@@ -1,155 +1,71 @@
-Return-Path: <linux-pwm+bounces-770-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-771-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B502E82C63E
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 21:10:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9C7D82C7F5
+	for <lists+linux-pwm@lfdr.de>; Sat, 13 Jan 2024 00:26:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BDA7A28A60D
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 20:10:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 889C91F24446
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 23:26:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBE65168DC;
-	Fri, 12 Jan 2024 20:09:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 508191A725;
+	Fri, 12 Jan 2024 23:25:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="1pgyGpfI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZGb0QSl"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7D8168C8
-	for <linux-pwm@vger.kernel.org>; Fri, 12 Jan 2024 20:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ccbc328744so83647861fa.3
-        for <linux-pwm@vger.kernel.org>; Fri, 12 Jan 2024 12:09:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1705090163; x=1705694963; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KODDiTlCYJz8VsTSh5FfV19+LAJgiCFhCmKp66prebs=;
-        b=1pgyGpfIAUmtnVrgG2GiS1Bcof5zE5Ypo1c3vuQAugjD8jxG2OHBuff3dtj+ym2LH0
-         FyP5ZZQlcse7lt4saVLhFZJnH20xpgYueXwZRK49kgnypWa8l+DNsKR8rLntNZWmtm50
-         1vCV7vhpCi6J2vBeOIV5HevYJ7O6yLbLpUBa4QHyOaCFwZqjOHMOEd/xH5TtvwKBYdyy
-         5chv0NuZ2RvA/o7RxNiyUpRS33VLb5WRuWqAZJgmkrdVYWta5/d1v27v7KGJsTdZ50Tn
-         t43+45eMxxreA8nIsx+tkvVAER788TIkVyNrz5pvRncAJXBlH1e7znPk9fzwTwt+BVCh
-         zMog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705090163; x=1705694963;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KODDiTlCYJz8VsTSh5FfV19+LAJgiCFhCmKp66prebs=;
-        b=fhVyoUblvSUzr4N5hOhfbbgUJURyhRLJJUg/zAAVlbhSvL3kcpchVq8tKLm7UOMW1f
-         qc+FzcSjo8yjttTuIo9pd6amSOC4iHwcahU5eRKAY+wWiPQ3+dkOIq45GD53Ahj3G+0f
-         fXwszQOh9LIz5Fhu0v3xd897CNvLJzfQlGD359Iem/pC+O8Xl3W1sJzuoKOz1sfmGisT
-         uWp6O+uV6IfngjYgw7uQadhA4BVDC6WNbuNv+ASqJbc4bocB0zDKoDaffmGAKifl/JCJ
-         NpxNPlQNfNzqr3Ht6B7yQFa35bI32kjiPcWgj95hfUM74BrjAnBnOq6iKx880pV9fUnM
-         zEIw==
-X-Gm-Message-State: AOJu0YxOu0MDe6QxOBv1p8RCTavMfLpqsVr4XCqKYk+/yn1JTs4lieFk
-	M0RMKUfincMkW6DwxV+x3jks4X2+IITjtD3MuqRUk0LBV6pb7g==
-X-Google-Smtp-Source: AGHT+IGEuMOKDSkYS95xvat9jZtpVVIWQ7N5qewHjvbrG746DxH65fTxGieC8qJkBQ+ThV+voOiRxrp6c9DBjmLGD8c=
-X-Received: by 2002:a2e:7813:0:b0:2cd:85b9:5815 with SMTP id
- t19-20020a2e7813000000b002cd85b95815mr890369ljc.42.1705090162684; Fri, 12 Jan
- 2024 12:09:22 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BB31A701;
+	Fri, 12 Jan 2024 23:25:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0BB6CC433C7;
+	Fri, 12 Jan 2024 23:25:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705101939;
+	bh=3y1uoNWKd8tam1ezfC8dDZ4MG9KPOYDb7ijWVz55ff4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=kZGb0QSlMlmkBayilS5IbUVeoSSJTwHeIEVHfVJ2Mr3fIpHPvpZs/OAixpWoxrWuA
+	 8s9cO4lMH0BVdw4pqZREAxFLehqTnuI8QGmNoAJvtPhre+130I5Nom/1kL2bLrPf9E
+	 OT/XUOpcoIPZAaM1ecVSYvm3dqoQccQ75WS8YAXyaqopkFUuOOCtk0eYsNaiEbvLHm
+	 qXsOR+2xS+cjsA+/IGIkYZGFjyIG7UGbqrf1eIb7s42XrLsdN3vJoH1ts7q/25AfDi
+	 UQX7saMGd0zJpgfdVM0uXwuGM2BhpWU6m0tTUD1ZjhbnyMA12CN1iXbbkoTalJCpxB
+	 EgGk2K9ZvA0cQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EC496DFC697;
+	Fri, 12 Jan 2024 23:25:38 +0000 (UTC)
+Subject: Re: [GIT PULL] pwm: Changes for v6.8-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240112155851.2987763-1-thierry.reding@gmail.com>
+References: <20240112155851.2987763-1-thierry.reding@gmail.com>
+X-PR-Tracked-List-Id: <linux-pwm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240112155851.2987763-1-thierry.reding@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.8-rc1
+X-PR-Tracked-Commit-Id: 7afc0e7f681e6efd6b826f003fc14c17b5093643
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 42bff4d0f9b9c8b669c5cef25c5116f41eb45c6b
+Message-Id: <170510193896.16457.16750929757894793798.pr-tracker-bot@kernel.org>
+Date: Fri, 12 Jan 2024 23:25:38 +0000
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
- <20240109-axi-spi-engine-series-3-v1-1-e42c6a986580@baylibre.com>
- <2c74aad9-3cb9-4222-8072-e72120c2658e@sirena.org.uk> <CAMknhBGMRed9vDrDAuPJ5DnEe6MyHzd0VBebp5OaLX2Q+AyhMQ@mail.gmail.com>
- <CAMknhBE-1Khe9J-n5WQnH=mFnN0ukiq7=F-SEOU6J-2_u-R0bw@mail.gmail.com>
-In-Reply-To: <CAMknhBE-1Khe9J-n5WQnH=mFnN0ukiq7=F-SEOU6J-2_u-R0bw@mail.gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 12 Jan 2024 14:09:11 -0600
-Message-ID: <CAMknhBGzOFnMnpt7B8iHd9VwWA-_zFVdiswDUAheovrHXyAv=Q@mail.gmail.com>
-Subject: Re: [PATCH 01/13] spi: add core support for controllers with offload capabilities
-To: Mark Brown <broonie@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Hennerich <michael.hennerich@analog.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Frank Rowand <frowand.list@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-spi@vger.kernel.org, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	David Jander <david@protonic.nl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 11, 2024 at 3:32=E2=80=AFPM David Lechner <dlechner@baylibre.co=
-m> wrote:
->
-> On Thu, Jan 11, 2024 at 2:54=E2=80=AFPM David Lechner <dlechner@baylibre.=
-com> wrote:
-> >
-> > On Wed, Jan 10, 2024 at 3:36=E2=80=AFPM Mark Brown <broonie@kernel.org>=
- wrote:
-> > >
-> > > On Wed, Jan 10, 2024 at 01:49:42PM -0600, David Lechner wrote:
-> > > > This adds a feature for specialized SPI controllers that can record
-> > > > a series of SPI transfers, including tx data, cs assertions, delays=
-,
-> > > > etc. and then play them back using a hardware trigger without CPU
-> > > > intervention.
-> > >
-> > > > The intended use case for this is with the AXI SPI Engine to captur=
-e
-> > > > data from ADCs at high rates (MSPS) with a stable sample period.
-> > >
-> > > > Most of the implementation is controller-specific and will be handl=
-ed by
-> > > > drivers that implement the offload_ops callbacks. The API follows a
-> > > > prepare/enable pattern that should be familiar to users of the clk
-> > > > subsystem.
-> > >
-> > > This is a lot to do in one go, and I think it's a bit too off on the
-> > > side and unintegrated with the core.  There's two very high level bit=
-s
-> > > here, there's the pre-cooking a message for offloading to be executed=
- by
-> > > a hardware engine and there's the bit where that's triggered by some
-> > > hardwar event rather than by software.
-> > >
-> > > There was a bunch of discussion of the former case with David Jander
-> >
-> > I found [1] which appears to be the conversation you are referring to.
-> > Is that all or is there more that I missed?
-> >
-> > [1]: https://lore.kernel.org/linux-spi/20220512163445.6dcca126@erd992/
-> >
-> > > (CCed) a while back when he was doing all the work he did on optimisi=
-ng
-> > > the core for uncontended uses, the thinking there was to have a
-> > > spi_prepare_message() (or similar) API that drivers could call and th=
-en
-> > > reuse the same transfer repeatedly, and even without any interface fo=
-r
-> > > client drivers it's likely that we'd be able to take advantage of it =
-in
-> > > the core for multi-transfer messages.  I'd be surprised if there were=
-n't
-> > > wins when the message goes over the DMA copybreak size.  A much wider
-> > > range of hardware would be able to do this bit, for example David's c=
-ase
-> > > was a Raspberry Pi using the DMA controller to write into the SPI
->
-> For those, following along, it looks like the RPi business was
-> actually a 2013 discussion with Martin Sperl [2]. Both this and [1]
-> discuss proposed spi_prepare_message() APIs.
->
-> [2]: https://lore.kernel.org/linux-spi/CACRpkdb4mn_Hxg=3D3tuBu89n6eyJ082E=
-ETkwtNbzZDFZYTHbVVg@mail.gmail.com/T/#u
+The pull request you sent on Fri, 12 Jan 2024 16:58:48 +0100:
 
-I found one more. A patch from Martin with the basic proposed API but
-not much in the way of implementation. It looks like this is where the
-idea fizzled out.
+> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.8-rc1
 
-https://lore.kernel.org/linux-spi/0C7D5B1E-E561-4F52-BEA8-572EB0CA26A6@mart=
-in.sperl.org/
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/42bff4d0f9b9c8b669c5cef25c5116f41eb45c6b
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
