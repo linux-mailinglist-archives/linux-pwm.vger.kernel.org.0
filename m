@@ -1,36 +1,36 @@
-Return-Path: <linux-pwm+bounces-760-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-761-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9935182BFD9
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 13:38:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBA1982BFEB
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 13:45:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 02D5C285A9A
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 12:38:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7446FB22D86
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 12:45:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FF0F59B48;
-	Fri, 12 Jan 2024 12:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 912AE6BB45;
+	Fri, 12 Jan 2024 12:45:15 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7D55917E;
-	Fri, 12 Jan 2024 12:38:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1936BB3E;
+	Fri, 12 Jan 2024 12:45:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TBLbq6m5nz6D8wj;
-	Fri, 12 Jan 2024 20:35:35 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TBLlr27Q8z6K9B9;
+	Fri, 12 Jan 2024 20:42:32 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 46C1D140B2F;
-	Fri, 12 Jan 2024 20:38:01 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 0EEF014058E;
+	Fri, 12 Jan 2024 20:45:11 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 12 Jan
- 2024 12:38:00 +0000
-Date: Fri, 12 Jan 2024 12:37:59 +0000
+ 2024 12:45:10 +0000
+Date: Fri, 12 Jan 2024 12:45:09 +0000
 From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To: David Lechner <dlechner@baylibre.com>
 CC: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob
@@ -44,12 +44,12 @@ CC: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob
 	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-doc@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 10/13] iio: buffer: dmaengine: export
- devm_iio_dmaengine_buffer_alloc()
-Message-ID: <20240112123759.00007440@Huawei.com>
-In-Reply-To: <20240109-axi-spi-engine-series-3-v1-10-e42c6a986580@baylibre.com>
+Subject: Re: [PATCH 12/13] iio: offload: add new PWM triggered DMA buffer
+ driver
+Message-ID: <20240112124509.000001b8@Huawei.com>
+In-Reply-To: <20240109-axi-spi-engine-series-3-v1-12-e42c6a986580@baylibre.com>
 References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
-	<20240109-axi-spi-engine-series-3-v1-10-e42c6a986580@baylibre.com>
+	<20240109-axi-spi-engine-series-3-v1-12-e42c6a986580@baylibre.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
@@ -63,99 +63,89 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, 10 Jan 2024 13:49:51 -0600
+On Wed, 10 Jan 2024 13:49:53 -0600
 David Lechner <dlechner@baylibre.com> wrote:
 
-> This changes devm_iio_dmaengine_buffer_alloc() to an exported symbol.
-> This will be used by drivers that need to allocate a DMA buffer without
-> attaching it to an IIO device.
+> This adds a new driver for handling SPI offloading using a PWM as the
+> trigger and DMA for the received data. This will be used by ADCs in
+> conjunction with SPI controllers with offloading support to be able
+> to sample at high rates without CPU intervention.
 > 
 > Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->  Documentation/driver-api/driver-model/devres.rst   |  1 +
->  drivers/iio/buffer/Kconfig                         | 14 +++++++-------
->  drivers/iio/buffer/industrialio-buffer-dmaengine.c |  3 ++-
->  include/linux/iio/buffer-dmaengine.h               |  2 ++
->  4 files changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-> index b23d4a2b68a6..60e4b7ba38e5 100644
-> --- a/Documentation/driver-api/driver-model/devres.rst
-> +++ b/Documentation/driver-api/driver-model/devres.rst
-> @@ -285,6 +285,7 @@ I2C
->  IIO
->    devm_iio_device_alloc()
->    devm_iio_device_register()
-> +  devm_iio_dmaengine_buffer_alloc()
->    devm_iio_dmaengine_buffer_setup()
->    devm_iio_kfifo_buffer_setup()
->    devm_iio_kfifo_buffer_setup_ext()
-> diff --git a/drivers/iio/buffer/Kconfig b/drivers/iio/buffer/Kconfig
-> index 925c5bf074bc..27d82fb4bc4d 100644
-> --- a/drivers/iio/buffer/Kconfig
-> +++ b/drivers/iio/buffer/Kconfig
-> @@ -40,6 +40,13 @@ config IIO_BUFFER_HW_CONSUMER
->  	  Should be selected by drivers that want to use the generic Hw consumer
->  	  interface.
->  
-> +config IIO_HW_TRIGGERED_BUFFER
-> +	tristate "Industrial I/O hardware triggered buffer support"
-> +	select AUXILIARY_BUS
-> +	select IIO_TRIGGER
-> +	help
-> +	  Provides helper functions for setting up hardware triggered buffers.
+
+Ah. So if I read this right, the trigger only exists to provide somewhere
+to hang the frequency control?   Not sure it's worth the complexity for that.
+
+
+Do we expect a given offload engine to allow a bunch of 'standard' triggers?
+If that's the case then I don't mind them being exposed as triggers. We do
+that for a few other devices where we need to pick between a bunch of
+different internal signals and it works fine.
+
 > +
->  config IIO_KFIFO_BUF
->  	tristate "Industrial I/O buffering based on kfifo"
->  	help
-> @@ -53,10 +60,3 @@ config IIO_TRIGGERED_BUFFER
->  	select IIO_KFIFO_BUF
->  	help
->  	  Provides helper functions for setting up triggered buffers.
-> -
-> -config IIO_HW_TRIGGERED_BUFFER
-> -	tristate "Industrial I/O hardware triggered buffer support"
-> -	select AUXILIARY_BUS
-> -	select IIO_TRIGGER
-> -	help
-> -	  Provides helper functions for setting up hardware triggered buffers.
+> +static int iio_pwm_triggered_dma_buffer_probe(struct platform_device *pdev)
+> +{
+> +	struct iio_pwm_triggered_dma_buffer *st;
+> +	struct auxiliary_device *adev;
+> +	int ret;
+> +
+> +	st = devm_kzalloc(&pdev->dev, sizeof(*st), GFP_KERNEL);
+> +	if (!st)
+> +		return -ENOMEM;
+> +
+> +	st->pwm = devm_pwm_get(&pdev->dev, NULL);
+> +	if (IS_ERR(st->pwm))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(st->pwm),
+> +				     "failed to get PWM\n");
+> +
+> +	st->hw.buffer = devm_iio_dmaengine_buffer_alloc(&pdev->dev, "rx");
+> +	if (IS_ERR(st->hw.buffer))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(st->hw.buffer),
+> +				     "failed to allocate buffer\n");
+> +
+> +	st->hw.trig = devm_iio_trigger_alloc(&pdev->dev, "%s-%s-pwm-trigger",
+> +					     dev_name(pdev->dev.parent),
+> +					     dev_name(&pdev->dev));
+> +	if (!st->hw.trig)
+> +		return -ENOMEM;
+> +
+> +	st->hw.trig->ops = &iio_pwm_triggered_dma_buffer_ops;
+> +	st->hw.trig->dev.parent = &pdev->dev;
+> +	st->hw.trig->dev.groups = iio_pwm_triggered_dma_buffer_groups;
+> +	iio_trigger_set_drvdata(st->hw.trig, st);
+> +
+> +	/* start with a reasonable default value */
+> +	ret = axi_spi_engine_offload_set_samp_freq(st, 1000);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret,
+> +				     "failed to set sampling frequency\n");
+> +
+> +	ret = devm_iio_trigger_register(&pdev->dev, st->hw.trig);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret,
+> +				     "failed to register trigger\n");
+> +
+> +	adev = &st->hw.adev;
+> +	adev->name = "triggered-buffer";
+> +	adev->dev.parent = &pdev->dev;
+> +	adev->dev.release = iio_pwm_triggered_dma_buffer_adev_release;
+> +	adev->id = 0;
+> +
+> +	ret = auxiliary_device_init(adev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = auxiliary_device_add(adev);
+> +	if (ret) {
+> +		auxiliary_device_uninit(adev);
+> +		return ret;
+> +	}
+> +
+> +	return devm_add_action_or_reset(&pdev->dev,
+> +			iio_pwm_triggered_dma_buffer_unregister_adev, adev);
+Split this an register the uninit and delete as separate callbacks to so we
+can clearly see what each is doing.
 
-Why move this?
-
-> diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-> index c67ddf963bfb..03225939f223 100644
-> --- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-> +++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-> @@ -244,7 +244,7 @@ static void __devm_iio_dmaengine_buffer_free(void *buffer)
->   *
->   * The buffer will be automatically de-allocated once the device gets destroyed.
->   */
-> -static struct iio_buffer *devm_iio_dmaengine_buffer_alloc(struct device *dev,
-> +struct iio_buffer *devm_iio_dmaengine_buffer_alloc(struct device *dev,
->  	const char *channel)
->  {
->  	struct iio_buffer *buffer;
-> @@ -261,6 +261,7 @@ static struct iio_buffer *devm_iio_dmaengine_buffer_alloc(struct device *dev,
->  
->  	return buffer;
->  }
-> +EXPORT_SYMBOL_GPL(devm_iio_dmaengine_buffer_alloc);
->  
->  /**
->   * devm_iio_dmaengine_buffer_setup() - Setup a DMA buffer for an IIO device
-> diff --git a/include/linux/iio/buffer-dmaengine.h b/include/linux/iio/buffer-dmaengine.h
-> index 5c355be89814..3ac616ddf5b9 100644
-> --- a/include/linux/iio/buffer-dmaengine.h
-> +++ b/include/linux/iio/buffer-dmaengine.h
-> @@ -10,6 +10,8 @@
->  struct iio_dev;
->  struct device;
->  
-> +struct iio_buffer *devm_iio_dmaengine_buffer_alloc(struct device *dev,
-> +						   const char *channel);
->  int devm_iio_dmaengine_buffer_setup(struct device *dev,
->  				    struct iio_dev *indio_dev,
->  				    const char *channel);
-> 
+> +}
 
 
