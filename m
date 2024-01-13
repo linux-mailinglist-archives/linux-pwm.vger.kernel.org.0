@@ -1,179 +1,112 @@
-Return-Path: <linux-pwm+bounces-778-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-779-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D724E82CDBF
-	for <lists+linux-pwm@lfdr.de>; Sat, 13 Jan 2024 17:26:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49AC282CEF2
+	for <lists+linux-pwm@lfdr.de>; Sat, 13 Jan 2024 23:47:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C06D1F21D45
-	for <lists+linux-pwm@lfdr.de>; Sat, 13 Jan 2024 16:26:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82702283598
+	for <lists+linux-pwm@lfdr.de>; Sat, 13 Jan 2024 22:47:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE1BC4C6F;
-	Sat, 13 Jan 2024 16:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DD5B168B1;
+	Sat, 13 Jan 2024 22:47:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="G/I/b9oK"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="NNRgbx92"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9102B4C65;
-	Sat, 13 Jan 2024 16:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-	t=1705163200; bh=RQlY+jEYkNLZGSgB/4+Cf47fWKFdF0+OLYk1Sb7uF+w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G/I/b9oKpQhGjP/14desRRYG8sMKpLx0JWeRFYydyZP7r/cFiUD/Y11H2OamR/UNm
-	 OkEGffzV7F0OAAUeJQqTvGegggOR/usBXKq6LPgePZuFk525StbLlBi6+gc9+RY8gP
-	 iy/UNECCrwYRIBhq43eBj8CISLvN1l7AHeUO6fPP3DrD+7EuV4lIl5WSUe6dTc6bPW
-	 WVoV9gN74SHfkAVy3Cu9T/A9uvkA0PI/sMNePG1Hn8xsL2x3uOBysXFOhRpMJN5Imu
-	 SI1c2JtdZnP37Rq3iGD82NCNpvyKF0360mVtffbiRlqqGG3rPMRzWZov9rX1a8qlSk
-	 MTjIfaslZq4uQ==
-Received: by gofer.mess.org (Postfix, from userid 1000)
-	id 6091C1000C6; Sat, 13 Jan 2024 16:26:40 +0000 (GMT)
-Date: Sat, 13 Jan 2024 16:26:40 +0000
-From: Sean Young <sean@mess.org>
-To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: daniel.lezcano@linaro.org, tglx@linutronix.de,
-	linux-kernel@vger.kernel.org, tony@atomide.com,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] drivers/clocksource/timer-ti-dm: Don't call
- clk_get_rate() in stop function
-Message-ID: <ZaK5wOHxf2CvzZrk@gofer.mess.org>
-References: <1696312220-11550-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7282168A3;
+	Sat, 13 Jan 2024 22:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-558eedb6fd8so799076a12.2;
+        Sat, 13 Jan 2024 14:46:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1705186017; x=1705790817; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PAv5l0VtvnO1pRB8FcDO9H9jLbmc1LXe0iJC5gP0mFM=;
+        b=NNRgbx92Nmj41z2h1FF/D/j140z0wrjot3HZ8szbHUOOaDjR2QMBZ21bLuI9GoHD9a
+         iSx7Eq1WZlDeiRtyDdQQ8fgux2g23CUOOlbebMnSMNBGU1Wu6AAJx6+Y/BehwJQ4bNcf
+         cvYrtnAkFTtFPw4tNHwOoo690oML1QZTR0AYHmZEZX9cr/YudirMTUEP2MJQuXGeqvt7
+         CqAiEkt3hJvM2zi8YZD+fEa/yXYQHgnE9zVzGrtZwXYVG57OnlylIDtQP6HOsTM7sPA7
+         YC3A7H/3eotQqmjYuJMjF5Z2UBdCZ8WUiOiRGRlsuD0peILBIB1Qy1UqtRovt+OQD8Tp
+         bNmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705186017; x=1705790817;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PAv5l0VtvnO1pRB8FcDO9H9jLbmc1LXe0iJC5gP0mFM=;
+        b=bVZwPC/1XGA0gz5aqTrWRRsJ9F2pGg+cXgO6KHYpw3EEOMl3z8fii2uNYv9qefddWj
+         d9GkEqBk8kaoAC31+iIBqacwUxNg8viP9Cg/7v+CMssRTKWb+mrYm+7rV9r5hpqzj7+B
+         yhrVhiRVBnYd0P/upI1xdg1BM4Zc0SZXpOrp9pnWPR38ztGvnVP7+9bMj2qIDa1o619x
+         Do6SgdaoqJQ1w0CRCVY1LPDvgc7BvZ17X13cj5buTODTnb5llmGQBbu2cWFxL2hEKlDm
+         WHtHl3c1s/VMkQcT7XyYHNzAvOAroYvZ3k6tJU8K1tNQmy/bxrIW9yv5saYQMqJYJze5
+         7N/Q==
+X-Gm-Message-State: AOJu0YwxKZUQx3qF/eiv57VLAMqPRhqQw8f/D093gqgAvPGiwiYMDyy9
+	R2dLyG0F+VPYxEMOJfCV3Vk=
+X-Google-Smtp-Source: AGHT+IFg0Jc9rGZcwGGkPbHFtCvCtdIraNk6iU99Ny4eASgGfZGCe+646zfhY31ak/W99X7fBqqqPA==
+X-Received: by 2002:a17:906:7c59:b0:a29:f55d:e1a6 with SMTP id g25-20020a1709067c5900b00a29f55de1a6mr1593516ejp.105.1705186016494;
+        Sat, 13 Jan 2024 14:46:56 -0800 (PST)
+Received: from localhost.localdomain (dynamic-2a01-0c22-6fe7-c700-0000-0000-0000-0e63.c22.pool.telefonica.de. [2a01:c22:6fe7:c700::e63])
+        by smtp.googlemail.com with ESMTPSA id g18-20020a170906595200b00a2d4e658132sm755409ejr.42.2024.01.13.14.46.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jan 2024 14:46:56 -0800 (PST)
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-pwm@vger.kernel.org,
+	linux-amlogic@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Dmitry Rokosov <ddrokosov@sberdevices.ru>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [RFC PATCH v2 0/3] regulator: pwm-regulator: Fixes for disabled PWMs at boot
+Date: Sat, 13 Jan 2024 23:46:25 +0100
+Message-ID: <20240113224628.377993-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1696312220-11550-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Ivaylo,
+This is the second version of an attempt to fix booting mainline Linux
+on Meson8b Odroid-C1.
+This series is an update to an RFC patch that I sent some time ago [0]
+and incorporates a lot of the feedback from that v1.
 
-On Tue, Oct 03, 2023 at 08:50:20AM +0300, Ivaylo Dimitrov wrote:
-> clk_get_rate() might sleep, and that prevents dm-timer based PWM from being
-> used from atomic context.
-
-Now that this is merged, pwm-ir-tx can only use the pwm in atomic context
-if pwm-omap-timer.c sets the atomic field like the rpi pwm does here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pwm/pwm-bcm2835.c#n175
-
-see pwm-ir-tx here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/rc/pwm-ir-tx.c#n170
-
-It would be nice to have this tested and working properly for the n900.
-
-Thanks,
-
-Sean
+The main changes since v1 [0] are:
+- new patch checking the voltage limits in pwm_regulator_get_voltage()
+- updated calculation for disabled regulators in+
+  pwm_regulator_get_voltage() utilizing above limit checking
+- new pwm_regulator_init_boot_on() to preserve the output voltage when
+  pwm_regulator_enable() later enables the PWM output without and
+  preceding pwm_regulator_set_voltage().
 
 
-> 
-> Fix that by getting fclk rate in probe() and using a notifier in case rate
-> changes.
-> 
-> Fixes: af04aa856e93 ("ARM: OMAP: Move dmtimer driver out of plat-omap to drivers under clocksource")
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-> ---
->  drivers/clocksource/timer-ti-dm.c | 36 ++++++++++++++++++++++++++++--------
->  1 file changed, 28 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-> index 09ab29c..5f60f6b 100644
-> --- a/drivers/clocksource/timer-ti-dm.c
-> +++ b/drivers/clocksource/timer-ti-dm.c
-> @@ -140,6 +140,8 @@ struct dmtimer {
->  	struct platform_device *pdev;
->  	struct list_head node;
->  	struct notifier_block nb;
-> +	struct notifier_block fclk_nb;
-> +	unsigned long fclk_rate;
->  };
->  
->  static u32 omap_reserved_systimers;
-> @@ -253,8 +255,7 @@ static inline void __omap_dm_timer_enable_posted(struct dmtimer *timer)
->  	timer->posted = OMAP_TIMER_POSTED;
->  }
->  
-> -static inline void __omap_dm_timer_stop(struct dmtimer *timer,
-> -					unsigned long rate)
-> +static inline void __omap_dm_timer_stop(struct dmtimer *timer)
->  {
->  	u32 l;
->  
-> @@ -269,7 +270,7 @@ static inline void __omap_dm_timer_stop(struct dmtimer *timer,
->  		 * Wait for functional clock period x 3.5 to make sure that
->  		 * timer is stopped
->  		 */
-> -		udelay(3500000 / rate + 1);
-> +		udelay(3500000 / timer->fclk_rate + 1);
->  #endif
->  	}
->  
-> @@ -348,6 +349,21 @@ static int omap_timer_context_notifier(struct notifier_block *nb,
->  	return NOTIFY_OK;
->  }
->  
-> +static int omap_timer_fclk_notifier(struct notifier_block *nb,
-> +				    unsigned long event, void *data)
-> +{
-> +	struct clk_notifier_data *clk_data = data;
-> +	struct dmtimer *timer = container_of(nb, struct dmtimer, fclk_nb);
-> +
-> +	switch (event) {
-> +	case POST_RATE_CHANGE:
-> +		timer->fclk_rate = clk_data->new_rate;
-> +		return NOTIFY_OK;
-> +	default:
-> +		return NOTIFY_DONE;
-> +	}
-> +}
-> +
->  static int omap_dm_timer_reset(struct dmtimer *timer)
->  {
->  	u32 l, timeout = 100000;
-> @@ -754,7 +770,6 @@ static int omap_dm_timer_stop(struct omap_dm_timer *cookie)
->  {
->  	struct dmtimer *timer;
->  	struct device *dev;
-> -	unsigned long rate = 0;
->  
->  	timer = to_dmtimer(cookie);
->  	if (unlikely(!timer))
-> @@ -762,10 +777,7 @@ static int omap_dm_timer_stop(struct omap_dm_timer *cookie)
->  
->  	dev = &timer->pdev->dev;
->  
-> -	if (!timer->omap1)
-> -		rate = clk_get_rate(timer->fclk);
-> -
-> -	__omap_dm_timer_stop(timer, rate);
-> +	__omap_dm_timer_stop(timer);
->  
->  	pm_runtime_put_sync(dev);
->  
-> @@ -1124,6 +1136,14 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
->  		timer->fclk = devm_clk_get(dev, "fck");
->  		if (IS_ERR(timer->fclk))
->  			return PTR_ERR(timer->fclk);
-> +
-> +		timer->fclk_nb.notifier_call = omap_timer_fclk_notifier;
-> +		ret = devm_clk_notifier_register(dev, timer->fclk,
-> +						 &timer->fclk_nb);
-> +		if (ret)
-> +			return ret;
-> +
-> +		timer->fclk_rate = clk_get_rate(timer->fclk);
->  	} else {
->  		timer->fclk = ERR_PTR(-ENODEV);
->  	}
-> -- 
-> 1.9.1
+[0] https://lore.kernel.org/linux-pwm/20231221211222.1380658-1-martin.blumenstingl@googlemail.com/
+
+
+Martin Blumenstingl (3):
+  regulator: pwm-regulator: Add validity checks in continuous
+    .get_voltage
+  regulator: pwm-regulator: Calculate the output voltage for disabled
+    PWMs
+  regulator: pwm-regulator: Manage boot-on with disabled PWM channels
+
+ drivers/regulator/pwm-regulator.c | 43 +++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+
+-- 
+2.43.0
+
 
