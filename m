@@ -1,61 +1,62 @@
-Return-Path: <linux-pwm+bounces-788-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-789-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDD3B82E152
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jan 2024 21:12:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE42F82E155
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jan 2024 21:12:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 054A1B20C00
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jan 2024 20:12:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D25328388D
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jan 2024 20:12:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51FEE19472;
-	Mon, 15 Jan 2024 20:12:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B2C7199A1;
+	Mon, 15 Jan 2024 20:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="t+IsQMQN"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qkxkutBw"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79CD1946C
-	for <linux-pwm@vger.kernel.org>; Mon, 15 Jan 2024 20:12:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A264419471
+	for <linux-pwm@vger.kernel.org>; Mon, 15 Jan 2024 20:12:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3bb9d54575cso6408514b6e.2
-        for <linux-pwm@vger.kernel.org>; Mon, 15 Jan 2024 12:12:25 -0800 (PST)
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-598e01ce434so1173465eaf.1
+        for <linux-pwm@vger.kernel.org>; Mon, 15 Jan 2024 12:12:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1705349544; x=1705954344; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2korMs0kPHmOBV4VWypzARkCOEJYa1AxE8QmV2EhabY=;
-        b=t+IsQMQNDzqWwZBRbaBnhluUVYVB6lhTDKu3EranKvuhrMhe9PnykP5Bvq5wENJWKg
-         mncz6ugKQaso6/+OikSux36OZpaHluUKTv9yuYJ/SdfCdutTioOF4oVTlwZgeLOfD/yQ
-         i2nYF+6BkILkXki6KgGmlOU+cSzRFZ19OX9VLfDWa18skhsJYB6z+R7n2PUaXL5ELAsg
-         XRFi3NM0EXxpPRoThC3HSQSacvACuwIkm4ElOw1MM/qHRF26W+CGKiGg/f3hpZVV1Qbr
-         7+cQbUNPHk6X9/6ePTggzD1jwL1A9WlYjtW/QJXNKSNDnvY0lbwlyh9+T3unhBH3RoR/
-         Yj8Q==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1705349545; x=1705954345; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OoGYdHuOEch5eGoOUgb3CbwIdtVZ1B+1VuVUe8FdGw8=;
+        b=qkxkutBwONnkNLDxt2Rt7GfUg+ZG8foCxf/FhUNUN4cDCJdsbhrDbCV2tQf6U6Hi82
+         hlC3R03m5a/Cnqo32GQDSAIr3SmLcRSG9CQ7szwJumS6/aX/mRWjF6h8Ijug7gnTXkRI
+         gyUTqOmZYIzD7lK2vLgRvpLKwrQXNEUcZldaxcWxs8K2TViwEj9K7REjJPdfYt9BwlRD
+         ynzovUHmAw+Phs+hkAeQU5NYW06Y0SlW5F1LprGIZADaZfVY+7etv6NJzBDKRmXXPu87
+         Cc1HBckSML0F9ZNs1TtPRwAcuJptqLqLFcfObgGsqkPEdQrHtNCAqZMENmP0jqBj1IYE
+         jxqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705349544; x=1705954344;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2korMs0kPHmOBV4VWypzARkCOEJYa1AxE8QmV2EhabY=;
-        b=kfinAOUZ8qxz/NP5wTq936jCxfmygtp20nxiPmvsx7sXafdUKidOW8gaHcvADCcotu
-         AZ0jS1TQkl9SnTmsECoQs/Z5ArXYtgXuxXZUxhIcT4hKAioo84GeKZAeqQ4SqTwP4B1j
-         1tZUjxTzazNosIAZeoePD/Uu9ZdL3xZonYTp4mEBbu/5bq4nK621rO4xRjEGg7eiL/Ou
-         VnVICxZEbniogROZ/ruRXcKHvVNVaCmwmq9dj+8XngqMl5eA0YJigpsPzxHwAC6ssw+e
-         JdJ9Hdyj3jDVGOl6b29HUGQC6SJF/wyYIs78YEeqr+yOdDr8i9m6Lhg97Z//DVFa4O94
-         Xqow==
-X-Gm-Message-State: AOJu0YzPhSwGgCafMyUUwgqQQuHjO0hVHiHLNmx5crt1XC4K5Xtz+4yF
-	TFGJsDVZAFbQhZyUt+iRbCm9OYBlyT8RsTzd1pcrWz4zOrk=
-X-Google-Smtp-Source: AGHT+IGEsAdzR/wJAMs7NwEP1OmKlSony3WQCvmvUfuaMkFAOPapjGXpcSxXN1K3h2Jf6DxqmwkIOQ==
-X-Received: by 2002:a05:6808:3988:b0:3bb:c8ef:1c3d with SMTP id gq8-20020a056808398800b003bbc8ef1c3dmr9416571oib.5.1705349544525;
-        Mon, 15 Jan 2024 12:12:24 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705349545; x=1705954345;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OoGYdHuOEch5eGoOUgb3CbwIdtVZ1B+1VuVUe8FdGw8=;
+        b=dPSEkodTiHrc59ZvkXh5GyjQtgLwQox5+/fuQnA3RlDd5R/EqI8lCCtAn/Cz2JL7t1
+         TQnA+AwPyj1nj632fSRERqsDXX5XPJjiQFJYBSEF5orgzObgdHu1GFkoaLtiWfMfP3qy
+         KDwJ0XCGUzmkRbqkUh1xfoaCGbutrTjDWeE8Ymtd+7yBcivZ565rwD6Q1annOhnle7DM
+         TFONE6X0u4qUiYb127NwpXGwb7YYaEwtT7oTe/X7jnn0u1PtRJmMYhHcFr/XlXdRMlwM
+         7rEExLmaRp2eXcrd3+LJSAcw/cL1ZNUCOQapJ5csM5Tgpwz4A9KZFi+Qf+8pReXvZhDo
+         0nSg==
+X-Gm-Message-State: AOJu0YxdK3yoTXaEzXybFiVsM+At0ki2Or5BZJivN1bSuwUAUEwMiAoz
+	YGVBvR0vTkiZQVfSiNySmzSNkOd7mDi8izL7dZqx/8wWNFA=
+X-Google-Smtp-Source: AGHT+IHnusVFj+YA3xivR599tPImC6bULBVIHPYSM+PjDD1HCrUKJZuqs61Cdx3c+wH2pjzpb2J/hQ==
+X-Received: by 2002:a05:6359:6b81:b0:170:64cd:8aac with SMTP id ta1-20020a0563596b8100b0017064cd8aacmr4081881rwb.62.1705349545406;
+        Mon, 15 Jan 2024 12:12:25 -0800 (PST)
 Received: from workbox.taildc8f3.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id y26-20020ac8525a000000b004298b33cdcasm4219170qtn.50.2024.01.15.12.12.23
+        by smtp.gmail.com with ESMTPSA id y26-20020ac8525a000000b004298b33cdcasm4219170qtn.50.2024.01.15.12.12.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 12:12:24 -0800 (PST)
+        Mon, 15 Jan 2024 12:12:25 -0800 (PST)
 From: Trevor Gamblin <tgamblin@baylibre.com>
 To: linux-pwm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -66,41 +67,108 @@ Cc: linux-kernel@vger.kernel.org,
 	robh+dt@kernel.org,
 	krzysztof.kozlowski+dt@linaro.org,
 	conor+dt@kernel.org
-Subject: [PATCH 0/2] pwm: add axi-pwm-gen driver
-Date: Mon, 15 Jan 2024 15:12:19 -0500
-Message-ID: <20240115201222.1423626-1-tgamblin@baylibre.com>
+Subject: [PATCH 1/2] dt-bindings: pwm: Add bindings for AXI PWM generator
+Date: Mon, 15 Jan 2024 15:12:20 -0500
+Message-ID: <20240115201222.1423626-2-tgamblin@baylibre.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240115201222.1423626-1-tgamblin@baylibre.com>
+References: <20240115201222.1423626-1-tgamblin@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This series adds support for the AXI PWM GEN subsystem found on FPGA IP
-cores. It can be used to generate up to four configurable PWM outputs,
-and includes options for external synchronization and clock signals.
-The work is being done on behalf of, and therefore lists maintainers
-from Analog Devices, Inc.
+From: Drew Fustini <dfustini@baylibre.com>
 
-The series has been tested on actual hardware using an EVAL-AD7985FMCZ
-evaluation board. An oscilloscope was used to validate that the
-generated PWM signal matched the requested one.
+Add bindings for Analog Devices AXI PWM generator.
 
-Drew Fustini (2):
-  dt-bindings: pwm: Add bindings for AXI PWM generator
-  pwm: Add driver for AXI PWM generator
-
- .../bindings/pwm/adi,axi-pwmgen.yaml          |  48 ++++
- MAINTAINERS                                   |   9 +
- drivers/pwm/Kconfig                           |  12 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-axi-pwmgen.c                  | 229 ++++++++++++++++++
- 5 files changed, 299 insertions(+)
+Link: https://wiki.analog.com/resources/fpga/docs/axi_pwm_gen
+Signed-off-by: Drew Fustini <dfustini@baylibre.com>
+Co-developed-by: Trevor Gamblin <tgamblin@baylibre.com>
+Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
+---
+ .../bindings/pwm/adi,axi-pwmgen.yaml          | 48 +++++++++++++++++++
+ MAINTAINERS                                   |  8 ++++
+ 2 files changed, 56 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
- create mode 100644 drivers/pwm/pwm-axi-pwmgen.c
 
+diff --git a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
+new file mode 100644
+index 000000000000..8f16b2e14154
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/adi,axi-pwmgen.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AXI PWM generator
++
++maintainers:
++  - Michael Hennerich <Michael.Hennerich@analog.com>
++  - Nuno Sá <nuno.sa@analog.com>
++
++description:
++  The Analog Devices AXI PWM generator can generate PWM signals
++  with variable pulse width and period.
++
++  https://wiki.analog.com/resources/fpga/docs/axi_pwm_gen
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    const: adi,axi-pwmgen-1.00.a
++
++  reg:
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 2
++
++  clocks:
++    maxItems: 1
++
++unevaluatedProperties: false
++
++required:
++  - reg
++  - clocks
++
++examples:
++  - |
++    pwm@44b00000 {
++       compatible = "adi,axi-pwmgen-1.00.a";
++       reg = <0x44b00000 0x1000>;
++       clocks = <&spi_clk>;
++       #pwm-cells = <2>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c6c7b50e6ef6..7b0f3aec5381 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3415,6 +3415,14 @@ W:	https://ez.analog.com/linux-software-drivers
+ F:	Documentation/devicetree/bindings/hwmon/adi,axi-fan-control.yaml
+ F:	drivers/hwmon/axi-fan-control.c
+ 
++AXI PWM GENERATOR
++M:	Michael Hennerich <michael.hennerich@analog.com>
++M:	Nuno Sá <nuno.sa@analog.com>
++L:	linux-pwm@vger.kernel.org
++S:	Supported
++W:	https://ez.analog.com/linux-software-drivers
++F:	Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
++
+ AXXIA I2C CONTROLLER
+ M:	Krzysztof Adamski <krzysztof.adamski@nokia.com>
+ L:	linux-i2c@vger.kernel.org
 -- 
 2.43.0
 
