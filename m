@@ -1,76 +1,76 @@
-Return-Path: <linux-pwm+bounces-814-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-815-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E345C82FC3E
-	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 23:16:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0A3F82FC4C
+	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 23:17:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3E7551F253A5
-	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 22:16:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E49151C27C59
+	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 22:17:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 155121DA50;
-	Tue, 16 Jan 2024 20:43:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6A7038381;
+	Tue, 16 Jan 2024 20:45:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xqu7FLT+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QX2dfPNZ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369501EB53
-	for <linux-pwm@vger.kernel.org>; Tue, 16 Jan 2024 20:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1359C250ED
+	for <linux-pwm@vger.kernel.org>; Tue, 16 Jan 2024 20:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705437829; cv=none; b=T6HiM2lkokp/UzEcdYcCR7yFDif08jmmlHzEGTrYRq3y7r0Q5hEZYF8P3CBNWytR4FQM+qxuD+fSIrBO5spVTbDsu6rTgX+/umsxRmv7sWck9DxP0kT0C2CDCGGpBTYu9B3/qrg+ZteHS9R8Ot/D3E9RKbUZ4wwyAiI2hSZAZxc=
+	t=1705437925; cv=none; b=a37f2nubDZiIzRrONvC9Q1w0xUYb04vVdFtZk/WtLIO22kNaTWDCBQXtL0MniX4un/AsIOTM8Z2lmbD6MxeeLOmjML3zXEvQWa1FSQ+ldokzlZinQBCjEMTDhKDymw7USCiA+6s1t3sfdD9nZujJ14Wm247iSXMKRUH8J5WQIg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705437829; c=relaxed/simple;
-	bh=lUZs54U2UA0MeATkJMD8r2dxKqaLVbxdSBpnA7CBAQ0=;
+	s=arc-20240116; t=1705437925; c=relaxed/simple;
+	bh=VwD2o42GKCMVoFWM4BCeW2ZBYFCQzyp04aI4NBC1I88=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
 	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
 	 To:Cc:References:From:Autocrypt:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=tXXsHOtounLYeeQdQG/fsZGT6Ns0ZB7KC9y7/OAl3fEqY96AJn4Qi2vW4pSF/0AB9Ded4dSDyoKTyCPvAAunXsYhGRc2ofgbEZb2arvVGSu27G8dILg48hKmB+z8LyPiSxYL0f+P9enOYB/F1bITG502sVrkI9eEXAS50GrKtBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xqu7FLT+; arc=none smtp.client-ip=209.85.218.47
+	 Content-Transfer-Encoding; b=bzZMAi9ZdZJUrLWGMZZuvXsLh9L3IHNXGTdc6CoJ6zYBokMtS18f3nnvVz1nfkoOYHIlPFZfXnTcm+X2WtxRwQuaq1Z/HbCpcYW17/wr/q0LHuSfMs+QRIjic6JMks4nW9caWx8FXt4KlngNcTxS0eTrA4u1n+ceqHC62gk65gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QX2dfPNZ; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a2dd05e02ffso269675966b.3
-        for <linux-pwm@vger.kernel.org>; Tue, 16 Jan 2024 12:43:47 -0800 (PST)
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-50eaabc36bcso12765333e87.2
+        for <linux-pwm@vger.kernel.org>; Tue, 16 Jan 2024 12:45:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705437825; x=1706042625; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1705437922; x=1706042722; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=22jyeaAES+kz8Hg4ntOJsukTiv9OkKs46DcXVyNEJTs=;
-        b=Xqu7FLT+egSQzmOFkDylIEdEB14CKE00TxyNniistkUa0d0ejwDO45GhioaLoC7cAz
-         5CqEs0WS4qrtLQT+N29+NIl6riuzHjb5153pWXlFPHtbnC5txcqbI4ohXwt4wh3PPfRe
-         lqbswDiQhuoytuZma6nFP/F1iwVJKcsdjVGzKMEP/+AIkWwBASszqR69vNwQCev4wn2b
-         Th3D69QFDEN9fOqPBicr2aTJ2KF3PddBGE+cy9h5EXOcb3fhWy1aD4DRH4ez2Vrf57CK
-         r7u6UFFW3jr6CLv32F9BgGZsEHnf4fYqJQUnQINWkV3hoK701DrXN6WEoOmq+3KBHl4B
-         YR6Q==
+        bh=txkFZci/pgsXaxnR/38VBVYwmC/OcvuhAyTTbLIrlLk=;
+        b=QX2dfPNZ7iTk1JUsVkg255Q8C2IPQs0aohtn0aDYIvUSI0xq2jAAuTQZohRwav8kyR
+         gb4rCz1Eu40HieJyHQXEruCM7QbEjk8lec0SASFN0pntZ+zEL1tEf+x4ObqG5yUb51eP
+         01lDP0joyi84bQqEEeG5LDEvN/lRe97HFzfAuTo0C4ENNwUfK/4aqGO03+LkuRBFU06r
+         ZHkLuB0U8iKnNS4RQ/HQrxVnsj+97TJZTLb7p6Yr2kfE7OK+dlmghdak51yi5cPV/uTT
+         roIfYMrtG2gDmS6ZZoeM8+wza9cohtKRXWMnncCVV2soioFsPa3zfk+KeRBUxToMfdLR
+         FkBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705437825; x=1706042625;
+        d=1e100.net; s=20230601; t=1705437922; x=1706042722;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=22jyeaAES+kz8Hg4ntOJsukTiv9OkKs46DcXVyNEJTs=;
-        b=ZlQ153RFQ6iWutXX5P/ptTjK1jZXiqXKWFEGrf3WMoWwyH97ZYKhWQP79dJb7U2aUa
-         50UtkJmRSNTrc/mmw1HhT834I0ZPgMDta5drGlMItwxsJpuKCrpK0c+eKIkh4nh536B2
-         oWh/KKFEIthkduoGuQTyhvNM8NYb7sgxma1gmVIF8cfDcpDWQNh6Y/Scs35UIHI+qqnT
-         2ZwDQNKJIf5Sf/484G2ePOeqEKQ6/+y9SxayFtwyQl/7GC9SjXgFT4Zr0ttApLNwQhoK
-         VWIEPJrXmLL/8zD9eSOaYIjFECK/5F2nUdGa2+8Fl1mOpRFP+hvOYqeIYqB2j+zDOPk/
-         SQ6A==
-X-Gm-Message-State: AOJu0YwM6r2y/qbE5Ff/A9Tb9lvMzOSyv0X2K+OhxvcBG9QSbKS1SdQb
-	m4nH8dNJJm7eagchNaFZwWJ/jBjHgZR09A==
-X-Google-Smtp-Source: AGHT+IGtRFyxikoY0ukF5REg3tnlz3401jAWmQD327xf257XtFX+iLMVSmAceT0l1tsLj5bHQGX8bA==
-X-Received: by 2002:a17:906:fe46:b0:a27:7de8:9cd9 with SMTP id wz6-20020a170906fe4600b00a277de89cd9mr3368634ejb.23.1705437825488;
-        Tue, 16 Jan 2024 12:43:45 -0800 (PST)
+        bh=txkFZci/pgsXaxnR/38VBVYwmC/OcvuhAyTTbLIrlLk=;
+        b=pmc62WqGly3n8oJQK7L2EaLriWQJ0WaaXqLkY2KSJlegJNYIFmVAHJ+h/N0D6ct4rr
+         eHp6tmJoTuH9/vuu4+KTqxF+eqKDiPsM9Hg+R4p+vgj8JTavcdGbEK2bwkVapcbaFTJk
+         U1ls1V/FjZKsIyssU7uOrob4Ws34v0F1tb1C5t5KQVxbXsS/9HhA5OHSLO/4Ysx5B+CC
+         Gq6kqNSYan2EvkRYlqAX3WY2NmlZjJWCYzH9J0sJCTq7GFeukZlCV7Fv8jEcuDASwCxB
+         Q4wloiRdUM0O0OnarVH3d84/9lXGYKHukGDI4c3dYtFbPq1mM2fAvV4ma/2Gtn53WJHb
+         Eozg==
+X-Gm-Message-State: AOJu0Yz8SYmojBwydh6ovMsEiQYsjecpCrwgWLkLgLOZ99ACQ0EJlk3A
+	BjwUcUcf+Nx2AYfVJ3/jBpZVWzTHhQM8fg==
+X-Google-Smtp-Source: AGHT+IGGcXxw/R0mm39DaU/LVmJ6coh0dFZ6uHogacHYaydxCmMOz/aPNXG/4aLNp003Lf0G81ZpGA==
+X-Received: by 2002:a05:6512:39d5:b0:50e:2f43:8b7f with SMTP id k21-20020a05651239d500b0050e2f438b7fmr4218175lfu.13.1705437922134;
+        Tue, 16 Jan 2024 12:45:22 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id st6-20020a170907c08600b00a2ce3230351sm5448862ejc.37.2024.01.16.12.43.43
+        by smtp.gmail.com with ESMTPSA id st6-20020a170907c08600b00a2ce3230351sm5448862ejc.37.2024.01.16.12.45.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jan 2024 12:43:45 -0800 (PST)
-Message-ID: <0c9ea547-eaa5-4446-9d6c-e6fcc289ec4a@linaro.org>
-Date: Tue, 16 Jan 2024 21:43:41 +0100
+        Tue, 16 Jan 2024 12:45:21 -0800 (PST)
+Message-ID: <d90d035b-c63b-4bb2-a84b-9627fca10eee@linaro.org>
+Date: Tue, 16 Jan 2024 21:45:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -78,8 +78,8 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT
- schema format
+Subject: Re: [PATCH v2 1/3] dt-bindings: display: convert Atmel's HLCDC to DT
+ schema
 Content-Language: en-US
 To: Dharma Balasubiramani <dharma.b@microchip.com>,
  conor.dooley@microchip.com, sam@ravnborg.org, bbrezillon@kernel.org,
@@ -93,7 +93,7 @@ To: Dharma Balasubiramani <dharma.b@microchip.com>,
  u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
 Cc: linux4microchip@microchip.com
 References: <20240116113800.82529-1-dharma.b@microchip.com>
- <20240116113800.82529-4-dharma.b@microchip.com>
+ <20240116113800.82529-2-dharma.b@microchip.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -139,110 +139,33 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240116113800.82529-4-dharma.b@microchip.com>
+In-Reply-To: <20240116113800.82529-2-dharma.b@microchip.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 16/01/2024 12:38, Dharma Balasubiramani wrote:
-> Convert the atmel,hlcdc binding to DT schema format.
-> 
-> Adjust the clock-names property to clarify that the LCD controller expects
-> one of these clocks (either sys_clk or lvds_pll_clk to be present but not
-> both) along with the slow_clk and periph_clk. This alignment with the actual
-> hardware requirements will enable accurate device tree configuration for
-> systems using the HLCDC IP.
+On 16/01/2024 12:37, Dharma Balasubiramani wrote:
+> Convert the existing DT binding to DT schema of the Atmel's HLCDC display
+> controller.
 > 
 > Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
 > ---
 > changelog
 > v1 -> v2
 > - Remove the explicit copyrights.
-> - Modify title (not include words like binding/driver).
+> - Modify filename like compatible.
+> - Modify title (drop words like binding/driver).
 > - Modify description actually describing the hardware and not the driver.
-> - Add details of lvds_pll addition in commit message.
+> - Remove pinctrl properties which aren't required.
 > - Ref endpoint and not endpoint-base.
-> - Fix coding style.
-> 
-> Note: Renaming hlcdc-display-controller, hlcdc-pwm to generic names throws
-> errors from the existing DTS files.
-> ...
-> /home/dharma/Mainline/linux/arch/arm/boot/dts/microchip/at91sam9n12ek.dtb:
-> hlcdc@f8038000: 'hlcdc-display-controller' does not match any of the
-> regexes: 'pinctrl-[0-9]+'
+> - Drop redundant info about bus-width description and add ref to video-interfaces.
+> - Move 'additionalProperties' after 'Required'.
+> - Drop parent node and it's other sub-device node which are not related here.
+> - Add compatible to example 2 and add comments that bus-width is the diff between two examples.
 > ---
->  .../devicetree/bindings/mfd/atmel,hlcdc.yaml  | 105 ++++++++++++++++++
->  .../devicetree/bindings/mfd/atmel-hlcdc.txt   |  56 ----------
->  2 files changed, 105 insertions(+), 56 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
-> new file mode 100644
-> index 000000000000..f624b60b76fb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
-> @@ -0,0 +1,105 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/atmel,hlcdc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Atmel's HLCD Controller
-> +
-> +maintainers:
-> +  - Nicolas Ferre <nicolas.ferre@microchip.com>
-> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
-> +  - Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> +
-> +description: |
-> +  The Atmel HLCDC (HLCD Controller) IP available on Atmel SoCs exposes two
-> +  subdevices
-> +    # a PWM chip:
-> +    # a Display Controller:
 
-This is a friendly reminder during the review process.
-
-It seems my or other reviewer's previous comments were not fully
-addressed. Maybe the feedback got lost between the quotes, maybe you
-just forgot to apply it. Please go back to the previous discussion and
-either implement all requested changes or keep discussing them.
-
-Thank you.
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - atmel,at91sam9n12-hlcdc
-> +      - atmel,at91sam9x5-hlcdc
-> +      - atmel,sama5d2-hlcdc
-> +      - atmel,sama5d3-hlcdc
-> +      - atmel,sama5d4-hlcdc
-> +      - microchip,sam9x60-hlcdc
-> +      - microchip,sam9x75-xlcdc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 3
-> +
-> +  clock-names:
-> +    anyOf:
-> +      - items:
-> +          - enum:
-> +              - sys_clk
-> +              - lvds_pll_clk
-> +      - contains:
-> +          const: periph_clk
-> +      - contains:
-> +          const: slow_clk
-
-NAK. You just ignored entire review.
+Please respond to review comments and acknowledge you implement each of
+them. I don't think you did here everything I pointed out. The next
+patch for sure misses things.
 
 Best regards,
 Krzysztof
