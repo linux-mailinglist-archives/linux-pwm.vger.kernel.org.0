@@ -1,327 +1,212 @@
-Return-Path: <linux-pwm+bounces-809-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-810-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1EAC82F3DE
-	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 19:14:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC96682F49C
+	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 19:50:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 88D4C287DDB
-	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 18:14:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F07701C238BA
+	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 18:50:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE0261CD23;
-	Tue, 16 Jan 2024 18:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6A9D1CF95;
+	Tue, 16 Jan 2024 18:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g6N2n1YU"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EYvnLMYD"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904C71CD0B;
-	Tue, 16 Jan 2024 18:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A501D520;
+	Tue, 16 Jan 2024 18:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705428879; cv=none; b=Rm8FFZ7Y+9Ym9W5RSn0uL5FuWniYfhboxIcORRp/cJDRhzGQO9mkdqQh6Pc1hN2TQ46vT2zTRRCM1RxW4XE9Isnfq577lsA3SPxOAbwqgOsDSO1Mkl6HfYEN/Cojhtf3jxuX/uWRb9BNLP//BRi3cn2HfVUvWZUPJ9sr31xmzkA=
+	t=1705431018; cv=none; b=HsRLyvFNEO2MkQuBC5FpPDdZjhFrlgCKhBS+YtGz3sSO1mbE4BNdoX7V0F/YDDLT1nK/rZqbnc/uFGL0o/rkZ9oTceluO1CPiVrPfBy+44NYnCGqrJIYmYBeUwzWyZI+X/UXDf/YuW9nm+gSZkkeflXSQjXu0ITNjqSqb4uo69U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705428879; c=relaxed/simple;
-	bh=XqGWFN9qw3I7S+8oXQ8vgsY2LlPy6DwWiwVeRJX8jtY=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To; b=ASnkLgqO2WT5Iwh1tW2ZomKiQwrqkRQL8Dy9tlpMCS4XBdf3C4mH2VoYChH35qN2BdfIVxFrSxBl0HLAqkPKKf5jkCNQM6SWOdOSMqGMIMLC+yspcNaq/niLBv0TXALILOi4waROX/CvHGKuVEArDYZHtzxg5SO4YWJDAThc65w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g6N2n1YU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86F0DC433F1;
-	Tue, 16 Jan 2024 18:14:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705428879;
-	bh=XqGWFN9qw3I7S+8oXQ8vgsY2LlPy6DwWiwVeRJX8jtY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g6N2n1YUqR9yoVur4zZBArRAgQpi1c4PbX7YJQiZkk5Tk0FUOQ36hxNBnsT2IWICQ
-	 R9tNDvd1IYAPiW3TvfFK6jgDw3/m9kgPp0JZolwPMRaIq4EdIKze144Q3Xy18C96sZ
-	 PM7Ep81S2x6TUhvw/vewRFgnsBeqfoZP72vQP1vfHcnoXCKi6wXjbYqIOQG4h4dVuc
-	 RijxzIZEfmIdbdilNNUQ/NPXJ8yMTlILAocahmsTk9CbyY06cvafMZ7SjR0w1dInwZ
-	 qBdPcdZ7gVcF+sws/q8ujl6BGSRO8q3zXUz0OWA47XdnRtyA2S/+nhdqudhUESHd/2
-	 lF44R599rR5Ew==
-Date: Tue, 16 Jan 2024 18:14:32 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: conor.dooley@microchip.com, sam@ravnborg.org, bbrezillon@kernel.org,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	lee@kernel.org, thierry.reding@gmail.com,
-	u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-	linux4microchip@microchip.com
-Subject: Re: [PATCH v2 3/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT
- schema format
-Message-ID: <20240116-flatten-animate-f30842548e9d@spud>
-References: <20240116113800.82529-1-dharma.b@microchip.com>
- <20240116113800.82529-4-dharma.b@microchip.com>
+	s=arc-20240116; t=1705431018; c=relaxed/simple;
+	bh=u9HtAreXvZzRNiP6Z/mv4lczqcqgpaGLfP2V36U+ZO8=;
+	h=Received:DKIM-Signature:Received:Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:Content-Language:To:CC:
+	 References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-Originating-IP:X-ClientProxiedBy:X-QCInternal:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-GUID:
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details; b=O1PmgqplueSvGIQJPSCiLfQH20XwdN/fX4jdnCRgz44Nd/UC70JeEojwcpdH+x1ek+zMv7olqlQlFlrCP0WVAKGCwOYx4eZmxZ7ZEx9f1A5ktQ7rq27wxP1eWRkUi0rh+nUpg4Wpt0//mWuj/4tSxA9N389ISwfdWZ0pdoGNIB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EYvnLMYD; arc=none smtp.client-ip=205.220.180.131
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40GHJqcE002807;
+	Tue, 16 Jan 2024 18:50:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=RhJ8xMqSq4+fViYmhVIvXju/z80MFnRKlqjM76zqqC8=; b=EY
+	vnLMYDbg+PpcPxubij3rLp7H+lyFZmVAvrPDIDYnk6+NmTyVKZ0dZT6pu1l+8JUy
+	qmqx6H+RhL3QWuWwbUEOxrI7GOE6FDIMP7VL1dEMf1A4b7uUkS4t0ZTqld9HgXgk
+	bK5xfvSI3PuhSaE7Hy+crhuiz5XFz24cRn/F+qxKoBY0ntDWWezS6m9chfXQkAJ2
+	S6Zdyr0dtXbRfrkQeYZHafd93/adpNV8AV7AK3mprx+tQeXpkV+gPKAeORjV6g6V
+	p/afQoEnPKV6sQrZpOVQ5iTvquGhoNEdnPZ43Iu23FK29RUeut1MoWfPL2VXzzT4
+	92CiJEZqhb8LStdsyLUQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vnnajhm3b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jan 2024 18:50:00 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40GInwWh009909
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jan 2024 18:49:58 GMT
+Received: from [10.110.59.103] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 16 Jan
+ 2024 10:49:58 -0800
+Message-ID: <dc8a58ab-00df-bfd4-39f7-ec196e578260@quicinc.com>
+Date: Tue, 16 Jan 2024 10:49:49 -0800
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="+ECF9lc6dEAb7wF0"
-Content-Disposition: inline
-In-Reply-To: <20240116113800.82529-4-dharma.b@microchip.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: (subset) [PATCH v8 0/7] Add support for LUT PPG
+Content-Language: en-US
+To: Lee Jones <lee@kernel.org>, <pavel@ucw.cz>, <thierry.reding@gmail.com>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <agross@kernel.org>, <andersson@kernel.org>
+CC: <luca.weiss@fairphone.com>, <konrad.dybcio@linaro.org>,
+        <u.kleine-koenig@pengutronix.de>, <quic_subbaram@quicinc.com>,
+        <quic_gurus@quicinc.com>, <linux-leds@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pwm@vger.kernel.org>
+References: <20231221185838.28440-1-quic_amelende@quicinc.com>
+ <170496750168.1654525.11132648331912183091.b4-ty@kernel.org>
+ <20240111100747.GM7948@google.com>
+From: Anjelique Melendez <quic_amelende@quicinc.com>
+In-Reply-To: <20240111100747.GM7948@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: nCYl4rsDxYDo4V1V6G-YW2wRQ5an-h_m
+X-Proofpoint-ORIG-GUID: nCYl4rsDxYDo4V1V6G-YW2wRQ5an-h_m
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 clxscore=1011 priorityscore=1501 impostorscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 adultscore=0 phishscore=0
+ bulkscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2311290000 definitions=main-2401160148
 
 
---+ECF9lc6dEAb7wF0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 16, 2024 at 05:08:00PM +0530, Dharma Balasubiramani wrote:
-> Convert the atmel,hlcdc binding to DT schema format.
->=20
-> Adjust the clock-names property to clarify that the LCD controller expects
-> one of these clocks (either sys_clk or lvds_pll_clk to be present but not
-> both) along with the slow_clk and periph_clk. This alignment with the act=
-ual
-> hardware requirements will enable accurate device tree configuration for
-> systems using the HLCDC IP.
->=20
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-> ---
-> changelog
-> v1 -> v2
-> - Remove the explicit copyrights.
-> - Modify title (not include words like binding/driver).
-> - Modify description actually describing the hardware and not the driver.
-> - Add details of lvds_pll addition in commit message.
-> - Ref endpoint and not endpoint-base.
-> - Fix coding style.
->=20
-> Note: Renaming hlcdc-display-controller, hlcdc-pwm to generic names throws
-> errors from the existing DTS files.
+On 1/11/2024 2:07 AM, Lee Jones wrote:
+> On Thu, 11 Jan 2024, Lee Jones wrote:
+> 
+>> On Thu, 21 Dec 2023 10:58:30 -0800, Anjelique Melendez wrote:
+>>> In certain PMICs, LUT pattern and LPG configuration is stored in SDAM
+>>> modules instead of LUT peripheral. This feature is called PPG.
+>>>
+>>> This change series adds support for PPG. Thanks!
+>>> Changes since v7:
+>>>   - Patch 4/7
+>>>     - Initialize hi/lo_pause variables in lpg_pattern_set()
+>>> Changes since v6:
+>>>   - Patch 2/7
+>>>     - Removed required by constraint on PPG dt properties
+>>> Changes since v5:
+>>>   - Patch 4/7
+>>>     - Update logic so that multicolor led device triggers pattern
+>>>       on all LEDs at the same time
+>>>     - Update nitpicks from Lee
+>>>   - Patch 5/7
+>>>     - Update nitpicks from Lee
+>>> Changes since v4:
+>>>   - Patch 3/7
+>>>     - Get rid of r/w helpers
+>>>     - Use regmap_read_poll_timeout() in qcom_pbs_wait_for_ack()
+>>>     - Update error path in qcom_pbs_trigger_event()
+>>>     - Fix reverse christmas tree
+>>>   - Patch 4/7
+>>>     - Get rid of r/w helpers
+>>>     - Update variables to use "sdam" instead of "nvmem"
+>>>     - Fix comments
+>>>     - Fix reverse christmas tree
+>>>     - Update lpg_pattern_set() logic
+>>>   - Patch 5/7
+>>>     - Removed sdam_lut_base from lpg_data
+>>> Changes since v3:
+>>>   - Patch 4/7
+>>>     - Fix function returns
+>>>     - Move register definition to top of file
+>>>     - Revert max_brightness and probe accidental changes
+>>>     - Combine init_sdam() and parse_sdam()
+>>>     - Change error prints in probe to use dev_err_probe
+>>>     - Remove ppg_en variable
+>>>     - Update when pbs triggers are set/cleared
+>>>   - Patch 6/7
+>>>     - Remove use of nvmem_count
+>>>     - Move register definition to top of file
+>>>     - Remove lpg_get_sdam_lut_idx()
+>>> Changes since v2:
+>>>   - Patch 1/7
+>>>     - Fix dt_binding_check error
+>>>     - Rename binding file to match compatible
+>>>     - Iclude SoC specific comptaibles
+>>>   - Patch 2/7
+>>>     - Update nvmem-names list
+>>>   - Patch 3/7
+>>>     - Update EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
+>>>     - Fix return/break logic in qcom_pbs_wait_for_ack()
+>>>     - Update iterators to be int
+>>>     - Add constants
+>>>     - Fix function calls in qcom_pbs_trigger_event()
+>>>     - Remove unnessary comments
+>>>     - Return -EPROBE_DEFER from get_pbs_client_device()
+>>> Changes since v1:
+>>>   - Patch 1/7
+>>>     - Fix dt_binding_check errors
+>>>     - Update binding description
+>>>   - Path 2/7
+>>>     - Fix dt_binding_check errors
+>>>     - Update per variant constraints
+>>>     - Update nvmem description
+>>>   - Patch 3/7
+>>>     - Update get_pbs_client_device()
+>>>     - Drop use of printk
+>>>     - Remove unused function
+>>>
+>>> [...]
+>>
+>> Applied, thanks!
+>>
+>> [2/7] dt-bindings: leds: leds-qcom-lpg: Add support for LPG PPG
+>>       commit: 2fdd08fec742e0c94a2a06a0c9ee0912b6f7ac39
+>> [4/7] leds: rgb: leds-qcom-lpg: Add support for PPG through single SDAM
+>>       commit: 07a1afc8fbb77cc893e2285112482902ac88a295
+>> [5/7] leds: rgb: leds-qcom-lpg: Update PMI632 lpg_data to support PPG
+>>       commit: f4f5f6a6f8d7bcc8efd0eee6751def22c9a38fd0
+>> [6/7] leds: rgb: leds-qcom-lpg: Include support for PPG with dedicated LUT SDAM
+>>       commit: 7399a927272de1fc42f4da8af1d8d60b65a15b84
+>> [7/7] leds: rgb: Update PM8350C lpg_data to support two-nvmem PPG Scheme
+>>       commit: 7b4066868689b1f341e61957611d252b6fa8cafc
+> 
+> This set had a bunch of checkpatch.pl errors.
+> 
+> Please fix them up subsequently.
+> 
+Hi Lee,
 
-I don't think that is important. If there is no code that depends on the
-node names (and there is not in the mainline kernel, not sure about
-anywhere else) the binding and the devicetree could easily adopt generic
-node names.
+Just wanted to get some quick clarification. Would you like checkpatch.pl issues fixed in a new version
+of this series or would you like a new patch to fix all the issues? Looks like these patches are in your
+for-leds-next-next branch so I am guessing you would like a new follow up patch
+but I just wanted to double check.
 
-> ...
-> /home/dharma/Mainline/linux/arch/arm/boot/dts/microchip/at91sam9n12ek.dtb:
-> hlcdc@f8038000: 'hlcdc-display-controller' does not match any of the
-> regexes: 'pinctrl-[0-9]+'
-> ---
->  .../devicetree/bindings/mfd/atmel,hlcdc.yaml  | 105 ++++++++++++++++++
->  .../devicetree/bindings/mfd/atmel-hlcdc.txt   |  56 ----------
->  2 files changed, 105 insertions(+), 56 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml b/Doc=
-umentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
-> new file mode 100644
-> index 000000000000..f624b60b76fb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
-> @@ -0,0 +1,105 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/atmel,hlcdc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Atmel's HLCD Controller
-> +
-> +maintainers:
-> +  - Nicolas Ferre <nicolas.ferre@microchip.com>
-> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
-> +  - Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> +
-> +description: |
-> +  The Atmel HLCDC (HLCD Controller) IP available on Atmel SoCs exposes t=
-wo
-> +  subdevices
-> +    # a PWM chip:
-> +    # a Display Controller:
-
-The formatting here is a bit odd. I'd truncate this to
-"subdevices: a PWM chip and a display controller." & drop the |.
-
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - atmel,at91sam9n12-hlcdc
-> +      - atmel,at91sam9x5-hlcdc
-> +      - atmel,sama5d2-hlcdc
-> +      - atmel,sama5d3-hlcdc
-> +      - atmel,sama5d4-hlcdc
-> +      - microchip,sam9x60-hlcdc
-> +      - microchip,sam9x75-xlcdc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 3
-> +
-> +  clock-names:
-> +    anyOf:
-> +      - items:
-> +          - enum:
-> +              - sys_clk
-> +              - lvds_pll_clk
-> +      - contains:
-> +          const: periph_clk
-> +      - contains:
-> +          const: slow_clk
-> +    maxItems: 3
-
-Why not just:
-  clock-names:
-    items:
-      - const: periph_clk
-      - enum: [sys_clk, lvds_pll_clk]
-      - const: slow_clk
-
-Cheers,
-Conor.
-
-> +
-> +  hlcdc-display-controller:
-> +    $ref: /schemas/display/atmel/atmel,hlcdc-display-controller.yaml
-> +
-> +  hlcdc-pwm:
-> +    $ref: /schemas/pwm/atmel,hlcdc-pwm.yaml
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/at91.h>
-> +    #include <dt-bindings/dma/at91.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    lcd_controller: lcd-controller@f0030000 {
-> +      compatible =3D "atmel,sama5d3-hlcdc";
-> +      reg =3D <0xf0030000 0x2000>;
-> +      clocks =3D <&lcdc_clk>, <&lcdck>, <&clk32k>;
-> +      clock-names =3D "periph_clk", "sys_clk", "slow_clk";
-> +      interrupts =3D <36 IRQ_TYPE_LEVEL_HIGH 0>;
-> +
-> +      hlcdc-display-controller {
-> +        compatible =3D "atmel,hlcdc-display-controller";
-> +        pinctrl-names =3D "default";
-> +        pinctrl-0 =3D <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        port@0 {
-> +          #address-cells =3D <1>;
-> +          #size-cells =3D <0>;
-> +          reg =3D <0>;
-> +
-> +          hlcdc_panel_output: endpoint@0 {
-> +            reg =3D <0>;
-> +            remote-endpoint =3D <&panel_input>;
-> +          };
-> +        };
-> +      };
-> +
-> +      hlcdc-pwm {
-> +        compatible =3D "atmel,hlcdc-pwm";
-> +        pinctrl-names =3D "default";
-> +        pinctrl-0 =3D <&pinctrl_lcd_pwm>;
-> +        #pwm-cells =3D <3>;
-> +      };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt b/Docu=
-mentation/devicetree/bindings/mfd/atmel-hlcdc.txt
-> deleted file mode 100644
-> index 7de696eefaed..000000000000
-> --- a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
-> +++ /dev/null
-> @@ -1,56 +0,0 @@
-> -Device-Tree bindings for Atmel's HLCDC (High LCD Controller) MFD driver
-> -
-> -Required properties:
-> - - compatible: value should be one of the following:
-> -   "atmel,at91sam9n12-hlcdc"
-> -   "atmel,at91sam9x5-hlcdc"
-> -   "atmel,sama5d2-hlcdc"
-> -   "atmel,sama5d3-hlcdc"
-> -   "atmel,sama5d4-hlcdc"
-> -   "microchip,sam9x60-hlcdc"
-> -   "microchip,sam9x75-xlcdc"
-> - - reg: base address and size of the HLCDC device registers.
-> - - clock-names: the name of the 3 clocks requested by the HLCDC device.
-> -   Should contain "periph_clk", "sys_clk" and "slow_clk".
-> - - clocks: should contain the 3 clocks requested by the HLCDC device.
-> - - interrupts: should contain the description of the HLCDC interrupt line
-> -
-> -The HLCDC IP exposes two subdevices:
-> - - a PWM chip: see ../pwm/atmel-hlcdc-pwm.txt
-> - - a Display Controller: see ../display/atmel/hlcdc-dc.txt
-> -
-> -Example:
-> -
-> -	hlcdc: hlcdc@f0030000 {
-> -		compatible =3D "atmel,sama5d3-hlcdc";
-> -		reg =3D <0xf0030000 0x2000>;
-> -		clocks =3D <&lcdc_clk>, <&lcdck>, <&clk32k>;
-> -		clock-names =3D "periph_clk","sys_clk", "slow_clk";
-> -		interrupts =3D <36 IRQ_TYPE_LEVEL_HIGH 0>;
-> -
-> -		hlcdc-display-controller {
-> -			compatible =3D "atmel,hlcdc-display-controller";
-> -			pinctrl-names =3D "default";
-> -			pinctrl-0 =3D <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
-> -			#address-cells =3D <1>;
-> -			#size-cells =3D <0>;
-> -
-> -			port@0 {
-> -				#address-cells =3D <1>;
-> -				#size-cells =3D <0>;
-> -				reg =3D <0>;
-> -
-> -				hlcdc_panel_output: endpoint@0 {
-> -					reg =3D <0>;
-> -					remote-endpoint =3D <&panel_input>;
-> -				};
-> -			};
-> -		};
-> -
-> -		hlcdc_pwm: hlcdc-pwm {
-> -			compatible =3D "atmel,hlcdc-pwm";
-> -			pinctrl-names =3D "default";
-> -			pinctrl-0 =3D <&pinctrl_lcd_pwm>;
-> -			#pwm-cells =3D <3>;
-> -		};
-> -	};
-> --=20
-> 2.25.1
->=20
-
---+ECF9lc6dEAb7wF0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZabHiAAKCRB4tDGHoIJi
-0uasAQCiVJvgHAWSIdArOBPKYA0i6KIc1zXakFfntet4tkWOYwD/QHfy3s4v0Omb
-AqUVcZAx5XPwUIZXDytRbbmWLaHJ/QM=
-=yXNW
------END PGP SIGNATURE-----
-
---+ECF9lc6dEAb7wF0--
+Thanks,
+Anjelique
 
