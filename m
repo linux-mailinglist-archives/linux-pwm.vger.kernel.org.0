@@ -1,497 +1,179 @@
-Return-Path: <linux-pwm+bounces-791-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-792-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6200D82E226
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jan 2024 22:18:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A24E82E816
+	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 04:10:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C447C1F2112B
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jan 2024 21:18:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB1A31C229F3
+	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 03:10:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21BC81B26E;
-	Mon, 15 Jan 2024 21:18:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57B3C6FC8;
+	Tue, 16 Jan 2024 03:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="GNwfxIOK"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2130.outbound.protection.outlook.com [40.107.255.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82601B263
-	for <linux-pwm@vger.kernel.org>; Mon, 15 Jan 2024 21:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rPULS-0000Ix-3d; Mon, 15 Jan 2024 22:18:10 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rPULQ-0006FH-R8; Mon, 15 Jan 2024 22:18:08 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rPULQ-000PRz-2Q;
-	Mon, 15 Jan 2024 22:18:08 +0100
-Date: Mon, 15 Jan 2024 22:18:04 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Trevor Gamblin <tgamblin@baylibre.com>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	michael.hennerich@analog.com, nuno.sa@analog.com, devicetree@vger.kernel.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
-Subject: Re: [PATCH 2/2] pwm: Add driver for AXI PWM generator
-Message-ID: <gbessnmierg5gvdguhwauoe2mxr3krwcfk2afhazrqvz45md64@itbchezepncg>
-References: <20240115201222.1423626-1-tgamblin@baylibre.com>
- <20240115201222.1423626-3-tgamblin@baylibre.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C946F79C0;
+	Tue, 16 Jan 2024 03:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b0McGYmicZUc2ylPR4cinID7aZi3hRcIuHb4HTHKoydIruRs1YgRhCWhUiP06hF1ACe8dzU3CKP/60szXACmkZ3YkRfhC9PsgtZDwXBN+fAsoZZVsT4JUDb/ReS34Able9IJM5BFAEa5Fw0gdhM9/G3dVbB4Pe1ITUOhGjh9eS7h/sM3hagpI6lE8Y1l/QQ4SDLKBm8uSDS1D149cedkKNFH6WFzkLdNsQGMiURcLyUQ2xBGPsKRnX3DOHrpznLIoHDcUoIdR81OLZ8U3iilRH76t4xEEMcZrGfKVvcyONhB+qIe5bo46ifvYtkmPiA2gdR7/Xh/YEllktrn7SZgmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AB/UIKajGKhyCkanyKdU+bx3DrAHiicmMJi4QCuHaRc=;
+ b=Hjp9OvpbuQsiw1iZ6rFKVbMFLmqWovWcK9PU67A6VxC7Y3Ax0dEOAtFN3v9Cxo0qNIAotNbwySdw4pSMiwzRxzfg2kOj/RcK1VzU9uNDmsIQjEGdxDq9cVTc/zqZ8sFJZFqUeDJJ/WbcSh2N3we5685VMbEHluZ+LG9mcQz5ls/wQFkSgDgbhgCiIeeWIDw0C7WE4e/iPVQFnjBgeqx52SYA7iwW0ydFmz+iV70xbcR5x0b+XXPrPbOdE0bbW3UAW/3uyBZXRz/mMwssN7jxWdoDGVZu40mPQhIIMCMAwEkF7OERlrTTSEtB4QgMVfgyo9aZz2VyyxLdNL4jIg8qdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AB/UIKajGKhyCkanyKdU+bx3DrAHiicmMJi4QCuHaRc=;
+ b=GNwfxIOK1iL3LkUk5VAPc+l7JBLdZL9JL0emJ4lu9/9kd8lG07eSCW7nSIE67aPm6CmG2reWwAEc4fY047wUNshpMv7zoxuFK5MSyozxiqaeyxf5VKHN9u7FbfdoXtH/k547nN3j0g8YGgYknGQR16dyGCarrOWLnLIncYzg5y9MFhKT3DZSUs3MooiUyNsRM5ezdHRr5VvYCrRDEe5kEtF5EAe2ETP34EMhimMRlvABrV19h9X78iuygLkjPLPSZA28zIGsu/BqjGlRIg4Y2O5t2R0DEGGZ7GSd5PaxJbDNnAgEYKGzDF9NvH4Eq2fvyitudfkD4yMzCAPRMTcu9g==
+Received: from OSQPR06MB7252.apcprd06.prod.outlook.com (2603:1096:604:29c::6)
+ by OSQPR06MB7153.apcprd06.prod.outlook.com (2603:1096:604:298::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.23; Tue, 16 Jan
+ 2024 03:10:00 +0000
+Received: from OSQPR06MB7252.apcprd06.prod.outlook.com
+ ([fe80::36df:4bd:1991:976b]) by OSQPR06MB7252.apcprd06.prod.outlook.com
+ ([fe80::36df:4bd:1991:976b%5]) with mapi id 15.20.7181.026; Tue, 16 Jan 2024
+ 03:09:59 +0000
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, "jdelvare@suse.com"
+	<jdelvare@suse.com>, "linux@roeck-us.net" <linux@roeck-us.net>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"joel@jms.id.au" <joel@jms.id.au>, "andrew@aj.id.au" <andrew@aj.id.au>,
+	"corbet@lwn.net" <corbet@lwn.net>, "thierry.reding@gmail.com"
+	<thierry.reding@gmail.com>, "u.kleine-koenig@pengutronix.de"
+	<u.kleine-koenig@pengutronix.de>, "p.zabel@pengutronix.de"
+	<p.zabel@pengutronix.de>, "naresh.solanki@9elements.com"
+	<naresh.solanki@9elements.com>, "linux-hwmon@vger.kernel.org"
+	<linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
+	<linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-pwm@vger.kernel.org"
+	<linux-pwm@vger.kernel.org>, BMC-SW <BMC-SW@aspeedtech.com>,
+	"patrick@stwcx.xyz" <patrick@stwcx.xyz>
+Subject: Re: [PATCH v12 1/3] dt-bindings: hwmon: fan: Add fan binding to
+ schema
+Thread-Topic: [PATCH v12 1/3] dt-bindings: hwmon: fan: Add fan binding to
+ schema
+Thread-Index: AQHaQgZu5E6zHIhZfEy632aEYqumvLDapZqAgAEmR1s=
+Date: Tue, 16 Jan 2024 03:09:59 +0000
+Message-ID:
+ <OSQPR06MB72520F546A22DE55532A33E78B732@OSQPR06MB7252.apcprd06.prod.outlook.com>
+References: <20240108074348.735014-1-billy_tsai@aspeedtech.com>
+ <20240108074348.735014-2-billy_tsai@aspeedtech.com>
+ <54929342-7e06-4e39-a7e9-e5dc787406ce@linaro.org>
+In-Reply-To: <54929342-7e06-4e39-a7e9-e5dc787406ce@linaro.org>
+Accept-Language: en-US, zh-TW
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSQPR06MB7252:EE_|OSQPR06MB7153:EE_
+x-ms-office365-filtering-correlation-id: b3d79ad6-a9b7-4746-2096-08dc1640a010
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 3mXcEnYPgpcmqgiUtrRwGPQx4k2lKgXVASAiuwWM2+oTqIJQFCesvj6BcNn6iOhT3aaK/QTj9DF4DY17pjMZjZAjvcHwSvMciCnMa3mODu4lz5JKzhgBVVBSsgwyMnba7E5aWDbe/qRCw7w4jDHcQbs9XBFDniU9lIrX4yNi8wrzTMz8N5dIBDqZCqvMVtO5/tmFIlzVIkJvDufUVOt7/w7QP0rGoDS/IlZl7057/ujK9HKcyZTPjJvmSo3pv60pOnW/hQwVFItlxg3qumZsOd3Ss7T+NtncEMSSV/bv3V8+fCV2S9GosQv57v4KTF/ueoGs5sdpBvZF982dQgXqlVK+7gEXB6dI1HLu2SMa54s5mk34vCDXetzA0e1w7mpbzTwlRC4cwy+EAeQipVbfC1K/auk7QY3whZBoou4lsXtT4bvghVPGzYwFY4h48MYkMiDCuTrz7RYXLYHLYbnpnuaIo6zyO3AQZZmS5B3Xi14BI2P3FWED2i4QMYK6Q/1w6xURoWu4cfJ25OlQhFa1YtKvaw+0DAg0U3xQL+gm76+YqsvsdHuFy38353FhOmRGzvtW645McBknTj5kv31m1gbOgZ8kA0maMZTwgMkYZVlfs0bPiXJcuz1IHq+v2mLM
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSQPR06MB7252.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(366004)(39850400004)(136003)(346002)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(122000001)(38070700009)(38100700002)(55016003)(26005)(86362001)(33656002)(921011)(76116006)(9686003)(71200400001)(7696005)(66946007)(66556008)(66476007)(66446008)(110136005)(6506007)(55236004)(64756008)(316002)(7416002)(5660300002)(52536014)(8936002)(8676002)(2906002)(4744005)(41300700001)(478600001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?xkhvC97KVRpdSM/sJjVrrj4RJlBhDGzGLnI33Al7oT+KRRpPn+cA6Bum5w?=
+ =?iso-8859-1?Q?n1vxs4hRYm+igJke1Fai+tOt0PEA7DYGUexmSaOx9avmokD/WQLxen31Ko?=
+ =?iso-8859-1?Q?VGu8jUbcSl+lqNmO5r+FOebbV0km50TyGvi7Oo+xNB3+E5yDr3Byr9Hs8z?=
+ =?iso-8859-1?Q?P8AbSlY7GAXAZ1bQsaRvNWy4T30fVeO2zrFe1QFisDTkfj02iBEvHgSM0j?=
+ =?iso-8859-1?Q?C4Xgi3pBag1qMtW3SlFsYP8X1KKVMdn60y2buZr6Fg/RCqj6OhzeTl30ah?=
+ =?iso-8859-1?Q?z6pD50UVvoWcYX2LrxSTXFyug0k+Gb/pYxKNYCLFpAibiuI1o1byMo2VgJ?=
+ =?iso-8859-1?Q?23/0bpo2dS4lPeaTRR839crZG8kbj2zQ+klCtsIl9jDpzAgpp8hxbGvsJP?=
+ =?iso-8859-1?Q?/sO5/NJc8WmQmZn3V3cqHKugFETLuuElAtPgkp/3SxOVKBQQSIMGHz3hEY?=
+ =?iso-8859-1?Q?jyBc6BsudDomQ6k2QB1Imjo7pX8+zMxF73P0euXNtg0uaJrvxStF/4Cn+e?=
+ =?iso-8859-1?Q?baQqzAzmi7Ham17TnFpk4o2t2Z9ChK5yCifwBskHD/zBsQqyoVHvoKUPus?=
+ =?iso-8859-1?Q?8GiV/9sLsv1Q0OneKi7MyGSeAHWzc79lz1TsJxUOEz9vTRHVskkkTMVLYd?=
+ =?iso-8859-1?Q?XelSlOU4z8aSNY3+rc7s8HensB25O+XHuD8cHodEw4VWA8S4ZFyBhztw0L?=
+ =?iso-8859-1?Q?8RmYsSFPGg6J+oekSCtTJohD/zv+gwLZempRdDm9Djc1URdFEmzvx/M15Q?=
+ =?iso-8859-1?Q?UsuRgt52aengXHBECmvLu6Fc8KuvvZshvVQWFFItux9kttSvQbprnTN9sP?=
+ =?iso-8859-1?Q?C9IhJ0o6ztYDt/aMev3+IW5d4r7fqRhn01dpaW3a3CPKEoSOrJlc5pRDcl?=
+ =?iso-8859-1?Q?MNk5ef4sa0vkLBsXBLnJ+LMmN0OSK6/NWlDJoZDG6YmuLVVhQFV971p19+?=
+ =?iso-8859-1?Q?HVO32K6zw0FgEKawOGOgB/V6m+Ivr/aQquHQTBqRfnMetkDI4FG/ufWXFW?=
+ =?iso-8859-1?Q?bkLVRsFEutButxPmNrTPiRsP8lSxeHa4mkf8YPx15tSbfA+Nvtj5PC5fgd?=
+ =?iso-8859-1?Q?Jbs+gcAL18JmojFUQ1SeNSVHrqnqNO+4ddH2mQEHlW/U7Sz+MVk7FLnQda?=
+ =?iso-8859-1?Q?b6SmZIosbttqlevkaHZsopYSqJ7C8IQUJ3GcMXYYb6YMqg6gie0lL/z80T?=
+ =?iso-8859-1?Q?TBDeRORY+ahlNF5CBUEY4Eyr9wZpqxr2O2uxXN8fQMmr82pSS+Ahdsf40s?=
+ =?iso-8859-1?Q?ZM8HFC3AADv1in2r6aItnc7mGtR6HIQ1wrS6zjcFms6r7wK+SG2N2gTnH0?=
+ =?iso-8859-1?Q?fwG6e0k4b5XkJHuRv/qgnyD2bvUXfV0G/I3WDH/vkyLrFI4Q2OK5yMbgZZ?=
+ =?iso-8859-1?Q?yYqf775168RHLzLWaxaPhV10pUlbzS4b9vVsP6NQA3++qXpZlBR45OmIB4?=
+ =?iso-8859-1?Q?ongsUCK+nMj+ImNnxVABwryE+Wyo4u2yZwjgfjr9ZrYBn5bENdlDdKjoXq?=
+ =?iso-8859-1?Q?HFbQoPda1JK9H4QQvLd7Lt6t1Bw152Af/m0D4yAdFmj6K5MpKctQ+8zgjn?=
+ =?iso-8859-1?Q?GFA/e2VKh1K37nVsJnm6JrW5kckJqtcXHUYbIXK+y/3ZRlrKAcnve+1gEu?=
+ =?iso-8859-1?Q?vTVNAnz7tLgJZluZo9TZolEMJfWODjVmzL?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tx74ann2b5ciakvj"
-Content-Disposition: inline
-In-Reply-To: <20240115201222.1423626-3-tgamblin@baylibre.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSQPR06MB7252.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3d79ad6-a9b7-4746-2096-08dc1640a010
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2024 03:09:59.8568
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EPmaDbZ8gLFB/D3fi0VFxrTKxrneAUAP8RnYOiNPgc+GHsmV2gjIc7h7TGi/W1o9WgHBWFFDqSIXiuLHbHJxxnrQK67g/fRh1ftxllog2iQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSQPR06MB7153
 
-
---tx74ann2b5ciakvj
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello,
-
-On Mon, Jan 15, 2024 at 03:12:21PM -0500, Trevor Gamblin wrote:
-> From: Drew Fustini <dfustini@baylibre.com>
->=20
-> Add support for the Analog Devices AXI PWM Generator. This device is an
-> FPGA-implemented peripheral used as PWM signal generator and can be
-> interfaced with AXI4. The register map of this peripheral makes it
-> possible to configure the period and duty cycle of the output signal.
->=20
-> Link: https://wiki.analog.com/resources/fpga/docs/axi_pwm_gen
-> Co-developed-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> Co-developed-by: David Lechner <dlechner@baylibre.com>
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> Signed-off-by: Drew Fustini <dfustini@baylibre.com>
-> Co-developed-by: Trevor Gamblin <tgamblin@baylibre.com>
-> Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
-> ---
->  MAINTAINERS                  |   1 +
->  drivers/pwm/Kconfig          |  12 ++
->  drivers/pwm/Makefile         |   1 +
->  drivers/pwm/pwm-axi-pwmgen.c | 229 +++++++++++++++++++++++++++++++++++
->  4 files changed, 243 insertions(+)
->  create mode 100644 drivers/pwm/pwm-axi-pwmgen.c
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7b0f3aec5381..3abe90dec82e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3422,6 +3422,7 @@ L:	linux-pwm@vger.kernel.org
->  S:	Supported
->  W:	https://ez.analog.com/linux-software-drivers
->  F:	Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
-> +F:	drivers/pwm/pwm-axi-pwmgen.c
-> =20
->  AXXIA I2C CONTROLLER
->  M:	Krzysztof Adamski <krzysztof.adamski@nokia.com>
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 4b956d661755..b105c0db4936 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -98,6 +98,18 @@ config PWM_ATMEL_TCB
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-atmel-tcb.
-> =20
-> +config PWM_AXI_PWMGEN
-> +	tristate "Analog Devices AXI PWM generator"
-> +	select REGMAP_MMIO
-
-Assuming you won't find the device on all machines, can you please add a
-reasonable dependency to not annoy users?
-
-> +	help
-> +	  This enables support for the Analog Devices AXI PWM generator.
-> +
-> +	  This is a configurable PWM generator with variable pulse width and
-> +	  period.
-> +
-> +	  To compile this driver as a module, choose M here: the module will be
-> +	  called pwm-axi-pwmgen.
-> +
->  config PWM_BCM_IPROC
->  	tristate "iProc PWM support"
->  	depends on ARCH_BCM_IPROC || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index c5ec9e168ee7..8322089954e9 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -6,6 +6,7 @@ obj-$(CONFIG_PWM_APPLE)		+=3D pwm-apple.o
->  obj-$(CONFIG_PWM_ATMEL)		+=3D pwm-atmel.o
->  obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+=3D pwm-atmel-hlcdc.o
->  obj-$(CONFIG_PWM_ATMEL_TCB)	+=3D pwm-atmel-tcb.o
-> +obj-$(CONFIG_PWM_AXI_PWMGEN)	+=3D pwm-axi-pwmgen.o
->  obj-$(CONFIG_PWM_BCM_IPROC)	+=3D pwm-bcm-iproc.o
->  obj-$(CONFIG_PWM_BCM_KONA)	+=3D pwm-bcm-kona.o
->  obj-$(CONFIG_PWM_BCM2835)	+=3D pwm-bcm2835.o
-> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
-> new file mode 100644
-> index 000000000000..5e91636b88b4
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-axi-pwmgen.c
-> @@ -0,0 +1,229 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Analog Devices AXI PWM generator
-> + *
-> + * Copyright 2024 Analog Devices Inc.
-> + * Copyright 2024 Baylibre SAS
-> + */
-> +#include <linux/bits.h>
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +#define AXI_PWMGEN_NPWM			4
-> +#define AXI_PWMGEN_REG_CORE_VERSION	0x00
-> +#define AXI_PWMGEN_REG_ID		0x04
-> +#define AXI_PWMGEN_REG_SCRATCHPAD	0x08
-> +#define AXI_PWMGEN_REG_CORE_MAGIC	0x0C
-> +#define AXI_PWMGEN_REG_CONFIG		0x10
-> +#define AXI_PWMGEN_REG_NPWM		0x14
-> +#define AXI_PWMGEN_CH_PERIOD_BASE	0x40
-> +#define AXI_PWMGEN_CH_DUTY_BASE		0x44
-> +#define AXI_PWMGEN_CH_OFFSET_BASE	0x48
-> +#define AXI_PWMGEN_CHX_PERIOD(ch)	(AXI_PWMGEN_CH_PERIOD_BASE + (12 * (ch=
-)))
-> +#define AXI_PWMGEN_CHX_DUTY(ch)		(AXI_PWMGEN_CH_DUTY_BASE + (12 * (ch)))
-> +#define AXI_PWMGEN_CHX_OFFSET(ch)	(AXI_PWMGEN_CH_OFFSET_BASE + (12 * (ch=
-)))
-
-I'd drop the name AXI_PWMGEN_CH_PERIOD_BASE and just hard code it in the
-definition of AXI_PWMGEN_CHX_PERIOD. Ditto for the two other macros.
-
-> +#define AXI_PWMGEN_TEST_DATA		0x5A0F0081
-
-Is this a documented constant, or just a random (as in xkcd#221) value?
-
-> +#define AXI_PWMGEN_LOAD_CONFIG		BIT(1)
-> +#define AXI_PWMGEN_RESET		BIT(0)
-> +#define AXI_PWMGEN_MAX_REGISTER		0x6C
-> +
-> +struct axi_pwmgen {
-> +	struct pwm_chip		chip;
-> +	struct clk		*clk;
-> +	struct regmap		*regmap;
-> +
-> +	/* Used to store the period when the channel is disabled */
-> +	unsigned int		ch_period[AXI_PWMGEN_NPWM];
-> +	bool			ch_enabled[AXI_PWMGEN_NPWM];
-> +};
-
-I'm not a fan of this alignment. If you don't have a strong opinion here
-please just use a single space here. (I would expect you to not have a
-strong opinion as other structs in this driver are not aligned in this
-way.)
-
-> +
-> +static const struct regmap_config axi_pwm_regmap_config =3D {
-> +	.reg_bits =3D 32,
-> +	.reg_stride =3D 4,
-> +	.val_bits =3D 32,
-> +	.max_register =3D AXI_PWMGEN_MAX_REGISTER,
-> +};
-> +
-> +static struct axi_pwmgen *to_axi_pwmgen(struct pwm_chip *chip)
-
-I'm a big fan of common symbol prefixes. I suggest to rename
-axi_pwm_regmap_config to axi_pwmgen_regmap_config and to_axi_pwmgen to
-axi_pwmgen_from_chip.
-
-> +{
-> +	return container_of(chip, struct axi_pwmgen, chip);
-> +}
-> +
-> +static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *de=
-vice,
-> +			    const struct pwm_state *state)
-> +{
-> +	struct axi_pwmgen *pwm =3D to_axi_pwmgen(chip);
-
-Please pick a different name. "pwm" is reserved for pwm_device
-variables. (And please use it for these.) A typical name would be
-"ddata", or "pc" or "apg". (Maybe also rename axi_pwmgen to
-axi_pwmgen_ddata?)
-
-> +	unsigned long clk_rate_hz =3D clk_get_rate(pwm->clk);
-> +	unsigned int ch =3D device->hwpwm;
-> +	struct regmap *regmap =3D pwm->regmap;
-> +	u64 period_cnt, duty_cnt;
-> +	int ret;
-
-You didn't check for state->polarity. You should however. Also
-=2Eget_state() needs to assign that one.
-
-> +	if (!clk_rate_hz)
-> +		return -EINVAL;
-> +
-> +	period_cnt =3D DIV_ROUND_UP_ULL(state->period * clk_rate_hz, NSEC_PER_S=
-EC);
-
-The multiplication might overflow. Please use mul_u64_u64_div_u64() (or
-one of its variant) and error out on clk_rate_hz > NSEC_PER_SEC.
-
-Also round-up is wrong. I would expect that enabling PWM_DEBUG and
-enough testing should tell you that. .apply is supposed to implement the
-biggest period not bigger than the requested one. So you have to round
-down here.
-
-> +	if (period_cnt > UINT_MAX)
-> +		return -EINVAL;
-
-That's wrong. Please continue with period_cnd =3D UINT_MAX here.
-
-Instead you should probably error out on period_cnt =3D=3D 0.
-
-> +	pwm->ch_period[ch] =3D period_cnt;
-> +	pwm->ch_enabled[ch] =3D state->enabled;
-> +	ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), state->enabled =
-? period_cnt : 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	duty_cnt =3D DIV_ROUND_UP_ULL(state->duty_cycle * clk_rate_hz, NSEC_PER=
-_SEC);
-> +	ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), duty_cnt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_write(regmap, AXI_PWMGEN_REG_CONFIG, AXI_PWMGEN_LOAD_CONF=
-IG);
-
-I assume this means that the writes above are to shadow registers and on
-this write they are latched into the hardware. So there is no glitch?!
-
-Does this wait for the currently running period to complete before
-switching to the new configuration?
-
-Please document these two hardware properties in a "Limitations"
-paragraph at the top of the driver. See other drivers for the format.
-
-> +}
-> +
-> +static int axi_pwmgen_get_state(struct pwm_chip *chip, struct pwm_device=
- *device,
-> +				struct pwm_state *state)
-> +{
-> +	struct axi_pwmgen *pwm =3D to_axi_pwmgen(chip);
-> +	unsigned long clk_rate_hz =3D clk_get_rate(pwm->clk);
-> +	struct regmap *regmap =3D pwm->regmap;
-> +	unsigned int ch =3D device->hwpwm;
-> +	u32 cnt;
-> +	int ret;
-> +
-> +	if (!clk_rate_hz) {
-> +		dev_err(device->chip->dev, "axi pwm clock has no frequency\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	state->enabled =3D pwm->ch_enabled[ch];
-> +
-> +	if (state->enabled) {
-> +		ret =3D regmap_read(regmap, AXI_PWMGEN_CHX_PERIOD(ch), &cnt);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		cnt =3D pwm->ch_period[ch];
-> +	}
-
-If state->enabled is false, state->period is (or should) be ignored by
-the caller, so there shouldn't be a need to track ch_period.
-
-Also ch_enabled shouldn't be needed. Just reporting
-AXI_PWMGEN_CHX_PERIOD(ch) =3D=3D 0 as disabled should work fine?!
-
-I think then you also don't need to artificially limit npwm to four.
-
-> +	state->period =3D DIV_ROUND_CLOSEST_ULL((u64)cnt * NSEC_PER_SEC, clk_ra=
-te_hz);
-
-As feeding the result for .get_state() to .apply() should not modify the
-hardware state, you have to round up here.
-
-> +	ret =3D regmap_read(regmap, AXI_PWMGEN_CHX_DUTY(ch), &cnt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	state->duty_cycle =3D DIV_ROUND_CLOSEST_ULL((u64)cnt * NSEC_PER_SEC, cl=
-k_rate_hz);
-
-ditto.
-
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops axi_pwmgen_pwm_ops =3D {
-> +	.apply =3D axi_pwmgen_apply,
-> +	.get_state =3D axi_pwmgen_get_state,
-> +};
-> +
-> +static int axi_pwmgen_setup(struct axi_pwmgen *pwm, struct device *dev)
-> +{
-> +	struct regmap *regmap =3D pwm->regmap;
-> +	int idx;
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret =3D regmap_write(regmap, AXI_PWMGEN_REG_SCRATCHPAD, AXI_PWMGEN_TEST=
-_DATA);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D regmap_read(regmap, AXI_PWMGEN_REG_SCRATCHPAD, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val !=3D AXI_PWMGEN_TEST_DATA)
-> +		return dev_err_probe(dev, -EIO, "failed to access the device registers=
-\n");
-> +
-> +	ret =3D regmap_read(regmap, AXI_PWMGEN_REG_NPWM, &pwm->chip.npwm);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (pwm->chip.npwm > AXI_PWMGEN_NPWM) {
-> +		dev_warn(dev, "driver is limited to %d channels but hardware reported =
-%u\n",
-> +				AXI_PWMGEN_NPWM, pwm->chip.npwm);
-> +		pwm->chip.npwm =3D AXI_PWMGEN_NPWM;
-> +	}
-> +
-> +	/* Disable all the outputs */
-
-Please don't. If the bootloader setup a splash screen, loading the pwm
-driver shouldn't disable the backlight. So please don't touch the
-configuration in .probe().
-
-> +	for (idx =3D 0; idx < pwm->chip.npwm; idx++) {
-> +		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(idx), 0);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(idx), 0);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_OFFSET(idx), 0);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	/* Enable the core */
-> +	return regmap_update_bits(regmap, AXI_PWMGEN_REG_CONFIG, AXI_PWMGEN_RES=
-ET, 0);
-> +}
-> +
-> +static int axi_pwmgen_probe(struct platform_device *pdev)
-> +{
-> +	struct axi_pwmgen *pwm;
-> +	void __iomem *io_base;
-> +	int ret;
-> +
-> +	pwm =3D devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
-> +	if (!pwm)
-> +		return -ENOMEM;
-> +
-> +	io_base =3D devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(io_base))
-> +		return PTR_ERR(io_base);
-> +
-> +	pwm->regmap =3D devm_regmap_init_mmio(&pdev->dev, io_base, &axi_pwm_reg=
-map_config);
-> +	if (IS_ERR(pwm->regmap))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pwm->regmap),
-> +				     "failed to init register map\n");
-> +
-> +	pwm->clk =3D devm_clk_get_enabled(&pdev->dev, NULL);
-> +	if (IS_ERR(pwm->clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pwm->clk), "failed to get clo=
-ck\n");
-
-Please call clk_rate_exclusive_get() on pwm->clk and cache the rate in
-struct axi_pwmgen.
-
-> +	pwm->chip.dev =3D &pdev->dev;
-> +	pwm->chip.ops =3D &axi_pwmgen_pwm_ops;
-> +	pwm->chip.base =3D -1;
-
-Don't assign .base.
-
-> +
-> +	ret =3D axi_pwmgen_setup(pwm, &pdev->dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return devm_pwmchip_add(&pdev->dev, &pwm->chip);
-> +}
-> +
-> +static const struct of_device_id axi_pwmgen_ids[] =3D {
-> +	{ .compatible =3D "adi,axi-pwmgen-1.00.a" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, axi_pwmgen_ids);
-> +
-> +static struct platform_driver axi_pwmgen_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "axi-pwmgen",
-> +		.of_match_table =3D axi_pwmgen_ids,
-> +	},
-> +	.probe =3D axi_pwmgen_probe,
-> +};
-> +
-
-Drop this empty line.
-
-> +module_platform_driver(axi_pwmgen_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Sergiu Cuciurean <sergiu.cuciurean@analog.com>");
-> +MODULE_DESCRIPTION("Driver for the Analog Devices AXI PWM generator");
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---tx74ann2b5ciakvj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWloQsACgkQj4D7WH0S
-/k4XNwf+LaA/Rztj4bxdTeyCwVjj2DybwiI4EVDVrHmafVlK9E4oTnIm15gREru/
-0GVon1F2izw10EvlcEBsuW8fI/MNWhgqooHt2RIrhN9sTjiYkmC21eSwZ5vhTM8b
-ww43oQKvSXtiKcLkwdLybhVBzS1DgZkWfoePC2zYJ/NMVBkYS1kHuaUHBX22BUhS
-9eKW82FkpGMs/hvim7yf4RlolDe4/NykegdCsFuZqOIpadwgrQ2nB0IQ0som8EPg
-z7sbilsd4hnRD1BGa0d7F/wMvnS8HH/2yHPRyj+zZ6/pzKDIMlr4XIx436SKj26N
-WhHlpBXfGbV9YQdFdtyP7vYz0HjaKQ==
-=x9+i
------END PGP SIGNATURE-----
-
---tx74ann2b5ciakvj--
+> > +  pwms:=0A=
+> > +    description:=0A=
+> > +      PWM provider.=0A=
+> > +    maxItems: 1=0A=
+> > +=0A=
+> > +  "#cooling-cells":=0A=
+> > +    const: 2=0A=
+> > +=0A=
+> > +  cooling-levels:=0A=
+> > +    description:=0A=
+> > +      The control value which correspond to thermal cooling states.=0A=
+> > +    $ref: /schemas/types.yaml#/definitions/uint32-array=0A=
+> > +=0A=
+> > +  tach-ch:=0A=
+> > +    description:=0A=
+> > +      The tach channel used for the fan.=0A=
+> > +    $ref: /schemas/types.yaml#/definitions/uint8-array=0A=
+=0A=
+> What is the tach-channel and why is it different from pwm specifier?=0A=
+=0A=
+Hi Krzysztof,=0A=
+=0A=
+Using the Aspeed SoC as an example, our SoC features 16 PWMs and 16 tachome=
+ter channels that can be employed to control and monitor fans.=0A=
+The "tach-ch" parameter is utilized to specify which tachometer channel is =
+being used to monitor a specific fan.=0A=
+The "pwms" parameter is utilized to specify which pwm channel is being used=
+ to control a specific fan.=0A=
+=0A=
+Thanks=0A=
+Best regards,=0A=
+Billy Tsai=0A=
 
