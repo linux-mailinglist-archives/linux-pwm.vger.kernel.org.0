@@ -1,108 +1,123 @@
-Return-Path: <linux-pwm+bounces-805-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-806-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 428D282EF2C
-	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 13:49:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68AC982F05F
+	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 15:15:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D63E3B212AE
-	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 12:49:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 52AA41C22E1B
+	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jan 2024 14:15:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 384A01BC30;
-	Tue, 16 Jan 2024 12:49:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49D371BDF1;
+	Tue, 16 Jan 2024 14:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gadgetoid.com header.i=@gadgetoid.com header.b="n2WiHX16"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8521BC23
-	for <linux-pwm@vger.kernel.org>; Tue, 16 Jan 2024 12:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rPisU-0000UH-3Y; Tue, 16 Jan 2024 13:49:14 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rPisS-000FGv-Kl; Tue, 16 Jan 2024 13:49:12 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rPisS-000swY-1n;
-	Tue, 16 Jan 2024 13:49:12 +0100
-Date: Tue, 16 Jan 2024 13:49:12 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Sean Young <sean@mess.org>
-Cc: Trevor Gamblin <tgamblin@baylibre.com>, linux-pwm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, michael.hennerich@analog.com, nuno.sa@analog.com, 
-	devicetree@vger.kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	conor+dt@kernel.org
-Subject: Re: [PATCH 2/2] pwm: Add driver for AXI PWM generator
-Message-ID: <7cycugkqw3sew7qvr3ltntg7newzqbccl3xy5je5jgnrg7d6e5@nex2hngeqtlu>
-References: <20240115201222.1423626-1-tgamblin@baylibre.com>
- <20240115201222.1423626-3-tgamblin@baylibre.com>
- <gbessnmierg5gvdguhwauoe2mxr3krwcfk2afhazrqvz45md64@itbchezepncg>
- <ZaY-FjeRV2qPL0wz@gofer.mess.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31B11BDDF
+	for <linux-pwm@vger.kernel.org>; Tue, 16 Jan 2024 14:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gadgetoid.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gadgetoid.com
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2107f19e331so222377fac.3
+        for <linux-pwm@vger.kernel.org>; Tue, 16 Jan 2024 06:15:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gadgetoid.com; s=google; t=1705414521; x=1706019321; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/7ITeHnRHAkZbklQNhs4u/b6ecDW9RjUixnOTjPpFPs=;
+        b=n2WiHX16MSD4OJxmhWLB4cMVJHsppCGuF7a340QOyPcUq/rxwPSHxmEjVdWN/h7C7S
+         uLZalzNFx1gHu4WelgKeCYvCaz5sK51qD8Rbc/rkKdeT0d8khSsLzZk+pipBY003b22c
+         4MhG4ZhkpKxqlVTaYdwJyr/H9gE4j99X22889HBk7CyJTqwhI3vhhyuy5jTqRknvbdbM
+         NRqUsnk9dtR0f12pRSw82vZlT9x3jY4akeXd+ZhJPSiTW2hCo6k7VwV5gUr+lAbFnECg
+         hiYqoM/ku+wk4In3B8U0TLT/VdYJ/gEE2n/5oQCGjoovyS+F+vYRxAfocSnJ+QOPyoXd
+         17uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705414521; x=1706019321;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/7ITeHnRHAkZbklQNhs4u/b6ecDW9RjUixnOTjPpFPs=;
+        b=DsFRaUAXF4oYIWMgl0hi1cIfRzqhq7d8SwCem7YHrmCW5jqXdPZLp4Rst6aKZpZIVw
+         p+2ieGAMvP2INnh0eZBpK30fkAUcx8DAnjfJnOLbHcSZQxP4ptW8a5zj36A+zcl33gEj
+         0+xRIHh70AivZ4NReZpLjNZ+9a+CP15wCcszva1xEfrAOgMUOiMbwfuuuYdwCr+/sNkN
+         iMlUG6Rotysahbain07EY6BIMpa9hfza4ttekCgkwZGY+ocLGH8wqxni4EHqqMGeOt+1
+         Tev+hJn5rm+ydni7okG7Vq7DFgQ4/vxAqswP1bVqPyykmIhML4BckVjDOwh1JxjcrwaW
+         cDpw==
+X-Gm-Message-State: AOJu0Yw+RQH4kbcmgi17DhJlhwJODXYqY5rdJCUYXpKpSYkUXRCnwcut
+	O4gYjbfDzMFZydNyM76kqda1uYq6rKhD7DiGz+EQfP9eWrJuYw==
+X-Google-Smtp-Source: AGHT+IEfF3mO2LyOShyaYtfBBGRQxG+YErn+tn3w2svxKcNAIv62k27kw8BVinLcz0PhBhGG2HOkiPSVEBgKhjMf6DU=
+X-Received: by 2002:a05:6871:5829:b0:206:7626:e1bb with SMTP id
+ oj41-20020a056871582900b002067626e1bbmr7317002oac.28.1705414520972; Tue, 16
+ Jan 2024 06:15:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5xakas4or6b5zuxp"
-Content-Disposition: inline
-In-Reply-To: <ZaY-FjeRV2qPL0wz@gofer.mess.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-
-
---5xakas4or6b5zuxp
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
+ <20201211170432.6113-1-nicola.dilieto@gmail.com> <20201211170432.6113-2-nicola.dilieto@gmail.com>
+ <20210117130434.663qpp6noujptdyt@pengutronix.de> <CACRpkdawMpuznr-XC2uvZm8PvOj-jObpnbz6iptV-Q4OFxjesw@mail.gmail.com>
+ <CA+TH9VnrsSQDUfvXk8c+q6Sx2Jc5TCN5XLYCRLtgv55-6voLWg@mail.gmail.com>
+ <Y/YPtJK8nVBthCML@surfacebook> <Y/YuJoxkz+o0Omie@einstein.dilieto.eu>
+ <5521796b-d51e-42a3-831a-7fbf75247726@gadgetoid.com> <CAHp75VfLEBw=ypFiLpd8ken5JPkW5DJey_UroV+3B6ZSaK3Jyw@mail.gmail.com>
+In-Reply-To: <CAHp75VfLEBw=ypFiLpd8ken5JPkW5DJey_UroV+3B6ZSaK3Jyw@mail.gmail.com>
+From: Phil Howard <phil@gadgetoid.com>
+Date: Tue, 16 Jan 2024 14:15:09 +0000
+Message-ID: <CA+kSVo-yjU17Q97vN+DrpUUxCku6H309iXNDiBy9fJ3QPM8aTQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Nicola Di Lieto <nicola.dilieto@gmail.com>, 
+	Angelo Compagnucci <angelo.compagnucci@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	linux-pwm@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, 
+	Rob Herring <robh@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, 12 Jan 2024 at 18:32, Andy Shevchenko <andy.shevchenko@gmail.com> w=
+rote:
+>
+> On Fri, Jan 12, 2024 at 3:38=E2=80=AFPM Philip Howard <phil@gadgetoid.com=
+> wrote:
+> > On 22/02/2023 15:00, Nicola Di Lieto wrote:
+> > > On Wed, Feb 22, 2023 at 02:51:00PM +0200, andy.shevchenko@gmail.com w=
+rote:
+>
+> ...
+>
+> > I'd love to know if you're still likely to look into this.
+>
+> If you are asking me as well (since To refers to me), Cc for the new
+> version and I might look at it. Currently I am OoO till the end of
+> month and after that I probably will have more tasks to do, so no
+> guarantee for this cycle, but just in case Cc and we will see.
 
-On Tue, Jan 16, 2024 at 08:28:06AM +0000, Sean Young wrote:
-> On Mon, Jan 15, 2024 at 10:18:04PM +0100, Uwe Kleine-K=F6nig wrote:
-> > On Mon, Jan 15, 2024 at 03:12:21PM -0500, Trevor Gamblin wrote:
-> > > +	pwm->chip.dev =3D &pdev->dev;
-> > > +	pwm->chip.ops =3D &axi_pwmgen_pwm_ops;
->=20
-> In that case pwm->chip.atomic =3D true; can be set too (although this sho=
-uld
-> be tested with CONFIG_DEBUG_ATOMIC_SLEEP and CONFIG_PWM_DEBUG).
+Thanks for your reply!
 
-Oh indeed. Good catch.
+I'm not sure I know how to "Cc for the new version," it took me about
+an hour to generate a (hopefully) suitably formatted email response
+to this patch. I've only just subbed to linux-pwm.
 
-Thanks
-Uwe
+But yes- my reply was cast out into the ether in the hopes that logging
+my interest might get things moving again, or at least let me know if I
+should try tackling it myself.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+I'm moving over to libgpiod on Raspberry Pi, losing software PWM (
+from the library I was using) in the process. I don't want to use or
+contrive another not-invented-here solution.
 
---5xakas4or6b5zuxp
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWme0cACgkQj4D7WH0S
-/k6SnAf8CN6fVPc3MOsjuIIC1oV5YbMRilw8XY4Piy87ZlBBm4FF2GHVvg+47LWU
-KZmp3xOFO1q4VD85xsAvSllfUoZt3myvZcZKEWpclkcXXzm4rsqMDtOzBM4OyZ8e
-vpyXAKeLff+bIW8ZYjuxIstclzcdjl7JZRftKpCCPLhN45jK/TFK3ObKBPggDgIs
-IRIc32QVsFzU9JU7CmexkZUu9EbyBFEz4ku/2HYeyLGzv2VIrlBMXMeEMhl/LnHV
-bdKNmZ4+CPeflwBdX7nhCk4GbHX/6gfd5UrohBBHwFu0zou/0wYicYa1eLE7al3n
-G67tpOVkF+o4IRrL3B0X4QPvUBZ1Mg==
-=9/Ze
------END PGP SIGNATURE-----
-
---5xakas4or6b5zuxp--
+--
+Philip Howard
 
