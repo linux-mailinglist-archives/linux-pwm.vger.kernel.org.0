@@ -1,240 +1,161 @@
-Return-Path: <linux-pwm+bounces-826-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-827-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0CDC83032F
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jan 2024 11:05:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A958083036D
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jan 2024 11:21:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FDD71F212D0
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jan 2024 10:05:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFE801C23B3A
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jan 2024 10:21:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C8911429E;
-	Wed, 17 Jan 2024 10:03:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EC9414A8C;
+	Wed, 17 Jan 2024 10:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="owr485wz"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1A414286
-	for <linux-pwm@vger.kernel.org>; Wed, 17 Jan 2024 10:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498451429E
+	for <linux-pwm@vger.kernel.org>; Wed, 17 Jan 2024 10:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705485807; cv=none; b=oF76duzc4cKiecArBv8KiUOa8SiCT/EtTuqFHVhW7q1kFyXmNyF0pIpa+rusB0FbAvbhYQ0bKjWq/SfARGKyeLOBY73nWBAU1aQTcybbdyty1HpJbCwnFAQG0SsdID5GBo1i8cJ5B9+ddUDMHU2JiWxkiaQcXAgythBMP1DOF9Q=
+	t=1705486872; cv=none; b=BvdSsf9adrBePsJw+Qe9tzZ3/cdsv6uYGBIW0dNq3L4BIi8l7OGzOJZFQulvx4JxSQAkJCuYvWjEQqPq/NAMFtsXrgjcmGahSLG15+VFDnX2sClrN2dPdlhgtbVP5ZG7VT71bqCnrtAmYetefPAZ6J/7laNue0Y96eEWs4cnij0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705485807; c=relaxed/simple;
-	bh=2/Pg19mJk7/OgRvVH7Stv2YWNsahvj/2T/Oj3wiLOh4=;
-	h=Received:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-SA-Exim-Connect-IP:X-SA-Exim-Mail-From:
-	 X-SA-Exim-Scanned:X-PTX-Original-Recipient; b=hcoLYYC2sLalcYaw9NenVOZKYOK8YhCe1wIanpHL7dGdpV/h0zpSLJWL0OC4VIU+ckskgkjZvCwhdQ6JM70YmsRQ2qi8vhvXYrCFXWxygqLCp39wTiajJJ/xAnnOS+Jow4NrxDQwVV9rmIeZ4QLONo3BThmotKIt5bu1P0ek9qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rQ2lR-000651-VN; Wed, 17 Jan 2024 11:03:17 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rQ2lQ-000RMX-RA; Wed, 17 Jan 2024 11:03:16 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rQ2lQ-001aYu-2O;
-	Wed, 17 Jan 2024 11:03:16 +0100
-Date: Wed, 17 Jan 2024 11:03:16 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>, 
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/6] dt-bindings: pwm: amlogic: fix s4 bindings
-Message-ID: <awxboh3nv4r5p7v7vcgwttu2m74fws47johb73c5f7econ2qqu@zl5xbnoeyclq>
+	s=arc-20240116; t=1705486872; c=relaxed/simple;
+	bh=fA8fOIDmpDf6O1sgGqy94Z1yqgjC5fUGvhAPgezy1N0=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 References:User-agent:From:To:Cc:Subject:Date:In-reply-to:
+	 Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding; b=g3jrIeaq0lMuMeYzO/AL85JXgDdHTbpOjfg+fj1Q8eJBh8sp1mAH1WjgKYYatCzKnuCwXHC2GZ1FbMeUx7ldnvRRID5kwi1DSJtCbHF/doLW/kYBv2PbECIP40E/pbDUdodqihCBL2GAUnoNm78I/rJ+pfAQOmkhDUHKYx2rZBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=owr485wz; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e7065b692so35883085e9.3
+        for <linux-pwm@vger.kernel.org>; Wed, 17 Jan 2024 02:21:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1705486867; x=1706091667; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5mSVG7D4F/4/rMlg7YZmDmtDRH4U8gyyZuRonzPy+H4=;
+        b=owr485wzoOgCgR7SlEzjfEy+Cl+cdj/22FfX4CcxSFSHtx6Dt5iAJWgkJ0q5VZ9vgr
+         fs7rgRtaCBVN6c42pRwbYb8evWjvVvU3jLcYijFTgLSqyD7vsjSQv1US48gLqli2zy7o
+         sl2nLgXJh+kTaivTGzjvSvkHGKPOSd2xcUPuLxd75bGf2zurL7wwL9l11ceCVYHhu68w
+         705aJgy0G0wQ/dztCtwdFlPA35w1xzpdIey9R5kLsb3qL5K6VgQdN+dVs0IPnEuIsD/p
+         4yALn3JWFMKsLSs6wqC8SE0pSMLj/O3eTYZy9Pb4C7KFFkzApvdDILDlbuOPWRNQDlGI
+         oW1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705486867; x=1706091667;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5mSVG7D4F/4/rMlg7YZmDmtDRH4U8gyyZuRonzPy+H4=;
+        b=OeS3yG/V4yFF1b1NeM4jXucdQmu9rc6exWtWrVPt/U301loJEGOdbOAfNwf0bwdcmD
+         hom3gWWly7WTS3UXZDOkLKLEhIzg9f7rpKkLECQgv7WUM3kK1ztOUmEWYgrdpUEt7aXd
+         BCtgB9ubC/FjPKYh51tvPKJYY+ZR3BZ5JiLHEdGxvKt9rvrcC7pHLCklg80QLmbB5quO
+         p5WZNjZoushaFWOx2YCEqp+tiOtRwwdmlIwyOhqRbXj/21scl4e3Z9+1R0ncGd6DWMr1
+         ye/Fn4wu8rxkJFvMz+iwj3UsAyIGkNUwuFtOwR4V2g5vX6Bjd31gzssV3lTO1zWNR2Is
+         oRJQ==
+X-Gm-Message-State: AOJu0YzGoQ4IALhrz3o1DZaY0TDOwMM7K3fiYSfu6IIoLANpBT9u1n0R
+	cQ2njbg9lEj/l7gE07K/NKiMTZ3iJ65nJA==
+X-Google-Smtp-Source: AGHT+IHkPtaUfaJlpb5rgGajtKU+P5rzVz0YPS17UdzuHDV8aXYHDcinmlVZjk1+b215qJd7ggkx8A==
+X-Received: by 2002:a05:600c:22cc:b0:40e:3dcd:2e24 with SMTP id 12-20020a05600c22cc00b0040e3dcd2e24mr4695637wmg.180.1705486867325;
+        Wed, 17 Jan 2024 02:21:07 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:c1f6:14ce:b96f:2df5])
+        by smtp.gmail.com with ESMTPSA id v13-20020a05600c444d00b0040e526bd5fdsm1894578wmn.1.2024.01.17.02.21.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 02:21:06 -0800 (PST)
 References: <20231222111658.832167-1-jbrunet@baylibre.com>
- <20231222111658.832167-2-jbrunet@baylibre.com>
+ <20231222111658.832167-3-jbrunet@baylibre.com>
+ <4rdb2be2bfzak3s4uaizthcdcdwdrxnx4kr2sgn527hvsie3pb@gfqciim7yryz>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Thierry Reding
+ <thierry.reding@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>
+Subject: Re: [PATCH v4 2/6] dt-bindings: pwm: amlogic: add new compatible
+ for meson8 pwm type
+Date: Wed, 17 Jan 2024 11:16:31 +0100
+In-reply-to: <4rdb2be2bfzak3s4uaizthcdcdwdrxnx4kr2sgn527hvsie3pb@gfqciim7yryz>
+Message-ID: <1jfrywxnu5.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bbfbzv6eijurrhvz"
-Content-Disposition: inline
-In-Reply-To: <20231222111658.832167-2-jbrunet@baylibre.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-
-
---bbfbzv6eijurrhvz
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 22, 2023 at 12:16:49PM +0100, Jerome Brunet wrote:
-> s4 has been added to the compatible list while converting the Amlogic PWM
-> binding documentation from txt to yaml.
->=20
-> However, on the s4, the clock bindings have different meaning compared to
-> the previous SoCs.
->=20
-> On the previous SoCs the clock bindings used to describe which input the
-> PWM channel multiplexer should pick among its possible parents.
->=20
-> This is very much tied to the driver implementation, instead of describing
-> the HW for what it is. When support for the Amlogic PWM was first added,
-> how to deal with clocks through DT was not as clear as it nowadays.
-> The Linux driver now ignores this DT setting, but still relies on the
-> hard-coded list of clock sources.
->=20
-> On the s4, the input multiplexer is gone. The clock bindings actually
-> describe the clock as it exists, not a setting. The property has a
-> different meaning, even if it is still 2 clocks and it would pass the che=
-ck
-> when support is actually added.
->=20
-> Also the s4 cannot work if the clocks are not provided, so the property no
-> longer optional.
 
-s/no/is no/
+On Wed 17 Jan 2024 at 10:58, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutr=
+onix.de> wrote:
 
-> Finally, for once it makes sense to see the input as being numbered
-> somehow. No need to bother with clock-names on the s4 type of PWM.
->=20
-> Fixes: 43a1c4ff3977 ("dt-bindings: pwm: Convert Amlogic Meson PWM binding=
-")
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 67 ++++++++++++++++---
->  1 file changed, 58 insertions(+), 9 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Doc=
-umentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-> index 527864a4d855..a1d382aacb82 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-> @@ -9,9 +9,6 @@ title: Amlogic PWM
->  maintainers:
->    - Heiner Kallweit <hkallweit1@gmail.com>
-> =20
-> -allOf:
-> -  - $ref: pwm.yaml#
-> -
->  properties:
->    compatible:
->      oneOf:
-> @@ -43,12 +40,8 @@ properties:
->      maxItems: 2
-> =20
->    clock-names:
-> -    oneOf:
-> -      - items:
-> -          - enum: [clkin0, clkin1]
-> -      - items:
-> -          - const: clkin0
-> -          - const: clkin1
-> +    minItems: 1
-> +    maxItems: 2
-> =20
->    "#pwm-cells":
->      const: 3
-> @@ -57,6 +50,55 @@ required:
->    - compatible
->    - reg
-> =20
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - amlogic,meson8-pwm
-> +              - amlogic,meson8b-pwm
-> +              - amlogic,meson-gxbb-pwm
-> +              - amlogic,meson-gxbb-ao-pwm
-> +              - amlogic,meson-axg-ee-pwm
-> +              - amlogic,meson-axg-ao-pwm
-> +              - amlogic,meson-g12a-ee-pwm
-> +              - amlogic,meson-g12a-ao-pwm-ab
-> +              - amlogic,meson-g12a-ao-pwm-cd
-> +    then:
-> +      # Historic bindings tied to the driver implementation
-> +      # The clocks provided here are meant to be matched with the input
-> +      # known (hard-coded) in the driver and used to select pwm clock
-> +      # source. Currently, the linux driver ignores this.
+> [[PGP Signed Part:Undecided]]
+> Hello,
+>
+> On Fri, Dec 22, 2023 at 12:16:50PM +0100, Jerome Brunet wrote:
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Do=
+cumentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>> index a1d382aacb82..eece390114a3 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>> @@ -21,23 +21,35 @@ properties:
+>>            - amlogic,meson-g12a-ee-pwm
+>>            - amlogic,meson-g12a-ao-pwm-ab
+>>            - amlogic,meson-g12a-ao-pwm-cd
+>> -          - amlogic,meson-s4-pwm
+>> +        deprecated: true
+>>        - items:
+>>            - const: amlogic,meson-gx-pwm
+>>            - const: amlogic,meson-gxbb-pwm
+>> +        deprecated: true
+>>        - items:
+>>            - const: amlogic,meson-gx-ao-pwm
+>>            - const: amlogic,meson-gxbb-ao-pwm
+>> +        deprecated: true
+>>        - items:
+>>            - const: amlogic,meson8-pwm
+>>            - const: amlogic,meson8b-pwm
+>> +        deprecated: true
+>
+> I think deprecating the old binding and adding a new compatible should
+> be done in two commits.
 
-I admit I didn't understand the relevant difference between the old and
-the new binding yet. (The driver currently doesn't support the s4,
-right?) Is it possible to detect if the dt uses the old or the new
-binding? If yes, I suggest to drop the old one from the binding and only
-keep it in the driver for legacy systems.
+Hi Uwe,
 
-> +      properties:
-> +        clock-names:
-> +          oneOf:
-> +            - items:
-> +                - enum: [clkin0, clkin1]
-> +            - items:
-> +                - const: clkin0
-> +                - const: clkin1
-> +
-> +  # Newer IP block take a single input per channel, instead of 4 inputs
-> +  # for both channels
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - amlogic,meson-s4-pwm
+There was the same comment on v3 and Krzysztof said it should be done
+like this:
 
-The expectation is that this list contains all compatibles that are not
-included in the "historic" list above, right? Then maybe use "else:"
-instead of another explicit list?
+https://lore.kernel.org/linux-pwm/e127dcef-3149-443a-9a8c-d24ef4054f09@lina=
+ro.org
 
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: input clock of PWM channel A
-> +            - description: input clock of PWM channel B
-> +        clock-names: false
-> +      required:
-> +        - clocks
-> +
->  additionalProperties: false
+I tend to agree with Krzysztof on this but, as I previously said,
+I don't really mind one way or the other. Just have to pick one.
 
-Best regards
-Uwe
+>
+>> +      - const: amlogic,meson8-pwm-v2
+>> +      - items:
+>> +          - enum:
+>> +              - amlogic,meson8b-pwm-v2
+>> +              - amlogic,meson-gxbb-pwm-v2
+>> +              - amlogic,meson-axg-pwm-v2
+>> +              - amlogic,meson-g12-pwm-v2
+>> +          - const: amlogic,meson8-pwm-v2
+>> +      - const: amlogic,meson-s4-pwm
+>
+> Best regards
+> Uwe
+
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---bbfbzv6eijurrhvz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWnpeMACgkQj4D7WH0S
-/k7D8ggArnaDEUYvcg/pgZL5jLaqhKI+CoViERryuLi+QxBL1eWhFvl6XyVCjS7N
-FV4h2WdLIV3wdMGKYdCdv9hzleWVaVx1hJDLmOPunTO9QZUmMu6vRYVpsZcpuSpg
-T1LNgkK3uEcHBSt6YXynKssZK72/ydv0dDIZ6WZy5+dkdJfWxxCaXubS7Pd6lF8Y
-bnOKgErPh/7F0d17TOgIcrwUViGdVt6+d4NbgymqWCueJt/sqX5e81lTn+V3/knM
-NypPZ7UqCNgJ/zL9vJpJZsKQYNNM4yA5n0HlHgDZBlzLeYttXHUKhHqnArC4/PWF
-CTJ4QZ5qA38yQXWFHypZkl5dLHlniA==
-=ZKMp
------END PGP SIGNATURE-----
-
---bbfbzv6eijurrhvz--
+Jerome
 
