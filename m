@@ -1,229 +1,145 @@
-Return-Path: <linux-pwm+bounces-824-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-825-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2118830097
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jan 2024 08:37:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88E8B83031B
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jan 2024 11:02:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E78A9B22064
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jan 2024 07:37:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46F8B1F258BF
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jan 2024 10:02:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 191BBBE5B;
-	Wed, 17 Jan 2024 07:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HCF0Cm4C"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80B701DA35;
+	Wed, 17 Jan 2024 09:58:23 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964FBBE49
-	for <linux-pwm@vger.kernel.org>; Wed, 17 Jan 2024 07:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6D614296
+	for <linux-pwm@vger.kernel.org>; Wed, 17 Jan 2024 09:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705477060; cv=none; b=bG5SmXVKagmm/G//mSv+p0m6taf6dwkZfqhBUc77fxkwvcbWWgANnhfSKziYaOsKNKSGqQ94tQ7MOHyEei0NhIO+/mUBv4DH+9Q8M5X9IXyIc0qloRnOPNXl0OtM3XgUy5wK7+BRwRyLPEOU3toRQhnFrMbfJaMRDc4zZ8OznZs=
+	t=1705485503; cv=none; b=nM57Az+DsxQgUE6PqQ1Z1nHE17Ys5jxocB3ksqesHwgQd2dUvcB6Yy13TZ2qJFohjamW1tlsjjo+a/thZ+CHKA3ZuMhIGggAmqpMlHUIu9/nY1XeBtfm/tSaXM8eSVTj2sVVmGbC7J9dr3AcNisHd5ioVIs+UNhEvQeZXTtPoBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705477060; c=relaxed/simple;
-	bh=1eQ/pqXoQG270ZvRFbCAoZaq95bnLk24Xb2QmOUHtD4=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:References:From:Autocrypt:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=N97JfmlcmZ/vZHbXIrYW9/zv0YPFaig0ClS4yumOvdwA1AwmLhuvlFQoL40MmSWTomKacFtc275XgvI00utPVtMSgd8H7fba4ERBA+gG/DP2DrWItE9eJCY2qQfOM+Am0Sk/ZHByqP4LcbIQywXuea1kXqCFqmltKjPE0h1FGbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HCF0Cm4C; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a2d04888d3dso502684566b.2
-        for <linux-pwm@vger.kernel.org>; Tue, 16 Jan 2024 23:37:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705477056; x=1706081856; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mYY6pYg4hJx8t4EgMJgj47ze8WV3NufoN+cY8Yko8wU=;
-        b=HCF0Cm4CejSuzv7zvWUFGQYwsvykH0eGcUH4QntSC8rdmGwvvNFgtcsWXEy9N+pzJX
-         Pdnopc9wzaQioauFAwZ0M3k0zrm5mxRBXOcWITC8GMkt+3J4YyRxFks2f31PWVhStPoi
-         LGmdggmVnHuEGPnlsF5t9pdrHZjwhbVKcqCSqVWH08WFfI1DFJSLWysw9uHzK05Nglrb
-         raVBDSLMirvGRO2p3QZAjSOiLRRoiqoN0mCVy5aler9/Uqzd3NVxDHCu1SY+A4nk0t+y
-         iBqBIk4TFcKPYP2D0U/smH/Stb+lPxbuMP2Jb2fxmQ1+e71awQNXKKoQi08VCGoHY3lt
-         WsfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705477056; x=1706081856;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mYY6pYg4hJx8t4EgMJgj47ze8WV3NufoN+cY8Yko8wU=;
-        b=GoeOSSiDzvC+U+GkLCRUj8mKkUnFAnWK7jrKkyR+uTOhZGpZbdx3hzci5tRajqwprN
-         R4LMAJHwgfWVaD2jQ9wc7apRNwmI43GROOXLV+7mCFQvYoqUyvYjOpeWheoyMJadKbqn
-         +8IwNqT6AbxiQUm3r9jynoKlKonDU14X3ilVct2C2BySR0uhqo/9okUQiGg3q9+WFRy2
-         svX/I/6XoP/mMOmhPoEvVh+1x16Hz1jz+/B/cC47JvvmUPJI1+N9+rY7o6XMXDfem0NP
-         H8ETT/0ezaId+ehS0WLBeJxK0Awkmz1MuTZ8bBiDS7ShSVzWrbDGSkDy3AWk2yNigmzV
-         Xnrg==
-X-Gm-Message-State: AOJu0Yzn+wxmKd6VZy2Smunqtxz0guUL6Mu1YfLUsMz+e/fFwU27W2ot
-	47vPm3/LvOu/0XWj/EiVtyzKmYM7CqGWyw==
-X-Google-Smtp-Source: AGHT+IGI2hc8ONom1x59NxfFXZFzuHKuCXPlvMiNSpZswnyOsMJ0vVpL5nxjhgoEBxbXs1a6lONRLw==
-X-Received: by 2002:a17:907:a609:b0:a2d:89a3:3c17 with SMTP id vt9-20020a170907a60900b00a2d89a33c17mr2601230ejc.110.1705477055857;
-        Tue, 16 Jan 2024 23:37:35 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id bv2-20020a170906b1c200b00a2e81e4876dsm1507299ejb.44.2024.01.16.23.37.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jan 2024 23:37:35 -0800 (PST)
-Message-ID: <5b39c702-c74e-4cd5-accf-b6b8792e65b2@linaro.org>
-Date: Wed, 17 Jan 2024 08:37:32 +0100
+	s=arc-20240116; t=1705485503; c=relaxed/simple;
+	bh=QGHHevF8YQdvBtIYC1f3KFH0iYomiMAEYr5gjnvwyQk=;
+	h=Received:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-SA-Exim-Connect-IP:X-SA-Exim-Mail-From:
+	 X-SA-Exim-Scanned:X-PTX-Original-Recipient; b=MTFBoNo0aIsJA/ht4havKTObDHJE8YxR2P+oCRGP75e0uAh5bb755O0kmOIj2ISXnJ2xaaIJ+21CA/xA7wW33bR556bT5UJYNryA73lZi2x8VdvFAlpc64iB/MO4IfzNnhIdA1UjqKCmt1no3QF+/HMH2Eh3DSy2648gS7AS0BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rQ2gS-0005ZN-8j; Wed, 17 Jan 2024 10:58:08 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rQ2gP-000QyH-KQ; Wed, 17 Jan 2024 10:58:05 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rQ2gP-001Zpp-1k;
+	Wed, 17 Jan 2024 10:58:05 +0100
+Date: Wed, 17 Jan 2024 10:58:05 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>
+Subject: Re: [PATCH v4 2/6] dt-bindings: pwm: amlogic: add new compatible for
+ meson8 pwm type
+Message-ID: <4rdb2be2bfzak3s4uaizthcdcdwdrxnx4kr2sgn527hvsie3pb@gfqciim7yryz>
+References: <20231222111658.832167-1-jbrunet@baylibre.com>
+ <20231222111658.832167-3-jbrunet@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT schema
- format
-Content-Language: en-US
-To: Dharma.B@microchip.com, sam@ravnborg.org, bbrezillon@kernel.org,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, daniel@ffwll.ch, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
- claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, lee@kernel.org, thierry.reding@gmail.com,
- u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-References: <20240110102535.246177-1-dharma.b@microchip.com>
- <20240110102535.246177-3-dharma.b@microchip.com>
- <683b7838-9c19-4a51-8ec4-90ac8a8a94ce@linaro.org>
- <a59fe94a-feac-439e-a93d-3a90f7d05de5@microchip.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <a59fe94a-feac-439e-a93d-3a90f7d05de5@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 17/01/2024 03:22, Dharma.B@microchip.com wrote:
-> Hi Krzysztof,
-> On 10/01/24 11:31 pm, Krzysztof Kozlowski wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>
->> On 10/01/2024 11:25, Dharma Balasubiramani wrote:
->>> Convert the atmel,hlcdc binding to DT schema format.
->>>
->>> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
->>> ---
->>>   .../devicetree/bindings/mfd/atmel,hlcdc.yaml  | 106 ++++++++++++++++++
->>>   .../devicetree/bindings/mfd/atmel-hlcdc.txt   |  56 ---------
->>>   2 files changed, 106 insertions(+), 56 deletions(-)
->>>   create mode 100644 Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
->>>   delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
->>> new file mode 100644
->>> index 000000000000..555d6faa9104
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
->>
->> This looks not tested, so limited review follows:
-> I acknowledge that I didn't test the patches individually. I appreciate 
-> your understanding. Taken care in v2.
->>
->>> @@ -0,0 +1,106 @@
->>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>> +# Copyright (C) 2024 Microchip Technology, Inc. and its subsidiaries
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/mfd/atmel,hlcdc.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Atmel's HLCDC (High LCD Controller) MFD driver
->>
->> Drop "MFD driver" and rather describe/name the hardware. MFD is Linux
->> term, so I really doubt that's how this was called.
-> Done.
->>
->>> +
->>> +maintainers:
->>> +  - Nicolas Ferre <nicolas.ferre@microchip.com>
->>> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
->>> +  - Claudiu Beznea <claudiu.beznea@tuxon.dev>
->>> +
->>> +description: |
->>> +  Device-Tree bindings for Atmel's HLCDC (High LCD Controller) MFD driver.
->>
->> Drop
-> Done.
->>
->>> +  The HLCDC IP exposes two subdevices:
->>> +  # a PWM chip: see ../pwm/atmel,hlcdc-pwm.yaml
->>> +  # a Display Controller: see ../display/atmel/atmel,hlcdc-dc.yaml
->>
->> Rephrase to describe hardware. Drop redundant paths.
-> Sure, I will truncate this to "subdevices: a PWM chip and a display 
-> controller." & drop the |.
-> 
-> I added description about those two subdevices below.
-
-Then why do you still keep there comments? # is a comment.
-...
-
-> in v3.
->>
->>> +
->>> +  hlcdc-display-controller:
->>
->> Does anything depend on the name? If not, then just display-controller
-> Got an error "'hlcdc-display-controller' does not match any of the 
-> regexes: 'pinctrl-[0-9]+'" so I retained it in v2,but as conor advised 
-> to have node names generic and we can easily adopt, I will modify it in v3.
-
-That's not a dependency. I was talking about any users of the binding.
-User of a binding is for example: Linux kernel driver, other open-source
-projects, out-of-tree projects.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gr6tisr4x6hvjf6f"
+Content-Disposition: inline
+In-Reply-To: <20231222111658.832167-3-jbrunet@baylibre.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
-Best regards,
-Krzysztof
+--gr6tisr4x6hvjf6f
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hello,
+
+On Fri, Dec 22, 2023 at 12:16:50PM +0100, Jerome Brunet wrote:
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Doc=
+umentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+> index a1d382aacb82..eece390114a3 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+> @@ -21,23 +21,35 @@ properties:
+>            - amlogic,meson-g12a-ee-pwm
+>            - amlogic,meson-g12a-ao-pwm-ab
+>            - amlogic,meson-g12a-ao-pwm-cd
+> -          - amlogic,meson-s4-pwm
+> +        deprecated: true
+>        - items:
+>            - const: amlogic,meson-gx-pwm
+>            - const: amlogic,meson-gxbb-pwm
+> +        deprecated: true
+>        - items:
+>            - const: amlogic,meson-gx-ao-pwm
+>            - const: amlogic,meson-gxbb-ao-pwm
+> +        deprecated: true
+>        - items:
+>            - const: amlogic,meson8-pwm
+>            - const: amlogic,meson8b-pwm
+> +        deprecated: true
+
+I think deprecating the old binding and adding a new compatible should
+be done in two commits.
+
+> +      - const: amlogic,meson8-pwm-v2
+> +      - items:
+> +          - enum:
+> +              - amlogic,meson8b-pwm-v2
+> +              - amlogic,meson-gxbb-pwm-v2
+> +              - amlogic,meson-axg-pwm-v2
+> +              - amlogic,meson-g12-pwm-v2
+> +          - const: amlogic,meson8-pwm-v2
+> +      - const: amlogic,meson-s4-pwm
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--gr6tisr4x6hvjf6f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWnpKwACgkQj4D7WH0S
+/k6AaggAin0jCt53AVKx89sNgzh9ZmocciEzqNU5jAkggiecMPVDrBNA50/rCvpN
+9IUDrfQxZcFW4/bzKGeFsD/kww1TuC23erTmXdTmDSo9jMJfU6EEAkMcya0KMfyZ
+Eu6/6wpNdkDNodfkhHMmLYq0ghfI4Q5ivtv21BxInc3jCfm85jhpjwAA840Z11WK
+Rpl85eBQPbgHWrEZu8kL3i1V11nStyVoJg8q3b1wsNWxjZGfN/3bGBq9D9smBa79
+tv0wLo/wfoxEgj+t5afko75zR8/bFoslSp96gLI+NdKf597Skd0U44MhMeztiAp1
+SYIMrB7UsPDMFZETx8Wulu/Jh2Pk+w==
+=bl1g
+-----END PGP SIGNATURE-----
+
+--gr6tisr4x6hvjf6f--
 
