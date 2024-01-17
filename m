@@ -1,245 +1,229 @@
-Return-Path: <linux-pwm+bounces-823-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-824-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A51C830033
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jan 2024 07:37:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2118830097
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jan 2024 08:37:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A09D1F25377
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jan 2024 06:37:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E78A9B22064
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Jan 2024 07:37:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2148C8BFC;
-	Wed, 17 Jan 2024 06:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 191BBBE5B;
+	Wed, 17 Jan 2024 07:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hgBxX9gg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HCF0Cm4C"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F42BE4B
-	for <linux-pwm@vger.kernel.org>; Wed, 17 Jan 2024 06:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964FBBE49
+	for <linux-pwm@vger.kernel.org>; Wed, 17 Jan 2024 07:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705473465; cv=none; b=TgMgqf41dna+9fyG9Myjcgi9j1OB1F1IBDL7M8Dy2jR9NXsvmIt2ornSp+ORYk7GUBxpyUPZ3MJYMN95ZFpUGQiXFfPEhG8LuAItAb+Fbby1z93YfL8MLjlOuaxcUCxKTUXklMYkUO2rCzwyDAukkl+dd05H/aT8ydpAtgcu528=
+	t=1705477060; cv=none; b=bG5SmXVKagmm/G//mSv+p0m6taf6dwkZfqhBUc77fxkwvcbWWgANnhfSKziYaOsKNKSGqQ94tQ7MOHyEei0NhIO+/mUBv4DH+9Q8M5X9IXyIc0qloRnOPNXl0OtM3XgUy5wK7+BRwRyLPEOU3toRQhnFrMbfJaMRDc4zZ8OznZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705473465; c=relaxed/simple;
-	bh=LTeE/mqnWiVhvUUWjvdKUrRjy41JL2x7cpg5UntPi/w=;
+	s=arc-20240116; t=1705477060; c=relaxed/simple;
+	bh=1eQ/pqXoQG270ZvRFbCAoZaq95bnLk24Xb2QmOUHtD4=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=aXviNOgiivwLbOa43e8G/TpeWwZFgL349fkEAxLvtMr8y6iVUVavcNAb9J7h/6O/qa07zFwE+4s4HVJTUV8KR46GuYqgOU4k36ETeITJ2JND0NrkLIb0oFCwU6afgNbhykQs6QRnq4Vqcp+dW35K8IWZq8Sfsm+vfmWmFFAjov8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=hgBxX9gg; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5ff45dc44d1so19418087b3.2
-        for <linux-pwm@vger.kernel.org>; Tue, 16 Jan 2024 22:37:42 -0800 (PST)
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
+	 To:References:From:Autocrypt:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=N97JfmlcmZ/vZHbXIrYW9/zv0YPFaig0ClS4yumOvdwA1AwmLhuvlFQoL40MmSWTomKacFtc275XgvI00utPVtMSgd8H7fba4ERBA+gG/DP2DrWItE9eJCY2qQfOM+Am0Sk/ZHByqP4LcbIQywXuea1kXqCFqmltKjPE0h1FGbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HCF0Cm4C; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a2d04888d3dso502684566b.2
+        for <linux-pwm@vger.kernel.org>; Tue, 16 Jan 2024 23:37:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1705473461; x=1706078261; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3MjS89mx0sQXy2eTiKmRoWh0TgEsc77yp3/tG8fkBm0=;
-        b=hgBxX9ggpFPAjQaLWUzITDG+iFQ0/t5S7zqEW3eIun443YWPGac9ikSbPDpxRCAXWc
-         ypmk/vcG7cmQTIbcrZBXxmNT2QQZcC1M+jWAzLEVpMWpjBmSCmFUKPSb8DWq/e081FWB
-         FRK9jMJ1DSLn3NFdld3Kj6PGRdIDBBVmOPDahNr01MFac2lHM5r8RjASCiVfG3zrO+wG
-         XefQ6fCBrFjX/aFmLKKv6gywp88DhGpVCncpZQYZ+AOOOVMdT5HM6nu5/mqELJSpnZM6
-         upefClyn35gMHaYPX6NtssZvLLCL7JTaC9MfGfc7/aBokk+cXKnufyPMAzOEAfZTFnvI
-         L+Tw==
+        d=linaro.org; s=google; t=1705477056; x=1706081856; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mYY6pYg4hJx8t4EgMJgj47ze8WV3NufoN+cY8Yko8wU=;
+        b=HCF0Cm4CejSuzv7zvWUFGQYwsvykH0eGcUH4QntSC8rdmGwvvNFgtcsWXEy9N+pzJX
+         Pdnopc9wzaQioauFAwZ0M3k0zrm5mxRBXOcWITC8GMkt+3J4YyRxFks2f31PWVhStPoi
+         LGmdggmVnHuEGPnlsF5t9pdrHZjwhbVKcqCSqVWH08WFfI1DFJSLWysw9uHzK05Nglrb
+         raVBDSLMirvGRO2p3QZAjSOiLRRoiqoN0mCVy5aler9/Uqzd3NVxDHCu1SY+A4nk0t+y
+         iBqBIk4TFcKPYP2D0U/smH/Stb+lPxbuMP2Jb2fxmQ1+e71awQNXKKoQi08VCGoHY3lt
+         WsfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705473461; x=1706078261;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3MjS89mx0sQXy2eTiKmRoWh0TgEsc77yp3/tG8fkBm0=;
-        b=g97m77JnFUOr09hM4dD4ly77eUeDXk1YNZ+R6hQJSt/U/wXd+FnjevqYf4OdrUjWMo
-         UfZfayhv2jecgZ15dgjDuR3qC+tSFzppbbCDnO/8xO8MKaYyqsdHqrGjWGkDFgyq2GNn
-         yF2Emb6i5FlDmcNZHKpSMoORLOgUWYik0YVihX+nEs7wQKDZ0NUTXmPef+T2XuH5Ckq6
-         x8be1Nd0cIhPwCA005ee9fMI06KFtycjrgakHkyi0evHUSoFss9RQiFTVQu8eyoq8OTx
-         +bq0JmhtwI17kz9Kbsj1e2tbjJLXgvblfqs9Puvmke6ufGe/sRy7mIvlFuoje69tAkko
-         03iw==
-X-Gm-Message-State: AOJu0Yx5NuR/2VsFOeSsyS0dh7dW3AwiySq30mtIu16Lpe7pYltJoAmB
-	muCMAGFO4AcYD3ZqOLoG5UIfPH3iw2e6YQEO6UjR0m4H/jroXA==
-X-Google-Smtp-Source: AGHT+IFEMyWcAcqOEFbcyT/yrtYZJx8PYnYGhp0KuSEal/fflTbBO9CbsaFUxysMnyygE2daNgRd/NjFO6m06R+oiAo=
-X-Received: by 2002:a25:ab52:0:b0:dc2:3bb2:61 with SMTP id u76-20020a25ab52000000b00dc23bb20061mr367501ybi.90.1705473461632;
- Tue, 16 Jan 2024 22:37:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705477056; x=1706081856;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mYY6pYg4hJx8t4EgMJgj47ze8WV3NufoN+cY8Yko8wU=;
+        b=GoeOSSiDzvC+U+GkLCRUj8mKkUnFAnWK7jrKkyR+uTOhZGpZbdx3hzci5tRajqwprN
+         R4LMAJHwgfWVaD2jQ9wc7apRNwmI43GROOXLV+7mCFQvYoqUyvYjOpeWheoyMJadKbqn
+         +8IwNqT6AbxiQUm3r9jynoKlKonDU14X3ilVct2C2BySR0uhqo/9okUQiGg3q9+WFRy2
+         svX/I/6XoP/mMOmhPoEvVh+1x16Hz1jz+/B/cC47JvvmUPJI1+N9+rY7o6XMXDfem0NP
+         H8ETT/0ezaId+ehS0WLBeJxK0Awkmz1MuTZ8bBiDS7ShSVzWrbDGSkDy3AWk2yNigmzV
+         Xnrg==
+X-Gm-Message-State: AOJu0Yzn+wxmKd6VZy2Smunqtxz0guUL6Mu1YfLUsMz+e/fFwU27W2ot
+	47vPm3/LvOu/0XWj/EiVtyzKmYM7CqGWyw==
+X-Google-Smtp-Source: AGHT+IGI2hc8ONom1x59NxfFXZFzuHKuCXPlvMiNSpZswnyOsMJ0vVpL5nxjhgoEBxbXs1a6lONRLw==
+X-Received: by 2002:a17:907:a609:b0:a2d:89a3:3c17 with SMTP id vt9-20020a170907a60900b00a2d89a33c17mr2601230ejc.110.1705477055857;
+        Tue, 16 Jan 2024 23:37:35 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id bv2-20020a170906b1c200b00a2e81e4876dsm1507299ejb.44.2024.01.16.23.37.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jan 2024 23:37:35 -0800 (PST)
+Message-ID: <5b39c702-c74e-4cd5-accf-b6b8792e65b2@linaro.org>
+Date: Wed, 17 Jan 2024 08:37:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240116041054.11641-1-nylon.chen@sifive.com> <20240116041054.11641-2-nylon.chen@sifive.com>
- <CAJM55Z9ZbmbPKaJ8LJ5KyoCW9fAEJaT3Q4PbcadwLNCq1NXbxA@mail.gmail.com> <20240116-custard-drew-9a02e83d538a@wendy>
-In-Reply-To: <20240116-custard-drew-9a02e83d538a@wendy>
-From: Nylon Chen <nylon.chen@sifive.com>
-Date: Wed, 17 Jan 2024 14:37:30 +0800
-Message-ID: <CAHh=Yk_dye_KMXbug1VwYXU0Wm-mZgx_t-oJx1N0uYVByb1z7Q@mail.gmail.com>
-Subject: Re: [v6 1/3] riscv: dts: sifive: unleashed/unmatched: Remove PWM
- controlled LED's active-low properties
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: Emil Renner Berthing <emil.renner.berthing@canonical.com>, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, conor+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	robh+dt@kernel.org, u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com, 
-	aou@eecs.berkeley.edu, zong.li@sifve.com, vincent.chen@sifive.com, 
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	nylon7717@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT schema
+ format
+Content-Language: en-US
+To: Dharma.B@microchip.com, sam@ravnborg.org, bbrezillon@kernel.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, daniel@ffwll.ch, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+ claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, lee@kernel.org, thierry.reding@gmail.com,
+ u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+References: <20240110102535.246177-1-dharma.b@microchip.com>
+ <20240110102535.246177-3-dharma.b@microchip.com>
+ <683b7838-9c19-4a51-8ec4-90ac8a8a94ce@linaro.org>
+ <a59fe94a-feac-439e-a93d-3a90f7d05de5@microchip.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <a59fe94a-feac-439e-a93d-3a90f7d05de5@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Conor Dooley <conor.dooley@microchip.com> =E6=96=BC 2024=E5=B9=B41=E6=9C=88=
-16=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=886:45=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
-> On Tue, Jan 16, 2024 at 02:20:57AM -0800, Emil Renner Berthing wrote:
-> > Nylon Chen wrote:
-> > > This removes the active-low properties of the PWM-controlled LEDs in
-> > > the HiFive Unmatched device tree.
-> > >
-> > > The reference is hifive-unleashed-a00.pdf[0] and hifive-unmatched-sch=
-ematics-v3.pdf[1].
-> > >
-> > > Link: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7b=
-f8453f8698_hifive-unleashed-a00-schematics-1.pdf [0]
-> > > Link: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e6=
-8ce76f4192_hifive-unmatched-schematics-v3.pdf [1]
-> > >
-> > > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> > > Co-developed-by: Zong Li <zong.li@sifve.com>
-> > > Signed-off-by: Zong Li <zong.li@sifve.com>
-> > > Co-developed-by: Vincent Chen <vincent.chen@sifive.com>
-> > > Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-> > > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
-> > > ---
-> > >  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++----
-> > >  arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 12 ++++-------=
--
-> > >  2 files changed, 8 insertions(+), 12 deletions(-)
-> > >
-> > > diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/ar=
-ch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> > > index 900a50526d77..11e7ac1c54bb 100644
-> > > --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> > > +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> > > @@ -49,7 +49,7 @@ led-controller {
-> > >             compatible =3D "pwm-leds";
-> > >
-> > >             led-d1 {
-> > > -                   pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
-> > > +                   pwms =3D <&pwm0 0 7812500 0>;
-> > >                     active-low;
-> > >                     color =3D <LED_COLOR_ID_GREEN>;
-> > >                     max-brightness =3D <255>;
-> > > @@ -57,7 +57,7 @@ led-d1 {
-> > >             };
-> > >
-> > >             led-d2 {
-> > > -                   pwms =3D <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
-> > > +                   pwms =3D <&pwm0 1 7812500 0>;
-> > >                     active-low;
-> > >                     color =3D <LED_COLOR_ID_GREEN>;
-> > >                     max-brightness =3D <255>;
-> > > @@ -65,7 +65,7 @@ led-d2 {
-> > >             };
-> > >
-> > >             led-d3 {
-> > > -                   pwms =3D <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
-> > > +                   pwms =3D <&pwm0 2 7812500 0>;
-> > >                     active-low;
-> > >                     color =3D <LED_COLOR_ID_GREEN>;
-> > >                     max-brightness =3D <255>;
-> > > @@ -73,7 +73,7 @@ led-d3 {
-> > >             };
-> > >
-> > >             led-d4 {
-> > > -                   pwms =3D <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
-> > > +                   pwms =3D <&pwm0 3 7812500 0>;
-> > >                     active-low;
-> > >                     color =3D <LED_COLOR_ID_GREEN>;
-> > >                     max-brightness =3D <255>;
-> > > diff --git a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts b/ar=
-ch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> > > index 07387f9c135c..b328ee80693f 100644
-> > > --- a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> > > +++ b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> > > @@ -51,8 +51,7 @@ led-controller-1 {
-> > >             compatible =3D "pwm-leds";
-> > >
-> > >             led-d12 {
-> > > -                   pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
-> > > -                   active-low;
-> > > +                   pwms =3D <&pwm0 0 7812500 0>;
-> >
+On 17/01/2024 03:22, Dharma.B@microchip.com wrote:
+> Hi Krzysztof,
+> On 10/01/24 11:31 pm, Krzysztof Kozlowski wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>
+>> On 10/01/2024 11:25, Dharma Balasubiramani wrote:
+>>> Convert the atmel,hlcdc binding to DT schema format.
+>>>
+>>> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+>>> ---
+>>>   .../devicetree/bindings/mfd/atmel,hlcdc.yaml  | 106 ++++++++++++++++++
+>>>   .../devicetree/bindings/mfd/atmel-hlcdc.txt   |  56 ---------
+>>>   2 files changed, 106 insertions(+), 56 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
+>>>   delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
+>>> new file mode 100644
+>>> index 000000000000..555d6faa9104
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
+>>
+>> This looks not tested, so limited review follows:
+> I acknowledge that I didn't test the patches individually. I appreciate 
+> your understanding. Taken care in v2.
+>>
+>>> @@ -0,0 +1,106 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>> +# Copyright (C) 2024 Microchip Technology, Inc. and its subsidiaries
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/mfd/atmel,hlcdc.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Atmel's HLCDC (High LCD Controller) MFD driver
+>>
+>> Drop "MFD driver" and rather describe/name the hardware. MFD is Linux
+>> term, so I really doubt that's how this was called.
+> Done.
+>>
+>>> +
+>>> +maintainers:
+>>> +  - Nicolas Ferre <nicolas.ferre@microchip.com>
+>>> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
+>>> +  - Claudiu Beznea <claudiu.beznea@tuxon.dev>
+>>> +
+>>> +description: |
+>>> +  Device-Tree bindings for Atmel's HLCDC (High LCD Controller) MFD driver.
+>>
+>> Drop
+> Done.
+>>
+>>> +  The HLCDC IP exposes two subdevices:
+>>> +  # a PWM chip: see ../pwm/atmel,hlcdc-pwm.yaml
+>>> +  # a Display Controller: see ../display/atmel/atmel,hlcdc-dc.yaml
+>>
+>> Rephrase to describe hardware. Drop redundant paths.
+> Sure, I will truncate this to "subdevices: a PWM chip and a display 
+> controller." & drop the |.
+> 
+> I added description about those two subdevices below.
 
-Hi Emil and Conor, thanks for your feedback.
->
->
-> > Here you remove the active-low property, but you don't above. I'm not s=
-ure
-> > what's the right thing to do, but I would have expected the same change=
- in both
-> > places.
->
-For this patch, all "active-low" should be deleted. This is my
-mistake. I will fix it in the next version.
->
->
-> Just to note, the original version of this that I acked/reviewed removed
-> the property from all led nodes. I then apparently didn't look closely
-> enough at v5 and left acked/reviewed tags on it too. It did not remove
-> the active-low properties but this change was not mentioned in the
-> changelog for the series.
-Sorry Conor, I apologize for any confusion I may have caused.
->
-> D4 on the unleashed and D12 on the unmatched have the same circuitry
-> (modulo the placement of the series resistor) so I don't get why the
-> property is being removed from only D12.
->
-> I rescind my ack/review until that is clarified and/or fixed.
->
-> Thanks,
-> Conor.
->
->
-> > >                     color =3D <LED_COLOR_ID_GREEN>;
-> > >                     max-brightness =3D <255>;
-> > >                     label =3D "d12";
-> > > @@ -68,20 +67,17 @@ multi-led {
-> > >                     label =3D "d2";
-> > >
-> > >                     led-red {
-> > > -                           pwms =3D <&pwm0 2 7812500 PWM_POLARITY_IN=
-VERTED>;
-> > > -                           active-low;
-> > > +                           pwms =3D <&pwm0 2 7812500 0>;
-> > >                             color =3D <LED_COLOR_ID_RED>;
-> > >                     };
-> > >
-> > >                     led-green {
-> > > -                           pwms =3D <&pwm0 1 7812500 PWM_POLARITY_IN=
-VERTED>;
-> > > -                           active-low;
-> > > +                           pwms =3D <&pwm0 1 7812500 0>;
-> > >                             color =3D <LED_COLOR_ID_GREEN>;
-> > >                     };
-> > >
-> > >                     led-blue {
-> > > -                           pwms =3D <&pwm0 3 7812500 PWM_POLARITY_IN=
-VERTED>;
-> > > -                           active-low;
-> > > +                           pwms =3D <&pwm0 3 7812500 0>;
-> > >                             color =3D <LED_COLOR_ID_BLUE>;
-> > >                     };
-> > >             };
-> > > --
-> > > 2.42.0
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-riscv mailing list
-> > > linux-riscv@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-riscv
+Then why do you still keep there comments? # is a comment.
+...
+
+> in v3.
+>>
+>>> +
+>>> +  hlcdc-display-controller:
+>>
+>> Does anything depend on the name? If not, then just display-controller
+> Got an error "'hlcdc-display-controller' does not match any of the 
+> regexes: 'pinctrl-[0-9]+'" so I retained it in v2,but as conor advised 
+> to have node names generic and we can easily adopt, I will modify it in v3.
+
+That's not a dependency. I was talking about any users of the binding.
+User of a binding is for example: Linux kernel driver, other open-source
+projects, out-of-tree projects.
+
+
+Best regards,
+Krzysztof
+
 
