@@ -1,288 +1,133 @@
-Return-Path: <linux-pwm+bounces-844-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-846-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68E158315BF
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 10:27:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 841318315E2
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 10:32:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18C792878E7
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 09:27:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E06E284BC7
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 09:32:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1C9F1F945;
-	Thu, 18 Jan 2024 09:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="GgaDCg1W"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 240C21F92D;
+	Thu, 18 Jan 2024 09:32:27 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D055E200B6;
-	Thu, 18 Jan 2024 09:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6931F940
+	for <linux-pwm@vger.kernel.org>; Thu, 18 Jan 2024 09:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705570016; cv=none; b=XC68rBuYPuSgIatKrty+mhFsPmTxvClPlNcZBRiXX9SGNLD3tsQrp3UK8XCJj2hdx+Y3oE6qt9do+Lsd1PmXsP1ol0xzHf8FSI4RvYqPkbL6Nz7iL7Pu7Mh4AFD+8DHdCuQNGyIsWqt7cnHIaqfUpAqx7varXLTKS+8TdneVMbQ=
+	t=1705570347; cv=none; b=jxLeSTOqFs8ZsZp6Qfo+XX79B0y7nBqni3Y+t/6kOB+QPx6A3KQj0r8JqFTLNVcwoMspA7kN17/5fJlZBvCy+r8FN3Ex13ERuYaOtog542P2d7Ob9YHmciJs8udPNCtZcFMM8wJbIjpUpc6GFjfaMue4sStThqh1T9EySPDWcgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705570016; c=relaxed/simple;
-	bh=MCV4dqB4eVaGjG7L5iQ57P5luLp5+R3l+cbnAaRFZOs=;
-	h=DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:X-IronPort-AV:
-	 X-Amp-Result:Received:Received:Received:From:To:CC:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type; b=aRv9npH8OZ8KP7XB9zTyruRtZs5NU+uOSzfYBBefDVoEwJ2Tdv49hC75eLic7DwvzL45oFeifcunTmnEG7Z933s1vzpDjmIcDNRZlwjsEHuCWPt76KJiTRqvowE7ZaAndy3Gk7qZDQV/5M4lPAhfE8kWBcnBMiPYpGuhKeP3CX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=GgaDCg1W; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1705570015; x=1737106015;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MCV4dqB4eVaGjG7L5iQ57P5luLp5+R3l+cbnAaRFZOs=;
-  b=GgaDCg1Wk8Z9YyrCzKJUpPojwY1yhwRyxxJUu5q1fMvLORml1dOpS0mb
-   QGnd386/rcrz1vdiu5HGpDJQ6xLWKY/FPgupXJaNmvYX0QRxgZzVP441z
-   zSL4I83GyCTvnIcsro+yRb/BxMG6+ba4HJFqsDgzVc5RQbjcEMyiZ07wo
-   XvChRdpnjodt03vCsS3heR9fLfs7loh0CasG6tTg3vFBu5cYSbVFX7XZN
-   T7bu/hzGac/hFD7Mfhlfktap7vXaKTPNO3UwSSNGSgr6Z1F0EIZxrbDad
-   Csq/yRjMQsWeuph0HwmlhiwX06A9Inzz/0YC6IlXwTHYEV0PBcmNX0TdO
-   A==;
-X-CSE-ConnectionGUID: /RVRxSQxQqyqw2wXGfeV8A==
-X-CSE-MsgGUID: 8AbJbon5RFKSA22ZDWONgQ==
-X-IronPort-AV: E=Sophos;i="6.05,201,1701154800"; 
-   d="scan'208";a="245651304"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Jan 2024 02:26:53 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 18 Jan 2024 02:26:52 -0700
-Received: from che-lt-i70843lx.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Thu, 18 Jan 2024 02:26:42 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-To: <conor.dooley@microchip.com>, <sam@ravnborg.org>, <bbrezillon@kernel.org>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
-	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<lee@kernel.org>, <thierry.reding@gmail.com>,
-	<u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>
-CC: <linux4microchip@microchip.com>, Dharma Balasubiramani
-	<dharma.b@microchip.com>
-Subject: [PATCH v3 3/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT schema format
-Date: Thu, 18 Jan 2024 14:56:12 +0530
-Message-ID: <20240118092612.117491-4-dharma.b@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240118092612.117491-1-dharma.b@microchip.com>
-References: <20240118092612.117491-1-dharma.b@microchip.com>
+	s=arc-20240116; t=1705570347; c=relaxed/simple;
+	bh=x4OR2QnV/+fgMTmdwS/QmOKbvtbDOKH/eK433t7NRV0=;
+	h=Received:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-SA-Exim-Connect-IP:X-SA-Exim-Mail-From:
+	 X-SA-Exim-Scanned:X-PTX-Original-Recipient; b=uwuJ6+gnqtNSfuyvavJY8PA00eux/bSBEGae6lmfjgsuL7MDyvplFECHVx+2E0ZruDip9LCNPpAQ56tZV/vO+HkwYwlJZcycCI7DbHkPCFskjT2+lU+FSSkRlnY+goYCG22Bsu8ZSzySj8EGL6a9fhI4gBRgv18rIKPhwUrLmA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rQOj3-0002xz-Tn; Thu, 18 Jan 2024 10:30:17 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rQOiy-000etK-Ax; Thu, 18 Jan 2024 10:30:12 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rQOiy-002Ifg-0Y;
+	Thu, 18 Jan 2024 10:30:12 +0100
+Date: Thu, 18 Jan 2024 10:30:11 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: nikita.shubin@maquefel.me
+Cc: Hartley Sweeten <hsweeten@visionengravers.com>, 
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Lukasz Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	Guenter Roeck <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Ralf Baechle <ralf@linux-mips.org>, "Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
+	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-spi@vger.kernel.org, netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	linux-ide@vger.kernel.org, linux-input@vger.kernel.org, linux-sound@vger.kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 00/39] ep93xx device tree conversion
+Message-ID: <a54csycouodnmj6qarfel7cvgupaerl7uhrruixuy7uaekqgzw@2whufrjqunme>
+References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="s7rbtueqy4vwjth4"
+Content-Disposition: inline
+In-Reply-To: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-Convert the atmel,hlcdc binding to DT schema format.
 
-Adjust the clock-names property to clarify that the LCD controller expects
-one of these clocks (either sys_clk or lvds_pll_clk to be present but not
-both) along with the slow_clk and periph_clk. This alignment with the actual
-hardware requirements will enable accurate device tree configuration for
-systems using the HLCDC IP.
+--s7rbtueqy4vwjth4
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
----
-changelog
-v2 -> v3
-- Rename hlcdc-display-controller and hlcdc-pwm to generic names.
-- Modify the description by removing the unwanted comments and '|'.
-- Modify clock-names simpler.
-v1 -> v2
-- Remove the explicit copyrights.
-- Modify title (not include words like binding/driver).
-- Modify description actually describing the hardware and not the driver.
-- Add details of lvds_pll addition in commit message.
-- Ref endpoint and not endpoint-base.
-- Fix coding style.
-...
- .../devicetree/bindings/mfd/atmel,hlcdc.yaml  | 97 +++++++++++++++++++
- .../devicetree/bindings/mfd/atmel-hlcdc.txt   | 56 -----------
- 2 files changed, 97 insertions(+), 56 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
- delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+Hello,
 
-diff --git a/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
-new file mode 100644
-index 000000000000..eccc998ac42c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/atmel,hlcdc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Atmel's HLCD Controller
-+
-+maintainers:
-+  - Nicolas Ferre <nicolas.ferre@microchip.com>
-+  - Alexandre Belloni <alexandre.belloni@bootlin.com>
-+  - Claudiu Beznea <claudiu.beznea@tuxon.dev>
-+
-+description:
-+  The Atmel HLCDC (HLCD Controller) IP available on Atmel SoCs exposes two
-+  subdevices, a PWM chip and a Display Controller.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - atmel,at91sam9n12-hlcdc
-+      - atmel,at91sam9x5-hlcdc
-+      - atmel,sama5d2-hlcdc
-+      - atmel,sama5d3-hlcdc
-+      - atmel,sama5d4-hlcdc
-+      - microchip,sam9x60-hlcdc
-+      - microchip,sam9x75-xlcdc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 3
-+
-+  clock-names:
-+    items:
-+      - const: periph_clk
-+      - enum: [sys_clk, lvds_pll_clk]
-+      - const: slow_clk
-+
-+  display-controller:
-+    $ref: /schemas/display/atmel/atmel,hlcdc-display-controller.yaml
-+
-+  pwm:
-+    $ref: /schemas/pwm/atmel,hlcdc-pwm.yaml
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/at91.h>
-+    #include <dt-bindings/dma/at91.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    lcd_controller: lcd-controller@f0030000 {
-+      compatible = "atmel,sama5d3-hlcdc";
-+      reg = <0xf0030000 0x2000>;
-+      clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
-+      clock-names = "periph_clk", "sys_clk", "slow_clk";
-+      interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
-+
-+      display-controller {
-+        compatible = "atmel,hlcdc-display-controller";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        port@0 {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+          reg = <0>;
-+
-+          hlcdc_panel_output: endpoint@0 {
-+            reg = <0>;
-+            remote-endpoint = <&panel_input>;
-+          };
-+        };
-+      };
-+
-+      pwm {
-+        compatible = "atmel,hlcdc-pwm";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&pinctrl_lcd_pwm>;
-+        #pwm-cells = <3>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
-deleted file mode 100644
-index 7de696eefaed..000000000000
---- a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
-+++ /dev/null
-@@ -1,56 +0,0 @@
--Device-Tree bindings for Atmel's HLCDC (High LCD Controller) MFD driver
--
--Required properties:
-- - compatible: value should be one of the following:
--   "atmel,at91sam9n12-hlcdc"
--   "atmel,at91sam9x5-hlcdc"
--   "atmel,sama5d2-hlcdc"
--   "atmel,sama5d3-hlcdc"
--   "atmel,sama5d4-hlcdc"
--   "microchip,sam9x60-hlcdc"
--   "microchip,sam9x75-xlcdc"
-- - reg: base address and size of the HLCDC device registers.
-- - clock-names: the name of the 3 clocks requested by the HLCDC device.
--   Should contain "periph_clk", "sys_clk" and "slow_clk".
-- - clocks: should contain the 3 clocks requested by the HLCDC device.
-- - interrupts: should contain the description of the HLCDC interrupt line
--
--The HLCDC IP exposes two subdevices:
-- - a PWM chip: see ../pwm/atmel-hlcdc-pwm.txt
-- - a Display Controller: see ../display/atmel/hlcdc-dc.txt
--
--Example:
--
--	hlcdc: hlcdc@f0030000 {
--		compatible = "atmel,sama5d3-hlcdc";
--		reg = <0xf0030000 0x2000>;
--		clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
--		clock-names = "periph_clk","sys_clk", "slow_clk";
--		interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
--
--		hlcdc-display-controller {
--			compatible = "atmel,hlcdc-display-controller";
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			port@0 {
--				#address-cells = <1>;
--				#size-cells = <0>;
--				reg = <0>;
--
--				hlcdc_panel_output: endpoint@0 {
--					reg = <0>;
--					remote-endpoint = <&panel_input>;
--				};
--			};
--		};
--
--		hlcdc_pwm: hlcdc-pwm {
--			compatible = "atmel,hlcdc-pwm";
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_lcd_pwm>;
--			#pwm-cells = <3>;
--		};
--	};
--- 
-2.25.1
+On Thu, Jan 18, 2024 at 11:20:43AM +0300, Nikita Shubin via B4 Relay wrote:
+> No major changes since last version (v6) all changes are cometic.
 
+Never saw changes described as "cometic". I guess that means "fast" and
+"high impact"?
+
+SCNR
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--s7rbtueqy4vwjth4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWo76MACgkQj4D7WH0S
+/k5uKAf/Z0JDYxAVHNppDOc31mQ8q/h4mL5VX4NFHWitBkLRBX5sufWi6uUBbK7h
+KA9Z1DHWGNNXUXsV2IsXKsw6WcsC+Wj/g+hUfWMx2kvbnvD8JtYBl1+MJALeBVlt
+aQCy1yMPL36xcy8vSLyh63vZXUHyBaWuooRwVqOhklHSg7/rwSEwECEZZqsg748Z
+iiYmSVRjLlktw1yUtJBvlO1fXWQ41DSbyaQWaIJvbym8B5+2XXW2BTGZOg7CuDz5
+HG9KvXf2AnAEM4RAV6Oo/WKBBEq0kfQ/UBkkH85YOaXrDlNblggfMix84LyansxB
+43g95kkMn3JP3koNgEA+nk73+SCctA==
+=1qlI
+-----END PGP SIGNATURE-----
+
+--s7rbtueqy4vwjth4--
 
