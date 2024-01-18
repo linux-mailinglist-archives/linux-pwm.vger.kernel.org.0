@@ -1,227 +1,153 @@
-Return-Path: <linux-pwm+bounces-838-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-839-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B318883148C
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 09:24:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE1918314D6
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 09:38:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A22A1F24496
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 08:24:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71EF4282D24
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 08:38:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC4EA219F7;
-	Thu, 18 Jan 2024 08:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9eiBwBm"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B55628DA9;
+	Thu, 18 Jan 2024 08:29:16 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B02420B19;
-	Thu, 18 Jan 2024 08:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB2228DB3
+	for <linux-pwm@vger.kernel.org>; Thu, 18 Jan 2024 08:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705566180; cv=none; b=Hqo8J6k/D/P5cESqoEHNb7cKbEDJHvS6hTWr/6nV46Tzl0K8cIBP3t+KzrT3YWOeH9QeaL+yzv6D+i48NzKK/jKklL9xBYHlEAmUU06tkbHGFRRGeRqzyCgmn5Z9SpDhnIzKSuJAm0qxKIkahDqQBEhRaWpeumBcaontL09vx+8=
+	t=1705566556; cv=none; b=VcRmbCCMN5+JjPiWvg66cUaXeXB8fnJ67l32HXiPsPRZcoCkrPbdqmkDy9fqyVy2oDJvZWvJvkRaQYfSenLmhZd3tNDgCXPSwLS2zjTCz7ehn1Jbwq2X5R6jnLOJHBGyaA4vkXofbU/MZnDzBoo08BUnb3ZwroT+2BpiKjm3gJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705566180; c=relaxed/simple;
-	bh=0AP5jOr0kcxnDwVy44nLG1Q6cTn3VJnAgm1Ofg4TYoQ=;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
-	 X-Endpoint-Received:X-Original-From:Reply-To; b=XnHeWrnZ3fOykjKSH3I218MA7YvGW7xtPZVQ/rdbGrduyyJ+mBsyBHzBIhEGjFRnlc0panTYV66pPk9XIYfaOe0CVZ88pU6ybxDfX2/jEcQ4YQevvUltGtP2rjv7M/TJAV699bOsEs2WeVK/1xGmqZYFegJsnlTQiEpiQoz0r1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9eiBwBm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 56542C4E67C;
-	Thu, 18 Jan 2024 08:23:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705566180;
-	bh=0AP5jOr0kcxnDwVy44nLG1Q6cTn3VJnAgm1Ofg4TYoQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=V9eiBwBmVJizwx9kN3fY2dZWZmXkRA9WyoaKxKs/wo6fqyrPCdiS2dXnXyk2144Wd
-	 cxW0jngPkOr05HywUF8L2FNkA31cn8uu1Od3BKaLHo8UEnEOqUDUM/EVYq4RaHwcFo
-	 il6reDafINpdPMF/JqJnWruFkcYLRJClCaKbRFFdAjaJktMH/k4MPcVcsA4Er4pf3o
-	 I8gLOae6cwUmD4N/I5gNSOeJVeRCHbCT+MvE4SAk3ckUbIRiCYep9xE4DkHFb53kNi
-	 D68EVw1I/x7eQapR73m5ZQGP/wozB/eLWzD+QmqcppGs2CsjZUF3PbaWZg9meQJiJs
-	 7KP++IoKiHw7w==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B49C47DCF;
-	Thu, 18 Jan 2024 08:23:00 +0000 (UTC)
-From:
- Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Thu, 18 Jan 2024 11:21:17 +0300
-Subject: [PATCH v7 34/39] pwm: ep93xx: drop legacy pinctrl
+	s=arc-20240116; t=1705566556; c=relaxed/simple;
+	bh=2AYP5CD9AZz8aB6EdtcR9jZS/dHOeqWoSjb7AvRioso=;
+	h=Received:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 MIME-Version:Content-Type:Content-Disposition:X-SA-Exim-Connect-IP:
+	 X-SA-Exim-Mail-From:X-SA-Exim-Scanned:X-PTX-Original-Recipient; b=G10a/PQjRgBGjTmrlCVJ/IRS4qVf3pz1VJ8amGl328TJbNbf+crFOKSsNf8O1YUeG7CZ0dCLMRXWP6AhTwaSTAMOtcPnRJIFCstXqLyw6VjQYuSj3AoK08c8yButgqEdGVjiYfLL7H+VvrMO5bW24heb2ZDzi2MqperNajzNyd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rQNlv-0005et-5z; Thu, 18 Jan 2024 09:29:11 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rQNlu-000eGH-My; Thu, 18 Jan 2024 09:29:10 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rQNlu-002Gq5-21;
+	Thu, 18 Jan 2024 09:29:10 +0100
+Date: Thu, 18 Jan 2024 09:29:10 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Sean Young <sean@mess.org>, kernel@pengutronix.de
+Subject: [GIT PULL] pwm: Changes for v6.8-rc1, take 2
+Message-ID: <sbjugedbn2pyqcskybmxj2evju74ldyiwugnjpu4u5ln7ufrfj@m7hi2ie63aai>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240118-ep93xx-v7-34-d953846ae771@maquefel.me>
-References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
-In-Reply-To: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
-To: Hartley Sweeten <hsweeten@visionengravers.com>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
- Nikita Shubin <nikita.shubin@maquefel.me>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Damien Le Moal <dlemoal@kernel.org>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Sergey Shtylyov <s.shtylyov@omp.ru>
-Cc: Thierry Reding <thierry.reding@gmail.com>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705566176; l=4445;
- i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=TKmzJsDbCt6jQiF+EbUv2e6fJpGA78evP9E+SCft8XM=; =?utf-8?q?b=3DuTNETrcDdVn4?=
- =?utf-8?q?grQ+DzKgLck9mFseBIzYK2sG5C9k4qes3E0+i+e7QVxCqZcwd/eJodiHDoULoENl?=
- 5ehihrh2BSKrZqJonrvKYHz8cMMb177v66ZbH8QXFJpdvNVXGRaD
-X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
- pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
-X-Endpoint-Received:
- by B4 Relay for nikita.shubin@maquefel.me/20230718 with auth_id=65
-X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
-Reply-To: <nikita.shubin@maquefel.me>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oel4hbh7smqzfdfw"
+Content-Disposition: inline
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-Drop legacy gpio request/free since we are using
-pinctrl for this now.
+--oel4hbh7smqzfdfw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
----
- arch/arm/mach-ep93xx/core.c       | 42 ---------------------------------------
- drivers/pwm/pwm-ep93xx.c          | 18 -----------------
- include/linux/soc/cirrus/ep93xx.h |  4 ----
- 3 files changed, 64 deletions(-)
+Hello Linus,
 
-diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
-index b99c46d22c4d..4ddf1a4cba33 100644
---- a/arch/arm/mach-ep93xx/core.c
-+++ b/arch/arm/mach-ep93xx/core.c
-@@ -577,48 +577,6 @@ void __init ep93xx_register_pwm(int pwm0, int pwm1)
- 		platform_device_register(&ep93xx_pwm1_device);
- }
- 
--int ep93xx_pwm_acquire_gpio(struct platform_device *pdev)
--{
--	int err;
--
--	if (pdev->id == 0) {
--		err = 0;
--	} else if (pdev->id == 1) {
--		err = gpio_request(EP93XX_GPIO_LINE_EGPIO14,
--				   dev_name(&pdev->dev));
--		if (err)
--			return err;
--		err = gpio_direction_output(EP93XX_GPIO_LINE_EGPIO14, 0);
--		if (err)
--			goto fail;
--
--		/* PWM 1 output on EGPIO[14] */
--		ep93xx_devcfg_set_bits(EP93XX_SYSCON_DEVCFG_PONG);
--	} else {
--		err = -ENODEV;
--	}
--
--	return err;
--
--fail:
--	gpio_free(EP93XX_GPIO_LINE_EGPIO14);
--	return err;
--}
--EXPORT_SYMBOL(ep93xx_pwm_acquire_gpio);
--
--void ep93xx_pwm_release_gpio(struct platform_device *pdev)
--{
--	if (pdev->id == 1) {
--		gpio_direction_input(EP93XX_GPIO_LINE_EGPIO14);
--		gpio_free(EP93XX_GPIO_LINE_EGPIO14);
--
--		/* EGPIO[14] used for GPIO */
--		ep93xx_devcfg_clear_bits(EP93XX_SYSCON_DEVCFG_PONG);
--	}
--}
--EXPORT_SYMBOL(ep93xx_pwm_release_gpio);
--
--
- /*************************************************************************
-  * EP93xx video peripheral handling
-  *************************************************************************/
-diff --git a/drivers/pwm/pwm-ep93xx.c b/drivers/pwm/pwm-ep93xx.c
-index 7cf05d0b78fb..0d17dbe10fcf 100644
---- a/drivers/pwm/pwm-ep93xx.c
-+++ b/drivers/pwm/pwm-ep93xx.c
-@@ -27,8 +27,6 @@
- 
- #include <asm/div64.h>
- 
--#include <linux/soc/cirrus/ep93xx.h>	/* for ep93xx_pwm_{acquire,release}_gpio() */
--
- #define EP93XX_PWMx_TERM_COUNT	0x00
- #define EP93XX_PWMx_DUTY_CYCLE	0x04
- #define EP93XX_PWMx_ENABLE	0x08
-@@ -45,20 +43,6 @@ static inline struct ep93xx_pwm *to_ep93xx_pwm(struct pwm_chip *chip)
- 	return container_of(chip, struct ep93xx_pwm, chip);
- }
- 
--static int ep93xx_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct platform_device *pdev = to_platform_device(chip->dev);
--
--	return ep93xx_pwm_acquire_gpio(pdev);
--}
--
--static void ep93xx_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct platform_device *pdev = to_platform_device(chip->dev);
--
--	ep93xx_pwm_release_gpio(pdev);
--}
--
- static int ep93xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			    const struct pwm_state *state)
- {
-@@ -157,8 +141,6 @@ static int ep93xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- }
- 
- static const struct pwm_ops ep93xx_pwm_ops = {
--	.request = ep93xx_pwm_request,
--	.free = ep93xx_pwm_free,
- 	.apply = ep93xx_pwm_apply,
- };
- 
-diff --git a/include/linux/soc/cirrus/ep93xx.h b/include/linux/soc/cirrus/ep93xx.h
-index 8942bfaf1545..f6376edc1b33 100644
---- a/include/linux/soc/cirrus/ep93xx.h
-+++ b/include/linux/soc/cirrus/ep93xx.h
-@@ -37,8 +37,6 @@ struct ep93xx_regmap_adev {
- 	container_of((_adev), struct ep93xx_regmap_adev, adev)
- 
- #ifdef CONFIG_ARCH_EP93XX
--int ep93xx_pwm_acquire_gpio(struct platform_device *pdev);
--void ep93xx_pwm_release_gpio(struct platform_device *pdev);
- int ep93xx_ide_acquire_gpio(struct platform_device *pdev);
- void ep93xx_ide_release_gpio(struct platform_device *pdev);
- int ep93xx_i2s_acquire(void);
-@@ -46,8 +44,6 @@ void ep93xx_i2s_release(void);
- unsigned int ep93xx_chip_revision(void);
- 
- #else
--static inline int ep93xx_pwm_acquire_gpio(struct platform_device *pdev) { return 0; }
--static inline void ep93xx_pwm_release_gpio(struct platform_device *pdev) {}
- static inline int ep93xx_ide_acquire_gpio(struct platform_device *pdev) { return 0; }
- static inline void ep93xx_ide_release_gpio(struct platform_device *pdev) {}
- static inline int ep93xx_i2s_acquire(void) { return 0; }
+the following changes since commit 7afc0e7f681e6efd6b826f003fc14c17b5093643:
 
--- 
-2.41.0
+  MAINTAINERS: pwm: Thierry steps down, Uwe takes over (2024-01-12 16:40:34=
+ +0100)
 
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/ukleinek/linux tags/pwm/=
+for-6.8-2
+
+for you to fetch changes up to 9320fc509b87b4d795fb37112931e2f4f8b5c55f:
+
+  pwm: jz4740: Don't use dev_err_probe() in .request() (2024-01-12 18:25:05=
+ +0100)
+
+The commits are in next since next-20240117 only, but they are small
+and obvious enough to qualify for inclusion IMHO.
+
+Please pull this for v6.8-rc1.
+
+Thanks to Sean for his contribution to this PR.
+
+Best regards
+Uwe
+
+----------------------------------------------------------------
+pwm changes for 6.8, take 2
+
+The first commit fixes a duplicate cleanup in an error path introduced
+in pwm/for-6.8-rc1~13.
+
+The second cares for an out-of-bounds access. In practise it doesn't
+happen---otherwise someone would have noticed since v5.17-rc1 I
+guess---because the device tree binding for the two drivers using
+of_pwm_single_xlate() only have args->args_count =3D=3D 1. A device-tree
+that doesn't conform to the respective bindings could trigger that
+easily however.
+
+The third and last one corrects the request callback of the jz4740 pwm
+driver which used dev_err_probe() long after .probe() completed. This is
+conceptually wrong because dev_err_probe() might call
+device_set_deferred_probe_reason() which is nonsensical after the driver
+is bound.
+----------------------------------------------------------------
+
+Sean Young (1):
+      pwm: bcm2835: Remove duplicate call to clk_rate_exclusive_put()
+
+Uwe Kleine-K=F6nig (2):
+      pwm: Fix out-of-bounds access in of_pwm_single_xlate()
+      pwm: jz4740: Don't use dev_err_probe() in .request()
+
+ drivers/pwm/core.c        | 2 +-
+ drivers/pwm/pwm-bcm2835.c | 4 +---
+ drivers/pwm/pwm-jz4740.c  | 7 ++++---
+ 3 files changed, 6 insertions(+), 7 deletions(-)
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--oel4hbh7smqzfdfw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWo4VUACgkQj4D7WH0S
+/k7FqggAqzHss9G/SniAytw4Kh6MuU+Dzu55g71yItXx1o2XK21pgfCwsiGdGBBS
+1xXuHBaluaj92NceWK8/ID1ikLhvJJSCN5AyeOrow+JOru3RbiCZEg14LC0enb9s
+3cXB/BduiEvSxzS6iPdACxMFtn0o02yYVMWWM65YcFRej05dYP2fVLWUD6o63JTE
+O3e6b9Iac3LFFY3Vd/Hhrz9q/lJtjv6RgL0UJ+J610r775zURq+rp4N00z9wKQHq
+eq16Be4ONHfida9pTlH1g882wIOQaejChCem9BTYugiGFSw4CT6TmsY5facBYsA6
+tj9pw07DQSoljyini9JBDnRll68D0A==
+=mReT
+-----END PGP SIGNATURE-----
+
+--oel4hbh7smqzfdfw--
 
