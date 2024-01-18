@@ -1,263 +1,530 @@
-Return-Path: <linux-pwm+bounces-834-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-835-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A64F83128A
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 06:51:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FE30831460
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 09:23:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD3E8287165
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 05:51:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 91DC81F24485
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 08:23:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC818B64C;
-	Thu, 18 Jan 2024 05:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3799125AD;
+	Thu, 18 Jan 2024 08:22:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="CKbYnlm3";
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="GeI6wfJ3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHD+3fYF"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7653DB641;
-	Thu, 18 Jan 2024 05:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.154.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705557058; cv=fail; b=tHWec9x+/I2PvzbEBy3CoyhHnbjibEKZILenSES18YRGJm3MAViB6zjyoJw9Z9GFEeLRta9OuS+hqY3axyosAD40GBtIcm8UOC7u2fAlrzHzLMknO7osutuk5K1TB1qY3Evng2imCTHu8OIOvA7wzWC50Fga/IUMFfJqj/dkEk4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705557058; c=relaxed/simple;
-	bh=cEqdnPnf4HYrzcgFVm/7di/GOvEt3IIr54iyIJFCg9c=;
-	h=DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:X-IronPort-AV:
-	 X-Amp-Result:Received:Received:Received:ARC-Message-Signature:
-	 ARC-Authentication-Results:DKIM-Signature:Received:Received:From:
-	 To:Subject:Thread-Topic:Thread-Index:Date:Message-ID:References:
-	 In-Reply-To:Accept-Language:Content-Language:X-MS-Has-Attach:
-	 X-MS-TNEF-Correlator:x-ms-publictraffictype:
-	 x-ms-traffictypediagnostic:x-ms-office365-filtering-correlation-id:
-	 x-ms-exchange-senderadcheck:x-ms-exchange-antispam-relay:
-	 x-microsoft-antispam:x-microsoft-antispam-message-info:
-	 x-forefront-antispam-report:
-	 x-ms-exchange-antispam-messagedata-chunkcount:
-	 x-ms-exchange-antispam-messagedata-0:Content-Type:Content-ID:
-	 Content-Transfer-Encoding:MIME-Version:
-	 X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-originalarrivaltime:
-	 X-MS-Exchange-CrossTenant-fromentityheader:
-	 X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-	 X-MS-Exchange-CrossTenant-userprincipalname:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=b0iTnTAGF73ha4VChORbdxaPcyiCriyP95KRUqwTv8asuTkXi5xNzPdZAK1VjOnmst7p5apOdSn4H0XVN9qEJgMCrYqOmkAtIs5JsnZu+1LR7PHAkmHUQ76SJg7x+oaLohqN6C7FFfnTOWixVf4K4HmwaJ48ISqUtmkN5HV/N/w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=CKbYnlm3; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=GeI6wfJ3; arc=fail smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1705557056; x=1737093056;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version;
-  bh=cEqdnPnf4HYrzcgFVm/7di/GOvEt3IIr54iyIJFCg9c=;
-  b=CKbYnlm3fnU6E8dMniuHbxiEHokfWJd2oqaqY3qlgROum5EGiokq++GZ
-   Edm2+vBroWZeF7T0SlfNZYxSCANiQ9qc442jsswDcsR6I8W/HfsFtaiEa
-   LJMOPA2ZuC0TH7Ccs7YXrUb12v7eyw9I5RDpvc3O9rY4aGb8e02qYouy/
-   vy/pWA9hy+jMzylnhhKrsrQWWRJJtVryie1XwmMMChNeHRexm6CKo7Niu
-   L1uM8SeAPzqJ3VFVZTgytRa4yeQMUanaZmn3xr0uJdMkJFYBjNy3lEJHV
-   KnvvXhk73BlK18+OxB2hw8sm4kR/aDWS0Aj8U4PB6zg0yZYTT/+b0SIAb
-   w==;
-X-CSE-ConnectionGUID: WQ76XdzIT5KmW24LymELGw==
-X-CSE-MsgGUID: EoFZfwZHQi+9BcB+hAPq6A==
-X-IronPort-AV: E=Sophos;i="6.05,201,1701154800"; 
-   d="scan'208";a="182158580"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 17 Jan 2024 22:50:48 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 17 Jan 2024 22:50:33 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (10.10.215.250)
- by email.microchip.com (10.10.87.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 17 Jan 2024 22:50:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q7m+WT9HAVMsmCMx6frDDU0CPQJdao6J8uIUb/DNpulJWMPq27lexyklfeDfP8yT4EP0B35H+QGkPr0VWw/UtHCm5aMqVze0nhWEaJHUPzDMikqvm9VueOzVxae52g18d68OwEpNRS7jYcopMg5ew/QqCuZE8GGxqbashyp0x9H8QBnAYiNB/7JorR+Chv1BQOyNJTzg1KXb3AcA1gLvJBnno4Vb3OKCXkW0NbDXv8fVT2RSERmHIs3AccyKzKJl+j1iAwydFnSgCC5ZbW4va1gAvumYiVvH/X0WCVZEacnNPb7YBC/IZOJsI34M+k3vf26PBo8HjkdMKLwOilwC0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cEqdnPnf4HYrzcgFVm/7di/GOvEt3IIr54iyIJFCg9c=;
- b=Gc0vqP9oHc3K26q/DT+bSKLAvyu5luzfTJ4ncA4z7+qlndeb0fm1YmQqgVOraAJ5qI98Bb07MEeqnBUPVn6OixVTLcVsJNG9bBzOpOcZIgyFILs9Vwi2DP1WE7rUq8Sr05IdLUEJ73Y9nWNdTD2FDu3290Ry9uL8EdynLpG0iRQ/NN7iR5ihEQ9oqRoyUTXYrmIT2iGaKbPzB8XMk7Kbc1Ihr75ex+JamJO3OxJcUwHMpojNM/drhqW6AeEi8kXe2JYMZlVq+3n4iBZN+Q9NFBvvjdiM9mkRzcxd5QM/i/FfZ/IC6MX9JCYO8ECL9LASAsG5GeMp3fkrvpbr3190sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cEqdnPnf4HYrzcgFVm/7di/GOvEt3IIr54iyIJFCg9c=;
- b=GeI6wfJ3RkURRzDyu00nnv0HAzm5YcbcD5yrp4cfm1JknLYVqO8/Rl+UacCLz5PDOjo8JzaRWknmrI6hmFIyM/knBxemxlI37AKcxsjubhBaM4q0SALyJWgQvQECcpYpKFVOB7/4o6h1vrayiTUJASWwE3LYqjlHW9xTwrWar5jsL/XU9bTRSEiom2rPmdWKGIkNG6TWY5sx1Uf+UAz2wNwVmQAklHlcSqeXqLtet7RGgcpRXCbZ0hCjTaH3rZ7t17uHv9O47iJR8myqCpr04qGmOaJsXy2kOfJySWKCK2yIPbVjlzI0b32Mc+QqDN6XD/LIcGPp29UEXvilezxpCQ==
-Received: from PH7PR11MB6451.namprd11.prod.outlook.com (2603:10b6:510:1f4::16)
- by DS7PR11MB6269.namprd11.prod.outlook.com (2603:10b6:8:97::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.23; Thu, 18 Jan
- 2024 05:50:29 +0000
-Received: from PH7PR11MB6451.namprd11.prod.outlook.com
- ([fe80::80b9:80a3:e88a:57ee]) by PH7PR11MB6451.namprd11.prod.outlook.com
- ([fe80::80b9:80a3:e88a:57ee%3]) with mapi id 15.20.7202.020; Thu, 18 Jan 2024
- 05:50:29 +0000
-From: <Dharma.B@microchip.com>
-To: <krzysztof.kozlowski@linaro.org>, <sam@ravnborg.org>,
-	<bbrezillon@kernel.org>, <maarten.lankhorst@linux.intel.com>,
-	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
-	<daniel@ffwll.ch>, <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <Nicolas.Ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
-	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<lee@kernel.org>, <thierry.reding@gmail.com>,
-	<u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT schema
- format
-Thread-Topic: [PATCH 2/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT schema
- format
-Thread-Index: AQHaQ6+DDeklb90Sy0qUe1mJSbBgM7DTVpiAgAn6HICAAFf8AIABdGqA
-Date: Thu, 18 Jan 2024 05:50:29 +0000
-Message-ID: <551c6be6-9d48-4891-ad17-12e3c64cca8b@microchip.com>
-References: <20240110102535.246177-1-dharma.b@microchip.com>
- <20240110102535.246177-3-dharma.b@microchip.com>
- <683b7838-9c19-4a51-8ec4-90ac8a8a94ce@linaro.org>
- <a59fe94a-feac-439e-a93d-3a90f7d05de5@microchip.com>
- <5b39c702-c74e-4cd5-accf-b6b8792e65b2@linaro.org>
-In-Reply-To: <5b39c702-c74e-4cd5-accf-b6b8792e65b2@linaro.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR11MB6451:EE_|DS7PR11MB6269:EE_
-x-ms-office365-filtering-correlation-id: b0dad323-b6da-4f1f-886d-08dc17e96095
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 052cLspJMkdjJuQKPzNyFR5yOCmWn1H+1dmylwCLF0VDw/H4Nxwmy/NC2+Ha46oFzHNO3F2AddM4UeYN9Eh0Z35xuDELrNWIkOFhxQQQANH/szRQ5/bzO9NZwdNorCtzuTLqVfHmc0JeHH02cdJ7Y41fLAN6RRpNs+o7H22flIG8TYXG5QtYH+SLqDvjccbvlRm3aRJwqO2fDupTsR2fJdl7iTwHf6XS/aZ7S58Yq36OtYMShOAgEFV6hrrLrGqrrMJOfu0T1DLKh4a4u9NVCr/eS22LD3rrOETQU6OCSJbOSl6Js+X5ruypXqWxhtJik1N0F7METymSny7pPTOhpP27XG2Cf5k8penlwuyOrI0uH/ggxB4OJhsaQRL0VDe4O9y+jIsWldvpXJRJ40Wl6R9rvYBK93i+dbeIY7O06SqttiUfMO0SU8x5PhRVrusMtLHoXXs8yKyox8LdQwpe/9m9BOs/UAlRVkjkb/69DWfrvdTl27yI+2gzB+IV5jsB7xleuJqSgetOnBHzYP5lnMatIx6moDC05WAzi49rsZ7fIvl+HsoVu7O6Fy2DnBhG8IU0TR/gaqlZzwqe95Br9DbX69GSpFIQAOoZiTe6Mr2IhjJ8C1sdafiBTBKv9C++hMIE1u6tGg9bbRvItrSrsi1zTGflNc6JSjT3rYnTJ+5XtrVkmtvrXmv9DAmTlFF3DKdNkiHj1NH8QdntKQ5JiSP8pBubVB3F1HsZdtn5ZBQ=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6451.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(136003)(39860400002)(346002)(376002)(230922051799003)(230273577357003)(230173577357003)(186009)(64100799003)(1800799012)(451199024)(31686004)(83380400001)(86362001)(31696002)(36756003)(2616005)(38070700009)(66946007)(8676002)(5660300002)(53546011)(38100700002)(122000001)(26005)(64756008)(71200400001)(6512007)(66446008)(966005)(110136005)(921011)(66556008)(316002)(6506007)(66476007)(6486002)(8936002)(2906002)(478600001)(76116006)(7416002)(41300700001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UHdRdTVLcGlKM2F2Vnpkb1dSdVNDOTNZTmhxM0hROXlWL2hYSUR4Tkpld21o?=
- =?utf-8?B?OFE2TExzK3NRbU16U0kxZnl4ZS85SERwYkdBQUpidkFzdVNiUkNnZzBtNUgy?=
- =?utf-8?B?MVFRcnJnTGxRTEIyTEVCVkVUbi9uQm5vNWltbm5mUHVzK1gwaEZrL3J2OHJm?=
- =?utf-8?B?ek1uUXlqajVvME9kL0grM1RJeXlIY0o0UmVHVmNVL0p2Rk5yNDcvbjA2Y3g1?=
- =?utf-8?B?YkdxVXdxa1VYWTROSG0zaXFObmowQkE0RTgvdm1Kem5mMjJubmxxU1hIZEF5?=
- =?utf-8?B?U0UzYXZRY1N3MStxODlLNUJkd0pLS0grU29ldVpnc21yUUxwMDM0VjN4Y29Z?=
- =?utf-8?B?QlBQQkJJWWlvNWl3OUh1UWZYeUVtZXlmT1JjUmdWTGQrM1RtWkc2R3Jid29o?=
- =?utf-8?B?V1M3cW5LUWExTXJQY2JYVG9seDhjdVhZbk9wbHhuZTIzVHFvYjBhekNDcG9a?=
- =?utf-8?B?dFNnUmo3MlF1TGxWVHhQeDFjdzVKcGx3c1R6NFo2RjIxWmhzbFdqd0h4MkRT?=
- =?utf-8?B?ZGt0cUVydklSRVJOQWVrSzA1M205eXQ2UTlkSU81UjYzOUQweUxENW04WVd4?=
- =?utf-8?B?RFZpcUs5bkh1QVB4QUFHQ1pzTjlhOFhKR2o1K1hJcVhJS2xycEY1S0dsakdD?=
- =?utf-8?B?R0RDUTlHaVdaRmJCSU4zVDM2d0pqbnQvRnZZQmdWd2hDR1F2STFrSGxWdG9K?=
- =?utf-8?B?Z0Rpa2ErRzdjSTVKU2RqWGhDRE5rSkNZZkYxWUN3T1hKWGdKVzlxZkRhb3JW?=
- =?utf-8?B?K0lxemM1TWVhS3lNcDdxOFZJTHVSMkt6eVY1bW9RTU5iUmxMOVFsSFRIeXpZ?=
- =?utf-8?B?ZDlKa2pzWlF1SGFHcG9pMTVQeVRlY09GZFYrbXpaUUovL2IxZmJjRDFLaWwr?=
- =?utf-8?B?Yk9lUVhURmNvcEsxemlnWWtMWWx6UmlBeWhxc1RTWktpMWhKQVZ0RWFZc0NU?=
- =?utf-8?B?dlgzeWFLQTFmUmlTUWV5VktrVVBoZE04TnRKYVNaNC9SY2xzOTg0NHBVbFNk?=
- =?utf-8?B?YzJadVUvQTRmekJiVTZJaERvT2dyeFc1NVZYR1o1aUFMWW80VHMxeGFXSUFr?=
- =?utf-8?B?dVZqWHFjdndaay9kSm85akZDYVRDZFFVUXZUNmh3Q2kvUHB0dzgwbnpIQ1dW?=
- =?utf-8?B?V2JLOGtUdzlrQTJ6UUNJd29PQzhTcTQ4REp1ZitMOCt1dEFmMUdDUlRmUGUr?=
- =?utf-8?B?VDhSaE0zdTg0VkFXZkl0eGZtUEtXa3dVOU5oQjFCb0NPKzJ6Ym9oOHpRZmpH?=
- =?utf-8?B?VjI3ZmZGckpRTTRLMVY0ZU5wUnhIWDY0UkljM3hvb2MrblVSVTZwcHFrbk53?=
- =?utf-8?B?ME1FMjdDd2ZwVGZmaEQ0NFBqUzh2Q0t2Z2FuNnk2cXdjRGI4QUVTNFNnRkRM?=
- =?utf-8?B?eDFCaUVza21XaTY5VTExNVNzNXpraUpJdFBHekw0aU4vME85ck9hWXhzMkxE?=
- =?utf-8?B?eVB4YlBVdHRTc1orczBHVzRxbklKdmgxeWcrRStIRkFneVR5SGl4Y2lnN2Vq?=
- =?utf-8?B?bHRpRnZtRGEzM2FXRVVBVlk3MEUwMVJXSk0yQXA1UlNnOHpKZkFBRi8xZkxL?=
- =?utf-8?B?dU44bFFPWnBhOUZTNHAraGE2SGljY1M0R28xREpZWDRnMnN5QmpPa0ZhdzlU?=
- =?utf-8?B?dmY0Sm9WSzUzZXhZTUhwOFIwZkszWmlJM2FuWTVtVU5vZFRFdnJLTUo4T1gz?=
- =?utf-8?B?Qkk5RkVWN2ZRaUFoZlh5WDc1Ynp2Q2gwbjFvcmZJb0o4Sy94UVNMSkt2VzJN?=
- =?utf-8?B?enFWNTBrWnJJNlFHdHlQVUFTTXpEdHFTa1hOZ0orZ2pZRC9vRjl1d0xaZmE4?=
- =?utf-8?B?ekUxTHJ0RlVHRnk2VWF0QmJnUUpBTFRJSjM0RXhweXRrSlV5MW1MbzRiZjla?=
- =?utf-8?B?OXUzdkdXZVVnV1JlTTVCaUh6Sk9oYmdXZlg5RFNOS1N4YlZmUHNFdHBJK293?=
- =?utf-8?B?QVNzSlh0L1FqSTdVc2ZFZ21PUktlclBPK2hmVE5Ua0lWT1J5Nm9NTDNqYk5Q?=
- =?utf-8?B?TmFhdWtEQ0tsOVZJTWRTVVFkZFpSYjd0TVE0emxSME15WVRkRm8xaFREbm1R?=
- =?utf-8?B?MitPVmVBL1lzdDRROThBKytiaUlDek1LVTdlWmJzb1BQU2FVdXM1amlDMlUz?=
- =?utf-8?Q?MlbQuJ4Z+AKBmVs8NDuFEQyFe?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6D5A6F13C155BC4CB9C30ADE6EC3778F@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DABDB664;
+	Thu, 18 Jan 2024 08:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705566179; cv=none; b=XpcmJXh5Frm8nwsWmTBO16w6PFTwb6dosDQnuKNlKeoN9Z1dQ6hTW2AgHfIv9d2SjHBJsJKtz8LC8jMlG6HvV6//z1XpVwM3A3cSvAmfJm1HhXOphasHHBR3KMmM9Q9ZqaTlNqCUsJM9QuYMtnHsloyDN+rjqnjQ/y+/rRphdbw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705566179; c=relaxed/simple;
+	bh=OAhC8ySXYO2X+1aEqw9cRtEGfgcPu1KCicMgKtzOquQ=;
+	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
+	 X-Endpoint-Received:X-Original-From:Reply-To; b=ofmUPYOUflSEUN4HBqJocnK4XLEM/vtzPz/QRt6UEujkD+KV5kjq4Uhv60cBSyJudi5W7W1WlNfo/usAqY3DP5zHhI/KHclMjsRZNi9TRCxtD7ZtFHIzzJ1hn0dckOhF+Nv/5PCGsQs9JwQiL99KrVlM4DHzHqQ3nkMPawBmk04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHD+3fYF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A8BE6C43390;
+	Thu, 18 Jan 2024 08:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705566178;
+	bh=OAhC8ySXYO2X+1aEqw9cRtEGfgcPu1KCicMgKtzOquQ=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=bHD+3fYFbs0eA4H3NQ1Xvnw3zrtqNkAXlDFiBXMEWMuqbayteUJgVwGN97cJidvEI
+	 TI8ixXTQmQWyTr1HYq6YHwExslgOjS8MZmE8fv0AGuOpB8uVpqmEr3lJah6+uu7lCR
+	 AAYm4cbDrI9Dpgu0d4UNX0fh8rhIa/xhigFOaFlaU3GkSoaFNPbSc3PKrH+7lqGrdl
+	 TveFI6k5vNvwsrfjN0neQhk3tjB/WIgm6BFShp8+AMv90Zp4S3i7DKqx2tAZfXXFgc
+	 A49m6b59m95vcG5B4IklRuX5OG0/EH3PZa+eCy0FP4Nv6D6PBI0QQ1roiAsZbVg9VX
+	 jO6Wopl+9NnBg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8274FC4707B;
+	Thu, 18 Jan 2024 08:22:58 +0000 (UTC)
+From:
+ Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
+Subject: [PATCH v7 00/39] ep93xx device tree conversion
+Date: Thu, 18 Jan 2024 11:20:43 +0300
+Message-Id: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6451.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0dad323-b6da-4f1f-886d-08dc17e96095
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2024 05:50:29.4476
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OFWjJ7d9Ia9uylafVmPfNq0GKJV9I7HhjZ0G3f6px+1Ie5KBni2W0IzQPyb+cPafKKO0ScyWhHUuHx9pZDkJVg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6269
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFvfqGUC/2XOQW6DMBAF0KtEXtfIM8Y4ZNV7VF0M9lCsFkhtg
+ qgi7l6TRVDE8svzvv9dJI6Bk7ic7iLyHFIYhxzs20m4joYvlsHnLFChVpUykq+1XhapwNlKg2X
+ 0KPJxQ4llE2lw3XbeU5o4bg/XyG1YHj98fObcxrGXUxeZ9t4SS0BtEAs4a4US5BC+w0RF6m5NG
+ N57+r1xyz9Fz1tlF9I0xr/H5llvxYd5s5ZKal9pMi2A0vzSse2Yyx3WsMMyQwJvbe0dO1BHaJ4
+ QAPEJTYbe1GQrb3yL9RFWO0TYYZWh08o2Z3I10fkVruv6D8JqzTylAQAA
+To: Hartley Sweeten <hsweeten@visionengravers.com>, 
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Nikita Shubin <nikita.shubin@maquefel.me>, Vinod Koul <vkoul@kernel.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+ Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>, 
+ "Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
+ Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-sound@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+ Andy Shevchenko <andriy.shevchenko@intel.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andy.shevchenko@gmail.com>
+X-Mailer: b4 0.13-dev-e3e53
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705566176; l=16525;
+ i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
+ bh=OAhC8ySXYO2X+1aEqw9cRtEGfgcPu1KCicMgKtzOquQ=; =?utf-8?q?b=3Dw8QhO8lmSTda?=
+ =?utf-8?q?m1p3HK3zCc04jA4JbUSDHG0VvQO0iIrpSV+RucH4Bu7xwaXfuuw2gSlOCoFyvTSl?=
+ u6z14qdtDv3Fa6w1sFIGtzEP7rJ48nMNlIFF/XivaLl3aPiVGDgb
+X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
+ pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
+X-Endpoint-Received:
+ by B4 Relay for nikita.shubin@maquefel.me/20230718 with auth_id=65
+X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
+Reply-To: <nikita.shubin@maquefel.me>
 
-T24gMTcvMDEvMjQgMTowNyBwbSwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToNCj4gRVhURVJO
-QUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5
-b3Uga25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+IA0KPiBPbiAxNy8wMS8yMDI0IDAzOjIyLCBE
-aGFybWEuQkBtaWNyb2NoaXAuY29tIHdyb3RlOg0KPj4gSGkgS3J6eXN6dG9mLA0KPj4gT24gMTAv
-MDEvMjQgMTE6MzEgcG0sIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+Pj4gRVhURVJOQUwg
-RU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3Ug
-a25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+Pj4NCj4+PiBPbiAxMC8wMS8yMDI0IDExOjI1LCBE
-aGFybWEgQmFsYXN1YmlyYW1hbmkgd3JvdGU6DQo+Pj4+IENvbnZlcnQgdGhlIGF0bWVsLGhsY2Rj
-IGJpbmRpbmcgdG8gRFQgc2NoZW1hIGZvcm1hdC4NCj4+Pj4NCj4+Pj4gU2lnbmVkLW9mZi1ieTog
-RGhhcm1hIEJhbGFzdWJpcmFtYW5pIDxkaGFybWEuYkBtaWNyb2NoaXAuY29tPg0KPj4+PiAtLS0N
-Cj4+Pj4gICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2F0bWVsLGhsY2RjLnlhbWwgIHwg
-MTA2ICsrKysrKysrKysrKysrKysrKw0KPj4+PiAgICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9t
-ZmQvYXRtZWwtaGxjZGMudHh0ICAgfCAgNTYgLS0tLS0tLS0tDQo+Pj4+ICAgIDIgZmlsZXMgY2hh
-bmdlZCwgMTA2IGluc2VydGlvbnMoKyksIDU2IGRlbGV0aW9ucygtKQ0KPj4+PiAgICBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hdG1lbCxo
-bGNkYy55YW1sDQo+Pj4+ICAgIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbWZkL2F0bWVsLWhsY2RjLnR4dA0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hdG1lbCxobGNkYy55YW1s
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hdG1lbCxobGNkYy55YW1s
-DQo+Pj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+Pj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uNTU1
-ZDZmYWE5MTA0DQo+Pj4+IC0tLSAvZGV2L251bGwNCj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hdG1lbCxobGNkYy55YW1sDQo+Pj4NCj4+PiBUaGlzIGxv
-b2tzIG5vdCB0ZXN0ZWQsIHNvIGxpbWl0ZWQgcmV2aWV3IGZvbGxvd3M6DQo+PiBJIGFja25vd2xl
-ZGdlIHRoYXQgSSBkaWRuJ3QgdGVzdCB0aGUgcGF0Y2hlcyBpbmRpdmlkdWFsbHkuIEkgYXBwcmVj
-aWF0ZQ0KPj4geW91ciB1bmRlcnN0YW5kaW5nLiBUYWtlbiBjYXJlIGluIHYyLg0KPj4+DQo+Pj4+
-IEBAIC0wLDAgKzEsMTA2IEBADQo+Pj4+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BM
-LTIuMCBPUiBCU0QtMi1DbGF1c2UpDQo+Pj4+ICsjIENvcHlyaWdodCAoQykgMjAyNCBNaWNyb2No
-aXAgVGVjaG5vbG9neSwgSW5jLiBhbmQgaXRzIHN1YnNpZGlhcmllcw0KPj4+PiArJVlBTUwgMS4y
-DQo+Pj4+ICstLS0NCj4+Pj4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvbWZk
-L2F0bWVsLGhsY2RjLnlhbWwjDQo+Pj4+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcv
-bWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4+Pj4gKw0KPj4+PiArdGl0bGU6IEF0bWVsJ3MgSExD
-REMgKEhpZ2ggTENEIENvbnRyb2xsZXIpIE1GRCBkcml2ZXINCj4+Pg0KPj4+IERyb3AgIk1GRCBk
-cml2ZXIiIGFuZCByYXRoZXIgZGVzY3JpYmUvbmFtZSB0aGUgaGFyZHdhcmUuIE1GRCBpcyBMaW51
-eA0KPj4+IHRlcm0sIHNvIEkgcmVhbGx5IGRvdWJ0IHRoYXQncyBob3cgdGhpcyB3YXMgY2FsbGVk
-Lg0KPj4gRG9uZS4NCj4+Pg0KPj4+PiArDQo+Pj4+ICttYWludGFpbmVyczoNCj4+Pj4gKyAgLSBO
-aWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+DQo+Pj4+ICsgIC0gQWxl
-eGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tPg0KPj4+PiArICAt
-IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUB0dXhvbi5kZXY+DQo+Pj4+ICsNCj4+Pj4g
-K2Rlc2NyaXB0aW9uOiB8DQo+Pj4+ICsgIERldmljZS1UcmVlIGJpbmRpbmdzIGZvciBBdG1lbCdz
-IEhMQ0RDIChIaWdoIExDRCBDb250cm9sbGVyKSBNRkQgZHJpdmVyLg0KPj4+DQo+Pj4gRHJvcA0K
-Pj4gRG9uZS4NCj4+Pg0KPj4+PiArICBUaGUgSExDREMgSVAgZXhwb3NlcyB0d28gc3ViZGV2aWNl
-czoNCj4+Pj4gKyAgIyBhIFBXTSBjaGlwOiBzZWUgLi4vcHdtL2F0bWVsLGhsY2RjLXB3bS55YW1s
-DQo+Pj4+ICsgICMgYSBEaXNwbGF5IENvbnRyb2xsZXI6IHNlZSAuLi9kaXNwbGF5L2F0bWVsL2F0
-bWVsLGhsY2RjLWRjLnlhbWwNCj4+Pg0KPj4+IFJlcGhyYXNlIHRvIGRlc2NyaWJlIGhhcmR3YXJl
-LiBEcm9wIHJlZHVuZGFudCBwYXRocy4NCj4+IFN1cmUsIEkgd2lsbCB0cnVuY2F0ZSB0aGlzIHRv
-ICJzdWJkZXZpY2VzOiBhIFBXTSBjaGlwIGFuZCBhIGRpc3BsYXkNCj4+IGNvbnRyb2xsZXIuIiAm
-IGRyb3AgdGhlIHwuDQo+Pg0KPj4gSSBhZGRlZCBkZXNjcmlwdGlvbiBhYm91dCB0aG9zZSB0d28g
-c3ViZGV2aWNlcyBiZWxvdy4NCj4gDQo+IFRoZW4gd2h5IGRvIHlvdSBzdGlsbCBrZWVwIHRoZXJl
-IGNvbW1lbnRzPyAjIGlzIGEgY29tbWVudC4NClN1cmUsIEkgd2lsbCBkcm9wIHRoZSBjb21tZW50
-cyBoZXJlLg0KPiAuLi4NCj4gDQo+PiBpbiB2My4NCj4+Pg0KPj4+PiArDQo+Pj4+ICsgIGhsY2Rj
-LWRpc3BsYXktY29udHJvbGxlcjoNCj4+Pg0KPj4+IERvZXMgYW55dGhpbmcgZGVwZW5kIG9uIHRo
-ZSBuYW1lPyBJZiBub3QsIHRoZW4ganVzdCBkaXNwbGF5LWNvbnRyb2xsZXINCj4+IEdvdCBhbiBl
-cnJvciAiJ2hsY2RjLWRpc3BsYXktY29udHJvbGxlcicgZG9lcyBub3QgbWF0Y2ggYW55IG9mIHRo
-ZQ0KPj4gcmVnZXhlczogJ3BpbmN0cmwtWzAtOV0rJyIgc28gSSByZXRhaW5lZCBpdCBpbiB2Mixi
-dXQgYXMgY29ub3IgYWR2aXNlZA0KPj4gdG8gaGF2ZSBub2RlIG5hbWVzIGdlbmVyaWMgYW5kIHdl
-IGNhbiBlYXNpbHkgYWRvcHQsIEkgd2lsbCBtb2RpZnkgaXQgaW4gdjMuDQo+IA0KPiBUaGF0J3Mg
-bm90IGEgZGVwZW5kZW5jeS4gSSB3YXMgdGFsa2luZyBhYm91dCBhbnkgdXNlcnMgb2YgdGhlIGJp
-bmRpbmcuDQo+IFVzZXIgb2YgYSBiaW5kaW5nIGlzIGZvciBleGFtcGxlOiBMaW51eCBrZXJuZWwg
-ZHJpdmVyLCBvdGhlciBvcGVuLXNvdXJjZQ0KPiBwcm9qZWN0cywgb3V0LW9mLXRyZWUgcHJvamVj
-dHMuDQpTdXJlLCBJIHdpbGwgZ28gd2l0aCBnZW5lcmljIG5hbWVzICdkaXNwbGF5LWNvbnRyb2xs
-ZXInIGFuZCAncHdtJy4NCg0KLS0gDQpXaXRoIEJlc3QgUmVnYXJkcywNCkRoYXJtYSBCLg0KPiAN
-Cj4gDQo+IEJlc3QgcmVnYXJkcywNCj4gS3J6eXN6dG9mDQo+IA0KDQoNCg0K
+The goal is to recieve ACKs for all patches in series to merge it via Arnd branch.
+
+No major changes since last version (v6) all changes are cometic.
+
+Following patches require attention from Stephen Boyd, as they were converted to aux_dev as suggested:
+
+- ARM: ep93xx: add regmap aux_dev
+- clk: ep93xx: add DT support for Cirrus EP93xx
+
+Following patches require attention from Vinod Koul:
+
+- dma: cirrus: Convert to DT for Cirrus EP93xx
+- dma: cirrus: remove platform code
+
+Following patches are dropped:
+- dt-bindings: wdt: Add ts72xx (pulled requested by Wim Van Sebroeck)
+
+Big Thanks to Andy Shevchenko once again.
+
+Patches should be formated with '--histogram'
+
+---
+Changes in v7:
+
+mtd: rawnand: add support for ts72xx
+    - fixed KConfig description
+
+ARM: ep93xx: Add terminator to gpiod_lookup_table
+    - + Reported-by, Fixes
+
+ARM: ep93xx: add regmap aux_dev
+    - + trailing comma
+    - - #include <linux/spinlock.h>
+
+clk: ep93xx: add DT support for Cirrus EP93xx
+    - dropped unused defines
+    - return from default in ep93xx_mux_get_parent()
+    - use guard() in ep93xx_mux_set_parent_lock()
+    - <math.h> header for abs_diff()
+    - fixed comments
+
+pinctrl: add a Cirrus ep93xx SoC pin controller
+    - dropped comments for DEVCFG defines
+    - <linux/array_size.h> for ARRAY_SIZE()
+    - + default in ep93xx_get_group_name()
+    - correct cast for id->driver_data
+    - s/device_set_of_node_from_dev()/device_set_node()/
+
+power: reset: Add a driver for the ep93xx reset
+    - Add <linux/container_of.h>, <linux/errno.h>, <linux/slab.h>
+    - Add <linux/module.h>, <linux/mod_devicetable.h>
+    - Remove <platform_device.h>
+
+spi: ep93xx: add DT support for Cirrus EP93xx
+    - Replace with ret = dev_err_probe(...);
+
+ata: pata_ep93xx: add device tree support
+    - fixed wrong rebase with some partes leaked in "ata: pata_ep93xx: remove legacy pinctrl use"
+    - fix dma_request_chan() error processing
+
+dma: cirrus: Convert to DT for Cirrus EP93xx
+    - fixed commit message (dropped explicit "only")
+    - fixed clk_get() processing to defer probe and log spamming
+    - refactor ep93xx_m2p_dma_filter()
+    - dropped blank line in ep93xx_m2p_dma_of_xlate()
+    - refactor ep93xx_m2m_dma_of_xlate()
+
+dma: cirrus: remove platform code
+    - s/dma/DMA/ in commit message
+
+soc: Add SoC driver for Cirrus ep93xx
+    - add period
+    - use cleanup and guard() for spinlocking
+    - correct cast for device_get_match_data()
+    - dropped dev_info() with SoC revision - i can't find it anywhere since 2.6 :/,
+      don't know why i was so sured that ep93xx always printed that
+
+ata: pata_ep93xx: remove legacy pinctrl use
+    - made error handling in DMA as Uwe suggested
+
+- Link to v6: https://lore.kernel.org/r/20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me
+
+Changes in v6:
+
+- clk: ep93xx: add DT support for Cirrus EP93xx
+  - s/spin_lock_irqsave()/guard()/
+  - refactor index check in ep93xx_mux_set_parent_lock() to something more readable
+  - use in_range in ep93xx_mux_set_parent_lock()/ep93xx_ddiv_set_rate()
+  - use GENMASK() in ep93xx_ddiv_recalc_rate()
+  - comment reserved bit in ep93xx_ddiv_set_rate()
+  - move out from loop ClkDiv value assigment
+  - some style fixes
+
+Andy, i was i asked to set index of XTALI explicitly, i am not setting ddiv_pdata
+there becouse only XTALI is jnown in advance, and i think setting them in one place is more convenient.
+
+- pinctrl: add a Cirrus ep93xx SoC pin controller
+  - drop OF from Kconfig
+  - droped linux/of.h include
+  - add space to */ where it is applicable
+  - add coma in multiline assigment
+  - "return NULL" as default case in ep93xx_get_group_name()
+  - fixed casting id->driver_data
+  - use device_set_of_node_from_dev()
+  - use dev_err_probe()
+
+- power: reset: Add a driver for the ep93xx reset
+  - drop linux/of.h include
+
+- soc: Add SoC driver for Cirrus ep93xx
+  - s/GPL-2.0/GPL-2.0-only/
+  - drop linux/kernel.h include
+  - + blank line before linux/soc/cirrus/ep93xx.h
+  - + blank line after ep93xx_get_soc_rev()
+  - + coma for pinctrl_names
+  - valid casting to int for of_device_get_match_data() return value
+
+- mtd: rawnand: add support for ts72xx
+  - return as part of switch case
+  - s/iowrite8/iowrite8_rep/
+
+- net: cirrus: add DT support for Cirrus EP93xx
+  - fix header sorting
+
+- dma: cirrus: Convert to DT for Cirrus EP93xx
+  - use devm_clk_get
+  - use is_slave_direction
+
+Changes in v5:
+
+- gpio: ep93xx: split device in multiple
+  - ordered headers
+  - use irqd_to_hwirq()
+  - s/platform_get_irq()/platform_get_irq_optional()/
+
+- [PATCH v4 02/42] ARM: ep93xx: add swlocked prototypes
+  - replaced with ARM: ep93xx: add regmap aux_dev
+
+- [PATCH v4 03/42] dt-bindings: clock: Add Cirrus EP93xx
+  - fixed identation
+  - removed EP93XX_CLK_END
+  - and dropped it
+  - clock bindings moved to syscon with renaming to cirrus,ep9301-syscon.h
+
+- clk: ep93xx: add DT support for Cirrus EP93xx
+  - convert to auxiliary and use parent device tree node
+  - moved all clocks except XTALI here
+  - used devm version everywhere and *_parent_hw() instead of passing name where it's possible
+  - unfortunately devm_clk_hw_register_fixed_rate doesn't have a parent index version
+
+- [PATCH v4 05/42] dt-bindings: pinctrl: Add Cirrus EP93xx
+  - "unevaluatedProperties: false" for pins
+  - returned "additionalProperties: false" where it was
+  - and dropped it
+
+- pinctrl: add a Cirrus ep93xx SoC pin controller
+  - sorted includes
+  - convert to auxiliary and use parent device tree node
+
+- power: reset: Add a driver for the ep93xx reset
+  - convert to auxiliary device
+
+- dt-bindings: soc: Add Cirrus EP93xx
+  - dropped all ref to reboot, clk, pinctrl subnodes
+  - added pins, as it's now used for pinctrl
+  - added #clock-cells, as it's now used for clk
+
+- dt-bindings: pwm: Add Cirrus EP93xx
+  - $ref to pwm.yaml
+  - fixed 'pwm-cells'
+  - s/additionalProperties/unevaluatedProperties/
+
+- soc: Add SoC driver for Cirrus ep93xx
+  - removed clocks, they are moved to clk auxiliary driver, as we dropped the clk dt node
+  - removed all swlocked exported functions
+  - dropped static spinlock
+  - added instantiating auxiliary reboot, clk, pinctrl
+
+- dt-bindings: spi: Add Cirrus EP93xx
+  - Document DMA support
+
+- spi: ep93xx: add DT support for Cirrus EP93xx
+  - dropped CONFIG_OF and SPI/DMA platform data entirely
+  - s/master/host/
+  - reworked DMA setup so we can use probe defer
+
+- dt-bindings: dma: Add Cirrus EP93xx
+  - dropped bindings header (moved ports description to YAML)
+  - changed '#dma-cells' to 2, we use port, direction in cells so we can drop platform code completely
+
+- dma: cirrus: add DT support for Cirrus EP93xx
+  - dropped platform probing completely
+  - dropped struct ep93xx_dma_data replaced with internal struct ep93xx_dma_chan_cfg with port/direction
+  - added xlate functions for m2m/m2p
+  - we require filters to set dma_cfg before hw_setup
+
+- dt-bindings: ata: Add Cirrus EP93xx
+  - Document DMA support
+
+- ata: pata_ep93xx: add device tree support
+  - drop DMA platform header with data
+  - use DMA OF so we can defer probing until DMA is up
+
+- ARM: dts: add Cirrus EP93XX SoC .dtsi
+- ARM: dts: ep93xx: add ts7250 board
+- ARM: dts: ep93xx: Add EDB9302 DT
+  - replaced "eclk: clock-controller" to syscon reference
+  - replaced "pinctrl: pinctrl" to syscon reference
+  - gpios are now "enabled" by default
+  - reworked i2s node
+  - change all dma nodes and refs
+
+- new additions to I2S
+  - Document DMA
+  - Document Audio Port usage
+  - drop legacy DMA support
+
+- Link to v4: https://lore.kernel.org/r/20230915-ep93xx-v4-0-a1d779dcec10@maquefel.me
+
+Changes in v4:
+
+- gpio: ep93xx: split device in multiple
+  - s/generic_handle_irq/generic_handle_domain_irq/
+  - s/int offset/irq_hw_number_t offset/ though now it looks a bit odd to me
+  - drop i = 0
+  - drop 'error'
+  - use dev_err_probe withour printing devname once again
+
+dt-bindings: clock: Add Cirrus EP93xx
+  - renamed cirrus,ep93xx-clock.h -> cirrus,ep9301-clk.h
+
+clk: ep93xx: add DT support for Cirrus EP93xx
+  - drop unused includes
+  - use .name only for xtali, pll1, pll2 parents
+  - convert // to /*
+  - pass clk_parent_data instead of char* clock name
+
+dt-bindings: pinctrl: Add Cirrus EP93xx
+  - s/additionalProperties/unevaluatedProperties/
+
+dt-bindings: soc: Add Cirrus EP93xx
+  - move syscon to soc directory
+  - add vendor prefix
+  - make reboot same style as pinctrl, clk
+  - use absolute path for ref
+  - expand example
+
+soc: Add SoC driver for Cirrus ep93xx
+  - s/0xf0000000/GENMASK(31, 28)/
+  - s/ret/ep93xx_chip_revision(map)/
+  - drop symbol exports
+  - convert to platform driver
+
+dt-bindings: rtc: Add Cirrus EP93xx
+  - allOf: with $ref to rtc.yaml
+  - s/additionalProperties/unevaluatedProperties/
+
+dt-bindings: watchdog: Add Cirrus EP93x
+  - drop description
+  - reword
+
+power: reset: Add a driver for the ep93xx reset
+  - lets use 'GPL-2.0+' instead of '(GPL-2.0)'
+  - s/of_device/of/
+  - drop mdelay with warning
+  - return 0 at the end
+
+net: cirrus: add DT support for Cirrus EP93xx
+  - fix leaking np
+
+mtd: nand: add support for ts72xx
+  - +bits.h
+  - drop comment
+  - ok to fwnode_get_next_child_node
+  - use goto to put handle and nand and report error
+
+ARM: dts: add Cirrus EP93XX SoC .dtsi
+  - add simple-bus for ebi, as we don't require to setup anything
+  - add arm,pl011 compatible to uart nodes
+  - drop i2c-gpio, as it's isn't used anywhere
+
+ARM: dts: ep93xx: add ts7250 board
+  - generic node name for temperature-sensor
+  - drop i2c
+  - move nand, rtc, watchdog to ebi node
+
+- Link to v3: https://lore.kernel.org/r/20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me
+
+---
+Alexander Sverdlin (3):
+      ASoC: ep93xx: Drop legacy DMA support
+      ARM: dts: ep93xx: Add EDB9302 DT
+      ASoC: cirrus: edb93xx: Delete driver
+
+Nikita Shubin (36):
+      ARM: ep93xx:  Add terminator to gpiod_lookup_table
+      gpio: ep93xx: split device in multiple
+      ARM: ep93xx: add regmap aux_dev
+      clk: ep93xx: add DT support for Cirrus EP93xx
+      pinctrl: add a Cirrus ep93xx SoC pin controller
+      power: reset: Add a driver for the ep93xx reset
+      dt-bindings: soc: Add Cirrus EP93xx
+      soc: Add SoC driver for Cirrus ep93xx
+      dt-bindings: dma: Add Cirrus EP93xx
+      dma: cirrus: Convert to DT for Cirrus EP93xx
+      dt-bindings: watchdog: Add Cirrus EP93x
+      watchdog: ep93xx: add DT support for Cirrus EP93xx
+      dt-bindings: pwm: Add Cirrus EP93xx
+      pwm: ep93xx: add DT support for Cirrus EP93xx
+      dt-bindings: spi: Add Cirrus EP93xx
+      spi: ep93xx: add DT support for Cirrus EP93xx
+      dt-bindings: net: Add Cirrus EP93xx
+      net: cirrus: add DT support for Cirrus EP93xx
+      dt-bindings: mtd: Add ts7200 nand-controller
+      mtd: rawnand: add support for ts72xx
+      dt-bindings: ata: Add Cirrus EP93xx
+      ata: pata_ep93xx: add device tree support
+      dt-bindings: input: Add Cirrus EP93xx keypad
+      input: keypad: ep93xx: add DT support for Cirrus EP93xx
+      wdt: ts72xx: add DT support for ts72xx
+      gpio: ep93xx: add DT support for gpio-ep93xx
+      ASoC: dt-bindings: ep93xx: Document DMA support
+      ASoC: dt-bindings: ep93xx: Document Audio Port support
+      ARM: dts: add Cirrus EP93XX SoC .dtsi
+      ARM: dts: ep93xx: add ts7250 board
+      ARM: ep93xx: DT for the Cirrus ep93xx SoC platforms
+      pwm: ep93xx: drop legacy pinctrl
+      ata: pata_ep93xx: remove legacy pinctrl use
+      ARM: ep93xx: delete all boardfiles
+      ARM: ep93xx: soc: drop defines
+      dma: cirrus: remove platform code
+
+ .../bindings/arm/cirrus/cirrus,ep9301.yaml         |   38 +
+ .../bindings/ata/cirrus,ep9312-pata.yaml           |   42 +
+ .../bindings/dma/cirrus,ep9301-dma-m2m.yaml        |   84 ++
+ .../bindings/dma/cirrus,ep9301-dma-m2p.yaml        |  144 ++
+ .../bindings/input/cirrus,ep9307-keypad.yaml       |   87 ++
+ .../devicetree/bindings/mtd/technologic,nand.yaml  |   45 +
+ .../devicetree/bindings/net/cirrus,ep9301-eth.yaml |   59 +
+ .../devicetree/bindings/pwm/cirrus,ep9301-pwm.yaml |   53 +
+ .../bindings/soc/cirrus/cirrus,ep9301-syscon.yaml  |   94 ++
+ .../bindings/sound/cirrus,ep9301-i2s.yaml          |   16 +
+ .../devicetree/bindings/spi/cirrus,ep9301-spi.yaml |   70 +
+ .../bindings/watchdog/cirrus,ep9301-wdt.yaml       |   42 +
+ arch/arm/Makefile                                  |    1 -
+ arch/arm/boot/dts/cirrus/Makefile                  |    4 +
+ arch/arm/boot/dts/cirrus/ep93xx-bk3.dts            |  126 ++
+ arch/arm/boot/dts/cirrus/ep93xx-edb9302.dts        |  182 +++
+ arch/arm/boot/dts/cirrus/ep93xx-ts7250.dts         |  145 ++
+ arch/arm/boot/dts/cirrus/ep93xx.dtsi               |  441 ++++++
+ arch/arm/mach-ep93xx/Kconfig                       |   20 +-
+ arch/arm/mach-ep93xx/Makefile                      |   11 -
+ arch/arm/mach-ep93xx/clock.c                       |  733 ----------
+ arch/arm/mach-ep93xx/core.c                        | 1017 --------------
+ arch/arm/mach-ep93xx/dma.c                         |  114 --
+ arch/arm/mach-ep93xx/edb93xx.c                     |  368 -----
+ arch/arm/mach-ep93xx/ep93xx-regs.h                 |   38 -
+ arch/arm/mach-ep93xx/gpio-ep93xx.h                 |  111 --
+ arch/arm/mach-ep93xx/hardware.h                    |   25 -
+ arch/arm/mach-ep93xx/irqs.h                        |   76 --
+ arch/arm/mach-ep93xx/platform.h                    |   42 -
+ arch/arm/mach-ep93xx/soc.h                         |  212 ---
+ arch/arm/mach-ep93xx/timer-ep93xx.c                |  143 --
+ arch/arm/mach-ep93xx/ts72xx.c                      |  422 ------
+ arch/arm/mach-ep93xx/ts72xx.h                      |   94 --
+ arch/arm/mach-ep93xx/vision_ep9307.c               |  321 -----
+ drivers/ata/pata_ep93xx.c                          |  106 +-
+ drivers/clk/Kconfig                                |    8 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/clk-ep93xx.c                           |  840 ++++++++++++
+ drivers/dma/ep93xx_dma.c                           |  287 +++-
+ drivers/gpio/gpio-ep93xx.c                         |  345 ++---
+ drivers/input/keyboard/ep93xx_keypad.c             |   74 +-
+ drivers/mtd/nand/raw/Kconfig                       |    6 +
+ drivers/mtd/nand/raw/Makefile                      |    1 +
+ drivers/mtd/nand/raw/technologic-nand-controller.c |  220 +++
+ drivers/net/ethernet/cirrus/ep93xx_eth.c           |   63 +-
+ drivers/pinctrl/Kconfig                            |    7 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/pinctrl-ep93xx.c                   | 1434 ++++++++++++++++++++
+ drivers/power/reset/Kconfig                        |   10 +
+ drivers/power/reset/Makefile                       |    1 +
+ drivers/power/reset/ep93xx-restart.c               |   84 ++
+ drivers/pwm/pwm-ep93xx.c                           |   26 +-
+ drivers/soc/Kconfig                                |    1 +
+ drivers/soc/Makefile                               |    1 +
+ drivers/soc/cirrus/Kconfig                         |   13 +
+ drivers/soc/cirrus/Makefile                        |    2 +
+ drivers/soc/cirrus/soc-ep93xx.c                    |  241 ++++
+ drivers/spi/spi-ep93xx.c                           |   66 +-
+ drivers/watchdog/ep93xx_wdt.c                      |    8 +
+ drivers/watchdog/ts72xx_wdt.c                      |    8 +
+ include/dt-bindings/clock/cirrus,ep9301-syscon.h   |   46 +
+ include/linux/platform_data/dma-ep93xx.h           |   94 --
+ include/linux/platform_data/eth-ep93xx.h           |   10 -
+ include/linux/platform_data/keypad-ep93xx.h        |   32 -
+ include/linux/platform_data/spi-ep93xx.h           |   15 -
+ include/linux/soc/cirrus/ep93xx.h                  |   47 +-
+ sound/soc/cirrus/Kconfig                           |    9 -
+ sound/soc/cirrus/Makefile                          |    4 -
+ sound/soc/cirrus/edb93xx.c                         |  116 --
+ sound/soc/cirrus/ep93xx-i2s.c                      |   19 -
+ sound/soc/cirrus/ep93xx-pcm.c                      |   19 +-
+ 71 files changed, 5137 insertions(+), 4548 deletions(-)
+---
+base-commit: 052d534373b7ed33712a63d5e17b2b6cdbce84fd
+change-id: 20230605-ep93xx-01c76317e2d2
+
+Best regards,
+-- 
+Nikita Shubin <nikita.shubin@maquefel.me>
+
 
