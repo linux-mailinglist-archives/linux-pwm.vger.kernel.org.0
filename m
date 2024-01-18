@@ -1,183 +1,117 @@
-Return-Path: <linux-pwm+bounces-849-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-850-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58A76831BBA
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 15:49:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2143831CA1
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 16:32:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E79C285549
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 14:49:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E501A1C22C3F
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jan 2024 15:32:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A64641DA39;
-	Thu, 18 Jan 2024 14:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1D0E28DA2;
+	Thu, 18 Jan 2024 15:31:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZAvBPWzi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYgMK7mK"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72ADE250E7;
-	Thu, 18 Jan 2024 14:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC1A23741;
+	Thu, 18 Jan 2024 15:31:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705589359; cv=none; b=XAXeldyqQIhktJXImQlfgKRDHsqDqVmNuHCaNuU+e0IcnpTQ7hWE0QCIECN9xg7dY/UqVu1iYLkpgEYuMnsrKnMoCd7+4NvnGmsCtH8uU/Pw0M6cLhuL7DVVgZeorLbLYIPh8xZ4YzExIzvpN8LYK3rInstFcIHlQ7bkwpXaICw=
+	t=1705591893; cv=none; b=BQHvGt9VNMoPxBsnVS+hV1kENEdrGIIfQIdin2+sdInt2woo0uWeF4bUhNsklj21G6B7t/+loo3YGzybzT87Le45ekDHOL5tv+pggAbgNlI8PIud3PqP0C2Gmr1YBgHRq4FskoRkEzBSVwvhVpL8lK2DEXirGrb0fR3riHHHMNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705589359; c=relaxed/simple;
-	bh=oaXZOHDx2BP58wrfTY7FOWKwJKm/7v9GcGOdWbyjMH0=;
+	s=arc-20240116; t=1705591893; c=relaxed/simple;
+	bh=4wA+UWwUt1juxH0gO+qlw0qBSnENNfKQfAfESA3JOVA=;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To; b=gpe9SBzCcqb+jGyYO2yheYz/8z6+xcQYr2u3ZNAxEc5XY8mqMvKGQOIO7BTrszXtbeHfKLtkeM3zuAvEoieYu91sqX+mtYp9/Sj/xki/ZnIwaOsh5Hr7x54yDVQyQaFPbYykVg3du4CUR5S3hfeeoRqziYPzGpWl0NLlhcoEiOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZAvBPWzi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37E88C433A6;
-	Thu, 18 Jan 2024 14:49:15 +0000 (UTC)
+	 In-Reply-To; b=nbvf4eG2WQ3vV1Ba56cdPbhZdWTiLqtwPnLEvUaZK0ntf4OzdcFfWd4zdPGuLa9cIM6BVDdCzypCY7hMpMdy/AUTnxJ7rZTlLV6kH5hEBNNxecr0E3xIvmTrFRb9yqR6nWVkzSk7J3LKzK1dt0G0nkSLhdbVDecmTIGjIgM+Ss8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYgMK7mK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A758C433F1;
+	Thu, 18 Jan 2024 15:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705589358;
-	bh=oaXZOHDx2BP58wrfTY7FOWKwJKm/7v9GcGOdWbyjMH0=;
+	s=k20201202; t=1705591892;
+	bh=4wA+UWwUt1juxH0gO+qlw0qBSnENNfKQfAfESA3JOVA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZAvBPWzieJskFoW183PEr8ko56ub1ezMkwW/ohvj1sw9/kCHfTebfeHgole8+UtBy
-	 oSEHXiF8clPeYat+HYQzqzDgBvzL8othGgtOItqYWNCMUFFaYudSb+JxreiZlrI5HN
-	 6K8SlxPuZl98eVjzlA6Dkru8H5dyhUzqhwIub2Q7fvMAMJPs1bcq3eTEKrhu9rLxB5
-	 m/eJnCNM0bjMP02XpFYF/zpQG+ICKsvCJOiWnEB3XnglwsvConsP6vhgdwaycTopGV
-	 koI+u1gFMxFJ7hjQuhj2S1C0/eKZm1EoiN7CTnCJvnvAFwbip7l+BpdJvLAy0hGeF2
-	 Cm3402uD0STMA==
-Date: Thu, 18 Jan 2024 14:49:12 +0000
-From: Lee Jones <lee@kernel.org>
-To: Anjelique Melendez <quic_amelende@quicinc.com>
-Cc: pavel@ucw.cz, thierry.reding@gmail.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	agross@kernel.org, andersson@kernel.org, luca.weiss@fairphone.com,
-	konrad.dybcio@linaro.org, u.kleine-koenig@pengutronix.de,
-	quic_subbaram@quicinc.com, quic_gurus@quicinc.com,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: Re: (subset) [PATCH v8 0/7] Add support for LUT PPG
-Message-ID: <20240118144912.GC3305748@google.com>
-References: <20231221185838.28440-1-quic_amelende@quicinc.com>
- <170496750168.1654525.11132648331912183091.b4-ty@kernel.org>
- <20240111100747.GM7948@google.com>
- <dc8a58ab-00df-bfd4-39f7-ec196e578260@quicinc.com>
+	b=oYgMK7mKWk4ZpaH3EseK8Uu7+VHlxzes9YSDMKw0MQl6vDz0aE35z9l5zA3rAJHxy
+	 BsMNnOdU+x1zZVU5ULw4Vi++4+idxP+fxaG4rDIVsNy0FceRSO1rQZ1d9c14jWDNB3
+	 VDjGwfjyA/qljuvGO80OcVYJV44ejuOioTJ6QpooEQkxKNn5zMXO0DG1ZGkDY21vs2
+	 lC3EVqEUqTc5/+e8ceuNyI/SV87N55LGVlxR7gw6+Ar7IueUmvo7ELbdeYy9R3OR1u
+	 aBeUpNP3Xwd53UP2qVMZAEDmGH1Ag1xLa9UCQlATBEv9FG6HnJaQ/Hea1i9hhhKBnO
+	 L3p63L2WnYYIg==
+Date: Thu, 18 Jan 2024 15:31:26 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Dharma Balasubiramani <dharma.b@microchip.com>
+Cc: conor.dooley@microchip.com, sam@ravnborg.org, bbrezillon@kernel.org,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	lee@kernel.org, thierry.reding@gmail.com,
+	u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+	linux4microchip@microchip.com
+Subject: Re: [PATCH v3 1/3] dt-bindings: display: convert Atmel's HLCDC to DT
+ schema
+Message-ID: <20240118-unscathed-flail-be2e49abc56d@spud>
+References: <20240118092612.117491-1-dharma.b@microchip.com>
+ <20240118092612.117491-2-dharma.b@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uK+u7gbhbDVqB0jo"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dc8a58ab-00df-bfd4-39f7-ec196e578260@quicinc.com>
+In-Reply-To: <20240118092612.117491-2-dharma.b@microchip.com>
 
-On Tue, 16 Jan 2024, Anjelique Melendez wrote:
 
-> 
-> 
-> On 1/11/2024 2:07 AM, Lee Jones wrote:
-> > On Thu, 11 Jan 2024, Lee Jones wrote:
-> > 
-> >> On Thu, 21 Dec 2023 10:58:30 -0800, Anjelique Melendez wrote:
-> >>> In certain PMICs, LUT pattern and LPG configuration is stored in SDAM
-> >>> modules instead of LUT peripheral. This feature is called PPG.
-> >>>
-> >>> This change series adds support for PPG. Thanks!
-> >>> Changes since v7:
-> >>>   - Patch 4/7
-> >>>     - Initialize hi/lo_pause variables in lpg_pattern_set()
-> >>> Changes since v6:
-> >>>   - Patch 2/7
-> >>>     - Removed required by constraint on PPG dt properties
-> >>> Changes since v5:
-> >>>   - Patch 4/7
-> >>>     - Update logic so that multicolor led device triggers pattern
-> >>>       on all LEDs at the same time
-> >>>     - Update nitpicks from Lee
-> >>>   - Patch 5/7
-> >>>     - Update nitpicks from Lee
-> >>> Changes since v4:
-> >>>   - Patch 3/7
-> >>>     - Get rid of r/w helpers
-> >>>     - Use regmap_read_poll_timeout() in qcom_pbs_wait_for_ack()
-> >>>     - Update error path in qcom_pbs_trigger_event()
-> >>>     - Fix reverse christmas tree
-> >>>   - Patch 4/7
-> >>>     - Get rid of r/w helpers
-> >>>     - Update variables to use "sdam" instead of "nvmem"
-> >>>     - Fix comments
-> >>>     - Fix reverse christmas tree
-> >>>     - Update lpg_pattern_set() logic
-> >>>   - Patch 5/7
-> >>>     - Removed sdam_lut_base from lpg_data
-> >>> Changes since v3:
-> >>>   - Patch 4/7
-> >>>     - Fix function returns
-> >>>     - Move register definition to top of file
-> >>>     - Revert max_brightness and probe accidental changes
-> >>>     - Combine init_sdam() and parse_sdam()
-> >>>     - Change error prints in probe to use dev_err_probe
-> >>>     - Remove ppg_en variable
-> >>>     - Update when pbs triggers are set/cleared
-> >>>   - Patch 6/7
-> >>>     - Remove use of nvmem_count
-> >>>     - Move register definition to top of file
-> >>>     - Remove lpg_get_sdam_lut_idx()
-> >>> Changes since v2:
-> >>>   - Patch 1/7
-> >>>     - Fix dt_binding_check error
-> >>>     - Rename binding file to match compatible
-> >>>     - Iclude SoC specific comptaibles
-> >>>   - Patch 2/7
-> >>>     - Update nvmem-names list
-> >>>   - Patch 3/7
-> >>>     - Update EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
-> >>>     - Fix return/break logic in qcom_pbs_wait_for_ack()
-> >>>     - Update iterators to be int
-> >>>     - Add constants
-> >>>     - Fix function calls in qcom_pbs_trigger_event()
-> >>>     - Remove unnessary comments
-> >>>     - Return -EPROBE_DEFER from get_pbs_client_device()
-> >>> Changes since v1:
-> >>>   - Patch 1/7
-> >>>     - Fix dt_binding_check errors
-> >>>     - Update binding description
-> >>>   - Path 2/7
-> >>>     - Fix dt_binding_check errors
-> >>>     - Update per variant constraints
-> >>>     - Update nvmem description
-> >>>   - Patch 3/7
-> >>>     - Update get_pbs_client_device()
-> >>>     - Drop use of printk
-> >>>     - Remove unused function
-> >>>
-> >>> [...]
-> >>
-> >> Applied, thanks!
-> >>
-> >> [2/7] dt-bindings: leds: leds-qcom-lpg: Add support for LPG PPG
-> >>       commit: 2fdd08fec742e0c94a2a06a0c9ee0912b6f7ac39
-> >> [4/7] leds: rgb: leds-qcom-lpg: Add support for PPG through single SDAM
-> >>       commit: 07a1afc8fbb77cc893e2285112482902ac88a295
-> >> [5/7] leds: rgb: leds-qcom-lpg: Update PMI632 lpg_data to support PPG
-> >>       commit: f4f5f6a6f8d7bcc8efd0eee6751def22c9a38fd0
-> >> [6/7] leds: rgb: leds-qcom-lpg: Include support for PPG with dedicated LUT SDAM
-> >>       commit: 7399a927272de1fc42f4da8af1d8d60b65a15b84
-> >> [7/7] leds: rgb: Update PM8350C lpg_data to support two-nvmem PPG Scheme
-> >>       commit: 7b4066868689b1f341e61957611d252b6fa8cafc
-> > 
-> > This set had a bunch of checkpatch.pl errors.
-> > 
-> > Please fix them up subsequently.
-> > 
-> Hi Lee,
-> 
-> Just wanted to get some quick clarification. Would you like checkpatch.pl issues fixed in a new version
-> of this series or would you like a new patch to fix all the issues? Looks like these patches are in your
-> for-leds-next-next branch so I am guessing you would like a new follow up patch
-> but I just wanted to double check.
+--uK+u7gbhbDVqB0jo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-A follow-up please.
+On Thu, Jan 18, 2024 at 02:56:10PM +0530, Dharma Balasubiramani wrote:
+> Convert the existing DT binding to DT schema of the Atmel's HLCDC display
+> controller.
+>=20
+> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+> ---
+> changelog
+> v2 -> v3
+> - Remove '|' in description, as there is no formatting to preserve.
+> - Ref video-interfaces as endpoint.
+> - Remove ref and description for bus-width.
+> - Add new line before the child node in example.
 
--- 
-Lee Jones [李琼斯]
+> - Remove 'example 2', as it is not required for just one additional prope=
+rty.
+
+Rob's comment on the previous version was:
+| Just 1 extra property doesn't justify 2 examples.
+|=20
+| In any case, drop the partial examples and just have 1 complete example=
+=20
+| in the MFD binding schema.
+
+
+--uK+u7gbhbDVqB0jo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZalETQAKCRB4tDGHoIJi
+0oMyAP9+Ll8fdXViDHTVjFHNGPWzChucZsZdKY7aRr7jkFYBhAD/Qt7JIQGWHJ89
+hYQiygsvwed2ijEO9ueMCNp10XQMzw4=
+=FSle
+-----END PGP SIGNATURE-----
+
+--uK+u7gbhbDVqB0jo--
 
