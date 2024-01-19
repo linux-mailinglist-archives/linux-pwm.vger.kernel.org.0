@@ -1,65 +1,78 @@
-Return-Path: <linux-pwm+bounces-859-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-860-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E60A832F85
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jan 2024 20:52:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D237983305A
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jan 2024 22:35:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CECEDB23D9A
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jan 2024 19:51:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 897DB28657D
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jan 2024 21:35:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 511C95645A;
-	Fri, 19 Jan 2024 19:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF9D554BE3;
+	Fri, 19 Jan 2024 21:35:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MM2M331s"
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="GjhB6wRa";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="5hc1wO07"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailrelay6-1.pub.mailoutpod2-cph3.one.com (mailrelay6-1.pub.mailoutpod2-cph3.one.com [46.30.211.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221265644C;
-	Fri, 19 Jan 2024 19:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EDB58121
+	for <linux-pwm@vger.kernel.org>; Fri, 19 Jan 2024 21:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705693914; cv=none; b=qrYbkd/dK+sqOlp8YygoE6/LJF9QvGAIZfYRVUXs06175JW0N6Ah+f9//Ssm6E8DKiBXNDkGHsmLB32HgJFOWJOChRLA45OIp9Dnb0ogrIGg9m++L+wZ3nvnrDcYnt/E1yxOfRqswj7LsbYN1tOLZdhiBU2lRBvf020Do7X3VUQ=
+	t=1705700100; cv=none; b=ju5SLLUWmmgnTnytQf7b49NChEP97a+E0Ck8ZLzmtbVw9FGz9YG5Bk1s9MEICoLhFFmolVipj9q59PZX8Kf+LerrNdp0NY0Q3JZaNvn3XH8j1qRnejGeq6vcIFosXgC6IUJcd6DX7BAQp7Aq0JJ03eloYgGiJKjlubQFzIGkDPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705693914; c=relaxed/simple;
-	bh=V/giPsLnDjrj1zV7DERx2IXZKAyhH88rKKkf5QFcqUw=;
+	s=arc-20240116; t=1705700100; c=relaxed/simple;
+	bh=UNNRJRbDTngtJ5Pl/++i0CkHx4pdPunpIhyAAGeoHB8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WP7ut4h4FsRUYabQ+8qfOMmAse6Rx7YKcu9NvvsSChjtVBPc8q2V/8yE5ER073PjvYh3+dVmj//KYf63qce1527hh/4/7EoIQ/Bej/dxAqhT78ArU7S58c2Oj21ef+00ujOigzTElyzdNFpp3XMlLTFjN/aZLxzN/jtD1KoEf+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MM2M331s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB04C433F1;
-	Fri, 19 Jan 2024 19:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705693913;
-	bh=V/giPsLnDjrj1zV7DERx2IXZKAyhH88rKKkf5QFcqUw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MM2M331sZCqze2pBHsSkXYXRwFFz+7F13kgvKu8biiY3cZoImBNdsLDtQVpOFlK1p
-	 +Szq70+Q4GmioBk5W1BC34gr/z4wheZ6OCJ2Bmcj7MBaoso/yTbf630iIPDj9643gS
-	 ilHqJeQdFLF8lvBudaYjWpyIlMBkHG5I9fWzg9lhd5daZHla2oHwkfXGEzGA84uEjt
-	 sDlfFUkV34VFBQSdTXkP/t02fnQ6BMWMP4ydsU5yVjCMUqzV0ZGGDRPXJb669zxPX0
-	 sPOrTcK1LxKGpVfO2SmPe/pfILd08TaHie75ZHIS7U9FqYBXwgtefpOzyXsYVpEmFu
-	 TFrFSybHeB9PA==
-Date: Fri, 19 Jan 2024 13:51:51 -0600
-From: Rob Herring <robh@kernel.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Dharma Balasubiramani <dharma.b@microchip.com>,
-	conor.dooley@microchip.com, bbrezillon@kernel.org,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, lee@kernel.org,
-	thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-	linux-pwm@vger.kernel.org, linux4microchip@microchip.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q3luCX10OyqU7rj34xIwAkbIq6lGeo+vWWjA+rXLfGJXTOt/0Av1l/UaoCIiYRWyZ3m8MpSPxDo25tlWhn1r3dq399opUD8kAGvw4DxyRikzOD0ARTS6HTHDPFSlYIB9QUgk2zD3AfFv8GDNWrUfDc9U5H52Ms8n7Ztr2xhZBzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=GjhB6wRa; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=5hc1wO07; arc=none smtp.client-ip=46.30.211.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=rsa2;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=pO8iBfnjG9hH6vbSRTnXqbEv232F90DY50ha8PvFEd8=;
+	b=GjhB6wRaysDcllp1zsaNynkQl6JNvD+hw2s6dm55JB+H5rGwsfSuOcZwCpp/lTxl/tW2aDNE3z5MN
+	 cCvOWaF/N+ToEspVuSSnuBo8lOkUaVrjwSwe9Mao6GtlEfGoyVttyZq4CzBCuxJBNVPwITHT+XDF/d
+	 xCmbQtnQjMmh5WAe3LGVVn7hMkGrIbRdPEifGr3r3e5Vk0aYqyWLs8EoJEg0BLnf0pRNxtqOpifSLP
+	 DVUq8fj27NFfrJ8Zz/XqxG80zSTseJDWRryFpPf4WZbhGKwSVmENvDTHhLLoa0JpcuEViBFLJCmpXh
+	 r9GP2gowfi3qn7OXJhAZxLkYdx+O+5g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=ed2;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=pO8iBfnjG9hH6vbSRTnXqbEv232F90DY50ha8PvFEd8=;
+	b=5hc1wO07ZIzFI0AGFuC0N6Bpa19KNWG4JJyX/eWazj1u2M5PzREmbIABVmM0wXHM4e5cZxcwJvtgo
+	 tXdJqTLCQ==
+X-HalOne-ID: 6d92ffab-b712-11ee-b81e-dfbeffc51846
+Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
+	by mailrelay6.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id 6d92ffab-b712-11ee-b81e-dfbeffc51846;
+	Fri, 19 Jan 2024 21:33:48 +0000 (UTC)
+Date: Fri, 19 Jan 2024 22:33:47 +0100
+From: Sam Ravnborg <sam@ravnborg.org>
+To: Dharma.B@microchip.com
+Cc: Linux4Microchip@microchip.com, linux-pwm@vger.kernel.org,
+	alexandre.belloni@bootlin.com, dri-devel@lists.freedesktop.org,
+	Nicolas.Ferre@microchip.com, Conor.Dooley@microchip.com,
+	thierry.reding@gmail.com, krzysztof.kozlowski+dt@linaro.org,
+	claudiu.beznea@tuxon.dev, airlied@gmail.com, lee@kernel.org,
+	u.kleine-koenig@pengutronix.de, devicetree@vger.kernel.org,
+	conor+dt@kernel.org, tzimmermann@suse.de, mripard@kernel.org,
+	robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+	bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
+	daniel@ffwll.ch
 Subject: Re: [PATCH v3 0/3] Convert Microchip's HLCDC Text based DT bindings
  to JSON schema
-Message-ID: <20240119195151.GB938671-robh@kernel.org>
+Message-ID: <20240119213347.GA304371@ravnborg.org>
 References: <20240118092612.117491-1-dharma.b@microchip.com>
  <20240118193040.GA223383@ravnborg.org>
+ <e308b833-8cfe-41c0-954e-f1470108394a@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -68,67 +81,79 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240118193040.GA223383@ravnborg.org>
+In-Reply-To: <e308b833-8cfe-41c0-954e-f1470108394a@microchip.com>
 
-On Thu, Jan 18, 2024 at 08:30:40PM +0100, Sam Ravnborg wrote:
-> Hi Dharma et al.
-> 
-> On Thu, Jan 18, 2024 at 02:56:09PM +0530, Dharma Balasubiramani wrote:
-> > Converted the text bindings to YAML and validated them individually using following commands
-> > 
-> > $ make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/
-> > $ make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/
-> > 
-> > changelogs are available in respective patches.
-> > 
-> > Dharma Balasubiramani (3):
-> >   dt-bindings: display: convert Atmel's HLCDC to DT schema
-> >   dt-bindings: atmel,hlcdc: convert pwm bindings to json-schema
-> >   dt-bindings: mfd: atmel,hlcdc: Convert to DT schema format
-> 
-> I know this is a bit late to ask - sorry in advance.
-> 
-> The binding describes the single IP block as a multi functional device,
-> but it is a single IP block that includes the display controller and a
-> simple pwm that can be used for contrast or backlight.
-> 
-> If we ignore the fact that the current drivers for hlcdc uses an mfd
-> abstraction, is this then the optimal way to describe the HW?
-> 
-> 
-> In one of my stale git tree I converted atmel lcdc to DT, and here
-> I used:
-> 
-> +  "#pwm-cells":
-> +    description:
-> +      This PWM chip use the default 3 cells bindings
-> +      defined in ../../pwm/pwm.yaml.
-> +    const: 3
-> +
-> +  clocks:
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    maxItems: 2
-> +    items:
-> +      - const: lcdc_clk
-> +      - const: hclk
-> 
-> This proved to be a simple way to describe the HW.
-> 
-> To make the DT binding backward compatible you likely need to add a few
-> compatible that otherwise would have been left out - but that should do
-> the trick.
-> 
-> The current atmel hlcdc driver that is split in three is IMO an
-> over-engineering, and the driver could benefit merging it all in one.
-> And the binding should not prevent this.
+Hi Dharma,
 
-I agree on all this, but a conversion is not really the time to redesign 
-things. Trust me, I've wanted to on lots of conversions. It should be 
-possible to simplify the driver side while keeping the DT as-is. Just 
-make the display driver bind to the MFD node instead. After that, then 
-one could look at flattening everything to 1 node.
+On Fri, Jan 19, 2024 at 08:41:04AM +0000, Dharma.B@microchip.com wrote:
+> Hi Sam,
+> On 19/01/24 1:00 am, Sam Ravnborg wrote:
+> > [You don't often get email from sam@ravnborg.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+> > 
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> > 
+> > Hi Dharma et al.
+> > 
+> > On Thu, Jan 18, 2024 at 02:56:09PM +0530, Dharma Balasubiramani wrote:
+> >> Converted the text bindings to YAML and validated them individually using following commands
+> >>
+> >> $ make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/
+> >> $ make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/
+> >>
+> >> changelogs are available in respective patches.
+> >>
+> >> Dharma Balasubiramani (3):
+> >>    dt-bindings: display: convert Atmel's HLCDC to DT schema
+> >>    dt-bindings: atmel,hlcdc: convert pwm bindings to json-schema
+> >>    dt-bindings: mfd: atmel,hlcdc: Convert to DT schema format
+> > 
+> > I know this is a bit late to ask - sorry in advance.
+> > 
+> > The binding describes the single IP block as a multi functional device,
+> > but it is a single IP block that includes the display controller and a
+> > simple pwm that can be used for contrast or backlight.
+> yes.
+> > 
+> > If we ignore the fact that the current drivers for hlcdc uses an mfd
+> > abstraction, is this then the optimal way to describe the HW?
+> > 
+> > 
+> > In one of my stale git tree I converted atmel lcdc to DT, and here
+> Are you referring the "bindings/display/atmel,lcdc.txt"?
+Correct.
 
-Rob
+> > I used:
+> > 
+> > +  "#pwm-cells":
+> > +    description:
+> > +      This PWM chip use the default 3 cells bindings
+> > +      defined in ../../pwm/pwm.yaml.
+> > +    const: 3
+> > +
+> > +  clocks:
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    maxItems: 2
+> > +    items:
+> > +      - const: lcdc_clk
+> > +      - const: hclk
+> > 
+> > This proved to be a simple way to describe the HW.
+> > 
+> > To make the DT binding backward compatible you likely need to add a few
+> > compatible that otherwise would have been left out - but that should do
+> > the trick.
+> again you mean the compatibles from atmel,lcdc binding?
+
+If the new binding describes the full IP, as I suggest, then I assume
+you need to add the compatible "atmel,hlcdc-pwm" to be backward
+compatible. Otherwise users assuming the old binding will fail to find
+the pwm info. I am not sure how important this is - but at least then
+the device trees can be updated out of sync with the current users.
+
+I hope this explains what I tried to say, otherwise do not hesitate to
+get back to me.
+
+	Sam
 
