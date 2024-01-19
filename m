@@ -1,50 +1,51 @@
-Return-Path: <linux-pwm+bounces-858-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-859-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A03A832F7D
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jan 2024 20:45:43 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E60A832F85
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jan 2024 20:52:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEDF9286529
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jan 2024 19:45:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CECEDB23D9A
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jan 2024 19:51:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0058156442;
-	Fri, 19 Jan 2024 19:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 511C95645A;
+	Fri, 19 Jan 2024 19:51:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8qlEF5l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MM2M331s"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C561E23B1;
-	Fri, 19 Jan 2024 19:45:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221265644C;
+	Fri, 19 Jan 2024 19:51:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705693536; cv=none; b=YILhbeMuINTPoEKzTJo29VU4eoDtwDX1fSz8JgjbvfxspQa5zek/ZSx6DWksd3eLFGr2Bc1b49QonRW/hK7ngo+rZ8/ORqyyBnjCrYninsP78vOzxdMo5fenud6FPp8adUqOUdgUd9z2nMZl02JU0ZhFQz+jO0QQ70lyQoNfgEM=
+	t=1705693914; cv=none; b=qrYbkd/dK+sqOlp8YygoE6/LJF9QvGAIZfYRVUXs06175JW0N6Ah+f9//Ssm6E8DKiBXNDkGHsmLB32HgJFOWJOChRLA45OIp9Dnb0ogrIGg9m++L+wZ3nvnrDcYnt/E1yxOfRqswj7LsbYN1tOLZdhiBU2lRBvf020Do7X3VUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705693536; c=relaxed/simple;
-	bh=ZLRFh8jAtCz6PPqki5bAxQzNfDJr0iQNBuuoCLP1jyY=;
+	s=arc-20240116; t=1705693914; c=relaxed/simple;
+	bh=V/giPsLnDjrj1zV7DERx2IXZKAyhH88rKKkf5QFcqUw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QdtGz39IIvQVPGdUinTAiYJ+nqxcXWiDINi/a6EJgcMez40l+cLkZMlvwF5KucLo6TlKewJf8wzhV5sp3GlN0Qvo+5B5u1aQpsVn3NG/MeBv76chP1aqOjhUL18d7uoUcqDEoRxb9VfrFwIGkRY0fqAU/ULyW0XikwzKrSumXAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8qlEF5l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27FBCC433C7;
-	Fri, 19 Jan 2024 19:45:36 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=WP7ut4h4FsRUYabQ+8qfOMmAse6Rx7YKcu9NvvsSChjtVBPc8q2V/8yE5ER073PjvYh3+dVmj//KYf63qce1527hh/4/7EoIQ/Bej/dxAqhT78ArU7S58c2Oj21ef+00ujOigzTElyzdNFpp3XMlLTFjN/aZLxzN/jtD1KoEf+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MM2M331s; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB04C433F1;
+	Fri, 19 Jan 2024 19:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705693536;
-	bh=ZLRFh8jAtCz6PPqki5bAxQzNfDJr0iQNBuuoCLP1jyY=;
+	s=k20201202; t=1705693913;
+	bh=V/giPsLnDjrj1zV7DERx2IXZKAyhH88rKKkf5QFcqUw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i8qlEF5lFfm1rnknBphId32t07uJ2nWjZ0/vbiPRCdIJBTGH3RGmYFFCigwhoDjuK
-	 pGvDBpEd3bg9kRqQBr2nd2+zOlbXyEQMy1eEDclTbGqmNl1sL5vngXy3TvavH1eG5K
-	 t83Sb2pV54FQfxvF4wf/dzRlharZnoV7WWdmB2/dzUKd0BXalzqIFCSxcGN23ujhTK
-	 iGVUrXYmcIySuzr6IIKdxbbqup7CATqsBYPI1ozLYJZPxapqjL1MTfLuSkQvJUdb6x
-	 YDIEwjUvntaq11XQmZBCDnqRJuFqa9/nPYX2DFSYHq7BWK3+WJiaGmofo2U+O0vmA5
-	 9HAR7B0e5IcWQ==
-Date: Fri, 19 Jan 2024 13:45:34 -0600
+	b=MM2M331sZCqze2pBHsSkXYXRwFFz+7F13kgvKu8biiY3cZoImBNdsLDtQVpOFlK1p
+	 +Szq70+Q4GmioBk5W1BC34gr/z4wheZ6OCJ2Bmcj7MBaoso/yTbf630iIPDj9643gS
+	 ilHqJeQdFLF8lvBudaYjWpyIlMBkHG5I9fWzg9lhd5daZHla2oHwkfXGEzGA84uEjt
+	 sDlfFUkV34VFBQSdTXkP/t02fnQ6BMWMP4ydsU5yVjCMUqzV0ZGGDRPXJb669zxPX0
+	 sPOrTcK1LxKGpVfO2SmPe/pfILd08TaHie75ZHIS7U9FqYBXwgtefpOzyXsYVpEmFu
+	 TFrFSybHeB9PA==
+Date: Fri, 19 Jan 2024 13:51:51 -0600
 From: Rob Herring <robh@kernel.org>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: conor.dooley@microchip.com, sam@ravnborg.org, bbrezillon@kernel.org,
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Dharma Balasubiramani <dharma.b@microchip.com>,
+	conor.dooley@microchip.com, bbrezillon@kernel.org,
 	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
 	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
 	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -54,11 +55,11 @@ Cc: conor.dooley@microchip.com, sam@ravnborg.org, bbrezillon@kernel.org,
 	linux-kernel@vger.kernel.org, lee@kernel.org,
 	thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
 	linux-pwm@vger.kernel.org, linux4microchip@microchip.com
-Subject: Re: [PATCH v3 2/3] dt-bindings: atmel,hlcdc: convert pwm bindings to
- json-schema
-Message-ID: <20240119194534.GA938671-robh@kernel.org>
+Subject: Re: [PATCH v3 0/3] Convert Microchip's HLCDC Text based DT bindings
+ to JSON schema
+Message-ID: <20240119195151.GB938671-robh@kernel.org>
 References: <20240118092612.117491-1-dharma.b@microchip.com>
- <20240118092612.117491-3-dharma.b@microchip.com>
+ <20240118193040.GA223383@ravnborg.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -67,85 +68,67 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240118092612.117491-3-dharma.b@microchip.com>
+In-Reply-To: <20240118193040.GA223383@ravnborg.org>
 
-On Thu, Jan 18, 2024 at 02:56:11PM +0530, Dharma Balasubiramani wrote:
-> Convert device tree bindings for Atmel's HLCDC PWM controller to YAML
-> format.
+On Thu, Jan 18, 2024 at 08:30:40PM +0100, Sam Ravnborg wrote:
+> Hi Dharma et al.
 > 
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
-> changelog
-> v2 -> v3
-> - Remove '|' in description, as there is no formatting to preserve.
-> - Delete the description for pwm-cells.
-> - Drop the label for pwm node as it not used.
-> v1 -> v2
-> - Remove the explicit copyrights.
-> - Modify title (not include words like binding/driver).
-> - Modify description actually describing the hardware and not the driver.
-> - Remove pinctrl properties which aren't required.
-> - Drop parent node and it's other sub-device node which are not related here.
-> ---
->  .../bindings/pwm/atmel,hlcdc-pwm.yaml         | 44 +++++++++++++++++++
->  .../bindings/pwm/atmel-hlcdc-pwm.txt          | 29 ------------
->  2 files changed, 44 insertions(+), 29 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+> On Thu, Jan 18, 2024 at 02:56:09PM +0530, Dharma Balasubiramani wrote:
+> > Converted the text bindings to YAML and validated them individually using following commands
+> > 
+> > $ make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/
+> > $ make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/
+> > 
+> > changelogs are available in respective patches.
+> > 
+> > Dharma Balasubiramani (3):
+> >   dt-bindings: display: convert Atmel's HLCDC to DT schema
+> >   dt-bindings: atmel,hlcdc: convert pwm bindings to json-schema
+> >   dt-bindings: mfd: atmel,hlcdc: Convert to DT schema format
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml b/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
-> new file mode 100644
-> index 000000000000..4f4cc21fe4f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/atmel,hlcdc-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Atmel's HLCDC's PWM controller
-> +
-> +maintainers:
-> +  - Nicolas Ferre <nicolas.ferre@microchip.com>
-> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
-> +  - Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> +
-> +description:
-> +  The LCDC integrates a Pulse Width Modulation (PWM) Controller. This block
-> +  generates the LCD contrast control signal (LCD_PWM) that controls the
-> +  display's contrast by software. LCDC_PWM is an 8-bit PWM signal that can be
-> +  converted to an analog voltage with a simple passive filter. LCD display
-> +  panels have different backlight specifications in terms of minimum/maximum
-> +  values for PWM frequency. If the LCDC PWM frequency range does not match the
-> +  LCD display panel, it is possible to use the standalone PWM Controller to
-> +  drive the backlight.
-> +
-> +properties:
-> +  compatible:
-> +    const: atmel,hlcdc-pwm
-> +
+> I know this is a bit late to ask - sorry in advance.
+> 
+> The binding describes the single IP block as a multi functional device,
+> but it is a single IP block that includes the display controller and a
+> simple pwm that can be used for contrast or backlight.
+> 
+> If we ignore the fact that the current drivers for hlcdc uses an mfd
+> abstraction, is this then the optimal way to describe the HW?
+> 
+> 
+> In one of my stale git tree I converted atmel lcdc to DT, and here
+> I used:
+> 
 > +  "#pwm-cells":
+> +    description:
+> +      This PWM chip use the default 3 cells bindings
+> +      defined in ../../pwm/pwm.yaml.
 > +    const: 3
 > +
-> +required:
-> +  - compatible
-> +  - "#pwm-cells"
+> +  clocks:
+> +    maxItems: 2
 > +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pwm {
-> +      compatible = "atmel,hlcdc-pwm";
-> +      pinctrl-names = "default";
-> +      pinctrl-0 = <&pinctrl_lcd_pwm>;
-> +      #pwm-cells = <3>;
-> +    };
+> +  clock-names:
+> +    maxItems: 2
+> +    items:
+> +      - const: lcdc_clk
+> +      - const: hclk
+> 
+> This proved to be a simple way to describe the HW.
+> 
+> To make the DT binding backward compatible you likely need to add a few
+> compatible that otherwise would have been left out - but that should do
+> the trick.
+> 
+> The current atmel hlcdc driver that is split in three is IMO an
+> over-engineering, and the driver could benefit merging it all in one.
+> And the binding should not prevent this.
 
-Move the example to the MFD schema. Or just drop if already there.
+I agree on all this, but a conversion is not really the time to redesign 
+things. Trust me, I've wanted to on lots of conversions. It should be 
+possible to simplify the driver side while keeping the DT as-is. Just 
+make the display driver bind to the MFD node instead. After that, then 
+one could look at flattening everything to 1 node.
 
 Rob
 
