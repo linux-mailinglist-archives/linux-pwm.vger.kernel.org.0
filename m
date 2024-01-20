@@ -1,128 +1,108 @@
-Return-Path: <linux-pwm+bounces-861-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-862-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DA68833383
-	for <lists+linux-pwm@lfdr.de>; Sat, 20 Jan 2024 11:04:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D953D8334CB
+	for <lists+linux-pwm@lfdr.de>; Sat, 20 Jan 2024 14:25:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A95361F22394
-	for <lists+linux-pwm@lfdr.de>; Sat, 20 Jan 2024 10:04:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83020284063
+	for <lists+linux-pwm@lfdr.de>; Sat, 20 Jan 2024 13:25:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE39A3D7F;
-	Sat, 20 Jan 2024 10:04:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9618AEAFA;
+	Sat, 20 Jan 2024 13:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="VUaePavB";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="mDrAf03Q"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mailrelay1-1.pub.mailoutpod3-cph3.one.com (mailrelay1-1.pub.mailoutpod3-cph3.one.com [46.30.211.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497EAD516
-	for <linux-pwm@vger.kernel.org>; Sat, 20 Jan 2024 10:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C840AEEDB
+	for <linux-pwm@vger.kernel.org>; Sat, 20 Jan 2024 13:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705745083; cv=none; b=ZABMTeQanXpfvkxMl1Bi2hFjooz1A5n7+BXLMtjimcryreW+wV4nwMmleakSnVSAcoWrE/trbcuW1Za5PWdroK8MlD3FV4Xcwgtt+BOjzqGvIbW5GSjjS1/TSrE8R+j0kQdKn8Gft+Q0BWJBTwBTtT7NVmETMsfRkd77/YYdN8c=
+	t=1705757110; cv=none; b=VSnIsXf2+k4Q6qyKYNwZxFpLIKqei5Srk7CxZvMFVKVf0sbcdlSE0i2SgLdKQY5goTlT9J9eX2nBZ4oVXYO2ZiMjFdR0qRdLhtiy1S/T2bnb4umly+NxB/yJ8sw6myWDLP2X12wa4MdLtDhHxb3H1iMNTl4sthU7oF7+LtlndfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705745083; c=relaxed/simple;
-	bh=pkuENZ4SIPfpvozPTXrY7v9vPtesecOlQ4AiQhqNgxc=;
+	s=arc-20240116; t=1705757110; c=relaxed/simple;
+	bh=RSP2se+u6DCISnP7SUu3FLuksvZziTDFqxykP1f62lU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=km5wNFTOz3SSenv4P6wQQuNhm/ynJeYMVW1e1aRmYy/OjHjsT3ub4sjOj4hDkGhLOATXbBfuJ6zFc8Mla5903kGw/SGwsV/Mte8HUHvX2IMMi/O4nBr71MkX/sEu41a6l+jO+HM5JEg3Rt+LFMEZRhqMR2gfJvk8CrQyDs0ebdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rR8CU-0004RC-U0; Sat, 20 Jan 2024 11:03:42 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rR8CS-0017A8-2m; Sat, 20 Jan 2024 11:03:40 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rR8CR-003wrX-39;
-	Sat, 20 Jan 2024 11:03:39 +0100
-Date: Sat, 20 Jan 2024 11:03:39 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: conor.dooley@microchip.com, sam@ravnborg.org, bbrezillon@kernel.org, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
-	daniel@ffwll.ch, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	conor+dt@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
-	claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, lee@kernel.org, 
-	thierry.reding@gmail.com, linux-pwm@vger.kernel.org, linux4microchip@microchip.com
-Subject: Re: [PATCH v3 2/3] dt-bindings: atmel,hlcdc: convert pwm bindings to
- json-schema
-Message-ID: <xv5nv2tzenkuppfhcrhkfv3ntc5n5p5pt5mka33dwd26jkkdda@agskejqaabwk>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MDS340n2TaPkW4TZSSnblKjEKRM2hUSXeVC5yC/T3cmWoqjzbhI5XalsFz78OE1GWh2VekhXTcH0zalBcQuQeC6d73Kqg7kDOprZTkBWNpBoam4Y1ZCCrNjxpoIiUwVfiI+ptyie6k+tO5gtbO5OxxIW2OBj+o+IsvrDg5wc6/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=VUaePavB; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=mDrAf03Q; arc=none smtp.client-ip=46.30.211.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=rsa2;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=nis0MFICALDl8ueriEsSxywhUejA62uue/J5cXFxeyE=;
+	b=VUaePavB9fYtt07l5KK9wUaWbFvslcUItlQeESzh4+PC+JlHKIjokXvAqJq5A2UuZe6H1zG6M76ym
+	 P1YY+x5r5Va+/5/mR3KXN+AxHNC1YLPpSoFb4S+8xtDvhQYB+BQ8kR+vZZ4NCr6OGGphDdehmISCj7
+	 5Ynb/XUBqGxkCWzbTcFmtvnCSboHLKvnvE/0h8NHRJuIhsNrPYInYoTlZ/zYwr1r4gByarY6MK6kX1
+	 w2vtccBTqwq94HXCNGzR6y2LD1oD6/Ub35yPmR2CnkL9xmiCDUWFGOPO8O7bVlzw/XcESFiHD4E9r6
+	 q7QIKsn9LU0K5DTnpaBUJe/gnpm7wJw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=ed2;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=nis0MFICALDl8ueriEsSxywhUejA62uue/J5cXFxeyE=;
+	b=mDrAf03QUCGkLVFzLWy1mb2nZd8MPZrNGY9zpcn2vCt5UPndHii5ObDnSFLMBBl9sOveAhAWjnD8N
+	 UE5eIIHBA==
+X-HalOne-ID: 298bbbbb-b797-11ee-a599-1ff1563c5748
+Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
+	by mailrelay1.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
+	id 298bbbbb-b797-11ee-a599-1ff1563c5748;
+	Sat, 20 Jan 2024 13:23:58 +0000 (UTC)
+Date: Sat, 20 Jan 2024 14:23:56 +0100
+From: Sam Ravnborg <sam@ravnborg.org>
+To: Rob Herring <robh@kernel.org>,
+	Dharma Balasubiramani <dharma.b@microchip.com>
+Cc: linux4microchip@microchip.com, linux-pwm@vger.kernel.org,
+	alexandre.belloni@bootlin.com, dri-devel@lists.freedesktop.org,
+	nicolas.ferre@microchip.com, conor.dooley@microchip.com,
+	thierry.reding@gmail.com, krzysztof.kozlowski+dt@linaro.org,
+	claudiu.beznea@tuxon.dev, airlied@gmail.com, lee@kernel.org,
+	Dharma Balasubiramani <dharma.b@microchip.com>,
+	u.kleine-koenig@pengutronix.de, devicetree@vger.kernel.org,
+	conor+dt@kernel.org, tzimmermann@suse.de, mripard@kernel.org,
+	linux-arm-kernel@lists.infradead.org, bbrezillon@kernel.org,
+	linux-kernel@vger.kernel.org, daniel@ffwll.ch
+Subject: Re: [PATCH v3 0/3] Convert Microchip's HLCDC Text based DT bindings
+ to JSON schema
+Message-ID: <20240120132356.GA345206@ravnborg.org>
 References: <20240118092612.117491-1-dharma.b@microchip.com>
- <20240118092612.117491-3-dharma.b@microchip.com>
- <kht2fxv2fbeod4pakk6q6m4gthftdr6asjqjojgb45kqlsrxpl@37umfctsorhs>
+ <20240118193040.GA223383@ravnborg.org>
+ <20240119195151.GB938671-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hn4duuuau4xew7c5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <kht2fxv2fbeod4pakk6q6m4gthftdr6asjqjojgb45kqlsrxpl@37umfctsorhs>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20240119195151.GB938671-robh@kernel.org>
 
+Hi Dharma & Rob.
 
---hn4duuuau4xew7c5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > To make the DT binding backward compatible you likely need to add a few
+> > compatible that otherwise would have been left out - but that should do
+> > the trick.
+> > 
+> > The current atmel hlcdc driver that is split in three is IMO an
+> > over-engineering, and the driver could benefit merging it all in one.
+> > And the binding should not prevent this.
+> 
+> I agree on all this, but a conversion is not really the time to redesign 
+> things. Trust me, I've wanted to on lots of conversions. It should be 
+> possible to simplify the driver side while keeping the DT as-is. Just 
+> make the display driver bind to the MFD node instead. After that, then 
+> one could look at flattening everything to 1 node.
 
-Hello,
+Understood and thinking a bit about it fully agreed as well.
+Dharma - please see my comments only as ideas for the future, and
+ignore them in this fine rewrite you do.
 
-On Thu, Jan 18, 2024 at 11:16:49AM +0100, Uwe Kleine-K=F6nig wrote:
-> On Thu, Jan 18, 2024 at 02:56:11PM +0530, Dharma Balasubiramani wrote:
-> > Convert device tree bindings for Atmel's HLCDC PWM controller to YAML
-> > format.
-> >=20
-> > Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-> > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
->=20
-> Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
->=20
-> I will update the short log to
->=20
-> 	dt-bindings: pwm: atmel,hlcdc: Convert bindings to json-schema
->=20
-> to match my preferences (unless you object) and apply for next after the
-> merge window.
-
-Dropped from my todo-list after Rob's feedback.
-
-Best regards
-Uwe
-
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---hn4duuuau4xew7c5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWrmnsACgkQj4D7WH0S
-/k4Evwf+JZJx7peQB9ZNaNwVOaGScaRce7jQlkr6TZUH+fszttEseyB/tucPO6F1
-wwQR5xcoJ3OTeAhwycSX5D8DTn6fvaT4Dj8CSxoHdVQ+VxilKSw93Pf0F7Bu/BJ5
-+24zWaEiBkUj3LuAubJ6p2uvec+BLZ8iS+iD8s93fXsst0P4Rxn6D3NMawIZdRfY
-pZlJLBFY1jG4oqulbJZkVHCKz+tm2D/Prn6M/156bqvhXmAdSL6nDSU8hWwUGgsR
-KTwbMOAfYM97UTx6ejOmH/ZEeDwQioDl30OYLluBRCu0A0og5v7Rf7Tj2IBLjqfW
-V3c4Jy3A6Uoy4+MMynVotSSuwwmlAw==
-=P0ik
------END PGP SIGNATURE-----
-
---hn4duuuau4xew7c5--
+	Sam
 
