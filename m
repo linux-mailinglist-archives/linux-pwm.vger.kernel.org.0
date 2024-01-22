@@ -1,134 +1,115 @@
-Return-Path: <linux-pwm+bounces-885-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-886-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DF89836EB5
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 19:01:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 949C183745F
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 21:46:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 07F9FB261F2
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 17:39:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A86C8B25B2D
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 20:46:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68A895B210;
-	Mon, 22 Jan 2024 16:55:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 293EC4A9A0;
+	Mon, 22 Jan 2024 20:44:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+t36IAE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9XOiQN5"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B48C3D972;
-	Mon, 22 Jan 2024 16:55:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0496B4A99B;
+	Mon, 22 Jan 2024 20:44:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705942536; cv=none; b=NmMceTqclG3693uPnITrhSMFdb966uKkBdA6rWWqUkjtyDQcNoz0S6udSTCzr26lwszQ+8gocOa1r169DBdtTKm5D8SmT03X1ltk7/8voN849aSSbjEnCgDrJrJAYh15mUQOvBCRM7HKF96VHqEtA79zL/Q3LjxHWMTm96yFb2g=
+	t=1705956282; cv=none; b=ZP6GGp3g7kUTQspY6HR8Wy0yCK8tzmcv4XpVxOxmlF5xQmdTYjB8+NzhZKMQgqjR80XHpH5OWTte8vZufsP3syTn8NrTZHvOJAadWzD6soo1h88m8nnqsq0aBk03qxdXdD+je4ltN3oJfYlReoJece/pEEs8yrnJYtrQ8lqdfJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705942536; c=relaxed/simple;
-	bh=8T0ucgjfyXJd5NvhWFta/df8Q6IEWrQ3KgZIzNuukxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mCiKedPYiEiDqZmBdcqxDqEVVdepvWSP1SUAfZEj1OkyRt/ARj4mTti60jz8QN9ez4p37Zm780uiA+EsuCnxHviIdbTTyVtK+UCV/7R4mmzymGe/RpKQheU2kPqeisa+WESlska3Pub6gtyNf2Gb8LxLLN3QsERifgEKnjQKTFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+t36IAE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A2ECC433C7;
-	Mon, 22 Jan 2024 16:55:30 +0000 (UTC)
+	s=arc-20240116; t=1705956282; c=relaxed/simple;
+	bh=dt5C1IAu6gWee39W5ANHJTbSfbM7H6/2F0kZ9c8AxPw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=dCriP83UOhu+uyIc1bang5laejpM1i0HyH4tVjpztt6uExOos2SnAAQN2iqhzJgoI+6aKZMMwICvubLWOPRo/UgTT5bsCshh7Xvt0wX125XXvsHj8QFq0LLEBk5IMNVIA7IQhNP0HQ1dZh9VrElToqPY7xRbvnYgVoTsH9wexeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9XOiQN5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E7B5C43394;
+	Mon, 22 Jan 2024 20:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705942535;
-	bh=8T0ucgjfyXJd5NvhWFta/df8Q6IEWrQ3KgZIzNuukxw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G+t36IAEXRN0EzeicIjVOqkYYa8UkpBLp6d4LHyP7PIL/KyxtPlv6rg0f9eyVU3UY
-	 7emrR1fDVXXhERnUfVNKiKo61V6I3tH7tIxbfssm8b/6zuhuQ3xifa2STUgrV1oXX0
-	 zaMq78qpDVbS5XpQTWhPzojQal6XA4yBS7SqchbC7vVzFGfkaym0gYc+RzBI806Hex
-	 VdW7NBmQQSJJgjkoa1SP73Q/Yf/4+I2rpRxG0TQWtJ43tYG6vUuF54bTHwqxpHRupC
-	 /n10Cd+pskxQZnA/HwIxtP4KSe+4q+OfXYNYUf/RBH4dsLRbo4OecYuL9SZXLP1Vi1
-	 qKo+cTrdKPCcA==
-Date: Mon, 22 Jan 2024 16:55:28 +0000
-From: Conor Dooley <conor@kernel.org>
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org,
-	William Qiu <william.qiu@starfivetech.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Rob Herring <robh+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	=?utf-8?q?Emil_Renner_Berthing_=3Ckernel=40esmil=2Edk=3E=2C_Rob_Herring_?=@spud.smtp.subspace.kernel.org,
-	=?utf-8?q?=3Crobh+dt=40kernel=2Eorg=3E=2C_Thierry_Reding_=3Cthierry=2Eredin?=@spud.smtp.subspace.kernel.org,
-	=?utf-8?q?g=40gmail=2Ecom=3E=2C_Philipp_Zabel_=3Cp=2Ezabel=40pengutronix=2E?=@spud.smtp.subspace.kernel.org,
-	=?utf-8?q?de=3E=2C_Krzysztof_Kozlowski_=3Ckrzysztof=2Ekozlowski+dt=40linaro?=@spud.smtp.subspace.kernel.org,
-	=?utf-8?q?=2Eorg=3E=2C_Conor_Dooley_=3Cconor+dt=40kernel=2Eorg=3E=2C_Uwe_Kl?=@spud.smtp.subspace.kernel.org,
-	=?utf-8?q?eine-K=C3=B6nig_=3Cu=2Ekleine-koenig=40pengutronix=2Ede=3E=2C_Hal?=@spud.smtp.subspace.kernel.org,
-	=?utf-8?q?_Feng_=3Chal=2Efeng=40starfivetech=2Ecom=3E=2C_Paul_Walmsley_=3Cp?=@spud.smtp.subspace.kernel.org,
-	=?utf-8?q?aul=2Ewalmsley=40sifive=2Ecom=3E=2C_Palmer_Dabbelt_=3Cpalmer=40da?=@spud.smtp.subspace.kernel.org,
-	=?utf-8?q?bbelt=2Ecom=3E=2C_Albert_Ou_=3Caou=40eecs=2Eberkeley=2Eedu=3E?=@spud.smtp.subspace.kernel.org
-Subject: Re: (subset) [PATCH v10 0/4] StarFive's Pulse Width Modulation
- driver support
-Message-ID: <20240122-palm-maximize-75522ae88b8a@spud>
-References: <20231222094548.54103-1-william.qiu@starfivetech.com>
- <20240122-twitter-scroll-75416c5bbd27@spud>
+	s=k20201202; t=1705956281;
+	bh=dt5C1IAu6gWee39W5ANHJTbSfbM7H6/2F0kZ9c8AxPw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=N9XOiQN5vt0NGWHxNtRbl73Z2V5PcnE36LQA7oJz6wqXDOWsCo15Yk6o8RCaleRRa
+	 dGkrQSUIaZ/po8iaAYm5AmeCqMYSIypJ3FjWbZuVGQ0A0bauE5mVdJiDe95nnFC0je
+	 arepL7QdE753biMbtMpcreuEzfHseSJ3xOXAxWTaTCIhwQek8wEm+luNoH5CIsJcLJ
+	 IcFrYv9Ai2o4NmlQTVeso/DsUXo8DFkLre1gBuhaw8tUpVinVHlz5sAZNl7rae/8tl
+	 //EgDEN3m0871eIrkTPJS8HAD3W4f3P5xokBcEY+xIbIw8HHhEweLPtmgdhH0smgAB
+	 Ty9jZdXM1KhrQ==
+From: Mark Brown <broonie@kernel.org>
+To: lgirdwood@gmail.com, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+ linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-kernel@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Dmitry Rokosov <ddrokosov@sberdevices.ru>
+In-Reply-To: <20240113224628.377993-1-martin.blumenstingl@googlemail.com>
+References: <20240113224628.377993-1-martin.blumenstingl@googlemail.com>
+Subject: Re: [RFC PATCH v2 0/3] regulator: pwm-regulator: Fixes for
+ disabled PWMs at boot
+Message-Id: <170595627996.145638.15681759676659435096.b4-ty@kernel.org>
+Date: Mon, 22 Jan 2024 20:44:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="S+zxDKzeEYPgrYkE"
-Content-Disposition: inline
-In-Reply-To: <20240122-twitter-scroll-75416c5bbd27@spud>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-5c066
 
+On Sat, 13 Jan 2024 23:46:25 +0100, Martin Blumenstingl wrote:
+> This is the second version of an attempt to fix booting mainline Linux
+> on Meson8b Odroid-C1.
+> This series is an update to an RFC patch that I sent some time ago [0]
+> and incorporates a lot of the feedback from that v1.
+> 
+> The main changes since v1 [0] are:
+> - new patch checking the voltage limits in pwm_regulator_get_voltage()
+> - updated calculation for disabled regulators in+
+>   pwm_regulator_get_voltage() utilizing above limit checking
+> - new pwm_regulator_init_boot_on() to preserve the output voltage when
+>   pwm_regulator_enable() later enables the PWM output without and
+>   preceding pwm_regulator_set_voltage().
+> 
+> [...]
 
---S+zxDKzeEYPgrYkE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to
 
-On Mon, Jan 22, 2024 at 04:50:25PM +0000, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
->=20
-> On Fri, 22 Dec 2023 17:45:44 +0800, William Qiu wrote:
-> > This patchset adds initial rudimentary support for the StarFive
-> > Pulse Width Modulation controller driver. And this driver will
-> > be used in StarFive's VisionFive 2 board.The first patch add
-> > Documentations for the device and Patch 2 adds device probe for
-> > the module.
-> >=20
-> > Changes v9->v10:
-> > - Rebased to v6.7rc6.
-> > - Dropped unuseful dependency.
-> > - Added error handling.
-> >=20
-> > [...]
->=20
-> Applied to riscv-dt-for-next, thanks!
->=20
-> [1/4] dt-bindings: pwm: Add bindings for OpenCores PWM Controller
->       https://git.kernel.org/conor/c/2529085831b0
-> [3/4] riscv: dts: starfive: jh7100: Add PWM node and pins configuration
->       https://git.kernel.org/conor/c/26c3112c10f8
-> [4/4] riscv: dts: starfive: jh7110: Add PWM node and pins configuration
->       https://git.kernel.org/conor/c/92df97487208
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-Something went super wrong here with the CC list that b4 generated for
-me, there was a bunch of utf8 encoding crap in the middle of it. Perhaps
-I should update the version of b4 that I have been running...
+Thanks!
 
---S+zxDKzeEYPgrYkE
-Content-Type: application/pgp-signature; name="signature.asc"
+[1/3] regulator: pwm-regulator: Add validity checks in continuous .get_voltage
+      commit: c92688cac239794e4a1d976afa5203a4d3a2ac0e
+[2/3] regulator: pwm-regulator: Calculate the output voltage for disabled PWMs
+      commit: 6a7d11efd6915d80a025f2a0be4ae09d797b91ec
+[3/3] regulator: pwm-regulator: Manage boot-on with disabled PWM channels
+      commit: b3cbdcc191819b75c04178142e2d0d4c668f68c0
 
------BEGIN PGP SIGNATURE-----
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZa6eAAAKCRB4tDGHoIJi
-0vanAP9sqv+lnua3IrSO2oAtWeacHEw1X3F2Zdr6Ewh5/RTWVgEAsNs/8NwnyYis
-DM3sjdeahWoQWza4LobW7lTD7M2vyAk=
-=TxP9
------END PGP SIGNATURE-----
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---S+zxDKzeEYPgrYkE--
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
 
