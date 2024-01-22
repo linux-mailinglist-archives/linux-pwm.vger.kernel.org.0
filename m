@@ -1,108 +1,99 @@
-Return-Path: <linux-pwm+bounces-862-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-865-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D953D8334CB
-	for <lists+linux-pwm@lfdr.de>; Sat, 20 Jan 2024 14:25:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EA2E883598E
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 04:03:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83020284063
-	for <lists+linux-pwm@lfdr.de>; Sat, 20 Jan 2024 13:25:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A2EA1282534
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 03:03:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9618AEAFA;
-	Sat, 20 Jan 2024 13:25:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7036B2578;
+	Mon, 22 Jan 2024 03:02:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="VUaePavB";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="mDrAf03Q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PwS3fHC6"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailrelay1-1.pub.mailoutpod3-cph3.one.com (mailrelay1-1.pub.mailoutpod3-cph3.one.com [46.30.211.240])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C840AEEDB
-	for <linux-pwm@vger.kernel.org>; Sat, 20 Jan 2024 13:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F6517F8;
+	Mon, 22 Jan 2024 03:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705757110; cv=none; b=VSnIsXf2+k4Q6qyKYNwZxFpLIKqei5Srk7CxZvMFVKVf0sbcdlSE0i2SgLdKQY5goTlT9J9eX2nBZ4oVXYO2ZiMjFdR0qRdLhtiy1S/T2bnb4umly+NxB/yJ8sw6myWDLP2X12wa4MdLtDhHxb3H1iMNTl4sthU7oF7+LtlndfM=
+	t=1705892576; cv=none; b=XBxZRMPiD69Var2+1CUZBrX6PVP3bFuZCP+pHpyBIhnp83/VrWF47Dj+nKjw13vF3o9TuYBEA7Vn4YmKxo/7KZZnjJhafpl4fqYllvQW8Yi2Tc/e4F7UiV19a3BIcI5DaU8W+xJKhRtDsjDI/34v3DB8MIvxOj0AhRczejPOGDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705757110; c=relaxed/simple;
-	bh=RSP2se+u6DCISnP7SUu3FLuksvZziTDFqxykP1f62lU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MDS340n2TaPkW4TZSSnblKjEKRM2hUSXeVC5yC/T3cmWoqjzbhI5XalsFz78OE1GWh2VekhXTcH0zalBcQuQeC6d73Kqg7kDOprZTkBWNpBoam4Y1ZCCrNjxpoIiUwVfiI+ptyie6k+tO5gtbO5OxxIW2OBj+o+IsvrDg5wc6/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=VUaePavB; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=mDrAf03Q; arc=none smtp.client-ip=46.30.211.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa2;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=nis0MFICALDl8ueriEsSxywhUejA62uue/J5cXFxeyE=;
-	b=VUaePavB9fYtt07l5KK9wUaWbFvslcUItlQeESzh4+PC+JlHKIjokXvAqJq5A2UuZe6H1zG6M76ym
-	 P1YY+x5r5Va+/5/mR3KXN+AxHNC1YLPpSoFb4S+8xtDvhQYB+BQ8kR+vZZ4NCr6OGGphDdehmISCj7
-	 5Ynb/XUBqGxkCWzbTcFmtvnCSboHLKvnvE/0h8NHRJuIhsNrPYInYoTlZ/zYwr1r4gByarY6MK6kX1
-	 w2vtccBTqwq94HXCNGzR6y2LD1oD6/Ub35yPmR2CnkL9xmiCDUWFGOPO8O7bVlzw/XcESFiHD4E9r6
-	 q7QIKsn9LU0K5DTnpaBUJe/gnpm7wJw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed2;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=nis0MFICALDl8ueriEsSxywhUejA62uue/J5cXFxeyE=;
-	b=mDrAf03QUCGkLVFzLWy1mb2nZd8MPZrNGY9zpcn2vCt5UPndHii5ObDnSFLMBBl9sOveAhAWjnD8N
-	 UE5eIIHBA==
-X-HalOne-ID: 298bbbbb-b797-11ee-a599-1ff1563c5748
-Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-	by mailrelay1.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id 298bbbbb-b797-11ee-a599-1ff1563c5748;
-	Sat, 20 Jan 2024 13:23:58 +0000 (UTC)
-Date: Sat, 20 Jan 2024 14:23:56 +0100
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Rob Herring <robh@kernel.org>,
-	Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: linux4microchip@microchip.com, linux-pwm@vger.kernel.org,
-	alexandre.belloni@bootlin.com, dri-devel@lists.freedesktop.org,
-	nicolas.ferre@microchip.com, conor.dooley@microchip.com,
-	thierry.reding@gmail.com, krzysztof.kozlowski+dt@linaro.org,
-	claudiu.beznea@tuxon.dev, airlied@gmail.com, lee@kernel.org,
-	Dharma Balasubiramani <dharma.b@microchip.com>,
-	u.kleine-koenig@pengutronix.de, devicetree@vger.kernel.org,
-	conor+dt@kernel.org, tzimmermann@suse.de, mripard@kernel.org,
-	linux-arm-kernel@lists.infradead.org, bbrezillon@kernel.org,
-	linux-kernel@vger.kernel.org, daniel@ffwll.ch
-Subject: Re: [PATCH v3 0/3] Convert Microchip's HLCDC Text based DT bindings
- to JSON schema
-Message-ID: <20240120132356.GA345206@ravnborg.org>
-References: <20240118092612.117491-1-dharma.b@microchip.com>
- <20240118193040.GA223383@ravnborg.org>
- <20240119195151.GB938671-robh@kernel.org>
+	s=arc-20240116; t=1705892576; c=relaxed/simple;
+	bh=JU9q0bJ7a4jYOvykJk01qQpv3D5tvVRO+GJ+CDcsGr4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OIu6/n3eMENcq+CA2GWif1a6N69gj1ckvWawLXsonGur9+qBeeM08ZEKNdI+QsOQjZmK1JodVV8pTK3w8EvDZYpwAfivrjCrHjDXpqU8N+GnaDPfxDPxILzD7xvyBasx35/7d9QaaOV+v4b1HgExBPu+q1KbxJp2JaHAhLK9noE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PwS3fHC6; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecsmtp.iind.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705892575; x=1737428575;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JU9q0bJ7a4jYOvykJk01qQpv3D5tvVRO+GJ+CDcsGr4=;
+  b=PwS3fHC6LmoPS8UCvDbnq0zn6jox3QbhMuoT3NLt3xM4sRAm/M19LLk5
+   X/z7t81aT7+95RjsGh8LTGg6cYiDOgatVlZMzhGvnPYizoyHe1H8Ss528
+   dAfG5Mlj1uoCql7pTeRFwH5c+naK8O3KXxaCbcbHiauzGdiOXmXA0uBCn
+   OeEUH4o2XmCtAObNc/4ARARlI5xbmqFqDGGTNHMmbAfBKZCQwoPYyWGv8
+   noN5DB4qNGPxMZ7qpsjdjTHYJ6E+/J4jtLOPT6hpMueZz/YKP2oUf60XQ
+   jMtAWDaArioROOeuZUcI3cvZQQ13IhaaNmsi18RnjbspotwUX3L92YqAi
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="14607320"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="14607320"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2024 19:02:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="1085519"
+Received: from inesxmail01.iind.intel.com ([10.223.57.40])
+  by orviesa003.jf.intel.com with ESMTP; 21 Jan 2024 19:02:42 -0800
+Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
+	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 1C3D147C1;
+	Mon, 22 Jan 2024 08:32:41 +0530 (IST)
+Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
+	id 1785C1600100; Mon, 22 Jan 2024 08:32:41 +0530 (IST)
+From: Raag Jadav <raag.jadav@intel.com>
+To: u.kleine-koenig@pengutronix.de,
+	jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	lakshmi.sowjanya.d@intel.com
+Cc: linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v1 0/3] DesignWare PWM improvements
+Date: Mon, 22 Jan 2024 08:32:35 +0530
+Message-Id: <20240122030238.29437-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240119195151.GB938671-robh@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Dharma & Rob.
+This series adds 16 channel support for Intel Elkhart Lake and simplifies
+code using standard helpers in DesignWare PWM driver.
 
-> > To make the DT binding backward compatible you likely need to add a few
-> > compatible that otherwise would have been left out - but that should do
-> > the trick.
-> > 
-> > The current atmel hlcdc driver that is split in three is IMO an
-> > over-engineering, and the driver could benefit merging it all in one.
-> > And the binding should not prevent this.
-> 
-> I agree on all this, but a conversion is not really the time to redesign 
-> things. Trust me, I've wanted to on lots of conversions. It should be 
-> possible to simplify the driver side while keeping the DT as-is. Just 
-> make the display driver bind to the MFD node instead. After that, then 
-> one could look at flattening everything to 1 node.
+Raag Jadav (3):
+  pwm: dwc: Add 16 channel support for Intel Elkhart Lake
+  pwm: dwc: simplify error handling
+  pwm: dwc: use to_pci_dev() helper
 
-Understood and thinking a bit about it fully agreed as well.
-Dharma - please see my comments only as ideas for the future, and
-ignore them in this fine rewrite you do.
+ drivers/pwm/pwm-dwc.c | 71 +++++++++++++++++++++++++++++--------------
+ drivers/pwm/pwm-dwc.h |  5 +++
+ 2 files changed, 54 insertions(+), 22 deletions(-)
 
-	Sam
+
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+-- 
+2.35.3
+
 
