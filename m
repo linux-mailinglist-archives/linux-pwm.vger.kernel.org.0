@@ -1,161 +1,140 @@
-Return-Path: <linux-pwm+bounces-877-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-878-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 738CB836B89
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 17:47:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBE49836C57
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 18:03:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F8431C24B4B
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 16:47:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D6E11F24E55
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 17:03:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E46113FE3F;
-	Mon, 22 Jan 2024 15:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87101604AB;
+	Mon, 22 Jan 2024 15:44:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rV7rGxU9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GttxGDNW"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEAB83FE3B
-	for <linux-pwm@vger.kernel.org>; Mon, 22 Jan 2024 15:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7574879E;
+	Mon, 22 Jan 2024 15:44:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936806; cv=none; b=CeBQj4s+FgRW0QNLSU2VfrcAi5ZvVmE2EdEiJLN9yYnCBiHO30uRzxxlmNY2CxSva9zBPj1nOMjMFHcb68gWBA7VQop789i5l/KbK2rc7+phfRFPuYxtWMWDvOCk2DzvYDa8k096EfnbOCjVfdfWmwSVdfEvSn0z3haKzVmZS5k=
+	t=1705938296; cv=none; b=C9xnUt//sBxpCBxI9dE5AGJKbKefuI0Ezx1eId4UIkosXYm7NyYOsyRVQDBAsr39GUqG2DLQCSKzSfLFcH5BpCVhf2Gzn242400ERNisMusLhRSGcPFaeDX4vHTZear2rNMtfBwKBlyh1erqlZImEbK1RxENbZ9aWuNzKVFHhIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936806; c=relaxed/simple;
-	bh=SXUPVZkJmcierNdtKqvg9SmUNHeTPRtiZts/xJRvssk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ips+FIGDxyVipeqmyvG4D7Fx7OYrX2cMmAGxvBAvJ8XlxSOwh6cs5FPVimooECUGHjAenlrqGpJR2Qf1nmCNhOuxFSwt545G9PUM1tr8XEY2rjVHdm2h7AQVtCGGvCulBz1xaYt9jISRRVGttYvd/1P/YXUy6g2xjH6q5F/yMXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rV7rGxU9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A54C43330
-	for <linux-pwm@vger.kernel.org>; Mon, 22 Jan 2024 15:20:06 +0000 (UTC)
+	s=arc-20240116; t=1705938296; c=relaxed/simple;
+	bh=XVEvO/xHApugNMmo0t/BHKJyiHUEpSxLpzJk8RCmns0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WoLEFpKVpALUO5+l0PLdK33BbxNomkHcIe9JkIGQf7etYJXhl+UoX0zzdgy4EvXhsF+lIC2qw7eN2rtCZR4lLcxq+sKXpvPuadHcv+se8jjwAFXAuCMzkfmNvTJTH2WMyIkNEKBlOkwOf29FdM2t48KkWqu/M5n99N4MlnSzXFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GttxGDNW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B59C433C7;
+	Mon, 22 Jan 2024 15:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705936806;
-	bh=SXUPVZkJmcierNdtKqvg9SmUNHeTPRtiZts/xJRvssk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rV7rGxU92XXwycgUGJw7K4cnzR088p6xQt3GeF0u42UV8it4WfI/TQVkK6f3YEDPR
-	 bygxas0sFl8gF3YUTiuDLBQT0pY1RdyU6ATXhDMRThgrOGgoqFzEFd0AkCshx7ClBK
-	 4G2iXtwl8IlyhM33mvX3O2mwdL5H7Z6ZUKhVlrmKq5SeDtOQ59k+9LHkXKlSMynBz7
-	 cJvRQEKrsi77S0BOWh9k3JDrV0nWxgTF1WikQChLAnZ9/0wO7ztG5RUpBZywzb9Bz6
-	 MhD63oQN33YPpsV8HcK8tR5sMEJaMmkajO5egAK+6CT0+rXZMsSj2p208Jhi4TVDpO
-	 cpjXU1vqThWcg==
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5f0629e67f4so32265277b3.3
-        for <linux-pwm@vger.kernel.org>; Mon, 22 Jan 2024 07:20:06 -0800 (PST)
-X-Gm-Message-State: AOJu0YxX08hrcY5pMtU19/Mmg9kvNkOdaE6sxLFS2rlspEpe+LsAg6iC
-	J0Vj+zLJzozvCWKl0dG7tX0+NDqsKG841yy21p5l+0xRTnKuhnL7hf1TeEtvnBujWwkzs8eHb6N
-	J1ZEo3cuyoS4NFmKSOJ+LwOs2qZNIr1pwhCkRCA==
-X-Google-Smtp-Source: AGHT+IHR9EW9F+L1o9xTG0NWnaQNNaPen2WULRKl2Ey5mTjdWB7qIXk9iNSTyKGEeFaaFtAETMuRe2rPCt8bmP5ufzo=
-X-Received: by 2002:a81:a1d5:0:b0:5ff:850e:ca42 with SMTP id
- y204-20020a81a1d5000000b005ff850eca42mr3334295ywg.4.1705936805503; Mon, 22
- Jan 2024 07:20:05 -0800 (PST)
+	s=k20201202; t=1705938295;
+	bh=XVEvO/xHApugNMmo0t/BHKJyiHUEpSxLpzJk8RCmns0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GttxGDNWqLmKUSnoZzl2ys1J9UCKV14Tw6AeRf55R1l5g3sGuJnS0O3JhUzipx2wp
+	 fVoLfMy4YKU1XI3tEQR2vsUAonkBAjgP1sXntLKi+TjxSX3MU/Um5F63As+2Mpj8CA
+	 mWnJ4S8UgnLLAs5pOPUTGmrwC6L1xXyg0+KzrqiND1VSgPVNf4mATKH7CWK56kvbqY
+	 nauLvJzoqsP5DKlOa1tigOH91OIINz4f+Q1Cuv776zS/1/g6vAuEoh7zZxtR4aqTXS
+	 f3zL9YGaXF+ap0CpmIDaYv+AbiD7wVlMz+7EBpvGUtVoYO4WcBqVcGh2zA4FP9b1Nk
+	 PXU6XOQ2l3L1A==
+Message-ID: <935d0ee9-adeb-43d1-a855-8f0287d0d4a2@kernel.org>
+Date: Mon, 22 Jan 2024 16:44:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1701860672.git.u.kleine-koenig@pengutronix.de> <3a67fffe50fe267b612d5557bb6b790ff1a792ca.1701860672.git.u.kleine-koenig@pengutronix.de>
-In-Reply-To: <3a67fffe50fe267b612d5557bb6b790ff1a792ca.1701860672.git.u.kleine-koenig@pengutronix.de>
-From: Robert Foss <rfoss@kernel.org>
-Date: Mon, 22 Jan 2024 16:19:54 +0100
-X-Gmail-Original-Message-ID: <CAN6tsi6iDsoTpNS7e0XCTf-2RM924za+B7_z9HL+xRR430jjjg@mail.gmail.com>
-Message-ID: <CAN6tsi6iDsoTpNS7e0XCTf-2RM924za+B7_z9HL+xRR430jjjg@mail.gmail.com>
-Subject: Re: [PATCH v4 107/115] drm/bridge: ti-sn65dsi86: Make use of
- devm_pwmchip_alloc() function
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Maxime Ripard <mripard@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, kernel@pengutronix.de, 
-	Jonas Karlman <jonas@kwiboo.se>, Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org, 
-	Douglas Anderson <dianders@chromium.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	linux-pwm@vger.kernel.org, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Andrzej Hajda <andrzej.hajda@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/6] dt-bindings: pwm: sprd: Convert to YAML
+To: Wenhua Lin <Wenhua.Lin@unisoc.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Orson Zhai <orsonzhai@gmail.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Chunyan Zhang <zhang.lyra@gmail.com>, linux-pwm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>,
+ Xiongpeng Wu <xiongpeng.wu@unisoc.com>, zhaochen su
+ <zhaochen.su29@gmail.com>, Zhaochen Su <Zhaochen.Su@unisoc.com>,
+ Xiaolong Wang <Xiaolong.Wang@unisoc.com>
+References: <20240122081754.17058-1-Wenhua.Lin@unisoc.com>
+ <20240122081754.17058-5-Wenhua.Lin@unisoc.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240122081754.17058-5-Wenhua.Lin@unisoc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 6, 2023 at 12:49=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> This prepares the pwm driver of the ti-sn65dsi86 to further changes of
-> the pwm core outlined in the commit introducing devm_pwmchip_alloc().
-> There is no intended semantical change and the driver should behave as
-> before.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 27 ++++++++++++++++++---------
->  1 file changed, 18 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/brid=
-ge/ti-sn65dsi86.c
-> index c45c07840f64..33eb2ed0a729 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -197,7 +197,7 @@ struct ti_sn65dsi86 {
->         DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
->  #endif
->  #if defined(CONFIG_PWM)
-> -       struct pwm_chip                 pchip;
-> +       struct pwm_chip                 *pchip;
->         bool                            pwm_enabled;
->         atomic_t                        pwm_pin_busy;
->  #endif
-> @@ -1372,7 +1372,7 @@ static void ti_sn_pwm_pin_release(struct ti_sn65dsi=
-86 *pdata)
->
->  static struct ti_sn65dsi86 *pwm_chip_to_ti_sn_bridge(struct pwm_chip *ch=
-ip)
->  {
-> -       return container_of(chip, struct ti_sn65dsi86, pchip);
-> +       return pwmchip_get_drvdata(chip);
->  }
->
->  static int ti_sn_pwm_request(struct pwm_chip *chip, struct pwm_device *p=
-wm)
-> @@ -1585,22 +1585,31 @@ static const struct pwm_ops ti_sn_pwm_ops =3D {
->  static int ti_sn_pwm_probe(struct auxiliary_device *adev,
->                            const struct auxiliary_device_id *id)
->  {
-> +       struct pwm_chip *chip;
->         struct ti_sn65dsi86 *pdata =3D dev_get_drvdata(adev->dev.parent);
->
-> -       pdata->pchip.dev =3D pdata->dev;
-> -       pdata->pchip.ops =3D &ti_sn_pwm_ops;
-> -       pdata->pchip.npwm =3D 1;
-> -       pdata->pchip.of_xlate =3D of_pwm_single_xlate;
-> -       pdata->pchip.of_pwm_n_cells =3D 1;
-> +       /*
-> +        * This should better use adev->dev instead of pdata->dev. See
-> +        * https://lore.kernel.org/dri-devel/20231127101547.734061-2-u.kl=
-eine-koenig@pengutronix.de
-> +        */
-> +       pdata->pchip =3D chip =3D devm_pwmchip_alloc(pdata->dev, 1, 0);
-> +       if (IS_ERR(chip))
-> +               return PTR_ERR(chip);
->
-> -       return pwmchip_add(&pdata->pchip);
-> +       pwmchip_set_drvdata(chip, pdata);
-> +
-> +       chip->ops =3D &ti_sn_pwm_ops;
-> +       chip->of_xlate =3D of_pwm_single_xlate;
-> +       chip->of_pwm_n_cells =3D 1;
-> +
-> +       return pwmchip_add(chip);
->  }
->
->  static void ti_sn_pwm_remove(struct auxiliary_device *adev)
->  {
->         struct ti_sn65dsi86 *pdata =3D dev_get_drvdata(adev->dev.parent);
->
-> -       pwmchip_remove(&pdata->pchip);
-> +       pwmchip_remove(pdata->pchip);
->
->         if (pdata->pwm_enabled)
->                 pm_runtime_put_sync(pdata->dev);
-> --
-> 2.42.0
->
+On 22/01/2024 09:17, Wenhua Lin wrote:
+> Convert Spreadtrum PWM controller bindings to DT schema.
+> 
+> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
 
-Acked-by: Robert Foss <rfoss@kernel.org>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
+
+Tools like b4 or scripts_getmaintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, use mainline), work on fork of kernel (don't, use
+mainline) or you ignore some maintainers (really don't). Just use b4 and
+all the problems go away.
+
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time, thus I will skip this patch entirely till you follow
+the process allowing the patch to be tested.
+
+Please kindly resend and include all necessary To/Cc entries.
+
+Best regards,
+Krzysztof
+
 
