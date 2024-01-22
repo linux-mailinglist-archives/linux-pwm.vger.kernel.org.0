@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-880-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-881-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E4FB836C60
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 18:03:54 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87BBA836D27
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 18:25:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26DDD28949D
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 17:03:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 893BBB2FE10
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 17:04:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68A47605CE;
-	Mon, 22 Jan 2024 15:45:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D1A648791;
+	Mon, 22 Jan 2024 15:46:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="na5nrKkP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DfCiNC0j"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECD0605CD;
-	Mon, 22 Jan 2024 15:45:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FCD487AC;
+	Mon, 22 Jan 2024 15:46:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705938322; cv=none; b=oYU9lVCZ28wKk0wfJTbMbEj2GF9AH/9DAYw5d/kg7FfvrCZqWDism3fxNuFNktD4/tMud8vI7/5zFhF7v5W+s53p/yO549pVcKs/eL/EPE+YMBQaZ2VnV1cL32eS4iGbNlxbmzoHRpCIo3NWJZLkQbW5SePgltJYPPJ27HyB9oI=
+	t=1705938398; cv=none; b=WN1TTQ7PWfniWMrzgNKPBc1aN0iZuxvloBmRGu0ltDBpUnY6ZwSKUpD4VUUTmrVYc1GF/E8idvH0hvwaKA6Misj+lwTZ5RwbuY4qpdd4B4gzTcU2GHeOTsRjPwhHTZh9UX+Hre+KzaXqJLTw0oMCUHgur+w857M+zT60f5aWVEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705938322; c=relaxed/simple;
-	bh=XGIk2VkyRUBY/nmNLn0tnKcENaKN1zDlvl5ilhJRe8A=;
+	s=arc-20240116; t=1705938398; c=relaxed/simple;
+	bh=/ztACHpiqxUk1r25CugN7mqbILIN7PLYHJR4ZTnAoKQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AuKzW81CYWZW97b5AM6mvl3Mbby5N3SV/61W2ExrecsMb1CZ7qkv+tZkMvxjnfKP+5TvccXX+CQgMFTN1zhN4i8hx+u0jf9STllEaTIie9IvvBzZ4pQLFRsJo3I3/tZvj/ufjd5GH18WU0uuo8MEf65F6LgjteK2xRPy+tvcnUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=na5nrKkP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23BAAC433C7;
-	Mon, 22 Jan 2024 15:45:17 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=sEYW+bkJAitnZ7nWHoK+xh1AEj3fZXyRj9owupDmkVMvzIRQdCPuTsD9YVd57cQh3NhVwP+T/qqNV8mMzZDMeM6QPZ/eEhb4KDZ0wFyd3+GykRZ4/HfaKfbSu6ks6l7WtdS2Jv94blobQofAv5WZOTqwC3xmQmp/l1I+a9VgcwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DfCiNC0j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CECCFC433F1;
+	Mon, 22 Jan 2024 15:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705938320;
-	bh=XGIk2VkyRUBY/nmNLn0tnKcENaKN1zDlvl5ilhJRe8A=;
+	s=k20201202; t=1705938397;
+	bh=/ztACHpiqxUk1r25CugN7mqbILIN7PLYHJR4ZTnAoKQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=na5nrKkP9O9pARVm3EBLVleua6DjKNu5vIZquKxis9DTDYtcELxcZkNJDG10j807p
-	 Xb0Ii+zbRzRKa1/H3J2OQ3+Nc+TQm6GPKpE51ADbIwXDMLTa1t85ssFM9U7PFYBQl+
-	 WPjRB94JM93eX6Tqj25bn/owizZQU4NwJdqdVyfQHgmNTEP8xaVnr9YSpN6v8GCsKi
-	 7t7eAvTUYLTXYgBijv+azUcStIuVF7WKH+toeDykdKB5xCI3QRhUBaVA4v9Gq78woo
-	 VBI1v0GNhbBIpPL96N3heOzdRA278juplYWaCHYw48OlvVVJyL4Py0Tr8vylI2EQwf
-	 SPaujRl3+S+xQ==
-Message-ID: <19cc590f-86a6-4ff6-bf87-9a7bbcde8345@kernel.org>
-Date: Mon, 22 Jan 2024 16:45:17 +0100
+	b=DfCiNC0jVtA50NWze3cAPh6Xns4ZPXbXJyiySigJoeTNHUdkxYPgugN2oHhmIcgbB
+	 C+Lof2wfs7ofeWKjLWLJYhLHW7i+DghKD4ffjwtqdr7ej9H0ffQM0BfF6Ag/4tZLwE
+	 XaWRZ8Mr55oQzpYBnixTR+B+8+Kjj6k6A4/Wb8RAdzToaGoGF0Iad5zqdxahNGaRqf
+	 rKhLClYbneouscncMI6GnMg8OTBZ73SnBIz9xpa/CMjTj431wakyKj4w1IF+qGpfE7
+	 PfaGgk0QYWsr3mBnQnPrNgaddHlcBXsAhEM4wsbI6HUFnrN5++nTVBzD9bj3Hurr22
+	 Qc2ZQgGAeUAKw==
+Message-ID: <4e3ee39f-2cad-4543-a505-8b0d16a01ad6@kernel.org>
+Date: Mon, 22 Jan 2024 16:46:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] dt-bindings: pwm: sprd: Add sprd,mod attribute
+Subject: Re: [PATCH 2/6] pwm: sprd: Improve the pwm backlight control function
 Content-Language: en-US
 To: Wenhua Lin <Wenhua.Lin@unisoc.com>,
  =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
@@ -62,7 +62,7 @@ Cc: Orson Zhai <orsonzhai@gmail.com>,
  <zhaochen.su29@gmail.com>, Zhaochen Su <Zhaochen.Su@unisoc.com>,
  Xiaolong Wang <Xiaolong.Wang@unisoc.com>
 References: <20240122081754.17058-1-Wenhua.Lin@unisoc.com>
- <20240122081754.17058-7-Wenhua.Lin@unisoc.com>
+ <20240122081754.17058-3-Wenhua.Lin@unisoc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -107,33 +107,25 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240122081754.17058-7-Wenhua.Lin@unisoc.com>
+In-Reply-To: <20240122081754.17058-3-Wenhua.Lin@unisoc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 22/01/2024 09:17, Wenhua Lin wrote:
-> Add sprd,mod attribute, which set the number of different
-> duty cycles that PWM's waveform could output, to dts.
-> 
+> +
+>  static int sprd_pwm_probe(struct platform_device *pdev)
+>  {
+>  	struct sprd_pwm_chip *spc;
+> @@ -288,6 +310,10 @@ static int sprd_pwm_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = sprd_pwm_get_mod(pdev);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "get pwm mod failed! Use default setting\n");
 
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
-
-Tools like b4 or scripts_getmaintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, use mainline), work on fork of kernel (don't, use
-mainline) or you ignore some maintainers (really don't). Just use b4 and
-all the problems go away.
-
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time, thus I will skip this patch entirely till you follow
-the process allowing the patch to be tested.
-
-Please kindly resend and include all necessary To/Cc entries.
-
+That's not an error. dev_info. Assuming that it will even stay (once you
+send proper version for proper review).
 
 Best regards,
 Krzysztof
