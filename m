@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-878-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-879-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBE49836C57
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 18:03:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 34324836C59
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 18:03:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D6E11F24E55
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 17:03:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD1941F243B3
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 17:03:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87101604AB;
-	Mon, 22 Jan 2024 15:44:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 004A1604C9;
+	Mon, 22 Jan 2024 15:45:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GttxGDNW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pzb0eHj6"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7574879E;
-	Mon, 22 Jan 2024 15:44:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADE2604C7;
+	Mon, 22 Jan 2024 15:45:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705938296; cv=none; b=C9xnUt//sBxpCBxI9dE5AGJKbKefuI0Ezx1eId4UIkosXYm7NyYOsyRVQDBAsr39GUqG2DLQCSKzSfLFcH5BpCVhf2Gzn242400ERNisMusLhRSGcPFaeDX4vHTZear2rNMtfBwKBlyh1erqlZImEbK1RxENbZ9aWuNzKVFHhIc=
+	t=1705938307; cv=none; b=W3CRlkZQq2mIpWRYYcFJTvyHxoxLmJUTxb86Yy1+aaKqWK6NJV2252wQrCS2AYI4NlhUuVujH5hltW+lNLyOl3Ivur3YtEpKAd6cTB36ZDjd0UCkhMZ+bOhBx8uyp6G8pozJiUOgMVIgxVdJ9+0YPpcfQ/A79tbciw9WrC7u/Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705938296; c=relaxed/simple;
-	bh=XVEvO/xHApugNMmo0t/BHKJyiHUEpSxLpzJk8RCmns0=;
+	s=arc-20240116; t=1705938307; c=relaxed/simple;
+	bh=Ue+/tDhBb/1gBOrxz6LTibB6j6RlnisBWlO/bM5Ghoc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WoLEFpKVpALUO5+l0PLdK33BbxNomkHcIe9JkIGQf7etYJXhl+UoX0zzdgy4EvXhsF+lIC2qw7eN2rtCZR4lLcxq+sKXpvPuadHcv+se8jjwAFXAuCMzkfmNvTJTH2WMyIkNEKBlOkwOf29FdM2t48KkWqu/M5n99N4MlnSzXFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GttxGDNW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B59C433C7;
-	Mon, 22 Jan 2024 15:44:53 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=ZIbwNzDSn0YnyT3gzncUW1Cd0kA2CQynhhhLLzfcSJHwvzhfLXfh5U0UtX9kEtOnkMA2euJwcsowzVgX69c4HXuUkbw36W48k+03ZIMmn8Q8zI1qoltl2X68/YmiPaLXebEGZCHrICekcHH7ycpkzdj3k854ZSlhN50br0lZeOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pzb0eHj6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5A0FC433C7;
+	Mon, 22 Jan 2024 15:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705938295;
-	bh=XVEvO/xHApugNMmo0t/BHKJyiHUEpSxLpzJk8RCmns0=;
+	s=k20201202; t=1705938307;
+	bh=Ue+/tDhBb/1gBOrxz6LTibB6j6RlnisBWlO/bM5Ghoc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GttxGDNWqLmKUSnoZzl2ys1J9UCKV14Tw6AeRf55R1l5g3sGuJnS0O3JhUzipx2wp
-	 fVoLfMy4YKU1XI3tEQR2vsUAonkBAjgP1sXntLKi+TjxSX3MU/Um5F63As+2Mpj8CA
-	 mWnJ4S8UgnLLAs5pOPUTGmrwC6L1xXyg0+KzrqiND1VSgPVNf4mATKH7CWK56kvbqY
-	 nauLvJzoqsP5DKlOa1tigOH91OIINz4f+Q1Cuv776zS/1/g6vAuEoh7zZxtR4aqTXS
-	 f3zL9YGaXF+ap0CpmIDaYv+AbiD7wVlMz+7EBpvGUtVoYO4WcBqVcGh2zA4FP9b1Nk
-	 PXU6XOQ2l3L1A==
-Message-ID: <935d0ee9-adeb-43d1-a855-8f0287d0d4a2@kernel.org>
-Date: Mon, 22 Jan 2024 16:44:50 +0100
+	b=Pzb0eHj6qpeufmI86x98Qw+LR+GMkimm5bJroy/sSXv17GSI+hCm5ZhTgbP54c3Aq
+	 lKiACCr0yWZGgAorHHng1EM5thuLfKCTNeTKwYr6roRP8mnV9YQTZypast8t49nqrB
+	 CUkjxL0QxYy9riQXWaqoFhSSzPp3Lo8RIrFgbNqaR0qXYIXHaSu+se2BjwQvXBN3Pf
+	 cdEukCVTh0ta++XupHTc4GdxW7C60lZmcGyLHGNqA/zKSFoKoHR+Iz7PvTvxZh8JtS
+	 ACTKne1qP7fuVTDnXsaRgsoiqidoMt5D4LlbKXgp+0GxYAP9ImzjOgWXefFSMf5CeW
+	 ugFFVIyzq97tw==
+Message-ID: <1cf604e5-3fa7-4908-8cdb-90816b703ae5@kernel.org>
+Date: Mon, 22 Jan 2024 16:45:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] dt-bindings: pwm: sprd: Convert to YAML
+Subject: Re: [PATCH 5/6] pwm: sprd: Add sprd,ums9620-pwm compatible
+Content-Language: en-US
 To: Wenhua Lin <Wenhua.Lin@unisoc.com>,
  =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 Cc: Orson Zhai <orsonzhai@gmail.com>,
@@ -61,8 +62,7 @@ Cc: Orson Zhai <orsonzhai@gmail.com>,
  <zhaochen.su29@gmail.com>, Zhaochen Su <Zhaochen.Su@unisoc.com>,
  Xiaolong Wang <Xiaolong.Wang@unisoc.com>
 References: <20240122081754.17058-1-Wenhua.Lin@unisoc.com>
- <20240122081754.17058-5-Wenhua.Lin@unisoc.com>
-Content-Language: en-US
+ <20240122081754.17058-6-Wenhua.Lin@unisoc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -107,12 +107,12 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240122081754.17058-5-Wenhua.Lin@unisoc.com>
+In-Reply-To: <20240122081754.17058-6-Wenhua.Lin@unisoc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 22/01/2024 09:17, Wenhua Lin wrote:
-> Convert Spreadtrum PWM controller bindings to DT schema.
+> Add sprd,ums9620-pwm compatible string to binding document.
 > 
 > Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
 
@@ -133,6 +133,7 @@ a waste of time, thus I will skip this patch entirely till you follow
 the process allowing the patch to be tested.
 
 Please kindly resend and include all necessary To/Cc entries.
+
 
 Best regards,
 Krzysztof
