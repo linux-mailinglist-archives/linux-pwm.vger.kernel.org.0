@@ -1,60 +1,60 @@
-Return-Path: <linux-pwm+bounces-882-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-883-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62F40836D62
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 18:30:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2BE5836CC2
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 18:16:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 376A5B33FC9
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 17:14:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F9D01F273E6
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jan 2024 17:16:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97A5463122;
-	Mon, 22 Jan 2024 16:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FE8264CD3;
+	Mon, 22 Jan 2024 16:05:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="qUQJeHqi";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="O+VHH8W5"
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="HZRfxWW7";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="bKfCDk0H"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailrelay3-1.pub.mailoutpod3-cph3.one.com (mailrelay3-1.pub.mailoutpod3-cph3.one.com [46.30.211.242])
+Received: from mailrelay4-1.pub.mailoutpod3-cph3.one.com (mailrelay4-1.pub.mailoutpod3-cph3.one.com [46.30.211.243])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906FE6311F
-	for <linux-pwm@vger.kernel.org>; Mon, 22 Jan 2024 16:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FEF64CC0
+	for <linux-pwm@vger.kernel.org>; Mon, 22 Jan 2024 16:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705939434; cv=none; b=oNVfnjXyE3KT67MD6502BnEG2gpxbUTM8SRVBUDXCu2dCa7iRV76IVY1lG6w08PdaapvsWf/gXTkE8uBNVJZ2+uIG7zdmVnqYdrCeeDrxdwRGpp8mvfR1xJuOYdjYe/h2Zd5wdEyQzAPpiUTeJ5ZhQMXqql7TiwTfMoC0/ZNdFs=
+	t=1705939546; cv=none; b=sxYBFYzdk43oxslr431myprvaXQbTBJVURBHsLJRRxlFmnGihynXPufWR9JGYIraZGdjZc2SHXfgp9jKFHyEIu99RghQPJow5DpteNQXh4KLFhvmyiO7GqbwirI92Yzy/6zpGpAwEE5hcLrYJ3VmztxqV2+u93/FWPs378EuM+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705939434; c=relaxed/simple;
-	bh=9D6ZQ2OZuJf5dffwus791inA7wfTVtusm8V+mFb8C0E=;
+	s=arc-20240116; t=1705939546; c=relaxed/simple;
+	bh=z9kt8zQbM3eNnFmXEo3654lPUSRiE75PpypTs9NBlKs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=osiTA+D9UzZQwLQSX8/f+dfGiK3Su0wg7OTrWq5Oo+/ecplArPM32YAgJJRNvbrRjfu3SWZqcMkoYW8LojToNkqqKHBtkew/Xnu5RrJROGcpDDGKU3dA/aR+GFwtZfYKPV+3gVT87wZOgd9VIfxn0Bol1WY/1JhAQHNrz+xOtsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=qUQJeHqi; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=O+VHH8W5; arc=none smtp.client-ip=46.30.211.242
+	 Content-Type:Content-Disposition:In-Reply-To; b=lf/3uD5MQkLVDL1qVem8ed+5bzI3/PkouSauVW765xTMTcRnXoZ7eCUjckPbeb2lwRt3qEfCL+XSt/nFFFiZRUi9+Q9t56Yao/B+0yuwIcEW9AfXVEMkj98SIKRd2XuEEDVkY9p/WjiImSJ8nG758RyT/WSUphEx8AJba7mOL6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=HZRfxWW7; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=bKfCDk0H; arc=none smtp.client-ip=46.30.211.243
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=ravnborg.org; s=rsa2;
 	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
 	 from:date:from;
-	bh=laeWsP4RFv5KrL7g+IvrtMdtqBtJukqz8LuUfm2cqgI=;
-	b=qUQJeHqi1WuJ4lhrw5ihDWeVdSiAgtYVgv81VZBeIjSglVSVFt/ADgsBl119lt2Dnphw3ttzVhafa
-	 uSZD4IeWk9lam27GfjTB9sXT6/ItVF6PVJe6Qygg3RUiqKGhe1+JDjPfHXCNJ7/gas8D67bQ0rY0ut
-	 8g6fo9wB6JkO8jxXfdGTqT2OrwUYGFuQMfwFC1tXEW6eN9FZ/VcIlvgvONHlLuKVpMIJhLrR6hIh2K
-	 km5+6hPxyTD7lTrOLkdMmXJAGWbE5je92oOEPRxcDz3nG9Wn8ROy/q9pKw+FUlSyiP5eoPhlM5oaae
-	 Nc2A//Qhcf/lsvmY8q1ck6Y/vGBrDmw==
+	bh=xAGeSXO7EYCYJmljPUEN1rFUpiw71f4rCC8gSgFu1n8=;
+	b=HZRfxWW7RKvIzlLrWQDFVCTBUG5Jn1GeeZVFbfHhTfHQ1bK6ANABb9Ao3YCp7+9OkCan+DgMbN0gB
+	 7Z6KlrAcBHvLa52KHKbxsUqobDFzMYHyLl6dfJGWrIEFQIKuMaMeLya7L4Eh72a62yQva2BsUtXYIi
+	 +gdaDjCy4jtdh6K9Xj57QU5JN2kgd5whs5nSSgDF4oLqiLpM91y1BC+FQTSm91Qy+iPBuudeeBL0By
+	 3oqdvR5O2eBoJfSzKzc2UkKgr4HXz9su5ap3kEIpK0h0Q+C7KIITFpAYbR3Qv8tCLRpzgdQthfnm38
+	 QbWPO99YbFnwplbHV2K64bQXu/dELTQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
 	d=ravnborg.org; s=ed2;
 	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
 	 from:date:from;
-	bh=laeWsP4RFv5KrL7g+IvrtMdtqBtJukqz8LuUfm2cqgI=;
-	b=O+VHH8W5rEReTZpoQlWdBy6/b3ITx3LfYx2BE0xKkB0xpp/q+ziY5fGddcGdfTcRLuU5v7gq3TkFe
-	 H8KNl7ZAA==
-X-HalOne-ID: aac18610-b93f-11ee-b8c2-ff813d2dbafc
+	bh=xAGeSXO7EYCYJmljPUEN1rFUpiw71f4rCC8gSgFu1n8=;
+	b=bKfCDk0HafSg+g3RaIu9TrzIt2gHb++4e++SaoHzG8BuWLN7Mzyav7YHusF+tvo7FeLOMboYIg9IK
+	 gXQFr1jBg==
+X-HalOne-ID: ee3a7b61-b93f-11ee-a7a3-9f04b458b84a
 Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-	by mailrelay3.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id aac18610-b93f-11ee-b8c2-ff813d2dbafc;
-	Mon, 22 Jan 2024 16:02:42 +0000 (UTC)
-Date: Mon, 22 Jan 2024 17:02:40 +0100
+	by mailrelay4.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
+	id ee3a7b61-b93f-11ee-a7a3-9f04b458b84a;
+	Mon, 22 Jan 2024 16:04:34 +0000 (UTC)
+Date: Mon, 22 Jan 2024 17:04:33 +0100
 From: Sam Ravnborg <sam@ravnborg.org>
 To: Dharma.B@microchip.com
 Cc: robh@kernel.org, Linux4Microchip@microchip.com,
@@ -69,7 +69,7 @@ Cc: robh@kernel.org, Linux4Microchip@microchip.com,
 	linux-kernel@vger.kernel.org, daniel@ffwll.ch
 Subject: Re: [PATCH v3 0/3] Convert Microchip's HLCDC Text based DT bindings
  to JSON schema
-Message-ID: <20240122160240.GA511247@ravnborg.org>
+Message-ID: <20240122160433.GB511247@ravnborg.org>
 References: <20240118092612.117491-1-dharma.b@microchip.com>
  <20240118193040.GA223383@ravnborg.org>
  <20240119195151.GB938671-robh@kernel.org>
@@ -85,7 +85,7 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <6c6e4ddc-b3df-484e-961f-6efbd52defd6@microchip.com>
 
-Hi Dharma
+Hi Dharma,
 On Mon, Jan 22, 2024 at 03:52:17AM +0000, Dharma.B@microchip.com wrote:
 > On 20/01/24 6:53 pm, Sam Ravnborg wrote:
 > > [You don't often get email from sam@ravnborg.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
@@ -134,7 +134,9 @@ On Mon, Jan 22, 2024 at 03:52:17AM +0000, Dharma.B@microchip.com wrote:
 >    - compatible
 >    - "#pwm-cells"
 > 
-Good idea, this looks like a nice simplification.
+As already commented, this looks nice.
+But as Rob said, this should be a 1:1 conversion from text to yaml,
+and then clean-up can come in the second step.
 
 	Sam
 
