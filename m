@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-904-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-905-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CF7183A3CE
-	for <lists+linux-pwm@lfdr.de>; Wed, 24 Jan 2024 09:12:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DAA583A41A
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 Jan 2024 09:26:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EB73BB279BE
-	for <lists+linux-pwm@lfdr.de>; Wed, 24 Jan 2024 08:12:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5612B1F2318F
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 Jan 2024 08:26:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D37B17565;
-	Wed, 24 Jan 2024 08:12:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F39F717562;
+	Wed, 24 Jan 2024 08:26:38 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897A917548
-	for <linux-pwm@vger.kernel.org>; Wed, 24 Jan 2024 08:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACCC1754C
+	for <linux-pwm@vger.kernel.org>; Wed, 24 Jan 2024 08:26:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706083961; cv=none; b=f1fUptP32OFCc1r8L/snHXhL6dQavBiNi7lFb+AKOo8Fw1IggqINN0vxku2/Kr9Dd6p2vUm39ZH33Lc/0BCi9BTtTmh1rsoJWfIyglblgZH6423FKWrBUgq/JlSZVxsn/9oCEQeDRw4/8EKuuDKysU3sEmyyEmzfcMfeEbhgHSg=
+	t=1706084798; cv=none; b=eb4g3+T2l5ftLYtiDrl3NN6a7IC9q50Gg4xKCR5vgzAlgdD6hM2n8xUhN4h3W+6YV5S0UPfAqR5yld2k2dyFcK/L9+dK4ByWvm5ZnfJ8LUFbXjldfP4cSRcPae0aosHJSJh1HSzxJnZoA2rmwoYYIlwII2dl3gJPsnrBoD34Qds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706083961; c=relaxed/simple;
-	bh=Ra+uYWwhblxNzXJQDojcVngsE0ksUba1CDXh77gitc4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k0Ljat9SOdzxCAohpe6zUI38v0fmMH5PpL0uOinGT0qaYr7Ii35sfkwO5TOn5Tq/gfFfehnyFwBADsdSApnJJvlpiHxBAWXiCwve9hcwVeHt8pvUvPr92YeVrd7MeMpe+NpWJ97x0yrBoxDRDBWsd24DRnIPcyJArCNx32rcW18=
+	s=arc-20240116; t=1706084798; c=relaxed/simple;
+	bh=HQRiUyWco/AQAm8j4TGQ2KP7Et83Pp67ONtM56voZgM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a3h5HXDkkzYp4YRw2XZug/fCc+pNq9XSYqWAUN/ZbVH5yGvtk7x1mGgnew1bkBR8958RVSl64QsAm7x6kELm3k5xpR1QlD8po5JIsOafEwDKn2YjMNfYiZ5Cnc0OJwVCvJqOFmlQSqplRxtGkmeN1/BF5CH7MEgOIKlla5+ZFMk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,171 +33,140 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSYN2-0005Ly-85; Wed, 24 Jan 2024 09:12:28 +0100
+	id 1rSYag-0006T1-8M; Wed, 24 Jan 2024 09:26:34 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSYN1-0020vS-RX; Wed, 24 Jan 2024 09:12:27 +0100
+	id 1rSYaf-0020x1-75; Wed, 24 Jan 2024 09:26:33 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSYN1-006z9z-2U;
-	Wed, 24 Jan 2024 09:12:27 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Arnd Bergmann <arnd@arndb.de>,
-	soc@kernel.org
-Cc: linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de,
-	Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
-Subject: [PATCH v3 2/2] bus: ts-nbus: Improve error reporting
-Date: Wed, 24 Jan 2024 09:12:05 +0100
-Message-ID:  <2dac8939942b4006a6ff12df7e75d3243df00723.1706083174.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1706083174.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1706083174.git.u.kleine-koenig@pengutronix.de>
+	id 1rSYaf-006zXL-0P;
+	Wed, 24 Jan 2024 09:26:33 +0100
+Date: Wed, 24 Jan 2024 09:26:33 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Johan Jonker <jbx6244@yandex.com>
+Cc: linux-pwm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
+	linux-rockchip@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, kernel@pengutronix.de
+Subject: Re: [PATCH] dt-bindings: pwm: rockchip: Allow "interrupts" prooperty
+Message-ID: <5swqcqpc5zwa3bfhuoyjnymozyzy3lgurnbsurebybj2c7fck3@ycwk2ugo2ouf>
+References: <20240106142654.1262758-2-u.kleine-koenig@pengutronix.de>
+ <7dea73a6-d733-4cd2-b2d5-02f09e2a6dd9@linaro.org>
+ <94ad0f59-4095-40ee-963d-4ac379fc8852@yandex.com>
+ <cvvifoctmgdsgqfadqbhgywfw2ff57fz33w26hghf5kyo5j5sw@mj75xtvczr2h>
+ <210132de-a46b-4f9f-8546-0c36d8a34665@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4331; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=Ra+uYWwhblxNzXJQDojcVngsE0ksUba1CDXh77gitc4=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsMZXxKHyoQuP5gmawFJezfKgaJtoslvfMHFo1 ZCvU7k0bPWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbDGVwAKCRCPgPtYfRL+ TkfPCACJ5I8+jkbwckvDQ0eOaLuilN9116CL/xELl5PeddXQCYNd9HUVVllyeCpz9w2Nzah54fE YTd6jJFtbc7wGyRboNcj9/w3YgHSBhlcGym9mhXzyvtWXrHbLNH2oXQEhzup/mSDfBZAvTf+8Uj GjW5F355h7a8h3rIE0hVnbsQ6kfsMpQnsgrbLhzGkZvPF0ITnPnT34Q62apSbgP80RoqOyJ3USa 6BPfDcuKuAQE+OSQnDdO7EzUvQsocdnVUwmIZRD2FSeK1ufapUHujZXh4SpNSvoCshEBJs0vihG 4qaoXq95B0w+3I5c89fA50bUWp8n/WHMvsc8RbAOYmIGJmLP
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="g63cxjnywwxblftj"
+Content-Disposition: inline
+In-Reply-To: <210132de-a46b-4f9f-8546-0c36d8a34665@linaro.org>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-Using dev_err_probe() brings several improvements:
 
- - emits the symbolic error code
- - properly handles EPROBE_DEFER
- - combines error message generation and return value handling
+--g63cxjnywwxblftj
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-While at it add error messages to two error paths that were silent
-before.
+Hello Johan,
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/bus/ts-nbus.c | 66 ++++++++++++++++++-------------------------
- 1 file changed, 28 insertions(+), 38 deletions(-)
+On Sun, Jan 07, 2024 at 11:30:14AM +0100, Krzysztof Kozlowski wrote:
+> On 07/01/2024 00:25, Uwe Kleine-K=F6nig wrote:
+> > On Sat, Jan 06, 2024 at 10:25:10PM +0100, Johan Jonker wrote:
+> >> On 1/6/24 18:10, Krzysztof Kozlowski wrote:
+> >>> On 06/01/2024 15:26, Uwe Kleine-K=F6nig wrote:
+> >>>> This fixes the dtbs_check error
+> >>>>
+> >>>> 	arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dtb: pwm@10280030: 'inte=
+rrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+> >>>> 	from schema $id: http://devicetree.org/schemas/pwm/pwm-rockchip.yam=
+l#
+> >>>>
+> >>>> in several device trees.
+> >>>>
+> >>>> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >>
+> >>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >>
+> >> NAK
+> >>
+> >> There's a reason why this isn't implemented before:
+> >>
+> >> [RFC PATCH v1 1/2] dt-bindings: pwm: rockchip: add interrupts property=
+ <https://lore.kernel.org/linux-rockchip/ed3df2c8-ffb5-1723-0ed7-3a27219728=
+52@gmail.com/#r>
+> >>
+> >> https://lore.kernel.org/linux-rockchip/ed3df2c8-ffb5-1723-0ed7-3a27219=
+72852@gmail.com/
+> >>
+> >> [PATCH 1/1] dt-bindings: pwm: rockchip: Add description for rk3588 <ht=
+tps://lore.kernel.org/linux-rockchip/20220901135523.52151-1-sebastian.reich=
+el@collabora.com/#r>
+> >>
+> >> https://lore.kernel.org/linux-rockchip/66b5b616-ae9f-a1aa-e2b5-450f570=
+cfcdd@gmail.com/
+> >>
+> >> [PATCH v1 03/11] dt-bindings: pwm: rockchip: add rockchip,rk3128-pwm <=
+https://lore.kernel.org/linux-rockchip/f5dd0ee4-d97e-d878-ffde-c06e9b233e38=
+@gmail.com/>
+> >>
+> >> https://lore.kernel.org/linux-rockchip/946d8ac2-6ff2-093a-ad3c-aa755e0=
+0d1dd@arm.com/
+> >>
+> >>
+> >> On how to correctly model the DT with common interrupts , PWM and one =
+shot as a sort of MFD etc there's no consensus yet.
+> >>
+> >> Leaf it as it is till someone made a working driver demo, so that the =
+coder is free to model a DT solution that fits to him/her.
+> >=20
+> > Having the warnings until this happens is bad though. If describing the
+> > irqs in the schema is considered wrong, we should remove the interrupts
+> > properties from the device tree sources.
+>=20
+> I think the previous thread mixes bindings with driver. Does the
+> hardware have interrupt? Yes? Add it to the bindings. No? Don't add it.
+>=20
+> However Johan's reply is saying something about driver, so how is it
+> related?
 
-diff --git a/drivers/bus/ts-nbus.c b/drivers/bus/ts-nbus.c
-index 19c5d1f4e4d7..baf22a82c47a 100644
---- a/drivers/bus/ts-nbus.c
-+++ b/drivers/bus/ts-nbus.c
-@@ -39,45 +39,39 @@ struct ts_nbus {
- /*
-  * request all gpios required by the bus.
-  */
--static int ts_nbus_init_pdata(struct platform_device *pdev, struct ts_nbus
--		*ts_nbus)
-+static int ts_nbus_init_pdata(struct platform_device *pdev,
-+			      struct ts_nbus *ts_nbus)
- {
- 	ts_nbus->data = devm_gpiod_get_array(&pdev->dev, "ts,data",
- 			GPIOD_OUT_HIGH);
--	if (IS_ERR(ts_nbus->data)) {
--		dev_err(&pdev->dev, "failed to retrieve ts,data-gpio from dts\n");
--		return PTR_ERR(ts_nbus->data);
--	}
-+	if (IS_ERR(ts_nbus->data))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->data),
-+				     "failed to retrieve ts,data-gpio from dts\n");
- 
- 	ts_nbus->csn = devm_gpiod_get(&pdev->dev, "ts,csn", GPIOD_OUT_HIGH);
--	if (IS_ERR(ts_nbus->csn)) {
--		dev_err(&pdev->dev, "failed to retrieve ts,csn-gpio from dts\n");
--		return PTR_ERR(ts_nbus->csn);
--	}
-+	if (IS_ERR(ts_nbus->csn))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->csn),
-+			      "failed to retrieve ts,csn-gpio from dts\n");
- 
- 	ts_nbus->txrx = devm_gpiod_get(&pdev->dev, "ts,txrx", GPIOD_OUT_HIGH);
--	if (IS_ERR(ts_nbus->txrx)) {
--		dev_err(&pdev->dev, "failed to retrieve ts,txrx-gpio from dts\n");
--		return PTR_ERR(ts_nbus->txrx);
--	}
-+	if (IS_ERR(ts_nbus->txrx))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->txrx),
-+				     "failed to retrieve ts,txrx-gpio from dts\n");
- 
- 	ts_nbus->strobe = devm_gpiod_get(&pdev->dev, "ts,strobe", GPIOD_OUT_HIGH);
--	if (IS_ERR(ts_nbus->strobe)) {
--		dev_err(&pdev->dev, "failed to retrieve ts,strobe-gpio from dts\n");
--		return PTR_ERR(ts_nbus->strobe);
--	}
-+	if (IS_ERR(ts_nbus->strobe))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->strobe),
-+				     "failed to retrieve ts,strobe-gpio from dts\n");
- 
- 	ts_nbus->ale = devm_gpiod_get(&pdev->dev, "ts,ale", GPIOD_OUT_HIGH);
--	if (IS_ERR(ts_nbus->ale)) {
--		dev_err(&pdev->dev, "failed to retrieve ts,ale-gpio from dts\n");
--		return PTR_ERR(ts_nbus->ale);
--	}
-+	if (IS_ERR(ts_nbus->ale))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->ale),
-+				     "failed to retrieve ts,ale-gpio from dts\n");
- 
- 	ts_nbus->rdy = devm_gpiod_get(&pdev->dev, "ts,rdy", GPIOD_IN);
--	if (IS_ERR(ts_nbus->rdy)) {
--		dev_err(&pdev->dev, "failed to retrieve ts,rdy-gpio from dts\n");
--		return PTR_ERR(ts_nbus->rdy);
--	}
-+	if (IS_ERR(ts_nbus->rdy))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->rdy),
-+				     "failed to retrieve ts,rdy-gpio from dts\n");
- 
- 	return 0;
- }
-@@ -289,25 +283,20 @@ static int ts_nbus_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	pwm = devm_pwm_get(dev, NULL);
--	if (IS_ERR(pwm)) {
--		ret = PTR_ERR(pwm);
--		if (ret != -EPROBE_DEFER)
--			dev_err(dev, "unable to request PWM\n");
--		return ret;
--	}
-+	if (IS_ERR(pwm))
-+		return dev_err_probe(dev, PTR_ERR(pwm),
-+				     "unable to request PWM\n");
- 
- 	pwm_init_state(pwm, &state);
--	if (!state.period) {
--		dev_err(&pdev->dev, "invalid PWM period\n");
--		return -EINVAL;
--	}
-+	if (!state.period)
-+		return dev_err_probe(dev, -EINVAL, "invalid PWM period\n");
- 
- 	state.duty_cycle = state.period;
- 	state.enabled = true;
- 
- 	ret = pwm_apply_state(pwm, &state);
- 	if (ret < 0)
--		return ret;
-+		return dev_err_probe(dev, ret, "failed to configure PWM\n");
- 
- 	/*
- 	 * we can now start the FPGA and populate the peripherals.
-@@ -321,7 +310,8 @@ static int ts_nbus_probe(struct platform_device *pdev)
- 
- 	ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
- 	if (ret < 0)
--		return ret;
-+		return dev_err_probe(dev, ret,
-+				     "failed to populate platform devices on bus\n");
- 
- 	dev_info(dev, "initialized\n");
- 
--- 
-2.43.0
+Following Krzysztof's argumentation I'm inclined to apply the patch
+despite Johan's objection as the irqs are already described in the
+device trees and not having them in the binding only adds warnings to
+the dt checks.
 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--g63cxjnywwxblftj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWwybgACgkQj4D7WH0S
+/k5/Jgf/b/nfgkm/z6r4IycnlkEkHBd6KuwpTZCG/WLoFRBzIv5EGibepKaqeBPj
+Afvp9Kw4vGeNU1fGvGgDII7i8+V4KK4QpIIB7/8dCH6G+u+rDmm+dnPcB0wtWKX7
+I2H+tO1SEiegnpvn17AiqC2datTVeKuOatRlUQeNpfsc3QtNk5MJ0Gc2y8u4CC7s
+A1A7GF3GJko2JF/5+lV5tS/uQORgyL6GIe3z1bEd+Nuzu0G3rMOZNTSdqnRigZRz
+3E9nAKTWY6RHje4OFBe/qqfaH5enxziFkLNcR29GF5AHaVKiU0uDHBLHiyYiEi6G
+kCiQix9wyz3lQM+EuhN3PZnhSyQmHg==
+=beb2
+-----END PGP SIGNATURE-----
+
+--g63cxjnywwxblftj--
 
