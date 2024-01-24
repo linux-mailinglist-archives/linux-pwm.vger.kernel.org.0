@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-908-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-909-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6291183A4D8
-	for <lists+linux-pwm@lfdr.de>; Wed, 24 Jan 2024 10:03:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0384E83A4E9
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 Jan 2024 10:09:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1177928B859
-	for <lists+linux-pwm@lfdr.de>; Wed, 24 Jan 2024 09:03:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA1EC1F22D21
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 Jan 2024 09:09:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E41B217BD6;
-	Wed, 24 Jan 2024 09:02:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21B3017C98;
+	Wed, 24 Jan 2024 09:08:41 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1A117BB5
-	for <linux-pwm@vger.kernel.org>; Wed, 24 Jan 2024 09:02:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61F817BD6
+	for <linux-pwm@vger.kernel.org>; Wed, 24 Jan 2024 09:08:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706086975; cv=none; b=eB3GIwFWUaH5SbUcoojPdd1dQ5eamec8h/dLC1HcdAnXSwOq3RaCkBrDF8X8v2Ctr3A8cevDa8fQXdIFch0ag7+uIMqPInvmA3nLEeSOIYWK4w+U5liREkClQfn8x5DdSWmSAJYz93KOE6Z8hUbqNOogDN1QW9TkZcK13JNmeCE=
+	t=1706087321; cv=none; b=t9c6soCpOHN15Akfm+3V651PxnoZU75qNx4xszz/zGx2X0MC+BrqY6lSsUMZoUUeXpcglFFX7MjkKEcfyo+AVEULleysIPsVAn6Nqz52QYZG6jNgbwMdt7SrbfYfyAoWsssoafJ6PkODxeceytS6bJQoQM4DnrUkFExUjLCBE/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706086975; c=relaxed/simple;
-	bh=IUzPpBw3waxXsmF2u/OJpdQqbjdb1ELOjeunXCIZSuY=;
+	s=arc-20240116; t=1706087321; c=relaxed/simple;
+	bh=6/KlTA0J6uFnfl5c8rIDF12UeY21Z4ml6g/NHKbxJj0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HPH0IorT5dXjdVxyZFppYlQ/FG7BFpTSAqZsZomlZzJ2+fAA5ywXFKCo7wfmL4UQKJUpaTzKb36dWi8HWXz5e6M1RSi+BMjCoKsY0t9s4qeTdQ6TM8MnkivSCpn+nw2+v+qMRS8HAaB1RZOX2/Pcx2kXeTrU++/ExIFwDbIpLnE=
+	 Content-Type:Content-Disposition:In-Reply-To; b=d2UwbMi8ksCF5qkbcAHk9SxWuoG+897+r1MPfoGqqc8Ok/pxOwF6r9msaUv0CH8dNGjqiBblxt2Vy6MicybIrFi+7mdZMJqQh7e+jtDnTlNHbObK7/8Vsfap9kQsSK04WAQd3ykW0w3aY0jV86C2+kTtg+Dq2/dkYXpkyxAeJUo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,17 +33,17 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSZ9d-0001F3-HK; Wed, 24 Jan 2024 10:02:41 +0100
+	id 1rSZFF-0001ed-9Q; Wed, 24 Jan 2024 10:08:29 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSZ9c-00217d-KQ; Wed, 24 Jan 2024 10:02:40 +0100
+	id 1rSZFE-0021Y0-I6; Wed, 24 Jan 2024 10:08:28 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSZ9c-0070Sy-1j;
-	Wed, 24 Jan 2024 10:02:40 +0100
-Date: Wed, 24 Jan 2024 10:02:40 +0100
+	id 1rSZFE-0070pg-1U;
+	Wed, 24 Jan 2024 10:08:28 +0100
+Date: Wed, 24 Jan 2024 10:08:28 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Jerome Brunet <jbrunet@baylibre.com>
 Cc: Thierry Reding <thierry.reding@gmail.com>, 
@@ -51,11 +51,11 @@ Cc: Thierry Reding <thierry.reding@gmail.com>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>
-Subject: Re: [PATCH v4 5/6] pwm: meson: don't carry internal clock elements
- around
-Message-ID: <gyhea42rtydw3g45lfkfbxfm6xcbwibz67vw7xke2sm7powz2a@i33g4pyanu4l>
+Subject: Re: [PATCH v4 3/6] pwm: meson: generalize 4 inputs clock on meson8
+ pwm type
+Message-ID: <4kcbh4dezgpic2dpgdi2swtx2puqiq74w2tungmxipf4nznpn7@u4g4f3cimps4>
 References: <20231222111658.832167-1-jbrunet@baylibre.com>
- <20231222111658.832167-6-jbrunet@baylibre.com>
+ <20231222111658.832167-4-jbrunet@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -63,62 +63,59 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="h373wi4nrohxmd3v"
+	protocol="application/pgp-signature"; boundary="6rb4fnput74ewssa"
 Content-Disposition: inline
-In-Reply-To: <20231222111658.832167-6-jbrunet@baylibre.com>
+In-Reply-To: <20231222111658.832167-4-jbrunet@baylibre.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---h373wi4nrohxmd3v
+--6rb4fnput74ewssa
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 22, 2023 at 12:16:53PM +0100, Jerome Brunet wrote:
-> Pointers to the internal clock elements of the PWM are useless
-> after probe. There is no need to carry this around in the device
-> data. Just let devres deal with it.
+Hello Jerome,
+
+On Fri, Dec 22, 2023 at 12:16:51PM +0100, Jerome Brunet wrote:
+> Meson8 pwm type always has 4 input clocks. Some inputs may be grounded,
+> like in the AO domain of some SoCs.
+>=20
+> Drop the parent number parameter and make this is constant.
+> This is also done to make addition of generic meson8 compatible easier.
 >=20
 > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  drivers/pwm/pwm-meson.c | 67 ++++++++++++++++++++++++-----------------
->  1 file changed, 39 insertions(+), 28 deletions(-)
+>  drivers/pwm/pwm-meson.c | 19 ++++++-------------
+>  1 file changed, 6 insertions(+), 13 deletions(-)
 >=20
 > diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 15c44185d784..fb113bc8da29 100644
+> index 2971bbf3b5e7..ef50c337f444 100644
 > --- a/drivers/pwm/pwm-meson.c
 > +++ b/drivers/pwm/pwm-meson.c
-> @@ -90,9 +90,6 @@ struct meson_pwm_channel {
->  	unsigned int hi;
->  	unsigned int lo;
+> @@ -60,7 +60,7 @@
+>  #define MISC_A_EN		BIT(0)
 > =20
-> -	struct clk_mux mux;
-> -	struct clk_divider div;
-> -	struct clk_gate gate;
->  	struct clk *clk;
->  };
+>  #define MESON_NUM_PWMS		2
+> -#define MESON_MAX_MUX_PARENTS	4
+> +#define MESON_NUM_MUX_PARENTS	4
 > =20
-> @@ -442,6 +439,13 @@ static int meson_pwm_init_channels(struct device *de=
-v)
->  		struct meson_pwm_channel *channel =3D &meson->channels[i];
->  		struct clk_parent_data div_parent =3D {}, gate_parent =3D {};
->  		struct clk_init_data init =3D {};
-> +		struct clk_divider *div;
-> +		struct clk_gate *gate;
-> +		struct clk_mux *mux;
-> +
-> +		mux =3D devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
-> +		if (!mux)
-> +			return -ENOMEM;
+>  static struct meson_pwm_channel_data {
+>  	u8		reg_offset;
+> @@ -98,7 +98,6 @@ struct meson_pwm_channel {
+> =20
+>  struct meson_pwm_data {
+>  	const char * const *parent_names;
 
-I don't like this change. While it doesn't increase the memory used, it
-fragments the used memory and increases the overhead of memory
-management and the number of devm allocations.
+I suggest to make this
 
-Are these members of meson_pwm_channel in the way for anything later?
+	const char *parent_names[MESON_NUM_MUX_PARENTS];
+
+to make it more explicit that really four entries are needed here. This
+also makes is unnecessary to add the additional NULL entries to
+pwm_gxbb_ao_parent_names and the other arrays.
 
 Best regards
 Uwe
@@ -127,20 +124,20 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---h373wi4nrohxmd3v
+--6rb4fnput74ewssa
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWw0i8ACgkQj4D7WH0S
-/k683gf9GGBr93JUCS2xEl/m1YAKTTgHqxB2JExfwiC6KJfo/FURTvQbLwW4gtu9
-BqujrqKJuEIj5YPmfS2DfmnGEQteeSmoeb6vtHwsKyehVtqSqDOF/1ZPSIakbMdx
-hE3kSBmZVCVPwj9s1JoNAlR+AtWRnzVYUdF40iEjJ6VPhWZB9Swh9KJhNfWAuUIg
-KxSIivAcwtRrtX9ThjzjKj5sPWGqdaVGTFxir66leKCCmsboGdDOAV60d39u0bSY
-cDXdp36+vG5DQh1bpjAUE7S/+URvABaCmV8CKBRpMSfyxLo9M65b8VlZS1Q36pl0
-ljk2vMhvu45fpewQYEgUv6kO82pUfw==
-=J1Jy
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWw04sACgkQj4D7WH0S
+/k4MBwf/RJ2RnPMTRGHy4+MlxDEmIhRVYEzgGL1RRFV939kzYtusENpZpGIQ2mXu
+E60HnA+QkB/q4MoAFSLk81DulYhW3fIn7AURwQ19rdCtgn3d+7zGnA+G+JiPmCXx
+I0jHMlpak+0iexEcTDeahUHixs0DrxD1/kG9eTtipV17OZuBlTGyw8QDqcHAKFow
+0czC72kNUxlOp/W77jS0V367u/onArkMSIOh1N4JZ+yNX0ZuOugc18RD0wU5eCo3
+FASi7J+U/zZaBAFXeS2BXMrq1bLMjBmrc6dDGoNusqCD/YGfTqxQKmptwFcHWvQy
+huYzkvDx8jvj6TmgK+i+/+PjgTV9ow==
+=0D4C
 -----END PGP SIGNATURE-----
 
---h373wi4nrohxmd3v--
+--6rb4fnput74ewssa--
 
