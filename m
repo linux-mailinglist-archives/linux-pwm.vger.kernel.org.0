@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-956-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-951-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2453B83C1D9
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:10:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F314D83C1B7
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:10:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DBABEB20F74
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:10:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A71B7290552
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:10:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CEF73D99E;
-	Thu, 25 Jan 2024 12:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDFAB446A0;
+	Thu, 25 Jan 2024 12:10:46 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC943C097
-	for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 12:10:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AE93D98E
+	for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 12:10:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706184647; cv=none; b=pVQbGpVu+CPydR9yMFi4u4B7N2c9vQquiZ24AyKxG+0mVU2dkoZIH5KrsC8lBRFfJG6xREJETJkogyzHGl0rGxWSMWLi/CRpEVl3v+euq0KvsObgyf6ywKWoJXYAzbGWtZ3EyYSqKuaxq0AMzmTWDO0uCOagcg1ZngxEiRghyds=
+	t=1706184646; cv=none; b=Tm++o4GtleotDjzs0QGDevKu1xVgdjdX6vr85sUZwe81WbrpywOYjqCf+dmJ1YWsof/AwrJOlkqfqxB25p6IDlZ4mTZ4izGwx3LNSvhavoajHSf2qvASYXa2RqCTEB/UINY7ukZc+nJBrcoBZNgIpgU8t+Bh2hkTXdXRkQm7CfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706184647; c=relaxed/simple;
-	bh=uFBlakhvwzSVbt80uodFKs9a9OzBGt3pAN9wCTEkBqs=;
+	s=arc-20240116; t=1706184646; c=relaxed/simple;
+	bh=FjGukNj1cYfdDeJbaFr89/JaJYedpj7bOyWFB1DfTbE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XStKDUR5goiBbrgB2es3M2O1Ni4B/sMdtjLSIUQcr/ZGVvBFo9/ye/6di6PO9BH38w7V1/9RKPVF8F8nu4mSoGjZ7fLOn0ysphXMtCB+3XP5mvWOy+7hPv/whiQO0bDD5Z8yVkUEsmFk2JsakhxtPERNNUfZpd3YWiEZ9rdu7Ec=
+	 MIME-Version:Content-Type; b=t0e2p46EF38Sf68Edm0wAmP94XW6XPjhTJVNLALkKPsdiW+gjozITD/YCF5FO5u45UA09zAdBfx7ip9mMCabsxF1Hw53LVRmpJSHaCeR7/uvPCwXiwZLrxjuCsQHMl0GAKqtAvImrSx5gfDhlWDaJKoGVxOVl0wFto2bBjY+tzk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,22 +33,27 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZ8-0003g1-Tb; Thu, 25 Jan 2024 13:10:42 +0100
+	id 1rSyZ9-0003gR-D6; Thu, 25 Jan 2024 13:10:43 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZ8-002HPU-EO; Thu, 25 Jan 2024 13:10:42 +0100
+	id 1rSyZ8-002HPa-Jm; Thu, 25 Jan 2024 13:10:42 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZ8-007myz-1D;
+	id 1rSyZ8-007mz3-1j;
 	Thu, 25 Jan 2024 13:10:42 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: linux-pwm@vger.kernel.org
-Cc: kernel@pengutronix.de
-Subject: [PATCH v5 013/111] pwm: img: Make use of parent device pointer in driver data
-Date: Thu, 25 Jan 2024 13:08:35 +0100
-Message-ID:  <d47e77ac3e7c905f021ad27c3bbbb8054c1045c7.1706182805.git.u.kleine-koenig@pengutronix.de>
+To: Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	linux-pwm@vger.kernel.org
+Cc: Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kernel@pengutronix.de
+Subject: [PATCH v5 014/111] pwm: imx27: Make use of pwmchip_parent() macro
+Date: Thu, 25 Jan 2024 13:08:36 +0100
+Message-ID:  <b4c1865612be7f5f78fc77a6cd858dec09dd46fe.1706182805.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
@@ -59,7 +64,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2510; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=uFBlakhvwzSVbt80uodFKs9a9OzBGt3pAN9wCTEkBqs=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk9I9hRx5ek0VWjZDIU1wsV9g8d+uv75HUvHE JujoaqT2+yJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPSAAKCRCPgPtYfRL+ TpGSCACOGZ2GkUD+ap/q6ENDTy/Hw2X/oWTB/pFD8AR2E1uBoni3W/5sxfoEYevi0R7YZikIJAh z7AFm4+ZmidfrZ6SEUWGtAbiEfBmF/APvV0QN4u2+P6GGGsOIXEcIDaibdk5b7ojej8A/FGigLW l+w3jTFnXHYj7A2V6N9Xmo4inFEue0Ab+Mk6OWXMz0RhfE4hwA1WU3EiPGgqEZTOXM4+p74umAo 0KEUCQAD9njjIWwZhWkQv/8TrMc6zIP/mEz2HSVRz3nCorJIiMTo7NUq936gROsxy2mEQN15BdS ssMfvNd9PPEiWcWOwvv9T8dzmcAz50b7DPO1Hrj4U535uEQu
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1477; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=FjGukNj1cYfdDeJbaFr89/JaJYedpj7bOyWFB1DfTbE=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtRN/l6V/GWyigEb/iTefuf1aK6L1azGyfUZrOuL7CxSM 5vSdD52MhqzMDByMciKKbLYN67JtKqSi+xc++8yzCBWJpApDFycAjARCS72/xFfpuToNHFLdZUs +BL1VFcgS42XnT9nw5UYo/UHY7b9018atnh64P2Sx1kqDj8svO7te39S2ctK9nxypHkk8620fbs Vu2MyAvSfz96jsf3BghiPbOv2rge+JT7mCe739qzPUM81/zlhh/GsdYtvKy/N28R3kffknZh0md fubyXNWB558AeUWLN9kpG9Xvvmm9gvwT2c9zyWbL9p0CY/5T9n+Q+NnesVm20PWqQJTG1RlPhXO HHdinIjcZ2FgvcX/Hj3vn/F3sU979Mc3gpqayX8a7zKl9rqs4JdqM/WbPG3mDMu2mu3NlyK+m+0 YE2UoL/j0clNztOMXmkxnvpvdI75yOKmfQoFE4oaCsR6AA==
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -68,75 +73,45 @@ X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expand
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 struct pwm_chip::dev is about to change. To not have to touch this
-driver in the same commit as struct pwm_chip::dev, make use of the
-already existing pointer to the parent device in driver data.
+driver in the same commit as struct pwm_chip::dev, use the macro
+provided for exactly this purpose.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-img.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/pwm/pwm-imx27.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
-index 5965ac35b32e..2d7477fc391a 100644
---- a/drivers/pwm/pwm-img.c
-+++ b/drivers/pwm/pwm-img.c
-@@ -99,7 +99,7 @@ static int img_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	if (period_ns < imgchip->min_period_ns ||
- 	    period_ns > imgchip->max_period_ns) {
--		dev_err(chip->dev, "configured period not in range\n");
-+		dev_err(imgchip->dev, "configured period not in range\n");
- 		return -ERANGE;
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index 7d9bc43f12b0..5d796453519a 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -145,7 +145,7 @@ static int pwm_imx27_get_state(struct pwm_chip *chip,
+ 		state->polarity = PWM_POLARITY_INVERSED;
+ 		break;
+ 	default:
+-		dev_warn(chip->dev, "can't set polarity, output disconnected");
++		dev_warn(pwmchip_parent(chip), "can't set polarity, output disconnected");
  	}
  
-@@ -120,14 +120,14 @@ static int img_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 		div = PWM_CTRL_CFG_SUB_DIV0_DIV1;
- 		timebase = DIV_ROUND_UP(mul, 512);
- 	} else {
--		dev_err(chip->dev,
-+		dev_err(imgchip->dev,
- 			"failed to configure timebase steps/divider value\n");
- 		return -EINVAL;
- 	}
+ 	prescaler = MX3_PWMCR_PRESCALER_GET(val);
+@@ -177,7 +177,7 @@ static int pwm_imx27_get_state(struct pwm_chip *chip,
+ static void pwm_imx27_sw_reset(struct pwm_chip *chip)
+ {
+ 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
+-	struct device *dev = chip->dev;
++	struct device *dev = pwmchip_parent(chip);
+ 	int wait_count = 0;
+ 	u32 cr;
  
- 	duty = DIV_ROUND_UP(timebase * duty_ns, period_ns);
- 
--	ret = pm_runtime_resume_and_get(chip->dev);
-+	ret = pm_runtime_resume_and_get(imgchip->dev);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -141,8 +141,8 @@ static int img_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	      (timebase << PWM_CH_CFG_TMBASE_SHIFT);
- 	img_pwm_writel(imgchip, PWM_CH_CFG(pwm->hwpwm), val);
- 
--	pm_runtime_mark_last_busy(chip->dev);
--	pm_runtime_put_autosuspend(chip->dev);
-+	pm_runtime_mark_last_busy(imgchip->dev);
-+	pm_runtime_put_autosuspend(imgchip->dev);
- 
- 	return 0;
- }
-@@ -153,7 +153,7 @@ static int img_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	struct img_pwm_chip *imgchip = to_img_pwm_chip(chip);
- 	int ret;
- 
--	ret = pm_runtime_resume_and_get(chip->dev);
-+	ret = pm_runtime_resume_and_get(imgchip->dev);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -177,8 +177,8 @@ static void img_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	val &= ~BIT(pwm->hwpwm);
- 	img_pwm_writel(imgchip, PWM_CTRL_CFG, val);
- 
--	pm_runtime_mark_last_busy(chip->dev);
--	pm_runtime_put_autosuspend(chip->dev);
-+	pm_runtime_mark_last_busy(imgchip->dev);
-+	pm_runtime_put_autosuspend(imgchip->dev);
- }
- 
- static int img_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -196,7 +196,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
+ 				     struct pwm_device *pwm)
+ {
+ 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
+-	struct device *dev = chip->dev;
++	struct device *dev = pwmchip_parent(chip);
+ 	unsigned int period_ms;
+ 	int fifoav;
+ 	u32 sr;
 -- 
 2.43.0
 
