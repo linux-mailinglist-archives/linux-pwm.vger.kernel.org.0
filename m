@@ -1,44 +1,44 @@
-Return-Path: <linux-pwm+bounces-933-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-928-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E991D83B79C
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 04:10:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DC6B83B793
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 04:10:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2707A1C24BFD
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 03:10:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0AF01F2539F
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 03:10:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C5F79CB;
-	Thu, 25 Jan 2024 03:09:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B41166FAE;
+	Thu, 25 Jan 2024 03:09:27 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCEA749F;
-	Thu, 25 Jan 2024 03:09:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E04111AB;
+	Thu, 25 Jan 2024 03:09:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706152171; cv=none; b=CiD38gw5Qn0q4SVoUS86q9jaoy0ujPyfhuNudY7kcvfxBc0X6jVBP0JCVZh8uAqqnDTlAnsThK0aJw/sW+7/0LVyYpzU/Khr3ndov7kMnO863qx25iDxZ/pEG5kperzwZjMoTnZ6h1l/XdZ3/pmHRg7kDJkZbuYWU+izyo55Y9c=
+	t=1706152167; cv=none; b=sM9zPHQAzSUB3yfigziB5aASdutX8qHatNwaqm9ClAuxYYAWakgTEEQ04Cl0+ykWAum+Bb9ECSC2oJVNX0qyXQib9OYGs4YnIqMmArQpUYHifgtk2EcJEyU3GuekFeI7vbf1MmSjfPUo1Yj7TzZDtRiH3R4DD6Vm0SFzUhTrw+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706152171; c=relaxed/simple;
-	bh=+HxDaiSN4fpd2HAPliDEpKUcx7oxWusM6UlFtpvLUiA=;
+	s=arc-20240116; t=1706152167; c=relaxed/simple;
+	bh=R2C6qolABmQGKD8qhfjxXMFPRKAELbug93bu+jBPX/E=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ASoM2ZmCdtTroy6hdJWVXvnh7sOq6unr1QT3QDx4/4Qe6MTN4MYS7SGXjO+DJlwrWcic2qdFKovdGwCfG32UyKv3V2Et2wbrrVKXjk6gzQLRTTqd8z3c/Is3P+9oky/bQocnkZrS1nAVkrgn6f/Wn3VFT7d8pJ51QzkrLke+Eb0=
+	 MIME-Version:Content-Type; b=gl5x2gsG1qJu9adIX/dKhp5pdmoau/1Fre8XRfOyz7YLY7tiAtcLIJbt5NLzyHsvIk6Lj7phb1q+hftjqcRirlqQME1q05PZiNALrVjTK3cEhFNujRDsMW7TYOU0ySQrzN4+xnZmlKcaqCbTJD2p576B2CQi2qm526117VgqzVo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
 Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 40P38dAg061552;
+	by SHSQR01.spreadtrum.com with ESMTP id 40P38djq061628;
 	Thu, 25 Jan 2024 11:08:39 +0800 (+08)
 	(envelope-from Wenhua.Lin@unisoc.com)
 Received: from SHDLP.spreadtrum.com (shmbx06.spreadtrum.com [10.0.1.11])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TL5F60P66z2Rq2lv;
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TL5F670HYz2Rq2lq;
 	Thu, 25 Jan 2024 11:01:14 +0800 (CST)
 Received: from xm9614pcu.spreadtrum.com (10.13.2.29) by shmbx06.spreadtrum.com
  (10.0.1.11) with Microsoft SMTP Server (TLS) id 15.0.1497.23; Thu, 25 Jan
- 2024 11:08:37 +0800
+ 2024 11:08:38 +0800
 From: Wenhua Lin <Wenhua.Lin@unisoc.com>
 To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
         Rob
@@ -60,9 +60,9 @@ CC: Orson Zhai <orsonzhai@gmail.com>,
         Zhaochen Su <Zhaochen.Su@unisoc.com>,
         Xiaolong
  Wang <Xiaolong.Wang@unisoc.com>
-Subject: [PATCH V2 3/6] pwm: sprd: Optimize the calculation method of duty
-Date: Thu, 25 Jan 2024 10:55:30 +0800
-Message-ID: <20240125025533.10315-4-Wenhua.Lin@unisoc.com>
+Subject: [PATCH V2 4/6] dt-bindings: pwm: sprd: Convert to YAML
+Date: Thu, 25 Jan 2024 10:55:31 +0800
+Message-ID: <20240125025533.10315-5-Wenhua.Lin@unisoc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240125025533.10315-1-Wenhua.Lin@unisoc.com>
 References: <20240125025533.10315-1-Wenhua.Lin@unisoc.com>
@@ -75,30 +75,163 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
  shmbx06.spreadtrum.com (10.0.1.11)
-X-MAIL:SHSQR01.spreadtrum.com 40P38dAg061552
+X-MAIL:SHSQR01.spreadtrum.com 40P38djq061628
 
-Use DIV_ROUND_CLOSEST_ULL to avoid overflow and improve accuracy
-when calculating duty.
+Convert Spreadtrum PWM controller bindings to DT schema.
 
 Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
 ---
- drivers/pwm/pwm-sprd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/pwm/pwm-sprd.txt      | 40 --------
+ .../devicetree/bindings/pwm/pwm-sprd.yaml     | 93 +++++++++++++++++++
+ 2 files changed, 93 insertions(+), 40 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-sprd.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sprd.yaml
 
-diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
-index cc54aa77c7e6..8de3f9e154ce 100644
---- a/drivers/pwm/pwm-sprd.c
-+++ b/drivers/pwm/pwm-sprd.c
-@@ -156,7 +156,8 @@ static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_device *pwm,
- 	 * given settings (MOD and input clock).
- 	 */
- 	mod = spc->mod[pwm->hwpwm];
--	duty = duty_ns * mod / period_ns;
-+	tmp = (u64)duty_ns * mod;
-+	duty = DIV_ROUND_CLOSEST_ULL(tmp, period_ns);
- 
- 	tmp = (u64)chn->clk_rate * period_ns;
- 	do_div(tmp, NSEC_PER_SEC);
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-sprd.txt b/Documentation/devicetree/bindings/pwm/pwm-sprd.txt
+deleted file mode 100644
+index 87b206fd0618..000000000000
+--- a/Documentation/devicetree/bindings/pwm/pwm-sprd.txt
++++ /dev/null
+@@ -1,40 +0,0 @@
+-Spreadtrum PWM controller
+-
+-Spreadtrum SoCs PWM controller provides 4 PWM channels.
+-
+-Required properties:
+-- compatible : Should be "sprd,ums512-pwm".
+-- reg: Physical base address and length of the controller's registers.
+-- clocks: The phandle and specifier referencing the controller's clocks.
+-- clock-names: Should contain following entries:
+-  "pwmn": used to derive the functional clock for PWM channel n (n range: 0 ~ 3).
+-  "enablen": for PWM channel n enable clock (n range: 0 ~ 3).
+-- #pwm-cells: Should be 2. See pwm.yaml in this directory for a description of
+-  the cells format.
+-
+-Optional properties:
+-- assigned-clocks: Reference to the PWM clock entries.
+-- assigned-clock-parents: The phandle of the parent clock of PWM clock.
+-
+-Example:
+-	pwms: pwm@32260000 {
+-		compatible = "sprd,ums512-pwm";
+-		reg = <0 0x32260000 0 0x10000>;
+-		clock-names = "pwm0", "enable0",
+-			"pwm1", "enable1",
+-			"pwm2", "enable2",
+-			"pwm3", "enable3";
+-		clocks = <&aon_clk CLK_PWM0>, <&aonapb_gate CLK_PWM0_EB>,
+-		       <&aon_clk CLK_PWM1>, <&aonapb_gate CLK_PWM1_EB>,
+-		       <&aon_clk CLK_PWM2>, <&aonapb_gate CLK_PWM2_EB>,
+-		       <&aon_clk CLK_PWM3>, <&aonapb_gate CLK_PWM3_EB>;
+-		assigned-clocks = <&aon_clk CLK_PWM0>,
+-			<&aon_clk CLK_PWM1>,
+-			<&aon_clk CLK_PWM2>,
+-			<&aon_clk CLK_PWM3>;
+-		assigned-clock-parents = <&ext_26m>,
+-			<&ext_26m>,
+-			<&ext_26m>,
+-			<&ext_26m>;
+-		#pwm-cells = <2>;
+-	};
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-sprd.yaml b/Documentation/devicetree/bindings/pwm/pwm-sprd.yaml
+new file mode 100644
+index 000000000000..81c5fd688c3c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/pwm-sprd.yaml
+@@ -0,0 +1,93 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright 2023 Unisoc Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/pwm-sprd.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Spreadtrum PWM controller
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++description: |
++  Spreadtrum SoCs PWM controller provides 4 PWM channels.
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - sprd,ums512-pwm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 8
++    maxItems: 8
++
++  clock-names:
++    items:
++      - const: pwm0
++      - const: enable0
++      - const: pwm1
++      - const: enable1
++      - const: pwm2
++      - const: enable2
++      - const: pwm3
++      - const: enable3
++    description: |
++      Should contain following entries:
++      "pwmn": used to derive the functional clock for PWM channel n (n range: 0 ~ 3).
++      "enablen": for PWM channel n enable clock (n range: 0 ~ 3).
++
++  assigned-clocks:
++    minItems: 4
++    maxItems: 4
++
++  assigned-clock-parents:
++    minItems: 4
++    maxItems: 4
++
++  "#pwm-cells":
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/sprd,ums512-clk.h>
++    pwms: pwm@32260000 {
++        compatible = "sprd,ums512-pwm";
++        reg = <0x32260000 0x10000>;
++        clock-names = "pwm0", "enable0",
++                      "pwm1", "enable1",
++                      "pwm2", "enable2",
++                      "pwm3", "enable3";
++        clocks = <&aon_clk CLK_PWM0>, <&aonapb_gate CLK_PWM0_EB>,
++                 <&aon_clk CLK_PWM1>, <&aonapb_gate CLK_PWM1_EB>,
++                 <&aon_clk CLK_PWM2>, <&aonapb_gate CLK_PWM2_EB>,
++                 <&aon_clk CLK_PWM3>, <&aonapb_gate CLK_PWM3_EB>;
++        assigned-clocks = <&aon_clk CLK_PWM0>,
++                          <&aon_clk CLK_PWM1>,
++                          <&aon_clk CLK_PWM2>,
++                          <&aon_clk CLK_PWM3>;
++        assigned-clock-parents = <&ext_26m>,
++                                 <&ext_26m>,
++                                 <&ext_26m>,
++                                 <&ext_26m>;
++        #pwm-cells = <2>;
++    };
++
++...
 -- 
 2.17.1
 
