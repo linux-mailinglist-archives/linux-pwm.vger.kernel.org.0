@@ -1,198 +1,156 @@
-Return-Path: <linux-pwm+bounces-1069-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1070-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39EA583CA25
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 18:37:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E48E483CA4A
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 18:48:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C94A1C211FE
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 17:37:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B21E29409C
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 17:48:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E70DA4F611;
-	Thu, 25 Jan 2024 17:37:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 080A9131727;
+	Thu, 25 Jan 2024 17:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Iai+swkE"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639AA1E861;
-	Thu, 25 Jan 2024 17:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6FB129A73
+	for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 17:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706204244; cv=none; b=DIyg/MXvirQYRm6hEScnEel/hQsKk1PTiYiOIqqlENEWlAueB6Eel4Ao/0338BAU4LS28UyBeFwNxG61Bg6S10AJA3+PxjK32IU5phPVxP6dcdV8qivjI2kkSCLj8PvU/RTjNPg36nETFrbqFR0c9AXfE3B3e4yTcLLgPp77OwA=
+	t=1706204908; cv=none; b=uCRzIJapBmh/15faZa1ZYHFRLfYzuvrkCHwiL0o1onJAnx9cdenuSyjjd5REngrKkwYzIYPspg+YO1WvnvVMZoQSoWIgJWtTgoBaYqNVbXRs1CxETtKPqb1ffQDEn/49G0/IviC29IcxilccIkaVXT+kcM7tgVXA1oTNaDwngoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706204244; c=relaxed/simple;
-	bh=D5+69pz0DJ/NuhMmCIyJCiC9/OywEyKOFSRpOUxuPIM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dG0ZuEecrxHVqXfjb7jzrQcQCtGsdsdXUjxOJRm+fZ+q4o1qxTBS5mI2gGRoJDRb+tvjDejgT3g/pjRmbSDW6QdjgqK7pLzb14TJsxGr7vH2M6d0+b55jsWw/sm2F9P08d4tWUPq7hLT1Yn2q/jd71IAz2WNw7CHE7mVHn4W8dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id D053184F04;
-	Thu, 25 Jan 2024 18:37:17 +0100 (CET)
-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date: Thu, 25 Jan 2024 18:36:33 +0100
-Subject: [PATCH RESEND v3] dt-bindings: pxa-pwm: Convert to YAML
+	s=arc-20240116; t=1706204908; c=relaxed/simple;
+	bh=5+fKpkYglqqr18Q42ScQr9ZZt0k4KEDEt9yQuGh8teU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L/DPlDuO+ByGajcgi5Za9M2LrSn+/c0f3Zj1a87Eve0pDnelA8Q/CRuOz/JUKGF3aeqCDffbJFuMfN2kOCf0Otff9Og2yNTN0FxxYVB+g/FcBNGuHosh5JGFpQEydE/HNen3LUsmpjtoAOgAz8MbUpMe0VrcmdSkxjikS7+fBFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Iai+swkE; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-55cef56c6f9so1344267a12.3
+        for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 09:48:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706204903; x=1706809703; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7QQ5xywaldx4inPhMAC8V1N2G9UQEtEowfFIay8eCsg=;
+        b=Iai+swkERKMY8p/vS9MXlbUV9sV1BlqIUtxTIvTmap8IeeW6p3Q21qeMDF0GxACkUg
+         sN+ufQa1x+FBuabDZMN3enkHq9Gjms5XJOykHBLuzI0bU07XlKpVFj/dH29qyUhiiGYo
+         DRCD/uLH7rG3CHLJYcnyjkMile2Jpq1CyLUd8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706204903; x=1706809703;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7QQ5xywaldx4inPhMAC8V1N2G9UQEtEowfFIay8eCsg=;
+        b=dCHI0wnp8AzjrEe8+qNPm+304+RbsXQosD8HneerWT5Nreb1duMmNpfuq5CRZzIzMa
+         bm8tKzrx+hJCA4SHZgo3IyCtwly/5aJhuY5X9Z6fnYVxLgs3Uz8LBSpN/IlVuqFJ44vE
+         RASNgIXhoB7g8fL+Ln5/sJEba2io2l6ux7UeyLTQqjIjYH8n7wB/G07UfVTkanbzSE9D
+         EAA2L4Y/lLw3DputA/dILWJuiIRuARaKJ4/Vk7mFGVOn2WfGLg5Ok0pN2HFfhYKnrHIF
+         LMz4K9drAy/GoIu9GGfBhqSueVcRROSirzQLtwngVtMzDhVopZRkdYStXWf6xFyNRlnm
+         M41g==
+X-Gm-Message-State: AOJu0YyL7ak5QcuukhX8RSVlH1KDqVwyaNu4bzmOmL5Xq7/IQheAxe/j
+	C1si4yvZtI3EK7lOvxUar4vIZKqlMugx9VMIMQc6iJA7yD9jkvC1G4AuLWYYYrzFEyls2jRsgiS
+	JEA==
+X-Google-Smtp-Source: AGHT+IF/SmTY2FXj8CEVna2g65d3XVkkg4Phz7ni4GC1T8gr3J9rVJUKin3mnSwOrE9noalX5a+uAw==
+X-Received: by 2002:aa7:cf98:0:b0:55c:7afd:6075 with SMTP id z24-20020aa7cf98000000b0055c7afd6075mr672580edx.66.1706204902962;
+        Thu, 25 Jan 2024 09:48:22 -0800 (PST)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
+        by smtp.gmail.com with ESMTPSA id t4-20020a056402020400b0055c26f9275dsm5135487edv.42.2024.01.25.09.48.21
+        for <linux-pwm@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jan 2024 09:48:22 -0800 (PST)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40e865bccb4so1145e9.0
+        for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 09:48:21 -0800 (PST)
+X-Received: by 2002:a05:600c:3b1c:b0:40e:61cf:af91 with SMTP id
+ m28-20020a05600c3b1c00b0040e61cfaf91mr160203wms.7.1706204901267; Thu, 25 Jan
+ 2024 09:48:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240125-pxa-pwm-yaml-v3-1-10b0b0dc02bd@skole.hr>
-To: Thierry Reding <thierry.reding@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3506;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=D5+69pz0DJ/NuhMmCIyJCiC9/OywEyKOFSRpOUxuPIM=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlspwl9xCQCWwWD4o/hj495TcH5nVZzIuxxZYSv
- wPmNc/11liJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZbKcJQAKCRCaEZ6wQi2W
- 4WYaD/wJWL9ngZ4a3izemZly15vrf9wOY3vThQuZaOJ6dsPSzkFGkYukM3pfhaq0azk2ZWl+cQu
- Z1+89btjqie6qRr8Vqw1Hv1KlBeq0PIajbgahNRCscLXjyfziK6KrR6aF+WvIhRiLe/4YcBcqkH
- xu4QJVQp/IRpA/xf1Y+qO8Ws2t6AOLQnL1sbSMeQwZJBEoifWdb/SELVpb2BGi/AANRNbjKIcFr
- d9S9nBdJ1jQx/Cgnbg+MCr/S+Ea4uLO1lX0+YgQzh+Jl/kJR4KNvSmNAZWNqE7H/aCZMHmHSHYx
- EMX11jCxLc/VP2vflKxRNuU1L6+9psI1RewUrFPBcbK1zi4IAUDKQxQBUQD2BR5aC8SGo16Rzrh
- 9lx7edvo5VMsPXrEJ5r0f1h9Q18g/MfgpAYVV60tH+DHLwvlN7m/zREFs5SzmzCLpqfwGoGO6Zy
- 8G9fDy7J0g8fP979QNKOVQXaQjdi9qKfe3P4FDwjxlVB0ZtnnlDziEzmLyyrBZPbI1dHDO8ACxK
- ddzsyqzD05jCtc7JlCwCnbcS2eBoeo6Z+3JmvYKB3eR3TpwtByf88+29fS5JTBP3+siDptxbjof
- 5N9lwYnM6MUgykq65eBCKAQekhqHXaCZOC6KbKC2BHl+R/8r05yTY0HHTFIxKn1RjzX4FvWBmIo
- Zwg4rUuYfgV/rTQ==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
+References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de> <0316aaec9dbfc0c73788bcd3ee532ae7ecadb180.1706182805.git.u.kleine-koenig@pengutronix.de>
+In-Reply-To: <0316aaec9dbfc0c73788bcd3ee532ae7ecadb180.1706182805.git.u.kleine-koenig@pengutronix.de>
+From: Doug Anderson <dianders@chromium.org>
+Date: Thu, 25 Jan 2024 09:48:04 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=Xscb2kv6drrqBBT2MOA0cSO3=oVZ4Hw3sKTo-uUuqQ-w@mail.gmail.com>
+Message-ID: <CAD=FV=Xscb2kv6drrqBBT2MOA0cSO3=oVZ4Hw3sKTo-uUuqQ-w@mail.gmail.com>
+Subject: Re: [PATCH v5 104/111] drm/bridge: ti-sn65dsi86: Make use of
+ devm_pwmchip_alloc() function
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, linux-pwm@vger.kernel.org, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, dri-devel@lists.freedesktop.org, 
+	kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert the PXA PWM binding file from TXT to YAML.
+Hi,
 
-The original binding does not mention any clocks, but the PWM controller
-will not probe without a clock.
+On Thu, Jan 25, 2024 at 4:11=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> This prepares the pwm driver of the ti-sn65dsi86 to further changes of
+> the pwm core outlined in the commit introducing devm_pwmchip_alloc().
+> There is no intended semantical change and the driver should behave as
+> before.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/brid=
+ge/ti-sn65dsi86.c
+> index f1fffbef3324..7fbc307cc025 100644
+> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> @@ -197,7 +197,7 @@ struct ti_sn65dsi86 {
+>         DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
+>  #endif
+>  #if defined(CONFIG_PWM)
+> -       struct pwm_chip                 pchip;
+> +       struct pwm_chip                 *pchip;
+>         bool                            pwm_enabled;
+>         atomic_t                        pwm_pin_busy;
+>  #endif
+> @@ -1374,7 +1374,7 @@ static void ti_sn_pwm_pin_release(struct ti_sn65dsi=
+86 *pdata)
+>
+>  static struct ti_sn65dsi86 *pwm_chip_to_ti_sn_bridge(struct pwm_chip *ch=
+ip)
+>  {
+> -       return container_of(chip, struct ti_sn65dsi86, pchip);
+> +       return pwmchip_get_drvdata(chip);
+>  }
 
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
----
-Changes in v3:
-- Change id to marvell,pxa-pwm.yaml (forgot to do in v2)
-- Link to v2: https://lore.kernel.org/r/20240106-pxa-pwm-yaml-v2-1-9578ff5f2d7f@skole.hr
+nit: given Linux conventions that I'm aware of, a reader of the code
+would see the name "pwm_chip_to_ti_sn_bridge" and assume it's doing a
+container_of operation. It no longer is, so the name doesn't make as
+much sense. ...and, in fact, the function itself doesn't make as much
+sense. Maybe just have all callers call pwmchip_get_drvdata()
+directly?
 
-Changes in v2:
-- Rename to marvell,pxa-pwm.yaml
-- Note addition of clock property
-- Update trailers
-- Link to v1: https://lore.kernel.org/r/20240105-pxa-pwm-yaml-v1-1-4ded9d00c38f@skole.hr
----
- .../devicetree/bindings/pwm/marvell,pxa-pwm.yaml   | 51 ++++++++++++++++++++++
- Documentation/devicetree/bindings/pwm/pxa-pwm.txt  | 30 -------------
- 2 files changed, 51 insertions(+), 30 deletions(-)
+In any case, this seems fine to me. I haven't done lots to analyze
+your full plans to fix lifetime issues, but this patch itself looks
+benign and I wouldn't object to it landing. Thus I'm OK with:
 
-diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-new file mode 100644
-index 000000000000..ba6325575ea0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/marvell,pxa-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell PXA PWM
-+
-+maintainers:
-+  - Duje Mihanović <duje.mihanovic@skole.hr>
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - marvell,pxa250-pwm
-+      - marvell,pxa270-pwm
-+      - marvell,pxa168-pwm
-+      - marvell,pxa910-pwm
-+
-+  reg:
-+    # Length should be 0x10
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    # Used for specifying the period length in nanoseconds
-+    const: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#pwm-cells"
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/pxa-clock.h>
-+
-+    pwm0: pwm@40b00000 {
-+      compatible = "marvell,pxa250-pwm";
-+      reg = <0x40b00000 0x10>;
-+      #pwm-cells = <1>;
-+      clocks = <&clks CLK_PWM0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
-deleted file mode 100644
-index 5ae9f1e3c338..000000000000
---- a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--Marvell PWM controller
--
--Required properties:
--- compatible: should be one or more of:
--  - "marvell,pxa250-pwm"
--  - "marvell,pxa270-pwm"
--  - "marvell,pxa168-pwm"
--  - "marvell,pxa910-pwm"
--- reg: Physical base address and length of the registers used by the PWM channel
--  Note that one device instance must be created for each PWM that is used, so the
--  length covers only the register window for one PWM output, not that of the
--  entire PWM controller.  Currently length is 0x10 for all supported devices.
--- #pwm-cells: Should be 1.  This cell is used to specify the period in
--  nanoseconds.
--
--Example PWM device node:
--
--pwm0: pwm@40b00000 {
--	compatible = "marvell,pxa250-pwm";
--	reg = <0x40b00000 0x10>;
--	#pwm-cells = <1>;
--};
--
--Example PWM client node:
--
--backlight {
--	compatible = "pwm-backlight";
--	pwms = <&pwm0 5000000>;
--	...
--}
+Acked-by: Douglas Anderson <dianders@chromium.org>
 
----
-base-commit: 610a9b8f49fbcf1100716370d3b5f6f884a2835a
-change-id: 20240105-pxa-pwm-yaml-8dbb00dfe7c6
-
-Best regards,
--- 
-Duje Mihanović <duje.mihanovic@skole.hr>
+Similar to the other ti-sn65dsi86 patch in this series, unless someone
+more senior in the drm-misc community contradicts me I think it's safe
+to assume you could land this through your tree.
 
 
+-Doug
 
