@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-1020-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1043-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECADA83C1FC
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:11:05 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65B5F83C228
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:11:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3DF91F224FB
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:11:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 20167B24000
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:11:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3C0A1CA83;
-	Thu, 25 Jan 2024 12:11:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1D083D98E;
+	Thu, 25 Jan 2024 12:11:06 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A354439A
-	for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 12:11:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA90C45020
+	for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 12:11:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706184661; cv=none; b=lhXBuQvYhwZIBDyLqnT/qCBdbAso9YZ1Cw0G9ykdGGmEPizE3RZVivPP63yTKFyESN+XZmNgPiWqUuT9Ft7gh83Pv20552F5sTgKm85xofBEpBsn5wLwFlMDlARabhMu7Jy1EOAJAEFTKwVUKD+x3f+AHRdr5vVazxJERsmd2V4=
+	t=1706184666; cv=none; b=vCPsuOU2y+cnee219LsbhGxJMnKYvVqoDbs6tFLcBQxy+hu7c+Xp3eMgjorTMtcqRKGOgFX+u+M6c5TO8xXuPyutzy2uNi6O8V5n7uGk28pCn5ICT85LFaena6g5j4TQ7XqBY0xH81oZjX5h9A96O/Q2eB8xK3UkKaPHs4KujKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706184661; c=relaxed/simple;
-	bh=tWPOjHNk9l4NhNA+9uRaG4wPayVZWs3awqdiQXOLgME=;
+	s=arc-20240116; t=1706184666; c=relaxed/simple;
+	bh=UeKCwn2GW6SYXoYMGVhQOEFQrUIA+9rYY7iFhSXWjuE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=stDX1oJio+rmLVgoRf9kfw9ccXV8oFqpiMBDTKCgrR7JVKh9Folevxl2hDQkkz15frQza4I4jjuQf0yGqbaVBlZFnrqutiAKG2pGQCOrc01oREzGsKWfN3Bax+cYn6bSAQdEszB5ZVSP0Y47A9kK1I1hLtIvnb7q9OmRIK9dghs=
+	 MIME-Version:Content-Type; b=phGuGOfbMHUAXvlVNue8zL23DOGuw3tAbZ2l/pJsj7GBJX6lyhkAZsPfmnjV/djlSc69d1O8DrTxdbjXOcGHmL0xNC0cGljmHKBsfyWXJqI6WTgxbInqLDLil1Cfugm7PAlUlx5LiQ7b4sHi8j5Z8WI3awRp8FxQ+/e8E+lSl6Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,22 +33,26 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZN-0004WE-S6; Thu, 25 Jan 2024 13:10:57 +0100
+	id 1rSyZN-0004WW-SI; Thu, 25 Jan 2024 13:10:57 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZM-002HU7-EH; Thu, 25 Jan 2024 13:10:56 +0100
+	id 1rSyZM-002HUB-JE; Thu, 25 Jan 2024 13:10:56 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZM-007n3k-1B;
+	id 1rSyZM-007n3o-1f;
 	Thu, 25 Jan 2024 13:10:56 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: linux-pwm@vger.kernel.org
-Cc: kernel@pengutronix.de
-Subject: [PATCH v5 084/111] pwm: rz-mtu3: Make use of devm_pwmchip_alloc() function
-Date: Thu, 25 Jan 2024 13:09:46 +0100
-Message-ID:  <b7dc391ff166ce5ee865e0b5e6391f740aa4d110.1706182805.git.u.kleine-koenig@pengutronix.de>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-pwm@vger.kernel.org
+Cc: Alim Akhtar <alim.akhtar@samsung.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: [PATCH v5 085/111] pwm: samsung: Make use of devm_pwmchip_alloc() function
+Date: Thu, 25 Jan 2024 13:09:47 +0100
+Message-ID:  <259526dbf79927759cf0dbd5cea1c9a72e93b492.1706182805.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
@@ -59,7 +63,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3793; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=tWPOjHNk9l4NhNA+9uRaG4wPayVZWs3awqdiQXOLgME=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk+dT5dzrY+VWcHIJu3DV/f9YB2WDrW4rZshp KcOqQxdKWmJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPnQAKCRCPgPtYfRL+ TgXeB/4jhQiFwC+QNN74JLTg5qkmc9sxOCNvMy58Ia5W4+s6nuoSvvQUjMgsMCpKD897AVtW9/j j8fFmouHOi6/NA+DQdnZpnLY10YLOnTtIifJhLxGz0SqihqPk8mOBEC/kX8aoH8iDpCAe760fOU WWgyQeWdlL0/mwK2xJFeB35aJPyFTVWZ+H3PYpg6lS8hzKgA+Eg/Jnhsfzm/IHh92NiKlQZpZdI hIjU0IgNerYej9B5QB0rOVXOKDO9SxMv2l8qmCD2sgWsBVjjiKwoDwEKoQNha+C5SSqhoIbgfCj N/1T5M+rt2nNaXWBZLxHsgqNH2oyOkDK5iaNG4te2nC9EVH5
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6205; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=UeKCwn2GW6SYXoYMGVhQOEFQrUIA+9rYY7iFhSXWjuE=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk+e5VzO5pcCwTrYHpG8dMQVP716ZZNx2LcP6 Vm+iFOq4DWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPngAKCRCPgPtYfRL+ TiyuB/9YYuayjJurs4fj41Lwo4crThgLymmHi5MjbtZ8gke5dMiTpAnoxz61mTG7TtUBKPU4LFu 8de2uwDyTY4Sp/OasOnsFIbi+cn2j+P6L32VPmtGqRijIAhIEVOki4MRwJTmVDjYvT8H3VQqUYV WuvrHl34z+EJnMjX6yZpkd/1s3x4YfJTnc5rrambSqfhylo3gLQwP9SIm1ko2ppF7AIifbc0KQp 4CQz8+gMottKvblH9g+R0hxi2ch3qPk5zl0rSEbeJhMVNZigLbi140rk0f9cFyNRFgRkGzyU0g9 a+WFyx2APP+h1WwQ379Vg6V3R31irxagB6PyGrs1OQET4yAB
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -67,115 +71,172 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-This prepares the pwm-rz-mtu3 driver to further changes of the pwm core
+This prepares the pwm-samsung driver to further changes of the pwm core
 outlined in the commit introducing devm_pwmchip_alloc(). There is no
 intended semantical change and the driver should behave as before.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-rz-mtu3.c | 31 +++++++++++++++----------------
- 1 file changed, 15 insertions(+), 16 deletions(-)
+ drivers/pwm/pwm-samsung.c | 46 ++++++++++++++++++++-------------------
+ 1 file changed, 24 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/pwm/pwm-rz-mtu3.c b/drivers/pwm/pwm-rz-mtu3.c
-index 45d075560a21..809c7f32b928 100644
---- a/drivers/pwm/pwm-rz-mtu3.c
-+++ b/drivers/pwm/pwm-rz-mtu3.c
-@@ -61,7 +61,6 @@ struct rz_mtu3_pwm_channel {
+diff --git a/drivers/pwm/pwm-samsung.c b/drivers/pwm/pwm-samsung.c
+index a97cae49406e..dec44ba1f90b 100644
+--- a/drivers/pwm/pwm-samsung.c
++++ b/drivers/pwm/pwm-samsung.c
+@@ -69,7 +69,6 @@ struct samsung_pwm_channel {
+ 
  /**
-  * struct rz_mtu3_pwm_chip - MTU3 pwm private data
-  *
-- * @chip: MTU3 pwm chip data
-  * @clk: MTU3 module clock
-  * @lock: Lock to prevent concurrent access for usage count
-  * @rate: MTU3 clock rate
-@@ -72,7 +71,6 @@ struct rz_mtu3_pwm_channel {
+  * struct samsung_pwm_chip - private data of PWM chip
+- * @chip:		generic PWM chip
+  * @variant:		local copy of hardware variant data
+  * @inverter_mask:	inverter status for all channels - one bit per channel
+  * @disabled_mask:	disabled status for all channels - one bit per channel
+@@ -80,7 +79,6 @@ struct samsung_pwm_channel {
+  * @channel:		per channel driver data
   */
- 
- struct rz_mtu3_pwm_chip {
+ struct samsung_pwm_chip {
 -	struct pwm_chip chip;
- 	struct clk *clk;
- 	struct mutex lock;
- 	unsigned long rate;
-@@ -92,7 +90,7 @@ static const struct rz_mtu3_channel_io_map channel_map[] = {
- 
- static inline struct rz_mtu3_pwm_chip *to_rz_mtu3_pwm_chip(struct pwm_chip *chip)
+ 	struct samsung_pwm_variant variant;
+ 	u8 inverter_mask;
+ 	u8 disabled_mask;
+@@ -110,7 +108,7 @@ static DEFINE_SPINLOCK(samsung_pwm_lock);
+ static inline
+ struct samsung_pwm_chip *to_samsung_pwm_chip(struct pwm_chip *chip)
  {
--	return container_of(chip, struct rz_mtu3_pwm_chip, chip);
+-	return container_of(chip, struct samsung_pwm_chip, chip);
 +	return pwmchip_get_drvdata(chip);
  }
  
- static void rz_mtu3_pwm_read_tgr_registers(struct rz_mtu3_pwm_channel *priv,
-@@ -219,7 +217,7 @@ static int rz_mtu3_pwm_enable(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
- 	u8 val;
- 	int rc;
- 
--	rc = pm_runtime_resume_and_get(rz_mtu3_pwm->chip.dev);
-+	rc = pm_runtime_resume_and_get(pwmchip_parent(pwm->chip));
- 	if (rc)
- 		return rc;
- 
-@@ -265,7 +263,7 @@ static void rz_mtu3_pwm_disable(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
- 
- 	mutex_unlock(&rz_mtu3_pwm->lock);
- 
--	pm_runtime_put_sync(rz_mtu3_pwm->chip.dev);
-+	pm_runtime_put_sync(pwmchip_parent(pwm->chip));
+ static inline unsigned int to_tcon_channel(unsigned int channel)
+@@ -181,9 +179,10 @@ static unsigned long pwm_samsung_get_tin_rate(struct samsung_pwm_chip *our_chip,
+ 	return rate / (reg + 1);
  }
  
- static int rz_mtu3_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-@@ -462,24 +460,27 @@ static DEFINE_RUNTIME_DEV_PM_OPS(rz_mtu3_pwm_pm_ops,
- 
- static void rz_mtu3_pwm_pm_disable(void *data)
+-static unsigned long pwm_samsung_calc_tin(struct samsung_pwm_chip *our_chip,
++static unsigned long pwm_samsung_calc_tin(struct pwm_chip *chip,
+ 					  unsigned int chan, unsigned long freq)
  {
--	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = data;
-+	struct pwm_chip *chip = data;
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
++	struct samsung_pwm_chip *our_chip = to_samsung_pwm_chip(chip);
+ 	struct samsung_pwm_variant *variant = &our_chip->variant;
+ 	unsigned long rate;
+ 	struct clk *clk;
+@@ -197,12 +196,12 @@ static unsigned long pwm_samsung_calc_tin(struct samsung_pwm_chip *our_chip,
+ 				return rate;
+ 		}
  
- 	clk_rate_exclusive_put(rz_mtu3_pwm->clk);
--	pm_runtime_disable(rz_mtu3_pwm->chip.dev);
--	pm_runtime_set_suspended(rz_mtu3_pwm->chip.dev);
-+	pm_runtime_disable(pwmchip_parent(chip));
-+	pm_runtime_set_suspended(pwmchip_parent(chip));
+-		dev_warn(pwmchip_parent(&our_chip->chip),
++		dev_warn(pwmchip_parent(chip),
+ 			"tclk of PWM %d is inoperational, using tdiv\n", chan);
+ 	}
+ 
+ 	rate = pwm_samsung_get_tin_rate(our_chip, chan);
+-	dev_dbg(pwmchip_parent(&our_chip->chip), "tin parent at %lu\n", rate);
++	dev_dbg(pwmchip_parent(chip), "tin parent at %lu\n", rate);
+ 
+ 	/*
+ 	 * Compare minimum PWM frequency that can be achieved with possible
+@@ -329,7 +328,7 @@ static int __pwm_samsung_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		dev_dbg(pwmchip_parent(chip), "duty_ns=%d, period_ns=%d (%u)\n",
+ 						duty_ns, period_ns, period);
+ 
+-		tin_rate = pwm_samsung_calc_tin(our_chip, pwm->hwpwm, period);
++		tin_rate = pwm_samsung_calc_tin(chip, pwm->hwpwm, period);
+ 
+ 		dev_dbg(pwmchip_parent(chip), "tin_rate=%lu\n", tin_rate);
+ 
+@@ -506,9 +505,10 @@ static const struct of_device_id samsung_pwm_matches[] = {
+ };
+ MODULE_DEVICE_TABLE(of, samsung_pwm_matches);
+ 
+-static int pwm_samsung_parse_dt(struct samsung_pwm_chip *our_chip)
++static int pwm_samsung_parse_dt(struct pwm_chip *chip)
+ {
+-	struct device_node *np = pwmchip_parent(&our_chip->chip)->of_node;
++	struct samsung_pwm_chip *our_chip = to_samsung_pwm_chip(chip);
++	struct device_node *np = pwmchip_parent(chip)->of_node;
+ 	const struct of_device_id *match;
+ 	struct property *prop;
+ 	const __be32 *cur;
+@@ -522,7 +522,7 @@ static int pwm_samsung_parse_dt(struct samsung_pwm_chip *our_chip)
+ 
+ 	of_property_for_each_u32(np, "samsung,pwm-outputs", prop, cur, val) {
+ 		if (val >= SAMSUNG_PWM_NUM) {
+-			dev_err(pwmchip_parent(&our_chip->chip),
++			dev_err(pwmchip_parent(chip),
+ 				"%s: invalid channel index in samsung,pwm-outputs property\n",
+ 								__func__);
+ 			continue;
+@@ -533,7 +533,7 @@ static int pwm_samsung_parse_dt(struct samsung_pwm_chip *our_chip)
+ 	return 0;
  }
- 
- static int rz_mtu3_pwm_probe(struct platform_device *pdev)
+ #else
+-static int pwm_samsung_parse_dt(struct samsung_pwm_chip *our_chip)
++static int pwm_samsung_parse_dt(struct pwm_chip *chip)
  {
- 	struct rz_mtu3 *parent_ddata = dev_get_drvdata(pdev->dev.parent);
-+	struct pwm_chip *chip;
- 	struct rz_mtu3_pwm_chip *rz_mtu3_pwm;
+ 	return -ENODEV;
+ }
+@@ -542,21 +542,22 @@ static int pwm_samsung_parse_dt(struct samsung_pwm_chip *our_chip)
+ static int pwm_samsung_probe(struct platform_device *pdev)
+ {
  	struct device *dev = &pdev->dev;
- 	unsigned int i, j = 0;
++	struct pwm_chip *chip;
+ 	struct samsung_pwm_chip *our_chip;
+ 	unsigned int chan;
  	int ret;
  
--	rz_mtu3_pwm = devm_kzalloc(&pdev->dev, sizeof(*rz_mtu3_pwm), GFP_KERNEL);
--	if (!rz_mtu3_pwm)
--		return -ENOMEM;
-+	chip = devm_pwmchip_alloc(&pdev->dev, RZ_MTU3_MAX_PWM_CHANNELS, sizeof(*rz_mtu3_pwm));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
+-	our_chip = devm_kzalloc(&pdev->dev, sizeof(*our_chip), GFP_KERNEL);
+-	if (our_chip == NULL)
++	chip = devm_pwmchip_alloc(&pdev->dev, SAMSUNG_PWM_NUM, sizeof(*chip));
++	if (chip == NULL)
+ 		return -ENOMEM;
++	our_chip = to_samsung_pwm_chip(chip);
++
++	chip->ops = &pwm_samsung_ops;
  
- 	rz_mtu3_pwm->clk = parent_ddata->clk;
+-	our_chip->chip.dev = &pdev->dev;
+-	our_chip->chip.ops = &pwm_samsung_ops;
+-	our_chip->chip.npwm = SAMSUNG_PWM_NUM;
+ 	our_chip->inverter_mask = BIT(SAMSUNG_PWM_NUM) - 1;
  
-@@ -514,15 +515,13 @@ static int rz_mtu3_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ENABLED(CONFIG_OF) && pdev->dev.of_node) {
+-		ret = pwm_samsung_parse_dt(our_chip);
++		ret = pwm_samsung_parse_dt(chip);
+ 		if (ret)
+ 			return ret;
+ 	} else {
+@@ -595,7 +596,7 @@ static int pwm_samsung_probe(struct platform_device *pdev)
  
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
--	rz_mtu3_pwm->chip.dev = &pdev->dev;
- 	ret = devm_add_action_or_reset(&pdev->dev, rz_mtu3_pwm_pm_disable,
--				       rz_mtu3_pwm);
-+				       chip);
- 	if (ret < 0)
- 		return ret;
+ 	platform_set_drvdata(pdev, our_chip);
  
--	rz_mtu3_pwm->chip.ops = &rz_mtu3_pwm_ops;
--	rz_mtu3_pwm->chip.npwm = RZ_MTU3_MAX_PWM_CHANNELS;
--	ret = devm_pwmchip_add(&pdev->dev, &rz_mtu3_pwm->chip);
-+	chip->ops = &rz_mtu3_pwm_ops;
-+	ret = devm_pwmchip_add(&pdev->dev, chip);
- 	if (ret)
- 		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
+-	ret = pwmchip_add(&our_chip->chip);
++	ret = pwmchip_add(chip);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to register PWM chip\n");
+ 		clk_disable_unprepare(our_chip->base_clk);
+@@ -612,17 +613,18 @@ static int pwm_samsung_probe(struct platform_device *pdev)
  
+ static void pwm_samsung_remove(struct platform_device *pdev)
+ {
+-	struct samsung_pwm_chip *our_chip = platform_get_drvdata(pdev);
++	struct pwm_chip *chip = platform_get_drvdata(pdev);
++	struct samsung_pwm_chip *our_chip = to_samsung_pwm_chip(chip);
+ 
+-	pwmchip_remove(&our_chip->chip);
++	pwmchip_remove(chip);
+ 
+ 	clk_disable_unprepare(our_chip->base_clk);
+ }
+ 
+ static int pwm_samsung_resume(struct device *dev)
+ {
+-	struct samsung_pwm_chip *our_chip = dev_get_drvdata(dev);
+-	struct pwm_chip *chip = &our_chip->chip;
++	struct pwm_chip *chip = dev_get_drvdata(dev);
++	struct samsung_pwm_chip *our_chip = to_samsung_pwm_chip(chip);
+ 	unsigned int i;
+ 
+ 	for (i = 0; i < SAMSUNG_PWM_NUM; i++) {
 -- 
 2.43.0
 
