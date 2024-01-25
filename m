@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-1052-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1053-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C65F83C249
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:14:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BCAB383C258
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:14:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3F468B210EF
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:14:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1E59CB228BB
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:14:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B32C1CF96;
-	Thu, 25 Jan 2024 12:14:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 821493A27E;
+	Thu, 25 Jan 2024 12:14:23 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D2F3A27E
-	for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 12:14:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A723F8CA
+	for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 12:14:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706184855; cv=none; b=J4iF1DV3gFmDrcxFv61SQ5GwLCt25m/c9s+zdLoXHrADpm3i15EbJrCRrauj0MZ1x0MtCIMJBEA7TL4ub3tusGf3h4VgEoDv+Wod4a6I5a5MisjMR/yGaiXGsAV0inAO6w3xRz3+qe93UnJ8DQgROQ22A66RdaABcqic9+YIJtM=
+	t=1706184863; cv=none; b=Hftud4hdUTou2RrnezqhpW0ryKHKjsGRbVSVqB1hELQFMcd/PEevd41DsRtqF2//k0bkkP165Qtl/6vx15fsaXlcfHjH8rS8qXUX36E0ZtuoXzK6e4lQx90y70QQtUY5zwHNUapu534mXOLm0bfpU8Vh5NFMJ9uqGLuiYcgzppk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706184855; c=relaxed/simple;
-	bh=xFZHrY/7C9PRNt99L0vl8g6j3yX1l4H0eIirFXKiC6s=;
+	s=arc-20240116; t=1706184863; c=relaxed/simple;
+	bh=Y70kt1S+wDMGZ2Y6dT7JBGkOh38DPB/mz0c9lW1w+go=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k3Vaz3c1e5ZI39K3QvuZhCS5VmybFXG71CdrMMHVeQqvRh/b04XoG1QwEdHHvtEoKFQ7v5p0KPENVqmZFTLEoVPsTtjf9lJ1u7svQEVt6STwDkFn998Jyre8jBQjTwF+CNNws7dXTLy38hzDoZridwmYrBnkqBKp+YHq+xpKDnw=
+	 MIME-Version:Content-Type; b=V/x8Jcd7/4RDTvV8OkTsJG9D4rTmcqKqU3165/HvhAHsFZYIlbp7WTEql+JUbfE53EtiyXu/qmsDB4oA5dZ0jcJbAkuF/14yP5oxhONum8Ci9RYwNMvn2rUTyl3OVyRs8QX2N3VQJP1xduhOguohrwYeSvknPEis7RtAapKXe84=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,18 +33,24 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZH-00048C-Nh; Thu, 25 Jan 2024 13:10:51 +0100
+	id 1rSyZH-00049s-NK; Thu, 25 Jan 2024 13:10:51 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZD-002HR8-To; Thu, 25 Jan 2024 13:10:47 +0100
+	id 1rSyZE-002HRD-5b; Thu, 25 Jan 2024 13:10:48 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZD-007n0k-2K;
+	id 1rSyZD-007n0n-33;
 	Thu, 25 Jan 2024 13:10:47 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: linux-pwm@vger.kernel.org,
+To: Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	James Clark <james.clark@arm.com>,
+	linux-pwm@vger.kernel.org,
 	Hector Martin <marcan@marcan.st>,
 	Sven Peter <sven@svenpeter.dev>,
 	Nicolas Ferre <nicolas.ferre@microchip.com>,
@@ -105,9 +111,9 @@ To: linux-pwm@vger.kernel.org,
 	Bjorn Andersson <quic_bjorande@quicinc.com>,
 	Luca Weiss <luca@z3ntu.xyz>,
 	Johan Hovold <johan@kernel.org>,
-	Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: kernel@pengutronix.de,
+	Alex Elder <elder@kernel.org>
+Cc: linux-doc@vger.kernel.org,
+	kernel@pengutronix.de,
 	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	asahi@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
@@ -138,9 +144,9 @@ Cc: kernel@pengutronix.de,
 	linux-leds@vger.kernel.org,
 	greybus-dev@lists.linaro.org,
 	linux-staging@lists.linux.dev
-Subject: [PATCH v5 039/111] pwm: Provide wrappers for storing and getting driver private data
-Date: Thu, 25 Jan 2024 13:09:01 +0100
-Message-ID:  <1c873808bfc93ab51f49be799334dee6e8ab398a.1706182805.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v5 040/111] pwm: Provide devm_pwmchip_alloc() function
+Date: Thu, 25 Jan 2024 13:09:02 +0100
+Message-ID:  <f59b1a4a8d6fba65e4d3e8698310c9cb1d4c43ce.1706182805.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
@@ -151,7 +157,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1920; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=xFZHrY/7C9PRNt99L0vl8g6j3yX1l4H0eIirFXKiC6s=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk9naZ43cfZqRmm0PAwRVRHazfdHqUBSCmiRl 7SkEynbJGKJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPZwAKCRCPgPtYfRL+ TqyWB/0Xq9H2qxz5a4NBliO3W2OBOYrNCAIPS+YFIK+/psR+8hFCNvRcL8LkTcvrGhz+wH1p+Pb F64/cTSgbYddbvZjoDx1kSNtuKvpvYsZy3B/swnxRBzzhjM4qRl0nLRqI7tuxKsMoJ6KChrenmP ZHuoEbNaT3Jq0uJ3jCQX+OWAPfMUgSkbUr5A7m+b7JrBvE1+EcTZ0ltF9cqru7Gex1/GIk5STLR s4XqyNlr+QqQS2lKFYFTNPQKFohdM4YpL+GcQjYEZZG2zihg6J+r6Mx1mefplrODntBtd+WIXCL uGNCMjCbN1xcJ1N2Xx2QisJNxxGcBaZCqQD7Iqx5HLe1eACQ
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4472; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=Y70kt1S+wDMGZ2Y6dT7JBGkOh38DPB/mz0c9lW1w+go=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk9o1J7Qn6pSUgc2O5FQOVH47M2tNWcGfyzpg KqN39khZuCJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPaAAKCRCPgPtYfRL+ Tl7sCACDg65PvULF2T57x8s2GOVh8qHAOM4G2fEdFZQeFhZiTply5wW+kG5bIM1JAdU3cAiM96g uzfqnkdy2Mt6/lWu6ZhjqOk/xYUO80eOZ5e8cyRhQLGb4VsogRhDSOKSAf4k0fkzTYCdCM3jfwP QGXt5GRUeYGJVhDmUC7m1wai9vWlfWG8IXkVbSYnX3LqEAl0A40uaffDMUtp2bFtgHNqtqbGhx6 bM/vJXjzuqiGa8jiFMTuJ50PRpeh9o/6cre0EhT+nv5GQHpRaGSKnNf/E7Q0CK0tiRGYs7M9t6g 2w/lsv8+vxgUQ7yjIC7YwrqDMXW1+x7YTS/xwh76REfV7L9/
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -159,62 +165,111 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-These functions are useful to store and query driver private data a
-After struct pwm_chip got its own struct device, this can make use of
-dev_get_drvdata() and dev_set_drvdata() on that device.  These functions
-are required already now to convert drivers to pwmchip_alloc() which
-must happen before changing pwm_chip::dev.
+This function allocates a struct pwm_chip and driver data. Compared to
+the status quo the split into pwm_chip and driver data is new, otherwise
+it doesn't change anything relevant (yet).
+
+The intention is that after all drivers are switched to use this
+allocation function, its possible to add a struct device to struct
+pwm_chip to properly track the latter's lifetime without touching all
+drivers again. Proper lifetime tracking is a necessary precondition to
+introduce character device support for PWMs (that implements atomic
+setting and doesn't suffer from the sysfs overhead of the /sys/class/pwm
+userspace support).
+
+The new function pwmchip_priv() (obviously?) only works for chips
+allocated with devm_pwmchip_alloc().
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- include/linux/pwm.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ .../driver-api/driver-model/devres.rst        |  1 +
+ Documentation/driver-api/pwm.rst              | 10 ++++----
+ drivers/pwm/core.c                            | 25 +++++++++++++++++++
+ include/linux/pwm.h                           |  2 ++
+ 4 files changed, 33 insertions(+), 5 deletions(-)
 
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index c5f99d834ec5..e4df72c408d2 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -420,6 +420,7 @@ POWER
+   devm_reboot_mode_unregister()
+ 
+ PWM
++  devm_pwmchip_alloc()
+   devm_pwmchip_add()
+   devm_pwm_get()
+   devm_fwnode_pwm_get()
+diff --git a/Documentation/driver-api/pwm.rst b/Documentation/driver-api/pwm.rst
+index 3c28ccc4b611..cee66c7f0335 100644
+--- a/Documentation/driver-api/pwm.rst
++++ b/Documentation/driver-api/pwm.rst
+@@ -143,11 +143,11 @@ to implement the pwm_*() functions itself. This means that it's impossible
+ to have multiple PWM drivers in the system. For this reason it's mandatory
+ for new drivers to use the generic PWM framework.
+ 
+-A new PWM controller/chip can be added using pwmchip_add() and removed
+-again with pwmchip_remove(). pwmchip_add() takes a filled in struct
+-pwm_chip as argument which provides a description of the PWM chip, the
+-number of PWM devices provided by the chip and the chip-specific
+-implementation of the supported PWM operations to the framework.
++A new PWM controller/chip can be allocated using devm_pwmchip_alloc, then added
++using pwmchip_add() and removed again with pwmchip_remove(). pwmchip_add()
++takes a filled in struct pwm_chip as argument which provides a description of
++the PWM chip, the number of PWM devices provided by the chip and the
++chip-specific implementation of the supported PWM operations to the framework.
+ 
+ When implementing polarity support in a PWM driver, make sure to respect the
+ signal conventions in the PWM framework. By definition, normal polarity
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 1b4c3d0caa82..b821a2b0b172 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -454,6 +454,31 @@ of_pwm_single_xlate(struct pwm_chip *chip, const struct of_phandle_args *args)
+ }
+ EXPORT_SYMBOL_GPL(of_pwm_single_xlate);
+ 
++static void *pwmchip_priv(struct pwm_chip *chip)
++{
++	return (void *)chip + sizeof(*chip);
++}
++
++struct pwm_chip *devm_pwmchip_alloc(struct device *parent, unsigned int npwm, size_t sizeof_priv)
++{
++	struct pwm_chip *chip;
++	size_t alloc_size;
++
++	alloc_size = size_add(sizeof(*chip), sizeof_priv);
++
++	chip = devm_kzalloc(parent, alloc_size, GFP_KERNEL);
++	if (!chip)
++		return ERR_PTR(-ENOMEM);
++
++	chip->dev = parent;
++	chip->npwm = npwm;
++
++	pwmchip_set_drvdata(chip, pwmchip_priv(chip));
++
++	return chip;
++}
++EXPORT_SYMBOL_GPL(devm_pwmchip_alloc);
++
+ static void of_pwmchip_add(struct pwm_chip *chip)
+ {
+ 	if (!chip->dev || !chip->dev->of_node)
 diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index d7966918f301..2c49d2fe2fe7 100644
+index 2c49d2fe2fe7..8bc7504aa7d4 100644
 --- a/include/linux/pwm.h
 +++ b/include/linux/pwm.h
-@@ -272,6 +272,7 @@ struct pwm_ops {
-  * @npwm: number of PWMs controlled by this chip
-  * @of_xlate: request a PWM device given a device tree PWM specifier
-  * @atomic: can the driver's ->apply() be called in atomic context
-+ * @driver_data: Private pointer for driver specific info
-  * @pwms: array of PWM devices allocated by the framework
-  */
- struct pwm_chip {
-@@ -286,6 +287,7 @@ struct pwm_chip {
- 	bool atomic;
+@@ -403,6 +403,8 @@ static inline bool pwm_might_sleep(struct pwm_device *pwm)
+ int pwm_capture(struct pwm_device *pwm, struct pwm_capture *result,
+ 		unsigned long timeout);
  
- 	/* only used internally by the PWM framework */
-+	void *driver_data;
- 	struct pwm_device *pwms;
- };
- 
-@@ -294,6 +296,24 @@ static inline struct device *pwmchip_parent(struct pwm_chip *chip)
- 	return chip->dev;
- }
- 
-+static inline void *pwmchip_get_drvdata(struct pwm_chip *chip)
-+{
-+	/*
-+	 * After pwm_chip got a dedicated struct device, this can be replaced by
-+	 * dev_get_drvdata(&chip->dev);
-+	 */
-+	return chip->driver_data;
-+}
++struct pwm_chip *devm_pwmchip_alloc(struct device *parent, unsigned int npwm, size_t sizeof_priv);
 +
-+static inline void pwmchip_set_drvdata(struct pwm_chip *chip, void *data)
-+{
-+	/*
-+	 * After pwm_chip got a dedicated struct device, this can be replaced by
-+	 * dev_set_drvdata(&chip->dev, data);
-+	 */
-+	chip->driver_data = data;
-+}
-+
- #if IS_ENABLED(CONFIG_PWM)
- /* PWM user APIs */
- int pwm_apply_might_sleep(struct pwm_device *pwm, const struct pwm_state *state);
+ int __pwmchip_add(struct pwm_chip *chip, struct module *owner);
+ #define pwmchip_add(chip) __pwmchip_add(chip, THIS_MODULE)
+ void pwmchip_remove(struct pwm_chip *chip);
 -- 
 2.43.0
 
