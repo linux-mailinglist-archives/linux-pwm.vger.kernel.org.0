@@ -1,137 +1,92 @@
-Return-Path: <linux-pwm+bounces-1055-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1056-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47ECE83C278
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:27:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97A1883C329
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 14:06:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B2E8CB21F58
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:27:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA2C21C23C8F
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:06:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 810B2482EE;
-	Thu, 25 Jan 2024 12:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17F284F5EB;
+	Thu, 25 Jan 2024 13:04:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E1tLv29k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZ1UNUcY"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE13482DC
-	for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 12:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D949059B54;
+	Thu, 25 Jan 2024 13:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706185609; cv=none; b=YpVJxEJ0cke9I+B/I6uWeingI6mxC1nf7x9MgHX7lAByfoW8RrisLp4C9zJVHzCA5HRkc91rN6DW3zh8yIIekNbfHgUkBh2FOSA6lP8TyLC28YOQK7TAdu2Xj3H1kj8X3derJe3b/AC10MVXPUTy1Kdecz6P1BBEkx6RqWaefy4=
+	t=1706187880; cv=none; b=Srn+WrDCF3WsOw8geerYtCpX0ykefYtXl39O+lFnKww+U70oY6RNHTeH1yMGzo/OD+wOtbhs+ZiLLar+e58GnhMxJl+WiBocVYD4+k5aYHCRwGOPNdWG5Wu0R9lBlx8ZZ2VFWc63o0A6N65miJ27POOIIG64nG8kCDmam01QHgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706185609; c=relaxed/simple;
-	bh=f2s70FoxfWKlvYI8rEQuBCtCm0pNVV+xAm5hARhYJ5M=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=pJfL7ha02rVr1qNBX+gABatoFETajQW6FyuIq/qaeykNH5qC09jYlHTAl9Ad6GGakjfog3nlKFAreEy3xeraC5b9/ue7WyCTqe2Wi0+QbE8FskPSHXSLviFtLyTTxtpUbBlgzCQFcQxEyPjVbhjQLYLS3yaIK7GMJ7UvVwm4vJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E1tLv29k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AF7BC433C7;
-	Thu, 25 Jan 2024 12:26:47 +0000 (UTC)
+	s=arc-20240116; t=1706187880; c=relaxed/simple;
+	bh=re1mVyPi8aLdjXqW+u5VMYGNKanfxtt0Mx/XGaxSaQk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nM2fYu/i3SxE6EwfWUSY7aEMLFxcwRlDAvvpcZiFSg4GdOgMEbY3MXZP9sAmnMyUJkBt9Su8IqcU8byrojnUWErvBcVjZNUB35EyQ8zZPoHC61RW7xRxPDzWDEPql+ywhjydmbb9JXgH39Eb71qhWYblqPGRotfGoA1VEtEXrmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZ1UNUcY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB9F4C433F1;
+	Thu, 25 Jan 2024 13:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706185609;
-	bh=f2s70FoxfWKlvYI8rEQuBCtCm0pNVV+xAm5hARhYJ5M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=E1tLv29ko87lvgMaCaJ3t8/pCxbwX4nfkj3TYDcgrjNyVoXcU2mppIq5KmclTM056
-	 we9MPOtAZTGgc55uW2cwBb1EIRlTGwR+gVbJIHPFZb4Wgi73XDXvEO2UVkkEq/rD5G
-	 yt5sE8IGlLRtYA9zXr+EXnZ9C4bbY7SR7GVzaGwiquvxx5N8CxAQ7D4VfpIQf5FNHg
-	 QstyaZCynp2DhJlb7Rioafdcwn8EdDkcNp9+cy6csi3Te4ok5PLbfHCt9/DLGRLiG0
-	 3pFKJpG0anzxcrsJPbHJOJPgdzLRtSvP6hg1PbQsmWHsagOz04WnhaNzsr2k8JFQsg
-	 VW6/4OJoRkkbw==
+	s=k20201202; t=1706187879;
+	bh=re1mVyPi8aLdjXqW+u5VMYGNKanfxtt0Mx/XGaxSaQk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aZ1UNUcYqd7mj41uJmYe2V+XXWphdUKswCVdYtgXXW9sMtkUw7QmfJcNcLkc10LBp
+	 E/ltE74PzlL1NsyeLA16n3x7IoHuV5vg5iwOrPy6BABAvhvHnWJ462MCGrG2rmQkDH
+	 DRBAiAltvgNPmrh9usVLBWS+oilC7/kHVHESlmMNiaDV48RGlmVhVHcGHmhIL0OSUx
+	 ohW4WC3dcQdmjr+/Z2ldkZ83M84JVbM1jVmvKTksRigG3mrSU6Y520bXulKqzkidTC
+	 yM8m9r5U57fm69yrkmDfcKLMCJG0Sdq6cVAyhDBYx5SyDLlNV6jmegR23md1SqaKjr
+	 irk8sHhmgvmkw==
+Date: Thu, 25 Jan 2024 13:04:32 +0000
+From: Lee Jones <lee@kernel.org>
+To: Anjelique Melendez <quic_amelende@quicinc.com>
+Cc: pavel@ucw.cz, thierry.reding@gmail.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	agross@kernel.org, andersson@kernel.org, luca.weiss@fairphone.com,
+	konrad.dybcio@linaro.org, u.kleine-koenig@pengutronix.de,
+	quic_subbaram@quicinc.com, quic_gurus@quicinc.com,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v8 3/7] soc: qcom: add QCOM PBS driver
+Message-ID: <20240125130432.GG74950@google.com>
+References: <20231221185838.28440-1-quic_amelende@quicinc.com>
+ <20231221185838.28440-4-quic_amelende@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 25 Jan 2024 13:26:45 +0100
-From: Michael Walle <mwalle@kernel.org>
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH v5 087/111] pwm: sl28cpld: Make use of
- devm_pwmchip_alloc() function
-In-Reply-To: <eba4f163b407831e27d1de769fe3a8ef29ad1f0d.1706182805.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
- <eba4f163b407831e27d1de769fe3a8ef29ad1f0d.1706182805.git.u.kleine-koenig@pengutronix.de>
-Message-ID: <8c92b4fa9e568f875763c65cdebc925e@kernel.org>
-X-Sender: mwalle@kernel.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231221185838.28440-4-quic_amelende@quicinc.com>
 
-> This prepares the pwm-sl28cpld driver to further changes of the pwm 
-> core
-> outlined in the commit introducing devm_pwmchip_alloc(). There is no
-> intended semantical change and the driver should behave as before.
+On Thu, 21 Dec 2023, Anjelique Melendez wrote:
+
+> Add the Qualcomm PBS (Programmable Boot Sequencer) driver. The QCOM PBS
+> driver supports configuring software PBS trigger events through PBS RAM
+> on Qualcomm Technologies, Inc (QTI) PMICs.
 > 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-
-Reviewed-by: Michael Walle <mwalle@kernel.org>
-
-With a small nit below.
-
+> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
 > ---
->  drivers/pwm/pwm-sl28cpld.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
-> index 88b01ff9e460..934378d6a002 100644
-> --- a/drivers/pwm/pwm-sl28cpld.c
-> +++ b/drivers/pwm/pwm-sl28cpld.c
-> @@ -81,14 +81,13 @@
->  	regmap_write((priv)->regmap, (priv)->offset + (reg), (val))
-> 
->  struct sl28cpld_pwm {
-> -	struct pwm_chip chip;
->  	struct regmap *regmap;
->  	u32 offset;
->  };
-> 
->  static inline struct sl28cpld_pwm *sl28cpld_pwm_from_chip(struct 
-> pwm_chip *chip)
->  {
-> -	return container_of(chip, struct sl28cpld_pwm, chip);
-> +	return pwmchip_get_drvdata(chip);
+>  drivers/soc/qcom/Kconfig          |   9 ++
+>  drivers/soc/qcom/Makefile         |   1 +
+>  drivers/soc/qcom/qcom-pbs.c       | 243 ++++++++++++++++++++++++++++++
+>  include/linux/soc/qcom/qcom-pbs.h |  30 ++++
+>  4 files changed, 283 insertions(+)
+>  create mode 100644 drivers/soc/qcom/qcom-pbs.c
+>  create mode 100644 include/linux/soc/qcom/qcom-pbs.h
 
-This function now seems superfluous. Better use
-pwmchip_get_drvdata(chip) directly.
+This needs to be applied soon, or I'll have to remove all of the LEDS
+patches, since the lack of include/linux/soc/qcom/qcom-pbs.h is causing
+build failures.
 
-If you don't respin or this is too much work, I can
-send a patch once this is applied.
-
--michael
-
->  }
-> 
->  static int sl28cpld_pwm_get_state(struct pwm_chip *chip,
-> @@ -213,9 +212,10 @@ static int sl28cpld_pwm_probe(struct 
-> platform_device *pdev)
->  		return -ENODEV;
->  	}
-> 
-> -	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> -	if (!priv)
-> -		return -ENOMEM;
-> +	chip = devm_pwmchip_alloc(&pdev->dev, 1, sizeof(*priv));
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +	priv = sl28cpld_pwm_from_chip(chip);
-> 
->  	priv->regmap = dev_get_regmap(pdev->dev.parent, NULL);
->  	if (!priv->regmap) {
-> @@ -231,10 +231,7 @@ static int sl28cpld_pwm_probe(struct 
-> platform_device *pdev)
->  	}
-> 
->  	/* Initialize the pwm_chip structure */
-> -	chip = &priv->chip;
-> -	chip->dev = &pdev->dev;
->  	chip->ops = &sl28cpld_pwm_ops;
-> -	chip->npwm = 1;
-> 
->  	ret = devm_pwmchip_add(&pdev->dev, chip);
->  	if (ret) {
+-- 
+Lee Jones [李琼斯]
 
