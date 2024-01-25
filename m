@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-972-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-974-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 863AA83C1C8
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:10:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9D4983C1F7
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:11:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40DAF290E2D
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:10:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BFAA2B23C19
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:10:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8CCE36B10;
-	Thu, 25 Jan 2024 12:10:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A18F4123F;
+	Thu, 25 Jan 2024 12:10:52 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416614502D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973BB45032
 	for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 12:10:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706184651; cv=none; b=r7LbEdrUD3qlNYsdI/Lz82t+ah76yu/DJvZfon4j4dvbDU0e+aC+5VR1nteXIoMJFByJfZajr2zXeA8RQUtv0CrxZ/eeeG+qc5A5WpZnoLknp2hgwgYWc+D2hDHf+oPnm/eC4kMf8xE1RNPJMNb5cvxekOa4e5IWKhYkyqal8dY=
+	t=1706184652; cv=none; b=Ee5TU490F4Y1cJe1gaJHyaGZVqgkvS6c+g9RhLR1C6/UZWf4SVOSbUr6sTgLpxyTzTjpM9qyi80jTf884zhJ5CkCvpvSvOgxtmiLBZCpWhx4BLjUfjuEKkzZnNiXTqWvZZ3OzuOc1Glo16SfCVrZIlGcOffzt6Q6hJfR4Wd7WBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706184651; c=relaxed/simple;
-	bh=GxMi0tXDokbqmRCwg0JFBfaf+3WQDSlBqy/nZUUiyFI=;
+	s=arc-20240116; t=1706184652; c=relaxed/simple;
+	bh=2rCU3Goqf+i/4f2eo8F31DBFj03pWNn5JfV1Fg0fihU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bEbfbF85GyE1hTJqmLQYNfUIV0GBbC4MqirKy28vDBt2Kkns29FakMRD0994IYQEZdNYsekwQj1qSDuiUisXA7nv109Znwav7FEFc1jy9l4QQ1HpKGfDJlqYNOL0Z23+y//JB4UQBpcRCN5dfE8PAIYXGILJLMQqk4T0BTi278E=
+	 MIME-Version:Content-Type; b=VbrVFq9Ab3lAmJ1vDniuba9RkkWe4TBFrzX7TyLwyuZUjSiiL4kCbar3XOv+85EIaTOj80CRGvf8WkWYPoTyxZbK7xA9pKjwCsu+asGyuljU1nQ3BBtrBrAXdZrYN7EXCDlLgxmiMln82ZHNPPHy3aKbWFIXRyHE4rR9w4ZgHkw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,15 +33,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZC-0003qe-D4; Thu, 25 Jan 2024 13:10:46 +0100
+	id 1rSyZC-0003sa-ER; Thu, 25 Jan 2024 13:10:46 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZB-002HQT-EB; Thu, 25 Jan 2024 13:10:45 +0100
+	id 1rSyZB-002HQX-Kv; Thu, 25 Jan 2024 13:10:45 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZB-007mzx-1A;
+	id 1rSyZB-007n01-1p;
 	Thu, 25 Jan 2024 13:10:45 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
@@ -51,9 +51,9 @@ To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
 Cc: linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org,
 	kernel@pengutronix.de
-Subject: [PATCH v5 028/111] pwm: stm32-lp: Make use of pwmchip_parent() macro
-Date: Thu, 25 Jan 2024 13:08:50 +0100
-Message-ID:  <b33ce87b22638a61f2a69de830b311f3bea80632.1706182805.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v5 029/111] pwm: stm32: Make use of pwmchip_parent() macro
+Date: Thu, 25 Jan 2024 13:08:51 +0100
+Message-ID:  <c00da5849d5bfc05347902ca49019f323fb5217c.1706182805.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
@@ -64,7 +64,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1687; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=GxMi0tXDokbqmRCwg0JFBfaf+3WQDSlBqy/nZUUiyFI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk9amGtsO13RN82ZdGaIn265nrghL45JlRz3H m4/+E8MM2qJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPWgAKCRCPgPtYfRL+ TmMLB/4nmEyDWMlrmY+YHCGKQA5px+JYct1T/6PjFiwE6aTzYuhAfKJfiBdeO1QUt9gTuqFG6po N8HW/Iq0aH2dy8grQs11fpFeqwEetOMGYqFQeNtlsyp3JqzTtpdzB663RrV/E3nT2J6CkX7B6ch KS93iYe4qCYjUn2eNsSy5MFZ1Hba6SZKmJ78DO1JjInA2WId1BHN+MiDkJ98Vkh1ldYGLtEXGj7 9dZgYkc7o5dkvfzFxoY+WYtDw1KXuQVX8IkHOBMC2bD4fBdTx2mXVbP8Q/cwOGb8tUT/rKllgU+ zvJqbac8fjXH0wRoUxJblXzlaUj5NBzzHK5ee+mm1ldRJEb4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1165; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=2rCU3Goqf+i/4f2eo8F31DBFj03pWNn5JfV1Fg0fihU=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk9b5vHxohwwaQtHz8JsM2yY5H4duLs5GHq54 vcS0n3FevKJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPWwAKCRCPgPtYfRL+ TnxKCACg9m9lIgloOvrBwmqvi6ascp/CemOgDNoaxiIYlJP8+rO8Lt91yaKtyuEb3iKVS4l0Kag pwXWK0TiysMO8g+NcyK144WBEglsDTfTMgLmDV5kNEML2pPBK+2KwG02MkVrO1dt/XTV5ESbHHS sh3BRGZk1H0q7W49CWQnA51FdXrfN0Ol8mHUIQ6lMLHkpyHLxZPgfPqBXkLNxZD7F7AAFH0P1zA twi9sdK6u8XozxsIvNe4quvBfv+HwgX7IcRDMylR7YgTywquTMOyqUJrWPAM/VFexsy9RHWAGAI gSXmV2PtXaTWfI45CGi2+PgaxKIdNXGUP4xxjp8Vi9Lm2FSM
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -78,40 +78,31 @@ provided for exactly this purpose.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-stm32-lp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-stm32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 439068f3eca1..3754faeca838 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	do_div(div, NSEC_PER_SEC);
- 	if (!div) {
- 		/* Clock is too slow to achieve requested period. */
--		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
-+		dev_dbg(pwmchip_parent(chip), "Can't reach %llu ns\n", state->period);
- 		return -EINVAL;
+diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+index 5f10cba492ec..d1dc9e3ca2a1 100644
+--- a/drivers/pwm/pwm-stm32.c
++++ b/drivers/pwm/pwm-stm32.c
+@@ -94,7 +94,7 @@ static int stm32_pwm_raw_capture(struct stm32_pwm *priv, struct pwm_device *pwm,
+ 				 unsigned long tmo_ms, u32 *raw_prd,
+ 				 u32 *raw_dty)
+ {
+-	struct device *parent = priv->chip.dev->parent;
++	struct device *parent = pwmchip_parent(&priv->chip)->parent;
+ 	enum stm32_timers_dmas dma_id;
+ 	u32 ccen, ccr;
+ 	int ret;
+@@ -170,7 +170,7 @@ static int stm32_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	ret = clk_enable(priv->clk);
+ 	if (ret) {
+-		dev_err(priv->chip.dev, "failed to enable counter clock\n");
++		dev_err(pwmchip_parent(chip), "failed to enable counter clock\n");
+ 		goto unlock;
  	}
  
-@@ -69,7 +69,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	while (div > STM32_LPTIM_MAX_ARR) {
- 		presc++;
- 		if ((1 << presc) > STM32_LPTIM_MAX_PRESCALER) {
--			dev_err(priv->chip.dev, "max prescaler exceeded\n");
-+			dev_err(pwmchip_parent(chip), "max prescaler exceeded\n");
- 			return -EINVAL;
- 		}
- 		div = prd >> presc;
-@@ -130,7 +130,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 				       (val & STM32_LPTIM_CMPOK_ARROK) == STM32_LPTIM_CMPOK_ARROK,
- 				       100, 1000);
- 	if (ret) {
--		dev_err(priv->chip.dev, "ARR/CMP registers write issue\n");
-+		dev_err(pwmchip_parent(chip), "ARR/CMP registers write issue\n");
- 		goto err;
- 	}
- 	ret = regmap_write(priv->regmap, STM32_LPTIM_ICR,
 -- 
 2.43.0
 
