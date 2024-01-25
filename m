@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-1018-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1023-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A284283C1FB
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:11:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7650C83C202
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:11:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 54216290E3F
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:11:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C4161F20F9B
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:11:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A48F345028;
-	Thu, 25 Jan 2024 12:11:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B33C376E1;
+	Thu, 25 Jan 2024 12:11:02 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08716405F9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC6B3A1B6
 	for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 12:11:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706184661; cv=none; b=KH9adPTPGbrXh9pO6UicYnDMce0N6SYaGehTXHw5SYxKMoGdLaItuHPjb9PNJvP3ta9+wHd5oZehYk9+i9cPe21uCo+tO3c5+PGhEw/0qs5r+OucqDjIjFXZZGxGX5rISVpk/p9bPDM2HAYwCUdY3WEoC7s4Po++ePJQv+YKJlM=
+	t=1706184662; cv=none; b=XqgYGogjTrzqttdbFJr/fF+dE9Hj17/xDcDx9cmJNU6lFYbe67teMOYopEH/f7vPYFgOJNduASrJQrHHr9ZOypsOTztw2lWajoFnJlCLWBfG9yZQITEkTAeYs5UEqKsWV0jRG7ugb6EDLgwF77oQmkXdoKkTcKKLWiSk6I/oiXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706184661; c=relaxed/simple;
-	bh=r+uiUVOaGWwe7N2kbIo8z2q+oQVmCrs97Q6G78FFDzs=;
+	s=arc-20240116; t=1706184662; c=relaxed/simple;
+	bh=AqCy7Z2oVcAAzlatiEtHnhmNKcs9T74A/W5aS85/uq8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ldjz+awWAhkde1GxPXwnav1O9T+dUbd8AjDX5OW8kTs1mw2QfQ5C2wjCmUM5nJmhSPq8obwIJVTWEkerCHZ/ai88BTTG4QQywClUAloBpDTNuiYsKdxMBlMzBN9h8lADpeMvyUW/cE8VP5a/ado3X1GTz6O3voK1jUd6AlbrsOk=
+	 MIME-Version:Content-Type; b=lNKF/W5Z1kJaLpV0Xu4deAf8PA+A+5wGesQm33qnI6S1O/z6z/CYQsq5Y7lYKfL5DpuYRip2ndVeT1Ain3VDdpcIvwmAPL4n159vp4xdI+tn9jEPakBB2ZmlDVrM6adYBPxxixtVlvO5KJnCEj7DkdZtT9KRWjql1HTMgK39s+E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,22 +33,22 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZN-0004Um-Gq; Thu, 25 Jan 2024 13:10:57 +0100
+	id 1rSyZN-0004VJ-PQ; Thu, 25 Jan 2024 13:10:57 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZL-002HTv-V1; Thu, 25 Jan 2024 13:10:55 +0100
+	id 1rSyZM-002HU0-3f; Thu, 25 Jan 2024 13:10:56 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZL-007n3Y-2r;
-	Thu, 25 Jan 2024 13:10:55 +0100
+	id 1rSyZM-007n3c-07;
+	Thu, 25 Jan 2024 13:10:56 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: linux-pwm@vger.kernel.org
 Cc: kernel@pengutronix.de
-Subject: [PATCH v5 081/111] pwm: rcar: Make use of devm_pwmchip_alloc() function
-Date: Thu, 25 Jan 2024 13:09:43 +0100
-Message-ID:  <461995bfe1d43af40eb7b4905be96df325cbfcc2.1706182805.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v5 082/111] pwm: renesas-tpu: Make use of devm_pwmchip_alloc() function
+Date: Thu, 25 Jan 2024 13:09:44 +0100
+Message-ID:  <8ca07b1b06b653ea296ce8a6e65a35762d33f0bf.1706182805.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
@@ -59,7 +59,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2449; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=r+uiUVOaGWwe7N2kbIo8z2q+oQVmCrs97Q6G78FFDzs=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk+ZCHA312WeFgtgrg7u+RsUcDdTsgvbczr3s cKZCnn8nlGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPmQAKCRCPgPtYfRL+ TqEzB/4w0E79pCTgBojoyf2dKsrRrKR+Fr4n02+pfLAZsuJL/NSg0sLSqOPVu5MqFHgbntxgDeU RQbMJ/5hjRrAPX8CeoNZN3scugU1HIUTjw/BZEp3IzeZRenCwSuk3FFSUjbBLWH9crI/GHDDAFW iEwIG7r6+R2HOA5lri/wism6JqxHZy6reXnVkJ4xH15DCpXOYZLcHtPT5V9C/wNocdeyC+fErS/ Se6m8M8uVxCwixyL5jnvp/vgoQ9Vz9qFLHVuUu21LFRMGl9Nj3ikKQ5kJrnI6jkk5zZ74LVOwIH d5vSXO9yCZb43PQEsFG5lNPaFJSuEqlvU9s49kzukFP2MmFR
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2237; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=AqCy7Z2oVcAAzlatiEtHnhmNKcs9T74A/W5aS85/uq8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk+ayzKrhMadaGLmuZrFQ9GFa2S5ppX5lpiAO MPexUSRj4CJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPmgAKCRCPgPtYfRL+ TpIMB/9U79nw1V4L6UymabxtIzDtlZI+O5mWwA+bjaR76ShW9PUvcC51svzn5oaRrXfUUHFE39c UXuDScTbpEdRVljcRitZ4qksbk0DlC1jvRUIIaJoqFyPCMEsW7uy6V6RH5E4KUEsfx9WRNacAFT BMNzy0ctCN7indysMgkcC0NJZWoxUyS5uS4LqIYeXJlkcswfeiJXiFBzIoFTEQDihjPhsCa2g4B iBoi4SzetsEwYe3XcWYdbr0vkz/o1t0l4USaOx1as5nZGAURsXhesJ1Ew5rk1FRghDxxBHGai85 d4K70oVIBHUfk/kMnVM40aGPFpn97ILObrJ9kb0GjvV+/FjB
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -67,83 +67,74 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-This prepares the pwm-rcar driver to further changes of the pwm core
-outlined in the commit introducing devm_pwmchip_alloc(). There is no
-intended semantical change and the driver should behave as before.
+This prepares the pwm-renesas-tpu driver to further changes of the pwm
+core outlined in the commit introducing devm_pwmchip_alloc(). There is
+no intended semantical change and the driver should behave as before.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-rcar.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ drivers/pwm/pwm-renesas-tpu.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index 4838762137d1..435d5587fd55 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -38,14 +38,13 @@
- #define  RCAR_PWMCNT_PH0_SHIFT	0
+diff --git a/drivers/pwm/pwm-renesas-tpu.c b/drivers/pwm/pwm-renesas-tpu.c
+index 28265fdfc92a..eeddda460636 100644
+--- a/drivers/pwm/pwm-renesas-tpu.c
++++ b/drivers/pwm/pwm-renesas-tpu.c
+@@ -79,7 +79,6 @@ struct tpu_pwm_device {
  
- struct rcar_pwm_chip {
+ struct tpu_device {
+ 	struct platform_device *pdev;
 -	struct pwm_chip chip;
+ 	spinlock_t lock;
+ 
  	void __iomem *base;
- 	struct clk *clk;
+@@ -87,7 +86,10 @@ struct tpu_device {
+ 	struct tpu_pwm_device tpd[TPU_CHANNEL_MAX];
  };
  
- static inline struct rcar_pwm_chip *to_rcar_pwm_chip(struct pwm_chip *chip)
- {
--	return container_of(chip, struct rcar_pwm_chip, chip);
+-#define to_tpu_device(c)	container_of(c, struct tpu_device, chip)
++static inline struct tpu_device *to_tpu_device(struct pwm_chip *chip)
++{
 +	return pwmchip_get_drvdata(chip);
- }
++}
  
- static void rcar_pwm_write(struct rcar_pwm_chip *rp, u32 data,
-@@ -202,12 +201,14 @@ static const struct pwm_ops rcar_pwm_ops = {
+ static void tpu_pwm_write(struct tpu_pwm_device *tpd, int reg_nr, u16 value)
+ {
+@@ -438,12 +440,14 @@ static const struct pwm_ops tpu_pwm_ops = {
  
- static int rcar_pwm_probe(struct platform_device *pdev)
+ static int tpu_probe(struct platform_device *pdev)
  {
 +	struct pwm_chip *chip;
- 	struct rcar_pwm_chip *rcar_pwm;
+ 	struct tpu_device *tpu;
  	int ret;
  
--	rcar_pwm = devm_kzalloc(&pdev->dev, sizeof(*rcar_pwm), GFP_KERNEL);
--	if (rcar_pwm == NULL)
-+	chip = devm_pwmchip_alloc(&pdev->dev, 1, sizeof(*rcar_pwm));
+-	tpu = devm_kzalloc(&pdev->dev, sizeof(*tpu), GFP_KERNEL);
+-	if (tpu == NULL)
++	chip = devm_pwmchip_alloc(&pdev->dev, TPU_CHANNEL_MAX, sizeof(*tpu));
 +	if (chip == NULL)
  		return -ENOMEM;
-+	rcar_pwm = to_rcar_pwm_chip(chip);
++	tpu = to_tpu_device(chip);
  
- 	rcar_pwm->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(rcar_pwm->base))
-@@ -219,15 +220,13 @@ static int rcar_pwm_probe(struct platform_device *pdev)
- 		return PTR_ERR(rcar_pwm->clk);
- 	}
+ 	spin_lock_init(&tpu->lock);
+ 	tpu->pdev = pdev;
+@@ -460,15 +464,13 @@ static int tpu_probe(struct platform_device *pdev)
+ 	/* Initialize and register the device. */
+ 	platform_set_drvdata(pdev, tpu);
  
--	platform_set_drvdata(pdev, rcar_pwm);
-+	platform_set_drvdata(pdev, chip);
+-	tpu->chip.dev = &pdev->dev;
+-	tpu->chip.ops = &tpu_pwm_ops;
+-	tpu->chip.npwm = TPU_CHANNEL_MAX;
++	chip->ops = &tpu_pwm_ops;
  
--	rcar_pwm->chip.dev = &pdev->dev;
--	rcar_pwm->chip.ops = &rcar_pwm_ops;
--	rcar_pwm->chip.npwm = 1;
-+	chip->ops = &rcar_pwm_ops;
+ 	ret = devm_pm_runtime_enable(&pdev->dev);
+ 	if (ret < 0)
+ 		return dev_err_probe(&pdev->dev, ret, "Failed to enable runtime PM\n");
  
- 	pm_runtime_enable(&pdev->dev);
+-	ret = devm_pwmchip_add(&pdev->dev, &tpu->chip);
++	ret = devm_pwmchip_add(&pdev->dev, chip);
+ 	if (ret < 0)
+ 		return dev_err_probe(&pdev->dev, ret, "Failed to register PWM chip\n");
  
--	ret = pwmchip_add(&rcar_pwm->chip);
-+	ret = pwmchip_add(chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
- 		pm_runtime_disable(&pdev->dev);
-@@ -239,9 +238,9 @@ static int rcar_pwm_probe(struct platform_device *pdev)
- 
- static void rcar_pwm_remove(struct platform_device *pdev)
- {
--	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
-+	struct pwm_chip *chip = platform_get_drvdata(pdev);
- 
--	pwmchip_remove(&rcar_pwm->chip);
-+	pwmchip_remove(chip);
- 
- 	pm_runtime_disable(&pdev->dev);
- }
 -- 
 2.43.0
 
