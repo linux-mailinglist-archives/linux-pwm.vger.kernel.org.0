@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-980-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-983-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A258D83C1CE
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:10:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DD3883C1D3
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:10:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4AE01C2261F
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:10:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F7F9290E4B
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:10:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1DA63D97F;
-	Thu, 25 Jan 2024 12:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C40745032;
+	Thu, 25 Jan 2024 12:10:54 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B26041742
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8211344368
 	for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 12:10:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706184653; cv=none; b=nuZMd8LkqiFVE11oUIYjVKqZJLpCzgvpzLph4NPSYeUuSZ8UcCydmHpuldyWvMO0jov0bHzwiRIfN4fMbHbzB8keWlZAnf8spMHe+ppxwhWYSzWz8BHU6MM74ZoaSNrqCoRH1pCpoWPVN4kHGKI+iGKMRTlPPNWUnY11GOMKmuM=
+	t=1706184654; cv=none; b=USvAVgSpOa46mdtNPexSlVqFDPA81ukLqPXsUhMJOe2bQr7ZS8CSRcxBs9xTzI9UPMJwt0xxhd4KknkMj0lirT1xe9ZHREjtqMOvr2bdUo6QK7RdqqtlnuglAT3fmVXjlTlw/djs5CJbM9QhqYU0yc0nd1Fmm1o1ML4kGwzIekg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706184653; c=relaxed/simple;
-	bh=p+aAC78UNyRUwHwUsSPfi3rt5IvRRtbIKuH958+lNnk=;
+	s=arc-20240116; t=1706184654; c=relaxed/simple;
+	bh=u09bAlZCYe9ZqxMNX4bi+tIh6MWYvJyYs/iFuE1kLeI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MZ9VfeajE3l1sY1bm80HjlkVIXgy1qVsTMniJaclMdVTukRwreQCZ5gwc9CfQyIYy1M+EwDjQkI0FU8N4qc0IGqPwtAY9dkPgOA01Ib2cm9Iq1ymHw1EQmh9xTiAglbI0EaBx93IN7o4Ytow2YiSPPo3ABsi6BxyJrqY9WVDfqE=
+	 MIME-Version:Content-Type; b=egKTqCSDbtl2kcrq0/Mku7UM8iCwypKMQ20tup55RUUpgBML0M1LaQoeyVsDk8ZfqJcSfmXJVfWGyoqukpHukdtyNihWpzukca2G/k8PSUML6qDSVecZirDeuxOjYdKuGOYh3CuojpmFsJ172zzTCtLReoQamGMzUA00QiIeS0g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,26 +33,22 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZG-0004G4-AA; Thu, 25 Jan 2024 13:10:50 +0100
+	id 1rSyZG-0004HD-E5; Thu, 25 Jan 2024 13:10:50 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZF-002HRm-Ji; Thu, 25 Jan 2024 13:10:49 +0100
+	id 1rSyZF-002HRp-Rl; Thu, 25 Jan 2024 13:10:49 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZF-007n1L-1i;
+	id 1rSyZF-007n1P-2W;
 	Thu, 25 Jan 2024 13:10:49 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	linux-pwm@vger.kernel.org
-Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	kernel@pengutronix.de
-Subject: [PATCH v5 048/111] pwm: bcm-kona: Make use of devm_pwmchip_alloc() function
-Date: Thu, 25 Jan 2024 13:09:10 +0100
-Message-ID:  <33ae6686c922d94f59d971d7eded95717ad1cece.1706182805.git.u.kleine-koenig@pengutronix.de>
+To: linux-pwm@vger.kernel.org
+Cc: kernel@pengutronix.de
+Subject: [PATCH v5 049/111] pwm: berlin: Make use of devm_pwmchip_alloc() function
+Date: Thu, 25 Jan 2024 13:09:11 +0100
+Message-ID:  <6b4a7aa88ea10bc7718e239a154848550889329a.1706182805.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
@@ -63,7 +59,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2122; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=p+aAC78UNyRUwHwUsSPfi3rt5IvRRtbIKuH958+lNnk=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtRN/kXrd89ccCD/TcttxXaDbZPc494YrBKQ32Gxh2tlf iZblIJRJ6MxCwMjF4OsmCKLfeOaTKsqucjOtf8uwwxiZQKZwsDFKQAT6elh/2ezI3KesSX7+9uT thZdv+2Ua8sYrvt5pRrDEhmR6HPb7NhV5D89iH3OF1nwomuy97Qyq0zZ1j9njikqenPwrGJYkDv BpOCKg3hKaL5EVFzEkbfLjjaYz86VT+Yx1r2UP6dZ/h+byskbjd5d2lxSH6r1LWpCvArMZ/vIlK qxrc6w3x82P3jlSg+ri1PLV3zPPsZgPPPgJw3evgY/o8gMq52HJm0urt/cvUjsXpVRv0z/X3m1w 8F5it4XrV7+2uL7WC+1+TDL0nmSy/wfv2msOiBkWbFNtPTc/D95Rtr/nMpc+1UUtGevcdMQea2l eGcb6zwWmTrB22n5Zedett55/6ZE3qfZ2+9Qrdal4iMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3286; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=u09bAlZCYe9ZqxMNX4bi+tIh6MWYvJyYs/iFuE1kLeI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk9zl3k5evJKP1O17+8Kr4bYwGUbs67qOU1SV NjQbJoQFg2JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPcwAKCRCPgPtYfRL+ Tv1FB/4m8nEL5/shcOM/yHFLWW1jo1guy/RGUKeDbIA8q/r0IjVj7LUtEiM4UK9+pNFgQYLRBiQ rRezJ/XyXyW8jRHlPLQjYwKml/WIYymAPqjXvipNKMsAWianmziPei0zPUdlk4h9oFchrmlj9kc FLhJQo3Ppb0r3A5ROb0Z3U89dab8lcdvEIAT3Kl8f0NSPdQjPO5pU1S9Mi04h69sZycKjyvd9Pu Rx3Q5AdBq/E+xYpq2lB4h7ZNIIj/viwVvgwXVmWxvngOWc7F/u2GlxqQKXEHlGatcMsQP0i1YhD ViLbFnDnKu3dCp20sXHfi+JLxdbMvWVa6b+GAmfc/Qn3Z4sE
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -71,76 +67,105 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-This prepares the pwm-bcm-kona driver to further changes of the pwm core
+This prepares the pwm-berlin driver to further changes of the pwm core
 outlined in the commit introducing devm_pwmchip_alloc(). There is no
 intended semantical change and the driver should behave as before.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-bcm-kona.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/pwm/pwm-berlin.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pwm/pwm-bcm-kona.c b/drivers/pwm/pwm-bcm-kona.c
-index 47acae8d7478..91eab525aedd 100644
---- a/drivers/pwm/pwm-bcm-kona.c
-+++ b/drivers/pwm/pwm-bcm-kona.c
-@@ -56,14 +56,13 @@
- #define DUTY_CYCLE_HIGH_MAX			0x00ffffff
- 
- struct kona_pwmc {
--	struct pwm_chip chip;
- 	void __iomem *base;
- 	struct clk *clk;
+diff --git a/drivers/pwm/pwm-berlin.c b/drivers/pwm/pwm-berlin.c
+index 442913232dc0..831aed228caf 100644
+--- a/drivers/pwm/pwm-berlin.c
++++ b/drivers/pwm/pwm-berlin.c
+@@ -49,7 +49,6 @@ struct berlin_pwm_channel {
  };
  
- static inline struct kona_pwmc *to_kona_pwmc(struct pwm_chip *chip)
+ struct berlin_pwm_chip {
+-	struct pwm_chip chip;
+ 	struct clk *clk;
+ 	void __iomem *base;
+ 	struct berlin_pwm_channel channel[BERLIN_PWM_NUMPWMS];
+@@ -57,7 +56,7 @@ struct berlin_pwm_chip {
+ 
+ static inline struct berlin_pwm_chip *to_berlin_pwm_chip(struct pwm_chip *chip)
  {
--	return container_of(chip, struct kona_pwmc, chip);
+-	return container_of(chip, struct berlin_pwm_chip, chip);
 +	return pwmchip_get_drvdata(chip);
  }
  
- /*
-@@ -273,18 +272,18 @@ static const struct pwm_ops kona_pwm_ops = {
+ static inline u32 berlin_pwm_readl(struct berlin_pwm_chip *bpc,
+@@ -198,12 +197,14 @@ MODULE_DEVICE_TABLE(of, berlin_pwm_match);
  
- static int kona_pwmc_probe(struct platform_device *pdev)
+ static int berlin_pwm_probe(struct platform_device *pdev)
  {
 +	struct pwm_chip *chip;
- 	struct kona_pwmc *kp;
- 	unsigned int chan;
- 	unsigned int value = 0;
- 	int ret = 0;
+ 	struct berlin_pwm_chip *bpc;
+ 	int ret;
  
--	kp = devm_kzalloc(&pdev->dev, sizeof(*kp), GFP_KERNEL);
--	if (kp == NULL)
-+	chip = devm_pwmchip_alloc(&pdev->dev, 6, sizeof(*kp));
-+	if (chip == NULL)
- 		return -ENOMEM;
-+	kp = to_kona_pwmc(chip);
+-	bpc = devm_kzalloc(&pdev->dev, sizeof(*bpc), GFP_KERNEL);
+-	if (!bpc)
+-		return -ENOMEM;
++	chip = devm_pwmchip_alloc(&pdev->dev, BERLIN_PWM_NUMPWMS, sizeof(*bpc));
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
++	bpc = to_berlin_pwm_chip(chip);
  
--	kp->chip.dev = &pdev->dev;
--	kp->chip.ops = &kona_pwm_ops;
--	kp->chip.npwm = 6;
-+	chip->ops = &kona_pwm_ops;
+ 	bpc->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(bpc->base))
+@@ -213,25 +214,24 @@ static int berlin_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(bpc->clk))
+ 		return PTR_ERR(bpc->clk);
  
- 	kp->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(kp->base))
-@@ -304,14 +303,14 @@ static int kona_pwmc_probe(struct platform_device *pdev)
- 	}
+-	bpc->chip.dev = &pdev->dev;
+-	bpc->chip.ops = &berlin_pwm_ops;
+-	bpc->chip.npwm = BERLIN_PWM_NUMPWMS;
++	chip->ops = &berlin_pwm_ops;
  
- 	/* Set push/pull for all channels */
--	for (chan = 0; chan < kp->chip.npwm; chan++)
-+	for (chan = 0; chan < chip->npwm; chan++)
- 		value |= (1 << PWM_CONTROL_TYPE_SHIFT(chan));
- 
- 	writel(value, kp->base + PWM_CONTROL_OFFSET);
- 
- 	clk_disable_unprepare(kp->clk);
- 
--	ret = devm_pwmchip_add(&pdev->dev, &kp->chip);
+-	ret = devm_pwmchip_add(&pdev->dev, &bpc->chip);
 +	ret = devm_pwmchip_add(&pdev->dev, chip);
  	if (ret < 0)
- 		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
+ 		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
  
+-	platform_set_drvdata(pdev, bpc);
++	platform_set_drvdata(pdev, chip);
+ 
+ 	return 0;
+ }
+ 
+ static int berlin_pwm_suspend(struct device *dev)
+ {
+-	struct berlin_pwm_chip *bpc = dev_get_drvdata(dev);
++	struct pwm_chip *chip = dev_get_drvdata(dev);
++	struct berlin_pwm_chip *bpc = to_berlin_pwm_chip(chip);
+ 	unsigned int i;
+ 
+-	for (i = 0; i < bpc->chip.npwm; i++) {
++	for (i = 0; i < chip->npwm; i++) {
+ 		struct berlin_pwm_channel *channel = &bpc->channel[i];
+ 
+ 		channel->enable = berlin_pwm_readl(bpc, i, BERLIN_PWM_ENABLE);
+@@ -247,7 +247,8 @@ static int berlin_pwm_suspend(struct device *dev)
+ 
+ static int berlin_pwm_resume(struct device *dev)
+ {
+-	struct berlin_pwm_chip *bpc = dev_get_drvdata(dev);
++	struct pwm_chip *chip = dev_get_drvdata(dev);
++	struct berlin_pwm_chip *bpc = to_berlin_pwm_chip(chip);
+ 	unsigned int i;
+ 	int ret;
+ 
+@@ -255,7 +256,7 @@ static int berlin_pwm_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
+-	for (i = 0; i < bpc->chip.npwm; i++) {
++	for (i = 0; i < chip->npwm; i++) {
+ 		struct berlin_pwm_channel *channel = &bpc->channel[i];
+ 
+ 		berlin_pwm_writel(bpc, i, channel->ctrl, BERLIN_PWM_CONTROL);
 -- 
 2.43.0
 
