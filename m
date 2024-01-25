@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-971-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-973-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EE6683C1CB
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:10:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C8CA83C1FE
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 13:11:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 332A01C227E7
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:10:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96B0CB23B0F
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jan 2024 12:10:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D799B3F8CA;
-	Thu, 25 Jan 2024 12:10:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04FCC33CC9;
+	Thu, 25 Jan 2024 12:10:52 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2CC4502C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5536B4502E
 	for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 12:10:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706184651; cv=none; b=Z8hLX3AmRpT0kG8QcjreAU5d6gqWfSj+0ggv93aTk7c36om7PUKDA2wpptLaPyoYkHkKWQXxue4NKJ5bf5Hf4loh3QwTqg+1hCNT3GwT1PmZtEnttFnypiX+X0mYf0RtbCJfykpOR0nALAC7qrCS/lF0cXw+YngeI1UNLxlNoMk=
+	t=1706184651; cv=none; b=kRMFpTXp27UQ3v/+Jg3bvSTEIn7D3XN0rMhn6F1q78EzftvCpJwxNqGzkqUZcdgbkr+y8MkSrVyTcqwmrHs7IGQ1YkQaNJgo6cCrwgKJFUrBw2zz3Ft823LGCULu7PqfIPtPUC30z5Aacv7yEv9Gh+BC8hci/fB6pmRbKcU1fqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706184651; c=relaxed/simple;
-	bh=pENp6Fzt17e/dX+Jfp4xUxSF7mCQqw25Xy3zSvEU+Pg=;
+	bh=X14x+DY306nHG5hEMQxX1u8V65fC+fZjXfuMgUb+HjY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fVrpHatAri+ry6ZMl5+7b50Y7cfU2qpmnf0vofT25T0LZHw0+EfR1lxjspskkAI9UpuVmR42D2naAFj2e2mMoYHbZq+RrexwVvkJ2C3Pg6kTIkZV9RqYd16dXQuyObgPDb6R2rZMXN4DkIi5zc6GbS5zaQRORaDuEKeaTNXsaDc=
+	 MIME-Version:Content-Type; b=i3q5JWRbqYiRG0HokrIBlzLeLWqgjTLDXQeQUaP7nDlJLEhr4d8b0N8TohoCzM0fcoOjlAYCl3dv/22ALnh9dXYJD8NC9YZGFSYgcQXe/VOSvV+QV42C8D4MGT41aPXgPjzABpnrQBowIL/M6bB3WyiOWkLoawXucvdNpgDnNsA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,22 +33,22 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZD-0003zt-Ux; Thu, 25 Jan 2024 13:10:48 +0100
+	id 1rSyZE-00041A-3e; Thu, 25 Jan 2024 13:10:48 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZC-002HQm-G0; Thu, 25 Jan 2024 13:10:46 +0100
+	id 1rSyZC-002HQr-Mo; Thu, 25 Jan 2024 13:10:46 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZC-007n0H-17;
+	id 1rSyZC-007n0L-22;
 	Thu, 25 Jan 2024 13:10:46 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: linux-pwm@vger.kernel.org
 Cc: kernel@pengutronix.de
-Subject: [PATCH v5 033/111] pwm: tiehrpwm: Make use of pwmchip_parent() macro
-Date: Thu, 25 Jan 2024 13:08:55 +0100
-Message-ID:  <4d53f2ef951a0def23270a527f53f0d70fa1cb37.1706182805.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v5 034/111] pwm: twl-led: Make use of pwmchip_parent() macro
+Date: Thu, 25 Jan 2024 13:08:56 +0100
+Message-ID:  <310ab25192d777892b842949721cf855575f4e00.1706182805.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
@@ -59,7 +59,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3906; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=pENp6Fzt17e/dX+Jfp4xUxSF7mCQqw25Xy3zSvEU+Pg=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk9gnbLYYrnLXsqCXIdTAJ6x4zDjzhG+AexsZ iXe4f/49tWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPYAAKCRCPgPtYfRL+ Tt4tB/9wMfi6xdkS9/uPPygRjLAKBRATrhKJOxY478JRosH0/hqzXP0fgr3g4IlR+LHPlm60VLo bVo9Tma1/9IaC3gVxRW8IknaCpKtaQiAgNYqHgUm57EcdxRVDkpz4d/NjgQBao8Fh/AfHxAOKEL HqQJo88jPyq/fV0hCubNkiDditVy6Tml40w1ZGnltH3cnMS0dw3lD/51UtK+7agYf3isGHo7lIv LzmCNErLU16WI+NNLeaim7YNIttbNBju7xhw1vjjmwzmATKVK5niVaPj4j7G01rAMhAfE6iuGpy yT4r5PFQmyUF0xq3eVvGir4lDz47qrgCQyUYmZlJjt/Ionft
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5759; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=X14x+DY306nHG5hEMQxX1u8V65fC+fZjXfuMgUb+HjY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk9hzHDFMzye1+II6c/mPDI7uFrPYgKaDtFjz e3Dr/C2OTqJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPYQAKCRCPgPtYfRL+ TocOB/4njJqRZk9TnMdM27IbPvxrXNbZsXhaqZalsiBYn3nb7QqrK5GSLrQKfJJ0vwv3OI/4bYk 3jYSuD9avDQu3LJpQnmM1WbA4EnhAuPrsDq843UyVBDT0+sNxfu7CsJUjWgRK6yzsgFA+Qb69YI f2AOJtXDfuewuIdJ8Y2eWheimDeNdk8vHWPg+MI8aaWNZgT7roB7tFsdMpvq4KSk/T5RVh4JWZJ J30dvbJH590CfJ9bWbfnv5eiAjs1K3PpFiUFXcG/qOF3EXKOQMjq81+1pC8R4CbbVCpgjVEb895 nWJzS9Oovioo4/eW9a9clB/PTN5CetE0UqYxOTmZRizWqOtX
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -73,103 +73,139 @@ provided for exactly this purpose.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-tiehrpwm.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/pwm/pwm-twl-led.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index af231fa74fa9..80e22e373bc5 100644
---- a/drivers/pwm/pwm-tiehrpwm.c
-+++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -256,7 +256,7 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 			if (i == pwm->hwpwm)
- 				continue;
+diff --git a/drivers/pwm/pwm-twl-led.c b/drivers/pwm/pwm-twl-led.c
+index c670ccb81653..00ef798dae52 100644
+--- a/drivers/pwm/pwm-twl-led.c
++++ b/drivers/pwm/pwm-twl-led.c
+@@ -100,7 +100,7 @@ static int twl4030_pwmled_config(struct pwm_chip *chip, struct pwm_device *pwm,
  
--			dev_err(chip->dev,
-+			dev_err(pwmchip_parent(chip),
- 				"period value conflicts with channel %u\n",
- 				i);
- 			return -EINVAL;
-@@ -268,11 +268,11 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	/* Configure clock prescaler to support Low frequency PWM wave */
- 	if (set_prescale_div(period_cycles/PERIOD_MAX, &ps_divval,
- 			     &tb_divval)) {
--		dev_err(chip->dev, "Unsupported values\n");
-+		dev_err(pwmchip_parent(chip), "Unsupported values\n");
- 		return -EINVAL;
+ 	ret = twl_i2c_write(TWL4030_MODULE_LED, pwm_config, base, 2);
+ 	if (ret < 0)
+-		dev_err(chip->dev, "%s: Failed to configure PWM\n", pwm->label);
++		dev_err(pwmchip_parent(chip), "%s: Failed to configure PWM\n", pwm->label);
+ 
+ 	return ret;
+ }
+@@ -114,7 +114,7 @@ static int twl4030_pwmled_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	mutex_lock(&twl->mutex);
+ 	ret = twl_i2c_read_u8(TWL4030_MODULE_LED, &val, TWL4030_LEDEN_REG);
+ 	if (ret < 0) {
+-		dev_err(chip->dev, "%s: Failed to read LEDEN\n", pwm->label);
++		dev_err(pwmchip_parent(chip), "%s: Failed to read LEDEN\n", pwm->label);
+ 		goto out;
  	}
  
--	pm_runtime_get_sync(chip->dev);
-+	pm_runtime_get_sync(pwmchip_parent(chip));
+@@ -122,7 +122,7 @@ static int twl4030_pwmled_enable(struct pwm_chip *chip, struct pwm_device *pwm)
  
- 	/* Update clock prescaler values */
- 	ehrpwm_modify(pc->mmio_base, TBCTL, TBCTL_CLKDIV_MASK, tb_divval);
-@@ -299,7 +299,7 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	ret = twl_i2c_write_u8(TWL4030_MODULE_LED, val, TWL4030_LEDEN_REG);
+ 	if (ret < 0)
+-		dev_err(chip->dev, "%s: Failed to enable PWM\n", pwm->label);
++		dev_err(pwmchip_parent(chip), "%s: Failed to enable PWM\n", pwm->label);
  
- 	ehrpwm_write(pc->mmio_base, cmp_reg, duty_cycles);
- 
--	pm_runtime_put_sync(chip->dev);
-+	pm_runtime_put_sync(pwmchip_parent(chip));
- 
- 	return 0;
- }
-@@ -323,7 +323,7 @@ static int ehrpwm_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	int ret;
- 
- 	/* Leave clock enabled on enabling PWM */
--	pm_runtime_get_sync(chip->dev);
-+	pm_runtime_get_sync(pwmchip_parent(chip));
- 
- 	/* Disabling Action Qualifier on PWM output */
- 	if (pwm->hwpwm) {
-@@ -346,8 +346,8 @@ static int ehrpwm_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	/* Enable TBCLK */
- 	ret = clk_enable(pc->tbclk);
- 	if (ret) {
--		dev_err(chip->dev, "Failed to enable TBCLK for %s: %d\n",
--			dev_name(pc->chip.dev), ret);
-+		dev_err(pwmchip_parent(chip), "Failed to enable TBCLK for %s: %d\n",
-+			dev_name(pwmchip_parent(chip)), ret);
- 		return ret;
+ out:
+ 	mutex_unlock(&twl->mutex);
+@@ -139,7 +139,7 @@ static void twl4030_pwmled_disable(struct pwm_chip *chip,
+ 	mutex_lock(&twl->mutex);
+ 	ret = twl_i2c_read_u8(TWL4030_MODULE_LED, &val, TWL4030_LEDEN_REG);
+ 	if (ret < 0) {
+-		dev_err(chip->dev, "%s: Failed to read LEDEN\n", pwm->label);
++		dev_err(pwmchip_parent(chip), "%s: Failed to read LEDEN\n", pwm->label);
+ 		goto out;
  	}
  
-@@ -385,7 +385,7 @@ static void ehrpwm_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	clk_disable(pc->tbclk);
+@@ -147,7 +147,7 @@ static void twl4030_pwmled_disable(struct pwm_chip *chip,
  
- 	/* Disable clock on PWM disable */
--	pm_runtime_put_sync(chip->dev);
-+	pm_runtime_put_sync(pwmchip_parent(chip));
+ 	ret = twl_i2c_write_u8(TWL4030_MODULE_LED, val, TWL4030_LEDEN_REG);
+ 	if (ret < 0)
+-		dev_err(chip->dev, "%s: Failed to disable PWM\n", pwm->label);
++		dev_err(pwmchip_parent(chip), "%s: Failed to disable PWM\n", pwm->label);
+ 
+ out:
+ 	mutex_unlock(&twl->mutex);
+@@ -203,7 +203,7 @@ static int twl6030_pwmled_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	ret = twl_i2c_write_u8(TWL6030_MODULE_ID1, on_time,
+ 			       TWL6030_LED_PWM_CTRL1);
+ 	if (ret < 0)
+-		dev_err(chip->dev, "%s: Failed to configure PWM\n", pwm->label);
++		dev_err(pwmchip_parent(chip), "%s: Failed to configure PWM\n", pwm->label);
+ 
+ 	return ret;
  }
- 
- static void ehrpwm_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -393,8 +393,8 @@ static void ehrpwm_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- 	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
- 
- 	if (pwm_is_enabled(pwm)) {
--		dev_warn(chip->dev, "Removing PWM device without disabling\n");
--		pm_runtime_put_sync(chip->dev);
-+		dev_warn(pwmchip_parent(chip), "Removing PWM device without disabling\n");
-+		pm_runtime_put_sync(pwmchip_parent(chip));
+@@ -217,7 +217,7 @@ static int twl6030_pwmled_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	mutex_lock(&twl->mutex);
+ 	ret = twl_i2c_read_u8(TWL6030_MODULE_ID1, &val, TWL6030_LED_PWM_CTRL2);
+ 	if (ret < 0) {
+-		dev_err(chip->dev, "%s: Failed to read PWM_CTRL2\n",
++		dev_err(pwmchip_parent(chip), "%s: Failed to read PWM_CTRL2\n",
+ 			pwm->label);
+ 		goto out;
  	}
+@@ -227,7 +227,7 @@ static int twl6030_pwmled_enable(struct pwm_chip *chip, struct pwm_device *pwm)
  
- 	/* set period value to zero on free */
-@@ -523,7 +523,7 @@ static void ehrpwm_pwm_remove(struct platform_device *pdev)
+ 	ret = twl_i2c_write_u8(TWL6030_MODULE_ID1, val, TWL6030_LED_PWM_CTRL2);
+ 	if (ret < 0)
+-		dev_err(chip->dev, "%s: Failed to enable PWM\n", pwm->label);
++		dev_err(pwmchip_parent(chip), "%s: Failed to enable PWM\n", pwm->label);
  
- static void ehrpwm_pwm_save_context(struct ehrpwm_pwm_chip *pc)
- {
--	pm_runtime_get_sync(pc->chip.dev);
-+	pm_runtime_get_sync(pwmchip_parent(&pc->chip));
+ out:
+ 	mutex_unlock(&twl->mutex);
+@@ -244,7 +244,7 @@ static void twl6030_pwmled_disable(struct pwm_chip *chip,
+ 	mutex_lock(&twl->mutex);
+ 	ret = twl_i2c_read_u8(TWL6030_MODULE_ID1, &val, TWL6030_LED_PWM_CTRL2);
+ 	if (ret < 0) {
+-		dev_err(chip->dev, "%s: Failed to read PWM_CTRL2\n",
++		dev_err(pwmchip_parent(chip), "%s: Failed to read PWM_CTRL2\n",
+ 			pwm->label);
+ 		goto out;
+ 	}
+@@ -254,7 +254,7 @@ static void twl6030_pwmled_disable(struct pwm_chip *chip,
  
- 	pc->ctx.tbctl = ehrpwm_read(pc->mmio_base, TBCTL);
- 	pc->ctx.tbprd = ehrpwm_read(pc->mmio_base, TBPRD);
-@@ -534,7 +534,7 @@ static void ehrpwm_pwm_save_context(struct ehrpwm_pwm_chip *pc)
- 	pc->ctx.aqsfrc = ehrpwm_read(pc->mmio_base, AQSFRC);
- 	pc->ctx.aqcsfrc = ehrpwm_read(pc->mmio_base, AQCSFRC);
+ 	ret = twl_i2c_write_u8(TWL6030_MODULE_ID1, val, TWL6030_LED_PWM_CTRL2);
+ 	if (ret < 0)
+-		dev_err(chip->dev, "%s: Failed to disable PWM\n", pwm->label);
++		dev_err(pwmchip_parent(chip), "%s: Failed to disable PWM\n", pwm->label);
  
--	pm_runtime_put_sync(pc->chip.dev);
-+	pm_runtime_put_sync(pwmchip_parent(&pc->chip));
- }
+ out:
+ 	mutex_unlock(&twl->mutex);
+@@ -295,7 +295,7 @@ static int twl6030_pwmled_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	mutex_lock(&twl->mutex);
+ 	ret = twl_i2c_read_u8(TWL6030_MODULE_ID1, &val, TWL6030_LED_PWM_CTRL2);
+ 	if (ret < 0) {
+-		dev_err(chip->dev, "%s: Failed to read PWM_CTRL2\n",
++		dev_err(pwmchip_parent(chip), "%s: Failed to read PWM_CTRL2\n",
+ 			pwm->label);
+ 		goto out;
+ 	}
+@@ -305,7 +305,7 @@ static int twl6030_pwmled_request(struct pwm_chip *chip, struct pwm_device *pwm)
  
- static void ehrpwm_pwm_restore_context(struct ehrpwm_pwm_chip *pc)
+ 	ret = twl_i2c_write_u8(TWL6030_MODULE_ID1, val, TWL6030_LED_PWM_CTRL2);
+ 	if (ret < 0)
+-		dev_err(chip->dev, "%s: Failed to request PWM\n", pwm->label);
++		dev_err(pwmchip_parent(chip), "%s: Failed to request PWM\n", pwm->label);
+ 
+ out:
+ 	mutex_unlock(&twl->mutex);
+@@ -321,7 +321,7 @@ static void twl6030_pwmled_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	mutex_lock(&twl->mutex);
+ 	ret = twl_i2c_read_u8(TWL6030_MODULE_ID1, &val, TWL6030_LED_PWM_CTRL2);
+ 	if (ret < 0) {
+-		dev_err(chip->dev, "%s: Failed to read PWM_CTRL2\n",
++		dev_err(pwmchip_parent(chip), "%s: Failed to read PWM_CTRL2\n",
+ 			pwm->label);
+ 		goto out;
+ 	}
+@@ -331,7 +331,7 @@ static void twl6030_pwmled_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ 
+ 	ret = twl_i2c_write_u8(TWL6030_MODULE_ID1, val, TWL6030_LED_PWM_CTRL2);
+ 	if (ret < 0)
+-		dev_err(chip->dev, "%s: Failed to free PWM\n", pwm->label);
++		dev_err(pwmchip_parent(chip), "%s: Failed to free PWM\n", pwm->label);
+ 
+ out:
+ 	mutex_unlock(&twl->mutex);
 -- 
 2.43.0
 
