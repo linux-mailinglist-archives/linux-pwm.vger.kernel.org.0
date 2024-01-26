@@ -1,343 +1,218 @@
-Return-Path: <linux-pwm+bounces-1080-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1081-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2F5B83D190
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 01:38:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67AA683D49F
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 09:21:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 44864B21E49
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 00:38:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 79DFB2840E6
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 08:21:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5112D629;
-	Fri, 26 Jan 2024 00:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YrA1jvxB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEDC31B271;
+	Fri, 26 Jan 2024 07:20:21 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E4B362;
-	Fri, 26 Jan 2024 00:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFC81A723
+	for <linux-pwm@vger.kernel.org>; Fri, 26 Jan 2024 07:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706229517; cv=none; b=McU7Uv6UfG6AINDV9lMOPKMxeiY6bj7mi9JTEJIb8Y6HFVliPb4fZ0hj5VXxa4+AF1YWFgBDGIxq7YIEbGxr9XF5tfi7/x/Gy2CFFs2yZI8mnR36fiUir89SDw5+ncsXwZWJznnECUpArCgXDGue0bF+Xs+moMHQepYaJqtR6lA=
+	t=1706253621; cv=none; b=fmYHpIhx0O4/moWfft6BYg0JStuuukBfEeH8cgLvO2L/yoTt/j20I7unDDQgSJ/qCnEkZJdP3U09O4Hjb59S6FX07AJpo0lvFjpUR7/GP/CZywRm1UP27XwVocPfyK0a801VW5eQKfiDts+YtiDwfOOjUmQzHnMQds5xsIN6sdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706229517; c=relaxed/simple;
-	bh=rOEX1bgvfa5pZYrTf4/IA0sPQBNBW81LFwqj7o3ESTU=;
+	s=arc-20240116; t=1706253621; c=relaxed/simple;
+	bh=2MlIvEb5ti15ByVLn0Sx8MbSa5UY7PBvuWGN5H1F15g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QQDMMRykZ/PgY40qwcuyJDF83gxNon4Wk4a0d3ddog3WoPuuoW/yNJocHnsngzhq96wc2ZImDP3kRuufP/tdN2wc/Qaj3HsSMTJ5mUlaEJXS+lfsQELAPC+geAHXKYVsbjbMzCOobXmhwFVK1cu6ZNDPCgRxaKIURxogTnGXKmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YrA1jvxB; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706229514; x=1737765514;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rOEX1bgvfa5pZYrTf4/IA0sPQBNBW81LFwqj7o3ESTU=;
-  b=YrA1jvxBD1LfwjpoWJ2+qs1/H2HMPFgm4DFEm39CRrxAYqyDWIjvQ6Z0
-   HJ+jkyvf9GbWIV0r3zqXWMzg3dCZdWHPMjSdoRlvRy/o1gYaaJYDTp5Nd
-   8kl+i/C2sy5wYGKRw5RPCic6TDTzdaVhdIQBo+SwHSQEGEO3HVhw88FKC
-   WbdLEkrhYvM3SGSVD9wZWp0se10XN8Pt29ylsM55cgf+UnwD4K9gtOEDR
-   D2rpKi86CabgqfHtXSq+83hmqaeDDQafDbJ1GABiMk/eT2tpt5T3Wy3qL
-   K1dlmEsXJ0WkezQo5XXSpJ3Di2M4H8wkI50jtBneb0l1uhvvpmaAiNEWg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9462221"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="9462221"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 16:38:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="857252586"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="857252586"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Jan 2024 16:38:25 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rTAEh-0000Wq-2P;
-	Fri, 26 Jan 2024 00:38:23 +0000
-Date: Fri, 26 Jan 2024 08:38:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Aleksandr Shubin <privatesub2@gmail.com>, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Aleksandr Shubin <privatesub2@gmail.com>,
-	Brandon Cheo Fusi <fusibrandon13@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Maksim Kiselev <bigunclemax@gmail.com>,
-	John Watts <contact@jookia.org>, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v7 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
- support
-Message-ID: <202401260832.fN2PCI3u-lkp@intel.com>
-References: <20240125072032.1151383-3-privatesub2@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=WnK6Kj1S23UOFPFjSkuFxKoupIrjYxX3rpAa8xFmn9K333Oa0YIC3idGjzHOYvH0UvOdhpJ2AjWi/XUwZdYmQRYZO4CRWsMnuh7jEC/E+4PCHB/VbxK2jxxrPRZL+c2slnvFFkBiHEG5wr19q6fds/z1avrKdtHD5HGRZfBuXxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rTGVU-0000h3-J6; Fri, 26 Jan 2024 08:20:08 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rTGVJ-002SaA-Ok; Fri, 26 Jan 2024 08:19:57 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rTGVJ-008SOJ-2A;
+	Fri, 26 Jan 2024 08:19:57 +0100
+Date: Fri, 26 Jan 2024 08:19:51 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Wenhua Lin <Wenhua.Lin@unisoc.com>
+Cc: Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
+	Xiongpeng Wu <xiongpeng.wu@unisoc.com>, zhaochen su <zhaochen.su29@gmail.com>, 
+	Zhaochen Su <Zhaochen.Su@unisoc.com>, Xiaolong Wang <Xiaolong.Wang@unisoc.com>
+Subject: Re: [PATCH 1/6] pwm: sprd: Add support for UMS9620
+Message-ID: <bvnhi4qeczrmlmaog6drlztg4x6ubozjzu57sukpejme7xecqc@724g62vjgxrq>
+References: <20240122081754.17058-1-Wenhua.Lin@unisoc.com>
+ <20240122081754.17058-2-Wenhua.Lin@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6hmfj7udr3e3yp5w"
 Content-Disposition: inline
-In-Reply-To: <20240125072032.1151383-3-privatesub2@gmail.com>
-
-Hi Aleksandr,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on sunxi/sunxi/for-next linus/master v6.8-rc1 next-20240125]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Aleksandr-Shubin/dt-bindings-pwm-Add-binding-for-Allwinner-D1-T113-S3-R329-PWM-controller/20240125-152445
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20240125072032.1151383-3-privatesub2%40gmail.com
-patch subject: [PATCH v7 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM support
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20240126/202401260832.fN2PCI3u-lkp@intel.com/config)
-compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project a31a60074717fc40887cfe132b77eec93bedd307)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240126/202401260832.fN2PCI3u-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401260832.fN2PCI3u-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   In file included from drivers/pwm/pwm-sun20i.c:16:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/pwm/pwm-sun20i.c:16:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/pwm/pwm-sun20i.c:16:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
->> drivers/pwm/pwm-sun20i.c:288:3: error: field designator 'owner' does not refer to any field in type 'const struct pwm_ops'
-     288 |         .owner = THIS_MODULE,
-         |         ~^~~~~~~~~~~~~~~~~~~
->> drivers/pwm/pwm-sun20i.c:297:36: warning: declaration of 'struct platform_device' will not be visible outside of this function [-Wvisibility]
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
->> drivers/pwm/pwm-sun20i.c:302:16: error: call to undeclared function 'devm_kzalloc'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     302 |         sun20i_chip = devm_kzalloc(&pdev->dev, sizeof(*sun20i_chip), GFP_KERNEL);
-         |                       ^
->> drivers/pwm/pwm-sun20i.c:302:34: error: incomplete definition of type 'struct platform_device'
-     302 |         sun20i_chip = devm_kzalloc(&pdev->dev, sizeof(*sun20i_chip), GFP_KERNEL);
-         |                                     ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
->> drivers/pwm/pwm-sun20i.c:306:22: error: call to undeclared function 'devm_platform_ioremap_resource'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     306 |         sun20i_chip->base = devm_platform_ioremap_resource(pdev, 0);
-         |                             ^
->> drivers/pwm/pwm-sun20i.c:306:20: error: incompatible integer to pointer conversion assigning to 'void *' from 'int' [-Wint-conversion]
-     306 |         sun20i_chip->base = devm_platform_ioremap_resource(pdev, 0);
-         |                           ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pwm/pwm-sun20i.c:310:51: error: incomplete definition of type 'struct platform_device'
-     310 |         sun20i_chip->clk_bus = devm_clk_get_enabled(&pdev->dev, "bus");
-         |                                                      ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
->> drivers/pwm/pwm-sun20i.c:312:10: error: call to undeclared function 'dev_err_probe'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     312 |                 return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->clk_bus),
-         |                        ^
-   drivers/pwm/pwm-sun20i.c:312:29: error: incomplete definition of type 'struct platform_device'
-     312 |                 return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->clk_bus),
-         |                                       ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
-   drivers/pwm/pwm-sun20i.c:315:52: error: incomplete definition of type 'struct platform_device'
-     315 |         sun20i_chip->clk_hosc = devm_clk_get_enabled(&pdev->dev, "hosc");
-         |                                                       ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
-   drivers/pwm/pwm-sun20i.c:317:29: error: incomplete definition of type 'struct platform_device'
-     317 |                 return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->clk_hosc),
-         |                                       ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
-   drivers/pwm/pwm-sun20i.c:320:52: error: incomplete definition of type 'struct platform_device'
-     320 |         sun20i_chip->clk_apb0 = devm_clk_get_enabled(&pdev->dev, "apb0");
-         |                                                       ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
-   drivers/pwm/pwm-sun20i.c:322:29: error: incomplete definition of type 'struct platform_device'
-     322 |                 return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->clk_apb0),
-         |                                       ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
-   drivers/pwm/pwm-sun20i.c:325:59: error: incomplete definition of type 'struct platform_device'
-     325 |         sun20i_chip->rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-         |                                                              ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
-   drivers/pwm/pwm-sun20i.c:327:29: error: incomplete definition of type 'struct platform_device'
-     327 |                 return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->rst),
-         |                                       ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
-   drivers/pwm/pwm-sun20i.c:330:33: error: incomplete definition of type 'struct platform_device'
-     330 |         ret = of_property_read_u32(pdev->dev.of_node, "allwinner,pwm-channels",
-         |                                    ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
-   drivers/pwm/pwm-sun20i.c:341:29: error: incomplete definition of type 'struct platform_device'
-     341 |                 return dev_err_probe(&pdev->dev, ret, "failed to deassert reset\n");
-         |                                       ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
-   drivers/pwm/pwm-sun20i.c:343:31: error: incomplete definition of type 'struct platform_device'
-     343 |         sun20i_chip->chip.dev = &pdev->dev;
-         |                                  ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
-   drivers/pwm/pwm-sun20i.c:351:29: error: incomplete definition of type 'struct platform_device'
-     351 |                 return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
-         |                                       ~~~~^
-   drivers/pwm/pwm-sun20i.c:297:36: note: forward declaration of 'struct platform_device'
-     297 | static int sun20i_pwm_probe(struct platform_device *pdev)
-         |                                    ^
->> drivers/pwm/pwm-sun20i.c:354:2: error: call to undeclared function 'platform_set_drvdata'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     354 |         platform_set_drvdata(pdev, sun20i_chip);
-         |         ^
-   drivers/pwm/pwm-sun20i.c:359:38: warning: declaration of 'struct platform_device' will not be visible outside of this function [-Wvisibility]
-     359 | static void sun20i_pwm_remove(struct platform_device *pdev)
-         |                                      ^
-   fatal error: too many errors emitted, stopping now [-ferror-limit=]
-   8 warnings and 20 errors generated.
+In-Reply-To: <20240122081754.17058-2-Wenhua.Lin@unisoc.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
-vim +288 drivers/pwm/pwm-sun20i.c
+--6hmfj7udr3e3yp5w
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-   284	
-   285	static const struct pwm_ops sun20i_pwm_ops = {
-   286		.get_state = sun20i_pwm_get_state,
-   287		.apply = sun20i_pwm_apply,
- > 288		.owner = THIS_MODULE,
-   289	};
-   290	
-   291	static const struct of_device_id sun20i_pwm_dt_ids[] = {
-   292		{ .compatible = "allwinner,sun20i-d1-pwm" },
-   293		{ },
-   294	};
-   295	MODULE_DEVICE_TABLE(of, sun20i_pwm_dt_ids);
-   296	
- > 297	static int sun20i_pwm_probe(struct platform_device *pdev)
-   298	{
-   299		struct sun20i_pwm_chip *sun20i_chip;
-   300		int ret;
-   301	
- > 302		sun20i_chip = devm_kzalloc(&pdev->dev, sizeof(*sun20i_chip), GFP_KERNEL);
-   303		if (!sun20i_chip)
-   304			return -ENOMEM;
-   305	
- > 306		sun20i_chip->base = devm_platform_ioremap_resource(pdev, 0);
-   307		if (IS_ERR(sun20i_chip->base))
-   308			return PTR_ERR(sun20i_chip->base);
-   309	
-   310		sun20i_chip->clk_bus = devm_clk_get_enabled(&pdev->dev, "bus");
-   311		if (IS_ERR(sun20i_chip->clk_bus))
- > 312			return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->clk_bus),
-   313					     "failed to get bus clock\n");
-   314	
-   315		sun20i_chip->clk_hosc = devm_clk_get_enabled(&pdev->dev, "hosc");
-   316		if (IS_ERR(sun20i_chip->clk_hosc))
-   317			return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->clk_hosc),
-   318					     "failed to get hosc clock\n");
-   319	
-   320		sun20i_chip->clk_apb0 = devm_clk_get_enabled(&pdev->dev, "apb0");
-   321		if (IS_ERR(sun20i_chip->clk_apb0))
-   322			return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->clk_apb0),
-   323					     "failed to get apb0 clock\n");
-   324	
-   325		sun20i_chip->rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-   326		if (IS_ERR(sun20i_chip->rst))
-   327			return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->rst),
-   328					     "failed to get bus reset\n");
-   329	
-   330		ret = of_property_read_u32(pdev->dev.of_node, "allwinner,pwm-channels",
-   331					   &sun20i_chip->chip.npwm);
-   332		if (ret)
-   333			sun20i_chip->chip.npwm = 8;
-   334	
-   335		if (sun20i_chip->chip.npwm > 16)
-   336			sun20i_chip->chip.npwm = 16;
-   337	
-   338		/* Deassert reset */
-   339		ret = reset_control_deassert(sun20i_chip->rst);
-   340		if (ret)
-   341			return dev_err_probe(&pdev->dev, ret, "failed to deassert reset\n");
-   342	
-   343		sun20i_chip->chip.dev = &pdev->dev;
-   344		sun20i_chip->chip.ops = &sun20i_pwm_ops;
-   345	
-   346		mutex_init(&sun20i_chip->mutex);
-   347	
-   348		ret = pwmchip_add(&sun20i_chip->chip);
-   349		if (ret < 0) {
-   350			reset_control_assert(sun20i_chip->rst);
-   351			return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
-   352		}
-   353	
- > 354		platform_set_drvdata(pdev, sun20i_chip);
-   355	
-   356		return 0;
-   357	}
-   358	
+On Mon, Jan 22, 2024 at 04:17:49PM +0800, Wenhua Lin wrote:
+> The PMW unit on the current Unisoc's SoCs has 4 channels but has different
+> address offsets. On UMS512, they are 0x0, 0x20, 0x40, 0x60 respectively,
+> while are 0x0, 0x4000, 0x8000, 0xC000 on UMS9620.
+>=20
+> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
+> ---
+>  drivers/pwm/pwm-sprd.c | 28 ++++++++++++++++++++++++----
+>  1 file changed, 24 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
+> index 77939e161006..bc1e3ed13528 100644
+> --- a/drivers/pwm/pwm-sprd.c
+> +++ b/drivers/pwm/pwm-sprd.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/math64.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+> =20
+> @@ -23,7 +24,6 @@
+>  #define SPRD_PWM_ENABLE_BIT	BIT(0)
+> =20
+>  #define SPRD_PWM_CHN_NUM	4
+> -#define SPRD_PWM_REGS_SHIFT	5
+>  #define SPRD_PWM_CHN_CLKS_NUM	2
+>  #define SPRD_PWM_CHN_OUTPUT_CLK	1
+> =20
+> @@ -32,14 +32,27 @@ struct sprd_pwm_chn {
+>  	u32 clk_rate;
+>  };
+> =20
+> +struct sprd_pwm_data {
+> +	int reg_shift;
+> +};
+> +
+>  struct sprd_pwm_chip {
+>  	void __iomem *base;
+>  	struct device *dev;
+>  	struct pwm_chip chip;
+> +	const struct sprd_pwm_data *pdata;
+>  	int num_pwms;
+>  	struct sprd_pwm_chn chn[SPRD_PWM_CHN_NUM];
+>  };
+> =20
+> +static const struct sprd_pwm_data ums512_data =3D {
+> +	.reg_shift =3D 5,
+> +};
+> +
+> +static const struct sprd_pwm_data ums9620_data =3D {
+> +	.reg_shift =3D 14,
+> +};
+> +
+>  static inline struct sprd_pwm_chip* sprd_pwm_from_chip(struct pwm_chip *=
+chip)
+>  {
+>  	return container_of(chip, struct sprd_pwm_chip, chip);
+> @@ -58,7 +71,7 @@ static const char * const sprd_pwm_clks[] =3D {
+> =20
+>  static u32 sprd_pwm_read(struct sprd_pwm_chip *spc, u32 hwid, u32 reg)
+>  {
+> -	u32 offset =3D reg + (hwid << SPRD_PWM_REGS_SHIFT);
+> +	u32 offset =3D reg + (hwid << spc->pdata->reg_shift);
+> =20
+>  	return readl_relaxed(spc->base + offset);
+>  }
+> @@ -66,7 +79,7 @@ static u32 sprd_pwm_read(struct sprd_pwm_chip *spc, u32=
+ hwid, u32 reg)
+>  static void sprd_pwm_write(struct sprd_pwm_chip *spc, u32 hwid,
+>  			   u32 reg, u32 val)
+>  {
+> -	u32 offset =3D reg + (hwid << SPRD_PWM_REGS_SHIFT);
+> +	u32 offset =3D reg + (hwid << spc->pdata->reg_shift);
+> =20
+>  	writel_relaxed(val, spc->base + offset);
+>  }
+> @@ -253,6 +266,7 @@ static int sprd_pwm_clk_init(struct sprd_pwm_chip *sp=
+c)
+>  static int sprd_pwm_probe(struct platform_device *pdev)
+>  {
+>  	struct sprd_pwm_chip *spc;
+> +	const void *priv;
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This can better be of type struct sprd_pwm_data *. Also pdata would be a
+better name.
+
+>  	int ret;
+> =20
+>  	spc =3D devm_kzalloc(&pdev->dev, sizeof(*spc), GFP_KERNEL);
+> @@ -263,6 +277,11 @@ static int sprd_pwm_probe(struct platform_device *pd=
+ev)
+>  	if (IS_ERR(spc->base))
+>  		return PTR_ERR(spc->base);
+> =20
+> +	priv =3D of_device_get_match_data(&pdev->dev);
+> +	if (!priv)
+> +		return dev_err_probe(&pdev->dev, -EINVAL, "get regs shift failed!\n");
+> +	spc->pdata =3D priv;
+> +
+>  	spc->dev =3D &pdev->dev;
+> =20
+>  	ret =3D sprd_pwm_clk_init(spc);
+> @@ -281,7 +300,8 @@ static int sprd_pwm_probe(struct platform_device *pde=
+v)
+>  }
+> =20
+>  static const struct of_device_id sprd_pwm_of_match[] =3D {
+> -	{ .compatible =3D "sprd,ums512-pwm", },
+> +	{ .compatible =3D "sprd,ums512-pwm",	.data =3D (void *)&ums512_data},
+> +	{ .compatible =3D "sprd,ums9620-pwm",	.data =3D (void *)&ums9620_data},
+
+Please use one line per assignment. Do you really need the cast to void
+*?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--6hmfj7udr3e3yp5w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWzXRYACgkQj4D7WH0S
+/k4JmwgAkLH4Y8EJskrxYs0xavniF70Hm1Dr48Cp50Of6D25lfLnkXou+9JXjJT1
+OaJLTED1r8yDO4rPT58QOeEF1L58RpMtrqjG7FJfA3cBf/NX4cEDT9i81zVL1je+
+c2sZj01cx8X1dkeuSZtkKNXcWRI/yQV1PH/r3XDzwxIwNxbpQEwt1PRpu0C1U2qm
+ONlTDLpZZSaEJV7HfH24WCnrco/jR6G8n4QImLzyvV8FAOGV6+GqYPvXu7fJ4Aop
+zxGGb0keN8BmuCDWP+NfnxrsRg7IReowVY2g1uQtTNAczmh/tqVmJv6RZmB/6kdR
+HjRy/yHKEM27bM6tQwnhc6gv/9ZgDw==
+=/S+R
+-----END PGP SIGNATURE-----
+
+--6hmfj7udr3e3yp5w--
 
