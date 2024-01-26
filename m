@@ -1,199 +1,180 @@
-Return-Path: <linux-pwm+bounces-1097-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1098-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C25483DD8D
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 16:33:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AF09983DF8F
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 18:12:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 901301F22870
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 15:33:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 25C251F2413E
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 17:12:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06FBF1CFBF;
-	Fri, 26 Jan 2024 15:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M9d1S/ow"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E4091EA7C;
+	Fri, 26 Jan 2024 17:12:28 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C856D1CFBC;
-	Fri, 26 Jan 2024 15:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7BEAD53
+	for <linux-pwm@vger.kernel.org>; Fri, 26 Jan 2024 17:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706283195; cv=none; b=HYlmclryTXzUEeFr2dQkkBF2pxuYBf/O507B3oOVLgqS3yeJdcTaxarpohwzAVmJqEoY2G4L5eyxO9DiIb0qWgPL2uutB3iLCeEsgyhVptb0cpEjuX4Vs3cl6vyVTDSNBXI4C82HKuUsbjZfBqWbTsMNpwMc/SG/5BqtGLF3sE4=
+	t=1706289148; cv=none; b=EdMYzsH6wW1m3pNZTHXXmqsLBjWtvSEpElGZEBiGDQlLg5zLCgCvG4aBrvBoeONJ8vXDfkPGe6llDlEYMlCK87QtNutQba2ocy/fxVB2yO//eZ0qvqn6hZAja7EEYM8YqsHgKhjrW0ofC9DiQaMfuimnoy5hJts3umJsXVO+0Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706283195; c=relaxed/simple;
-	bh=mAzKWZzPkM6ug0onv0vRe/nRxVt4tmp8a5kHaDgKrWc=;
+	s=arc-20240116; t=1706289148; c=relaxed/simple;
+	bh=COb4jLeIk3Yc6EinXHh+ryEulfnYvk9LPJq7bo9yaf4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gwp1HaeckqiWk/p+KwPxT0ZJEUn6/+w/t/TD4P8fL+/MypJH/qrrc2/7deCdGNNYLZ6djgqA8x9mLpTHEw0BWYd/tBT0EywrZcClTbymOGlihbqOTxQ9YoOBeQoPPM+HhAR/C8LbdtUMj6j6d1iqRjRXZ3dnbv9Cl/d69lLfR8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M9d1S/ow; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6E19C433C7;
-	Fri, 26 Jan 2024 15:33:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706283195;
-	bh=mAzKWZzPkM6ug0onv0vRe/nRxVt4tmp8a5kHaDgKrWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M9d1S/owaLykjwZWoE/JjcSyfLO7y4RC6T8y6akAgrduNm62lUq45zOIYoRkDGeGQ
-	 bdV4MyfhzQ3kZ2yklUTH4mBzQkaA7EDoW7q65hvlDrJwnfW3wL7Oh/mvn3nWO8m2+5
-	 RUSeikg8Npwu33rkmN3Hu9DeqalWWeet9m+tN4rQPIdyfHXaGd2QwyKz2JNdi4/Ia6
-	 Y3vgbXw724n07b6UrC9832j8q8EOkse6XYAuGUXS7CtCoIfdNj9QrdBbnUexpMBbsD
-	 yjqmhSlc8gkmG99WflAqiOHbM51tbxHxPcEPGPsK3TeQ5aOGrgsQizpvqiMUvHOzcO
-	 XLAUrWVhHl+bg==
-Date: Fri, 26 Jan 2024 15:33:08 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Dharma.B@microchip.com
-Cc: Conor.Dooley@microchip.com, sam@ravnborg.org, bbrezillon@kernel.org,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, Nicolas.Ferre@microchip.com,
-	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	lee@kernel.org, thierry.reding@gmail.com,
-	u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-	Linux4Microchip@microchip.com
-Subject: Re: [PATCH v3 3/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT
- schema format
-Message-ID: <20240126-uncommon-stout-dd3243e6b43f@spud>
-References: <20240118-recent-glorified-fd35d72e006e@spud>
- <c33868c8-dc42-4800-885c-5e5f24c2044e@microchip.com>
- <20240119-character-mardi-43571d7fe7d5@wendy>
- <da60f9f3-f955-4a87-a020-5710185953c0@microchip.com>
- <20240122-stark-duress-2f59294dcf27@spud>
- <4906b7e2-0ddb-4d3c-a48b-e16278f2d649@microchip.com>
- <20240124-lend-emerald-1028fe65cc39@spud>
- <c3c30bf2-e7c2-4861-bfdf-519a7afde476@microchip.com>
- <20240125-proved-passage-7fa128f828db@wendy>
- <51da296d-a8a9-417a-8875-3b5e866a89a3@microchip.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=nCSbGlpuYXHLWOadJx1MYORSnDw+rtdynrnPfUydDPXYZnNMOtp18i/awBMZUxEj0lYMkXDUd6YXfDHg0Zf32BC78FRLzG5bS0W41gSbVkGM2oVC7j3g6Yt1GV8Tj0fUwuU7ZuH7LqJhoCkMUs0/cMuY0TlNSL1yNXpiK102JBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rTPjB-0003h4-L9; Fri, 26 Jan 2024 18:10:53 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rTPiw-002YFi-JY; Fri, 26 Jan 2024 18:10:38 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rTPiw-008oFN-1F;
+	Fri, 26 Jan 2024 18:10:38 +0100
+Date: Fri, 26 Jan 2024 18:10:38 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Alex Elder <elder@ieee.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	James Clark <james.clark@arm.com>, linux-pwm@vger.kernel.org, Hector Martin <marcan@marcan.st>, 
+	Sven Peter <sven@svenpeter.dev>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, Alexander Shiyan <shc_work@mail.ru>, 
+	Benson Leung <bleung@chromium.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Paul Cercueil <paul@crapouillou.net>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Hans de Goede <hdegoede@redhat.com>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Conor Dooley <conor.dooley@microchip.com>, 
+	Daire McNamara <daire.mcnamara@microchip.com>, Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	Heiko Stuebner <heiko@sntech.de>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Michael Walle <mwalle@kernel.org>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Hammer Hsieh <hammerh0314@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>, 
+	Sean Anderson <sean.anderson@seco.com>, Michal Simek <michal.simek@amd.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+	Anjelique Melendez <quic_amelende@quicinc.com>, Andi Shyti <andi.shyti@kernel.org>, 
+	Lu Hongfei <luhongfei@vivo.com>, Bjorn Andersson <quic_bjorande@quicinc.com>, 
+	Luca Weiss <luca@z3ntu.xyz>, Johan Hovold <johan@kernel.org>, 
+	Douglas Anderson <dianders@chromium.org>, linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	platform-driver-x86@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Guenter Roeck <groeck@chromium.org>, 
+	linux-riscv@lists.infradead.org, Fabio Estevam <festevam@gmail.com>, 
+	linux-stm32@st-md-mailman.stormreply.com, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+	Jerome Brunet <jbrunet@baylibre.com>, chrome-platform@lists.linux.dev, 
+	linux-samsung-soc@vger.kernel.org, linux-staging@lists.linux.dev, 
+	linux-rockchip@lists.infradead.org, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, NXP Linux Team <linux-imx@nxp.com>, linux-leds@vger.kernel.org, 
+	linux-sunxi@lists.linux.dev, Jonas Karlman <jonas@kwiboo.se>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-amlogic@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, greybus-dev@lists.linaro.org, linux-mips@vger.kernel.org, 
+	asahi@lists.linux.dev, kernel@pengutronix.de
+Subject: Re: [PATCH v5 040/111] pwm: Provide devm_pwmchip_alloc() function
+Message-ID: <zjt3r6z5ilpffh26qidwp3axpnvfkwcrwanrtjjm2kscpdovuz@ppcrdlhmqiqq>
+References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
+ <f59b1a4a8d6fba65e4d3e8698310c9cb1d4c43ce.1706182805.git.u.kleine-koenig@pengutronix.de>
+ <db05fb6a-2ea5-4e00-ac03-adc1897d96de@ieee.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="N7HfhWSgZScgqIKp"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="b26sjadvk3fz44v6"
 Content-Disposition: inline
-In-Reply-To: <51da296d-a8a9-417a-8875-3b5e866a89a3@microchip.com>
+In-Reply-To: <db05fb6a-2ea5-4e00-ac03-adc1897d96de@ieee.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---N7HfhWSgZScgqIKp
-Content-Type: text/plain; charset=us-ascii
+--b26sjadvk3fz44v6
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 26, 2024 at 02:22:42PM +0000, Dharma.B@microchip.com wrote:
-> On 25/01/24 1:57 pm, Conor Dooley - M52691 wrote:
+Hello Alex,
+
+On Fri, Jan 26, 2024 at 08:56:33AM -0600, Alex Elder wrote:
+> On 1/25/24 6:09 AM, Uwe Kleine-K=F6nig wrote:
+> > This function allocates a struct pwm_chip and driver data. Compared to
+> > the status quo the split into pwm_chip and driver data is new, otherwise
+> > it doesn't change anything relevant (yet).
 > >=20
-> >>> If the lvds pll is an input to the hlcdc, you need to add it here.
-> >>>   From your description earlier it does sound like it is an input to
-> >>> the hlcdc, but now you are claiming that it is not.
-> >>
-> >> The LVDS PLL serves as an input to both the LCDC and LVDSC
+> > The intention is that after all drivers are switched to use this
+> > allocation function, its possible to add a struct device to struct
+> > pwm_chip to properly track the latter's lifetime without touching all
+> > drivers again. Proper lifetime tracking is a necessary precondition to
+> > introduce character device support for PWMs (that implements atomic
+> > setting and doesn't suffer from the sysfs overhead of the /sys/class/pwm
+> > userspace support).
 > >=20
-> > Then it should be an input to both the LCDC and LVDSC in the devicetree.
+> > The new function pwmchip_priv() (obviously?) only works for chips
+> > allocated with devm_pwmchip_alloc().
 >=20
-> For the LVDSC to operate, the presence of the LVDS PLL is crucial. Howeve=
-r, in the case of the LCDC, LVDS PLL is not essential for its operation unl=
-ess LVDS interface is used and when it is used lvds driver will take care o=
-f preparing and enabling the LVDS PLL.
+> I think this looks good.  Two questions:
+> - Should you explicitly align the private data?  Or do you believe
+>   the default alignment (currently pointer size aligned) is adequate?
 
-Please fix your line wrapping, not sure what's going on here, but these
-lines are super long.
+I'm not aware of a requirement for a higher order alignment (but I might
+well miss something). I did my tests on arm, nothing exploded there.
+Maybe the conservative approach of asserting the same alignment as
+kmalloc would be a good idea. I'll think and research about that.
 
-> Consequently, it seems that there might not be any significant actions we=
- can take within the LCD driver regarding the LVDS PLL.
+iio uses ARCH_DMA_MINALIGN, net uses 32 (NETDEV_ALIGN).
 
-You should be getting a reference to the clock and calling enable on it
-etc, even if the LVDSC is also doing so. That will allow the clock
-framework to correctly track users.
+> - Is there a non-devres version of the allocation function?
 
-> If there are no intentions to utilize it within the driver, is it necessa=
-ry to explicitly designate it as an input in the device tree?
+Patch #109 introduces a non-devres variant. As it's not used it's a
+static function though. Can easily be changed is a use case pops up.
 
-The binding describes the hardware, so yes it should be there. What the
-driver implementation does with the clock is not relevant. That said, I
-think the driver should actually be using it, as I wrote above.
+Best regards
+Uwe
 
->=20
-> If yes, I will update the bindings with optional LVDS PLL clock.
->=20
-> clock-names:
->   items:
->     - const: periph_clk
->     - const: sys_clk
->     - const: slow_clk
->     - const: lvds_pll  # Optional clock
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-This looks correct, but the comment is not needed. Setting minItems: 3
-does this for you.
-
-> >> with the
-> >> LVDS_PLL multiplied by 7 for the Pixel clock to the LVDS PHY, and
-> >=20
-> > Are you sure? The diagram doesn't show a multiplier, the 7x comment
-> > there seems to be showing relations?
->=20
-> Sorry,=20
-> LVDS PLL =3D (PCK * 7) goes to LVDSC PHY
-> PCK =3D (LVDS PLL / 7) goes to LCDC
-
-I'll take your word for it :)
-
-> >> LVDS_PLL divided by 7 for the Pixel clock to the LCDC.
-> >=20
-> >> I am inclined to believe that appropriately configuring and enabling it
-> >> in the LVDS driver would be the appropriate course of action.
-> >=20
-> > We're talking about bindings here, not drivers, but I would imagine that
-> > if two peripherals are using the same clock then both of them should be
-> > getting a reference to and enabling that clock so that the clock
-> > framework can correctly track the users.
-> >=20
-> >>> I don't know your hardware, so I have no idea which of the two is
-> >>> correct, but it sounds like the former. Without digging into how this
-> >>> works my assumption about the hardware here looks like is that the lv=
-ds
-> >>> controller is a clock provider,
-> >>
-> >> It's a PLL clock from PMC.
-> >>
-> >>> and that the lvds controller's clock is
-> >>> an optional input for the hlcdc.
-> >>
-> >> Again it's a PLL clock from PMC.
-> >>
-> >> Please refer Section 39.3
-> >> https://ww1.microchip.com/downloads/aemDocuments/documents/MPU32/Produ=
-ctDocuments/DataSheets/SAM9X7-Series-Data-Sheet-DS60001813.pdf
-> >=20
-> > It is not the same exact clock as you pointed out above though, so the
-> > by 7 divider should be modelled.
->=20
-> Modelled in mfd binding? If possible, could you please provide an example=
- for better clarity? Thank you.
-
-Whatever node corresponds to the register range controlling this PLL
-should be a "clock-controller" (like any other clock provider does).
-Your PMC should have this property. I don't know if the correct location
-is the mfd node or somewhere else, you'll have to check your docs.
-
-Thanks,
-Conor.
-
---N7HfhWSgZScgqIKp
+--b26sjadvk3fz44v6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbPQtAAKCRB4tDGHoIJi
-0hAfAP9oD7w7XXefbTe7aCamQ784UR9nGzozBzN9AoLVCrxKGAD+JD5kiMlu70l/
-6YBAmgN41j1kRbKlAUFnrV4Y2INzNgU=
-=MfAt
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWz540ACgkQj4D7WH0S
+/k4oQwf+Nnq9bGZWZrbCQsHJYB54zfZt1whu2kQgdRMIQzT8HP7NadKhFCqs3Ob6
+5xwIwbIpdczrpzHM25+5ZrTBiH5oSQ/Si0YMzglndL8Tm59GEJxcKoorYpDNplJR
+xHL2owB7VgG87fFIvSCe163biS2vI/gIjAGvL9bpzcSH62Eq7EO3APk7Hx+h7d9e
+QHLzzUmpN9JlrzYOhKE7Pu7/iVFPNqNb7FQtAOnamXe0kRLs05649mgdJ9q30gS8
+imf9reDedsSG7sHM5NjtZpBQpF9H3vulzuGbH2MH2jNDLjtcpvUXUZpfijLN69iQ
+GqSwNOqcwcXljLsP1A1wM8snNwzi/A==
+=cXfD
 -----END PGP SIGNATURE-----
 
---N7HfhWSgZScgqIKp--
+--b26sjadvk3fz44v6--
 
