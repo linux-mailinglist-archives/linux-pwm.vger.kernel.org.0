@@ -1,131 +1,98 @@
-Return-Path: <linux-pwm+bounces-1087-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1088-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE2EB83D53C
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 10:02:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3591A83D5BE
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 10:14:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 950191F27F57
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 09:02:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E7C1028A0C3
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 09:14:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCA2E5BAC8;
-	Fri, 26 Jan 2024 07:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F51E14AA7;
+	Fri, 26 Jan 2024 08:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PBYHx9+0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mgRIW2oj"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7104B5B5DA
-	for <linux-pwm@vger.kernel.org>; Fri, 26 Jan 2024 07:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE69214AA2
+	for <linux-pwm@vger.kernel.org>; Fri, 26 Jan 2024 08:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706254868; cv=none; b=BoxuE3HP6wpMGamLN7h0T/qWPrm+xP+jiSxJOxH8rCmts9CX6lAuL4c/2F+SA+IbDK/6YifgiObdrEZ1cW286cQq+QSvsLl2/Ydo7n7SEclQ55xfBEJ+/z+iWZSdL/f8pVKtgfFCBuJa31dbitrQDinAhN1kGwiHcHfMJaK2BWY=
+	t=1706256918; cv=none; b=DDGVd3/NkN6GXtNt3HWsfXeKT3ElX79Lh368TyLEM9USZBBTG+kcm1Fmll/z1QA8A7kVHcL+2ioEug8VsRauELwR0dH34bUk4P2bocSX3ZPOKk8k3AZ+MKW/zf9Xm1cVZp2cdi4iQ09HXy3+e69CC4sMq4l+/vNV7w7nl8QZ5k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706254868; c=relaxed/simple;
-	bh=vo1MXNksdwyMhK3dw454VBvsuvuDah4af4HHol3J5x8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YlGjq44skl6lgbFZ5UmXImp6Y8vKPgxNJYEZ8GAaQHZtyesV1448an6HAFR8G/Yo3cBwAqOOTgovlyS4fNDviBznDpiYls4S40ywp2OJ4DAPNKt+rcPXwruEHPGb5M74FxVThzgehVSbA4MQ0kAzbBrgCHhnwKrEV2qGh1RRbZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=PBYHx9+0; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d711d7a940so796945ad.1
-        for <linux-pwm@vger.kernel.org>; Thu, 25 Jan 2024 23:41:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1706254867; x=1706859667; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rRcRbgsRNptjKbWJltVNRyiCjNqQwGUOGyfVxx0zgtk=;
-        b=PBYHx9+0/55m2Z44xvjsuoTHelDTExKLAA2Oq0dMg6mQREarCqjIBwnf5nOJ99o5+O
-         iENWScyvdDVSD2oXzlfAG9GWxZljP5oCaDFY5uy1fSQdhtuMs2pW2JR0yn4ZF6CUiu4U
-         5PTVX+jSIsV6U77ExIBKp59BrZg4llrpZqiLI408iRg18snKDMXZTT78r1rwrdjg3zp5
-         X/WD/A8/HWof8SFO23ybBqh0JM54/V9yFGIyFkVmM8STUt5DZVCJvFfyD3RJQE/cGJ14
-         aZ4N9sRAxvS2wF7QMPSxmtSxgub61xTFrbubDQkL06F7FEksTxITsIpGt8spYNRRrXNv
-         svYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706254867; x=1706859667;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rRcRbgsRNptjKbWJltVNRyiCjNqQwGUOGyfVxx0zgtk=;
-        b=YB/B7wDKGZEkOvxgKbujRM6JgGam5MzxM5Nn1OqpbXjjAOuDLRwOZoReaO7A5T6Ccr
-         Ak/31ekHwuyyC574DCUIQ/HQWzw/3jpVuuwKvuWdxnwpn0LLyEfJvfNPFbNKdbMiU/+q
-         3v73yIKFp7yxxEUZrTXCnWnScyFgvNXjM+Ut8zljAryfdSIngSwQA1f276m5yG6k6A7n
-         smzvi7ViYK7LVbyz5tD22LD/KEYKHN/5oTZRF5Hbd280L7ysDMP3PZ616+VkbdIoOP84
-         Lf5p/c7Sg7SUbxtWz/Zj+S/JaYYfMQ0MmcdsNfliccHLOfpb0JF9qQeomr/UISFs+WID
-         3WOg==
-X-Gm-Message-State: AOJu0Yyv781d2/ZUNfCRdtXJX2QUGNP5TSXC3ZeWFhGg5ubqCB8Kl78Z
-	I3yi5vBkfMALqDbr1gECXLNpXGnrMW11QdEVRVseAP1al8uV+5dKM2oVpvks96Q=
-X-Google-Smtp-Source: AGHT+IHGReke6kD2OmXKAW701euY1rQL/Dm+NNnadPCt2a21W5MSYSRr51pEXvTF6eYyHuNn53vOrw==
-X-Received: by 2002:a17:902:7805:b0:1d7:6f15:7869 with SMTP id p5-20020a170902780500b001d76f157869mr1063575pll.73.1706254866785;
-        Thu, 25 Jan 2024 23:41:06 -0800 (PST)
-Received: from hsinchu15.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id n3-20020a170902e54300b001d4816958c2sm521066plf.166.2024.01.25.23.41.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 23:41:06 -0800 (PST)
-From: Nylon Chen <nylon.chen@sifive.com>
-To: linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	conor@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	aou@eecs.berkeley.edu,
-	thierry.reding@gmail.com,
-	u.kleine-koenig@pengutronix.de
-Cc: vincent.chen@sifive.com,
-	zong.li@sifive.com,
-	nylon.chen@sifive.com,
-	nylon7717@gmail.com
-Subject: [PATCH v8 3/3] pwm: sifive: Fix the error in the idempotent test within the pwm_apply_state_debug function
-Date: Fri, 26 Jan 2024 15:40:45 +0800
-Message-ID: <20240126074045.20159-4-nylon.chen@sifive.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240126074045.20159-1-nylon.chen@sifive.com>
-References: <20240126074045.20159-1-nylon.chen@sifive.com>
+	s=arc-20240116; t=1706256918; c=relaxed/simple;
+	bh=b8RjFzCXtogQPwFhj8x0PhXxvVhO7AOW2xn9VtQNREM=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=JI0NMUURD6jCs2wNIiu5fqs7YNMCKXG/FwZCIUkOS9kWubEvyQnZon5LwJn62jVfWNj/eMkeZUtJLQTSCfSCDbtzgLjayGWdN4ZZ7YY1eV4hfi9js1UZQEpFLnstEPV39gNU9omHB2Qt8s5q0/L+imXIIAvUrIX2no8a8RGl094=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mgRIW2oj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCAACC433C7;
+	Fri, 26 Jan 2024 08:15:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706256917;
+	bh=b8RjFzCXtogQPwFhj8x0PhXxvVhO7AOW2xn9VtQNREM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mgRIW2ojAoBK9joEehzhK3T9jpqeFupGGtvhAVrJJf5G9T8XhKJIVoB1ecjSIes/V
+	 iUN5RA+H3lYwUY1pw6UBiNRaj+uBY+LR83lwfJb3SRWV26xGvByDfXN0Nuv3qVbD2V
+	 ijeh/VSvxtli95y2F7SIvwKCKmdT82TjBtn3DcwmV9PDcz8p49PDPRBWJYnXo+N5w+
+	 5r9H0vcCJcrU6daj6tTL0bwcXNoDyL8UGUHErOSX7qid32VXw/L3i9oAhYDJhNsFPl
+	 EeqVLCU4J4Tt4OhjyOrUnlAlWVky92T2rDBGbsAy0yqsX7p+nybLOipLv+2gBpasbg
+	 zl6/2CqWx0Umg==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Fri, 26 Jan 2024 09:15:08 +0100
+From: Michael Walle <mwalle@kernel.org>
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH v5 087/111] pwm: sl28cpld: Make use of
+ devm_pwmchip_alloc() function
+In-Reply-To: <tdnopqe6tgk4lyelaevyrsklwlpciwqjseqdn22yq56k6yhcfn@jy467apaymil>
+References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
+ <eba4f163b407831e27d1de769fe3a8ef29ad1f0d.1706182805.git.u.kleine-koenig@pengutronix.de>
+ <8c92b4fa9e568f875763c65cdebc925e@kernel.org>
+ <g3nwht566fqcyxyfholgvhc5za2pe4zmhiow5c4fwwkieuwbsr@slxxexro4dsv>
+ <54f93af5837bb07ad5ee2c0aca7a8633@kernel.org>
+ <tdnopqe6tgk4lyelaevyrsklwlpciwqjseqdn22yq56k6yhcfn@jy467apaymil>
+Message-ID: <482b1d8e7d1620cce6076329de0efa65@kernel.org>
+X-Sender: mwalle@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-Round the result to the nearest whole number. This ensures that
-real_period is always a reasonable integer that is not lower than the
-actual value.
+> My guess is, we're not talking about the same thing. I consider:
+> 
+> diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
+> index 934378d6a002..1dcdcdd03787 100644
+> --- a/drivers/pwm/pwm-sl28cpld.c
+> +++ b/drivers/pwm/pwm-sl28cpld.c
+> @@ -85,6 +85,7 @@ struct sl28cpld_pwm {
+>  	u32 offset;
+>  };
+> 
+> +static inline struct sl28cpld_pwm *sl28cpld_pwm_from_chip(struct 
+> pwm_chip *chip) __attribute__((const));
+>  static inline struct sl28cpld_pwm *sl28cpld_pwm_from_chip(struct 
+> pwm_chip *chip)
 
-e.g.
-$ echo 110 > /sys/devices/platform/led-controller-1/leds/d12/brightness
-$ .apply is not idempotent (ena=1 pol=0 1739692/4032985) -> (ena=1 pol=0 1739630/4032985)
+You're right. I thought you mean returing pointer to a const struct.
 
-Co-developed-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
----
- drivers/pwm/pwm-sifive.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Anyway, it might be correct in the pwm case, because the data is 
+contained
+within the pwm struct (at least for now), so for any given pointer the
+returned value is just pointer + offset. But there is a huge warning 
+that
+const shouldn't be used with pointers (or rather to look at the data the
+pointer points to). Therefore, I'm not sure this is a good idea.
 
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index b07c8598bb21..7cf7a76cdb44 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -101,7 +101,7 @@ static void pwm_sifive_update_clock(struct pwm_sifive_ddata *ddata,
- 
- 	/* As scale <= 15 the shift operation cannot overflow. */
- 	num = (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWIDTH + scale);
--	ddata->real_period = div64_ul(num, rate);
-+	ddata->real_period = DIV_ROUND_UP_ULL(num, rate);
- 	dev_dbg(ddata->chip.dev,
- 		"New real_period = %u ns\n", ddata->real_period);
- }
--- 
-2.42.0
+OTOH I've never used this attribute, so I might be wrong. The kernel
+doesn't seem to use it very often.
 
+-michael
 
