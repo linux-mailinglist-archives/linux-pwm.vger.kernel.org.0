@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-1081-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1082-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67AA683D49F
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 09:21:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E068883D47A
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 08:47:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 79DFB2840E6
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 08:21:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F05501C243D8
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jan 2024 07:47:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEDC31B271;
-	Fri, 26 Jan 2024 07:20:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15A361AADC;
+	Fri, 26 Jan 2024 07:24:19 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFC81A723
-	for <linux-pwm@vger.kernel.org>; Fri, 26 Jan 2024 07:20:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EB467C47
+	for <linux-pwm@vger.kernel.org>; Fri, 26 Jan 2024 07:24:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706253621; cv=none; b=fmYHpIhx0O4/moWfft6BYg0JStuuukBfEeH8cgLvO2L/yoTt/j20I7unDDQgSJ/qCnEkZJdP3U09O4Hjb59S6FX07AJpo0lvFjpUR7/GP/CZywRm1UP27XwVocPfyK0a801VW5eQKfiDts+YtiDwfOOjUmQzHnMQds5xsIN6sdA=
+	t=1706253859; cv=none; b=pTmRrT0dbJkivb+ol/ULishBBfqMKENtNuK5nVOaDW6NfCKepQtEAPeTmC9InFYcbjXTCNCxJ+1T8CPPQNF6ZokgTEjqO3DOnUq/8gvO08vvWQWnvkKHqfJ9dgndZH73PwijWjvc1DGQ+M7KLcpUaqHRhru7rvYcJplWJQZ9nyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706253621; c=relaxed/simple;
-	bh=2MlIvEb5ti15ByVLn0Sx8MbSa5UY7PBvuWGN5H1F15g=;
+	s=arc-20240116; t=1706253859; c=relaxed/simple;
+	bh=HJYFiKO9DwglCe7ISCM24dbTxJ5lIQjepvlFtkyqvbs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WnK6Kj1S23UOFPFjSkuFxKoupIrjYxX3rpAa8xFmn9K333Oa0YIC3idGjzHOYvH0UvOdhpJ2AjWi/XUwZdYmQRYZO4CRWsMnuh7jEC/E+4PCHB/VbxK2jxxrPRZL+c2slnvFFkBiHEG5wr19q6fds/z1avrKdtHD5HGRZfBuXxY=
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZPzHrAPvVh0esJAy9d9ENXxY/ktAPAYGesJiSyTABrDo2W6/pyiL9u40YaTVih/uCencA2pC5OqTA28hMqjycVZb73Oa3YNKsPK7vSbXUaqgM5DRNPHdIwVLd5vRR1Tmo/XQl4YahzsQ/yX/o6Sl0lrWddtPuFMxwL6SQKIsklM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,28 +33,30 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rTGVU-0000h3-J6; Fri, 26 Jan 2024 08:20:08 +0100
+	id 1rTGZI-0000o3-PP; Fri, 26 Jan 2024 08:24:04 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rTGVJ-002SaA-Ok; Fri, 26 Jan 2024 08:19:57 +0100
+	id 1rTGZH-002SaR-IJ; Fri, 26 Jan 2024 08:24:03 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rTGVJ-008SOJ-2A;
-	Fri, 26 Jan 2024 08:19:57 +0100
-Date: Fri, 26 Jan 2024 08:19:51 +0100
+	id 1rTGZH-008STv-1W;
+	Fri, 26 Jan 2024 08:24:03 +0100
+Date: Fri, 26 Jan 2024 08:24:00 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Wenhua Lin <Wenhua.Lin@unisoc.com>
-Cc: Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, linux-pwm@vger.kernel.org, 
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Chunyan Zhang <zhang.lyra@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
 	Xiongpeng Wu <xiongpeng.wu@unisoc.com>, zhaochen su <zhaochen.su29@gmail.com>, 
 	Zhaochen Su <Zhaochen.Su@unisoc.com>, Xiaolong Wang <Xiaolong.Wang@unisoc.com>
-Subject: Re: [PATCH 1/6] pwm: sprd: Add support for UMS9620
-Message-ID: <bvnhi4qeczrmlmaog6drlztg4x6ubozjzu57sukpejme7xecqc@724g62vjgxrq>
-References: <20240122081754.17058-1-Wenhua.Lin@unisoc.com>
- <20240122081754.17058-2-Wenhua.Lin@unisoc.com>
+Subject: Re: [PATCH V2 1/6] pwm: sprd: Add support for UMS9620
+Message-ID: <jco3xlugbnpfpl7xq7dagpvrp57wlqjvjff7mhuc2yynohu2xc@zht3pus4vfrz>
+References: <20240125025533.10315-1-Wenhua.Lin@unisoc.com>
+ <20240125025533.10315-2-Wenhua.Lin@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -62,135 +64,34 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6hmfj7udr3e3yp5w"
+	protocol="application/pgp-signature"; boundary="ryuj6cclf4p2fcew"
 Content-Disposition: inline
-In-Reply-To: <20240122081754.17058-2-Wenhua.Lin@unisoc.com>
+In-Reply-To: <20240125025533.10315-2-Wenhua.Lin@unisoc.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---6hmfj7udr3e3yp5w
+--ryuj6cclf4p2fcew
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 22, 2024 at 04:17:49PM +0800, Wenhua Lin wrote:
+Hello,
+
+On Thu, Jan 25, 2024 at 10:55:28AM +0800, Wenhua Lin wrote:
 > The PMW unit on the current Unisoc's SoCs has 4 channels but has different
 > address offsets. On UMS512, they are 0x0, 0x20, 0x40, 0x60 respectively,
 > while are 0x0, 0x4000, 0x8000, 0xC000 on UMS9620.
->=20
-> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
-> ---
->  drivers/pwm/pwm-sprd.c | 28 ++++++++++++++++++++++++----
->  1 file changed, 24 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
-> index 77939e161006..bc1e3ed13528 100644
-> --- a/drivers/pwm/pwm-sprd.c
-> +++ b/drivers/pwm/pwm-sprd.c
-> @@ -9,6 +9,7 @@
->  #include <linux/math64.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/pwm.h>
-> =20
-> @@ -23,7 +24,6 @@
->  #define SPRD_PWM_ENABLE_BIT	BIT(0)
-> =20
->  #define SPRD_PWM_CHN_NUM	4
-> -#define SPRD_PWM_REGS_SHIFT	5
->  #define SPRD_PWM_CHN_CLKS_NUM	2
->  #define SPRD_PWM_CHN_OUTPUT_CLK	1
-> =20
-> @@ -32,14 +32,27 @@ struct sprd_pwm_chn {
->  	u32 clk_rate;
->  };
-> =20
-> +struct sprd_pwm_data {
-> +	int reg_shift;
-> +};
-> +
->  struct sprd_pwm_chip {
->  	void __iomem *base;
->  	struct device *dev;
->  	struct pwm_chip chip;
-> +	const struct sprd_pwm_data *pdata;
->  	int num_pwms;
->  	struct sprd_pwm_chn chn[SPRD_PWM_CHN_NUM];
->  };
-> =20
-> +static const struct sprd_pwm_data ums512_data =3D {
-> +	.reg_shift =3D 5,
-> +};
-> +
-> +static const struct sprd_pwm_data ums9620_data =3D {
-> +	.reg_shift =3D 14,
-> +};
-> +
->  static inline struct sprd_pwm_chip* sprd_pwm_from_chip(struct pwm_chip *=
-chip)
->  {
->  	return container_of(chip, struct sprd_pwm_chip, chip);
-> @@ -58,7 +71,7 @@ static const char * const sprd_pwm_clks[] =3D {
-> =20
->  static u32 sprd_pwm_read(struct sprd_pwm_chip *spc, u32 hwid, u32 reg)
->  {
-> -	u32 offset =3D reg + (hwid << SPRD_PWM_REGS_SHIFT);
-> +	u32 offset =3D reg + (hwid << spc->pdata->reg_shift);
-> =20
->  	return readl_relaxed(spc->base + offset);
->  }
-> @@ -66,7 +79,7 @@ static u32 sprd_pwm_read(struct sprd_pwm_chip *spc, u32=
- hwid, u32 reg)
->  static void sprd_pwm_write(struct sprd_pwm_chip *spc, u32 hwid,
->  			   u32 reg, u32 val)
->  {
-> -	u32 offset =3D reg + (hwid << SPRD_PWM_REGS_SHIFT);
-> +	u32 offset =3D reg + (hwid << spc->pdata->reg_shift);
-> =20
->  	writel_relaxed(val, spc->base + offset);
->  }
-> @@ -253,6 +266,7 @@ static int sprd_pwm_clk_init(struct sprd_pwm_chip *sp=
-c)
->  static int sprd_pwm_probe(struct platform_device *pdev)
->  {
->  	struct sprd_pwm_chip *spc;
-> +	const void *priv;
 
-This can better be of type struct sprd_pwm_data *. Also pdata would be a
-better name.
-
->  	int ret;
-> =20
->  	spc =3D devm_kzalloc(&pdev->dev, sizeof(*spc), GFP_KERNEL);
-> @@ -263,6 +277,11 @@ static int sprd_pwm_probe(struct platform_device *pd=
-ev)
->  	if (IS_ERR(spc->base))
->  		return PTR_ERR(spc->base);
-> =20
-> +	priv =3D of_device_get_match_data(&pdev->dev);
-> +	if (!priv)
-> +		return dev_err_probe(&pdev->dev, -EINVAL, "get regs shift failed!\n");
-> +	spc->pdata =3D priv;
-> +
->  	spc->dev =3D &pdev->dev;
-> =20
->  	ret =3D sprd_pwm_clk_init(spc);
-> @@ -281,7 +300,8 @@ static int sprd_pwm_probe(struct platform_device *pde=
-v)
->  }
-> =20
->  static const struct of_device_id sprd_pwm_of_match[] =3D {
-> -	{ .compatible =3D "sprd,ums512-pwm", },
-> +	{ .compatible =3D "sprd,ums512-pwm",	.data =3D (void *)&ums512_data},
-> +	{ .compatible =3D "sprd,ums9620-pwm",	.data =3D (void *)&ums9620_data},
-
-Please use one line per assignment. Do you really need the cast to void
-*?
+I just sent feedback to (implicit) v1 of this patch and only realized
+now there is a v2 already. My feedback given there also applies to this
+patch. So I'm marking also this patch as "changes requested" in
+patchwork, please look at
+https://lore.kernel.org/linux-pwm/bvnhi4qeczrmlmaog6drlztg4x6ubozjzu57sukpe=
+jme7xecqc@724g62vjgxrq/T/#u
+for the details.
 
 Best regards
 Uwe
@@ -199,20 +100,20 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---6hmfj7udr3e3yp5w
+--ryuj6cclf4p2fcew
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWzXRYACgkQj4D7WH0S
-/k4JmwgAkLH4Y8EJskrxYs0xavniF70Hm1Dr48Cp50Of6D25lfLnkXou+9JXjJT1
-OaJLTED1r8yDO4rPT58QOeEF1L58RpMtrqjG7FJfA3cBf/NX4cEDT9i81zVL1je+
-c2sZj01cx8X1dkeuSZtkKNXcWRI/yQV1PH/r3XDzwxIwNxbpQEwt1PRpu0C1U2qm
-ONlTDLpZZSaEJV7HfH24WCnrco/jR6G8n4QImLzyvV8FAOGV6+GqYPvXu7fJ4Aop
-zxGGb0keN8BmuCDWP+NfnxrsRg7IReowVY2g1uQtTNAczmh/tqVmJv6RZmB/6kdR
-HjRy/yHKEM27bM6tQwnhc6gv/9ZgDw==
-=/S+R
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWzXg8ACgkQj4D7WH0S
+/k6oVQf/We+IgYNxslnBKJ7mVuD9ABywhi2Yxtsc06xGTYqLCPnVS9Toy2eDOC9U
+MfoIJchFZd9Nv0KoLa2PhiparSak2Eo4wQDehmo4LODjDP09xwD0XqYdweUKoa6g
+wKT8MuXw5D8zJ6nRCMYXJY/eHmbR/NUJJN1OxRawpm+GOQW3o6Ou/ciyQbf03vf8
+rfa+om9MSR0bQnRFaZY3FmGmMJtz71UQSkvQ84wkbr/eOfWt52df/md4GPNcktLx
+eZxyZfACh8VVGHHajB9JRX5D9NGEl/zrE40IllWH251l71u9/qDlTaqO/OVHab5F
+zIMlKNF3FFI2cCjtg4rMO4mJ6NipQw==
+=sE7Y
 -----END PGP SIGNATURE-----
 
---6hmfj7udr3e3yp5w--
+--ryuj6cclf4p2fcew--
 
