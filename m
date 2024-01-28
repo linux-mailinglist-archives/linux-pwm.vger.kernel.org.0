@@ -1,51 +1,51 @@
-Return-Path: <linux-pwm+bounces-1107-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1108-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFB9F83F83E
-	for <lists+linux-pwm@lfdr.de>; Sun, 28 Jan 2024 17:52:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C848583F83F
+	for <lists+linux-pwm@lfdr.de>; Sun, 28 Jan 2024 17:52:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5A9C2B20B1C
-	for <lists+linux-pwm@lfdr.de>; Sun, 28 Jan 2024 16:52:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FD90280F29
+	for <lists+linux-pwm@lfdr.de>; Sun, 28 Jan 2024 16:52:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F7582556D;
-	Sun, 28 Jan 2024 16:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21E562C1B1;
+	Sun, 28 Jan 2024 16:37:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="G5Ffn++2"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="m4pasbyR"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E196A2D044;
-	Sun, 28 Jan 2024 16:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78601D680;
+	Sun, 28 Jan 2024 16:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706459834; cv=none; b=DWJkQCybid1UZsVbgthTtIJDlGG5czB6RqA4Cr+VehUA7RTroeRklM/CC/keDZmglbaDiKa+HXqMmSSpiNlL7cuYl5zvyYRqLSwTukYW745y1HtrM8QAFDwnyNoKkfemwg2w8maqQR1vBAAyuYLyodBUaqDKyCAd/e9ptNQbuWA=
+	t=1706459838; cv=none; b=lU2RmBjD+591iC6HLHTgKSTSnlJeRISIEdbdlyphpvhnXaipVltQm8IVndxTQtbgkE0Zy3LEh+57JVJDxfcvpG/CoXz7FH5XVJBinlMicC5u+cMA5dBIWduzNdSHm9c93ft7lbFEc+zk7zElbHtnX3M3Ed8LL2Pcrq1pm6PzvIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706459834; c=relaxed/simple;
-	bh=Ihy1J+LUc+2GJw3RCT0rs0IzXK/mLNSR9w2VXqtpDaw=;
+	s=arc-20240116; t=1706459838; c=relaxed/simple;
+	bh=BohQprQB51l6ihIoZBbVLeW8R+5yliHCGpJvOHOSM6k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rRYSP+7LrK/4B7KRcmdTMSVu2k26y7HhBiJgxvfcYO1/bcZDJciCrWGjGhdfMVsW7mIfwtlGDq45MxEIhFG4GW5xF4ZWuhEHF8hyRJmd0CTW8nIW/lqetvJOgqAVMHkO+MxNuL1xRkIBm7pG6tsYBUBwvZr9jEperRtA5szV10M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=G5Ffn++2; arc=none smtp.client-ip=212.227.15.15
+	 MIME-Version; b=SVnXL2z8XOKy5sKi0s8a6Fyte8PVsMHlZHLEplu3ZURkiow0BuglSpyw9JM8UdRHybwSSxbdR8YsJ1S6Umw5rilO3SrBo2Hd51YBn/IDmgMJ4f07v0oir1PqPR8QnRUhO2EFuZujYGT+49Kz+SrwcvCFgkwrTNiv0d9LjIyWM34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=m4pasbyR; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1706459822; x=1707064622; i=wahrenst@gmx.net;
-	bh=Ihy1J+LUc+2GJw3RCT0rs0IzXK/mLNSR9w2VXqtpDaw=;
+	s=s31663417; t=1706459825; x=1707064625; i=wahrenst@gmx.net;
+	bh=BohQprQB51l6ihIoZBbVLeW8R+5yliHCGpJvOHOSM6k=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=G5Ffn++2wdpHi2cu/xMU951pz2mA1dz2KhEYtsSOQjDjDpEsxXEQrXukbab5EHiG
-	 l8e87E4DL0vEgPfDZPbRYYhk77eeZt91eG+vZJsEGXFFyjjvQAx45WIYQ14n/ohDm
-	 cbS3sY0WHSBsMYDHCiacttPLU5FLtx7KMEL0vXIobpUISE8UutOIk+IdV7wVkKOPC
-	 0Q9mimFlVdnvn2rOybWebNmqiCEWvhZwFeqm7O4kQK8BcEHLAZr6Xr/XMJktFiCHJ
-	 GUxLoVAv+il4pkYpwAdx0ncMcqRp13bmX9iPre6gXkIya/NcXLifiuWEllVHoJ/L6
-	 uSzVchIpwX68DGOpyg==
+	b=m4pasbyR/2W3clxx296gHVWVt01vUeDAxAhpqQVDDZSoZaBdiaNN9gMERS3Uur95
+	 2KbuS33zKi3gCCoh/0Ws+voOEHL0wLRqaTOw88Lh656WS1lo2XuJ0riojMSg0X6EC
+	 frOSi56qYnxv5CzMoSE6IhEuMNVuqckxBKMy96PspE7Hs4u6TWUm3sMOKZThgYn5f
+	 cS7W64COiRqoQljTfCIn54BShiIw9GFb0ci7pnmS+ywkX3vnLk+YU8JdPZSa4G5+f
+	 HTUQY/521AEyyG4qseX6Da5W5KKbCR9RmeLdD9HKrEKuFR6Si5x+tRYFFf5NoW+Pp
+	 l/4NtTHz61I4fN+o6A==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MEFzr-1rKXtb2nQb-00AGHd; Sun, 28
- Jan 2024 17:37:02 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MwfWa-1r9jid1hc2-00y8Ec; Sun, 28
+ Jan 2024 17:37:05 +0100
 From: Stefan Wahren <wahrenst@gmx.net>
 To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -58,11 +58,11 @@ Cc: andy.shevchenko@gmail.com,
 	linux-pwm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	Nicola Di Lieto <nicola.dilieto@gmail.com>,
+	Vincent Whitchurch <vincent.whitchurch@axis.com>,
 	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V3 1/2] dt-bindings: pwm: Add pwm-gpio
-Date: Sun, 28 Jan 2024 17:36:29 +0100
-Message-Id: <20240128163630.104725-2-wahrenst@gmx.net>
+Subject: [PATCH V3 2/2] pwm: Add GPIO PWM driver
+Date: Sun, 28 Jan 2024 17:36:30 +0100
+Message-Id: <20240128163630.104725-3-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240128163630.104725-1-wahrenst@gmx.net>
 References: <20240128163630.104725-1-wahrenst@gmx.net>
@@ -73,88 +73,312 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IRoKT6Ns/GQ5OUzdwWJbbs1OLQ9UK66Xs5hrBWMHEsnTpXEPd0A
- O/fnUwkrW2zpYUzoWKe950nei6l2rUybADJfzF6oAyvrGj/pScExQRKJtqpNaFqjqcSllqD
- Gb2ykXuqFZuz4NlK5LD9HrCHKOQqembG/1O8LP2XrO1AyPbMBmTrtNzu/HWvIUJiSmmyYPj
- TZ9N/+UrnMbSkB50aC+Ww==
+X-Provags-ID: V03:K1:av63O9S6j9RKoXEd833Mi5loi5nqy8JlimNJ9AhkgrvuLQRSkoI
+ Y1114Mqf8EKgqNHaXR+TwX2BbGryDzfSMwkocthA8OObGPgnpm4fsnvf46xh+0ZNGNj1HTh
+ wZ8jl+jnTk/7AygHC723M+kvXc+OdvHbEyO7mw9dHAqz2pVJEBO1j3+TVLBUiRzhOWXZ8D2
+ 9y74Op2+0j2WKohtCrJHA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:wXkJwjL85SI=;UcZhokDW8e/MRlAS3oyPoU34k/n
- hKY8GGBZ5DTsEHIhyAcWSOQkD76Tu0UAa4C5rvGc6do+TvomsZHaLWOJ8jL5ePrhZ4IXm6kqv
- 53+DbpSdMTsivUEr/7GZVpal9c8SKLmba/vkN2ARIXSPef7UJcMmC5losFWXztvG6hDnhauxf
- VIjj0SvpK5BNfOxcGH+mf6C+WaNdISUmvvN2Y3voJnSvVrB24lphVVM5/74bt7XT4huSH+vJ4
- nyyxKWH1f6xjpAruF9/T/r1RPQlppJGa075zDgRTfgdRD6ZoEeCWl+Se50m/00OUDAG7Luuld
- qUrJxcwjgpUue0KghPtDDNRgx0+q66yF29v5h6ieMZo7U84+b0Zll6kRfQict5DvxLI5K/5gO
- QArXeJk3ZyDoovXjgjiSsClewZrjWn4CMbDcNYcq4pWfDLjzpmnYX8LrNtE/QfxG7EUpRnONr
- i5AHJYKpJi5ICVW+iArDqL3g1UoIwhu4SXDSrv6HjQ/LiSUN+xi09qMqOhOcpswWm4DBL2XbQ
- 1Zt9exLGvsJg9+leOo0sDbEwtReR8k7k5SA2hrr1lWm5KXx3k5O05WSV6s8XxygbxKseSZ25x
- wWG2pSZKl2WzAwpnoqpUNsi37Z7INstnYkmE3F5GS4I6hXyp0Z/Aos6jQMOWr6U0pIFxO8cgf
- UokPiT1UTCFQm3pM683lJCzHV/iRgTKy0+q1YoOsVTvdDjTt3hnKfXlTlZFJBbabM2xWqMWlx
- MDoZBJ60rPXWX9Pn383TJvw9Zh/O8CYV7PTDaOQdFE8mus1680+ZvH1ikVGrkUN6hxyJGIc14
- S+epxoX6yYr3EjCFzaQJmV2cuH79uae0wZ/pYm82mzkqVV41/m0r6ZT91Mq5S2726yJaUmatX
- OXMTkb1sl30CyWubh+jaykV3Q0EzzOQbtGS76K3mxaO90k8NnVi5f2E3WfZRz6fsiRi6Jl1Mt
- ndpuvBi61/rxd1vD5mwtrkeRG2g=
+UI-OutboundReport: notjunk:1;M01:P0:o5TMCyM4FqU=;Lc0quUfCJYgvmPlIkaVfTm4/tOw
+ njmoDGPAommTX4WQU0NWuMoiVbD7Q8PWRDxQq/04RaD+8bZbuGHzc4UfN9XOgryJcqbPCuG2h
+ gnmq73WeXj1LLu8FxIXym7nL+CHxEIDKQjFvTkX97WNMsLRb1LJ6VU4xO92rXbCcFcDxIkcwy
+ AGCHVZUeUZLZwIeyHG7EDRdiJTXvqBBODlMeWHcewUM73Zd/jjehrKhKhcUBjjjSvJ5YCoMiq
+ TcUwwc1qziaalc5r7s/wO10JhOfYdLyDJpkocFt1n7yKEIkMTBa95mlsPX6CD7z4eILEbwuHs
+ XAiZVMDACzG5KFbNhTnfpIPidCnjTWL5TIHS584+T0Ex0Q5JOncJvzIAuzmgEeLRrLJ5glMTg
+ ZVDN8XloCBRWb5tYpSz2ISjo0WagC2i+ttuQ+cPMLYEyWmXL8AjUIJdST/PMNZdv3/b7spsyG
+ 0NdZgPdZAaezKOW6m2YB9RdPj/op4FUaj1YqDT0RhK0LUm7CSw9AvSrljXvspGWi3hpeb8Fct
+ B1DMylwb8lrRxTAZzXlGl7R0MWNXmREadVyLfWh4zcwKoV0HFiYEV1MDhP3tcijBvj2D+3Byf
+ peXeLjXkkX9jGpFmv5qEY5BQ1B4NaUL/8CpY6WxCSTS9hMML063KWdPRHK88V9dJQauFN34h1
+ hGxhUcoe2WyqM3xuUjDab6qpxpSDJBCPpgPRSc1xWnHF+JbJI3TF+slWItEPn9UQkmpOOU2TL
+ 25by6fhy7/UEWT2QeNCdnS1wuVmNbhn/EBeXhbdC5mMKt/qgEcVQJ2jclXYGsMyWPikPRIWhx
+ a1giooS5LB/bzd+QXOubg6Xb96wkScGSFh5rItNuOFDPe3E/R2Gylrx0jE/g7rIkTChriariJ
+ L+E+sALch4UN3tWwrACGoSB48wQKO9z2l/cGSD8MUqyUASPbN1II0DtIkxO80xVlixSliNpO+
+ fGVqLD4YPpOWk2VGg57be9e+Jdg=
 
-From: Nicola Di Lieto <nicola.dilieto@gmail.com>
+From: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-Add bindings for the pwm-gpio driver.
+Add a software PWM which toggles a GPIO from a high-resolution timer.
 
-Signed-off-by: Nicola Di Lieto <nicola.dilieto@gmail.com>
+This will naturally not be as accurate or as efficient as a hardware
+PWM, but it is useful in some cases.  I have for example used it for
+evaluating LED brightness handling (via leds-pwm) on a board where the
+LED was just hooked up to a GPIO, and for a simple verification of the
+timer frequency on another platform.
+
+Since high-resolution timers are used, sleeping gpio chips are not
+supported and are rejected in the probe function.
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
 Co-developed-by: Stefan Wahren <wahrenst@gmx.net>
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 =2D--
- .../devicetree/bindings/pwm/pwm-gpio.yaml     | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
+ drivers/pwm/Kconfig    |  11 ++
+ drivers/pwm/Makefile   |   1 +
+ drivers/pwm/pwm-gpio.c | 221 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 233 insertions(+)
+ create mode 100644 drivers/pwm/pwm-gpio.c
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml b/Documen=
-tation/devicetree/bindings/pwm/pwm-gpio.yaml
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 4b956d661755..7cfda2cde130 100644
+=2D-- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -227,6 +227,17 @@ config PWM_FSL_FTM
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-fsl-ftm.
+
++config PWM_GPIO
++	tristate "GPIO PWM support"
++	depends on GPIOLIB
++	depends on HIGH_RES_TIMERS
++	help
++	  Generic PWM framework driver for a software PWM toggling a GPIO pin
++	  from kernel high-resolution timers.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-gpio.
++
+ config PWM_HIBVT
+ 	tristate "HiSilicon BVT PWM support"
+ 	depends on ARCH_HISI || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index c5ec9e168ee7..59d1a46bb1af 100644
+=2D-- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -19,6 +19,7 @@ obj-$(CONFIG_PWM_DWC_CORE)	+=3D pwm-dwc-core.o
+ obj-$(CONFIG_PWM_DWC)		+=3D pwm-dwc.o
+ obj-$(CONFIG_PWM_EP93XX)	+=3D pwm-ep93xx.o
+ obj-$(CONFIG_PWM_FSL_FTM)	+=3D pwm-fsl-ftm.o
++obj-$(CONFIG_PWM_GPIO)		+=3D pwm-gpio.o
+ obj-$(CONFIG_PWM_HIBVT)		+=3D pwm-hibvt.o
+ obj-$(CONFIG_PWM_IMG)		+=3D pwm-img.o
+ obj-$(CONFIG_PWM_IMX1)		+=3D pwm-imx1.o
+diff --git a/drivers/pwm/pwm-gpio.c b/drivers/pwm/pwm-gpio.c
 new file mode 100644
-index 000000000000..4932484563f9
+index 000000000000..14637abe465b
 =2D-- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
-@@ -0,0 +1,42 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/pwm-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/pwm/pwm-gpio.c
+@@ -0,0 +1,221 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Generic software PWM for modulating GPIOs
++ *
++ * Copyright (C) 2020 Axis Communications AB
++ * Copyright (C) 2020 Nicola Di Lieto
++ * Copyright (C) 2024 Stefan Wahren
++ */
 +
-+title: Generic software PWM for modulating GPIOs
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/gpio/consumer.h>
++#include <linux/hrtimer.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/spinlock.h>
 +
-+maintainers:
-+  - Stefan Wahren <wahrenst@gmx.net>
++struct pwm_gpio {
++	struct pwm_chip chip;
++	struct hrtimer gpio_timer;
++	struct gpio_desc *gpio;
++	struct pwm_state state;
++	struct pwm_state next_state;
 +
-+properties:
-+  "#pwm-cells":
-+    description: |
-+      It should be 3. See pwm.yaml in this directory for a
-+      description of the cells format.
-+    const: 3
++	/* Protect internal state between pwm_ops and hrtimer */
++	spinlock_t lock;
 +
-+  compatible:
-+    const: pwm-gpio
++	bool changing;
++	bool running;
++	bool level;
++};
 +
-+  gpios:
-+    description:
-+      GPIO to be modulated
-+    maxItems: 1
++static unsigned long pwm_gpio_toggle(struct pwm_gpio *gpwm, bool level)
++{
++	const struct pwm_state *state =3D &gpwm->state;
++	bool invert =3D state->polarity =3D=3D PWM_POLARITY_INVERSED;
 +
-+required:
-+  - "#pwm-cells"
-+  - compatible
-+  - gpios
++	gpwm->level =3D level;
++	gpiod_set_value(gpwm->gpio, gpwm->level ^ invert);
 +
-+additionalProperties: false
++	if (!state->duty_cycle || state->duty_cycle =3D=3D state->period) {
++		gpwm->running =3D false;
++		return 0;
++	}
 +
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
++	gpwm->running =3D true;
++	return level ? state->duty_cycle : state->period - state->duty_cycle;
++}
 +
-+    pwm0 {
-+        #pwm-cells =3D <3>;
-+        compatible =3D "pwm-gpio";
-+        gpios =3D <&gpio 1 GPIO_ACTIVE_HIGH>;
-+    };
++static enum hrtimer_restart pwm_gpio_timer(struct hrtimer *gpio_timer)
++{
++	struct pwm_gpio *gpwm =3D container_of(gpio_timer, struct pwm_gpio,
++					     gpio_timer);
++	unsigned long next_toggle;
++	unsigned long flags;
++	bool new_level;
++
++	spin_lock_irqsave(&gpwm->lock, flags);
++
++	/* Apply new state at end of current period */
++	if (!gpwm->level && gpwm->changing) {
++		gpwm->changing =3D false;
++		gpwm->state =3D gpwm->next_state;
++		new_level =3D !!gpwm->state.duty_cycle;
++	} else {
++		new_level =3D !gpwm->level;
++	}
++
++	next_toggle =3D pwm_gpio_toggle(gpwm, new_level);
++	if (next_toggle) {
++		hrtimer_forward(gpio_timer, hrtimer_get_expires(gpio_timer),
++				ns_to_ktime(next_toggle));
++	}
++
++	spin_unlock_irqrestore(&gpwm->lock, flags);
++
++	return next_toggle ? HRTIMER_RESTART : HRTIMER_NORESTART;
++}
++
++static int pwm_gpio_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			  const struct pwm_state *state)
++{
++	struct pwm_gpio *gpwm =3D container_of(chip, struct pwm_gpio, chip);
++	bool invert =3D state->polarity =3D=3D PWM_POLARITY_INVERSED;
++	unsigned long flags;
++
++	if (!state->enabled) {
++		hrtimer_cancel(&gpwm->gpio_timer);
++	} else if (!gpwm->running) {
++		/*
++		 * This just enables the output, but pwm_gpio_toggle()
++		 * really starts the duty cycle.
++		 */
++		int ret =3D gpiod_direction_output(gpwm->gpio, invert);
++
++		if (ret)
++			return ret;
++	}
++
++	spin_lock_irqsave(&gpwm->lock, flags);
++
++	if (!state->enabled) {
++		gpwm->state =3D *state;
++		gpwm->running =3D false;
++		gpwm->changing =3D false;
++
++		gpiod_set_value(gpwm->gpio, invert);
++	} else if (gpwm->running) {
++		gpwm->next_state =3D *state;
++		gpwm->changing =3D true;
++	} else {
++		unsigned long next_toggle;
++
++		gpwm->state =3D *state;
++		gpwm->changing =3D false;
++
++		next_toggle =3D pwm_gpio_toggle(gpwm, !!state->duty_cycle);
++		if (next_toggle) {
++			hrtimer_start(&gpwm->gpio_timer, next_toggle,
++				      HRTIMER_MODE_REL);
++		}
++	}
++
++	spin_unlock_irqrestore(&gpwm->lock, flags);
++
++	return 0;
++}
++
++static int pwm_gpio_get_state(struct pwm_chip *chip, struct pwm_device *p=
+wm,
++			       struct pwm_state *state)
++{
++	struct pwm_gpio *gpwm =3D container_of(chip, struct pwm_gpio, chip);
++	unsigned long flags;
++
++	spin_lock_irqsave(&gpwm->lock, flags);
++
++	if (gpwm->changing)
++		*state =3D gpwm->next_state;
++	else
++		*state =3D gpwm->state;
++
++	spin_unlock_irqrestore(&gpwm->lock, flags);
++
++	return 0;
++}
++
++static const struct pwm_ops pwm_gpio_ops =3D {
++	.apply =3D pwm_gpio_apply,
++	.get_state =3D pwm_gpio_get_state,
++};
++
++static int pwm_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev =3D &pdev->dev;
++	struct pwm_gpio *gpwm;
++	int ret;
++
++	gpwm =3D devm_kzalloc(dev, sizeof(*gpwm), GFP_KERNEL);
++	if (!gpwm)
++		return -ENOMEM;
++
++	spin_lock_init(&gpwm->lock);
++
++	gpwm->gpio =3D devm_gpiod_get(dev, NULL, GPIOD_ASIS);
++	if (IS_ERR(gpwm->gpio)) {
++		return dev_err_probe(dev, PTR_ERR(gpwm->gpio),
++				     "could not get gpio\n");
++	}
++
++	if (gpiod_cansleep(gpwm->gpio)) {
++		return dev_err_probe(dev, -EINVAL,
++				     "sleeping GPIO %d not supported\n",
++				     desc_to_gpio(gpwm->gpio));
++	}
++
++	gpwm->chip.dev =3D dev;
++	gpwm->chip.ops =3D &pwm_gpio_ops;
++	gpwm->chip.npwm =3D 1;
++
++	hrtimer_init(&gpwm->gpio_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	gpwm->gpio_timer.function =3D pwm_gpio_timer;
++
++	ret =3D pwmchip_add(&gpwm->chip);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "could not add pwmchip\n");
++
++	platform_set_drvdata(pdev, gpwm);
++
++	return 0;
++}
++
++static void pwm_gpio_remove(struct platform_device *pdev)
++{
++	struct pwm_gpio *gpwm =3D platform_get_drvdata(pdev);
++
++	pwmchip_remove(&gpwm->chip);
++	hrtimer_cancel(&gpwm->gpio_timer);
++}
++
++static const struct of_device_id pwm_gpio_dt_ids[] =3D {
++	{ .compatible =3D "pwm-gpio" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, pwm_gpio_dt_ids);
++
++static struct platform_driver pwm_gpio_driver =3D {
++	.driver =3D {
++		.name =3D "pwm-gpio",
++		.of_match_table =3D pwm_gpio_dt_ids,
++	},
++	.probe =3D pwm_gpio_probe,
++	.remove_new =3D pwm_gpio_remove,
++};
++module_platform_driver(pwm_gpio_driver);
++
++MODULE_DESCRIPTION("PWM GPIO driver");
++MODULE_ALIAS("platform:pwm-gpio");
++MODULE_AUTHOR("Vincent Whitchurch");
++MODULE_LICENSE("GPL");
 =2D-
 2.34.1
 
