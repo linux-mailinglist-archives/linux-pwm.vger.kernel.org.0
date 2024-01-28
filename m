@@ -1,57 +1,74 @@
-Return-Path: <linux-pwm+bounces-1101-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1104-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6A4483F32F
-	for <lists+linux-pwm@lfdr.de>; Sun, 28 Jan 2024 03:46:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB20183F5FE
+	for <lists+linux-pwm@lfdr.de>; Sun, 28 Jan 2024 16:03:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 79753B2244B
-	for <lists+linux-pwm@lfdr.de>; Sun, 28 Jan 2024 02:46:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7051E2836F7
+	for <lists+linux-pwm@lfdr.de>; Sun, 28 Jan 2024 15:03:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C88D1378;
-	Sun, 28 Jan 2024 02:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D99AB2209E;
+	Sun, 28 Jan 2024 15:03:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekkuEtNm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SCHu8FHX"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F33469E;
-	Sun, 28 Jan 2024 02:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8AC208A5;
+	Sun, 28 Jan 2024 15:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706409988; cv=none; b=MzngP4JpxmyVe2fOVMi0LcnFOfIafxcQnPfm64aDxI+H7kMVCtjdkjhYTcQwWWJv3my5HB2M9fSLMT2d3MfbpD1NLS6yeSAU1dXQgznUY7bL+plDijelAhNY+IV1r9KMDkB8gXlI49qTnXVeHleHy3Q9e7f0Tw5olGqT4P32zAY=
+	t=1706454184; cv=none; b=dUMuXTELDeWqzJiey72gshc1QY6yBe5RC6z6MiwhHkN6dK9oKvET36EbXMXlJ/rLtHdGR8O1CGf8iZfmOzUJwy27cwXhhPXohXp+MxjBjH/nsu7BAsoyH2xX89S1DfENfzot+Mn31lgWhuKcUFTNWdUyGpTfqa+daCh4viDdk5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706409988; c=relaxed/simple;
-	bh=XnuWDgu/gKqnvw3vLWc64kzWM3OFBScvj3GiIupgVyw=;
+	s=arc-20240116; t=1706454184; c=relaxed/simple;
+	bh=kx6bsX0OE3XS8U8hsFaidy9FE0hwsYAbgmFip0JKzNY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJaU8rkLLLFIq34EIPH25bnSO7hTpcdQxM4IG/ZPLcYQoSNPCameBAWskepX+UBNvKHFxJmxGdF6A3NypoTQHzkOyyspc/3xUhPNAeLbDsvKVQaIzDzsEDSzllb8Y7dzUnWnsnDQVy5LfmxGU0GJHbmRbTT577WfN9MlerLP+x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekkuEtNm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B51C433F1;
-	Sun, 28 Jan 2024 02:46:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706409988;
-	bh=XnuWDgu/gKqnvw3vLWc64kzWM3OFBScvj3GiIupgVyw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ekkuEtNm7fKAadlCzQSnsYyn2ZphjymLYQ3A7Z/Cf5OPr31oYoS2CgeTZTUHq2B/q
-	 0AD6f7Kq0DUIMQU0WxCdCZK442OoW4QBwTRWrpws12R4whPQDepPJA679gXyoqpECo
-	 Z0F/GOYbq7OCi9AIUzWn70UsQZgX5E09B6YbJf8S2ZC3iMsNO6g7n5xfY1OMdB9VSk
-	 KrF2VfL78iJqKJMD8OInDG1tbckIqFuePCHIxfUxBsfUTWkwMVKBv351J+XepDJyit
-	 tU5zlQpcVu/ptSyoSZpv0zTQI1PmJjA3rprfeuTVNB/DqBoXmtFuh6GTUk5+mu6dUi
-	 tqgaPEkP4HLtw==
-Date: Sat, 27 Jan 2024 20:46:25 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Devi Priya <quic_devipriy@quicinc.com>
-Cc: agross@kernel.org, konrad.dybcio@linaro.org, lee@kernel.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	thierry.reding@gmail.com, baruch@tkos.co.il, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, u.kleine-koenig@pengutronix.de, 
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 0/4] Enable pwm support for IPQ5332 & IPQ9574 SoCs
-Message-ID: <okn4ejzcwxgrcuoo4u2tx4adx37mle25urh2s2dda7huqfeans@gzzra4y776v4>
-References: <20231006045317.1056625-1-quic_devipriy@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZulVKOCy0+9VUxDeivBlP6sVnG3ecaI8iKyOzWkc2XdckXS4O6wts7JqgxPJBaSCPQiBR8dLlPOizfaY1z0cQJed7rOduoHZYwo7HveQCxNLOt6KxuLg9aTSh9iMOkKfAHO1PK1zGdZIk5wBMPTKr1HOT/81ClqvrH1xjLW9exE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SCHu8FHX; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706454183; x=1737990183;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kx6bsX0OE3XS8U8hsFaidy9FE0hwsYAbgmFip0JKzNY=;
+  b=SCHu8FHXfJlp7BeZdXkIkaeObPUTxE0RqeLfC079MJHRJV+uc1R0nzUL
+   kdzTLZOacsnD/4E2oFdr6/DNqgsYKSZwuQhXFCIYsPuxlBeGnri6NaZaJ
+   CNEiRTEljxhH/+AFl74K60Im3O4APVYPd4leP7wZt/lXOS5Me6xbbbhLC
+   B5U9UfWEGG0plU5PaAGZ0OYmoTZAhOYWucSC+bzVeEEETOAK9RRXqrYkN
+   LJ9zD89zfGUIa+3WYw/Q0TBUtmwv+QigxBT1ab0ImRICPb3/jxI/aX71I
+   A5XcZyhXN5aDMnNbX5DxqEOyDHAvHdTlFn0nDGDQjKeHA/Cj6YHplYNO5
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="433942732"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="433942732"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 07:03:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="960672159"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="960672159"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 07:03:00 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rU6Qq-0000000HTxG-3LXC;
+	Sun, 28 Jan 2024 16:46:48 +0200
+Date: Sun, 28 Jan 2024 16:46:48 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com,
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] pwm: dwc: use to_pci_dev() helper
+Message-ID: <ZbZo2A3qU9RIz568@smile.fi.intel.com>
+References: <20240122030238.29437-1-raag.jadav@intel.com>
+ <20240122030238.29437-4-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -60,41 +77,38 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231006045317.1056625-1-quic_devipriy@quicinc.com>
+In-Reply-To: <20240122030238.29437-4-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Oct 06, 2023 at 10:23:13AM +0530, Devi Priya wrote:
-> Enable pwm support for IPQ5332 & IPQ9574 SoCs and document the
-> pwm compatibles.
-> While at it, use qcom,ipq6018-pwm as the fallback compatible and extend the
-> simple-mfd support for ipq5332 & ipq9574 targets.
-> 
-> This series depends on the below series which adds support
-> for the PWM driver on IPQ targets:
-> https://lore.kernel.org/linux-arm-msm/20231005160550.2423075-1-quic_devipriy@quicinc.com/
+On Mon, Jan 22, 2024 at 08:32:38AM +0530, Raag Jadav wrote:
+> Use to_pci_dev() helper to get pci device reference.
 
-I've kept this series in my inbox, hoping that you would work out the DT
-bindings with the maintainers. Dropping them now, please resend the DTS
-patches once the bindings are in order.
+PCI
 
-Thanks,
-Bjorn
+...
 
-> 
-> Devi Priya (4):
->   dt-bindings: pwm: Document the pwm compatible for ipq5332 & ipq9574
->   dt-bindings: mfd: qcom,tcsr: Extend simple-mfd & pwm support for IPQ
->     targets
->   arm64: dts: qcom: ipq9574: Add pwm support
->   arm64: dts: qcom: ipq5332: Add pwm support
-> 
->  .../devicetree/bindings/mfd/qcom,tcsr.yaml        |  9 ++++++---
->  .../devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml |  9 ++++++++-
->  arch/arm64/boot/dts/qcom/ipq5332.dtsi             | 15 ++++++++++++++-
->  arch/arm64/boot/dts/qcom/ipq9574-rdp418.dts       | 12 ++++++++++++
->  arch/arm64/boot/dts/qcom/ipq9574.dtsi             | 15 ++++++++++++++-
->  5 files changed, 54 insertions(+), 6 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+>  static int dwc_pwm_suspend(struct device *dev)
+>  {
+> -	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+>  	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
+>  	int i;
+>  
+> @@ -120,7 +120,7 @@ static int dwc_pwm_suspend(struct device *dev)
+>  
+>  static int dwc_pwm_resume(struct device *dev)
+>  {
+> -	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+>  	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
+>  	int i;
+
+I don't see how pdev is being used. That said, why dev_get_drvdata() is not
+suffice?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
