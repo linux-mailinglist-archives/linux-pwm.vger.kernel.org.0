@@ -1,114 +1,189 @@
-Return-Path: <linux-pwm+bounces-1119-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1120-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A46A084078C
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jan 2024 14:55:43 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D1F8840AF3
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jan 2024 17:12:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4492D1F215CC
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jan 2024 13:55:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BA2CCB2124E
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jan 2024 16:12:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9FF3657BD;
-	Mon, 29 Jan 2024 13:55:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E4D7155A22;
+	Mon, 29 Jan 2024 16:11:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D+cDND//"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jmZTr9+s"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2009E657AF
-	for <linux-pwm@vger.kernel.org>; Mon, 29 Jan 2024 13:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5C8155316;
+	Mon, 29 Jan 2024 16:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706536537; cv=none; b=eoy1ry1IucqxzAkE7ymnJk3OieAN14z16JsqHFhhoo26MhuM09TG9PINcFZ5+yCneTiVgWdgTv21k7carPBhP2O33P2Cg57h0LNM8MmY/JBR1CYvSdq3oNtw3l7jj+uv9uXXT4ovJaw3Cjsu/mL0WrCe/TqY7ltonN5l3irAVtU=
+	t=1706544719; cv=none; b=DSvHah43ICESVSxnnFce5yntactFraCyt4yC/RAXhSFqqTtQ5HYsRQwCW2pONsO3uObZpEiVzCw2Y4dknOIevIEj8PhLBH5Y1DaQ4Y/RU49KQ56EwFOoB+IUqCBfKf2ECCC6liu/q3Ut1R9g06CJYu1plLS72iRdgwLLKYUZpPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706536537; c=relaxed/simple;
-	bh=g5hnEmLuBTV9IeAPhqC/fOJTrs0WTAgexL990thdjRk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uaNytVR10DZrEeigeV5EU05bUQgS+qRLaZlOYTKWVtkoBNm59v3n6UKsXIhqzV8cwe9ceI5a304jkB2q5xLBw6zPDYd4OGJDkZIhaoCwV0DnzpG8HPVSgX45GK91kMxHybcKgFh4NUzel6LnQHvhf9t5fjP03WexrrMm6aO1ulc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D+cDND//; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5ffa694d8e5so33506717b3.0
-        for <linux-pwm@vger.kernel.org>; Mon, 29 Jan 2024 05:55:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706536535; x=1707141335; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g5hnEmLuBTV9IeAPhqC/fOJTrs0WTAgexL990thdjRk=;
-        b=D+cDND//IEAtDfGdtJoBR/k2/mIOIBWz5EBUecBiYYtu5ieWXQKy9YTTBhCnsip0yI
-         ImC37o6dFcMk4VkUwKGhPPi608P8JfBGc8pzchlVH4gklpidIFQhqXyufQONutRPNH7Q
-         MvpRZocAzLjvnf35m3/UOr3B3Bnbvq0oHb2e/sWOAbgAJaA80xlFDFHU7QyPBrCVrP10
-         Q85xr9i0pwlxQdVCVzhHj29N49Ojac/1LmwGqVPtCE/F6kqbHabtIVlCQZW3+iy1iJlp
-         u9HF/dlHzJBFAoa0jLX5TdJsCxgxOmx/2K0ZGijAf2lfgUt6NGq7KKgla2IRP9RHY9Wu
-         VB0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706536535; x=1707141335;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g5hnEmLuBTV9IeAPhqC/fOJTrs0WTAgexL990thdjRk=;
-        b=ee3/JE/C894fQEbkq73VwRBhtgd4mJ5KLpJ3WNDFfYqCpv6G9dTwBpuQPgbMRYTIzB
-         p1LgzFOyWDV9dnrMK5qUNMZYNQVE9lOPfOOkJpZQ4KiqamtUKGDaqPhgE4k7LSJE9pvF
-         2i+EM4WXYH9UFiZRuWGJzs6Tl3jQhFv9oewi0rzOtMUM901/OCA2sLQd+XCMKQvuP8PV
-         cAc7kCOCO42a01nFQjrHVKMigaXiVWGscijil6ErsolFNPWUaEAfcawLKNoaDRRdWf/k
-         3UFs68mpJvXlyH/BJRO8gqFdW9OVUxTmbRF4F3MZ9hauYjc5A+1rzLeVjHQdp//9cI+6
-         RTdA==
-X-Gm-Message-State: AOJu0YwWsN/Su3Bjvi4eavxSvgFUqJI4KfUgWBzQJPPHt98bF8FPJCqX
-	QJB6gO/mhX1DpdnjIF8icv7J718Zf1fi2R8jPgLdx0HLs4x+xGgJuSkUZNkND4RN4bdw04JANOG
-	8TD/SZuTu6ykZeik1dOq4FbflR7HeCqkpjnfY/Q==
-X-Google-Smtp-Source: AGHT+IEv6CE0f/Y1NjvVVdx6TknhydnToue5+SN9kI2iG5bQIL7oCxiClJdrtrn4bl1a2DbnY4glwWflCywtSdGlGyQ=
-X-Received: by 2002:a81:b14a:0:b0:603:cb87:3272 with SMTP id
- p71-20020a81b14a000000b00603cb873272mr991325ywh.23.1706536535088; Mon, 29 Jan
- 2024 05:55:35 -0800 (PST)
+	s=arc-20240116; t=1706544719; c=relaxed/simple;
+	bh=EJuKz+rDfnnrgz4jtF7KK8M8+lKo37WzgpZ8fWKe+go=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZB+GO7gWznVf1uLUo7DDZhMlCsWOew2DnJD823kDZZqLuhIsD4Z+e6j9AHZf69vhtpei0uO7giXMeQDt1H8coK1LAQRYajRcA/wcF0e1iVz/mo9APHBx0Bg8oioTzX80JOcYExzB7hD6fAckJi0gxa2p1WDOWJSbp7DcmE6X7Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jmZTr9+s; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706544717; x=1738080717;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EJuKz+rDfnnrgz4jtF7KK8M8+lKo37WzgpZ8fWKe+go=;
+  b=jmZTr9+s0BH0yotyOal0q9jxcJoA62wy25l1FbdVyMSYrG8n8/5I5iXX
+   j6f1Uam6LcnTvGo2QtuQdybq/982+bOjOmiro8aVgfeC/za03w88C5U5F
+   0MGWVmSus8W51EfUIEjZVSDBYPoL8e/2N5o60F5D710ImRdsL38rx5RIQ
+   zqrV4PPN/KiyHIRtvMwhY9U+wL+Ksvj18xrmdcZN/pmKjqluICEowsKVw
+   gjIiuQJbyWMUQsUy0e+m1ye3rkP1aVqCbJwhlC0ZrVeDObPRNslWn3LnY
+   PKaaucS09jcnGyHHffyopgrqE/81eywmV6W0Wm1vy1AUk6AlNf/trU4v0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="16359739"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="16359739"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 08:02:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="3342415"
+Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 29 Jan 2024 08:02:44 -0800
+Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rUU5q-0004Oq-0h;
+	Mon, 29 Jan 2024 16:02:42 +0000
+Date: Tue, 30 Jan 2024 00:02:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
+	linux@roeck-us.net, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	joel@jms.id.au, andrew@codeconstruct.com.au, corbet@lwn.net,
+	u.kleine-koenig@pengutronix.de, p.zabel@pengutronix.de,
+	naresh.solanki@9elements.com, linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
+	BMC-SW@aspeedtech.com, patrick@stwcx.xyz
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v13 3/3] hwmon: (aspeed-g6-pwm-tacho): Support for ASPEED
+ g6 PWM/Fan tach
+Message-ID: <202401292303.6SVAncvn-lkp@intel.com>
+References: <20240124060705.1342461-4-billy_tsai@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240128163630.104725-1-wahrenst@gmx.net> <20240128163630.104725-3-wahrenst@gmx.net>
- <8f525770-7e39-4bf1-9ad3-803826ffbb1e@kernel.org>
-In-Reply-To: <8f525770-7e39-4bf1-9ad3-803826ffbb1e@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 29 Jan 2024 14:55:23 +0100
-Message-ID: <CACRpkdZ=wikdPVtC0KnOX7ZAg2obwALqnKARxS3uyTmhKeCuxw@mail.gmail.com>
-Subject: Re: [PATCH V3 2/2] pwm: Add GPIO PWM driver
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Stefan Wahren <wahrenst@gmx.net>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	andy.shevchenko@gmail.com, Angelo Compagnucci <angelo.compagnucci@gmail.com>, 
-	Philip Howard <phil@gadgetoid.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Vincent Whitchurch <vincent.whitchurch@axis.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124060705.1342461-4-billy_tsai@aspeedtech.com>
 
-On Mon, Jan 29, 2024 at 10:40=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.o=
-rg> wrote:
-> On 28/01/2024 17:36, Stefan Wahren wrote:
+Hi Billy,
 
-> > +MODULE_ALIAS("platform:pwm-gpio");
->
-> You should not need MODULE_ALIAS() in normal cases. If you need it,
-> usually it means your device ID table is wrong (e.g. misses either
-> entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
-> for incomplete ID table.
+kernel test robot noticed the following build errors:
 
-I was under the impression that MODULE_ALIAS
-was something people put in to make platforms using
-udev behave better by default, e.g. autoprobing these
-devices better (on coldplug for "platform:*").
+[auto build test ERROR on groeck-staging/hwmon-next]
+[also build test ERROR on linus/master v6.8-rc2 next-20240129]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-For example:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3D4f46d6e7e5ffbce0ee1d1a80767fdf45e56cc863
+url:    https://github.com/intel-lab-lkp/linux/commits/Billy-Tsai/dt-bindings-hwmon-fan-Add-fan-binding-to-schema/20240124-141405
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+patch link:    https://lore.kernel.org/r/20240124060705.1342461-4-billy_tsai%40aspeedtech.com
+patch subject: [PATCH v13 3/3] hwmon: (aspeed-g6-pwm-tacho): Support for ASPEED g6 PWM/Fan tach
+config: riscv-randconfig-r071-20240129 (https://download.01.org/0day-ci/archive/20240129/202401292303.6SVAncvn-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240129/202401292303.6SVAncvn-lkp@intel.com/reproduce)
 
-But I might have got it all wrong :/
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401292303.6SVAncvn-lkp@intel.com/
 
-Yours,
-Linus Walleij
+All errors (new ones prefixed by >>):
+
+>> drivers/hwmon/aspeed-g6-pwm-tach.c:496:2: error: implicit declaration of function 'of_platform_populate' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+           of_platform_populate(dev->of_node, NULL, NULL, dev);
+           ^
+   1 error generated.
+
+
+vim +/of_platform_populate +496 drivers/hwmon/aspeed-g6-pwm-tach.c
+
+   446	
+   447	static int aspeed_pwm_tach_probe(struct platform_device *pdev)
+   448	{
+   449		struct device *dev = &pdev->dev, *hwmon;
+   450		int ret;
+   451		struct device_node *child;
+   452		struct aspeed_pwm_tach_data *priv;
+   453	
+   454		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+   455		if (!priv)
+   456			return -ENOMEM;
+   457		priv->dev = dev;
+   458		priv->base = devm_platform_ioremap_resource(pdev, 0);
+   459		if (IS_ERR(priv->base))
+   460			return PTR_ERR(priv->base);
+   461	
+   462		priv->clk = devm_clk_get_enabled(dev, NULL);
+   463		if (IS_ERR(priv->clk))
+   464			return dev_err_probe(dev, PTR_ERR(priv->clk),
+   465					     "Couldn't get clock\n");
+   466		priv->clk_rate = clk_get_rate(priv->clk);
+   467		priv->reset = devm_reset_control_get_exclusive(dev, NULL);
+   468		if (IS_ERR(priv->reset))
+   469			return dev_err_probe(dev, PTR_ERR(priv->reset),
+   470					     "Couldn't get reset control\n");
+   471	
+   472		ret = reset_control_deassert(priv->reset);
+   473		if (ret)
+   474			return dev_err_probe(dev, ret,
+   475					     "Couldn't deassert reset control\n");
+   476	
+   477		priv->chip.dev = dev;
+   478		priv->chip.ops = &aspeed_pwm_ops;
+   479		priv->chip.npwm = PWM_ASPEED_NR_PWMS;
+   480	
+   481		ret = devm_pwmchip_add(dev, &priv->chip);
+   482		if (ret < 0) {
+   483			reset_control_assert(priv->reset);
+   484			return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
+   485		}
+   486	
+   487		for_each_child_of_node(dev->of_node, child) {
+   488			ret = aspeed_tach_create_fan(dev, child, priv);
+   489			if (ret < 0) {
+   490				of_node_put(child);
+   491				dev_warn(dev, "Failed to create fan %d", ret);
+   492				return 0;
+   493			}
+   494		}
+   495	
+ > 496		of_platform_populate(dev->of_node, NULL, NULL, dev);
+   497	
+   498		hwmon = devm_hwmon_device_register_with_info(dev, "aspeed_tach", priv,
+   499							     &aspeed_tach_chip_info, NULL);
+   500		ret = PTR_ERR_OR_ZERO(hwmon);
+   501		if (ret) {
+   502			reset_control_assert(priv->reset);
+   503			return dev_err_probe(dev, ret,
+   504					     "Failed to register hwmon device\n");
+   505		}
+   506	
+   507		return 0;
+   508	}
+   509	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
