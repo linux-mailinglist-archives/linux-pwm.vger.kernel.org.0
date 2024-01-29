@@ -1,129 +1,114 @@
-Return-Path: <linux-pwm+bounces-1118-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1119-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66CD68403F5
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jan 2024 12:41:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A46A084078C
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jan 2024 14:55:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 632611C22D29
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jan 2024 11:41:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4492D1F215CC
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jan 2024 13:55:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DA705BACB;
-	Mon, 29 Jan 2024 11:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9FF3657BD;
+	Mon, 29 Jan 2024 13:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D+cDND//"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E435BADE
-	for <linux-pwm@vger.kernel.org>; Mon, 29 Jan 2024 11:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2009E657AF
+	for <linux-pwm@vger.kernel.org>; Mon, 29 Jan 2024 13:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706528511; cv=none; b=S1ygZg7i6/9DqWvlw39bMabGr7Y3/ZoAhSEfN8vi10TaH9kwMEnYfFjsDqIDaxPnZ2YcmAC+I3irQVk8GOUzsnaYM8H00W+G8iHGAcSXhMoFOShu+2bCZZPkSOJDlNUOYTd64cMom1JILDaHkulWkaSxsFvuWZSK1oKFFwYohlU=
+	t=1706536537; cv=none; b=eoy1ry1IucqxzAkE7ymnJk3OieAN14z16JsqHFhhoo26MhuM09TG9PINcFZ5+yCneTiVgWdgTv21k7carPBhP2O33P2Cg57h0LNM8MmY/JBR1CYvSdq3oNtw3l7jj+uv9uXXT4ovJaw3Cjsu/mL0WrCe/TqY7ltonN5l3irAVtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706528511; c=relaxed/simple;
-	bh=2lI29vGxeH+es7wJEpP9RobhcZAprA3yoPRF1BvBlW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k98x2ZJsbqVLn8a1gfX0GE7aMCBvgNvmYSnOlnB+fFbULfbZyAmUYZgY1+qEbOnE4Ma7y2pYB1Z+cPcGTZfPrz5zv0CQ/T86f1urnjQD6tKdQ20NcfZyGIChWu2l3ABWqd2+epch6z/a6gZsGrNpN26q0PhOnlX1N7p0gqz6xSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rUQ1K-0006sh-Ut; Mon, 29 Jan 2024 12:41:46 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rUQ1K-0039xJ-1f; Mon, 29 Jan 2024 12:41:46 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rUQ1J-00As6C-35;
-	Mon, 29 Jan 2024 12:41:45 +0100
-Date: Mon, 29 Jan 2024 12:41:45 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Johan Jonker <jbx6244@yandex.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	linux-pwm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, kernel@pengutronix.de
-Subject: Re: [PATCH] dt-bindings: pwm: rockchip: Allow "interrupts" prooperty
-Message-ID: <dsq5f77dkwfzjegisz6waaqln4b4hbyhoafeygsisdhfzjy2ud@v4pdwvkkupbh>
-References: <20240106142654.1262758-2-u.kleine-koenig@pengutronix.de>
- <7dea73a6-d733-4cd2-b2d5-02f09e2a6dd9@linaro.org>
- <94ad0f59-4095-40ee-963d-4ac379fc8852@yandex.com>
- <cvvifoctmgdsgqfadqbhgywfw2ff57fz33w26hghf5kyo5j5sw@mj75xtvczr2h>
- <210132de-a46b-4f9f-8546-0c36d8a34665@linaro.org>
- <5swqcqpc5zwa3bfhuoyjnymozyzy3lgurnbsurebybj2c7fck3@ycwk2ugo2ouf>
- <b03fc42e-653a-49b2-8835-6cfb7a7bb39e@yandex.com>
+	s=arc-20240116; t=1706536537; c=relaxed/simple;
+	bh=g5hnEmLuBTV9IeAPhqC/fOJTrs0WTAgexL990thdjRk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uaNytVR10DZrEeigeV5EU05bUQgS+qRLaZlOYTKWVtkoBNm59v3n6UKsXIhqzV8cwe9ceI5a304jkB2q5xLBw6zPDYd4OGJDkZIhaoCwV0DnzpG8HPVSgX45GK91kMxHybcKgFh4NUzel6LnQHvhf9t5fjP03WexrrMm6aO1ulc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D+cDND//; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5ffa694d8e5so33506717b3.0
+        for <linux-pwm@vger.kernel.org>; Mon, 29 Jan 2024 05:55:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706536535; x=1707141335; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g5hnEmLuBTV9IeAPhqC/fOJTrs0WTAgexL990thdjRk=;
+        b=D+cDND//IEAtDfGdtJoBR/k2/mIOIBWz5EBUecBiYYtu5ieWXQKy9YTTBhCnsip0yI
+         ImC37o6dFcMk4VkUwKGhPPi608P8JfBGc8pzchlVH4gklpidIFQhqXyufQONutRPNH7Q
+         MvpRZocAzLjvnf35m3/UOr3B3Bnbvq0oHb2e/sWOAbgAJaA80xlFDFHU7QyPBrCVrP10
+         Q85xr9i0pwlxQdVCVzhHj29N49Ojac/1LmwGqVPtCE/F6kqbHabtIVlCQZW3+iy1iJlp
+         u9HF/dlHzJBFAoa0jLX5TdJsCxgxOmx/2K0ZGijAf2lfgUt6NGq7KKgla2IRP9RHY9Wu
+         VB0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706536535; x=1707141335;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g5hnEmLuBTV9IeAPhqC/fOJTrs0WTAgexL990thdjRk=;
+        b=ee3/JE/C894fQEbkq73VwRBhtgd4mJ5KLpJ3WNDFfYqCpv6G9dTwBpuQPgbMRYTIzB
+         p1LgzFOyWDV9dnrMK5qUNMZYNQVE9lOPfOOkJpZQ4KiqamtUKGDaqPhgE4k7LSJE9pvF
+         2i+EM4WXYH9UFiZRuWGJzs6Tl3jQhFv9oewi0rzOtMUM901/OCA2sLQd+XCMKQvuP8PV
+         cAc7kCOCO42a01nFQjrHVKMigaXiVWGscijil6ErsolFNPWUaEAfcawLKNoaDRRdWf/k
+         3UFs68mpJvXlyH/BJRO8gqFdW9OVUxTmbRF4F3MZ9hauYjc5A+1rzLeVjHQdp//9cI+6
+         RTdA==
+X-Gm-Message-State: AOJu0YwWsN/Su3Bjvi4eavxSvgFUqJI4KfUgWBzQJPPHt98bF8FPJCqX
+	QJB6gO/mhX1DpdnjIF8icv7J718Zf1fi2R8jPgLdx0HLs4x+xGgJuSkUZNkND4RN4bdw04JANOG
+	8TD/SZuTu6ykZeik1dOq4FbflR7HeCqkpjnfY/Q==
+X-Google-Smtp-Source: AGHT+IEv6CE0f/Y1NjvVVdx6TknhydnToue5+SN9kI2iG5bQIL7oCxiClJdrtrn4bl1a2DbnY4glwWflCywtSdGlGyQ=
+X-Received: by 2002:a81:b14a:0:b0:603:cb87:3272 with SMTP id
+ p71-20020a81b14a000000b00603cb873272mr991325ywh.23.1706536535088; Mon, 29 Jan
+ 2024 05:55:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="p7u3kwx5lvuf6mxa"
-Content-Disposition: inline
-In-Reply-To: <b03fc42e-653a-49b2-8835-6cfb7a7bb39e@yandex.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-
-
---p7u3kwx5lvuf6mxa
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20240128163630.104725-1-wahrenst@gmx.net> <20240128163630.104725-3-wahrenst@gmx.net>
+ <8f525770-7e39-4bf1-9ad3-803826ffbb1e@kernel.org>
+In-Reply-To: <8f525770-7e39-4bf1-9ad3-803826ffbb1e@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 29 Jan 2024 14:55:23 +0100
+Message-ID: <CACRpkdZ=wikdPVtC0KnOX7ZAg2obwALqnKARxS3uyTmhKeCuxw@mail.gmail.com>
+Subject: Re: [PATCH V3 2/2] pwm: Add GPIO PWM driver
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Stefan Wahren <wahrenst@gmx.net>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	andy.shevchenko@gmail.com, Angelo Compagnucci <angelo.compagnucci@gmail.com>, 
+	Philip Howard <phil@gadgetoid.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Vincent Whitchurch <vincent.whitchurch@axis.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Johan,
+On Mon, Jan 29, 2024 at 10:40=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
+> On 28/01/2024 17:36, Stefan Wahren wrote:
 
-On Wed, Jan 24, 2024 at 10:40:15AM +0100, Johan Jonker wrote:
-> The interrupt registers are located outside the PWM range and have nothin=
-g to do with the PWM driver.
-> Adding them to a PWM binding is just bogus.
-> They are a left over from the manufacturer tree that use them in a IR det=
-ection driver.
-> Heiko keeps them because someone outside mainline kernel might use them?
-> They should be removed and remodeled in a new sort of MFD node that handl=
-es all operating 3 modes.
+> > +MODULE_ALIAS("platform:pwm-gpio");
+>
+> You should not need MODULE_ALIAS() in normal cases. If you need it,
+> usually it means your device ID table is wrong (e.g. misses either
+> entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
+> for incomplete ID table.
 
-After some more feedback on irc, I sent a patch removing the interrupts
-property. However I failed to Cc: you on it. This first patch catched
-your attention even without you being explicitly Cc:d, so I hoped the
-new patch also hit your inbox. Find it at
+I was under the impression that MODULE_ALIAS
+was something people put in to make platforms using
+udev behave better by default, e.g. autoprobing these
+devices better (on coldplug for "platform:*").
 
-	https://lore.kernel.org/linux-pwm/20240129113205.2453029-2-u.kleine-koenig=
-@pengutronix.de
+For example:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
+id=3D4f46d6e7e5ffbce0ee1d1a80767fdf45e56cc863
 
-and tell me if you want a bounce.
+But I might have got it all wrong :/
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---p7u3kwx5lvuf6mxa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmW3jvgACgkQj4D7WH0S
-/k7cyQf+KF/024MjeRRDq7JoTp/gABQjsEkdql+YPSGnbFims+m61aWadom2WbqE
-7IcSORlT/w7ttWXcxIFT6YidFwhUVrmNSoDkMNigX6epHthh8gtb5gxf/v9s8aUr
-Zgw8xt9+n8xo5Bcod5719qMm3wE28ke7pbP2Lb30iy/K9hUia7uprlCdWH/RpNos
-/sA2QUvMonssEiE7blvZ1ipy7TOmG+duWbrOy++BqGQHhG6uSeI5yBlrS7a6L6sl
-QC39LKKfAVxLoA+517BjxlOGjI9DAXZn8HXi4K/ZQZ8seMOI4yITzYJ0SJKssraa
-e9L5x42WcyuSgxoU+W7JfE41L329bA==
-=8zBU
------END PGP SIGNATURE-----
-
---p7u3kwx5lvuf6mxa--
+Yours,
+Linus Walleij
 
