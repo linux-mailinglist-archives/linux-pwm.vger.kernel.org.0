@@ -1,224 +1,156 @@
-Return-Path: <linux-pwm+bounces-1153-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1154-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 628728449E8
-	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jan 2024 22:24:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 49CD0844A38
+	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jan 2024 22:41:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8631F1C2174D
-	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jan 2024 21:24:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31BF01C23D69
+	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jan 2024 21:41:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0E6739846;
-	Wed, 31 Jan 2024 21:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 183AD39AF6;
+	Wed, 31 Jan 2024 21:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8x09sGY"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vhywtnwT"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5B839840;
-	Wed, 31 Jan 2024 21:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACBA39AD8
+	for <linux-pwm@vger.kernel.org>; Wed, 31 Jan 2024 21:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706736134; cv=none; b=XgPFth/iUzuLzeWFfmqpMqbshwsNeF3aLyKL57e0Si6A+Q3Ays1XmNfA3j+vW3BsXCPaVM57gBgxk7BukZyQADruCLoJuCIMtEgo6xazLnFGRZejV7Dr6Cg4qbfI2okJos2XwsSiv9vuNQGUOftUR3T/GzE1ByfpXFMm0HFFC7Q=
+	t=1706737250; cv=none; b=IuQT48Nmxub97RBabAOz/3pICicflez4ZtzwxahvISlazTH7ehHJFcFC7zDsR1avyEvwoTfkFOMD+G6DB7Zq358izk6OGmGHjBxtoES3K0pLT/aJvnWm74U2A4WSDg1DuzNXIZuZ047/9gLlQqiCTO8JCrjXMVdTWUMN5OEapfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706736134; c=relaxed/simple;
-	bh=6/S3gn/MU54WmcTkqkBqwpun43sj6keFl/lVKEDYooU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=liTiWMdbDhQptMo4+gvVzu1qhJHMTevFai4zTAcrMD8z98wewz8uagaowzIETMdh+bmJfOYa7v+JCGf0i/3KZ5lsexvPLLqZgqDrALFmKnu5Y1CXtZ2EKIErfG20PXaay39VBkl84E140QjgfMRqeeV/5U4ERgmh7ueVaznZTVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8x09sGY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49AA4C433C7;
-	Wed, 31 Jan 2024 21:22:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706736134;
-	bh=6/S3gn/MU54WmcTkqkBqwpun43sj6keFl/lVKEDYooU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u8x09sGYO00YuYlSGlkT2akkv0shyGx869qM0+Nclutea46M8UdJZb/sudyW+01w3
-	 Jicz2TGobc8mmXGtUcRO676xFf5CxWOa+rr3tiHFrVxliKJSUjU+ESbv/my7hu12XJ
-	 Epun7n4H9pPPOm3amIXwK03nbrD1z9rMwAk623ucM6/AByBA+sy8d26F4V+3Df6WT5
-	 3JUZm7wUEB+1M9GEh6bTCy784yonSr1hbrTs7VC8MH/9c9eAYCULOtp9g3n7KSzZmL
-	 OP6X8RZVQ3PJD+aolPH6o2ZuKmj1B0asR2j5rKV1NVyNASsT8UjvMjYRCpcD6aGRY3
-	 Y1uZup2ac2gKQ==
-Date: Wed, 31 Jan 2024 21:22:06 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Aleksandr Shubin <privatesub2@gmail.com>, linux-kernel@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Maksim Kiselev <bigunclemax@gmail.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	John Watts <contact@jookia.org>,
-	Cheo Fusi <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v8 1/3] dt-bindings: pwm: Add binding for Allwinner
- D1/T113-S3/R329 PWM controller
-Message-ID: <20240131-renewably-glimpse-a80339e8ff81@spud>
-References: <20240131125920.2879433-1-privatesub2@gmail.com>
- <20240131125920.2879433-2-privatesub2@gmail.com>
- <20240131145244.4f534bac@donnerap.manchester.arm.com>
+	s=arc-20240116; t=1706737250; c=relaxed/simple;
+	bh=T402gfDyzXVtmo/oZ0m9qcfgfnOlOaxqSbRV+G64Ecg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Kjo/pUpjhuXhoide220KCrmeUb2QfyZX/uRNHdIbVkLVWpdrgPkF6nIwDTFnzIU3w9jkIldSFMUWzA0fbVnY0GwT8pGYdwGvWOZQOTgBLZCBmsMt2uRdG++GF/zIFQmSddNzxZBg4U98/ieOFwwBnDOUYoO0XLVJ4rS/dNm3P3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vhywtnwT; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-783d84ecb13so22858685a.0
+        for <linux-pwm@vger.kernel.org>; Wed, 31 Jan 2024 13:40:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1706737245; x=1707342045; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Knxj9uv4iZ1dgBHeg4EtTaZgAoXlIxg9l8W0a+giSJM=;
+        b=vhywtnwTuc9RakhLiZheE9wwv3V24jhKA2luXPUmble72pN0MPDNVJNdW4e9VZVBQ8
+         2g5YtgMCj1KpS7GXFVdN4QSM8xxE+7q6FX7lp4Dqv4BoeZk9B6mu3pC56rWcU7IzSu1Q
+         aJ3sR/0aq0Pw//XUZNsPdrJaDlPoCT61z20orp6U36OiUsCJQEcKCcRk35C4eCF+aQQk
+         e6zwopHAVIjEjbXG8Nl2bJjabaF6CJDG/8z6PjGtUDdTnV6YbdJpvDnElFtrI+K19yoM
+         zstaJSB9h1CtdMXWJn4Poen6vdXm0UW4PRVOq70RxHkdAESAVP7ybISLBnEWm3USqTb7
+         wLmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706737245; x=1707342045;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Knxj9uv4iZ1dgBHeg4EtTaZgAoXlIxg9l8W0a+giSJM=;
+        b=SRBKns7VwSlJaKTwQZ+tpO0/MoUxrmkt5QIhCFW6CcCqDDYFX2T+1xfZoKgO+1t8T7
+         A77g4G/WAXWqmF2tN/LSd6JCK971I2G2a+5XoD4OBS4A5ZbyDoPEh3JWpKjnG80/PkdI
+         DDR+Pd9x08LdJgOrEEsHcn3uq3AkfaqdlIi25ZrAIRd2DxKzQyD7WzlocWqDnKptVZpC
+         /dU4utcxrP3SvepVO+gNCrTcD0K59Gna3arh2oCOGBAORG4x+OhB7pfzPgqDQSvw125d
+         zvwuefPzPcdT0587WQR73N2/qal/J496a1x9qy/Z8CVegpH0DZ3riHeyXaiVKufSQnVQ
+         E/8Q==
+X-Gm-Message-State: AOJu0Yx84Re8pyB5cIWYkM9tmj9e69/RAlIsaymdX8UFGBa9XHV+9dsy
+	4merP2StdSY+UWiqwmvO24cnVHihJBLN9FxHh1ueYG7Ed7Z+GezR+ExN86C0r69hjgOcxBGq1tT
+	j
+X-Google-Smtp-Source: AGHT+IH//FtR5pU/FvoNykuJnaaFodVtnbBuyvND4LKvSIV3uPOqqJuM+XClfFfjusxFg5hSItim4A==
+X-Received: by 2002:a05:620a:13cd:b0:783:81c7:fb75 with SMTP id g13-20020a05620a13cd00b0078381c7fb75mr666629qkl.67.1706737245495;
+        Wed, 31 Jan 2024 13:40:45 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUa/5saWV0RbshTbvr43QC/fkrGL4QuqVlfgMyHHE81mXU7LaMchz8kJvhTcfQkpxd/3he9NsDfHpfQVKeSxKmH9L/LQf5tJVk46peChycwPPzVZI6ioBpZHKYp3oCIIdvi4mvjPnZNd5uc5q3WY09EYQooEcBO6Q7brVTolECZSaL4hagp5AkIChW4UQkx8lgtdzbX5cAb1h7smPKCrR1G1CzMRASGg2sDZ8QR7WUbCQTuMo6XwaTFcA3CCQ9Nlgb8jehZczvTRQIxGno10G8a7wBMisX2YKmcsr/Yrw09SKH++O8JD5bJOhIFS8gBbKZq7sRT5eDuHq8/8c+0VgY=
+Received: from workbox.taildc8f3.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
+        by smtp.gmail.com with ESMTPSA id br44-20020a05620a462c00b007853f040aedsm537160qkb.8.2024.01.31.13.40.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 13:40:45 -0800 (PST)
+From: Trevor Gamblin <tgamblin@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	u.kleine-koenig@pengutronix.de,
+	michael.hennerich@analog.com,
+	nuno.sa@analog.com,
+	devicetree@vger.kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	Trevor Gamblin <tgamblin@baylibre.com>
+Subject: [PATCH 0/2 v3] pwm: add axi-pwm-gen driver
+Date: Wed, 31 Jan 2024 16:40:39 -0500
+Message-ID: <20240131214042.1335251-1-tgamblin@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lXyhdNnqG2jz+p5F"
-Content-Disposition: inline
-In-Reply-To: <20240131145244.4f534bac@donnerap.manchester.arm.com>
+Content-Transfer-Encoding: 8bit
 
+This series adds support for the AXI PWM GEN subsystem found on FPGA IP
+cores. It can be used to generate configurable PWM outputs, and includes
+options for external synchronization and clock signals.  The work is
+being done on behalf of, and therefore lists maintainers from Analog
+Devices, Inc.
 
---lXyhdNnqG2jz+p5F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The series has been tested on actual hardware using an EVAL-AD7985FMCZ
+evaluation board. An oscilloscope was used to validate that the
+generated PWM signal matched the requested one.
 
-On Wed, Jan 31, 2024 at 02:52:44PM +0000, Andre Przywara wrote:
-> On Wed, 31 Jan 2024 15:59:14 +0300
-> Aleksandr Shubin <privatesub2@gmail.com> wrote:
->=20
-> Hi,
->=20
-> > Allwinner's D1, T113-S3 and R329 SoCs have a new pwm
-> > controller witch is different from the previous pwm-sun4i.
-> >=20
-> > The D1 and T113 are identical in terms of peripherals,
-> > they differ only in the architecture of the CPU core, and
-> > even share the majority of their DT. Because of that,
-> > using the same compatible makes sense.
-> > The R329 is a different SoC though, and should have
-> > a different compatible string added, especially as there
-> > is a difference in the number of channels.
-> >=20
-> > D1 and T113s SoCs have one PWM controller with 8 channels.
-> > R329 SoC has two PWM controllers in both power domains, one of
-> > them has 9 channels (CPUX one) and the other has 6 (CPUS one).
-> >=20
-> > Add a device tree binding for them.
-> >=20
-> > Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
-> > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> > ---
-> >  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 88 +++++++++++++++++++
-> >  1 file changed, 88 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun=
-20i-pwm.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm=
-=2Eyaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
-> > new file mode 100644
-> > index 000000000000..716f75776006
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
-> > @@ -0,0 +1,88 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pwm/allwinner,sun20i-pwm.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Allwinner D1, T113-S3 and R329 PWM
-> > +
-> > +maintainers:
-> > +  - Aleksandr Shubin <privatesub2@gmail.com>
-> > +  - Brandon Cheo Fusi <fusibrandon13@gmail.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - const: allwinner,sun20i-d1-pwm
-> > +      - items:
-> > +          - const: allwinner,sun20i-r329-pwm
-> > +          - const: allwinner,sun20i-d1-pwm
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  "#pwm-cells":
-> > +    const: 3
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: Bus clock
-> > +      - description: 24 MHz oscillator
-> > +      - description: APB0 clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: bus
-> > +      - const: hosc
-> > +      - const: apb0
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  allwinner,pwm-channels:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: The number of PWM channels configured for this instan=
-ce
-> > +    enum: [6, 9]
-> > +
-> > +allOf:
-> > +  - $ref: pwm.yaml#
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: allwinner,sun20i-r329-pwm
-> > +
-> > +    then:
-> > +      required:
-> > +        - allwinner,pwm-channels
-> > +
-> > +    else:
-> > +      properties:
-> > +        allwinner,pwm-channels: false
->=20
-> Do we really need to be that strict?
-> If something compatible to D1 pops up in the future, just with a different
-> number of channels, we would need a new compatible string.
+---
 
-Well, you would want to have a soc specific compatible anyway then,
-right?
+v3 changes:
+* Address feedback for driver in v2:
+  * Remove unnecessary blank line in axi_pwmgen_apply
+  * Use macros already defined in <linux/fpga/adi-axi-common.h> for
+    version checking
 
-> If we would leave this else branch out, we could just specify some
-> number differing from the default, and be good.
+Link to v2: https://lore.kernel.org/linux-pwm/20240123220515.279439-1-tgamblin@baylibre.com/
 
-If it were compatible with the d1, then the "then:" branch would apply,
-provided you used the fallback correctly. Although if the number of
-channels were different, we'd likely end up with modifications here to
-limit it to the correct values for each soc.
+v2 changes:
+* Address feedback for driver and device tree in v1:
+  * Use more reasonable Kconfig approach
+  * Use common prefixes for all functions
+  * Rename axi_pwmgen struct to axi_pwmgen_ddata
+  * Change use of "pwm" to "ddata"
+  * Set and check state->polarity
+  * Multiply safely with mul_u64_u64_div_u64()
+  * Improve handling of max and zero periods
+  * Error if clk_rate_hz > NSEC_PER_SEC
+  * Add "Limitations" section at top of pwm-axi-pwmgen.c
+  * Don't disable outputs by default
+  * Remove unnecessary macros for period, duty, offset
+  * Fix axi_pwmgen_ddata alignment
+  * Don't artificially limit npwm to four
+  * Use clk_rate_exclusive_get(), balance with clk_rate_exclusive_put()
+  * Cache clk rate in axi_pwmgen_ddata
+  * Don't assign pwm->chip.base, do assign pwm->chip.atomic
+  * Relocate "unevaluatedProperties" in device tree binding
+* Remove redundant calls to clk_get_rate
+* Test contents of AXI_PWMGEN_REG_CORE_MAGIC instead of
+  arbitrary AXI_PWMGEN_TEST_DATA in AXI_PWMGEN_REG_SCRATCHPAD
+* Remove redundant clk struct from axi_pwmgen_ddata
+* Add self as module author
+* Add major version check for IP core
 
-Cheers,
-Conor.
+Link to v1: https://lore.kernel.org/linux-pwm/20240115201222.1423626-1-tgamblin@baylibre.com/
 
-> The number of channels really looks like a parameter to the IP, it's
-> modelled like this in the manual (PCR: 0x0100 + 0x0000 + N * 0x0020).
+Drew Fustini (2):
+  dt-bindings: pwm: Add AXI PWM generator
+  pwm: Add driver for AXI PWM generator
 
---lXyhdNnqG2jz+p5F
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../bindings/pwm/adi,axi-pwmgen.yaml          |  48 ++++
+ MAINTAINERS                                   |   9 +
+ drivers/pwm/Kconfig                           |  13 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-axi-pwmgen.c                  | 242 ++++++++++++++++++
+ 5 files changed, 313 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
+ create mode 100644 drivers/pwm/pwm-axi-pwmgen.c
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.43.0
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbq5/gAKCRB4tDGHoIJi
-0m7lAQDMB3FXHeE2sd+nUCjULoFP3QBAMejcAL5DVTHwwcfoCwEAmITUfiKctPUZ
-aRVAUnCJ7PvSkH3019Ou5tyacXCp1gY=
-=b0st
------END PGP SIGNATURE-----
-
---lXyhdNnqG2jz+p5F--
 
