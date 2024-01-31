@@ -1,206 +1,159 @@
-Return-Path: <linux-pwm+bounces-1147-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1148-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82A898442BC
-	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jan 2024 16:12:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAFF884438F
+	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jan 2024 17:00:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 427BAB2FEC5
-	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jan 2024 15:00:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C6B1C1C24AB2
+	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jan 2024 16:00:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B44E12BF03;
-	Wed, 31 Jan 2024 14:52:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 405C612A176;
+	Wed, 31 Jan 2024 16:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=asem.it header.i=@asem.it header.b="N8CjPHW1"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C3C012BEA8;
-	Wed, 31 Jan 2024 14:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706712773; cv=none; b=FajdmOrEPGMYULr8hwKJ/R7VzFMCDRsLYgSHyc8qRUygQIpSV1WEnusXy8keOQT9rn1DQD9/sI+JhRmT4THrLJ1NZpCY2MvDeWsfudDk3us5EU2xlRe8lTTSZ+NcJF5rXViWScrICnSb9sJoDplaGrizikAn2SbW2h+Ozdxh8TY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706712773; c=relaxed/simple;
-	bh=Oogf3pucZYuTqQuJqbTDe2IY/fTSAT6FHkzSNlxg3ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MkXx6bS3tI4eE/r+dvxrB0fh2+TQH+C7BRwcY8ZyZVhrh7VZ99Zp32fNhWDZVhkjxDg3DzZswmSW1z+1urIyKcs0Eo6ZGTWKOi4hEHp1ljBkceNYnjOX8xnMKT28uVmg/h1Jqm0Mw4ZC/WkqEdN0WW+Cd3Khhw3T5yzKAUXOoIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF49EDA7;
-	Wed, 31 Jan 2024 06:53:33 -0800 (PST)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89FDA3F762;
-	Wed, 31 Jan 2024 06:52:47 -0800 (PST)
-Date: Wed, 31 Jan 2024 14:52:44 +0000
-From: Andre Przywara <andre.przywara@arm.com>
-To: Aleksandr Shubin <privatesub2@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
- Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Philipp Zabel <p.zabel@pengutronix.de>, Marc
- Kleine-Budde <mkl@pengutronix.de>, Maksim Kiselev <bigunclemax@gmail.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, John Watts
- <contact@jookia.org>, Cheo Fusi <fusibrandon13@gmail.com>,
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v8 1/3] dt-bindings: pwm: Add binding for Allwinner
- D1/T113-S3/R329 PWM controller
-Message-ID: <20240131145244.4f534bac@donnerap.manchester.arm.com>
-In-Reply-To: <20240131125920.2879433-2-privatesub2@gmail.com>
-References: <20240131125920.2879433-1-privatesub2@gmail.com>
-	<20240131125920.2879433-2-privatesub2@gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2095.outbound.protection.outlook.com [40.107.13.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F1F12A154;
+	Wed, 31 Jan 2024 16:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.13.95
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706716838; cv=fail; b=Pd6+Zwq6aaYJ7k3ziOugGP1Zecroka4Uad2lTq6W8tSfPGFdum1U/JstL5pfkcHqyt4zjn4/Zs0QdmlcwlJFMWoBHn0o3c3tLSMqGopzVkm783ZrriEmN6OTHfHeUvCyulAyDEAIYy/KxtnRm1Aea85y2VL4DVdpairpSnGDpJo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706716838; c=relaxed/simple;
+	bh=HfEq0nbWwNAVif0viQ8X+rouNSLt5H8FFxVajEvbxiE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bry/4fXh3PwNw9Qes43XKkaCBBKfFmdFw5W+dawiVhqEBnhx0KxgtxzE+a1EQw1m0sfhEfHZfOXH+P+EoJ4HYpQpUMYoW9ir6eq8EY5m9ifBR3vQDDzx6vWcAbue5TxxPWtCtDTNu0Uk13pATZgv/NqnUmckIKr5tI3q2w5bS38=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it; spf=pass smtp.mailfrom=asem.it; dkim=pass (1024-bit key) header.d=asem.it header.i=@asem.it header.b=N8CjPHW1; arc=fail smtp.client-ip=40.107.13.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asem.it
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MaD1pWIUhKFxe5SkX1C5si2KP3QDGNfkTe9B7pAgIrO54DL84zgS6gUj2RnL09p7tGpdQHamQ478bApOMuEcS9yfnb1bQRyH9FJENEHQvaseJnM0l0m/zXJr779HYAKWnBe1UeAjciSYkXTxBUTQF0X0QcrFU9aHZEo7zuzZtGaQWgJFT+cL7M1zX3JyfHkavsicgzd7BxbrbDg1N8RljvWNhUnlhQBiPY3HX0YdQkZRAT7KcPIMLAWRqe8KCX698mzoj6/oQPhvta483MlYnSmnik2Rs5SKFhNa8cojgIesXZh4qkc+MBUXFbgHdWwsty7bpaOSDv+1LI7kseXwhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HfEq0nbWwNAVif0viQ8X+rouNSLt5H8FFxVajEvbxiE=;
+ b=K52yyp9q3ks7QLtfTyk/toZBuPdC8x2/RK4F/1HZWMrp4b01ll6Ue/1MSdLHMIkqL0Y2lq3Y3s5BMMPtpar1qzAfcnexJ3W1Ym0SYZyxdEVH5dqg5QgK3GrT7C2/QdxdRfPxRdI+Ar8I01MPXDjY8VhSlUlANeI3xx+CRfumBVbERtaxPLa5ZUBd+9ybBThTIWqMIrLsdGZxTxGJ4iPO6vG22LcGA4utRjPKxmHN6UwWSO2s+N9deY808zdJqDkXJwbFLd4wqbKeRqeVF3ILJ45CoElLOKZClRRhGXnwo8ugMGV2oMDi8IP4ml81MhiDgO4ugJAPpF32kCG9oA953w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=asem.it; dmarc=pass action=none header.from=asem.it; dkim=pass
+ header.d=asem.it; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=asem.it; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HfEq0nbWwNAVif0viQ8X+rouNSLt5H8FFxVajEvbxiE=;
+ b=N8CjPHW1NINspmGK5hUlYR4J/XZmetPA8RunOZ6WRlYlbhJFBLLUPalv/jB1eMNntk/6LYH5ei6JCSy+C2rujc1EJBAqqHylUs1vgRs6Q+k1+JPWaw9jvADv/l5mWnbLqJKgAQcRK/72+7r1AFaV8pUSm9Za+pcNavPU/KvBLfA=
+Received: from DU2PR01MB8034.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:273::14) by AS1PR01MB10126.eurprd01.prod.exchangelabs.com
+ (2603:10a6:20b:479::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Wed, 31 Jan
+ 2024 16:00:30 +0000
+Received: from DU2PR01MB8034.eurprd01.prod.exchangelabs.com
+ ([fe80::f272:d554:d6b7:13cd]) by DU2PR01MB8034.eurprd01.prod.exchangelabs.com
+ ([fe80::f272:d554:d6b7:13cd%7]) with mapi id 15.20.7228.029; Wed, 31 Jan 2024
+ 16:00:30 +0000
+From: Flavio Suligoi <f.suligoi@asem.it>
+To: Sean Young <sean@mess.org>, Lee Jones <lee@kernel.org>, Daniel Thompson
+	<daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Helge Deller
+	<deller@gmx.de>, =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: RE: [PATCH] backlight: mp3309c: Use pwm_apply_might_sleep()
+Thread-Topic: [PATCH] backlight: mp3309c: Use pwm_apply_might_sleep()
+Thread-Index: AQHaUgGOFtuwrSusFE2OvXE5fNuSCbD0F/6w
+Date: Wed, 31 Jan 2024 16:00:30 +0000
+Message-ID:
+ <DU2PR01MB803436CB9EB04B690143F864F97C2@DU2PR01MB8034.eurprd01.prod.exchangelabs.com>
+References: <20240128154905.407302-1-sean@mess.org>
+In-Reply-To: <20240128154905.407302-1-sean@mess.org>
+Accept-Language: it-IT, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=asem.it;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU2PR01MB8034:EE_|AS1PR01MB10126:EE_
+x-ms-office365-filtering-correlation-id: 99e9f8b0-6401-4c0a-2786-08dc2275bfbd
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ COOz85YMFmoCzr8Mh6WXO3D66qnG1ReC1gQHQypFxK/zeL2cyvqsfA5zXotuH9ELlUDqHnTpP5NLnwtwOO4vChdkAoIPLwWJgbksP6QSTxbj8Bq6KIWiJSRi7MDoMa3STviEHn9JtmFByYOP2iRKyvUXoaxnMp/7AKLfcb217JUOvDGocUxvob0LAZILQrquP9THSKVPRmB8yJU+0J4NvyWUDsBMhhEQBx6wTTyx+XcHDLs0OXsDC9OjVT86f5YXUGf/Omui6nfHOZG3j9xegzoYauzmes4f/NFWofw7CEy9XM4R/rwJtX3JB1F2wk/ox+e2Z7xVwEkTKxYgIN2KRDlG5HzCBN31fkYMmEEBfvLRKTM+uo5LHiWTefSbIpk27RpmIN4tKT46Hr8ALtvlYiczfy3p80hXqt/8dx1fpG6qR1DVKjy4Xl/qnUVPUFlZsXGQf0OIUvTdC3bTlhA5rvLw9/8OVbs46A5sj5Vr2B1ZZ7bho6cXaaTxtQXJ/5jLrUgZlI2GgCofMcta1y9iqOtB7JF9vGdCAHlIz1JF+vY8drTsgvd2c6rkvdq1985nOQBxJMsp/rbnlVpD2+0txBVX92OoZBDKasK+sVjHV0HKS92+lRD+6Ij0fHkpzpIn
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR01MB8034.eurprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(136003)(396003)(366004)(39850400004)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(38100700002)(26005)(9686003)(41300700001)(122000001)(54906003)(5660300002)(8676002)(64756008)(66556008)(478600001)(7416002)(7696005)(2906002)(316002)(6506007)(4744005)(71200400001)(66446008)(66476007)(8936002)(52536014)(76116006)(4326008)(66946007)(110136005)(38070700009)(33656002)(86362001)(55016003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?8BLTTUWMOc04TFCj77BY5Zg/ji2e835sXMUpFKF4l94R7f7FgwPmNOMBz1?=
+ =?iso-8859-1?Q?zYeeuUx8HHlWfWxm8YNXnwjkUS0k2MKFTOXIILo13yVgZOFRN0g0sRcqyQ?=
+ =?iso-8859-1?Q?AmzM5JP3cKddnW8LaRXxge6baiwQdYnOFXEpHK1uRCEyPCs99L23i4o0t6?=
+ =?iso-8859-1?Q?/2xUv7sYtkkeVVOD0mAiIH5EgUkrYXT0PLh0WZnPvjX3iXtfoBhsjvVmm7?=
+ =?iso-8859-1?Q?tdrScKYURVDbjsJv+JQ9Wg54zVMbVdBsWiODYsirgr6aLy260CumG1TKWd?=
+ =?iso-8859-1?Q?qxN0r+5dREJGhchph6Hf/SrA6lqnm7kcwnSYfejWBvR/uDPVPAKmDNXGn9?=
+ =?iso-8859-1?Q?MwRbWrNJTuMwWRxJAvOzKDKPGyiY4tX7zm2e5AzYClAOqqoU/7LqascTOr?=
+ =?iso-8859-1?Q?Caegcb/XOdf3eo6G22SPAWCVVySUQ4Wzg0evatUzh+g75l3F9ttAmM665h?=
+ =?iso-8859-1?Q?HrokpzDBXasC4KmGGltIZxVdLhWCDJAvYCG5rYXQW+t4UjeUYlcbFW+NRx?=
+ =?iso-8859-1?Q?STYrRNLz/vd693vi4bJlkWOGT97id6847zJQjVf1boH9GgjehXh1I8jgUq?=
+ =?iso-8859-1?Q?CDYlSCG3sWUnKnj9k+AFDIVTwCDQa6J+1tPySK6auSYMjdIHb7n/pMdnwe?=
+ =?iso-8859-1?Q?VjpoLtA+/n1M9jNcC9R3o+1+4DDHy3mPb9zAAAWI6O2lzJgsmD63QVBrl4?=
+ =?iso-8859-1?Q?HClDC8pZ+dMnGRBwlNRPv90OAqgkFv9vAbG57RfdC4wzoaRdTu5FTy35mm?=
+ =?iso-8859-1?Q?LZ280YoFTRsHn0ONR/YhnKQ9QNvO3j9Bv5UaOs8WJh4tVzhJGVUnvA3n50?=
+ =?iso-8859-1?Q?Y4sO0y8ctDlnP8UxNweghpPRwYkrBvNs8smlWUNgrlG/VDyr0sTZreKeJR?=
+ =?iso-8859-1?Q?kCh5TtRlnPBLhRTRTmpu8XkswdNpBYXIHr2aeasYlKE+DkyPON+v2WDQFf?=
+ =?iso-8859-1?Q?WRPzAZOEGa3GvEce8VvPtjZHltBiHqBphpnOiZOlFmmQcOTFlE1zKzd/5v?=
+ =?iso-8859-1?Q?dqsvLbTysQIWPRTEhmexfq1M1IaC54ow3NgUERySmyWxTMqp7UU9ozXVHE?=
+ =?iso-8859-1?Q?jbiMWgpr6akHjQI1Q0nK+yS0Wrgk3Vxu6EUYfwFkqtxqX6S5Dy8MYIUOBm?=
+ =?iso-8859-1?Q?ujYexfODS0fbHH+3BrpFCJt2O8B/OqMdnKr6ZXGNTSMJgO42ot5TClW3dK?=
+ =?iso-8859-1?Q?3H8jZdC4W5/+m45Hp40YJGkVElCFU1PZfhBncWcGN+ALDoo7vlcWqvDXx9?=
+ =?iso-8859-1?Q?HL24NPBoGLdm1X7CbxLztKOElKGSAjmvq9bzvFt9B+/GlHyeeFcDHU1wd8?=
+ =?iso-8859-1?Q?hHRQ3HUd6usSlJY0P7TxYAx+eMYNXofiqtk+Qx6q+OpxtD7atbt5Y+qDP6?=
+ =?iso-8859-1?Q?/ei8rCp6IgUIEgjzRfaywir7xwJKdn/7XoUUuBCMaTvc4Y47+T/oS9hygU?=
+ =?iso-8859-1?Q?wTZL5GCvnCfPuhKPBzdrRl1uMvcwqAeqOVxIHKw2KUwPkA/CCXKQVkhbpe?=
+ =?iso-8859-1?Q?l7sb8O5+f7N4fBQceqiSuBlFfZK+hYuTSYjU2VVd67H5udNjd5un91mQqE?=
+ =?iso-8859-1?Q?wKyb3GKG9P7KMpGeBvADXrFPJAWsKvkQEg+TfdpdzLOd2FRFhcLOhJBz0s?=
+ =?iso-8859-1?Q?rn9T6zMgH0oiA=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: asem.it
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR01MB8034.eurprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99e9f8b0-6401-4c0a-2786-08dc2275bfbd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jan 2024 16:00:30.3028
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d0a766c6-7992-4344-a4a2-a467a7bb1ed2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qD3FbrG1XJ5PYszVLM94znaqW1AauFKS8RdTZaMUB6M4imjUSwzv4oeJ9a+LZm9OrmS9FT/zBTnaCgAjYya8Kg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR01MB10126
 
-On Wed, 31 Jan 2024 15:59:14 +0300
-Aleksandr Shubin <privatesub2@gmail.com> wrote:
+Hi Sean,
 
-Hi,
+I've just tested your change on my board that uses the mp3309c.
+All ok, thanks!
 
-> Allwinner's D1, T113-S3 and R329 SoCs have a new pwm
-> controller witch is different from the previous pwm-sun4i.
-> 
-> The D1 and T113 are identical in terms of peripherals,
-> they differ only in the architecture of the CPU core, and
-> even share the majority of their DT. Because of that,
-> using the same compatible makes sense.
-> The R329 is a different SoC though, and should have
-> a different compatible string added, especially as there
-> is a difference in the number of channels.
-> 
-> D1 and T113s SoCs have one PWM controller with 8 channels.
-> R329 SoC has two PWM controllers in both power domains, one of
-> them has 9 channels (CPUX one) and the other has 6 (CPUS one).
-> 
-> Add a device tree binding for them.
-> 
-> Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+...
+
+> Subject: [PATCH] backlight: mp3309c: Use pwm_apply_might_sleep()
+>=20
+> pwm_apply_state() is deprecated since commit c748a6d77c06a ("pwm:
+> Rename
+> pwm_apply_state() to pwm_apply_might_sleep()"). This is the final user in=
+ the
+> tree.
+>=20
+> Signed-off-by: Sean Young <sean@mess.org>
 > ---
->  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
-> new file mode 100644
-> index 000000000000..716f75776006
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
-> @@ -0,0 +1,88 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/allwinner,sun20i-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner D1, T113-S3 and R329 PWM
-> +
-> +maintainers:
-> +  - Aleksandr Shubin <privatesub2@gmail.com>
-> +  - Brandon Cheo Fusi <fusibrandon13@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: allwinner,sun20i-d1-pwm
-> +      - items:
-> +          - const: allwinner,sun20i-r329-pwm
-> +          - const: allwinner,sun20i-d1-pwm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#pwm-cells":
-> +    const: 3
-> +
-> +  clocks:
-> +    items:
-> +      - description: Bus clock
-> +      - description: 24 MHz oscillator
-> +      - description: APB0 clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: bus
-> +      - const: hosc
-> +      - const: apb0
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  allwinner,pwm-channels:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: The number of PWM channels configured for this instance
-> +    enum: [6, 9]
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun20i-r329-pwm
-> +
-> +    then:
-> +      required:
-> +        - allwinner,pwm-channels
-> +
-> +    else:
-> +      properties:
-> +        allwinner,pwm-channels: false
 
-Do we really need to be that strict?
-If something compatible to D1 pops up in the future, just with a different
-number of channels, we would need a new compatible string.
-If we would leave this else branch out, we could just specify some
-number differing from the default, and be good.
-The number of channels really looks like a parameter to the IP, it's
-modelled like this in the manual (PCR: 0x0100 + 0x0000 + N * 0x0020).
-
-Cheers,
-Andre
-
-> +
-> +unevaluatedProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#pwm-cells"
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/sun20i-d1-ccu.h>
-> +    #include <dt-bindings/reset/sun20i-d1-ccu.h>
-> +
-> +    pwm: pwm@2000c00 {
-> +      compatible = "allwinner,sun20i-d1-pwm";
-> +      reg = <0x02000c00 0x400>;
-> +      clocks = <&ccu CLK_BUS_PWM>, <&dcxo>, <&ccu CLK_APB0>;
-> +      clock-names = "bus", "hosc", "apb0";
-> +      resets = <&ccu RST_BUS_PWM>;
-> +      #pwm-cells = <0x3>;
-> +    };
-> +
-> +...
-
+Tested-by: Flavio Suligoi <f.suligoi@asem.it>
 
