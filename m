@@ -1,454 +1,215 @@
-Return-Path: <linux-pwm+bounces-1156-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1157-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6610F844A3F
-	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jan 2024 22:41:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 02FF4844FDD
+	for <lists+linux-pwm@lfdr.de>; Thu,  1 Feb 2024 04:39:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 88E541C22FF3
-	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jan 2024 21:41:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 28A7D1C21407
+	for <lists+linux-pwm@lfdr.de>; Thu,  1 Feb 2024 03:39:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10EB739FEC;
-	Wed, 31 Jan 2024 21:40:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 993533A8E4;
+	Thu,  1 Feb 2024 03:39:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="PoBmTTo0"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="juKh9KuQ";
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="sVuwHc3/"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD0339AFE
-	for <linux-pwm@vger.kernel.org>; Wed, 31 Jan 2024 21:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706737253; cv=none; b=tgXrFkPtbE+1mNtUDwpsS2uT/qF2IsfhHcThKFYE/npwvtm0nOA3nT2WvQGRXSsdccJ74sFU929+hJWkdf8F6C2L6XcFAFYIRKD9kxq9Jh8HVctb2ti/fO4+iFMYowLMvSBLpFBUAcc/TooSExEz6AZLNtzr6M8rN+gBomhH+QE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706737253; c=relaxed/simple;
-	bh=TzJI9DKcr14wIxwW5xX42GkeCx1HYD+R/f/OjsgMQu8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QzKisSJeozR/EiikEFvpMv2tE+1pFVQZ06n9x+wLHp3p+wS79hoov9yOduEUBM8v7b/sRd2CVhF1p3GuiwGhtBDZW5bm9sUSFj+3XZxEIZlGPP38QrkSBKKQzLvtn2kCRNpfOz5h7pV5kjCMEU8lGwNEpKh2Tujah14kBreS+/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=PoBmTTo0; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3be90c51299so174585b6e.0
-        for <linux-pwm@vger.kernel.org>; Wed, 31 Jan 2024 13:40:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1706737249; x=1707342049; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tsEVxG29WCMfnx8JtgD8uSy6BCcIKhPjoqts5Funlgk=;
-        b=PoBmTTo0KoAn3js0XbH5oWloyA2CgcHc/5JDUAWuMCfMQQXG1ohyDPT0HDrt6NeUNP
-         NQgW4BdUuBZRmyQvOVBVzV3rFewE3t9Y5sZ9wHVbAr3prde7WWs4O8DxB8KZhbmfZQFh
-         386XAdD0E7CzHtbZaUX0iTK9WOkkFmPBvLjO9/R1x94RVlzDTcubx00tNIGWmSYfsrtf
-         TX5SqFWmnzKFkTHu/lyE2GUrlhEQjfQvPAEFWqCYuf94X7tysj4vKpblaYSDIDHN2UlY
-         qGSby5aqBJ2qQrRFLt9Doyg/Fu4upmS0wj8SannweQQ/Lc3dbTDbdeEZ+pPvwxdolZVp
-         crJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706737249; x=1707342049;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tsEVxG29WCMfnx8JtgD8uSy6BCcIKhPjoqts5Funlgk=;
-        b=cLcleJmoLACVt/UxX7y32NuQtbva3tJXqtXZ6LKD0FqM50Rq15LAqd4ugZkxlmZttb
-         F6ta3E0Xnl58qRskQiJsxtAZXnB3q+RjZPOfMqLxFoqUF+Xn1DrqWPU2LtZkUhiU1QCX
-         TnqAHbBpoutureMTHUHIjIQpbYqnRuFP505pYuVB6yG96rkUhhiq1xe5P68UFK2nKeGH
-         K2ZDR57ZdiAQ3M7ddyQ630CjxheIQRTxU8vrhPqytGnlJNvcIXvCWGNEhza43XJj+Pvf
-         gHRUXUbReI6H/SVVIZWqc7k3oK8h9DZdbdR9caSejJY23CUG8bBn0xlu9Z/nDCalZtSV
-         NZqA==
-X-Gm-Message-State: AOJu0YwgpMfOSAigYpItlNztqzwSbesfoDoPzgHFd4xNLFAcDjZldKcu
-	5BnMl8Lcge8sx0EaADISo4pH9dJKh2K/GbnGAga3imtbMKJRlx3K12E8vYQxyfvAxA+XjyCRlVg
-	tgUw=
-X-Google-Smtp-Source: AGHT+IHq/e8pnhFUDAICQ/t87WXNxsEnPo/PiG4c3dkbnBNplJBMJcBVN+cLzHqJSQ4NMwb+ZA020g==
-X-Received: by 2002:a05:6808:2f05:b0:3be:c0f9:3cb4 with SMTP id gu5-20020a0568082f0500b003bec0f93cb4mr3643826oib.25.1706737249530;
-        Wed, 31 Jan 2024 13:40:49 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUJnNirCWZnLItLHBgrn1/jV23gkm3qXnwUW9u1iYwRtC1mlU+gUu1QUTqY3kzXJNkCWo++RHySDOSFqgd3vJviwX0VBWi/kDs7DYcy5szkGmxpgBTrjJrpiDQy/UTv+LvBO8ydETYTV5AaWlEZEY1k/osNajJ06rQgzuc2rf1QihUAstLTZ+tafxUI13lZcSisziZ6V63fyWXe+aPDzI4NLkT9TVlmg6qdNuvHHe1jhLt+3aEz6IWAeLt5Q8QA6rKKxMN5EzqtqPO+IuCfLRDxRy9rIlJBTuibHSpIjdhmkRkUxeHHTlj6e67/5Z4Q4keiKsaENLQvbBS/aeAeTK8rqDjUoPzZjpkkzZeVMjgPb0esDy02OMbzhrA8pjs4/GjA6vlMs8BT/cel0JDzXVESIdp4+JbVGj3gIsx6JCyQnHQgzlG9YdOVhqY=
-Received: from workbox.taildc8f3.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id br44-20020a05620a462c00b007853f040aedsm537160qkb.8.2024.01.31.13.40.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 13:40:49 -0800 (PST)
-From: Trevor Gamblin <tgamblin@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	u.kleine-koenig@pengutronix.de,
-	michael.hennerich@analog.com,
-	nuno.sa@analog.com,
-	devicetree@vger.kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	Drew Fustini <dfustini@baylibre.com>,
-	Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>
-Subject: [PATCH 2/2 v3] pwm: Add driver for AXI PWM generator
-Date: Wed, 31 Jan 2024 16:40:41 -0500
-Message-ID: <20240131214042.1335251-3-tgamblin@baylibre.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240131214042.1335251-1-tgamblin@baylibre.com>
-References: <20240131214042.1335251-1-tgamblin@baylibre.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31A93A8C2;
+	Thu,  1 Feb 2024 03:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.154.123
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706758755; cv=fail; b=DSoVSqOE7KNx+RkHUkWwaY6NnsmkYviX3V+8DHXIStKad0wriTiCG5QQ6vvkF+7t1ouP8Y06QWlW7owmXfFaFzp/9FOj/dQfgjf3z6Hrjq01i9wMkff8bskvsj1egeqVhxVUzARuwbKFCdzCPK2lKK4h/ogSBu5y56SQS9nMhqY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706758755; c=relaxed/simple;
+	bh=HwDYnrdElNZYlgSNsRPCJiTcgxwibcLlquez18YxWns=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=O/0KABpDtcnmyiKPXVCDZ0PRL0zT4yl1x0NMv0bCvHGlxspIzEsyj/cfeOTeoPYdRfmUdp/QJVpnXsV62TlQVfnWuZKgqPEmvk6CZnEP80ZeOzYD3ex4QPzJVZntU1/fQN3c1NeOhbjgH38CtLMDS10xXP0CW8GfQDoKG6gor8g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=juKh9KuQ; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=sVuwHc3/; arc=fail smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1706758752; x=1738294752;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=HwDYnrdElNZYlgSNsRPCJiTcgxwibcLlquez18YxWns=;
+  b=juKh9KuQEh5JkW8ZSlXVKDim3V2KnUKoSp8SMQ8fpyS2nyupMmJllgKk
+   uUurcLGZ7l2JujSSqxsAHuxCiP6CkETSJqcnCSxuOEP+Ny87hnyn36Stv
+   m5MzLbZEElTWBigveMIQjeHtjowyRli1mQcLe61mAom57BpiBU9yurT5l
+   +nC1wFfvGuEdJNXXDys7E4kZyJ5kmOac2nQeUugVOLo/rUTd/nb1f6Y6B
+   Oag/79kcSBfJky3xaum7/MQwLnzC8sdgGc+dTM7mU43EJJhk6cK6jFLHY
+   d6Ppyol11hahsG8gRO5OiA3R+QuBE1TXMwDolIN7Sx+f6l3f4eW5ckM9Q
+   w==;
+X-CSE-ConnectionGUID: NIaZ0aBKSoOwXDiSTUTK/A==
+X-CSE-MsgGUID: 2z/lmbsRSmKm7g8iVr+scw==
+X-IronPort-AV: E=Sophos;i="6.05,234,1701154800"; 
+   d="scan'208";a="182854435"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 31 Jan 2024 20:39:11 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 31 Jan 2024 20:38:40 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.250)
+ by email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 31 Jan 2024 20:38:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P/s1U2MLoHlEMleNFiw7d8Q7kQz19gul8oecn+CEByJtop4D8YWhW0zfLDiu3r43w+5j2JQa57YXCqQRGseNg4rhK7AmYPWsk62O7m8TR7Tk9wXKxWrjayeAQ4JPoJBizJBqcDaDlftrm1cWXZkEtuNakVbBnoTgBKgG+8B+RyK3jpyYlbiCF62Qb2PRDeGHx4WJ7VrqDrfGfuM7W0be5dyHQK7DsHMe2BiAIUpl89eu+vRjctlX+7HXh9DDy3/Ihnf8E+/UX3MzguTG0QEOi2Pj52VRNfHQH5qEaNLWKFfp0JYvhnAub7nUiD+jmAT7PnRGHUtX864jAXxiaR3Jzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HwDYnrdElNZYlgSNsRPCJiTcgxwibcLlquez18YxWns=;
+ b=YdqiA6tnVNqzlUTxNnU2k9KKjblSwQzVi4JPWBwpi3xgpXdHzTMF0OBjaOY23wkTRMeT0xYEhJuG77D8Bi/hyPB4oP08iPmkhbi2/82KXOCJT1exhKy2vUFzCnbHmeUOntf591/3M8As9AoU9GBeXGxi4xTwcQRQsUiBKCm1bwuK3xBHPuPt3/EI9i8OmGnw5Iw1ybp2EWQsDGlFNOmY3dUX82DzNeADYJ7cx9Dywq7SV27cnmPZ2Qe+WIwqaONFnZy5qot1rLUOp0yIT8JNYTe5MIzO0KDyTyLKx8DYy5jEVWGPngbkDLQYhwc86Uzsg36Czpio91i4hNJ1vef77Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HwDYnrdElNZYlgSNsRPCJiTcgxwibcLlquez18YxWns=;
+ b=sVuwHc3/JuAsw5qWSoCLL7W7vAIhf11wU3Q2TBI3O79UrbFhGW2KMDm9JhPN3wDDUj/oOrbXDL6uBGmWjRIGeRgjE5akyoVBF7bbcy2B+X+yHrFmCXvd/SQ5CDwLt0tUQD2luvRgQ63cPRvoVFUd9yu3x3TcLLQSE92OR7GErMdBlUJbVTncZffDl7+vhTk6dXEPheTl0YAExxFJTInLEIrevcwgJu25W/PrCU0fKzvWFJnpKbiICDsukOJDnbk7icLdYbUlmdXOLLPJ1tEgFKX4+BuQQBm7pfg9A0FQsfFzmLk4skfd9YvabhehvRkXBrAo7LGTT9q4gpUMtBWk3Q==
+Received: from PH7PR11MB6451.namprd11.prod.outlook.com (2603:10b6:510:1f4::16)
+ by IA1PR11MB8100.namprd11.prod.outlook.com (2603:10b6:208:445::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.24; Thu, 1 Feb
+ 2024 03:38:37 +0000
+Received: from PH7PR11MB6451.namprd11.prod.outlook.com
+ ([fe80::80b9:80a3:e88a:57ee]) by PH7PR11MB6451.namprd11.prod.outlook.com
+ ([fe80::80b9:80a3:e88a:57ee%3]) with mapi id 15.20.7249.024; Thu, 1 Feb 2024
+ 03:38:37 +0000
+From: <Dharma.B@microchip.com>
+To: <sam@ravnborg.org>, <bbrezillon@kernel.org>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <Nicolas.Ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
+	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<lee@kernel.org>, <thierry.reding@gmail.com>,
+	<u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>
+CC: <Hari.PrasathGE@microchip.com>, <Manikandan.M@microchip.com>
+Subject: Re: [linux][PATCH v5 0/3] Convert Microchip's HLCDC Text based DT
+ bindings to JSON schema
+Thread-Topic: [linux][PATCH v5 0/3] Convert Microchip's HLCDC Text based DT
+ bindings to JSON schema
+Thread-Index: AQHaU/afGNCqaviMx0Sn8Qd7rlUHCrD02FgA
+Date: Thu, 1 Feb 2024 03:38:37 +0000
+Message-ID: <478cab42-5f30-4fbe-b42d-02d16b81ca11@microchip.com>
+References: <20240131033523.577450-1-dharma.b@microchip.com>
+In-Reply-To: <20240131033523.577450-1-dharma.b@microchip.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR11MB6451:EE_|IA1PR11MB8100:EE_
+x-ms-office365-filtering-correlation-id: ffd47a9b-ee7e-41e7-1b40-08dc22d74662
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0vi1KFOcLeyfT5Uj7/7uw7vaf7yFw1NEYH/Y++8XgPV3VmWh9izg34TyIEcSM4nXEXzwSu/uiZfem/FTdV5joJ7aqg9qlOHafdNfSmBWoTOaNeyRMGZFhGLUKh/oOmMeGGMYdzBxy5kBbI+BQV7RQ5kVMaNSHEz8mjojhY4WO5QHR2z6U3B0fmuhoo980tGP6iBk7JqaWMdcq9IRkhlKjZ9NQ9eI/47SrPs+FZQ1hZTtfxJq/CXmdzszVFYBxYd5zpQOfy+p8XwLd5pQthJ8Enhh3J7CN59L3kj0VYW4z0yH0Kaxl25ayms/AqDyXlnbQVLGpRBT1Bwf7Dm8dag2DBu/f+pQlOrjweNtgyPkJqpibz7zEWqpTFKjw1AYIIfKMwdkqGlaaHORCyxg3fumiB3P1QQrGU3Cg/GGiZbInBz0TAqEH9Bj2cozyQ9LBhQyNED7SUMGRf+1BI8d7cUQlePT8LFqhy5OeMPiUDrNhw6qHyaTtzqlFCDqIxfHSgES1XqBHsEsyVrdDkwzSngk8vqmt8ofc6bmYMDIU0mlhkGvsqHy+6c2s8cjN5/JRnO3NVXfGUKeifPiZvpnbmJSR7M6wexbEBWzFQAcSyuo3JfhxgljAcYEq1hPnIHu2aYtqo0+IeIHDXXxLN1N6GP/pm+HFaZkbeK0wntYoWSlxxU=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6451.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(136003)(376002)(396003)(366004)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(921011)(26005)(5660300002)(107886003)(6506007)(4326008)(53546011)(6512007)(2616005)(66556008)(2906002)(7416002)(83380400001)(76116006)(66476007)(66446008)(6486002)(66946007)(110136005)(64756008)(478600001)(316002)(54906003)(8936002)(91956017)(31686004)(71200400001)(8676002)(38070700009)(86362001)(38100700002)(122000001)(41300700001)(36756003)(31696002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?c0poUU5FSytWQ1VGenhpbDN4L0pXK3Z4ajNjL2J0UkNHUmFOdTJWVENROGNx?=
+ =?utf-8?B?WHkzSjVJK2pxbzkvbWVleDljeWdWakMxK0x3Z0tsZklRcmZyZFdBUTdCUjla?=
+ =?utf-8?B?NDZTUjlvT04xSW5yaXZac1ZSb3RWRFk1dEJEWU1yUnJLcTg1UXprSGRoaVcw?=
+ =?utf-8?B?ZDhhNnB6dVpscUFUVVcvbzVyRkxJRDBJU3RhZkRhMmtOQldoZ0hvaTB6cENs?=
+ =?utf-8?B?citINThaa3NmeXRwQUt6UVN0czAxbWJoaFdDSERvWkthQTFLUEdFbHFUVXB2?=
+ =?utf-8?B?ekNOR3VYWHYySGRRNkNPTUVvMUNUNlVzcGk2QllTQzN4aE5vaDZnSVYwbUZV?=
+ =?utf-8?B?U0VabjE2UE9pVEh1OHU1YldhcloxbHpwZ2xOb0tGMThUQlJIVVdlYlROWExz?=
+ =?utf-8?B?bnZOMzlUVEdMeXo3cWVqNEc1WG0vNEJ4dnRqb0RGTFZGS1c4endWdmVUMmxR?=
+ =?utf-8?B?TENkYnhrUmVYZjdxeVBEUTBWbmdva3hBNjlXMTkvVldKVVI2TGhYUXZTekl1?=
+ =?utf-8?B?VjZrN1RKQWE0dUx2WU5zaWJHSy91cE54ZnY2UllKQVNzTFZobHRDRVZYQ3pw?=
+ =?utf-8?B?bnN5SFJma2dzei82ekZUTWpMY0ZIajNjeDdGc0NMSGd4T1ViVWZCVHB1R09B?=
+ =?utf-8?B?UFlXZEtmK0ZnZXY3cXJ0ckl1VXp1OWlZTFRNY0VuQ1B6ckRZVTdDbjVpbmFI?=
+ =?utf-8?B?bk5kYWhjMG12WTllc1ZsbTVFNXFlVllocmdnSm84eVlibURMdGpPR2Nkb0ox?=
+ =?utf-8?B?UG82MWVxRUtQa2RMcGJyLytWQ2czZC8vakRFejluVllBUXFjOTYzZ05Pd0I5?=
+ =?utf-8?B?VklNcE1XaUR3WmRRdGZ2Umd6Z2huSHBvOXY1ZWpSWnNKVlkrTVZEaUg3UUJj?=
+ =?utf-8?B?RzR5UkpRZ1dONk1ZQ1lwRldab1FrRTlRaGpQUmpEa29xdlJHTEdXL0xyQnR0?=
+ =?utf-8?B?bjNza0ZBY29KSXBUTVBzZVNCNFV1UXhKKzVaNUtYMUdyaXAzVi8wZ3U3eHdr?=
+ =?utf-8?B?NFpLdWprN2JkWkJKZnk1dXplV0t5WVQyeUp1LzJZcXZ2VVB4ODFZTnJEdWtH?=
+ =?utf-8?B?dUp2cVQ4bGZKOFpvY0RmQjVZallRMGdzRkNSTjZFaVlLVjNQbXVzOFg3MWg3?=
+ =?utf-8?B?amhCWjZoM0ExWWVQREd4UmdUU3Y4SFNyQXArMHc0eVNwWTltYU9MRVIxOU1W?=
+ =?utf-8?B?N2o5MGQrY3NqM1lvQTZKQjl4VlNlS2pQZEJmSVlMQnBuNW5XaHJ1U2Y1WVE5?=
+ =?utf-8?B?MndKbVczc2VmWUZTVmlsZWFacmV0RGlKaGVGMWF1ZlAxUDIyejhPOVMrcDFz?=
+ =?utf-8?B?aU9rNVJNZGdEV0ttcnh3aWowN2U2VVNZSWkzenFSUDdPaHo5SDFYOTZ3TUNh?=
+ =?utf-8?B?ZzZrOGFwVzJoTm5UZjJnOFR5dVFvSFNxdjVPS1lVQ3B4VmI5SFhsUG5ZaHc1?=
+ =?utf-8?B?Zm1wUGhINTZnQWVKOFY4c0RXNTZzcGdmQ0dzSkJkMGEya1E3WWtoS0ZiUFFN?=
+ =?utf-8?B?YnQyR203V0M5b0VCbGdKbXdXMXNianovVXdxdkhvMnc4WHRiakdVelEzQzho?=
+ =?utf-8?B?b0J1d1NHNXF0S2hJcVpPMUFCZFVLQzlxS0JzaVJNV2xKZTJERmM3Q3lWUUlI?=
+ =?utf-8?B?WlVOOHhaT0NOUDhMaC9mZTBXb0YxMllyS1VqSzNlZjVYNHJDNUNSczdBMEp1?=
+ =?utf-8?B?eUNBc0UvdDZjZEVoTjRlSnQ3L0wvZkNTL1JyT1Yzd3Z3QTdoSEw4OXZ0MXJX?=
+ =?utf-8?B?N2tMd3FCOWdYeGdGem40Wml2RzBIQVVsems5ZW5pb3ZJSERDcGlMRHAvdGRF?=
+ =?utf-8?B?c1pCODBXb0JPclNYY09ZU0QzdDJuVEtUTmR2c2FubmJFZ25CSERUMnh5YlJ1?=
+ =?utf-8?B?dnpnM0NOdjBvWXpWZDN4S1pqV0VoakdtL0dEUTZucFRFdzY2MzJYUUhzRlZz?=
+ =?utf-8?B?QnIrcmhwOTdhbEhTVVNVTkF4bWk2Rm9HVmtOdUJGaTFOUkxna3NHRkRvcUVI?=
+ =?utf-8?B?Q3BOTmw1YytFT05xcElxSG0wRzcvS3AvTjBlaXRBYkNkQXFXMlR5MHhmT0FI?=
+ =?utf-8?B?bXA1dFRMQ2xkbmphRFltOXZsdnBncE1UcWl3MTdES1NYaS9EdHU4ak1LUk1w?=
+ =?utf-8?Q?BPD3OubnWeNJ7EJ8DA82lBBid?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2B1473B76BE8D3409BE241D8D99C708B@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6451.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ffd47a9b-ee7e-41e7-1b40-08dc22d74662
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Feb 2024 03:38:37.3312
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9kJsmtu4Ch5jTAOF/oLsAjqL4Q7us7rlFoO23h3jlBC8/WO7ImsKJErEKwlutQGIG6A8bCkzi0bzmIM0SnvPQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB8100
 
-From: Drew Fustini <dfustini@baylibre.com>
-
-Add support for the Analog Devices AXI PWM Generator. This device is an
-FPGA-implemented peripheral used as PWM signal generator and can be
-interfaced with AXI4. The register map of this peripheral makes it
-possible to configure the period and duty cycle of the output signal.
-
-Link: https://wiki.analog.com/resources/fpga/docs/axi_pwm_gen
-Co-developed-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Co-developed-by: David Lechner <dlechner@baylibre.com>
-Signed-off-by: David Lechner <dlechner@baylibre.com>
-Signed-off-by: Drew Fustini <dfustini@baylibre.com>
-Co-developed-by: Trevor Gamblin <tgamblin@baylibre.com>
-Acked-by: Nuno Sa <nuno.sa@analog.com>
-Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
----
-v3 changes:
-* Address feedback for driver in v2:
-  * Remove unnecessary blank line in axi_pwmgen_apply
-  * Use macros already defined in <linux/fpga/adi-axi-common.h> for
-    version checking
-
-v2 changes:
-* Address feedback for driver and device tree in v1:
-  * Use more reasonable Kconfig approach
-  * Use common prefixes for all functions
-  * Rename axi_pwmgen struct to axi_pwmgen_ddata
-  * Change use of "pwm" to "ddata"
-  * Set and check state->polarity
-  * Multiply safely with mul_u64_u64_div_u64()
-  * Improve handling of max and zero periods
-  * Error if clk_rate_hz > NSEC_PER_SEC
-  * Add "Limitations" section at top of pwm-axi-pwmgen.c
-  * Don't disable outputs by default
-  * Remove unnecessary macros for period, duty, offset
-  * Fix axi_pwmgen_ddata alignment
-  * Don't artificially limit npwm to four
-  * Use clk_rate_exclusive_get(), balance with clk_rate_exclusive_put()
-  * Cache clk rate in axi_pwmgen_ddata
-  * Don't assign pwm->chip.base, do assign pwm->chip.atomic
-* Remove redundant calls to clk_get_rate
-* Test contents of AXI_PWMGEN_REG_CORE_MAGIC instead of
-  arbitrary AXI_PWMGEN_TEST_DATA in AXI_PWMGEN_REG_SCRATCHPAD
-* Remove redundant clk struct from axi_pwmgen_ddata
-* Add self as module author
-* Add major version check for IP core
-
----
- MAINTAINERS                  |   1 +
- drivers/pwm/Kconfig          |  13 ++
- drivers/pwm/Makefile         |   1 +
- drivers/pwm/pwm-axi-pwmgen.c | 242 +++++++++++++++++++++++++++++++++++
- 4 files changed, 257 insertions(+)
- create mode 100644 drivers/pwm/pwm-axi-pwmgen.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8a4ed5545680..2baa7a0a1c8c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3438,6 +3438,7 @@ L:	linux-pwm@vger.kernel.org
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
- F:	Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
-+F:	drivers/pwm/pwm-axi-pwmgen.c
- 
- AXXIA I2C CONTROLLER
- M:	Krzysztof Adamski <krzysztof.adamski@nokia.com>
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 4b956d661755..d44b0e86adee 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -98,6 +98,19 @@ config PWM_ATMEL_TCB
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-atmel-tcb.
- 
-+config PWM_AXI_PWMGEN
-+	tristate "Analog Devices AXI PWM generator"
-+	depends on MICROBLAZE || NIOS2 || ARCH_ZYNQ || ARCH_ZYNQMP || ARCH_INTEL_SOCFPGA || COMPILE_TEST
-+	select REGMAP_MMIO
-+	help
-+	  This enables support for the Analog Devices AXI PWM generator.
-+
-+	  This is a configurable PWM generator with variable pulse width and
-+	  period.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called pwm-axi-pwmgen.
-+
- config PWM_BCM_IPROC
- 	tristate "iProc PWM support"
- 	depends on ARCH_BCM_IPROC || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index c5ec9e168ee7..8322089954e9 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_PWM_APPLE)		+= pwm-apple.o
- obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
- obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+= pwm-atmel-hlcdc.o
- obj-$(CONFIG_PWM_ATMEL_TCB)	+= pwm-atmel-tcb.o
-+obj-$(CONFIG_PWM_AXI_PWMGEN)	+= pwm-axi-pwmgen.o
- obj-$(CONFIG_PWM_BCM_IPROC)	+= pwm-bcm-iproc.o
- obj-$(CONFIG_PWM_BCM_KONA)	+= pwm-bcm-kona.o
- obj-$(CONFIG_PWM_BCM2835)	+= pwm-bcm2835.o
-diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
-new file mode 100644
-index 000000000000..44e62e90b227
---- /dev/null
-+++ b/drivers/pwm/pwm-axi-pwmgen.c
-@@ -0,0 +1,242 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Analog Devices AXI PWM generator
-+ *
-+ * Copyright 2024 Analog Devices Inc.
-+ * Copyright 2024 Baylibre SAS
-+ *
-+ * Limitations:
-+ * - The writes to registers for period and duty are shadowed until
-+ *   LOAD_CONFIG is written to AXI_PWMGEN_REG_CONFIG at the end of the
-+ *   current period.
-+ * - Writing LOAD_CONFIG also has the effect of re-synchronizing all
-+ *   enabled channels, which could cause glitching on other channels. It
-+ *   is therefore expected that channels are assigned harmonic periods
-+ *   and all have a single user coordinating this.
-+ * - Supports normal polarity. Does not support changing polarity.
-+ */
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/fpga/adi-axi-common.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#define AXI_PWMGEN_REG_CORE_VERSION	0x00
-+#define AXI_PWMGEN_REG_ID		0x04
-+#define AXI_PWMGEN_REG_SCRATCHPAD	0x08
-+#define AXI_PWMGEN_REG_CORE_MAGIC	0x0C
-+#define AXI_PWMGEN_REG_CONFIG		0x10
-+#define AXI_PWMGEN_REG_NPWM		0x14
-+#define AXI_PWMGEN_CHX_PERIOD(ch)	(0x40 + (12 * (ch)))
-+#define AXI_PWMGEN_CHX_DUTY(ch)		(0x44 + (12 * (ch)))
-+#define AXI_PWMGEN_CHX_OFFSET(ch)	(0x48 + (12 * (ch)))
-+#define AXI_PWMGEN_REG_CORE_MAGIC_VAL	0x601A3471 /* Identification number to test during setup */
-+#define AXI_PWMGEN_LOAD_CONFIG		BIT(1)
-+#define AXI_PWMGEN_RESET		BIT(0)
-+
-+struct axi_pwmgen_ddata {
-+	struct pwm_chip	chip;
-+	struct regmap *regmap;
-+	unsigned long clk_rate_hz;
-+};
-+
-+static const struct regmap_config axi_pwmgen_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+};
-+
-+static struct axi_pwmgen_ddata *axi_pwmgen_from_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct axi_pwmgen_ddata, chip);
-+}
-+
-+static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    const struct pwm_state *state)
-+{
-+	struct axi_pwmgen_ddata *ddata = axi_pwmgen_from_chip(chip);
-+	unsigned int ch = pwm->hwpwm;
-+	struct regmap *regmap = ddata->regmap;
-+	u64 period_cnt, duty_cnt;
-+	int ret;
-+
-+	if (state->polarity != PWM_POLARITY_NORMAL)
-+		return -EINVAL;
-+
-+	if (state->enabled) {
-+		period_cnt = mul_u64_u64_div_u64(state->period, ddata->clk_rate_hz, NSEC_PER_SEC);
-+		if (period_cnt > UINT_MAX)
-+			period_cnt = UINT_MAX;
-+
-+		if (period_cnt == 0)
-+			return -EINVAL;
-+
-+		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), period_cnt);
-+		if (ret)
-+			return ret;
-+
-+		duty_cnt = mul_u64_u64_div_u64(state->duty_cycle, ddata->clk_rate_hz, NSEC_PER_SEC);
-+		if (duty_cnt > UINT_MAX)
-+			duty_cnt = UINT_MAX;
-+
-+		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), duty_cnt);
-+		if (ret)
-+			return ret;
-+	} else {
-+		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), 0);
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), 0);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return regmap_write(regmap, AXI_PWMGEN_REG_CONFIG, AXI_PWMGEN_LOAD_CONFIG);
-+}
-+
-+static int axi_pwmgen_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				struct pwm_state *state)
-+{
-+	struct axi_pwmgen_ddata *ddata = axi_pwmgen_from_chip(chip);
-+	struct regmap *regmap = ddata->regmap;
-+	unsigned int ch = pwm->hwpwm;
-+	u32 cnt;
-+	int ret;
-+
-+	ret = regmap_read(regmap, AXI_PWMGEN_CHX_PERIOD(ch), &cnt);
-+	if (ret)
-+		return ret;
-+
-+	state->enabled = cnt != 0;
-+
-+	state->period = DIV_ROUND_UP_ULL((u64)cnt * NSEC_PER_SEC, ddata->clk_rate_hz);
-+
-+	ret = regmap_read(regmap, AXI_PWMGEN_CHX_DUTY(ch), &cnt);
-+	if (ret)
-+		return ret;
-+
-+	state->duty_cycle = DIV_ROUND_UP_ULL((u64)cnt * NSEC_PER_SEC, ddata->clk_rate_hz);
-+
-+	state->polarity = PWM_POLARITY_NORMAL;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops axi_pwmgen_pwm_ops = {
-+	.apply = axi_pwmgen_apply,
-+	.get_state = axi_pwmgen_get_state,
-+};
-+
-+static int axi_pwmgen_setup(struct axi_pwmgen_ddata *ddata, struct device *dev)
-+{
-+	struct regmap *regmap = ddata->regmap;
-+	int ret;
-+	u32 val;
-+
-+	ret = regmap_read(regmap, AXI_PWMGEN_REG_CORE_MAGIC, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val != AXI_PWMGEN_REG_CORE_MAGIC_VAL)
-+		return dev_err_probe(dev, -ENODEV,
-+			"failed to read expected value from register: got %08x, expected %08x\n",
-+			val,
-+			AXI_PWMGEN_REG_CORE_MAGIC_VAL);
-+
-+	ret = regmap_read(regmap, AXI_PWMGEN_REG_CORE_VERSION, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (ADI_AXI_PCORE_VER_MAJOR(val) != 1) {
-+		return dev_err_probe(dev, -ENODEV, "Unsupported peripheral version %u.%u.%u\n",
-+			ADI_AXI_PCORE_VER_MAJOR(val),
-+			ADI_AXI_PCORE_VER_MINOR(val),
-+			ADI_AXI_PCORE_VER_PATCH(val));
-+	}
-+
-+	ret = regmap_read(regmap, AXI_PWMGEN_REG_NPWM, &ddata->chip.npwm);
-+	if (ret)
-+		return ret;
-+
-+	/* Enable the core */
-+	return regmap_update_bits(regmap, AXI_PWMGEN_REG_CONFIG, AXI_PWMGEN_RESET, 0);
-+}
-+
-+static void axi_pwmgen_clk_rate_exclusive_put(void *data)
-+{
-+	clk_rate_exclusive_put(data);
-+}
-+
-+static int axi_pwmgen_probe(struct platform_device *pdev)
-+{
-+	struct axi_pwmgen_ddata *ddata;
-+	struct clk *clk;
-+	void __iomem *io_base;
-+	int ret;
-+
-+	ddata = devm_kzalloc(&pdev->dev, sizeof(*ddata), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
-+
-+	io_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(io_base))
-+		return PTR_ERR(io_base);
-+
-+	ddata->regmap = devm_regmap_init_mmio(&pdev->dev, io_base, &axi_pwmgen_regmap_config);
-+	if (IS_ERR(ddata->regmap))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ddata->regmap),
-+				     "failed to init register map\n");
-+
-+	clk = devm_clk_get_enabled(&pdev->dev, NULL);
-+	if (IS_ERR(clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(clk), "failed to get clock\n");
-+
-+	ret = clk_rate_exclusive_get(clk);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "failed to get exclusive rate\n");
-+
-+	ret = devm_add_action_or_reset(&pdev->dev, axi_pwmgen_clk_rate_exclusive_put, clk);
-+	if (ret)
-+		return ret;
-+
-+	ddata->clk_rate_hz = clk_get_rate(clk);
-+	if (!ddata->clk_rate_hz || ddata->clk_rate_hz > NSEC_PER_SEC)
-+		return dev_err_probe(&pdev->dev, -EINVAL,
-+				     "Invalid clock rate: %lu\n", ddata->clk_rate_hz);
-+
-+	ddata->chip.dev = &pdev->dev;
-+	ddata->chip.ops = &axi_pwmgen_pwm_ops;
-+	ddata->chip.atomic = true;
-+
-+	ret = axi_pwmgen_setup(ddata, &pdev->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	return devm_pwmchip_add(&pdev->dev, &ddata->chip);
-+}
-+
-+static const struct of_device_id axi_pwmgen_ids[] = {
-+	{ .compatible = "adi,axi-pwmgen-1.00.a" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, axi_pwmgen_ids);
-+
-+static struct platform_driver axi_pwmgen_driver = {
-+	.driver = {
-+		.name = "axi-pwmgen",
-+		.of_match_table = axi_pwmgen_ids,
-+	},
-+	.probe = axi_pwmgen_probe,
-+};
-+module_platform_driver(axi_pwmgen_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Sergiu Cuciurean <sergiu.cuciurean@analog.com>");
-+MODULE_AUTHOR("Trevor Gamblin <tgamblin@baylibre.com>");
-+MODULE_DESCRIPTION("Driver for the Analog Devices AXI PWM generator");
--- 
-2.43.0
-
+SGkgUm9iLA0KDQpPbiAzMS8wMS8yNCA5OjA1IGFtLCBEaGFybWEgQiAtIEk3MDg0MyB3cm90ZToN
+Cj4gQ29udmVydGVkIHRoZSB0ZXh0IGJpbmRpbmdzIHRvIFlBTUwgYW5kIHZhbGlkYXRlZCB0aGVt
+IGluZGl2aWR1YWxseSB1c2luZyBmb2xsb3dpbmcgY29tbWFuZHMNCj4gDQo+ICQgbWFrZSBkdF9i
+aW5kaW5nX2NoZWNrIERUX1NDSEVNQV9GSUxFUz1Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvDQo+ICQgbWFrZSBkdGJzX2NoZWNrIERUX1NDSEVNQV9GSUxFUz1Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvDQo+IA0KPiBjaGFuZ2Vsb2dzIGFyZSBhdmFpbGFibGUgaW4g
+cmVzcGVjdGl2ZSBwYXRjaGVzLg0KPiANCj4gQXMgU2FtIHN1Z2dlc3RlZCBJJ20gc2VuZGluZyB0
+aGUgUFdNIGJpbmRpbmcgYXMgaXQgaXMgaW4gdGhpcyBwYXRjaCBzZXJpZXMsIGNsZWFuIHVwIHBh
+dGNoDQo+IHdpbGwgYmUgc2VudCBhcyBzZXBhcmF0ZSBwYXRjaC4NCj4gDQoNCkkgd291bGQgd2Fu
+dCB0byBrbm93IGlmIEkgY2FuIGhhdmUgdGhlIGV4YW1wbGVzIGluIGRpc3BsYXkgYW5kIHB3bSAN
+CmJpbmRpbmdzIHNlcGFyYXRlbHkgb3IgaWYgSSBoYXZlIHRvIGRlbGV0ZSB0aGVtIGZyb20gYm90
+aCBhbmQgaGF2ZSBhIA0Kc2luZ2xlLCBjb21wcmVoZW5zaXZlIGV4YW1wbGUgaW4gbWZkIGJpbmRp
+bmcuIEknbSBhIGxpdHRsZSBwdXp6bGVkIGFib3V0IA0KdGhpcy4NCg0KPiBEaGFybWEgQmFsYXN1
+YmlyYW1hbmkgKDMpOg0KPiAgICBkdC1iaW5kaW5nczogZGlzcGxheTogY29udmVydCBBdG1lbCdz
+IEhMQ0RDIHRvIERUIHNjaGVtYQ0KPiAgICBkdC1iaW5kaW5nczogYXRtZWwsaGxjZGM6IGNvbnZl
+cnQgcHdtIGJpbmRpbmdzIHRvIGpzb24tc2NoZW1hDQo+ICAgIGR0LWJpbmRpbmdzOiBtZmQ6IGF0
+bWVsLGhsY2RjOiBDb252ZXJ0IHRvIERUIHNjaGVtYSBmb3JtYXQNCj4gDQo+ICAgLi4uL2F0bWVs
+L2F0bWVsLGhsY2RjLWRpc3BsYXktY29udHJvbGxlci55YW1sIHwgODUgKysrKysrKysrKysrKysr
+Kw0KPiAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2F0bWVsL2hsY2RjLWRjLnR4dCAgICAgICB8IDc1
+IC0tLS0tLS0tLS0tLS0tDQo+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2F0bWVsLGhs
+Y2RjLnlhbWwgIHwgOTkgKysrKysrKysrKysrKysrKysrKw0KPiAgIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL21mZC9hdG1lbC1obGNkYy50eHQgICB8IDU2IC0tLS0tLS0tLS0tDQo+ICAgLi4uL2Jp
+bmRpbmdzL3B3bS9hdG1lbCxobGNkYy1wd20ueWFtbCAgICAgICAgIHwgNDQgKysrKysrKysrDQo+
+ICAgLi4uL2JpbmRpbmdzL3B3bS9hdG1lbC1obGNkYy1wd20udHh0ICAgICAgICAgIHwgMjkgLS0t
+LS0tDQo+ICAgNiBmaWxlcyBjaGFuZ2VkLCAyMjggaW5zZXJ0aW9ucygrKSwgMTYwIGRlbGV0aW9u
+cygtKQ0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9hdG1lbC9hdG1lbCxobGNkYy1kaXNwbGF5LWNvbnRyb2xsZXIueWFtbA0K
+PiAgIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9hdG1lbC9obGNkYy1kYy50eHQNCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hdG1lbCxobGNkYy55YW1sDQo+ICAgZGVs
+ZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvYXRt
+ZWwtaGxjZGMudHh0DQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9wd20vYXRtZWwsaGxjZGMtcHdtLnlhbWwNCj4gICBkZWxldGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9hdG1lbC1obGNkYy1w
+d20udHh0DQo+IA0KDQotLSANCldpdGggQmVzdCBSZWdhcmRzLA0KRGhhcm1hIEIuDQoNCg==
 
