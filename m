@@ -1,95 +1,115 @@
-Return-Path: <linux-pwm+bounces-1173-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1174-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DD9E8464C2
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 Feb 2024 01:03:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADA168464FC
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 Feb 2024 01:18:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE80B289137
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 Feb 2024 00:03:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A76028A1EC
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 Feb 2024 00:18:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A7E0620;
-	Fri,  2 Feb 2024 00:03:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 228F3188;
+	Fri,  2 Feb 2024 00:18:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ELiKg/sM"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="KkQWEYMw"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0216105;
-	Fri,  2 Feb 2024 00:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAC97E9;
+	Fri,  2 Feb 2024 00:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706832218; cv=none; b=C/JIsv6LUT05kIW8shxJHaAmM6rXrCXeFV41GBnQJDAaqXgu7RfWys/pnia1XpCsA7j5u+GyjrJUz4FDZ0zTSs9X01FBd8KzeNl4ZzS6II3W/WG7f88q1qja919iNfw+Jr5Lin26Uj1BAet5+j4408JHcCONs+8VIxXQsNY9PnM=
+	t=1706833101; cv=none; b=ZhsUhMrjtizB/fBxMoSb/czm1PEZcBkSE8OthbdjZhaI/l52FJydDI5ZLE2fUVOKTcnu86Fk0BqAsBp96qbPUQPiEKH5/JEKH8sYKFpvx0geC9fp9UdwAH7aGfXzKieQd3dBar9eNtcCb12shSRdEjNGWdZo1DipGCu73Piluuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706832218; c=relaxed/simple;
-	bh=jRRF9WD0Ih34oFyn8QC1/CQx0uQoczFXftdu1/ViRb4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pRhuhU1ccUQjrMOHBkANABsfcBsiTmJy0sadE5rD7bp7x4TmJXfr87WJMggu1hjaCxAOI/K4d+Ae3ZoVOU3+vaZzqsujCtV3nlHgyOjmqXfQqPF4+CWKPWSgas7ErfbI2qZmcNvR35KTnV3U5gTu4ykty4CtF1FcTBcoUxxTY74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ELiKg/sM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62FDEC433F1;
-	Fri,  2 Feb 2024 00:03:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706832217;
-	bh=jRRF9WD0Ih34oFyn8QC1/CQx0uQoczFXftdu1/ViRb4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ELiKg/sM9oMYqNibGG/5LYhmgT0jM5x2oYprQxJqLmZyTZ2nRwppEdaTmQfAN69F0
-	 FgMCPdgBl39xnkRFNfkD64XX7idIYesPJH9e0LCtaYn0l7kT03k02+Gvip2XS/ZUc5
-	 vUohXNz4xvFOSgO2k2Mg4i6M4jctvhxOwyeyyuKfNbpCBtxMPpMfGsXJztnC4dgyCM
-	 PL2bGc116RDtZuavthS2bkDIucZg3tpOSBmkVqCoFYfCu4xbo2EIVfIvMPFxJuwE9Y
-	 VeVDtCneZvqEHmvu9QGRV+aYZPgoA4POxen9VfDyV2AjLlp1kHEvHSfHJIjLOKvkix
-	 kvy5Qtuf65rSQ==
-From: Bjorn Andersson <andersson@kernel.org>
-To: lee@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	agross@kernel.org,
-	Anjelique Melendez <quic_amelende@quicinc.com>
-Cc: konrad.dybcio@linaro.org,
-	linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 0/2] Add QCOM PBS driver
-Date: Thu,  1 Feb 2024 18:03:34 -0600
-Message-ID: <170683221107.260225.17408986886128551623.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240201204421.16992-2-quic_amelende@quicinc.com>
-References: <20240201204421.16992-2-quic_amelende@quicinc.com>
+	s=arc-20240116; t=1706833101; c=relaxed/simple;
+	bh=6lCpe1JWBv0gIutmOVn15+H+ejUjuih0/bmRqdymfH0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h2sCnjKAYOoMSnmIJt2dqj1HWFNTxYsmDtzZ/CautBDmxMU40cPXmKJJFI6uBOYaUXbjEnPq92HEqrGijnrMU4cMXyraztd2qDWVc5dLbeS4e9GGSuthk6OtZSPDOsJi0mSdWG9Ps7tXEMKQQUVvfr45iOEeL84kRO8GRdph238=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=KkQWEYMw; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1706833099; x=1738369099;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6lCpe1JWBv0gIutmOVn15+H+ejUjuih0/bmRqdymfH0=;
+  b=KkQWEYMwJZTDr8dc/K+oE0lrlSLa2x22T49eBxn/3roWFr9+SUB99qok
+   5ne2eQeIbm2yL2WQXP6lieMWIoTbVr8IONhNMjPZdSlhJMFkNlxyQK9iJ
+   uYOwOcTDBvlAPfaFPdhfSz+WzOhyJgQUIIbWU/o+QqfdOHLoJjLH9aKBf
+   urQODbmxIGmTrCLDAw9+5cNpzs7V2woe33eM/liVEW23C+XIppy61ebKs
+   APsWdpVAXKEKse9WyX2NNU8VjZkAhyOFzhHLpTmgdj7YOPvf6hHsuFISF
+   cOAZ5T1DCPaT687J0dwy6XsDQH8tZwEkCqMFn52912LNEDhdducdX0YbY
+   Q==;
+X-CSE-ConnectionGUID: q2aqr2bnSse6ZnRLstrm9A==
+X-CSE-MsgGUID: ZMDnp1A7QAq47c0BW+chNg==
+X-IronPort-AV: E=Sophos;i="6.05,236,1701154800"; 
+   d="scan'208";a="15650200"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Feb 2024 17:18:18 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 1 Feb 2024 17:17:45 -0700
+Received: from che-lt-i70843lx.amer.actel.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 1 Feb 2024 17:17:37 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+To: <sam@ravnborg.org>, <bbrezillon@kernel.org>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
+	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<lee@kernel.org>, <thierry.reding@gmail.com>,
+	<u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>
+CC: <hari.prasathge@microchip.com>, <manikandan.m@microchip.com>, "Dharma
+ Balasubiramani" <dharma.b@microchip.com>
+Subject: [linux][PATCH v6 0/3] Convert Microchip's HLCDC Text based DT bindings to JSON schema
+Date: Fri, 2 Feb 2024 05:47:30 +0530
+Message-ID: <20240202001733.91455-1-dharma.b@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+Converted the text bindings to YAML and validated them individually using following commands
 
-On Thu, 01 Feb 2024 12:44:20 -0800, Anjelique Melendez wrote:
-> Add the Qualcomm PBS (Programmable Boot Sequencer) driver. The QCOM PBS
-> driver supports configuring software PBS trigger events through PBS RAM
-> on Qualcomm Technologies, Inc (QTI) PMICs.
-> 
-> QCOM PBS driver is needed to support LUT PPG. This is a new series to
-> separate PBS patches from the applied LUT PPG patch. Original comments
-> can be found here:
-> https://lore.kernel.org/all/20231221185838.28440-1-quic_amelende@quicinc.com/T/#m7ab7af4c59c6e1019721d01cb3696cb5ed708bda
-> 
-> [...]
+$ make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/
+$ make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/
 
-Applied, thanks!
+changelogs are available in respective patches.
 
-[1/2] dt-bindings: soc: qcom: Add qcom,pbs bindings
-      commit: 641fde51bdb26c09ea8cdbd82084e93bd88d1fcb
-[2/2] soc: qcom: add QCOM PBS driver
-      commit: 5b2dd77be1d85ac3a8be3749f5605bf0830e2998
+Dharma Balasubiramani (3):
+  dt-bindings: display: convert Atmel's HLCDC to DT schema
+  dt-bindings: atmel,hlcdc: convert pwm bindings to json-schema
+  dt-bindings: mfd: atmel,hlcdc: Convert to DT schema format
 
-Best regards,
+ .../atmel/atmel,hlcdc-display-controller.yaml | 63 ++++++++++++
+ .../bindings/display/atmel/hlcdc-dc.txt       | 75 --------------
+ .../devicetree/bindings/mfd/atmel,hlcdc.yaml  | 99 +++++++++++++++++++
+ .../devicetree/bindings/mfd/atmel-hlcdc.txt   | 56 -----------
+ .../bindings/pwm/atmel,hlcdc-pwm.yaml         | 35 +++++++
+ .../bindings/pwm/atmel-hlcdc-pwm.txt          | 29 ------
+ 6 files changed, 197 insertions(+), 160 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/atmel/atmel,hlcdc-display-controller.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+
 -- 
-Bjorn Andersson <andersson@kernel.org>
+2.25.1
+
 
