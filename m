@@ -1,125 +1,169 @@
-Return-Path: <linux-pwm+bounces-1183-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1184-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C46938476A7
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 Feb 2024 18:51:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3461847A4B
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 Feb 2024 21:13:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A087FB2CBE7
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 Feb 2024 17:49:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 601AD1F2279D
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 Feb 2024 20:13:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E06A14AD07;
-	Fri,  2 Feb 2024 17:49:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EA148062E;
+	Fri,  2 Feb 2024 20:13:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UxJu2BVf"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="qjl4aPoF"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1D9168B9;
-	Fri,  2 Feb 2024 17:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8ECD80606;
+	Fri,  2 Feb 2024 20:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706896178; cv=none; b=GAEO9/guA8TxnyAffTF7ikPxN+WdEm3YFWU/9gxf3vDsBY8GdH0ZXMOLP4DFtOFZyB4UI7W5V9Uh2YgDfeLpurVLhb6hwjaP7s0NBNM7gMzwI/8pIM1MoiBZJFTw3G8Vf6cKIrumjXAc2n4d9JWzuwQ4jpuN/x6Ih3Ah1PUHMnw=
+	t=1706904809; cv=none; b=F9u4klJkiiSR08UljMsuClQZza+vtq6PtDTqppAGq0i9dXG95Zx7Q6FR2+gapKCKPTvPEBxHlEyZAvJpMHHqU/KIBDg/CtZGB9bWAIgJJoFnCdIbIBLbY63EvvXS3DphK9wVEaAFApOIfr+UPHI7+ZYUVjiyDKXsjGAsAjQkS0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706896178; c=relaxed/simple;
-	bh=ORUBZj9VbJrS+6YnsNZ+Hq1I3Z9kACZ53vfnC6z1j6Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=naks1ljI9+daVPefYn33BRXN4Ik6eSFqFH3i0QUtB4eTkuVjMfnFnQQZ+4OKIx/v5WBJ2tHUJ1ZyPqyfQM/qogkhWBBoQtcxcAIdzcIBUAEfSQ2xPQJtQq6ISh3IR31sj1EooKcxgPl2VggnFzqAyiVfKajPNIUE6eTXoh5VOYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UxJu2BVf; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 412B5I9j003316;
-	Fri, 2 Feb 2024 17:49:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=oDjf0Uy4yNJyMguYyjd0ZF+yN77D94FizZdVWHnKdZ8=; b=Ux
-	Ju2BVf+IR5KBBoGt0+JaQALT4a2O7Xy0Vf/hm1XJfccC00RvoOTEmrXRSDhd3jCL
-	xWrVCY9BwcIupl9QlU/Ko+PICCcbRbjvfB/7k9sR+hoT2C9PKcMXZY6jzWdZyMgZ
-	0o7B5GmHg2OI60jOPrmtnUK0F6SBrW6s9ZUQZwzeuZWIED7TuapKDQBeEyXO1HTn
-	CY90RjN724QauLDBdC66lMGoN1Fy+pGg+H1K46eGVFz4FgfIQ2WkNXqvwCdDs0Tt
-	aGb/rh2OTtl2d6ydA6Fw15pYS66Ypn93hrVxrkZ90sQj8NyqisUvppfWZfUqw5fh
-	v2HCb908A0CHkHSp5utw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0pwc20h7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 17:49:32 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 412HnWKs001766
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 Feb 2024 17:49:32 GMT
-Received: from [10.110.0.40] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 2 Feb
- 2024 09:49:31 -0800
-Message-ID: <4a9b6d7b-70ab-cd18-770c-37993b0ccc63@quicinc.com>
-Date: Fri, 2 Feb 2024 09:49:21 -0800
+	s=arc-20240116; t=1706904809; c=relaxed/simple;
+	bh=PUv3nFnuJ9zyA1sti9M6oocB0bwJaHp3C7+h3EFz18k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nugEFcMbT/aTSlYJFr2FjbfU7DbaHyK8GsUN+LvXR5g5RXslW2uk5rV2XS/FIVB1AS1OzgXIxy+656OL2VJ4QnMcZaVx1DQCfLRcM2FXqThqYq9w1FYXlt+dl2DWVMxP300wspR7jG8B4H2k1SgkfMhktzxYbywHRYZrWR3dAzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=qjl4aPoF; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1706904796; x=1707509596; i=wahrenst@gmx.net;
+	bh=PUv3nFnuJ9zyA1sti9M6oocB0bwJaHp3C7+h3EFz18k=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=qjl4aPoFiMRDfJlpWqFkPm3ACZm/z4ZqmBrhRTMr345CWQd2Jt+VCHHZ16ayXqaP
+	 RgZcXj0/oyH2+cpu/VpidzWWEk+O1yQwUUv+JS6meCCp4gvEXb4L2nsaX+pqOuDRd
+	 I6+DtGZ2wLIVcmCXgk71M4A+0jXzlNjqhHeTAqbY2Bdu66BnnPPk1UFzTNQvNLDkd
+	 DsAm4SxFiqPYcEAlZjNOoG6HOmFIXKy/GRyEbS7Ck2Vgiawb5edDKpUloGqBPHhtQ
+	 LjmBA1gEDc2VvFujP+v5bdSCaSW6TrfD4SMElFzaRYzA2PFZQLKa1BXsnD/2lwdys
+	 Ot5G7oIaa3S9LyMqeQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mf0BM-1qqtj43O1K-00gUOk; Fri, 02
+ Feb 2024 21:13:16 +0100
+Message-ID: <384a6c41-f29c-4adc-96a2-f72a44d1c718@gmx.net>
+Date: Fri, 2 Feb 2024 21:13:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 1/2] dt-bindings: soc: qcom: Add qcom,pbs bindings
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 0/2] pwm: Add GPIO PWM driver
+To: Phil Howard <phil@gadgetoid.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com,
+ Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20240128163630.104725-1-wahrenst@gmx.net>
+ <CA+kSVo88y7n9dyo57fgjybC9=1b_dgTPA3u-_kUH9X_79HF4tA@mail.gmail.com>
 Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, <lee@kernel.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <agross@kernel.org>, <andersson@kernel.org>
-CC: <konrad.dybcio@linaro.org>, <linux-leds@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pwm@vger.kernel.org>
-References: <20240201204421.16992-2-quic_amelende@quicinc.com>
- <20240201204421.16992-4-quic_amelende@quicinc.com>
- <1de7cfbc-3507-459f-842e-c9349b2f05ac@linaro.org>
-From: Anjelique Melendez <quic_amelende@quicinc.com>
-In-Reply-To: <1de7cfbc-3507-459f-842e-c9349b2f05ac@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 1RG0hPmpTWbv0d2sxE46VFefcLvl8srb
-X-Proofpoint-ORIG-GUID: 1RG0hPmpTWbv0d2sxE46VFefcLvl8srb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-02_11,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=438 clxscore=1015
- phishscore=0 bulkscore=0 mlxscore=0 suspectscore=0 adultscore=0
- priorityscore=1501 malwarescore=0 impostorscore=0 lowpriorityscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402020128
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <CA+kSVo88y7n9dyo57fgjybC9=1b_dgTPA3u-_kUH9X_79HF4tA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0oChKbxfGdIdXr0N9w8xUKyvCYDidRbih5Ksz0yaBJsqsmkhJxp
+ 36RAwbAJ32fXLojOHjYvzfK9BOdDdt/KZdYGl+aYkWQS37/WvMtZx0+vBEQHq8PdERQrrtk
+ /Tz4K9XyRoZy49MP8Ji8LiY2rmNqNw67kSzy1+7eTgANxXuMm0RJ/R1QgxsGVxKVMOrMySJ
+ IJCoC8TO9sbP/pcp83U2Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:wySiJoXBfxg=;FSC9pA1wm4R0wPy508UHmdafWCV
+ JHAyMO+tablNoe3kQ3JbB2HqzQolUMjOndkL5Y4kBZPMU7Z655FW7vLiT51yh+VKcw3sY0AhO
+ kl05OKt9NAbGoJbWEizfECi+ahhBNwcnpUe05ka2LqPKTTWY35iH8e9rAwqQTBsGxNole1RDq
+ hQIvsY4z3N2eiLcWZiqpPNiU0H/f3uJkVGqOzVcPxodHwab9qYFgn4+lL1Jgbugar5S4Guh0w
+ WkRSq9SFKT6yxA7PgiQSjkrJBjv4PrUPYffGVNM4bHyfR8Y2neM7QoDtOAxqciLfBMRDv8iz+
+ zPjC8RyqCnaBirBASgacLzx5P5FUzDcE45Pti4kDfhdjmeFds4m4bpDVPbxSeABMR6F7ca5S2
+ /DAmvryH57C5EY9uXr61KFTcUo5LMzJvPPhVRlrIXBeROmT2y/wZCb2B7idSlsp2QxybGIu8k
+ gfEEnk4Hyogk+7RBzaX4D1SwFsdOfSQ6nePvNCSE2SAowfB/+eQbURykWncD4YODp7axTYohG
+ Ow24CJQi97OIO5lcF0sSiC7fndXIgdyYClf9Z6PPROmMFctuJfc2A+T9shzO7vZzfZwky0BR3
+ YC/PlPcDVsLXUNjzPaqbweKc944QAxFKEBDdS9VIAd4Q0i7NohELDyi6aXjqfHw5EZsBbMtCx
+ rYc5QtwtECCBciVSu32ojXQGCllIC96a+DXdbdm4lsnhARYFuhsJXjvkEj1ZGexdPNfM2PE/3
+ KFJude1K6kRU7QUui3yhen7R5prtO923+ke6TvvLUgFpgNtAFKIMujYI6/8pgppfEBwRUAgJQ
+ gaM+4bhkuw6PBupyujmDs1PowJ5u8CxEygzn4mQNetiSM=
 
+Hi Phil,
 
-
-On 2/1/2024 11:29 PM, Krzysztof Kozlowski wrote:
-> On 01/02/2024 21:44, Anjelique Melendez wrote:
->> Add binding for the Qualcomm Programmable Boot Sequencer device.
+Am 02.02.24 um 14:19 schrieb Phil Howard:
+> On Sun, 28 Jan 2024 at 16:37, Stefan Wahren <wahrenst@gmx.net> wrote:
+>> Add a software PWM which toggles a GPIO from a high-resolution timer.
 >>
->> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
->> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> How is it possible? This is v1, not a resend, and I never give review
-> tags not in public.
-> 
-> Best regards,
-> Krzysztof
-> 
-Sorry for the confusion, this patch was originally in this series:
-https://lore.kernel.org/all/20231221185838.28440-2-quic_amelende@quicinc.com/,
-where you gave your reviewed by tag in v3:
-https://lore.kernel.org/all/102328fa-5699-4731-d639-079bce8863a5@linaro.org/.
-This was separated into a new series since half of the original
-patches were already applied. I mentioned this in the cover
-letter but in future should I keep version the same as the original
-series?
+>> Recent discussions in the Raspberry Pi community revealt that a lot
+>> of users still use MMIO userspace tools for GPIO access. One argument
+>> for this approach is the lack of a GPIO PWM kernel driver. So this
+>> series tries to fill this gap.
+> *Thank you* for picking this up. I've been stuck down by covid but am ai=
+ming
+> to build and test this on a Pi 5 (with a gpio chip over PCIe) to see if =
+it runs-
+> though I am fully expecting a PIO solution (using the Pi 5s RP1) to hand=
+le
+> PWM in this case, and hope to rely upon this gpio-pwm module for previou=
+s
+> iterations.
+i hope you are doing well.
 
-Thanks,
-Anjelique
+There will be small functional changes in V4. Since this series based on
+Linux 6.8 and there is no RPi 5 mainline support, you will need to apply
+it on top of rpi-6.8.y.
+
+Should i wait for your test results (no pressure) before sending V4?
+>
+>> This continues the work of Vincent Whitchurch [1], which is easier
+>> to read and more consequent by rejecting sleeping GPIOs than Nicola's
+>> approach [2].
+>>
+>> The work has been tested on a Raspberry Pi 3 B+ and a cheap logic
+>> analyzer.
+>>
+>> V3:
+>>   - rebase on top of v6.8-pwm-next
+>>   - cherry-pick improvements from Nicola's series
+>>   - try to address Uwe's, Linus' and Andy's comments
+>>   - try to avoid GPIO glitches during probe
+>>   - fix pwm_gpio_remove()
+>>   - some code clean up's and comments
+>>
+>> V2:
+>>   - Rename gpio to gpios in binding
+>>   - Calculate next expiry from expected current expiry rather than "now=
+"
+>>   - Only change configuration after current period ends
+>>   - Implement get_state()
+>>   - Add error message for probe failures
+>>   - Stop PWM before unregister
+>>
+>> [1] - https://lore.kernel.org/all/20200915135445.al75xmjxudj2rgcp@axis.=
+com/T/
+>> [2] - https://lore.kernel.org/all/20201205214353.xapax46tt5snzd2v@einst=
+ein.dilieto.eu/
+>>
+>> Nicola Di Lieto (1):
+>>    dt-bindings: pwm: Add pwm-gpio
+>>
+>> Vincent Whitchurch (1):
+>>    pwm: Add GPIO PWM driver
+>>
+>>   .../devicetree/bindings/pwm/pwm-gpio.yaml     |  42 ++++
+>>   drivers/pwm/Kconfig                           |  11 +
+>>   drivers/pwm/Makefile                          |   1 +
+>>   drivers/pwm/pwm-gpio.c                        | 221 +++++++++++++++++=
++
+>>   4 files changed, 275 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pwm/pwm-gpio.yam=
+l
+>>   create mode 100644 drivers/pwm/pwm-gpio.c
+>>
+>> --
+>> 2.34.1
+>>
+
 
