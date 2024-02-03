@@ -1,74 +1,75 @@
-Return-Path: <linux-pwm+bounces-1189-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1190-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E4C6848735
-	for <lists+linux-pwm@lfdr.de>; Sat,  3 Feb 2024 16:47:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CD8B5848738
+	for <lists+linux-pwm@lfdr.de>; Sat,  3 Feb 2024 16:48:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 97F1FB267EB
-	for <lists+linux-pwm@lfdr.de>; Sat,  3 Feb 2024 15:47:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A66E1B26D53
+	for <lists+linux-pwm@lfdr.de>; Sat,  3 Feb 2024 15:48:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14D295DF2D;
-	Sat,  3 Feb 2024 15:47:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 840D15F549;
+	Sat,  3 Feb 2024 15:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="A/YndlFE"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="YNDnvWLU"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666975D748
-	for <linux-pwm@vger.kernel.org>; Sat,  3 Feb 2024 15:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46F15F547
+	for <linux-pwm@vger.kernel.org>; Sat,  3 Feb 2024 15:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706975246; cv=none; b=hsS4/Ee5RkPRsKt/JaK96x3Rg8XkxOWmM8kdnzQCegbyop6Eygh7N6E8XbCfVNrEkfJ4Lbj6B7ODdH0z+72y9giVyOuieV0YQGLEp0SWwOEnGaFPNDLlJszUAf+ZuZ9aeKe9FIS4ENjNjvz//4mb3Ul/7l1T7NXKokL7rmI3UUc=
+	t=1706975270; cv=none; b=QeWcWx3eWasb0WCiNr2nIC889eYMSd6hQ4uCIxlIKemLQgF/8yJWNDoRumKtnZs5vf46rj6SDDpO29KXW3oh9/SeluBrzFw1C+Okwbf2FduuE02r8wS96UPvGLBHerx2vigc1D2M5oAal2R6i+1aLEgrLQq/DICk5z7rAts2dOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706975246; c=relaxed/simple;
-	bh=SaFekycQUAlhaMOi8GYbX13HfBZgmgqP7oiL389koow=;
+	s=arc-20240116; t=1706975270; c=relaxed/simple;
+	bh=4VsMVgkKNr4aDxCymIdFswH9Cysdcq63FHQxspuGJ10=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hf1wpp/OCGIaIgUE5rhOMr8by7PEQnaf+WQi6lm5aRSQHkklcFIWJIgvBaefxGAGMBwmE9xKQXmUsRqfdwiGBrCUO4XazRuwYAkG6oMGylySgHETUxsVZNm/FVYlYEAVqPRcY1ClPAKBdCljgE39cx+1dZQ9QjDPqHunTJ3fi6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=A/YndlFE; arc=none smtp.client-ip=209.85.218.50
+	 In-Reply-To:Content-Type; b=LLbUOHLvSGy1tDWuQAoQAPPqViPTTPYazPSDDGYF7omiXmcEFU63sZmDvrObYjUrKQs0vWWffkzXeeaZI3eCcoZqFWtOKHxe/Uf03GBkOueJgeAoU7Ojp4M0SM5rQlXR/qN3OIhz79uSkR65QKWWzcCpRgisOh65Nn2+Lf7klqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=YNDnvWLU; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a363961b96aso394342766b.3
-        for <linux-pwm@vger.kernel.org>; Sat, 03 Feb 2024 07:47:24 -0800 (PST)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a35e9161b8cso406100766b.3
+        for <linux-pwm@vger.kernel.org>; Sat, 03 Feb 2024 07:47:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1706975242; x=1707580042; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1706975267; x=1707580067; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=l7pbMMPF8mQNRywWQfD/HjLQ57Xp2XNOTC7Bl96/4NE=;
-        b=A/YndlFEwtDZiHK43R0iHUXci4roe8MM3ulCEFrGE3SPP9ozAwYtEdwur87gGvUHn9
-         K1VlyZ9MKlwliU4ziN453anhGu2SA9Rq9UVXHNUAs4mDtnvW/aYGrG68yjqygalB8mwn
-         abhSTyax//LrTJjxwKLbCUmlqfprc409/7kH1IRmwdwYWt8J4BJMaDBV/env4Od9lWyB
-         bw+U/XTyTf2YfnrukV5ocnacTuQN9vQ3vNsvVDmYOp/JAmo5mdDp8oZ6QoNGaVfTp2BR
-         67vlNbjpzGEv76i2BN21Xj8h4ffaJ21LiilCj2MHHElWo3mu/OWu1vWbESJk+QWdSgcg
-         cEYA==
+        bh=PvbWoswNaGVqXOS/Y81TnW60rEhWx123p06GMhO9oQI=;
+        b=YNDnvWLUtqeXV0Wa9QXVm+e7Um1UJwIYPo/ajBRNKX6e2wHjoa1eW/d1zeQ+qsmwGL
+         u4wy5isX1JY5EcAt7W4RvOI8GxGXzdOIFjU3T5d8j+xya8A3oY6Mqyh7pDOdY+bDCy6U
+         wzbYoX2eGOBokSX/xa0viOeqNZ9lg2G2wTbt0DvyhgljjGwJM2okZzUVox1+pTXavzdn
+         hBtsKnd3shdaj2JJy6c6Kx1Neb6FeX4nsOVPIhQ2thqxQkIDoZNSm7ce0ngG5HtAdt7l
+         nVXg3A9NXp+J+Mq8zYWhuNMHYgI4MkD7zlnqqKE/unHRFWKdKCP40o4hRwH0oV95YU0W
+         CEJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706975242; x=1707580042;
+        d=1e100.net; s=20230601; t=1706975267; x=1707580067;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l7pbMMPF8mQNRywWQfD/HjLQ57Xp2XNOTC7Bl96/4NE=;
-        b=KeMJepCV3waSSFs5MNF8/kmn2d2tnlmU91pqd1g5XysvYYZQJCMQ953UdSQ1osUIJM
-         xHd7kGraH8ZfzB0z9jeB6gGTqg4quarPmb1wmFO5Dx4u0q9u5UgQmLvHLwDBycnsEfvE
-         7mxeyLQlH5g1prDAQjVKnhiK++EtOpyLgieQ3PFezp0CCCEACIMPkiKJ/885nJja9d2c
-         rOWQki9GbWgwiLrIL82L66BwLfymxJ6F8Y5zLhDYDauNOzNC5gJQ0CwmiduWv9JrLGX5
-         xdxOvwKh1UqIjBIii44+/OYvSNhS6uXOBsGzaxloNzRFTAS/0jtE2Ofb+VnVRo6CibR+
-         szPA==
-X-Gm-Message-State: AOJu0YzbP207Eeyhy9tu0CpYFADmzZsNBoaOagb0t5MegN5wIwJf5qbF
-	ZAzsffvDiHwnFqoCTXt0DbYiwg8XcB2kry638bdFHtqjYSuef921vVcYiU31uL8=
-X-Google-Smtp-Source: AGHT+IEPo/5jfizQ1jyslzZpg323EvRS56yIHcoRFacyFmdwmLcBhXim6vkvn52sSVmDHypO0DBrKA==
-X-Received: by 2002:a17:907:1041:b0:a35:47fe:ed67 with SMTP id oy1-20020a170907104100b00a3547feed67mr4021606ejb.77.1706975242613;
-        Sat, 03 Feb 2024 07:47:22 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXf6wY7MlXUcs7YmeB18dSNFiYpejtCbZUFkO+N60x7tWuU3I9lPqYWz6oNG91dFhxDKKDu0WRxHY2EdmoNMHsIe05IYjt60+k9mpeA7cA5tY1gacjH8hkFBOcTJPLyVfHhgc1QzZIaa9ih3/oZO1HDLDrNbygdJcshC51C6+NmB4y5QO6D68Mu230vvGLheBjBhg2QZ/oJ/81Zu+EyWFobHQqO/JzWVXph95cmR/jbOQ9U9qhBBlZugXLYqtKmT+E6F94mPBBD0tH92wIuQevGxGEy9wyfDA1xZAGzmZhJ5o9dzj9nd/kVFt+cYNC+dtKkMUw=
+        bh=PvbWoswNaGVqXOS/Y81TnW60rEhWx123p06GMhO9oQI=;
+        b=UZj5B1W4fEnOMumRPOs/IUtc3imtNCeo4bsmxrlh0JF2T0cAhucG4IaLSn6IlLAkN/
+         n6BHs1Nr4fdyczC0LTG3s46FIKye46mQqOrFlf+j9+y9iTlS2tJC3jHtt/S4QrkYnZjA
+         oi/W6H42jcDLz+5PVF2mbKwpNU9/OydtsOkO55ubie/Llpg0q67pmhCnDpcktrzqrzyv
+         pwFfQTG88YoEnn4MKd67QAsz03BNKF2iI4fUe5PJFCidosFPhGMOXKXzq21Jw73rVcqy
+         Ent7++ob2ptslTLK9K2FYlq+qNuPdBWu7r61kHHK6v45uPgyzFLLnadrNdI4q3095MVq
+         yetw==
+X-Gm-Message-State: AOJu0YxxQV46uUOg80BkhjvG7BFF+SuwFi0NOcinfa8VoKhteXgbAV7+
+	omK4u0vcuhKhCnVy9Xf7rfxqZx+pbi40I57zv8mPNDbzVQ0fcGIywbjeSuftwhM8lTeGIl2NU/k
+	y
+X-Google-Smtp-Source: AGHT+IF3FvBatr0/ILHi1/5DIZyhaHerns1yE/6MyuJKC/c+Qzk0KG4qfh/Udos94Dx0DuHONsOCwQ==
+X-Received: by 2002:a17:907:78ca:b0:a37:6519:93b2 with SMTP id kv10-20020a17090778ca00b00a37651993b2mr674088ejc.55.1706975267073;
+        Sat, 03 Feb 2024 07:47:47 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXHnLnkAkbzF1cHsh8m55N0T+Xh7AnLtuglmUqu1nYk7oQu0ttshOtxZf0XgARNjnrjAxu/pc2MayQ4aZEGCoqiEz41ulAm7hBOkekcp+5TpPpZRjKxsNWnEgtoL4XnFf7HzMCnRyh0H7MousYD4LHuGjiBGWSjhbhUMawf3StPZ82i2wfVWlS1MJKYbiR7JhL8jJ2rx5qisexu3OYNoXcUVfWpZfsMB8P+dRieM/ps/58t7hcmZK+NEBG8ZnKerbfXVI14YmHTxac+n0QSCC4r9ySiCkzsBsweWC4HiamGv5YqS588yxWus7F0lFFjWFoUitY=
 Received: from [192.168.50.4] ([82.78.167.154])
-        by smtp.gmail.com with ESMTPSA id vq11-20020a170907a4cb00b00a36cc8c1bcbsm2119253ejc.173.2024.02.03.07.47.21
+        by smtp.gmail.com with ESMTPSA id vq11-20020a170907a4cb00b00a36cc8c1bcbsm2119253ejc.173.2024.02.03.07.47.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 03 Feb 2024 07:47:22 -0800 (PST)
-Message-ID: <18179a0b-8ac1-4ec3-9c58-c334356df37d@tuxon.dev>
-Date: Sat, 3 Feb 2024 17:47:21 +0200
+        Sat, 03 Feb 2024 07:47:46 -0800 (PST)
+Message-ID: <9e337e19-9aaf-45c4-b2ee-09f77e1680fd@tuxon.dev>
+Date: Sat, 3 Feb 2024 17:47:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -76,8 +77,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] pwm: atmel-hlcdc: Fix clock imbalance related to
- suspend support
+Subject: Re: [PATCH 2/2] pwm: atmel-hlcdc: Don't use pwm consumer API
 Content-Language: en-US
 To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
  Nicolas Ferre <nicolas.ferre@microchip.com>,
@@ -86,40 +86,65 @@ To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
 Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 References: <cover.1706269232.git.u.kleine-koenig@pengutronix.de>
- <b51ea92b0a45eff3dc83b08adefd43d930df996c.1706269232.git.u.kleine-koenig@pengutronix.de>
+ <6e34607828b290cd64ca9f82df40872853069f07.1706269232.git.u.kleine-koenig@pengutronix.de>
 From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <b51ea92b0a45eff3dc83b08adefd43d930df996c.1706269232.git.u.kleine-koenig@pengutronix.de>
+In-Reply-To: <6e34607828b290cd64ca9f82df40872853069f07.1706269232.git.u.kleine-koenig@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
 
 On 26.01.2024 14:04, Uwe Kleine-König wrote:
-> The suspend callback disables the periph clock when the PWM is enabled
-> and resume reenables this clock if the PWM was disabled before. Judging
-> from the code comment it's suspend that is wrong here. Fix accordingly.
+> Lowlevel driver callbacks are not supposed to use the consumer API
+> functions. Currently this works, but with the upcoming locking changes
+> this probably results in dead locks.
 > 
-> Fixes: f9bb9da7c09d ("pwm: atmel-hlcdc: Implement the suspend/resume hooks")
 > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-I don't have the HW to check it but it looks good to me:
 Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 
 > ---
->  drivers/pwm/pwm-atmel-hlcdc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pwm/pwm-atmel-hlcdc.c | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
 > 
 > diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
-> index 3f2c5031a3ba..1f6fc9a9fcf3 100644
+> index 1f6fc9a9fcf3..2d64af045fc5 100644
 > --- a/drivers/pwm/pwm-atmel-hlcdc.c
 > +++ b/drivers/pwm/pwm-atmel-hlcdc.c
-> @@ -185,7 +185,7 @@ static int atmel_hlcdc_pwm_suspend(struct device *dev)
+> @@ -183,9 +183,10 @@ static const struct atmel_hlcdc_pwm_errata atmel_hlcdc_pwm_sama5d3_errata = {
+>  static int atmel_hlcdc_pwm_suspend(struct device *dev)
+>  {
 >  	struct atmel_hlcdc_pwm *atmel = dev_get_drvdata(dev);
+> +	struct pwm_device *pwm = &atmel->chip.pwms[0];
 >  
 >  	/* Keep the periph clock enabled if the PWM is still running. */
-> -	if (pwm_is_enabled(&atmel->chip.pwms[0]))
-> +	if (!pwm_is_enabled(&atmel->chip.pwms[0]))
+> -	if (!pwm_is_enabled(&atmel->chip.pwms[0]))
+> +	if (!pwm->state.enabled)
 >  		clk_disable_unprepare(atmel->hlcdc->periph_clk);
 >  
 >  	return 0;
+> @@ -194,20 +195,17 @@ static int atmel_hlcdc_pwm_suspend(struct device *dev)
+>  static int atmel_hlcdc_pwm_resume(struct device *dev)
+>  {
+>  	struct atmel_hlcdc_pwm *atmel = dev_get_drvdata(dev);
+> -	struct pwm_state state;
+> +	struct pwm_device *pwm = &atmel->chip.pwms[0];
+>  	int ret;
+>  
+> -	pwm_get_state(&atmel->chip.pwms[0], &state);
+> -
+>  	/* Re-enable the periph clock it was stopped during suspend. */
+> -	if (!state.enabled) {
+> +	if (!pwm->state.enabled) {
+>  		ret = clk_prepare_enable(atmel->hlcdc->periph_clk);
+>  		if (ret)
+>  			return ret;
+>  	}
+>  
+> -	return atmel_hlcdc_pwm_apply(&atmel->chip, &atmel->chip.pwms[0],
+> -				     &state);
+> +	return atmel_hlcdc_pwm_apply(&atmel->chip, pwm, &pwm->state);
+>  }
+>  
+>  static DEFINE_SIMPLE_DEV_PM_OPS(atmel_hlcdc_pwm_pm_ops,
 
