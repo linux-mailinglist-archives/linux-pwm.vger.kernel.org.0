@@ -1,177 +1,130 @@
-Return-Path: <linux-pwm+bounces-1195-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1196-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4E9E849010
-	for <lists+linux-pwm@lfdr.de>; Sun,  4 Feb 2024 20:21:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8269D84909C
+	for <lists+linux-pwm@lfdr.de>; Sun,  4 Feb 2024 22:21:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C14BA1C22083
-	for <lists+linux-pwm@lfdr.de>; Sun,  4 Feb 2024 19:21:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 34F921F21AB8
+	for <lists+linux-pwm@lfdr.de>; Sun,  4 Feb 2024 21:21:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E788250EA;
-	Sun,  4 Feb 2024 19:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gadgetoid.com header.i=@gadgetoid.com header.b="doY3/JH/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3592C1B5;
+	Sun,  4 Feb 2024 21:21:05 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8938D24B23
-	for <linux-pwm@vger.kernel.org>; Sun,  4 Feb 2024 19:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6275C2C1A5
+	for <linux-pwm@vger.kernel.org>; Sun,  4 Feb 2024 21:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707074487; cv=none; b=X5S3bsYFidIULjZnuGoG1fHXby6m7b2NVeyuyik0UXXjVWUfdfC7DzGjn4Slsrve5J8FGx73eRzpr/XwUhfo8gH4odgMwjwG9fmydoLzA8a2GH2udyTvL1uRA881mzXsbVA4qFmtiE8B4A/dvg9QkVEgBzGTaxOM6ee4a8Xe1A0=
+	t=1707081665; cv=none; b=jUqjAk+CJxlDnr3R00gWOPCe0m2PVXMVlGKKZ/5zIzTqeGljXdl/z1f5iRJQHmLB7a9FTXzzppUYkN3LCFQTYZDosQlEcA8hqfLZQxE5vAEXu3qnpC4Z9v5euOH4iBNvamGwOcvzakJp0PSu2yHK8G/GecA0Na9KLepmsXdpx9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707074487; c=relaxed/simple;
-	bh=+2qQZPvzRM1Ccx5r01txcVMOu3HC/uAEKJdeEjLsMc8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DRlPefb554VVBNVt/vQSnsdHtZGmmskxmsDESWrZ/qKclqOkjwhaZKerS7dj3NHVmA6hwFqr/iFGpzSYZQYVJNvCB6JTDdQVfneN7SJwQy0learoJd0omg1C9BCQRvnke758VMJ3TAvP6aCtBP5tBHuJjJMJS9H44WvyK7JWVJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gadgetoid.com; spf=pass smtp.mailfrom=gadgetoid.com; dkim=pass (2048-bit key) header.d=gadgetoid.com header.i=@gadgetoid.com header.b=doY3/JH/; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gadgetoid.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gadgetoid.com
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e0f43074edso2178016a34.1
-        for <linux-pwm@vger.kernel.org>; Sun, 04 Feb 2024 11:21:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gadgetoid.com; s=google; t=1707074484; x=1707679284; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=60/XrcYt04qCiCxE5F6uQ90YiYyMDDuz2RU+MkOhiCs=;
-        b=doY3/JH/VGFNSDKGTNfFcNEZh3cJJ6s63wiBE933toOgBGzXn8lFi5GQk6lYLjzK/9
-         MkY8EacNtkiVVvQCJJeDkYzJ/hCKUS7qaX6wBU5qwxcvUlvSgCleLp5dgUKgDIl0wNqv
-         7i1zSY+tp0iDXIr6OYjecUmASdxxpifpA6OOmXavBGpADD/qMhbz/xLaEjptR23mMmOn
-         NQl1fErK9+Begcd3FJY16CF4UekDxlR4IcXMMRJFG5rRT1KoQ+C22aksjyqbYxRDLFHm
-         qGFaf6ML8uNnMIvILGGol6UBBmz/jg1KiONCxpUU7ryPTa8nQRLZqi3RK5t4rMfvR2uy
-         EGtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707074484; x=1707679284;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=60/XrcYt04qCiCxE5F6uQ90YiYyMDDuz2RU+MkOhiCs=;
-        b=SzW1RvCCsxVcSkZ0rlUMgE3jM9EZXOkHVuYrp6WrACLCYlRpmiJRL/IHPKhKbkIOge
-         T2zWyg2bHLynP3LQ7EtYKtuIVeCIX74iPaMuXFqNFYUeV9eHry0UkYo76kJ5I23ArDSz
-         oPo7KmjtfnX2Dc4VO5nmOUQHxzAEGXx8l+V9NSeUXIJ6dufqxmXPWmHsgkgKNkcSxk+W
-         QXhzMAiONzRaVUK8uY9H3p4MMENGuy8hzY7MdVxGnp8Ek8eNM3S2TxsgEYpeZLMXqdB2
-         yh+oWuKELrItov/rkanNiNuV4j/nuddYQAo8F4sE86exF/qoMD8KTw8BFnVmr83CaBnc
-         Z6hw==
-X-Gm-Message-State: AOJu0YzRbMWxl94k6I0j+rkovdBylanA/g36dL05uPIUzdDQVSxgB2fy
-	6Ymt2jR4AcosjcKf98IktoCDh0HVd43U2vCOw3QY28ZRGg6S8pizXi+yA1n28b2ZwkQpb0JItUS
-	BJVg54ZVQ6vOiOAN7JzZl8JWYexHAD3Xlk+Fxrg==
-X-Google-Smtp-Source: AGHT+IG3Z18gYOA2RjAesz6ekRd1LlfvoBIJH/qHhBB5ERUf3SeHSwhd6yPwjdb6xlORyUSXjQpvxZGKoTMcLcOe6QE=
-X-Received: by 2002:a05:6870:10d6:b0:218:d5a6:e14 with SMTP id
- 22-20020a05687010d600b00218d5a60e14mr4466262oar.46.1707074484492; Sun, 04 Feb
- 2024 11:21:24 -0800 (PST)
+	s=arc-20240116; t=1707081665; c=relaxed/simple;
+	bh=znBJ4HvTEH7LlC8OzDSWvAk5dHEpEUaClIrUDbTqHCk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g2BCbxwYgD2lamfy60SVrHeM4gLie7N9turbK8xh4d8x5Tuue1XqzvdhVu0tat6IgIQQq9BWf0djXwz5u1bRyPqV9/GQZkhVwXBjRHsOFeevvZRDZvnvUnN/qHKe0v6y5xzKee3H3+fB9F+tmz4zulNmsbESxPf+fy+9vvq+rnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rWjv3-00010J-W6; Sun, 04 Feb 2024 22:20:54 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rWjv3-004Vd9-2M; Sun, 04 Feb 2024 22:20:53 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rWjv2-00F1px-3A;
+	Sun, 04 Feb 2024 22:20:52 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: linux-pwm@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	kernel@pengutronix.de,
+	Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH] pwm: sti: Fix capture for st,pwm-num-chan < st,capture-num-chan
+Date: Sun,  4 Feb 2024 22:20:43 +0100
+Message-ID: <20240204212043.2951852-2-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240128163630.104725-1-wahrenst@gmx.net> <CA+kSVo88y7n9dyo57fgjybC9=1b_dgTPA3u-_kUH9X_79HF4tA@mail.gmail.com>
- <384a6c41-f29c-4adc-96a2-f72a44d1c718@gmx.net>
-In-Reply-To: <384a6c41-f29c-4adc-96a2-f72a44d1c718@gmx.net>
-From: Phil Howard <phil@gadgetoid.com>
-Date: Sun, 4 Feb 2024 19:21:13 +0000
-Message-ID: <CA+kSVo9V_CFdP0tahZ78zbfHPaKMSb8sh_3jc2dQZv0NkXnjvQ@mail.gmail.com>
-Subject: Re: [PATCH V3 0/2] pwm: Add GPIO PWM driver
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	andy.shevchenko@gmail.com, Angelo Compagnucci <angelo.compagnucci@gmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2217; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=znBJ4HvTEH7LlC8OzDSWvAk5dHEpEUaClIrUDbTqHCk=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlv/+ssxeT0/jsauV8Isrf9HeWJ3V0+LjXj6ca0 ymRJMKJTq2JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZb//rAAKCRCPgPtYfRL+ Ti9NB/0ZRd1UZzP0yhjKQn1b0N0TIEvXZd7wjvSDlY5LUQ6Ank56n7FXmeoP0j+FL5JrMHC4gN8 IfAe98VZXtaCP72iagl3m3A7TV0kXM0bCKJOq3faxsopTfoZwGC2bmJYYFuGik2HoAFWIz61VKV X+LeLLLZcfA+Nc5qCFhfJwWyKe+JLMsQMTzkWqOPtHT+MNi3qCu7uAzREIFc0LCR6T1qr0JZUlN zc6ytRXe3VNI9BORTF7MFv6tXTyJRoZx9W7gk8xzMNxieov+BuR+O4s4IjsHNGIINXqDBS/nP0Y eNa9dP6JWhEJRQwsh9XD+4oZhk0Y1VjVxH+LqN0jUhaXhD6p
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On Fri, 2 Feb 2024 at 20:13, Stefan Wahren <wahrenst@gmx.net> wrote:
->
-> Hi Phil,
->
-> Am 02.02.24 um 14:19 schrieb Phil Howard:
-> > On Sun, 28 Jan 2024 at 16:37, Stefan Wahren <wahrenst@gmx.net> wrote:
-> >> Add a software PWM which toggles a GPIO from a high-resolution timer.
-> >>
-> >> Recent discussions in the Raspberry Pi community revealt that a lot
-> >> of users still use MMIO userspace tools for GPIO access. One argument
-> >> for this approach is the lack of a GPIO PWM kernel driver. So this
-> >> series tries to fill this gap.
-> > *Thank you* for picking this up. I've been stuck down by covid but am aiming
-> > to build and test this on a Pi 5 (with a gpio chip over PCIe) to see if it runs-
-> > though I am fully expecting a PIO solution (using the Pi 5s RP1) to handle
-> > PWM in this case, and hope to rely upon this gpio-pwm module for previous
-> > iterations.
-> i hope you are doing well.
->
-> There will be small functional changes in V4. Since this series based on
-> Linux 6.8 and there is no RPi 5 mainline support, you will need to apply
-> it on top of rpi-6.8.y.
+The driver only used the number of pwm channels to set the pwm_chip's
+npwm member. The result is that if there are more capture channels than
+PWM channels specified in the device tree, only a part of the capture
+channel is usable. Fix that by passing the bigger channel count to the
+pwm framework. This makes it possible that the .apply() callback is
+called with .hwpwm >= pwm_num_devs, catch that case and return an error
+code.
 
-I've got as far as applying the patches and building myself a 6.8.y kernel,
-just dragging the ol' brain kicking and screaming into dts world again.
+Fixes: c97267ae831d ("pwm: sti: Add PWM capture callback")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
->
-> Should i wait for your test results (no pressure) before sending V4?
+the code that is fixed here was actually introduced a bit earlier than the
+commit specified in the fixes line. See the commits immediately proceeding the
+pointed out commit. This problem only gets relevant once the capture callback
+is actually available, so the blamed commit is correct. In this regard the
+commit log of 85a834c42a49 ("pwm: sti: It's now valid for number of PWM
+channels to be zero") is bogus however.
 
-Don't wait on my account- (no really, it's chaos here)- send away!
+Best regards
+Uwe
 
-> >
-> >> This continues the work of Vincent Whitchurch [1], which is easier
-> >> to read and more consequent by rejecting sleeping GPIOs than Nicola's
-> >> approach [2].
-> >>
-> >> The work has been tested on a Raspberry Pi 3 B+ and a cheap logic
-> >> analyzer.
-> >>
-> >> V3:
-> >>   - rebase on top of v6.8-pwm-next
-> >>   - cherry-pick improvements from Nicola's series
-> >>   - try to address Uwe's, Linus' and Andy's comments
-> >>   - try to avoid GPIO glitches during probe
-> >>   - fix pwm_gpio_remove()
-> >>   - some code clean up's and comments
-> >>
-> >> V2:
-> >>   - Rename gpio to gpios in binding
-> >>   - Calculate next expiry from expected current expiry rather than "now"
-> >>   - Only change configuration after current period ends
-> >>   - Implement get_state()
-> >>   - Add error message for probe failures
-> >>   - Stop PWM before unregister
-> >>
-> >> [1] - https://lore.kernel.org/all/20200915135445.al75xmjxudj2rgcp@axis.com/T/
-> >> [2] - https://lore.kernel.org/all/20201205214353.xapax46tt5snzd2v@einstein.dilieto.eu/
-> >>
-> >> Nicola Di Lieto (1):
-> >>    dt-bindings: pwm: Add pwm-gpio
-> >>
-> >> Vincent Whitchurch (1):
-> >>    pwm: Add GPIO PWM driver
-> >>
-> >>   .../devicetree/bindings/pwm/pwm-gpio.yaml     |  42 ++++
-> >>   drivers/pwm/Kconfig                           |  11 +
-> >>   drivers/pwm/Makefile                          |   1 +
-> >>   drivers/pwm/pwm-gpio.c                        | 221 ++++++++++++++++++
-> >>   4 files changed, 275 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
-> >>   create mode 100644 drivers/pwm/pwm-gpio.c
-> >>
-> >> --
-> >> 2.34.1
-> >>
->
+ drivers/pwm/pwm-sti.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-
+diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
+index 6cf55cf34d39..69b1113c6b82 100644
+--- a/drivers/pwm/pwm-sti.c
++++ b/drivers/pwm/pwm-sti.c
+@@ -395,8 +395,17 @@ static int sti_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
+ static int sti_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			 const struct pwm_state *state)
+ {
++	struct sti_pwm_chip *pc = to_sti_pwmchip(chip);
++	struct sti_pwm_compat_data *cdata = pc->cdata;
++	struct device *dev = pc->dev;
+ 	int err;
+ 
++	if (pwm->hwpwm >= cdata->pwm_num_devs) {
++		dev_err(dev, "device %u is not valid for pwm mode\n",
++			pwm->hwpwm);
++		return -EINVAL;
++	}
++
+ 	if (state->polarity != PWM_POLARITY_NORMAL)
+ 		return -EINVAL;
+ 
+@@ -646,7 +655,7 @@ static int sti_pwm_probe(struct platform_device *pdev)
+ 
+ 	pc->chip.dev = dev;
+ 	pc->chip.ops = &sti_pwm_ops;
+-	pc->chip.npwm = pc->cdata->pwm_num_devs;
++	pc->chip.npwm = max(cdata->pwm_num_devs, cdata->cpt_num_devs);
+ 
+ 	for (i = 0; i < cdata->cpt_num_devs; i++) {
+ 		struct sti_cpt_ddata *ddata = &cdata->ddata[i];
 -- 
-Philip Howard
-Technology & Lifestyle Writer
-gadgetoid.com
+2.43.0
 
-Gadgetoid gadg-et-oid [gaj-it-oid]
-
-                                     -adjective
-
-1. having the characteristics or form of a gadget; resembling a
-mechanical contrivance or device.
 
