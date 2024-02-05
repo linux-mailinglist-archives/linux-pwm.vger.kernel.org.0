@@ -1,305 +1,203 @@
-Return-Path: <linux-pwm+bounces-1213-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1214-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89729849A01
-	for <lists+linux-pwm@lfdr.de>; Mon,  5 Feb 2024 13:22:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 415DC849B60
+	for <lists+linux-pwm@lfdr.de>; Mon,  5 Feb 2024 14:07:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 419502838E4
-	for <lists+linux-pwm@lfdr.de>; Mon,  5 Feb 2024 12:21:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EAE382814A7
+	for <lists+linux-pwm@lfdr.de>; Mon,  5 Feb 2024 13:07:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE37D1B968;
-	Mon,  5 Feb 2024 12:21:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D361C6B9;
+	Mon,  5 Feb 2024 13:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="KLjB/MFW"
+	dkim=pass (2048-bit key) header.d=gadgetoid.com header.i=@gadgetoid.com header.b="Mpr+Iz8i"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB731B95C;
-	Mon,  5 Feb 2024 12:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811D11C69F
+	for <linux-pwm@vger.kernel.org>; Mon,  5 Feb 2024 13:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707135717; cv=none; b=AzKSNaB3wl/VKh6Ig13frQPFcyTbsACzyyhVUTn4Z81KYBTTUUgfmenPL6QY0Yu5j9k+1PWRziTdUECcXJmPpFhi/9nEen/hn6F/4ijob30QnAeAiu3YZ/pivESgbmMQ4X4RE5XDbzTS1is934LUEC4UHMXB8SuwhqZNywU6OSI=
+	t=1707138426; cv=none; b=qnkwV/qWTZwRBXSGNBCYtGbfQ5rQnZXltk4Z/jjUh+X5Id/NDtHt4e4mckC+BrxGltCEqD/G+la5fpFyFAi2c9VxG610KeNp02y7z72ucsVA9qfPggtOS9KTQ0biZbj3mqZrcvnJaeFUxHzUMPowaNniS8bTuqmle5NCp2X+jBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707135717; c=relaxed/simple;
-	bh=4+L+wNFmeBIceFORKmB6j1KUwbZpGuVuGSnVbLyj5eU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L9gIptMiwAJ/HD/v46Jqf8bEXl9+/8h0ibsRzrWdFfCgNGgGzI+4uIkVTfa+J5GlhaogK0Z7MThCHSL8f0nmR1hVIwN0FUn92acevh2mSDKJjVFUJEIQk147H7ehJvYRX84w9SqXWKAzJWc+VMpPUapMLg82PzsRBGuPBG2aLK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=KLjB/MFW; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1707135699; x=1707740499; i=wahrenst@gmx.net;
-	bh=4+L+wNFmeBIceFORKmB6j1KUwbZpGuVuGSnVbLyj5eU=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=KLjB/MFWD+I6f9HuIUN31VPvyJTdBJdNgQSpGnRa690xTLb5tV1C456rN0c6uOK5
-	 9Zdi6aBIpnDfEwQEP5l+X66Nq2rTQvf2NvAmjd5RLwU2YmWHBwPfYb9pg1scF+yul
-	 /AU3INydkNjSxLgbFx9Z3UIV8kYp24ZmzRXE3Ko02iF0SQ5520dUBBvgKB+oIkHDK
-	 sIYCRof/eUR4CFTyGpasz8uaYXyrUdEEdBZjL4dw3D/Xq2Tw5tWAwiNOlBLIov4E2
-	 mC7kwFxSseIb4TfC1pTFDorh0x1g9YYs3rmuji5/koxONY91T/cFQJsjkeN2oTn8g
-	 fNeg47N6gFvUi4DMNw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MIwz4-1rI3Sb2518-00KO37; Mon, 05
- Feb 2024 13:21:39 +0100
-Message-ID: <06e166f0-b6ac-4ffd-b194-a2ba0031605f@gmx.net>
-Date: Mon, 5 Feb 2024 13:21:36 +0100
+	s=arc-20240116; t=1707138426; c=relaxed/simple;
+	bh=kj5oXDdWjTX/J2ZGVZugOLeI+cfkVNHXrF6PII9SThQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JZ3If+i9a7/eSjscRGvvWG8mERwmAoFyqFP8YGznHZ9seHz/NGD+WfGCa4mMuU6iHjrJBW274DIiEHyx1DG+RsbuHmHiMY7g9+Mbl4oTG8P0MdxnP6XJ5yni89jbYw6i21zx0/nx2hUjCe36F77cfw2REqpwuAjCREODcFemEQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gadgetoid.com; spf=pass smtp.mailfrom=gadgetoid.com; dkim=pass (2048-bit key) header.d=gadgetoid.com header.i=@gadgetoid.com header.b=Mpr+Iz8i; arc=none smtp.client-ip=209.85.160.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gadgetoid.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gadgetoid.com
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-21433afcc53so2727142fac.3
+        for <linux-pwm@vger.kernel.org>; Mon, 05 Feb 2024 05:07:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gadgetoid.com; s=google; t=1707138423; x=1707743223; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/H6eARlBWgKgxV/ZtkOc9y1qYb/Y56hfRsMXOxNcheU=;
+        b=Mpr+Iz8iYt2JTcrECblDgwGzxRM/97ZbKOYfTuSoMczTssLdfAoY5d5+NXRHJiwzJS
+         ALDr+XKGPy1usxkQYk+8ZknrD63RnPUhEJNaKWTsuplggcLoLcyXKIzGaR886qPy1b5n
+         yaz4Nm66FO9rF+SEOUH3KVkSmB+jNq+rsxutHJiMafsEVe5E/50LOIBLgNjj2hA9PGXg
+         NscfF1YjL0rRdZQ8Q7I/2DNESTplO3+7JDcTUPyODvVDeLRy36QNhuXkAaiXENrX8yUe
+         LCtpNtoCrO7kMvWYlT6rj+unRupfa56rSyMb3Osiu4sP5Q3vC6sIcsnBs/Mb0ZNrPDxF
+         ZEhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707138423; x=1707743223;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/H6eARlBWgKgxV/ZtkOc9y1qYb/Y56hfRsMXOxNcheU=;
+        b=V482j4yxGxW6iFkdqZlXXinqxcIi+7u/vnNAceVPjgXARhil8W+8lAi2Zau0xkB0hZ
+         1UxyOLrmv4zcDijw4gWRJ1Ka6LRF7BvjphBnI6E3gOgzR94Q0/Gh7fSf8rv9wfFLidRj
+         fmEbN+oXSbrO4pVxgCwjFFcFwjCIbS8tLqYJJK7Iq+zAwXij2V+J11nmfqGoY/1yFmXr
+         gAX7T1Vf3wGDq4F8Zang7xNJ4P1etf8XSzHv2yebD5n0mj7+UlVe4mA8Pajp+epDy1Mo
+         AqfFlf719cYHTexRdDz5bZjb+RuIyBuhiQGTBhdNVQPybJ/ivgTDwSnat15BZCgssL3i
+         YICw==
+X-Gm-Message-State: AOJu0YzWt/bne82bbowgkha9bi5V4R5cAiMYc+J9Aa1lL2RzzWTw1rpF
+	EB7InJaibVOf/D5KZHbwk69mXCPhxjhVun+Abb6JYiYACJwHd9IdVZejVmhAUnHhRgM9pMpEP8D
+	YsPm+qj5a5rJj5UXo+6TTU/a66CNeX1/LmyzswQ==
+X-Google-Smtp-Source: AGHT+IEkLUyHqWKv2xv0DJNMzx+vpkU/sDWa1HHvcZpPuDo8gMGn7LtGIjCfwIBzlaTQ07qaKwCePUQsKpKsT6jKaFk=
+X-Received: by 2002:a05:6870:1b1b:b0:214:c98e:40bd with SMTP id
+ hl27-20020a0568701b1b00b00214c98e40bdmr9221509oab.14.1707138423282; Mon, 05
+ Feb 2024 05:07:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 2/2] pwm: Add GPIO PWM driver
-Content-Language: en-US
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com,
- Angelo Compagnucci <angelo.compagnucci@gmail.com>,
- Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- Vincent Whitchurch <vincent.whitchurch@axis.com>
 References: <20240204220851.4783-1-wahrenst@gmx.net>
- <20240204220851.4783-3-wahrenst@gmx.net>
- <b3bh4srxjc5s5yrceugn2bry4j7srvuyyc2zc7uorynn3esbbq@xtpfu3xnsi3q>
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <b3bh4srxjc5s5yrceugn2bry4j7srvuyyc2zc7uorynn3esbbq@xtpfu3xnsi3q>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:K5kix2xLmiOuuljpWVQ4ZlNETG7gXkwoYSRA1ekmuhi5BGJqNqX
- smW5BgQ7ZHZOTfvr4AMm2ET7eMox1tsMgXHOuZNmytNMQ+G7IABaOFJ3tqoMhhvkvlTA4c+
- e5vSJXqzjtHWy+NsL/9oD9cj8Yov96eSVYNX/0deUQGXQYBGenecZQRVcU+uDjTKCovij0q
- HGTS5CsYCLsGaw1A9VAsw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HOvm5Kv5JUY=;ZHarOy1rGIDmsPqxHhmTCmybMQT
- vQ8K2IAgbAJWtTxK4jyuFXjo8PNc99Vh1/TQqBltctaQbRQzRpkY6BjqUquxcmVOIOLcFo8cl
- zAzHcdZsUwAa/qcWYG0bx5N7QYmE2EkCttRFoG8WGWvCcFNMFRYtf5UxX4DeJRQCM0KwhAT+s
- WX1kUKUUyfUmXRA2Naib5mgJsZzgmIUbl1M88fITKigwUpjmuRucSQIF/zlgRPRmcO8Xv6QTH
- zeTlsVUUoM6MsuqGq9SmX3Cm33MSfM3Pi9+BptpGU642XjpTj4Ftfi3fTjsQy9GrfkFJuaeXy
- +9Zol1YQtWEDj16jezpwfGuSK6BcvUztbZEpAqiMfSygkGvHespBIO1TltWwFeQupu1/QjduH
- /tKrIBiMGYon3tp+7fgAEAJj62Lzhhj+pwGidZk7A3mE3mpxpNkpMRn/2kynCHveaDdNYjOTD
- bZj40U8IuT12yET8LwilNBqn3EJfYYSk2Uut+4W0tofFvyQoj0PehKRS9QFWs3StW3RS5F3/N
- iyNWn3ykgIFzxRnn29wLpYATFQhNdKslQe0SNSEsd8Y75q2noWcuW9YLARTPPWzSH7UIterWW
- BOIjy5qogvwnB1CrKP2wn3IvwmyIVb2bym00awjdB6Sp93giymGZ+AcHKucOJrKk4L+kcgS95
- T3MYtiGZ+j7hY/DFowUZLVdK3gSTTzNxBiaeJ9h+67MrRJgwSQ6OKx8UyYQJ+fMmnw7a31wkZ
- TPvdWHMQxZ2ycS2eSrWbmcvUZr46bLuiIO3523S8chqIuPAlmfZ8NsaL3m+nhRk4tVkuZ019e
- zsYAkKV1KvoZjzyqf8XXlud+ZmjUj/ek0VOmDn1/95zH0=
+In-Reply-To: <20240204220851.4783-1-wahrenst@gmx.net>
+From: Phil Howard <phil@gadgetoid.com>
+Date: Mon, 5 Feb 2024 13:06:52 +0000
+Message-ID: <CA+kSVo_skHAiw0smezZYKEXs4eu2uZy=XwQMfbq4dZmEfcpwEA@mail.gmail.com>
+Subject: Re: [PATCH V4 0/2] pwm: Add GPIO PWM driver
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	andy.shevchenko@gmail.com, Angelo Compagnucci <angelo.compagnucci@gmail.com>, 
+	Sean Young <sean@mess.org>, Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Uwe,
+On Sun, 4 Feb 2024 at 22:09, Stefan Wahren <wahrenst@gmx.net> wrote:
+>
+> Add a software PWM which toggles a GPIO from a high-resolution timer.
+>
+> Recent discussions in the Raspberry Pi community revealt that a lot
+> of users still use MMIO userspace tools for GPIO access. One argument
+> for this approach is the lack of a GPIO PWM kernel driver. So this
+> series tries to fill this gap.
+>
+> This continues the work of Vincent Whitchurch [1], which is easier
+> to read and more consequent by rejecting sleeping GPIOs than Nicola's
+> approach [2].
+>
+> The work has been tested on a Raspberry Pi 3 B+ and a cheap logic
+> analyzer.
 
-Am 05.02.24 um 11:09 schrieb Uwe Kleine-K=C3=B6nig:
-> Hello,
->
-> On Sun, Feb 04, 2024 at 11:08:51PM +0100, Stefan Wahren wrote:
->> +static enum hrtimer_restart pwm_gpio_timer(struct hrtimer *gpio_timer)
->> +{
->> +	struct pwm_gpio *gpwm =3D container_of(gpio_timer, struct pwm_gpio,
->> +					     gpio_timer);
->> +	unsigned long next_toggle;
->> +	unsigned long flags;
->> +	bool new_level;
->> +
->> +	spin_lock_irqsave(&gpwm->lock, flags);
->> +
->> +	/* Apply new state at end of current period */
->> +	if (!gpwm->level && gpwm->changing) {
->> +		gpwm->changing =3D false;
->> +		gpwm->state =3D gpwm->next_state;
->> +		new_level =3D !!gpwm->state.duty_cycle;
->> +	} else {
->> +		new_level =3D !gpwm->level;
->> +	}
->> +
->> +	next_toggle =3D pwm_gpio_toggle(gpwm, new_level);
->> +	if (next_toggle) {
->> +		hrtimer_forward(gpio_timer, hrtimer_get_expires(gpio_timer),
->> +				ns_to_ktime(next_toggle));
-> How does this work in relation to hrtimer_resolution? If the resolution
-> is (say) 300 and next_toggle is 2000. Does the trigger trigger at
-> hrtimer_get_expires(...) + 1800, or at ... + 2100?
->
-> If you assume we have period =3D 6000 and duty_cycle =3D 2000, the delta=
- to
-> forward the driver alternates between 1800 and 3900 (if rounding down)
-> or between 2100 and 4200 if rounding up. Both is not optimal.
->
-> Ideally you'd round down the active phase (i.e. pick 1800) and for the
-> inactive phase you'd use rounddown(period) - rounddown(duty_cycle) which
-> gives 4200 here. Does this make sense?
-oh dear, looks like a can of worms. I will look into it. Btw according
-to multi_v7_defconfig the hrtimer_resolution on the Pi is 1 ns.
+Tested on a Pi 5 with a Rigol scope. I have not done any comparative
+testing to the contemporary methods of GPIO on a Pi (they're probably
+not great) but it looks good at a glance.
 
-Does it make sense to log the hrtimer_resolution e.g. at probe?
->
->> +	}
->> +
->> +	spin_unlock_irqrestore(&gpwm->lock, flags);
->> +
->> +	return next_toggle ? HRTIMER_RESTART : HRTIMER_NORESTART;
->> +}
->> +
->> +static int pwm_gpio_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
->> +			  const struct pwm_state *state)
->> +{
->> +	struct pwm_gpio *gpwm =3D container_of(chip, struct pwm_gpio, chip);
->> +	bool invert =3D state->polarity =3D=3D PWM_POLARITY_INVERSED;
->> +	unsigned long flags;
->> +
->> +	if (state->duty_cycle && state->duty_cycle < hrtimer_resolution)
->> +		return -EINVAL;
->> +
->> +	if (state->duty_cycle !=3D state->period &&
->> +	    (state->period - state->duty_cycle < hrtimer_resolution))
->> +		return -EINVAL;
-> If you assume that hrtimer_resolution =3D 300 again, you don't want to
-> refuse
->
-> 	.duty_cycle =3D 200
-> 	.period =3D 200
->
-> do you?
-Actually i had rejected it. Yes, this specific corner case does work
-with such a resolution. But if the user want a steady level, the user
-would use a plain GPIO not a PWM. As soon the duty cycle get lower this
-would be rejected and as a user i would be confused.
+There is jitter, as you might expect, though I would expect this to be much
+better than the userspace soft PWM we're used to.
 
-Another issue here, is that we don't have a good interface to tell the
-limitations.
-> I think you want:
->
-> 	mininterval =3D min(state->duty_cycle, state->period - state->duty_cycl=
-e);
-> 	if (mininterval && mininterval < hrtimer_resolution)
-> 		return -EINVAL;
->
-> to catch both cases in a single check.
->
->> +	if (!state->enabled) {
->> +		hrtimer_cancel(&gpwm->gpio_timer);
->> +	} else if (!gpwm->running) {
->> +		/*
->> +		 * This just enables the output, but pwm_gpio_toggle()
->> +		 * really starts the duty cycle.
->> +		 */
->> +		int ret =3D gpiod_direction_output(gpwm->gpio, invert);
->> +
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	spin_lock_irqsave(&gpwm->lock, flags);
->> +
->> +	if (!state->enabled) {
->> +		gpwm->state =3D *state;
->> +		gpwm->running =3D false;
->> +		gpwm->changing =3D false;
->> +
->> +		gpiod_set_value(gpwm->gpio, invert);
->> +	} else if (gpwm->running) {
->> +		gpwm->next_state =3D *state;
->> +		gpwm->changing =3D true;
->> +	} else {
->> +		unsigned long next_toggle;
->> +
->> +		gpwm->state =3D *state;
->> +		gpwm->changing =3D false;
->> +
->> +		next_toggle =3D pwm_gpio_toggle(gpwm, !!state->duty_cycle);
->> +		if (next_toggle) {
->> +			hrtimer_start(&gpwm->gpio_timer, next_toggle,
->> +				      HRTIMER_MODE_REL);
->> +		}
-> The curly braces can be dropped here and in a few more locations.
->
->> +	}
->> +
->> +	spin_unlock_irqrestore(&gpwm->lock, flags);
->> +
->> +	return 0;
->> +}
->> +
->> +static int pwm_gpio_get_state(struct pwm_chip *chip, struct pwm_device=
- *pwm,
->> +			       struct pwm_state *state)
->> +{
->> +	struct pwm_gpio *gpwm =3D container_of(chip, struct pwm_gpio, chip);
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&gpwm->lock, flags);
->> +
->> +	if (gpwm->changing)
->> +		*state =3D gpwm->next_state;
->> +	else
->> +		*state =3D gpwm->state;
->> +
->> +	spin_unlock_irqrestore(&gpwm->lock, flags);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct pwm_ops pwm_gpio_ops =3D {
->> +	.apply =3D pwm_gpio_apply,
->> +	.get_state =3D pwm_gpio_get_state,
->> +};
->> +
->> +static int pwm_gpio_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev =3D &pdev->dev;
->> +	struct pwm_gpio *gpwm;
->> +	int ret;
->> +
->> +	gpwm =3D devm_kzalloc(dev, sizeof(*gpwm), GFP_KERNEL);
->> +	if (!gpwm)
->> +		return -ENOMEM;
->> +
->> +	spin_lock_init(&gpwm->lock);
->> +
->> +	gpwm->gpio =3D devm_gpiod_get(dev, NULL, GPIOD_ASIS);
->> +	if (IS_ERR(gpwm->gpio)) {
->> +		return dev_err_probe(dev, PTR_ERR(gpwm->gpio),
->> +				     "could not get gpio\n");
->> +	}
->> +
->> +	if (gpiod_cansleep(gpwm->gpio)) {
->> +		return dev_err_probe(dev, -EINVAL,
->> +				     "sleeping GPIO %d not supported\n",
->> +				     desc_to_gpio(gpwm->gpio));
->> +	}
-> Is it still state of the art to add gpio numbers to error messages?
-I was unsure how to handle this user-friendly. Just simply logging
-"sleeping GPIO not supported" doesn't provide a reference on the
-affected GPIO. GPIO names are optional, so maybe empty.
+Mostly for Pi users who happen to be watching this unfold-
 
-I'm open to suggestions :-)
+PWM on the Pi 5 is achieved via the PCIe bus to the RP1 peripheral and
+IO controller on a Pi 5 so it's possible to saturate the PCIe bus and have
+A Bad Day. I think ~200KHz is about the practical limit here, if I try and push
+to 400KHz things start to get dicy. The faster you go, the more proportional
+impact jitter will have on the resulting signal.
 
-Best regards
+My optimistic first try in the MHz range booted me off SSH and required a
+power cycle so I'm not even sure what went wrong. Less of an issue for
+on-chip GPIO controllers ala <= Pi 4.
+
+Here's my very naive overlay -
+
+// Definitions for w1-gpio module (without external pullup)
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835";
+    fragment@0 {
+        target-path = "/";
+        __overlay__ {
+            pwm_gpio: pwm_gpio@0 {
+                compatible = "pwm-gpio";
+                pinctrl-names = "default";
+                pinctrl-0 = <&pwm_gpio_pins>;
+                gpios = <&gpio 4 0>;
+                status = "okay";
+            };
+        };
+    };
+
+    fragment@1 {
+        target = <&gpio>;
+        __overlay__ {
+            pwm_gpio_pins: pwm_gpio_pins@0 {
+                brcm,pins = <4>;
+                brcm,function = <1>; // out
+                brcm,pull = <0>; // off
+            };
+        };
+    };
+};
+
 >
->> +	gpwm->chip.dev =3D dev;
->> +	gpwm->chip.ops =3D &pwm_gpio_ops;
->> +	gpwm->chip.npwm =3D 1;
->> +	gpwm->chip.atomic =3D true;
->> +
->> +	hrtimer_init(&gpwm->gpio_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
->> +	gpwm->gpio_timer.function =3D pwm_gpio_timer;
->> +
->> +	ret =3D pwmchip_add(&gpwm->chip);
->> +	if (ret < 0)
->> +		return dev_err_probe(dev, ret, "could not add pwmchip\n");
->> +
->> +	platform_set_drvdata(pdev, gpwm);
->> +
->> +	return 0;
->> +}
-> Best regards
-> Uwe
+> V4:
+>  - address DT bindings comments from Conor Dooley
+>  - drop unnecessary MODULE_ALIAS() as suggested by Krzysztof Kozlowski
+>  - add range checks to apply which consider the hrtimer resolution
+>    (idea comes from Sean Young)
+>  - mark driver as atomic as suggested by Sean Young
+>
+> V3:
+>  - rebase on top of v6.8-pwm-next
+>  - cherry-pick improvements from Nicola's series
+>  - try to address Uwe's, Linus' and Andy's comments
+>  - try to avoid GPIO glitches during probe
+>  - fix pwm_gpio_remove()
+>  - some code clean up's and comments
+>
+> V2:
+>  - Rename gpio to gpios in binding
+>  - Calculate next expiry from expected current expiry rather than "now"
+>  - Only change configuration after current period ends
+>  - Implement get_state()
+>  - Add error message for probe failures
+>  - Stop PWM before unregister
+>
+> [1] - https://lore.kernel.org/all/20200915135445.al75xmjxudj2rgcp@axis.com/T/
+> [2] - https://lore.kernel.org/all/20201205214353.xapax46tt5snzd2v@einstein.dilieto.eu/
+>
+> Nicola Di Lieto (1):
+>   dt-bindings: pwm: Add pwm-gpio
+>
+> Vincent Whitchurch (1):
+>   pwm: Add GPIO PWM driver
+>
+>  .../devicetree/bindings/pwm/pwm-gpio.yaml     |  42 ++++
+>  drivers/pwm/Kconfig                           |  11 +
+>  drivers/pwm/Makefile                          |   1 +
+>  drivers/pwm/pwm-gpio.c                        | 228 ++++++++++++++++++
+>  4 files changed, 282 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
+>  create mode 100644 drivers/pwm/pwm-gpio.c
+>
+> --
+> 2.34.1
 >
 
+
+-- 
+Philip Howard
 
