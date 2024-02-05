@@ -1,288 +1,121 @@
-Return-Path: <linux-pwm+bounces-1211-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1212-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFDA8849765
-	for <lists+linux-pwm@lfdr.de>; Mon,  5 Feb 2024 11:11:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DCDD84996C
+	for <lists+linux-pwm@lfdr.de>; Mon,  5 Feb 2024 13:00:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CBDCFB2BC49
-	for <lists+linux-pwm@lfdr.de>; Mon,  5 Feb 2024 10:09:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39E15280F33
+	for <lists+linux-pwm@lfdr.de>; Mon,  5 Feb 2024 12:00:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7505D168D7;
-	Mon,  5 Feb 2024 10:09:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7878A19475;
+	Mon,  5 Feb 2024 11:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="VX2X4zNz"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD569134A9
-	for <linux-pwm@vger.kernel.org>; Mon,  5 Feb 2024 10:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8EF199B0;
+	Mon,  5 Feb 2024 11:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707127754; cv=none; b=NVF62ockSfYkW2nB2enC9xOT5xPpKnYAVgqBTqKY7OGQXTsuI2D/QZKBR0LRcEPm8NgOZwzmjxfbRt3bzbha8sz9u32zjCEMUG9VI/qdDsI6w8hYWfegwEbSi8Zb9hXG8XUCHKZ1LymyxVtfQh47AAR6QikIhUe2n1ctJvamON4=
+	t=1707134343; cv=none; b=AbqIAEfYrzOMhBecIhyHrKGlf7NIVUVVt1FHxyS+e6DnczFFYWt6jbCCD6MDB6rg8T9j0nmNYgD1ldbLdKWK8ykoeuYOGkyP4ODx22fXKHM9iXZYBg8IdBn2NVZmF2nPFdCGeYIorkePBZmejwM0G0IwU/ZYaMDMBZQlFcQ6Q+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707127754; c=relaxed/simple;
-	bh=F99UGl7ngh1/kkSUhb2J1OjOelX2kbZxbOegzofmhzI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=soS+wZ8SIFv5qnmJTWK3Gwatt/oYdqNT0eYlFgmpAWm08EahD0CapXbB/P1dMSkXo8SXhFz8BWQ64Pw34Z/tDXLs9/j7v3OJSnq7clGpcN2jsVsmBdbFRJObbPbcIl6BE+dknif2nbi005WV8KwAPd/Sk1bMmvgJl9CgmoKEWYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rWvuQ-00048b-NM; Mon, 05 Feb 2024 11:09:02 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rWvuP-004bvy-SF; Mon, 05 Feb 2024 11:09:01 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rWvuP-00FNpw-2S;
-	Mon, 05 Feb 2024 11:09:01 +0100
-Date: Mon, 5 Feb 2024 11:09:01 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com, 
-	Angelo Compagnucci <angelo.compagnucci@gmail.com>, Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Vincent Whitchurch <vincent.whitchurch@axis.com>
-Subject: Re: [PATCH V4 2/2] pwm: Add GPIO PWM driver
-Message-ID: <b3bh4srxjc5s5yrceugn2bry4j7srvuyyc2zc7uorynn3esbbq@xtpfu3xnsi3q>
-References: <20240204220851.4783-1-wahrenst@gmx.net>
- <20240204220851.4783-3-wahrenst@gmx.net>
+	s=arc-20240116; t=1707134343; c=relaxed/simple;
+	bh=f/UbavRhjoaVvbmskvWAMvejHYVscy5mA/b9KLY3Y7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pRKnFqbU/70K2NhXbgoB0ItDR6VG8cg/mwomJVx8sPYPrljyI44PbdItH5Y7nVGlw9IQNy69/Q7NQ+mf6iEpzgOruQnqqV1e3bgPokazFNOGPX5mYrXSy8Nu1+zyY5gPpOzjMPzzR+QiU4fofiQB8TnmmndfHdzU3uNYoGx9kS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=VX2X4zNz; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1707134331; x=1707739131; i=wahrenst@gmx.net;
+	bh=f/UbavRhjoaVvbmskvWAMvejHYVscy5mA/b9KLY3Y7s=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=VX2X4zNzxjHACElSe6clchMA+vG4hC3DJomR17PKChv5zesf/E2nN7hOxMoNM71h
+	 cK2RGgISnI/LncBapSJ26pB4r6Hxq2qPBUV/dc7DiCuH4/xgTd56iWpTpugmvtLaP
+	 vyJyMcsVFaJBqd03o9zZf1mixtS6cyn0Tz4dk7fY9sfjL2ImUVNPOdONg9kUiQsAw
+	 fh6qV/E7QFRUcJPKwnqOkm+MhFt5QeJq09bmzIpXh/tPH80wjOQTeY37KsC1JMbit
+	 hvWGDQhThY9StaT4++c/ZcybZk3aq7PW/XEv7qlU3AUCSBFcVKTaWSGfCuCbCjf4o
+	 TGtSyQoC5/slVuVXZQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mi2O1-1r2JhK28tl-00e8vu; Mon, 05
+ Feb 2024 12:58:51 +0100
+Message-ID: <e92b9ff8-5486-47bc-828e-c19a7a251d4b@gmx.net>
+Date: Mon, 5 Feb 2024 12:58:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qooobwxuyeu4bcau"
-Content-Disposition: inline
-In-Reply-To: <20240204220851.4783-3-wahrenst@gmx.net>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-
-
---qooobwxuyeu4bcau
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 1/2] dt-bindings: pwm: Add pwm-gpio
+Content-Language: en-US
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com,
+ Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+ Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Nicola Di Lieto <nicola.dilieto@gmail.com>
+References: <20240204220851.4783-1-wahrenst@gmx.net>
+ <20240204220851.4783-2-wahrenst@gmx.net>
+ <zxzck6nm2xxakobwj4mk4x3vrz76c7dmlwgplhhunuzr25oeok@lc3kngblfmnz>
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <zxzck6nm2xxakobwj4mk4x3vrz76c7dmlwgplhhunuzr25oeok@lc3kngblfmnz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:IFddr63wFDUAJh89cO1UJ213DGxFVUXLhZqHmgs7pMwEiyuqhYf
+ WtbY/dNldTz5gEHQg49JlJBh3DlcDp7v9dRdd4h7UiPIEyuvl47a+uZhdL4Ngm3VegbxzsJ
+ 0Re0gV37SiOnSLj5o6pW5KxpL6nTLurNb/2a1+nkJ549HQSvf9BPUlpqDTcMz+Py/pMnst0
+ ytP7Z9N4vg4FfO+Jltmsg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:QYLDAQqhya8=;lR/yaYFQgc5bUxt7YOQURUH3wTh
+ ScAGBARXwgIJgFPgYCH8vXPePAifhy0/S3j5zqiObM5eIVfmkgbes6GE0I+PFxiX23hpCSh5i
+ Ees0Plhyxg9KknZG4QZdVYoXYp/Q0AKrcy8eGxww6JVXAP4GMANwxwcRA30m64U/3IHBHQ/yo
+ eHmVKcb40ztiBq60tJzl3nDeEoNHSIum2foRMxAHm8d0JyWnX2iN2JmTkTl5O/mJTOcynS2+Y
+ fCA9/WELgekZmXmNfMbpBB/1qtPrT6D47XO+VEKwa20GY+BwziLWjxrvadmHWobQ1JPzNebIX
+ ZmhZF+ty9/X/rsl1FS9Rv2+PVIS0Q+NBC/0TajYlF1dcMP483VcaqJ4XGb2LJseAM5NLDG55B
+ Uar2U6lrmur45ix5VS+N0xkJXrCoKodgkNTuc8i5UY7W3+onodhwtT5hUKGUzv0wPGnN8XF28
+ XBXMKlzjWHY98sviB+lbH5LF5nu7zUlHDV/1W0RIcUbqQBIeFlcrfO6ghiWUcdyT+6OHwjINw
+ lRlLJQRwGp99ftl1GEaXX/oqUzqVuOoJNbf1s+5FxuM8B6CypfJo247X4kcGsUk159j3l6dmu
+ Az/tZG8+Gn38PD9h8qD5VF4y/COlM1HHfMzDNZwrTsubtwPiCvMr3d5tPyfHsL3PwC86nmE5+
+ 8AsWg/em0n/7DhI6hIingUTaWu0gvyp+gIegJUble2+VNM3z75iQL7hCeOozBhEHPGLIteVW5
+ LKN04YReRAbMe82Hu38bO2F300pdnJSNh9Em1OFX0LbRx8AL2YjywGiVzHVYsWrVi9sF2Co+2
+ +z0hoZwi/8gZHSTT7BJTeGZggr8Fv3I/Icvs99hM6bKXw=
 
-Hello,
+Hi Uwe,
 
-On Sun, Feb 04, 2024 at 11:08:51PM +0100, Stefan Wahren wrote:
-> +static enum hrtimer_restart pwm_gpio_timer(struct hrtimer *gpio_timer)
-> +{
-> +	struct pwm_gpio *gpwm =3D container_of(gpio_timer, struct pwm_gpio,
-> +					     gpio_timer);
-> +	unsigned long next_toggle;
-> +	unsigned long flags;
-> +	bool new_level;
-> +
-> +	spin_lock_irqsave(&gpwm->lock, flags);
-> +
-> +	/* Apply new state at end of current period */
-> +	if (!gpwm->level && gpwm->changing) {
-> +		gpwm->changing =3D false;
-> +		gpwm->state =3D gpwm->next_state;
-> +		new_level =3D !!gpwm->state.duty_cycle;
-> +	} else {
-> +		new_level =3D !gpwm->level;
-> +	}
-> +
-> +	next_toggle =3D pwm_gpio_toggle(gpwm, new_level);
-> +	if (next_toggle) {
-> +		hrtimer_forward(gpio_timer, hrtimer_get_expires(gpio_timer),
-> +				ns_to_ktime(next_toggle));
+Am 05.02.24 um 10:15 schrieb Uwe Kleine-K=C3=B6nig:
+> Hello,
+>
+> On Sun, Feb 04, 2024 at 11:08:50PM +0100, Stefan Wahren wrote:
+>> +  "#pwm-cells":
+>> +    const: 3
+>> +
+>> +  gpios:
+>> +    description:
+>> +      GPIO to be modulated
+>> +    maxItems: 1
+> Given that we have 3 PWM cells (so there is an u32 that specifies the
+> pwm_chip's line number) it would be obvious to allow several GPIOs. But
+> I guess we can extend this easily if and when the need arises.
+yes this is a limitation in order to keep it simple.
 
-How does this work in relation to hrtimer_resolution? If the resolution
-is (say) 300 and next_toggle is 2000. Does the trigger trigger at
-hrtimer_get_expires(...) + 1800, or at ... + 2100?
+Regards
+>
+> Otherwise I'm happy with this patch.
+>
+> Best regards
+> Uwe
+>
 
-If you assume we have period =3D 6000 and duty_cycle =3D 2000, the delta to
-forward the driver alternates between 1800 and 3900 (if rounding down)
-or between 2100 and 4200 if rounding up. Both is not optimal.
-
-Ideally you'd round down the active phase (i.e. pick 1800) and for the
-inactive phase you'd use rounddown(period) - rounddown(duty_cycle) which
-gives 4200 here. Does this make sense?
-
-> +	}
-> +
-> +	spin_unlock_irqrestore(&gpwm->lock, flags);
-> +
-> +	return next_toggle ? HRTIMER_RESTART : HRTIMER_NORESTART;
-> +}
-> +
-> +static int pwm_gpio_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			  const struct pwm_state *state)
-> +{
-> +	struct pwm_gpio *gpwm =3D container_of(chip, struct pwm_gpio, chip);
-> +	bool invert =3D state->polarity =3D=3D PWM_POLARITY_INVERSED;
-> +	unsigned long flags;
-> +
-> +	if (state->duty_cycle && state->duty_cycle < hrtimer_resolution)
-> +		return -EINVAL;
-> +
-> +	if (state->duty_cycle !=3D state->period &&
-> +	    (state->period - state->duty_cycle < hrtimer_resolution))
-> +		return -EINVAL;
-
-If you assume that hrtimer_resolution =3D 300 again, you don't want to
-refuse
-
-	.duty_cycle =3D 200
-	.period =3D 200
-
-do you? I think you want:
-
-	mininterval =3D min(state->duty_cycle, state->period - state->duty_cycle);
-	if (mininterval && mininterval < hrtimer_resolution)
-		return -EINVAL;
-
-to catch both cases in a single check.
-
-> +	if (!state->enabled) {
-> +		hrtimer_cancel(&gpwm->gpio_timer);
-> +	} else if (!gpwm->running) {
-> +		/*
-> +		 * This just enables the output, but pwm_gpio_toggle()
-> +		 * really starts the duty cycle.
-> +		 */
-> +		int ret =3D gpiod_direction_output(gpwm->gpio, invert);
-> +
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	spin_lock_irqsave(&gpwm->lock, flags);
-> +
-> +	if (!state->enabled) {
-> +		gpwm->state =3D *state;
-> +		gpwm->running =3D false;
-> +		gpwm->changing =3D false;
-> +
-> +		gpiod_set_value(gpwm->gpio, invert);
-> +	} else if (gpwm->running) {
-> +		gpwm->next_state =3D *state;
-> +		gpwm->changing =3D true;
-> +	} else {
-> +		unsigned long next_toggle;
-> +
-> +		gpwm->state =3D *state;
-> +		gpwm->changing =3D false;
-> +
-> +		next_toggle =3D pwm_gpio_toggle(gpwm, !!state->duty_cycle);
-> +		if (next_toggle) {
-> +			hrtimer_start(&gpwm->gpio_timer, next_toggle,
-> +				      HRTIMER_MODE_REL);
-> +		}
-
-The curly braces can be dropped here and in a few more locations.
-
-> +	}
-> +
-> +	spin_unlock_irqrestore(&gpwm->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pwm_gpio_get_state(struct pwm_chip *chip, struct pwm_device *=
-pwm,
-> +			       struct pwm_state *state)
-> +{
-> +	struct pwm_gpio *gpwm =3D container_of(chip, struct pwm_gpio, chip);
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&gpwm->lock, flags);
-> +
-> +	if (gpwm->changing)
-> +		*state =3D gpwm->next_state;
-> +	else
-> +		*state =3D gpwm->state;
-> +
-> +	spin_unlock_irqrestore(&gpwm->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops pwm_gpio_ops =3D {
-> +	.apply =3D pwm_gpio_apply,
-> +	.get_state =3D pwm_gpio_get_state,
-> +};
-> +
-> +static int pwm_gpio_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct pwm_gpio *gpwm;
-> +	int ret;
-> +
-> +	gpwm =3D devm_kzalloc(dev, sizeof(*gpwm), GFP_KERNEL);
-> +	if (!gpwm)
-> +		return -ENOMEM;
-> +
-> +	spin_lock_init(&gpwm->lock);
-> +
-> +	gpwm->gpio =3D devm_gpiod_get(dev, NULL, GPIOD_ASIS);
-> +	if (IS_ERR(gpwm->gpio)) {
-> +		return dev_err_probe(dev, PTR_ERR(gpwm->gpio),
-> +				     "could not get gpio\n");
-> +	}
-> +
-> +	if (gpiod_cansleep(gpwm->gpio)) {
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "sleeping GPIO %d not supported\n",
-> +				     desc_to_gpio(gpwm->gpio));
-> +	}
-
-Is it still state of the art to add gpio numbers to error messages?
-
-> +	gpwm->chip.dev =3D dev;
-> +	gpwm->chip.ops =3D &pwm_gpio_ops;
-> +	gpwm->chip.npwm =3D 1;
-> +	gpwm->chip.atomic =3D true;
-> +
-> +	hrtimer_init(&gpwm->gpio_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> +	gpwm->gpio_timer.function =3D pwm_gpio_timer;
-> +
-> +	ret =3D pwmchip_add(&gpwm->chip);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "could not add pwmchip\n");
-> +
-> +	platform_set_drvdata(pdev, gpwm);
-> +
-> +	return 0;
-> +}
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---qooobwxuyeu4bcau
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXAs7wACgkQj4D7WH0S
-/k6Eewf/fbsfLpDgN48u2SB5wYgDBrzE1wtKr7rJngfjIaVD+Oczp1o09UdS39z7
-q3RnhAYJG5vMFNMkovAyi6nViQ0GERkX7ALcFAfTwC0B5w2uAnwL9P1u+5ONu3kW
-FhKGnpXghg3bVLGNVgTdCOhog0Vajj/XeozbPUBLP05POs+7FVzg21/VYoVqzmCj
-2ppNmbq8pyOVKez4HY1xzLNXb7NormhiCT02FcpxhR+f+rViAYSe4+7ueAzzwkft
-O3vBrLnI16Pt4FbX7xtoaKBk71P+RkGjxcUzpd8ARz0OmF8TadO6dFkI3iK7xlZy
-58kfCBe7AAI/Q7nrIMLiK+YqZ3wTIw==
-=SeeU
------END PGP SIGNATURE-----
-
---qooobwxuyeu4bcau--
 
