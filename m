@@ -1,177 +1,104 @@
-Return-Path: <linux-pwm+bounces-1218-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1219-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3354784A1CD
-	for <lists+linux-pwm@lfdr.de>; Mon,  5 Feb 2024 19:07:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8C4284B40D
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Feb 2024 12:58:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E50B8285943
-	for <lists+linux-pwm@lfdr.de>; Mon,  5 Feb 2024 18:07:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB97D1C21A95
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Feb 2024 11:58:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2BFC482C7;
-	Mon,  5 Feb 2024 18:07:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27E78130AC6;
+	Tue,  6 Feb 2024 11:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XxfL1v8u"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA2647F77
-	for <linux-pwm@vger.kernel.org>; Mon,  5 Feb 2024 18:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2275130AC9
+	for <linux-pwm@vger.kernel.org>; Tue,  6 Feb 2024 11:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707156446; cv=none; b=lrOxg3065vYu/Im5uLd47D16IOhuw/lprPhjTmtAfbQ9N1uqb9J4xJSifwuELY0lWZSYctUYZEfPjlMtLSRM+QNtJe0YSwVvRDfc1pcMnXQG8SXn0nTe4od0kEUUtrUkuwQaxDC2LFlkzVHecCEaTNj/cs2RG2Tp8kNHNQ704hk=
+	t=1707219798; cv=none; b=G6iNomB6tuZ8TSsCCHJcM/ZX++T7aGfSD1MaU15gD/g/D9JzTMA+3buhilffSVBzIFmV3QIpy8JXWRGMyMgkL/wiq/DeDqUKXVyYegn/2XJSNbBdTDTjGdHN0wdpjVMZlLFv5PISQH9tog0sueA07sF6wKzyC3po893bec3ceTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707156446; c=relaxed/simple;
-	bh=WekkH0x+wQr8GCr9nI/D/6WcaPx85LhuLjShRfa0J68=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NaSeWFqe8UcrlDAJRoRMgBO+7w1jLtf7syHrjBM20DQ8mFAmERjXjVzr2ZZapsZn252pE9go6cBXNVBOOpa7Zyr4lW2BB/44M741lvOLxi94pv5lTnT3xNzOF2i7tQoKcWAYp078bZJvC6xTIs4D2AzZUqa1lKiwnPdXd1aTUhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rX3ND-0002rX-MG; Mon, 05 Feb 2024 19:07:15 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rX3NC-004fwa-68; Mon, 05 Feb 2024 19:07:14 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rX3NC-00Fkrt-0H;
-	Mon, 05 Feb 2024 19:07:14 +0100
-Date: Mon, 5 Feb 2024 19:07:13 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Nylon Chen <nylon.chen@sifive.com>
-Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, conor@kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
-	aou@eecs.berkeley.edu, thierry.reding@gmail.com, vincent.chen@sifive.com, 
-	zong.li@sifive.com, nylon7717@gmail.com
-Subject: Re: [PATCH v8 2/3] pwm: sifive: change the PWM controlled LED
- algorithm
-Message-ID: <4kqkazromkzyhic2mgyyjrh4jlnp6djfuotu37btdfolqp5e2o@6jkbjnahvrbo>
-References: <20240126074045.20159-1-nylon.chen@sifive.com>
- <20240126074045.20159-3-nylon.chen@sifive.com>
+	s=arc-20240116; t=1707219798; c=relaxed/simple;
+	bh=EPQ+cVqCjVdYYihQHuYeCKtcklYcUa9mjYhu8zX/BuA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZClpp1XE7FQ+bl02LSwR0MXmjqPN9HbMLX13ce2OGDV1NRP1rDacvGw6jb1osNlSA8YcSZQ+QDJTKINnMsPkF6ZdPniXY7n/rr/l9+sgxrZgobEgZ/9zRUuXtO6gyhuO4s+zXwP9g+s3rvI1K/SlB+j9yd8wACKiKhwtsvaSA7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XxfL1v8u; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7d5bbbe57bbso2213596241.1
+        for <linux-pwm@vger.kernel.org>; Tue, 06 Feb 2024 03:43:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707219793; x=1707824593; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EPQ+cVqCjVdYYihQHuYeCKtcklYcUa9mjYhu8zX/BuA=;
+        b=XxfL1v8u6sMsN9nrWxz3yneNDrNHQiK1GCEXJleB+zkH9ivp4vIaoCy/aeV0UEN/lS
+         GYFCud+hl8sYHjlh8dOJd6a1yuMQXFx4WQXo5zx/tBDTrGdtGYeeAitR1hDJ3J/hHNsE
+         0GQKfRlYYg5yoFEegSPdnAGXyS6yKFUBAihKFKMi2LgRtjjdZF86xTcOSbYYIlxlrtRQ
+         luZ1FUTTMosqss19s18XiGgbSELakyIH/IXr8GAbs1+HZ8pVj9v6iaREg9NDHXTR1kT3
+         +3sm4Pn2mSS/uOfUfRjzEpJ+UzeyIFbAH+s/kyxecIPLN5ltRIPvuere8tgQfQcnizfg
+         UGmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707219793; x=1707824593;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EPQ+cVqCjVdYYihQHuYeCKtcklYcUa9mjYhu8zX/BuA=;
+        b=Kaq+/DedwqaXSOvb3AAq5kTY0AdX+dSMwJBkX6m+RDMOnoW1b3NhspZp+nAu6DHfsr
+         Y/hI/LOzkMnTU6z76yXVhZaIz8ic+lVYTQW8L/8f7AaHe0Qexg6xmAGrq5xpb6864BIr
+         6zT5xS6DvyEn4ENTKoOmmjB37vTw8w2uVpdUtT/jrV0+JQS+bpbUGaB34J9CTG/vaiNh
+         g+msE++BCA7P1TlOpxEY910caMPw+xVo7eEey0YUBMEpdVPFNM1/wyWaQuhkDyTQ+FZx
+         7wxRVgCwlIacXCiGzEDe19irQSKSwPkTQOydEzI+W2CpNanSdyaQo5WS2blgRIbRFyGV
+         nreQ==
+X-Gm-Message-State: AOJu0Yx7yLvuW/YujtYR1Q5tXnpdYC2kTVGqf8kPsdilmEU/+h7hlbZ6
+	aLa6rnD4TgmxNKHmFQaue0DzmwsuBbWzfeWg1HfxRYlHYJ0aHdltT8o0W3BHEPvXbt0/k9V/qlL
+	6McVSciwRBfWMxu5zks3aOkqRs9igUJZqAlyNIg==
+X-Google-Smtp-Source: AGHT+IH/ty3l4JaUHzTYH22M32IOVtgJQ3dBcaWbXhnfjFajbREEFj3DCVA1V0Yyjmd3nXSfVWqfldaOAu0sdOIdccE=
+X-Received: by 2002:a05:6122:1b0c:b0:4c0:1edf:f29f with SMTP id
+ er12-20020a0561221b0c00b004c01edff29fmr2291037vkb.5.1707219793602; Tue, 06
+ Feb 2024 03:43:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ngq5sitimfjzgek5"
-Content-Disposition: inline
-In-Reply-To: <20240126074045.20159-3-nylon.chen@sifive.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-
-
---ngq5sitimfjzgek5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20240130105515.30258-1-me@kloenk.de>
+In-Reply-To: <20240130105515.30258-1-me@kloenk.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 6 Feb 2024 12:43:02 +0100
+Message-ID: <CAMRc=Mdb+=aHyyMZCf3ALWot-QY=NZ_mR=bubqofwHRV4srG3Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio-mvebu: no hardcoded timer assignment for pwm
+To: Finn Behrens <me@kloenk.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Heisath <jannis@imserv.org>, Yureka Lilian <yuka@yuka.dev>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-Regarding the Subject: The patch has nothing to do with an LED, has it?
-
-On Fri, Jan 26, 2024 at 03:40:44PM +0800, Nylon Chen wrote:
-> The `frac` variable represents the pulse inactive time, and the result
-> of this algorithm is the pulse active time. Therefore, we must reverse th=
-e result.
-
-Please break lines at 75 columns in the commit log.
-
-> The reference is SiFive FU740-C000 Manual[0]
->=20
-> Link: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed8b=
-16acba_fu740-c000-manual-v1p6.pdf [0]
-
-I looked at Figure 29 in this document (version v1p6, pdf page 148). Not
-sure I understand that correctly, but I expect that the output of the
-">=3D?" node below pwmcmp0 to become 1 if pwms has reached pwmcmp0, is
-that right? In that case this output is zero when pwmcount is zero and
-then pwmcmp0ip is zero, too. So a period starts with the inactive part
-and so it's inversed polarity.
-
-What made you think that the current driver implementation is wrong?
-
-> Co-developed-by: Zong Li <zong.li@sifive.com>
-> Signed-off-by: Zong Li <zong.li@sifive.com>
-> Co-developed-by: Vincent Chen <vincent.chen@sifive.com>
-> Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-> Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+On Tue, Jan 30, 2024 at 11:55=E2=80=AFAM Finn Behrens <me@kloenk.de> wrote:
+>
+> Removes the hardcoded timer assignment of timers to pwm controllers.
+> This allows to use more than one pwm per gpio bank.
+>
+> Original patch with chip_data interface by Heisath <jannis@imserv.org>
+>
+> Link: https://wiki.kobol.io/helios4/pwm/#patch-requirement
+> Co-developed-by: Yureka Lilian <yuka@yuka.dev>
+> Signed-off-by: Yureka Lilian <yuka@yuka.dev>
+> Signed-off-by: Finn Behrens <me@kloenk.de>
 > ---
->  drivers/pwm/pwm-sifive.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> index eabddb7c7820..b07c8598bb21 100644
-> --- a/drivers/pwm/pwm-sifive.c
-> +++ b/drivers/pwm/pwm-sifive.c
-> @@ -113,6 +113,7 @@ static int pwm_sifive_get_state(struct pwm_chip *chip=
-, struct pwm_device *pwm,
->  	u32 duty, val;
-> =20
->  	duty =3D readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-> +	duty =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - duty;
 
-I find it irritating that both values are assigned to duty. I'd spend
-another variable and make this:
+This looks good to me but I'd love for Uwe to Ack it before I pick it up.
 
-	inactive =3D readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-	duty =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - inactive;
-
-
-> =20
->  	state->enabled =3D duty > 0;
-> =20
-> @@ -123,11 +124,10 @@ static int pwm_sifive_get_state(struct pwm_chip *ch=
-ip, struct pwm_device *pwm,
->  	state->period =3D ddata->real_period;
->  	state->duty_cycle =3D
->  		(u64)duty * ddata->real_period >> PWM_SIFIVE_CMPWIDTH;
-> -	state->polarity =3D PWM_POLARITY_INVERSED;
-> +	state->polarity =3D PWM_POLARITY_NORMAL;
-> =20
->  	return 0;
->  }
-> -
-
-Please keep this empty line between functions.
-
->  static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
->  			    const struct pwm_state *state)
->  {
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ngq5sitimfjzgek5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXBI9AACgkQj4D7WH0S
-/k5uxQgAnQ/SvX4+QQISrWgnYygCgVlr4ryD5EN3wAHNeDGn3EvG8hNVvZTlQtZV
-CA5wYClIyGjAq6Qeg/tlfwjhthtMinqwQZpZ0K67c/Fr51cp0ic7PNKWkQF3UMWf
-EaShSF6NIyFsCX25OZNa9lUpMgp9hx+klZ0gFSL5aZ9n/MGmgM4In68YfKEQsS01
-X/LgQj0AwDo5utQmLL+zp8sKneEs5WM7/Wcs7910eC/+bpo4fBBs5D1R7ap8LHts
-J6qse4XMtdHJyHQxXuDq2/tH4+ttAz7lodvJuYSjGoU/OAhCOUNx0rF+TgUFs5zj
-FqHeGOJyQ2QKYeqv3kqqjdd3VpHLjw==
-=4mPe
------END PGP SIGNATURE-----
-
---ngq5sitimfjzgek5--
+Bart
 
