@@ -1,139 +1,443 @@
-Return-Path: <linux-pwm+bounces-1225-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1226-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A14E484C5FF
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 09:09:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B32A84C661
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 09:40:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 45218B25D6B
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 08:09:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 158D61F2556B
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 08:40:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE033200AD;
-	Wed,  7 Feb 2024 08:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d68xilUo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FA3C208A9;
+	Wed,  7 Feb 2024 08:39:56 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C417B200AC;
-	Wed,  7 Feb 2024 08:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071EF20319
+	for <linux-pwm@vger.kernel.org>; Wed,  7 Feb 2024 08:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707293338; cv=none; b=jnCUoMPWKGCo47m1nWHefNMNOyFF4cYlBrogaNOvyyz4f2F6dxsuAtiqvsUB3i2SQu/NiYEUxpNsR2gqbyKsjrRWkoPuuyl7LJyBwMnUfuVeqmFZIY08Eodfpwa3+eUabD38VtJFbLm33+CaAOFxiXU27bNQyQ+Ivpsb5VWY09Y=
+	t=1707295196; cv=none; b=KGnzQ8DCQIv836+gpFQ2OUbLUyjTnPATS+J9rYdn9YET/frAIeaGCRZto/ANjA6g3l5PbbfldoAcd+zr+pWKYP7tF+BXx5dfGx1UnWARI7cevKUoppqIt2BtPjZ7sqIcaG5FIsIthduMKEXL7+LfnAwbf0nAEDOfK4dPK25myU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707293338; c=relaxed/simple;
-	bh=57iKMo8gsXVdW40iwK8MU76XeVzaqjNop9+cUYX2IeY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kivPctPjE2GcgfJGNoytlOr7u3D4tDkAysX6RUCGXj2dRrj3V9OLbBk4m0cUTkkEX+6cB37bs+FjPL4DX4TjU7UT+C0t5hypOZ/DsdLvgYoxX1whsoqAR8uvzGvNjiTFntSlZ0oB8tTF/ynqyWMT96Tt+c4Y8ADWJHEnF0pf294=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d68xilUo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0CA8C433F1;
-	Wed,  7 Feb 2024 08:08:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707293338;
-	bh=57iKMo8gsXVdW40iwK8MU76XeVzaqjNop9+cUYX2IeY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=d68xilUo0Wlh4oO13lvXX4kmOUdH3P16an7Q5qHJUxV9UDx3QrMcCiDyJb60cONUl
-	 LmjYRO1j91Bcs6SjmD13LuMKGg0kK7KLgEJlvorVFwhgtISAsrNzxMT8BbZvlC4bBu
-	 LrFipdm/pDfeaDtmFNuxxPjxW0+nzaGAlHMD4Z7VCGmGuYuNCf5G05bSn2ibkCov23
-	 Y/JTwjCvWXzqlto4DuX78s18vbw4FScLXHVU2TBYoS/RE9UI/c7PvAqseb2YZRMjYM
-	 qOkSDtXnxVkx/+4jRmDqmdt0Cq7pe32mY5SDABZ98AnhbUsC5BZUUr3DO4DPIEM3oK
-	 XLxoL4JQn+ypQ==
-Message-ID: <14d1464b-7d60-4021-bc33-b0e809f3cde0@kernel.org>
-Date: Wed, 7 Feb 2024 09:08:49 +0100
+	s=arc-20240116; t=1707295196; c=relaxed/simple;
+	bh=dnZ/UZKbLsJbAzFORY5rtTkrFeqnx/bZ+TXxm9aozzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PLG9cxjtADXc5GYxn55SyZJQsZK90Z78CRHZrt09jgPCwx0VnPCiKu1gm9tW7U3dAQdisD4MYQf919Jh9TLdh9dXYC+vFtJc88WdVsVEmDrJk+MR0djpHcmLGd5jKvOhdySR0CL6t9dWkg1x7Bypf+CWMP3BUWMWRFBsTMOESwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rXdSu-0001Xk-CX; Wed, 07 Feb 2024 09:39:32 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rXdSs-004z5B-P9; Wed, 07 Feb 2024 09:39:30 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rXdSs-00HCvw-27;
+	Wed, 07 Feb 2024 09:39:30 +0100
+Date: Wed, 7 Feb 2024 09:39:30 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, dlan@gentoo.org, 
+	inochiama@outlook.com
+Subject: Re: [PATCH v1 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+Message-ID: <sgdzjoyabi7jf6h6lzrx6evl5g625ccczqgnyseeh24zauvqgp@dhad3txonq6a>
+References: <20240207055856.672184-1-qiujingbao.dlmu@gmail.com>
+ <20240207060913.672554-1-qiujingbao.dlmu@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
-Content-Language: en-US
-To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>, u.kleine-koenig@pengutronix.de,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- dlan@gentoo.org, inochiama@outlook.com
-References: <20240207055856.672184-1-qiujingbao.dlmu@gmail.com>
- <20240207060913.672554-1-qiujingbao.dlmu@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ku6e3d7ezi6spch7"
+Content-Disposition: inline
 In-Reply-To: <20240207060913.672554-1-qiujingbao.dlmu@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On 07/02/2024 07:09, Jingbao Qiu wrote:
+
+--ku6e3d7ezi6spch7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello Jingbao,
+
+On Wed, Feb 07, 2024 at 02:09:13PM +0800, Jingbao Qiu wrote:
 > Implement the PWM driver for CV1800.
-> 
+>=20
 > Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 > ---
+>  drivers/pwm/Kconfig      |  10 ++
+>  drivers/pwm/Makefile     |   1 +
+>  drivers/pwm/pwm-cv1800.c | 218 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 229 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-cv1800.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 4b956d661755..455f07af94f7 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -186,6 +186,16 @@ config PWM_CROS_EC
+>  	  PWM driver for exposing a PWM attached to the ChromeOS Embedded
+>  	  Controller.
+> =20
+> +config PWM_CV1800
+> +	tristate "Sophgo CV1800 PWM driver"
+> +	depends on ARCH_SOPHGO || COMPILE_TEST
+> +	help
+> +	  Generic PWM framework driver for the Sophgo CV1800 series
+> +	  SoCs.
+> +
+> +	  To compile this driver as a module, build the dependecies
+> +	  as modules, this will be called pwm-cv1800.
+> +
+>  config PWM_DWC_CORE
+>  	tristate
+>  	depends on HAS_IOMEM
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index c5ec9e168ee7..6c3c4a07a316 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CLK)		+=3D pwm-clk.o
+>  obj-$(CONFIG_PWM_CLPS711X)	+=3D pwm-clps711x.o
+>  obj-$(CONFIG_PWM_CRC)		+=3D pwm-crc.o
+>  obj-$(CONFIG_PWM_CROS_EC)	+=3D pwm-cros-ec.o
+> +obj-$(CONFIG_PWM_CV1800)	+=3D pwm-cv1800.o
+>  obj-$(CONFIG_PWM_DWC_CORE)	+=3D pwm-dwc-core.o
+>  obj-$(CONFIG_PWM_DWC)		+=3D pwm-dwc.o
+>  obj-$(CONFIG_PWM_EP93XX)	+=3D pwm-ep93xx.o
+> diff --git a/drivers/pwm/pwm-cv1800.c b/drivers/pwm/pwm-cv1800.c
+> new file mode 100644
+> index 000000000000..4d4f233c9087
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-cv1800.c
+> @@ -0,0 +1,218 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * rtc-cv1800.c: PWM driver for Sophgo cv1800 RTC
+> + *
+> + * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 
+Please document the behaviour of the PWM here at the top of the driver.
+Things to mention are:
+
+ - How does the hardware behave on disable? (Usual behaviours include:
+   output of inactive state; freeze where it just happens to be; high-z)
+
+ - If you reconfigure the hardware, does it complete the previously
+   running period before emitting the new wave form?
+
+ - Are there possible glitches in .apply()? (i.e. can it happen, that
+   for a short moment a wave form is emitted that has the new period but
+   the old duty_cycle?)
+
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +
+> +#define HLPERIOD_BASE  0x00
+> +#define PERIOD_BASE    0x04
+> +#define POLARITY       0x040
+> +#define PWMSTART       0x044
+> +#define PWMDONE        0x048
+> +#define PWMUPDATE      0x4c
+> +#define PWM_OE         0xd0
+> +#define HLPERIOD_SHIFT 0x08
+> +#define PERIOD_SHIFT   0x08
+> +
+> +#define HLPERIOD(n)    (HLPERIOD_BASE + ((n) * HLPERIOD_SHIFT))
+> +#define PERIOD(n)      (PERIOD_BASE + ((n) * PERIOD_SHIFT))
+> +#define UPDATE(n)      (BIT(0) << (n))
+> +#define OE_MASK(n)     (BIT(0) << (n))
+> +#define START_MASK(n)  (BIT(0) << (n))
+> +
+> +#define PERIOD_RESET   0x02
+> +#define HLPERIOD_RESET 0x1
+> +#define REG_DISABLE    0x0U
+> +#define REG_ENABLE     BIT(0)
+
+Please use a driver specific prefix for all these defines.
+
+> +struct soc_info {
+> +	unsigned int num_pwms;
+> +};
+> +
+> +struct cv1800_pwm {
+> +	struct pwm_chip chip;
+> +	struct regmap *map;
+> +	struct clk *clk;
+> +};
+> +
+> +static inline struct cv1800_pwm *to_cv1800_pwm_dev(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct cv1800_pwm, chip);
+> +}
+> +
+> +static int cv1800_pwm_enable(struct pwm_chip *chip, struct pwm_device *p=
+wm,
+> +			     u32 enable)
+
+This is called with the enable parameter set to state->enabled which is
+a bool. Please use a bool here, too, instead of a u32.
+
+> +{
+> +	struct cv1800_pwm *priv =3D to_cv1800_pwm_dev(chip);
+> +	u32 pwm_enable;
+> +
+> +	regmap_read(priv->map, PWMSTART, &pwm_enable);
+> +	pwm_enable >>=3D pwm->hwpwm;
+
+I don't understand why this value is shifted here. I guess this misses a
+mask?
+
+> +	if (enable)
+> +		clk_prepare_enable(priv->clk);
+> +	else
+> +		clk_disable_unprepare(priv->clk);
+
+This is broken. It might well happen that the first call to .apply() has
+state->enabled =3D false. Please make sure to properly balance clk
+enabling.
+
+> +	/*
+> +	 * If the parameters are changed during runtime, Register needs
+> +	 * to be updated to take effect.
+> +	 */
+> +	if (pwm_enable) {
+> +		regmap_update_bits(priv->map, PWMUPDATE, UPDATE(pwm->hwpwm),
+> +				   REG_ENABLE << pwm->hwpwm);
+> +		regmap_update_bits(priv->map, PWMUPDATE, UPDATE(pwm->hwpwm),
+> +				   REG_DISABLE << pwm->hwpwm);
+
+REG_DISABLE is zero. Why is this shifted? Very strange.
+
+> +	} else {
+> +		regmap_update_bits(priv->map, PWM_OE, OE_MASK(pwm->hwpwm),
+> +				   enable << pwm->hwpwm);
+> +		regmap_update_bits(priv->map, PWMSTART, START_MASK(pwm->hwpwm),
+> +				   enable << pwm->hwpwm);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cv1800_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct cv1800_pwm *priv =3D to_cv1800_pwm_dev(chip);
+> +	u64 period_ns, duty_ns;
+> +	u32 period_val, hlperiod_val;
+> +	unsigned long long rate, div;
+> +
+> +	period_ns =3D state->period;
+> +	duty_ns =3D state->duty_cycle;
+> +
+> +	rate =3D (unsigned long long)clk_get_rate(priv->clk);
+
+This cast has no effect, so please drop it. To prevent that the clock
+changes rate while the PWM is running, please use
+clk_rate_exclusive_get().
+
+> +	div =3D rate * period_ns;
+
+This might overflow. Please use mul_u64_u64_div_u64() or one of its
+variants and error out on rate > NSEC_PER_SEC. (There are other pwm
+drivers that make it right, took a look into these if this is unclear.)
+
+> +	do_div(div, NSEC_PER_SEC);
+> +	period_val =3D div;
+> +
+> +	div =3D rate * (period_ns - duty_ns);
+> +	do_div(div, NSEC_PER_SEC);
+> +	hlperiod_val =3D div;
+
+I think it can happen here, that div it too big to fit into this u32.
+
+> +	regmap_write(priv->map, PERIOD(pwm->hwpwm), period_val);
+> +	regmap_write(priv->map, HLPERIOD(pwm->hwpwm), hlperiod_val);
+> +
+> +	cv1800_pwm_enable(chip, pwm, state->enabled);
+> +
+> +	return 0;
+> +}
+> +
+> +static int cv1800_pwm_get_state(struct pwm_chip *chip, struct pwm_device=
+ *pwm,
+> +				 struct pwm_state *state)
+> +{
+> +	struct cv1800_pwm *priv =3D to_cv1800_pwm_dev(chip);
+> +	u32 period_val, hlperiod_val, tem;
+> +	u64 rate;
+> +	u64 period_ns =3D 0;
+> +	u64 duty_ns =3D 0;
+> +	u32 enable =3D 0;
+> +
+> +	regmap_read(priv->map, PERIOD(pwm->hwpwm), &period_val);
+> +	regmap_read(priv->map, HLPERIOD(pwm->hwpwm), &hlperiod_val);
+> +
+> +	if (period_val !=3D PERIOD_RESET || hlperiod_val !=3D HLPERIOD_RESET) {
+> +		rate =3D (u64)clk_get_rate(priv->clk);
+> +
+> +		tem =3D NSEC_PER_SEC * period_val;
+
+This might overflow.
+
+> +		do_div(tem, rate);
+> +		period_ns =3D tem;
+
+This uses wrong rounding. If you enabled PWM_DEBUG during your tests,
+this should be catched and logged.
 
 > +
-> +static struct platform_driver cv1800_pwm_driver = {
-> +	.driver = {
-> +		.name = "cv1800-pwm",
-> +		.of_match_table = cv1800_pwm_dt_ids,
+> +		tem =3D period_val * period_ns;
+> +		do_div(tem, hlperiod_val);
+> +		duty_ns =3D tem;
+> +
+> +		regmap_read(priv->map, PWMSTART, &enable);
+> +		enable >>=3D pwm->hwpwm;
+
+Again a missing mask??
+
+> +	}
+> +
+> +	state->period =3D period_ns;
+> +	state->duty_cycle =3D duty_ns;
+> +	state->enabled =3D enable;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pwm_ops cv1800_pwm_ops =3D {
+> +	.apply =3D cv1800_pwm_apply,
+> +	.get_state =3D cv1800_pwm_get_state,
+> +};
+> +
+> +static const struct regmap_config cv1800_pwm_regmap_config =3D {
+> +	.reg_bits =3D 32,
+> +	.val_bits =3D 32,
+> +	.reg_stride =3D 4,
+> +};
+> +
+> +static int cv1800_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct cv1800_pwm *cv_pwm;
+
+Please pick always the same name for your driver private variable. In
+the other functions it is called "priv".
+
+> +	void __iomem *base;
+> +	const struct soc_info *info;
+> +
+> +	info =3D device_get_match_data(dev);
+> +	if (!info)
+
+error message please.
+
+> +		return -EINVAL;
+> +
+> +	cv_pwm =3D devm_kzalloc(dev, sizeof(*cv_pwm), GFP_KERNEL);
+> +	if (!cv_pwm)
+> +		return -ENOMEM;
+> +
+> +	base =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	cv_pwm->map =3D devm_regmap_init_mmio(&pdev->dev, base,
+> +					    &cv1800_pwm_regmap_config);
+> +	if (IS_ERR(cv_pwm->map))
+> +		return PTR_ERR(cv_pwm->map);
+> +
+> +	cv_pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(cv_pwm->clk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(cv_pwm->clk),
+> +				     "clk not found\n");
+> +
+> +	cv_pwm->chip.dev =3D dev;
+> +	cv_pwm->chip.ops =3D &cv1800_pwm_ops;
+> +	cv_pwm->chip.npwm =3D info->num_pwms;
+
+Missing clk handling here. Please all clk_prepare_enable once for each
+running channel.
+
+> +	return devm_pwmchip_add(dev, &cv_pwm->chip);
+> +}
+> +
+> +static const struct soc_info cv1800b_soc_info =3D {
+> +	.num_pwms =3D 4,
+> +};
+
+Until you support more variants, I suggest to just hardcode npwm to
+four.
+
+> +static const struct of_device_id cv1800_pwm_dt_ids[] =3D {
+> +	{ .compatible =3D "sophgo,cv1800-pwm", .data =3D &cv1800b_soc_info },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, cv1800_pwm_dt_ids);
+> +
+> +static struct platform_driver cv1800_pwm_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "cv1800-pwm",
+> +		.of_match_table =3D cv1800_pwm_dt_ids,
 > +	},
-> +	.probe = cv1800_pwm_probe,
+> +	.probe =3D cv1800_pwm_probe,
 > +};
 > +module_platform_driver(cv1800_pwm_driver);
 > +
 > +MODULE_ALIAS("platform:cv1800-pwm");
 
-You should not need MODULE_ALIAS() in normal cases. If you need it,
-usually it means your device ID table is wrong (e.g. misses either
-entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
-for incomplete ID table.
+I'm with Krzysztof here, this shouldn't be needed.
 
+> +MODULE_AUTHOR("Jingbao Qiu");
+> +MODULE_DESCRIPTION("Sophgo cv1800 RTC Driver");
+> +MODULE_LICENSE("GPL");
 
-Best regards,
-Krzysztof
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ku6e3d7ezi6spch7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXDQcEACgkQj4D7WH0S
+/k7MUwgAsrKBGI9Hel0m1xmG2Q3RC/iv2KKO5zVzYfXMFviJjQF+3FVXxpAIBM2N
+61XfltHtaZgx+RGq68rxHgobCPkXNA5Dys4W8g3ek0T8XVh1QLouAFGYCRl66Sxz
+CTNE2TwGmipF2GwuLljLNadPuL6odF0NEUp9Z5Cu6eMkBvRpFfNc492SSmYnndiR
+UYaus3hjfCP62MCTdLhrr8DObvYLU0dBIumrkFhfhWhj6hxksztYY4cKOblM2O9I
+DGzdXlCHBGHnVQ6m7yBId5giZhJIYkI5goR4bxTFdn4ZWGIjrN0Fp0H3AhktPlSp
+v1oeT03M/lfha0BXfBZVpLf4DX8F/A==
+=aldx
+-----END PGP SIGNATURE-----
+
+--ku6e3d7ezi6spch7--
 
