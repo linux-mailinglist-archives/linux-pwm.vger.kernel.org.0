@@ -1,113 +1,139 @@
-Return-Path: <linux-pwm+bounces-1224-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1225-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42B2684C5D6
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 08:53:40 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A14E484C5FF
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 09:09:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 75A711C24218
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 07:53:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 45218B25D6B
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 08:09:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A12041F958;
-	Wed,  7 Feb 2024 07:53:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE033200AD;
+	Wed,  7 Feb 2024 08:08:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fe63DBqg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d68xilUo"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3271D557;
-	Wed,  7 Feb 2024 07:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C417B200AC;
+	Wed,  7 Feb 2024 08:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707292417; cv=none; b=qNNdHyyn2mcG8HCp+5VSCgdZRN6z0xPkOZ9NkixT8Fpdn0uszDP5zT/ipF39FaEG8q0AOOkHuuXAdiHn2FjC+UDPV2pzGNgl2CiYlcSk02ZfzRk72QpsQZM8vLcpg1CGg5qVbsHk+jZifxafHa/c3izfAeRF+csMp+U0suFQnLk=
+	t=1707293338; cv=none; b=jnCUoMPWKGCo47m1nWHefNMNOyFF4cYlBrogaNOvyyz4f2F6dxsuAtiqvsUB3i2SQu/NiYEUxpNsR2gqbyKsjrRWkoPuuyl7LJyBwMnUfuVeqmFZIY08Eodfpwa3+eUabD38VtJFbLm33+CaAOFxiXU27bNQyQ+Ivpsb5VWY09Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707292417; c=relaxed/simple;
-	bh=v65/JklQgSLzo3ITevRxa/JurcYK6rfeiPZMwug9Slw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N7rtlzbFZL5pX9m7pc7oCqMIwyuMXCLPQAWe6Vk+UvP9zA7SX5WcyolF7vaOGqKYrxhF21xjxInavzcvjKYvCYA3sV+Cnr7ZwJb1zYta1ZIfulGra3eENrH0VJNBzOCbvBRKg7ZbEKJZjS9Bo+C5o+mlIkJUTf/KbiFx08NY7KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fe63DBqg; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-59a8ecbadf7so113711eaf.0;
-        Tue, 06 Feb 2024 23:53:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707292415; x=1707897215; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xgX5ExE3nJYcAguyTho/pDjzA5VrWtWbQB1ZBDtuJ5k=;
-        b=Fe63DBqgRUA4dOhQG12E+UZWNsvoWkNVnRQQqLEZNBcOvyVauT2Vf7T1tbcLaO68N0
-         yhqrQKMgEoRh+jh4cIjoZiaSmY7lKLyNBvInc4Srz6Hp4VcgizGnzNmU444eoq1nJZh4
-         nX1oDfKExiDb/q1mVSxZmwayE/6Z4qCAw38IBNKAnsZAjoX/NoGUHpHCEsBZqBI3V4Fw
-         vaGOB+j+1riydKZ96hxIvALT/EPpjTyBvw9j45MxDyMgJjYFbNODvc+Q0IoOcrp9GneV
-         s03BtZGztogGpX+dgfet/wPpZL7jbxOgo+uB/m+4vifjGIafUpKBnTBsBTfwGU+9D4CZ
-         OWdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707292415; x=1707897215;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xgX5ExE3nJYcAguyTho/pDjzA5VrWtWbQB1ZBDtuJ5k=;
-        b=WC66Ali4RubzZi4aZpdbnurCIFYKg/uAxirhlxIF9Y0wLx1PkYghJfeyWHcMzw7fvk
-         wU0wSrMY3CmqVN2XMleacjA4cLHLZ0PP5CTPU2KpBgT3VpGGINHD9RdG05EZzPG9cq08
-         /ljprvBpgkx3T1a6CcUMVjeIrJcBnrRZM5qb50G31mGFrKSCwkSr96ZyRlUBw8A4G1Ad
-         rpxZx9Wsw+61j/zlscp43x1R7g8SGDlcpfd5oRbyFSJlp21tUHC1px4Kq0YhHhboPXUv
-         kyaGij74TpJg0DFSrGX4Ujxewn6qiLjINP3N43XNyZL5yLS21Wo5AeyHMJwfduNO0bVc
-         HNpA==
-X-Gm-Message-State: AOJu0YzMEgiu5M6WP49CQ0kudyBR2o9sgluUNzf7HK2AfZBdl7atNDeq
-	xYpNaeYi/UHBRFw12dM0G3ild9eDm7ZcNLNqHwHwT6uBm730wFCbeBu4aSK6JCKf350pS4WPsUT
-	BHc64txvv+4AuNmbldKAesYizHAw=
-X-Google-Smtp-Source: AGHT+IHcDukNiN88ITnMg3zYEptRe0xEyi0EmdPcpucd7Hhq7QFK1xmlcRZ5QJz+Lo1eAKT0fu+cDqYZteyjTCpArF4=
-X-Received: by 2002:a4a:7452:0:b0:599:f42b:9f5d with SMTP id
- t18-20020a4a7452000000b00599f42b9f5dmr4953137ooe.2.1707292414606; Tue, 06 Feb
- 2024 23:53:34 -0800 (PST)
+	s=arc-20240116; t=1707293338; c=relaxed/simple;
+	bh=57iKMo8gsXVdW40iwK8MU76XeVzaqjNop9+cUYX2IeY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kivPctPjE2GcgfJGNoytlOr7u3D4tDkAysX6RUCGXj2dRrj3V9OLbBk4m0cUTkkEX+6cB37bs+FjPL4DX4TjU7UT+C0t5hypOZ/DsdLvgYoxX1whsoqAR8uvzGvNjiTFntSlZ0oB8tTF/ynqyWMT96Tt+c4Y8ADWJHEnF0pf294=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d68xilUo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0CA8C433F1;
+	Wed,  7 Feb 2024 08:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707293338;
+	bh=57iKMo8gsXVdW40iwK8MU76XeVzaqjNop9+cUYX2IeY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d68xilUo0Wlh4oO13lvXX4kmOUdH3P16an7Q5qHJUxV9UDx3QrMcCiDyJb60cONUl
+	 LmjYRO1j91Bcs6SjmD13LuMKGg0kK7KLgEJlvorVFwhgtISAsrNzxMT8BbZvlC4bBu
+	 LrFipdm/pDfeaDtmFNuxxPjxW0+nzaGAlHMD4Z7VCGmGuYuNCf5G05bSn2ibkCov23
+	 Y/JTwjCvWXzqlto4DuX78s18vbw4FScLXHVU2TBYoS/RE9UI/c7PvAqseb2YZRMjYM
+	 qOkSDtXnxVkx/+4jRmDqmdt0Cq7pe32mY5SDABZ98AnhbUsC5BZUUr3DO4DPIEM3oK
+	 XLxoL4JQn+ypQ==
+Message-ID: <14d1464b-7d60-4021-bc33-b0e809f3cde0@kernel.org>
+Date: Wed, 7 Feb 2024 09:08:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+Content-Language: en-US
+To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>, u.kleine-koenig@pengutronix.de,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ dlan@gentoo.org, inochiama@outlook.com
 References: <20240207055856.672184-1-qiujingbao.dlmu@gmail.com>
- <20240207055856.672184-2-qiujingbao.dlmu@gmail.com> <1b0026ff-5334-4d3f-805e-d06926ca20f4@linaro.org>
-In-Reply-To: <1b0026ff-5334-4d3f-805e-d06926ca20f4@linaro.org>
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Date: Wed, 7 Feb 2024 15:53:23 +0800
-Message-ID: <CAJRtX8TFLZMTxPO2Qb18j0JY+nDS3Bep0YngEozzoW4tpQS+CQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: pwm: sophgo: add pwm for Sophgo
- CV1800 series SoC.
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: u.kleine-koenig@pengutronix.de, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	dlan@gentoo.org, inochiama@outlook.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <20240207060913.672554-1-qiujingbao.dlmu@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20240207060913.672554-1-qiujingbao.dlmu@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 7, 2024 at 3:45=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 07/02/2024 06:58, Jingbao Qiu wrote:
-> > Add devicetree binding to describe the PWM for Sophgo CV1800 SoC.
-> >
-> > Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> > ---
-> >  .../bindings/pwm/sophgo,cv1800-pwm.yaml       | 45 +++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/sophgo,cv1800=
--pwm.yaml
-> >
->
-> If there is going to be resend: drop full stop from subject and re-order
-> maintainers and description to match convention (look at other schemas
-> and example-schema).
+On 07/02/2024 07:09, Jingbao Qiu wrote:
+> Implement the PWM driver for CV1800.
+> 
+> Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> ---
 
-Thank you for your suggestion. I will fix it.
+
+> +
+> +static struct platform_driver cv1800_pwm_driver = {
+> +	.driver = {
+> +		.name = "cv1800-pwm",
+> +		.of_match_table = cv1800_pwm_dt_ids,
+> +	},
+> +	.probe = cv1800_pwm_probe,
+> +};
+> +module_platform_driver(cv1800_pwm_driver);
+> +
+> +MODULE_ALIAS("platform:cv1800-pwm");
+
+You should not need MODULE_ALIAS() in normal cases. If you need it,
+usually it means your device ID table is wrong (e.g. misses either
+entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
+for incomplete ID table.
+
 
 Best regards,
-Jingbao Qiu
+Krzysztof
+
 
