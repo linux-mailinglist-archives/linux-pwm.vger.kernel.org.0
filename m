@@ -1,73 +1,72 @@
-Return-Path: <linux-pwm+bounces-1221-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1222-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9FF084C48E
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 06:59:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52BA884C4B4
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 07:10:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 74F6E1F24CBC
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 05:59:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A3BA286425
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 06:10:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FF3A1BF2A;
-	Wed,  7 Feb 2024 05:59:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D70D1C2AD;
+	Wed,  7 Feb 2024 06:09:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0ZNC2ZV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITOLueP6"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB451CD25;
-	Wed,  7 Feb 2024 05:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E671D549;
+	Wed,  7 Feb 2024 06:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707285546; cv=none; b=rGb/fsvexlOi4LXkl0zv9zll6AHgX5uv8Gmf/qK2S0J17u59fFRC4/QqAOfxPF7NyywB4upJXY7zxi9FzmUy3UffWoBOvnDBi2sHg148L+2WlonemLuMYTol4ibzD1crjtqWbBWHoc+TbpnvoALdpCF9lG2eb89IG+Ub8ALg+wQ=
+	t=1707286161; cv=none; b=ngOObbv9fhXu80RRzCE+Ze3WaBZ7xgwkvv27+VtYw3yp/NOCPU6mXnKEyCZ1HeWiPWBGGaPo6JwDruW7RzoE4xm50gtRjjTNjfE/0xoPz+5hnzWx2ZLyVzRDK8eN5J0rLRBT5PUZzdHYgQf/TiQ9PkMFako+vHc1WVh2AokJhF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707285546; c=relaxed/simple;
-	bh=xFXi2UIRe00nhT4n+S7N5s7JJ4U/nwtzBClHlrzvqgE=;
+	s=arc-20240116; t=1707286161; c=relaxed/simple;
+	bh=A/DJHmh0XJOvuah/D5lZPVfH+nS9+ETgI/RcbKawubM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mAAUQJfgUDOcCJa8HlX6UDhnLzdJafQXwZIp4HFQxB2YnIArjHnLmTf49OEfpsdp5ymL6ezkpv4JbT/VqlethR6Wkw+fHq0nR3ONEwYebjjDeBW3MyygSsc69SE2wPsudjpa1q3rbgsv1N6rTBMBVoIckKYxYFz/TD6GxLt/o9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P0ZNC2ZV; arc=none smtp.client-ip=209.85.167.172
+	 MIME-Version; b=msGnDtQMsMzMCk9G1peCUFHj63OUKRxWy0NA1Chjf0vEyqozRwQDVJihVw6MM4TDLmXTrZYGSb+L4MvjUhkKdLeLpY133sAgq1hNLbfEYCWjmH9yXzRC/c5ewYy8IgxcHuvrSNyNem1GtyWxLrwqhRQJpj5s/1R3Mp8whI0w+7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ITOLueP6; arc=none smtp.client-ip=209.85.167.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3bfcf606936so147410b6e.0;
-        Tue, 06 Feb 2024 21:59:04 -0800 (PST)
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3bd72353d9fso226738b6e.3;
+        Tue, 06 Feb 2024 22:09:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707285544; x=1707890344; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1707286158; x=1707890958; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OGq4nXKDwtVR5j58DrEt76XQbCTlsrAlFhIvJM2+AAY=;
-        b=P0ZNC2ZVDZS30udHbbeh+w5SsFoyqKHsWOy4uPlFFE/ejMURDwgQdeD16I09aNgEvQ
-         zVDANOtfiplF0gsBQhsaTuFF0PApksRg/+XH2S2CBrbgaQymhRbRe7e3hSYk8Z6SIAnG
-         2UUz33KhKDNmdu/mH52XVS8Fv9ywFO11JL7GvaTU4NmsZni9RT6C5ZZNLess0COZH0PS
-         mm4H0YXicyL6ODFjgAXQ047gGLsOC1Eav/cXs95Ng8goxxVPr73rKnIjPfIny1Baq58U
-         Ygwv46srfRwNr9DwlcUPa4VxDWoWQG+LkSIKPyxdbcf2UMhNj8Ia6DLuq1cz5s/Bpav+
-         SIQQ==
+        bh=UOCigBVBBBspIi0p1lxtYszF6WmD5xOXo1RR8ILaV44=;
+        b=ITOLueP6yf0oZL/oGM9YObyUR4sq7Fv9BMOLF1nePEaWqbLB1QeauTfPGGgC9FSvY7
+         YlikTXWaIL76a67ebtxFOdNlCAfZ47KumIj/0DeakKI1/5086m6CCII5cR7jUs7FFcXS
+         rHnPo00V7IyC4ctuVkhEm1IDEgJrFkxmLzL0IgUMLJdDe2sC5BNiOyv+bh9Oz1aVojft
+         cJtKIqRB6zz+OAFcrJezjHAreFGRDLVI0IG4ERfHWpxSgIgXSPCBFCpYS2nudONnIhds
+         h1k3kv/mNHvidu2GgiEPvtty24q2Hw81ol4Du0XA7p9502i93oABSgVNE0ujS2Aj2ehl
+         22Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707285544; x=1707890344;
+        d=1e100.net; s=20230601; t=1707286158; x=1707890958;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OGq4nXKDwtVR5j58DrEt76XQbCTlsrAlFhIvJM2+AAY=;
-        b=bW51WxXkIH+xSJgGQ/M7K5eVfuHLYOtssyKQk1aOzZqJcbfRJbxYFu7voBxo1Ug8Kx
-         INqoKrRDy+4OEZS2kGdc0zu6YqrINiBXyu1G2oGzY1S/7GrxA8xQ5ynMutg63Mcze/6A
-         5lrvVyUKXE5+HZ4Ta342e2HDDN9uDAvAfX31CpIM0+5cNCV9mbs8FKyqHZPfUyU1GHym
-         zTM5O0ASFf+q449V1rwzez0ygtERcGp5nSJcbPQ+gbz1+ABVicG/cRzSPxbKgASgIQnD
-         l5WZxg4Zz0zkicXei06a53UQ3cHsZ5n+pI+ytGSBbpabHwgTC+vnarhE1d51aOSTfazZ
-         7A/A==
-X-Forwarded-Encrypted: i=1; AJvYcCX6V3qte9rUYg7pgsOnVTYo0k+UvpI13+Qn8UGVdm95Q9v2xuCZv4Yd9bcAH1oN2C1PjGgtLkq1Mrp8cqRwXAWToSEFLwyrL0qa/vxdSxaPbNrOa2PpKZCWroGYKCwdb7mVhI7nmBsswA==
-X-Gm-Message-State: AOJu0YyB9EWx3q4yVqd7+rDAxdMqVfWugBTiMo7wAWSJj0j2uNfFlCQT
-	uqVAHS6DOZnxz5I5Kx1sQh/tb2QEWpPVS0B4CnnDgmLgW4+A5h2i
-X-Google-Smtp-Source: AGHT+IFJ1uSNZr2F74eetYgjKoROr9ghfF/UDk/owV7CNEBeRmt4UUrcwE0whoI8WvBXETOUI3mG5g==
-X-Received: by 2002:a05:6808:285:b0:3bf:e3b3:c463 with SMTP id z5-20020a056808028500b003bfe3b3c463mr4350773oic.16.1707285543070;
-        Tue, 06 Feb 2024 21:59:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV0duPcRBbTWYM8jn+7PE7RP6z2dBYtvebosoE//mZ5l6hwKI+mLHx5/yl1UR6G0GrNkgdhwJHDsTGisgpvcXzRLzv21KzIid2gVyodDP17JA9YwsKlSMQXj0dYTNrgCsOPfW4dYVvQmTLCbwStWNydW3RJNfxrsUjb5hg1z7cLxtX/j69e76jnu51gBxe9Ok7tsn0NdNaxKf4zwAwizSYVxoc478AZIW9ljOm5n7Qxb94gzD2F2dHG5oXUEySdwo6vB/9qc9qUy2llvNJohS01XFvTM2Cw8CJ2mou2wo4Jq+emZC34mweT7rAaiZjiJ/GrWp3UE4BnEQycWs8L4v9gmeMJDjjAwPR5ZK7493t7Qz/0mVJsKEbORBEt1aclerfmovp53FCqcBkNLeoj9fAo+EChf+LXLcdiscs6g2LyVb2U8B/FrrK2uetIXJOrjjNnoPF7CANgIBDPG+T6
-Received: from localhost ([46.3.240.105])
-        by smtp.gmail.com with ESMTPSA id f26-20020aa79d9a000000b006d638fd230bsm567312pfq.93.2024.02.06.21.59.02
+        bh=UOCigBVBBBspIi0p1lxtYszF6WmD5xOXo1RR8ILaV44=;
+        b=QJ33mqVDmMRG9BUR9vRDc8PXGprDbM0VZ6+aVjnoqasDdqu88rwxHHsDXOrzuXBi+9
+         xp8hsFgH/Xn/A+lZ5SdzaGTZsYZ0mjKzfUJk0cTXMiE8Ht6L6wP/NOdM7AD5wXRYeay2
+         YnB6z4QiXN26whn4x0jEVAeVu5obqWA9CLZlIwtOBoG985QL+CWvUu3AkAHaxS2NbtAP
+         1F/1XkLGSMWXz9ZYibvQCSRNu4RfQwvPU2Fb79P6HK+v2mdFGAyQhyQb/rl7HGebfIGq
+         aXwXwcMQCMhK2GIZmAKhx9HRrOA/Eic5phlDyYjoVcQ3Dk4wKQRALXFKoG/MvkX6E32a
+         DcoA==
+X-Gm-Message-State: AOJu0Yyy0nNS8TQVtRtsb0nrY1PNYa6wsB+XDsjLRK/ukDu/O+/M8WOC
+	9XGYRvqLbrW+K43XtODMIwnuHF8bpZkbiTG8RT0E5P5tqAQSOBuj
+X-Google-Smtp-Source: AGHT+IHjcSRNhjdpiDizYjB5tVnNmWy+hv7bqmHg5NK4M1lB7uQCHWXSjX79eFWSxoNbmechVTucEQ==
+X-Received: by 2002:a05:6808:238e:b0:3bd:db8e:b1d8 with SMTP id bp14-20020a056808238e00b003bddb8eb1d8mr5063741oib.31.1707286157690;
+        Tue, 06 Feb 2024 22:09:17 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU5Z/IPm1PzlvZ/4DoLoupXpww8RtUS6z8HvQbyiN7ng0X4zFS3SdNz4Jq9y4Gni8dbDCPC9kPJKRkgpnj1A1SVquB3JXvIwTvE/EA07sczOr/9cJPVZq0nVwxPkF2FPIRx6dzfjSieCWUkuYHWJq27xY2/oh4uZJEz+zUG5yuHng588d9OoCg4vnIi6SCAFMbQGUlQ55OOPz3Kj4n4VTnqEDV6E48aXw6efEQWV0pg8RqiFlowPpkJUzy1Gtjw0uSvv2qYhDbN/sN4i90dtENREYyJ/Z+hERJkLndUwErphE1Fuw3z6CltU83lCNF427bpO73pqxVBgHPpUDzhj++crlGa3kcu+3bZR4XCrQZqrKrKEIfSD79gyxF15CuazRvj9RFec9CwIA+hV9PY8f/tZ3yuqNUIacLGdgnZXdJfnORJptRdHEa/dDRCzV4ihBBTotO5ed0POFNFMF4Q
+Received: from localhost ([46.3.240.101])
+        by smtp.gmail.com with ESMTPSA id r18-20020aa78b92000000b006d9c216a9e6sm577543pfd.56.2024.02.06.22.09.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 21:59:02 -0800 (PST)
+        Tue, 06 Feb 2024 22:09:17 -0800 (PST)
 From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 To: u.kleine-koenig@pengutronix.de,
 	robh+dt@kernel.org,
@@ -83,9 +82,9 @@ Cc: linux-pwm@vger.kernel.org,
 	dlan@gentoo.org,
 	inochiama@outlook.com,
 	Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Subject: [PATCH v1 1/2] dt-bindings: pwm: sophgo: add pwm for Sophgo CV1800 series SoC.
-Date: Wed,  7 Feb 2024 13:58:55 +0800
-Message-Id: <20240207055856.672184-2-qiujingbao.dlmu@gmail.com>
+Subject: [PATCH v1 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+Date: Wed,  7 Feb 2024 14:09:13 +0800
+Message-Id: <20240207060913.672554-1-qiujingbao.dlmu@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240207055856.672184-1-qiujingbao.dlmu@gmail.com>
 References: <20240207055856.672184-1-qiujingbao.dlmu@gmail.com>
@@ -97,65 +96,273 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add devicetree binding to describe the PWM for Sophgo CV1800 SoC.
+Implement the PWM driver for CV1800.
 
 Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 ---
- .../bindings/pwm/sophgo,cv1800-pwm.yaml       | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/sophgo,cv1800-pwm.yaml
+ drivers/pwm/Kconfig      |  10 ++
+ drivers/pwm/Makefile     |   1 +
+ drivers/pwm/pwm-cv1800.c | 218 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 229 insertions(+)
+ create mode 100644 drivers/pwm/pwm-cv1800.c
 
-diff --git a/Documentation/devicetree/bindings/pwm/sophgo,cv1800-pwm.yaml b/Documentation/devicetree/bindings/pwm/sophgo,cv1800-pwm.yaml
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 4b956d661755..455f07af94f7 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -186,6 +186,16 @@ config PWM_CROS_EC
+ 	  PWM driver for exposing a PWM attached to the ChromeOS Embedded
+ 	  Controller.
+ 
++config PWM_CV1800
++	tristate "Sophgo CV1800 PWM driver"
++	depends on ARCH_SOPHGO || COMPILE_TEST
++	help
++	  Generic PWM framework driver for the Sophgo CV1800 series
++	  SoCs.
++
++	  To compile this driver as a module, build the dependecies
++	  as modules, this will be called pwm-cv1800.
++
+ config PWM_DWC_CORE
+ 	tristate
+ 	depends on HAS_IOMEM
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index c5ec9e168ee7..6c3c4a07a316 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CLK)		+= pwm-clk.o
+ obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
+ obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
+ obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
++obj-$(CONFIG_PWM_CV1800)	+= pwm-cv1800.o
+ obj-$(CONFIG_PWM_DWC_CORE)	+= pwm-dwc-core.o
+ obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
+ obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
+diff --git a/drivers/pwm/pwm-cv1800.c b/drivers/pwm/pwm-cv1800.c
 new file mode 100644
-index 000000000000..7fcdf98b27fd
+index 000000000000..4d4f233c9087
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/sophgo,cv1800-pwm.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/sophgo,cv1800-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/pwm/pwm-cv1800.c
+@@ -0,0 +1,218 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * rtc-cv1800.c: PWM driver for Sophgo cv1800 RTC
++ *
++ * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
++ */
 +
-+title: Sophgo CV1800 PWM controller
++#include <linux/clk.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/regmap.h>
 +
-+description:
-+  The chip provides a set of four independent PWM channel outputs.
++#define HLPERIOD_BASE  0x00
++#define PERIOD_BASE    0x04
++#define POLARITY       0x040
++#define PWMSTART       0x044
++#define PWMDONE        0x048
++#define PWMUPDATE      0x4c
++#define PWM_OE         0xd0
++#define HLPERIOD_SHIFT 0x08
++#define PERIOD_SHIFT   0x08
 +
-+maintainers:
-+  - Jingbao Qiu <qiujingbao.dlmu@gmail.com>
++#define HLPERIOD(n)    (HLPERIOD_BASE + ((n) * HLPERIOD_SHIFT))
++#define PERIOD(n)      (PERIOD_BASE + ((n) * PERIOD_SHIFT))
++#define UPDATE(n)      (BIT(0) << (n))
++#define OE_MASK(n)     (BIT(0) << (n))
++#define START_MASK(n)  (BIT(0) << (n))
 +
-+allOf:
-+  - $ref: pwm.yaml#
++#define PERIOD_RESET   0x02
++#define HLPERIOD_RESET 0x1
++#define REG_DISABLE    0x0U
++#define REG_ENABLE     BIT(0)
 +
-+properties:
-+  compatible:
-+    const: sophgo,cv1800-pwm
++struct soc_info {
++	unsigned int num_pwms;
++};
 +
-+  reg:
-+    maxItems: 1
++struct cv1800_pwm {
++	struct pwm_chip chip;
++	struct regmap *map;
++	struct clk *clk;
++};
 +
-+  clocks:
-+    maxItems: 1
++static inline struct cv1800_pwm *to_cv1800_pwm_dev(struct pwm_chip *chip)
++{
++	return container_of(chip, struct cv1800_pwm, chip);
++}
 +
-+  "#pwm-cells":
-+    const: 3
++static int cv1800_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
++			     u32 enable)
++{
++	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
++	u32 pwm_enable;
 +
-+required:
-+  - compatible
-+  - reg
-+  - clocks
++	regmap_read(priv->map, PWMSTART, &pwm_enable);
++	pwm_enable >>= pwm->hwpwm;
 +
-+unevaluatedProperties: false
++	if (enable)
++		clk_prepare_enable(priv->clk);
++	else
++		clk_disable_unprepare(priv->clk);
 +
-+examples:
-+  - |
-+    pwm0: pwm@3060000 {
-+        compatible = "sophgo,cv1800-pwm";
-+        reg = <0x3060000 0x1000>;
-+        clocks = <&clk 60>;
-+        #pwm-cells = <3>;
-+    };
++	/*
++	 * If the parameters are changed during runtime, Register needs
++	 * to be updated to take effect.
++	 */
++	if (pwm_enable) {
++		regmap_update_bits(priv->map, PWMUPDATE, UPDATE(pwm->hwpwm),
++				   REG_ENABLE << pwm->hwpwm);
++		regmap_update_bits(priv->map, PWMUPDATE, UPDATE(pwm->hwpwm),
++				   REG_DISABLE << pwm->hwpwm);
++	} else {
++		regmap_update_bits(priv->map, PWM_OE, OE_MASK(pwm->hwpwm),
++				   enable << pwm->hwpwm);
++		regmap_update_bits(priv->map, PWMSTART, START_MASK(pwm->hwpwm),
++				   enable << pwm->hwpwm);
++	}
++
++	return 0;
++}
++
++static int cv1800_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			    const struct pwm_state *state)
++{
++	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
++	u64 period_ns, duty_ns;
++	u32 period_val, hlperiod_val;
++	unsigned long long rate, div;
++
++	period_ns = state->period;
++	duty_ns = state->duty_cycle;
++
++	rate = (unsigned long long)clk_get_rate(priv->clk);
++
++	div = rate * period_ns;
++	do_div(div, NSEC_PER_SEC);
++	period_val = div;
++
++	div = rate * (period_ns - duty_ns);
++	do_div(div, NSEC_PER_SEC);
++	hlperiod_val = div;
++
++	regmap_write(priv->map, PERIOD(pwm->hwpwm), period_val);
++	regmap_write(priv->map, HLPERIOD(pwm->hwpwm), hlperiod_val);
++
++	cv1800_pwm_enable(chip, pwm, state->enabled);
++
++	return 0;
++}
++
++static int cv1800_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++				 struct pwm_state *state)
++{
++	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
++	u32 period_val, hlperiod_val, tem;
++	u64 rate;
++	u64 period_ns = 0;
++	u64 duty_ns = 0;
++	u32 enable = 0;
++
++	regmap_read(priv->map, PERIOD(pwm->hwpwm), &period_val);
++	regmap_read(priv->map, HLPERIOD(pwm->hwpwm), &hlperiod_val);
++
++	if (period_val != PERIOD_RESET || hlperiod_val != HLPERIOD_RESET) {
++		rate = (u64)clk_get_rate(priv->clk);
++
++		tem = NSEC_PER_SEC * period_val;
++		do_div(tem, rate);
++		period_ns = tem;
++
++		tem = period_val * period_ns;
++		do_div(tem, hlperiod_val);
++		duty_ns = tem;
++
++		regmap_read(priv->map, PWMSTART, &enable);
++		enable >>= pwm->hwpwm;
++	}
++
++	state->period = period_ns;
++	state->duty_cycle = duty_ns;
++	state->enabled = enable;
++
++	return 0;
++}
++
++static const struct pwm_ops cv1800_pwm_ops = {
++	.apply = cv1800_pwm_apply,
++	.get_state = cv1800_pwm_get_state,
++};
++
++static const struct regmap_config cv1800_pwm_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++};
++
++static int cv1800_pwm_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cv1800_pwm *cv_pwm;
++	void __iomem *base;
++	const struct soc_info *info;
++
++	info = device_get_match_data(dev);
++	if (!info)
++		return -EINVAL;
++
++	cv_pwm = devm_kzalloc(dev, sizeof(*cv_pwm), GFP_KERNEL);
++	if (!cv_pwm)
++		return -ENOMEM;
++
++	base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	cv_pwm->map = devm_regmap_init_mmio(&pdev->dev, base,
++					    &cv1800_pwm_regmap_config);
++	if (IS_ERR(cv_pwm->map))
++		return PTR_ERR(cv_pwm->map);
++
++	cv_pwm->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(cv_pwm->clk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(cv_pwm->clk),
++				     "clk not found\n");
++
++	cv_pwm->chip.dev = dev;
++	cv_pwm->chip.ops = &cv1800_pwm_ops;
++	cv_pwm->chip.npwm = info->num_pwms;
++
++	return devm_pwmchip_add(dev, &cv_pwm->chip);
++}
++
++static const struct soc_info cv1800b_soc_info = {
++	.num_pwms = 4,
++};
++
++static const struct of_device_id cv1800_pwm_dt_ids[] = {
++	{ .compatible = "sophgo,cv1800-pwm", .data = &cv1800b_soc_info },
++	{},
++};
++MODULE_DEVICE_TABLE(of, cv1800_pwm_dt_ids);
++
++static struct platform_driver cv1800_pwm_driver = {
++	.driver = {
++		.name = "cv1800-pwm",
++		.of_match_table = cv1800_pwm_dt_ids,
++	},
++	.probe = cv1800_pwm_probe,
++};
++module_platform_driver(cv1800_pwm_driver);
++
++MODULE_ALIAS("platform:cv1800-pwm");
++MODULE_AUTHOR("Jingbao Qiu");
++MODULE_DESCRIPTION("Sophgo cv1800 RTC Driver");
++MODULE_LICENSE("GPL");
 -- 
 2.25.1
 
