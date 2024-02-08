@@ -1,101 +1,163 @@
-Return-Path: <linux-pwm+bounces-1253-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1254-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08AAA84E69A
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 18:23:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C16C84EDD5
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Feb 2024 00:39:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A98E1291479
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 17:23:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 509CC1C23FCF
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 23:39:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61DE37FBA3;
-	Thu,  8 Feb 2024 17:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NPJW/uYW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC936535DF;
+	Thu,  8 Feb 2024 23:24:47 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39B37EF19;
-	Thu,  8 Feb 2024 17:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 167CB54F9D;
+	Thu,  8 Feb 2024 23:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707413019; cv=none; b=mwrWYdZ2v2ecjXEm2Y5jLdSj16kONQqmqfRHsrx9CXdcVnurTOSJp2yUw63YWT21dOrK5tgSgveutIUZRb48Ah2jnfqqklZVqKC2B66e8KJ4Bb61p9rFZ6co13s6GNUrN8gJ1c41u0ID2QFTlW3YxdeHQAmFmJQvpGzu/FrH9Ek=
+	t=1707434687; cv=none; b=IfYIsIMnghvR95MttK4wE1261hP1WDBmfGC3ew2/1BfkUFVhahb3OXKkz3SrC7OoR7wt5quLQD3sQE3qJpmO7z1hw2h1iitrzRV/M7bSiVlF5FBiX0BdY7UH9jl5oTKWCuEvOMfswcumct/RLcyXmcFCw8/Nh8aglHJCPFy8aSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707413019; c=relaxed/simple;
-	bh=V+gwtZRfZzD4e0ADinSM7BMhqOp1FjOWYK5UT7X4mJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I9xZsTm7YvunHs9hFex17TIE2S5+zFs3V/towfHzGK/pf4CXiVouMz+9BIk9iwvOsvOM3/x8Mg981KEUEHaQYqKicSIKZ4zy7SH3/wqOG1jPDbYW8lB88JR/GTXlQrdfbJVMcJa4VvYHTLlnKnv3Oh7rhXjsjDrMTaTWaMiBAYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NPJW/uYW; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707413018; x=1738949018;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=V+gwtZRfZzD4e0ADinSM7BMhqOp1FjOWYK5UT7X4mJ0=;
-  b=NPJW/uYWdtd/8jNa75MHWAiVUtzF4hmWsFhLO6V3DHHkyX37qUdpW9zg
-   O+OamevUeORgXW1/xthcynaJaio4xo3/Klitssp9mEYz7pWV1BZJF/wLr
-   oHunJGsqnB7CNKKDowNgKYEnhs+ZjQPS+YJ+YIR+P9muw4ssJfpNRvgab
-   oamfh+AU2vfPHmMhbpn0CmKeg3GF8xhdkABvucS3AcomcjLN+V1eboXpo
-   Syfl99Lj48rgoeZkDhP1ReybzTPWWdCDaeTIlJ8lTw2bXb55aNlZpVdfP
-   7YQhptwAL4AXnaVU5C33Q3Gx5lr2W4/wh9rOyWPCz2BxvZOi664tz8hqp
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="11843627"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="11843627"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:23:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="910434285"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="910434285"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 09:23:35 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rY87Y-00000002w6K-3Guk;
-	Thu, 08 Feb 2024 19:23:32 +0200
-Date: Thu, 8 Feb 2024 19:23:32 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com,
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] DesignWare PWM improvements
-Message-ID: <ZcUOFComp54S76jF@smile.fi.intel.com>
-References: <20240208070529.28562-1-raag.jadav@intel.com>
+	s=arc-20240116; t=1707434687; c=relaxed/simple;
+	bh=iJ4h27b2stDbHUbzrUkIwBdpRJ0K3N623MbRZI78gZ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=izg74EBX3FHxCCyFfxNLQF3XVeldryjUFYrECFZsJ1sgOCOI4SA6j9u06zC4pA28d9s3yt0RsXqw9MeE/vYQOR/zWqpi2imz2nKPCgkvoiN/SVgKBHDnsuW0rYUqW1djsIAGaMX9m40Gk2SpXvM9gbp+bOqWpbEzPks/tPofZ+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-IronPort-AV: E=Sophos;i="6.05,255,1701097200"; 
+   d="scan'208";a="197291914"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 09 Feb 2024 08:24:38 +0900
+Received: from mulinux.home (unknown [10.226.92.227])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 66D7C4009BDC;
+	Fri,  9 Feb 2024 08:24:34 +0900 (JST)
+From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v6 0/4] Add RZ/V2{M, MA} PWM driver support
+Date: Thu,  8 Feb 2024 23:24:07 +0000
+Message-Id: <20240208232411.316936-1-fabrizio.castro.jz@renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240208070529.28562-1-raag.jadav@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 08, 2024 at 12:35:24PM +0530, Raag Jadav wrote:
-> This series implements 16 channel PWM support for Intel Elkhart Lake
-> along with minor cleanups for DesignWare PWM driver.
+The RZ/V2{M, MA} PWM Timer (PWM) is composed of 16 channels.
+Linux is only allowed access to channels 8 to 14 on RZ/V2M,
+while there is no restriction for RZ/V2MA.
 
-> Raag Jadav (5):
->   pwm: dwc: drop redundant error check
->   pwm: dwc: Add 16 channel support for Intel Elkhart Lake
->   pwm: dwc: simplify error handling
->   pwm: dwc: access driver_data using dev_get_drvdata()
->   pwm: dwc: use pm_sleep_ptr() macro
+The RZ/V2{M, MA} PWM Timer (PWM) supports the following functions:
+ * The PWM has 24-bit counters which operate at PWM_CLK (48 MHz).
+ * The frequency division ratio for internal counter operation is
+   selectable as PWM_CLK divided by 1, 16, 256, or 2048.
+ * The period as well as the duty cycle is adjustable.
+ * The low-level and high-level order of the PWM signals can be
+   inverted.
+ * The duty cycle of the PWM signal is selectable in the range from
+   0 to 100%.
+ * The minimum resolution is 20.83 ns.
+ * Three interrupt sources: Rising and falling edges of the PWM signal
+   and clearing of the counter.
+ * Counter operation and the bus interface are asynchronous and both can
+   operate independently of the magnitude relationship of the respective
+   clock periods.
 
-For patches except #3
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+v5->v6:
+ * Updated copyright in driver (2023->2024).
+ * Several improvements to the driver, as suggested by Uwe.
+v4->v5:
+ * rebased to pwm for-next.
+ * Sorted KConfig file
+ * Sorted Make file
+ * Updated copyright header 2022->2023.
+ * Updated limitation section.
+ * Replaced the variable chip->rzv2m_pwm in rzv2m_pwm_wait_delay()
+ * Replaced polarity logic as per HW manual dutycycle = Ton/Ton+Toff, so
+   eventhough native polarity is inverted from period point of view it
+   is correct.
+ * Updated logic for supporting 0% , 100% and remaining duty cycles.
+ * On config() replaced
+ * pm_runtime_resume_and_get()->pm_runtime_get_sync()
+ * Counter is stopped while updating period/polarity to avoid glitches.
+ * Added error check for clk_prepare_enable()
+ * Introduced is_ch_enabled variable to cache channel enable status.
+ * clk_get_rate is called after enabling the clock and
+ * clk_rate_exclusive_get()
+ * Added comment for delay
+ * Replaced 1000000000UL->NSEC_PER_SEC.
+ * Improved error handling in probe().
+v3->v4:
+ * Documented the hardware properties in "Limitations" section
+ * Dropped the macros F2CYCLE_NSEC, U24_MASK and U24_MAX.
+ * Added RZV2M_PWMCYC_PERIOD macro for U24_MAX
+ * Dropped rzv2m_pwm_freq_div variable and started using 1 << (4 * i)
+   for calculating divider as it is power of 16.
+ * Reordered the functions to have rzv2m_pwm_config() directly before
+   rzv2m_pwm_apply().
+ * Improved the logic for calculating period and duty cycle in config()
+ * Merged multiple RZV2M_PWMCTR register writes to a single write in
+ * config()
+ * replaced pwm_is_enabled()->pwm->state.enabled
+ * Avoided assigning bit value as enum pwm_polarity instead used enum
+ * constant.
+ * Fixed various issues in probe error path.
+ * Updated the logic for PWM cycle setting register
+ * A 100% duty cycle is only possible with PWMLOW > PWMCYC. So
+   restricting PWMCYC values < 0xffffff
+ * The native polarity of the hardware is inverted (i.e. it starts with
+ * the
+ * low part). So switched the inversion bit handling.
+v2->v3:
+ * Removed clock patch#1 as it is queued for 6.3 renesas-clk
+ * Added Rb tag from Geert for bindings and dt patches
+ * Added return code for rzv2m_pwm_get_state()
+ * Added comment in rzv2m_pwm_reset_assert_pm_disable()
+v1->v2:
+ * Updated commit description
+ * Replaced pwm8_15_pclk->cperi_grpf
+ * Added reset entry R9A09G011_PWM_GPF_PRESETN
+ * Added Rb tag from Krzysztof for bindings and the keep the Rb tag as
+   the below changes are trivial
+ * Updated the description for APB clock
+ * Added resets required property
+ * Updated the example with resets property
+ * Replaced
+   devm_reset_control_get_optional_shared->devm_reset_control_get_shared
+ * Added resets property in pwm nodes.
+
+Biju Das (4):
+  dt-bindings: pwm: Add RZ/V2M PWM binding
+  pwm: Add support for RZ/V2M PWM driver
+  arm64: dts: renesas: r9a09g011: Add pwm nodes
+  arm64: dts: renesas: rzv2m evk: Enable pwm
+
+ .../bindings/pwm/renesas,rzv2m-pwm.yaml       |  90 ++++
+ .../boot/dts/renesas/r9a09g011-v2mevk2.dts    |  70 +++
+ arch/arm64/boot/dts/renesas/r9a09g011.dtsi    |  98 ++++
+ drivers/pwm/Kconfig                           |  11 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-rzv2m.c                       | 469 ++++++++++++++++++
+ 6 files changed, 739 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/renesas,rzv2m-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-rzv2m.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
 
