@@ -1,111 +1,110 @@
-Return-Path: <linux-pwm+bounces-1240-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1241-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 554B684DA8B
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 08:06:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B7D684DADA
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 08:47:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D81531F23FF6
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 07:06:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE6541C20927
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 07:47:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6413A6A023;
-	Thu,  8 Feb 2024 07:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B8lBdqOS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C12069970;
+	Thu,  8 Feb 2024 07:47:04 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E319C6997B;
-	Thu,  8 Feb 2024 07:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C518069317
+	for <linux-pwm@vger.kernel.org>; Thu,  8 Feb 2024 07:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707375949; cv=none; b=YnWe5VIFmdr064f+w8rGhjCuOgCeh7eNVbweTezsjBTZr4/fCoDUVaFy4FP/BJW6fgoxHrUL7lyO973XSP/8TfAZ6iangsAj4D27/lznb3AaEjCil6K6j8Rqq/0oAsJHOjTeDUeVZvRycLiSd+jrVcyTgpdPu+9Wojl8hxtfaoc=
+	t=1707378424; cv=none; b=pregPYjQAJwWJs24Ge0JWVEoq02xlJ7nAdNjT9jq34tMXOohiKon4UiIhR2C+nqSgT+ncc9GZhZFQ+cWFMNmh0jQajmLQ0GhMmvBG6LpwP0wDiHzX6e/nljxNmNnDOIEmdpknk4XBz2tWD6tois2Ooa94m8T8nK8Z6u0HzT9BgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707375949; c=relaxed/simple;
-	bh=zYJsF8OpWc7dj9/OozfDPc9dxuZGaqWmvnyjlLvPRpo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=h8vTv5Ueh9d97Jxb577lINA4NVq9382m563xq1sz/4lDDxwYjACjDzqRdUMzAxDGb8Kopeq5f/mzxJV7U0hWnl6VmKbHIus6Wo6H29MgyKtr53VKZGLwe+ryxCovS3DLowN8RhzGKf3olsOaV6e/ful2jF5gZbgowGcA/HsnJBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B8lBdqOS; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecsmtp.iind.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707375948; x=1738911948;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zYJsF8OpWc7dj9/OozfDPc9dxuZGaqWmvnyjlLvPRpo=;
-  b=B8lBdqOSWHEkBo5YhmwpXLUyWL9B3OUOTYINxVfJUiHtUZjnYthjjDJH
-   RQ4kR1UycEw0REMYof5Mj+wdbUG9pcxpsz9yiruxTbBssDMvMwvEfBNNY
-   j2YE9nSf9gA1uHZ2jfz6oRTuqbPzDrVL3So5XnOeKaIEJKht8s61UGA2N
-   hngO4ZNLWYkihwpSX9nBDp8VjScA6TqbHWIcEEkLH73EjdM+Bi8371Qt1
-   zMknz4+kOqxue7xZBgogfnMJJB6gsn8HEyEKcajo4FjUP7OBdiF/3YVKV
-   Ec+E+fZ6cGNoHE5ya+g+15+tlJHnUNfzEEMeXpSnu0IgBfG0CSqqh/zUk
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="12525875"
-X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
-   d="scan'208";a="12525875"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 23:05:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
-   d="scan'208";a="1573972"
-Received: from inesxmail01.iind.intel.com ([10.223.57.40])
-  by fmviesa007.fm.intel.com with ESMTP; 07 Feb 2024 23:05:38 -0800
-Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
-	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 57D8B4841;
-	Thu,  8 Feb 2024 12:35:35 +0530 (IST)
-Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
-	id 578F41600100; Thu,  8 Feb 2024 12:35:35 +0530 (IST)
-From: Raag Jadav <raag.jadav@intel.com>
-To: u.kleine-koenig@pengutronix.de,
-	jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	lakshmi.sowjanya.d@intel.com
-Cc: linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v2 5/5] pwm: dwc: use pm_sleep_ptr() macro
-Date: Thu,  8 Feb 2024 12:35:29 +0530
-Message-Id: <20240208070529.28562-6-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240208070529.28562-1-raag.jadav@intel.com>
+	s=arc-20240116; t=1707378424; c=relaxed/simple;
+	bh=jypAfUbIvbUyT0Wu4Q94MHamlS5MN7DK7z7R5vymIIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fWHL8dnGbu6KHU4uO8p9BsHoulLYgMGX5i8jINJt/GAS/DDt9FoDXlkfopE7G0gtmx1A3TPw+sUVnmMkJ2GqBe+fcuYtnzS/T22Jenu5W5F2pqzUpNdrLRzfCic3o2sgS5ESrIZydVErQO5i92d+FM3JEiVWoyhlECClc8qAM9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rXz7O-0007qt-7f; Thu, 08 Feb 2024 08:46:46 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rXz7M-005Aii-S1; Thu, 08 Feb 2024 08:46:44 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rXz7M-000CVE-2W;
+	Thu, 08 Feb 2024 08:46:44 +0100
+Date: Thu, 8 Feb 2024 08:46:44 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: andriy.shevchenko@linux.intel.com, Raag Jadav <raag.jadav@intel.com>
+Cc: jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, 
+	lakshmi.sowjanya.d@intel.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] pwm: dwc: drop redundant error check
+Message-ID: <qrwcje4t2pbbxilnlfz2q7njodcp6vl54uaypdbvjgvwhgvc5g@4eq5wvumpjjx>
 References: <20240208070529.28562-1-raag.jadav@intel.com>
+ <20240208070529.28562-2-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xlh5lne2t7smrnyn"
+Content-Disposition: inline
+In-Reply-To: <20240208070529.28562-2-raag.jadav@intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-Since we don't have runtime PM handles here, we should be using
-pm_sleep_ptr() macro, so that the compiler can discard it in case
-CONFIG_PM_SLEEP=n.
 
-Fixes: 30b5b066fa83 ("pwm: dwc: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions")
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
- drivers/pwm/pwm-dwc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--xlh5lne2t7smrnyn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-index cc5bba977f47..bb39cc34f895 100644
---- a/drivers/pwm/pwm-dwc.c
-+++ b/drivers/pwm/pwm-dwc.c
-@@ -127,7 +127,7 @@ static struct pci_driver dwc_pwm_driver = {
- 	.remove = dwc_pwm_remove,
- 	.id_table = dwc_pwm_id_table,
- 	.driver = {
--		.pm = pm_ptr(&dwc_pwm_pm_ops),
-+		.pm = pm_sleep_ptr(&dwc_pwm_pm_ops),
- 	},
- };
- 
--- 
-2.35.3
+On Thu, Feb 08, 2024 at 12:35:25PM +0530, Raag Jadav wrote:
+> pcim_iomap_table() fails only if pcim_iomap_regions() fails. No need to
+> check for failure if the latter is already successful.
 
+Is this really true? pcim_iomap_table() calls devres_alloc_node() which
+might fail if the allocation fails. (Yes, I know
+https://lwn.net/Articles/627419/, but the rule is still to check for
+errors, right?)
+
+What am I missing?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--xlh5lne2t7smrnyn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXEhuMACgkQj4D7WH0S
+/k5Olwf/dwZIJw628t/aGAEw0FtU/HzoSUJ1BaFp000aDowWve+BF2cPDzakhFi4
+BdLaB0m7H5BPs0FpeUv9mTaVEdCiXsQaOE2yPQTmbeiy5/cqMVftPkUfJvSx4oRM
+uNAeg8VdiNC+7GrjJ9A9rcZwRbF9yoO8rjJ+1fH7M4q7IAfxWgKu2LcjhjFGRuAs
+B4XRgoLdDBYpVtHX4IMFX3NVrk2nAFYMQmNd4mvjxteC7i3CRB9N8HDiFXzFTISl
+1h7olr5Vq0sNB97QfZX100PeaJcdZo2o89NR/RMd3XWiL/fDPAnneWTgXduP3mxk
+mbTudFFjPoRxG5POPxqzQYWo+yORiw==
+=XhB1
+-----END PGP SIGNATURE-----
+
+--xlh5lne2t7smrnyn--
 
