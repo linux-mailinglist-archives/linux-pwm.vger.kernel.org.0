@@ -1,64 +1,64 @@
-Return-Path: <linux-pwm+bounces-1233-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1234-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A3DD84D7BD
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 03:21:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E31384D7FE
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 03:53:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 467BA1C21C6C
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 02:21:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8A515B21A40
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 02:53:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F30315ACB;
-	Thu,  8 Feb 2024 02:21:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CCA01BF24;
+	Thu,  8 Feb 2024 02:53:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BV2OT+SF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TYglBz9Q"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078501C6A8;
-	Thu,  8 Feb 2024 02:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912671CD19;
+	Thu,  8 Feb 2024 02:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707358889; cv=none; b=SejUWvhPFvJXaNkeqJZ6OCwZIB0SJMN/yt/4GSe8y9ypNZh8kNRhQWOWokF8/08xtWg/WLm1Bb8/5cH/7dcIZazOH4+gzprelptMtZoZkUaAVU/s0wnKbHQmx/gMbTHttUHJ0FEJgUxKQerF4hAisLiwGTIFRd8OusYILIVPCSU=
+	t=1707360809; cv=none; b=m/jzSdo4xpaT0IDJ5d6kyO40/n2iy/k8S4jSb+A0buy9QAuwrtLG1JgD1n25yIDyJnypOZYMQfUkAONsTSGsmYXoBf/fK74//d9TQ+WR3O/chGtQip+Ar0b5TqeWRSoSS2SYDwXOBA9LpU21r5NY6K0W2GlI9AzKRh2+42fSCbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707358889; c=relaxed/simple;
-	bh=UKmPL5Zx+C+SOFiu/lgbITC5x7HQmDloUJhMi2ef6a4=;
+	s=arc-20240116; t=1707360809; c=relaxed/simple;
+	bh=z8d5u8+rfIRiZiS6FEisYDE0pgKqtyMux9OL0xOE4cI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uUw8tyaXNroeNV+uknpquteaX/tKhAX5SiUY6ISqag6vqCMHkvXGAyRydyIedDtUQIzT4cNJy4kHY1qQJWH+0mg8VtK1h8o7FJl4Ynfh1s/zXlCq6fdD9H1ZfiSy1EWyxOVSz6GuV9/bl75fBBDqSJf0iJfyRpivtH4ByujPtOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BV2OT+SF; arc=none smtp.client-ip=192.55.52.88
+	 Content-Type:Content-Disposition:In-Reply-To; b=uhQGy/wclMscpwsE6Pn8fEveT7d7zHZ4ci0asJxEPBgAaW3zRKs7NEIaKfo94CNBqyAaevZaxmbGh4ii804M4BGVczLJMQ1I/+RrReRzhwtxAWUiJcN5qBquLpd/UBFs6EY+4JEM6gQrHy+mONEhCrBemFNtfNOi4IcsNuBo+Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TYglBz9Q; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707358887; x=1738894887;
+  t=1707360807; x=1738896807;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=UKmPL5Zx+C+SOFiu/lgbITC5x7HQmDloUJhMi2ef6a4=;
-  b=BV2OT+SFp3wGr/d2tOFar6nhEWPjmT2vzPOxKBuAqeMajNKfiUpTx3qo
-   /r6d4ZjX5y9om0LDwZv+VETk3oCvvMP1HfF1xPDBm+VLIJQhTsBA4NVNU
-   g1/q7gcAO1PMZ5JMBO2y+e/eKTvNewyrx9kccwmxmcrlh+3v85LBRGP6F
-   ntQc4JmhbilRa6AYOexzcLCcnarL4S3eVfVZOIqJbngPxDKceiac/hhsQ
-   K/GFmI+k6OZ+kY9jF2y4lbGYPgeTcjytageNDqZmacMJ4V+/LDi9EUIS8
-   zjGLuARLadSaHcz8k3Jcb9pFO5f7H/SMb4CzahotC6L1R/vqwmgiNN6NB
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="436266519"
+  bh=z8d5u8+rfIRiZiS6FEisYDE0pgKqtyMux9OL0xOE4cI=;
+  b=TYglBz9Qfcz0e8xmpyBSj1zNTJK9gJTdt9vh+bom1V19hWtU/1k4ZwCG
+   z44z2TUaiQAoHrmME8pQZmiP5+JFqoDsoLy/w5/M9UiTD7msXwztQzTQL
+   qkWneHX4xAunZuKj9fuCH9E77UDsd6yWaiAN5Dl3EBPdgL9CzSwmF/wXv
+   IwFxIAItxCG22Btlu9NYtoycXpqM20A0FMm9xzvkNkwybWPZvN1Uyat8v
+   FwIoSlWA3d3jCIV+ceQHe9Zf13MfD/+NgsXR6cfmCROCyxoCwNLikPmU+
+   6eyKrNbGgiRGFu3RP2k6/SZ12mum9aBtAzLQXy6XoBocjWwwKc1grgNOR
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="11867491"
 X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
-   d="scan'208";a="436266519"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 18:21:25 -0800
+   d="scan'208";a="11867491"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 18:53:26 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
-   d="scan'208";a="1837261"
+   d="scan'208";a="24776293"
 Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 07 Feb 2024 18:21:21 -0800
+  by fmviesa002.fm.intel.com with ESMTP; 07 Feb 2024 18:53:22 -0800
 Received: from kbuild by 01f0647817ea with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rXu2Q-0003Fi-2L;
-	Thu, 08 Feb 2024 02:21:18 +0000
-Date: Thu, 8 Feb 2024 10:20:43 +0800
+	id 1rXuXQ-0003Hg-1q;
+	Thu, 08 Feb 2024 02:53:20 +0000
+Date: Thu, 8 Feb 2024 10:53:02 +0800
 From: kernel test robot <lkp@intel.com>
 To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>, u.kleine-koenig@pengutronix.de,
 	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
@@ -70,7 +70,7 @@ Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	dlan@gentoo.org, inochiama@outlook.com,
 	Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 Subject: Re: [PATCH v1 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
-Message-ID: <202402081005.iOYVJ6KI-lkp@intel.com>
+Message-ID: <202402081059.e1PYAFcY-lkp@intel.com>
 References: <20240207060913.672554-1-qiujingbao.dlmu@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -84,24 +84,24 @@ In-Reply-To: <20240207060913.672554-1-qiujingbao.dlmu@gmail.com>
 
 Hi Jingbao,
 
-kernel test robot noticed the following build warnings:
+kernel test robot noticed the following build errors:
 
-[auto build test WARNING on 7afc0e7f681e6efd6b826f003fc14c17b5093643]
+[auto build test ERROR on 7afc0e7f681e6efd6b826f003fc14c17b5093643]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Jingbao-Qiu/dt-bindings-pwm-sophgo-add-pwm-for-Sophgo-CV1800-series-SoC/20240207-141135
 base:   7afc0e7f681e6efd6b826f003fc14c17b5093643
 patch link:    https://lore.kernel.org/r/20240207060913.672554-1-qiujingbao.dlmu%40gmail.com
 patch subject: [PATCH v1 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
-config: hexagon-allyesconfig (https://download.01.org/0day-ci/archive/20240208/202402081005.iOYVJ6KI-lkp@intel.com/config)
+config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20240208/202402081059.e1PYAFcY-lkp@intel.com/config)
 compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 7dd790db8b77c4a833c06632e903dc4f13877a64)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240208/202402081005.iOYVJ6KI-lkp@intel.com/reproduce)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240208/202402081059.e1PYAFcY-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402081005.iOYVJ6KI-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402081059.e1PYAFcY-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
    In file included from drivers/pwm/pwm-cv1800.c:14:
    In file included from include/linux/regmap.h:20:
@@ -142,13 +142,13 @@ All warnings (new ones prefixed by >>):
    include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
      604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
          |                                                       ~~~~~~~~~~ ^
->> drivers/pwm/pwm-cv1800.c:131:3: warning: comparison of distinct pointer types ('typeof ((tem)) *' (aka 'unsigned int *') and 'uint64_t *' (aka 'unsigned long long *')) [-Wcompare-distinct-pointer-types]
+   drivers/pwm/pwm-cv1800.c:131:3: warning: comparison of distinct pointer types ('typeof ((tem)) *' (aka 'unsigned int *') and 'uint64_t *' (aka 'unsigned long long *')) [-Wcompare-distinct-pointer-types]
      131 |                 do_div(tem, rate);
          |                 ^~~~~~~~~~~~~~~~~
    include/asm-generic/div64.h:222:28: note: expanded from macro 'do_div'
      222 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
          |                ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
-   drivers/pwm/pwm-cv1800.c:131:3: error: incompatible pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of type 'uint64_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
+>> drivers/pwm/pwm-cv1800.c:131:3: error: incompatible pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of type 'uint64_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
      131 |                 do_div(tem, rate);
          |                 ^~~~~~~~~~~~~~~~~
    include/asm-generic/div64.h:238:22: note: expanded from macro 'do_div'
@@ -172,7 +172,7 @@ All warnings (new ones prefixed by >>):
    include/asm-generic/div64.h:213:38: note: passing argument to parameter 'dividend' here
      213 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
          |                                      ^
->> drivers/pwm/pwm-cv1800.c:131:3: warning: shift count >= width of type [-Wshift-count-overflow]
+   drivers/pwm/pwm-cv1800.c:131:3: warning: shift count >= width of type [-Wshift-count-overflow]
      131 |                 do_div(tem, rate);
          |                 ^~~~~~~~~~~~~~~~~
    include/asm-generic/div64.h:234:25: note: expanded from macro 'do_div'
