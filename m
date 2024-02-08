@@ -1,117 +1,238 @@
-Return-Path: <linux-pwm+bounces-1232-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1233-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC0E784D36A
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 22:03:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A3DD84D7BD
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 03:21:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8B24FB22B0C
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Feb 2024 21:03:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 467BA1C21C6C
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 02:21:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 222285A0EB;
-	Wed,  7 Feb 2024 21:02:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F30315ACB;
+	Thu,  8 Feb 2024 02:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BV2OT+SF"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7980E1EB49
-	for <linux-pwm@vger.kernel.org>; Wed,  7 Feb 2024 21:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078501C6A8;
+	Thu,  8 Feb 2024 02:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707339779; cv=none; b=nG6hybk/tr5XkhuK4zzYqkw1ptEAJBw5XOJEk7yFKZvyNgYoea/o9GgqN5XKLjo6sD5Vo+TIzmaYFakArAQFtSgrRZYbaXzF+xjQI6rMSqJVscLLtEHOJYFRui9RFRoGRhK4xVyXdBP+EP5B/LfqE14d5RwSf1zc/A4tzAmQuuU=
+	t=1707358889; cv=none; b=SejUWvhPFvJXaNkeqJZ6OCwZIB0SJMN/yt/4GSe8y9ypNZh8kNRhQWOWokF8/08xtWg/WLm1Bb8/5cH/7dcIZazOH4+gzprelptMtZoZkUaAVU/s0wnKbHQmx/gMbTHttUHJ0FEJgUxKQerF4hAisLiwGTIFRd8OusYILIVPCSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707339779; c=relaxed/simple;
-	bh=SMnOxcqyiKOEAilnYNvJ1dFmF1BWPXJbI27lylGchgk=;
+	s=arc-20240116; t=1707358889; c=relaxed/simple;
+	bh=UKmPL5Zx+C+SOFiu/lgbITC5x7HQmDloUJhMi2ef6a4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ipNRlEBa8mVFOYdJ17AeumMUnWX/m4QH/UVD/SeN3bo2nmghA+sN1gZQHLODCSngphB4ee0PTSmD1ivc2j3iBuK/FgXsOahPJzJW5inc+4tW9QG4fJhXUjzst8B84ZrSRzoMzubCvl1UuksgNueqHNwuhbBBtPTTV7scWOD2F9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rXp4H-0007oV-5J; Wed, 07 Feb 2024 22:02:53 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rXp4G-0055Vu-Nt; Wed, 07 Feb 2024 22:02:52 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rXp4G-00HWRP-20;
-	Wed, 07 Feb 2024 22:02:52 +0100
-Date: Wed, 7 Feb 2024 22:02:52 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: linux-pwm@vger.kernel.org
-Cc: Peter Griffin <peter.griffin@linaro.org>, Lee Jones <lee@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: sti: Fix capture for st, pwm-num-chan < st,
- capture-num-chan
-Message-ID: <ke2smhqbjkqwdvqgrad3t2zlmsk5fvdbqzdfo74fpsutpqxmn7@my3otofvpxze>
-References: <20240204212043.2951852-2-u.kleine-koenig@pengutronix.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=uUw8tyaXNroeNV+uknpquteaX/tKhAX5SiUY6ISqag6vqCMHkvXGAyRydyIedDtUQIzT4cNJy4kHY1qQJWH+0mg8VtK1h8o7FJl4Ynfh1s/zXlCq6fdD9H1ZfiSy1EWyxOVSz6GuV9/bl75fBBDqSJf0iJfyRpivtH4ByujPtOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BV2OT+SF; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707358887; x=1738894887;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UKmPL5Zx+C+SOFiu/lgbITC5x7HQmDloUJhMi2ef6a4=;
+  b=BV2OT+SFp3wGr/d2tOFar6nhEWPjmT2vzPOxKBuAqeMajNKfiUpTx3qo
+   /r6d4ZjX5y9om0LDwZv+VETk3oCvvMP1HfF1xPDBm+VLIJQhTsBA4NVNU
+   g1/q7gcAO1PMZ5JMBO2y+e/eKTvNewyrx9kccwmxmcrlh+3v85LBRGP6F
+   ntQc4JmhbilRa6AYOexzcLCcnarL4S3eVfVZOIqJbngPxDKceiac/hhsQ
+   K/GFmI+k6OZ+kY9jF2y4lbGYPgeTcjytageNDqZmacMJ4V+/LDi9EUIS8
+   zjGLuARLadSaHcz8k3Jcb9pFO5f7H/SMb4CzahotC6L1R/vqwmgiNN6NB
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="436266519"
+X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
+   d="scan'208";a="436266519"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 18:21:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
+   d="scan'208";a="1837261"
+Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 07 Feb 2024 18:21:21 -0800
+Received: from kbuild by 01f0647817ea with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rXu2Q-0003Fi-2L;
+	Thu, 08 Feb 2024 02:21:18 +0000
+Date: Thu, 8 Feb 2024 10:20:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>, u.kleine-koenig@pengutronix.de,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	dlan@gentoo.org, inochiama@outlook.com,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Subject: Re: [PATCH v1 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+Message-ID: <202402081005.iOYVJ6KI-lkp@intel.com>
+References: <20240207060913.672554-1-qiujingbao.dlmu@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="e42dhmedfx264hq5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240204212043.2951852-2-u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20240207060913.672554-1-qiujingbao.dlmu@gmail.com>
+
+Hi Jingbao,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on 7afc0e7f681e6efd6b826f003fc14c17b5093643]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jingbao-Qiu/dt-bindings-pwm-sophgo-add-pwm-for-Sophgo-CV1800-series-SoC/20240207-141135
+base:   7afc0e7f681e6efd6b826f003fc14c17b5093643
+patch link:    https://lore.kernel.org/r/20240207060913.672554-1-qiujingbao.dlmu%40gmail.com
+patch subject: [PATCH v1 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+config: hexagon-allyesconfig (https://download.01.org/0day-ci/archive/20240208/202402081005.iOYVJ6KI-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 7dd790db8b77c4a833c06632e903dc4f13877a64)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240208/202402081005.iOYVJ6KI-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402081005.iOYVJ6KI-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/pwm/pwm-cv1800.c:14:
+   In file included from include/linux/regmap.h:20:
+   In file included from include/linux/iopoll.h:14:
+   In file included from include/linux/io.h:13:
+   In file included from arch/hexagon/include/asm/io.h:337:
+   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     547 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+         |                                                   ^
+   In file included from drivers/pwm/pwm-cv1800.c:14:
+   In file included from include/linux/regmap.h:20:
+   In file included from include/linux/iopoll.h:14:
+   In file included from include/linux/io.h:13:
+   In file included from arch/hexagon/include/asm/io.h:337:
+   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+         |                                                   ^
+   In file included from drivers/pwm/pwm-cv1800.c:14:
+   In file included from include/linux/regmap.h:20:
+   In file included from include/linux/iopoll.h:14:
+   In file included from include/linux/io.h:13:
+   In file included from arch/hexagon/include/asm/io.h:337:
+   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     584 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+>> drivers/pwm/pwm-cv1800.c:131:3: warning: comparison of distinct pointer types ('typeof ((tem)) *' (aka 'unsigned int *') and 'uint64_t *' (aka 'unsigned long long *')) [-Wcompare-distinct-pointer-types]
+     131 |                 do_div(tem, rate);
+         |                 ^~~~~~~~~~~~~~~~~
+   include/asm-generic/div64.h:222:28: note: expanded from macro 'do_div'
+     222 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
+   drivers/pwm/pwm-cv1800.c:131:3: error: incompatible pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of type 'uint64_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
+     131 |                 do_div(tem, rate);
+         |                 ^~~~~~~~~~~~~~~~~
+   include/asm-generic/div64.h:238:22: note: expanded from macro 'do_div'
+     238 |                 __rem = __div64_32(&(n), __base);       \
+         |                                    ^~~~
+   include/asm-generic/div64.h:213:38: note: passing argument to parameter 'dividend' here
+     213 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
+         |                                      ^
+   drivers/pwm/pwm-cv1800.c:135:3: warning: comparison of distinct pointer types ('typeof ((tem)) *' (aka 'unsigned int *') and 'uint64_t *' (aka 'unsigned long long *')) [-Wcompare-distinct-pointer-types]
+     135 |                 do_div(tem, hlperiod_val);
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/div64.h:222:28: note: expanded from macro 'do_div'
+     222 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
+   drivers/pwm/pwm-cv1800.c:135:3: error: incompatible pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of type 'uint64_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
+     135 |                 do_div(tem, hlperiod_val);
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/div64.h:238:22: note: expanded from macro 'do_div'
+     238 |                 __rem = __div64_32(&(n), __base);       \
+         |                                    ^~~~
+   include/asm-generic/div64.h:213:38: note: passing argument to parameter 'dividend' here
+     213 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
+         |                                      ^
+>> drivers/pwm/pwm-cv1800.c:131:3: warning: shift count >= width of type [-Wshift-count-overflow]
+     131 |                 do_div(tem, rate);
+         |                 ^~~~~~~~~~~~~~~~~
+   include/asm-generic/div64.h:234:25: note: expanded from macro 'do_div'
+     234 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^  ~~
+   include/linux/compiler.h:76:40: note: expanded from macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   drivers/pwm/pwm-cv1800.c:135:3: warning: shift count >= width of type [-Wshift-count-overflow]
+     135 |                 do_div(tem, hlperiod_val);
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/div64.h:234:25: note: expanded from macro 'do_div'
+     234 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^  ~~
+   include/linux/compiler.h:76:40: note: expanded from macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   10 warnings and 2 errors generated.
 
 
---e42dhmedfx264hq5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+vim +131 drivers/pwm/pwm-cv1800.c
 
-Hello,
+   113	
+   114	static int cv1800_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+   115					 struct pwm_state *state)
+   116	{
+   117		struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
+   118		u32 period_val, hlperiod_val, tem;
+   119		u64 rate;
+   120		u64 period_ns = 0;
+   121		u64 duty_ns = 0;
+   122		u32 enable = 0;
+   123	
+   124		regmap_read(priv->map, PERIOD(pwm->hwpwm), &period_val);
+   125		regmap_read(priv->map, HLPERIOD(pwm->hwpwm), &hlperiod_val);
+   126	
+   127		if (period_val != PERIOD_RESET || hlperiod_val != HLPERIOD_RESET) {
+   128			rate = (u64)clk_get_rate(priv->clk);
+   129	
+   130			tem = NSEC_PER_SEC * period_val;
+ > 131			do_div(tem, rate);
+   132			period_ns = tem;
+   133	
+   134			tem = period_val * period_ns;
+   135			do_div(tem, hlperiod_val);
+   136			duty_ns = tem;
+   137	
+   138			regmap_read(priv->map, PWMSTART, &enable);
+   139			enable >>= pwm->hwpwm;
+   140		}
+   141	
+   142		state->period = period_ns;
+   143		state->duty_cycle = duty_ns;
+   144		state->enabled = enable;
+   145	
+   146		return 0;
+   147	}
+   148	
 
-On Sun, Feb 04, 2024 at 10:20:43PM +0100, Uwe Kleine-K=F6nig wrote:
-> The driver only used the number of pwm channels to set the pwm_chip's
-> npwm member. The result is that if there are more capture channels than
-> PWM channels specified in the device tree, only a part of the capture
-> channel is usable. Fix that by passing the bigger channel count to the
-> pwm framework. This makes it possible that the .apply() callback is
-> called with .hwpwm >=3D pwm_num_devs, catch that case and return an error
-> code.
->=20
-> Fixes: c97267ae831d ("pwm: sti: Add PWM capture callback")
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Applied to
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---e42dhmedfx264hq5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXD7/sACgkQj4D7WH0S
-/k4W6Af+LP7GAMfV4xW8XI35c10G0QmuXzYGGgm4htVhsO7Ene8t5KZR4EgKZ+wg
-qGQt1YjWN622JLJ/3HHxyo+Cb+rXOIJT3Xq4cNFUIv9PT8aE9fL+rjZpekLlKL4j
-MyTYlM4yq7xIaipfd18aMuMN934BNfC/7xHKJO3CT+yPui7CFYRL1MoFfxAV1bQC
-85J9imw6CzK6KQI5iU70WWHqIPDlrimPXtXhQf3/OwBLfzlLhJT4Plqcwf4EwQyi
-wGyqDz8XMzs0UTjXeIcBxby4oBX02NFr1X0tMC+nF/CiKI5pYgseXeA/lshrinNt
-JYsIsJs3ydRyICIdFPtqeRcXM33/CA==
-=ryXS
------END PGP SIGNATURE-----
-
---e42dhmedfx264hq5--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
