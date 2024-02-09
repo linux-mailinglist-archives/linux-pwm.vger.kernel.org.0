@@ -1,668 +1,323 @@
-Return-Path: <linux-pwm+bounces-1256-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1257-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A14C84EDDB
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Feb 2024 00:39:50 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E740984F580
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Feb 2024 14:01:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B62A71F23007
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Feb 2024 23:39:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5F4E1B2594E
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Feb 2024 13:01:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7F5755798;
-	Thu,  8 Feb 2024 23:25:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10C7A381A1;
+	Fri,  9 Feb 2024 13:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="EdQC3Owj"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F358255C0A;
-	Thu,  8 Feb 2024 23:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707434700; cv=none; b=dYP5pR0JX5j/1iqwegatuj2phsY7fENfX9jh9m6327Rrp/Rs+VrzuJ6Q0uV80K1g0ai6nzI+FsivTcf4Kgh2Qmca9Jn2ViKmwQAq7gPBU6Nb7x+sizvr+B44fpjI8IAZyCpWGRWj+10r+v1IrAZL8aqzL6HTYOJoxo2fFsAvKn0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707434700; c=relaxed/simple;
-	bh=WBaTzJzhM55xdVCvz86FKgtFn3EQiv0Ts6ceDlSKVNg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TK6D/3Fl3DFQwHrrsLNqFA0kJ0gVnLFD0QxoShkTy3wS1Cc6mLOWn3yV0+3dIiumS62kNV5vvIXE6nfxV6CKYAHcoAAAtoDtz0gGgwVR4Sfy5P6FtsDdDRF6iJcoXdRjItMtmT7yyiUVBVt7RwLgQkYmZjEiV69bEyLQMg0Cbts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-IronPort-AV: E=Sophos;i="6.05,255,1701097200"; 
-   d="scan'208";a="197291931"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 09 Feb 2024 08:24:57 +0900
-Received: from mulinux.home (unknown [10.226.92.227])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id CD10A4009BDC;
-	Fri,  9 Feb 2024 08:24:54 +0900 (JST)
-From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Subject: [PATCH v6 2/4] pwm: Add support for RZ/V2M PWM driver
-Date: Thu,  8 Feb 2024 23:24:09 +0000
-Message-Id: <20240208232411.316936-3-fabrizio.castro.jz@renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240208232411.316936-1-fabrizio.castro.jz@renesas.com>
-References: <20240208232411.316936-1-fabrizio.castro.jz@renesas.com>
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2079.outbound.protection.outlook.com [40.107.114.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63F237710;
+	Fri,  9 Feb 2024 13:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.114.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707483695; cv=fail; b=pZjrMk4D/YR6+5FJATkAWvLZ33rLTWyOuDk5zDBRBIoJCajcOyzNF9xw5VwO/wrNJGSPZ701pq8zrupviHyIcAnfEis2Lqhfpn254haYs59C1d5u0RcqdVoyjgrGrT+qonQFCbL1ODEBC/Y2Uw3vEamCpBDqTxPUVbplWSSVcew=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707483695; c=relaxed/simple;
+	bh=AfeFwiU1QQAVOwO/Ufq4Ktyb2/h3YKqRCa3u94C9/AE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=KWLc79ku9q21iSEBnPV0YTgULQgIxhT7Uoa8S6wcKSddR2zllf4+w8jPzyYrb5Au81KrWV/XNd+6Xx43nCiOzHx4zFCdPcEUsxsaMLs+9bO3Y+8Mv4QtPwEq1LEiw3Ww3c5DW7d/DvYvMVxE6wQ/Y65+EkF52lDFY9+JhXaiGV8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=EdQC3Owj; arc=fail smtp.client-ip=40.107.114.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OukY0uK1L1kdk5WgW9lS68oF5dPOAP/Pw+8v5t/SJX0fXpSbDVL3alY1ihvvhu4SEhiawFzrHmksxY5uA9FWtyl2ERVOhTIGHFZGm91Mi/xhb3AlQs8LKQPlMDDULpLzFoKMu6yiiAa2s90CSKh8DadP0jJLyI27g46BEwpoCcrnR35FFaqTfP58CKnSsiwiWuqSmjpj585y9Hf7SokFku79YSyFECeDPKRIZNdIq0dhQRXxRP5hPBy31MylkSzi7VYsTzXcq/h9wsJUvqKGVM1sNmaSV80IzHZbw9SdNRfMODYNvMIs9rncvvVgYoz63MbhK3SevcYnB2fD5aGIPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dmVV+TMYTAqDf5Ho4yvm2VKu/6p4tYCNfeXcMKak7mA=;
+ b=ku10CPSckGpDDirBY6GrvFyYAdFIoenWxK7pEW61FOyC9/P4GQMMioFJN9PEiMyiMCwPrU5gL4H0muKdHcWlSNCLD73S0YbfW0NzkbTeGi+9W/FYxgGWsmGkoYOzUyN96CCWGd+1zhw3+E7Tm7GpZdx3RaByZRC/uzKD6awZBq+A9jHQuppqPlOxqPqr8lGrUJ9SI5VLGVTuRBiprFIL8zxgGt8pHJxhxMmw5zjjJcE7mFFGOtCWuhKMClLQDC0u20jjN7yJPRHeiI7dSAeGwibbs9tuFVc1GBZ17XI3jC1zFNcb0yMKgrEBwD/TqUTa1qsTf0DCzdOaB6Sp/4tQdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dmVV+TMYTAqDf5Ho4yvm2VKu/6p4tYCNfeXcMKak7mA=;
+ b=EdQC3Owjs117MJ45Y54YkLycUCcztZILMxSzsSjfRP1eQ8VuCNwWOOYTmpQZh0IAzZtFuTNuYCENL4r0QTzv4lWNskbbA81/Z6RVA4Vmuye1wfRWpVanhDvinozsWZdoKMhCBBkEmQH7wKnTWcCQkkcgZlIruC2oAkt0+WU1vgE=
+Received: from TYVPR01MB11279.jpnprd01.prod.outlook.com
+ (2603:1096:400:366::13) by TYWPR01MB8329.jpnprd01.prod.outlook.com
+ (2603:1096:400:165::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.39; Fri, 9 Feb
+ 2024 13:01:27 +0000
+Received: from TYVPR01MB11279.jpnprd01.prod.outlook.com
+ ([fe80::30fc:68c0:95df:41e9]) by TYVPR01MB11279.jpnprd01.prod.outlook.com
+ ([fe80::30fc:68c0:95df:41e9%3]) with mapi id 15.20.7270.025; Fri, 9 Feb 2024
+ 13:01:21 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+CC: Thierry Reding <thierry.reding@gmail.com>, Geert Uytterhoeven
+	<geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Magnus Damm <magnus.damm@gmail.com>, "linux-pwm@vger.kernel.org"
+	<linux-pwm@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v17 4/4] pwm: rzg2l-gpt: Add support for gpt linking with
+ poeg
+Thread-Topic: [PATCH v17 4/4] pwm: rzg2l-gpt: Add support for gpt linking with
+ poeg
+Thread-Index: AQHaG6Vl7hzseDTNIEm0zYYEZnfrvbC6iUGAgEfqqDA=
+Date: Fri, 9 Feb 2024 13:00:17 +0000
+Message-ID:
+ <TYVPR01MB112795CFC0E87360CB54DE26D864B2@TYVPR01MB11279.jpnprd01.prod.outlook.com>
+References: <20231120113307.80710-1-biju.das.jz@bp.renesas.com>
+ <20231120113307.80710-5-biju.das.jz@bp.renesas.com>
+ <iukf4j5bewacpg4k2ucczwjdcv2wvmokjqxasvgij6l6436chp@r242vjhfwaee>
+In-Reply-To: <iukf4j5bewacpg4k2ucczwjdcv2wvmokjqxasvgij6l6436chp@r242vjhfwaee>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYVPR01MB11279:EE_|TYWPR01MB8329:EE_
+x-ms-office365-filtering-correlation-id: 1db54a2e-8ca6-4de5-372d-08dc296f1086
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 2ml2BefqWSXrjFpxLeBY7/MWoj9nykEyYBt5+dgfk/HOwdfh8hcp+Ujyvp+M0pncxNaR1tqnFMe+ACAuNHzvVD05Yj5f1vkfQd5CueUSH0HfNgQUZd100PRiuhwxMk6yaZjBSWLFVqiwHOVzQPLrcHvU4XvRq/nIR4qz8K96LeuqDuPx/zfIKKIkEqn/ay9Hskc1YcbKA8u09m2Z+E9XvGExaZcHh3G1Yv5+6qGNzneZbXCeSPRTPmaNiBSaQheulcdLhM/kzeC8l1dguKl7ktYlP8Z9DckoQmiVQXcn87BoFrTGU4VXWRWL3zZ5y/PcgOKiN7tpKqMSvIyMNdke3XC0OAbqQkTLgNAf9jrBIB5Ec1zns4VZ7Xi7/ueJIaoO+djaKkpgalchonoJYFwFWDrbnHQlPW9xR0+2aGF+9v/rjaenysPI9Cg6OLgIRDVb6ApGjlfWWLQvoRQsFyDdRrkieAMSiNk2jiGrJVlxubUjqc3E9IxXMWeW5ekcNwtESJB1H3TNAUY9DRclbRWNDXqOF+8a6G0lFHV0GSF43NQda36VMXmeGEvlGIl8H0PB+4Yrf6OvpKeifoOkI3oUiPQSwBRhQc+TLkY8KhWtif0=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYVPR01MB11279.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(39860400002)(366004)(376002)(396003)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(2906002)(8676002)(52536014)(5660300002)(66574015)(83380400001)(26005)(86362001)(107886003)(33656002)(38100700002)(122000001)(6666004)(38070700009)(76116006)(7696005)(66446008)(64756008)(66476007)(66946007)(54906003)(66556008)(316002)(6916009)(71200400001)(6506007)(53546011)(9686003)(966005)(478600001)(4326008)(8936002)(55016003)(41300700001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?/IoaEe78pRNhyej/K7mJq4MA0dNz7i+fEI/Uy7vHvnFJ0ay2xXTFDBBoxL?=
+ =?iso-8859-1?Q?rw1ro/9358cFdOJwaaXmgcEwe1ACJh99tJMLQv/NrXcbcSg3hzBj9QF5DK?=
+ =?iso-8859-1?Q?S3z0PWsRYtsl539lonrofHbaynvGVxj/LW18sek77d+ax9tN5jqgPlF4CT?=
+ =?iso-8859-1?Q?u8JaNEuVzXgjO/frcXk0lVsDuS9hbXhImKwF54UnhqakIzK1eiOKmjLH3z?=
+ =?iso-8859-1?Q?hq1HSk6ogCdbLwjxYfHdhAV5K4DXtuvOocHddEfjaBWVhaycQG/jiV3omH?=
+ =?iso-8859-1?Q?nzOoM15IPPB1E0mkxm46msJY8Cy3WrY7XNYZdi6+HZMiqg2QtImNwAS7A6?=
+ =?iso-8859-1?Q?IYOvYush9C/u4KnRVvEFkr24QDVTJJaYcDAkdeaN0JWqcttyXZlveRWCtB?=
+ =?iso-8859-1?Q?8GAivEmBUrVgeyX6jOnf+jEm9zitK29JbtmtPMDdnUja8guX787hmvoZSo?=
+ =?iso-8859-1?Q?dod0b9Sz8VwfPjzt4xFZOyYkEe1nu8oEGag+9hnYc/1K07SPOFok27nwZy?=
+ =?iso-8859-1?Q?tR5X1Z1mdnFJmQorr20AAqOMSeH31HyWo3pS+MSp/6vn9v9YndByx5DoVW?=
+ =?iso-8859-1?Q?ILbPkuJFa7p4MSgUMptCxjsXXfZZUnUJsTL+m4TIQi0M+Gipfh1Ys21uFy?=
+ =?iso-8859-1?Q?7GNB7P7xUsZbgqeHpM6xWXq/Q4dH1pnw6kEGC3CA4pdU4gqGbu8L4hhQgL?=
+ =?iso-8859-1?Q?oNgg19sFeNOX3sFuDCpORC4ZOCUanshRE9/T2gHLiigXiPszwdVflgJ+6t?=
+ =?iso-8859-1?Q?flk58d/j05igIWfdD1pa+0bybCTl5LKlsDO47TL02GYHXqAzS+XS2Uojv+?=
+ =?iso-8859-1?Q?MB46u/k+yVhtFxApAOKgNdo/2G98sgmXaFoRk9RydB7RUYNlj2ryqmxtRK?=
+ =?iso-8859-1?Q?63tq2NS7ErpTXFlX7dcJDS7HM/c4cbA+197MADdfmBKDIfCPTvZcKmFLBY?=
+ =?iso-8859-1?Q?+by/MU4TrrJ8Ym8+3xS+r2OcByqkDnD1bGn0OWZAbjSyUJs0LsbxtReR0z?=
+ =?iso-8859-1?Q?44oQQndAwc9APfWi5SMf/S1aPhkV/m9JFC7FSna/i4NFYIKEVz0+Qs6wkV?=
+ =?iso-8859-1?Q?APuGCGjNSProFRcNvlUx1EaVWPH62RBLJcWx2dmzbF+eAJoC+rSNY7uSXM?=
+ =?iso-8859-1?Q?SbfwJdMvgCnYJDcGkAhWTYaZXV9yjMnMqHqJohZU97w0YEblHTfVw5uo4O?=
+ =?iso-8859-1?Q?ZC8pP0kFQZu0qv2WDmEZftJfWufOwfjoR85XudS160FhCoOyhaDMP1TKLy?=
+ =?iso-8859-1?Q?x+6ZS+BbuhEennRkzrHQPnULQWkMbY7JgnkivynfYm00qCRuKYNmWzdL3V?=
+ =?iso-8859-1?Q?5I11OD5AuZzJiIW+Zhe1ay2qXpl17tOIQZrAqfLWFhoLBM3lLJooop3dI2?=
+ =?iso-8859-1?Q?TglCRweIL/fJ8vRVtIJ0Vem68TD4EMUHkieOEdzg8CHFI7WxMiDyALTYmX?=
+ =?iso-8859-1?Q?K34sJRZ2VzIDlVoX34EuHqTEyqW2KmZ9ytdrR6RSgyuA9uzNdQaEFXWhTe?=
+ =?iso-8859-1?Q?4RtIOyj12VeXKg/oEm70w8g0VVeVvAVBzxcjf6xJ9fszAJQ+JT2qntQIcv?=
+ =?iso-8859-1?Q?2RRv3DmqdPBiKY4u7wY41iFSWIoFIvnB4fc+u44nsoaEXZ1d4TWcvneMEx?=
+ =?iso-8859-1?Q?Q6JCXigVZz/+jQZA/8S8retQWPXMg2D7LIKhkjKzosfNFGThesLYzCJw?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYVPR01MB11279.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1db54a2e-8ca6-4de5-372d-08dc296f1086
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Feb 2024 13:00:17.4656
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jZcsoqW26ryE6HWbEVu1ZONLsVb0p2MWLDV46oCuZOtPfZOQ9xKoB5fNMmqR14GD4/8oZvn0lwoBdX+H2qw1gclSButj0YC/vAIV5LRwbbE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB8329
 
-From: Biju Das <biju.das.jz@bp.renesas.com>
+Hi Uwe,
 
-The RZ/V2{M, MA} PWM Timer supports the following functions:
+Thanks for the feedback. Sorry for the delay as I was busy with improving
+network performance on RZ/G2L platforms.
 
- * The PWM has 24-bit counters which operate at PWM_CLK (48 MHz).
- * The frequency division ratio for internal counter operation is
-   selectable as PWM_CLK divided by 1, 16, 256, or 2048.
- * The period as well as the duty cycle is adjustable.
- * The low-level and high-level order of the PWM signals can be
-   inverted.
- * The duty cycle of the PWM signal is selectable in the range from
-   0 to 100%.
- * The minimum resolution is 20.83 ns.
- * Three interrupt sources: Rising and falling edges of the PWM signal
-   and clearing of the counter
- * Counter operation and the bus interface are asynchronous and both
-   can operate independently of the magnitude relationship of the
-   respective clock periods.
+> -----Original Message-----
+> From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> Sent: Monday, December 25, 2023 6:29 PM
+> Subject: Re: [PATCH v17 4/4] pwm: rzg2l-gpt: Add support for gpt linking
+> with poeg
+>=20
+> On Mon, Nov 20, 2023 at 11:33:07AM +0000, Biju Das wrote:
+> > The General PWM Timer (GPT) is capable of detecting "dead time error
+> > and short-circuits between output pins" and send Output disable
+> > request to poeg(Port Output Enable for GPT).
+> >
+> > Add support for linking poeg group with gpt, so that gpt can control
+> > the output disable function.
+> >
+> > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > ---
+> > v16->v17:
+> >  * No change
+> > v15->v16:
+> >  * No change.
+> > v14->v15:
+> >  * Updated commit description by replacing "This patch add"-> "Add".
+> > v3->v14:
+> >  * Removed the parenthesis for RZG2L_MAX_POEG_GROUPS.
+> >  * Renamed rzg2l_gpt_parse_properties()->rzg2l_gpt_poeg_init() as it no=
+t
+> only parse
+> >    the properties but also implements the needed register writes.
+> >  * Added acomment here about the purpose of the function
+> > rzg2l_gpt_poeg_init()
+> >  * Removed magic numbers from rzg2l_gpt_poeg_init()
+> >  * Fixed resource leak in rzg2l_gpt_poeg_init().
+> >  * Moved the patch from series[1] to here  [1]
+> > https://lore.kernel.org/linux-renesas-soc/20221215205843.4074504-1-bij
+> > u.das.jz@bp.renesas.com/T/#t
+> > v2->v3:
+> >  * Updated commit header and description
+> >  * Added check for poeg group in rzg2l_gpt_parse_properties().
+> > v1->v2:
+> >  * Replaced id->poeg-id as per poeg bindings.
+> > This patch depend upon [1]
+> > ---
+> >  drivers/pwm/pwm-rzg2l-gpt.c | 83
+> > +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 83 insertions(+)
+> >
+> > diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
+> > index 428e6e577db6..a309131db8ee 100644
+> > --- a/drivers/pwm/pwm-rzg2l-gpt.c
+> > +++ b/drivers/pwm/pwm-rzg2l-gpt.c
+> > @@ -31,6 +31,7 @@
+> >  #define RZG2L_GTCR		0x2c
+> >  #define RZG2L_GTUDDTYC		0x30
+> >  #define RZG2L_GTIOR		0x34
+> > +#define RZG2L_GTINTAD		0x38
+> >  #define RZG2L_GTBER		0x40
+> >  #define RZG2L_GTCNT		0x48
+> >  #define RZG2L_GTCCRA		0x4c
+> > @@ -48,9 +49,15 @@
+> >  #define RZG2L_UP_COUNTING	(RZG2L_GTUDDTYC_UP | RZG2L_GTUDDTYC_UDF)
+> >
+> >  #define RZG2L_GTIOR_GTIOA	GENMASK(4, 0)
+> > +#define RZG2L_GTIOR_OADF	GENMASK(10, 9)
+> >  #define RZG2L_GTIOR_GTIOB	GENMASK(20, 16)
+> > +#define RZG2L_GTIOR_OBDF	GENMASK(26, 25)
+> >  #define RZG2L_GTIOR_OAE		BIT(8)
+> >  #define RZG2L_GTIOR_OBE		BIT(24)
+> > +#define RZG2L_GTIOR_OADF_HIGH_IMP_ON_OUT_DISABLE	BIT(9)
+> > +#define RZG2L_GTIOR_OBDF_HIGH_IMP_ON_OUT_DISABLE	BIT(25)
+> > +#define RZG2L_GTIOR_PIN_DISABLE_SETTING \
+> > +	(RZG2L_GTIOR_OADF_HIGH_IMP_ON_OUT_DISABLE |
+> > +RZG2L_GTIOR_OBDF_HIGH_IMP_ON_OUT_DISABLE)
+> >
+> >  #define RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE	0x07
+> >  #define RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE	0x1b
+> > @@ -64,6 +71,8 @@
+> >  #define RZG2L_GTIOR_GTIOB_OUT_LO_END_TOGGLE_CMP_MATCH \
+> >  	(FIELD_PREP(RZG2L_GTIOR_GTIOB, RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE)
+> > | RZG2L_GTIOR_OBE)
+> >
+> > +#define RZG2L_GTINTAD_GRP_MASK			GENMASK(25, 24)
+> > +
+> >  #define RZG2L_GTCCR(i) (0x4c + 4 * (i))
+> >
+> >  #define RZG2L_MAX_HW_CHANNELS	8
+> > @@ -76,6 +85,9 @@
+> >
+> >  #define RZG2L_GET_CH_OFFS(i) (0x100 * (i))
+> >
+> > +#define RZG2L_MAX_POEG_GROUPS	4
+> > +#define RZG2L_LAST_POEG_GROUP	3
+> > +
+> >  struct rzg2l_gpt_chip {
+> >  	struct pwm_chip chip;
+> >  	void __iomem *mmio;
+> > @@ -88,6 +100,7 @@ struct rzg2l_gpt_chip {
+> >  	u32 user_count[RZG2L_MAX_HW_CHANNELS];
+> >  	u32 enable_count[RZG2L_MAX_HW_CHANNELS];
+> >  	DECLARE_BITMAP(ch_en_bits, RZG2L_MAX_PWM_CHANNELS);
+> > +	DECLARE_BITMAP(poeg_gpt_link, RZG2L_MAX_POEG_GROUPS *
+> > +RZG2L_MAX_HW_CHANNELS);
+> >  };
+> >
+> >  static inline struct rzg2l_gpt_chip *to_rzg2l_gpt_chip(struct
+> > pwm_chip *chip) @@ -454,6 +467,75 @@ static void
+> rzg2l_gpt_reset_assert_pm_disable(void *data)
+> >  	reset_control_assert(rzg2l_gpt->rstc);
+> >  }
+> >
+> > +/*
+> > + * This function links a poeg group{A,B,C,D} with a gpt channel{0..7}
+> > +and
+> > + * configure the pin for output disable.
+> > + */
+> > +static void rzg2l_gpt_poeg_init(struct platform_device *pdev,
+> > +				struct rzg2l_gpt_chip *rzg2l_gpt) {
+> > +	struct of_phandle_args of_args;
+> > +	unsigned int i;
+> > +	u32 poeg_grp;
+> > +	u32 bitpos;
+> > +	int cells;
+> > +	u32 offs;
+> > +	int ret;
+> > +
+> > +	cells =3D of_property_count_u32_elems(pdev->dev.of_node,
+> "renesas,poegs");
+> > +	if (cells =3D=3D -EINVAL)
+> > +		return;
+> > +
+> > +	cells >>=3D 1;
+> > +	for (i =3D 0; i < cells; i++) {
+> > +		ret =3D of_parse_phandle_with_fixed_args(pdev->dev.of_node,
+> > +						       "renesas,poegs", 1, i,
+> > +						       &of_args);
+>=20
+> If you use of_for_each_phandle() here, you don't need to determine the
+> length first.
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
----
+of_for_each_phandle() will iterate 6 times for the below[1] list of=20
+phandle and channel index pair tuples.
 
-v5->v6:
- * Added Fab's Signed-off-by.
- * Updated copyright year to 2024.
- * Added include of limits.h.
- * Added variable max_period to rzv2m_pwm_chip.
- * Simplified the calculations by calculating max_period during probe,
-   based on the numerical limits of the formula and the u64 data type.
- * Added rzv2m_pwm_mul_u64_u64_div_u64_roundup.
- * Added rzv2m_pwm_prescale_to_shift to fix the calculation of the
-   frequency divider.
- * Improved the calculations and the variable names of
-   rzv2m_pwm_get_state.
- * Improved the calculations of rzv2m_pwm_config.
- * Removed .owner from rzv2m_pwm_ops.
- * Improved rzv2m_pwm_pm_runtime_resume and renamed its err variable to
-   ret.
- * Removed of_match_ptr.
- * Added Fab as module author.
-v4->v5:
- * Sorted KConfig file
- * Sorted Make file
- * Updated copyright header 2022->2023.
- * Updated limitation section.
- * Replaced the variable chip->rzv2m_pwm in rzv2m_pwm_wait_delay()
- * Replaced polarity logic as per HW manual dutycycle = Ton/Ton+Toff, so
-   eventhough native polarity is inverted from period point of view it
-   is correct.
- * Added logic for supporting 0% , 100% and remaining duty cycle.
- * On config() replaced
- * pm_runtime_resume_and_get()->pm_runtime_get_sync()
- * Counter is stopped while updating period/polarity to avoid glitches.
- * Added error check for clk_prepare_enable()
- * Introduced is_ch_enabled variable to cache channel enable status.
- * clk_get_rate is called after enabling the clock and
- * clk_rate_exclusive_get()
- * Added comment for delay
- * Replaced 1000000000UL->NSEC_PER_SEC.
- * Improved error handling in probe().
-v3->v4:
- * Documented the hardware properties in "Limitations" section
- * Dropped the macros F2CYCLE_NSEC, U24_MASK and U24_MAX.
- * Added RZV2M_PWMCYC_PERIOD macro for U24_MAX
- * Dropped rzv2m_pwm_freq_div variable and started using 1 << (4 * i)
-   for calculating divider as it is power of 16.
- * Reordered the functions to have rzv2m_pwm_config() directly before
-   rzv2m_pwm_apply().
- * Improved the logic for calculating period and duty cycle in config()
- * Merged multiple RZV2M_PWMCTR register writes to a single write in
- * config()
- * replaced pwm_is_enabled()->pwm->state.enabled
- * Avoided assigning bit value as enum pwm_polarity instead used enum
- * constant.
- * Fixed various issues in probe error path.
- * Updated the logic for PWM cycle setting register
- * A 100% duty cycle is only possible with PWMLOW > PWMCYC. So
-   restricting PWMCYC values < 0xffffff
- * The native polarity of the hardware is inverted (i.e. it starts with
-   the low part). So switched the inversion bit handling.
-v2->v3:
- * Added return code for rzv2m_pwm_get_state()
- * Added comment in rzv2m_pwm_reset_assert_pm_disable()
-v1->v2:
- * Replaced
-   devm_reset_control_get_optional_shared->devm_reset_control_get_shared
+What I need is just loop 3 times and get the poeg_group and gpt_channel fro=
+m it.
+So, determining length is simpler than looping 6 times.
 
- drivers/pwm/Kconfig     |  11 +
- drivers/pwm/Makefile    |   1 +
- drivers/pwm/pwm-rzv2m.c | 469 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 481 insertions(+)
- create mode 100644 drivers/pwm/pwm-rzv2m.c
+So, are you ok with existing logic?
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 4b956d661755..55d46e6183a2 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -524,6 +524,17 @@ config PWM_RZ_MTU3
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-rz-mtu3.
- 
-+config PWM_RZV2M
-+       tristate "Renesas RZ/V2M PWM support"
-+       depends on ARCH_R9A09G011 || COMPILE_TEST
-+       depends on HAS_IOMEM
-+       help
-+         This driver exposes the PWM controller found in Renesas
-+         RZ/V2M like chips through the PWM API.
-+
-+         To compile this driver as a module, choose M here: the module
-+         will be called pwm-rzv2m.
-+
- config PWM_SAMSUNG
- 	tristate "Samsung PWM support"
- 	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index c5ec9e168ee7..cf5a4a1c3b1a 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -48,6 +48,7 @@ obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
- obj-$(CONFIG_PWM_RZ_MTU3)	+= pwm-rz-mtu3.o
-+obj-$(CONFIG_PWM_RZV2M)		+= pwm-rzv2m.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
- obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
- obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
-diff --git a/drivers/pwm/pwm-rzv2m.c b/drivers/pwm/pwm-rzv2m.c
-new file mode 100644
-index 000000000000..7aa07576a3c8
---- /dev/null
-+++ b/drivers/pwm/pwm-rzv2m.c
-@@ -0,0 +1,469 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Renesas RZ/V2M PWM Timer (PWM) driver
-+ *
-+ * Copyright (C) 2024 Renesas Electronics Corporation
-+ *
-+ * Hardware manual for this IP can be found here
-+ * https://www.renesas.com/in/en/document/mah/rzv2m-users-manual-hardware?language=en
-+ *
-+ * Limitations:
-+ * - Changes to the duty cycle configuration get effective only after the next
-+ *   period end.
-+ * - The duty cycle can be changed only by modifying the PWMLOW register
-+ *   value and changing the pulse width at low level. The duty cycle becomes
-+ *   0% for the low width when the value of the PWMLOW register is 0x0h
-+ *   and 100% for the low width when the value of the PWMLOW > PWMCYC.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/limits.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
-+#include <linux/reset.h>
-+#include <linux/time.h>
-+
-+#define RZV2M_PWMCTR	0x0
-+#define RZV2M_PWMCYC	0x4
-+#define RZV2M_PWMLOW	0x8
-+#define RZV2M_PWMCNT	0xc
-+
-+#define RZV2M_PWMCTR_PWMPS	GENMASK(17, 16)
-+#define RZV2M_PWMCTR_PWMHL	BIT(3)
-+#define RZV2M_PWMCTR_PWMTM	BIT(2)
-+#define RZV2M_PWMCTR_PWME	BIT(1)
-+
-+#define RZV2M_PWMCYC_PERIOD	GENMASK(23, 0)
-+#define RZV2M_PWMLOW_PERIOD	GENMASK(23, 0)
-+
-+struct rzv2m_pwm_chip {
-+	u64 max_period;
-+	struct pwm_chip chip;
-+	void __iomem *mmio;
-+	struct reset_control *rstc;
-+	struct clk *apb_clk;
-+	struct clk *pwm_clk;
-+	unsigned long rate;
-+	unsigned long delay;
-+	unsigned long pwm_cyc;
-+	enum pwm_polarity polarity;
-+	bool is_ch_enabled;
-+};
-+
-+static inline u64 rzv2m_pwm_mul_u64_u64_div_u64_roundup(u64 a, u64 b, u64 c)
-+{
-+	u64 ab = a * b;
-+
-+	return ab / c + (ab % c ? 1 : 0);
-+}
-+
-+static inline struct rzv2m_pwm_chip *to_rzv2m_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct rzv2m_pwm_chip, chip);
-+}
-+
-+static void rzv2m_pwm_wait_delay(struct rzv2m_pwm_chip *rzv2m_pwm)
-+{
-+	/* delay timer when change the setting register */
-+	ndelay(rzv2m_pwm->delay);
-+}
-+
-+static void rzv2m_pwm_write(struct rzv2m_pwm_chip *rzv2m_pwm, u32 reg, u32 data)
-+{
-+	writel(data, rzv2m_pwm->mmio + reg);
-+}
-+
-+static u32 rzv2m_pwm_read(struct rzv2m_pwm_chip *rzv2m_pwm, u32 reg)
-+{
-+	return readl(rzv2m_pwm->mmio + reg);
-+}
-+
-+static void rzv2m_pwm_modify(struct rzv2m_pwm_chip *rzv2m_pwm, u32 reg, u32 clr,
-+			     u32 set)
-+{
-+	rzv2m_pwm_write(rzv2m_pwm, reg,
-+			(rzv2m_pwm_read(rzv2m_pwm, reg) & ~clr) | set);
-+}
-+
-+static u8 rzv2m_pwm_calculate_prescale(struct rzv2m_pwm_chip *rzv2m_pwm,
-+				       u64 period_cycles)
-+{
-+	u32 prescaled_period_cycles;
-+	u8 prescale;
-+
-+	prescaled_period_cycles = period_cycles >> 24;
-+	if (prescaled_period_cycles >= 256)
-+		prescale = 3;
-+	else
-+		prescale = (fls(prescaled_period_cycles) + 3) / 4;
-+
-+	return prescale;
-+}
-+
-+static inline int rzv2m_pwm_prescale_to_shift(u8 prescale)
-+{
-+	return prescale == 3 ? 11 : prescale * 4;
-+}
-+
-+static int rzv2m_pwm_enable(struct rzv2m_pwm_chip *rzv2m_pwm)
-+{
-+	int rc;
-+
-+	rc = pm_runtime_resume_and_get(rzv2m_pwm->chip.dev);
-+	if (rc)
-+		return rc;
-+
-+	rzv2m_pwm_modify(rzv2m_pwm, RZV2M_PWMCTR, RZV2M_PWMCTR_PWME,
-+			 RZV2M_PWMCTR_PWME);
-+	rzv2m_pwm_wait_delay(rzv2m_pwm);
-+	rzv2m_pwm->is_ch_enabled = true;
-+
-+	return 0;
-+}
-+
-+static void rzv2m_pwm_disable(struct rzv2m_pwm_chip *rzv2m_pwm)
-+{
-+	rzv2m_pwm_modify(rzv2m_pwm, RZV2M_PWMCTR, RZV2M_PWMCTR_PWME, 0);
-+	rzv2m_pwm_wait_delay(rzv2m_pwm);
-+	pm_runtime_put_sync(rzv2m_pwm->chip.dev);
-+	rzv2m_pwm->is_ch_enabled = false;
-+}
-+
-+static int rzv2m_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			       struct pwm_state *state)
-+{
-+	struct rzv2m_pwm_chip *rzv2m_pwm = to_rzv2m_pwm_chip(chip);
-+	u16 frequency_divisor;
-+	u32 ctr, cyc, low;
-+	u8 prescale;
-+
-+	pm_runtime_get_sync(chip->dev);
-+	ctr = rzv2m_pwm_read(rzv2m_pwm, RZV2M_PWMCTR);
-+	state->enabled = FIELD_GET(RZV2M_PWMCTR_PWME, ctr);
-+	state->polarity = FIELD_GET(RZV2M_PWMCTR_PWMHL, ctr) ?
-+		PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
-+	prescale = FIELD_GET(RZV2M_PWMCTR_PWMPS, ctr);
-+	frequency_divisor = 1 << rzv2m_pwm_prescale_to_shift(prescale);
-+
-+	cyc = rzv2m_pwm_read(rzv2m_pwm, RZV2M_PWMCYC);
-+	state->period = rzv2m_pwm_mul_u64_u64_div_u64_roundup(cyc + 1,
-+				NSEC_PER_SEC * frequency_divisor,
-+				rzv2m_pwm->rate);
-+
-+	low = rzv2m_pwm_read(rzv2m_pwm, RZV2M_PWMLOW);
-+	state->duty_cycle = rzv2m_pwm_mul_u64_u64_div_u64_roundup(cyc + 1 - low,
-+				NSEC_PER_SEC * frequency_divisor,
-+				rzv2m_pwm->rate);
-+
-+	return pm_runtime_put(chip->dev);
-+}
-+
-+static int rzv2m_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    const struct pwm_state *state)
-+{
-+	struct rzv2m_pwm_chip *rzv2m_pwm = to_rzv2m_pwm_chip(chip);
-+	u64 period = state->period, duty_cycle = state->duty_cycle;
-+	u16 frequency_divisor;
-+	u64 pwm_cyc, pwm_low;
-+	u8 prescale;
-+	u32 pwm_ctr;
-+
-+	/*
-+	 * Clamp period and duty cycle to their maximum values for our current
-+	 * configuration rather than letting our calculations overflow.
-+	 */
-+	if (period > rzv2m_pwm->max_period) {
-+		period = rzv2m_pwm->max_period;
-+		if (duty_cycle > rzv2m_pwm->max_period)
-+			duty_cycle = period;
-+	}
-+
-+	/*
-+	 * Formula for calculating PWM Cycle Setting Register:
-+	 * PWM cycle = (PWM period(ns) / (PWM_CLK period(ns) × Div ratio)) - 1
-+	 */
-+	pwm_cyc = (period * rzv2m_pwm->rate) / NSEC_PER_SEC;
-+	pwm_cyc = pwm_cyc ? pwm_cyc : 1;
-+
-+	prescale = rzv2m_pwm_calculate_prescale(rzv2m_pwm, pwm_cyc - 1);
-+	frequency_divisor = 1 << rzv2m_pwm_prescale_to_shift(prescale);
-+	if (frequency_divisor > 1) {
-+		pwm_cyc = (period * rzv2m_pwm->rate) /
-+				(NSEC_PER_SEC * frequency_divisor);
-+		pwm_cyc = pwm_cyc ? pwm_cyc : 1;
-+	}
-+
-+	if (pwm_cyc && !FIELD_FIT(RZV2M_PWMCYC_PERIOD, pwm_cyc - 1))
-+		pwm_cyc = RZV2M_PWMCYC_PERIOD + 1;
-+
-+	/*
-+	 * Formula for calculating PWMLOW register:
-+	 * PWMLOW register = PWM cycle * Low pulse width ratio (%)
-+	 */
-+	pwm_low = (duty_cycle * rzv2m_pwm->rate) /
-+			(NSEC_PER_SEC * frequency_divisor);
-+
-+	pwm_low = pwm_cyc - pwm_low;
-+	if (!FIELD_FIT(RZV2M_PWMLOW_PERIOD, pwm_low))
-+		pwm_low = RZV2M_PWMLOW_PERIOD;
-+
-+	pwm_cyc--;
-+
-+	/*
-+	 * If the PWM channel is disabled, make sure to turn on the clock
-+	 * before writing the register.
-+	 */
-+	if (!pwm->state.enabled)
-+		pm_runtime_get_sync(rzv2m_pwm->chip.dev);
-+
-+	/*
-+	 * To change the setting value of the PWM cycle setting register
-+	 * (PWMm_PWMCYC) or polarity, set the PWME bit of the PWM control
-+	 * register (PWMm_PWMCTR) to 0b and stop the counter operation.
-+	 */
-+	if (rzv2m_pwm->polarity != state->polarity || rzv2m_pwm->pwm_cyc != pwm_cyc) {
-+		rzv2m_pwm_modify(rzv2m_pwm, RZV2M_PWMCTR, RZV2M_PWMCTR_PWME, 0);
-+		rzv2m_pwm_wait_delay(rzv2m_pwm);
-+	}
-+
-+	rzv2m_pwm_write(rzv2m_pwm, RZV2M_PWMCYC, pwm_cyc);
-+	rzv2m_pwm_write(rzv2m_pwm, RZV2M_PWMLOW, pwm_low);
-+
-+	pwm_ctr = FIELD_PREP(RZV2M_PWMCTR_PWMPS, prescale);
-+	if (state->polarity == PWM_POLARITY_INVERSED)
-+		pwm_ctr |= RZV2M_PWMCTR_PWMHL;
-+
-+	rzv2m_pwm_modify(rzv2m_pwm, RZV2M_PWMCTR, RZV2M_PWMCTR_PWMTM |
-+			 RZV2M_PWMCTR_PWMPS | RZV2M_PWMCTR_PWMHL, pwm_ctr);
-+
-+	if (rzv2m_pwm->polarity != state->polarity || rzv2m_pwm->pwm_cyc != pwm_cyc) {
-+		rzv2m_pwm->polarity = state->polarity;
-+		rzv2m_pwm->pwm_cyc = pwm_cyc;
-+		rzv2m_pwm_modify(rzv2m_pwm, RZV2M_PWMCTR, RZV2M_PWMCTR_PWME,
-+				 RZV2M_PWMCTR_PWME);
-+	}
-+
-+	rzv2m_pwm_wait_delay(rzv2m_pwm);
-+
-+	/* If the PWM is not enabled, turn the clock off again to save power. */
-+	if (!pwm->state.enabled)
-+		pm_runtime_put(rzv2m_pwm->chip.dev);
-+
-+	return 0;
-+}
-+
-+static int rzv2m_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			   const struct pwm_state *state)
-+{
-+	struct rzv2m_pwm_chip *rzv2m_pwm = to_rzv2m_pwm_chip(chip);
-+	bool enabled = pwm->state.enabled;
-+	int ret;
-+
-+	if (!state->enabled) {
-+		if (enabled)
-+			rzv2m_pwm_disable(rzv2m_pwm);
-+
-+		return 0;
-+	}
-+
-+	ret = rzv2m_pwm_config(chip, pwm, state);
-+	if (ret)
-+		return ret;
-+
-+	if (!enabled)
-+		ret = rzv2m_pwm_enable(rzv2m_pwm);
-+
-+	return ret;
-+}
-+
-+static const struct pwm_ops rzv2m_pwm_ops = {
-+	.get_state = rzv2m_pwm_get_state,
-+	.apply = rzv2m_pwm_apply,
-+};
-+
-+static int rzv2m_pwm_pm_runtime_suspend(struct device *dev)
-+{
-+	struct rzv2m_pwm_chip *rzv2m_pwm = dev_get_drvdata(dev);
-+
-+	clk_disable_unprepare(rzv2m_pwm->pwm_clk);
-+	clk_disable_unprepare(rzv2m_pwm->apb_clk);
-+
-+	return 0;
-+}
-+
-+static int rzv2m_pwm_pm_runtime_resume(struct device *dev)
-+{
-+	struct rzv2m_pwm_chip *rzv2m_pwm = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(rzv2m_pwm->apb_clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(rzv2m_pwm->pwm_clk);
-+	if (ret)
-+		clk_disable_unprepare(rzv2m_pwm->apb_clk);
-+
-+	return ret;
-+}
-+
-+static DEFINE_RUNTIME_DEV_PM_OPS(rzv2m_pwm_pm_ops,
-+				 rzv2m_pwm_pm_runtime_suspend,
-+				 rzv2m_pwm_pm_runtime_resume, NULL);
-+
-+static void rzv2m_pwm_reset_assert_pm_disable(void *data)
-+{
-+	struct rzv2m_pwm_chip *rzv2m_pwm = data;
-+
-+	/*
-+	 * The below check is for making balanced PM usage count in probe/remove
-+	 * eg: boot loader is turning on PWM and probe increments the PM usage
-+	 * count. Before apply, if there is unbind/remove callback we need to
-+	 * decrement the PM usage count.
-+	 */
-+	if (rzv2m_pwm->is_ch_enabled)
-+		pm_runtime_put(rzv2m_pwm->chip.dev);
-+
-+	clk_rate_exclusive_put(rzv2m_pwm->pwm_clk);
-+	clk_rate_exclusive_put(rzv2m_pwm->apb_clk);
-+	pm_runtime_disable(rzv2m_pwm->chip.dev);
-+	pm_runtime_set_suspended(rzv2m_pwm->chip.dev);
-+	reset_control_assert(rzv2m_pwm->rstc);
-+}
-+
-+static int rzv2m_pwm_probe(struct platform_device *pdev)
-+{
-+	struct rzv2m_pwm_chip *rzv2m_pwm;
-+	unsigned long apb_clk_rate;
-+	int ret;
-+
-+	rzv2m_pwm = devm_kzalloc(&pdev->dev, sizeof(*rzv2m_pwm), GFP_KERNEL);
-+	if (!rzv2m_pwm)
-+		return -ENOMEM;
-+
-+	rzv2m_pwm->mmio = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(rzv2m_pwm->mmio))
-+		return PTR_ERR(rzv2m_pwm->mmio);
-+
-+	rzv2m_pwm->apb_clk = devm_clk_get(&pdev->dev, "apb");
-+	if (IS_ERR(rzv2m_pwm->apb_clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(rzv2m_pwm->apb_clk),
-+				     "cannot get apb clock\n");
-+
-+	rzv2m_pwm->pwm_clk = devm_clk_get(&pdev->dev, "pwm");
-+	if (IS_ERR(rzv2m_pwm->pwm_clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(rzv2m_pwm->pwm_clk),
-+				     "cannot get pwm clock\n");
-+
-+	rzv2m_pwm->rstc = devm_reset_control_get_shared(&pdev->dev, NULL);
-+	if (IS_ERR(rzv2m_pwm->rstc))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(rzv2m_pwm->rstc),
-+				     "get reset failed\n");
-+
-+	platform_set_drvdata(pdev, rzv2m_pwm);
-+	ret = reset_control_deassert(rzv2m_pwm->rstc);
-+	if (ret) {
-+		return dev_err_probe(&pdev->dev, ret,
-+			      "cannot deassert reset control\n");
-+	}
-+
-+	ret = clk_prepare_enable(rzv2m_pwm->apb_clk);
-+	if (ret < 0)
-+		goto err_reset;
-+
-+	ret = clk_prepare_enable(rzv2m_pwm->pwm_clk);
-+	if (ret < 0)
-+		goto disable_apb_clk;
-+
-+	clk_rate_exclusive_get(rzv2m_pwm->apb_clk);
-+	clk_rate_exclusive_get(rzv2m_pwm->pwm_clk);
-+	apb_clk_rate = clk_get_rate(rzv2m_pwm->apb_clk);
-+	if (!apb_clk_rate)
-+		goto err_rate_put;
-+
-+	rzv2m_pwm->rate = clk_get_rate(rzv2m_pwm->pwm_clk);
-+	if (!rzv2m_pwm->rate)
-+		goto err_rate_put;
-+	rzv2m_pwm->max_period = U64_MAX / rzv2m_pwm->rate;
-+
-+	/*
-+	 * The registers other than the PWM interrupt register (PWMINT) are
-+	 * always synchronized with PWM_CLK at regular intervals. It takes some
-+	 * time (Min: 2 × PCLK + 4 × PWM_CLK to Max: 6 × PCLK + 9 × PWM_CLK) for
-+	 * the value set in the register to be reflected in the PWM circuit
-+	 * because there is a synchronizer between the register and the PWM
-+	 * circuit.
-+	 */
-+	rzv2m_pwm->delay = 6 * DIV_ROUND_UP(NSEC_PER_SEC, apb_clk_rate) +
-+		9 * DIV_ROUND_UP(NSEC_PER_SEC, rzv2m_pwm->rate);
-+
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	/*
-+	 *  We need to keep the clock on, in case the bootloader has enabled the
-+	 *  PWM and is running during probe().
-+	 */
-+	if (!!(rzv2m_pwm_read(rzv2m_pwm, RZV2M_PWMCTR) & RZV2M_PWMCTR_PWME)) {
-+		u32 val;
-+
-+		pm_runtime_get_sync(&pdev->dev);
-+		rzv2m_pwm->is_ch_enabled = true;
-+		rzv2m_pwm->pwm_cyc = rzv2m_pwm_read(rzv2m_pwm, RZV2M_PWMCYC);
-+		val = rzv2m_pwm_read(rzv2m_pwm, RZV2M_PWMCTR);
-+		rzv2m_pwm->polarity = FIELD_GET(RZV2M_PWMCTR_PWMHL, val) ?
-+				PWM_POLARITY_NORMAL : PWM_POLARITY_INVERSED;
-+	}
-+
-+	rzv2m_pwm->chip.dev = &pdev->dev;
-+	ret = devm_add_action_or_reset(&pdev->dev,
-+				       rzv2m_pwm_reset_assert_pm_disable,
-+				       rzv2m_pwm);
-+	if (ret)
-+		return ret;
-+
-+	rzv2m_pwm->chip.ops = &rzv2m_pwm_ops;
-+	rzv2m_pwm->chip.npwm = 1;
-+	ret = devm_pwmchip_add(&pdev->dev, &rzv2m_pwm->chip);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
-+
-+	pm_runtime_idle(&pdev->dev);
-+
-+	return 0;
-+
-+err_rate_put:
-+	clk_rate_exclusive_put(rzv2m_pwm->pwm_clk);
-+	clk_rate_exclusive_put(rzv2m_pwm->apb_clk);
-+	clk_disable_unprepare(rzv2m_pwm->pwm_clk);
-+disable_apb_clk:
-+	clk_disable_unprepare(rzv2m_pwm->apb_clk);
-+err_reset:
-+	reset_control_assert(rzv2m_pwm->rstc);
-+	return ret;
-+}
-+
-+static const struct of_device_id rzv2m_pwm_of_table[] = {
-+	{ .compatible = "renesas,rzv2m-pwm", },
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, rzv2m_pwm_of_table);
-+
-+static struct platform_driver rzv2m_pwm_driver = {
-+	.driver = {
-+		.name = "pwm-rzv2m",
-+		.pm = pm_ptr(&rzv2m_pwm_pm_ops),
-+		.of_match_table = rzv2m_pwm_of_table,
-+	},
-+	.probe = rzv2m_pwm_probe,
-+};
-+module_platform_driver(rzv2m_pwm_driver);
-+
-+MODULE_AUTHOR("Biju Das <biju.das.jz@bp.renesas.com>");
-+MODULE_AUTHOR("Fabrizio Castro <fabrizio.castro.jz@renesas.com>");
-+MODULE_DESCRIPTION("Renesas RZ/V2M PWM Timer Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.34.1
+[1]
+renesas,poegs =3D <&poeggd 4>, <&poeggb 1>, <&poegga 2>;
 
+>=20
+> > +		if (ret) {
+> > +			dev_err(&pdev->dev,
+> > +				"Failed to parse 'renesas,poegs' property\n");
+> > +			return;
+> > +		}
+> > +
+> > +		if (of_args.args[0] >=3D RZG2L_MAX_HW_CHANNELS) {
+> > +			dev_err(&pdev->dev, "Invalid channel %d >=3D %d\n",
+> > +				of_args.args[0], RZG2L_MAX_HW_CHANNELS);
+> > +			of_node_put(of_args.np);
+> > +			return;
+> > +		}
+> > +
+> > +		bitpos =3D of_args.args[0];
+>=20
+> This can be moved further down, and so nearer to where it is actually
+> used.
+
+OK
+
+Cheers,
+Biju
 
