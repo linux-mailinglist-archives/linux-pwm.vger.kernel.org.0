@@ -1,63 +1,64 @@
-Return-Path: <linux-pwm+bounces-1276-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1281-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39B948513FF
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 14:03:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E1B8851409
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 14:03:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CF0C7B22178
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 13:03:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B98211F274C3
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 13:03:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A20133A278;
-	Mon, 12 Feb 2024 13:02:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C77F13B2BE;
+	Mon, 12 Feb 2024 13:02:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nrzq+2cL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c5N0YQ00"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D463A262;
-	Mon, 12 Feb 2024 13:02:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4613A8CB;
+	Mon, 12 Feb 2024 13:02:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707742974; cv=none; b=t8X7m7avORDehlnqRQR4vxcMfHdOD8DtbEqPa9Xe8hAvE8v9BZLTG1ypxUoUOOHomKXrq1DiwDFr1nIgPaQyzUoJs11JPGFShq3rrfb1GL6PS8D3zXzxFJ3Tcn+lnrfCrzVc6xZ4jUu/9nPwrIXPLFDf6/VK9kSH8d6Rt/C/NpM=
+	t=1707742979; cv=none; b=rC3ntrSbZSSTKLipimGEty5/ByYzyBz6KetL1tRqRFVvxvM0peKkVp6somb7rV+614AuzWcoMQOVSbwWx8zlXong0504ESrOE0JCNHYO8WawRrn9Vl8haqPCRGP34gBXhMMELjQZlYqcaG/vBQ9ntNwtAi7CnDvbSxZReCC4l2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707742974; c=relaxed/simple;
-	bh=+iezdmJtQKUYOgzOmH1gPFOjerA7i2PM8BJI/LAdFUQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WQLq/DMc/PwkyTwiQpIcwRBd9BYQeIzqbVchp4EG65o6dXahwpirfZZUio7dk5TU6TU1LFiak0J8JBphPTqTKv0b8EAHcdRtcz1lxu+VvOo8HkZf7aE7vCC+F3p8jvPQfU7gWYTixNzw0VziPyYbjH96K85HllZoXvzBzRf+W1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nrzq+2cL; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1707742979; c=relaxed/simple;
+	bh=B3s2F89GzkRqiCuF715R3/bfNCpfUIA+Ssd1CZYkmYM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YLm4W626qoX7GHdUFK+5NUwF8vTmHWhXKIrT4XhONyuhJ1dzwNuw0gmeBwFf3RIxP1wvPaYpWCNIB8CeT/ac9y38zBnXLvKk95Eq5bqs4Yljy68yetsq9EkgtUtJqn0IWBVdg+VbOoSjQqSeqh2BUm4GFimmj1AYHEeGDjQPZVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c5N0YQ00; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecsmtp.iind.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707742973; x=1739278973;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+iezdmJtQKUYOgzOmH1gPFOjerA7i2PM8BJI/LAdFUQ=;
-  b=Nrzq+2cLkhNJvTmuayjT90GnHTGCKnyjqcwWPQ2yvMOvnaQRqI08cyLG
-   LbDWgiEcUbU9wL3cpde5Rzje8T1ODWXUzvyVchp29+3KHy8RAv8IMOzoj
-   ngyTMOZwqD6FedUxaojBjq3NjCoWgleF/91yZxUHTOq6wShheEfHIKqSK
-   6ZFxzQO0T8XcYKugTaVaYjIHhBr9tN5hB1QOI4CKvFlATgyiBBO9i4jrF
-   IEuo2E8swnpe1l/itUFohD8CEMDuySF970p7MmvrpDCCigSMY27OHNJfy
-   k/xu0e6Q/gwuk87x5n45hktHi45d+lZAu0X6GJnhs9RdF2Mf0xrFAvYn0
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="1594828"
+  t=1707742976; x=1739278976;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=B3s2F89GzkRqiCuF715R3/bfNCpfUIA+Ssd1CZYkmYM=;
+  b=c5N0YQ00+km2atJAvKL6Qz9OIf0gPKhRXUc+GEa/vVE0lXAcyrzDkeMB
+   aflft9KcFCsYb2F4cwMIR37SUqR7RkdNZFmGBlo9nlkgHmJStN5fE1LWY
+   Bov+ugEOMIeBPcTNbvLEs5kQGfARtZ+rrQkugC9B3O9Y9ATo6qNmHBgRf
+   XfcT2YeSor9osh3vVlXLE9DDH030ksLnd8xZVdnoT4fTLThq9l+WXAd6o
+   UDIjJXiaXNQGqxzrxpBXxGmmE4jECNxXZbkXGNPM/jECk5j9dtk3oV3L/
+   C3Cp6D97z0UMPJDoiXynyM+eQNRva1Sz6uJDm33LLPwZVlr1CypwfBSKr
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="1594836"
 X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
-   d="scan'208";a="1594828"
+   d="scan'208";a="1594836"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 05:02:52 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
-   d="scan'208";a="33378386"
+   d="scan'208";a="33378392"
 Received: from inesxmail01.iind.intel.com ([10.223.57.40])
   by orviesa002.jf.intel.com with ESMTP; 12 Feb 2024 05:02:50 -0800
 Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
-	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 573FD23A66;
+	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 5756C1CACF;
 	Mon, 12 Feb 2024 18:32:49 +0530 (IST)
 Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
-	id 52D061600100; Mon, 12 Feb 2024 18:32:49 +0530 (IST)
+	id 541C51600101; Mon, 12 Feb 2024 18:32:49 +0530 (IST)
 From: Raag Jadav <raag.jadav@intel.com>
 To: u.kleine-koenig@pengutronix.de,
 	jarkko.nikula@linux.intel.com,
@@ -67,10 +68,12 @@ To: u.kleine-koenig@pengutronix.de,
 Cc: linux-pwm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v3 0/5] DesignWare PWM improvements
-Date: Mon, 12 Feb 2024 18:32:42 +0530
-Message-Id: <20240212130247.9985-1-raag.jadav@intel.com>
+Subject: [PATCH v3 1/5] pwm: dwc: use pm_sleep_ptr() macro
+Date: Mon, 12 Feb 2024 18:32:43 +0530
+Message-Id: <20240212130247.9985-2-raag.jadav@intel.com>
 X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20240212130247.9985-1-raag.jadav@intel.com>
+References: <20240212130247.9985-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -79,32 +82,30 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series implements 16 channel PWM support for Intel Elkhart Lake
-along with minor cleanups for DesignWare PWM driver.
+Since we don't have runtime PM handles here, we should be using
+pm_sleep_ptr() macro, so that the compiler can discard it in case
+CONFIG_PM_SLEEP=n.
 
-Changes since v2:
-- Remove error code duplication from dev_err_probe()
-- Update tags
+Fixes: 30b5b066fa83 ("pwm: dwc: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions")
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pwm/pwm-dwc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes since v1:
-- Drop redundant error check
-- Provide dwc_pwm_init_one() to initialize one PWM instance
-- Use dev_get_drvdata() instead of pci_get_drvdata()
-- Use pm_sleep_ptr() instead of use pm_ptr()
-
-Raag Jadav (5):
-  pwm: dwc: use pm_sleep_ptr() macro
-  pwm: dwc: drop redundant error check
-  pwm: dwc: Add 16 channel support for Intel Elkhart Lake
-  pwm: dwc: simplify error handling
-  pwm: dwc: access driver_data using dev_get_drvdata()
-
- drivers/pwm/pwm-dwc.c | 59 ++++++++++++++++++++++++-------------------
- drivers/pwm/pwm-dwc.h |  5 ++++
- 2 files changed, 38 insertions(+), 26 deletions(-)
-
-
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
+index 4929354f8cd9..a4a057ae03ea 100644
+--- a/drivers/pwm/pwm-dwc.c
++++ b/drivers/pwm/pwm-dwc.c
+@@ -120,7 +120,7 @@ static struct pci_driver dwc_pwm_driver = {
+ 	.remove = dwc_pwm_remove,
+ 	.id_table = dwc_pwm_id_table,
+ 	.driver = {
+-		.pm = pm_ptr(&dwc_pwm_pm_ops),
++		.pm = pm_sleep_ptr(&dwc_pwm_pm_ops),
+ 	},
+ };
+ 
 -- 
 2.35.3
 
