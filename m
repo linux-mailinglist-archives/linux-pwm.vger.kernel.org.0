@@ -1,77 +1,55 @@
-Return-Path: <linux-pwm+bounces-1266-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1269-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76792850D74
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 07:11:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10DD8850DDF
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 08:19:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F4901C22129
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 06:10:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B94CF1F27CBF
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 07:19:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B7F46FBF;
-	Mon, 12 Feb 2024 06:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kxuo9xJw"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C2B42B9C2;
+	Mon, 12 Feb 2024 07:15:02 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9B96FAD;
-	Mon, 12 Feb 2024 06:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C54B2B9D5
+	for <linux-pwm@vger.kernel.org>; Mon, 12 Feb 2024 07:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707718256; cv=none; b=nRYMMM39jRnRuk9P/wy1LwNToBA6Fn/DHbOuLIgAEmye7VegRpE1UEVK1ffFW1DgFBE9RWYtIVRVGMmuTcTaYYYPIeGaotiYzd6doPT8iLrJfIpmCJzyaGKw7kkUOVc2zhd5amsb22c08cOw97GZgP7mjR0NkDqweoZNc1oqofc=
+	t=1707722102; cv=none; b=vE/rzkDS50oqyqQTa4rTI+sOeEYqikTHw4WMOK+Xu2Ca1ADpyIokcXKLVmDLXmJ1Og3K5J8T8RcOk1TYdp6KKmkPs9y0EkBuIvhnDmEoS3Jk2+lATl9x5VgkSjZpQMbDty7ZW4yWak5sBZtycZH8fY4pLorSdcpogtvSIEn56xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707718256; c=relaxed/simple;
-	bh=kFsYgesT2OuI7NyKvUcKDZ7z+d8fMM9cVlbYxuZzWg4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aGLmtC3wi0zU/DP3M7GwYD0ou2uCmNRLLaR0+CGA1y1wpVTLQILnVU7CmCBxB7TEAcI2Yqn616jGuYJad/FJ/Caqx/Eha6tqq6xPCKmsQw0xrW8fLVwy6++6rSJQ/ezQ1ktwGqhD27wmiS1eMk77RzYuwZhmN1j9YlOj6W1T0WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kxuo9xJw; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecsmtp.iind.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707718255; x=1739254255;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=kFsYgesT2OuI7NyKvUcKDZ7z+d8fMM9cVlbYxuZzWg4=;
-  b=kxuo9xJwWhuvS8JlH54MXkU8WFN6+oxjsnBcWob/otlfieUxEXlQDF1d
-   8ZTUKuBH1PlPMX3zT7BlOBV1xan04LTd88bmyz5d23s0Vc5tOupZQIbK2
-   94DVpxgbQrFkob6tPml0FfT/o+6FvliFfZE7cBYr6E6ZotEJAoKVW4G7x
-   KVAVFbyzt6yW311wOXhLyD1ZbyThY8D1scZBuvFrwrSS2vxyxyfwA0WBV
-   s5xjQ7ToWfZGqtWBiSW1qhNiueIoNrD15U/qkgLYKnG0UYn6gnZoxyr/d
-   +ShGdPLkj+NzG4MZKExAnreC3MS5AjrpzHYq1ihlS7DSoWSahi6vdtKwt
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="1833044"
-X-IronPort-AV: E=Sophos;i="6.05,262,1701158400"; 
-   d="scan'208";a="1833044"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2024 22:10:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,262,1701158400"; 
-   d="scan'208";a="33574489"
-Received: from inesxmail01.iind.intel.com ([10.223.57.40])
-  by fmviesa001.fm.intel.com with ESMTP; 11 Feb 2024 22:10:40 -0800
-Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
-	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 581291CAEA;
-	Mon, 12 Feb 2024 11:40:39 +0530 (IST)
-Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
-	id 55F891600102; Mon, 12 Feb 2024 11:40:39 +0530 (IST)
-From: Raag Jadav <raag.jadav@intel.com>
-To: u.kleine-koenig@pengutronix.de,
-	jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com
-Cc: linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v1 2/2] pwm: lpss: drop redundant runtime PM handles
-Date: Mon, 12 Feb 2024 11:40:37 +0530
-Message-Id: <20240212061037.4271-3-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240212061037.4271-1-raag.jadav@intel.com>
+	s=arc-20240116; t=1707722102; c=relaxed/simple;
+	bh=jYjodvYdPgaA2R6RTwlHo99I3LADJFhgrLfeHWg5EAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nrp+dd9gygtRD0fJKjjXTJHIanQXu4FVivzic7X/A8gUelON+Cjczmuy2e0qFXtR0XLIyeSvkyU8jm0+KKtPhxDoVztrBzOBtgdgqYRdSjsBa0+BVKnRTCiKnXTso2kC1DP3Sjn03VcpH8tFI2hX0ETAdNa82FPkIwu37bjnAww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rZQWU-0003cF-7C; Mon, 12 Feb 2024 08:14:38 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rZQWT-000EsZ-1a; Mon, 12 Feb 2024 08:14:37 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rZQWS-002wvz-37;
+	Mon, 12 Feb 2024 08:14:36 +0100
+Date: Mon, 12 Feb 2024 08:14:36 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, 
+	andriy.shevchenko@linux.intel.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] LPSS PWM cleanups
+Message-ID: <lfenqtr2hgjfisn6x6gffme55htmt3o6cbdiroilwanm52zyvs@frlnph7kkwg7>
 References: <20240212061037.4271-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -79,59 +57,58 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7dxxvd6dgm2rpgvr"
+Content-Disposition: inline
+In-Reply-To: <20240212061037.4271-1-raag.jadav@intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-We no longer need empty runtime PM handles for PCI devices after commit
-c5eb1190074c ("PCI / PM: Allow runtime PM without callback functions").
-Drop them and let PCI core take care of power state transitions.
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pwm/pwm-lpss-pci.c | 22 ----------------------
- 1 file changed, 22 deletions(-)
+--7dxxvd6dgm2rpgvr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
-index b4134bee2863..51efe37e23fe 100644
---- a/drivers/pwm/pwm-lpss-pci.c
-+++ b/drivers/pwm/pwm-lpss-pci.c
-@@ -48,25 +48,6 @@ static void pwm_lpss_remove_pci(struct pci_dev *pdev)
- 	pm_runtime_get_sync(&pdev->dev);
- }
- 
--static int pwm_lpss_runtime_suspend_pci(struct device *dev)
--{
--	/*
--	 * The PCI core will handle transition to D3 automatically. We only
--	 * need to provide runtime PM hooks for that to happen.
--	 */
--	return 0;
--}
--
--static int pwm_lpss_runtime_resume_pci(struct device *dev)
--{
--	return 0;
--}
--
--static DEFINE_RUNTIME_DEV_PM_OPS(pwm_lpss_pci_pm,
--				 pwm_lpss_runtime_suspend_pci,
--				 pwm_lpss_runtime_resume_pci,
--				 NULL);
--
- static const struct pci_device_id pwm_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x0ac8), (unsigned long)&pwm_lpss_bxt_info},
- 	{ PCI_VDEVICE(INTEL, 0x0f08), (unsigned long)&pwm_lpss_byt_info},
-@@ -86,9 +67,6 @@ static struct pci_driver pwm_lpss_driver_pci = {
- 	.id_table = pwm_lpss_pci_ids,
- 	.probe = pwm_lpss_probe_pci,
- 	.remove = pwm_lpss_remove_pci,
--	.driver = {
--		.pm = pm_ptr(&pwm_lpss_pci_pm),
--	},
- };
- module_pci_driver(pwm_lpss_driver_pci);
- 
--- 
-2.35.3
+Hello,
 
+On Mon, Feb 12, 2024 at 11:40:35AM +0530, Raag Jadav wrote:
+> This series implements minor cleanups for LPSS PWM driver.
+>=20
+> Raag Jadav (2):
+>   pwm: lpss: use devm_pm_runtime_enable() helper
+>   pwm: lpss: drop redundant runtime PM handles
+>=20
+>  drivers/pwm/pwm-lpss-pci.c      | 22 ----------------------
+>  drivers/pwm/pwm-lpss-platform.c | 10 +---------
+>  2 files changed, 1 insertion(+), 31 deletions(-)
+
+the series looks fine to me. Will give others some more time to comment
+and apply later.
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--7dxxvd6dgm2rpgvr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXJxVsACgkQj4D7WH0S
+/k6Qewf8D2r0SZoTgNIPbAgqzXZmkWt05MDzsZuccY6QBwKTpI997AoIWkBIqYtT
+5Q758V6bxBOV9OE092c/Xv3ZkTWS1BYQ+rM8ZPvzFlvaLFuIrAo4NrXW1UJAZFF6
+9iAOJ1JpcAOwHcQgSdGS8A7Ji4h/xKwVuQXx+BMV7k6JFq7gM4v+Wdqc0JjBFO0D
+hQYNPHUdvu4OQqoeMe0tsNg3P616uXxWERVEk64bJzOAxRYBsVROmPvWowhmbTaR
+LC92Xoqq01FKtg7Y80HGxkd9HSDHHL906WlbJ08S8bwwd/CLA5/c0Jq1qeoXbPH8
+RT5V8q0Ly7Le9sPGwVb26OkpiKX0Vg==
+=Y5op
+-----END PGP SIGNATURE-----
+
+--7dxxvd6dgm2rpgvr--
 
