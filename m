@@ -1,119 +1,136 @@
-Return-Path: <linux-pwm+bounces-1272-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1273-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D4118512B3
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 12:53:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C593A851365
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 13:17:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 47BD9B260E9
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 11:53:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3ADB31F2360D
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 12:17:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7CEC39FC7;
-	Mon, 12 Feb 2024 11:53:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4615439AF3;
+	Mon, 12 Feb 2024 12:17:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cE7JG+MI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJPUqbih"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106BD39FC3;
-	Mon, 12 Feb 2024 11:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B8339AE1;
+	Mon, 12 Feb 2024 12:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707738804; cv=none; b=jtr2jrhyKLJngloox7YL5PxlqSp8/AbKIaCgC7cde6qD+sRZYXWjcYkjbeBK9pURf/az66yghQASjwrERmWK6sGMwiZZuYDWyMwJOBiTs3GlUbR88tapp7BWz+RafrmzIIKKR30GD192Ct1HcjCNBPrqCcz21l0d4XqzwnBBBd0=
+	t=1707740256; cv=none; b=K/cM6hZTlY5kLoqDXJWb168q24qybpeDgHLqzHckhonQN57ab9y6UtPhn5zgqj6ZU0gzn0GQRYHH9fcgJn3oWvC/pRW41WmjKnIodFMBHMPrOk1AsamU0XfzIvIJCdMCajhHtXvj3LTtb2oRT7uNSyaz7XkT7eMxF1nQLMBLFdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707738804; c=relaxed/simple;
-	bh=bysvMgUEFjn8y4Zodb9vYNfjWoNGlYwrLwAYxoEu+i4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XjH46ugzZ5GjkISWpbzK4/EO+CD2mdnOcop6mLGcvkISlod/Ng+0vIJ+IDlbvo6G0Zw6YMxzdkVxvrVPAH1uzAEMS+TlvbpdP/EDk7dJ72Qt6kZahC71w5fw/x1SgcKY4XeiZTkHeNCY0Mezcpl81IAoYUfCCCmxk0axkhEgVgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cE7JG+MI; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707738803; x=1739274803;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=bysvMgUEFjn8y4Zodb9vYNfjWoNGlYwrLwAYxoEu+i4=;
-  b=cE7JG+MIuKXoxYVH9weFBCIpBljpqd31uhzZ4Um0o1Nl0aONl9nWF/pZ
-   /7zoooQxLPk7vbhX2esCUe7S6kqgJ04hoU1v12LPTSWUOMkjKW4Ia1TAQ
-   e0otaoeQS3W+aFtj3aFxaXei1ASeYQpTdEYYNS0MPDVXHQRt2Te2in74f
-   j8DPAF8D473+YDmpfKQoqCGTPvg/cqhjlEgMUM4uKbEo/Xhul63btaCLI
-   GmQaz3nSDi/6u9hD9Ty6ckey3JMId4KRHI2dUSRehmchJMCEAs5Xj5wFY
-   vE2DSzDruvNgG+pzg8YtVX0XBNCQBmHaKoAm/WN/4tjLofZmZ7eVhKjRo
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="2055272"
-X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
-   d="scan'208";a="2055272"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 03:53:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="911460714"
-X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
-   d="scan'208";a="911460714"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 03:53:20 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rZUsA-00000003sxP-05DM;
-	Mon, 12 Feb 2024 13:53:18 +0200
-Date: Mon, 12 Feb 2024 13:53:17 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Raag Jadav <raag.jadav@intel.com>, jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com,
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] pwm: dwc: Add 16 channel support for Intel
- Elkhart Lake
-Message-ID: <ZcoGrXo8qKLXedaa@smile.fi.intel.com>
-References: <20240208070529.28562-1-raag.jadav@intel.com>
- <20240208070529.28562-3-raag.jadav@intel.com>
- <ZcUNe09gDtkztmbk@smile.fi.intel.com>
- <ZcZ6kUkf-GktlU4p@black.fi.intel.com>
- <ZcZ__nnOz1QA7uUZ@smile.fi.intel.com>
- <42pjh4zpbsyfdi6njcwhpoyllmqr6vv7u5h2lfakrje4dzitfj@3bsynlfj5mjj>
+	s=arc-20240116; t=1707740256; c=relaxed/simple;
+	bh=h+eDKUqejupTNYV2ZlucWTDKZk68JVOgE7r1odf5v+A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FgA5RCyHP7y+6DyyDPIi7KffWwBoohuhgNK08PB3C/ONdqhh0cLP3JnVGDhv+sVcS8ipHpla4fPOmOoNFEehYLvCWbrS/UlmtLcbclc9TwwwjuWIi8ZHkxDkzlTdQvaHehJ0g7kbgIqabqTkdyuL1GMVzf9appntDct01RpAF1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eJPUqbih; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d71cb97937so29474925ad.3;
+        Mon, 12 Feb 2024 04:17:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707740254; x=1708345054; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gUo2/Sg64m+gluTfzP+6rjHe5+qPkCNx3G6SYPGm/sI=;
+        b=eJPUqbihtaQiAlSpBldnTA/cRH4entRjTG671rrYwyDVRKO8TcFv1zDBojlOYYB3V/
+         17H/QdJnlKrDqBRQaXYvT1OdIrMBdoj8Nsz+aYvWxqKNwGUK9yJCESSYKEb4a8+n+WrR
+         I8hEaa2s7UnluZPnoKgRRiBNKNlSbIh7ZBxQ75evb7PZy3GBru5m8MqKki1EDGJl/XKA
+         5UXGbSTXNh3qnu7APLfPXLIy4dnGaB7ZrebQvKLN+zOjbRv2rNIOgBVvMxTJY2DCGK9i
+         QcnJvhuNrvtV3uGjPsT4StPA2vSEaJ1FJz72DpteXvGiSvk4KF9/yigocD9Um9ZkCDRL
+         vUfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707740254; x=1708345054;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gUo2/Sg64m+gluTfzP+6rjHe5+qPkCNx3G6SYPGm/sI=;
+        b=Ikcc+vngzJE3l0Q2rCgnwfd9jsHYZHhO0+NjSt2TrjK5lfIdp+1S/hzmb1vRf+LRl5
+         15TrTtdSUBq46cpftN+0E+lsOw12WsdbsSC15vpyXQyu4LNONyliGw/H3juBr9EFbIT6
+         IwT3GOfB36ej8/YFsA5uCT9OjvUvBF/UIYhdgey/LOG3Bu1kVmmoYK0xM0DhnauVKCPQ
+         bFp3WFHnBeNXDNVct9US4PPAzpSyg146JBC98HkujF54iDJJN6ChOt7IoBRkQWlHqADt
+         HUnP95h8nIP3dcDVMDVDxawVshvRhQyuwdRv/mnS6JSzQXrk9d/EUmk1No+WUAnFYbAt
+         2leg==
+X-Gm-Message-State: AOJu0YxjuLyyTrfrNu4ZzXq3ryLPidjnesQw56j5j2Wwyqu6lW5XpICy
+	os8jnUJvUt+soYhV9SFyvtg2gMWEEbOkKZO7hngBCYyuvnab6zfR
+X-Google-Smtp-Source: AGHT+IFzZoWi800XZAi+x/ypG94jLrL9fnPO+EXDCwS1MscQgFPlWVxztSuKLwoHj+sgV2FOfGRUAg==
+X-Received: by 2002:a17:902:b696:b0:1d9:5596:ffe8 with SMTP id c22-20020a170902b69600b001d95596ffe8mr5309450pls.66.1707740253393;
+        Mon, 12 Feb 2024 04:17:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUYA8Xz5X9EaPh/+2SLYWC4a0TJgPvUOO27bVLQYpVaU5SGcwZsmMpHBougkK2XTigazcx1bA8Ak0t8ElLVcBUxwi1zB/8PJOrmrbKJN1FTyHVxMFLmgM4OyReOS/8ruOqxTSGJA4OWO6H4hhwYMLymcwuZoaOh92N3sy/nBfS/dR6iI6tCDs5gzJN/MIGAheQsCNqMO+JcVWBM7nJvk+l0sB+CrfCofsIvkh6NwWhcJVNfgcc8/5vbW8FpVOHdsZZK74eimU9+VKmawl0MhL2TVLc9ei8+aHK4TZClVLQN+MFdxONt/paHePhfZf46wQ0WK9cgEfEtthRrXnW5ZYTQ2a9+fdTXSaQdb5RrbMlno03vroOg1x/a6lrUBa1L1bCvtjYROSslGLWvl3nIqxkHCva8dRK+LpttCOfm/6z4GqbEc/Ig8PFW9o1IqBcdFh06Vu85JkTP50Pkd7DC
+Received: from localhost ([46.3.240.101])
+        by smtp.gmail.com with ESMTPSA id e21-20020a170902d39500b001d8e5a3be8asm242216pld.259.2024.02.12.04.17.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 04:17:33 -0800 (PST)
+From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+To: u.kleine-koenig@pengutronix.de,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu
+Cc: linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	dlan@gentoo.org,
+	inochiama@outlook.com,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Subject: [PATCH v2 0/2] riscv: pwm: sophgo: add pwm support for CV1800
+Date: Mon, 12 Feb 2024 20:17:27 +0800
+Message-Id: <20240212121729.1086718-1-qiujingbao.dlmu@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <42pjh4zpbsyfdi6njcwhpoyllmqr6vv7u5h2lfakrje4dzitfj@3bsynlfj5mjj>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Sat, Feb 10, 2024 at 06:19:53PM +0100, Uwe Kleine-König wrote:
-> On Fri, Feb 09, 2024 at 09:41:50PM +0200, Andy Shevchenko wrote:
-> > On Fri, Feb 09, 2024 at 09:18:41PM +0200, Raag Jadav wrote:
-> > > On Thu, Feb 08, 2024 at 07:20:59PM +0200, Andy Shevchenko wrote:
-> > > > On Thu, Feb 08, 2024 at 12:35:26PM +0530, Raag Jadav wrote:
+The Sophgo CV1800 chip provides a set of four independent
+PWM channel outputs.
+This series adds PWM controller support for Sophgo cv1800.
 
-...
+Changes since v1:
+- drop full stop from subject
+- re-order maintainers and description
+- pass checkpatch.pl --strict
+- fix naming errors
+- add "Limitations" section
+- use a driver specific prefix for all defines
+- using bool instead u32 in cv1800_pwm_enable
+- check and set state->polarity
+- use mul_u64_u64_div_u64
+- use clk_rate_exclusive_get(), balance with clk_rate_exclusive_put()
+- using macro definitions instead of shift operations
+- remove shift operation on 0
+- use priv replace cv_pwm 
+- hardcode npwm
+- set atomic to true
+- remove MODULE_ALIAS
 
-> > > > Side Q: Have you used --histogram diff algo when prepared the series?
-> > > > If no, it's better to start using it.
-> > > 
-> > > I used it for a few weeks, but I think I've grown a bit too comfortable
-> > > with patience.
-> > > 
-> > > I'll use histogram for pinctrl stuff if you insist :)
-> > 
-> > It's recommended by Torvalds:
-> > https://lore.kernel.org/linux-gpio/CAHk-=wiVNOFP1dzKdCqXvoery5p8QoBB5THiJUMbZ1TxJb7FhQ@mail.gmail.com/
-> 
-> BTW, the magic to use it by default is:
-> 
-> 	git config --global diff.algorithm histogram
+v1: https://lore.kernel.org/all/20240207055856.672184-1-qiujingbao.dlmu@gmail.com/
 
-Yep, that's what I have on my machines for development.
+Jingbao Qiu (2):
+  dt-bindings: pwm: sophgo: add pwm for Sophgo CV1800 series SoC
+  pwm: sophgo: add pwm support for Sophgo CV1800 SoC
 
+ .../bindings/pwm/sophgo,cv1800-pwm.yaml       |  45 ++++
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-cv1800.c                      | 248 ++++++++++++++++++
+ 4 files changed, 304 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/sophgo,cv1800-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-cv1800.c
+
+
+base-commit: 7afc0e7f681e6efd6b826f003fc14c17b5093643
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
 
