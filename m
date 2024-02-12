@@ -1,121 +1,180 @@
-Return-Path: <linux-pwm+bounces-1277-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1282-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7CF1851401
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 14:03:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75AF98518E8
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 17:26:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 950C3282C7D
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 13:03:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F01141F21D4B
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Feb 2024 16:26:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2A203A8C9;
-	Mon, 12 Feb 2024 13:02:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B263B3D396;
+	Mon, 12 Feb 2024 16:26:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="klqEjlbh"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cj6G+CAN";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bSJE8x2A";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cj6G+CAN";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bSJE8x2A"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03323A28B;
-	Mon, 12 Feb 2024 13:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E964E3CF57;
+	Mon, 12 Feb 2024 16:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707742976; cv=none; b=jzAvhBHdzFDx/OqWC5DK7U1QF4tMIiCmJltiLJUd9yYIG1OefP+s+33dRv8EmV1EFcLxGnb3mLCqBBcZPdT0qYUPt2QIiZakBWSG5MAM0pDaNxwggPmb61wrTNYuSkU5qVqvT98G1kdDh4QDG19q/+pqmcbXWFhzvh3fgizpckM=
+	t=1707755212; cv=none; b=WYCoErOnpDGI7pFsfS+dalpdyArm0Hp7yApipbc7Q4nNbmKa8luzu8VPTfKujYL0ze11G1O6VindhsDMYtCnrRXkl/cLWcRodoVAPfxFK4cHrzlqEqWZ+JaDO/xkf7KwgqtZjRR0r0iMGsnBKVVoW0cm7hlRDUIeyH3HpHXLssc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707742976; c=relaxed/simple;
-	bh=uje6c8I2tiqtfUYQ+9jgDQlGSSLDu0ZZYftu8pHhS3M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JNIW3EJALMYPLiOZMBk8FS8SVybJpI0VFnYkcJLQFS5JsQ17fk2a3bAvhigQnyNAQ7ZKDl4pXXxgyBxgUY8ABnk/+IIJM5gieZHhnap+9a/+ZmmcrbupjD2Gu50XwgcjfKT7FsJwDw6+6tle2DchhZ5cDFO9fQMBFWKxBKkjQiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=klqEjlbh; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecsmtp.iind.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707742975; x=1739278975;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=uje6c8I2tiqtfUYQ+9jgDQlGSSLDu0ZZYftu8pHhS3M=;
-  b=klqEjlbhGogFUcn0Ao2WhRGI1+6gA6qDJaPBUUfYKTYLG9yXDPJ+ZiBG
-   NTt2RBvWZH1R85I5nL36AcQFSbqcPpaS4bNaV6jcgNTDfn2lZQqKSU3bx
-   Fa72xmPrbWREqwiM9CfG8xiXtRgkd61V6gZcD3tEgaTaLe2HiOqis43nE
-   Hfqgz740ig0Vnh4XQV1fqsDrf/T6mXEH3KKqS7AVTwQuhnJ6gQGubsLTH
-   YBwYu+rTdFl0Q3HmKiWlR4uBYvT36dX0Z0ICa7YDokHN52B0MAOT+FWZo
-   CoT3T+u0XtLWyZVVf3oSYD1/5PTsuuDICgTt5Gfkx9h8d2qEYpM8kV9V6
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="1594832"
-X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
-   d="scan'208";a="1594832"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 05:02:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
-   d="scan'208";a="33378387"
-Received: from inesxmail01.iind.intel.com ([10.223.57.40])
-  by orviesa002.jf.intel.com with ESMTP; 12 Feb 2024 05:02:50 -0800
-Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
-	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 59E3D1CAD1;
-	Mon, 12 Feb 2024 18:32:49 +0530 (IST)
-Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
-	id 56F421600105; Mon, 12 Feb 2024 18:32:49 +0530 (IST)
-From: Raag Jadav <raag.jadav@intel.com>
-To: u.kleine-koenig@pengutronix.de,
-	jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	lakshmi.sowjanya.d@intel.com
-Cc: linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v3 5/5] pwm: dwc: access driver_data using dev_get_drvdata()
-Date: Mon, 12 Feb 2024 18:32:47 +0530
-Message-Id: <20240212130247.9985-6-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240212130247.9985-1-raag.jadav@intel.com>
-References: <20240212130247.9985-1-raag.jadav@intel.com>
+	s=arc-20240116; t=1707755212; c=relaxed/simple;
+	bh=V5EmgNT1FxQ+Jnej29ubhc2sQqfcj87dSelsP9UGUl8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DO5vfb0bOB7iBBAZ7hbVheSf+gLyrpPDhNwFw/Mz4Rvv0jvDQ+ATJxMbxSFHcp3XdGp+1mdDrBw/zA3LdFQGt+JLZETJ2FCV0oh/LOxxUUhfcfksy+SXSI+172OuCwNEWgiq8xHL/7p8D9M7eOY2qy94lnK3CcTCdLxjjH5UQIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cj6G+CAN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bSJE8x2A; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cj6G+CAN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bSJE8x2A; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 332A71F788;
+	Mon, 12 Feb 2024 16:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707755209; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PK3idIyd9gCCDEazD/FLS4OkOLntCLd8x9crOExzJXc=;
+	b=cj6G+CANuvWhcCdqKOGFqJ4ZIRVJXiSEubKBRKuUKnlG2qLbSyt5vhhplNzwTj5x8nuJJq
+	YZb2hTJvXGJ2dxreLJ+bRivxAhVbge7d0OD20WH531EHCuJEzzTy2b4y0x1IPKz8nXTF8s
+	l2Zb6MtHOxyzMCm/QHYKJ9DI0NoTOgw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707755209;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PK3idIyd9gCCDEazD/FLS4OkOLntCLd8x9crOExzJXc=;
+	b=bSJE8x2A3SRTFrFpwM8rCuyl3RpLfNSzAK9mkUmJy7ZGP0DKewlTlVgDBGoADZrBhkTcwn
+	dDgWWKeHMLD5ExAg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1707755209; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PK3idIyd9gCCDEazD/FLS4OkOLntCLd8x9crOExzJXc=;
+	b=cj6G+CANuvWhcCdqKOGFqJ4ZIRVJXiSEubKBRKuUKnlG2qLbSyt5vhhplNzwTj5x8nuJJq
+	YZb2hTJvXGJ2dxreLJ+bRivxAhVbge7d0OD20WH531EHCuJEzzTy2b4y0x1IPKz8nXTF8s
+	l2Zb6MtHOxyzMCm/QHYKJ9DI0NoTOgw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1707755209;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PK3idIyd9gCCDEazD/FLS4OkOLntCLd8x9crOExzJXc=;
+	b=bSJE8x2A3SRTFrFpwM8rCuyl3RpLfNSzAK9mkUmJy7ZGP0DKewlTlVgDBGoADZrBhkTcwn
+	dDgWWKeHMLD5ExAg==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id E159713A0E;
+	Mon, 12 Feb 2024 16:26:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id Fhp0NchGymXmXgAAn2gu4w
+	(envelope-from <tzimmermann@suse.de>); Mon, 12 Feb 2024 16:26:48 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: lee@kernel.org,
+	daniel.thompson@linaro.org,
+	jingoohan1@gmail.com,
+	deller@gmx.de,
+	javierm@redhat.com
+Cc: dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH 00/10] backlight: Replace struct fb_info in interfaces
+Date: Mon, 12 Feb 2024 17:16:33 +0100
+Message-ID: <20240212162645.5661-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spamd-Result: default: False [0.85 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_SEVEN(0.00)[10];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FREEMAIL_TO(0.00)[kernel.org,linaro.org,gmail.com,gmx.de,redhat.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.05)[59.41%]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: 0.85
 
-Now that we're setting driver_data using dev_set_drvdata(), we can use
-dev_get_drvdata() for accessing it.
+Backlight drivers implement struct backlight_ops.check_fb, which
+uses struct fb_info in its interface. Replace the callback with one
+the does not use fb_info.
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pwm/pwm-dwc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+In DRM, we have several drivers that implement backlight support. By
+including <linux/backlight.h> these drivers depend on <linux/fb.h>.
+At the same time, fbdev is deprecated for new drivers and likely to
+be replaced on many systems.
 
-diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-index 56fac8655c7b..ed56b796b670 100644
---- a/drivers/pwm/pwm-dwc.c
-+++ b/drivers/pwm/pwm-dwc.c
-@@ -82,8 +82,7 @@ static void dwc_pwm_remove(struct pci_dev *pci)
- 
- static int dwc_pwm_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
--	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
-+	struct dwc_pwm *dwc = dev_get_drvdata(dev);
- 	int i;
- 
- 	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
-@@ -102,8 +101,7 @@ static int dwc_pwm_suspend(struct device *dev)
- 
- static int dwc_pwm_resume(struct device *dev)
- {
--	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
--	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
-+	struct dwc_pwm *dwc = dev_get_drvdata(dev);
- 	int i;
- 
- 	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
+This patchset is part of a larger effort to implement the backlight
+code without depending on fbdev.
+
+Patch 1 makes the backlight core match backlight and framebuffer
+devices via struct fb_info.bl_dev. Patches 2 to 9 then go through
+drivers and remove unnecessary implementations of check_fb. Finally,
+patch 10 replaces the check_fb hook with controls_device, which
+uses the framebuffer's Linux device instead of the framebuffer.
+
+Thomas Zimmermann (10):
+  backlight: Match backlight device against struct fb_info.bl_dev
+  auxdisplay/ht16k33: Remove struct backlight_ops.check_fb
+  hid/hid-picolcd: Fix initialization order
+  hid/hid-picolcd: Remove struct backlight_ops.check_fb
+  backlight/aat2870-backlight: Remove struct backlight.check_fb
+  backlight/pwm-backlight: Remove struct backlight_ops.check_fb
+  fbdev/sh_mobile_lcdc_fb: Remove struct backlight_ops.check_fb
+  fbdev/ssd1307fb: Init backlight before registering framebuffer
+  fbdev/ssd1307fb: Remove struct backlight_ops.check_fb
+  backlight: Add controls_device callback to struct backlight_ops
+
+ drivers/auxdisplay/ht16k33.c             |  8 ------
+ drivers/hid/hid-picolcd_backlight.c      |  7 ------
+ drivers/hid/hid-picolcd_core.c           | 14 +++++------
+ drivers/hid/hid-picolcd_fb.c             |  4 +++
+ drivers/video/backlight/aat2870_bl.c     |  7 ------
+ drivers/video/backlight/backlight.c      |  9 +++++--
+ drivers/video/backlight/bd6107.c         | 12 ++++-----
+ drivers/video/backlight/gpio_backlight.c | 12 ++++-----
+ drivers/video/backlight/lv5207lp.c       | 12 ++++-----
+ drivers/video/backlight/pwm_bl.c         | 12 ---------
+ drivers/video/fbdev/sh_mobile_lcdcfb.c   |  7 ------
+ drivers/video/fbdev/ssd1307fb.c          | 31 +++++++++---------------
+ include/linux/backlight.h                | 16 ++++++------
+ include/linux/pwm_backlight.h            |  1 -
+ 14 files changed, 55 insertions(+), 97 deletions(-)
+
 -- 
-2.35.3
+2.43.0
 
 
