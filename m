@@ -1,60 +1,63 @@
-Return-Path: <linux-pwm+bounces-1303-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1304-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE4CA8538ED
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Feb 2024 18:49:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FF128539BC
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Feb 2024 19:18:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D354F1C21659
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Feb 2024 17:49:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFD29282395
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Feb 2024 18:18:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04E39604C4;
-	Tue, 13 Feb 2024 17:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9F72605BE;
+	Tue, 13 Feb 2024 18:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ad5JWAs5"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F53A60266
-	for <linux-pwm@vger.kernel.org>; Tue, 13 Feb 2024 17:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9543A5FB8E;
+	Tue, 13 Feb 2024 18:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707846543; cv=none; b=VBPZfQbB/lc8DW8OP1EwZiJd87+GchFtQnjlfpznLLz/KRs/0mF7u0bGRTiQjkcuZ2ogpcxFxVaFAuLtLIntw9rnDxWC8ip3jTa5xmBetvv8xwF6dlhYhuu9AeIrcRu0M/vsU9f1vL8D6wxVUerSZ/JsQSxzNG4niJMiqsD6MFE=
+	t=1707848321; cv=none; b=C/G0SmK8P5+ilMtPU3VQTKPQkBl1pRsCm1mSf9rR90HDaj6ipp4AhhDK5iPjIMG3uBzlUSsbSI6OOan5Y0i8PUdPegrSOZxxS1O9ql3QLKFcD/JGMVZ9hkF48Qss9hNWqeyCY5K43E2rB9Ue3KITyaSfM4GIhwrQxMOh1LtZ8pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707846543; c=relaxed/simple;
-	bh=QWIuBAJ3e+TCWmBbhbpgT4PWb2RX18XR04uHZ6yIclw=;
+	s=arc-20240116; t=1707848321; c=relaxed/simple;
+	bh=SXLQ1pLcws2l0Xu0viSOaOO/O0DM9PSjTl8YaFye7O4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q4nmFakCLDBKEcDelbdviVv3RMeZ1GIw2XiNmoCJcQbMvh6lTthy6eXs2Hk7Gm4PXBcKwgAimXU0xWPDVV4FjGC08SEwtqL3s0kQz0TmglVeA4lJysJPf9yUJQLNDzrJ5eNEuNgyAUVBcGQDxOxoJGLw563U8P/wQOYNZwLxTGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rZwtm-0007eB-T1; Tue, 13 Feb 2024 18:48:50 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rZwtk-000Wtk-TI; Tue, 13 Feb 2024 18:48:48 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rZwtk-0046pb-2d;
-	Tue, 13 Feb 2024 18:48:48 +0100
-Date: Tue, 13 Feb 2024 18:48:48 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=OBErasOwtnWqvRNRlOjRtg8ARI2b3TRBi2BcKQkg+3W5gHLeqmC1qmDQpEkqlU0pXSVCBcwhWI9VIY/YBIzzLc8m3cz32QCQy8ICk+Md62sLmeDI1Gv0+ElaN7qvRaqFTqZpC0bYJe/c3lqQ7oRcnRiZv2+xkZ+hEfMvVO7z7jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ad5JWAs5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57B2BC433C7;
+	Tue, 13 Feb 2024 18:18:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707848321;
+	bh=SXLQ1pLcws2l0Xu0viSOaOO/O0DM9PSjTl8YaFye7O4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ad5JWAs5XvKh8//hxsQfl8sVNqHO31XPsh+ZF8+QSExCv6zGXvJzPT5IGPP9aRFeN
+	 0wjW8TZGBHZCHFSEVjr6P8iE+daTR0e8NnAluUKjvAT4adPufiTasPE+Uqdv0lbw8U
+	 d6gwYaWj1W00LAzE8ntx72wAfwn62hcHengKnCpS49gz2Jgy/IndIVhyMO7XFGq9E/
+	 xH6t91BnSH9I/tMgtoNLiYl8bA45jzuKULGxgMrEU/u/xgJ2WIkh9kB3oeLT22VJn6
+	 nvL6jqxyg6zvs4HTDRKb359KCTZEDNx4bYMNjFKRFU2MVTB0LH3kjxak2fyFPFRzae
+	 12mz6EtEUxCiw==
+Date: Tue, 13 Feb 2024 18:18:36 +0000
+From: Conor Dooley <conor@kernel.org>
 To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 Subject: Re: [PATCH 1/2] dt-bindings: pwm: mediatek,mt2712: add compatible
  for MT7988
-Message-ID: <onnokyq7ciza7i7jzc74cun2khpst5iocuccks2cm433ux3za3@dou4oacrvuxj>
+Message-ID: <20240213-resource-evaluator-0754cfd5882d@spud>
 References: <20240213164633.25447-1-zajec5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -62,62 +65,63 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jhwaxkndpklwhxal"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="IwSpqDfDVNcc7RLA"
 Content-Disposition: inline
 In-Reply-To: <20240213164633.25447-1-zajec5@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---jhwaxkndpklwhxal
+--IwSpqDfDVNcc7RLA
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-
-Hello Rafa=C5=82,
 
 On Tue, Feb 13, 2024 at 05:46:32PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote:
 > From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
 >=20
 > MT7988 has on-SoC controller that can control up to 8 PWMs.
+
+I see a binding and a dts patch, but no driver patch, how come?
+
+Also, what makes this incompatibly different with the other devices in
+the binding, like the 8183?
+
+Cheers,
+Conor.
+
 >=20
 > Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> ---
+>  Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.ya=
+ml b/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
+> index 0fbe8a6469eb..a5c308801619 100644
+> --- a/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
+> @@ -24,6 +24,7 @@ properties:
+>            - mediatek,mt7629-pwm
+>            - mediatek,mt7981-pwm
+>            - mediatek,mt7986-pwm
+> +          - mediatek,mt7988-pwm
+>            - mediatek,mt8183-pwm
+>            - mediatek,mt8365-pwm
+>            - mediatek,mt8516-pwm
+> --=20
+> 2.35.3
+>=20
 
-please make sure that the email address used for sending the patch
-matches the Signed-off-by line.
-
-(It depends on the pickyness of the relevant maintainer if that is a
-stopper or not.)
-
-Assuming this patch will go in via a mediatek tree:
-
-Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-
-Thanks
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---jhwaxkndpklwhxal
+--IwSpqDfDVNcc7RLA
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXLq38ACgkQj4D7WH0S
-/k5Yxgf+MGDk4UWSSThMXzK6DjwTQdURT3za9jTq2ls/OQIHoQfyaw902waKPjVr
-mPIVGTESq0AvIpQNcZQQH8WUjNfI7at0cWPaTA/iZD07h9nMOEztTp4wP3rYwBp5
-yicKjx5McHb1nR5poDAXFudd+7v/gOgXBLPxABfx4FiOLWqnNuDJF2xwmge8mKHp
-NKlYSZk+kiCbBwsZk3LBwLqKv45TnPI2yuayws+r1jYLnmXMyRUkVQqCpX2/CUGq
-wESqm70l9ty5FmyiE86YbJkgx+b5o9Z/nJt223FluL3Ftnxfc0sABjdCI9IxmFCg
-sWhDm4LJVkrMbtBmn8VK5huxt/BXmw==
-=o3gj
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcuyewAKCRB4tDGHoIJi
+0uxEAQDGsfDNcKZx9Z0a6eodrNyCrahRr5IkdabX4h7AqUDWPAEA17xUt82LhKde
+tA7TZ/ft3fpvv0XodKAVGbutj7bELQA=
+=znwI
 -----END PGP SIGNATURE-----
 
---jhwaxkndpklwhxal--
+--IwSpqDfDVNcc7RLA--
 
