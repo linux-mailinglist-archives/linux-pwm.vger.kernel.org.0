@@ -1,92 +1,60 @@
-Return-Path: <linux-pwm+bounces-1302-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1303-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33064853685
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Feb 2024 17:48:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE4CA8538ED
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Feb 2024 18:49:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C8411F22AFE
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Feb 2024 16:48:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D354F1C21659
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Feb 2024 17:49:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 686E4604D7;
-	Tue, 13 Feb 2024 16:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fx+WGuHj"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04E39604C4;
+	Tue, 13 Feb 2024 17:49:04 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E735FEEF;
-	Tue, 13 Feb 2024 16:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F53A60266
+	for <linux-pwm@vger.kernel.org>; Tue, 13 Feb 2024 17:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707842823; cv=none; b=cnL9Q+LfHBJ+Ae4tB82XQy/qcbYS2D5RepR0jDA9iCY2YaqdWt0O/3GG5mQ219nqAuVZNvheTRBSkHIQWgFPv3YeiGooT47CtNTMG8m/PtCc+f8X1JvYF3TtYkcQEcNk+f8SiUpv0Dh5bS44+xPaYroOQIDk1oWQ0LibI1zbdn0=
+	t=1707846543; cv=none; b=VBPZfQbB/lc8DW8OP1EwZiJd87+GchFtQnjlfpznLLz/KRs/0mF7u0bGRTiQjkcuZ2ogpcxFxVaFAuLtLIntw9rnDxWC8ip3jTa5xmBetvv8xwF6dlhYhuu9AeIrcRu0M/vsU9f1vL8D6wxVUerSZ/JsQSxzNG4niJMiqsD6MFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707842823; c=relaxed/simple;
-	bh=Ts9rTkO5j5nGKALcg9pGKYCXK/axLho53cM/U24J3OE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gJ129xpWKItu3rrpNHP0zlaeALwn+5/o0S2rkv6J95USRviP1tFP2alds/U1DMRZx/wtblObkGja8awIFSXT33J6YpGpRmO8xUotYybItQNBPVh96K3LNAeFHozkfGDLrA9iLLHDcpUrdIU/DBcSsLR8wakSrbvXQ8E81bjw/hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fx+WGuHj; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5600c43caddso5516582a12.2;
-        Tue, 13 Feb 2024 08:47:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707842820; x=1708447620; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T+F4oKcixpMDMjtibRGARd2c9eJAlVuiYPpkn0XIejY=;
-        b=fx+WGuHjAHU5PapbnPHuRCYMGl5v2hMJiF59DXTnlIAGfc9dfkh8vpO3gS3YwWXTC4
-         1PTfVkxk5FNDsEOUivy18Vyg7Sk5dRa5eNUmG7ldJRvf65jLKTPPBSGLgKyulb6Ss/Fj
-         tilYH2mDJtUFplUCkYnE3Ugr4Vqw5yd1PzFL3pSoS5YTM5fet51ljFbsO5hyQ8Bmuqo5
-         TQ/LX54AUtsWt2UH2EmjlmxmniMrEJc4Ya+FxkhgZPCdYzwUPnsBPmNlDW52WzSarFvX
-         vISuj1+UqklYZH9DJMxOtKrVLGkTj8FPh9UB/WwLjHGxBMYVjxOzlrPdAtc/wjdyB3Bl
-         Lo3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707842820; x=1708447620;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T+F4oKcixpMDMjtibRGARd2c9eJAlVuiYPpkn0XIejY=;
-        b=WRUAlHJDh3LADk4y3hgK1xpzUb+OudC+Coo6LZEp8HilBNVYarK7sauj2GQJKow5Tt
-         tM5xRV4fV5BWfOmIKEkcjhIU7IXKkq4dOrhJ42dnKqwkUQHLC7qhbdP3AAt/xGA3QL1x
-         SaFa/pPa6t/ea7ASAEBmHEZeC+RPSliLAksyIzpmehnf36sceVPl8nPYHDipuU+IvDpc
-         KNs6bavDgBqzviUDn1HihZLiQ1rnCAvgkG0nR8xvkzylALgiW2hGTrc2mwKfvhfxUiRj
-         +v1oEG/b0uFrmoXybiGFdk4uqpMCfdsjh/OQ+JsJve53WNMKuQxPnuxliyHQti87sDJ4
-         2Wqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpic/vnPmCoUDqu+RQHOdG7+XLZmuW9TS7bd7sofV0tYeFzSj02QTfOH1OWKpFJauC1MqL10sg1jDp1/+2dIQTs2flE4NM3bzkKtYmy3rndoFc1m+I4oU/Eds+tL2/ALei0WS3emcU5evWW8XRSJPS3vrP9oTZCE1SCE0BsI4xb9wFiQ==
-X-Gm-Message-State: AOJu0Yydv7whHh7OhdvYd5uGYJBpjkzlzmvIO5PTuB8/2kxzX3hFhcIS
-	KkQgHCRcbVsIjVoZdqFHrBNDyhZBP5Oo5hGH7mc1RZdDTQvPtkRU
-X-Google-Smtp-Source: AGHT+IEeCwyqkHpoeY0sJgs+ZgFzlmCq6/tbYDuHpnER0Oiuvl6HmAKPTXql31UVCs75XR7jLk+zFw==
-X-Received: by 2002:aa7:d590:0:b0:55f:d9d1:6de1 with SMTP id r16-20020aa7d590000000b0055fd9d16de1mr169835edq.16.1707842819607;
-        Tue, 13 Feb 2024 08:46:59 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUJ01uweZYgi6dyBpmqVKNY1aQLUGcn9okDSZxLvkc2fCvETs8lVM4QVRx/Z3UztsF9TRQeXuZv/iau8+VVonrwh0Ry0Mn+5XUDbCYIjne4NE/Pej4Qh5E1hwcPPtAMJGpCWAKslgCCvepxqQ06Hx8Gg07VgFvdvx2whcix6fexV8J/r+KnLQYAo6JhhK5/sSxEtCpj8m9DTrcYMfZlrkph73xQOjSKo377khXaBW77sEJwhLlkYHDU0T3M5T+uVtl0sUQKeyQzJt8IhVwCCBIf3qeTzMdGEhd9Lq44n126Mco+rueEbFSuBpU4oAicwyj7dVz/ed2U3kq5x+HRBurmrth8PDMvEhsSQblKFMG4ct8vP2knzwvgwbO5aeMz2AjDS5zJ1x2vezF6F6UHPtE4ic66Btj5guMzAD4gLoVsrO//Z9smQwShv2+xuG7D0mFdQR6dyYJTosntQHSxY4zinuFqQ+HkqSVDgeDL7p7MLKbTm3VGuOUrf9ioWbafHveji9qflnl8zgS5jjke
-Received: from localhost.lan (031011218106.poznan.vectranet.pl. [31.11.218.106])
-        by smtp.gmail.com with ESMTPSA id v10-20020a056402184a00b0055f0b3ec5d8sm3863582edy.36.2024.02.13.08.46.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 08:46:59 -0800 (PST)
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: John Crispin <john@phrozen.org>,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH 2/2] arm64: dts: mediatek: mt7988: add PWM controller
-Date: Tue, 13 Feb 2024 17:46:33 +0100
-Message-Id: <20240213164633.25447-2-zajec5@gmail.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240213164633.25447-1-zajec5@gmail.com>
+	s=arc-20240116; t=1707846543; c=relaxed/simple;
+	bh=QWIuBAJ3e+TCWmBbhbpgT4PWb2RX18XR04uHZ6yIclw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q4nmFakCLDBKEcDelbdviVv3RMeZ1GIw2XiNmoCJcQbMvh6lTthy6eXs2Hk7Gm4PXBcKwgAimXU0xWPDVV4FjGC08SEwtqL3s0kQz0TmglVeA4lJysJPf9yUJQLNDzrJ5eNEuNgyAUVBcGQDxOxoJGLw563U8P/wQOYNZwLxTGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rZwtm-0007eB-T1; Tue, 13 Feb 2024 18:48:50 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rZwtk-000Wtk-TI; Tue, 13 Feb 2024 18:48:48 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rZwtk-0046pb-2d;
+	Tue, 13 Feb 2024 18:48:48 +0100
+Date: Tue, 13 Feb 2024 18:48:48 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: mediatek,mt2712: add compatible
+ for MT7988
+Message-ID: <onnokyq7ciza7i7jzc74cun2khpst5iocuccks2cm433ux3za3@dou4oacrvuxj>
 References: <20240213164633.25447-1-zajec5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -94,64 +62,62 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jhwaxkndpklwhxal"
+Content-Disposition: inline
+In-Reply-To: <20240213164633.25447-1-zajec5@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
 
-Add binding for on-SoC controller that can control up to 8 PWMs.
+--jhwaxkndpklwhxal
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+Hello Rafa=C5=82,
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-index bba97de4fb44..67007626b5cd 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only OR MIT
- 
-+#include <dt-bindings/clock/mediatek,mt7988-clk.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
- / {
-@@ -78,7 +79,7 @@ gic: interrupt-controller@c000000 {
- 			#interrupt-cells = <3>;
- 		};
- 
--		clock-controller@10001000 {
-+		infracfg: clock-controller@10001000 {
- 			compatible = "mediatek,mt7988-infracfg", "syscon";
- 			reg = <0 0x10001000 0 0x1000>;
- 			#clock-cells = <1>;
-@@ -103,6 +104,24 @@ clock-controller@1001e000 {
- 			#clock-cells = <1>;
- 		};
- 
-+		pwm@10048000 {
-+			compatible = "mediatek,mt7988-pwm";
-+			reg = <0 0x10048000 0 0x1000>;
-+			clocks = <&infracfg CLK_INFRA_66M_PWM_BCK>,
-+				 <&infracfg CLK_INFRA_66M_PWM_HCK>,
-+				 <&infracfg CLK_INFRA_66M_PWM_CK1>,
-+				 <&infracfg CLK_INFRA_66M_PWM_CK2>,
-+				 <&infracfg CLK_INFRA_66M_PWM_CK3>,
-+				 <&infracfg CLK_INFRA_66M_PWM_CK4>,
-+				 <&infracfg CLK_INFRA_66M_PWM_CK5>,
-+				 <&infracfg CLK_INFRA_66M_PWM_CK6>,
-+				 <&infracfg CLK_INFRA_66M_PWM_CK7>,
-+				 <&infracfg CLK_INFRA_66M_PWM_CK8>;
-+			clock-names = "top", "main", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6",
-+				      "pwm7","pwm8";
-+			#pwm-cells = <2>;
-+		};
-+
- 		clock-controller@11f40000 {
- 			compatible = "mediatek,mt7988-xfi-pll";
- 			reg = <0 0x11f40000 0 0x1000>;
--- 
-2.35.3
+On Tue, Feb 13, 2024 at 05:46:32PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote:
+> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+>=20
+> MT7988 has on-SoC controller that can control up to 8 PWMs.
+>=20
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
 
+please make sure that the email address used for sending the patch
+matches the Signed-off-by line.
+
+(It depends on the pickyness of the relevant maintainer if that is a
+stopper or not.)
+
+Assuming this patch will go in via a mediatek tree:
+
+Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--jhwaxkndpklwhxal
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXLq38ACgkQj4D7WH0S
+/k5Yxgf+MGDk4UWSSThMXzK6DjwTQdURT3za9jTq2ls/OQIHoQfyaw902waKPjVr
+mPIVGTESq0AvIpQNcZQQH8WUjNfI7at0cWPaTA/iZD07h9nMOEztTp4wP3rYwBp5
+yicKjx5McHb1nR5poDAXFudd+7v/gOgXBLPxABfx4FiOLWqnNuDJF2xwmge8mKHp
+NKlYSZk+kiCbBwsZk3LBwLqKv45TnPI2yuayws+r1jYLnmXMyRUkVQqCpX2/CUGq
+wESqm70l9ty5FmyiE86YbJkgx+b5o9Z/nJt223FluL3Ftnxfc0sABjdCI9IxmFCg
+sWhDm4LJVkrMbtBmn8VK5huxt/BXmw==
+=o3gj
+-----END PGP SIGNATURE-----
+
+--jhwaxkndpklwhxal--
 
