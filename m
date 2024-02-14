@@ -1,89 +1,126 @@
-Return-Path: <linux-pwm+bounces-1497-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1498-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 392AB854D7B
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 16:57:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44996854D88
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 17:02:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DACCE1F2446A
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 15:57:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 781871C2893F
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 16:02:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CA305EE7E;
-	Wed, 14 Feb 2024 15:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="1LScw71g"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7C385FF03;
+	Wed, 14 Feb 2024 16:01:41 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6A95D8EF;
-	Wed, 14 Feb 2024 15:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5282C5FF04
+	for <linux-pwm@vger.kernel.org>; Wed, 14 Feb 2024 16:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707926246; cv=none; b=KA5Z5w6vPMSTQuiZwxUULmHEtZ4yPmI0EAXFyuKwyMOZPSj8kgg5KaQAVxvOM1uk5zbj8hxTP7JDvuzOvvBR6crZOm0FbbaNarDC42mqUjmqVtXYj9aldNaRgOGVb6TF73AJ0Ec+tPM2vd+KZ8biAnj5yyT4dcU6U8T8lfqZKrQ=
+	t=1707926501; cv=none; b=avoX8Jc8i1x1IFMwJYe4gAFu+55SKtY8O9ypg4d/nLPaK9n+NVHIuxjxbZ3cD6EoHy2o+9ZzF9IJcMtawiva0CLWXWwYqedqpeirm22Kx3cMxU63XEwxKjl+6i9r4UVriW12lafFL4++N+RcJouof0MS5vc5V25JziwdB61+INY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707926246; c=relaxed/simple;
-	bh=Bd5EcXpITfABSAnDz1WzxxXsNxYIHPEqoPgVPDXjEq4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LL8KEUDVhTEnv79arRciZkaxOfMgeKn/EOF2ejcdEmgivRYZh4rlaj0Gpwiv25JUXP3CyXxMkeImy7ZQT/ObZpsdaSr3pj8XeinpM9N4oZzaci6a8Bv+HBCs7FsFE8XEptVOhKppbMLC78+eS0isGIu/kmaZjB6NS2coftR1XLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=1LScw71g; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1707926243;
-	bh=Bd5EcXpITfABSAnDz1WzxxXsNxYIHPEqoPgVPDXjEq4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=1LScw71gscHusyEbrd4zfM/xFcfo0LDyiCDjfjNLpdlC3vXCIHGOr+OVC9UiG49oe
-	 Th3ePND4eiQ+rojPuKJ8Ul9Y+E1FFnccwqYGQF0xHzYC7IMjIq5c9uMuwurenmCKqx
-	 sv/hbGpdt9GkC7qTGJ3iaWcX78+sXr4RJdWffHH0J2R8yA6xUMrCeBW1YtQPhNxgBz
-	 5fM2NOr0/nOkeQJ1jhxsvBhe9yq8EFM1wtBQlJABI00Rolc0BXToX5rZCe/opBVClS
-	 J+sLyrhBZunjmRZj6pb9OUrrsTG/fXVRneMn76dUWdJi6VxrSyQMXaK+HXnOrJB+4H
-	 cy526X8mMBR9w==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C33673782083;
-	Wed, 14 Feb 2024 15:57:22 +0000 (UTC)
-Message-ID: <f5998e7c-674b-4ee5-b25f-d280db2f912d@collabora.com>
-Date: Wed, 14 Feb 2024 16:57:22 +0100
+	s=arc-20240116; t=1707926501; c=relaxed/simple;
+	bh=qQgiis671KMhxBu/V+1KoLmS1g8E7kk7u3pEl6sUoeA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sCYw3Ghowu+O1HSU0hsYm7TP6NCEATv6iw9rIYKNXHrnxFUzzuoJxbrzp0gpwD88f6UYytYmVKRM0fo5hEXirRfV0w7hEwXNACGsifZ3EMAxRk7q+FQf5FmNpxy0V4bVcuYWT/r4UcGz1YNJWBAmxs/61KQ4ZJIfTLsQreTsTLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raHhY-0004Ml-OG; Wed, 14 Feb 2024 17:01:36 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raHhX-000ibZ-Q7; Wed, 14 Feb 2024 17:01:35 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raHhX-004mX9-2L;
+	Wed, 14 Feb 2024 17:01:35 +0100
+Date: Wed, 14 Feb 2024 17:01:35 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>, platform-driver-x86@vger.kernel.org, 
+	Hans de Goede <hdegoede@redhat.com>, kernel@pengutronix.de, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v6 067/164] pwm: lpss-*: Make use of devm_pwmchip_alloc()
+ function
+Message-ID: <asyro4yemnlljhyjxk7dxzzo3nlhqxq7hg5vk7lirx6gtknqsh@4jd42jhr6bkp>
+References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+ <b567ab5dd992e361eb884fa6c2cac11be9c7dde3.1707900770.git.u.kleine-koenig@pengutronix.de>
+ <Zcy2GbkjX7N6buB9@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/2] pwm: mediatek: add support for MT7988
-Content-Language: en-US
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, John Crispin
- <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <rafal@milecki.pl>
-References: <20240214140454.6438-1-zajec5@gmail.com>
- <20240214140454.6438-2-zajec5@gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240214140454.6438-2-zajec5@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uj2rlk6shklovz67"
+Content-Disposition: inline
+In-Reply-To: <Zcy2GbkjX7N6buB9@smile.fi.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-Il 14/02/24 15:04, Rafał Miłecki ha scritto:
-> From: Rafał Miłecki <rafal@milecki.pl>
-> 
-> MT7988 uses new registers layout just like MT7981 but it supports 8 PWM
-> interfaces.
-> 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+--uj2rlk6shklovz67
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hello,
+
+On Wed, Feb 14, 2024 at 02:46:17PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 14, 2024 at 10:31:54AM +0100, Uwe Kleine-K=F6nig wrote:
+> > This prepares the pwm-lpc drivers to further changes of the pwm core
+>=20
+> lpc --> lpss
+> pwm --> PWM
+
+I'd keep pwm in lower case. While I agree that the thing the pwm core is
+about is written PWM, I use "pwm" to describe the framework. So the
+directory is drivers/pwm (and not drivers/PWM), the subject prefix is
+"pwm", the function prefix for pwm functions is pwm_.
+
+Agreed for the other changes. The current state of the patch is
+available at:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git/commit/=
+?h=3Dpwm-lifetime-tracking&id=3D5b8f3aa33b3def3c8441ce28c93062766f278b09
+
+(i.e. I didn't add your Reviewed-by tag because I didn't capitalize
+pwm).
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--uj2rlk6shklovz67
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXM494ACgkQj4D7WH0S
+/k6ZGgf/Ybx1ACeubPaD0rZmGGJ3/29QV/AG6oJ6Lsu1euAxy5PFEC7O8XzXALSw
+xT9TM1Cu418Ims5cdCWcoiCDsUWl3Jdo69Ce4GrB2vLtrjswmkWte3VgLUuRbKxy
+Erai9v5rbVu141/DB+3Iwyows9F4+Jh1jmbmxh5f9uxDl5EQg+SOEIjucywcusBh
+oswV8D0bHQVYFnjZBbh8ZNAh13gz4p4SRR26IbOxhQL3B2nF/frCSWe+eKksT5ip
+Zrg9DMuhKmQbksPRaQfGJapH1erd81ktbQ+jZlRWEfbih/HQPLPoGeiiNDRnbwH0
+6s03TqXIdAJu/FErDoqmHFNRl8m7vQ==
+=947R
+-----END PGP SIGNATURE-----
+
+--uj2rlk6shklovz67--
 
