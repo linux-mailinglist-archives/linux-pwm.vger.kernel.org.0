@@ -1,75 +1,55 @@
-Return-Path: <linux-pwm+bounces-1310-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1311-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C59BE854511
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 10:24:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8F20854527
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 10:28:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA13D1C2214B
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 09:24:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D81D1F29EE1
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 09:28:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69F9A125CF;
-	Wed, 14 Feb 2024 09:24:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95FE5125D9;
+	Wed, 14 Feb 2024 09:28:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URX3IcFo"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="4uggz3V0"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF02C125B8;
-	Wed, 14 Feb 2024 09:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19651429C;
+	Wed, 14 Feb 2024 09:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707902678; cv=none; b=iMoyL9GSYRXGEjci47o5l1UvQ0+KvbPMzbUUxxQJh4iLc/cNaBT3E4Pc/O2FYwKqUl7XqRDGhAIsxEKmRlfqSYAXiTxnBu/1jmuv15NKN5+8uTnqU7Qii0ayEMETrJZEkzJd2bBIzGTcA93hvrXLLu8pA6qU4W1icdlpZAzi/2g=
+	t=1707902880; cv=none; b=XE58aZvStvjhIznJ/mUrji2H5u6HQOnxM5+Q02p9TGUrummMpupbVzxDPg6gb8yaQNmtGhax1T3/w/w5QNaRu6j4K50gvGuRmjilzUEOC0wZATlEIQrZvd6E1uce6jVwS4YvIwPY+xYNFs25za4CNmosZ+ei8QkPYIdjMwGS/DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707902678; c=relaxed/simple;
-	bh=41Mh4KpWrduupYGMz0oD5L7b3mxUfFV/Gi6M3Kps/QU=;
+	s=arc-20240116; t=1707902880; c=relaxed/simple;
+	bh=R7/bEBifI4lBAh8QUwfn+H3MAcMLkC8MOxtp6x/n10M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QQ/n/khliYvBBpddLxpl82gHV1GyHTeHaBbz8dS5r6wrkgnYSAXcjcTCTDNpCnsufM7guM5gZKxoCgw7yA5FuMLXg1KU4lct5RKdmibr09ZfLRdksv7SkBWEHy4JAV00KaCjn1shsrZVWgEHV3rl7O4NWDzASEpOKEHZmtXE6+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=URX3IcFo; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so7123856a12.0;
-        Wed, 14 Feb 2024 01:24:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707902675; x=1708507475; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=autbkFLkjIeFP2IoTWAP7V+DqrVLjHlcVKE9Dqcp+7Q=;
-        b=URX3IcFoF4Lhtwc7A0uFJA4+3GnOD+ZkyMc3iZ+T/Uwu+qgc+Q5/E9UlacR3bCanq+
-         KJ3Vfyxoc+5i7oFJTZu1qNKsm4ekzjwv0hlZRECeeJnQgr6XTvJcdY7sASpDzu70OeIF
-         aWpvRu4Z9IR8KeuUIBTqJf5fTMWZma6ERs5aS/ynRERrTE56Zarns1LdWvHsmq+529Yq
-         QL9uksyIsmqIB51SXpTLPUWlTxwOQNaFdswpgg27M1wrAwTu0r6bgqnGgTOlabFCoQpH
-         c49kGSaommc80kz683luWL70jSb/l9kJngnZUAYIrMnebpoIi5nHVWsfaeEWFE8yzQnK
-         zo3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707902675; x=1708507475;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=autbkFLkjIeFP2IoTWAP7V+DqrVLjHlcVKE9Dqcp+7Q=;
-        b=VSTIMIV66foy1SUVC4j584T8bgzsyl/tFATKQTrL5ALf1I2tArfbV+DHHxOd7uxSmc
-         8PFQY7PuOwUbrzau/2E9UE3Biaw2C7epVj47w9ZxRxsgQqRL4VkNW18mFUZLFi68ZVHb
-         UO5TGrAWDE+5LxoM2VAKsVlwFdzTb7+74Dj3HC34/JXXYgjc4xaozBi1jOiDNystM0u4
-         m5Pc9/g39EjyDmRm9EHm9SnyTYB6PxF2fktYFAI/xPMuIuD0lXLHNbiG9STCLtlumgC6
-         1qZfO5FlxUsJRErw7Rs0tv5EBDpBFwGMpP6jfb67qv6HraPkr6wNAHuApoO3W/LMdrd5
-         dxCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXt0tr99dDkoamaxoC7o83oRtSUnen8BPpKNhOrtZhEYm1w/Rit3BGz7T+onwLC5vAjXalJWT8Spam+2C76KENHBjusdwDg7rSOwzFxgsvRusFI+2VUsjy+I51p+JplKvYWzyrSizdieO8DNQkcS2CkfxIzgUGZQJY7swgqNtNtX4QZtw==
-X-Gm-Message-State: AOJu0Yyzc6KUVakFacHsqnxRt4b+ZG6tLT23dyBGwmuj1THjDDjB5og1
-	8VbqaT1VZ6fLfSsUVvh9oYaH5wVUVfSGFZPh8FxIWzHTXI3hveyB
-X-Google-Smtp-Source: AGHT+IEIRK0LiG32CesRopAhB5xn0V0/7DWQoZ3+1hg39jN/1KBKrKr4SXdEpoYMVIpPCy2AIxG62A==
-X-Received: by 2002:a17:906:4158:b0:a3d:26b2:94f4 with SMTP id l24-20020a170906415800b00a3d26b294f4mr1389226ejk.73.1707902674566;
-        Wed, 14 Feb 2024 01:24:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX3CDe8Xc/tATxS7T7yF2GAH4vsL09Wkp69VRwWz7CXelPz+Y3qX6mCVXQoiLVeDQjXN4B2M7OS6GeN2B2a7Crtgov9zLzWIvOlMdSYOjmaTQ1kSeeN9nW1WHcvwX9Jbaokv+jiZs+Yw5lWz7mZ/Y4enHVIoJhrLyjFcwY/vlzeIsQSgTht3lgfkPHwfBjRDdxOI4OSCHDKvPQJIbbVsmJIL/0/UhLWKCv3cVdsb6rwaD+6Cmxy/MiLputfczmnLOTqgffmeaJpCdcTOM5PjBQ87lSHA2nqCQjIwWiGT01w/uU9lPIEcuZxccYhMM6FybU5VvmIf05oXjULJGxcwcN6X66B4rmc/i3NZV5EaiMwsMlqIw1fEUOCQFBSc+y0Y95HOg44oORhyU9fiL0ZF1c+kiJTifxJdOHvGoihDF2Ir7aXXpb8s83kRYLquvlyfVMpoVqfRA+G1UiogrTcCRUO
-Received: from [192.168.26.149] (031011218106.poznan.vectranet.pl. [31.11.218.106])
-        by smtp.googlemail.com with ESMTPSA id vo2-20020a170907a80200b00a3cf66ec008sm1636224ejc.166.2024.02.14.01.24.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Feb 2024 01:24:34 -0800 (PST)
-Message-ID: <bbacfaad-a182-4df5-8317-640e32a1954a@gmail.com>
-Date: Wed, 14 Feb 2024 10:24:32 +0100
+	 In-Reply-To:Content-Type; b=KLLP0nyULMPB05MmIOFj/C7ttkD8947q1sQDtHVXm0lhzjEqbRkP+J2u675Y6zAkISwtKv969zMQIk2hmLnuo7qVLdaDrKFnUpp3C7Z0hy3adl/TN7dtf4ju3PUOhqX1DoClROrf4aUakC6D/c4CcIwV4h+TeDjzn2T4Bkyy7l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=4uggz3V0; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1707902876;
+	bh=R7/bEBifI4lBAh8QUwfn+H3MAcMLkC8MOxtp6x/n10M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=4uggz3V0Edxv8IP6cRbU05flDUjer1IhQ4PFjTRlQUhgVduHUEqnpHW8Yyrkwsz1z
+	 sjZU2G8VmNpGDZ/ZLCnoWGrsECWcSlKn+UrXq0aJARQmubB0T9vXZNDct5ks00j1xp
+	 gouKT9E02DbzrkddLKKJnCfwm0z0SmFeC6KjChIh2b5d9un4TFz7S0lAX3YDDjLi2i
+	 OVDzwPrPBVsr8eHkabjEMthfceQ2mC49sVxKGSR+ts4dE2KhXN0vhmgecQXbG2csbq
+	 HK3kP2gG+VcB6Dfnu6p3GxbPtxBPPvaNsRGhjGhQiq+NzvRLEa1wL08BAbxB6AA7Fc
+	 pnQhu/Fs7tksg==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3AD113781FEF;
+	Wed, 14 Feb 2024 09:27:55 +0000 (UTC)
+Message-ID: <e957b044-fe84-4b72-bdf1-cbc40c722019@collabora.com>
+Date: Wed, 14 Feb 2024 10:27:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -77,73 +57,100 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: mediatek: mt7988: add PWM controller
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: mediatek,mt2712: add compatible for
+ MT7988
+Content-Language: en-US
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+ Conor Dooley <conor@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
  Conor Dooley <conor+dt@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
  =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 References: <20240213164633.25447-1-zajec5@gmail.com>
- <20240213164633.25447-2-zajec5@gmail.com>
- <36baacb4-4aa9-421f-bde0-c4be7d7f4aa1@collabora.com>
-Content-Language: en-US
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-In-Reply-To: <36baacb4-4aa9-421f-bde0-c4be7d7f4aa1@collabora.com>
+ <20240213-resource-evaluator-0754cfd5882d@spud>
+ <d4391868-ddcd-4f66-b539-28d245fa83df@gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <d4391868-ddcd-4f66-b539-28d245fa83df@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 14.02.2024 10:09, AngeloGioacchino Del Regno wrote:
-> Il 13/02/24 17:46, Rafał Miłecki ha scritto:
->> From: Rafał Miłecki <rafal@milecki.pl>
+Il 14/02/24 07:34, Rafał Miłecki ha scritto:
+> On 13.02.2024 19:18, Conor Dooley wrote:
+>> On Tue, Feb 13, 2024 at 05:46:32PM +0100, Rafał Miłecki wrote:
+>>> From: Rafał Miłecki <rafal@milecki.pl>
+>>>
+>>> MT7988 has on-SoC controller that can control up to 8 PWMs.
 >>
->> Add binding for on-SoC controller that can control up to 8 PWMs.
->>
->> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
->> ---
->>   arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 21 ++++++++++++++++++++-
->>   1 file changed, 20 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
->> index bba97de4fb44..67007626b5cd 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
->> @@ -1,5 +1,6 @@
->>   // SPDX-License-Identifier: GPL-2.0-only OR MIT
->> +#include <dt-bindings/clock/mediatek,mt7988-clk.h>
->>   #include <dt-bindings/interrupt-controller/arm-gic.h>
->>   / {
->> @@ -78,7 +79,7 @@ gic: interrupt-controller@c000000 {
->>               #interrupt-cells = <3>;
->>           };
->> -        clock-controller@10001000 {
->> +        infracfg: clock-controller@10001000 {
->>               compatible = "mediatek,mt7988-infracfg", "syscon";
->>               reg = <0 0x10001000 0 0x1000>;
->>               #clock-cells = <1>;
->> @@ -103,6 +104,24 @@ clock-controller@1001e000 {
->>               #clock-cells = <1>;
->>           };
->> +        pwm@10048000 {
->> +            compatible = "mediatek,mt7988-pwm";
+>> I see a binding and a dts patch, but no driver patch, how come?
 > 
-> I can't take this unless there's a driver that supports your device.
+> I believe that to avoid cross-trees patchsets (which are sometimes
+> tricky for maintainers) there are two ways of submiting such changes:
+> 1. dt-binding + driver; then (separately) DTS
+> 2. dt-binding + DTS; then (separately) driver
+> 
+> I chose later in this case as my personal priority right now is to deal
+> with all MediaTek DTS files.
+> 
+> Is that wrong or unacceptable?
+> 
 
-I'd argue you should rather look for a documented binding rather than a
-(Linux?) driver. Otherwise you would refuse changes that are not
-strictly Linux related. DTS files are meant to describe hardware in a
-generic way and not be driven by Linux drivers / design.
+It's not wrong but it's partially unacceptable, at least on my side.
 
-Example:
-We have bindings for "brcm,bcm6345-timer" and "bcm63138-timer" (see
-commit e112f2de151b) and DTS files with those bindings.
-There is no Linux driver for that hardware block as there is no need
-for it.
+In my opinion (and I believe many do agree with me), sending the binding along
+with the driver is the right choice, and if you also want to include the dts
+that is also appreciated: series can go through multiple maintainers applying
+subsets - it's ok to do.
+
+I want to put emphasis on sending the binding with the driver, as this allows
+for a better review on everyone's side because we do see the full picture and
+we can give better advices: in this case, I'm not sure whether adding a new
+compatible for MT7988 in an enum is a good idea, as the compatible string may
+be shared with one of the *eleven* SoCs that are supported in the PWM driver,
+meaning that (hardware speaking!) the PWM controller in 7988 might be the same
+as the one in mt1234.
+
+Thanks for the great work that you're doing on the bindings btw.
+Keep it up!
+Angelo
+
+> 
+>> Also, what makes this incompatibly different with the other devices in
+>> the binding, like the 8183?
+> 
+> It can control 8 PWMs unlike any other SoC block except for MT2712.
+> It uses different registers than MT2712 thought.
+> 
+> 
+>> Cheers,
+>> Conor.
+>>
+>>>
+>>> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+>>> ---
+>>>   Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml 
+>>> b/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
+>>> index 0fbe8a6469eb..a5c308801619 100644
+>>> --- a/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
+>>> +++ b/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
+>>> @@ -24,6 +24,7 @@ properties:
+>>>             - mediatek,mt7629-pwm
+>>>             - mediatek,mt7981-pwm
+>>>             - mediatek,mt7986-pwm
+>>> +          - mediatek,mt7988-pwm
+>>>             - mediatek,mt8183-pwm
+>>>             - mediatek,mt8365-pwm
+>>>             - mediatek,mt8516-pwm
+>>> -- 
+>>> 2.35.3
+>>>
+> 
 
 
-In this context I'm explaining binding thing with Conor in discussion
-on PATCH 1/1. So stay tuned :)
 
