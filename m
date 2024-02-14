@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-1441-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1437-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 783A9854609
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 10:35:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B47D3854601
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 10:35:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CE5B1C203F4
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 09:35:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8447D1C213AA
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 09:35:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D6681429C;
-	Wed, 14 Feb 2024 09:34:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A632913AF3;
+	Wed, 14 Feb 2024 09:34:50 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF881A28C
-	for <linux-pwm@vger.kernel.org>; Wed, 14 Feb 2024 09:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEDA1AACB
+	for <linux-pwm@vger.kernel.org>; Wed, 14 Feb 2024 09:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707903290; cv=none; b=u2wCt2CzuMi2enKBvXR6bCwEsuHUHH4oBzZKHvD/x4z4WiXjQ+4M9aXx0zOxuI+o2nIQ75I10W7RgHSdCoTznGQ/ilryByfPn+KaiVbSIcyzW/0Q51M0yMcO2g0J3Sk7/IAGCNRILHy25PIwkE3WEkwgubCsoQ9ajFX/D3DqrVc=
+	t=1707903289; cv=none; b=UvXVkm70AJRDG8eAhNq9sbMB2biC8MJFPCeWCBvuGHjB4vgAqXgdsBDfZskK8B0+g1/uZMEoqKqpJdA5veIR3pqkETeV1HgrZiT0DTrYjF2C8Z8DFnbqnrf0yiUDk3ZWmaKf+LFFRy5F0fM3k2xB4z51/SCuwlZA2RM01HFtLZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707903290; c=relaxed/simple;
-	bh=5/yTk1XF3m/x+RiUeNlZR9xZGtgNzZcm4JJ6LWl3SkU=;
+	s=arc-20240116; t=1707903289; c=relaxed/simple;
+	bh=Bq4gK46k4bMEHnDGw5vzMWIw4Mxs6RiMnEaOZk00EBI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jRgxLHDsgcB9jygQmaLE8kDgyIvT4BfR4UgxBRMXleIruR7pv0f7UDLvk+jbfw4sTPPJcw0rENTmG6OW7q2vJ+ESTa1n6x5s0yA9nzFmp/U6FTMc7sjljSyPP78giPoIpaN7s+B1ZU0pXJST6n2j10ueldeyKrEcuF8000qd1+k=
+	 MIME-Version:Content-Type; b=EIjpA4LAG4iVT+3O0V9PQy81Dke8CV+H/QRrOliwh69VnsDurTf+MG4tiDtgX0R/F9wPnTmCaOBgyNGfGxZlShKGugAqHk3BadGAQ27FgBRSm36GS5XrK3VLyA6A9NZ+M0xEYMu7i1/FfNNuPo4pM+IK11nDstuCiDUzPXEjBVw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,22 +33,22 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raBf7-00064k-Rj; Wed, 14 Feb 2024 10:34:41 +0100
+	id 1raBf7-000655-Ny; Wed, 14 Feb 2024 10:34:41 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raBf5-000fHJ-0u; Wed, 14 Feb 2024 10:34:39 +0100
+	id 1raBf5-000fHM-64; Wed, 14 Feb 2024 10:34:39 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raBf4-004Y9D-35;
-	Wed, 14 Feb 2024 10:34:38 +0100
+	id 1raBf5-004Y9G-0M;
+	Wed, 14 Feb 2024 10:34:39 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: linux-pwm@vger.kernel.org
 Cc: kernel@pengutronix.de
-Subject: [PATCH v6 138/164] pwm: tiehrpwm: Make use of pwmchip_parent() accessor
-Date: Wed, 14 Feb 2024 10:33:05 +0100
-Message-ID:  <9badd116d0e26a5656b222c5b4adad7e111a53c7.1707900770.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v6 139/164] pwm: tiehrpwm: Make use of devm_pwmchip_alloc() function
+Date: Wed, 14 Feb 2024 10:33:06 +0100
+Message-ID:  <62fbac428cae0942f8e88234bf249537fcd890a3.1707900770.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
@@ -59,7 +59,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3880; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=5/yTk1XF3m/x+RiUeNlZR9xZGtgNzZcm4JJ6LWl3SkU=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlzIjpgsTtrvfgqya3uN0BJ+Dyy8uXS80wREI+d zNCuOxxwzGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcyI6QAKCRCPgPtYfRL+ Tt3sB/91l+quYZQfYlbIZdoku5QGEzrr07xSLsN7h3jbdg0sjBTJhXWt4vmRY5LWTAtv9yRE2vl CLHrBLZkEdBMoQNTsTzNDcqftYrHIWrFyaZaVYE/wn4nu/9FEViTGo1wgh9fcRa+YvNtBZBZhKY GzTEumJFHEjnOm9VESX+B3B3GsqK63wCcka1mNT00hbZJPf75vgawEqE2ivrVgCKLGozcrPf6Mx Q31wl2HSGdwhovIXuwuToX559F3fhGg3HXu0M/EgNDonD50+hCRFOp3nHbbwdkRP3I+t8VmejV/ KnfbPi4NPSYYo4H4C9L9pueD09GKd4b7kShs7ZfMmORZv5cB
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1837; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=Bq4gK46k4bMEHnDGw5vzMWIw4Mxs6RiMnEaOZk00EBI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlzIjqoslzBeP8TNXalImcEEWt4Hba/B3opAwT9 f/CwIz/IIuJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcyI6gAKCRCPgPtYfRL+ Tuj9B/4hC0WtCt47qjLaFx/C6F4T9Yf+NlwdmZstIFiGsewnldl+ciE6tP1fuOYG5H20tW26NTz sy/p7+aWKNjRHolnUYuRbjOfPMR+UYsDOA4Ft18zjG4V3iRLwxJCA7paM+qOWBsv4cBZ0KjGseU WQIY4wIMLDg4Rb3Cpb4G7aemomf7xHiENmewQheqJP5BpiCtxdb2xAkdtlU+c8WtvLl5WycRs0b +c6c9EMMTokscsiE/AvJqENQOZW2tBtVYe2Z52nYZDdbHHE9liLp4NPwwUT/K6/uQpyxEGp/4Lg nX0vG1p/FgLuYM6QYvN4GfW51AYyL7sAWr8X6Nury7Ai6lvT
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -67,109 +67,61 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-struct pwm_chip::dev is about to change. To not have to touch this
-driver in the same commit as struct pwm_chip::dev, use the accessor
-function provided for exactly this purpose.
+This prepares the pwm-tiecap driver to further changes of the pwm core
+outlined in the commit introducing devm_pwmchip_alloc(). There is no
+intended semantical change and the driver should behave as before.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-tiehrpwm.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/pwm/pwm-tiehrpwm.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index 6d7babf6fdb0..9a7c72196173 100644
+index 9a7c72196173..e5104725d9b7 100644
 --- a/drivers/pwm/pwm-tiehrpwm.c
 +++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -256,7 +256,7 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 			if (i == pwm->hwpwm)
- 				continue;
+@@ -105,7 +105,6 @@ struct ehrpwm_context {
+ };
  
--			dev_err(chip->dev,
-+			dev_err(pwmchip_parent(chip),
- 				"period value conflicts with channel %u\n",
- 				i);
- 			return -EINVAL;
-@@ -268,11 +268,11 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	/* Configure clock prescaler to support Low frequency PWM wave */
- 	if (set_prescale_div(period_cycles/PERIOD_MAX, &ps_divval,
- 			     &tb_divval)) {
--		dev_err(chip->dev, "Unsupported values\n");
-+		dev_err(pwmchip_parent(chip), "Unsupported values\n");
+ struct ehrpwm_pwm_chip {
+-	struct pwm_chip chip;
+ 	unsigned long clk_rate;
+ 	void __iomem *mmio_base;
+ 	unsigned long period_cycles[NUM_PWM_CHANNEL];
+@@ -116,7 +115,7 @@ struct ehrpwm_pwm_chip {
+ 
+ static inline struct ehrpwm_pwm_chip *to_ehrpwm_pwm_chip(struct pwm_chip *chip)
+ {
+-	return container_of(chip, struct ehrpwm_pwm_chip, chip);
++	return pwmchip_get_drvdata(chip);
+ }
+ 
+ static inline u16 ehrpwm_read(void __iomem *base, unsigned int offset)
+@@ -454,9 +453,10 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+ 	struct clk *clk;
+ 	int ret;
+ 
+-	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+-	if (!pc)
+-		return -ENOMEM;
++	chip = devm_pwmchip_alloc(&pdev->dev, NUM_PWM_CHANNEL, sizeof(*pc));
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
++	pc = to_ehrpwm_pwm_chip(chip);
+ 
+ 	clk = devm_clk_get(&pdev->dev, "fck");
+ 	if (IS_ERR(clk)) {
+@@ -475,10 +475,7 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
  		return -EINVAL;
  	}
  
--	pm_runtime_get_sync(chip->dev);
-+	pm_runtime_get_sync(pwmchip_parent(chip));
+-	chip = &pc->chip;
+-	chip->dev = &pdev->dev;
+ 	chip->ops = &ehrpwm_pwm_ops;
+-	chip->npwm = NUM_PWM_CHANNEL;
  
- 	/* Update clock prescaler values */
- 	ehrpwm_modify(pc->mmio_base, TBCTL, TBCTL_CLKDIV_MASK, tb_divval);
-@@ -299,7 +299,7 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	ehrpwm_write(pc->mmio_base, cmp_reg, duty_cycles);
- 
--	pm_runtime_put_sync(chip->dev);
-+	pm_runtime_put_sync(pwmchip_parent(chip));
- 
- 	return 0;
- }
-@@ -323,7 +323,7 @@ static int ehrpwm_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	int ret;
- 
- 	/* Leave clock enabled on enabling PWM */
--	pm_runtime_get_sync(chip->dev);
-+	pm_runtime_get_sync(pwmchip_parent(chip));
- 
- 	/* Disabling Action Qualifier on PWM output */
- 	if (pwm->hwpwm) {
-@@ -346,8 +346,8 @@ static int ehrpwm_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	/* Enable TBCLK */
- 	ret = clk_enable(pc->tbclk);
- 	if (ret) {
--		dev_err(chip->dev, "Failed to enable TBCLK for %s: %d\n",
--			dev_name(chip->dev), ret);
-+		dev_err(pwmchip_parent(chip), "Failed to enable TBCLK for %s: %d\n",
-+			dev_name(pwmchip_parent(chip)), ret);
- 		return ret;
- 	}
- 
-@@ -385,7 +385,7 @@ static void ehrpwm_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	clk_disable(pc->tbclk);
- 
- 	/* Disable clock on PWM disable */
--	pm_runtime_put_sync(chip->dev);
-+	pm_runtime_put_sync(pwmchip_parent(chip));
- }
- 
- static void ehrpwm_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -393,8 +393,8 @@ static void ehrpwm_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- 	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
- 
- 	if (pwm_is_enabled(pwm)) {
--		dev_warn(chip->dev, "Removing PWM device without disabling\n");
--		pm_runtime_put_sync(chip->dev);
-+		dev_warn(pwmchip_parent(chip), "Removing PWM device without disabling\n");
-+		pm_runtime_put_sync(pwmchip_parent(chip));
- 	}
- 
- 	/* set period value to zero on free */
-@@ -528,7 +528,7 @@ static void ehrpwm_pwm_save_context(struct pwm_chip *chip)
- {
- 	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
- 
--	pm_runtime_get_sync(chip->dev);
-+	pm_runtime_get_sync(pwmchip_parent(chip));
- 
- 	pc->ctx.tbctl = ehrpwm_read(pc->mmio_base, TBCTL);
- 	pc->ctx.tbprd = ehrpwm_read(pc->mmio_base, TBPRD);
-@@ -539,7 +539,7 @@ static void ehrpwm_pwm_save_context(struct pwm_chip *chip)
- 	pc->ctx.aqsfrc = ehrpwm_read(pc->mmio_base, AQSFRC);
- 	pc->ctx.aqcsfrc = ehrpwm_read(pc->mmio_base, AQCSFRC);
- 
--	pm_runtime_put_sync(chip->dev);
-+	pm_runtime_put_sync(pwmchip_parent(chip));
- }
- 
- static void ehrpwm_pwm_restore_context(struct pwm_chip *chip)
+ 	pc->mmio_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pc->mmio_base))
 -- 
 2.43.0
 
