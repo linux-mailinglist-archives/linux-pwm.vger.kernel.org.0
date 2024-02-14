@@ -1,109 +1,124 @@
-Return-Path: <linux-pwm+bounces-1490-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1491-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51D518549C0
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 13:55:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 497AF854B09
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 15:05:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 83BB71C21918
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 12:55:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB2B8B23AAA
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 14:05:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70DFF52F6E;
-	Wed, 14 Feb 2024 12:55:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B00154F88;
+	Wed, 14 Feb 2024 14:05:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LP0fB7+5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enzfK2AJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C42B524DE;
-	Wed, 14 Feb 2024 12:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6387D5467A;
+	Wed, 14 Feb 2024 14:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707915315; cv=none; b=SSLkrxwi0Q/hgYqKQNgnMpFehv54Of+LTRi2kB9wqd7kWot+QljGUEOLZf5oKfQhcBl7AQUfyUvzkOAIevzITZzEPCEkf8Xi6xpJ/GGPZ7v9zwEKVxD6Zp0P0plI9lMNYrGr9CnjWUqF5jDbvbX1vyvC7Pk9AvDk/To8Tykf9Tc=
+	t=1707919505; cv=none; b=uUoeW9arPHLrpYI4jeMjVomJr0Dca/w3J+cmGkmLHiIh83DcUlN1yza1iucvrxN8UJR7Kyj99DJORAPh+BdGNGVsVygMY3ap3xvf8ddG7CQYVrvc7VCNEe52oZFsMqbK3juYxSw8o7X/tYHnPskEkznWyTKWgvlWtCpGsxrEMnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707915315; c=relaxed/simple;
-	bh=iDdbWiwEPcFY3BALcgE9v1lv2ENjOuGM5iSt5eVJd/k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VNcy2QO3c/5drQnZKd3v2G6uHf2BFRhIIVPFBFZXyzaoz1aKHjz6UrZI4PF8y/T84YDRp2sQFog197TbcWRvckXR94OXcS4YEIBd65HwwSGhAFsN/C3bmtCC57atw8mCtDF/9QBIft7NEQ1D02rwl95XHIUG8SpAG/yd2mvAQgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LP0fB7+5; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707915314; x=1739451314;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=iDdbWiwEPcFY3BALcgE9v1lv2ENjOuGM5iSt5eVJd/k=;
-  b=LP0fB7+5STmDVuM77dP2GjjnjQGjDKpxnWkkSZgbPsIPlljWChnlgkyO
-   TKpQnuW0LH1RFpOY4whbGKdjUVOJiPRBYy87daJ+jq2H1c+PYFnphzA8o
-   q5sqkkAYt6KkK3qw2SNrE5c8JgG/1EmylmE4U0xCrRdRxMnxhQEoy5krb
-   3HVKKJ8pSD9YUw3uQL2/Rh/z8jA2Sz1t+NViOEtcO/hEU8224PKyFz67o
-   +r16D+hKdJIqRE6L6lBssgfhybVf2DBHZD86rUV+XAb40Q9V0o/+ElDjR
-   /Blj/vgksE1z4M06Qz22Ox+QcH710kUp6ja0v+tSbDMLiuVBcQouEFg0l
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="24428263"
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="24428263"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 04:55:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="3245478"
-Received: from jhogande-desk.fi.intel.com (HELO [10.237.72.164]) ([10.237.72.164])
-  by orviesa010.jf.intel.com with ESMTP; 14 Feb 2024 04:55:11 -0800
-Message-ID: <8a580aad-001c-4e88-8f56-271f1835e581@linux.intel.com>
-Date: Wed, 14 Feb 2024 14:55:09 +0200
+	s=arc-20240116; t=1707919505; c=relaxed/simple;
+	bh=XTHsakMKCRvGMeYX+V9AYEltoRSA1pIrIQBwCDAiBXg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=T89zSXPJMDvBwAgzNXN2hSNFDM8v5ANbI5R2LDXsdNL+WX1E9Xvdd7OVzID9ZVWhwOhIV7980tNWJaSl6hrzVQ0Ztyz0keqqy5/rM5w7fMJBAEipdBwEFQ04SGXve/BPlTprE29NE82rmosZao6V47IQl9nNAfgj0qrFZnCFqbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=enzfK2AJ; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5638dbf1417so493729a12.0;
+        Wed, 14 Feb 2024 06:05:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707919501; x=1708524301; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=z7Q1BpdFE96j/+901jCtibE5f/f88ZZPNniLXRQM0DA=;
+        b=enzfK2AJ7PAsh90saisXmtk9KmF8WKUlCesV602TvNxpl5beHjDkrbcC//VVO5DPdy
+         CsOJrWWixYDj3lcqHxk3UUSr7NCjpp/uMC6QF37jPlbAwcUuPwRS2MwMmNrqqtdRAQU3
+         GONCX1H6GqRNYCOBwIPboGhMvs0KZemKiMmGBL0LXJyORvocxBj+9XZTebr2qx9aMq+9
+         vttBtlf5+4B+7jMmXeJIh1nsN4tWTy0Vvg6Q7V0AFL74yCP6GiXZSA9HUVbJNV0t59CG
+         iDF0GuRRN+IslOsd7E1YNDIhkU2rBwiuwERjUwWz5Mv9mnwOAFA4T7y/1OYuhbzFk9cz
+         bHhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707919501; x=1708524301;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z7Q1BpdFE96j/+901jCtibE5f/f88ZZPNniLXRQM0DA=;
+        b=NgSyfe8KhlPBI756W1tz7eTyR0Zbm4GKLPOmS3Rm18Zzp82Tv6WebzaQq5qUeodii7
+         5e3eNKgu/owYYYdaJ49Y4gMkv+h9Ns9F5YiRkQL4qs6iBrJ765Rf+/b521G1L+x/sg9m
+         OPIU7+yF28c9UGW8jipPaxlVMhMlqcISuluibMTHVnD4Rsb2psbLP3F4IeaZzEPFWGjC
+         yFKSv/ZDyXY2ualfwq0fqs10RxFBjYbGUepqQQPiZw54j4Cwmb0op9G/HOTIUyrPPo4e
+         iCeEx9UPoy7ZkmjgwndxdXz4AbmxD6Zdf//rSFOV7YvjgOOCecmZ/V7KAT9MGacMjlrJ
+         xryg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlOo5Hsb3J/J0Jzu/w22+SwrvQqIx2RtrbTcNt6hr44spNwiJ7BK3ptlDPtAjF6iyaXJ8NOgrUlI47QanJXnd8OAA/WxGm9MWnWO/dEpw8nVcQhKhKt4Hf0MYzp0Jnx8JglQzu3lbWt3O8IQIWqfrawia0EMVcj+Qg6/wpomvGnVTflg==
+X-Gm-Message-State: AOJu0Yx9Uh0+4zWZ3SneSa73AcmW/DOW6mMvlqKBWXkEB4zvmGkHGN6n
+	BFN5cp7cwQVH5l4QvVhCq232cgNtHXXcrbaCOt1uojZmKDB1N0OkBTzSsKCz
+X-Google-Smtp-Source: AGHT+IHV5lTBSsU2P4rgMTuePMzPF3w3ljb7dMNL+67Z2B7qY19FGGj9oQip/nDTMA6wH9kRqjNzqg==
+X-Received: by 2002:aa7:c61a:0:b0:560:799:f802 with SMTP id h26-20020aa7c61a000000b005600799f802mr1932526edq.21.1707919501304;
+        Wed, 14 Feb 2024 06:05:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUtmzNXaugjkX2Lbay0q+RsXHbXxui68JmgAB7AAmk4fN6jM65+wulw9ikFfckzf4uYl4dacm8xHp/v2UQatJoXIMh9DdY4tfvpVmwaS8QRN26anrUvaF40ZtJauATQNUIsMTq7FYNnfRokS3gSUXM2eLI33PzYCSVvpQiDHEuJk81vMeQX2XhGl6jYHsBVrk22H67C4u8N+drhgxpW2To1xIPETJ8yOjudZKLtwmBEIvy/VaytbZGFC5FcZQBMSl1/azpXi+FC16ov9Iv4Tz+CikGEFzMUZxfRTlukzTpTaSDTWrlC5aEYVUl0EaWshVPu+v9XjqKmshRUdwH7HGTkIprdv/AYXAXMiFYqDqplLuVKPHl/OmnMHinF+8gTyWy/2P6Gd8pfN09kXEM6KlzG4q+VuzFZHKCYPtrc72Z67u21U0VQJzM5lPAOlld1uLGGuJoHHWrhGCkvLqV1zYzp77iazMGiQSMqtOk1/a2fQuY13LupsaYThSx/+PlTPg==
+Received: from localhost.lan (031011218106.poznan.vectranet.pl. [31.11.218.106])
+        by smtp.gmail.com with ESMTPSA id p23-20020a056402501700b005614409022esm4700646eda.63.2024.02.14.06.04.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 06:05:00 -0800 (PST)
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	John Crispin <john@phrozen.org>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH V2 1/2] dt-bindings: pwm: mediatek,mt2712: add compatible for MT7988
+Date: Wed, 14 Feb 2024 15:04:53 +0100
+Message-Id: <20240214140454.6438-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/5] DesignWare PWM improvements
-Content-Language: en-US
-To: Raag Jadav <raag.jadav@intel.com>, u.kleine-koenig@pengutronix.de,
- mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
- lakshmi.sowjanya.d@intel.com
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240212130247.9985-1-raag.jadav@intel.com>
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-In-Reply-To: <20240212130247.9985-1-raag.jadav@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2/12/24 15:02, Raag Jadav wrote:
-> This series implements 16 channel PWM support for Intel Elkhart Lake
-> along with minor cleanups for DesignWare PWM driver.
-> 
-> Changes since v2:
-> - Remove error code duplication from dev_err_probe()
-> - Update tags
-> 
-> Changes since v1:
-> - Drop redundant error check
-> - Provide dwc_pwm_init_one() to initialize one PWM instance
-> - Use dev_get_drvdata() instead of pci_get_drvdata()
-> - Use pm_sleep_ptr() instead of use pm_ptr()
-> 
-> Raag Jadav (5):
->    pwm: dwc: use pm_sleep_ptr() macro
->    pwm: dwc: drop redundant error check
->    pwm: dwc: Add 16 channel support for Intel Elkhart Lake
->    pwm: dwc: simplify error handling
->    pwm: dwc: access driver_data using dev_get_drvdata()
-> 
->   drivers/pwm/pwm-dwc.c | 59 ++++++++++++++++++++++++-------------------
->   drivers/pwm/pwm-dwc.h |  5 ++++
->   2 files changed, 38 insertions(+), 26 deletions(-)
-> 
-I tested on Elkhart lake this patchset and it adds another 8 channel PWM 
-instance and the PCI device continue switching between D0 and D3 power 
-states depending is some channel enabled or all idle.
+From: Rafał Miłecki <rafal@milecki.pl>
 
-Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+MT7988 has on-SoC controller that can control up to 8 PWM interfaces. It
+differs from blocks on other SoCs (amount of PWMs & registers) so it
+needs its own compatible string.
+
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+V2: Explain new compatibility string reason in commit body
+
+ Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml b/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
+index 0fbe8a6469eb..a5c308801619 100644
+--- a/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
+@@ -24,6 +24,7 @@ properties:
+           - mediatek,mt7629-pwm
+           - mediatek,mt7981-pwm
+           - mediatek,mt7986-pwm
++          - mediatek,mt7988-pwm
+           - mediatek,mt8183-pwm
+           - mediatek,mt8365-pwm
+           - mediatek,mt8516-pwm
+-- 
+2.35.3
 
 
