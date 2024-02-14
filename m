@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-1419-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1463-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A8878545EC
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 10:35:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC05B85461F
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 10:35:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C59B1C21D06
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 09:35:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A897D28AC25
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 09:35:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00D631AADF;
-	Wed, 14 Feb 2024 09:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D414618E2F;
+	Wed, 14 Feb 2024 09:34:52 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7637219477
-	for <linux-pwm@vger.kernel.org>; Wed, 14 Feb 2024 09:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED15D1AAD4
+	for <linux-pwm@vger.kernel.org>; Wed, 14 Feb 2024 09:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707903286; cv=none; b=PKQK+TpYxrcbnZhWf/waGx8AnK97ODe8HqGavGRr3uQw3cumS4DJ4DzgEXG/KRAZFX6gsDpi0dwfK1WGQrzSqPLMMd2opX0eLBT4Cs6vv9vLRSRdxwgsUJhCNLGaLLkhojNs5zBTNKmDNUkI0cksFr1EZBO8oHVwX9rgsbxn8NM=
+	t=1707903292; cv=none; b=F/3gOYzLbcYecd2DAF81wTu1HQ2adsc8XGkHlUFMd7dJcdHbuhPSX3lMMqTOF1P3HeuYDVgO/uJoJznPxpQ5fulH3rM/KFsXVCDPMCphNlR3SD/RSA+tdKhYDLA4DqUSFBkUKQpelux6AEtFb00hgVTRpVpX9d9dd+FWjjlmZGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707903286; c=relaxed/simple;
-	bh=T/U7wQnCa/nBPtaaTnKA2tY72R4dDiZtK4LWdIBSJd4=;
+	s=arc-20240116; t=1707903292; c=relaxed/simple;
+	bh=p17FPEGdt5iTjNuLV9ceuEp0unNUnbj7ddT/qbdQK6A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OUMQctPgycJnsMuVbgpRMyqWkEfp+NDPQKA+yYxt12oOK+7iZikvhGOb8HmcgPKRrAwznHYF99tO4+tRGRNZj6+8folvcoOPeX9q3GmH9UXiW+pIAS8srk057ubVZvHDgDh/YhltuTB1937mQ3eB0Ok8K3K4l+7fG8VMrMRAvKE=
+	 MIME-Version:Content-Type; b=mAnWCLhN6JlAcbmoa06gf5YgGXTYIq/JIUpbE8RDP33TrL0TC/pN0X9u4Bf1EKqgIFwK6Udh5axWWMBZNXobYB7ddskuC3+pfZa1qWay8HKwpj/aMIaJptyMC9G2F1+J78ovKAv+cWFDLDWMd7ppKYXUsWAKQh0zUd0f/bnR324=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,15 +33,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raBf5-0005mH-Id; Wed, 14 Feb 2024 10:34:39 +0100
+	id 1raBf5-0005n0-7f; Wed, 14 Feb 2024 10:34:39 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raBf1-000fFz-TE; Wed, 14 Feb 2024 10:34:35 +0100
+	id 1raBf2-000fG3-14; Wed, 14 Feb 2024 10:34:36 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raBf1-004Y7h-2c;
+	id 1raBf1-004Y7l-35;
 	Wed, 14 Feb 2024 10:34:35 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
@@ -51,9 +51,9 @@ To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
 Cc: linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org,
 	kernel@pengutronix.de
-Subject: [PATCH v6 117/164] pwm: stm32: Make use of devm_pwmchip_alloc() function
-Date: Wed, 14 Feb 2024 10:32:44 +0100
-Message-ID:  <59e5dfff2b878cc8590e286572672e4f10e35380.1707900770.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v6 118/164] pwm: stm32-lp: Simplify code to determine the pwmchip's parent device
+Date: Wed, 14 Feb 2024 10:32:45 +0100
+Message-ID:  <9ad2399e1a683a6344b12d7f70498393b8f8b9de.1707900770.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
@@ -64,7 +64,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2070; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=T/U7wQnCa/nBPtaaTnKA2tY72R4dDiZtK4LWdIBSJd4=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlzIjRsLdl8HTUa9tf6qIs+zvnxTpj//AqG0X++ ldOrCB7T1eJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcyI0QAKCRCPgPtYfRL+ Tu6/B/477D5/A7oJB9f/BCRHZQWbXLL6oXepDfsU47gcf24GXzWckRUa2n8Rqdd/N4URAzUpcng QoWNKG5EiIW/stnDW/Fr9WxNS+3kZw4quDzkWcw+aosSTnstAtrM8uI1gQdxfEy6aWOuhuQnS0S X1xBRUp9v2dVbkizu0+a0AAOrbtrVgh2rMLKXiDWhTYbKz6xHdZnlnNf3HLdCXkpxK96WQWJeJ/ ozDH2tVMAE52haznrJX5TZ6pbjP/ScQoKzLEl2AjJfNXu6U7ma8ohFQa2H/l9Eu0mjDCN3jpiV1 eOORhbGtaT96LiRrSk8FkgoUtiZWGOArvSlrqsow37mhdCpm
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1729; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=p17FPEGdt5iTjNuLV9ceuEp0unNUnbj7ddT/qbdQK6A=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlzIjSiFzVxGz5R9cEYI7bUJyRiPKUR9CFsjkaW i4NRo0cchuJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcyI0gAKCRCPgPtYfRL+ Tt5yCACxBKnzZgWU3h2X0Pssz520fC4vS5n8IvUil7omtHL+QdVa1HqAdbHiMTefUpOE/lbprks 9OXdbLyHyS+AP3rtkm9pf6NY9qiwCju+j8WxGHcuIE7pxjlGqG14SIelfDF1boJKg6l2ojCdehb zJ7IfYpisafyoF8FIChFk1gzc/ONNfnNtvM/6nXQff6eJCbBGCCJ6xr/cA8PIRekYefwuYn6TsR PAvFL1Eh8cnPZadlN2AadmF7XYfpkVIOMOAqbmwXXV8sR+LsV/JQiZaq6/aO4myzasrgrwTEZqF O3XYnL0Xd+toiysEZWSScpaBTuzdmy2sGr79orItPwV+hTkj
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -72,68 +72,47 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-This prepares the pwm-stm32 driver to further changes of the pwm core
-outlined in the commit introducing devm_pwmchip_alloc(). There is no
-intended semantical change and the driver should behave as before.
+There is already a pointer to the pwmchip, make use of it directly
+instead of using the struct stm32_pwm_lp *priv just obtained from
+it. This also has the advantage of not using struct stm32_pwm_lp::chip
+any more which will be dropped soon.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-stm32.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/pwm/pwm-stm32-lp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index 1440b706ee57..0c028d17c075 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -27,7 +27,6 @@ struct stm32_breakinput {
- };
+diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+index 439068f3eca1..bbab6be314a8 100644
+--- a/drivers/pwm/pwm-stm32-lp.c
++++ b/drivers/pwm/pwm-stm32-lp.c
+@@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	do_div(div, NSEC_PER_SEC);
+ 	if (!div) {
+ 		/* Clock is too slow to achieve requested period. */
+-		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
++		dev_dbg(chip->dev, "Can't reach %llu ns\n", state->period);
+ 		return -EINVAL;
+ 	}
  
- struct stm32_pwm {
--	struct pwm_chip chip;
- 	struct mutex lock; /* protect pwm config/enable */
- 	struct clk *clk;
- 	struct regmap *regmap;
-@@ -40,7 +39,7 @@ struct stm32_pwm {
- 
- static inline struct stm32_pwm *to_stm32_pwm_dev(struct pwm_chip *chip)
- {
--	return container_of(chip, struct stm32_pwm, chip);
-+	return pwmchip_get_drvdata(chip);
- }
- 
- static u32 active_channels(struct stm32_pwm *dev)
-@@ -632,14 +631,16 @@ static int stm32_pwm_probe(struct platform_device *pdev)
- 	struct stm32_timers *ddata = dev_get_drvdata(pdev->dev.parent);
- 	struct pwm_chip *chip;
- 	struct stm32_pwm *priv;
--	unsigned int num_enabled;
-+	unsigned int npwm, num_enabled;
- 	unsigned int i;
- 	int ret;
- 
--	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
--	if (!priv)
--		return -ENOMEM;
--	chip = &priv->chip;
-+	npwm = stm32_pwm_detect_channels(ddata->regmap, &num_enabled);
-+
-+	chip = devm_pwmchip_alloc(dev, npwm, sizeof(*priv));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	priv = to_stm32_pwm_dev(chip);
- 
- 	mutex_init(&priv->lock);
- 	priv->regmap = ddata->regmap;
-@@ -655,9 +656,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
- 
- 	stm32_pwm_detect_complementary(priv);
- 
--	chip->dev = dev;
- 	chip->ops = &stm32pwm_ops;
--	chip->npwm = stm32_pwm_detect_channels(ddata->regmap, &num_enabled);
- 
- 	/* Initialize clock refcount to number of enabled PWM channels. */
- 	for (i = 0; i < num_enabled; i++)
+@@ -69,7 +69,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	while (div > STM32_LPTIM_MAX_ARR) {
+ 		presc++;
+ 		if ((1 << presc) > STM32_LPTIM_MAX_PRESCALER) {
+-			dev_err(priv->chip.dev, "max prescaler exceeded\n");
++			dev_err(chip->dev, "max prescaler exceeded\n");
+ 			return -EINVAL;
+ 		}
+ 		div = prd >> presc;
+@@ -130,7 +130,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 				       (val & STM32_LPTIM_CMPOK_ARROK) == STM32_LPTIM_CMPOK_ARROK,
+ 				       100, 1000);
+ 	if (ret) {
+-		dev_err(priv->chip.dev, "ARR/CMP registers write issue\n");
++		dev_err(chip->dev, "ARR/CMP registers write issue\n");
+ 		goto err;
+ 	}
+ 	ret = regmap_write(priv->regmap, STM32_LPTIM_ICR,
 -- 
 2.43.0
 
