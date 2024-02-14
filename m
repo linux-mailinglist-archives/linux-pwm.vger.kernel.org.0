@@ -1,214 +1,152 @@
-Return-Path: <linux-pwm+bounces-1305-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1306-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1C84853DF1
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Feb 2024 23:03:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18A798542D4
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 07:34:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9078DB2F070
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Feb 2024 22:03:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 825B41F27070
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 06:34:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C6F7664C4;
-	Tue, 13 Feb 2024 21:58:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6A9310A2C;
+	Wed, 14 Feb 2024 06:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bQU8V6E6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cvn9rzcJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFD165BAA;
-	Tue, 13 Feb 2024 21:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E551F8C06;
+	Wed, 14 Feb 2024 06:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707861504; cv=none; b=Yz2KV8+5xhfy/F67ZksMf2Fqs38pDlbQIilQFLgULB+p2SlefVUJ7stNPr/6nSgtA3y3S80w7dIbVaV8+Riy3VBX7cyOo6V19y53WR0wjsX7I79vTiUMuiceFv2iQ6nUybVHxG1lAFCAXA4QvAWNherw4+WfS+5GRmJvTpKOynY=
+	t=1707892488; cv=none; b=FccsKJyeIn3A4Ys1nttgfghxh3b7/uTCV9GsB32LCBQDwhNdPt2OR+BDQfGgyZ5p0YUnz2Pm2/37aRJcF7Z3mtIpALrCKMq1k1U1rpRE74b8ZMi8fgc+Vrto868MTGAdTLZgdSy7H/7oqXXOCZpOxjRkp5x6doSxMUdkLEBbR3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707861504; c=relaxed/simple;
-	bh=QZtp6zFSJB9KAqD6mHzlmSSAFRT2TanT7mhlKfjwml4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uSCSxzcGDlK0O03jlqnSpkx/RvPZRQEmuWcQI+PZrXB1swbse2BgBUbETw/97Ns4sSlo8wmaIXdeDgb0T4UrI0VN73cuvkS55H12ESYzaQzA/WhUwkIgPKnCLwxbSG+rPUF4LO0813ZAsEISwSaWka2UTunNnYsb9kTpe7OVzYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bQU8V6E6; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707861502; x=1739397502;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QZtp6zFSJB9KAqD6mHzlmSSAFRT2TanT7mhlKfjwml4=;
-  b=bQU8V6E6qhV+r/nkG0+zeTp+0uyc/JQNQbasnPMXJLvm7VKBzMANMCQi
-   ywMEGQSdlEx7zGgy7ISwOT5NqpcZQCz3tx/MeWNdg8LaKv68jiaTpA8fp
-   08vqHaS1k+HPKe2Vz879R3XR+ryyvK6clsOFDFHMhf1AmYNDsm/6b+RBB
-   9IVAnOzOnUssNp9vUZmFZ5JkauFXtBMdq6z7DYDVOPeS8gJWnfMSLygZ+
-   cqG4KZg7SfWsPI+yU3B1pJOAYZXzP+7PFpVeERJxWJxWpy8Vn0JboknSV
-   5te1X/yXB8wZPcidBXryqesKewDr0+KZ7octVeZh2xNcQVs3zpxPnMC3W
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="12611759"
-X-IronPort-AV: E=Sophos;i="6.06,158,1705392000"; 
-   d="scan'208";a="12611759"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 13:58:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="911908559"
-X-IronPort-AV: E=Sophos;i="6.06,158,1705392000"; 
-   d="scan'208";a="911908559"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Feb 2024 13:58:17 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ra0nA-00086a-0K;
-	Tue, 13 Feb 2024 21:58:16 +0000
-Date: Wed, 14 Feb 2024 05:57:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, lee@kernel.org,
-	daniel.thompson@linaro.org, jingoohan1@gmail.com, deller@gmx.de,
-	javierm@redhat.com
-Cc: oe-kbuild-all@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-pwm@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
-	Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>
-Subject: Re: [PATCH 04/10] hid/hid-picolcd: Remove struct
- backlight_ops.check_fb
-Message-ID: <202402140514.sb1rerJx-lkp@intel.com>
-References: <20240212162645.5661-5-tzimmermann@suse.de>
+	s=arc-20240116; t=1707892488; c=relaxed/simple;
+	bh=eEHPUbvHfD27bana0BRRHxvfB5Gt0cYRP8x1lbtuhM8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iGBD6wmXRIxCvAWMYjtu9pvD+iiJt3vBx3e2gNX33aARwwhBAl6A01gQJurYjO5912fpOJDFG1muTXGK9XUzLxKKgjkEhkP5Ep3GrY1rCi8hV2DggAk0w3v2HvfPCT5VDvf4A/Rj9kgI+9turjyLTz88UOJ1+pXx1oDyTB3/V88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cvn9rzcJ; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-561f78f1ba1so1535828a12.0;
+        Tue, 13 Feb 2024 22:34:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707892485; x=1708497285; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IvuFwE9JH8AL4WuwyCUWF595QEwuv9nlPeFYbel5Slw=;
+        b=Cvn9rzcJIsoV4fGNTNgMbB1CUyG8+9v6ym28P/LP8AngLpcGOCw5tdM+GvWnJNfxdC
+         Su5Ma0InYnH0ahXEbsGMxdkkqz6oQL8+0w2Mncozo/PDqVXr/rFRMxAD8LDpJlr6WPKu
+         290V2e+96N8SCH+yf7DDjfV23cuQa4A6Y3FVk5DD8Nx7vrJeGlvzzvSMfgxiZ60jpko8
+         1j2YuNB/FHuLGZ6ZU+ZygI5LxhdRn5KxJBb6iOCS2OyYaOyFiFeUzqDPCK+AHGukVUEa
+         KKYIDAin9EhdSDgvAuk3KkDQKe++N9uOStR0IMpjW6UCPlfnxwdWfObsh2WpJFelOTrw
+         UvPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707892485; x=1708497285;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IvuFwE9JH8AL4WuwyCUWF595QEwuv9nlPeFYbel5Slw=;
+        b=GHhn0FZzukxmU8GLQNeUV9tM2BwnWAt/LzyIIjAq4PPFFZd6EUutQ2qNLbLOO9+CQ3
+         djLTVULQQwRD9jD0+UAQJWaoielvXHF6+P2dS9C06srtySB4G7/P7nTxpNksGapY0MCI
+         VaNSHcHGB90Larw/eEqF3GRssdXUMSILFJg8V3Tpb5/etDmjz4wGEtDBcVE26GQX95Uo
+         5eDKjKFOB1tR9A2YbAKVPW1tD6J5K89dU0kJJjy9SvfplJWY14uMRj8eFcVhTs4RbMNR
+         jcQA6pFu9Ym7rUkAM5y3cQQiOCnGyfnDgDDCHFxEdDuOAhRTqpApF2pyym0Ojd3CdwIf
+         XPhg==
+X-Forwarded-Encrypted: i=1; AJvYcCX4EgB2eXhQqsp03/NrH5/WXOWmTG6CeXnABRYvXSegQTXwwIRiqkJo1gN45OJegiws0lJaU2j/NSNcj8mTfjk0yOMEutqLwTs+vZJxu7t/8i6WOIQ74gcBq5LLsNfiPRq08XNXs4RGmOIgmmpKx8fZ+ZswA8+qC8Y1sLaYypTziqBjwQ==
+X-Gm-Message-State: AOJu0YyFGcDjLcMNAayQl09TwPxIVeDGlXhS/1v7BgqdW/ORIwaS4fcV
+	d32sYIoKLi95CUyF8ATjdLdv8zJXzcOMbWNIFMb6YS6ob+llyT8R
+X-Google-Smtp-Source: AGHT+IHv+h8nilZZuuQrNuz2sPa7nTzeb5gGsJU/RCpp62Djtg8Tx7IBmD08B8kU0Zzb0q6Sou+1qg==
+X-Received: by 2002:aa7:c54b:0:b0:560:c6a8:e7c8 with SMTP id s11-20020aa7c54b000000b00560c6a8e7c8mr1318865edr.10.1707892482532;
+        Tue, 13 Feb 2024 22:34:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVYZNO4JHkvDYTwsSttpiPIZ3L8seVIgzLVDNEi6Zky1po9/QSq3tFucI4ZDAcKsdb2s08oFBX9nr9gVXyygAgkdFhXGmu+bpBNO9iIOT/jceybNOvG36LbmiAgu7DPUb29/gh+3aunjo99O/DIxNvImO+H+qTtXRmkz0JxT9JCXP7827qqsbgr2pqEb7MZSBu6rFAe6ue+Lf9IpMNosN6WPbJWTQ4OrJUOlrr63vUVE0WsVsfDrrOhcqfv8KBoml2jGwJ0NS5rmjPi44u2ngb7Bqs+ixptzf6Jbbap3azFppHRMq/J63gCNyt+v4yscVk2z4HysH7KxyfFQLCKBDERK4iXKUE63sSnjiiAGgAw76THJ+xPDWGkN4ZY3k8BR/ysKil0eqM+8D0WT7N1nakLiiT28kSjIe0AR1aRUJa/Y7RRmmkxX2g3lAvlnLU8bSIZRgXWICT8CBCxTZubUCM+uGl5Etj7+1oYLkmBk38=
+Received: from [192.168.26.149] (031011218106.poznan.vectranet.pl. [31.11.218.106])
+        by smtp.googlemail.com with ESMTPSA id dh12-20020a0564021d2c00b00561970655bbsm3290214edb.4.2024.02.13.22.34.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Feb 2024 22:34:41 -0800 (PST)
+Message-ID: <d4391868-ddcd-4f66-b539-28d245fa83df@gmail.com>
+Date: Wed, 14 Feb 2024 07:34:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240212162645.5661-5-tzimmermann@suse.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: mediatek,mt2712: add compatible for
+ MT7988
+To: Conor Dooley <conor@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+References: <20240213164633.25447-1-zajec5@gmail.com>
+ <20240213-resource-evaluator-0754cfd5882d@spud>
+Content-Language: en-US
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+In-Reply-To: <20240213-resource-evaluator-0754cfd5882d@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Thomas,
+On 13.02.2024 19:18, Conor Dooley wrote:
+> On Tue, Feb 13, 2024 at 05:46:32PM +0100, Rafał Miłecki wrote:
+>> From: Rafał Miłecki <rafal@milecki.pl>
+>>
+>> MT7988 has on-SoC controller that can control up to 8 PWMs.
+> 
+> I see a binding and a dts patch, but no driver patch, how come?
 
-kernel test robot noticed the following build errors:
+I believe that to avoid cross-trees patchsets (which are sometimes
+tricky for maintainers) there are two ways of submiting such changes:
+1. dt-binding + driver; then (separately) DTS
+2. dt-binding + DTS; then (separately) driver
 
-[auto build test ERROR on lee-backlight/for-backlight-next]
-[also build test ERROR on lee-backlight/for-backlight-fixes hid/for-next lee-leds/for-leds-next linus/master v6.8-rc4 next-20240213]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I chose later in this case as my personal priority right now is to deal
+with all MediaTek DTS files.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Zimmermann/backlight-Match-backlight-device-against-struct-fb_info-bl_dev/20240213-002853
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git for-backlight-next
-patch link:    https://lore.kernel.org/r/20240212162645.5661-5-tzimmermann%40suse.de
-patch subject: [PATCH 04/10] hid/hid-picolcd: Remove struct backlight_ops.check_fb
-config: x86_64-rhel-8.3 (https://download.01.org/0day-ci/archive/20240214/202402140514.sb1rerJx-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240214/202402140514.sb1rerJx-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402140514.sb1rerJx-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/hid/hid-picolcd_fb.c: In function 'picolcd_init_framebuffer':
->> drivers/hid/hid-picolcd_fb.c:497:13: error: 'struct fb_info' has no member named 'bl_dev'
-     497 |         info->bl_dev = data->backlight;
-         |             ^~
+Is that wrong or unacceptable?
 
 
-vim +497 drivers/hid/hid-picolcd_fb.c
+> Also, what makes this incompatibly different with the other devices in
+> the binding, like the 8183?
 
-   459	
-   460	static DEVICE_ATTR(fb_update_rate, 0664, picolcd_fb_update_rate_show,
-   461			picolcd_fb_update_rate_store);
-   462	
-   463	/* initialize Framebuffer device */
-   464	int picolcd_init_framebuffer(struct picolcd_data *data)
-   465	{
-   466		struct device *dev = &data->hdev->dev;
-   467		struct fb_info *info = NULL;
-   468		struct picolcd_fb_data *fbdata = NULL;
-   469		int i, error = -ENOMEM;
-   470		u32 *palette;
-   471	
-   472		/* The extra memory is:
-   473		 * - 256*u32 for pseudo_palette
-   474		 * - struct fb_deferred_io
-   475		 */
-   476		info = framebuffer_alloc(256 * sizeof(u32) +
-   477				sizeof(struct fb_deferred_io) +
-   478				sizeof(struct picolcd_fb_data) +
-   479				PICOLCDFB_SIZE, dev);
-   480		if (!info)
-   481			goto err_nomem;
-   482	
-   483		info->fbdefio = info->par;
-   484		*info->fbdefio = picolcd_fb_defio;
-   485		info->par += sizeof(struct fb_deferred_io);
-   486		palette = info->par;
-   487		info->par += 256 * sizeof(u32);
-   488		for (i = 0; i < 256; i++)
-   489			palette[i] = i > 0 && i < 16 ? 0xff : 0;
-   490		info->pseudo_palette = palette;
-   491		info->fbops = &picolcdfb_ops;
-   492		info->var = picolcdfb_var;
-   493		info->fix = picolcdfb_fix;
-   494		info->fix.smem_len   = PICOLCDFB_SIZE*8;
-   495	
-   496	#ifdef CONFIG_HID_PICOLCD_BACKLIGHT
- > 497		info->bl_dev = data->backlight;
-   498	#endif
-   499	
-   500		fbdata = info->par;
-   501		spin_lock_init(&fbdata->lock);
-   502		fbdata->picolcd = data;
-   503		fbdata->update_rate = PICOLCDFB_UPDATE_RATE_DEFAULT;
-   504		fbdata->bpp     = picolcdfb_var.bits_per_pixel;
-   505		fbdata->force   = 1;
-   506		fbdata->vbitmap = info->par + sizeof(struct picolcd_fb_data);
-   507		fbdata->bitmap  = vmalloc(PICOLCDFB_SIZE*8);
-   508		if (fbdata->bitmap == NULL) {
-   509			dev_err(dev, "can't get a free page for framebuffer\n");
-   510			goto err_nomem;
-   511		}
-   512		info->flags |= FBINFO_VIRTFB;
-   513		info->screen_buffer = fbdata->bitmap;
-   514		info->fix.smem_start = (unsigned long)fbdata->bitmap;
-   515		memset(fbdata->vbitmap, 0xff, PICOLCDFB_SIZE);
-   516		data->fb_info = info;
-   517	
-   518		error = picolcd_fb_reset(data, 1);
-   519		if (error) {
-   520			dev_err(dev, "failed to configure display\n");
-   521			goto err_cleanup;
-   522		}
-   523	
-   524		error = device_create_file(dev, &dev_attr_fb_update_rate);
-   525		if (error) {
-   526			dev_err(dev, "failed to create sysfs attributes\n");
-   527			goto err_cleanup;
-   528		}
-   529	
-   530		fb_deferred_io_init(info);
-   531		error = register_framebuffer(info);
-   532		if (error) {
-   533			dev_err(dev, "failed to register framebuffer\n");
-   534			goto err_sysfs;
-   535		}
-   536		return 0;
-   537	
-   538	err_sysfs:
-   539		device_remove_file(dev, &dev_attr_fb_update_rate);
-   540		fb_deferred_io_cleanup(info);
-   541	err_cleanup:
-   542		data->fb_info    = NULL;
-   543	
-   544	err_nomem:
-   545		if (fbdata)
-   546			vfree(fbdata->bitmap);
-   547		framebuffer_release(info);
-   548		return error;
-   549	}
-   550	
+It can control 8 PWMs unlike any other SoC block except for MT2712.
+It uses different registers than MT2712 thought.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+> Cheers,
+> Conor.
+> 
+>>
+>> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+>> ---
+>>   Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml b/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
+>> index 0fbe8a6469eb..a5c308801619 100644
+>> --- a/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
+>> +++ b/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
+>> @@ -24,6 +24,7 @@ properties:
+>>             - mediatek,mt7629-pwm
+>>             - mediatek,mt7981-pwm
+>>             - mediatek,mt7986-pwm
+>> +          - mediatek,mt7988-pwm
+>>             - mediatek,mt8183-pwm
+>>             - mediatek,mt8365-pwm
+>>             - mediatek,mt8516-pwm
+>> -- 
+>> 2.35.3
+>>
+
 
