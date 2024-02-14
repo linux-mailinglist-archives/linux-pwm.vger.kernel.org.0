@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-1429-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1449-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A04F48545F2
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 10:35:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68EC985460E
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 10:35:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C53DE1C22530
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 09:35:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24DEC289781
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Feb 2024 09:35:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 703E11B81A;
-	Wed, 14 Feb 2024 09:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9ADBC14AAE;
+	Wed, 14 Feb 2024 09:34:51 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57191A58B
-	for <linux-pwm@vger.kernel.org>; Wed, 14 Feb 2024 09:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0A21AAD7
+	for <linux-pwm@vger.kernel.org>; Wed, 14 Feb 2024 09:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707903288; cv=none; b=CI4yuUSMOUM2SoG4mymowp5V2in0tE3JUC1MDoxNul4dBYuHV/9PfdFMNSoLfxcfRMinN/6Z85aaOSO656XHpD9VKMQ3x8FoVP11iMrCLYRztn3dGUDRKA63YcjMitR+/4fVegL4jYWPO2y0BzOwxsuwTesHj2lZp6Kx7RUPWcM=
+	t=1707903291; cv=none; b=BgMyMYUViqjXK2FFsAFudgH/Fh5URwn+BPfr6dryMA+6lkz0briwkxlQh1t2EmMEHXHpMdIUecyKr+24fLIDiTW4Lj61u3Cnapncdbxl+/j9Mf6LUWy+dk4J4AVmwegfldG2K+N18XrTT3Mu0YxI1Xw3WvBWknrh5PAdtDbGftE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707903288; c=relaxed/simple;
-	bh=DbWu18VlLTpi0TLDV4zCUYQI0ftmQeIBVlncJAGjvIc=;
+	s=arc-20240116; t=1707903291; c=relaxed/simple;
+	bh=VF916AdZ78JlJ0SXwxTExhTiVpOym5KKgRYivv6Ziis=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SHowwAD37MP6PWSRcKOlvQoB0h8RAPYqVFzPjd6zKC8L0ovDJGfB2qwt7ETTtVNELaKU51sfcAXcDLk2ijDkBrunNqcWDvWFDAIDhuEOmpwkLSFd9rvGmfvAiLUouAzQZL4JWDgD+Atcwuc1+iTxTRgNWuicN7TO3CcRv9WBUJo=
+	 MIME-Version:Content-Type; b=SsoioRuDkc+MlaPUCuJQ6284FmmSJU9qYziAmrNdDHh6ff9klQRGAylm4802b2Gz21Lb3AyKwsUGTcan6aIz+aEHafuCoC6D5o4k+RG0vTO0xe56vPOQbRFJnHt4Lwia23/KHVzp7oB3HQBmxUy3ckREM1PemIAv0YY0XhHcEpg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,15 +33,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raBf6-0005wy-R9; Wed, 14 Feb 2024 10:34:40 +0100
+	id 1raBf6-0005xb-K9; Wed, 14 Feb 2024 10:34:40 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raBf3-000fGj-Mq; Wed, 14 Feb 2024 10:34:37 +0100
+	id 1raBf3-000fGm-Qe; Wed, 14 Feb 2024 10:34:37 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raBf3-004Y8T-20;
+	id 1raBf3-004Y8W-2Q;
 	Wed, 14 Feb 2024 10:34:37 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Thierry Reding <thierry.reding@gmail.com>,
@@ -49,9 +49,9 @@ To: Thierry Reding <thierry.reding@gmail.com>,
 	linux-pwm@vger.kernel.org
 Cc: linux-tegra@vger.kernel.org,
 	kernel@pengutronix.de
-Subject: [PATCH v6 129/164] pwm: tegra: Drop duplicated tracking of the parent device
-Date: Wed, 14 Feb 2024 10:32:56 +0100
-Message-ID:  <225f4bfcb15fb69eb818ddb71d623157c447180a.1707900770.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v6 130/164] pwm: tegra: Prepare removing pwm_chip from driver data
+Date: Wed, 14 Feb 2024 10:32:57 +0100
+Message-ID:  <2813c63bf1317dee808f4c5c4a9411999f2d5746.1707900770.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
@@ -62,7 +62,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2876; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=DbWu18VlLTpi0TLDV4zCUYQI0ftmQeIBVlncJAGjvIc=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlzIjf+bHY9Rh4V/toVOTJkaXKpT/7Mep24Er3n 5lLD9yz+16JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcyI3wAKCRCPgPtYfRL+ Tvz6CACw9W3C2IdUWvecr3u+vMws3swoG3qHUb+hKAwJ2nm0iOKF20vO0n0suCe3hxFkh/pghM2 V4s+qRZaD9WlmJTivcex6+t33MIuLWj7Cp4QvwyNmC3FDudXDfeEL/6u3UvhS9ENA9CjJAnb6+S ooAZ4W7axleSW8MmiNNVWUpxG6oHa9+rUdYDruQTu4o8Ac300kIAUHzr9/943NlbEbuOIIjBhzw WdBxGpetIxPzwgxBszFQHF2uHCJ70scr9Wa8l2UywsTTL25kXS15+Je7b4Cqd2xQo7hHUl2hNMR OcXGvnb/4JZiOov49M8fGIkqnuYctBvPnhrXbU515NvPOipi
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2947; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=VF916AdZ78JlJ0SXwxTExhTiVpOym5KKgRYivv6Ziis=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlzIjgDA92l+Vp08pf0DuRT8U7DSfoVYOPFmKn9 25xgRemO/2JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcyI4AAKCRCPgPtYfRL+ TnREB/93dL9/Ft/5k5RZnjQdlJxTf+pybj4EEChiZPBGrXqUJFzUcP9mkdq18E34vqPNEJ08i+Z mt/7epSZvWbOcVEs4FWx+IKENAL6m1KRnmrO797BtG8NZ4IVykNFCT0KUSf/s8EZWLpiFNZOBQ9 RomBlYBeXCpysjsjxzspYM/KW+VjQVYLZ+8mrz5R92jQCIN93hiTF68iohnSoQrOY0JtoF+vbvw gp3u1QP6f6XmMUYZW0n/77DgEwJyvKbLbeq5KQvfpXfWFfa+wmlBwxX52gIrZtnKhXm5rLVLveW vB7ZbqpYOzfH9nHvYFhOHRVeNgZqxnsJPPU7u+Qg+HgnQIRj
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -70,89 +70,93 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-The pwmchip stores a pointer to the parent device, so there is no need
-to store another copy in driver private data. Drop struct
-tegra_pwm_chip::dev and use the pwm_chip's parent pointer instead.
+This prepares the driver for further changes that will drop struct
+pwm_chip chip from struct tegra_pwm_chip. Use the pwm_chip as driver
+data instead of the tegra_pwm_chip to get access to the pwm_chip in
+tegra_pwm_remove() without using pc->chip.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-tegra.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/pwm/pwm-tegra.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-index 82ee2f0754f9..0d5f57c9ee26 100644
+index 0d5f57c9ee26..f61c24376523 100644
 --- a/drivers/pwm/pwm-tegra.c
 +++ b/drivers/pwm/pwm-tegra.c
-@@ -66,7 +66,6 @@ struct tegra_pwm_soc {
+@@ -271,12 +271,14 @@ static const struct pwm_ops tegra_pwm_ops = {
  
- struct tegra_pwm_chip {
- 	struct pwm_chip chip;
--	struct device *dev;
+ static int tegra_pwm_probe(struct platform_device *pdev)
+ {
++	struct pwm_chip *chip;
+ 	struct tegra_pwm_chip *pc;
+ 	int ret;
  
- 	struct clk *clk;
- 	struct reset_control*rst;
-@@ -158,7 +157,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 			 */
- 			required_clk_rate *= 2;
- 
--		err = dev_pm_opp_set_rate(pc->dev, required_clk_rate);
-+		err = dev_pm_opp_set_rate(pwmchip_parent(chip), required_clk_rate);
- 		if (err < 0)
- 			return -EINVAL;
- 
-@@ -194,7 +193,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * before writing the register. Otherwise, keep it enabled.
- 	 */
- 	if (!pwm_is_enabled(pwm)) {
--		err = pm_runtime_resume_and_get(pc->dev);
-+		err = pm_runtime_resume_and_get(pwmchip_parent(chip));
- 		if (err)
- 			return err;
- 	} else
-@@ -206,7 +205,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * If the PWM is not enabled, turn the clock off again to save power.
- 	 */
- 	if (!pwm_is_enabled(pwm))
--		pm_runtime_put(pc->dev);
-+		pm_runtime_put(pwmchip_parent(chip));
- 
- 	return 0;
- }
-@@ -217,7 +216,7 @@ static int tegra_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	int rc = 0;
- 	u32 val;
- 
--	rc = pm_runtime_resume_and_get(pc->dev);
-+	rc = pm_runtime_resume_and_get(pwmchip_parent(chip));
- 	if (rc)
- 		return rc;
- 
-@@ -237,7 +236,7 @@ static void tegra_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	val &= ~PWM_ENABLE;
- 	pwm_writel(pc, pwm->hwpwm, val);
- 
--	pm_runtime_put_sync(pc->dev);
-+	pm_runtime_put_sync(pwmchip_parent(chip));
- }
- 
- static int tegra_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-@@ -280,7 +279,6 @@ static int tegra_pwm_probe(struct platform_device *pdev)
+ 	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+ 	if (!pc)
  		return -ENOMEM;
++	chip = &pc->chip;
  
  	pc->soc = of_device_get_match_data(&pdev->dev);
--	pc->dev = &pdev->dev;
  
- 	pc->regs = devm_platform_ioremap_resource(pdev, 0);
+@@ -284,7 +286,7 @@ static int tegra_pwm_probe(struct platform_device *pdev)
  	if (IS_ERR(pc->regs))
-@@ -302,7 +300,7 @@ static int tegra_pwm_probe(struct platform_device *pdev)
- 		return ret;
+ 		return PTR_ERR(pc->regs);
  
- 	/* Set maximum frequency of the IP */
--	ret = dev_pm_opp_set_rate(pc->dev, pc->soc->max_frequency);
-+	ret = dev_pm_opp_set_rate(&pdev->dev, pc->soc->max_frequency);
+-	platform_set_drvdata(pdev, pc);
++	platform_set_drvdata(pdev, chip);
+ 
+ 	pc->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(pc->clk))
+@@ -326,11 +328,11 @@ static int tegra_pwm_probe(struct platform_device *pdev)
+ 
+ 	reset_control_deassert(pc->rst);
+ 
+-	pc->chip.dev = &pdev->dev;
+-	pc->chip.ops = &tegra_pwm_ops;
+-	pc->chip.npwm = pc->soc->num_channels;
++	chip->dev = &pdev->dev;
++	chip->ops = &tegra_pwm_ops;
++	chip->npwm = pc->soc->num_channels;
+ 
+-	ret = pwmchip_add(&pc->chip);
++	ret = pwmchip_add(chip);
  	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to set max frequency: %d\n", ret);
- 		goto put_pm;
+ 		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
+ 		reset_control_assert(pc->rst);
+@@ -348,9 +350,10 @@ static int tegra_pwm_probe(struct platform_device *pdev)
+ 
+ static void tegra_pwm_remove(struct platform_device *pdev)
+ {
+-	struct tegra_pwm_chip *pc = platform_get_drvdata(pdev);
++	struct pwm_chip *chip = platform_get_drvdata(pdev);
++	struct tegra_pwm_chip *pc = to_tegra_pwm_chip(chip);
+ 
+-	pwmchip_remove(&pc->chip);
++	pwmchip_remove(chip);
+ 
+ 	reset_control_assert(pc->rst);
+ 
+@@ -359,7 +362,8 @@ static void tegra_pwm_remove(struct platform_device *pdev)
+ 
+ static int __maybe_unused tegra_pwm_runtime_suspend(struct device *dev)
+ {
+-	struct tegra_pwm_chip *pc = dev_get_drvdata(dev);
++	struct pwm_chip *chip = dev_get_drvdata(dev);
++	struct tegra_pwm_chip *pc = to_tegra_pwm_chip(chip);
+ 	int err;
+ 
+ 	clk_disable_unprepare(pc->clk);
+@@ -375,7 +379,8 @@ static int __maybe_unused tegra_pwm_runtime_suspend(struct device *dev)
+ 
+ static int __maybe_unused tegra_pwm_runtime_resume(struct device *dev)
+ {
+-	struct tegra_pwm_chip *pc = dev_get_drvdata(dev);
++	struct pwm_chip *chip = dev_get_drvdata(dev);
++	struct tegra_pwm_chip *pc = to_tegra_pwm_chip(chip);
+ 	int err;
+ 
+ 	err = pinctrl_pm_select_default_state(dev);
 -- 
 2.43.0
 
