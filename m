@@ -1,170 +1,220 @@
-Return-Path: <linux-pwm+bounces-1527-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1528-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73AD085648D
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Feb 2024 14:36:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46BF78564F3
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Feb 2024 14:54:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2DB7828527E
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Feb 2024 13:36:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C61B41F28D70
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Feb 2024 13:54:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C460130ADC;
-	Thu, 15 Feb 2024 13:36:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D41C1332BD;
+	Thu, 15 Feb 2024 13:51:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gywuzh24"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGJ3CP/j"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B8612BF3D;
-	Thu, 15 Feb 2024 13:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC195132467;
+	Thu, 15 Feb 2024 13:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708004179; cv=none; b=gicxQXISt3sKlCxGrWlHZwBJLiK6zMCBbZBMGuW6iDFcgieGjplTrYONMUpPTbGUq1Wd07DZxDHcn9lrnrUCzqQ0niK1dKBSZu/O3JkoD2H12fMOQaEi2Ggw3D2xNRku1lTaTsIg9G2XfXdwJsz52cNj4K6/mdgGD5KAsBzquJI=
+	t=1708005097; cv=none; b=VtuYk+6sz3c1Vg5iR6nnU+zS45VQBOqWaToy4iXiyO6Y25fLbzOAMShcTs0lRRnFh9L6LO7RYqKjCKTLgsMrtlPn66V/mdOITewWkyeV1PYG6lo5JQCwejm4OWil6Lb0Xxu/T2aygVmJYCoUN8Izm3q0XX/15zuOVCaWychAVYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708004179; c=relaxed/simple;
-	bh=wKwVgYFc688UeLNGciCD/DyW+yTu3pIXDuMz+D2rtjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n2rwiaJWTh6ea7Mdp0ixt7Bir3cem8oOcIf2Xs/iDpWbdeqdjA6rY2lEhSlO3kXLNB4jkS6XuUExn84nJ+NmDs0ZBog60mIfltqpbMTrIlVruzlFARa3WsYL5rfyNXNWsvoZwqku91FMGf2uV2BoryTB+5ko/m0lELRRPKsfy+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gywuzh24; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708004178; x=1739540178;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=wKwVgYFc688UeLNGciCD/DyW+yTu3pIXDuMz+D2rtjg=;
-  b=gywuzh24ibV/kWXPBHYJiMDdmkU4YhqjvGX+vlF+C7ro7sF6ZyD4k2NO
-   bSzfEXzdfNygtynjYmtR8EYjlQ9pVDAbSv72QU2tdTqxZXaUeCUwpacDw
-   3zEXmRJisUDGj4d3s9y1QFY+wFWSezlrMDbi+MPlHMkx2cZBs8LRnsUZ0
-   8OfQtL9UhvjX1ted14EulZoDb5aJapVj6C9bvb4myy3v2/FcqlKby0qjj
-   AxCHxBTbHnb8tJIM58Pi4lK1GzmMZVO4drQ6l96iIMH9BwgZHn4ArAU/O
-   lmqx5LVIGOZjXxXfJvuYSyLMLk2CVDybrJMWKgGvuFt9l3bmqW4iQoh7V
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="2234316"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="2234316"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 05:36:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="935667293"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="935667293"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 05:36:15 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rabuP-00000004ngF-005z;
-	Thu, 15 Feb 2024 15:36:13 +0200
-Date: Thu, 15 Feb 2024 15:36:12 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Raag Jadav <raag.jadav@intel.com>, jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com,
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] pwm: dwc: drop redundant error check
-Message-ID: <Zc4TTLetiGhJlx8d@smile.fi.intel.com>
-References: <20240208070529.28562-1-raag.jadav@intel.com>
- <20240208070529.28562-2-raag.jadav@intel.com>
- <qrwcje4t2pbbxilnlfz2q7njodcp6vl54uaypdbvjgvwhgvc5g@4eq5wvumpjjx>
- <ZcUJoSMhgC7lhY-H@smile.fi.intel.com>
- <cv6w4n2ptcdehn5n3mipuyfrtemm4rldhiyppazk4uqdn2xx7e@hxg4kldaacxk>
- <Zcz-csPY5x29DP7v@smile.fi.intel.com>
- <sd2ugzjrmrdvcyxotoyg53qp3i7ta4yko225ln3gk4fmik7iof@a7mab6o2kkvz>
+	s=arc-20240116; t=1708005097; c=relaxed/simple;
+	bh=RzDVzAMbt/0O8rLENBgNMOIiu2ews2E1U5PQyx+Ji0k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=duthAThQ7ST3q+IY+RI12/l/pID7L0Nmhb/kMpJj1MT6zmByzVq7B5SDMxItlbgOcnxPCuti79DYQfuELHiISOzmgiKhs7y/wXpy7QpK36g0g8faMeSDsaTLkhxhBB5wvP2OHOcegKXZUBQke9WW5qKyMLtN8/I9b3PlSb4JNs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGJ3CP/j; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4121954d4c0so3306275e9.0;
+        Thu, 15 Feb 2024 05:51:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708005094; x=1708609894; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5t9mkBRSLuX6Whm+p+USkACVg0A1ZTFUPoQmMKDP/ks=;
+        b=RGJ3CP/ji8NihQLfupeAHxS66Q+QtNvy5PxhM0MX8ofwzKLRJ4l80YaI8VMzKOg5GP
+         yeV1NGk3aArey0SyQXCgwlhmrqAv0hfLYTCOTVNrDZEJbAwDzzPEbMIxlHFgEN/eIyA4
+         JOJHqs0eN5WIlUKrz4GYDIMhkRVHSzCOwoWPnt3UjIsE1SQwaAQHlXaIEzya8btY9RhB
+         wuZqzdmqbecDlvHn+CqurKcYmfpaAGDjBRIVrY16/qHeb+kbb6zeKQ/hblN/AJ84C8Xr
+         fh7a8ThSa6yPtEeAoxs6X0DLuESPX9UGFtD3KV4adDjf56EbJ3GYqp7CF7c/qMURYLis
+         C+4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708005094; x=1708609894;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5t9mkBRSLuX6Whm+p+USkACVg0A1ZTFUPoQmMKDP/ks=;
+        b=STzCClyhCCVnz8///Rm3CjUFmeNucHivQqgorFpEp20Jocw/x7NJ4wlLWmxHdkv5PV
+         crC+0FBafKGrbwB5jQ7VzAU+2WdHrLwRJhSyheqGAJvPUibYM64ER9guIQc6f+kKRLi3
+         WP4KExTIsuWrOcypRsidUtg9lZ29inrt9OTZ/oSQiXjNmhAQbz8TEL0g0gEhc1yLNmmU
+         lN4idUYRYl/FTGyrU4I194b1hgmuKVSEULUf0HAVzAY9pRWYPNVEhPOin8muKiYR775F
+         mGnd2+htdzUJ8/qCkNRDn+GovbhbbLLwLKdgjjVbW1fwNuf6coAfEjimWqhOrm30tcDP
+         XNTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXmn5akH/NV/CbhvBGsR8nz7GQhjKNHju9HZgD8xo9MMEeRkwU8BqIz6HaHI8fb7ImsdP/pZ1qkG6wi1HuPNE4OWQrcTEbiEf20gTUTZv90TYYxxF/CffJYF7bCwpo9MuOAshlfMt2hXHXel4CMicUdhF35azYFBFitxt2dAt8mMN7YExbUdxiIW3Ov8DM2fUy5jxant0Dganp0yfTRydanq/M4xXotFwew6BapbvieN4w/168YdOWJul2TcuVHV6v9aB67pgERkpdO+MfzrlHvIKJ67T6zgfYBawbO4KRYRyCunvFq9Vs7w9i2kAQZmcwZQZU4620SE48THXmksUs+mtNRmAmrIs/hkfhxoprlHDxBILx50EAWELuRHZ4=
+X-Gm-Message-State: AOJu0Yzk2lHiFiO0I+VmZqZcdn1U8ickzALl9D9GO5DGMmNIjodxFatO
+	qJnbKMnlCoLDtwUgfeUb9zYMJU49BbV/4rw2oBK8kBvdAzeDwV5o
+X-Google-Smtp-Source: AGHT+IH7k9jN1LEPjklm49kSSJGmdKPhxpWNQecPQqPdKhvRMqEI/U195h3M4bWUY8DUrcLpEFVYaQ==
+X-Received: by 2002:a05:600c:3503:b0:412:7d0:d83 with SMTP id h3-20020a05600c350300b0041207d00d83mr1601111wmq.16.1708005093670;
+        Thu, 15 Feb 2024 05:51:33 -0800 (PST)
+Received: from ?IPv6:2001:a61:3456:4e01:6ae:b55a:bd1d:57fc? ([2001:a61:3456:4e01:6ae:b55a:bd1d:57fc])
+        by smtp.gmail.com with ESMTPSA id i7-20020a05600c290700b00410add3af79sm5061337wmd.23.2024.02.15.05.51.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Feb 2024 05:51:33 -0800 (PST)
+Message-ID: <63b248efcbd62a121610cbf37ea0339bd87c99e7.camel@gmail.com>
+Subject: Re: [PATCH v6 003/164] pwm: Provide pwmchip_alloc() function and a
+ devm variant of it
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Michael Walle
+ <mwalle@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ linux-doc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Paul Cercueil <paul@crapouillou.net>, 
+ linux-tegra@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, James Clark
+ <james.clark@arm.com>, Pavel Machek <pavel@ucw.cz>,  Broadcom internal
+ kernel review list <bcm-kernel-feedback-list@broadcom.com>, Guenter Roeck
+ <groeck@chromium.org>,  chrome-platform@lists.linux.dev, Nobuhiro Iwamatsu
+ <nobuhiro1.iwamatsu@toshiba.co.jp>, Fabio Estevam <festevam@gmail.com>, 
+ linux-riscv@lists.infradead.org, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh@kernel.org>, Samuel
+ Holland <samuel@sholland.org>,  linux-samsung-soc@vger.kernel.org, Bjorn
+ Andersson <quic_bjorande@quicinc.com>,  Florian Fainelli
+ <florian.fainelli@broadcom.com>, Jonathan Corbet <corbet@lwn.net>, Sean
+ Anderson <sean.anderson@seco.com>, Benson Leung <bleung@chromium.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, Jernej
+ Skrabec <jernej.skrabec@gmail.com>,  Jonathan Hunter
+ <jonathanh@nvidia.com>, Hammer Hsieh <hammerh0314@gmail.com>,
+ linux-rockchip@lists.infradead.org,  Chen-Yu Tsai <wens@csie.org>, Michal
+ Simek <michal.simek@amd.com>, NXP Linux Team <linux-imx@nxp.com>,
+ linux-leds@vger.kernel.org, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ linux-mips@vger.kernel.org,  linux-sunxi@lists.linux.dev,
+ platform-driver-x86@vger.kernel.org,  linux-pwm@vger.kernel.org, Kees Cook
+ <keescook@chromium.org>, Sven Peter <sven@svenpeter.dev>, Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>,  Ray Jui
+ <rjui@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Jonathan
+ =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>, Vladimir Zapolskiy
+ <vz@mleia.com>, Hans de Goede <hdegoede@redhat.com>, Mark Brown
+ <broonie@kernel.org>,  linux-mediatek@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org,  Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ linux-amlogic@lists.infradead.org, Orson Zhai <orsonzhai@gmail.com>, Mika
+ Westerberg <mika.westerberg@linux.intel.com>,  kernel@pengutronix.de,
+ linux-arm-kernel@lists.infradead.org, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>,  Alexander Shiyan <shc_work@mail.ru>, Scott
+ Branden <sbranden@broadcom.com>,  linux-gpio@vger.kernel.org, Daire
+ McNamara <daire.mcnamara@microchip.com>,  Chunyan Zhang
+ <zhang.lyra@gmail.com>, Hector Martin <marcan@marcan.st>, 
+ linux-stm32@st-md-mailman.stormreply.com, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>,  Fabrice Gasnier
+ <fabrice.gasnier@foss.st.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ asahi@lists.linux.dev,  Maxime Coquelin <mcoquelin.stm32@gmail.com>, Kevin
+ Hilman <khilman@baylibre.com>, Shawn Guo <shawnguo@kernel.org>,  Anjelique
+ Melendez <quic_amelende@quicinc.com>
+Date: Thu, 15 Feb 2024 14:51:31 +0100
+In-Reply-To: <ws4ybgtvfxqz53vk3i67suipzyqpy5y5fqeee5uf3ua6ow222n@i4ktjuorq3nl>
+References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+	 <9577d6053a5a52536057dc8654ff567181c2da82.1707900770.git.u.kleine-koenig@pengutronix.de>
+	 <Zcy21tsntcK80hef@smile.fi.intel.com>
+	 <ws4ybgtvfxqz53vk3i67suipzyqpy5y5fqeee5uf3ua6ow222n@i4ktjuorq3nl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <sd2ugzjrmrdvcyxotoyg53qp3i7ta4yko225ln3gk4fmik7iof@a7mab6o2kkvz>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Feb 15, 2024 at 10:22:57AM +0100, Uwe Kleine-König wrote:
-> On Wed, Feb 14, 2024 at 07:54:58PM +0200, Andy Shevchenko wrote:
-> > On Wed, Feb 14, 2024 at 06:45:48PM +0100, Uwe Kleine-König wrote:
-> > > On Thu, Feb 08, 2024 at 07:04:33PM +0200, Andy Shevchenko wrote:
-> > > > On Thu, Feb 08, 2024 at 08:46:44AM +0100, Uwe Kleine-König wrote:
-> > > > > On Thu, Feb 08, 2024 at 12:35:25PM +0530, Raag Jadav wrote:
-> > > > > > pcim_iomap_table() fails only if pcim_iomap_regions() fails. No need to
-> > > > > > check for failure if the latter is already successful.
-> > > > > 
-> > > > > Is this really true? pcim_iomap_table() calls devres_alloc_node() which
-> > > > > might fail if the allocation fails. (Yes, I know
-> > > > > https://lwn.net/Articles/627419/, but the rule is still to check for
-> > > > > errors, right?)
-> > > > 
-> > > > We do not add a dead code to the kernel, right?
-> > > > 
-> > > > > What am I missing?
-> > > > 
-> > > > Mysterious ways of the twisted PCI devres code.
-> > > > Read the above commit message again :-)
-> > > > 
-> > > > For your convenience I can elaborate. pcim_iomap_table() calls _first_
-> > > > devres_find() which _will_ succeed if the pcim_iomap_regions() previously
-> > > > succeeded. Does it help to understand how it designed?
-> > > 
-> > > I assume you're saying that after pcim_iomap_regions() succeeded it's
-> > > already known that pcim_iomap_table() succeeds (because the former
-> > > already called the latter).
-> > > 
-> > > I'm still concerned here. I agree that error checking might be skipped
-> > > if it's clear that no error can happen (the device cannot disappear
-> > > between these two calls, can it?), 
-> > 
-> > It depends. If you call it in some asynchronous callbacks which may be run
-> > after PCI device disappears, then indeed, it's problematic. But you probably
-> > will have much bigger issue at that point already.
-> > 
-> > In ->probe() it's guaranteed to work as I suggested (assuming properly working
-> > hardware).
-> 
-> Assuming properly working hardware allows to drop many error checks :-)
+On Thu, 2024-02-15 at 13:01 +0100, Uwe Kleine-K=C3=B6nig wrote:
+> On Wed, Feb 14, 2024 at 02:49:26PM +0200, Andy Shevchenko wrote:
+> > On Wed, Feb 14, 2024 at 10:30:50AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > This function allocates a struct pwm_chip and driver data. Compared t=
+o
+> > > the status quo the split into pwm_chip and driver data is new, otherw=
+ise
+> > > it doesn't change anything relevant (yet).
+> > >=20
+> > > The intention is that after all drivers are switched to use this
+> > > allocation function, its possible to add a struct device to struct
+> > > pwm_chip to properly track the latter's lifetime without touching all
+> > > drivers again. Proper lifetime tracking is a necessary precondition t=
+o
+> > > introduce character device support for PWMs (that implements atomic
+> > > setting and doesn't suffer from the sysfs overhead of the /sys/class/=
+pwm
+> > > userspace support).
+> > >=20
+> > > The new function pwmchip_priv() (obviously?) only works for chips
+> > > allocated with pwmchip_alloc().
+> >=20
+> > ...
+> >=20
+> > > +#define PWMCHIP_ALIGN ARCH_DMA_MINALIGN
+> > > +
+> > > +static void *pwmchip_priv(struct pwm_chip *chip)
+> > > +{
+> > > +	return (void *)chip + ALIGN(sizeof(*chip), PWMCHIP_ALIGN);
+> > > +}
+> >=20
+> > Why not use dma_get_cache_alignment() ?
+>=20
+> Hmm, that function returns 1 if ARCH_HAS_DMA_MINALIGN isn't defined. The
+> idea of using ARCH_DMA_MINALIGN was to ensure that the priv data has the
+> same minimal alignment as kmalloc(). Took my inspriration from
+> https://lore.kernel.org/r/20240209-counter-align-fix-v2-1-5777ea0a2722@an=
+alog.com
+> . The implementation of dma_get_cache_alignment suggests that not all
+> archs provide ARCH_DMA_MINALIGN? Also there is ARCH_KMALLOC_MINALIGN.
+> Hmm, don't know yet what to do here.
 
-Yes, and we have some checks are being not implemented ("dropped"), but here is
-the thing: this is a PCI device and surprise removal (while it's not possible
-for the on-die devices) should be handled differently, not related to this code
-anyway. Malicious hardware is out of scope either.
+Here it goes my 2 cents... AFAIK, ARCH_DMA_MINALIGN gives you the same alig=
+nment
+guarantees than devm_kmalloc() for instance. In some archs it will effectiv=
+ely be the
+same as ARCH_KMALLOC_MINALIGN. Now, I think it only matters if the owners o=
+f private
+data intend to have a DMA safe buffer in their structs. If that is the case=
+, we need
+to ensure a proper alignment for that structure. In IIO for example, the co=
+nstruct is
+like this:
 
-> > > but for me as an uninitiated pci code
-> > > reader, I wonder about
-> > > 
-> > > 	dwc->base = pcim_iomap_table(pci)[0];
-> > > 
-> > > without error checking. (OTOH, if pcim_iomap_table() returned NULL, the
-> > > "[0]" part is already problematic.)
-> > 
-> > Seems it's your problem, many drivers use the way I suggested.
-> > 
-> > > I'd like to have a code comment here saying that pcim_iomap_table()
-> > > won't return NULL.
-> > 
-> > Why? It's redundant. If you use it, you should know this API.
-> > So, the bottom line, does this API needs better documentation?
-> 
-> If a driver author knows it while writing the code, it's obvious. But if
-> the driver author looks again in 2 years or someone else (e.g. me with
-> the PWM maintainer hat on and with little pci experience) that knowledge
-> might be faded.
+https://elixir.bootlin.com/linux/latest/source/drivers/iio/dac/ltc2688.c#L9=
+6
 
-This is widely used pattern. Anybody who works with Git should know how
-to use `git grep` tool. If in doubts, always can ask in the mailing lists.
-I still consider it redundant.
+The buffers should come last in the struct so they are alone in the line. I=
+n IIO,
+Jonathan has a strict policy for this. Like, even if you just want to trans=
+fer 2/4
+bytes via spi, we need to make the buffer safe (apparently there are some c=
+ontrollers
+only doing DMA - even for small transfers).
 
-P.S. That's what you call "bikeshedding" (done by yourself here)?
+I would say that if unsure, go with ARCH_DMA_MINALIGN. You just might waste=
+ some
+space in some archs. OTOH, if you think DMA is not really a thing for pwm c=
+hips, you
+might go ARCH_KMALLOC_MINALIGN. And since you already have your own PWMCHIP=
+_ALIGN, it
+should be easy to change the requirements down the road (if needed).
 
+That said, I'm not familiar with dma_get_cache_alignment().
 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+- Nuno S=C3=A1
 
 
