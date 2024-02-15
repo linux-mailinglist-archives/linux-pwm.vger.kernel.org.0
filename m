@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-1511-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1512-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2F30855DE2
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Feb 2024 10:24:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD08E855E96
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Feb 2024 10:55:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 13CED1C220C7
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Feb 2024 09:24:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D2C531C21B66
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Feb 2024 09:55:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 437EE1B94F;
-	Thu, 15 Feb 2024 09:23:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 659A064A9F;
+	Thu, 15 Feb 2024 09:54:57 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAB61B951
-	for <linux-pwm@vger.kernel.org>; Thu, 15 Feb 2024 09:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9644D63519
+	for <linux-pwm@vger.kernel.org>; Thu, 15 Feb 2024 09:54:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707988996; cv=none; b=NM03kpDoBBLpKZMwR9I2huBzUw/OgQjVojXvnaMcFU68hP4lbTgNGgtajhLgV4DoD00zcStfn4K+7cPhlXP/fiEyY7bPjzS442HfSkGkvpgrFZ4O3n09qv5iOOOSTGZ12KEL6DiGIv3DREJbMZ6conJAxynKt6LV8AJ8BJ/WIP8=
+	t=1707990897; cv=none; b=DecP0mznBtbsSd7yj/CV/PfJVmItsYcTD2itHWiAxLfpAOH+jHqW+dxdufav+idH6UmUdjmryt6Pj6Wro259hBM8F5H2wFY+UyhTRHATP1CQqqOdeJML+Yht/sI9w+k1D+TWZ/c4nNzxtRYapFjDXA7IClKSGq5HnM0QCNxXfEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707988996; c=relaxed/simple;
-	bh=jE1rZpY3SjNM/hr3FU2idYQaRSA7hffibi3C0fZZNdY=;
+	s=arc-20240116; t=1707990897; c=relaxed/simple;
+	bh=RNF989/m20IyPhB5QfOKoOvl9/hYrxwPiHxxPlAAJzk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G10In9od4pBtniUp1QxRCICvLFTNIyn8WH9eYrWIFp+36uIojdOs7TB6wSL5sBOJacVXoGkEjoDhwz/aNUTkTXuvI3MWe3L5Jne5qB5mbSqK9EQQnGS4N39fyzmIe7SL/2DuYjlgBRl1NqNgIEcdXzo5xYq+MUXaiO8UAuv3C0U=
+	 Content-Type:Content-Disposition:In-Reply-To; b=A/D4McwI/jai5Blmpeh+Hi/YeEkc/0BNIis6FL1S1vvvjLAeTyjez28b4gMYSdsWX5xPMzFMlDn4wxGl/PX8vk+EH247JGSd2R/CuCgkzBqz/KDFDYjWH1DgwztVoKyRIBeT2uO42JDchF//fiMPE8vVM/5xvPFiHpo5/WzlWSs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,30 +33,32 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raXxK-0001b0-QJ; Thu, 15 Feb 2024 10:22:58 +0100
+	id 1raYRr-00047w-9k; Thu, 15 Feb 2024 10:54:31 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raXxJ-000r6J-Bz; Thu, 15 Feb 2024 10:22:57 +0100
+	id 1raYRp-000rFT-Ba; Thu, 15 Feb 2024 10:54:29 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raXxJ-005Gfg-0v;
-	Thu, 15 Feb 2024 10:22:57 +0100
-Date: Thu, 15 Feb 2024 10:22:57 +0100
+	id 1raYRp-005HU7-0o;
+	Thu, 15 Feb 2024 10:54:29 +0100
+Date: Thu, 15 Feb 2024 10:54:28 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Raag Jadav <raag.jadav@intel.com>, jarkko.nikula@linux.intel.com, 
-	mika.westerberg@linux.intel.com, lakshmi.sowjanya.d@intel.com, linux-pwm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] pwm: dwc: drop redundant error check
-Message-ID: <sd2ugzjrmrdvcyxotoyg53qp3i7ta4yko225ln3gk4fmik7iof@a7mab6o2kkvz>
-References: <20240208070529.28562-1-raag.jadav@intel.com>
- <20240208070529.28562-2-raag.jadav@intel.com>
- <qrwcje4t2pbbxilnlfz2q7njodcp6vl54uaypdbvjgvwhgvc5g@4eq5wvumpjjx>
- <ZcUJoSMhgC7lhY-H@smile.fi.intel.com>
- <cv6w4n2ptcdehn5n3mipuyfrtemm4rldhiyppazk4uqdn2xx7e@hxg4kldaacxk>
- <Zcz-csPY5x29DP7v@smile.fi.intel.com>
+To: Dharma Balasubiramani <dharma.b@microchip.com>
+Cc: sam@ravnborg.org, bbrezillon@kernel.org, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
+	daniel@ffwll.ch, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	conor+dt@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
+	claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, lee@kernel.org, 
+	thierry.reding@gmail.com, linux-pwm@vger.kernel.org, hari.prasathge@microchip.com, 
+	manikandan.m@microchip.com, Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [linux][PATCH v6 2/3] dt-bindings: atmel,hlcdc: convert pwm
+ bindings to json-schema
+Message-ID: <4psibzz7xylyp3zbmp3gup2gojh77bsllkyosbfdacyw4gzxuw@djl7eg4oeg2r>
+References: <20240202001733.91455-1-dharma.b@microchip.com>
+ <20240202001733.91455-3-dharma.b@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -64,86 +66,149 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="52elieucqt6bggmp"
+	protocol="application/pgp-signature"; boundary="bkvbrrniz7f544mh"
 Content-Disposition: inline
-In-Reply-To: <Zcz-csPY5x29DP7v@smile.fi.intel.com>
+In-Reply-To: <20240202001733.91455-3-dharma.b@microchip.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---52elieucqt6bggmp
+--bkvbrrniz7f544mh
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 07:54:58PM +0200, Andy Shevchenko wrote:
-> On Wed, Feb 14, 2024 at 06:45:48PM +0100, Uwe Kleine-K=F6nig wrote:
-> > On Thu, Feb 08, 2024 at 07:04:33PM +0200, Andy Shevchenko wrote:
-> > > On Thu, Feb 08, 2024 at 08:46:44AM +0100, Uwe Kleine-K=F6nig wrote:
-> > > > On Thu, Feb 08, 2024 at 12:35:25PM +0530, Raag Jadav wrote:
-> > > > > pcim_iomap_table() fails only if pcim_iomap_regions() fails. No n=
-eed to
-> > > > > check for failure if the latter is already successful.
-> > > >=20
-> > > > Is this really true? pcim_iomap_table() calls devres_alloc_node() w=
-hich
-> > > > might fail if the allocation fails. (Yes, I know
-> > > > https://lwn.net/Articles/627419/, but the rule is still to check for
-> > > > errors, right?)
-> > >=20
-> > > We do not add a dead code to the kernel, right?
-> > >=20
-> > > > What am I missing?
-> > >=20
-> > > Mysterious ways of the twisted PCI devres code.
-> > > Read the above commit message again :-)
-> > >=20
-> > > For your convenience I can elaborate. pcim_iomap_table() calls _first_
-> > > devres_find() which _will_ succeed if the pcim_iomap_regions() previo=
-usly
-> > > succeeded. Does it help to understand how it designed?
-> >=20
-> > I assume you're saying that after pcim_iomap_regions() succeeded it's
-> > already known that pcim_iomap_table() succeeds (because the former
-> > already called the latter).
-> >=20
-> > I'm still concerned here. I agree that error checking might be skipped
-> > if it's clear that no error can happen (the device cannot disappear
-> > between these two calls, can it?),=20
->=20
-> It depends. If you call it in some asynchronous callbacks which may be run
-> after PCI device disappears, then indeed, it's problematic. But you proba=
-bly
-> will have much bigger issue at that point already.
->=20
-> In ->probe() it's guaranteed to work as I suggested (assuming properly wo=
-rking
-> hardware).
+Hello,
 
-Assuming properly working hardware allows to drop many error checks :-)
+On Fri, Feb 02, 2024 at 05:47:32AM +0530, Dharma Balasubiramani wrote:
+> Convert device tree bindings for Atmel's HLCDC PWM controller to YAML
+> format.
+>=20
+> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+> Changelog
+> v5 -> v6
+> - Drop the example as we have one complete example in mfd binding.
+> v4 -> v5
+> v3 -> v4
+> - No changes
+> Note: The clean up patch will be sent later as Sam suggested.
+> v2 -> v3
+> - Remove '|' in description, as there is no formatting to preserve.
+> - Delete the description for pwm-cells.
+> - Drop the label for pwm node as it not used.
+> v1 -> v2
+> - Remove the explicit copyrights.
+> - Modify title (not include words like binding/driver).
+> - Modify description actually describing the hardware and not the driver.
+> - Remove pinctrl properties which aren't required.
+> - Drop parent node and it's other sub-device node which are not related h=
+ere.
+> ---
+>  .../bindings/pwm/atmel,hlcdc-pwm.yaml         | 35 +++++++++++++++++++
+>  .../bindings/pwm/atmel-hlcdc-pwm.txt          | 29 ---------------
+>  2 files changed, 35 insertions(+), 29 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm=
+=2Eyaml
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm=
+=2Etxt
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml b=
+/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
+> new file mode 100644
+> index 000000000000..0e92868a2b68
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/atmel,hlcdc-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Atmel's HLCDC's PWM controller
+> +
+> +maintainers:
+> +  - Nicolas Ferre <nicolas.ferre@microchip.com>
+> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
+> +  - Claudiu Beznea <claudiu.beznea@tuxon.dev>
+> +
+> +description:
+> +  The LCDC integrates a Pulse Width Modulation (PWM) Controller. This bl=
+ock
+> +  generates the LCD contrast control signal (LCD_PWM) that controls the
+> +  display's contrast by software. LCDC_PWM is an 8-bit PWM signal that c=
+an be
+> +  converted to an analog voltage with a simple passive filter. LCD displ=
+ay
+> +  panels have different backlight specifications in terms of minimum/max=
+imum
+> +  values for PWM frequency. If the LCDC PWM frequency range does not mat=
+ch the
+> +  LCD display panel, it is possible to use the standalone PWM Controller=
+ to
+> +  drive the backlight.
+> +
+> +properties:
+> +  compatible:
+> +    const: atmel,hlcdc-pwm
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +required:
+> +  - compatible
+> +  - "#pwm-cells"
+> +
+> +additionalProperties: false
+> diff --git a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt b/=
+Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+> deleted file mode 100644
+> index afa501bf7f94..000000000000
+> --- a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
+> +++ /dev/null
+> @@ -1,29 +0,0 @@
+> -Device-Tree bindings for Atmel's HLCDC (High-end LCD Controller) PWM dri=
+ver
+> -
+> -The Atmel HLCDC PWM is subdevice of the HLCDC MFD device.
+> -See ../mfd/atmel-hlcdc.txt for more details.
+> -
+> -Required properties:
+> - - compatible: value should be one of the following:
+> -   "atmel,hlcdc-pwm"
+> - - pinctr-names: the pin control state names. Should contain "default".
+> - - pinctrl-0: should contain the pinctrl states described by pinctrl
+> -   default.
+> - - #pwm-cells: should be set to 3. This PWM chip use the default 3 cells
+> -   bindings defined in pwm.yaml in this directory.
+> -
+> -Example:
+> -
+> -	hlcdc: hlcdc@f0030000 {
+> -		compatible =3D "atmel,sama5d3-hlcdc";
+> -		reg =3D <0xf0030000 0x2000>;
+> -		clocks =3D <&lcdc_clk>, <&lcdck>, <&clk32k>;
+> -		clock-names =3D "periph_clk","sys_clk", "slow_clk";
+> -
+> -		hlcdc_pwm: hlcdc-pwm {
+> -			compatible =3D "atmel,hlcdc-pwm";
+> -			pinctrl-names =3D "default";
+> -			pinctrl-0 =3D <&pinctrl_lcd_pwm>;
+> -			#pwm-cells =3D <3>;
+> -		};
+> -	};
 
-> > but for me as an uninitiated pci code
-> > reader, I wonder about
-> >=20
-> > 	dwc->base =3D pcim_iomap_table(pci)[0];
-> >=20
-> > without error checking. (OTOH, if pcim_iomap_table() returned NULL, the
-> > "[0]" part is already problematic.)
->=20
-> Seems it's your problem, many drivers use the way I suggested.
->=20
-> > I'd like to have a code comment here saying that pcim_iomap_table()
-> > won't return NULL.
->=20
-> Why? It's redundant. If you use it, you should know this API.
-> So, the bottom line, does this API needs better documentation?
+I guess dropping the example is fine because it's included now in the
+mfd binding.
 
-If a driver author knows it while writing the code, it's obvious. But if
-the driver author looks again in 2 years or someone else (e.g. me with
-the PWM maintainer hat on and with little pci experience) that knowledge
-might be faded.
+Applied to
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
+-next
 
 Best regards
 Uwe
@@ -152,20 +217,20 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---52elieucqt6bggmp
+--bkvbrrniz7f544mh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXN1/AACgkQj4D7WH0S
-/k5JrQf/Qt6r2gqZjxMeq4PGvF1ZTCfwDFGvIsSfsXifo93hI+YxWNxiNGkXqwol
-MPOMR2g6xorzUL0Jz/fJZjnD/KqhBfM8DcSDNTuXi5wdZshZrto0WKcTP8YwrSBH
-AQGVKClLGe1YXgo0Gzuc1IXACRNJrMjp3rEZsqUy4xANrvEXfMH1KYWzIC7k0P0b
-2Grc2iLKinIuyfv59cWZixH/wf1Fl0SdJWsrhQ8ltf1tar1zO988tbFC3Yy3/sst
-+OLKIq/6iAc1iCc9wpzSCVC0kxaEgru2pgrX/BeW1tO9bDu5uBRv6jvqq51dLid6
-vTlKdejBqqBizFNTA4dsp29thDlICw==
-=fVEU
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXN31QACgkQj4D7WH0S
+/k6NeAf9EVR8Xz9GuvTvAqU0vc/y1P/c6V7/AtXRwh5HxqS2eziYkB1DZ7gU7MzY
+pZ5nyNIvTFXxrcGr4jKn8XaFMUVLaduPRRld8o4OpCxgrRcdG6yj+MRox9gQ4eTq
+H31V7tmZCubtMX1CIrNgFv91u6mj2tnndzxCS2MpVIYCt4SVG0SH9Yah3VTZ2Q4h
+zHteuvTsi/4n0JIx4qBGjJerCR8+5DrTW4NxbawleSuXpqfbSSPfabVjPHd4sA9g
+DnREROuPWeL3QV/aQ3F7X9y2FcfjK1B2F7V3MVm6N/S7Y/gT7NjmF1985t9O3hmK
+hxUuN2McBmMJC3yK4gUBzlAYjOCE3w==
+=Q1fN
 -----END PGP SIGNATURE-----
 
---52elieucqt6bggmp--
+--bkvbrrniz7f544mh--
 
