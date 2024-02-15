@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-1512-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1513-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD08E855E96
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Feb 2024 10:55:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A183855EAC
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Feb 2024 11:02:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D2C531C21B66
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Feb 2024 09:55:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B88812839CA
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Feb 2024 10:02:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 659A064A9F;
-	Thu, 15 Feb 2024 09:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1374266B55;
+	Thu, 15 Feb 2024 10:02:27 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9644D63519
-	for <linux-pwm@vger.kernel.org>; Thu, 15 Feb 2024 09:54:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BD765E03
+	for <linux-pwm@vger.kernel.org>; Thu, 15 Feb 2024 10:02:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707990897; cv=none; b=DecP0mznBtbsSd7yj/CV/PfJVmItsYcTD2itHWiAxLfpAOH+jHqW+dxdufav+idH6UmUdjmryt6Pj6Wro259hBM8F5H2wFY+UyhTRHATP1CQqqOdeJML+Yht/sI9w+k1D+TWZ/c4nNzxtRYapFjDXA7IClKSGq5HnM0QCNxXfEY=
+	t=1707991347; cv=none; b=Y186ibLEH+UmhSYeeknmS1ctuzdmj0UHmftX3MKA9+11BdTyugn7zB/1ETkGupz/Bz49wk4C4SKMjz2kCCk3Ss5q3xiH/80ZP7l+KOIIvemjI2HJiY7ExvtBTBY+1f93SVKV5mLwtKBXv2ZvQqao6kIOC8+WFRoxCT9Vi9tatzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707990897; c=relaxed/simple;
-	bh=RNF989/m20IyPhB5QfOKoOvl9/hYrxwPiHxxPlAAJzk=;
+	s=arc-20240116; t=1707991347; c=relaxed/simple;
+	bh=To/616VYsl1JYtI0DcRNUrjLciru29NY2Dgy6sQDoRA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A/D4McwI/jai5Blmpeh+Hi/YeEkc/0BNIis6FL1S1vvvjLAeTyjez28b4gMYSdsWX5xPMzFMlDn4wxGl/PX8vk+EH247JGSd2R/CuCgkzBqz/KDFDYjWH1DgwztVoKyRIBeT2uO42JDchF//fiMPE8vVM/5xvPFiHpo5/WzlWSs=
+	 Content-Type:Content-Disposition:In-Reply-To; b=tOqYEFj5bUhL6HhPagCZZNsMIdamyFmzdSalvsgrFXuSNyKOmKohIdiys8EKRe3Ou5zNmt2Y9N/jIBbCDCSt3tXTULvuU/P1/DMWBCW7Ogji6NX5KSlSG92WRsGhiDqlCP72gfoTK1k4xjSwfq4KJMK134wyh2dVraG94HC7RGw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,32 +33,35 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raYRr-00047w-9k; Thu, 15 Feb 2024 10:54:31 +0100
+	id 1raYZC-0004fD-8S; Thu, 15 Feb 2024 11:02:06 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raYRp-000rFT-Ba; Thu, 15 Feb 2024 10:54:29 +0100
+	id 1raYZA-000rGi-Vp; Thu, 15 Feb 2024 11:02:04 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1raYRp-005HU7-0o;
-	Thu, 15 Feb 2024 10:54:29 +0100
-Date: Thu, 15 Feb 2024 10:54:28 +0100
+	id 1raYZA-005HsV-2q;
+	Thu, 15 Feb 2024 11:02:04 +0100
+Date: Thu, 15 Feb 2024 11:02:04 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: sam@ravnborg.org, bbrezillon@kernel.org, 
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, sam@ravnborg.org, bbrezillon@kernel.org, 
 	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
 	daniel@ffwll.ch, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
 	conor+dt@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
 	claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, lee@kernel.org, 
-	thierry.reding@gmail.com, linux-pwm@vger.kernel.org, hari.prasathge@microchip.com, 
-	manikandan.m@microchip.com, Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [linux][PATCH v6 2/3] dt-bindings: atmel,hlcdc: convert pwm
- bindings to json-schema
-Message-ID: <4psibzz7xylyp3zbmp3gup2gojh77bsllkyosbfdacyw4gzxuw@djl7eg4oeg2r>
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, 
+	linux-pwm@vger.kernel.org, Dharma Balasubiramani <dharma.b@microchip.com>, 
+	hari.prasathge@microchip.com, manikandan.m@microchip.com, 
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: (subset) [linux][PATCH v6 3/3] dt-bindings: mfd: atmel,hlcdc:
+ Convert to DT schema format
+Message-ID: <aamdttvdk3jmswvy3rw3debk3ouddkgjbs6xmixroe6kqakjw4@lnd5crcgoeyj>
 References: <20240202001733.91455-1-dharma.b@microchip.com>
- <20240202001733.91455-3-dharma.b@microchip.com>
+ <20240202001733.91455-4-dharma.b@microchip.com>
+ <170738899221.920003.15342446791449663430.b4-ty@kernel.org>
+ <cedecdb7-fe4a-42ea-9a11-faa82f84b57d@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -66,149 +69,56 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bkvbrrniz7f544mh"
+	protocol="application/pgp-signature"; boundary="o2z5u2icip6vcnon"
 Content-Disposition: inline
-In-Reply-To: <20240202001733.91455-3-dharma.b@microchip.com>
+In-Reply-To: <cedecdb7-fe4a-42ea-9a11-faa82f84b57d@linaro.org>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---bkvbrrniz7f544mh
+--o2z5u2icip6vcnon
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Fri, Feb 02, 2024 at 05:47:32AM +0530, Dharma Balasubiramani wrote:
-> Convert device tree bindings for Atmel's HLCDC PWM controller to YAML
-> format.
+On Mon, Feb 12, 2024 at 11:23:02AM +0100, Krzysztof Kozlowski wrote:
+> On 08/02/2024 11:43, Lee Jones wrote:
+> > On Fri, 02 Feb 2024 05:47:33 +0530, Dharma Balasubiramani wrote:
+> >> Convert the atmel,hlcdc binding to DT schema format.
+> >>
+> >> Align clocks and clock-names properties to clearly indicate that the L=
+CD
+> >> controller expects lvds_pll_clk when interfaced with the lvds display.=
+ This
+> >> alignment with the specific hardware requirements ensures accurate dev=
+ice tree
+> >> configuration for systems utilizing the HLCDC IP.
+> >>
+> >> [...]
+> >=20
+> > Applied, thanks!
+> >=20
+> > [3/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT schema format
+> >       commit: cb946db1335b599ece363d33966bf653ed0fa58a
+> >=20
 >=20
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
-> Changelog
-> v5 -> v6
-> - Drop the example as we have one complete example in mfd binding.
-> v4 -> v5
-> v3 -> v4
-> - No changes
-> Note: The clean up patch will be sent later as Sam suggested.
-> v2 -> v3
-> - Remove '|' in description, as there is no formatting to preserve.
-> - Delete the description for pwm-cells.
-> - Drop the label for pwm node as it not used.
-> v1 -> v2
-> - Remove the explicit copyrights.
-> - Modify title (not include words like binding/driver).
-> - Modify description actually describing the hardware and not the driver.
-> - Remove pinctrl properties which aren't required.
-> - Drop parent node and it's other sub-device node which are not related h=
-ere.
-> ---
->  .../bindings/pwm/atmel,hlcdc-pwm.yaml         | 35 +++++++++++++++++++
->  .../bindings/pwm/atmel-hlcdc-pwm.txt          | 29 ---------------
->  2 files changed, 35 insertions(+), 29 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm=
-=2Eyaml
->  delete mode 100644 Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm=
-=2Etxt
+> Next is still failing.
+
+Failing in the sense of dtbs_check, right?
+
+> Dharma,
+> You must explain and clearly mark dependencies between patches.
 >=20
-> diff --git a/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml b=
-/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
-> new file mode 100644
-> index 000000000000..0e92868a2b68
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/atmel,hlcdc-pwm.yaml
-> @@ -0,0 +1,35 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/atmel,hlcdc-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Atmel's HLCDC's PWM controller
-> +
-> +maintainers:
-> +  - Nicolas Ferre <nicolas.ferre@microchip.com>
-> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
-> +  - Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> +
-> +description:
-> +  The LCDC integrates a Pulse Width Modulation (PWM) Controller. This bl=
-ock
-> +  generates the LCD contrast control signal (LCD_PWM) that controls the
-> +  display's contrast by software. LCDC_PWM is an 8-bit PWM signal that c=
-an be
-> +  converted to an analog voltage with a simple passive filter. LCD displ=
-ay
-> +  panels have different backlight specifications in terms of minimum/max=
-imum
-> +  values for PWM frequency. If the LCDC PWM frequency range does not mat=
-ch the
-> +  LCD display panel, it is possible to use the standalone PWM Controller=
- to
-> +  drive the backlight.
-> +
-> +properties:
-> +  compatible:
-> +    const: atmel,hlcdc-pwm
-> +
-> +  "#pwm-cells":
-> +    const: 3
-> +
-> +required:
-> +  - compatible
-> +  - "#pwm-cells"
-> +
-> +additionalProperties: false
-> diff --git a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt b/=
-Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-> deleted file mode 100644
-> index afa501bf7f94..000000000000
-> --- a/Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
-> +++ /dev/null
-> @@ -1,29 +0,0 @@
-> -Device-Tree bindings for Atmel's HLCDC (High-end LCD Controller) PWM dri=
-ver
-> -
-> -The Atmel HLCDC PWM is subdevice of the HLCDC MFD device.
-> -See ../mfd/atmel-hlcdc.txt for more details.
-> -
-> -Required properties:
-> - - compatible: value should be one of the following:
-> -   "atmel,hlcdc-pwm"
-> - - pinctr-names: the pin control state names. Should contain "default".
-> - - pinctrl-0: should contain the pinctrl states described by pinctrl
-> -   default.
-> - - #pwm-cells: should be set to 3. This PWM chip use the default 3 cells
-> -   bindings defined in pwm.yaml in this directory.
-> -
-> -Example:
-> -
-> -	hlcdc: hlcdc@f0030000 {
-> -		compatible =3D "atmel,sama5d3-hlcdc";
-> -		reg =3D <0xf0030000 0x2000>;
-> -		clocks =3D <&lcdc_clk>, <&lcdck>, <&clk32k>;
-> -		clock-names =3D "periph_clk","sys_clk", "slow_clk";
-> -
-> -		hlcdc_pwm: hlcdc-pwm {
-> -			compatible =3D "atmel,hlcdc-pwm";
-> -			pinctrl-names =3D "default";
-> -			pinctrl-0 =3D <&pinctrl_lcd_pwm>;
-> -			#pwm-cells =3D <3>;
-> -		};
-> -	};
+> Lee,
+> Can you pick up two previous patches as well?
 
-I guess dropping the example is fine because it's included now in the
-mfd binding.
-
-Applied to
-
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
--next
+I applied the pwm patch now. If Lee wants to pick up this one via his
+tree that would be fine for me, too. If that's the case please tell me,
+then I'll drop it from my for-next branch again. Feel free to add
+my Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> for patch
+#2 then.
 
 Best regards
 Uwe
@@ -217,20 +127,20 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---bkvbrrniz7f544mh
+--o2z5u2icip6vcnon
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXN31QACgkQj4D7WH0S
-/k6NeAf9EVR8Xz9GuvTvAqU0vc/y1P/c6V7/AtXRwh5HxqS2eziYkB1DZ7gU7MzY
-pZ5nyNIvTFXxrcGr4jKn8XaFMUVLaduPRRld8o4OpCxgrRcdG6yj+MRox9gQ4eTq
-H31V7tmZCubtMX1CIrNgFv91u6mj2tnndzxCS2MpVIYCt4SVG0SH9Yah3VTZ2Q4h
-zHteuvTsi/4n0JIx4qBGjJerCR8+5DrTW4NxbawleSuXpqfbSSPfabVjPHd4sA9g
-DnREROuPWeL3QV/aQ3F7X9y2FcfjK1B2F7V3MVm6N/S7Y/gT7NjmF1985t9O3hmK
-hxUuN2McBmMJC3yK4gUBzlAYjOCE3w==
-=Q1fN
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXN4RwACgkQj4D7WH0S
+/k6aQggAqysz6fco+x2BEiMLKvymsmjxsyB2/87ERoRKMlE6OrSSbqyjTAhMSXeo
+V66WmW2x3F1DhLcpwochJJIc2e4sFUWSJ1qfXPyGNTocDInGiLAhYZGqoBuOZBIN
+nfJTFseFLQ429Y9Ip7uMet4TIhZjAX0t8cMGKDZSMU2h+Xeuj76BidSxgtiHErcP
+k0ej0USTqRXvJ3IebZ7lbrhJBPF5CMAW9U83v9gqCbg85lVGANWcte/AcvPTKCcH
+CERT4AOYikNxEQIC8PEhYWCwOcR9lkY4o0WPSUe6T/11eFmiga+uk+NDdRONRPN7
+w3esiQ5TsIkYMiK/13Ve0Y8podbLnQ==
+=g/pN
 -----END PGP SIGNATURE-----
 
---bkvbrrniz7f544mh--
+--o2z5u2icip6vcnon--
 
