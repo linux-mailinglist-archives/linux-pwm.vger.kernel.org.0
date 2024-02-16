@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-1532-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1533-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 345FD8577ED
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Feb 2024 09:48:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D713E857836
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Feb 2024 09:57:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BBFA4B21593
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Feb 2024 08:48:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5729C1F237E3
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Feb 2024 08:57:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5E2C1CF9B;
-	Fri, 16 Feb 2024 08:44:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 433361AADA;
+	Fri, 16 Feb 2024 08:57:07 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27A81CF92
-	for <linux-pwm@vger.kernel.org>; Fri, 16 Feb 2024 08:44:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DE61AAD3
+	for <linux-pwm@vger.kernel.org>; Fri, 16 Feb 2024 08:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708073062; cv=none; b=jxPpVePDCx+4QS9NQmWOGZfb0oYsZPlm4ATspjWkmV8TsSFuWDCd0we+sSx4tquWNU7pQBa43AZVvGSQ4adKu44M94bh5Cu75WKgSb5MWbHUxBel37hztbWUViLdazN+HWmioqWF3G7swzN0gOaleMNFRxs21Fh5LUpVWXTicoo=
+	t=1708073827; cv=none; b=bX8vOHEx9LS5HSC953HuaW9aaUa7scmtcN+KJmykJwGj3xrjomTF881PyYD61I9Z04fIMDRNWZ/D4vvmD4/mQ6y3a/SM+Pe3+ZsAtoop/PDNNePwHS/uI4esNaphIByQfXvgWv09u9fX2yysxL2Q7yeDIdvHdqMXolCqDPNuqgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708073062; c=relaxed/simple;
-	bh=HaC4Zn8Fqki6BSDMsVg1UgsS9LzaXRv9bV4wV3qoOtI=;
+	s=arc-20240116; t=1708073827; c=relaxed/simple;
+	bh=F7SJEois+X8tz2gjrxqqrDEy5yeqY6GzZm2Rtgg54X8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sdVKksW4BB1loeklq4Ib2C1pvAv6DAO4QHVPjGdJgWG7SEeZeXh5LSkc5u3qOGkG+7gC6wK9TIwgFr0uS3hOqsVwTwibwlcmU3FYB76UOP9zXbcxfKZ7KEhrGHsycCCX+5n93jOCwMAeR8b3UWMPbdILOaruICjI62U8N2dKNmc=
+	 Content-Type:Content-Disposition:In-Reply-To; b=YGjGt1ADzH69VPo8fyRPAkMmjkCMN9R9e3elBewktBjTEPsByaEfCtyB4DAkvWqf4iLw2Yxb2Pv1HjA5hTL1V3wvGuJHgL1UsUxHfrKBHPhGqu5wL0Rz219PPDi45zEs5x4/d5YYdnk8u3qk2UCCetnKM2o9ozp1/PG1UukTsiQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,37 +33,33 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1ratoz-0006gU-9X; Fri, 16 Feb 2024 09:43:49 +0100
+	id 1rau1c-0007VS-M6; Fri, 16 Feb 2024 09:56:52 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1ratox-0012d3-8w; Fri, 16 Feb 2024 09:43:47 +0100
+	id 1rau1b-0012eE-I9; Fri, 16 Feb 2024 09:56:51 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1ratox-005rTs-0Y;
-	Fri, 16 Feb 2024 09:43:47 +0100
-Date: Fri, 16 Feb 2024 09:43:47 +0100
+	id 1rau1b-005roU-1V;
+	Fri, 16 Feb 2024 09:56:51 +0100
+Date: Fri, 16 Feb 2024 09:56:51 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, sam@ravnborg.org, bbrezillon@kernel.org, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
-	daniel@ffwll.ch, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	conor+dt@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
-	claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, 
-	linux-pwm@vger.kernel.org, Dharma Balasubiramani <dharma.b@microchip.com>, 
-	hari.prasathge@microchip.com, manikandan.m@microchip.com, 
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: (subset) [linux][PATCH v6 3/3] dt-bindings: mfd: atmel,hlcdc:
- Convert to DT schema format
-Message-ID: <wkqqowh6ivn35d24n5ngdqno77wl7onrkdh43winac7bg7oekf@ykwhxujb4cjq>
-References: <20240202001733.91455-1-dharma.b@microchip.com>
- <20240202001733.91455-4-dharma.b@microchip.com>
- <170738899221.920003.15342446791449663430.b4-ty@kernel.org>
- <cedecdb7-fe4a-42ea-9a11-faa82f84b57d@linaro.org>
- <aamdttvdk3jmswvy3rw3debk3ouddkgjbs6xmixroe6kqakjw4@lnd5crcgoeyj>
- <2e96c824-47e8-48bd-9e03-8c7390b02d24@linaro.org>
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Conor Dooley <conor@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: mediatek,mt2712: add compatible
+ for MT7988
+Message-ID: <crisnlcmsylgjbyikwj4it5oee46lrcneegt35rkh7f7irpjt4@au5h4owkl4s3>
+References: <20240213164633.25447-1-zajec5@gmail.com>
+ <20240213-resource-evaluator-0754cfd5882d@spud>
+ <d4391868-ddcd-4f66-b539-28d245fa83df@gmail.com>
+ <e957b044-fe84-4b72-bdf1-cbc40c722019@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -71,87 +67,85 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cq33vkronfz22nrp"
+	protocol="application/pgp-signature"; boundary="x6fer6asqpvyqikq"
 Content-Disposition: inline
-In-Reply-To: <2e96c824-47e8-48bd-9e03-8c7390b02d24@linaro.org>
+In-Reply-To: <e957b044-fe84-4b72-bdf1-cbc40c722019@collabora.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---cq33vkronfz22nrp
-Content-Type: text/plain; charset=iso-8859-1
+--x6fer6asqpvyqikq
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Krzysztof,
+Hello,
 
-On Thu, Feb 15, 2024 at 07:44:53PM +0100, Krzysztof Kozlowski wrote:
-> On 15/02/2024 11:02, Uwe Kleine-K=F6nig wrote:
-> > On Mon, Feb 12, 2024 at 11:23:02AM +0100, Krzysztof Kozlowski wrote:
-> >> On 08/02/2024 11:43, Lee Jones wrote:
-> >>> Applied, thanks!
-> >>>
-> >>> [3/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT schema format
-> >>>       commit: cb946db1335b599ece363d33966bf653ed0fa58a
-> >>>
-> >>
-> >> Next is still failing.
+On Wed, Feb 14, 2024 at 10:27:54AM +0100, AngeloGioacchino Del Regno wrote:
+> Il 14/02/24 07:34, Rafa=C5=82 Mi=C5=82ecki ha scritto:
+> > On 13.02.2024 19:18, Conor Dooley wrote:
+> > > On Tue, Feb 13, 2024 at 05:46:32PM +0100, Rafa=C5=82 Mi=C5=82ecki wro=
+te:
+> > > > From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> > > >=20
+> > > > MT7988 has on-SoC controller that can control up to 8 PWMs.
+> > >=20
+> > > I see a binding and a dts patch, but no driver patch, how come?
 > >=20
-> > Failing in the sense of dtbs_check, right?
->=20
-> No, bindings were failing. dt_binding_check. This must not fail, so kind
-> of bummer...
->=20
-> >> Dharma,
-> >> You must explain and clearly mark dependencies between patches.
-> >>
-> >> Lee,
-> >> Can you pick up two previous patches as well?
+> > I believe that to avoid cross-trees patchsets (which are sometimes
+> > tricky for maintainers) there are two ways of submiting such changes:
+> > 1. dt-binding + driver; then (separately) DTS
+> > 2. dt-binding + DTS; then (separately) driver
 > >=20
-> > I applied the pwm patch now. If Lee wants to pick up this one via his
-> > tree that would be fine for me, too. If that's the case please tell me,
-> > then I'll drop it from my for-next branch again. Feel free to add
-> > my Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> for pa=
-tch
-> > #2 then.
+> > I chose later in this case as my personal priority right now is to deal
+> > with all MediaTek DTS files.
+> >=20
+> > Is that wrong or unacceptable?
+> >=20
 >=20
-> At least next is happy.
+> It's not wrong but it's partially unacceptable, at least on my side.
+>=20
+> In my opinion (and I believe many do agree with me), sending the binding =
+along
+> with the driver is the right choice, and if you also want to include the =
+dts
+> that is also appreciated: series can go through multiple maintainers appl=
+ying
+> subsets - it's ok to do.
 
-The pwm binding is in next now (as
-0fa319a1427f7c8d0af4c255316624f7e6f649a0) but dt_binding_check still
-tells me (among others):
-
-	Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml:
-	Error in referenced schema matching $id: http://devicetree.org/schemas/dis=
-play/atmel/atmel,hlcdc-display-controller.yaml
-
-This is what you meant, right? This goes away as soon as the first patch
-(dt-bindings: display: convert Atmel's HLCDC to DT schema) is applied,
-too. So next isn't completely happy yet.
+Just to put in my 2 =C2=A2:
+My preference is to not avoid cross-trees patchsets and put all three
+patches in a single series. This combines the advantages of 1. and 2.
+Given this happens often enough this is something that the maintainers
+are used to handle just fine, so the cross-tree issue isn't problematic
+most of the time. The conflicts that sometimes arise with cross-tree
+patches aren't bad enough to out-weight having binding, driver and dts
+changes all together.
 
 Best regards
 Uwe
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---cq33vkronfz22nrp
+--x6fer6asqpvyqikq
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXPIEIACgkQj4D7WH0S
-/k7oDQgAhBtX499THTMoh/0hUXU71eAA/S5lMq1KvNvT9NGWXU+/7etMKgUxdmNr
-+BLVyxYYkJ9eb+PUQLvIcmXR8aZgx9z4YpXLb+WiGW7WimGfPI0Q/fLZY7BZrMLA
-DjakKBxO9u1oUP7acORjgZ4IAdYW2mny5U/LqVMnnWFafGcrX5UM4OumJZ7zTRn3
-P3ZwycYlZLErUa5tebQk1lIYeFRvm480U+ZGr/SCIjN4MFycMOr7bls0c+HztokP
-SoVVESp6bokSs0C7COdjZhZXacLybjMTCAer6b01jFRKhThwKNA63f+k2idvjEEI
-I6snuKjGUsWInVK5KQwDpuL5xFLOXw==
-=PMux
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXPI1IACgkQj4D7WH0S
+/k50eggAl5AH/OVaXRqlBR+khwnAAggxgfwh/au8rZ5x8SWflhcLnzmbI5goBNP+
+QiVN6/885+APLBzrvTgeiEQAjlKGsc1Av9hy5x2gQy4U9rhPVikE3B8fE9pugDEr
+ZIhljDbUobwdsu08aGbAr2sggD9tI8eJDcssD9sOF6Gwn73LjYJ7AxYuph9MWHqJ
+Ztdiy+AjILaWSAq4jeCCmL6MFgXIGDq6Unb6w6lDFhAcjG6FKh09+gyjFkihNdsg
+Ib93vHAw+rnrzUfcHhmFNaIIiw5d5mediZDrLKqWXp5U10ipOhfocOoyFK3AqKVS
+9PS6i5I/jMerH5hRMqLY0+/3ZEjhlA==
+=TKTq
 -----END PGP SIGNATURE-----
 
---cq33vkronfz22nrp--
+--x6fer6asqpvyqikq--
 
