@@ -1,129 +1,109 @@
-Return-Path: <linux-pwm+bounces-1559-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1560-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFE7F85B73F
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 10:24:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D8AD85B749
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 10:26:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EB371C23EDD
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 09:24:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 722C7286D3B
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 09:26:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D125C53E15;
-	Tue, 20 Feb 2024 09:24:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8AB25FBAD;
+	Tue, 20 Feb 2024 09:26:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LfOgC1db"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FYfXiFpE"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8F25F480
-	for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 09:24:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258845FB9E
+	for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 09:26:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708421095; cv=none; b=qI9YmTSXMbPx1J0Mkvcw2sCCGY3vNfCxTeOzHnBp/MfSkAYCnzU1jugnQ12zuCbcGL+Vegv0TawCB1OULNCNAOQH/Zdizyoe9Kk7/mPBDBdhX0Ilk9BSkujr4EQQkHXnWX0pTnCu9Rprea3mLXXDVQpuSVcX89Z5hESQyqQuMLU=
+	t=1708421188; cv=none; b=i0hhwouBtCBK9doofBxLwTSmvY7PdtalM3XxMtVYh54GbWak9JYdVuraV6p37j8MwnIgP37kQPQlD3PVImRHBV1sOll5odXGfBNOs/JbYjj3PA4G/7HD9g9kejf5F35X94aUtWv78kqsDH+499afohMy+/VAfTTKcZcKnbSJG/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708421095; c=relaxed/simple;
-	bh=udKLWycwu+hf+6x5oFlyNQr/LkDvsWZpDbgX4ydJdKQ=;
+	s=arc-20240116; t=1708421188; c=relaxed/simple;
+	bh=Mt08b5IuW5iUmptxH1bjfs6hZbxovlXyK/bnhQFhVzo=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DEiF6UJgcHBHw/8eAcy2TCPkAnJ6t9qKzRR7Y3Wm2hvoeF0yFy0FB4zP+jLGwj2yjZ1IJhHlJwuRXLjL/Mpa7fD7Pc4QloIX/mJCK4pYB+nIW2feRK+jEy2BBXO27iisFkUf82EbX9S6Tjdgc8lS3qafwtfdFV2NiM3gm0iCT2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LfOgC1db; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=N/IHU1e2l1KnR8EUpuUAhOUemlueO5oBTd9qaJENHSYKytFemVu7Bbk4Q2CYTA+CJgWs9h2ShyX39OjAus4n8kaJXp9ttKN/PUuK207cOju3H8wCsDDmK1yan5/gUbEozjSVUt7duETaJwkzWOtc6cPJJqD3V13sw7CIqGOS3Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FYfXiFpE; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708421093;
+	s=mimecast20190719; t=1708421186;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xshxlpsQluS7qRAd7fMDdSOWA/KW0tH/DDlQJBA+rDs=;
-	b=LfOgC1db1K56AHho9mtA2Iu4ukPRa2JNkgGVuSdurkqFtR/6vUhlGWe+Fe/OlhmbFsW7GR
-	btNFIlf9QOrOsRW9vePM1V0EhhFbgydoq9mafvKa5z0DN1l0VimewPLI1wwZrsLZCS78JL
-	7eNIamfMEWQy06CfTeYv7tJMjFaOZ2c=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=d6/AuLBRasXrm7J2e/EDk+uBFMWPxSsXqB1INo3NCiU=;
+	b=FYfXiFpEnw+GmJiv5Fakdwhv/8EEHmQ7YyT9hA7yuLhAs2nTKrsxNvdiEtAr8+kR8H23S4
+	qI5LUSjvMwNfc2o1L0JiU9cQBXUa22MfXHTIUQIIexWqaAkt9xorJTBbyz86pgDmghynUU
+	PtDqCHkf63ulUyg0saWFWcq8fOcNOG4=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-331-gFb2vJRtNkCyvKnRJCvdrA-1; Tue, 20 Feb 2024 04:24:51 -0500
-X-MC-Unique: gFb2vJRtNkCyvKnRJCvdrA-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-411ac839dc5so28718325e9.2
-        for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 01:24:51 -0800 (PST)
+ us-mta-629-2juZr9aXMdm3TdK-uyQ4nw-1; Tue, 20 Feb 2024 04:26:24 -0500
+X-MC-Unique: 2juZr9aXMdm3TdK-uyQ4nw-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-40fb505c97aso30274575e9.3
+        for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 01:26:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708421090; x=1709025890;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xshxlpsQluS7qRAd7fMDdSOWA/KW0tH/DDlQJBA+rDs=;
-        b=WRQfHtXegvmsZhqRlar4N71WZaB7zoqLJshGp3X/e+UUuJ2WlDLw2/0C0ENS6okBet
-         OxitiKKw5ruhbBnnntwrFseTK9hyAy22SsC2/nAaN2+WFzs+uvxE8bF4xGvbCrJ+n1Y3
-         VAEsA2ZIVYB0uiSyW5ec5YSqflKzH2zY9GmPipYjYALLpO0dI0LR1ThQ6nkKby9VqFb5
-         xI6A3qjqfJcxAeZgdYUAxvUA0Kza1di5TfikFH03W7eVhklFqzl/Hp0AVTIoEeFxDjBV
-         ib63VkDZcJ7coiloU1qLFgrLsrNfdbAV1MyulWwgUyVVT25Hx8ut4cQut+wMkNt7QtNj
-         gSHg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlxhrbzju7giEjN2d0Hb0yitSstHdLqQavG6pD8+AZg0msuScCl6H13p5WO87I+xvjhPkEc8GbCm0KVJzWASx/Y2DXtsG9fZ1d
-X-Gm-Message-State: AOJu0YxTIOYEtxLp1IxFGzt+Dp0J5MCwg2YjZT/Ll+1865pdrnlBak2D
-	CGbYkc5aW8SXGwJTfyWiX16U5ERJC/c7d5kD8B4Gdc9BOEyLWxupvILbWnXZO/kDL+NVNa3Q4TG
-	dAa4JUUt/WWzgSpqr6d1qgWlJemg4rEtE76LG8oCRrfjsf0+l44ciZ54ITg==
-X-Received: by 2002:a05:600c:1d26:b0:40f:de6a:2a27 with SMTP id l38-20020a05600c1d2600b0040fde6a2a27mr7454593wms.40.1708421090415;
-        Tue, 20 Feb 2024 01:24:50 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHkPjh10xOQRjnJMuYej9HPk/BhMMWKcIszDd75k/eW3ji67ZhUwGUtMHTKJ5oYHxYrfH7Zng==
-X-Received: by 2002:a05:600c:1d26:b0:40f:de6a:2a27 with SMTP id l38-20020a05600c1d2600b0040fde6a2a27mr7454582wms.40.1708421090135;
-        Tue, 20 Feb 2024 01:24:50 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708421183; x=1709025983;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=d6/AuLBRasXrm7J2e/EDk+uBFMWPxSsXqB1INo3NCiU=;
+        b=ZjVgjdAoXBCyI/esrWJHq6xdcZAUjkM7FszOoRQZE/z3fD/YrHATszOA8xHotPYJ2c
+         UM2AslAwtliGjzQqjuX9Fn84+s2XMf50K5MYFtjQ4DFFh/X/zR9xIfwosgy6idYggVQY
+         lPYYUrSPHyu/g8ZiTBK3l1n6g4cuuYRFxu/6FyWjc/vrUtqLapIbxt7nr6WXZZb2vmDO
+         8INq0QJ8RlyDU0h4RCAYvWuS1dVD1+PJ41G4m1pm1cr8fogx7eqWA4zCbksay23SzIKF
+         gBJs66m1YMsJO902XGIHyLysM8cyjdwpnuChXqrjmQ2b00VLNVImxxc2Blgs1EuNVYcu
+         wbdg==
+X-Forwarded-Encrypted: i=1; AJvYcCX5M9G2ivhiPJhaAvR29IaBjQainaVIxDxWMbLckEhHQWaCveLpu7NOwko/VvnnKZDTRtIYaZlQbU4dxhgyIgStb+Tu6vcF5FUe
+X-Gm-Message-State: AOJu0YxeYK7Lwwj3rNEdcmYwCFqQBy/1TLLp17SGTRI2SdGfDEVmKlhK
+	WOtb4udgl0qupWcn11NkXtf4a9Wz1jXfKj1LmBNpaB2pxH9X9t9UJEsqiTjTvsgc/MsUSAfIUlv
+	V1tF6c+ChPX3rLlUwDXkr8zQeTcmM1F996ZTtiVPy51Tqb7ljWO/5dluVeA==
+X-Received: by 2002:a05:600c:1f8e:b0:411:e178:2a73 with SMTP id je14-20020a05600c1f8e00b00411e1782a73mr10705777wmb.22.1708421183416;
+        Tue, 20 Feb 2024 01:26:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHzVg7vZYHc9003vxmP5eEeeGzAiqN8t1ACQZvgD0y3R9j9HKc3efOeyrsGr5LZTSNXF/ALHw==
+X-Received: by 2002:a05:600c:1f8e:b0:411:e178:2a73 with SMTP id je14-20020a05600c1f8e00b00411e1782a73mr10705762wmb.22.1708421183102;
+        Tue, 20 Feb 2024 01:26:23 -0800 (PST)
 Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id y10-20020a1c4b0a000000b00412704a0e4asm779017wma.2.2024.02.20.01.24.49
+        by smtp.gmail.com with ESMTPSA id z17-20020a1c4c11000000b004127057d6b9sm747318wmf.35.2024.02.20.01.26.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 01:24:49 -0800 (PST)
+        Tue, 20 Feb 2024 01:26:22 -0800 (PST)
 From: Javier Martinez Canillas <javierm@redhat.com>
 To: Thomas Zimmermann <tzimmermann@suse.de>, lee@kernel.org,
  daniel.thompson@linaro.org, jingoohan1@gmail.com, deller@gmx.de
 Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
  linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, Thomas Zimmermann
- <tzimmermann@suse.de>, Bruno =?utf-8?Q?Pr=C3=A9mont?=
- <bonbons@linux-vserver.org>
-Subject: Re: [PATCH 04/10] hid/hid-picolcd: Remove struct
- backlight_ops.check_fb
-In-Reply-To: <20240212162645.5661-5-tzimmermann@suse.de>
+ <tzimmermann@suse.de>
+Subject: Re: [PATCH 05/10] backlight/aat2870-backlight: Remove struct
+ backlight.check_fb
+In-Reply-To: <20240212162645.5661-6-tzimmermann@suse.de>
 References: <20240212162645.5661-1-tzimmermann@suse.de>
- <20240212162645.5661-5-tzimmermann@suse.de>
-Date: Tue, 20 Feb 2024 10:24:49 +0100
-Message-ID: <8734tnjxni.fsf@minerva.mail-host-address-is-not-set>
+ <20240212162645.5661-6-tzimmermann@suse.de>
+Date: Tue, 20 Feb 2024 10:26:22 +0100
+Message-ID: <87zfvvij0h.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
 Thomas Zimmermann <tzimmermann@suse.de> writes:
 
-> The driver sets struct fb_info.bl_dev to the correct backlight
-> device. Thus rely on the backlight core code to match backlight
-> and framebuffer devices, and remove the extra check_fb function
-> from struct backlight_ops.
+> The driver's implementation of check_fb always returns true, which
+> is the default if no implementation has been set. So remove the code
+> from the driver.
 >
 > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: "Bruno Pr=C3=A9mont" <bonbons@linux-vserver.org>
 > ---
-
-[...]
-
-> +#ifdef CONFIG_HID_PICOLCD_BACKLIGHT
-> +	info->bl_dev =3D data->backlight;
-> +#endif
-> +
-
-The robot complains about this, I think that you also need to guard
-against CONFIG_FB_BACKLIGHT being defined. Alternatively, you could
-include a preparatory patch to fix the HID_PICOLCD_BACKLIGHT config
-symbol dependencies.
-
-Other than that,
 
 Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
---=20
+-- 
 Best regards,
 
 Javier Martinez Canillas
