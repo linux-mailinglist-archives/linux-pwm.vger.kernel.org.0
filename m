@@ -1,109 +1,115 @@
-Return-Path: <linux-pwm+bounces-1560-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1561-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D8AD85B749
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 10:26:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5295285B752
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 10:27:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 722C7286D3B
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 09:26:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E9CC1F25E9E
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 09:27:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8AB25FBAD;
-	Tue, 20 Feb 2024 09:26:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FA23605C1;
+	Tue, 20 Feb 2024 09:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FYfXiFpE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jFROOUWE"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258845FB9E
-	for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 09:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD1E5FDBF
+	for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 09:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708421188; cv=none; b=i0hhwouBtCBK9doofBxLwTSmvY7PdtalM3XxMtVYh54GbWak9JYdVuraV6p37j8MwnIgP37kQPQlD3PVImRHBV1sOll5odXGfBNOs/JbYjj3PA4G/7HD9g9kejf5F35X94aUtWv78kqsDH+499afohMy+/VAfTTKcZcKnbSJG/E=
+	t=1708421233; cv=none; b=Mw3u3ibV8AcU8jTk0PezKN8VVZeKIIsTvbX/7dm/r03hb0PxnnslOK9R9TA6wE5khSYzpwk+LERF3SEtHRK1czqWco5hUoc3k5bPo4m/c1bxCdy2rtUwTvBsl8C4weKwBALb+3cT2zbAvT43idANt7rFJhYYg15NFq7dDcHIYWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708421188; c=relaxed/simple;
-	bh=Mt08b5IuW5iUmptxH1bjfs6hZbxovlXyK/bnhQFhVzo=;
+	s=arc-20240116; t=1708421233; c=relaxed/simple;
+	bh=Cr049JDQLVE6h9YwU+hPc42YZw3O5KaA0156euo/6HU=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=N/IHU1e2l1KnR8EUpuUAhOUemlueO5oBTd9qaJENHSYKytFemVu7Bbk4Q2CYTA+CJgWs9h2ShyX39OjAus4n8kaJXp9ttKN/PUuK207cOju3H8wCsDDmK1yan5/gUbEozjSVUt7duETaJwkzWOtc6cPJJqD3V13sw7CIqGOS3Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FYfXiFpE; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=jr2NHT0RC5ELqE7cL5RcY0G+wM3WNvfhk2fGK3ZNjzbRunfSQ7eHweVE7/xU5vlFDshkTEWZ61aeR47OhlyM50K1bOIHQZVCPQeLq/DMTQ4twAsiZzN4HOpm6AwBWatAvleJWE6nAl9tracUqYMULbSysElrxGsJzCQraYgH9f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jFROOUWE; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708421186;
+	s=mimecast20190719; t=1708421230;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=d6/AuLBRasXrm7J2e/EDk+uBFMWPxSsXqB1INo3NCiU=;
-	b=FYfXiFpEnw+GmJiv5Fakdwhv/8EEHmQ7YyT9hA7yuLhAs2nTKrsxNvdiEtAr8+kR8H23S4
-	qI5LUSjvMwNfc2o1L0JiU9cQBXUa22MfXHTIUQIIexWqaAkt9xorJTBbyz86pgDmghynUU
-	PtDqCHkf63ulUyg0saWFWcq8fOcNOG4=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Cr049JDQLVE6h9YwU+hPc42YZw3O5KaA0156euo/6HU=;
+	b=jFROOUWEIOprRmqYt/pSA6T7eCfWQS5o4cI0FsSPIaXSBwASyBHxH+K1WioXBsTU7Uz6Ec
+	db8TZVHRLXmdD9O4zW2+QJB4uMNgWHymwqxGjOWVM5ikY3pZ4s+I98gbvvPqoFiSDMR00f
+	xVy1bxReVGha2jsdDnL5yPFatJKn1us=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-629-2juZr9aXMdm3TdK-uyQ4nw-1; Tue, 20 Feb 2024 04:26:24 -0500
-X-MC-Unique: 2juZr9aXMdm3TdK-uyQ4nw-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-40fb505c97aso30274575e9.3
-        for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 01:26:24 -0800 (PST)
+ us-mta-448-2lN5NgxIOgOktADBNmeaEQ-1; Tue, 20 Feb 2024 04:27:09 -0500
+X-MC-Unique: 2lN5NgxIOgOktADBNmeaEQ-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2d2399a08c0so13897181fa.3
+        for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 01:27:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708421183; x=1709025983;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d6/AuLBRasXrm7J2e/EDk+uBFMWPxSsXqB1INo3NCiU=;
-        b=ZjVgjdAoXBCyI/esrWJHq6xdcZAUjkM7FszOoRQZE/z3fD/YrHATszOA8xHotPYJ2c
-         UM2AslAwtliGjzQqjuX9Fn84+s2XMf50K5MYFtjQ4DFFh/X/zR9xIfwosgy6idYggVQY
-         lPYYUrSPHyu/g8ZiTBK3l1n6g4cuuYRFxu/6FyWjc/vrUtqLapIbxt7nr6WXZZb2vmDO
-         8INq0QJ8RlyDU0h4RCAYvWuS1dVD1+PJ41G4m1pm1cr8fogx7eqWA4zCbksay23SzIKF
-         gBJs66m1YMsJO902XGIHyLysM8cyjdwpnuChXqrjmQ2b00VLNVImxxc2Blgs1EuNVYcu
-         wbdg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5M9G2ivhiPJhaAvR29IaBjQainaVIxDxWMbLckEhHQWaCveLpu7NOwko/VvnnKZDTRtIYaZlQbU4dxhgyIgStb+Tu6vcF5FUe
-X-Gm-Message-State: AOJu0YxeYK7Lwwj3rNEdcmYwCFqQBy/1TLLp17SGTRI2SdGfDEVmKlhK
-	WOtb4udgl0qupWcn11NkXtf4a9Wz1jXfKj1LmBNpaB2pxH9X9t9UJEsqiTjTvsgc/MsUSAfIUlv
-	V1tF6c+ChPX3rLlUwDXkr8zQeTcmM1F996ZTtiVPy51Tqb7ljWO/5dluVeA==
-X-Received: by 2002:a05:600c:1f8e:b0:411:e178:2a73 with SMTP id je14-20020a05600c1f8e00b00411e1782a73mr10705777wmb.22.1708421183416;
-        Tue, 20 Feb 2024 01:26:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHzVg7vZYHc9003vxmP5eEeeGzAiqN8t1ACQZvgD0y3R9j9HKc3efOeyrsGr5LZTSNXF/ALHw==
-X-Received: by 2002:a05:600c:1f8e:b0:411:e178:2a73 with SMTP id je14-20020a05600c1f8e00b00411e1782a73mr10705762wmb.22.1708421183102;
-        Tue, 20 Feb 2024 01:26:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708421228; x=1709026028;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cr049JDQLVE6h9YwU+hPc42YZw3O5KaA0156euo/6HU=;
+        b=O+oEKf6SqUiyEuXnk7o3gxjryhieoa1J90+dLecAK3sBwxeweh9hJ8PYTLKXmbL2Hm
+         /EF/YF+6XbiGB9jaHeYz9wwGH+eg4v8CaRf4ijp+Oqm1AE85i7zmcNXSoukn4GQkYqIJ
+         IGVBW6ZdRqVuUELzaEsnEZ/qQ6Kg9ZwbazRWK8aIv/8NdadARFz779+lE0BeJZcr5xfB
+         erRQR7LnTQNnjy3fJ4DTKtj1JaunOLiyppKUTTx4zcgn3u38QBbil0cAATZkr+Sth1/2
+         738aS8TUCoggk/EOjticyADKY46fI3fRawk4OAc+QUdjr9IFyey2Cal6VEM3klln5gYV
+         r3SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpfYgRetvvaDOvhdopKVYx1HMXbAXjF/vEJJ8gxWGik7eiPHQe0W9vu7F7AQksMI+kxa/9zNo9jp2ngoPTFqe5Syc41Mlczjg6
+X-Gm-Message-State: AOJu0Yw8OWPrKUsA/EMEFd0dz3TSmWX99UXedYv8LxaMMZH3jGZb0mEF
+	d3QgYmKT8mEQUUORmLR5pJTYR35weXfzYP42hrbwnM0EJP6doj+kHa6MXfF/CzqxVbVHf/GKBlV
+	sfmEpGHWb5vSGJvoaE31siktYUd6t5aDnHc/vQ7GFa5jJUzPjvZdXaAst1g==
+X-Received: by 2002:a2e:8895:0:b0:2d2:3707:485c with SMTP id k21-20020a2e8895000000b002d23707485cmr4468707lji.20.1708421227880;
+        Tue, 20 Feb 2024 01:27:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGIOUqTz15wX4tpCLDU3x6oh41ZPQVlb/WZWHFmGcfp/tIINmvltfgmSrW/DyUZvNLfveew0g==
+X-Received: by 2002:a2e:8895:0:b0:2d2:3707:485c with SMTP id k21-20020a2e8895000000b002d23707485cmr4468689lji.20.1708421227590;
+        Tue, 20 Feb 2024 01:27:07 -0800 (PST)
 Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id z17-20020a1c4c11000000b004127057d6b9sm747318wmf.35.2024.02.20.01.26.22
+        by smtp.gmail.com with ESMTPSA id i13-20020a5d55cd000000b0033b198efbedsm12732585wrw.15.2024.02.20.01.27.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 01:26:22 -0800 (PST)
+        Tue, 20 Feb 2024 01:27:07 -0800 (PST)
 From: Javier Martinez Canillas <javierm@redhat.com>
 To: Thomas Zimmermann <tzimmermann@suse.de>, lee@kernel.org,
  daniel.thompson@linaro.org, jingoohan1@gmail.com, deller@gmx.de
 Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
  linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, Thomas Zimmermann
- <tzimmermann@suse.de>
-Subject: Re: [PATCH 05/10] backlight/aat2870-backlight: Remove struct
- backlight.check_fb
-In-Reply-To: <20240212162645.5661-6-tzimmermann@suse.de>
+ <tzimmermann@suse.de>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 06/10] backlight/pwm-backlight: Remove struct
+ backlight_ops.check_fb
+In-Reply-To: <20240212162645.5661-7-tzimmermann@suse.de>
 References: <20240212162645.5661-1-tzimmermann@suse.de>
- <20240212162645.5661-6-tzimmermann@suse.de>
-Date: Tue, 20 Feb 2024 10:26:22 +0100
-Message-ID: <87zfvvij0h.fsf@minerva.mail-host-address-is-not-set>
+ <20240212162645.5661-7-tzimmermann@suse.de>
+Date: Tue, 20 Feb 2024 10:27:06 +0100
+Message-ID: <87wmqziiz9.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 Thomas Zimmermann <tzimmermann@suse.de> writes:
 
-> The driver's implementation of check_fb always returns true, which
-> is the default if no implementation has been set. So remove the code
-> from the driver.
+> The internal check_fb callback from struct pwm_bl_data is never
+> implemented. thus the driver's implementation of check_fb always
+> returns true, which is the backlight core's default if no
+> implementation has been set. So remove the code from the driver.
 >
 > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: "Uwe Kleine-K=C3=B6nig" <u.kleine-koenig@pengutronix.de>
 > ---
 
 Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
--- 
+--=20
 Best regards,
 
 Javier Martinez Canillas
