@@ -1,346 +1,276 @@
-Return-Path: <linux-pwm+bounces-1571-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1572-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8D8985C0AF
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 17:06:20 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DA5385C215
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 18:11:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D47A71C23AF5
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 16:06:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D82E3B214AE
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 17:11:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62DD477A08;
-	Tue, 20 Feb 2024 16:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DCCD768F9;
+	Tue, 20 Feb 2024 17:11:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="EvBRxKwO"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="kzvUBsnj"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2070.outbound.protection.outlook.com [40.107.114.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2A176404;
-	Tue, 20 Feb 2024 16:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.114.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708445085; cv=fail; b=FrN4eiTyvXnpW9O/tEUbiaeFYvxIZsGYkmmMBwLXksTGcvdygj143uEuiAjAgXDBhuOcKtktt1I+6R1fmtHRvFxe9MiE8a27t0aazCaAvfQMGdcy6LQHoLV0lhWTt+dsM6EzO3u72OY234hruN7k5V6iygyKpNq90q6wH3zcvJY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708445085; c=relaxed/simple;
-	bh=bL7m8+1jNZroQO6utNHHucAvZy3U9hWxS91dzK8xFbY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=TR9W5qrjOlPsv0eb0SWe2LJMsZCgfF7SkhRDzs7/+rMrgPqUTaDthSX2PuCS0HCWuXsmLeJmL9BEiyxpmsZge+sgHhnKu0+0ZMaBYU7XduoUwrMp3UpFHVwIyMjml56FRon9VwpOVa4opny7HPK52DlXHXQtzpH2W7MofMAwVpg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=EvBRxKwO; arc=fail smtp.client-ip=40.107.114.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LAeo0kPADq6wQV77aZIJtabGsRW2K4RxvtvPNjnpaDYvnZrzgrpb4lQKBLSKnTjbnUMfnsFtc5LnezrGOY4f1OmwgN0Z/O5/G4A8VsoJOO8VTtvxwnRH7c6x38TXVtWu+eGwhVHuMsacu60Mo4lFoGAhlsFyTaqgTDJetsn1Q/5W1k9+sXpu9dcdagN/3nI6iVq7GBahpHYqaFmEIxq1oHWtKoPmupwlLBi0oP3IgEHhSG0pP9HiGLKEhix0575bdKU1wyz+Kn66OSmG/sFZRR++brZrZFOlT8akFSVphUx9mus9GCJWs3Q+xPEsw6D1+jyWJUtM4gUHmottCDIi0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cFxR7VhTZWr0WxfMVvEKGQQesYMZmpYbzROHD60xnCs=;
- b=jb319ppt3eshyrLVZdpij4pUp1Q0P9nld8KWe8iuY03xziOj9SK2z/Dq1pmCVu46j6sTsdYb5vBUUp89exRHeOGDOTv8xjPp/WU+s92+z8bzBz6a0N7tDS/+/1Gq1UCblShyGvGfGGFcAWbG4+4j+BiYEA1ePQdMvVIsnBLWJQi5wq8AWyv8BTzy6qaClhs33AqfHlO5nUIX4qyGXipUAGX1FZpczQceC05ddVNWAEbBRtgWziSkn0k2n+f7p9VUxwL00TyBeKPzObls4/ArfWvL5NeHngDCZ55Vwz+0yxknAPM8zLJPhkbW1BOkJda0rukKwnAwpo56ANM8gq17Bg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cFxR7VhTZWr0WxfMVvEKGQQesYMZmpYbzROHD60xnCs=;
- b=EvBRxKwOOMNovtlPalQp7aJaKdQEsvTnfxNFQPDEuajgkGysrIf5afwcQEzTAqJQkhChLMW/O2DUDmwLAnIMIbNKU+IYJ8Katp9GP96oC8vULwppTXsQXQ+aWQNXwO4jqGUISXkj8t3+LCmdEA8hVgdjfklowfZRk0zdGhOSQYA=
-Received: from TYCPR01MB11269.jpnprd01.prod.outlook.com
- (2603:1096:400:3c0::10) by TY3PR01MB10174.jpnprd01.prod.outlook.com
- (2603:1096:400:1d9::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.38; Tue, 20 Feb
- 2024 16:04:36 +0000
-Received: from TYCPR01MB11269.jpnprd01.prod.outlook.com
- ([fe80::6719:535a:7217:9f0]) by TYCPR01MB11269.jpnprd01.prod.outlook.com
- ([fe80::6719:535a:7217:9f0%3]) with mapi id 15.20.7292.036; Tue, 20 Feb 2024
- 16:04:35 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-CC: Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel
-	<p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Magnus Damm
-	<magnus.damm@gmail.com>, "linux-pwm@vger.kernel.org"
-	<linux-pwm@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
-Thread-Topic: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
-Thread-Index:
- AQHaG6VjO3tWbpjOM0KBvyBIicGE/LCcr38AgAGHJgCAAD55gIAAsVCggABh/ACAAACWkIAHckBwgAA/rwCAWz9yAIAReWlg
-Date: Tue, 20 Feb 2024 16:04:35 +0000
-Message-ID:
- <TYCPR01MB11269807ECEDDEC9F47EA153B86502@TYCPR01MB11269.jpnprd01.prod.outlook.com>
-References: <20231120113307.80710-1-biju.das.jz@bp.renesas.com>
- <20231120113307.80710-4-biju.das.jz@bp.renesas.com>
- <20231206183824.g6dc5ib2dfb7um7n@pengutronix.de>
- <TYCPR01MB1126952E843AC08DB732C18A5868BA@TYCPR01MB11269.jpnprd01.prod.outlook.com>
- <20231207214159.i5347ikpbt2ihznr@pengutronix.de>
- <TYCPR01MB11269C233892B6E3002622C3B868AA@TYCPR01MB11269.jpnprd01.prod.outlook.com>
- <20231208140718.laekt3jlsmwvzc7x@pengutronix.de>
- <TYCPR01MB11269900EF62D8CA3E906DBAC868AA@TYCPR01MB11269.jpnprd01.prod.outlook.com>
- <TYCPR01MB1126992DD51F714AEDADF0A4F868DA@TYCPR01MB11269.jpnprd01.prod.outlook.com>
- <20231213114004.cuei66hi3jmcpocj@pengutronix.de>
- <TYVPR01MB11279298D880FA94B31219865864B2@TYVPR01MB11279.jpnprd01.prod.outlook.com>
-In-Reply-To:
- <TYVPR01MB11279298D880FA94B31219865864B2@TYVPR01MB11279.jpnprd01.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYCPR01MB11269:EE_|TY3PR01MB10174:EE_
-x-ms-office365-filtering-correlation-id: 5d35f8af-6703-42db-9790-08dc322da255
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- qwUdxLBPJX5MPJC14SQSBGJ4iL3txnKH6j8vDG4EKabatA4titsHMW0AgtRLk+vdRMT0xSV72yvGRH6fnJ49aqvwp4SXnYjVU4/DXAyRKuEvqLrVOMfga/nqxGCW2hEZ+kos0CaQfeFfhuqf3jhXsNraGvk1roOiPxPbPHtYe55R9rlm2QxklQUF7c2FkcSAWM3lsGjPzPbcYzuUxKvBVMlJ7A03JVH4g4Aik8dcXxwWWbEg2WJW7IbfFMYp/V4kdQQ4WflXR/O0hE9klzqw+dUb3Tt4UJqVoq1gGJ7vuD3uy2rVK9uz+8QfJwbiTnzoFbjFpvB8bkMPMTLhIpqQKbz6nYRYlRf/Y3C0qOzl44V9UKBvkU4OfJUEJXirTQQQnCi1YXphSDEbSX72/dTbdK3a9ef8z3PBxqeJJMCV+peDf2BZcRVJQ3QT22KGLjlHdfCWmUokC7JLo04UhLFu67eMVfxb0/bTrDCVAHX3Gv8YZ7DESh3bhCyQrARKji4RVbVDdNlwSjG8fb2E5r2cHBwJ+y0KUFskUD5kEBtB0HvLZqvvASIV66c2u3rHermLfs6g7jy5z0gZP9XoS8cwHBgZ0iHgCS17d0yPOSYMqLo=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11269.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?5hImbV81xza1RJKrVQcnqaUtBWBwcByOkYuBRmEL/8St1jleO1RSEPzKpL?=
- =?iso-8859-1?Q?cXv59E3lIFbmJ6EjhlmtqOQxywwW3ZgnM4P2pXTgCPoSuyp86ZlPkTZ4FC?=
- =?iso-8859-1?Q?fOhI7ggupKRJyN9FeP8AWqLjYurtCaMq8OCbrIZ7RZbm4zXxfj01Gdi+/q?=
- =?iso-8859-1?Q?8XCVKXm+7br0beXjuHdS4JOYBxFclBk77cLUhDBO2Pv3yKrmMnU+E4buOJ?=
- =?iso-8859-1?Q?b6oz3PnV26CNG6ocf0AlRiVCCxG9CFUR4RkyDph3ETI1E+8ytYpE5pCRcj?=
- =?iso-8859-1?Q?boyEhSm6BIm5bRELL8LdpCXUSoxun6guf7BrgfDZFJC1Inv+rbpeP0+mwl?=
- =?iso-8859-1?Q?uC6E4zyhTE7b5loQuRA5dM9w5M65NgPjOokM+lEx9MquB8CJ0WrjkQk6ri?=
- =?iso-8859-1?Q?Lt690ZELrs6juZqlH/Dn5gtNtZckpIIGO4uKZ9GRU3evsqqECum3LiPS3g?=
- =?iso-8859-1?Q?e5nZv1Qbwa6Pv04UcBRz8xZ/Xf/MNlK4jzTGHX64QGeEFoq6l8OtPBCNU3?=
- =?iso-8859-1?Q?vyU4RBQnzBxiMug/9p4JPGwXo2p2ki7YwUXjOwHcw3eD4bVoHLNoSgTnKj?=
- =?iso-8859-1?Q?V0LpvwdAaMb6rGSVXIB6GFU07HOMKgp4ibn5PmKjdcLnHSiixPAXdrPqQZ?=
- =?iso-8859-1?Q?bPE2G1zY4ePs0QkjfHQ5y1MZP06isKidntmH4FtVp5dnntiTl6I3YzqwKV?=
- =?iso-8859-1?Q?0DZJN7FFWNV5tCqucabzUb2TuXfvAPyyyn/ZJ2uZG5NaYyvvY3NNrnx4HB?=
- =?iso-8859-1?Q?yGi/lOMK5Yua1poYUqcoa+X6+fwj2TZwcCniw+j2kjswmYQI2CavVBFrXL?=
- =?iso-8859-1?Q?P+JND1gftuGnqzdxImHc9658J+VAMPEtr9hqcVZ5mtb6SYPTz0+GQ2e/om?=
- =?iso-8859-1?Q?RobdcTt5eCCkFY1MNFNWFrUmJfOoHWd7aclWUl2UGQbtuLgR7uvQpPbtkv?=
- =?iso-8859-1?Q?RIS64nLLR2LQzdnAUDj1bXAEkt2hpPZwjSmkidYn2/FrrbY9bH2mtc4HbY?=
- =?iso-8859-1?Q?1NnGsRrMiHrT72DFyZKNqmgtkZFHWDwGSW2BlIerFEfuudfGYlYMQRqvG8?=
- =?iso-8859-1?Q?4ZlA6M+Gezpyvq36+7Euc7lfTfISvAVAGQYbKCpKyCoMXN88pwqdMETIow?=
- =?iso-8859-1?Q?KsMZkCdnJhXVAEGIgZlOWbrWZBfvsHIoht26iqi3ZbnaIRlW9iepmY2nKX?=
- =?iso-8859-1?Q?AgvtaDMxOJRnGeUq+r+f280f0OUUmYsVY60LZc+gWtVK10eXlWqcNyuH4O?=
- =?iso-8859-1?Q?kGnRqB1U67gqSjMW+tBFG9JkW6HvvMLVzuI4A2r0in1u4FGqczzSxQ5zQh?=
- =?iso-8859-1?Q?6JZQKU1eiAqIZBkWf/qu91kswYtpP+06RSkIH+L2qD3cw2XH7bcNL9Eg/x?=
- =?iso-8859-1?Q?fNW72bxEGzJK2UdJ9xxfNWozwPcxUJRLN3w3JYeripJuR9FoZZ1Q5sEOM2?=
- =?iso-8859-1?Q?npMQcU6b6ahuG+Dni6V6Euz4Nt9irY8rGEGtRRf5bpoVw+mI7awc/UgviZ?=
- =?iso-8859-1?Q?dfqNeJ87eEdEE5Dh45y5deVXU2hUOZsWbAvH/O2druvJHZcxcIsw8Svqal?=
- =?iso-8859-1?Q?zzduRGQ0+naiH1J5TZKs3JyG2HVc5kfpJ/wKbmR5BhF1iIC/u7+mYmOXtH?=
- =?iso-8859-1?Q?+HGt/Mm5om2O5r8PTIjhqIsVEpJfw9WLZKfNQkm8hq9mkrcUBX8k75Eg?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EDC76400
+	for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 17:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708449106; cv=none; b=rpdqW1tuLS9FfPoPqWtSTpyM70SV+3CWSSYIkvbZj+SdU/h9Ysyxv4ugmE3/9ZjzmO8e+6V1f6V/BbllTgqKJBROcUkipjlYT2KKOOfHPFIFh8Vm4wS0tS8oMqgCprcBKblXrnmW0WOysMugO6ZB/e6uNBnbifw/fEY43e1tM58=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708449106; c=relaxed/simple;
+	bh=EJs09zYJJbSZ8cWFMENMnQp1ilbZKfVmQ4Hagg2pxBA=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=TAgjePkp8DkTuLuM72CGlrhGLvFCdZVVqUMdHsLmGmlz0yzijdQLoxmpKemcp7o/DiWXH2Aogmi/wtY2Q1NP4tB/mCZEp6ht3e0xxv7jRVWu7UjEzLr8dMj2/5Yj1dq/T2sz+vctkuhI5NDCG0QHkS22I8j06kntIH3aP0EYdsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=kzvUBsnj; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d220e39907so58840851fa.1
+        for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 09:11:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708449101; x=1709053901; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EBsPYOj4o/oYmqjND5mUcKc/lhfqBms3nMBFQ3ab9hc=;
+        b=kzvUBsnjLvj0xgcMxEFlC9DB/GEqmKd/EiM/XxvyedDuaJcd6xc5ivmyNwnSS55UuZ
+         23xdNf6LvnMSVk5nCNEu/uo0J5n3DHvletyM0qCUHhpJ6C1ekC/nBlW8SoMk0zRCOaJu
+         /AR66DoItp/nmBzoy3FxqIhkJmqdnU6fwK8HXTeIf9Y1EGnXCZx2fQ4AaVnzwfjeMp27
+         IKJ5dQQ5Zntynf3qKFC362y3346vzZTK3GazEe2zKozxfMW5f5JzaOQE19OWzcCM8xZ0
+         zs5keuthLnH7zMNeHtc0Mzi4RBThoZZ6KsIVTrePFIpek40/oOwCycVR0UTdXVq0GjK4
+         CckQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708449101; x=1709053901;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EBsPYOj4o/oYmqjND5mUcKc/lhfqBms3nMBFQ3ab9hc=;
+        b=k+9simEjwGasuX92R6kBscE0/ebiAy9xj9o0m7bU2IaEHxOKEpJifuNIAX6Z2llnNN
+         1H7nF156GhVdnruvMGg7ih9yoQOReTlcJuPdo6AhQ3ZnBC0A2w9RgOkuDanD4mzlQCdt
+         uOTO3xsRdLG9bOUuB5ffbINlMKo6g9ZF8CeFjCI0NNLVXrVYPm7/q4pMhaSV6L6wnbc5
+         QTwefQuvJbRoWL8K4Bis5kiRLkYcIOQQdZPMbilIQoSc/iKcvgFvhgPr3OFyFUXXQLob
+         HuHAnqB0ZkhR5rAAkk71D9lN8184CWTqsKDkupqjt+5DCVVl7n31IgbGS/pU1WQRrb7j
+         oO1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWAC47wYryz0c3JQl7InbvFmgN3UT2cHqhUGHiBQQrlmmIwTy8AEelZqrX0eqwY1gxWF5MkSdyaPSAsIWTAOaZR2BgIcC+XvF1q
+X-Gm-Message-State: AOJu0YzEbKjaL2TUwGGDWbFSHMcs9rg7tjy0BQkZCSUV3bSleZe/XM8N
+	9hX45RkqLKdfRlG3jXqItc69sIZa97QuUXlEwGkB+ejJyh909Evztf/Yroen9lg=
+X-Google-Smtp-Source: AGHT+IE/S89tnO2LtN3j67GoQbINgLpjDYN7UkNP8HnGtOyZ+toxAR93pnkI/lei8Z5htDwisVq8kQ==
+X-Received: by 2002:a2e:3e1a:0:b0:2d2:39a5:d190 with SMTP id l26-20020a2e3e1a000000b002d239a5d190mr5615387lja.1.1708449101050;
+        Tue, 20 Feb 2024 09:11:41 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:2f02:c7d6:1af5:7c37])
+        by smtp.gmail.com with ESMTPSA id h5-20020a05600016c500b0033d60cba289sm4828605wrf.68.2024.02.20.09.11.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 09:11:40 -0800 (PST)
+References: <20231222111658.832167-1-jbrunet@baylibre.com>
+ <20231222111658.832167-5-jbrunet@baylibre.com>
+ <pqnl66xnct5lqua36iasqws4kowhqtn6vkq7fml76pomcnatj4@q66n3siflgoc>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Thierry Reding
+ <thierry.reding@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>
+Subject: Re: [PATCH v4 4/6] pwm: meson: use device data to carry information
+ around
+Date: Tue, 20 Feb 2024 18:10:59 +0100
+In-reply-to: <pqnl66xnct5lqua36iasqws4kowhqtn6vkq7fml76pomcnatj4@q66n3siflgoc>
+Message-ID: <1jcysrdpro.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB11269.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d35f8af-6703-42db-9790-08dc322da255
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2024 16:04:35.7878
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yqCxPNO9TQ3sYAYawtgORofRTqk58sPp3HjZCf5VW6pXcnL85eBCU3H55BfxTq0vkOnXxYmAJ+NmS8uHh0RpYy5Dtx2z88o3sxEfy5MiLoc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB10174
-
-Hi Uwe,
-
-> -----Original Message-----
-> From: Biju Das
-> Sent: Friday, February 9, 2024 1:39 PM
-> To: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> Cc: Thierry Reding <thierry.reding@gmail.com>; Philipp Zabel
-> <p.zabel@pengutronix.de>; Geert Uytterhoeven <geert+renesas@glider.be>;
-> Fabrizio Castro <fabrizio.castro.jz@renesas.com>; Magnus Damm
-> <magnus.damm@gmail.com>; linux-pwm@vger.kernel.org; linux-renesas-
-> soc@vger.kernel.org; Prabhakar Mahadev Lad <prabhakar.mahadev-
-> lad.rj@bp.renesas.com>
-> Subject: RE: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
->=20
-> Hi Uwe,
->=20
-> Thanks for the feedback
->=20
-> > -----Original Message-----
-> > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > Sent: Wednesday, December 13, 2023 11:40 AM
-> > Subject: Re: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
-> >
-> > On Wed, Dec 13, 2023 at 09:06:56AM +0000, Biju Das wrote:
-> > > Hi Uwe,
-> > >
-> > > > -----Original Message-----
-> > > > From: Biju Das
-> > > > Sent: Friday, December 8, 2023 2:12 PM
-> > > > Subject: RE: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
-> > > >
-> > > > Hi Uwe Kleine-K=F6nig,
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > > > > Sent: Friday, December 8, 2023 2:07 PM
-> > > > > Subject: Re: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
-> > > > >
-> > > > > Hello Biju,
-> > > > >
-> > > > > On Fri, Dec 08, 2023 at 10:34:55AM +0000, Biju Das wrote:
-> > > > > > > -----Original Message-----
-> > > > > > > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > > > > > > Sent: Thursday, December 7, 2023 9:42 PM
-> > > > > > > Subject: Re: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
-> > > > > > >
-> > > > > > > Hello Biju,
-> > > > > > >
-> > > > > > > On Thu, Dec 07, 2023 at 06:26:44PM +0000, Biju Das wrote:
-> > > > > > > > ######[  304.213944] pwm-rzg2l-gpt 10048000.pwm: .apply is
-> > > > > > > > not idempotent (ena=3D1 pol=3D0 5500000000000/4398035251200=
-0)
-> > > > > > > > ->
-> > > > > > > > (ena=3D1
-> > > > > > > > pol=3D0
-> > > > > > > > 5500000000000/43980239923200)
-> > > > > > > > 	 High setting##
-> > > > > > > > 	[  304.230854] pwm-rzg2l-gpt 10048000.pwm: .apply is not
-> > > > > > > > idempotent
-> > > > > > > > (ena=3D1 pol=3D0 23980465100800/43980352512000) -> (ena=3D1
-> > > > > > > > pol=3D0
-> > > > > > > > 23980465100800/43980239923200)
-> > > > > > >
-> > > > > > > Have you tried to understand that? What is the clk rate when
-> > > > > > > this
-> > > > > happens?
-> > > > > > > You're not suggesting that mul_u64_u64_div_u64 is wrong, are
-> > you?
-> > > > > >
-> > > > > > mul_u64_u64_div_u64() works for certain values. But for very
-> > > > > > high values we are losing precision and is giving unexpected
-> > values.
-> > > > >
-> > > > > Can you reduce the problem to a bogus result of
-> > mul_u64_u64_div_u64()?
-> > > > > I'd be very surprised if the problem was mul_u64_u64_div_u64()
-> > > > > and not how it's used in your pwm driver.
-> > > >
-> > > > When I looked last time, it drops precision here[1]. I will
-> > > > recheck
-> > again.
-> > > > On RZ/G2L family devices, the PWM rate is 100MHz.
-> > > >
-> > >  [1]
-> > > https://elixir.bootlin.com/linux/v6.7-rc4/source/lib/math/div64.c#L2
-> > > 14
-> > >
-> > >
-> > > Please find the bug details in mul_u64_u64_div_u64() compared to
-> > > mul_u64_u32_div()
-> > >
-> > > Theoretical calculation:
-> > >
-> > > Period =3D 43980465100800 nsec
-> > > Duty_cycle =3D 23980465100800 nsec
-> > > PWM rate =3D 100MHz
-> > >
-> > > period_cycles(tmp) =3D 43980465100800 * (100 * 10 ^ 6) / (10 ^ 9) =3D
-> > > 4398046510080 prescale =3D ((43980465100800 >> 32) >=3D 256) =3D 5
-> > > period_cycles =3D min (round_up(4398046510080,( 1 << (2 * 5 )),
-> > > U32_MAX) =3D min (4295162607, U32_MAX) =3D U32_MAX =3D 0xFFFFFFFF
-> > > duty_cycles =3D min (2398046510080, ,( 1 << (2 * 5 )), U32_MAX) =3D  =
-min
-> > > (2341842295,
-> > > U32_MAX) =3D 0x8B95AD77
-> > >
-> > >
-> > > with mul_u64_u64_div_u64 (ARM64):
-> > > [   54.551612] ##### period_cycles_norm=3D43980465100800
-> > > [   54.305923] ##### period_cycles_tmp=3D4398035251080 ---> This is t=
-he
-> > bug.
-> >
-> > It took me a while to read from your mail that
-> >
-> > 	mul_u64_u64_div_u64(43980465100800, 100000000, 1000000000)
-> >
-> > yields 4398035251080 on your machine (which isn't the exact result).
-> >
-> > I came to the same conclusion, damn, I thought mul_u64_u64_div_u64()
-> > was exact. I wonder if it's worth to improve that. One fun fact is
-> > that while mul_u64_u64_div_u64(43980465100800, 100000000, 1000000000)
-> > yields
-> > 4398035251080 (which is off by 11259000), swapping the parameters (and
-> > thus using mul_u64_u64_div_u64(100000000, 43980465100800, 1000000000))
-> > yields 4398046510080 which is the exact result.
-> >
-> > So this exact issue can be improved by:
-> >
-> > diff --git a/lib/math/div64.c b/lib/math/div64.c index
-> > 55a81782e271..9523c3cd37f7 100644
-> > --- a/lib/math/div64.c
-> > +++ b/lib/math/div64.c
-> > @@ -188,6 +188,9 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
-> >  	u64 res =3D 0, div, rem;
-> >  	int shift;
-> >
-> > +	if (a > b)
-> > +		return mul_u64_u64_div_u64(b, a, c);
-> > +
-> >  	/* can a * b overflow ? */
-> >  	if (ilog2(a) + ilog2(b) > 62) {
-> >  		/*
-> >
-> > but the issue stays in principle. I'll think about that for a while.
->=20
-> OK, I found a way to fix this issue
->=20
-> static inline u64 rzg2l_gpt_mul_u64_u64_div_u64_roundup(u64 a, u64 b, u64
-> c) {
-> 	u64 retval;
->=20
-> 	if (a > b)
-> 		retval =3D mul_u64_u64_div_u64(b, a, c / 2);
-> 	else
-> 		retval =3D mul_u64_u64_div_u64(a, b, c / 2);
->=20
-> 	return DIV64_U64_ROUND_UP(retval, 2);
-> }
->=20
-> In my case divisor is multiple of 2 as it is clk frequency.
->=20
-> a =3D 43980465100800, b=3D 100000000, c =3D 1000000000, expected result a=
-fter
-> rounding up =3D 4398046510080
->=20
-> with using above api,
->=20
-> 43980465100800 * 100000000 / 500000000 =3D 8796093020160. roundup
-> (8796093020160, 2) =3D 4398046510080
->=20
-> I am planning to send v18 with these changes.
->=20
-> Please let me know if you have any comments.
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
-I found another way to avoid overflow and also we are not losing any precis=
-ion.
+On Mon 05 Feb 2024 at 18:12, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutr=
+onix.de> wrote:
 
-+	 * Rate is in MHz and is always integer for peripheral clk
-+	 * 2^32(val) * 2^10 (prescalar) * 10^9 > 2^64
-+	 * 2^32(val) * 2^10 (prescalar) * 10^6 < 2^64
-+	 * Multiply val with prescalar first, if the result is less than
-+	 * 2^34, then multiply by 10^9. Otherwise divide nr and dr by 10^3
-+	 * so that it will never overflow.
- 	 */
+> [[PGP Signed Part:Undecided]]
+> On Fri, Dec 22, 2023 at 12:16:52PM +0100, Jerome Brunet wrote:
+>> Use struct device data to carry the information data around, instead
+>> of embedded the pwm structure in it and using container_of()
+>>=20
+>> Doing so works just as well and makes it a little easier to add setup
+>> callback depending on the DT compatible.
+>>=20
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  drivers/pwm/pwm-meson.c | 39 +++++++++++++++++++++++----------------
+>>  1 file changed, 23 insertions(+), 16 deletions(-)
+>>=20
+>> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+>> index ef50c337f444..15c44185d784 100644
+>> --- a/drivers/pwm/pwm-meson.c
+>> +++ b/drivers/pwm/pwm-meson.c
+>> @@ -101,7 +101,6 @@ struct meson_pwm_data {
+>>  };
+>>=20=20
+>>  struct meson_pwm {
+>> -	struct pwm_chip chip;
+>>  	const struct meson_pwm_data *data;
+>>  	struct meson_pwm_channel channels[MESON_NUM_PWMS];
+>>  	void __iomem *base;
+>> @@ -114,7 +113,7 @@ struct meson_pwm {
+>>=20=20
+>>  static inline struct meson_pwm *to_meson_pwm(struct pwm_chip *chip)
+>>  {
+>> -	return container_of(chip, struct meson_pwm, chip);
+>> +	return dev_get_drvdata(chip->dev);
+>>  }
+>>=20=20
+>>  static int meson_pwm_request(struct pwm_chip *chip, struct pwm_device *=
+pwm)
+>> @@ -146,6 +145,7 @@ static int meson_pwm_calc(struct meson_pwm *meson, s=
+truct pwm_device *pwm,
+>>  			  const struct pwm_state *state)
+>>  {
+>>  	struct meson_pwm_channel *channel =3D &meson->channels[pwm->hwpwm];
+>> +	struct device *dev =3D pwm->chip->dev;
+>>  	unsigned int cnt, duty_cnt;
+>>  	unsigned long fin_freq;
+>>  	u64 duty, period, freq;
+>> @@ -168,19 +168,19 @@ static int meson_pwm_calc(struct meson_pwm *meson,=
+ struct pwm_device *pwm,
+>>=20=20
+>>  	fin_freq =3D clk_round_rate(channel->clk, freq);
+>>  	if (fin_freq =3D=3D 0) {
+>> -		dev_err(meson->chip.dev, "invalid source clock frequency\n");
+>> +		dev_err(dev, "invalid source clock frequency\n");
+>>  		return -EINVAL;
+>>  	}
+>>=20=20
+>> -	dev_dbg(meson->chip.dev, "fin_freq: %lu Hz\n", fin_freq);
+>> +	dev_dbg(dev, "fin_freq: %lu Hz\n", fin_freq);
+>>=20=20
+>>  	cnt =3D div_u64(fin_freq * period, NSEC_PER_SEC);
+>>  	if (cnt > 0xffff) {
+>> -		dev_err(meson->chip.dev, "unable to get period cnt\n");
+>> +		dev_err(dev, "unable to get period cnt\n");
+>>  		return -EINVAL;
+>>  	}
+>>=20=20
+>> -	dev_dbg(meson->chip.dev, "period=3D%llu cnt=3D%u\n", period, cnt);
+>> +	dev_dbg(dev, "period=3D%llu cnt=3D%u\n", period, cnt);
+>>=20=20
+>>  	if (duty =3D=3D period) {
+>>  		channel->hi =3D cnt;
+>> @@ -191,7 +191,7 @@ static int meson_pwm_calc(struct meson_pwm *meson, s=
+truct pwm_device *pwm,
+>>  	} else {
+>>  		duty_cnt =3D div_u64(fin_freq * duty, NSEC_PER_SEC);
+>>=20=20
+>> -		dev_dbg(meson->chip.dev, "duty=3D%llu duty_cnt=3D%u\n", duty, duty_cn=
+t);
+>> +		dev_dbg(dev, "duty=3D%llu duty_cnt=3D%u\n", duty, duty_cnt);
+>>=20=20
+>>  		channel->hi =3D duty_cnt;
+>>  		channel->lo =3D cnt - duty_cnt;
+>> @@ -214,7 +214,7 @@ static void meson_pwm_enable(struct meson_pwm *meson=
+, struct pwm_device *pwm)
+>>=20=20
+>>  	err =3D clk_set_rate(channel->clk, channel->rate);
+>>  	if (err)
+>> -		dev_err(meson->chip.dev, "setting clock rate failed\n");
+>> +		dev_err(pwm->chip->dev, "setting clock rate failed\n");
+>>=20=20
+>>  	spin_lock_irqsave(&meson->lock, flags);
+>>=20=20
+>> @@ -425,10 +425,10 @@ static const struct of_device_id meson_pwm_matches=
+[] =3D {
+>>  };
+>>  MODULE_DEVICE_TABLE(of, meson_pwm_matches);
+>>=20=20
+>> -static int meson_pwm_init_channels(struct meson_pwm *meson)
+>> +static int meson_pwm_init_channels(struct device *dev)
+>>  {
+>>  	struct clk_parent_data mux_parent_data[MESON_NUM_MUX_PARENTS] =3D {};
+>> -	struct device *dev =3D meson->chip.dev;
+>> +	struct meson_pwm *meson =3D dev_get_drvdata(dev);
+>>  	unsigned int i;
+>>  	char name[255];
+>>  	int err;
+>> @@ -438,7 +438,7 @@ static int meson_pwm_init_channels(struct meson_pwm =
+*meson)
+>>  		mux_parent_data[i].name =3D meson->data->parent_names[i];
+>>  	}
+>>=20=20
+>> -	for (i =3D 0; i < meson->chip.npwm; i++) {
+>> +	for (i =3D 0; i < MESON_NUM_PWMS; i++) {
+>>  		struct meson_pwm_channel *channel =3D &meson->channels[i];
+>>  		struct clk_parent_data div_parent =3D {}, gate_parent =3D {};
+>>  		struct clk_init_data init =3D {};
+>> @@ -519,28 +519,35 @@ static int meson_pwm_init_channels(struct meson_pw=
+m *meson)
+>>  static int meson_pwm_probe(struct platform_device *pdev)
+>>  {
+>>  	struct meson_pwm *meson;
+>> +	struct pwm_chip *chip;
+>>  	int err;
+>>=20=20
+>> +	chip =3D devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+>> +	if (!chip)
+>> +		return -ENOMEM;
+>> +
+>>  	meson =3D devm_kzalloc(&pdev->dev, sizeof(*meson), GFP_KERNEL);
+>>  	if (!meson)
+>>  		return -ENOMEM;
+>>=20=20
+>> +	platform_set_drvdata(pdev, meson);
+>> +
+>>  	meson->base =3D devm_platform_ioremap_resource(pdev, 0);
+>>  	if (IS_ERR(meson->base))
+>>  		return PTR_ERR(meson->base);
+>>=20=20
+>>  	spin_lock_init(&meson->lock);
+>> -	meson->chip.dev =3D &pdev->dev;
+>> -	meson->chip.ops =3D &meson_pwm_ops;
+>> -	meson->chip.npwm =3D MESON_NUM_PWMS;
+>> +	chip->dev =3D &pdev->dev;
+>> +	chip->ops =3D &meson_pwm_ops;
+>> +	chip->npwm =3D MESON_NUM_PWMS;
+>>=20=20
+>>  	meson->data =3D of_device_get_match_data(&pdev->dev);
+>>=20=20
+>> -	err =3D meson_pwm_init_channels(meson);
+>> +	err =3D meson_pwm_init_channels(&pdev->dev);
+>>  	if (err < 0)
+>>  		return err;
+>>=20=20
+>> -	err =3D devm_pwmchip_add(&pdev->dev, &meson->chip);
+>> +	err =3D devm_pwmchip_add(&pdev->dev, chip);
+>>  	if (err < 0)
+>>  		return dev_err_probe(&pdev->dev, err,
+>>  				     "failed to register PWM chip\n");
+>
+> Parts of this change overlap with plans I have for this driver. I
 
-Here I can useDIV64_U64_ROUND_UP() instead. I will send v18 based on this.
+It does overlap indeed. I'll drop this one while rebasing
 
-Cheers,
-Biju
+> reworked the series a bit now, also affecting the meson driver, the
+> previous submission is available at
+> https://lore.kernel.org/linux-pwm/bf6f7c6253041f60ee8f35b5c9c9e8d595332fb=
+0.1706182805.git.u.kleine-koenig@pengutronix.de
+>
+> I don't see the nice benefit of this patch yet, but I assume this will
+> become clearer when I check the next patch.
+>
+> Best regards
+> Uwe
 
+
+--=20
+Jerome
 
