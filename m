@@ -1,154 +1,186 @@
-Return-Path: <linux-pwm+bounces-1553-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1554-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7F3485B58A
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 09:39:57 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 614C785B5AC
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 09:43:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 179231C225E2
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 08:39:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 98382B214F8
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 08:43:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC6742E3E8;
-	Tue, 20 Feb 2024 08:39:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE8CD5D735;
+	Tue, 20 Feb 2024 08:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rGH1RGBk"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F36B5D46C
-	for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 08:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF7C5D46D
+	for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 08:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708418374; cv=none; b=S+kARG5ykpHj3K/ks2KWjrlhdTKQIpkPrao2Gm3pZ2vQjRe1OZzmSCpv9bqm6sFgXH9j1F2rGvQ4ZtSdr6tSSixUVJaqTh+WfAHBcfaX6ZwACVbOcAMa6SN5MhNPQxxr4hPJNhna+Y2ib/Drofjt5FhoGScZus+0ZLN9mDuE/VM=
+	t=1708418608; cv=none; b=hIl+4sESI0sv8J043xOK7Q9bmTpyX2INJKGwo+aOqA3XeswDjo65MDonRrdS4XNM4VTq5Ji3g31NYP4zlIp9i6SoPEJRKGVvJ3vtEV2vC22Qp/4pN90szg4LXacGKpB4TEsRLnK05zHv27rLs/M3HuK8rKfU89+uci073kfhpZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708418374; c=relaxed/simple;
-	bh=WCIgc8FmZR2G8VtM8HPhX6ovI0R5QT9omQjCWGJo+1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ggjIvlZmOxBFqGG4L4AG6psYYt4XVKBRrpriwx/78HTZ7aMH0U/Y+0HcFGXKwG3o/LlJYKqh6Kic9mDT2bfsNDBJDBrfkHpuPstSzVQVdhXwFc8KqSGF6UE545p9kX3a8R6INMabBHhr9FftBOcCbtl0JCqXgiKp98KKsEfWtf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rcLeg-00082X-Iy; Tue, 20 Feb 2024 09:39:10 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rcLef-001oAI-4n; Tue, 20 Feb 2024 09:39:09 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rcLef-008LlF-08;
-	Tue, 20 Feb 2024 09:39:09 +0100
-Date: Tue, 20 Feb 2024 09:39:08 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Lee Jones <lee@kernel.org>, Sam Ravnborg <sam@ravnborg.org>, 
-	Boris Brezillon <bbrezillon@kernel.org>
-Cc: Dharma.B@microchip.com, krzysztof.kozlowski@linaro.org, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
-	daniel@ffwll.ch, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	conor+dt@kernel.org, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, 
-	claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, 
-	linux-pwm@vger.kernel.org, Hari.PrasathGE@microchip.com, Manikandan.M@microchip.com, 
-	Conor.Dooley@microchip.com
-Subject: Re: (subset) [linux][PATCH v6 3/3] dt-bindings: mfd: atmel,hlcdc:
- Convert to DT schema format
-Message-ID: <qywehfpajronx457jzaxpynjnae6wpl5uvswetr6nrtmmcm5wl@7rl5jfqsofzn>
-References: <20240202001733.91455-1-dharma.b@microchip.com>
- <20240202001733.91455-4-dharma.b@microchip.com>
- <170738899221.920003.15342446791449663430.b4-ty@kernel.org>
- <cedecdb7-fe4a-42ea-9a11-faa82f84b57d@linaro.org>
- <ffd43756-b24e-4f19-be33-0e33047ad70c@microchip.com>
- <20240220082026.GG10170@google.com>
+	s=arc-20240116; t=1708418608; c=relaxed/simple;
+	bh=+t4VwbrGo553hvc0/n5wxPqBQt8SYKPxeM/tBSQCuf0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AFEmnljDmH/Rl2nBv4jG5gVHLOtnIHpfZkN4SZUXSMWSfr+buyYacG7+AsVH7OO2HhhbgWnj3m8DwXi3OLZgXZmOaIgePXiOQM8W0HGmqLCGHziM+cdCqy/87JFfqWjoXo4VRj5qhFaKe/lWW3/MZ5G7APT5ItPMZETLJiRssM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rGH1RGBk; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4126dd40a54so4022415e9.3
+        for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 00:43:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708418605; x=1709023405; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lvOKZ6FnRVaRVe1Ql/pBOvP/3gu5W7cm2XGKLzU0Jes=;
+        b=rGH1RGBkCDV5U7Zdv4RsFSN2yLuB2qxBc7tQ8nT/0hniMwCBEDhGNvcHcOtFHONZSP
+         yYgll5wnUYFy6ZE1YWtAKAu4ez1xC1zlVYJfGMjVXJBBJjq4u002n8vvWqRCk9Tu8Jl+
+         eWpae4SjB08TZ1/dowFz5RBIE3mFbYKUG71QSiTQXx+CRN0RK8QJqvMFURLGuxVbcNDP
+         qCYpZJn8CAmRgV0AcD6Da+jCg4kQBnIU7EXwYHfBohP0cEH8U+jhGLSFSrNSmF/956uh
+         hokXNngYNsPQmW70wGW7Etd+8Aa9VRA+bdsD3zAtZo0xqH80W8PVfq9R16myUdawRriC
+         QHjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708418605; x=1709023405;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lvOKZ6FnRVaRVe1Ql/pBOvP/3gu5W7cm2XGKLzU0Jes=;
+        b=q07zXAPVm9fqnBTBCs0pq5dJqqGhwax/PPGUYONPISc2vTl4gcSpFJUtFzjAx5HNqe
+         eF6DLPHl2b+qnssLcl0V/FqC6EYWY1xrowg/5hMVsz2upx1wqOgHWqYtm3lSwKwcrplP
+         MDR2GTYLOfSqkZZeYh/aA8dJaE5ESwkRlul8UJHxrBn9j1ehrrVsdMPwhLSYIRwUZ2hj
+         iJl9rpUEbsRFjngem5DPvUCCnbspo0stD+V7xQs1L82KoIeqjRQuu54lH4WMFKyLBdjH
+         RStlZO9Y1mou6xCHkWubuGZVI/iM2LoCSQdDs0gs7w3fnXsSExi67sEz8en0jJQSZYjZ
+         7+4A==
+X-Forwarded-Encrypted: i=1; AJvYcCWYgRqWmQ4PR/MCtmum8zt2ClB3oRVZWR5uR9kVEVRRwEsckD4g5RmeyNJT1EpJU8uEn49uJPcXzHZh8Mm9fDulrtyOsM3mSbR1
+X-Gm-Message-State: AOJu0YxFBIFlcaICNg1wDhzZU1ZAv+z2VzfYRcmkzOkbIZXsXaHMSqqQ
+	B87mzwcSG7ambz+/g504W4kjaLQDpvLociD/c2pA9muj9hyPz5NkueKRt2xySzc=
+X-Google-Smtp-Source: AGHT+IHC8cvv39figdqKFr2x/5K8JqNBhDhnjLZkdTYqb0OQnDRB6RKw8IW4o1Opoo/z9ZuQp6+ZCg==
+X-Received: by 2002:a05:600c:19cd:b0:411:d273:90e2 with SMTP id u13-20020a05600c19cd00b00411d27390e2mr13071167wmq.3.1708418605430;
+        Tue, 20 Feb 2024 00:43:25 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id g17-20020a05600c4ed100b0040ecdd672fasm14075986wmq.13.2024.02.20.00.43.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Feb 2024 00:43:25 -0800 (PST)
+Message-ID: <e6fdfb54-aa2c-4c17-a5c2-4d12abf2591c@linaro.org>
+Date: Tue, 20 Feb 2024 09:43:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qejo3o7k6h2mp3hz"
-Content-Disposition: inline
-In-Reply-To: <20240220082026.GG10170@google.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: (subset) [linux][PATCH v6 3/3] dt-bindings: mfd: atmel,hlcdc:
+ Convert to DT schema format
+Content-Language: en-US
+To: Dharma.B@microchip.com, lee@kernel.org, sam@ravnborg.org,
+ bbrezillon@kernel.org, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+ claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+ u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
+Cc: Hari.PrasathGE@microchip.com, Manikandan.M@microchip.com,
+ Conor.Dooley@microchip.com
+References: <20240202001733.91455-1-dharma.b@microchip.com>
+ <20240202001733.91455-4-dharma.b@microchip.com>
+ <170738899221.920003.15342446791449663430.b4-ty@kernel.org>
+ <cedecdb7-fe4a-42ea-9a11-faa82f84b57d@linaro.org>
+ <ffd43756-b24e-4f19-be33-0e33047ad70c@microchip.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <ffd43756-b24e-4f19-be33-0e33047ad70c@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 20/02/2024 04:34, Dharma.B@microchip.com wrote:
+> Hi Krzysztof,
+> 
+> On 12/02/24 3:53 pm, Krzysztof Kozlowski wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>
+>> On 08/02/2024 11:43, Lee Jones wrote:
+>>> On Fri, 02 Feb 2024 05:47:33 +0530, Dharma Balasubiramani wrote:
+>>>> Convert the atmel,hlcdc binding to DT schema format.
+>>>>
+>>>> Align clocks and clock-names properties to clearly indicate that the LCD
+>>>> controller expects lvds_pll_clk when interfaced with the lvds display. This
+>>>> alignment with the specific hardware requirements ensures accurate device tree
+>>>> configuration for systems utilizing the HLCDC IP.
+>>>>
+>>>> [...]
+>>>
+>>> Applied, thanks!
+>>>
+>>> [3/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT schema format
+>>>        commit: cb946db1335b599ece363d33966bf653ed0fa58a
+>>>
+>>
+>> Next is still failing.
+>>
+>> Dharma,
+>> You must explain and clearly mark dependencies between patches.
+> 
+> I sincerely apologize for any confusion caused by the oversight. I have 
+> organized the patches according to their dependencies in the patch 
 
---qejo3o7k6h2mp3hz
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Does it mean that all your other patchsets which contain multiple
+patches have dependencies? That would be the meaning of above approach.
+Unfortunately that's not good... I'll comment in other places for
+individual issues.
 
-Hello,
+Best regards,
+Krzysztof
 
-On Tue, Feb 20, 2024 at 08:20:26AM +0000, Lee Jones wrote:
-> On Tue, 20 Feb 2024, Dharma.B@microchip.com wrote:
-> > On 12/02/24 3:53 pm, Krzysztof Kozlowski wrote:
-> > > On 08/02/2024 11:43, Lee Jones wrote:
-> > >> On Fri, 02 Feb 2024 05:47:33 +0530, Dharma Balasubiramani wrote:
-> > >>> Convert the atmel,hlcdc binding to DT schema format.
-> > >>>
-> > >>> Align clocks and clock-names properties to clearly indicate that th=
-e LCD
-> > >>> controller expects lvds_pll_clk when interfaced with the lvds displ=
-ay. This
-> > >>> alignment with the specific hardware requirements ensures accurate =
-device tree
-> > >>> configuration for systems utilizing the HLCDC IP.
-> > >>>
-> > >>> [...]
-> > >>
-> > >> Applied, thanks!
-> > >>
-> > >> [3/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT schema format
-> > >>        commit: cb946db1335b599ece363d33966bf653ed0fa58a
-> > >>
-> > >=20
-> > > Next is still failing.
->
-> If this continues to be an issue, I can just remove the commit.
-
-The missing part in next is that patch 1 isn't included. So the options
-are:
-
- a) Someone (dri or dt folks?) merges patch 1
-    This fixes the state in next, though some commits stay around that
-    fail dt_binding_check
-
- b) Someone (mfd or dt?) merges all 3 patches in one go and the two
-    patches already applied are dropped.
-    This makes dt_binding_check happy for all revs.
-
-For me a) is good enough, but I guess the dri people are not aware there
-is something to do for them?! Would be nice if Sam or Boris commented.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---qejo3o7k6h2mp3hz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXUZSwACgkQj4D7WH0S
-/k7RwggAn5k8z+bYxn2HgADIEc6MbdHU9mSeQkIedBDJ7eKUR9WZ1pe+Srnu1tVr
-WrbdWq3sSF9lnSbmq+jH/W6Rp2m1T/8d17EqgmBblQM31IHwt/aJO6y0Ey3qrE91
-tF3NOvg4sDPwl0E+WSKOSl0fk9Qk0zhL161D6FREDGwt2KAZ5MKIxYvIobYDLHmb
-sqKfYhfHR7r3FfhvtPTkWrTdhasrsrxNY1Jkff8UuznodekV+O6j5UaQyLCZRzRS
-+kw+V/q9YQW1PdpNX8GuUYeArlXwco8mSS3iVm7KbAJDg20lGumcEJGr9u8WRB3d
-pduGmFRvTTV/J2sLRDjAX4oijX45fA==
-=2XIV
------END PGP SIGNATURE-----
-
---qejo3o7k6h2mp3hz--
 
