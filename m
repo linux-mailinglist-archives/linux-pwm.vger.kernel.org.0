@@ -1,172 +1,309 @@
-Return-Path: <linux-pwm+bounces-1567-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1568-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 969BD85B81E
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 10:49:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1EAF85B97C
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 11:48:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E99B2B28899
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 09:49:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D323E1C23B51
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 10:48:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1EEA67A0A;
-	Tue, 20 Feb 2024 09:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GB+iInto"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC47B64A94;
+	Tue, 20 Feb 2024 10:48:13 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F93067A0C
-	for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 09:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE5A65BB2
+	for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 10:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708422388; cv=none; b=NThwU2T6pX60803/pUOGdcjk1bbgPsub6QAM3MkWQGEaNxsvoLy8gzfItYrC+nJM8qtcx3X6hBbSwfArG52IdAc2ObZjhTawjDNjG/2clGxSgElQPg68nXK2adYwZhA+eBAu3gnEXytBDUD4VLgFCP4ghtf0gwJ+PIZoOuS+Mug=
+	t=1708426093; cv=none; b=EDbTG2pj9OWUGHKNUYux+5984CTXDgUvIx7qPFUt1WFMgaCLLd1gtNFp0tkJX/oDn8Cm9DU05541hZlN3nxw1A2A7Gd3ZnoL/PTeBgnPvWTckWyNczphdUhNK51zWFndkp9wByojWgXbnOrXVuqRRPShJUYfgjeovGzBLtlqxok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708422388; c=relaxed/simple;
-	bh=VU6lUw9k90PuFwFfUzpvE+ClWSw7Z6+NspthVyDjW7w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=C7WcZYMaa5uj8yfpBJqq6zJ8HQkh6m8Jf2OSMPqlj8yD8tYDxe35gtVLWZu5mfAmyAT77REvBLpk17qDt2r7sxMvzjOPegNUfUyj1GB3IugDSUK6KPmhKhYrWYQBMF/rqrIfdeWVfZFJgWtrWSYBPaq7Op4dfOoOs7rp4TuQOCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GB+iInto; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708422386;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ua+iueUGl77okzhaoQdUc6zme30b1qrWNRG/YazNKLc=;
-	b=GB+iIntocFLIeNPkrzRL1cYz5KKqQy03ZM7foNrmbcaLsOUSQEAJ1TDlOH59nPwzSn5KBv
-	WVodOqXeiZceXXdWKv/iQdCw3WYPcsE3lBNnTdQpFrYF8omgHQI+0uaUqiuJ2m+kmTaa/g
-	lI5mso8tBC0unm4YuSbc2R3aPK9weus=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-159-GvkpHARuMMiHM9mO2sNDmA-1; Tue, 20 Feb 2024 04:46:23 -0500
-X-MC-Unique: GvkpHARuMMiHM9mO2sNDmA-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4107469e8adso33032815e9.1
-        for <linux-pwm@vger.kernel.org>; Tue, 20 Feb 2024 01:46:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708422382; x=1709027182;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ua+iueUGl77okzhaoQdUc6zme30b1qrWNRG/YazNKLc=;
-        b=i5jQ9K44tmn4+v/ZmsBL8MrigROLBplmf51YBe65P1Ykrsm+xGBkO7p9PkLoFFfeWH
-         KNtSXhqTY7dStBqP5iQ6i48FZaDS8Cuucb5KGIcG7YokvlVx7r/mJB5uoE5oLQa5S3m3
-         nLVqOVcY4NPS4/908cmYO46U3g4nE3M3NNUCdWnA0Y+IHuC4E5a/mqNnKiecVYlodMbh
-         V3YVJ2Au/aq3cic2bodm/XS0LHrmxU3pJao3ytg/WVkKs8VJe52xAPpBpL6w0vbCNVZB
-         xaIbfon9nLSiSUIms4dn8DBqCKDQjVA4L0EvpqUtypIEb3xo1DESY0kEfFeliLO/bPr2
-         CnkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0vXVjBZOZ41LWrqXQDfNyrJ13u8RXOZegENvxW0mIz0eoRKLHb3CRc7asZft/RpuCVUZysFzP/LKZe0sUNCbWCflyjDEmLp3R
-X-Gm-Message-State: AOJu0YyNCJufkk5nIYuq/vVWTUbBJrJ0VdFjhgL4kJed+zRUpKtpqtv6
-	nRO7zg02lmUBINKaZFjhGoTR6kyk+wRw+qD3T/Y+/x2ji8WrR5U/ubPURvDTP9wSO+lBJrk9TZD
-	9rzaycep1TfMxWLdR6qwb9UDmY0cBw2nqC9X4JQ4INlhzaKA0nsI4SE/F+A==
-X-Received: by 2002:a05:600c:4813:b0:411:fae0:b158 with SMTP id i19-20020a05600c481300b00411fae0b158mr10243408wmo.35.1708422382793;
-        Tue, 20 Feb 2024 01:46:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHVewDRy1qipC9k0gZj2P7ww2xioxl7Ke3sBkdfIzbrcFreEU44DweZYKlUDvIymqIYAVgmSA==
-X-Received: by 2002:a05:600c:4813:b0:411:fae0:b158 with SMTP id i19-20020a05600c481300b00411fae0b158mr10243398wmo.35.1708422382457;
-        Tue, 20 Feb 2024 01:46:22 -0800 (PST)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id k10-20020a7bc40a000000b004101f27737asm13892556wmi.29.2024.02.20.01.46.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 01:46:22 -0800 (PST)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, lee@kernel.org,
- daniel.thompson@linaro.org, jingoohan1@gmail.com, deller@gmx.de
-Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
- linux-input@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 01/10] backlight: Match backlight device against struct
- fb_info.bl_dev
-In-Reply-To: <a5b9a2d8-f305-4b68-9086-76d5f1b985c7@suse.de>
-References: <20240212162645.5661-1-tzimmermann@suse.de>
- <20240212162645.5661-2-tzimmermann@suse.de>
- <87bk8bjxzo.fsf@minerva.mail-host-address-is-not-set>
- <a5b9a2d8-f305-4b68-9086-76d5f1b985c7@suse.de>
-Date: Tue, 20 Feb 2024 10:46:21 +0100
-Message-ID: <87edd7ii36.fsf@minerva.mail-host-address-is-not-set>
+	s=arc-20240116; t=1708426093; c=relaxed/simple;
+	bh=mDXVF315yM8Tt+rLIMijaJ8JhnLc3Rvn5gHC0Rz9hc4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fb86EcDViK/hNR5f6Gnc0EYOUVmd7ljLqWe3HptC//Wv/L1S4rzazyFmkugM+X+fIi4xLXQe/8cbb2LyQz0pYl6uPURv4Ujvx97u/aymZmQJ4+/ImKnZ5ClGEK2PyELcBpAnvEb+INbUSbo00Pi0v9N6x4yqW7z6eVm+nNhyfp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rcNfM-0000FW-IK; Tue, 20 Feb 2024 11:48:00 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rcNfK-001pIp-7S; Tue, 20 Feb 2024 11:47:58 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rcNfK-008PTy-0S;
+	Tue, 20 Feb 2024 11:47:58 +0100
+Date: Tue, 20 Feb 2024 11:47:58 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, dlan@gentoo.org, 
+	inochiama@outlook.com
+Subject: Re: [PATCH v2 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+Message-ID: <54cwiddo4rsfgryxcgrniauwu2jqfynatmw5i7fzssbxm7txbp@cydhntyrls4p>
+References: <20240212121729.1086718-1-qiujingbao.dlmu@gmail.com>
+ <20240212121729.1086718-3-qiujingbao.dlmu@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cjk7gu26xrxspefg"
+Content-Disposition: inline
+In-Reply-To: <20240212121729.1086718-3-qiujingbao.dlmu@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
 
-> Hi
->
-> Am 20.02.24 um 10:17 schrieb Javier Martinez Canillas:
->> Thomas Zimmermann <tzimmermann@suse.de> writes:
->>
->> Hello Thomas,
->>
->>> Framebuffer drivers for devices with dedicated backlight are supposed
->>> to set struct fb_info.bl_dev to the backlight's respective device. Use
->>> the value to match backlight and framebuffer in the backlight core code.
->>>
->>> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
->>> ---
->>>   drivers/video/backlight/backlight.c | 9 +++++++--
->>>   1 file changed, 7 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
->>> index 86e1cdc8e3697..48844a4f28ad3 100644
->>> --- a/drivers/video/backlight/backlight.c
->>> +++ b/drivers/video/backlight/backlight.c
->>> @@ -98,7 +98,8 @@ static int fb_notifier_callback(struct notifier_block *self,
->>>   {
->>>   	struct backlight_device *bd;
->>>   	struct fb_event *evdata = data;
->>> -	int node = evdata->info->node;
->>> +	struct fb_info *info = evdata->info;
->>> +	int node = info->node;
->>>   	int fb_blank = 0;
->>>   
->>>   	/* If we aren't interested in this event, skip it immediately ... */
->>> @@ -110,8 +111,12 @@ static int fb_notifier_callback(struct notifier_block *self,
->>>   
->>>   	if (!bd->ops)
->>>   		goto out;
->>> -	if (bd->ops->check_fb && !bd->ops->check_fb(bd, evdata->info))
->>> +	else if (bd->ops->check_fb && !bd->ops->check_fb(bd, info))
->>>   		goto out;
->>> +#if IS_ENABLED(CONFIG_FB_BACKLIGHT)
->>> +	else if (info->bl_dev && info->bl_dev != bd)
->> If the driver doesn't provide a struct backlight_ops .check_fb callback, I
->> think that having an info->bl_dev should be mandatory ? Or at least maybe
->> there should be a warning if info->bl_dev isn't set ?
->
-> bl_dev can only be used for display drivers that set an explicit 
-> backlight device; otherwise it's NULL. There seem to be systems where 
-> backlight and display are distinct. And the docs for check_fb say that 
-> by default the backlight matches against any display. I tried to keep 
-> this semantics by silently succeeding if neither check_fb nor bl_dev 
-> have bene set.
->
->>
->> The would be a driver bug, right ?
->
-> I assume that some systems create the backlight instance from platform 
-> data or DT and the display driver has no means of knowing about it.
->
+--cjk7gu26xrxspefg
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok. I thought that in that case a (platform specific) .check_fb callback
-would have to be provided then. But if the semantic is that none could be
-missing, then I guess is OK to silently succeeding.
+Hello,
 
-I wonder if at least a debug printout is worth it. But maybe a follow-up.
+On Mon, Feb 12, 2024 at 08:17:29PM +0800, Jingbao Qiu wrote:
+> Implement the PWM driver for CV1800.
+>=20
+> Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> ---
+>  drivers/pwm/Kconfig      |  10 ++
+>  drivers/pwm/Makefile     |   1 +
+>  drivers/pwm/pwm-cv1800.c | 248 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 259 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-cv1800.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 4b956d661755..455f07af94f7 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -186,6 +186,16 @@ config PWM_CROS_EC
+>  	  PWM driver for exposing a PWM attached to the ChromeOS Embedded
+>  	  Controller.
+> =20
+> +config PWM_CV1800
+> +	tristate "Sophgo CV1800 PWM driver"
+> +	depends on ARCH_SOPHGO || COMPILE_TEST
+> +	help
+> +	  Generic PWM framework driver for the Sophgo CV1800 series
+> +	  SoCs.
+> +
+> +	  To compile this driver as a module, build the dependecies
+> +	  as modules, this will be called pwm-cv1800.
+> +
+>  config PWM_DWC_CORE
+>  	tristate
+>  	depends on HAS_IOMEM
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index c5ec9e168ee7..6c3c4a07a316 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CLK)		+=3D pwm-clk.o
+>  obj-$(CONFIG_PWM_CLPS711X)	+=3D pwm-clps711x.o
+>  obj-$(CONFIG_PWM_CRC)		+=3D pwm-crc.o
+>  obj-$(CONFIG_PWM_CROS_EC)	+=3D pwm-cros-ec.o
+> +obj-$(CONFIG_PWM_CV1800)	+=3D pwm-cv1800.o
+>  obj-$(CONFIG_PWM_DWC_CORE)	+=3D pwm-dwc-core.o
+>  obj-$(CONFIG_PWM_DWC)		+=3D pwm-dwc.o
+>  obj-$(CONFIG_PWM_EP93XX)	+=3D pwm-ep93xx.o
+> diff --git a/drivers/pwm/pwm-cv1800.c b/drivers/pwm/pwm-cv1800.c
+> new file mode 100644
+> index 000000000000..3d7f2ff3a6c2
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-cv1800.c
+> @@ -0,0 +1,248 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * pwm-cv1800.c: PWM driver for Sophgo cv1800
+> + *
+> + * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> + *
+> + * Limitations:
+> + * - It output low when PWM channel disabled.
+> + * - This pwm device supports dynamic loading of PWM parameters. When PW=
+MSTART
+> + *   is written from 0 to 1, the register value (HLPERIODn, PERIODn) wil=
+l be
+> + *   temporarily stored inside the PWM. If you want to dynamically chang=
+e the
+> + *   waveform during PWM output, after writing the new value to HLPERIOD=
+n and
+> + *   PERIODn, write 1 and then 0 to PWMUPDATE[n] to make the new value e=
+ffective.
+> + * - Supports up to Rate/2 output, and the lowest is about Rate/(2^30-1).
+> + * - By setting HLPERIODn to 0, can produce 100% duty cycle.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +
+> +#define PWM_CV1800_HLPERIOD_BASE       0x00
+> +#define PWM_CV1800_PERIOD_BASE         0x04
+> +#define PWM_CV1800_PWM_CV1800_POLARITY 0x40
+> +#define PWM_CV1800_START               0x44
+> +#define PWM_CV1800_DONE                0x48
+> +#define PWM_CV1800_UPDATE              0x4c
+> +#define PWM_CV1800_OE                  0xd0
+> +#define PWM_CV1800_HLPERIOD_SHIFT      0x08
+> +#define PWM_CV1800_PERIOD_SHIFT        0x08
+> +
+> +#define PWM_CV1800_HLPERIOD(n)         \
+> +	(PWM_CV1800_HLPERIOD_BASE + ((n) * PWM_CV1800_HLPERIOD_SHIFT))
+> +#define PWM_CV1800_PERIOD(n)           \
+> +	(PWM_CV1800_PERIOD_BASE + ((n) * PWM_CV1800_PERIOD_SHIFT))
 
-> Best regards
-> Thomas
->
+I would have used a plain 0x08 instead of PWM_CV1800_HLPERIOD_SHIFT and
+PWM_CV1800_PERIOD_SHIFT.
 
--- 
-Best regards,
+> +#define PWM_CV1800_UPDATE_MASK(n) (BIT(0) << (n))
+> +#define PWM_CV1800_OE_MASK(n)     (BIT(0) << (n))
+> +#define PWM_CV1800_START_MASK(n)  (BIT(0) << (n))
+> +
+> +#define PWM_CV1800_MAXPERIOD      (BIT(30) - 1)
+> +#define PWM_CV1800_MINPERIOD      BIT(1)
+> +#define PWM_CV1800_MINHLPERIOD    BIT(0)
+> +#define PWM_CV1800_PERIOD_RESET   BIT(1)
+> +#define PWM_CV1800_HLPERIOD_RESET BIT(0)
+> +#define PWM_CV1800_REG_DISABLE    0x0U
+> +#define PWM_CV1800_REG_ENABLE(n)  (BIT(0) << (n))
+> +
+> +struct cv1800_pwm {
+> +	struct pwm_chip chip;
+> +	struct regmap *map;
+> +	struct clk *clk;
+> +	unsigned long clk_rate;
+> +};
+> +
+> +static const struct regmap_config cv1800_pwm_regmap_config =3D {
+> +	.reg_bits =3D 32,
+> +	.val_bits =3D 32,
+> +	.reg_stride =3D 4,
+> +};
+> +
+> +static inline struct cv1800_pwm *to_cv1800_pwm_dev(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct cv1800_pwm, chip);
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+Please rework the driver to use pwmchip_alloc(). See
+https://lore.kernel.org/linux-pwm/a37a167364366b6cbe2dd299dce02731706213b2.=
+1707900770.git.u.kleine-koenig@pengutronix.de/T/#u
+for a simple example for such a rework.
 
+> +}
+> +
+> +static int cv1800_pwm_enable(struct pwm_chip *chip, struct pwm_device *p=
+wm,
+> +			     bool enable)
+> +{
+> +	struct cv1800_pwm *priv =3D to_cv1800_pwm_dev(chip);
+> +	u32 pwm_enable;
+> +
+> +	regmap_read(priv->map, PWM_CV1800_START, &pwm_enable);
+> +	pwm_enable &=3D PWM_CV1800_START_MASK(pwm->hwpwm);
+> +
+> +	/*
+> +	 * If the parameters are changed during runtime, Register needs
+> +	 * to be updated to take effect.
+> +	 */
+> +	if (pwm_enable && enable) {
+> +		regmap_update_bits(priv->map, PWM_CV1800_UPDATE,
+> +				   PWM_CV1800_UPDATE_MASK(pwm->hwpwm),
+> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
+> +		regmap_update_bits(priv->map, PWM_CV1800_UPDATE,
+> +				   PWM_CV1800_UPDATE_MASK(pwm->hwpwm),
+> +				   PWM_CV1800_REG_DISABLE);
+> +	} else if (!pwm_enable && enable) {
+> +		regmap_update_bits(priv->map, PWM_CV1800_OE,
+> +				   PWM_CV1800_OE_MASK(pwm->hwpwm),
+> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
+> +		regmap_update_bits(priv->map, PWM_CV1800_START,
+> +				   PWM_CV1800_START_MASK(pwm->hwpwm),
+> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
+> +	} else if (pwm_enable && !enable) {
+> +		regmap_update_bits(priv->map, PWM_CV1800_OE,
+> +				   PWM_CV1800_OE_MASK(pwm->hwpwm),
+> +				   PWM_CV1800_REG_DISABLE);
+> +		regmap_update_bits(priv->map, PWM_CV1800_START,
+> +				   PWM_CV1800_START_MASK(pwm->hwpwm),
+> +				   PWM_CV1800_REG_DISABLE);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int cv1800_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct cv1800_pwm *priv =3D to_cv1800_pwm_dev(chip);
+> +	u32 period_val, hlperiod_val;
+> +	u64 tem;
+> +
+> +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+> +		return -EINVAL;
+> +
+> +	tem =3D mul_u64_u64_div_u64(state->period, priv->clk_rate, NSEC_PER_SEC=
+);
+> +	if (tem > PWM_CV1800_MAXPERIOD || tem < PWM_CV1800_MINPERIOD)
+> +		return -EINVAL;
+
+Please use:
+
+	if (tem < PWM_CV1800_MINPERIOD)
+		return -EINVAL
+	if (tem > PWM_CV1800_MAXPERIOD)
+		tem =3D PWM_CV1800_MAXPERIOD;
+
+> +	period_val =3D (u32)tem;
+> +
+> +	tem =3D mul_u64_u64_div_u64(state->period - state->duty_cycle,
+> +				  priv->clk_rate, NSEC_PER_SEC);
+
+Given that you're supposed to configure the biggest duty_cycle not
+bigger than the requested value, you have to round up here.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--cjk7gu26xrxspefg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXUg10ACgkQj4D7WH0S
+/k41lggAljRXqWa2Xerk5/sOtzrwKao8H0XqZCZfI2VNVmcyFqID9ZqatZxvnWkE
+/BIq+00xygUSmlupdxeaRxbWcuKQ7VsFiq0ulhiwNgbWgYw1QykdXV+ukxF5eNsp
+OWq8+m4S3/ueQIF2GfLq9Pcp6csmBCaQxWH28P4IMO6cyrlB7Rx7ZhRIBuKj9iUf
+BZTsNfSV7g35JQZRlBic0+Bt0zNCYS9UkAhK6dKddgUZ9TapBsm5+pqnSjjl7ZEY
+cMHcpIYdMqgzMo1nmlIo2SgW4e8Mue3H5We1SR/Li4szk/DcESHVNZKGG7XHuDYL
+g565r7uqbftADQuMQ+aLRn6gFjPcnw==
+=qwpP
+-----END PGP SIGNATURE-----
+
+--cjk7gu26xrxspefg--
 
