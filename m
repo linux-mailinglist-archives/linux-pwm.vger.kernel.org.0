@@ -1,85 +1,148 @@
-Return-Path: <linux-pwm+bounces-1596-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1597-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2EDB85DFD2
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 Feb 2024 15:35:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF8D785E09A
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Feb 2024 16:12:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98E031F24CFE
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 Feb 2024 14:35:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8995C283A21
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Feb 2024 15:12:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DBB178B73;
-	Wed, 21 Feb 2024 14:35:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F27780049;
+	Wed, 21 Feb 2024 15:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cLxbQz6y"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D544869D10;
-	Wed, 21 Feb 2024 14:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829E27FBD9
+	for <linux-pwm@vger.kernel.org>; Wed, 21 Feb 2024 15:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708526124; cv=none; b=Lc1qgNr1W27BwqiiRUElCTDSeRmPa2nFyFrGjmH5ScOw4bBhSUrodeZWytLXYWuxxXK1+vbvovcJZ9ZXWXeLZz4KcHgM80pSCVOBRVRHeAivZIdHvC//DEAqbcrFp8uQ66f+npILxNTMpNYYiS/l87WN9Dakw7T6tSkFtbTT39A=
+	t=1708528332; cv=none; b=t8L1W1PUPcs8GAn0+w3H7dHDuQf4WMNim+2OAQK2webLFlxYb5wQSnPWqmSFe/h+honu8GvHt+PYpB4azf+bMgT4kXFEI7250cFEz3zLu1nOYoaIqzZg2WDALEBnmwOOqVS555cRcvSPQc07L614DBpTch3jtQpJXvoeo0OaE50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708526124; c=relaxed/simple;
-	bh=7kJff6uenqtMcG+oABWOgdnozgZWzTpO/XafjFTGPRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cy9hT8JkO+EkXCXjdlPKJsZ0wBReAh/pZesRtgRQs0hnn8DWNSqgykvv4ruAcxvSaosbnO24ESHPyn0qkzBaPtSBSXZz6vFGBZVH9NKCwyvL1xujBC4ALzg6rCjZlw3CDIG4aQWhvgvvzZ8oLThlQdCu5HwP35seQQZqpLdqGHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="2550153"
-X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
-   d="scan'208";a="2550153"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 06:35:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="913315192"
-X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
-   d="scan'208";a="913315192"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 06:35:19 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rcngp-00000006N7Q-44Cd;
-	Wed, 21 Feb 2024 16:35:15 +0200
-Date: Wed, 21 Feb 2024 16:35:15 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: lee@kernel.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
-	deller@gmx.de, robin@protonic.nl, javierm@redhat.com,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 02/10] auxdisplay/ht16k33: Remove struct
- backlight_ops.check_fb
-Message-ID: <ZdYKI_DOWetWHrRm@smile.fi.intel.com>
-References: <20240221094324.27436-1-tzimmermann@suse.de>
- <20240221094324.27436-3-tzimmermann@suse.de>
+	s=arc-20240116; t=1708528332; c=relaxed/simple;
+	bh=8MBWv4daSK/tAPnGOdgukRNPyIGRTHZS1yezb+YHTCM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GQ3mnUYhuUerXliuQit1gx6zXr7tGZ2mcB9qkMRdKxfWMaKCkz6TXWFax3QsmUzrfPatrqiKIjfXh+s2axBDDXuxhm9mzC1Nw49jGgtDIWH/3mHbRoTswTnMGy6jm1OisN1Yv3a7Z999VEuG1lCY4m71byhrSt4qr7uB2zQlHPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=cLxbQz6y; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-412698cdd77so18329585e9.1
+        for <linux-pwm@vger.kernel.org>; Wed, 21 Feb 2024 07:12:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708528328; x=1709133128; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3FBkTY4ktEOVpEo6YvXl49m3OViLG+BImsIBijiLHxg=;
+        b=cLxbQz6ymcCXqZoV++mA7iXWCRoo1cVCN0C46/gFOZRVJrYijeeBd+ZjjraP8KKWe1
+         D+78FOPxfFKAK0Vl02L6BYkt9nYWpToJdKw2a0lcY1aaDQmZTtbfqc99gkwGrb/kb1EN
+         pozRg1Q25h5HhBfFyzL+/OGyzGFxUlyLKA1icqyv3+JZWxV+RiKuld/hqPR8Z4FFA7tE
+         PQcb4r9lWDaSSiKXY5T/eW2MDHSZ/ecPJrM2SLMco0p5iW5jW5LwflQH8NLvHxM+Gh9n
+         o6qOoitzP+FKcKpfT+79i8gk0R599CtDD/7jYeU0A8491kpyx/6yBQ4gJRGKRSLmA3bj
+         zaig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708528328; x=1709133128;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3FBkTY4ktEOVpEo6YvXl49m3OViLG+BImsIBijiLHxg=;
+        b=RsqGz7dC3AGmpxSH5/gVX4mOLCmSfIGETtgFh/fjQIY/F+UMcVYcEkH1sp5tPdjU4/
+         P/VPDv0KYI7D5mdNg4gYIJGfxqQAoBh1f9sbadmxCKxBC7X9MkxjumfHTipd1fgEurfH
+         JT+hwPTxo0+dgNBFYh2Q9kpA3LlMDwEJyvn2DZibHQwuexez8iFljyX821d3fF/b6dYA
+         cv7MJZP5OiF6v5p3qyeqgXs/68AbPgHxgVL15ob/poJlRMT1mp5TH7Vf3Wi/6tKK6Mv9
+         sFcx1ku7vQNi3rYwiibwVDPJoRhuGIdTl96J6Xbqc99CmYfz9LnDgFZ22hFbw8NAGtCD
+         yRUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWFXboSgUMm6UbpMSoGvrD9IVXaI5aQiEIwrT80rWnRYSDm3Brweh4uRqddDyzfSuVOW4+Ix+qot4xW4P2YIMxwIFtYnMXmBMO0
+X-Gm-Message-State: AOJu0YxjXun7/wfD3OQOOZ4CesPeEbpfWyxUqnLt34TdwsavcZo0YZRu
+	QkPIUcv5GT9R7C+PAundzpydA0YenBcRimJPjdg+r/+p/hULWAn2skDts3WzMHA=
+X-Google-Smtp-Source: AGHT+IEbPlqDTjSdZwcRLe9JlRyRaH1Pf7F4HirGnDZSwaq8u4fW6YZ7whK5ATYjJZ9SOJhon0VagA==
+X-Received: by 2002:a05:600c:458d:b0:412:60f9:3fe3 with SMTP id r13-20020a05600c458d00b0041260f93fe3mr10011548wmo.1.1708528327447;
+        Wed, 21 Feb 2024 07:12:07 -0800 (PST)
+Received: from toaster.lan ([2a01:e0a:3c5:5fb1:1b1a:d907:d735:9f9e])
+        by smtp.googlemail.com with ESMTPSA id bg22-20020a05600c3c9600b0040fc56712e8sm18725342wmb.17.2024.02.21.07.12.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 07:12:07 -0800 (PST)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Kevin Hilman <khilman@baylibre.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-amlogic@lists.infradead.org,
+	linux-pwm@vger.kernel.org,
+	JunYi Zhao <junyi.zhao@amlogic.com>
+Subject: [PATCH v5 0/5] pwm: meson: dt-bindings fixup
+Date: Wed, 21 Feb 2024 16:11:46 +0100
+Message-ID: <20240221151154.26452-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240221094324.27436-3-tzimmermann@suse.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 21, 2024 at 10:41:29AM +0100, Thomas Zimmermann wrote:
-> The driver sets struct fb_info.bl_dev to the correct backlight
-> device. Thus rely on the backlight core code to match backlight
-> and framebuffer devices, and remove the extra check_fb function
-> from struct backlight_ops.
+This patchset aims to:
+* Fix the incorrect bindings for the s4 type of pwm that was introduced
+  while converting the documentation from txt to yaml format.
+* Introduce a new compatible for the existing PWMs to better describe the
+  HW in DT, instead of describing driver settings.
+* Make the introduction of a new pwm variant (s4) slightly easier.
 
-check_fb()
+Changes since v4 [4]:
+ * Rebased on Uwe's pwm rework in pwm-next
+ * Drop change to carry device data in drvdata
+ * Make the length of parent name array fixed
+ * Single allocation instead 3 for the internal clock elements
+ * meson8-pwm-v2 and meson-pwm-s4 compatibles under an enum instead of
+   2 const
 
-Acked-by: Andy Shevchenko <andy@kernel.org>
+Changes since v3 [3]:
+ * Split first rework patch into 3 changes
+ * Use dev_warn_once() to notify use of obsolete bindings
+ * Rebased on Uwe dev_err_probe() change.
+
+Changes since v2 [2]:
+* Drop DTS changes. These will be re-submitted later on. Possibly after
+  u-boot gets support for the new compatible to minimise conversion
+  problems.
+* Position deprecated property correctly in dt-bindings for the old
+  meson8 type pwm bindings
+* Reword commit description of patch #2 to make more obvious it does not
+  introduce a new HW support but fixes a bad bindings.
+* Dropped Rob's Reviewed-by on patch #2. It seemed appropriate considering
+  the discussion on this change.
+
+Changes since v1 [1]:
+* Fix typo in the new binding compatible documentation
+* Disallow clock-names for the new compatibles in the schema documenation
+
+[1]: https://lore.kernel.org/linux-amlogic/20231106103259.703417-1-jbrunet@baylibre.com
+[2]: https://lore.kernel.org/linux-amlogic/20231117125919.1696980-1-jbrunet@baylibre.com
+[3]: https://lore.kernel.org/linux-amlogic/20231129134004.3642121-1-jbrunet@baylibre.com
+[4]: https://lore.kernel.org/linux-amlogic/20231222111658.832167-1-jbrunet@baylibre.com
+
+Jerome Brunet (5):
+  dt-bindings: pwm: amlogic: fix s4 bindings
+  dt-bindings: pwm: amlogic: Add a new binding for meson8 pwm types
+  pwm: meson: generalize 4 inputs clock on meson8 pwm type
+  pwm: meson: don't carry internal clock elements around
+  pwm: meson: add generic compatible for meson8 to sm1
+
+ .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 115 ++++++-
+ drivers/pwm/pwm-meson.c                       | 289 ++++++++++--------
+ 2 files changed, 260 insertions(+), 144 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
 
