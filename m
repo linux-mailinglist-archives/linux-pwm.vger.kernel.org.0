@@ -1,242 +1,226 @@
-Return-Path: <linux-pwm+bounces-1577-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1578-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90BFB85C512
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 20:43:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4028D85D365
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Feb 2024 10:23:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E4C86B24FC4
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Feb 2024 19:43:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 63C911C2211E
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Feb 2024 09:23:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C26F14A0B6;
-	Tue, 20 Feb 2024 19:43:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 292653D0C8;
+	Wed, 21 Feb 2024 09:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Zjv/klIi";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JUZ91t7T";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Zjv/klIi";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JUZ91t7T"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 436D46A8D5;
-	Tue, 20 Feb 2024 19:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5252D3D55B;
+	Wed, 21 Feb 2024 09:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708458227; cv=none; b=Dva4PhgQR4VHkiamWPQGlB5x19+U6jag24Mu0cLN01+RT6761gtVBl33LoR2cJVv183jTITK5VOcAfQxoVoSlHPy1N7o/Q9Fc1yxO7A16kBFzXDODp4LLr1XRpwJ+W5joMWpDamW7CSJZp9w3MRSHQhs0/fZQHVPufz0RmgdNy0=
+	t=1708507403; cv=none; b=Dbt/6SJfw84UJATs/0fTw8P3WtgQfyHtJHEz593dFXkqd1W6fh5s7PddAyiVt16zKHLUSNGNUC8NL0NB1aBGjFclgbzUTBkyN49nqKV/VpEXrAsECQnFCfWvnpAJqIQ2S+yPzn1q46uKmY2Go4bkvPPuik0PHyxyB0v91riGPAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708458227; c=relaxed/simple;
-	bh=v6TM7e/E9AXwqW8WFLxVsXU9NvoMm4n/Q6ipHdxV9t4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iQkQv66JrzBgPrbzx4l+OK8Kn4qBawfeHGoMogoF0hvEbauXEXbnhzP8t00TV6vpwzJsmJP8XjeNtkCY5M4ZbGr2hQ0CyJkV1OonF/tk6jJLGnnLMEXFC7vZZ47A9M+RJuAfmv+xJoXFfAXHUMyq7kR9HjMqDlVIZ4UjX+9jRn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.06,174,1705330800"; 
-   d="scan'208";a="198557854"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 21 Feb 2024 04:43:44 +0900
-Received: from localhost.localdomain (unknown [10.226.92.246])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id E724D40031D1;
-	Wed, 21 Feb 2024 04:43:40 +0900 (JST)
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-pwm@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH v18 4/4] pwm: rzg2l-gpt: Add support for gpt linking with poeg
-Date: Tue, 20 Feb 2024 19:43:18 +0000
-Message-Id: <20240220194318.672443-5-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240220194318.672443-1-biju.das.jz@bp.renesas.com>
-References: <20240220194318.672443-1-biju.das.jz@bp.renesas.com>
+	s=arc-20240116; t=1708507403; c=relaxed/simple;
+	bh=9HneibxCG1NkU56lKKP5LsAMpSx4jwBIinBDn3SDcQo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F/hENS4YovFRvBheT0PkoscIDSxw/gcdEl5EW/oeuuwHo44lrlOj0aopvQ/ApVjrje6J5gn707yooToRMJ7Aa4kHIfYobmYjZLVIJOwYfhc2x51oiwDy/jQkG1XFFJjap3o2DKuQpluaTP9WNrJ3EnO+45i3isWOB4qPVgK0zP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Zjv/klIi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JUZ91t7T; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Zjv/klIi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JUZ91t7T; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 880B32205B;
+	Wed, 21 Feb 2024 09:23:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708507399; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mlwxUsar9qsnJji6/TOyKLeApaAnM6kT9bkCyRhsrDc=;
+	b=Zjv/klIiePjnZh3LALfdjlerJGJdnthfdRvw2vGjI7FnePsCnCe06e+kdZVCTV1u/SPAAj
+	cETOzDFWhN7o7IjHUR1+O5Xm6FXTGfc9wi2tenvSdo3z42zD0eqTw29rDc4X90nee/F0ah
+	6YZ9tzOqufSt9lLhg7yhOMwvg1mmy1A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708507399;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mlwxUsar9qsnJji6/TOyKLeApaAnM6kT9bkCyRhsrDc=;
+	b=JUZ91t7TZZ0oHeAOCysrjoYLPBPX4+ndhE9OFQ8EICLdJdD61Esxl5uNvVpM4t755wsB5I
+	S277QK3wo4F2NfAg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1708507399; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mlwxUsar9qsnJji6/TOyKLeApaAnM6kT9bkCyRhsrDc=;
+	b=Zjv/klIiePjnZh3LALfdjlerJGJdnthfdRvw2vGjI7FnePsCnCe06e+kdZVCTV1u/SPAAj
+	cETOzDFWhN7o7IjHUR1+O5Xm6FXTGfc9wi2tenvSdo3z42zD0eqTw29rDc4X90nee/F0ah
+	6YZ9tzOqufSt9lLhg7yhOMwvg1mmy1A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1708507399;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mlwxUsar9qsnJji6/TOyKLeApaAnM6kT9bkCyRhsrDc=;
+	b=JUZ91t7TZZ0oHeAOCysrjoYLPBPX4+ndhE9OFQ8EICLdJdD61Esxl5uNvVpM4t755wsB5I
+	S277QK3wo4F2NfAg==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 44C5413A25;
+	Wed, 21 Feb 2024 09:23:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id 8BRoDwfB1WWYBgAAn2gu4w
+	(envelope-from <tzimmermann@suse.de>); Wed, 21 Feb 2024 09:23:19 +0000
+Message-ID: <dfb06240-bd67-43fb-93d7-4fce9184fb20@suse.de>
+Date: Wed, 21 Feb 2024 10:23:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/10] backlight: Replace struct fb_info in interfaces
+To: Lee Jones <lee@kernel.org>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, jingoohan1@gmail.com,
+ deller@gmx.de, javierm@redhat.com, dri-devel@lists.freedesktop.org,
+ linux-fbdev@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+References: <20240212162645.5661-1-tzimmermann@suse.de>
+ <20240215121326.GL9758@aspen.lan>
+ <288a480c-74e9-49dd-a58d-294792771ea6@suse.de>
+ <20240219150209.GB10170@google.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20240219150209.GB10170@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-3.09 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BAYES_HAM(-3.00)[100.00%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linaro.org,gmail.com,gmx.de,redhat.com,lists.freedesktop.org,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.09
 
-The General PWM Timer (GPT) is capable of detecting "dead time error
-and short-circuits between output pins" and send Output disable
-request to poeg(Port Output Enable for GPT).
+Hi
 
-Add support for linking poeg group with gpt, so that
-gpt can control the output disable function.
+Am 19.02.24 um 16:02 schrieb Lee Jones:
+> On Thu, 15 Feb 2024, Thomas Zimmermann wrote:
+>
+>> Hi
+>>
+>> Am 15.02.24 um 13:13 schrieb Daniel Thompson:
+>>> On Mon, Feb 12, 2024 at 05:16:33PM +0100, Thomas Zimmermann wrote:
+>>>> Backlight drivers implement struct backlight_ops.check_fb, which
+>>>> uses struct fb_info in its interface. Replace the callback with one
+>>>> the does not use fb_info.
+>>>>
+>>>> In DRM, we have several drivers that implement backlight support. By
+>>>> including <linux/backlight.h> these drivers depend on <linux/fb.h>.
+>>>> At the same time, fbdev is deprecated for new drivers and likely to
+>>>> be replaced on many systems.
+>>>>
+>>>> This patchset is part of a larger effort to implement the backlight
+>>>> code without depending on fbdev.
+>>>>
+>>>> Patch 1 makes the backlight core match backlight and framebuffer
+>>>> devices via struct fb_info.bl_dev. Patches 2 to 9 then go through
+>>>> drivers and remove unnecessary implementations of check_fb. Finally,
+>>>> patch 10 replaces the check_fb hook with controls_device, which
+>>>> uses the framebuffer's Linux device instead of the framebuffer.
+>>> I won't reply individually but I also took a look at the patches for
+>>> the combo devices and it all looked good to me from a backlight
+>>> point of view.
+>>>
+>>> However I don't want to drop Reviewed-by: on them since it risks those
+>>> bit being mistaken for an ack and merged ahead of the patch 1...
+>> Thanks for reviewing. Unless someone objects, my intention is to merge
+>> everything via the drm-misc, so all patches should go in at once. I do have
+>> a lot more patches that untangle backlight and fbdev almost completely, but
+>> most of these changes are in the actual graphics drivers rather than the
+>> backlight core code. So hopefully everything can go through the DRM tree; or
+>> maybe the fbdev tree.
+> This is only acceptable if the maintainers of those trees can provide me
+> with a pull-request to a succinct (_only_ these patches) immutable
+> branch.  If this is not possible, then I should like to merge the set
+> through the Backlight tree and I can provide everyone else with said PR.
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v17->v18:
- * Moved bitpos near to the user.
-v16->v17:
- * No change
-v15->v16:
- * No change.
-v14->v15:
- * Updated commit description by replacing "This patch add"-> "Add".
-v3->v14:
- * Removed the parenthesis for RZG2L_MAX_POEG_GROUPS.
- * Renamed rzg2l_gpt_parse_properties()->rzg2l_gpt_poeg_init() as it not only parse
-   the properties but also implements the needed register writes.
- * Added acomment here about the purpose of the function rzg2l_gpt_poeg_init()
- * Removed magic numbers from rzg2l_gpt_poeg_init()
- * Fixed resource leak in rzg2l_gpt_poeg_init().
- * Moved the patch from series[1] to here
- [1] https://lore.kernel.org/linux-renesas-soc/20221215205843.4074504-1-biju.das.jz@bp.renesas.com/T/#t
-v2->v3:
- * Updated commit header and description
- * Added check for poeg group in rzg2l_gpt_parse_properties().
-v1->v2:
- * Replaced id->poeg-id as per poeg bindings.
-This patch depend upon [1]
-[1] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20221214132232.2835828-3-biju.das.jz@bp.renesas.com/
----
- drivers/pwm/pwm-rzg2l-gpt.c | 82 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+I see, there's a separate backlight tree.
 
-diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
-index 0dc8163ee92b..de2926395a5a 100644
---- a/drivers/pwm/pwm-rzg2l-gpt.c
-+++ b/drivers/pwm/pwm-rzg2l-gpt.c
-@@ -32,6 +32,7 @@
- #define RZG2L_GTCR		0x2c
- #define RZG2L_GTUDDTYC		0x30
- #define RZG2L_GTIOR		0x34
-+#define RZG2L_GTINTAD		0x38
- #define RZG2L_GTBER		0x40
- #define RZG2L_GTCNT		0x48
- #define RZG2L_GTCCR(i)		(0x4c + 4 * (i))
-@@ -48,11 +49,17 @@
- #define RZG2L_UP_COUNTING	(RZG2L_GTUDDTYC_UP | RZG2L_GTUDDTYC_UDF)
- 
- #define RZG2L_GTIOR_GTIOA	GENMASK(4, 0)
-+#define RZG2L_GTIOR_OADF	GENMASK(10, 9)
- #define RZG2L_GTIOR_GTIOB	GENMASK(20, 16)
- #define RZG2L_GTIOR_GTIOx(a)	((a) ? RZG2L_GTIOR_GTIOB : RZG2L_GTIOR_GTIOA)
-+#define RZG2L_GTIOR_OBDF	GENMASK(26, 25)
- #define RZG2L_GTIOR_OAE		BIT(8)
- #define RZG2L_GTIOR_OBE		BIT(24)
- #define RZG2L_GTIOR_OxE(a)	((a) ? RZG2L_GTIOR_OBE : RZG2L_GTIOR_OAE)
-+#define RZG2L_GTIOR_OADF_HIGH_IMP_ON_OUT_DISABLE	BIT(9)
-+#define RZG2L_GTIOR_OBDF_HIGH_IMP_ON_OUT_DISABLE	BIT(25)
-+#define RZG2L_GTIOR_PIN_DISABLE_SETTING \
-+	(RZG2L_GTIOR_OADF_HIGH_IMP_ON_OUT_DISABLE | RZG2L_GTIOR_OBDF_HIGH_IMP_ON_OUT_DISABLE)
- 
- #define RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE	0x1b
- #define RZG2L_GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH \
-@@ -64,6 +71,8 @@
- 	((a) ? RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH : \
- 	 RZG2L_GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH)
- 
-+#define RZG2L_GTINTAD_GRP_MASK			GENMASK(25, 24)
-+
- #define RZG2L_MAX_HW_CHANNELS	8
- #define RZG2L_CHANNELS_PER_IO	2
- #define RZG2L_MAX_PWM_CHANNELS	(RZG2L_MAX_HW_CHANNELS * RZG2L_CHANNELS_PER_IO)
-@@ -73,6 +82,9 @@
- 
- #define RZG2L_GET_CH_OFFS(i) (0x100 * (i))
- 
-+#define RZG2L_MAX_POEG_GROUPS	4
-+#define RZG2L_LAST_POEG_GROUP	3
-+
- struct rzg2l_gpt_chip {
- 	struct pwm_chip chip;
- 	void __iomem *mmio;
-@@ -85,6 +97,7 @@ struct rzg2l_gpt_chip {
- 	u32 user_count[RZG2L_MAX_HW_CHANNELS];
- 	u32 enable_count[RZG2L_MAX_HW_CHANNELS];
- 	DECLARE_BITMAP(ch_en_bits, RZG2L_MAX_PWM_CHANNELS);
-+	DECLARE_BITMAP(poeg_gpt_link, RZG2L_MAX_POEG_GROUPS * RZG2L_MAX_HW_CHANNELS);
- };
- 
- static inline unsigned int rzg2l_gpt_subchannel(unsigned int hwpwm)
-@@ -444,6 +457,74 @@ static void rzg2l_gpt_reset_assert_pm_disable(void *data)
- 	reset_control_assert(rzg2l_gpt->rstc);
- }
- 
-+/*
-+ * This function links a poeg group{A,B,C,D} with a gpt channel{0..7} and
-+ * configure the pin for output disable.
-+ */
-+static void rzg2l_gpt_poeg_init(struct platform_device *pdev,
-+				struct rzg2l_gpt_chip *rzg2l_gpt)
-+{
-+	struct of_phandle_args of_args;
-+	unsigned int i;
-+	u32 poeg_grp;
-+	u32 bitpos;
-+	int cells;
-+	u32 offs;
-+	int ret;
-+
-+	cells = of_property_count_u32_elems(pdev->dev.of_node, "renesas,poegs");
-+	if (cells == -EINVAL)
-+		return;
-+
-+	cells >>= 1;
-+	for (i = 0; i < cells; i++) {
-+		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
-+						       "renesas,poegs", 1, i,
-+						       &of_args);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"Failed to parse 'renesas,poegs' property\n");
-+			return;
-+		}
-+
-+		if (of_args.args[0] >= RZG2L_MAX_HW_CHANNELS) {
-+			dev_err(&pdev->dev, "Invalid channel %d >= %d\n",
-+				of_args.args[0], RZG2L_MAX_HW_CHANNELS);
-+			of_node_put(of_args.np);
-+			return;
-+		}
-+
-+		if (!of_device_is_available(of_args.np)) {
-+			/* It's fine to have a phandle to a non-enabled poeg. */
-+			of_node_put(of_args.np);
-+			continue;
-+		}
-+
-+		if (!of_property_read_u32(of_args.np, "renesas,poeg-id", &poeg_grp)) {
-+			offs = RZG2L_GET_CH_OFFS(of_args.args[0]);
-+			if (poeg_grp > RZG2L_LAST_POEG_GROUP) {
-+				dev_err(&pdev->dev, "Invalid poeg group %d > %d\n",
-+					poeg_grp, RZG2L_LAST_POEG_GROUP);
-+				of_node_put(of_args.np);
-+				return;
-+			}
-+
-+			bitpos = of_args.args[0] + poeg_grp * RZG2L_MAX_HW_CHANNELS;
-+			set_bit(bitpos, rzg2l_gpt->poeg_gpt_link);
-+
-+			rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTINTAD,
-+					 RZG2L_GTINTAD_GRP_MASK,
-+					 poeg_grp << 24);
-+
-+			rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTIOR,
-+					 RZG2L_GTIOR_OBDF | RZG2L_GTIOR_OADF,
-+					 RZG2L_GTIOR_PIN_DISABLE_SETTING);
-+		}
-+
-+		of_node_put(of_args.np);
-+	}
-+}
-+
- static int rzg2l_gpt_probe(struct platform_device *pdev)
- {
- 	struct rzg2l_gpt_chip *rzg2l_gpt;
-@@ -511,6 +592,7 @@ static int rzg2l_gpt_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	rzg2l_gpt_poeg_init(pdev, rzg2l_gpt);
- 	pm_runtime_put(&pdev->dev);
- 
- 	mutex_init(&rzg2l_gpt->lock);
+I'm going to send another revision of this patchset. You either merge 
+all of the patches via the backlight tree, or you could just merge 
+patches 1, 5 and 6 for now. I'll take care to get the rest merged via 
+other trees and I'll re-submoit patch 10 for a final clean up. Your choice.
+
+Best regards
+Thomas
+
+>
+
 -- 
-2.25.1
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
 
