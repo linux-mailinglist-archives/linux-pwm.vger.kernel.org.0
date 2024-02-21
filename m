@@ -1,110 +1,54 @@
-Return-Path: <linux-pwm+bounces-1588-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1590-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F67985D428
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 Feb 2024 10:44:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B99C985D5CE
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Feb 2024 11:40:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D3CB1F274CF
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 Feb 2024 09:44:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 74B36282CF7
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Feb 2024 10:40:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 223143E476;
-	Wed, 21 Feb 2024 09:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lsATnrjx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8TFBqIGS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lsATnrjx";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8TFBqIGS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5476536AFB;
+	Wed, 21 Feb 2024 10:40:40 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TWMBX01.aspeed.com (211-20-114-70.hinet-ip.hinet.net [211.20.114.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284943E470;
-	Wed, 21 Feb 2024 09:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C5E442A;
+	Wed, 21 Feb 2024 10:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708508615; cv=none; b=E6TXXpCuj+karju6oeRnqNAdbYJuWIhKU3lHB7BQNYBrdzcy0VsNRBrAyh5YTFpeZQSffyRO4pWjiTm+Mh25O7242V8kn1hXUXsLSca8zioCsl+VSVfwKRF4FksgAfEXR+Bvj61T6bL+bKaFh3YaT6qiIoy5SsMWK78mw1+IqJg=
+	t=1708512040; cv=none; b=Li5nqS8jl4wv2F5JEg7KTShS7Wc91MUQkKkXpBYY2GbtHNe7BZHv3CV8l5j1dbKws00nYAoOqR8zQRMTE5qEupqrPjkli3eaFg87WSt020WiOdCvIa4rUG5VccOCe3Psd/Nj4OJXjeDyJNkD4lfUZrz33smc37NbBojjGU6qeF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708508615; c=relaxed/simple;
-	bh=BVHjxKUQNx6YtDqBqrT5tXu2Vz0zGrthGbEiJkri11Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ASBrsUeZjn5Jyb3jcu1rbCLQwBdlBnlKPGvL4Jd50JqDZxcStqdwpGptDv4CMgxmAH/cnhBWkgbn9ctm77qQ9w7Ldp3IzIyspiCJIboKJRM9mNODZOKZT6MVIA8nVhIqO9m45zOeE1zHRLcs52h59lT1viQC7y6ESeFTD3ocprw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lsATnrjx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8TFBqIGS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lsATnrjx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8TFBqIGS; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4982C22149;
-	Wed, 21 Feb 2024 09:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1708508611; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9poqBGT1D4fdmvAl6rpVBJMyFuTWxjtusItU2HOV0Sc=;
-	b=lsATnrjxW9kbUCri3Z9QiTUQMw6Dieqk6fUFX7mmSZl1rb5w9FKGHxXX8fwV4nC8Swi4Xk
-	nIBFzG9p59bAbc2O4hpIvE4/yPkUxDKmlrNlRuZNSQQuMtTlvNp1DmfQmak7Y35o1IkIdi
-	Tew86zcSJz/MnIsC9F/2dILNWJXrdVg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1708508611;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9poqBGT1D4fdmvAl6rpVBJMyFuTWxjtusItU2HOV0Sc=;
-	b=8TFBqIGSgIY3LqR8c/7+PJaqa20uDN1lHoz3R1d5g4qc32jDiseM+McDGdzp9OYed/X7Gy
-	LAQcS8pd8nnIvsCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1708508611; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9poqBGT1D4fdmvAl6rpVBJMyFuTWxjtusItU2HOV0Sc=;
-	b=lsATnrjxW9kbUCri3Z9QiTUQMw6Dieqk6fUFX7mmSZl1rb5w9FKGHxXX8fwV4nC8Swi4Xk
-	nIBFzG9p59bAbc2O4hpIvE4/yPkUxDKmlrNlRuZNSQQuMtTlvNp1DmfQmak7Y35o1IkIdi
-	Tew86zcSJz/MnIsC9F/2dILNWJXrdVg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1708508611;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9poqBGT1D4fdmvAl6rpVBJMyFuTWxjtusItU2HOV0Sc=;
-	b=8TFBqIGSgIY3LqR8c/7+PJaqa20uDN1lHoz3R1d5g4qc32jDiseM+McDGdzp9OYed/X7Gy
-	LAQcS8pd8nnIvsCA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id D1A0E13A42;
-	Wed, 21 Feb 2024 09:43:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id 2O+1McLF1WUpCwAAn2gu4w
-	(envelope-from <tzimmermann@suse.de>); Wed, 21 Feb 2024 09:43:30 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: lee@kernel.org,
-	daniel.thompson@linaro.org,
-	jingoohan1@gmail.com,
-	deller@gmx.de,
-	andy@kernel.org,
-	robin@protonic.nl,
-	javierm@redhat.com
-Cc: dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v2 10/10] backlight: Add controls_device callback to struct backlight_ops
-Date: Wed, 21 Feb 2024 10:41:37 +0100
-Message-ID: <20240221094324.27436-11-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240221094324.27436-1-tzimmermann@suse.de>
-References: <20240221094324.27436-1-tzimmermann@suse.de>
+	s=arc-20240116; t=1708512040; c=relaxed/simple;
+	bh=ZYQUxHkonFhaXRGYDsoLklvyyCireBnJY2HZQ4MAHEw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jmqB7mpLJ9fHOJLBbP599gtVaHC0sGwliMdeKy1qnQwFbtvMuQY1Lr8uRuu8kBPuYcD6M9Pj1wdfl4kuIK3yHEdW9tQ3Cl83U1zYvJ96s/Cr2sTNfaqvfQgA+tWkx93dgj4kVl1eCWRWn4Sc7gDH40qZuZPZbv3lfad5QSoavP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=aspeedtech.com; spf=fail smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=aspeedtech.com
+Received: from TWMBX02.aspeed.com (192.168.0.24) by TWMBX01.aspeed.com
+ (192.168.0.124) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 21 Feb
+ 2024 18:41:17 +0800
+Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 21 Feb 2024 18:40:27 +0800
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+To: <jdelvare@suse.com>, <linux@roeck-us.net>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>, <joel@jms.id.au>,
+	<andrew@codeconstruct.com.au>, <corbet@lwn.net>,
+	<u.kleine-koenig@pengutronix.de>, <p.zabel@pengutronix.de>,
+	<billy_tsai@aspeedtech.com>, <naresh.solanki@9elements.com>,
+	<linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-pwm@vger.kernel.org>, <BMC-SW@aspeedtech.com>, <patrick@stwcx.xyz>
+Subject: [PATCH v14 0/3] Support pwm/tach driver for aspeed ast26xx
+Date: Wed, 21 Feb 2024 18:40:22 +0800
+Message-ID: <20240221104025.1306227-1-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -112,202 +56,126 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 R_MISSING_CHARSET(2.50)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 REPLY(-4.00)[];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 R_RATELIMIT(0.00)[to_ip_from(RLbrmj4aennmrpd7btm9n9zy3k)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[12];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,suse.de:email];
-	 FREEMAIL_TO(0.00)[kernel.org,linaro.org,gmail.com,gmx.de,protonic.nl,redhat.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Flag: NO
+Content-Type: text/plain
 
-Replace check_fb with controls_device in struct backlight_ops. The
-new callback interface takes a Linux device instead of a framebuffer.
-Resolves one of the dependencies of backlight.h on fb.h.
+Unlike the old design that the register setting of the TACH should based
+on the configure of the PWM. In ast26xx, the dependency between pwm and
+tach controller is eliminated and becomes a separate hardware block. One
+is used to provide pwm output and another is used to monitor the frequency
+of the input. This driver implements them by exposing two kernel
+subsystems: PWM and HWMON. The PWM subsystem can be utilized alongside
+existing drivers for controlling elements such as fans (pwm-fan.c),
+beepers (pwm-beeper.c) and so on. Through the HWMON subsystem, the driver
+provides sysfs interfaces for fan.
 
-The few drivers that had custom implementations of check_fb can easily
-use the framebuffer's Linux device instead. Update them accordingly.
+Changes since v13:
+Restore Rob's "Reviewed-by" for fan-common.yaml.
+Remove the compatible string in the dts example in aspeed,g6-pwm-tach.yaml.
+Utilize devm_add_action_or_reset() to assert the reset.
+Resolve the compiler error.
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
----
- drivers/video/backlight/backlight.c      |  2 +-
- drivers/video/backlight/bd6107.c         | 12 ++++++------
- drivers/video/backlight/gpio_backlight.c | 12 ++++++------
- drivers/video/backlight/lv5207lp.c       | 12 ++++++------
- include/linux/backlight.h                | 16 ++++++++--------
- 5 files changed, 27 insertions(+), 27 deletions(-)
+Changes since v12:
+Merge the pwm-fan configure information into the fan node.
+Add the of_platform_populate function to the driver to treat the child
+node as a platform device.
 
-diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
-index 48844a4f28ad3..18a0ac4bd6005 100644
---- a/drivers/video/backlight/backlight.c
-+++ b/drivers/video/backlight/backlight.c
-@@ -111,7 +111,7 @@ static int fb_notifier_callback(struct notifier_block *self,
- 
- 	if (!bd->ops)
- 		goto out;
--	else if (bd->ops->check_fb && !bd->ops->check_fb(bd, info))
-+	else if (bd->ops->controls_device && !bd->ops->controls_device(bd, info->device))
- 		goto out;
- #if IS_ENABLED(CONFIG_FB_BACKLIGHT)
- 	else if (info->bl_dev && info->bl_dev != bd)
-diff --git a/drivers/video/backlight/bd6107.c b/drivers/video/backlight/bd6107.c
-index c95a12bf0ce26..d124ede084ef9 100644
---- a/drivers/video/backlight/bd6107.c
-+++ b/drivers/video/backlight/bd6107.c
-@@ -99,18 +99,18 @@ static int bd6107_backlight_update_status(struct backlight_device *backlight)
- 	return 0;
- }
- 
--static int bd6107_backlight_check_fb(struct backlight_device *backlight,
--				       struct fb_info *info)
-+static bool bd6107_backlight_controls_device(struct backlight_device *backlight,
-+					     struct device *display_dev)
- {
- 	struct bd6107 *bd = bl_get_data(backlight);
- 
--	return !bd->pdata->dev || bd->pdata->dev == info->device;
-+	return !bd->pdata->dev || bd->pdata->dev == display_dev;
- }
- 
- static const struct backlight_ops bd6107_backlight_ops = {
--	.options	= BL_CORE_SUSPENDRESUME,
--	.update_status	= bd6107_backlight_update_status,
--	.check_fb	= bd6107_backlight_check_fb,
-+	.options	 = BL_CORE_SUSPENDRESUME,
-+	.update_status	 = bd6107_backlight_update_status,
-+	.controls_device = bd6107_backlight_controls_device,
- };
- 
- static int bd6107_probe(struct i2c_client *client)
-diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
-index d28c30b2a35d2..c0cff685ea848 100644
---- a/drivers/video/backlight/gpio_backlight.c
-+++ b/drivers/video/backlight/gpio_backlight.c
-@@ -30,18 +30,18 @@ static int gpio_backlight_update_status(struct backlight_device *bl)
- 	return 0;
- }
- 
--static int gpio_backlight_check_fb(struct backlight_device *bl,
--				   struct fb_info *info)
-+static bool gpio_backlight_controls_device(struct backlight_device *bl,
-+					   struct device *display_dev)
- {
- 	struct gpio_backlight *gbl = bl_get_data(bl);
- 
--	return !gbl->dev || gbl->dev == info->device;
-+	return !gbl->dev || gbl->dev == display_dev;
- }
- 
- static const struct backlight_ops gpio_backlight_ops = {
--	.options	= BL_CORE_SUSPENDRESUME,
--	.update_status	= gpio_backlight_update_status,
--	.check_fb	= gpio_backlight_check_fb,
-+	.options	 = BL_CORE_SUSPENDRESUME,
-+	.update_status	 = gpio_backlight_update_status,
-+	.controls_device = gpio_backlight_controls_device,
- };
- 
- static int gpio_backlight_probe(struct platform_device *pdev)
-diff --git a/drivers/video/backlight/lv5207lp.c b/drivers/video/backlight/lv5207lp.c
-index 1f1d06b4e119a..0cf00fee0f605 100644
---- a/drivers/video/backlight/lv5207lp.c
-+++ b/drivers/video/backlight/lv5207lp.c
-@@ -62,18 +62,18 @@ static int lv5207lp_backlight_update_status(struct backlight_device *backlight)
- 	return 0;
- }
- 
--static int lv5207lp_backlight_check_fb(struct backlight_device *backlight,
--				       struct fb_info *info)
-+static bool lv5207lp_backlight_controls_device(struct backlight_device *backlight,
-+					       struct device *display_dev)
- {
- 	struct lv5207lp *lv = bl_get_data(backlight);
- 
--	return !lv->pdata->dev || lv->pdata->dev == info->device;
-+	return !lv->pdata->dev || lv->pdata->dev == display_dev;
- }
- 
- static const struct backlight_ops lv5207lp_backlight_ops = {
--	.options	= BL_CORE_SUSPENDRESUME,
--	.update_status	= lv5207lp_backlight_update_status,
--	.check_fb	= lv5207lp_backlight_check_fb,
-+	.options	 = BL_CORE_SUSPENDRESUME,
-+	.update_status	 = lv5207lp_backlight_update_status,
-+	.controls_device = lv5207lp_backlight_controls_device,
- };
- 
- static int lv5207lp_probe(struct i2c_client *client)
-diff --git a/include/linux/backlight.h b/include/linux/backlight.h
-index 614653e07e3a8..2db4c70053c46 100644
---- a/include/linux/backlight.h
-+++ b/include/linux/backlight.h
-@@ -13,6 +13,7 @@
- #include <linux/fb.h>
- #include <linux/mutex.h>
- #include <linux/notifier.h>
-+#include <linux/types.h>
- 
- /**
-  * enum backlight_update_reason - what method was used to update backlight
-@@ -110,7 +111,6 @@ enum backlight_scale {
- };
- 
- struct backlight_device;
--struct fb_info;
- 
- /**
-  * struct backlight_ops - backlight operations
-@@ -160,18 +160,18 @@ struct backlight_ops {
- 	int (*get_brightness)(struct backlight_device *);
- 
- 	/**
--	 * @check_fb: Check the framebuffer device.
-+	 * @controls_device: Check against the display device
- 	 *
--	 * Check if given framebuffer device is the one bound to this backlight.
--	 * This operation is optional and if not implemented it is assumed that the
--	 * fbdev is always the one bound to the backlight.
-+	 * Check if the backlight controls the given display device. This
-+	 * operation is optional and if not implemented it is assumed that
-+	 * the display is always the one controlled by the backlight.
- 	 *
- 	 * RETURNS:
- 	 *
--	 * If info is NULL or the info matches the fbdev bound to the backlight return true.
--	 * If info does not match the fbdev bound to the backlight return false.
-+	 * If display_dev is NULL or display_dev matches the device controlled by
-+	 * the backlight, return true. Otherwise return false.
- 	 */
--	int (*check_fb)(struct backlight_device *bd, struct fb_info *info);
-+	bool (*controls_device)(struct backlight_device *bd, struct device *display_dev);
- };
- 
- /**
+Changes since v11:
+Fix the compiler error of the driver.
+The owner member has to be moved to struct pwm_chip.
+
+Changes since v10:
+Add the enum for the 'fan-driving-mode' properties in the fan-common.yaml.
+
+Changes since v9:
+Change the type of fan-driving-mode to string
+Fix some typos and formatting issues.
+
+Changes since v8:
+Fix the fail of fan div register setting. (FIELD_GET -> FIELD_PREP)
+Change the type of tach-ch from uint32_t to uint8-array
+Add additional properties and apply constraints to certain properties.
+
+Changes since v7:
+Cherry-pick the fan-common.yaml and add the following properties:
+- min-rpm
+- div
+- mode
+- tach-ch
+Fix the warning which is reported by the kernel test robot.
+
+Changes since v6:
+Consolidate the PWM and TACH functionalities into a unified driver.
+
+Changes since v5:
+- pwm/tach:
+  - Remove the utilization of common resources from the parent node.
+  - Change the concept to 16 PWM/TACH controllers, each with one channel,
+  instead of 1 PWM/TACH controller with 16 channels.
+- dt-binding:
+  - Eliminate the usage of simple-mfd.
+
+Changes since v4:
+- pwm:
+  - Fix the return type of get_status function.
+- tach:
+  - read clk source once and re-use it
+  - Remove the constants variables
+  - Allocate tach_channel as array
+  - Use dev->parent
+- dt-binding:
+  - Fix the order of the patches
+  - Add example and description for tach child node
+  - Remove pwm extension property
+
+Changes since v3:
+- pwm:
+  - Remove unnecessary include header
+  - Fix warning Prefer "GPL" over "GPL v2"
+- tach:
+  - Remove the paremeter min_rpm and max_rpm and return the tach value 
+  directly without any polling or delay.
+  - Fix warning Prefer "GPL" over "GPL v2"
+- dt-binding:
+  - Replace underscore in node names with dashes
+  - Split per subsystem
+
+Changes since v2:
+- pwm:
+  - Use devm_* api to simplify the error cleanup
+  - Fix the multi-line alignment problem
+- tach:
+  - Add tach-aspeed-ast2600 to index.rst
+  - Fix the multi-line alignment problem
+  - Remove the tach enable/disable when read the rpm
+  - Fix some coding format issue
+
+Changes since v1:
+- tach:
+  - Add the document tach-aspeed-ast2600.rst
+  - Use devm_* api to simplify the error cleanup.
+  - Change hwmon register api to devm_hwmon_device_register_with_info
+
+Billy Tsai (2):
+  dt-bindings: hwmon: Support Aspeed g6 PWM TACH Control
+  hwmon: (aspeed-g6-pwm-tacho): Support for ASPEED g6 PWM/Fan tach
+
+Naresh Solanki (1):
+  dt-bindings: hwmon: fan: Add fan binding to schema
+
+ .../bindings/hwmon/aspeed,g6-pwm-tach.yaml    |  71 +++
+ .../devicetree/bindings/hwmon/fan-common.yaml |  79 +++
+ Documentation/hwmon/aspeed-g6-pwm-tach.rst    |  26 +
+ Documentation/hwmon/index.rst                 |   1 +
+ drivers/hwmon/Kconfig                         |  11 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/aspeed-g6-pwm-tach.c            | 549 ++++++++++++++++++
+ 7 files changed, 738 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
+ create mode 100644 Documentation/devicetree/bindings/hwmon/fan-common.yaml
+ create mode 100644 Documentation/hwmon/aspeed-g6-pwm-tach.rst
+ create mode 100644 drivers/hwmon/aspeed-g6-pwm-tach.c
+
 -- 
-2.43.0
+2.25.1
 
 
