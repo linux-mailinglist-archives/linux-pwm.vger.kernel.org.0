@@ -1,410 +1,432 @@
-Return-Path: <linux-pwm+bounces-1614-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1615-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4DF4860C42
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Feb 2024 09:26:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C85E0860D66
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Feb 2024 09:59:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 600B4B252E8
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Feb 2024 08:26:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E7CF287B2B
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Feb 2024 08:59:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87CC01799D;
-	Fri, 23 Feb 2024 08:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZHpaqNan"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C06B1B97C;
+	Fri, 23 Feb 2024 08:59:48 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2131.outbound.protection.partner.outlook.cn [139.219.17.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B3A171CC;
-	Fri, 23 Feb 2024 08:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708676800; cv=none; b=ba9tFqKhQMFua4ZEyGG0IOJhiCQnXQ01XfCaoHuCBSNrAw8O4C615NJfuxjx4Wd/wgZBJpujOEFL3+Xnxhi4RHoHOtliFc/F7Lj5veo2EcqkkY7uotZT3tQFqVyAEfwKQcEqQvF6sdRIuW7YzibEyzGrHBMcWfcN81YOgiBt7Fc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708676800; c=relaxed/simple;
-	bh=UGWu9/RGVhPRHNm2ZM5Lm4+vI26YnJWAQlnr7077FvQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jwX3LUCgukNK+V2eNLjMJtpc0tpkQ6wUqJFyj3osZSjCzOqGyMG8OnST/2lZZD4TRAe1ZvbXBdGdmm9kzWMyu15AMp61gI6ryJUE3/6v39RY+c5eeCkc80zxWPcqWXR9iByA1fQDmXB+fzdoIPBoLUFzJsn9JOB9EMrA7W7LnfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZHpaqNan; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-29954bb87b4so470249a91.2;
-        Fri, 23 Feb 2024 00:26:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708676798; x=1709281598; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qTr2+PqAnvK9X/YZnyvAos4+4N6czGUqcVm1e1lr76A=;
-        b=ZHpaqNanLE+M1eqd3ddkHb+kVAyocAR0Jv4EYKhvutq1SMMq9y0m7AV+Oq5+IaBm8w
-         VUjEL9GLLdTBEHEJ4RFlUVQVRxwk1EPP9A06FV6ofaQp56Lf+TZjBBfwTaxd8WkP+UDw
-         xRrsTF1OaSSvlKyKx4HtykJNX4mER9NMl5PlJoycIQF/UOvELwsCNvW0LORmu6kbpE+j
-         P0k+rxjXwbEwmm1vpYCsPpubQV5cDw0rDu/zzxMUvqEDdvczl8HOXHRUkoxyJVRqtQUU
-         p9mqkzc82qV0G4i0HCyvF7z1ucG2verBYTxwrVWt9Xr7pBMUryejAhUfDYvLboafFAKA
-         DZkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708676798; x=1709281598;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qTr2+PqAnvK9X/YZnyvAos4+4N6czGUqcVm1e1lr76A=;
-        b=EJK/ghJ/uPH11Fy1i770CNCJtrqbx1+eZDgfN4c9qKuTmrWR96ihKpHcJp8hMSe0T1
-         gUWGZ7u/4fbb9I/FU1pk7L5t4D2OthSbBYEP9zCjpP/qJnO0LSwOBeV+jlsMKo7pMMKk
-         cWttQiRpEvZUAJTdFvttM3usCwbcKsT51BegFm+IXVmvMCYaiq61ZC5yS6dhDcnT9cSf
-         hRf2Fox/Ch5pWY1p1khazjPphhiCiW+TI1QYW4ZA75wU7FWcDsavC6u0xTlGutulOcl7
-         wdR+XKcUnMuXwa4D3V2sECQSMIxbR8nh6xJ8IdmIPSdfWoXfg5dtUOwlGaF3ICqkhsvl
-         1OmA==
-X-Forwarded-Encrypted: i=1; AJvYcCWvI1/nG0PTwZpJH8KdjZB/U03qdTJs0ozy7OF9FK1t0AUx0cKvb1UfT3PyCY03cme4OQdzpCADstpWeHZljFO9LFn0qgKRmI4OXsQdw6JIzv9H5Qkcb3qeNOSPuLwnAe/QU5LUZhvdyg==
-X-Gm-Message-State: AOJu0Yy4CDzlK11Y33o6xtGfBNEHSIpuUIbWVaKNzPihUzBqhJdlQrhT
-	MOAfZB9EwefLud7hiqRmVo5heq0y4gRELfT7/6h5chcoOmSQnYr5
-X-Google-Smtp-Source: AGHT+IFoFoCXFLU/CwtPl83Yd2UtmThoMh16Aj8GM17nwA3naAxiuJDHV7fUqyodGNmSdsRJLxThrQ==
-X-Received: by 2002:a17:90a:90f:b0:29a:6d06:6253 with SMTP id n15-20020a17090a090f00b0029a6d066253mr909056pjn.41.1708676797422;
-        Fri, 23 Feb 2024 00:26:37 -0800 (PST)
-Received: from localhost ([46.3.240.105])
-        by smtp.gmail.com with ESMTPSA id n5-20020a17090a928500b0029967638141sm829131pjo.37.2024.02.23.00.26.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 00:26:37 -0800 (PST)
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-To: u.kleine-koenig@pengutronix.de,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu
-Cc: linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	dlan@gentoo.org,
-	inochiama@outlook.com,
-	Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Subject: [PATCH v3 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
-Date: Fri, 23 Feb 2024 16:26:32 +0800
-Message-Id: <20240223082632.109767-1-qiujingbao.dlmu@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240223082014.109385-1-qiujingbao.dlmu@gmail.com>
-References: <20240223082014.109385-1-qiujingbao.dlmu@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2061B59C;
+	Fri, 23 Feb 2024 08:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.131
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708678788; cv=fail; b=bWTog8fQ5TT5PO1BkjZadfxilzHhwbZYdt6vdNQxMFf36C25I81IboDXNAPmXvxS7SOrcr0gslhhP03+Acd8u4ZRmfwX/jLCKq7tM6TZsMpDyvCJgzIFq1ir+ql5XWTN/hK6VxSGl6f0KDocOwPjW86rlYSETo7ef/R9kKDCyQw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708678788; c=relaxed/simple;
+	bh=zQkJb4JLscsPirq8bN3z7FhbSlp9T/mSna6RxIg3Xko=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=YMVinLwLUjgwb9a1vTHgvFJe8LKCxYg2R26bS91Q0KY980rXUGm3jkc+dJ3F4aMQzpz2MFLYWVk+OENdsjvhfKcxTAB4ZYG0Aac4tiFmtGUmqhph1Uu4VNo0uEoc5eztxKVeFFKVrScjOTXLDh5RnSYVW6vm+9KxPh+reNMNJqw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Iz7gAcKXKfKOoqNqxbJlKL3kTBZVZW6pBySn4OVbSe8+qPt3mv0aomPX9dyhcInukJRrPP1mhV7jf+BKQ377Ihe7oQSLy0jZYORA9wDzTQFIAl0SPMRoBmqp8bp9D1jL5RZlXVsvNccHiHIeSFUFmiuF49oCIzlCGtdVhQSDZj/SwaOeYU9fVVZlskyy1Y4JGQ3Vxwrp5yMGLDEy5f0Qt+GodtDKHWvfCxe1xZjfuMrWW1m1k7xf9C0BoUedyYTPioqwV5fxwEMTPMxU4GBLHIXY7tTViGrHQExLXhmO+eEZM9cWwztlNX8jIZZ7JXuXLiwAq1ecj5Q4lDqhswZ/Yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=w6pAsBP5+6SDjubTRP2MJ666KO/KtCTKeE47PwgbW9Q=;
+ b=eXuuJr3NxGPCu5ELgXkLIkHf68UkTm8t5wZJBIY0zC5ip/VbFqe2hIRXLfaM7XuxeCAtpySdJdU5zlA/H8Ubqodh6t3X2VEr/42hcRA0Scw6skJasi5JEOk2+nqcrSXb96bZMvKTud6UIOfsNQQ4EZM2QxDfw53vm5+jhqrmcAnQj48K6Cry+yebEAVtzlwNeiZnuuIqzY9dDV4Hjq4RuAlRSHPAM1mrtVTkPn6aaBSbyExw/zREsnD4U7Gx6HZm1Vf4RhhK/gk4+QfNOVQdFEKzqGDtXHCCVqcfK2FP3Odx8B6h/OUjjSd6/tY3DqHgMvhu8rwQXSGU8Rr+6X+R1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::8) by ZQ0PR01MB0967.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:e::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.46; Fri, 23 Feb
+ 2024 08:43:39 +0000
+Received: from ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn
+ ([fe80::380f:84dd:fec:a39]) by ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn
+ ([fe80::380f:84dd:fec:a39%4]) with mapi id 15.20.7270.047; Fri, 23 Feb 2024
+ 08:43:39 +0000
+From: William Qiu <william.qiu@starfivetech.com>
+To: linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	William Qiu <william.qiu@starfivetech.com>
+Subject: [PATCH v11] pwm: opencores: Add PWM driver support
+Date: Fri, 23 Feb 2024 16:43:32 +0800
+Message-Id: <20240223084332.100410-1-william.qiu@starfivetech.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BJXPR01CA0055.CHNPR01.prod.partner.outlook.cn (10.43.33.22)
+ To ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn (10.2.3.232)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1253:EE_|ZQ0PR01MB0967:EE_
+X-MS-Office365-Filtering-Correlation-Id: cbdeb5c4-af75-452e-189a-08dc344b885f
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	lcmOrupSrDYmjnH/qLn5mu0V3VK2RIBb9EEUJBcAFKiRyP+01m4TT0HJXAweU7iom3nYIdXYAxBr+DcJARr/yymKNddlAzzlx8s3NqJz6xNKyqr48fHFfMR3RKqxUiPvb8GfJx6KgNGrT5jSo0+r9gWhMWwVp/N5NPSOTM6L6li/JU8BYmb1jBiUyvbsk/qZl3nIOcXKupCCWo5tYTr9xwFys75ujoZeNkjJqGAo1MaAUivNNRYux+rO3gyQ+kNhBwNedH1xrcW+YrDSjdr5ZNY8BD3we/QJ8SuLiJ788Vdrs9uN+OlDoy7UwBuPDm9/5bbyNgkU3B9nuEGsyZZD1STAZpBK1/pHhetZYwRMQ4ZWn9uKq+WyV+mGwBG2/NiHEK1jaHxxnA7K+RH11ga445gNkqJNRwSCNjLUrxtMUqnAJrL3dxupOUPMnDrL5NgkxkVA23cnFdI2D5zz96SfkR5IlZ9XYy6NyFK6O10QU4AB0XIYgmdcw/BYmXNtI915YlKrwl7aT3YNyHJCiHWDhFiifhXtmRDFyEqfcoxmUGxHdHRJnRSHd9/fGb341ghz
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?N6u6Hmi/IFMcFNP6h1yfZzNt4sScEVEIYe26WokhdlDAVNU1yuWc9Vb3FpRw?=
+ =?us-ascii?Q?29nu4dwrRxcBbVrBh3oA+WKxQFzXnqPfK82qhr50VzXatILbkum8Rq6mVSD8?=
+ =?us-ascii?Q?KT38dGBqqWb1xNgFEsddpRw3Y6PzWylkLCcuryK4PhAv7QpffQRx7EKVOnIM?=
+ =?us-ascii?Q?5+ApX3yYxGkI4JrdIGdDpX+gqOqCgupgy6M3e45R0yU24qKyA3VXszzdqfxX?=
+ =?us-ascii?Q?Csp1QnKpSNjZxeRrD5MPkbp4pBHr+R84W8mEdD3er/YLPcbbyb+VOgqg88fs?=
+ =?us-ascii?Q?gtzJQohnwx8BAeCSlwfdgFPJFyIYSVmysq7VAhtfFjU/onLPa9S88jobB/vM?=
+ =?us-ascii?Q?79NuA7TN2s+/mAVUhuu5PwIkl1++a7jOjcey9WyF+7b4grQF6Y0XjKUPLsVm?=
+ =?us-ascii?Q?2Hq5vGjJmDy2TZoyPp/QrXiD6mnIA4aqMLRmecZjj6O78paRc1JIJK5+dQj/?=
+ =?us-ascii?Q?RcNIGNHn84riFBlQqiz7bqWy3C+FITh32gWxe+w7I4fsFsuOoAGOyNROiYcT?=
+ =?us-ascii?Q?4G9UqNDgyiPSdBZV8HYe/D+zHHHM546p7WSWxroJhnMA8hXH0IA9/4obS4On?=
+ =?us-ascii?Q?wa60MzSkMiiBmWZ/gRXc1LxlqDukU+Q+t1spONIian4Ldd4/rGL/IQvi2ml+?=
+ =?us-ascii?Q?HjGsTd9AwG/lkt1dYDeg1cGCvCHDQSId/P8QcRC9iXgRms7trMzpamjZmpgW?=
+ =?us-ascii?Q?mI4TyqpUvpMPNuyo7GvpR0p5mvmxVBgx5VlmvWcF5HY4EDfSnSoNdgKLh8OL?=
+ =?us-ascii?Q?Ok6/b9a9GYNs/PBB3k07AJd8+sKIZuOb+VsG/QdiYKC6dVXSJH48gF6oOAzT?=
+ =?us-ascii?Q?CB4hj7IX7wPr9W16OG+FYlDJK4zQJU17rQxVtztSIHn/L7H+XwOo/Bfx3ltr?=
+ =?us-ascii?Q?SyCdEdUJCP7yyLExcRDdXoUaIMB5DxDJYhP8MviXgLooMhXRQv5g7ZXtjVPu?=
+ =?us-ascii?Q?79r2L4DD0wgq9z70nNvHpjSgTdYAi2lqILu3EzTIAtfbBLHnZdCG0F7hFb66?=
+ =?us-ascii?Q?BrWzl9+er2D2e8jlKVRGLLybrfzYx3oLN5PEsfX/LoIAln1VeWUqUBe1I7QL?=
+ =?us-ascii?Q?nX4vM6QVZBeBTbUNU5BRfDxFEucmg9GKOJyh5IrvruHAOIaXV4UO49hoNUnZ?=
+ =?us-ascii?Q?nZ1NXJxUGyucDTecnSZekva9QjIWUix0Z+LuR/PmP/crwZJ1FiaymCOAGVN2?=
+ =?us-ascii?Q?Mche42xcC1G3AYHoU1UUTA+y4wMGWU3lWvjWHVsKwxge4GWb7Hu6HiWMOykN?=
+ =?us-ascii?Q?dmByETmPPFNKYSR36RMm05bFAwVwUNwt11/s2o0D3DLssPLAGF6lJiDk6LuH?=
+ =?us-ascii?Q?Nocu98gULoxdve+5AnZwdH0Ki3z4VHECH5PJE2orNCylGE+FX8IOF+NRnyfc?=
+ =?us-ascii?Q?4zzlLs+DGu9w566bllKfQZ9K0jtBZdV0sSHbR1NnmO4MUWzB4/Qre4Bc64Uy?=
+ =?us-ascii?Q?tOZPE53QtkqWxbQwtmS4JfTIi7ErM/7nGK3NL2ttBTeb02gIsEtMHLDYD1Nu?=
+ =?us-ascii?Q?Pbf3CcdbKeklgXYQD2zjfvxTNqFGlz0dJ4sP7B5mXNAozkCDwmVI1wQ0TMCe?=
+ =?us-ascii?Q?z/iwsnMS04g7yWBgemLUYRxMIzERqweRuBe4Nky5cQrJbijPZU+FtyfQm1s8?=
+ =?us-ascii?Q?rg=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbdeb5c4-af75-452e-189a-08dc344b885f
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 08:43:39.6043
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oxTx2BpUzCKmnoM978t++j5nhn+2f6Spn/LCoSBEi/Ej9hr5E1hW36tCjX12SgUAvCBE2f8F6cUgu2VDLbhlDiskax35OqpwxdWYG6xNJOE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB0967
 
-Implement the PWM driver for CV1800.
+Add driver for OpenCores PWM Controller. And add compatibility code
+which based on StarFive SoC.
 
-Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Co-developed-by: Hal Feng <hal.feng@starfivetech.com>
+Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+Signed-off-by: William Qiu <william.qiu@starfivetech.com>
 ---
- drivers/pwm/Kconfig      |  10 ++
+ MAINTAINERS              |   7 ++
+ drivers/pwm/Kconfig      |  12 ++
  drivers/pwm/Makefile     |   1 +
- drivers/pwm/pwm-cv1800.c | 259 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 270 insertions(+)
- create mode 100644 drivers/pwm/pwm-cv1800.c
+ drivers/pwm/pwm-ocores.c | 232 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 252 insertions(+)
+ create mode 100644 drivers/pwm/pwm-ocores.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9ed4d3868539..12ea5e86fc23 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16414,6 +16414,13 @@ F:	Documentation/i2c/busses/i2c-ocores.rst
+ F:	drivers/i2c/busses/i2c-ocores.c
+ F:	include/linux/platform_data/i2c-ocores.h
+ 
++OPENCORES PWM DRIVER
++M:	William Qiu <william.qiu@starfivetech.com>
++M:	Hal Feng <hal.feng@starfivetech.com>
++S:	Supported
++F:	Documentation/devicetree/bindings/pwm/opencores,pwm.yaml
++F:	drivers/pwm/pwm-ocores.c
++
+ OPENRISC ARCHITECTURE
+ M:	Jonas Bonn <jonas@southpole.se>
+ M:	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
 diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 4b956d661755..455f07af94f7 100644
+index 4b956d661755..d87e1bb350ba 100644
 --- a/drivers/pwm/Kconfig
 +++ b/drivers/pwm/Kconfig
-@@ -186,6 +186,16 @@ config PWM_CROS_EC
- 	  PWM driver for exposing a PWM attached to the ChromeOS Embedded
- 	  Controller.
+@@ -444,6 +444,18 @@ config PWM_NTXEC
+ 	  controller found in certain e-book readers designed by the original
+ 	  design manufacturer Netronix.
  
-+config PWM_CV1800
-+	tristate "Sophgo CV1800 PWM driver"
-+	depends on ARCH_SOPHGO || COMPILE_TEST
++config PWM_OCORES
++	tristate "OpenCores PWM support"
++	depends on HAS_IOMEM && OF
++	depends on COMMON_CLK && RESET_CONTROLLER
++	depends on ARCH_STARFIVE || COMPILE_TEST
 +	help
-+	  Generic PWM framework driver for the Sophgo CV1800 series
-+	  SoCs.
++	  If you say yes to this option, support will be included for the
++	  OpenCores PWM. For details see https://opencores.org/projects/ptc.
 +
-+	  To compile this driver as a module, build the dependecies
-+	  as modules, this will be called pwm-cv1800.
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-ocores.
 +
- config PWM_DWC_CORE
- 	tristate
- 	depends on HAS_IOMEM
+ config PWM_OMAP_DMTIMER
+ 	tristate "OMAP Dual-Mode Timer PWM support"
+ 	depends on OF
 diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index c5ec9e168ee7..6c3c4a07a316 100644
+index c5ec9e168ee7..517c4f643058 100644
 --- a/drivers/pwm/Makefile
 +++ b/drivers/pwm/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CLK)		+= pwm-clk.o
- obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
- obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
- obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
-+obj-$(CONFIG_PWM_CV1800)	+= pwm-cv1800.o
- obj-$(CONFIG_PWM_DWC_CORE)	+= pwm-dwc-core.o
- obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
- obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
-diff --git a/drivers/pwm/pwm-cv1800.c b/drivers/pwm/pwm-cv1800.c
+@@ -40,6 +40,7 @@ obj-$(CONFIG_PWM_MICROCHIP_CORE)	+= pwm-microchip-core.o
+ obj-$(CONFIG_PWM_MTK_DISP)	+= pwm-mtk-disp.o
+ obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
+ obj-$(CONFIG_PWM_NTXEC)		+= pwm-ntxec.o
++obj-$(CONFIG_PWM_OCORES)	+= pwm-ocores.o
+ obj-$(CONFIG_PWM_OMAP_DMTIMER)	+= pwm-omap-dmtimer.o
+ obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
+ obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
+diff --git a/drivers/pwm/pwm-ocores.c b/drivers/pwm/pwm-ocores.c
 new file mode 100644
-index 000000000000..da1309dc0091
+index 000000000000..874bc630bf2d
 --- /dev/null
-+++ b/drivers/pwm/pwm-cv1800.c
-@@ -0,0 +1,259 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/pwm/pwm-ocores.c
+@@ -0,0 +1,232 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * pwm-cv1800.c: PWM driver for Sophgo cv1800
++ * OpenCores PWM Driver
 + *
-+ * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
++ * https://opencores.org/projects/ptc
++ *
++ * Copyright (C) 2018-2023 StarFive Technology Co., Ltd.
 + *
 + * Limitations:
-+ * - It output low when PWM channel disabled.
-+ * - This pwm device supports dynamic loading of PWM parameters. When PWMSTART
-+ *   is written from 0 to 1, the register value (HLPERIODn, PERIODn) will be
-+ *   temporarily stored inside the PWM. If you want to dynamically change the
-+ *   waveform during PWM output, after writing the new value to HLPERIODn and
-+ *   PERIODn, write 1 and then 0 to PWMUPDATE[n] to make the new value effective.
-+ * - Supports up to Rate/2 output, and the lowest is about Rate/(2^30-1).
-+ * - By setting HLPERIODn to 0, can produce 100% duty cycle.
++ * - The hardware only do inverted polarity.
++ * - The hardware minimum period / duty_cycle is (1 / pwm_apb clock frequency) ns.
++ * - The hardware maximum period / duty_cycle is (U32_MAX / pwm_apb clock frequency) ns.
 + */
 +
 +#include <linux/clk.h>
-+#include <linux/kernel.h>
++#include <linux/io.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
++#include <linux/of_device.h>
 +#include <linux/platform_device.h>
 +#include <linux/pwm.h>
-+#include <linux/regmap.h>
++#include <linux/reset.h>
++#include <linux/slab.h>
 +
-+#define PWM_CV1800_HLPERIOD_BASE 0x00
-+#define PWM_CV1800_PERIOD_BASE 0x04
-+#define PWM_CV1800_PWM_CV1800_POLARITY 0x40
-+#define PWM_CV1800_START 0x44
-+#define PWM_CV1800_DONE 0x48
-+#define PWM_CV1800_UPDATE 0x4c
-+#define PWM_CV1800_OE 0xd0
++/* OCPWM_CTRL register bits*/
++#define REG_OCPWM_EN      BIT(0)
++#define REG_OCPWM_ECLK    BIT(1)
++#define REG_OCPWM_NEC     BIT(2)
++#define REG_OCPWM_OE      BIT(3)
++#define REG_OCPWM_SIGNLE  BIT(4)
++#define REG_OCPWM_INTE    BIT(5)
++#define REG_OCPWM_INT     BIT(6)
++#define REG_OCPWM_CNTRRST BIT(7)
++#define REG_OCPWM_CAPTE   BIT(8)
 +
-+#define PWM_CV1800_HLPERIOD(n) (PWM_CV1800_HLPERIOD_BASE + ((n) * 0x08))
-+#define PWM_CV1800_PERIOD(n) (PWM_CV1800_PERIOD_BASE + ((n) * 0x08))
-+
-+#define PWM_CV1800_UPDATE_MASK(n) (BIT(0) << (n))
-+#define PWM_CV1800_OE_MASK(n) (BIT(0) << (n))
-+#define PWM_CV1800_START_MASK(n) (BIT(0) << (n))
-+
-+#define PWM_CV1800_MAXPERIOD (BIT(30) - 1)
-+#define PWM_CV1800_MINPERIOD BIT(1)
-+#define PWM_CV1800_MINHLPERIOD BIT(0)
-+#define PWM_CV1800_PERIOD_RESET BIT(1)
-+#define PWM_CV1800_HLPERIOD_RESET BIT(0)
-+#define PWM_CV1800_REG_DISABLE 0x0U
-+#define PWM_CV1800_REG_ENABLE(n) (BIT(0) << (n))
-+
-+struct cv1800_pwm {
-+	struct regmap *map;
++struct ocores_pwm_device {
++	struct pwm_chip chip;
 +	struct clk *clk;
-+	unsigned long clk_rate;
++	struct reset_control *rst;
++	const struct ocores_pwm_data *data;
++	void __iomem *regs;
++	u32 clk_rate; /* PWM APB clock frequency */
 +};
 +
-+static inline struct cv1800_pwm *to_cv1800_pwm_dev(struct pwm_chip *chip)
-+{
-+	return pwmchip_get_drvdata(chip);
-+}
-+
-+static const struct regmap_config cv1800_pwm_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
++struct ocores_pwm_data {
++	void __iomem *(*get_ch_base)(void __iomem *base, unsigned int channel);
 +};
 +
-+static int cv1800_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
-+			     bool enable)
++static inline u32 ocores_readl(struct ocores_pwm_device *ddata,
++			       unsigned int channel,
++			       unsigned int offset)
 +{
-+	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-+	u32 pwm_enable;
++	void __iomem *base = ddata->data->get_ch_base ?
++			     ddata->data->get_ch_base(ddata->regs, channel) : ddata->regs;
 +
-+	regmap_read(priv->map, PWM_CV1800_START, &pwm_enable);
-+	pwm_enable &= PWM_CV1800_START_MASK(pwm->hwpwm);
-+
-+	/*
-+	 * If the parameters are changed during runtime, Register needs
-+	 * to be updated to take effect.
-+	 */
-+	if (pwm_enable && enable) {
-+		regmap_update_bits(priv->map, PWM_CV1800_UPDATE,
-+				   PWM_CV1800_UPDATE_MASK(pwm->hwpwm),
-+				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-+		regmap_update_bits(priv->map, PWM_CV1800_UPDATE,
-+				   PWM_CV1800_UPDATE_MASK(pwm->hwpwm),
-+				   PWM_CV1800_REG_DISABLE);
-+	} else if (!pwm_enable && enable) {
-+		regmap_update_bits(priv->map, PWM_CV1800_OE,
-+				   PWM_CV1800_OE_MASK(pwm->hwpwm),
-+				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-+		regmap_update_bits(priv->map, PWM_CV1800_START,
-+				   PWM_CV1800_START_MASK(pwm->hwpwm),
-+				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-+	} else if (pwm_enable && !enable) {
-+		regmap_update_bits(priv->map, PWM_CV1800_OE,
-+				   PWM_CV1800_OE_MASK(pwm->hwpwm),
-+				   PWM_CV1800_REG_DISABLE);
-+		regmap_update_bits(priv->map, PWM_CV1800_START,
-+				   PWM_CV1800_START_MASK(pwm->hwpwm),
-+				   PWM_CV1800_REG_DISABLE);
-+	}
-+
-+	return 0;
++	return readl(base + offset);
 +}
 +
-+static int cv1800_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    const struct pwm_state *state)
++static inline void ocores_writel(struct ocores_pwm_device *ddata,
++				 unsigned int channel,
++				 unsigned int offset, u32 val)
 +{
-+	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-+	u32 period_val, hlperiod_val;
-+	u64 tem;
++	void __iomem *base = ddata->data->get_ch_base ?
++			     ddata->data->get_ch_base(ddata->regs, channel) : ddata->regs;
 +
-+	if (state->polarity != PWM_POLARITY_NORMAL)
-+		return -EINVAL;
-+
-+	/*
-+	 * This hardware use PERIOD and HLPERIOD registers to represent PWM waves.
-+	 *
-+	 * The meaning of PERIOD is how many clock cycles (from the clock source)
-+	 * are used to represent PWM waves.
-+	 * PERIOD = rate(MHz) / target(MHz)
-+	 * PERIOD = period(ns) * rate(Hz) / NSEC_PER_SEC
-+	 * The meaning of HLPERIOD is the number of low-level cycles in PERIOD.
-+	 * HLPERIOD = PERIOD - rate(MHz) / duty(MHz)
-+	 * HLPERIOD = PERIOD - (duty(ns) * rate(Hz) / NSEC_PER_SEC)
-+	 */
-+	tem = mul_u64_u64_div_u64(state->period, priv->clk_rate, NSEC_PER_SEC);
-+	if (tem < PWM_CV1800_MINPERIOD)
-+		return -EINVAL;
-+
-+	if (tem > PWM_CV1800_MAXPERIOD)
-+		tem = PWM_CV1800_MAXPERIOD;
-+
-+	period_val = (u32)tem;
-+
-+	tem = mul_u64_u64_div_u64(state->duty_cycle, priv->clk_rate,
-+				  NSEC_PER_SEC);
-+	if (tem > period_val)
-+		return -EINVAL;
-+	hlperiod_val = period_val - (u32)tem;
-+
-+	regmap_write(priv->map, PWM_CV1800_PERIOD(pwm->hwpwm), period_val);
-+	regmap_write(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), hlperiod_val);
-+
-+	cv1800_pwm_enable(chip, pwm, state->enabled);
-+
-+	return 0;
++	writel(val, base + offset);
 +}
 +
-+static int cv1800_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++static inline struct ocores_pwm_device *chip_to_ocores(struct pwm_chip *chip)
++{
++	return container_of(chip, struct ocores_pwm_device, chip);
++}
++
++static void __iomem *starfive_jh71x0_get_ch_base(void __iomem *base,
++						 unsigned int channel)
++{
++	unsigned int offset = (channel > 3 ? 1 << 15 : 0) + (channel & 3) * 0x10;
++
++	return base + offset;
++}
++
++static int ocores_pwm_get_state(struct pwm_chip *chip,
++				struct pwm_device *pwm,
 +				struct pwm_state *state)
 +{
-+	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-+	u32 period_val, hlperiod_val;
-+	u64 period_ns = 0;
-+	u64 duty_ns = 0;
-+	u32 enable = 0;
++	struct ocores_pwm_device *ddata = chip_to_ocores(chip);
++	u32 period_data, duty_data, ctrl_data;
 +
-+	regmap_read(priv->map, PWM_CV1800_PERIOD(pwm->hwpwm), &period_val);
-+	regmap_read(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), &hlperiod_val);
++	period_data = ocores_readl(ddata, pwm->hwpwm, 0x8);
++	duty_data = ocores_readl(ddata, pwm->hwpwm, 0x4);
++	ctrl_data = ocores_readl(ddata, pwm->hwpwm, 0xC);
 +
-+	if (period_val != PWM_CV1800_PERIOD_RESET ||
-+	    hlperiod_val != PWM_CV1800_HLPERIOD_RESET) {
-+		period_ns = DIV_ROUND_UP_ULL(period_val * NSEC_PER_SEC, priv->clk_rate);
-+		duty_ns = DIV_ROUND_UP_ULL(hlperiod_val * period_ns, period_val);
-+
-+		regmap_read(priv->map, PWM_CV1800_START, &enable);
-+
-+		enable &= PWM_CV1800_START_MASK(pwm->hwpwm);
-+	}
-+
-+	state->period = period_ns;
-+	state->duty_cycle = duty_ns;
-+	state->enabled = enable;
-+	state->polarity = PWM_POLARITY_NORMAL;
++	state->period = DIV_ROUND_UP_ULL((u64)period_data * NSEC_PER_SEC, ddata->clk_rate);
++	state->duty_cycle = DIV_ROUND_UP_ULL((u64)duty_data * NSEC_PER_SEC, ddata->clk_rate);
++	state->polarity = PWM_POLARITY_INVERSED;
++	state->enabled = (ctrl_data & REG_OCPWM_EN) ? true : false;
 +
 +	return 0;
 +}
 +
-+static const struct pwm_ops cv1800_pwm_ops = {
-+	.apply = cv1800_pwm_apply,
-+	.get_state = cv1800_pwm_get_state,
-+};
-+
-+static void devm_clk_rate_exclusive_put(void *data)
++static int ocores_pwm_apply(struct pwm_chip *chip,
++			    struct pwm_device *pwm,
++			    const struct pwm_state *state)
 +{
-+	struct clk *clk = data;
++	struct ocores_pwm_device *ddata = chip_to_ocores(chip);
++	u32 ctrl_data = 0;
++	u64 period_data, duty_data;
 +
-+	clk_rate_exclusive_put(clk);
-+}
++	if (state->polarity != PWM_POLARITY_INVERSED)
++		return -EINVAL;
 +
-+static int cv1800_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cv1800_pwm *priv;
-+	struct pwm_chip *chip;
-+	void __iomem *base;
-+	int ret;
++	ctrl_data = ocores_readl(ddata, pwm->hwpwm, 0xC);
++	ocores_writel(ddata, pwm->hwpwm, 0xC, 0);
 +
-+	chip = devm_pwmchip_alloc(dev, 4, sizeof(*priv));
-+	if (!chip)
-+		return PTR_ERR(chip);
++	period_data = DIV_ROUND_DOWN_ULL(state->period * ddata->clk_rate, NSEC_PER_SEC);
++	if (period_data <= U32_MAX)
++		ocores_writel(ddata, pwm->hwpwm, 0x8, (u32)period_data);
++	else
++		return -EINVAL;
 +
-+	priv = to_cv1800_pwm_dev(chip);
++	duty_data = DIV_ROUND_DOWN_ULL(state->duty_cycle * ddata->clk_rate, NSEC_PER_SEC);
++	if (duty_data <= U32_MAX)
++		ocores_writel(ddata, pwm->hwpwm, 0x4, (u32)duty_data);
++	else
++		return -EINVAL;
 +
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
++	ocores_writel(ddata, pwm->hwpwm, 0xC, 0);
 +
-+	priv->map = devm_regmap_init_mmio(&pdev->dev, base,
-+					  &cv1800_pwm_regmap_config);
-+	if (IS_ERR(priv->map))
-+		return PTR_ERR(priv->map);
-+
-+	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
-+				     "clk not found\n");
-+
-+	ret = clk_rate_exclusive_get(priv->clk);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "failed to get exclusive rate\n");
-+
-+	ret = devm_add_action_or_reset(&pdev->dev, devm_clk_rate_exclusive_put,
-+				       priv->clk);
-+	if (ret) {
-+		clk_rate_exclusive_put(priv->clk);
-+		return ret;
++	if (state->enabled) {
++		ctrl_data = ocores_readl(ddata, pwm->hwpwm, 0xC);
++		ocores_writel(ddata, pwm->hwpwm, 0xC, ctrl_data | REG_OCPWM_EN | REG_OCPWM_OE);
 +	}
 +
-+	priv->clk_rate = clk_get_rate(priv->clk);
-+	if (!priv->clk_rate)
-+		return dev_err_probe(&pdev->dev, -EINVAL,
-+				     "Invalid clock rate: %lu\n",
-+				     priv->clk_rate);
-+
-+	chip->ops = &cv1800_pwm_ops;
-+
-+	return devm_pwmchip_add(dev, chip);
++	return 0;
 +}
 +
-+static const struct of_device_id cv1800_pwm_dt_ids[] = {
-+	{ .compatible = "sophgo,cv1800-pwm" },
-+	{},
++static const struct pwm_ops ocores_pwm_ops = {
++	.get_state	= ocores_pwm_get_state,
++	.apply		= ocores_pwm_apply,
 +};
-+MODULE_DEVICE_TABLE(of, cv1800_pwm_dt_ids);
 +
-+static struct platform_driver cv1800_pwm_driver = {
++static const struct ocores_pwm_data jh7100_pwm_data = {
++	.get_ch_base = starfive_jh71x0_get_ch_base,
++};
++
++static const struct ocores_pwm_data jh7110_pwm_data = {
++	.get_ch_base = starfive_jh71x0_get_ch_base,
++};
++
++static const struct of_device_id ocores_pwm_of_match[] = {
++	{ .compatible = "opencores,pwm-v1" },
++	{ .compatible = "starfive,jh7100-pwm", .data = &jh7100_pwm_data},
++	{ .compatible = "starfive,jh7110-pwm", .data = &jh7110_pwm_data},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, ocores_pwm_of_match);
++
++static void ocores_reset_control_assert(void *data)
++{
++	reset_control_assert(data);
++}
++
++static int ocores_pwm_probe(struct platform_device *pdev)
++{
++	const struct of_device_id *id;
++	struct device *dev = &pdev->dev;
++	struct ocores_pwm_device *ddata;
++	struct pwm_chip *chip;
++	int ret;
++
++	id = of_match_device(ocores_pwm_of_match, dev);
++	if (!id)
++		return -EINVAL;
++
++	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
++	if (!ddata)
++		return -ENOMEM;
++
++	ddata->data = id->data;
++	chip = &ddata->chip;
++	chip->dev = dev;
++	chip->ops = &ocores_pwm_ops;
++	chip->npwm = 8;
++
++	ddata->regs = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(ddata->regs))
++		return dev_err_probe(dev, PTR_ERR(ddata->regs),
++				     "Unable to map IO resources\n");
++
++	ddata->clk = devm_clk_get_enabled(dev, NULL);
++	if (IS_ERR(ddata->clk))
++		return dev_err_probe(dev, PTR_ERR(ddata->clk),
++				     "Unable to get pwm's clock\n");
++
++	ddata->rst = devm_reset_control_get_optional_exclusive(dev, NULL);
++	if (IS_ERR(ddata->rst))
++		return dev_err_probe(dev, PTR_ERR(ddata->rst),
++				     "Unable to get pwm's reset\n");
++
++	reset_control_deassert(ddata->rst);
++
++	ret = devm_add_action_or_reset(dev, ocores_reset_control_assert, ddata->rst);
++	if (ret)
++		return ret;
++
++	ddata->clk_rate = clk_get_rate(ddata->clk);
++	if (ddata->clk_rate <= 0)
++		return dev_err_probe(dev, ddata->clk_rate,
++				     "Unable to get clock's rate\n");
++
++	ret = devm_pwmchip_add(dev, chip);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Could not register PWM chip\n");
++
++	platform_set_drvdata(pdev, ddata);
++
++	return ret;
++}
++
++static struct platform_driver ocores_pwm_driver = {
++	.probe = ocores_pwm_probe,
 +	.driver = {
-+		.name = "cv1800-pwm",
-+		.of_match_table = cv1800_pwm_dt_ids,
++		.name = "ocores-pwm",
++		.of_match_table = ocores_pwm_of_match,
 +	},
-+	.probe = cv1800_pwm_probe,
 +};
-+module_platform_driver(cv1800_pwm_driver);
++module_platform_driver(ocores_pwm_driver);
 +
-+MODULE_AUTHOR("Jingbao Qiu");
-+MODULE_DESCRIPTION("Sophgo cv1800 PWM Driver");
++MODULE_AUTHOR("Jieqin Chen");
++MODULE_AUTHOR("Hal Feng <hal.feng@starfivetech.com>");
++MODULE_DESCRIPTION("OpenCores PWM PTC driver");
 +MODULE_LICENSE("GPL");
 -- 
-2.25.1
+2.34.1
 
 
