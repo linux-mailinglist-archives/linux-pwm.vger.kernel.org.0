@@ -1,277 +1,242 @@
-Return-Path: <linux-pwm+bounces-1658-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1659-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD35486B10F
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Feb 2024 15:00:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5584F86B376
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Feb 2024 16:42:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D9A91C24324
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Feb 2024 14:00:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 78C841C22727
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Feb 2024 15:42:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C4FB1509AB;
-	Wed, 28 Feb 2024 13:59:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C510715B988;
+	Wed, 28 Feb 2024 15:41:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W8MBNb36"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6kTsMcX"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658B614EFF5
-	for <linux-pwm@vger.kernel.org>; Wed, 28 Feb 2024 13:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2334152E14;
+	Wed, 28 Feb 2024 15:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709128795; cv=none; b=LBLwhzv7kEdiG+ob0kdAiQ2m8AISn8emPcNYq9AwM1NlhHMSQozXPWbvhoI7TNl4INf21FH63Dh9JQLZGj2h93vK/6cT4clT80tnUoeBt1KMPlwEt+xdbf3Y8hmfsY0ZjaW7UG6D/Fm3h9jS3w3l9HLn+crfhe/gTFkQejIguSg=
+	t=1709134895; cv=none; b=Su68aWoIjPbsDF8tF81nuZ5LEoZAturgMnZHoSNpxqjHuAROTrDx6jssH7lkGaskAbFc370/CBapxD5ftuiSp2LzTmHsnkbqPH/sWYuwvJMaK2LpElyqeznM5bmdLvw5bMdf7z0Ov3CdEFhzhWSGCGoViEfYJzp3sop7PrfHICE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709128795; c=relaxed/simple;
-	bh=Ia2M0qxwtcNcfSaVEpSG+cjzWqtLFrxF+mIkAJQUGhI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SJi3l5+Ib8Xav4+zroyoYRTQXSTtUSPIG3OPplzfDs5wtvLkKOyjHo6mhVg0Hi0aQcuoeizp7F37kMOG2Qa1NZJ/ntH1HlLt00SUESUX22j/D079cY42vh3qNRVblDLpzS8vYfxtMdnChv6UZ622PPDsc/drqr4+iN1WGhrmcdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W8MBNb36; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3e706f50beso697945966b.0
-        for <linux-pwm@vger.kernel.org>; Wed, 28 Feb 2024 05:59:52 -0800 (PST)
+	s=arc-20240116; t=1709134895; c=relaxed/simple;
+	bh=9i1q127oWjdJ+t9z1pQacKuTLS2LK+k8327gtEih0HE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qCtNGdx9l7ZzIdaFdDxYGlYcVVzmx57S7Hws3ujTcso00iNbx3p/7lPaUROZmGP+aAYQJpolxG+9BoUdk512rGGfufrKwZvwMEC5IcUIMYrJeaTvoPf+gzl2O5Y8qAOtUnAuUUcNGxrsWXE4au+v+znz26iyEFkcMndhF60KpQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z6kTsMcX; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3fb8b0b7acso707448466b.2;
+        Wed, 28 Feb 2024 07:41:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709128791; x=1709733591; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=9NqnkdPX6paOI+O7RwBWR73KUtzFSBhK812pkEn7md8=;
-        b=W8MBNb36pfGoOeWVaYCQ+hAXHjj1N6auzMMjlx/5Qxw1KmqVq3WT7Hc8+7QGWjED8A
-         uTfXpEwyAkk0sz7FOLQGlMiNOplMAE/HbXq1QFr057Fa0pqcpwZgfORqI/qnStZmTlYq
-         VvEqBiOe77/2eOk/d/HQlpQ9dCxGeI2MbcnBWyDqMijWMmNV/+krvT6lwVG0k2i8dE7O
-         K2vkNPryrO4/8tVtm12B7IxJJzG4wWP3ik5rE1FK7KnKhfVs5yebWXl7tDwXaie4H9Cn
-         pqeB6hlkgNJs0zIwyphsohGsrAdkHQzZ5xTtoL9tpoyk/cqRy3OYK1iJHOy7npdFNjmc
-         gE8g==
+        d=gmail.com; s=20230601; t=1709134892; x=1709739692; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O6ajv5WB4Bbxg+l7rcG1Skw2klg4SLTom1IzidWxyp0=;
+        b=Z6kTsMcXBtXnYuKk5Id3G7PrfRKhyGG0W0dKNeKN0lilI9ikslsZNXC8c++ekppZIg
+         J6hq5rft2AjJIkdLnQAPzIgL38xf5Gwy94RIU/OqBU+eQXajdOlzmiWll3oiDwaxdXEp
+         3YppJ8YrG5yber4UFd5YDOQPGz5WWv210IhzxfTXb+0bpQMAhcteOkWAefgG5iAfhNlV
+         8Rt2FyXK3WeRjn+NhAojfcyk3+pGeUP0Rh3qIF1CBCH4iGi4We1NAYx8KMGXq5Sgvmvb
+         +TcSEi4KklQ+5Fr/jJ4aHzKJhU4cUeMiK8TPUyvoRvUc1iGd1G99BI5tczKYK9rIAXBF
+         BBZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709128791; x=1709733591;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1709134892; x=1709739692;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9NqnkdPX6paOI+O7RwBWR73KUtzFSBhK812pkEn7md8=;
-        b=J0U5N8gGIiGvpm4AUk1OQEbgefl3EhFO4ygkCxSGam1NCnwtFS5zLaAH6z0ES9W9qj
-         6GisNyQO14Hed59+eDNzIIKMF0uGkgWEQwVJpMQgEJwFKJLb5/y7hC+Kx/nllAFplO+w
-         U3LQgwHu68WVnwoSboM7E6kS+rbDe/eUMKKue7IcSVR5xP/B/U0tXprwhQgVpgagDFAi
-         Tj/ym0h4kX/16tlj3Cna5apDlwxdaZnPAsqtUN33Cw4DJxAG2yA2tRPRXeUKpjyRApng
-         jBnsoUnejFISSvus92eoseHXtTtU7eay64cvVML49a8+hXw0hSjT128FXcSz3mlBkKcQ
-         DvXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ8aKQ6aa8GganDwnkh4DvYmzRigrgbuMDtP6xhFppktn7ggG99TEMsEeN+MAmjjeELWiPrbGOLj882dF1zy/jG0FrlLTTIg1A
-X-Gm-Message-State: AOJu0Yw/rhu9FF/bKpuug9B0/pxMTJ3YjFkDersuxwRD2EIQU31fuhRi
-	5L268qCvi0VDqBZz74mD/56GddWeGc41VH6O0t7xAvyoUSwWtyPE/sQy2TBDm5Y=
-X-Google-Smtp-Source: AGHT+IEPfj9suyKmqUMmFTefs1BwjpmX4BCCIkOQNyZStovYfhxfKEjSJ4N+hLi+WRu+2hs8+y+DkA==
-X-Received: by 2002:a17:906:565a:b0:a3e:6a25:2603 with SMTP id v26-20020a170906565a00b00a3e6a252603mr9232878ejr.33.1709128790687;
-        Wed, 28 Feb 2024 05:59:50 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id cm27-20020a170906f59b00b00a3f3d0d30c8sm1859841ejd.213.2024.02.28.05.59.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Feb 2024 05:59:50 -0800 (PST)
-Message-ID: <6dd18b29-6e45-4c35-8f7e-5248b057449d@linaro.org>
-Date: Wed, 28 Feb 2024 14:59:48 +0100
+        bh=O6ajv5WB4Bbxg+l7rcG1Skw2klg4SLTom1IzidWxyp0=;
+        b=SCp/MJTQ0RhO1zPwDgcST/wGrR0avnAb6mtgb3L+lDspVKzS7C0pvKsRtHK9cYvwQE
+         UtcWJ76M2T3kvTEzAdoMQXsa9pVMb4V+DuaDq1F+OI24apkjL2LrGOz15FdLvG+q8P36
+         oME9thfNAjN5vk4RIY23H/IeO9dAPeLR0F+W6kKC5MmmwzXUbRS9GxieQWzyCYj9yhcl
+         gQUjuVKX8L5SHsBFcB9YqDST3OPaa6f5dTkYDUldWHL564MN5n8Sy4A3N/lUfOQndUfB
+         VinjN3ooxSqGzw1LJpss5MCTpz1Qcme26a9T/mfOIrHga3x6CYyn+yrCLhBNx791IJXE
+         EHtw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzkE3Z4Lu8Xkc02mmIFrkZ8SV2qQL3SWNlJ/BnvWr4h+8Xa9Eu6A5liMneVG3rgT8KbsWyH/uyZCrcik+wtpYV0QaYPWHQQCiUS/i7P775ac/jf6l5gktOLzoE18zLBLI8ZzH37c8ny9B8UQsUYZcHZ9oImgVr2NfCpLTcYILNi6+LMw==
+X-Gm-Message-State: AOJu0YyePrW+MgiFWxHK+ab9Fcmz4WVSvp1AxwYSVBCJzmaU79OCxlEF
+	N99A0Rs40cJBZeD7df15Qw1IfbD/EfeJuVHlp1ZVbd6J20CSpInuX0i643dW
+X-Google-Smtp-Source: AGHT+IHSpViTIZ64bBjjRxqqZXU7O0E93QpwOrVzZct6s/wb3v0mbHX9WV7MhgL/Mp0j+kpqsEs5fg==
+X-Received: by 2002:a17:906:b58:b0:a43:ff8c:6d9c with SMTP id v24-20020a1709060b5800b00a43ff8c6d9cmr48027ejg.56.1709134892125;
+        Wed, 28 Feb 2024 07:41:32 -0800 (PST)
+Received: from debian ([93.184.186.109])
+        by smtp.gmail.com with ESMTPSA id cu13-20020a170906ba8d00b00a43215bff13sm1975290ejd.117.2024.02.28.07.41.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 07:41:31 -0800 (PST)
+Date: Wed, 28 Feb 2024 16:41:29 +0100
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: pwm: add support for MC33XS2410
+Message-ID: <20240228154129.GA749753@debian>
+References: <20240228133236.748225-1-dima.fedrau@gmail.com>
+ <20240228133236.748225-2-dima.fedrau@gmail.com>
+ <6dd18b29-6e45-4c35-8f7e-5248b057449d@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: pwm: add support for MC33XS2410
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240228133236.748225-1-dima.fedrau@gmail.com>
- <20240228133236.748225-2-dima.fedrau@gmail.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240228133236.748225-2-dima.fedrau@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6dd18b29-6e45-4c35-8f7e-5248b057449d@linaro.org>
 
-On 28/02/2024 14:32, Dimitri Fedrau wrote:
-> Adding documentation for MC33XS2410 pwm driver.
-
-Driver as Linux driver? If so, please rephrase to describe hardware.
-
+Am Wed, Feb 28, 2024 at 02:59:48PM +0100 schrieb Krzysztof Kozlowski:
+> On 28/02/2024 14:32, Dimitri Fedrau wrote:
+> > Adding documentation for MC33XS2410 pwm driver.
 > 
-> Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
-> ---
->  .../bindings/pwm/nxp,mc33xs2410.yaml          | 105 ++++++++++++++++++
->  1 file changed, 105 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+> Driver as Linux driver? If so, please rephrase to describe hardware.
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml b/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
-> new file mode 100644
-> index 000000000000..bd387dbe69be
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
-> @@ -0,0 +1,105 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/nxp,mc33xs2410.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MC33XS2410 PWM driver
-
-Driver as Linux driver? If so, please rephrase to describe hardware.
-
-> +
-> +maintainers:
-> +  - Dimitri Fedrau <dima.fedrau@gmail.com>
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: nxp,mc33xs2410
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  spi-max-frequency:
-> +    maximum: 10000000
-> +
-> +  spi-cpha: true
-> +
-> +  spi-cs-setup-delay-ns:
-> +    minimum: 100
-> +    default: 100
-> +
-> +  spi-cs-hold-delay-ns:
-> +    minimum: 10
-> +    default: 10
-> +
-> +  spi-cs-inactive-delay-ns:
-> +    minimum: 300
-> +    default: 300
-> +
-> +  reset-gpios:
-> +    description:
-> +      GPIO connected to the active low reset pin.
-> +    maxItems: 1
-> +
-> +  "#pwm-cells":
-> +    const: 3
-> +
-> +  pwms:
-> +    description:
-> +      Direct inputs(di0-3) are used to directly turn-on or turn-off the
-> +      outputs. The external PWM clock can be used if the internal clock
-> +      doesn't meet timing requirements.
-
-pwm is input for pwm?
-
-> +    maxItems: 5
-> +
-> +  pwm-names:
-> +    items:
-> +      - const: di0
-> +      - const: di1
-> +      - const: di2
-> +      - const: di3
-> +      - const: ext_clk
-
-Aren't these clocks?
-
-> +
-> +  vdd-supply:
-> +    description:
-> +      Logic supply voltage
-> +
-> +  vspi-supply:
-> +    description:
-> +      Supply voltage for SPI
-> +
-> +  vpwr-supply:
-> +    description:
-> +      Power switch supply
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-
-Instead:
-unevaluatedProperties: false
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +       pwm@0 {
-> +           compatible = "nxp,mc33xs2410";
-> +           reg = <0x0>;
-> +           spi-max-frequency = <4000000>;
-> +           spi-cpha;
-> +           spi-cs-setup-delay-ns = <100>;
-> +           spi-cs-hold-delay-ns = <10>;
-> +           spi-cs-inactive-delay-ns = <300>;
-> +           reset-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
-> +           #pwm-cells = <3>;
-
-Make example complete, so provide all properties, like interrupts, pwms
-and whatever you have in the binding.
-
+Will fix it.
+> > 
+> > Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
+> > ---
+> >  .../bindings/pwm/nxp,mc33xs2410.yaml          | 105 ++++++++++++++++++
+> >  1 file changed, 105 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml b/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+> > new file mode 100644
+> > index 000000000000..bd387dbe69be
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+> > @@ -0,0 +1,105 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pwm/nxp,mc33xs2410.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: MC33XS2410 PWM driver
+> 
+> Driver as Linux driver? If so, please rephrase to describe hardware.
+>
+Will fix it.
+> > +
+> > +maintainers:
+> > +  - Dimitri Fedrau <dima.fedrau@gmail.com>
+> > +
+> > +allOf:
+> > +  - $ref: pwm.yaml#
+> > +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: nxp,mc33xs2410
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  spi-max-frequency:
+> > +    maximum: 10000000
+> > +
+> > +  spi-cpha: true
+> > +
+> > +  spi-cs-setup-delay-ns:
+> > +    minimum: 100
+> > +    default: 100
+> > +
+> > +  spi-cs-hold-delay-ns:
+> > +    minimum: 10
+> > +    default: 10
+> > +
+> > +  spi-cs-inactive-delay-ns:
+> > +    minimum: 300
+> > +    default: 300
+> > +
+> > +  reset-gpios:
+> > +    description:
+> > +      GPIO connected to the active low reset pin.
+> > +    maxItems: 1
+> > +
+> > +  "#pwm-cells":
+> > +    const: 3
+> > +
+> > +  pwms:
+> > +    description:
+> > +      Direct inputs(di0-3) are used to directly turn-on or turn-off the
+> > +      outputs. The external PWM clock can be used if the internal clock
+> > +      doesn't meet timing requirements.
+> 
+> pwm is input for pwm?
+> 
+Yes.
+> > +    maxItems: 5
+> > +
+> > +  pwm-names:
+> > +    items:
+> > +      - const: di0
+> > +      - const: di1
+> > +      - const: di2
+> > +      - const: di3
+> > +      - const: ext_clk
+> 
+> Aren't these clocks?
+> 
+di0-3 are PWM input signals which are translated to output voltage "vpwr".
+ext_clk is described as PWM clock in the datasheet. Didn't used it, just
+mentioned it here for completeness.
+> > +
+> > +  vdd-supply:
+> > +    description:
+> > +      Logic supply voltage
+> > +
+> > +  vspi-supply:
+> > +    description:
+> > +      Supply voltage for SPI
+> > +
+> > +  vpwr-supply:
+> > +    description:
+> > +      Power switch supply
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +additionalProperties: false
+> 
+> Instead:
+> unevaluatedProperties: false
+> 
+Will fix it.
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    spi {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +       pwm@0 {
+> > +           compatible = "nxp,mc33xs2410";
+> > +           reg = <0x0>;
+> > +           spi-max-frequency = <4000000>;
+> > +           spi-cpha;
+> > +           spi-cs-setup-delay-ns = <100>;
+> > +           spi-cs-hold-delay-ns = <10>;
+> > +           spi-cs-inactive-delay-ns = <300>;
+> > +           reset-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
+> > +           #pwm-cells = <3>;
+> 
+> Make example complete, so provide all properties, like interrupts, pwms
+> and whatever you have in the binding.
+> 
+I could make the binding complete, but I haven't used all properties nor
+does the driver supports them.
+> Best regards,
+> Krzysztof
+> 
 Best regards,
-Krzysztof
-
+Dimitri
 
