@@ -1,280 +1,277 @@
-Return-Path: <linux-pwm+bounces-1657-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1658-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D076B86B069
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Feb 2024 14:33:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD35486B10F
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Feb 2024 15:00:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DE5C1F287E2
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Feb 2024 13:33:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D9A91C24324
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Feb 2024 14:00:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54A91151CDC;
-	Wed, 28 Feb 2024 13:33:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C4FB1509AB;
+	Wed, 28 Feb 2024 13:59:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mj32giKO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W8MBNb36"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7149814C58C;
-	Wed, 28 Feb 2024 13:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658B614EFF5
+	for <linux-pwm@vger.kernel.org>; Wed, 28 Feb 2024 13:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709127180; cv=none; b=q+fzY7VLHGx4hvIc7pbQwB+SyLe6MHg99+ZlXv33TkOo/f9X2DGjNes5NfZiENRSnMiPK3RFr7RgCW6Sn8iprCp95utBSMzZkI6nCFtopRYnX/cIbOnH7tSq+3u4glGhksVr5YTAcebm+iqEay1rQwFgbrIiMMx0+VnP1X1dW1c=
+	t=1709128795; cv=none; b=LBLwhzv7kEdiG+ob0kdAiQ2m8AISn8emPcNYq9AwM1NlhHMSQozXPWbvhoI7TNl4INf21FH63Dh9JQLZGj2h93vK/6cT4clT80tnUoeBt1KMPlwEt+xdbf3Y8hmfsY0ZjaW7UG6D/Fm3h9jS3w3l9HLn+crfhe/gTFkQejIguSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709127180; c=relaxed/simple;
-	bh=7IIXC1qsD1MFpjVOqYYi+BOf0Ko89zjnAhsRvckXXLA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BTuR7OcJslOQ7x55Hx04BEGFbyScwK5wIQQaTC8/5wUuf7Dt/vRSXOfqfxXWX+j8oZ5oft8Xb5n80clVstUnJt0AvqBdBvOvaf2kirEAbm88p6zDZ1TsDC2o/D/Qx9eCGIIBrzGYf8Q6QL0dYECAdG60lYIG89qDyh64ttXglIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mj32giKO; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so6978101a12.0;
-        Wed, 28 Feb 2024 05:32:58 -0800 (PST)
+	s=arc-20240116; t=1709128795; c=relaxed/simple;
+	bh=Ia2M0qxwtcNcfSaVEpSG+cjzWqtLFrxF+mIkAJQUGhI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SJi3l5+Ib8Xav4+zroyoYRTQXSTtUSPIG3OPplzfDs5wtvLkKOyjHo6mhVg0Hi0aQcuoeizp7F37kMOG2Qa1NZJ/ntH1HlLt00SUESUX22j/D079cY42vh3qNRVblDLpzS8vYfxtMdnChv6UZ622PPDsc/drqr4+iN1WGhrmcdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W8MBNb36; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3e706f50beso697945966b.0
+        for <linux-pwm@vger.kernel.org>; Wed, 28 Feb 2024 05:59:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709127177; x=1709731977; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GPr5OT0hjAf7wDQpFiXt+umkADr7mP/nXjReYVXPj5M=;
-        b=mj32giKOlivVtkqrMS5OBEssUKko98m64EaFlhXQ445ynCpOWjmuG2gomATey9br9V
-         QzpBUz1BK7a16BSI+EEmMvqt6DgeAQwpGk78ZbbFqOcRGLUnHbmVKBzMYEGf5Wa4VupF
-         YmiF6H3pLEiILs0FxYN29D51CEL/Gx1/miXLMZ+QkEbx7NpeDOHLAhaQptWe31PklUjj
-         DjDjxStGEfSA/jgrjUMIlOQJQu04Ju3qpgb9+89SN/feBQfDatq6jpadxWFDNM5vQCiF
-         0h7seBcbi8b+o0z1ujLtuloWnQB2jFQvtHXXp9cp1saVyIevy2nMIMraMMaKH+l7oipO
-         8YCA==
+        d=linaro.org; s=google; t=1709128791; x=1709733591; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=9NqnkdPX6paOI+O7RwBWR73KUtzFSBhK812pkEn7md8=;
+        b=W8MBNb36pfGoOeWVaYCQ+hAXHjj1N6auzMMjlx/5Qxw1KmqVq3WT7Hc8+7QGWjED8A
+         uTfXpEwyAkk0sz7FOLQGlMiNOplMAE/HbXq1QFr057Fa0pqcpwZgfORqI/qnStZmTlYq
+         VvEqBiOe77/2eOk/d/HQlpQ9dCxGeI2MbcnBWyDqMijWMmNV/+krvT6lwVG0k2i8dE7O
+         K2vkNPryrO4/8tVtm12B7IxJJzG4wWP3ik5rE1FK7KnKhfVs5yebWXl7tDwXaie4H9Cn
+         pqeB6hlkgNJs0zIwyphsohGsrAdkHQzZ5xTtoL9tpoyk/cqRy3OYK1iJHOy7npdFNjmc
+         gE8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709127177; x=1709731977;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GPr5OT0hjAf7wDQpFiXt+umkADr7mP/nXjReYVXPj5M=;
-        b=GiJNitNFXJuunGD/ENqTcLJkUFgwbcdaEheCPkHexM0XvorSdHgBWh9NBFSSQCrHM/
-         zojqYdL4rxqtC2E89RDgts61iqv5x03veYvgvi/rIF2IZv5nIp06SIUVsK8zJ2qu2h0u
-         8UYlnp4KwOSTLSFDxG0UN7MqJ/8w/3id0AfAg/bZvGhbvX+wO6KkPruquAIORMHo6JPB
-         vlXk218DQtNqqd7bmuTzEeJumyQJT6dyJltCnqmP9G2+fZZhAeidGfJCQWdU00aMHhAa
-         EWJmVbGNTZS8h0tkANKYoV+Y4UbdaP88rYW7rA7SVoU+4dUKDnRK/b4qrhpmV1RtebLZ
-         Cz3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ7bv7T5G9poZiEiREtARqyPd3kWenNZoII5fnLtGSPNswhA3LIxOmDhBOuM3L4NWB7smXu7mjpcWxJjU9v+VSSGU0NeEortKAkMQgLc46ibNazH0HwGs8wbjJ88/dCGWfSpoptzVI
-X-Gm-Message-State: AOJu0YwsGAdgnjJEVAkknvDEAm2lRl3uUO0423L6c9rH2DYxnX79hME6
-	VhazNtZ1Ve6FLWQwhgEnqejaQmm8GS/8qjPIFEr4WljXT8psGfsL
-X-Google-Smtp-Source: AGHT+IGKXE9lfXX9DxovkPhxOiHRke5PiL6tBfUVMEyI2CN8x3HQkC4HBz58InRj4yxj29oYT98jnA==
-X-Received: by 2002:a17:906:488c:b0:a44:fd7:3850 with SMTP id v12-20020a170906488c00b00a440fd73850mr808781ejq.66.1709127176741;
-        Wed, 28 Feb 2024 05:32:56 -0800 (PST)
-Received: from debian.fritz.box ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id vx5-20020a170907a78500b00a3f20a8d2f6sm1856952ejc.112.2024.02.28.05.32.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 05:32:56 -0800 (PST)
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: 
-Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: [PATCH 3/3] pwm: mc33xs2410: add support for direct inputs
-Date: Wed, 28 Feb 2024 14:32:35 +0100
-Message-Id: <20240228133236.748225-4-dima.fedrau@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240228133236.748225-1-dima.fedrau@gmail.com>
-References: <20240228133236.748225-1-dima.fedrau@gmail.com>
+        d=1e100.net; s=20230601; t=1709128791; x=1709733591;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9NqnkdPX6paOI+O7RwBWR73KUtzFSBhK812pkEn7md8=;
+        b=J0U5N8gGIiGvpm4AUk1OQEbgefl3EhFO4ygkCxSGam1NCnwtFS5zLaAH6z0ES9W9qj
+         6GisNyQO14Hed59+eDNzIIKMF0uGkgWEQwVJpMQgEJwFKJLb5/y7hC+Kx/nllAFplO+w
+         U3LQgwHu68WVnwoSboM7E6kS+rbDe/eUMKKue7IcSVR5xP/B/U0tXprwhQgVpgagDFAi
+         Tj/ym0h4kX/16tlj3Cna5apDlwxdaZnPAsqtUN33Cw4DJxAG2yA2tRPRXeUKpjyRApng
+         jBnsoUnejFISSvus92eoseHXtTtU7eay64cvVML49a8+hXw0hSjT128FXcSz3mlBkKcQ
+         DvXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ8aKQ6aa8GganDwnkh4DvYmzRigrgbuMDtP6xhFppktn7ggG99TEMsEeN+MAmjjeELWiPrbGOLj882dF1zy/jG0FrlLTTIg1A
+X-Gm-Message-State: AOJu0Yw/rhu9FF/bKpuug9B0/pxMTJ3YjFkDersuxwRD2EIQU31fuhRi
+	5L268qCvi0VDqBZz74mD/56GddWeGc41VH6O0t7xAvyoUSwWtyPE/sQy2TBDm5Y=
+X-Google-Smtp-Source: AGHT+IEPfj9suyKmqUMmFTefs1BwjpmX4BCCIkOQNyZStovYfhxfKEjSJ4N+hLi+WRu+2hs8+y+DkA==
+X-Received: by 2002:a17:906:565a:b0:a3e:6a25:2603 with SMTP id v26-20020a170906565a00b00a3e6a252603mr9232878ejr.33.1709128790687;
+        Wed, 28 Feb 2024 05:59:50 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id cm27-20020a170906f59b00b00a3f3d0d30c8sm1859841ejd.213.2024.02.28.05.59.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 05:59:50 -0800 (PST)
+Message-ID: <6dd18b29-6e45-4c35-8f7e-5248b057449d@linaro.org>
+Date: Wed, 28 Feb 2024 14:59:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: pwm: add support for MC33XS2410
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240228133236.748225-1-dima.fedrau@gmail.com>
+ <20240228133236.748225-2-dima.fedrau@gmail.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240228133236.748225-2-dima.fedrau@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add support for direct inputs, which are used to directly turn-on or
-turn-off the outputs. Direct inputs have the advantage over the SPI
-controlled outputs that they aren't limited to the frequency steps.
-Frequency resolution depends on the input signal, range is still
-from 0.5Hz to 2.048kHz.
+On 28/02/2024 14:32, Dimitri Fedrau wrote:
+> Adding documentation for MC33XS2410 pwm driver.
 
-Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
----
- drivers/pwm/pwm-mc33xs2410.c | 116 +++++++++++++++++++++++++++++++----
- 1 file changed, 105 insertions(+), 11 deletions(-)
+Driver as Linux driver? If so, please rephrase to describe hardware.
 
-diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
-index 35753039da6b..828a67227185 100644
---- a/drivers/pwm/pwm-mc33xs2410.c
-+++ b/drivers/pwm/pwm-mc33xs2410.c
-@@ -18,7 +18,10 @@
- #define MC33XS2410_GLB_CTRL_MODE_MASK	GENMASK(7, 6)
- #define MC33XS2410_GLB_CTRL_NORMAL_MODE	BIT(6)
- #define MC33XS2410_GLB_CTRL_SAFE_MODE	BIT(7)
-+#define MC33XS2410_GLB_CTRL_CMOS_LEVEL	BIT(0)
- #define MC33XS2410_OUT1_4_CTRL		0x02
-+#define MC33XS2410_IN_CTRL1		0x03
-+#define MC33XS2410_IN_CTRL1_IN_EN(x)	BIT(x)
- #define MC33XS2410_PWM_CTRL1		0x05
- #define MC33XS2410_PWM_CTRL1_POL_INV(x)	BIT(x)
- #define MC33XS2410_PWM_CTRL3		0x07
-@@ -45,6 +48,7 @@
- struct mc33xs2410_pwm {
- 	struct pwm_chip chip;
- 	struct spi_device *spi;
-+	struct pwm_device *di[4];
- 	struct mutex lock;
- };
- 
-@@ -154,20 +158,15 @@ static u8 mc33xs2410_pwm_get_freq(const struct pwm_state *state)
- 	return (ret | FIELD_PREP(MC33XS2410_PWM_FREQ_STEP_MASK, step));
- }
- 
--static int mc33xs2410_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
--				const struct pwm_state *state)
-+static int mc33xs2410_pwm_apply_spi(struct pwm_chip *chip,
-+				    struct pwm_device *pwm,
-+				    const struct pwm_state *state)
- {
- 	struct mc33xs2410_pwm *mc33xs2410 = mc33xs2410_pwm_from_chip(chip);
- 	struct spi_device *spi = mc33xs2410->spi;
- 	u8 mask, val;
- 	int ret;
- 
--	if (state->period > mc33xs2410_period[STEP_05HZ][MC33XS2410_PERIOD_MAX])
--		return -EINVAL;
--
--	if (state->period < mc33xs2410_period[STEP_32HZ][MC33XS2410_PERIOD_MIN])
--		return -EINVAL;
--
- 	guard(mutex)(&mc33xs2410->lock);
- 	mask = MC33XS2410_PWM_CTRL1_POL_INV(pwm->hwpwm);
- 	val = (state->polarity == PWM_POLARITY_INVERSED) ? mask : 0;
-@@ -190,9 +189,38 @@ static int mc33xs2410_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	return mc33xs2410_modify_reg(spi, MC33XS2410_PWM_CTRL3, mask, val);
- }
- 
--static int mc33xs2410_pwm_get_state(struct pwm_chip *chip,
--				    struct pwm_device *pwm,
--				    struct pwm_state *state)
-+static int mc33xs2410_pwm_apply_direct_inputs(struct pwm_chip *chip,
-+					      struct pwm_device *pwm,
-+					      const struct pwm_state *state)
-+{
-+	struct mc33xs2410_pwm *mc33xs2410 = mc33xs2410_pwm_from_chip(chip);
-+	struct pwm_device *di = mc33xs2410->di[pwm->hwpwm];
-+
-+	guard(mutex)(&mc33xs2410->lock);
-+
-+	return pwm_apply_state(di, state);
-+}
-+
-+static int mc33xs2410_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+				const struct pwm_state *state)
-+{
-+	struct mc33xs2410_pwm *mc33xs2410 = mc33xs2410_pwm_from_chip(chip);
-+
-+	if (state->period > mc33xs2410_period[STEP_05HZ][MC33XS2410_PERIOD_MAX])
-+		return -EINVAL;
-+
-+	if (state->period < mc33xs2410_period[STEP_32HZ][MC33XS2410_PERIOD_MIN])
-+		return -EINVAL;
-+
-+	if (mc33xs2410->di[pwm->hwpwm])
-+		return mc33xs2410_pwm_apply_direct_inputs(chip, pwm, state);
-+	else
-+		return mc33xs2410_pwm_apply_spi(chip, pwm, state);
-+}
-+
-+static int mc33xs2410_pwm_get_state_spi(struct pwm_chip *chip,
-+					struct pwm_device *pwm,
-+					struct pwm_state *state)
- {
- 	struct mc33xs2410_pwm *mc33xs2410 = mc33xs2410_pwm_from_chip(chip);
- 	struct spi_device *spi = mc33xs2410->spi;
-@@ -236,6 +264,28 @@ static int mc33xs2410_pwm_get_state(struct pwm_chip *chip,
- 	return 0;
- }
- 
-+static int mc33xs2410_pwm_get_state_direct_inputs(struct pwm_chip *chip,
-+						  struct pwm_device *pwm,
-+						  struct pwm_state *state)
-+{
-+	struct mc33xs2410_pwm *mc33xs2410 = mc33xs2410_pwm_from_chip(chip);
-+
-+	pwm_get_state(mc33xs2410->di[pwm->hwpwm], state);
-+	return 0;
-+}
-+
-+static int mc33xs2410_pwm_get_state(struct pwm_chip *chip,
-+				    struct pwm_device *pwm,
-+				    struct pwm_state *state)
-+{
-+	struct mc33xs2410_pwm *mc33xs2410 = mc33xs2410_pwm_from_chip(chip);
-+
-+	if (mc33xs2410->di[pwm->hwpwm])
-+		return mc33xs2410_pwm_get_state_direct_inputs(chip, pwm, state);
-+	else
-+		return mc33xs2410_pwm_get_state_spi(chip, pwm, state);
-+}
-+
- static const struct pwm_ops mc33xs2410_pwm_ops = {
- 	.apply = mc33xs2410_pwm_apply,
- 	.get_state = mc33xs2410_pwm_get_state,
-@@ -257,6 +307,45 @@ static int mc33xs2410_reset(struct device *dev)
- 	return 0;
- }
- 
-+static int mc33xs2410_direct_inputs_probe(struct mc33xs2410_pwm *mc33xs2410)
-+{
-+	struct device *dev = &mc33xs2410->spi->dev;
-+	u16 di_en = 0;
-+	char buf[4];
-+	int ret, ch;
-+
-+	for (ch = 0; ch < 4; ch++) {
-+		sprintf(buf, "di%d", ch);
-+		mc33xs2410->di[ch] = devm_pwm_get(dev, buf);
-+		ret = PTR_ERR_OR_ZERO(mc33xs2410->di[ch]);
-+		switch (ret) {
-+		case 0:
-+			di_en |= MC33XS2410_IN_CTRL1_IN_EN(ch);
-+			break;
-+		case -ENODATA:
-+			mc33xs2410->di[ch] = NULL;
-+			break;
-+		case -EPROBE_DEFER:
-+			return ret;
-+		default:
-+			dev_err(dev, "Failed to request %s: %d\n", buf, ret);
-+			return ret;
-+		}
-+	}
-+
-+	if (!di_en)
-+		return 0;
-+
-+	/* CMOS input logic level */
-+	ret = mc33xs2410_modify_reg(mc33xs2410->spi, MC33XS2410_GLB_CTRL,
-+				    MC33XS2410_GLB_CTRL_CMOS_LEVEL,
-+				    MC33XS2410_GLB_CTRL_CMOS_LEVEL);
-+	if (ret < 0)
-+		return ret;
-+
-+	return mc33xs2410_write_reg(mc33xs2410->spi, MC33XS2410_IN_CTRL1, di_en);
-+}
-+
- static int mc33xs2410_probe(struct spi_device *spi)
- {
- 	struct mc33xs2410_pwm *mc33xs2410;
-@@ -290,6 +379,11 @@ static int mc33xs2410_probe(struct spi_device *spi)
- 		return dev_err_probe(dev, ret,
- 				     "Failed to transition to normal mode\n");
- 
-+	/* Enable direct inputs */
-+	ret = mc33xs2410_direct_inputs_probe(mc33xs2410);
-+	if (ret)
-+		return ret;
-+
- 	ret = devm_pwmchip_add(dev, &mc33xs2410->chip);
- 	if (ret < 0)
- 		return dev_err_probe(dev, ret, "Failed to add pwm chip\n");
--- 
-2.39.2
+> 
+> Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
+> ---
+>  .../bindings/pwm/nxp,mc33xs2410.yaml          | 105 ++++++++++++++++++
+>  1 file changed, 105 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml b/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+> new file mode 100644
+> index 000000000000..bd387dbe69be
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+> @@ -0,0 +1,105 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/nxp,mc33xs2410.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MC33XS2410 PWM driver
+
+Driver as Linux driver? If so, please rephrase to describe hardware.
+
+> +
+> +maintainers:
+> +  - Dimitri Fedrau <dima.fedrau@gmail.com>
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,mc33xs2410
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 10000000
+> +
+> +  spi-cpha: true
+> +
+> +  spi-cs-setup-delay-ns:
+> +    minimum: 100
+> +    default: 100
+> +
+> +  spi-cs-hold-delay-ns:
+> +    minimum: 10
+> +    default: 10
+> +
+> +  spi-cs-inactive-delay-ns:
+> +    minimum: 300
+> +    default: 300
+> +
+> +  reset-gpios:
+> +    description:
+> +      GPIO connected to the active low reset pin.
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +  pwms:
+> +    description:
+> +      Direct inputs(di0-3) are used to directly turn-on or turn-off the
+> +      outputs. The external PWM clock can be used if the internal clock
+> +      doesn't meet timing requirements.
+
+pwm is input for pwm?
+
+> +    maxItems: 5
+> +
+> +  pwm-names:
+> +    items:
+> +      - const: di0
+> +      - const: di1
+> +      - const: di2
+> +      - const: di3
+> +      - const: ext_clk
+
+Aren't these clocks?
+
+> +
+> +  vdd-supply:
+> +    description:
+> +      Logic supply voltage
+> +
+> +  vspi-supply:
+> +    description:
+> +      Supply voltage for SPI
+> +
+> +  vpwr-supply:
+> +    description:
+> +      Power switch supply
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+
+Instead:
+unevaluatedProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +       pwm@0 {
+> +           compatible = "nxp,mc33xs2410";
+> +           reg = <0x0>;
+> +           spi-max-frequency = <4000000>;
+> +           spi-cpha;
+> +           spi-cs-setup-delay-ns = <100>;
+> +           spi-cs-hold-delay-ns = <10>;
+> +           spi-cs-inactive-delay-ns = <300>;
+> +           reset-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
+> +           #pwm-cells = <3>;
+
+Make example complete, so provide all properties, like interrupts, pwms
+and whatever you have in the binding.
+
+Best regards,
+Krzysztof
 
 
