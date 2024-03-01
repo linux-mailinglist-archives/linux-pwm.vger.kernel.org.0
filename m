@@ -1,70 +1,72 @@
-Return-Path: <linux-pwm+bounces-1671-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1672-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BBEF86DFF0
-	for <lists+linux-pwm@lfdr.de>; Fri,  1 Mar 2024 12:14:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A75986DFF3
+	for <lists+linux-pwm@lfdr.de>; Fri,  1 Mar 2024 12:14:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D9F4A1F22289
-	for <lists+linux-pwm@lfdr.de>; Fri,  1 Mar 2024 11:14:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 397FF28710A
+	for <lists+linux-pwm@lfdr.de>; Fri,  1 Mar 2024 11:14:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 356246CDAD;
-	Fri,  1 Mar 2024 11:12:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7C366EF0B;
+	Fri,  1 Mar 2024 11:12:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVKSgPXD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jpgMwL0k"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C006995C;
-	Fri,  1 Mar 2024 11:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B78B6CDA5;
+	Fri,  1 Mar 2024 11:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709291562; cv=none; b=hWtblprNlm7p32wgaYn5a/L/VwUeeaL3FP0UiZiunMdob3pcPMW8khv1w2LWlYLknosMRkNmPeaxcAg1IDVkFNHiFeZHaLL0Fgeu95XrVMtUmp0WFpB8bdx4BIXTV92JybuLYKKK7ifqlbGZTLqkop/BQnHr5bE+hC6m/iNrtoY=
+	t=1709291563; cv=none; b=Vx+ZFj/GLaeA9I2cBQZjf0ethJcVAHaIo0lTUzVqm4WfZ8KebB7SjxhFgmsoexK1kBnrFIVhTW7mLj+KJXJWeofM/uy5hSN/SZIPpdrvCslDrTpqARTZ811GevRfgh6uhFUaLI69bqfP4aifWxGQEkH+QGQdOTwElRjeD83i1S4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709291562; c=relaxed/simple;
-	bh=G0Ytuzuhq5IT80Qym7JsUFTIlvAQ8ypbq/Q3B8+0Y5M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qjGov+WQrHbVPqWWAqSxGjq1BR8wPP0NdHyqhTosYS1Nsjsg53BA1Q7ZMBn9BG4BYDrxUDDww2jV/FCgvRuWIH9vq2seV29CrrpODkVcb0szqh3eYGASoQuWdj3D31LlsfFN+7cAHcnUU6OtUDTDoV8g5KO+LayhO11etT/suMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LVKSgPXD; arc=none smtp.client-ip=209.85.218.49
+	s=arc-20240116; t=1709291563; c=relaxed/simple;
+	bh=ZcXh5FtON65IFFWLi8WCHoxgIUc/5UvzSJLTC0D+gNQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=eCmjdcWnkpHSUwt5Vcg7egCcf9jSW/uwyAuGJeTA18p4XzXCgG6JLQOl2x6ej6BH59pqhQWYQJtzf9tMtH0CUziu0vrM63LlIAaS8iK2p8WC7eeZzphjWTS6DpU7IbfoT2dN62wa6d3o2/9zaNUcA2pt3qkvU72e049isjD6IbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jpgMwL0k; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a446478b04bso180924666b.3;
-        Fri, 01 Mar 2024 03:12:40 -0800 (PST)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-565c6cf4819so5094183a12.1;
+        Fri, 01 Mar 2024 03:12:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709291559; x=1709896359; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WpDmXfSvrjV3LnFP0ToCDaEvJaHWTSkPddd8OTrd0Rw=;
-        b=LVKSgPXDziy8XJcRQuZPN8smUI+AgzUZ1nCh/2QnkXl9WixBRJ74rM11mFa2BhqHlj
-         +yzmprDhuwfm5FpTKDuQ9eGpz+hScAhB2zKhqygdRYIa/KxjrBW6DsLiOoTFU1npLT+n
-         JphCUqXTpNBWnRej+T+TecjYtttQrETE7UqOdHv+aWyxjHYLEOqqPbXEZFLZN8yetdkB
-         YQbvyGUlIVbvQ5uNZYD6TO1SoJxTosL57ecNz0ffNXvLpQ6Q0VZZjMHuvWXC6avPPIwP
-         Oo+LCNY5FfdwsC0c+Y/+LoDZDapqq92hVfwfwN2f5+wF6L5z2bgkESGbKMivvYcMuUs6
-         SCZg==
+        d=gmail.com; s=20230601; t=1709291560; x=1709896360; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TFXpgh2dqrGyE1Rignr5uC/50XLP7JPOWIkkNnxbS/8=;
+        b=jpgMwL0k29ruQU1wmWPgGaVhI+N0FsK8OyXMmbF8ELJFe0V2miHvHPEVNR+F4uq5OA
+         BHtbcQaqdPEDW+NOS8thOur7RvB9wbd42uKsShqo5LbsvI7y4RlULKZTW8/xjAPRuPwn
+         bSKc0nCjFZ7PPujcF7a0RJVtEjniaRQcgTzzyyQLisgVHPBs8DFq7c+p8ulH3dRyOFzu
+         iJoXnAEGJYwiJxRdnG6iXWx88ZYkk/7bysZCVLFdfSNVuUAlvNEGsYGXc0AjmP4jN4HS
+         V+Fv7Jc9/3eG4uRRyk5G5m+M3aCOiJb7kmt6DKfFC1ww4mq1l3w4S2lVgxQPUjrp8h7D
+         KQXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709291559; x=1709896359;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WpDmXfSvrjV3LnFP0ToCDaEvJaHWTSkPddd8OTrd0Rw=;
-        b=V2EGVcZUAD3KegdGMFrEMXC5eDjIba1SMV4Rm5ZYMGL/gO9MQo6pMrspt7t9mvyZmA
-         6pwruf7tv38yj3C0JO2iQ+L01Fsw63ah8QojUMvP+QmMzhN/q2kmLvOFJfl6A1cfYMnJ
-         4O0x1Ordq91qKB2hLl3Kzl1nlsHPgAnZ0QyTLH0XWMWzIm/q7M58dNBLu4TWheFvmFHk
-         GLCcoztCX7Pv0aVrcRPDJXbmPNITR+LXMEKqDHwDyUvUM+BvbHOBeAlDyozhk71NA5zB
-         KmEgHY8npR9ryZPqFYhEw5awL0J3kQULcmt6Yke9KIHi2xlwE0HIAu0J3gW8y4/YbHl/
-         c4JA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhyLS4p4pLy1oftfAPUDrZfiX+Mn7n3nnKfF3SBXYci1WWLNFeC3zmtrxMTVVlIELJMAKbCcesUEEq9mnEOZjNhbqotKO+q8vPeM4/++uZXtmq2QnW6d+xScxaO7tdLCKfQ5RZ68sIPwzhPV/9RHrZObsYDSTOqOgeG7Y2uDg6CfdtWw==
-X-Gm-Message-State: AOJu0YxLPdr7lHZY3iBln9HaEMPS04xJ7H9dn3QOJcmnPxrXiGfItAYN
-	lhHDVOT/uFa3AdZizwawqKKzauNpWDziAiXplhsZhhP5NnXLbS1nCVarK41I
-X-Google-Smtp-Source: AGHT+IGaeVRjJhAGnRJBtIfjSECCgFgo+xctiX9YHIc0geBFEJq7kepaf3yCC0sfrkrvuOimxT4b4g==
-X-Received: by 2002:a17:906:5fd1:b0:a44:4fbd:a8fe with SMTP id k17-20020a1709065fd100b00a444fbda8femr974495ejv.1.1709291558645;
-        Fri, 01 Mar 2024 03:12:38 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709291560; x=1709896360;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TFXpgh2dqrGyE1Rignr5uC/50XLP7JPOWIkkNnxbS/8=;
+        b=LucRiZ2wiLVp4Vb0iupHP7W7vAkqXDACzFn1I67D/EGxL1KSIEd4XPpW6riVRY29Ua
+         QtUMEvnjWBRiqfhvMUHIDdSv3JPLKPtTqGYkazNFSb0mFkIKCc7Nxiy/2vo0d36I5vU8
+         Xy4eMQyj3Xxxt12mkzK6n0M+2i6SpwkKj/CfjdJujJZmg/M0FC3zuWE5mUSPualYm5cA
+         GmdkGh0aLZwC1E89OtyfMTCqSVKGJwxpIPJwHxER9ZCz3U+KhcyamemlWKN+0yJNIhbm
+         IF7ozSC9rJncoWuE90XBdRrAc97Jic3TDEAs/thNU0C6U1Q9khU2NysUQ/GJn5zsA5u4
+         kVvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXs8M/Mr26a3xxtfQarmAFImBDtiqybcSdQXRm71sdiZ5uGUePeUTX9o7rIeQ76kfougStsSWrxvFigKyVCiriQPqkkYGobp0ZYpT/eSgAFrXomXvXRf+nuDtwwoTIsJJ/9lQU7ZDcaCukyoHLAAHQ3LmidJM8vz+nrtPtpddWOOgSJxQ==
+X-Gm-Message-State: AOJu0YzQybvoVuIIGRUHDywVbgvXgLdgFZK2Qc92bwdlhIDlP6Gq0x/6
+	xv+wAv1vEA44Ng4D5yqYF9WvVgJzDZ5axD8olhK7hqCjwu5re7uV+zK1vPQh
+X-Google-Smtp-Source: AGHT+IFpNSPUOypt4J8usVOyPInHeu7emdsC4RhR6Ja7jYBR8q8w5QCpCguspfiiSDa3D7c6OJ67eA==
+X-Received: by 2002:a17:906:7f0f:b0:a3f:d260:4a72 with SMTP id d15-20020a1709067f0f00b00a3fd2604a72mr1197125ejr.27.1709291559560;
+        Fri, 01 Mar 2024 03:12:39 -0800 (PST)
 Received: from debian.fritz.box ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id n18-20020a170906089200b00a43a478e4f0sm1583254eje.180.2024.03.01.03.12.37
+        by smtp.gmail.com with ESMTPSA id n18-20020a170906089200b00a43a478e4f0sm1583254eje.180.2024.03.01.03.12.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 03:12:38 -0800 (PST)
+        Fri, 01 Mar 2024 03:12:39 -0800 (PST)
 From: Dimitri Fedrau <dima.fedrau@gmail.com>
 To: 
 Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
@@ -75,10 +77,12 @@ Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
 	linux-pwm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] pwm: add support for NXPs high-side switch MC33XS2410
-Date: Fri,  1 Mar 2024 12:11:21 +0100
-Message-Id: <20240301111124.29283-1-dima.fedrau@gmail.com>
+Subject: [PATCH v2 1/3] dt-bindings: pwm: add support for MC33XS2410
+Date: Fri,  1 Mar 2024 12:11:22 +0100
+Message-Id: <20240301111124.29283-2-dima.fedrau@gmail.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240301111124.29283-1-dima.fedrau@gmail.com>
+References: <20240301111124.29283-1-dima.fedrau@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -87,34 +91,138 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The MC33XS2410 is a four channel high-side switch. Featuring advanced
-monitoring and control function, the device is operational from 3.0 V to
-60 V. The device is controlled by SPI port for configuration.
+Adding documentation for NXPs MC33XS2410 high side switch.
 
-Changes in V2:
-  - fix title in devicetree binding
-  - fix commit message in devicetree binding patch
-  - remove external clock from pwms and create clocks property
-  - switch to unevaluatedProperties: false
-  - add missing properties for complete example:
-    - pwm-names
-    - pwms
-    - interrupts
-    - clocks
-
-Dimitri Fedrau (3):
-  dt-bindings: pwm: add support for MC33XS2410
-  pwm: add support for NXPs high-side switch MC33XS2410
-  pwm: mc33xs2410: add support for direct inputs
-
- .../bindings/pwm/nxp,mc33xs2410.yaml          | 118 +++++
- drivers/pwm/Kconfig                           |  12 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-mc33xs2410.c                  | 418 ++++++++++++++++++
- 4 files changed, 549 insertions(+)
+Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
+---
+ .../bindings/pwm/nxp,mc33xs2410.yaml          | 118 ++++++++++++++++++
+ 1 file changed, 118 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
- create mode 100644 drivers/pwm/pwm-mc33xs2410.c
 
+diff --git a/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml b/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+new file mode 100644
+index 000000000000..1729fe5c3dfb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+@@ -0,0 +1,118 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/nxp,mc33xs2410.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: High-side switch MC33XS2410
++
++maintainers:
++  - Dimitri Fedrau <dima.fedrau@gmail.com>
++
++allOf:
++  - $ref: pwm.yaml#
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++properties:
++  compatible:
++    const: nxp,mc33xs2410
++
++  reg:
++    maxItems: 1
++
++  spi-max-frequency:
++    maximum: 10000000
++
++  spi-cpha: true
++
++  spi-cs-setup-delay-ns:
++    minimum: 100
++    default: 100
++
++  spi-cs-hold-delay-ns:
++    minimum: 10
++    default: 10
++
++  spi-cs-inactive-delay-ns:
++    minimum: 300
++    default: 300
++
++  reset-gpios:
++    description:
++      GPIO connected to the active low reset pin.
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 3
++
++  pwm-names:
++    items:
++      - const: di0
++      - const: di1
++      - const: di2
++      - const: di3
++
++  pwms:
++    description:
++      Direct inputs(di0-3) are used to directly turn-on or turn-off the
++      outputs.
++    maxItems: 4
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    description:
++      The external clock can be used if the internal clock doesn't meet
++      timing requirements over temperature and voltage operating range.
++    maxItems: 1
++
++  vdd-supply:
++    description:
++      Logic supply voltage
++
++  vspi-supply:
++    description:
++      Supply voltage for SPI
++
++  vpwr-supply:
++    description:
++      Power switch supply
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++       pwm@0 {
++           compatible = "nxp,mc33xs2410";
++           reg = <0x0>;
++           spi-max-frequency = <4000000>;
++           spi-cpha;
++           spi-cs-setup-delay-ns = <100>;
++           spi-cs-hold-delay-ns = <10>;
++           spi-cs-inactive-delay-ns = <300>;
++           reset-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
++           #pwm-cells = <3>;
++           pwm-names = "di0", "di1", "di2", "di3";
++           pwms = <&pwm0 0 1000000>,
++                  <&pwm1 0 1000000>,
++                  <&pwm2 0 1000000>,
++                  <&pwm3 0 1000000>;
++           interrupt-parent = <&gpio0>;
++           interrupts = <31 IRQ_TYPE_LEVEL_LOW>;
++           clocks = <&clk_ext_fixed>;
++           vdd-supply = <&reg_3v3>;
++           vspi-supply = <&reg_3v3>;
++           vpwr-supply = <&reg_24v0>;
++       };
++    };
 -- 
 2.39.2
 
