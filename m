@@ -1,252 +1,121 @@
-Return-Path: <linux-pwm+bounces-1670-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1671-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D69586DFA7
-	for <lists+linux-pwm@lfdr.de>; Fri,  1 Mar 2024 11:53:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BBEF86DFF0
+	for <lists+linux-pwm@lfdr.de>; Fri,  1 Mar 2024 12:14:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED14B285458
-	for <lists+linux-pwm@lfdr.de>; Fri,  1 Mar 2024 10:53:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D9F4A1F22289
+	for <lists+linux-pwm@lfdr.de>; Fri,  1 Mar 2024 11:14:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ACF96BFC1;
-	Fri,  1 Mar 2024 10:53:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 356246CDAD;
+	Fri,  1 Mar 2024 11:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVKSgPXD"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261246BFA4;
-	Fri,  1 Mar 2024 10:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C006995C;
+	Fri,  1 Mar 2024 11:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709290410; cv=none; b=KjyFmVZfTyuQb0Z1cRiEC7k9nrSGrFIsMPODHhVudvpmv1a5cAR+UVQn0oGE8RK+/S78cNtszJqfDh3BxQlgHTkzEQnYaBubGiDvkwKPz9edoJcYHyTfnyX57T1ioFRGCht3bOKej8VsoJHVmjZ/jlurh0pmhi2SRLiNhp7GBWU=
+	t=1709291562; cv=none; b=hWtblprNlm7p32wgaYn5a/L/VwUeeaL3FP0UiZiunMdob3pcPMW8khv1w2LWlYLknosMRkNmPeaxcAg1IDVkFNHiFeZHaLL0Fgeu95XrVMtUmp0WFpB8bdx4BIXTV92JybuLYKKK7ifqlbGZTLqkop/BQnHr5bE+hC6m/iNrtoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709290410; c=relaxed/simple;
-	bh=t4ccu+GWe684aqIDSKF9bD//mn+pVsNSlItyqSKCQgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ThG9ajKwQuEM+6aiQJ6J1MrUBPD6GEoxaZRIvott21tk4R3d5oEEEZTMtlaZ2aPM5Y5luzQtV2wMga8FNnUMVnqDG3GMn8Ukc+W8/U0TRbE7vlYIEnJhRJFI4V2ddO8bzNVjwsemeyX/PjNJyhVKME/Vj3sZsoAyhVcEKa4DFXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1rg0UC-002Hbb-4N; Fri, 01 Mar 2024 18:51:29 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 01 Mar 2024 18:51:43 +0800
-Date: Fri, 1 Mar 2024 18:51:43 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Varshini Rajendran <varshini.rajendran@microchip.com>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
-	mturquette@baylibre.com, sboyd@kernel.org, davem@davemloft.net,
-	andi.shyti@kernel.org, tglx@linutronix.de, tudor.ambarus@linaro.org,
-	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	linus.walleij@linaro.org, sre@kernel.org,
-	u.kleine-koenig@pengutronix.de, p.zabel@pengutronix.de,
-	olivia@selenic.com, radu_nicolae.pirea@upb.ro,
-	richard.genoud@gmail.com, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-	wim@linux-watchdog.org, linux@roeck-us.net, linux@armlinux.org.uk,
-	andrei.simion@microchip.com, mihai.sain@microchip.com,
-	andre.przywara@arm.com, neil.armstrong@linaro.org, tony@atomide.com,
-	durai.manickamkr@microchip.com, geert+renesas@glider.be,
-	arnd@arndb.de, Jason@zx2c4.com, rdunlap@infradead.org,
-	rientjes@google.com, vbabka@suse.cz, mripard@kernel.org,
-	codrin.ciubotariu@microchip.com, eugen.hristev@collabora.com,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-	linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v4 00/39] Add support for sam9x7 SoC family
-Message-ID: <ZeGzPwdslHIj5IWt@gondor.apana.org.au>
-References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
+	s=arc-20240116; t=1709291562; c=relaxed/simple;
+	bh=G0Ytuzuhq5IT80Qym7JsUFTIlvAQ8ypbq/Q3B8+0Y5M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qjGov+WQrHbVPqWWAqSxGjq1BR8wPP0NdHyqhTosYS1Nsjsg53BA1Q7ZMBn9BG4BYDrxUDDww2jV/FCgvRuWIH9vq2seV29CrrpODkVcb0szqh3eYGASoQuWdj3D31LlsfFN+7cAHcnUU6OtUDTDoV8g5KO+LayhO11etT/suMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LVKSgPXD; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a446478b04bso180924666b.3;
+        Fri, 01 Mar 2024 03:12:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709291559; x=1709896359; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WpDmXfSvrjV3LnFP0ToCDaEvJaHWTSkPddd8OTrd0Rw=;
+        b=LVKSgPXDziy8XJcRQuZPN8smUI+AgzUZ1nCh/2QnkXl9WixBRJ74rM11mFa2BhqHlj
+         +yzmprDhuwfm5FpTKDuQ9eGpz+hScAhB2zKhqygdRYIa/KxjrBW6DsLiOoTFU1npLT+n
+         JphCUqXTpNBWnRej+T+TecjYtttQrETE7UqOdHv+aWyxjHYLEOqqPbXEZFLZN8yetdkB
+         YQbvyGUlIVbvQ5uNZYD6TO1SoJxTosL57ecNz0ffNXvLpQ6Q0VZZjMHuvWXC6avPPIwP
+         Oo+LCNY5FfdwsC0c+Y/+LoDZDapqq92hVfwfwN2f5+wF6L5z2bgkESGbKMivvYcMuUs6
+         SCZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709291559; x=1709896359;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WpDmXfSvrjV3LnFP0ToCDaEvJaHWTSkPddd8OTrd0Rw=;
+        b=V2EGVcZUAD3KegdGMFrEMXC5eDjIba1SMV4Rm5ZYMGL/gO9MQo6pMrspt7t9mvyZmA
+         6pwruf7tv38yj3C0JO2iQ+L01Fsw63ah8QojUMvP+QmMzhN/q2kmLvOFJfl6A1cfYMnJ
+         4O0x1Ordq91qKB2hLl3Kzl1nlsHPgAnZ0QyTLH0XWMWzIm/q7M58dNBLu4TWheFvmFHk
+         GLCcoztCX7Pv0aVrcRPDJXbmPNITR+LXMEKqDHwDyUvUM+BvbHOBeAlDyozhk71NA5zB
+         KmEgHY8npR9ryZPqFYhEw5awL0J3kQULcmt6Yke9KIHi2xlwE0HIAu0J3gW8y4/YbHl/
+         c4JA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhyLS4p4pLy1oftfAPUDrZfiX+Mn7n3nnKfF3SBXYci1WWLNFeC3zmtrxMTVVlIELJMAKbCcesUEEq9mnEOZjNhbqotKO+q8vPeM4/++uZXtmq2QnW6d+xScxaO7tdLCKfQ5RZ68sIPwzhPV/9RHrZObsYDSTOqOgeG7Y2uDg6CfdtWw==
+X-Gm-Message-State: AOJu0YxLPdr7lHZY3iBln9HaEMPS04xJ7H9dn3QOJcmnPxrXiGfItAYN
+	lhHDVOT/uFa3AdZizwawqKKzauNpWDziAiXplhsZhhP5NnXLbS1nCVarK41I
+X-Google-Smtp-Source: AGHT+IGaeVRjJhAGnRJBtIfjSECCgFgo+xctiX9YHIc0geBFEJq7kepaf3yCC0sfrkrvuOimxT4b4g==
+X-Received: by 2002:a17:906:5fd1:b0:a44:4fbd:a8fe with SMTP id k17-20020a1709065fd100b00a444fbda8femr974495ejv.1.1709291558645;
+        Fri, 01 Mar 2024 03:12:38 -0800 (PST)
+Received: from debian.fritz.box ([93.184.186.109])
+        by smtp.gmail.com with ESMTPSA id n18-20020a170906089200b00a43a478e4f0sm1583254eje.180.2024.03.01.03.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 03:12:38 -0800 (PST)
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: 
+Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] pwm: add support for NXPs high-side switch MC33XS2410
+Date: Fri,  1 Mar 2024 12:11:21 +0100
+Message-Id: <20240301111124.29283-1-dima.fedrau@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240223171342.669133-1-varshini.rajendran@microchip.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 23, 2024 at 10:43:42PM +0530, Varshini Rajendran wrote:
-> This patch series adds support for the new SoC family - sam9x7.
->  - The device tree, configs and drivers are added
->  - Clock driver for sam9x7 is added
->  - Support for basic peripherals is added
->  - Target board SAM9X75 Curiosity is added
-> 
->  Changes in v4:
->  --------------
-> 
->  - Addressed all the review comments in the patches
->  - Picked up all Acked-by and Reviewed-by tags
->  - Dropped applied patches from the series
->  - Added pwm node and related dt binding documentation
->  - Added support for exporting some clocks to DT
->  - Dropped USB related patches and changes. See NOTE.
->  - All the specific changes are captured in the corresponding patches
-> 
->  NOTE: Owing to the discussion here
->  https://lore.kernel.org/linux-devicetree/CAL_JsqJ9PrX6fj-EbffeJce09MXs=B7t+KS_kOinxaRx38=WxA@mail.gmail.com/
->  the USB related changes are dropped from this series in order to enable
->  us to work on the mentioned issues before adding new compatibles as
->  said. The issues/warnings will be addressed in subsequent patches.
->  After which the USB related support for sam9x7 SoCs will be added. Hope
->  this works out fine.
-> 
->  Changes in v3:
->  --------------
-> 
->  - Fixed the DT documentation errors pointed out in v2.
->  - Dropped Acked-by tag in tcb DT doc patch as it had to be adapted
->    according to sam9x7 correctly.
->  - Picked by the previously missed tags.
->  - Dropped this patch "dt-bindings: usb: generic-ehci: Document clock-names
->    property" as the warning was not found while validating DT-schema for
->    at91-sam9x75_curiosity.dtb.
->  - Dropped redundant words in the commit message.
->  - Fixed the CHECK_DTBS warnings validated against
->    at91-sam9x75_curiosity.dtb.
->  - Renamed dt nodes according to naming convention.
->  - Dropped unwanted status property in dts.
->  - Removed nodes that are not in use from the board dts.
->  - Removed spi DT doc patch from the series as it was already applied
->    and a fix patch was applied subsequently. Added a patch to remove the
->    compatible to adapt sam9x7.
->  - Added sam9x7 compatibles in usb dt documentation.
-> 
-> 
->  Changes in v2:
->  --------------
-> 
->  - Added sam9x7 specific compatibles in DT with fallbacks
->  - Documented all the newly added DT compatible strings
->  - Added device tree for the target board sam9x75 curiosity and
->    documented the same in the DT bindings documentation
->  - Removed the dt nodes that are not supported at the moment
->  - Removed the configs added by previous version that are not supported
->    at the moment
->  - Fixed all the corrections in the commit message
->  - Changed all the instances of copyright year to 2023
->  - Added sam9x7 flag in PIT64B configuration
->  - Moved macro definitions to header file
->  - Added another divider in mck characteristics in the pmc driver
->  - Fixed the memory leak in the pmc driver
->  - Dropped patches that are no longer needed
->  - Picked up Acked-by and Reviewed-by tags
-> 
-> 
-> Varshini Rajendran (39):
->   dt-bindings: net: cdns,macb: add sam9x7 ethernet interface
->   dt-bindings: atmel-sysreg: add sam9x7
->   dt-bindings: crypto: add sam9x7 in Atmel AES
->   dt-bindings: crypto: add sam9x7 in Atmel SHA
->   dt-bindings: crypto: add sam9x7 in Atmel TDES
->   dt-bindings: i2c: at91: Add sam9x7 compatible string
->   dt-bindings: atmel-ssc: add microchip,sam9x7-ssc
->   dt-bindings: atmel-nand: add microchip,sam9x7-pmecc
->   dt-bindings: pinctrl: at91: add sam9x7
->   dt-bindings: rng: atmel,at91-trng: add sam9x7 TRNG
->   dt-bindings: rtt: at91rm9260: add sam9x7 compatible
->   dt-bindings: serial: atmel,at91-usart: add compatible for sam9x7.
->   ASoC: dt-bindings: atmel-classd: add sam9x7 compatible
->   dt-bindings: pwm: at91: Add sam9x7 compatible strings list
->   dt-bindings: watchdog: sama5d4-wdt: add compatible for sam9x7-wdt
->   spi: dt-bindings: atmel,at91rm9200-spi: remove 9x60 compatible from
->     list
->   ASoC: dt-bindings: microchip: add sam9x7
->   ARM: at91: pm: add support for sam9x7 SoC family
->   ARM: at91: pm: add sam9x7 SoC init config
->   ARM: at91: add support in SoC driver for new sam9x7
->   dt-bindings: clk: at91: add sam9x7
->   dt-bindings: clk: at91: add sam9x7 clock controller
->   clk: at91: clk-sam9x60-pll: re-factor to support individual core freq
->     outputs
->   clk: at91: sam9x7: add support for HW PLL freq dividers
->   clk: at91: sama7g5: move mux table macros to header file
->   dt-bindings: clock: at91: Allow PLLs to be exported and referenced in
->     DT
->   clk: at91: sam9x7: add sam9x7 pmc driver
->   dt-bindings: irqchip/atmel-aic5: Add support for sam9x7 aic
->   irqchip/atmel-aic5: Add support to get nirqs from DT for sam9x60 &
->     sam9x7
->   power: reset: at91-poweroff: lookup for proper pmc dt node for sam9x7
->   power: reset: at91-reset: add reset support for sam9x7 SoC
->   power: reset: at91-reset: add sdhwc support for sam9x7 SoC
->   dt-bindings: reset: atmel,at91sam9260-reset: add sam9x7
->   dt-bindings: power: reset: atmel,sama5d2-shdwc: add sam9x7
->   ARM: at91: Kconfig: add config flag for SAM9X7 SoC
->   ARM: configs: at91: enable config flags for sam9x7 SoC family
->   ARM: dts: at91: sam9x7: add device tree for SoC
->   dt-bindings: arm: add sam9x75 curiosity board
->   ARM: dts: at91: sam9x75_curiosity: add sam9x75 curiosity board
-> 
->  .../devicetree/bindings/arm/atmel-at91.yaml   |    6 +
->  .../devicetree/bindings/arm/atmel-sysregs.txt |    7 +-
->  .../bindings/clock/atmel,at91rm9200-pmc.yaml  |    2 +
->  .../bindings/clock/atmel,at91sam9x5-sckc.yaml |    4 +-
->  .../crypto/atmel,at91sam9g46-aes.yaml         |    6 +-
->  .../crypto/atmel,at91sam9g46-sha.yaml         |    6 +-
->  .../crypto/atmel,at91sam9g46-tdes.yaml        |    6 +-
->  .../bindings/i2c/atmel,at91sam-i2c.yaml       |    4 +-
->  .../interrupt-controller/atmel,aic.txt        |    2 +-
->  .../devicetree/bindings/misc/atmel-ssc.txt    |    1 +
->  .../devicetree/bindings/mtd/atmel-nand.txt    |    1 +
->  .../devicetree/bindings/net/cdns,macb.yaml    |    5 +
->  .../bindings/pinctrl/atmel,at91-pinctrl.txt   |    2 +
->  .../power/reset/atmel,sama5d2-shdwc.yaml      |    3 +
->  .../bindings/pwm/atmel,at91sam-pwm.yaml       |    3 +
->  .../reset/atmel,at91sam9260-reset.yaml        |    4 +
->  .../bindings/rng/atmel,at91-trng.yaml         |    4 +
->  .../bindings/rtc/atmel,at91sam9260-rtt.yaml   |    4 +-
->  .../bindings/serial/atmel,at91-usart.yaml     |   12 +-
->  .../bindings/sound/atmel,sama5d2-classd.yaml  |    7 +-
->  .../sound/microchip,sama7g5-i2smcc.yaml       |   11 +-
->  .../bindings/spi/atmel,at91rm9200-spi.yaml    |    1 -
->  .../bindings/watchdog/atmel,sama5d4-wdt.yaml  |   12 +-
->  arch/arm/boot/dts/microchip/Makefile          |    3 +
->  .../dts/microchip/at91-sam9x75_curiosity.dts  |  309 +++++
->  arch/arm/boot/dts/microchip/sam9x60.dtsi      |    1 +
->  arch/arm/boot/dts/microchip/sam9x7.dtsi       | 1214 +++++++++++++++++
->  arch/arm/configs/at91_dt_defconfig            |    1 +
->  arch/arm/mach-at91/Kconfig                    |   23 +-
->  arch/arm/mach-at91/Makefile                   |    1 +
->  arch/arm/mach-at91/generic.h                  |    2 +
->  arch/arm/mach-at91/pm.c                       |   35 +
->  arch/arm/mach-at91/sam9x7.c                   |   34 +
->  drivers/clk/at91/Makefile                     |    1 +
->  drivers/clk/at91/clk-sam9x60-pll.c            |   50 +-
->  drivers/clk/at91/pmc.h                        |   18 +
->  drivers/clk/at91/sam9x60.c                    |    7 +
->  drivers/clk/at91/sam9x7.c                     |  946 +++++++++++++
->  drivers/clk/at91/sama7g5.c                    |   42 +-
->  drivers/irqchip/irq-atmel-aic5.c              |   12 +-
->  drivers/power/reset/Kconfig                   |    4 +-
->  drivers/power/reset/at91-sama5d2_shdwc.c      |    1 +
->  drivers/soc/atmel/soc.c                       |   23 +
->  drivers/soc/atmel/soc.h                       |    9 +
->  include/dt-bindings/clock/at91.h              |    4 +
->  45 files changed, 2788 insertions(+), 65 deletions(-)
->  create mode 100644 arch/arm/boot/dts/microchip/at91-sam9x75_curiosity.dts
->  create mode 100644 arch/arm/boot/dts/microchip/sam9x7.dtsi
->  create mode 100644 arch/arm/mach-at91/sam9x7.c
->  create mode 100644 drivers/clk/at91/sam9x7.c
-> 
-> -- 
-> 2.25.1
+The MC33XS2410 is a four channel high-side switch. Featuring advanced
+monitoring and control function, the device is operational from 3.0 V to
+60 V. The device is controlled by SPI port for configuration.
 
-Patches 3-5 and 10 applied.  Thanks.
+Changes in V2:
+  - fix title in devicetree binding
+  - fix commit message in devicetree binding patch
+  - remove external clock from pwms and create clocks property
+  - switch to unevaluatedProperties: false
+  - add missing properties for complete example:
+    - pwm-names
+    - pwms
+    - interrupts
+    - clocks
+
+Dimitri Fedrau (3):
+  dt-bindings: pwm: add support for MC33XS2410
+  pwm: add support for NXPs high-side switch MC33XS2410
+  pwm: mc33xs2410: add support for direct inputs
+
+ .../bindings/pwm/nxp,mc33xs2410.yaml          | 118 +++++
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-mc33xs2410.c                  | 418 ++++++++++++++++++
+ 4 files changed, 549 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+ create mode 100644 drivers/pwm/pwm-mc33xs2410.c
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.39.2
+
 
