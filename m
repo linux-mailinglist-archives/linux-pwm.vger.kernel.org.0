@@ -1,147 +1,122 @@
-Return-Path: <linux-pwm+bounces-1687-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1688-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A5A786FF65
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Mar 2024 11:48:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F34A3870300
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Mar 2024 14:42:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9AEE41C21096
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Mar 2024 10:48:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E8311C215F2
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Mar 2024 13:42:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3479837179;
-	Mon,  4 Mar 2024 10:48:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0334B3E48C;
+	Mon,  4 Mar 2024 13:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjvAJLQO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E36D20B27
-	for <linux-pwm@vger.kernel.org>; Mon,  4 Mar 2024 10:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3121EB2C;
+	Mon,  4 Mar 2024 13:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709549322; cv=none; b=Da7AKrIMExZRReZ0cwwIBrh1CEnqe9FwAaPTglHXM7qXh3JWnHy18CTR1jTpYz1Fk5+zOQbjQaReRgM5nU2xn64+aAM1W7CgqQ2vP/603PPZou36kGN4mjLgaQ2wVWp6lypVV2Tpx8mp7l+X7W9IUCR4KdQ0YX83lcW7lAkY3JY=
+	t=1709559665; cv=none; b=usMgvyog5+De3s9M7KqvXx4f5JhD7veNrsckU71UguD2UAl15VodnMk2qkLv0UdpC6EYEBWm0niL38dgzbhqahi5DRxy7YmTFPiQhNJhVVZUcYmOpxsVlW8TIo/jq+XIi0V1PZoeqPw2zar9pOlSv0ubhzGPJBz2Xq/xoLdOGys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709549322; c=relaxed/simple;
-	bh=kx2zpyXI8oxJfPrLUgbgStNZsYw4K1yjsM3fNQrI1l4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IrwVvZ4qZgjrdJ9n5K6g/Vqox8328AWcllR1fadmFLTrCtE0jLg4ljpG6hCUgS4VUSUaj2ZREcY0S6l/QeDpHy4Wp4LPqrNLR963TqAm9Fk/vI491UkHDmfadiiTgGYM07LsqHkDgD4n/NCWRuB4hYj3CsqlcetBfND7Pbq94UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rh5s6-0007d8-1h; Mon, 04 Mar 2024 11:48:38 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rh5s5-004Klt-GL; Mon, 04 Mar 2024 11:48:37 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rh5s5-00Gbba-1M;
-	Mon, 04 Mar 2024 11:48:37 +0100
-Date: Mon, 4 Mar 2024 11:48:37 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Dong Aisheng <aisheng.dong@nxp.com>
-Cc: linux-pwm@vger.kernel.org, imx@lists.linux.dev, dongas86@gmail.com, 
-	shawnguo@kernel.org, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/1] pwm: imx-tpm: fix probe crash due to access
- registers without clock
-Message-ID: <qpk3pwirjmxf4agstv6bisdefrzv5k24uxiszyobpf7yw3mxt3@ryj7hoyvp4cc>
-References: <20240304102929.893542-1-aisheng.dong@nxp.com>
+	s=arc-20240116; t=1709559665; c=relaxed/simple;
+	bh=BQE9hFzI13IZRZo749AAQrUf4z+0QDBsfPu5T/4OTlQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s/99RKek9tk2KOAASfliFSNNr3ujohQ8C11ci74r7kHPagREc7gv0aoLZplncy4Drm83LZz8f2gyZgf53RBt0IYSaMUCN1rvEjzS4om7stPOXswx0Wh6AfcT2gUSc7Gn01v0Cm8kN17/0yO5Ka2S56Fp1HMXihb0VJoDu8Z44OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QjvAJLQO; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5a128e202b6so831860eaf.2;
+        Mon, 04 Mar 2024 05:41:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709559663; x=1710164463; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5/dHCpgDDmSuBOfKLpH4euKRiDvMD04w7x34y1sbbGY=;
+        b=QjvAJLQOfdYN5YNyyJLVXsLMQIUBFGP8rfn0wUsSTTSneGSPT01RszcUqljGvwa0m9
+         F1f3cfWF34w0xSU/KD4q5Uga+/Vt9W6lT5bhswikwSQytfV0BYc83AYzMFnxKHYUSX6I
+         kiBlDcWT1kdRWRD628HSIIDFXBPv/4U7U6JSFQiLf8FEdC7ca6Ac5kefDWCboaXFIy4S
+         mWhstasd9ElNjAWHEpLbmlqflgcE6FAQ65v48moGed2kZSwwozRqIYPkJ7nbMO94jrAb
+         k1l7KHQE0e6NDoYCsvnd+YnxXFoBbSYk2sjE87yg4fJi/fZyeH2epjWNfecwb0CelN2/
+         JcbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709559663; x=1710164463;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5/dHCpgDDmSuBOfKLpH4euKRiDvMD04w7x34y1sbbGY=;
+        b=iB8bB2bCynPnq3I0lnt3tVsNsNtRut2Dha36GRJVNSyCnRrEhd5V4dqHhHK89Sjxn4
+         A7u8zOJFGDUj8Bvg+C9A6DFkk0ysBmzow24R/AwbXMFthjwkLMmOcLE63IpOzYyycbHr
+         8J9Jfw4YoIh9GhmrlhJrs7K3kL8F5zudfQqUtAQkzjjQW12TbcKIQKZwoIOvgIaCnzRe
+         6P7RmyjroJxuPDShEG/n58YSjjeCJe+AycA/5t9Wf43g+j8O7B3nqp81PDtdYYLbWeKW
+         aZyXwcvWzU1ZL9CnoMGU6p1+muKO/O4iylVvMNYlAdd0rEgmWmGVlxnWXuXAIZvcYfzc
+         9Siw==
+X-Forwarded-Encrypted: i=1; AJvYcCUo2RyTPFE9OMwEBCYMYM4ff3KGt6YiSIJTrsITVfC3bk3ZoJEtIZKsEYqvPLfg7/083suOmTOWZFED9m5An2+qNtRjjnEgby78TpisXg3Q8hdnwZFaS8AEQi+B/lc1xCJ91T+5WqljbPWt+m0Fx0DlpNVgABuOQ8qra/jk7miHWg0CGg==
+X-Gm-Message-State: AOJu0YxxEZ/KPYJos06MzmluZFht1GHpccu8emUzucf68JSolRkFIr/7
+	9O9DlkN72J3T6N1ut8AfNlXP6AB8mdYY8l17r/Pdur1PN4dZpxRBW4kIsoWZ/+HAHCuJtDkOA9e
+	w9HhATh1O/9px7J+0U1Mk5D1F2cbdXziTR5vdYqJY
+X-Google-Smtp-Source: AGHT+IGApFrYWTCxf7o+Xw3AU3j0mc3yLDQDYin1YtShfj5gmezRzs9SAsWTz6aEslad9W0wPmt7sBbXkXDMb2pSQo4=
+X-Received: by 2002:a4a:2559:0:b0:5a1:15a2:114c with SMTP id
+ v25-20020a4a2559000000b005a115a2114cmr4854461ooe.0.1709559663519; Mon, 04 Mar
+ 2024 05:41:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2oimvvwb6qepn7wc"
-Content-Disposition: inline
-In-Reply-To: <20240304102929.893542-1-aisheng.dong@nxp.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-
-
---2oimvvwb6qepn7wc
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20240304085933.1246964-1-qiujingbao.dlmu@gmail.com>
+ <20240304090248.1247215-1-qiujingbao.dlmu@gmail.com> <91f0a339-ac0e-49df-bd26-dbfe1485308f@linaro.org>
+In-Reply-To: <91f0a339-ac0e-49df-bd26-dbfe1485308f@linaro.org>
+From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Date: Mon, 4 Mar 2024 21:40:52 +0800
+Message-ID: <CAJRtX8TPz_jTvPmuBW8t=mC+BR1kWmu=GS9K1k6ys7U9u0ENFw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: u.kleine-koenig@pengutronix.de, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	dlan@gentoo.org, inochiama@outlook.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Dong,
-
-On Mon, Mar 04, 2024 at 06:29:29PM +0800, Dong Aisheng wrote:
-> The following commit abf6569d6482 ("pwm: imx-tpm: Make use of
-> devm_pwmchip_alloc() function") introduced an issue that accessing
-> registers without clock which results in the following boot crash
-> on MX7ULP platform. Fixed it by enabling clock properly.
->=20
-> Unhandled fault: external abort on non-linefetch (0x1008) at 0xf0978004
-> [f0978004] *pgd=3D64009811, *pte=3D40250653, *ppte=3D40250453
-> Internal error: : 1008 [#1] SMP ARM
-> Modules linked in:
-> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.8.0-rc6-next-20240301 #18
-> Hardware name: Freescale i.MX7ULP (Device Tree)
-> PC is at pwm_imx_tpm_probe+0x1c/0xd8
-> LR is at __devm_ioremap_resource+0xf8/0x1dc
-> pc : [<c0629e58>]    lr : [<c0562d4c>]    psr: 80000053
-> sp : f0825e10  ip : 00000000  fp : 00000000
-> r10: c148f8c0  r9 : c41fc338  r8 : c164b000
-> r7 : 00000000  r6 : c406b400  r5 : c406b410  r4 : f0978000
-> r3 : 00000005  r2 : 00000000  r1 : a0000053  r0 : f0978000
-> Flags: Nzcv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  Segment none
-> Control: 10c5387d  Table: 6000406a  DAC: 00000051
+On Mon, Mar 4, 2024 at 6:15=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 04/03/2024 10:02, Jingbao Qiu wrote:
+> > Implement the PWM driver for CV1800.
+> >
+> > Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+>
 > ...
-> Call trace:
->  pwm_imx_tpm_probe from platform_probe+0x58/0xb0
->  platform_probe from really_probe+0xc4/0x2e0
->  really_probe from __driver_probe_device+0x84/0x19c
->  __driver_probe_device from driver_probe_device+0x2c/0x104
->  driver_probe_device from __driver_attach+0x90/0x170
->  __driver_attach from bus_for_each_dev+0x7c/0xd0
->  bus_for_each_dev from bus_add_driver+0xc4/0x1cc
->  bus_add_driver from driver_register+0x7c/0x114
->  driver_register from do_one_initcall+0x58/0x270
->  do_one_initcall from kernel_init_freeable+0x170/0x218
->  kernel_init_freeable from kernel_init+0x14/0x140
->  kernel_init from ret_from_fork+0x14/0x20
->=20
-> Cc: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> Fixes: abf6569d6482 ("pwm: imx-tpm: Make use of devm_pwmchip_alloc() func=
-tion")
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+>
+> > +
+> > +     ret =3D devm_add_action_or_reset(&pdev->dev, devm_clk_rate_exclus=
+ive_put,
+> > +                                    priv->clk);
+> > +     if (ret) {
+> > +             clk_rate_exclusive_put(priv->clk);
+> > +             return ret;
+>
+> Please test this path - you have double put.
+>
 
-LGTM, applied to
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
+Thank you for your reply. You're right. If the
+devm_add_action_or_reset()  function
+fails to add an action, it will call the action.
 
-Thanks
-Uwe
+By the way, if I need to resend the patch, should I wait for the
+maintainer to review it, or
+should I immediately correct this error and resend it.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---2oimvvwb6qepn7wc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXlpwQACgkQj4D7WH0S
-/k4jAAf/UWWbceHFixLTHxbBE2mSCAfOAeD4DOXlqnbQiV3tw1COJ3yM2sEynPC9
-Ipxjbohbf1F6m5ShNEtbgfLiT6Di7O1+0UowAtYGKU3EgHDJzz0Yd5ApYbxlTdH5
-c70ARDxsuGIqaVNLoXxR+5FAG+qYrXSjeWNo99WpehBaVPBfa56E32NfBfmAcVUN
-WXPf9Bqgvjf6oies7xXDFZJSpePd4J633nYlHYTax/7S7jY/HY2IMxaviFPRyHN8
-j8r51XUSExdch6H1DU8gUM4318i8ZPyZ5SBkSTBrqBig2TDUfU1pFv7A8KRpX+wl
-zMFGYXhxUJVbkTgUL3XXvEe37GLcWQ==
-=kMEF
------END PGP SIGNATURE-----
-
---2oimvvwb6qepn7wc--
+Best regards,
+Jingbao Qiu
 
