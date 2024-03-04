@@ -1,123 +1,153 @@
-Return-Path: <linux-pwm+bounces-1681-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1682-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C86286F0FB
-	for <lists+linux-pwm@lfdr.de>; Sat,  2 Mar 2024 16:52:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAE8F86FC86
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Mar 2024 09:59:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 336A11F217DE
-	for <lists+linux-pwm@lfdr.de>; Sat,  2 Mar 2024 15:52:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2887C1C21B05
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Mar 2024 08:59:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 318871B5B1;
-	Sat,  2 Mar 2024 15:52:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1F4A18E1F;
+	Mon,  4 Mar 2024 08:59:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vM8rwEgN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jnp0AdMf"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7BF18627
-	for <linux-pwm@vger.kernel.org>; Sat,  2 Mar 2024 15:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331A21AAD4;
+	Mon,  4 Mar 2024 08:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709394753; cv=none; b=M8bMGfHqj6aUr/DMRnPGpr2yc2pAAmiU0qSd89kNX3lbSQPG8/6hH4Yo71XiqhUF2mD9SUjq9JMUhBbbw7d+Jt3ksJVAswnpZnVeVe7l4I5uCQnN4o7VPyyLY2UXm9d0eUIbD39GiNynzWU84RmOyU3Bom25ehNf4e9cnxxLD1c=
+	t=1709542779; cv=none; b=onz8jKTFhe36I+xXOv3jIc50BskvKkUxpeFY0JqUgVw+QL+mw9oKFHy52Ojhpi9WjitZaCib/GAeSUmK67hq1WJ8ohk63/D9jH4F4N5jUBgzGKghIbjBT0YY0TwwgCGpgEsg2xIBomhQ/6ohdjhy22K7/GXg1YSuNmA6abui7AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709394753; c=relaxed/simple;
-	bh=IpeQuxZYHbOib0UXMdpmSgRLjR8MvxoaSxSpZYZToPE=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=Snd3XceErv3VHjm42Qo1/UjUvNiDJDxRZNxGD2FGB7utEC62oEdyA6pfSzuf1wY1jBpPtbK0xNLTXUuVXEN4ki4JvdTEhJtiDNxTZwHKZwugO3YAOooXqnxa+IHEyim9sbuHy+QF0OZICGl5Y+IGeJIY6bxTNpv4qZf2Xv/0dtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vM8rwEgN; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412d5727ca8so3371885e9.1
-        for <linux-pwm@vger.kernel.org>; Sat, 02 Mar 2024 07:52:29 -0800 (PST)
+	s=arc-20240116; t=1709542779; c=relaxed/simple;
+	bh=a2u99KZ/g8QH3+B1Mc/rpYOTu5OPl8vhwz5casgIp5Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XZfVZwfr4xZUMDyVVD3IVZLeFLOOSR/paSGBvMFYmIiZZS+WyGnh7q3vxJUzx63+Iq01c1zaBcuOH4wNCuTaDb3DaIJe+yLNWXvhRup8cPNYALsEmTYUYsMG548VmtLjGG81upiSSdFBgZqBm0ViNGs+YEemBr0gGgGWqoGPMbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jnp0AdMf; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dc9222b337so42062665ad.2;
+        Mon, 04 Mar 2024 00:59:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709394748; x=1709999548; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
-         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HFHn5+gTrYvZdU2UMo/5Uu0slaoxEdGH237gIhxi8Fk=;
-        b=vM8rwEgNt86TgO93LZO8zpZ26DtyGOWECruz/CQ5hcynxeX/kKPL0C1+E4se/yGGH3
-         eKswlZSk+eq5N5NcBmR349G4cvIscSztS1QM11ZmMm8GSrBHJj9F3nMxDbV1LpKKNVPl
-         4YmGtOzA8k4x/yuLLij1ngC1fq6PHGOZLc1NhCMNnepvsrmezHeyCbPrlUnBhM5yDyDZ
-         TQiMXjVkPpxFS0O54cvmZs/Gi8MBHlfOUfi0OeYipBMPsP9BJaq6SZ9tfE/OuMShV1tg
-         WX1bO0m8UEEP54bEXS67GQ+hgeTINRCOvjnCO8bGPFxbfBlJCCnYqXIU6TvYfhI1CfQS
-         Mk0Q==
+        d=gmail.com; s=20230601; t=1709542777; x=1710147577; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NCgMNgIsQ5yH5yGtzt3c+nzo8902LdhWh/xibCGfDJw=;
+        b=jnp0AdMfJGu712i5JtvvbNvNGUzKJcu4re/EZ48wxCLuGPad7sN1y1axDUk1ALaLUN
+         8Mb1w5bvpxtcuLrwxZCDq87It2KSGx7riU32wzL+aZyJiqZ3uE9IAYNyH2JFOfcr61I4
+         zkB+MbQp2s/vyNc/fuTeLHwftqI8SvMrUjMOluxtQvjwAciGUj8FVNxG4li0pUhOcYa8
+         wy5N///zkCopQAUIlCVvanoI4ZsS727Z0yitWUHCJ9IkUbMtnlEVNju5krlLrkJhFt/1
+         fnHioszQNAyU5OUdY4Q8QgJcTmMBY6AiS7TadpZq3QAzztECOWCJjo4iR/+3DzHKs2h/
+         IYgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709394748; x=1709999548;
-        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
-         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HFHn5+gTrYvZdU2UMo/5Uu0slaoxEdGH237gIhxi8Fk=;
-        b=gADzOXT1KdY9OoWgGxCzVQKo7ntBfq6Q/5umFAPCjQwyqQ8fgk/a2CoTPCCTWJ1Xl/
-         PfSlfnXYDS5PgVttZETFGeE8WPk7tloCEMcyWqJd9KVykoXBn355uArN4hleUolrDKA+
-         14nny64sj6lDoLcArYp8C0OKvkomvZDJveaVsgrR9QQJPbHHMo/GDUszW5smrT+ZAUkg
-         NyuEAV904/Wh+DwiEqhO0FhIsxyHSRX3T4rcL+5eaFIG1l4icy/kMahNRQXToArV0++M
-         5b5xF1miEpALXkZMHPe5VYtEypCxZGpiiDK19lPkiIa/gXwI8qWKa3CT2M6Berjy920Q
-         7Fdg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHonXHZQ8H1QAlVcxcW8gRP+pVpTAZum+jWa2NTLeoq/FVeCbgS2YD6mh7gPDqyxhB6vKBAxlY0Bp5uzlfCCTOXqIezWvmDPoo
-X-Gm-Message-State: AOJu0YxmmjTPX2hTSmdGn9LJHjj6x9PhUcPDvgViNQsiBmScSbxpJTiG
-	Zo51gb2v3zt8tmC/2XTI/ti0zmC7zju9MFLqboW18fajFKyIShLKzbjXlxLGWmU=
-X-Google-Smtp-Source: AGHT+IHPEsKg9YL345VNJehawUEGJqX6jI1a45uLPxbSI3cJXqB9wbFooKxQnCv4HflprTmT7kTmXA==
-X-Received: by 2002:a05:600c:4f44:b0:412:a5ed:bb57 with SMTP id m4-20020a05600c4f4400b00412a5edbb57mr4177808wmq.31.1709394747993;
-        Sat, 02 Mar 2024 07:52:27 -0800 (PST)
-Received: from localhost ([2a01:e0a:3c5:5fb1:a62b:dc91:b659:dbf5])
-        by smtp.gmail.com with ESMTPSA id d22-20020a05600c34d600b00412d6357945sm2015404wmq.27.2024.03.02.07.52.27
+        d=1e100.net; s=20230601; t=1709542777; x=1710147577;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NCgMNgIsQ5yH5yGtzt3c+nzo8902LdhWh/xibCGfDJw=;
+        b=ss8bEWMzF6EBKEyE6GaO1j/atPgRICqPmV84/ZVFm3WcCbRVjqy0ROD+Sn20zoVujn
+         dvI/xBFzDmmJYSwcummi+E7h2O1m6bZ95WSYDj+1GikwtC1HrUnbRUl8WkCdy3XEmJ3W
+         Jnwr9yD1oCuhBl1ehPQ4qPbVW5kPeWcHN6u7LqbjdQ88KnfYgusZvRNVokufcFJNCC5+
+         97ZlTKS7vpOnPPbxHPpkUcaAxK3UBUHejzBN4WWqjxhV+oV76K0G22NASzRIRFgO4jTr
+         uM3GYJgQ1lXTIOXZYaZ7Q5C2VQcEeDAYnpCyCxQQQqIUnRTB84aqWXhj9PRRL2IX6WVt
+         HCXg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAbVLkKGuIbxCu0JiDq+4ik8qaz4YAZjw1ksNeYPoDKMayftfoSjbBu12uE7ovgGzqY4jq8lmc1PKqhKGqamgYZadfA8OkRURcCW8qGKVtOzZxn29Rq8hZ0KhmMjuBY6pkUl+cniMvrQ==
+X-Gm-Message-State: AOJu0YwJwRVNBUtyMvUsqOq0QBKTyT29OBn3q0kTcX5kv/af3/cgp+ih
+	IrD3dIv6kBnxVRNrave38O4LAJci/4BdT3vB7wrW+jhj8cbGtH9t
+X-Google-Smtp-Source: AGHT+IGJssglye0z9dA/EIYkGmMwL5UqzajKCPrB/EkEGyZOtMVWFHXED5Fw+PmbpEjlmLhJKYdCOg==
+X-Received: by 2002:a17:902:ab96:b0:1dc:abeb:22fe with SMTP id f22-20020a170902ab9600b001dcabeb22femr8317535plr.65.1709542777408;
+        Mon, 04 Mar 2024 00:59:37 -0800 (PST)
+Received: from localhost ([46.3.240.108])
+        by smtp.gmail.com with ESMTPSA id s13-20020a170902ea0d00b001dcc0c84721sm7982371plg.99.2024.03.04.00.59.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Mar 2024 07:52:27 -0800 (PST)
-References: <20240221151154.26452-1-jbrunet@baylibre.com>
- <b6jyherdfnehu3xrg6ulkxlcfknfej6ali2om27d7rjmwncwxz@3wrtx6sv4xm7>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org, JunYi Zhao
- <junyi.zhao@amlogic.com>
-Subject: Re: [PATCH v5 0/5] pwm: meson: dt-bindings fixup
-Date: Sat, 02 Mar 2024 16:50:11 +0100
-In-reply-to: <b6jyherdfnehu3xrg6ulkxlcfknfej6ali2om27d7rjmwncwxz@3wrtx6sv4xm7>
-Message-ID: <1jsf18skat.fsf@starbuckisacylon.baylibre.com>
+        Mon, 04 Mar 2024 00:59:37 -0800 (PST)
+From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+To: u.kleine-koenig@pengutronix.de,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu
+Cc: linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	dlan@gentoo.org,
+	inochiama@outlook.com,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Subject: [PATCH v4 0/2] riscv: pwm: sophgo: add pwm support for CV1800
+Date: Mon,  4 Mar 2024 16:59:31 +0800
+Message-Id: <20240304085933.1246964-1-qiujingbao.dlmu@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+
+The Sophgo CV1800 chip provides a set of four independent
+PWM channel outputs.
+This series adds PWM controller support for Sophgo cv1800.
+
+Changes since v3:
+- use macro instead of npwm number
+- add support for polarity feature
+- add Output-Enable/OE check
+
+v3: https://lore.kernel.org/all/20240223082014.109385-1-qiujingbao.dlmu@gmail.com/
+
+Changes since v2:
+- use 0x08 instead of macro
+- split if statements based on conditions
+- in order to round up, first calculate the
+  number of high-level cycles, then subtract
+  it from the PERIOD to obtain the number of HLPERIOD
+- use new pwmchip_alloc() API instead of old style
+
+v2: https://lore.kernel.org/all/20240212121729.1086718-1-qiujingbao.dlmu@gmail.com/
+
+Changes since v1:
+- drop full stop from subject
+- re-order maintainers and description
+- pass checkpatch.pl --strict
+- fix naming errors
+- add "Limitations" section
+- use a driver specific prefix for all defines
+- using bool instead u32 in cv1800_pwm_enable
+- check and set state->polarity
+- use mul_u64_u64_div_u64
+- use clk_rate_exclusive_get(), balance with clk_rate_exclusive_put()
+- using macro definitions instead of shift operations
+- remove shift operation on 0
+- use priv replace cv_pwm
+- hardcode npwm
+- set atomic to true
+- remove MODULE_ALIAS
+
+v1: https://lore.kernel.org/all/20240207055856.672184-1-qiujingbao.dlmu@gmail.com/
+
+Jingbao Qiu (2):
+  dt-bindings: pwm: sophgo: add pwm for Sophgo CV1800 series SoC
+  pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+
+ .../bindings/pwm/sophgo,cv1800-pwm.yaml       |  45 +++
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-cv1800.c                      | 314 ++++++++++++++++++
+ 4 files changed, 370 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/sophgo,cv1800-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-cv1800.c
 
 
-On Sat 02 Mar 2024 at 11:04, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutr=
-onix.de> wrote:
+base-commit: 801de0882d8a95aa1b1fe67df1696e037d785656
+-- 
+2.25.1
 
-> [[PGP Signed Part:Undecided]]
-> Hello Jerome,
->
-> On Wed, Feb 21, 2024 at 04:11:46PM +0100, Jerome Brunet wrote:
->> Jerome Brunet (5):
->>   dt-bindings: pwm: amlogic: fix s4 bindings
->>   dt-bindings: pwm: amlogic: Add a new binding for meson8 pwm types
->>   pwm: meson: generalize 4 inputs clock on meson8 pwm type
->>   pwm: meson: don't carry internal clock elements around
->>   pwm: meson: add generic compatible for meson8 to sm1
->
-> I applied patches #1 to #3. This doesn't mean #4 and #5 are bad, just
-> that I need some more time for review.
-
-No worries. The change in those, especially #5, are pretty simple but
-the diff are indeed hard to read :/
-
->
-> Best regards
-> Uwe
-
-
---=20
-Jerome
 
