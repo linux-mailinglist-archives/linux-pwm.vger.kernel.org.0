@@ -1,104 +1,114 @@
-Return-Path: <linux-pwm+bounces-1710-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1711-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8542C871BE5
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Mar 2024 11:45:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DEAE871BFF
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Mar 2024 11:48:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3566F1F25024
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Mar 2024 10:45:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F3C31C228D1
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Mar 2024 10:48:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D31D141C67;
-	Tue,  5 Mar 2024 10:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFTxySPR"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B44D5A79B;
+	Tue,  5 Mar 2024 10:39:36 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A630B11198;
-	Tue,  5 Mar 2024 10:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB105B5A5
+	for <linux-pwm@vger.kernel.org>; Tue,  5 Mar 2024 10:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709634625; cv=none; b=oz7dpDbTBY/gzwsVd2j+yWW5I7T4b9KEAPrG53F5s53uPF0qRgX2/oIQPCACKq04YM04n6V2FmZI3qk7IYHYDYKf+lUJiR4AUhXAjuPRQjsTGGcz2GvjBxxwuIctgET63oGNzDC+4Jn2eU+jgRlKkHe9x5Qo7/lmOUNsLvQ/ZtI=
+	t=1709635176; cv=none; b=YeeHZ2PPO/ae+2oqX1B0N/7e+E7gKTRiaA2aaBMFO7gNx54NtD6Bzst4eoZYSBEiLrP/0ROYtIcpTUpyZ898S7LBRgFEFDcQhGVUU5Z0jZuFNq5NmhtDVVFx/rXotZ1oEJliuhJ4agrfwSN2bR+Dyqj77gLW1inrVPllkuuUJXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709634625; c=relaxed/simple;
-	bh=NFHYZPCn1iRdzYwgW5HIMl0T/4npS5nF2/vEjh+JuOs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NCGqzquQeztemzsLXLknPR8S3aHznQ71VPT/f3WPE0Q99TUEiMEQDISU64eEg0iBDI4jwV7xIL8tsB9puaYJ/Dr7GJY1Lwb+hxHodvuAgq0RtRhTUSy51pKcrlTomwGq1hv/Ldi20BAjsjRxFEa/Oqi53EaCUk2u2nvmtn2Pzc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFTxySPR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFA5DC433C7;
-	Tue,  5 Mar 2024 10:30:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709634625;
-	bh=NFHYZPCn1iRdzYwgW5HIMl0T/4npS5nF2/vEjh+JuOs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ZFTxySPRZx59XD3uzj19WgnlvWjAgsAma51hEVMdNa1Slm5uVyfvgeeghyi6U/ewx
-	 nYHtHCFdJ7KfvL0M471EaXSHXN3G8cXXzkL73uuky/BkJEjwZ033+xNMz9DwjrSaiM
-	 iMYCJCPsV+5mBBsu0Kz1CbGEL7PEeIsRI+OSB4qayHDrNp26r2FXnuK+h0Hpy090dG
-	 +EUczuIuHBwuUO/1fH8Z/u8K9ZpK5aAU3OUx4JbgnZgwRNiMEtiFyRo1HqaXHPbkfn
-	 dFTmQ/yQd0qUjctrtxumpJPJHbKUK2ochzOrndK0Gzlpd18jkpewFO/JyAHXnPvUer
-	 RA2EPQpyTikCA==
-From: Lee Jones <lee@kernel.org>
-To: andy@kernel.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, 
- deller@gmx.de, robin@protonic.nl, javierm@redhat.com, 
- Thomas Zimmermann <tzimmermann@suse.de>
-Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
- linux-input@vger.kernel.org, linux-pwm@vger.kernel.org
-In-Reply-To: <20240304163220.19144-1-tzimmermann@suse.de>
-References: <20240304163220.19144-1-tzimmermann@suse.de>
-Subject: Re: [PATCH v3 00/10] backlight: Replace struct fb_info in
- interfaces
-Message-Id: <170963462254.80615.15102290140369290410.b4-ty@kernel.org>
-Date: Tue, 05 Mar 2024 10:30:22 +0000
+	s=arc-20240116; t=1709635176; c=relaxed/simple;
+	bh=xJC6jDGTZbfYNZLeIFZXozgT6kJjE2Q9dhe8/M+AlaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YpIW4frXEqzAR6dtFYLxwGCX1Z4xEILzWGxnnmdCuleBn/4nueaqGab2tDVd0hAqD9+m4ZRJk+161PwYCVrUqD19iTCO6v34nKln0qY32n5D/etGxDI6NMoQvtJioelE4H3xpoRulTK2x/jGrpiWeuTJbf1rXw70IDYtZsDmR2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rhSCq-0005q9-Kv; Tue, 05 Mar 2024 11:39:32 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rhSCn-004X6O-Dh; Tue, 05 Mar 2024 11:39:29 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rhSCn-00005d-15;
+	Tue, 05 Mar 2024 11:39:29 +0100
+Date: Tue, 5 Mar 2024 11:39:29 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: William Qiu <william.qiu@starfivetech.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Hal Feng <hal.feng@starfivetech.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v11] pwm: opencores: Add PWM driver support
+Message-ID: <isbszrmgdsipmlolzbhf2wlcen7hq4yre3titcrmzea7rvty3s@ugp6hsodvm4k>
+References: <20240223084332.100410-1-william.qiu@starfivetech.com>
+ <ZQ0PR01MB12534DB9109EA8AEA33A221B9F22A@ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.12.4
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wxlbcuxknmfufojp"
+Content-Disposition: inline
+In-Reply-To: <ZQ0PR01MB12534DB9109EA8AEA33A221B9F22A@ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On Mon, 04 Mar 2024 17:29:45 +0100, Thomas Zimmermann wrote:
-> Backlight drivers implement struct backlight_ops.check_fb, which
-> uses struct fb_info in its interface. Replace the callback with one
-> that does not use fb_info.
-> 
-> In DRM, we have several drivers that implement backlight support. By
-> including <linux/backlight.h> these drivers depend on <linux/fb.h>.
-> At the same time, fbdev is deprecated for new drivers and likely to
-> be replaced on many systems.
-> 
-> [...]
 
-Applied, thanks!
+--wxlbcuxknmfufojp
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[01/10] backlight: Match backlight device against struct fb_info.bl_dev
-        commit: 67716b34e1be2beb7464f9b9d0b47b2cc7dbc208
-[02/10] auxdisplay/ht16k33: Remove struct backlight_ops.check_fb
-        commit: 747554336b46a26fcdf47e2e48044c7e175b6a5f
-[03/10] hid/hid-picolcd: Fix initialization order
-        commit: d55b578e3b0cd6abdc52e2c34d88dd3487bb10a2
-[04/10] hid/hid-picolcd: Remove struct backlight_ops.check_fb
-        commit: 09ca774d2e87f9b086b23354b1605709fb50205f
-[05/10] backlight/aat2870-backlight: Remove struct backlight.check_fb
-        commit: 61e837e975abcb4d278c3427d927e1cbaaed0090
-[06/10] backlight/pwm-backlight: Remove struct backlight_ops.check_fb
-        commit: 9c2be31d2951c8dce90950db000c095330406f94
-[07/10] fbdev/sh_mobile_lcdc_fb: Remove struct backlight_ops.check_fb
-        commit: a2a8fbdb54a78fd18850cd0b74b465657ffb1e0c
-[08/10] fbdev/ssd1307fb: Init backlight before registering framebuffer
-        commit: 5500326bd33e52230866f50770ca822ce400a4ab
-[09/10] fbdev/ssd1307fb: Remove struct backlight_ops.check_fb
-        commit: d1b82cc44fd8be4013538992814c45f0e55c02b4
-[10/10] backlight: Add controls_device callback to struct backlight_ops
-        commit: 7e508af663e20e9e40003bb30e06b926c754159b
+On Tue, Mar 05, 2024 at 06:12:23AM +0000, William Qiu wrote:
+> Could you please help me review this patch series to see if there is
+> anything that needs to be modified? If not, could you help me integrate
+> this patch into the mainline? Thanks.
 
---
-Lee Jones [李琼斯]
+I know I'm behind on reviewing this driver. There are a few more and I
+still have your patch on my radar. New drivers require a big effort on
+my side for review---each revision takes easily >1h for me to comment.
+When I find time to review, I usually pick the oldest on
+https://patchwork.ozlabs.org/project/linux-pwm/list/ to reply. So as
+long as your patch appears there, it's not lost.
 
+So I ask you for some more patience.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--wxlbcuxknmfufojp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXm9mAACgkQj4D7WH0S
+/k70xAf+L/NjaLnO4btjhXBXfmOqh5Ri5vCe5ftI5y1i5oMovpEpAfMnPxJRWyEU
+lMJBlyHRNbFQmsKxR/vbk63RIn0yV8nCYCVas29BUc6dQMPkkk59j9FDmPNB4bvr
+4l3HQmHfqM7h/kLEhWpbNLZWBnE5jA+JxWLLGsjljArSmqZavQ0ozZ1fNEjTJZUn
+mY9Du3E+GF+2nOZsIrZVJdGmIho6RL7n+CLydiqtX0Nzref06E7Ex5MQARoabMo6
+9Dclkb91uhYxg8yO6kC+EdtfARNBxpXsql9N6p8MCFVKeFcy0O1pipyLMGmYXRJS
+0QnUrgv5qOOMRW3EwP5v3PU5o1TkfA==
+=j+NC
+-----END PGP SIGNATURE-----
+
+--wxlbcuxknmfufojp--
 
