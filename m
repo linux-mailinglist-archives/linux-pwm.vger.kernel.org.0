@@ -1,588 +1,347 @@
-Return-Path: <linux-pwm+bounces-1705-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1706-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBD8087196B
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Mar 2024 10:20:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFB76871985
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Mar 2024 10:24:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1885BB2199A
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Mar 2024 09:20:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 958BB280E4F
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Mar 2024 09:24:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A26B52F6A;
-	Tue,  5 Mar 2024 09:19:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A555524DC;
+	Tue,  5 Mar 2024 09:24:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRoi4h6u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHImajwr"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2996B52F9A;
-	Tue,  5 Mar 2024 09:19:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFB250272;
+	Tue,  5 Mar 2024 09:24:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709630389; cv=none; b=RtJyr7/znuavookWI0B8Abm65S0S3kM1XBZWfDtbVcgmSUg6IIANNCXvAeROfwXKQQmTbb7gSf6avVt+SKwFI57eIDfFidU9IjEpD0jJJFvmkMi11RAw1Rbi+PVsk5C0HYYiMXxlhOnwpcANaJy3Nv3KLtUuaqNSwItytvmjT0M=
+	t=1709630684; cv=none; b=u8lauUEldPa7q61MADobxRanFGB116TRX/58ssU39g8C5Z85Fn3IMXS2MtRxIGehd2/yE+4kHEZBq9oAFTfLIYKIAwGh9NDWdz+Zv6wNObp5VQwTGm7yqdbVC4hCpdDvKvE72JwhDuimhvKT1/u7SuC7QKNAP2Km1RBuUFWHVRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709630389; c=relaxed/simple;
-	bh=eev7GnbVv/qDn4S1pxBTDgkO1GfK+TChNdpLax/Zfcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cOgftflLij9cYyNQlEMp/uMp6oNJn0jg8so4xaKZG5biR6GR9qmdDu1AnkhVwDmAjsyxjk8r1DPVlK5HJuc5+gOwWG+fUtWfZL/jatoJjkFE1GZhgUX1JSNFdogqSgP4LpqdHTiJx8LgWr2jVABuo7PC7LpXglmgcjyvg0Zxb6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRoi4h6u; arc=none smtp.client-ip=209.85.210.50
+	s=arc-20240116; t=1709630684; c=relaxed/simple;
+	bh=tPfQYkjbgATtz+kEhN3abAcfDDsv0QHzHdZUDzvbn1s=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=NTneupFy0tnApcUlJjJ+GIGP6W5ZY42BKLYCCShdXY3khDgWs1PzG9kb128r1y0UBnG0KrX/Ty5UjHMVzBm/jyd7+e3s/84YblYOjFfqm4TDDjyI5WOBqBxRczRVw/if4n8GmRr9oHRX+kq9nefZ4KOphw/NY5OhPVMzzzx5QRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IHImajwr; arc=none smtp.client-ip=209.85.210.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6e45ef83c54so3933383a34.2;
-        Tue, 05 Mar 2024 01:19:46 -0800 (PST)
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6e4b34f2455so2961472a34.2;
+        Tue, 05 Mar 2024 01:24:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709630386; x=1710235186; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qx8RVKeks5xoFF+dC3FM2hRTh0FAVy4/kFdS1epGby4=;
-        b=KRoi4h6uT4tiR4LEa8XSffXfaMzM07IbgQz5wND1aXm01z54ElWrLBOdThLe8/DZ05
-         qjxP3ByQX7/L1KVJU23vdod+4/II+CgpS67yfsO0HHFlbTYqiXxwLYlHqpzVCM1rYL00
-         jIOvRfWvaIilNdApG+QEwSdI7rf/LWb1kxb/g4EL+dlM/fLRZe/jqITvQO5nZX4oOseg
-         7ZlFrhIB4FyQy6Q+gwlw5NsvIHhVdtGO9EC9ZfDD3kj58+F+A68Pc5J5l8YxUyVcM40X
-         37gDWpwLXWE5mqX3huZIqI8qB1SL/T6WTK1haI76BXTbHSWY+VNBzErx6iIzmVHdi4m9
-         BuUw==
+        d=gmail.com; s=20230601; t=1709630682; x=1710235482; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:date
+         :subject:cc:to:from:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2n6XxnRJcK3S7HaVQoAKao47crHz+00Pci1WifCRN34=;
+        b=IHImajwr3tDZAeDJSS59h9INfwOrvNmxSrX0JJKXrkk4EZFNJC+VVRvYyM/C15B+CV
+         DK2DiTy7J88ETFUMaitJx9A8EPWX9MoKx7RxclO+5RPfhadT7T2PUL7L58TByZh/h0nc
+         rB0iB4gmwUM75le4UFJPnn0eq5TTAOOkF9uu0tK7Vm3/UWIvYO5Qk5THTg5Aftgamq79
+         uZUOOG6v/ZJjOMFFpC+mWcgI0VsrySNkpJufNTIdPG7R166Lc3R9bKt5T0Np81UIH4mG
+         yj1kU5GjNe5bru0F65QzIYZmRUDJmrP/4K9SDNiCvD30MRmOPmwqDu6OFPVDAhnVHBXX
+         clNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709630386; x=1710235186;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qx8RVKeks5xoFF+dC3FM2hRTh0FAVy4/kFdS1epGby4=;
-        b=K8Y+t1HAV7XQj7W4bYWy2UAA4s0IX9yzWu3mjRO70WhxN4xCClFPlhPkgRFjfDvh0/
-         dF7IvuBG5iFbqtJfPC3cYlrdtiSh/DCsRhqYr0BaLk0HkJlHtM6bnAX2xJ9VKXcco/7e
-         3cpI75YlBVBNozRqRZrMC1KQryts/WsQ2wxivtyRRG4ecJ9z4D0C+9e7WvEiBnJBHnlq
-         PKNoI+u6PYeP/CIKgpc3auvjjXchd0a6vtQ84BAEhfTwLLLbjoR7spSKiz5N9ZLvVNVE
-         U95GbFxdo6fz9l5g4nLldkTJ1ghiAKQdIvO9w9ZDurrYG5n+QgYUGzqcCDro813QXVeg
-         4UfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWoZw/xKywH+3NCCYYvJNI+CjOWiyr97EU4nvNeJnxPqMDMAGRKr84w+fKCdu4rsaihb7XuvFHx6jq4suQ+KqqlOm1XGIjlAgOTFQQ1LMzvc2hjbl9Rfi5pirjjuJV2tCXMy+j8ckbCeQOgfkaOxBBOoRL3vtHzRLzj3eNdqaStHKS96A==
-X-Gm-Message-State: AOJu0Yyj/f5Cpi4k7HxtTo4pJuLygNeEd4kF/TEHizrqJqD6mz6AFVPa
-	DlgqB0/DNMUuJ/6OgBGHDjN7inAvlhGmzpKZQcmVB98STGQ6IjeY6boxPJs7eV4zCkiPT1nqO6k
-	r7eL2vWnyAQzXQntf7HLOy1wpk/Q=
-X-Google-Smtp-Source: AGHT+IEBKrsFaa3UU1orjl1o6zifI+FTyC25Vv6DaMsLue2yC9hYZhdkoWcD4yk0mSsUmKxUsGwKQUhX9RdP9qyG2gM=
-X-Received: by 2002:a05:6870:8194:b0:21f:df18:349b with SMTP id
- k20-20020a056870819400b0021fdf18349bmr1082678oae.35.1709630385840; Tue, 05
- Mar 2024 01:19:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709630682; x=1710235482;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:date
+         :subject:cc:to:from:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2n6XxnRJcK3S7HaVQoAKao47crHz+00Pci1WifCRN34=;
+        b=OrG1f2U8Io9kzJ0nFIMb/zTBaFIZOdsnwp4qgWV6co2+rD9H2EzxU8B1wgxDSNmeQM
+         p2nIAaCgkIl0ziCT3IeHkyMToUQgph5h/FuyyARsP3ZzzhWKJ9bAeIfP7CEqghYTUpSH
+         trCshXOHLUeR7ClaF6f9VMK8D5VyQD0lyXxWG3BkqqvXTHJWxZ8zZJiDR1fasTfCNZLm
+         LAxhOgeTkUhGaAo+Z3Zd6UDi7ZxGbYurNFI71IVXd25Ydr+HhwIoEljgPCeRYJC4TNWJ
+         HnYLFhkwJLBcjS+BOmjOOtG68wEuF0WgFEXlJC0G4DPELknFlw5jucNbQrNv6P7WjnJd
+         HMvA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzUmNTMtVP+nOAVnGZCSP15HPcv402sRpqtHKrbr7R6YB6bcmhOMC7umQjmmAYCI31V9vulGlbiKI88v7ecgdnFE9UKUgnKQ2HsXa7LJ8XVoQBbu16Jll1TqijSegbZpqVahXg4qMK
+X-Gm-Message-State: AOJu0YxG9YgOC1L/COTL4e2TEwQ1qwIVFQbse64ew1YTN2yVue6wX4lc
+	rDVGBw0FPqGa32r5xf1UmLAxs9teX6epgw8NoXvtph6HiS9pPTnn
+X-Google-Smtp-Source: AGHT+IEf3Th5yXrUurmy310rbfGfsm6zvHyKT8USnhxeMIOTIZ0B8RtQzE21FA69Y+hhaHydWopuag==
+X-Received: by 2002:a9d:6944:0:b0:6e4:fa1a:dae2 with SMTP id p4-20020a9d6944000000b006e4fa1adae2mr516840oto.2.1709630682163;
+        Tue, 05 Mar 2024 01:24:42 -0800 (PST)
+Received: from localhost.localdomain ([2402:3a80:863:befc:ec5c:8cb:6f1e:1f69])
+        by smtp.gmail.com with ESMTPSA id f4-20020a63de04000000b005dc4ce8d2a4sm8717493pgg.58.2024.03.05.01.24.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 01:24:41 -0800 (PST)
+Message-ID: <65e6e4d9.630a0220.8d898.19f4@mx.google.com>
+X-Google-Original-Message-ID: <d72d1ae5-0378-4bac-8b77-0bb69f55accd@gmx.net> (raw)
+From: pratikmanvar09@gmail.com
+To: wahrenst@gmx.net
+Cc: festevam@gmail.com,
+	jun.li@nxp.com,
+	kernel@pengutronix.de,
+	linux-arm-kernel@lists.infradead.org,
+	linux-imx@nxp.com,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	lkp@intel.com,
+	oe-kbuild-all@lists.linux.dev,
+	pratik.manvar@ifm.com,
+	pratikmanvar09@gmail.com,
+	s.hauer@pengutronix.de,
+	shawnguo@kernel.org,
+	thierry.reding@gmail.com,
+	u.kleine-koenig@pengutronix.de,
+	xiaoning.wang@nxp.com
+Subject: Re: [PATCH v2] pwm: imx27: workaround of the pwm output bug
+Date: Tue,  5 Mar 2024 14:54:28 +0530
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <65bf307d.170a0220.4d544.f32b@mx.google.com>
+References: <d72d1ae5-0378-4bac-8b77-0bb69f55accd@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304085933.1246964-1-qiujingbao.dlmu@gmail.com>
- <20240304090248.1247215-1-qiujingbao.dlmu@gmail.com> <twzx4abuhduos5s32txeugqr2yyca6ey7adcontsnapthwqaxa@dscea3ybrlym>
-In-Reply-To: <twzx4abuhduos5s32txeugqr2yyca6ey7adcontsnapthwqaxa@dscea3ybrlym>
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Date: Tue, 5 Mar 2024 17:19:34 +0800
-Message-ID: <CAJRtX8T3GD-zu43-+U_rGQugqzGQQ-QbjHATV1NRdEMWevSUGw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	dlan@gentoo.org, inochiama@outlook.com
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Uwe,
-
-On Mon, Mar 4, 2024 at 11:37=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello,
->
-> thanks for your patch.
->
-> On Mon, Mar 04, 2024 at 05:02:48PM +0800, Jingbao Qiu wrote:
-> > Implement the PWM driver for CV1800.
-> >
-> > Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> > ---
-> >  drivers/pwm/Kconfig      |  10 ++
-> >  drivers/pwm/Makefile     |   1 +
-> >  drivers/pwm/pwm-cv1800.c | 314 +++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 325 insertions(+)
-> >  create mode 100644 drivers/pwm/pwm-cv1800.c
-> >
-> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > index 4b956d661755..455f07af94f7 100644
-> > --- a/drivers/pwm/Kconfig
-> > +++ b/drivers/pwm/Kconfig
-> > @@ -186,6 +186,16 @@ config PWM_CROS_EC
-> >         PWM driver for exposing a PWM attached to the ChromeOS Embedded
-> >         Controller.
-> >
-> > +config PWM_CV1800
-> > +     tristate "Sophgo CV1800 PWM driver"
-> > +     depends on ARCH_SOPHGO || COMPILE_TEST
-> > +     help
-> > +       Generic PWM framework driver for the Sophgo CV1800 series
-> > +       SoCs.
-> > +
-> > +       To compile this driver as a module, build the dependecies
-> > +       as modules, this will be called pwm-cv1800.
-> > +
-> >  config PWM_DWC_CORE
-> >       tristate
-> >       depends on HAS_IOMEM
-> > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> > index c5ec9e168ee7..6c3c4a07a316 100644
-> > --- a/drivers/pwm/Makefile
-> > +++ b/drivers/pwm/Makefile
-> > @@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CLK)               +=3D pwm-clk.o
-> >  obj-$(CONFIG_PWM_CLPS711X)   +=3D pwm-clps711x.o
-> >  obj-$(CONFIG_PWM_CRC)                +=3D pwm-crc.o
-> >  obj-$(CONFIG_PWM_CROS_EC)    +=3D pwm-cros-ec.o
-> > +obj-$(CONFIG_PWM_CV1800)     +=3D pwm-cv1800.o
-> >  obj-$(CONFIG_PWM_DWC_CORE)   +=3D pwm-dwc-core.o
-> >  obj-$(CONFIG_PWM_DWC)                +=3D pwm-dwc.o
-> >  obj-$(CONFIG_PWM_EP93XX)     +=3D pwm-ep93xx.o
-> > diff --git a/drivers/pwm/pwm-cv1800.c b/drivers/pwm/pwm-cv1800.c
-> > new file mode 100644
-> > index 000000000000..d5b31a2b7787
-> > --- /dev/null
-> > +++ b/drivers/pwm/pwm-cv1800.c
-> > @@ -0,0 +1,314 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * pwm-cv1800.c: PWM driver for Sophgo cv1800
->
-> Mentioning the filename in the file isn't very helpful. It's obvious
-> information.
-
-I will drop this line.
-
->
-> > + * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> > + *
-> > + * Limitations:
-> > + * - It output low when PWM channel disabled.
-> > + * - This pwm device supports dynamic loading of PWM parameters. When =
-PWMSTART
-> > + *   is written from 0 to 1, the register value (HLPERIODn, PERIODn) w=
-ill be
-> > + *   temporarily stored inside the PWM. If you want to dynamically cha=
-nge the
-> > + *   waveform during PWM output, after writing the new value to HLPERI=
-ODn and
-> > + *   PERIODn, write 1 and then 0 to PWMUPDATE[n] to make the new value=
- effective.
-> > + * - Supports up to Rate/2 output, and the lowest is about Rate/(2^30-=
-1).
-> > + * - By setting HLPERIODn to 0, can produce 100% duty cycle.
-> > + * - This hardware could support inverted polarity. By default, the va=
-lue of the
-> > + *   POLARITY register is 0x0. This means that HLPERIOD represents the=
- number
-> > + *   of low level beats.
-> > + * - This hardware supports input mode and output mode, implemented th=
-rough the
-> > + *   Output-Enable/OE register. However, this driver has not yet imple=
-mented
-> > + *   capture callback.
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pwm.h>
-> > +#include <linux/regmap.h>
-> > +
-> > +#define PWM_CV1800_HLPERIOD_BASE     0x00
-> > +#define PWM_CV1800_PERIOD_BASE       0x04
-> > +#define PWM_CV1800_POLARITY          0x40
-> > +#define PWM_CV1800_START             0x44
-> > +#define PWM_CV1800_DONE              0x48
-> > +#define PWM_CV1800_UPDATE            0x4c
-> > +#define PWM_CV1800_OE                0xd0
-> > +
-> > +#define PWM_CV1800_HLPERIOD(n)       (PWM_CV1800_HLPERIOD_BASE + ((n) =
-* 0x08))
-> > +#define PWM_CV1800_PERIOD(n)         (PWM_CV1800_PERIOD_BASE + ((n) * =
-0x08))
-> > +
-> > +#define PWM_CV1800_UPDATE_MASK(n)    (BIT(0) << (n))
-> > +#define PWM_CV1800_OE_MASK(n)        (BIT(0) << (n))
-> > +#define PWM_CV1800_START_MASK(n)     (BIT(0) << (n))
-> > +#define PWM_CV1800_POLARITY_MASK(n)  (BIT(0) << (n))
-> > +
-> > +#define PWM_CV1800_OE_INPUT          0x00U
-> > +#define PWM_CV1800_OE_OUTPUT(n)      (BIT(0) << (n))
-> > +#define PWM_CV1800_MAXPERIOD         (BIT(30) - 1)
-> > +#define PWM_CV1800_MINPERIOD         BIT(1)
->
-> These are minimal and maximal values. I'd do
->
-> #define PWM_CV1800_MAXPERIOD         0x3fffffff
-> #define PWM_CV1800_MINPERIOD         2
->
-
-I will fix it.
-
-> > +#define PWM_CV1800_PERIOD_RESET      BIT(1)
-> > +#define PWM_CV1800_HLPERIOD_RESET    BIT(0)
-> > +#define PWM_CV1800_REG_DISABLE       0x00U
-> > +#define PWM_CV1800_REG_ENABLE(n)     (BIT(0) << (n))
-> > +#define PWM_CV1800_CHANNELS          4
-> > +
-> > +struct cv1800_pwm {
-> > +     struct regmap *map;
-> > +     struct clk *clk;
-> > +     unsigned long clk_rate;
-> > +};
-> > +
-> > +static inline struct cv1800_pwm *to_cv1800_pwm_dev(struct pwm_chip *ch=
-ip)
-> > +{
-> > +     return pwmchip_get_drvdata(chip);
-> > +}
-> > +
-> > +static const struct regmap_config cv1800_pwm_regmap_config =3D {
-> > +     .reg_bits =3D 32,
-> > +     .val_bits =3D 32,
-> > +     .reg_stride =3D 4,
-> > +};
-> > +
-> > +static int cv1800_pwm_enable(struct pwm_chip *chip, struct pwm_device =
-*pwm,
-> > +                          bool enable)
-> > +{
-> > +     struct cv1800_pwm *priv =3D to_cv1800_pwm_dev(chip);
-> > +     u32 pwm_enable;
-> > +
-> > +     regmap_read(priv->map, PWM_CV1800_START, &pwm_enable);
-> > +     pwm_enable &=3D PWM_CV1800_START_MASK(pwm->hwpwm);
-> > +
-> > +     /*
-> > +      * If the parameters are changed during runtime, Register needs
-> > +      * to be updated to take effect.
-> > +      */
-> > +     if (pwm_enable && enable) {
-> > +             regmap_update_bits(priv->map, PWM_CV1800_UPDATE,
-> > +                                PWM_CV1800_UPDATE_MASK(pwm->hwpwm),
-> > +                                PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-> > +             regmap_update_bits(priv->map, PWM_CV1800_UPDATE,
-> > +                                PWM_CV1800_UPDATE_MASK(pwm->hwpwm),
-> > +                                PWM_CV1800_REG_DISABLE);
-> > +     } else if (!pwm_enable && enable) {
-> > +             regmap_update_bits(priv->map, PWM_CV1800_START,
-> > +                                PWM_CV1800_START_MASK(pwm->hwpwm),
-> > +                                PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-> > +     } else if (pwm_enable && !enable) {
-> > +             regmap_update_bits(priv->map, PWM_CV1800_START,
-> > +                                PWM_CV1800_START_MASK(pwm->hwpwm),
-> > +                                PWM_CV1800_REG_DISABLE);
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void cv1800_pwm_set_polarity(struct pwm_chip *chip,
-> > +                                 struct pwm_device *pwm,
-> > +                                 enum pwm_polarity polarity)
-> > +{
-> > +     struct cv1800_pwm *priv =3D to_cv1800_pwm_dev(chip);
-> > +
-> > +     if (pwm->state.enabled)
-> > +             cv1800_pwm_enable(chip, pwm, !pwm->state.enabled);
-> > +
-> > +     if (polarity =3D=3D PWM_POLARITY_INVERSED)
-> > +             regmap_update_bits(priv->map, PWM_CV1800_POLARITY,
-> > +                                PWM_CV1800_POLARITY_MASK(pwm->hwpwm),
-> > +                                PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-> > +     else
-> > +             regmap_update_bits(priv->map, PWM_CV1800_POLARITY,
-> > +                                PWM_CV1800_POLARITY_MASK(pwm->hwpwm),
-> > +                                PWM_CV1800_REG_DISABLE);
->
-> Wouldn't it be more natural to make this read:
->
->         if (polarity =3D=3D PWM_POLARITY_INVERSED)
->                 regmap_update_bits(priv->map, PWM_CV1800_POLARITY,
->                                    PWM_CV1800_POLARITY_MASK(pwm->hwpwm),
->                                    PWM_CV1800_POLARITY_MASK(pwm->hwpwm));
->         else
->                 regmap_update_bits(priv->map, PWM_CV1800_POLARITY,
->                                    PWM_CV1800_POLARITY_MASK(pwm->hwpwm),
->                                    0);
->
-> or even:
->
->         u32 polarity =3D 0;
->
->         if (polarity =3D=3D PWM_POLARITY_INVERSED)
->                 polarity =3D PWM_CV1800_POLARITY_MASK(pwm->hwpwm);
->
->         regmap_update_bits(priv->map, PWM_CV1800_POLARITY,
->                            PWM_CV1800_POLARITY_MASK(pwm->hwpwm),
->                            polarity);
->
-> ?
->
-
-Good idea.  My code looks so bloated. I will fix it.
-
-> > +}
-> > +
-> > +static void cv1800_pwm_set_oe(struct pwm_chip *chip, struct pwm_device=
- *pwm,
-> > +                           u32 mode)
-> > +{
-> > +     struct cv1800_pwm *priv =3D to_cv1800_pwm_dev(chip);
-> > +     u32 state;
-> > +
-> > +     regmap_read(priv->map, PWM_CV1800_OE, &state);
-> > +     state &=3D PWM_CV1800_OE_MASK(pwm->hwpwm);
-> > +
-> > +     if (state =3D=3D mode)
-> > +             return;
-> > +
-> > +     cv1800_pwm_enable(chip, pwm, false);
-> > +
-> > +     if (mode =3D=3D PWM_CV1800_OE_INPUT)
-> > +             regmap_update_bits(priv->map, PWM_CV1800_OE,
-> > +                                PWM_CV1800_OE_MASK(pwm->hwpwm),
-> > +                                PWM_CV1800_REG_DISABLE);
-> > +     else if (mode =3D=3D PWM_CV1800_OE_OUTPUT(pwm->hwpwm))
-> > +             regmap_update_bits(priv->map, PWM_CV1800_OE,
-> > +                                PWM_CV1800_OE_MASK(pwm->hwpwm),
-> > +                                PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-> > +}
->
-> What does this function do? A comment describing that would be good. I
-> wonder about it being called unconditionally in .apply() below.
-
-I will add a comment for this function.
-
->
-> > +
-> > +static int cv1800_pwm_apply(struct pwm_chip *chip, struct pwm_device *=
-pwm,
-> > +                         const struct pwm_state *state)
-> > +{
-> > +     struct cv1800_pwm *priv =3D to_cv1800_pwm_dev(chip);
-> > +     u32 period_val, hlperiod_val;
-> > +     u64 tem;
-> > +
-> > +     cv1800_pwm_set_oe(chip, pwm, PWM_CV1800_OE_OUTPUT(pwm->hwpwm));
-> > +
-> > +     if (state->polarity !=3D pwm->state.polarity)
-> > +             cv1800_pwm_set_polarity(chip, pwm, state->polarity);
-> > +
-> > +     /*
-> > +      * This hardware use PERIOD and HLPERIOD registers to represent P=
-WM waves.
-> > +      *
-> > +      * The meaning of PERIOD is how many clock cycles (from the clock=
- source)
-> > +      * are used to represent PWM waves.
-> > +      * PERIOD =3D rate(MHz) / target(MHz)
-> > +      * PERIOD =3D period(ns) * rate(Hz) / NSEC_PER_SEC
-> > +      */
-> > +     tem =3D mul_u64_u64_div_u64(state->period, priv->clk_rate, NSEC_P=
-ER_SEC);
->
-> What does "tem" stand for? Maybe "ticks" is a better name?
-
-"ticks" looks better. I will use it.
-
->
-> > +     if (tem < PWM_CV1800_MINPERIOD)
-> > +             return -EINVAL;
-> > +
-> > +     if (tem > PWM_CV1800_MAXPERIOD)
-> > +             tem =3D PWM_CV1800_MAXPERIOD;
-> > +
-> > +     period_val =3D (u32)tem;
-> > +
-> > +     /*
-> > +      * The meaning of HLPERIOD is the number of beats in the low or h=
-igh level
-> > +      * of the PERIOD. When the value of the POLARITY register is 0, H=
-LPERIOD
-> > +      * represents a low level.
-> > +      * HLPERIOD =3D period_val - rate(MHz) / duty(MHz)
-> > +      * HLPERIOD =3D period_val - duty(ns) * rate(Hz) / NSEC_PER_SEC
->
-> So HLPERIOD defines the second part of each period, right? This isn't
-> considered in .get_state().
-
-I am so sorry about this. I made a mess of the duty cycle.
-According to the PWM_DEBUG, it can be inferred that configure the
-biggest duty_cycle not
-bigger than the requested value, so in .apply duty_cycle should round down =
-and
-in .get_state duty_cycle should round up. However, when the polarity is nor=
-mal,
-This hardware requires a low-level beat count. So the corrected code
-is as follows.
-
-in .apply()
-
-ticks =3D mul_u64_u64_div_u64(state->duty_cycle , priv->clk_rate,NSEC_PER_S=
-EC);
-...
-hlperiod_val =3Dperiod_val- (u32)ticks;
-
-in .get_state()
-
-u32 hlperiod_val=3D0;
-
-period_ns =3D DIV_ROUND_UP_ULL(period_val * NSEC_PER_SEC,priv->clk_rate);
-duty_ns =3D DIV_ROUND_UP_ULL(hlperiod_val * period_ns, period_val);
-hlperiod_val =3D period_ns - duty_ns;
-
-I tested this code with PWM_DEBUG. no warning output. What do you
-think about this?
-
-
->
-> > +      */
-> > +     tem =3D mul_u64_u64_div_u64(state->duty_cycle, priv->clk_rate,
-> > +                               NSEC_PER_SEC);
-> > +     if (tem > period_val)
-> > +             return -EINVAL;
->
-> if (tem > period_val)
->         tem =3D period_val;
->
-> > +     hlperiod_val =3D period_val - (u32)tem;
->
-> Wrong rounding I think. Did you test your driver with PWM_DEBUG enabled?
-
-ditto.
-
->
-> > +     regmap_write(priv->map, PWM_CV1800_PERIOD(pwm->hwpwm), period_val=
-);
-> > +     regmap_write(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), hlperiod=
-_val);
-> > +
-> > +     cv1800_pwm_enable(chip, pwm, state->enabled);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int cv1800_pwm_get_state(struct pwm_chip *chip, struct pwm_devi=
-ce *pwm,
-> > +                             struct pwm_state *state)
-> > +{
-> > +     struct cv1800_pwm *priv =3D to_cv1800_pwm_dev(chip);
-> > +     u32 period_val, hlperiod_val;
-> > +     u64 period_ns =3D 0;
-> > +     u64 duty_ns =3D 0;
-> > +     u32 enable =3D 0;
-> > +     u32 polarity =3D 0;
-> > +
-> > +     regmap_read(priv->map, PWM_CV1800_PERIOD(pwm->hwpwm), &period_val=
-);
-> > +     regmap_read(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), &hlperiod=
-_val);
-> > +
-> > +     if (period_val !=3D PWM_CV1800_PERIOD_RESET ||
-> > +         hlperiod_val !=3D PWM_CV1800_HLPERIOD_RESET) {
-> > +             period_ns =3D DIV_ROUND_UP_ULL(period_val * NSEC_PER_SEC,
-> > +                                          priv->clk_rate);
-> > +             duty_ns =3D DIV_ROUND_UP_ULL(hlperiod_val * period_ns, pe=
-riod_val);
-> > +
-> > +             regmap_read(priv->map, PWM_CV1800_START, &enable);
-> > +             enable &=3D PWM_CV1800_START_MASK(pwm->hwpwm);
-> > +
-> > +             regmap_read(priv->map, PWM_CV1800_POLARITY, &polarity);
-> > +             polarity &=3D PWM_CV1800_POLARITY_MASK(pwm->hwpwm);
-> > +     }
-> > +
-> > +     state->period =3D period_ns;
-> > +     state->duty_cycle =3D duty_ns;
-> > +     state->enabled =3D enable;
-> > +     state->polarity =3D polarity ? PWM_POLARITY_INVERSED : PWM_POLARI=
-TY_NORMAL;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct pwm_ops cv1800_pwm_ops =3D {
-> > +     .apply =3D cv1800_pwm_apply,
-> > +     .get_state =3D cv1800_pwm_get_state,
-> > +};
-> > +
-> > +static void devm_clk_rate_exclusive_put(void *data)
-> > +{
-> > +     struct clk *clk =3D data;
-> > +
-> > +     clk_rate_exclusive_put(clk);
-> > +}
-> > +
-> > +static int cv1800_pwm_probe(struct platform_device *pdev)
-> > +{
-> > +     struct device *dev =3D &pdev->dev;
-> > +     struct cv1800_pwm *priv;
-> > +     struct pwm_chip *chip;
-> > +     void __iomem *base;
-> > +     int ret;
-> > +
-> > +     chip =3D devm_pwmchip_alloc(dev, PWM_CV1800_CHANNELS, sizeof(*pri=
-v));
-> > +     if (!chip)
-> > +             return PTR_ERR(chip);
-> > +     priv =3D to_cv1800_pwm_dev(chip);
-> > +
-> > +     base =3D devm_platform_ioremap_resource(pdev, 0);
-> > +     if (IS_ERR(base))
-> > +             return PTR_ERR(base);
-> > +
-> > +     priv->map =3D devm_regmap_init_mmio(&pdev->dev, base,
-> > +                                       &cv1800_pwm_regmap_config);
-> > +     if (IS_ERR(priv->map))
-> > +             return PTR_ERR(priv->map);
-> > +
-> > +     priv->clk =3D devm_clk_get_enabled(&pdev->dev, NULL);
-> > +     if (IS_ERR(priv->clk))
-> > +             return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
-> > +                                  "clk not found\n");
-> > +
-> > +     ret =3D clk_rate_exclusive_get(priv->clk);
->
-> There is a devm_clk_rate_exclusive_get() in next. Please make use of it.
-> (See commit b0cde62e4c54)
-
-I will use this branch.
-
->
-> > +     if (ret)
-> > +             return dev_err_probe(&pdev->dev, ret,
-> > +                                  "failed to get exclusive rate\n");> =
-> +
-> > +     ret =3D devm_add_action_or_reset(&pdev->dev, devm_clk_rate_exclus=
-ive_put,
-> > +                                    priv->clk);
-> > +     if (ret) {
-> > +             clk_rate_exclusive_put(priv->clk);
-> > +             return ret;
-> > +     }
-> > +
-> > +     priv->clk_rate =3D clk_get_rate(priv->clk);
-> > +     if (!priv->clk_rate)
-> > +             return dev_err_probe(&pdev->dev, -EINVAL,
-> > +                                  "Invalid clock rate: %lu\n",
-> > +                                  priv->clk_rate);
-> > +
-> > +     chip->ops =3D &cv1800_pwm_ops;
-> > +
-> > +     return devm_pwmchip_add(dev, chip);
->
-> Error message if devm_pwmchip_add() fails, please.
-
-I will fix it.
-
-Thank you for your reply.
-
-Best regards
-Jingbao Qiu
+Hi Stefan,=0D
+=0D
+Sorry for the abysmal delay.=0D
+Thanks for your review and suggestions.=0D
+=0D
+>Hi Pratik,=0D
+>=0D
+>Am 04.02.24 um 07:36 schrieb pratikmanvar09@gmail.com:=0D
+>> Hi Stefan,=0D
+>>=0D
+>> Thanks for your review.=0D
+>> Please see my reply below inline.=0D
+>>=0D
+>>>> From: Clark Wang <xiaoning.wang@nxp.com>=0D
+>>>>=0D
+>>>> This fixes the pwm output bug when decrease the duty cycle.=0D
+>>>> This is a limited workaround for the PWM IP issue TKT0577206.=0D
+>>> this looks like a patch from the vendor tree.=0D
+>> [Pratik]: Yes, this is the patch from NXP. Please see original link of t=
+he patch https://github.com/nxp-imx/linux-imx/commit/16181cc4eee61d87cbaba0=
+e5a479990507816317=0D
+>>=0D
+>>> Could you please provide a link to the origin or at least to the=0D
+>>> document which describes TKT0577206?=0D
+>> [Pratik]: Please refer i.MX8MN errata #ERR051198 in https://www.nxp.com/=
+docs/en/errata/IMX8MN_0N14Y.pdf.=0D
+>Thanks, i think this ERR... reference is better than TKT... because it's=0D
+>links to the errata documents and other Freescale/NXP drivers use them=0D
+>too. So having this code in a comment would be great.=0D
+Sure, I will mention this #ERR051198 code in commit message.=0D
+>>=0D
+>>> As a i.MX6ULL user i couldn't find this issue in the chip errata. So ar=
+e=0D
+>>> you sure that every PWM IP handled by this driver is affected?=0D
+>> [Pratik]: Yes, looks like this issue is on all platforms which uses this=
+ PWM IP.=0D
+>>=0D
+>>>> Root cause:=0D
+>>>> When the SAR FIFO is empty, the new write value will be directly appli=
+ed=0D
+>>>> to SAR even the current period is not over.=0D
+>>>> If the new SAR value is less than the old one, and the counter is=0D
+>>>> greater than the new SAR value, the current period will not filp the=0D
+>>> s/filp/flip/ ?=0D
+>>>> level. This will result in a pulse with a duty cycle of 100%.=0D
+>>>>=0D
+>>>> Workaround:=0D
+>>>> Add an old value SAR write before updating the new duty cycle to SAR.=
+=0D
+>>>> This will keep the new value is always in a not empty fifo, and can be=
+=0D
+>>>> wait to update after a period finished.=0D
+>>>>=0D
+>>>> Limitation:=0D
+>>>> This workaround can only solve this issue when the PWM period is longe=
+r=0D
+>>>> than 2us(or <500KHz).=0D
+>>>>=0D
+>>>> Reviewed-by: Jun Li <jun.li@nxp.com>=0D
+>>>> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>=0D
+>>>> Link: https://github.com/nxp-imx/linux-imx/commit/16181cc4eee61d87cbab=
+a0e5a479990507816317=0D
+>>>> Tested-by: Pratik Manvar <pratik.manvar@ifm.com>=0D
+>>>> ---=0D
+>>>>    V1 -> V2: fix sparse warnings reported-by: kernel test robot <lkp@i=
+ntel.com>=0D
+>>>>              Closes: https://lore.kernel.org/oe-kbuild-all/20231230090=
+7.RGtYsKxb-lkp@intel.com/=0D
+>>>>=0D
+>>>>    drivers/pwm/pwm-imx27.c | 67 ++++++++++++++++++++++++++++++++++++++=
+---=0D
+>>>>    1 file changed, 62 insertions(+), 5 deletions(-)=0D
+>>>>=0D
+>>>> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c=0D
+>>>> index 7d9bc43f12b0..1e500a5bf564 100644=0D
+>>>> --- a/drivers/pwm/pwm-imx27.c=0D
+>>>> +++ b/drivers/pwm/pwm-imx27.c=0D
+>>>> @@ -21,11 +21,13 @@=0D
+>>>>    #include <linux/platform_device.h>=0D
+>>>>    #include <linux/pwm.h>=0D
+>>>>    #include <linux/slab.h>=0D
+>>>> +#include <linux/spinlock.h>=0D
+>>>>=0D
+>>>>    #define MX3_PWMCR			0x00    /* PWM Control Register */=0D
+>>>>    #define MX3_PWMSR			0x04    /* PWM Status Register */=0D
+>>>>    #define MX3_PWMSAR			0x0C    /* PWM Sample Register */=0D
+>>>>    #define MX3_PWMPR			0x10    /* PWM Period Register */=0D
+>>>> +#define MX3_PWMCNR			0x14    /* PWM Counter Register */=0D
+>>>>=0D
+>>>>    #define MX3_PWMCR_FWM			GENMASK(27, 26)=0D
+>>>>    #define MX3_PWMCR_STOPEN		BIT(25)=0D
+>>>> @@ -91,6 +93,7 @@ struct pwm_imx27_chip {=0D
+>>>>    	 * value to return in that case.=0D
+>>>>    	 */=0D
+>>>>    	unsigned int duty_cycle;=0D
+>>>> +	spinlock_t lock;=0D
+>>>>    };=0D
+>>>>=0D
+>>>>    #define to_pwm_imx27_chip(chip)	container_of(chip, struct pwm_imx27=
+_chip, chip)=0D
+>>>> @@ -203,10 +206,10 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_=
+chip *chip,=0D
+>>>>=0D
+>>>>    	sr =3D readl(imx->mmio_base + MX3_PWMSR);=0D
+>>>>    	fifoav =3D FIELD_GET(MX3_PWMSR_FIFOAV, sr);=0D
+>>>> -	if (fifoav =3D=3D MX3_PWMSR_FIFOAV_4WORDS) {=0D
+>>>> +	if (fifoav >=3D MX3_PWMSR_FIFOAV_3WORDS) {=0D
+>>>>    		period_ms =3D DIV_ROUND_UP_ULL(pwm_get_period(pwm),=0D
+>>>>    					 NSEC_PER_MSEC);=0D
+>>>> -		msleep(period_ms);=0D
+>>>> +		msleep(period_ms * (fifoav - 2));=0D
+>>> This touches a different workaround ("pwm: imx: Avoid sample FIFO=0D
+>>> overflow for i.MX PWM version2") without any explanation.=0D
+>> [Pratik]: Sure, I will look into this. Thanks!=0D
+>>>>    		sr =3D readl(imx->mmio_base + MX3_PWMSR);=0D
+>>>>    		if (fifoav =3D=3D FIELD_GET(MX3_PWMSR_FIFOAV, sr))=0D
+>>>> @@ -217,13 +220,15 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_=
+chip *chip,=0D
+>>>>    static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device=
+ *pwm,=0D
+>>>>    			   const struct pwm_state *state)=0D
+>>>>    {=0D
+>>>> -	unsigned long period_cycles, duty_cycles, prescale;=0D
+>>>> +	unsigned long period_cycles, duty_cycles, prescale, counter_check, f=
+lags;=0D
+>>>>    	struct pwm_imx27_chip *imx =3D to_pwm_imx27_chip(chip);=0D
+>>>> +	void __iomem *reg_sar =3D imx->mmio_base + MX3_PWMSAR;=0D
+>>>> +	__force u32 sar_last, sar_current;=0D
+>>>>    	struct pwm_state cstate;=0D
+>>>>    	unsigned long long c;=0D
+>>>>    	unsigned long long clkrate;=0D
+>>>>    	int ret;=0D
+>>>> -	u32 cr;=0D
+>>>> +	u32 cr, timeout =3D 1000;=0D
+>>>>=0D
+>>>>    	pwm_get_state(pwm, &cstate);=0D
+>>>>=0D
+>>>> @@ -264,7 +269,57 @@ static int pwm_imx27_apply(struct pwm_chip *chip,=
+ struct pwm_device *pwm,=0D
+>>>>    		pwm_imx27_sw_reset(chip);=0D
+>>>>    	}=0D
+>>>>=0D
+>>>> -	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);=0D
+>>>> +	/*=0D
+>>>> +	 * This is a limited workaround. When the SAR FIFO is empty, the new=
+=0D
+>>>> +	 * write value will be directly applied to SAR even the current peri=
+od=0D
+>>>> +	 * is not over.=0D
+>>>> +	 * If the new SAR value is less than the old one, and the counter is=
+=0D
+>>>> +	 * greater than the new SAR value, the current period will not filp=
+=0D
+>>> The same typo as in the commit message.=0D
+>>>> +	 * the level. This will result in a pulse with a duty cycle of 100%.=
+=0D
+>>>> +	 * So, writing the current value of the SAR to SAR here before updat=
+ing=0D
+>>>> +	 * the new SAR value can avoid this issue.=0D
+>>>> +	 *=0D
+>>>> +	 * Add a spin lock and turn off the interrupt to ensure that the=0D
+>>>> +	 * real-time performance can be guaranteed as much as possible when=
+=0D
+>>>> +	 * operating the following operations.=0D
+>>>> +	 *=0D
+>>>> +	 * 1. Add a threshold of 1.5us. If the time T between the read curre=
+nt=0D
+>>>> +	 * count value CNR and the end of the cycle is less than 1.5us, wait=
+=0D
+>>>> +	 * for T to be longer than 1.5us before updating the SAR register.=0D
+>>>> +	 * This is to avoid the situation that when the first SAR is written=
+,=0D
+>>>> +	 * the current cycle just ends and the SAR FIFO that just be written=
+=0D
+>>>> +	 * is emptied again.=0D
+>>>> +	 *=0D
+>>>> +	 * 2. Use __raw_writel() to minimize the interval between two writes=
+ to=0D
+>>>> +	 * the SAR register to increase the fastest pwm frequency supported.=
+=0D
+>>>> +	 *=0D
+>>>> +	 * When the PWM period is longer than 2us(or <500KHz), this workarou=
+nd=0D
+>>>> +	 * can solve this problem.=0D
+>>>> +	 */=0D
+>>>> +	if (duty_cycles < imx->duty_cycle) {=0D
+>>>> +		c =3D clkrate * 1500;=0D
+>>>> +		do_div(c, NSEC_PER_SEC);=0D
+>>>> +		counter_check =3D c;=0D
+>>>> +		sar_last =3D (__force u32) cpu_to_le32(imx->duty_cycle);=0D
+>>>> +		sar_current =3D (__force u32) cpu_to_le32(duty_cycles);=0D
+>>>> +=0D
+>>>> +		spin_lock_irqsave(&imx->lock, flags);=0D
+>>>> +		if (state->period >=3D 2000) {=0D
+>>>> +			while ((period_cycles -=0D
+>>>> +				readl_relaxed(imx->mmio_base + MX3_PWMCNR))=0D
+>>>> +				< counter_check) {=0D
+>>>> +				if (!--timeout)=0D
+>>>> +					break;=0D
+>>>> +			};=0D
+>>>> +		}=0D
+>>>> +		if (!(MX3_PWMSR_FIFOAV &=0D
+>>>> +		      readl_relaxed(imx->mmio_base + MX3_PWMSR)))=0D
+>>>> +			__raw_writel(sar_last, reg_sar);=0D
+>>>> +		__raw_writel(sar_current, reg_sar);=0D
+>>>> +		spin_unlock_irqrestore(&imx->lock, flags);=0D
+>>>> +	} else=0D
+>>>> +		writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);=0D
+>>>> +=0D
+>>> This is hard to believe that checkpatch.pl is fine with this patch.=0D
+>>> Please use it before submission.=0D
+>> [Pratik]: I used the checkpatch.pl in this patch and that runs without a=
+ny warnings/errors!=0D
+>Okay, AFAIR the coding style suggests braces for the else case.=0D
+>>=0D
+>>>>    	writel(period_cycles, imx->mmio_base + MX3_PWMPR);=0D
+>>>>=0D
+>>>>    	/*=0D
+>>>> @@ -324,6 +379,8 @@ static int pwm_imx27_probe(struct platform_device =
+*pdev)=0D
+>>>>    		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_per),=0D
+>>>>    				     "failed to get peripheral clock\n");=0D
+>>>>=0D
+>>>> +	spin_lock_init(&imx->lock);=0D
+>>>> +	imx->duty_cycle =3D 0;=0D
+>>> This line looks unrelated and unnecessary.=0D
+>> [Pratik]: Right. I will remove this line in next patch version.=0D
+>Could you also please look at Uwe's comments [1]?=0D
+>=0D
+>Thanks=0D
+>=0D
+>[1] -=0D
+>https://lore.kernel.org/all/20211220105555.zwq22vip7onafrck@pengutronix.de=
+/=0D
+Actually, I did not get much time to work on this. But, I will look into th=
+is now.=0D
+>>=0D
+>>> Best regards=0D
+>>>>    	imx->chip.ops =3D &pwm_imx27_ops;=0D
+>>>>    	imx->chip.dev =3D &pdev->dev;=0D
+>>>>    	imx->chip.npwm =3D 1;=0D
+=0D
+Thanks & Regards,=0D
+Pratik Manvar=
 
