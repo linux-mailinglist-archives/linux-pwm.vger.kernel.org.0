@@ -1,183 +1,162 @@
-Return-Path: <linux-pwm+bounces-1745-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1746-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E245878F78
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Mar 2024 09:07:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E36B878F80
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Mar 2024 09:12:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 18A9F1F21462
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Mar 2024 08:07:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 08C08281E6C
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Mar 2024 08:12:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D536997B;
-	Tue, 12 Mar 2024 08:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NvoNlh8b"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F5D56997C;
+	Tue, 12 Mar 2024 08:11:59 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896A742A9D;
-	Tue, 12 Mar 2024 08:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196BA69957;
+	Tue, 12 Mar 2024 08:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710230864; cv=none; b=AU7YnoKdbfZWDJsg+R5fIO/er6hax1IkxP00RlDTGbjrqoh68dIEzNJM6MPYm1k23zFyNXUZkzU/llRFmqAWxpBsMi64EYG3DKBMXNvhULsSZfhgWcBPc6IwH7h5Ge/GXpsmKFVR9d67YkKvTn1iYdmqFM6dOKZcLheU5L0CykU=
+	t=1710231119; cv=none; b=dyqkdUP40eJv0z4t4S+7H6VlZMxf3ZJbgZoMTqmABOl32cjfLbLToLrkAuPcE9y5JQghBuo76j23XQi9OakyeV3DdqNm9kCVT7EuB/aUIUc9CwONUal2m/H4PqySbBOBCoHQeDTZD9e14jA04FHTmzMCYydUPW6rweUzPVMMnRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710230864; c=relaxed/simple;
-	bh=PNfBS889iem5S8jWm+B9nUFW1ywCu/6HUug1appnhjs=;
+	s=arc-20240116; t=1710231119; c=relaxed/simple;
+	bh=sk8HixfVcumWZ1GehQ9D9l7TFRrPjkgjILc7gne2LgU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TlWbxLNgk5YJZ5r/4qiLFIwJhNH5x8tYMMgwHXJoJ48HtzpMK1jBJpzARFuFgncZgtgJAgn/cjksMSlCF67uPYDVQTV/AtrEkAUWJSNoIgqeG8Rho8yAt3XIlXxW8cGFyFbqzS/O/I9yDrgHyrBDBGZrCkglC9/B0ywgl+xpP78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NvoNlh8b; arc=none smtp.client-ip=209.85.167.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=fUaD4FNjGGrsCMZ2tJQ5xQ7oguSZ4ik99HCdWMg4DNjw/h1t4HZYIT2YnE+2inHUriGp7v8fq2btQbi77Fe5Jvdqvzyzp5jpa2HdBlrNGU6+WmIuYetylluPB/MY4AEYTavn2Jvgryjm3HKh+syE+r+c8WCYFMCNwAu/yUCBvuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c19dd9ade5so2441830b6e.3;
-        Tue, 12 Mar 2024 01:07:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710230861; x=1710835661; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/RIzEOygq7VMUeLQit4zxfFJspu+naDg/n7R0XzC1T4=;
-        b=NvoNlh8bHHJYIlX/dtbefgIiOI5mucLA9eg6NXyLWWt1ZuGjpQ/zqIvRW1+gVrcoTT
-         /A4hdoGclfJAhVTvDH1ooj5evbXYqj/whyC8aQUtTh5s1OX1wYFK4OASVjc9oMyy7owX
-         zI+4w9saV9Q/ojYWLtb2GIeQY4fmeIA4tPDG7nvrkFA7V78HAxfIa7+hjbeF4KX0WCxF
-         CONRCSBnDireNS1dt+/jlwwk2+fgYOei9qORQG/q9f2MTUbImbhd6jeKhtT4IeGYf8vN
-         PPxrANb5kX+J5zimk+ZGWdwRXfCt5I6dQzvxxZo+QfmWQOkDGx7Av05tbZJ6i+FTD7/8
-         botA==
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dc6cbe1ac75so4272694276.1;
+        Tue, 12 Mar 2024 01:11:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710230861; x=1710835661;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/RIzEOygq7VMUeLQit4zxfFJspu+naDg/n7R0XzC1T4=;
-        b=nWP1GnRT4QeYaS5ANKCHue/fBd/7ESOp2z5+pnJYoXgQk1JlG0HcN+XiW03i/ACsZP
-         Yeoq3V4UAeKN1LrhbrI9jFZEJN+LQJfoQB/tk09h8GM/3fQmvAhPcV7QLJ1Z+DGEhnJ7
-         Vf+4PG2CjRQzgO1Tm9B2dMzTkSdMRO0rdAGlM9xh+BDlMvdav2sRu5zy8UeXkws4RZFe
-         gMZM32aQiFXpoTYv8ZtYwthh1QEcEmxIWLTmNIrqsxS8TTg7mNh/afTaM6+uTAHu+E+H
-         +4zEQlOokk1AuuZ2L9KDO59CU7P7jLQbLdjDKY1QHsbw7vWmxu1lxwB5sTrAIs8qdOb+
-         NeoA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7bGOxAchhRIAYZkgLfbV12GhyltgT0shrEYDvsgWsB7P0tAVcygJ/0yDCgObAHhyV4ICYChdkGq+FN+UcAnkLYptZo99/Y4jnhBKKDSljeqmgH82SY9Ojia+ukv1+lvC2vLBC+kfvnDMKZ57ioa9yA2u9+0vb+f4PMJbQmk0PFL5YfQ==
-X-Gm-Message-State: AOJu0YwAyAG9aeBdth2gF8MCh03AlmNE6x0p+2c34kmzhz1RS/tXXpTk
-	NLF6JEFdgqUar77RMD857tVfenF8s38ujEzi79LA7E+DSSGIuCk4toNyN+8aDt5TuckshItS7Gz
-	WLfzh4Qe6DmSzUTWc0RfsPAcKigY=
-X-Google-Smtp-Source: AGHT+IEqGDo4+QqrniADKoFq8kmvx9wqjkjFdrGrz+1YEKvO4L30rSVWPQnVMTLEU9xShw0Iryu5luhAJnmK0B+eWoM=
-X-Received: by 2002:a05:6870:854d:b0:220:b713:77c1 with SMTP id
- w13-20020a056870854d00b00220b71377c1mr7483886oaj.31.1710230861330; Tue, 12
- Mar 2024 01:07:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710231115; x=1710835915;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0DGGAdPbj0T4Ioaeokq1bEI9IQ4pAfF26xaU3ZGRRTE=;
+        b=oEvxF35Ro8FRDiVFsEnTBBp4GF4hcwi2jmkf7t9jiFclOQq40+d6MuVfL40IhW+FiB
+         ylGbxDwVcbib5nvgY1MrMdFUifhpgUcDY8evIA07KMkYAzjnasvGqFSnJV4DymZfaYVD
+         EvG4BHpV9TerdmN8jUqX1pflRAHw4CJoWqWakqqySmLFeffasz5fHFbTV6cLdhDSwg6H
+         oNzrp2E7CXLS/0Yd8W1II2xD6XlR7tiYH64WtRv1WiORagqMHDrMuTP1hChxe7UYe21k
+         7k8w3+ErSUcSJtNbyZB4ivP/DbX1DzGVhoRUHQbQYzaCRvQCTS7bCJ8NUJ5k9Gj8we4g
+         D4Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUPTs08aypXy3kB1RQ7y5lq2h5TmNs372ZQOY7UWB1IR6vAJ14s62EtuVuoChRfnCmctFSXCo3cqxUv4i40XtFgQvhVWLgFeIK6X6Sj+jUnjAupT7eZMQMeWs+Pag3iG39lpPbqq/V/kM5wJEM=
+X-Gm-Message-State: AOJu0YxRun9avYQvBko5p4kfnDsdVWtz2THBI90SSTBDxgMtJKD4FU1H
+	Ws7JAoVX1XO5CXoACnPv/2I9YdX5rkDFsNk0AkN8w9X7n7Nr1iUYsCyZektyFFg=
+X-Google-Smtp-Source: AGHT+IFNaH9CLp8v+95AfkpFLyvHa4x3m0DWvM7x2rPJysWPzHHTHOqZmhiyYHsZsqgwVW0G3+1aMQ==
+X-Received: by 2002:a25:1587:0:b0:dc2:271a:3799 with SMTP id 129-20020a251587000000b00dc2271a3799mr7069864ybv.23.1710231115282;
+        Tue, 12 Mar 2024 01:11:55 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id v3-20020a259103000000b00dc7496891f1sm1549406ybl.54.2024.03.12.01.11.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Mar 2024 01:11:54 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dc25e12cc63so5800728276.0;
+        Tue, 12 Mar 2024 01:11:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUYeiLRIila3hZCFXGTan4SUpJHzc3Xvb7p+vFUFamMwsS7eyTVabBVPNxxzhcFo3RBWosyN4MtFLIfBLR3cazZOpFzHtrEkiE/PafeZOwoDm1ALZRicsQE2laPdLSznmCh1A9iejFwqw+Dhu8=
+X-Received: by 2002:a25:2007:0:b0:dcb:b072:82d8 with SMTP id
+ g7-20020a252007000000b00dcbb07282d8mr7175633ybg.15.1710231113910; Tue, 12 Mar
+ 2024 01:11:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304085933.1246964-1-qiujingbao.dlmu@gmail.com>
- <20240304090248.1247215-1-qiujingbao.dlmu@gmail.com> <twzx4abuhduos5s32txeugqr2yyca6ey7adcontsnapthwqaxa@dscea3ybrlym>
- <CAJRtX8T3GD-zu43-+U_rGQugqzGQQ-QbjHATV1NRdEMWevSUGw@mail.gmail.com>
-In-Reply-To: <CAJRtX8T3GD-zu43-+U_rGQugqzGQQ-QbjHATV1NRdEMWevSUGw@mail.gmail.com>
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Date: Tue, 12 Mar 2024 16:07:30 +0800
-Message-ID: <CAJRtX8RagduSxqxh-jH2wcoNgzbRdNRYW5Gcka1_uPR-o-Tj7w@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+References: <20240220194318.672443-1-biju.das.jz@bp.renesas.com>
+ <20240220194318.672443-4-biju.das.jz@bp.renesas.com> <hy5crf2leuvewkn5omgrk2bmkndivwmhst4yrefnd3mepy4nzd@xw3rtkxdnb2g>
+In-Reply-To: <hy5crf2leuvewkn5omgrk2bmkndivwmhst4yrefnd3mepy4nzd@xw3rtkxdnb2g>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 12 Mar 2024 09:11:42 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdV8SnMgawrMspemJNfsAHW-wSboXeEOgZ6F37QqrmiLSA@mail.gmail.com>
+Message-ID: <CAMuHMdV8SnMgawrMspemJNfsAHW-wSboXeEOgZ6F37QqrmiLSA@mail.gmail.com>
+Subject: Re: [PATCH v18 3/4] pwm: Add support for RZ/G2L GPT
 To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	dlan@gentoo.org, inochiama@outlook.com
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, Biju Das <biju.das.au@gmail.com>, 
+	kernel@pengutronix.de
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
 Hi Uwe,
 
-Gentle ping,
-I'm sorry for wasting your time, and I look forward to your feedback.
+On Tue, Mar 12, 2024 at 8:20=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Tue, Feb 20, 2024 at 07:43:17PM +0000, Biju Das wrote:
+> > --- /dev/null
+> > +++ b/drivers/pwm/pwm-rzg2l-gpt.c
+> > +static u64 calculate_period_or_duty(struct rzg2l_gpt_chip *rzg2l_gpt, =
+u32 val, u8 prescale)
+> > +{
+> > +     u64 tmp, d;
+> > +
+> > +     /*
+> > +      * Rate is in MHz and is always integer for peripheral clk
+> > +      * 2^32 * 2^10 (prescalar) * 10^9 > 2^64
+> > +      * 2^32 * 2^10 (prescalar) * 10^6 < 2^64
+> > +      * Multiply val with prescalar first, if the result is less than
+> > +      * 2^34, then multiply by 10^9. Otherwise divide nr and dr by 10^=
+3
+> > +      * so that it will never overflow.
+> > +      */
+> > +
+> > +     tmp =3D (u64)val << (2 * prescale);
+> > +     if (tmp <=3D (1ULL << 34)) {
+>
+> I would have written that as:
+>
+>         if (tmp >> 34 =3D=3D 0)
+>
+> (which implements tmp < (1ULL << 34), which doesn't matter much).
+>
+> > +             tmp *=3D NSEC_PER_SEC;
+> > +             d =3D rzg2l_gpt->rate;
+> > +     } else {
+> > +             tmp *=3D div64_u64(NSEC_PER_SEC, KILO);
+>
+> I don't know if the compiler is clever enough to not calculate that
+> every time?
 
-> > > +     if (tem < PWM_CV1800_MINPERIOD)
-> > > +             return -EINVAL;
-> > > +
-> > > +     if (tem > PWM_CV1800_MAXPERIOD)
-> > > +             tem = PWM_CV1800_MAXPERIOD;
-> > > +
-> > > +     period_val = (u32)tem;
-> > > +
-> > > +     /*
-> > > +      * The meaning of HLPERIOD is the number of beats in the low or high level
-> > > +      * of the PERIOD. When the value of the POLARITY register is 0, HLPERIOD
-> > > +      * represents a low level.
-> > > +      * HLPERIOD = period_val - rate(MHz) / duty(MHz)
-> > > +      * HLPERIOD = period_val - duty(ns) * rate(Hz) / NSEC_PER_SEC
-> >
-> > So HLPERIOD defines the second part of each period, right? This isn't
-> > considered in .get_state().
->
-> I am so sorry about this. I made a mess of the duty cycle.
-> According to the PWM_DEBUG, it can be inferred that configure the
-> biggest duty_cycle not
-> bigger than the requested value, so in .apply duty_cycle should round down and
-> in .get_state duty_cycle should round up. However, when the polarity is normal,
-> This hardware requires a low-level beat count. So the corrected code
-> is as follows.
->
-> in .apply()
->
-> ticks = mul_u64_u64_div_u64(state->duty_cycle , priv->clk_rate,NSEC_PER_SEC);
-> ...
-> hlperiod_val =period_val- (u32)ticks;
->
-> in .get_state()
->
-> u32 hlperiod_val=0;
->
-> period_ns = DIV_ROUND_UP_ULL(period_val * NSEC_PER_SEC,priv->clk_rate);
-> duty_ns = DIV_ROUND_UP_ULL(hlperiod_val * period_ns, period_val);
-> hlperiod_val = period_ns - duty_ns;
->
-> I tested this code with PWM_DEBUG. no warning output. What do you
-> think about this?
->
->
+Not on 32-bit when written that way.
 
-in .apply()
+> Also using div64_u64 is too heavy given that both values fit
+> into an u32.
 
-ticks = mul_u64_u64_div_u64(state->duty_cycle, priv->clk_rate,
-NSEC_PER_SEC);
-if (ticks > period_val)
-ticks = period_val;
+Indeed, so "NSEC_PER_SEC / KILO" should be fine.
+I guess NSEC_PER_MSEC would be too obfuscating?
 
-hlperiod_val = period_val - (u32)ticks;
-...
-regmap_write(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), hlperiod_val);
-
-in .get_state()
-
-u64 hlperiod_ns = 0;
-regmap_read(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), &hlperiod_val);
-...
-period_ns = DIV_ROUND_UP_ULL(period_val * NSEC_PER_SEC,
-priv->clk_rate);
-hlperiod_ns = DIV_ROUND_UP_ULL(hlperiod_val * NSEC_PER_SEC,
-priv->clk_rate);
-
-duty_ns = period_ns - hlperiod_ns;
-
-I tested this code with PWM_DEBUG. no warning output.
-
-> >
-> > > +      */
-> > > +     tem = mul_u64_u64_div_u64(state->duty_cycle, priv->clk_rate,
-> > > +                               NSEC_PER_SEC);
-> > > +     if (tem > period_val)
-> > > +             return -EINVAL;
-> >
-> > if (tem > period_val)
-> >         tem = period_val;
-> >
-> > > +     hlperiod_val = period_val - (u32)tem;
-> >
-> > Wrong rounding I think. Did you test your driver with PWM_DEBUG enabled?
 >
-> ditto.
+> > +             d =3D div64_u64(rzg2l_gpt->rate, KILO);
 >
+> At first I thought you could better use 1024 as the common divisor here
+> as it could be implemented using a shift operation. But I understood
+> with the comment above that we're not losing precision here as both
+> NSEC_PER_SEC and rate are a multiple of 1000.
+>
+> Maybe s/Rate is in MHz and is always integer for peripheral clk/Rate is
+> a multiple of 1000000, and so dividing by 1000 is an exact operation./ ?
+>
+> > +     }
+> > +
+> > +     return DIV64_U64_ROUND_UP(tmp, d);
+> > +}
 
-Best regards
-Jingbao Qiu
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
