@@ -1,284 +1,150 @@
-Return-Path: <linux-pwm+bounces-1764-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1765-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B38E587C46E
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Mar 2024 21:47:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BED7B87C498
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Mar 2024 22:12:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6839A281D4B
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Mar 2024 20:47:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 48AE91F2252B
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Mar 2024 21:12:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CDCD7641F;
-	Thu, 14 Mar 2024 20:47:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26AED7641A;
+	Thu, 14 Mar 2024 21:12:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ABt2KcCT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cuYUUYk0"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967C3763F4
-	for <linux-pwm@vger.kernel.org>; Thu, 14 Mar 2024 20:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFFA763F6
+	for <linux-pwm@vger.kernel.org>; Thu, 14 Mar 2024 21:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710449249; cv=none; b=fkoDpYYBg3REzczpQ0Ynf1sUBPggSRsJn5DMJtU9bSlWDn9Vait0W6ie4NPdg1Mll+gq/NXwnnToTxW8sFt/AzHiwFflHuV513SAfbcp4bLpAHSW+GriI8YcpyKwDYoIVJahlXv1Q43dgQTvhZulqnNH22/bETXi28fG7guLUNs=
+	t=1710450734; cv=none; b=ccDUf4dcbrkEeLU5HkXLEkJqwmj2+MF/TGibrq1XYlMJ6+1rzHZ7VN17exWU/C5/q5oM8NyBf97puVdtxiBbYj0LzRGCiV0OXg/iDCMGKGYiaVK1J1MIW5j8cFvoevM4sZD0Z/I6KQjlMP79lq01dsOJ7+/zFEjYMNzDe9KNzTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710449249; c=relaxed/simple;
-	bh=UIF4J65ehQgwFgLwNNQv7+xO+t1wQO4o0nbyeYHrPkE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BMDURIH2Tesx01VclFI3I6cJYKTuPHdZFTCGak/z7pCS1pQCBGH2sOTWOS68dERpwhRq31nGCxVKeJjsAUrkSAkiH7NRqfL2SvEf2ZrRLTMjy0OveBLjmzz71HdAlq1+9g3X6CD4H7AbPgYtmUErfzR2CsFaKWoGnZ4CoSvMdhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ABt2KcCT; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-42edb7a1114so5652531cf.1
-        for <linux-pwm@vger.kernel.org>; Thu, 14 Mar 2024 13:47:27 -0700 (PDT)
+	s=arc-20240116; t=1710450734; c=relaxed/simple;
+	bh=VQAxS9UlhaDxtNiBi9XLQsLHIPtqwmP3APdnk8j+erw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dl7p6g73ACfiiVhw/V7otKdZp4k/9GBRvvXC8Qt6qGr0qFpr0UGcrfhTmJfWDjg+n6TWbikDzLYJDKBGKbYdyFFL9O5SENmuQRZYNf7mi2CpDodQruQUx88NIeYUtfldik2IO6yc12xmquOD46XcdFc0BhRMEwB+K1lJmB6BnPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cuYUUYk0; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3fb8b0b7acso153927066b.2
+        for <linux-pwm@vger.kernel.org>; Thu, 14 Mar 2024 14:12:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710449246; x=1711054046; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rebonSk8UmoBj8EHW0+x6iBNgmHsWXTbExBrTy61JIM=;
-        b=ABt2KcCTKTlgPCIMiO/hqlySV6jsyDRateiNcb72R8QpY/yS5ODckuXKIMfA8lhQHj
-         j6wF05HpDTgCQaCxKCvMay4NbaEt15cQc7gMzNaGhg3Wr60X9SFLI14/8MWhRTPZ7hwc
-         EbSPDU2hQoWKRzyE5vCx7ctgVtvqwBEHSzZP6WNDaN53zl3OCcYSZZAWTuukUI7MYYGX
-         rd2Btwtj4XzJ0D4HrVypQJCpCbSI6DYm4xxYV2YPuHG4wkvgMIcV1cLj2mqJ8DMhVUNO
-         CwkMqhKUlWCd6+A/zZZUEt+gNINZ8Eckf6tMr6iIgP2CG66TbaiBwK2G9sAjrRfkTpXB
-         S+/Q==
+        d=linaro.org; s=google; t=1710450730; x=1711055530; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zLs92Y9LtVh2vMfCgrmAPa3vJkKfjO8HkqCB9AzDoYc=;
+        b=cuYUUYk0sz0LlqPyBDLf1bUzQ61j7n77KxrzhXePlUiphbCZO9YXeviT+0GWa8Nhsg
+         bGQoBl5f3B1qdqQ5g8F1al/fNSDpSQzRLvBkLs0z1EU3sV2UkbGJ88NKFs/w8I/vRKSH
+         48KXtZMiXjBNgoye/y/LD1SBuOUnpr/zfPCjHCZ8XFGEBHXvq7VL5bYibDyhrWAqQ5kh
+         BMjJBVW286LqdBtfduNKrQV7mDv39vu9GVEfTlNImF1vJazKYUX1t2ypjvA1EzriIPIo
+         KeO7HV1HFEGdjVgchcmMv1Q6xnIWGLZWQhZs1J09wazBLXfdjJipY0F8Jsz7oXdIL+vO
+         WWcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710449246; x=1711054046;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rebonSk8UmoBj8EHW0+x6iBNgmHsWXTbExBrTy61JIM=;
-        b=eYNJHSmRSIUIWyI9CglYbXz9HauHC4sriA88mHtLcYvpPC8Xs/QBpGJ5nKT0klJeTw
-         vnveGbFjqbs+9z06PML0STqzC1g4PcIGJOdqW5iok3BXY3l6mxt6CjQUV0owP6fGAHGs
-         wFPSkQwSx5wsve2LbH3CRtOSpqXgRIQ6EfyBe7yhM4mhvsmWjZ9qS7H95O5GLE6tjmYP
-         JztEBHs2reBHRXqRDRiGJPXJSdbjcxc7zNppzTvgrjeWGBtR0mtvBbExCGpqnn0GOE5K
-         wypa13ddSXUjqeg5esb0ZbJ7EzhhrY8SKtwvmZrbUH9jHBdoki4bDuC1Shh6d8H2g2XO
-         /yUQ==
-X-Gm-Message-State: AOJu0Yz4pdNBxXGTnEtYoDS6c5HgRXWUOoy5igHxOEnty8p4925AkNmd
-	ZYQZAEPDHOaEotoMrMwE6+sVNpUi3IcVLbEZXD+e56A8TaEyyGK5pbEhBv6HXXzd0RH8U5eBSWE
-	fo5U=
-X-Google-Smtp-Source: AGHT+IEiWI7uwJUkA2nC89WYPMmqCqUoLsa0nMoO8D5PL661KnZykIIys9gvWKTzQQJUhvwk5sxNyw==
-X-Received: by 2002:a05:622a:1214:b0:42e:b2c3:d77a with SMTP id y20-20020a05622a121400b0042eb2c3d77amr2173669qtx.46.1710449246262;
-        Thu, 14 Mar 2024 13:47:26 -0700 (PDT)
-Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id n16-20020ac86750000000b0042eef160b4dsm1165272qtp.76.2024.03.14.13.47.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Mar 2024 13:47:26 -0700 (PDT)
-From: Trevor Gamblin <tgamblin@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	u.kleine-koenig@pengutronix.de,
-	michael.hennerich@analog.com,
-	nuno.sa@analog.com,
-	devicetree@vger.kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	tgamblin@baylibre.com,
-	dlechner@baylibre.com
-Subject: [PATCH 2/2] pwm: axi-pwmgen: support version 2.00.a
-Date: Thu, 14 Mar 2024 16:47:22 -0400
-Message-ID: <20240314204722.1291993-3-tgamblin@baylibre.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240314204722.1291993-1-tgamblin@baylibre.com>
-References: <20240314204722.1291993-1-tgamblin@baylibre.com>
+        d=1e100.net; s=20230601; t=1710450730; x=1711055530;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zLs92Y9LtVh2vMfCgrmAPa3vJkKfjO8HkqCB9AzDoYc=;
+        b=B7COvAsIyEngJ3gqXnVTuxhNUjEYRn74eUKtizOWk8dHIba4sy/rUsDf3flyFs6ZqF
+         3WcZbbeUPCvYiyw5QXTw+3ejHKFg7R67B9dNwmXX1WPB6R9xPlCsd4ZSbBibtMpCiHJI
+         iUW8juczHCzGJocvvMGxs7tkZWNjUyrSf68JWD/VabAMFgOW55uIMNEUbFKcVe8TLrhW
+         TPN8RCaGuGSXkkYR3xR6kRRgquHJdKVnSEnnErsQs1U5gMGE8khCQUSB85PnGRjcEdWD
+         8j1fBqq1mPjs/xhnI0hpqTsKGEfJyKlj+v8WJEJQ9SJ4CmP3Pv+QARtQWVvhk4ZvB6BP
+         Cu8A==
+X-Forwarded-Encrypted: i=1; AJvYcCXws6mZCldr/Grip7RIgD1iZr+QF6CjBhoDqykzNsgulG0qIpByGLUBeR155rzmwb61DrwA2W3H7UoFz+kDg2Rbk1kqKDKK0+4b
+X-Gm-Message-State: AOJu0YxOaK56mMsGw9uu3wIL8MI16LW5hSkwe4WZRbHkksgfCknRwmmq
+	q31DN8y/g5PNfl8RuBEjdjn3jjDvAVonMcYL/KFxbxCbwBRK/o/5/KfwUNM9u+U=
+X-Google-Smtp-Source: AGHT+IHwj5yGArBwzsmIws1hzvuHYMA1RYMPtsqGuhKTIt51xsMOfO0SrPSQ7xgex7bZxVXePI8HgQ==
+X-Received: by 2002:a17:907:c30e:b0:a46:7335:9c6f with SMTP id tl14-20020a170907c30e00b00a4673359c6fmr2037854ejc.13.1710450729848;
+        Thu, 14 Mar 2024 14:12:09 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id vi2-20020a170907d40200b00a42f6d17123sm1025222ejc.46.2024.03.14.14.12.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 14:12:09 -0700 (PDT)
+Message-ID: <5fc9d434-d30b-44a0-bcef-f5c32f938034@linaro.org>
+Date: Thu, 14 Mar 2024 22:12:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: adi,axi-pwmgen: Add compatible for
+ v2 IP
+Content-Language: en-US
+To: Trevor Gamblin <tgamblin@baylibre.com>, linux-pwm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+ michael.hennerich@analog.com, nuno.sa@analog.com,
+ devicetree@vger.kernel.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, dlechner@baylibre.com
+References: <20240314204722.1291993-1-tgamblin@baylibre.com>
+ <20240314204722.1291993-2-tgamblin@baylibre.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240314204722.1291993-2-tgamblin@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This adds support for the AXI PWMGEN v2 IP block. This version is
-nearly identical to v1 other than it supports up to 16 channels instead
-of 4 and a few of the memory mapped registers have moved.
+On 14/03/2024 21:47, Trevor Gamblin wrote:
+> This adds a compatible string for the AXI PWMGEN v2 IP block. This is
+> nearly identical to v1 other than updating the example to use v2.
+> 
+> Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
+> ---
 
-Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
----
- drivers/pwm/pwm-axi-pwmgen.c | 62 ++++++++++++++++++++++++++++--------
- 1 file changed, 49 insertions(+), 13 deletions(-)
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
-index 0c8f7f893a21..539625c404ac 100644
---- a/drivers/pwm/pwm-axi-pwmgen.c
-+++ b/drivers/pwm/pwm-axi-pwmgen.c
-@@ -32,16 +32,25 @@
- #define AXI_PWMGEN_REG_CORE_MAGIC	0x0C
- #define AXI_PWMGEN_REG_CONFIG		0x10
- #define AXI_PWMGEN_REG_NPWM		0x14
--#define AXI_PWMGEN_CHX_PERIOD(ch)	(0x40 + (12 * (ch)))
--#define AXI_PWMGEN_CHX_DUTY(ch)		(0x44 + (12 * (ch)))
--#define AXI_PWMGEN_CHX_OFFSET(ch)	(0x48 + (12 * (ch)))
-+#define AXI_PWMGEN_CHX_PERIOD(v, ch)	((v)->period_base + (v)->ch_step * (ch))
-+#define AXI_PWMGEN_CHX_DUTY(v, ch)	((v)->duty_base + (v)->ch_step * (ch))
-+#define AXI_PWMGEN_CHX_OFFSET(v, ch)	((v)->offset_base + (v)->ch_step * (ch))
- #define AXI_PWMGEN_REG_CORE_MAGIC_VAL	0x601A3471 /* Identification number to test during setup */
- #define AXI_PWMGEN_LOAD_CONFIG		BIT(1)
- #define AXI_PWMGEN_RESET		BIT(0)
- 
-+struct axi_pwm_variant {
-+	u8 period_base;
-+	u8 duty_base;
-+	u8 offset_base;
-+	u8 major_version;
-+	u8 ch_step;
-+};
-+
- struct axi_pwmgen_ddata {
- 	struct regmap *regmap;
- 	unsigned long clk_rate_hz;
-+	const struct axi_pwm_variant *variant;
- };
- 
- static const struct regmap_config axi_pwmgen_regmap_config = {
-@@ -50,12 +59,30 @@ static const struct regmap_config axi_pwmgen_regmap_config = {
- 	.val_bits = 32,
- };
- 
-+static const struct axi_pwm_variant pwmgen_1_00_variant = {
-+	.period_base = 0x40,
-+	.duty_base = 0x44,
-+	.offset_base = 0x48,
-+	.major_version = 1,
-+	.ch_step = 12,
-+};
-+
-+static const struct axi_pwm_variant pwmgen_2_00_variant = {
-+	.period_base = 0x40,
-+	.duty_base = 0x80,
-+	.offset_base = 0xC0,
-+	.major_version = 2,
-+	.ch_step = 4,
-+};
-+
-+
- static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			    const struct pwm_state *state)
- {
- 	struct axi_pwmgen_ddata *ddata = pwmchip_get_drvdata(chip);
- 	unsigned int ch = pwm->hwpwm;
- 	struct regmap *regmap = ddata->regmap;
-+	const struct axi_pwm_variant *variant = ddata->variant;
- 	u64 period_cnt, duty_cnt;
- 	int ret;
- 
-@@ -70,7 +97,7 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		if (period_cnt == 0)
- 			return -EINVAL;
- 
--		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), period_cnt);
-+		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(variant, ch), period_cnt);
- 		if (ret)
- 			return ret;
- 
-@@ -78,15 +105,15 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		if (duty_cnt > UINT_MAX)
- 			duty_cnt = UINT_MAX;
- 
--		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), duty_cnt);
-+		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch), duty_cnt);
- 		if (ret)
- 			return ret;
- 	} else {
--		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), 0);
-+		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(variant, ch), 0);
- 		if (ret)
- 			return ret;
- 
--		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), 0);
-+		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch), 0);
- 		if (ret)
- 			return ret;
- 	}
-@@ -99,11 +126,12 @@ static int axi_pwmgen_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- {
- 	struct axi_pwmgen_ddata *ddata = pwmchip_get_drvdata(chip);
- 	struct regmap *regmap = ddata->regmap;
-+	const struct axi_pwm_variant *variant = ddata->variant;
- 	unsigned int ch = pwm->hwpwm;
- 	u32 cnt;
- 	int ret;
- 
--	ret = regmap_read(regmap, AXI_PWMGEN_CHX_PERIOD(ch), &cnt);
-+	ret = regmap_read(regmap, AXI_PWMGEN_CHX_PERIOD(variant, ch), &cnt);
- 	if (ret)
- 		return ret;
- 
-@@ -111,7 +139,7 @@ static int axi_pwmgen_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	state->period = DIV_ROUND_UP_ULL((u64)cnt * NSEC_PER_SEC, ddata->clk_rate_hz);
- 
--	ret = regmap_read(regmap, AXI_PWMGEN_CHX_DUTY(ch), &cnt);
-+	ret = regmap_read(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch), &cnt);
- 	if (ret)
- 		return ret;
- 
-@@ -127,7 +155,8 @@ static const struct pwm_ops axi_pwmgen_pwm_ops = {
- 	.get_state = axi_pwmgen_get_state,
- };
- 
--static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev)
-+static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev, 
-+			    const struct axi_pwm_variant *variant)
- {
- 	int ret;
- 	u32 val;
-@@ -146,7 +175,7 @@ static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev)
- 	if (ret)
- 		return ret;
- 
--	if (ADI_AXI_PCORE_VER_MAJOR(val) != 1) {
-+	if (ADI_AXI_PCORE_VER_MAJOR(val) != variant->major_version) {
- 		return dev_err_probe(dev, -ENODEV, "Unsupported peripheral version %u.%u.%u\n",
- 			ADI_AXI_PCORE_VER_MAJOR(val),
- 			ADI_AXI_PCORE_VER_MINOR(val),
-@@ -178,9 +207,14 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
- 	struct pwm_chip *chip;
- 	struct axi_pwmgen_ddata *ddata;
- 	struct clk *clk;
-+	const struct axi_pwm_variant *variant;
- 	void __iomem *io_base;
- 	int ret;
- 
-+	variant = device_get_match_data(dev);
-+	if (!variant)
-+		return -EINVAL;
-+
- 	io_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(io_base))
- 		return PTR_ERR(io_base);
-@@ -190,7 +224,7 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(regmap),
- 				     "failed to init register map\n");
- 
--	ret = axi_pwmgen_setup(regmap, dev);
-+	ret = axi_pwmgen_setup(regmap, dev, variant);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -199,6 +233,7 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
- 		return PTR_ERR(chip);
- 	ddata = pwmchip_get_drvdata(chip);
- 	ddata->regmap = regmap;
-+	ddata->variant = variant;
- 
- 	clk = devm_clk_get_enabled(dev, NULL);
- 	if (IS_ERR(clk))
-@@ -224,7 +259,8 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id axi_pwmgen_ids[] = {
--	{ .compatible = "adi,axi-pwmgen-1.00.a" },
-+	{ .compatible = "adi,axi-pwmgen-1.00.a", .data = &pwmgen_1_00_variant },
-+	{ .compatible = "adi,axi-pwmgen-2.00.a", .data = &pwmgen_2_00_variant },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, axi_pwmgen_ids);
--- 
-2.44.0
+Best regards,
+Krzysztof
 
 
