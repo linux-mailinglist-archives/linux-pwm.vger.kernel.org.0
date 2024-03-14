@@ -1,400 +1,675 @@
-Return-Path: <linux-pwm+bounces-1760-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1761-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED87987BC02
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Mar 2024 12:35:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8617B87C26E
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Mar 2024 19:11:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7563A28484C
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Mar 2024 11:35:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 145961F21963
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Mar 2024 18:11:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F25C66CDB5;
-	Thu, 14 Mar 2024 11:35:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 939A674C0A;
+	Thu, 14 Mar 2024 18:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="u+KrULC9"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2084.outbound.protection.outlook.com [40.107.114.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE4B6EB53
-	for <linux-pwm@vger.kernel.org>; Thu, 14 Mar 2024 11:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710416141; cv=none; b=dgRIFaVqbjwGTqVTtADMz+lNeK9S0lnR5+Wr5WlJxVKaid0JYAZc5OiVkKq23khpfhHzsltPigj+H2L2zXBc5dw4l9xNGNbyuLiq4CS6Q5E3lZ6BTVa7vBPxiDGMERVs9nBePC4ZORcTj2u4uPXl2C2cGn9k528VfN76PDkBnWI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710416141; c=relaxed/simple;
-	bh=g2FvV2a/76PoLAhdO8gpdq5YlLgPaBxWjYrgLTRBR20=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tcaGgjSKXAQ6ov1DFiTb/gEiQNKFuyYMUZB12FScmNZZl2ijUE1CiCATrv1LqHODY3Oz/1BDF+nYHhFBPCwwocuTK98nAMh7O2CtDYNIxUx0NTbaJGanGIdQwUbuacoihqcT1DzC9QXnvCU8ykrd02HEWAEnUPHMLBjER/JIAQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rkjMz-0006vq-E7; Thu, 14 Mar 2024 12:35:33 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rkjMy-006IlX-BZ; Thu, 14 Mar 2024 12:35:32 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rkjMy-0060TP-0q;
-	Thu, 14 Mar 2024 12:35:32 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Lee Jones <lee@kernel.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Helge Deller <deller@gmx.de>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	kernel@pengutronix.de,
-	linux-pwm@vger.kernel.org
-Subject: [PATCH v2] backlight: lp8788: Drop support for platform data
-Date: Thu, 14 Mar 2024 12:35:28 +0100
-Message-ID: <20240314113529.923708-2-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4FB74BF2;
+	Thu, 14 Mar 2024 18:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.114.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710439859; cv=fail; b=gg4zCIqK2vvBJw5RnUo9UE5k6McPUMGXMfIDLsWWmMgxpI/VqvyCiELIwN+IpxoMw9txN7180yT6DXegBZpemw0jtV065wPGBYJ4TWcbTRaF2ilkl9KcLKL5iLdaXimFSTeBikHrr3jP5iMubxloevhLxqXGsxuDmVSGHNIbd7U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710439859; c=relaxed/simple;
+	bh=RhtQnixAl9VQAcseggpEDN3igeTO6j98+klUIOFsYXQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ftxcn/mQ9kUh78ZFND76YQUL/0XBz2LNWA1kr6x5sn/DHnK5l4OK0ZuDTiwsdfwgj35OlDxn6IbQX9SdSYq7X1AAf1Z33ARSnpWgqSJIexSQGxoyc9xMPshgrYCYysSRWisEgG0gBqYPuOu/Pbe95bhUQWKN6qBC4/Mw8AbgAFA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=u+KrULC9; arc=fail smtp.client-ip=40.107.114.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GMuOoufmFlW1PD3Va9da6FTbhNbkx6T3BL7LpS9R3hMydoX3MfVMpmzoj3KtDntJYxzWMUW9EeRxLZbcCZj1owRfo7Y+2i1lIzGOO3nbwH9uiMRAlSeEba+KL3x6SkLHEqxwJJogjxxQpr/3c8ZmABb/3bYVa3zGzz1bg6XrnkOXkWgBwtwF3RLXQFo+VdcWRx/v1JTjaqnLxwC0T4gabvnTzFAZrwP44TNi9OKVdN1/FbfpG8MwF/Wvup7JpjtEFssblTW8KsV4r6p+81Yf6YnzlTMvpqLJJpp2jynS3VRSMcpHOfBTsg/xyBW7Z00P1K8DGX/q6UmUT+tQT1ytEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VON3NkF8Ajs/sKWD/3x9WuOrIdvgpxeTMXhmRmUe7iQ=;
+ b=aXREp64FaMk/tHWWq4Av8biZHWX/h6VaUXDQMEtsYfGYmVe0a1UlWdZ6blbAXu2cgjLidzySKsQIDdr1nF7Jtj5xj5UnmRWr7TerM+qHq00rB0D87T42EmeSjRNMrArvG2plyujWBVs8jYz7JHDOxuDCtdg+nFPDBTp4O5NkMh7uphhztIS/go1q08GG323fDO19cLWR9CFSfZ2D2XHjNeuZBwEaE7BKgoAaJplN3+D+ePv44wk90IJL+cBUI3VrMOjsIkGalnRLHrmlZ/zhREC5CKEIDT/gvGtPo4Q6gVdlJOJgPrc13brEECjGMx7QiKSby9vCvoy0NBj7Vy7O1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VON3NkF8Ajs/sKWD/3x9WuOrIdvgpxeTMXhmRmUe7iQ=;
+ b=u+KrULC9QEM7HocX6Entqsknwdm93U4PBQ1EYTtKVyhup0NLnC+cs/FzoyAeHUVsfwIbqeRVYtS3Fr1G7MJRacVFoHFDARfC7UORybHJNTBZEd9jPSxUlNHV9b0GQACYsXuLPzX4r63PLs/vWJ5T3lk603YlQnkmAxrwJvCfe8k=
+Received: from OSAPR01MB1587.jpnprd01.prod.outlook.com (2603:1096:603:2e::16)
+ by OS3PR01MB10027.jpnprd01.prod.outlook.com (2603:1096:604:1e6::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.36; Thu, 14 Mar
+ 2024 18:10:51 +0000
+Received: from OSAPR01MB1587.jpnprd01.prod.outlook.com
+ ([fe80::aef6:c35b:b90d:2e3f]) by OSAPR01MB1587.jpnprd01.prod.outlook.com
+ ([fe80::aef6:c35b:b90d:2e3f%5]) with mapi id 15.20.7386.017; Thu, 14 Mar 2024
+ 18:10:51 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+CC: Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Magnus Damm
+	<magnus.damm@gmail.com>, "linux-pwm@vger.kernel.org"
+	<linux-pwm@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>, biju.das.au
+	<biju.das.au@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: [PATCH v18 3/4] pwm: Add support for RZ/G2L GPT
+Thread-Topic: [PATCH v18 3/4] pwm: Add support for RZ/G2L GPT
+Thread-Index: AQHaZDUd2szw5U1SmEaBqj/KTS2kjrEz0w2AgAPRLgA=
+Date: Thu, 14 Mar 2024 18:10:50 +0000
+Message-ID:
+ <OSAPR01MB1587400FECDBFDB3E38A594286292@OSAPR01MB1587.jpnprd01.prod.outlook.com>
+References: <20240220194318.672443-1-biju.das.jz@bp.renesas.com>
+ <20240220194318.672443-4-biju.das.jz@bp.renesas.com>
+ <hy5crf2leuvewkn5omgrk2bmkndivwmhst4yrefnd3mepy4nzd@xw3rtkxdnb2g>
+In-Reply-To: <hy5crf2leuvewkn5omgrk2bmkndivwmhst4yrefnd3mepy4nzd@xw3rtkxdnb2g>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSAPR01MB1587:EE_|OS3PR01MB10027:EE_
+x-ms-office365-filtering-correlation-id: e2b5b3c7-3fa2-4f0b-00f7-08dc445214f3
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 8hT2SSNDHjkuJYgzDwlrPzlrb3vn2UXK26umUqGP2ie2Kr1WnMjiWSF/3PETFnlQsHz8L2gtLtk8PHeDYqlF6//IxC+/G7+40yFMHqso8BReVU10EdMgMC9pExkcneiLTwgfSB8jdEw4RRWqlfF3RAN6xHPhD93DtnzAtB9UsOdBOoQUZR6tsGHMm2mSBhnXozdfqfgh+RKmhMntgMDVp1iSx4T2wEngdq7bs6ffp8m32MoH9o6w0eOVUyH/oEfLdwbHpqY6oS6NeEbkIwLxne4a9LqDpIOH/0EtWg+8gkM7tcV2EBkJnQyPEZ498B5mNilbfHdt82KN6YWiIBXuHHqWn6c7XADHJ8/3oNDZZkxt3iUQp6qrhVTTcnz83UkQtxdUqE4mV++Qxw+kMXAv5b9TpY0j9gCJ8sPrCaR1Bn6n/XHS7/OoicdfIPvcRAMTgGKf6CM5TuGKlYGvmj3AqYAsZsrpiDwcJ+ttC7j6nyyJGzZJxe6qmVKxnkPXY7NapQVs2BQ4EUoHmp8YZ30et5K/INRG4yULDqTVcZslqLduvUcwq0xD3Gl1RiqKrArxsqmzregKEeGGCcKvLxgYDLs6GblBW7B3Eqxs7TVmT2uzGRNQD3z1YGZsAKRGZ9NqNtAw+0/DwMJNmAI6u6hflAm9MPjlPU5n4obK5zvneG71pTEnQulFl/o3nVU9Z06A
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB1587.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?Nptt+t14eh3ytSgV/ee2zqbqpSpagzDZjTiy9qo9yl49R30Cr2238Id5NU?=
+ =?iso-8859-1?Q?4qtWVVoW0OV+xR1LXmgv4avaPqOfAfztwUdZNl7i3dmRsjFcFraBDZgjXW?=
+ =?iso-8859-1?Q?fhKCQ7m5CyvelVmIZR9Lsz7h2hTj2rh/CIX9znGs0Ei/Z6R3Oaesv1DINF?=
+ =?iso-8859-1?Q?sYV2zgcpfcl98389OS3/ia9gxSFpC54uXnnl2LwxsWkGYNqFPCAfSG5B6Z?=
+ =?iso-8859-1?Q?XC7pzIytZs+rO8XqRx1oIHKkgOQkq9FJSdV1RxmE8t9bgqvic0bgsAYrXo?=
+ =?iso-8859-1?Q?ZO0Ygo1ciugVIg/U+rNrF7by/HWy7evguMT1KVP8LWsuF0dDmyp228dJ/k?=
+ =?iso-8859-1?Q?+/1RnRPq4NMZ4udRwQdysmXsXr+rn17vVhkQRyIpQbhEFnpE+uj8D2mxoy?=
+ =?iso-8859-1?Q?gU8Gka8jFrFvT6haIrWnysK4b095+1sH3ZyGEY4aSZRvW2ago6jXCqG+KX?=
+ =?iso-8859-1?Q?zABdckBjarfMC7UWiYPilm6l9XeoVPyfQxIOS5t4F5KuphMlBXCtytY6dz?=
+ =?iso-8859-1?Q?WWBofQoh9KGac2xiM5SZuQqFXXPh1hY1Qqor4yLOHB5Rn1lS1vhLsZHlFN?=
+ =?iso-8859-1?Q?oRAofUH9+Rtlm9roRLwFa/L66fHUcO3kMoanIjF6FrUvPqyOPyTcqzMsfo?=
+ =?iso-8859-1?Q?Br4W8XV/rJt6rVMg7IQGPc3SeywkF2x0a82p/BBvbDCR79I7zeywA5BkK2?=
+ =?iso-8859-1?Q?+52eI2YCMR5AAqI63uj6kBBnseMuN4yjjysLXQTWv+Roi18ICLMyIAgLff?=
+ =?iso-8859-1?Q?6ZMeDZHTv3A50BsUxjhBgeKxm4aHR5VS8aOTyVmAfxU2EfhYcZjzRlFKq0?=
+ =?iso-8859-1?Q?ED9pHJm6ukK564ibqn/u2p3iqyEKNM6uSDRmiSa7T/DlgCbxk+X7no5rFW?=
+ =?iso-8859-1?Q?UM81TugTyE3IBqyr/Dw1TBwA2RRGpvMrUqAZiGPmWoxazKfUwRE/HifQtb?=
+ =?iso-8859-1?Q?IoY6Dpf1z+l1GB7hlA6ZGUd1KsJnSYLuH93kHT23E2ztQv9/eTN9zvB1Iv?=
+ =?iso-8859-1?Q?LlVxlz63X1YceVd5x2fVmTPmOFMbstOCS11uoHygATBr5rH+wM656/vBuG?=
+ =?iso-8859-1?Q?TIkK3DCJWWsLa4qtasrlCbCyKL263T6WvO6bwUr4WVZWbcnEvnQvJJnyVA?=
+ =?iso-8859-1?Q?e+g6dfSQvxCa3cd31OiNTPXoJ7PD7jUofqhonsLE2iyupVaT9ycCS9LNb6?=
+ =?iso-8859-1?Q?Aa92XYcCH5VEbmYFZoUco1kSkyf7kDyfosn6V32+rRMSbVpIJgcDfsk1m1?=
+ =?iso-8859-1?Q?W6OSAziSiuokb+1fELdLLpk8khY7D75qT5Fl7yibXM1RpEc4rgqO60wr9n?=
+ =?iso-8859-1?Q?n7QM+c8S4K9yy40eJuxwFTVlGI4/j09NABzUf1I7EudZ9moER1uPEKQPDI?=
+ =?iso-8859-1?Q?j8XrCowOGQY1sSD1d68kkgiLJfQRTkgpDj5HYZiBKvJD47FBn9y/rARScm?=
+ =?iso-8859-1?Q?w7ybWy2jua+JorJTLB+yW1D+xHhPiab3iLLQhCqgqZGTQHvmGbTnl1n1/1?=
+ =?iso-8859-1?Q?GdgUOGfuhwu/AqY+E/OEUWYYn8HGLMHaGqOPq7Bh0PO0rStZvWMbKFQTP1?=
+ =?iso-8859-1?Q?tgWDAq30UOMho7KdzeGkoRJCPJToGbgR/SeiI3pBG7j9CKxVBXskHCHTaj?=
+ =?iso-8859-1?Q?zk0Fr8cOESBjuiECZQpMGn5xG/x/Mt78AIe7wQdRxe0Hy4ay0qHuIHvQ?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10006; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=g2FvV2a/76PoLAhdO8gpdq5YlLgPaBxWjYrgLTRBR20=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBl8uECYhOw+Z3KflaiPkVaU63r+1ZPfAAMMzjEF 9glc8EAYzuJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZfLhAgAKCRCPgPtYfRL+ Tnm4B/0YHLgD8QKnOqM5I6xI7VAHP8MyGa/w0KShtQPv3VWODnzxtZL5yVroY/yEHEY0M0Z2cIN m6t5Hbr7MUgOx7TdwOyMd1sTlO62WIMauQ/ohMus1yPX1DY3el6VmPt5vCRtTjRNyb05NJlIX/s lepSh3ekFc7+93rP2TjSPOxe8IurA7N9xS1oGVAjJeqA58Z80rxw0zWJ63iE9D8EVVExULhNwNx r+sUPFtmXuNOWWa7uyMVKIWopShFfb+mBmyILrFLyQE4ZqYT8BSVL3XtfkqxO/yjU/hz0qcCs5e MeC/LHdsAmGhmiNVNrxhvOBYB4fCbSLuWJAWnkIbf2JnznFt
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB1587.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2b5b3c7-3fa2-4f0b-00f7-08dc445214f3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2024 18:10:50.8875
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +N6YLfRqORA8n4MpheCLcVZjjN8I9K7JHIws0PpBkF+V54UFsqVrpjCvUHrFm5TauCf8gFZXhQW0uaFfHG70TsRBluM8fswKvaYM7JXipR8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB10027
 
-The backlight driver supports getting passed platform data. However this
-isn't used. This allows to remove quite some dead code from the driver
-because bl->pdata is always NULL, and so bl->mode is always
-LP8788_BL_REGISTER_ONLY.
+Hi Uwe Kleine-K=F6nig,
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Changes since (implicit) v1 archived at
-https://lkml.kernel.org/20240313124828.861731-2-u.kleine-koenig@pengutronix.de:
+> -----Original Message-----
+> From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> Sent: Tuesday, March 12, 2024 7:20 AM
+> Subject: Re: [PATCH v18 3/4] pwm: Add support for RZ/G2L GPT
+>=20
+> Hello,
+>=20
+> On Tue, Feb 20, 2024 at 07:43:17PM +0000, Biju Das wrote:
+> > diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
+> > new file mode 100644 index 000000000000..0dc8163ee92b
+> > --- /dev/null
+> > +++ b/drivers/pwm/pwm-rzg2l-gpt.c
+> > @@ -0,0 +1,559 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Renesas RZ/G2L General PWM Timer (GPT) driver
+> > + *
+> > + * Copyright (C) 2024 Renesas Electronics Corporation
+> > + *
+> > + * Hardware manual for this IP can be found here
+> > + *
+> > +https://www.renesas.com/eu/en/document/mah/rzg2l-group-rzg2lc-group-u
+> > +sers-manual-hardware-0?language=3Den
+> > + *
+> > + * Limitations:
+> > + * - Counter must be stopped before modifying Mode and Prescaler.
+> > + * - When PWM is disabled, the output is driven to inactive.
+> > + * - While the hardware supports both polarities, the driver (for now)
+> > + *   only handles normal polarity.
+> > + * - When both channels are used, disabling the channel on one stops t=
+he
+> > + *   other.
+>=20
+> Do I understand right that the driver doesn't disable one channel if the =
+other is running?
 
- - Also drop struct pwm_device *pwm member from struct lp8788_bl
+Yes, that is correct. We will allow to set only duty cycle for other channe=
+l.
+The first enabled channel sets the shared registers and duty cycle.
 
-I'm surprised that this didn't fail to compile ...
+>=20
+> > + */
+> > +
+> > +#include <linux/bitfield.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/io.h>
+> > +#include <linux/limits.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pm_runtime.h>
+> > +#include <linux/pwm.h>
+> > +#include <linux/reset.h>
+> > +#include <linux/time.h>
+> > +#include <linux/units.h>
+> > +
+> > +#define RZG2L_GTCR		0x2c
+> > +#define RZG2L_GTUDDTYC		0x30
+> > +#define RZG2L_GTIOR		0x34
+> > +#define RZG2L_GTBER		0x40
+> > +#define RZG2L_GTCNT		0x48
+> > +#define RZG2L_GTCCR(i)		(0x4c + 4 * (i))
+> > +#define RZG2L_GTPR		0x64
+> > +
+> > +#define RZG2L_GTCR_CST		BIT(0)
+> > +#define RZG2L_GTCR_MD		GENMASK(18, 16)
+> > +#define RZG2L_GTCR_TPCS		GENMASK(26, 24)
+> > +
+> > +#define RZG2L_GTCR_MD_SAW_WAVE_PWM_MODE	FIELD_PREP(RZG2L_GTCR_MD, 0)
+> > +
+> > +#define RZG2L_GTUDDTYC_UP	BIT(0)
+> > +#define RZG2L_GTUDDTYC_UDF	BIT(1)
+> > +#define RZG2L_UP_COUNTING	(RZG2L_GTUDDTYC_UP | RZG2L_GTUDDTYC_UDF)
+>=20
+> Would it make sense to have GTUDDTYC in the last define's name?
 
-Best regards
-Uwe
+Will make it RZG2L_GTUDDTYC_UP_COUNTING as RZG2L_GTUDDTYC reg offset define=
+d above.
 
- drivers/video/backlight/lp8788_bl.c | 151 ++--------------------------
- include/linux/mfd/lp8788.h          |  36 -------
- 2 files changed, 8 insertions(+), 179 deletions(-)
+>=20
+> > +#define RZG2L_GTIOR_GTIOA	GENMASK(4, 0)
+> > +#define RZG2L_GTIOR_GTIOB	GENMASK(20, 16)
+> > +#define RZG2L_GTIOR_GTIOx(a)	((a) ? RZG2L_GTIOR_GTIOB : RZG2L_GTIOR_GT=
+IOA)
+> > +#define RZG2L_GTIOR_OAE		BIT(8)
+> > +#define RZG2L_GTIOR_OBE		BIT(24)
+> > +#define RZG2L_GTIOR_OxE(a)	((a) ? RZG2L_GTIOR_OBE : RZG2L_GTIOR_OAE)
+> > +
+> > +#define RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE	0x1b
+> > +#define RZG2L_GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH \
+> > +	(RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE | RZG2L_GTIOR_OAE) #define
+> > +RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH \
+> > +	(FIELD_PREP(RZG2L_GTIOR_GTIOB, RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE)
+> > +| RZG2L_GTIOR_OBE)
+> > +
+> > +#define RZG2L_GTIOR_GTIOx_OUT_HI_END_TOGGLE_CMP_MATCH(a) \
+> > +	((a) ? RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH : \
+> > +	 RZG2L_GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH)
+> > +
+> > +#define RZG2L_MAX_HW_CHANNELS	8
+> > +#define RZG2L_CHANNELS_PER_IO	2
+> > +#define RZG2L_MAX_PWM_CHANNELS	(RZG2L_MAX_HW_CHANNELS * RZG2L_CHANNELS=
+_PER_IO)
+> > +#define RZG2L_MAX_SCALE_FACTOR	1024
+> > +
+> > +#define RZG2L_GET_CH(a)	((a) / 2)
+> > +
+> > +#define RZG2L_GET_CH_OFFS(i) (0x100 * (i))
+> > +
+> > +struct rzg2l_gpt_chip {
+> > +	struct pwm_chip chip;
 
-diff --git a/drivers/video/backlight/lp8788_bl.c b/drivers/video/backlight/lp8788_bl.c
-index d1a14b0db265..d173e93f6348 100644
---- a/drivers/video/backlight/lp8788_bl.c
-+++ b/drivers/video/backlight/lp8788_bl.c
-@@ -12,7 +12,6 @@
- #include <linux/mfd/lp8788.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
--#include <linux/pwm.h>
- #include <linux/slab.h>
- 
- /* Register address */
-@@ -31,149 +30,40 @@
- #define MAX_BRIGHTNESS			127
- #define DEFAULT_BL_NAME			"lcd-backlight"
- 
--struct lp8788_bl_config {
--	enum lp8788_bl_ctrl_mode bl_mode;
--	enum lp8788_bl_dim_mode dim_mode;
--	enum lp8788_bl_full_scale_current full_scale;
--	enum lp8788_bl_ramp_step rise_time;
--	enum lp8788_bl_ramp_step fall_time;
--	enum pwm_polarity pwm_pol;
--};
--
- struct lp8788_bl {
- 	struct lp8788 *lp;
- 	struct backlight_device *bl_dev;
--	struct lp8788_backlight_platform_data *pdata;
--	enum lp8788_bl_ctrl_mode mode;
--	struct pwm_device *pwm;
- };
- 
--static struct lp8788_bl_config default_bl_config = {
--	.bl_mode    = LP8788_BL_REGISTER_ONLY,
--	.dim_mode   = LP8788_DIM_EXPONENTIAL,
--	.full_scale = LP8788_FULLSCALE_1900uA,
--	.rise_time  = LP8788_RAMP_8192us,
--	.fall_time  = LP8788_RAMP_8192us,
--	.pwm_pol    = PWM_POLARITY_NORMAL,
--};
--
--static inline bool is_brightness_ctrl_by_pwm(enum lp8788_bl_ctrl_mode mode)
--{
--	return mode == LP8788_BL_COMB_PWM_BASED;
--}
--
--static inline bool is_brightness_ctrl_by_register(enum lp8788_bl_ctrl_mode mode)
--{
--	return mode == LP8788_BL_REGISTER_ONLY ||
--		mode == LP8788_BL_COMB_REGISTER_BASED;
--}
--
- static int lp8788_backlight_configure(struct lp8788_bl *bl)
- {
--	struct lp8788_backlight_platform_data *pdata = bl->pdata;
--	struct lp8788_bl_config *cfg = &default_bl_config;
- 	int ret;
- 	u8 val;
- 
--	/*
--	 * Update chip configuration if platform data exists,
--	 * otherwise use the default settings.
--	 */
--	if (pdata) {
--		cfg->bl_mode    = pdata->bl_mode;
--		cfg->dim_mode   = pdata->dim_mode;
--		cfg->full_scale = pdata->full_scale;
--		cfg->rise_time  = pdata->rise_time;
--		cfg->fall_time  = pdata->fall_time;
--		cfg->pwm_pol    = pdata->pwm_pol;
--	}
--
- 	/* Brightness ramp up/down */
--	val = (cfg->rise_time << LP8788_BL_RAMP_RISE_SHIFT) | cfg->fall_time;
-+	val = (LP8788_RAMP_8192us << LP8788_BL_RAMP_RISE_SHIFT) | LP8788_RAMP_8192us;
- 	ret = lp8788_write_byte(bl->lp, LP8788_BL_RAMP, val);
- 	if (ret)
- 		return ret;
- 
- 	/* Fullscale current setting */
--	val = (cfg->full_scale << LP8788_BL_FULLSCALE_SHIFT) |
--		(cfg->dim_mode << LP8788_BL_DIM_MODE_SHIFT);
-+	val = (LP8788_FULLSCALE_1900uA << LP8788_BL_FULLSCALE_SHIFT) |
-+		(LP8788_DIM_EXPONENTIAL << LP8788_BL_DIM_MODE_SHIFT);
- 
- 	/* Brightness control mode */
--	switch (cfg->bl_mode) {
--	case LP8788_BL_REGISTER_ONLY:
--		val |= LP8788_BL_EN;
--		break;
--	case LP8788_BL_COMB_PWM_BASED:
--	case LP8788_BL_COMB_REGISTER_BASED:
--		val |= LP8788_BL_EN | LP8788_BL_PWM_INPUT_EN |
--			(cfg->pwm_pol << LP8788_BL_PWM_POLARITY_SHIFT);
--		break;
--	default:
--		dev_err(bl->lp->dev, "invalid mode: %d\n", cfg->bl_mode);
--		return -EINVAL;
--	}
--
--	bl->mode = cfg->bl_mode;
-+	val |= LP8788_BL_EN;
- 
- 	return lp8788_write_byte(bl->lp, LP8788_BL_CONFIG, val);
- }
- 
--static void lp8788_pwm_ctrl(struct lp8788_bl *bl, int br, int max_br)
--{
--	unsigned int period;
--	unsigned int duty;
--	struct device *dev;
--	struct pwm_device *pwm;
--
--	if (!bl->pdata)
--		return;
--
--	period = bl->pdata->period_ns;
--	duty = br * period / max_br;
--	dev = bl->lp->dev;
--
--	/* request PWM device with the consumer name */
--	if (!bl->pwm) {
--		pwm = devm_pwm_get(dev, LP8788_DEV_BACKLIGHT);
--		if (IS_ERR(pwm)) {
--			dev_err(dev, "can not get PWM device\n");
--			return;
--		}
--
--		bl->pwm = pwm;
--
--		/*
--		 * FIXME: pwm_apply_args() should be removed when switching to
--		 * the atomic PWM API.
--		 */
--		pwm_apply_args(pwm);
--	}
--
--	pwm_config(bl->pwm, duty, period);
--	if (duty)
--		pwm_enable(bl->pwm);
--	else
--		pwm_disable(bl->pwm);
--}
--
- static int lp8788_bl_update_status(struct backlight_device *bl_dev)
- {
- 	struct lp8788_bl *bl = bl_get_data(bl_dev);
--	enum lp8788_bl_ctrl_mode mode = bl->mode;
- 
- 	if (bl_dev->props.state & BL_CORE_SUSPENDED)
- 		bl_dev->props.brightness = 0;
- 
--	if (is_brightness_ctrl_by_pwm(mode)) {
--		int brt = bl_dev->props.brightness;
--		int max = bl_dev->props.max_brightness;
--
--		lp8788_pwm_ctrl(bl, brt, max);
--	} else if (is_brightness_ctrl_by_register(mode)) {
--		u8 brt = bl_dev->props.brightness;
--
--		lp8788_write_byte(bl->lp, LP8788_BL_BRIGHTNESS, brt);
--	}
-+	lp8788_write_byte(bl->lp, LP8788_BL_BRIGHTNESS, bl_dev->props.brightness);
- 
- 	return 0;
- }
-@@ -187,29 +77,15 @@ static int lp8788_backlight_register(struct lp8788_bl *bl)
- {
- 	struct backlight_device *bl_dev;
- 	struct backlight_properties props;
--	struct lp8788_backlight_platform_data *pdata = bl->pdata;
--	int init_brt;
--	char *name;
- 
- 	props.type = BACKLIGHT_PLATFORM;
- 	props.max_brightness = MAX_BRIGHTNESS;
- 
- 	/* Initial brightness */
--	if (pdata)
--		init_brt = min_t(int, pdata->initial_brightness,
--				props.max_brightness);
--	else
--		init_brt = 0;
--
--	props.brightness = init_brt;
-+	props.brightness = 0;
- 
- 	/* Backlight device name */
--	if (!pdata || !pdata->name)
--		name = DEFAULT_BL_NAME;
--	else
--		name = pdata->name;
--
--	bl_dev = backlight_device_register(name, bl->lp->dev, bl,
-+	bl_dev = backlight_device_register(DEFAULT_BL_NAME, bl->lp->dev, bl,
- 				       &lp8788_bl_ops, &props);
- 	if (IS_ERR(bl_dev))
- 		return PTR_ERR(bl_dev);
-@@ -229,16 +105,7 @@ static void lp8788_backlight_unregister(struct lp8788_bl *bl)
- static ssize_t lp8788_get_bl_ctl_mode(struct device *dev,
- 				     struct device_attribute *attr, char *buf)
- {
--	struct lp8788_bl *bl = dev_get_drvdata(dev);
--	enum lp8788_bl_ctrl_mode mode = bl->mode;
--	char *strmode;
--
--	if (is_brightness_ctrl_by_pwm(mode))
--		strmode = "PWM based";
--	else if (is_brightness_ctrl_by_register(mode))
--		strmode = "Register based";
--	else
--		strmode = "Invalid mode";
-+	const char *strmode = "Register based";
- 
- 	return scnprintf(buf, PAGE_SIZE, "%s\n", strmode);
- }
-@@ -265,8 +132,6 @@ static int lp8788_backlight_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	bl->lp = lp;
--	if (lp->pdata)
--		bl->pdata = lp->pdata->bl_pdata;
- 
- 	platform_set_drvdata(pdev, bl);
- 
-diff --git a/include/linux/mfd/lp8788.h b/include/linux/mfd/lp8788.h
-index 3d5c480d58ea..46d8fa779134 100644
---- a/include/linux/mfd/lp8788.h
-+++ b/include/linux/mfd/lp8788.h
-@@ -12,7 +12,6 @@
- 
- #include <linux/gpio.h>
- #include <linux/irqdomain.h>
--#include <linux/pwm.h>
- #include <linux/regmap.h>
- 
- #define LP8788_DEV_BUCK		"lp8788-buck"
-@@ -88,12 +87,6 @@ enum lp8788_charger_event {
- 	CHARGER_DETECTED,
- };
- 
--enum lp8788_bl_ctrl_mode {
--	LP8788_BL_REGISTER_ONLY,
--	LP8788_BL_COMB_PWM_BASED,	/* PWM + I2C, changed by PWM input */
--	LP8788_BL_COMB_REGISTER_BASED,	/* PWM + I2C, changed by I2C */
--};
--
- enum lp8788_bl_dim_mode {
- 	LP8788_DIM_EXPONENTIAL,
- 	LP8788_DIM_LINEAR,
-@@ -206,31 +199,6 @@ struct lp8788_charger_platform_data {
- 				enum lp8788_charger_event event);
- };
- 
--/*
-- * struct lp8788_backlight_platform_data
-- * @name                  : backlight driver name. (default: "lcd-backlight")
-- * @initial_brightness    : initial value of backlight brightness
-- * @bl_mode               : brightness control by pwm or lp8788 register
-- * @dim_mode              : dimming mode selection
-- * @full_scale            : full scale current setting
-- * @rise_time             : brightness ramp up step time
-- * @fall_time             : brightness ramp down step time
-- * @pwm_pol               : pwm polarity setting when bl_mode is pwm based
-- * @period_ns             : platform specific pwm period value. unit is nano.
--			    Only valid when bl_mode is LP8788_BL_COMB_PWM_BASED
-- */
--struct lp8788_backlight_platform_data {
--	char *name;
--	int initial_brightness;
--	enum lp8788_bl_ctrl_mode bl_mode;
--	enum lp8788_bl_dim_mode dim_mode;
--	enum lp8788_bl_full_scale_current full_scale;
--	enum lp8788_bl_ramp_step rise_time;
--	enum lp8788_bl_ramp_step fall_time;
--	enum pwm_polarity pwm_pol;
--	unsigned int period_ns;
--};
--
- /*
-  * struct lp8788_led_platform_data
-  * @name         : led driver name. (default: "keyboard-backlight")
-@@ -272,7 +240,6 @@ struct lp8788_vib_platform_data {
-  * @buck2_dvs    : gpio configurations for buck2 dvs
-  * @chg_pdata    : platform data for charger driver
-  * @alarm_sel    : rtc alarm selection (1 or 2)
-- * @bl_pdata     : configurable data for backlight driver
-  * @led_pdata    : configurable data for led driver
-  * @vib_pdata    : configurable data for vibrator driver
-  * @adc_pdata    : iio map data for adc driver
-@@ -294,9 +261,6 @@ struct lp8788_platform_data {
- 	/* rtc alarm */
- 	enum lp8788_alarm_sel alarm_sel;
- 
--	/* backlight */
--	struct lp8788_backlight_platform_data *bl_pdata;
--
- 	/* current sinks */
- 	struct lp8788_led_platform_data *led_pdata;
- 	struct lp8788_vib_platform_data *vib_pdata;
+Will remove it in next version as devm_pwmchip_alloc() will be used.
 
-base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
--- 
-2.43.0
+> > +	void __iomem *mmio;
+> > +	struct reset_control *rstc;
+> > +	struct clk *clk;
+> > +	struct mutex lock; /* lock to protect shared channel resources */
+> > +	unsigned long rate;
+> > +	u64 max_val;
+> > +	u32 period_cycles[RZG2L_MAX_HW_CHANNELS];
+> > +	u32 user_count[RZG2L_MAX_HW_CHANNELS];
+> > +	u32 enable_count[RZG2L_MAX_HW_CHANNELS];
+> > +	DECLARE_BITMAP(ch_en_bits, RZG2L_MAX_PWM_CHANNELS); };
+> > +
+> > +static inline unsigned int rzg2l_gpt_subchannel(unsigned int hwpwm) {
+> > +	return hwpwm & 0x1;
+> > +}
+> > +
+> > +static inline u64 rzg2l_gpt_mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
+> > +{
+> > +	u64 retval;
+> > +
+> > +	if (a > b)
+> > +		retval =3D mul_u64_u64_div_u64(b, a, c);
+> > +	else
+> > +		retval =3D mul_u64_u64_div_u64(a, b, c);
+>=20
+> With
+> https://lore.kernel.org/lkml/20240303092408.662449-2-u.kleine-koenig@peng=
+utronix.de
+> this function can be replaced by a direct call to mul_u64_u64_div_u64().
+> I expect this patch to go into v6.9-rc1 as akpm picked it up before the m=
+erge window opened.
+
+Ok, I will hold next version until v6.9-rc1 as for-pwm-nexxt doesn't have t=
+his patch??
+
+>=20
+> > +	return retval;
+> > +}
+> > [...]
+> > +static u64 calculate_period_or_duty(struct rzg2l_gpt_chip *rzg2l_gpt,
+> > +u32 val, u8 prescale) {
+> > +	u64 tmp, d;
+> > +
+> > +	/*
+> > +	 * Rate is in MHz and is always integer for peripheral clk
+> > +	 * 2^32 * 2^10 (prescalar) * 10^9 > 2^64
+> > +	 * 2^32 * 2^10 (prescalar) * 10^6 < 2^64
+> > +	 * Multiply val with prescalar first, if the result is less than
+> > +	 * 2^34, then multiply by 10^9. Otherwise divide nr and dr by 10^3
+> > +	 * so that it will never overflow.
+> > +	 */
+> > +
+> > +	tmp =3D (u64)val << (2 * prescale);
+> > +	if (tmp <=3D (1ULL << 34)) {
+>=20
+> I would have written that as:
+>=20
+> 	if (tmp >> 34 =3D=3D 0)
+>=20
+> (which implements tmp < (1ULL << 34), which doesn't matter much).
+>=20
+> > +		tmp *=3D NSEC_PER_SEC;
+> > +		d =3D rzg2l_gpt->rate;
+> > +	} else {
+> > +		tmp *=3D div64_u64(NSEC_PER_SEC, KILO);
+>=20
+> I don't know if the compiler is clever enough to not calculate that every=
+ time? Also using div64_u64 is
+> too heavy given that both values fit into an u32.
+>=20
+> > +		d =3D div64_u64(rzg2l_gpt->rate, KILO);
+>=20
+> At first I thought you could better use 1024 as the common divisor here a=
+s it could be implemented
+> using a shift operation. But I understood with the comment above that we'=
+re not losing precision here
+> as both NSEC_PER_SEC and rate are a multiple of 1000.
+>=20
+> Maybe s/Rate is in MHz and is always integer for peripheral clk/Rate is a=
+ multiple of 1000000, and so
+> dividing by 1000 is an exact operation./ ?
+
+I will use rate_khz as suggested in the later thread and getrid of all abov=
+e checks.
+
++	tmp =3D (u64)val << (2 * prescale);
++	tmp *=3D USEC_PER_SEC;
++
++	return DIV64_U64_ROUND_UP(tmp, rzg2l_gpt->rate_khz);
+
+
+>=20
+>=20
+> > +	}
+> > +
+> > +	return DIV64_U64_ROUND_UP(tmp, d);
+> > +}
+> > +
+> > +static int rzg2l_gpt_get_state(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> > +			       struct pwm_state *state)
+> > +{
+> > +	struct rzg2l_gpt_chip *rzg2l_gpt =3D to_rzg2l_gpt_chip(chip);
+> > +	int rc;
+> > +
+> > +	rc =3D pm_runtime_resume_and_get(chip->dev);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	state->enabled =3D rzg2l_gpt_is_ch_enabled(rzg2l_gpt, pwm->hwpwm);
+> > +	if (state->enabled) {
+> > +		u32 ch =3D RZG2L_GET_CH(pwm->hwpwm);
+> > +		u32 offs =3D RZG2L_GET_CH_OFFS(ch);
+> > +		u8 prescale;
+> > +		u32 val;
+> > +
+> > +		val =3D rzg2l_gpt_read(rzg2l_gpt, offs + RZG2L_GTCR);
+> > +		prescale =3D FIELD_GET(RZG2L_GTCR_TPCS, val);
+> > +
+> > +		val =3D rzg2l_gpt_read(rzg2l_gpt, offs + RZG2L_GTPR);
+> > +		state->period =3D calculate_period_or_duty(rzg2l_gpt, val, prescale)=
+;
+> > +
+> > +		val =3D rzg2l_gpt_read(rzg2l_gpt,
+> > +				     offs + RZG2L_GTCCR(rzg2l_gpt_subchannel(pwm->hwpwm)));
+> > +		state->duty_cycle =3D calculate_period_or_duty(rzg2l_gpt, val, presc=
+ale);
+> > +		if (state->duty_cycle > state->period)
+> > +			state->duty_cycle =3D state->period;
+> > +	}
+> > +
+> > +	state->polarity =3D PWM_POLARITY_NORMAL;
+> > +	pm_runtime_put(chip->dev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static u32 rzg2l_gpt_calculate_pv_or_dc(u64 period_or_duty_cycle, u8
+> > +prescale) {
+> > +	return min_t(u64, (period_or_duty_cycle + (1 << (2 * prescale)) - 1) =
+>> (2 * prescale),
+> > +		     U32_MAX);
+>=20
+> Can the addition overflow? Is the addition even right? This function is u=
+sed in .apply() where it's
+> usually right to round down.
+
+No, It won't overflow. The logic is proposed by you in v17 for DIV64_U64_RO=
+UND_UP and it is
+passing all tests with PWM_DEBUG=3Dy.
+
+VAL=3D10000
+echo "#### Zero duty cycle ###"
+echo 0 > /sys/class/pwm/$PWMCHIP/pwm${IO_1}/duty_cycle
+
+echo "#### decrement Period ###"
+for i in $(seq ${VAL} -1 1); do
+
+echo "#### Increment Period ###"
+for i in $(seq 1 ${VAL}); do
+
+echo "#### decrement duty cycle ###"
+for i in $(seq ${VAL} -1 1); do
+
+echo "#### Increment duty cycle ###"
+for i in $(seq 1 ${VAL}); do
+
+>=20
+> > +}
+> > +
+> > +/* Caller holds the lock while calling rzg2l_gpt_config() */ static
+> > +int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> > +			    const struct pwm_state *state) {
+> > +	struct rzg2l_gpt_chip *rzg2l_gpt =3D to_rzg2l_gpt_chip(chip);
+> > +	u8 ch =3D RZG2L_GET_CH(pwm->hwpwm);
+> > +	u32 offs =3D RZG2L_GET_CH_OFFS(ch);
+> > +	unsigned long pv, dc;
+> > +	u64 period_cycles;
+> > +	u64 duty_cycles;
+> > +	u8 prescale;
+> > +
+> > +	/* Limit period/duty cycle to max value supported by the HW */
+> > +	if (state->period > rzg2l_gpt->max_val)
+> > +		period_cycles =3D rzg2l_gpt->max_val;
+> > +	else
+> > +		period_cycles =3D state->period;
+>=20
+> this is equivalent to
+>=20
+> 	period_cycles =3D min(state->period, rzg2l_gpt->max_val);
+>=20
+> Is this less readable to justify keeping the if?
+
+Agreed.
+
+>=20
+> > +	period_cycles =3D rzg2l_gpt_mul_u64_u64_div_u64(period_cycles,
+> > +rzg2l_gpt->rate, NSEC_PER_SEC);
+>=20
+> After this operation period_cycles's unit is really hardware cycles.
+> Before it isn't. I suggest to introduce another variable "period" for the=
+ value above. So make this
+> read:
+>=20
+> 	period =3D min(state->period, rzg2l_gpt->max_val);
+> 	period_cycles =3D mul_u64_u64_div_u64(period, rzg2l_gpt->rate, NSEC_PER_=
+SEC);
+>=20
+> . This shouldn't be harder for the compiler but easier for the human read=
+er.
+
+Agreed.
+
+Will use period, duty_cycle, period_cycles, duty_cycles variables
+and later two variables are for hardware cycles.
+
+>=20
+> > +	/*
+> > +	 * GPT counter is shared by multiple channels, so prescale and period
+> > +	 * can NOT be modified when there are multiple channels in use with
+> > +	 * different settings.
+> > +	 */
+> > +	if (period_cycles < rzg2l_gpt->period_cycles[ch] &&
+> > +rzg2l_gpt->user_count[ch] > 1)
+>=20
+> Would it make sense to swap the checks? Technically it doesn't make a dif=
+ference, but if rzg2l_gpt-
+> >user_count[ch] =3D=3D 0 rzg2l_gpt->period_cycles[ch] might be an invalid=
+ value?
+
+Agreed.
+
+>=20
+> > +		return -EBUSY;
+> > +
+> > +	prescale =3D rzg2l_gpt_calculate_prescale(rzg2l_gpt, period_cycles);
+> > +	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_cycles, prescale);
+> > +
+> > +	if (state->duty_cycle > rzg2l_gpt->max_val)
+> > +		duty_cycles =3D rzg2l_gpt->max_val;
+> > +	else
+> > +		duty_cycles =3D state->duty_cycle;
+> > +
+> > +	duty_cycles =3D rzg2l_gpt_mul_u64_u64_div_u64(duty_cycles, rzg2l_gpt-=
+>rate, NSEC_PER_SEC);
+> > +	dc =3D rzg2l_gpt_calculate_pv_or_dc(duty_cycles, prescale);
+> > +
+> > +	/*
+> > +	 * GPT counter is shared by multiple channels, we cache the period cy=
+cles
+> > +	 * from the first enabled channel and use the same value for both
+> > +	 * channels.
+> > +	 */
+> > +	rzg2l_gpt->period_cycles[ch] =3D period_cycles;
+> > +
+> > +	/*
+> > +	 * Counter must be stopped before modifying mode, prescaler, timer
+> > +	 * counter and buffer enable registers. These registers are shared
+> > +	 * between both channels. So allow updating these registers only for =
+the
+> > +	 * first enabled channel.
+> > +	 */
+> > +	if (rzg2l_gpt->enable_count[ch] <=3D 1)
+> > +		rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTCR, RZG2L_GTCR_CST, 0);
+>=20
+> What happens for the second running channel here? You're still writing to=
+ the relevant registers, just
+> without stopping the hardware. Sounds strange.
+
+It is a mistake.
+I will add check for shared registers, so that it won't set by the second r=
+unning channel.
+
+>=20
+> > +
+> > +	/* GPT set operating mode (saw-wave up-counting) */
+> > +	rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTCR, RZG2L_GTCR_MD,
+> > +			 RZG2L_GTCR_MD_SAW_WAVE_PWM_MODE);
+> > +
+> > [...]
+> > +static int rzg2l_gpt_apply(struct pwm_chip *chip, struct pwm_device *p=
+wm,
+> > +			   const struct pwm_state *state)
+> > +{
+> > +	struct rzg2l_gpt_chip *rzg2l_gpt =3D to_rzg2l_gpt_chip(chip);
+> > +	bool enabled =3D pwm->state.enabled;
+> > +	int ret;
+> > +
+> > +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+> > +		return -EINVAL;
+> > +
+> > +	if (!state->enabled) {
+> > +		if (enabled) {
+> > +			rzg2l_gpt_disable(rzg2l_gpt, pwm);
+> > +			pm_runtime_put_sync(rzg2l_gpt->chip.dev);
+> > +		}
+> > +
+> > +		return 0;
+> > +	}
+> > +
+> > +	if (!enabled) {
+> > +		ret =3D pm_runtime_resume_and_get(rzg2l_gpt->chip.dev);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	mutex_lock(&rzg2l_gpt->lock);
+> > +	ret =3D rzg2l_gpt_config(chip, pwm, state);
+> > +	mutex_unlock(&rzg2l_gpt->lock);
+> > +	if (ret)
+>=20
+> Is here a conditional pm_runtime_put_sync() missing?
+
+Will fix it.
+
+
+>=20
+> > +		return ret;
+> > +
+> > +	if (!enabled)
+> > +		ret =3D rzg2l_gpt_enable(rzg2l_gpt, pwm);
+>=20
+> and here?
+
+OK.
+
+>=20
+> > +	return ret;
+> > +}
+> > +
+> > [...]
+> > +static int rzg2l_gpt_probe(struct platform_device *pdev) {
+> > +	struct rzg2l_gpt_chip *rzg2l_gpt;
+> > +	int ret;
+> > +	u32 i;
+> > +
+> > +	rzg2l_gpt =3D devm_kzalloc(&pdev->dev, sizeof(*rzg2l_gpt), GFP_KERNEL=
+);
+> > +	if (!rzg2l_gpt)
+> > +		return -ENOMEM;
+> > +
+> > +	rzg2l_gpt->mmio =3D devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(rzg2l_gpt->mmio))
+> > +		return PTR_ERR(rzg2l_gpt->mmio);
+> > +
+> > +	rzg2l_gpt->rstc =3D devm_reset_control_get_exclusive(&pdev->dev, NULL=
+);
+> > +	if (IS_ERR(rzg2l_gpt->rstc))
+> > +		return dev_err_probe(&pdev->dev, PTR_ERR(rzg2l_gpt->rstc),
+> > +				     "get reset failed\n");
+> > +
+> > +	rzg2l_gpt->clk =3D devm_clk_get(&pdev->dev, NULL);
+> > +	if (IS_ERR(rzg2l_gpt->clk))
+> > +		return dev_err_probe(&pdev->dev, PTR_ERR(rzg2l_gpt->clk),
+> > +				     "cannot get clock\n");
+> > +
+> > +	ret =3D reset_control_deassert(rzg2l_gpt->rstc);
+> > +	if (ret)
+> > +		return dev_err_probe(&pdev->dev, ret,
+> > +				     "cannot deassert reset control\n");
+> > +
+> > +	pm_runtime_enable(&pdev->dev);
+> > +	ret =3D pm_runtime_resume_and_get(&pdev->dev);
+> > +	if (ret)
+> > +		goto err_reset;
+> > +
+> > +	ret =3D clk_rate_exclusive_get(rzg2l_gpt->clk);
+>=20
+> There is a devm variant of this function in the mean time.
+
+OK, currently for testing I picked it from next.
+
+>=20
+> > +	if (ret)
+> > +		goto err_pm_put;
+> > +
+> > +	rzg2l_gpt->rate =3D clk_get_rate(rzg2l_gpt->clk);
+> > +	if (!rzg2l_gpt->rate) {
+> > +		ret =3D dev_err_probe(&pdev->dev, -EINVAL, "gpt clk rate is 0");
+> > +		goto err_clk_rate_put;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Refuse clk rates > 1 GHz to prevent overflow later for computing
+> > +	 * period and duty cycle.
+> > +	 */
+> > +	if (rzg2l_gpt->rate > NSEC_PER_SEC) {
+> > +		ret =3D -EINVAL;
+>=20
+> Error message please.
+
+OK.
+
+Other than this, I will use the below changes in next version
+1) devm_pwmchip_alloc()
+2) use a local variable dev to replace &pdev->dev in probe() in the next ve=
+rsion.
+3) Also will add below check in probe as you suggested in later thread.
+
++	/*
++	 * Rate is in MHz and is always integer for peripheral clk
++	 * 2^32 * 2^10 (prescalar) * 10^6 (rate_khz) < 2^64
++	 * So make sure rate is multiple of 1000.
++	 */
++	rzg2l_gpt->rate_khz =3D rate / KILO;
++	if (rzg2l_gpt->rate_khz * KILO !=3D rate) {
++		ret =3D dev_err_probe(dev, -EINVAL, "rate is not multiple of 1000");
++		goto err_pm_put;
++	}
+
+
+Cheers,
+Biju
 
 
