@@ -1,119 +1,139 @@
-Return-Path: <linux-pwm+bounces-1779-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1784-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4988087D937
-	for <lists+linux-pwm@lfdr.de>; Sat, 16 Mar 2024 08:42:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAC0987DCFC
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 Mar 2024 11:41:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 02163281EB2
-	for <lists+linux-pwm@lfdr.de>; Sat, 16 Mar 2024 07:42:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D374281724
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 Mar 2024 10:41:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A536DDAD;
-	Sat, 16 Mar 2024 07:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0psW86V"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECB1E18EAD;
+	Sun, 17 Mar 2024 10:40:58 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C2F11CBA;
-	Sat, 16 Mar 2024 07:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D409E17984
+	for <linux-pwm@vger.kernel.org>; Sun, 17 Mar 2024 10:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710574944; cv=none; b=hbqA5PpMstk3ZumJQCF+BAw1H05c2B31wA9tVKhaewCR8A2KKkm0jNQYaHXat7QYxf0nRSI8ZIbmxJMZ9ZENw6/fo6eQyb3TOubVLKBXgcbLNDvEIu95To/SaBKoC/5id3jWCl7VIUaOhX52s2zipBSksoCylvkD7NsZzlFtUMU=
+	t=1710672058; cv=none; b=E8o3eEmxiQwNcL5AMyhh3FezWIhc/bvh8EIoUny4iLTELmqUSZ2YJc10XrgyXJuPsRaOrpt2mQWxwYLHdm+2yG3m0z4DgV4ZkjMnvkrtvGroyBE1YCs+p78wp5MEqZ+mLg4j7Q84WC6BMb0DmwwQisn+CxWPKNIWfIW0/mxZ6F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710574944; c=relaxed/simple;
-	bh=56JqIBcIZt2kuj5bkWl7JtIP0/zRXh6D3VTqXoclOtk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BA5M/L/z+btxTk6Om30RGOwjwEnBBS/xtMQGD6VMXchIW6qyK6gzKuyo5+XlRu4mbrDc1ZOo55OsQkPUAjXkedrHgt5waRG4QZENp2DLQPcyc72YKacVx7lR05y2DynG1efvqiBvINEPlWhy2gowbCiwFMFAuLHGa6pr0NPStNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V0psW86V; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6ddf26eba3cso1895940a34.0;
-        Sat, 16 Mar 2024 00:42:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710574941; x=1711179741; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rBPpCGPm72Cb2qGJkp1BJBbjbsRni3kHlr8127B2i6Q=;
-        b=V0psW86V7xVIs1L3uO8AV1C+AbMqsRifzAEXehuVDuWEK/uUztjz3eHboBarOv7evZ
-         umjLttYIufffqmeq9d/+tkR0JUPIllasIK1outpNYzxtp7ORMGCysSuz1QCdTjYnI/2Y
-         q+aymYdpyk1mYdCA3qF/H65zo1/XsbnhqWDymquRQq2lOSjZHb7ancMEkTRBwoM4gUJk
-         vDM6kTm1Hli1+QYfbbsrTtn5XcnuOjD2VFFM3Y+LN6dG20kJXnIPbWWSNrH/tZ/9oIdC
-         12z5P8462sJiPJ6fZBGgcAtvja3XWqgHNjDvLZFCDcdoCFOoK2p/Plh44IjuvUkLlXxn
-         7aqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710574941; x=1711179741;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rBPpCGPm72Cb2qGJkp1BJBbjbsRni3kHlr8127B2i6Q=;
-        b=fBuYgylIAk9z/e3MaxHy+218pnvLcJ/p4rrZ5QL5cg2iR/xP1mCq6cSvZFB20MwOiI
-         9lYCUMynXhKT3RM9QHjfAfES2eAj8ZB54HYbGQ0PwlvC2fP1m6HRx5CRSy1VRr/Kl53i
-         ZeELdkIXSPS1qUsTLm+AXa+pjQvjozg0CdI+L6YpBGOcAPb2xJk6Kg/kRvJfrvblWDpx
-         PjEFqSs0SVVnm48WJ4knnu/Ctn3KK9hGTez6CphJByCDOo9i+/9BYl+mhPb6Px2cMjFk
-         rxbzjPwz8TQsmNuW/CmnnWNhKxyUdtUnIlEfdbob0wiqzqQlMysaBW5w2MuPKx78PlDf
-         9LJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUENjXAcDm0nQMPYnqNXtQoczNp40+ek4a7cZLPLR43lRqbTU8+Hd9G74449GIDQpJ70uXB74pcusbtU3Lw6keRPm5vgWKDDjSqBIxjKv7BF9Yqblbk7x6MJZnSrpmDJfhIPy/OndLN98kH7pPnlwk3OkLfmzf/1tlwSXSd3aqurgM10A==
-X-Gm-Message-State: AOJu0Yy1KqCKcksrwrAKJKh9DQWyj6kwQr7BVIG+wroWlPuxx42Yg7Zk
-	Qeh8ZDBK8NKCEvTB7X+r+eak9m/PT1Vo2wnXtLg/d8rdlmVQn0P3cQkGtdZYtho0Jv4vpWi/psg
-	ohuaxEqBIjhJx4ceUuIhv1o2mv6Q=
-X-Google-Smtp-Source: AGHT+IHFNWlMLUEZGtMU5YFLrS1fjFOJ1VLXDJxxjl14Ouo+4V1Hu0pW2Hgiyq5Bpke3rnCc4Mt1Lm0rTUKZ3zYrE1c=
-X-Received: by 2002:a05:6820:20f:b0:5a4:93b6:9a5 with SMTP id
- bw15-20020a056820020f00b005a493b609a5mr297421oob.4.1710574940386; Sat, 16 Mar
- 2024 00:42:20 -0700 (PDT)
+	s=arc-20240116; t=1710672058; c=relaxed/simple;
+	bh=fs59cnUdx6Lj37sKccMDB1aCfsDJsVT37Vt+S8/sLfQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Pg2T5/G8LkOhPB5AA5P1oRblj167s8qnGVAI+dmxBYEPBzcdFQZOfhzXbLgC/YPgur3X7LHNUbtEutFyx15dKItcu+wH6TlVTpMb8Qx/1p2qOdQEJJ5WTkkdGGDS6df4rkv1xOTW1oO5JmhQbA6QUc7I4ZR5vIIHdBvwe9t69MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rlnwd-00029Q-HI; Sun, 17 Mar 2024 11:40:47 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rlnwc-006rff-RP; Sun, 17 Mar 2024 11:40:46 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rlnwc-007aCv-2T;
+	Sun, 17 Mar 2024 11:40:46 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: linux-pwm@vger.kernel.org
+Cc: kernel@pengutronix.de,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 0/8] pwm: Add support for character devices
+Date: Sun, 17 Mar 2024 11:40:31 +0100
+Message-ID: <cover.1710670958.git.u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240314100131.323540-1-qiujingbao.dlmu@gmail.com>
- <20240314100131.323540-3-qiujingbao.dlmu@gmail.com> <ZfT42gzJhVd1NQzd@xhacker>
- <jtqqbpr4qeo4m5oetmmusf2hy2wy6hnpstl344p2hu62vbbqrk@tefqeoqf37jh>
-In-Reply-To: <jtqqbpr4qeo4m5oetmmusf2hy2wy6hnpstl344p2hu62vbbqrk@tefqeoqf37jh>
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Date: Sat, 16 Mar 2024 15:42:09 +0800
-Message-ID: <CAJRtX8TV7AEC7_owA819X_NzTS9Y6WdbHED1NQZWWfTK_zYcww@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Jisheng Zhang <jszhang@kernel.org>, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	dlan@gentoo.org, inochiama@outlook.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2528; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=fs59cnUdx6Lj37sKccMDB1aCfsDJsVT37Vt+S8/sLfQ=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtRvJxYsaufN39XgfXrBvIQF1e6v41KZjC8+TmOfnTX5e 9fxnD/5nYzGLAyMXAyyYoos9o1rMq2q5CI71/67DDOIlQlkCgMXpwBM5FwYB8M28/f5NyNsN0gI cMfs7cq6/9WWXbL4p1vVpVJOuxaz6yc8TEpVk6PPcmyV8bVbYr331V6zxH28DHu5dmiG7Y8O9L2 S0eDOF142LTFn+6nvx3Tk+t9o3a0zlWcvf/gm+JVO9dmPho8u2ey6UuJzWa6ij9XNp65b5nbylp mzFVeHh2YrPatabVtQfqlBLNK0ar05T0x60XUn71VTXdTdGk5pOs+p3S2TaLakK0LuS97WQhOTA pWVjwsu1ga++PktSlCNoXVLeMy9qI3Tg55bru8/9nU50x2LDw8YBRjfZn7ekcQTNcfbXu422/Tz fq65Kwoy5j8Q7pz376uZeEIB6/1n1zJnZc6ua5U46P4UAA==
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On Sat, Mar 16, 2024 at 3:22=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello,
->
-> On Sat, Mar 16, 2024 at 09:41:46AM +0800, Jisheng Zhang wrote:
-> > On Thu, Mar 14, 2024 at 06:01:31PM +0800, Jingbao Qiu wrote:
-> > > +static void cv1800_pwm_set_oe(struct pwm_chip *chip, struct pwm_devi=
-ce *pwm,
-> > > +                         u32 mode)
-> >
-> > Did you get any information about the capture support pwm controller?
->
-> Instead of adding capture support to this pwm driver, I'd rather see
-> support added to the counter subsystem. That's more versatile.
->
-> See https://lore.kernel.org/linux-pwm/Y3aze3B6%2Fe5uWS%2FH@fedora for
-> some more context.
->
+Hello,
 
-Thank you for your suggestion. I will add support for the counter subsystem
-after communicating with the hardware designer about the input function of =
-PWM.
-Do you have any suggestions for this patch?
+After the necessary changes to the lowlevel drivers got in for v6.9-rc1
+here come some changes to the core to implement /dev/pwmchipX character
+devices.
 
-Best regards
-Jingbao Qiu
+In my tests on an ARM STM32MP1 programming a PWM using the character
+device is ~4 times faster than just changing duty_cycle via the sysfs
+API. It also has the advantage that (similar to pwm_apply_*) the target
+state is provided to the kernel with a single call, instead of having to
+program the individual settings one after another via sysfs (in the
+right order to not cross states not supported by the driver). 
+
+Note the representation of a PWM waveform is different here compared to
+the in-kernel representation. A PWM waveform is represented using:
+
+	period
+	duty_cycle
+	duty_offset
+
+A disabled PWM is represented by period = 0. For an inversed wave use:
+
+	duty_offset = duty_cycle
+	duty_cycle = period - duty_cycle;
+
+. However there are some difficulties yet that make it hard to provide a
+consistent API to userspace and so for now duty_offset isn't (fully)
+supported yet. That needs some more consideration and can be added
+later.
+
+A userspace lib together with some simple test programs making use of
+this new API can be found at
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/libpwm.git
+
+.
+
+The start of the series is some cleanup and preparation. The lifetime
+and locking patches are needed to not crash the kernel when a character
+device is open while a lowlevel driver goes away.
+
+I look forward to feedback,
+Uwe
+
+Uwe Kleine-König (8):
+  pwm: Ensure that pwm_chips are allocated using pwmchip_alloc()
+  pwm: Give some sysfs related variables and functions better names
+  pwm: Move contents of sysfs.c into core.c
+  pwm: Ensure a struct pwm has the same lifetime as its pwm_chip
+  pwm: Add a struct device to struct pwm_chip
+  pwm: Make pwmchip_[sg]et_drvdata() a wrapper around dev_set_drvdata()
+  pwm: Add more locking
+  pwm: Add support for pwmchip devices for faster and easier userspace
+    access
+
+ drivers/pwm/Kconfig      |   4 -
+ drivers/pwm/Makefile     |   1 -
+ drivers/pwm/core.c       | 988 +++++++++++++++++++++++++++++++++++++--
+ drivers/pwm/sysfs.c      | 545 ---------------------
+ include/linux/pwm.h      |  51 +-
+ include/uapi/linux/pwm.h |  23 +
+ 6 files changed, 993 insertions(+), 619 deletions(-)
+ delete mode 100644 drivers/pwm/sysfs.c
+ create mode 100644 include/uapi/linux/pwm.h
+
+base-commit: dd6c6d57ab61d496f6ff7d6ca38611062af142a1
+-- 
+2.43.0
+
 
