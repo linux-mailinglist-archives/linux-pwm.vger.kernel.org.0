@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-1811-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1812-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C37F889640
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 Mar 2024 09:48:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76BD288965A
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 Mar 2024 09:50:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D9311C30039
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 Mar 2024 08:48:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2BC621F31758
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 Mar 2024 08:50:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E7D4130AE8;
-	Mon, 25 Mar 2024 05:31:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21D27144D15;
+	Mon, 25 Mar 2024 05:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrPZZfZ0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUL61oDb"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7F1149C7D;
-	Mon, 25 Mar 2024 01:54:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2ABE15253D;
+	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711331662; cv=none; b=Gk9MkEKfQh/D1sbgyIJcS2VT44gcR3xdWwM4FEIckwNLvv7lLKUfsZL6pX33r+4ssJpNmxOXlNTGCSwEzqx295gTe/MgmmUU85qEaDJ9kfQYElfB2ZdgUb72cMd+hNq3t16ami7TgpWt6edLJaKM9znWnFndfLfcDZWKWhKqulE=
+	t=1711332788; cv=none; b=kdeHrfc35gKEaEXohVq3g8dJ2nXsdQ4KR6W3d75bqOTEIcNP5kvqHuyY/ankkPxhm2VwKn59Ro0Wfts6WRGI+IXU2BAzUxqfIb4Y7ntMk8qLdvKzpecFZAQJIx+3iIiS86n2t7dzFh1fT4dmsEs9qj2y61lXJyb5uXwx84GYkuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711331662; c=relaxed/simple;
-	bh=x6gbNWDUC3393woiAhRGtrXvkbgxFEKnVO43IWMARsU=;
+	s=arc-20240116; t=1711332788; c=relaxed/simple;
+	bh=aJvg1KH6joFG6oJkgTHoc61lNEcN6UYDL94Kek/0h5A=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=jo4eRyXnHT6pJlze8xtEpd1EeBpqCzs5cNTT6ZJHa8EUHj40hkpdHUwApSEPYljxRFVAPnX0dye4BDIjBhOZuJDCzLFydOpPlDJOiMZB4G7KpGIWtVFbD8Ec9x0bye3cy2qJDr7S0LwJ2Sd7sTThMgJVZwKf91MQmw2WiWm3+TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrPZZfZ0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7D974C43399;
-	Mon, 25 Mar 2024 01:54:22 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=R48zXyjukBt/Etd1M9nCVkEZlG1fiiroEpe8dgkhWTSZKJewMBoUhqtKirm01WvT+0Bge0vv0kJAjB3CdJ1Oiiw25oqtXiCoXPPqKnyMt/PCq4nNwXfQ2alDH2jKyP50EIZRz3IJcJ30QEDhSOgNg9lMVsQ/U21QNHuh3ld1bGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUL61oDb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7DB0EC43390;
+	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711331662;
-	bh=x6gbNWDUC3393woiAhRGtrXvkbgxFEKnVO43IWMARsU=;
+	s=k20201202; t=1711332787;
+	bh=aJvg1KH6joFG6oJkgTHoc61lNEcN6UYDL94Kek/0h5A=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=jrPZZfZ03PsaQD3fMGm9nq2UPpPmNCR2UhRG5lEG5sj1PDjplq8FZ75Zbzq4M++fX
-	 Q6TVSgOVQbUvhZzKhKOQNbQwhQhy2BZ8MRkhAIEF+3w0ilwV/nWxm1rjxE/qfP/Mr+
-	 E3yc5dSuBNp0Bm1L/KI5QDwiA8kFCuNjxzWIU7cCRVNPOgSNBZV+qUtQOY4O/YoTDT
-	 PFwCgNm3HEFcmI1zG6v/j47VLsywRsjUKgaIEweM6/K8U5bK1qRIu9RKHx/KjIcwnX
-	 cAPddvxMuoVuFBd1hKdjXjkxNm2QAvn+OmyKHTZvNymrjm/TZ8YaQVQ3vy0XdpqBcO
-	 88LTlEfD/nBQw==
+	b=bUL61oDb/M+5KYmdH9GZAQdZT3PYKaJ010SbGP/0QAETJ2gY+Rxd19+hfItokn4fc
+	 qXm+5UshaVvnLaKO+h8US6GsQq7XoxEkTJDEVJIEaNCFv8M2uUBhoQrMAu3fisTCQo
+	 B4fRFMNeMscSki123E/z54cBRXf+v5p5HhYpLJ3jJtc1OvR7VQslOwZ36RRz8NHOez
+	 HFUH5lzzeG0rrZGBHCyr2OTeNZB2H2sILwj6OEqE53Bfd2qCAI/Z34pAg9I1JWd2Cn
+	 dq/bNtJWoCPVpzv9DjBiOxvAIfXazxrFfLBNOkzXYWWq5P+zSQavVa4Lgiia++T7N2
+	 7rjlBqvf/ljRg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 59B24D2D0E0;
-	Mon, 25 Mar 2024 01:54:22 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5AFA0D2D0E0;
+	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -55,8 +55,8 @@ Content-Transfer-Encoding: 8bit
 Subject: Re: [PATCH v6 000/164] pwm: Improve lifetime tracking for pwm_chips
 From: patchwork-bot+chrome-platform@kernel.org
 Message-Id: 
- <171133166235.9916.5159550524752322105.git-patchwork-notify@kernel.org>
-Date: Mon, 25 Mar 2024 01:54:22 +0000
+ <171133278736.9916.5526869645378949035.git-patchwork-notify@kernel.org>
+Date: Mon, 25 Mar 2024 02:13:07 +0000
 References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
 In-Reply-To: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
 To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig_=3Cu=2Ekleine-koenig=40pengutronix=2Ede=3E?=@codeaurora.org
@@ -102,7 +102,7 @@ Cc: linux-pwm@vger.kernel.org, corbet@lwn.net, Jonathan.Cameron@huawei.com,
 
 Hello:
 
-This series was applied to chrome-platform/linux.git (for-kernelci)
+This series was applied to chrome-platform/linux.git (for-next)
 by Uwe Kleine-König <u.kleine-koenig@pengutronix.de>:
 
 On Wed, 14 Feb 2024 10:30:47 +0100 you wrote:
