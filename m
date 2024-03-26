@@ -1,142 +1,79 @@
-Return-Path: <linux-pwm+bounces-1820-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1821-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09B2588C5AD
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 Mar 2024 15:49:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3466E88D026
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 Mar 2024 22:36:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7EB26B2159F
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 Mar 2024 14:49:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 665E41C677C6
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 Mar 2024 21:36:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57F8B13C676;
-	Tue, 26 Mar 2024 14:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57C0813D63A;
+	Tue, 26 Mar 2024 21:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JzuL9WGj"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A32BED9;
-	Tue, 26 Mar 2024 14:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340D17353B
+	for <linux-pwm@vger.kernel.org>; Tue, 26 Mar 2024 21:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464567; cv=none; b=W5aRuY4FA+MFSwww+a9KSGBm6rjqxF/qS+LJFKNBU4hSPwhPIFxU2Jq1/l2LG5AczpGnyOXcEwvCrz/Q3NaPNqAwMPJKDzDYJJ1da4uSW1XH+h3VH+mdRZ4O2ERbQ09krA9hqDHEy8zJZYxtmOTIYcpbBICCxe2Qt3z18yuixBI=
+	t=1711488974; cv=none; b=tMnCM/vUP81DR8Ilj9woMtuSTNfpLltKTN1R7DRL0e4udN+1olTB88EczaAkvehJ8SXiB3k7L9c5TPi3BXcksCAPcBd/AouPM8x8x14402lme7+1KlP5gBbj/znHsIQWOrhZ6U2hw1wG7UA32FRDIYQwUm4Byvo4HriCpmwiQww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464567; c=relaxed/simple;
-	bh=NjGYoZS9MYNf6KYedY89CIBd6GNJTkqJoAov7a2XKRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PKa2GUP2mvNfmdnlyNeLbfnsCask9NEB4lp/RWBjl2d0U9X7MSBPz3S8LBcMRCJLBPg2ZLxsqT1391GskXnP9fC6P3xxTX/6E6DPlfevlCTKnIJjxYKl4YICDrwonkiLmXmCzDJBct5JO5U+vELkj+9bAOiu2XeEv2qMEhP4aN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: u4/HncuNQveTDgvADY/MsQ==
-X-CSE-MsgGUID: xKfSFc0eQ3Cp9nnBEl04Pw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="28999055"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="28999055"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:49:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="914882408"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="914882408"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:49:12 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rp86t-0000000GKYj-43J8;
-	Tue, 26 Mar 2024 16:49:07 +0200
-Date: Tue, 26 Mar 2024 16:49:07 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: nikita.shubin@maquefel.me,
-	Hartley Sweeten <hsweeten@visionengravers.com>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Lukasz Majewski <lukma@denx.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Mark Brown <broonie@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Ralf Baechle <ralf@linux-mips.org>,
-	"Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>,
-	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-	netdev@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-ide@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-sound@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v9 00/38] ep93xx device tree conversion
-Message-ID: <ZgLgY11N8dkpTZJB@smile.fi.intel.com>
-References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
- <dc3e2cb4-f631-4611-8814-0dc04c5502f0@linaro.org>
+	s=arc-20240116; t=1711488974; c=relaxed/simple;
+	bh=TDotayzJxX0y2vdsDxXxnENtD2X4/xK7TSA2t63JWwo=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=jQdn0CpIZbldGfrrhS1PJwPZovA3ijUtv9eb3bUojzVq7gOZhVbn+NMK7ZAfexZmerw2UtDNB9hapU7W0RaSr06mSXer/NjpptggSsyAn9t4aosprjjQjdwjaaqvcEAqusItjWQGeU34RvQwz7vsabHNEPpJhsF+zmy3loyT95Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JzuL9WGj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C0A61C433F1;
+	Tue, 26 Mar 2024 21:36:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711488973;
+	bh=TDotayzJxX0y2vdsDxXxnENtD2X4/xK7TSA2t63JWwo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=JzuL9WGj4vpGxEIb6FIqF+r1SqQqOOyCC7o4VJmGzjzwcrJHnP6Oot7fwtKGFtHaD
+	 BsduNVJ1hWi6DLi+tiCz8Dirv/Fl9uDFOgyJQN30tDJuQCd5pnmTETC7+9U37R9/J6
+	 BCQej4hWj6mI+hKFW6rJ7LZiMGk4RTBxJjPq3PLbWiqyYui7pLxlEb8pFC13zAx9H5
+	 nkjjUcBU+uWB74jHWHeLhgqtXtqpoy/xYWfd0LG5yrtyiFXnna1RNtIQKTFRZSF83f
+	 HZ9aWaZyoe27RRGOwlEq1kqSiK/oD0Moy36uspwef10Ud0mR/caJfJqvVBW7C3ia1U
+	 Fc2imPOo0SdfA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B6FA8D2D0EC;
+	Tue, 26 Mar 2024 21:36:13 +0000 (UTC)
+Subject: Re: [GIT PULL] pwm: A fix for v6.9-rc2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <unlcfjofn5lsga7ttr6egp6wjvsinwysi7lklc646ixap4oumx@uymlfmdyy6jf>
+References: <unlcfjofn5lsga7ttr6egp6wjvsinwysi7lklc646ixap4oumx@uymlfmdyy6jf>
+X-PR-Tracked-List-Id: <linux-pwm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <unlcfjofn5lsga7ttr6egp6wjvsinwysi7lklc646ixap4oumx@uymlfmdyy6jf>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.9-rc2-fixes
+X-PR-Tracked-Commit-Id: 9eb05877dbee03064d3d3483cd6702f610d5a358
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 576bb2d8e37a75a27400849327b996f330bc2380
+Message-Id: <171148897374.26753.6059366761717688870.pr-tracker-bot@kernel.org>
+Date: Tue, 26 Mar 2024 21:36:13 +0000
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pwm@vger.kernel.org, Zoltan HERPAI <wigyori@uid0.hu>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc3e2cb4-f631-4611-8814-0dc04c5502f0@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Mar 26, 2024 at 11:19:54AM +0100, Krzysztof Kozlowski wrote:
-> On 26/03/2024 10:18, Nikita Shubin via B4 Relay wrote:
-> > The goal is to recieve ACKs for all patches in series to merge it via Arnd branch.
-> > 
-> > Some changes since last version (v8):
-> > 
-> > - Most important, fixed bug in Device Tree resulting in CS4271 not working by Alexander Sverdlin.
-> > - added #interrupt-cells to gpio nodes with interrupts-controller
-> > - fixed some EOF in dtsi files
-> > - fixed identation and type in ep93xx-keypad thanks to Andy Shevchenko
-> > 
-> > Stephen Boyd, Vinod Koul PLEASE! give some comments on following, couse i hadn't one for a couple of iterations already:
-> > 
-> > Following patches require attention from Stephen Boyd, as they were converted to aux_dev as suggested:
-> > 
-> > - ARM: ep93xx: add regmap aux_dev
-> > - clk: ep93xx: add DT support for Cirrus EP93xx
-> > 
-> > Following patches require attention from Vinod Koul:
-> > 
-> > - dma: cirrus: Convert to DT for Cirrus EP93xx
-> > - dma: cirrus: remove platform code
-> 
-> A lot of this could have been already merged if you split it... Just
-> saying...
+The pull request you sent on Tue, 26 Mar 2024 09:05:10 +0100:
 
-But you able to apply DT schema patches if you wish.
-Just doing? :-)
+> https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.9-rc2-fixes
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/576bb2d8e37a75a27400849327b996f330bc2380
+
+Thank you!
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
