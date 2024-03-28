@@ -1,112 +1,119 @@
-Return-Path: <linux-pwm+bounces-1827-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1828-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF4DE88FEBA
-	for <lists+linux-pwm@lfdr.de>; Thu, 28 Mar 2024 13:11:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2C82890527
+	for <lists+linux-pwm@lfdr.de>; Thu, 28 Mar 2024 17:27:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 199271C23FD2
-	for <lists+linux-pwm@lfdr.de>; Thu, 28 Mar 2024 12:11:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6ED76299469
+	for <lists+linux-pwm@lfdr.de>; Thu, 28 Mar 2024 16:27:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 604CB657C5;
-	Thu, 28 Mar 2024 12:11:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C3A612FB03;
+	Thu, 28 Mar 2024 16:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b="f6dDQoVp"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp1.ms.mff.cuni.cz (smtp-in1.ms.mff.cuni.cz [195.113.20.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565DF5474B
-	for <linux-pwm@vger.kernel.org>; Thu, 28 Mar 2024 12:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DE17E788;
+	Thu, 28 Mar 2024 16:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711627860; cv=none; b=YOjc3cnDQiloOmw2VYyTlSDIk+Mz2Ynm5JaFaN1qJbgoyfU4Sozt+yOkynhwR8m2Y2DdE7sSeMl71xCID5chf6Jj/65qWfY7JzJPfOaB9kOD4u9i8mxg2lou0hKEiw/sofXbXcT7jrqyw0WoCoDGbYFq+oGDCpDVCdW9YRJuMxc=
+	t=1711643246; cv=none; b=TRdOkJ91QEGfsPznMepto9e13pslkAiM5jZLJvxhgUI0CjK+PruS0t8EORfCMxYY50sC3f5u5jYnFXrZbHDQySnT49rlNb5mk2AdF89taSAD5rtzCs/5hBA5QrlZCXgO1uwQMQIxUsn2Ihp+XfAYkqnL2gls+QAsiBG6F1fx9S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711627860; c=relaxed/simple;
-	bh=XLR5seFyaOZ89hdv/Ug8D4XWdLSyEghesi9PWjNcV6I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mXTh6v0y0zqbNNYMLiPSLh/bQ2W3pBxrIvshaeDhkVbAycv7fTqOx0LYP4YEg7ynr88bAmGJRHnCYCQBNKUK9LAHqF/LK0NRXFi7DSLG7W81leXFLZRChKOOoFPzSiDvuaOMpMtTrugOKgi4IQ29k40jeIwQ4GNYHOTLLUOyQ2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rpoam-0003cy-1q; Thu, 28 Mar 2024 13:10:48 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rpoal-008zxt-FO; Thu, 28 Mar 2024 13:10:47 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rpoal-00CxMb-1I;
-	Thu, 28 Mar 2024 13:10:47 +0100
-Date: Thu, 28 Mar 2024 13:10:47 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] pwm: add missing kernel-doc for pwm_chip:cdev
-Message-ID: <3xqcgvyz2dunxxnmstt63d3v235r3cfh6ddsajrnogpw4zvy7b@w7tzawgexthc>
-References: <20240328045515.15874-1-rdunlap@infradead.org>
+	s=arc-20240116; t=1711643246; c=relaxed/simple;
+	bh=dIb9eE7iYPMGcvU2C0yJgjBaPJT0qXXikLkp/Z4F09M=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:To:From:Cc; b=klzcwefSGkicP5QPN+K5Z1Sxoa1Kk7FxhSkVotqlkuG65YaraM4QGsehPuv1X3S2ejRC9etzM4Q7ttQx9EYoEfh0K50yZEODGoHKWi1azKdZMqSoMDAEjgN23APYRYXUA/q17KXOP/SsdTBhjDL4pa6KpB1qkDERj33sAbEqaLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz; spf=pass smtp.mailfrom=matfyz.cz; dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b=f6dDQoVp; arc=none smtp.client-ip=195.113.20.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matfyz.cz
+X-SubmittedBy: id balejk@matfyz.cz subject /postalCode=110+2000/O=Univerzita+20Karlova/street=Ovocn+5CxC3+5CxBD+20trh+20560/5/ST=Praha,+20Hlavn+5CxC3+5CxAD+20m+5CxC4+5Cx9Bsto/C=CZ/CN=Karel+20Balej/emailAddress=balejk@matfyz.cz
+	serial F5FD910E8FE2121B897F7E55B84E351D
+	issued by /C=NL/O=GEANT+20Vereniging/CN=GEANT+20Personal+20CA+204
+	auth type TLS.CUNI
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mff.cuni.cz;
+	s=submission; t=1711643225; x=1712943225;
+	bh=UIMr0cXzQ7K9MqVml1YbFic1/i1jalZvSB0LSoBSsDQ=;
+	h=Mime-Version:From;
+	b=f6dDQoVpmL/onp80cBDa4r6ezxFbnUEqH6rIQrDZ7YxoFaSmFHcoPjc1iwm4d70Pt
+	 jS+lzJFdJwuybbUfRpSeSuahAsKGXstZb6Aj6AOlAut1kWTLcWsHwuvuPuvg34MnbM
+	 5ldTqipkpguHZfzuYXcSBwFr9ky3DGT09dQeULHKGP0nL73N7tGH+iMFKA1ldx570H
+	 TPiobmP+202I07GapaeAPvsh9CBDFrwBAlDJJKY/dyKzgwG8wkYhkvfgI0F3/Qc86i
+	 88IPUo70ueRVyPpeZh4NOt/gVpDhbnvjsV1iaNnVNbmw/uZggmGl/w7IELrLMVFrG1
+	 sMb0u0e7l4ssA==
+Received: from localhost (internet5.mraknet.com [185.200.108.250])
+	(authenticated)
+	by smtp1.ms.mff.cuni.cz (8.16.1/8.16.1) with ESMTPS id 42SGR3at063608
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
+	Thu, 28 Mar 2024 17:27:05 +0100 (CET)
+	(envelope-from balejk@matfyz.cz)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vl5k7ifaxjvijgw2"
-Content-Disposition: inline
-In-Reply-To: <20240328045515.15874-1-rdunlap@infradead.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-
-
---vl5k7ifaxjvijgw2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 28 Mar 2024 17:27:03 +0100
+Message-Id: <D05IVTPYH35N.2CLDG6LSILRSN@matfyz.cz>
+Subject: [REGRESSION] PWM vibrator does not probe with v6.9-rc1
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+From: "Karel Balej" <balejk@matfyz.cz>
+Cc: <regressions@lists.linux.dev>, <linux-pwm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 
-Hello Randy,
+Uwe,
 
-On Wed, Mar 27, 2024 at 09:55:13PM -0700, Randy Dunlap wrote:
-> Add a kernel-doc description of @cdev to prevent a build warning:
->=20
-> include/linux/pwm.h:308: warning: Function parameter or struct member 'cd=
-ev' not described in 'pwm_chip'
->=20
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+I am working on bringing the mainline Linux to my old smartphone. Most
+of the changes are not yet in-tree.
 
-Thanks for the fix, I applied it to my for-next branch at
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
-=2E
+The phone has a PWM vibrator for which the corresponding input driver
+(pwm-vibrator) is used. The driver used for the PWM is pwm-pxa (or
+pxa25x-pwm).
 
-Best regards
-Uwe
+The DT nodes look like this
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+[...]
+	pwm: pwm@1ac00 {
+		compatible =3D "marvell,pxa250-pwm";
+		reg =3D <0x1ac00 0x10>;
+		#pwm-cells =3D <1>;
+		clocks =3D <&apbc PXA1908_CLK_PWM3>;
+	};
+[...]
+	vibrator {
+		compatible =3D "pwm-vibrator";
+		pwm-names =3D "enable";
+		pwms =3D <&pwm 100000>;
+		enable-gpios =3D <&gpio 20 GPIO_ACTIVE_HIGH>;
+		pinctrl-names =3D "default";
+		pinctrl-0 =3D <&vibrator_pins>;
+	};
+[...]
 
---vl5k7ifaxjvijgw2
-Content-Type: application/pgp-signature; name="signature.asc"
+The vibrator worked fine with v6.8-rc6 but after I rebased to v6.9-rc1,
+it no longer probes printing
 
------BEGIN PGP SIGNATURE-----
+	[  +0.000118] pwm-vibrator vibrator: failed to apply initial PWM state: -2=
+2
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYFXkYACgkQj4D7WH0S
-/k6cKQf/RspDnaB8B793IIf5VGeniUSJQJ6Y+ZbSnl7Nd5F8rpMpZ+V2dNkJ02eA
-sO64DEi9sdjm/xhiJh1qyZgJi4cmuHwl5SmZCOlQi4gVTtGXMydMUW8gL4MtsUiR
-ZS3KXz57oDWs6ZPRz2cAUwfut/b1Qs/9R9qOnb2JM/KFrYFxlQgtwxaXga1wweFB
-TJL7hElzajXZygks1pq7LNocMhvtdRz4hUBGjBekqLyLFXTLkY6TP2m0vep5UHJC
-U9irHFFFh5y0a2yhoQDEwqG2AYsLa3uFPEMC/GjKM85sUngv6O1C1QrCA4D2FRnT
-Adj9LPGcE8BWs4zr8UHUBElzBILs8g==
-=0Tli
------END PGP SIGNATURE-----
+to dmesg.
 
---vl5k7ifaxjvijgw2--
+I have bisected the problem to 40ade0c2e794 ("pwm: Let the of_xlate
+callbacks accept references without period").
+
+Looking at the commit and adjacent history, I don't believe this problem
+is caused by this still being an out-of-tree DT, nonetheless, if it
+proves to be the case, then I apologize for false alarm.
+
+Would you please take a look?
+
+Thank you and kind regards,
+K. B.
+
+#regzbot introduced: 40ade0c2e794
 
