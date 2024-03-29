@@ -1,102 +1,120 @@
-Return-Path: <linux-pwm+bounces-1836-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1837-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 567F6891FAB
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Mar 2024 16:09:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D53A891FB5
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Mar 2024 16:10:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0822028A497
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Mar 2024 15:09:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3831228ADD3
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Mar 2024 15:10:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C369E146581;
-	Fri, 29 Mar 2024 13:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="HssmyUaz"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5D2C146D62;
+	Fri, 29 Mar 2024 14:02:57 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA521465A6
-	for <linux-pwm@vger.kernel.org>; Fri, 29 Mar 2024 13:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C935D85942
+	for <linux-pwm@vger.kernel.org>; Fri, 29 Mar 2024 14:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711720241; cv=none; b=rWUfwufsqg5wa+CdxGxAGxwm17MJxhmxfm4VpxFrQQnsxS5oRSdz8/3T8cp2BFtpwPQUiASy1KNMBTNV7od+U8zyO5ZMJC0IdyQKCHZVXEVkkaLERKl7qaOvYsLypNIyLHVRBSzG203Rd7Dyc+Ce39c9mzHj2azgZlUH36dCJ3k=
+	t=1711720977; cv=none; b=YvLX5pmKhw2BJtJeY5zLVz/Cq6h06DG7T+v+jsIQyeMeg4yxGl5rGLZcYrDaIytADuHSHs6iKjylcDJVH42LY+uaRVHJNZHB+C3d5JhB5/gBx8kSO0xWLg3Gi8lLnEQWwSSeJZjoIDvw7GZRR7wSS6EkFDvNiRB2ilVDHe91EL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711720241; c=relaxed/simple;
-	bh=k9Pz2wGjjLq/znd6nt6zLHxpUPldlGrUSAlgLnKAn7g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dxk/fNGHzmjo1NELnvGYWnJbI++JKfRpSmQjE+a2OGX41gG0pqj8F2yHfj/ybucY2q/CTVSM8ebi3WUrZWH5JTkWfY+6jUM5aTqO01sOOPEOoOIs1yTurQ+KEZPynHk7x2JbQd8p0gs1YLD0sFF1IyKMR79jkKjcYWjk5pEbvFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=HssmyUaz; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d71765d3e1so9306441fa.0
-        for <linux-pwm@vger.kernel.org>; Fri, 29 Mar 2024 06:50:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711720236; x=1712325036; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k9Pz2wGjjLq/znd6nt6zLHxpUPldlGrUSAlgLnKAn7g=;
-        b=HssmyUazSNhFqFvtvC+X6ciP8tk1VY17FEUN/AwKm4E+3SENv+HQzskRaZwrmCzq0n
-         tjfurpk2OpFIxM47Xnokj8pIGNkOHG+ZWBALri+zy0O8kQ70GbK1rog2jBl3S1zYYtpV
-         BKd48L3fCyfQEGjh2YB9ABoUs2IgK7WOu/eVI4siOffcY+I2dS1YxscMONCEUTg95Ct8
-         4cHzu+LAg6ra54YzUXYqy+IJolcMsmhtT3HKw2fDWzzu4GmuVUP7/wuHwZy+EaYjHhLN
-         x5BfTTiVqaHY8DhYDrHiqSvFpioHv7bnJPtFNmhzsZZNHK5k7Q/5aQPXAUk37kP+L1xZ
-         dVeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711720236; x=1712325036;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k9Pz2wGjjLq/znd6nt6zLHxpUPldlGrUSAlgLnKAn7g=;
-        b=DCBVOnC3O4Ge2DVRe5ON539ltgb+8coRrIB46AH4aJOoPUoKyY3oAYiGn7MZ1Hxflv
-         vHL3UXEwlafqq39TIz5z6GA+502JlwaEhDU46L/o2UmJ0u7DjIcP6tqJPCKoRYM6JgcU
-         kfNIDZ0WIVdJO5XkhH/4zY+pNk2JN5fmxCq0vFaXP+Wf7PNSYMC6U9LtPX2gF+pKm3g6
-         EcttOK85iC6F1zKsVHcwp3TDGPl6IDT88y80HUWIFQypAQOkB1jSpGmV/8emgH0b6nor
-         +JXIE4oHd4BLJx94wgGovlm86tUcOrHNG3OfUwW1JVSHjKrGFVQ6rKjNdG5P2UuDJfLM
-         FP9A==
-X-Gm-Message-State: AOJu0YxI6U6FynZMv60zbdORUGEbFxpXjodXJbH9KxFDDOFpjqP1P/ma
-	iwYlWQJjosjs4ID8z/fL5TSChlp1nU66piTadDvxIpMVMcdqPDJoS8fuzHqhPbKxPo1XLDwJyGT
-	gY4NwYEWYdJKPC+RLtPHvdSVBSjrABN8y5ysYdMIIDKkIESE9Uz8=
-X-Google-Smtp-Source: AGHT+IHx9H+eXzZ1h0kAXaPMAW/8x4mhedSNM5EI5+ajyiZQoyVbJkaAD7fzzTxwsCStxfleOOKAtHLOj1QYqyFotAU=
-X-Received: by 2002:a2e:9c84:0:b0:2d4:5d3e:9666 with SMTP id
- x4-20020a2e9c84000000b002d45d3e9666mr1233664lji.45.1711720236626; Fri, 29 Mar
- 2024 06:50:36 -0700 (PDT)
+	s=arc-20240116; t=1711720977; c=relaxed/simple;
+	bh=CTUdk1L/aKRoDFPX3NSo0uVm6JcRn+6eQ4QblsP4Vc4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HLZSDmgGMjqwy2m5Bgil6JcmPO8RYJAW5eo84V9FHRQe4lcAJKZmK9KdIXCaCo1xe5wvtc6M2vpXqoMp84rN1hCphg+qlMLYplp0EOg6y/MP9diwiJog3FNMIc/f3g5z2CEYq00IfqtxMBzwZ/+WZWVOpsmPAD8kAEBd5MZ3Qsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rqCon-0005q7-W2; Fri, 29 Mar 2024 15:02:54 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rqCon-009CdJ-Cu; Fri, 29 Mar 2024 15:02:53 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rqCon-00DQZt-11;
+	Fri, 29 Mar 2024 15:02:53 +0100
+Date: Fri, 29 Mar 2024 15:02:53 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: linux-pwm@vger.kernel.org, David Lechner <dlechner@baylibre.com>
+Cc: kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: Don't check pointer for being non-NULL after use
+Message-ID: <5ly72cm6hruwdblgxiecxxf3gcnplhy762vlrlxgbvlg7xyotl@y6tzrlholow7>
+References: <20240329101648.544155-2-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240329101648.544155-2-u.kleine-koenig@pengutronix.de>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="z6bhuwcloiyf7phk"
+Content-Disposition: inline
 In-Reply-To: <20240329101648.544155-2-u.kleine-koenig@pengutronix.de>
-From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 29 Mar 2024 08:50:25 -0500
-Message-ID: <CAMknhBFwKJw4ut4maTbF8DqOdymGiWfUM5b0EEGJOAauc57WCw@mail.gmail.com>
-Subject: Re: [PATCH] pwm: Don't check pointer for being non-NULL after use
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Content-Type: text/plain; charset="UTF-8"
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+
+
+--z6bhuwcloiyf7phk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 29, 2024 at 5:17=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
+Hello,
+
+On Fri, Mar 29, 2024 at 11:16:48AM +0100, Uwe Kleine-K=F6nig wrote:
 > After assigning chip =3D pwm->chip; the compiler is free to assume that
 > pwm is non-NULL and so can optimize out the check for pwm against NULL.
->
+>=20
 > While it's probably a programming error to pass a NULL pointer to
 > pwm_put() this shouldn't be dropped without careful consideration and
 > wasn't intended.
->
+>=20
 > So assign chip only after the NULL check.
->
+>=20
 > Reported-by: David Lechner <dlechner@baylibre.com>
 > Fixes: d60bc2995732 ("pwm: Add a struct device to struct pwm_chip")
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+Applied to
+
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+
+with David's Reviewed-by tag.
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--z6bhuwcloiyf7phk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYGygwACgkQj4D7WH0S
+/k4cFggAiSy/MUZo+BkDkgX8jTvPBMRSuIN1wQ65oWaKXiReaF69bLgM7qc5Y4M7
+apEuS9cvCvZoFcItZLtnvs57SNsmsQA9ZIMU1WCx43/bjSYxCZLhVH/lwiY5dNO9
+A50froUUYmoQ+1Eosxr93OyAwYrBN9y+w3Blbtjp/Oq1R7v/1ykcANHjyTBayzRc
+afqcghQLoooi/DovGvyCy3srGegZ1i477O32RUDmhortqqmw1ZqRpe+YLvxYDlhA
+tbnFtJ5vl2KqaUeIsElpCLGkDr5RNE8aKFw7dqxzmdtiH005MiW9Qc8mykFminHN
+XHNO0kqZF3xmJmkuQpqSCDvpvkfGeQ==
+=Y8Cg
+-----END PGP SIGNATURE-----
+
+--z6bhuwcloiyf7phk--
 
