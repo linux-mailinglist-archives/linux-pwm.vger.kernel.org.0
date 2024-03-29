@@ -1,120 +1,112 @@
-Return-Path: <linux-pwm+bounces-1837-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1838-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D53A891FB5
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Mar 2024 16:10:27 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A76F3892003
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Mar 2024 16:15:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3831228ADD3
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Mar 2024 15:10:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 297D6B34364
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Mar 2024 15:10:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5D2C146D62;
-	Fri, 29 Mar 2024 14:02:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B702181752;
+	Fri, 29 Mar 2024 14:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SmPkxfqi"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C935D85942
-	for <linux-pwm@vger.kernel.org>; Fri, 29 Mar 2024 14:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526CF85942;
+	Fri, 29 Mar 2024 14:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711720977; cv=none; b=YvLX5pmKhw2BJtJeY5zLVz/Cq6h06DG7T+v+jsIQyeMeg4yxGl5rGLZcYrDaIytADuHSHs6iKjylcDJVH42LY+uaRVHJNZHB+C3d5JhB5/gBx8kSO0xWLg3Gi8lLnEQWwSSeJZjoIDvw7GZRR7wSS6EkFDvNiRB2ilVDHe91EL8=
+	t=1711721386; cv=none; b=ePHCtSv2gxOCjUa1Gh2NEZ1gHChiMgd9l7lg/ZMcHpTdqMscYM6CltDNxcmS/EsUucYzVj7YpQ2lY2ESOjek8xjKc1ypmN80vIUNIKv+AQ+9CulCSvfeNSeNbcxHCSZqVo5JAbfYHXX/ToenV/YzgIDozRotnUjMq4aTP4OUJfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711720977; c=relaxed/simple;
-	bh=CTUdk1L/aKRoDFPX3NSo0uVm6JcRn+6eQ4QblsP4Vc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HLZSDmgGMjqwy2m5Bgil6JcmPO8RYJAW5eo84V9FHRQe4lcAJKZmK9KdIXCaCo1xe5wvtc6M2vpXqoMp84rN1hCphg+qlMLYplp0EOg6y/MP9diwiJog3FNMIc/f3g5z2CEYq00IfqtxMBzwZ/+WZWVOpsmPAD8kAEBd5MZ3Qsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rqCon-0005q7-W2; Fri, 29 Mar 2024 15:02:54 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rqCon-009CdJ-Cu; Fri, 29 Mar 2024 15:02:53 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rqCon-00DQZt-11;
-	Fri, 29 Mar 2024 15:02:53 +0100
-Date: Fri, 29 Mar 2024 15:02:53 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: linux-pwm@vger.kernel.org, David Lechner <dlechner@baylibre.com>
-Cc: kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: Don't check pointer for being non-NULL after use
-Message-ID: <5ly72cm6hruwdblgxiecxxf3gcnplhy762vlrlxgbvlg7xyotl@y6tzrlholow7>
-References: <20240329101648.544155-2-u.kleine-koenig@pengutronix.de>
+	s=arc-20240116; t=1711721386; c=relaxed/simple;
+	bh=7BXu3z5aWHgSwjpVC5g+uQXoiZ7sf2zEb76J2er2REU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ar8w9zQlJvVDvKXwZzz+OI1jXuQO7fQ1yBuABga44TfUxaXdfyloGbjhdz0HBLNTqSXt5L75Ah1SpytF6ahh47M5+0MPeVHUg4OZwiEszUD3ZOm7AQPc0KDG32BSZQxubILoDzKGZhbNX8bHIe/5g3NNAfrQywsjDTSi2gDN5xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SmPkxfqi; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=tnY6mjvKmaqatppE95jsbuYCoBKw4Of7/2hkJ0TnT9Y=;
+	t=1711721384; x=1712153384; b=SmPkxfqiiMyMj1p8u9z7DICvpOa6Ch/p8/+CixxzlHGVRLt
+	JZCf5N+5DxTP/NLAg9bAjSryiEFSL3HohrJKXwLmptxG9rZQ90G94rMy6qUTL+s/w+Nwbjl7JW8k3
+	WeriHuEtPMRP5m2CyAH5Uyw/MixQgqOv6I88V5grmnVGarofwXkA8aTg1jGil61xxttejucDDIwrh
+	Fd9MV3vZ0U4xkVnH6g0qcJmFA4uy/qgYgrnObRADoWuMwmNe5q0tv6msZ6xZ+1YrMTcCwohJ1kgps
+	dlX8J0t0Ml3+0JVdIWIokuIifhdX3zz2fhZXPgYAIfxkYE1+n6PfKQEFQW2RrSJA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rqCvO-0004AK-5m; Fri, 29 Mar 2024 15:09:42 +0100
+Message-ID: <2e7ef1d2-ecc5-49c9-96e7-e479f0e5e3d8@leemhuis.info>
+Date: Fri, 29 Mar 2024 15:09:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="z6bhuwcloiyf7phk"
-Content-Disposition: inline
-In-Reply-To: <20240329101648.544155-2-u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pwm: Fix setting period with #pwm-cells = <1> and
+ of_pwm_single_xlate()
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Karel Balej <balejk@matfyz.cz>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+References: <D05IVTPYH35N.2CLDG6LSILRSN@matfyz.cz>
+ <20240329103544.545290-2-u.kleine-koenig@pengutronix.de>
+ <D06708BSGQ0J.1L4YOKOADM7T6@matfyz.cz>
+ <v5jwouykt37up3bcjiigjgipzfdwgo5cguskunxjmyags43gql@dmrcrynj4zvj>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <v5jwouykt37up3bcjiigjgipzfdwgo5cguskunxjmyags43gql@dmrcrynj4zvj>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711721384;6978f1f8;
+X-HE-SMSGID: 1rqCvO-0004AK-5m
 
+On 29.03.24 14:24, Uwe Kleine-König wrote:
+> On Fri, Mar 29, 2024 at 12:21:15PM +0100, Karel Balej wrote:
+>> Just a nit: I am not sure if perhaps this being part of the report
+>> thread is sufficient, but generally there should probably also be a
+>> Closes: trailer for regzbot to automatically mark the report as resolved
+>> among other reasons.
+> 
+> I applied this patch and added
+> 
+> Link: https://lore.kernel.org/r/D05IVTPYH35N.2CLDG6LSILRSN@matfyz.cz
+> 
+> to the Signoff area which should be good enough to make the regzbot
+> recognize this as the matching fix.
 
---z6bhuwcloiyf7phk
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thx for that. FWIW, those tags are not only for regzbot: they are older,
+as Linus wants them for good reasons[1]; that's why the docs also tell
+people to place them[2] for many years now. But a lot of developer are
+either not aware or ignore that.
 
-Hello,
+Ciao, Thorsten
 
-On Fri, Mar 29, 2024 at 11:16:48AM +0100, Uwe Kleine-K=F6nig wrote:
-> After assigning chip =3D pwm->chip; the compiler is free to assume that
-> pwm is non-NULL and so can optimize out the check for pwm against NULL.
->=20
-> While it's probably a programming error to pass a NULL pointer to
-> pwm_put() this shouldn't be dropped without careful consideration and
-> wasn't intended.
->=20
-> So assign chip only after the NULL check.
->=20
-> Reported-by: David Lechner <dlechner@baylibre.com>
-> Fixes: d60bc2995732 ("pwm: Add a struct device to struct pwm_chip")
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+[1] for details, see:
+https://lore.kernel.org/all/CAHk-=wjMmSZzMJ3Xnskdg4+GGz=5p5p+GSYyFBTh0f-DgvdBWg@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wjxzafG-=J8oT30s7upn4RhBs6TX-uVFZ5rME+L5_DoJA@mail.gmail.com/
 
-Applied to
+[2] see Documentation/process/submitting-patches.rst
+(http://docs.kernel.org/process/submitting-patches.html) and
+Documentation/process/5.Posting.rst
+(https://docs.kernel.org/process/5.Posting.html)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
-
-with David's Reviewed-by tag.
-
-Thanks
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---z6bhuwcloiyf7phk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYGygwACgkQj4D7WH0S
-/k4cFggAiSy/MUZo+BkDkgX8jTvPBMRSuIN1wQ65oWaKXiReaF69bLgM7qc5Y4M7
-apEuS9cvCvZoFcItZLtnvs57SNsmsQA9ZIMU1WCx43/bjSYxCZLhVH/lwiY5dNO9
-A50froUUYmoQ+1Eosxr93OyAwYrBN9y+w3Blbtjp/Oq1R7v/1ykcANHjyTBayzRc
-afqcghQLoooi/DovGvyCy3srGegZ1i477O32RUDmhortqqmw1ZqRpe+YLvxYDlhA
-tbnFtJ5vl2KqaUeIsElpCLGkDr5RNE8aKFw7dqxzmdtiH005MiW9Qc8mykFminHN
-XHNO0kqZF3xmJmkuQpqSCDvpvkfGeQ==
-=Y8Cg
------END PGP SIGNATURE-----
-
---z6bhuwcloiyf7phk--
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
