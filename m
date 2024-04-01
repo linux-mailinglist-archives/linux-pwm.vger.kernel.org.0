@@ -1,112 +1,129 @@
-Return-Path: <linux-pwm+bounces-1838-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1839-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A76F3892003
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Mar 2024 16:15:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B0B2893894
+	for <lists+linux-pwm@lfdr.de>; Mon,  1 Apr 2024 09:09:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 297D6B34364
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Mar 2024 15:10:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55B76281A76
+	for <lists+linux-pwm@lfdr.de>; Mon,  1 Apr 2024 07:09:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B702181752;
-	Fri, 29 Mar 2024 14:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SmPkxfqi"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D0C3946C;
+	Mon,  1 Apr 2024 07:09:28 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526CF85942;
-	Fri, 29 Mar 2024 14:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF655CA73
+	for <linux-pwm@vger.kernel.org>; Mon,  1 Apr 2024 07:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711721386; cv=none; b=ePHCtSv2gxOCjUa1Gh2NEZ1gHChiMgd9l7lg/ZMcHpTdqMscYM6CltDNxcmS/EsUucYzVj7YpQ2lY2ESOjek8xjKc1ypmN80vIUNIKv+AQ+9CulCSvfeNSeNbcxHCSZqVo5JAbfYHXX/ToenV/YzgIDozRotnUjMq4aTP4OUJfM=
+	t=1711955368; cv=none; b=MpCR4zKb57qyEW8c1vt78LrAkE6MMcT/wBFCA49N1UwCt+HSxVEv74AXOGTj58fthdrl2DWlqtLXIAOwXtdTtRi5dSLRcUYyKM2sR/D0+6wIsyw5T1BIcvZ6Qanndwir04i6Asmtuf9Od9bINIcyAbUP8yn4RJL9KfLN4McZ0Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711721386; c=relaxed/simple;
-	bh=7BXu3z5aWHgSwjpVC5g+uQXoiZ7sf2zEb76J2er2REU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ar8w9zQlJvVDvKXwZzz+OI1jXuQO7fQ1yBuABga44TfUxaXdfyloGbjhdz0HBLNTqSXt5L75Ah1SpytF6ahh47M5+0MPeVHUg4OZwiEszUD3ZOm7AQPc0KDG32BSZQxubILoDzKGZhbNX8bHIe/5g3NNAfrQywsjDTSi2gDN5xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SmPkxfqi; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=tnY6mjvKmaqatppE95jsbuYCoBKw4Of7/2hkJ0TnT9Y=;
-	t=1711721384; x=1712153384; b=SmPkxfqiiMyMj1p8u9z7DICvpOa6Ch/p8/+CixxzlHGVRLt
-	JZCf5N+5DxTP/NLAg9bAjSryiEFSL3HohrJKXwLmptxG9rZQ90G94rMy6qUTL+s/w+Nwbjl7JW8k3
-	WeriHuEtPMRP5m2CyAH5Uyw/MixQgqOv6I88V5grmnVGarofwXkA8aTg1jGil61xxttejucDDIwrh
-	Fd9MV3vZ0U4xkVnH6g0qcJmFA4uy/qgYgrnObRADoWuMwmNe5q0tv6msZ6xZ+1YrMTcCwohJ1kgps
-	dlX8J0t0Ml3+0JVdIWIokuIifhdX3zz2fhZXPgYAIfxkYE1+n6PfKQEFQW2RrSJA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rqCvO-0004AK-5m; Fri, 29 Mar 2024 15:09:42 +0100
-Message-ID: <2e7ef1d2-ecc5-49c9-96e7-e479f0e5e3d8@leemhuis.info>
-Date: Fri, 29 Mar 2024 15:09:41 +0100
+	s=arc-20240116; t=1711955368; c=relaxed/simple;
+	bh=tLrzw1qbwUo9fjZdtE/jidZK8xe86yeQauW2sJ3gpRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=q4w8OyUnRj2pm23QK6XPzBEz8z6lJyGQnowAqS74OXIu4soJ6KFkW100Q9dcKTHSt0vmd6czPtsjD0ZF96saHaWAWh3hkATcyN/lr0iS66Wy4qBt+5JjjnkqwnbUyyGpvnJ5iWbYRZob62/viAh0sNqdnQBioFm0DEkbEmROVE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rrBnH-000754-Oa; Mon, 01 Apr 2024 09:09:23 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rrBnG-009kSG-Vi; Mon, 01 Apr 2024 09:09:22 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rrBnG-00DxTT-2u;
+	Mon, 01 Apr 2024 09:09:22 +0200
+Date: Mon, 1 Apr 2024 09:09:22 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pwm@vger.kernel.org, kernel@pengutronix.de, 
+	Karel Balej <balejk@matfyz.cz>
+Subject: [GIT PULL] pwm: A fix for v6.9-rc3
+Message-ID: <sflouhdi5i4ekqxhpi4z5vriwnwxd6jobrwazhlpg77avn22qz@2f54bed3yu6v>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pwm: Fix setting period with #pwm-cells = <1> and
- of_pwm_single_xlate()
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Karel Balej <balejk@matfyz.cz>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org
-References: <D05IVTPYH35N.2CLDG6LSILRSN@matfyz.cz>
- <20240329103544.545290-2-u.kleine-koenig@pengutronix.de>
- <D06708BSGQ0J.1L4YOKOADM7T6@matfyz.cz>
- <v5jwouykt37up3bcjiigjgipzfdwgo5cguskunxjmyags43gql@dmrcrynj4zvj>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <v5jwouykt37up3bcjiigjgipzfdwgo5cguskunxjmyags43gql@dmrcrynj4zvj>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711721384;6978f1f8;
-X-HE-SMSGID: 1rqCvO-0004AK-5m
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2b42trqtlzied2wd"
+Content-Disposition: inline
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On 29.03.24 14:24, Uwe Kleine-König wrote:
-> On Fri, Mar 29, 2024 at 12:21:15PM +0100, Karel Balej wrote:
->> Just a nit: I am not sure if perhaps this being part of the report
->> thread is sufficient, but generally there should probably also be a
->> Closes: trailer for regzbot to automatically mark the report as resolved
->> among other reasons.
-> 
-> I applied this patch and added
-> 
-> Link: https://lore.kernel.org/r/D05IVTPYH35N.2CLDG6LSILRSN@matfyz.cz
-> 
-> to the Signoff area which should be good enough to make the regzbot
-> recognize this as the matching fix.
 
-Thx for that. FWIW, those tags are not only for regzbot: they are older,
-as Linus wants them for good reasons[1]; that's why the docs also tell
-people to place them[2] for many years now. But a lot of developer are
-either not aware or ignore that.
+--2b42trqtlzied2wd
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ciao, Thorsten
+Hello Linus,
 
-[1] for details, see:
-https://lore.kernel.org/all/CAHk-=wjMmSZzMJ3Xnskdg4+GGz=5p5p+GSYyFBTh0f-DgvdBWg@mail.gmail.com/
-https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
-https://lore.kernel.org/all/CAHk-=wjxzafG-=J8oT30s7upn4RhBs6TX-uVFZ5rME+L5_DoJA@mail.gmail.com/
+The following changes since commit 9eb05877dbee03064d3d3483cd6702f610d5a358:
 
-[2] see Documentation/process/submitting-patches.rst
-(http://docs.kernel.org/process/submitting-patches.html) and
-Documentation/process/5.Posting.rst
-(https://docs.kernel.org/process/5.Posting.html)
+  pwm: img: fix pwm clock lookup (2024-03-25 07:31:26 +0100)
 
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+(that you pulled for v6.9-rc2) are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/p=
+wm/for-6.9-rc3-fixes
+
+for you to fetch changes up to 73dfe970c038d0548beccc5bfb2707e1d543b01f:
+
+  pwm: Fix setting period with #pwm-cells =3D <1> and of_pwm_single_xlate()=
+ (2024-03-29 13:50:10 +0100)
+
+Please pull this for v6.9-rc3.
+
+Thanks
+Uwe
+
+----------------------------------------------------------------
+pwm: A fix targeting v6.9-rc3
+
+This fixes a regression intoduced by an off-by-one in v6.9-rc1 making
+the pwm-pxa and the pwm driver in ti-sn65dsi86 unusable for most
+consumer drivers because the default period wasn't set.
+
+----------------------------------------------------------------
+Uwe Kleine-K=F6nig (1):
+      pwm: Fix setting period with #pwm-cells =3D <1> and of_pwm_single_xla=
+te()
+
+ drivers/pwm/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--2b42trqtlzied2wd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYKXaEACgkQj4D7WH0S
+/k6OJwf9HyBN5eu+n3h1zYFw9kk2LOL+4eVBOndlKKn0JPKQ+MmhzYOJV1+0HXsT
++I5pcBhE7MwD/HeEv6/ParMdim871L5I/opi2Xep1Htnyb3tUnJVFI5CMcrXncZM
+op3wBLN3RFTe9uBvEpYR+VFSzQVdGfz+kTq/tLZDr+GiQYKPkxkZksQ233OpMhgu
+AcxQnEfSriIg5153cAKCvSw+fU470VR3RFms3nGx4A8MKBEPJDJ5StbqtOuk7Wka
+0NX4up1MHJlYJftfRMIwlSkwbo6RQLqjkQpwRldo/tk9GikCqBW7R3n8M4BkEDaV
+DX3eUKvbWo1OgcR/st/qV2z/UEIDnQ==
+=1+jt
+-----END PGP SIGNATURE-----
+
+--2b42trqtlzied2wd--
 
