@@ -1,82 +1,62 @@
-Return-Path: <linux-pwm+bounces-1849-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1850-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49AD7895AC3
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Apr 2024 19:34:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50156895AE3
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Apr 2024 19:40:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8FDC9B224BB
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Apr 2024 17:34:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEC2D1F21DA2
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Apr 2024 17:40:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EC6915A49F;
-	Tue,  2 Apr 2024 17:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBDB815A4A6;
+	Tue,  2 Apr 2024 17:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UHCwRBRq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0pxRBGC"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740C015A4A3;
-	Tue,  2 Apr 2024 17:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B248417BB7;
+	Tue,  2 Apr 2024 17:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712079284; cv=none; b=Dk5b4WK70BdMYctH4aGbWfoQ7W9XTHM85ul2S4KXEBX4SPXnjDvecOlhCtUuXJs33KL2dpHNC5IMMPtXqnQsbnY3j9p61R48AUx5scQQpmpFPB9ApZx48Q3WFMlmS1XCaqrj0DUtB1Kqu+yI9sUo7+ttsFGNYK/OrqSXBrk2c1A=
+	t=1712079654; cv=none; b=RPbURTwDGA3Ct3Qm7xCmliV7Hi2e/BKSHx31rEWnk2dywhf+LKHSYjkrZNyyhgAG4/sVC5yx/BdsMbLmhvzoy2RokEMMryxUx/D4G/rn3ZsqcWhDXcnxdlGrRq2GQMFO0WSD4NEuJ2Vm/CI+98QJgsg2499Ccd3Z3Vbtk/LUmxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712079284; c=relaxed/simple;
-	bh=fNYoNOn5B2vjF3chFRhRaoGkC5J7EsTH2AoQer+/ANQ=;
+	s=arc-20240116; t=1712079654; c=relaxed/simple;
+	bh=rOoYl8MM4akGFWw4ON4nG8u58BI+J0+HplPfMqOklfI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E5Jbw5yXQ+1S5PcWGb4xW1S10t+2SGZHmq4dibHU89JPQaNW061FeHvXIsc2iRRxa9nTlxc4PfzskjxBHERN/kMjMx24haPhgbl1aZ1jYW8/td8Ggf+KebgTL5Ou2yDdliJAq98T7it7ixMwO4icqbcw3ahNHk+N7GSE+U6/o/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UHCwRBRq; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712079281; x=1743615281;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fNYoNOn5B2vjF3chFRhRaoGkC5J7EsTH2AoQer+/ANQ=;
-  b=UHCwRBRq5A6Unz3E8uXorTmwX/IoFdipD6hrn5ECopTriEZN1N9PJa+z
-   MQjvlrpwMuJPKp+HLmqmB7332VvdefRDWTpYykqh14yjDsjRzAv7HGu9l
-   xJDIzk+Cqb+Fp7J0z2CBlMr2kZu8Pc1uLIrW/C1UzfZ5oPPG4Sw0tetQz
-   oJyIGxeAw7vtWQ4ra5I/+swijEOIQO8HjpP9Z1zTVMotGRcriTMEZRfOf
-   Zlo0R3+xpOCoCD5RXSSedJ1+tUy3rw/D4i2MDVJ+istj2VB32zXuDJyiE
-   /qUQ/XCaxY44XEaGn3lDvBOYvwcU0NiZ3elv3X+X5z5YlBCPHMgOVW4C3
-   g==;
-X-CSE-ConnectionGUID: 2NqKV760S76UAuUCxZjkJg==
-X-CSE-MsgGUID: G2fnHb7XTiWcwYaT12aZAg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7136171"
-X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="7136171"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 10:34:39 -0700
-X-CSE-ConnectionGUID: OSeGEsaLQ6G3xhHefXNoRQ==
-X-CSE-MsgGUID: kGl3BvEEROiCz1mlLQHR4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="18255944"
-Received: from lkp-server02.sh.intel.com (HELO 90ee3aa53dbd) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 02 Apr 2024 10:34:36 -0700
-Received: from kbuild by 90ee3aa53dbd with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rri1q-0001Lz-0E;
-	Tue, 02 Apr 2024 17:34:34 +0000
-Date: Wed, 3 Apr 2024 01:34:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=ud/ROIP0+Q/OFG7F+cuhDcNy50tAoz6oSMoNvydXBSsKfTsViw8BLEwPHTtfEMGE1u/epRh+vcAYzSA12pO/acXXhHHcnvZeQ0kH5Cg/0oRHs+2NxaqPD18PxzbbAPZQ/onYrvr5tiAB4S/5CAME8hoUN1FSr1us/Tm42YpDLd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0pxRBGC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D083C433F1;
+	Tue,  2 Apr 2024 17:40:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712079654;
+	bh=rOoYl8MM4akGFWw4ON4nG8u58BI+J0+HplPfMqOklfI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f0pxRBGC5oYHJ1ujp6gXFafw41NnQ3jxoE26RW7RoSamIfbwFjR/Y33cs7/ybbFrj
+	 RYFqFZVFcSeZUjVqhHspVQ/hCGu2y2Q6ppSe3EXI/7zHSjLfmI8J03/RCObfCD9Idz
+	 IeliCtKmWfWexphwnK/mx2wLcd2DY7yIKCAs/PsMHH0/68PjMDXAe09wcfoWT9gy0V
+	 8WTfWLie821GTLj6eOyHV+7HmdmPx3gmSU2bgKu3rmnCk8zcemevz4M6ewoQK2bXhX
+	 4TVhCXuGvJOVzzZmqlg7UOAtOrU6T9FRYxlCQMB1chirNx/6X5mdKfIQzYbnEAsVZm
+	 8zBSs0jtPDEjg==
+Date: Tue, 2 Apr 2024 12:40:51 -0500
+From: Rob Herring <robh@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, loongson-kernel@lists.loongnix.cn,
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v1 5/5] LoongArch: dts: Add PWM support to Loongson-2K2000
-Message-ID: <202404030108.rzArK10u-lkp@intel.com>
-References: <7214b933ce85f9d030828e9efab7fbeb57eb712b.1711953223.git.zhoubinbin@loongson.cn>
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH v1 1/5] dt-bindings: pwm: Add Loongson PWM controller
+Message-ID: <20240402174051.GA324804-robh@kernel.org>
+References: <cover.1711953223.git.zhoubinbin@loongson.cn>
+ <edad2bb5b0045c633734c1499fb163c3c6776121.1711953223.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -85,37 +65,93 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7214b933ce85f9d030828e9efab7fbeb57eb712b.1711953223.git.zhoubinbin@loongson.cn>
+In-Reply-To: <edad2bb5b0045c633734c1499fb163c3c6776121.1711953223.git.zhoubinbin@loongson.cn>
 
-Hi Binbin,
+On Tue, Apr 02, 2024 at 03:58:38PM +0800, Binbin Zhou wrote:
+> Add Loongson PWM controller binding with DT schema format using
+> json-schema.
+> 
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  .../devicetree/bindings/pwm/pwm-loongson.yaml | 64 +++++++++++++++++++
 
-kernel test robot noticed the following build errors:
+Filename should match compatible.
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.9-rc2 next-20240402]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>  MAINTAINERS                                   |  6 ++
+>  2 files changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-loongson.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-loongson.yaml b/Documentation/devicetree/bindings/pwm/pwm-loongson.yaml
+> new file mode 100644
+> index 000000000000..d25904468353
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-loongson.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/pwm-loongson.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson PWM Controller
+> +
+> +maintainers:
+> +  - Binbin Zhou <zhoubinbin@loongson.cn>
+> +
+> +description:
+> +  It is the generic PWM framework driver for Loongson family.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/dt-bindings-pwm-Add-Loongson-PWM-controller/20240402-160109
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/7214b933ce85f9d030828e9efab7fbeb57eb712b.1711953223.git.zhoubinbin%40loongson.cn
-patch subject: [PATCH v1 5/5] LoongArch: dts: Add PWM support to Loongson-2K2000
-config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20240403/202404030108.rzArK10u-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240403/202404030108.rzArK10u-lkp@intel.com/reproduce)
+That's describing the driver. Not really relevant to the binding.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404030108.rzArK10u-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
+> +  Each PWM has one pulse width output signal and one pulse input
+> +  signal to be measured.
+> +  It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips.
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: loongson,ls7a-pwm
+> +      - items:
+> +          - enum:
+> +              - loongson,ls2k0500-pwm
+> +              - loongson,ls2k1000-pwm
+> +              - loongson,ls2k2000-pwm
+> +          - const: loongson,ls7a-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  '#pwm-cells':
+> +    const: 3
 
->> Error: arch/loongarch/boot/dts/loongson-2k2000.dtsi:123.19-20 syntax error
-   FATAL ERROR: Unable to parse input tree
+Please define what is in each cell. If there's only 2 signals, then the 
+first cell defines the output or input (what value for which one?).
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Really, the PWM binding is only for outputs, so is a cell even needed? I 
+suppose we could use it for inputs too, but that's really "input 
+capture" type operation that timers often have. I'll defer to the PWM 
+maintainers...
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - '#pwm-cells'
+
+pwm.yaml makes this required already.
+
+Rob
+
 
