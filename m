@@ -1,164 +1,121 @@
-Return-Path: <linux-pwm+bounces-1848-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1849-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3B17894D14
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Apr 2024 09:59:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49AD7895AC3
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Apr 2024 19:34:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 730BC1F22774
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Apr 2024 07:59:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8FDC9B224BB
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Apr 2024 17:34:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E711B3D547;
-	Tue,  2 Apr 2024 07:59:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EC6915A49F;
+	Tue,  2 Apr 2024 17:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UHCwRBRq"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B29C63D3A7;
-	Tue,  2 Apr 2024 07:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740C015A4A3;
+	Tue,  2 Apr 2024 17:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712044766; cv=none; b=FZuMQAbeSSjAfqT6T8xWQyVlAoEngD9OulK1LHkXsShluJ6DvBEGFP3iwif1y8E1Qt1X5umquSUwl55SpkS359sPCO0KR5motolDm8NFs6WIcnYDRgZoBZsUU4JOvDPefequV6jVZUX/rRThFOb7i9JISQcK5lGOo7zbn0VkTC8=
+	t=1712079284; cv=none; b=Dk5b4WK70BdMYctH4aGbWfoQ7W9XTHM85ul2S4KXEBX4SPXnjDvecOlhCtUuXJs33KL2dpHNC5IMMPtXqnQsbnY3j9p61R48AUx5scQQpmpFPB9ApZx48Q3WFMlmS1XCaqrj0DUtB1Kqu+yI9sUo7+ttsFGNYK/OrqSXBrk2c1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712044766; c=relaxed/simple;
-	bh=RjzY/TrHpPzgQXWVOSSQ3iE3+KepvtFf5tjgeWxzioU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tVCOIkwGESXL67vfDmCjN6+Z7vvJ2whQTZjzpfJxaiauzSII9pYmvc+ASXyRx6+o9ww9CB+ClDES+fsRKghra/xLDPs+Q8UtgCIL6P9084MM6LDwpu5m0CsLVIgblPOlniuWDmzVcFrHlBw0dZ7gCGLbWjnqJ3nNs3FKDjFHyDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.20.109.80])
-	by gateway (Coremail) with SMTP id _____8Axz+vaugtmuD8iAA--.13151S3;
-	Tue, 02 Apr 2024 15:59:22 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.109.80])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxPs_WugtmEaRxAA--.22839S3;
-	Tue, 02 Apr 2024 15:59:21 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	s=arc-20240116; t=1712079284; c=relaxed/simple;
+	bh=fNYoNOn5B2vjF3chFRhRaoGkC5J7EsTH2AoQer+/ANQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E5Jbw5yXQ+1S5PcWGb4xW1S10t+2SGZHmq4dibHU89JPQaNW061FeHvXIsc2iRRxa9nTlxc4PfzskjxBHERN/kMjMx24haPhgbl1aZ1jYW8/td8Ggf+KebgTL5Ou2yDdliJAq98T7it7ixMwO4icqbcw3ahNHk+N7GSE+U6/o/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UHCwRBRq; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712079281; x=1743615281;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fNYoNOn5B2vjF3chFRhRaoGkC5J7EsTH2AoQer+/ANQ=;
+  b=UHCwRBRq5A6Unz3E8uXorTmwX/IoFdipD6hrn5ECopTriEZN1N9PJa+z
+   MQjvlrpwMuJPKp+HLmqmB7332VvdefRDWTpYykqh14yjDsjRzAv7HGu9l
+   xJDIzk+Cqb+Fp7J0z2CBlMr2kZu8Pc1uLIrW/C1UzfZ5oPPG4Sw0tetQz
+   oJyIGxeAw7vtWQ4ra5I/+swijEOIQO8HjpP9Z1zTVMotGRcriTMEZRfOf
+   Zlo0R3+xpOCoCD5RXSSedJ1+tUy3rw/D4i2MDVJ+istj2VB32zXuDJyiE
+   /qUQ/XCaxY44XEaGn3lDvBOYvwcU0NiZ3elv3X+X5z5YlBCPHMgOVW4C3
+   g==;
+X-CSE-ConnectionGUID: 2NqKV760S76UAuUCxZjkJg==
+X-CSE-MsgGUID: G2fnHb7XTiWcwYaT12aZAg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7136171"
+X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
+   d="scan'208";a="7136171"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 10:34:39 -0700
+X-CSE-ConnectionGUID: OSeGEsaLQ6G3xhHefXNoRQ==
+X-CSE-MsgGUID: kGl3BvEEROiCz1mlLQHR4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
+   d="scan'208";a="18255944"
+Received: from lkp-server02.sh.intel.com (HELO 90ee3aa53dbd) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 02 Apr 2024 10:34:36 -0700
+Received: from kbuild by 90ee3aa53dbd with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rri1q-0001Lz-0E;
+	Tue, 02 Apr 2024 17:34:34 +0000
+Date: Wed, 3 Apr 2024 01:34:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
 	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v1 5/5] LoongArch: dts: Add PWM support to Loongson-2K2000
-Date: Tue,  2 Apr 2024 15:59:06 +0800
-Message-ID: <7214b933ce85f9d030828e9efab7fbeb57eb712b.1711953223.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1711953223.git.zhoubinbin@loongson.cn>
-References: <cover.1711953223.git.zhoubinbin@loongson.cn>
+Cc: oe-kbuild-all@lists.linux.dev, loongson-kernel@lists.loongnix.cn,
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v1 5/5] LoongArch: dts: Add PWM support to Loongson-2K2000
+Message-ID: <202404030108.rzArK10u-lkp@intel.com>
+References: <7214b933ce85f9d030828e9efab7fbeb57eb712b.1711953223.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxPs_WugtmEaRxAA--.22839S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7AFW8ZFyxAFW8CFWxAF1UArc_yoW8Kw48pa
-	sru3yUKrW0gF1Ikwn8XFy8KFZ3Zr95CF9rWFnrAFyUJ34DKw4jva18GFyxXF1xWr4UX34a
-	vFnakryjgFZrXwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Wrv_ZF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
-	0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVW7JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF
-	7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUVWrXDUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7214b933ce85f9d030828e9efab7fbeb57eb712b.1711953223.git.zhoubinbin@loongson.cn>
 
-The module is supported, enable it.
+Hi Binbin,
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- arch/loongarch/boot/dts/loongson-2k2000.dtsi | 60 ++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+kernel test robot noticed the following build errors:
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k2000.dtsi b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-index 605efaba7292..278cbc27d19b 100644
---- a/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-@@ -126,6 +126,66 @@ msi: msi-controller@1fe01140 {
- 			interrupt-parent = <&eiointc>;
- 		};
- 
-+		pwm@100a0000 {
-+			compatible = "loongson,ls2k2000-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x100a0000 0x0 0x10>;
-+			interrupt-parent = <&pic>;
-+			interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_MISC_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@100a0100 {
-+			compatible = "loongson,ls2k2000-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x100a0100 0x0 0x10>;
-+			interrupt-parent = <&pic>;
-+			interrupts = <25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_MISC_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@100a0200 {
-+			compatible = "loongson,ls2k2000-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x100a0200 0x0 0x10>;
-+			interrupt-parent = <&pic>;
-+			interrupts = <26 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_MISC_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@100a0300 {
-+			compatible = "loongson,ls2k2000-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x100a0300 0x0 0x10>;
-+			interrupt-parent = <&pic>;
-+			interrupts = <27 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_MISC_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@100a0400 {
-+			compatible = "loongson,ls2k2000-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x100a0400 0x0 0x10>;
-+			interrupt-parent = <&pic>;
-+			interrupts = <38 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_MISC_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
-+		pwm@100a0500 {
-+			compatible = "loongson,ls2k2000-pwm", "loongson,ls7a-pwm";
-+			reg = <0x0 0x100a0500 0x0 0x10>;
-+			interrupt-parent = <&pic>;
-+			interrupts = <39 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk LOONGSON2_MISC_CLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
- 		rtc0: rtc@100d0100 {
- 			compatible = "loongson,ls2k2000-rtc", "loongson,ls7a-rtc";
- 			reg = <0x0 0x100d0100 0x0 0x100>;
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on linus/master v6.9-rc2 next-20240402]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/dt-bindings-pwm-Add-Loongson-PWM-controller/20240402-160109
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/7214b933ce85f9d030828e9efab7fbeb57eb712b.1711953223.git.zhoubinbin%40loongson.cn
+patch subject: [PATCH v1 5/5] LoongArch: dts: Add PWM support to Loongson-2K2000
+config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20240403/202404030108.rzArK10u-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240403/202404030108.rzArK10u-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404030108.rzArK10u-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> Error: arch/loongarch/boot/dts/loongson-2k2000.dtsi:123.19-20 syntax error
+   FATAL ERROR: Unable to parse input tree
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
