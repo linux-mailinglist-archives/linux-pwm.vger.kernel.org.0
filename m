@@ -1,70 +1,70 @@
-Return-Path: <linux-pwm+bounces-1841-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1842-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 295A5894916
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Apr 2024 04:01:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B93F894921
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Apr 2024 04:08:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 28BB71C20C25
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Apr 2024 02:01:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AA7DAB22D47
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Apr 2024 02:08:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8951FD502;
-	Tue,  2 Apr 2024 02:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10A6BD53C;
+	Tue,  2 Apr 2024 02:08:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Kykk28s4"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="SI2j69fH"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C35BA2D
-	for <linux-pwm@vger.kernel.org>; Tue,  2 Apr 2024 02:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50667D51D
+	for <linux-pwm@vger.kernel.org>; Tue,  2 Apr 2024 02:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712023313; cv=none; b=bRy7s9mgDEJKe5yyVmXiIQPetcONuPCObl9wOJf7U+YBI/ejPHJctsvO9++du0veGYwhXN3AdaFIe0s2KWEhi9mLJ9HNSLbM8Nt+z3syv+jMpPZUwUjOMdDzIMGdvFX/3782UoOsLYlRqPw0YlIabet38yhU/cCka4C44ZnzG/I=
+	t=1712023702; cv=none; b=LBnYerACuhVUQT/oeCsZBFNpAPY8guuwp2culUH88TqhS6VpdUsASXhfKVTsO4BqJNNfbBjoVeYwQtxugdWfkPxcv9GOT9J/LjW5RFKs+BAU6hAM5X5j8Y5CLijHM2ncPHsjvmWw/YoanuZ4Zz63ezY/GVDUZ99iDpgAwx5bWvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712023313; c=relaxed/simple;
-	bh=ZkW2O+QItGCfBp/Z2YzczJnP+UFR/LpqxThI1ialKH8=;
+	s=arc-20240116; t=1712023702; c=relaxed/simple;
+	bh=PrlGp1dxOAI91R3aGTmxXIR4ZfxIcjbvIEqWZhUIigs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dhxTb0VKsB+yzaSk6s8MLRkEgdhha58H06vR1xm5JXt0wwjeQRdxKLc2YwLLPJP1eXVUMVZ/a17mbas2jStk1RuKKuRLnh67MUgUifdYDDZsaqnAveQNmIBFN9Mn9QndJqbfr5kMrijU2GVCQc1qYWljmFk4YTAVT283j1oinlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Kykk28s4; arc=none smtp.client-ip=209.85.219.179
+	 To:Cc:Content-Type; b=NDpYjJJhIQYEngEXu/95JjNykJTOMItEqNBVo8byCqScrnVKr1idsujsgVRTMKDu4h1VhsachsYNcDG9Qx4xbtwkU2XDWc3G0bxYQ02r0PyVOHHagHCLPQDGEuaKapOYmzRUoYXki/A6z/2o2UnH6044xm+/owkzNi5KdhEoXNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=SI2j69fH; arc=none smtp.client-ip=209.85.128.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc74435c428so4440791276.2
-        for <linux-pwm@vger.kernel.org>; Mon, 01 Apr 2024 19:01:51 -0700 (PDT)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-615019cd427so8125407b3.3
+        for <linux-pwm@vger.kernel.org>; Mon, 01 Apr 2024 19:08:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1712023311; x=1712628111; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1712023699; x=1712628499; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zvr2WqmK4l25YNAt8b0NZcWlTzIuuYI4Iz17Klvwotc=;
-        b=Kykk28s4e9QuP10LJEdiXyv5YXAaNrS0zQrwz6lYblPY3q7WYc6OBfQv9wZeammYQr
-         OwCUgAX7mZnWu4xs53ZOzziAwowFCAGP0zXBcJPPsZx/l3GXfY9hPFtbMioS67+fsmQu
-         KxdAbj2SxB5wDDnLvjQLYHApfoNXn4IkdNwaygjCpobJ/haepaKKPATICOrUS4RxKGxm
-         aLYnd1aT69H4bVJL6hiVAFboD1GMhGF1eswlDA/LYlq623LuHcLy8nQU3PTONugh9YSv
-         dy7fXYfIkY3OXadWOrxSKM7rrg/oylkc7sJWiEWg/4q1s9jF5Wwt5tAYDR8C2Y1vyOZN
-         TZRw==
+        bh=aO2nKjxSM3VMmgCum0y14ZLXUnNoa4kf/yRJ6eyJhQc=;
+        b=SI2j69fHr04DKp0u1mvSX/TxpKTZhuEBPVvkuZtYQyxPTS8mgIgok9VPgoXbZ51WJV
+         ynoR9UtKfGf/nh29WcZ2Lrdc2iblrDppKQbdVSrPIYmf+D7kZ65Qof97M2EROqeYqDte
+         6VShohu5/Pi4enBFf35Mfn0CcpNujdAm/l7s4ystncgmJqcnX5XgectMRYfYHjL0JPMF
+         OUZc1nmDvJ2pDTCe7kriOmtdi6mmKhjmLc/ViMpJcThygUqJIUkdnkNV6Xv2A+k+hXaR
+         xywKUt21dCDOWxS/vPyDvKM1vM5RI4f/nPVSJZlqAMrM2u4nsmw4FOtzI+pGrSeUH4bM
+         PF+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712023311; x=1712628111;
+        d=1e100.net; s=20230601; t=1712023699; x=1712628499;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zvr2WqmK4l25YNAt8b0NZcWlTzIuuYI4Iz17Klvwotc=;
-        b=URdMUMpPjKgtbBB8yEUdpskzrfK/DKCuC9yMOYPWJATD31vNVEPYMDIH9hfSnTf6Nd
-         55mLbvQhtDr1qs1yqEfwGt9oKYXBxADvckD6Mv3bKIPUgn3L66riIxiiPW2Pv3fHDNwf
-         GVnXBilPZBWQE7sSZIWEuXlw59ZGypW6/yqBLn8w+5SfWy+r5o4IM0Qod6KH8JWhU10l
-         nVp0yNE8M7RinNb2Q85iz5K7S55oIKrmgGEmceVZz2A7n+cKuVTHbuPvOJQxHEt9phEE
-         mGY1baY+j3/ZFtZVSrZrEsrIpyaf1eGldQ4Z+NAtGhi50jDHX5m0OC6LtHUEoPzQuUGl
-         g+3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXh4y5DeHGhu5++8yaqekKVgYREtcV6nJ9N5cNunJId+VVmvNPsDDLT3uIibqXXc8TH5/KuJegMndgtWhgsbchowu94FdPKjjcS
-X-Gm-Message-State: AOJu0Yxj1pewuZZwg/nfeBMrxwOO3Ox/DxUhKqTBcreL0t+Wf2hJFfZa
-	myDL2NK0QysXq1kWH/q4ITNntmANLFnMM4yVwDpQDWPaO7Vctqt2U0zuz2AXuKT9zyhSqtp27wz
-	5bQmbse4xIZcndtikmZEc7jnvaf8T1HcpgEMVOQ==
-X-Google-Smtp-Source: AGHT+IEiTesJ6e5VvTHdNiIZOlQ0XIWLmXy/mt4x0B4EzVBfFyQZ042yMQyfl2fZmz0rPpzr+oqCLTurlcAbC3agZZc=
-X-Received: by 2002:a25:2e04:0:b0:dc7:4f61:5723 with SMTP id
- u4-20020a252e04000000b00dc74f615723mr8867725ybu.39.1712023310864; Mon, 01 Apr
- 2024 19:01:50 -0700 (PDT)
+        bh=aO2nKjxSM3VMmgCum0y14ZLXUnNoa4kf/yRJ6eyJhQc=;
+        b=aW2cckMR1/WPMZApAmmoXsntiNNaYLV72quLNhSdU6LCEWE/CNNGfKtzulmIwdfMrq
+         xjooqlcO0YYRsFfXlkQN82nkXU+ekyRqvd6JvBibPjqJZF5eF/CBPRpiWMT+moEK2zv7
+         Tzqcd0wosaLSjLyYnk6x3nUhS5GfQLel4Pkc2Pv7/KmSbVffjORGEZRUk9L5PwR+jNO1
+         i9lvap4v4I0y7/JfVoHZRuQmVT34JhkUwDjWScnJIl4HG4unZUyq5cbcT2bEh8PrrFDe
+         nZox25fRomfmhJ1fJMXs9C2K0LETBgm7nUdvGonC7GWIhHiQ02zQkKmxFiCkTzI99KDJ
+         G6Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCWV1/d2yAh0XchQnPgf5UloJWc1cUJ9fNeWLYfqnkCdrd5IGHwT+NgVc+1AiaL/65r3zNnzLC1KNON64Ed4PFLUBTVT3wSvAIY6
+X-Gm-Message-State: AOJu0YwMNu4z2X2dpqVMeA3C78VRPS2tQegq/frEpd1oPUee+oUW0YEn
+	OQ17mb4U+fHKJ+ow1e5eq2PO/GIJsV6+/c/gsH6RMpyXcUay0ULigl9zELxaAFiot/q9kLVOzIh
+	hnhlCeK87Dl5PgvmvRNv+Y8i7LlZGac5WV1zPjA==
+X-Google-Smtp-Source: AGHT+IH3DILv5+78c1GHhnyaPQm/r0jIaMiTrNrIh4LNwLDk/VMmQxGRZ3ndmVTuyIWK1baCoGbKbbm8kZWFSv0sI0s=
+X-Received: by 2002:a81:7788:0:b0:610:973f:3877 with SMTP id
+ s130-20020a817788000000b00610973f3877mr9996133ywc.35.1712023699215; Mon, 01
+ Apr 2024 19:08:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -72,13 +72,12 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240222081231.213406-1-nylon.chen@sifive.com>
- <20240222081231.213406-4-nylon.chen@sifive.com> <jvwgsszvs4jtcytcphsdjulzgqfqzdp4sisu236ddwsqgmvriw@ngi4ljgh5b74>
-In-Reply-To: <jvwgsszvs4jtcytcphsdjulzgqfqzdp4sisu236ddwsqgmvriw@ngi4ljgh5b74>
+ <20240222081231.213406-3-nylon.chen@sifive.com> <f5ukvah2ujko2iht3pd5jxq5kaukbs5z3pn5s7qwcnx4aqr3yv@mwtbwkcfa44a>
+In-Reply-To: <f5ukvah2ujko2iht3pd5jxq5kaukbs5z3pn5s7qwcnx4aqr3yv@mwtbwkcfa44a>
 From: Nylon Chen <nylon.chen@sifive.com>
-Date: Tue, 2 Apr 2024 10:01:39 +0800
-Message-ID: <CAHh=Yk92=hp+kaTJWL13_jwJ5gzAAi8gbRF=Ns9=yq2trRUQEg@mail.gmail.com>
-Subject: Re: [PATCH v9 3/3] pwm: sifive: Fix the error in the idempotent test
- within the pwm_apply_state_debug function
+Date: Tue, 2 Apr 2024 10:08:08 +0800
+Message-ID: <CAHh=Yk8MXy73d8M1J5bVu4spDMbjQDneVTqA=Ts=SGPDO7PXMQ@mail.gmail.com>
+Subject: Re: [PATCH v9 2/3] pwm: sifive: change the PWM algorithm
 To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, conor@kernel.org, 
@@ -89,49 +88,91 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2024=E5=B9=
-=B43=E6=9C=8819=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=882:17=E5=AF=AB=
+=B43=E6=9C=8819=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=882:16=E5=AF=AB=
 =E9=81=93=EF=BC=9A
 >
-> Hello,
->
-> On Thu, Feb 22, 2024 at 04:12:31PM +0800, Nylon Chen wrote:
-> > Round the result to the nearest whole number. This ensures that
-> > real_period is always a reasonable integer that is not lower than the
-> > actual value.
+> On Thu, Feb 22, 2024 at 04:12:30PM +0800, Nylon Chen wrote:
+> > The `frac` variable represents the pulse inactive time, and the result
+> > of this algorithm is the pulse active time.
+> > Therefore, we must reverse the result.
 > >
-> > e.g.
-> > $ echo 110 > /sys/devices/platform/led-controller-1/leds/d12/brightness
-> > $ .apply is not idempotent (ena=3D1 pol=3D0 1739692/4032985) -> (ena=3D=
-1 pol=3D0 1739630/4032985)
+> > The reference is SiFive FU740-C000 Manual[0]
+> >
+> > Link: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed=
+8b16acba_fu740-c000-manual-v1p6.pdf [0]
 > >
 > > Co-developed-by: Zong Li <zong.li@sifive.com>
 > > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > Co-developed-by: Vincent Chen <vincent.chen@sifive.com>
+> > Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
 > > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
 > > ---
-> >  drivers/pwm/pwm-sifive.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >  drivers/pwm/pwm-sifive.c | 10 ++++++----
+> >  1 file changed, 6 insertions(+), 4 deletions(-)
 > >
 > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> > index a586cfe4191b..bebcbebacccd 100644
+> > index eabddb7c7820..a586cfe4191b 100644
 > > --- a/drivers/pwm/pwm-sifive.c
 > > +++ b/drivers/pwm/pwm-sifive.c
-> > @@ -101,7 +101,7 @@ static void pwm_sifive_update_clock(struct pwm_sifi=
-ve_ddata *ddata,
+> > @@ -110,9 +110,10 @@ static int pwm_sifive_get_state(struct pwm_chip *c=
+hip, struct pwm_device *pwm,
+> >                               struct pwm_state *state)
+> >  {
+> >       struct pwm_sifive_ddata *ddata =3D pwm_sifive_chip_to_ddata(chip)=
+;
+> > -     u32 duty, val;
+> > +     u32 duty, val, inactive;
 > >
-> >       /* As scale <=3D 15 the shift operation cannot overflow. */
-> >       num =3D (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWIDTH =
-+ scale);
-> > -     ddata->real_period =3D div64_ul(num, rate);
-> > +     ddata->real_period =3D DIV_ROUND_UP_ULL(num, rate);
-> >       dev_dbg(ddata->chip.dev,
-> >               "New real_period =3D %u ns\n", ddata->real_period);
+> > -     duty =3D readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
+> > +     inactive =3D readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
+> > +     duty =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - inactive;
+> >
+> >       state->enabled =3D duty > 0;
+> >
+> > @@ -123,7 +124,7 @@ static int pwm_sifive_get_state(struct pwm_chip *ch=
+ip, struct pwm_device *pwm,
+> >       state->period =3D ddata->real_period;
+> >       state->duty_cycle =3D
+> >               (u64)duty * ddata->real_period >> PWM_SIFIVE_CMPWIDTH;
+> > -     state->polarity =3D PWM_POLARITY_INVERSED;
+> > +     state->polarity =3D PWM_POLARITY_NORMAL;
+> >
+> >       return 0;
 > >  }
-Hi Uwe
+> > @@ -139,7 +140,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+> >       int ret =3D 0;
+> >       u32 frac;
+> >
+> > -     if (state->polarity !=3D PWM_POLARITY_INVERSED)
+> > +     if (state->polarity !=3D PWM_POLARITY_NORMAL)
+> >               return -EINVAL;
+> >
+> >       cur_state =3D pwm->state;
+> > @@ -159,6 +160,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+> >       frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
+> >       /* The hardware cannot generate a 100% duty cycle */
 >
-> pwm_sifive_apply has a DIV64_U64_ROUND_CLOSEST(). I wonder if that needs
-> adaption, too?!
-According to my experiments, no adjustment is necessary.
+> Is this still true now that we know that PWM_SIFIVE_PWMCMP is the
+> inactive time in a period? If you fix that, the same claim in the header
+> of the driver needs adaption, too.
+I believe the statement is true, but I don't know which part the
+driver header file refers to.
 >
+> >       frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+> > +     frac =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
+>
+> I like the additional variable in pwm_sifive_get_state(). Can you please
+> add one here, too?
+got it
+>
+> >       mutex_lock(&ddata->lock);
+> >       if (state->period !=3D ddata->approx_period) {
+>
+Thank you for taking the time to help me review my implementation.
+
+Nylon
 > Best regards
 > Uwe
 >
