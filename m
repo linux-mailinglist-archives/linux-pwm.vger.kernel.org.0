@@ -1,85 +1,55 @@
-Return-Path: <linux-pwm+bounces-1864-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1865-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B43508992A0
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 02:30:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C06D899534
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 08:23:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E69811C219CC
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 00:30:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1861C1F235E3
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 06:23:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AF41B67E;
-	Fri,  5 Apr 2024 00:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RTXSzEYr"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F962225AE;
+	Fri,  5 Apr 2024 06:23:31 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876585221
-	for <linux-pwm@vger.kernel.org>; Fri,  5 Apr 2024 00:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A2B1803D
+	for <linux-pwm@vger.kernel.org>; Fri,  5 Apr 2024 06:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712277034; cv=none; b=A4uhv4fEZvwqOuguyhP0SGGMR7Xug4Z3Nu8s23u4SuV/TkGavvp/t198ySICSsHJAckFUPmINw+hLLfxJXnAeT4Wkf4ItyoYbH3NrDUweVuwJf/D3+9dQzrqjRAE7XsFtpNq2E48bow58QEw/8DJ1RlMw7qaLBjVd7D6nUcPdZ0=
+	t=1712298211; cv=none; b=f6bUta605Aw8i4n9rKOd+4ZV/RQ9/x5JPsOkRJOO2dQOQkbtw83sqORRQSAtigtmAisTf5nRPvCj3syWyctYce/lLeML6N6SD1CWNUFVoYADhi2I1yBYR0UutXGG4zV+lC45rfb2ptircelgoD+/OFhinpXtK3NQwrR/qsRj9PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712277034; c=relaxed/simple;
-	bh=BTYBKY7/0T17C/Uz4+eZw1Bz3APXr+o6lqJ6srlxLh0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BA05HBlwkQDFjwJle4A31v0NYPq+xhJfiTcZJ38I/qRz2Fnc8XfctzuR/uyNN2kI9K3FkBOdScrixdEjgi8ZvPbiDThU5LCtw7QLrUlnSeR532xGStGHvqcDPXhxAX9+9Y82DC/7+sxjGI7RwWeMdwLKHlEOUxv+SW7VtdfuHXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RTXSzEYr; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-61518d33293so18467247b3.2
-        for <linux-pwm@vger.kernel.org>; Thu, 04 Apr 2024 17:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712277031; x=1712881831; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kx5GqimBqgoxRtDb4HVslENXxE3yEwOSa53ix8sBFFY=;
-        b=RTXSzEYrTxabVpZfl6T62D8Q1k+niCTZ9Kb2rscLkDPejaZkdqqud10005edKx+0P8
-         qS1rrogzrNK1JMXzpw9TSU43PGUJvoWh07KIxd5+9pcLI1if8MiOBTV+Y02xAyuWotIm
-         jIPoCfhxt9apM4MI9Xt2RaP4Ga8vj73lWo5v+jH46L03tZJKC7dIm0JdbOKO6MJCmZ5h
-         83NL3w75qvoJsKwT7A4nTz9ujCNWrrk+spF1J4HorodsKNBiHCiQtv0LeiWkS8ROEmcz
-         Qhnw1xvIh7xeHunboqo1IHFBiiJbjx8xfV79bQqcNG/iBeXM1o5/tmenUwS7yIVwVQhp
-         oH7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712277031; x=1712881831;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kx5GqimBqgoxRtDb4HVslENXxE3yEwOSa53ix8sBFFY=;
-        b=UNPPX9Gg3iePFcRzd7k42ZEgCgUhAZN9hvyQLzr/pfOt1VVd4b0oEC/Wk5La5kfExj
-         6/hAGXC8BEmT/nOL8g9h7KgOyyVASagqDR6Pjl4ESAdAiN0sDE/1774u+IOCHpCVsW+5
-         LXnBUOn3SV6HLDtmNCOBhWHc8Y4oDNMq7cSv8/CMPA4+Rzl5suBB0W6hrmkXoo4ULTFb
-         nBiaFyJrhw8SGJp4o9f43+VVencvHGZjD6GL49k9qiFAMhPWeL2pKRVEOkP30Pe3g2+0
-         hyYQrFmF/WPDIeB3Xrs607iUWFw4blY6ylCBn3GXPNirJpprP6RZo3yqN/qhiUDSeD3r
-         8Jtg==
-X-Gm-Message-State: AOJu0YxFGOQ34WDN0rAiAQPoJ0BzaCr7mkcgeiC7+jnKVuougIz/64y+
-	iIvYNx+6U1bLWlRCmB8SwoAx6O3QDBRi80nXp2Ya+dqneg3ZSURUWKajfSiLcRfaN5FWGzutseN
-	MWeM=
-X-Google-Smtp-Source: AGHT+IHs3gngUHw+CwSkJUZTlJ+6mEDrxlOE7X4g8tSplLT8zaqzOgjvQ/enLCKFueM09BlvER07kw==
-X-Received: by 2002:a25:69c2:0:b0:dd0:471:712 with SMTP id e185-20020a2569c2000000b00dd004710712mr4151943ybc.33.1712277031320;
-        Thu, 04 Apr 2024 17:30:31 -0700 (PDT)
-Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id o4-20020ac86d04000000b00432feda5986sm232728qtt.35.2024.04.04.17.30.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 17:30:31 -0700 (PDT)
-From: Trevor Gamblin <tgamblin@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	u.kleine-koenig@pengutronix.de,
-	michael.hennerich@analog.com,
-	nuno.sa@analog.com,
-	tgamblin@baylibre.com,
-	dlechner@baylibre.com
-Subject: [RFC PATCH 3/3] pwm: add pwm_config_full to pwm.h
-Date: Thu,  4 Apr 2024 20:30:25 -0400
-Message-ID: <20240405003025.739603-4-tgamblin@baylibre.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240405003025.739603-1-tgamblin@baylibre.com>
+	s=arc-20240116; t=1712298211; c=relaxed/simple;
+	bh=oI59NsJvDA8c2DbqEq5ZynS0EqYnzPHQ7vo6EjbmAJw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iEoKAZI9ugOC8ZyzX3GRzCvqOHv1xVcrTsgeHauljxTmERrPS+CaxS3D7lFvaO/oewcFrvd2CHpxNkG8AzeBdybjv3w6hs6WK8q98euh4IFA+mRj0ubmEUChzTAFBK31cd+/FoTA3eN/E8BS4pG8iltBplXocBqC+6f0J5AXSMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rscz1-0000do-44; Fri, 05 Apr 2024 08:23:27 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rscyz-00AVvc-RG; Fri, 05 Apr 2024 08:23:25 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rscyz-00FMxw-2S;
+	Fri, 05 Apr 2024 08:23:25 +0200
+Date: Fri, 5 Apr 2024 08:23:25 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Trevor Gamblin <tgamblin@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	michael.hennerich@analog.com, nuno.sa@analog.com, dlechner@baylibre.com
+Subject: Re: [RFC PATCH 0/3] pwm: add support for duty_offset
+Message-ID: <fhrderkiwqzc7fw2hptz2la3aco72wlossqbrr4m42qllcpcpw@vhxflah2ex2a>
 References: <20240405003025.739603-1-tgamblin@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -87,93 +57,111 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qulilgqzezq3juot"
+Content-Disposition: inline
+In-Reply-To: <20240405003025.739603-1-tgamblin@baylibre.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-Add a function that performs the old pwm_config operations while also
-handling duty_offset. Change pwm_config to use pwm_config_full with the
-duty_offset_ns argument set to 0.
 
-Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
----
- include/linux/pwm.h | 35 ++++++++++++++++++++++++++++++-----
- 1 file changed, 30 insertions(+), 5 deletions(-)
+--qulilgqzezq3juot
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index e0e5960f91ba..eb018f11a48f 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -347,33 +347,51 @@ int pwm_apply_atomic(struct pwm_device *pwm, const struct pwm_state *state);
- int pwm_adjust_config(struct pwm_device *pwm);
- 
- /**
-- * pwm_config() - change a PWM device configuration
-+ * pwm_config_full() - change a PWM device configuration, including duty
-+ * offset
-  * @pwm: PWM device
-  * @duty_ns: "on" time (in nanoseconds)
-+ * @duty_offset_ns: offset (in nanoseconds) of "on" pulse
-  * @period_ns: duration (in nanoseconds) of one cycle
-  *
-  * Returns: 0 on success or a negative error code on failure.
-  */
--static inline int pwm_config(struct pwm_device *pwm, int duty_ns,
--			     int period_ns)
-+static inline int pwm_config_full(struct pwm_device *pwm, int duty_ns,
-+				  int duty_offset_ns, int period_ns)
- {
- 	struct pwm_state state;
- 
- 	if (!pwm)
- 		return -EINVAL;
- 
--	if (duty_ns < 0 || period_ns < 0)
-+	if (duty_ns < 0 || period_ns < 0 || duty_offset_ns < 0)
- 		return -EINVAL;
- 
- 	pwm_get_state(pwm, &state);
--	if (state.duty_cycle == duty_ns && state.period == period_ns)
-+	if (state.duty_cycle == duty_ns && state.period == period_ns &&
-+	    state.duty_offset == duty_offset_ns)
- 		return 0;
- 
- 	state.duty_cycle = duty_ns;
-+	state.duty_offset = duty_offset_ns;
- 	state.period = period_ns;
- 	return pwm_apply_might_sleep(pwm, &state);
- }
- 
-+/**
-+ * pwm_config() - change a PWM device configuration
-+ * @pwm: PWM device
-+ * @duty_ns: "on" time (in nanoseconds)
-+ * @period_ns: duration (in nanoseconds) of one cycle
-+ *
-+ * Returns: 0 on success or a negative error code on failure.
-+ */
-+static inline int pwm_config(struct pwm_device *pwm, int duty_ns,
-+			     int period_ns)
-+{
-+	return pwm_config_full(pwm, duty_ns, 0, period_ns);
-+}
-+
- /**
-  * pwm_enable() - start a PWM output toggling
-  * @pwm: PWM device
-@@ -480,6 +498,13 @@ static inline int pwm_adjust_config(struct pwm_device *pwm)
- 	return -EOPNOTSUPP;
- }
- 
-+static inline int pwm_config_full(struct pwm_device *pwm, int duty_ns,
-+				  int duty_offset_ns, int period_ns)
-+{
-+	might_sleep();
-+	return -EINVAL;
-+}
-+
- static inline int pwm_config(struct pwm_device *pwm, int duty_ns,
- 			     int period_ns)
- {
--- 
-2.44.0
+Hello Trevor,
 
+In general I really like your effort to generalize the pwm framework.
+Thanks a lot!
+
+On Thu, Apr 04, 2024 at 08:30:22PM -0400, Trevor Gamblin wrote:
+> This series extends the PWM subsystem to support the duty_offset feature
+> found on some PWM devices. It includes a patch to enable this feature
+> for the axi-pwmgen driver, which can also serve as an example of how to
+> implement it for other devices. It also contains a patch adding a new
+> pwm_config_full() function mirroring the behavior of pwm_config() but
+
+Please don't. pwm_config() is a function I want to get rid of in the
+long term. Consumers that want to make use of it should use
+pwm_apply_*().
+
+> with duty_offset included, to help maintain compatibility for drivers
+> that don't support the feature.
+>=20
+> The series was tested on actual hardware using a Zedboard. An
+> oscilloscope was used to validate that the generated PWM signals matched
+> the requested ones. The libpwm [1] tool was also used for testing the
+> char device functionality.
+>=20
+> The series is marked RFC as there are some outstanding questions about
+> implementation:
+>=20
+> 1. In drivers/pwm/core.c, __pwm_apply() was modified to check that the
+> sum of state->duty_offset + state->duty_cycle does not exceed
+> state->period, but in the character device section these values are
+> being checked separately. Is this intentional? What is the intended
+> behavior?
+
+state->duty_offset + state->duty_cycle doesn't necessarily need to be
+less or equal to state->period. Consider this waveform, where ^ marks
+the start of a period.
+
+
+        ___       _________       __...
+           \_____/         \_____/
+        ^               ^
+
+This one has duty_offset =3D 9 and duty_cycle =3D 10 while
+period =3D 16 < 10 + 9.
+
+> 2. Should __pwm_apply() explicitly disallow PWM_POLARITY_INVERSED and
+> duty_offset together?
+
+While there is no technical need for that, a configuration with both
+PWM_POLARITY_INVERSED and duty_offset > 0 is irritating. So I'd say yes,
+it should be disallowed. When I created the cdev API I even considered
+dropping .polarity for lowlevel drivers and convert them all to
+=2Eduty_offset.
+
+Having said that I don't like the addition of .supports_offset to
+struct pwm_chip, which only signals a new incomplete evolution of the
+pwm framework. Better adapt all drivers and then assume all of them
+support it.
+
+> 3. Are there other places that would need duty_offset handling which
+> have been missed?
+
+I'm happy you adapted the tracing stuff. I didn't look closely, but I
+don't think something important was missed.
+
+> Note that in addition to the other patches in this series, the changes
+> to the axi-pwmgen driver rely on [2] and [3], which haven't been picked
+> up yet.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--qulilgqzezq3juot
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYPmNwACgkQj4D7WH0S
+/k50lAf+Oqu/fg4apGGLXPe+Zm3udwjikCgFyfY22MOv1Z/HIQlJktDlCXg8kSQj
+d2Uo5EcA1GDtV5f7YUA4MHN9wtdFLqdi34clET+dMQzdaU+l1EXmkkhbnpHj3Ku3
+50L75svXzhJdBt+Wr9r0WNPs6ngvb5LjpwuHfYUahdhEW3KsvMOMaqwQCQp7XGVF
+Y0Cq9RJf3bxk0cOhl87K+ErARUG39q5+ATJh7LwI7Uwlxa8sOmuOCaCVfv7p8DA8
+Wa2L7CfhqJPCDRt0Gx5WAtjcjF6REqnjBCOWkKBIgRiP8FsVJ8rDqMCdhqzSu6P/
+LtGSEmpTU2JU/qULGie0qYa3m/bfoQ==
+=eT6T
+-----END PGP SIGNATURE-----
+
+--qulilgqzezq3juot--
 
