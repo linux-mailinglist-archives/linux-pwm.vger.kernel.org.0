@@ -1,72 +1,72 @@
-Return-Path: <linux-pwm+bounces-1861-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1863-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 534BC89929C
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 02:30:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DE1189929E
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 02:30:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0251528687C
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 00:30:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C1E071C21708
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 00:30:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD27A568A;
-	Fri,  5 Apr 2024 00:30:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DDBE79CD;
+	Fri,  5 Apr 2024 00:30:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Mw4enQKX"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Fa2NAhNg"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528F11859
-	for <linux-pwm@vger.kernel.org>; Fri,  5 Apr 2024 00:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E40A2A
+	for <linux-pwm@vger.kernel.org>; Fri,  5 Apr 2024 00:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712277032; cv=none; b=KdHvDVV9UWFsCIZMS4wyzwXe3+VFocL20xS9Dm85wiXlJTHqILzpaEDLYKTXfBwuJuNjF9TQ8iIlcgaKFQARFi7vS8wqLvrDKmj1wmWN06tp2c4wc0Zr7NG2oB8CXOjGa8GXVF5Yzs0sGPCL9Qwx7M52OALtDmavjd8zRoAAVIo=
+	t=1712277034; cv=none; b=a5hHK3i52uc97Axi/U3NlY56rXBuXNqAWHLiYiSMTfvftxnv13s5G6P3Z3rZq0Zwavn07ORTT/4u0EZJjJiirunriIc8G2sa4I3QbAbOZvf2VIntv8tc1Vd9B6ERK7ywXhYHNmskgTXT3BonLBjv/yQKv5oFDfM3hvmFzZrN27s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712277032; c=relaxed/simple;
-	bh=4AgyvYLStYaefPpieUHnAMDvsbOsjZpYhGh6QgQbxo0=;
+	s=arc-20240116; t=1712277034; c=relaxed/simple;
+	bh=xo/5zy7BKD5MQNwqWrK5Y7aZc4xuWO41L1gezsqpgM0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tDqmv+9JVhpSC40JPOGdFGm2d2inoPki9lc+88fZ3u9GfdZPIofZLlJ6/jOXIOANmkRXWrtu7ON0dvcFhKP8AkiOkrAUzqaQyB/x9xkR1xOgJ/vUHCaRizEYtb1AA4iTUmTs3KKam90VTWa9JeSz4ibfjZdTPITtyB8jyaesW0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Mw4enQKX; arc=none smtp.client-ip=209.85.128.171
+	 MIME-Version; b=Axr3aKjy8KQi3wdBBKOkviqxSiE/f1JYA0yX6BCG5JkmrpohQvtp+/TSzGjtcaIR6Gvheqelh2RPvH5OE/6MdeYJtN7bc42NsXHz1tIf/saNne0Hn0L65WYu//aHKsQRxtcEbKhCCKyF74Xa2GY3Brn5KHJA5bx3yL4OX93jHpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Fa2NAhNg; arc=none smtp.client-ip=209.85.210.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-61461580403so17932857b3.2
-        for <linux-pwm@vger.kernel.org>; Thu, 04 Apr 2024 17:30:30 -0700 (PDT)
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e89c87a72eso1148986a34.0
+        for <linux-pwm@vger.kernel.org>; Thu, 04 Apr 2024 17:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712277029; x=1712881829; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712277030; x=1712881830; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ShutlIE8DACdzeSSC3XVEeXZaPNv1RHdPHW39J6XIEY=;
-        b=Mw4enQKXzGDUW91byFQ//+UjBHOOnZa9PoPXty9Q6mFnnxn8icMNytl89Yn2gANoAb
-         EVOCrAmmA3q9TolkXoao0QlFYBwRAC4xxkPE4xuJ1j+2d8/ty4+PqRHbspTxEj/jZeqD
-         iDdle8CEl/EHZqI+cycUkxD92/gjFIlomHq9iPyonTWc7B+sXel3esOftgja+yCXn17q
-         0fhCm3Ba5JHr8qEf9c+MFuadG6GhgtuPeUwix44zYhAY2X0Xd0JSdvIG2RZeWsBlPg11
-         bY+obqdAfqrmWi77O0QqlkLlVi7fSKQg/D+DhJN3RiimRgVjWni1NuX4YpctP7Zh5A3a
-         /rkA==
+        bh=mflIGl0JabM93wYA4asHh3PZJ7LJW93To1t++JIDmfs=;
+        b=Fa2NAhNg6kkwFytftj+oDsjgnaUUd4/KoFeFjaBOunkuROV4mwqUgrHD3XNk7cUAHd
+         BZgbN8ii6I/k5M3YWqybW1oX77rErtpeW1VsbleWWN063hiNPrgpgfosDn6kGqDriIbP
+         IODvwdG6GxsTZ5sL47UVuljKcaz2tzBip3ALnBq1u2NC4SqdxK6FgVgXWWIsg6n08c7X
+         gMU9HWa5f41fBFcBs3OHjHb5ogCXnri1CONgSLzvxDyW0XJnmAOmycRjrjGewBk0qu73
+         N5AtaU57m9freAkvmr7eOBKnacx+n3NAIxOdiO863GzzGIqwRc3ALPeEp29zvluiF/PG
+         e1WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712277029; x=1712881829;
+        d=1e100.net; s=20230601; t=1712277030; x=1712881830;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ShutlIE8DACdzeSSC3XVEeXZaPNv1RHdPHW39J6XIEY=;
-        b=A33lX2WQBnzyJw813UYJDYmD9s1U/AJonuxIvSgVijP571f8IzNV2rChthaSmUE3yG
-         SNUdfZbufQ7nydNlxOm0aknB7Nk6Udxpgg+RTpctHHr/lxIokW4wtltqkciORdyF8P66
-         vXdVAjx10VYnIJCMM/EH1JYnGs4+RTkuFSQOUMH3B1C2YzH4feoddWnoA0w5bPcoNJC2
-         eIur8JHHQw153/CLXgtcluzPVZGvlFtnfeq6Q8zVmHEsWN8LC/daGZS86uziUwe7xknr
-         /1Rug8QbJOkm96XhuiyceBFyku4iEgwwUuXPcW7Y4rPBHwpcodp+pTlWPEyffoIKz348
-         pMKg==
-X-Gm-Message-State: AOJu0YzUfOiDhxnWLn6cE8KHHmURp/VTgppL9KZVR2hiYKOvSrlXZ4v3
-	I6lnY2DezY/sIthAFg3LywNt2RIXvgHsK2QOlOHCTQyjoPDRKxhZgPioUJGYbV82GaZ3zd+omnv
-	cHPA=
-X-Google-Smtp-Source: AGHT+IG4nNl8NLkWyptttyOjJv5e8/6gL5vdyaS5k8cT6wp2uWJiNGzpKwk4N7atiVBD6rvmfaDxQQ==
-X-Received: by 2002:a25:8745:0:b0:dcc:cadf:3376 with SMTP id e5-20020a258745000000b00dcccadf3376mr1118624ybn.18.1712277029082;
-        Thu, 04 Apr 2024 17:30:29 -0700 (PDT)
+        bh=mflIGl0JabM93wYA4asHh3PZJ7LJW93To1t++JIDmfs=;
+        b=LyAjwsofXccjtQmnyiE69qyN/NTp+WDWd6JkNoUMtbHK643wKGc/D9ReblvbP8pb5z
+         gMc2/UoGQkD+nCRtiqEnt3rmfdtbDi4eoQxNyERfg6M4q0rnZZIeI14znBD3oNp/Qd4Y
+         8C9OITWHxOj1RqfiSyD6e6kzmBsmurR4sBCEwc0zQkudqH1aaQJ8Jr22sGZmSiXCIQjl
+         R0rNjKnOF3abkaEmd9E0I5YN5iQyzz4pozmH8IxpXY1/G/nAyaDyJn1evmDrERCfWSoS
+         31TfXYlKsuIkphEoVN3EPtjN2W4fcTq77OMcfrlERb+ZAy0BFaERidqKXeb2Nco1oJSP
+         KE6w==
+X-Gm-Message-State: AOJu0YwGMMfdlV/4xSXJYgXnrSi1pIQsDPvcRSNPN0ekkyQ7DojnKZLw
+	ocFq/8AcMhWRetjiZK5ML5nt87V5yF58NyWzn5sb7CvX8Q99v6ZgmLs9/E7D5TAgJv0ZNylZTnn
+	OV44=
+X-Google-Smtp-Source: AGHT+IGeFIba7Fjoy+Lh5imxQMFJ60kylklXD567TEN4HDRnVJ4VBUmRGP0suOKAmd/UdpjTU1+F8w==
+X-Received: by 2002:a9d:7a57:0:b0:6e9:df99:77c6 with SMTP id z23-20020a9d7a57000000b006e9df9977c6mr29202otm.27.1712277030414;
+        Thu, 04 Apr 2024 17:30:30 -0700 (PDT)
 Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id o4-20020ac86d04000000b00432feda5986sm232728qtt.35.2024.04.04.17.30.28
+        by smtp.gmail.com with ESMTPSA id o4-20020ac86d04000000b00432feda5986sm232728qtt.35.2024.04.04.17.30.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 17:30:28 -0700 (PDT)
+        Thu, 04 Apr 2024 17:30:29 -0700 (PDT)
 From: Trevor Gamblin <tgamblin@baylibre.com>
 To: linux-pwm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -75,9 +75,9 @@ Cc: linux-kernel@vger.kernel.org,
 	nuno.sa@analog.com,
 	tgamblin@baylibre.com,
 	dlechner@baylibre.com
-Subject: [RFC PATCH 1/3] pwm: add duty offset support
-Date: Thu,  4 Apr 2024 20:30:23 -0400
-Message-ID: <20240405003025.739603-2-tgamblin@baylibre.com>
+Subject: [RFC PATCH 2/3] pwm: axi-pwmgen: add duty offset support
+Date: Thu,  4 Apr 2024 20:30:24 -0400
+Message-ID: <20240405003025.739603-3-tgamblin@baylibre.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240405003025.739603-1-tgamblin@baylibre.com>
 References: <20240405003025.739603-1-tgamblin@baylibre.com>
@@ -89,297 +89,124 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some PWM chips support a "phase" or "duty_offset" feature. This patch
-continues adding support for configuring this property in the PWM
-subsystem.
-
-The pwm_chip struct gains a new supports_offset flag, which can be set
-for compatible parts. This is checked in __pwm_apply, where attempts to
-set duty_offset result in an EOPNOTSUPP if the flag is not set.
-
-Functions duty_offset_show(), duty_offset_store(), and
-pwm_get_duty_offset() are added to match what exists for duty_cycle.
-
-Handle duty_offset in the new pwmchip char device logic.
-
-Also add duty_offset to TP_printk in include/trace/events/pwm.h so that
-it is reported with other properties when using the event tracing pipe
-for debug.
+Enable duty_offset feature now that it is supported in the pwm
+subsystem. Related macros and struct fields related to duty_offset are
+renamed to be consistent.
 
 Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
 ---
- drivers/pwm/core.c         | 75 +++++++++++++++++++++++++++++++++++---
- include/linux/pwm.h        | 17 +++++++++
- include/trace/events/pwm.h |  6 ++-
- 3 files changed, 90 insertions(+), 8 deletions(-)
+ drivers/pwm/pwm-axi-pwmgen.c | 35 +++++++++++++++++++++++++++--------
+ 1 file changed, 27 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 2745941a008b..0e05518feb21 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -80,6 +80,7 @@ static void pwm_apply_debug(struct pwm_device *pwm,
- 	 */
- 	if (s1.enabled && s1.polarity != state->polarity) {
- 		s2.polarity = state->polarity;
-+		s2.duty_offset = s1.duty_cycle;
- 		s2.duty_cycle = s1.period - s1.duty_cycle;
- 		s2.period = s1.period;
- 		s2.enabled = s1.enabled;
-@@ -121,6 +122,23 @@ static void pwm_apply_debug(struct pwm_device *pwm,
- 			 state->duty_cycle, state->period,
- 			 s2.duty_cycle, s2.period);
+diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+index 539625c404ac..84ecb12e1e21 100644
+--- a/drivers/pwm/pwm-axi-pwmgen.c
++++ b/drivers/pwm/pwm-axi-pwmgen.c
+@@ -6,9 +6,9 @@
+  * Copyright 2024 Baylibre SAS
+  *
+  * Limitations:
+- * - The writes to registers for period and duty are shadowed until
+- *   LOAD_CONFIG is written to AXI_PWMGEN_REG_CONFIG at the end of the
+- *   current period.
++ * - The writes to registers for period, duty, and duty_offset are
++ *   shadowed until LOAD_CONFIG is written to AXI_PWMGEN_REG_CONFIG at
++ *   the end of the current period.
+  * - Writing LOAD_CONFIG also has the effect of re-synchronizing all
+  *   enabled channels, which could cause glitching on other channels. It
+  *   is therefore expected that channels are assigned harmonic periods
+@@ -34,7 +34,7 @@
+ #define AXI_PWMGEN_REG_NPWM		0x14
+ #define AXI_PWMGEN_CHX_PERIOD(v, ch)	((v)->period_base + (v)->ch_step * (ch))
+ #define AXI_PWMGEN_CHX_DUTY(v, ch)	((v)->duty_base + (v)->ch_step * (ch))
+-#define AXI_PWMGEN_CHX_OFFSET(v, ch)	((v)->offset_base + (v)->ch_step * (ch))
++#define AXI_PWMGEN_CHX_DUTY_OFFSET(v, ch)	((v)->duty_offset_base + (v)->ch_step * (ch))
+ #define AXI_PWMGEN_REG_CORE_MAGIC_VAL	0x601A3471 /* Identification number to test during setup */
+ #define AXI_PWMGEN_LOAD_CONFIG		BIT(1)
+ #define AXI_PWMGEN_RESET		BIT(0)
+@@ -42,7 +42,7 @@
+ struct axi_pwm_variant {
+ 	u8 period_base;
+ 	u8 duty_base;
+-	u8 offset_base;
++	u8 duty_offset_base;
+ 	u8 major_version;
+ 	u8 ch_step;
+ };
+@@ -62,7 +62,7 @@ static const struct regmap_config axi_pwmgen_regmap_config = {
+ static const struct axi_pwm_variant pwmgen_1_00_variant = {
+ 	.period_base = 0x40,
+ 	.duty_base = 0x44,
+-	.offset_base = 0x48,
++	.duty_offset_base = 0x48,
+ 	.major_version = 1,
+ 	.ch_step = 12,
+ };
+@@ -70,7 +70,7 @@ static const struct axi_pwm_variant pwmgen_1_00_variant = {
+ static const struct axi_pwm_variant pwmgen_2_00_variant = {
+ 	.period_base = 0x40,
+ 	.duty_base = 0x80,
+-	.offset_base = 0xC0,
++	.duty_offset_base = 0xC0,
+ 	.major_version = 2,
+ 	.ch_step = 4,
+ };
+@@ -83,7 +83,7 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	unsigned int ch = pwm->hwpwm;
+ 	struct regmap *regmap = ddata->regmap;
+ 	const struct axi_pwm_variant *variant = ddata->variant;
+-	u64 period_cnt, duty_cnt;
++	u64 period_cnt, duty_cnt, duty_offset_cnt;
+ 	int ret;
  
-+	if (state->enabled &&
-+	    last->polarity == state->polarity &&
-+	    last->period == s2.period &&
-+	    last->duty_offset > s2.duty_offset &&
-+	    last->duty_offset <= state->duty_offset)
-+		dev_warn(pwmchip_parent(chip),
-+			 ".apply didn't pick the best available duty offset (requested: %llu/%llu, applied: %llu/%llu, possible: %llu/%llu)\n",
-+			 state->duty_offset, state->period,
-+			 s2.duty_offset, s2.period,
-+			 last->duty_offset, last->period);
+ 	if (state->polarity != PWM_POLARITY_NORMAL)
+@@ -108,6 +108,14 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch), duty_cnt);
+ 		if (ret)
+ 			return ret;
 +
-+	if (state->enabled && state->duty_offset < s2.duty_offset)
-+		dev_warn(pwmchip_parent(chip),
-+			 ".apply is supposed to round down duty_offset (requested: %llu/%llu, applied: %llu/%llu)\n",
-+			 state->duty_offset, state->period,
-+			 s2.duty_offset, s2.period);
++		duty_offset_cnt = mul_u64_u64_div_u64(state->duty_offset, ddata->clk_rate_hz, NSEC_PER_SEC);
++		if (duty_offset_cnt > UINT_MAX)
++			duty_offset_cnt = UINT_MAX;
 +
- 	if (!state->enabled && s2.enabled && s2.duty_cycle > 0)
- 		dev_warn(pwmchip_parent(chip),
- 			 "requested disabled, but yielded enabled with duty > 0\n");
-@@ -144,12 +162,13 @@ static void pwm_apply_debug(struct pwm_device *pwm,
- 	if (s1.enabled != last->enabled ||
- 	    s1.polarity != last->polarity ||
- 	    (s1.enabled && s1.period != last->period) ||
-+	    (s1.enabled && s1.duty_offset != last->duty_offset) ||
- 	    (s1.enabled && s1.duty_cycle != last->duty_cycle)) {
- 		dev_err(pwmchip_parent(chip),
--			".apply is not idempotent (ena=%d pol=%d %llu/%llu) -> (ena=%d pol=%d %llu/%llu)\n",
-+			".apply is not idempotent (ena=%d pol=%d %llu/%llu/%llu) -> (ena=%d pol=%d %llu/%llu/%llu)\n",
- 			s1.enabled, s1.polarity, s1.duty_cycle, s1.period,
--			last->enabled, last->polarity, last->duty_cycle,
--			last->period);
-+			s1.duty_offset, last->enabled, last->polarity,
-+			last->duty_cycle, last->period, last->duty_offset);
++		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY_OFFSET(variant, ch), duty_offset_cnt);
++		if (ret)
++			return ret;
+ 	} else {
+ 		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(variant, ch), 0);
+ 		if (ret)
+@@ -116,6 +124,10 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch), 0);
+ 		if (ret)
+ 			return ret;
++
++		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY_OFFSET(variant, ch), 0);
++		if (ret)
++			return ret;
  	}
- }
  
-@@ -164,13 +183,17 @@ static int __pwm_apply(struct pwm_device *pwm, const struct pwm_state *state)
- 	int err;
+ 	return regmap_write(regmap, AXI_PWMGEN_REG_CONFIG, AXI_PWMGEN_LOAD_CONFIG);
+@@ -145,6 +157,12 @@ static int axi_pwmgen_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
  
- 	if (!pwm || !state || !state->period ||
--	    state->duty_cycle > state->period)
-+	    state->duty_offset + state->duty_cycle > state->period)
- 		return -EINVAL;
+ 	state->duty_cycle = DIV_ROUND_UP_ULL((u64)cnt * NSEC_PER_SEC, ddata->clk_rate_hz);
  
- 	chip = pwm->chip;
- 
-+	if (!chip->supports_offset && state->duty_offset)
-+		return -EOPNOTSUPP;
-+
- 	if (state->period == pwm->state.period &&
- 	    state->duty_cycle == pwm->state.duty_cycle &&
-+	    state->duty_offset == pwm->state.duty_offset &&
- 	    state->polarity == pwm->state.polarity &&
- 	    state->enabled == pwm->state.enabled &&
- 	    state->usage_power == pwm->state.usage_power)
-@@ -292,10 +315,11 @@ int pwm_adjust_config(struct pwm_device *pwm)
- 	 * been configured.
- 	 *
- 	 * In either case, we setup the new period and polarity, and assign a
--	 * duty cycle of 0.
-+	 * duty cycle and offset of 0.
- 	 */
- 	if (!state.period) {
- 		state.duty_cycle = 0;
-+		state.duty_offset = 0;
- 		state.period = pargs.period;
- 		state.polarity = pargs.polarity;
- 
-@@ -617,6 +641,41 @@ static ssize_t duty_cycle_store(struct device *pwm_dev,
- 	return ret ? : size;
- }
- 
-+static ssize_t duty_offset_show(struct device *pwm_dev,
-+			       struct device_attribute *attr,
-+			       char *buf)
-+{
-+	const struct pwm_device *pwm = pwm_from_dev(pwm_dev);
-+	struct pwm_state state;
-+
-+	pwm_get_state(pwm, &state);
-+
-+	return sysfs_emit(buf, "%llu\n", state.duty_offset);
-+}
-+
-+static ssize_t duty_offset_store(struct device *pwm_dev,
-+				struct device_attribute *attr,
-+				const char *buf, size_t size)
-+{
-+	struct pwm_export *export = pwmexport_from_dev(pwm_dev);
-+	struct pwm_device *pwm = export->pwm;
-+	struct pwm_state state;
-+	u64 val;
-+	int ret;
-+
-+	ret = kstrtou64(buf, 0, &val);
++	ret = regmap_read(regmap, AXI_PWMGEN_CHX_DUTY_OFFSET(variant, ch), &cnt);
 +	if (ret)
 +		return ret;
 +
-+	mutex_lock(&export->lock);
-+	pwm_get_state(pwm, &state);
-+	state.duty_offset = val;
-+	ret = pwm_apply_might_sleep(pwm, &state);
-+	mutex_unlock(&export->lock);
++	state->duty_offset = DIV_ROUND_UP_ULL((u64)cnt * NSEC_PER_SEC, ddata->clk_rate_hz);
 +
-+	return ret ? : size;
-+}
-+
- static ssize_t enable_show(struct device *pwm_dev,
- 			   struct device_attribute *attr,
- 			   char *buf)
-@@ -731,6 +790,7 @@ static ssize_t capture_show(struct device *pwm_dev,
+ 	state->polarity = PWM_POLARITY_NORMAL;
  
- static DEVICE_ATTR_RW(period);
- static DEVICE_ATTR_RW(duty_cycle);
-+static DEVICE_ATTR_RW(duty_offset);
- static DEVICE_ATTR_RW(enable);
- static DEVICE_ATTR_RW(polarity);
- static DEVICE_ATTR_RO(capture);
-@@ -738,6 +798,7 @@ static DEVICE_ATTR_RO(capture);
- static struct attribute *pwm_attrs[] = {
- 	&dev_attr_period.attr,
- 	&dev_attr_duty_cycle.attr,
-+	&dev_attr_duty_offset.attr,
- 	&dev_attr_enable.attr,
- 	&dev_attr_polarity.attr,
- 	&dev_attr_capture.attr,
-@@ -1290,7 +1351,7 @@ static long pwm_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 			if (state.enabled) {
- 				cstate.period = state.period;
- 				if (state.polarity == PWM_POLARITY_NORMAL) {
--					cstate.duty_offset = 0;
-+					cstate.duty_offset = state.duty_offset;
- 					cstate.duty_cycle = state.duty_cycle;
- 				} else {
- 					cstate.duty_offset = state.duty_cycle;
-@@ -1356,6 +1417,7 @@ static long pwm_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 				state.period = cstate.period;
- 				state.polarity = PWM_POLARITY_NORMAL;
- 				state.duty_cycle = cstate.duty_cycle;
-+				state.duty_offset = cstate.duty_offset;
- 			} else {
- 				state.enabled = false;
- 			}
-@@ -1991,6 +2053,7 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
+ 	return 0;
+@@ -254,6 +272,7 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
  
- 		seq_printf(s, " period: %llu ns", state.period);
- 		seq_printf(s, " duty: %llu ns", state.duty_cycle);
-+		seq_printf(s, " duty_offset: %llu ns", state.duty_offset);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
+ 	chip->ops = &axi_pwmgen_pwm_ops;
+ 	chip->atomic = true;
++	chip->supports_offset = true;
  
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index a58db7011807..e0e5960f91ba 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -51,6 +51,7 @@ enum {
-  * struct pwm_state - state of a PWM channel
-  * @period: PWM period (in nanoseconds)
-  * @duty_cycle: PWM duty cycle (in nanoseconds)
-+ * @duty_offset: PWM duty offset (in nanoseconds)
-  * @polarity: PWM polarity
-  * @enabled: PWM enabled status
-  * @usage_power: If set, the PWM driver is only required to maintain the power
-@@ -61,6 +62,7 @@ enum {
- struct pwm_state {
- 	u64 period;
- 	u64 duty_cycle;
-+	u64 duty_offset;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- 	bool usage_power;
-@@ -130,6 +132,15 @@ static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- 	return state.duty_cycle;
+ 	return devm_pwmchip_add(dev, chip);
  }
- 
-+static inline u64 pwm_get_duty_offset(const struct pwm_device *pwm)
-+{
-+	struct pwm_state state;
-+
-+	pwm_get_state(pwm, &state);
-+
-+	return state.duty_offset;
-+}
-+
- static inline enum pwm_polarity pwm_get_polarity(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
-@@ -161,6 +172,9 @@ static inline void pwm_get_args(const struct pwm_device *pwm,
-  * ->duty_cycle value exceed the pwm_args->period one, which would trigger
-  * an error if the user calls pwm_apply_might_sleep() without adjusting ->duty_cycle
-  * first.
-+ *
-+ * ->duty_offset is likewise set to zero to avoid inconsistent default
-+ *  states.
-  */
- static inline void pwm_init_state(const struct pwm_device *pwm,
- 				  struct pwm_state *state)
-@@ -176,6 +190,7 @@ static inline void pwm_init_state(const struct pwm_device *pwm,
- 	state->period = args.period;
- 	state->polarity = args.polarity;
- 	state->duty_cycle = 0;
-+	state->duty_offset = 0;
- 	state->usage_power = false;
- }
- 
-@@ -275,6 +290,7 @@ struct pwm_ops {
-  * @npwm: number of PWMs controlled by this chip
-  * @of_xlate: request a PWM device given a device tree PWM specifier
-  * @atomic: can the driver's ->apply() be called in atomic context
-+ * @supports_offset: does the driver support duty cycle offset
-  * @uses_pwmchip_alloc: signals if pwmchip_allow was used to allocate this chip
-  * @operational: signals if the chip can be used (or is already deregistered)
-  * @nonatomic_lock: mutex for nonatomic chips
-@@ -292,6 +308,7 @@ struct pwm_chip {
- 	struct pwm_device * (*of_xlate)(struct pwm_chip *chip,
- 					const struct of_phandle_args *args);
- 	bool atomic;
-+	bool supports_offset;
- 
- 	/* only used internally by the PWM framework */
- 	bool uses_pwmchip_alloc;
-diff --git a/include/trace/events/pwm.h b/include/trace/events/pwm.h
-index 12b35e4ff917..2d25ac5de816 100644
---- a/include/trace/events/pwm.h
-+++ b/include/trace/events/pwm.h
-@@ -18,6 +18,7 @@ DECLARE_EVENT_CLASS(pwm,
- 		__field(struct pwm_device *, pwm)
- 		__field(u64, period)
- 		__field(u64, duty_cycle)
-+		__field(u64, duty_offset)
- 		__field(enum pwm_polarity, polarity)
- 		__field(bool, enabled)
- 		__field(int, err)
-@@ -27,13 +28,14 @@ DECLARE_EVENT_CLASS(pwm,
- 		__entry->pwm = pwm;
- 		__entry->period = state->period;
- 		__entry->duty_cycle = state->duty_cycle;
-+		__entry->duty_offset = state->duty_offset;
- 		__entry->polarity = state->polarity;
- 		__entry->enabled = state->enabled;
- 		__entry->err = err;
- 	),
- 
--	TP_printk("%p: period=%llu duty_cycle=%llu polarity=%d enabled=%d err=%d",
--		  __entry->pwm, __entry->period, __entry->duty_cycle,
-+	TP_printk("%p: period=%llu duty_cycle=%llu duty_offset=%llu polarity=%d enabled=%d err=%d",
-+		  __entry->pwm, __entry->period, __entry->duty_cycle, __entry->duty_offset,
- 		  __entry->polarity, __entry->enabled, __entry->err)
- 
- );
 -- 
 2.44.0
 
