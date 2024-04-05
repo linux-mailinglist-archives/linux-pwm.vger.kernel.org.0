@@ -1,138 +1,126 @@
-Return-Path: <linux-pwm+bounces-1869-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1870-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67F0B89A18A
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 17:41:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 85DD189A308
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 19:04:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EEA64286051
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 15:41:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B1C3288286
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 17:04:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 341AF16FF30;
-	Fri,  5 Apr 2024 15:41:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48DAF171651;
+	Fri,  5 Apr 2024 17:04:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zrbi3bY6"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="p9t3Lldm"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A501DFE4;
-	Fri,  5 Apr 2024 15:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40516171645
+	for <linux-pwm@vger.kernel.org>; Fri,  5 Apr 2024 17:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712331677; cv=none; b=JHP+3zWJ2nzeQZAXmGpuQvNT32eebRUrCMySdeEQwx/EEDDAwiUdJvd6olUzxlsSNpD30G3JV4ndcMTZFLNOmrNKQLsGECCQVWbc2Jy0EngSqS+NTgQ6/UTMIxHUXdfM9MyH8lKL2/PY55GUi97nOAbywtlboyuAQNRACaXKcG4=
+	t=1712336653; cv=none; b=NZmzrF4K9cCfcOcX2iuSsb/GL9O/WSQ7wqXNxc16Fki2l9y3f6fCQQUtyXGOcyXdC7H5vjDKBLxqCTvMNffCiG6woGnfcjcXHu5B5/zeQNGownlduEchgBnRmz5e163snvbVsNKsDD4FYS6PXlqLMjVyYY6IsYfzdQpU0taoWvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712331677; c=relaxed/simple;
-	bh=rZJGyKNtzoutcmvD9yBAQBRLOt5WkG7MywHLVvMRWZ4=;
+	s=arc-20240116; t=1712336653; c=relaxed/simple;
+	bh=OOgEwHqMz/Yvjc2goDeb8uEo8Ux7zxdqL7svhS7VDzM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N1U25hQPW7/iEgBTPtKJl0Pwx6+vJJfyPr2l0HHxlDOKrJ/irLWSyiljqZNkXgO3SvlMRwu1txNMHVt8MnxAZLK1/Vdi33g/IKno/zyPeNa9SbGeRzVfsLOGF6llGqDk9Z9vENwGMTzHYt7qRfBoQC9S3/hELWFtaZIhujcLT98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zrbi3bY6; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4163181a7ceso4796085e9.0;
-        Fri, 05 Apr 2024 08:41:15 -0700 (PDT)
+	 To:Cc:Content-Type; b=IcOQzFlvDfS1B0Ui493grvjYZrTXIBHiXV1QLGdhG70c3A3LhjeTYRgggnt4Yf7KEHp7HZTeTLLfRDlbUJLQowB7CHZWOmTxskcVU5pOTa/LMhxtw8hF+RpK6gLhAtXduJ5aU3ogDj4Plvr7t0Tz/S/jzgFtzd9JJr/cPbWsXac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=p9t3Lldm; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d4886a1cb4so31148721fa.0
+        for <linux-pwm@vger.kernel.org>; Fri, 05 Apr 2024 10:04:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712331674; x=1712936474; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712336648; x=1712941448; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vWae/TQVR4lDMRxTHKpFB8Vkf/PIFo/hlHy1KJVttno=;
-        b=Zrbi3bY6TWu8nzzhcBUiUS9i51HQAy+PP8m+ions/eaLgCT2afnymTyF6ZPX2L5jj0
-         O2QUpcQZOZhGVF33VidqinJidL9dDTLqFjp49lcpGxmx5OcoEqDhkSY+0IjFB1SuAZbn
-         vbuwk/TXT/DXX0SkoqZhQQFJC1l58Y1LpCxn9bh1ofqHrp47m4toz847at/FEXioKin9
-         mGHqBf7upSb3L5vCOPZHVXtjooiQe5+C2TsZgmVzUIPuHdu1SYdbo5JG9mDLDzu8m60v
-         DFDoYqFODUUXR4MWq/T2ZklzdBF4qVWsWUdJJUxs7j2eMPBCOtx7olJcQpfWG+aTXpbC
-         Y9BA==
+        bh=0MbNjbvHvDDOSjIwkj/Strvo+EkSYgqBXUTM9ofNx5w=;
+        b=p9t3LldmW4SOxNOxt9fcY7jPCvtbRUdbD4b63lKA8ata6eWL1uSoX3BPcyjIk8ZMDf
+         NCvYd+Qel99IUgL4/m+2dojPLOj6aIPVkSXd2ZLDBcEQ26DzRpxmBOzOCGArdjWJvt6c
+         OC2qBM6uAIiEvarYCQsOUBo+qvVi5y8Q8vqTPXjr3S6YMZzPuA6grCgMmToM2r4AbL7t
+         fCuyGfop4upSgHQLNDbCkXcA6JNWUmyEeuxOsmD/L6Awc1ZbjKSbdo4V4CAm4KZj4336
+         9AKFg+O4paRIjdIYiQWPo3wboXmuX1c8p2005zWJjbwjfZjYZ+EIILUR0Ew51JIp4bYD
+         frCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712331674; x=1712936474;
+        d=1e100.net; s=20230601; t=1712336648; x=1712941448;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vWae/TQVR4lDMRxTHKpFB8Vkf/PIFo/hlHy1KJVttno=;
-        b=V75OqEkMGHuO5XVOOCwDm+4cIjcenJ1nPTCI9ZnLXWPZrXneHknzLZTYWlyi8dNPGD
-         nKRepRjtonTaLSfrbp4eALSXjg4n07U8Z4Aem9LY7fcZAFO54Gq80i4zpDM56jDjSZOV
-         mcLy+0G6sUnkfPSVvKXoS0/4KobrsRT4V6nevsufh3/rZRGeZmr9pUzK1Xf++w1LuyZO
-         pHT88Znvf8xOeVB/SPhpt5AsN8JdOBAqu3/cV74g9JBU2KYEUsQuDQPoGi27Qz4GTAQ5
-         Rs7CLY14RzHQDRCf6fxsO+PqvJnAdWkXT6kDVMUP87t93Pj3Gjk8lD76ddv4hIEZ8jED
-         +Rxw==
-X-Forwarded-Encrypted: i=1; AJvYcCX87hIdpjqcDNB/8KoGLWp571LT54RgXumry5CJI9sfUglLdNSHYiJqA3qAfYpyySN6pIHbchSvu8zwqD+LXCyfuaBlik6TyoJRRgwz/fGrmN8d9704Q8PlfTpmJxcHBVI5Utox8cJFy69vcCLVQPFbHoKMYFD30w+op1m0Jg9izaX+umoxh09+qycKTKXZZy5JNTuOdy/+ikyGrzfGZWlfzbQ11eVtXlhPp/qmuiXp7z/A5TQfzNUgyb1YxyMYNdt3WpPRPl494mhZCvTWF6UfjBBH8d3nCKbj45LhlxOkJe6S6QwsogXegaHvwJaRkr9QuIc=
-X-Gm-Message-State: AOJu0YzGFCrTxq/voXaZURL2XeOsNKwiwup2aFnrQvotGneJ5wkuJfQ7
-	vH16VVKnVivchoc0yFchZtCMZoSu+8KNeDLkxLpU0RlVoJNCkAuns24H+e5XnzyO+futuy3jq1X
-	qs2BHpd7Vj7VhoPLQ6hR2GMklOEfjpfcMYYc=
-X-Google-Smtp-Source: AGHT+IEH9WiGdwQmFDR3UUpRkcaEXiGYsc+rbm05qeGkTnAd0VuAIEH5g2EodOENEkeRm+TdhthkOlf3f027HucPkCY=
-X-Received: by 2002:a05:600c:19cd:b0:416:2bef:ce81 with SMTP id
- u13-20020a05600c19cd00b004162befce81mr1484706wmq.1.1712331657141; Fri, 05 Apr
- 2024 08:40:57 -0700 (PDT)
+        bh=0MbNjbvHvDDOSjIwkj/Strvo+EkSYgqBXUTM9ofNx5w=;
+        b=tY8zw2QcfV4uTvehH4NduqFyGwX0yRbFgKwiIePPh1eMV7PLwztxD8HONtE+4DHxMk
+         VeQ2PwXfelbXih27SNjYqaxtiKDvotC7KQAdlJZvFif9Fd2HNw7gcvqWjJpzPxPjLhMf
+         CGKzHfEkoMaOTSMbtDGAvPLGl2u7t02r0vRg9R0uxm0/Q5NJ+8sE5RmCu1ezBS+KsTO6
+         82KyDPFtPnkRIsRQn1fSUSmc3714lwKQHYxjZ93ejaZs8PKTCwz1i2ouxcFC+2kybh7b
+         UXpO9pVtF33M2Qb5fjZDXeg6uWPjaGbizgNnc6aIdtPxwOWxCiLLOdsLmbZ2SaCJfx5t
+         Xhbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTSj869q0W+9K5l0xe8c++WYtLuaRskqU/whIToF9NFIhkxsKGF/9Cn13C0VAzuaKpG5GsTXLrXvyB/gRv9SrsWVNBs8yIbkTc
+X-Gm-Message-State: AOJu0YyrQpZLnoJetEcOeI/CYl/AcuJTPlLTWKykPnRq/IRa/lr0tZNG
+	D+aW0WlHeQUGajZWIVL1beVklTQzxteaMqtwQ+9Vw3DUUT/PB2i6gTGKvMECB4jF7aYXlgvN5mA
+	VgnLec5X3tvdMDoq0+RNMyqrjtx7qRJhb2mKDFA==
+X-Google-Smtp-Source: AGHT+IF/wUgVwYjkQB9QkUlJ3rk/lwdpphCX6bl6Br6T/1h0Jsz8GgHfi7aqte4he6pNM2ldIDRcVp8T/y+psXCWnc4=
+X-Received: by 2002:a2e:be9a:0:b0:2d6:c94d:94c2 with SMTP id
+ a26-20020a2ebe9a000000b002d6c94d94c2mr1833000ljr.46.1712336648097; Fri, 05
+ Apr 2024 10:04:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202404052349.lQch9J7G-lkp@intel.com>
-In-Reply-To: <202404052349.lQch9J7G-lkp@intel.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 5 Apr 2024 08:40:45 -0700
-Message-ID: <CAADnVQJXq1bSe20FgBN=BL1E5d8qOfLv_Ettq+724h5QfRuuKg@mail.gmail.com>
-Subject: Re: [linux-next:master] BUILD REGRESSION 8568bb2ccc278f344e6ac44af6ed010a90aa88dc
-To: kernel test robot <lkp@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Linux Memory Management List <linux-mm@kvack.org>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
-	bpf <bpf@vger.kernel.org>, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, lima@lists.freedesktop.org, 
-	linux-arch <linux-arch@vger.kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
-	nouveau@lists.freedesktop.org
+References: <20240405003025.739603-1-tgamblin@baylibre.com> <fhrderkiwqzc7fw2hptz2la3aco72wlossqbrr4m42qllcpcpw@vhxflah2ex2a>
+In-Reply-To: <fhrderkiwqzc7fw2hptz2la3aco72wlossqbrr4m42qllcpcpw@vhxflah2ex2a>
+From: David Lechner <dlechner@baylibre.com>
+Date: Fri, 5 Apr 2024 12:03:56 -0500
+Message-ID: <CAMknhBFgXdH63_N738qMt6tzK_zWdB-OWvYTWitmBuQNqrN+LQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] pwm: add support for duty_offset
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Trevor Gamblin <tgamblin@baylibre.com>, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, michael.hennerich@analog.com, 
+	nuno.sa@analog.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 5, 2024 at 8:37=E2=80=AFAM kernel test robot <lkp@intel.com> wr=
-ote:
->
-> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-n=
-ext.git master
-> branch HEAD: 8568bb2ccc278f344e6ac44af6ed010a90aa88dc  Add linux-next spe=
-cific files for 20240405
->
-> Error/Warning reports:
->
-> https://lore.kernel.org/oe-kbuild-all/202404051333.7und7PPW-lkp@intel.com
-> https://lore.kernel.org/oe-kbuild-all/202404051423.eiaXLwhX-lkp@intel.com
-> https://lore.kernel.org/oe-kbuild-all/202404051659.aawUkGUQ-lkp@intel.com
-> https://lore.kernel.org/oe-kbuild-all/202404052022.Cwf2ilBp-lkp@intel.com
->
-> Error/Warning: (recently discovered and may have been fixed)
->
-> aarch64-linux-ld: kernel/bpf/verifier.c:20223:(.text+0xdbb4): undefined r=
-eference to `__SCK__perf_snapshot_branch_stack'
-> aarch64-linux-ld: verifier.c:(.text+0x17c3c): undefined reference to `__S=
-CK__perf_snapshot_branch_stack'
-> drivers/i2c/busses/i2c-i801.c:1407:(.text+0x1d2ef4a): undefined reference=
- to `i2c_root_adapter'
-> kernel/bpf/verifier.c:20223:(.text+0xdba4): dangerous relocation: unsuppo=
-rted relocation
-> loongarch64-linux-ld: kernel/bpf/verifier.c:20223:(.text+0xa818): undefin=
-ed reference to `__SCK__perf_snapshot_branch_stack'
-> loongarch64-linux-ld: verifier.c:(.text+0xa964): undefined reference to `=
-__SCK__perf_snapshot_branch_stack'
-> mips64el-linux-ld: verifier.c:(.text.do_misc_fixups+0xd9c): undefined ref=
-erence to `__SCK__perf_snapshot_branch_stack'
-> riscv32-linux-ld: section .data LMA [00369000,00907967] overlaps section =
-.text LMA [0007899c,01a6a6af]
-> s390-linux-ld: verifier.c:(.text+0x13038): undefined reference to `__SCK_=
-_perf_snapshot_branch_stack'
-> verifier.c:(.text+0x17c14): relocation truncated to fit: R_AARCH64_ADR_PR=
-EL_PG_HI21 against undefined symbol `__SCK__perf_snapshot_branch_stack'
-> verifier.c:(.text+0xa960): undefined reference to `__SCK__perf_snapshot_b=
-ranch_stack'
-> verifier.c:(.text+0xadd0): dangerous relocation: unsupported relocation
-> verifier.c:(.text.do_misc_fixups+0xd98): undefined reference to `__SCK__p=
-erf_snapshot_branch_stack'
+On Fri, Apr 5, 2024 at 1:23=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Thu, Apr 04, 2024 at 08:30:22PM -0400, Trevor Gamblin wrote:
 
-Fixed in bpf-next with commit:
-https://lore.kernel.org/all/20240405142637.577046-1-arnd@kernel.org/
+...
+
+> > 2. Should __pwm_apply() explicitly disallow PWM_POLARITY_INVERSED and
+> > duty_offset together?
+>
+> While there is no technical need for that, a configuration with both
+> PWM_POLARITY_INVERSED and duty_offset > 0 is irritating. So I'd say yes,
+> it should be disallowed. When I created the cdev API I even considered
+> dropping .polarity for lowlevel drivers and convert them all to
+> .duty_offset.
+>
+> Having said that I don't like the addition of .supports_offset to
+> struct pwm_chip, which only signals a new incomplete evolution of the
+> pwm framework. Better adapt all drivers and then assume all of them
+> support it.
+
+But not all chips can fully support this feature. I envisioned this
+flag as something consumer drivers would check when they require a
+chip capable of providing a phase offset between two PWM output
+channels. This way, the consumer driver could fail to probe if the PWM
+chip is not up to the task.
+
+For example the consumer driver might require two coordinated signals like =
+this:
+      _                   _
+PWM0 | |_________________| |_________________
+           ___                 ___
+PWM1 _____|   |_______________|   |__________
+
+PWM0: duty_offset =3D 0, duty_cycle =3D 1, period =3D 10
+PWM1: duty_offset =3D 2, duty_cycle =3D 2, period =3D 10
+
+Do we need to do additional work to support cases like this? Or should
+we just let it fail silently and let it generate incorrect signals if
+someone attempts to use an unsupported hardware configuration?
 
