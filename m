@@ -1,164 +1,174 @@
-Return-Path: <linux-pwm+bounces-1871-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1872-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FA1089A544
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 21:56:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E50689A95A
+	for <lists+linux-pwm@lfdr.de>; Sat,  6 Apr 2024 08:34:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 83B9A1C208F2
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Apr 2024 19:56:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 97A941F212FB
+	for <lists+linux-pwm@lfdr.de>; Sat,  6 Apr 2024 06:34:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D26C3173347;
-	Fri,  5 Apr 2024 19:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 191F7200D1;
+	Sat,  6 Apr 2024 06:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eL0cAt0p"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98DD173336
-	for <linux-pwm@vger.kernel.org>; Fri,  5 Apr 2024 19:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F05FC19;
+	Sat,  6 Apr 2024 06:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712346967; cv=none; b=hpw06pM9xi0/G27GQOl/DD7jMu73byFLrSvmExvSDbIMOcpwpHL0JhITVh8RFQBHICNfg4bgABUlpPI7EZA+/vXfHHojmP6pbgSS9JF4/3DfUczZ13Ei1mrHr+36manfVuCPmuGw2s9LY6ranUkYni5HS/ZQOPiTgbd/77EkR8s=
+	t=1712385273; cv=none; b=JcNYpoRIOYaSWIKiY+ILlFKECbjby8RhcY3Pgqr00DqhfGkvP7Rg/kzyC7xONmhsW+qz74n3eJTnHz1P30tEzORNlcqatAKBYIbO4rJgfe0ZTMjgVtBPNU7Zvzij5XP7QcuqJjPDU6AGKT3GAugsv6OfzdVahW+4E3RezrTsziQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712346967; c=relaxed/simple;
-	bh=GxGMOTnsr5TM4J1mJTzy6oMhUIIAbjU/GGFgBEgB7oM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qoFkIPwlCgd4EM0J6Tuse96rVgbIDldK1jjdd1gKvGFaEGW1wYid0//W6TCMbvaj4WndUH0GwwnzKJbTXiDpnfRdXOtBi3ZeZj+5ssAICWpsXZsa6j2mnSVH95QTzea27Uc9ss5sTjp/yHAoMFumZ2FYElvyQzeMdld7/cW+V98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rspfO-00065i-6m; Fri, 05 Apr 2024 21:56:02 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rspfN-00Ac9s-0J; Fri, 05 Apr 2024 21:56:01 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rspfM-00FZ4g-2x;
-	Fri, 05 Apr 2024 21:56:00 +0200
-Date: Fri, 5 Apr 2024 21:55:54 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Trevor Gamblin <tgamblin@baylibre.com>, linux-pwm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, michael.hennerich@analog.com, nuno.sa@analog.com
-Subject: Re: [RFC PATCH 0/3] pwm: add support for duty_offset
-Message-ID: <gcibnofcdvs3qwygsuvwobckoyipj2a3t72remo5ohauuvf2cb@4ae4byeom67d>
-References: <20240405003025.739603-1-tgamblin@baylibre.com>
- <fhrderkiwqzc7fw2hptz2la3aco72wlossqbrr4m42qllcpcpw@vhxflah2ex2a>
- <CAMknhBFgXdH63_N738qMt6tzK_zWdB-OWvYTWitmBuQNqrN+LQ@mail.gmail.com>
+	s=arc-20240116; t=1712385273; c=relaxed/simple;
+	bh=AG0MAab/lRPGXeVxF+74QX66/sODwWFllD6zet+ILvQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BWqINpEBvqyqN3k/88nQBWK0MaOVgcrboKXD3o3OpMb1PEIiiD7Ui51eDZESiypS0RFOaKZ4eWE3waJqENVpJ09ZAGHYnyWLp6p/3px9m7D/Bh4pBaepy7yaw+3Cp+ONvNOSsjPzA0xY6DctMATj47cfQ4wjtAB6sKg60EmTGcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eL0cAt0p; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2a2e5d86254so1630942a91.1;
+        Fri, 05 Apr 2024 23:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712385270; x=1712990070; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HXg1HzMY1ws0HrUT2NKFnF8qZY/gmV174Rp18+QBW4Y=;
+        b=eL0cAt0p7PeGjoiDug80uMi3nDEzNJK9g8mWEZcvfc+qxyZqPM+VW7VPRXNJoasB3B
+         +5EO+x88FiNbTUjysrhavoh/oK6AiOy36CCS+/PoRvtPmMFF3RUTPO88k8nNUQuqm8Bp
+         6eGHR1+40IL0ziC402m8Ud0m6rXFCbjFIMMWv4VtQM3Xg0rA2BnvkJR+3uD3CEwAeXyE
+         9VePsgTLdMll6AdPvg559GNK0pNfOkmpSxqWlDgBgQ4Wi8QgMrbo15Ph5yUFJ80R+ict
+         gDJ/J2Fl+kRBUezwkKoOcLAnQ+KbfFQaONqYzqDBGToqfpuFRkb3aVV8Kf5jWqIOi9bp
+         Z0Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712385270; x=1712990070;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HXg1HzMY1ws0HrUT2NKFnF8qZY/gmV174Rp18+QBW4Y=;
+        b=cciLXdBxbFDGFWOR1ei0qO3sJWiggKU8NNTueRbjCTfj3h0j8bbPXOV+KEcv1JJC+j
+         p73O9LbvMBEeNHB/qYhLHMp+irqpCEBA8jab7CSyMfflb3EQw82UGzXX+nmwgcQ6d7Ul
+         mOqSQrqnU4LolJ+Gjrq0xZyb2lDnuVOeYnEKXpeUPKFtfeyvhgc+jE4F0ki2g4YbRdTz
+         xmfrWjFW28x6ZyIKoWT9jpfxjfszrxcdqvgEzkQmYz/1HWnqSoINQUuMPsgQXYacS0pe
+         9Ozlq63KiAsdT0LC/JyQqpCMrukyl0SUMVeCvTnyXVCm2giyNwP7fgEI3l7NC4elpriG
+         e3DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUDWgPb74XJy2xIRpANPKGar0qIxje0B4Fbkc9vRlFDEeYBzdOGbNQ99tXzKxBeZjaMgFRtXJoJFKggkNFeD1O7VZLVMzOQ0Ic5HQOpTaL4ncRV5pDel4wAKvebeVxqpTRGWfqGXGgYUN63++5a87SkwXpOReLAZs7Z0PMWDXQeRoq+g==
+X-Gm-Message-State: AOJu0YzqemrEs1OpFMxxv2YO8cOkm9e+eo1/n3uBLRSf33pJjD7lOl/W
+	yYtc1HEF3YjwymB3qgh43sBC7QXdf6FTKCwM7XwnVjJ78fOs60UC
+X-Google-Smtp-Source: AGHT+IGDyqBgNFFll4mE4oRSotvuKucjZDNVPTEEuoznkPGqJXeFtlRNdg2zCa20QKWjdZdYJc5HcA==
+X-Received: by 2002:a17:90a:c293:b0:2a2:fec9:1bbd with SMTP id f19-20020a17090ac29300b002a2fec91bbdmr6076126pjt.17.1712385269834;
+        Fri, 05 Apr 2024 23:34:29 -0700 (PDT)
+Received: from localhost ([46.3.240.101])
+        by smtp.gmail.com with ESMTPSA id ei24-20020a17090ae55800b002a386a4d6b0sm2367991pjb.6.2024.04.05.23.34.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Apr 2024 23:34:29 -0700 (PDT)
+From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+To: u.kleine-koenig@pengutronix.de,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	inochiama@outlook.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Cc: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Subject: [PATCH v6 0/2] riscv: pwm: sophgo: add pwm support for CV1800
+Date: Sat,  6 Apr 2024 14:34:11 +0800
+Message-Id: <20240406063413.3334639-1-qiujingbao.dlmu@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wewextuk6np2tzoq"
-Content-Disposition: inline
-In-Reply-To: <CAMknhBFgXdH63_N738qMt6tzK_zWdB-OWvYTWitmBuQNqrN+LQ@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
+The Sophgo CV1800 chip provides a set of four independent
+PWM channel outputs.
+This series adds PWM controller support for Sophgo cv1800.
 
---wewextuk6np2tzoq
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes since v5:
+- delete the OE function because we plan to use the counter subsystem
+  instead of capture, so there is no need to reuse this code.
+- fix set polarity reverse error.
 
-Hello David,
+v5: https://lore.kernel.org/all/20240314100131.323540-1-qiujingbao.dlmu@gmail.com/
 
-On Fri, Apr 05, 2024 at 12:03:56PM -0500, David Lechner wrote:
-> On Fri, Apr 5, 2024 at 1:23=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Thu, Apr 04, 2024 at 08:30:22PM -0400, Trevor Gamblin wrote:
->=20
-> ...
->=20
-> > > 2. Should __pwm_apply() explicitly disallow PWM_POLARITY_INVERSED and
-> > > duty_offset together?
-> >
-> > While there is no technical need for that, a configuration with both
-> > PWM_POLARITY_INVERSED and duty_offset > 0 is irritating. So I'd say yes,
-> > it should be disallowed. When I created the cdev API I even considered
-> > dropping .polarity for lowlevel drivers and convert them all to
-> > .duty_offset.
-> >
-> > Having said that I don't like the addition of .supports_offset to
-> > struct pwm_chip, which only signals a new incomplete evolution of the
-> > pwm framework. Better adapt all drivers and then assume all of them
-> > support it.
->=20
-> But not all chips can fully support this feature. I envisioned this
-> flag as something consumer drivers would check when they require a
-> chip capable of providing a phase offset between two PWM output
-> channels. This way, the consumer driver could fail to probe if the PWM
-> chip is not up to the task.
->=20
-> For example the consumer driver might require two coordinated signals lik=
-e this:
->       _                   _
-> PWM0 | |_________________| |_________________
->            ___                 ___
-> PWM1 _____|   |_______________|   |__________
->=20
-> PWM0: duty_offset =3D 0, duty_cycle =3D 1, period =3D 10
-> PWM1: duty_offset =3D 2, duty_cycle =3D 2, period =3D 10
->=20
-> Do we need to do additional work to support cases like this? Or should
-> we just let it fail silently and let it generate incorrect signals if
-> someone attempts to use an unsupported hardware configuration?
+Changes since v4:
+- drop filename
+- fix macro
+- optimize cv1800_pwm_set_polarity()
+- optimize cv1800_pwm_set_oe()
+- add comment for cv1800_pwm_set_oe()
+- use ticks replace tem
+- fix duty_cycle larger than period_val
+- use devm_clk_rate_exclusive_get() replace
+  clk_rate_exclusive_get()
+- map linux polarity to register polarity 
 
-My vision here is that you can do the following:
+v4: https://lore.kernel.org/all/20240304085933.1246964-1-qiujingbao.dlmu@gmail.com/
 
-	state.duty_offset =3D 0;
-	state.duty_cycle =3D 1;
-	state.period =3D 10;
-	ret =3D pwm_round_state(pwm, &state);
-	if (!is_good_enough(state))
-		goto err;
+datasheet Link: https://github.com/milkv-duo/duo-files/blob/main/duo/datasheet/CV1800B-CV1801B-Preliminary-Datasheet-full-en.pdf
+page 614
 
-This way pwm_apply_* could just continue to work as it does now (i.e.
-implement the biggest period not bigger than requested. For that
-implement the biggest duty_offset not bigger than requested and for
-these values of period and duty_offset implement the biggest duty_cycle
-not bigger than requested.)
+Changes since v3:
+- use macro instead of npwm number
+- add support for polarity feature
+- add support for Output-Enable/OE feature
 
-This has the advantage that the lowlevel driver doesn't need to judge if
-the setting it implements is good enough.
+v3: https://lore.kernel.org/all/20240223082014.109385-1-qiujingbao.dlmu@gmail.com/
 
-To get there, quite some work has to be invested.
+Changes since v2:
+- use 0x08 instead of macro
+- split if statements based on conditions
+- in order to round up, first calculate the
+  number of high-level cycles, then subtract
+  it from the PERIOD to obtain the number of HLPERIOD
+- use new pwmchip_alloc() API instead of old style
 
-Best regards
-Uwe
+v2: https://lore.kernel.org/all/20240212121729.1086718-1-qiujingbao.dlmu@gmail.com/
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Changes since v1:
+- drop full stop from subject
+- re-order maintainers and description
+- pass checkpatch.pl --strict
+- fix naming errors
+- add "Limitations" section
+- use a driver specific prefix for all defines
+- using bool instead u32 in cv1800_pwm_enable
+- check and set state->polarity
+- use mul_u64_u64_div_u64
+- use clk_rate_exclusive_get(), balance with clk_rate_exclusive_put()
+- using macro definitions instead of shift operations
+- remove shift operation on 0
+- use priv replace cv_pwm
+- hardcode npwm
+- set atomic to true
+- remove MODULE_ALIAS
 
---wewextuk6np2tzoq
-Content-Type: application/pgp-signature; name="signature.asc"
+v1: https://lore.kernel.org/all/20240207055856.672184-1-qiujingbao.dlmu@gmail.com/
 
------BEGIN PGP SIGNATURE-----
+Jingbao Qiu (2):
+  dt-bindings: pwm: sophgo: add pwm for Sophgo CV1800 series SoC
+  pwm: sophgo: add pwm support for Sophgo CV1800 SoC
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYQV0IACgkQj4D7WH0S
-/k4KhQgApye5alomNROsehvEvK1/wS5Lj9Ak4+5GDtGnadX04W2BVIjid7X3PUoq
-T56Cfz402Db10LHyYSimqxXL6g8pr08d5E4u80BNu6hhDHbh4azaqbVZZlUsk6cq
-URRSQ+lESFFLRCT/P7kUMZWYtkkTIGFtU6wKBzDC27Jz8GfaIRbI7k4lmqgCChzK
-QMT3xRESfs4otfNHol3nEDJRYktq700/5QEXN1IMse8XFw5d2wurC1rrR3F2U8EK
-AyZ64WBU8eITxen3DX82SXiUEPXirEVBOlOmVH5bBFcQPoqpHjS+E1fl++whZC6V
-4N7T05zPmIf50NIaPdGqwym+lCAEaA==
-=EDVO
------END PGP SIGNATURE-----
+ .../bindings/pwm/sophgo,cv1800-pwm.yaml       |  45 +++
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-cv1800.c                      | 296 ++++++++++++++++++
+ 4 files changed, 352 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/sophgo,cv1800-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-cv1800.c
 
---wewextuk6np2tzoq--
+-- 
+2.25.1
+
 
