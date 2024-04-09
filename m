@@ -1,151 +1,134 @@
-Return-Path: <linux-pwm+bounces-1877-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1878-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B63989D38E
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Apr 2024 09:49:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F1DD89E1B3
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Apr 2024 19:41:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EA643B20C8E
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Apr 2024 07:49:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A6B8285CA2
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Apr 2024 17:41:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B19F7D096;
-	Tue,  9 Apr 2024 07:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5F6F156866;
+	Tue,  9 Apr 2024 17:41:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JJjj8H6x"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857547D08A
-	for <linux-pwm@vger.kernel.org>; Tue,  9 Apr 2024 07:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2964C85
+	for <linux-pwm@vger.kernel.org>; Tue,  9 Apr 2024 17:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712648960; cv=none; b=a0ARsyfcOursPG73fKxansPQoSq3dXT2vTWzaK8W781QCGBaaIQZvrDTrRDBZCn95F4/YL134yKFU0QP2KrZqrTbsU6hFjUPITkU4xIRLGas6lMv3+Ueeki4jLfAnix1uyFOVEUmFxmyHmZckgGQBqMFLSz07kF9qjx0wJkrR3Q=
+	t=1712684492; cv=none; b=INsf1EuTTF5Df7OAQ396LooQ1CKi3rz0bTCnel7NdlPFIbgQEvPVRY2FqTtSZcEitujXeKh8ePXOXIgQz05FNt7hi22NHc18wCm9kS/+U6id8nT1m0z1n7LMPDSsxyr0FZrjfRLMeoQ/773hGpHLnuZhZY5xsEF7OqPm2O2vfRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712648960; c=relaxed/simple;
-	bh=5j4TuV8vRcRLAfu1YCJFfxKchwrk9RM8qUNUR2+nVuM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AxBhG81uWP5LuNT7eSJxxWvANi1UF8JBLvIx4NDXbxffsPvohK+oJ1yFbUrelZc9UEehre6C7c7xDZH21BNcWqx3AX48kD6TMiH+gQvISmfEEE6uYVUQUr9AZguer283hfX1DGWekN0zUpT6zs/3jbx+Tf6Q45dLrGk1+SXEBoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1ru6EE-0007YK-38; Tue, 09 Apr 2024 09:49:14 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1ru6ED-00BGR6-GK; Tue, 09 Apr 2024 09:49:13 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1ru6ED-00GoJV-1N;
-	Tue, 09 Apr 2024 09:49:13 +0200
-Date: Tue, 9 Apr 2024 09:49:13 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: John Ernberg <john.ernberg@actia.se>
-Cc: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, 
-	"kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH 8/8] pwm: Add support for pwmchip devices for faster and
- easier userspace access
-Message-ID: <z6g6zbzwaejozhb7hxjnta2tawifa5diblz6ktdt6hnngazkfr@xclx4ooiuw63>
-References: <8d3acfc431ecd431d6cced032dcb58ad2579474c.1710670958.git.u.kleine-koenig@pengutronix.de>
- <20240408154233.890293-1-john.ernberg@actia.se>
+	s=arc-20240116; t=1712684492; c=relaxed/simple;
+	bh=unos6c4MHrzRTe2hgteD1gsusU+s2n+AHu5YvsvKRjc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hNlfb7xMmUH8kZEAwgOPQiyZKHb1xbDOdkah+d+dQ6sfWpqRbUOS1fGw8EIdrKCa8ERpyjoA8LALHu3HX2qxa6Kcx73l3mp9b5s6hrCuj7TWRH6DhpaX24DQVbJ8ZWvc376TuA17cc8dCz/KKrxUxUgG71q/OumTt1LVTCcVU4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JJjj8H6x; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-69935d567a0so38046456d6.1
+        for <linux-pwm@vger.kernel.org>; Tue, 09 Apr 2024 10:41:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712684488; x=1713289288; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8oYCODPGJ0bN2MpITwTfd+iJcVjHgLaVmvJQk/UGr/o=;
+        b=JJjj8H6xs9rHjJi+xJjysxP9DO2wt/fSdQmV36MM427dbVN0QP6yx3tF+uH3+CssJ1
+         DA2QCXKzqkC4Iud8CJ3CmoR+zCzu6264nyWjkUCpdmqR7KPs+6xBJGHSC9vwJbj4j0iv
+         za1waKvPKm8M0lQFY9ebTKxi2A9RjMAQGL/lwJ8naERzhVtruZPnUKKLxGCwxtr0FUeF
+         SDVulDxu9/uJT7ZkiO6U8uxAoebwL+z0fyaGDxvmhPfVIxhpZJOUjnFXuMvcXSI8ZCWP
+         YzZzIhTHsSrgf80I5BFva7LIzCJ0Jupb7lXwz7vFQYS8xc2l94f3jhgmrSi+OZf6I7sW
+         daNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712684488; x=1713289288;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8oYCODPGJ0bN2MpITwTfd+iJcVjHgLaVmvJQk/UGr/o=;
+        b=IYN7KE9e5eB/piwvE6PCrOfjppgJkUW5aRtOxSE5q7Hqp/vrj8YKQk9+KVxuEXwJ7O
+         3z+3n1OvYadsXw8Ecw9h+MJJgmOd5U51K4M95aQjTYro4i2NBkgYhC6IX/ga8tphcXlG
+         KAD2HrNi8OQ+RH46AJWotX9KSaQv5vUkuJxV6N1djzMCBK0aRPWMaZs6F6np9cfmdO7X
+         Er403eVYuFoO9g/VSsf9dm/U9nMc51GxAFk9i4cMOYnHvHxski4NfcwceucB0S5thJMw
+         dvKrHSouJKNmN8lNlreJXHZd2i2QpGEwkiooMuJck2sZVuRCtw0A84wGAT4j2QXI/tpq
+         on7Q==
+X-Gm-Message-State: AOJu0Yyju8JQEQxP4mdDbSsy/2aDWTgME2W6T4e7ioGxjaEUBNMr27zp
+	3TLVeRA83Wz/PJqn8TqVfCblwjEiVJDgVdwbaeW4vvniKmP1RKG3F7xxZvNdHqjIZZeDo6ZNHCu
+	7zDI=
+X-Google-Smtp-Source: AGHT+IHGCEPinBO7Yd4QZECySz5Dt83YBfPMasFzUPQv/+wr7ihZEj/8iTd4uwaGBm0ejbCFoUhTxw==
+X-Received: by 2002:a05:6214:20c1:b0:696:9b25:3434 with SMTP id 1-20020a05621420c100b006969b253434mr295726qve.15.1712684488262;
+        Tue, 09 Apr 2024 10:41:28 -0700 (PDT)
+Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
+        by smtp.gmail.com with ESMTPSA id o11-20020a0ce40b000000b00699437d4dfbsm3828996qvl.72.2024.04.09.10.41.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 10:41:28 -0700 (PDT)
+From: Trevor Gamblin <tgamblin@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	u.kleine-koenig@pengutronix.de,
+	michael.hennerich@analog.com,
+	nuno.sa@analog.com,
+	tgamblin@baylibre.com,
+	dlechner@baylibre.com
+Subject: [PATCH 0/2 v2] pwm: add support for duty_offset
+Date: Tue,  9 Apr 2024 13:41:24 -0400
+Message-ID: <20240409174126.1296318-1-tgamblin@baylibre.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yv6ye4ccej6tofoz"
-Content-Disposition: inline
-In-Reply-To: <20240408154233.890293-1-john.ernberg@actia.se>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
+This series extends the PWM subsystem to support the duty_offset feature
+found on some PWM devices. It includes a patch to enable this feature
+for the axi-pwmgen driver, which can also serve as an example of how to
+implement it for other devices.
 
---yv6ye4ccej6tofoz
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The series was tested on actual hardware using a Zedboard. An
+oscilloscope was used to validate that the generated PWM signals matched
+the requested ones. The libpwm [1] tool was also used for testing the
+char device functionality.
 
-Hallo,
+Note that in addition to the other patches in this series, the changes
+to the axi-pwmgen driver rely on [2] and [3], which haven't been picked
+up yet.
 
-On Mon, Apr 08, 2024 at 03:42:39PM +0000, John Ernberg wrote:
-> Seeing this patch set made me excited.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/libpwm.git/
+[2] https://lore.kernel.org/linux-pwm/20240301173343.1086332-1-tgamblin@baylibre.com/
+[3] https://lore.kernel.org/linux-pwm/20240314204722.1291993-1-tgamblin@baylibre.com/
 
-\o/
+---
+v2 changes:
+* Address feedback for driver in v1:
+  * Remove supports_offset flag in pwm_chip struct, and references to it
+    in the axi-pwmgen driver patch
+  * Drop pwm_config_full patch entirely
+  * Don't return EINVAL when state->duty_offset + state->duty_cycle >
+    state->period in __pwm_apply(), since this is valid as long as
+    neither is greater than state->period on its own
+  * Add a check to disallow setting the PWM signal as inverse and a
+    nonzero duty_offset at the same time in __pwm_apply(), with a
+    comment explaining why
 
-> Did you consider or try a pwm_line model structure, that is connected to =
-a file
-> descriptor, more like request_line from gpio chardevs?
+Link to v1 (RFC): https://lore.kernel.org/linux-pwm/20240405003025.739603-1-tgamblin@baylibre.com/
 
-I'd be open for an extension that simplifies detection of which (chip,
-hwpwm) pair corresponds to which usage. It could be fed from a device
-tree like:
+Trevor Gamblin (2):
+  pwm: add duty offset support
+  pwm: axi-pwmgen: add duty offset support
 
-	&pwm0 {
-		compatible =3D ...;
-		reg =3D <...>;
-		#pwm-cells =3D <3>;
-		pwm-names =3D "motor-control", "backlight", "", "status-led";
-	}
+ drivers/pwm/core.c           | 82 +++++++++++++++++++++++++++++++++---
+ drivers/pwm/pwm-axi-pwmgen.c | 34 +++++++++++----
+ include/linux/pwm.h          | 15 +++++++
+ include/trace/events/pwm.h   |  6 ++-
+ 4 files changed, 121 insertions(+), 16 deletions(-)
 
-and provide a function in libpwm that allows to determine the chipid of
-the chip corresponding to &pwm0 (or an open fd to that device) and 3
-when "status-led" is searched for.
+-- 
+2.44.0
 
-This could be done completely in userspace I think (by inspecting
-sysfs), so I wonder if this could be a complete userspace
-implementation. I like keeping the kernel API simple, i.e. let it only
-work (as it is now) only using chipid and hwpwm. Hmm, maybe make pwm
-names a kernel concept exposed to sysfs to not have to hardcode the dt
-details into libpwm?!
-
-> We have been using gpio chardevs for a while and really benefitted from t=
-hat
-> over the sysfs interface. I wrote a simple wrapper around the PWM sysfs
-> interface mimicing the way gpio chardevs work for PWM using dirfd, to mak=
-e our
-> application design more streamlined.
-
-libpwm can also fall back to sysfs when the character devices are
-missing. If you want to compare the two implementation and create a best
-of two merge from it, that would be great.
-
-> With this patch set I do not see how we can name the PWMs in the device t=
-ree
-> nor during request which is a big benefit with GPIO when we need to suppo=
-rt
-> multiple hardwares. Nor can I see how we would inspect which pins are
-> allocated or their names when debugging.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---yv6ye4ccej6tofoz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYU8vgACgkQj4D7WH0S
-/k7zmggAoEhtQonGIKDZOmPqv8gcL2jXzIYA6dEv1ETX/fxe1AmuABF/m+TAgxdz
-+PGKZ3ypzDfySoklMpPJOEA85NeUgwTzg9f3IJhluJsK0IrTswJ/dwe5Ct6EYLIj
-plU2ey2BKleiM5xJgQRrmlf7ATKmFGUp6Yu13AsIuOyNjkVYeW4tO4gXnLLBSrs7
-AGSmIA9q74jJt+dipUSt73Fwma8xXLnwwxmpaArPxbHVhMXigmrZm+H3Cjl9ZcHX
-uX6D1UA2URscsdcWb5xWEQ8ZCN+2Eqttgx2cn+0VJXMouVpCNTaNTIhmPGfbW+Rx
-7XeJKoGhDCZR9jwEE/gZllxyt3ufIw==
-=qgo8
------END PGP SIGNATURE-----
-
---yv6ye4ccej6tofoz--
 
