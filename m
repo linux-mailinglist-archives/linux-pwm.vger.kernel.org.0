@@ -1,75 +1,75 @@
-Return-Path: <linux-pwm+bounces-1902-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1903-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 417D88A1F3D
-	for <lists+linux-pwm@lfdr.de>; Thu, 11 Apr 2024 21:11:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8751A8A1F42
+	for <lists+linux-pwm@lfdr.de>; Thu, 11 Apr 2024 21:12:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE49C1F268CE
-	for <lists+linux-pwm@lfdr.de>; Thu, 11 Apr 2024 19:11:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B0E4288498
+	for <lists+linux-pwm@lfdr.de>; Thu, 11 Apr 2024 19:12:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 494421754B;
-	Thu, 11 Apr 2024 19:10:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75B8F9DF;
+	Thu, 11 Apr 2024 19:12:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wa5izdlx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kb8pKlSH"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D43D205E35
-	for <linux-pwm@vger.kernel.org>; Thu, 11 Apr 2024 19:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60461205E18
+	for <linux-pwm@vger.kernel.org>; Thu, 11 Apr 2024 19:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712862658; cv=none; b=Y56HXa2lDqg6cHy7gVJoJk2mC82SdujsgU9ygCxNYh2612zq6e4BVbKJ1xM8Ewar3mtdJi+lo/elL7P7Q172qTtzIbL+nx+lREtFdal3Roesw8nKlpA/gY6cSIEuLHaUvzdPgMth+6/zmwzo21EDCy17PKXypggz7dOrYwAfzdw=
+	t=1712862736; cv=none; b=q2vvRKiANrsNph8q4xzZDPZ3KaBy7zjEPhwUDgdaxcpYYAts1p9U+HAe+FhqCiKlK3riJ718zz6wkb3cUhgdofOzFpVKtkl8SjEplXiRhMywwL4U1ZZHWgzjfcTJOCrvG8duf7Q4BJnkoF6AUACmKlRnECw7M5lhM/pRi2rUFEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712862658; c=relaxed/simple;
-	bh=fuQvFrGXXjJVqZYrBWPT8FzS4z7oPtg+2qAYwRGI3p8=;
+	s=arc-20240116; t=1712862736; c=relaxed/simple;
+	bh=eFFDOYCijLRK2Jw3Ui1NSz1Q85P0U2Cz5lmx2t1mKp4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GCDXsdsDmUkmDQX5R37IMk4gGLjwOXE/ovjeW52OoEOzBHCtajllxAfYLKXBaYZKrSmneBdUeePsn2cX2lXUp/hNYChQ/M8eQWE/MbjSuj+sa7lCZKXCMAsR8Ae4/ePLA1Lr1RFzNEiqpuALkokB1VTFR/UDKgssoEDF4wa+DHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wa5izdlx; arc=none smtp.client-ip=209.85.128.46
+	 In-Reply-To:Content-Type; b=NwiGbHLAANjcvZDdyKQ2x5oh5Q0BxSP1sGewl4d6EsCL7scxs2Cu8k2L1fhzi7PWU9Rjv1b+VWmV0Xu1Yl5iZ8GMvtTPDp6FqbUFtiMxG3E/d5UlQizrWJOPIxMBahTWZPaUqaWd/G0mYR54g1fEGlog+r03pVNB5U+rrDq2nv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kb8pKlSH; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4167fce0a41so7162465e9.0
-        for <linux-pwm@vger.kernel.org>; Thu, 11 Apr 2024 12:10:54 -0700 (PDT)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-343f62d8124so72235f8f.2
+        for <linux-pwm@vger.kernel.org>; Thu, 11 Apr 2024 12:12:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712862653; x=1713467453; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712862734; x=1713467534; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=BoYaazQjD0tvXqOZypnTJqg/fbRzZsuu2W5M8fTRcss=;
-        b=wa5izdlxojI+6goDY+YAlrc2JTfy56azsyfRBA/dXYX9oAE80T0ogiSocJfu3sOGER
-         OwaFnqGXdpPN7GZrg6X3VQF2dGzxYjyRSPU+d5j/mPEalv78QiXXzyCMp+uyiEeuJVjV
-         ZLWU6NBOm3lG+Y4U/smEZBSDyxIUSW2wFXeFneITG9u4ZNgSJC8V2kfUH0Hpb78KQEcO
-         k9urSH8ZDxZVM6RTtV7ZW9X8Tl5/xfF6/adawBmHCCfJ17O6x6gec9BHjZHTp2U1DbVG
-         KGoX1KWoEgRONlpCiHwhetZb3ZTu4BtnOhiPUhbfHHJS5dUtUeY1FxVi37eezmMaPB3d
-         nPKg==
+        bh=YeZyNokGKdFPotQZCmtk4+giEamRAWAsbLUX1ROpg9U=;
+        b=kb8pKlSHMcJJtA+95+pYLsTeWyqGQ/2cOAUsdA+WhntfTodg3DG3ens2uij2tajdO9
+         bNS37ZHOfrirxvqfAR4XD8vAmuLwCmvHC3PLELCqYL2hm4Zjgo1ah7s7GYvodS2QhHiT
+         ndCtLgztsZpT9nko8qQtPwHOn31FIIHHMhK0etOp4V3CZqlMCHmgugHdgDhV8Lf8nnh5
+         fr6xV+/7ZFVK9EicqG3ts97oAGMaK3QqxdHfWrm27NSXY9dqmLchwq+0vKAACcXzBWkn
+         USGabgMegzJXYo6v/mh5DSXe7YxINTomrSJZFvVW8kS45OC98/23TmDdVw6ef3rjyJbs
+         orUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712862653; x=1713467453;
+        d=1e100.net; s=20230601; t=1712862734; x=1713467534;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BoYaazQjD0tvXqOZypnTJqg/fbRzZsuu2W5M8fTRcss=;
-        b=e4KvPOZXJxVHqIvk9loAsDJNPhLb03nrWGixBFwonwRJ9sL8cPSQnKa88HYwHZOZ5K
-         IT/FomcxCIOx9I7ILhj07bA+dA0OrbFGHbsk3aRQESzqCW7NyZq2essmzrjRnXDPGO6s
-         5Pc9mmyFQMtEPtr+978rrSs3CNHsNck9gqowrfvIdPJRhrFGzPXtqdTOSedP6QAYFjOG
-         Mw4ZnB/GcwHKW9/JcDP5qcBfqTLy+cmrM7rNlpqEAFcasvQ91T/aM6H3UaxA7eQ/PVyM
-         +VgP2fbg5FyvP6JnxXUVmrZ0mHYIgTzzY/2I3zqS5cAKlQmhSxN9ldqSbqGuGOJpz2VH
-         qjIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVfFmpOT2r2tjzeqvc20Fn4NI9Ug2rv+9pX9XxArLWeF8GRoFSVG0Trtftg11ndEEcVV+XWmEfNCQZlaZf0tabIAzVJjWsaCBGw
-X-Gm-Message-State: AOJu0Yyy3GrAG7g96ACOCs7smy42GMIMZQFpQMK72ItBKLY9BhsdCs9u
-	p6Cpa9+J940z1iJ2hiBMK3Jyt6HZGKBhTcYLAHVuYRyfqBVA14Ei9ga9WcH3RKQ=
-X-Google-Smtp-Source: AGHT+IGNwRUeyUvir55Byrpd3SEPNB7KQCbiphw8y28HpOspgFi8BwSF67pPoL4qOgdRrKMeeL3lOw==
-X-Received: by 2002:a05:600c:35c5:b0:416:69cf:d5f8 with SMTP id r5-20020a05600c35c500b0041669cfd5f8mr3467918wmq.6.1712862653510;
-        Thu, 11 Apr 2024 12:10:53 -0700 (PDT)
+        bh=YeZyNokGKdFPotQZCmtk4+giEamRAWAsbLUX1ROpg9U=;
+        b=SYmur8mHTimFWlAethovWki2MpcFKfpJdHGYcpTHm3UCd6AHka1i7T25s5SZcEGX2k
+         GRJKHPJiw04Zwby799RXxRoyuvU3gNL5AWZH50HKFHGbtvGgKB9euro9EvpGeNbDsOgE
+         9nmIsCQn1eFpjFvyVNbgG1UKLN2vbpo+wQHFB+OCIJQXbes7tT1QgHRzCUdjl6YAxkwI
+         qDNfq9d+qbkH67gzjQWziSvKCLYJ+Cl6VcWmY+fihsYoLn0IC4WqfdM/95fio5m0i7KW
+         QYl/Q2tFoT3Sjb5KpeLtBx53yiFNt2BIrYN1qnKcops0bygWOHmracbq+GC2fVRwTvS/
+         aLFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXcmUMj/SmxAeCia5TRnlf6u21QxCmPzUVIevESIhZRx60IDrui+lWMd9al37mY/HCH0TajCo/fWsCHtubbGbDS1gDFu1FvjXuO
+X-Gm-Message-State: AOJu0Yx2ssnH0CtsVcp5q92ff/zQm4a96Hr6ZejqJcTEUlWonKyOA3by
+	QPHc/STw96nC8hHF5Ll4oQtcchN+9GNJyjkkUyAuwZEnXWMJlFulKaiEDt/gKEI=
+X-Google-Smtp-Source: AGHT+IFMz+ZBVFgSP87EdKwwjghK5e69H4EIvxpdY8uuJy+BkE+7QgPD7ZQ9ZOUKHFL3hKQ0ncAtRg==
+X-Received: by 2002:a05:6000:144:b0:33d:5fa6:79bf with SMTP id r4-20020a056000014400b0033d5fa679bfmr254957wrx.71.1712862733807;
+        Thu, 11 Apr 2024 12:12:13 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id r10-20020a05600c35ca00b00415dfa709dasm3185355wmq.15.2024.04.11.12.10.52
+        by smtp.gmail.com with ESMTPSA id l26-20020adfa39a000000b00343e825d679sm2418010wrb.87.2024.04.11.12.12.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Apr 2024 12:10:52 -0700 (PDT)
-Message-ID: <bb250368-d1d2-41dd-abef-ae505a4a5d33@linaro.org>
-Date: Thu, 11 Apr 2024 21:10:51 +0200
+        Thu, 11 Apr 2024 12:12:13 -0700 (PDT)
+Message-ID: <fbd5d34d-db01-473e-998a-95cc3cfd61e2@linaro.org>
+Date: Thu, 11 Apr 2024 21:12:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -78,23 +78,17 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: Add Loongson PWM controller
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Binbin Zhou
- <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>,
+To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
+ <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
  Rob Herring <robh+dt@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Juxin Gao <gaojuxin@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
+ Conor Dooley <conor+dt@kernel.org>, Juxin Gao <gaojuxin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn,
  linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
  Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
 References: <cover.1712732719.git.zhoubinbin@loongson.cn>
  <38c234d548b4b9c334cda6e7664a803896b31f6f.1712732719.git.zhoubinbin@loongson.cn>
- <c1399191-6c6d-4eb4-b05b-f87a9f2b4152@linaro.org>
- <CAMpQs4JiLGJ-nBDmj1pe0SCqKeCnz5DrybJAKE8_6up293YNpw@mail.gmail.com>
- <98d12a5e-e291-40f9-8334-3b5f53ed79a8@linaro.org>
- <CAMpQs4KgzOjJe52BAhTb5P4t5ZynkW9AUEzPBkX_1h5XHuk5Ew@mail.gmail.com>
- <b551f712-ed95-4d90-b0fd-7cf471bc9eee@linaro.org>
- <k2v7ibfc5vjprfw6gvrcelbknhxqf7mnybsnbb2avj6qblkmqz@graeaj372hcg>
 Content-Language: en-US
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -141,118 +135,18 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <k2v7ibfc5vjprfw6gvrcelbknhxqf7mnybsnbb2avj6qblkmqz@graeaj372hcg>
+In-Reply-To: <38c234d548b4b9c334cda6e7664a803896b31f6f.1712732719.git.zhoubinbin@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 11/04/2024 17:21, Uwe Kleine-König wrote:
-> Hello,
+On 11/04/2024 11:16, Binbin Zhou wrote:
+> Add Loongson PWM controller binding with DT schema format using
+> json-schema.
 > 
-> On Thu, Apr 11, 2024 at 04:44:37PM +0200, Krzysztof Kozlowski wrote:
->> On 11/04/2024 16:35, Binbin Zhou wrote:
->>> On Thu, Apr 11, 2024 at 5:07 PM Krzysztof Kozlowski
->>> <krzysztof.kozlowski@linaro.org> wrote:
->>>>
->>>> On 11/04/2024 13:01, Binbin Zhou wrote:
->>>>> On Thu, Apr 11, 2024 at 4:26 PM Krzysztof Kozlowski
->>>>> <krzysztof.kozlowski@linaro.org> wrote:
->>>>>>
->>>>>> On 11/04/2024 11:16, Binbin Zhou wrote:
->>>>>>> Add Loongson PWM controller binding with DT schema format using
->>>>>>> json-schema.
->>>>>>>
->>>>>>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
->>>>>>
->>>>>>
->>>>>>> +properties:
->>>>>>> +  compatible:
->>>>>>> +    oneOf:
->>>>>>> +      - const: loongson,ls7a-pwm
->>>>>>> +      - items:
->>>>>>> +          - enum:
->>>>>>> +              - loongson,ls2k0500-pwm
->>>>>>> +              - loongson,ls2k1000-pwm
->>>>>>> +              - loongson,ls2k2000-pwm
->>>>>>> +          - const: loongson,ls7a-pwm
->>>>>>> +
->>>>>>> +  reg:
->>>>>>> +    maxItems: 1
->>>>>>> +
->>>>>>> +  interrupts:
->>>>>>> +    maxItems: 1
->>>>>>> +
->>>>>>> +  clocks:
->>>>>>> +    maxItems: 1
->>>>>>> +
->>>>>>> +  '#pwm-cells':
->>>>>>> +    description:
->>>>>>> +      The first cell must have a value of 0, which specifies the PWM output signal;
->>>>>>
->>>>>> If you have always the same value in PWM phandle, why encoding it in the
->>>>>> phandle in the first place? What's the benefit of passing 0?
->>>>>
->>>>> Hi Krzysztof:
->>>>>
->>>>> My thoughts are:
->>>>> First of all, our pwm has only one output signal, so it can only be 0.
->>>>> Also, as you know from the pwm xlate function, the first cell is the
->>>>> pwm index, so I fixed it to be 0 here.
->>>>>
->>>>> The xlate function:
->>>>> https://elixir.bootlin.com/linux/v6.8/source/drivers/pwm/core.c#L106
->>>>
->>>> You refer for xlate for PWM with three cells. You do not have three
->>>> cells, as you have only on signal, so why insisting on using other
->>>> xlate? Do you do the same for clocks? Or resets?
->>>>
->>>> I don't think you use appropriate argument in this discussion. We talk
->>>> about hardware and your argument "I don't want to use my own xlate in
->>>> the driver" is about driver.
->>>>
->>> Hi Krzysztof:
->>>
->>> Thanks for your comments.
->>>
->>> Emm... Indeed, I used to think about it from the driver's perspective.
->>> From the binding perspective, two cells really should be more appropriate.
->>> I try to make the following changes in the next version patchset:
->>>
->>>   '#pwm-cells':
->>>     description:
->>>       The first cell is the period in nanoseconds;
->>>       The second cell flag supported by this binding is PWM_POLARITY_INVERTED.
->>>     const: 2
->>>
->>> Accordingly, the custom xlate function will be used in the driver.
->>
->> If your other, upcoming variants had more PWM outputs, then I would find
->> reasonable keeping cells=3 to have one approach for all of them. But I
->> guess that's not the case here.
-> 
-> There is an easy way to get rid of the 0, just use chip->of_xlate =
-> of_pwm_single_xlate; Having said that, I don't particularily like that.
-> If it wasn't for dt bindings being stable I'd argue for all PWM chips to
-> use #pwm-cells = <3>; and accept that the 2nd field is zero for
-> consistency.
-> 
-> Some statistics:
-> 
-> There are only two drivers that use of_pwm_single_xlate:
->  - drivers/pwm/pwm-pxa.c
->  - drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> 
-> There is one driver that uses a completely custom xlate function (and
-> #pwm-cells = <1>, to specify the pwmid; the period is fixed):
->  - drivers/pwm/pwm-cros-ec.c
-> 
-> All 65 other drivers use #pwm-cells = <3> with the "usual" semantic. At
-> least 21 among them only have a single output and so always use 0 in the
-> 2nd cell.
-> 
-> So I'm all in favour to stick to the approach used in this binding for
-> the sake of consistency among the drivers^Wbindings.
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
 
-Seems fine, thanks for the explanation.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
