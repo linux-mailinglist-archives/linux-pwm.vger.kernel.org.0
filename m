@@ -1,108 +1,113 @@
-Return-Path: <linux-pwm+bounces-1918-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1919-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E156A8A328F
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 17:36:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE8B28A329C
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 17:38:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01D1F1C24575
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 15:36:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AAA31286C93
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 15:38:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44FEB1482F1;
-	Fri, 12 Apr 2024 15:35:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0DD91411FD;
+	Fri, 12 Apr 2024 15:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YtInHfC3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SY/TX+nY"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DF41482E2;
-	Fri, 12 Apr 2024 15:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40D81411F4;
+	Fri, 12 Apr 2024 15:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712936158; cv=none; b=DZRKXXq+gr2RUPX/i2xvlLCkrOYpyfyz8ZRGr+KNvlwXzIRGGhVzXukAoJJfbSidNT/lgvkJp4Hwb+tNNGm8A8C35dfEcUUg8ug6vS5ifupforwbuC9K7iT/HW5C0Fr6mfcrs7ABhS/5Z4le4lynHmxxZCl2TuoMekBXFNbpClM=
+	t=1712936311; cv=none; b=SOe65tljuMxZ/z5PPvrYCv4oLGS3Q28bfbbB8PgXv8NcgOrdKizsfBkFBRibykHu9Of9AKDp9TDq3IWSpfnCFFjSGHyPsL2qEQqNt1bDi2uZnZ8PQWMneXqaf6AZkzxEixzwaJ3btWLsXsGM3yhNnktwjuz4vu2epxue86f/eU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712936158; c=relaxed/simple;
-	bh=ri9lUgAOtfo86OqHDKzXa69NZHZUgF3TZoCl1G2ZZWk=;
+	s=arc-20240116; t=1712936311; c=relaxed/simple;
+	bh=o0Ohfuc9FmFgVm+WRikyirOa0zfzgYOUHOXxIW7s4Uo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sG9N7sWe8KKfso1KJCcbTcoglADKY1f8UHY4TDhQw8m4kY0v4x7mafZvkVHrHQxfYfIg0g/JInyR6NFuBo1EmfqegTNh8W+xH3F0iQ/MSthYuXGrCrtj7cmZcFLk9zrIafRrVP7oy1InuNXMHoY09/tLQNH2riP7XW8clLc7C3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YtInHfC3; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=nWoRzPEfRqF7UrBRA5nM/k9qe8TE7WE59MsM9Mge6qQW7aEHtlBc7RSan/uKZNxtd0J15yACVX4+K6hZ9A7symt5brAPP4ItnHzEnO2vd+3NmzFWRIpO0qD3xqgp91B5dN4y7ZfUiGeN2vQ+Gv3PIDx1Ms2ETBNhwagmn3IlkVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SY/TX+nY; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712936157; x=1744472157;
+  t=1712936310; x=1744472310;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ri9lUgAOtfo86OqHDKzXa69NZHZUgF3TZoCl1G2ZZWk=;
-  b=YtInHfC3i84a1FKpfs+2Sp7vMC0pB3ymiWADvEoDvambA74Qe9amL1+W
-   BqDxRpHnPLtXn73Vr/dTSP9CZfY2rEy4rdWp5QFNpQGbspfaJ+XM4mdPS
-   w7CgIt4yIeNQNnDBzxChnNeRQHHTW3l2WLhA+TloBoIqYymNn9FrmZRKV
-   H296xBCf3OhmhDOHRwlCmXTms7T8c5qQi35WbnvHI6x6MQs26ssPS/h3A
-   +8Wu0w7yWSQ0d2dkiafhEXKZ//HUhCJYtN0k8rZOFdeifURe2naNxHNKb
-   d++OAwLhi8XxaYMl+fwnbvv81BZNWI5eHkMqBa/W2SVWDMK9GbDzGRllw
-   g==;
-X-CSE-ConnectionGUID: PPa9VnITRxSSsqnCRE54tQ==
-X-CSE-MsgGUID: jQiSGJzuTWOF+18smw70vw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="12243725"
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=o0Ohfuc9FmFgVm+WRikyirOa0zfzgYOUHOXxIW7s4Uo=;
+  b=SY/TX+nYIcHlVlmuYzfP5BqRb2r/fDNIG9W3GInFyIIpekQsq/pcSGjg
+   Qa1FKpSP+QDQZBiWfJIKwtmZc6X7F6RUFBGPWvQJlVMPG7JwpPCyVMsXT
+   L9o0QrKmpaTWfio1/A+GdasgmLWPzUnWzzQKOrnMMgj0Io1xZ84NYb7qx
+   xbuyorP3V7k/9Dke8p+tzJ8OYsYnXs/HmMyC5D/uEetqETiyvF80n5FgC
+   KM1G2WF8Rs2A8kr51zIzYVHQEp+GRPDQQ9Z+gyo1/t3FKZoW/dBpgs100
+   zqHRJ0kICLZcYWkC1KwD6Rp76oHCfPt4IaOn0nm40xB7z8mAHO9z1sfto
+   A==;
+X-CSE-ConnectionGUID: SxgHU3KRRbiLds1JFPeLhA==
+X-CSE-MsgGUID: yniKpg+ZQYyG5dGPwRCbTA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="12187226"
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="12243725"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 08:35:56 -0700
-X-CSE-ConnectionGUID: E5x+YhdQQbWx+08vauJTIg==
-X-CSE-MsgGUID: rOGDQoMPSgmibNVcz859/g==
+   d="scan'208";a="12187226"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 08:38:30 -0700
+X-CSE-ConnectionGUID: rC/3ktDzS+O1TKFpUz9EjQ==
+X-CSE-MsgGUID: ijfHJG9yT9uMjig0fGakig==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="25700350"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 08:35:55 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rvIwR-00000003gq9-3gtK;
-	Fri, 12 Apr 2024 18:35:51 +0300
-Date: Fri, 12 Apr 2024 18:35:51 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com, linux-pwm@vger.kernel.org,
+   d="scan'208";a="21330663"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 08:38:27 -0700
+Date: Fri, 12 Apr 2024 18:38:24 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com,
+	andriy.shevchenko@linux.intel.com, linux-pwm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v1] pwm: dwc: allow suspend/resume for 16 channels
-Message-ID: <ZhlU176sS36_JvQU@smile.fi.intel.com>
+Message-ID: <Zhk-7Tp4HzF41Is5@black.fi.intel.com>
 References: <20240412060812.20412-1-raag.jadav@intel.com>
+ <zf74jdjza2kfgmiecmlwlws46fmy3rtxvcocmkwewgx64oewpm@xfyq2zt6ts5u>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240412060812.20412-1-raag.jadav@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <zf74jdjza2kfgmiecmlwlws46fmy3rtxvcocmkwewgx64oewpm@xfyq2zt6ts5u>
 
-On Fri, Apr 12, 2024 at 11:38:12AM +0530, Raag Jadav wrote:
-> With 16 channel pwm support, we're registering two instances of pwm_chip
-> with 8 channels each. We need to update PM functions to use both instances
-> of pwm_chip during power state transitions.
+On Fri, Apr 12, 2024 at 01:12:48PM +0200, Uwe Kleine-König wrote:
+> Hello,
 > 
-> Introduce struct dwc_pwm_drvdata and use it as driver_data, which will
-> maintain both instances of pwm_chip along with dwc_pwm_info and allow us
-> to use them inside suspend/resume handles.
+> On Fri, Apr 12, 2024 at 11:38:12AM +0530, Raag Jadav wrote:
+> > diff --git a/drivers/pwm/pwm-dwc.h b/drivers/pwm/pwm-dwc.h
+> > index a8b074841ae8..c6e2df5a6122 100644
+> > --- a/drivers/pwm/pwm-dwc.h
+> > +++ b/drivers/pwm/pwm-dwc.h
+> > @@ -38,6 +38,12 @@ struct dwc_pwm_info {
+> >  	unsigned int size;
+> >  };
+> >  
+> > +struct dwc_pwm_drvdata {
+> > +	const struct dwc_pwm_info *info;
+> > +	void __iomem *io_base;
+> 
+> .io_base is only used during init time and so doesn't need to be tracked
+> in driver data.
 
-...
+It will be useful for other features which are WIP.
 
-> +	data = devm_kzalloc(dev, struct_size(data, chips, info->nr), GFP_KERNEL);
-> +	if (!data)
-> +		return dev_err_probe(dev, -ENOMEM, "Failed to allocate drvdata\n");
+> Otherwise I (only slightly) dislike
+> > +	struct dwc_pwm_drvdata *data;
+> because "data" is very generic. I'd call it ddata. But I don't feel
+> strong here. I'm happy if you change to "ddata" in v2, I will silently
+> apply anyhow if you prefer "data".
 
-Haven't noticed before, but we do not print messages for -ENOMEM. Just return
-the code.
+I think "data" is more readable, something like "ddata" would make me
+re-adjust my glasses ;)
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Raag
 
