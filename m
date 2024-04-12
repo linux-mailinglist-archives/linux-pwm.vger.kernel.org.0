@@ -1,195 +1,271 @@
-Return-Path: <linux-pwm+bounces-1905-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1906-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2302B8A23A9
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 04:07:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE92A8A2636
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 08:08:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC6CB285C43
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 02:07:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D10B91C20F3C
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 06:08:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D9A8D299;
-	Fri, 12 Apr 2024 02:07:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E1B239FFB;
+	Fri, 12 Apr 2024 06:08:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ZxAKYJCq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VSYdVZRe"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC59ACA64
-	for <linux-pwm@vger.kernel.org>; Fri, 12 Apr 2024 02:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD1438F84;
+	Fri, 12 Apr 2024 06:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712887646; cv=none; b=hL7a1ggjyxwlFr5/GyLZ8o6hnTLLi/Zw9RsjfOV2O3YFbGFdjtlkhAkE69RyuINorm7wJYySxNoeluXuciiQ886L/M6N0DhjQBOfgvA+gFVA5nBTxY5lqTLP1j4SbcyTm0ACm752c3Jfjk7ndk/u4n/+qWkpHbY5MNnc/noh5T8=
+	t=1712902129; cv=none; b=ae4G+ImkB66M3/WzbqRfOeJOGw00zBJbOGoKgUGVG+T670JqiYkQ6F+ZcZltbc0Ooh8eeHPQGEygp6FxJwL9EEGCd4t9hUuG8Jn6Av5/DphuBFn8X/Ri1c9tVqk30Ma6Fuo2q2Q2ZNUmqQ7rH9SW3Jc15VOQ7gZT7pcrsz+aurU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712887646; c=relaxed/simple;
-	bh=MelCsYWkdQ5EAsUBNYbNsTcwbc2X5i5zv+BYxjy46ik=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eQTtTLcK6mW9ZrLyM5cfiCVk3djHncsWx5vtK++UEYBgs58XFpJl5b2kA0SNtEdprvRRlgSDfYgCCZtTx3ugMDIXK6dI0LbLvV+qAgfA2STXNAtJSa0y51uX0rZ9vQSfgXuVyEn1pXrnNlakUe5ufQsvYTLWR+CZcFt3Z1ag/Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=ZxAKYJCq; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6181237230dso4773097b3.2
-        for <linux-pwm@vger.kernel.org>; Thu, 11 Apr 2024 19:07:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1712887644; x=1713492444; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YQm9N6HlYQFv2uqQbKzOf53M4hr41FQjJSq0UsW2Bjw=;
-        b=ZxAKYJCq50xUcKjq3UcT1V9eKrZbvF+i9yvDZRP0ddj9hOzcaHXxv67Ogr9pBUMXAx
-         x8Cct3+o0gFhd02jhcGX/Er7wRZ2CJIQsCmzBxOjonI+YiHnoxQKRql35Jt9VLk8p2S5
-         +4c6Etn7/u9QqZuIXpP4ldHKx7yCDYE5gLtBsltLiz55YAROuHmpU8PyGS4jvgv1GT/m
-         BPuvKg26fWpt1EpnUNToMK5dKmq2m9wguHZ5E2kWbW2PhA/DdcSoXA+7S9klXr94XBFH
-         Plj1HcK3ZuByQgo6i1J5jfnuMKqklvHiAWckJR+OlUDGdsyjovPcc3ID1X5T5nT030Iw
-         /D6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712887644; x=1713492444;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YQm9N6HlYQFv2uqQbKzOf53M4hr41FQjJSq0UsW2Bjw=;
-        b=UYUWinqC1//Js2NviuwdPWbHgV1jALkyvQw+sCFwO9OaWQNc05lypqGLGQtZDN4+El
-         R5neP92XhQnTeDrNLkP8zglUaB5rS6PLJ3+Zebw6QI3nJK4MOU7l6nvxq+oAQaiiFfFN
-         i2R0rljo1ABKnYY3+N2Z2h0OgHaJgM61fWZphf8KVZw60nhZiS5Eq5PHaTICl5eYaYSp
-         sQHZpgvXtKCfVygQ7rfL1EtI+hldZRSB1dLB4cFPbSpRlaGLjTL9tezJ0DcLE8IYkJo0
-         +LJ8ZPigYu1utDc+iXuFJ6t6+ZILFvLf4N/yMpsuvMzDyhrv95MkyYIIADzZFdjEw93s
-         46Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdY37YE9awORK6XqMq14m38L1y75Gnl3uKboCFqvIFtVjD9jPDANs3jVyjSEe8TiS/NhBdLBUhvD6XvUHXUqA35MQ+792Eht8b
-X-Gm-Message-State: AOJu0Ywx5T30xBJM16asSvrECQgL5zfl68TgqoB3sD36ULM0kDxvc7RG
-	8/eC34RuY7D4JmJSlUNx4lLgx6k46byOq1J7KMe6tMEbJnWkZPRiERXhI+b8tKCx1wVHWu+nN0I
-	gIeI0a6bvBBXZ4rSX1q2zJJ1jntJXnS6p/IfIuw==
-X-Google-Smtp-Source: AGHT+IEyah2wqUDUWwo2dw/PFJAZ80ndyEe9wSUytDMdW7m4oK2cK2GqDd50cMMO1kXUDCo8ycdzX/F5kxc1yT2BDdc=
-X-Received: by 2002:a0d:d614:0:b0:615:16a1:4a04 with SMTP id
- y20-20020a0dd614000000b0061516a14a04mr1202091ywd.31.1712887643882; Thu, 11
- Apr 2024 19:07:23 -0700 (PDT)
+	s=arc-20240116; t=1712902129; c=relaxed/simple;
+	bh=XmQDTHlp8Xgu11tjbD44C6ofZlZ8gr2RpYPC/BYEG5E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VulCRRXq9/7CkjIVTasm6mF5pn+mE8cdG/F6TNtPaCAo/TV3ZgpuugsrKp7k/LbUurOOs6a44f6E0M8j/ODc1TX3k/X8KIO919OfUgpCrbIW6+NkC44dh8flTEoG1EGNbXxCrFPUx7qCRM5ORpW6PErAEm3whyTmNpGw9Wb+caY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VSYdVZRe; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecsmtp.iind.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712902128; x=1744438128;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XmQDTHlp8Xgu11tjbD44C6ofZlZ8gr2RpYPC/BYEG5E=;
+  b=VSYdVZRepcj9TC7/Lau9WfSfOSmsju5WRscKSTyheOgUlaveJbATK/eC
+   OKmFYLZLek8yzQUySGHP0A/dV6rIn9MT/gRR3uz3ResWYU6Kdfkgk8BDF
+   7/aTszjAbbq0CLl/0IOyPsbsHaC9g0Xvb4rOUQ8urOdpoJr9HEEuvdfCg
+   29yElMQgqlUJ9c58wzYG/hAMmAgP9pXjBOgLKqae2p2KYra8q+jUWji8z
+   5pISAy/7YPYiUuLRxYdDjC4KZlyvz6B8fsCgd9/1VUIhHIYTNR1NqxA2v
+   gAK/lTmz5TSI8wnqd8D8JyJLdA8b4ZLkdgOecfsjMYurAgTzSj0CoPExV
+   g==;
+X-CSE-ConnectionGUID: VZovVwPKTV6x29uiADf77A==
+X-CSE-MsgGUID: GtwHAFfXTmiUg+zw+Iabcg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8195448"
+X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
+   d="scan'208";a="8195448"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 23:08:47 -0700
+X-CSE-ConnectionGUID: PIbUNGPKRhuk4pCDV2ypbA==
+X-CSE-MsgGUID: eG+hynucTwi4AuEpkLNZhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
+   d="scan'208";a="21566870"
+Received: from inesxmail01.iind.intel.com ([10.223.57.40])
+  by orviesa006.jf.intel.com with ESMTP; 11 Apr 2024 23:08:45 -0700
+Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
+	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 2CC5872945;
+	Fri, 12 Apr 2024 11:38:44 +0530 (IST)
+Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
+	id 28D941600100; Fri, 12 Apr 2024 11:38:44 +0530 (IST)
+From: Raag Jadav <raag.jadav@intel.com>
+To: u.kleine-koenig@pengutronix.de,
+	jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com,
+	andriy.shevchenko@linux.intel.com
+Cc: linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v1] pwm: dwc: allow suspend/resume for 16 channels
+Date: Fri, 12 Apr 2024 11:38:12 +0530
+Message-Id: <20240412060812.20412-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240222081231.213406-1-nylon.chen@sifive.com>
- <20240222081231.213406-3-nylon.chen@sifive.com> <f5ukvah2ujko2iht3pd5jxq5kaukbs5z3pn5s7qwcnx4aqr3yv@mwtbwkcfa44a>
- <CAHh=Yk8MXy73d8M1J5bVu4spDMbjQDneVTqA=Ts=SGPDO7PXMQ@mail.gmail.com>
-In-Reply-To: <CAHh=Yk8MXy73d8M1J5bVu4spDMbjQDneVTqA=Ts=SGPDO7PXMQ@mail.gmail.com>
-From: Nylon Chen <nylon.chen@sifive.com>
-Date: Fri, 12 Apr 2024 10:07:12 +0800
-Message-ID: <CAHh=Yk-WmzJe0vb+noX8Gb13BL2SOB=MwSB=F9nH_G-j9zi1Lw@mail.gmail.com>
-Subject: Re: [PATCH v9 2/3] pwm: sifive: change the PWM algorithm
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, conor@kernel.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com, 
-	paul.walmsley@sifive.com, aou@eecs.berkeley.edu, thierry.reding@gmail.com, 
-	vincent.chen@sifive.com, zong.li@sifive.com, nylon7717@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Nylon Chen <nylon.chen@sifive.com> =E6=96=BC 2024=E5=B9=B44=E6=9C=882=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8810:08=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2024=E5=
-=B9=B43=E6=9C=8819=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=882:16=E5=AF=
-=AB=E9=81=93=EF=BC=9A
-> >
-> > On Thu, Feb 22, 2024 at 04:12:30PM +0800, Nylon Chen wrote:
-> > > The `frac` variable represents the pulse inactive time, and the resul=
-t
-> > > of this algorithm is the pulse active time.
-> > > Therefore, we must reverse the result.
-> > >
-> > > The reference is SiFive FU740-C000 Manual[0]
-> > >
-> > > Link: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86=
-ed8b16acba_fu740-c000-manual-v1p6.pdf [0]
-> > >
-> > > Co-developed-by: Zong Li <zong.li@sifive.com>
-> > > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > > Co-developed-by: Vincent Chen <vincent.chen@sifive.com>
-> > > Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-> > > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
-> > > ---
-> > >  drivers/pwm/pwm-sifive.c | 10 ++++++----
-> > >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> > > index eabddb7c7820..a586cfe4191b 100644
-> > > --- a/drivers/pwm/pwm-sifive.c
-> > > +++ b/drivers/pwm/pwm-sifive.c
-> > > @@ -110,9 +110,10 @@ static int pwm_sifive_get_state(struct pwm_chip =
-*chip, struct pwm_device *pwm,
-> > >                               struct pwm_state *state)
-> > >  {
-> > >       struct pwm_sifive_ddata *ddata =3D pwm_sifive_chip_to_ddata(chi=
-p);
-> > > -     u32 duty, val;
-> > > +     u32 duty, val, inactive;
-> > >
-> > > -     duty =3D readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-> > > +     inactive =3D readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm))=
-;
-> > > +     duty =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - inactive;
-> > >
-> > >       state->enabled =3D duty > 0;
-> > >
-> > > @@ -123,7 +124,7 @@ static int pwm_sifive_get_state(struct pwm_chip *=
-chip, struct pwm_device *pwm,
-> > >       state->period =3D ddata->real_period;
-> > >       state->duty_cycle =3D
-> > >               (u64)duty * ddata->real_period >> PWM_SIFIVE_CMPWIDTH;
-> > > -     state->polarity =3D PWM_POLARITY_INVERSED;
-> > > +     state->polarity =3D PWM_POLARITY_NORMAL;
-> > >
-> > >       return 0;
-> > >  }
-> > > @@ -139,7 +140,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip=
-, struct pwm_device *pwm,
-> > >       int ret =3D 0;
-> > >       u32 frac;
-> > >
-> > > -     if (state->polarity !=3D PWM_POLARITY_INVERSED)
-> > > +     if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> > >               return -EINVAL;
-> > >
-> > >       cur_state =3D pwm->state;
-> > > @@ -159,6 +160,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip=
-, struct pwm_device *pwm,
-> > >       frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
-Hi Uwe,
-> > >       /* The hardware cannot generate a 100% duty cycle */
-Do you mean that if the inference is correct, this comment should be modifi=
-ed?
-> >
-> > Is this still true now that we know that PWM_SIFIVE_PWMCMP is the
-> > inactive time in a period? If you fix that, the same claim in the heade=
-r
-> > of the driver needs adaption, too.
-> I believe the statement is true, but I don't know which part the
-> driver header file refers to.
-> >
-> > >       frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-> > > +     frac =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
-> >
-> > I like the additional variable in pwm_sifive_get_state(). Can you pleas=
-e
-> > add one here, too?
-> got it
-> >
-> > >       mutex_lock(&ddata->lock);
-> > >       if (state->period !=3D ddata->approx_period) {
-> >
-> Thank you for taking the time to help me review my implementation.
->
-> Nylon
-> > Best regards
-> > Uwe
-> >
-> > --
-> > Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig     =
-       |
-> > Industrial Linux Solutions                 | https://www.pengutronix.de=
-/ |
+With 16 channel pwm support, we're registering two instances of pwm_chip
+with 8 channels each. We need to update PM functions to use both instances
+of pwm_chip during power state transitions.
+
+Introduce struct dwc_pwm_drvdata and use it as driver_data, which will
+maintain both instances of pwm_chip along with dwc_pwm_info and allow us
+to use them inside suspend/resume handles.
+
+Fixes: ebf2c89eb95e ("pwm: dwc: Add 16 channel support for Intel Elkhart Lake")
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+---
+ drivers/pwm/pwm-dwc-core.c |  1 -
+ drivers/pwm/pwm-dwc.c      | 82 +++++++++++++++++++++++++-------------
+ drivers/pwm/pwm-dwc.h      |  6 +++
+ 3 files changed, 60 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/pwm/pwm-dwc-core.c b/drivers/pwm/pwm-dwc-core.c
+index 043736972cb9..c8425493b95d 100644
+--- a/drivers/pwm/pwm-dwc-core.c
++++ b/drivers/pwm/pwm-dwc-core.c
+@@ -172,7 +172,6 @@ struct pwm_chip *dwc_pwm_alloc(struct device *dev)
+ 	dwc->clk_ns = 10;
+ 	chip->ops = &dwc_pwm_ops;
+ 
+-	dev_set_drvdata(dev, chip);
+ 	return chip;
+ }
+ EXPORT_SYMBOL_GPL(dwc_pwm_alloc);
+diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
+index 676eaf8d7a53..1bf0ee4d3229 100644
+--- a/drivers/pwm/pwm-dwc.c
++++ b/drivers/pwm/pwm-dwc.c
+@@ -31,26 +31,34 @@ static const struct dwc_pwm_info ehl_pwm_info = {
+ 	.size = 0x1000,
+ };
+ 
+-static int dwc_pwm_init_one(struct device *dev, void __iomem *base, unsigned int offset)
++static int dwc_pwm_init_one(struct device *dev, struct dwc_pwm_drvdata *data, unsigned int idx)
+ {
+ 	struct pwm_chip *chip;
+ 	struct dwc_pwm *dwc;
++	int ret;
+ 
+ 	chip = dwc_pwm_alloc(dev);
+ 	if (IS_ERR(chip))
+ 		return PTR_ERR(chip);
+ 
+ 	dwc = to_dwc_pwm(chip);
+-	dwc->base = base + offset;
++	dwc->base = data->io_base + (data->info->size * idx);
+ 
+-	return devm_pwmchip_add(dev, chip);
++	ret = devm_pwmchip_add(dev, chip);
++	if (ret)
++		return ret;
++
++	data->chips[idx] = chip;
++	return 0;
+ }
+ 
+ static int dwc_pwm_probe(struct pci_dev *pci, const struct pci_device_id *id)
+ {
+ 	const struct dwc_pwm_info *info;
+ 	struct device *dev = &pci->dev;
+-	int i, ret;
++	struct dwc_pwm_drvdata *data;
++	unsigned int idx;
++	int ret;
+ 
+ 	ret = pcim_enable_device(pci);
+ 	if (ret)
+@@ -63,17 +71,25 @@ static int dwc_pwm_probe(struct pci_dev *pci, const struct pci_device_id *id)
+ 		return dev_err_probe(dev, ret, "Failed to iomap PCI BAR\n");
+ 
+ 	info = (const struct dwc_pwm_info *)id->driver_data;
++	data = devm_kzalloc(dev, struct_size(data, chips, info->nr), GFP_KERNEL);
++	if (!data)
++		return dev_err_probe(dev, -ENOMEM, "Failed to allocate drvdata\n");
+ 
+-	for (i = 0; i < info->nr; i++) {
+-		/*
+-		 * No need to check for pcim_iomap_table() failure,
+-		 * pcim_iomap_regions() already does it for us.
+-		 */
+-		ret = dwc_pwm_init_one(dev, pcim_iomap_table(pci)[0], i * info->size);
++	/*
++	 * No need to check for pcim_iomap_table() failure,
++	 * pcim_iomap_regions() already does it for us.
++	 */
++	data->io_base = pcim_iomap_table(pci)[0];
++	data->info = info;
++
++	for (idx = 0; idx < data->info->nr; idx++) {
++		ret = dwc_pwm_init_one(dev, data, idx);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
++	dev_set_drvdata(dev, data);
++
+ 	pm_runtime_put(dev);
+ 	pm_runtime_allow(dev);
+ 
+@@ -88,19 +104,24 @@ static void dwc_pwm_remove(struct pci_dev *pci)
+ 
+ static int dwc_pwm_suspend(struct device *dev)
+ {
+-	struct pwm_chip *chip = dev_get_drvdata(dev);
+-	struct dwc_pwm *dwc = to_dwc_pwm(chip);
+-	int i;
++	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
++	unsigned int idx;
+ 
+-	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
+-		if (chip->pwms[i].state.enabled) {
+-			dev_err(dev, "PWM %u in use by consumer (%s)\n",
+-				i, chip->pwms[i].label);
+-			return -EBUSY;
++	for (idx = 0; idx < data->info->nr; idx++) {
++		struct pwm_chip *chip = data->chips[idx];
++		struct dwc_pwm *dwc = to_dwc_pwm(chip);
++		unsigned int i;
++
++		for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
++			if (chip->pwms[i].state.enabled) {
++				dev_err(dev, "PWM %u in use by consumer (%s)\n",
++					i, chip->pwms[i].label);
++				return -EBUSY;
++			}
++			dwc->ctx[i].cnt = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(i));
++			dwc->ctx[i].cnt2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(i));
++			dwc->ctx[i].ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(i));
+ 		}
+-		dwc->ctx[i].cnt = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(i));
+-		dwc->ctx[i].cnt2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(i));
+-		dwc->ctx[i].ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(i));
+ 	}
+ 
+ 	return 0;
+@@ -108,14 +129,19 @@ static int dwc_pwm_suspend(struct device *dev)
+ 
+ static int dwc_pwm_resume(struct device *dev)
+ {
+-	struct pwm_chip *chip = dev_get_drvdata(dev);
+-	struct dwc_pwm *dwc = to_dwc_pwm(chip);
+-	int i;
++	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
++	unsigned int idx;
+ 
+-	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
+-		dwc_pwm_writel(dwc, dwc->ctx[i].cnt, DWC_TIM_LD_CNT(i));
+-		dwc_pwm_writel(dwc, dwc->ctx[i].cnt2, DWC_TIM_LD_CNT2(i));
+-		dwc_pwm_writel(dwc, dwc->ctx[i].ctrl, DWC_TIM_CTRL(i));
++	for (idx = 0; idx < data->info->nr; idx++) {
++		struct pwm_chip *chip = data->chips[idx];
++		struct dwc_pwm *dwc = to_dwc_pwm(chip);
++		unsigned int i;
++
++		for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
++			dwc_pwm_writel(dwc, dwc->ctx[i].cnt, DWC_TIM_LD_CNT(i));
++			dwc_pwm_writel(dwc, dwc->ctx[i].cnt2, DWC_TIM_LD_CNT2(i));
++			dwc_pwm_writel(dwc, dwc->ctx[i].ctrl, DWC_TIM_CTRL(i));
++		}
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/pwm/pwm-dwc.h b/drivers/pwm/pwm-dwc.h
+index a8b074841ae8..c6e2df5a6122 100644
+--- a/drivers/pwm/pwm-dwc.h
++++ b/drivers/pwm/pwm-dwc.h
+@@ -38,6 +38,12 @@ struct dwc_pwm_info {
+ 	unsigned int size;
+ };
+ 
++struct dwc_pwm_drvdata {
++	const struct dwc_pwm_info *info;
++	void __iomem *io_base;
++	struct pwm_chip *chips[];
++};
++
+ struct dwc_pwm_ctx {
+ 	u32 cnt;
+ 	u32 cnt2;
+-- 
+2.35.3
+
 
