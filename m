@@ -1,115 +1,122 @@
-Return-Path: <linux-pwm+bounces-1923-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1924-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 048248A33FD
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 18:46:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBD278A342E
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 18:57:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADF9A1F22A2F
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 16:46:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 549B51F22F9B
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 16:57:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A24F014AD32;
-	Fri, 12 Apr 2024 16:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UEFQO42R"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4032614AD17;
+	Fri, 12 Apr 2024 16:57:25 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA52714900C;
-	Fri, 12 Apr 2024 16:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229A338DC8
+	for <linux-pwm@vger.kernel.org>; Fri, 12 Apr 2024 16:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712940355; cv=none; b=fJp28GtfnrcZTbDomfu08YnwAe8QrnF8FQgJtW1Js/F9s6HB3NG25BvdIg85CnSTycyxwFXn4nmie5oo3FayAaBZtzhRcwEt9e4sfpOi00HiTirUbOWDd2mKJZ72qXw6lD8m7pHDzPUiC12OYnNTWWpm1jt5RIdTTdDBZFpD6Gk=
+	t=1712941045; cv=none; b=AePfqMM04RbhLvu1/Z+DyPJ3kIxvT0nQVw486UCci7jT92lnkiBOCAL/lh+EYo0jt8bcDmhVzD6vSCodm6L790uoVo0uHtrCTObqZjRrOfM7TmiMAaiWD16mKwWv8tirsWtlUrltC9k4x49PSPjtSRf2X8I4ONCP4ORGJcBQX/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712940355; c=relaxed/simple;
-	bh=y9Yt29vHd8nVHODE69mLVM3p2B463p8ZHm84V3ZPix8=;
+	s=arc-20240116; t=1712941045; c=relaxed/simple;
+	bh=i2Z9fAFvOda3bJQ96U5BgCIGm8zg4hWmqFq3u3tJpJM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m40TJYZ88SNm8j0B1iZb/BqbBnYYvrxFU6hUhd8vAqsY0iWIaChg0pXITX4zptzaVz+IyCc41WgXoY89Eirq0O6dzeip6SzTX8iyM52rxuob8/LMuYzOxkV3LW3km8jVHKKwReF2EhbG+dbqyL3oJQbkUDVkerw2ufXmKKjGNsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UEFQO42R; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712940354; x=1744476354;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=y9Yt29vHd8nVHODE69mLVM3p2B463p8ZHm84V3ZPix8=;
-  b=UEFQO42RedFyLf35jiqf3h3wp11DVTOFedgGMYOvttFDyN5UxffRa0LY
-   p+Y6kSjH4rVhNlEgB/IrWILkHZglPUM3rkyMLFlaOIlOXb4tWqtFVDxeE
-   v1ay5ZmgskvLifrk1UkiizHcexpmfDtB10N7WEoY+IG6hqPO8c+qGHJgx
-   5QFkiv9qEEnvAYE4K+yxAMDXKB/N0z+ogx2uLSgQL8NEq36G1gn/cV15/
-   buCVHDgWBIjRnIAq99qpqBrUnmBHdHMVJDOhZB5bfdWxzAYFhhea8J8It
-   C5e4Culy26PcFg9mtvxUsMXo7ygxZ04qjLMd4qxdifQoODQ3TsaAynKbW
-   A==;
-X-CSE-ConnectionGUID: uiD9kKEWTIW4YxEAsSXg+Q==
-X-CSE-MsgGUID: yf/C08fZTGGwk1J9hIGzsA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="19797470"
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="19797470"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 09:45:53 -0700
-X-CSE-ConnectionGUID: UH5B1YgpQ9OnH1uDJH94IA==
-X-CSE-MsgGUID: p1RMsWI9QiuYZltHW4VVwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="26079046"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 09:45:51 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rvK28-00000003huv-2pkl;
-	Fri, 12 Apr 2024 19:45:48 +0300
-Date: Fri, 12 Apr 2024 19:45:48 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com, linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=a5DcFDBp1yEK+Ubgffzz9TYASj1hMqnlq13eRo18GyRc7JUgH2ykEoBFd0Cbi0cG3/walsM334+TaEDhUDuOHjMhfWKy7jMPeMmfT8VJwF1xTgT/oIkFNsTm77de2Lvl9ZYZoq/kuDd7zeLKcv8zv51U5fnwktFed6gW+9gmEAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rvKDF-0003e0-5Q; Fri, 12 Apr 2024 18:57:17 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rvKDD-00BuVS-Vy; Fri, 12 Apr 2024 18:57:16 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rvKDD-000ICp-2v;
+	Fri, 12 Apr 2024 18:57:15 +0200
+Date: Fri, 12 Apr 2024 18:57:15 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Raag Jadav <raag.jadav@intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, 
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v1] pwm: dwc: allow suspend/resume for 16 channels
-Message-ID: <ZhllPOXt41Ndlhc_@smile.fi.intel.com>
+Message-ID: <drz5rhytvwjpsywdspdr3q6vqeo2g5icq3th3cx5awbvqcr6bt@quxusf4jafc2>
 References: <20240412060812.20412-1-raag.jadav@intel.com>
- <ZhlU176sS36_JvQU@smile.fi.intel.com>
- <ZhleDwUJLDEG5QwH@black.fi.intel.com>
+ <zf74jdjza2kfgmiecmlwlws46fmy3rtxvcocmkwewgx64oewpm@xfyq2zt6ts5u>
+ <ZhlUFZDTQum5-AIR@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pzdbva5yjpjhd3hq"
 Content-Disposition: inline
-In-Reply-To: <ZhleDwUJLDEG5QwH@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <ZhlUFZDTQum5-AIR@smile.fi.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On Fri, Apr 12, 2024 at 07:15:11PM +0300, Raag Jadav wrote:
-> On Fri, Apr 12, 2024 at 06:35:51PM +0300, Andy Shevchenko wrote:
+
+--pzdbva5yjpjhd3hq
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+On Fri, Apr 12, 2024 at 06:32:37PM +0300, Andy Shevchenko wrote:
+> On Fri, Apr 12, 2024 at 01:12:48PM +0200, Uwe Kleine-K=F6nig wrote:
 > > On Fri, Apr 12, 2024 at 11:38:12AM +0530, Raag Jadav wrote:
+>=20
+> ...
+>=20
+> > > +struct dwc_pwm_drvdata {
+> > > +	const struct dwc_pwm_info *info;
+> > > +	void __iomem *io_base;
+> >=20
+> > .io_base is only used during init time and so doesn't need to be tracked
+> > in driver data.
+>=20
+> It's me who asked for this specific change and I think it's still benefic=
+ial
+> as it allows to simplify the code.
 
-...
+Ok then, feel free to keep it for v2 then.
 
-> > > +	data = devm_kzalloc(dev, struct_size(data, chips, info->nr), GFP_KERNEL);
-> > > +	if (!data)
-> > > +		return dev_err_probe(dev, -ENOMEM, "Failed to allocate drvdata\n");
-> > 
-> > Haven't noticed before, but we do not print messages for -ENOMEM. Just return
-> > the code.
-> 
-> Any special case for -ENOMEM?
+Best regards
+Uwe
 
-Yes. But I have no link to the discussion at hand. Just believe me, or look into
-Git history for changes that drop that messaging. Perhaps one or two will give a
-hint where it starts from...
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-> I found a few drivers which still do.
+--pzdbva5yjpjhd3hq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-They should be fixed.
+-----BEGIN PGP SIGNATURE-----
 
--- 
-With Best Regards,
-Andy Shevchenko
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYZZ+oACgkQj4D7WH0S
+/k73Cwf+KsGOLSfnUd/wJy4xv7VEgN6qzyjbD9djHVctd2ocVTXFBsx/vHoFplcF
+8JBf9d7Hzn/K1RMg1f39cgcIJo6UFvTJvZ75S1vIHpY5b5yQLpkOOpUEqI1zPbd0
+W1pphxiIFNkhp7ZWVycyNubNbN7zbAhvzJrdRszq3lKr1DioEs076eVPkp/eAxB9
+v2JXzPvh5b5cg/VbyE8pZ0RKA/EEsc6ZnjGGP+0DyTix0GDm3ShSlof8KNy8D4yp
+rykZ5aSuh3weldZhXCWRJDR5U0wSpTt3mjmQKokoEXD4JEXxtJJmC68hU1IeRGvu
+kXkcQLUGulEdyybpNIqu8wbqxiPqIw==
+=7TW/
+-----END PGP SIGNATURE-----
 
-
+--pzdbva5yjpjhd3hq--
 
