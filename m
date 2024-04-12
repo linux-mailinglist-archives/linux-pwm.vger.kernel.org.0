@@ -1,147 +1,107 @@
-Return-Path: <linux-pwm+bounces-1916-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1917-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A9188A2E00
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 14:08:43 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 232E38A3283
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 17:32:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 797031C21484
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 12:08:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 37AD8B223EE
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 15:32:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ADD05674A;
-	Fri, 12 Apr 2024 12:08:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7CD1482F0;
+	Fri, 12 Apr 2024 15:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RQTzucsK"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C074C624
-	for <linux-pwm@vger.kernel.org>; Fri, 12 Apr 2024 12:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5393F5914E;
+	Fri, 12 Apr 2024 15:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712923717; cv=none; b=dQgChaXIWPjZ4v4NO7G/7sbacXa4xSoi3aWtylnc0XjFRfFLehsBXkaNifVDrExAcLWN84fw7bMOx3GNWSu4axWH9RgplwNUC+ouTZ52HBvGt56MtPK0dBHlDiTO6nzUqozmFIsoMyzPgLz9AnT3IgE7aJZCI+GwKF6QX9mL05E=
+	t=1712935963; cv=none; b=VOS5mlO32hobdswFKlWcNIMOPtyJmq513/DAHCKiRW3kdUu7hXt2M8gTLBGjuTVDz3WM2WH4bMRUyJoEIvZUa6Ort1neO4UAwWrrXDfB9WSd0k0ghn7SO2hVNtJQQOJee/GfmMmPp7XaBucfIGdTrrfXwXl39nHs/KcxvGLnRtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712923717; c=relaxed/simple;
-	bh=aGZGursS0e7p0NN8/DsscT4cCqk++laaAgsgmlWTm/k=;
+	s=arc-20240116; t=1712935963; c=relaxed/simple;
+	bh=YcGVppXDTZpBYsq3LZQl0x3tHjY0EsDlBXQF4JKc2kc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YDKF7TdAhvxCN9KefaisGKyfM4lZg16nqIBxMmrAJkQgZoN08Esu2LvAsiem7l3fvd606jj6nAZjT+fm3gXrTSW/bh1BbedapsaIpy6NWhhmNf07n8HH92Tou4RSIqRHhUycgXVF/MF0S/NXAISbqoVtNTb22y4e/rdfvw0EV30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvFhf-0007RX-Pr; Fri, 12 Apr 2024 14:08:23 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvFhe-00BsBA-On; Fri, 12 Apr 2024 14:08:22 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvFhe-0009i4-29;
-	Fri, 12 Apr 2024 14:08:22 +0200
-Date: Fri, 12 Apr 2024 14:08:22 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org, 
-	JunYi Zhao <junyi.zhao@amlogic.com>
-Subject: Re: [PATCH v5 5/5] pwm: meson: add generic compatible for meson8 to
- sm1
-Message-ID: <24ec3iiudmfapiosygpsvgu7kmdqe6csbkpuzx3p3sa4oyodqu@hshmbpvzhufb>
-References: <20240221151154.26452-1-jbrunet@baylibre.com>
- <20240221151154.26452-6-jbrunet@baylibre.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kuyLgd2RWS26quuH+GgWqzl7+s/kcJVY14K9zolc6r3i9aAFuwVPH5mYUS9zN8H/M72M4Z91Neyeug1XGD8mCRogCXECEDW2+oAH0C5oA1znuQ6n+D9MAhtzaMnZVMwYvzZm9lxtMUnomgSENBuw3hH8+0z3J5cQW5eMM3m8Slw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RQTzucsK; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712935963; x=1744471963;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=YcGVppXDTZpBYsq3LZQl0x3tHjY0EsDlBXQF4JKc2kc=;
+  b=RQTzucsKX3lYIBDM375wr2Up04GfAjKxuUExlcVegO/xo3viWpc+XmIG
+   glqfjZu6vCVFYF+ijwFkbyldTdcrnYQ5D8X65Ue7CZAYX1wWCkeelER3c
+   waiVYOJ1MTwRiW8xBwb6AmDgfqxIN95eSFnUF/D5Ckg+kDIQucI80m1PJ
+   pG+h4rIP2Ls/kQ7AoUk6xPrDm5g3bygfJbGTx9w6bEbANDACtm00kuNZZ
+   u7lxIl/Uc/oMlfUt8Gy6XA5sQQeFPee3C6iC1RYuKRF1XU3dpFqDzPj/x
+   94a8oyL8W3j1ofHAaAnvXrajwJtPfSro8WIKc6UjtltkhwrzJAif9hJVs
+   w==;
+X-CSE-ConnectionGUID: FTjBeGz5QhWWrYm9wimVcg==
+X-CSE-MsgGUID: czIS+8+qTlu2MzrZDz23/w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="30875189"
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="30875189"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 08:32:42 -0700
+X-CSE-ConnectionGUID: 0zUC7aeoQt+hygbpFCOnvQ==
+X-CSE-MsgGUID: akgacc3/RCez8p0U9pOJZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="21838477"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 08:32:40 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rvItJ-00000003goC-3FW9;
+	Fri, 12 Apr 2024 18:32:37 +0300
+Date: Fri, 12 Apr 2024 18:32:37 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Raag Jadav <raag.jadav@intel.com>, jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com, linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] pwm: dwc: allow suspend/resume for 16 channels
+Message-ID: <ZhlUFZDTQum5-AIR@smile.fi.intel.com>
+References: <20240412060812.20412-1-raag.jadav@intel.com>
+ <zf74jdjza2kfgmiecmlwlws46fmy3rtxvcocmkwewgx64oewpm@xfyq2zt6ts5u>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="o6zwfw2ds5fuh2ws"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240221151154.26452-6-jbrunet@baylibre.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <zf74jdjza2kfgmiecmlwlws46fmy3rtxvcocmkwewgx64oewpm@xfyq2zt6ts5u>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Fri, Apr 12, 2024 at 01:12:48PM +0200, Uwe Kleine-König wrote:
+> On Fri, Apr 12, 2024 at 11:38:12AM +0530, Raag Jadav wrote:
+
+...
+
+> > +struct dwc_pwm_drvdata {
+> > +	const struct dwc_pwm_info *info;
+> > +	void __iomem *io_base;
+> 
+> .io_base is only used during init time and so doesn't need to be tracked
+> in driver data.
+
+It's me who asked for this specific change and I think it's still beneficial
+as it allows to simplify the code.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---o6zwfw2ds5fuh2ws
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 21, 2024 at 04:11:51PM +0100, Jerome Brunet wrote:
-> Introduce a new compatible support in the Amlogic PWM driver.
->=20
-> The PWM HW is actually the same for all SoCs supported so far. A specific
-> compatible is needed only because the clock sources of the PWMs are
-> hard-coded in the driver.
->=20
-> It is better to have the clock source described in DT but this changes the
-> bindings so a new compatible must be introduced.
->=20
-> When all supported platform have migrated to the new compatible, support
-> for the legacy ones may be removed from the driver.
->=20
-> The addition of this new compatible makes the old ones obsolete, as
-> described in the DT documentation.
->=20
-> Adding a callback to setup the clock will also make it easier to add
-> support for the new PWM HW found in a1, s4, c3 and t7 SoC families.
->=20
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-
-After spending some brain cycles on this one I think I understood it.
-Looks fine to me, I only considered questioning if the dev_warn_once is
-too offensive.
-
-b4 + git applied the patch just fine even without patch #4 of this
-series. Would you be so kind to double check it works as intended?
-
-BTW, b4 diagnosed:
-
-Checking attestation on all messages, may take a moment...
----
-  =E2=9C=97 [PATCH v5 5/5] pwm: meson: add generic compatible for meson8 to=
- sm1
-    + Link: https://lore.kernel.org/r/20240221151154.26452-6-jbrunet@baylib=
-re.com
-    + Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-  ---
-  =E2=9C=97 BADSIG: DKIM/baylibre-com.20230601.gappssmtp.com
-
-Is this only because it took me so long to reply, or is there a
-configuration issue with the baylibre MTA?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---o6zwfw2ds5fuh2ws
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYZJDUACgkQj4D7WH0S
-/k5YqAf9Gp+g65dKTx78fK8hzvxoD9Y3G0PBNvMZG0cgDhyEIvXcC0zVpdDqgL/L
-UbcBW+DNc5Imw7H91xeUtyD4nDhybz1aG38vALuh8Ojuy+qqfxhZpaaDLl0344sB
-QVRkyJQxgB2VYDslaNPD7caXYtuMTwdyrbXf1jE7dg5ui9zWpr7pR+1TFPEYGsRE
-iRBqz3cZmq1MN0/1hhzw81jXz7rJVgv79bGBHr43wq2EwiAB/Rx1ztYFl9stz9PR
-KLOWaASjPFjeHxdrv6gP/+TEJ2BweZe7wwkEHFe34KUysr2x+QUFK2+x727TD30j
-gAmrGXJHW5AvlZZQMvhhKwxdFsxrpQ==
-=JdWF
------END PGP SIGNATURE-----
-
---o6zwfw2ds5fuh2ws--
 
