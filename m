@@ -1,103 +1,104 @@
-Return-Path: <linux-pwm+bounces-1917-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1918-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 232E38A3283
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 17:32:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E156A8A328F
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 17:36:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 37AD8B223EE
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 15:32:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01D1F1C24575
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Apr 2024 15:36:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7CD1482F0;
-	Fri, 12 Apr 2024 15:32:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44FEB1482F1;
+	Fri, 12 Apr 2024 15:35:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RQTzucsK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YtInHfC3"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5393F5914E;
-	Fri, 12 Apr 2024 15:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DF41482E2;
+	Fri, 12 Apr 2024 15:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712935963; cv=none; b=VOS5mlO32hobdswFKlWcNIMOPtyJmq513/DAHCKiRW3kdUu7hXt2M8gTLBGjuTVDz3WM2WH4bMRUyJoEIvZUa6Ort1neO4UAwWrrXDfB9WSd0k0ghn7SO2hVNtJQQOJee/GfmMmPp7XaBucfIGdTrrfXwXl39nHs/KcxvGLnRtk=
+	t=1712936158; cv=none; b=DZRKXXq+gr2RUPX/i2xvlLCkrOYpyfyz8ZRGr+KNvlwXzIRGGhVzXukAoJJfbSidNT/lgvkJp4Hwb+tNNGm8A8C35dfEcUUg8ug6vS5ifupforwbuC9K7iT/HW5C0Fr6mfcrs7ABhS/5Z4le4lynHmxxZCl2TuoMekBXFNbpClM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712935963; c=relaxed/simple;
-	bh=YcGVppXDTZpBYsq3LZQl0x3tHjY0EsDlBXQF4JKc2kc=;
+	s=arc-20240116; t=1712936158; c=relaxed/simple;
+	bh=ri9lUgAOtfo86OqHDKzXa69NZHZUgF3TZoCl1G2ZZWk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kuyLgd2RWS26quuH+GgWqzl7+s/kcJVY14K9zolc6r3i9aAFuwVPH5mYUS9zN8H/M72M4Z91Neyeug1XGD8mCRogCXECEDW2+oAH0C5oA1znuQ6n+D9MAhtzaMnZVMwYvzZm9lxtMUnomgSENBuw3hH8+0z3J5cQW5eMM3m8Slw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RQTzucsK; arc=none smtp.client-ip=198.175.65.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=sG9N7sWe8KKfso1KJCcbTcoglADKY1f8UHY4TDhQw8m4kY0v4x7mafZvkVHrHQxfYfIg0g/JInyR6NFuBo1EmfqegTNh8W+xH3F0iQ/MSthYuXGrCrtj7cmZcFLk9zrIafRrVP7oy1InuNXMHoY09/tLQNH2riP7XW8clLc7C3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YtInHfC3; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712935963; x=1744471963;
+  t=1712936157; x=1744472157;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=YcGVppXDTZpBYsq3LZQl0x3tHjY0EsDlBXQF4JKc2kc=;
-  b=RQTzucsKX3lYIBDM375wr2Up04GfAjKxuUExlcVegO/xo3viWpc+XmIG
-   glqfjZu6vCVFYF+ijwFkbyldTdcrnYQ5D8X65Ue7CZAYX1wWCkeelER3c
-   waiVYOJ1MTwRiW8xBwb6AmDgfqxIN95eSFnUF/D5Ckg+kDIQucI80m1PJ
-   pG+h4rIP2Ls/kQ7AoUk6xPrDm5g3bygfJbGTx9w6bEbANDACtm00kuNZZ
-   u7lxIl/Uc/oMlfUt8Gy6XA5sQQeFPee3C6iC1RYuKRF1XU3dpFqDzPj/x
-   94a8oyL8W3j1ofHAaAnvXrajwJtPfSro8WIKc6UjtltkhwrzJAif9hJVs
-   w==;
-X-CSE-ConnectionGUID: FTjBeGz5QhWWrYm9wimVcg==
-X-CSE-MsgGUID: czIS+8+qTlu2MzrZDz23/w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="30875189"
+   mime-version:in-reply-to;
+  bh=ri9lUgAOtfo86OqHDKzXa69NZHZUgF3TZoCl1G2ZZWk=;
+  b=YtInHfC3i84a1FKpfs+2Sp7vMC0pB3ymiWADvEoDvambA74Qe9amL1+W
+   BqDxRpHnPLtXn73Vr/dTSP9CZfY2rEy4rdWp5QFNpQGbspfaJ+XM4mdPS
+   w7CgIt4yIeNQNnDBzxChnNeRQHHTW3l2WLhA+TloBoIqYymNn9FrmZRKV
+   H296xBCf3OhmhDOHRwlCmXTms7T8c5qQi35WbnvHI6x6MQs26ssPS/h3A
+   +8Wu0w7yWSQ0d2dkiafhEXKZ//HUhCJYtN0k8rZOFdeifURe2naNxHNKb
+   d++OAwLhi8XxaYMl+fwnbvv81BZNWI5eHkMqBa/W2SVWDMK9GbDzGRllw
+   g==;
+X-CSE-ConnectionGUID: PPa9VnITRxSSsqnCRE54tQ==
+X-CSE-MsgGUID: jQiSGJzuTWOF+18smw70vw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="12243725"
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="30875189"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 08:32:42 -0700
-X-CSE-ConnectionGUID: 0zUC7aeoQt+hygbpFCOnvQ==
-X-CSE-MsgGUID: akgacc3/RCez8p0U9pOJZw==
+   d="scan'208";a="12243725"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 08:35:56 -0700
+X-CSE-ConnectionGUID: E5x+YhdQQbWx+08vauJTIg==
+X-CSE-MsgGUID: rOGDQoMPSgmibNVcz859/g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="21838477"
+   d="scan'208";a="25700350"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 08:32:40 -0700
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 08:35:55 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rvItJ-00000003goC-3FW9;
-	Fri, 12 Apr 2024 18:32:37 +0300
-Date: Fri, 12 Apr 2024 18:32:37 +0300
+	id 1rvIwR-00000003gq9-3gtK;
+	Fri, 12 Apr 2024 18:35:51 +0300
+Date: Fri, 12 Apr 2024 18:35:51 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Raag Jadav <raag.jadav@intel.com>, jarkko.nikula@linux.intel.com,
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
 	mika.westerberg@linux.intel.com, linux-pwm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v1] pwm: dwc: allow suspend/resume for 16 channels
-Message-ID: <ZhlUFZDTQum5-AIR@smile.fi.intel.com>
+Message-ID: <ZhlU176sS36_JvQU@smile.fi.intel.com>
 References: <20240412060812.20412-1-raag.jadav@intel.com>
- <zf74jdjza2kfgmiecmlwlws46fmy3rtxvcocmkwewgx64oewpm@xfyq2zt6ts5u>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <zf74jdjza2kfgmiecmlwlws46fmy3rtxvcocmkwewgx64oewpm@xfyq2zt6ts5u>
+In-Reply-To: <20240412060812.20412-1-raag.jadav@intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Apr 12, 2024 at 01:12:48PM +0200, Uwe Kleine-König wrote:
-> On Fri, Apr 12, 2024 at 11:38:12AM +0530, Raag Jadav wrote:
+On Fri, Apr 12, 2024 at 11:38:12AM +0530, Raag Jadav wrote:
+> With 16 channel pwm support, we're registering two instances of pwm_chip
+> with 8 channels each. We need to update PM functions to use both instances
+> of pwm_chip during power state transitions.
+> 
+> Introduce struct dwc_pwm_drvdata and use it as driver_data, which will
+> maintain both instances of pwm_chip along with dwc_pwm_info and allow us
+> to use them inside suspend/resume handles.
 
 ...
 
-> > +struct dwc_pwm_drvdata {
-> > +	const struct dwc_pwm_info *info;
-> > +	void __iomem *io_base;
-> 
-> .io_base is only used during init time and so doesn't need to be tracked
-> in driver data.
+> +	data = devm_kzalloc(dev, struct_size(data, chips, info->nr), GFP_KERNEL);
+> +	if (!data)
+> +		return dev_err_probe(dev, -ENOMEM, "Failed to allocate drvdata\n");
 
-It's me who asked for this specific change and I think it's still beneficial
-as it allows to simplify the code.
+Haven't noticed before, but we do not print messages for -ENOMEM. Just return
+the code.
 
 -- 
 With Best Regards,
