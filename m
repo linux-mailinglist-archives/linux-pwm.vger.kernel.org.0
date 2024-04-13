@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-1928-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1929-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C01558A3BA8
-	for <lists+linux-pwm@lfdr.de>; Sat, 13 Apr 2024 10:34:16 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56D638A3BC0
+	for <lists+linux-pwm@lfdr.de>; Sat, 13 Apr 2024 10:49:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC1401C20B53
-	for <lists+linux-pwm@lfdr.de>; Sat, 13 Apr 2024 08:34:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ACE73B21C82
+	for <lists+linux-pwm@lfdr.de>; Sat, 13 Apr 2024 08:49:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F33A366;
-	Sat, 13 Apr 2024 08:34:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86DFC20DD3;
+	Sat, 13 Apr 2024 08:49:29 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32C1FC0C
-	for <linux-pwm@vger.kernel.org>; Sat, 13 Apr 2024 08:34:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE771CD2F
+	for <linux-pwm@vger.kernel.org>; Sat, 13 Apr 2024 08:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712997254; cv=none; b=Zl1pkWc7K10j8nw8Hmj/3BdUkL6fcR85BU0EBCsy461IEyEgK03klJZNsadF5FxRMcbTLn0RP/borOacCZPW1PkfFeGJ4HfC01WzmZAMrTvZGTxNmNYdWpOZajTcF/gyQmYjXrg1ikoxCxYXcqueUMJYctd2+cJQKeYeoOuJNXY=
+	t=1712998169; cv=none; b=atkJQDzmZoL288XZEQ9Lyo6KAgxHiiaiRsPtXceBQkMk9HmhOapeWcYJ22LkTrEFaRnfAHcOahEj94Ts+R30hCfAj6nlC4IGRt5hpKyLvssQpUzJdsoQt6GUpfE3/4mYtpRg44k4KAlvutF1E/iPCzWi0LHNXeAGpYSDpKN86zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712997254; c=relaxed/simple;
-	bh=40BAp+yZUuTRmoo80dA+61fdXD+O/yD9OHZHF03hoy8=;
+	s=arc-20240116; t=1712998169; c=relaxed/simple;
+	bh=6FIPiQ594KFngeqpTnGrN4qG2Klq6DDn5xZjR0G3Pr4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h5EYBgTr6Bc9bEjf8U5nGdW5rdrvosekZbR89GMC7fZFLOal9t1LgvvD61jpa4egVqdVoeHRqdlwMxlg8GXmNW39hHlFJAuT13o9lRq+T40y3x/mrEpOkekKE/ayeir47wAyV9l2i2ACLI2Lsf1LEUUZWZbja8qHUJaHCk2KdHE=
+	 Content-Type:Content-Disposition:In-Reply-To; b=R30FiWg/fZWLdBFQtdr9i9HKmL1gbfcjtlPLWK0wi+0sh99sFlx6W6v98vBYmwRGP5MrzlBAVwwv4u6Z+/U57DTBcaoGSAgdmZXaKBCf85xPfM2xCeUkDzfOUrAfKd/AWJrETjlfRbT9ugxgVwAASkX57tG3IJ2Jm/2jwiqVD/M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,27 +33,49 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rvYpf-0002JO-Vo; Sat, 13 Apr 2024 10:33:55 +0200
+	id 1rvZ3g-00055f-W5; Sat, 13 Apr 2024 10:48:25 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rvYpd-00C1wL-GC; Sat, 13 Apr 2024 10:33:53 +0200
+	id 1rvZ3a-00C201-5I; Sat, 13 Apr 2024 10:48:18 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rvYpd-000fpA-1K;
-	Sat, 13 Apr 2024 10:33:53 +0200
-Date: Sat, 13 Apr 2024 10:33:53 +0200
+	id 1rvZ3a-000gB5-03;
+	Sat, 13 Apr 2024 10:48:18 +0200
+Date: Sat, 13 Apr 2024 10:48:17 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
-	Joel Stanley <joel@jms.id.au>
-Cc: linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-aspeed@lists.ozlabs.org, kernel@pengutronix.de, 
-	Andrew Jeffery <andrew@codeconstruct.com.au>, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/2] hwmon: (aspeed-g6-pwm-tacho): Prepare for further
- pwm core changes
-Message-ID: <f43gbxbyjik76dzlwmjkcvfwdijzotctyngoidh7zb3xgog3ox@krm3avhdolhf>
-References: <cover.1710777536.git.u.kleine-koenig@pengutronix.de>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Nikita Shubin <nikita.shubin@maquefel.me>, 
+	Hartley Sweeten <hsweeten@visionengravers.com>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Sergey Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Ralf Baechle <ralf@linux-mips.org>, Aaron Wu <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
+	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, Netdev <netdev@vger.kernel.org>, 
+	linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-sound@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v9 00/38] ep93xx device tree conversion
+Message-ID: <izbjcqcvjjhwwbrrhk7jer536ydi5gr7gqdg5icsbmialrrepn@dp7q6jvjujrj>
+References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+ <66e1da99-5cf4-4506-b0bf-4bdf04959f41@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -61,73 +83,98 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kxg3gmqzxdbzcys4"
+	protocol="application/pgp-signature"; boundary="pjwf7nurmhwqoh67"
 Content-Disposition: inline
-In-Reply-To: <cover.1710777536.git.u.kleine-koenig@pengutronix.de>
+In-Reply-To: <66e1da99-5cf4-4506-b0bf-4bdf04959f41@app.fastmail.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---kxg3gmqzxdbzcys4
+--pjwf7nurmhwqoh67
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello Arnd,
 
-On Mon, Mar 18, 2024 at 05:09:48PM +0100, Uwe Kleine-K=F6nig wrote:
-> there is a pending rework for the pwm framework[1] that requires a
-> preparatory change for all pwm drivers. When creating them I wasn't
-> aware of the aspeed-g6-pwm-tacho driver, just found this now while doing
-> build tests with my series.
+On Tue, Mar 26, 2024 at 11:07:06AM +0100, Arnd Bergmann wrote:
+> On Tue, Mar 26, 2024, at 10:18, Nikita Shubin via B4 Relay wrote:
+> > The goal is to recieve ACKs for all patches in series to merge it via=
+=20
+> > Arnd branch.
 >=20
-> To not delay application of my series, I'd like to take the two patches
-> from this series via my pwm tree.
+> Thank you for the continued updates, I really hope we can merge
+> it all for 6.10. I've looked through it again and I'm pretty much
+> ready to just merge it, though I admit that the process is not
+> working out that great, and it would probably have been quicker
+> to add DT support to drivers individually through the subsystem
+> trees.
 >=20
-> To state the (maybe) obvious: This series depends on the following commit=
-s:
+> > Stephen Boyd, Vinod Koul PLEASE! give some comments on following, couse=
+=20
+> > i hadn't one for a couple of iterations already:
+> >
+> > Following patches require attention from Stephen Boyd, as they were=20
+> > converted to aux_dev as suggested:
+> >
+> > - ARM: ep93xx: add regmap aux_dev
+> > - clk: ep93xx: add DT support for Cirrus EP93xx
+> >
+> > Following patches require attention from Vinod Koul:
+> >
+> > - dma: cirrus: Convert to DT for Cirrus EP93xx
+> > - dma: cirrus: remove platform code
 >=20
-> 	7e1449cd15d1 "hwmon: (aspeed-g6-pwm-tacho): Support for ASPEED g6 PWM/Fa=
-n tach"
-> 	024913dbf99f pwm: Provide pwmchip_alloc() function and a devm variant of=
- it
-> 	4e59267c7a20 pwm: Provide an inline function to get the parent device of=
- a given chip
+> I suspect that Stephen and Vinod may be missing this, as reviewing
+> a 38 patch series tends to be a lot of work, and they may have
+> missed that they are on the critical path here. I certainly
+> tend to just ignore an entire thread when it looks like I'm not
+> immediately going to be reviewing it all and other people are
+> likely to have more comments first, so I'm not blaming them.
 >=20
-> The earliest commit containing all those is:
->=20
-> 	15223fdbdf4f "Merge tag 'hwmon-for-v6.9' of git://git.kernel.org/pub/scm=
-/linux/kernel/git/groeck/linux-staging"
+> To better catch their attention, I would suggest you repost the
+> two smaller sets of patches as a separate series, with only the
+> relevant people on Cc. Please also include the respective
+> bindings when you send send these patches to Stephen and
+> Vinod.
 
-I applied this series with Guenter's ack to my branch at
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
-=2E (Honestly I already did that a while ago, only noticed now that I
-didn't explicitly tell about that.)
+It seems this happend for the clock series; it's at
+https://lore.kernel.org/all/20240408-ep93xx-clk-v1-0-1d0f4c324647@maquefel.=
+me/
+and received an ack by Stephen.
 
-Thanks
+Vinod gave some feedback in this thread with some remarks that need
+addressing.
+
+With the latter I wonder if the plan to get this as a whole into v6.10
+is screwed and if I should pick up the PWM bits (patches #12, #13 and
+maybe #38) via my tree. Patch #38 touches arch/arm and
+include/linux/soc, so I wouldn't pick that one up without an explicit
+ack by (I guess) Arnd.
+
+Best regards
 Uwe
 
 --=20
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---kxg3gmqzxdbzcys4
+--pjwf7nurmhwqoh67
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYaQ3AACgkQj4D7WH0S
-/k6p1gf/bC+XXzwCLWvjQc2AJM9nGY0a/ogPm9gQDU92NRnSV62zrm3R+3a0I1ID
-VFB01y3omfw/G/XnSAoln+OuzfgI9LqUP/e+k1RMH5a/kiSp5elCrb86frHgqcuv
-7LhSfgUgPmodytUclM3U7yLO0p8O0w2d9XwThdhEeiT96uCGrdbInaHkaDokp89v
-7AriwfntCP5jCny5UPlIT4+TNfAWSHzKUj1y+PZNVLu6bhOsMvuLaHcDlwkLjrQ9
-91jIusgrkGas/sdeHtiwucZDdfdbrB8eixUOJNNupYZwOil+Ipyyl8rITkBHMACt
-1dL7CG2q5uOVEc7W7ex1aeQrOeofQw==
-=Q+r3
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYaRtAACgkQj4D7WH0S
+/k4o+wgAuEjfWmNoFVoIX9NkVmNLAztPiy6Nh9yJ/HEcfVvrFbjsMvDotb4qsGsE
+zfAz7mfofpUhLaFIGx1Sr9p8Zx4eXf0lmRH68rTiXE/hV39TXWKgmf03FG3yPOzN
+1KouxDXOtKIiBxdhSBON/zWyYksJzI9WfjLtzPhcbS0N3CEWi7aTvVS7HmKStyAU
+8/YI17F/4ym1Rf8Zm6JqyzQy5lOmmjy+Sq+BHfkB0ZpNIHQSoaOWISL3Y9bsFSJX
+ALkkO6L4WJVqkAL718q6pYMtb9SiNVyQjyYgYddxFfM6c6cnhg1AV+QEk+VLTPHy
+OgUVpigrpDXH/2JTVvZ7VetbpnSGAg==
+=sCOf
 -----END PGP SIGNATURE-----
 
---kxg3gmqzxdbzcys4--
+--pjwf7nurmhwqoh67--
 
