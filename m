@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-1931-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1932-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 945558A3BE6
-	for <lists+linux-pwm@lfdr.de>; Sat, 13 Apr 2024 11:22:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F396E8A3DCF
+	for <lists+linux-pwm@lfdr.de>; Sat, 13 Apr 2024 19:01:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 41CAD283742
-	for <lists+linux-pwm@lfdr.de>; Sat, 13 Apr 2024 09:22:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A90F0282175
+	for <lists+linux-pwm@lfdr.de>; Sat, 13 Apr 2024 17:01:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E37F1DFEF;
-	Sat, 13 Apr 2024 09:22:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C68E4AEF9;
+	Sat, 13 Apr 2024 17:01:02 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E783818B14
-	for <linux-pwm@vger.kernel.org>; Sat, 13 Apr 2024 09:22:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924FC3E487
+	for <linux-pwm@vger.kernel.org>; Sat, 13 Apr 2024 17:00:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713000161; cv=none; b=k55EUG1/YTmF2cWrTHgypbZVoCVIOnyVit2Q8qMnRIkuWfy5lzfTjyC2AjFGjARBUxtpFKUgVJZlZfIqgR5+TVOApgrqRdhcRwSre0AB5xf0YRXuEKsp+JT9dYMSFMZ4+o9VNDrhsPQRfGTY0E6dWgUtSOPQZB52vyPcRRgJrIM=
+	t=1713027661; cv=none; b=Ufo8Jq5VRLI7ZetKb87NVjFYHQXNl3HLPDK/VrgnVzm5n3LF1bDEel1+Ck1EIMDTGiqh8NNklPUd+vHeI6YCu2BGOFRbbUKOOH1PYsbRreD/cXLWTh0ky7S9J9/joGwaWhqKiTIPosar6Gx7Vk0WaFaWrhR5M1BzZU8CtLsm0wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713000161; c=relaxed/simple;
-	bh=NhoRlOub3hGY2Wr6gMKhXt1Pu/YNnisEixCIxNzqyqE=;
+	s=arc-20240116; t=1713027661; c=relaxed/simple;
+	bh=TwoOoayG2/ST3HZsGLT4YyQTYNvAKfgjQ7zhiv7yKeY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKobtkkwMXl8vu5i4pvRd6Y4ZGnxw+wEjQXulEj4Ju06Mpl/+g/mIhQi9vhhtnU5yvoOsAS2ty1rh8/fzfYz6cK6JP5TLibIzpQouctLqtpj6WDZtzsIIFEq1SeHbMT3FdaX3C0kV/w1hnKQQBcR7dOSPzeGmVMBAVTTB+V/XhU=
+	 Content-Type:Content-Disposition:In-Reply-To; b=SAC3+7QNQY1u2Yil0nH2I/B//bnKFqmWR8CmCMc24lwAHXIl2H1MJwulRzUHc6jbR9R2/N/00az1vA6nysKLKAXUzrAF0O8VdbFTChPN2diskn3U52Ly9MMu65smd3mVkU0YpZ/IiwlHjlaUlL2/JcGqUHE4+1kAAA6yBLNL24I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -33,27 +33,24 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rvZam-0003nZ-JX; Sat, 13 Apr 2024 11:22:36 +0200
+	id 1rvgkI-0007j6-Vt; Sat, 13 Apr 2024 19:00:55 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rvZaj-00C2Nu-NT; Sat, 13 Apr 2024 11:22:33 +0200
+	id 1rvgkG-00C607-2H; Sat, 13 Apr 2024 19:00:52 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rvZaj-000hEY-23;
-	Sat, 13 Apr 2024 11:22:33 +0200
-Date: Sat, 13 Apr 2024 11:22:33 +0200
+	id 1rvgkF-000sD7-3B;
+	Sat, 13 Apr 2024 19:00:51 +0200
+Date: Sat, 13 Apr 2024 19:00:48 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: linux-pwm@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
-	kernel@pengutronix.de, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	John Ernberg <john.ernberg@actia.se>, Thorsten Scherer <T.Scherer@eckelmann.de>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Trevor Gamblin <tgamblin@baylibre.com>, 
-	David Lechner <dlechner@baylibre.com>
-Subject: Re: [PATCH 0/8] pwm: Add support for character devices
-Message-ID: <ywvi3wqcte5wfwq7twg26smtu7rgjv5z2tbdu6mz5cehjlxf72@2h77sey4xsv2>
-References: <cover.1710670958.git.u.kleine-koenig@pengutronix.de>
+To: William Qiu <william.qiu@starfivetech.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Hal Feng <hal.feng@starfivetech.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v11] pwm: opencores: Add PWM driver support
+Message-ID: <ys5z3v7rmrjlwttwymhjlxtx36gnuvrbj7q3hdcczdb4t6y2m2@lz2bniiaaxe4>
+References: <20240223084332.100410-1-william.qiu@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -61,93 +58,344 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zj47uaeekg2t34wy"
+	protocol="application/pgp-signature"; boundary="6ppsoyvbhlmx6qtx"
 Content-Disposition: inline
-In-Reply-To: <cover.1710670958.git.u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20240223084332.100410-1-william.qiu@starfivetech.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---zj47uaeekg2t34wy
+--6ppsoyvbhlmx6qtx
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-On Sun, Mar 17, 2024 at 11:40:31AM +0100, Uwe Kleine-K=F6nig wrote:
-> After the necessary changes to the lowlevel drivers got in for v6.9-rc1
-> here come some changes to the core to implement /dev/pwmchipX character
-> devices.
->=20
-> In my tests on an ARM STM32MP1 programming a PWM using the character
-> device is ~4 times faster than just changing duty_cycle via the sysfs
-> API. It also has the advantage that (similar to pwm_apply_*) the target
-> state is provided to the kernel with a single call, instead of having to
-> program the individual settings one after another via sysfs (in the
-> right order to not cross states not supported by the driver).=20
->=20
-> Note the representation of a PWM waveform is different here compared to
-> the in-kernel representation. A PWM waveform is represented using:
->=20
-> 	period
-> 	duty_cycle
-> 	duty_offset
->=20
-> A disabled PWM is represented by period =3D 0. For an inversed wave use:
->=20
-> 	duty_offset =3D duty_cycle
-> 	duty_cycle =3D period - duty_cycle;
->=20
-> . However there are some difficulties yet that make it hard to provide a
-> consistent API to userspace and so for now duty_offset isn't (fully)
-> supported yet. That needs some more consideration and can be added
-> later.
->=20
-> A userspace lib together with some simple test programs making use of
-> this new API can be found at
->=20
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/libpwm.git
->=20
-> .
->=20
-> The start of the series is some cleanup and preparation. The lifetime
-> and locking patches are needed to not crash the kernel when a character
-> device is open while a lowlevel driver goes away.
+thanks for your patience to wait for my review.
 
-This series is already in next for some time, but I'm not sure that I
-want to really send it to Linus in the next merge window as there are a
-few issues with it:
+On Fri, Feb 23, 2024 at 04:43:32PM +0800, William Qiu wrote:
+> Add driver for OpenCores PWM Controller. And add compatibility code
+> which based on StarFive SoC.
+>=20
+> Co-developed-by: Hal Feng <hal.feng@starfivetech.com>
+> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
+> ---
+>  MAINTAINERS              |   7 ++
+>  drivers/pwm/Kconfig      |  12 ++
+>  drivers/pwm/Makefile     |   1 +
+>  drivers/pwm/pwm-ocores.c | 232 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 252 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-ocores.c
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9ed4d3868539..12ea5e86fc23 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16414,6 +16414,13 @@ F:	Documentation/i2c/busses/i2c-ocores.rst
+>  F:	drivers/i2c/busses/i2c-ocores.c
+>  F:	include/linux/platform_data/i2c-ocores.h
+> =20
+> +OPENCORES PWM DRIVER
+> +M:	William Qiu <william.qiu@starfivetech.com>
+> +M:	Hal Feng <hal.feng@starfivetech.com>
+> +S:	Supported
+> +F:	Documentation/devicetree/bindings/pwm/opencores,pwm.yaml
+> +F:	drivers/pwm/pwm-ocores.c
+> +
+>  OPENRISC ARCHITECTURE
+>  M:	Jonas Bonn <jonas@southpole.se>
+>  M:	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 4b956d661755..d87e1bb350ba 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -444,6 +444,18 @@ config PWM_NTXEC
+>  	  controller found in certain e-book readers designed by the original
+>  	  design manufacturer Netronix.
+> =20
+> +config PWM_OCORES
+> +	tristate "OpenCores PWM support"
 
- - A (false positive) lockdep warning reported by Marek Szyprowski.
-   See https://lore.kernel.org/all/5a49cadd-21b7-4384-9e7d-9105ccc288b3@sam=
-sung.com
+OpenCores PTC PWM support?
 
- - A speculation warning flagged by smatch that I don't understand
-   completely yet (and failed to attract attention by people that know
-   more about about it)
-   See https://lore.kernel.org/all/1e3dc81d-dcd4-4b04-85b1-23937e2f0acd@mor=
-oto.mountain
+> +	depends on HAS_IOMEM && OF
+> +	depends on COMMON_CLK && RESET_CONTROLLER
+> +	depends on ARCH_STARFIVE || COMPILE_TEST
+> +	help
+> +	  If you say yes to this option, support will be included for the
+> +	  OpenCores PWM. For details see https://opencores.org/projects/ptc.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-ocores.
+> +
+>  config PWM_OMAP_DMTIMER
+>  	tristate "OMAP Dual-Mode Timer PWM support"
+>  	depends on OF
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index c5ec9e168ee7..517c4f643058 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -40,6 +40,7 @@ obj-$(CONFIG_PWM_MICROCHIP_CORE)	+=3D pwm-microchip-cor=
+e.o
+>  obj-$(CONFIG_PWM_MTK_DISP)	+=3D pwm-mtk-disp.o
+>  obj-$(CONFIG_PWM_MXS)		+=3D pwm-mxs.o
+>  obj-$(CONFIG_PWM_NTXEC)		+=3D pwm-ntxec.o
+> +obj-$(CONFIG_PWM_OCORES)	+=3D pwm-ocores.o
+>  obj-$(CONFIG_PWM_OMAP_DMTIMER)	+=3D pwm-omap-dmtimer.o
+>  obj-$(CONFIG_PWM_PCA9685)	+=3D pwm-pca9685.o
+>  obj-$(CONFIG_PWM_PXA)		+=3D pwm-pxa.o
+> diff --git a/drivers/pwm/pwm-ocores.c b/drivers/pwm/pwm-ocores.c
+> new file mode 100644
+> index 000000000000..874bc630bf2d
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-ocores.c
+> @@ -0,0 +1,232 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * OpenCores PWM Driver
+> + *
+> + * https://opencores.org/projects/ptc
+> + *
+> + * Copyright (C) 2018-2023 StarFive Technology Co., Ltd.
+> + *
+> + * Limitations:
+> + * - The hardware only do inverted polarity.
+> + * - The hardware minimum period / duty_cycle is (1 / pwm_apb clock freq=
+uency) ns.
+> + * - The hardware maximum period / duty_cycle is (U32_MAX / pwm_apb cloc=
+k frequency) ns.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/reset.h>
+> +#include <linux/slab.h>
+> +
+> +/* OCPWM_CTRL register bits*/
+> +#define REG_OCPWM_EN      BIT(0)
+> +#define REG_OCPWM_ECLK    BIT(1)
+> +#define REG_OCPWM_NEC     BIT(2)
+> +#define REG_OCPWM_OE      BIT(3)
+> +#define REG_OCPWM_SIGNLE  BIT(4)
+> +#define REG_OCPWM_INTE    BIT(5)
+> +#define REG_OCPWM_INT     BIT(6)
+> +#define REG_OCPWM_CNTRRST BIT(7)
+> +#define REG_OCPWM_CAPTE   BIT(8)
+> +
+> +struct ocores_pwm_device {
+> +	struct pwm_chip chip;
+> +	struct clk *clk;
+> +	struct reset_control *rst;
+> +	const struct ocores_pwm_data *data;
+> +	void __iomem *regs;
+> +	u32 clk_rate; /* PWM APB clock frequency */
+> +};
+> +
+> +struct ocores_pwm_data {
+> +	void __iomem *(*get_ch_base)(void __iomem *base, unsigned int channel);
+> +};
+> +
+> +static inline u32 ocores_readl(struct ocores_pwm_device *ddata,
 
- - I'm a bit unhappy about the rounding behaviour. Actually I'd like to
-   only provide userspace access via the character device to drivers
-   that adhere to the rounding rules for new drivers (that is: First
-   pick the maximal period that isn't bigger than the requested period.
-   Then for the chosen period pick the maximal duty_cycle that isn't
-   bigger than the requested one) to give a consistent behaviour. This
-   is further complicated by the fact that the character device exposes
-   a more flexible API (involving a duty_offset instead of polarity) and
-   the natural extension for the rounding rules with duty_offset is
-   different than for inverted polarity configurations.
+ocores_pwm_readl is a tad longer (which is annoying), but IMHO the
+advantage of the longer name (no clash with other ocores IP drivers,
+being able to easily setup ftrace filtering for all functions in this
+driver) outweighs the shorter name. Can you please update accordingly.
+(There are a few more symbols that the same treatment.)
 
-I currently consider introducing a new callback that in the long run
-should replace .apply() and that properly implements the duty_offset
-stuff. Then the character device could only be provided for the drivers
-implementing .apply2().
+> +			       unsigned int channel,
+> +			       unsigned int offset)
+> +{
+> +	void __iomem *base =3D ddata->data->get_ch_base ?
+> +			     ddata->data->get_ch_base(ddata->regs, channel) : ddata->regs;
+> +
+> +	return readl(base + offset);
+> +}
+> [...]
+> +static void __iomem *starfive_jh71x0_get_ch_base(void __iomem *base,
+> +						 unsigned int channel)
+> +{
+> +	unsigned int offset =3D (channel > 3 ? 1 << 15 : 0) + (channel & 3) * 0=
+x10;
 
-I'm open for feedback, e.g. suggestions for a better name for .apply2().
+offset =3D (channel & 4) << 13 | (channel & 3) << 4
+
+results in the same offsets and can be compiled to more efficient code.
+(Well, at least on ARM, I suspect the same applies to riscv.)
+
+> +	return base + offset;
+> +}
+> +
+> +static int ocores_pwm_get_state(struct pwm_chip *chip,
+> +				struct pwm_device *pwm,
+> +				struct pwm_state *state)
+> +{
+> +	struct ocores_pwm_device *ddata =3D chip_to_ocores(chip);
+> +	u32 period_data, duty_data, ctrl_data;
+> +
+> +	period_data =3D ocores_readl(ddata, pwm->hwpwm, 0x8);
+> +	duty_data =3D ocores_readl(ddata, pwm->hwpwm, 0x4);
+> +	ctrl_data =3D ocores_readl(ddata, pwm->hwpwm, 0xC);
+
+Can you please give symbolic names to these offsets?
+
+> [...]
+> +
+> +static int ocores_pwm_apply(struct pwm_chip *chip,
+> +			    struct pwm_device *pwm,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct ocores_pwm_device *ddata =3D chip_to_ocores(chip);
+> +	u32 ctrl_data =3D 0;
+> +	u64 period_data, duty_data;
+> +
+> +	if (state->polarity !=3D PWM_POLARITY_INVERSED)
+> +		return -EINVAL;
+> +
+> +	ctrl_data =3D ocores_readl(ddata, pwm->hwpwm, 0xC);
+> +	ocores_writel(ddata, pwm->hwpwm, 0xC, 0);
+> +
+> +	period_data =3D DIV_ROUND_DOWN_ULL(state->period * ddata->clk_rate, NSE=
+C_PER_SEC);
+
+The multiplication might overflow. Please use mul_u64_u32_div and in
+=2Eprobe assert that ddata->clk_rate <=3D NSEC_PER_SEC.
+
+> +	if (period_data <=3D U32_MAX)
+> +		ocores_writel(ddata, pwm->hwpwm, 0x8, (u32)period_data);
+> +	else
+> +		return -EINVAL;
+
+Please make this:
+
+	if (period_data <=3D U32_MAX)
+		period_data =3D U32_MAX;
+
+What happens if period_data =3D=3D 0? I guess this is a problem and you
+should return -EINVAL in that case.
+
+> +	duty_data =3D DIV_ROUND_DOWN_ULL(state->duty_cycle * ddata->clk_rate, N=
+SEC_PER_SEC);
+> +	if (duty_data <=3D U32_MAX)
+> +		ocores_writel(ddata, pwm->hwpwm, 0x4, (u32)duty_data);
+> +	else
+> +		return -EINVAL;
+> +
+> +	ocores_writel(ddata, pwm->hwpwm, 0xC, 0);
+
+What is the effect on this one? I guess it disables the output? Is this
+necessary? Does updating the configuration complete the currently
+running period?=20
+
+Please document in the Limitations paragraph if there are possible
+glitches (e.g. when the period register is written but the duty_cycle
+register not yet) and if the current period is completed.
+
+> [...]
+> +static int ocores_pwm_probe(struct platform_device *pdev)
+> +{
+> +	const struct of_device_id *id;
+> +	struct device *dev =3D &pdev->dev;
+> +	struct ocores_pwm_device *ddata;
+> +	struct pwm_chip *chip;
+> +	int ret;
+> +
+> +	id =3D of_match_device(ocores_pwm_of_match, dev);
+> +	if (!id)
+> +		return -EINVAL;
+> +
+> +	ddata =3D devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
+> +	if (!ddata)
+> +		return -ENOMEM;
+> +
+> +	ddata->data =3D id->data;
+> +	chip =3D &ddata->chip;
+
+This needs updating with the changes that got into 6.9-rc1. See
+ae8635e99c5cc752e204ab9ee8869ec54a9223f0 for a commit you might want to
+take as a template for the change needed here.
+
+> +	chip->dev =3D dev;
+> +	chip->ops =3D &ocores_pwm_ops;
+> +	chip->npwm =3D 8;
+> +
+> +	ddata->regs =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(ddata->regs))
+> +		return dev_err_probe(dev, PTR_ERR(ddata->regs),
+> +				     "Unable to map IO resources\n");
+> +
+> +	ddata->clk =3D devm_clk_get_enabled(dev, NULL);
+
+This member is only used here in .probe(). So it doesn't need to be
+stored in struct ocores_pwm_device.
+
+> +	if (IS_ERR(ddata->clk))
+> +		return dev_err_probe(dev, PTR_ERR(ddata->clk),
+> +				     "Unable to get pwm's clock\n");
+> +
+> +	ddata->rst =3D devm_reset_control_get_optional_exclusive(dev, NULL);
+
+Same as for clk, rst is only used here.
+
+> +	if (IS_ERR(ddata->rst))
+> +		return dev_err_probe(dev, PTR_ERR(ddata->rst),
+> +				     "Unable to get pwm's reset\n");
+> +
+> +	reset_control_deassert(ddata->rst);
+> +
+> +	ret =3D devm_add_action_or_reset(dev, ocores_reset_control_assert, ddat=
+a->rst);
+> +	if (ret)
+> +		return ret;
+
+Please add a call to devm_clk_rate_exclusive_get() before storing the
+rate and relying on it not changing.
+
+> +	ddata->clk_rate =3D clk_get_rate(ddata->clk);
+> +	if (ddata->clk_rate <=3D 0)
+> +		return dev_err_probe(dev, ddata->clk_rate,
+> +				     "Unable to get clock's rate\n");
+> +
+> +	ret =3D devm_pwmchip_add(dev, chip);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Could not register PWM chip\n");
+> +
+> +	platform_set_drvdata(pdev, ddata);
+
+This is unused.
+
+> +	return ret;
+
+Here ret is always 0, please use return 0 here.
+
+> +}
+> +
+> +static struct platform_driver ocores_pwm_driver =3D {
+> +	.probe =3D ocores_pwm_probe,
+> +	.driver =3D {
+> +		.name =3D "ocores-pwm",
+> +		.of_match_table =3D ocores_pwm_of_match,
+> +	},
+> +};
+> +module_platform_driver(ocores_pwm_driver);
+> +
+> +MODULE_AUTHOR("Jieqin Chen");
+> +MODULE_AUTHOR("Hal Feng <hal.feng@starfivetech.com>");
+> +MODULE_DESCRIPTION("OpenCores PWM PTC driver");
+
+The hardware unit is called PTC (PWM/Timer/Counter), so
+"OpenCores PTC PWM driver" would be more appropriate?!
+
+> +MODULE_LICENSE("GPL");
 
 Best regards
 Uwe
@@ -156,20 +404,20 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---zj47uaeekg2t34wy
+--6ppsoyvbhlmx6qtx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYaTtgACgkQj4D7WH0S
-/k41GggArwCz04UM8XYP40a2/xPS4R0IFZU9g8hFxLKfZke42KtDgVJp84tyvxRk
-Ce74eLiOxvzP9iMUB30qYalIWscFxabpizkVnXXVYOrKGrrCb4vKW/x2/LYYy3My
-9UDrF5YndTxX3Y9wI8TH6YXn6nKN14Lwr5iw3lrbhH3T3g4XODyiRJuaVgbcgn81
-Xz3mwGljML/9wV2dYN5gNQPuhi/1h1KgMCE5m7Hz3LNmNp0GAwxYE3CM+sAaaEVE
-PG9uJSi+tFUv9lscozE9qWjD7NbN9ZZ6LoA+fBeHOnM0rU5Z0IUbu1/p6U0MoVTF
-zJxMjSxvnSYNUkBzCfjLeej3Spk+pQ==
-=QS8z
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYaukAACgkQj4D7WH0S
+/k4upAf/R/Lcbnh4PGsFvAixxLQEJneISth1z8CHVKscqrZHCDRxRZnerkRAC2Dp
+efAo5PoEaxInDglOU/ftttZX7YaRUgocXG3wlkzIGyD+PLrpncwSdSWJR6zDW4fC
+ivPXuXmXfG4/OCFBrVrSgGvLWFE0Np8b9idQngiRxETJhPQVHMT/XCJvRJkF2Hb7
+glbbHRW3XqJDbXTnOqMjFYhtj5yAFcrVqC2B4/CXRQxUTrURT2si9sTxycbIswvV
+KBY5gXoqalzO/C2l5eZGX+OT3LrT6ytnwb1/MulkaY59pm7NWoZfrXr1WkVN8Wa1
+9SFw4map/UfZSbhe2g3XXUr6ABv7jw==
+=Pn3J
 -----END PGP SIGNATURE-----
 
---zj47uaeekg2t34wy--
+--6ppsoyvbhlmx6qtx--
 
