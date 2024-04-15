@@ -1,324 +1,102 @@
-Return-Path: <linux-pwm+bounces-1937-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1938-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FDED8A5271
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 15:58:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1D958A52AD
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 16:08:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42F2C1C226F2
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 13:58:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 410A91F23B38
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 14:08:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E4073163;
-	Mon, 15 Apr 2024 13:58:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59A0374E3F;
+	Mon, 15 Apr 2024 14:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="BywKZqOv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H+jUHZQb"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7739B73171
-	for <linux-pwm@vger.kernel.org>; Mon, 15 Apr 2024 13:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE00474E3A;
+	Mon, 15 Apr 2024 14:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713189487; cv=none; b=ZYter+mWlR8cKae/j5tqyAN1mr9fwACsQJzIkVhAa7wesaMxSsMBWU8a7THVo91V5lsAVj12e9XqrAErhpfYbuiNUQBr+AZSwscEMgTh/gOQr6+zeQW4ZeOTLaqrmKZy4ts3q1dsNlE2xvEJMYPUQvT9orJ1QKlJztKBOzONiZY=
+	t=1713190074; cv=none; b=pdpBnCA3J9JRckS+dXyzTwNA/pmzdrLc4/G7xqT57PyC4AoKvW8X0lsM6Mm2dYnjyfPK0oPz7Ur4t5Ni/KWCWv5hSU0vbziC1Z2Wq0NqqWrwjNwul4ALYdG4/hSCER/zePN/thpG6AmGS/axzTd7nA0ol4w9mUF2VZk03viOK1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713189487; c=relaxed/simple;
-	bh=cXmuk02yardD7sK0mmbeHpQjs8LzSBc0Pq+OZbHu/tQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jLNu46Dam9QiDd6WvCEwpyWQZ19V7sdFFvmHlkIGjI+NDm0ZnFEHg/z9QQBWdDQVXq3OgLTQY2+dGySspaGcbGVVXkZVkIkMjYQRGmAg2GSDyq3PboP1BOU7snKkHhxD4OT9NEwtPU6j9IswUMapfoSaaUzyA93B3AF/OJQk1/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=BywKZqOv; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e65a1370b7so10684455ad.3
-        for <linux-pwm@vger.kernel.org>; Mon, 15 Apr 2024 06:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1713189484; x=1713794284; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lVuQCo/DoesmumNLbytxbUmN6PFT19OiHvggiXb/Rg4=;
-        b=BywKZqOv72fFNdV3hcqhYpM5OAwvGmhgRto34LsJxNYuO/MsLFMIommBm7WPFFXsS3
-         duaXkxzorkO7yBzFizAwpw6ZF2QHQ/9MCgXc3o9htGS7KZyJfzMc688SrYsXjU9nt7Oc
-         nXX7tXHJoLsWvEsF2hMB6NatIG9bHEU6k6bEFGS8yMO1eCx4n+q+4mWGP6wp9cdfRJis
-         ZYWUQ2qJcN70BTuAoZbU0RABWnEDX+n+l2Ma1GczWMBDiCn5feFJXB2DlBYSGegQ+TiS
-         Xkqaiibxvl4QtIuF0gCFi6e6+/llAd7se257cNh5ZrBkJdecd/8s+VgeE91f82koG3Ir
-         z2rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713189484; x=1713794284;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lVuQCo/DoesmumNLbytxbUmN6PFT19OiHvggiXb/Rg4=;
-        b=UNFgVIxO4/upmF34Lx3IWqLjtNcNHxb5COPJkVJkuaRmleNV7HdD5sQGDmFgD/9hTN
-         9Gltz0V0XzjllV7e0vMhR7rS6Kg6ai+O6mygaCV2hcrDyLNrvSAuPLCNE4CO0zBbyhv2
-         a97DXawlSOwNsxfNBO8dHNI//QjRyIC23cicztKse1I9NxxNyguTboZ/3eKmZMFx001G
-         KuGBdSRzK1whOt9rOl+DVsF+b0cd7xjUF/MXHiI8r2SApcM2XZ0FyDcpuYIBbrlIPStR
-         EcsDbYduytBMjlbprbtV3hg7HDBZq9ihUuVXEjNtLLEvT57wYH8RXeRsDqygS0OKbWep
-         ZyWA==
-X-Gm-Message-State: AOJu0Yz+PA3tBn0v5wpz050p/3fWe9db8KvaPFTDqXfTFka8ARSqq5cO
-	af2IqMlWjWSYbYtHO5thNC0TpxkFMz9cUcZ9vTXgOH0/8cDK7+66rlEBdpJD+gk=
-X-Google-Smtp-Source: AGHT+IH1EJlNhxHBbJx4rlhNdixoqaV81K17xIAdFpby2ITRn1UkjQwWr1KOH1NPYHANUXU7rHhUMA==
-X-Received: by 2002:a17:902:e786:b0:1e6:3494:61fc with SMTP id cp6-20020a170902e78600b001e6349461fcmr4593155plb.0.1713189483773;
-        Mon, 15 Apr 2024 06:58:03 -0700 (PDT)
-Received: from ?IPV6:2601:602:9081:11e0::ba8? ([2601:602:9081:11e0::ba8])
-        by smtp.gmail.com with ESMTPSA id m6-20020a170902db0600b001e2a7ed52d0sm7939883plx.239.2024.04.15.06.58.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Apr 2024 06:58:03 -0700 (PDT)
-Message-ID: <6adb0adb-51b7-40cd-9768-23373265388b@baylibre.com>
-Date: Mon, 15 Apr 2024 06:58:02 -0700
+	s=arc-20240116; t=1713190074; c=relaxed/simple;
+	bh=iLpEtGtKkckJoSs3revBB/GVNqg1O8LlmWFpE7x+CWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nDyHtd8BArPa1YWqafk9yIzaz3ByHYQQRUY4eF+LwnSKQSxG3vMgG6SEThpLE+ITTtfyLy6hKMiSLgcqYoQXHrSQUElI3wVUDfB94P1swESPCL+Y8PGWosvvCAsRLoqx31SJogyeO8sZJkT+crv4B3QRO8qU41lOGQg3nTAMrok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H+jUHZQb; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713190073; x=1744726073;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=iLpEtGtKkckJoSs3revBB/GVNqg1O8LlmWFpE7x+CWU=;
+  b=H+jUHZQbl3oDXZSyPUdHKLRVTSlVXJ75+2YDubSQJivOOHAPRcRKXa8z
+   0d/zYA3xDpBhp77mdGFXjcNGpspIS1d3ryUMKmF5M9oXJNix1Sy1xWOxH
+   iwKyvZ7lc++aD86RffWy0/A0PzHEMDIqE2cGqvzYp/2Oi7tbZXYPcIqFs
+   GF17NBLJ5R2wF5fA729XSbhIwj54/4E+sai+lmfE196VulXcPTxuTk+1K
+   /VBskPWr3+67pT5pyHYAhtI4SQx5IocXwNF9PmyK2CYUIh86sDs8dQ5hD
+   tl/aZ8A/GUJa2YLjjU4O8CchAEVzMsdnTFdNnIcF7E7XQlHibRoO81V01
+   w==;
+X-CSE-ConnectionGUID: EbXiUeQrTzi7WrBh0/N4pQ==
+X-CSE-MsgGUID: g9+l/fhXSwCQzryM4OTlIQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="8415926"
+X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
+   d="scan'208";a="8415926"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 07:07:53 -0700
+X-CSE-ConnectionGUID: COIgAGrNS2iRVj55sVt0fA==
+X-CSE-MsgGUID: M3lwDkRlS8qtp/Yw0mR9sw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
+   d="scan'208";a="22399383"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 07:07:51 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rwMzs-00000004Qby-13lO;
+	Mon, 15 Apr 2024 17:07:48 +0300
+Date: Mon, 15 Apr 2024 17:07:47 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com, linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pwm: dwc: allow suspend/resume for 16 channels
+Message-ID: <Zh00s9VX0m42jO8t@smile.fi.intel.com>
+References: <20240415074051.14681-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] pwm: axi-pwmgen: support version 2.00.a
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
- michael.hennerich@analog.com, nuno.sa@analog.com,
- devicetree@vger.kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, dlechner@baylibre.com
-References: <20240314204722.1291993-1-tgamblin@baylibre.com>
- <20240314204722.1291993-3-tgamblin@baylibre.com>
- <2by7rakflv22s6uk2e2jk5lw65erjljpwdxdxg3z73furlprj5@2qlacusapkgr>
-Content-Language: en-US
-From: Trevor Gamblin <tgamblin@baylibre.com>
-In-Reply-To: <2by7rakflv22s6uk2e2jk5lw65erjljpwdxdxg3z73furlprj5@2qlacusapkgr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240415074051.14681-1-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Mon, Apr 15, 2024 at 01:10:51PM +0530, Raag Jadav wrote:
+> With 16 channel pwm support, we're registering two instances of pwm_chip
+> with 8 channels each. We need to update PM functions to use both instances
+> of pwm_chip during power state transitions.
+> 
+> Introduce struct dwc_pwm_drvdata and use it as driver_data, which will
+> maintain both instances of pwm_chip along with dwc_pwm_info and allow us
+> to use them inside suspend/resume handles.
+
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-On 2024-04-14 05:05, Uwe Kleine-König wrote:
-> Hello Trevor,
-Hi Uwe,
->
-> On Thu, Mar 14, 2024 at 04:47:22PM -0400, Trevor Gamblin wrote:
->> This adds support for the AXI PWMGEN v2 IP block. This version is
->> nearly identical to v1 other than it supports up to 16 channels instead
->> of 4 and a few of the memory mapped registers have moved.
->>
->> Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
->> ---
->>   drivers/pwm/pwm-axi-pwmgen.c | 62 ++++++++++++++++++++++++++++--------
->>   1 file changed, 49 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
->> index 0c8f7f893a21..539625c404ac 100644
->> --- a/drivers/pwm/pwm-axi-pwmgen.c
->> +++ b/drivers/pwm/pwm-axi-pwmgen.c
->> @@ -32,16 +32,25 @@
->>   #define AXI_PWMGEN_REG_CORE_MAGIC	0x0C
->>   #define AXI_PWMGEN_REG_CONFIG		0x10
->>   #define AXI_PWMGEN_REG_NPWM		0x14
->> -#define AXI_PWMGEN_CHX_PERIOD(ch)	(0x40 + (12 * (ch)))
->> -#define AXI_PWMGEN_CHX_DUTY(ch)		(0x44 + (12 * (ch)))
->> -#define AXI_PWMGEN_CHX_OFFSET(ch)	(0x48 + (12 * (ch)))
->> +#define AXI_PWMGEN_CHX_PERIOD(v, ch)	((v)->period_base + (v)->ch_step * (ch))
->> +#define AXI_PWMGEN_CHX_DUTY(v, ch)	((v)->duty_base + (v)->ch_step * (ch))
->> +#define AXI_PWMGEN_CHX_OFFSET(v, ch)	((v)->offset_base + (v)->ch_step * (ch))
->>   #define AXI_PWMGEN_REG_CORE_MAGIC_VAL	0x601A3471 /* Identification number to test during setup */
->>   #define AXI_PWMGEN_LOAD_CONFIG		BIT(1)
->>   #define AXI_PWMGEN_RESET		BIT(0)
->>   
->> +struct axi_pwm_variant {
->> +	u8 period_base;
->> +	u8 duty_base;
->> +	u8 offset_base;
->> +	u8 major_version;
->> +	u8 ch_step;
->> +};
->> +
->>   struct axi_pwmgen_ddata {
->>   	struct regmap *regmap;
->>   	unsigned long clk_rate_hz;
->> +	const struct axi_pwm_variant *variant;
->>   };
->>   
->>   static const struct regmap_config axi_pwmgen_regmap_config = {
->> @@ -50,12 +59,30 @@ static const struct regmap_config axi_pwmgen_regmap_config = {
->>   	.val_bits = 32,
->>   };
->>   
->> +static const struct axi_pwm_variant pwmgen_1_00_variant = {
->> +	.period_base = 0x40,
->> +	.duty_base = 0x44,
->> +	.offset_base = 0x48,
->> +	.major_version = 1,
->> +	.ch_step = 12,
->> +};
->> +
->> +static const struct axi_pwm_variant pwmgen_2_00_variant = {
->> +	.period_base = 0x40,
->> +	.duty_base = 0x80,
->> +	.offset_base = 0xC0,
->> +	.major_version = 2,
->> +	.ch_step = 4,
->> +};
-> My first intuition to model the register differences would have been
-> something like:
->
-> 	#define ..._PERIOD 0
-> 	#define ..._DUTY 1
-> 	#define ..._OFFSET 2
->
-> and then store a "register_step"(?) variable (which is 0x4 for v1 and
-> 0x40 for v2) in the variant struct and then use:
->
-> #define AXI_PWMGEN_CHX_PERIOD(v, ch)	(0x40 + (v)->ch_step * (ch))
-> #define AXI_PWMGEN_CHX_DUTY(v, ch)	(0x40 + (v)->register_step + (v)->ch_step * (ch))
-> #define AXI_PWMGEN_CHX_OFFSET(v, ch)	(0x40 + 2 * (v)->register_step + (v)->ch_step * (ch))
->
-> This saves a tiny bit of memory, not entirely sure this is a good idea.
-> Pick it up if you like, or keep your approach, I don't care much.
->
->> +
->>   static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->>   			    const struct pwm_state *state)
->>   {
->>   	struct axi_pwmgen_ddata *ddata = pwmchip_get_drvdata(chip);
->>   	unsigned int ch = pwm->hwpwm;
->>   	struct regmap *regmap = ddata->regmap;
->> +	const struct axi_pwm_variant *variant = ddata->variant;
->>   	u64 period_cnt, duty_cnt;
->>   	int ret;
->>   
->> @@ -70,7 +97,7 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->>   		if (period_cnt == 0)
->>   			return -EINVAL;
->>   
->> -		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), period_cnt);
->> +		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(variant, ch), period_cnt);
->>   		if (ret)
->>   			return ret;
->>   
->> @@ -78,15 +105,15 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->>   		if (duty_cnt > UINT_MAX)
->>   			duty_cnt = UINT_MAX;
->>   
->> -		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), duty_cnt);
->> +		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch), duty_cnt);
->>   		if (ret)
->>   			return ret;
->>   	} else {
->> -		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), 0);
->> +		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(variant, ch), 0);
->>   		if (ret)
->>   			return ret;
->>   
->> -		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), 0);
->> +		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch), 0);
->>   		if (ret)
->>   			return ret;
->>   	}
->> @@ -99,11 +126,12 @@ static int axi_pwmgen_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->>   {
->>   	struct axi_pwmgen_ddata *ddata = pwmchip_get_drvdata(chip);
->>   	struct regmap *regmap = ddata->regmap;
->> +	const struct axi_pwm_variant *variant = ddata->variant;
->>   	unsigned int ch = pwm->hwpwm;
->>   	u32 cnt;
->>   	int ret;
->>   
->> -	ret = regmap_read(regmap, AXI_PWMGEN_CHX_PERIOD(ch), &cnt);
->> +	ret = regmap_read(regmap, AXI_PWMGEN_CHX_PERIOD(variant, ch), &cnt);
->>   	if (ret)
->>   		return ret;
->>   
->> @@ -111,7 +139,7 @@ static int axi_pwmgen_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->>   
->>   	state->period = DIV_ROUND_UP_ULL((u64)cnt * NSEC_PER_SEC, ddata->clk_rate_hz);
->>   
->> -	ret = regmap_read(regmap, AXI_PWMGEN_CHX_DUTY(ch), &cnt);
->> +	ret = regmap_read(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch), &cnt);
->>   	if (ret)
->>   		return ret;
->>   
->> @@ -127,7 +155,8 @@ static const struct pwm_ops axi_pwmgen_pwm_ops = {
->>   	.get_state = axi_pwmgen_get_state,
->>   };
->>   
->> -static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev)
->> +static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev,
->> +			    const struct axi_pwm_variant *variant)
->>   {
->>   	int ret;
->>   	u32 val;
->> @@ -146,7 +175,7 @@ static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev)
->>   	if (ret)
->>   		return ret;
->>   
->> -	if (ADI_AXI_PCORE_VER_MAJOR(val) != 1) {
->> +	if (ADI_AXI_PCORE_VER_MAJOR(val) != variant->major_version) {
->>   		return dev_err_probe(dev, -ENODEV, "Unsupported peripheral version %u.%u.%u\n",
-> Hmm, is it worth to also diagnose a mismatch here? That is if the dt
-> tells this was a version 2 device but the register says version 1? In
-> this case
->
-> 	Unsupported peripheral version 1.x.y
->
-> might be misleading, because version 1 is supported and the problem is
-> maybe only a wrong dt?
-Good point, I'll look into this change too.
->
->>   			ADI_AXI_PCORE_VER_MAJOR(val),
->>   			ADI_AXI_PCORE_VER_MINOR(val),
->> @@ -178,9 +207,14 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
->>   	struct pwm_chip *chip;
->>   	struct axi_pwmgen_ddata *ddata;
->>   	struct clk *clk;
->> +	const struct axi_pwm_variant *variant;
->>   	void __iomem *io_base;
->>   	int ret;
->>   
->> +	variant = device_get_match_data(dev);
->> +	if (!variant)
->> +		return -EINVAL;
->> +
->>   	io_base = devm_platform_ioremap_resource(pdev, 0);
->>   	if (IS_ERR(io_base))
->>   		return PTR_ERR(io_base);
->> @@ -190,7 +224,7 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
->>   		return dev_err_probe(dev, PTR_ERR(regmap),
->>   				     "failed to init register map\n");
->>   
->> -	ret = axi_pwmgen_setup(regmap, dev);
->> +	ret = axi_pwmgen_setup(regmap, dev, variant);
->>   	if (ret < 0)
->>   		return ret;
->>   
->> @@ -199,6 +233,7 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
->>   		return PTR_ERR(chip);
->>   	ddata = pwmchip_get_drvdata(chip);
->>   	ddata->regmap = regmap;
->> +	ddata->variant = variant;
->>   
->>   	clk = devm_clk_get_enabled(dev, NULL);
->>   	if (IS_ERR(clk))
->> @@ -224,7 +259,8 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
->>   }
->>   
->>   static const struct of_device_id axi_pwmgen_ids[] = {
->> -	{ .compatible = "adi,axi-pwmgen-1.00.a" },
->> +	{ .compatible = "adi,axi-pwmgen-1.00.a", .data = &pwmgen_1_00_variant },
->> +	{ .compatible = "adi,axi-pwmgen-2.00.a", .data = &pwmgen_2_00_variant },
->>   	{ }
->>   };
->>   MODULE_DEVICE_TABLE(of, axi_pwmgen_ids);
-> Otherwise looks fine.
->
-> Can you please add the next iteration of this patch together with the
-> series adding support for v1?
-
-Thank you, will do. I'm currently traveling so I may not get to it until 
-the weekend or early next week.
-
-Trevor
-
->
-> Best regards
-> Uwe
->
 
