@@ -1,275 +1,107 @@
-Return-Path: <linux-pwm+bounces-1934-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1935-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B16C8A493D
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 09:41:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 735C38A4DB1
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 13:28:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40F8528119D
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 07:41:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8151A1C20D26
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 11:27:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E00B24A06;
-	Mon, 15 Apr 2024 07:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JKAnEkZh"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B9025D49F;
+	Mon, 15 Apr 2024 11:27:49 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885672EAE6;
-	Mon, 15 Apr 2024 07:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE86F5FBA3
+	for <linux-pwm@vger.kernel.org>; Mon, 15 Apr 2024 11:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713166858; cv=none; b=Q7WKSqGsSUlzJ79Ly7aSrgD4DXyIoTWuEUYkRxr7IUBCaxiiIj96/ip4W3OonqcVfayckjULVlnz7EouE11c35w141aTzzlSSUsk+jTf74Fv1cmb7PXWLIsc8YYZ3ymFh22vsSPruPr2Z31OdS8IV0mhAjkdKt3mlfiO6IbbQMM=
+	t=1713180469; cv=none; b=YJG01xCvt3+ADA0Bmz3Vu/qpG2GI9xYfbsNmpoJNjpTy6BRbimtyF2qcbnYuk7ol+EPd55JiMHpvvDBHOwmSDwA+YsaSS0YmjyeG56AWNokEzQniOHEzqlvO+RCMOQ3EFUY0z1ufK+sJ0jcW8ShAF0kwzhJmXfdyTvy8991+cwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713166858; c=relaxed/simple;
-	bh=KV3WZcxZWeAs613SkdTfKfp+L1qJ8Fy4gMkHGkuUPe0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DP5kDgyM65VX+DZsz1418y/8BCZPIL6QFHt35nmBVdJ5nPR3fiv6/hFsz57awXJhRECe3afeQBlE8bXHjV2zqY3A40xWBemNFFNgm3IerAG0J/VfCnNxm8G5PeI0JmUtusRBUzjNXU5pojhBfyafBieQbhUxREYAGOpWdhPs974=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JKAnEkZh; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecsmtp.iind.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713166857; x=1744702857;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=KV3WZcxZWeAs613SkdTfKfp+L1qJ8Fy4gMkHGkuUPe0=;
-  b=JKAnEkZhbd8NvEtzy3RBiZHuTvuQvU+tamB0H9phJa3SgbvU85ILwIgm
-   XaueTcbTQZZgH51taqlckmLRNxGWXjLQopai20LxD33tQYlNeyoG8xVbr
-   KfGZsiCWeWCtiLxW1JdcQtn/mGUYgJQnjmmNWoGPKVRP+Rp4VccKGzeZ/
-   /W9Q8mXJqSC/xFur7gDf6dbwuBmFK8mKfyB/tjR4bkEywoUGr+o823Fhr
-   SiTIN4O9Di8E1uCbXxHzt6yx6yYOiwOqJ66eUWBHvPDE8mmYhw/Ltpq4m
-   /NHgzFVOLwpq0pmWDFoyJXVz0+Pgi+O7bvgjLngPsICjgPoxSH092QXg3
-   A==;
-X-CSE-ConnectionGUID: Sd3eIBN2R+mhGNpeWO5gDw==
-X-CSE-MsgGUID: Hdc6R8JhTnC6G8lSNY0HGA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11044"; a="8665715"
-X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
-   d="scan'208";a="8665715"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 00:40:56 -0700
-X-CSE-ConnectionGUID: ZgGAJXOMTkqj8j8DED4pOw==
-X-CSE-MsgGUID: NX9oNU9cTkOg23OUyyMsgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
-   d="scan'208";a="52781267"
-Received: from inesxmail01.iind.intel.com ([10.223.57.40])
-  by orviesa002.jf.intel.com with ESMTP; 15 Apr 2024 00:40:54 -0700
-Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
-	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 5459F72AA6;
-	Mon, 15 Apr 2024 13:10:53 +0530 (IST)
-Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
-	id 4F5131600100; Mon, 15 Apr 2024 13:10:53 +0530 (IST)
-From: Raag Jadav <raag.jadav@intel.com>
-To: u.kleine-koenig@pengutronix.de,
-	jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com
-Cc: linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v2] pwm: dwc: allow suspend/resume for 16 channels
-Date: Mon, 15 Apr 2024 13:10:51 +0530
-Message-Id: <20240415074051.14681-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.35.3
+	s=arc-20240116; t=1713180469; c=relaxed/simple;
+	bh=jDf2Y1vp1jyVxpwRw+0NqPRWWVE522F13Uzq66S7vSA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=W28G18i0u5jmyiBfwhE1tFrh3Wlw4vmt2dYGRv47FI7w4sJ8G7Vv9m+OmgKbEc0krf0rAtynLb7KM8exYRLLwPFXCzSqgiLyDzcSTXPnfsmAVXMgCgt0G2jbIX4rtCQPUAZog17d8Ala1oscYuPMuAbSXYSxJUD4+iWkDdAcUQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
+ (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Mon, 15 Apr
+ 2024 13:27:36 +0200
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%4]) with mapi id
+ 15.01.2507.037; Mon, 15 Apr 2024 13:27:36 +0200
+From: John Ernberg <john.ernberg@actia.se>
+To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
+CC: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH 8/8] pwm: Add support for pwmchip devices for faster and
+ easier userspace access
+Thread-Topic: [PATCH 8/8] pwm: Add support for pwmchip devices for faster and
+ easier userspace access
+Thread-Index: AQHaictjh2dhWToPm0mPNkeTSyNMR7Ffb7aAgAmq/4A=
+Date: Mon, 15 Apr 2024 11:27:35 +0000
+Message-ID: <b2a6c620-2272-4aa2-98f5-863e7faeb5ab@actia.se>
+References: <8d3acfc431ecd431d6cced032dcb58ad2579474c.1710670958.git.u.kleine-koenig@pengutronix.de>
+ <20240408154233.890293-1-john.ernberg@actia.se>
+ <z6g6zbzwaejozhb7hxjnta2tawifa5diblz6ktdt6hnngazkfr@xclx4ooiuw63>
+In-Reply-To: <z6g6zbzwaejozhb7hxjnta2tawifa5diblz6ktdt6hnngazkfr@xclx4ooiuw63>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-esetresult: clean, is OK
+x-esetid: 37303A29059A2F57647260
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <812333EAA628664B957BD0C49D53B6B8@actia.se>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-With 16 channel pwm support, we're registering two instances of pwm_chip
-with 8 channels each. We need to update PM functions to use both instances
-of pwm_chip during power state transitions.
-
-Introduce struct dwc_pwm_drvdata and use it as driver_data, which will
-maintain both instances of pwm_chip along with dwc_pwm_info and allow us
-to use them inside suspend/resume handles.
-
-Fixes: ebf2c89eb95e ("pwm: dwc: Add 16 channel support for Intel Elkhart Lake")
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
-Changes since v1:
-- Drop error message for -ENOMEM
-- s/data/ddata/
-
- drivers/pwm/pwm-dwc-core.c |  1 -
- drivers/pwm/pwm-dwc.c      | 82 +++++++++++++++++++++++++-------------
- drivers/pwm/pwm-dwc.h      |  6 +++
- 3 files changed, 60 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/pwm/pwm-dwc-core.c b/drivers/pwm/pwm-dwc-core.c
-index 043736972cb9..c8425493b95d 100644
---- a/drivers/pwm/pwm-dwc-core.c
-+++ b/drivers/pwm/pwm-dwc-core.c
-@@ -172,7 +172,6 @@ struct pwm_chip *dwc_pwm_alloc(struct device *dev)
- 	dwc->clk_ns = 10;
- 	chip->ops = &dwc_pwm_ops;
- 
--	dev_set_drvdata(dev, chip);
- 	return chip;
- }
- EXPORT_SYMBOL_GPL(dwc_pwm_alloc);
-diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-index 676eaf8d7a53..fb3eadf6fbc4 100644
---- a/drivers/pwm/pwm-dwc.c
-+++ b/drivers/pwm/pwm-dwc.c
-@@ -31,26 +31,34 @@ static const struct dwc_pwm_info ehl_pwm_info = {
- 	.size = 0x1000,
- };
- 
--static int dwc_pwm_init_one(struct device *dev, void __iomem *base, unsigned int offset)
-+static int dwc_pwm_init_one(struct device *dev, struct dwc_pwm_drvdata *ddata, unsigned int idx)
- {
- 	struct pwm_chip *chip;
- 	struct dwc_pwm *dwc;
-+	int ret;
- 
- 	chip = dwc_pwm_alloc(dev);
- 	if (IS_ERR(chip))
- 		return PTR_ERR(chip);
- 
- 	dwc = to_dwc_pwm(chip);
--	dwc->base = base + offset;
-+	dwc->base = ddata->io_base + (ddata->info->size * idx);
- 
--	return devm_pwmchip_add(dev, chip);
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret)
-+		return ret;
-+
-+	ddata->chips[idx] = chip;
-+	return 0;
- }
- 
- static int dwc_pwm_probe(struct pci_dev *pci, const struct pci_device_id *id)
- {
- 	const struct dwc_pwm_info *info;
- 	struct device *dev = &pci->dev;
--	int i, ret;
-+	struct dwc_pwm_drvdata *ddata;
-+	unsigned int idx;
-+	int ret;
- 
- 	ret = pcim_enable_device(pci);
- 	if (ret)
-@@ -63,17 +71,25 @@ static int dwc_pwm_probe(struct pci_dev *pci, const struct pci_device_id *id)
- 		return dev_err_probe(dev, ret, "Failed to iomap PCI BAR\n");
- 
- 	info = (const struct dwc_pwm_info *)id->driver_data;
-+	ddata = devm_kzalloc(dev, struct_size(ddata, chips, info->nr), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
- 
--	for (i = 0; i < info->nr; i++) {
--		/*
--		 * No need to check for pcim_iomap_table() failure,
--		 * pcim_iomap_regions() already does it for us.
--		 */
--		ret = dwc_pwm_init_one(dev, pcim_iomap_table(pci)[0], i * info->size);
-+	/*
-+	 * No need to check for pcim_iomap_table() failure,
-+	 * pcim_iomap_regions() already does it for us.
-+	 */
-+	ddata->io_base = pcim_iomap_table(pci)[0];
-+	ddata->info = info;
-+
-+	for (idx = 0; idx < ddata->info->nr; idx++) {
-+		ret = dwc_pwm_init_one(dev, ddata, idx);
- 		if (ret)
- 			return ret;
- 	}
- 
-+	dev_set_drvdata(dev, ddata);
-+
- 	pm_runtime_put(dev);
- 	pm_runtime_allow(dev);
- 
-@@ -88,19 +104,24 @@ static void dwc_pwm_remove(struct pci_dev *pci)
- 
- static int dwc_pwm_suspend(struct device *dev)
- {
--	struct pwm_chip *chip = dev_get_drvdata(dev);
--	struct dwc_pwm *dwc = to_dwc_pwm(chip);
--	int i;
-+	struct dwc_pwm_drvdata *ddata = dev_get_drvdata(dev);
-+	unsigned int idx;
- 
--	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
--		if (chip->pwms[i].state.enabled) {
--			dev_err(dev, "PWM %u in use by consumer (%s)\n",
--				i, chip->pwms[i].label);
--			return -EBUSY;
-+	for (idx = 0; idx < ddata->info->nr; idx++) {
-+		struct pwm_chip *chip = ddata->chips[idx];
-+		struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+		unsigned int i;
-+
-+		for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
-+			if (chip->pwms[i].state.enabled) {
-+				dev_err(dev, "PWM %u in use by consumer (%s)\n",
-+					i, chip->pwms[i].label);
-+				return -EBUSY;
-+			}
-+			dwc->ctx[i].cnt = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(i));
-+			dwc->ctx[i].cnt2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(i));
-+			dwc->ctx[i].ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(i));
- 		}
--		dwc->ctx[i].cnt = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(i));
--		dwc->ctx[i].cnt2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(i));
--		dwc->ctx[i].ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(i));
- 	}
- 
- 	return 0;
-@@ -108,14 +129,19 @@ static int dwc_pwm_suspend(struct device *dev)
- 
- static int dwc_pwm_resume(struct device *dev)
- {
--	struct pwm_chip *chip = dev_get_drvdata(dev);
--	struct dwc_pwm *dwc = to_dwc_pwm(chip);
--	int i;
-+	struct dwc_pwm_drvdata *ddata = dev_get_drvdata(dev);
-+	unsigned int idx;
- 
--	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
--		dwc_pwm_writel(dwc, dwc->ctx[i].cnt, DWC_TIM_LD_CNT(i));
--		dwc_pwm_writel(dwc, dwc->ctx[i].cnt2, DWC_TIM_LD_CNT2(i));
--		dwc_pwm_writel(dwc, dwc->ctx[i].ctrl, DWC_TIM_CTRL(i));
-+	for (idx = 0; idx < ddata->info->nr; idx++) {
-+		struct pwm_chip *chip = ddata->chips[idx];
-+		struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+		unsigned int i;
-+
-+		for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
-+			dwc_pwm_writel(dwc, dwc->ctx[i].cnt, DWC_TIM_LD_CNT(i));
-+			dwc_pwm_writel(dwc, dwc->ctx[i].cnt2, DWC_TIM_LD_CNT2(i));
-+			dwc_pwm_writel(dwc, dwc->ctx[i].ctrl, DWC_TIM_CTRL(i));
-+		}
- 	}
- 
- 	return 0;
-diff --git a/drivers/pwm/pwm-dwc.h b/drivers/pwm/pwm-dwc.h
-index a8b074841ae8..c6e2df5a6122 100644
---- a/drivers/pwm/pwm-dwc.h
-+++ b/drivers/pwm/pwm-dwc.h
-@@ -38,6 +38,12 @@ struct dwc_pwm_info {
- 	unsigned int size;
- };
- 
-+struct dwc_pwm_drvdata {
-+	const struct dwc_pwm_info *info;
-+	void __iomem *io_base;
-+	struct pwm_chip *chips[];
-+};
-+
- struct dwc_pwm_ctx {
- 	u32 cnt;
- 	u32 cnt2;
--- 
-2.35.3
-
+SGkgVXdlLA0KDQpPbiA0LzkvMjQgOTo0OSBBTSwgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6DQo+
+IEhhbGxvLA0KPiANCj4gT24gTW9uLCBBcHIgMDgsIDIwMjQgYXQgMDM6NDI6MzlQTSArMDAwMCwg
+Sm9obiBFcm5iZXJnIHdyb3RlOg0KPj4gU2VlaW5nIHRoaXMgcGF0Y2ggc2V0IG1hZGUgbWUgZXhj
+aXRlZC4NCj4gDQo+IFxvLw0KPiANCj4+IERpZCB5b3UgY29uc2lkZXIgb3IgdHJ5IGEgcHdtX2xp
+bmUgbW9kZWwgc3RydWN0dXJlLCB0aGF0IGlzIGNvbm5lY3RlZCB0byBhIGZpbGUNCj4+IGRlc2Ny
+aXB0b3IsIG1vcmUgbGlrZSByZXF1ZXN0X2xpbmUgZnJvbSBncGlvIGNoYXJkZXZzPw0KPiANCj4g
+SSdkIGJlIG9wZW4gZm9yIGFuIGV4dGVuc2lvbiB0aGF0IHNpbXBsaWZpZXMgZGV0ZWN0aW9uIG9m
+IHdoaWNoIChjaGlwLA0KPiBod3B3bSkgcGFpciBjb3JyZXNwb25kcyB0byB3aGljaCB1c2FnZS4g
+SXQgY291bGQgYmUgZmVkIGZyb20gYSBkZXZpY2UNCj4gdHJlZSBsaWtlOg0KPiANCj4gCSZwd20w
+IHsNCj4gCQljb21wYXRpYmxlID0gLi4uOw0KPiAJCXJlZyA9IDwuLi4+Ow0KPiAJCSNwd20tY2Vs
+bHMgPSA8Mz47DQo+IAkJcHdtLW5hbWVzID0gIm1vdG9yLWNvbnRyb2wiLCAiYmFja2xpZ2h0Iiwg
+IiIsICJzdGF0dXMtbGVkIjsNCj4gCX0NCj4gDQo+IGFuZCBwcm92aWRlIGEgZnVuY3Rpb24gaW4g
+bGlicHdtIHRoYXQgYWxsb3dzIHRvIGRldGVybWluZSB0aGUgY2hpcGlkIG9mDQo+IHRoZSBjaGlw
+IGNvcnJlc3BvbmRpbmcgdG8gJnB3bTAgKG9yIGFuIG9wZW4gZmQgdG8gdGhhdCBkZXZpY2UpIGFu
+ZCAzDQo+IHdoZW4gInN0YXR1cy1sZWQiIGlzIHNlYXJjaGVkIGZvci4NCj4gDQo+IFRoaXMgY291
+bGQgYmUgZG9uZSBjb21wbGV0ZWx5IGluIHVzZXJzcGFjZSBJIHRoaW5rIChieSBpbnNwZWN0aW5n
+DQo+IHN5c2ZzKSwgc28gSSB3b25kZXIgaWYgdGhpcyBjb3VsZCBiZSBhIGNvbXBsZXRlIHVzZXJz
+cGFjZQ0KPiBpbXBsZW1lbnRhdGlvbi4gSSBsaWtlIGtlZXBpbmcgdGhlIGtlcm5lbCBBUEkgc2lt
+cGxlLCBpLmUuIGxldCBpdCBvbmx5DQo+IHdvcmsgKGFzIGl0IGlzIG5vdykgb25seSB1c2luZyBj
+aGlwaWQgYW5kIGh3cHdtLiBIbW0sIG1heWJlIG1ha2UgcHdtDQo+IG5hbWVzIGEga2VybmVsIGNv
+bmNlcHQgZXhwb3NlZCB0byBzeXNmcyB0byBub3QgaGF2ZSB0byBoYXJkY29kZSB0aGUgZHQNCj4g
+ZGV0YWlscyBpbnRvIGxpYnB3bT8hDQoNClNvdW5kcyBsaWtlIGl0IGNvdWxkIGJlIHdvcmthYmxl
+IHRoYXQgd2F5LiBUaGFua3MhDQoNCj4gDQo+PiBXZSBoYXZlIGJlZW4gdXNpbmcgZ3BpbyBjaGFy
+ZGV2cyBmb3IgYSB3aGlsZSBhbmQgcmVhbGx5IGJlbmVmaXR0ZWQgZnJvbSB0aGF0DQo+PiBvdmVy
+IHRoZSBzeXNmcyBpbnRlcmZhY2UuIEkgd3JvdGUgYSBzaW1wbGUgd3JhcHBlciBhcm91bmQgdGhl
+IFBXTSBzeXNmcw0KPj4gaW50ZXJmYWNlIG1pbWljaW5nIHRoZSB3YXkgZ3BpbyBjaGFyZGV2cyB3
+b3JrIGZvciBQV00gdXNpbmcgZGlyZmQsIHRvIG1ha2Ugb3VyDQo+PiBhcHBsaWNhdGlvbiBkZXNp
+Z24gbW9yZSBzdHJlYW1saW5lZC4NCj4gDQo+IGxpYnB3bSBjYW4gYWxzbyBmYWxsIGJhY2sgdG8g
+c3lzZnMgd2hlbiB0aGUgY2hhcmFjdGVyIGRldmljZXMgYXJlDQo+IG1pc3NpbmcuIElmIHlvdSB3
+YW50IHRvIGNvbXBhcmUgdGhlIHR3byBpbXBsZW1lbnRhdGlvbiBhbmQgY3JlYXRlIGEgYmVzdA0K
+PiBvZiB0d28gbWVyZ2UgZnJvbSBpdCwgdGhhdCB3b3VsZCBiZSBncmVhdC4NCj4gDQo+PiBXaXRo
+IHRoaXMgcGF0Y2ggc2V0IEkgZG8gbm90IHNlZSBob3cgd2UgY2FuIG5hbWUgdGhlIFBXTXMgaW4g
+dGhlIGRldmljZSB0cmVlDQo+PiBub3IgZHVyaW5nIHJlcXVlc3Qgd2hpY2ggaXMgYSBiaWcgYmVu
+ZWZpdCB3aXRoIEdQSU8gd2hlbiB3ZSBuZWVkIHRvIHN1cHBvcnQNCj4+IG11bHRpcGxlIGhhcmR3
+YXJlcy4gTm9yIGNhbiBJIHNlZSBob3cgd2Ugd291bGQgaW5zcGVjdCB3aGljaCBwaW5zIGFyZQ0K
+Pj4gYWxsb2NhdGVkIG9yIHRoZWlyIG5hbWVzIHdoZW4gZGVidWdnaW5nLg0KPiANCj4gQmVzdCBy
+ZWdhcmRzDQo+IFV3ZQ0KPiANCg0KQmVzdCByZWdhcmRzIC8vIEpvaG4gRXJuYmVyZw==
 
