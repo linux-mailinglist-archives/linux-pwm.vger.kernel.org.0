@@ -1,107 +1,150 @@
-Return-Path: <linux-pwm+bounces-1935-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1936-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 735C38A4DB1
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 13:28:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDACF8A4E03
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 13:48:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8151A1C20D26
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 11:27:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 951F22828A5
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 11:48:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B9025D49F;
-	Mon, 15 Apr 2024 11:27:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DD1062818;
+	Mon, 15 Apr 2024 11:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hTWESPEz"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail.actia.se (mail.actia.se [212.181.117.226])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE86F5FBA3
-	for <linux-pwm@vger.kernel.org>; Mon, 15 Apr 2024 11:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1A74E1C9;
+	Mon, 15 Apr 2024 11:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713180469; cv=none; b=YJG01xCvt3+ADA0Bmz3Vu/qpG2GI9xYfbsNmpoJNjpTy6BRbimtyF2qcbnYuk7ol+EPd55JiMHpvvDBHOwmSDwA+YsaSS0YmjyeG56AWNokEzQniOHEzqlvO+RCMOQ3EFUY0z1ufK+sJ0jcW8ShAF0kwzhJmXfdyTvy8991+cwU=
+	t=1713181734; cv=none; b=QcmI59SP4+UCfhQ6htnEjGXx5dCCSJb1uRw4Y3AT77VsjEODQlFNmt9VXQHmhv/szqnXdSkTlTKhcmvts5NmdKtS6PSImohLknYtl36mDrJpUsa+bIlLu44RFNnRrZMg7uplu6oM4Ox13wNC4U6dz2O0vySz8qvtaJVolPOsdIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713180469; c=relaxed/simple;
-	bh=jDf2Y1vp1jyVxpwRw+0NqPRWWVE522F13Uzq66S7vSA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=W28G18i0u5jmyiBfwhE1tFrh3Wlw4vmt2dYGRv47FI7w4sJ8G7Vv9m+OmgKbEc0krf0rAtynLb7KM8exYRLLwPFXCzSqgiLyDzcSTXPnfsmAVXMgCgt0G2jbIX4rtCQPUAZog17d8Ala1oscYuPMuAbSXYSxJUD4+iWkDdAcUQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=actia.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
-Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
- (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Mon, 15 Apr
- 2024 13:27:36 +0200
-Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
- S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%4]) with mapi id
- 15.01.2507.037; Mon, 15 Apr 2024 13:27:36 +0200
-From: John Ernberg <john.ernberg@actia.se>
-To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
-CC: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH 8/8] pwm: Add support for pwmchip devices for faster and
- easier userspace access
-Thread-Topic: [PATCH 8/8] pwm: Add support for pwmchip devices for faster and
- easier userspace access
-Thread-Index: AQHaictjh2dhWToPm0mPNkeTSyNMR7Ffb7aAgAmq/4A=
-Date: Mon, 15 Apr 2024 11:27:35 +0000
-Message-ID: <b2a6c620-2272-4aa2-98f5-863e7faeb5ab@actia.se>
-References: <8d3acfc431ecd431d6cced032dcb58ad2579474c.1710670958.git.u.kleine-koenig@pengutronix.de>
- <20240408154233.890293-1-john.ernberg@actia.se>
- <z6g6zbzwaejozhb7hxjnta2tawifa5diblz6ktdt6hnngazkfr@xclx4ooiuw63>
-In-Reply-To: <z6g6zbzwaejozhb7hxjnta2tawifa5diblz6ktdt6hnngazkfr@xclx4ooiuw63>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-esetresult: clean, is OK
-x-esetid: 37303A29059A2F57647260
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <812333EAA628664B957BD0C49D53B6B8@actia.se>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1713181734; c=relaxed/simple;
+	bh=eET1pX9I1cdrhU3c46Ss84IQIxFOX+xYeTVK4Qtj68o=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=MWRR3YQUsMuXEPPZPR1J7/Ia8Zv+8M0TYFT7pDiMHIEcjyzsgam7az4EleWV9TvfIkfmjJqxiOeLiBVM3gsWDaY8y/1b8ydtR9Zrxr2bLxOM/P4Z1Utn7RN2MnFW/FIpcvuo6M9YTyffm4WZVw0L0tG3anJ8d+je8Hlv+8rfoSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hTWESPEz; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E09C8C0005;
+	Mon, 15 Apr 2024 11:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713181729;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mHFzrlLFn4E1ExYOjEZ9nCG7yBy5rx/gtcDIhxkwf64=;
+	b=hTWESPEzV9xVD9Q+wMDkau2rPvUPdmuiyZ6O3MBPlHaTgXpNpDJ4OA1hrr1XvjZ+ub5NkR
+	49r8eQUbSd2w9nB4Xzlfe5kwmrWB6Jr6LVsuRel7mO3jJWreOBg7qh1PPMh0OgYgiCWVYE
+	1ZgjoAGwgkM88blAik+YLtkNfZa92iaZnlIYlcMMlrbe1U0rMruQBAr636aj1wZTDbHZJB
+	dITN890v6oSkUGEd5rkLayad6YXeX0SRS3xo6wHC3avpvA4+qbnqZQqRjkO9oucAANQsQH
+	lvlumYo8Rlgeb6y/q7JnpBJGoqdVfsi8yoFKtjh2vEEfoIm4P6i80EjDDwiUWA==
+Message-ID: <9f8a584c-03a7-437e-96a7-56484523b2e4@bootlin.com>
+Date: Mon, 15 Apr 2024 13:48:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: jszhang@kernel.org
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, guoren@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+ robh+dt@kernel.org, thierry.reding@gmail.com,
+ u.kleine-koenig@pengutronix.de, wefu@redhat.com,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20231005130519.3864-3-jszhang@kernel.org>
+Subject: Re: [PATCH v3 2/2] pwm: add T-HEAD PWM driver
+Content-Language: en-US
+From: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+In-Reply-To: <20231005130519.3864-3-jszhang@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.bonnefille@bootlin.com
 
-SGkgVXdlLA0KDQpPbiA0LzkvMjQgOTo0OSBBTSwgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6DQo+
-IEhhbGxvLA0KPiANCj4gT24gTW9uLCBBcHIgMDgsIDIwMjQgYXQgMDM6NDI6MzlQTSArMDAwMCwg
-Sm9obiBFcm5iZXJnIHdyb3RlOg0KPj4gU2VlaW5nIHRoaXMgcGF0Y2ggc2V0IG1hZGUgbWUgZXhj
-aXRlZC4NCj4gDQo+IFxvLw0KPiANCj4+IERpZCB5b3UgY29uc2lkZXIgb3IgdHJ5IGEgcHdtX2xp
-bmUgbW9kZWwgc3RydWN0dXJlLCB0aGF0IGlzIGNvbm5lY3RlZCB0byBhIGZpbGUNCj4+IGRlc2Ny
-aXB0b3IsIG1vcmUgbGlrZSByZXF1ZXN0X2xpbmUgZnJvbSBncGlvIGNoYXJkZXZzPw0KPiANCj4g
-SSdkIGJlIG9wZW4gZm9yIGFuIGV4dGVuc2lvbiB0aGF0IHNpbXBsaWZpZXMgZGV0ZWN0aW9uIG9m
-IHdoaWNoIChjaGlwLA0KPiBod3B3bSkgcGFpciBjb3JyZXNwb25kcyB0byB3aGljaCB1c2FnZS4g
-SXQgY291bGQgYmUgZmVkIGZyb20gYSBkZXZpY2UNCj4gdHJlZSBsaWtlOg0KPiANCj4gCSZwd20w
-IHsNCj4gCQljb21wYXRpYmxlID0gLi4uOw0KPiAJCXJlZyA9IDwuLi4+Ow0KPiAJCSNwd20tY2Vs
-bHMgPSA8Mz47DQo+IAkJcHdtLW5hbWVzID0gIm1vdG9yLWNvbnRyb2wiLCAiYmFja2xpZ2h0Iiwg
-IiIsICJzdGF0dXMtbGVkIjsNCj4gCX0NCj4gDQo+IGFuZCBwcm92aWRlIGEgZnVuY3Rpb24gaW4g
-bGlicHdtIHRoYXQgYWxsb3dzIHRvIGRldGVybWluZSB0aGUgY2hpcGlkIG9mDQo+IHRoZSBjaGlw
-IGNvcnJlc3BvbmRpbmcgdG8gJnB3bTAgKG9yIGFuIG9wZW4gZmQgdG8gdGhhdCBkZXZpY2UpIGFu
-ZCAzDQo+IHdoZW4gInN0YXR1cy1sZWQiIGlzIHNlYXJjaGVkIGZvci4NCj4gDQo+IFRoaXMgY291
-bGQgYmUgZG9uZSBjb21wbGV0ZWx5IGluIHVzZXJzcGFjZSBJIHRoaW5rIChieSBpbnNwZWN0aW5n
-DQo+IHN5c2ZzKSwgc28gSSB3b25kZXIgaWYgdGhpcyBjb3VsZCBiZSBhIGNvbXBsZXRlIHVzZXJz
-cGFjZQ0KPiBpbXBsZW1lbnRhdGlvbi4gSSBsaWtlIGtlZXBpbmcgdGhlIGtlcm5lbCBBUEkgc2lt
-cGxlLCBpLmUuIGxldCBpdCBvbmx5DQo+IHdvcmsgKGFzIGl0IGlzIG5vdykgb25seSB1c2luZyBj
-aGlwaWQgYW5kIGh3cHdtLiBIbW0sIG1heWJlIG1ha2UgcHdtDQo+IG5hbWVzIGEga2VybmVsIGNv
-bmNlcHQgZXhwb3NlZCB0byBzeXNmcyB0byBub3QgaGF2ZSB0byBoYXJkY29kZSB0aGUgZHQNCj4g
-ZGV0YWlscyBpbnRvIGxpYnB3bT8hDQoNClNvdW5kcyBsaWtlIGl0IGNvdWxkIGJlIHdvcmthYmxl
-IHRoYXQgd2F5LiBUaGFua3MhDQoNCj4gDQo+PiBXZSBoYXZlIGJlZW4gdXNpbmcgZ3BpbyBjaGFy
-ZGV2cyBmb3IgYSB3aGlsZSBhbmQgcmVhbGx5IGJlbmVmaXR0ZWQgZnJvbSB0aGF0DQo+PiBvdmVy
-IHRoZSBzeXNmcyBpbnRlcmZhY2UuIEkgd3JvdGUgYSBzaW1wbGUgd3JhcHBlciBhcm91bmQgdGhl
-IFBXTSBzeXNmcw0KPj4gaW50ZXJmYWNlIG1pbWljaW5nIHRoZSB3YXkgZ3BpbyBjaGFyZGV2cyB3
-b3JrIGZvciBQV00gdXNpbmcgZGlyZmQsIHRvIG1ha2Ugb3VyDQo+PiBhcHBsaWNhdGlvbiBkZXNp
-Z24gbW9yZSBzdHJlYW1saW5lZC4NCj4gDQo+IGxpYnB3bSBjYW4gYWxzbyBmYWxsIGJhY2sgdG8g
-c3lzZnMgd2hlbiB0aGUgY2hhcmFjdGVyIGRldmljZXMgYXJlDQo+IG1pc3NpbmcuIElmIHlvdSB3
-YW50IHRvIGNvbXBhcmUgdGhlIHR3byBpbXBsZW1lbnRhdGlvbiBhbmQgY3JlYXRlIGEgYmVzdA0K
-PiBvZiB0d28gbWVyZ2UgZnJvbSBpdCwgdGhhdCB3b3VsZCBiZSBncmVhdC4NCj4gDQo+PiBXaXRo
-IHRoaXMgcGF0Y2ggc2V0IEkgZG8gbm90IHNlZSBob3cgd2UgY2FuIG5hbWUgdGhlIFBXTXMgaW4g
-dGhlIGRldmljZSB0cmVlDQo+PiBub3IgZHVyaW5nIHJlcXVlc3Qgd2hpY2ggaXMgYSBiaWcgYmVu
-ZWZpdCB3aXRoIEdQSU8gd2hlbiB3ZSBuZWVkIHRvIHN1cHBvcnQNCj4+IG11bHRpcGxlIGhhcmR3
-YXJlcy4gTm9yIGNhbiBJIHNlZSBob3cgd2Ugd291bGQgaW5zcGVjdCB3aGljaCBwaW5zIGFyZQ0K
-Pj4gYWxsb2NhdGVkIG9yIHRoZWlyIG5hbWVzIHdoZW4gZGVidWdnaW5nLg0KPiANCj4gQmVzdCBy
-ZWdhcmRzDQo+IFV3ZQ0KPiANCg0KQmVzdCByZWdhcmRzIC8vIEpvaG4gRXJuYmVyZw==
+ > T-HEAD SoCs such as the TH1520 contain a PWM controller used
+ > to control the LCD backlight, fan and so on. Add driver for it.
+ >
+ > Signed-off-by: Jisheng Zhang <jszhang@kernel.org > ---
+
+Hello,
+I've just tested your driver and it works flawlessly on the 
+BeagleV-Ahead with the last mainline kernel. However, I had to modify 
+some portion of the code to comply with the last kernel needs.
+
+ > +static const struct pwm_ops thead_pwm_ops = {
+ > +    .apply = thead_pwm_apply,
+ > +    .get_state = thead_pwm_get_state,
+ > +    .owner = THIS_MODULE,
+
+Since commit 384461abcab6, the owner of a pwm_ops structure is implicit 
+and so, you can (must) remove this last line now.
+
+ > +};
+ > ...
+ > +static int thead_pwm_probe(struct platform_device *pdev)
+ > +{
+ > +    struct thead_pwm_chip *priv;
+ > +    int ret, i;
+ > +    u32 val;
+ > +
+ > +    priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+ > +    if (!priv)
+ > +        return -ENOMEM;
+ > +
+ > +    platform_set_drvdata(pdev, priv);
+ > +
+ > +    priv->mmio_base = devm_platform_ioremap_resource(pdev, 0);
+ > +    if (IS_ERR(priv->mmio_base))
+ > +        return PTR_ERR(priv->mmio_base);
+ > +
+ > +    priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
+ > +    if (IS_ERR(priv->clk))
+ > +        return PTR_ERR(priv->clk);
+ > +
+ > +    priv->chip.ops = &thead_pwm_ops;
+ > +    priv->chip.dev = &pdev->dev;
+ > +    priv->chip.npwm = THEAD_PWM_MAX_NUM;
+ > +
+ > +    /* check whether PWM is ever started or not */
+ > +    for (i = 0; i < priv->chip.npwm; i++) {
+ > +        val = readl(priv->mmio_base + THEAD_PWM_FP(i));
+ > +        if (val)
+ > +            priv->channel_ever_started |= 1 << i;
+
+					     BIT(i) ?
+If the bootloader starts a PWM channel for some reason, it will not be 
+referenced by the PM usage counter, I added this line in the if 
+statement to counter this problem :
+		pm_runtime_get(&pdev->dev);
+
+ > +    }
+ > +
+ > +    ret = devm_pwmchip_add(&pdev->dev, &priv->chip);
+ > +    if (ret)
+ > +        return ret;
+ > +
+ > +    devm_pm_runtime_enable(&pdev->dev);
+ > +
+ > +    return 0;
+ > +}
+
+
+Thank you for your work. With the above comments addressed:
+
+Tested-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+
+Do you plan to send out a new iteration of this patch soon ?
+
+Best regards,
+Thomas Bonnefille
 
