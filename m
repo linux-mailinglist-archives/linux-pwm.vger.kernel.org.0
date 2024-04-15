@@ -1,345 +1,275 @@
-Return-Path: <linux-pwm+bounces-1933-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1934-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B4568A4163
-	for <lists+linux-pwm@lfdr.de>; Sun, 14 Apr 2024 11:05:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B16C8A493D
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 09:41:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0415BB21784
-	for <lists+linux-pwm@lfdr.de>; Sun, 14 Apr 2024 09:05:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40F8528119D
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Apr 2024 07:41:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB06320B34;
-	Sun, 14 Apr 2024 09:05:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E00B24A06;
+	Mon, 15 Apr 2024 07:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JKAnEkZh"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2D74A24
-	for <linux-pwm@vger.kernel.org>; Sun, 14 Apr 2024 09:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885672EAE6;
+	Mon, 15 Apr 2024 07:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713085551; cv=none; b=cVP+a2aQQB86eYaLLRbM1VqRvRyBGB23vtAXh/A64LKWQ6SRsUvXNNkDOr6zSYHI1yhL/wpq4+8TLRflRks88ymnlgnwV8c5g/mQe36eETAJqYjrxaf4J3rcde9+ZHj1u21lcTWbE5HeecA7p+nWH9Ih60maQaw7/fz6cNqpD40=
+	t=1713166858; cv=none; b=Q7WKSqGsSUlzJ79Ly7aSrgD4DXyIoTWuEUYkRxr7IUBCaxiiIj96/ip4W3OonqcVfayckjULVlnz7EouE11c35w141aTzzlSSUsk+jTf74Fv1cmb7PXWLIsc8YYZ3ymFh22vsSPruPr2Z31OdS8IV0mhAjkdKt3mlfiO6IbbQMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713085551; c=relaxed/simple;
-	bh=eUQSUFsqzUC4ARHWh09c/+7xh9a4BPEUv4J3aTZ78E0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UiCjgFPKTlRFCyuP/irOZo048ovS60RHDm3KG0egMqG8HcXrGNKapvJ2lK7lwxqeFBMqO6aUYWUF+v5JJgJRrAzyNmmZ1LMZBmqiEHpN8/OWDLOHUkzHyGPRTGY54odwTFrOwiKiyyKQCjVbWQ9HgosMhUDg7LTPvAcNupfzOQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvvnt-0000E5-DD; Sun, 14 Apr 2024 11:05:37 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvvnr-00CDYm-Sy; Sun, 14 Apr 2024 11:05:35 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvvnr-0015XN-2b;
-	Sun, 14 Apr 2024 11:05:35 +0200
-Date: Sun, 14 Apr 2024 11:05:35 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Trevor Gamblin <tgamblin@baylibre.com>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	michael.hennerich@analog.com, nuno.sa@analog.com, devicetree@vger.kernel.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	dlechner@baylibre.com
-Subject: Re: [PATCH 2/2] pwm: axi-pwmgen: support version 2.00.a
-Message-ID: <2by7rakflv22s6uk2e2jk5lw65erjljpwdxdxg3z73furlprj5@2qlacusapkgr>
-References: <20240314204722.1291993-1-tgamblin@baylibre.com>
- <20240314204722.1291993-3-tgamblin@baylibre.com>
+	s=arc-20240116; t=1713166858; c=relaxed/simple;
+	bh=KV3WZcxZWeAs613SkdTfKfp+L1qJ8Fy4gMkHGkuUPe0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DP5kDgyM65VX+DZsz1418y/8BCZPIL6QFHt35nmBVdJ5nPR3fiv6/hFsz57awXJhRECe3afeQBlE8bXHjV2zqY3A40xWBemNFFNgm3IerAG0J/VfCnNxm8G5PeI0JmUtusRBUzjNXU5pojhBfyafBieQbhUxREYAGOpWdhPs974=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JKAnEkZh; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecsmtp.iind.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713166857; x=1744702857;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=KV3WZcxZWeAs613SkdTfKfp+L1qJ8Fy4gMkHGkuUPe0=;
+  b=JKAnEkZhbd8NvEtzy3RBiZHuTvuQvU+tamB0H9phJa3SgbvU85ILwIgm
+   XaueTcbTQZZgH51taqlckmLRNxGWXjLQopai20LxD33tQYlNeyoG8xVbr
+   KfGZsiCWeWCtiLxW1JdcQtn/mGUYgJQnjmmNWoGPKVRP+Rp4VccKGzeZ/
+   /W9Q8mXJqSC/xFur7gDf6dbwuBmFK8mKfyB/tjR4bkEywoUGr+o823Fhr
+   SiTIN4O9Di8E1uCbXxHzt6yx6yYOiwOqJ66eUWBHvPDE8mmYhw/Ltpq4m
+   /NHgzFVOLwpq0pmWDFoyJXVz0+Pgi+O7bvgjLngPsICjgPoxSH092QXg3
+   A==;
+X-CSE-ConnectionGUID: Sd3eIBN2R+mhGNpeWO5gDw==
+X-CSE-MsgGUID: Hdc6R8JhTnC6G8lSNY0HGA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11044"; a="8665715"
+X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
+   d="scan'208";a="8665715"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 00:40:56 -0700
+X-CSE-ConnectionGUID: ZgGAJXOMTkqj8j8DED4pOw==
+X-CSE-MsgGUID: NX9oNU9cTkOg23OUyyMsgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,202,1708416000"; 
+   d="scan'208";a="52781267"
+Received: from inesxmail01.iind.intel.com ([10.223.57.40])
+  by orviesa002.jf.intel.com with ESMTP; 15 Apr 2024 00:40:54 -0700
+Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
+	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 5459F72AA6;
+	Mon, 15 Apr 2024 13:10:53 +0530 (IST)
+Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
+	id 4F5131600100; Mon, 15 Apr 2024 13:10:53 +0530 (IST)
+From: Raag Jadav <raag.jadav@intel.com>
+To: u.kleine-koenig@pengutronix.de,
+	jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com,
+	andriy.shevchenko@linux.intel.com
+Cc: linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v2] pwm: dwc: allow suspend/resume for 16 channels
+Date: Mon, 15 Apr 2024 13:10:51 +0530
+Message-Id: <20240415074051.14681-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6obdirpcc2cza6oe"
-Content-Disposition: inline
-In-Reply-To: <20240314204722.1291993-3-tgamblin@baylibre.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
+With 16 channel pwm support, we're registering two instances of pwm_chip
+with 8 channels each. We need to update PM functions to use both instances
+of pwm_chip during power state transitions.
 
---6obdirpcc2cza6oe
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Introduce struct dwc_pwm_drvdata and use it as driver_data, which will
+maintain both instances of pwm_chip along with dwc_pwm_info and allow us
+to use them inside suspend/resume handles.
 
-Hello Trevor,
+Fixes: ebf2c89eb95e ("pwm: dwc: Add 16 channel support for Intel Elkhart Lake")
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+---
+Changes since v1:
+- Drop error message for -ENOMEM
+- s/data/ddata/
 
-On Thu, Mar 14, 2024 at 04:47:22PM -0400, Trevor Gamblin wrote:
-> This adds support for the AXI PWMGEN v2 IP block. This version is
-> nearly identical to v1 other than it supports up to 16 channels instead
-> of 4 and a few of the memory mapped registers have moved.
->=20
-> Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
-> ---
->  drivers/pwm/pwm-axi-pwmgen.c | 62 ++++++++++++++++++++++++++++--------
->  1 file changed, 49 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
-> index 0c8f7f893a21..539625c404ac 100644
-> --- a/drivers/pwm/pwm-axi-pwmgen.c
-> +++ b/drivers/pwm/pwm-axi-pwmgen.c
-> @@ -32,16 +32,25 @@
->  #define AXI_PWMGEN_REG_CORE_MAGIC	0x0C
->  #define AXI_PWMGEN_REG_CONFIG		0x10
->  #define AXI_PWMGEN_REG_NPWM		0x14
-> -#define AXI_PWMGEN_CHX_PERIOD(ch)	(0x40 + (12 * (ch)))
-> -#define AXI_PWMGEN_CHX_DUTY(ch)		(0x44 + (12 * (ch)))
-> -#define AXI_PWMGEN_CHX_OFFSET(ch)	(0x48 + (12 * (ch)))
-> +#define AXI_PWMGEN_CHX_PERIOD(v, ch)	((v)->period_base + (v)->ch_step * =
-(ch))
-> +#define AXI_PWMGEN_CHX_DUTY(v, ch)	((v)->duty_base + (v)->ch_step * (ch))
-> +#define AXI_PWMGEN_CHX_OFFSET(v, ch)	((v)->offset_base + (v)->ch_step * =
-(ch))
->  #define AXI_PWMGEN_REG_CORE_MAGIC_VAL	0x601A3471 /* Identification numbe=
-r to test during setup */
->  #define AXI_PWMGEN_LOAD_CONFIG		BIT(1)
->  #define AXI_PWMGEN_RESET		BIT(0)
-> =20
-> +struct axi_pwm_variant {
-> +	u8 period_base;
-> +	u8 duty_base;
-> +	u8 offset_base;
-> +	u8 major_version;
-> +	u8 ch_step;
-> +};
-> +
->  struct axi_pwmgen_ddata {
->  	struct regmap *regmap;
->  	unsigned long clk_rate_hz;
-> +	const struct axi_pwm_variant *variant;
->  };
-> =20
->  static const struct regmap_config axi_pwmgen_regmap_config =3D {
-> @@ -50,12 +59,30 @@ static const struct regmap_config axi_pwmgen_regmap_c=
-onfig =3D {
->  	.val_bits =3D 32,
->  };
-> =20
-> +static const struct axi_pwm_variant pwmgen_1_00_variant =3D {
-> +	.period_base =3D 0x40,
-> +	.duty_base =3D 0x44,
-> +	.offset_base =3D 0x48,
-> +	.major_version =3D 1,
-> +	.ch_step =3D 12,
-> +};
-> +
-> +static const struct axi_pwm_variant pwmgen_2_00_variant =3D {
-> +	.period_base =3D 0x40,
-> +	.duty_base =3D 0x80,
-> +	.offset_base =3D 0xC0,
-> +	.major_version =3D 2,
-> +	.ch_step =3D 4,
-> +};
+ drivers/pwm/pwm-dwc-core.c |  1 -
+ drivers/pwm/pwm-dwc.c      | 82 +++++++++++++++++++++++++-------------
+ drivers/pwm/pwm-dwc.h      |  6 +++
+ 3 files changed, 60 insertions(+), 29 deletions(-)
 
-My first intuition to model the register differences would have been
-something like:
+diff --git a/drivers/pwm/pwm-dwc-core.c b/drivers/pwm/pwm-dwc-core.c
+index 043736972cb9..c8425493b95d 100644
+--- a/drivers/pwm/pwm-dwc-core.c
++++ b/drivers/pwm/pwm-dwc-core.c
+@@ -172,7 +172,6 @@ struct pwm_chip *dwc_pwm_alloc(struct device *dev)
+ 	dwc->clk_ns = 10;
+ 	chip->ops = &dwc_pwm_ops;
+ 
+-	dev_set_drvdata(dev, chip);
+ 	return chip;
+ }
+ EXPORT_SYMBOL_GPL(dwc_pwm_alloc);
+diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
+index 676eaf8d7a53..fb3eadf6fbc4 100644
+--- a/drivers/pwm/pwm-dwc.c
++++ b/drivers/pwm/pwm-dwc.c
+@@ -31,26 +31,34 @@ static const struct dwc_pwm_info ehl_pwm_info = {
+ 	.size = 0x1000,
+ };
+ 
+-static int dwc_pwm_init_one(struct device *dev, void __iomem *base, unsigned int offset)
++static int dwc_pwm_init_one(struct device *dev, struct dwc_pwm_drvdata *ddata, unsigned int idx)
+ {
+ 	struct pwm_chip *chip;
+ 	struct dwc_pwm *dwc;
++	int ret;
+ 
+ 	chip = dwc_pwm_alloc(dev);
+ 	if (IS_ERR(chip))
+ 		return PTR_ERR(chip);
+ 
+ 	dwc = to_dwc_pwm(chip);
+-	dwc->base = base + offset;
++	dwc->base = ddata->io_base + (ddata->info->size * idx);
+ 
+-	return devm_pwmchip_add(dev, chip);
++	ret = devm_pwmchip_add(dev, chip);
++	if (ret)
++		return ret;
++
++	ddata->chips[idx] = chip;
++	return 0;
+ }
+ 
+ static int dwc_pwm_probe(struct pci_dev *pci, const struct pci_device_id *id)
+ {
+ 	const struct dwc_pwm_info *info;
+ 	struct device *dev = &pci->dev;
+-	int i, ret;
++	struct dwc_pwm_drvdata *ddata;
++	unsigned int idx;
++	int ret;
+ 
+ 	ret = pcim_enable_device(pci);
+ 	if (ret)
+@@ -63,17 +71,25 @@ static int dwc_pwm_probe(struct pci_dev *pci, const struct pci_device_id *id)
+ 		return dev_err_probe(dev, ret, "Failed to iomap PCI BAR\n");
+ 
+ 	info = (const struct dwc_pwm_info *)id->driver_data;
++	ddata = devm_kzalloc(dev, struct_size(ddata, chips, info->nr), GFP_KERNEL);
++	if (!ddata)
++		return -ENOMEM;
+ 
+-	for (i = 0; i < info->nr; i++) {
+-		/*
+-		 * No need to check for pcim_iomap_table() failure,
+-		 * pcim_iomap_regions() already does it for us.
+-		 */
+-		ret = dwc_pwm_init_one(dev, pcim_iomap_table(pci)[0], i * info->size);
++	/*
++	 * No need to check for pcim_iomap_table() failure,
++	 * pcim_iomap_regions() already does it for us.
++	 */
++	ddata->io_base = pcim_iomap_table(pci)[0];
++	ddata->info = info;
++
++	for (idx = 0; idx < ddata->info->nr; idx++) {
++		ret = dwc_pwm_init_one(dev, ddata, idx);
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
++	dev_set_drvdata(dev, ddata);
++
+ 	pm_runtime_put(dev);
+ 	pm_runtime_allow(dev);
+ 
+@@ -88,19 +104,24 @@ static void dwc_pwm_remove(struct pci_dev *pci)
+ 
+ static int dwc_pwm_suspend(struct device *dev)
+ {
+-	struct pwm_chip *chip = dev_get_drvdata(dev);
+-	struct dwc_pwm *dwc = to_dwc_pwm(chip);
+-	int i;
++	struct dwc_pwm_drvdata *ddata = dev_get_drvdata(dev);
++	unsigned int idx;
+ 
+-	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
+-		if (chip->pwms[i].state.enabled) {
+-			dev_err(dev, "PWM %u in use by consumer (%s)\n",
+-				i, chip->pwms[i].label);
+-			return -EBUSY;
++	for (idx = 0; idx < ddata->info->nr; idx++) {
++		struct pwm_chip *chip = ddata->chips[idx];
++		struct dwc_pwm *dwc = to_dwc_pwm(chip);
++		unsigned int i;
++
++		for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
++			if (chip->pwms[i].state.enabled) {
++				dev_err(dev, "PWM %u in use by consumer (%s)\n",
++					i, chip->pwms[i].label);
++				return -EBUSY;
++			}
++			dwc->ctx[i].cnt = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(i));
++			dwc->ctx[i].cnt2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(i));
++			dwc->ctx[i].ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(i));
+ 		}
+-		dwc->ctx[i].cnt = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(i));
+-		dwc->ctx[i].cnt2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(i));
+-		dwc->ctx[i].ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(i));
+ 	}
+ 
+ 	return 0;
+@@ -108,14 +129,19 @@ static int dwc_pwm_suspend(struct device *dev)
+ 
+ static int dwc_pwm_resume(struct device *dev)
+ {
+-	struct pwm_chip *chip = dev_get_drvdata(dev);
+-	struct dwc_pwm *dwc = to_dwc_pwm(chip);
+-	int i;
++	struct dwc_pwm_drvdata *ddata = dev_get_drvdata(dev);
++	unsigned int idx;
+ 
+-	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
+-		dwc_pwm_writel(dwc, dwc->ctx[i].cnt, DWC_TIM_LD_CNT(i));
+-		dwc_pwm_writel(dwc, dwc->ctx[i].cnt2, DWC_TIM_LD_CNT2(i));
+-		dwc_pwm_writel(dwc, dwc->ctx[i].ctrl, DWC_TIM_CTRL(i));
++	for (idx = 0; idx < ddata->info->nr; idx++) {
++		struct pwm_chip *chip = ddata->chips[idx];
++		struct dwc_pwm *dwc = to_dwc_pwm(chip);
++		unsigned int i;
++
++		for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
++			dwc_pwm_writel(dwc, dwc->ctx[i].cnt, DWC_TIM_LD_CNT(i));
++			dwc_pwm_writel(dwc, dwc->ctx[i].cnt2, DWC_TIM_LD_CNT2(i));
++			dwc_pwm_writel(dwc, dwc->ctx[i].ctrl, DWC_TIM_CTRL(i));
++		}
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/pwm/pwm-dwc.h b/drivers/pwm/pwm-dwc.h
+index a8b074841ae8..c6e2df5a6122 100644
+--- a/drivers/pwm/pwm-dwc.h
++++ b/drivers/pwm/pwm-dwc.h
+@@ -38,6 +38,12 @@ struct dwc_pwm_info {
+ 	unsigned int size;
+ };
+ 
++struct dwc_pwm_drvdata {
++	const struct dwc_pwm_info *info;
++	void __iomem *io_base;
++	struct pwm_chip *chips[];
++};
++
+ struct dwc_pwm_ctx {
+ 	u32 cnt;
+ 	u32 cnt2;
+-- 
+2.35.3
 
-	#define ..._PERIOD 0
-	#define ..._DUTY 1
-	#define ..._OFFSET 2
-
-and then store a "register_step"(?) variable (which is 0x4 for v1 and
-0x40 for v2) in the variant struct and then use:
-
-#define AXI_PWMGEN_CHX_PERIOD(v, ch)	(0x40 + (v)->ch_step * (ch))
-#define AXI_PWMGEN_CHX_DUTY(v, ch)	(0x40 + (v)->register_step + (v)->ch_ste=
-p * (ch))
-#define AXI_PWMGEN_CHX_OFFSET(v, ch)	(0x40 + 2 * (v)->register_step + (v)->=
-ch_step * (ch))
-
-This saves a tiny bit of memory, not entirely sure this is a good idea.
-Pick it up if you like, or keep your approach, I don't care much.
-
-> +
->  static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
->  			    const struct pwm_state *state)
->  {
->  	struct axi_pwmgen_ddata *ddata =3D pwmchip_get_drvdata(chip);
->  	unsigned int ch =3D pwm->hwpwm;
->  	struct regmap *regmap =3D ddata->regmap;
-> +	const struct axi_pwm_variant *variant =3D ddata->variant;
->  	u64 period_cnt, duty_cnt;
->  	int ret;
-> =20
-> @@ -70,7 +97,7 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, stru=
-ct pwm_device *pwm,
->  		if (period_cnt =3D=3D 0)
->  			return -EINVAL;
-> =20
-> -		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), period_cnt);
-> +		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(variant, ch), perio=
-d_cnt);
->  		if (ret)
->  			return ret;
-> =20
-> @@ -78,15 +105,15 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
->  		if (duty_cnt > UINT_MAX)
->  			duty_cnt =3D UINT_MAX;
-> =20
-> -		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), duty_cnt);
-> +		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch), duty_cn=
-t);
->  		if (ret)
->  			return ret;
->  	} else {
-> -		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), 0);
-> +		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(variant, ch), 0);
->  		if (ret)
->  			return ret;
-> =20
-> -		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), 0);
-> +		ret =3D regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch), 0);
->  		if (ret)
->  			return ret;
->  	}
-> @@ -99,11 +126,12 @@ static int axi_pwmgen_get_state(struct pwm_chip *chi=
-p, struct pwm_device *pwm,
->  {
->  	struct axi_pwmgen_ddata *ddata =3D pwmchip_get_drvdata(chip);
->  	struct regmap *regmap =3D ddata->regmap;
-> +	const struct axi_pwm_variant *variant =3D ddata->variant;
->  	unsigned int ch =3D pwm->hwpwm;
->  	u32 cnt;
->  	int ret;
-> =20
-> -	ret =3D regmap_read(regmap, AXI_PWMGEN_CHX_PERIOD(ch), &cnt);
-> +	ret =3D regmap_read(regmap, AXI_PWMGEN_CHX_PERIOD(variant, ch), &cnt);
->  	if (ret)
->  		return ret;
-> =20
-> @@ -111,7 +139,7 @@ static int axi_pwmgen_get_state(struct pwm_chip *chip=
-, struct pwm_device *pwm,
-> =20
->  	state->period =3D DIV_ROUND_UP_ULL((u64)cnt * NSEC_PER_SEC, ddata->clk_=
-rate_hz);
-> =20
-> -	ret =3D regmap_read(regmap, AXI_PWMGEN_CHX_DUTY(ch), &cnt);
-> +	ret =3D regmap_read(regmap, AXI_PWMGEN_CHX_DUTY(variant, ch), &cnt);
->  	if (ret)
->  		return ret;
-> =20
-> @@ -127,7 +155,8 @@ static const struct pwm_ops axi_pwmgen_pwm_ops =3D {
->  	.get_state =3D axi_pwmgen_get_state,
->  };
-> =20
-> -static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev)
-> +static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev,=
-=20
-> +			    const struct axi_pwm_variant *variant)
->  {
->  	int ret;
->  	u32 val;
-> @@ -146,7 +175,7 @@ static int axi_pwmgen_setup(struct regmap *regmap, st=
-ruct device *dev)
->  	if (ret)
->  		return ret;
-> =20
-> -	if (ADI_AXI_PCORE_VER_MAJOR(val) !=3D 1) {
-> +	if (ADI_AXI_PCORE_VER_MAJOR(val) !=3D variant->major_version) {
->  		return dev_err_probe(dev, -ENODEV, "Unsupported peripheral version %u.=
-%u.%u\n",
-
-Hmm, is it worth to also diagnose a mismatch here? That is if the dt
-tells this was a version 2 device but the register says version 1? In
-this case
-
-	Unsupported peripheral version 1.x.y
-
-might be misleading, because version 1 is supported and the problem is
-maybe only a wrong dt?
-
->  			ADI_AXI_PCORE_VER_MAJOR(val),
->  			ADI_AXI_PCORE_VER_MINOR(val),
-> @@ -178,9 +207,14 @@ static int axi_pwmgen_probe(struct platform_device *=
-pdev)
->  	struct pwm_chip *chip;
->  	struct axi_pwmgen_ddata *ddata;
->  	struct clk *clk;
-> +	const struct axi_pwm_variant *variant;
->  	void __iomem *io_base;
->  	int ret;
-> =20
-> +	variant =3D device_get_match_data(dev);
-> +	if (!variant)
-> +		return -EINVAL;
-> +
->  	io_base =3D devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(io_base))
->  		return PTR_ERR(io_base);
-> @@ -190,7 +224,7 @@ static int axi_pwmgen_probe(struct platform_device *p=
-dev)
->  		return dev_err_probe(dev, PTR_ERR(regmap),
->  				     "failed to init register map\n");
-> =20
-> -	ret =3D axi_pwmgen_setup(regmap, dev);
-> +	ret =3D axi_pwmgen_setup(regmap, dev, variant);
->  	if (ret < 0)
->  		return ret;
-> =20
-> @@ -199,6 +233,7 @@ static int axi_pwmgen_probe(struct platform_device *p=
-dev)
->  		return PTR_ERR(chip);
->  	ddata =3D pwmchip_get_drvdata(chip);
->  	ddata->regmap =3D regmap;
-> +	ddata->variant =3D variant;
-> =20
->  	clk =3D devm_clk_get_enabled(dev, NULL);
->  	if (IS_ERR(clk))
-> @@ -224,7 +259,8 @@ static int axi_pwmgen_probe(struct platform_device *p=
-dev)
->  }
-> =20
->  static const struct of_device_id axi_pwmgen_ids[] =3D {
-> -	{ .compatible =3D "adi,axi-pwmgen-1.00.a" },
-> +	{ .compatible =3D "adi,axi-pwmgen-1.00.a", .data =3D &pwmgen_1_00_varia=
-nt },
-> +	{ .compatible =3D "adi,axi-pwmgen-2.00.a", .data =3D &pwmgen_2_00_varia=
-nt },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, axi_pwmgen_ids);
-
-Otherwise looks fine.
-
-Can you please add the next iteration of this patch together with the
-series adding support for v1?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---6obdirpcc2cza6oe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYbnF4ACgkQj4D7WH0S
-/k67zggAlhPUv5GAzjNqwsx7wvCjkqBLFv2HvSf0OHAr67/6XkEAmcBSLcIIOyjR
-wxqDsLpRXc/sUTejbz/YcW8uQDwdqSh6QDoaB9l9CFsras1uQuneIoEjX3x1R0oH
-sz/6S42rMwGd2hNYQQke8ngWSg7FP3K5kdc7ItARHrsTb6YLzr/J6hzPzy51vcuU
-xjF0ytB3oDcT//UOCXr/gRaeCXWYCjhZYYN2PWD3RjQIMzgPZW6Q1tPdeTv1myIO
-mgkXEaGgmO2BEb0fvcAIiaVWRhsFnemCvnu18bO/pwOKvHzQHq0eBc96XpxBGNIn
-MtJef4hUhD1WjGz2JtZ59XLahbWGvQ==
-=O0X/
------END PGP SIGNATURE-----
-
---6obdirpcc2cza6oe--
 
