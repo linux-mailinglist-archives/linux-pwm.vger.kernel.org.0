@@ -1,398 +1,103 @@
-Return-Path: <linux-pwm+bounces-1968-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1969-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 471478A7210
-	for <lists+linux-pwm@lfdr.de>; Tue, 16 Apr 2024 19:17:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AEEF8A7675
+	for <lists+linux-pwm@lfdr.de>; Tue, 16 Apr 2024 23:29:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3E24283854
-	for <lists+linux-pwm@lfdr.de>; Tue, 16 Apr 2024 17:17:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B60081C2224A
+	for <lists+linux-pwm@lfdr.de>; Tue, 16 Apr 2024 21:29:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 392441327FB;
-	Tue, 16 Apr 2024 17:17:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3811369B2;
+	Tue, 16 Apr 2024 21:22:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="c7Jb77B/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCDssa58"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EAF2130E4E
-	for <linux-pwm@vger.kernel.org>; Tue, 16 Apr 2024 17:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6EC84FB0;
+	Tue, 16 Apr 2024 21:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713287862; cv=none; b=DPSyUzT1L6n7D5M5eKNS6yXaUsNyMgXYp3uDd0KT7IKwUEQ9q2XwvERJOkyul5P2Z1p1x1ihHUd+yGtZNUwn2h6TQWKdbIp8oeFSNR0SQ3vFi0Of9HTsYPfE7cp9QeWJczYECCWBpy/nM6nZjgROs+SQ+oPkJFoA2Y3IMP2Ldo8=
+	t=1713302526; cv=none; b=oRAzZxiSdPDM4zAnC6DnmGzg5KAqHD27XMYdx6AWX62fzVO74wm6wgd46RUvQV3AHbYfpC4QQAaNXNU3bNWIRDcVvcQeCxV9//jRy/DXAe5aSHqiueJNDtwXxjbUqEDwjtl7Dj+D9SabIJwdWf114uYdEGHGUGnPu9Abi5rbi6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713287862; c=relaxed/simple;
-	bh=EKXb7yQw/fe0FE8px0sxnaU+bNGR8VwStnqSeNJAK78=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EpNV2hQRYY18k2LgxsqGlqXxWr2gkWfuAY/Ywqj2eO6c7kZ/7wVgtg52LTkcT0nZMOdaufSPC2U9OugYJvdGWVkQyF1A4asLch1pzShOGcHdk+9+kxv6wn0xTqDMr6dsQrTJA4TjNOb5K4TMwri4Z1KX8dzPgprNx/atr5c9+90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=c7Jb77B/; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4187731a6e1so12786375e9.2
-        for <linux-pwm@vger.kernel.org>; Tue, 16 Apr 2024 10:17:40 -0700 (PDT)
+	s=arc-20240116; t=1713302526; c=relaxed/simple;
+	bh=3viy2RvxVscrJaKjTMnRS76dUx/hTzvJ4XU6gR37kFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qcadP+omA4UKP1rXCA2f2zaNLcWbFF/wV+ksEyEnx2o8ZA0QTtreEKUhPrztKzeT+ahx49yrLtwp0IX1eHke/rSkQKciYJhtXP8D0+tyqbehv9+4c5robalE4Q5ne3HFVoR5l+e2rz8nfhdP0rJMBB4vgVSK+cjUKdLI1R40K9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eCDssa58; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6ed32341906so4368747b3a.1;
+        Tue, 16 Apr 2024 14:22:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1713287859; x=1713892659; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3OfhnCdRCj4VDt6eW9kP3dOI/qEqIsCJXQa6tBxYksk=;
-        b=c7Jb77B/BPEIHOx7JJlTtzAV0DJKPXAdmN2W/lq7AVN2h+5m+LJeoPv53c7Z4aXp5+
-         8bdC1d+3QftXvakUAYPw6uiIQLz7EpnNU4ofO6UJ3tYQk+VYwjoiNc0QFeTNo76llCz0
-         0SSwomDBu+XKxESkn61DlE5VvdgMS8Ea1sJkOtKABLAEisc+xjRhUB6lfpdhkpohZYqm
-         52JRgd012xA7poByPzcpP9TpR7T0vggHLEagxI1fAsWhSwQkHiROwkQJDyqKlTSRuftC
-         //mZRhBvCMfI7mUuPBPUb/UjfC5Hzg+NC0ln0+TeLQNfB3znNoY9Ni/A0P0OanVW4Fw4
-         EWYw==
+        d=gmail.com; s=20230601; t=1713302524; x=1713907324; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t5+cT67cTo02CntoKNagjaOFlNuq4qrkhX6F7XjSc7A=;
+        b=eCDssa58omdGDgdymTfE+9FVpgnrVAVVzx7l/xISkHKNEXzKAo2gk7D5RQ4nTKzWu9
+         PwrKqImo2eu3mQvfXzODvJiAP4Reh3I5nsGz3P+DloFVMGy8vdOzPnQl22/5qtIA8LDu
+         aHLCA0iVHra2VgGZcDz2DmeSAdF5upsf3waRnjjurAJGGIGtlD9iEhP1ZGbN0tbTUXTp
+         q9PK4ZNt5A4rqS/2o5pP6j4D5PNzaxqrYVIP9byorDVfTC9Vdz6j/x++u6wljaF0IQ/A
+         s9bdajlnq6d5T6rLlV5z85rZrVv5AISd5+OnLqo7dHJwAu57ONYynya2YHnh7zWVQziF
+         XKhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713287859; x=1713892659;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1713302524; x=1713907324;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3OfhnCdRCj4VDt6eW9kP3dOI/qEqIsCJXQa6tBxYksk=;
-        b=CFSXGmUWGLJw5DtMl5gm+75GpXjRJmnqAEMdG3PUeZGPA8k0HPnWZ+s7YVLY1mcbJ9
-         eazlopIPGHNjRHiNj4fenEjZ2G1zO3KhSKet9l5SHRMq3UYcfYwVqYiaZpqvpnT0oJ1H
-         /tZH45YU1U/pliUEqwdRYwt5X1tagEBf/Hfblls3vKrfPQCOAxqvNldkkcEftFV2ERx9
-         WR0bp62KE3JMJeoVFoK7PBjQtCOTo83FdwieqTWTL8M7qzk9/5yn8H8NgJ2+q6ywy9+Y
-         HSbSCDxl5vqnhpX8nd1yKPXeV6qYqIrr0APxM7H1WiQmgYmyTjygvW95v5nh0p/GLNNg
-         bY0g==
-X-Forwarded-Encrypted: i=1; AJvYcCV+SnrNCX4iypCNY2TOpWdVMfx2ioeeNvyiyq4pnQEGJEgomKlvZ8IDbS2HYHGQxGMf3NbKEsAG/uPI7ek0uqiKdguGWRugyZaW
-X-Gm-Message-State: AOJu0YznokeJL/YhkA8fEmZZwEaP335k7iCVgjgZn9zWt9xBZeqOdaNl
-	NgfgUTXmNwXGf1FO/0LjblW/BstTs+av0nmofUFBF8dLwPMTLSStYXWe4hJai9k=
-X-Google-Smtp-Source: AGHT+IEzjiaX1n6oQ+liuW4MzJZY5btpgRV0JOFHDzPw647K0dBRyKO/Tjhf3hGYY7dRl/P8Gl3KRQ==
-X-Received: by 2002:a05:600c:4506:b0:417:fbc2:caf8 with SMTP id t6-20020a05600c450600b00417fbc2caf8mr8135607wmo.23.1713287858595;
-        Tue, 16 Apr 2024 10:17:38 -0700 (PDT)
-Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
-        by smtp.gmail.com with ESMTPSA id w7-20020a05600c474700b004182fab5098sm13016326wmo.20.2024.04.16.10.17.37
+        bh=t5+cT67cTo02CntoKNagjaOFlNuq4qrkhX6F7XjSc7A=;
+        b=QdFnjGEiXGVKqM/nMMImaISz/VfpKPfZV+RP/Smi0KRFveTbt0IOOol+S6L1imJAI7
+         9uzb4UwQ6r59jenlKZuMmHDuYPWmlmoa7C2QRdHbf/7LOlGXgppuLrsodfTKUD3harc/
+         tjaMLyhc4NztV+E4WJ9/4XE4ReGJp1UgiAEZLhxleMHRtAugzl79QSNVmJmxy0gH+8KQ
+         aUAJjpmeOtYbjq/wXc9xtBMwuE6F4I9VopkpKv69EoRyOqAsFEdIEBfgXaK6aOsoJv7L
+         YOZ1VfHrbVQFz7Iq5JPVPq1n7BELmQ/1xzZ+l2UnrY0nbRtD1KxNOrJLKCewlJufO1ek
+         lysw==
+X-Forwarded-Encrypted: i=1; AJvYcCXvsnMbqnOw53B9t3AVGCJV3jwTW1ads1s0CPs1waNWJfaptkf5oBUhFO/jovGx86wqEd8PEUfYlAa2nrltDFE4vtRh2fgg3yjRkXnAQrA7Une71v1+z6kW6jAh13Tf4NJ5qpahJzV62t/HeHeuTX6eU1HIzNlIrnZLMLx2nuH6Gffz67w=
+X-Gm-Message-State: AOJu0YyVhWiOzjINP2AhK9M77kRBogtfQHo+EvJUL3ZYO/n4LO2vN2Sj
+	VHUefGRRujDxGhzxu5yj6eaer6g11UpaeBJxGgucI7RPH0wKn9CHYugYAQ==
+X-Google-Smtp-Source: AGHT+IGtmhADIn7ffFIr2aJ/CC7G2eca3Dy2sm/BOCN1hE7qQKGMKwHpRYxAp8Rfdp/z4Jp2coDvwQ==
+X-Received: by 2002:a05:6a00:928e:b0:6e6:b4e0:c3db with SMTP id jw14-20020a056a00928e00b006e6b4e0c3dbmr15191117pfb.24.1713302524254;
+        Tue, 16 Apr 2024 14:22:04 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id ll10-20020a056a00728a00b006efd89effd4sm4556024pfb.102.2024.04.16.14.22.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 10:17:38 -0700 (PDT)
-From: Naresh Solanki <naresh.solanki@9elements.com>
-To: Guenter Roeck <linux@roeck-us.net>,
-	krzysztof.kozlowski+dt@linaro.org,
-	u.kleine-koenig@pengutronix.de,
-	Jean Delvare <jdelvare@suse.com>
-Cc: Naresh Solanki <naresh.solanki@9elements.com>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: [PATCH 2/4] hwmon: (max6639) : Utilise pwm subsystem
-Date: Tue, 16 Apr 2024 22:47:15 +0530
-Message-ID: <20240416171720.2875916-2-naresh.solanki@9elements.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240416171720.2875916-1-naresh.solanki@9elements.com>
+        Tue, 16 Apr 2024 14:22:03 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 16 Apr 2024 14:22:02 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Naresh Solanki <naresh.solanki@9elements.com>
+Cc: krzysztof.kozlowski+dt@linaro.org, u.kleine-koenig@pengutronix.de,
+	Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 2/4] hwmon: (max6639) : Utilise pwm subsystem
+Message-ID: <ecddd7f3-fc25-4021-9758-b00893ac9622@roeck-us.net>
 References: <20240416171720.2875916-1-naresh.solanki@9elements.com>
+ <20240416171720.2875916-2-naresh.solanki@9elements.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240416171720.2875916-2-naresh.solanki@9elements.com>
 
-Utilise pwm subsystem for fan pwm handling
+On Tue, Apr 16, 2024 at 10:47:15PM +0530, Naresh Solanki wrote:
+> Utilise pwm subsystem for fan pwm handling
+> 
+> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
 
-Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
----
- drivers/hwmon/Kconfig   |   1 +
- drivers/hwmon/max6639.c | 200 ++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 191 insertions(+), 10 deletions(-)
+That adds a lot of complexity to the driver. I am missing the benefits.
+You are supposed to explain why you are making changes, not just that
+you are making them.
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 257ec5360e35..c9cc74f8c807 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -1224,6 +1224,7 @@ config SENSORS_MAX6639
- 	tristate "Maxim MAX6639 sensor chip"
- 	depends on I2C
- 	select REGMAP_I2C
-+	depends on PWM
- 	help
- 	  If you say yes here you get support for the MAX6639
- 	  sensor chips.
-diff --git a/drivers/hwmon/max6639.c b/drivers/hwmon/max6639.c
-index 1af93fc53cb5..f37fdd161154 100644
---- a/drivers/hwmon/max6639.c
-+++ b/drivers/hwmon/max6639.c
-@@ -20,6 +20,7 @@
- #include <linux/err.h>
- #include <linux/mutex.h>
- #include <linux/platform_data/max6639.h>
-+#include <linux/pwm.h>
- #include <linux/regmap.h>
- 
- /* Addresses to scan */
-@@ -55,6 +56,9 @@ static const unsigned short normal_i2c[] = { 0x2c, 0x2e, 0x2f, I2C_CLIENT_END };
- #define MAX6639_GCONFIG_PWM_FREQ_HI		0x08
- 
- #define MAX6639_FAN_CONFIG1_PWM			0x80
-+#define MAX6639_REG_FAN_CONFIG2a_PWM_POL	0x02
-+#define MAX6639_FAN_CONFIG3_FREQ_MASK		0x03
-+#define MAX6639_REG_TARGTDUTY_SLOT		120
- 
- #define MAX6639_FAN_CONFIG3_THERM_FULL_SPEED	0x40
- 
-@@ -62,6 +66,10 @@ static const unsigned short normal_i2c[] = { 0x2c, 0x2e, 0x2f, I2C_CLIENT_END };
- 
- static const int rpm_ranges[] = { 2000, 4000, 8000, 16000 };
- 
-+/* Supported PWM frequency */
-+static const unsigned int freq_table[] = { 20, 33, 50, 100, 5000, 8333, 12500,
-+					   25000 };
-+
- #define FAN_FROM_REG(val, rpm_range)	((val) == 0 || (val) == 255 ? \
- 				0 : (rpm_ranges[rpm_range] * 30) / (val))
- #define TEMP_LIMIT_TO_REG(val)	clamp_val((val) / 1000, 0, 255)
-@@ -93,6 +101,9 @@ struct max6639_data {
- 
- 	/* Optional regulator for FAN supply */
- 	struct regulator *reg;
-+	/* max6639 pwm chip */
-+	struct pwm_chip chip;
-+	struct pwm_device *pwmd[MAX6639_NDEV]; /* max6639 has two pwm device */
- };
- 
- static struct max6639_data *max6639_update_device(struct device *dev)
-@@ -271,8 +282,11 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *dev_attr,
- {
- 	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
- 	struct max6639_data *data = dev_get_drvdata(dev);
-+	struct pwm_state state;
-+
-+	pwm_get_state(data->pwmd[attr->index], &state);
- 
--	return sprintf(buf, "%d\n", data->pwm[attr->index] * 255 / 120);
-+	return sprintf(buf, "%d\n", pwm_get_relative_duty_cycle(&state, 255));
- }
- 
- static ssize_t pwm_store(struct device *dev,
-@@ -281,6 +295,7 @@ static ssize_t pwm_store(struct device *dev,
- {
- 	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
- 	struct max6639_data *data = dev_get_drvdata(dev);
-+	struct pwm_state state;
- 	unsigned long val;
- 	int res;
- 
-@@ -290,10 +305,10 @@ static ssize_t pwm_store(struct device *dev,
- 
- 	val = clamp_val(val, 0, 255);
- 
--	mutex_lock(&data->update_lock);
--	data->pwm[attr->index] = (u8)(val * 120 / 255);
--	regmap_write(data->regmap, MAX6639_REG_TARGTDUTY(attr->index), data->pwm[attr->index]);
--	mutex_unlock(&data->update_lock);
-+	pwm_get_state(data->pwmd[attr->index], &state);
-+	pwm_set_relative_duty_cycle(&state, val, 255);
-+	pwm_apply_state(data->pwmd[attr->index], &state);
-+
- 	return count;
- }
- 
-@@ -373,6 +388,158 @@ static struct attribute *max6639_attrs[] = {
- };
- ATTRIBUTE_GROUPS(max6639);
- 
-+static struct max6639_data *to_max6639_pwm(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct max6639_data, chip);
-+}
-+
-+static int max6639_pwm_get_state(struct pwm_chip *chip,
-+				 struct pwm_device *pwm,
-+				 struct pwm_state *state)
-+{
-+	struct max6639_data *data = to_max6639_pwm(chip);
-+	int value, i = pwm->hwpwm, x, err;
-+	unsigned int freq;
-+
-+	mutex_lock(&data->update_lock);
-+
-+	err = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG1(i), &value);
-+	if (err < 0)
-+		goto abort;
-+
-+	if (value & MAX6639_FAN_CONFIG1_PWM) {
-+		state->enabled = true;
-+
-+		/* Determine frequency from respective registers */
-+		err = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG3(i), &value);
-+		if (err < 0)
-+			goto abort;
-+		x = value & MAX6639_FAN_CONFIG3_FREQ_MASK;
-+
-+		err = regmap_read(data->regmap, MAX6639_REG_GCONFIG, &value);
-+		if (err < 0)
-+			goto abort;
-+		if (value & MAX6639_GCONFIG_PWM_FREQ_HI)
-+			x |= 0x4;
-+		x &= 0x7;
-+		freq = freq_table[x];
-+
-+		state->period = DIV_ROUND_UP(NSEC_PER_SEC, freq);
-+
-+		err = regmap_read(data->regmap, MAX6639_REG_TARGTDUTY(i), &value);
-+		if (err < 0)
-+			goto abort;
-+		/* max6639 supports 120 slots only */
-+		state->duty_cycle = mul_u64_u32_div(state->period, value, 120);
-+
-+		err = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG2a(i), &value);
-+		if (err < 0)
-+			goto abort;
-+		value &= MAX6639_REG_FAN_CONFIG2a_PWM_POL;
-+		state->polarity = (value != 0);
-+	} else {
-+		state->enabled = false;
-+	}
-+
-+abort:
-+	mutex_unlock(&data->update_lock);
-+	return value;
-+}
-+
-+static int max6639_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			     const struct pwm_state *state)
-+{
-+	struct max6639_data *data = to_max6639_pwm(chip);
-+	int value, i = pwm->hwpwm, x, err;
-+	unsigned int freq;
-+	struct pwm_state cstate;
-+
-+	cstate = pwm->state;
-+
-+	mutex_lock(&data->update_lock);
-+
-+	if (state->period != cstate.period) {
-+		/* Configure frequency */
-+		freq = DIV_ROUND_UP_ULL(NSEC_PER_SEC, state->period);
-+
-+		/* Chip supports limited number of frequency */
-+		for (x = 0; x < sizeof(freq_table); x++)
-+			if (freq <= freq_table[x])
-+				break;
-+
-+		err = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG3(i), &value);
-+		if (err < 0)
-+			goto abort;
-+
-+		value &= ~MAX6639_FAN_CONFIG3_FREQ_MASK;
-+		value |= (x & MAX6639_FAN_CONFIG3_FREQ_MASK);
-+		err = regmap_write(data->regmap, MAX6639_REG_FAN_CONFIG3(i), value);
-+		if (err < 0)
-+			goto abort;
-+
-+		err = regmap_read(data->regmap, MAX6639_REG_GCONFIG, &value);
-+		if (err < 0)
-+			goto abort;
-+
-+		if (x >> 2)
-+			value &= ~MAX6639_GCONFIG_PWM_FREQ_HI;
-+		else
-+			value |= MAX6639_GCONFIG_PWM_FREQ_HI;
-+		err = regmap_write(data->regmap, MAX6639_REG_GCONFIG, value);
-+		if (err < 0)
-+			goto abort;
-+	}
-+
-+	/* Configure dutycycle */
-+	if (state->duty_cycle != cstate.duty_cycle ||
-+	    state->period != cstate.period) {
-+		value = DIV_ROUND_DOWN_ULL(state->duty_cycle * MAX6639_REG_TARGTDUTY_SLOT,
-+					   state->period);
-+		err = regmap_write(data->regmap, MAX6639_REG_TARGTDUTY(i), value);
-+		if (err < 0)
-+			goto abort;
-+	}
-+
-+	/* Configure polarity */
-+	if (state->polarity != cstate.polarity) {
-+		err = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG2a(i), &value);
-+		if (err < 0)
-+			goto abort;
-+		if (state->polarity == PWM_POLARITY_NORMAL)
-+			value |= MAX6639_REG_FAN_CONFIG2a_PWM_POL;
-+		else
-+			value &= ~MAX6639_REG_FAN_CONFIG2a_PWM_POL;
-+		err = regmap_write(data->regmap, MAX6639_REG_FAN_CONFIG2a(i), value);
-+		if (err < 0)
-+			goto abort;
-+	}
-+
-+	if (state->enabled != cstate.enabled) {
-+		err = regmap_read(data->regmap, MAX6639_REG_FAN_CONFIG1(i), &value);
-+		if (err < 0)
-+			goto abort;
-+		if (state->enabled)
-+			value |= MAX6639_FAN_CONFIG1_PWM;
-+		else
-+			value &= ~MAX6639_FAN_CONFIG1_PWM;
-+
-+		err = regmap_write(data->regmap, MAX6639_REG_FAN_CONFIG1(i), value);
-+		if (err < 0)
-+			goto abort;
-+	}
-+	value = 0;
-+
-+abort:
-+	mutex_unlock(&data->update_lock);
-+
-+	return err;
-+}
-+
-+static const struct pwm_ops max6639_pwm_ops = {
-+	.apply = max6639_pwm_apply,
-+	.get_state = max6639_pwm_get_state,
-+};
-+
- /*
-  *  returns respective index in rpm_ranges table
-  *  1 by default on invalid range
-@@ -396,6 +563,7 @@ static int max6639_init_client(struct i2c_client *client,
- 		dev_get_platdata(&client->dev);
- 	int i;
- 	int rpm_range = 1; /* default: 4000 RPM */
-+	struct pwm_state state;
- 	int err;
- 
- 	/* Reset chip to default values, see below for GCONFIG setup */
-@@ -459,11 +627,15 @@ static int max6639_init_client(struct i2c_client *client,
- 		if (err)
- 			goto exit;
- 
--		/* PWM 120/120 (i.e. 100%) */
--		data->pwm[i] = 120;
--		err = regmap_write(data->regmap, MAX6639_REG_TARGTDUTY(i), data->pwm[i]);
--		if (err)
--			goto exit;
-+		dev_dbg(&client->dev, "Using chip default PWM");
-+		data->pwmd[i] = pwm_request_from_chip(&data->chip, i, NULL);
-+		if (IS_ERR(data->pwmd[i]))
-+			return PTR_ERR(data->pwmd[i]);
-+		pwm_get_state(data->pwmd[i], &state);
-+		state.period = DIV_ROUND_UP(NSEC_PER_SEC, 25000);
-+		state.polarity = PWM_POLARITY_NORMAL;
-+		pwm_set_relative_duty_cycle(&state, 0, 255);
-+		pwm_apply_state(data->pwmd[i], &state);
- 	}
- 	/* Start monitoring */
- 	err = regmap_write(data->regmap, MAX6639_REG_GCONFIG,
-@@ -540,6 +712,14 @@ static int max6639_probe(struct i2c_client *client)
- 				     PTR_ERR(data->regmap),
- 				     "regmap initialization failed\n");
- 
-+	/* Add PWM controller of max6639 */
-+	data->chip.dev = dev;
-+	data->chip.ops = &max6639_pwm_ops;
-+	data->chip.npwm = MAX6639_NDEV;
-+	err = devm_pwmchip_add(dev, &data->chip);
-+	if (err < 0)
-+		return dev_err_probe(dev, err, "failed to add PWM chip\n");
-+
- 	data->reg = devm_regulator_get_optional(dev, "fan");
- 	if (IS_ERR(data->reg)) {
- 		if (PTR_ERR(data->reg) != -ENODEV)
--- 
-2.42.0
+Why are you making those changes ?
 
+Guenter
 
