@@ -1,55 +1,55 @@
-Return-Path: <linux-pwm+bounces-1980-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1983-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15C188A8092
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Apr 2024 12:19:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 302928A80A6
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Apr 2024 12:19:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCBC61F22465
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Apr 2024 10:19:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3F7C1F216A5
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Apr 2024 10:19:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B422913B794;
-	Wed, 17 Apr 2024 10:19:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B6A913C668;
+	Wed, 17 Apr 2024 10:19:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IlCqquzr"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mWZHwN+S"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A2E13AD15;
-	Wed, 17 Apr 2024 10:19:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20BE13C3E4;
+	Wed, 17 Apr 2024 10:19:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713349164; cv=none; b=OrlIBT2OwlbirqIOjolx730Puhkg1yyKvvlQO/EHfJdUyVDMetr2E89jzfvLZx6+Yuc9ls4GuwvlIX63qjH3phbioK9jf4/eFVh6pzRCnOceRw8pbBDo49+CScGAloINHzBHEsxyMaxGWWH5SrNPPdGhYbX3KosJ8mb2XStV4GM=
+	t=1713349169; cv=none; b=ke0YxyH6ukIusWTPAqHEBCCpzUQUvIoG76u+NP7/6Y2QCJYy9Dk9JxFekEq8ag/63RnMZf1qJoBVwgKWrAlWyTV/7b0JeR4KzIqb5Bjfng2zia4tRoqkUh4s6mssSmPu2sKxPEDrv/BJKp4n+ou+fof9iJb+X5Gq/gGFYjHhIl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713349164; c=relaxed/simple;
-	bh=ZXvKnOxAWKtA1ZyEyD4xHHi6jtBiRKSNgjQUwwOb1yU=;
+	s=arc-20240116; t=1713349169; c=relaxed/simple;
+	bh=Szzgxmq1uily16b3FrtzPmtlOA6Oz+XiGmAlFkhAWfg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b6i+fsCYm/xUrrqhHDcxJ5SBx2DqEH3JieO0i/nzAxNmVG4FbxDXKtd9e3NFtSBRcDnoCr4AvqMJkfYd5GLaaKXmMK2TC555pG2UPN7/mCXQ7ayab4vhrWZCBM/tmCLQJBYLoEJkeR094mZuSz2tTCiWtUDeaWFfvLXlE78Pc40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=IlCqquzr; arc=none smtp.client-ip=46.235.227.194
+	 In-Reply-To:Content-Type; b=INnAdp3auhDlx+SbC8n3tg8xLfEPcXDXjQ2gwvvSgugb8+BcIzGdn4duS8UG8mBF93ATG6YmE0nBWWit7kEmB39gYdNTiJL5ARI7bCV0MBDuaMPPIvnUPym+sJ64JoOV68BWou4iWGgp/NN0mDrsTsZH9Hm4UhWYQW1W2MKHzSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mWZHwN+S; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713349161;
-	bh=ZXvKnOxAWKtA1ZyEyD4xHHi6jtBiRKSNgjQUwwOb1yU=;
+	s=mail; t=1713349166;
+	bh=Szzgxmq1uily16b3FrtzPmtlOA6Oz+XiGmAlFkhAWfg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IlCqquzrqUlQvCl+clDNR1MpbKDu6k//HytgxLI1g7MrwNNTpm5Rx0l8/2tqSrorC
-	 uDwRQ7dnsfDiZIX339ue5ahjkjK4fmI4+YbZy5enye6rbMpldSSI71ZrR/av3jiGY1
-	 st6A4Z3hzYqTuyxQxL8Pq81AWby27Xn7zukuc42lO9ajFKdD6UfpLHU3Xa3y+nTy9h
-	 XkQSzZCCCszHy4P57NGwXnin0UpC5ur80SC2uNQhXqeb/c3Le/rcSR63/uNPCysMEW
-	 PQNc4TrOySDRAStEXSJA6Sk34nRnV6Kkjln4VA42e3rfohLmBo55BWB3XjWN0Pp4fa
-	 /XlPbG5u7uwPA==
+	b=mWZHwN+SJSF4qii40JMjO4a0mZ0xd0frPpAsO6zE3jF5by96Ss23cKU7WPM003pc8
+	 unemdGp3KvaI2VGVHed5crgnBn3c+TF+1/2mehtDuxybZMGIzchvLPTUtuSQYtqYJO
+	 wOiHXXtlektNyLXF+SU9Wi25GJhuOf/IS6ycCuzqcezUJutD9gdM9Yj20n67VtSNoj
+	 jJ+NNNawmROsc+pneLvoC1MzDmzLczdqMBZk+ybAmeJ3iHWKamWz92AXRl/HoziQ4i
+	 Xy5+0vGmebmBs0b00R0T/z38ez5aqCSrCjwxg/InedNXHMRUAq/c0qmVqRmMmEYl88
+	 bFjgmeC5t/uSg==
 Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BCBEF37820F1;
-	Wed, 17 Apr 2024 10:19:19 +0000 (UTC)
-Message-ID: <1db01bd8-0936-40e5-9f1b-7ea34746bef1@collabora.com>
-Date: Wed, 17 Apr 2024 12:19:19 +0200
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BF8443782143;
+	Wed, 17 Apr 2024 10:19:24 +0000 (UTC)
+Message-ID: <ecff5045-105f-4e46-b44f-a8892086d19a@collabora.com>
+Date: Wed, 17 Apr 2024 12:19:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -57,8 +57,8 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 11/18] dt-bindings: pwm: mediatek,pwm-disp: add
- power-domains property
+Subject: Re: [PATCH v2 08/18] dt-bindings: display: mediatek: gamma: add
+ compatible for MT8365 SoC
 To: Alexandre Mergnat <amergnat@baylibre.com>,
  Chun-Kuang Hu <chunkuang.hu@kernel.org>,
  Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
@@ -78,24 +78,20 @@ Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
  linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
  linux-clk@vger.kernel.org
 References: <20231023-display-support-v2-0-33ce8864b227@baylibre.com>
- <20231023-display-support-v2-11-33ce8864b227@baylibre.com>
+ <20231023-display-support-v2-8-33ce8864b227@baylibre.com>
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-In-Reply-To: <20231023-display-support-v2-11-33ce8864b227@baylibre.com>
+In-Reply-To: <20231023-display-support-v2-8-33ce8864b227@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Il 16/04/24 17:53, Alexandre Mergnat ha scritto:
-> According to the Mediatek MT8365 datasheet, the display PWM block has
-> a power domain.
+> Document the display Gamma on MT8365, which is compatible
+> with that of the MT8183.
 > 
 > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 
-It's the same for at least MT8195, MT8183 and I think MT8192 as well... so
-not having that from the beginning is actually a mistake.
-
-Please add a Fixes tag and resend, after which:
-
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
 
 
