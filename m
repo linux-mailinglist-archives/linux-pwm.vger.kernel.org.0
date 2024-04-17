@@ -1,125 +1,138 @@
-Return-Path: <linux-pwm+bounces-1974-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1975-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A4718A7DBF
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Apr 2024 10:07:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D734D8A7DBE
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Apr 2024 10:07:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E1980B23A4B
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9499028220E
 	for <lists+linux-pwm@lfdr.de>; Wed, 17 Apr 2024 08:07:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FECC7D41F;
-	Wed, 17 Apr 2024 08:06:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A46847CF18;
+	Wed, 17 Apr 2024 08:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mCTbDA02"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6657D3FB
-	for <linux-pwm@vger.kernel.org>; Wed, 17 Apr 2024 08:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F907D40B
+	for <linux-pwm@vger.kernel.org>; Wed, 17 Apr 2024 08:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713341217; cv=none; b=if20WejH4Jkcwrck9Fil3rxVEosqRXq+regTIPYJ+XTMk61egM++oFY2ybh3W9TpQ4m7FwiIuc2BbkmAPqgn+6WKgqNHjP85RuA2XKfC5NBPVAVmymuefQWffdywzz71ENHgLJ9ehjNLxEJwhJVQDFcWuVcJmnOCh/OoBUZwVT0=
+	t=1713341219; cv=none; b=Ajh8UUh/eB3WOdkRBaYTNksyBdCfyuT4xb+UKsXWgV/uKuhFN4pK8q59QbLj2jZsrDXa671mJJb7pcdnx/qi9eU6uvjcw3G91082wOJmpMnyF5GzounxUcs4XsBB4an6InKPpSADdqh0uf8zyXnaNVE6LfEjBqJxy6n3MMjRYpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713341217; c=relaxed/simple;
-	bh=w/Urp16yxBrBlbQ0FwhKJmNlOuwGGOs/m9vemgqOvVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=He2NmFdnz91Oo4qrPKhd5HK62lq2oWsp3prNV3iTRRDGtwpXcYjlBbrWj1z/b4GGhJsIGuWOQPFYVdDoN/Shzxuya0VkG9TAHXguY+DapXJtiS37FYk3qMaAkmMFWoR54kpMxDuKXXaooGCcUmyLoYSBmI4T9KRkoTK4X79a8DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rx0J8-0007Ur-OT; Wed, 17 Apr 2024 10:06:18 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rx0J4-00CkpM-Fr; Wed, 17 Apr 2024 10:06:14 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rx0J4-002eR5-1F;
-	Wed, 17 Apr 2024 10:06:14 +0200
-Date: Wed, 17 Apr 2024 10:06:14 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Alexandre Mergnat <amergnat@baylibre.com>
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Jitao Shi <jitao.shi@mediatek.com>, CK Hu <ck.hu@mediatek.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, dri-devel@lists.freedesktop.org, 
-	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v2 12/18] dt-bindings: pwm: mediatek,pwm-disp: add
- compatible for mt8365 SoC
-Message-ID: <vasuzy7cf5x6p5rnrmdrk5z54oncu2yuutupf25h5fgd5y6fpl@mnkf67agw64g>
-References: <20231023-display-support-v2-0-33ce8864b227@baylibre.com>
- <20231023-display-support-v2-12-33ce8864b227@baylibre.com>
+	s=arc-20240116; t=1713341219; c=relaxed/simple;
+	bh=m4cgksIDbGLFKOwBZjchQTOmi+eWGpVLDvkruMW0wGg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jhtkPyKYlT+b2Rbuq/VxXfOvdZ0IpuVpqnVljrqLuMXSWXSqPKaBJQELiNmlip96ek1IBZbcOWvEjhvGlDM6TlyAATzNeXqkDTG6sl4JZUhK84XeYaNjAnVTEMb4gtHx/gnbePmv/vGLnW3awrkjeYWCTWXasMTgmn6u6Jy19Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mCTbDA02; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e69888a36so7693366a12.3
+        for <linux-pwm@vger.kernel.org>; Wed, 17 Apr 2024 01:06:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1713341215; x=1713946015; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BuvMTKrS538OQBDa2jdh/t6qnPEHbqMc8PN+mILzuvs=;
+        b=mCTbDA021uI/MpaphPimUOaSUMI10XU7fzUrzzLzWW3EAiQ46UAr2WtON7Wq7tuq5i
+         BmtBrqwm50lUt0uHoy7C/UkOeEe70nMkia7H7tXWQTkJW/KqVIi6U2meDGJqzVAeXJux
+         QIIGJBmAn9WvgeQj1WBWzxsPD29S2mNWZYGbqGxkz5GiNut7Vfrs5QcKlZ9VTrfnIJbW
+         coplHmF2SwOY3LUJRwYdJo/1rPoIbvvLyN59ABi/JY10mbQu8fYZlumDObRtna1g+LXV
+         /Nno5lHWxvnZho1OyHsqY8McErp35fmvKUbHSJewxENZDov5Cf1IPIuRTdZIT2jlUw6E
+         htAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713341215; x=1713946015;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BuvMTKrS538OQBDa2jdh/t6qnPEHbqMc8PN+mILzuvs=;
+        b=rFR3P0AgEPsCOHEjz8rHEBLu4He24zpAJvNS6ulnScm0qb8syBCGxmlKnYU3zq+dXd
+         ciS132YEl2LArNtr7E30qv+tDJQzJX2ZT5DpwBGughcqWcS2rMsu6eMUKbOyiZyTqIJw
+         YChzxdonYTTfC/7VUtxFsaIxgOq449bHCNpWrydLBjvzHjAukdRpF98/O+Awqq7U27jR
+         6XJMul/0WRYf90PgSJrgrC6sK3awop6PFvmxMPzf7NIFlX72z8RXP6Ddj1iLgPOnyQkS
+         HrFFARFaXWRGhR/SyzrK/24Pf7nUiyAFw/UqKQS5EMVwvQYDRHdxnhRy3zPRj2kTcT28
+         gwVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUL8+Q0NIutAGhKlxW93dVpsHYbdVcYZGiBPNa6yAgpnJPZ91ZHuLUQjOtKBxRgt6OT1R5qaTdo4oBpIf9dKEVULp2oSpDQYxTT
+X-Gm-Message-State: AOJu0YzgAi88KIIUR9U8qhlDKnuKZmtMvEvKdt6UvLDrp6oaFzexEEWh
+	iuQS7x1SOJsEAhZmeZPnw1cvZMfNNr3127erVhthmQ4Rc5btptTls/p9ZwYxB20=
+X-Google-Smtp-Source: AGHT+IF9QNj2+LEOTDvCsMmUjHTc38pjE+FDvplPR3KiswRdx9pL2ELeUrxLu0thmtQsPq4SfA0PEQ==
+X-Received: by 2002:a17:906:a016:b0:a52:4d96:85e with SMTP id p22-20020a170906a01600b00a524d96085emr6795036ejy.53.1713341214788;
+        Wed, 17 Apr 2024 01:06:54 -0700 (PDT)
+Received: from [192.168.1.172] ([93.5.22.158])
+        by smtp.gmail.com with ESMTPSA id cx10-20020a170906c80a00b00a51b5282837sm7852622ejb.15.2024.04.17.01.06.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Apr 2024 01:06:54 -0700 (PDT)
+Message-ID: <cd5dcc90-bd34-40d5-af79-4943883411ad@baylibre.com>
+Date: Wed, 17 Apr 2024 10:06:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="io3h7fqcywjsjxa4"
-Content-Disposition: inline
-In-Reply-To: <20231023-display-support-v2-12-33ce8864b227@baylibre.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 11/18] dt-bindings: pwm: mediatek,pwm-disp: add
+ power-domains property
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Jitao Shi <jitao.shi@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, dri-devel@lists.freedesktop.org,
+ linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org
+References: <20231023-display-support-v2-0-33ce8864b227@baylibre.com>
+ <20231023-display-support-v2-11-33ce8864b227@baylibre.com>
+ <22yeoik77sdhmg43odjftzjn2douq74zhxwy6qx3hsrvr53r5e@7w3f3zbgxult>
+Content-Language: en-US
+From: Alexandre Mergnat <amergnat@baylibre.com>
+In-Reply-To: <22yeoik77sdhmg43odjftzjn2douq74zhxwy6qx3hsrvr53r5e@7w3f3zbgxult>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
---io3h7fqcywjsjxa4
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+
+On 17/04/2024 10:01, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Tue, Apr 16, 2024 at 05:53:12PM +0200, Alexandre Mergnat wrote:
+>> According to the Mediatek MT8365 datasheet, the display PWM block has
+>> a power domain.
+>>
+>> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> 
+> I already pointed that out in reply to the cover letter, so just to make
+> it more easily to spot for people considering to apply this patch:
+> 
+> This is already fixed in next.
+> 
 
 Hello,
+Sorry I've misunderstood the previous message.
+I will remove this patch for the next revision and notify it in the cover letter.
 
-On Tue, Apr 16, 2024 at 05:53:13PM +0200, Alexandre Mergnat wrote:
-> Add a compatible string for MediaTek Genio 350 MT8365's display PWM
-> block: this is the same as MT8183.
->=20
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
-> Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+Thanks
 
-I already asked in reply to v1 what the merge plan is here. There are
-changes in my pwm tree to the mediatek,pwm-disp binding already. I don't
-think they conflict with this patch, but maybe it's still easier to take
-this via pwm?!
+> Best regards
+> Uwe
+> 
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---io3h7fqcywjsjxa4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYfgvUACgkQj4D7WH0S
-/k78IAgAhF2CBY2gx+0pIvPzhA01LKYoH1PW7O9/VqjB74kUiFSUlcSeRrutEtNX
-ZEg4pND9OmmBG82ECTvIccPKIL/n/aJOrZmng5N69kS14q4JUBYSVXbDDAF1dCbX
-0PieK7SFo9D87VIaJATg+qpjGibELEWpKVbPeTeO5J2wzUJSltGSG5oNzJ8dX3XO
-uqQoTu0bGayvkTeIy6I1XXkNDC8OGER+18nco1/s6w0zkBdm26UUbc3DCy/o5eeA
-R0WD+DHqWiTxA80vpSEGFJ2RBPB96z3bbFBz4U0n5Q9vU34oqBr3oyvOd9qPXTMt
-ok+B9O4U4Q0Cag8pOsGc7GXkD41LXA==
-=hlSO
------END PGP SIGNATURE-----
-
---io3h7fqcywjsjxa4--
+-- 
+Regards,
+Alexandre
 
