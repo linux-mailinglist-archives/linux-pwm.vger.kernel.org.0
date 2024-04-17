@@ -1,353 +1,134 @@
-Return-Path: <linux-pwm+bounces-1990-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-1991-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D569A8A80EB
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Apr 2024 12:28:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 68D798A848A
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Apr 2024 15:28:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62C1F1F21A83
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Apr 2024 10:28:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D91A1F217D3
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Apr 2024 13:28:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A09B13C3E1;
-	Wed, 17 Apr 2024 10:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aDwYNLm4"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EEAF13F454;
+	Wed, 17 Apr 2024 13:26:32 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EE213C3D3;
-	Wed, 17 Apr 2024 10:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F8A1422D5
+	for <linux-pwm@vger.kernel.org>; Wed, 17 Apr 2024 13:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713349682; cv=none; b=ZUHZt+RcXEdtqwyzabTQTzTdnTRyrwE3D/af+PFOyBJUZLXmiuI3sav/16UrukbYgjXDT6Bg7x1sHuT37H3xSe1f94Hzyj9VfRWNSJ9JUOhORt6lVqbU12/CJT3Gvoi+ABSxjTK7fHsk3X1P9NNIWHRWEuSp4UziExbNA0pr7CQ=
+	t=1713360392; cv=none; b=ZvRO76b9xSYEXHcgZrG/KT6T99Q8NyHHEA8NOtKYpvzq+BKLQK5XeU4G6l/asNTHbW7mlhmbXu6Y2l5FJbj7Oiir8XJypQo7ArfZlif7932knWL4X0h1704JjiBUWhcmFzDBPuark3uc8h25ZNOQkTM6xT2fE727p8oYzPj9UYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713349682; c=relaxed/simple;
-	bh=2SVLOxF1LIFW8IU+UiQ7K2P1NHBlwj/W6OfBiv0gOr4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BmNdxSNaKjMrWzRk/4ayA1PsfxdHdFPAnz/T0AHcxaxmBW9QBCU24azpKY/vGcr1MR4Tmus85U//NZrYWAp7NSFhhKNJnYBhBdCabd5iJL5PK6IUMXf7LOpa29b1P2HtyB8hbifasvJ56OaDMHccdLW0GL8yD6OIuz7fO0VqjfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aDwYNLm4; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713349679;
-	bh=2SVLOxF1LIFW8IU+UiQ7K2P1NHBlwj/W6OfBiv0gOr4=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=aDwYNLm4GpaVas8y1JxE813xF5hvJPUXYik0xtOCY1BNDNqzE3iTahTaivSHQj7l6
-	 MXbis/vxnwKNQGh0KQLKsagi3TjhE4JJ9Es1XfP3msHY0waB9Xuy6CjCNxaM/egkl2
-	 2O0N2+cDm8wYhxh0jTEhFcPFOD2NmnK1tiw6T4jzfgBdSzNSE3bl8CDMz4noQxmtSt
-	 nU1HN29DcvKuBkI6/TUXfx+a2EaeVJIBwGUGJyTePjst1qmBNmIA19w8TKUS48H6t3
-	 yxdSdM8Tv4UYOMQm/3uDZfPxCIe9S76dl7wvEdk5i9FD3bhmCP0VAKASQVwbcYuqJ5
-	 yb7qpzIBF+VcA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8B20237820F9;
-	Wed, 17 Apr 2024 10:27:57 +0000 (UTC)
-Message-ID: <ee8d0a32-b4fb-4fc4-83b2-300f7453d95f@collabora.com>
-Date: Wed, 17 Apr 2024 12:27:57 +0200
+	s=arc-20240116; t=1713360392; c=relaxed/simple;
+	bh=s8ny+TndcIJQgmcNzBMecyd/A5GThSZKfKRvzWKXkgQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DGAPKglkoAEFVP+xqz9t9E/AOzY4jYz3LlrxPjZlfwcvb5Y/YURI/LSGOvWJARjKLUfJnLAIG1UkPbY+iJw+rRx95XAVzztNf+v+7mhllZZD/Ysygd65TUSJbFlPQW24QVOJ4ptpyHqqgpt5lAswUdvWDRPyKhBID6OsQyt6PZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rx5IP-0007GI-7I; Wed, 17 Apr 2024 15:25:53 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rx5IM-00CnkN-Su; Wed, 17 Apr 2024 15:25:50 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rx5IM-002rHj-2Y;
+	Wed, 17 Apr 2024 15:25:50 +0200
+Date: Wed, 17 Apr 2024 15:25:50 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Alexandre Mergnat <amergnat@baylibre.com>, 
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, Jitao Shi <jitao.shi@mediatek.com>, CK Hu <ck.hu@mediatek.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, dri-devel@lists.freedesktop.org, 
+	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 11/18] dt-bindings: pwm: mediatek,pwm-disp: add
+ power-domains property
+Message-ID: <5vqnkgp77tir5j5cumo62pm2cw4xjabexu7nk3kze4gk4ri5dn@g3pee2beuuco>
+References: <20231023-display-support-v2-0-33ce8864b227@baylibre.com>
+ <20231023-display-support-v2-11-33ce8864b227@baylibre.com>
+ <1db01bd8-0936-40e5-9f1b-7ea34746bef1@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH v2 18/18] arm64: dts: mediatek: add display support for
- mt8365-evk
-To: Alexandre Mergnat <amergnat@baylibre.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Jitao Shi <jitao.shi@mediatek.com>,
- CK Hu <ck.hu@mediatek.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <u.kleine-koenig@pengutronix.de>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
- linux-clk@vger.kernel.org
-References: <20231023-display-support-v2-0-33ce8864b227@baylibre.com>
- <20231023-display-support-v2-18-33ce8864b227@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20231023-display-support-v2-18-33ce8864b227@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Il 16/04/24 17:53, Alexandre Mergnat ha scritto:
-> MIPI DSI:
-> - Add "vsys_lcm_reg" regulator support and setup the "mt6357_vsim1_reg",
-> to power the pannel plugged to the DSI connector.
-> - Setup the Display Parallel Interface.
->    - Add the startek kd070fhfid015 pannel support.
-> 
-> HDMI:
-> - Add HDMI connector support.
-> - Add the "ite,it66121" HDMI bridge support, driven by I2C1.
-> - Setup the Display Parallel Interface.
-> 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-> ---
->   arch/arm64/boot/dts/mediatek/mt8365-evk.dts | 182 ++++++++++++++++++++++++++++
->   1 file changed, 182 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-> index 50cbaefa1a99..4afdcbefc481 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-> @@ -26,6 +26,18 @@ chosen {
->   		stdout-path = "serial0:921600n8";
->   	};
->   
-> +	connector {
-> +		compatible = "hdmi-connector";
-> +		label = "hdmi";
-> +		type = "d";
-> +
-> +		port {
-> +			hdmi_connector_in: endpoint {
-> +				remote-endpoint = <&hdmi_connector_out>;
-> +			};
-> +		};
-> +	};
-> +
->   	firmware {
->   		optee {
->   			compatible = "linaro,optee-tz";
-> @@ -86,6 +98,56 @@ optee_reserved: optee@43200000 {
->   			reg = <0 0x43200000 0 0x00c00000>;
->   		};
->   	};
-> +
-> +	vsys_lcm_reg: regulator-vsys-lcm {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&pio 129 GPIO_ACTIVE_HIGH>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-name = "vsys_lcm";
-> +	};
-> +};
-> +
-> +&dpi0 {
-> +	pinctrl-0 = <&dpi_default_pins>;
-> +	pinctrl-1 = <&dpi_idle_pins>;
-> +	pinctrl-names = "default", "sleep";
-> +	status = "okay";
-> +
-> +	port {
-> +		dpi_out: endpoint {
-> +			remote-endpoint = <&it66121_in>;
-> +		};
-> +	};
-> +};
-> +
-> +&dsi0 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	status = "okay";
-> +
-> +	panel@0 {
-> +		compatible = "startek,kd070fhfid015";
-> +		status = "okay";
-
-status is always okay, unless it's disabled.
-
-> +		reg = <0>;
-> +		enable-gpios = <&pio 67 GPIO_ACTIVE_HIGH>;
-> +		reset-gpios = <&pio 20 GPIO_ACTIVE_HIGH>;
-> +		iovcc-supply = <&mt6357_vsim1_reg>;
-> +		power-supply = <&vsys_lcm_reg>;
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&dsi_out>;
-> +			};
-> +		};
-> +	};
-> +
-> +	port {
-> +		dsi_out: endpoint {
-> +			remote-endpoint = <&panel_in>;
-> +		};
-> +	};
->   };
->   
->   &cpu0 {
-> @@ -138,6 +200,50 @@ &i2c0 {
->   	status = "okay";
->   };
->   
-> +&i2c1 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	clock-div = <2>;
-> +	clock-frequency = <100000>;
-> +	pinctrl-0 = <&i2c1_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +
-> +	it66121hdmitx: it66121hdmitx@4c {
-
-Can we please get an actually readable name for this node?
-
-Just a suggestion (you're free to rename however you want)
-
-	it66121_hdmi: hdmi@4c {
-
-> +		#sound-dai-cells = <0>;
-> +		compatible = "ite,it66121";
-> +		interrupt-parent = <&pio>;
-> +		interrupts = <68 IRQ_TYPE_LEVEL_LOW>;
-> +		pinctrl-0 = <&ite_pins>;
-> +		pinctrl-names = "default";
-> +		reg = <0x4c>;
-> +		reset-gpios = <&pio 69 GPIO_ACTIVE_LOW>;
-> +		vcn18-supply = <&mt6357_vsim2_reg>;
-> +		vcn33-supply = <&mt6357_vibr_reg>;
-> +		vrf12-supply = <&mt6357_vrf12_reg>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				it66121_in: endpoint {
-> +					bus-width = <12>;
-> +					remote-endpoint = <&dpi_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				hdmi_connector_out: endpoint {
-> +					remote-endpoint = <&hdmi_connector_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
->   &mmc0 {
->   	assigned-clock-parents = <&topckgen CLK_TOP_MSDCPLL>;
->   	assigned-clocks = <&topckgen CLK_TOP_MSDC50_0_SEL>;
-> @@ -180,7 +286,55 @@ &mt6357_pmic {
->   	#interrupt-cells = <2>;
->   };
->   
-> +&mt6357_vsim1_reg {
-> +	regulator-min-microvolt = <1800000>;
-> +	regulator-max-microvolt = <1800000>;
-> +};
-> +
->   &pio {
-> +	dpi_default_pins: dpi-default-pins {
-> +		pins {
-> +			pinmux = <MT8365_PIN_0_GPIO0__FUNC_DPI_D0>,
-> +				 <MT8365_PIN_1_GPIO1__FUNC_DPI_D1>,
-> +				 <MT8365_PIN_2_GPIO2__FUNC_DPI_D2>,
-> +				 <MT8365_PIN_3_GPIO3__FUNC_DPI_D3>,
-> +				 <MT8365_PIN_4_GPIO4__FUNC_DPI_D4>,
-> +				 <MT8365_PIN_5_GPIO5__FUNC_DPI_D5>,
-> +				 <MT8365_PIN_6_GPIO6__FUNC_DPI_D6>,
-> +				 <MT8365_PIN_7_GPIO7__FUNC_DPI_D7>,
-> +				 <MT8365_PIN_8_GPIO8__FUNC_DPI_D8>,
-> +				 <MT8365_PIN_9_GPIO9__FUNC_DPI_D9>,
-> +				 <MT8365_PIN_10_GPIO10__FUNC_DPI_D10>,
-> +				 <MT8365_PIN_11_GPIO11__FUNC_DPI_D11>,
-> +				 <MT8365_PIN_12_GPIO12__FUNC_DPI_DE>,
-> +				 <MT8365_PIN_13_GPIO13__FUNC_DPI_VSYNC>,
-> +				 <MT8365_PIN_14_GPIO14__FUNC_DPI_CK>,
-> +				 <MT8365_PIN_15_GPIO15__FUNC_DPI_HSYNC>;
-> +			drive-strength = <MTK_DRIVE_4mA>;
-
-drive-strength = <4> is just fine....! :-)
-
-> +		};
-> +	};
-> +
-> +	dpi_idle_pins: dpi-idle-pins {
-> +		pins {
-> +			pinmux = <MT8365_PIN_0_GPIO0__FUNC_GPIO0>,
-> +				 <MT8365_PIN_1_GPIO1__FUNC_GPIO1>,
-> +				 <MT8365_PIN_2_GPIO2__FUNC_GPIO2>,
-> +				 <MT8365_PIN_3_GPIO3__FUNC_GPIO3>,
-> +				 <MT8365_PIN_4_GPIO4__FUNC_GPIO4>,
-> +				 <MT8365_PIN_5_GPIO5__FUNC_GPIO5>,
-> +				 <MT8365_PIN_6_GPIO6__FUNC_GPIO6>,
-> +				 <MT8365_PIN_7_GPIO7__FUNC_GPIO7>,
-> +				 <MT8365_PIN_8_GPIO8__FUNC_GPIO8>,
-> +				 <MT8365_PIN_9_GPIO9__FUNC_GPIO9>,
-> +				 <MT8365_PIN_10_GPIO10__FUNC_GPIO10>,
-> +				 <MT8365_PIN_11_GPIO11__FUNC_GPIO11>,
-> +				 <MT8365_PIN_12_GPIO12__FUNC_GPIO12>,
-> +				 <MT8365_PIN_13_GPIO13__FUNC_GPIO13>,
-> +				 <MT8365_PIN_14_GPIO14__FUNC_GPIO14>,
-> +				 <MT8365_PIN_15_GPIO15__FUNC_GPIO15>;
-> +		};
-> +	};
-> +
->   	ethernet_pins: ethernet-pins {
->   		phy_reset_pins {
->   			pinmux = <MT8365_PIN_133_TDM_TX_DATA1__FUNC_GPIO133>;
-> @@ -222,6 +376,34 @@ pins {
->   		};
->   	};
->   
-> +	i2c1_pins: i2c1-pins {
-> +		pins {
-> +			pinmux = <MT8365_PIN_59_SDA1__FUNC_SDA1_0>,
-> +				 <MT8365_PIN_60_SCL1__FUNC_SCL1_0>;
-> +			bias-pull-up;
-> +		};
-> +	};
-> +
-> +	ite_pins: ite-pins {
-> +
-
-extra blank line, please remove.
-
-> +		irq_ite_pins {
-
-Did you run dtbs_check?!? :-)
-
-Cheers,
-Angelo
-
-> +			pinmux = <MT8365_PIN_68_CMDAT0__FUNC_GPIO68>;
-> +			input-enable;
-> +			bias-pull-up;
-> +		};
-> +
-> +		pwr_pins {
-> +			pinmux = <MT8365_PIN_70_CMDAT2__FUNC_GPIO70>,
-> +				 <MT8365_PIN_71_CMDAT3__FUNC_GPIO71>;
-> +			output-high;
-> +		};
-> +
-> +		rst_ite_pins {
-> +			pinmux = <MT8365_PIN_69_CMDAT1__FUNC_GPIO69>;
-> +			output-high;
-> +		};
-> +	};
-> +
->   	mmc0_default_pins: mmc0-default-pins {
->   		clk-pins {
->   			pinmux = <MT8365_PIN_99_MSDC0_CLK__FUNC_MSDC0_CLK>;
-> 
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2mhwzpvshnycjgzu"
+Content-Disposition: inline
+In-Reply-To: <1db01bd8-0936-40e5-9f1b-7ea34746bef1@collabora.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
+--2mhwzpvshnycjgzu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hello,
+
+On Wed, Apr 17, 2024 at 12:19:19PM +0200, AngeloGioacchino Del Regno wrote:
+> Il 16/04/24 17:53, Alexandre Mergnat ha scritto:
+> > According to the Mediatek MT8365 datasheet, the display PWM block has
+> > a power domain.
+> >=20
+> > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+>=20
+> It's the same for at least MT8195, MT8183 and I think MT8192 as well... so
+> not having that from the beginning is actually a mistake.
+>=20
+> Please add a Fixes tag and resend, after which:
+>=20
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
+
+You mean similar to:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit=
+/?id=3Dfb7c3d8ba039df877886fd457538d8b24ca9c84b
+
+? It seems someone you know well was quicker :-)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--2mhwzpvshnycjgzu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYfzd0ACgkQj4D7WH0S
+/k644QgApZcXCwxXpE1GPvpexO/Vc5AFPTJkm7FRBnwJJkvRZ1ycT6cFchMCCuDk
+54zNsJAXca62uylo+g0umyShBTdJtfK1/jrxOFPvuA+8sdm6j2zXdQGxrq2QozhU
+52gFI/sNHpKkYT/ky/xaUHOpbw/BK8bc/6mkaCoKcZg3aB3U/lJsgIX1x9d/Uqo6
+70f0ssIQn1KRrZj66GjL2o9m9A8aZ5shpR3TTBtnjw1/K6I2aAU7VUX4R5Uda7ol
+bdrw0/GGO0IuYZ+q+F2LLbRTFE2oHy3ZzNQlJ8HBj2e160g1Mo+AQqfqcEwZe8C6
+4qWjBjl/FQQtdEludY7c04KB7u+YSg==
+=3M09
+-----END PGP SIGNATURE-----
+
+--2mhwzpvshnycjgzu--
 
