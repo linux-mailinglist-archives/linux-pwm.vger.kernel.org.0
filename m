@@ -1,130 +1,134 @@
-Return-Path: <linux-pwm+bounces-2053-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2054-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0190A8AF3A3
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 Apr 2024 18:14:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5BBE8AF4B7
+	for <lists+linux-pwm@lfdr.de>; Tue, 23 Apr 2024 18:56:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 33EA21C23986
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 Apr 2024 16:14:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D9378B2183C
+	for <lists+linux-pwm@lfdr.de>; Tue, 23 Apr 2024 16:56:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A83CF13D271;
-	Tue, 23 Apr 2024 16:14:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BA8813D883;
+	Tue, 23 Apr 2024 16:56:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="b1yJeJJa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h7pqCXnC"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156DB13CAB3;
-	Tue, 23 Apr 2024 16:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0F613D638;
+	Tue, 23 Apr 2024 16:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713888849; cv=none; b=s8TZT5XSGdA32qqBW77GtZpSF8pYzYR+npoE3i56q3LD2olJ7qi2GzMcIfAxJF18aOm/V4Q/Mju0noMzmYov3anbAUQGZ2V+9CvOfVSQnUgchNWo7OaZn9dlYgvWxE6gmMsHoaZk3ORdQx/GovbD/rFmO/X1Li48P3PLFCXBdQY=
+	t=1713891376; cv=none; b=ZqjIYux1y/AuBke1NeI0CQ0c2j49LviFFhbGGjrIhsdyFtGj8TJxo2MJZbSZJel5UhnxRnPF9p5v6A14Jks4QJ1ygmfI2ueDQHd0SJHLvBpR1IS8KKKCgECDB+gJz7maLCYgyN/GeGOE3sMeR+kFRkQkfWMk2z+5J7qcW0Lr178=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713888849; c=relaxed/simple;
-	bh=b967/hHJBnWnMCTBji//0dHXuXrl2DP/d/po0fsIoGk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IaoypCbaxBk4vQRu9zScgOMcS4JG8rDEsBZoBicwf39IbSBPo5gEqJO3AVFDYRHAQqkJZKQnqcyRKCl9FwNGQViNYxyjOjlchuIux3cCu36sUl3YMjOsOmQN2RxIO+JjOpcW3+4J15D3WE4Xh1bvcphNSsWshG9ZX3tRq+ZrvMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=b1yJeJJa; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 43D96120011;
-	Tue, 23 Apr 2024 19:14:05 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 43D96120011
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1713888845;
-	bh=5Gfs5AmZGozZkrrRTvm140Edujqw0V5kNp9waYflDF8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=b1yJeJJaDHqH69ss+sRunhyufYQj7rb6mouCKXrVFaysnuFWc1mTSgT1EdKNU6Pq3
-	 A79gQ+iFnbkN0Ik2WngcXBxeoU35rNHzUXQh3IOuRagb9hDzpBNxo+53kX7rrwtmFf
-	 yXSumzqbDzwQ4ffX1nb0oatFzMSYX461Wf41TP6vjjzW0ATntFn5grKADVJzfDfkmB
-	 VL3FO6D8MQTQXABxWmID518Txl7ELHqLvPC32mgKsIqlp6xu42EYxFxDIVbedXbA9b
-	 zlbsYkG4x9qmvprIbIh5ASsZ7oDjF+OW43b3OLIzQ6ac+CLmxuPZq+U3u2b8O0GYP1
-	 QGCVfVjuwnZ2w==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 23 Apr 2024 19:14:05 +0300 (MSK)
-Received: from work.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 23 Apr 2024 19:14:04 +0300
-From: George Stark <gnstark@salutedevices.com>
-To: <u.kleine-koenig@pengutronix.de>, <neil.armstrong@linaro.org>,
-	<khilman@baylibre.com>, <jbrunet@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>, <thierry.reding@gmail.com>,
-	<hkallweit1@gmail.com>
-CC: <linux-pwm@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kernel@salutedevices.com>, George Stark <gnstark@salutedevices.com>, Dmitry
- Rokosov <ddrokosov@salutedevices.com>
-Subject: [PATCH 2/2] pwm: meson: add check for error from clk_round_rate()
-Date: Tue, 23 Apr 2024 19:13:56 +0300
-Message-ID: <20240423161356.2522636-3-gnstark@salutedevices.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240423161356.2522636-1-gnstark@salutedevices.com>
-References: <20240423161356.2522636-1-gnstark@salutedevices.com>
+	s=arc-20240116; t=1713891376; c=relaxed/simple;
+	bh=9jKImSKJH//yp89TtUBPLUkHY2ItM8gvJTkZo98APIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TCm8ajukOg5hNNIcTRfOHMeSeKAQrxgoTii5mD/euYGeugaRyDyWW6U9yB6sdTE/WUzN54Upuz1HnjvdBQUJtlsn7WesBYlqzGOxmb61EEZ28xVcG9Rlfj94WFQS6TXvGBeYZ1nk17l95NGHjqOZgJnEMUXI3L96tMVai899eMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h7pqCXnC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39EB5C116B1;
+	Tue, 23 Apr 2024 16:56:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713891375;
+	bh=9jKImSKJH//yp89TtUBPLUkHY2ItM8gvJTkZo98APIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h7pqCXnC0c+AKjGt7ps4NLqvG1MZr+CIoURfC46QPTZXNrPI+8bc8ubOSgl5YWzxd
+	 uOBz2QvIj3WTd+yoNcDW4MMVzP8vNIe4WTudrmYtXAL8oG8gfMIg/v3FL21WqqJhZZ
+	 WflEsdgNVsOfXcauiWWXmo3bxoCInTxrPrqJ7byHc8AYM13g9kVzRr7CgtH9+1kexe
+	 0HdFKuODKdnNG2qPHQecDVjRTqc5srs8LYv4I3/CRv4Q7JsN2NnMUTEb/lLg6UGIMZ
+	 3Md1MBvmSQfzFhCcnX5Kap2+znFipX5HDII2S4djNtKhNZW5CenSshViBS1/KPhUX0
+	 hxWVUQdOQjkJw==
+Date: Tue, 23 Apr 2024 17:56:10 +0100
+From: Conor Dooley <conor@kernel.org>
+To: George Stark <gnstark@salutedevices.com>
+Cc: u.kleine-koenig@pengutronix.de, neil.armstrong@linaro.org,
+	khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, thierry.reding@gmail.com,
+	hkallweit1@gmail.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-amlogic@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel@salutedevices.com,
+	Dmitry Rokosov <ddrokosov@salutedevices.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: amlogic: Add new bindings for
+ meson A1 pwm
+Message-ID: <20240423-wildcard-smoking-90b50f00da50@spud>
+References: <20240423161006.2522351-1-gnstark@salutedevices.com>
+ <20240423161006.2522351-2-gnstark@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184882 [Apr 23 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;100.64.160.123:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/23 04:11:00 #24934400
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="kfOnWG+PV/EmHtbK"
+Content-Disposition: inline
+In-Reply-To: <20240423161006.2522351-2-gnstark@salutedevices.com>
 
-clk_round_rate() can return not only zero if requested frequency can not
-be provided but also negative error code so add check for it too.
 
-Fixes: 329db102a26d ("pwm: meson: make full use of common clock framework")
-Signed-off-by: George Stark <gnstark@salutedevices.com>
-Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
----
- drivers/pwm/pwm-meson.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+--kfOnWG+PV/EmHtbK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index ebe76298f6e2..52604635b31e 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -168,9 +168,10 @@ static int meson_pwm_calc(struct pwm_chip *chip, struct pwm_device *pwm,
- 		freq = ULONG_MAX;
- 
- 	fin_freq = clk_round_rate(channel->clk, freq);
--	if (fin_freq == 0) {
--		dev_err(pwmchip_parent(chip), "invalid source clock frequency\n");
--		return -EINVAL;
-+	if (fin_freq <= 0) {
-+		dev_err(pwmchip_parent(chip),
-+			"invalid source clock frequency %llu\n", freq);
-+		return fin_freq ? fin_freq : -EINVAL;
- 	}
- 
- 	dev_dbg(pwmchip_parent(chip), "fin_freq: %lu Hz\n", fin_freq);
--- 
-2.25.1
+On Tue, Apr 23, 2024 at 07:10:05PM +0300, George Stark wrote:
+> The chip has 3 dual channel PWM modules AB, CD, EF.
+>=20
+> Signed-off-by: George Stark <gnstark@salutedevices.com>
+> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
 
+a would sort before s.
+
+With the re-order,
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Thanks,
+Conor.
+
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Doc=
+umentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+> index 1d71d4f8f328..ef6daf1760ff 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+> @@ -37,6 +37,7 @@ properties:
+>        - enum:
+>            - amlogic,meson8-pwm-v2
+>            - amlogic,meson-s4-pwm
+> +          - amlogic,meson-a1-pwm
+>        - items:
+>            - enum:
+>                - amlogic,meson8b-pwm-v2
+> @@ -126,6 +127,7 @@ allOf:
+>            contains:
+>              enum:
+>                - amlogic,meson-s4-pwm
+> +              - amlogic,meson-a1-pwm
+>      then:
+>        properties:
+>          clocks:
+> --=20
+> 2.25.1
+>=20
+
+--kfOnWG+PV/EmHtbK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZifoKgAKCRB4tDGHoIJi
+0pMNAQCxYf8hqWwkb4mI3niPQvLerhHnsj4GAXUEra2Y5SFWyAD+O8aq8lBtJQo7
+Ia++PthnUZ+ozioT++tgnXb3SPOeQQ8=
+=hN7Z
+-----END PGP SIGNATURE-----
+
+--kfOnWG+PV/EmHtbK--
 
