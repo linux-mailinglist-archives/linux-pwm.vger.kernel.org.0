@@ -1,225 +1,250 @@
-Return-Path: <linux-pwm+bounces-2057-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2058-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DF228AFC60
-	for <lists+linux-pwm@lfdr.de>; Wed, 24 Apr 2024 01:00:34 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCE2B8B017A
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 Apr 2024 08:02:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 795821F246C1
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 Apr 2024 23:00:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D3D2FB21B4F
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 Apr 2024 06:02:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1408C2E85E;
-	Tue, 23 Apr 2024 23:00:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43058156C4F;
+	Wed, 24 Apr 2024 06:02:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Ey2kgYal"
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="JkDucVWV"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2132.outbound.protection.outlook.com [40.107.215.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9EC1C6BE;
-	Tue, 23 Apr 2024 23:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713913229; cv=none; b=KYYHWbMTUHOO/5tm3ghhXQ02wbyHIFHGCUMLds2HaSNKkrICpFBF3Pny5scOTA3CxmS3izhb5blnjRaA4+QOGOJ43QlSngeDCX56HTrUA7kDacZVkaqe2UqesC5C0HIzD5h+9pvDuRY1lNx4jRG1X9hA109goMT58mCMM/0KF38=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713913229; c=relaxed/simple;
-	bh=g2/HsqUrBh9Sgq2CvmzDNLX3ZRhUVGTx7iFVUGdteJg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jcDcl/nMlFBzdqI0DBuUmkXkk0/Dq83yEn9L0vsVC4SLnwx4QF+yaI2vp/hLqCTL26B147FgjEnh2Owi6zXAW1HDAZURWFtYFiYUaIjcpJ1GyM/jIHl8IEL4ne/VsdXtZPG8GDrCqnsKqj+/eZ3tIfWDJtHJrYrZDI5nbs1k8nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Ey2kgYal; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 23725100004;
-	Wed, 24 Apr 2024 02:00:21 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 23725100004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1713913221;
-	bh=tcVfNzm8I5LEMAd+H5pTx/XXdCO1zxNExqAEu+sh1rk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=Ey2kgYalHNsRgGMEO8gcRyn3v4qM3sybzmq8nLPF5QgoUxsadY+FbtMZ0/fPt6/sp
-	 kDgX9dxk+jdYtPfZQcWaax5+HH8QwHvpuG2+FgPMEi9A8fKwJXD5FUGSBexCT3xdm9
-	 5aGwvjIJqEe16Ep7Fbap0bnVS4+neN8mS/6BczYxn3VP7NYLyrZ3zGciNCXr323hfY
-	 i8wSdmMUrkOG1sKC/xLWOlvUcE6jX6Sx2JP5DaDDeihgnPLA8tNr8kGIkg5TlsqK8N
-	 D5m7oLk4CPJLiZgmQVayu00tjEACovLNRcwAGfyi+nFm82MuO6mwM41q3XSMyddk2q
-	 K1aNgUCRAT6Sg==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed, 24 Apr 2024 02:00:20 +0300 (MSK)
-Received: from [192.168.1.143] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 24 Apr 2024 02:00:20 +0300
-Message-ID: <4feb8fe3-af72-4483-87b2-30503328cfe2@salutedevices.com>
-Date: Wed, 24 Apr 2024 02:00:20 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABB715696D;
+	Wed, 24 Apr 2024 06:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.132
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713938535; cv=fail; b=YJZkEUtpvA3YMx6qMSq3LkH+NXkw5NjzBowdbyGdEffy2L4l2mi8fmotZzBxGDzB2SOYKtIhT8dyJlBw5NDWivyOcfrowSOf34mX9Y6OvPdo7mG3WuA06ZdvgX9RcSaRG3H24436EpPKxuETEbhKvuieStPfWIgGSy6s3RjBHxg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713938535; c=relaxed/simple;
+	bh=c9Y4B/cl71MHTamMPv0DIo5VshOCh5H3N3Lbp/tq4AI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=qVDcjHYH0k/dac2zen+hXRPn1R3Pp8BZ4Av/IKsyD8vWMWWLeDIt4BEJIG9cu2GXSGUYBwUoHKz8pbvISh13sYjWXAdlA8hF00qChLCeTeLBqvmqy5fNtx0o5JyUh5q9++QQooiS0ciun0nVPcx8M3M7TOIMNEVrP8DS9vbF/KY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=JkDucVWV; arc=fail smtp.client-ip=40.107.215.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YIW5SZTMrv8ia78AeMghr4tlHE731VKm0DwvL1o4aiLLo8uB82rm4Osc2aJKAggHMK3lbOLZrgEmr2fBKPa7lXmdCEbRBva4cDCIknvhSPtRSBiE1N75XppFOcExVk7XHzRNHTkJcUIhFbhgx+EV37d+VvOJZYhiGSixZtuHHQyCtQyTARysCAhgoxVtjfX9juHSLzsvxuO9Id12z3I569khdJBdCVxLc5V9BFXl97V4FMTsum3y3OX1E0CDYO+mAZWor44zYGLH19mH+TE45H4Zkbxev+Xe4guHOksgtGY0c6P7O+pQpZUcm5ivLqtTeTLH88SarHBdvhfXR5O7hQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ul6S9ex/KQtUwLtSB5gQDfvg0a/OkznGg2X/xc2cmMQ=;
+ b=eRx53B23xemJ0YSdRpA/QHyUe6zjPQbJiRXm4WfFfPp3ktg8LP1KH0vHga/yjqeJpkxuWhQ+Fkj3ZSaeQreMX9zWMAheHlz+sFm7nQHBODiNSZRuwvMaO/o9OmzlKk4w2OCLTc4YoSUkt/My5OKNdv3WSwKAFZ8gW86Mekfcslcj7MgWZpvIlKOHo+scnVroJmZgzERHkAfyuof/mUfDW/j0F8iLJUkfMEk1pLesRpEsRdR81kLyuRJzk0VT4tq4JDX1JGN9q2S70AE/z3TRO/IzSy3C6DBRnGVLjYshJb0cO+ZumWU9g88j4EoibjNKzIzJdrauXA9xPADjHp0ANQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ul6S9ex/KQtUwLtSB5gQDfvg0a/OkznGg2X/xc2cmMQ=;
+ b=JkDucVWV3ydm+pDStiZB7ScCrlOQYp7qJCzpM8zyA6ezF8rqxSbthl3iNI+4Zz02NmpR1vNGK4r7+h7KpvUEwnoIWkwL3yfi3gYq+Qanpd+q4VXa/p0JxOGGDQCE3XPNSIw9dhfk7P0Kh0TzH3R9UD55BcKc9JMqg19NMwejeDXXah5TnSlGILrYQJ2/xIvuq+GC5YVKtQcW4j80knqVGj2dqxaqgFYmxaHR0cQlF2qTBYa6KJgvM0OOyVH7W85vRqaClea3tJ6Fd8p1B65+DNMyZACtEXAvbGeTg9W6UwR/vi/Z2vLtU8Zi2VQ7IBjCFZXlvWzDT1sj/6kEEcC5sw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYSPR03MB7387.apcprd03.prod.outlook.com (2603:1096:400:414::10)
+ by TYZPR03MB8134.apcprd03.prod.outlook.com (2603:1096:400:453::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 24 Apr
+ 2024 06:02:10 +0000
+Received: from TYSPR03MB7387.apcprd03.prod.outlook.com
+ ([fe80::1569:6058:25d5:5466]) by TYSPR03MB7387.apcprd03.prod.outlook.com
+ ([fe80::1569:6058:25d5:5466%4]) with mapi id 15.20.7472.044; Wed, 24 Apr 2024
+ 06:02:09 +0000
+Message-ID: <7ae09b97-70d6-4613-bc1c-b58f09f24531@amlogic.com>
+Date: Wed, 24 Apr 2024 14:02:03 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: amlogic: Add new bindings for meson
+ A1 pwm
+Content-Language: en-US
+To: Jerome Brunet <jbrunet@baylibre.com>, Conor Dooley <conor@kernel.org>
+Cc: George Stark <gnstark@salutedevices.com>, u.kleine-koenig@pengutronix.de,
+ neil.armstrong@linaro.org, khilman@baylibre.com,
+ martin.blumenstingl@googlemail.com, thierry.reding@gmail.com,
+ hkallweit1@gmail.com, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kernel@salutedevices.com,
+ Dmitry Rokosov <ddrokosov@salutedevices.com>,
+ "junyi.zhao" <junyi.zhao@amlogic.com>
+References: <20240423161006.2522351-1-gnstark@salutedevices.com>
+ <20240423161006.2522351-2-gnstark@salutedevices.com>
+ <20240423-wildcard-smoking-90b50f00da50@spud>
+ <1jr0ewezvc.fsf@starbuckisacylon.baylibre.com>
+From: Kelvin Zhang <kelvin.zhang@amlogic.com>
+In-Reply-To: <1jr0ewezvc.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR01CA0172.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:28::28) To TYSPR03MB7387.apcprd03.prod.outlook.com
+ (2603:1096:400:414::10)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] pwm: meson: support meson A1 SoC family
-To: Jerome Brunet <jbrunet@baylibre.com>
-CC: <u.kleine-koenig@pengutronix.de>, <neil.armstrong@linaro.org>,
-	<khilman@baylibre.com>, <martin.blumenstingl@googlemail.com>,
-	<thierry.reding@gmail.com>, <hkallweit1@gmail.com>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>, George Stark
-	<gnstark@sberdevices.ru>, Dmitry Rokosov <ddrokosov@salutedevices.com>
-References: <20240423161006.2522351-1-gnstark@salutedevices.com>
- <20240423161006.2522351-3-gnstark@salutedevices.com>
- <1jv848ezzo.fsf@starbuckisacylon.baylibre.com>
-Content-Language: en-US
-From: George Stark <gnstark@salutedevices.com>
-In-Reply-To: <1jv848ezzo.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184885 [Apr 23 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;100.64.160.123:7.1.2;salutedevices.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/23 19:04:00 #24945065
-X-KSMG-AntiVirus-Status: Clean, skipped
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYSPR03MB7387:EE_|TYZPR03MB8134:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8a6e3076-5d04-4489-8f94-08dc642413fc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RVYyL2kyRnhoK0tvZkRERUNmbjBUcnRBVEQ3Vkp1UDYrR0c0NmU4eThyWGRG?=
+ =?utf-8?B?NVVzYllOd1VxbzhodUhKemxmSHltU3VTZXM3cTFlMzhiZlBGL1FKUENqL0pS?=
+ =?utf-8?B?NzZod2IxOHpneDQ3NFlMakRLRGpIRUNyTlh3Z1VyUU41QzJPT3ZqQytUcEg1?=
+ =?utf-8?B?QUpJNTU3MTE2SUNTVnVldG5BNzhkM0hMZTZXeFNPVlNJZ2JEZ2l4M2twaHhy?=
+ =?utf-8?B?aE1XTnRCWG9qN1JrMVZaNnV1V2xXTFB0b2xkR1VJM3h2a0dWenJ0dTRhT016?=
+ =?utf-8?B?ZVJ2Rnp4YXJKOXFzSmhlTWVzdTg3Q2RmOEdtbHJJbU9Xa0NhNGhGOFlLajhY?=
+ =?utf-8?B?YWVsQzNlaEc0YStTR0hSeGw3V1pUR1Juc3hVblJHcTh6NUs0SlgwM2phaFdk?=
+ =?utf-8?B?M2ViNFJyUDFvWEhUYk4zbk5tY1haak0wM0dHbmttS0VzOUdhS1YvRi9lRldn?=
+ =?utf-8?B?aStuMm9GWXY3elJ5UDRJbzZwWFNuWEE2YWNIQUdNSlFEWGw4T1VqMXRxZThl?=
+ =?utf-8?B?QzYyWTRjclFucU44K2o4MDVpanJyK3JzS25FalErc0NmTm9CdXpHYk9OR2xj?=
+ =?utf-8?B?dU1VR0lxRG9CWlNCTDB6aGl2WlVWVzVINCs2bDVMSjRjQVQ3Z1dtWS9zb3Z6?=
+ =?utf-8?B?bUdpUy90OUZYT3pTOS9SMGFjMGUyaDd1eVlmeTZkaXlnQ0tjM0l3bWExc2RS?=
+ =?utf-8?B?aGJkQ3owaC81VnptOGNUaWNMZWIxOWNHUnVtQ0RWa3ZxQmM1WnlJUTBCemtE?=
+ =?utf-8?B?c0pyR3BGM2tmeDJPSHRNakJvK2hXMGVGcHNaYkRxVnd2YTZWakFLMnhhWk0r?=
+ =?utf-8?B?L1dGdm9Uc0xPMmEwNW5ySll0NFQ2dGNWZytDb2wwemxQcVBnQkNMajJ3L0xY?=
+ =?utf-8?B?KzVmWDZnUkp6MDFGUnBiSXFzS0tDcjNZQ21qRm9qYkFlTEE0RE1Va2VGbE9r?=
+ =?utf-8?B?czYvcS9tNmNZc21LbXJsYzB4Y0tQZkVwNmY0aWh5MWNQcjVoVWtCUTVNMVYy?=
+ =?utf-8?B?Z0JvbU5ad0dSSm16UWxHMjFMckI1dFlGdDhXTzJiVkVsV1l1K21mWFlnQkxH?=
+ =?utf-8?B?d2hNQVUvbTVoZVF2VDNWa0dLSm5vUHoxNnR5Sm1jT3N1dm5vZTVxaTcxY0hp?=
+ =?utf-8?B?L3Z2SkJML1o0bjFBeDI2eGVoUmdFcVlRdUtIVUN6ZE1USEwyTkthdFdvbFI0?=
+ =?utf-8?B?U3BsS3N0dlJuVXkzWGRXOXg3ZE1KS2Q2ZEpsa1FtVWxHaTBmQVVqWkxlcHBF?=
+ =?utf-8?B?VFkrTER2NHN2eFAvYjZSZzNZWktCQU9iQnF6ZmpOdDM5eTBoVE9NbkcyWGhu?=
+ =?utf-8?B?R29wS0k5Z01sa1BQSGZKZ2hIOWw2RG9xeFdKZ1hMdzNJYmRRMFFMMVIvZDRt?=
+ =?utf-8?B?eDZzaVhxNWorSVZKSTZXUEZYQmFuNVZocFpWT1F4dFVGSFUyVkRNejR6bUhF?=
+ =?utf-8?B?K0FtNWdYbWJaWElOcENwdml6Y3FGSnF2bzdMV3dDQXJEQVR5dHhWZWFucFFs?=
+ =?utf-8?B?ZFpLRGQ5TTVEQVptekc5VnpZZGhqSk5ReUh4K25xNUluc1Q5NmRaUWl4VFV1?=
+ =?utf-8?B?dUR2aEpJNU4xeDVpTnVCcStoN01GN2N3WVBPNHNRSUx3bmlKa3VJTC9lT2tW?=
+ =?utf-8?B?N1dMc01qSmhvdGI2Lzg4d2IwdTRMK1lMNXVhOFlyL0hvWERjQUM2YWpwUVBY?=
+ =?utf-8?B?TExXZzdSdzlxdlhLaXpGSm9nZ3NtanVWZVlhM3lONjducldUYlpRUEJRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYSPR03MB7387.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Nk1ZNDh4WjVEempxN0hKdUZMWlU5TW5SU2lRM2dhek5Jd3hLVWZtWkFibXNt?=
+ =?utf-8?B?aWpwaVJ5QjdvNG4wRllkZ3BwTVZBUlI0WG5xM3hIWjVhUm43d3R6WkJVQVp3?=
+ =?utf-8?B?TVNZWlRJQld2NEdvZDZKa1JkNWE1cXVLTmJTZlk5TjNUMkRNVG5kcWs4QnNl?=
+ =?utf-8?B?Wi9MQlBMVndjb015N0dHeVhBRjI5MlgvRFd2S3VJQ3ByN1JPN29RQUd2QnJG?=
+ =?utf-8?B?VU9nckwxZCtkTWNXVWpKV3MyRzBlM0NDVEFGRk1Xb05NMHRjT2hDTFNFVGls?=
+ =?utf-8?B?WjAxaUFPekI4UCs5NGVrc2ExZlF0VmZPQUVPMmlVREptTXBZWEdtMWJibEhN?=
+ =?utf-8?B?SXNSbUtVc3d5R3VjK3JDdzNNeE45VUZwSHhuajlKK3NXakZ0a04xOGNjYmla?=
+ =?utf-8?B?ZUxtUzNtV1FnS1FLaWwrajhSY1FvYzlaTHJnUnNGWG1BblltVEsrQW1vdGR1?=
+ =?utf-8?B?Y3FZUkxXOTVZWG9XUWxOOGFaT1hXajlGMEVTNjF2aTgwTnZLTzRPQnV1cHNO?=
+ =?utf-8?B?QmUrSVArL2VPS1FYWUR1NG9YMVM0NVQ1NzBWbDJuS2Jta0NsV1Y3VHJEMDB6?=
+ =?utf-8?B?L0F0aFlnZjlLSWhYaFI3SEgwYkJaY1JuUm5Qd0ltdTRpZDUyRnRFT1RJZ1BU?=
+ =?utf-8?B?YVZjOGFJcnBWQkxkUWJhSmJvTlBYM2NEYnFHbWNBNlpzVE81aEd0OWNOek5J?=
+ =?utf-8?B?TGMxVmx3S3lIUzZnOWtwYlRGaUU4eG42clF0TWtZWmJLazhMMGxVS3d0RHZM?=
+ =?utf-8?B?OTI3UVRhMjRiREF4bGhlSEZROExzM1N3NVRmVm54WnlXT3ROUlNsK2lzN0Nr?=
+ =?utf-8?B?eUIvanp1UkNRTkZkTVNlS3dodlNURndXUERVWXVocG54OVczcWFkR0NCejhX?=
+ =?utf-8?B?UjBwQytyeitLM0xJdVlaQnQrOHZxMzJVMDNFV0k5YlhydDMzU3l1aG5XeUdI?=
+ =?utf-8?B?c2hobkdCT3ZvYXlqN3ZOaHV6VVdLSmpUMkNvMmdIYklWdjFvRUQ0Z2hUcHV1?=
+ =?utf-8?B?ellPK21kUFoyWWwrYm5rQWRwNGJBNkV6V3k5SFNzSVNWdXEvOHU2dkdsZkw2?=
+ =?utf-8?B?VGZrcEI2dVZMdEVtNnhUYjRwclI4Ty85T01iS3ZHOGcwRFBhZUpQdS9yK1FE?=
+ =?utf-8?B?QUkzZGR4RmZRTEJESDU3TlJHNmhGbGpVZFdMK0ZWYmxpaXc2TStLd0o5bXlM?=
+ =?utf-8?B?Ui9CTlRzZkhkY1dkMlVEdEZmTTk0UFNtcEtWM2ZwSHhtR0IzditIOUNJTjVu?=
+ =?utf-8?B?N3VHK3NnT2VrenBwaFRNdktBTDRBSlpPSG5TdERTOVViLzhSclNrN0pGbmdI?=
+ =?utf-8?B?WkdDTFAzOFd4VWh1NElCa2RuT1BRNXg4MXVNcjB4MTV6ZnpyQVk3aTdnOUEy?=
+ =?utf-8?B?Z3dCN3RFVTBRWDg0aVdtWE1CeHl0cTRpWlJERHVyalRKOGFUY0RZNUthSy9o?=
+ =?utf-8?B?N3pwa2tRQWVjTURhT2YvM1F3RlJUclBpNFpwRWtEVXRRbGlPOFgxcng0d0px?=
+ =?utf-8?B?TXJBb3VzVkszOERHNVNtYUtaZU5QSTR1bEJGc0VEMk9YN0Z6ZlptVm9Ka0Ev?=
+ =?utf-8?B?SHRBRWxnMW9aSmlvYlZYaVNrNUpETXEyaTBFWlRDUmx5TUNRcE1mMmtzYm5M?=
+ =?utf-8?B?cHJQNUZiS2pwbW43WGdYYytrR0gzSzhGWjZ1eDU0eVV6dFJHcGdDMlNVVytY?=
+ =?utf-8?B?TzhzMHNrbkhoSXZzbnlNWDVkWkM5L1U1SU5ZT2ZteURzUUlWS004dFA5UjMy?=
+ =?utf-8?B?YVY1S282a0RLRERIdTZuT0VmNXIrOE9UZDRPNzlLRjdoMjNGUzFZTzBOTjVF?=
+ =?utf-8?B?dkVwdFpkWnlSY1ZvT0dZWmt6VzRqbkRuMkFoRFcyTVlQZW5uTzJyemlSTWFk?=
+ =?utf-8?B?ajk4K3RxQXVpUjVXbVYzSUtFNkwxMUQwVjQwRUFuSVVwajhWbmRPeWM3cDFq?=
+ =?utf-8?B?QWNRTGFFOGtLWHdTcHMyTjhpWXhVS2lpVmNiSUQ4b0V1Zys4NmR5Y3hva01W?=
+ =?utf-8?B?THNiTlpwZDFGSDNnQmdFU2w2SXZTdVlKUnpVTmNycEY4TDZIcnlyQUQ1RjJU?=
+ =?utf-8?B?Z0xMaXhydy9lTyt4U0dYNGdDa2RVbTA4U2RKSUJsalFOR0YrNGhycUd4aGww?=
+ =?utf-8?B?MjFLekxqbnA2U21LQW1tUW1BMHZvMUxldGdST3lRbjZwMUpDOS9Bbkg3d29J?=
+ =?utf-8?B?Wmc9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a6e3076-5d04-4489-8f94-08dc642413fc
+X-MS-Exchange-CrossTenant-AuthSource: TYSPR03MB7387.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2024 06:02:09.7620
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /XCrhJnQ8/NMgcAGrwn/ZcSIc+Wge1WX9ZkHfr8aoqiw2c6QqS/rw01ca1hZLUvQfB/FYeHMyoz7ah7IEIJ6LWDK45O1kRDNPJVXaW9v5c0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB8134
 
-Hello Jerome
-
-Thanks for the review
 
 
-On 4/23/24 20:35, Jerome Brunet wrote:
+On 2024/4/24 01:44, Jerome Brunet wrote:
 > 
-> On Tue 23 Apr 2024 at 19:10, George Stark <gnstark@salutedevices.com> wrote:
+> On Tue 23 Apr 2024 at 17:56, Conor Dooley <conor@kernel.org> wrote:
 > 
->> From: George Stark <gnstark@sberdevices.ru>
+>> [[PGP Signed Part:Undecided]]
+>> On Tue, Apr 23, 2024 at 07:10:05PM +0300, George Stark wrote:
+>>> The chip has 3 dual channel PWM modules AB, CD, EF.
+>>>
+>>> Signed-off-by: George Stark <gnstark@salutedevices.com>
+>>> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
 >>
->> Add a compatible string and configuration for the meson A1 SoC family
->> PWM. Additionally, provide an external clock initialization helper
->> specifically designed for these PWM IPs.
+>> a would sort before s.
 >>
->> Signed-off-by: George Stark <gnstark@sberdevices.ru>
->> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
->> ---
->>   drivers/pwm/pwm-meson.c | 35 +++++++++++++++++++++++++++++++++++
->>   1 file changed, 35 insertions(+)
+>> With the re-order,
+>> Acked-by: Conor Dooley <conor.dooley@microchip.com>
 >>
->> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
->> index ea96c5973488..529a541ba7b6 100644
->> --- a/drivers/pwm/pwm-meson.c
->> +++ b/drivers/pwm/pwm-meson.c
->> @@ -462,6 +462,33 @@ static int meson_pwm_init_channels_meson8b_v2(struct pwm_chip *chip)
->>   	return meson_pwm_init_clocks_meson8b(chip, mux_parent_data);
->>   }
->>   
->> +static int meson_pwm_init_channels_ext_clock(struct pwm_chip *chip)
+>> Thanks,
+>> Conor.
+>>
+>>> ---
+>>>   Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml | 2 ++
+>>>   1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>>> index 1d71d4f8f328..ef6daf1760ff 100644
+>>> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>>> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>>> @@ -37,6 +37,7 @@ properties:
+>>>         - enum:
+>>>             - amlogic,meson8-pwm-v2
+>>>             - amlogic,meson-s4-pwm
+>>> +          - amlogic,meson-a1-pwm
 > 
-> That kind on naming (ext) is almost sure to clash with whatever comes next.
-> Just use the name of the first SoC using the method, a1 for instance.
+> AFAICT, the a1 interface is exactly as the s4 interface.
+> So a1 should list s4 as a fallback and the driver should match on the s4.
 
-It's true that pwm core in a1 s4, t7 etc is the same AFAWK.
-I just want to clarify your proposal:
-I add a1 compatible to the dt-bindings with s4 as fallback,
-t7 compatible will be added later in the same way.
+Hi George,
+For your information, we are preparing S4 submission.
+Thanks!
 
-Here in the driver I don't mention a1 at all and use s4-centric naming e.g.:
-
-{
-	.compatible = "amlogic,meson-s4-pwm",
-	.data = &pwm_meson_s4_data
-},
-static const struct meson_pwm_data pwm_meson_s4_data = {
-	.channels_init = meson_pwm_init_channels_s4,
-};
-
-right?
-
->> +{
->> +	struct device *dev = pwmchip_parent(chip);
->> +	struct meson_pwm *meson = to_meson_pwm(chip);
->> +	struct meson_pwm_channel *channels = meson->channels;
->> +	struct clk_bulk_data *clks = NULL;
->> +	unsigned int i;
->> +	int res;
->> +
->> +	res = devm_clk_bulk_get_all(dev, &clks);
->> +	if (res < 0) {
->> +		dev_err(dev, "can't get device clocks\n");
->> +		return res;
->> +	}
 > 
-> I don't think allocating the 'clk_bulk_data *clks' is necessary or safe.
-> We know exactly how many clocks we expect, there is no need for a get all.
-> 
->> +
->> +	if (res != MESON_NUM_PWMS) {
->> +		dev_err(dev, "clock count must be %d, got %d\n",
->> +			MESON_NUM_PWMS, res);
->> +		return -EINVAL;
->> +	}
-> 
-> ... and this only catches the problem after the fact.
-> 
-> It is probably convinient but not necessary.
-> 
->> +
->> +	for (i = 0; i < MESON_NUM_PWMS; i++)
->> +		channels[i].clk = clks[i].clk;
-> 
-> channels[i].clk could be assigned directly of_clk_get() using clock
-> indexes. No extra allocation needed.
-
-if we use of_clk_get then we'll have to free the clock objects in the
-end. Could we use devm_clk_bulk_get instead?
-
->> +
->> +	return 0;
->> +}
->> +
->>   static const struct meson_pwm_data pwm_meson8b_data = {
->>   	.parent_names = { "xtal", NULL, "fclk_div4", "fclk_div3" },
->>   	.channels_init = meson_pwm_init_channels_meson8b_legacy,
->> @@ -500,11 +527,19 @@ static const struct meson_pwm_data pwm_meson8_v2_data = {
->>   	.channels_init = meson_pwm_init_channels_meson8b_v2,
->>   };
->>   
->> +static const struct meson_pwm_data pwm_meson_ext_clock_data = {
->> +	.channels_init = meson_pwm_init_channels_ext_clock,
->> +};
->> +
->>   static const struct of_device_id meson_pwm_matches[] = {
->>   	{
->>   		.compatible = "amlogic,meson8-pwm-v2",
->>   		.data = &pwm_meson8_v2_data
->>   	},
->> +	{
->> +		.compatible = "amlogic,meson-a1-pwm",
->> +		.data = &pwm_meson_ext_clock_data
->> +	},
->>   	/* The following compatibles are obsolete */
->>   	{
->>   		.compatible = "amlogic,meson8b-pwm",
+>>>         - items:
+>>>             - enum:
+>>>                 - amlogic,meson8b-pwm-v2
+>>> @@ -126,6 +127,7 @@ allOf:
+>>>             contains:
+>>>               enum:
+>>>                 - amlogic,meson-s4-pwm
+>>> +              - amlogic,meson-a1-pwm
+>>>       then:
+>>>         properties:
+>>>           clocks:
+>>> --
+>>> 2.25.1
+>>>
+>>
+>> [[End of PGP Signed Part]]
 > 
 > 
-
--- 
-Best regards
-George
+> --
+> Jerome
+> 
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
 
