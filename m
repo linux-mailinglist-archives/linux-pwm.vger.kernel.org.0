@@ -1,158 +1,153 @@
-Return-Path: <linux-pwm+bounces-2078-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2079-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EB4E8B0C58
-	for <lists+linux-pwm@lfdr.de>; Wed, 24 Apr 2024 16:19:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B5668B0E25
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 Apr 2024 17:29:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50D731F269E9
-	for <lists+linux-pwm@lfdr.de>; Wed, 24 Apr 2024 14:19:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DAE81289515
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 Apr 2024 15:29:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 064D215CD6E;
-	Wed, 24 Apr 2024 14:19:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C177015FA93;
+	Wed, 24 Apr 2024 15:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IIDpgYUI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C1F15E20A
-	for <linux-pwm@vger.kernel.org>; Wed, 24 Apr 2024 14:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED8615F400;
+	Wed, 24 Apr 2024 15:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713968353; cv=none; b=a5ny/5o9UoBffeLB0IdyxorOWmLSOO/2mzMy2hR+vvH2A8A29ItNKGl0gevAHxxbYzJgWrJIIs1vkjY1fqSxe2CVmmLJ/ew9eXXcgLeMtLJqCRQFileF0q6ZuIYCeezOjwV6UqWPynXdkyMHr0OnbQMDPWJ1L0xrivrAJs+FBKw=
+	t=1713972570; cv=none; b=Fsp4Evk4l6EVRzseBq6CmTC68kEeZk7baFUqITQ8nd5tZujF6dADkDIPt/lg03yGi7hYl5nu5STVfLp0ZTW6hYx5eJCDlCaeI3udGkLwupZRGIopfNak0a8tWCofwioTtA11Z4dvPFqi8i1WXRoiJOyAE1Fis+2JCrd5BU8odOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713968353; c=relaxed/simple;
-	bh=7OfnhU8HUosrXlE9LscXGpZNCgqv6yIHtmXb1myfwM4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eI2cscdziOYLqNiGUxLcWDFoT6IXvnp7VAj5yiSKJPrtjABpwEmdm+M/yTM5xXjoNmkILYodUbeYo2R1MkHpJ7LbA49VCvXQ/sS+toqJdkO29mQH6Kezvh8oHwgmlBjh2fb91fu7KLgwKhLlf+ewFcaSk9GFDjgMl5UMSLgrQbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rzdSj-0003vP-Nj; Wed, 24 Apr 2024 16:19:05 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rzdSi-00E638-Nf; Wed, 24 Apr 2024 16:19:04 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rzdSi-007q8K-23;
-	Wed, 24 Apr 2024 16:19:04 +0200
-Date: Wed, 24 Apr 2024 16:19:04 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: George Stark <gnstark@salutedevices.com>
-Cc: neil.armstrong@linaro.org, khilman@baylibre.com, jbrunet@baylibre.com, 
-	martin.blumenstingl@googlemail.com, thierry.reding@gmail.com, hkallweit1@gmail.com, 
-	linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@salutedevices.com, 
-	Dmitry Rokosov <ddrokosov@salutedevices.com>
-Subject: Re: [PATCH v2 2/2] pwm: meson: Add check for error from
- clk_round_rate()
-Message-ID: <xb2prc5ewslr74eh22xo4heeiepeiu4rb72zekuatcuhp45p6s@nhwhnq26tthg>
-References: <20240424132408.2565916-1-gnstark@salutedevices.com>
- <20240424132408.2565916-3-gnstark@salutedevices.com>
+	s=arc-20240116; t=1713972570; c=relaxed/simple;
+	bh=Vu6DELfonvw9lHN74NiHvN61NDGymX7hh/EgpU943Z8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fBhxwX2oI5vggLznoy9AY34GRQu1z/f3kGRv6nOP1q1I7m52/c7UIUS5qjMepk4I+qiNqvb5xDntN6q2PqmppCps32AujiLJILhPZYe+r62Cv84w5F1NPw0AvbjrIoMVKpt5WvCJfig4aiLa/wUqAY/0WOOTes/d+uoaXwZqDYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IIDpgYUI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1C28FC2BBFC;
+	Wed, 24 Apr 2024 15:29:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713972570;
+	bh=Vu6DELfonvw9lHN74NiHvN61NDGymX7hh/EgpU943Z8=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=IIDpgYUIYDxVPYwvmFfvmYTPmf2rzD8RFT+xcM0lc7K4VMHzEbuJC0404e8CSqBph
+	 bXHXQvM8674Rfh4yJAp5qkeMY7y6vtieYL/0NemLVdCJ3HLSVn2AebAwh3o/jiD6fp
+	 ZJFKsIcXHVvDmwvYN0Y4qmRdijtxkTMIM89GTTZBhFhIZR8eJouqrFeT8Av+pnAL3n
+	 8HYkJf4gTSb88T2Lzn3BbHnSQX0I9LxNgDM/6dnyfVCSrhcyllqENkasrcSS2K8yqm
+	 xqcj3OK7AIiP/QW5JzDjFIjOwj4kfFJmVoy/bMNA6lGViVp4hN5TK1yrY9QuOHTKkV
+	 6Q2kRDXcQGHoQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A98C4345F;
+	Wed, 24 Apr 2024 15:29:29 +0000 (UTC)
+From: Xilin Wu via B4 Relay <devnull+wuxilin123.gmail.com@kernel.org>
+Subject: [PATCH 00/10] AYN Odin 2 support
+Date: Wed, 24 Apr 2024 23:29:05 +0800
+Message-Id: <20240424-ayn-odin2-initial-v1-0-e0aa05c991fd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fikxshr2mxc6iptg"
-Content-Disposition: inline
-In-Reply-To: <20240424132408.2565916-3-gnstark@salutedevices.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEElKWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDEyMT3cTKPN38lMw8I93MvMySzMQcXUvTJPNkAzOD5BQDYyWgvoKi1LT
+ MCrCZ0bG1tQCEsBlwYwAAAA==
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Junhao Xie <bigfoot@classfun.cn>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Tengfei Fan <quic_tengfan@quicinc.com>, 
+ Molly Sophia <mollysophia379@gmail.com>, Junhao Xie <bigfoot@classfun.cn>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linux-arm-msm@vger.kernel.org, Xilin Wu <wuxilin123@gmail.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713972563; l=2387;
+ i=wuxilin123@gmail.com; s=20240424; h=from:subject:message-id;
+ bh=Vu6DELfonvw9lHN74NiHvN61NDGymX7hh/EgpU943Z8=;
+ b=XA7dmSSQgwlHKJcd7j3RMyizgYSyuIyC12qzPEZzPft0iV8Pp7Rfl5ki1fbT8Bdw6JOL6UExt
+ iQdQLO/Vjk+CrumZWFFtdE2wE1xqX6UcD6C+rqW72OO3ExlyiiYCM/N
+X-Developer-Key: i=wuxilin123@gmail.com; a=ed25519;
+ pk=vPnxeJnlD/PfEbyQPZzaay5ezxI/lMrke7qXy31lSM8=
+X-Endpoint-Received: by B4 Relay for wuxilin123@gmail.com/20240424 with
+ auth_id=157
+X-Original-From: Xilin Wu <wuxilin123@gmail.com>
+Reply-To: wuxilin123@gmail.com
+
+AYN Odin 2 is a gaming handheld based on QCS8550, which is derived
+from SM8550 but without modem RF system.
+
+This series bring support for:
+* Remoteprocs
+* UFS storage
+* SD Card
+* Type-C with USB3 10Gbps and DisplayPort (4-lane requires a pending
+  patch)
+* PCIe0 (Wi-Fi requires the pending pwrseq series)
+* Bluetooth
+* Regulators
+* Integrated fan with automatic speed control based on CPU temperature
+* Power and volume keys
+* M1, M2 buttons
+* HDMI output up to 1080p 60hz
+* four groups of RGB lights
+* GPU
+* Internal DSI display with touchscreen
+
+Depends: [1]
+
+[1] https://lore.kernel.org/all/20240424024508.3857602-1-quic_tengfan@quicinc.com/
+
+Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
+---
+Junhao Xie (2):
+      dt-bindings: pwm: Add SI-EN SN3112 PWM support
+      pwm: Add SI-EN SN3112 PWM support
+
+Xilin Wu (8):
+      dt-bindings: display: panel: Add Synaptics TD4328
+      drm/panel: Add driver for Synaptics TD4328 LCD panel
+      arm64: dts: qcom: pmk8550: Add PWM controller
+      arm64: dts: qcom: sm8550: Add UART15
+      arm64: dts: qcom: sm8550: Update EAS properties
+      dt-bindings: vendor-prefixes: Add AYN Technologies
+      dt-bindings: arm: qcom: Add AYN Odin 2
+      arm64: dts: qcom: Add AYN Odin 2
+
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    1 +
+ .../bindings/display/panel/synaptics,td4328.yaml   |   69 +
+ .../devicetree/bindings/pwm/si-en,sn3112-pwm.yaml  |   55 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |    2 +
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/pmk8550.dtsi              |   10 +
+ arch/arm64/boot/dts/qcom/qcs8550-ayn-odin2.dts     | 1410 ++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8550.dtsi               |   54 +-
+ drivers/gpu/drm/panel/Kconfig                      |   10 +
+ drivers/gpu/drm/panel/Makefile                     |    1 +
+ drivers/gpu/drm/panel/panel-synaptics-td4328.c     |  246 ++++
+ drivers/pwm/Kconfig                                |   10 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-sn3112.c                           |  336 +++++
+ 14 files changed, 2190 insertions(+), 16 deletions(-)
+---
+base-commit: 90388b2f9fa5f332289335f99996e252697c0242
+change-id: 20240424-ayn-odin2-initial-95b7c060cd03
+
+Best regards,
+-- 
+Xilin Wu <wuxilin123@gmail.com>
 
 
---fikxshr2mxc6iptg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Apr 24, 2024 at 04:24:08PM +0300, George Stark wrote:
-> clk_round_rate() can return not only zero if requested frequency can not
-> be provided but also negative error code so add check for it too.
->=20
-> Also change type of variable holding clk_round_rate() result from
-> unsigned long to long. It's safe due to clk_round_rate() returns long.
->=20
-> Fixes: 329db102a26d ("pwm: meson: make full use of common clock framework=
-")
-> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
-> Signed-off-by: George Stark <gnstark@salutedevices.com>
-> ---
->  drivers/pwm/pwm-meson.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index f4d70da621ec..d4228ac1e7ea 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -148,7 +148,7 @@ static int meson_pwm_calc(struct pwm_chip *chip, stru=
-ct pwm_device *pwm,
->  	struct meson_pwm *meson =3D to_meson_pwm(chip);
->  	struct meson_pwm_channel *channel =3D &meson->channels[pwm->hwpwm];
->  	unsigned int cnt, duty_cnt;
-> -	unsigned long fin_freq;
-> +	long fin_freq;
->  	u64 duty, period, freq;
-> =20
->  	duty =3D state->duty_cycle;
-> @@ -168,9 +168,10 @@ static int meson_pwm_calc(struct pwm_chip *chip, str=
-uct pwm_device *pwm,
->  		freq =3D ULONG_MAX;
-> =20
->  	fin_freq =3D clk_round_rate(channel->clk, freq);
-> -	if (fin_freq =3D=3D 0) {
-> -		dev_err(pwmchip_parent(chip), "invalid source clock frequency\n");
-> -		return -EINVAL;
-> +	if (fin_freq <=3D 0) {
-> +		dev_err(pwmchip_parent(chip),
-> +			"invalid source clock frequency %llu\n", freq);
-> +		return fin_freq ? fin_freq : -EINVAL;
->  	}
-> =20
->  	dev_dbg(pwmchip_parent(chip), "fin_freq: %lu Hz\n", fin_freq);
-                                                   ^
-With fin_freq now being unsigned, this ------------' should be a 'd'.
-
-If you want to still extend your fixes series: A bit further below there
-is
-
-	cnt =3D div_u64(fin_freq * period, NSEC_PER_SEC);
-
-=2E The multiplication there might overflow. This should better use
-mul_u64_u64_div_u64() (or one of it's variants).
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---fikxshr2mxc6iptg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYpFNcACgkQj4D7WH0S
-/k6FHwgAgAJd3kevEdN/itUIoFGC4HyfsHU4mupmXhK8vQlLQeSLp88NOl8o4aq1
-krOsXkTeyPpYboayP13PMoNCEalGdGz0u1O6YRT7zhNmjTgho+BDeC5aYheIFNEr
-sBop9BWBnlUWXxKJNvv89YVYJX8/gm1lYUbJ+aY5cp4x1Sima7d81bIU6XGrKwZu
-Kay2eRvXf9c8F2WpSNhTS/NlQWOFZYHUQujWJKBUOQuIc6g9q916JnX9MalzD25a
-3sP5sShWiSiNdGJ0Z9oVqmWU4O4A9o3WZHYWg3mZme79PTQdVIO9oIcOMMUOiKm/
-t754lFYORol+j34xFOkG3l1bcOnwpg==
-=xYuN
------END PGP SIGNATURE-----
-
---fikxshr2mxc6iptg--
 
