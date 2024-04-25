@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-2108-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2109-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A29798B260C
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Apr 2024 18:11:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99BD68B2618
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Apr 2024 18:14:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C74E21C21A67
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Apr 2024 16:11:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E8671F22A9B
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Apr 2024 16:14:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5357414D280;
-	Thu, 25 Apr 2024 16:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B00D114D6E7;
+	Thu, 25 Apr 2024 16:13:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9jx071Q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fvq2lU3Q"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2448614C5BF;
-	Thu, 25 Apr 2024 16:11:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8079714D6E0;
+	Thu, 25 Apr 2024 16:13:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714061497; cv=none; b=aCI8nm5GJipqYJ3XEljGM229NfaLB0p3IMHTUZDPrH0WEmWf/CvyCELgGdlMqVCIK43dFrv580H2Q7mnrKiXaCyK6A5oKypebfphW9uWW6xJmnwzwuMo103WbYfbhE0H3lQPsy5LQuLUoeCOuKR9YwuTXWpsfSeYllTv+IkCKVQ=
+	t=1714061639; cv=none; b=YYyqQpOTRtJKwOKy0KZUe+2eIGBM+Tb04iRWNEy9aYh8umANSMJe2A4fr8ZIKADSXhJk6BuOiJHk4xHMyzirCpEx1uP/A2mMaew1q7P/WPqq84LgsvWIANwbhgTk6bf/4tO17EhwXuO6UORL8inOBExUjkej54d25qp+YHrXScs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714061497; c=relaxed/simple;
-	bh=ho12mLf87MAZYvf64xJHQvB9LOeFouGnTfDbUPjBnlc=;
+	s=arc-20240116; t=1714061639; c=relaxed/simple;
+	bh=feTbD2uTqi+ngg+EWsqq4nTtcv2X2wbI6YTY0TM5urQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VVny7zPyM2an7MNRL3VaNXx6M8asck4H+t1yG2DvJrXJ1qEWxyyLetDyNnr8lv0N4pUCQXx5FZYhuvU47RDjiIQjRJ3K8JbEfrm2iEaFUdEgfqbPBjfplzauclRwu6JxaLEmMA1L5UoDFmQpwbnEfMKCl6IRj5Pnt2qkYMr929s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j9jx071Q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ABE8C113CC;
-	Thu, 25 Apr 2024 16:11:36 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=qI8OeoXLgUYh+5kieiS0CxW6NVqnLCXon3bIsxkqoxfZkuLrmqrnXoORDOVXOhm/IEpHiiKHn1o2mbB/Z124I3aWkKmjcAywMkiQdgacZnhDewCIisk1mL73jW1OKZsdoIpcjYMykYnVWj5qZhc65ql5Kh8jN7qSqwJO062s7Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fvq2lU3Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAFF1C2BD11;
+	Thu, 25 Apr 2024 16:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714061496;
-	bh=ho12mLf87MAZYvf64xJHQvB9LOeFouGnTfDbUPjBnlc=;
+	s=k20201202; t=1714061639;
+	bh=feTbD2uTqi+ngg+EWsqq4nTtcv2X2wbI6YTY0TM5urQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j9jx071QsFWrW3XHntMLgzQJpPLY6JtJxBxjwcMn3XrjyxGciv8cAY3zY7azsgZF8
-	 OZAubVoWj+tHQxw7TilPa1OGCxI4t+STVuEOVn4QYOYfEfszslIkEcGSzj81xGCbhY
-	 g1RFk1oqlxhXZBtYDu68IODgvXXTc21m0MgRk3rReFOxi/ptErGI8XnNfIXRiVUY04
-	 kcKRBSHkVfjNcgnC2fcjpSkOCycEIt1JGGxd38cIluYciDBAdztxnhSpl0BPuXd3GO
-	 lsdAPpgXvvCZEV03auyx5q+1dL3mKJtCCDsTsomA7nkWnat1g+z6bdfd6lhbpJjWuA
-	 vr3IbtzSMPUJQ==
-Date: Thu, 25 Apr 2024 11:11:34 -0500
+	b=fvq2lU3QMJOQ+m997z8dJi9QqF2Q0BJX048hYDevUOtGvMTTjFfZ3HOY75CNckttF
+	 hDbsgGv5Sd5pFeLj7PDQpsqBRsNRZROMQEXoRbVGz9OFNJGCwo6lnzv/pU7Rjx2D4D
+	 DgiBCs8Q2mKW9E5I25hrmc8IKI3M9axUGIe4/eIRnGTzQ5jHk10bKgiTfDzbcYbSRw
+	 FtNGrYcbHe2AwnBUQwHohsxqyqlp71QhB81cqLw2VDWgRFM/R/TvFcdz5b2Tid/Egs
+	 b+ZqzWIS9yzkrw8hhfo7SUYIoUck09smLMhcR3FUWJNuqGlH48MYqIfRdORB2RbojJ
+	 yQlx4fZOuxR3A==
+Date: Thu, 25 Apr 2024 11:13:56 -0500
 From: Rob Herring <robh@kernel.org>
 To: Xilin Wu <wuxilin123@gmail.com>
 Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
@@ -61,10 +61,10 @@ Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
 	Molly Sophia <mollysophia379@gmail.com>, linux-pwm@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 03/10] dt-bindings: display: panel: Add Synaptics TD4328
-Message-ID: <20240425161134.GA2695912-robh@kernel.org>
+Subject: Re: [PATCH 08/10] dt-bindings: vendor-prefixes: Add AYN Technologies
+Message-ID: <20240425161356.GA2729350-robh@kernel.org>
 References: <20240424-ayn-odin2-initial-v1-0-e0aa05c991fd@gmail.com>
- <20240424-ayn-odin2-initial-v1-3-e0aa05c991fd@gmail.com>
+ <20240424-ayn-odin2-initial-v1-8-e0aa05c991fd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -73,95 +73,32 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240424-ayn-odin2-initial-v1-3-e0aa05c991fd@gmail.com>
+In-Reply-To: <20240424-ayn-odin2-initial-v1-8-e0aa05c991fd@gmail.com>
 
-On Wed, Apr 24, 2024 at 11:29:08PM +0800, Xilin Wu wrote:
-> Synaptics TD4328 is a display driver IC used to drive LCD DSI panels.
+On Wed, Apr 24, 2024 at 11:29:13PM +0800, Xilin Wu wrote:
+> Add an entry for AYN Technologies (https://www.ayntec.com/)
 > 
 > Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
 > ---
->  .../bindings/display/panel/synaptics,td4328.yaml   | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/synaptics,td4328.yaml b/Documentation/devicetree/bindings/display/panel/synaptics,td4328.yaml
-> new file mode 100644
-> index 000000000000..216f2fb22b88
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/synaptics,td4328.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/synaptics,td4328.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Synaptics TD4328-based DSI display panels
-> +
-> +maintainers:
-> +  - Xilin Wu <wuxilin123@gmail.com>
-> +
-> +description:
-> +  The Synaptics TD4328 is a generic DSI Panel IC used to control
-> +  LCD panels.
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    contains:
-> +      const: syna,td4328
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index e4aeeb5fe4d1..c2365b0f4184 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -194,6 +194,8 @@ patternProperties:
+>      description: Axentia Technologies AB
+>    "^axis,.*":
+>      description: Axis Communications AB
+> +  "^ayn,.*":
 
-You need a compatible specific to a panel. This can be a fallback 
-though.
+It is somewhat preferred to use the domain name (ayntec).
 
-> +
-> +  vdd-supply:
-> +    description: Digital voltage rail
-> +
-> +  vddio-supply:
-> +    description: Digital I/O voltage rail
-> +
-> +  reg: true
-> +  port: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset-gpios
-> +  - vdd-supply
-> +  - vddio-supply
-> +  - port
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    dsi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        panel@0 {
-> +            compatible = "syna,td4328";
-> +            reg = <0>;
-> +
-> +            backlight = <&backlight>;
-> +            reset-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
-> +
-> +            vdd-supply = <&vdd_lcm_2p8>;
-> +            vddio-supply = <&vreg_l12b_1p8>;
-> +
-> +            port {
-> +                panel_in_0: endpoint {
-> +                    remote-endpoint = <&dsi0_out>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
+> +    description: AYN Technologies Co., Ltd.
+>    "^azoteq,.*":
+>      description: Azoteq (Pty) Ltd
+>    "^azw,.*":
 > 
 > -- 
 > 2.44.0
