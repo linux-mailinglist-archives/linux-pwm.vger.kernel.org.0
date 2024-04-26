@@ -1,134 +1,126 @@
-Return-Path: <linux-pwm+bounces-2112-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2115-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B4E18B275A
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Apr 2024 19:14:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DE4A08B302A
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Apr 2024 08:17:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 15CA81C23250
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Apr 2024 17:14:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BC481C224FA
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Apr 2024 06:17:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52E5714EC4E;
-	Thu, 25 Apr 2024 17:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="VLq7HvOh"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAF5013A40B;
+	Fri, 26 Apr 2024 06:17:52 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F9714E2FB;
-	Thu, 25 Apr 2024 17:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1822F2F
+	for <linux-pwm@vger.kernel.org>; Fri, 26 Apr 2024 06:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714065193; cv=none; b=hSLa27X/f0U85EWaCYTntx5C3cxLCGaS1ZeMnPsBIUp+bCkQ0jiDwSh2SYMzqbs6ecxvMTvxLkKb7Ppzd2OkRK9gZPzjwzpU3nA1oji9PDjgxTQfUwPWyFbYYSX6dckWftdDx6wwcXXjaTPh9XArtDF4m+oF5tIztNcGuiS/1pE=
+	t=1714112272; cv=none; b=R2lmMlyLnuRfTRFoG8en9dzkWtKMZ+jNRXFCRzNmCX/esvh77pU+fWo+jvhYI0bTZy2y/AXkVNj57QMUxAEqLbJRk45Atzk7m5EEvBRFYSFgGTCpZfHCd48XSprzvyDiKxU1iB0UwWomStOOuIc/jC1B9hDDV70C7A+OrkxVhxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714065193; c=relaxed/simple;
-	bh=FGaH4pLH7LYMjkdhr/geohJb9dwhyxxED5l1amL/Ogo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Upx1qRsyXF1RxeEsuV/EExOThBM4/FDdso/quITtWUak8U+GGUIMH58e3n7tTdq3auM9WFzH6iwpqmhPRVTNw10KvLOy2Y1N+wISlVTw+GEJNAEXSGJVurZxNhoSGtpqqHcS4+sj3yYKZKGsi4te4BHMtSLVvRXGiDg6yFdS5+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=VLq7HvOh; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id AEA5212000D;
-	Thu, 25 Apr 2024 20:13:01 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru AEA5212000D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1714065181;
-	bh=A9GpIzQZVP3rm6DjUNEFW6D9Y7ngu+Gh1hs4Mrn4JxU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=VLq7HvOhXhaz9LyhReNa/Tgut3dPhbsangs+j1NwAmTmF2zJIL5Bot/2PIhBvR+3H
-	 7IKC+vDzs3R7Fr7fXvA2Svn51kNKlHHIsYNGap3fhG4nvgoYGsa5rLbAGaCG8B67Km
-	 LFYXcHPMBgd/PtAfxMHqGeyqIe19EELLLfr4UNHphWQbK4K8Gb6RdmohGfCSRm7u3X
-	 gDC9XGAcxJKFjpizpXvXM21T0nT+K4Baxrq9L07hVryhWNBSR9xqfnRYw3ed1z+yc7
-	 9YpUq7CFSSw5O7edpiwqMNxiV2znJNwh/XB8Gb6w16TaHC/WJaURh4aZkFNWQvddIw
-	 k6mYR5mNeDmag==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Thu, 25 Apr 2024 20:13:01 +0300 (MSK)
-Received: from work.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 25 Apr 2024 20:13:00 +0300
-From: George Stark <gnstark@salutedevices.com>
-To: <u.kleine-koenig@pengutronix.de>, <neil.armstrong@linaro.org>,
-	<khilman@baylibre.com>, <jbrunet@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>, <thierry.reding@gmail.com>,
-	<hkallweit1@gmail.com>
-CC: <linux-pwm@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kernel@salutedevices.com>, George Stark <gnstark@salutedevices.com>
-Subject: [PATCH v3 3/3] pwm: meson: Use mul_u64_u64_div_u64() for frequency calculating
-Date: Thu, 25 Apr 2024 20:12:53 +0300
-Message-ID: <20240425171253.2752877-4-gnstark@salutedevices.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240425171253.2752877-1-gnstark@salutedevices.com>
-References: <20240425171253.2752877-1-gnstark@salutedevices.com>
+	s=arc-20240116; t=1714112272; c=relaxed/simple;
+	bh=quehoQ6DdK+mQ9RBHc2jh07gWC1RMDRjLQT8IC7XHaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q23HS2dwFAQEMv5LnHvZDmkYnXgXWIIV5xDvGTStydHEe9d/fbjPcRDsOMiU01+zYgwUN11nzBVHViBpBH8Arv7zxV4FWzFGaPsfyKqyY3T83iSJb5IPll1JQaymdSM4UE6Mm3J/Nf9yb9qQUSu4N2nyA0pMigMPm/19nIbsjhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s0Ety-0001Ls-K8; Fri, 26 Apr 2024 08:17:42 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s0Ety-00EOe0-4e; Fri, 26 Apr 2024 08:17:42 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s0Ety-0097PL-0C;
+	Fri, 26 Apr 2024 08:17:42 +0200
+Date: Fri, 26 Apr 2024 08:17:41 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Lee Jones <lee@kernel.org>
+Cc: kernel@pengutronix.de, linux-pwm@vger.kernel.org, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] leds: pwm: Disable PWM when going to suspend
+Message-ID: <yitqw57rdkr44ly32sxukxa2m4a6jm74upfxc74dmbklucl6kq@3ni7emsqgzx4>
+References: <20240417144943.GA2399047@google.com>
+ <20240417153846.271751-2-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184930 [Apr 25 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 18 0.3.18 b9d6ada76958f07c6a68617a7ac8df800bc4166c, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/25 14:02:00 #24969020
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="difcfriydj6k3jns"
+Content-Disposition: inline
+In-Reply-To: <20240417153846.271751-2-u.kleine-koenig@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-While calculating frequency for the given period u64 numbers are
-multiplied before division what can lead to overflow in theory so use
-secure mul_u64_u64_div_u64() which handles overflow correctly.
 
-Fixes: 329db102a26d ("pwm: meson: make full use of common clock framework")
-Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: George Stark <gnstark@salutedevices.com>
----
- drivers/pwm/pwm-meson.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--difcfriydj6k3jns
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 4a652d500dfc..b2f97dfb01bb 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -176,7 +176,7 @@ static int meson_pwm_calc(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	dev_dbg(pwmchip_parent(chip), "fin_freq: %ld Hz\n", fin_freq);
- 
--	cnt = div_u64(fin_freq * period, NSEC_PER_SEC);
-+	cnt = mul_u64_u64_div_u64(fin_freq, period, NSEC_PER_SEC);
- 	if (cnt > 0xffff) {
- 		dev_err(pwmchip_parent(chip), "unable to get period cnt\n");
- 		return -EINVAL;
-@@ -191,7 +191,7 @@ static int meson_pwm_calc(struct pwm_chip *chip, struct pwm_device *pwm,
- 		channel->hi = 0;
- 		channel->lo = cnt;
- 	} else {
--		duty_cnt = div_u64(fin_freq * duty, NSEC_PER_SEC);
-+		duty_cnt = mul_u64_u64_div_u64(fin_freq, duty, NSEC_PER_SEC);
- 
- 		dev_dbg(pwmchip_parent(chip), "duty=%llu duty_cnt=%u\n", duty, duty_cnt);
- 
--- 
-2.25.1
+Hello Lee,
 
+On Wed, Apr 17, 2024 at 05:38:47PM +0200, Uwe Kleine-K=F6nig wrote:
+> On stm32mp1xx based machines (and others) a PWM consumer has to disable
+> the PWM because an enabled PWM refuses to suspend. So check the
+> LED_SUSPENDED flag and depending on that set the .enabled property.
+>=20
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218559
+> Fixes: 76fe464c8e64 ("leds: pwm: Don't disable the PWM when the LED shoul=
+d be off")
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> ---
+> Hello,
+>=20
+> On Wed, Apr 17, 2024 at 03:49:43PM +0100, Lee Jones wrote:
+> > On Tue, 16 Apr 2024, Uwe Kleine-K=F6nig wrote:
+> > > If you don't consider that suitable, I can create a patch that is eas=
+ier
+> > > to pick up.
+> >=20
+> > Yes, please submit it properly.
+
+Gentle ping. Even given the regression was introduced in v6.7-rc1
+already, I think this should go into v6.9. If you don't agree that's
+fine, but then getting it onto next to queue it for v6.10-rc1 at least
+would be great.
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--difcfriydj6k3jns
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYrRwUACgkQj4D7WH0S
+/k5XXQf+Lk6n3RbWMZZNm8vnkZn09tLkBIs9ubRFmALUCL5rA7j63qNrJ3S3aqwr
+B5N01uxZuj5urnyux+OrIhBzYind99dVKfuudU1u7Db6BZuzeh85oMHSdle/f3ie
+y+amKsoRmr+bSMUmNIQnRVBcW2mz9x5IQE3JbMrIETWRTcxg8sL1M7tF4I6KyBGj
+oyqWtNoxIPlck90C2IS3GG1oxuzAtItCTZRr5iORf6TjUc+LPIgoI71CaxDpHUZo
+RQLpEMgBIa4PnTgZhlbAc/D4fLqP+s8Us44/3Xy0FHXCqttr6EGjJog0qFHrdd0U
+iJ2o47qFORbDqEDYHKFOwfXWyuC1UQ==
+=S8es
+-----END PGP SIGNATURE-----
+
+--difcfriydj6k3jns--
 
