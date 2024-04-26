@@ -1,108 +1,132 @@
-Return-Path: <linux-pwm+bounces-2116-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2117-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 967248B306A
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Apr 2024 08:30:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BCF68B3073
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Apr 2024 08:31:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C94261C22B13
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Apr 2024 06:30:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5DFC71C219F4
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Apr 2024 06:31:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 567E714293;
-	Fri, 26 Apr 2024 06:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="yUt9hb3Z"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C8426AC5;
+	Fri, 26 Apr 2024 06:31:56 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C620631;
-	Fri, 26 Apr 2024 06:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C3A631
+	for <linux-pwm@vger.kernel.org>; Fri, 26 Apr 2024 06:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714113032; cv=none; b=HbFmAwcXlAeCo4569dqOt7n7xzFbN7fqpgZWKqfCTkj11yvUl888IgQ5FNdbY3+bxeEFU96OYmlBh/YVO8XdR1Ndbmq55qRqbkRB5meIJGhR+i+svrVvWu+W2VtqBO/l2TUvLxvcfcI4jLG4tV2emweVsUPdxB2wAZnT5YoFJgo=
+	t=1714113116; cv=none; b=ae93wYk6wohGGVTL4XOrPY4vtvd7Cn3TgUnnV77e0ZFnFhtlChq9cOFWF1dYJClhD8xednkJGEnrv/D9lCIWooqmKfCmEkKYD5CTln8b3u8himmX9CDswiNuFWLo3qVNKvTtsf1hYunRBBWq+KdwkK5CfqVEU9ETNpupzxv4Yic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714113032; c=relaxed/simple;
-	bh=H+5rwc89tCjEHu0KqwHwKpS4+vjC45z3KXV2smJhxTs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oV5VNlShmdYuGyTep9IwrMPZHADr5HH7WgkW4yFhpsk56f98KYE+PEibqjeNf+07FYIeFaM77agECT8zGNObDFJMp9xdSuDGRKzE5/lNoRVt/QrZDuwLltxi8wPNNByf0XOAOA3YcVzhroBzzV3Y6E29OW21fFauqkLhtHFW20o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=yUt9hb3Z; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=AYzZEF7JC/Zux/HGDdSRgGYZlcZDlsavbIJ+OlNLhvI=;
-	t=1714113030; x=1714545030; b=yUt9hb3ZCnhz8vzbtmAY88dQFtay6Dw4j8vxZcMJbBLc6JW
-	x6WKer61bW0GT1ePUmFTNGmvKu5YMlT3raSGjHW/hUaNEGmE0RR31t/ocx5+G9Xqt0x6KV+DTgg/K
-	agQ394LfVNnjiNGrRZUCiMjEzSZ5FywEtg3wLUWVdlpPvm2dsovL3NFvfylmec1uy1th8ntu5EfPr
-	mi7smirKCN+E25fmbd3mHid0KdXsTD2agiuSXMH3f3vS2nm9ct2JsY4Aw5DkLqhNtxXXWKOHtcwfn
-	PPKaUFX2yILly9bVjVB+blqbW/Yfx9dEGgFpg+VLkPWtX5wXSeA/hpBXQDjyS5Rg==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s0F6J-0003S9-SU; Fri, 26 Apr 2024 08:30:27 +0200
-Message-ID: <b36151b9-15af-41cd-92ca-9ab515d03256@leemhuis.info>
-Date: Fri, 26 Apr 2024 08:30:27 +0200
+	s=arc-20240116; t=1714113116; c=relaxed/simple;
+	bh=su+atXghKMgF4V7XqaGPcM0Vgqr72C0JOQgjOLMUQGI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=FUGTs2gdDg4Xjd+QiFR+eTIpjuTM+EdnNuDmb2Jqu0PZbjHkHi0NQWcC1mPb1z9SbktJZE6VSBJANif8d5maVg7IKBkbdP0LuZ8tFlFU7c+9F69QCIWq0YioTdjoZrR+vWeLbZtFV4AhAYRi8F4VxsheMgoxK0gOeeWMoujfaag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s0F7g-0007Zw-PD; Fri, 26 Apr 2024 08:31:52 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s0F7g-00EOfZ-67; Fri, 26 Apr 2024 08:31:52 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s0F7g-0097iY-0M;
+	Fri, 26 Apr 2024 08:31:52 +0200
+Date: Fri, 26 Apr 2024 08:31:51 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pwm@vger.kernel.org, kernel@pengutronix.de, 
+	Thorsten Scherer <t.scherer@eckelmann.de>
+Subject: [GIT PULL] pwm: Update Uwe's maintainer entries
+Message-ID: <wkokeh5mkc3d3j5d3aumdj3g4fzk5znbye2prdroqgwlhzledw@eskutdgi72nv>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] leds: pwm: Disable PWM when going to suspend
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Lee Jones <lee@kernel.org>
-Cc: kernel@pengutronix.de, linux-pwm@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20240417144943.GA2399047@google.com>
- <20240417153846.271751-2-u.kleine-koenig@pengutronix.de>
- <yitqw57rdkr44ly32sxukxa2m4a6jm74upfxc74dmbklucl6kq@3ni7emsqgzx4>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <yitqw57rdkr44ly32sxukxa2m4a6jm74upfxc74dmbklucl6kq@3ni7emsqgzx4>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1714113030;349e5dd1;
-X-HE-SMSGID: 1s0F6J-0003S9-SU
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ckzhtjp5cdktz4t3"
+Content-Disposition: inline
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On 26.04.24 08:17, Uwe Kleine-König wrote:
-> On Wed, Apr 17, 2024 at 05:38:47PM +0200, Uwe Kleine-König wrote:
->> On stm32mp1xx based machines (and others) a PWM consumer has to disable
->> the PWM because an enabled PWM refuses to suspend. So check the
->> LED_SUSPENDED flag and depending on that set the .enabled property.
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218559
->> Fixes: 76fe464c8e64 ("leds: pwm: Don't disable the PWM when the LED should be off")
->> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
->> ---
->> Hello,
->>
->> On Wed, Apr 17, 2024 at 03:49:43PM +0100, Lee Jones wrote:
->>> On Tue, 16 Apr 2024, Uwe Kleine-König wrote:
->>>> If you don't consider that suitable, I can create a patch that is easier
->>>> to pick up.
->>>
->>> Yes, please submit it properly.
-> 
-> Gentle ping. Even given the regression was introduced in v6.7-rc1
-> already, I think this should go into v6.9. [...]
 
-FWIW, I guess Linus would agree (even if it's the second to last release
-in this case):
+--ckzhtjp5cdktz4t3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
+Hello Linus,
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+the following changes since commit ed30a4a51bb196781c8058073ea720133a65596f:
+
+  Linux 6.9-rc5 (2024-04-21 12:35:54 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/p=
+wm/for-6.9-rc6-fixes
+
+for you to fetch changes up to 190f1f46ede17ca0d7153ac115d6518ec1be2ba3:
+
+  MAINTAINERS: Update Uwe's email address, drop SIOX maintenance (2024-04-2=
+6 08:20:14 +0200)
+
+This is just an update to my contact email address as my Pengutronix
+address will stop working soon. I also drop my co-maintenance for SIOX,
+but that continues to be in good hands.
+
+Please pull this for v6.9-rc6.
+
+Thanks and best regards
+Uwe
+
+----------------------------------------------------------------
+pwm: Update Uwe's maintainer entries
+
+This is just an update to my maintainer entries as I will switch jobs
+soon. Getting a contact email address into the MAINTAINERS file that
+will work also after my switch will hopefully reduce people mailing to
+the then non-existing address.
+
+----------------------------------------------------------------
+Uwe Kleine-K=F6nig (1):
+      MAINTAINERS: Update Uwe's email address, drop SIOX maintenance
+
+ MAINTAINERS | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ckzhtjp5cdktz4t3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYrSlcACgkQj4D7WH0S
+/k4qPgf+OCSN5jFjGB6BE48wQDFcBuUrGk8zfgGTkL8E7kFNwwVFRs7nmPhwvXbD
+69ouFq5WsqGeTjhg2PmjbsJTN+RDXF1KzjRtvcH3gO9ao4PdrO13IAI75E16A/bv
+JqyJOMzndnmTQt4twwFa/VjWzuCn3HEW/lxIEDnDrYJBAkbzZM60Yo0zX6z8ftNM
+FnpRwDa4ECEnJ9Zyx/XkGmvjinCHZH4ByFBSiPmtPBIekxTHQ0PJ+HJiApQorFOd
+7QMt8BIt3pmDm85a8EwE7N6GEBZgjvMm/+1yZjK350ywIQtOSaWIo4MSsg2povwL
+Nfe6wKeiN7OPLG69kn1B95qpbiQY9w==
+=1Lq6
+-----END PGP SIGNATURE-----
+
+--ckzhtjp5cdktz4t3--
 
