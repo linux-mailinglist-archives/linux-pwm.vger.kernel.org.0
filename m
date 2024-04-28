@@ -1,74 +1,74 @@
-Return-Path: <linux-pwm+bounces-2123-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2124-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02E438B4968
-	for <lists+linux-pwm@lfdr.de>; Sun, 28 Apr 2024 05:30:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C1228B4974
+	for <lists+linux-pwm@lfdr.de>; Sun, 28 Apr 2024 05:43:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B38062825B3
-	for <lists+linux-pwm@lfdr.de>; Sun, 28 Apr 2024 03:30:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4245B2820E6
+	for <lists+linux-pwm@lfdr.de>; Sun, 28 Apr 2024 03:43:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3AD420E3;
-	Sun, 28 Apr 2024 03:30:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 145B328F0;
+	Sun, 28 Apr 2024 03:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QXk+XiYv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DM5EvGzS"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8C528F1;
-	Sun, 28 Apr 2024 03:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D9623A0;
+	Sun, 28 Apr 2024 03:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714275008; cv=none; b=nKkHcYhL7AWQ/Z2soE2upBmfUYrX0A0HWmUHj8vm4o6EF4v8t+1eyOVYQ5vKCGr3OqT6JXo2zJE1hmbnXh5zphQphgtAoHLcu7VHehscwXyru61FuB4FjstdIcIdpWOBXdb7R5Z3Fh2PUlrwtkqToC2HdEjNGGlPtMQkRYfIu4Q=
+	t=1714275793; cv=none; b=HzYiSKsmtp1ZEATBKbsZFTOK4xQ0vrF/E+F7AAPB2/STaf+54J2cI5iYwME64jzJoENvK8jZSWVcAfBcBzNGkp8+tw/HMA11XSHCgvsrFVWyYASp838giOIP4xm5UjipHpj+WZ4YdATy2SwttjmliGBcTl1b1hfxodMBIBi9jvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714275008; c=relaxed/simple;
-	bh=I4zlPiNkPKCqigRDkhVrLgPV52DgP2yPuBfoCuO++rw=;
+	s=arc-20240116; t=1714275793; c=relaxed/simple;
+	bh=QTm0oGZ4jKozHwlGDj3XCzZ34Hs+9vRs4XWHvTGRbyA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V2V97sLTqsfvxLYZIuFoEqXQ926meWsrsmJaKs/Sq2ylT7dTEEaKcX+AT9U2XGW1ftOWANvyWdJMQRhppo3RMwO9qcT6xIx5du9rhP+L8mSu0U+6toDcqow1Vg5mktBMXLuFJDvv3OFNYM2bLmNVZfpJka1EiJWDeZTj6HhmfZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QXk+XiYv; arc=none smtp.client-ip=209.85.167.177
+	 In-Reply-To:Content-Type; b=VE5Xfmeo8p0FaVG0fO2eMe/8V0GaLk+R/LHXDZav9WOkTlXR0axwWkSTEgfqzLjsYtATehYf+yJqATnfLRKmNDSXq+id//3X3KiHCqBg/FFjLEDZChSQ79Ch26Pc27Gic68lhNniz+LnlrbseRB6y269oVmKgMdv0I1Dfx2sQek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DM5EvGzS; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3c730f599abso2090143b6e.0;
-        Sat, 27 Apr 2024 20:30:06 -0700 (PDT)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ae229e9176so2839205a91.0;
+        Sat, 27 Apr 2024 20:43:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714275006; x=1714879806; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714275791; x=1714880591; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=kQ5VTPH2nor9MJto5pDIHRFuErP8fLZdpGXB3ZZ2RNE=;
-        b=QXk+XiYvVbsqr0lwnEEsHbmHUMBNzhiSObG/8O4TN38qW8/NfPT6D/AibC2KcKvKti
-         NPqX22tVgfwhdQ5Vj2y4gozh7y/cexOeg+Q/2ycwiIJ5PSFelzxLOQbnHMtUbwhBqYa7
-         GIzhVhqJaTj1YT0TiOiYgotqrwnfQltZE10SQqG18K52JRKnhRhtLKgZwaArf3TXkPl4
-         KKJuF1RgnPZ+L9u9utA8Vv/wfgEL2Wwi6UlszsTRN9sVKJ4352GO0SkR3Gfnnbtcf4jK
-         /86OtKlAhzEqcOEkhlRlpuAtZHitnDltXpG7mUh6umv1ICvc1nSl0wYes6uhNF1igwWC
-         rAHw==
+        bh=cF3gFSsAF8/xhEBnIsSjdFtkiMowyOcPJ+4xKxqvds8=;
+        b=DM5EvGzSfKhgkwoPnH72SohnZPlAt3Ig0zt6eeSlDoSDz3wZwr2P27nDRtlcABkgje
+         h962s3XN+CMeGMaTgEgX2BnQWJ4Z7ME4nm180CuWxYXX/ckJDK5GdobLgHa2A1a05wQF
+         SKOmo0uq9nOelgTBGsOFHqVNJxmxd1WJGWgVwZr7PZ9m4KM2+oz+f6zZ7ah+/5ssMwWw
+         SxF163Q9jjsVAv9qpDNTlty6cPapA9ZJgr5t+Rp8dqDYONmGiauwYL7s4g2X/RtqAcaF
+         rRkHc0BW5F/Odlkss0tAaSSe1fQ1kMrd+YRVVKYnQSHNd3pBa868kpDOuTB6Mo+Njptt
+         CP7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714275006; x=1714879806;
+        d=1e100.net; s=20230601; t=1714275791; x=1714880591;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kQ5VTPH2nor9MJto5pDIHRFuErP8fLZdpGXB3ZZ2RNE=;
-        b=B3lgKJgrq6ZpncTBy9bjx07aXWvhTtAg7yHq8XT3Sy+LK/6mYyXmxcxzFMmXtmrVh1
-         PoW59lXM6gixKGKooQy5auwK4ZvD9IzqDL7HPLJVSW/6jTy0qg1wl4g58+HNr1XYVQhF
-         W10fgPkjAmqdAUKJWWYpUyJn81BIo22HsDh9agvGeoC1xEWuRkvnuXFF2aQD4vBH6y/k
-         c/GVGIWIUomdl4MFshTHQx6wOpsHoNK7KiK19ozOF0D15TGAu9xEGk8AJebAn6to9dbi
-         AJ0/yNnGMTaagQXPn2h6AmA+NoNxlWOoVL7iKGupR0COIRMY9FshnlDJCLqNR/uuDEiG
-         JAwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWHKVYPOzJBY6fXbpliFAOc6tpETV59UboQIfQ7R/jiGbAW5Wy8B63u+hbIGkBtIduPQapYP4wtfUKC3Bgf5O4qOgD01Niv8DH6ve7E/jOjggIYixs4F+PoFbxJJRapJoIKANUZMknEjEMTDCCeI8yW+lj6HeFMuZAPwvulJ6Du5GcfW/b1xA=
-X-Gm-Message-State: AOJu0YxcQb65YJLzcQfLBmxqFO11y76pOcah817fxfhJOSkhETfA1rma
-	0Vuk0HhwQmqgW/4CpHgoN7LA6oaEb58/NPP2NAp5Wi2Y8wJdqH8u
-X-Google-Smtp-Source: AGHT+IGJkj+yYHDRxtFh21/KcaEEA+iw75QHG9gavNpfANp/PSWXvk5mSppHJic7qjN9s62bkRVoDQ==
-X-Received: by 2002:a05:6808:1594:b0:3c8:41ed:8738 with SMTP id t20-20020a056808159400b003c841ed8738mr9142094oiw.22.1714275006042;
-        Sat, 27 Apr 2024 20:30:06 -0700 (PDT)
+        bh=cF3gFSsAF8/xhEBnIsSjdFtkiMowyOcPJ+4xKxqvds8=;
+        b=QUWTR3wRymSqCCrZmPgAihxs/jU9QqEEpZv5Z8teZvhVVG38MEXIBZyhEUIudbwxjV
+         ZMxzeJ778ikYA7lTVYQpdBIiW0uPoVk019DJbW/uufGHqc770+LEuw+k3lYg1JcdaajK
+         YRKgFCik/cns+lOfWooUlwG7CxZwRDtaoAsKh1ZLca7EE9Xsw/vFvsbLOOc0zYO+TGXy
+         syHF9eJVDK0JsLA0wmfB6Hhbnbwx50LP5aAll4U2q0Mvk6fFgm7anLV7MkoDxcVrD76Y
+         vkD9konMcmXn3boIPteI27tYRZF+tIECbTw+YarEcrUHhkMdWKIw/qtX6X9MMuhfiyHY
+         LSXg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+Qpk0Bfuq7G+E5VtmSzHCARBftrSy7Xl+FPmuxsxtsZjmtYjnjbV/VHNqIaNVs0moX6vYK5hXCkc5MrUKFSup3zJMWWdw8xMYOjEUFKVwZOGm2PajHuctpjb2V/kkQmh1hzfAncmnAfMoxjuzyJhInX9fK8lPSVCgnUugUyiW6NjSnn5/MCI=
+X-Gm-Message-State: AOJu0YxDqhvGEc7/NjEwYNqKj9RKH++O27YU2rZ+vQZeB7dqQhY1qToq
+	BhDGjbXUJ90Pb6qlDGjSHD/IQD+R3+CPBXSRQP/tx5y/8bZUD7xE
+X-Google-Smtp-Source: AGHT+IH8mJdZTclWb62UvmTjNjCFpNOr+GkX5xNCJ3l7df3vwRT//5dtC2idHbg5/5JmAE8+hAlxkQ==
+X-Received: by 2002:a17:90a:e641:b0:2ab:257c:4747 with SMTP id ep1-20020a17090ae64100b002ab257c4747mr6214969pjb.6.1714275790697;
+        Sat, 27 Apr 2024 20:43:10 -0700 (PDT)
 Received: from [0.0.0.0] (42-3-109-144.ptr.netvigator.com. [42.3.109.144])
-        by smtp.gmail.com with ESMTPSA id a8-20020a62bd08000000b006ea81423c65sm17563901pff.148.2024.04.27.20.30.01
+        by smtp.gmail.com with ESMTPSA id gb23-20020a17090b061700b002b15a672805sm354415pjb.23.2024.04.27.20.43.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 27 Apr 2024 20:30:05 -0700 (PDT)
-Message-ID: <89aa81f6-8945-4448-b298-b66ec4d386fe@gmail.com>
-Date: Sun, 28 Apr 2024 11:29:59 +0800
+        Sat, 27 Apr 2024 20:43:10 -0700 (PDT)
+Message-ID: <c69021e6-2397-4cae-a640-9a3b6ce2e404@gmail.com>
+Date: Sun, 28 Apr 2024 11:43:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -76,9 +76,8 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/10] drm/panel: Add driver for Synaptics TD4328 LCD
- panel
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+Subject: Re: [PATCH 07/10] arm64: dts: qcom: sm8550: Update EAS properties
+To: Bryan O'Donoghue <pure.logic@nexus-software.ie>,
  =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Junhao Xie <bigfoot@classfun.cn>,
@@ -95,38 +94,79 @@ Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
  linux-arm-msm@vger.kernel.org
 References: <20240424-ayn-odin2-initial-v1-0-e0aa05c991fd@gmail.com>
- <20240424-ayn-odin2-initial-v1-4-e0aa05c991fd@gmail.com>
- <c792a2dd-3183-4d39-bda5-4a8c30a476ff@linaro.org>
+ <20240424-ayn-odin2-initial-v1-7-e0aa05c991fd@gmail.com>
+ <99f51564-df99-4f06-9419-1eaa9501f27d@nexus-software.ie>
 Content-Language: en-US
 From: Xilin Wu <wuxilin123@gmail.com>
-In-Reply-To: <c792a2dd-3183-4d39-bda5-4a8c30a476ff@linaro.org>
+In-Reply-To: <99f51564-df99-4f06-9419-1eaa9501f27d@nexus-software.ie>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 2024/4/24 23:58, Bryan O'Donoghue wrote:
+On 2024/4/25 6:45, Bryan O'Donoghue wrote:
 > On 24/04/2024 16:29, Xilin Wu via B4 Relay wrote:
 >> From: Xilin Wu <wuxilin123@gmail.com>
 >>
->> Add support for the 1920x1080 LCD panel driven by the Synaptics
->> TD4328 IC, as found on AYN Odin 2.
+>> The original values provided by Qualcomm appear to be quite
+>> inaccurate. Specifically, some heavy gaming tasks could be
+>> improperly assigned to the A510 cores by the scheduler, resulting
+>> in a CPU bottleneck. This update to the EAS properties aims to
+>> enhance the user experience across various scenarios.
 >>
->> Co-developed-by: Junhao Xie <bigfoot@classfun.cn>
->> Signed-off-by: Junhao Xie <bigfoot@classfun.cn>
->> Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
+>> The power numbers were obtained using a Type-C power meter, which
+>> was directly connected to the battery connector on the AYN Odin 2
+>> motherboard, acting as a fake battery.
+>>
+>> It should be noted that the A715 cores seem less efficient than the
+>> A710 cores. Therefore, an average value has been assigned to them,
+>> considering that the A715 and A710 cores share a single cpufreq
+>> domain.
+>>
+>> Cortex-A510 cores:
+>> 441 kHz, 564 mV, 43 mW, 350 Cx
+>> 556 kHz, 580 mV, 59 mW, 346 Cx
+>> 672 kHz, 592 mV, 71 mW, 312 Cx
+>> 787 kHz, 604 mV, 83 mW, 290 Cx
+>> 902 kHz, 608 mV, 96 mW, 288 Cx
+>> 1017 kHz, 624 mV, 107 mW, 264 Cx
+>> 1113 kHz, 636 mV, 117 mW, 252 Cx
+>> 1228 kHz, 652 mV, 130 mW, 240 Cx
+>> 1344 kHz, 668 mV, 146 mW, 235 Cx
+>> 1459 kHz, 688 mV, 155 mW, 214 Cx
+>> 1555 kHz, 704 mV, 166 mW, 205 Cx
+>> 1670 kHz, 724 mV, 178 mW, 192 Cx
+>> 1785 kHz, 744 mV, 197 mW, 189 Cx
+>> 1900 kHz, 764 mV, 221 mW, 190 Cx
+>> 2016 kHz, 784 mV, 243 mW, 188 Cx
+>> Your dynamic-power-coefficient for cpu 1: 251
 > 
-> checkpatch.pl --strict somepatch
+> This looks pretty convincing and like good work.
 > 
-> CHECK: Alignment should match open parenthesis
-> #207: FILE: drivers/gpu/drm/panel/panel-synaptics-td4328.c:150:
-> +static int td4328_get_modes(struct drm_panel *panel,
-> +             struct drm_connector *connector)
+> A few questions and suggestions for your commit log.
 > 
-> total: 0 errors, 2 warnings, 1 checks, 269 lines checked
+> I'd really love to know more about how you ran this test. What values 
+> exactly does your power meter give you?
+> 
+> How did you lock the core to a specific CPU frequency ?
+> 
+> Maybe also give the equation to calculate Pdyn in the commit log.
+> 
+> https://patchwork.kernel.org/project/linux-arm-kernel/patch/1500974575-2244-1-git-send-email-wxt@rock-chips.com/#20763985
 > 
 > ---
 > bod
 
-Ack. Will fix in v2.
+The power meter accepts a fixed 4 volts input, and outputs to the 
+battery connector on the board. It is also connected to a computer for 
+data recording, including voltage and current.
+
+The CPU frequency pinning and Pdyn calculation is done by a script on 
+the list: [1]. I just removed the power measuring part since it was done 
+on the computer with the meter.
+
+I will improve the commit log in v2.
+
+[1] 
+https://lore.kernel.org/all/CAD=FV=U1FP0e3_AVHpauUUZtD-5X3XCwh5aT9fH_8S_FFML2Uw@mail.gmail.com/
 
 -- 
 Thanks,
