@@ -1,38 +1,38 @@
-Return-Path: <linux-pwm+bounces-2135-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2137-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54F678B6BD7
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Apr 2024 09:34:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 144688B6BDA
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 Apr 2024 09:34:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BA771F225DD
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Apr 2024 07:34:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 460CC1C221CF
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 Apr 2024 07:34:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFA653FB9B;
-	Tue, 30 Apr 2024 07:32:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 516433FE5B;
+	Tue, 30 Apr 2024 07:32:38 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E62993A1DE;
-	Tue, 30 Apr 2024 07:32:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FCF73F8E2;
+	Tue, 30 Apr 2024 07:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714462355; cv=none; b=mvyrzMC2HFp24JQv0vkjL/WoobRmWC+SWUZ6EPBJXreuhogSL8MVy5JxIyFnB85CJzqqd/0IZZtO2uVXF2FMGT6v5EzdaoXCqdLyW+Adq3YsdRrqXxcLis2P8rCBIfRoALcaJbRtr2LNOWjLAJ/GLg+VNN2CocqsSV+YsBrYLxU=
+	t=1714462358; cv=none; b=LmugZ2b3RPy4+WoA1N3m2yVm1Hdy9FutBH1QM+yYoLo3SQF8m4Y2wva7DB8o/bqebvKE6aFLTtYproa+Vpj3nH918ubFEMrg76KT8Ni4GV9o984rFtt0uC+yGwi/woNcRlYnk5ytG+vOulVcSebnuwT/+blD3f18N7VifCx9bHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714462355; c=relaxed/simple;
-	bh=kXnM/kY2SPptXwp4A5BojYTAHASKtf/xRW9k6y2jTOM=;
+	s=arc-20240116; t=1714462358; c=relaxed/simple;
+	bh=BjQHR6vu2XZOynOekX9lv0BckJPSe8tM9CLxWosuqnI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WNRkomsOgoetQ+TBrgNyNFmYe5JghG0RFzRsBaIT6HmGGXGM3EeN9uVxW1eCU0LQ2qBcGuxg542+Z0Xk1gUDHZV2jcM4ug51pCdElbBw7OlhajiKWCLhyDNdpbcT1GucPmnKOLxidgZ1vmWj+wmV0AloZOJIZBXYkXQgZvs2M+g=
+	 MIME-Version; b=Fve9p5kP/2Fv8JYXdafAl4ljdLrUf6UCPC6GAquiL71CWw1ne+23TJSRY6l6OPiuOxzhdCFJ8O4ZlIvR77+HScNVNvVoRii5ZrnVliypv0GPObAX6iP2GYAoEP44XGBpfAXHrbZS/pe395xBPRczAKtoV3fOHiIllLgNRBzxgJU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [112.20.112.218])
-	by gateway (Coremail) with SMTP id _____8BxV_COnjBmHFEFAA--.17936S3;
-	Tue, 30 Apr 2024 15:32:30 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxpOqRnjBmIVEFAA--.5317S3;
+	Tue, 30 Apr 2024 15:32:33 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.112.218])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxndyHnjBm3e4KAA--.26331S4;
-	Tue, 30 Apr 2024 15:32:28 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxndyHnjBm3e4KAA--.26331S5;
+	Tue, 30 Apr 2024 15:32:30 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -45,9 +45,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	linux-pwm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v1 2/6] dt-bindings: pwm: google,cros-ec: Do not require pwm-cells twice
-Date: Tue, 30 Apr 2024 15:32:03 +0800
-Message-ID: <231df058d9cb35cfcf4bcdf4385f4ad8cb21a046.1714450308.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v1 3/6] dt-bindings: pwm: marvell,pxa: Do not require pwm-cells twice
+Date: Tue, 30 Apr 2024 15:32:04 +0800
+Message-ID: <06765e0dd9a842dc51ff9c9cea93f26b8792e44b.1714450308.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1714450308.git.zhoubinbin@loongson.cn>
 References: <cover.1714450308.git.zhoubinbin@loongson.cn>
@@ -58,11 +58,11 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxndyHnjBm3e4KAA--.26331S4
+X-CM-TRANSID:AQAAf8AxndyHnjBm3e4KAA--.26331S5
 X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Jw17Jry7ZF4DuF1DuF45Arc_yoWxKFX_AF
-	srur4DtrZ8AFyFkr4Y9F4xtF15Xw4IkF4kA3WUJw1qka4Fyr90grykt345Ar17Aw4Y9F1F
-	9a93Ar9FyrsrGosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Jw17Jry7ZF4DuF1DuF45Arc_yoWxKrXEvF
+	s2vF4DJrW5tryfKw1Yyr4xtF1rXw4SkF1kCanxJr1vk34FvFZxWFWkK3y5Ar47Cr4Y9F1r
+	uayxJrWDAwn7GosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
 	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
 	cSsGvfJTRUUUbSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
 	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
@@ -82,21 +82,21 @@ pwm-cells property is already required by pwm.yaml schema.
 
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml | 1 -
+ Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml b/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
-index 3afe1480df52..f7bc84b05a87 100644
---- a/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
-@@ -35,7 +35,6 @@ properties:
- 
+diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+index ba6325575ea0..9ee1946dc2e1 100644
+--- a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+@@ -34,7 +34,6 @@ properties:
  required:
    - compatible
--  - '#pwm-cells'
+   - reg
+-  - "#pwm-cells"
+   - clocks
  
  additionalProperties: false
- 
 -- 
 2.43.0
 
