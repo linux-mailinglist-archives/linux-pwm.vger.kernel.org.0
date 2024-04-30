@@ -1,103 +1,157 @@
-Return-Path: <linux-pwm+bounces-2141-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2142-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63E968B6BE2
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Apr 2024 09:34:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 148028B6BE4
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 Apr 2024 09:34:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D36681F216C2
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Apr 2024 07:34:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4561D1C22030
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 Apr 2024 07:34:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7F8F40860;
-	Tue, 30 Apr 2024 07:33:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ADF141740;
+	Tue, 30 Apr 2024 07:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+t13E2I"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E267B3FBAC;
-	Tue, 30 Apr 2024 07:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AA5182BD;
+	Tue, 30 Apr 2024 07:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714462380; cv=none; b=acCnVqTsOgLBvuxCBV9GzagWvG1RYb2iCywV64Q46Co5qsqQVkMQVTkNmU0YE/hoK0x3zuAayqg2DS7LdHrEJfZo9CdywhVatkwc7XX6B8RzARfCTgJ3XYaIBTLYpDoS1CEB6NeFZT+Oo0II8hARePrVpjpbrorYiW+yvsV4uXg=
+	t=1714462410; cv=none; b=gmG75DliJjY+bRv3CBtDqveqeJqqn4a5tU9+zBcg6bRhp//WEBnkYDzUlSPes8FPEOJBLm5065aafDzJq+rSand4/n3h9r5QHtT/lr3driMg6e2pIJPQ98YHdZ0Z1kdZyvCIZWNY/wF5SURkqilPanusvHLDBGVC8TOZTiA0HzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714462380; c=relaxed/simple;
-	bh=/IlEnrpt9k9uOOPO+/34MXFhcIlxRa+1urKacYHgPtc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pbs4IhhIixkj0r/wyifKvfVKOXLcd7cMz1zNXiRKVNxxSA/Kx7YTDyOTgKv3gJd3L9acNJtzTFaP4JVLDANvhzbMXKHdTEjvd00ESg0MhjaHHzHQop8+CDNohKuPuRAzDAHWid4HlDEA8pOWuy4Fna/j8ZQp6QIz1igaiy3LEPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.20.112.218])
-	by gateway (Coremail) with SMTP id _____8BxuemonjBmNFEFAA--.5353S3;
-	Tue, 30 Apr 2024 15:32:56 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.112.218])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxhFafnjBm+O4KAA--.9736S4;
-	Tue, 30 Apr 2024 15:32:54 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	loongson-kernel@lists.loongnix.cn,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v1 6/6] dt-bindings: pwm: snps,dw-apb-timers: Do not require pwm-cells twice
-Date: Tue, 30 Apr 2024 15:32:36 +0800
-Message-ID: <68eaecf11db9bec7bdb90dbf38507332628a0434.1714450308.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1714450308.git.zhoubinbin@loongson.cn>
-References: <cover.1714450308.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1714462410; c=relaxed/simple;
+	bh=r3yZQOo7p6VsIe3U4P+tg3b/ZLhUdSJ+KRIWZpHmqME=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kahqbWF2DHrpO/QDCUWPDqlCx+M4cgpvyll6Cf/Ls9X95ccGubfbEAod3zDw8+yDSGZezomB1nulYNd0n2+1sAEAK+FLja70cZYcMFS7LSKGW9dBuaypBbGDyVaep92vFItaipd+ozJv3Sa/y7Wuk3Yq5P2BtCMm93jnmG+N7ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G+t13E2I; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61bb219737dso41765427b3.2;
+        Tue, 30 Apr 2024 00:33:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714462407; x=1715067207; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f1t1YtdVQhMuh5WLzKhqApsNSS87AIHqdVoWO4lvwyE=;
+        b=G+t13E2Iy7VcLbFBUxF5iV3g0ue8vJAk0v80r0ReN+xFGA/bk0Bw2pYGWx+0cV2i0H
+         9VWBbDPP21KsvUnmZPTfERw8oERZHFiRQ8H8SoqHvf5Aw04EA67NOz7J/2+nPF/g3PMm
+         weWmYhM0dldEK3Rxi4xRrghPwucyy64JpXa+y1HKQ37H9TiGRRRX7fDqnFU7BBH7mPV5
+         fSzR5PYFe1AckoMfoElfEvVJNQPRAmtcEXjfLc6bRxn5UxkEqcdEUCajXWfnubgSMh8T
+         6iujETsTvQU8u1VoZLieCueXegMd20gArhsr6SY6AsHkwgm0Muxrh862uuOHsMykNZ0Z
+         u34w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714462407; x=1715067207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f1t1YtdVQhMuh5WLzKhqApsNSS87AIHqdVoWO4lvwyE=;
+        b=DCNSydxcthcYaymDYuFQ4Or+LMDJNCPuZqQZkS8ehNDpy/YPtNmFvZ8kVZeaHobkNT
+         iwbGqU8kfAsLDnSOCXuw51UDYZewGxQh5MrTnS/TI/eFtDz7q5B1wrDOHJ3bzWSNqu4V
+         SIJLPop2e6hWJqSD1bzjZY27sqx2gXSGz04978sNVNchZkDtFq42GEA4RmMD2MMLsO3R
+         DvttAX6tJs/ysyRedaIlccPi8JejEvLk1UAvI6Ps374hUqkWhdAUwp9DRly+7aQ5oHqy
+         GGhD+zeTKvZKnec6/GA31fOH1vAQ5ZdToVqDwquLknwyA7PB4VJBRL+KZxJLHbsQBf6Q
+         PC2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXseW8o8MKFDKkF6L3fAt4/SObUdCdSt4OBmX7VG/prpGRPYayjfvIJwfgMp4HfDeTQGIXU/7vAszUXMUT3tn88odSxSQN6R+kx350wyokNKKZeEysgd4fcdoebMAktiYA2eJ1NCw==
+X-Gm-Message-State: AOJu0Ywcswckn9678Z/AuXIdkmoF6Z7Bl6AFYyIhttZ2Cewjh2XycozD
+	KbjMOK3asZD9xwq0rt34g5ZvztkTLd+jkjO2mC0W8CMKUb8LgwpAUlv9kA9VfAGk3KKeYSU9s64
+	gxXbWZ4VBiKXisICA4FPXJKuwQXI=
+X-Google-Smtp-Source: AGHT+IGdaXe0AdtKqsfeXw6soP40M1C7YdJ1S/7IP5X2AoM2UtipL8sYJvRDlyY2qFs1/W7AObRd05SaPuE5W/+FjBw=
+X-Received: by 2002:a05:690c:d1e:b0:618:2f6d:ca80 with SMTP id
+ cn30-20020a05690c0d1e00b006182f6dca80mr2400093ywb.12.1714462407621; Tue, 30
+ Apr 2024 00:33:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8AxhFafnjBm+O4KAA--.9736S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Jw17Jry7ZF4DuF1DuF45Arc_yoW3Jwc_ZF
-	W3Zan8uF45Zryrtr4Yqw4xtF15Jr13uF1kAws8Xr1qkas0kF90gr95t34UCr17uFs3uFyr
-	uayfJFy7Ars3GosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbSAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWr
-	XVW3AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04
-	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jqRRiUUUUU=
+References: <cover.1713164810.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1713164810.git.zhoubinbin@loongson.cn>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 30 Apr 2024 13:33:16 +0600
+Message-ID: <CAMpQs4LD6R6TgcE_MJ4akwgtDFVA5VHh4oTSTy0bzuLxUDXWxw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] pwm: Introduce pwm driver for the Loongson family chips
+To: Binbin Zhou <zhoubinbin@loongson.cn>, ukleinek@kernel.org
+Cc: Huacai Chen <chenhuacai@loongson.cn>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-pwm-cells property is already required by pwm.yaml schema.
+On Tue, Apr 16, 2024 at 7:55=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.cn=
+> wrote:
+>
+> Hi all:
+>
+> This patchset introduce a generic PWM framework driver for Loongson famil=
+y.
+> Each PWM has one pulse width output signal and one pulse input signal to =
+be measured.
+>
+> It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips=
+.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- .../devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml         | 1 -
- 1 file changed, 1 deletion(-)
+Hi Uwe:
 
-diff --git a/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml b/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
-index 4d0b5964443d..7523a89a1773 100644
---- a/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
-+++ b/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
-@@ -51,7 +51,6 @@ properties:
- required:
-   - compatible
-   - reg
--  - "#pwm-cells"
-   - clocks
-   - clock-names
- 
--- 
-2.43.0
+Gentle ping.
+The dt-binding part of the patchset looks good now, do you have any
+comments on the driver part?
 
+Thanks.
+Binbin
+>
+> Thanks.
+>
+> -------
+> V3:
+> patch (1/2):
+>  - Add Reviewed-by tag from Krzysztof, thanks.
+> patch (2/2):
+>  - Several code stlye adjustments, such as line breaks.
+>
+> Link to V2:
+> https://lore.kernel.org/all/cover.1712732719.git.zhoubinbin@loongson.cn/
+>
+> v2:
+> - Remove the dts-related patches and update dts at once after all
+> relevant drivers are complete.
+> patch (1/2):
+>  - The dt-binding filename should match compatible, rename it as
+>    loongson,ls7a-pwm.yaml;
+>  - Update binding description;
+>  - Add description for each pwm cell;
+>  - Drop '#pwm-cells' from required, for pwm.yaml makes it required alread=
+y.
+>
+> Link to v1:
+> https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongso=
+n.cn/
+>
+> Binbin Zhou (2):
+>   dt-bindings: pwm: Add Loongson PWM controller
+>   pwm: Add Loongson PWM controller support
+>
+>  .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
+>  MAINTAINERS                                   |   7 +
+>  drivers/pwm/Kconfig                           |  10 +
+>  drivers/pwm/Makefile                          |   1 +
+>  drivers/pwm/pwm-loongson.c                    | 298 ++++++++++++++++++
+>  5 files changed, 382 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-p=
+wm.yaml
+>  create mode 100644 drivers/pwm/pwm-loongson.c
+>
+> --
+> 2.43.0
+>
 
