@@ -1,104 +1,139 @@
-Return-Path: <linux-pwm+bounces-2147-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2148-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 332B08B7E48
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Apr 2024 19:16:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 045C58B8568
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 May 2024 07:43:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6305F1C22560
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Apr 2024 17:16:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B415B2818EA
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 May 2024 05:43:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F35D17BB0C;
-	Tue, 30 Apr 2024 17:16:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92A9C495E5;
+	Wed,  1 May 2024 05:43:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ncPzi1s3"
+	dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b="Y424BfbC"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06709179972;
-	Tue, 30 Apr 2024 17:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1980248CDD
+	for <linux-pwm@vger.kernel.org>; Wed,  1 May 2024 05:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714497402; cv=none; b=BVVwYWTU6xkPiU2exAxBMiOceA1OcEkYQ4/EVGwn/2onh3yJMHx8Xtzgdru0LxLcW+8KAdHKKh7n0tIvLNLpoijTJyKy1cwyokZPfSCuQr0OP931FfohSbdaebnlyEbChTGHoCENkvRZfJ/Z1UuB/AyU5Rm+FShJbA8kvVix+6Q=
+	t=1714542195; cv=none; b=ou+9p7fMJE9K4dsSg1du643kZgUaidnyDeD3/LDhZipapWDeojxUKBM2TxTfNyY4iyZ1upNsz6IT02vTsXjAYH3AbE3V+7osl3Ofxyjt/piBpKO0qGqnw4eQzeKmC9CV4ewWLmnZ4tI2D4k6QKmxTH1IpnixBf7a6ZRfifBbYFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714497402; c=relaxed/simple;
-	bh=UM4Myfw7j7uZr0oU03VjauXTrSlN9bfj7UyNwemQRfY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GT3N23bhI6L289Z8cZuo+6XAeuieMuxlQ9ENk7mKhraSS1Nr/ATN4iv4jmJAKdhl/Q7R406GU8O8f8nj2AzxE6od9kqz1ZxvZAiX4gCgiChqIgktosP0E8xrQ0S9bvzUrb4kJJp3nsITGEDTo0vSOveTeyGE3kIsVk4p8A+YbE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ncPzi1s3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C62C4AF18;
-	Tue, 30 Apr 2024 17:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714497401;
-	bh=UM4Myfw7j7uZr0oU03VjauXTrSlN9bfj7UyNwemQRfY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ncPzi1s3u2ES6MKoFRNVJhpNljKB77/8yxn8ZPIRnm4709iv7dhFzNiy7FMSKvBU2
-	 TuBFzDRe+TaQIX5lam6kpxda76PVYMXdMKuQhF6hait4u/NqcMQnBK+QTTONEVFo6r
-	 JI4suDhDfKgWyqDtURiIAJO+e+xmpujFhOATjIBP4XvRUR9mvzP+gqnN1ltMYpyrBt
-	 uY7aoUgKETyVogbB4k6UDg3sPD5gyQwYTaOM/51BGHd9lNbIsqluc283xvKyoHl8y9
-	 foImlEUMJaAuaV1CweL6tu8HQ6Sv1V+tW9AsGzzeQptMVh/iJ92zUmQF9A25bkqI4z
-	 dMg/+iIiGR5Vw==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-516d2b9cd69so7200680e87.2;
-        Tue, 30 Apr 2024 10:16:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXXQ/nat75G+5bqbsbRC1LDW2m3RQJLMNv5QQIIM2nS+q/uYMUqjDIBAIcMHMHRq9yX5+/RqNe7v356Ft6dOdPKh8f1kZJdf0IjbQ/P9XVn/e6RAMNnYigHK7NX7chnceIZuYSiSg==
-X-Gm-Message-State: AOJu0Yyy/5YKNVQ0HCsuPkePyJQlFsa6bIBxm8bFgwoPQdiGszaUO+5V
-	O+735mcl8hrjvBciaH/wHpxzBpOY3yiVS+eH0JdAZHOuZ/vDEUCJxptmMW6XZfhA+1wZE9jaQHA
-	XdNIp4pUZgRUo+t3bYSaLvZJPqw==
-X-Google-Smtp-Source: AGHT+IFoXSlP1BOLp331TXPZuru98nnqyG+1OHUxU2ibTvTPfsH3K6ZLAW6XSvJ7z2hH995oh9AaoeVqBKOvO/0ukAU=
-X-Received: by 2002:a05:6512:2087:b0:51d:9429:dc with SMTP id
- t7-20020a056512208700b0051d942900dcmr72850lfr.5.1714497399803; Tue, 30 Apr
- 2024 10:16:39 -0700 (PDT)
+	s=arc-20240116; t=1714542195; c=relaxed/simple;
+	bh=26r+LT/6atmj9opecbx4FJ7PWFVD5JLfAoCCwRN2W1M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fMp3Tv+RSU9ihtffMrNL1Mts2+z8KXrMWl8+lLNCKxFN7ZXcOIU+aFgeOEcV9hQOjEXQ7xb8G1zbLhyOwmQu6idh91J6DV3Qzl/myIhIOxzaudOGwgnF+JTyCi+fDZvj9sAIKO+xOuKDFhv503kc/vEuxItH6gy3/hszPkO3scM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org; spf=none smtp.mailfrom=jookia.org; dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b=Y424BfbC; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=jookia.org
+Date: Wed, 1 May 2024 15:42:44 +1000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
+	t=1714542190;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I0JjuJfRwN3PxzuU5OJDvRQPhrTURiBh6iup5xIVpTE=;
+	b=Y424BfbCPAvaTiEHva+EjwrF+C76RSvznwiqdRgCuCqTxRnj4CPCMnZcgRxIj6IJHGoWfH
+	QDA+QESm21J7Owl6Nwa43JtUtBul3458OjK+OWjihWPXsis2nkQ35huVIS2GaA+EYM92bo
+	pSi6wkVCU6jXLeu40QYL6P5vfcGM/B1CzZr6tFHol2LsuCNthYca4DosTY7W8q/uO1Y0oB
+	dsdOKMr7KJobIGPIBnci+tvmJ2r7NGGYg0swk/u4gxbde7uajDO3S8ZtWd1PLIOYmAUHX5
+	AVpikoE3IjpRbzcw/aqXp5G6Ink/LHb/tylAKunqkzV7dKkd1tifPeDv+/rSGQ==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: John Watts <contact@jookia.org>
+To: Aleksandr Shubin <privatesub2@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	Brandon Cheo Fusi <fusibrandon13@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Maksim Kiselev <bigunclemax@gmail.com>, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v8 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
+ support
+Message-ID: <ZjHWVEbzQ1udTcmQ@titan>
+References: <20240131125920.2879433-1-privatesub2@gmail.com>
+ <20240131125920.2879433-3-privatesub2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1714450308.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1714450308.git.zhoubinbin@loongson.cn>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Tue, 30 Apr 2024 12:16:26 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJK7MTC5LEfUnyOdpcmnON_aT4dJgpvDXAifJiYaZ_pug@mail.gmail.com>
-Message-ID: <CAL_JsqJK7MTC5LEfUnyOdpcmnON_aT4dJgpvDXAifJiYaZ_pug@mail.gmail.com>
-Subject: Re: [PATCH v1 0/6] dt-bindings: pwm: Cleanup pwm-cells required twice
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, loongson-kernel@lists.loongnix.cn, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131125920.2879433-3-privatesub2@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 30, 2024 at 2:32=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> Hi all:
->
-> When I was submitting the Loongson PWM dt-binding, Rob reminded me that
-> the pwm-cells property was already required in pwm.yaml and did not need
-> to be repeated.
->
-> This patchset attempts to clean up the required pwm-cells attribute twice=
-.
+Hi,
 
-Thanks for this.
+On Wed, Jan 31, 2024 at 03:59:15PM +0300, Aleksandr Shubin wrote:
+> +	if (state->polarity != pwm->state.polarity ||
+> +	    state->duty_cycle != pwm->state.duty_cycle ||
+> +	    state->period != pwm->state.period) {
+> +		ctl = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CTL(pwm->hwpwm));
+> +		clk_cfg = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_CFG(pwm->hwpwm));
+> +		hosc_rate = clk_get_rate(sun20i_chip->clk_hosc);
+> +		bus_rate = clk_get_rate(sun20i_chip->clk_apb0);
+> +		if (pwm_en & SUN20I_PWM_ENABLE_EN(pwm->hwpwm ^ 1)) {
+> +			/* if the neighbor channel is enable, check period only */
+> +			use_bus_clk = FIELD_GET(SUN20I_PWM_CLK_CFG_SRC, clk_cfg) != 0;
+> +			val = mul_u64_u64_div_u64(state->period,
+> +						  (use_bus_clk ? bus_rate : hosc_rate),
+> +						  NSEC_PER_SEC);
+> +
+> +			div_m = FIELD_GET(SUN20I_PWM_CLK_CFG_DIV_M, clk_cfg);
+> +		} else {
+> +			/* check period and select clock source */
+> +			use_bus_clk = false;
+> +			val = mul_u64_u64_div_u64(state->period, hosc_rate, NSEC_PER_SEC);
+> +			if (val <= 1) {
+> +				use_bus_clk = true;
+> +				val = mul_u64_u64_div_u64(state->period, bus_rate, NSEC_PER_SEC);
+> +				if (val <= 1) {
+> +					ret = -EINVAL;
+> +					goto unlock_mutex;
+> +				}
+> +			}
+> +			div_m = fls(DIV_ROUND_DOWN_ULL(val, SUN20I_PWM_MAGIC));
+> +			if (div_m > SUN20I_PWM_CLK_DIV_M_MAX) {
+> +				ret = -EINVAL;
+> +				goto unlock_mutex;
+> +			}
+> +
+> +			/* set up the CLK_DIV_M and clock CLK_SRC */
+> +			clk_cfg = FIELD_PREP(SUN20I_PWM_CLK_CFG_DIV_M, div_m);
+> +			clk_cfg |= FIELD_PREP(SUN20I_PWM_CLK_CFG_SRC, use_bus_clk);
+> +
+> +			sun20i_pwm_writel(sun20i_chip, clk_cfg, SUN20I_PWM_CLK_CFG(pwm->hwpwm));
+> +		}
 
-> Thanks.
->
-> Binbin Zhou (6):
->   dt-bindings: pwm: bcm2835: Do not require pwm-cells twice
->   dt-bindings: pwm: google,cros-ec: Do not require pwm-cells twice
->   dt-bindings: pwm: marvell,pxa: Do not require pwm-cells twice
->   dt-bindings: pwm: mediatek,mt2712: Do not require pwm-cells twice
->   dt-bindings: pwm: mediatek,pwm-disp: Do not require pwm-cells twice
->   dt-bindings: pwm: snps,dw-apb-timers: Do not require pwm-cells twice
+If I'm reading this correctly, for each PWM pair you set the clock once.
+Wouldn't this mean that the order of setting PWMs would affect the accuracy?
+It would be good to note this down perhaps?
 
-This could really just be one patch. It's the same repeated change and
-it's all going to 1 maintainer. No need to respin for that though.
+John.
 
-Rob
+> -- 
+> 2.25.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
