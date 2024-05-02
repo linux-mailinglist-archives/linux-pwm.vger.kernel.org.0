@@ -1,81 +1,85 @@
-Return-Path: <linux-pwm+bounces-2153-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2154-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C44A8B9F27
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 May 2024 19:02:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7E6F8B9F31
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 May 2024 19:05:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD8971C20EEC
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 May 2024 17:02:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C69F1F21ED8
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 May 2024 17:05:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2F2616FF22;
-	Thu,  2 May 2024 17:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 663B516FF2A;
+	Thu,  2 May 2024 17:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZCq+1a3z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jbW6EJTs"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E6916F919;
-	Thu,  2 May 2024 17:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C9816FF27;
+	Thu,  2 May 2024 17:04:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714669331; cv=none; b=NWCmnlQG1OACY4N0pA7Fd1nPxVBdpBOPJfn9POgdxwIOIdj4vEEkFdloczUw/1mK94E4lEZcqtZ4RpoUzEochheh2xswEag6Q4uieoUqiWi4TAtbSCjyOLdAww3DoEU6yc4myDiS+ckz+IGbwiOIpas4vuktoMzMT4tv2O5FP0E=
+	t=1714669486; cv=none; b=rRYzvnU2HFq4aMYVF2GoFN6n8TaZTsU4EYDR0NzEuzIMiJJ3+/FfUSaI0ir7c5lA1TY3CxnAaUWFDH+CgSQ9k7pDREqKlEWE0M16nSvWKL7ZOkGAPnPNRSCsZOO+HMcDP7dAsuWhLwpFJKJ8LKP4KmYGeWod7ele+2dV5wwGaIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714669331; c=relaxed/simple;
-	bh=dzcRh9vvoHLf1Dofq5gdOS3EEFs6BfZ6FAKB4VmdUYA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=r5btzhLMRb0xpyE6FE9MlSJcyoZJl1Seh52XPZBzjUgVl7Dr9xnetT9zuivivd+puLhzKMCFN//t9SoxjpKI/MHLVPKnFu0es9aRqKbl/PUJmh2Th2j2QoBjh0aoRvEfaTni2/FvwIuUlzdXw1JeETEncIi7l/VK3wSr1DItu6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZCq+1a3z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8578EC113CC;
-	Thu,  2 May 2024 17:02:09 +0000 (UTC)
+	s=arc-20240116; t=1714669486; c=relaxed/simple;
+	bh=49eyjM/VLdE7NVxycz/BBQaGVKwViQu2psRAqw1p1YA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FCqNH/EipBST/S2WAKt7i33PWCTOf5x/PSDvLbJIk0wPOAP0Jg/7hBTM21ebi03rBX7PQ5bejizbx554uswApXWT9icsqeCw5xVxbuKtcIyHtVG3WpJ/+pS27V0TuS+cjuxINXxeD2YdH0b7xOreUbi/4ADMSz2ziIifgVs99xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jbW6EJTs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A07CC113CC;
+	Thu,  2 May 2024 17:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714669331;
-	bh=dzcRh9vvoHLf1Dofq5gdOS3EEFs6BfZ6FAKB4VmdUYA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ZCq+1a3zx8lx1nBHOmEWj5jZvQwUMjow8Pk1H4J0n3YPgg9t1X56ddYpLljGT3XFu
-	 3KkAo7Y8/k/HNRYerPeJ8xmRTqWObb45GIKK/GeKmVWxM7YIb5T+m3S977jhOU4nHi
-	 EK9+Js/+lhz6genY3dIt4ElFTvo8aWD15XpjDoeDAsFE+98XmDUelx7XxV+KJi7Chd
-	 Gc9PPgrJBBsg5WtEOmgBpfcnKQ0fD0ejAiDML/K82UNtA5FnQYIVw+nSR3NwLbXUhm
-	 kcRV7EIEXAKf+fuELX7AqrMspHcyBQ+LziyizM2XTcwSUDPJv2bHj5tuo1sIf5tsui
-	 Yq1ucS/yca+mA==
+	s=k20201202; t=1714669485;
+	bh=49eyjM/VLdE7NVxycz/BBQaGVKwViQu2psRAqw1p1YA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jbW6EJTsLqbwr7myvvL4/KS3XciomH0hvu1aInVGZ2FnkRV3bKQKKDwkDWAwlSIr4
+	 Yd7rS/dN5bhwWHiCweWn67TlpHoIPO/Wgq2It3J4sJHH6LzFwjFRS8LNajO8brJkZG
+	 HeerqdsycyGFxMvbnIszQhMY3iBmQcIoqUVyGovct77CScgfmXJ/xfjGxODqu8v3UV
+	 ghuxQ/3cxEa06ZWWpqXh+iGnhvoaqQRpv3HR69WF0ldoIK5m+lXi6eQ6uczynZje1Y
+	 atzlGnKh8PEey4wihiw3FPMz31tZn42xPqNQMI6xThBOmWFVKRcVh6HfkQ1wSyzB5E
+	 TmRDrqVTxJtCw==
+Date: Thu, 2 May 2024 18:04:41 +0100
 From: Lee Jones <lee@kernel.org>
-To: Lee Jones <lee@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
- linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, 
- LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
-In-Reply-To: <20240417153846.271751-2-u.kleine-koenig@pengutronix.de>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de
+Subject: Re: (subset) [PATCH] leds: pwm: Disable PWM when going to suspend
+Message-ID: <20240502170441.GD1200070@google.com>
 References: <20240417144943.GA2399047@google.com>
  <20240417153846.271751-2-u.kleine-koenig@pengutronix.de>
-Subject: Re: (subset) [PATCH] leds: pwm: Disable PWM when going to suspend
-Message-Id: <171466932928.1214296.17132644352212078458.b4-ty@kernel.org>
-Date: Thu, 02 May 2024 18:02:09 +0100
+ <171466932928.1214296.17132644352212078458.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.12.4
+In-Reply-To: <171466932928.1214296.17132644352212078458.b4-ty@kernel.org>
 
-On Wed, 17 Apr 2024 17:38:47 +0200, Uwe Kleine-König wrote:
-> On stm32mp1xx based machines (and others) a PWM consumer has to disable
-> the PWM because an enabled PWM refuses to suspend. So check the
-> LED_SUSPENDED flag and depending on that set the .enabled property.
+On Thu, 02 May 2024, Lee Jones wrote:
+
+> On Wed, 17 Apr 2024 17:38:47 +0200, Uwe Kleine-König wrote:
+> > On stm32mp1xx based machines (and others) a PWM consumer has to disable
+> > the PWM because an enabled PWM refuses to suspend. So check the
+> > LED_SUSPENDED flag and depending on that set the .enabled property.
+> > 
+> > 
 > 
+> Applied, thanks!
 > 
+> [1/1] leds: pwm: Disable PWM when going to suspend
+>       commit: 974afccd37947a6951a052ef8118c961e57eaf7b
 
-Applied, thanks!
+If this is important, you may wish to retroactively send it to Stable
+once it's been merged into Mainline.
 
-[1/1] leds: pwm: Disable PWM when going to suspend
-      commit: 974afccd37947a6951a052ef8118c961e57eaf7b
-
---
+-- 
 Lee Jones [李琼斯]
-
 
