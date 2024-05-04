@@ -1,260 +1,199 @@
-Return-Path: <linux-pwm+bounces-2156-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2157-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1714C8BB83D
-	for <lists+linux-pwm@lfdr.de>; Sat,  4 May 2024 01:27:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E8428BB9A9
+	for <lists+linux-pwm@lfdr.de>; Sat,  4 May 2024 08:50:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A9DB1C20AC8
-	for <lists+linux-pwm@lfdr.de>; Fri,  3 May 2024 23:27:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 253F3283BDB
+	for <lists+linux-pwm@lfdr.de>; Sat,  4 May 2024 06:50:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A34783A10;
-	Fri,  3 May 2024 23:27:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3178291E;
+	Sat,  4 May 2024 06:50:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="fl4HV5pC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvDgUplk"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787D482492;
-	Fri,  3 May 2024 23:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B4712B7D;
+	Sat,  4 May 2024 06:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714778861; cv=none; b=hsXiUEcBdICfmpZzgJ1sznCGAMWSF1cYz4Cxn1CxT3E2RSLJJSEBxOFosuGcuGKZnss/c4z9iYsJVVQ7Sc8OPOAgJXSXdYSE0sSVMeVZ6j+d8HnY7WGW2wYeNfDOUhN/LumLZFxEQ/do9ESC6Czo4A4/EFPYlW/gX3BxjMhhoMU=
+	t=1714805410; cv=none; b=IOzDHDSAlFkW3DE5LRr7KQ9xCwNK6WGmLWO5Fp9D27QzVTY2svFNi0X//JNDZF5psmaWV3KGD8wv/PqFT8E5UQkHOgIFBumCSUG4CrP0xdDBXNfBOokLEkwMaeW3/CnBJyFy+Kc9TUXTQy9rLjcbC5ik+hNQgxwFOR+bBFd03Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714778861; c=relaxed/simple;
-	bh=km2JbMYOVMBRBh5wdBigoe+/JkP+p1OtJjyOJmtgrNM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=j4Pn4xhXlaCq2byW8Huhbdnd+buVBN+YRcfsYd7bChUzL1L8asS/TJZObumSUS0RfYV6X9ky+O7aqZASJptxNdJSolMoge9zZWl8eYu9FIDMqsbrslnLMyrmCZQUcjiWsaffEb5viMMCXDhlMZRX/0F5u5GXNex+02/6/BTM/VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=fl4HV5pC; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 89D0B12000D;
-	Sat,  4 May 2024 02:27:33 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 89D0B12000D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1714778853;
-	bh=aqLgLmOfjg9tWRTqIW89TpjQRFOLV36kFW4nNXsy8JU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=fl4HV5pCdGAVnzJc5bj322ihGtRGNMSbHUxQG4SJHrf0wMTZJo44yM1pMIDcp/xqo
-	 pyHvyJLhuQ9rQtJZoOKnQQvW98ytoqEmwfYUcM6bp+yGWmEKLXOWNbIHpYM2Galgun
-	 PLn+eZ1hipBGE69WeC8zIdQrAaJUg18lfpyMUdtT7gsUvi0NaxfADO+lCr/AV29qHY
-	 W9LqFdPs4vi2QEXqme3macsDnW8EdJ16nu8t4Vv/CNwMYRE63MUjHGtYma++ZJvN40
-	 yoksLU9AvnEAcBozU9sxyJ0KKFpcst51JEt+nbL0xqR0qmVsBIv/D0AyW0erXUFcKa
-	 6/sHc3og6GF3g==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Sat,  4 May 2024 02:27:33 +0300 (MSK)
-Received: from [192.168.1.143] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sat, 4 May 2024 02:27:33 +0300
-Message-ID: <80e41cb1-6ad9-436c-b5b0-2045e6a379b7@salutedevices.com>
-Date: Sat, 4 May 2024 02:27:32 +0300
+	s=arc-20240116; t=1714805410; c=relaxed/simple;
+	bh=R0TlPIIIm/V0GkqkwHs+5v9yj/zJg44U1G0GZwq2Xw8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rEUFiiSfKOPYYLygpqtrJ4OUQ1pX+dSvUoDUoVMH6n9dYwYM1GP20lbClg4qoLVF5g0cEoDkiw3G5TXNfAAhMkeHiWeoOxJsDHJyzBn+zrRwdaeiE6TgcefeoDF1aQ0pKYNa+7RGHjVmBi26Ar8XUqLH4mqijvskV6twmzz8xBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lvDgUplk; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5af23552172so338609eaf.1;
+        Fri, 03 May 2024 23:50:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714805407; x=1715410207; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O2sbKjYzT4x1UoL5RpmaK50wwtSEQgH7b73Ky6YXb1k=;
+        b=lvDgUplkraVsWnsSW5ndmK3tUHW+HuhAOgMVQ3kL6TwdjrOT5WGFMMxD9YQuUoD79T
+         1vlJ5EN3WTaFSiyJ9zzY6t0YVK2paueQDa1a/tZxHQTUV34q15pKrk8ny4LgbEJ+UU49
+         HwRhMD23yjY4GQjqJkbOTUXiyGdYm5r5JStBkAZkagGAt+H77MYCbZQztUYe8nJzdRFT
+         /UQGCUPGmxY//M5+UCrPkZTAR1c/BB29mptZywk8VG/KMcLJyPlEFeG6N/q28W+15LEF
+         FB0jTofTk6ghcGL51yw6WMImcjp7Y2T2kgZzBI+Bu1aoW34karJJeLOazAAgo2qB+4n6
+         aJAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714805407; x=1715410207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O2sbKjYzT4x1UoL5RpmaK50wwtSEQgH7b73Ky6YXb1k=;
+        b=mivFycyAdobWQRL7EkxR+pnnXfkpuifeZmejXAeKiLg6/EUxfi1g7kuAF4sNdYsfiI
+         Ts7bG3v2NsR8scA+41ire5b7FIuTD5OGQZSfXkba2yHC6LRbDaGTBqLKK/HhtKyJk0cj
+         AwXa13KTs/Kxm+AEjrHG2u0XQLpLuXnCG6I8ooI+WJymxv8vmIdCq1QJwFohdPN+bju4
+         0cynAtM+2rN9A/EOj+o4JzyPalyk+Zn3SzodymnDs9oZE/MskROpdI+iwms9tzI2KHGT
+         w/tWwcFfB5dnw87DbvqitNaIecRdZO5dFN6RjQYQY5inU3qU380Epq/ZOnKwuJSztIkb
+         WeVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJAxsOgon2igN3seRPemVjSxvujHxRej5S5+F7szsR5uaIhT4PzFc3r/QNAO2ZzsiLKdYlrue1W8W4Wm5xYWPu79U3MkDa+3HcjVgqqKavXmCBE+yoEIKTjuk+XN2GVvxoUq0MJOq7nNcUiedRwWwCiV3aGCzk39X0F4TnpOkQOrePzA==
+X-Gm-Message-State: AOJu0YxQA1i4oTGydfHbvd4jDaFkAN7xj42FVaFzZpodWQZ5Z8M4p1iy
+	fA9bmwDYb7xcxib2DI46b4OwImm2DrDdARvFD9B9ejGq22Fn2BIQ6UmE4F9KlbvjXGeKdguY4z+
+	okGTjv209A3Ar7yyZ02TvN8PHf7s=
+X-Google-Smtp-Source: AGHT+IGWGhtJnlnrAsPTnGzkKYDaCZgrwiomT047J2Lrj8CoCeY+IesKUjnqTtkUFM1xQM+nuPuMXVzwgBopTqoH23w=
+X-Received: by 2002:a4a:dd95:0:b0:5ac:9f5f:fbdf with SMTP id
+ h21-20020a4add95000000b005ac9f5ffbdfmr4665249oov.4.1714805405859; Fri, 03 May
+ 2024 23:50:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] pwm: meson: Add support for Amlogic S4 PWM
-To: Junyi Zhao <junyi.zhao@amlogic.com>, <kelvin.zhang@amlogic.com>
-CC: Jerome Brunet <jbrunet@baylibre.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>, Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	<linux-pwm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240424-s4-pwm-v4-0-ee22effd40d0@amlogic.com>
- <20240424-s4-pwm-v4-1-ee22effd40d0@amlogic.com>
- <1jil07f3ps.fsf@starbuckisacylon.baylibre.com>
- <d990d835-e4bb-4248-b17e-da8907cf16e7@amlogic.com>
-Content-Language: en-US
-From: George Stark <gnstark@salutedevices.com>
-In-Reply-To: <d990d835-e4bb-4248-b17e-da8907cf16e7@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185054 [May 03 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 19 0.3.19 07c7fa124d1a1dc9662cdc5aace418c06ae99d2b, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;127.0.0.199:7.1.2;salutedevices.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/03 16:56:00 #25080849
-X-KSMG-AntiVirus-Status: Clean, skipped
+References: <20240501083242.773305-1-qiujingbao.dlmu@gmail.com> <PN1P287MB2818F3818BEBE875C460F158FE1F2@PN1P287MB2818.INDP287.PROD.OUTLOOK.COM>
+In-Reply-To: <PN1P287MB2818F3818BEBE875C460F158FE1F2@PN1P287MB2818.INDP287.PROD.OUTLOOK.COM>
+From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Date: Sat, 4 May 2024 14:49:54 +0800
+Message-ID: <CAJRtX8SRudWy7q-ON3L-oTjQo8+GCKPX9_sP8Dq8p3t915yvMQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/2] riscv: pwm: sophgo: add pwm support for CV1800
+To: Chen Wang <unicorn_wang@outlook.com>
+Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, dlan@gentoo.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Junyi, Kelvin
+On Fri, May 3, 2024 at 9:47=E2=80=AFAM Chen Wang <unicorn_wang@outlook.com>=
+ wrote:
+>
+> Hi, Jingbao,
+>
+> This patchset should also be sent to the linux-riscv mailinglist.
 
-I'm sorry for the ping. Do you have plans to finish these patches?
+I will do that.
 
-Here is sample code how devm could be used to manage clk objects created
-by of_clk_get:
+>
+> On 2024/5/1 16:32, Jingbao Qiu wrote:
+> > The Sophgo CV1800 chip provides a set of four independent
+> > PWM channel outputs.
+> > This series adds PWM controller support for Sophgo cv1800.
+> >
+> > Changes since v6:
+> > - add detailed Limitations
+> > - using BIT(n) instead BIT(0) << n
+> > - use 0 instead of disable macro
+> > - modify OE judgment criteria
+> > - add devm_regmap_init_mmio error message
+> > - delete unused variable
+> >
+> > v6: https://lore.kernel.org/all/20240406063413.3334639-1-qiujingbao.dlm=
+u@gmail.com/
+> >
+> > Changes since v5:
+> > - delete the OE function because we plan to use the counter subsystem
+> >    instead of capture, so there is no need to reuse this code.
+> > - fix set polarity reverse error.
+> >
+> > v5: https://lore.kernel.org/all/20240314100131.323540-1-qiujingbao.dlmu=
+@gmail.com/
+> >
+> > Changes since v4:
+> > - drop filename
+> > - fix macro
+> > - optimize cv1800_pwm_set_polarity()
+> > - optimize cv1800_pwm_set_oe()
+> > - add comment for cv1800_pwm_set_oe()
+> > - use ticks replace tem
+> > - fix duty_cycle larger than period_val
+> > - use devm_clk_rate_exclusive_get() replace
+> >    clk_rate_exclusive_get()
+> > - map linux polarity to register polarity
+> >
+> > v4: https://lore.kernel.org/all/20240304085933.1246964-1-qiujingbao.dlm=
+u@gmail.com/
+> >
+> > datasheet Link: https://github.com/milkv-duo/duo-files/blob/main/duo/da=
+tasheet/CV1800B-CV1801B-Preliminary-Datasheet-full-en.pdf
+> > page 614
+> >
+> > Changes since v3:
+> > - use macro instead of npwm number
+> > - add support for polarity feature
+> > - add support for Output-Enable/OE feature
+> >
+> > v3: https://lore.kernel.org/all/20240223082014.109385-1-qiujingbao.dlmu=
+@gmail.com/
+> >
+> > Changes since v2:
+> > - use 0x08 instead of macro
+> > - split if statements based on conditions
+> > - in order to round up, first calculate the
+> >    number of high-level cycles, then subtract
+> >    it from the PERIOD to obtain the number of HLPERIOD
+> > - use new pwmchip_alloc() API instead of old style
+> >
+> > v2: https://lore.kernel.org/all/20240212121729.1086718-1-qiujingbao.dlm=
+u@gmail.com/
+> >
+> > Changes since v1:
+> > - drop full stop from subject
+> > - re-order maintainers and description
+> > - pass checkpatch.pl --strict
+> > - fix naming errors
+> > - add "Limitations" section
+> > - use a driver specific prefix for all defines
+> > - using bool instead u32 in cv1800_pwm_enable
+> > - check and set state->polarity
+> > - use mul_u64_u64_div_u64
+> > - use clk_rate_exclusive_get(), balance with clk_rate_exclusive_put()
+> > - using macro definitions instead of shift operations
+> > - remove shift operation on 0
+> > - use priv replace cv_pwm
+> > - hardcode npwm
+> > - set atomic to true
+> > - remove MODULE_ALIAS
+> >
+> > v1: https://lore.kernel.org/all/20240207055856.672184-1-qiujingbao.dlmu=
+@gmail.com/
+> >
+> > Jingbao Qiu (2):
+> >    dt-bindings: pwm: sophgo: add pwm for Sophgo CV1800 series SoC
+> >    pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+> >
+> >   .../bindings/pwm/sophgo,cv1800-pwm.yaml       |  45 +++
+> >   drivers/pwm/Kconfig                           |  10 +
+> >   drivers/pwm/Makefile                          |   1 +
+> >   drivers/pwm/pwm-cv1800.c                      | 293 +++++++++++++++++=
++
+> >   4 files changed, 349 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/pwm/sophgo,cv180=
+0-pwm.yaml
+> >   create mode 100644 drivers/pwm/pwm-cv1800.c
+> >
+> >
+> > base-commit: 32c44e1fa921aebf8a5ef9f778534a30aab39313
 
-struct clk_set_devres {
-	struct clk *clks[MESON_NUM_PWMS];
-};
-
-static void devm_clk_set_release(struct device *dev, void *res)
-{
-	struct clk_set_devres *devres = res;
-	int num_clks = MESON_NUM_PWMS;
-
-	while (--num_clks >= 0)
-		clk_put(devres->clks[num_clks]);
-}
-
-static int meson_pwm_init_channels_s4(struct pwm_chip *chip)
-{
-	struct device *dev = pwmchip_parent(chip);
-	struct meson_pwm *meson = to_meson_pwm(chip);
-	struct clk_set_devres *devres;
-	unsigned int i;
-	int res;
-
-	devres = devres_alloc(devm_clk_set_release,
-			      sizeof(*devres), GFP_KERNEL);
-	if (!devres)
-		return -ENOMEM;
-
-	devres_add(dev, devres);
-
-	for (i = 0; i < MESON_NUM_PWMS; i++) {
-		devres->clks[i] = of_clk_get(dev->of_node, i);
-		if (IS_ERR(devres->clks[i])) {
-			res = PTR_ERR(devres->clks[i]);
-			dev_err_probe(dev, res, "Failed to get clk\n");
-			return res;
-		}
-		meson->channels[i].clk = devres->clks[i];
-	}
-	return 0;
-}
-
-On 4/24/24 14:44, Junyi Zhao wrote:
-> 
-> 
-> On 2024/4/24 18:32, Jerome Brunet wrote:
->> [ EXTERNAL EMAIL ]
->>
->> On Wed 24 Apr 2024 at 18:28, Kelvin Zhang via B4 Relay 
->> <devnull+kelvin.zhang.amlogic.com@kernel.org> wrote:
->>
->>> From: Junyi Zhao <junyi.zhao@amlogic.com>
->>>
->>> This patch adds support for Amlogic S4 PWM.
->>>
->>> Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
->>> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
->>> ---
->>>   drivers/pwm/pwm-meson.c | 37 +++++++++++++++++++++++++++++++++++++
->>>   1 file changed, 37 insertions(+)
->>>
->>> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
->>> index ea96c5973488..6abc823745e4 100644
->>> --- a/drivers/pwm/pwm-meson.c
->>> +++ b/drivers/pwm/pwm-meson.c
->>> @@ -462,6 +462,35 @@ static int 
->>> meson_pwm_init_channels_meson8b_v2(struct pwm_chip *chip)
->>>        return meson_pwm_init_clocks_meson8b(chip, mux_parent_data);
->>>   }
->>>
->>> +static int meson_pwm_init_channels_meson_s4(struct pwm_chip *chip)
->>> +{
->>> +     int i, ret;
->>> +     struct device *dev = pwmchip_parent(chip);
->>> +     struct device_node *np = dev->of_node;
->>> +     struct meson_pwm *meson = to_meson_pwm(chip);
->>> +     struct meson_pwm_channel *channel;
->>> +
->>> +     for (i = 0; i < MESON_NUM_PWMS; i++) {
->>> +             channel = &meson->channels[i];
->>> +             channel->clk = of_clk_get(np, i);
->>> +             if (IS_ERR(channel->clk)) {
->>> +                     ret = PTR_ERR(channel->clk);
->>> +                     dev_err_probe(dev, ret, "Failed to get clk\n");
->>> +                     goto err;
->>> +             }
->>> +     }
->>> +
->>> +     return 0;
->>> +
->>> +err:
->>> +     while (--i >= 0) {
->>> +             channel = &meson->channels[i];
->>> +             clk_put(channel->clk);
->>
->> Fine on error but leaks on module unload.
->>
->> Same as George,
->>
->> Add the devm variant of of_clk_get() if you must.
->> Use devm_add_action_or_reset() otherwise
-> Hi jerom，but we have discussed before.devm variant such as follows：
-> devm_clk_get_enable(struct device * dev, char * id)
-> struct clk *devm_clk_get(struct device *dev, const char *id)
-> struct clk *devm_clk_get_optional(struct device *dev, const char *id)
-> 
-> after i check api parm ,these api's 2rd parm "id" is string not index.
-> because dt binding have no name property. could we use devm？
->>
->> Could please synchronize this series with George and deal with all the
->> supported SoCs ? a1, s4, t7, c3 ...
->>
->>> +     }
->>> +
->>> +     return ret;
->>> +}
->>> +
->>>   static const struct meson_pwm_data pwm_meson8b_data = {
->>>        .parent_names = { "xtal", NULL, "fclk_div4", "fclk_div3" },
->>>        .channels_init = meson_pwm_init_channels_meson8b_legacy,
->>> @@ -500,6 +529,10 @@ static const struct meson_pwm_data 
->>> pwm_meson8_v2_data = {
->>>        .channels_init = meson_pwm_init_channels_meson8b_v2,
->>>   };
->>>
->>> +static const struct meson_pwm_data pwm_meson_s4_data = {
->>> +     .channels_init = meson_pwm_init_channels_meson_s4,
->>> +};
->>> +
->>>   static const struct of_device_id meson_pwm_matches[] = {
->>>        {
->>>                .compatible = "amlogic,meson8-pwm-v2",
->>> @@ -538,6 +571,10 @@ static const struct of_device_id 
->>> meson_pwm_matches[] = {
->>>                .compatible = "amlogic,meson-g12a-ao-pwm-cd",
->>>                .data = &pwm_g12a_ao_cd_data
->>>        },
->>> +     {
->>> +             .compatible = "amlogic,meson-s4-pwm",
->>> +             .data = &pwm_meson_s4_data
->>> +     },
->>>        {},
->>>   };
->>>   MODULE_DEVICE_TABLE(of, meson_pwm_matches);
->>
->>
->> -- 
->> Jerome
-
--- 
 Best regards
-George
+Jingbao Qiu
 
