@@ -1,126 +1,142 @@
-Return-Path: <linux-pwm+bounces-2158-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2159-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 784568BCB98
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 May 2024 12:05:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD13E8BCF77
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 May 2024 15:49:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2EF862848AF
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 May 2024 10:05:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E5441F2192A
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 May 2024 13:49:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5877A14265A;
-	Mon,  6 May 2024 10:05:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A45DC7FBC3;
+	Mon,  6 May 2024 13:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="Px6qogDZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1QhkbCi"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40AC13FD93
-	for <linux-pwm@vger.kernel.org>; Mon,  6 May 2024 10:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F338E7FBBA;
+	Mon,  6 May 2024 13:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714989955; cv=none; b=l1ECEkLMxdUdYXeklB8ZIhvTrkLfSZP+KpI+MADv96Vurk10kQ7h6P/bEZ+3aTZsmZfXdEa3ozEtrp7zb2lLqnmJ8JFBU3NWmghzXS2/dAbyo1k9IIvbxhhjpIIIAfvQ5WpGZEwlNPJhKdiog3Hx3sDU/dfM+sSumOhQj8i4ch0=
+	t=1715003379; cv=none; b=E2RytTaEarcHL+KxYE3RkZTU6JVAnIFD0AeCNItG1zSrUdnSk2plgXaLsMFer6/iHTX3gy//5FBXkgwYDthx0PhoRH41zNY6l2igJJuwOu7rUP3ZJvfW8srzNAi2Ly9oIcE9c7dyTSl1oDWiG7NCTMe+6hvSmt4CB24KG4uAdOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714989955; c=relaxed/simple;
-	bh=EHVAhxJUUskPmEprZXUYYP2CVf27DfLU1+UviOggadA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kji1trTn42oUQeYz7RkCZa7ULoVZYbBr/j5KAUmdFxAwNWqeQxkTEIi7TZn6QqPoW71Kwcf8gWVBrczqxKRnFM55EPFGBx7MoUAuL1YVfGeZ7Qt1AYiyX1fFLvhfrIQBZ27jwh/KTRSR45s0dPI5dERLNdmHGHvSXycPynErOks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=Px6qogDZ; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2b346712919so1298276a91.2
-        for <linux-pwm@vger.kernel.org>; Mon, 06 May 2024 03:05:52 -0700 (PDT)
+	s=arc-20240116; t=1715003379; c=relaxed/simple;
+	bh=VeYTlSC5e0onakW3rKrio1y3PTvEXFB4w3FqeXv54R0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KFouI721ubmmpedz01E0x1SjdMw/dRl864KO6FSUk+y6HgjNU+3wKYORoQauJitgCdKmq00b+PrtLSGAZ70Vu6VpuwbtnwLOjgw5yrXkFNWd599ZK5okR/N+MY7qPSflIIwBSrhNydDozeMuGD1HqVQi4eENqEsE5PGYK0lQSMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R1QhkbCi; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1eb24e3a2d9so18820455ad.1;
+        Mon, 06 May 2024 06:49:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1714989952; x=1715594752; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EHVAhxJUUskPmEprZXUYYP2CVf27DfLU1+UviOggadA=;
-        b=Px6qogDZ74sIj76MnfPZEftB4i9CXxmbjl5Kai4YZc0EMZ4ZUlAY5NJdzZp1qpscCF
-         DcAPfjSdBXEhfXaoCNBktYMzY1NPjvitKd2f5K1EHu69a4qF/x24gueo/qRT6mZQm4Mx
-         g/3Im7IWCRo6YRR2RbYaLf9XhiYDE1b2kKqM9xu7RI5bGMLIYcnWO0Tt2jr5oLJsDl80
-         gtrBQjHBliIE6b2vh7dNvngGrTX4NfbiaBzmfx+o0aK2TLi5XhuSgf4zB9UkNiV1u8QY
-         UlqKXtsgHcaCHsCGP9C0a9D858+mTnh6FMZ855pdZdfK9VuMAgykIfjYpa+YUFHN3Rt0
-         rsGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714989952; x=1715594752;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1715003377; x=1715608177; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EHVAhxJUUskPmEprZXUYYP2CVf27DfLU1+UviOggadA=;
-        b=DxahdINQ7rHLeIOyvB/ZS0JGG13vVCFmmB2sG5DeeVTzmvRL2iGfW2TwOCdYqQiipg
-         hnu1CRjS1OBDgoiRkmZ32XCFlzuyIvEMLB+NwmVw35TKhNHZQ1jljgO0MXbSiWRkJFak
-         4HkRo4MOaB7hKcEw3b9FkqM5Q3TYLHGi5vUkbcXgZrf0aFudHpPo93SN/ezKCha6kqpu
-         7CEY+Z44tVKd77A/MLmIeHmxauPaOiANVZNWD1N+KSchzuNd99pOq93/Cnu7fafw2Usf
-         qHsss++z8gUBdcbrr7fAToDevBtVPxTU7aIKWA3q4nzbPofgy+wCnTqzlP5KOXkKbH20
-         tS2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWBTiJLt8hsUp9m+opGc9LGOA3aYLeYM6def34TdPnBkw5V2AVtHBdkcPTQTTYwZgcPa6lU/VaN5wX8/C8uSEgf08Cb5To19m0o
-X-Gm-Message-State: AOJu0Yyf5ILc12+vQtB/Q/SbNPgKpDEUCCUV1ioxIlk3ZtAxIGtTOzJR
-	I6+kZS2peZ3R0cuUtUjDghZIIIKasX9zUS/Xl0FzWPDO8zCi77VUDqyOaPLA2laeU6CfEZiS3bT
-	rqysyRVEpHY/mQPKUPc82lBMY8wynLAxQLluZfQ==
-X-Google-Smtp-Source: AGHT+IGzw4nooSD+qK1cXQQ4lfrb6udoqefgbhSIEUdE+dY70rCPEtAtCshhxq/u9d9ODfZCzLMX/bw/b0jv3tpzoxE=
-X-Received: by 2002:a17:90a:c505:b0:2b4:36d7:b6b5 with SMTP id
- k5-20020a17090ac50500b002b436d7b6b5mr8376894pjt.34.1714989951948; Mon, 06 May
- 2024 03:05:51 -0700 (PDT)
+        bh=Q0tf2qu9Q8Di2qMp5UR/PKhNSbAhcOms4Eni4j4Wu/o=;
+        b=R1QhkbCi0fc3Xjz8OP1ckLFlW/5xarey+CHz41prrImsxYQOuKcX8dlbM0RMhXJEaV
+         pdrn8O1+ue732K/HAWqd0z00pjxwSUOVKG0OzZgJgaFCLRXI+G5ybPU3I5LN/MpeEkut
+         W+qXokBrVHrmTHCSKmFUbZka8nFkduyL8xHg0+9S4+1W6PQKJJpMDmy/q/GZqjbbddY0
+         8S7ba1c8QAyTu0V5+dA76PR3UxzitwkgublPHgAPrW2i8Q1S6JAGXJWZ6rUyBDj5AHbq
+         PoYQFsnzsUSIZF3ChnGdPsEGgsQvQIt6+lG8Yv01aZprJiqaL9gSWRDPoVBtMejytM8G
+         zAzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715003377; x=1715608177;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q0tf2qu9Q8Di2qMp5UR/PKhNSbAhcOms4Eni4j4Wu/o=;
+        b=j5Fi98VmcdOqWd+9qqYcN9TFILuzADoy+J7KlURD21bTl/8wh/g7qSIykN4Ongq5YW
+         mtVirn+PT3fel2y4Bm0JPg60td9bC+Z/PGZyLmri7gYDecDjjcKiOVGqqbhVHu9hKtln
+         hjkFg+qk8/78+z428eZTQVxWxDHCfaUN8uuzqe4oSVupCl8fn2ibsYCDkHGBsIswjhIV
+         +CMHQ8f31Gg/hlsXuGo6o8dfaeR5lB5c44leHu1w7g6wOffdVFb+UHzuRZiqN/UsN7rc
+         H6oCYnDjNsxEHcFlMgsgoExnGLdiHzD+r4GiIidO6mNF70UJTdd51I6t72C4/+oNLLA+
+         BWtg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7JcixGPi31J9JQ9v1A96KCn4SFx5j0fPXwfXALX8fmd5Akj3pER8+i7HJq+17AJzCJQeVKz0EK06/UIDbM8K8Nvn8cEks8n1Q0c2nkR1EIywdBRR03eQm+m/ASoR5cG3TjblYlAnlpSKstwR10Uy/o616SqfrsTPhu/G5gPuV7pFqQak=
+X-Gm-Message-State: AOJu0Yw1LgbxfUsZCA6LOtMB8mWuiok85Worr75N1IfT/G4dLPFESNfa
+	BOoYb1STKhTVC2jIUnVICIsCQqUki5eyNai8y2UQvi/9fwqU5/kd
+X-Google-Smtp-Source: AGHT+IFsSZGL2it7t9nrfAcHqKBBtNdyFp8UV64K//be7jHkwT4m1n655IsAPNPg10zU+pm1Y4qQLQ==
+X-Received: by 2002:a17:902:e947:b0:1e2:8841:8d67 with SMTP id b7-20020a170902e94700b001e288418d67mr14383470pll.32.1715003376608;
+        Mon, 06 May 2024 06:49:36 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w13-20020a170902d3cd00b001ec460b50casm8290294plb.307.2024.05.06.06.49.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 May 2024 06:49:35 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 6 May 2024 06:49:34 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Naresh Solanki <naresh.solanki@9elements.com>
+Cc: Rob Herring <robh@kernel.org>, krzysztof.kozlowski+dt@linaro.org,
+	u.kleine-koenig@pengutronix.de, Jean Delvare <jdelvare@suse.com>,
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 2/4] hwmon: (max6639) : Utilise pwm subsystem
+Message-ID: <6d424919-70cc-43dc-a5a0-eab24f42f9e8@roeck-us.net>
+References: <20240416171720.2875916-1-naresh.solanki@9elements.com>
+ <20240416171720.2875916-2-naresh.solanki@9elements.com>
+ <ecddd7f3-fc25-4021-9758-b00893ac9622@roeck-us.net>
+ <CABqG17hebvkpvxwGVfp0nT_YMrvgdkEqU2_XjijCpdtgU6C+1A@mail.gmail.com>
+ <1294114a-4509-4c8a-a0a2-39f6e5f83227@roeck-us.net>
+ <CABqG17hamhz9+bZ44FNkoSU5MxHLB13OZWGgzhr6xdDjdb=2xg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416171720.2875916-1-naresh.solanki@9elements.com>
- <20240416171720.2875916-2-naresh.solanki@9elements.com> <ecddd7f3-fc25-4021-9758-b00893ac9622@roeck-us.net>
- <CABqG17hebvkpvxwGVfp0nT_YMrvgdkEqU2_XjijCpdtgU6C+1A@mail.gmail.com> <1294114a-4509-4c8a-a0a2-39f6e5f83227@roeck-us.net>
-In-Reply-To: <1294114a-4509-4c8a-a0a2-39f6e5f83227@roeck-us.net>
-From: Naresh Solanki <naresh.solanki@9elements.com>
-Date: Mon, 6 May 2024 15:35:40 +0530
-Message-ID: <CABqG17hamhz9+bZ44FNkoSU5MxHLB13OZWGgzhr6xdDjdb=2xg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] hwmon: (max6639) : Utilise pwm subsystem
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>
-Cc: krzysztof.kozlowski+dt@linaro.org, u.kleine-koenig@pengutronix.de, 
-	Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABqG17hamhz9+bZ44FNkoSU5MxHLB13OZWGgzhr6xdDjdb=2xg@mail.gmail.com>
 
-+Rob Herring
-
-Hi Guenter,
-
-
-On Mon, 22 Apr 2024 at 18:07, Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On 4/22/24 03:39, Naresh Solanki wrote:
-> > Hi Guenter,
+On Mon, May 06, 2024 at 03:35:40PM +0530, Naresh Solanki wrote:
+> +Rob Herring
+> 
+> Hi Guenter,
+> 
+> 
+> On Mon, 22 Apr 2024 at 18:07, Guenter Roeck <linux@roeck-us.net> wrote:
 > >
-> > On Wed, 17 Apr 2024 at 02:52, Guenter Roeck <linux@roeck-us.net> wrote:
-> >>
-> >> On Tue, Apr 16, 2024 at 10:47:15PM +0530, Naresh Solanki wrote:
-> >>> Utilise pwm subsystem for fan pwm handling
-> >>>
-> >>> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
-> >>
-> >> That adds a lot of complexity to the driver. I am missing the benefits.
-> >> You are supposed to explain why you are making changes, not just that
-> >> you are making them.
-> >>
-> >> Why are you making those changes ?
-> > Sure.
-> > This is to align with fan-common.yml wherein chip pwm is exposed.
-> > I'll update commit message
+> > On 4/22/24 03:39, Naresh Solanki wrote:
+> > > Hi Guenter,
+> > >
+> > > On Wed, 17 Apr 2024 at 02:52, Guenter Roeck <linux@roeck-us.net> wrote:
+> > >>
+> > >> On Tue, Apr 16, 2024 at 10:47:15PM +0530, Naresh Solanki wrote:
+> > >>> Utilise pwm subsystem for fan pwm handling
+> > >>>
+> > >>> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+> > >>
+> > >> That adds a lot of complexity to the driver. I am missing the benefits.
+> > >> You are supposed to explain why you are making changes, not just that
+> > >> you are making them.
+> > >>
+> > >> Why are you making those changes ?
+> > > Sure.
+> > > This is to align with fan-common.yml wherein chip pwm is exposed.
+> > > I'll update commit message
+> > >
 > >
->
-> Adding lots of complexity to a driver just to have it match a yaml file ?
-> I'll want to see a use case. Explain why you need the pwm exposed.
-> "because the yaml file demands it" is not a use case.
-The idea behind this was that this approach provides flexibility with
-hardware routing i.e., PWM0 might be connected to Fan1 & vise
-versa instead of assuming 1:1 mapping.
+> > Adding lots of complexity to a driver just to have it match a yaml file ?
+> > I'll want to see a use case. Explain why you need the pwm exposed.
+> > "because the yaml file demands it" is not a use case.
+> The idea behind this was that this approach provides flexibility with
+> hardware routing i.e., PWM0 might be connected to Fan1 & vise
+> versa instead of assuming 1:1 mapping.
+> 
 
-Regards,
-Naresh
->
-> Guenter
->
+The chip does not support such a configuration. Any hardware implementing
+this would make automatic fan control using the chip's capabilities
+impossible. Also, userspace fan control does not rely on the pwm subsystem.
+
+This would make sense if someone was to use the chip as generic pwm
+controller, which would be very unlikely. A "might be" is not sufficient
+to warrant such an invasive and (in terms of code size) expensive change.
+
+Thanks,
+Guenter
 
