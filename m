@@ -1,146 +1,236 @@
-Return-Path: <linux-pwm+bounces-2167-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2168-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA7038C140E
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 May 2024 19:30:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B92E68C1795
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 May 2024 22:32:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4AF01B20B94
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 May 2024 17:30:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EAE2A1C21D6E
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 May 2024 20:32:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80CFB179B2;
-	Thu,  9 May 2024 17:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE7B8D2E6;
+	Thu,  9 May 2024 20:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cf+P/ziF"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9AF8BF1
-	for <linux-pwm@vger.kernel.org>; Thu,  9 May 2024 17:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8D4376;
+	Thu,  9 May 2024 20:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715275801; cv=none; b=fAGQx1E34vkadIqIxcuKM1WvdKBlnD86S05Hdmpi2yHWVmBDXJo1qp6vWJd4Y09WstvMNbmMXDnYmNXLpZhG6XllpNtz+YkTVsfSYltfYwEmRmYnwd8xqcFH4kL112PjRe0B3MowHZcjxBOsOiV1NFon9gCi3EbBGNXgbbMqQLM=
+	t=1715286742; cv=none; b=pZj7tj2O5f3uzla+9vlzGIXpaFpqFY8ZCfcBcSdflOcs3N/XenrvaH96NDqTwfFbXiHPPP+QQrCIAtZJNLIGLJL6AYFjUEpL8QlHVYVPooadb7+ncecWhVzT7FctCXnVMEEiBIpEJAr6540JCxsmbrB+BNgNyoKZ3KlyvK2fq5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715275801; c=relaxed/simple;
-	bh=w2h7XneCk2MaV80gK1ryvpL88EXGmMJN8AHtD7/dmsA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RbCCEPi1oA9PUOy6HPaeYbmD2yPCn0Jq0Hpm542TVk88ZlomJ0b9oWlt+pdoZKv2H3ub00o50fNupGEDvZQsY3JJevd/kT441h1QM2PYSyrjXSxZ5zQePCr3u4nD5ZjDbDJ8a0q8u4s8kphl3cYtch+pC1llBpCCySEmET6ZomM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s57aC-0003Yj-7T; Thu, 09 May 2024 19:29:28 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s57a9-000UgF-2s; Thu, 09 May 2024 19:29:25 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s57a9-001PcK-00;
-	Thu, 09 May 2024 19:29:25 +0200
-Date: Thu, 9 May 2024 19:29:24 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pwm: renesas,tpu: Do not require pwm-cells
- twice
-Message-ID: <dthqwkvdy7qkkwr6bvvi3mwutuaggnj3xripwa2jvqv4lni5bd@3zlnzotkmmfx>
-References: <c0590d8898e553f29c96c7c4083f7b3ca1915727.1715050962.git.zhoubinbin@loongson.cn>
- <CAL_JsqJewzGp5E+O44JgvHu9Q-3PKaXnhjUQbmV7OHfFCEX3Ug@mail.gmail.com>
+	s=arc-20240116; t=1715286742; c=relaxed/simple;
+	bh=4N+RQzYmeQqh9vU7WAmaNZWG6yhK/KPp2rXeuqU3JCo=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=og+CVPbwNmhjqnZB4NXV6h3Cxxeq9NIDqQgssBLhd3LfeXnsrK8hNDMlcY95Nutyw+bCLJquE21ePvoVUF6la8udKeyl363PqeMvYLc1xlZLkV+SxY9iY6lXKmgi0ujcfX47wtnismatZ0CIkHaNdR44yhkdXqXeMxsBwCv75iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cf+P/ziF; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6ed3587b93bso739863a34.1;
+        Thu, 09 May 2024 13:32:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715286739; x=1715891539; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=WgzIChNHOybB6YvtmtKRO5fmRYHJDfezozAjqZ0oqsY=;
+        b=Cf+P/ziF6w5eVVm805Bzryvqzf1u5E5ZIxpnzNeRp610rSKBy10L4Anv8bglvPoqnY
+         wDgBWpIMcU3UYfs777T+G1T7/d0/40473WeTmND3GcqERp3zYIzmz994gWEg8p5yI8qm
+         hkCUsTW4ObNxJUdAzZbMka6wEWuwbIOvLnq4LRhv+YTM4Xl+LpM/Cr8pFZnBwbo11amX
+         mZOW/miNnl6ye129Jxg/EkZLmnj6/ZtPcgKQ3wF17S7Rp5qbW+xT0EkL4jPCvzFJbfjT
+         ukOXHRbgIe4hVcR+dMwGaZZZWbF0UHSW5undTYzSssah+gZ+LipwWL/ToTeC7javWwpv
+         mg1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715286739; x=1715891539;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WgzIChNHOybB6YvtmtKRO5fmRYHJDfezozAjqZ0oqsY=;
+        b=Jrb6kn9DjiCOshJ4yM9mqQOhGP5Sfdh/8y8Y6yNnTd++WKVsVF3WLDU9a7jsgm0L4A
+         aFc9bKZ8n1RTeuBIDJEYE00Qx0Fk0XXF68omrM+M0o7gouRfWkEy2IT5+AYAQrQ06Mk7
+         j08jVbji/nrRGPyPQVXwdnKbbXbMKlOs7NQbZKmsUArNS2k+X7SMzBuB51dvgQeR62uS
+         4ND4KhRttxiEEGu4swMz5r6UVft2FMXom7lOqA6AhBPJ0Mq1rkFZWORYgVHhIR/q/tSm
+         OaLL8tAm7jd3fUeRXgNmN3sNBsBFrTNHfLGnz5smVxlL7p5TGLzGALV/Oib0uSjGg0YX
+         eg6g==
+X-Forwarded-Encrypted: i=1; AJvYcCX9UGsB+5aaFwyoS7/sNAnARlUSnx9PugMGWqRhVHBxdQBlqzDeYEYda8Hi63Z0NP1wWOeGNtPMIP+4Z/mg9tKFy1b9daM3TE1NNUhq2dKhiQoRlDMt+cJRHvXKlMCWb94W7LblEw==
+X-Gm-Message-State: AOJu0YxxhsMSs9a/kYYvsq2y1oy97cHficHlT8IGT10xGCVmnhkNQmtk
+	H3VBeKMdXs5k0sM8EMY/43Wn22OHrpv9cM+x5h6kLJvtO34dD2eV
+X-Google-Smtp-Source: AGHT+IHEGJhWWa1e30aGL5DnsTEpJiTDTXaGIBCDX2v7pHa+Npm+d4Q9LH1hhmRiUUPUezlEhErNEA==
+X-Received: by 2002:a05:6830:14ce:b0:6f0:417d:5167 with SMTP id 46e09a7af769-6f0e9109a0bmr697703a34.7.1715286739471;
+        Thu, 09 May 2024 13:32:19 -0700 (PDT)
+Received: from neuromancer. ([75.28.21.198])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5b26de89545sm379650eaf.34.2024.05.09.13.32.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 13:32:18 -0700 (PDT)
+Message-ID: <663d32d2.4a0a0220.e5dc.2304@mx.google.com>
+X-Google-Original-Message-ID: <Zj0y0D/2P2W6heiu@neuromancer.>
+Date: Thu, 9 May 2024 15:32:16 -0500
+From: Chris Morgan <macroalpha82@gmail.com>
+To: Aleksandr Shubin <privatesub2@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Maksim Kiselev <bigunclemax@gmail.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	John Watts <contact@jookia.org>,
+	Cheo Fusi <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v8 1/3] dt-bindings: pwm: Add binding for Allwinner
+ D1/T113-S3/R329 PWM controller
+References: <20240131125920.2879433-1-privatesub2@gmail.com>
+ <20240131125920.2879433-2-privatesub2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="svvbuq3olqx47rsc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJewzGp5E+O44JgvHu9Q-3PKaXnhjUQbmV7OHfFCEX3Ug@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20240131125920.2879433-2-privatesub2@gmail.com>
 
+On Wed, Jan 31, 2024 at 03:59:14PM +0300, Aleksandr Shubin wrote:
+> Allwinner's D1, T113-S3 and R329 SoCs have a new pwm
+> controller witch is different from the previous pwm-sun4i.
+> 
+> The D1 and T113 are identical in terms of peripherals,
+> they differ only in the architecture of the CPU core, and
+> even share the majority of their DT. Because of that,
+> using the same compatible makes sense.
+> The R329 is a different SoC though, and should have
+> a different compatible string added, especially as there
+> is a difference in the number of channels.
+> 
+> D1 and T113s SoCs have one PWM controller with 8 channels.
+> R329 SoC has two PWM controllers in both power domains, one of
+> them has 9 channels (CPUX one) and the other has 6 (CPUS one).
+> 
+> Add a device tree binding for them.
+> 
+> Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 88 +++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> new file mode 100644
+> index 000000000000..716f75776006
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> @@ -0,0 +1,88 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/allwinner,sun20i-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner D1, T113-S3 and R329 PWM
+> +
+> +maintainers:
+> +  - Aleksandr Shubin <privatesub2@gmail.com>
+> +  - Brandon Cheo Fusi <fusibrandon13@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: allwinner,sun20i-d1-pwm
+> +      - items:
+> +          - const: allwinner,sun20i-r329-pwm
+> +          - const: allwinner,sun20i-d1-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +  clocks:
+> +    items:
+> +      - description: Bus clock
+> +      - description: 24 MHz oscillator
+> +      - description: APB0 clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: bus
+> +      - const: hosc
+> +      - const: apb0
 
---svvbuq3olqx47rsc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry for being late to the party, but I'm starting to look at the
+PWM controller for the H700 (H616/T507 are compatible I believe) and
+for those devices they use apb1. Would it be possible to just name this
+clock "apb" and note it's just the "APB clock"?
 
-On Thu, May 09, 2024 at 08:46:14AM -0500, Rob Herring wrote:
-> On Tue, May 7, 2024 at 1:54=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.c=
-n> wrote:
-> >
-> > pwm-cells property is already required by pwm.yaml schema.
->=20
-> This should be dropped or reverted.
->=20
-> > Suggested-by: Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org>
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >
-> > This is a missing patch to cleanup the required pwm-cells attribute twi=
-ce[1].
-> > Thanks to Uwe for the heads up.
-> > [1]:https://lore.kernel.org/linux-pwm/cover.1714450308.git.zhoubinbin@l=
-oongson.cn/
-> >
-> >  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml=
- b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-> > index a3e52b22dd18..4c8ce7a26d13 100644
-> > --- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-> > +++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-> > @@ -16,7 +16,6 @@ select:
-> >          const: renesas,tpu
-> >    required:
-> >      - compatible
-> > -    - '#pwm-cells'
->=20
-> This line is not requiring #pwm-cells, but rather only applying the
-> schema when #pwm-cells is present. It is needed because there's also
-> renesas,tpu in bindings/timer/renesas,tpu.yaml. Without this,
-> linux-next now has these warnings:
->=20
-> [...]
+Thank you.
 
-Huh, indeed. I only grepped and didn't notice the context of the line. I
-dropped the patch.
-
-Sorry and thanks
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---svvbuq3olqx47rsc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmY9B+0ACgkQj4D7WH0S
-/k4cowf/Z6dozCYzK9DiFHM/0340/SNDomoR2MHiqfpe565MjkhAISkq88wrIT9f
-ZBb76SN04FljZfUjSo0kX6qeshyIIe8MO6s9il96bNOue8i4YqHY6E+kFHAu6Wot
-5XwtvW7f3/acQaWpu13LyunLifwGFvafP891XMN3iBgRmbvpZZ/b4OP78/V7SdM2
-fQKj154b4ci00chQ7yT+BXUj5QGX8fc2Er76FHFNMi0nYr77EnAI2sEkYWb0Wxg1
-FUdoWa5lnV8U/wsohICoukVCxZT0KSCIjHuXl05mllSe2Yek+SzGJZ0fGxiW9Yfz
-jeQSEiDOzeJYJRS0L/5sxCVzqNZOfw==
-=iMm5
------END PGP SIGNATURE-----
-
---svvbuq3olqx47rsc--
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  allwinner,pwm-channels:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: The number of PWM channels configured for this instance
+> +    enum: [6, 9]
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: allwinner,sun20i-r329-pwm
+> +
+> +    then:
+> +      required:
+> +        - allwinner,pwm-channels
+> +
+> +    else:
+> +      properties:
+> +        allwinner,pwm-channels: false
+> +
+> +unevaluatedProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#pwm-cells"
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/sun20i-d1-ccu.h>
+> +    #include <dt-bindings/reset/sun20i-d1-ccu.h>
+> +
+> +    pwm: pwm@2000c00 {
+> +      compatible = "allwinner,sun20i-d1-pwm";
+> +      reg = <0x02000c00 0x400>;
+> +      clocks = <&ccu CLK_BUS_PWM>, <&dcxo>, <&ccu CLK_APB0>;
+> +      clock-names = "bus", "hosc", "apb0";
+> +      resets = <&ccu RST_BUS_PWM>;
+> +      #pwm-cells = <0x3>;
+> +    };
+> +
+> +...
+> -- 
+> 2.25.1
+> 
 
