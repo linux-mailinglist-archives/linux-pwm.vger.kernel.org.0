@@ -1,236 +1,218 @@
-Return-Path: <linux-pwm+bounces-2168-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2169-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B92E68C1795
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 May 2024 22:32:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA5318C4D4C
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 May 2024 09:52:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EAE2A1C21D6E
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 May 2024 20:32:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD8D81C20E92
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 May 2024 07:52:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE7B8D2E6;
-	Thu,  9 May 2024 20:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cf+P/ziF"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DBB814A85;
+	Tue, 14 May 2024 07:52:42 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8D4376;
-	Thu,  9 May 2024 20:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8426F13ACC
+	for <linux-pwm@vger.kernel.org>; Tue, 14 May 2024 07:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715286742; cv=none; b=pZj7tj2O5f3uzla+9vlzGIXpaFpqFY8ZCfcBcSdflOcs3N/XenrvaH96NDqTwfFbXiHPPP+QQrCIAtZJNLIGLJL6AYFjUEpL8QlHVYVPooadb7+ncecWhVzT7FctCXnVMEEiBIpEJAr6540JCxsmbrB+BNgNyoKZ3KlyvK2fq5s=
+	t=1715673162; cv=none; b=C4E6i9WGG+j+zMdbKoIZNTsLeEr8fmwJm27/Zcifgv5fRILm//wfFqe5p+GSlcDwYIdQ2Z7hlvWbctZzzGWsgmRCFzQSUw/vCwNlNcC+SwZwDIEqP2flbnagcNcbQz16I8ddsM8MROeZv+T22jcylr2q0TJbw7oeiiqmztWroK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715286742; c=relaxed/simple;
-	bh=4N+RQzYmeQqh9vU7WAmaNZWG6yhK/KPp2rXeuqU3JCo=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=og+CVPbwNmhjqnZB4NXV6h3Cxxeq9NIDqQgssBLhd3LfeXnsrK8hNDMlcY95Nutyw+bCLJquE21ePvoVUF6la8udKeyl363PqeMvYLc1xlZLkV+SxY9iY6lXKmgi0ujcfX47wtnismatZ0CIkHaNdR44yhkdXqXeMxsBwCv75iI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cf+P/ziF; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6ed3587b93bso739863a34.1;
-        Thu, 09 May 2024 13:32:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715286739; x=1715891539; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=WgzIChNHOybB6YvtmtKRO5fmRYHJDfezozAjqZ0oqsY=;
-        b=Cf+P/ziF6w5eVVm805Bzryvqzf1u5E5ZIxpnzNeRp610rSKBy10L4Anv8bglvPoqnY
-         wDgBWpIMcU3UYfs777T+G1T7/d0/40473WeTmND3GcqERp3zYIzmz994gWEg8p5yI8qm
-         hkCUsTW4ObNxJUdAzZbMka6wEWuwbIOvLnq4LRhv+YTM4Xl+LpM/Cr8pFZnBwbo11amX
-         mZOW/miNnl6ye129Jxg/EkZLmnj6/ZtPcgKQ3wF17S7Rp5qbW+xT0EkL4jPCvzFJbfjT
-         ukOXHRbgIe4hVcR+dMwGaZZZWbF0UHSW5undTYzSssah+gZ+LipwWL/ToTeC7javWwpv
-         mg1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715286739; x=1715891539;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WgzIChNHOybB6YvtmtKRO5fmRYHJDfezozAjqZ0oqsY=;
-        b=Jrb6kn9DjiCOshJ4yM9mqQOhGP5Sfdh/8y8Y6yNnTd++WKVsVF3WLDU9a7jsgm0L4A
-         aFc9bKZ8n1RTeuBIDJEYE00Qx0Fk0XXF68omrM+M0o7gouRfWkEy2IT5+AYAQrQ06Mk7
-         j08jVbji/nrRGPyPQVXwdnKbbXbMKlOs7NQbZKmsUArNS2k+X7SMzBuB51dvgQeR62uS
-         4ND4KhRttxiEEGu4swMz5r6UVft2FMXom7lOqA6AhBPJ0Mq1rkFZWORYgVHhIR/q/tSm
-         OaLL8tAm7jd3fUeRXgNmN3sNBsBFrTNHfLGnz5smVxlL7p5TGLzGALV/Oib0uSjGg0YX
-         eg6g==
-X-Forwarded-Encrypted: i=1; AJvYcCX9UGsB+5aaFwyoS7/sNAnARlUSnx9PugMGWqRhVHBxdQBlqzDeYEYda8Hi63Z0NP1wWOeGNtPMIP+4Z/mg9tKFy1b9daM3TE1NNUhq2dKhiQoRlDMt+cJRHvXKlMCWb94W7LblEw==
-X-Gm-Message-State: AOJu0YxxhsMSs9a/kYYvsq2y1oy97cHficHlT8IGT10xGCVmnhkNQmtk
-	H3VBeKMdXs5k0sM8EMY/43Wn22OHrpv9cM+x5h6kLJvtO34dD2eV
-X-Google-Smtp-Source: AGHT+IHEGJhWWa1e30aGL5DnsTEpJiTDTXaGIBCDX2v7pHa+Npm+d4Q9LH1hhmRiUUPUezlEhErNEA==
-X-Received: by 2002:a05:6830:14ce:b0:6f0:417d:5167 with SMTP id 46e09a7af769-6f0e9109a0bmr697703a34.7.1715286739471;
-        Thu, 09 May 2024 13:32:19 -0700 (PDT)
-Received: from neuromancer. ([75.28.21.198])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5b26de89545sm379650eaf.34.2024.05.09.13.32.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 13:32:18 -0700 (PDT)
-Message-ID: <663d32d2.4a0a0220.e5dc.2304@mx.google.com>
-X-Google-Original-Message-ID: <Zj0y0D/2P2W6heiu@neuromancer.>
-Date: Thu, 9 May 2024 15:32:16 -0500
-From: Chris Morgan <macroalpha82@gmail.com>
-To: Aleksandr Shubin <privatesub2@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Maksim Kiselev <bigunclemax@gmail.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	John Watts <contact@jookia.org>,
-	Cheo Fusi <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v8 1/3] dt-bindings: pwm: Add binding for Allwinner
- D1/T113-S3/R329 PWM controller
-References: <20240131125920.2879433-1-privatesub2@gmail.com>
- <20240131125920.2879433-2-privatesub2@gmail.com>
+	s=arc-20240116; t=1715673162; c=relaxed/simple;
+	bh=GzUDP9qyUtPowYjkmxi34ELF72sAUuP1hvoLcRapgG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=cWJw+7lKjlqe/EAsdMlkAD8sh8wI6oX5tT3BJ3AWCQhZkFmlxf2I1nSZX31zEQnHyNhHNPK4R4ap2NhOk6Tr9mCs45bpabyquFaaWRlWnR3qvOwcBvollsI/WCYEZxCRun5JgxXcRhlUZJ3SE7M1V72t+xNK/dXxH0vFhrLW4wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s6mxf-0001Yg-V6; Tue, 14 May 2024 09:52:35 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s6mxe-001JY2-GH; Tue, 14 May 2024 09:52:34 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s6mxe-004MdF-1K;
+	Tue, 14 May 2024 09:52:34 +0200
+Date: Tue, 14 May 2024 09:52:22 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pwm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, 
+	Alexandre Mergnat <amergnat@baylibre.com>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Dmitry Rokosov <ddrokosov@salutedevices.com>, George Stark <gnstark@salutedevices.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, Varshini Rajendran <varshini.rajendran@microchip.com>, 
+	kernel@pengutronix.de
+Subject: [GIT PULL] pwm: Changes for v6.10-rc1
+Message-ID: <ea6vevhosh66ghu724gpsvawqq3zggvruhhjsvbmasskhevmsq@lircam7wky64>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ceclf3girx2xyptj"
 Content-Disposition: inline
-In-Reply-To: <20240131125920.2879433-2-privatesub2@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On Wed, Jan 31, 2024 at 03:59:14PM +0300, Aleksandr Shubin wrote:
-> Allwinner's D1, T113-S3 and R329 SoCs have a new pwm
-> controller witch is different from the previous pwm-sun4i.
-> 
-> The D1 and T113 are identical in terms of peripherals,
-> they differ only in the architecture of the CPU core, and
-> even share the majority of their DT. Because of that,
-> using the same compatible makes sense.
-> The R329 is a different SoC though, and should have
-> a different compatible string added, especially as there
-> is a difference in the number of channels.
-> 
-> D1 and T113s SoCs have one PWM controller with 8 channels.
-> R329 SoC has two PWM controllers in both power domains, one of
-> them has 9 channels (CPUX one) and the other has 6 (CPUS one).
-> 
-> Add a device tree binding for them.
-> 
-> Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
-> new file mode 100644
-> index 000000000000..716f75776006
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
-> @@ -0,0 +1,88 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/allwinner,sun20i-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner D1, T113-S3 and R329 PWM
-> +
-> +maintainers:
-> +  - Aleksandr Shubin <privatesub2@gmail.com>
-> +  - Brandon Cheo Fusi <fusibrandon13@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: allwinner,sun20i-d1-pwm
-> +      - items:
-> +          - const: allwinner,sun20i-r329-pwm
-> +          - const: allwinner,sun20i-d1-pwm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#pwm-cells":
-> +    const: 3
-> +
-> +  clocks:
-> +    items:
-> +      - description: Bus clock
-> +      - description: 24 MHz oscillator
-> +      - description: APB0 clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: bus
-> +      - const: hosc
-> +      - const: apb0
 
-Sorry for being late to the party, but I'm starting to look at the
-PWM controller for the H700 (H616/T507 are compatible I believe) and
-for those devices they use apb1. Would it be possible to just name this
-clock "apb" and note it's just the "APB clock"?
+--ceclf3girx2xyptj
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thank you.
+Hello Linus,
 
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  allwinner,pwm-channels:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: The number of PWM channels configured for this instance
-> +    enum: [6, 9]
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun20i-r329-pwm
-> +
-> +    then:
-> +      required:
-> +        - allwinner,pwm-channels
-> +
-> +    else:
-> +      properties:
-> +        allwinner,pwm-channels: false
-> +
-> +unevaluatedProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#pwm-cells"
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/sun20i-d1-ccu.h>
-> +    #include <dt-bindings/reset/sun20i-d1-ccu.h>
-> +
-> +    pwm: pwm@2000c00 {
-> +      compatible = "allwinner,sun20i-d1-pwm";
-> +      reg = <0x02000c00 0x400>;
-> +      clocks = <&ccu CLK_BUS_PWM>, <&dcxo>, <&ccu CLK_APB0>;
-> +      clock-names = "bus", "hosc", "apb0";
-> +      resets = <&ccu RST_BUS_PWM>;
-> +      #pwm-cells = <0x3>;
-> +    };
-> +
-> +...
-> -- 
-> 2.25.1
-> 
+the following changes since commit 190f1f46ede17ca0d7153ac115d6518ec1be2ba3:
+
+  MAINTAINERS: Update Uwe's email address, drop SIOX maintenance (2024-04-2=
+6 08:20:14 +0200)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/p=
+wm/for-6.10-rc1
+
+for you to fetch changes up to 4817118f257e49b043f3d80f021a327b7e1d796f:
+
+  pwm: pca9685: Drop explicit initialization of struct i2c_device_id::drive=
+r_data to 0 (2024-05-10 07:30:27 +0200)
+
+----------------------------------------------------------------
+pwm: Changes for v6.10-rc1
+
+Apart for the normal updates for dt bindings, cleanups and support for
+new device variants to existing drivers this completes the conversion to
+pwmchip_alloc() which was started in the v6.9 development cycle.
+
+Using pwmchip_alloc() is a precondition to the character device support
+which allows easier and faster access to PWM devices. However there are
+some issues I want to clean up before including it in mainline, so this
+isn't contained here despite it was in next for some time.
+
+Thanks to Alexandre Mergnat, Binbin Zhou, Dmitry Rokosov, George Stark,
+Jerome Brunet and Varshini Rajendran for their contributions. Further
+thanks go to AngeloGioacchino Del Regno, Conor Dooley, David Lechner,
+Fabrice Gasnier, Florian Fainelli, Guenter Roeck, Gustavo A. R. Silva,
+Krzysztof Kozlowski and Rob Herring for valuable patch review.
+
+----------------------------------------------------------------
+
+This is based on v6.9-rc5 because commit 141a8502214d ("pwm: bcm2835:
+Drop open coded variant of devm_clk_rate_exclusive_get()") made the
+build bots unhappy without commit 7f1dd39aedfc ("clk: Provide
+!COMMON_CLK dummy for devm_clk_rate_exclusive_get()").
+
+There are two commits touching drivers/hwmon. The driver modified here
+provides a pwm device and it is converted to pwmchip_alloc() before
+making pwmchip_alloc() mandatory. These two patches have Guenter's
+blessing.
+
+Please pull this for v6.10-rc1.
+
+Thanks
+Uwe
+
+Alexandre Mergnat (1):
+      dt-bindings: pwm: mediatek,pwm-disp: add compatible for mt8365 SoC
+
+Binbin Zhou (6):
+      dt-bindings: pwm: bcm2835: Do not require pwm-cells twice
+      dt-bindings: pwm: google,cros-ec: Do not require pwm-cells twice
+      dt-bindings: pwm: marvell,pxa: Do not require pwm-cells twice
+      dt-bindings: pwm: mediatek,mt2712: Do not require pwm-cells twice
+      dt-bindings: pwm: mediatek,pwm-disp: Do not require pwm-cells twice
+      dt-bindings: pwm: snps,dw-apb-timers: Do not require pwm-cells twice
+
+George Stark (3):
+      pwm: meson: Drop unneeded check in .get_state()
+      pwm: meson: Add check for error from clk_round_rate()
+      pwm: meson: Use mul_u64_u64_div_u64() for frequency calculating
+
+Jerome Brunet (1):
+      pwm: meson: Add generic compatible for meson8 to sm1
+
+Uwe Kleine-K=F6nig (22):
+      hwmon: (aspeed-g6-pwm-tacho): Make use of pwmchip_parent() accessor
+      hwmon: (aspeed-g6-pwm-tacho): Make use of devm_pwmchip_alloc() functi=
+on
+      pwm: Ensure that pwm_chips are allocated using pwmchip_alloc()
+      pwm: sti: Simplify probe function using devm functions
+      pwm: sti: Improve error reporting using dev_err_probe()
+      pwm: sti: Drop member from driver data that only carries a constant
+      pwm: sti: Maintain all per-chip driver data in a single struct
+      pwm: sti: Use devm_kcalloc() instead of calculating the size for devm=
+_kzalloc()
+      pwm: sti: Prefer local variable over pointer dereference
+      pwm: Give some sysfs related variables and functions better names
+      pwm: Move contents of sysfs.c into core.c
+      pwm: Ensure a struct pwm has the same lifetime as its pwm_chip
+      pwm: Add a struct device to struct pwm_chip
+      pwm: Don't check pointer for being non-NULL after use
+      pwm: Make pwmchip_[sg]et_drvdata() a wrapper around dev_set_drvdata()
+      pwm: stm32: Add error messages in .probe()'s error paths
+      pwm: stm32: Improve precision of calculation in .apply()
+      pwm: stm32: Fix for settings using period > UINT32_MAX
+      pwm: stm32: Calculate prescaler with a division instead of a loop
+      pwm: bcm2835: Introduce a local variable for &pdev->dev
+      pwm: bcm2835: Drop open coded variant of devm_clk_rate_exclusive_get()
+      pwm: pca9685: Drop explicit initialization of struct i2c_device_id::d=
+river_data to 0
+
+Varshini Rajendran (1):
+      dt-bindings: pwm: at91: Add sam9x7 compatible strings list
+
+ .../devicetree/bindings/pwm/atmel,at91sam-pwm.yaml |   3 +
+ .../bindings/pwm/google,cros-ec-pwm.yaml           |   1 -
+ .../devicetree/bindings/pwm/marvell,pxa-pwm.yaml   |   1 -
+ .../bindings/pwm/mediatek,mt2712-pwm.yaml          |   1 -
+ .../devicetree/bindings/pwm/mediatek,pwm-disp.yaml |   2 +-
+ .../devicetree/bindings/pwm/pwm-bcm2835.yaml       |   1 -
+ .../bindings/pwm/snps,dw-apb-timers-pwm2.yaml      |   1 -
+ drivers/hwmon/aspeed-g6-pwm-tach.c                 |  21 +-
+ drivers/pwm/Kconfig                                |   4 -
+ drivers/pwm/Makefile                               |   1 -
+ drivers/pwm/core.c                                 | 606 +++++++++++++++++=
+++--
+ drivers/pwm/pwm-bcm2835.c                          |  30 +-
+ drivers/pwm/pwm-meson.c                            | 213 +++++---
+ drivers/pwm/pwm-pca9685.c                          |   4 +-
+ drivers/pwm/pwm-sti.c                              | 161 ++----
+ drivers/pwm/pwm-stm32.c                            |  60 +-
+ drivers/pwm/sysfs.c                                | 545 ------------------
+ include/linux/pwm.h                                |  36 +-
+ 18 files changed, 832 insertions(+), 859 deletions(-)
+ delete mode 100644 drivers/pwm/sysfs.c
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ceclf3girx2xyptj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZDGCoACgkQj4D7WH0S
+/k5riwf/f2KlvYedl1IYp+oS/j9cPIdByb6twz4AWQYbP6DrR8S245oYdNeImr1R
+fx9L+DiyENMFxOFcVUp4vR59Rckmkw1zucylJ5zje4/mqfDmBuh66zDqpQLFApju
+MLldf1Qb2OYycrMzvZYG+DqHyiYj7SvlIKwydO9ep/wgOhPpFVqXohc7toHVdHEu
+H+gfKLel2PUpMKTD61/7n4A6TCxGkTfKmfqOp9wLtvo4uC1G1HICKa5NR7taWRts
+FLQKsm3BBt4Y/XFJDFPOeiZegk/9JWaey2HnfdjSQ+VFx7YM+WKKrXKDiRTz0HdF
+JQXYluezV+VZgCg7fVttxTUb/mpfAQ==
+=ayjq
+-----END PGP SIGNATURE-----
+
+--ceclf3girx2xyptj--
 
