@@ -1,185 +1,110 @@
-Return-Path: <linux-pwm+bounces-2198-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2199-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B05DF8CA385
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 May 2024 22:55:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 625B98CA9F9
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 10:32:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B298D1C20A59
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 May 2024 20:55:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8FF5D1C2017C
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 08:32:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7845A139CE3;
-	Mon, 20 May 2024 20:55:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2C4755C33;
+	Tue, 21 May 2024 08:31:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="x3QCy2/4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EVMAu9sp"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB2D139CE8
-	for <linux-pwm@vger.kernel.org>; Mon, 20 May 2024 20:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C6254BDB;
+	Tue, 21 May 2024 08:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716238534; cv=none; b=fQdqcLCCrW6S6/Zjf0UuCuy7IDPQ1vv0vyJ1w6wJUkHhZ3r8A9VFuICiJq3xXY2FSFHVzaoM0HNNsCezQMfLWxh2Fp/oNIVQy5vxjQL0YUxdjcfWbpQNKdPCUkcgWc92IolKeO+6D7njeh3gznquoeiYwQ2TDIbn5QsAVMQmklI=
+	t=1716280318; cv=none; b=YnfWY6kIVtJ66Ft/I5wEW+FN91WxalnoKCmfyE87RAqhOA5tbU3bNdxLQffv8z5Y6Up4lFxqZuAEp3DK70bPoqZgXmhTnBhN9+1TXcmXpkUALY7NiI6UdvvhdziCMNRp01i/QeMirIqAgIJmrLiPp5gcf3+Z/xa/WAWWmmlTDlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716238534; c=relaxed/simple;
-	bh=FY1p/wmrA6kcXFiHpWFc6CtUYphIKLuifGfTMZ7SkxI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=a3EI1abAuq4sOzo47wcB6ahOT0h4o5fPg7F8YSvrdNoPZfVF8yr5XrHGc5rHC7OMoPb3gWzFZiFp8iJri1UxHQTJ3Rm6qQJbA/29hc76pszMR/38J7fcfsbXVVKkuvRxFXKAs2An7hCeolxv178jah3bm7bTAZBb4Z6Q8r5NvJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=x3QCy2/4; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 65D442C0F83;
-	Tue, 21 May 2024 08:55:28 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1716238528;
-	bh=FY1p/wmrA6kcXFiHpWFc6CtUYphIKLuifGfTMZ7SkxI=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=x3QCy2/45BafBKzc35MME6kUiCmCNoPGtoAW/t7YZ+AW1C730cLnvove8ARTIueZO
-	 8A3ngtYAa5KTLH6/I60Sl+jw0gFElbQzUMh41BWV/b7uvG2FaeFu8xt1eQ/jIE7PsS
-	 p6sWZzG93TekjedeSN9VvmaaqxGP6sQZGNDYZDfJqfY0mjSEg7e8R63cZ6COzhV/6f
-	 H8qdC5HGlNHKe98oTmcoMcis6KHjaCUCEe3WM7RFwQ77qKUi+iAdA2BjfccP+54s6v
-	 8QVkffbJJKvirZgOQ89HBWE14AvXHRf/vyLBGgFMnzxi56NRb5rJWV3qWgRItLqZ+W
-	 dRzXez6EA8QyA==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B664bb8c00001>; Tue, 21 May 2024 08:55:28 +1200
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 21 May 2024 08:55:28 +1200
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1544.011; Tue, 21 May 2024 08:55:28 +1200
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To: Conor Dooley <conor@kernel.org>, Guenter Roeck <linux@roeck-us.net>
-CC: "jdelvare@suse.com" <jdelvare@suse.com>, "robh@kernel.org"
-	<robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, "ukleinek@kernel.org"
-	<ukleinek@kernel.org>, "linux-hwmon@vger.kernel.org"
-	<linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org"
-	<linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-Thread-Topic: [PATCH v3 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm
- properties
-Thread-Index: AQHaqmJINjerzqQHjU+Bh4jVLB5aBbGfjXmAgAAldACAAAqRgIAAFKiA
-Date: Mon, 20 May 2024 20:55:27 +0000
-Message-ID: <4de798f3-069e-4028-a5b5-5e6a639277e3@alliedtelesis.co.nz>
-References: <20240520030321.3756604-1-chris.packham@alliedtelesis.co.nz>
- <20240520030321.3756604-2-chris.packham@alliedtelesis.co.nz>
- <20240520-pendant-charity-a66a8d738690@spud>
- <62c3c546-5172-4417-a15a-d13419d42be3@roeck-us.net>
- <20240520-badly-islamist-dcae9fe1303b@spud>
-In-Reply-To: <20240520-badly-islamist-dcae9fe1303b@spud>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BCDFF3CED3C3E240AAD9211B102C9705@atlnz.lc>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1716280318; c=relaxed/simple;
+	bh=8sDFlj1Gwr4M6++unKHbhg9lGquHLfbGNCat/SHDtO8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EkLcE01lAjnkETKHDFV4FJwWfAVySMWtU/V5FYvNerwbX5mL5e4aDkMl+778Nz5Bkyy3AaEbJbf/YeKL2b+SvFapddMEmYhFvkIOhboPF1EjuXKQPvoLUyL7HO6jfDUKu3cf77+7W2CRmf9KUgVY3He6Z+f91rizZNZmLZ5DoP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EVMAu9sp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 645DCC2BD11;
+	Tue, 21 May 2024 08:31:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716280318;
+	bh=8sDFlj1Gwr4M6++unKHbhg9lGquHLfbGNCat/SHDtO8=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=EVMAu9spISPmj5wcZir1ZwC8EOT2723ZPfJRyPHsI7UPgZBbnJBeqVihe8T8SW/e9
+	 0VWMpGRIEiWQnxynFJLeJ0sLD67YmuLHcBzsS7IhIqXlJZiVA8W7k/5odJU7v8w82Y
+	 YYl4RSLBxegny9KQT4CjK1ckHu+BfDPKqcO4kC9MGwEm/OIwgeLhVQIiEvU9Rvk/u4
+	 Js+UgkngSCZRA/ZVuYsndMM1yJIvBc3CApIW+GROkW4C7XMy//bO8lcESoqruTDPUF
+	 Ct+Y+9Z9tth8mC/FLYXEY7u4Qo69BhbI9504GYHeA/RtvrHupwckqnB1BiG3o/5Nih
+	 8D+uMZ1Eb6hiQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4892BC25B75;
+	Tue, 21 May 2024 08:31:58 +0000 (UTC)
+From: Kelvin Zhang via B4 Relay <devnull+kelvin.zhang.amlogic.com@kernel.org>
+Subject: [PATCH v5 0/2] Add support for Amlogic S4 PWM
+Date: Tue, 21 May 2024 16:31:33 +0800
+Message-Id: <20240521-s4-pwm-v5-0-0c91f5fa32cd@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=F9L0dbhN c=1 sm=1 tr=0 ts=664bb8c0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=TpHVaj0NuXgA:10 a=Db2xuwfgTYU1MdicWjYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOVbTGYC/2XMywrCMBCF4VcpszYyhPFSV76HdBGSSTtgmpKUq
+ JS8u7Fbl//h8G2QOQlnuHUbJC6SJc4tTocO7GTmkZW41qBRE5ImlUktr6C0u2DfX8/WMEM7L4m
+ 9vHfoMbSeJK8xfXa30G/9IwopVMxas/eO0OHdhGccxR5tDDDUWr8Le7g+ngAAAA==
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Kelvin Zhang <kelvin.zhang@amlogic.com>, 
+ Junyi Zhao <junyi.zhao@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716280316; l=802;
+ i=kelvin.zhang@amlogic.com; s=20240329; h=from:subject:message-id;
+ bh=8sDFlj1Gwr4M6++unKHbhg9lGquHLfbGNCat/SHDtO8=;
+ b=KKSNn/ElfAgYrD7BO58I3c5C8vB5uGsP6pt7ktkMU4BuQE/FsH8XzspsgB5ryJpTkuh7AF31j
+ RUpIylqtVOBDRnzK1f+s/NeZHkzNcF3E/mMKJ0suVlIDZCdvvFsrNEQ
+X-Developer-Key: i=kelvin.zhang@amlogic.com; a=ed25519;
+ pk=pgnle7HTNvnNTcOoGejvtTC7BJT30HUNXfMHRRXSylI=
+X-Endpoint-Received: by B4 Relay for kelvin.zhang@amlogic.com/20240329 with
+ auth_id=148
+X-Original-From: Kelvin Zhang <kelvin.zhang@amlogic.com>
+Reply-To: kelvin.zhang@amlogic.com
 
-DQpPbiAyMS8wNS8yNCAwNzo0MSwgQ29ub3IgRG9vbGV5IHdyb3RlOg0KPiBPbiBNb24sIE1heSAy
-MCwgMjAyNCBhdCAxMjowMzo0MlBNIC0wNzAwLCBHdWVudGVyIFJvZWNrIHdyb3RlOg0KPj4gT24g
-NS8yMC8yNCAwOTo0OSwgQ29ub3IgRG9vbGV5IHdyb3RlOg0KPj4+IE9uIE1vbiwgTWF5IDIwLCAy
-MDI0IGF0IDAzOjAzOjE5UE0gKzEyMDAsIENocmlzIFBhY2toYW0gd3JvdGU6DQo+Pj4+IEFkZCBm
-YW4gY2hpbGQgbm9kZXMgdGhhdCBhbGxvdyBkZXNjcmliaW5nIHRoZSBjb25uZWN0aW9ucyBmb3Ig
-dGhlDQo+Pj4+IEFEVDc0NzUgdG8gdGhlIGZhbnMgaXQgY29udHJvbHMuIFRoaXMgYWxzbyBhbGxv
-d3Mgc2V0dGluZyBzb21lDQo+Pj4+IGluaXRpYWwgdmFsdWVzIGZvciB0aGUgcHdtIGR1dHkgY3lj
-bGUgYW5kIGZyZXF1ZW5jeS4NCj4+Pj4NCj4+Pj4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGFja2hh
-bSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KPj4+PiAtLS0NCj4+Pj4NCj4+
-Pj4gTm90ZXM6DQo+Pj4+ICAgICAgIENoYW5nZXMgaW4gdjM6DQo+Pj4+ICAgICAgIC0gVXNlIHRo
-ZSBwd20gcHJvdmlkZXIvY29uc3VtZXIgYmluZGluZ3MNCj4+Pj4gICAgICAgQ2hhbmdlcyBpbiB2
-MjoNCj4+Pj4gICAgICAgLSBEb2N1bWVudCAwIGFzIGEgdmFsaWQgdmFsdWUgKGxlYXZlcyBoYXJk
-d2FyZSBhcy1pcykNCj4+Pj4NCj4+Pj4gICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvaHdtb24v
-YWR0NzQ3NS55YW1sICAgIHwgMjUgKysrKysrKysrKysrKysrKysrLQ0KPj4+PiAgICAxIGZpbGUg
-Y2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPj4+Pg0KPj4+PiBkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2h3bW9uL2FkdDc0NzUu
-eWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9od21vbi9hZHQ3NDc1Lnlh
-bWwNCj4+Pj4gaW5kZXggMDUxYzk3NmFiNzExLi45OWJkNjg5YWUwY2QgMTAwNjQ0DQo+Pj4+IC0t
-LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9od21vbi9hZHQ3NDc1LnlhbWwN
-Cj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2h3bW9uL2FkdDc0
-NzUueWFtbA0KPj4+PiBAQCAtNTEsNiArNTEsMTUgQEAgcHJvcGVydGllczoNCj4+Pj4gICAgICAg
-ICAgZW51bTogWzAsIDFdDQo+Pj4+ICAgICAgICAgIGRlZmF1bHQ6IDENCj4+Pj4gKyAgIiNwd20t
-Y2VsbHMiOg0KPj4+PiArICAgIGNvbnN0OiA0DQo+Pj4+ICsgICAgZGVzY3JpcHRpb246IHwNCj4+
-Pj4gKyAgICAgIE51bWJlciBvZiBjZWxscyBpbiBhIFBXTSBzcGVjaWZpZXIuDQo+Pj4+ICsgICAg
-ICAtIDA6IFRoZSBwd20gY2hhbm5lbA0KPj4+PiArICAgICAgLSAxOiBUaGUgcHdtIGZyZXF1ZW5j
-eSBpbiBoZXJ0eiAtIDAsIDExLCAxNCwgMjIsIDI5LCAzNSwgNDQsIDU4LCA4OCwgMjI1MDANCj4+
-PiBUaGUgc3RhbmRhcmQgYmluZGluZyBpcyBwZXJpb2QgaW4gbmFub3NlY29uZHMsIG5vdCBmcmVx
-dWVuY3kgaW4gSHouDQo+Pj4gV2hhdCdzIGdhaW5lZCBmcm9tIGRldmlhdGluZyBmcm9tIHRoYXQ/
-DQo+Pj4NCj4+IEknZCBzdHJvbmdseSBzdXNwZWN0IHRoYXQgQ2hyaXMgZGlkbid0IGtub3cgYW5k
-IGRpZG4ndCBleHBlY3QgaXQsDQo+PiBqdXN0IGxpa2UgbWUuDQo+IEkgZGlkIHBvaW50IG91dCBv
-biB2MiB0aGF0IHRoZSBpbmZvcm1hdGlvbiBvbiB0aGUgc3RhbmRhcmQgYmluZGluZyB3YXMNCj4g
-aW4gcHdtLnR4dCwgYnV0IEkgYWxzbyBzYWlkICJvcmRlciBpdCBoYXMgPGluZGV4IGZyZXEgZmxh
-Z3MgZHV0eT4iIHdoaWNoDQo+IGxpa2VseSBkaWRuJ3QgaGVscC4gSSBkaWQgaG93ZXZlciBDQyB5
-b3UgYm90aCBvbiBhIHBhdGNoIHRoZSBvdGhlciBkYXkNCj4gd2hlcmUgSSBmaXhlZCBwd20ueWFt
-bCBzbyB0aGF0IGl0IGFjdHVhbGx5IGNvbnRhaW5lZCB0aGUgaW5mb3JtYXRpb24gb24NCj4gd2hh
-dCB0aGUgY2VsbHMgcmVwcmVzZW50ZWQuDQoNCkkgZGlkIHNlZSB0aGF0IHBhdGNoIHRoYW5rcy4g
-QW5kIEkgZGlkIGFkanVzdCB0aGUgb3JkZXIgb2YgdGhlIA0KcGFyYW1ldGVycyBJIGhhZCBiYXNl
-ZCBvbiBpdC4NCg0KSSBwZXJzb25hbGx5IGZvdW5kIGV4cHJlc3NpbmcgdGhlIGZyZXF1ZW5jeSBp
-biBzZWNvbmRzIGNvbmZ1c2luZyB3aGljaCANCnRoZSBpcyBtYWluIHJlYXNvbiB3aHkgSSBzdHVj
-ayB3aXRoIGhlcnR6LiBJIGFsc28gY291bGRuJ3QgZ3JvayBob3cgdG8gDQpleHByZXNzIHRoZSBk
-dXR5IGN5Y2xlIGlmIEkgZGlkIGV4cHJlc3MgdGhlIGZyZXF1ZW5jeSBpbiBuYW5vc2Vjb25kcy4g
-SSANCnRoaW5rIG1heWJlIEknbSBhIGJpdCBjb25mdXNlZCBhcyB0byBob3cgdG8gZXhwcmVzcyBh
-IGdlbmVyaWMgUFdNIHBlcmlvZCANCndoZW4gdGhlIGNvbnRyb2xsZXIgSSdtIGRlYWxpbmcgd2l0
-aCBoYXMgYSBmcmVxdWVuY3kgYW5kIGEgZHV0eSBjeWNsZS4NCg0KPj4+PiArICAgICAgLSAyOiBQ
-V00gZmxhZ3MgMCBvciBQV01fUE9MQVJJVFlfSU5WRVJURUQNCj4+Pj4gKyAgICAgIC0gMzogVGhl
-IGRlZmF1bHQgcHdtIGR1dHkgY3ljbGUgLSAwLTI1NQ0KPj4+IFNhbWUgaGVyZSBJIGd1ZXNzLCB3
-aHkgbm90IG1hdGNoIHRoZSB1bml0cyB1c2VkIGZvciB0aGUgcGVyaW9kIGZvciB0aGUNCj4+PiBk
-dXR5IGN5Y2xlPw0KPj4+DQo+PiBTYW1lIGhlcmUuIEkgYW0gdXNlZCB0byBwd20gZnJlcXVlbmN5
-IGluIEh6IGFuZCBkdXR5IGN5Y2xlIGFzIHBlcmNlbnRhZ2UuDQo+PiBVc2luZyB0aGUgcGVyaW9k
-IGluc3RlYWQgaXMgc29tZXdoYXQgdW51c3VhbCwgYW5kIEkgbXVzdCBhZG1pdCB0aGF0IEkNCj4+
-IGhhdmUgbmV2ZXIgZW5jb3VudGVyZWQgaXQgd2hpbGUgZGVhbGluZyB3aXRoIGEgdmFyaWV0eSBv
-ZiBmYW4gY29udHJvbGxlcnMuDQpNeSBleHBlY3RhdGlvbiBpcyB0aGF0IGEgZHV0eSBjeWNsZSBp
-cyBhIHBlcmNlbnRhZ2UuIFRoZSBvbmx5IHJlYXNvbiBJJ20gDQp1c2luZyAwLTI1NSBpbnN0ZWFk
-IG9mIDAtMTAwIGlzIGJlY2F1c2UgdGhhdCBtYXRjaGVzIHRoZSBzeXNmcyBBQkkuIEJ1dCANCkkn
-ZCBoYXBwaWx5IGNoYW5nZSB0byBhIHRydWUgcGVyY2VudGFnZSAoaWYgSSBjYW4gZmlndXJlIG91
-dCB0aGUgaW50ZWdlciANCm1hdGgpLCB3ZSdkIGxvc2UgYSBsaXR0bGUgYml0IG9mIHByZWNpc2lv
-biBidXQgbm90aGluZyBhbnlvbmUgd291bGQgDQpyZWFsbHkgbm90aWNlLg0KPiBJZiBpdCBpcyB3
-aGF0IG1ha2VzIHNlbnNlIHRvIHVzZSwgYmVjYXVzZSBpdCdzIHdoYXQgZXZlcnlvbmUgYW5kIHRo
-ZWlyDQo+IG1vdGhlciBkb2N1bWVudHMsIHRoZW4gc3VyZS4gTXkgcmF0aW9uYWxlIEkgc3VwcG9z
-ZSB3YXMgdGhyZWVmb2xkOg0KPiAtIENvbnNpc3RlbmN5IHdpdGggdGhlIHBlcmlvZA0KPiAtIFRp
-bWUgd291bGQgYmUgbW9yZSBwb3J0YWJsZSBiZXR3ZWVuIHByb3ZpZGVycywgaWYgOCBiaXRzIG9m
-IHByZWNpc2lvbg0KPiAgICBpcyBkZWVtZWQgaW5zdWZmaWNpZW50IGZvciBzb21lIHByb3ZpZGVy
-cy4NCj4gLSBMYXN0ICYgbGVhc3QsIHRoZSBQV00gQVBJcyBpbiB0aGUga2VybmVsIHVzZSB0aW1l
-IGZvciB0aGUgZHV0eWN5Y2xlDQo+DQo+IElmIHlvdSdyZSBnb2luZyB0byB1c2UgcGVyY2VudGFn
-ZXMgcmF0aGVyIHRoYW4gdGltZSwgd291bGQgaXQgbm90DQo+IG1ha2UgbW9yZSBzZW5zZSB0byBl
-aXRoZXIgdXNlIHBlcmNlbnQgaXRzZWxmIHdpdGggYSAwLTEwMCByYW5nZSBvciB1c2UNCj4gYmFz
-aXMgcG9pbnRzIGlmIHBlcmNlbnQgZG9lc24ndCBwcm92aWRlIHN1ZmZpY2llbnQgZ3JhbnVsYXJp
-dHk/DQo+DQo+IEkgdGhpbmsgaXQnZCBiZSBnb29kIG9mIFV3ZSBjaGltZWQgaW4sIGdpdmVuIHdl
-J3JlIGRpc2N1c3NpbmcgYSBQV00NCj4gcHJvdmlkZXIgYmluZGluZyBhZnRlciBhbGwuDQoNCkkn
-ZCBhbHNvIHBvaW50IG91dCBJJ20gbW9yZSB0aGFuIGhhcHB5IHRvIGdvIGJhY2sgdG8gbXkgdjIg
-YXBwcm9hY2ggb2YgDQphZGRpbmcgc3BlY2lmaWMgcHJvcGVydGllcyBmb3IgdGhlIGZyZXF1ZW5j
-eSBhbmQgZHV0eSBjeWNsZS4NCg0KPj4gSnVzdCB0byBtYWtlIHN1cmUgSSB1bmRlcnN0YW5kIHRo
-aXMgY29ycmVjdGx5IC0gZHV0eSBjeWNsZXMgd291bGQNCj4gcy9kdXR5IGN5Y2xlcy9wZXJpb2Rz
-Lw0KPg0KPj4gYmUgKHJvdW5kZWQpOg0KPj4NCj4+IEh6CW5zDQo+PiAxMQk5MCw5MDksMDkxDQo+
-PiAxNAk3MSw0MjgsNTcxDQo+PiAyMgk0NSw0NTQsNTQ1DQo+PiAyOToJMzQsNDgyLDc1OQ0KPj4g
-MzU6CTI4LDU3MSw0MjkNCj4+IDQ0OgkyMiw3MjcsMjczDQo+PiA1ODoJMTcsMjQxLDM3OQ0KPj4g
-ODg6CTExLDM2Myw2MzYNCj4+IDIyNTAwCTQ0LDQ0NA0KPj4NCj4+IEV4YW1wbGVzIGZvciBkdXR5
-IGN5Y2xlcyB3b3VsZCBiZQ0KPj4NCj4+IDIwJTogMCwycyBvciAyMDAsMDAwLDAwMA0KPj4gNTAl
-OiAwLjVzIG9yIDUwMCwwMDAsMDAwDQo+PiA4MCU6IDAuOHMgb3IgODAwLDAwMCwwMDANCj4+DQo+
-PiBJcyB0aGF0IGNvcnJlY3QgPw0KPiBBc3N1bWluZyBhIDEgc2Vjb25kIHBlcmlvZCwgdGhvc2Ug
-bG9vayBhcyBleHBlY3RlZC4NCg0KVG8gbWUgdGhhdCBqdXN0IG1ha2VzIHRoaW5ncyBoYXJkZXIg
-dG8gdW5kZXJzdGFuZC4gSWYgeW91IHdlcmUgcmVhZGluZyANCnRoZSBBRFQ3NDc1IGRhdGFzaGVl
-dCB5b3UnZCBzZWUgdGhpbmdzIGxpa2UgdGhlIHN1cHBvcnRlZCBmcmVxdWVuY2llcyBvZiANCjEx
-LCAxNCwgLi4uICwgODgsIDIyNTAwLiBIYXZpbmcgdG8gZXhwcmVzcyB0aGF0IGluIG5hbm9zZWNv
-bmRzIHJlcXVpcmVzIA0KbWFraW5nIGEgYml0IG9mIGEgbGVhcC4gVGhlIGR1dHkgY3ljbGUgcGVy
-Y2VudGFnZSB0byBuYW5vc2Vjb25kcyBpcyBtb3JlIA0Kc3RyYWlnaHQgZm9yd2FyZCBidXQgc2Vl
-bXMgdW5uZWNlc3NhcmlseSBvYnNjdXJlIHRvIG1lLg0KDQo+DQo+IENoZWVycywNCj4gQ29ub3Iu
-DQo+
+Add support for Amlogic S4 PWM and related device nodes.
+
+Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+---
+Changes in v5:
+- Add devm_add_action_or_reset for free clk when unloading.
+- Replace the underscores of node name with dashes.
+- Link to v4: https://lore.kernel.org/r/20240424-s4-pwm-v4-0-ee22effd40d0@amlogic.com
+
+---
+Junyi Zhao (2):
+      pwm: meson: Add support for Amlogic S4 PWM
+      arm64: dts: amlogic: Add Amlogic S4 PWM
+
+ arch/arm64/boot/dts/amlogic/meson-s4.dtsi | 207 ++++++++++++++++++++++++++++++
+ drivers/pwm/pwm-meson.c                   |  53 ++++++++
+ 2 files changed, 260 insertions(+)
+---
+base-commit: 124cfbcd6d185d4f50be02d5f5afe61578916773
+change-id: 20240424-s4-pwm-2d709986caee
+
+Best regards,
+-- 
+Kelvin Zhang <kelvin.zhang@amlogic.com>
+
+
 
