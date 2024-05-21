@@ -1,61 +1,48 @@
-Return-Path: <linux-pwm+bounces-2205-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2206-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF85D8CB3DA
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 20:50:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A9C78CB3F6
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 21:03:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5566FB208F3
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 18:50:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FF1A1F22B59
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 19:03:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 101C22AEFB;
-	Tue, 21 May 2024 18:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B5551494AA;
+	Tue, 21 May 2024 19:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="twf+yDEY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnw6Ciy8"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8228417722;
-	Tue, 21 May 2024 18:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6825D14901C;
+	Tue, 21 May 2024 19:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716317427; cv=none; b=aXP8fqMY/QSfLVujeVfTXY7tStYnhv012OIU0GsHgdS1aZixEX/Mxv2vUzUWN+pTo4Uao+W7g20VjDUs+eacqwLaMlwSHeGc5VqAH3F5JXNYuqMADZqxAoxDUmI+ZDrHc5m+uwjqKKscfdb1qfu0Y6dx4Et4sql0AOoRXssGrwM=
+	t=1716318146; cv=none; b=jNxEn/BuUj88y/RVTJRkhxt5KAKUFmmx5u8n94z8cBE/WIDKMadGC97iedVwlZWv3MP/mrVDwF1IcSiyyMc7SergMu1RuvoYQv/nSA0WZeQgEN/hfiY2MKID3jJpRjENLrrz7GVjcKVWHkoHa9CF3ShZ4QFYqzLTI3dKaihsLvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716317427; c=relaxed/simple;
-	bh=lRAe+LkKT4cBx4UtkXVFIn0h7vayN5ENbaTYWa1+Wc8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=e9bFpmRwi2UKgMEvg4iwBIK/LsV25lgNGlIn22r8KTXer3/sdadl/Je4OI+5FnTGeMBxAoxuUOVhEJzW19vAMud8ELPyIObucq88McQHoGKumZNvOGc4RTn8+3jFoE0FXdKXBctXzRT0n4MRL5JU3WbQilVR9w/Ma6YQFJCanJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=twf+yDEY; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 2BB1F120005;
-	Tue, 21 May 2024 21:50:13 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 2BB1F120005
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1716317413;
-	bh=layIMEI/pkFEQkS/PJJqywpWNGCjnNMloO+DcQbHo2s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=twf+yDEYeGnc8V8rmhzGZNgtuCb1UG/9wxtYXD7uOUAfw8PWdYoIvnxNDrni9YUZF
-	 pdhlqlgWSN6eAub5PMoPWf0CkTi682zSrm2bQ+7Qgr9MrbObX0iLFLuyCLueQ9Ugbg
-	 9CAuInykDuKE50mG2TcWmCwYFRL3Nuzh9/TLt5Jw20e53jw0Uf6pIqu/0NMNCTj+pQ
-	 //fUDTVaK9ycLN+YZwwGwPU5Dhl3HnMPC1HbzfUvEpDQTldPe8o9vK193kZ8/NOXc6
-	 22ziJVXKTDc4ybFOgsz7ATDrkpILVsDSgFRc+EDbDlfxu0dReGzhVTLeoZbL0fCvZo
-	 edxh+LI8gmvUw==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 21 May 2024 21:50:12 +0300 (MSK)
-Received: from [172.28.65.135] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 21 May 2024 21:50:12 +0300
-Message-ID: <4fd9fe90-1da0-4b8c-8bc4-18b7a4dc38ab@salutedevices.com>
-Date: Tue, 21 May 2024 21:50:12 +0300
+	s=arc-20240116; t=1716318146; c=relaxed/simple;
+	bh=Pop+pTIbDV/uRiCxs5Z5+voBTD3kbbNyyhq/21Ly9L8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iVWzisQkqp2xeBCekrWWfNOL7t/QS6wYCsgPZ51Ed/d0DtlSWdlOSF1t6Sx+PBvwqbIGpuJ/zcmu6u2Bq57zmrtNobIUOE7fYHDn1r1tbviqBLThyuocU6+2062PSs1KgCWhCK0l5N0tnw5RJ0hwN9vGGVHTwJILaxmK66SmodQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnw6Ciy8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE0F7C2BD11;
+	Tue, 21 May 2024 19:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716318145;
+	bh=Pop+pTIbDV/uRiCxs5Z5+voBTD3kbbNyyhq/21Ly9L8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pnw6Ciy8Ss+CPPX3/eIwfz/TIvS97lloi8hWCFTq85z2pU7+kQn8FUEf70Ub1pu8D
+	 5mks9LQ4OTTV4jhpPLK6zhIROQT16/GartdEYgGcUsvdJ4Bqc5EoKVCuqbBDIU3yNg
+	 kIfvU0+xoywCUIHtJEyh5MK93uhqKDvgF55jdGVRsCkVNKhAHDN7I2jGXQU4pRk5LB
+	 uKPheJY8YJCZadetK8uqtf+Tt1VHKgLCJVbSIUE2FGdVg/Yxv5U/sgofFPL6CGfqh8
+	 MZWsN7ioBR4Kr7/0VjyHgjNiuZE0oZESHWcNQ62/6zyBpPq3lgq6vKwehJ7qE2YHTS
+	 3R8qT4k6dTX3A==
+Message-ID: <920c3b0d-86ed-4616-989c-0d493a189c91@kernel.org>
+Date: Tue, 21 May 2024 21:02:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -63,157 +50,84 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [DMARC error][DKIM error] [PATCH v5 1/2] pwm: meson: Add support
- for Amlogic S4 PWM
-To: <kelvin.zhang@amlogic.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>, Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>
-CC: <linux-pwm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, Junyi Zhao <junyi.zhao@amlogic.com>,
-	"kernel@salutedevices.com" <kernel@salutedevices.com>
-References: <20240521-s4-pwm-v5-0-0c91f5fa32cd@amlogic.com>
- <20240521-s4-pwm-v5-1-0c91f5fa32cd@amlogic.com>
+Subject: Re: [PATCH 1/5] dt-bindings: trivial-devices: Drop adi,adp5585 and
+ adi,adp5585-02
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org
+Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
+ <20240520195942.11582-2-laurent.pinchart@ideasonboard.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: George Stark <gnstark@salutedevices.com>
-In-Reply-To: <20240521-s4-pwm-v5-1-0c91f5fa32cd@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240520195942.11582-2-laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185399 [May 21 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_uf_ne_domains}, {Tracking_dating_text_input_url}, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;www.kernel.org:7.1.1;salutedevices.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/05/21 16:20:00
-X-KSMG-LinksScanning: Clean, bases: 2024/05/21 17:40:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/21 08:41:00 #25230763
-X-KSMG-AntiVirus-Status: Clean, skipped
 
-Hello Kelvin, Junyi
-
-On 5/21/24 11:31, Kelvin Zhang via B4 Relay wrote:
-> From: Junyi Zhao <junyi.zhao@amlogic.com>
+On 20/05/2024 21:59, Laurent Pinchart wrote:
+> The Analog Devices ADP5585 is a multi-function device that requires
+> non-trivial DT bindings. To prepare for proper support of the device,
+> drop the related compatible strings from trivial-devices.yaml. They were
+> added by mistake, without any user in the mainline kernel, neither in
+> device tree sources nor in drivers.
 > 
-> This patch adds support for Amlogic S4 PWM.
+> Fixes: e5dddbedfe09 ("dt-bindings: add ADP5585/ADP5589 entries to trivial-devices")
 
-Please take a look at 
-https://www.kernel.org/doc/html/v6.9/process/submitting-patches.html#describe-your-changes
+I don't see a bug there. Just because there are no users, it is not yet
+a bug.
 
-It should be something like
-Add support for Amlogic S4 PWM.
+This should be squashed with next patch so you keep compatibles documented.
 
 
-> 
-> Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
-> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
-> ---
->   drivers/pwm/pwm-meson.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 53 insertions(+)
-> 
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index b2f97dfb01bb..9fea28a51921 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -460,6 +460,51 @@ static int meson_pwm_init_channels_meson8b_v2(struct pwm_chip *chip)
->   	return meson_pwm_init_clocks_meson8b(chip, mux_parent_data);
->   }
->   
-> +static void meson_pwm_s4_put_clk(void *data)
-> +{
-> +	int i;
-> +	struct meson_pwm *meson;
-> +	struct meson_pwm_channel *channel;
-> +
-> +	meson = (struct meson_pwm *)data;
-You can initialize meson variable along with declaration; type casting 
-is not needed
 
-> +	for (i = 0; i < MESON_NUM_PWMS; i++) {
-> +		channel = &meson->channels[i];
-> +		clk_put(channel->clk);
-> +	}
-you can save 3 lines just by using clk_put(meson->channels[i].clk);
+Best regards,
+Krzysztof
 
-> +}
-> +
-> +static int meson_pwm_init_channels_meson_s4(struct pwm_chip *chip)
-> +{
-> +	int i, ret;
-> +	struct device *dev = pwmchip_parent(chip);
-> +	struct device_node *np = dev->of_node;
-> +	struct meson_pwm *meson = to_meson_pwm(chip);
-> +	struct meson_pwm_channel *channel;
-> +
-> +	for (i = 0; i < MESON_NUM_PWMS; i++) {
-> +		channel = &meson->channels[i];
-> +		channel->clk = of_clk_get(np, i);
-> +		if (IS_ERR(channel->clk)) {
-> +			ret = PTR_ERR(channel->clk);
-> +			dev_err_probe(dev, ret, "Failed to get clk\n");
-> +			goto err;
-> +		}
-> +	}
-> +	ret = devm_add_action_or_reset(dev, meson_pwm_s4_put_clk, meson);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +
-> +err:
-> +	while (--i >= 0) {
-> +		channel = &meson->channels[i];
-> +		clk_put(channel->clk);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->   static const struct meson_pwm_data pwm_meson8b_data = {
->   	.parent_names = { "xtal", NULL, "fclk_div4", "fclk_div3" },
->   	.channels_init = meson_pwm_init_channels_meson8b_legacy,
-> @@ -498,6 +543,10 @@ static const struct meson_pwm_data pwm_meson8_v2_data = {
->   	.channels_init = meson_pwm_init_channels_meson8b_v2,
->   };
->   
-> +static const struct meson_pwm_data pwm_meson_s4_data = {
-> +	.channels_init = meson_pwm_init_channels_meson_s4,
-> +};
-> +
-according to already existing soc-specific named vars and functions
-new names should be
-static const struct meson_pwm_data pwm_s4_data
-and
-static int meson_pwm_init_channels_s4(struct pwm_chip *chip)
-
->   static const struct of_device_id meson_pwm_matches[] = {
->   	{
->   		.compatible = "amlogic,meson8-pwm-v2",
-> @@ -536,6 +585,10 @@ static const struct of_device_id meson_pwm_matches[] = {
->   		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
->   		.data = &pwm_g12a_ao_cd_data
->   	},
-> +	{
-> +		.compatible = "amlogic,meson-s4-pwm",
-> +		.data = &pwm_meson_s4_data
-> +	},
->   	{},
->   };
->   MODULE_DEVICE_TABLE(of, meson_pwm_matches);
-> 
-
--- 
-Best regards
-George
 
