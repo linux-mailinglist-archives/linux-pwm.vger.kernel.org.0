@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-2206-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2207-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A9C78CB3F6
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 21:03:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E7668CB3FF
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 21:06:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FF1A1F22B59
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 19:03:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6FAC3B24268
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 19:05:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B5551494AA;
-	Tue, 21 May 2024 19:02:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3396D14900E;
+	Tue, 21 May 2024 19:05:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnw6Ciy8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I75bpz/Z"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6825D14901C;
-	Tue, 21 May 2024 19:02:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15CD69DF7;
+	Tue, 21 May 2024 19:05:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716318146; cv=none; b=jNxEn/BuUj88y/RVTJRkhxt5KAKUFmmx5u8n94z8cBE/WIDKMadGC97iedVwlZWv3MP/mrVDwF1IcSiyyMc7SergMu1RuvoYQv/nSA0WZeQgEN/hfiY2MKID3jJpRjENLrrz7GVjcKVWHkoHa9CF3ShZ4QFYqzLTI3dKaihsLvc=
+	t=1716318357; cv=none; b=D7s2jVTYsI2h/i+f51HW0gGfUDutpoxEVYAfBhZ1yFPxMtOgsmSgRhoDWMp+GUdBgnowKlmUNZ0FOEUo8PLPiTYGShdAc4W+Q4qSPYbq2qI/KIH+IWbVeG2EQiN8ssLWtAbrGQKVyTAzWnov3G+0VTmJ6oK5TFlX/Lz2qjME0pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716318146; c=relaxed/simple;
-	bh=Pop+pTIbDV/uRiCxs5Z5+voBTD3kbbNyyhq/21Ly9L8=;
+	s=arc-20240116; t=1716318357; c=relaxed/simple;
+	bh=q2yoRuIo85m8Z6ImV81l45Ie2jVyv8NbcTBVXQYNINE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iVWzisQkqp2xeBCekrWWfNOL7t/QS6wYCsgPZ51Ed/d0DtlSWdlOSF1t6Sx+PBvwqbIGpuJ/zcmu6u2Bq57zmrtNobIUOE7fYHDn1r1tbviqBLThyuocU6+2062PSs1KgCWhCK0l5N0tnw5RJ0hwN9vGGVHTwJILaxmK66SmodQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnw6Ciy8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE0F7C2BD11;
-	Tue, 21 May 2024 19:02:21 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=cMKVaNoWetLmWgziKCtcMlcTdI6KnMwg8ZVIveL+ZZw7lQY8OmBkeDNwGRtuOi0N1qJDlx7EChf0J+wOwRgwE2DfCxUvqZGH5AYLeW1u0GZADIviWvso0+yikTEg+TSTxF//udw49E1d78GtKf956mcA6y5+kO4IDYewpR41wCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I75bpz/Z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDF26C2BD11;
+	Tue, 21 May 2024 19:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716318145;
-	bh=Pop+pTIbDV/uRiCxs5Z5+voBTD3kbbNyyhq/21Ly9L8=;
+	s=k20201202; t=1716318356;
+	bh=q2yoRuIo85m8Z6ImV81l45Ie2jVyv8NbcTBVXQYNINE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pnw6Ciy8Ss+CPPX3/eIwfz/TIvS97lloi8hWCFTq85z2pU7+kQn8FUEf70Ub1pu8D
-	 5mks9LQ4OTTV4jhpPLK6zhIROQT16/GartdEYgGcUsvdJ4Bqc5EoKVCuqbBDIU3yNg
-	 kIfvU0+xoywCUIHtJEyh5MK93uhqKDvgF55jdGVRsCkVNKhAHDN7I2jGXQU4pRk5LB
-	 uKPheJY8YJCZadetK8uqtf+Tt1VHKgLCJVbSIUE2FGdVg/Yxv5U/sgofFPL6CGfqh8
-	 MZWsN7ioBR4Kr7/0VjyHgjNiuZE0oZESHWcNQ62/6zyBpPq3lgq6vKwehJ7qE2YHTS
-	 3R8qT4k6dTX3A==
-Message-ID: <920c3b0d-86ed-4616-989c-0d493a189c91@kernel.org>
-Date: Tue, 21 May 2024 21:02:19 +0200
+	b=I75bpz/ZrJBhtuMHBG9w8pGgtZBKngSo1hzZjyrTF9hTbZStSyaaa0OXO7aaCWFW9
+	 XZUWM9AlFsDXJxB6wfq2gRpjAT3ODKd9xCnZCQOPCd1XoaF/DAaMtwQDQ9ylUzNQYN
+	 Tsz5uVMvpMXzJscDB/CmyfH5Ov7rQT0ARV8gS10QjpXKVBjIldAOvYvd1drtPasKD6
+	 /3eL42gGNe7FRk8HJiea8XobXZ+2QGi4An928gX9we6rdabY6EWgTGenbC0zRBA3qk
+	 722Dui0BA+KRe45YFH8ZLl5QkD68AFIKXgXc1KzS4viOZQYl7sR5LCsAGrWRamlxKN
+	 65oIrFA3ex4pw==
+Message-ID: <11a383f3-a6db-4de7-a5f8-2938c69e98fc@kernel.org>
+Date: Tue, 21 May 2024 21:05:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: trivial-devices: Drop adi,adp5585 and
- adi,adp5585-02
+Subject: Re: [PATCH 2/5] dt-bindings: Add bindings for the Analog Devices
+ ADP5585
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
  linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org
@@ -61,7 +61,7 @@ Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
 References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
- <20240520195942.11582-2-laurent.pinchart@ideasonboard.com>
+ <20240520195942.11582-3-laurent.pinchart@ideasonboard.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,23 +107,250 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240520195942.11582-2-laurent.pinchart@ideasonboard.com>
+In-Reply-To: <20240520195942.11582-3-laurent.pinchart@ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 20/05/2024 21:59, Laurent Pinchart wrote:
-> The Analog Devices ADP5585 is a multi-function device that requires
-> non-trivial DT bindings. To prepare for proper support of the device,
-> drop the related compatible strings from trivial-devices.yaml. They were
-> added by mistake, without any user in the mainline kernel, neither in
-> device tree sources nor in drivers.
+> The ADP5585 is a 10/11 input/output port expander with a built in keypad
+> matrix decoder, programmable logic, reset generator, and PWM generator.
+> These bindings model the device as an MFD, and support the GPIO expander
+> and PWM functions.
 > 
-> Fixes: e5dddbedfe09 ("dt-bindings: add ADP5585/ADP5589 entries to trivial-devices")
+> These bindings support the GPIO and PWM functions.
+> 
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+> I've limited the bindings to GPIO and PWM as I lack hardware to design,
+> implement and test the rest of the features the chip supports.
+> ---
+>  .../bindings/gpio/adi,adp5585-gpio.yaml       |  36 ++++++
+>  .../devicetree/bindings/mfd/adi,adp5585.yaml  | 117 ++++++++++++++++++
+>  .../bindings/pwm/adi,adp5585-pwm.yaml         |  35 ++++++
+>  MAINTAINERS                                   |   7 ++
+>  4 files changed, 195 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pwm/adi,adp5585-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml b/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
+> new file mode 100644
+> index 000000000000..210e4d53e764
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
+> @@ -0,0 +1,36 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/adi,adp5585-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADP5585 GPIO Expander
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +
+> +description: |
+> +  The Analog Devices ADP5585 has up to 11 GPIOs represented by a "gpio" child
+> +  node of the parent MFD device. See
+> +  Documentation/devicetree/bindings/mfd/adi,adp5585.yaml for further details as
+> +  well as an example.
+> +
+> +properties:
+> +  compatible:
+> +    const: adi,adp5585-gpio
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  gpio-reserved-ranges: true
 
-I don't see a bug there. Just because there are no users, it is not yet
-a bug.
+There are no resources here, so new compatible is not really warranted.
+Squash the node into parent.
 
-This should be squashed with next patch so you keep compatibles documented.
+> +
+> +required:
+> +  - compatible
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +
+> +additionalProperties: false
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+> new file mode 100644
+> index 000000000000..217c038b2842
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+> @@ -0,0 +1,117 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/adi,adp5585.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADP5585 Keypad Decoder and I/O Expansion
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +
+> +description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+> +  The ADP5585 is a 10/11 input/output port expander with a built in keypad
+> +  matrix decoder, programmable logic, reset generator, and PWM generator.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - adi,adp5585-00  # Default
+> +          - adi,adp5585-01  # 11 GPIOs
+> +          - adi,adp5585-02  # No pull-up resistors by default on special pins
+> +          - adi,adp5585-03  # Alternate I2C address
+> +          - adi,adp5585-04  # Pull-down resistors on all pins by default
+> +      - const: adi,adp5585
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vdd-supply: true
+> +
+> +  gpio:
+> +    $ref: /schemas/gpio/adi,adp5585-gpio.yaml
+> +
+> +  pwm:
+> +    $ref: /schemas/pwm/adi,adp5585-pwm.yaml
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio
+> +  - pwm
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: adi,adp5585-01
+> +    then:
+> +      properties:
+> +        gpio:
+> +          properties:
+> +            gpio-reserved-ranges: false
+
+This also points to fact your child node is pointless. It does not stand
+on its own...
+
+> +    else:
+> +      properties:
+> +        gpio:
+> +          properties:
+> +            gpio-reserved-ranges:
+> +              items:
+> +                - const: 5
+> +                - const: 1
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        mfd@34 {
+> +            compatible = "adi,adp5585-00", "adi,adp5585";
+> +            reg = <0x34>;
+> +
+> +            gpio {
+> +                compatible = "adi,adp5585-gpio";
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +                gpio-reserved-ranges = <5 1>;
+> +            };
+> +
+> +            pwm {
+> +                compatible = "adi,adp5585-pwm";
+> +                #pwm-cells = <3>;
+> +            };
+> +        };
+> +    };
+> +
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        mfd@34 {
+> +            compatible = "adi,adp5585-01", "adi,adp5585";
+> +            reg = <0x34>;
+> +
+> +            vdd-supply = <&reg_3v3>;
+> +
+> +            gpio {
+> +                compatible = "adi,adp5585-gpio";
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+
+Different by one property? So just keep one example, unless there are
+more differences.
+
+> +            };
+> +
+> +            pwm {
+> +                compatible = "adi,adp5585-pwm";
+> +                #pwm-cells = <3>;
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/pwm/adi,adp5585-pwm.yaml b/Documentation/devicetree/bindings/pwm/adi,adp5585-pwm.yaml
+> new file mode 100644
+> index 000000000000..351a9d5da566
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/adi,adp5585-pwm.yaml
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/adi,adp5585-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADP5585 PWM Generator
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +
+> +description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+> +  The Analog Devices ADP5585 generates a PWM output with configurable frequency
+> +  and duty cycle represented by a "pwm" child node of the parent MFD device.
+> +  See Documentation/devicetree/bindings/mfd/adi,adp5585.yaml for further
+> +  details as well as an example.
+> +
+> +allOf:
+> +  - $ref: /schemas/pwm/pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adp5585-pwm
+> +
+> +  "#pwm-cells":
+> +    const: 3
+
+Also no resources, so this can be part of the parent node.
 
 
 
