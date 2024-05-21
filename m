@@ -1,249 +1,219 @@
-Return-Path: <linux-pwm+bounces-2204-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2205-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D0EA8CAEFA
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 15:08:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF85D8CB3DA
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 20:50:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 128D8283FFD
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 13:08:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5566FB208F3
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 May 2024 18:50:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4AA47C09E;
-	Tue, 21 May 2024 13:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 101C22AEFB;
+	Tue, 21 May 2024 18:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="twf+yDEY"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFED280046
-	for <linux-pwm@vger.kernel.org>; Tue, 21 May 2024 13:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8228417722;
+	Tue, 21 May 2024 18:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716296769; cv=none; b=pS7iK8m2kHF0u4mZ4bsaf/jSSLLcVtQjO9806jJTe50B7SrELLrJlapIU8OmSJFyxW0vnBfN/6ejWEctsIAJsdHJgsk7Lkzgzn79zSltpUP+8Sd2w7gdW2s4rOPOsmxDgjOrWMz/llJmAz7E5N+XiQLTYs/1aa1d7RwVqRAn6+Q=
+	t=1716317427; cv=none; b=aXP8fqMY/QSfLVujeVfTXY7tStYnhv012OIU0GsHgdS1aZixEX/Mxv2vUzUWN+pTo4Uao+W7g20VjDUs+eacqwLaMlwSHeGc5VqAH3F5JXNYuqMADZqxAoxDUmI+ZDrHc5m+uwjqKKscfdb1qfu0Y6dx4Et4sql0AOoRXssGrwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716296769; c=relaxed/simple;
-	bh=Gm4Rfz371L48OCVFj/POrZrHcEmt4Wh36gFUtfw+L2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J5IG5irjJn1CMg8wLtrik1/Fhy6eS9A4I7+PlGk/vv5uWz+d0eAJ+XXpFoa+jTmKSAmdGoJqfKiWbZsHT32xoFql3Jp4DIaOH3oMC7DiZrLE8tfbVVW9GldyISxakZt/T5FMuhJyLgSbXOP9FjV7mjp7gCTje+KqDUMW/H6SbXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s9PBi-0000Dp-Ik; Tue, 21 May 2024 15:05:54 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s9PBh-002OPX-SC; Tue, 21 May 2024 15:05:53 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s9PBh-009TFH-2X;
-	Tue, 21 May 2024 15:05:53 +0200
-Date: Tue, 21 May 2024 15:05:53 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Clark Wang <xiaoning.wang@nxp.com>
-Subject: Re: [PATCH 5/5] pwm: adp5585: Add Analog Devices ADP5585 support
-Message-ID: <xobmekjwqanow765yr42tsgknc5gc7szjublq6ywgbmoxovlr5@v3sofz5bmkol>
-References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
- <20240520195942.11582-6-laurent.pinchart@ideasonboard.com>
- <dl7a6puox5lc36fpto2fgyfgmpd3uboqc4lcfdtuaxzzsboqld@alw7vyi7pqjz>
- <20240521100922.GF16345@pendragon.ideasonboard.com>
+	s=arc-20240116; t=1716317427; c=relaxed/simple;
+	bh=lRAe+LkKT4cBx4UtkXVFIn0h7vayN5ENbaTYWa1+Wc8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=e9bFpmRwi2UKgMEvg4iwBIK/LsV25lgNGlIn22r8KTXer3/sdadl/Je4OI+5FnTGeMBxAoxuUOVhEJzW19vAMud8ELPyIObucq88McQHoGKumZNvOGc4RTn8+3jFoE0FXdKXBctXzRT0n4MRL5JU3WbQilVR9w/Ma6YQFJCanJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=twf+yDEY; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 2BB1F120005;
+	Tue, 21 May 2024 21:50:13 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 2BB1F120005
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1716317413;
+	bh=layIMEI/pkFEQkS/PJJqywpWNGCjnNMloO+DcQbHo2s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
+	b=twf+yDEYeGnc8V8rmhzGZNgtuCb1UG/9wxtYXD7uOUAfw8PWdYoIvnxNDrni9YUZF
+	 pdhlqlgWSN6eAub5PMoPWf0CkTi682zSrm2bQ+7Qgr9MrbObX0iLFLuyCLueQ9Ugbg
+	 9CAuInykDuKE50mG2TcWmCwYFRL3Nuzh9/TLt5Jw20e53jw0Uf6pIqu/0NMNCTj+pQ
+	 //fUDTVaK9ycLN+YZwwGwPU5Dhl3HnMPC1HbzfUvEpDQTldPe8o9vK193kZ8/NOXc6
+	 22ziJVXKTDc4ybFOgsz7ATDrkpILVsDSgFRc+EDbDlfxu0dReGzhVTLeoZbL0fCvZo
+	 edxh+LI8gmvUw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Tue, 21 May 2024 21:50:12 +0300 (MSK)
+Received: from [172.28.65.135] (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 21 May 2024 21:50:12 +0300
+Message-ID: <4fd9fe90-1da0-4b8c-8bc4-18b7a4dc38ab@salutedevices.com>
+Date: Tue, 21 May 2024 21:50:12 +0300
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kumwfefmbg4urjq2"
-Content-Disposition: inline
-In-Reply-To: <20240521100922.GF16345@pendragon.ideasonboard.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [DMARC error][DKIM error] [PATCH v5 1/2] pwm: meson: Add support
+ for Amlogic S4 PWM
+To: <kelvin.zhang@amlogic.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+	<u.kleine-koenig@pengutronix.de>, Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>
+CC: <linux-pwm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, Junyi Zhao <junyi.zhao@amlogic.com>,
+	"kernel@salutedevices.com" <kernel@salutedevices.com>
+References: <20240521-s4-pwm-v5-0-0c91f5fa32cd@amlogic.com>
+ <20240521-s4-pwm-v5-1-0c91f5fa32cd@amlogic.com>
+Content-Language: en-US
+From: George Stark <gnstark@salutedevices.com>
+In-Reply-To: <20240521-s4-pwm-v5-1-0c91f5fa32cd@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 185399 [May 21 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_uf_ne_domains}, {Tracking_dating_text_input_url}, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;www.kernel.org:7.1.1;salutedevices.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/05/21 16:20:00
+X-KSMG-LinksScanning: Clean, bases: 2024/05/21 17:40:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/21 08:41:00 #25230763
+X-KSMG-AntiVirus-Status: Clean, skipped
+
+Hello Kelvin, Junyi
+
+On 5/21/24 11:31, Kelvin Zhang via B4 Relay wrote:
+> From: Junyi Zhao <junyi.zhao@amlogic.com>
+> 
+> This patch adds support for Amlogic S4 PWM.
+
+Please take a look at 
+https://www.kernel.org/doc/html/v6.9/process/submitting-patches.html#describe-your-changes
+
+It should be something like
+Add support for Amlogic S4 PWM.
 
 
---kumwfefmbg4urjq2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
+> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+> ---
+>   drivers/pwm/pwm-meson.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 53 insertions(+)
+> 
+> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+> index b2f97dfb01bb..9fea28a51921 100644
+> --- a/drivers/pwm/pwm-meson.c
+> +++ b/drivers/pwm/pwm-meson.c
+> @@ -460,6 +460,51 @@ static int meson_pwm_init_channels_meson8b_v2(struct pwm_chip *chip)
+>   	return meson_pwm_init_clocks_meson8b(chip, mux_parent_data);
+>   }
+>   
+> +static void meson_pwm_s4_put_clk(void *data)
+> +{
+> +	int i;
+> +	struct meson_pwm *meson;
+> +	struct meson_pwm_channel *channel;
+> +
+> +	meson = (struct meson_pwm *)data;
+You can initialize meson variable along with declaration; type casting 
+is not needed
 
-Hello,
+> +	for (i = 0; i < MESON_NUM_PWMS; i++) {
+> +		channel = &meson->channels[i];
+> +		clk_put(channel->clk);
+> +	}
+you can save 3 lines just by using clk_put(meson->channels[i].clk);
 
-[dropping Alexandru Ardelean from Cc as their address bounces]
+> +}
+> +
+> +static int meson_pwm_init_channels_meson_s4(struct pwm_chip *chip)
+> +{
+> +	int i, ret;
+> +	struct device *dev = pwmchip_parent(chip);
+> +	struct device_node *np = dev->of_node;
+> +	struct meson_pwm *meson = to_meson_pwm(chip);
+> +	struct meson_pwm_channel *channel;
+> +
+> +	for (i = 0; i < MESON_NUM_PWMS; i++) {
+> +		channel = &meson->channels[i];
+> +		channel->clk = of_clk_get(np, i);
+> +		if (IS_ERR(channel->clk)) {
+> +			ret = PTR_ERR(channel->clk);
+> +			dev_err_probe(dev, ret, "Failed to get clk\n");
+> +			goto err;
+> +		}
+> +	}
+> +	ret = devm_add_action_or_reset(dev, meson_pwm_s4_put_clk, meson);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +
+> +err:
+> +	while (--i >= 0) {
+> +		channel = &meson->channels[i];
+> +		clk_put(channel->clk);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>   static const struct meson_pwm_data pwm_meson8b_data = {
+>   	.parent_names = { "xtal", NULL, "fclk_div4", "fclk_div3" },
+>   	.channels_init = meson_pwm_init_channels_meson8b_legacy,
+> @@ -498,6 +543,10 @@ static const struct meson_pwm_data pwm_meson8_v2_data = {
+>   	.channels_init = meson_pwm_init_channels_meson8b_v2,
+>   };
+>   
+> +static const struct meson_pwm_data pwm_meson_s4_data = {
+> +	.channels_init = meson_pwm_init_channels_meson_s4,
+> +};
+> +
+according to already existing soc-specific named vars and functions
+new names should be
+static const struct meson_pwm_data pwm_s4_data
+and
+static int meson_pwm_init_channels_s4(struct pwm_chip *chip)
 
-On Tue, May 21, 2024 at 01:09:22PM +0300, Laurent Pinchart wrote:
-> On Tue, May 21, 2024 at 10:51:26AM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Mon, May 20, 2024 at 10:59:41PM +0300, Laurent Pinchart wrote:
-> > > +	ret =3D regmap_update_bits(adp5585_pwm->regmap, ADP5585_GENERAL_CFG,
-> > > +				 ADP5585_OSC_EN, ADP5585_OSC_EN);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	return 0;
-> >=20
-> > The last four lines are equivalent to
-> >=20
-> > 	return ret;
->=20
-> I prefer the existing code but can also change it.
+>   static const struct of_device_id meson_pwm_matches[] = {
+>   	{
+>   		.compatible = "amlogic,meson8-pwm-v2",
+> @@ -536,6 +585,10 @@ static const struct of_device_id meson_pwm_matches[] = {
+>   		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
+>   		.data = &pwm_g12a_ao_cd_data
+>   	},
+> +	{
+> +		.compatible = "amlogic,meson-s4-pwm",
+> +		.data = &pwm_meson_s4_data
+> +	},
+>   	{},
+>   };
+>   MODULE_DEVICE_TABLE(of, meson_pwm_matches);
+> 
 
-Well, I see the upside of your approach. If this was my only concern I
-wouldn't refuse to apply the patch.
-
-> > > +	regmap_update_bits(adp5585_pwm->regmap, ADP5585_GENERAL_CFG,
-> > > +			   ADP5585_OSC_EN, 0);
-> > > +}
-> > > +
-> > > +static int pwm_adp5585_apply(struct pwm_chip *chip,
-> > > +			     struct pwm_device *pwm,
-> > > +			     const struct pwm_state *state)
-> > > +{
-> > > +	struct adp5585_pwm_chip *adp5585_pwm =3D to_adp5585_pwm_chip(chip);
-> > > +	u32 on, off;
-> > > +	int ret;
-> > > +
-> > > +	if (!state->enabled) {
-> > > +		guard(mutex)(&adp5585_pwm->lock);
-> > > +
-> > > +		return regmap_update_bits(adp5585_pwm->regmap, ADP5585_PWM_CFG,
-> > > +					  ADP5585_PWM_EN, 0);
-> > > +	}
-> > > +
-> > > +	if (state->period < ADP5585_PWM_MIN_PERIOD_NS ||
-> > > +	    state->period > ADP5585_PWM_MAX_PERIOD_NS)
-> > > +		return -EINVAL;
-> >=20
-> > Make this:
-> >=20
-> > 	if (state->period < ADP5585_PWM_MIN_PERIOD_NS)
-> > 		return -EINVAL;
-> >=20
-> > 	period =3D min(ADP5585_PWM_MAX_PERIOD_NS, state->period)
-> > 	duty_cycle =3D min(period, state->period);
->=20
-> I haven't been able to find documentation about the expected behaviour.
-> What's the rationale for returning an error if the period is too low,
-> but silently clamping it if it's too high ?
-
-Well, it's only implicitly documented in the implementation of
-PWM_DEBUG. The reasoning is a combination of the following thoughts:
-
- - Requiring exact matches is hard to work with, so some deviation
-   between request and configured value should be allowed.
- - Rounding in both directions has strange and surprising effects. The
-   corner cases (for all affected parties (=3Dconsumer, lowlevel driver
-   and pwm core)) are easier if you only round in one direction.
-   One ugly corner case in your suggested patch is:
-   ADP5585_PWM_MAX_PERIOD_NS corresponds to 0xffff clock ticks.
-   If the consumer requests period=3D64000.2 clock ticks, you configure
-   for 64000. If the consumer requests period=3D65535.2 clock ticks you
-   return -EINVAL.
-   Another strange corner case is: Consider a hardware that can
-   implement the following periods 499.7 ns, 500.2 ns, 500.3 ns and then
-   only values >502 ns.
-   If you configure for 501 ns, you'd get 500.3 ns. get_state() would
-   tell you it's running at 500 ns. If you then configure 500 ns you
-   won't get 500.3 ns any more.
- - If you want to allow 66535.2 clock ticks (and return 65535), what
-   should be the maximal value that should yield 65535? Each cut-off
-   value is arbitrary, so using \infty looks reasonable (to me at
-   least).
- - Rounding down is easier than rounding up, because that's what C's /
-   does. (Well, this is admittedly a bit arbitrary, because if you round
-   down in .apply() you have to round up in .get_state().)
-
-> > round-closest is wrong. Testing with PWM_DEBUG should point that out.
-> > The right algorithm is:
-> >=20
-> > 	on =3D duty_cycle / (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
-> > 	off =3D period / (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ) - on
-> >=20
-> >=20
-> > > +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
-> > > +		swap(on, off);
-> >=20
-> > Uhh, no. Either you can do inverted polarity or you cannot. Don't claim
-> > you can.
->=20
-> OK, but what's the rationale ? This is also an area where I couldn't
-> find documentation.
-
-I don't have a good rationale here. IMHO this inverted polarity stuff is
-only a convenience for consumers because the start of the period isn't
-visible from the output wave form (apart from (maybe) the moment where
-you change the configuration) and so
-
-	.period =3D 5000, duty_cycle =3D 1000, polarity =3D PWM_POLARITY_NORMAL
-
-isn't distinguishable from
-
-	.period =3D 5000, duty_cycle =3D 4000, polarity =3D PWM_POLARITY_INVERSED
-
-=2E But it's a historic assumption of the pwm core that there is a
-relevant difference between the two polarities and I want at least a
-consistent behaviour among the lowlevel drivers. BTW, this convenience
-is the reason I'm not yet clear how I want to implemement a duty_offset.
-
-> > > +	ret =3D devm_pwmchip_add(&pdev->dev, &adp5585_pwm->chip);
-> > > +	if (ret) {
-> > > +		mutex_destroy(&adp5585_pwm->lock);
-> > > +		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void adp5585_pwm_remove(struct platform_device *pdev)
-> > > +{
-> > > +	struct adp5585_pwm_chip *adp5585_pwm =3D platform_get_drvdata(pdev);
-> > > +
-> > > +	mutex_destroy(&adp5585_pwm->lock);
-> >=20
-> > Huh, this is a bad idea. The mutex is gone while the pwmchip is still
-> > registered. AFAIK calling mutex_destroy() is optional, and
-> > adp5585_pwm_remove() can just be dropped. Ditto in the error paths of
-> > .probe().
->=20
-> mutex_destroy() is a no-op when !CONFIG_DEBUG_MUTEXES. When the config
-> option is selected, it gets more useful. I would prefer moving away from
-> the devm_* registration, and unregister the pwm_chip in .remove()
-> manually, before destroying the mutex.
-
-In that case I'd prefer a devm_mutex_init()?!
-=20
+-- 
 Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---kumwfefmbg4urjq2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZMnDAACgkQj4D7WH0S
-/k6cSgf9GGbNJK6nrF2obOZaaHxRDIpOYDcxw0EnZdOniUP0LlmCDHna8Awg+NAZ
-XMkcq0a60qCSMNDLSJqjm8mF4zwWmlUl9NLyRIjptLAM7g8D5N8MkPsxPIfXcA2o
-KeC8zxOriHRK5Pju5wMXdVg4Vkmre8i5GgWHqH4dGcJILfFtU+xiAy5J9S9RYfyU
-xI67jpvDLuAfknGQcNGpaHrS0Z1MkrcG7yr1IJdyfu6VTDiW7RvH6SUufd004lfL
-w1uO2vXMAHO9lmKgnTT8j6u2edjxyuWVLZPn71yVTqAZ5aPaWPAQCV5Qbyd3sgJY
-nTjKK/hJUb8bN5cFPij9tjhFMwlN2Q==
-=VRiY
------END PGP SIGNATURE-----
-
---kumwfefmbg4urjq2--
+George
 
