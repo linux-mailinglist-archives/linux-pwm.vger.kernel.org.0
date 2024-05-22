@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-2215-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2216-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A54148CBB9F
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 May 2024 08:58:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E52998CBBDC
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 May 2024 09:21:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0EEA51F22123
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 May 2024 06:58:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 13C4C1C20FDE
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 May 2024 07:21:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F31F879952;
-	Wed, 22 May 2024 06:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C8E379B87;
+	Wed, 22 May 2024 07:21:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1PieJV5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J0IskLwb"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA51459147;
-	Wed, 22 May 2024 06:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561C62233A;
+	Wed, 22 May 2024 07:21:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716361082; cv=none; b=giIJbHW5kqG5T1M7TWvGhhS15uBqEwcGBbeYH3ZtvSqTW/hVGs/9hTus7+8KcxXysBlxtoFPSYyZwOhYfwqquW1O67+FG+VtwZO1j3uvCJM3oHn0WF6odPGZpqDO53/gq5NoXIoC3b4Yw8tNAk/Wz/HlIiziCyqkcn4s2mKGEBc=
+	t=1716362461; cv=none; b=RwnLnlrQgT6GYmkKJke4ytivmAjMx6SRRvpi8hpaP6ms1KXgC2pRV5qzGJZyGJd3hctzBoPQp6l7pKwIoXRJM6MiIdhdbmy7Z8ZMpGIQVRg7HPahWeYJ8wn4b2/oQwz+roG7dU7bbGaLAIZAUx1gS+n5+ppSndWiQbiY3kb2SoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716361082; c=relaxed/simple;
-	bh=zW4bTdJWK81AR2+O8wSlEJaH4FcFXtOYcg1BuXGhn9k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JnE3x6GWmoiV60MZPJ8XfMMgJyv/GRdXqhHSmDHUPRW1nNxgge87CsB4i/ut1avsvTGIP/mFZQH3dGg9pSq+OCsj2JgNB7foavYly8NCjRqt8xF8vzNGlPeLuHN8mb3vYOCdUGpMk/pi5MUa3k9I79NNAP2ZnQcXedrAFsdjzQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1PieJV5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39181C2BD11;
-	Wed, 22 May 2024 06:57:57 +0000 (UTC)
+	s=arc-20240116; t=1716362461; c=relaxed/simple;
+	bh=9iaBb5mHzEt3sd5FPGMcs25cO1NhhiyMvrzjqOLKl/c=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZWmFEpDYKstXm/NTRozuMl+GzawUXyLk1qdoEbnis3dKtfMFbEi3YLRB7h5C5jB/qFB6ygs7JQjdV6znbBu/XR81LO1Y7laV7XzMt80qRvKv1V3K8nPDofGBFUzfeJ42K1avvbJJHLHQwjaQ5jMPMk9anp4B2Z9W+i0DzX4ROO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J0IskLwb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440EAC2BD11;
+	Wed, 22 May 2024 07:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716361082;
-	bh=zW4bTdJWK81AR2+O8wSlEJaH4FcFXtOYcg1BuXGhn9k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n1PieJV5GQxwoN6cinS+3f6pE72OKEoAUIa0NA8eOl045vEbW4KG+TBaS2FLMcYFi
-	 hoqtJXIJlLu+b+t5lpPtYujk/3HCY2Fle1dMrj8uRb539SUzWdygSg1Yd3pbOvqDkG
-	 iAX4e5Rb7riYGqZIn03i2wAw11jlIeI9ecCoLuVmmBAiuMEeikrei2v3hbVDD+NqBm
-	 rMN/z0Rqa5VSedNhqlvReMqTxzLPHt2ku5HHHezgDJbRQ+12h35sIY8Wovxme2sxwN
-	 BUq8mBLYvm4xjLetB8qhJsIG9MW2SPyJ3xqVqcUTwlo8X52/Le62oYdYS7r16QozJz
-	 yzi7UEd3B1c/g==
-Message-ID: <075f5a03-f288-4dfb-a293-3a6c0675881b@kernel.org>
-Date: Wed, 22 May 2024 08:57:56 +0200
+	s=k20201202; t=1716362460;
+	bh=9iaBb5mHzEt3sd5FPGMcs25cO1NhhiyMvrzjqOLKl/c=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=J0IskLwbdL+IfFmIfTfDTmH/Qq4Z/Pwh+Gj8pfJ0QzXHnMYfKlyrAGD4AQq5rtf3U
+	 CXew5AElD1ij+dp7YxQzPjuGj4VffL+RJhnKpXR36eilwHQdAEp3uz3WzSKP7918Zz
+	 K47gmGVlUVc94DHue9XnmHKUi/H6Kg5C/uxJZhuwHwiNfaRbZu/Tp9O8p+z6yvAEKp
+	 C6+LrGJaTEed4Pj072y0cgZp9lnn6wgwP/kB5jirKmLv/OQL0Ksd1yqFOxUKZru5HN
+	 tTgUd5mVAWDGgg7043QSqnfX0VEgQhshn/lMmx6WjB2kBRX08RnniX8YrYKEyBqCsK
+	 yY1kWY5vWMElA==
+Message-ID: <482e5724-cfe0-4cb0-8faa-f5dfafd0e563@kernel.org>
+Date: Wed, 22 May 2024 09:20:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -52,6 +52,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 2/5] dt-bindings: Add bindings for the Analog Devices
  ADP5585
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
  linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
@@ -64,7 +65,7 @@ References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
  <20240520195942.11582-3-laurent.pinchart@ideasonboard.com>
  <11a383f3-a6db-4de7-a5f8-2938c69e98fc@kernel.org>
  <20240521194309.GA8863@pendragon.ideasonboard.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <075f5a03-f288-4dfb-a293-3a6c0675881b@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -109,176 +110,93 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240521194309.GA8863@pendragon.ideasonboard.com>
+In-Reply-To: <075f5a03-f288-4dfb-a293-3a6c0675881b@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 21/05/2024 21:43, Laurent Pinchart wrote:
-> Hi Krzysztof,
-> 
-> On Tue, May 21, 2024 at 09:05:50PM +0200, Krzysztof Kozlowski wrote:
->> On 20/05/2024 21:59, Laurent Pinchart wrote:
->>> The ADP5585 is a 10/11 input/output port expander with a built in keypad
->>> matrix decoder, programmable logic, reset generator, and PWM generator.
->>> These bindings model the device as an MFD, and support the GPIO expander
->>> and PWM functions.
+On 22/05/2024 08:57, Krzysztof Kozlowski wrote:
+> On 21/05/2024 21:43, Laurent Pinchart wrote:
+>> Hi Krzysztof,
+>>
+>> On Tue, May 21, 2024 at 09:05:50PM +0200, Krzysztof Kozlowski wrote:
+>>> On 20/05/2024 21:59, Laurent Pinchart wrote:
+>>>> The ADP5585 is a 10/11 input/output port expander with a built in keypad
+>>>> matrix decoder, programmable logic, reset generator, and PWM generator.
+>>>> These bindings model the device as an MFD, and support the GPIO expander
+>>>> and PWM functions.
+>>>>
+>>>> These bindings support the GPIO and PWM functions.
+>>>>
+>>>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>>>> ---
+>>>> I've limited the bindings to GPIO and PWM as I lack hardware to design,
+>>>> implement and test the rest of the features the chip supports.
+>>>> ---
+>>>>  .../bindings/gpio/adi,adp5585-gpio.yaml       |  36 ++++++
+>>>>  .../devicetree/bindings/mfd/adi,adp5585.yaml  | 117 ++++++++++++++++++
+>>>>  .../bindings/pwm/adi,adp5585-pwm.yaml         |  35 ++++++
+>>>>  MAINTAINERS                                   |   7 ++
+>>>>  4 files changed, 195 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
+>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+>>>>  create mode 100644 Documentation/devicetree/bindings/pwm/adi,adp5585-pwm.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml b/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..210e4d53e764
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
+>>>> @@ -0,0 +1,36 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/gpio/adi,adp5585-gpio.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Analog Devices ADP5585 GPIO Expander
+>>>> +
+>>>> +maintainers:
+>>>> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>>>> +
+>>>> +description: |
+>>>> +  The Analog Devices ADP5585 has up to 11 GPIOs represented by a "gpio" child
+>>>> +  node of the parent MFD device. See
+>>>> +  Documentation/devicetree/bindings/mfd/adi,adp5585.yaml for further details as
+>>>> +  well as an example.
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    const: adi,adp5585-gpio
+>>>> +
+>>>> +  gpio-controller: true
+>>>> +
+>>>> +  '#gpio-cells':
+>>>> +    const: 2
+>>>> +
+>>>> +  gpio-reserved-ranges: true
 >>>
->>> These bindings support the GPIO and PWM functions.
->>>
->>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>> ---
->>> I've limited the bindings to GPIO and PWM as I lack hardware to design,
->>> implement and test the rest of the features the chip supports.
->>> ---
->>>  .../bindings/gpio/adi,adp5585-gpio.yaml       |  36 ++++++
->>>  .../devicetree/bindings/mfd/adi,adp5585.yaml  | 117 ++++++++++++++++++
->>>  .../bindings/pwm/adi,adp5585-pwm.yaml         |  35 ++++++
->>>  MAINTAINERS                                   |   7 ++
->>>  4 files changed, 195 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
->>>  create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
->>>  create mode 100644 Documentation/devicetree/bindings/pwm/adi,adp5585-pwm.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml b/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
->>> new file mode 100644
->>> index 000000000000..210e4d53e764
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
->>> @@ -0,0 +1,36 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/gpio/adi,adp5585-gpio.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Analog Devices ADP5585 GPIO Expander
->>> +
->>> +maintainers:
->>> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>> +
->>> +description: |
->>> +  The Analog Devices ADP5585 has up to 11 GPIOs represented by a "gpio" child
->>> +  node of the parent MFD device. See
->>> +  Documentation/devicetree/bindings/mfd/adi,adp5585.yaml for further details as
->>> +  well as an example.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: adi,adp5585-gpio
->>> +
->>> +  gpio-controller: true
->>> +
->>> +  '#gpio-cells':
->>> +    const: 2
->>> +
->>> +  gpio-reserved-ranges: true
+>>> There are no resources here, so new compatible is not really warranted.
+>>> Squash the node into parent.
 >>
->> There are no resources here, so new compatible is not really warranted.
->> Squash the node into parent.
+>> Child nodes seem (to me) to be the standard way to model functions in
+>> MFD devices. Looking at mfd_add_device(), for OF-based systems, the
+>> function iterates over child nodes. I don't mind going a different
 > 
-> Child nodes seem (to me) to be the standard way to model functions in
-> MFD devices. Looking at mfd_add_device(), for OF-based systems, the
-> function iterates over child nodes. I don't mind going a different
-
-Only to assign of node, which could be skipped as well.
-
-> routes, could you indicate what you have in mind, perhaps pointing to an
-> existing driver as an example ?
-
-Most of them? OK, let's take the last added driver in MFD directory:
-cirrus,cs42l43
-It has three children and only two nodes, because only these two devices
-actually need/use/benefit the subnodes.
-
-
+> Only to assign of node, which could be skipped as well.
 > 
->>> +
->>> +required:
->>> +  - compatible
->>> +  - gpio-controller
->>> +  - "#gpio-cells"
->>> +
->>> +additionalProperties: false
->>> +
->>> +...
->>> diff --git a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
->>> new file mode 100644
->>> index 000000000000..217c038b2842
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
->>> @@ -0,0 +1,117 @@
->>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/mfd/adi,adp5585.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Analog Devices ADP5585 Keypad Decoder and I/O Expansion
->>> +
->>> +maintainers:
->>> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>> +
->>> +description: |
->>
->> Do not need '|' unless you need to preserve formatting.
->>
->>> +  The ADP5585 is a 10/11 input/output port expander with a built in keypad
->>> +  matrix decoder, programmable logic, reset generator, and PWM generator.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    items:
->>> +      - enum:
->>> +          - adi,adp5585-00  # Default
->>> +          - adi,adp5585-01  # 11 GPIOs
->>> +          - adi,adp5585-02  # No pull-up resistors by default on special pins
->>> +          - adi,adp5585-03  # Alternate I2C address
->>> +          - adi,adp5585-04  # Pull-down resistors on all pins by default
->>> +      - const: adi,adp5585
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  interrupts:
->>> +    maxItems: 1
->>> +
->>> +  vdd-supply: true
->>> +
->>> +  gpio:
->>> +    $ref: /schemas/gpio/adi,adp5585-gpio.yaml
->>> +
->>> +  pwm:
->>> +    $ref: /schemas/pwm/adi,adp5585-pwm.yaml
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - gpio
->>> +  - pwm
->>> +
->>> +allOf:
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            const: adi,adp5585-01
->>> +    then:
->>> +      properties:
->>> +        gpio:
->>> +          properties:
->>> +            gpio-reserved-ranges: false
->>
->> This also points to fact your child node is pointless. It does not stand
->> on its own...
+>> routes, could you indicate what you have in mind, perhaps pointing to an
+>> existing driver as an example ?
 > 
-> That doesn't make the child pointless just for that reason. There are
-> numerous examples of child nodes that don't stand on their own.
+> Most of them? OK, let's take the last added driver in MFD directory:
+> cirrus,cs42l43
+> It has three children and only two nodes, because only these two devices
+> actually need/use/benefit the subnodes.
 
-No, your if-then must be in the schema defining it. This is just
-unmaintianable code. It proves that child's compatible means nothing. If
-you cannot use child's compatible to make any meaningful choices, then
-it is useless.
+BTW, if these devices have their own I2C addresses or are reusable
+blocks, then of course their existence as child nodes is warranted.
 
+Similarly if these devices had additional subnodes, like pinctrl or SPI
+controller.
 
 Best regards,
 Krzysztof
