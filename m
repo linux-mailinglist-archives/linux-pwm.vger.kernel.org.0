@@ -1,136 +1,111 @@
-Return-Path: <linux-pwm+bounces-2228-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2229-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DA208CCBE9
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 May 2024 07:55:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 749478CCC85
+	for <lists+linux-pwm@lfdr.de>; Thu, 23 May 2024 08:51:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 474CF280DD6
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 May 2024 05:55:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2BBFD1F217B5
+	for <lists+linux-pwm@lfdr.de>; Thu, 23 May 2024 06:51:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F7968005C;
-	Thu, 23 May 2024 05:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b="hytQWbFK"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FE2513C90E;
+	Thu, 23 May 2024 06:51:10 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4A5537F5;
-	Thu, 23 May 2024 05:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC86613C904
+	for <linux-pwm@vger.kernel.org>; Thu, 23 May 2024 06:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716443739; cv=none; b=JgnKp+nvryWuzHxodqZkTfZNR5firWO6Set/GaarVODhJMJG8q5DFvJ3SVEY2j58/ZXO4/bHQUjIxnzUnLFa5i9KqpgsnTB2h9tv239AYtBPeuhvV1JvkRSfCkRc70iSGfu1DlE0ZgIUJNfz2fsAHdYOpPkaMLTldHXY4vEQBaI=
+	t=1716447070; cv=none; b=cP6zVuqsT1+6+KsGBgStXgdcAA7smjGEmNug65wD3WgXSsKkLcDkHHfVKAAwpx6WlF7Bkw1PKRN0fMf+diZvQH9EJzW62zlfUsBgJaSz/8kYomDw7SunRtvA8QK78D07manW34B7DdOckJhPqnDTyCps17SMtU3DJp0Z0+Ts9M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716443739; c=relaxed/simple;
-	bh=SxmqM88Y/QvoBAEDVZtTfuZXc6MFXor/37QPRIkhkfo=;
+	s=arc-20240116; t=1716447070; c=relaxed/simple;
+	bh=HbilW8+/QhxMpuv2I3szsbRjZe9iBLkmZfLbtsRhSQA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lQepr3TEs2DCHcX8S09pYZKsYLCURah9riQwIQQYvm601TGOcnaa1yt4j0w4IbVARWU++ScZPxiebtVrrSdeWvzoNf7ra3yPbP1cqIdhJjRRQKFSEQGoEsutlCw0CDdT+HiWYub+kIJHfeTNbTzn9Cb7uPGouEjWcIammjgXUP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org; spf=none smtp.mailfrom=jookia.org; dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b=hytQWbFK; arc=none smtp.client-ip=95.215.58.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=jookia.org
-X-Envelope-To: kikuchan98@gmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
-	t=1716443735;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jY3OZs3TRZ5fmpHwmF6ZDWmp14tMvpciAkxRyO1/MQo=;
-	b=hytQWbFKB3vS3t96pRQn4SK+Ur5QZdeFozP0miOBgRAvWcITv47RA+H3y/L8s41jv2Jvwp
-	2V3mqNq/STuUork+Ia76faXDFhZL4ZPVJp4uVFqRYa0t0qWzpkA9rgFdAB+oeV0c72NYxL
-	PBbUgqJ5mADP46bcP+qBEZ1ZEOAA+KlwrEcGFSrsbgy2FCZJd+5S03xqmAqedwC1PPR2pc
-	H6K1usInzBMeoeP8VMe/OUHo7JdQqZjr1RwS3T5ADMI6Z6G4iS0BOeMVvQ7846Mdwo0MU3
-	rQenItiIfmJmr5/f+6MwV4ChKBt6E+oDXNL7sWK6sv2hGNZn32pWDadZJw9llw==
-X-Envelope-To: privatesub2@gmail.com
-X-Envelope-To: aou@eecs.berkeley.edu
-X-Envelope-To: bigunclemax@gmail.com
-X-Envelope-To: conor+dt@kernel.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: fusibrandon13@gmail.com
-X-Envelope-To: jernej.skrabec@gmail.com
-X-Envelope-To: krzk+dt@kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-pwm@vger.kernel.org
-X-Envelope-To: linux-riscv@lists.infradead.org
-X-Envelope-To: linux-sunxi@lists.linux.dev
-X-Envelope-To: mkl@pengutronix.de
-X-Envelope-To: p.zabel@pengutronix.de
-X-Envelope-To: palmer@dabbelt.com
-X-Envelope-To: paul.walmsley@sifive.com
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: samuel@sholland.org
-X-Envelope-To: ukleinek@kernel.org
-X-Envelope-To: wens@csie.org
-Date: Thu, 23 May 2024 15:54:00 +1000
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: John Watts <contact@jookia.org>
-To: =?utf-8?B?44GN44GP44Gh44KD44KT44GV44KT?= <kikuchan98@gmail.com>
-Cc: privatesub2@gmail.com, aou@eecs.berkeley.edu, bigunclemax@gmail.com,
-	conor+dt@kernel.org, devicetree@vger.kernel.org,
-	fusibrandon13@gmail.com, jernej.skrabec@gmail.com,
-	krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	mkl@pengutronix.de, p.zabel@pengutronix.de, palmer@dabbelt.com,
-	paul.walmsley@sifive.com, robh@kernel.org, samuel@sholland.org,
-	ukleinek@kernel.org, wens@csie.org
-Subject: Re: [PATCH v9 0/3] Add support for Allwinner PWM on D1/T113s/R329
- SoCs
-Message-ID: <Zk7Z-MfdF-YKWeJ6@titan>
-References: <CAG40kxGMu-TSchNezkcC_A97hzPnWU3KxeL-X-hJfPhjr_COyQ@mail.gmail.com>
- <Zk6yK3U9tgxOxcBb@titan>
- <CAG40kxFxE_Oj+9aCzGku0a3KFHpuW8ai=gEkV9M8==5gwmjdEA@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=k9BgKTyQnOW5hTGp39MlLNSxu/bevOMYyUZA8VQh4iTqG7fJWmXsZ1DHOjW9yxu3HIZFLl1PU4Ue+T9prIE6g7FZTpzU9+li1jTV4P7nW3h662VpsvopXBX/PQUG6ykalvV081sjb6ZPYGKaGmzoJZ65Cvi/ybPRaF5QYiGXMjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1sA2I5-0001hf-DT; Thu, 23 May 2024 08:51:05 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1sA2I4-002crX-FE; Thu, 23 May 2024 08:51:04 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1sA2I4-00Aa6K-1G;
+	Thu, 23 May 2024 08:51:04 +0200
+Date: Thu, 23 May 2024 08:51:04 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Trevor Gamblin <tgamblin@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	michael.hennerich@analog.com, nuno.sa@analog.com, dlechner@baylibre.com
+Subject: Re: [PATCH 1/2 v3] pwm: add duty offset support
+Message-ID: <fqipplnnt2ppyjgvvg7klbnqqcn6phivziizgfbth4jauntsjo@reno3me4kr4o>
+References: <20240521194916.1897909-1-tgamblin@baylibre.com>
+ <20240521194916.1897909-2-tgamblin@baylibre.com>
+ <73y7ovftjv35gw3sjeu3jisg7feplhyebmcnldqvszuofqnn7q@eh4lyicuhfmq>
+ <8cd080ef-e1f3-4752-8f92-d61c5fd321b5@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="u3xcrkvxcpftqa4e"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG40kxFxE_Oj+9aCzGku0a3KFHpuW8ai=gEkV9M8==5gwmjdEA@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <8cd080ef-e1f3-4752-8f92-d61c5fd321b5@baylibre.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On Thu, May 23, 2024 at 02:30:32PM +0900, きくちゃんさん wrote:
-> Hello John,
 
-Hello,
+--u3xcrkvxcpftqa4e
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Your method is quite impressive and challenging.
-> 
-> I think PWM is not only for LCD backlighting, but also for signal generation.
-> For instance, imagine an application software that sends a stream to
-> one PWM channel to synthesize sound by changing its period (plays a
-> square wave).
-> By your method, if the other PWM channel is used for LCD backlighting,
-> it may flicker repeatedly on DIV_M changes.
-> (Or simply both channels for streo sound synthesize, you may hear lots
-> of pop noise)
-> 
-> It means the setting of one channel can affect the other, which users
-> may not anticipate.
+On Wed, May 22, 2024 at 04:06:00PM -0400, Trevor Gamblin wrote:
+> Makes sense. On a related note, will your pwm/chardev branch be merged so=
+on?
 
-Does Linux guarantee a flicker-free experience with setting up PWM
-channels, or that it doesn't affect other channels?
-How do other drivers handle this situation?
+My plan here is to first add core support for .duty_offset, and then
+only expose those chips that implement the new .apply. The reasoning is
+that I want to assert that there is a consistent rounding for all
+new-style drivers and thus allow chardev users to rely on these rounding
+rules.
 
-Maybe out-sourcing the clocking to the device tree and letting people set the
-clock and common divisor in the DT would be a good idea, with the HOSC and a
-common divisor of 1 by default, then error if the value can't be found.
+Best regards
+Uwe
 
-This would work for periods from 41ns up to 687ms by default. Using APB would
-give a better resolution as by default it hangs around 5ns which is nice and
-divisible by 10.
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-> 
-> Best regards,
-> kikuchan.
+--u3xcrkvxcpftqa4e
+Content-Type: application/pgp-signature; name="signature.asc"
 
-John.
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZO51cACgkQj4D7WH0S
+/k6C6Qf+LTGJjBboyMSSTGF03G/zNT6JcBtkPJkyoI+Av73PPmFweSy8iuE7KtDa
+W9NPdmbpbos8hJLsD9O9IUM93okpA7WSEcmyoVNAMfs7GuZNjqpMD2LrS/5NsNJv
+Z0JEycpMDx5fdF45DYU2ruVXf30j40SUN3g2QaZ6/QSl/VRQx1tOR7iNmKl2VhMV
+XTi35dXsdcdjkkVVB+iGxROHY7hA22V8D8NLjfDIx5dErZds2/UXPnaiPmQKTu+z
+f7Y8mI0K7aZzx4fFEBMrJBSI+xZr6S2kpOxCfqaYjgL92Bl80SCrTOxioHkjsl0+
+DPYIUGsisTjiVVHIHHeh97s+4XpH5w==
+=DG6d
+-----END PGP SIGNATURE-----
+
+--u3xcrkvxcpftqa4e--
 
