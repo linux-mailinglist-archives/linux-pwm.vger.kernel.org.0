@@ -1,358 +1,593 @@
-Return-Path: <linux-pwm+bounces-2233-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2234-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF0488CDD8B
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 May 2024 01:18:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6248F8CE265
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 May 2024 10:30:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1DDE31C22798
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 May 2024 23:18:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6B20C1C2131F
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 May 2024 08:30:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFD8E12881C;
-	Thu, 23 May 2024 23:16:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE6401292DD;
+	Fri, 24 May 2024 08:29:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VmDDgdVI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOTLgVmb"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE629128813;
-	Thu, 23 May 2024 23:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BD81292C3;
+	Fri, 24 May 2024 08:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716506215; cv=none; b=Nx9G17DRqfme55CxuCNy7aD0Houk54d3+UDU/eoWB4fDnisI3qk5U0gi7UgJhmuJ7n5Pu5R3UVGA7m7MsLhAnXrUub9IEZZg3fIcoKs7jA8VqfjSSCiNOg5mlNrC/uWQgdLSr24Z2uUCbwtq2WQXkUFGNary7SeIynWqzOZp3/M=
+	t=1716539391; cv=none; b=YqgC/bFYpSMzCY0ZFqRjEGqGNx9g8B1qARdUqE1toL2PgSB+2c5fSDtqqJM4r+eW6JxTfFW12n3JKADmhtf8vzsBBhDggx6Ks1yN1vC8BkG5mZC6izIV9clkbqwZfPffII6DjSUzKzyTHpJC8mPCqHHnGIMnP1e8Larf4yidG5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716506215; c=relaxed/simple;
-	bh=iInzZtl5DmousXS3xfA+CEeE4VY23v6nxCWdWAghjLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aPRuqoVMHajyfTDfrSlKQtDj2a+sjTLmoWr2iOo2jUOqKMic3u8YzQdZ3X53QZ9sPmjf9jRVNzFQNB8PQQh2J6o3/1nh59z9jp8BlYZGUUzwx/3LAshi020ZaTXSprh5MjCCuXISsML21edgxK9HYaIYZBJQzxhJi0DOXeTvm1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=VmDDgdVI; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DC702471;
-	Fri, 24 May 2024 01:16:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1716506198;
-	bh=iInzZtl5DmousXS3xfA+CEeE4VY23v6nxCWdWAghjLs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VmDDgdVINI1OzSfvVRBAj+7MKw8O2pZNA/G1BjXxXPYXulqs1Gn03nWyVOudTCSb1
-	 69Fc4rR6HHybg3Ve5sspfutGtklPfdKGq211nFCHiDL0ExiiDQ4R8SJW0QccMoGmeO
-	 8cDtTD59Cy8kOMye0NR/FgLODYwKH6B8QG8wS6oY=
-Date: Fri, 24 May 2024 02:16:41 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Alexandru Ardelean <alexandru.ardelean@analog.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/5] dt-bindings: Add bindings for the Analog Devices
- ADP5585
-Message-ID: <20240523231641.GJ6640@pendragon.ideasonboard.com>
-References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
- <20240520195942.11582-3-laurent.pinchart@ideasonboard.com>
- <11a383f3-a6db-4de7-a5f8-2938c69e98fc@kernel.org>
- <20240521194309.GA8863@pendragon.ideasonboard.com>
- <075f5a03-f288-4dfb-a293-3a6c0675881b@kernel.org>
- <20240522072224.GC8863@pendragon.ideasonboard.com>
- <92e85dff-ad02-4673-a625-2248b249c262@kernel.org>
+	s=arc-20240116; t=1716539391; c=relaxed/simple;
+	bh=4hA31vtpsaNvcfAhS+q95vc1AsSGRuyl0izOM9TkIqA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iBopeDZvuAgoI3pUVHpvBns38PgSw6Ybkh67CUVCAFkzhigaXeTNcMxyzjJOcdRVKdr7Z9gpQaJ+/nh2Q7D7SS1QA2+m+yzxgW9URc2bDysyhzsGjPVkAzXURJ1eS55WUKUwUUi/mXOzQPMtgGVqQVh4yNeEC2ekgBY4u1ph7Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iOTLgVmb; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-62a083d7ee9so5445957b3.2;
+        Fri, 24 May 2024 01:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716539389; x=1717144189; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WH3Fys/j3aklEmn45PjuAQUjyf4/TFQKqnoFYRFAo0k=;
+        b=iOTLgVmbOo5fLCnAOUWAmXt9DNgN8J48QwrsQc10OE23OyA+CMTYF80RIQ67qfY1Td
+         WAq3ZM9/muAJTqTnuN0wnuP/Ew7udLlXF65w+Bs/JEFqay+4nrYc1dOj31VIt/GKx7ff
+         KVgq7P7Z1AO20sOmmTZt1kgjVnJOyKWUlig3iV7MKm6TwoKpTfF152F42mC2P5wBZdka
+         +xzmgduJ9PjnEhwRv2ezox983qEy+q7MybVg6bd6lc6ND9q+FmMlMwsoaVRpo19Dn3YB
+         /ugJYR1hzRgWvTlc51UX+V2k4ZT9dYkDhoTj8T7V22OcW7yoEkTx60uy5De+iO9aosVO
+         PB+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716539389; x=1717144189;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WH3Fys/j3aklEmn45PjuAQUjyf4/TFQKqnoFYRFAo0k=;
+        b=UzHbPlqUAtMfmTsJ6bDYagXGYkKgl1KC2memRJNLR3gJRppweiWceZ+U3juZrbpgpe
+         Xjsh8J984I1lCi4pYA/RLR1T68rRe7AZ+bhXAI+lzTgb8YT+xeGorXTW6o5ooE+Iram0
+         /JBOmj4/NioFdbd8BRKei4mJN104aAGYds7WMH0HRWx9Y3tWi6zgCKnwVNomYmWW+Mge
+         fPjSPV1Hk+RgO4+P+ynX7+nunCgNrsm9+bNko51P+NT4+lslty8ZzijU6Xq1PdggaE7G
+         Fq9qO4rS82ljarzGmJtmgYE3xendTq5jAA9c/Lc3nJ8BCGx3W/PWiMgPmyu7C4gc2hxi
+         wAuw==
+X-Forwarded-Encrypted: i=1; AJvYcCXngSxLSVMTLTflsE5PNoLbtlqS5kxcc7oURJph3HQhjoXMWCExTrrZmB2X2cBMlEC7IsbspJV5MWNiCoSGuL8EFiYjiJYeKex8aexElKno7rWmcaa87mx9WhgEmTMm8I79ArrQ1Q==
+X-Gm-Message-State: AOJu0Yx8Mdt45sUsXal8yOfqhIlKXgLOl6gd34WxbyNnDBxC2SSgsXNJ
+	PsOnnsCtYhLzVM4H+i7Rga2Jcuv8E/dEKnWtn8x7Ks1+UTbNreDmzg+NKEYfe/YNNbltyPfppn4
+	KXWwL1+d2t9Q6izt0dEdSUQknUB0=
+X-Google-Smtp-Source: AGHT+IGheiRqB6HWj77luLhirWJyawY2o8T2dTrGT8ZU7I/j9Z7RflsykCkKsK4ZvYx8zBWo3R7pn2i7vQIJXeho6xY=
+X-Received: by 2002:a0d:ea47:0:b0:620:2753:96b8 with SMTP id
+ 00721157ae682-62a08df7f15mr19585687b3.12.1716539388653; Fri, 24 May 2024
+ 01:29:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <92e85dff-ad02-4673-a625-2248b249c262@kernel.org>
+References: <cover.1713164810.git.zhoubinbin@loongson.cn> <c89917023b49fff70bc89ddb66be7da4e0fe67ef.1713164810.git.zhoubinbin@loongson.cn>
+ <t3efvxh4d2xvjh4pfrdnho6mwonwm6spjer72ww3wiqx2v3a2x@52ufzsdhc44i>
+In-Reply-To: <t3efvxh4d2xvjh4pfrdnho6mwonwm6spjer72ww3wiqx2v3a2x@52ufzsdhc44i>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Fri, 24 May 2024 14:29:35 +0600
+Message-ID: <CAMpQs4KyX3A-Bxyp7+evBT5Umb03OvpV0VtqrNjAnZPYZ_dNQw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] pwm: Add Loongson PWM controller support
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+Hi Uwe:
 
-(There's a question for the GPIO and PWM maintainers below)
+Thanks for your detailed review.
 
-On Wed, May 22, 2024 at 09:40:02AM +0200, Krzysztof Kozlowski wrote:
-> On 22/05/2024 09:22, Laurent Pinchart wrote:
-> > On Wed, May 22, 2024 at 08:57:56AM +0200, Krzysztof Kozlowski wrote:
-> >> On 21/05/2024 21:43, Laurent Pinchart wrote:
-> >>> On Tue, May 21, 2024 at 09:05:50PM +0200, Krzysztof Kozlowski wrote:
-> >>>> On 20/05/2024 21:59, Laurent Pinchart wrote:
-> >>>>> The ADP5585 is a 10/11 input/output port expander with a built in keypad
-> >>>>> matrix decoder, programmable logic, reset generator, and PWM generator.
-> >>>>> These bindings model the device as an MFD, and support the GPIO expander
-> >>>>> and PWM functions.
-> >>>>>
-> >>>>> These bindings support the GPIO and PWM functions.
-> >>>>>
-> >>>>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >>>>> ---
-> >>>>> I've limited the bindings to GPIO and PWM as I lack hardware to design,
-> >>>>> implement and test the rest of the features the chip supports.
-> >>>>> ---
-> >>>>>  .../bindings/gpio/adi,adp5585-gpio.yaml       |  36 ++++++
-> >>>>>  .../devicetree/bindings/mfd/adi,adp5585.yaml  | 117 ++++++++++++++++++
-> >>>>>  .../bindings/pwm/adi,adp5585-pwm.yaml         |  35 ++++++
-> >>>>>  MAINTAINERS                                   |   7 ++
-> >>>>>  4 files changed, 195 insertions(+)
-> >>>>>  create mode 100644 Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
-> >>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-> >>>>>  create mode 100644 Documentation/devicetree/bindings/pwm/adi,adp5585-pwm.yaml
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml b/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
-> >>>>> new file mode 100644
-> >>>>> index 000000000000..210e4d53e764
-> >>>>> --- /dev/null
-> >>>>> +++ b/Documentation/devicetree/bindings/gpio/adi,adp5585-gpio.yaml
-> >>>>> @@ -0,0 +1,36 @@
-> >>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >>>>> +%YAML 1.2
-> >>>>> +---
-> >>>>> +$id: http://devicetree.org/schemas/gpio/adi,adp5585-gpio.yaml#
-> >>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>>>> +
-> >>>>> +title: Analog Devices ADP5585 GPIO Expander
-> >>>>> +
-> >>>>> +maintainers:
-> >>>>> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >>>>> +
-> >>>>> +description: |
-> >>>>> +  The Analog Devices ADP5585 has up to 11 GPIOs represented by a "gpio" child
-> >>>>> +  node of the parent MFD device. See
-> >>>>> +  Documentation/devicetree/bindings/mfd/adi,adp5585.yaml for further details as
-> >>>>> +  well as an example.
-> >>>>> +
-> >>>>> +properties:
-> >>>>> +  compatible:
-> >>>>> +    const: adi,adp5585-gpio
-> >>>>> +
-> >>>>> +  gpio-controller: true
-> >>>>> +
-> >>>>> +  '#gpio-cells':
-> >>>>> +    const: 2
-> >>>>> +
-> >>>>> +  gpio-reserved-ranges: true
-> >>>>
-> >>>> There are no resources here, so new compatible is not really warranted.
-> >>>> Squash the node into parent.
-> >>>
-> >>> Child nodes seem (to me) to be the standard way to model functions in
-> >>> MFD devices. Looking at mfd_add_device(), for OF-based systems, the
-> >>> function iterates over child nodes. I don't mind going a different
-> >>
-> >> Only to assign of node, which could be skipped as well.
-> > 
-> > It has to be assigned somehow, otherwise the GPIO and PWM lookups won't
-> > work. That doesn't have to be done in mfd_add_device() though, it can
-> > also be done manually by the driver. Looking at the example you gave,
-> > cs42l43_pin_probe() handles that assignment. I would have considered
-> > that a bit of a hack, but if that's your preferred approach, I'm fine
-> > with it. Could you confirm you're OK with that ?
-> 
-> I am fine with the drivers doing that. It's not a hack, for all
-> sub-devices (e.g. also auxiliary bus) you won't have automatic of_node
-> assignment.
+On Thu, May 23, 2024 at 10:31=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello,
+>
+> sorry for taking so long to get back to your patch. reviewing new
+> drivers is quite time consuming which makes me often fail to review in a
+> timely manner.
+>
+> On Tue, Apr 16, 2024 at 09:55:15AM +0800, Binbin Zhou wrote:
+> > This commit adds a generic PWM framework driver for the PWM controller
+> > found on Loongson family chips.
+> >
+> > Co-developed-by: Juxin Gao <gaojuxin@loongson.cn>
+> > Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  MAINTAINERS                |   1 +
+> >  drivers/pwm/Kconfig        |  10 ++
+> >  drivers/pwm/Makefile       |   1 +
+> >  drivers/pwm/pwm-loongson.c | 298 +++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 310 insertions(+)
+> >  create mode 100644 drivers/pwm/pwm-loongson.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index ecef2744726d..d32da7c77f0e 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -12756,6 +12756,7 @@ M:    Binbin Zhou <zhoubinbin@loongson.cn>
+> >  L:   linux-pwm@vger.kernel.org
+> >  S:   Maintained
+> >  F:   Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+> > +F:   drivers/pwm/pwm-loongson.c
+> >
+> >  LOONGSON-2 SOC SERIES CLOCK DRIVER
+> >  M:   Yinbo Zhu <zhuyinbo@loongson.cn>
+> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > index 4b956d661755..bb163c65e5ae 100644
+> > --- a/drivers/pwm/Kconfig
+> > +++ b/drivers/pwm/Kconfig
+> > @@ -324,6 +324,16 @@ config PWM_KEEMBAY
+> >         To compile this driver as a module, choose M here: the module
+> >         will be called pwm-keembay.
+> >
+> > +config PWM_LOONGSON
+> > +     tristate "Loongson PWM support"
+> > +     depends on MACH_LOONGSON64
+>
+> Something with || COMPILE_TEST would be nice.
 
-I gave this a try, and here's what I came up with to drop the compatible
-string. Please ignore for a moment the fact that the child nodes are
-still there, that's an orthogonal question which I can address
-separately. What I would like is feedback on how the OF nodes are
-handled.
+OK..
+>
+> > +     help
+> > +       Generic PWM framework driver for Loongson family.
+> > +       It can be found on Loongson-2K series cpu and Loongson LS7A bri=
+dge chips.
+> > +
+> > +       To compile this driver as a module, choose M here: the module
+> > +       will be called pwm-loongson.
+> > +
+> >  config PWM_LP3943
+> >       tristate "TI/National Semiconductor LP3943 PWM support"
+> >       depends on MFD_LP3943
+> > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> > index c5ec9e168ee7..bffa49500277 100644
+> > --- a/drivers/pwm/Makefile
+> > +++ b/drivers/pwm/Makefile
+> > @@ -28,6 +28,7 @@ obj-$(CONFIG_PWM_INTEL_LGM) +=3D pwm-intel-lgm.o
+> >  obj-$(CONFIG_PWM_IQS620A)    +=3D pwm-iqs620a.o
+> >  obj-$(CONFIG_PWM_JZ4740)     +=3D pwm-jz4740.o
+> >  obj-$(CONFIG_PWM_KEEMBAY)    +=3D pwm-keembay.o
+> > +obj-$(CONFIG_PWM_LOONGSON)   +=3D pwm-loongson.o
+> >  obj-$(CONFIG_PWM_LP3943)     +=3D pwm-lp3943.o
+> >  obj-$(CONFIG_PWM_LPC18XX_SCT)        +=3D pwm-lpc18xx-sct.o
+> >  obj-$(CONFIG_PWM_LPC32XX)    +=3D pwm-lpc32xx.o
+> > diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
+> > new file mode 100644
+> > index 000000000000..5ac79a69acd3
+> > --- /dev/null
+> > +++ b/drivers/pwm/pwm-loongson.c
+> > @@ -0,0 +1,298 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Loongson PWM driver
+> > + *
+> > + * Author: Juxin Gao <gaojuxin@loongson.cn>
+> > + * Further cleanup and restructuring by:
+> > + *         Binbin Zhou <zhoubinbin@loongson.cn>
+> > + *
+> > + * Copyright (C) 2017-2024 Loongson Technology Corporation Limited.
+>
+> A paragraph about the hardware capabilities here please. Please answer
+> the following questions:
+>
+>  - How does the hardware behave on disable? (Does it complete the
+>    currently running period? Is the output still driven then? If yes,
+>    which level?)
+>
+>  - How does the hardware behave on configuration changes? (Does it
+>    complete the currently running period? Are there some glitches
+>    expected (like driving an output corresponding to the old period
+>    length but the new duty_cycle or similar).
+>
+>  - Are there any restrictions like: Cannot do 100% relative duty (or
+>    0%)?
+>
+> Stick to the format used in most other drivers such that
+>
+>         sed -rn '/Limitations:/,/\*\/?$/p' drivers/pwm/pwm-loongson.c
+>
+> emits the requested info.
+>
 
-diff --git a/drivers/gpio/gpio-adp5585.c b/drivers/gpio/gpio-adp5585.c
-index 9696a4cdcfc1..8480ceef05ce 100644
---- a/drivers/gpio/gpio-adp5585.c
-+++ b/drivers/gpio/gpio-adp5585.c
-@@ -174,6 +174,7 @@ static int adp5585_gpio_probe(struct platform_device *pdev)
- 	struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
- 	struct adp5585_gpio_dev *adp5585_gpio;
- 	struct device *dev = &pdev->dev;
-+	struct device_node *node;
- 	struct gpio_chip *gc;
- 	int ret;
+OK, I will add it.
+> > + */
+> > +
+> > +#include <linux/acpi.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/device.h>
+> > +#include <linux/init.h>
+> > +#include <linux/io.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pwm.h>
+> > +#include <linux/units.h>
+> > +
+> > +/* Loongson PWM registers */
+> > +#define PWM_DUTY     0x4 /* Low Pulse Buffer Register */
+> > +#define PWM_PERIOD   0x8 /* Pulse Period Buffer Register */
+> > +#define PWM_CTRL     0xc /* Control Register */
+>
+> Please use a driver specific prefix for these defines. PWM_DUTY is quite
+> generic otherwise.
 
-@@ -187,6 +188,13 @@ static int adp5585_gpio_probe(struct platform_device *pdev)
+OK, I will rename these defines as LOONGSON_*.
+>
+> > +
+> > +/* Control register bits */
+> > +#define PWM_CTRL_EN  BIT(0)  /* Counter Enable Bit */
+> > +#define PWM_CTRL_OE  BIT(3)  /* Pulse Output Enable Control Bit, Valid=
+ Low */
+> > +#define PWM_CTRL_SINGLE      BIT(4)  /* Single Pulse Control Bit */
+> > +#define PWM_CTRL_INTE        BIT(5)  /* Interrupt Enable Bit */
+> > +#define PWM_CTRL_INT BIT(6)  /* Interrupt Bit */
+> > +#define PWM_CTRL_RST BIT(7)  /* Counter Reset Bit */
+> > +#define PWM_CTRL_CAPTE       BIT(8)  /* Measurement Pulse Enable Bit *=
+/
+> > +#define PWM_CTRL_INVERT      BIT(9)  /* Output flip-flop Enable Bit */
+> > +#define PWM_CTRL_DZONE       BIT(10) /* Anti-dead Zone Enable Bit */
+> > +
+> > +#define PWM_FREQ_STD       (50 * HZ_PER_KHZ)
+> > +
+> > +struct pwm_loongson_ddata {
+> > +     struct pwm_chip chip;
+> > +     struct clk      *clk;
+> > +     void __iomem    *base;
+> > +     /* The following for PM */
+> > +     u32             ctrl;
+> > +     u32             duty;
+> > +     u32             period;
+>
+> This needs updating to cope for commit 05947224ff46 ("pwm: Ensure that
+> pwm_chips are allocated using pwmchip_alloc()")
+>
+> Also I'm not a fan of aligning the member names. If you feel strong
+> about it, keep it as is, however.
+>
 
- 	mutex_init(&adp5585_gpio->lock);
+Yes, I have refactored this part based on commit 05947224ff46 ("pwm:
+Ensure that pwm_chips are allocated using pwmchip_alloc()").
+> > +};
+> > +
+> > +static inline struct pwm_loongson_ddata *to_pwm_loongson_ddata(struct =
+pwm_chip *chip)
+> > +{
+> > +     return container_of(chip, struct pwm_loongson_ddata, chip);
+> > +}
+> > +
+> > +static inline u32 pwm_loongson_readl(struct pwm_loongson_ddata *ddata,=
+ u64 offset)
+>
+> I don't know about the calling convention on loongson, but I'd expect
+> offset to be an unsigned int only, given that (I guess) only PWM_CTRL
+> and friends are passed here.
+>
 
-+	node = of_get_child_by_name(dev->parent->of_node, "gpio");
-+	if (!node)
-+		return dev_err_probe(dev, -ENXIO, "'gpio' child node not found\n");
-+
-+	dev->of_node = node;
-+	dev->fwnode = &node->fwnode;
-+
- 	gc = &adp5585_gpio->gpio_chip;
- 	gc->parent = dev;
- 	gc->direction_input = adp5585_gpio_direction_input;
-@@ -204,6 +212,9 @@ static int adp5585_gpio_probe(struct platform_device *pdev)
- 	ret = devm_gpiochip_add_data(&pdev->dev, &adp5585_gpio->gpio_chip,
- 				     adp5585_gpio);
- 	if (ret) {
-+		of_node_put(dev->of_node);
-+		dev->of_node = NULL;
-+		dev->fwnode = NULL;
- 		mutex_destroy(&adp5585_gpio->lock);
- 		return dev_err_probe(&pdev->dev, ret, "failed to add GPIO chip\n");
- 	}
-@@ -215,6 +226,10 @@ static void adp5585_gpio_remove(struct platform_device *pdev)
- {
- 	struct adp5585_gpio_dev *adp5585_gpio = platform_get_drvdata(pdev);
+Emm...
+Actually, unsigned int should be enough.
+> > +{
+> > +     return readl(ddata->base + offset);
+> > +}
+> > +
+> > +static inline void pwm_loongson_writel(struct pwm_loongson_ddata *ddat=
+a,
+> > +                                    u32 val, u64 offset)
+> > +{
+> > +     writel(val, ddata->base + offset);
+> > +}
+> > +
+> > +static int pwm_loongson_set_polarity(struct pwm_chip *chip, struct pwm=
+_device *pwm,
+> > +                                  enum pwm_polarity polarity)
+> > +{
+> > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+> > +     u16 val;
+> > +
+> > +     val =3D pwm_loongson_readl(ddata, PWM_CTRL);
+> > +
+> > +     if (polarity =3D=3D PWM_POLARITY_INVERSED)
+> > +             /* Duty cycle defines LOW period of PWM */
+> > +             val |=3D PWM_CTRL_INVERT;
+> > +     else
+> > +             /* Duty cycle defines HIGH period of PWM */
+> > +             val &=3D ~PWM_CTRL_INVERT;
+> > +
+> > +     pwm_loongson_writel(ddata, val, PWM_CTRL);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void pwm_loongson_disable(struct pwm_chip *chip, struct pwm_dev=
+ice *pwm)
+> > +{
+> > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+> > +     u32 val;
+> > +
+> > +     if (pwm->state.polarity =3D=3D PWM_POLARITY_NORMAL)
+> > +             pwm_loongson_writel(ddata, ddata->period, PWM_DUTY);
+> > +     else if (pwm->state.polarity =3D=3D PWM_POLARITY_INVERSED)
+> > +             pwm_loongson_writel(ddata, 0, PWM_DUTY);
+> > +
+> > +     val =3D pwm_loongson_readl(ddata, PWM_CTRL);
+> > +     val &=3D ~PWM_CTRL_EN;
+> > +     pwm_loongson_writel(ddata, val, PWM_CTRL);
+>
+> Technically it's not needed to configure the duty. A consumer who
+> expects a certain behaviour is supposed to not disable the PWM.
+>
 
-+	of_node_put(pdev->dev.of_node);
-+	pdev->dev.of_node = NULL;
-+	pdev->dev.fwnode = NULL;
-+
- 	mutex_destroy(&adp5585_gpio->lock);
- }
+Emm, this is really not necessary.
+> > +}
+> > +
+> > +static int pwm_loongson_enable(struct pwm_chip *chip, struct pwm_devic=
+e *pwm)
+> > +{
+> > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+> > +     u32 val;
+> > +
+> > +     pwm_loongson_writel(ddata, ddata->duty, PWM_DUTY);
+> > +     pwm_loongson_writel(ddata, ddata->period, PWM_PERIOD);
+>
+> pwm_loongson_enable() is called from pwm_loongson_apply() and PWM_DUTY an=
+d
+> PWM_PERIOD were already written there. So please either only write it
+> once, or add a code comment about why writing twice is needed.
+>
 
-diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
-index e39a6ea5f794..3b190567ea0b 100644
---- a/drivers/pwm/pwm-adp5585.c
-+++ b/drivers/pwm/pwm-adp5585.c
-@@ -146,6 +146,8 @@ static const struct pwm_ops adp5585_pwm_ops = {
- static int adp5585_pwm_probe(struct platform_device *pdev)
- {
- 	struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node;
- 	struct pwm_chip *chip;
- 	int ret;
+Sorry, it's my fault. I will keep these regs written only once.
+> > +     val =3D pwm_loongson_readl(ddata, PWM_CTRL);
+> > +     val |=3D PWM_CTRL_EN;
+> > +     pwm_loongson_writel(ddata, val, PWM_CTRL);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static u32 pwm_loongson_set_config(struct pwm_loongson_ddata *ddata, i=
+nt ns,
+> > +                                u64 clk_rate, u64 offset)
+> > +{
+> > +     u32 val;
+> > +     u64 c;
+> > +
+> > +     c =3D clk_rate * ns;
+>
+> That migth overflow?!
+>
+> > +     do_div(c, NSEC_PER_SEC);
+> > +     val =3D c < 1 ? 1 : c;
+>
+> That smells fishy. If a period (or duty_cycle) is requested that is too
+> small to be implemented, let .apply() return -EINVAL.
+>
 
-@@ -153,16 +155,34 @@ static int adp5585_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(chip))
- 		return PTR_ERR(chip);
+In fact, I'm going to rewrite this part, drop the
+pwm_loongson_set_config(), and calulate the duty and period in
+pwm_loongson_config(), something like:
 
-+	node = of_get_child_by_name(dev->parent->of_node, "pwm");
-+	if (!node)
-+		return dev_err_probe(dev, -ENXIO, "'pwm' child node not found\n");
-+
-+	dev->of_node = node;
-+	dev->fwnode = &node->fwnode;
-+
- 	pwmchip_set_drvdata(chip, adp5585->regmap);
- 	chip->ops = &adp5585_pwm_ops;
+        /* duty =3D duty_ns * ddata->clk_rate / NSEC_PER_SEC */
+        ctx.duty =3D mul_u64_u64_div_u64(duty_ns, ddata->clk_rate, NSEC_PER=
+_SEC);
+        pwm_loongson_writel(ddata, ctx.duty, LOONGSON_PWM_REG_DUTY);
 
- 	ret = devm_pwmchip_add(&pdev->dev, chip);
--	if (ret)
-+	if (ret) {
-+		of_node_put(dev->of_node);
-+		dev->of_node = NULL;
-+		dev->fwnode = NULL;
- 		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
-+	}
+        /* period =3D period_ns * ddata->clk_rate / NSEC_PER_SEC */
+        ctx.period =3D mul_u64_u64_div_u64(period_ns, ddata->clk_rate,
+NSEC_PER_SEC);
+        pwm_loongson_writel(ddata, ctx.period, LOONGSON_PWM_REG_PERIOD);
 
- 	return 0;
- }
 
-+static void adp5585_pwm_remove(struct platform_device *pdev)
-+{
-+	of_node_put(pdev->dev.of_node);
-+	pdev->dev.of_node = NULL;
-+	pdev->dev.fwnode = NULL;
-+}
-+
- static struct platform_driver adp5585_pwm_driver = {
- 	.driver	= {
- 		.name = "adp5585-pwm",
+> > +     pwm_loongson_writel(ddata, val, offset);
+> > +
+> > +     return val;
+> > +}
+> > +
+> > +static int pwm_loongson_config(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> > +                            int duty_ns, int period_ns)
+> > +{
+> > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+> > +     struct device *dev =3D chip->dev;
+> > +     u64 clk_rate;
+> > +
+> > +     if (duty_ns > NANOHZ_PER_HZ || period_ns > NANOHZ_PER_HZ)
+> > +             return -ERANGE;
+>
+> Nope, that's wrong. Please configure the biggest possible period not
+> bigger than the requested period. So something like:
+>
+>         period_ns =3D min(period_ns, NANOHZ_PER_HZ);
+>
+> ; ditto for duty_cycle.
 
-Is this acceptable ? I'm a bit concerned about poking the internals of
-struct device directly from drivers.
+OK.. I will do it in .apply().
+>
+> > +     clk_rate =3D has_acpi_companion(dev) ? PWM_FREQ_STD : clk_get_rat=
+e(ddata->clk);
+> > +
+> > +     ddata->duty =3D pwm_loongson_set_config(ddata, duty_ns, clk_rate,=
+ PWM_DUTY);
+> > +     ddata->period =3D pwm_loongson_set_config(ddata, period_ns, clk_r=
+ate, PWM_PERIOD);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device=
+ *pwm,
+> > +                           const struct pwm_state *state)
+> > +{
+> > +     int err;
+> > +     bool enabled =3D pwm->state.enabled;
+> > +
+> > +     if (state->polarity !=3D pwm->state.polarity) {
+> > +             if (enabled) {
+> > +                     pwm_loongson_disable(chip, pwm);
+> > +                     enabled =3D false;
+> > +             }
+> > +
+> > +             err =3D pwm_loongson_set_polarity(chip, pwm, state->polar=
+ity);
+> > +             if (err)
+> > +                     return err;
+> > +     }
+> > +
+> > +     if (!state->enabled) {
+> > +             if (enabled)
+> > +                     pwm_loongson_disable(chip, pwm);
+> > +             return 0;
+> > +     }
+> > +
+> > +     err =3D pwm_loongson_config(chip, pwm, state->duty_cycle, state->=
+period);
+>
+> state->duty_cycle is an u64, however it's truncated to an int here.
+>
 
-I have also refrained from setting fnode->dev to point back to the
-device as fone by cs42l43_pin_probe(), as a comment in struct
-fwnode_handle indicates that the dev field is for device links only and
-shouldn't be touched by anything else. I'm not sure if I should set it.
+OK, I will fix it.
+> > +     if (err)
+> > +             return err;
+> > +
+> > +     if (!enabled)
+> > +             err =3D pwm_loongson_enable(chip, pwm);
+> > +
+> > +     return err;
+> > +}
+> > +
+> > +static int pwm_loongson_get_state(struct pwm_chip *chip, struct pwm_de=
+vice *pwm,
+> > +                               struct pwm_state *state)
+> > +{
+> > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+> > +     u32 period, duty, ctrl;
+> > +     u64 ns;
+> > +
+> > +     ctrl =3D pwm_loongson_readl(ddata, PWM_CTRL);
+> > +     state->polarity =3D (ctrl & PWM_CTRL_INVERT) ? PWM_POLARITY_INVER=
+SED : PWM_POLARITY_NORMAL;
+> > +     state->enabled =3D (ctrl & PWM_CTRL_EN) ? true : false;
+> > +
+> > +     duty =3D pwm_loongson_readl(ddata, PWM_DUTY);
+> > +     ns =3D duty * NSEC_PER_SEC;
+> > +     state->duty_cycle =3D do_div(ns, duty);
+> > +
+> > +     period =3D pwm_loongson_readl(ddata, PWM_PERIOD);
+> > +     ns =3D period * NSEC_PER_SEC;
+> > +     state->period =3D do_div(ns, period);
+> > +
+> > +     ddata->ctrl =3D ctrl;
+> > +     ddata->duty =3D pwm_loongson_readl(ddata, PWM_DUTY);
+> > +     ddata->period =3D pwm_loongson_readl(ddata, PWM_PERIOD);
+>
+> The rounding looks wrong. Did you test with PWM_DEBUG enabled?
+>
+> I think the value assigned to ddata->period and the other members isn't
+> used. Unless I'm mistaken, please drop the assignment.
+>
 
-> >>> routes, could you indicate what you have in mind, perhaps pointing to an
-> >>> existing driver as an example ?
-> >>
-> >> Most of them? OK, let's take the last added driver in MFD directory:
-> >> cirrus,cs42l43
-> >> It has three children and only two nodes, because only these two devices
-> >> actually need/use/benefit the subnodes.
-> > 
-> > Still trying to understand what bothers you here, is it the child nodes,
-> > or the fact that they have a compatible string and are documented in a
-> > separate binding ? Looking at the cirrus,cs42l43 bindings and the
-> 
-> What bothers me (and as expressed in many reviews by us) is representing
-> driver structure directly in DT. People model DT based how their Linux
-> drivers are represented. I don't care about driver stuff here, but DT/DTS.
+The period, duty and ctrl are prepared for PM. I plan to put these
+three parameters separately into the pwm_loongson_context structure. I
+think it will look clearer:
 
-DT models the hardware as seen from a software point of view. It
-shouldn't reflect the structure of Linux drivers, but it has to be
-usable by drivers.
+struct pwm_loongson_context {
+        u32 ctrl;
+        u32 duty;
+        u32 period;
+};
 
-> > corresponding drivers, the pinctrl child node serves the purpose of
-> > grouping properties related to the pinctrl function, and allows
-> > referencing pinctrl entries from other DT nodes. All those properties
-> 
-> If you have sub-subnodes, it warrants for me such child. Why? Because it
-> makes DTS easier to read.
-> 
-> > could have been placed in the parent node. Are you fine with the
-> > adi,adp5585 having gpio and pwm child nodes, as long as they don't have
-> > compatible strings, and are documented in a single binding ?
-> 
-> As well not, because then you have even less reasons to have them as
-> separate nodes. With compatible, one could at least try to argue that
-> sub-devices are re-usable across families.
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct pwm_ops pwm_loongson_ops =3D {
+> > +     .apply =3D pwm_loongson_apply,
+> > +     .get_state =3D pwm_loongson_get_state,
+> > +};
+> > +
+> > +static int pwm_loongson_probe(struct platform_device *pdev)
+> > +{
+> > +     struct pwm_loongson_ddata *ddata;
+> > +     struct device *dev =3D &pdev->dev;
+> > +
+> > +     ddata =3D devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
+> > +     if (!ddata)
+> > +             return -ENOMEM;
+> > +
+> > +     ddata->base =3D devm_platform_ioremap_resource(pdev, 0);
+> > +     if (IS_ERR(ddata->base))
+> > +             return PTR_ERR(ddata->base);
+> > +
+> > +     if (!has_acpi_companion(dev)) {
+> > +             ddata->clk =3D devm_clk_get_enabled(dev, NULL);
+> > +             if (IS_ERR(ddata->clk))
+> > +                     return PTR_ERR(ddata->clk);
+>
+> error message with dev_err_probe() please.
 
-I'll reuse your argument, I think the child nodes make the DTS easier to
-read :-)
+OK, I will do it.
+>
+> > +     }
+> > +
+> > +     ddata->chip.dev =3D dev;
+> > +     ddata->chip.ops =3D &pwm_loongson_ops;
+> > +     ddata->chip.npwm =3D 1;
+> > +     platform_set_drvdata(pdev, ddata);
+>
+> The effect of platform_set_drvdata is used in .suspend below, however
+> there you use dev_get_drvdata on &pdev->dev. For symmetry I suggest to
+> use dev_set_drvdata(dev, ddata) here.
+>
+> > +     return devm_pwmchip_add(dev, &ddata->chip);
+>
+> error message iwth dev_err_probe() please (if it fails).
 
-> >>>>> +required:
-> >>>>> +  - compatible
-> >>>>> +  - reg
-> >>>>> +  - gpio
-> >>>>> +  - pwm
-> >>>>> +
-> >>>>> +allOf:
-> >>>>> +  - if:
-> >>>>> +      properties:
-> >>>>> +        compatible:
-> >>>>> +          contains:
-> >>>>> +            const: adi,adp5585-01
-> >>>>> +    then:
-> >>>>> +      properties:
-> >>>>> +        gpio:
-> >>>>> +          properties:
-> >>>>> +            gpio-reserved-ranges: false
-> >>>>
-> >>>> This also points to fact your child node is pointless. It does not stand
-> >>>> on its own...
-> >>>
-> >>> That doesn't make the child pointless just for that reason. There are
-> >>> numerous examples of child nodes that don't stand on their own.
-> >>
-> >> No, your if-then must be in the schema defining it. This is just
-> >> unmaintianable code. It proves that child's compatible means nothing. If
-> >> you cannot use child's compatible to make any meaningful choices, then
-> >> it is useless.
-> > 
-> > The compatible string may not be very useful. The child nodes have a
-> > use.
-> 
-> What is their use? Grouping few properties? As mentioned above -
-> grouping subnodes like pinctrl does, is argument on its own for code
-> readability. Grouping few properties, which in many other devices are in
-> top-node (see last 100 reviews of new drivers doing exactly the same),
-> is not that argument.
-> 
-> OTOH, my first, main argument was:
-> 
-> They do not have any resources on their own. Otherwise please point me -
-> which property represents their resource, like clock, reset, gpio,
-> suppy, IO address?
+OK, I will add it.
+>
+> > +}
+> > +
+> > [...]
+> > +static struct platform_driver pwm_loongson_driver =3D {
+> > +     .probe  =3D pwm_loongson_probe,
+> > +     .driver =3D {
+> > +             .name   =3D "loongson-pwm",
+> > +             .pm     =3D pm_ptr(&pwm_loongson_pm_ops),
+> > +             .of_match_table   =3D pwm_loongson_of_ids,
+> > +             .acpi_match_table =3D pwm_loongson_acpi_ids,
+>
+> This alignment looks really ugly. Please use a single space before the
+> =3D. (Or if you must, properly align the =3D.)
+>
+OK., I will keep  a single space before the =3D.
 
--- 
-Regards,
-
-Laurent Pinchart
+Thanks.
+Binbin
+> > +     },
+> > +};
+> > +module_platform_driver(pwm_loongson_driver);
+> > +
+> > +MODULE_DESCRIPTION("Loongson PWM driver");
+> > +MODULE_AUTHOR("Loongson Technology Corporation Limited.");
+> > +MODULE_LICENSE("GPL");
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
 
