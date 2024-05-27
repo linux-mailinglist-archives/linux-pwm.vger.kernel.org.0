@@ -1,210 +1,146 @@
-Return-Path: <linux-pwm+bounces-2238-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2239-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0C738CF4F1
-	for <lists+linux-pwm@lfdr.de>; Sun, 26 May 2024 18:56:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 994738CFA8C
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2024 09:52:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C37BE1C2095D
-	for <lists+linux-pwm@lfdr.de>; Sun, 26 May 2024 16:56:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3F745B21EDB
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2024 07:52:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DA9D1A28D;
-	Sun, 26 May 2024 16:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kloenk.de header.i=@kloenk.de header.b="uPMbV/H6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 942B93BBE2;
+	Mon, 27 May 2024 07:51:39 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA70C3C38;
-	Sun, 26 May 2024 16:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F13A55339B;
+	Mon, 27 May 2024 07:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716742593; cv=none; b=DX5b9d88mX4qSmA91Fx5pU7o3Pv2TZ5VHOi+qXcbr6sfDKhbvYLjCfy2V//59VssIYZvw8p5EcmAR7POjJFpUHQg4h/c7in+WDPclpuWM9l6dpG+wAGYRZQ7hxbo1CrtsGhrizrme/aNF44aQaPb7fAYeVDxSj6NhMdrl5hVWpU=
+	t=1716796299; cv=none; b=t/TQeH/OWqBuQ2aowc59/FR3cwcS6KRGEqQOt+SxYYR9XnXrAi+PM+jmQ4OviMyu9qpAe5LG8ZBnitnVhDUcDQ4aQpaKR2bq3gXayNi4nVB53YAY/u36UkAW9KlNm/i8ZpoM/bZshHrzUVPZ8HAJ2Dh+pUjaTHkW40lINsWltKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716742593; c=relaxed/simple;
-	bh=X78jjsQ86RXdbowtYihaJzb8GQKZmbw2ydyhdKGXZFk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bmoy9sV2NMxmBbYMgXf1x0Dx86jTTLInGxAtMOum05rx1hiQ+TL6v1waOyGtwjwHI6VVxLsHl9PK2PwAwgSOAOMXbW7ndku82wAOq/AtYmF/qaR9/mXCt2nbJ+bptZ9Ff0IAjLwCGPX29jZ7LpyIwxLNsSsWKEZi1G9iMlzJlKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.de; spf=pass smtp.mailfrom=kloenk.de; dkim=pass (1024-bit key) header.d=kloenk.de header.i=@kloenk.de header.b=uPMbV/H6; arc=none smtp.client-ip=49.12.72.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.de
-From: Finn Behrens <me@kloenk.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.de; s=mail;
-	t=1716742586; bh=uY51i8VK4saPxA1AoHhLDzBJkgaIKcf7BimO7Tpr5fw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=uPMbV/H62AgvcaVgLEls2QddpD5MEtvsQ9hbiFEkv2GTSN+Rju98JG05WpUEojP0Q
-	 i52cLoKM+ywo8d5Em5WJb32zOr31DZiTnKEvXTR71WcL8U2RnnzfnHX3fgnDYwx6nv
-	 YnxO3GcMGe4rlUMnPkEQZ/zyfVS1fIg7l0DQ+/sk=
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-pwm@vger.kernel.org,
- linux-gpio@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Heisath <jannis@imserv.org>, Yureka Lilian <yuka@yuka.dev>
-Subject: Re: [PATCH] gpio-mvebu: no hardcoded timer assignment for pwm
-Date: Sun, 26 May 2024 18:56:25 +0200
-Message-ID: <224E981B-57DD-4C8F-BA37-F55ECB0F2CB6@kloenk.de>
-In-Reply-To: <6chccjdn3yidi7rodcledxx7czt3adjxvaeeneii5ghfiw4oc3@t5qtmnlasvlo>
-References: <20240130105515.30258-1-me@kloenk.de>
- <6chccjdn3yidi7rodcledxx7czt3adjxvaeeneii5ghfiw4oc3@t5qtmnlasvlo>
+	s=arc-20240116; t=1716796299; c=relaxed/simple;
+	bh=9zRpQfat7Oli3vay5767wDuuEKHzrn0huIwJEQ3gjfA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bFdsQZhn3nir4w0Sm0Giudca03E2DyoWJPnCzvju3NoPjHXA7LK/09lNsj4nBON6YjOioaBTmNkMKpuq8FxWcBjt6ESUsGUuGB664fnZIVOlBWF51Aj9P7DeFzIkF7P6DTUGJ5czEUhvvE4chtl3rNYqG5nfUOWy9rlRUk5ZeJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [112.20.112.247])
+	by gateway (Coremail) with SMTP id _____8DxzOqHO1RmkR8AAA--.433S3;
+	Mon, 27 May 2024 15:51:35 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.112.247])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxBMWCO1RmyeMKAA--.17909S2;
+	Mon, 27 May 2024 15:51:32 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Juxin Gao <gaojuxin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	loongson-kernel@lists.loongnix.cn,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v4 0/2] pwm: Introduce pwm driver for the Loongson family chips
+Date: Mon, 27 May 2024 15:51:10 +0800
+Message-ID: <cover.1716795485.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxBMWCO1RmyeMKAA--.17909S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uryDurykCFW5WFyxZF4rCrX_yoW8ZF4UpF
+	Z8C343Kr18tr129rn3X3W8CF1Sva1fJFsrGFs3t348Wa98Ca4jq3y3Kw45ArZrur12vFy2
+	vrZ3CFWUKa4UurXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
+	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
+	Ja73UjIFyTuYvjxU2MKZDUUUU
 
-Hi,
+Hi all:
 
-Sorry for taking so so long, life happened.
-Currently working on a v2 but maybe reasonable to discuss some things alr=
-eady here.
+This patchset introduce a generic PWM framework driver for Loongson family.
+Each PWM has one pulse width output signal and one pulse input signal to be measured.
 
-(And sorry for first sending html, to long not worked on kernel and trust=
- my mail client to much, so second resend without html)
+It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips.
 
-> On 8. Feb 2024, at 09:05, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengut=
-ronix.de> wrote:
->
-> Hello,
->
-> On Tue, Jan 30, 2024 at 11:55:13AM +0100, Finn Behrens wrote:
->> Removes the hardcoded timer assignment of timers to pwm controllers.
->> This allows to use more than one pwm per gpio bank.
->>
->> Original patch with chip_data interface by Heisath <jannis@imserv.org =
-<mailto:jannis@imserv.org>>
->>
->> Link: https://wiki.kobol.io/helios4/pwm/#patch-requirement
->> Co-developed-by: Yureka Lilian <yuka@yuka.dev <mailto:yuka@yuka.dev>>
->> Signed-off-by: Yureka Lilian <yuka@yuka.dev <mailto:yuka@yuka.dev>>
->> Signed-off-by: Finn Behrens <me@kloenk.de <mailto:me@kloenk.de>>
->
-> I find this patch hard to understand and I hope it's more complicated
-> than it could be. I wonder if it would be beneficial to split this patc=
-h
-> in two. In the first patch just introduce the new structures with all
-> the necessary renaming and only in the second patch implement the added=
+Thanks.
 
-> flexibility.
-I will try for the v2, currently not sure how easy that will be as most t=
-hings are used directly and will not work when not used.
-But might have to rewrite quite a bit as think I found a possible race co=
-ndition in this patch. (further down below with the static variable)
->
-> Some more details below.
->
->> drivers/gpio/gpio-mvebu.c | 223 ++++++++++++++++++++++++--------------=
+-------
+V4:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Addressed Uwe's review comments, thanks.
+   - Make use of devm_pwmchip_alloc() function;
+   - Add Limitations description;
+   - Add LOONGSON_ prefix for Loongson pwm register defines;
+   - Keep regs written only once;
+   - Rewrite duty/period calculation;
+   - Add dev_err_probe() in .probe();
+   - Put the parameters used by PM into a separate
+     structure(pwm_loongson_suspend_store);
+   - Fix some code style.
 
->> 1 file changed, 139 insertions(+), 84 deletions(-)
->>
->> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
->> index a13f3c18ccd4..303ea3be0b69 100644
->> --- a/drivers/gpio/gpio-mvebu.c
->> +++ b/drivers/gpio/gpio-mvebu.c
->> @@ -94,21 +94,43 @@
->>
->> #define MVEBU_MAX_GPIO_PER_BANK		32
->>
->> -struct mvebu_pwm {
->> +enum mvebu_pwm_ctrl {
->> +	MVEBU_PWM_CTRL_SET_A =3D 0,
->> +	MVEBU_PWM_CTRL_SET_B,
->> +	MVEBU_PWM_CTRL_MAX
->> +};
->> +
->> +struct mvebu_pwmchip {
->> 	struct regmap		*regs;
->> 	u32			 offset;
->> 	unsigned long		 clk_rate;
->> -	struct gpio_desc	*gpiod;
->> -	struct pwm_chip		 chip;
->> 	spinlock_t		 lock;
->> -	struct mvebu_gpio_chip	*mvchip;
->> +	bool			 in_use;
->>
->> 	/* Used to preserve GPIO/PWM registers across suspend/resume */
->> -	u32			 blink_select;
->> 	u32			 blink_on_duration;
->> 	u32			 blink_off_duration;
->> };
->>
->> +struct mvebu_pwm_chip_drv {
->> +	enum mvebu_pwm_ctrl	 ctrl;
->> +	struct gpio_desc	*gpiod;
->> +	bool			 master;
->> +};
->> +
->> +struct mvebu_pwm {
->> +	struct pwm_chip		 chip;
->> +	struct mvebu_gpio_chip	*mvchip;
->> +	struct mvebu_pwmchip	 controller;
->> +	enum mvebu_pwm_ctrl	 default_controller;
->> +
->> +	/* Used to preserve GPIO/PWM registers across suspend/resume */
->> +	u32				 blink_select;
->> +	struct mvebu_pwm_chip_drv	 drv[];
->> +};
->
-> So we have three different structures related to pwm. Some highlevel
-> description (in a comment or at least the commit log) about how the
-> hardware works and which struct describes what would be helpful. I gave=
+Link to V3:
+https://lore.kernel.org/linux-pwm/cover.1713164810.git.zhoubinbin@loongson.cn/
 
-> up after 15 min of reading this patch and trying to understand it.
->
->> +static struct mvebu_pwmchip  *mvebu_pwm_list[MVEBU_PWM_CTRL_MAX];
->
-> Huh, a static variable. Does that mean we can only have one mvebu_gpio
-> device?
-This is the global over the gpio aliases gpio0 and gpio1.
-As far as I understand this we take the id from the alias in the probe fu=
-nction and there we can only ever have the id 0 and 1.
+V3:
+patch (1/2):
+ - Add Reviewed-by tag from Krzysztof, thanks.
+patch (2/2):
+ - Several code stlye adjustments, such as line breaks.
 
-While looking over this again I noticed that we therefore don=E2=80=99t h=
-ave a working lock with this, and now gpio0 can take the pwm from gpio1 w=
-hich is the main idea behind this patch.
-My idea would be convert the lock from the pwm chip to a global lock in t=
-his module and use that for all pwm locks and this global list. I don=E2=80=
-=99t know if there is a less global variable that we can access from both=
- gpio0 and gpio1?
->
->> +
->> struct mvebu_gpio_chip {
->> 	struct gpio_chip   chip;
->> 	struct regmap     *regs;
->> @@ -285,12 +307,12 @@ mvebu_gpio_write_level_mask(struct mvebu_gpio_ch=
-ip *mvchip, u32 val)
->>  * Functions returning offsets of individual registers for a given
->>  * PWM controller.
->>  */
->> -static unsigned int mvebu_pwmreg_blink_on_duration(struct mvebu_pwm *=
-mvpwm)
->> +static unsigned int mvebu_pwmreg_blink_on_duration(struct mvebu_pwmch=
-ip *mvpwm)
->
-> I'm a fan of picking always the same variable name for the same thing
-> and different names for different things. "mvpwm" is used for variables=
+Link to V2:
+https://lore.kernel.org/all/cover.1712732719.git.zhoubinbin@loongson.cn/
 
-> of type struct mvebu_pwmchip and struct mvebu_pwm.
->
->> {
->> 	return mvpwm->offset + PWM_BLINK_ON_DURATION_OFF;
->> }
->
-> Best regards
-> Uwe
->
-> -- =
+v2:
+- Remove the dts-related patches and update dts at once after all
+relevant drivers are complete.
+patch (1/2):
+ - The dt-binding filename should match compatible, rename it as
+   loongson,ls7a-pwm.yaml;
+ - Update binding description;
+ - Add description for each pwm cell;
+ - Drop '#pwm-cells' from required, for pwm.yaml makes it required already.
 
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig     =
-       |
-> Industrial Linux Solutions                 | https://www.pengutronix.de=
-/ |
+Link to v1:
+https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  dt-bindings: pwm: Add Loongson PWM controller
+  pwm: Add Loongson PWM controller support
+
+ .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
+ MAINTAINERS                                   |   7 +
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-loongson.c                    | 295 ++++++++++++++++++
+ 5 files changed, 381 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-loongson.c
+
+-- 
+2.43.0
 
 
