@@ -1,101 +1,171 @@
-Return-Path: <linux-pwm+bounces-2244-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2245-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEE188CFD93
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2024 11:56:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A2B98CFEF6
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2024 13:30:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BEEA1C21246
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2024 09:56:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E2629B21821
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 May 2024 11:29:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2026D13AA42;
-	Mon, 27 May 2024 09:56:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CBD41527BE;
+	Mon, 27 May 2024 11:29:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OwZyc81o"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Y8SfZw9s"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973C313A896
-	for <linux-pwm@vger.kernel.org>; Mon, 27 May 2024 09:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2552A1527A8;
+	Mon, 27 May 2024 11:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716803799; cv=none; b=DLTXkL4ZoInjymUtvjDBiUSX6GiugF3c7eH8u6whx0eidGXGO1GRq9/Mps7SUinBPKbT/0tJxst6ineY4+FN5MZ273Ihai34z/w8LtnirW1UsWZ2ZIqb8ZWHFDjH1DD3UCyLmQHTOFLfiS/AThn6FSc7m3OXENNWYP4DirKWUCA=
+	t=1716809393; cv=none; b=hT3aKEtLxhPJ+CGgKCa6Hxftqw8xTVbyrnfmnI1ieDSejlDS+76eeJ7JW4OIJSmUITWFMXL3Nz7JHjLnTh+zMvRJUNWRXe9hA1bfwdcSiIsZ6YX0TIgApfIIEBMmOJ3Fx0rc5jMc6Gtk5QaF2xcaiwJkCelA+mFru9jN0gvxyPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716803799; c=relaxed/simple;
-	bh=h5jXgRKsQkIcgfD97Q5AAMa9LZ0uTBSUY0djiFxnNdM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X8u0+dDcbS29FBbldEWaiiDyn0bJsyzEGEmqIAcNfysaJEHgtUvKJnuigJiW8VPkbQvNCDgZ1+4OfMgqjslJ7AlenmULIp3s6lhuzdsUGtioCTW26zHw6g3HlSBngsEBIwjfrdbcfaQbpZ/XIE0VrHi+Mw36kQx7n8MLveI4A3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OwZyc81o; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-62a08092c4dso28918907b3.0
-        for <linux-pwm@vger.kernel.org>; Mon, 27 May 2024 02:56:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716803796; x=1717408596; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h5jXgRKsQkIcgfD97Q5AAMa9LZ0uTBSUY0djiFxnNdM=;
-        b=OwZyc81oHXBDnMV3uNMxqSlJRYsWOthjL5fZK2YxsR7yccd2ZaPUemN11Zc//VBDuP
-         q9AvTGyyIJNE+1QaueCdotAutEG7/s8iHmMRbsK86csfjd9M8R7nyNw4BaTzTA5HU3rl
-         N1QZHEkS71sCNIR3xJhqsfHfeff113hVZ2eN55ZbnFJ1nhZyQvDTA/olsEJZerJXHPxJ
-         YOoaMzar9lZVfo51KpfQt5KH+Tjm10CX0mSJEctLWX7o0Vw0sbT/S2M450usXd8yrhvI
-         zV32JlmgFfoYwIMJLlKssYQl/JiSgnvyEMd5XvYWdtgFaQme6118x9GE6blFTrpKfmas
-         NAQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716803796; x=1717408596;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h5jXgRKsQkIcgfD97Q5AAMa9LZ0uTBSUY0djiFxnNdM=;
-        b=X2TZSsejJYB7GbBbWJ2FZpZhXM2OeSGBlPK6jdr8AKcngSmROuZ1YJDgopkPSN8NH2
-         Bsvd+zTQy5rLfHvpjTvfQ1kx6PScYW4GV/gBy9J1vHu0Pg+H+52QFlh23/exurQB0+8e
-         JdNf1VYLkTqiYgwmTmAMgLo5xkrVCfKlSRP9ndzlD08vm0h/aH7ngt9ewSNmK1CYy7sP
-         edOqXmVc1xXzNzV4FVGqeoAax77SJeN0XqDEfXTtuzipR9gPoML7+Gv8UKF5TqTEK/UV
-         9uh/6GA4uzSUt9fW6U8BLyPdnojy/QvIXnjaNX7HwC/kF/CHbAxj+zDcmwILlGs75XK5
-         MGMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVI7iZEXv/iUpcD+Ctvs2QpCO06zwhcKjsiebyVZg7imMmDSWKUit7nkZrUq45efNuPIMiGWpIYE47ECcbgbJCBwdSZfsHqhZ1Y
-X-Gm-Message-State: AOJu0YxZTe2eXqmZuavOC7NRTorkFK2UwK4AmRuvgzeoiJmwFlPvvDAB
-	QJ+sQR2pH+7fWIoBdibLO1lBgdtIHnuf7zvhN+W0Za4RwMiE5mrKkaiHunwg6zGUMLWFErx5iUe
-	hvRS25uST0y5TNbqk7PMJgSUKIe3jVQssyE0NwQ==
-X-Google-Smtp-Source: AGHT+IGpccHoFCMTsrdaZe9Tm3wWZXSUyc/MWc6ba+P+ihM0RdYtqT8i31GHF/bZGJjJh4akODp67cOD7U7PAxqiLSM=
-X-Received: by 2002:a25:c7d1:0:b0:df4:e794:21b8 with SMTP id
- 3f1490d57ef6-df77225ad0bmr9332361276.55.1716803796507; Mon, 27 May 2024
- 02:56:36 -0700 (PDT)
+	s=arc-20240116; t=1716809393; c=relaxed/simple;
+	bh=CGndhDS38R/fmtI3ccV+gGKvVLXk98QyQiAhae+fn3E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HUhu3Ovkbw8hkeZBCK+nlfqcoL0pdQ3t/KUauevHOIC+j8bfcJH5ufyaCZByC5MMfpwLh7FmdfX1oUAXgeDcPiNV6aiIjCrXEz2D1ffmqbvCCUTqDyhIelo+IOdiOn3m356ZSd0BWbtQmSSoKfAuj7hlWuGX2UPi+n1ry1ti45Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=Y8SfZw9s; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1716809381; x=1717414181; i=wahrenst@gmx.net;
+	bh=p87Q8UkjB3GPaIDrH5V9qD5k2oMnw1gD5uOpf40Na5g=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=Y8SfZw9sR0gSOt1BeI6ejt8RIVJNmSXOngNRkz7Gf9hSJDZeFlLgzdzFGLL0c1sv
+	 wG0GFv1MlUKbkwVUdTI4wOv1tubultHmpDK3ai3dBuUyGhJ8fkd+CqqNDQZFlQIut
+	 nx41UbbcuMBRozDikHWrZ/uFPKiZqgmtz5pfJ0H/qwNjuPcGyfQT+UokMECG1mktO
+	 mxGUH1DKLuHjx2+FLc0E2B8g0C+FVUlz9QdW7We9SWl013yNlHXMoqASRtkYELZqf
+	 s9z+pdf3libRkADINV0iFlUW3t/np+pQdiatUscwryj+FEKMR16PBfEbq5mAdx2pf
+	 z86MuLsgFMlkR5WXUQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWih0-1s0Sk82qRk-00X6bO; Mon, 27
+ May 2024 13:29:40 +0200
+From: Stefan Wahren <wahrenst@gmx.net>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: andy.shevchenko@gmail.com,
+	Philip Howard <phil@gadgetoid.com>,
+	Sean Young <sean@mess.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	linux-gpio@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH V5 0/2] pwm: Add GPIO PWM driver
+Date: Mon, 27 May 2024 13:28:55 +0200
+Message-Id: <20240527112857.90554-1-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240204220851.4783-1-wahrenst@gmx.net> <CACRpkdYmOECdug1g2gYxjHZ-+Y040SR70UtDAgKD8yCb58Ob6Q@mail.gmail.com>
- <33d009cc-3378-42e0-8d40-a74a0b583a44@gmx.net>
-In-Reply-To: <33d009cc-3378-42e0-8d40-a74a0b583a44@gmx.net>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 27 May 2024 11:56:25 +0200
-Message-ID: <CACRpkdary+kDrTJ=u4VbSTv7wXGLQj9_fy7mv0w-Zg+eDvGXVQ@mail.gmail.com>
-Subject: Re: [PATCH V4 0/2] pwm: Add GPIO PWM driver
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	andy.shevchenko@gmail.com, Angelo Compagnucci <angelo.compagnucci@gmail.com>, 
-	Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:D81H1mK1sfWf5rt6dOOcbqK6ZiuKGXEz5C0O2GAfdFADnY27NZe
+ WkyCQP3J7aGqZhITBAqlgi1t1UQROET8w7K7Rlb2XdBCV+h/6njKao9JJuIb0F1Dzeibbrv
+ FGECLcSZ8SbULGctm4WPn/VXEi8+VXTxsrA1iJ8WeAqCOXgejfwfqINXRZKLDWLFF3HBVxU
+ GNieQnhe3RTyIQhBz16ZQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:vGHAvInGaPM=;Rx0zDoyG5JH2uEPVx8ormyYSTNA
+ zuRMBKn7Qx/MhZN/9jitQiMYUktc17h6BGx5Ph8AjeTzFwmZMfSmn7Uz30izEDXTwSD4/YJLU
+ xpia5nN/XgSoTkwgPyJl9C6nZBRJV7iARVznhDCIP+0mUbko9Fcwg3I0IaNs+QCFVnb9d1IYo
+ JBP79pdY275UQbk8QPWQ+Q4y6yo1dNG6wHWAV0WpvehtZwiOVhDOzXyHcQL+b6shzM9VxhH4I
+ 11H4aajF2iHohrEbqEN53u6DhlOyK9VCEcpMWMBxeP6T5Zoi72vbnGS80kgLNxQ4jF+clS5DF
+ vl6Ov576wEy8F7mxEvlMOxT95igqUF9DmHkH4/ZckXYkTDBU/qF54pqXbjbMAhz7DHmDuKi7b
+ pCrqGLbbCJJ+cin2WXQbJrBW2Us8166ejfvvWCdi7CN3GwwcV1sgqeu2TPN/Ur9YKSBmBenbF
+ mstPqJechtqjQSEt2KEY5nLOmEeXCFQFD5p2LDLv8h5LjHMdyrjdLhh5triKjUpaBczkIUHvb
+ 085Qtot+U3wP4GHwZNoUdLkxS00PuxDbPzedoYXBJacklBlCFrOAswwJItpjbiL75AfQaAuhR
+ EslC2U1FPIem7g1jc4mSouZdka7of7znN0dDr8mJk2Ug9yAQyvYyZt8Pll6B/7L//U3HTP3OL
+ JtEG/fJd0DU4F9TJRsPi3a/gVfUwM8TnNDoGFj8+SaoiU1etiyapMmQi/sxoB+cjD7N46Gmlh
+ RX0WxrmqZgAavK5Ntbn825wjG3ANPTEf3BgGJAE5rcSJJok528HONjz6QbAbQn0rK2mWxKoSs
+ Z4TrEpJntbEi0gse0ZmMA6M+m2s88wTY2KL5nRcYcvBK4=
 
-On Mon, May 27, 2024 at 10:44=E2=80=AFAM Stefan Wahren <wahrenst@gmx.net> w=
-rote:
+Add a software PWM which toggles a GPIO from a high-resolution timer.
 
-> I could rebase my latest work on 6.10-rc1 and send it out as V5. I would
-> be happy if you want to continue on that driver.
+Recent discussions in the Raspberry Pi community revealt that a lot
+of users still use MMIO userspace tools for GPIO access. One argument
+for this approach is the lack of a GPIO PWM kernel driver. So this
+series tries to fill this gap.
 
-I could probably do that! Let's see v5 and take it from there.
+This continues the work of Vincent Whitchurch [1], which is easier
+to read and more consequent by rejecting sleeping GPIOs than Nicola's
+approach [2].
 
-Yours,
-Linus Walleij
+The latest version has just been boot tested on a Raspberry Pi 3 B+.
+
+Since i'm not sure that i have the time to finish the driver soon, i'm
+happy if someone finish this job. From my POV, V5 of this series only
+lacks a solution for possible interrupt storm in case the period/duty cycl=
+e
+is set too short [3].
+
+V5:
+ - add Reviewed-by's for dt-binding patch
+ - rebase on top of v6.10-rc1
+ - print hr resolution at driver probe
+ - fix grammar in Kconfig
+ - fix return type of pwm_gpio_toggle
+ - implement hrtimer resolution rounding as noted by Uwe
+ - use firmware node path instead of GPIO numbers as suggested by Andy
+ - adjust some header includes and style issues as noted by Andy
+
+V4:
+ - address DT bindings comments from Conor Dooley
+ - drop unnecessary MODULE_ALIAS() as suggested by Krzysztof Kozlowski
+ - add range checks to apply which consider the hrtimer resolution
+   (idea comes from Sean Young)
+ - mark driver as atomic as suggested by Sean Young
+
+V3:
+ - rebase on top of v6.8-pwm-next
+ - cherry-pick improvements from Nicola's series
+ - try to address Uwe's, Linus' and Andy's comments
+ - try to avoid GPIO glitches during probe
+ - fix pwm_gpio_remove()
+ - some code clean up's and comments
+
+V2:
+ - Rename gpio to gpios in binding
+ - Calculate next expiry from expected current expiry rather than "now"
+ - Only change configuration after current period ends
+ - Implement get_state()
+ - Add error message for probe failures
+ - Stop PWM before unregister
+
+[1] - https://lore.kernel.org/all/20200915135445.al75xmjxudj2rgcp@axis.com=
+/T/
+[2] - https://lore.kernel.org/all/20201205214353.xapax46tt5snzd2v@einstein=
+.dilieto.eu/
+[3] - https://lore.kernel.org/linux-pwm/CACRpkdary+kDrTJ=3Du4VbSTv7wXGLQj9=
+_fy7mv0w-Zg+eDvGXVQ@mail.gmail.com/T/#m513f255daa9f30c325d11999cacd0864115=
+91bf9
+
+Nicola Di Lieto (1):
+  dt-bindings: pwm: Add pwm-gpio
+
+Vincent Whitchurch (1):
+  pwm: Add GPIO PWM driver
+
+ .../devicetree/bindings/pwm/pwm-gpio.yaml     |  42 +++
+ drivers/pwm/Kconfig                           |  11 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-gpio.c                        | 249 ++++++++++++++++++
+ 4 files changed, 303 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
+ create mode 100644 drivers/pwm/pwm-gpio.c
+
+=2D-
+2.34.1
+
 
