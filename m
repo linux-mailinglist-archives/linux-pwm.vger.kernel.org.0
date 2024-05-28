@@ -1,40 +1,40 @@
-Return-Path: <linux-pwm+bounces-2260-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2261-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF7398D24B7
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 May 2024 21:36:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 138DC8D250C
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 May 2024 21:45:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 88F711F288A2
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 May 2024 19:36:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3A5928F55C
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 May 2024 19:45:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E94217836C;
-	Tue, 28 May 2024 19:36:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62D3017837E;
+	Tue, 28 May 2024 19:41:56 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EC3176FA8
-	for <linux-pwm@vger.kernel.org>; Tue, 28 May 2024 19:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C940F176FA5
+	for <linux-pwm@vger.kernel.org>; Tue, 28 May 2024 19:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716924971; cv=none; b=jzhGNjLWarLOW4n09u6ZUDYa4Txawp7YidnB1/rx3y3Ru0RfIHLxfghnZQP81Xg83zbyzsTiNt0vjiuPgUQfSPYSztsFPFkOZECVK5nRxE82BbVKafRs3x4abC0zPGByHd7rEqfdo321sMAATZUKtZX1MxenVHS8eamrIx3dal4=
+	t=1716925316; cv=none; b=Kdd+e8CeWiMoG3+CYA4If/QkEyOJypgj8NWaD6/S4tJR+gHuQo+HpGX/gQ1f18HkkpBnQVWMd6LtBvJPRD8cEJ1iiAkXOoTmqEkA11VGEYJRfUNhJA8FqwYg9Q5iS1t+LQf0VKFPC9YefON+ubUCfh6H6WjgwtPosD2uZjL8BDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716924971; c=relaxed/simple;
-	bh=mcRUMZ4dwHJV5/dMwob3lapuhQw0EPjhT9rLeKNTsfc=;
+	s=arc-20240116; t=1716925316; c=relaxed/simple;
+	bh=XL5XfZPSAColagJjESsQyLbsnaVT0FBnyZJo1Q2iBzs=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DaNLMHFy/ERE4+xquD1S2JFjN6FK+NarxouksQ53lyuFkYSFF2ybEzEMBkSwMWsjZuDvx85kl6D6VWfBVKoUbyXqeyh/6j5ziPqJPjqyqJvOzz848pshf+tHEl3F9GmE/Z2mRRCr3Gt5rTDH0tA48OKW/8cR5JoCd1npKWUlR1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
+	 Content-Type:Content-Disposition:In-Reply-To; b=k59fdhOnPNxguZdAtipj2EumXNviy1Fr59mL/fvriGLUvnsgN6ePRAHj6bE50cP5KKU9151kKYH76n5Zf3zmnMoA2/y/k/aPdCRxYtCjonQRphozuYIIAf9zL0RYXOcimAwjj+4GFb/vjt1PSosszHIP87RmUJycwan7mBTfadk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 8703f71f-1d29-11ef-80c1-005056bdfda7;
-	Tue, 28 May 2024 22:36:06 +0300 (EEST)
+	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+	id 54d390ee-1d2a-11ef-aaf5-005056bdd08f;
+	Tue, 28 May 2024 22:41:52 +0300 (EEST)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 28 May 2024 22:36:06 +0300
+Date: Tue, 28 May 2024 22:41:51 +0300
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
@@ -46,11 +46,11 @@ Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
 	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>
-Subject: Re: [PATCH v2 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
-Message-ID: <ZlYyJpLeDLD_T5V6@surfacebook.localdomain>
+	Clark Wang <xiaoning.wang@nxp.com>
+Subject: Re: [PATCH v2 4/4] pwm: adp5585: Add Analog Devices ADP5585 support
+Message-ID: <ZlYzf6mW8RF9w_R7@surfacebook.localdomain>
 References: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
- <20240528190315.3865-4-laurent.pinchart@ideasonboard.com>
+ <20240528190315.3865-5-laurent.pinchart@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -59,66 +59,99 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240528190315.3865-4-laurent.pinchart@ideasonboard.com>
+In-Reply-To: <20240528190315.3865-5-laurent.pinchart@ideasonboard.com>
 
-Tue, May 28, 2024 at 10:03:13PM +0300, Laurent Pinchart kirjoitti:
-> From: Haibo Chen <haibo.chen@nxp.com>
+Tue, May 28, 2024 at 10:03:14PM +0300, Laurent Pinchart kirjoitti:
+> From: Clark Wang <xiaoning.wang@nxp.com>
 > 
 > The ADP5585 is a 10/11 input/output port expander with a built in keypad
 > matrix decoder, programmable logic, reset generator, and PWM generator.
-> This driver supports the GPIO function using the platform device
+> This driver supports the PWM function using the platform device
 > registered by the core MFD driver.
 > 
 > The driver is derived from an initial implementation from NXP, available
-> in commit 451f61b46b76 ("MLK-25917-2 gpio: adp5585-gpio: add
-> adp5585-gpio support") in their BSP kernel tree. It has been extensively
-> rewritten.
-
-Why is this not using gpio-regmap?
+> in commit 113113742208 ("MLK-25922-1 pwm: adp5585: add adp5585 PWM
+> support") in their BSP kernel tree. It has been extensively rewritten.
 
 ...
 
 > +#include <linux/device.h>
-> +#include <linux/gpio/driver.h>
+
++ err.h
+
+> +#include <linux/math64.h>
+> +#include <linux/minmax.h>
 > +#include <linux/mfd/adp5585.h>
 > +#include <linux/module.h>
 > +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
 > +#include <linux/regmap.h>
-
-+ types.h
-
-...
-
-> +	bit = off * 2 + (off > 5 ? 4 : 0);
-
-Right, but can you use >= 6 here which immediately follows to the next
-question, i.e. why not use bank in this conditional?
+> +#include <linux/time.h>
 
 ...
 
-> +	struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
+> +#define ADP5585_PWM_OSC_FREQ_HZ		1000000U
 
-(see below)
+(1 * HZ_PER_MHZ) ?
 
-> +	struct adp5585_gpio_dev *adp5585_gpio;
-> +	struct device *dev = &pdev->dev;
+> +#define ADP5585_PWM_MIN_PERIOD_NS	(2ULL * NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
+> +#define ADP5585_PWM_MAX_PERIOD_NS	(2ULL * 0xffff * NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
 
-	struct adp5585_dev *adp5585 = dev_get_drvdata(dev->parent);
-
-> +	struct gpio_chip *gc;
-> +	int ret;
+Wouldn't be better to use GENMASK() or (BIT(x) - 1) notation to show that
+the limit is due to HW register bits in use?
 
 ...
 
-> +	platform_set_drvdata(pdev, adp5585_gpio);
+> +	ret = regmap_write(regmap, ADP5585_PWM_OFFT_LOW,
+> +			   off & 0xff);
+> +	if (ret)
+> +		return ret;
+> +	ret = regmap_write(regmap, ADP5585_PWM_OFFT_HIGH,
+> +			   (off >> 8) & 0xff);
+> +	if (ret)
+> +		return ret;
+> +	ret = regmap_write(regmap, ADP5585_PWM_ONT_LOW,
+> +			   on & 0xff);
+> +	if (ret)
+> +		return ret;
+> +	ret = regmap_write(regmap, ADP5585_PWM_ONT_HIGH,
+> +			   (on >> 8) & 0xff);
+> +	if (ret)
+> +		return ret;
 
-Any use of driver data?
+Can be proper __le16/__be16 be used in conjunction with regmap bulk API?
+
+...
+
+> +	/* Enable PWM in continuous mode and no external AND'ing. */
+> +	ret = regmap_update_bits(regmap, ADP5585_PWM_CFG,
+> +				 ADP5585_PWM_IN_AND | ADP5585_PWM_MODE |
+> +				 ADP5585_PWM_EN, ADP5585_PWM_EN);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+
+	return regmap_update_bits(...);
+
+...
+
+> +	regmap_read(regmap, ADP5585_PWM_OFFT_LOW, &off);
+> +	regmap_read(regmap, ADP5585_PWM_OFFT_HIGH, &val);
+> +	off |= val << 8;
+> +
+> +	regmap_read(regmap, ADP5585_PWM_ONT_LOW, &on);
+> +	regmap_read(regmap, ADP5585_PWM_ONT_HIGH, &val);
+> +	on |= val << 8;
+
+As per above, can it be converted to use proper __le16/__be16 type and
+regmap bulk API?
 
 ...
 
 > +	device_set_of_node_from_dev(dev, dev->parent);
 
-Why not device_set_node()?
+Why this one? What's wrong with device_set_node()?
 
 -- 
 With Best Regards,
