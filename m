@@ -1,40 +1,40 @@
-Return-Path: <linux-pwm+bounces-2259-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2260-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1BD58D2496
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 May 2024 21:27:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF7398D24B7
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 May 2024 21:36:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D31BE1C26B26
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 May 2024 19:27:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 88F711F288A2
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 May 2024 19:36:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 888B0171E49;
-	Tue, 28 May 2024 19:27:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E94217836C;
+	Tue, 28 May 2024 19:36:11 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBEF174EE1
-	for <linux-pwm@vger.kernel.org>; Tue, 28 May 2024 19:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EC3176FA8
+	for <linux-pwm@vger.kernel.org>; Tue, 28 May 2024 19:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716924465; cv=none; b=Ju7MRL/cW4XHsCv1dVS19Ygag9nvE31M2CW41hL2ReUb+gDVfKU7nMe2OXseO3Jv7oSrP5zZoDUsaY6F5Kd8sM6kENvw1C55ktulddyuk9zbCj+9XfZiZ00DUGZA/ynRItUsiMeSbglF6hLHsh4rkoKkOR81/B3OkZPfU0OLPpk=
+	t=1716924971; cv=none; b=jzhGNjLWarLOW4n09u6ZUDYa4Txawp7YidnB1/rx3y3Ru0RfIHLxfghnZQP81Xg83zbyzsTiNt0vjiuPgUQfSPYSztsFPFkOZECVK5nRxE82BbVKafRs3x4abC0zPGByHd7rEqfdo321sMAATZUKtZX1MxenVHS8eamrIx3dal4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716924465; c=relaxed/simple;
-	bh=cTKbpAhjrjCxOHCkBE9KZlU76K9Ysjv16xE/+1J9QZM=;
+	s=arc-20240116; t=1716924971; c=relaxed/simple;
+	bh=mcRUMZ4dwHJV5/dMwob3lapuhQw0EPjhT9rLeKNTsfc=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZI+rwyuI679bLk+WRy8KCAo27EO7n6mq9fGFdJ9WvkysvQhNKeZNYLdsnHVTX9vK6UtxmQe5BGP1YhUz3E36LYQeMTZwC08wEtcgZ4H4mSyXKJXleErUO97SuY+y7qwfJSa4nK7a4pxhR8yS6UViwXaWPG1Ew6fbDEwYSrJ3kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+	 Content-Type:Content-Disposition:In-Reply-To; b=DaNLMHFy/ERE4+xquD1S2JFjN6FK+NarxouksQ53lyuFkYSFF2ybEzEMBkSwMWsjZuDvx85kl6D6VWfBVKoUbyXqeyh/6j5ziPqJPjqyqJvOzz848pshf+tHEl3F9GmE/Z2mRRCr3Gt5rTDH0tA48OKW/8cR5JoCd1npKWUlR1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
 	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 55c6fc82-1d28-11ef-80c1-005056bdfda7;
-	Tue, 28 May 2024 22:27:35 +0300 (EEST)
+	id 8703f71f-1d29-11ef-80c1-005056bdfda7;
+	Tue, 28 May 2024 22:36:06 +0300 (EEST)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 28 May 2024 22:27:34 +0300
+Date: Tue, 28 May 2024 22:36:06 +0300
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
@@ -47,11 +47,10 @@ Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
 	Rob Herring <robh@kernel.org>,
 	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
 	Haibo Chen <haibo.chen@nxp.com>
-Subject: Re: [PATCH v2 2/4] mfd: adp5585: Add Analog Devices ADP5585 core
- support
-Message-ID: <ZlYwJryxeZ2LAKYG@surfacebook.localdomain>
+Subject: Re: [PATCH v2 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
+Message-ID: <ZlYyJpLeDLD_T5V6@surfacebook.localdomain>
 References: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
- <20240528190315.3865-3-laurent.pinchart@ideasonboard.com>
+ <20240528190315.3865-4-laurent.pinchart@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -60,99 +59,66 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240528190315.3865-3-laurent.pinchart@ideasonboard.com>
+In-Reply-To: <20240528190315.3865-4-laurent.pinchart@ideasonboard.com>
 
-Tue, May 28, 2024 at 10:03:12PM +0300, Laurent Pinchart kirjoitti:
+Tue, May 28, 2024 at 10:03:13PM +0300, Laurent Pinchart kirjoitti:
 > From: Haibo Chen <haibo.chen@nxp.com>
 > 
 > The ADP5585 is a 10/11 input/output port expander with a built in keypad
 > matrix decoder, programmable logic, reset generator, and PWM generator.
-> This driver supports the chip by modelling it as an MFD device, with two
-> child devices for the GPIO and PWM functions.
+> This driver supports the GPIO function using the platform device
+> registered by the core MFD driver.
 > 
 > The driver is derived from an initial implementation from NXP, available
-> in commit 8059835bee19 ("MLK-25917-1 mfd: adp5585: add ADI adp5585 core
-> support") in their BSP kernel tree. It has been extensively rewritten.
+> in commit 451f61b46b76 ("MLK-25917-2 gpio: adp5585-gpio: add
+> adp5585-gpio support") in their BSP kernel tree. It has been extensively
+> rewritten.
+
+Why is this not using gpio-regmap?
 
 ...
 
-> +	tristate "Analog Devices ADP5585 MFD driver"
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	depends on I2C && OF
-
-Why OF?
-No COMPILE_TEST?
-
-...
-
-+ array_size.h
-+ device.h // e.g., devm_kzalloc()
-
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/init.h>
-> +#include <linux/slab.h>
-> +#include <linux/i2c.h>
-
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-
-You don't need them, instead of proxying...
-
-> +#include <linux/mfd/core.h>
+> +#include <linux/device.h>
+> +#include <linux/gpio/driver.h>
 > +#include <linux/mfd/adp5585.h>
-
-m is earlier than 'o', but with above drop no more issue :-)
-
-...just include mod_devicetable.h.
-
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
 > +#include <linux/regmap.h>
 
-+ types.h // e.g., u8
++ types.h
 
 ...
 
-> +	regmap_config = of_device_get_match_data(&i2c->dev);
+> +	bit = off * 2 + (off > 5 ? 4 : 0);
 
-We have i2c_get_match_data().
-
-...
-
-> +#ifndef __LINUX_MFD_ADP5585_H_
-> +#define __LINUX_MFD_ADP5585_H_
-> +
-> +#include <linux/bits.h>
+Right, but can you use >= 6 here which immediately follows to the next
+question, i.e. why not use bank in this conditional?
 
 ...
 
-> +#define		ADP5585_MAN_ID(v)		(((v) & 0xf0) >> 4)
+> +	struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
 
-GENMASK()
+(see below)
+
+> +	struct adp5585_gpio_dev *adp5585_gpio;
+> +	struct device *dev = &pdev->dev;
+
+	struct adp5585_dev *adp5585 = dev_get_drvdata(dev->parent);
+
+> +	struct gpio_chip *gc;
+> +	int ret;
 
 ...
 
-> +#define		ADP5585_Rx_PULL_CFG_MASK	(3)
+> +	platform_set_drvdata(pdev, adp5585_gpio);
 
-GENMASK()
-
-Why parentheses in all of them, btw?
+Any use of driver data?
 
 ...
 
-> +#define		ADP5585_C4_EXTEND_CFG_MASK	(1U << 6)
+> +	device_set_of_node_from_dev(dev, dev->parent);
 
-> +#define		ADP5585_R4_EXTEND_CFG_MASK	(1U << 5)
-
-> +#define		ADP5585_R3_EXTEND_CFG_MASK	(3U << 2)
-
-> +#define		ADP5585_R0_EXTEND_CFG_MASK	(1U << 0)
-
-> +#define		ADP5585_OSC_FREQ_MASK		(3U << 5)
-
-BIT() / GENMASK()
-
-> +#endif
+Why not device_set_node()?
 
 -- 
 With Best Regards,
