@@ -1,70 +1,70 @@
-Return-Path: <linux-pwm+bounces-2292-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2293-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94CE78D37ED
-	for <lists+linux-pwm@lfdr.de>; Wed, 29 May 2024 15:39:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35DD18D3913
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 May 2024 16:25:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 218611F2157A
-	for <lists+linux-pwm@lfdr.de>; Wed, 29 May 2024 13:39:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C82121F24673
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 May 2024 14:25:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 784DF17991;
-	Wed, 29 May 2024 13:39:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BA3A1586FE;
+	Wed, 29 May 2024 14:24:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRU53TuQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgWnHcp2"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B1014AA9;
-	Wed, 29 May 2024 13:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8708A1586C6;
+	Wed, 29 May 2024 14:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716989960; cv=none; b=qiRfQcFLPN/RWXQGyCaJBbVWZLJbZDfde86jJzO9JLPmzZpDxL5kIg+BpRD1QdXulFHR1LP/LPJ/nGUIltPbeOnbdRHwSwJwjODzWKfqQvAAdAOjJd9XKSmvPbiNOjuuXLOmoRjD/R1EI1yYFs4iKZUA0v3sNkcE5MCxjrSpZWc=
+	t=1716992683; cv=none; b=TKwm485mKhDhCcUVhN5CwQ/gdldR5pLSmmeSVjo7u9sBjMnVdVF1LNHjKuu+skT5ZeCMnBRtfqhZk2/rsF4UiyhC1WPrubGt5VWbX0c4vJOOulT/Ob48BEMYJgSxZlw+leFAK8ZTNHnXcnPjfF3bYZPJ/d5f/9L5IRxLektzht4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716989960; c=relaxed/simple;
-	bh=R3h5tSBPfEHGlt3Qf5kTWfRHMfookplRqGhxVq0OW2o=;
+	s=arc-20240116; t=1716992683; c=relaxed/simple;
+	bh=mNgUYEnubcG8x6sqIvwYtUSCoKzzcOYzQhUu7gFNBSg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dnVAOPq0ELV01zqga3EvSPGzWGdWuOJGGCALYiJcsPPLYaNAn6D+u3elK4c45J7aYKsFEvLqRcydFaNRh86cM05MNo4jtwL03tWbduIUzslRr0FzWx1cxeGIPR48fO0NrtqC1N3DOgasdP1v1bKy1NWzU49PzI/l7qCXzZC4uos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VRU53TuQ; arc=none smtp.client-ip=209.85.167.48
+	 To:Cc:Content-Type; b=NuqtO01X19K2/Mj1OIf6x+sIIYY7I/9WhoQV3rtGvCM+lvFHYrSmRSkINxs4yZI3SNHLpIXTB60beYMHbahM5EOtxdrOoRrZ2NKRO35je6VlqY6anssc5BYYataAuOo+9eiHw8OqZM56wdpx2ZX7c3fQzTI/8ICjrdR5qkTevq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UgWnHcp2; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-529614b8c29so3362328e87.2;
-        Wed, 29 May 2024 06:39:18 -0700 (PDT)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a630ff4ac84so244017266b.1;
+        Wed, 29 May 2024 07:24:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716989957; x=1717594757; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1716992680; x=1717597480; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/OSOPo7Lbda7dPzDxelwiNRlHm/oYGM0dTgvUx1nRbg=;
-        b=VRU53TuQHJIY840hcXzPUGBWV5XKo5psl+MfCFGMiubddH3c+W6lmzQgbFJx9GN39N
-         cBCMX3C5wX/rW8Wg7od8WRfBRyccxhC1ERJB3RlElph6UcShO8CwXBBF2lPzACHtI87u
-         yYOn9jh2UYK5bliR9wM/O8qT3gtVaFJlKjCwtI0M2a46Cew3VBztgPUmJxnCWqGmaeob
-         EKeuphOMzSh5jx/B4jfBTceA6sCyIEg8rIpyOZWUJ1iXUTmWengessqxdnSJp7czKGKm
-         17MnZj4OwMKNEDWr8fI06nt3IynIZPBJN40jhzgOEhOV+eGJC5zPXv53MdXl3MMRQQtn
-         +y7A==
+        bh=RXUaCkB6tMzvL4LfnqvowAZkzoZ/9h0tRmEhy+jXdZA=;
+        b=UgWnHcp2nMy92Z71MaWa1rFD8SbWvyOsiINSOheSyQL/6CjxGQ+CX/BQuX2xaoyf+C
+         szANyfWicq/zjhreAoWuoKefLDtRy5O9Ctc5C9+XDnIYgI0j7pBQtUwONJCYfdSiDSGC
+         OcZGNlyTqcjGEmxv9NQ3JzUrGSu5JtdDzOwwvhl8OOaQZddH88/rw3/kFhJzqsMtAe28
+         vOHwTJCtZs3Ow5tyQE5PTT8ysdHAGw8c5HlrIGZkamB8Bi6qAb27Uzx7q0UrxT8mANTQ
+         4fznhDazqnhnFmclBrpQ5Q8UJKjOpV/QLRZu6HODIzulLFbjjlyKlm+ycLSbXD0JpJ6t
+         R7bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716989957; x=1717594757;
+        d=1e100.net; s=20230601; t=1716992680; x=1717597480;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/OSOPo7Lbda7dPzDxelwiNRlHm/oYGM0dTgvUx1nRbg=;
-        b=pouTgx0qkl5VqxIclebWLZlxFq+yXncBg3CNBfxZjDHW/n56ClnfYgare7zBLm9Eqm
-         V+EvDBBO1v8y0ttuy0rb9G/ddgsJJNSleJHJv8zm8SNjDcFvXa+yqga5Msh+p0kfkUG7
-         FkfHDGWXMBSD21aSEsQEzicQyMcn0LEpsTkBJc3oWQcMizvtXetu20slGI/KHRQX3e1t
-         BzlYVpmzEXsHkEEn8uultsak5N6k7TWlQL4aG/oBjvrDcA3QJGQXhnGDbXjv+IHL/LBR
-         TN5m/LWUH/wCwEn7A/LANcDEnkJWDGuilD2JxBpWJ6gyW7yX3ONcQPQ2czn7+2ZT/KTT
-         lRPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdzE4kezQct5F7/4rIup1Jw8J7P4vfmo212lHj3ic753dyJN/JreYfQEs+7vIoAghPLaq1aAJkfN1U4omE2uL1IjDt0tf4BN8C0Ay3D9RUk5FbBuDL7GyoDwpvzJWrylR4e2/cZ3uGQPNY/5iUqrGiwmoluWb7LQoc20bll4ooDHQ=
-X-Gm-Message-State: AOJu0YxhIVekDoLoVjF45/XqgIop2lzKpOoEBfndn/TkXC/ycNc3a71w
-	j5snbZ65ePeO3uLIx0lUT4oRJkR4WY3AoXoFyM1GF/vXx1XU4Mc7ck6GSkLqN28scaTxPJyWa7L
-	jfag4iGW9Jya6qOHgYFv5D/pou2iAj/XX
-X-Google-Smtp-Source: AGHT+IF/Mx+aeQaDKWNtONCluGWzcUX4rpkMKxmKVHQ27MIk0ibKAqPWIDbQ7NzwC9rfk9DG3bxn038hq6LXNmgObN8=
-X-Received: by 2002:a19:ca01:0:b0:51a:df97:cc8d with SMTP id
- 2adb3069b0e04-52965a421acmr10862970e87.26.1716989956613; Wed, 29 May 2024
- 06:39:16 -0700 (PDT)
+        bh=RXUaCkB6tMzvL4LfnqvowAZkzoZ/9h0tRmEhy+jXdZA=;
+        b=pJ4whqEASyPzNQ/UmcYvI5Q0YxvbBMlt8LlcC1aqcwWi5ZxxLqL+NdZU+qw92WJnJE
+         9ROXCuhPIyn6JGdV7OGOslfrK8jTCMTK+CjK59ZU7DFtjoYisE33WsRJcrsW8hxU/ZOP
+         9gDSpczJLmAvl8fvSX930xkIe6+t+SY0lK8uBeJJMeEKuSu+5uxUmzFoWghGgntEZdAx
+         eRwIB/UyQuc15BniCfedV6zo8Lz8BdO21R7x1Hr1qOtpTAkANUTl17Zpa96XAMpxSidG
+         JW1YQxTZvPhRuusvAWR5BiLRCRpBCrcvWEU623+kADG04XqjWv267IYzZwfp8/YC4FhU
+         XL3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUrCoNX1IxK0UQgnx2fICkn36hJCXdWxNlLJCGTghZ3EMlf2KdUoQnawsce3GS03pXXNXl2gpkRpfssJb34QFtrgcFba8id5n0QgDYpoyYnMQOGquYYpPbBFTuQvGcrvQhjF0fKdGqSO07dAi836hVnUFQZ32ujiAK/bocPkV+9klI=
+X-Gm-Message-State: AOJu0Yzk646NzqspK6IgrlVnVuyt3SRqttb/fSWbhYejhWRYbUdPyxY8
+	Hz6VYXW+0uniiOyI2toKmik72mDr4qMIu98hLbxwOVWA2fkNKxmeHrr9l3XnGk+tEJbqfAruMKV
+	G5n6Oy0SvWyx7zhw5Wo8LCXPNibY=
+X-Google-Smtp-Source: AGHT+IHyZuAkokx73kdGAbIZ/CLYololxUsLncCUOjD0KN1JH9pe4IZRwVZJaedOC5UYnHuNWa89YDIMQfY5VzWtOtc=
+X-Received: by 2002:a17:906:384:b0:a62:2ef9:131 with SMTP id
+ a640c23a62f3a-a62641a2aecmr975337266b.6.1716992679816; Wed, 29 May 2024
+ 07:24:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -72,14 +72,14 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
- <20240528190315.3865-3-laurent.pinchart@ideasonboard.com> <ZlYwJryxeZ2LAKYG@surfacebook.localdomain>
- <20240528201326.GA8500@pendragon.ideasonboard.com> <CAHp75VeHA8qH_S=KJjAMv24vGP=hmeN9wSt1_NPsRhBZfEYXXw@mail.gmail.com>
- <20240529093541.GL1436@pendragon.ideasonboard.com>
-In-Reply-To: <20240529093541.GL1436@pendragon.ideasonboard.com>
+ <20240528190315.3865-4-laurent.pinchart@ideasonboard.com> <ZlYyJpLeDLD_T5V6@surfacebook.localdomain>
+ <20240528202044.GB8500@pendragon.ideasonboard.com> <CAHp75Vc2-jOMybL7vwJHgrvb_434p094tgdLo1SyK4i_RXYiDw@mail.gmail.com>
+ <20240529094748.GM1436@pendragon.ideasonboard.com>
+In-Reply-To: <20240529094748.GM1436@pendragon.ideasonboard.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 29 May 2024 16:38:40 +0300
-Message-ID: <CAHp75Vf1EgHOs2jBZPWtX7PdaNcEX_J4wX_aXDehNgxhDf39dw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] mfd: adp5585: Add Analog Devices ADP5585 core support
+Date: Wed, 29 May 2024 17:24:03 +0300
+Message-ID: <CAHp75Vf1uBTKHGazcuLCRvEo9k01t3+6oJnfZgpPZQ_dVCOeDg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
@@ -91,103 +91,44 @@ Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 29, 2024 at 12:35=E2=80=AFPM Laurent Pinchart
+On Wed, May 29, 2024 at 12:48=E2=80=AFPM Laurent Pinchart
 <laurent.pinchart@ideasonboard.com> wrote:
-> On Wed, May 29, 2024 at 08:44:26AM +0300, Andy Shevchenko wrote:
-> > On Tue, May 28, 2024 at 11:13=E2=80=AFPM Laurent Pinchart wrote:
-> > > On Tue, May 28, 2024 at 10:27:34PM +0300, Andy Shevchenko wrote:
-> > > > Tue, May 28, 2024 at 10:03:12PM +0300, Laurent Pinchart kirjoitti:
+> On Wed, May 29, 2024 at 09:16:43AM +0300, Andy Shevchenko wrote:
+> > On Tue, May 28, 2024 at 11:20=E2=80=AFPM Laurent Pinchart wrote:
+> > > On Tue, May 28, 2024 at 10:36:06PM +0300, Andy Shevchenko wrote:
 
 ...
 
-> > > > > +   depends on I2C && OF
+> > > > > +   device_set_of_node_from_dev(dev, dev->parent);
 > > > >
-> > > > Why OF?
+> > > > Why not device_set_node()?
 > > >
-> > > Because the driver works on OF systems only.
-> > >
-> > > > No COMPILE_TEST?
-> > >
-> > > The driver won't compile without CONFIG_I2C, so I can use
-> > >
-> > >         depends on I2C
-> > >         depends on OF || COMPILE_TEST
-> > >
-> > > Do you think that's better ?
+> > > Because device_set_of_node_from_dev() is meant for this exact use cas=
+e,
+> > > where the same node is used for multiple devices. It also puts any
+> > > previous dev->of_node, ensuring proper refcounting when devices are
+> > > unbound and rebound, without being deleted.
 > >
-> > I think that dropping OF completely is the best.
-> > OF || COMPILE_TEST would work as well, but I still don't know why we ne=
-ed this.
+> > When will the refcount be dropped (in case of removal of this device)?
+> > Or you mean it shouldn't?
 >
-> For the same reason that many drivers depend on specific CONFIG_$ARCH.
+> Any refcount taken on the OF node needs to be dropped. The device core
+> only drops the refcount when the device is being deleted, not when
+> there's an unbind-rebind cycle without deletion of the device (as
+> happens for instance when the module is unloaded and reloaded).
 
-It's different. You may not do in many cases the $ARCH ||
-COMPILE_TEST, while OF || COMPILE_TEST should just work in 100% cases.
+Under "device" you meant the real hardware, as Linux device (instance
+of the struct device object) is being rebuilt AFAIK)?
 
-> They can't run on other platforms, the dependency hides the symbol for
-> users who can't use the driver. This driver works on OF platforms only.
+> This has
+> to be handled by the driver. device_set_of_node_from_dev() handles it.
 
-What you are talking about is functional dependency, what I'm talking
-about is the compilation one.
-So, it's a pity that Kbuild doesn't distinguish these two basic
-concepts in dependencies and
-FOO || COMPILE_TEST is basically an artificial hack to tell "hey, FOO
-is _functional_ dependency, I do not care if I can compile without
-it".
+But why do you need to keep a parent node reference bumped?
+Only very few drivers in the kernel use this API and I believe either
+nobody knows what they are doing and you are right, or you are doing
+something which is not needed.
 
-...
-
-> > > > > +#define            ADP5585_MAN_ID(v)               (((v) & 0xf0)=
- >> 4)
-> > > >
-> > > > GENMASK()
-> > >
-> > > This is not a mask. Or do you mean
-> > >
-> > >         (((v) & GENMASK(7, 4)) >> 4)
-> > >
-> > > ?
-> >
-> > Yes.
-> >
-> > > I think that's overkill.
-> >
-> > Why? You have a mask, use it for less error prone code.
->
-> I'll change this to
-
-...
-
-> -       if (ADP5585_MAN_ID(id) !=3D ADP5585_MAN_ID_VALUE)
-> +       if (id & ADP5585_MAN_ID_MASK !=3D ADP5585_MAN_ID_VALUE)
-
-(Don't forget inner parentheses)
-
-...
-
-> > > > > +#define            ADP5585_Rx_PULL_CFG_MASK        (3)
-> > > >
-> > > > GENMASK()
-> > >
-> > > Not here, as this value is meant to be passed to ADP5585_Rx_PULL_CFG(=
-).
-> >
-> > Why is it marked as a mask? Rename it to _ALL or alike.
->
-> It's a mask, but used as
->
->         ADP5585_Rx_PULL_CFG(ADP5585_Rx_PULL_CFG_MASK)
->
-> We're reaching a level of bike-shedding that even I find impressive :-)
-> As with a few other of your review comments that I think are related to
-> personal taste more than anything else, I'll defer to the subsystem
-> maintainer and follow their preference on this one.
-
-I would name it _ALL and use (BIT(2) - 1) notation to show that you
-want all of them to be set. But okay, let's leave this to the
-maintainer.
-
---=20
+--
 With Best Regards,
 Andy Shevchenko
 
