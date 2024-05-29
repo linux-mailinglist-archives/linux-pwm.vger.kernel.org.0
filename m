@@ -1,325 +1,242 @@
-Return-Path: <linux-pwm+bounces-2284-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2287-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 642D88D33E8
-	for <lists+linux-pwm@lfdr.de>; Wed, 29 May 2024 12:01:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C46558D3425
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 May 2024 12:12:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1444A1F22523
-	for <lists+linux-pwm@lfdr.de>; Wed, 29 May 2024 10:01:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DB98A1C23772
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 May 2024 10:12:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74BD017B4F2;
-	Wed, 29 May 2024 10:01:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569D117DE0D;
+	Wed, 29 May 2024 10:11:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sv3Jkq8O"
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="kUotTfrp"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2122.outbound.protection.outlook.com [40.107.105.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499FB17B43A;
-	Wed, 29 May 2024 10:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716976878; cv=none; b=OqarpbaoQYArpYBerCVe395kpyBAcVL/lDXY39sDmvFzOu+AqjM12h6laWAkyV0Nv/lLfuwoFzhRN0GIKm+M+7U47LWdNiBJ+v69vG7B2c5qgfCwW0QiXnEDwM5Io+3zBBWHZWuf+xgwHVYpCfUUfcmnOtK+/8ERCosEGvz+A8c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716976878; c=relaxed/simple;
-	bh=DbSfj2AuXO8/xPseQuTpefTqS6ELr7H0u4EGEdY+1/0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZHPITukGfUVrUG641S+eUEm/51gc6X4xcdsEcQrtzR5udmc3VWZKvjd5d8nS5rD6UV/jb3JOdecWNL0V4tfXpdSJY2e4lU5hQlFXb6CPFHSW4x/LOexjMv0eMl8q2tWu1w8afnrs86L0E+4ZtGP5sxBlpvHBlVZQaOEtdHyUfDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sv3Jkq8O; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C42C7C32789;
-	Wed, 29 May 2024 10:01:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716976877;
-	bh=DbSfj2AuXO8/xPseQuTpefTqS6ELr7H0u4EGEdY+1/0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=sv3Jkq8O00gyXz9uLFyWjk/Ffg/b41NgyiWZFrXywChhNFGqqqkYN8oBCagBMUcDZ
-	 yjCpFIk5C9hqlHxQTwAdRRnoktZsuWx1GgzRiQ8yEC7LYeNO9viim7s3z7fJGvntFf
-	 4OqfDM+tB+PUGaWkLpR1pKFQNAMJiZ+A+Jp8bduKhYbcRnxwNgkHhlz46viRqq3l9w
-	 poKDgytGvIT9ngCOqLc8EAmZs+zVXw4YTlvNZvCY30CK6BadcjTA3ZD0SnFLdIPF/a
-	 OhLW5virLbLvot/GynXj8YH+fSFXL4bpU7K8lCgy3/UGsWx8EhMTArgMjv13A/beie
-	 +UcZe5Yq2+Atw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B071AC25B75;
-	Wed, 29 May 2024 10:01:17 +0000 (UTC)
-From: Kelvin Zhang via B4 Relay <devnull+kelvin.zhang.amlogic.com@kernel.org>
-Date: Wed, 29 May 2024 18:00:57 +0800
-Subject: [PATCH v6 2/2] arm64: dts: amlogic: Add Amlogic S4 PWM
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F2D17B51C;
+	Wed, 29 May 2024 10:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.122
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716977463; cv=fail; b=KFj812qtFtG/tEGmS1+UqRCF1HE2I8Zh2FLRaIt1SHTYl379pxHXz4w0NG3mzOFVo3bLKx1Xj645m7nyPzSZyb4lPtMo0cE+UHEDDWAa25r5zYpYrrHSuZ5nmvdhZEIsNPv4VruWsdK+0Orb2+a/gqn6yj1bdGkA4/G7sxqMiog=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716977463; c=relaxed/simple;
+	bh=acgJ9eLt5MEqg2YYyc3epGLTS3EsLW0MaWJt1OaIuxo=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=ufc85FXDqVSBoqi1cizJjUhNH1A9LR/LO6LXn8sGzKC8QkaUba8vcMdPJ/M+jOwTLR4Gs3MvAYXUiCcfkXt/d96v7ZDt/U3TF65bUROAyoRpR8zzL+Oa6pxeDjMWheMyaqDMsrRorwWeOaB1xejXtASKwCfstnD/isGqqYqtStU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=kUotTfrp; arc=fail smtp.client-ip=40.107.105.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n+s1VfxtT+LElADHKlufzwOsjdMVe6HTpM6oYs5FcPmNQME9XXf+KLT9IalumCKGe5AQ4EBnNlNjDdMgygwLaJE0D3Nf/QE50nk0tcWHaLR1R/vSEb6dQyMAVdW2XsQEYIV5UWhN9Zss6yKgU/w9un8JMER115WEx0vpZ0jt6EmKiHZMsE2JehHOZ7XG+iP5q2ZDwRvdp74syAGWggjNYhnyxgrLMR9vcYnNMims/f4IqwaigP9dUB3k+DvBv6yHfZRXo1M9Gxva9CQJyIOlzIMbrbv8fwlWgbzwms6zioi9tmljikrES7or8JpPKzLM5FFI4HEQsXobVt2Xhdp8Gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jxWFOafSEWg8GVa7FIRUhdWVZTfHV/SfAVlmj0XA2tU=;
+ b=FZ9aXV/W+P0J3fhiTPR0y0Dy6UaY7oPLMnBsdNQfn4yVIUHV+9tQThearPP9zUgoLccUuOdJnfO9jjsUkO3yq7ZLRG2cp1rG5hBLTFZMTwPOAuuIi4wTPHyWzmGpAroPZpupntbTeVCtDIM/93OgwS+90CWpwdcBSatN0kst8pbQcurpx+TFWFd7NA4KSfxxRCTy3fWWoQJ57WZJFfjbrxRoQhBirW8/tsw9xqMeo1e0d2dZZ9WrkRnr9Tjy1Olzdk3H/3nieLkUaCb9+WbAQbtZaNYoZ5zDpiM9RFPn4oAkb5g7w6BMSjCAf/hlj4T/9635CZT6rSFpMcpzYtbMAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jxWFOafSEWg8GVa7FIRUhdWVZTfHV/SfAVlmj0XA2tU=;
+ b=kUotTfrposaVJkwo6R1xAxEtZcMnmXPkB5Jm/YtoGGkBQEtEC6nGKF3dh//i7tXVdK1u9K0lorKJ812Yij4C3hK05yK31kJVlrkMwu730Kf6+LTKeiw0W5Pt3Y4VjB54Q7sdEnGgrNiBfv1K4gJVFEw+FnpWsRUZSOyoDPV5/6k=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from VE1PR04MB6382.eurprd04.prod.outlook.com (2603:10a6:803:122::31)
+ by AM9PR04MB8811.eurprd04.prod.outlook.com (2603:10a6:20b:40a::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.19; Wed, 29 May
+ 2024 10:10:51 +0000
+Received: from VE1PR04MB6382.eurprd04.prod.outlook.com
+ ([fe80::2a24:328:711:5cd6]) by VE1PR04MB6382.eurprd04.prod.outlook.com
+ ([fe80::2a24:328:711:5cd6%4]) with mapi id 15.20.7633.018; Wed, 29 May 2024
+ 10:10:50 +0000
+From: Farouk Bouabid <farouk.bouabid@cherry.de>
+Subject: [PATCH 0/6] Add Mule PWM-over-I2C support
+Date: Wed, 29 May 2024 12:10:29 +0200
+Message-Id: <20240529-buzzer_support-v1-0-fd3eb0a24442@cherry.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABX/VmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDU0NT3aTSqqrUovji0oKC/KISXWPjFEvjZMsUgzTDJCWgpoKi1LTMCrC
+ B0bG1tQAqsYyYYAAAAA==
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Quentin Schulz <quentin.schulz@cherry.de>, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, 
+ Farouk Bouabid <farouk.bouabid@cherry.de>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: VI1P194CA0043.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:803:3c::32) To VE1PR04MB6382.eurprd04.prod.outlook.com
+ (2603:10a6:803:122::31)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240529-s4-pwm-v6-2-270f63049f20@amlogic.com>
-References: <20240529-s4-pwm-v6-0-270f63049f20@amlogic.com>
-In-Reply-To: <20240529-s4-pwm-v6-0-270f63049f20@amlogic.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Kelvin Zhang <kelvin.zhang@amlogic.com>, 
- Junyi Zhao <junyi.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716976876; l=5081;
- i=kelvin.zhang@amlogic.com; s=20240329; h=from:subject:message-id;
- bh=RZgRRkkZrEuNbz37RVEud8NVXA4UvtxkJIzerJ/86lo=;
- b=xA9Jcfkz9OaK0o7FzoBlFuR9bh3RN4pR/Q7QCDMFd+LQG5R6Di11LrtXUIh6+alLiioBi3N5M
- u1/h7PU97Z/BJvN2un2gzkOJuTMbb+eEkOLl5G+UZEmMKJbqQYsUfOD
-X-Developer-Key: i=kelvin.zhang@amlogic.com; a=ed25519;
- pk=pgnle7HTNvnNTcOoGejvtTC7BJT30HUNXfMHRRXSylI=
-X-Endpoint-Received: by B4 Relay for kelvin.zhang@amlogic.com/20240329 with
- auth_id=148
-X-Original-From: Kelvin Zhang <kelvin.zhang@amlogic.com>
-Reply-To: kelvin.zhang@amlogic.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6382:EE_|AM9PR04MB8811:EE_
+X-MS-Office365-Filtering-Correlation-Id: e8480373-6d0a-4f9a-348c-08dc7fc79db2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|366007|52116005|1800799015|7416005|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R3orMDVLeG5jN2R3c2pWT1dzS3A1Y1BwMVZWWHNUYmRBRGwzcjRkY2ZCL3R5?=
+ =?utf-8?B?NWYvUTRDWkxQUXAvZ1U4Q0NySjA0dE54L0oyM2lzbDA4RWVkRHpOU2lwMTlj?=
+ =?utf-8?B?U1d0VlRZSElwUUtOTjFuZVhCSmhtelIreVdpeXd6eks5aDVMblUxcEtVeHFI?=
+ =?utf-8?B?T3JON2ZHaWN1N3d3WDF2QlRJMmk4Y1JoYklYbk9PVjdpTml3OGhHS1hNT29v?=
+ =?utf-8?B?SnNhNGIyQXZjT0FNdDZhWnBRdk1jdnFqMjhIb3NOcjRSdHY3dS91UWEvYStL?=
+ =?utf-8?B?dHB5U2lLcDJ3dzR5eEVUd2MyUldqNFdMRERhNnBlTExqYm83djlHUG05bUov?=
+ =?utf-8?B?eWxCMVE2UEtJRDVWOEVwVm9LRnQ4MStCL2owZllmdGlLZ0VuazIxNVVjNnF1?=
+ =?utf-8?B?eUxoZzJ1OVZXeFVYZk1ZWE4wQ2xsV3JJcnlFRkpacWdlWWpqdU5IdkNJY0x2?=
+ =?utf-8?B?bmNmdXFQQWtzUnY1SU1Pcll3VFNsMk5mNzlYbGxKL1FTQXlKeVFnQTJmYzdQ?=
+ =?utf-8?B?NWdVL2Y0bGVuUEJRMERWZ1lCMVZzTHVjMGp2dDRCaUFhbmV3WVZvRkxrMUJ1?=
+ =?utf-8?B?a0tLQ0Q0SFAxQmZHRUZlQlgrcGc4N2ZycGxucGQydjB1cXFOZHNNWVhwSXY0?=
+ =?utf-8?B?M0NKZXYvbFJlRE9SUUxyWjVZNnZGeU1pclRoYnZxNW9JRE5WS2ZEbTdYTkVv?=
+ =?utf-8?B?QXJGN25GVFpxVkMyL3pkK1FkYmxydWhJTE10aTN4YTJZM3VOM3dsSHBSSGY1?=
+ =?utf-8?B?YXFVV2FlTEFZMnRYM01pdTd0V2V4RldvTGxOQzlSbFVkdEVwT0ZtemxQYjAr?=
+ =?utf-8?B?R2xhUGFQMUR0ckw2RjBvQ3lyQzFYRUxrMUM2U2JWU2F0dzBBNU8vRkZ3RVdV?=
+ =?utf-8?B?a1dQc3NFUzFsdDhVaTRDWTIxOEdHSXRJeWRRODc1NWptRnJzUFdIYktEY2po?=
+ =?utf-8?B?eW01ekFSUUZURE9EMnZ5bDNNeDhyVk0ydDJlVnpObjB2cnRzbFJEeldTdkVj?=
+ =?utf-8?B?UFNoQXIvVmtDNVdITDVJeXlHNSs5MHdNU1ZXbHZ4VUlEdVBYdlZaT3I2ZnZt?=
+ =?utf-8?B?ZDZDUmVINFJCQ3dYK1JmeGE2UnFMQUNoem50L3ZPN2xCZUIzVnlzVXE1L3da?=
+ =?utf-8?B?WVlzWXdBZkVvemlJekNnZDJMMGNDTDhLVjZSV0oxTEZNUXorMkM0RnMxOE5X?=
+ =?utf-8?B?aEpncHArbThMbWIyVXVFQ2pNSk84QVlRSlBibWJLcUhPQ2tBN0FDdXlJb29U?=
+ =?utf-8?B?cm9QR1JqY21jb2NPOTZGaTA3Y29oY1c4N2VhQWI3WVhQTi8ySTNVOGdvQms0?=
+ =?utf-8?B?SlM2eUV6c3hndlo4WmZndzU5RXBQcEtBQW9NQ0ZHRmlPeWEzcVNhcXBRdVJt?=
+ =?utf-8?B?czVZMXlMUStQVHhncFNPV0J1OXNsWnQ3V1VHTkNrd0h6d3dDZEdPYWdHeU4x?=
+ =?utf-8?B?dStwZldLR3N1QXhDOGhXVDlYKzA3cmxFS3RGRnl2b3JBWWZOSnBFa3cxc1FY?=
+ =?utf-8?B?YUxFRkNyNlhhRmg0TTdyejNoanNWbGk3TmNNNnhJUGNrUjNPZDNKcHNVdkQv?=
+ =?utf-8?B?TWxUTWd3RlZUT3JoeFdRR2pjeHV4VUlkZXFjV0JIRUxZSUx2QnYzVXo3STJ2?=
+ =?utf-8?B?RERFMzBzWStZVkt1dC9SZFhUUnFRL1RTcWdJYTg0eC9HMHZ4RFVSWkMxcmZj?=
+ =?utf-8?B?K3NTRzZYRDJqRzM1Rkc5ZWkrbHdNSWI0Y3B3TkdhUGZ6UGZ1dEZabWpBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6382.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(52116005)(1800799015)(7416005)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZFBqMXNIUVV0dWliQkJ6VnVLcnI0MzA4UmhDcmdYUWY2dFFqcm1NcGdUMndW?=
+ =?utf-8?B?ektwMzFaNFhrYzd2R3J2a2R6M0FxY0NCV3lxRjl3ZVlDdXNtT1FCK3g2L3N6?=
+ =?utf-8?B?dGtCOWFuL3UvUDhtKzB6bW11d2JiZng2QmVhdGJHQjYrZW1yQlNGSVpMSWhW?=
+ =?utf-8?B?cnR1R2R4MjltVzNtMnl3Rk1BcTVIUGg1cGIrUFdYekxhbnFvMzEvc2VrbFpS?=
+ =?utf-8?B?QkdJTWJEbENJaEVZR0JVYUkwd1UwSUlYdnpWUUtEMjNVeGtHbjR0TFZLRXRw?=
+ =?utf-8?B?Qk9wY2gzWW9FZkNZaHJpMEQzV01wZ3FaS2VaY0t0bGdHZnZ5Sit1YS9BbXA0?=
+ =?utf-8?B?L3VERkRFVVd3TTRGWFQwa1dOM0xhcDhoZWx1aTN0cHdidHhiMVRranhWaEwy?=
+ =?utf-8?B?QkE2bjB5QWQreE5RT0V1bVpqUnIrc2JvQTJiV2kwaUJ4Tm9PQzF4TTlROUZH?=
+ =?utf-8?B?YVBleHhTeXJrTnkvdU95NUtHL0RpSmlyeEp4aFNqV2UzQWZNYlgrRDdiTTBM?=
+ =?utf-8?B?eFp2TldNZldlVmRoR3pyU3FTc29KUk9JQm4wcXZ1amhwNks1azVHODhKMGli?=
+ =?utf-8?B?ME9GaGQzRWlaQkZjNW5HeVcyRlNmcS80VWZSd0I1WUEwVXFZMHlranJOdXRK?=
+ =?utf-8?B?ckk4bDYwOWJXNVd1NXpxdDRnZlpRb1QrMTNYYmRPeXdOQk4zV2JtdUpLQy9O?=
+ =?utf-8?B?NFF2WXNkejZ5OXIzVnVJRFZaZGdlbVhzZzVrcHNObUdlODB0T0ZCNml1aEhJ?=
+ =?utf-8?B?Y2pyei9waFZuYnliaU4xcjBjdklwZ2xrS1psdUVqbFRtUk1EWnFXNEdCUVZS?=
+ =?utf-8?B?THBrdVV6Z1B6ZUpHNGFpRlBlSGgyWXYrS1FWVStiRnpXS0NrOC9PRGs4T2tw?=
+ =?utf-8?B?NFpqQ3hUQzdZRSt2bTZtc0ZIM3pBUUFjTEc4dEdZU3ZWRU5WdXB1NG1KcVFN?=
+ =?utf-8?B?SGROQmsrOFdXcTN4bm1ibGVnOFI1eUlNbEg2a29OMWxuK05UdUIwd0dhemNG?=
+ =?utf-8?B?SHk5RDRaaGxvVUtMNlJlQkRrL2dPdzlWMm1zYm82T2ZQN2szOE1aa2d6blVh?=
+ =?utf-8?B?eTJaSWV1OVJuMkozdlVuc2VLNElnSTlQdGxDZjZKYTYxVnZyS2pGcXFYODB0?=
+ =?utf-8?B?OVRDaklTUW1xeUVpclVDRkhaelprTWFDYWc1U0JtWmozWldYNEJBUHkxQW9y?=
+ =?utf-8?B?S09YV3RIcnZwQWVORjN5cDJRKy9sOG1sWU9vRndrSFNyRnFXS3FoV3RWSHEr?=
+ =?utf-8?B?WXhzVklNMkp3YUlMVEtVSzE4SzRHRTFCZEkvMG03cWw1bk5qQVdqUzhpTDFQ?=
+ =?utf-8?B?dG0wSFhKVVRQYTdTMThmbXpkUVV2aFlUcnJET1lUdWJnaWk1ME9pa08xQ0JR?=
+ =?utf-8?B?K2hoSTd1K0RxTHNwbUFBQW5HY3pIR3NId1NOVzdHRTF6TDdETWE2bHZKRjBp?=
+ =?utf-8?B?MGYxakNrdlJKWHdmanF2OUNJK24zMlBLMTVzM2tpemhpdk1xV3hGUWlCN1hs?=
+ =?utf-8?B?R3AvUmpZMXc0SGNING9UY1Mra3FDd0ZOTmdYbmlVam5vTFZxaXFQTnRSSVUz?=
+ =?utf-8?B?dzBRMC8vbnVtblhrZDVoYmU2c3lPUU9lOWNIQjRoRk5yTnI1WFpNMGtPeGVx?=
+ =?utf-8?B?cHdWd3lmUktaTmVjd0c1L0VOMG5NLzFPSjlmTjhaWTVLVHF1SzBzWEk2anpO?=
+ =?utf-8?B?QXl3MzZkYytBc0FURTIyWGZlVkVVN2VQTElUSUdib0tock9YYlcrSFR1Yi9p?=
+ =?utf-8?B?bUZwNVgrUllTdDJSVzZkVFZxRTVGRE5IbExrcTBqY2I0alI5V1d6OUJCVkxr?=
+ =?utf-8?B?c1NzL0RFalpkU1F5ZmlMb1g3ZjdPS2lnOXVocGNXL2RpZXd3LzIxMDVzeVRJ?=
+ =?utf-8?B?dzVTVjZiaExDTVByWUt1MjRseXRIWTkyTW9OZCtiSEhDWFkvT3VvYjFhMXJO?=
+ =?utf-8?B?ek1vMEx1Mzg5T2xLUHJQdVRDMHE0dWF3WElza2NBLzN6QVNEY1J5S2V5VEpj?=
+ =?utf-8?B?MzBBMC9RY0wzT0MrcEtCYWJSQ2ZGWklkbWJHTzU1RnVWNFpGaGIvTlJ6bXlV?=
+ =?utf-8?B?SUV2OFVqL29mVHpyWkpYbEVHbVA3TUtNZkJidXZ6L1lNcWFPQ2ZEMDB6Zm5N?=
+ =?utf-8?B?TVJnbGhxVVNWOGhZRnZOblhvbnQrd3RZTjBBUzFYQm5pSFF3NEZXdDhyNzg2?=
+ =?utf-8?B?Zmc9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8480373-6d0a-4f9a-348c-08dc7fc79db2
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6382.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2024 10:10:50.2541
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PjZUB+x1YcHSL8AlEsUsAQhc8R1su1NeHj5BfNjjgYlSQiv84zPw24gla2HfJgt7RHP8eI2fwzoePwn1iH9jhv1vKcdVHDtc7UiXu1iaXgM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8811
 
-From: Junyi Zhao <junyi.zhao@amlogic.com>
+Mule is an MCU that emulates a set of I2C devices which are reachable
+through an I2C-mux that is implemented in a different patch-series[1].
 
-Add device nodes for PWM_AB, PWM_CD, PWM_EF, PWM_GH and PWM_IJ
-along with GPIO PIN configs of each channel.
+Device #1 on the mux is a PWM controller that allows users to I2C-configure
+the PWM output signal.
 
-Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
-Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+On rk3399-puma-haikou, px30-ringneck-haikou, rk3588-tiger-haikou and
+rk3588-jaguar boards, this PWM controller is connected to a PWM beeper.
+
+      +-----------------------------------------------+
+      |  Mule                                         |
+      |        +---------------+                      |
+    ----+----->|Config register|                      |
+      | |      +--------|------+                      |
+      | |               |                             |
+      | |               V                             |
+      | |               __           +--------------+ |
+      | |              |   \-------->| amc6821      | |
+      | |              |   |         +--------------+ |      +--------+
+      | |              | M |-------->| PWM over I2C |------->| Beeper |
+      | +------------->| U |         +--------------+ |      +--------+
+      |                | X |-------->| dev #2       | |
+      |                |   |         +--------------+ |
+      |                |   /-------->| dev #3       | |
+      |                |__/          +--------------+ |
+      +-----------------------------------------------+
+
+This patch-series add support for Mule PWM-over-I2C controller as well
+as the PWM-beeper on theses boards.
+
+The device-tree patches are to be merged after the other patch-series.
+The dt-bindings and driver patches can be merged regardless of the state
+of the other series.
+
+[1] https://lore.kernel.org/lkml/20240506-dev-mule-i2c-mux-v2-0-a91c954f65d7@cherry.de/
+
+Signed-off-by: Farouk Bouabid <farouk.bouabid@cherry.de>
 ---
- arch/arm64/boot/dts/amlogic/meson-s4.dtsi | 207 ++++++++++++++++++++++++++++++
- 1 file changed, 207 insertions(+)
+Farouk Bouabid (6):
+      dt-bindings: pwm: add dt-bindings for mule pwm-over-i2c controller
+      pwm: add mule pwm-over-i2c driver
+      arm64: dts: rockchip: add pwm-beeper to rk3399-puma-haikou
+      arm64: dts: rockchip: add pwm-beeper to px30-ringneck-haikou
+      arm64: dts: rockchip: add pwm-beeper to rk3588-tiger-haikou
+      arm64: dts: rockchip: add pwm-beeper to rk3588-jaguar
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-s4.dtsi b/arch/arm64/boot/dts/amlogic/meson-s4.dtsi
-index 10896f9df682..98f554577bae 100644
---- a/arch/arm64/boot/dts/amlogic/meson-s4.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-s4.dtsi
-@@ -312,6 +312,168 @@ mux {
- 					};
- 				};
- 
-+				pwm_a_pins1: pwm-a-pins1 {
-+					mux {
-+						groups = "pwm_a_d";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_a_pins2: pwm-a-pins2 {
-+					mux {
-+						groups = "pwm_a_x";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_a_pins: pwm-a-pins {
-+					mux {
-+						groups = "pwm_a_d";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_b_pins1: pwm-b-pins1 {
-+					mux {
-+						groups = "pwm_b_d";
-+						function = "pwm_b";
-+					};
-+				};
-+
-+				pwm_b_pins2: pwm-b-pins2 {
-+					mux {
-+						groups = "pwm_b_x";
-+						function = "pwm_b";
-+					};
-+				};
-+
-+				pwm_c_pins1: pwm-c-pins1 {
-+					mux {
-+						groups = "pwm_c_d";
-+						function = "pwm_c";
-+					};
-+				};
-+
-+				pwm_c_pins2: pwm-c-pins2 {
-+					mux {
-+						groups = "pwm_c_x";
-+						function = "pwm_c";
-+					};
-+				};
-+
-+				pwm_d_pins1: pwm-d-pins1 {
-+					mux {
-+						groups = "pwm_d_d";
-+						function = "pwm_d";
-+					};
-+				};
-+
-+				pwm_d_pins2: pwm-d-pins2 {
-+					mux {
-+						groups = "pwm_d_h";
-+						function = "pwm_d";
-+					};
-+				};
-+
-+				pwm_e_pins1: pwm-e-pins1 {
-+					mux {
-+						groups = "pwm_e_x";
-+						function = "pwm_e";
-+						drive-strength-microamp = <500>;
-+					};
-+				};
-+
-+				pwm_e_pins2: pwm-e-pins2 {
-+					mux {
-+						groups = "pwm_e_z";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_f_pins1: pwm-f-pins1 {
-+					mux {
-+						groups = "pwm_f_x";
-+						function = "pwm_f";
-+					};
-+				};
-+
-+				pwm_f_pins2: pwm-f-pins2 {
-+					mux {
-+						groups = "pwm_f_z";
-+						function = "pwm_f";
-+					};
-+				};
-+
-+				pwm_g_pins1: pwm-g-pins1 {
-+					mux {
-+						groups = "pwm_g_d";
-+						function = "pwm_g";
-+					};
-+				};
-+
-+				pwm_g_pins2: pwm-g-pins2 {
-+					mux {
-+						groups = "pwm_g_z";
-+						function = "pwm_g";
-+					};
-+				};
-+
-+				pwm_h_pins: pwm-h-pins {
-+					mux {
-+						groups = "pwm_h";
-+						function = "pwm_h";
-+					};
-+				};
-+
-+				pwm_i_pins1: pwm-i-pins1 {
-+					mux {
-+						groups = "pwm_i_d";
-+						function = "pwm_i";
-+					};
-+				};
-+
-+				pwm_i_pins2: pwm-i-pins2 {
-+					mux {
-+						groups = "pwm_i_h";
-+						function = "pwm_i";
-+					};
-+				};
-+
-+				pwm_j_pins: pwm-j-pins {
-+					mux {
-+						groups = "pwm_j";
-+						function = "pwm_j";
-+					};
-+				};
-+
-+				pwm_a_hiz_pins: pwm-a-hiz-pins {
-+					mux {
-+						groups = "pwm_a_hiz";
-+						function = "pwm_a_hiz";
-+					};
-+				};
-+
-+				pwm_b_hiz_pins: pwm-b-hiz-pins {
-+					mux {
-+						groups = "pwm_b_hiz";
-+						function = "pwm_b_hiz";
-+					};
-+				};
-+
-+				pwm_c_hiz_pins: pwm-c-hiz-pins {
-+					mux {
-+						groups = "pwm_c_hiz";
-+						function = "pwm_b_hiz";
-+					};
-+				};
-+
-+				pwm_g_hiz_pins: pwm-g-hiz-pins {
-+					mux {
-+						groups = "pwm_g_hiz";
-+						function = "pwm_g_hiz";
-+					};
-+				};
-+
- 				spicc0_pins_x: spicc0-pins_x {
- 					mux {
- 						groups = "spi_a_mosi_x",
-@@ -399,6 +561,51 @@ spicc0: spi@50000 {
- 				status = "disabled";
- 			};
- 
-+			pwm_ab: pwm@58000 {
-+				compatible = "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x58000 0x0 0x24>;
-+				clocks = <&clkc_periphs CLKID_PWM_A>,
-+						<&clkc_periphs CLKID_PWM_B>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			pwm_cd: pwm@5a000 {
-+				compatible = "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x5a000 0x0 0x24>;
-+				clocks = <&clkc_periphs CLKID_PWM_C>,
-+						<&clkc_periphs CLKID_PWM_D>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			pwm_ef: pwm@5c000 {
-+				compatible = "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x5c000 0x0 0x24>;
-+				clocks = <&clkc_periphs CLKID_PWM_E>,
-+						<&clkc_periphs CLKID_PWM_F>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			pwm_gh: pwm@5e000 {
-+				compatible = "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x5e000 0x0 0x24>;
-+				clocks = <&clkc_periphs CLKID_PWM_G>,
-+						<&clkc_periphs CLKID_PWM_H>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			pwm_ij: pwm@60000 {
-+				compatible = "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x60000 0x0 0x24>;
-+				clocks = <&clkc_periphs CLKID_PWM_I>,
-+						<&clkc_periphs CLKID_PWM_J>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
- 			i2c0: i2c@66000 {
- 				compatible = "amlogic,meson-axg-i2c";
- 				reg = <0x0 0x66000 0x0 0x20>;
+ .../devicetree/bindings/pwm/tsd,pwm-mule.yaml      |  46 +++++++++
+ .../boot/dts/rockchip/px30-ringneck-haikou.dts     |   5 +
+ arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi    |  13 +++
+ .../arm64/boot/dts/rockchip/rk3399-puma-haikou.dts |   5 +
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi      |  13 +++
+ arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts     |  18 ++++
+ .../boot/dts/rockchip/rk3588-tiger-haikou.dts      |   6 ++
+ arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi     |  13 +++
+ drivers/pwm/Kconfig                                |  10 ++
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-mule.c                             | 115 +++++++++++++++++++++
+ 11 files changed, 245 insertions(+)
+---
+base-commit: fd8c3f3cd1b029f1851393839f7ce558db9cf202
+change-id: 20240515-buzzer_support-33d93c9d0f1b
 
+Best regards,
 -- 
-2.37.1
-
+Farouk Bouabid <farouk.bouabid@cherry.de>
 
 
