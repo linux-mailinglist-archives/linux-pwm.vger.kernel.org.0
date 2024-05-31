@@ -1,72 +1,72 @@
-Return-Path: <linux-pwm+bounces-2302-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2303-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96DE98D6420
-	for <lists+linux-pwm@lfdr.de>; Fri, 31 May 2024 16:12:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D01D8D6428
+	for <lists+linux-pwm@lfdr.de>; Fri, 31 May 2024 16:13:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 252321F22196
-	for <lists+linux-pwm@lfdr.de>; Fri, 31 May 2024 14:12:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 918721F233FD
+	for <lists+linux-pwm@lfdr.de>; Fri, 31 May 2024 14:13:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 460BA15B975;
-	Fri, 31 May 2024 14:12:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 548F9176AB8;
+	Fri, 31 May 2024 14:12:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kA8tJArf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0obda/d"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07DF1F947;
-	Fri, 31 May 2024 14:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E275176228;
+	Fri, 31 May 2024 14:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717164743; cv=none; b=KCTjcF3WvZo6qRfclhpvUR1KYGAUIdOsK5GQnM14HZeQcEwsYK+MZQzdCQDs2SXjsL3J6Mo4qQW0KcOpdzQ+tSB/rqeqr9Oixl85CHPKjadbC6hXrWb46xcB243XS0/9OprteThVMaUrKRBe2vG8i2gKlTVyW24VpJqQMTrfe70=
+	t=1717164747; cv=none; b=cKDiLimlRIHW9wD2WPOyBSoTKDVleQYL/pTnoaXmxvUYdZ3+ADa+fewGUc2zR9PxDu1wbii66nxmGEAss4Lm4HV80dDAjKqNxhKxNjlpEf9Twl0DpEZbu7UaCFor5ORzEWWscwCkAORiVoFRqOErD12uWiv8tD598WcTfdHQ5jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717164743; c=relaxed/simple;
-	bh=IHqJ+gtCt73wUC3F7SosO9077s2HWzZcUsKHQ3ldAsg=;
+	s=arc-20240116; t=1717164747; c=relaxed/simple;
+	bh=RhrUmzVO8TfLZd54FCoZcZD5QHg156A3ksQFZu6P0Mg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MgW4dF4aLupvJaaxpZEKssnVd0GuzYhlGT883wt2G6AIVwD8vsosDYqnQa4oIEoFzICdkIHJAPCU8BO6c7oNKmuHW1EICY7cDo7ESV5OXHVe2S55BIawesxYGRAl1Enw/ljZBmfcAcyzVbmLPEl9BQxXlfv3Lp8N0Quq2Ti3v7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kA8tJArf; arc=none smtp.client-ip=209.85.210.173
+	 MIME-Version; b=rRNkM8ptg5zydtlPxz2KssYno7LZVzQNsKvs57y4aLF+hmWp0oVf0+CbQH5Uc7z+k75dJZo2eoYeRt3UmItYgBKGvQ3N6X9DqReIRfQ5srdXZTAhQznATzqTTGbWGCf0z0gdAPDCKrvjjSUDh/YRvqmMeWf8Zp7AEqMo6A4gNiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k0obda/d; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7024426c75dso799329b3a.1;
-        Fri, 31 May 2024 07:12:21 -0700 (PDT)
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-70245b22365so631651b3a.1;
+        Fri, 31 May 2024 07:12:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717164741; x=1717769541; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1717164745; x=1717769545; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6wTHZBEFwXJhWoEDkPDRuoh0St8wlNAfA/2opNNZCGE=;
-        b=kA8tJArf6pTCdv4tGHQIcqADw5/saTskvru1o3PhGNTJ4kr9lxjOs7dc53TpHgmV4R
-         QGpg+gd6PW0aSrXT4uce6HvHQO+X2AaSbNpJSoPB0CFN5PcMd7HFhVsyj6evGolc5GFf
-         AJsOAHF2f+CJbxMNengKSdggjafHd6v/7xivRyQQaHSF6NiOAFE/4IKuuA9T1hobae3p
-         BcBKBcXGTmcnLryIz4c5BLVzVpBhU4968g3E6K2E7D+r2fqCGZ3b1x7Wa8xcZVTA/MHk
-         t7av1En62yRdf5vbedaU6sGSaqEwyBhfA/hPSfttZM6XuEuXsCIk8/OfdG2lVdXEm6RU
-         i5nA==
+        bh=S+bkqqaFUuGbFWxlDKxozcD2p6jDvwkVorFlVtLPXmU=;
+        b=k0obda/dHTdFPbU0TFsQUKzJSm6snNQPOhEkPpB63tMC1O0DgqtoTMaabud48V+dgl
+         3v+eP6JALkESqoOGXKpbVFZ5GdH2eBPp2IS8mq87Emzgub4MBaW55Y7VvBNcr8MHswQl
+         LS+spnoz6ay6rYn7217KUFhRzHPgkWQjxkbBIJtIknyPhfe2QselZl/lfQLQclKCIkek
+         6FcaX8UkUCRdCngUqGuTwXtPYy3re9MZV0zuZ3IAYHuclLgqfrULz/u2MEnJV7PkuZyL
+         V0dAusUc9tTQgtK/aI0bJzIidkC8I7CSXwOsUP0w5YvBiHWNmDFnDK/pMgd3Po1x4GS0
+         6ViA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717164741; x=1717769541;
+        d=1e100.net; s=20230601; t=1717164745; x=1717769545;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6wTHZBEFwXJhWoEDkPDRuoh0St8wlNAfA/2opNNZCGE=;
-        b=qF1EUOXcBDrYRwtXmKtVsNMSw/qQLV0CFwiFQRXjj+S5Elduj0+oUeI3ExQt+ZebnB
-         PUd7vTgjEBHfqUM/7XlP9YAyVvawWm9BVBml+xJXbtwJ1Pfts22alo3nNGZFFtlbbSbH
-         /WYLAmEdmVZRjtsl7FzXzcfvBUNC4lMuhIarMAtFC2PyS7hU0Jf8oAqat17e3axOtEiJ
-         CpYR0XfMy+a9RwH6dymv0218yggTAWlGkNvoRsfldal0Tfcto+0ndDwE1lulZ8cyTtGZ
-         2ooplrifiCjg3gDibP5M+keUFeepMGOKI+wHK+0u38DPftucNbohd3dGK3wKmy1FBmOd
-         a30Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXnBqpnwmKtWZO/nIfTTskWpHNbxUcxTYhUwysREHgHq6crDnqBlNtm285bY3tDuHevv6lObcdR6ZEjMFQNcfon6lfn7Tq9vfTuuhd8iFzGnUh8Gb7SOIfYWyE0YkAL5TIfugNEgA==
-X-Gm-Message-State: AOJu0Yy1vhdSvZVTVUA6biR/SVKmK4z1FEgKyQl77bginJeSGJkkFZES
-	2tCpHxNaeDjJVT3o8uNt57QhOGPZ5v4R4G1h9YbcHIK1V1zvoNubgYacaJgS6yQ=
-X-Google-Smtp-Source: AGHT+IGoJr0t15MSyl5iBphGcVZieynY1XhJgQ2y4dhBK/dl/1tYzaCMu+V5iPs17tOhEXXS6/u+gw==
-X-Received: by 2002:a05:6a20:6a25:b0:1ad:7e4d:2ea2 with SMTP id adf61e73a8af0-1b26f0ec300mr2694125637.4.1717164741148;
-        Fri, 31 May 2024 07:12:21 -0700 (PDT)
+        bh=S+bkqqaFUuGbFWxlDKxozcD2p6jDvwkVorFlVtLPXmU=;
+        b=wmGCOSfViZO7lbKcORh+9nPTmYzRCfE8v5lmdEZAvbFcgYDPOFYBLcb+EznKglWQHR
+         JP0hhXtOft99hvU9H6C2322ftBUlAzE0YeoWMnN796sm5k2XYiiSlbgnEg9PPVGuVjIa
+         +fpuoe40CRm+UTarFbq2TfWtUvB292rp1gJDF03g+a4iNEfkDsJrDR7m42u54Aqw7XUZ
+         9NTiIiZPtJd7Jp0Kq5EF4yOqnJJFhSltbwltAIDCwcVWfagty3x2BDQO/aHStAV+HV9A
+         Zv6FeETQR+T18+cGBtHqtYZ2rTH0THPZC9f7qFKXgQiDktKl2NePlCTwLUnHDtNzd/hx
+         z1uA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPGa9Ks9kMCnAeeBBxeCkzCCpKJHq/f8kMUQvG8FfWilbivgs9XaG3iITy0Wz1n4+Tv+NHSbZzM5xa6Zd7F4uKTNhjBqFmEUZB1MmMljI5fhAxxrqCY9Iz27s+zyfdfKRFAS7Ong==
+X-Gm-Message-State: AOJu0YzRRHt02WM7kt/UBRe+L4c1kLuu/j0laPWYLq//of+W/muUkIvz
+	XZRnJkJ1pAbhYVXwoF5t4NQOLlZP+E1S8sOP7h0a7sZtALEGGeQgGUtTkIUXMu4=
+X-Google-Smtp-Source: AGHT+IHPJgFaqgnxSWkMBgv7lPh1JhhIs574AgD6tNqP5a50Y7sg2nqLpeaI6lfcDle6Wt7ebuqnvw==
+X-Received: by 2002:a05:6a21:7888:b0:1af:d148:b713 with SMTP id adf61e73a8af0-1b26f17c7a0mr2374657637.1.1717164744673;
+        Fri, 31 May 2024 07:12:24 -0700 (PDT)
 Received: from noel.flets-west.jp ([2405:6586:4480:a10:167:9818:d778:5c14])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242b057besm1418103b3a.162.2024.05.31.07.12.17
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242b057besm1418103b3a.162.2024.05.31.07.12.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 May 2024 07:12:20 -0700 (PDT)
+        Fri, 31 May 2024 07:12:24 -0700 (PDT)
 From: Hironori KIKUCHI <kikuchan98@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: Hironori KIKUCHI <kikuchan98@gmail.com>,
@@ -83,9 +83,9 @@ Cc: Hironori KIKUCHI <kikuchan98@gmail.com>,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-sunxi@lists.linux.dev
-Subject: [PATCH 1/5] pwm: sun20i: Use devm_pwmchip_alloc() helper
-Date: Fri, 31 May 2024 23:11:33 +0900
-Message-ID: <20240531141152.327592-2-kikuchan98@gmail.com>
+Subject: [PATCH 2/5] pwm: sun20i: Add support for Allwinner H616 PWM
+Date: Fri, 31 May 2024 23:11:34 +0900
+Message-ID: <20240531141152.327592-3-kikuchan98@gmail.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240531141152.327592-1-kikuchan98@gmail.com>
 References: <20240531141152.327592-1-kikuchan98@gmail.com>
@@ -97,100 +97,248 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch fixes a compile error by using the devm_pwmchip_alloc() helper
-function along the way.
+Allwinner H616 SoC has a PWM controller similar to the one
+in the D1, which is supported by the pwm-sun20i driver.
+
+This patch adds support for the Allwinner H616 PWM.
+The main difference is in the register layout. Specifically, the
+GATING flag is placed in the PCCR register instead of the
+individual PCGR register. Thus, it must be handled properly.
 
 Signed-off-by: Hironori KIKUCHI <kikuchan98@gmail.com>
 ---
- drivers/pwm/pwm-sun20i.c | 45 ++++++++++++++++++++++------------------
- 1 file changed, 25 insertions(+), 20 deletions(-)
+ drivers/pwm/pwm-sun20i.c | 109 ++++++++++++++++++++++++++++++---------
+ 1 file changed, 86 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/pwm/pwm-sun20i.c b/drivers/pwm/pwm-sun20i.c
-index 3e3b5b138b3..93782023af6 100644
+index 93782023af6..d07ce0ebd2a 100644
 --- a/drivers/pwm/pwm-sun20i.c
 +++ b/drivers/pwm/pwm-sun20i.c
-@@ -102,7 +102,7 @@ struct sun20i_pwm_chip {
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * PWM Controller Driver for sunxi platforms (D1, T113-S3 and R329)
++ * PWM Controller Driver for sunxi platforms (D1, T113-S3, R329 and H616)
+  *
+  * Limitations:
+  * - When the parameters change, current running period will not be completed
+@@ -20,8 +20,17 @@
+ #include <linux/pwm.h>
+ #include <linux/reset.h>
+ 
++#define SUN20I_PWM_REG_OFFSET_PER_D1		(0x0080)
++#define SUN20I_PWM_REG_OFFSET_PCR_D1		(0x0100 + 0x0000)
++#define SUN20I_PWM_REG_OFFSET_PPR_D1		(0x0100 + 0x0004)
++#define SUN20I_PWM_REG_OFFSET_PER_H616		(0x0040)
++#define SUN20I_PWM_REG_OFFSET_PCR_H616		(0x0060 + 0x0000)
++#define SUN20I_PWM_REG_OFFSET_PPR_H616		(0x0060 + 0x0004)
++
+ #define SUN20I_PWM_CLK_CFG(chan)		(0x20 + (((chan) >> 1) * 0x4))
+ #define SUN20I_PWM_CLK_CFG_SRC			GENMASK(8, 7)
++#define SUN20I_PWM_CLK_CFG_BYPASS(chan)		BIT(5 + ((chan) & 1))
++#define SUN20I_PWM_CLK_CFG_GATING		BIT(4)
+ #define SUN20I_PWM_CLK_CFG_DIV_M		GENMASK(3, 0)
+ #define SUN20I_PWM_CLK_DIV_M_MAX		8
+ 
+@@ -29,15 +38,15 @@
+ #define SUN20I_PWM_CLK_GATE_BYPASS(chan)	BIT((chan) + 16)
+ #define SUN20I_PWM_CLK_GATE_GATING(chan)	BIT(chan)
+ 
+-#define SUN20I_PWM_ENABLE			0x80
++#define SUN20I_PWM_ENABLE(chip)			((chip)->data->reg_per)
+ #define SUN20I_PWM_ENABLE_EN(chan)		BIT(chan)
+ 
+-#define SUN20I_PWM_CTL(chan)			(0x100 + (chan) * 0x20)
++#define SUN20I_PWM_CTL(chip, chan)		((chip)->data->reg_pcr + (chan) * 0x20)
+ #define SUN20I_PWM_CTL_ACT_STA			BIT(8)
+ #define SUN20I_PWM_CTL_PRESCAL_K		GENMASK(7, 0)
+ #define SUN20I_PWM_CTL_PRESCAL_K_MAX		field_max(SUN20I_PWM_CTL_PRESCAL_K)
+ 
+-#define SUN20I_PWM_PERIOD(chan)			(0x104 + (chan) * 0x20)
++#define SUN20I_PWM_PERIOD(chip, chan)		((chip)->data->reg_ppr + (chan) * 0x20)
+ #define SUN20I_PWM_PERIOD_ENTIRE_CYCLE		GENMASK(31, 16)
+ #define SUN20I_PWM_PERIOD_ACT_CYCLE		GENMASK(15, 0)
+ 
+@@ -91,6 +100,13 @@
+  */
+ #define SUN20I_PWM_MAGIC			(255 * 65537 + 2 * 65536 + 1)
+ 
++struct sun20i_pwm_data {
++	unsigned long reg_per;
++	unsigned long reg_pcr;
++	unsigned long reg_ppr;
++	bool has_pcgr;
++};
++
+ struct sun20i_pwm_chip {
+ 	struct clk *clk_bus, *clk_hosc, *clk_apb;
+ 	struct reset_control *rst;
+@@ -98,6 +114,7 @@ struct sun20i_pwm_chip {
+ 	void __iomem *base;
+ 	/* Mutex to protect pwm apply state */
+ 	struct mutex mutex;
++	const struct sun20i_pwm_data *data;
+ };
  
  static inline struct sun20i_pwm_chip *to_sun20i_pwm_chip(struct pwm_chip *chip)
- {
--	return container_of(chip, struct sun20i_pwm_chip, chip);
-+	return pwmchip_get_drvdata(chip);
- }
+@@ -139,16 +156,16 @@ static int sun20i_pwm_get_state(struct pwm_chip *chip,
+ 	else
+ 		clk_rate = clk_get_rate(sun20i_chip->clk_apb);
  
- static inline u32 sun20i_pwm_readl(struct sun20i_pwm_chip *chip,
-@@ -308,12 +308,31 @@ static void sun20i_pwm_reset_ctrl_release(void *data)
+-	val = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CTL(pwm->hwpwm));
++	val = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CTL(sun20i_chip, pwm->hwpwm));
+ 	state->polarity = (SUN20I_PWM_CTL_ACT_STA & val) ?
+ 			   PWM_POLARITY_NORMAL : PWM_POLARITY_INVERSED;
  
- static int sun20i_pwm_probe(struct platform_device *pdev)
- {
-+	struct pwm_chip *chip;
- 	struct sun20i_pwm_chip *sun20i_chip;
-+	const struct sun20i_pwm_data *data;
-+	u32 npwm;
- 	int ret;
+ 	prescale_k = FIELD_GET(SUN20I_PWM_CTL_PRESCAL_K, val) + 1;
  
--	sun20i_chip = devm_kzalloc(&pdev->dev, sizeof(*sun20i_chip), GFP_KERNEL);
--	if (!sun20i_chip)
--		return -ENOMEM;
-+	data = of_device_get_match_data(&pdev->dev);
-+	if (!data)
-+		return -ENODEV;
-+
-+	ret = of_property_read_u32(pdev->dev.of_node, "allwinner,pwm-channels", &npwm);
-+	if (ret)
-+		npwm = 8;
-+
-+	if (npwm > 16) {
-+		dev_info(&pdev->dev, "Limiting number of PWM lines from %u to 16", npwm);
-+		npwm = 16;
-+	}
-+
-+	chip = devm_pwmchip_alloc(&pdev->dev, npwm, sizeof(*sun20i_chip));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	sun20i_chip = to_sun20i_pwm_chip(chip);
-+
-+	sun20i_chip->data = data;
+-	val = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_ENABLE);
++	val = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_ENABLE(sun20i_chip));
+ 	state->enabled = (SUN20I_PWM_ENABLE_EN(pwm->hwpwm) & val) ? true : false;
  
- 	sun20i_chip->base = devm_platform_ioremap_resource(pdev, 0);
+-	val = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_PERIOD(pwm->hwpwm));
++	val = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_PERIOD(sun20i_chip, pwm->hwpwm));
+ 
+ 	mutex_unlock(&sun20i_chip->mutex);
+ 
+@@ -187,23 +204,32 @@ static int sun20i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	mutex_lock(&sun20i_chip->mutex);
+ 
+-	pwm_en = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_ENABLE);
++	pwm_en = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_ENABLE(sun20i_chip));
+ 
+-	if (state->enabled != pwm->state.enabled) {
+-		clk_gate = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_GATE);
+-
+-		if (!state->enabled) {
++	if (state->enabled != pwm->state.enabled && !state->enabled) {
++		if (sun20i_chip->data->has_pcgr) {
++			/* Disabling the gate via PWM Clock Gating Register */
++			clk_gate = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_GATE);
+ 			clk_gate &= ~SUN20I_PWM_CLK_GATE_GATING(pwm->hwpwm);
+-			pwm_en &= ~SUN20I_PWM_ENABLE_EN(pwm->hwpwm);
+-			sun20i_pwm_writel(sun20i_chip, pwm_en, SUN20I_PWM_ENABLE);
+ 			sun20i_pwm_writel(sun20i_chip, clk_gate, SUN20I_PWM_CLK_GATE);
++		} else if (!(pwm_en & SUN20I_PWM_ENABLE_EN(pwm->hwpwm ^ 1))) {
++			/*
++			 * Disabling the gate via PWM Clock Configuration Register
++			 * if and only if the counterpart channel is disabled
++			 */
++			clk_cfg = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_CFG(pwm->hwpwm));
++			clk_cfg &= ~SUN20I_PWM_CLK_CFG_GATING;
++			sun20i_pwm_writel(sun20i_chip, clk_cfg, SUN20I_PWM_CLK_CFG(pwm->hwpwm));
+ 		}
++
++		pwm_en &= ~SUN20I_PWM_ENABLE_EN(pwm->hwpwm);
++		sun20i_pwm_writel(sun20i_chip, pwm_en, sun20i_chip->data->reg_per);
+ 	}
+ 
+ 	if (state->polarity != pwm->state.polarity ||
+ 	    state->duty_cycle != pwm->state.duty_cycle ||
+ 	    state->period != pwm->state.period) {
+-		ctl = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CTL(pwm->hwpwm));
++		ctl = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CTL(sun20i_chip, pwm->hwpwm));
+ 		clk_cfg = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_CFG(pwm->hwpwm));
+ 		hosc_rate = clk_get_rate(sun20i_chip->clk_hosc);
+ 		bus_rate = clk_get_rate(sun20i_chip->clk_apb);
+@@ -234,7 +260,8 @@ static int sun20i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			}
+ 
+ 			/* set up the CLK_DIV_M and clock CLK_SRC */
+-			clk_cfg = FIELD_PREP(SUN20I_PWM_CLK_CFG_DIV_M, div_m);
++			clk_cfg &= ~(SUN20I_PWM_CLK_CFG_DIV_M | SUN20I_PWM_CLK_CFG_SRC);
++			clk_cfg |= FIELD_PREP(SUN20I_PWM_CLK_CFG_DIV_M, div_m);
+ 			clk_cfg |= FIELD_PREP(SUN20I_PWM_CLK_CFG_SRC, use_bus_clk);
+ 
+ 			sun20i_pwm_writel(sun20i_chip, clk_cfg, SUN20I_PWM_CLK_CFG(pwm->hwpwm));
+@@ -265,21 +292,33 @@ static int sun20i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		 * Duty-cycle = T high-level / T period
+ 		 */
+ 		reg_period |= FIELD_PREP(SUN20I_PWM_PERIOD_ACT_CYCLE, act_cycle);
+-		sun20i_pwm_writel(sun20i_chip, reg_period, SUN20I_PWM_PERIOD(pwm->hwpwm));
++		sun20i_pwm_writel(sun20i_chip, reg_period,
++			SUN20I_PWM_PERIOD(sun20i_chip, pwm->hwpwm));
+ 
+ 		ctl = FIELD_PREP(SUN20I_PWM_CTL_PRESCAL_K, prescale_k);
+ 		if (state->polarity == PWM_POLARITY_NORMAL)
+ 			ctl |= SUN20I_PWM_CTL_ACT_STA;
+ 
+-		sun20i_pwm_writel(sun20i_chip, ctl, SUN20I_PWM_CTL(pwm->hwpwm));
++		sun20i_pwm_writel(sun20i_chip, ctl, SUN20I_PWM_CTL(sun20i_chip, pwm->hwpwm));
+ 	}
+ 
+ 	if (state->enabled != pwm->state.enabled && state->enabled) {
+-		clk_gate &= ~SUN20I_PWM_CLK_GATE_BYPASS(pwm->hwpwm);
+-		clk_gate |= SUN20I_PWM_CLK_GATE_GATING(pwm->hwpwm);
++		if (sun20i_chip->data->has_pcgr) {
++			/* Enabling the gate via PWM Clock Gating Register */
++			clk_gate = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_GATE);
++			clk_gate &= ~SUN20I_PWM_CLK_GATE_BYPASS(pwm->hwpwm);
++			clk_gate |= SUN20I_PWM_CLK_GATE_GATING(pwm->hwpwm);
++			sun20i_pwm_writel(sun20i_chip, clk_gate, SUN20I_PWM_CLK_GATE);
++		} else {
++			/* Enabling the gate via PWM Clock Configuration Register */
++			clk_cfg = sun20i_pwm_readl(sun20i_chip, SUN20I_PWM_CLK_CFG(pwm->hwpwm));
++			clk_cfg &= ~SUN20I_PWM_CLK_CFG_BYPASS(pwm->hwpwm);
++			clk_cfg |= SUN20I_PWM_CLK_CFG_GATING;
++			sun20i_pwm_writel(sun20i_chip, clk_cfg, SUN20I_PWM_CLK_CFG(pwm->hwpwm));
++		}
++
+ 		pwm_en |= SUN20I_PWM_ENABLE_EN(pwm->hwpwm);
+-		sun20i_pwm_writel(sun20i_chip, pwm_en, SUN20I_PWM_ENABLE);
+-		sun20i_pwm_writel(sun20i_chip, clk_gate, SUN20I_PWM_CLK_GATE);
++		sun20i_pwm_writel(sun20i_chip, pwm_en, SUN20I_PWM_ENABLE(sun20i_chip));
+ 	}
+ 
+ unlock_mutex:
+@@ -293,8 +332,29 @@ static const struct pwm_ops sun20i_pwm_ops = {
+ 	.get_state = sun20i_pwm_get_state,
+ };
+ 
++static const struct sun20i_pwm_data sun20i_d1_pwm_data = {
++	.reg_per = SUN20I_PWM_REG_OFFSET_PER_D1,
++	.reg_pcr = SUN20I_PWM_REG_OFFSET_PCR_D1,
++	.reg_ppr = SUN20I_PWM_REG_OFFSET_PPR_D1,
++	.has_pcgr = true,
++};
++
++static const struct sun20i_pwm_data sun50i_h616_pwm_data = {
++	.reg_per = SUN20I_PWM_REG_OFFSET_PER_H616,
++	.reg_pcr = SUN20I_PWM_REG_OFFSET_PCR_H616,
++	.reg_ppr = SUN20I_PWM_REG_OFFSET_PPR_H616,
++	.has_pcgr = false,
++};
++
+ static const struct of_device_id sun20i_pwm_dt_ids[] = {
+-	{ .compatible = "allwinner,sun20i-d1-pwm" },
++	{
++		.compatible = "allwinner,sun20i-d1-pwm",
++		.data = &sun20i_d1_pwm_data
++	},
++	{
++		.compatible = "allwinner,sun50i-h616-pwm",
++		.data = &sun50i_h616_pwm_data
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, sun20i_pwm_dt_ids);
+@@ -338,6 +398,8 @@ static int sun20i_pwm_probe(struct platform_device *pdev)
  	if (IS_ERR(sun20i_chip->base))
-@@ -339,17 +358,6 @@ static int sun20i_pwm_probe(struct platform_device *pdev)
- 		return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->rst),
- 				     "failed to get bus reset\n");
+ 		return PTR_ERR(sun20i_chip->base);
  
--	ret = of_property_read_u32(pdev->dev.of_node, "allwinner,pwm-channels",
--				   &sun20i_chip->chip.npwm);
--	if (ret)
--		sun20i_chip->chip.npwm = 8;
--
--	if (sun20i_chip->chip.npwm > 16) {
--		dev_info(&pdev->dev, "Limiting number of PWM lines from %u to 16",
--			 sun20i_chip->chip.npwm);
--		sun20i_chip->chip.npwm = 16;
--	}
--
- 	/* Deassert reset */
- 	ret = reset_control_deassert(sun20i_chip->rst);
- 	if (ret)
-@@ -359,17 +367,14 @@ static int sun20i_pwm_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
++	sun20i_chip->data = data;
++
+ 	sun20i_chip->clk_bus = devm_clk_get_enabled(&pdev->dev, "bus");
+ 	if (IS_ERR(sun20i_chip->clk_bus))
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->clk_bus),
+@@ -388,5 +450,6 @@ static struct platform_driver sun20i_pwm_driver = {
+ module_platform_driver(sun20i_pwm_driver);
  
--	sun20i_chip->chip.dev = &pdev->dev;
--	sun20i_chip->chip.ops = &sun20i_pwm_ops;
-+	chip->ops = &sun20i_pwm_ops;
- 
- 	mutex_init(&sun20i_chip->mutex);
- 
--	ret = devm_pwmchip_add(&pdev->dev, &sun20i_chip->chip);
-+	ret = devm_pwmchip_add(&pdev->dev, chip);
- 	if (ret < 0)
- 		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
- 
--	platform_set_drvdata(pdev, sun20i_chip);
--
- 	return 0;
- }
- 
+ MODULE_AUTHOR("Aleksandr Shubin <privatesub2@gmail.com>");
++MODULE_AUTHOR("Hironori KIKUCHI <kikuchan98@gmail.com>");
+ MODULE_DESCRIPTION("Allwinner sun20i PWM driver");
+ MODULE_LICENSE("GPL");
 -- 
 2.45.1
 
