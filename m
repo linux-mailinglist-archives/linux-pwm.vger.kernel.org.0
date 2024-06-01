@@ -1,398 +1,223 @@
-Return-Path: <linux-pwm+bounces-2313-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2314-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 523688D6F95
-	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jun 2024 13:54:15 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3570B8D70D1
+	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jun 2024 17:18:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 089982829EF
-	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jun 2024 11:54:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73C40B21CC1
+	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jun 2024 15:18:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F9CF14F9C4;
-	Sat,  1 Jun 2024 11:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 581F3152782;
+	Sat,  1 Jun 2024 15:17:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aRySKWS9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="neoRfGaJ"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108ED823A3;
-	Sat,  1 Jun 2024 11:54:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253F710949;
+	Sat,  1 Jun 2024 15:17:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717242846; cv=none; b=Bso0WxCfU/9yXNqlCAb36Q9DgEVA9MYlnqtkBrOl+KQx75CEIM5EG4XjDYz+Bur6Ws5mC3LUXJ+v3ugrwco4qjww0udVGdlJ4Ekbog2uiYQkuYO4D9DrceZsd4Bk27+zmJ0fp4OvA65iEh8pNDfd/z/a25bd61Ai++Du9yfX/pA=
+	t=1717255077; cv=none; b=PK1+z2Q8diavpFAUrhcJWdm1kalPI4+K2xWt9lIGlVelRwduOSICw508HC7aCZKVFalQFEAqkap79ziE/lsVa0suZN2uDB4lUp5uAo1/Ywer+YF4/z3hDr1TUYCnH+l7XkjQFXJKgYfJ860wlq4jzfIbDH+6AD9z0LR9f8UPHV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717242846; c=relaxed/simple;
-	bh=mQtDhd51AWq6YLrJqZrV321wR91AZdfTxW6PVSJC8xM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Goqjn62zANKtRmK0NcmcT87h9EKBWbdANPv+7HDGHuB79NTQ3iFjSex5ZhzQ11T6RYoucGqytkJmq2SIZLCSH4ljfUsjDsEU7WLyrx1tdWYK/Spoq9LoPil/RsAOs4u4P3niPoo0MdogzWmfvl0cgLoDvNWpJAkAtv2v2ZvZakI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aRySKWS9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A37A6C116B1;
-	Sat,  1 Jun 2024 11:54:00 +0000 (UTC)
+	s=arc-20240116; t=1717255077; c=relaxed/simple;
+	bh=MiheRmDa9YIwfK0COcyZiMZofO0kN5bJO2zbV82w0Q8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dPipJJiysFYx8ygxjEObwv/iEXMYuebTLeVWJwgoXssubOjhkAi9jXaC83sa9XPZYL4TmP/eMoqbz5J8Z1rc3Nkd5aEh6l7Pg656EDPZYXFhRdNxJfh7P18mp8/YOSoTzwQbKNL0WEW0//eJmHpTOQqiDmdIYkEmRB4NyEnj54c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=neoRfGaJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28E88C116B1;
+	Sat,  1 Jun 2024 15:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717242845;
-	bh=mQtDhd51AWq6YLrJqZrV321wR91AZdfTxW6PVSJC8xM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aRySKWS9iOByey0DiuIos6ZYSgpRFl6USVx4PiVvOnoVsTRdkxsW54AiZUS4A5huK
-	 qBZVv6YqAnjWJxBHd7xACe+XidTBLVJvWBOdVNFTFxLiMqk9pjCA72knD2QDNYAsAY
-	 iyDU2YzSen8mdqTwRWrDUT73ZCWwV/jPLG5mt7opeLRJE/mCDeninFk89ThuIcHQIt
-	 aVIdbKoLQsxk7Pi8+DTH8/sEb6qSwoAjWgu+At5e/0jYZuuu761Vlu6sjQWl617NM6
-	 yGk/oU6KUqfJrGMG3zJEs7VhzjFBNyreA2Zf8yeYocCUFO3QNtuAvbTUCPDUJ2i8A3
-	 nOyBVgFCmLoww==
-Date: Sat, 1 Jun 2024 13:53:51 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	unicorn_wang@outlook.com, dlan@gentoo.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
-Message-ID: <k6jbdbhkgwthxwutty6l4q75wds2nilb3chrv7n4ccycnzllw4@yubxfh5ciahr>
-References: <20240501083242.773305-1-qiujingbao.dlmu@gmail.com>
- <20240501083242.773305-3-qiujingbao.dlmu@gmail.com>
+	s=k20201202; t=1717255076;
+	bh=MiheRmDa9YIwfK0COcyZiMZofO0kN5bJO2zbV82w0Q8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=neoRfGaJsRFWOk1FaODamSrVPP9Mkt05R2gvMBipBnzK1gyg+ILcqorphKVKXP7Gs
+	 F/R4Odn6vSj9GoNdKKK3FYuEB+UWeeTe0ceeBrwyPkZ2HsXvXMJdTUKFpNjGUC4lqW
+	 jpKJONY/2Yw1n2vrfXULQcfubiHTr6FYDdxpIOJ6vG+LdNB1Mh5SW8UVUHipwo8G++
+	 49rP8vVdhEOxQpE+M/kQzy43pt0aeAgPylF8ofIkz15XsbAJVnXd8q1eL3iYrynKPb
+	 2zkxDRnj0veTWOOgfykURUV6zWrRKZfuCj8/xqemaiA8jWzGLV9B4bw4ZcqAHZvwOa
+	 hMjCOb4ycNi2Q==
+Message-ID: <da382d43-fa82-44c0-9630-086f59e6efa2@kernel.org>
+Date: Sat, 1 Jun 2024 17:17:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dmhnbedd5ai7tszy"
-Content-Disposition: inline
-In-Reply-To: <20240501083242.773305-3-qiujingbao.dlmu@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] dt-bindings: pwm: sun20i: Add options to select a
+ clock source and DIV_M
+To: Hironori KIKUCHI <kikuchan98@gmail.com>
+Cc: linux-kernel@vger.kernel.org, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ Aleksandr Shubin <privatesub2@gmail.com>, Cheo Fusi
+ <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev
+References: <20240531141152.327592-1-kikuchan98@gmail.com>
+ <20240531141152.327592-6-kikuchan98@gmail.com>
+ <851280ad-ac0e-47d1-99e2-4f3b5ea29f2f@kernel.org>
+ <CAG40kxEbMQc-ni0HDVR7rtj48aFu-jz8sYUAO+fdmZSmXWrizw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CAG40kxEbMQc-ni0HDVR7rtj48aFu-jz8sYUAO+fdmZSmXWrizw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 31/05/2024 19:57, Hironori KIKUCHI wrote:
+> Hello,
+> 
+>>> This patch adds new options to select a clock source and DIV_M register
+>>> value for each coupled PWM channels.
+>>
+>> Please do not use "This commit/patch/change", but imperative mood. See
+>> longer explanation here:
+>> https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+>>
+>> Bindings are before their users. This should not be last patch, because
+>> this implies there is no user.
+> 
+> I'm sorry, I'll fix them.
+> 
+>> This applies to all variants? Or the one you add? Confused...
+> 
+> Apologies for confusing you. This applies to all variants.
+> 
+>>
+>>>
+>>> Signed-off-by: Hironori KIKUCHI <kikuchan98@gmail.com>
+>>> ---
+>>>  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 19 +++++++++++++++++++
+>>>  1 file changed, 19 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+>>> index b9b6d7e7c87..436a1d344ab 100644
+>>> --- a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+>>> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+>>> @@ -45,6 +45,25 @@ properties:
+>>>      description: The number of PWM channels configured for this instance
+>>>      enum: [6, 9]
+>>>
+>>> +  allwinner,pwm-pair-clock-sources:
+>>> +    description: The clock source names for each PWM pair
+>>> +    items:
+>>> +      enum: [hosc, apb]
+>>> +    minItems: 1
+>>> +    maxItems: 8
+>>
+>> Missing type... and add 8 of such items to your example to make it complete.
+> 
+> Thank you. I'll fix it.
+> 
+>>
+>>> +
+>>> +  allwinner,pwm-pair-clock-prescales:
+>>> +    description: The prescale (DIV_M register) values for each PWM pair
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+>>> +    items:
+>>> +      items:
+>>> +        minimum: 0
+>>> +        maximum: 8
+>>> +      minItems: 1
+>>> +      maxItems: 1
+>>> +    minItems: 1
+>>> +    maxItems: 8
+>>
+>> This does not look like matrix but array.
+> 
+> I wanted to specify values like this:
+> 
+>     allwinner,pwm-pair-clock-prescales = <0>, <1>, <3>;
+>     allwinner,pwm-pair-clock-sources = "hosc", "apb", "hosc":
+> 
+> These should correspond to each PWM pair.
+> This way, I thought we might be able to visually understand the relationship
+> between prescalers and sources, like clock-names and clocks.
+> 
+> Is this notation uncommon, perhaps?
 
---dmhnbedd5ai7tszy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It's still an array.
 
-Hello,
+> 
+>>
+>> Why clock DIV cannot be deduced from typical PWM attributes + clock
+>> frequency?
+> 
+> This SoC's PWM system has one shared prescaler and clock source for each pair
+> of PWM channels. I should have noted this earlier, sorry.
+> 
+> Actually, the original v9 patch automatically deduced the DIV value
+> from the frequency.
+> However, because the two channels share a single prescaler, once one channel is
+> enabled, it affects and restricts the DIV value for the other channel
+> in the pair.
+> This introduces a problem of determining which channel should set the shared DIV
+> value. The original behavior was that the first channel enabled would win.
 
-On Wed, May 01, 2024 at 04:32:42PM +0800, Jingbao Qiu wrote:
-> [...]
-> diff --git a/drivers/pwm/pwm-cv1800.c b/drivers/pwm/pwm-cv1800.c
-> new file mode 100644
-> index 000000000000..d487af637198
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-cv1800.c
-> @@ -0,0 +1,293 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Sophgo CV1800 PWM driver
-> + * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> + *
-> + * Limitations:
-> + * - The hardware emits the inactive level when disabled.
-> + * - This pwm device supports dynamic loading of PWM parameters. When PWMSTART
-> + *   is written from 0 to 1, the register value (HLPERIODn, PERIODn) will be
-> + *   temporarily stored inside the PWM. If you want to dynamically change the
-> + *   waveform during PWM output, after writing the new value to HLPERIODn and
-> + *   PERIODn, write 1 and then 0 to PWMUPDATE[n] to make the new value effective.
+There's nothing bad in this.
 
-	To change polarity, the hardware has to be stopped though.
+> 
+> Instead, this patch try to resolve the issue by specifying these
+> values for each PWM
+> pairs deterministically.
+> That's why it requires the new options.
 
-> + * - Supports up to Rate/2 output, and the lowest is about Rate/(2^30-1).
+This does not solve that wrong divider can be programmed for second
+channel in each pair.
 
-Rate = input clock rate?
+Best regards,
+Krzysztof
 
-> + * - By setting HLPERIODn to 0, can produce 100% duty cycle.
-> + * - This hardware could support inverted polarity. By default, the value of the
-> + *   POLARITY register is 0x0. This means that HLPERIOD represents the number
-> + *   of low level beats.
-> + * - This hardware supports input mode and output mode, implemented through the
-> + *   Output-Enable/OE register. However, this driver has not yet implemented
-> + *   capture callback.
-
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +
-> +#define PWM_CV1800_HLPERIOD_BASE    0x00
-> +#define PWM_CV1800_PERIOD_BASE      0x04
-> +#define PWM_CV1800_POLARITY         0x40
-> +#define PWM_CV1800_START            0x44
-> +#define PWM_CV1800_DONE             0x48
-> +#define PWM_CV1800_UPDATE           0x4c
-> +#define PWM_CV1800_OE               0xd0
-> +
-> +#define PWM_CV1800_HLPERIOD(n)      (PWM_CV1800_HLPERIOD_BASE + ((n)*0x08))
-> +#define PWM_CV1800_PERIOD(n)        (PWM_CV1800_PERIOD_BASE + ((n)*0x08))
-
-I suggest to drop the ..._BASE defines and hardcode the 0 and 4
-respectively in the definition of PWM_CV1800_HLPERIOD and
-PWM_CV1800_PERIOD. Also please use spaces around the multiplication *.
-
-> +#define PWM_CV1800_UPDATE_MASK(n)   BIT(n)
-> +#define PWM_CV1800_OE_MASK(n)       BIT(n)
-> +#define PWM_CV1800_START_MASK(n)    BIT(n)
-> +#define PWM_CV1800_POLARITY_MASK(n) BIT(n)
-> +
-> +#define PWM_CV1800_MAXPERIOD        0x3fffffff
-> +#define PWM_CV1800_MINPERIOD        2
-> +#define PWM_CV1800_CHANNELS         4
-> +#define PWM_CV1800_PERIOD_RESET     BIT(1)
-
-This is strange, the PWM_CV1800_PERIOD can be programmed with values >=
-PWM_CV1800_MINPERIOD; if you program 2, you use period ==
-PWM_CV1800_PERIOD_RESET.
-
-> +#define PWM_CV1800_HLPERIOD_RESET   BIT(0)
-> +#define PWM_CV1800_REG_ENABLE(n)    BIT(n)
-> +
-> +struct cv1800_pwm {
-> +	struct regmap *map;
-> +	struct clk *clk;
-> +	unsigned long clk_rate;
-> +};
-> +
-> +static inline struct cv1800_pwm *to_cv1800_pwm_dev(struct pwm_chip *chip)
-> +{
-> +	return pwmchip_get_drvdata(chip);
-> +}
-> +
-> +static const struct regmap_config cv1800_pwm_regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +};
-> +
-> +static int cv1800_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			     bool enable)
-> +{
-> +	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-> +	u32 pwm_enable, state;
-> +
-> +	regmap_read(priv->map, PWM_CV1800_START, &pwm_enable);
-> +	pwm_enable &= PWM_CV1800_START_MASK(pwm->hwpwm);
-
-This value tells if the HW is enabled, right. Maybe rename the variable
-to pwm_enabled (or pwm_is_enabled).
-
-> +	/*
-> +	 * If the parameters are changed during runtime, Register needs
-> +	 * to be updated to take effect.
-> +	 */
-> +	if (pwm_enable && enable) {
-> +		regmap_update_bits(priv->map, PWM_CV1800_UPDATE,
-> +				   PWM_CV1800_UPDATE_MASK(pwm->hwpwm),
-> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-
-I would consider
-
-		regmap_set_bits(priv->map, PWM_CV1800_UPDATE, BIT(pwm->hwpwm));
-
-more readable.
-
-> +		regmap_update_bits(priv->map, PWM_CV1800_UPDATE,
-> +				   PWM_CV1800_UPDATE_MASK(pwm->hwpwm), 0);
-
-Maybe add a comment about why you modify the same bit here twice.
-
-> +	} else if (!pwm_enable && enable) {
-> +		regmap_update_bits(priv->map, PWM_CV1800_START,
-> +				   PWM_CV1800_START_MASK(pwm->hwpwm),
-> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-> +	} else if (pwm_enable && !enable) {
-> +		regmap_update_bits(priv->map, PWM_CV1800_START,
-> +				   PWM_CV1800_START_MASK(pwm->hwpwm), 0);
-> +	}
-
-The previous construct can be (IMO) simplified by doing:
-
-	if (!enable) {
-		if (pwm_enabled)
-			regmap_clear_bits(...);
-		return 0;
-	}
-
-	if (pwm_enabled) {
-		...
-	} else {
-		...
-	}
-
-(This slightly changes semantics, but that's fine.)
-
-> +
-> +	/* check and set OE/Output-Enable mode */
-> +	regmap_read(priv->map, PWM_CV1800_OE, &state);
-> +
-> +	if ((state & BIT(pwm->hwpwm)) && enable)
-> +		regmap_update_bits(priv->map, PWM_CV1800_OE,
-> +				   PWM_CV1800_OE_MASK(pwm->hwpwm),
-> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-
-This looks strange. If BIT(hwpwm) is already set, set it again?!
-Also if you used the caching implemented in regmap, you don't need to
-make this conditional.
-
-> +	return 0;
-> +}
-> +
-> +static void cv1800_pwm_set_polarity(struct pwm_chip *chip,
-> +				    struct pwm_device *pwm,
-> +				    enum pwm_polarity polarity)
-> +{
-> +	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-> +	u32 config_polarity = 0;
-> +
-> +	if (pwm->state.enabled)
-> +		cv1800_pwm_enable(chip, pwm, !pwm->state.enabled);
-
-Using false instead of !pwm->state.enabled would be more straight
-forward.
-
-> +	if (polarity == PWM_POLARITY_NORMAL)
-> +		config_polarity = PWM_CV1800_POLARITY_MASK(pwm->hwpwm);
-> +
-> +	regmap_update_bits(priv->map, PWM_CV1800_POLARITY,
-> +			   PWM_CV1800_POLARITY_MASK(pwm->hwpwm),
-> +			   config_polarity);
-> +}
-> +
-> +static int cv1800_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			    const struct pwm_state *state)
-> +{
-> +	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-> +	u32 period_val, hlperiod_val;
-> +	u64 ticks;
-> +
-> +	if (state->polarity != pwm->state.polarity)
-> +		cv1800_pwm_set_polarity(chip, pwm, state->polarity);
-> +
-> +	/*
-> +	 * This hardware use PERIOD and HLPERIOD registers to represent PWM waves.
-> +	 *
-> +	 * The meaning of PERIOD is how many clock cycles (from the clock source)
-> +	 * are used to represent PWM waves.
-> +	 * PERIOD = rate(MHz) / target(MHz)
-> +	 * PERIOD = period(ns) * rate(Hz) / NSEC_PER_SEC
-> +	 */
-> +	ticks = mul_u64_u64_div_u64(state->period, priv->clk_rate,
-> +				    NSEC_PER_SEC);
-> +	if (ticks < PWM_CV1800_MINPERIOD)
-> +		return -EINVAL;
-
-If you check this before configuring the period, it won't happen that
-the hw state is modified before you notice you cannot fulfill the
-requested state.
-
-> +	if (ticks > PWM_CV1800_MAXPERIOD)
-> +		ticks = PWM_CV1800_MAXPERIOD;
-> +	period_val = (u32)ticks;
-
-Maybe use period_ticks instead of period_val to have a consistent
-naming.
-
-> +
-> +	/*
-> +	 * After mapping, hlperiod represents the same polarity as duty.
-> +	 * HLPERIOD = rate(MHz) / duty(MHz)
-> +	 * HLPERIOD = duty(ns) * rate(Hz) / NSEC_PER_SEC
-> +	 */
-
-I don't understand that comment.
-
-> +	ticks = mul_u64_u64_div_u64(state->duty_cycle, priv->clk_rate,
-> +				    NSEC_PER_SEC);
-> +	if (ticks > period_val)
-> +		ticks = period_val;
-> +	hlperiod_val = (u32)ticks;
-> +
-> +	regmap_write(priv->map, PWM_CV1800_PERIOD(pwm->hwpwm), period_val);
-> +	regmap_write(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), hlperiod_val);
-> +
-> +	cv1800_pwm_enable(chip, pwm, state->enabled);
-> +
-> +	return 0;
-> +}
-> +
-> [...]
-> +static int cv1800_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct cv1800_pwm *priv;
-> +	struct pwm_chip *chip;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	chip = devm_pwmchip_alloc(dev, PWM_CV1800_CHANNELS, sizeof(*priv));
-
-PWM_CV1800_CHANNELS is only used here. I'd prefer a plain 4 here. This
-also makes this value easier to grep for.
-
-> +	if (!chip)
-> +		return PTR_ERR(chip);
-> +	priv = to_cv1800_pwm_dev(chip);
-> +
-> +	base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	priv->map = devm_regmap_init_mmio(&pdev->dev, base,
-> +					  &cv1800_pwm_regmap_config);
-> +	if (IS_ERR(priv->map)) {
-> +		dev_err(dev, "Couldn't create PWM regmap\n");
-> +		return PTR_ERR(priv->map);
-
-Use dev_err_probe please.
-
-> +	}
-> +
-> +	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-> +	if (IS_ERR(priv->clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
-> +				     "clk not found\n");
-> +
-> +	ret = devm_clk_rate_exclusive_get(dev, priv->clk);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				     "failed to get exclusive rate\n");
-> +
-> +	priv->clk_rate = clk_get_rate(priv->clk);
-> +	if (!priv->clk_rate)
-> +		return dev_err_probe(&pdev->dev, -EINVAL,
-> +				     "Invalid clock rate: %lu\n",
-> +				     priv->clk_rate);
-
-Please also error out if clk_rate > NSEC_PER_SEC, because otherwise you
-might get overflows for the calculations in .apply().
-
-> +
-> +	chip->ops = &cv1800_pwm_ops;
-> +
-> +	ret = devm_pwmchip_add(dev, chip);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
-> +
-> +	return 0;
-> +}
-> [...]
-
-Best regards
-Uwe
-
---dmhnbedd5ai7tszy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZbC7wACgkQj4D7WH0S
-/k5b1gf/RllMWyJU0W0EdBHc95DZbdJYePgvIo8GBPmcmcShca+0b+B81XlVkE9d
-O2/9v58B/0hI7F/g1vbxjk+h0j6lBLjgNeC8Ke2FWDTbuagxk+h3DDxbw3TAaF0M
-rErHO22dMFaIvJTB/AKM5r8B3COvZXtyLMRDEVhVK8zRvLcdQMu+Pw8L0QqSxja1
-LIzsbVltneMVG2s0CrM4oAwTguqCKSnScF31fsXbjbxbETI8A3z8SLDQGAb+j/Ge
-vTzFK8WCBX+ccNbCDD/tKRDgh/NVTvX/1JvEzhHuGyS5LWXK1wRI/qqKyqDw5x/W
-hDkTNm8z/S89qEF5MZdXlhO+LXtaEg==
-=rwZj
------END PGP SIGNATURE-----
-
---dmhnbedd5ai7tszy--
 
