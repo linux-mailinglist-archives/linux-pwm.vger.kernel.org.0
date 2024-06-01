@@ -1,188 +1,217 @@
-Return-Path: <linux-pwm+bounces-2311-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2312-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C72958D6899
-	for <lists+linux-pwm@lfdr.de>; Fri, 31 May 2024 19:57:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D1B118D6F69
+	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jun 2024 12:57:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA90C1C2138C
-	for <lists+linux-pwm@lfdr.de>; Fri, 31 May 2024 17:57:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 188071C20EF4
+	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jun 2024 10:57:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B4D017C7DF;
-	Fri, 31 May 2024 17:57:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D0F614EC46;
+	Sat,  1 Jun 2024 10:57:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7yULbTB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RR+osAes"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC6317C7D4;
-	Fri, 31 May 2024 17:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCDD208A4;
+	Sat,  1 Jun 2024 10:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717178250; cv=none; b=B1WfU0Ml538vqnEQvuWD5W9/O8fL6nhxEuUlQS4fh6742r8NZ8pV1RD2gZ+LOTLxB9d/B2KoPIKagvW94dcJHDknEr1V8ygw+AFg/ilwHCTOMcwJC0NCjv4NjU0v7eUF3PfbrNzLuOVdIJptevE1wyE456i/D1xsyMDx+u1pShc=
+	t=1717239476; cv=none; b=Sc+rwSQJa9o9WC16H0ZJUHXqYf5hab1PMx988nN1RPuF5bRD2PR4MdzB4u1H3oqMOzfGji5OfXzivYLkJtjp5Ga/dOCtUzqWC1RwFWIsXP6pncuxDRndOG7BIlvXLWOdyvGWmusWYzUbf20sfnEvmI2Uh1Apazwxx9dvA9qjJcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717178250; c=relaxed/simple;
-	bh=14nUOvlXzx9FwcFZnYhljHX2vE6nY1fLFbUL/vgkrwM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LcpyvsrtoVFwAXo8y0VC6/CkA/vrCZcSdmSx8GcAIRMl3JvkmY5t0qyH6HlBs+EvEE927ED3+pC0S8h1eTJAOhsFtGBdrIKmUxwK7nWopGnYnxnZh+w4wd1V/UlSN77cg1uvWih2dwlHR2bGakAXxrnRY8Xkj4EozReGckZ6LdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e7yULbTB; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dfa6e0add60so1416567276.3;
-        Fri, 31 May 2024 10:57:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717178247; x=1717783047; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iLsU9SrFk8jsYiYkwRmxAIdMWmUIfrvdUknMyWYRiWE=;
-        b=e7yULbTBi8fPsnGj+5gxmyqps7WiyVq6V/8R9T96B7aFSlgcwk720JnVR1w98xqh3L
-         dAf8EiGQKLDAs9r2QH1JoQcSsXB2hG3MdN3+bzmFoTMr/B4/LMQFuRbSYHDtRhTGD+ym
-         hK/GrGbfAbyuXaIjRVu6F5aABJMPPACA4A0VFgZms9DhNRBZ7swN9mQ7mwM06Zcvpojn
-         N23O57Thr3dUWr8XXJiacD3iRo9omsFUzeEgzWuCzuc1Z81oTAdjs6VcxO0ZjTyp6mOb
-         SoTP9eXGqZSN/X/KW6YWXZXPdg/W67KKfh1VSiPSLE0daUhnOSkgf02crm7eiRgr0wWu
-         yf3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717178247; x=1717783047;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iLsU9SrFk8jsYiYkwRmxAIdMWmUIfrvdUknMyWYRiWE=;
-        b=LZr2dvtb1WWoBNl2VnTc/62mokMvGtAi8qBg89aXN1wCpPenhr62yvaRkS3QdcD9x9
-         QDObzlnY/gdAKhK9GKjAFTsbEDUqC2o0c8c5fUDCU2dWDHLGEH5U7u5N045/kzkP1qkP
-         UMhtKBQidmDkvJ1SRnOkOeonilS8GxQ/p0YHazXeItWmyjtL3Y+k2uFrf6qiwcsMrf+y
-         HcvK55iNrtCBRsQcEjWGYNjwM1ktej2/Klv8BinfadOCqa46aujRIciDgMAq6FIrM2Ol
-         u+dGeMpAFctY0yrtlsBhiD3K31JfwUM8nDunCrpKVfsr4D/+KHND8byXZx10+I7oEzFD
-         QDFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbxy6eGRV5tP3ypRDfAc3dpD6mvGUQKBupKzFnDoEzPPz0tTIAvhqdry0tIVsj3JwUC1Q8VNZhREbtUrDNqH1m8wQYGSqxZMCq02Dx5Q+tU1R5jcb/Sf6udth4fUwXo1uhZutH/Q==
-X-Gm-Message-State: AOJu0YxtgQuGM0Bky0bIT5Wppyt9Qkr57YySlk8mrdIea9XxOMNwCuz0
-	gxFygfNErEKYj1CqHq1kgMuM/6DUW6ukCAXZUFCg306K7xYPoYQXdy41l9ojff6zGiGJZmeEHH2
-	wqWS34XhtAXaDWcvPd1bmlUBGuz8=
-X-Google-Smtp-Source: AGHT+IGJfAakWRlaze69hr1itb5DcopAVyEyNrYk8qoHbmtcEU0nuInXs6ghX0YrxFqZ+c4wgNhMQt18gfTY2R95X1Y=
-X-Received: by 2002:a5b:b86:0:b0:de5:4ab8:317f with SMTP id
- 3f1490d57ef6-dfa73c087fcmr2687449276.20.1717178247282; Fri, 31 May 2024
- 10:57:27 -0700 (PDT)
+	s=arc-20240116; t=1717239476; c=relaxed/simple;
+	bh=hjI6zlGmk0XqJ+6m5c0T6h3I3gacZziDQWPru7DqbYg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HEC277X5vy0JuRD1jjMR7hhb0RGc80uxX3oiqxS8g2w5FttznM6EM7kEPYFoFgTsnWHxs8lckjh+008r/uCJk6l0LQgEhJOxujgaqdbSzYh3hpFido9we0LJuEt/Ib+mn5qIEHCmXJc9uBdP5whrBpW15kQP7OYEHjFH3hPla8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RR+osAes; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05F3FC116B1;
+	Sat,  1 Jun 2024 10:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717239475;
+	bh=hjI6zlGmk0XqJ+6m5c0T6h3I3gacZziDQWPru7DqbYg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RR+osAesOUjdoXTTA0qTuMAr/2oy2KdpBDQgwFJoxN/XgIbvP/ljF8wah+ZfQMZCh
+	 7uD+sO49jt+3tXid+1jbmovedox3WD9FVA5ZvTDWcfwFCzhBmsRFiSIApqjr/0U+P/
+	 KbBhT+foqhUFl31iS/NeX2uzTvEWr18JGsJ518I1xPo+ODUBPVeRt4JL5H6XGFuFs9
+	 ems+gtnk6f2XSiABMHFe3/4gIUiBRbadXG+NR4xKAgf0ErdsYLpk8hWVN90STYsmAl
+	 xBpWjCD3s5nE61GhQ2Quf2mANrs3UKpIKddhLk6tjTsZ77A4Q/ngI0bBMtbF9EUZbK
+	 G/ZHioj/1wBQw==
+Date: Sat, 1 Jun 2024 12:57:48 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Trevor Gamblin <tgamblin@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	michael.hennerich@analog.com, nuno.sa@analog.com, dlechner@baylibre.com, 
+	devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Subject: Re: [PATCH 2/2 v5] pwm: Add driver for AXI PWM generator
+Message-ID: <de2trti4ilp3zw47u6qddg64ghiosvnrmknu3lkce635qushvq@qcoz3nfjuyrx>
+References: <20240424125850.4189116-1-tgamblin@baylibre.com>
+ <20240424125850.4189116-3-tgamblin@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240531141152.327592-1-kikuchan98@gmail.com> <20240531141152.327592-6-kikuchan98@gmail.com>
- <851280ad-ac0e-47d1-99e2-4f3b5ea29f2f@kernel.org>
-In-Reply-To: <851280ad-ac0e-47d1-99e2-4f3b5ea29f2f@kernel.org>
-From: Hironori KIKUCHI <kikuchan98@gmail.com>
-Date: Sat, 1 Jun 2024 02:57:15 +0900
-Message-ID: <CAG40kxEbMQc-ni0HDVR7rtj48aFu-jz8sYUAO+fdmZSmXWrizw@mail.gmail.com>
-Subject: Re: [PATCH 5/5] dt-bindings: pwm: sun20i: Add options to select a
- clock source and DIV_M
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, Aleksandr Shubin <privatesub2@gmail.com>, 
-	Cheo Fusi <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wyvehzs256ug4w5r"
+Content-Disposition: inline
+In-Reply-To: <20240424125850.4189116-3-tgamblin@baylibre.com>
 
-Hello,
 
-> > This patch adds new options to select a clock source and DIV_M register
-> > value for each coupled PWM channels.
->
-> Please do not use "This commit/patch/change", but imperative mood. See
-> longer explanation here:
-> https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
->
-> Bindings are before their users. This should not be last patch, because
-> this implies there is no user.
+--wyvehzs256ug4w5r
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm sorry, I'll fix them.
+Hello Trevor,
 
-> This applies to all variants? Or the one you add? Confused...
+thanks for your patience waiting for me to come around looking at your
+patch. I only found some trivial stuff to fix this time around.
 
-Apologies for confusing you. This applies to all variants.
+On Wed, Apr 24, 2024 at 08:58:48AM -0400, Trevor Gamblin wrote:
+> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+> new file mode 100644
+> index 000000000000..e0bf90cc2ba3
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-axi-pwmgen.c
+> @@ -0,0 +1,248 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Analog Devices AXI PWM generator
+> + *
+> + * Copyright 2024 Analog Devices Inc.
+> + * Copyright 2024 Baylibre SAS
 
->
-> >
-> > Signed-off-by: Hironori KIKUCHI <kikuchan98@gmail.com>
-> > ---
-> >  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
-> > index b9b6d7e7c87..436a1d344ab 100644
-> > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
-> > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
-> > @@ -45,6 +45,25 @@ properties:
-> >      description: The number of PWM channels configured for this instance
-> >      enum: [6, 9]
-> >
-> > +  allwinner,pwm-pair-clock-sources:
-> > +    description: The clock source names for each PWM pair
-> > +    items:
-> > +      enum: [hosc, apb]
-> > +    minItems: 1
-> > +    maxItems: 8
->
-> Missing type... and add 8 of such items to your example to make it complete.
+If there is public documentation available for the device, extra points
+for a link to it here.
 
-Thank you. I'll fix it.
+> [...]
+> +static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret = regmap_read(regmap, AXI_PWMGEN_REG_CORE_MAGIC, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val != AXI_PWMGEN_REG_CORE_MAGIC_VAL)
+> +		return dev_err_probe(dev, -ENODEV,
+> +			"failed to read expected value from register: got %08x, expected %08x\n",
+> +			val,
+> +			AXI_PWMGEN_REG_CORE_MAGIC_VAL);
 
->
-> > +
-> > +  allwinner,pwm-pair-clock-prescales:
-> > +    description: The prescale (DIV_M register) values for each PWM pair
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> > +    items:
-> > +      items:
-> > +        minimum: 0
-> > +        maximum: 8
-> > +      minItems: 1
-> > +      maxItems: 1
-> > +    minItems: 1
-> > +    maxItems: 8
->
-> This does not look like matrix but array.
+Join these two lines, please.
 
-I wanted to specify values like this:
+> +	ret = regmap_read(regmap, AXI_PWMGEN_REG_CORE_VERSION, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (ADI_AXI_PCORE_VER_MAJOR(val) != 2) {
+> +		return dev_err_probe(dev, -ENODEV, "Unsupported peripheral version %u.%u.%u\n",
+> +			ADI_AXI_PCORE_VER_MAJOR(val),
+> +			ADI_AXI_PCORE_VER_MINOR(val),
+> +			ADI_AXI_PCORE_VER_PATCH(val));
+> +	}
+> +
+> +	/* Enable the core */
+> +	ret = regmap_update_bits(regmap, AXI_PWMGEN_REG_CONFIG, AXI_PWMGEN_REG_CONFIG_RESET, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(regmap, AXI_PWMGEN_REG_NPWM, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Return the number of PWMs */
+> +	return val;
 
-    allwinner,pwm-pair-clock-prescales = <0>, <1>, <3>;
-    allwinner,pwm-pair-clock-sources = "hosc", "apb", "hosc":
+If the AXI_PWMGEN_REG_NPWM register contains a value >= 0x80000000, the
+return value is considered a negative error code. Not sure how necessary
+it is to check for this case. I'll leave that to you.
 
-These should correspond to each PWM pair.
-This way, I thought we might be able to visually understand the relationship
-between prescalers and sources, like clock-names and clocks.
+> +}
+> [...]
+> +static int axi_pwmgen_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct regmap *regmap;
+> +	struct pwm_chip *chip;
+> +	struct axi_pwmgen_ddata *ddata;
+> +	struct clk *clk;
+> +	void __iomem *io_base;
+> +	int ret;
+> +
+> +	io_base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(io_base))
+> +		return PTR_ERR(io_base);
+> +
+> +	regmap = devm_regmap_init_mmio(dev, io_base, &axi_pwmgen_regmap_config);
+> +	if (IS_ERR(regmap))
+> +		return dev_err_probe(dev, PTR_ERR(regmap),
+> +				     "failed to init register map\n");
+> +
+> +	ret = axi_pwmgen_setup(regmap, dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	chip = devm_pwmchip_alloc(dev, ret, sizeof(*ddata));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	ddata = pwmchip_get_drvdata(chip);
+> +	ddata->regmap = regmap;
+> +
+> +	clk = devm_clk_get_enabled(dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
+> +
+> +	ret = devm_clk_rate_exclusive_get(dev, clk);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to get exclusive rate\n");
+> +
+> +	ret = devm_add_action_or_reset(dev, axi_pwmgen_clk_rate_exclusive_put, clk);
+> +	if (ret)
+> +		return ret;
 
-Is this notation uncommon, perhaps?
+this should be dropped as devm_clk_rate_exclusive_get() already takes
+care for calling clk_rate_exclusive_put().
 
->
-> Why clock DIV cannot be deduced from typical PWM attributes + clock
-> frequency?
+> +	ddata->clk_rate_hz = clk_get_rate(clk);
+> +	if (!ddata->clk_rate_hz || ddata->clk_rate_hz > NSEC_PER_SEC)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "Invalid clock rate: %lu\n", ddata->clk_rate_hz);
+> +
+> +	chip->ops = &axi_pwmgen_pwm_ops;
+> +	chip->atomic = true;
+> +
+> +	ret = devm_pwmchip_add(dev, chip);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "could not add PWM chip\n");
+> +
+> +	return 0;
+> +}
 
-This SoC's PWM system has one shared prescaler and clock source for each pair
-of PWM channels. I should have noted this earlier, sorry.
+Best regards
+Uwe
 
-Actually, the original v9 patch automatically deduced the DIV value
-from the frequency.
-However, because the two channels share a single prescaler, once one channel is
-enabled, it affects and restricts the DIV value for the other channel
-in the pair.
-This introduces a problem of determining which channel should set the shared DIV
-value. The original behavior was that the first channel enabled would win.
+--wyvehzs256ug4w5r
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Instead, this patch try to resolve the issue by specifying these
-values for each PWM
-pairs deterministically.
-That's why it requires the new options.
+-----BEGIN PGP SIGNATURE-----
 
->
-> Best regards,
-> Krzysztof
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZa/poACgkQj4D7WH0S
+/k7Ccwf/XbVPD01QvCpVWIitYjlnQFA3OeXZOb78SAPUiKsNRvo4iQ+meWKOoUf8
+PGXMMBuVKNkndiKXn0AIIp4XIsmXv+8J8/p2TnTrTLE1OpB6gc3TTtdp0Y8LTRDJ
+mFsk+0jrGHwc5GG8OGehTKabJzUdCwJh5K3fYwsbinFob9ud52oiLDf6OPPQg8Wi
+m2DE3HLo2tGCzJvaioTEipN/M0vqJpmAkg+B10cNAIBqVEPn+tQxA4/HrD5GF29c
+l0YDjYj9se/IsyymwyREnm5/yEzIm6sGed+FVCowawq7P74SPBlIKtfMYEuhKJ+/
+tI16LwfQxQtdQKMqIbpdyEOJu8/A/A==
+=EJQa
+-----END PGP SIGNATURE-----
 
-Best regards,
-kikuchan.
+--wyvehzs256ug4w5r--
 
