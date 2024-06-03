@@ -1,425 +1,265 @@
-Return-Path: <linux-pwm+bounces-2325-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2326-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8595C8D7820
-	for <lists+linux-pwm@lfdr.de>; Sun,  2 Jun 2024 22:33:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08FC88D7947
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Jun 2024 02:10:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CF21FB2247D
-	for <lists+linux-pwm@lfdr.de>; Sun,  2 Jun 2024 20:33:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDA511C21435
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Jun 2024 00:10:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C07A677F11;
-	Sun,  2 Jun 2024 20:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O08/lM5+"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BC3519F;
+	Mon,  3 Jun 2024 00:10:32 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AE9770E6
-	for <linux-pwm@vger.kernel.org>; Sun,  2 Jun 2024 20:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFC84391;
+	Mon,  3 Jun 2024 00:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717360404; cv=none; b=qWxTpfaRhXdSLj3yWfn+PdXjCMIR1oMWg2rkucs53o4jDbfS59rBHhkyH73DTQs/gItuX27nhPPYSykoX2jCK2RoP+xuZ0O16aQXYQZtdroteDZ3Hql1De8Gj5QsGIJCoWSTYrRalVx4yBGhAKyWZQbLi4UDAhjF+YSUX4osHLc=
+	t=1717373431; cv=none; b=rQcozB6oZroznXQZIsOnIAVv0orZNvbeNFFkm5fthfsUMJXwQoQkOw9wBEZlNtUp5fP5NvVZkf7QhkYl4deIhD2yFzmxUCx0zdr+jA5nS6AogdWuYlCAblosgoEuqTpAkq7zp7RAOvayM/rZEK7FssXtEzSXQz901/oH4r59zA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717360404; c=relaxed/simple;
-	bh=LEH54Xss6M4fJdUT0ypflO26lqVmUNuMH4m+tTK9ZIk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bXjoVvRsdoNFmmI76tHZRZ+dTGbNccuHfBcIrKtaa4Yhfe6WVXx1JF2ro+Yq/Fxoz2VFQvBb5dltqFntrs2VsOFsobGJqDk2owu6xdVQfGx4nC2ZUeBUMJYzHqBEqPOZ54wOR5DK00XP8FaE8cKz7xa91NSYlCICpF7sy/zfvnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O08/lM5+; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52965199234so4118354e87.2
-        for <linux-pwm@vger.kernel.org>; Sun, 02 Jun 2024 13:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717360401; x=1717965201; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9VddKJjdJ2hWtpkrc2+6Jag2VOkVNIboyOcgFS2Ya0c=;
-        b=O08/lM5+Hl6aPedScRJP4inr50ai9ng1fjObosoxap4OrAUzzY6Aoa8L/AoYHcKxcD
-         BjHJ+pKidgkX6LhDzyXPPp8Xy3X3pzXDRJHQpcsNGVy2E+vZbtoYrIe/KDQdBnR3otU8
-         KlPtFsg7DzddYkeyuzJ7jhlA8+jtvVI3A+vIvuYoEN3GDSa8Ctx4LaoH1gyZHX3+oAxD
-         PYIKBN5faB0AEgrdRZlsSc5M3nAwh8dzc8QfNMb+ca08JznS77JuF4tPbXkfX0Q8b32v
-         a/NJYWJ6iDdm19nsn1FHW7ZsEgE1T14Ysx9vumzSFHPiK0MaxUKU06N3NIsE7JImgtdc
-         ePng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717360401; x=1717965201;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9VddKJjdJ2hWtpkrc2+6Jag2VOkVNIboyOcgFS2Ya0c=;
-        b=SyAFhCKjBHzZRqrMCdOBAiL3Ne/kMrTumYIEDrZwuF9od295m/HtVPI69v3OURtNyZ
-         eeXNnPdMP/j1OXwzn4/apzVzRR9PN3Xz710tZgPyTE4YZ6Nek+UqT/fj3xCTuGse5tUS
-         Gg++MYMYr0YHO2V2A3lc8iq+bsoJCaciXsB7eYetO4VeUZBSpzuPxjCh0pkpPHUctPVE
-         1AIgVY8f/b69rzIDIvbdWqkT7cX7CRmAPyzdAJWnKOJ2DiwIEcIXeBiphh77EuvH9kY9
-         du2VH9NsQ1LGsX6loR+ad6x5BWCRcYLNF0pWsF7LWZaWaiUg6SLNZ7QDAHM6hCX3XeS1
-         qivQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXn3LKAp1A7Ka+JTl0Slh3zgOowlspa533lGGCBmXSzsfX8KKYmbqqIXvc9Z+6Hzw9h34S+XCw0rjsFzIsr2v81daQFQXRELkLU
-X-Gm-Message-State: AOJu0YwHYh5Uu18l+LrGLungbn+eeshEuZJPxjlGaDIOebI7ND4X0bEY
-	KCuU04Wg9SuGV5r5cdjqw9VG4ctqXG0pKlpOM7+twBeGbSNjBsf7A2d+V+bl+JY=
-X-Google-Smtp-Source: AGHT+IGvg21TUFiJusrL8v6x/FgG8eOjVDQorlu2qC+SsxyjWCxhwERsdQE9JqaI5oIxj7t8lI+guA==
-X-Received: by 2002:a05:6512:4c6:b0:52b:5f39:9221 with SMTP id 2adb3069b0e04-52b896f183fmr4342822e87.64.1717360400937;
-        Sun, 02 Jun 2024 13:33:20 -0700 (PDT)
-Received: from [192.168.1.140] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52b98845508sm245859e87.288.2024.06.02.13.33.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Jun 2024 13:33:19 -0700 (PDT)
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 02 Jun 2024 22:33:09 +0200
-Subject: [PATCH v6 2/2] pwm: Add GPIO PWM driver
+	s=arc-20240116; t=1717373431; c=relaxed/simple;
+	bh=07ynrVUW3Z/uc5Y7/yQ+UyVpLSvpRWi/UkrMoSVmo70=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=epet9HTnMaBsc6gG6h4C7llsx8nmwImhSyjXqIW4b1xfdfNu5NHUu8EiK19R3B7L9mLZVFy/JvzueULAlc7vF4gBwQWymNx0KD062XBz/b6LJgEss3BBGQChQ4YvUbxg+daESd8rfuTuKDR5mV9HVa6TRLEEJHaFzNHyUQdzNZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5284A113E;
+	Sun,  2 Jun 2024 17:10:52 -0700 (PDT)
+Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E10BA3F792;
+	Sun,  2 Jun 2024 17:10:25 -0700 (PDT)
+Date: Mon, 3 Jun 2024 01:09:12 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Hironori KIKUCHI <kikuchan98@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Aleksandr
+ Shubin <privatesub2@gmail.com>, Cheo Fusi <fusibrandon13@gmail.com>,
+ linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH 5/5] dt-bindings: pwm: sun20i: Add options to select a
+ clock source and DIV_M
+Message-ID: <20240603010912.44b99988@minigeek.lan>
+In-Reply-To: <CAG40kxHKdC=uwyWzsBo1LTAXARDQGs0N4TBdD5nE1zhos48cbg@mail.gmail.com>
+References: <20240531141152.327592-1-kikuchan98@gmail.com>
+	<20240531141152.327592-6-kikuchan98@gmail.com>
+	<851280ad-ac0e-47d1-99e2-4f3b5ea29f2f@kernel.org>
+	<CAG40kxEbMQc-ni0HDVR7rtj48aFu-jz8sYUAO+fdmZSmXWrizw@mail.gmail.com>
+	<da382d43-fa82-44c0-9630-086f59e6efa2@kernel.org>
+	<CAG40kxHKdC=uwyWzsBo1LTAXARDQGs0N4TBdD5nE1zhos48cbg@mail.gmail.com>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240602-pwm-gpio-v6-2-e8f6ec9cc783@linaro.org>
-References: <20240602-pwm-gpio-v6-0-e8f6ec9cc783@linaro.org>
-In-Reply-To: <20240602-pwm-gpio-v6-0-e8f6ec9cc783@linaro.org>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com, 
- Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>, 
- Chris Morgan <macromorgan@hotmail.com>, Stefan Wahren <wahrenst@gmx.net>, 
- linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
- devicetree@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
- Vincent Whitchurch <vincent.whitchurch@axis.com>
-X-Mailer: b4 0.13.0
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+On Sun, 2 Jun 2024 15:15:13 +0900
+Hironori KIKUCHI <kikuchan98@gmail.com> wrote:
 
-Add a software PWM which toggles a GPIO from a high-resolution timer.
+Hi Kikuchan,
 
-This will naturally not be as accurate or as efficient as a hardware
-PWM, but it is useful in some cases.  I have for example used it for
-evaluating LED brightness handling (via leds-pwm) on a board where the
-LED was just hooked up to a GPIO, and for a simple verification of the
-timer frequency on another platform.
+> Hi Krzysztof,
+> 
+> > On 31/05/2024 19:57, Hironori KIKUCHI wrote:  
+> > > Hello,
+> > >  
+> > >>> This patch adds new options to select a clock source and DIV_M register
+> > >>> value for each coupled PWM channels.  
+> > >>
+> > >> Please do not use "This commit/patch/change", but imperative mood. See
+> > >> longer explanation here:
+> > >> https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+> > >>
+> > >> Bindings are before their users. This should not be last patch, because
+> > >> this implies there is no user.  
+> > >
+> > > I'm sorry, I'll fix them.
+> > >  
+> > >> This applies to all variants? Or the one you add? Confused...  
+> > >
+> > > Apologies for confusing you. This applies to all variants.
+> > >  
+> > >>  
+> > >>>
+> > >>> Signed-off-by: Hironori KIKUCHI <kikuchan98@gmail.com>
+> > >>> ---
+> > >>>  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 19 +++++++++++++++++++
+> > >>>  1 file changed, 19 insertions(+)
+> > >>>
+> > >>> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> > >>> index b9b6d7e7c87..436a1d344ab 100644
+> > >>> --- a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> > >>> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> > >>> @@ -45,6 +45,25 @@ properties:
+> > >>>      description: The number of PWM channels configured for this instance
+> > >>>      enum: [6, 9]
+> > >>>
+> > >>> +  allwinner,pwm-pair-clock-sources:
+> > >>> +    description: The clock source names for each PWM pair
+> > >>> +    items:
+> > >>> +      enum: [hosc, apb]
+> > >>> +    minItems: 1
+> > >>> +    maxItems: 8  
+> > >>
+> > >> Missing type... and add 8 of such items to your example to make it complete.  
+> > >
+> > > Thank you. I'll fix it.
+> > >  
+> > >>  
+> > >>> +
+> > >>> +  allwinner,pwm-pair-clock-prescales:
+> > >>> +    description: The prescale (DIV_M register) values for each PWM pair
+> > >>> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> > >>> +    items:
+> > >>> +      items:
+> > >>> +        minimum: 0
+> > >>> +        maximum: 8
+> > >>> +      minItems: 1
+> > >>> +      maxItems: 1
+> > >>> +    minItems: 1
+> > >>> +    maxItems: 8  
+> > >>
+> > >> This does not look like matrix but array.  
+> > >
+> > > I wanted to specify values like this:
+> > >
+> > >     allwinner,pwm-pair-clock-prescales = <0>, <1>, <3>;
+> > >     allwinner,pwm-pair-clock-sources = "hosc", "apb", "hosc":
+> > >
+> > > These should correspond to each PWM pair.
+> > > This way, I thought we might be able to visually understand the relationship
+> > > between prescalers and sources, like clock-names and clocks.
+> > >
+> > > Is this notation uncommon, perhaps?  
+> >
+> > It's still an array.  
+> 
+> Oh I understood and clear. Thank you.
+> 
+> > >> Why clock DIV cannot be deduced from typical PWM attributes + clock
+> > >> frequency?  
+> > >
+> > > This SoC's PWM system has one shared prescaler and clock source for each pair
+> > > of PWM channels. I should have noted this earlier, sorry.
+> > >
+> > > Actually, the original v9 patch automatically deduced the DIV value
+> > > from the frequency.
+> > > However, because the two channels share a single prescaler, once one channel is
+> > > enabled, it affects and restricts the DIV value for the other channel
+> > > in the pair.
+> > > This introduces a problem of determining which channel should set the shared DIV
+> > > value. The original behavior was that the first channel enabled would win.  
+> >
+> > There's nothing bad in this.
+> >  
+> > >
+> > > Instead, this patch try to resolve the issue by specifying these
+> > > values for each PWM
+> > > pairs deterministically.
+> > > That's why it requires the new options.  
+> >
+> > This does not solve that wrong divider can be programmed for second
+> > channel in each pair.
+> >  
+> 
+> Let me illustrate the connection of a paired PWM channels to be sure.
+> 
+> .    +------+                   +--------------+  +------+
+> .    + HOSC +--+             +--+ prescale_k 0 +--+ PWM0 |
+> .    +------+  |  +-------+  |  +--------------+  +------+
+> .              +--+ DIV_M +--+
+> .    +------+  |  +-------+  |  +--------------+  +------+
+> .    + APBx +--+             +--+ prescale_k 1 +--+ PWM1 |
+> .    +------+                   +--------------+  +------+
+> .          CLK_SRC
+> 
+> The PWM0 and PWM1 share DIV_M and CLK_SRC for them, and (not
+> illustrated) PWM2 and PWM3 share another DIV_M and another CLK_SRC for
+> them, and so on.
+> The DIV_M ranges from 0 to 8 and is used as a 1 / 2^DIV_M prescaler,
+> prescale_k ranges from 0 to 255 and is used as a 1 / (prescale_k + 1)
+> prescaler.
+> 
+> In the original v9 patch, enabling PWM0 determines CLK_SRC and
+> calculates DIV_M from the period that is going to be set.
+> Once the CLK_SRC and DIV_M are fixed, they cannot be changed until
+> both channels are disabled, unless PWM0 is the only enabled channel.
+> 
+> Looks good so far, but there is a pitfall.
+> 
+> Selecting CLK_SRC and DIV_M means it defines the PWM resolution of the
+> period and duty cycle for the pair of the PWM channels.
+> In other words, the resolution is determined by the (most likely the
+> very first) period, which can be arbitrary.
 
-Since high-resolution timers are used, sleeping GPIO chips are not
-supported and are rejected in the probe function.
+So I understand the problem, but I don't think expressing this in the
+devicetree is the right solution. It seems like a tempting pragmatical
+approach, but it sounds like the wrong way: this is not a hardware
+*description* of any kind, but rather a way to describe a certain user
+intention or a configuration. So this looks like a rather embedded
+approach to me, where you have a certain fixed register setup in mind,
+and want to somehow force this to the hardware.
+Another problem with this approach is that it doesn't really cover the
+sysfs interface, which is very dynamic by nature.
 
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Co-developed-by: Stefan Wahren <wahrenst@gmx.net>
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Co-developed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- Documentation/driver-api/gpio/drivers-on-gpio.rst |   7 +-
- drivers/pwm/Kconfig                               |  11 +
- drivers/pwm/Makefile                              |   1 +
- drivers/pwm/pwm-gpio.c                            | 243 ++++++++++++++++++++++
- 4 files changed, 261 insertions(+), 1 deletion(-)
+I have some questions / ideas, and would love to hear some feedback on
+them:
+- If some PWM channels are "linked", I don't think there is much we can
+  do about it: it's a hardware limitation. The details of that is
+  already "encoded" in the compatible string, I'd say, so there is no
+  need for further description in the devicetree. Any PWM user on those
+  boards would probably need to know about the shortcomings, and either
+  use different channels for wildly different PWM setups, or accept
+  that there are actually only three freely programmable PWM channels.
+- Does the PWM subsystem already have a way to model linked channels?
+  Maybe that problem is solved already elsewhere?
+- Previous Allwinner PWM IP was restricted to use the 24 MHz
+  oscillator only, and people seem to have survived with that. Can we
+  not just restrict ourselves to one clock source for those linked
+  channels? I would assume that the PWM frequency is less important
+  than the duty cycle? 
+- Can't we just return an error if some conflicting setup requests are
+  made? At the expense of this seeming somewhat random to the user,
+  because it depends on the order of requests? But people could then
+  react on the returned error value?
 
-diff --git a/Documentation/driver-api/gpio/drivers-on-gpio.rst b/Documentation/driver-api/gpio/drivers-on-gpio.rst
-index af632d764ac6..95572d2a94ce 100644
---- a/Documentation/driver-api/gpio/drivers-on-gpio.rst
-+++ b/Documentation/driver-api/gpio/drivers-on-gpio.rst
-@@ -27,7 +27,12 @@ hardware descriptions such as device tree or ACPI:
-   to the lines for a more permanent solution of this type.
- 
- - gpio-beeper: drivers/input/misc/gpio-beeper.c is used to provide a beep from
--  an external speaker connected to a GPIO line.
-+  an external speaker connected to a GPIO line. (If the beep is controlled by
-+  off/on, for an actual PWM waveform, see pwm-gpio below.)
-+
-+- pwm-gpio: drivers/pwm/pwm-gpio.c is used to toggle a GPIO with a high
-+  resolution timer producing a PWM waveform on the GPIO line, as well as
-+  Linux high resolution timers can do.
- 
- - extcon-gpio: drivers/extcon/extcon-gpio.c is used when you need to read an
-   external connector status, such as a headset line for an audio driver or an
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 1dd7921194f5..68ba28d52c4c 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -223,6 +223,17 @@ config PWM_FSL_FTM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-fsl-ftm.
- 
-+config PWM_GPIO
-+	tristate "GPIO PWM support"
-+	depends on GPIOLIB
-+	depends on HIGH_RES_TIMERS
-+	help
-+	  Generic PWM framework driver for software PWM toggling a GPIO pin
-+	  from kernel high-resolution timers.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-gpio.
-+
- config PWM_HIBVT
- 	tristate "HiSilicon BVT PWM support"
- 	depends on ARCH_HISI || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 90913519f11a..65d62cc41a8f 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_PWM_DWC_CORE)	+= pwm-dwc-core.o
- obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
- obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
- obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
-+obj-$(CONFIG_PWM_GPIO)		+= pwm-gpio.o
- obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
- obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
- obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
-diff --git a/drivers/pwm/pwm-gpio.c b/drivers/pwm/pwm-gpio.c
-new file mode 100644
-index 000000000000..32ae9bba87c3
---- /dev/null
-+++ b/drivers/pwm/pwm-gpio.c
-@@ -0,0 +1,243 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Generic software PWM for modulating GPIOs
-+ *
-+ * Copyright (C) 2020 Axis Communications AB
-+ * Copyright (C) 2020 Nicola Di Lieto
-+ * Copyright (C) 2024 Stefan Wahren
-+ * Copyright (C) 2024 Linus Walleij
-+ */
-+
-+#include <linux/cleanup.h>
-+#include <linux/container_of.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/hrtimer.h>
-+#include <linux/math.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/pwm.h>
-+#include <linux/spinlock.h>
-+#include <linux/time.h>
-+#include <linux/types.h>
-+
-+struct pwm_gpio {
-+	struct hrtimer gpio_timer;
-+	struct gpio_desc *gpio;
-+	struct pwm_state state;
-+	struct pwm_state next_state;
-+
-+	/* Protect internal state between pwm_ops and hrtimer */
-+	spinlock_t lock;
-+
-+	bool changing;
-+	bool running;
-+	bool level;
-+};
-+
-+static void pwm_gpio_round(struct pwm_state *dest, const struct pwm_state *src)
-+{
-+	u64 dividend;
-+	u32 remainder;
-+
-+	*dest = *src;
-+
-+	/* Round down to hrtimer resolution */
-+	dividend = dest->period;
-+	remainder = do_div(dividend, hrtimer_resolution);
-+	dest->period -= remainder;
-+
-+	dividend = dest->duty_cycle;
-+	remainder = do_div(dividend, hrtimer_resolution);
-+	dest->duty_cycle -= remainder;
-+}
-+
-+static u64 pwm_gpio_toggle(struct pwm_gpio *gpwm, bool level)
-+{
-+	const struct pwm_state *state = &gpwm->state;
-+	bool invert = state->polarity == PWM_POLARITY_INVERSED;
-+
-+	gpwm->level = level;
-+	gpiod_set_value(gpwm->gpio, gpwm->level ^ invert);
-+
-+	if (!state->duty_cycle || state->duty_cycle == state->period) {
-+		gpwm->running = false;
-+		return 0;
-+	}
-+
-+	gpwm->running = true;
-+	return level ? state->duty_cycle : state->period - state->duty_cycle;
-+}
-+
-+static enum hrtimer_restart pwm_gpio_timer(struct hrtimer *gpio_timer)
-+{
-+	struct pwm_gpio *gpwm = container_of(gpio_timer, struct pwm_gpio,
-+					     gpio_timer);
-+	u64 next_toggle;
-+	bool new_level;
-+
-+	guard(spinlock_irqsave)(&gpwm->lock);
-+
-+	/* Apply new state at end of current period */
-+	if (!gpwm->level && gpwm->changing) {
-+		gpwm->changing = false;
-+		gpwm->state = gpwm->next_state;
-+		new_level = !!gpwm->state.duty_cycle;
-+	} else {
-+		new_level = !gpwm->level;
-+	}
-+
-+	next_toggle = pwm_gpio_toggle(gpwm, new_level);
-+	if (next_toggle)
-+		hrtimer_forward(gpio_timer, hrtimer_get_expires(gpio_timer),
-+				ns_to_ktime(next_toggle));
-+
-+	return next_toggle ? HRTIMER_RESTART : HRTIMER_NORESTART;
-+}
-+
-+static int pwm_gpio_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			  const struct pwm_state *state)
-+{
-+	struct pwm_gpio *gpwm = pwmchip_get_drvdata(chip);
-+	bool invert = state->polarity == PWM_POLARITY_INVERSED;
-+
-+	if (state->duty_cycle && state->duty_cycle < hrtimer_resolution)
-+		return -EINVAL;
-+
-+	if (state->duty_cycle != state->period &&
-+	    (state->period - state->duty_cycle < hrtimer_resolution))
-+		return -EINVAL;
-+
-+	if (!state->enabled) {
-+		hrtimer_cancel(&gpwm->gpio_timer);
-+	} else if (!gpwm->running) {
-+		int ret;
-+
-+		/*
-+		 * This just enables the output, but pwm_gpio_toggle()
-+		 * really starts the duty cycle.
-+		 */
-+		ret = gpiod_direction_output(gpwm->gpio, invert);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	guard(spinlock_irqsave)(&gpwm->lock);
-+
-+	if (!state->enabled) {
-+		pwm_gpio_round(&gpwm->state, state);
-+		gpwm->running = false;
-+		gpwm->changing = false;
-+
-+		gpiod_set_value(gpwm->gpio, invert);
-+	} else if (gpwm->running) {
-+		pwm_gpio_round(&gpwm->next_state, state);
-+		gpwm->changing = true;
-+	} else {
-+		unsigned long next_toggle;
-+
-+		pwm_gpio_round(&gpwm->state, state);
-+		gpwm->changing = false;
-+
-+		next_toggle = pwm_gpio_toggle(gpwm, !!state->duty_cycle);
-+		if (next_toggle)
-+			hrtimer_start(&gpwm->gpio_timer, next_toggle,
-+				      HRTIMER_MODE_REL);
-+	}
-+
-+	return 0;
-+}
-+
-+static int pwm_gpio_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			       struct pwm_state *state)
-+{
-+	struct pwm_gpio *gpwm = pwmchip_get_drvdata(chip);
-+
-+	guard(spinlock_irqsave)(&gpwm->lock);
-+
-+	if (gpwm->changing)
-+		*state = gpwm->next_state;
-+	else
-+		*state = gpwm->state;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops pwm_gpio_ops = {
-+	.apply = pwm_gpio_apply,
-+	.get_state = pwm_gpio_get_state,
-+};
-+
-+static void pwm_gpio_disable_hrtimer(void *data)
-+{
-+	struct pwm_gpio *gpwm = data;
-+
-+	hrtimer_cancel(&gpwm->gpio_timer);
-+}
-+
-+static int pwm_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pwm_chip *chip;
-+	struct pwm_gpio *gpwm;
-+	int ret;
-+
-+	chip = devm_pwmchip_alloc(dev, 1, sizeof(*gpwm));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+
-+	gpwm = pwmchip_get_drvdata(chip);
-+
-+	spin_lock_init(&gpwm->lock);
-+
-+	gpwm->gpio = devm_gpiod_get(dev, NULL, GPIOD_ASIS);
-+	if (IS_ERR(gpwm->gpio))
-+		return dev_err_probe(dev, PTR_ERR(gpwm->gpio),
-+				     "%pfw: could not get gpio\n",
-+				     dev_fwnode(dev));
-+
-+	if (gpiod_cansleep(gpwm->gpio))
-+		return dev_err_probe(dev, -EINVAL,
-+				     "%pfw: sleeping GPIO not supported\n",
-+				     dev_fwnode(dev));
-+
-+	chip->ops = &pwm_gpio_ops;
-+	chip->atomic = true;
-+
-+	hrtimer_init(&gpwm->gpio_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	ret = devm_add_action_or_reset(dev, pwm_gpio_disable_hrtimer, gpwm);
-+	if (ret)
-+		return ret;
-+
-+	gpwm->gpio_timer.function = pwm_gpio_timer;
-+
-+	ret = pwmchip_add(chip);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "could not add pwmchip\n");
-+
-+	platform_set_drvdata(pdev, gpwm);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id pwm_gpio_dt_ids[] = {
-+	{ .compatible = "pwm-gpio" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, pwm_gpio_dt_ids);
-+
-+static struct platform_driver pwm_gpio_driver = {
-+	.driver = {
-+		.name = "pwm-gpio",
-+		.of_match_table = pwm_gpio_dt_ids,
-+	},
-+	.probe = pwm_gpio_probe,
-+};
-+module_platform_driver(pwm_gpio_driver);
-+
-+MODULE_DESCRIPTION("PWM GPIO driver");
-+MODULE_AUTHOR("Vincent Whitchurch");
-+MODULE_LICENSE("GPL");
+In general, I wonder what the real use cases are, maybe it's not a
+problem in real life? Do you have a concrete issue at hand, or is this
+just thinking about all potential use cases - which is honourable, but
+maybe a bit over the top here?
 
--- 
-2.45.1
+Cheers,
+Andre
+
+> Consider an application that uses PWM channels to generate a square
+> wave in stereo.
+> The very first musical note played defines the entire resolution for
+> the subsequent notes.
+> The music quality depends on the first note.
+> 
+> The problem is, there is NO way to fixate the resolution to be used.
+> 
+> The proposed method provides a simple way to deterministically fixate
+> the resolution.
+> (ofcourse, prescale_k is still calculated by period to be set)
+> 
+> > Best regards,
+> > Krzysztof  
+> 
+> Best regards,
+> kikuchan.
+> 
 
 
