@@ -1,144 +1,105 @@
-Return-Path: <linux-pwm+bounces-2349-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2352-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B92808FCF8C
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Jun 2024 15:38:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B19288FD00E
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Jun 2024 15:51:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFA641C22904
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Jun 2024 13:38:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B164F28F3C3
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Jun 2024 13:51:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 896BB18FDBF;
-	Wed,  5 Jun 2024 13:16:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9653B191490;
+	Wed,  5 Jun 2024 13:38:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dxkZGs/5"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="AUH34lJS"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07F019D881;
-	Wed,  5 Jun 2024 13:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F8F53BE
+	for <linux-pwm@vger.kernel.org>; Wed,  5 Jun 2024 13:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717593361; cv=none; b=X00ppwhq3Xxge/U8t7LB4qzRLh7qM3SxEONjNWlaCx/d7uNZ/ONDIieq+qexgiV5meOmZOFNNZzSkTW96BJCT7ghwGDXAEzZfwlXngbDbZTzsU18zF53AUGFOWrL/5ISoHhdMJiOWxlAlNrm/ywkXJWh6g4ir6YgLnssLiewIFM=
+	t=1717594717; cv=none; b=JeFvdyIIczjaT6seoBY4/vwCKRHSW6AgROJYc9oactbGk+lrznaua3xfWxvWasqB6OU0GqMYmH+mA3HbDdOBMxlUK/uTF9qdQvLxCznxSH6L/fz/nYcFEl2W4OXT7g6pVmcjM1PbJ36rpChZJl0ZraGFTQxGwba2UBFQibPiqMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717593361; c=relaxed/simple;
-	bh=g20FrGbDTGnz16POZhJm2IR0qbqxVdd8fkLY18CrcWI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TqKvjZXelyo4+B/R1VhfseYyKml9ulNiCtzZTeAGz9mAqNxFBsMubzLIv3zziBuyGYO/Flk0bgz6IA0Ot4dq0gjt7i1OsJUMCzMNmKZLcR0taVUTAxR2p7YFimVrkpm88YnPt1j1U5tkRwghV/rN2DI2FF1g3SWRTjgSy/Zj6E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dxkZGs/5; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecsmtp.iind.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717593360; x=1749129360;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=g20FrGbDTGnz16POZhJm2IR0qbqxVdd8fkLY18CrcWI=;
-  b=dxkZGs/5CpCGXyEWtCGbUH9DtWn21aPZ8i+ILdmncfJBY6kSbMf1U+X3
-   70RCjEO7CadLQMwWne7WDTjW3/zJUzlkfGkD15ARSkc1QFcw1ha2UK3en
-   S63tcxd9lu9BMk4xZyf8F/KOdWqrGuMl/qJoN9u7iUNplqdxq/TUDrNFx
-   HznT+9B7zx+rOHxLLzyJEtGX9wmQJ/IszneyO0e/NAgA2dpPchtANVsZw
-   yEp/pO4w6MgznODkTlwOoVV92eY7Y5EUpdxGUAOQa5H3Au6drF34nwdgZ
-   5VucPDbX+TQypzTttwPRVY9ngE9gNx85Tsfyut1nC/RuTLuI+ju6XehQ5
-   w==;
-X-CSE-ConnectionGUID: IqbgSj0fRTiYHWedFRLidw==
-X-CSE-MsgGUID: WgnMd6vBSw2aaTRXfCS/bA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="18048159"
-X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
-   d="scan'208";a="18048159"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 06:15:51 -0700
-X-CSE-ConnectionGUID: ccaxZxC0QXe0jSnmUw+xpw==
-X-CSE-MsgGUID: tQprvkH7TO6ZBRd9agHn8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
-   d="scan'208";a="42549302"
-Received: from inesxmail01.iind.intel.com ([10.223.57.40])
-  by orviesa003.jf.intel.com with ESMTP; 05 Jun 2024 06:15:50 -0700
-Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
-	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 666CB19B02;
-	Wed,  5 Jun 2024 18:45:48 +0530 (IST)
-Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
-	id 616491600109; Wed,  5 Jun 2024 18:45:48 +0530 (IST)
-From: Raag Jadav <raag.jadav@intel.com>
-To: ukleinek@kernel.org,
-	jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com
-Cc: linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v2 2/2] pwm: lpss: drop redundant runtime PM handles
-Date: Wed,  5 Jun 2024 18:45:33 +0530
-Message-Id: <20240605131533.20037-3-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240605131533.20037-1-raag.jadav@intel.com>
-References: <20240605131533.20037-1-raag.jadav@intel.com>
+	s=arc-20240116; t=1717594717; c=relaxed/simple;
+	bh=mlhApMpG5WU395YtWwS9QPBflIL0rJC4v8OyN6FnRbc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KJsm/qWECToxuJYZo5zxFoCiLjzuPShIkZcCJxsSNikLFhK7143qvuGvg9SAk/mz5b2HErVTU/5fgwYpLhqrDlHnwqfR3B3XKEPtuUfTbKs/VSTuubNy4Jj1HHx5Fmyya/fVywIspkemGwgI5M3Oy7gpg1ESiGeDb6Jgs6NS6Kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=AUH34lJS; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4214f52b810so23221995e9.1
+        for <linux-pwm@vger.kernel.org>; Wed, 05 Jun 2024 06:38:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717594714; x=1718199514; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mlhApMpG5WU395YtWwS9QPBflIL0rJC4v8OyN6FnRbc=;
+        b=AUH34lJSHF1jmKLrzgVUddSsKCND91OwylcvYopEsudkJI9VrjsLp7Mket5FQ6NCAK
+         +bhBPjP5gj+u9a3pX2pHCpy/xTsyECtunF/ogJEwWnfF1XFIhIkvF7kK/m3GJsztd1CG
+         tm+Qixqbjhif2OlUGdQCNJAinA6QtoXclkKE9POoJD+yP8bQ0WC2mbAlZRX64QHoaFiU
+         MMHJyuAc5FQpS4ucRbhd/qz880dAmHVx68nWaekLhs6YibBZnbjGEF/un28MehTJFwkY
+         /6kjzZtrS1Kri/wdZfcFzOM7LIJnQ++bH87xmBa9XQTSG2kWdtS84CNsHgg8gWdocUUG
+         E62g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717594714; x=1718199514;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mlhApMpG5WU395YtWwS9QPBflIL0rJC4v8OyN6FnRbc=;
+        b=tIBc9TvFJ30ubmhtwiRjO1OfFiZH0c4olLRKxMCa9AhpWDXni7t9Fzx7ybTsu8MYXK
+         UEre0LW3ti5CmyO5ZKlZC2lTj9G7PTsJXMiilMjgoeaawKQ5N/IjS9rJcPsX+oHZdAEL
+         TNkhK1REElre2Xsk02pQeZkawGShcRCiLtn9w/JWGCnq1ENY6nWNkFyC5PYnI1jLivZF
+         vQdNFiMZ78JmzHAEbqQI7hQCAPoG6SXH3bHT/jZlh/lI++IsumA+BK/8WYkzkpp8v0I2
+         oDAZ2D8t56EGc6nmpl9t7Dzws3k8Blc0y5kqkBRYbcninuDRxkxv6eT+KuapL6uJ6W/U
+         fXRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWoLIArTGLwHvPzMTkkuL3cXaWZ6K2yVmSss/fGoWU8Tt4aTlDktxlhqXqyI8kaLdkM2NdGmz85aQHm/pz5IEXKXYA94ETeEjZI
+X-Gm-Message-State: AOJu0YwZWsXnRMup4QdIstwVgb8nIAv/LsOU2tHgHgNSt7xE2r03dj83
+	+PKeHdYi2nLSTvspKKBq2pe8Okh6En/U3c4MpN6w5PbSKWnussKIh7jJdHNyR4Y=
+X-Google-Smtp-Source: AGHT+IHjkretuS1fTFtZei6hChIG2kgCEQtxhJThqCOKkNHqb6TBqHMder8dhApLzt0DEjaMW0SbBQ==
+X-Received: by 2002:a05:600c:46cd:b0:421:1fb1:fe00 with SMTP id 5b1f17b1804b1-421562d4a37mr26359565e9.17.1717594713675;
+        Wed, 05 Jun 2024 06:38:33 -0700 (PDT)
+Received: from localhost (p200300f65f283b00ca876ee5dd3d1e3b.dip0.t-ipconnect.de. [2003:f6:5f28:3b00:ca87:6ee5:dd3d:1e3b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215814fc11sm22296825e9.48.2024.06.05.06.38.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 06:38:33 -0700 (PDT)
+From: "Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=" <ukleinek@baylibre.com>
+X-Google-Original-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Date: Wed, 5 Jun 2024 15:38:31 +0200
+To: Hironori KIKUCHI <kikuchan98@gmail.com>
+Cc: linux-kernel@vger.kernel.org, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Aleksandr Shubin <privatesub2@gmail.com>, Cheo Fusi <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH 0/5] Add support for Allwinner H616 PWM
+Message-ID: <d5mr73yc7l6w6uvgqb4ymyc5267do4zirnnorkpi5s6qa5vckk@owayit4mexk2>
+References: <20240531141152.327592-1-kikuchan98@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531141152.327592-1-kikuchan98@gmail.com>
 
-We no longer need empty runtime PM handles for PCI devices after
-commits [1] and [2]. Drop them and let PCI core take care of power
-state transitions.
+On Fri, May 31, 2024 at 11:11:32PM +0900, Hironori KIKUCHI wrote:
+> Add support for the Allwinner H616 PWM, building on top of Aleksandr's
+> Allwinner D1 PWM driver v9.
 
-[1] c5eb1190074c ("PCI / PM: Allow runtime PM without callback functions")
-[2] fa885b06ec7e ("PCI/PM: Allow runtime PM with no PM callbacks at all")
+It would be great if you could arrange with Aleksandr to maybe put your
+efforts into a single series. I think this would simplify reviewing and
+overall handling of your series to me.
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pwm/pwm-lpss-pci.c | 22 ----------------------
- 1 file changed, 22 deletions(-)
+Your first patch should for sure be squashed into Aleksandr's patch #2.
 
-diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
-index 25045c229520..f7ece2809e6b 100644
---- a/drivers/pwm/pwm-lpss-pci.c
-+++ b/drivers/pwm/pwm-lpss-pci.c
-@@ -46,25 +46,6 @@ static void pwm_lpss_remove_pci(struct pci_dev *pdev)
- 	pm_runtime_get_sync(&pdev->dev);
- }
- 
--static int pwm_lpss_runtime_suspend_pci(struct device *dev)
--{
--	/*
--	 * The PCI core will handle transition to D3 automatically. We only
--	 * need to provide runtime PM hooks for that to happen.
--	 */
--	return 0;
--}
--
--static int pwm_lpss_runtime_resume_pci(struct device *dev)
--{
--	return 0;
--}
--
--static DEFINE_RUNTIME_DEV_PM_OPS(pwm_lpss_pci_pm,
--				 pwm_lpss_runtime_suspend_pci,
--				 pwm_lpss_runtime_resume_pci,
--				 NULL);
--
- static const struct pci_device_id pwm_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x0ac8), (unsigned long)&pwm_lpss_bxt_info},
- 	{ PCI_VDEVICE(INTEL, 0x0f08), (unsigned long)&pwm_lpss_byt_info},
-@@ -84,9 +65,6 @@ static struct pci_driver pwm_lpss_driver_pci = {
- 	.id_table = pwm_lpss_pci_ids,
- 	.probe = pwm_lpss_probe_pci,
- 	.remove = pwm_lpss_remove_pci,
--	.driver = {
--		.pm = pm_ptr(&pwm_lpss_pci_pm),
--	},
- };
- module_pci_driver(pwm_lpss_driver_pci);
- 
--- 
-2.35.3
-
+Best regards
+Uwe
 
