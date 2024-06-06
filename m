@@ -1,132 +1,112 @@
-Return-Path: <linux-pwm+bounces-2363-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2364-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 212C28FDEEE
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Jun 2024 08:40:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DA3D8FF2B6
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Jun 2024 18:41:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 853E1B22D92
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Jun 2024 06:40:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 924A21C2540A
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Jun 2024 16:41:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ED5E13AA59;
-	Thu,  6 Jun 2024 06:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70350198845;
+	Thu,  6 Jun 2024 16:41:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UEFmmS+y"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="SN0u6ZAu"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECF613BC2B;
-	Thu,  6 Jun 2024 06:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B10197A8A
+	for <linux-pwm@vger.kernel.org>; Thu,  6 Jun 2024 16:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717655976; cv=none; b=LThwwUMivfDCNf6Jvw6Cmm4/P8byWAJ0hSbuBni5zfBCG778Oo3zlXhxLnPDLkYit/6eksPDbY0VdcGsIkOYgNp2rlXb6fbtTJlhdUZQjW0/H3zfXhjT+dZAWeBmB+iLcveGzhGTuQt5xqQS9bVALnR8mYI7v3fzRC4X6R/W1Ds=
+	t=1717692078; cv=none; b=hKuVFkZO7zK8NSAAaFppQDC+8wkGx6HmpNqy2tc0YtxsMJoaDWHztN1ok5NS5NrpXCTWBYDp+AOcSU55tR2yrTEu+jRRsRR5rMzhe2ceV4ez1wq18zO+OwpAYYzEiWHMb9hNKvyBGO6WcM+FkYyFZNwv//COdNFWNSumnkz2hrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717655976; c=relaxed/simple;
-	bh=sJKvmB1/cWlJykFFARqeITuFspBLzwVycXd9vuzvU2Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=DBFPcWtG9LMsp2MpP6i85LK6MNjefzO8YC3Q/gaAOTUY6PZU9QNRk17K6ss6WLqytYixXDhwCE8ixMCeOgEsgWPHBAT+7GSj13WjxR5Cfj3rsYXNCjuUAYtjDt9TUeUTSh7E1KmoBp/WBPGMWFlivklIi5gJbMkiBlls4WyA7vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UEFmmS+y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF89C2BD10;
-	Thu,  6 Jun 2024 06:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717655975;
-	bh=sJKvmB1/cWlJykFFARqeITuFspBLzwVycXd9vuzvU2Q=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=UEFmmS+yoHnJ7U4pz7+lfGiLF2gCEu0QWbn+PGGM2kDz8hJvdfYZEs9qmwCb4qLzx
-	 61Z9a0DWIFuVFPdGgppb+smcoZzsYR3sLKbTTWRBV3mLQfNTrtOzpdewL9lcYDNCOh
-	 /VEfMsNZfOE/+62mdebcxp3s3LGNv4803pscgyhN/viqAU0oAF1QIJg4LXfrpXBT7e
-	 3W/T7hr1R7alBfqBHynB5YRJ+TCEFu9fg7WWgnyyzmLPqRv2EnU75JcHr6GimCQCW9
-	 QvFu3qDLUhH80LBI0+m5OJ6KsJWi2coynFwA2TktfGktWG7uhUobsly5px+euAxy63
-	 WiHrtGJno2p/Q==
-Message-ID: <dc9accba-78af-45ec-a516-b89f2d4f4b03@kernel.org>
-Date: Thu, 6 Jun 2024 08:39:29 +0200
+	s=arc-20240116; t=1717692078; c=relaxed/simple;
+	bh=NgEp4wJFP8OQoG1f967uwvuzPv7RniPGm3kP8chKzEk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Oxy6z7UG5ru1fOjEQi7yfZoEillMIKdLRZ//M67HjLzehrYJHFkV/9Gnbs9VdFUIUzY6sb5w8RlH8JhK2bzBQP5wOmWOLnNLqUsOGOsSIKsXB2NPqwaBY05kvjNz/RelLNJ4cJRiDL+99GL0xoL0BgzBZOfrQN78AfnPL79Lim4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=SN0u6ZAu; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-421555a4454so11989605e9.3
+        for <linux-pwm@vger.kernel.org>; Thu, 06 Jun 2024 09:41:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717692074; x=1718296874; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NFlvoUhHTBcZh8w8IJw3LmmJrN9QNxWkJzuoMzje6c8=;
+        b=SN0u6ZAuirEKCRCWlNfFOB4qBS3pHE2uwEAC2DVYShVzHRNAFwMtdlF5XsXJ1c1urm
+         NU0fiAGzlEAJma0SZ+sGt08mA+5rTGotO4zGiSumEixm7L3hSmfshlaKhhZrrml8uMW4
+         WlHCbkaxyQGxMsamZeHBweI/Ho3R7Zx3pukM35j+zhzOxMqTDjhk2bEsnjzzV5eVuUuQ
+         1Xv/400dySyhlejtHamTW0CnfY0DmURsvEvvK3GSf0YQDwtLHaIBn2jK6pxcctZVKoOX
+         wgaNkCsOdMIgg80ArQmT5+S2OAJQhR9K2iP8Op4HtTrxZgJR8z9pmQszVuqvEk6IQFaE
+         x5OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717692074; x=1718296874;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NFlvoUhHTBcZh8w8IJw3LmmJrN9QNxWkJzuoMzje6c8=;
+        b=o8l85VoS801mUG2cPnv1UbZp1elhJGhb2DOoT8CqvcyPLN72FVB8Rfz40krsxrpR+T
+         XIGWFKHdnzvPAPYfsIQb0jRbjDuz82hxO28sLj78PlQbrtfMNg3XWxFiKy0kaYYgi3NY
+         8T6ZXTIn38/SjUt6Ku6WLgVQMrl9OGG8t9B/uZoUJhvD5+XcIxIThoepWW7i/RXOtuwg
+         Dja+oluitxl1eh490Rj0su7SkVF8Y0EI8siXHBlb8mPiBqx6VLSyMQU7RgJcgV8Kl4Eu
+         iZtUCv7+Na2yrEwOcb/HOZZmoSTmSED84GCJuNU7ftDVF9uZ3/wg0MyhHA+zBb+hi7Wu
+         82VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX2c9/YFhwcr9y3mpxZ/iKd/W1muYSF4toEZtHVG+i/oMn1hgrbfyvIulyENmYn7TitqJiWhZQowuQOblGvBIn5SdsE1RdDL1Mt
+X-Gm-Message-State: AOJu0YyUhNuCCxXPI+aGbYZ1y/PEIFWk/QHgeWL1dhKq6Fj+gbgQKIz/
+	HccwiHRWgW5pWX+Hi4FxVf7TMGn5mY3kwZYf2YkRB0V0O1SnUq/+t0VdTygjcwI=
+X-Google-Smtp-Source: AGHT+IFI2CKQghwXxPOkm3Fd6QZzekxPjX0h8JBpBiwlKcaOKDJJpkDQTFN8JnYlJlnbpzb1YKSR/A==
+X-Received: by 2002:a05:600c:a09:b0:421:494c:9e74 with SMTP id 5b1f17b1804b1-42164a07144mr1895225e9.23.1717692073932;
+        Thu, 06 Jun 2024 09:41:13 -0700 (PDT)
+Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215810826csm62355245e9.17.2024.06.06.09.41.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 09:41:13 -0700 (PDT)
+From: "=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=" <ukleinek@baylibre.com>
+X-Google-Original-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Paul Cercueil <paul@crapouillou.net>,
+	Trevor Gamblin <tgamblin@baylibre.com>
+Cc: linux-mips@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
+Subject: [PATCH 0/2] pwm: Make use of regmap_{set,clear}_bits()
+Date: Thu,  6 Jun 2024 18:40:45 +0200
+Message-ID: <20240606164047.534741-4-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] dt-bindings: pwm: imx: remove interrupt proptery from
- required
-To: Frank Li <Frank.Li@nxp.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>,
- "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
- "open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
- "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240605220839.1398872-1-Frank.Li@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240605220839.1398872-1-Frank.Li@nxp.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=581; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=NgEp4wJFP8OQoG1f967uwvuzPv7RniPGm3kP8chKzEk=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmYeaPBInvQdNHM6Stx2iHKkOq3tnLNPTc0gBLD AC6QWIwbY6JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZmHmjwAKCRCPgPtYfRL+ TpJjB/4+OejqU6/wmRq8FxmCM+Ymr9bg7nRNHcxhOqBuUHgZwBejWrsZ74AjHPFHVJ39qnq+9ih iQTUV7UOjVjykTQF97eubsdy/Xvq12Y+O8i8RrRF0HBPuCCUX885Z5hnRe+mzJucpru4/QJQYYw HGN9lmoRaXEyodkTo8su7SVS4D3l8kNGPLDmqrBSTA3rhtKo+WK76srwusvNc7Fd6BvPW/eJJxV gF0v6GM965hZfqoXTnZqerEUy/+VWBHatQlQ+UOG/jSMUISBLtVGmIbSHFQAdMZ8weWMWPBRmbJ xERIGLVBkysqvwrfVCOR/bLMjZO9M3kdykY6N2xTvd0axGVp
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On 06/06/2024 00:08, Frank Li wrote:
-> The driver "drivers/pwm/pwm-imx27.c" never use interrupt. Generally pwm
-> hardware generate a waveform according to register timing setting. Needn't
-> interrupt handle at all. So remove it from "required" list.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
+Hello,
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+during the final look over Trevor's axi-pwmgen patch I found an opportunity to
+use regmap_clear_bits(). Looking through the other drivers I found another
+patch opportunity in the jz4740 driver.
 
-Best regards,
-Krzysztof
+Best regards
+Uwe
+
+Uwe Kleine-König (2):
+  pwm: jz4740: Another few conversions to regmap_{set,clear}_bits()
+  pwm: axi-pwmgen: Make use of regmap_clear_bits()
+
+ drivers/pwm/pwm-axi-pwmgen.c | 2 +-
+ drivers/pwm/pwm-jz4740.c     | 9 ++++-----
+ 2 files changed, 5 insertions(+), 6 deletions(-)
+
+base-commit: 7cf775737d4ec337e46bf8497882cb6a7650839a
+-- 
+2.43.0
 
 
