@@ -1,239 +1,170 @@
-Return-Path: <linux-pwm+bounces-2398-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2399-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32D77901FFC
-	for <lists+linux-pwm@lfdr.de>; Mon, 10 Jun 2024 12:54:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADCC5902460
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Jun 2024 16:44:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1C231F21101
-	for <lists+linux-pwm@lfdr.de>; Mon, 10 Jun 2024 10:54:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 294F01F261BE
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Jun 2024 14:44:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A107214F9D5;
-	Mon, 10 Jun 2024 10:46:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 755A0132108;
+	Mon, 10 Jun 2024 14:44:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="rjhO9hqx"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Pw43uUed"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9361714F9D1
-	for <linux-pwm@vger.kernel.org>; Mon, 10 Jun 2024 10:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC4D132112;
+	Mon, 10 Jun 2024 14:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718016384; cv=none; b=CFwJUzM392NO+Ur7X7N/wKJdAhEmkWc6noW1nnu3CHCvgW+c3ACnFGlZ+vibSzIcaMUINdOopSI2EFMM/RMlj5gANgrnp1DpwhNHmBGqE/tiazvtEkIDkfZo4BjxqZayWTPPEoCOwOSgqGUTMQ/nva8kb0+6dEwTRyCFYCt4/hE=
+	t=1718030682; cv=none; b=Rs7nAcArPd9KFXe5tv53DOqhUEYgGLPkxikjvuR6HFF67X+xVF7Bxx+FCkh/25vgNlcWMANK27WeW4Lzt5IUnsrBX4fS5tLDzn77NKNxjZbgCbbq+k14WmdNg+xSoJNb/XXiTMur1oyn/H/THElHb/Rr6SPwpf2t4C/KZV5M4Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718016384; c=relaxed/simple;
-	bh=74n1Zibr4fPkE6scCimdQ1VXXNPZn1aItHzIJ17piqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CITSSKpyj1TnykX+CzaUpR9WZ44DlMyscD87HCqnjkDnujZdMjWTEm+oLOxy8euH5vqFganXaFMuMF1Aul+W3H80EpTDaG0dlYdzBsh3CmmdyMiXW0CR5XP4ftBFBrHRJzS6hEk3FfFy6FLWiy3pmbXtzYrYvtmQnyLRrJbcRso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=rjhO9hqx; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57c73a3b3d7so1696159a12.1
-        for <linux-pwm@vger.kernel.org>; Mon, 10 Jun 2024 03:46:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718016379; x=1718621179; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/XlZMzh78GMHOD1gDwKx1xR6KaRV34mJ3eqV2qIma2k=;
-        b=rjhO9hqx4OZdYQcKcV1KqUJwCtM2krBGypULAQ/QepJLk2fiUNRQN1JMpBwxMhZDGW
-         5btqBWhEFNshhUUEwXQqxxaRXq49cT4Me0U++bKIdj85CaQ7V9jw+u0PyGmnDkR73bqr
-         DqdM60dClWqf8c+R3xg2muKfbIUqj6se3+wlhqAoRSx1iquN22Xbj243Q1/+tDH+IFCC
-         uMfNVBSaldV4HbLwPTpH55PtnBbXWGy6duYXfwZiFSxCPmo5LEyLZmf+fbiat0bU37l7
-         JtEY2M0Usw1L4ZiT/571eOatcf02E+vZD9PCpnVyagsIdmZZBgIWfPsTfdvGQEZboBcP
-         dGxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718016379; x=1718621179;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/XlZMzh78GMHOD1gDwKx1xR6KaRV34mJ3eqV2qIma2k=;
-        b=HaUFg/iVUrdZsyhTa2MX+FHHy7cMZYnrZ0f/mukND+7WGISj1wmD8sAx5n23a0+LXY
-         kQM2jMPR+PHaFaEQOVxt6VYIEfW6dHrPkdOlpW/Hp7j654azthQB79kWKLqlby6Auq/J
-         MU2Z2kCAZL1/XlRDE4DZxdSjA5deFjCljs11FMjRFUP0g3dGm5PsHPLRaaLihFk4nvSY
-         IneRpaydZSEvRO7l2ci9UEjXQAjnRmvvZ/AQLRYrA3LmnOSb2yUnSzrnuY4Ykwv8Nb/X
-         ws6rSqV7XVXOZBitP75wY3vJ2Sh/z5YNM3lIURVQmIpnAgO0QBMGF2tR6ELuPZhvOa27
-         DmdA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLTtaOXQep2I+8S2UYyNMyhWaVaWre3G4SjWsc765nGyKcrK1/toR0w9x1x4UQMbLUuuhYGQAGvRek6EhHOiWjydkzoo2tuDgv
-X-Gm-Message-State: AOJu0YxTJjZXmA/1C6il4C2fzPvRi0C1K+uvcfrEZCFq2w/092EonFTP
-	QDAV6rXU+oFvOpfscSj7or/0+8r5CLVdT31HWx5Yegnr7nWQw0+0Hqe0gtobOeY=
-X-Google-Smtp-Source: AGHT+IGvGQ6OvV2IAPt4qY854+RjVirsCYZ4KGXh5XrklREl+PiXnz7K4O/IsCKgGY3ZFb+KVLT+pQ==
-X-Received: by 2002:a17:906:eea:b0:a62:fc9d:6fec with SMTP id a640c23a62f3a-a6cd74bf905mr556338366b.34.1718016378782;
-        Mon, 10 Jun 2024 03:46:18 -0700 (PDT)
-Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f08204ba1sm309996566b.105.2024.06.10.03.46.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 03:46:18 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: [RFC PATCH] regulator: pwm-regulator: Make assumptions about disabled PWM consistent
-Date: Mon, 10 Jun 2024 12:46:00 +0200
-Message-ID: <20240610104600.458308-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1718030682; c=relaxed/simple;
+	bh=eY9F5kq/mdlMa6zRjS1NBDAumKWUUH16eUTQ0RBgBOM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QVq5HNmh/aOrT0gbXCUkBJbxZzLCgrDCr/YTiFTQpSnLGl+wr9pwO9x+QZ0zK2rSwD21Bpyh68c5VrZDy38kgRfsWHl7/ArJ68FdFoDkjM/jUdUx5bJjVhPn1371UOELWDt9vHUwG7Hi7UQDdp01qmHzz+GPQ9+MY0Gw+ntHARI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Pw43uUed; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ADUbtR029624;
+	Mon, 10 Jun 2024 14:44:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	YerxaNiDrqT++v3tBHV72ahDavLdzSNSM69xaGAmvMA=; b=Pw43uUedZ8KuOXS1
+	/oNwR7m0GP/Kt6W/0Fbq9TGDv3JR19mDb2ibvMKGY/lln1YHY8iKFdt9Az9Fm1fx
+	X74gWD12Mrm9hbEcYMbHaXQ9X8f0jJ4EVr/jRZt6PGKDmRT6Y1XHSWCmDuv5RAzV
+	6UKlt3qxurrWT5PnoMtb4ilDlQbOd1qlsl+c5QYuILroXvvpFfX6YlOQbxDYNMG/
+	c/VJyVK03aBcQJ5TzjAwsQLtZOsHdCRX/45XmaNPNpmHKqzYOGfpx6hGF086Ubk6
+	fzeb6Oo5PMLhriIJaXJXzaY7Tz1mJgFl38jHVD4XPY8IPEi0up4hWlGBmc4qVLqv
+	KoOsgg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymea6kwcu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 14:44:20 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45AEiIwZ012751
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 14:44:18 GMT
+Received: from [10.48.242.196] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Jun
+ 2024 07:44:17 -0700
+Message-ID: <ea5c6e03-3821-4808-9681-ea5576c65391@quicinc.com>
+Date: Mon, 10 Jun 2024 07:44:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5030; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=74n1Zibr4fPkE6scCimdQ1VXXNPZn1aItHzIJ17piqM=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmZtloVvG9ndchYWd7fvEXizTIhME1/yc0Ep8Ys E5Ns8dEVw+JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZmbZaAAKCRCPgPtYfRL+ TnT0B/9KAwtSY/bi7poMsPG7y3w5zMqCMPkH+Upgu/g8HQRJZkTlNiwNrnGAko16TU9vkorDMzj Qt5J/psei9zapGrbxi/IUCwQssVNuT9sZEIy5x16+ADhJCW7mvZmgFk4WyqvfAd8lhc6BSfUa30 kJKjUJHpyWL6KS1zgWTKv2+LwJ3pElylE14w5V2SP03lRmpBAcJglCD11mXWL5MiUWVJzuh+KIZ EEg6XTnb3j9jdrUejaMk588dAgd/XUDu80ZqGuVu371UCz8JbgLSyBCs04IJbjZ74v8Ic0b+m01 5xcwndLp6kKs8hDYNhQ/cbYBo/1+pR07ciO0TkIB5x6fyC8S
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pwm: add missing MODULE_DESCRIPTION() macros
+Content-Language: en-US
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+        Shawn Guo
+	<shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix
+ Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Matthias Brugger
+	<matthias.bgg@gmail.com>
+CC: <linux-pwm@vger.kernel.org>, <imx@lists.linux.dev>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20240607-md-drivers-pwm-v1-1-27237a2bec6a@quicinc.com>
+ <ca6b4ce2-4ebf-409d-b87d-2024445b9392@collabora.com>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <ca6b4ce2-4ebf-409d-b87d-2024445b9392@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: BZzjFM6FFRhPIg51RXBqh8PoY2xZ714Q
+X-Proofpoint-ORIG-GUID: BZzjFM6FFRhPIg51RXBqh8PoY2xZ714Q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ spamscore=0 phishscore=0 mlxlogscore=999 clxscore=1015 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 adultscore=0 bulkscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406100112
 
-Generally it's not known how a disabled PWM behaves. However if the
-bootloader hands over a disabled PWM that drives a regulator and it's
-claimed the regulator is enabled, then the most likely assumption is
-that the PWM emits the inactive level. This is represented by duty_cycle
-= 0 even for .polarity == PWM_POLARITY_INVERSED.
-
-Put that assumption in a dedicated function, document that it relies on
-an assumption and use that in both functions pwm_regulator_init_state()
-and pwm_regulator_get_voltage().
-
-With that pwm_regulator_init_boot_on() can be dropped, as it's only
-purpose is to make pwm_get_state() return a configuration that results
-in emitting constantly the inactive level if the PWM is off.
-
-Fixes: 6a7d11efd691 ("regulator: pwm-regulator: Calculate the output voltage for disabled PWMs")
-Fixes: b3cbdcc19181 ("regulator: pwm-regulator: Manage boot-on with disabled PWM channels")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
-Hello,
-
-this is my suggestion to fix the concerns I expressed in
-https://lore.kernel.org/all/hf24mrplr76xtziztkqiscowkh2f3vmceuarecqcwnr6udggs6@uiof2rvvqq5v/
-.
-
-It's only compile tested as I don't have a machine with a pwm-regulator.
-So getting test feedback before applying it would be great.
-
-Best regards
-Uwe
-
- drivers/regulator/pwm-regulator.c | 68 +++++++++++--------------------
- 1 file changed, 23 insertions(+), 45 deletions(-)
-
-diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
-index 7434b6b22d32..648a53b67a2f 100644
---- a/drivers/regulator/pwm-regulator.c
-+++ b/drivers/regulator/pwm-regulator.c
-@@ -48,18 +48,37 @@ struct pwm_voltages {
- 	unsigned int dutycycle;
- };
- 
-+static unsigned int pwm_regulator_get_relative_dutycyle(struct regulator_dev *rdev,
-+							unsigned int scale)
-+{
-+	struct pwm_regulator_data *drvdata = rdev_get_drvdata(rdev);
-+	struct pwm_state pwm_state;
-+
-+	pwm_get_state(drvdata->pwm, &pwm_state);
-+
-+	if (!pwm_state.enabled) {
-+		/*
-+		 * In general it's unknown what the output of a disabled PWM is.
-+		 * The only sane assumption here is it emits the inactive level
-+		 * which corresponds to duty_cycle = 0 (independent of the
-+		 * polarity).
-+		 */
-+		return 0;
-+	}
-+
-+	return pwm_get_relative_duty_cycle(&pwm_state, scale);
-+}
-+
- /*
-  * Voltage table call-backs
-  */
- static void pwm_regulator_init_state(struct regulator_dev *rdev)
- {
- 	struct pwm_regulator_data *drvdata = rdev_get_drvdata(rdev);
--	struct pwm_state pwm_state;
- 	unsigned int dutycycle;
- 	int i;
- 
--	pwm_get_state(drvdata->pwm, &pwm_state);
--	dutycycle = pwm_get_relative_duty_cycle(&pwm_state, 100);
-+	dutycycle = pwm_regulator_get_relative_dutycyle(rdev, 100);
- 
- 	for (i = 0; i < rdev->desc->n_voltages; i++) {
- 		if (dutycycle == drvdata->duty_cycle_table[i].dutycycle) {
-@@ -151,20 +170,10 @@ static int pwm_regulator_get_voltage(struct regulator_dev *rdev)
- 	int min_uV = rdev->constraints->min_uV;
- 	int max_uV = rdev->constraints->max_uV;
- 	int diff_uV = max_uV - min_uV;
--	struct pwm_state pstate;
- 	unsigned int diff_duty;
- 	unsigned int voltage;
- 
--	pwm_get_state(drvdata->pwm, &pstate);
--
--	if (!pstate.enabled) {
--		if (pstate.polarity == PWM_POLARITY_INVERSED)
--			pstate.duty_cycle = pstate.period;
--		else
--			pstate.duty_cycle = 0;
--	}
--
--	voltage = pwm_get_relative_duty_cycle(&pstate, duty_unit);
-+	voltage = pwm_regulator_get_relative_dutycyle(rdev, duty_unit);
- 	if (voltage < min(max_uV_duty, min_uV_duty) ||
- 	    voltage > max(max_uV_duty, min_uV_duty))
- 		return -ENOTRECOVERABLE;
-@@ -321,32 +330,6 @@ static int pwm_regulator_init_continuous(struct platform_device *pdev,
- 	return 0;
- }
- 
--static int pwm_regulator_init_boot_on(struct platform_device *pdev,
--				      struct pwm_regulator_data *drvdata,
--				      const struct regulator_init_data *init_data)
--{
--	struct pwm_state pstate;
--
--	if (!init_data->constraints.boot_on || drvdata->enb_gpio)
--		return 0;
--
--	pwm_get_state(drvdata->pwm, &pstate);
--	if (pstate.enabled)
--		return 0;
--
--	/*
--	 * Update the duty cycle so the output does not change
--	 * when the regulator core enables the regulator (and
--	 * thus the PWM channel).
--	 */
--	if (pstate.polarity == PWM_POLARITY_INVERSED)
--		pstate.duty_cycle = pstate.period;
--	else
--		pstate.duty_cycle = 0;
--
--	return pwm_apply_might_sleep(drvdata->pwm, &pstate);
--}
--
- static int pwm_regulator_probe(struct platform_device *pdev)
- {
- 	const struct regulator_init_data *init_data;
-@@ -404,11 +387,6 @@ static int pwm_regulator_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = pwm_regulator_init_boot_on(pdev, drvdata, init_data);
--	if (ret)
--		return dev_err_probe(&pdev->dev, ret,
--				     "Failed to apply boot_on settings\n");
--
- 	regulator = devm_regulator_register(&pdev->dev,
- 					    &drvdata->desc, &config);
- 	if (IS_ERR(regulator)) {
-
-base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
--- 
-2.43.0
-
+On 6/10/2024 1:06 AM, AngeloGioacchino Del Regno wrote:
+> Il 07/06/24 18:02, Jeff Johnson ha scritto:
+>> make allmodconfig && make W=1 C=1 reports:
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-imx1.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-imx27.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-intel-lgm.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-mediatek.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-pxa.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-samsung.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-spear.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pwm/pwm-visconti.o
+>>
+>> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+>>
+>> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+>> ---
+>> This addresses all of the issues in driver/pwm
+>>
+>> Let me know if you want any of the individual module changes
+>> segregated into separate patches.
+>> ---
+>>   drivers/pwm/pwm-imx1.c      | 1 +
+>>   drivers/pwm/pwm-imx27.c     | 1 +
+>>   drivers/pwm/pwm-intel-lgm.c | 1 +
+>>   drivers/pwm/pwm-mediatek.c  | 1 +
+>>   drivers/pwm/pwm-pxa.c       | 1 +
+>>   drivers/pwm/pwm-samsung.c   | 1 +
+>>   drivers/pwm/pwm-spear.c     | 1 +
+>>   drivers/pwm/pwm-visconti.c  | 1 +
+>>   8 files changed, 8 insertions(+)
+>>
+> 
+> ..snip..
+> 
+>> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+>> index 19a87873ad60..0b5d68a90e83 100644
+>> --- a/drivers/pwm/pwm-mediatek.c
+>> +++ b/drivers/pwm/pwm-mediatek.c
+>> @@ -395,4 +395,5 @@ static struct platform_driver pwm_mediatek_driver = {
+>>   module_platform_driver(pwm_mediatek_driver);
+>>   
+>>   MODULE_AUTHOR("John Crispin <blogic@openwrt.org>");
+>> +MODULE_DESCRIPTION("MediaTek Pulse Width Modulator driver");
+> 
+> MediaTek SoCs have got two different PWM IPs, one of which is used exclusively
+> for the Display PWM, and it is located in the DDP block.
+> 
+> So, there are two PWM IPs in one SoC:
+>   - A general purpose PWM IP
+>   - A DDP PWM IP
+> 
+> This driver is for the general purpose PWM IP.. so, please, can we change this
+> to "MediaTek general purpose Pulse Width Modulator driver"?
+> 
+> After which,
+> 
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> 
+>>   MODULE_LICENSE("GPL v2");
+> 
+Sure, I'll update these in v2
 
