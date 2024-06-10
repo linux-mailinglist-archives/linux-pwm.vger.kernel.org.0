@@ -1,157 +1,143 @@
-Return-Path: <linux-pwm+bounces-2395-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2396-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 598EE901DC7
-	for <lists+linux-pwm@lfdr.de>; Mon, 10 Jun 2024 11:07:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7700C901E29
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Jun 2024 11:26:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BCFCEB25D52
-	for <lists+linux-pwm@lfdr.de>; Mon, 10 Jun 2024 09:07:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E6BC280C98
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Jun 2024 09:26:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CE2077103;
-	Mon, 10 Jun 2024 09:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B602335A7;
+	Mon, 10 Jun 2024 09:26:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="b3d3lJke"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="z+bWmg2s"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD4D73473
-	for <linux-pwm@vger.kernel.org>; Mon, 10 Jun 2024 09:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D625055887
+	for <linux-pwm@vger.kernel.org>; Mon, 10 Jun 2024 09:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718010342; cv=none; b=aFLzav64Om4QqSQsh2cnRgocR/Ae66BIBeBjU5huBuH8eDb/qPK9UtUi6e5w9lh8CXcaAOmzpnBPDD3/7c3LdJCXOdW6hIDvrmF2WsMdYu4HVYMEf+XX3p5cf5hnzY9+mAH/7RsRP651qW7stmTzwZBV2fGgf5v5LAUlJ+5lxV8=
+	t=1718011592; cv=none; b=SCAGbet5U565LpC+76ZulA++HMdvXseW86IXU2Qf8H5uhpbbw8ZayvmEtQg0vEGy3Edjfgu+zqxMm7BTsCTUzykLtE7cGatDxSyXv4XG50Q8UxsHolNzU2pgvZ4PQobV4ZKv7ApZD4c6+zVgtCZnbjkC8yWealD08wHHDr8RdKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718010342; c=relaxed/simple;
-	bh=HEg0zyvw/V+cMw418J+Nfsgp8PdHvRrJzynNEBulD/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KJSdm2rL6C/bvf/YAmqN2x4K/J8gUSW5jV5rUxjqkmzGrg2Ou2X2tR64AiJfLGiCr9gRwc6o9tZyaCoGIH5CgGUtck2xu33ovlv/AA3Xps7SowzZ0O5sqX5cI265yB8BV+tpCaPZRBXx9sPk8b9rFAIp8I8jwAd5dR3k7NKlTSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=b3d3lJke; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a6e43dad8ecso420791566b.1
-        for <linux-pwm@vger.kernel.org>; Mon, 10 Jun 2024 02:05:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718010337; x=1718615137; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z97Srw814CSk6XdmVlMPcCGnmoMkpcpqJTTh4MZ38CU=;
-        b=b3d3lJkeKrEbLtTZr4R1OZWdGIQZFPncD6Y+TvfAnvUbPpF9t0V3hjGT5H2ChguXzG
-         OPkANN6libICRfhi4s6n5KQxo0JKx6D+95sEUe2YTBQb5PE9I4/bGEadbvYpqY8/37+t
-         Xt1Zis8yBgA2s+f9g+3fkag3JIv8YJH//6I+mkGuyhFEfPbUHrVQLZakXRwe/WI7+k3f
-         VttLkn59hLbD2Mcet0Xj7MxGIfquvklMqZgl9JzzRGogBRH3yQ4gLiwRRgD7tzBXVUcA
-         OFoVqOdfUm0fItxIK+/z2Sz8blTcrkNaUGrlTqzioFmuQQQa8/CnLHc0Jn0W6AB9J0Cu
-         gymw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718010337; x=1718615137;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z97Srw814CSk6XdmVlMPcCGnmoMkpcpqJTTh4MZ38CU=;
-        b=jvskvxIL5rK5FM7Ddyf/tFhZ6XZvAZTPSkb86hgXFsqOXcPqpmqMak+tlRvyuXIoC9
-         6IpZOSnxtKrFng/HHfIkH4Rw3cBVmVrp1Qx0wlcOKi3f1NvSxjfIQUunpEgMYdWGJC3U
-         RqRnuCRL5CE7dDXKWYGr7DPUueKGfCvKqrDyZSlYV2ykmwoF33KMf1qBXMaMcKTmBnDt
-         Lvj2ugPF+oiTz4SNb2w5WM618dLynTE9vF3g+Dz+2SoeIY+tMmn6fGc1MSWHR0lfTKT8
-         AsMlfl68C4VuPKSm/iJ3u1GyEPGOnGPpCgXzNPYf/oemwIZyMsX1ib238D1wJCGdkPbu
-         +2Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+oZO8PqSLIf79WVSLBc+c06CVoWbpY5cfNkWbLKnoM7bcvKCBKRxHAJmEJuv7Cq1+buVghr+35WKBxZnIJHyIVbHBinoChQ18
-X-Gm-Message-State: AOJu0Yw7SGxG65fu+DpXTF9U1FET0cbm3iln8oHrve/zRjZyU2eU0Ca5
-	np5nVtqogdIAgPhdIwMDqHgdIwqI71tCYqgP1rLkxHBxl/A56ctZvxhYuc0dzhM=
-X-Google-Smtp-Source: AGHT+IFkyhcT1eyJNZMa+v9iD180qe0aqLoDogvtNodRry9SmYe35KOJ15PGipaMtMR7zBJCwHj8dA==
-X-Received: by 2002:a17:906:840b:b0:a6f:dec:5a66 with SMTP id a640c23a62f3a-a6f0dec6614mr276844566b.5.1718010337430;
-        Mon, 10 Jun 2024 02:05:37 -0700 (PDT)
-Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6ef5285748sm412819866b.146.2024.06.10.02.05.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 02:05:36 -0700 (PDT)
-Date: Mon, 10 Jun 2024 11:05:36 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	linux-pwm@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] pwm: add missing MODULE_DESCRIPTION() macros
-Message-ID: <g5u7xk2l625vu6dxleonlmshnwqoge5fiaigbqlcedayu2rate@o4vgz7g27vlv>
-References: <20240607-md-drivers-pwm-v1-1-27237a2bec6a@quicinc.com>
- <ca6b4ce2-4ebf-409d-b87d-2024445b9392@collabora.com>
+	s=arc-20240116; t=1718011592; c=relaxed/simple;
+	bh=lW9oyedb8IGn15q/bioYfjF9kND/sMSUush0x/8KIH0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KTJhRpQEv97lXIH7Yx7VRZtDqm8v/NiK1UYEWCf97BnSfSLaYPg86QkeoJ9ASg/RKvuDKsRnacERdyqMrEEGBvd69tXVpkdeVJiwHZ74LXcvP6mOSCLq0al5TLUDobMdtOHsVACOLiA/T26jiKxDHMaH3ym8ZIac0HJf3prfOn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=z+bWmg2s; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1718011591; x=1749547591;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lW9oyedb8IGn15q/bioYfjF9kND/sMSUush0x/8KIH0=;
+  b=z+bWmg2sdMIgkKs3UVfXGdRodJOUAzDptdKX7Hea7SGkOq76PDxxrwSH
+   faIIH+Uj/At1U75obgMuW0+8pgsefYXui1HeJIxFdCg/YeWx5QsGOMdWa
+   KwcnDY/sYGcbGaquU8Tn47MJRtrzmpdkfCwO4oaWTIbic/YzVUDLvZ2eU
+   KjxbZEEtOR9oaWkr0Ib+VDjmlAGDOGpU9aGvFKbrkZg/T2Ch/6HgpMVOQ
+   XT0qd6B1dknmLmlaf5f8WwUmftGx3qvhdaBksvLCcfPQKbXJSMweQ427J
+   4zFNxgDXYWM5FRKXyMjfFQmt57Wwb8nRrKR9fFNazWQeN4GTyPDhPyv+L
+   A==;
+X-CSE-ConnectionGUID: CzxDyEoyTl613Fd8FCzROw==
+X-CSE-MsgGUID: AMrbPrcHQvuVCp0WqnDFhA==
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="asc'?scan'208";a="258051081"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 10 Jun 2024 02:26:30 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 10 Jun 2024 02:25:59 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Mon, 10 Jun 2024 02:25:57 -0700
+Date: Mon, 10 Jun 2024 10:25:41 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+CC: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>, Trevor Gamblin
+	<tgamblin@baylibre.com>, Michael Hennerich <michael.hennerich@analog.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>, <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH 2/2] pwm: axi-pwmgen: Make use of regmap_clear_bits()
+Message-ID: <20240610-device-fifty-ec8e24fe7ff3@wendy>
+References: <20240606164047.534741-4-u.kleine-koenig@baylibre.com>
+ <20240606164047.534741-6-u.kleine-koenig@baylibre.com>
+ <3755faec8dc7048da880ef6b924ed2e5a224bfef.camel@gmail.com>
+ <no6gyqovcjrzcior5lym6qtb7ya4abgcspe2mebpvfc2bl3f4i@h3x64l7pomhf>
+ <20240610-fineness-discern-e8b21551e149@wendy>
+ <56jdqmach5s4vkv72mpg6pdz5vr5j3fixmjpzyf5vt74ijvmaw@lt6c2icqf5rj>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="q35kt4hkwtu27u62"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="PGhBiDibnN1h8njY"
 Content-Disposition: inline
-In-Reply-To: <ca6b4ce2-4ebf-409d-b87d-2024445b9392@collabora.com>
+In-Reply-To: <56jdqmach5s4vkv72mpg6pdz5vr5j3fixmjpzyf5vt74ijvmaw@lt6c2icqf5rj>
 
-
---q35kt4hkwtu27u62
-Content-Type: text/plain; charset=us-ascii
+--PGhBiDibnN1h8njY
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Mon, Jun 10, 2024 at 10:06:49AM +0200, AngeloGioacchino Del Regno wrote:
-> Il 07/06/24 18:02, Jeff Johnson ha scritto:
-> > [...]
-> > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> > index 19a87873ad60..0b5d68a90e83 100644
-> > --- a/drivers/pwm/pwm-mediatek.c
-> > +++ b/drivers/pwm/pwm-mediatek.c
-> > @@ -395,4 +395,5 @@ static struct platform_driver pwm_mediatek_driver =
-=3D {
-> >   module_platform_driver(pwm_mediatek_driver);
-> >   MODULE_AUTHOR("John Crispin <blogic@openwrt.org>");
-> > +MODULE_DESCRIPTION("MediaTek Pulse Width Modulator driver");
+On Mon, Jun 10, 2024 at 10:32:13AM +0200, Uwe Kleine-K=F6nig wrote:
+> On Mon, Jun 10, 2024 at 09:00:53AM +0100, Conor Dooley wrote:
+> > On Mon, Jun 10, 2024 at 07:53:33AM +0200, Uwe Kleine-K=F6nig wrote:
+> > > Hello Nuno,
+> > >=20
+> > > On Fri, Jun 07, 2024 at 08:40:32AM +0200, Nuno S=E1 wrote:
+> > > > On Thu, 2024-06-06 at 18:40 +0200, Uwe Kleine-K=F6nig wrote:
+> > > > > Instead of using regmap_update_bits() and passing val=3D0, better=
+ use
+> > > > > regmap_clear_bits().
+> > > > >=20
+> > > > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+> > > > > ---
+> > > >=20
+> > > > Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+> > >=20
+> > > Thanks for looking at the patch. When I apply it (using b4) I get
+> > > however:
+> > >=20
+> > > NOTE: some trailers ignored due to from/email mismatches:
+> > >     ! Trailer: Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+> > >      Msg From: Nuno S=E1 <noname.nuno@gmail.com>
+> > >=20
+> > > I'll add it anyhow, but it would be great if you fixed your workflow =
+to
+> > > have the sender match the address in the tag.
+> >=20
+> > I'm curious, given I do this all the time, do you not see similar issues
+> > for me?
 >=20
-> MediaTek SoCs have got two different PWM IPs, one of which is used exclus=
-ively
-> for the Display PWM, and it is located in the DDP block.
->=20
-> So, there are two PWM IPs in one SoC:
->  - A general purpose PWM IP
->  - A DDP PWM IP
->=20
-> This driver is for the general purpose PWM IP.. so, please, can we change=
- this
-> to "MediaTek general purpose Pulse Width Modulator driver"?
->=20
-> After which,
->=20
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
+> Never noticed that for you. Maybe that's a new check in b4? I recently
+> reinstalled my devel machine, so I likely have a new version even if the
+> upstream change is a bit older already.
 
-Looks like a reasonable request.
+Nah, I think that's been in b4 for as long as I have been using it, even
+when I used the old version from debian. Maybe my use of patatt is the
+reason or some exemption for kernel.org addresses.
 
-@Jeff: Can you please resend with the suggested change, I dropped the
-patch from for-next now.
-
-Best regards
-Uwe
-
---q35kt4hkwtu27u62
+--PGhBiDibnN1h8njY
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZmwdsACgkQj4D7WH0S
-/k55zQf8CfuApQ1ZBtYAqa1Nbq+ZlBw/O21Uu1RabLwL/pyilctw+8HyD94rpw4l
-fa2pQmjJNIpbxVLwqbSz/liyD5+xs3qysDJdfTjG2sc3iWXXtfEo2PSOgxGByXfx
-53HHtTMGgwf4SGBDghqpOgBrfuPhjDbUC2xvVIYMwPFPliUjZhdQvNEUqZZiZxo1
-Ueou9i3+1M0/jEBd4adgtcR1QlNVQO/4QJ3RJMAFe1tQDVdYrLG3xb0+4uxskJ5b
-uuEuYScgNnItS4OISYQoo3R+M9RjhqBhiz+geuCDuHQOTK3GsLd6uJdvojmm1B1n
-PTlKBhDnoqJUPIoyjB6XfukvubKsiA==
-=P61q
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmbGlQAKCRB4tDGHoIJi
+0mCYAQDgrN3FMXb3+UNL0uPW78ebD/BkVtF7rMVld3YvO0wnIAD9HC6G2AhXzh5o
+BC0dufyhQR6Qhxdi+TwOz5lt3E33WQY=
+=OR3a
 -----END PGP SIGNATURE-----
 
---q35kt4hkwtu27u62--
+--PGhBiDibnN1h8njY--
 
