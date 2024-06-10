@@ -1,130 +1,139 @@
-Return-Path: <linux-pwm+bounces-2388-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2389-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C629901201
-	for <lists+linux-pwm@lfdr.de>; Sat,  8 Jun 2024 16:25:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4F9A901A8F
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Jun 2024 07:55:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C66411F2166A
-	for <lists+linux-pwm@lfdr.de>; Sat,  8 Jun 2024 14:25:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C280B1C22BCD
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Jun 2024 05:55:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C603417A933;
-	Sat,  8 Jun 2024 14:25:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4AEC1803A;
+	Mon, 10 Jun 2024 05:53:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RryReEsD"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ktgyr2ZZ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993FF17A920;
-	Sat,  8 Jun 2024 14:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F4B4AEE5
+	for <linux-pwm@vger.kernel.org>; Mon, 10 Jun 2024 05:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717856701; cv=none; b=pbYQDFRu7jjZ7xKWX8e7IlQcEsGFiarl9tFr6HxVEE1bfqg/X+4OT9h7XFdsInV1ZxTMqer0TlDGAvnY9DVbq1TBzfNK5Nul1yMXeaQ3uleBmFJGUXcpXv5iKudBKOXLlBxq1p2L/SL9l3+b0XRX1At1y4Pbe/MF1lNbewqq2kg=
+	t=1717998821; cv=none; b=KKonF/onLG/J1POyvOGsp6eq04yQ4Q3EU8LPISlvW124dWhNb0Qh6dzDJg0E0Ke6MWIdAmu/EXFJ8mONAqj4c04sgI2kbN1UQ5UJltxT92VDLe0jdUpMvqtxWu+kfifSn9OfBpTQb5cvZo2tb1hvGUT7Q7jl9KdbxBAmgnLzq2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717856701; c=relaxed/simple;
-	bh=rlC8MSGnb6YA01DoUOnDbXDIu1BbNuO1qPii8soutYw=;
+	s=arc-20240116; t=1717998821; c=relaxed/simple;
+	bh=rUKWtYHraZrMXYSCFmYbWtBSzxS4f3FPYen46DHiIlM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eyFxEhFjv+EP1ZTJOpJd85muY2qLJTdQ1GheM01SL8y0ba92hsUhZUxMpAglERo2M2F5f/SekaoHj7pEdcr9mRBtG+ZSW0Czju+Z9cTvM/ugkx63NxtItVrHOlvjFxf7HkJmiPIOyLRG+BiM2xUD9a45dhMfUv0/enHz9O2Uh6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RryReEsD; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717856699; x=1749392699;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=rlC8MSGnb6YA01DoUOnDbXDIu1BbNuO1qPii8soutYw=;
-  b=RryReEsDvLT4lzCCkDlBOj1ew5Dm0l+HIgaKOaiJsxDmJcyv/W+nRkuE
-   nVQ446Nr74QU4ALeP2oeK/uoMyA6nwcSTiPo530exjcgv3sMSPSByAp+7
-   1UU4HtvJ00KJ56YKKH72Sh+sjgFcD0INbw5gRoo9+x8q4+4rS0BMhf+fU
-   EjqhPlfNsFAihqi6muzLYfno41wVYxtPqqm6BqJLGJnBSw6eVFXigcAw6
-   72smYIgdFOZnJ+ZR6mh+PRT6gy2q4Se1dKooAWu7SrB6OA1h1llZDRzdD
-   zzdd3h1VCWbHQ4JC1tpxcPf2ayoJDtkGBNfpl+ZFla/GCODAVg3zT7PIY
-   w==;
-X-CSE-ConnectionGUID: kB8I2w7MTLCbd67QT+sd2w==
-X-CSE-MsgGUID: XbEm6xjHSK2Pk5q7znAadQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11097"; a="14726828"
-X-IronPort-AV: E=Sophos;i="6.08,223,1712646000"; 
-   d="scan'208";a="14726828"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2024 07:24:59 -0700
-X-CSE-ConnectionGUID: 08A8MsLfQq2uUBz6UiXTFQ==
-X-CSE-MsgGUID: 8j2cGZ7nTMC2JfPsGBkgKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,223,1712646000"; 
-   d="scan'208";a="38547777"
-Received: from lkp-server01.sh.intel.com (HELO 8967fbab76b3) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 08 Jun 2024 07:24:57 -0700
-Received: from kbuild by 8967fbab76b3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sFx02-00001W-2M;
-	Sat, 08 Jun 2024 14:24:54 +0000
-Date: Sat, 8 Jun 2024 22:24:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@baylibre.com>,
-	Benson Leung <bleung@chromium.org>
-Cc: oe-kbuild-all@lists.linux.dev, Guenter Roeck <groeck@chromium.org>,
-	linux-pwm@vger.kernel.org, chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] pwm: cros-ec: Don't care about consumers in
- .get_state()
-Message-ID: <202406082139.KG4VcZiF-lkp@intel.com>
-References: <20240607084416.897777-6-u.kleine-koenig@baylibre.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kB6DuLzSMfYeWkLA+jHiV0Z5b08cS6vTaKLu3qXhYI+7sLYbAnRdeUkyygB6vHic4NAll9jkrjK30bRuhKeREDPX0YDGF/4f0iAklOYsChXdfSuRKbXnkh+O10cbdUAHuTYIZSd0eKG5Dl3eSkiExRfmZqY4uCuwQb5VM1Smqr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ktgyr2ZZ; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-57a4d7ba501so5099574a12.2
+        for <linux-pwm@vger.kernel.org>; Sun, 09 Jun 2024 22:53:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717998816; x=1718603616; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nveD5QVwsPxKXb89Jt+nHFvKedVwXNgcMUK/mtqTUZ4=;
+        b=Ktgyr2ZZpw9lkoojKUWKLLWot1Qpm7DlSizmKWobwZ1mZ/wV4W8im59CkJAJHkdYv6
+         hjs0hHXjF4fUoLCWPqKTKmQMy3oYgf5eVRLNbBr9AAxTH2zkJddxrayZm4FumLFi/8W5
+         Hb2MK8h/TEYfM+j9ol9iMWM9d7mFxjjmtc2mvcyj2I2jBk2uIhNEsI0w845NypdWxhqc
+         WbpodGTd6ecQ6t1P7NS2oDweVJMKsU3AT1uK02xbVZi/6fNjSj83ivDGjs/sPntv3jtU
+         4ilA6xYXaitg91yHLxG0OMyoLnJSAtptA9xvdOfmWHzLG0yj/Xwq4j6BNFvZEIsBzSVX
+         1ybw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717998816; x=1718603616;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nveD5QVwsPxKXb89Jt+nHFvKedVwXNgcMUK/mtqTUZ4=;
+        b=ob6BfzSc/llPjEAC5eO1VJWVK79TK50mEtm3cJ5dE2gXcgaxjYXm9lDKFhoIh5l6mZ
+         IbhK/dlmdtKfbDUb/fYTp/SivrG8neC+W6L3RWkaAiGNgKy0SIQWqp25VDkCLta1hYJB
+         1tv73pI8nzbm16jrtrNsWtBf6GCDAjsIE69Rlj7lHXICOcxui8uExSIY5pGloQgBRoDX
+         IbcnSjKOk+9zlR8WaRa8AQUIz+B3Jnkpnoc+59s9veS2zQtsXWHkTwQjEqRHmv+/SLg3
+         0yUy7Uewi21F/rFDq/dhcqasSqj9hmg/ArJ356B8elaVMX2QVArVarsTUUasKzlQ7EMT
+         1q7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWFZSaWyzW8/gN5OgnNcK1E3DvYUEI3iymcMl6gvg+0jXOmKG/FnpFDcg8Y5jBLBF45SgTsCJtSR5k1HIRgDBlapQtEXQIrJbId
+X-Gm-Message-State: AOJu0YyNLu28sdihWhJRpnwJo6tN3PvpzZ7bEUGDaEX45KE5O6X3cJjR
+	SChCQsxw/cyhF4P6SFm+NViCJh3fUNoHPA5lf1OgM/uAxyHMHonwp5cxn1+MO1M=
+X-Google-Smtp-Source: AGHT+IGKWaofCbzaeJ8PKDw9g9lx54jjRGNbuTdIbQeM1t5M32qK+oQhnwU8rBZwu6qz61ojjBDTYg==
+X-Received: by 2002:a17:906:71b:b0:a6f:1e97:b177 with SMTP id a640c23a62f3a-a6f1e97b24fmr93056166b.64.1717998815904;
+        Sun, 09 Jun 2024 22:53:35 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:28d2:2417:3aa2:932])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c805cc3a4sm593844766b.69.2024.06.09.22.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Jun 2024 22:53:35 -0700 (PDT)
+Date: Mon, 10 Jun 2024 07:53:33 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: Trevor Gamblin <tgamblin@baylibre.com>, 
+	Michael Hennerich <michael.hennerich@analog.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 2/2] pwm: axi-pwmgen: Make use of regmap_clear_bits()
+Message-ID: <no6gyqovcjrzcior5lym6qtb7ya4abgcspe2mebpvfc2bl3f4i@h3x64l7pomhf>
+References: <20240606164047.534741-4-u.kleine-koenig@baylibre.com>
+ <20240606164047.534741-6-u.kleine-koenig@baylibre.com>
+ <3755faec8dc7048da880ef6b924ed2e5a224bfef.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ba52wjcuwfduil2v"
+Content-Disposition: inline
+In-Reply-To: <3755faec8dc7048da880ef6b924ed2e5a224bfef.camel@gmail.com>
+
+
+--ba52wjcuwfduil2v
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240607084416.897777-6-u.kleine-koenig@baylibre.com>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Uwe,
+Hello Nuno,
 
-kernel test robot noticed the following build warnings:
+On Fri, Jun 07, 2024 at 08:40:32AM +0200, Nuno S=E1 wrote:
+> On Thu, 2024-06-06 at 18:40 +0200, Uwe Kleine-K=F6nig wrote:
+> > Instead of using regmap_update_bits() and passing val=3D0, better use
+> > regmap_clear_bits().
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+> > ---
+>=20
+> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 
-[auto build test WARNING on 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0]
+Thanks for looking at the patch. When I apply it (using b4) I get
+however:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Uwe-Kleine-K-nig/pwm-cros-ec-Don-t-care-about-consumers-in-get_state/20240607-164747
-base:   1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
-patch link:    https://lore.kernel.org/r/20240607084416.897777-6-u.kleine-koenig%40baylibre.com
-patch subject: [PATCH 1/3] pwm: cros-ec: Don't care about consumers in .get_state()
-config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240608/202406082139.KG4VcZiF-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240608/202406082139.KG4VcZiF-lkp@intel.com/reproduce)
+NOTE: some trailers ignored due to from/email mismatches:
+    ! Trailer: Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+     Msg From: Nuno S=E1 <noname.nuno@gmail.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406082139.KG4VcZiF-lkp@intel.com/
+I'll add it anyhow, but it would be great if you fixed your workflow to
+have the sender match the address in the tag.
 
-All warnings (new ones prefixed by >>):
-
->> drivers/pwm/pwm-cros-ec.c:28: warning: Excess struct member 'channel' description in 'cros_ec_pwm_device'
+Best regards
+Uwe
 
 
-vim +28 drivers/pwm/pwm-cros-ec.c
+--ba52wjcuwfduil2v
+Content-Type: application/pgp-signature; name="signature.asc"
 
-3d593b6e80ad2c Fabio Baltieri   2022-04-28  17  
-1f0d3bb02785f6 Brian Norris     2016-07-15  18  /**
-1f0d3bb02785f6 Brian Norris     2016-07-15  19   * struct cros_ec_pwm_device - Driver data for EC PWM
-1f0d3bb02785f6 Brian Norris     2016-07-15  20   *
-1f0d3bb02785f6 Brian Norris     2016-07-15  21   * @ec: Pointer to EC device
-3d593b6e80ad2c Fabio Baltieri   2022-04-28  22   * @use_pwm_type: Use PWM types instead of generic channels
-82adc1b2688b02 Uwe Kleine-König 2023-07-05  23   * @channel: array with per-channel data
-1f0d3bb02785f6 Brian Norris     2016-07-15  24   */
-1f0d3bb02785f6 Brian Norris     2016-07-15  25  struct cros_ec_pwm_device {
-1f0d3bb02785f6 Brian Norris     2016-07-15  26  	struct cros_ec_device *ec;
-3d593b6e80ad2c Fabio Baltieri   2022-04-28  27  	bool use_pwm_type;
-1db37f9561b2b3 Thierry Reding   2019-10-17 @28  };
-1db37f9561b2b3 Thierry Reding   2019-10-17  29  
+-----BEGIN PGP SIGNATURE-----
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZmlNkACgkQj4D7WH0S
+/k5v1Qf/ZWOKkRry+WUr4g3Yy/+TjWum2HU0rZMGOq57/l9MLDlpIcy8ns8cE7GY
+dHyIa6Dj0K8R1jCHXGzkC4qu3MqkZParXl4Vt520XcXLZIuNkIdQD875pqgUDMqK
+lLvQ/09BWiv8F9oywkV6c6P10yCKbyG+JngPanT9sGJpFSXJnH0SF6Ie5r84Sf8w
+/sMPILOkSYwEn1Tikqh5XMUxlu/LQypQBofEK8ha9ESJDQKVFETvLGVYzdWyamZ+
+NS7M8Gq00U99EG3pjhhQmsgntJO3MXIEoKXlvK2TQJqaRBVVb9OqIFsSKBiAhHpU
+DyYvgzlUqUPAInRWKDoH6NXkQb0hcg==
+=v0Lt
+-----END PGP SIGNATURE-----
+
+--ba52wjcuwfduil2v--
 
