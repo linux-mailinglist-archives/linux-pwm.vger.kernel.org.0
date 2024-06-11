@@ -1,169 +1,173 @@
-Return-Path: <linux-pwm+bounces-2429-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2431-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48E3B903C67
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jun 2024 14:53:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A35179042FA
+	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jun 2024 19:59:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB8F22820FE
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jun 2024 12:53:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4D0EC28A087
+	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jun 2024 17:59:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9814017C9F3;
-	Tue, 11 Jun 2024 12:53:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CCB16EB58;
+	Tue, 11 Jun 2024 17:56:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r2QkMReT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PfSmakso";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r2QkMReT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PfSmakso"
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="MGUJ9Lse";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="gUDBqNT9"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailrelay4-1.pub.mailoutpod3-cph3.one.com (mailrelay4-1.pub.mailoutpod3-cph3.one.com [46.30.211.243])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDB317C7D7;
-	Tue, 11 Jun 2024 12:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9C55C8EF
+	for <linux-pwm@vger.kernel.org>; Tue, 11 Jun 2024 17:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718110412; cv=none; b=ChZJ/AU4SqxVU9LPqfvsniy2tH8kbaOTBcpUmzak2W0AKuxL4NRip8IGUR6WgYKmjqnC4+rjagZiEqCaT006DYX8BByb/XldXFmcx9N7ZbJ5zmLbTLspU04MBlON7l7mKOVGOIgEoqPHsxi/vVkUsZkeBZnYYDu+BEffiiLQSYY=
+	t=1718128617; cv=none; b=mwM5DkOfk2AWoA3WWTkM2rkI5XEuzewLVAn4NmhWH6Knv+5MFztVCbUzqG77HlC2SEkwGPtezDvo7kaF+nyB54t1XdC/C18y1SnfLyINzSt91QkAXU5PGy1enlUDkKxpATomifdTfsjpWGuEMTQ2pY60H828JZYtLk/yPGgyOQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718110412; c=relaxed/simple;
-	bh=mrKsI7V1VLDXXNYXGRYo3wy7OR288KJNg+BnOCQFsVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u51nSmjJjFvwYAvC9wRmrzst4o420MCjeqhPcc8KO0uuCWqyM/suZAV8JisdRw7iNfsDnwOUE+JPZqZ6KZK1vNXroLWpvU6BzCMNXOZSh9ujI8+QpOsQTer/8IdSZQus8P/5WwgiYJlqIDGlWEpXpcf4Duty9smmHZDSUqLmRTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r2QkMReT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PfSmakso; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r2QkMReT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PfSmakso; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4F5AE219D0;
-	Tue, 11 Jun 2024 12:53:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718110409; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HEjWtkTb/PFeRAxD/W2sHmuGdmWUrqrevxaycEPb138=;
-	b=r2QkMReTANHU/i76oAvxi6CivFgLO6xiQG8c26ZjkO4xH1Lb83VshrSCKIjTAXfmxuBDlS
-	ZGxlo3xlZtzCkYas4rDes6jnYdTGowzqfBvmkRkSjGmNN7kgepjCxi+f+0P477CZZOWrcA
-	ESo9PbwsrWA59ml9Y6Uvnfe6PWl8E7U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718110409;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HEjWtkTb/PFeRAxD/W2sHmuGdmWUrqrevxaycEPb138=;
-	b=PfSmaksoM4NVGIZa+YKdWWDcJppY4SHgzJmRihWdpn4BqEjt5+sbSFkvcqtsfEpd8q7eNz
-	C9Xy5hGIkIjV2SDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718110409; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HEjWtkTb/PFeRAxD/W2sHmuGdmWUrqrevxaycEPb138=;
-	b=r2QkMReTANHU/i76oAvxi6CivFgLO6xiQG8c26ZjkO4xH1Lb83VshrSCKIjTAXfmxuBDlS
-	ZGxlo3xlZtzCkYas4rDes6jnYdTGowzqfBvmkRkSjGmNN7kgepjCxi+f+0P477CZZOWrcA
-	ESo9PbwsrWA59ml9Y6Uvnfe6PWl8E7U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718110409;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HEjWtkTb/PFeRAxD/W2sHmuGdmWUrqrevxaycEPb138=;
-	b=PfSmaksoM4NVGIZa+YKdWWDcJppY4SHgzJmRihWdpn4BqEjt5+sbSFkvcqtsfEpd8q7eNz
-	C9Xy5hGIkIjV2SDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 08DEB13AAB;
-	Tue, 11 Jun 2024 12:53:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id aCT/AMlIaGbxMgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 11 Jun 2024 12:53:29 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: lee@kernel.org,
-	daniel.thompson@linaro.org,
-	jingoohan1@gmail.com,
-	deller@gmx.de,
-	linus.walleij@linaro.org,
-	f.suligoi@asem.it,
-	ukleinek@kernel.org
-Cc: dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 17/17] backlight: sky81452-backlight: Use backlight power constants
-Date: Tue, 11 Jun 2024 14:42:12 +0200
-Message-ID: <20240611125321.6927-18-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240611125321.6927-1-tzimmermann@suse.de>
+	s=arc-20240116; t=1718128617; c=relaxed/simple;
+	bh=m4UNf0dPubO+Nhq/aKH7BVJeY8wPAsx8wTcxb5/fl8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kdqQr9GTfZL4cZHSPiJU2P8z+mRP+CPeP2lC8Ql+QpnuJvmwKhMRjcb8fNAJZSVOXjQ+VcI1RdvtIUyVTpu64fGa5xoiaedDloB6RlzsvyWMH9821wZnIvyArFCG5mzFKJBhe/cXuRqnYV+7vVdh++S75Zrb6nubDDeRSzfA72c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=MGUJ9Lse; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=gUDBqNT9; arc=none smtp.client-ip=46.30.211.243
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=rsa1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=g9WKV73/vX/yRKi/hglFtmBSXNmDuF7jx1LSMWu23v8=;
+	b=MGUJ9LseT3f5lZBW0OKxinuyoP4Ccabuc75xhvpP21vgQEyTqiVTs4Fg1RT9IdF8tTLhJBJKs53DG
+	 aD3n4oKlEvWVRlRYDi10iHhL7J1lFyvbR4vIoTIomca43ATnqv+Z/NCR92hPtsikZKhlO8ItWGgxg1
+	 4YuvdjlA2N/E6Zg3k2emqVqcNu4RNvyBYvCI3W1WOKotRcB1YpG2MWaZ4xvwTtOVOGaN8E/WwfzlwA
+	 gOZOSciUXJNWLRHPt6oxwzcjCfkZShwRyr4YoMkmmM+sC+Yp0OfmoH7PYdlMPo9+qPG06FIdr81BjM
+	 FdbLkkUDCMyp0E5urejZivADmsWGsSQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=ed1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=g9WKV73/vX/yRKi/hglFtmBSXNmDuF7jx1LSMWu23v8=;
+	b=gUDBqNT9P/28PpP+1HZVetLC/b5nS0VWr4onj3XTH81Z/oW76YeBdXPCjeM+olZqxVc/T6ZDdKKNy
+	 aYJ+AdoAg==
+X-HalOne-ID: d271771c-281b-11ef-802b-591fce59e039
+Received: from ravnborg.org (2-105-16-150-cable.dk.customer.tdc.net [2.105.16.150])
+	by mailrelay4.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
+	id d271771c-281b-11ef-802b-591fce59e039;
+	Tue, 11 Jun 2024 17:55:45 +0000 (UTC)
+Date: Tue, 11 Jun 2024 19:55:44 +0200
+From: Sam Ravnborg <sam@ravnborg.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: lee@kernel.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
+	deller@gmx.de, linus.walleij@linaro.org, f.suligoi@asem.it,
+	ukleinek@kernel.org, dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 01/17] backlight: Add BL_CORE_ constants for power states
+Message-ID: <20240611175544.GC545417@ravnborg.org>
 References: <20240611125321.6927-1-tzimmermann@suse.de>
+ <20240611125321.6927-2-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-6.80 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,linaro.org,gmail.com,gmx.de,asem.it];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	R_RATELIMIT(0.00)[to_ip_from(RLbaz54pzrc9psah3tsaj8ddaq)];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de]
-X-Spam-Flag: NO
-X-Spam-Score: -6.80
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240611125321.6927-2-tzimmermann@suse.de>
 
-Replace FB_BLANK_ constants with their counterparts from the
-backlight subsystem. The values are identical, so there's no
-change in functionality.
+Hi Thomas.
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- drivers/video/backlight/sky81452-backlight.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Jun 11, 2024 at 02:41:56PM +0200, Thomas Zimmermann wrote:
+> Duplicate FB_BLANK_ constants as BL_CORE_ constants in the backlight
+> header file. Allows backlight drivers to avoid including the fbdev
+> header file and removes a compile-time dependency between the two
+> subsystems.
+Good to remove this dependency.
+> 
+> The new BL_CORE constants have the same values as their FB_BLANK_
+> counterparts. Hence UAPI and internal semantics do not change. The
+> backlight drivers can be converted one by one.
+This seems like the right approach.
 
-diff --git a/drivers/video/backlight/sky81452-backlight.c b/drivers/video/backlight/sky81452-backlight.c
-index 19f9f84a9fd6e..d76ac7c5cd990 100644
---- a/drivers/video/backlight/sky81452-backlight.c
-+++ b/drivers/video/backlight/sky81452-backlight.c
-@@ -315,7 +315,7 @@ static void sky81452_bl_remove(struct platform_device *pdev)
- 
- 	sysfs_remove_group(&bd->dev.kobj, &sky81452_bl_attr_group);
- 
--	bd->props.power = FB_BLANK_UNBLANK;
-+	bd->props.power = BL_CORE_UNBLANK;
- 	bd->props.brightness = 0;
- 	backlight_update_status(bd);
- 
--- 
-2.45.2
+> 
+> Backlight code or drivers do not use FB_BLANK_VSYNC_SUSPEND and
+> FB_BLANK_HSYNC_SUSPEND, so no new constants for these are being
+> added.
+> 
+> The semantics of FB_BLANK_NORMAL appear inconsistent. In fbdev,
+> NORMAL means display off with sync enabled. In backlight code,
+> this translates to turn the backlight off, but some drivers
+> interpret it as backlight on. So we keep the current code as is,
+> but mark BL_CORE_NORMAL as deprecated. Drivers should be fixed
+> and the constant removed. This affects ams369fg06 and a few DRM
+> panel drivers.
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> ---
+>  Documentation/ABI/stable/sysfs-class-backlight |  7 ++++---
+>  include/linux/backlight.h                      | 16 ++++++++++------
+>  2 files changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/ABI/stable/sysfs-class-backlight b/Documentation/ABI/stable/sysfs-class-backlight
+> index 023fb52645f8b..6102d6bebdf9a 100644
+> --- a/Documentation/ABI/stable/sysfs-class-backlight
+> +++ b/Documentation/ABI/stable/sysfs-class-backlight
+> @@ -3,10 +3,11 @@ Date:		April 2005
+>  KernelVersion:	2.6.12
+>  Contact:	Richard Purdie <rpurdie@rpsys.net>
+>  Description:
+> -		Control BACKLIGHT power, values are FB_BLANK_* from fb.h
+> +		Control BACKLIGHT power, values are compatible with
+> +		FB_BLANK_* from fb.h
+>  
+> -		 - FB_BLANK_UNBLANK (0)   : power on.
+> -		 - FB_BLANK_POWERDOWN (4) : power off
+> +		 - 0 (FB_BLANK_UNBLANK)   : power on.
+> +		 - 4 (FB_BLANK_POWERDOWN) : power off
+>  Users:		HAL
+>  
+>  What:		/sys/class/backlight/<backlight>/brightness
+> diff --git a/include/linux/backlight.h b/include/linux/backlight.h
+> index 19a1c0e22629d..e0cfd89ffadd2 100644
+> --- a/include/linux/backlight.h
+> +++ b/include/linux/backlight.h
+> @@ -210,14 +210,18 @@ struct backlight_properties {
+>  	 * When the power property is updated update_status() is called.
+>  	 *
+>  	 * The possible values are: (0: full on, 1 to 3: power saving
+> -	 * modes; 4: full off), see FB_BLANK_XXX.
+> +	 * modes; 4: full off), see BL_CORE_XXX constants.
+>  	 *
+>  	 * When the backlight device is enabled @power is set
+> -	 * to FB_BLANK_UNBLANK. When the backlight device is disabled
+> -	 * @power is set to FB_BLANK_POWERDOWN.
+> +	 * to BL_CORE_UNBLANK. When the backlight device is disabled
+> +	 * @power is set to BL_CORE_POWERDOWN.
+>  	 */
+>  	int power;
+>  
+> +#define BL_CORE_UNBLANK		(0)
+> +#define BL_CORE_NORMAL		(1) // deprecated; don't use in new code
+> +#define BL_CORE_POWERDOWN	(4)
 
+When introducing backlight specific constants then it would be good to
+get away from the ackward fbdev naming and use something that is more
+obvious.
+
+Something like:
+
+#define BACKLIGHT_POWER_ON	0
+#define BACKLIGHT_POWER_OFF	4
+#define BACKLIGHT_POWER_NORMAL	1	// deprecated; don't use in new code
+
+This will make the code more obvious to read / understand - at least
+IMO.
+
+The proposal did not use the BL_CORE_ naming, lets keep this for
+suspend/resume stuff.
+
+On top of this - many users of the power states could benefit using the
+backlight_enable()/backlight_disable() helpers, but that's another story.
+
+	Sam
 
