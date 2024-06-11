@@ -1,267 +1,197 @@
-Return-Path: <linux-pwm+bounces-2412-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2413-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CE84903914
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jun 2024 12:40:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57F71903C45
+	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jun 2024 14:53:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4C0BB21A4C
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jun 2024 10:40:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC9D81F23B1F
+	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jun 2024 12:53:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6448E178CD2;
-	Tue, 11 Jun 2024 10:39:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A964017C236;
+	Tue, 11 Jun 2024 12:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="fw919fy6"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YEWOKj7Q";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="o5IKrxjf";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mhf+MmSw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KukXRqvS"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79D97407C
-	for <linux-pwm@vger.kernel.org>; Tue, 11 Jun 2024 10:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D943D17C216;
+	Tue, 11 Jun 2024 12:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718102393; cv=none; b=uI4PmyjkOABG2nVwZCR16I+B/NmK43XHT2XXCDNT6u+I0XkI4ejG/VmNa7bYS0cxMp6f16dNRc4mts0XKfDqx3m7K5btREQCcEOR3QsXRx+mQDUSfggTaSjD2rJeCwD3v8fVTsCqjz4RCMIE6bp7KtIjAdYXuX9a1HPclsV5hr0=
+	t=1718110407; cv=none; b=BmD8pRYg61EmoTqa5UzaFLzPCyz8w/OjdbVAs9syp1fjmXPEHdy2q205xuhmGCS1fOH0ZQWUozC+seOWdDS1O3VzhiYIX/6i17A/2yRPElvweuiGbWyoNFKmuvwasW14648if/BRaA8R4FH0OqM9nBgTWmjm3K6F5s5JyYjFZqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718102393; c=relaxed/simple;
-	bh=lirAN5Btmeq0UbEDe8gzm1pnhLl1R7Bg3Vdt/RO8g0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sj1n+3m/0TXNYDuPlYyQeMwh1H4zGc0OZbN/qS08W2/MdCn6ZCRPojFAo/DWsUFI+TvocXDYYhsrKxyIcz4j7SZ6RG3aoMpTB8Cp1UH3+5q1YA5lH/tHGrT6fr4EjIwxsHwNn3tFuSBVWjK4ivTqRq3zHi++gFgh/fhjVrsq5ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=fw919fy6; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6f177b78dcso275886166b.1
-        for <linux-pwm@vger.kernel.org>; Tue, 11 Jun 2024 03:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718102388; x=1718707188; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+P5WPE+ImAbQV43ou/lMEcNBass1HwSNX4d8MwKtlIM=;
-        b=fw919fy63F0PMfcYEcVUcK5r94hbXIPHlc1Iyhpu4bvCeQt0yrWkAkJfzYaQ/FGbKv
-         i5AszFKw5w7QBO59mZ7vdNk/sqD6jsovuhG5YiCqWDiuHluX9GZiIUcysEgEjl33YjXr
-         XRgmIMxHUuG1ESSNM4dpfS8moHYadxPdvN7/x+qg1HG1hkNvnbGGkdDG8CpBct/G6ghU
-         MYAeYBLnE5i3vkfJrUuPBK5RtKy2teF79+x8EcpXs0vSXJJEUp1mH4JuccHsDJaeJNJx
-         mPLsdZ6Ui0sANhBYezVkKfMErcOAPVmrMBzKna8ej0q9KY0ccQSG89Cis1CPZ7+jmu8r
-         tjfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718102388; x=1718707188;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+P5WPE+ImAbQV43ou/lMEcNBass1HwSNX4d8MwKtlIM=;
-        b=ouGj9NfCGlHJs9YBLMHJM0tMKoaaRTMNyPIRW2NGFZZPsfWXMv7jEaqYOorsSSM1k2
-         UR772diZCVwp7rmGX9XnnWOWLH1sXHus6NyaWiyWdRiZF/RuwOQGKys/Ku6t9DCb9oMl
-         WS9gMzbBG7wOuBlaA5ChegXt8TQ4w9KAtLwEI5i4FR1GuWs+8SYw+3Iq+qi6XfCLUser
-         gW8yBGMq/WEDCPqaxeuI2/aD3bah2KapTRfMO2g9hyFNvH48uag5Gy+csMQSrk2ToYm3
-         SZT4OVgbUh3YCHWCahSsaaTM4QQbidZeYpfCU+kQP8SZwLN8gk7LVNm+n/0e9Gl9NhIs
-         VBnA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9E9ovvah4LYfxsHO2/u1oRpuu8vUcBHy8kAeygysxj+SX7ohGggkK+tY8D85RKN6d2comsOSGmQT/fhj2VLw8NiILvYnXnXLT
-X-Gm-Message-State: AOJu0YwOXh4DFG8wL07D+Dyv8lsM0bNhjQjDM6TUtLpRxH5QoBvs0/Vn
-	lXyUh295CgWauZ2xS0Ofsu4VXlnQvCgxDSnCUOajWWoq2MkojiPSiiM6K1NgRM4=
-X-Google-Smtp-Source: AGHT+IEbxriNoGDmtH7cENlXkSkINKU7KHdfmhUC2bUJYj1VkGK+4gPHQyF71NMYXPVJT8rOjRNHcQ==
-X-Received: by 2002:a17:906:f20b:b0:a6f:268a:1fc4 with SMTP id a640c23a62f3a-a6f268a2031mr280799666b.61.1718102387895;
-        Tue, 11 Jun 2024 03:39:47 -0700 (PDT)
-Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f34591542sm94539266b.55.2024.06.11.03.39.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 03:39:46 -0700 (PDT)
-Date: Tue, 11 Jun 2024 12:39:44 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org, chrome-platform@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] pwm: cros-ec: Don't care about consumers in
- .get_state()
-Message-ID: <dbygoq4rzxnzforpdsvuy5jze2rxqszi6qxtx6q37yxwjo36o6@qfoc6iz2nbay>
-References: <20240607084416.897777-5-u.kleine-koenig@baylibre.com>
- <20240607084416.897777-6-u.kleine-koenig@baylibre.com>
- <ZmgP5NTPEGM0M2Li@google.com>
+	s=arc-20240116; t=1718110407; c=relaxed/simple;
+	bh=7/ZPqCg2oypznzAk4bB3/au5AjkxMVCIcYfits/UUyY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k0sSW/xoEO0Zgajs7dqtuDIJGOPCeAgt1k5sgoZVzO5qwXnA4tz2cH4XutdWCtgYgBWY8TuLdgI7eo02LtsdH3tOi/Pw1kLYyzmORGYJtGDqGbbrzEGQmFSJdJ/hpASQSf79lluin/PU7Qoyop1DREkeuJk2cEsceU3tDidDiJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YEWOKj7Q; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=o5IKrxjf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mhf+MmSw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KukXRqvS; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 08293219AB;
+	Tue, 11 Jun 2024 12:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718110403; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=0OJ/GmOeQSU/IZhTKn9PtsP3VM7GWYfDZ3snD6F8rcQ=;
+	b=YEWOKj7QCAypbX9KgVarmr2rpiLMjKK9er9utpS8/9eOLsGftVG2YdPVgrfWQSGu1j0Y+k
+	vGEO1AuUeUUHLtZ3cqv3vEK8tZ2dUVNe67hc2dZ4aPdFDmTTyiDNAvnOn4M8rPuVXNqasf
+	8K35Iii3OP8KRPdxAj+bTxQDEp3L5tM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718110403;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=0OJ/GmOeQSU/IZhTKn9PtsP3VM7GWYfDZ3snD6F8rcQ=;
+	b=o5IKrxjfuZdL+t1Dgn8NeALCupja+o83kq7O58+6RQv0Vm2DYliZpWQdQciRkqHzLVOhn6
+	eb9vqdecn72s6QCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718110404; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=0OJ/GmOeQSU/IZhTKn9PtsP3VM7GWYfDZ3snD6F8rcQ=;
+	b=mhf+MmSwbvA1MjLAIWluuMlGTTih/VVI+Lww3XDbPNHtl+JmSiTAIAMqQlbJirGF3cpQ6F
+	kCGXS4+XU4kdH4SQ9JINppdxc7C3EGJSbZXE3zpUteGoibjs4sSIlJLSEQVLTdeXI/mbTI
+	YCMmob+a8O0s0GFXKT9WUnTAg+t2pXQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718110404;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=0OJ/GmOeQSU/IZhTKn9PtsP3VM7GWYfDZ3snD6F8rcQ=;
+	b=KukXRqvSRpzmi0UyQDdoML0HhDD4HgwDFjUCON1axpIt+ABVob80UVm1LydF91tDQ+WkVk
+	12X1KgiZCU58wQDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B4317137DF;
+	Tue, 11 Jun 2024 12:53:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id r0q6KsNIaGbxMgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 11 Jun 2024 12:53:23 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: lee@kernel.org,
+	daniel.thompson@linaro.org,
+	jingoohan1@gmail.com,
+	deller@gmx.de,
+	linus.walleij@linaro.org,
+	f.suligoi@asem.it,
+	ukleinek@kernel.org
+Cc: dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH 00/17] backlight: Introduce power-state constants
+Date: Tue, 11 Jun 2024 14:41:55 +0200
+Message-ID: <20240611125321.6927-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="konmklnuzw5wmdnt"
-Content-Disposition: inline
-In-Reply-To: <ZmgP5NTPEGM0M2Li@google.com>
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[kernel.org,linaro.org,gmail.com,gmx.de,asem.it];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de]
+
+The backlight code currently uses fbdev's FB_BLANK_ constants to
+represent power states UNBLANK and POWERDOWN. Introduce dedicated
+backlight constants to remove this dependency on fbdev.
+
+Patch 1 introduces BL_CORE_UNBLANK and BL_CORE_POWERDOWN, which
+replace similarly named constants from fbdev. There's also
+BL_CORE_NORMAL, which is required by a few drivers that appear
+to use incorrect or uncommon blanking semantics.
+
+The rest of the patchset converts backlight drivers. The new
+constants' values are identical to the old ones, so the driver
+conversion can be done one-by-one.
+
+There are many more backlight drivers in other subsystems. These
+can later be converted when the new constants have been merged.
+Once merged, several include statements for <linux/fb.h> can be
+removed (specifically under drivers/platform/x86/).
+
+This patchset is part of a larger effort to implement the backlight
+code without depending on fbdev and ultimatively remove fbdev
+dependencies from the kernel.
+
+Thomas Zimmermann (17):
+  backlight: Add BL_CORE_ constants for power states
+  backlight: aat2870-backlight: Use blacklight power constants
+  backlight: ams369fb06: Use backlight power constants
+  backlight: corgi-lcd: Use backlight power constants
+  backlight: gpio-backlight: Use backlight power constants
+  backlight: ipaq-micro-backlight: Use backlight power constants
+  backlight: journada_bl: Use backlight power constants
+  backlight: kb3886-bl: Use backlight power constants
+  backlight: ktd253-backlight: Use backlight power constants
+  backlight: led-backlight: Use backlight power constants
+  backlight: lm3533-backlight: Use backlight power constants
+  backlight: mp3309c: Use backlight power constants
+  backlight: pandora-backlight: Use backlight power constants
+  backlight: pcf50633-backlight: Use backlight power constants
+  backlight: pwm-backlight: Use backlight power constants
+  backlight: rave-sp-backlight: Use backlight power constants
+  backlight: sky81452-backlight: Use backlight power constants
+
+ .../ABI/stable/sysfs-class-backlight          |  7 +++---
+ drivers/video/backlight/aat2870_bl.c          |  4 ++--
+ drivers/video/backlight/ams369fg06.c          | 23 +++++++++----------
+ drivers/video/backlight/corgi_lcd.c           |  4 ++--
+ drivers/video/backlight/gpio_backlight.c      |  9 ++++----
+ drivers/video/backlight/ipaq_micro_bl.c       |  3 +--
+ drivers/video/backlight/jornada720_bl.c       |  3 +--
+ drivers/video/backlight/kb3886_bl.c           |  4 ++--
+ drivers/video/backlight/ktd253-backlight.c    |  5 ++--
+ drivers/video/backlight/led_bl.c              |  4 ++--
+ drivers/video/backlight/lm3533_bl.c           |  3 +--
+ drivers/video/backlight/mp3309c.c             |  4 ++--
+ drivers/video/backlight/pandora_bl.c          |  3 +--
+ drivers/video/backlight/pcf50633-backlight.c  |  5 ++--
+ drivers/video/backlight/pwm_bl.c              |  4 ++--
+ drivers/video/backlight/rave-sp-backlight.c   |  2 +-
+ drivers/video/backlight/sky81452-backlight.c  |  2 +-
+ include/linux/backlight.h                     | 16 ++++++++-----
+ 18 files changed, 51 insertions(+), 54 deletions(-)
 
 
---konmklnuzw5wmdnt
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+base-commit: 2bea08bd31298d60d416b2a6ed346bb53dd28037
+-- 
+2.45.2
 
-Hello Tzung,
-
-On Tue, Jun 11, 2024 at 08:50:44AM +0000, Tzung-Bi Shih wrote:
-> On Fri, Jun 07, 2024 at 10:44:15AM +0200, Uwe Kleine-K=F6nig wrote:
-> > The get_state() callback is never called (in a visible way) after there
-> > is a consumer for a pwm device. The core handles loosing the information
-> > about duty_cycle just fine.
->=20
-> ChromeOS EC has no separated "enabled" state, it sees `duty =3D=3D 0` as
-> "disabled"[1].  1db37f9561b2 ("pwm: cros-ec: Cache duty cycle value")
-> caches the value in kernel side so that it can retrieve the original duty
-> value even if (struct pwm_state *)->enabled is false.
-
-There is no need to cache, so the following would work:
-
-diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
-index 606ccfdaf4cc..2b72468767f4 100644
---- a/drivers/pwm/pwm-cros-ec.c
-+++ b/drivers/pwm/pwm-cros-ec.c
-@@ -25,15 +25,6 @@
- struct cros_ec_pwm_device {
- 	struct cros_ec_device *ec;
- 	bool use_pwm_type;
--	struct cros_ec_pwm *channel;
--};
--
--/**
-- * struct cros_ec_pwm - per-PWM driver data
-- * @duty_cycle: cached duty cycle
-- */
--struct cros_ec_pwm {
--	u16 duty_cycle;
- };
-=20
- static inline struct cros_ec_pwm_device *pwm_to_cros_ec_pwm(struct pwm_chi=
-p *chip)
-@@ -135,37 +126,33 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
- 			     const struct pwm_state *state)
- {
- 	struct cros_ec_pwm_device *ec_pwm =3D pwm_to_cros_ec_pwm(chip);
--	struct cros_ec_pwm *channel =3D &ec_pwm->channel[pwm->hwpwm];
- 	u16 duty_cycle;
--	int ret;
-=20
--	/* The EC won't let us change the period */
--	if (state->period !=3D EC_PWM_MAX_DUTY)
--		return -EINVAL;
-+	if (state->enabled) {
-=20
--	if (state->polarity !=3D PWM_POLARITY_NORMAL)
--		return -EINVAL;
-+		/* The EC only supports period =3D EC_PWM_MAX_DUTY */
-+		if (state->period < EC_PWM_MAX_DUTY ||
-+		    state->polarity !=3D PWM_POLARITY_NORMAL)
-+			return -EINVAL;
-=20
--	/*
--	 * EC doesn't separate the concept of duty cycle and enabled, but
--	 * kernel does. Translate.
--	 */
--	duty_cycle =3D state->enabled ? state->duty_cycle : 0;
-+		duty_cycle =3D min(state->duty_cycle, (u64)EC_PWM_MAX_DUTY);
-=20
--	ret =3D cros_ec_pwm_set_duty(ec_pwm, pwm->hwpwm, duty_cycle);
--	if (ret < 0)
--		return ret;
-+	} else {
-+		/*
-+		 * The hardware has no possibility to disable and so save power.
-+		 * Many consumers expect the PWM to at least stop to oscilate, so just
-+		 * configure for duty_cycle =3D 0.
-+		 */
-+		duty_cycle =3D 0;
-+	}
-=20
--	channel->duty_cycle =3D state->duty_cycle;
--
--	return 0;
-+	return cros_ec_pwm_set_duty(ec_pwm, pwm->hwpwm, duty_cycle);
- }
-=20
- static int cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device =
-*pwm,
- 				 struct pwm_state *state)
- {
- 	struct cros_ec_pwm_device *ec_pwm =3D pwm_to_cros_ec_pwm(chip);
--	struct cros_ec_pwm *channel =3D &ec_pwm->channel[pwm->hwpwm];
- 	int ret;
-=20
- 	ret =3D cros_ec_pwm_get_duty(ec_pwm->ec, ec_pwm->use_pwm_type, pwm->hwpwm=
-);
-@@ -175,23 +162,10 @@ static int cros_ec_pwm_get_state(struct pwm_chip *chi=
-p, struct pwm_device *pwm,
- 	}
-=20
- 	state->enabled =3D (ret > 0);
-+	state->duty_cycle =3D ret;
- 	state->period =3D EC_PWM_MAX_DUTY;
- 	state->polarity =3D PWM_POLARITY_NORMAL;
-=20
--	/*
--	 * Note that "disabled" and "duty cycle =3D=3D 0" are treated the same. If
--	 * the cached duty cycle is not zero, used the cached duty cycle. This
--	 * ensures that the configured duty cycle is kept across a disable and
--	 * enable operation and avoids potentially confusing consumers.
--	 *
--	 * For the case of the initial hardware readout, channel->duty_cycle
--	 * will be 0 and the actual duty cycle read from the EC is used.
--	 */
--	if (ret =3D=3D 0 && channel->duty_cycle > 0)
--		state->duty_cycle =3D channel->duty_cycle;
--	else
--		state->duty_cycle =3D ret;
--
- 	return 0;
- }
-=20
-@@ -291,11 +265,6 @@ static int cros_ec_pwm_probe(struct platform_device *p=
-dev)
- 	chip->ops =3D &cros_ec_pwm_ops;
- 	chip->of_xlate =3D cros_ec_pwm_xlate;
-=20
--	ec_pwm->channel =3D devm_kcalloc(dev, chip->npwm, sizeof(*ec_pwm->channel=
-),
--					GFP_KERNEL);
--	if (!ec_pwm->channel)
--		return -ENOMEM;
--
- 	dev_dbg(dev, "Probed %u PWMs\n", chip->npwm);
-=20
- 	ret =3D devm_pwmchip_add(dev, chip);
-
-> To make sure I understand, did you mean the original duty value could be =
-less
-> important because:
-> - We are less caring as it is in a debug context at [2]?
-> - At [3], the PWM device is still initializing.
-
-It doesn't really matter that this is about debug or initialisation. The
-key here is that the core can handle the PWM using duty_cycle 0 (or
-anything else) when it was requested to be disabled.
-
-Best regards
-Uwe
-
-> [1]: https://crrev.com/0e16954460a08133b2557150e0897014ea2b9672/common/pw=
-m.c#66
-> [2]: https://elixir.bootlin.com/linux/v6.10-rc3/source/drivers/pwm/core.c=
-#L52
-> [3]: https://elixir.bootlin.com/linux/v6.10-rc3/source/drivers/pwm/core.c=
-#L371
-
---konmklnuzw5wmdnt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZoKW0ACgkQj4D7WH0S
-/k76DQgAoM0Jovkalc4hFgZCLg19A/V4oH1mD06Dnr0VwAPv9grqkpL4twyYuwXo
-YTF7WPRC67Jvp+z3eK8cq6bhOyh7BmHwlq5z1nXZrASbVx1qkNyKOorCWbeJwkc+
-9ozeO0OuXaGkWpkpOteacgLVCQ1RVKMGWV/ko1b2DMfQLm0kCMO7vKO26EmDvfVO
-EF5rOURIjLsTSXH8DkZxoqauYQ5MholEJ+Hik+X/n3gD3Ke01MC0Rra1VO1c2Hns
-150mZPTxUhOO5imOm69P5eHuu+nXdnCBhqNB42gsRvP3wtJay7YUdsc9ys6dxUJX
-6izeIbyZYqsPyERA4d7Wmh9oOfC4Ew==
-=Jzn+
------END PGP SIGNATURE-----
-
---konmklnuzw5wmdnt--
 
