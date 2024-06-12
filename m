@@ -1,173 +1,111 @@
-Return-Path: <linux-pwm+bounces-2431-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2432-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A35179042FA
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jun 2024 19:59:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AC4D904B8A
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jun 2024 08:27:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4D0EC28A087
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jun 2024 17:59:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D57A9B22943
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jun 2024 06:27:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CCB16EB58;
-	Tue, 11 Jun 2024 17:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B3D0168C10;
+	Wed, 12 Jun 2024 06:27:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="MGUJ9Lse";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="gUDBqNT9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENojhtNN"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailrelay4-1.pub.mailoutpod3-cph3.one.com (mailrelay4-1.pub.mailoutpod3-cph3.one.com [46.30.211.243])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9C55C8EF
-	for <linux-pwm@vger.kernel.org>; Tue, 11 Jun 2024 17:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.243
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C46167DA0;
+	Wed, 12 Jun 2024 06:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718128617; cv=none; b=mwM5DkOfk2AWoA3WWTkM2rkI5XEuzewLVAn4NmhWH6Knv+5MFztVCbUzqG77HlC2SEkwGPtezDvo7kaF+nyB54t1XdC/C18y1SnfLyINzSt91QkAXU5PGy1enlUDkKxpATomifdTfsjpWGuEMTQ2pY60H828JZYtLk/yPGgyOQQ=
+	t=1718173638; cv=none; b=n4mfMsDv4odII1kUdmWfgnP/AJbapscOigPWs+c8YH5YN7/E/o7JD5MtT+cl+nGbRANVVPTzVOtCpSdeucEFDQFrbiM95whlAMej1KmukHXUomXriDlx8KVx0v7/WKOpxxi9sxE5ev8k2J2QRvCV3Uci7J4+NU6WcBXXwcG1W+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718128617; c=relaxed/simple;
-	bh=m4UNf0dPubO+Nhq/aKH7BVJeY8wPAsx8wTcxb5/fl8w=;
+	s=arc-20240116; t=1718173638; c=relaxed/simple;
+	bh=e2ENKQIsTaX0sTudk2hGDKHVUGSIjiOwmVg8cJI75PA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kdqQr9GTfZL4cZHSPiJU2P8z+mRP+CPeP2lC8Ql+QpnuJvmwKhMRjcb8fNAJZSVOXjQ+VcI1RdvtIUyVTpu64fGa5xoiaedDloB6RlzsvyWMH9821wZnIvyArFCG5mzFKJBhe/cXuRqnYV+7vVdh++S75Zrb6nubDDeRSzfA72c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=MGUJ9Lse; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=gUDBqNT9; arc=none smtp.client-ip=46.30.211.243
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=g9WKV73/vX/yRKi/hglFtmBSXNmDuF7jx1LSMWu23v8=;
-	b=MGUJ9LseT3f5lZBW0OKxinuyoP4Ccabuc75xhvpP21vgQEyTqiVTs4Fg1RT9IdF8tTLhJBJKs53DG
-	 aD3n4oKlEvWVRlRYDi10iHhL7J1lFyvbR4vIoTIomca43ATnqv+Z/NCR92hPtsikZKhlO8ItWGgxg1
-	 4YuvdjlA2N/E6Zg3k2emqVqcNu4RNvyBYvCI3W1WOKotRcB1YpG2MWaZ4xvwTtOVOGaN8E/WwfzlwA
-	 gOZOSciUXJNWLRHPt6oxwzcjCfkZShwRyr4YoMkmmM+sC+Yp0OfmoH7PYdlMPo9+qPG06FIdr81BjM
-	 FdbLkkUDCMyp0E5urejZivADmsWGsSQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=g9WKV73/vX/yRKi/hglFtmBSXNmDuF7jx1LSMWu23v8=;
-	b=gUDBqNT9P/28PpP+1HZVetLC/b5nS0VWr4onj3XTH81Z/oW76YeBdXPCjeM+olZqxVc/T6ZDdKKNy
-	 aYJ+AdoAg==
-X-HalOne-ID: d271771c-281b-11ef-802b-591fce59e039
-Received: from ravnborg.org (2-105-16-150-cable.dk.customer.tdc.net [2.105.16.150])
-	by mailrelay4.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id d271771c-281b-11ef-802b-591fce59e039;
-	Tue, 11 Jun 2024 17:55:45 +0000 (UTC)
-Date: Tue, 11 Jun 2024 19:55:44 +0200
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: lee@kernel.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
-	deller@gmx.de, linus.walleij@linaro.org, f.suligoi@asem.it,
-	ukleinek@kernel.org, dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 01/17] backlight: Add BL_CORE_ constants for power states
-Message-ID: <20240611175544.GC545417@ravnborg.org>
-References: <20240611125321.6927-1-tzimmermann@suse.de>
- <20240611125321.6927-2-tzimmermann@suse.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=YUYbkFTnA8+j33+H2wh2wLFrEyONsdYCi6BFxc28Q3uDVw3cCCsCjcHevRmmjy7GuWZGxZ1Tw9PjNNOL9B8xq2p9DaLXcVM9tS7A2udq+RRgv3T1oAWzCfeJfMAm6Hjfm+KRnNBB48QK8PrJSW8nZ/heKXRLtT+j6h7H27Ih19M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENojhtNN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66683C32786;
+	Wed, 12 Jun 2024 06:27:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718173637;
+	bh=e2ENKQIsTaX0sTudk2hGDKHVUGSIjiOwmVg8cJI75PA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ENojhtNNGHdNYOnPQN1MFhFOstveOWidJQ7t/Y8POhDUCxRHat45JPNjaJiyOAs+r
+	 v/1sB3eR9c8Ywl85QTXifc6beSGNWx407WniIbbLEKEJ6gKG/GcbpneurWzfMx6FfC
+	 iQY12Mh9xYE45kRCnWQrAjpKtErCt/IlXpLBTWt6fR4vHF6YHZJXXRrwnaDw22mHM5
+	 lN0k7QZ+7Ee6+yNGTHmFioyGClrPmFBNiUzlSvZEw+pW9lhnHCaOK8SIpuuOkUs2Sp
+	 bHiLLdc9srG4e+P75deeQisFR4fO6LOBnIYgN/5VStYxYFkDHsHP2xdvGNYeqi/x3z
+	 pbIB3o0CYQkDw==
+Date: Wed, 12 Jun 2024 06:27:14 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+	linux-pwm@vger.kernel.org, chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] pwm: cros-ec: Don't care about consumers in
+ .get_state()
+Message-ID: <Zmk_wolV5vK4JPCV@google.com>
+References: <20240607084416.897777-5-u.kleine-koenig@baylibre.com>
+ <20240607084416.897777-6-u.kleine-koenig@baylibre.com>
+ <ZmgP5NTPEGM0M2Li@google.com>
+ <dbygoq4rzxnzforpdsvuy5jze2rxqszi6qxtx6q37yxwjo36o6@qfoc6iz2nbay>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240611125321.6927-2-tzimmermann@suse.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dbygoq4rzxnzforpdsvuy5jze2rxqszi6qxtx6q37yxwjo36o6@qfoc6iz2nbay>
 
-Hi Thomas.
-
-On Tue, Jun 11, 2024 at 02:41:56PM +0200, Thomas Zimmermann wrote:
-> Duplicate FB_BLANK_ constants as BL_CORE_ constants in the backlight
-> header file. Allows backlight drivers to avoid including the fbdev
-> header file and removes a compile-time dependency between the two
-> subsystems.
-Good to remove this dependency.
+On Tue, Jun 11, 2024 at 12:39:44PM +0200, Uwe Kleine-König wrote:
+> On Tue, Jun 11, 2024 at 08:50:44AM +0000, Tzung-Bi Shih wrote:
+> > On Fri, Jun 07, 2024 at 10:44:15AM +0200, Uwe Kleine-König wrote:
+> > > The get_state() callback is never called (in a visible way) after there
+> > > is a consumer for a pwm device. The core handles loosing the information
+> > > about duty_cycle just fine.
+> > 
+> > ChromeOS EC has no separated "enabled" state, it sees `duty == 0` as
+> > "disabled"[1].  1db37f9561b2 ("pwm: cros-ec: Cache duty cycle value")
+> > caches the value in kernel side so that it can retrieve the original duty
+> > value even if (struct pwm_state *)->enabled is false.
 > 
-> The new BL_CORE constants have the same values as their FB_BLANK_
-> counterparts. Hence UAPI and internal semantics do not change. The
-> backlight drivers can be converted one by one.
-This seems like the right approach.
+> There is no need to cache, so the following would work:
 
+Ack.
+
+> > To make sure I understand, did you mean the original duty value could be less
+> > important because:
+> > - We are less caring as it is in a debug context at [2]?
+> > - At [3], the PWM device is still initializing.
 > 
-> Backlight code or drivers do not use FB_BLANK_VSYNC_SUSPEND and
-> FB_BLANK_HSYNC_SUSPEND, so no new constants for these are being
-> added.
+> It doesn't really matter that this is about debug or initialisation. The
+> key here is that the core can handle the PWM using duty_cycle 0 (or
+> anything else) when it was requested to be disabled.
 > 
-> The semantics of FB_BLANK_NORMAL appear inconsistent. In fbdev,
-> NORMAL means display off with sync enabled. In backlight code,
-> this translates to turn the backlight off, but some drivers
-> interpret it as backlight on. So we keep the current code as is,
-> but mark BL_CORE_NORMAL as deprecated. Drivers should be fixed
-> and the constant removed. This affects ams369fg06 and a few DRM
-> panel drivers.
 > 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> ---
->  Documentation/ABI/stable/sysfs-class-backlight |  7 ++++---
->  include/linux/backlight.h                      | 16 ++++++++++------
->  2 files changed, 14 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/ABI/stable/sysfs-class-backlight b/Documentation/ABI/stable/sysfs-class-backlight
-> index 023fb52645f8b..6102d6bebdf9a 100644
-> --- a/Documentation/ABI/stable/sysfs-class-backlight
-> +++ b/Documentation/ABI/stable/sysfs-class-backlight
-> @@ -3,10 +3,11 @@ Date:		April 2005
->  KernelVersion:	2.6.12
->  Contact:	Richard Purdie <rpurdie@rpsys.net>
->  Description:
-> -		Control BACKLIGHT power, values are FB_BLANK_* from fb.h
-> +		Control BACKLIGHT power, values are compatible with
-> +		FB_BLANK_* from fb.h
->  
-> -		 - FB_BLANK_UNBLANK (0)   : power on.
-> -		 - FB_BLANK_POWERDOWN (4) : power off
-> +		 - 0 (FB_BLANK_UNBLANK)   : power on.
-> +		 - 4 (FB_BLANK_POWERDOWN) : power off
->  Users:		HAL
->  
->  What:		/sys/class/backlight/<backlight>/brightness
-> diff --git a/include/linux/backlight.h b/include/linux/backlight.h
-> index 19a1c0e22629d..e0cfd89ffadd2 100644
-> --- a/include/linux/backlight.h
-> +++ b/include/linux/backlight.h
-> @@ -210,14 +210,18 @@ struct backlight_properties {
->  	 * When the power property is updated update_status() is called.
->  	 *
->  	 * The possible values are: (0: full on, 1 to 3: power saving
-> -	 * modes; 4: full off), see FB_BLANK_XXX.
-> +	 * modes; 4: full off), see BL_CORE_XXX constants.
->  	 *
->  	 * When the backlight device is enabled @power is set
-> -	 * to FB_BLANK_UNBLANK. When the backlight device is disabled
-> -	 * @power is set to FB_BLANK_POWERDOWN.
-> +	 * to BL_CORE_UNBLANK. When the backlight device is disabled
-> +	 * @power is set to BL_CORE_POWERDOWN.
->  	 */
->  	int power;
->  
-> +#define BL_CORE_UNBLANK		(0)
-> +#define BL_CORE_NORMAL		(1) // deprecated; don't use in new code
-> +#define BL_CORE_POWERDOWN	(4)
+> > [1]: https://crrev.com/0e16954460a08133b2557150e0897014ea2b9672/common/pwm.c#66
+> > [2]: https://elixir.bootlin.com/linux/v6.10-rc3/source/drivers/pwm/core.c#L52
+> > [3]: https://elixir.bootlin.com/linux/v6.10-rc3/source/drivers/pwm/core.c#L371
 
-When introducing backlight specific constants then it would be good to
-get away from the ackward fbdev naming and use something that is more
-obvious.
+I was trying to understand the description in the commit message:
+: The get_state() callback is never called (in a visible way) after there
+: is a consumer for a pwm device.
 
-Something like:
+I guess I understood; the core reads the duty value via get_state() when:
+- Initializing the device for the intial value.
+- Debugging for checking if apply() really takes effect.
 
-#define BACKLIGHT_POWER_ON	0
-#define BACKLIGHT_POWER_OFF	4
-#define BACKLIGHT_POWER_NORMAL	1	// deprecated; don't use in new code
+What 1db37f9561b2 worried about is already addressed by the core[4].
 
-This will make the code more obvious to read / understand - at least
-IMO.
+[4]: https://elixir.bootlin.com/linux/v6.10-rc3/source/drivers/pwm/core.c#L495
 
-The proposal did not use the BL_CORE_ naming, lets keep this for
-suspend/resume stuff.
-
-On top of this - many users of the power states could benefit using the
-backlight_enable()/backlight_disable() helpers, but that's another story.
-
-	Sam
+Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
 
