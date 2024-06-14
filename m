@@ -1,489 +1,147 @@
-Return-Path: <linux-pwm+bounces-2454-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2455-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0572908927
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 12:05:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66191908949
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 12:07:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77A8C28E1C3
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 10:05:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AF1ACB25C0A
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 10:07:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7DAC1946B7;
-	Fri, 14 Jun 2024 09:59:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D125192B9C;
+	Fri, 14 Jun 2024 10:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5P1v4bX"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="IY1s9lpB"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD3E19D06F
-	for <linux-pwm@vger.kernel.org>; Fri, 14 Jun 2024 09:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF235FBB7
+	for <linux-pwm@vger.kernel.org>; Fri, 14 Jun 2024 10:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718359181; cv=none; b=kl28rixO30NFlM5qHz0kDRpDH7OjQqNRXtDxOoOjuWtkbLCFnPWVYMLVeyrq8Gj3sT27rnyB+mv5sDowoF4vHdIic0rWHQVXCtR4f832bqTOOkbt76EsoNfm385lgdGk9uCzX9miU3JI1VXxzA+UxCp6kWo2fIAL1WtKe157n3A=
+	t=1718359571; cv=none; b=oNR65+bU+mM1DeBYjkI5O2DhPmDkHhJTgLTHJ80kVIo7G+Ye2OuzEGLyufDD5/0Vzs9ckLA6dHQYFn9FtS39maiRO06VfolWIKUPF2P+Mtme+CICoZwxPr814KErHA43WigF7IK8Rhj02Xiznmw7jJH4UIOhU1zKXkximDT4R1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718359181; c=relaxed/simple;
-	bh=o+UxusDvXcRw/9+99wtmLFw1Ay/JOFInOe2ZTYft6/8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C/1J4WlaBJzbA5pWuIl1tHlnaGjyU5G/g1uKkrSDc1SjZHMLNKjppik5VpTEg1aaYcz9ww/ILTl5IixYp+8pqtJfVdulRmPvfqH6Mlzo/GLdlPa/5XOnYXOxusWUFJUCGB+bhTpdXNcfu+PYXchlJ2cTjggRBmlqKxKmgBRJ5+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s5P1v4bX; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6f98178ceb3so1070146a34.0
-        for <linux-pwm@vger.kernel.org>; Fri, 14 Jun 2024 02:59:38 -0700 (PDT)
+	s=arc-20240116; t=1718359571; c=relaxed/simple;
+	bh=VLNaXn/lm7t6E5mAaLknHXlsRSaNaczlupRMV67F4k4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q+Pw5yKWeG8pnhtRt2C95Do6WGyy6Nl3cCFvS1LwrT4Q+v6o8YgOfuRCW3CpZdicrzN/HQ5xJtGViGmMMt12uzYKElj4GBefeIdXlx6SvOGHaAgx4c1nLx+lq7KBMTUp8xfj29Iv5RgFHUONEQFhNkakj+fvt6ude6oyz7ZCzo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=IY1s9lpB; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a6ef46d25efso259188466b.0
+        for <linux-pwm@vger.kernel.org>; Fri, 14 Jun 2024 03:06:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718359178; x=1718963978; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZwEL12Dk210SzDROzm2fK2nLGU+zRldORTG8TcrOARU=;
-        b=s5P1v4bXiSooSYEMashPeGCvfQ6Ka+EpkeLR+DiXhtIsuFdN0f3LdlI3mm3ad4jHjf
-         uFVrLWCgi12AZc0wJgpuKM8JW/ewqsTAL5b6CNDJku+OvmHmw+zeW0ZuB/Aquawlb1HY
-         lBcwhBWvhLJB1j4Z9DMC7hctc+0Isf+6lPo7NZDt602He5iggH7k+68D38sn4YbZLoFz
-         L2BCo6hL983Qtwyvd2FAfL6E0QjhFaFiC0zMBQTLiLuoqSpDBE/UnAaSu584h6AvOlOU
-         kWNdxwR8beVjku3PmqM/1uAwdkb39Vlp3FACPEVS2gG+qHsDA0dbXWBQ1nfsQUJK1/IX
-         9o5Q==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718359566; x=1718964366; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=n1RQFOycNLmuTPDyek4OedVGRn07iS0hgYarPk74x8U=;
+        b=IY1s9lpBron5deEc23/86zrRwF7AbBCj6PaimAZSdy8WkeaLQX31s4Gcg2T1KZb5vN
+         L62A1HHxQacPN2BWI5K90d077All63i7thJLddlVQANejPB6jPr/k9LR/XDB+ptrw5BN
+         yd8r4aztyuZyMZvbdGQp3Zh1dNdOMZib6dmiBYYlbgcAkjq+RfpUD6IEWI8FddwveeW9
+         hgv16XTBNOgPDtiIm8tTqpDZia0y9dM/C0zBAR/izke4ElIRwHXv9mrdro0H0KTa5Ehr
+         T8mAquxGiVgUk5I0MBYXVVJTzmfRpRcFDW9ZiZ+QQB9BOdMhrf01ncLnPLJ31h/RP3gp
+         c1Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718359178; x=1718963978;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZwEL12Dk210SzDROzm2fK2nLGU+zRldORTG8TcrOARU=;
-        b=MLS1GRK/IfjpIgk1sFOJ2acpqRhL/YkResVR95Xx2L6n/Jp5hL3byJd38WTLMciCvy
-         iiwriBLf3JJkgWE8iqzEy2ZoYCBXIljpvLBMeJmD2Z1S816fcBLp/BfYZw1wtHJ/Bpp4
-         gcCHmXPzWG4DkWoqpi4dbZckbMpmpQbT3vvTz7knhic8YN1pKbuQkbHH2fBMI5OnBZSo
-         OX2wPVyA16wXmtf9ZIhhQGl1yQlmLrWiI/hMV3d6VlqwRI10MQ6nqHCIVjI517JeKkbN
-         2xgWUwwKEuJOD5UP6nueDkRL/vXFVi5rDtrgDhGDJ4rI7t2YHR3sa8Fl1XW7zA1Ed6Jb
-         t+ag==
-X-Forwarded-Encrypted: i=1; AJvYcCVlr8KGXZ8tTP3NIJJ0b3Naf6NTfT9eSQFNQvove/jDcaKYAiN5SR/21TYadPe8qbxzeD3Y0tV5frRRmdqdA6L58cQuD1CBEIwY
-X-Gm-Message-State: AOJu0Yw2pOJxWBPRcg6qstXd3I8v8tJ+STa18d9nlnWflchC3XnXrBbI
-	gUUhRQW81anuz9FpTjiX9Q35M8c582YTtSwrb/cFORpaO/InuVfofBeKM53+ahg=
-X-Google-Smtp-Source: AGHT+IGaIW4Oj4QyiK1N8uLp44uKOum0SpgbvhX9tXBoqXkfPuCUc1l/mIKPBdvr5bH67v1ZL9Bhsw==
-X-Received: by 2002:a05:6830:10a:b0:6fa:e93:3e3e with SMTP id 46e09a7af769-6fb93766baamr2212329a34.9.1718359178133;
-        Fri, 14 Jun 2024 02:59:38 -0700 (PDT)
-Received: from krzk-bin.. ([78.10.206.163])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6fb5b2fe510sm554180a34.48.2024.06.14.02.59.33
+        d=1e100.net; s=20230601; t=1718359566; x=1718964366;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n1RQFOycNLmuTPDyek4OedVGRn07iS0hgYarPk74x8U=;
+        b=jqpFwSPRuCfwYhuJ0OlbR6C3iUYOChN996ymrxgOi6cqAqC3ScCzVcy0bCYCXkeEN8
+         uOqOGLU6YLp42Y9Hn5oWrBg5PvDoRuXLkaGxWvy/IQl926SrOmRBdbhMXVH/371zM/33
+         TiEb/A8u0NmHkW8AGYZREcTJX0GJbRmSqKwTn923t84ERXzpvAuE2HmZsbKO1CdgSDTz
+         avGYi6tLFcuSGiExgBlyDaKexpFnIRGwtSyFfBmto0f/K5gWuMxHYYsZUH/ie9XFwgZF
+         +FlQyhH2gMnuNeEbDGneVM8A4Cv0V+lRBq2/xrQV1FPuKA36QhSZC68tpkocNh5HaUmd
+         CreA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2xytOBNM70R0a+FFt1ssGvSsZuxjRsCG+cED5DYxz1OBQzvO45aRRitcdSd+WVpjDdSuVYlrM2tQnnOO96IP+5759Pf/kuWAY
+X-Gm-Message-State: AOJu0Yy5Fjusj4FiiDUtj09bC4zoQCQAN+H6ZjaNGW2feO4zui77T/GF
+	Bnk2lXdpJ4pz/qmykNo5crvr6hR3sm70UJmb9srCIbgw/U8aRSqfEvRwdJosbJI=
+X-Google-Smtp-Source: AGHT+IEBKcircL4D5yvI1Uh0Bdlj+m1RTUCtN9vKd4L45BNE7heuj8fMqHurvRePVoeMMv4jFlhDyw==
+X-Received: by 2002:a17:906:184a:b0:a6f:5a9d:37f9 with SMTP id a640c23a62f3a-a6f60dc5128mr122290766b.48.1718359565241;
+        Fri, 14 Jun 2024 03:06:05 -0700 (PDT)
+Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56ecb46fsm167018666b.129.2024.06.14.03.06.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 02:59:37 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Abel Vesa <abelvesa@kernel.org>,
-	Peng Fan <peng.fan@nxp.com>,
-	Frank Li <Frank.Li@nxp.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-watchdog@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] dt-bindings: drop stale Anson Huang from maintainers
-Date: Fri, 14 Jun 2024 11:59:27 +0200
-Message-ID: <20240614095927.88762-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+        Fri, 14 Jun 2024 03:06:04 -0700 (PDT)
+Date: Fri, 14 Jun 2024 12:06:03 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Sean Young <sean@mess.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] bus: ts-nbus: Use pwm_apply_might_sleep()
+Message-ID: <xj5mqnte5dgs4yzuku6g7gnprgm43tdbunxmo6o4thzreyraok@kttvkz5dhaei>
+References: <20240614090829.560605-1-sean@mess.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="56vgrc46vq6e7trh"
+Content-Disposition: inline
+In-Reply-To: <20240614090829.560605-1-sean@mess.org>
 
-Emails to Anson Huang bounce:
 
-  Diagnostic-Code: smtp; 550 5.4.1 Recipient address rejected: Access denied.
+--56vgrc46vq6e7trh
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Add IMX platform maintainers for bindings which would become orphaned.
+Hello,
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.yaml    | 4 +++-
- Documentation/devicetree/bindings/clock/imx6q-clock.yaml      | 4 +++-
- Documentation/devicetree/bindings/clock/imx6sl-clock.yaml     | 4 +++-
- Documentation/devicetree/bindings/clock/imx6sll-clock.yaml    | 4 +++-
- Documentation/devicetree/bindings/clock/imx6sx-clock.yaml     | 4 +++-
- Documentation/devicetree/bindings/clock/imx6ul-clock.yaml     | 4 +++-
- Documentation/devicetree/bindings/clock/imx7d-clock.yaml      | 1 -
- Documentation/devicetree/bindings/clock/imx8m-clock.yaml      | 4 +++-
- Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml      | 4 +++-
- Documentation/devicetree/bindings/gpio/gpio-mxs.yaml          | 1 -
- Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml      | 4 +++-
- .../devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml     | 4 +++-
- .../devicetree/bindings/memory-controllers/fsl/mmdc.yaml      | 4 +++-
- Documentation/devicetree/bindings/nvmem/imx-iim.yaml          | 4 +++-
- Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml        | 4 +++-
- Documentation/devicetree/bindings/nvmem/mxs-ocotp.yaml        | 4 +++-
- Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml        | 4 +++-
- Documentation/devicetree/bindings/pwm/mxs-pwm.yaml            | 1 -
- Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml      | 4 +++-
- Documentation/devicetree/bindings/thermal/imx-thermal.yaml    | 1 -
- Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml | 4 +++-
- Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml  | 4 +++-
- Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml   | 4 +++-
- .../devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml         | 4 +++-
- 24 files changed, 60 insertions(+), 24 deletions(-)
+[To: +=3D Arnd]
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.yaml b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.yaml
-index 526f508cb98d..bd39cf107f3e 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.yaml
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale i.MX7ULP System Integration Module
- 
- maintainers:
--  - Anson Huang <anson.huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- description: |
-   The system integration module (SIM) provides system control and chip configuration
-diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-index bae4fcb3aacc..74cfdcf1c93b 100644
---- a/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-+++ b/Documentation/devicetree/bindings/clock/imx6q-clock.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale i.MX6 Quad Clock Controller
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/clock/imx6sl-clock.yaml b/Documentation/devicetree/bindings/clock/imx6sl-clock.yaml
-index c85ff6ea3d24..b780bdaa4126 100644
---- a/Documentation/devicetree/bindings/clock/imx6sl-clock.yaml
-+++ b/Documentation/devicetree/bindings/clock/imx6sl-clock.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale i.MX6 SoloLite Clock Controller
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/clock/imx6sll-clock.yaml b/Documentation/devicetree/bindings/clock/imx6sll-clock.yaml
-index 6b549ed1493c..992536b2bf6a 100644
---- a/Documentation/devicetree/bindings/clock/imx6sll-clock.yaml
-+++ b/Documentation/devicetree/bindings/clock/imx6sll-clock.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale i.MX6 SLL Clock Controller
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/clock/imx6sx-clock.yaml b/Documentation/devicetree/bindings/clock/imx6sx-clock.yaml
-index 55dcad18b7c6..cd67fd6ba7ad 100644
---- a/Documentation/devicetree/bindings/clock/imx6sx-clock.yaml
-+++ b/Documentation/devicetree/bindings/clock/imx6sx-clock.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale i.MX6 SoloX Clock Controller
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/clock/imx6ul-clock.yaml b/Documentation/devicetree/bindings/clock/imx6ul-clock.yaml
-index be54d4df5afa..3804369c9f8a 100644
---- a/Documentation/devicetree/bindings/clock/imx6ul-clock.yaml
-+++ b/Documentation/devicetree/bindings/clock/imx6ul-clock.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale i.MX6 UltraLite Clock Controller
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/clock/imx7d-clock.yaml b/Documentation/devicetree/bindings/clock/imx7d-clock.yaml
-index e7d8427e4957..880d602d09f4 100644
---- a/Documentation/devicetree/bindings/clock/imx7d-clock.yaml
-+++ b/Documentation/devicetree/bindings/clock/imx7d-clock.yaml
-@@ -8,7 +8,6 @@ title: Freescale i.MX7 Dual Clock Controller
- 
- maintainers:
-   - Frank Li <Frank.Li@nxp.com>
--  - Anson Huang <Anson.Huang@nxp.com>
- 
- description: |
-   The clock consumer should specify the desired clock by having the clock
-diff --git a/Documentation/devicetree/bindings/clock/imx8m-clock.yaml b/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
-index 80539f88bc27..b4afd5aa8769 100644
---- a/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
-+++ b/Documentation/devicetree/bindings/clock/imx8m-clock.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: NXP i.MX8M Family Clock Control Module
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- description: |
-   NXP i.MX8M Mini/Nano/Plus/Quad clock control module is an integrated clock
-diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-index 918776d16ef3..e1fc8bb6d379 100644
---- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale i.MX/MXC GPIO controller
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
-index dfa1133f8c5e..8ff54369d16c 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
-@@ -8,7 +8,6 @@ title: Freescale MXS GPIO controller
- 
- maintainers:
-   - Shawn Guo <shawnguo@kernel.org>
--  - Anson Huang <Anson.Huang@nxp.com>
- 
- description: |
-   The Freescale MXS GPIO controller is part of MXS PIN controller.
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
-index 54d500be6aaa..1dcb9c78de3b 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
-+++ b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale Low Power Inter IC (LPI2C) for i.MX
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- allOf:
-   - $ref: /schemas/i2c/i2c-controller.yaml#
-diff --git a/Documentation/devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml b/Documentation/devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml
-index 6b54d32323fc..467002a5da43 100644
---- a/Documentation/devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml
-+++ b/Documentation/devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale MAG3110 magnetometer sensor
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.yaml b/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.yaml
-index 71547eee9919..5447f1dddedf 100644
---- a/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale Multi Mode DDR controller (MMDC)
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/nvmem/imx-iim.yaml b/Documentation/devicetree/bindings/nvmem/imx-iim.yaml
-index e9d9d8df4811..bb37d72c9eaa 100644
---- a/Documentation/devicetree/bindings/nvmem/imx-iim.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/imx-iim.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale i.MX IC Identification Module (IIM)
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- description: |
-   This binding represents the IC Identification Module (IIM) found on
-diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml b/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
-index be1314454bec..e21c06e9a741 100644
---- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale i.MX On-Chip OTP Controller (OCOTP)
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- description: |
-   This binding represents the on-chip eFuse OTP controller found on
-diff --git a/Documentation/devicetree/bindings/nvmem/mxs-ocotp.yaml b/Documentation/devicetree/bindings/nvmem/mxs-ocotp.yaml
-index d9287be89877..95121dd6311c 100644
---- a/Documentation/devicetree/bindings/nvmem/mxs-ocotp.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/mxs-ocotp.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: On-Chip OTP Memory for Freescale i.MX23/i.MX28
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- allOf:
-   - $ref: nvmem.yaml#
-diff --git a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml
-index 8bef9dfeba9a..ac0a35bf8648 100644
---- a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale i.MX TPM PWM controller
- 
- maintainers:
--  - Anson Huang <anson.huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- description: |
-   The TPM counter and period counter are shared between multiple
-diff --git a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
-index 8f50e23ca8c9..a9d3a41ac5b9 100644
---- a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
-@@ -8,7 +8,6 @@ title: Freescale MXS PWM controller
- 
- maintainers:
-   - Shawn Guo <shawnguo@kernel.org>
--  - Anson Huang <anson.huang@nxp.com>
- 
- allOf:
-   - $ref: pwm.yaml#
-diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-index 2ff174244795..ed1d4aa41b8c 100644
---- a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-+++ b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale Low Power SPI (LPSPI) for i.MX
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- allOf:
-   - $ref: /schemas/spi/spi-controller.yaml#
-diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-index 808d987bd8d1..337560562337 100644
---- a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-+++ b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
-@@ -8,7 +8,6 @@ title: NXP i.MX Thermal
- 
- maintainers:
-   - Shawn Guo <shawnguo@kernel.org>
--  - Anson Huang <Anson.Huang@nxp.com>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
-index d2c1e4573c32..42e2317a00f5 100644
---- a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
-+++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: NXP i.MX8M Mini Thermal
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- description: |
-   i.MX8MM has TMU IP to allow temperature measurement, there are
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-index d155d6799da6..66c4972d5072 100644
---- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-+++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
-index 181f0cc5b5bd..36b836d0620c 100644
---- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale i.MX Watchdog Timer (WDT) Controller
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
-index 9c50766bf690..a09686b3030d 100644
---- a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml
-@@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Freescale i.MX7ULP Watchdog Timer (WDT) Controller
- 
- maintainers:
--  - Anson Huang <Anson.Huang@nxp.com>
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+  - Fabio Estevam <festevam@gmail.com>
- 
- allOf:
-   - $ref: watchdog.yaml#
--- 
-2.43.0
+On Fri, Jun 14, 2024 at 10:08:29AM +0100, Sean Young wrote:
+> pwm_apply_state() is deprecated since commit c748a6d77c06a ("pwm: Rename
+> pwm_apply_state() to pwm_apply_might_sleep()").
+>=20
+> Signed-off-by: Sean Young <sean@mess.org>
+> ---
+>  drivers/bus/ts-nbus.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/bus/ts-nbus.c b/drivers/bus/ts-nbus.c
+> index baf22a82c47a7..b8af44c5cdbd0 100644
+> --- a/drivers/bus/ts-nbus.c
+> +++ b/drivers/bus/ts-nbus.c
+> @@ -294,7 +294,7 @@ static int ts_nbus_probe(struct platform_device *pdev)
+>  	state.duty_cycle =3D state.period;
+>  	state.enabled =3D true;
+> =20
+> -	ret =3D pwm_apply_state(pwm, &state);
+> +	ret =3D pwm_apply_might_sleep(pwm, &state);
+>  	if (ret < 0)
+>  		return dev_err_probe(dev, ret, "failed to configure PWM\n");
 
+Thanks. I guess the patch becoming
+8129d25e32b7fd0f77bc664252321f3a16bb26b8 was created a while before
+pwm_apply_might_sleep() was a thing.
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+
+Arnd, you merged the last changes to that driver. Do you want to care
+for that one, too? If not I can apply it via my pwm tree.
+
+Best regards
+Uwe
+
+--56vgrc46vq6e7trh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZsFgcACgkQj4D7WH0S
+/k6Ciwf/V640UlA3t7jmkjfZ8cO8YihHm54XgFoqLTh48Akc4MU9mW4UaZWM+IC3
+3hMfpLUzyPmUGsupnsfcyKOWa8trOtzTaiwB6M33NqO6qkdnQfPlOUzSLoYzwXqX
+xUMlUF9MKxCu0BoOiqgRq+AJLn5Egurwt3MmTSfqolf3dZd7GijmIzVCUh/KM6bq
+vt/NoG2nks4bUURM4Kn+jz2yNoSIVmFZx7IwEeekV5NpxMldCbJQ5LdK6opvnyRR
+0ebjw1qXO2wxucowDaXYNJcC6K2qOlwvxlONZFiO7E/7H/tmWnD6f7KM/fEG1hvC
+r+D+dyMoPviFNgnheoCEVCqjKGcm1w==
+=6gnx
+-----END PGP SIGNATURE-----
+
+--56vgrc46vq6e7trh--
 
