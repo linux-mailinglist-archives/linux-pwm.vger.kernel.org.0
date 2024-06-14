@@ -1,137 +1,101 @@
-Return-Path: <linux-pwm+bounces-2451-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2452-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14E7B9086EA
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 11:02:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC58F908717
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 11:08:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19B0B1C20D3F
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 09:02:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C1D51F232E8
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 09:08:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB59418FDA0;
-	Fri, 14 Jun 2024 09:02:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7705519149D;
+	Fri, 14 Jun 2024 09:08:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="J1MbRS8J"
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="MXZx04ZT";
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="MXZx04ZT"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F60F146A7A
-	for <linux-pwm@vger.kernel.org>; Fri, 14 Jun 2024 09:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C968146A7A;
+	Fri, 14 Jun 2024 09:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.97.38.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718355726; cv=none; b=tL/nSH/o1ilgtTbggqIZoKCqUVMogP0S+stp/WhA59WXduqzS3UOBwchlS/3yBWseJbsBaNa2EKq5ynRLbVV4McAUM5Ch4z0HPAknu+tGiRbJkkDZHq93fKTgoK9A2liI7he2b8UIPO5M3ANQ4ttm0KSYUmyiDwOxNKZZUmXE/8=
+	t=1718356132; cv=none; b=HKJLJ+0Ww5HZ5RleMUI8TGjth482wbw6tbDuNgW2iovRsYXdF+ILj1huOUGSDJl2VXrleAHZYWqr9kpSrbFFxPcdVxu7+duRnr0mXmSNZB9XCzwJEMuNSJ5Mt3tXvPLuwS4abbH3WDRFKD+E5l5Ai1X2GI86+nInvGley/EHmnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718355726; c=relaxed/simple;
-	bh=X7ORb1Koe6okLnwKX0hTqfYjYrzzPwimwJD21J2gqGM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IXra8gHKhNjjfHSHDBkTpBXfqOr2z0675tg1DCF63jkm9LrImu6QX++ePJevNyFGxREf1/4OZhTdEOhThXDPVVijF7fLbxf+Qz25Gj0YhbhrA6qD3lLFtKJ1ez/zMwXI3DEqgXyvEW31JE/UaWofz05U232M+kAGOxoqccHruoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=J1MbRS8J; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a6f04afcce1so251424166b.2
-        for <linux-pwm@vger.kernel.org>; Fri, 14 Jun 2024 02:02:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718355723; x=1718960523; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4GkufYcYiROPgUdoe4VOWKumgL9VxD9lLUKtk5IkCI0=;
-        b=J1MbRS8JYXTr8w4Xa1MrIl7DbU1N8d3Pa0sNLTdBu3IzHxTKSljAJaALcaLBUzhxOV
-         TWFHHVIeIx6fBzbrnUoMrinmT0UYMMsyz42cIJwEdLVHFavH0B20B6PglERDcT89qXsf
-         m5FK58boIqd8rM1XHtbfN15c5VEyNNmHifgvcm/lhmu3iC/A/eWXD7jh5EArhWS5ehKD
-         IbGYZYRrNM5jKla4j9RuROkSzSS+UwhXW+lNRLgOXhktms/jO3oogE1FfDE3k1uRm4pm
-         Ye9IqhJR70DDvFhv6XIPiSuCQmQAnltP3UPsBicvO5qzrn1gE/P8KTQAzrXwuq795OeM
-         mpsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718355723; x=1718960523;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4GkufYcYiROPgUdoe4VOWKumgL9VxD9lLUKtk5IkCI0=;
-        b=qFaTkNUrq2jcqYJ+Gd2JRObZPDnT6M0dPPWjH+IgWeN7xjLEk2vGgu1xpLF9CH90V4
-         7fEDwUf9kyIFt9WPl5hiwioPN+n70jlf5MYKz9LV1Fiz/q8NWM6n70htxBdywfKndh4t
-         rjvD+tXmgex0IQ/5puHXEYkwm/yzqyQBtKbCqUFwt++9946oJ+hiVt7KLMCRLZ99RmHs
-         royCEnMAyWhdcHDbuCtFnYd6YeAfLrPEZaPfKmi7OYQ+EB9s8dumV87aihpLwK5/vevO
-         zA25yQpAQKg1PjmknWoP0fb5G9JD2Uh4+O+WGobuUApvpb3PDe4h0BSgvx4KGorJq9mj
-         7Wfg==
-X-Forwarded-Encrypted: i=1; AJvYcCXaF7na/lrqtdIOEGPuPdFxcyxfedKbeTfDj2TJz6hMGVfhaAjyaIu3bqw5iqG/JuOkg6A7W47bmEgVIHCKHsQF/LlC7UtI515B
-X-Gm-Message-State: AOJu0Yxj2qCnWvy0UW4/3QsXhDzbfJ/hBfuUc50OwihUGYeo1pTjFtU2
-	Tl8ZuDz6+4ErwskmHKVIaImAU1wP1bU9kwLVwPeULT22AtLPzPLT8yvD9xIP+bE=
-X-Google-Smtp-Source: AGHT+IEgu+SEeuiOCn/D1qY0pc7gkYG3Zs7Fw5IldGNciNZjurJw8DVlWWCmF1sWH2Oat7hbi2sUlQ==
-X-Received: by 2002:a17:906:c34b:b0:a6f:14b8:a017 with SMTP id a640c23a62f3a-a6f60de601emr158636966b.74.1718355723412;
-        Fri, 14 Jun 2024 02:02:03 -0700 (PDT)
-Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56ed0d7csm161412166b.115.2024.06.14.02.02.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 02:02:02 -0700 (PDT)
-Date: Fri, 14 Jun 2024 11:02:01 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: 
-	Kelvin Zhang via B4 Relay <devnull+kelvin.zhang.amlogic.com@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, kelvin.zhang@amlogic.com, linux-pwm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Junyi Zhao <junyi.zhao@amlogic.com>
-Subject: Re: [PATCH v8 1/2] pwm: meson: Add support for Amlogic S4 PWM
-Message-ID: <agnl6gfipf3fyykdssnml6eibc2x7kva4nf7hpajiimoaavge4@lvajpt6tiszh>
-References: <20240613-s4-pwm-v8-0-b5bd0a768282@amlogic.com>
- <20240613-s4-pwm-v8-1-b5bd0a768282@amlogic.com>
- <1jfrtgj0so.fsf@starbuckisacylon.baylibre.com>
- <tnwdnwiruoty5yd42bmkupgg6hjxib5lblhqcyouoyx5y3zvnq@2d7cnrei24m4>
- <1jbk44htqr.fsf@starbuckisacylon.baylibre.com>
+	s=arc-20240116; t=1718356132; c=relaxed/simple;
+	bh=4RP4q9QG25QH+De1LOzDhXZta2ZeRrdDRTLsqg6NviQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sIrZXYl/E8+gzfcoGDAidRCEu6b3Jzoj615NmxsSR6Er6wjIeyF9dxEv/EUIJ4dJ0j+VAFndSuNEt1QvHPiAHceML9m7N8Ui/ChkvY4/vVbPONKUB6P63o6a5okw9X2+JxYuKlb44y3Fzqw/z/hpEIUPj7Q1J/13ixZNaflR72I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org; spf=pass smtp.mailfrom=mess.org; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=MXZx04ZT; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=MXZx04ZT; arc=none smtp.client-ip=88.97.38.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1718356122; bh=4RP4q9QG25QH+De1LOzDhXZta2ZeRrdDRTLsqg6NviQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MXZx04ZT9AN/P9rPEhdb4IzqE9vw6PolRAzCn9RBYYZQ7rklCBDnkxpE69XPsfsYz
+	 f9aXNX/D7Nqts+sHoBiOuNYvSGu36dQQGJ9tSekm22IDc+w+KDTtY/FYLcSAl8gGea
+	 +gUVACLvv849XtfBipBT+YT1bQkZ3NsW+Vb7gFT9/Jg/67lXlcZatOkAqiWc2FN+w6
+	 CUYcvP/Tg60cqNqm8xozqhb8VPASqD6Og8DSSB1LByifj1idQ/ODHqgzKssbPtIfpq
+	 wueVc0ZBPZ6XKnKEsCcJ8c9MpbhrZ6QHez5/u1QBHLipuB3acKyp5Qrs3xKii20Gsx
+	 MUlgaacYc1V+g==
+Received: by gofer.mess.org (Postfix, from userid 501)
+	id CB8BE1007EE; Fri, 14 Jun 2024 10:08:42 +0100 (BST)
+X-Spam-Level: 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1718356122; bh=4RP4q9QG25QH+De1LOzDhXZta2ZeRrdDRTLsqg6NviQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MXZx04ZT9AN/P9rPEhdb4IzqE9vw6PolRAzCn9RBYYZQ7rklCBDnkxpE69XPsfsYz
+	 f9aXNX/D7Nqts+sHoBiOuNYvSGu36dQQGJ9tSekm22IDc+w+KDTtY/FYLcSAl8gGea
+	 +gUVACLvv849XtfBipBT+YT1bQkZ3NsW+Vb7gFT9/Jg/67lXlcZatOkAqiWc2FN+w6
+	 CUYcvP/Tg60cqNqm8xozqhb8VPASqD6Og8DSSB1LByifj1idQ/ODHqgzKssbPtIfpq
+	 wueVc0ZBPZ6XKnKEsCcJ8c9MpbhrZ6QHez5/u1QBHLipuB3acKyp5Qrs3xKii20Gsx
+	 MUlgaacYc1V+g==
+Received: from localhost.localdomain (bigcore.local [IPv6:2a02:8011:d000:212:bc3c:1b4a:a6fa:362f])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gofer.mess.org (Postfix) with ESMTPSA id EEEC91000B8;
+	Fri, 14 Jun 2024 10:08:41 +0100 (BST)
+From: Sean Young <sean@mess.org>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Subject: [PATCH] bus: ts-nbus: Use pwm_apply_might_sleep()
+Date: Fri, 14 Jun 2024 10:08:29 +0100
+Message-ID: <20240614090829.560605-1-sean@mess.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oz7u3unvpzgczlnj"
-Content-Disposition: inline
-In-Reply-To: <1jbk44htqr.fsf@starbuckisacylon.baylibre.com>
+Content-Transfer-Encoding: 8bit
 
+pwm_apply_state() is deprecated since commit c748a6d77c06a ("pwm: Rename
+pwm_apply_state() to pwm_apply_might_sleep()").
 
---oz7u3unvpzgczlnj
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sean Young <sean@mess.org>
+---
+ drivers/bus/ts-nbus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hello Jer=F4me,
+diff --git a/drivers/bus/ts-nbus.c b/drivers/bus/ts-nbus.c
+index baf22a82c47a7..b8af44c5cdbd0 100644
+--- a/drivers/bus/ts-nbus.c
++++ b/drivers/bus/ts-nbus.c
+@@ -294,7 +294,7 @@ static int ts_nbus_probe(struct platform_device *pdev)
+ 	state.duty_cycle = state.period;
+ 	state.enabled = true;
+ 
+-	ret = pwm_apply_state(pwm, &state);
++	ret = pwm_apply_might_sleep(pwm, &state);
+ 	if (ret < 0)
+ 		return dev_err_probe(dev, ret, "failed to configure PWM\n");
+ 
+-- 
+2.45.2
 
-On Fri, Jun 14, 2024 at 09:24:28AM +0200, Jerome Brunet wrote:
-> My point here is also that devm_add_action_or_reset() can only fail on
-> memory allocation, like (devm_)kzalloc. Looking around the kernel, we
-> tend to not add messages for that and just return the error code,
-> presumably because those same 'out of memory' messages would proliferate
-> everywhere.
-
-I took your first message in this thread as opportunity to resend a
-patch improving the situation here. See
-
-	https://lore.kernel.org/lkml/3d1e308d45cddf67749522ca42d83f5b4f0b9634.1718=
-311756.git.u.kleine-koenig@baylibre.com/
-
-Best regards
-Uwe
-
---oz7u3unvpzgczlnj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZsBwUACgkQj4D7WH0S
-/k4l2wf6AmvkZU5HnDzh5pUZtIQAnaTIqw7xQlIVCPO0cdSS6agRG3SUyEETcbGu
-RoXED/lTCL16XBBJ6XVo8OEV1Genk9lIi11g6w/Ep5EsQSAgpZ/Vl2JgGvXLLJrF
-/p5HKP8VYBRpzUE8ss+9f8UI/1F39qwR3dUB6S6beBqq/2/dmTGmZehn281lvw0o
-a4eAdl4PTFmwdw2XnVbDiAEZsyapV/iUXPqDd4t0Op4MoW9fuAWkNSvPk9BqOp1x
-THfg5npVz7yjG/DS9LmUrVzb3O/ZFwRmHSpCixFoC5JQ0lEHtGanX07YF4V9trME
-pvtXzMcajGQH936vjemB8MN7Z4Dnaw==
-=Hk1f
------END PGP SIGNATURE-----
-
---oz7u3unvpzgczlnj--
 
