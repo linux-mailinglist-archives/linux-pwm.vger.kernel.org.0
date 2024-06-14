@@ -1,108 +1,116 @@
-Return-Path: <linux-pwm+bounces-2471-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2472-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B396908F43
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 17:46:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E9DE908F79
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 18:01:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4BB251F29BFA
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 15:46:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E58D286A2A
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 16:01:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6E1016D4D5;
-	Fri, 14 Jun 2024 15:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMP75Ftt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2484A146A9D;
+	Fri, 14 Jun 2024 16:01:31 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9B916C878;
-	Fri, 14 Jun 2024 15:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E72946C;
+	Fri, 14 Jun 2024 16:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718379974; cv=none; b=LVRveq+Pm4ahFZ2ed2Rr/6gJow6XIPpdWSf1L5kZ+C6ZEKI8QRoU0p5HMbHN0XAdrBsaoO7fo4L1KWlP2bPor2/tjVinqTQOPpBLyKGudLaZVYlCFDohYtP0xSRINCWKbygqfd9wzGMuTJSo1o4IGsoLt3k4J64VXqlUV9WPe28=
+	t=1718380891; cv=none; b=Gb+A9sJzmNyDQ5K5dljjAo+3iSgY42jBwqRJ3CV39eppMuy9nRAhw0/qB5lwazOSpARmUnMRo+JPbUDEaMybOWIcFRFbd4isJDj312wcAzz1MXSWm3S3KcYujupqDYDtJIo7tQvJBRmVeHy4ZyNZd+SaSNf1rgupI7g5MSghx2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718379974; c=relaxed/simple;
-	bh=Z6g1BYX8L60xI0ndaIE5U6XB1JZQMw7PdN+V+G9CosE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jLIRPF1v8XFwGznYtNzUthvi2Fa922JgVpbYbq/vsPhorkDW+S6Gf1wZB7d+vfoZTZFB3q2P5j2+xqjBFlNjH6pDfUjKgnYL40FL/I1HbwRwM7taXrzPDgq1hfCS4NTGglT2/lubtWIMmOprkVDCdVfpiIuweD+VIJmVeEHCcCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMP75Ftt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44A2EC4AF1A;
-	Fri, 14 Jun 2024 15:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718379974;
-	bh=Z6g1BYX8L60xI0ndaIE5U6XB1JZQMw7PdN+V+G9CosE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KMP75FtteaGZ46C996OXqSGmqE8rWWkj1b09SMD1m7ZkuO+h+D9jFg3FzgpqRMBey
-	 HkpEFBQC4TEBD32vbqGt4lh5UB2RQat0ogmEy+he9JH5tEnOyKub8ZBxNoxRXksbtx
-	 J3we+RxnWNyrzDYh1PmqUZOijLVeGmmvYxwn+ZVIoI5Gdj/dDESavn4EZ7vMgfCn1Z
-	 +NDhG7qOp/3PRGxVS8NEvgmned3x+Ov0As130rdvKUoAXXva/MoiHZlqYwwTY1rl70
-	 mrwEvxQXe+2elBeW2NL/yMjVfW64yXBndY8ex+UpKRTXP3A9qK/hBPknsKf0x3oGu7
-	 6f+tz1lGsi/zw==
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: linux-pwm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Sean Young <sean@mess.org>
-Subject: [PATCH] pwm: Drop pwm_apply_state()
-Date: Fri, 14 Jun 2024 17:46:02 +0200
-Message-ID: <20240614154603.689727-2-ukleinek@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1718380891; c=relaxed/simple;
+	bh=PF06UVAUwNRTBfsiJ21LK7Zw9YpeWoI6dp0UuAuGFXs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iC9DD7Y5sI8QiQFqt1PxpR9o3/UEZcFw7hZ33EqpZjm0oXuvuYD6E+HY71yjJt4AOZK80fcSogk34PReVfAVGLVBTFAVKgeeoQ6T0d/9bbIWSCYAxubRTQrGsBbwejU3NfLhU/kZg9BW3/FVqYVAUTqgM6u3lVTgGxH36LwQegY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W13rc72Q9z6H7Wv;
+	Sat, 15 Jun 2024 00:00:00 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 690CF140D26;
+	Sat, 15 Jun 2024 00:01:25 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Jun
+ 2024 17:01:24 +0100
+Date: Fri, 14 Jun 2024 17:01:23 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "Sascha
+ Hauer" <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Abel Vesa
+	<abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>, Frank Li
+	<Frank.Li@nxp.com>, <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<linux-i2c@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+	<linux-pwm@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <linux-watchdog@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: drop stale Anson Huang from maintainers
+Message-ID: <20240614170123.00002e0f@Huawei.com>
+In-Reply-To: <20240614095927.88762-1-krzysztof.kozlowski@linaro.org>
+References: <20240614095927.88762-1-krzysztof.kozlowski@linaro.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1437; i=ukleinek@kernel.org; h=from:subject; bh=Z6g1BYX8L60xI0ndaIE5U6XB1JZQMw7PdN+V+G9CosE=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmbGW7KFhB2Q7K6dl9fzXu5zx+pBZf8bDUzkSMX OwwDuUdYVCJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZmxluwAKCRCPgPtYfRL+ ThJZB/wPEdpuBE33pkjryetp2yEAreWO2n1W+2RNBdfHjUy91IOZlfClP+FWvYkQCGsby3xdh68 bGItAR4Vgo0Gj4PURZUQHOKN8mqze78WlEaVx3ygvw3YzMkMBVbnkGnYB4pa9MY5YEE7sxQrZJ1 PlLOjyiOoA6sPQsBah6vDaNvGBA+sY8nS8/kZeCejgweh3HNgcQCpWIVMH6T6ZRrKRQhx4n97Uc VbyrI882j9OEGCMnPdjN3tTVedkulQGDRF47b806S3ueK6KjYFYyV90MP0QFX4e01K/DqLOQdtC gsage3RfW/NGkOuOfy9174TanWsmWixWP4rEcYL53TGLMrWK
-X-Developer-Key: i=ukleinek@kernel.org; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-This function is not supposed to be used any more since commit
-c748a6d77c06 ("pwm: Rename pwm_apply_state() to
-pwm_apply_might_sleep()") that is included in v6.8-rc1. Two kernel
-releases should be enough for everyone to adapt, so drop the old
-function that was introduced as a compatibility stub for the transition.
+On Fri, 14 Jun 2024 11:59:27 +0200
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 
-Signed-off-by: Uwe Kleine-König <ukleinek@kernel.org>
----
-Hello,
+> Emails to Anson Huang bounce:
+> 
+>   Diagnostic-Code: smtp; 550 5.4.1 Recipient address rejected: Access denied.
+> 
+> Add IMX platform maintainers for bindings which would become orphaned.
+That doesn't make much sense for the magnetometer which has nothing to do with
+imx.
 
-with Sean patch fixing ts-nbus[1], the last user of pwm_apply_state() is
-gone, so pwm_apply_state() can be dropped now.
+Make that one my problem under my jic23@kernel.org address.
 
-Thanks for reminding me of this task.
+Thanks,
 
-Best regards
-Uwe
+Jonathan
 
-[1] https://lore.kernel.org/linux-pwm/20240614090829.560605-1-sean@mess.org
- include/linux/pwm.h | 7 -------
- 1 file changed, 7 deletions(-)
 
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 75ad0d2fd949..f8c2dc12dbd3 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -563,13 +563,6 @@ static inline void pwm_apply_args(struct pwm_device *pwm)
- 	pwm_apply_might_sleep(pwm, &state);
- }
- 
--/* only for backwards-compatibility, new code should not use this */
--static inline int pwm_apply_state(struct pwm_device *pwm,
--				  const struct pwm_state *state)
--{
--	return pwm_apply_might_sleep(pwm, state);
--}
--
- struct pwm_lookup {
- 	struct list_head list;
- 	const char *provider;
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
-prerequisite-patch-id: 51738c9613a88df12ce0963aa6bdb92fa15262e1
--- 
-2.43.0
+> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml b/Documentation/devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml
+> index 6b54d32323fc..467002a5da43 100644
+> --- a/Documentation/devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml
+> +++ b/Documentation/devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml
+> @@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+
+Not sure the new maintainers make sense here.
+
+Flip it to me if no one else volunteers.
+
+>  title: Freescale MAG3110 magnetometer sensor
+>  
+>  maintainers:
+> -  - Anson Huang <Anson.Huang@nxp.com>
+> +  - Shawn Guo <shawnguo@kernel.org>
+> +  - Sascha Hauer <s.hauer@pengutronix.de>
+> +  - Fabio Estevam <festevam@gmail.com>
+>  
+>  properties:
+>    compatible:
+
 
 
