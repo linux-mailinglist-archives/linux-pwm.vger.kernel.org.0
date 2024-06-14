@@ -1,131 +1,80 @@
-Return-Path: <linux-pwm+bounces-2461-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2462-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFF23908B92
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 14:23:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A4EF908E6F
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 17:16:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6317FB223F6
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 12:23:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E52EE1F27311
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jun 2024 15:16:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B30AF197A8A;
-	Fri, 14 Jun 2024 12:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="kPfOofo9"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3041B15CD64;
+	Fri, 14 Jun 2024 15:12:48 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB70196D80
-	for <linux-pwm@vger.kernel.org>; Fri, 14 Jun 2024 12:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66A2C1591F8;
+	Fri, 14 Jun 2024 15:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718367791; cv=none; b=GUAUf9eRg3n6ZcM77DfLNVLry9bC0YdJ68vFdRZRjdVPwhI8MalGXWfz89feDOu3lNs9m5VqWn+lN5HafiTGktHCDLK2Jvfi1UVXdCyuwo++F2bERdBEVPznOy4yV7a1AIFRJAmAto+HvtQkaC5wzN07udXNtQ/k55vOVYbqaPA=
+	t=1718377968; cv=none; b=s4XBQZeG2ntxyxD3W7aYFO1RizfT+HgcUyYk8QfyfkIL6Pbd0gEhzEjwtxUGiZ2osS2SXiIEpd58i+YQfuI+pqMxfzqXzse/Rlzi1yAAugFKZFN4DnvrAa8ZhwXCiml1+QHOgp5Jlsn5H/0mGolr/VswuE04K2JlFVdP2N5lBCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718367791; c=relaxed/simple;
-	bh=yxhM44O6zp2KBZgEbJ+StQD/YJ38G/9/f+U5EjDvXzA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k+vpfWHaG1wd5V2VrhIwHHLFmJvb9arEG+rSrvHCbypTljrQ/HXGE2m/3qomHdNTj5K6A3BKfcfhn6w/k3Clj/I/wpD8FpBW2g0DvEhyioEhIto3iuYUrlDkXdL/fruVV6C6bnXXELbCusefU+w3WRt1epnNwDrlYGPb7bExLr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=kPfOofo9; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=gbe4
-	NGoGJzlNtLVKEdopxNLp/BLddKDryG0jqabOz/E=; b=kPfOofo9DujqkJtNJJ0q
-	bC5ll3XMzSVdj9FSEvQ008yd04j5tBE0Edipg8AsmPKLDhnsv7sfUkOQMRaeCRJk
-	w3ROsk5S60Mawss3/1seNJtY+2wPFszE5/AUJ6Ni5lKjDxNIp7g6u3hvHYMGYgzs
-	yzwmDsryoNufbjjMonVbNq55BvFSPgTrj1+Jq+wh5LA/t7wjB0uupViXgdo/Kilp
-	H6BFbk27m/mDI8NPNyVpzhf59izO5mFTVwofkY+i5pFKghVz6A/D1wIg00Xpo1jl
-	ZTbdxIu3N6p82fL19bohOtkAfapZ/DcyND3ATd7ITGH4XZd8B04SsU/MdRu45BKV
-	Sw==
-Received: (qmail 1512454 invoked from network); 14 Jun 2024 14:23:01 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 14 Jun 2024 14:23:01 +0200
-X-UD-Smtp-Session: l3s3148p1@vPs1rdgayLhehh9j
-Date: Fri, 14 Jun 2024 14:23:01 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Abel Vesa <abelvesa@kernel.org>,
-	Peng Fan <peng.fan@nxp.com>, Frank Li <Frank.Li@nxp.com>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: drop stale Anson Huang from maintainers
-Message-ID: <20240614122301.vjwzbkrl5grh5dw2@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Abel Vesa <abelvesa@kernel.org>,
-	Peng Fan <peng.fan@nxp.com>, Frank Li <Frank.Li@nxp.com>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20240614095927.88762-1-krzysztof.kozlowski@linaro.org>
+	s=arc-20240116; t=1718377968; c=relaxed/simple;
+	bh=avEZ+q9GkCyZ8CRA8it+z6Wpyg/1LsKNszJVPpwkXi0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IDFOJeAVdULlKc2SAJCT7uCDIZIu9mvU5Mmm8wxAF0/6xOgX/BYjDZMyXc06qjImB6ZyA6cOho4boSAhDfI5CUH5kD35oorllD6YYZ+3uJwS+qUKeSWuOFeGEFag6Xw7vuyMEx1Rx542Xjj+MD3RndgYWr737ulPMiaceT0trn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.08,238,1712588400"; 
+   d="scan'208";a="207958146"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 15 Jun 2024 00:12:38 +0900
+Received: from localhost.localdomain (unknown [10.226.92.95])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id E300B445EBA3;
+	Sat, 15 Jun 2024 00:12:35 +0900 (JST)
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+	linux-pwm@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Biju Das <biju.das.au@gmail.com>,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH] pwm: Fix namespace error
+Date: Fri, 14 Jun 2024 16:12:33 +0100
+Message-Id: <20240614151233.398463-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="i66amim3x4jzbudd"
-Content-Disposition: inline
-In-Reply-To: <20240614095927.88762-1-krzysztof.kozlowski@linaro.org>
+Content-Transfer-Encoding: 8bit
 
+Fix namespace error due to typo by replacing USB_STORAGE->PWM.
 
---i66amim3x4jzbudd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: aeb9cedc87a2 ("pwm: Make use of a symbol namespace for the core")
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
+ include/linux/pwm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Fri, Jun 14, 2024 at 11:59:27AM +0200, Krzysztof Kozlowski wrote:
-> Emails to Anson Huang bounce:
->=20
->   Diagnostic-Code: smtp; 550 5.4.1 Recipient address rejected: Access den=
-ied.
->=20
-> Add IMX platform maintainers for bindings which would become orphaned.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index c68576067eca..75ad0d2fd949 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -8,7 +8,7 @@
+ #include <linux/mutex.h>
+ #include <linux/of.h>
+ 
+-MODULE_IMPORT_NS(USB_STORAGE);
++MODULE_IMPORT_NS(PWM);
+ 
+ struct pwm_chip;
+ 
+-- 
+2.25.1
 
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com> # for I2C
-
-
---i66amim3x4jzbudd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZsNiEACgkQFA3kzBSg
-KbZS8g//XMHYH+AtIpUDIrsnR9uk0/5NUTHI8TztcF7rT4+bRCBiwFY7SplUOupv
-9RK9jS1EA+S4ZyZkD56we02cqUlGBNXgS64vXTGfGIc1N+DMsa1uVyiv4MZsXgad
-PMnoe2emN02LqQCNCbvGvn9lZuYdEOwhfNVZXGVHcJbyQmgFwjUhoC1n2ukJA8AV
-mqSSlW1IVgJyYGhxxDLXh9diA/tcLpSPmgx3kzPVTNRmoS6edCWJcn9zluivL/R7
-4HXGhAw/yEMWvedXNQ54EnDrfVedA0f+xu0KOpQuMPkk0hQqD2JeisYBNTjX7SGq
-22kgrDdPLcyakURakGRVIpRy+iFZk1FzyiIPTRcEicskbaYXyvtu+78iWOB6A14K
-LP0evWM6LmqdKIVCooIOYPwiADx/oJYLYduFsgTWYq4GSpCuHtrHytwyw6j+LTvu
-jFM1zIVcml3rZ8ZieoIDXSqPiMqPE3/4cNuOfkkj4YmzdhLIN8FAJjEq+QepfxIw
-si0mPOGCa7Uuvlb/4n7DQWdoVTWkd6mmp1m/bPmdQqTE6eOVsrYSyDglKBcYCcCQ
-SuYwwUfnsKrX8mb9VIqHlYYtTX2VCECQKXpD84L/g0nO6KRrMqTTr0up3Mrzji5s
-KJJG1eA6JkB3J/1K5nplnklCdnsyY3Hx2aQy/Z6ECSDrUuiYj0E=
-=aS1V
------END PGP SIGNATURE-----
-
---i66amim3x4jzbudd--
 
