@@ -1,75 +1,76 @@
-Return-Path: <linux-pwm+bounces-2517-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2518-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AD2490D44F
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 16:19:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CF4790D683
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 17:05:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17729285755
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 14:19:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BAF28B24A50
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 14:19:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC021A00D8;
-	Tue, 18 Jun 2024 14:00:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A6881A01B9;
+	Tue, 18 Jun 2024 14:00:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkJIOb1o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFU/fJNi"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24A119F49B;
-	Tue, 18 Jun 2024 14:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0677D1A00CF;
+	Tue, 18 Jun 2024 14:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719233; cv=none; b=m1HRABoS7+dd3egzSzxaqxFL7UjKE6Bb2Aj4pQbVdhXZEFtrmL+zBKFPlHJQBR1QdN+MqeST3VvOCqZBruqtUGYzqjqSfwX/qEqAnnR7o0HTdv50yAMTsEN5Avtv8ICVnwHy0TDPPe3uvT8iy9sACCd6QWKVwI5eK63C0Swo7bU=
+	t=1718719235; cv=none; b=uISn4HKfM5+6osFDcB0EOY1Tlshrr6b0OKmbRjorFqsIYYxx7ibhhVQ3z9Z0kLl2u+BzS1wH0jDkG9ntXPk/LEUCmF+tjaR5SJFxYyY6LNf9Pla1eFSOX1LnzDxdtn+n52SV7dQiaqze6wSz2ZvAd3bwB2RRNxpyGkgwJoUBwjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719233; c=relaxed/simple;
-	bh=uZejq3wX3OBYE+9S5+uNP8az/DWpQYHhHiLxkXJUgAg=;
+	s=arc-20240116; t=1718719235; c=relaxed/simple;
+	bh=M+uc6GTvoNAckqEvB4YdUBo7gTDSwvEY9HdmtBtM0OA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tZXDZ2IZvPgM63KmmMxWBbDusVUMr4ljEc8+Ypm/lzpnK3zGM0a+tzI1y17AhsoGukUUqrGP8W4rqrjUvwoVUO9cbMRX1g6BsFKtMhRorh6lyYmpd1JkhgdYWUfGKAHQjQhTBkm7HudoCPl8pG2ZSZT4VBipEO7Mx5bhXkdbleA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WkJIOb1o; arc=none smtp.client-ip=209.85.208.43
+	 In-Reply-To:To:Cc; b=EUEMjG3C5POw2oTDoARBqnYZfJshcF5DK+HAMqyFDnOzmrTQyDgKpdWNC+FVRw2S4OQ27kh6EY03Swj52uPoaBThKqPJj7rMEIxlT7ek8+Sy0K6QH7SPclw7rDB/Y2rJ6O1+WqVlNqMYs2L/NPAka5WC2SapFhVDBeV2FV8v1YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YFU/fJNi; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57cce3bc8c6so3823782a12.3;
-        Tue, 18 Jun 2024 07:00:30 -0700 (PDT)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57cc7e85b4bso2284452a12.0;
+        Tue, 18 Jun 2024 07:00:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718719229; x=1719324029; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718719231; x=1719324031; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=eJjzPFzeK4OTnNmyhk2Z69T0Mv/GEdnDyv14Qjd1AMA=;
-        b=WkJIOb1o1+ffYugCAnkSw9Zr134fhg9M3VdiZAefDntFXJNNKnMR0x0OA5qimNCetA
-         aiIG/Lf9z4gieMsu2smeiYhcsbkHMrv1I2grUjJ7ykBHMeZn9d6hPu894Hi/OOmdxRxy
-         SnOy0kzjWlPNX8LAMOIZQa7fvXHudNR2oOz3lfIgv+E/KqTHvKR2Jzb3oRo+HFj4QCqE
-         kDGuHWA4yEud/gCfjg+i2yOw0Y3ooLDOGGJvR7GGghHLgPqxqvCnxcZNAEeEruZOpHBw
-         bty3TgmNdBp5b3B0ElqZh7tTIlDjIzVnIy+rgKUBHhWZ8ScF2Ow+NQpEtrOl3BdtaNBK
-         2DLg==
+        bh=Q4ELQwjzHA4yApdsWewX3oXEq3EZwSJvDLoYd1jNQ34=;
+        b=YFU/fJNiLdWH8K5pTEa8pKMdTc8UeFGXXaecMbItRVi4/091B7mJ6hPwY2Fc8U2av8
+         qFJYnuCGEUpcbnM472oqomhNm/cRU6LyfLPwTDLLv5FRPVal9KbDnkCCpvJSd1K5U9mE
+         gYcnC098z3Gkze3wC+FPMRVyT3TEs60A2hO6dyHFnK42ocMoGaYFsBDvZqW/LhNwTiXK
+         hB+EFpw/oLtNzkqME+7uarAjt1vWOpDGXAEmarzxH/O3Dv9AHm2k/XRp3sdsxwf/+DNU
+         YB5LrQGpFNNbUWnmkkrhXdUMhawpTXfJ6+xbzaSYskPpeajROVJmAB/aIck0K+JH3soJ
+         HEcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718719229; x=1719324029;
+        d=1e100.net; s=20230601; t=1718719231; x=1719324031;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eJjzPFzeK4OTnNmyhk2Z69T0Mv/GEdnDyv14Qjd1AMA=;
-        b=P8jiVXsOMmHQr1F/HfN0RL9waM45wRiN48GJ+97XpjWwb97Yu5DBx8fY0jAmTQdo/5
-         E4Gs6653SD3yMoOVqGGt2nOOfh3jAk+hTVP8JQE4LVTnz9Idun8HBW5DpcGwqStBV9L/
-         579UqO70taz+4IIJ9RbdV65hciQWlmRDqDVn1ZPCnkhfnEL8ij5T4tfQVgsjo8yixpLd
-         W1s2zn7ENUXaxobPLeEkp+bxYobvJCDAwlfJBriVrAn5/hRg/Z6+6AtDWzc3HdgOKVKk
-         R/Y1O09IHprytMAHZbG3hqXMrLZpFcUaMAbZdN1RSWIePUFnTh8NX8LbHP1c15MgtNl8
-         q0VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsMs1TT+C+Daq4euQXqZdmvnSSw0QapT7I0PEKYa3VVFXjKK7Ymva22LODIrRtLTF9no54bwLYrfMH0YT8/ekjwXSZeNS3QQMLVhqaL7u7gpVMzxS++KuCXiTC4wWHwXxbDzTHUuRTgba4mAdtoBELdyMO8B9CYrcUBS3OzjTtdYFjB9adssGDw6sErzpYUUhh8W33iWlKDApA3LfOfxG0FlmDP4sY5ZRcDz6kiW59C2I0olQ4mh2pC+2t2I+BqNSFmI9VIe/9xjm+1AVulOSvX6YmntMh+YxIGAXVuCFsu9a5X7Ycowd29ExuCJb12+IdNs/KAt3/Jn7aU5u0mlN5M5WhN3yaq0zPis2SmyPkTYwDxMsaZsUUq3h2eWHGcJBKwfS9okQWEDrLtI+n28Wwssjt+hKD
-X-Gm-Message-State: AOJu0YysE39hlYE31kT2HXWP/6gbQD9kJvkaosnA1utWHv5q48zU+wR1
-	uOJHSRrKHBgAC4npPabXdItRjnGSPeVgbVAx+1oNq0pNroVBqeFy
-X-Google-Smtp-Source: AGHT+IF4ZzHLI9V3+LTX7+JTibxZTfVLCoXIxk/IYmJanCqg5Sh7sZ08YDb/9Oipl6vdG3BZDB9ekA==
-X-Received: by 2002:a50:ab4a:0:b0:578:6c19:4801 with SMTP id 4fb4d7f45d1cf-57cbd6a70e9mr8232702a12.22.1718719228794;
-        Tue, 18 Jun 2024 07:00:28 -0700 (PDT)
+        bh=Q4ELQwjzHA4yApdsWewX3oXEq3EZwSJvDLoYd1jNQ34=;
+        b=tR4nMkREcZ8Awn9lxhIsvBVyEieW4PNT0M5GPQjflET4hdTJPESQVpwroje9L3Ymxj
+         ZEtClSj1EjRQPkpRxO8CG/0lNWOUB3iXTUHVcEiJxLrkWtYlT3E9EyxsKMdTxNKjMOGL
+         4zfoRevnVw/LiX1bExnfi7mXzkZrMQ3HlIeIV5aV+b5d+kyoqxFiybyG6CY8zZacsE2s
+         KsJ+whuuN5Ecy+VqaKWo0lVzfwKZzRRFLu4G7nvBkhL738j+H2EEX8OVTtivCBavRj0c
+         xcSeqa9hx43lpJ1aAuXNVsT50bxg6L1ydI8lcCr4uMok3HwRLC3Wg/GO7ZjEidpNxvW9
+         Ru/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUVs5dF93p/EwERhr7XLYEVB0tl+Hhb/9hKPvDoUhsVJCopONSRlPnw7ps6qXZZuEX35j452vCld8DTS12uDC+uWyHbPhLxbEBY0LLeMfQpQlzGaTgriYAeF/ZYdI9rywWxqFNd+GgOofWTIGa93QRgQJBmCiXP6LdFrmJGFLHLC6n1YiGnkOFpExZEmS0iJ+YjdWTkDo57a3cJlZcieFNbtX/JkhYDcOuhf6OtR1hrHymWlEAZ1g9p7VS2rOAOtfEa2Yxsb1cRqDVmDK36LSJ3HzA+hXL/y7CIVGi5nCPQs41N4S2fwx5bl7g9h1i9DEVtJriwxburcrqvngVxZyu8V6wRQWXqzBN0BnRSETOPKKKb4aTr+8ngGuCy7C67QF4oKKsqiME1w8dnrxoHeA8JOU0B2ziP
+X-Gm-Message-State: AOJu0YxSn0OKja92Tmq5FI9ORdYeNEm/CNMwhPs2kyD7LyKKpQhO89E0
+	1JLilEhsZeBohDIKYKfPJenhKNVbe7sUUMjwQ27BbllJPbmPctNI
+X-Google-Smtp-Source: AGHT+IG56CjchONS6I1JegFr/43CXmjz4UPasXM/HnpGFAACjVWB6VLqx/Impr4a3DUI4prupBUQPg==
+X-Received: by 2002:a50:998c:0:b0:57c:c171:2fb6 with SMTP id 4fb4d7f45d1cf-57cf7a4e148mr1877504a12.1.1718719231063;
+        Tue, 18 Jun 2024 07:00:31 -0700 (PDT)
 Received: from [127.0.1.1] (mm-167-232-122-178.mgts.dynamic.pppoe.byfly.by. [178.122.232.167])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm7731278a12.22.2024.06.18.07.00.26
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm7731278a12.22.2024.06.18.07.00.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 07:00:28 -0700 (PDT)
+        Tue, 18 Jun 2024 07:00:30 -0700 (PDT)
 From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Tue, 18 Jun 2024 16:59:52 +0300
-Subject: [PATCH v3 18/23] regulator: add s2dos05 regulator support
+Date: Tue, 18 Jun 2024 16:59:53 +0300
+Subject: [PATCH v3 19/23] power: supply: s2dos05: Add fuel gauge driver for
+ s2dos05
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -78,7 +79,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240618-starqltechn_integration_upstream-v3-18-e3f6662017ac@gmail.com>
+Message-Id: <20240618-starqltechn_integration_upstream-v3-19-e3f6662017ac@gmail.com>
 References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
 In-Reply-To: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
 To: Sebastian Reichel <sre@kernel.org>, 
@@ -104,436 +105,635 @@ Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
  Dzmitry Sankouski <dsankouski@gmail.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718719185; l=12895;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718719185; l=18925;
  i=dsankouski@gmail.com; s=20240618; h=from:subject:message-id;
- bh=uZejq3wX3OBYE+9S5+uNP8az/DWpQYHhHiLxkXJUgAg=;
- b=5XtWTi2CQq9/wixtulx+pvi4NO3P+hcgPgRzF8p95jBWt9lMboWJtUeAdy8U69KlHIY638Q7u
- vUZauNkhQbHBrjHjjmEPIjCHoFB1/7esgo0w4z1F6LxEg9G5mvxG1nM
+ bh=M+uc6GTvoNAckqEvB4YdUBo7gTDSwvEY9HdmtBtM0OA=;
+ b=wYpibWI2SfJGhhqeC25dhyZfx7jwIHK7peeTCQGamB97n/dYfX6y9D6lfjfMafBFp9MtQEP2c
+ PSrkGaJweMFBPaMye7WabuIUy9Ns45BE7DW5DmrdldpFpOVCId66k3E
 X-Developer-Key: i=dsankouski@gmail.com; a=ed25519;
  pk=6pMMVVDDReSiRgPCbMOUauN5nS3ty4Sf5b7a2gi4x0M=
 
-S2dos05 has 1 buck and 4 LDO regulators, used for powering
-panel/touchscreen.
+Add fuel gauge driver for s2dos05 PMIC. It uses adc to measure power
+on each power output s2dos05 provides, including regulator outputs
+and AVDD, ELVSS, ELVDD lines. Driver registers power supply for each
+corresponding power line.
+
+Adc can be disabled and enabled via sysfs.
 
 Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
 ---
- MAINTAINERS                           |   1 +
- drivers/regulator/Kconfig             |   8 +
- drivers/regulator/Makefile            |   1 +
- drivers/regulator/s2dos05-regulator.c | 362 ++++++++++++++++++++++++++++++++++
- 4 files changed, 372 insertions(+)
+ MAINTAINERS                       |   1 +
+ drivers/power/supply/Kconfig      |   8 +
+ drivers/power/supply/Makefile     |   1 +
+ drivers/power/supply/s2dos05-fg.c | 427 ++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/s2dos05.h       | 123 +++++++++++
+ 5 files changed, 560 insertions(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index b53462684a30..bee700a5e648 100644
+index bee700a5e648..2c5d9a74f977 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -19910,6 +19910,7 @@ F:	Documentation/devicetree/bindings/regulator/samsung,s5m*.yaml
  F:	drivers/clk/clk-s2mps11.c
  F:	drivers/mfd/s2dos*.c
  F:	drivers/mfd/sec*.c
-+F:	drivers/regulator/s2dos*.c
++F:	drivers/power/supply/s2dos*.c
+ F:	drivers/regulator/s2dos*.c
  F:	drivers/regulator/s2m*.c
  F:	drivers/regulator/s5m*.c
- F:	drivers/rtc/rtc-s5m.c
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index d333be2bea3b..d6d6f571a65d 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -1297,6 +1297,14 @@ config REGULATOR_RTQ2208
- 	  and two ldos. It features wide output voltage range from 0.4V to 2.05V
- 	  and the capability to configure the corresponding power stages.
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index a3fdfcb5aa64..22090b150885 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -964,6 +964,14 @@ config CHARGER_SURFACE
+ 	  Microsoft Surface devices, i.e. Surface Pro 7, Surface Laptop 3,
+ 	  Surface Book 3, and Surface Laptop Go.
  
-+config REGULATOR_S2DOS05
-+	tristate "SLSI S2DOS05 regulator"
-+	depends on MFD_S2DOS_CORE || COMPILE_TEST
++config FUEL_GAUGE_S2DOS05
++	tristate "Power measurement driver for s2dos05 pmic"
++	depends on MFD_S2DOS_CORE
 +	help
-+	  This driver provides support for the voltage regulators of the S2DOS05.
-+	  The S2DOS05 is a companion power management IC for the smart phones.
-+	  The S2DOS05 has 4 LDOs and 1 BUCK outputs.
++	  This driver measures power consumption of s2dos05 regulator consumers.
 +
- config REGULATOR_S2MPA01
- 	tristate "Samsung S2MPA01 voltage regulator"
- 	depends on MFD_SEC_CORE || COMPILE_TEST
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index ba15fa5f30ad..80f889404597 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -151,6 +151,7 @@ obj-$(CONFIG_REGULATOR_RTMV20)	+= rtmv20-regulator.o
- obj-$(CONFIG_REGULATOR_RTQ2134) += rtq2134-regulator.o
- obj-$(CONFIG_REGULATOR_RTQ6752)	+= rtq6752-regulator.o
- obj-$(CONFIG_REGULATOR_RTQ2208) += rtq2208-regulator.o
-+obj-$(CONFIG_REGULATOR_S2DOS05) += s2dos05-regulator.o
- obj-$(CONFIG_REGULATOR_S2MPA01) += s2mpa01.o
- obj-$(CONFIG_REGULATOR_S2MPS11) += s2mps11.o
- obj-$(CONFIG_REGULATOR_S5M8767) += s5m8767.o
-diff --git a/drivers/regulator/s2dos05-regulator.c b/drivers/regulator/s2dos05-regulator.c
++	  Say M or Y here to include power measurement ability in s2dos05 pmic.
++
+ config BATTERY_UG3105
+ 	tristate "uPI uG3105 battery monitor driver"
+ 	depends on I2C
+diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+index e1abad8b6b75..fcea83c8aa79 100644
+--- a/drivers/power/supply/Makefile
++++ b/drivers/power/supply/Makefile
+@@ -113,6 +113,7 @@ obj-$(CONFIG_RN5T618_POWER)	+= rn5t618_power.o
+ obj-$(CONFIG_BATTERY_ACER_A500)	+= acer_a500_battery.o
+ obj-$(CONFIG_BATTERY_SURFACE)	+= surface_battery.o
+ obj-$(CONFIG_CHARGER_SURFACE)	+= surface_charger.o
++obj-$(CONFIG_FUEL_GAUGE_S2DOS05)	+= s2dos05-fg.o
+ obj-$(CONFIG_BATTERY_UG3105)	+= ug3105_battery.o
+ obj-$(CONFIG_CHARGER_QCOM_SMB2)	+= qcom_pmi8998_charger.o
+ obj-$(CONFIG_FUEL_GAUGE_MM8013)	+= mm8013.o
+diff --git a/drivers/power/supply/s2dos05-fg.c b/drivers/power/supply/s2dos05-fg.c
 new file mode 100644
-index 000000000000..3c58a1bd2262
+index 000000000000..d2070f90c80c
 --- /dev/null
-+++ b/drivers/regulator/s2dos05-regulator.c
-@@ -0,0 +1,362 @@
++++ b/drivers/power/supply/s2dos05-fg.c
+@@ -0,0 +1,427 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * s2dos05.c - Regulator driver for the Samsung s2dos05
++ * s2dos05-fg.c
 + *
-+ * Copyright (C) 2016 Samsung Electronics
-+ * Copyright (C) 2023 Dzmitry Sankouski <dsankouski@gmail.com>
++ * Copyright (c) 2015 Samsung Electronics Co., Ltd
++ *              http://www.samsung.com
++ * Copyright (c) 2024 Dzmitry Sankouski <dsankouski@gmail.com>
 + *
 + */
-+
 +#include <linux/module.h>
-+#include <linux/bug.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/interrupt.h>
++#include <linux/mod_devicetable.h>
 +#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
++#include <linux/power_supply.h>
 +#include <linux/mfd/samsung/s2dos-core.h>
 +#include <linux/mfd/samsung/s2dos05.h>
-+#include <linux/i2c.h>
-+#include <linux/debugfs.h>
 +
-+struct s2dos05_data {
++#define SYNC_MODE	1
++#define ASYNC_MODE	2
++
++struct s2dos05_fg {
 +	struct regmap *regmap;
 +	struct device *dev;
++	u8 adc_sync_mode;
++	struct power_supply	*psy_elvdd;
++	struct power_supply	*psy_elvss;
++	struct power_supply	*psy_avdd;
++	struct power_supply	*psy_buck;
++	struct power_supply	*psy_ldo1;
++	struct power_supply	*psy_ldo2;
++	struct power_supply	*psy_ldo3;
++	struct power_supply	*psy_ldo4;
 +};
 +
-+static int s2m_enable(struct regulator_dev *rdev)
++static const unsigned int power_coeffs[8] = {POWER_ELVDD, POWER_ELVSS, POWER_AVDD,
++	POWER_BUCK, POWER_L1, POWER_L2, POWER_L3, POWER_L4};
++
++static void s2dos05_is_online(struct s2dos05_fg *drv_data, int *val)
 +{
-+	struct s2dos05_data *info = rdev_get_drvdata(rdev);
-+	struct regmap *regmap = info->regmap;
++	unsigned int adc_ctrl2;
 +
-+	return regmap_update_bits(regmap, rdev->desc->enable_reg,
-+				  rdev->desc->enable_mask,
-+					rdev->desc->enable_mask);
-+}
-+
-+static int s2m_disable_regmap(struct regulator_dev *rdev)
-+{
-+	struct s2dos05_data *info = rdev_get_drvdata(rdev);
-+	struct regmap *regmap = info->regmap;
-+	u8 val;
-+
-+	if (rdev->desc->enable_is_inverted)
-+		val = rdev->desc->enable_mask;
++	regmap_read(drv_data->regmap, S2DOS05_REG_PWRMT_CTRL2, &adc_ctrl2);
++	if ((adc_ctrl2 & ADC_EN_MASK) > 0)
++		*val = 1;
 +	else
-+		val = 0;
-+
-+	return regmap_update_bits(regmap, rdev->desc->enable_reg, rdev->desc->enable_mask,
-+				   val);
++		*val = 0;
 +}
 +
-+static int s2m_is_enabled_regmap(struct regulator_dev *rdev)
++static void s2dos05_start_measurement_if_async(struct s2dos05_fg *drv_data, unsigned int channel)
 +{
-+	struct s2dos05_data *info = rdev_get_drvdata(rdev);
-+	struct regmap *regmap = info->regmap;
-+	int ret;
-+	unsigned int val;
++	unsigned int temp;
 +
-+	ret = regmap_read(regmap, rdev->desc->enable_reg, &val);
-+	if (ret < 0)
-+		return ret;
++	if (drv_data->adc_sync_mode == ASYNC_MODE) {
++		regmap_read(drv_data->regmap, S2DOS05_REG_PWRMT_CTRL1, &temp);
++		if (!(temp & PWRMT_EN_CHK))
++			return;
 +
-+	if (rdev->desc->enable_is_inverted)
-+		return (val & rdev->desc->enable_mask) == 0;
++		regmap_update_bits(drv_data->regmap, S2DOS05_REG_PWRMT_CTRL1,
++							ADC_ASYNCRD_MASK, ADC_ASYNCRD_MASK);
++		usleep_range(2000, 2100);
++	}
++}
++
++static void s2dos05_adc_read_power(struct s2dos05_fg *drv_data, unsigned int channel, int *val)
++{
++	unsigned int data_l, data_h, adc_val;
++
++	regmap_update_bits(drv_data->regmap, S2DOS05_REG_PWRMT_CTRL2, ADC_PTR_MASK,
++				2*channel);
++	regmap_read(drv_data->regmap, S2DOS05_REG_PWRMT_DATA,
++				&data_l);
++
++	regmap_update_bits(drv_data->regmap, S2DOS05_REG_PWRMT_CTRL2, ADC_PTR_MASK,
++				2*channel+1);
++	regmap_read(drv_data->regmap, S2DOS05_REG_PWRMT_DATA,
++				&data_h);
++
++	adc_val = ((data_h & 0xff) << 8) | (data_l & 0xff);
++	*val = adc_val * power_coeffs[channel] / 100;
++}
++
++static int s2dos05_get_adc_validity(struct s2dos05_fg *drv_data)
++{
++	unsigned int adc_validity;
++
++	regmap_read(drv_data->regmap, S2DOS05_REG_OCL, &adc_validity);
++	return !!(adc_validity | ADC_VALID_MASK);
++}
++
++static ssize_t adc_en_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct s2dos05_fg *drv_data = dev_get_drvdata(dev);
++	unsigned int adc_ctrl3;
++
++	regmap_read(drv_data->regmap, S2DOS05_REG_PWRMT_CTRL2, &adc_ctrl3);
++	if ((adc_ctrl3 & ADC_EN_MASK) > 0)
++		return snprintf(buf, PAGE_SIZE, "ADC enable (%x)\n", adc_ctrl3);
 +	else
-+		return (val & rdev->desc->enable_mask) != 0;
++		return snprintf(buf, PAGE_SIZE, "ADC disable (%x)\n", adc_ctrl3);
 +}
 +
-+static int s2m_get_voltage_sel_regmap(struct regulator_dev *rdev)
++static ssize_t adc_en_store(struct device *dev, struct device_attribute *attr,
++				const char *buf, size_t count)
 +{
-+	struct s2dos05_data *info = rdev_get_drvdata(rdev);
-+	struct regmap *regmap = info->regmap;
++	struct s2dos05_fg *drv_data = dev_get_drvdata(dev);
 +	int ret;
-+	unsigned int val;
++	unsigned int temp, val;
 +
-+	ret = regmap_read(regmap, rdev->desc->vsel_reg, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	val &= rdev->desc->vsel_mask;
-+
-+	return val;
-+}
-+
-+static int s2m_set_voltage_sel_regmap(struct regulator_dev *rdev,
-+					unsigned int sel)
-+{
-+	struct s2dos05_data *info = rdev_get_drvdata(rdev);
-+	struct regmap *regmap = info->regmap;
-+	int ret;
-+
-+	ret = regmap_update_bits(regmap, rdev->desc->vsel_reg, rdev->desc->vsel_mask,
-+				sel);
-+	if (ret < 0)
-+		goto out;
-+
-+	if (rdev->desc->apply_bit)
-+		ret = regmap_update_bits(regmap, rdev->desc->apply_reg,
-+					 rdev->desc->apply_bit,
-+					 rdev->desc->apply_bit);
-+	return ret;
-+out:
-+	pr_warn("%s: failed to set voltage_sel_regmap\n", rdev->desc->name);
-+	return ret;
-+}
-+
-+static int s2m_set_voltage_sel_regmap_buck(struct regulator_dev *rdev,
-+					unsigned int sel)
-+{
-+	struct s2dos05_data *info = rdev_get_drvdata(rdev);
-+	struct regmap *regmap = info->regmap;
-+	int ret;
-+
-+	ret = regmap_write(regmap, rdev->desc->vsel_reg, sel);
-+	if (ret < 0)
-+		goto out;
-+
-+	if (rdev->desc->apply_bit)
-+		ret = regmap_update_bits(regmap, rdev->desc->apply_reg,
-+					 rdev->desc->apply_bit,
-+					 rdev->desc->apply_bit);
-+	return ret;
-+out:
-+	pr_warn("%s: failed to set voltage_sel_regmap\n", rdev->desc->name);
-+	return ret;
-+}
-+
-+static int s2m_set_voltage_time_sel(struct regulator_dev *rdev,
-+				   unsigned int old_selector,
-+				   unsigned int new_selector)
-+{
-+	int old_volt, new_volt;
-+
-+	/* sanity check */
-+	if (!rdev->desc->ops->list_voltage)
++	ret = kstrtouint(buf, 16, &temp);
++	if (ret)
 +		return -EINVAL;
 +
-+	old_volt = rdev->desc->ops->list_voltage(rdev, old_selector);
-+	new_volt = rdev->desc->ops->list_voltage(rdev, new_selector);
++	switch (temp) {
++	case 0:
++		val = 0x00;
++		break;
++	case 1:
++		val = 0x80;
++		break;
++	default:
++		val = 0x00;
++		break;
++	}
 +
-+	if (old_selector < new_selector)
-+		return DIV_ROUND_UP(new_volt - old_volt, S2DOS05_RAMP_DELAY);
++	regmap_update_bits(drv_data->regmap, S2DOS05_REG_PWRMT_CTRL2, ADC_EN_MASK,
++				val);
++	return count;
++}
++
++static ssize_t adc_sync_mode_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct s2dos05_fg *drv_data = dev_get_drvdata(dev);
++
++	switch (drv_data->adc_sync_mode) {
++	case SYNC_MODE:
++		return snprintf(buf, PAGE_SIZE, "SYNC_MODE (%d)\n", drv_data->adc_sync_mode);
++	case ASYNC_MODE:
++		return snprintf(buf, PAGE_SIZE, "ASYNC_MODE (%d)\n", drv_data->adc_sync_mode);
++	default:
++		return snprintf(buf, PAGE_SIZE, "error (%d)\n", drv_data->adc_sync_mode);
++	}
++}
++
++static ssize_t adc_sync_mode_store(struct device *dev, struct device_attribute *attr,
++				const char *buf, size_t count)
++{
++	struct s2dos05_fg *drv_data = dev_get_drvdata(dev);
++	int ret;
++	u8 temp;
++
++	ret = kstrtou8(buf, 16, &temp);
++	if (ret)
++		return -EINVAL;
++
++	switch (temp) {
++	case SYNC_MODE:
++		drv_data->adc_sync_mode = 1;
++		break;
++	case ASYNC_MODE:
++		drv_data->adc_sync_mode = 2;
++		break;
++	default:
++		drv_data->adc_sync_mode = 1;
++		break;
++	}
++
++	return count;
++}
++
++static DEVICE_ATTR_RW(adc_en);
++static DEVICE_ATTR_RW(adc_sync_mode);
++
++static int s2dos05_fg_get_property(struct power_supply *psy,
++					 enum power_supply_property psp,
++					 union power_supply_propval *val,
++					 unsigned int channel
++					 )
++{
++	struct s2dos05_fg *drv_data = power_supply_get_drvdata(psy);
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_ONLINE:
++		s2dos05_is_online(drv_data, &val->intval);
++		break;
++	case POWER_SUPPLY_PROP_STATUS:
++		if (s2dos05_get_adc_validity(drv_data))
++			val->intval = POWER_SUPPLY_HEALTH_GOOD;
++		else
++			val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
++		break;
++	case POWER_SUPPLY_PROP_POWER_NOW:
++		s2dos05_start_measurement_if_async(drv_data, channel);
++		s2dos05_adc_read_power(drv_data, channel, &val->intval);
++		break;
++	default:
++		return -EINVAL;
++	}
 +
 +	return 0;
 +}
 +
-+static int s2m_set_active_discharge(struct regulator_dev *rdev,
-+					bool enable)
++static int s2dos05_fg_get_property_elvdd(struct power_supply *psy,
++					 enum power_supply_property psp,
++					 union power_supply_propval *val
++					 )
 +{
-+	struct s2dos05_data *info = rdev_get_drvdata(rdev);
-+	struct regmap *regmap = info->regmap;
-+	int ret;
-+	u8 val;
-+
-+	if (enable)
-+		val = rdev->desc->active_discharge_on;
-+	else
-+		val = rdev->desc->active_discharge_off;
-+
-+	ret = regmap_update_bits(regmap, rdev->desc->active_discharge_reg,
-+				rdev->desc->active_discharge_mask, val);
-+	return ret;
++	return s2dos05_fg_get_property(psy, psp, val, CHANNEL_ELVDD);
 +}
 +
-+static const struct regulator_ops s2dos05_ldo_ops = {
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
-+	.is_enabled		= s2m_is_enabled_regmap,
-+	.enable			= s2m_enable,
-+	.disable		= s2m_disable_regmap,
-+	.get_voltage_sel	= s2m_get_voltage_sel_regmap,
-+	.set_voltage_sel	= s2m_set_voltage_sel_regmap,
-+	.set_voltage_time_sel	= s2m_set_voltage_time_sel,
-+	.set_active_discharge	= s2m_set_active_discharge,
-+};
-+
-+static const struct regulator_ops s2dos05_buck_ops = {
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
-+	.is_enabled		= s2m_is_enabled_regmap,
-+	.enable			= s2m_enable,
-+	.disable		= s2m_disable_regmap,
-+	.get_voltage_sel	= s2m_get_voltage_sel_regmap,
-+	.set_voltage_sel	= s2m_set_voltage_sel_regmap_buck,
-+	.set_voltage_time_sel	= s2m_set_voltage_time_sel,
-+	.set_active_discharge	= s2m_set_active_discharge,
-+};
-+
-+#define _BUCK(macro)	S2DOS05_BUCK##macro
-+#define _buck_ops(num)	s2dos05_buck_ops##num
-+
-+#define _LDO(macro)	S2DOS05_LDO##macro
-+#define _REG(ctrl)	S2DOS05_REG##ctrl
-+#define _ldo_ops(num)	s2dos05_ldo_ops##num
-+#define _MASK(macro)	S2DOS05_ENABLE_MASK##macro
-+#define _TIME(macro)	S2DOS05_ENABLE_TIME##macro
-+
-+#define BUCK_DESC(_name, _id, _ops, m, s, v, e, em, t, a) {	\
-+	.name		= _name,				\
-+	.id		= _id,					\
-+	.ops		= _ops,					\
-+	.type		= REGULATOR_VOLTAGE,			\
-+	.owner		= THIS_MODULE,				\
-+	.min_uV		= m,					\
-+	.uV_step	= s,					\
-+	.n_voltages	= S2DOS05_BUCK_N_VOLTAGES,		\
-+	.vsel_reg	= v,					\
-+	.vsel_mask	= S2DOS05_BUCK_VSEL_MASK,		\
-+	.enable_reg	= e,					\
-+	.enable_mask	= em,					\
-+	.enable_time	= t,					\
-+	.active_discharge_off = 0,				\
-+	.active_discharge_on = S2DOS05_BUCK_FD_MASK,		\
-+	.active_discharge_reg	= a,				\
-+	.active_discharge_mask	= S2DOS05_BUCK_FD_MASK		\
-+}
-+
-+#define LDO_DESC(_name, _id, _ops, m, s, v, e, em, t, a) {	\
-+	.name		= _name,				\
-+	.id		= _id,					\
-+	.ops		= _ops,					\
-+	.type		= REGULATOR_VOLTAGE,			\
-+	.owner		= THIS_MODULE,				\
-+	.min_uV		= m,					\
-+	.uV_step	= s,					\
-+	.n_voltages	= S2DOS05_LDO_N_VOLTAGES,		\
-+	.vsel_reg	= v,					\
-+	.vsel_mask	= S2DOS05_LDO_VSEL_MASK,		\
-+	.enable_reg	= e,					\
-+	.enable_mask	= em,					\
-+	.enable_time	= t,					\
-+	.active_discharge_off = 0,				\
-+	.active_discharge_on = S2DOS05_LDO_FD_MASK,		\
-+	.active_discharge_reg	= a,				\
-+	.active_discharge_mask	= S2DOS05_LDO_FD_MASK		\
-+}
-+
-+static struct regulator_desc regulators[S2DOS05_REGULATOR_MAX] = {
-+		/* name, id, ops, min_uv, uV_step, vsel_reg, enable_reg */
-+		LDO_DESC("ldo1", _LDO(1), &_ldo_ops(), _LDO(_MIN1),
-+			_LDO(_STEP1), _REG(_LDO1_CFG),
-+			_REG(_EN), _MASK(_L1), _TIME(_LDO), _REG(_LDO1_CFG)),
-+		LDO_DESC("ldo2", _LDO(2), &_ldo_ops(), _LDO(_MIN1),
-+			_LDO(_STEP1), _REG(_LDO2_CFG),
-+			_REG(_EN), _MASK(_L2), _TIME(_LDO), _REG(_LDO2_CFG)),
-+		LDO_DESC("ldo3", _LDO(3), &_ldo_ops(), _LDO(_MIN2),
-+			_LDO(_STEP1), _REG(_LDO3_CFG),
-+			_REG(_EN), _MASK(_L3), _TIME(_LDO), _REG(_LDO3_CFG)),
-+		LDO_DESC("ldo4", _LDO(4), &_ldo_ops(), _LDO(_MIN2),
-+			_LDO(_STEP1), _REG(_LDO4_CFG),
-+			_REG(_EN), _MASK(_L4), _TIME(_LDO), _REG(_LDO4_CFG)),
-+		BUCK_DESC("buck1", _BUCK(1), &_buck_ops(), _BUCK(_MIN1),
-+			_BUCK(_STEP1), _REG(_BUCK_VOUT),
-+			_REG(_EN), _MASK(_B1), _TIME(_BUCK), _REG(_BUCK_CFG)),
-+};
-+
-+static int s2dos05_pmic_dt_parse_pdata(struct device *dev,
-+					struct of_regulator_match *rdata,
-+					unsigned int rdev_num)
++static int s2dos05_fg_get_property_elvss(struct power_supply *psy,
++					 enum power_supply_property psp,
++					 union power_supply_propval *val
++					 )
 +{
-+	struct device_node *reg_np;
-+	int err;
-+
-+	reg_np = of_get_child_by_name(dev->parent->of_node, "regulators");
-+	if (!reg_np) {
-+		dev_err(dev, "could not find regulators sub-node\n");
-+		return -EINVAL;
-+	}
-+
-+	err = of_regulator_match(dev, reg_np, rdata, rdev_num);
-+	of_node_put(reg_np);
-+
-+	return err;
++	return s2dos05_fg_get_property(psy, psp, val, CHANNEL_ELVSS);
 +}
 +
-+static int s2dos05_pmic_probe(struct platform_device *pdev)
++static int s2dos05_fg_get_property_avdd(struct power_supply *psy,
++					 enum power_supply_property psp,
++					 union power_supply_propval *val
++					 )
++{
++	return s2dos05_fg_get_property(psy, psp, val, CHANNEL_AVDD);
++}
++
++static int s2dos05_fg_get_property_buck(struct power_supply *psy,
++					 enum power_supply_property psp,
++					 union power_supply_propval *val
++					 )
++{
++	return s2dos05_fg_get_property(psy, psp, val, CHANNEL_BUCK);
++}
++
++static int s2dos05_fg_get_property_ldo1(struct power_supply *psy,
++					 enum power_supply_property psp,
++					 union power_supply_propval *val
++					 )
++{
++	return s2dos05_fg_get_property(psy, psp, val, CHANNEL_L1);
++}
++
++static int s2dos05_fg_get_property_ldo2(struct power_supply *psy,
++					 enum power_supply_property psp,
++					 union power_supply_propval *val
++					 )
++{
++	return s2dos05_fg_get_property(psy, psp, val, CHANNEL_L2);
++}
++
++static int s2dos05_fg_get_property_ldo3(struct power_supply *psy,
++					 enum power_supply_property psp,
++					 union power_supply_propval *val
++					 )
++{
++	return s2dos05_fg_get_property(psy, psp, val, CHANNEL_L3);
++}
++
++static int s2dos05_fg_get_property_ldo4(struct power_supply *psy,
++					 enum power_supply_property psp,
++					 union power_supply_propval *val
++					 )
++{
++	return s2dos05_fg_get_property(psy, psp, val, CHANNEL_L4);
++}
++
++static void s2dos05_powermeter_init(struct s2dos05_fg *drv_data)
++{
++	/*  SMP_NUM = 1100(16384) ~16s in case of aync mode */
++	regmap_write(drv_data->regmap, S2DOS05_REG_PWRMT_CTRL1, 0x0C);
++	regmap_update_bits(drv_data->regmap, S2DOS05_REG_PWRMT_CTRL2, POWER_MODE,
++			POWER_MODE);
++	/* ADC EN */
++	regmap_update_bits(drv_data->regmap, S2DOS05_REG_PWRMT_CTRL2,
++			ADC_EN_MASK, ADC_EN_MASK);
++
++}
++
++static void s2dos05_powermeter_deinit(struct s2dos05_fg *s2dos05)
++{
++	/* ADC turned off */
++	regmap_write(s2dos05->regmap, S2DOS05_REG_PWRMT_CTRL2, 0);
++}
++
++static enum power_supply_property s2dos05_fg_properties[] = {
++	POWER_SUPPLY_PROP_ONLINE,
++	POWER_SUPPLY_PROP_STATUS,
++	POWER_SUPPLY_PROP_POWER_NOW,
++};
++
++static const struct power_supply_desc s2dos05_elvdd_fg_desc = {
++	.name		= "s2dos05_elvdd",
++	.type		= POWER_SUPPLY_TYPE_UNKNOWN,
++	.get_property	= s2dos05_fg_get_property_elvdd,
++	.properties	= s2dos05_fg_properties,
++	.num_properties	= ARRAY_SIZE(s2dos05_fg_properties),
++};
++
++static const struct power_supply_desc s2dos05_elvss_fg_desc = {
++	.name		= "s2dos05_elvss",
++	.type		= POWER_SUPPLY_TYPE_UNKNOWN,
++	.get_property	= s2dos05_fg_get_property_elvss,
++	.properties	= s2dos05_fg_properties,
++	.num_properties	= ARRAY_SIZE(s2dos05_fg_properties),
++};
++
++static const struct power_supply_desc s2dos05_avdd_fg_desc = {
++	.name		= "s2dos05_avdd",
++	.type		= POWER_SUPPLY_TYPE_UNKNOWN,
++	.get_property	= s2dos05_fg_get_property_avdd,
++	.properties	= s2dos05_fg_properties,
++	.num_properties	= ARRAY_SIZE(s2dos05_fg_properties),
++};
++
++static const struct power_supply_desc s2dos05_buck_fg_desc = {
++	.name		= "s2dos05_buck",
++	.type		= POWER_SUPPLY_TYPE_UNKNOWN,
++	.get_property	= s2dos05_fg_get_property_buck,
++	.properties	= s2dos05_fg_properties,
++	.num_properties	= ARRAY_SIZE(s2dos05_fg_properties),
++};
++
++static const struct power_supply_desc s2dos05_ldo1_fg_desc = {
++	.name		= "s2dos05_ldo1",
++	.type		= POWER_SUPPLY_TYPE_UNKNOWN,
++	.get_property	= s2dos05_fg_get_property_ldo1,
++	.properties	= s2dos05_fg_properties,
++	.num_properties	= ARRAY_SIZE(s2dos05_fg_properties),
++};
++
++static const struct power_supply_desc s2dos05_ldo2_fg_desc = {
++	.name		= "s2dos05_ldo2",
++	.type		= POWER_SUPPLY_TYPE_UNKNOWN,
++	.get_property	= s2dos05_fg_get_property_ldo2,
++	.properties	= s2dos05_fg_properties,
++	.num_properties	= ARRAY_SIZE(s2dos05_fg_properties),
++};
++
++static const struct power_supply_desc s2dos05_ldo3_fg_desc = {
++	.name		= "s2dos05_ldo3",
++	.type		= POWER_SUPPLY_TYPE_UNKNOWN,
++	.get_property	= s2dos05_fg_get_property_ldo3,
++	.properties	= s2dos05_fg_properties,
++	.num_properties	= ARRAY_SIZE(s2dos05_fg_properties),
++};
++
++static const struct power_supply_desc s2dos05_ldo4_fg_desc = {
++	.name		= "s2dos05_ldo4",
++	.type		= POWER_SUPPLY_TYPE_UNKNOWN,
++	.get_property	= s2dos05_fg_get_property_ldo4,
++	.properties	= s2dos05_fg_properties,
++	.num_properties	= ARRAY_SIZE(s2dos05_fg_properties),
++};
++
++static int s2dos05_fuelgauge_probe(struct platform_device *pdev)
 +{
 +	struct device *dev = &pdev->dev;
-+	struct s2dos_core *iodev = dev_get_drvdata(pdev->dev.parent);
-+	struct of_regulator_match *rdata = NULL;
-+	struct s2dos05_data *s2dos05;
-+	struct regulator_config config = { };
-+	unsigned int rdev_num = ARRAY_SIZE(regulators);
-+	int i;
-+	int ret, err = 0;
++	struct s2dos_core *iodev = dev_get_drvdata(dev->parent);
++	struct s2dos05_fg	*drv_data;
++	struct power_supply_config pscfg = {};
++	int ret;
 +
-+	s2dos05 = devm_kzalloc(dev, sizeof(struct s2dos05_data),
-+				GFP_KERNEL);
-+	if (!s2dos05) {
++	drv_data = devm_kzalloc(dev, sizeof(struct s2dos05_fg),
++							GFP_KERNEL);
++	if (!drv_data)
 +		ret = -ENOMEM;
-+		goto err_data;
++
++	drv_data->regmap = iodev->regmap;
++	s2dos05_powermeter_init(drv_data);
++	pscfg.drv_data = drv_data;
++
++	drv_data->psy_elvdd = devm_power_supply_register(dev, &s2dos05_elvdd_fg_desc, &pscfg);
++	drv_data->psy_elvss = devm_power_supply_register(dev, &s2dos05_elvss_fg_desc, &pscfg);
++	drv_data->psy_avdd = devm_power_supply_register(dev, &s2dos05_avdd_fg_desc, &pscfg);
++	drv_data->psy_buck = devm_power_supply_register(dev, &s2dos05_buck_fg_desc, &pscfg);
++	drv_data->psy_ldo1 = devm_power_supply_register(dev, &s2dos05_ldo1_fg_desc, &pscfg);
++	drv_data->psy_ldo2 = devm_power_supply_register(dev, &s2dos05_ldo2_fg_desc, &pscfg);
++	drv_data->psy_ldo3 = devm_power_supply_register(dev, &s2dos05_ldo3_fg_desc, &pscfg);
++	drv_data->psy_ldo4 = devm_power_supply_register(dev, &s2dos05_ldo4_fg_desc, &pscfg);
++
++	platform_set_drvdata(pdev, drv_data);
++
++	ret = device_create_file(&pdev->dev, &dev_attr_adc_en);
++	if (ret) {
++		dev_err(dev, "failed: create adc enable sysfs entry\n");
++		goto err;
 +	}
-+	platform_set_drvdata(pdev, s2dos05);
-+
-+	rdata = kcalloc(rdev_num, sizeof(*rdata), GFP_KERNEL);
-+	if (!rdata)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < rdev_num; i++)
-+		rdata[i].name = regulators[i].name;
-+
-+	err = s2dos05_pmic_dt_parse_pdata(dev, rdata, rdev_num);
-+	if (err < 0) {
-+		dev_err(dev, "Failed to parse regulators device of_node\n");
-+		goto err_data;
-+	}
-+
-+	s2dos05->regmap = iodev->regmap;
-+	s2dos05->dev = dev;
-+
-+	for (i = 0; i < rdev_num; i++) {
-+		struct regulator_dev *regulator;
-+
-+		config.init_data = rdata[i].init_data;
-+		config.of_node = rdata[i].of_node;
-+		config.dev = dev;
-+		config.driver_data = s2dos05;
-+		regulator = devm_regulator_register(&pdev->dev,
-+						&regulators[i], &config);
-+		if (IS_ERR(regulator)) {
-+			ret = PTR_ERR(regulator);
-+			dev_err(&pdev->dev, "regulator init failed for %d\n",
-+				i);
-+			goto out;
-+		}
++	ret = device_create_file(&pdev->dev, &dev_attr_adc_sync_mode);
++	if (ret) {
++		dev_err(dev, "failed: create adc sync mode sysfs entry\n");
++		goto err;
 +	}
 +
-+out:
-+	kfree(rdata);
++err:
++	device_remove_file(dev, &dev_attr_adc_en);
++	device_remove_file(dev, &dev_attr_adc_sync_mode);
 +
-+	return ret;
-+
-+err_data:
-+	devm_kfree(dev, (void *)s2dos05);
-+	kfree(s2dos05);
-+
-+	return ret;
++	return 0;
 +}
 +
-+static const struct platform_device_id s2dos05_pmic_id[] = {
-+	{ "s2dos05-regulator" },
-+	{ },
++static void s2dos05_fuelgauge_remove(struct platform_device *pdev)
++{
++	struct s2dos05_fg *info = platform_get_drvdata(pdev);
++
++	s2dos05_powermeter_deinit(info);
++
++	device_remove_file(&pdev->dev, &dev_attr_adc_en);
++	device_remove_file(&pdev->dev, &dev_attr_adc_sync_mode);
++}
++
++static const struct platform_device_id s2dos05_platform_ids[] = {
++	{"s2dos05-fg", 0},
++	{ /* sentinel */ },
 +};
-+MODULE_DEVICE_TABLE(platform, s2dos05_pmic_id);
++MODULE_DEVICE_TABLE(platform, s2dos05_platform_ids);
 +
 +static struct platform_driver s2dos05_platform_driver = {
 +	.driver = {
-+		.name = "s2dos05",
++		.name = "s2dos05-fg",
 +	},
-+	.probe = s2dos05_pmic_probe,
-+	.id_table = s2dos05_pmic_id,
++	.probe = s2dos05_fuelgauge_probe,
++	.id_table = s2dos05_platform_ids,
++	.remove_new = s2dos05_fuelgauge_remove,
 +};
 +module_platform_driver(s2dos05_platform_driver);
 +
++MODULE_DESCRIPTION("s2dos05 power meter");
 +MODULE_AUTHOR("Dzmitry Sankouski <dsankouski@gmail.com>");
-+MODULE_DESCRIPTION("SAMSUNG s2dos05 Regulator Driver");
 +MODULE_LICENSE("GPL");
+diff --git a/include/linux/mfd/s2dos05.h b/include/linux/mfd/s2dos05.h
+new file mode 100644
+index 000000000000..8d216064bc78
+--- /dev/null
++++ b/include/linux/mfd/s2dos05.h
+@@ -0,0 +1,123 @@
++/* SPDX-License-Identifier: GPL-2.0+
++ * s2dos05.h
++ *
++ * Copyright (c) 2016 Samsung Electronics Co., Ltd
++ *              http://www.samsung.com
++ *
++ */
++
++#ifndef __LINUX_MFD_S2DOS05_H
++#define __LINUX_MFD_S2DOS05_H
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#define MFD_DEV_NAME "s2dos05"
++
++struct s2dos05_dev {
++	struct device *dev;
++	struct regmap *regmap;
++};
++
++/* S2DOS05 registers */
++/* Slave Addr : 0xC0 */
++enum S2DOS05_reg {
++	S2DOS05_REG_DEV_ID,
++	S2DOS05_REG_TOPSYS_STAT,
++	S2DOS05_REG_STAT,
++	S2DOS05_REG_EN,
++	S2DOS05_REG_LDO1_CFG,
++	S2DOS05_REG_LDO2_CFG,
++	S2DOS05_REG_LDO3_CFG,
++	S2DOS05_REG_LDO4_CFG,
++	S2DOS05_REG_BUCK_CFG,
++	S2DOS05_REG_BUCK_VOUT,
++	S2DOS05_REG_IRQ_MASK = 0x0D,
++	S2DOS05_REG_SSD_TSD = 0x0E,
++	S2DOS05_REG_OCL = 0x10,
++	S2DOS05_REG_IRQ = 0x11
++};
++
++/* S2DOS05 regulator ids */
++enum S2DOS05_regulators {
++	S2DOS05_LDO1,
++	S2DOS05_LDO2,
++	S2DOS05_LDO3,
++	S2DOS05_LDO4,
++	S2DOS05_BUCK1,
++	S2DOS05_REG_MAX,
++};
++
++#define S2DOS05_IRQ_PWRMT_MASK	BIT(5)
++#define S2DOS05_IRQ_TSD_MASK	BIT(4)
++#define S2DOS05_IRQ_SSD_MASK	BIT(3)
++#define S2DOS05_IRQ_SCP_MASK	BIT(2)
++#define S2DOS05_IRQ_UVLO_MASK	BIT(1)
++#define S2DOS05_IRQ_OCD_MASK	BIT(0)
++
++#define S2DOS05_BUCK_MIN1	506250
++#define S2DOS05_LDO_MIN1	1500000
++#define S2DOS05_LDO_MIN2	2700000
++#define S2DOS05_BUCK_STEP1	6250
++#define S2DOS05_LDO_STEP1	25000
++#define S2DOS05_LDO_VSEL_MASK	0x7F
++#define S2DOS05_LDO_FD_MASK	0x80
++#define S2DOS05_BUCK_VSEL_MASK	0xFF
++#define S2DOS05_BUCK_FD_MASK	0x08
++
++#define S2DOS05_ENABLE_MASK_L1	BIT(0)
++#define S2DOS05_ENABLE_MASK_L2	BIT(1)
++#define S2DOS05_ENABLE_MASK_L3	BIT(2)
++#define S2DOS05_ENABLE_MASK_L4	BIT(3)
++#define S2DOS05_ENABLE_MASK_B1	BIT(4)
++
++#define S2DOS05_RAMP_DELAY	12000
++
++#define S2DOS05_ENABLE_TIME_LDO		50
++#define S2DOS05_ENABLE_TIME_BUCK	350
++
++#define S2DOS05_ENABLE_SHIFT	0x06
++#define S2DOS05_LDO_N_VOLTAGES	(S2DOS05_LDO_VSEL_MASK + 1)
++#define S2DOS05_BUCK_N_VOLTAGES (S2DOS05_BUCK_VSEL_MASK + 1)
++
++#define S2DOS05_PMIC_EN_SHIFT	6
++#define S2DOS05_REGULATOR_MAX (S2DOS05_REG_MAX)
++
++/* ----------power meter ----------*/
++#define S2DOS05_REG_PWRMT_CTRL1		0x0A
++#define S2DOS05_REG_PWRMT_CTRL2		0x0B
++#define S2DOS05_REG_PWRMT_DATA	0x0C
++#define S2DOS05_REG_IRQ_MASK	0x0D
++
++#define CHANNEL_ELVDD	0
++#define CHANNEL_ELVSS	1
++#define CHANNEL_AVDD	2
++#define CHANNEL_BUCK	3
++#define CHANNEL_L1	4
++#define CHANNEL_L2	5
++#define CHANNEL_L3	6
++#define CHANNEL_L4	7
++
++#define POWER_ELVDD			24500
++#define POWER_ELVSS			24500
++#define POWER_AVDD			3060
++#define POWER_BUCK			1525
++#define POWER_L1			5000
++#define POWER_L2			5000
++#define POWER_L3			5000
++#define POWER_L4			5000
++
++/* S2DOS05_REG_OCL */
++#define ADC_VALID_MASK			BIT(7)
++/* S2DOS05_REG_PWRMT_CTRL1 */
++#define ADC_ASYNCRD_MASK		BIT(7)
++#define PWRMT_EN_CHK			BIT(6)
++#define SMPNUM_MASK			0x0F
++/* S2DOS05_REG_PWRMT_CTRL2 */
++#define ADC_EN_MASK			BIT(7)
++#define ADC_PTR_MASK			0x0F
++#define POWER_MODE			BIT(4)
++#define RAWCURRENT_MODE			BIT(5)
++
++#define S2DOS05_MAX_ADC_CHANNEL		8
++
++#endif /*  __LINUX_MFD_S2DOS05_H */
 
 -- 
 2.39.2
