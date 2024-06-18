@@ -1,75 +1,75 @@
-Return-Path: <linux-pwm+bounces-2507-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2508-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E71D90D3FF
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 16:15:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B33F90D40B
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 16:16:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 362101C238FC
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 14:15:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2DD9287293
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 14:16:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BB3A15ECCA;
-	Tue, 18 Jun 2024 14:00:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9F6F15EFA1;
+	Tue, 18 Jun 2024 14:00:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvpY7Ypc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVuYx68U"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D4215DBD5;
-	Tue, 18 Jun 2024 14:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1912815ECF9;
+	Tue, 18 Jun 2024 14:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719208; cv=none; b=aD+RospM9yJl+EY0ARgqsYVocuU5e30TARvcsRzL5rqtEZUFzKcz4+jaymeYFf9kcORdw6iT8dDZcUj8YiecnP9s1r7lMhW1v4j43jrOgCYnK63EO27IVn0DXvFLBixy4jd8+JfdcAkeumTOjUXzPJrBIJ6R3GCvyz0Y5x7nf/E=
+	t=1718719210; cv=none; b=BJsnc0JU1vf5OOBmIUpddwsRGx322QMdy8fGItwp112rg+onYLoVErtqSx8TQPofqHI2Iu5NwksMQKzq2PFYBfQreXddGFlv5RfZHyhyyfUZVp7N08vKgKcFybbVzodjJ0C9iESzYVHZ4DdtyIAjUbMvWb3zw8tyzzAa95Bgm+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719208; c=relaxed/simple;
-	bh=7GuLNZWYidLfySwdnHMlO3cKyzwike5F0Axou4kYDbM=;
+	s=arc-20240116; t=1718719210; c=relaxed/simple;
+	bh=GeSjdBMrPx5/NgT7rDPKCihsvNHSXF0w4Z/AktYQJMg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sj6hHiJ2fCzT+Ld1r3iJ+dnxaXjtYJ1EzlGK7KzAkzcU7p3SLq0y1tNJ1FpuJWNPZ9AeZlmn4nQirKfhY8VNizoWXfbEO24/5/pvbMEYt0A3+BYkf5xYpNCJSkf5bmQrhcWtwXJ3QO8UKyb6l331SWNMl2bZs9siTUQp0AgdN0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fvpY7Ypc; arc=none smtp.client-ip=209.85.208.43
+	 In-Reply-To:To:Cc; b=ZbakU9RhvT8plVKz/tF1MxBboj7uqqmWFLZQTNnqZ9+F0CoaNNzi81TuvtZZ8tJc2p7evceWtumGuD4yLVrdBSyU4lmGikw1/detSh0U0ktGIqForSSu5W53Op/Gba8tApDiTfN36jjXFBoEd5KqWjDYRQkt9kdFrnr2B7sHRU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HVuYx68U; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57a1fe6392eso7346558a12.0;
-        Tue, 18 Jun 2024 07:00:06 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57c75464e77so6758003a12.0;
+        Tue, 18 Jun 2024 07:00:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718719205; x=1719324005; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718719207; x=1719324007; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=amtZh6cok3kVxxh2UoadCf51Ge+lbZ422aIWYrzWULU=;
-        b=fvpY7YpczSg8xf034VDQ73Ulz/AYfNLcRsj6ViByhg5Mzs8fGdJfnsNYlatzWKuAWb
-         RjhebBRLNgU6sU1YN27C0H6BJ6bgcgPq2ojkbe4KnL/gPspe91gyJQgkUrHFC+8QFusT
-         JpFIeSE5VKP6XPcwBjVBRpFaaNTmdFh5TUu6jpqUMD9WEyHQX8No+rdJASdvngJjO2vB
-         ICaS7yvVHK2LkpJzEgj665UDgw9Zz/Urlnr2TUeClAwwIXuTJzSbwXX3ePJ93uYbfvUV
-         Hsa0s36NW2D/sQwZ7wEUTG2Oqgmf/pL6qom6zqhpt+SIH6YlOgc0E3XsSHkuaMPxgDL3
-         BvpA==
+        bh=evq88jlvU8RulgmUy64jbhNijl81dqHkwYkJ8InB99k=;
+        b=HVuYx68UIYBqOvBHiK7st63eHkHDVCbdXNh5qVZiAO9qYbdiCzSJ3cUbQZJ3rUWP22
+         AouRSei1OjHsvJlV7aRv254ROq1CpS7L/63TSRJcMhSN1RMop0oPUqbfIijpVFaw8kIa
+         3iaxELgv0OM0jl0izVvua4mHi6/rI5ZDv24NlGfEQcfVXbV36VACBed/OaUhKOC2tzVd
+         FotEtmX0R7r2Bwi+CPRogyjnjxThK4ktPIcivp6ql0UHXByszkxuvQEcVsTscbbCfoMm
+         0C+PpCk2P92lcJsVirMwsSQSk7iQ8QPgZgZqGgKyD2CRvTROuHqpPHSPn/VsZo+qaJNV
+         PHig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718719205; x=1719324005;
+        d=1e100.net; s=20230601; t=1718719207; x=1719324007;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=amtZh6cok3kVxxh2UoadCf51Ge+lbZ422aIWYrzWULU=;
-        b=nEI+Yo2gMKqnA9agMuGzFzTMAmv87msNYPIaqzXy7joQnN6FNeFnCm6BkhRihBVEyq
-         dadd/HJ2h4PzB1ZJ/CkWdODbcw8Z9IbFTIBie8CHQBYRQfVjcDkNQmXKDHKyh4d/663a
-         kwCymOXghoUd7Ii+BAtKuXY5cQONy/XRfhD1+f1M7uwbabIqpvNm1vb3ZIwlXo6/OQ2n
-         k6eZpJzB1HWmVL5His8XioOk+4RjmKCPhpXOVM3yieAzBBDw9vD34mtxcPDfi73zEX9F
-         OsYAVXOP5w+GRwovpSd6bwuNTGfvdT3TqMMxX13OP2XX19gFlHjo2QkyG5XDIlq6T683
-         vQeg==
-X-Forwarded-Encrypted: i=1; AJvYcCU7D1LJdAv1/5SqcgBYe5kBA10LBzV+D23pia0eD4kTvV56vE78kjS6Jl0r9JWM55vwVnqdo+XHI6rAErHXgx/3TB7KEhvR2LpicOK1qaR/d+7kfLYnvEjbFTLttoRpJOFxYSASn1ofZadAS0jHXbZhCQzcFyyuY39Kq43NugUY0PtbFV+YI6Cqck1kIdy3LyfPqYjHgynIbAGQEl/P70ThQ+A6DDPN/cvXj0MIDhL5cs8xyJA98lGCZ/mJflSKXGA+OAMxvzi4CzEL20mnMhfCI07CzM0rwAGixyPBUMQQ7tqRAG63B1kq4REDD/Enb+uB6JAk23DQKIcmMtPsJ5yGdLTbwUSvdI8MS0P9e0x/2MZ3LEnEm/PduAgH9AKc8Li5/29OAhxKwaUZuJO+xLG8JK9NOpsq
-X-Gm-Message-State: AOJu0Yx9aDWib11lOHpPdCQIgCwTedY+XYP/fB/FSb4Zu4pZNFqTbj/4
-	ded59l6MIeeEIWY71C17T7jPFBnnVhw9rzlnG7vmfjJ8qP6Us+r3Y972BlKT
-X-Google-Smtp-Source: AGHT+IFacU/UFpIwaTa6wZ4f7sRQWphBmkbeBykRZgSzZFVXbMNWcd77zosms23rqaQYfYGh0AnbgA==
-X-Received: by 2002:a50:bb44:0:b0:57d:57c:ce99 with SMTP id 4fb4d7f45d1cf-57d057cd44fmr206656a12.2.1718719205082;
-        Tue, 18 Jun 2024 07:00:05 -0700 (PDT)
+        bh=evq88jlvU8RulgmUy64jbhNijl81dqHkwYkJ8InB99k=;
+        b=SWP1zma0XJYCPFI5laLnYrb9WLMLJX1au4yF8B4ZapI7JWCy65IA0q91O83ENQgCzO
+         3ZSMsRFWkcmHBv+fzqxemRWHXhv3mS+kgYk0RogCxh2/tCy9QCSA7SqqJNRqutMmyTgT
+         ox8oUB0YEt5+CgE1LGb3Hi38zzGo4wQzcwvYqZYPjPoFh74HrKB/PaiFZRZYU9RuOzrB
+         pWgAoJ+y7zEuR8bKwojkBWbVCinsysGRf0goElt/NB8rOyAZsTAkYS239MGlKl5/IIF+
+         hLOvVrEjBaRbvhkGFpXiE/C3iNsbEX/ZDLTdmNU6WwpPdc2cKz77pNWOZqAHEak93EFr
+         t6KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+6pcXnNXnWNxAuEFRqjSylG/WSetk8RtaVnvrO+a24OB5cuP0MsICI7u1dGcLVpNnXWC+V1cCixKXSbqXXQ98vJs9fD9tFXExFsDB4jlOiDfHMDhqtaljITAhluWDAEmudu4nITY897rEBqg55NpyPPNembZyK1jLqf7ND7ZHeAWbgap18kDj7YG/TvsOk0ZC5ZllrncciNIOw0AbckhlHgyPhoKHsqklQAQG/0PvzdyadmzniQPPs62h8Khq25H4LcQtD7zqe3KRlZAaXhUWWEeXbqtTbueDbka/fqfpTAS87t2J4DFVSOOBIk96ko9XTOKTtVfmxL2Je2PStIxAtyqhcXy4kP+7tG7+dDhfoi/N65qgB0hZ8TU+N79pRUoSegJlAX99yY2mG5r5LF31vQZlrRDx
+X-Gm-Message-State: AOJu0YxMHojX3xqlzG59AUj3Hi+oE+8AyTg1LHVhP0/wik2KqvATzHB7
+	O8ThCJNlgyJvjkHOjcwvYBsu5BPGva1zCNnphNG5SStIEyyAuXNd
+X-Google-Smtp-Source: AGHT+IFilio5qKRl+cSnK8IQn5IAVmutaHGtgF17QZrcOlUnZe/40B0j5GGoC7IbWTgHhNsL8k7V6w==
+X-Received: by 2002:a50:c19a:0:b0:57c:5f8a:26f8 with SMTP id 4fb4d7f45d1cf-57cbd6c6de0mr9000377a12.27.1718719207284;
+        Tue, 18 Jun 2024 07:00:07 -0700 (PDT)
 Received: from [127.0.1.1] (mm-167-232-122-178.mgts.dynamic.pppoe.byfly.by. [178.122.232.167])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm7731278a12.22.2024.06.18.07.00.03
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm7731278a12.22.2024.06.18.07.00.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 07:00:04 -0700 (PDT)
+        Tue, 18 Jun 2024 07:00:07 -0700 (PDT)
 From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Tue, 18 Jun 2024 16:59:42 +0300
-Subject: [PATCH v3 08/23] dt-bindings: led: add maxim,max77705-leds
+Date: Tue, 18 Jun 2024 16:59:43 +0300
+Subject: [PATCH v3 09/23] dt-bindings: mfd: add samsung,s2dos05
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -78,7 +78,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240618-starqltechn_integration_upstream-v3-8-e3f6662017ac@gmail.com>
+Message-Id: <20240618-starqltechn_integration_upstream-v3-9-e3f6662017ac@gmail.com>
 References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
 In-Reply-To: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
 To: Sebastian Reichel <sre@kernel.org>, 
@@ -104,72 +104,129 @@ Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
  Dzmitry Sankouski <dsankouski@gmail.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718719184; l=1609;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718719184; l=3596;
  i=dsankouski@gmail.com; s=20240618; h=from:subject:message-id;
- bh=7GuLNZWYidLfySwdnHMlO3cKyzwike5F0Axou4kYDbM=;
- b=wXF+V0LgvlhWhOUO8mOS/t/tdcu8fI/3fxi/NQRj3GlXy4qHn3uq8gHX7IrZD2ooIQihcNAZe
- 045YHR9yMxgCijG6bla4uPQq0zI6T5wO2cJU1U6TcVPhCbOH+3UPBUG
+ bh=GeSjdBMrPx5/NgT7rDPKCihsvNHSXF0w4Z/AktYQJMg=;
+ b=SVRUeOlS2AnrVfvyQsE3+BYBfIEGACx1n7IrRdkctMOEdEgjj8rJD4eKceXUvtg1WRJSqgDNd
+ jDU4o7csfmMCaF/woZolPqcOjzIaWS6mIu9Mc9Zuqq3a6UrHbBnN4LU
 X-Developer-Key: i=dsankouski@gmail.com; a=ed25519;
  pk=6pMMVVDDReSiRgPCbMOUauN5nS3ty4Sf5b7a2gi4x0M=
 
-add maxim,max77705 leds binding part
+add samsung,s2dos05 core MFD module binding
 
 Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
 ---
- .../devicetree/bindings/leds/maxim,max77705.yaml   | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ .../devicetree/bindings/mfd/samsung,s2dos05.yaml   | 89 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 90 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/maxim,max77705.yaml b/Documentation/devicetree/bindings/leds/maxim,max77705.yaml
+diff --git a/Documentation/devicetree/bindings/mfd/samsung,s2dos05.yaml b/Documentation/devicetree/bindings/mfd/samsung,s2dos05.yaml
 new file mode 100644
-index 000000000000..7c512545788a
+index 000000000000..f2ef5171cc40
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/maxim,max77705.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++++ b/Documentation/devicetree/bindings/mfd/samsung,s2dos05.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/leds/maxim,max77705.yaml#
++$id: http://devicetree.org/schemas/mfd/samsung,s2dos05.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Maxim MAX77705 Companion Power Management IC and USB Type-C interface IC LEDs
++title: Samsung S2DOS05 Power Management IC
 +
 +maintainers:
 +  - Dzmitry Sankouski <dsankouski@gmail.com>
 +
-+description: |
-+  This is a part of device tree bindings for Maxim MAX77705 multi functional device.
++description:
++  This is a part of device tree bindings for S2M and S5M family of Power
++  Management IC (PMIC).
 +
-+  Up to 4 LEDs supported. One LED is represented by one child node.
-+
-+  See also Documentation/devicetree/bindings/mfd/maxim,max77705.yaml for
-+  additional information and example.
++  The S2DOS05 is a companion power management IC for the panel and touchscreen
++  in smart phones. Provides voltage and current regulators and adc for power/current
++  measurements.
 +
 +properties:
 +  compatible:
-+    const: maxim,max77705-led
++    const: samsung,s2dos05-pmic
 +
-+  "#address-cells":
-+    const: 1
++  reg:
++    maxItems: 1
 +
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^led@[0-3]$":
-+    type: object
-+    $ref: common.yaml#
-+    properties:
-+      reg:
-+        description:
-+          LED index.
-+    unevaluatedProperties: false
-+    required:
-+      - reg
++  regulators:
++    $ref: /schemas/regulator/samsung,s2dos05.yaml
++    description: List of regulators and its properties
 +
 +required:
 +  - compatible
++  - reg
++  - regulators
 +
 +additionalProperties: false
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      pmic@60 {
++      	compatible = "samsung,s2dos05";
++      	reg = <0x60>;
++
++      	regulators {
++      		s2dos05_ldo1: s2dos05-ldo1 {
++      			regulator-name = "s2dos05-ldo1";
++      			regulator-min-microvolt = <1500000>;
++      			regulator-max-microvolt = <2000000>;
++      			regulator-active-discharge = <0x1>;
++      		};
++
++      		s2dos05_ldo2: s2dos05-ldo2 {
++      			regulator-name = "s2dos05-ldo2";
++      			regulator-min-microvolt = <1800000>;
++      			regulator-max-microvolt = <1800000>;
++      			regulator-active-discharge = <0x1>;
++      			regulator-boot-on;
++      		};
++
++      		s2dos05_ldo3: s2dos05-ldo3 {
++      			regulator-name = "s2dos05-ldo3";
++      			regulator-min-microvolt = <3000000>;
++      			regulator-max-microvolt = <3000000>;
++      			regulator-active-discharge = <0x1>;
++      			regulator-boot-on;
++      		};
++
++      		s2dos05_ldo4: s2dos05-ldo4 {
++      			regulator-name = "s2dos05-ldo4";
++      			regulator-min-microvolt = <2700000>;
++      			regulator-max-microvolt = <3775000>;
++      			regulator-active-discharge = <0x1>;
++      		};
++
++      		s2dos05_buck1: s2dos05-buck1 {
++      			regulator-name = "s2dos05-buck1";
++      			regulator-min-microvolt = <850000>;
++      			regulator-max-microvolt = <2100000>;
++      			regulator-active-discharge = <0x1>;
++      		};
++      	};
++      };
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f008429033c9..3ab41e53c9fc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19897,6 +19897,7 @@ L:	linux-samsung-soc@vger.kernel.org
+ S:	Maintained
+ B:	mailto:linux-samsung-soc@vger.kernel.org
+ F:	Documentation/devicetree/bindings/clock/samsung,s2mps11.yaml
++F:	Documentation/devicetree/bindings/mfd/samsung,s2dos*.yaml
+ F:	Documentation/devicetree/bindings/mfd/samsung,s2m*.yaml
+ F:	Documentation/devicetree/bindings/mfd/samsung,s5m*.yaml
+ F:	Documentation/devicetree/bindings/regulator/samsung,s2m*.yaml
 
 -- 
 2.39.2
