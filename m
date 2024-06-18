@@ -1,232 +1,126 @@
-Return-Path: <linux-pwm+bounces-2527-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2528-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B44690D532
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 16:33:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC2E890D54A
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 16:35:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B525E2829DC
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 14:33:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED74A1C2025F
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 14:35:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EFF413AD2F;
-	Tue, 18 Jun 2024 14:12:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67F84153573;
+	Tue, 18 Jun 2024 14:16:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zHcLB3wX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbxyrMmM"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCE61304A3
-	for <linux-pwm@vger.kernel.org>; Tue, 18 Jun 2024 14:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4581514EE;
+	Tue, 18 Jun 2024 14:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719940; cv=none; b=dokWQFmaJQk2MQWUbdSyMZLXzazFzfKqCV6xDa5idpx38PLpcgUpozjTaI7v1CDliAJSS9N7uDzD9sB7R0gN6aAr5u0CdP8Vj3xqhpnRsaa57seif8VxcNXMvQeV+ucy4k9EmQyvUrJu8Oc3svrWq8tknKCNE8p4vGCyBoeL7K8=
+	t=1718720204; cv=none; b=spE5R/bsxJQUwP7nKqVvTFe5mic4yz+QKV4pbmzvzYt6ZY485RRWLjBzeVvuLIa4lYEbLoqOth3poExDH5LDrsQc/ld0q7pCmDX7XaDiRBgK3sq4Z35eCy7RxKMzRkKnoDBdof6J0jAR2apyuk+YK7eXC4gdwBPWrlJXhenTvkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719940; c=relaxed/simple;
-	bh=0av22ofhvv+G1ykCXRTuar9N3ZcJAK8et2AWxSzeNng=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GxijvRy+jj/R4iJNg6/EGXGagdVz1l/64ICFmhlYi8wOBDOZvcnuREkNE+gjGOMYvueTs+SUYLuuKali4EPFYpIrfNHXTFQAnBaqCEWqXBM+RDPiYiW5CUJbFZ/KN1X9F3VjR+p9CSSo5Dme4JjTrPkUlYOjUrbpjeHTwk7JhY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zHcLB3wX; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52cc1528c83so1225014e87.2
-        for <linux-pwm@vger.kernel.org>; Tue, 18 Jun 2024 07:12:18 -0700 (PDT)
+	s=arc-20240116; t=1718720204; c=relaxed/simple;
+	bh=Om4iC8WD2JaG4NL4a3+9I68t3tIKpeGHX/9WOTfeeHU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IpjIIjLzR1Mv87j8pV0/HOm0UPL4vXaukfGlM/jfenS8ONaiymMFHhptd1NaEWtak+Zx1t3sCDDq5Xq3xPLMD5XXUCeVi3SSZo5tDeL6t1oEVYjXwgrCfEjMyq4FesYJPwJNWLg51Y5Gpe9fQN3s5XIwQju12CVpkW43p7w1qwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bbxyrMmM; arc=none smtp.client-ip=209.85.161.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5c1996a197fso689506eaf.0;
+        Tue, 18 Jun 2024 07:16:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718719936; x=1719324736; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z6Y4EgoXPRwJTHBawpiMcURy3sFFDfTP4JTr3Ev81mc=;
-        b=zHcLB3wXjK+ILG4tqLn10gDyPTobyjq3vbYbYoJpgiFaaLLSPrjSNPkr+J70bNvIPB
-         c9IDDMsYOyvHsHJP1XW99NAA+W67toVRsAQOZ4RpyUveH3Pubmya05ciSRISXpOcvFYR
-         ZMffKD3/nJIg+chWgC4KCFvS2/n8z4eWoIT3LWgKxyNSoyf1qnGKQQC2gCvBdf5rW09t
-         Y8irguPBPNq8aNomobzsz4en2p1fECywlfqcdcwGSqfqyesVYK0uv1ibcpc/CvIVRTeu
-         EqB+wYT8DMioCoTch5Hn8LX2uxRkWu8hhztrClpnu0GMlRsekb7pUTC3+5mDmcnFYnmT
-         dLRw==
+        d=gmail.com; s=20230601; t=1718720202; x=1719325002; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Om4iC8WD2JaG4NL4a3+9I68t3tIKpeGHX/9WOTfeeHU=;
+        b=bbxyrMmMzubrCsARUdiK5w8f3pelzV8WXRbWKWyAF/woViyX9qOokkp9EgiTLmm8lZ
+         7p+c5WF5EXbmLc9SC7bLu56uXDU+b/Y3yv/6urya6pdcIX63fDmZz5yhNgs0FJk9czUd
+         dBhcZTJv3wqj82ppkaaRflOmOJ8Qi4MOvuGk6818Y/R6WaGsILDCPI+rgRZWDyIMrMDu
+         L25R9bFzJisFKQUbpebtQe4Fqy42O1SqOS6BslIoMXFob4/BLO3SWenlAg27Y2el2hBU
+         ZDm+ob8FeQUA1jOag0rPOwQp4Dy6lY9hBYjblFp/H9hP97B6/Ayiiiyo7sQ8JM+U81nn
+         E+Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718719936; x=1719324736;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z6Y4EgoXPRwJTHBawpiMcURy3sFFDfTP4JTr3Ev81mc=;
-        b=prqWYepuB1te/3oWCFKyshh7x0QgIJwIZPGhZYwiDRxXYkVy1HY3rOqvovj71SXDeu
-         5nAC7NXtOEtvZ4zxh84mGVxdN9okS4X2AOmEGdnl2LiVF013SQ2k2oujmV+TFKRhLWWK
-         6VAtc51IPmPsRN1DZYofembucusAOw3P4vX/TE4ffnkSeby3LIuRA/NcbRZxhz1XRnTJ
-         tbjLjTG3P4+VQbE9hsg2FTkIsgD/5jpUZLkZg8VJkaY+05sYXrk0jT808XMv4w3RzVGD
-         ZzupKG7Fl+6uxJv0mdPu5yYpl8x73LcbRxCPIvNZhj74aMBxyigdaNvAAVglPrmVlKjD
-         bxrw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTNomRIcE9q1jjNmktmqou4j7VhfEr7bxxURMGwwfJvCgQlA59xRbHTvhXT3XKFg8XVTehrUu6NttrhyCAB2lrv8UdWiy+4KRf
-X-Gm-Message-State: AOJu0Yx+yRYl1fpZCdO9jmwg2OmVLZE6WYBL0YC2PGiemJEl8JGJmLVI
-	NZ8teTr6rY++k6qlpndTvheY6Rw2GMUsedmyMx+Z4sIwjQMovJWSagHGpsFGtbU=
-X-Google-Smtp-Source: AGHT+IGZaIibqfCcQvl/1r3MYhEg7Ikhi/ZBC3FSzVQkmqP3CbCr8ETdFAVMl4V1LEjW+9OKcHaQjQ==
-X-Received: by 2002:a05:6512:15a:b0:52c:958a:4afa with SMTP id 2adb3069b0e04-52ca6e65889mr7126633e87.23.1718719936329;
-        Tue, 18 Jun 2024 07:12:16 -0700 (PDT)
-Received: from ?IPV6:2a00:f41:9028:9df3:4fb7:492b:2c94:7283? ([2a00:f41:9028:9df3:4fb7:492b:2c94:7283])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2888658sm1508463e87.298.2024.06.18.07.12.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 07:12:15 -0700 (PDT)
-Message-ID: <13fea5c0-5906-4075-b734-52649e35eb69@linaro.org>
-Date: Tue, 18 Jun 2024 16:12:08 +0200
+        d=1e100.net; s=20230601; t=1718720202; x=1719325002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Om4iC8WD2JaG4NL4a3+9I68t3tIKpeGHX/9WOTfeeHU=;
+        b=aBeOljCLbllDWfHOZdko6RW5F30NuwqpR+eTBc+OWvcDOObYQdFBcl3U4d3/nf8r7H
+         Qzds0zgYSy9AfznUmBHZF/FANnvGEp3qTjs08abrdBmmEM94PUmYnmnTtIOyneDxr5tO
+         yid/snpCG0Q/NEulW9A9C9/Q20uQqsO1v9cNnhlftus2pNHVn/qRRGzvFWZoL7N4b6is
+         c/XTgJN5KqNUTuUEOFYwL3ddGH4oNnEuZneF/Z90rG0/uO5d35OrbKR8FT95yLhnsSkJ
+         YdE6p/FAccKgom54iPmr48Fy3yXHlMizgXrUfcXrTsKvfnccsUV8vDx08TFM1d1fEIxh
+         vmbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUJMUwALnNHqCj8yh6Jj44A50K8Dh57dv8zFRNXFZ99k/ITXnldmTzcGdtA1Q3jOwVJBKCT+rdJsHDN5pB/s83F0G7rN1cXgRHllUUSMIWYE3H2LbPwURkE1gVlX9vuGzEc2vhZsBCfcfOkTO3EnIeij6/b2nptxadxHQcaSpZsptxulpY0VF8qD8KIO+Uv/ukWeSY7raWlv3mWbwJhy9MH7Y1Xu02Ghec9ysRGk73pIrRt4r31ydCTaBFY5IcxG7c4xdhHwQkXdjooiXpj+3zurAEAMbeRXsYVZ94lK3L9qQJtAiAX/JflNWGnCvEuQh8LzPBauWtYppoGOCxVzK99W26xgiexKetF2kka3H9VqtpVtsSfQpGyUIjUEFlR+ymsZpvmyf7yDd0Epp9EzvVqxMnvUI7qETfNK0r1fs03RiquQ1j1EwXO3CMdet4kqY=
+X-Gm-Message-State: AOJu0YzqNK+TlOlC5zg32m8jfK8ql0e1F5oKtcKxYFLUark15dJuP05l
+	2MT2E42xWkPA54RtIYrpbo7DKlJhQAl8tjBwEx3ni8DcQ86u+jBttRLKxuMMZ4ERfZNXxmdoW2W
+	Mzthbb8QaLHyacDRkyC9Axut5KzQ=
+X-Google-Smtp-Source: AGHT+IFVxJEPFbT79HYd7zoJLAxyrPm1gzxY90KGBgQZvvizvrURzGFMbP7julYl6JpqzUKt2q+uL/xgIcBmlrzc4oI=
+X-Received: by 2002:a05:6870:b525:b0:259:ae64:9231 with SMTP id
+ 586e51a60fabf-259ae6493e7mr583749fac.15.1718720201642; Tue, 18 Jun 2024
+ 07:16:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 23/23] arm64: dts: qcom: starqltechn: add new features
-To: Dzmitry Sankouski <dsankouski@gmail.com>,
- Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>,
- phone-devel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
- <20240618-starqltechn_integration_upstream-v3-23-e3f6662017ac@gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240618-starqltechn_integration_upstream-v3-23-e3f6662017ac@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <20240618-starqltechn_integration_upstream-v3-22-e3f6662017ac@gmail.com> <e6a81932-0609-4476-82b6-43ee30b7de43@linaro.org>
+In-Reply-To: <e6a81932-0609-4476-82b6-43ee30b7de43@linaro.org>
+From: Dzmitry Sankouski <dsankouski@gmail.com>
+Date: Tue, 18 Jun 2024 17:16:29 +0300
+Message-ID: <CABTCjFAKFMQJXdwELZitCKpZQn+irfrHW6uOpHzwvFv=T7zKDA@mail.gmail.com>
+Subject: Re: [PATCH v3 22/23] arm64: dts: qcom: starqltechn: fix usb regulator mistake
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Sam Ravnborg <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, phone-devel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-input@vger.kernel.org, linux-leds@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 6/18/24 15:59, Dzmitry Sankouski wrote:
-> Add support for new features:
-> - sound (headphones and mics only)
-> - gpu
-> - panel
-> - buttons
-> - MAX77705 MFD:
->     - charger
->     - fuelgauge
->     - haptic
->     - led
-> 
-> Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
-> ---
-
-Please split this up
-
->   .../boot/dts/qcom/sdm845-samsung-starqltechn.dts   | 593 ++++++++++++++++++++-
->   1 file changed, 592 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts b/arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts
-> index bad154b1e894..28a5210e22fb 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts
-> @@ -7,15 +7,40 @@
->   
->   /dts-v1/;
->   
-> +#include <dt-bindings/input/linux-event-codes.h>
->   #include <dt-bindings/gpio/gpio.h>
->   #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-> +#include <dt-bindings/sound/qcom,q6afe.h>
-> +#include <dt-bindings/sound/qcom,q6asm.h>
-> +
->   #include "sdm845.dtsi"
-> +#include "pm8998.dtsi"
-> +#include "sdm845-wcd9340.dtsi"
-> +
-> +/delete-node/ &rmtfs_mem;
-> +/delete-node/ &adsp_mem;
-> +/delete-node/ &slpi_mem;
-> +/delete-node/ &spss_mem;
->   
->   / {
->   	chassis-type = "handset";
->   	model = "Samsung Galaxy S9 SM-G9600";
->   	compatible = "samsung,starqltechn", "qcom,sdm845";
->   
-> +	aliases {
-> +		serial0 = &uart9;
-> +	};
-> +
-> +	battery: battery {
-> +		compatible = "simple-battery";
-> +		constant-charge-current-max-microamp = <2150000>;
-> +		charge-full-design-microamp-hours = <3000000>;
-> +
-> +		over-voltage-threshold-microvolt = <4500000>;
-> +		voltage-min-design-microvolt = <3400000>;
-> +		voltage-max-design-microvolt = <4350000>;
-> +	};
-> +
->   	chosen {
->   		#address-cells = <2>;
->   		#size-cells = <2>;
-> @@ -59,9 +84,199 @@ memory@a1300000 {
->   			ftrace-size = <0x40000>;
->   			pmsg-size = <0x40000>;
->   		};
-> +
-> +		/* The rmtfs_mem needs to be guarded due to "XPU limitations"
-> +		 * it is otherwise possible for an allocation adjacent to the
-> +		 * rmtfs_mem region to trigger an XPU violation, causing a crash.
-> +		 */
-> +		rmtfs_lower_guard: memory@fde00000 {
-> +			no-map;
-> +			reg = <0 0xfde00000 0 0x1000>;
-> +		};
-
-qcom,use-guard-pages instead
-
-
-> +
-> +		rmtfs_mem: rmtfs-mem@fde01000 {
-> +			compatible = "qcom,rmtfs-mem";
-> +			reg = <0 0xfde01000 0 0x200000>;
-> +			no-map;
-> +
-> +			qcom,client-id = <1>;
-> +			qcom,vmid = <15>;
-
-QCOM_SCM_VMID_MSS_MSA
-
-[...]
-
-> +		/*
-> +		 * It seems like reserving the old rmtfs_mem region is also needed to prevent
-> +		 * random crashes which are most likely modem related, more testing needed.
-> +		 */
-> +		removed_region: removed-region@88f00000 {
-> +			no-map;
-> +			reg = <0 0x88f00000 0 0x1c00000>;
-
-Please keep no-map below reg for consistency
-
-[...]
-
-> +
-> +&gmu {
-> +	status = "okay";
-> +};
-
-Drop this and remove the disablement in 845.dtsi, gmu is only probed when
-GPU is
-
-[...]
-
->   	gpio-reserved-ranges = <0 4>, <27 4>, <81 4>, <85 4>;
-
-Do you know what these are for?
-
-Konrad
+=D0=B2=D1=82, 18 =D0=B8=D1=8E=D0=BD. 2024=E2=80=AF=D0=B3. =D0=B2 17:08, Kon=
+rad Dybcio <konrad.dybcio@linaro.org>:
+>
+>
+>
+> On 6/18/24 15:59, Dzmitry Sankouski wrote:
+> > Usb regulator was wrongly pointed to vreg_l1a_0p875.
+> > However, on starqltechn it's powered from vreg_l5a_0p8.
+> >
+> > Fixes: d711b22eee55 ("arm64: dts: qcom: starqltechn: add initial device=
+ tree for starqltechn")
+> >
+> > Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
+> > ---
+>
+> How did you confirm that?
+Vendor kernel source code:
+https://github.com/klabit87/twrp_android_samsung_kernel_sdm845/blob/e8bb630=
+39008e1704a2f1bde68d39ded9c16ea88/arch/arm64/boot/dts/samsung/sdm845-sec-st=
+arqlte-chnhk-r14_v2.1.dts#L10242
+https://github.com/klabit87/twrp_android_samsung_kernel_sdm845/blob/e8bb630=
+39008e1704a2f1bde68d39ded9c16ea88/arch/arm64/boot/dts/samsung/sdm845-sec-st=
+arqlte-chnhk-r14_v2.1.dts#L23401
+>
+> Konrad
 
