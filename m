@@ -1,75 +1,75 @@
-Return-Path: <linux-pwm+bounces-2516-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2517-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48B2190D445
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 16:18:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AD2490D44F
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 16:19:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5409D1C23AC7
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 14:18:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17729285755
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jun 2024 14:19:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B796419FA66;
-	Tue, 18 Jun 2024 14:00:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC021A00D8;
+	Tue, 18 Jun 2024 14:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRmTYiqe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkJIOb1o"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634C119F481;
-	Tue, 18 Jun 2024 14:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24A119F49B;
+	Tue, 18 Jun 2024 14:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718719230; cv=none; b=LcIkCNRNd76CbUF70hzUM8odfWr7t11UUHg0fk2oEGTD1ZsMDxO8FBM1WaxoalFpo6PhKKEawNMWg2kPwR4zegemjm1CqXXhROSnYNarl/lhibDASY8LmI+E6lzMqnEAVUSvpjyjPCcIAeQVLWsKt0Z1JLZdzrMKlcSgNX9RKyk=
+	t=1718719233; cv=none; b=m1HRABoS7+dd3egzSzxaqxFL7UjKE6Bb2Aj4pQbVdhXZEFtrmL+zBKFPlHJQBR1QdN+MqeST3VvOCqZBruqtUGYzqjqSfwX/qEqAnnR7o0HTdv50yAMTsEN5Avtv8ICVnwHy0TDPPe3uvT8iy9sACCd6QWKVwI5eK63C0Swo7bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718719230; c=relaxed/simple;
-	bh=IHZAr5+Cdn0wmqhOZ2PeM9l2Gdz/tWq1OFfADxf5XIQ=;
+	s=arc-20240116; t=1718719233; c=relaxed/simple;
+	bh=uZejq3wX3OBYE+9S5+uNP8az/DWpQYHhHiLxkXJUgAg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gmrlZ8lp74xDEcU2MSdycnbtdMjIVtoyIAVk9IWsMxzvrbI8Lx2b9WfBCtlLkB7MDTwyxs7kCLQ4Ln2QwCUDQNWWzH/gMTf++PLBXTWHPwB4eNLnT0eqc1BNFvHpu5663BFdyAaOiPJ7AMESifYSDexj7jhfRfMueAvTBH05cgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lRmTYiqe; arc=none smtp.client-ip=209.85.208.49
+	 In-Reply-To:To:Cc; b=tZXDZ2IZvPgM63KmmMxWBbDusVUMr4ljEc8+Ypm/lzpnK3zGM0a+tzI1y17AhsoGukUUqrGP8W4rqrjUvwoVUO9cbMRX1g6BsFKtMhRorh6lyYmpd1JkhgdYWUfGKAHQjQhTBkm7HudoCPl8pG2ZSZT4VBipEO7Mx5bhXkdbleA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WkJIOb1o; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57d046f4afdso268519a12.1;
-        Tue, 18 Jun 2024 07:00:28 -0700 (PDT)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57cce3bc8c6so3823782a12.3;
+        Tue, 18 Jun 2024 07:00:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718719227; x=1719324027; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718719229; x=1719324029; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=lVpSUbQ0RxUxTD6Qqs+KFz8X9qCBPybUa3iBtTp8xZM=;
-        b=lRmTYiqet/n1S42Ij86i6/mKITc/Imt1qa53nFDawxVKRJ816hLtRJklA2XIpSXIfb
-         DC49NQekC1RROEHKXg68LwOS1b1+tqrwQgGjH4Vrpy5Ano2F9vCXF8dJiBIez7RSzUBv
-         Y5SgR7pa/gB3eLDRm1bPItyFIlfDR7rgzWaaqaQtIzztHRhFZ/3t9f2fvb6HQ34qjygU
-         4hZ7ADKmm/4+nYWKTkHcMjr2MHybBem5EEZqau3gxJq2ocmtBfmQXicl3udNmUGpiTpv
-         WFhtfYkTwMo9L9snTzCTRpfjGb/lXaT7kpqWwIQzeVqei/eKPWwjPszGSEMAd91RGa2u
-         B6Pg==
+        bh=eJjzPFzeK4OTnNmyhk2Z69T0Mv/GEdnDyv14Qjd1AMA=;
+        b=WkJIOb1o1+ffYugCAnkSw9Zr134fhg9M3VdiZAefDntFXJNNKnMR0x0OA5qimNCetA
+         aiIG/Lf9z4gieMsu2smeiYhcsbkHMrv1I2grUjJ7ykBHMeZn9d6hPu894Hi/OOmdxRxy
+         SnOy0kzjWlPNX8LAMOIZQa7fvXHudNR2oOz3lfIgv+E/KqTHvKR2Jzb3oRo+HFj4QCqE
+         kDGuHWA4yEud/gCfjg+i2yOw0Y3ooLDOGGJvR7GGghHLgPqxqvCnxcZNAEeEruZOpHBw
+         bty3TgmNdBp5b3B0ElqZh7tTIlDjIzVnIy+rgKUBHhWZ8ScF2Ow+NQpEtrOl3BdtaNBK
+         2DLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718719227; x=1719324027;
+        d=1e100.net; s=20230601; t=1718719229; x=1719324029;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lVpSUbQ0RxUxTD6Qqs+KFz8X9qCBPybUa3iBtTp8xZM=;
-        b=F8GD1Bh3NCRgE837DsrVjgqCFFA+ZxCm9NgePdBy9jhCPKVXyVX8P1ByKxdHR3qlJe
-         bb6f2zzjCWkdmIDgm3S+u5fgxm7HPrRF0hRi1PK89z2HM7roxH2TRInxvokBLDVoXFhU
-         yuGVu7Vu+3XA/K+RTwRZRUsfiPIIDqFEKjUiYrRZxbBYp4BhlZIPY/F7p5JHOMu7fKy4
-         XWdRq1FHPUUzMpoajn7eHxh4VtNe1Nh4eY7IJp+JblXtqqaF+SKjhw53xEVX8HIcVR4S
-         oNTyTl0YhtBfqYNd+PYow0k7LFnwrM6cCH9VqxGviYEh8q3NnAI8kuBZG0ZZDIj+dugY
-         2RFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXuqk9s42snKqAdQttXyUbGb0PYEL3PmCfhbdrU1xRo4P+BTo/HFj/C0DSRdNeigtoNnwGossdZlrpCLgOaHQw/X7TTSq9DNveNKxUsbWBHQU3jLhONeDExDDWHwq8b8GbnqUcojHGszH0WpySywWhxzTSWwjqpGQ70ZZqmDBl2vxKvZtu6FaYpSnuF6K1DLp11M6NG8yUUK1NGnJFh8cn2mtQl/c/MF/c200PMv151iBoxBO6Ery4ZYYjnih7DXHiWNvBMu9QOADOXWO02GXYBR1zc7Rn7YqQiFkSGdJOoXFM/ybYPMTCjacluKeL5PwL3Uan1d0VsrDCEsL60KjoWY0SVanY57um9ZFtvqeo2G62d3Dq05hC4JBGq8kBZY7xuRnC1JOdB6NXcGTZq7FSa7YpVFg5b
-X-Gm-Message-State: AOJu0Yw1RjUnw6IeSj8Bc/d/HdWjtRC33Deyco7FsZbq4SyqCeovVlar
-	h0LL5slC21BAOYM+p+hEr1zyVxoSGddGXUyHjWFi8pR322NV1NAf
-X-Google-Smtp-Source: AGHT+IHe/0ra3yC6deGQmpMua4UTqdcMRRszmsFv8+QoEjoDXgFjZqQesDDjmgynaNQbxBP6akhjMw==
-X-Received: by 2002:aa7:ce04:0:b0:57d:3cf:899d with SMTP id 4fb4d7f45d1cf-57d03cf8aa2mr974692a12.22.1718719226445;
-        Tue, 18 Jun 2024 07:00:26 -0700 (PDT)
+        bh=eJjzPFzeK4OTnNmyhk2Z69T0Mv/GEdnDyv14Qjd1AMA=;
+        b=P8jiVXsOMmHQr1F/HfN0RL9waM45wRiN48GJ+97XpjWwb97Yu5DBx8fY0jAmTQdo/5
+         E4Gs6653SD3yMoOVqGGt2nOOfh3jAk+hTVP8JQE4LVTnz9Idun8HBW5DpcGwqStBV9L/
+         579UqO70taz+4IIJ9RbdV65hciQWlmRDqDVn1ZPCnkhfnEL8ij5T4tfQVgsjo8yixpLd
+         W1s2zn7ENUXaxobPLeEkp+bxYobvJCDAwlfJBriVrAn5/hRg/Z6+6AtDWzc3HdgOKVKk
+         R/Y1O09IHprytMAHZbG3hqXMrLZpFcUaMAbZdN1RSWIePUFnTh8NX8LbHP1c15MgtNl8
+         q0VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsMs1TT+C+Daq4euQXqZdmvnSSw0QapT7I0PEKYa3VVFXjKK7Ymva22LODIrRtLTF9no54bwLYrfMH0YT8/ekjwXSZeNS3QQMLVhqaL7u7gpVMzxS++KuCXiTC4wWHwXxbDzTHUuRTgba4mAdtoBELdyMO8B9CYrcUBS3OzjTtdYFjB9adssGDw6sErzpYUUhh8W33iWlKDApA3LfOfxG0FlmDP4sY5ZRcDz6kiW59C2I0olQ4mh2pC+2t2I+BqNSFmI9VIe/9xjm+1AVulOSvX6YmntMh+YxIGAXVuCFsu9a5X7Ycowd29ExuCJb12+IdNs/KAt3/Jn7aU5u0mlN5M5WhN3yaq0zPis2SmyPkTYwDxMsaZsUUq3h2eWHGcJBKwfS9okQWEDrLtI+n28Wwssjt+hKD
+X-Gm-Message-State: AOJu0YysE39hlYE31kT2HXWP/6gbQD9kJvkaosnA1utWHv5q48zU+wR1
+	uOJHSRrKHBgAC4npPabXdItRjnGSPeVgbVAx+1oNq0pNroVBqeFy
+X-Google-Smtp-Source: AGHT+IF4ZzHLI9V3+LTX7+JTibxZTfVLCoXIxk/IYmJanCqg5Sh7sZ08YDb/9Oipl6vdG3BZDB9ekA==
+X-Received: by 2002:a50:ab4a:0:b0:578:6c19:4801 with SMTP id 4fb4d7f45d1cf-57cbd6a70e9mr8232702a12.22.1718719228794;
+        Tue, 18 Jun 2024 07:00:28 -0700 (PDT)
 Received: from [127.0.1.1] (mm-167-232-122-178.mgts.dynamic.pppoe.byfly.by. [178.122.232.167])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm7731278a12.22.2024.06.18.07.00.24
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb72da156sm7731278a12.22.2024.06.18.07.00.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 07:00:26 -0700 (PDT)
+        Tue, 18 Jun 2024 07:00:28 -0700 (PDT)
 From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Tue, 18 Jun 2024 16:59:51 +0300
-Subject: [PATCH v3 17/23] mfd: add s2dos series core driver
+Date: Tue, 18 Jun 2024 16:59:52 +0300
+Subject: [PATCH v3 18/23] regulator: add s2dos05 regulator support
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -78,7 +78,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240618-starqltechn_integration_upstream-v3-17-e3f6662017ac@gmail.com>
+Message-Id: <20240618-starqltechn_integration_upstream-v3-18-e3f6662017ac@gmail.com>
 References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
 In-Reply-To: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
 To: Sebastian Reichel <sre@kernel.org>, 
@@ -104,372 +104,436 @@ Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
  Dzmitry Sankouski <dsankouski@gmail.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718719185; l=10509;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718719185; l=12895;
  i=dsankouski@gmail.com; s=20240618; h=from:subject:message-id;
- bh=IHZAr5+Cdn0wmqhOZ2PeM9l2Gdz/tWq1OFfADxf5XIQ=;
- b=l66fMD8sHB8UJYTpLpJ1ay3lJvzfpqGlDq6nPosqrMEDYoFHMPD/dy7mDaSAk2An0pOO6QxUi
- qEyrqTzd98iCKNsZDfsTPkuE8JTVRSRulb9nsxxFrfA4H6vj652yV10
+ bh=uZejq3wX3OBYE+9S5+uNP8az/DWpQYHhHiLxkXJUgAg=;
+ b=5XtWTi2CQq9/wixtulx+pvi4NO3P+hcgPgRzF8p95jBWt9lMboWJtUeAdy8U69KlHIY638Q7u
+ vUZauNkhQbHBrjHjjmEPIjCHoFB1/7esgo0w4z1F6LxEg9G5mvxG1nM
 X-Developer-Key: i=dsankouski@gmail.com; a=ed25519;
  pk=6pMMVVDDReSiRgPCbMOUauN5nS3ty4Sf5b7a2gi4x0M=
 
-S2DOS05 is a panel/touchscreen PMIC, often found in
-Samsung phones. We define 2 sub-devices for which drivers will
-be added in subsequent patches.
+S2dos05 has 1 buck and 4 LDO regulators, used for powering
+panel/touchscreen.
 
 Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
 ---
- MAINTAINERS                            |   1 +
- drivers/mfd/Kconfig                    |  13 +++
- drivers/mfd/Makefile                   |   2 +-
- drivers/mfd/s2dos-core.c               | 141 +++++++++++++++++++++++++++++++++
- include/linux/mfd/samsung/s2dos-core.h |  21 +++++
- include/linux/mfd/samsung/s2dos05.h    | 115 +++++++++++++++++++++++++++
- 6 files changed, 292 insertions(+), 1 deletion(-)
+ MAINTAINERS                           |   1 +
+ drivers/regulator/Kconfig             |   8 +
+ drivers/regulator/Makefile            |   1 +
+ drivers/regulator/s2dos05-regulator.c | 362 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 372 insertions(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index f3c245d432d9..b53462684a30 100644
+index b53462684a30..bee700a5e648 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -19908,6 +19908,7 @@ F:	Documentation/devicetree/bindings/regulator/samsung,s2dos*.yaml
- F:	Documentation/devicetree/bindings/regulator/samsung,s2m*.yaml
- F:	Documentation/devicetree/bindings/regulator/samsung,s5m*.yaml
+@@ -19910,6 +19910,7 @@ F:	Documentation/devicetree/bindings/regulator/samsung,s5m*.yaml
  F:	drivers/clk/clk-s2mps11.c
-+F:	drivers/mfd/s2dos*.c
+ F:	drivers/mfd/s2dos*.c
  F:	drivers/mfd/sec*.c
++F:	drivers/regulator/s2dos*.c
  F:	drivers/regulator/s2m*.c
  F:	drivers/regulator/s5m*.c
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index c4eb8ff2dcad..517d8778d7a8 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1278,6 +1278,19 @@ config MFD_RN5T618
- 	  additional drivers must be enabled in order to use the
- 	  functionality of the device.
+ F:	drivers/rtc/rtc-s5m.c
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index d333be2bea3b..d6d6f571a65d 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -1297,6 +1297,14 @@ config REGULATOR_RTQ2208
+ 	  and two ldos. It features wide output voltage range from 0.4V to 2.05V
+ 	  and the capability to configure the corresponding power stages.
  
-+config MFD_S2DOS_CORE
-+	tristate "Samsung Electronics PMIC Series Support"
-+	depends on I2C=y
-+	depends on OF
-+	select MFD_CORE
-+	select REGMAP_I2C
++config REGULATOR_S2DOS05
++	tristate "SLSI S2DOS05 regulator"
++	depends on MFD_S2DOS_CORE || COMPILE_TEST
 +	help
-+	  Support for the Samsung Electronics PMIC devices
-+	  usually used to power displays.
-+	  This driver provides common support for accessing the device,
-+	  additional drivers must be enabled in order to use the functionality
-+	  of the device.
++	  This driver provides support for the voltage regulators of the S2DOS05.
++	  The S2DOS05 is a companion power management IC for the smart phones.
++	  The S2DOS05 has 4 LDOs and 1 BUCK outputs.
 +
- config MFD_SEC_CORE
- 	tristate "Samsung Electronics PMIC Series Support"
- 	depends on I2C=y
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index bf65cc36d59c..37c51aab0205 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -228,7 +228,7 @@ obj-$(CONFIG_MFD_RK8XX_I2C)	+= rk8xx-i2c.o
- obj-$(CONFIG_MFD_RK8XX_SPI)	+= rk8xx-spi.o
- obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
- obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
--obj-$(CONFIG_MFD_S2DOS05)	+= s2dos05.o
-+obj-$(CONFIG_MFD_S2DOS_CORE)	+= s2dos-core.o
- obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
- obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
- obj-$(CONFIG_MFD_VEXPRESS_SYSREG)	+= vexpress-sysreg.o
-diff --git a/drivers/mfd/s2dos-core.c b/drivers/mfd/s2dos-core.c
+ config REGULATOR_S2MPA01
+ 	tristate "Samsung S2MPA01 voltage regulator"
+ 	depends on MFD_SEC_CORE || COMPILE_TEST
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index ba15fa5f30ad..80f889404597 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -151,6 +151,7 @@ obj-$(CONFIG_REGULATOR_RTMV20)	+= rtmv20-regulator.o
+ obj-$(CONFIG_REGULATOR_RTQ2134) += rtq2134-regulator.o
+ obj-$(CONFIG_REGULATOR_RTQ6752)	+= rtq6752-regulator.o
+ obj-$(CONFIG_REGULATOR_RTQ2208) += rtq2208-regulator.o
++obj-$(CONFIG_REGULATOR_S2DOS05) += s2dos05-regulator.o
+ obj-$(CONFIG_REGULATOR_S2MPA01) += s2mpa01.o
+ obj-$(CONFIG_REGULATOR_S2MPS11) += s2mps11.o
+ obj-$(CONFIG_REGULATOR_S5M8767) += s5m8767.o
+diff --git a/drivers/regulator/s2dos05-regulator.c b/drivers/regulator/s2dos05-regulator.c
 new file mode 100644
-index 000000000000..a04363b15a2a
+index 000000000000..3c58a1bd2262
 --- /dev/null
-+++ b/drivers/mfd/s2dos-core.c
-@@ -0,0 +1,141 @@
++++ b/drivers/regulator/s2dos05-regulator.c
+@@ -0,0 +1,362 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * s2dos05.c - mfd core driver for the s2dos05 chip
++ * s2dos05.c - Regulator driver for the Samsung s2dos05
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * Copyright (C) 2024 Dzmitry Sankouski <dsankouski@gmail.com>
++ * Copyright (C) 2016 Samsung Electronics
++ * Copyright (C) 2023 Dzmitry Sankouski <dsankouski@gmail.com>
 + *
 + */
 +
 +#include <linux/module.h>
++#include <linux/bug.h>
++#include <linux/delay.h>
++#include <linux/err.h>
 +#include <linux/slab.h>
-+#include <linux/i2c.h>
-+#include <linux/irq.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
 +#include <linux/interrupt.h>
-+#include <linux/mutex.h>
-+#include <linux/mfd/core.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
 +#include <linux/mfd/samsung/s2dos-core.h>
 +#include <linux/mfd/samsung/s2dos05.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
++#include <linux/i2c.h>
 +#include <linux/debugfs.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
 +
-+static struct dentry *debugfs_file;
++struct s2dos05_data {
++	struct regmap *regmap;
++	struct device *dev;
++};
 +
-+static int s2dos05_debugfs_show(struct seq_file *s, void *data)
++static int s2m_enable(struct regulator_dev *rdev)
 +{
-+	struct s2dos_core *s2dos05 = s->private;
-+	struct regmap *regmap = s2dos05->regmap;
-+	unsigned int i, reg, reg_data, pmic_id;
-+	int regs[] = {
-+		S2DOS05_REG_DEV_ID,
-+		S2DOS05_REG_TOPSYS_STAT,
-+		S2DOS05_REG_STAT,
-+		S2DOS05_REG_EN,
-+		S2DOS05_REG_LDO1_CFG,
-+		S2DOS05_REG_LDO2_CFG,
-+		S2DOS05_REG_LDO3_CFG,
-+		S2DOS05_REG_LDO4_CFG,
-+		S2DOS05_REG_BUCK_CFG,
-+		S2DOS05_REG_BUCK_VOUT,
-+		S2DOS05_REG_IRQ_MASK,
-+		S2DOS05_REG_SSD_TSD,
-+		S2DOS05_REG_OCL,
-+		S2DOS05_REG_IRQ
-+	};
-+	regmap_read(regmap, S2DOS05_REG_DEV_ID, &pmic_id);
-+	seq_printf(s, "S2DOS05, id: %d\n", pmic_id);
-+	seq_puts(s, "===================\n");
-+	for (i = 0; i < ARRAY_SIZE(regs); i++) {
-+		reg = regs[i];
-+		regmap_read(regmap, reg, &reg_data);
-+		seq_printf(s, "0x%02x:\t0x%02x\n", reg, reg_data);
-+	}
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
 +
-+	seq_puts(s, "\n");
++	return regmap_update_bits(regmap, rdev->desc->enable_reg,
++				  rdev->desc->enable_mask,
++					rdev->desc->enable_mask);
++}
++
++static int s2m_disable_regmap(struct regulator_dev *rdev)
++{
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
++	u8 val;
++
++	if (rdev->desc->enable_is_inverted)
++		val = rdev->desc->enable_mask;
++	else
++		val = 0;
++
++	return regmap_update_bits(regmap, rdev->desc->enable_reg, rdev->desc->enable_mask,
++				   val);
++}
++
++static int s2m_is_enabled_regmap(struct regulator_dev *rdev)
++{
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
++	int ret;
++	unsigned int val;
++
++	ret = regmap_read(regmap, rdev->desc->enable_reg, &val);
++	if (ret < 0)
++		return ret;
++
++	if (rdev->desc->enable_is_inverted)
++		return (val & rdev->desc->enable_mask) == 0;
++	else
++		return (val & rdev->desc->enable_mask) != 0;
++}
++
++static int s2m_get_voltage_sel_regmap(struct regulator_dev *rdev)
++{
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
++	int ret;
++	unsigned int val;
++
++	ret = regmap_read(regmap, rdev->desc->vsel_reg, &val);
++	if (ret < 0)
++		return ret;
++
++	val &= rdev->desc->vsel_mask;
++
++	return val;
++}
++
++static int s2m_set_voltage_sel_regmap(struct regulator_dev *rdev,
++					unsigned int sel)
++{
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
++	int ret;
++
++	ret = regmap_update_bits(regmap, rdev->desc->vsel_reg, rdev->desc->vsel_mask,
++				sel);
++	if (ret < 0)
++		goto out;
++
++	if (rdev->desc->apply_bit)
++		ret = regmap_update_bits(regmap, rdev->desc->apply_reg,
++					 rdev->desc->apply_bit,
++					 rdev->desc->apply_bit);
++	return ret;
++out:
++	pr_warn("%s: failed to set voltage_sel_regmap\n", rdev->desc->name);
++	return ret;
++}
++
++static int s2m_set_voltage_sel_regmap_buck(struct regulator_dev *rdev,
++					unsigned int sel)
++{
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
++	int ret;
++
++	ret = regmap_write(regmap, rdev->desc->vsel_reg, sel);
++	if (ret < 0)
++		goto out;
++
++	if (rdev->desc->apply_bit)
++		ret = regmap_update_bits(regmap, rdev->desc->apply_reg,
++					 rdev->desc->apply_bit,
++					 rdev->desc->apply_bit);
++	return ret;
++out:
++	pr_warn("%s: failed to set voltage_sel_regmap\n", rdev->desc->name);
++	return ret;
++}
++
++static int s2m_set_voltage_time_sel(struct regulator_dev *rdev,
++				   unsigned int old_selector,
++				   unsigned int new_selector)
++{
++	int old_volt, new_volt;
++
++	/* sanity check */
++	if (!rdev->desc->ops->list_voltage)
++		return -EINVAL;
++
++	old_volt = rdev->desc->ops->list_voltage(rdev, old_selector);
++	new_volt = rdev->desc->ops->list_voltage(rdev, new_selector);
++
++	if (old_selector < new_selector)
++		return DIV_ROUND_UP(new_volt - old_volt, S2DOS05_RAMP_DELAY);
++
 +	return 0;
 +}
 +
-+DEFINE_SHOW_ATTRIBUTE(s2dos05_debugfs);
-+
-+static const struct regmap_config s2dos05_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = S2DOS05_REG_IRQ,
-+};
-+
-+static struct mfd_cell s2dos05_devs[] = {
-+	{ .name = "s2dos05-fg" },
-+	{
-+		.name = "s2dos05-regulator",
-+		.of_compatible = "samsung,s2dos05-regulator",
-+	},
-+};
-+
-+
-+static int s2dos05_i2c_probe(struct i2c_client *i2c)
++static int s2m_set_active_discharge(struct regulator_dev *rdev,
++					bool enable)
 +{
-+	struct s2dos_core *s2dos05;
-+	struct regmap *regmap;
-+	struct device *dev = &i2c->dev;
++	struct s2dos05_data *info = rdev_get_drvdata(rdev);
++	struct regmap *regmap = info->regmap;
++	int ret;
++	u8 val;
 +
-+	unsigned int reg_data;
-+	int ret = 0;
++	if (enable)
++		val = rdev->desc->active_discharge_on;
++	else
++		val = rdev->desc->active_discharge_off;
 +
-+	s2dos05 = kzalloc(sizeof(struct s2dos_core), GFP_KERNEL);
-+	if (!s2dos05)
-+		return -ENOMEM;
-+
-+	regmap = devm_regmap_init_i2c(i2c, &s2dos05_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "Unable to initialise I2C Regmap\n");
-+		return PTR_ERR(regmap);
-+	}
-+	s2dos05->regmap = regmap;
-+
-+	if (regmap_read(regmap, S2DOS05_REG_DEV_ID, &reg_data) < 0) {
-+		dev_err(dev,
-+			"device not found on this channel (this is not an error)\n");
-+		ret = -ENODEV;
-+	} else {
-+		dev_info(dev, "%s device found with id: .0x%x\n",
-+				__func__, reg_data);
-+	}
-+
-+	i2c_set_clientdata(i2c, s2dos05);
-+
-+	debugfs_file = debugfs_create_file("s2dos05-regs",
-+				0664, NULL, (void *)s2dos05,
-+				  &s2dos05_debugfs_fops);
-+	if (!debugfs_file)
-+		dev_err(dev, "Failed to create debugfs file\n");
-+
-+	return mfd_add_devices(dev, -1, s2dos05_devs,
-+			ARRAY_SIZE(s2dos05_devs), NULL, 0, NULL);
++	ret = regmap_update_bits(regmap, rdev->desc->active_discharge_reg,
++				rdev->desc->active_discharge_mask, val);
++	return ret;
 +}
 +
-+static const struct of_device_id s2dos05_i2c_dt_ids[] = {
-+	{ .compatible = "samsung,s2dos05-pmic" },
++static const struct regulator_ops s2dos05_ldo_ops = {
++	.list_voltage		= regulator_list_voltage_linear,
++	.map_voltage		= regulator_map_voltage_linear,
++	.is_enabled		= s2m_is_enabled_regmap,
++	.enable			= s2m_enable,
++	.disable		= s2m_disable_regmap,
++	.get_voltage_sel	= s2m_get_voltage_sel_regmap,
++	.set_voltage_sel	= s2m_set_voltage_sel_regmap,
++	.set_voltage_time_sel	= s2m_set_voltage_time_sel,
++	.set_active_discharge	= s2m_set_active_discharge,
++};
++
++static const struct regulator_ops s2dos05_buck_ops = {
++	.list_voltage		= regulator_list_voltage_linear,
++	.map_voltage		= regulator_map_voltage_linear,
++	.is_enabled		= s2m_is_enabled_regmap,
++	.enable			= s2m_enable,
++	.disable		= s2m_disable_regmap,
++	.get_voltage_sel	= s2m_get_voltage_sel_regmap,
++	.set_voltage_sel	= s2m_set_voltage_sel_regmap_buck,
++	.set_voltage_time_sel	= s2m_set_voltage_time_sel,
++	.set_active_discharge	= s2m_set_active_discharge,
++};
++
++#define _BUCK(macro)	S2DOS05_BUCK##macro
++#define _buck_ops(num)	s2dos05_buck_ops##num
++
++#define _LDO(macro)	S2DOS05_LDO##macro
++#define _REG(ctrl)	S2DOS05_REG##ctrl
++#define _ldo_ops(num)	s2dos05_ldo_ops##num
++#define _MASK(macro)	S2DOS05_ENABLE_MASK##macro
++#define _TIME(macro)	S2DOS05_ENABLE_TIME##macro
++
++#define BUCK_DESC(_name, _id, _ops, m, s, v, e, em, t, a) {	\
++	.name		= _name,				\
++	.id		= _id,					\
++	.ops		= _ops,					\
++	.type		= REGULATOR_VOLTAGE,			\
++	.owner		= THIS_MODULE,				\
++	.min_uV		= m,					\
++	.uV_step	= s,					\
++	.n_voltages	= S2DOS05_BUCK_N_VOLTAGES,		\
++	.vsel_reg	= v,					\
++	.vsel_mask	= S2DOS05_BUCK_VSEL_MASK,		\
++	.enable_reg	= e,					\
++	.enable_mask	= em,					\
++	.enable_time	= t,					\
++	.active_discharge_off = 0,				\
++	.active_discharge_on = S2DOS05_BUCK_FD_MASK,		\
++	.active_discharge_reg	= a,				\
++	.active_discharge_mask	= S2DOS05_BUCK_FD_MASK		\
++}
++
++#define LDO_DESC(_name, _id, _ops, m, s, v, e, em, t, a) {	\
++	.name		= _name,				\
++	.id		= _id,					\
++	.ops		= _ops,					\
++	.type		= REGULATOR_VOLTAGE,			\
++	.owner		= THIS_MODULE,				\
++	.min_uV		= m,					\
++	.uV_step	= s,					\
++	.n_voltages	= S2DOS05_LDO_N_VOLTAGES,		\
++	.vsel_reg	= v,					\
++	.vsel_mask	= S2DOS05_LDO_VSEL_MASK,		\
++	.enable_reg	= e,					\
++	.enable_mask	= em,					\
++	.enable_time	= t,					\
++	.active_discharge_off = 0,				\
++	.active_discharge_on = S2DOS05_LDO_FD_MASK,		\
++	.active_discharge_reg	= a,				\
++	.active_discharge_mask	= S2DOS05_LDO_FD_MASK		\
++}
++
++static struct regulator_desc regulators[S2DOS05_REGULATOR_MAX] = {
++		/* name, id, ops, min_uv, uV_step, vsel_reg, enable_reg */
++		LDO_DESC("ldo1", _LDO(1), &_ldo_ops(), _LDO(_MIN1),
++			_LDO(_STEP1), _REG(_LDO1_CFG),
++			_REG(_EN), _MASK(_L1), _TIME(_LDO), _REG(_LDO1_CFG)),
++		LDO_DESC("ldo2", _LDO(2), &_ldo_ops(), _LDO(_MIN1),
++			_LDO(_STEP1), _REG(_LDO2_CFG),
++			_REG(_EN), _MASK(_L2), _TIME(_LDO), _REG(_LDO2_CFG)),
++		LDO_DESC("ldo3", _LDO(3), &_ldo_ops(), _LDO(_MIN2),
++			_LDO(_STEP1), _REG(_LDO3_CFG),
++			_REG(_EN), _MASK(_L3), _TIME(_LDO), _REG(_LDO3_CFG)),
++		LDO_DESC("ldo4", _LDO(4), &_ldo_ops(), _LDO(_MIN2),
++			_LDO(_STEP1), _REG(_LDO4_CFG),
++			_REG(_EN), _MASK(_L4), _TIME(_LDO), _REG(_LDO4_CFG)),
++		BUCK_DESC("buck1", _BUCK(1), &_buck_ops(), _BUCK(_MIN1),
++			_BUCK(_STEP1), _REG(_BUCK_VOUT),
++			_REG(_EN), _MASK(_B1), _TIME(_BUCK), _REG(_BUCK_CFG)),
++};
++
++static int s2dos05_pmic_dt_parse_pdata(struct device *dev,
++					struct of_regulator_match *rdata,
++					unsigned int rdev_num)
++{
++	struct device_node *reg_np;
++	int err;
++
++	reg_np = of_get_child_by_name(dev->parent->of_node, "regulators");
++	if (!reg_np) {
++		dev_err(dev, "could not find regulators sub-node\n");
++		return -EINVAL;
++	}
++
++	err = of_regulator_match(dev, reg_np, rdata, rdev_num);
++	of_node_put(reg_np);
++
++	return err;
++}
++
++static int s2dos05_pmic_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct s2dos_core *iodev = dev_get_drvdata(pdev->dev.parent);
++	struct of_regulator_match *rdata = NULL;
++	struct s2dos05_data *s2dos05;
++	struct regulator_config config = { };
++	unsigned int rdev_num = ARRAY_SIZE(regulators);
++	int i;
++	int ret, err = 0;
++
++	s2dos05 = devm_kzalloc(dev, sizeof(struct s2dos05_data),
++				GFP_KERNEL);
++	if (!s2dos05) {
++		ret = -ENOMEM;
++		goto err_data;
++	}
++	platform_set_drvdata(pdev, s2dos05);
++
++	rdata = kcalloc(rdev_num, sizeof(*rdata), GFP_KERNEL);
++	if (!rdata)
++		return -ENOMEM;
++
++	for (i = 0; i < rdev_num; i++)
++		rdata[i].name = regulators[i].name;
++
++	err = s2dos05_pmic_dt_parse_pdata(dev, rdata, rdev_num);
++	if (err < 0) {
++		dev_err(dev, "Failed to parse regulators device of_node\n");
++		goto err_data;
++	}
++
++	s2dos05->regmap = iodev->regmap;
++	s2dos05->dev = dev;
++
++	for (i = 0; i < rdev_num; i++) {
++		struct regulator_dev *regulator;
++
++		config.init_data = rdata[i].init_data;
++		config.of_node = rdata[i].of_node;
++		config.dev = dev;
++		config.driver_data = s2dos05;
++		regulator = devm_regulator_register(&pdev->dev,
++						&regulators[i], &config);
++		if (IS_ERR(regulator)) {
++			ret = PTR_ERR(regulator);
++			dev_err(&pdev->dev, "regulator init failed for %d\n",
++				i);
++			goto out;
++		}
++	}
++
++out:
++	kfree(rdata);
++
++	return ret;
++
++err_data:
++	devm_kfree(dev, (void *)s2dos05);
++	kfree(s2dos05);
++
++	return ret;
++}
++
++static const struct platform_device_id s2dos05_pmic_id[] = {
++	{ "s2dos05-regulator" },
 +	{ },
 +};
-+MODULE_DEVICE_TABLE(of, s2dos05_i2c_dt_ids);
++MODULE_DEVICE_TABLE(platform, s2dos05_pmic_id);
 +
-+static struct i2c_driver s2dos05_i2c_driver = {
-+	.driver		= {
-+		.name	= "s2dos-core",
-+		.owner	= THIS_MODULE,
-+		.of_match_table	= s2dos05_i2c_dt_ids,
++static struct platform_driver s2dos05_platform_driver = {
++	.driver = {
++		.name = "s2dos05",
 +	},
-+	.probe		= s2dos05_i2c_probe,
++	.probe = s2dos05_pmic_probe,
++	.id_table = s2dos05_pmic_id,
 +};
++module_platform_driver(s2dos05_platform_driver);
 +
-+module_i2c_driver(s2dos05_i2c_driver);
-+
-+MODULE_DESCRIPTION("s2dos core driver");
 +MODULE_AUTHOR("Dzmitry Sankouski <dsankouski@gmail.com>");
++MODULE_DESCRIPTION("SAMSUNG s2dos05 Regulator Driver");
 +MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/samsung/s2dos-core.h b/include/linux/mfd/samsung/s2dos-core.h
-new file mode 100644
-index 000000000000..7e84b387063c
---- /dev/null
-+++ b/include/linux/mfd/samsung/s2dos-core.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * s2dos-core.h
-+ *
-+ * Copyright (c) 2016 Samsung Electronics Co., Ltd
-+ *              http://www.samsung.com
-+ * Copyright (C) 2024 Dzmitry Sankouski <dsankouski@gmail.com>
-+ *
-+ */
-+
-+#ifndef __LINUX_MFD_S2DOS_CORE_H
-+#define __LINUX_MFD_S2DOS_CORE_H
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+struct s2dos_core {
-+	struct device *dev;
-+	struct regmap *regmap;
-+};
-+
-+#endif /*  __LINUX_MFD_S2DOS_CORE_H */
-diff --git a/include/linux/mfd/samsung/s2dos05.h b/include/linux/mfd/samsung/s2dos05.h
-new file mode 100644
-index 000000000000..0317dbe56f10
---- /dev/null
-+++ b/include/linux/mfd/samsung/s2dos05.h
-@@ -0,0 +1,115 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * s2dos05.h
-+ *
-+ * Copyright (c) 2016 Samsung Electronics Co., Ltd
-+ *              http://www.samsung.com
-+ *
-+ */
-+
-+#ifndef __LINUX_MFD_S2DOS05_H
-+#define __LINUX_MFD_S2DOS05_H
-+
-+/* S2DOS05 registers */
-+/* Slave Addr : 0xC0 */
-+enum s2dos05_reg {
-+	S2DOS05_REG_DEV_ID,
-+	S2DOS05_REG_TOPSYS_STAT,
-+	S2DOS05_REG_STAT,
-+	S2DOS05_REG_EN,
-+	S2DOS05_REG_LDO1_CFG,
-+	S2DOS05_REG_LDO2_CFG,
-+	S2DOS05_REG_LDO3_CFG,
-+	S2DOS05_REG_LDO4_CFG,
-+	S2DOS05_REG_BUCK_CFG,
-+	S2DOS05_REG_BUCK_VOUT,
-+	S2DOS05_REG_IRQ_MASK = 0x0D,
-+	S2DOS05_REG_SSD_TSD = 0x0E,
-+	S2DOS05_REG_OCL = 0x10,
-+	S2DOS05_REG_IRQ = 0x11
-+};
-+
-+/* S2DOS05 regulator ids */
-+enum s2dos05_regulators {
-+	S2DOS05_LDO1,
-+	S2DOS05_LDO2,
-+	S2DOS05_LDO3,
-+	S2DOS05_LDO4,
-+	S2DOS05_BUCK1,
-+	S2DOS05_REG_MAX,
-+};
-+
-+#define S2DOS05_IRQ_PWRMT_MASK	BIT(5)
-+#define S2DOS05_IRQ_TSD_MASK	BIT(4)
-+#define S2DOS05_IRQ_SSD_MASK	BIT(3)
-+#define S2DOS05_IRQ_SCP_MASK	BIT(2)
-+#define S2DOS05_IRQ_UVLO_MASK	BIT(1)
-+#define S2DOS05_IRQ_OCD_MASK	BIT(0)
-+
-+#define S2DOS05_BUCK_MIN1	506250
-+#define S2DOS05_LDO_MIN1	1500000
-+#define S2DOS05_LDO_MIN2	2700000
-+#define S2DOS05_BUCK_STEP1	6250
-+#define S2DOS05_LDO_STEP1	25000
-+#define S2DOS05_LDO_VSEL_MASK	0x7F
-+#define S2DOS05_LDO_FD_MASK	BIT(7)
-+#define S2DOS05_BUCK_VSEL_MASK	0xFF
-+#define S2DOS05_BUCK_FD_MASK	BIT(3)
-+
-+#define S2DOS05_ENABLE_MASK_L1	BIT(0)
-+#define S2DOS05_ENABLE_MASK_L2	BIT(1)
-+#define S2DOS05_ENABLE_MASK_L3	BIT(2)
-+#define S2DOS05_ENABLE_MASK_L4	BIT(3)
-+#define S2DOS05_ENABLE_MASK_B1	BIT(4)
-+
-+#define S2DOS05_RAMP_DELAY	12000
-+
-+#define S2DOS05_ENABLE_TIME_LDO		50
-+#define S2DOS05_ENABLE_TIME_BUCK	350
-+
-+#define S2DOS05_ENABLE_SHIFT	0x06
-+#define S2DOS05_LDO_N_VOLTAGES	(S2DOS05_LDO_VSEL_MASK + 1)
-+#define S2DOS05_BUCK_N_VOLTAGES (S2DOS05_BUCK_VSEL_MASK + 1)
-+
-+#define S2DOS05_PMIC_EN_SHIFT	6
-+#define S2DOS05_REGULATOR_MAX (S2DOS05_REG_MAX)
-+
-+/* ----------power meter ----------*/
-+#define S2DOS05_REG_PWRMT_CTRL1		0x0A
-+#define S2DOS05_REG_PWRMT_CTRL2		0x0B
-+#define S2DOS05_REG_PWRMT_DATA	0x0C
-+#define S2DOS05_REG_IRQ_MASK	0x0D
-+
-+#define CHANNEL_ELVDD	0
-+#define CHANNEL_ELVSS	1
-+#define CHANNEL_AVDD	2
-+#define CHANNEL_BUCK	3
-+#define CHANNEL_L1	4
-+#define CHANNEL_L2	5
-+#define CHANNEL_L3	6
-+#define CHANNEL_L4	7
-+
-+#define POWER_ELVDD			24500
-+#define POWER_ELVSS			24500
-+#define POWER_AVDD			3060
-+#define POWER_BUCK			1525
-+#define POWER_L1			5000
-+#define POWER_L2			5000
-+#define POWER_L3			5000
-+#define POWER_L4			5000
-+
-+/* S2DOS05_REG_OCL */
-+#define ADC_VALID_MASK			BIT(7)
-+/* S2DOS05_REG_PWRMT_CTRL1 */
-+#define ADC_ASYNCRD_MASK		BIT(7)
-+#define PWRMT_EN_CHK			BIT(6)
-+#define SMPNUM_MASK			0x0F
-+/* S2DOS05_REG_PWRMT_CTRL2 */
-+#define ADC_EN_MASK			BIT(7)
-+#define ADC_PTR_MASK			0x0F
-+#define POWER_MODE			BIT(4)
-+#define RAWCURRENT_MODE			BIT(5)
-+
-+#define S2DOS05_MAX_ADC_CHANNEL		8
-+
-+#endif /*  __LINUX_MFD_S2DOS05_H */
 
 -- 
 2.39.2
