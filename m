@@ -1,145 +1,113 @@
-Return-Path: <linux-pwm+bounces-2542-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2543-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B17E590E375
-	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jun 2024 08:32:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3FAE90E6F6
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jun 2024 11:26:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B710284B68
-	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jun 2024 06:32:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C45BD1C20AE5
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jun 2024 09:26:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BDB66F06D;
-	Wed, 19 Jun 2024 06:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66A6480026;
+	Wed, 19 Jun 2024 09:26:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BKz5xUPQ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="G6SHsUyt"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1361A6F2E2
-	for <linux-pwm@vger.kernel.org>; Wed, 19 Jun 2024 06:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61AAB7EEFD
+	for <linux-pwm@vger.kernel.org>; Wed, 19 Jun 2024 09:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718778725; cv=none; b=G8MUak2NIZoJiQEP+aqulkL8X683lnjqLLApOIT3AcbG6V37wfkMx/KEjxw0zg7O5tE1Z8jK4Uu3YtJ8NBptPFqa4L+PlbZJk+6pHDt23z0587NuXOQGVsUB+EHGvyk76n4oKTX+lnSxyaMwo+DgRs9D6SVs80Og7Eq+b2siXnE=
+	t=1718789208; cv=none; b=RXolmPeQ5Zl6FjVyIuyFsCICozdA3cJ7FVExpyizx/cjBJpZH2uksGnnGx9qAwp5UKWWE4Wj8v1PqIKzvDjexosihKsj9BbvWGz/NU3oDUEqUEcTuXE1JFPmE0KDN/bdY3zBXFK8jyd+BoWh7ns1Lcu2sGsNUtDDb7hftKXMusE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718778725; c=relaxed/simple;
-	bh=wFDerXuVfghJpTiIPsRtXmgYzrOV0DCn7nuFZy90qrw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JireZSVJ0d2wgzl4E+k+yDcD50qLWZLfSrbKNFwd68xiZIAAPtMXgtZsazojhwE8+t8+MBc/6AZYlfO8/4hMmPyOLJ2IoScGNCwp0HAJsj3bPPMd/ghjkZB+AnejWlC0R2IhnsbzOz+pkK9W3MZGy3xZgOvStKNSQhhjZ9BEY0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BKz5xUPQ; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52c85a7f834so7865548e87.0
-        for <linux-pwm@vger.kernel.org>; Tue, 18 Jun 2024 23:32:02 -0700 (PDT)
+	s=arc-20240116; t=1718789208; c=relaxed/simple;
+	bh=8K+WjM34MR24mhU/bzCFPG1mWsgoIklGhckomjtcqZk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fyIwXS4sm3TSMUQq48wHxZDkOsWrYXDqqN1MtKRrTuxxCtuGjgwVGd2D9vrw9GL28a1wGpDTFMsm8/dxLMlv7meYfWuUcnaZmUG4zYKLogwRLzLkgq6QJGQyDyKM5FEXuUKgU06L3wve0HwvOahd3xMYMAbDR+F2GPs2HPRbOKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=G6SHsUyt; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35f1dc4ab9aso5201031f8f.3
+        for <linux-pwm@vger.kernel.org>; Wed, 19 Jun 2024 02:26:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718778721; x=1719383521; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kWA6TxZL/MZl6HZnFwnJJBsYFPvFUHxiD6fzJli2OEU=;
-        b=BKz5xUPQH5oe2m+oz6FIakh8YZgserhH9FwPYhDJIV7S3mTJ2hL6AXVPD2P3ceKBP3
-         d9JdM4lEru3xVZL5maYySHMxhFQ1gccubinwgylgdTZE4qKRwq/vIA+eltXrqzsbLitM
-         FGYcfMhG3ZcMv9+33hWSoBJaA3Suza9xdPjx/qxerRghj8r4Hf/tfm6C37uiiOFXBht3
-         /Zu/yp1Duwm/o1OdtskCt7sJ0f6PXXaqI0NUq+DSy4EakEeKk1XWubK3H2BMmRvv8b9T
-         FftwEDmm7DCTPHg5h6WBzj3hZ16MDviwmStE3cpL/sagMj+p0dpsCFRoV7zdKVUUA+El
-         44LQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718789203; x=1719394003; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ezQRRIlNxNy2QrCPuAEV8Oyb8ctHh+po983NuDBnwzw=;
+        b=G6SHsUyttCTVp2pNawddnHzZHrhxuaFcX9X22TnZPhXacIQiaEEAkGfg2ByVxEJK2D
+         qNKbJFlgoogaqyz5orS91nBlcPvmTgnhS37A2e48BL3Eu2PHW5DfqLZcRv41weega2XB
+         TRIiW0P8XUy/VMpUiOgmeeEJIUfE9K3HUw6V2I0/eFBSK0Psl3zDqhyEgAsSWCdIyp6E
+         JT29AepIWtB9Tq6igIdVxXWhALuVMWt1ePQfAqdzK6ObucspaPV2/KAo8NmNr0mbhQZT
+         Pmnn6oR7D8WzF5tqxOkr2v/mfSqF8l7wR6nqg8YlzSKBnqtOWz9X2coCoW7DbfKBiZTB
+         EZGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718778721; x=1719383521;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kWA6TxZL/MZl6HZnFwnJJBsYFPvFUHxiD6fzJli2OEU=;
-        b=pjErjKbVrvvjz49QX/c49tkIqk3neNA9Nc/VEDMjyeuSmF7rvgRlBlTeBRg8BTlPHs
-         QPEDqv88GW6TRvX9I9Xv3qHretN2YXCHQ4TCzozoYrDsXB6YsBIMKt1yWEclcRqTdS/a
-         yd0EOWKhpPl8kfvKpuEerHtfmzRLoIB8HTI98sWD6cdrsixm6dHBZLpDt5eoIG0/pOXP
-         Q2vh+Jj6FGGKAsTLqgbur1gHjuIAFc/syUOKtpjMj4+AsB9HQZvFPpFSxr58Kvxm2sOv
-         ZFznxaOFkwb+Evjc22MuLWQ688aBkmGjgaoj5uTJSU4uPmC/x9bUKmLr4dcJ+LkqT2O/
-         tGLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXt29bbnZgpNgdqIcvQsaMZ+J7TL/zwlPdunQsOqK9SsjovzIpuhO4TgrFpC7UHrjPd601HB5agIU2U7MLUvBhiQrH8Ih4Rww5j
-X-Gm-Message-State: AOJu0YwKa9vth7lsyz48GHbXh8ldvswn0KkfpmQ0vj8SNezlVrBVO6CV
-	mnqRPVuDmP2XTpKgNCWj+i6SZN7Lw1RgwU54VRkWCtjrtUIYFej96tyYa+7Xoak=
-X-Google-Smtp-Source: AGHT+IEESoHV+TTf90PdN7pLxmBm3gZ0xMUk7VRL1azohO9LT1Z72CZ3oFQjtGbrIy3x/5u5Qu0uhQ==
-X-Received: by 2002:a05:6512:3d04:b0:52b:c262:99b3 with SMTP id 2adb3069b0e04-52ccaa5693emr1070573e87.11.1718778719107;
-        Tue, 18 Jun 2024 23:31:59 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52cba181738sm920583e87.255.2024.06.18.23.31.58
+        d=1e100.net; s=20230601; t=1718789203; x=1719394003;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ezQRRIlNxNy2QrCPuAEV8Oyb8ctHh+po983NuDBnwzw=;
+        b=OVOmnrNo8+SnhFfzBs7mkXa5QWS4+uSIw5Q4xt4QI0VadOTAIBOgk8J0ygcU8QQcmo
+         R6VUB7rFHuSYvOXUBM8ZxBfamgfYewDHZP0o3rOo5KYxFwJrwiwIZL2rkblsVnlTqmM6
+         LSbgsUIHGDHe1q2mB6fXCaIU8Vh5ZzaCRmbqK5WiU60BqMKeZZeRV8kI2OYpWrLxEBa9
+         zOMdIbTNykueuCC5txVAG5gHNOlTpAc+pJ2R/V/tLZi2vFryoqtw4flhBG0xLcTzo7WT
+         q81qmE3EaX2KELzVkoj9E7w/LOexHLlLt72jAU2izwucQLAIrImclBmQkF/b39U27jFL
+         AjtQ==
+X-Gm-Message-State: AOJu0YzHVxNMJaCWz2sO1QnTTNR2Wgvv97qlU7J7Wb2awY5NTXO3oC0d
+	5ox0lismWzd2cWurwlzq3AJ7O2QcahMX5C6dlaD1uvSIbpMm0eh2OUg3OGv4dr8=
+X-Google-Smtp-Source: AGHT+IGgDsBMEJLdwNAcDw3PcY77JcN2xEZg75HuwFgkVWJfFOmTXqt3HCQbJEJog+YJjnIQltEwEg==
+X-Received: by 2002:adf:ed47:0:b0:35f:1bb2:4354 with SMTP id ffacd0b85a97d-36317b7909bmr1476123f8f.35.1718789203528;
+        Wed, 19 Jun 2024 02:26:43 -0700 (PDT)
+Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-363e110ea83sm580059f8f.113.2024.06.19.02.26.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 23:31:58 -0700 (PDT)
-Date: Wed, 19 Jun 2024 09:31:57 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Dzmitry Sankouski <dsankouski@gmail.com>, 
-	Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Sam Ravnborg <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, 
-	phone-devel@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v3 02/23] gcc-sdm845: Add rates to the GP clocks
-Message-ID: <n7gvt4e6kt33lpnfivv4t2waro2t4qi4evkrfot3j2en7ubffb@gpzwolihwemr>
-References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
- <20240618-starqltechn_integration_upstream-v3-2-e3f6662017ac@gmail.com>
- <wnf3mfgdm4p4f5wrxdtlx4wccnizdvohc7iiyu5t22eeb67r57@xun3r73hksrg>
- <ad04e203-4244-4cd3-9c9a-fae002962990@linaro.org>
- <lwrz4rvn6ogseea5v6j7plc3yi3xnzo76dvrsl3muat3iswlkb@zmwa3xo3xgw4>
- <85e03d10-59a2-4f15-bb85-7b2c0354a5d1@linaro.org>
+        Wed, 19 Jun 2024 02:26:43 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Lee Jones <lee@kernel.org>,
+	Thierry Reding <treding@nvidia.com>
+Cc: linux-pwm@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/2] pwm: stm32: Two fixes
+Date: Wed, 19 Jun 2024 11:26:23 +0200
+Message-ID: <cover.1718788826.git.u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85e03d10-59a2-4f15-bb85-7b2c0354a5d1@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=533; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=8K+WjM34MR24mhU/bzCFPG1mWsgoIklGhckomjtcqZk=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmcqRBygtncZJsb5+PFhsyNusHwI7zYAGBSK0ow /sCo8fwWMWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZnKkQQAKCRCPgPtYfRL+ Ti+yB/4mxgOvo+OmLwR8PCMpp2jnM2ClElhsnuSSTMyl5UN4h5GkJDjmONpNy3bsxwB7117/6k1 Q9AX6/lRsmtxQGS7IMlXosAFM9qk28M+pwZj/egzcD6HRW4hGQ7N1JpyI7v24WrAIZfoj9/eRkQ mCjDkuF+Er8mzuXcd0FFdAb+N1OgS6fLlgy67yROfMaFEWMORwf3+SipVd3yyA+d9jM6gwq40Lk JbtwsR49cCGABdieBl1IAaOxQhsu3qe0a7o+cpiAucRu3z9pyuEnn/phsBcsH0eOw2xSCNSacxF luZ+roIox0Y4FKoHg1lJpeoYae7clhPM25eg453uqWW7aEOU
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 18, 2024 at 09:11:58PM GMT, Konrad Dybcio wrote:
-> 
-> 
-> On 6/18/24 20:55, Dmitry Baryshkov wrote:
-> > On Tue, Jun 18, 2024 at 08:50:52PM GMT, Konrad Dybcio wrote:
-> > > 
-> > > 
-> > > On 6/18/24 19:50, Dmitry Baryshkov wrote:
-> > > > On Tue, Jun 18, 2024 at 04:59:36PM GMT, Dzmitry Sankouski wrote:
-> > > > > sdm845 has "General Purpose" clocks that can be muxed to
-> > > > > SoC pins.
-> > > > > 
-> > > > > Those clocks may be used as e.g. PWM sources for external peripherals.
-> > > > > Add more frequencies to the table for those clocks so it's possible
-> > > > > for arbitrary peripherals to make use of them.
-> > > > > 
-> > > > > See also: bf8bb8eaccf(clk: qcom: gcc-msm8916: Add rates to the GP clocks)
-> > > > 
-> > > > Each time I look at the table attached to the GP CLK, I feel that it's
-> > > > plain wrong. In the end the GPCLK can in theory have arbitrary value
-> > > > depending on the usecase.
-> > > > 
-> > > > Bjorn, Konrad, maybe we should add special clk_ops for GP CLK which
-> > > > allow more flexibility than a default clk_rcg2_ops?
-> > > 
-> > > If we can somehow get max m/n/d values for all possible parents, sure
-> > 
-> > Calculate them at runtime?
-> 
-> We'd be calculating the mnd values for a frequency that's either equal or
-> reasonably close to the one requested. My worry is that we somehow need
-> to get the maximum values they can take (unless they're well-known)
+Hello,
 
-One of the options might be to force devices to use
-assigned-clock-parent to set GP CLK sorource and pwm-clk as an actual
-device using the clock.
+this series contains two fixes for the .apply() callback where bogous
+periods were calculated.
 
+I intend to send these to Linus before v6.10, so please if you have
+concerns don't hesitate to express them.
+
+Best regards
+Uwe
+
+Uwe Kleine-König (2):
+  pwm: stm32: Refuse too small period requests
+  pwm: stm32: Fix calculation of prescaler
+
+ drivers/pwm/pwm-stm32.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
 -- 
-With best wishes
-Dmitry
+2.43.0
+
 
