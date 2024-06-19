@@ -1,120 +1,131 @@
-Return-Path: <linux-pwm+bounces-2554-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2555-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 677D890F369
-	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jun 2024 18:00:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E57C990F37E
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jun 2024 18:02:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 688351C22259
-	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jun 2024 16:00:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F08B2824F5
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jun 2024 16:02:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5693415886B;
-	Wed, 19 Jun 2024 15:49:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7626F15AD9A;
+	Wed, 19 Jun 2024 15:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Giu7MEVV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IylMLhlN"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E8C1586CD;
-	Wed, 19 Jun 2024 15:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229C015253B;
+	Wed, 19 Jun 2024 15:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718812160; cv=none; b=hxqnNqfWskUQMDa7sTjztVzadXp+BAvhD9LtfUIhvhEYL/pjz6Vh8XGdZZsaauXHmj0LLRvXUn/81+oMZWV9YUxUsSxe3oH2+Lwh9zNiHzNfRKXvzfC8vrQ0oJ5Uw6AKbp4Yuz6KCS/Y6T0YBIqwYQOIeGrxbLE5DuyP3xaI5Aw=
+	t=1718812335; cv=none; b=J102YcQn6JLE0HnjApZw/hEz+zwSknyZGv5WTZ0daY7fMinuRoO3HVqgsmrdye5zXoI36h/nM/zNjYtxaLxzah2tAY2RYznqnO26enZ09X6tReD9ox8gXxDPUi5I7pUNtHNrKXmSDFzYvTPhD0GTjCPSfP7vRCR5yhOj2dbzi0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718812160; c=relaxed/simple;
-	bh=sCo0S/t/wVuMA8QyWX9utK/82LOwdLvNdRyW93Wh9Zo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hvJ+ZJ4luCQz8jiND4nL6yYkxQtICTCIDOo5/NLR0mj3Vza7/Dz/Pm+FJK/E3SdxC00jzLeMcj2LYGckp1qDu3rjN28FlywFMjVRdcOdYj9OlSt6lYZNPUParPP1acOVlEAOsKQAZGpAanqJNdT+rLc/5fc+clemOiBUEelunGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Giu7MEVV; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-80d6c63af28so2528192241.0;
-        Wed, 19 Jun 2024 08:49:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718812157; x=1719416957; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sCo0S/t/wVuMA8QyWX9utK/82LOwdLvNdRyW93Wh9Zo=;
-        b=Giu7MEVVW4CDe7/rxoWgXS+g3BfknXRz5SScKP9PTDBZ6+T0hjUTcqZXAhcTvKh+JA
-         xnnI+pJXlD2w7sq70hBGcLxYjGuzp+smoB0aaxENhSORF+vhQ5KcXE9btXcY4vaPWlam
-         6H51BZ5lkF/mGW2+7wYUwrzQ6jmz5zU5+Lrmw8zVCSCHJdaDdJhjQxu+PdQQfXt+oGzB
-         tEKz14AshBDyVn2d27Sk4pcdoiBqbiyV38scuI56oTipWtA+vzQGJZNDs58GvLJMUIxE
-         ecPwyS/5F8RRmGnNcla3IXv4v2LRIJPBXpiogYBt6OxipSL0aJ5sWI694cazCo54hOtR
-         zKfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718812157; x=1719416957;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sCo0S/t/wVuMA8QyWX9utK/82LOwdLvNdRyW93Wh9Zo=;
-        b=J82jj0LT/P6PFDqXvLRDP9I+G9MrnFGdgzbhB9iF7G0cC11K9N08/9gr5Hy9OfNFVb
-         KXDGMAjKAYChtHXOR7Cl8ya5h7TaVrHPT36QML4wlwh+sxYDC8i4Dajqk40WSJf3+mgo
-         DMtVHFPtQzBmba17f3ilEgdu/NtQmBmBnwI54fHxbBtblX/02WZlGlgWNMYmNxQKNbp4
-         jic0SZaxiuH841hz5yQ8jvKN4S30CbjP3n3cOXnMw+7eLZRGwKDLIfQmb11NrqUN3n+7
-         3hotV7z+/0UhdM9JXRsKSw4Licn6vclxt5MZMj8BSJgnjN2X1QmZ1XSD5XP2enCl5hAS
-         JpmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXNfV6/zxzeq9u504Dn+20+/NXomd8Rl9abPCmzU75Ls1SMzX7kEQlP29HL2l+xhplW/Un4qnMJbxXi7zvzDx0IVcaUF20U1XldnjFpxf6sjwXBCdqvb2zDEyDYRDVyhD4U8Mv3L9AKntC7v9msHUXIcUzG0rNnwWbPIOFd9lKR8SQfTXIYAwW0XRSaiBNWvA3GDeS8znYjDSSQ5hKwUezvY0Tq0lTW1k0MCBeG+90uLfi4IB6nM4g0fqqpPAAIBV7ACPR1trIYR9nDGJrfY82PwTDd+e+q7foHL6QR3rsVDG0Lrt2wwsRTqX/BSoa4Z6iPFvEL5tk7iIrYYAVkQzqsAzcFT0MjUR42f3iJHehuNBGAfobAkmpcWyLFr0fXcvm9yDS+bqsp9khF8RHWuy/bR78qCOphvIQ76W1UpQz33RbuHqw1yntFHvXGrpSm/Ko=
-X-Gm-Message-State: AOJu0YxQ/SnjNJ4BVcTpeDyEKgsFkRWz5mqL7lQLHR9BGg2ilF0YpSo+
-	eJ3XmUMeWVOOOLDirrWQp7pmeJbomedVaZtjVUXA1gHRe7bmBiB48uP/4ai5Biio6wtICX4ASuy
-	UiS7IGZq7NC1yrytmrED8gw8Q9uk=
-X-Google-Smtp-Source: AGHT+IHg0GWswSl3r9pwlr7iQjchG/nGHT//aM8i64MYsXIGAJArmngGDjmCxE9ZpGaKh9pHgPCRQReNLVUNTwTTHm4=
-X-Received: by 2002:a05:6102:26ce:b0:48c:40cd:e4da with SMTP id
- ada2fe7eead31-48f1304b1c6mr3802757137.19.1718812157407; Wed, 19 Jun 2024
- 08:49:17 -0700 (PDT)
+	s=arc-20240116; t=1718812335; c=relaxed/simple;
+	bh=B/QDewZ8f8pxC39ZfdvW4tjMlJycPZjA3D7QbLHaMqM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CUT4UBkhU6hZ8TdiWoKJ+bQ3/x5Ejb2KffS0x1ZM76gV9YFhpI2jHCPr8dDPaxTDXKfH0pTPGjZupCqCF0Vdtml4WqiF6SLZHKm4uGxFFfbt4W1pkiMi6XRQAaOJ7NWFsrbL+68TUgsMyx6/2CzpwdAKz9LWfFKjGPqKZOkddwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IylMLhlN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87025C2BBFC;
+	Wed, 19 Jun 2024 15:52:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718812334;
+	bh=B/QDewZ8f8pxC39ZfdvW4tjMlJycPZjA3D7QbLHaMqM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IylMLhlNZi/cBkkmZVPI7bXXgrSd1kDiDEp6eLLOo2nGFroQz5C5LHISQRpu8OsT1
+	 ZebKIkh/37BE+tCC0dPbTunx+Jf7mW8Lc/X9ck1GnvrdFV8SeypZlwHN5y4jU0KjX4
+	 /Om4T7tnb4jG4zTwBY1QpJBsKP21M1OBf8KPqReV2NUXM/7Ia9OgMKi5a9I82MS75F
+	 fwMjiOFF79nRb6ImdtvUJ9f9VwuKSH9ux6kPUoE0ufCRYD2awuICQff7QG5YsKlyVv
+	 axYsRc5alGXsGKOx+fl5Ye2CssDPfd7Be2SuLIfb099sEGElhi8KhOh1MpHQddk4Be
+	 A4y3g2uw6MFjg==
+Date: Wed, 19 Jun 2024 16:52:04 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Dzmitry Sankouski <dsankouski@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Pavel Machek <pavel@ucw.cz>, Liam Girdwood <lgirdwood@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Chanwoo Choi <cw00.choi@samsung.com>, phone-devel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v3 18/23] regulator: add s2dos05 regulator support
+Message-ID: <c17669b2-5fa0-40d4-b88d-8dee6a264321@sirena.org.uk>
+References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
+ <20240618-starqltechn_integration_upstream-v3-18-e3f6662017ac@gmail.com>
+ <4eab619f-6da9-4aff-b956-69d8e2ecd47f@sirena.org.uk>
+ <CABTCjFDUKgeYWuwo8eLt+5WD=4O+kLbFwMRxsTufGnqK0Ecpvg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
- <20240618-starqltechn_integration_upstream-v3-18-e3f6662017ac@gmail.com> <4eab619f-6da9-4aff-b956-69d8e2ecd47f@sirena.org.uk>
-In-Reply-To: <4eab619f-6da9-4aff-b956-69d8e2ecd47f@sirena.org.uk>
-From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Wed, 19 Jun 2024 18:49:06 +0300
-Message-ID: <CABTCjFDUKgeYWuwo8eLt+5WD=4O+kLbFwMRxsTufGnqK0Ecpvg@mail.gmail.com>
-Subject: Re: [PATCH v3 18/23] regulator: add s2dos05 regulator support
-To: Mark Brown <broonie@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Sam Ravnborg <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, 
-	Liam Girdwood <lgirdwood@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Chanwoo Choi <cw00.choi@samsung.com>, phone-devel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-leds@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="sNyOiMkks8z+Tn4L"
+Content-Disposition: inline
+In-Reply-To: <CABTCjFDUKgeYWuwo8eLt+5WD=4O+kLbFwMRxsTufGnqK0Ecpvg@mail.gmail.com>
+X-Cookie: Don't I know you?
+
+
+--sNyOiMkks8z+Tn4L
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-=D0=B2=D1=82, 18 =D0=B8=D1=8E=D0=BD. 2024=E2=80=AF=D0=B3. =D0=B2 17:08, Mar=
-k Brown <broonie@kernel.org>:
->
-> On Tue, Jun 18, 2024 at 04:59:52PM +0300, Dzmitry Sankouski wrote:
->
-> > index 000000000000..3c58a1bd2262
-> > --- /dev/null
-> > +++ b/drivers/regulator/s2dos05-regulator.c
-> > @@ -0,0 +1,362 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * s2dos05.c - Regulator driver for the Samsung s2dos05
-> > + *
->
-> Please make the entire comment a C++ one so things look more
-> intentional.
->
-Do you mean enclosing the first line (license identifier) in /* */
-style comment?
+On Wed, Jun 19, 2024 at 06:49:06PM +0300, Dzmitry Sankouski wrote:
+> =D0=B2=D1=82, 18 =D0=B8=D1=8E=D0=BD. 2024=E2=80=AF=D0=B3. =D0=B2 17:08, M=
+ark Brown <broonie@kernel.org>:
+> > On Tue, Jun 18, 2024 at 04:59:52PM +0300, Dzmitry Sankouski wrote:
+
+> > > +// SPDX-License-Identifier: GPL-2.0+
+> > > +/*
+> > > + * s2dos05.c - Regulator driver for the Samsung s2dos05
+> > > + *
+
+> > Please make the entire comment a C++ one so things look more
+> > intentional.
+
+> Do you mean enclosing the first line (license identifier) in /* */
+> style comment?
+
+No, that would be a C comment.  Please use C++ style for the rest of the
+header as well as the first line.
+
+--sNyOiMkks8z+Tn4L
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZy/qMACgkQJNaLcl1U
+h9DGWQgAgOa8X/ixdsOMeRWsYHbb7eeKRUufmB/VZK2WyLNILPGYtncD6cuJ+cLr
+AvUANsF0WqGXnetxElS8Y2jV21tcbGNT1eGe64GUPss6hdDebteb63GcRbB8N0Fd
+3L+HI4CWnr1oqwLzGGmVRLifr3h/4alGz6R+jy9O5drxEHxalZPdRFVdjbZ8jyr/
+3jg43CkWP2vdnZz08OObTm8jI197PhpxgFleekSlSmPqIqtMV/a3krF5CCSh4M8V
+n1CJGe6mr4M9lSZ3UpDJQCzWW7EfTmM1iu8RW6IpF5T6JZFtj+cwfS9Ba6kIK4+E
+zrmidAhG51b6MN5sNypIpxv0bh1Jxw==
+=zdP0
+-----END PGP SIGNATURE-----
+
+--sNyOiMkks8z+Tn4L--
 
