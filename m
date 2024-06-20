@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-2569-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2570-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 020BD910B23
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 18:06:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F06A1910B3A
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 18:07:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABE241F2140B
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 16:06:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 703FF1F21773
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 16:07:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4B571B142A;
-	Thu, 20 Jun 2024 16:06:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B87A11B1509;
+	Thu, 20 Jun 2024 16:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ftbq6QfJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cgf3mWgu"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4F71B1420;
-	Thu, 20 Jun 2024 16:06:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728591AF695;
+	Thu, 20 Jun 2024 16:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718899600; cv=none; b=flE0LMdBnZAfEt9DWZwiVJE2hiv842gag5cpwanlV/z26TxVAoi3MCT9N1wU9wDDsMqnN2V3O7gtymkr/Llftry08TljrFsfDEKqq9pty6cjvxOq7l/ki5ihxO1nfCofGroOwK5n/zPz6F4nwydfIo4DDidnjp/sF8mAgfVk6oU=
+	t=1718899632; cv=none; b=dVBCTZfBtgKFJs7FgWtg4YfYboBgNRM8Mjn7RJuE6ohKIXixhKvHK4dKLenLriMxzW5NoD+mN51fArN1N8ITORovh8QhIT3mDwRwjf7eYzdb1U+/tAfDDAY02p/uMsxo09SXyQgabIVJsKCo/sA/0vNPvy8VIAqv8G3ZW/qnXeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718899600; c=relaxed/simple;
-	bh=1UW2AwnpxgMhuZWy/PHLfmiMeCIH8N6saFGF89GT93A=;
+	s=arc-20240116; t=1718899632; c=relaxed/simple;
+	bh=ie5G6C2DtnM8GiOTEdsN7MlgoWHXuLtHh77/7qy636c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BMAg4uExiVdLRF1V2QXHyVwfhrcTM0a1+sn5uKMUMRxvG60Go1ozoy8390E8Bh5ePmzkCaWW/q6baAGZU7O+bKgD6je4JlOHasz/NdlwbzO7eUP7HkLoSdt+2EbSC4mQj5agyHQpTbAxx5d4OqQcs3RZtzyZ1rtJXQphxnDI+/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ftbq6QfJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF3FC2BD10;
-	Thu, 20 Jun 2024 16:06:29 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=p2/TupdF/W6jJCqQB1Fwdz8Z/dju6o6F6C9Fl2DJtQDssl7+YogJkoB95aO8QamBK/pj95qG3HSvtc84i/ml/QAt1oZS4CWDvKhEN7RlIm9MjCVcV4GYs3LaheajYpiNYxXiXTv3WlhOppjqNA1tM8NkH7d3wYxqOtolDuuv5MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cgf3mWgu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BC1FC2BD10;
+	Thu, 20 Jun 2024 16:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718899599;
-	bh=1UW2AwnpxgMhuZWy/PHLfmiMeCIH8N6saFGF89GT93A=;
+	s=k20201202; t=1718899632;
+	bh=ie5G6C2DtnM8GiOTEdsN7MlgoWHXuLtHh77/7qy636c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ftbq6QfJQUWuEEFxKjIVnotzsMEjc1X2W6l/9ChLsF9nE1+gidCKOgPP+wabDsMGz
-	 3oCKOigEyMVqWyfsF72G0gABpAA2Quq9xi6yqU5Sacqm5OaRAXUm2OvqRSxLIyVfY9
-	 kPZ30yx01mbyj1RZjtLuP7cxB3vPX5OBe9s47bqiW6Wl5fZdpvtKrGhR30JWw1OR6P
-	 sIWaP4Xs5qyenGXSW1bvtclxjqGc1oKN+CHX4SL3snkwc1OcIpvRt/NxxhSKmGjIHV
-	 uLMK0jrwqplfS4g/blXNek5HjtINJdv+Lhzgbxqj/4VpapmFzICpxmZ4aivfA/nDsM
-	 9Cr/fkUYjLM8Q==
-Message-ID: <ca2d3145-668f-4f3b-840d-0bc10f962440@kernel.org>
-Date: Thu, 20 Jun 2024 18:06:27 +0200
+	b=Cgf3mWguq0XAqp6Y2yRN2ufWDD2DL1ai0dOUh+Ece56PAs0bXSka0qBFjHTvYwbDa
+	 tcRkSD1Tojj8/vXdjoAiFMZnGaKzLrz7rufcg/9AztnRYLZ2DKUvOIusg7yaRTAaeB
+	 9eYR6bo3U8FWXVfyUsFpe+W2Eqdr7JR22SEyxjt6VqYdTZb+WorjjyMT5QvBCm+9BF
+	 1lZlQLqh6zJHQmYNyhWxkt1360eyXLG8OWpKHKX8nG5wVJMt1Gvqjw+HXlccsKdnsR
+	 nyzyx7ZtpHRS/KS456j4DpVktLwv0K2EchzwM0OfzJyTHLJX40KWA0+v55zY3VrAlh
+	 BqYBrrO40rVlQ==
+Message-ID: <32d31b32-3e80-4c18-9af2-18a43a00032c@kernel.org>
+Date: Thu, 20 Jun 2024 18:07:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 14/23] power: supply: max77705: Add charger driver for
- Maxim 77705
+Subject: Re: [PATCH v3 17/23] mfd: add s2dos series core driver
 To: Dzmitry Sankouski <dsankouski@gmail.com>,
  Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
@@ -73,7 +72,7 @@ Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
- <20240618-starqltechn_integration_upstream-v3-14-e3f6662017ac@gmail.com>
+ <20240618-starqltechn_integration_upstream-v3-17-e3f6662017ac@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -119,39 +118,52 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240618-starqltechn_integration_upstream-v3-14-e3f6662017ac@gmail.com>
+In-Reply-To: <20240618-starqltechn_integration_upstream-v3-17-e3f6662017ac@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 18/06/2024 15:59, Dzmitry Sankouski wrote:
-> Add driver for Maxim 77705 switch-mode charger (part of max77705
-> MFD driver) providing power supply class information to userspace.
+> S2DOS05 is a panel/touchscreen PMIC, often found in
+> Samsung phones. We define 2 sub-devices for which drivers will
+> be added in subsequent patches.
 > 
-> The driver is configured through DTS (battery and system related
-> settings). Also, POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE property
-> is writable, which allows to configure charge end at less than 100%
+> Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
+> ---
+>  MAINTAINERS                            |   1 +
+>  drivers/mfd/Kconfig                    |  13 +++
+>  drivers/mfd/Makefile                   |   2 +-
+>  drivers/mfd/s2dos-core.c               | 141 +++++++++++++++++++++++++++++++++
+>  include/linux/mfd/samsung/s2dos-core.h |  21 +++++
+>  include/linux/mfd/samsung/s2dos05.h    | 115 +++++++++++++++++++++++++++
+>  6 files changed, 292 insertions(+), 1 deletion(-)
 > 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f3c245d432d9..b53462684a30 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19908,6 +19908,7 @@ F:	Documentation/devicetree/bindings/regulator/samsung,s2dos*.yaml
+>  F:	Documentation/devicetree/bindings/regulator/samsung,s2m*.yaml
+>  F:	Documentation/devicetree/bindings/regulator/samsung,s5m*.yaml
+>  F:	drivers/clk/clk-s2mps11.c
+> +F:	drivers/mfd/s2dos*.c
+>  F:	drivers/mfd/sec*.c
+>  F:	drivers/regulator/s2m*.c
+>  F:	drivers/regulator/s5m*.c
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index c4eb8ff2dcad..517d8778d7a8 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1278,6 +1278,19 @@ config MFD_RN5T618
+>  	  additional drivers must be enabled in order to use the
+>  	  functionality of the device.
+>  
+> +config MFD_S2DOS_CORE
+> +	tristate "Samsung Electronics PMIC Series Support"
 
-...
+Nope, that's a strong NAK.
 
-> + *
-> + * Copyright (C) 2015 Samsung Electronics, Inc.
-> + *
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
+No need for one more clone of Samsung PMIC driver.
 
-Yeah, please do not upstream 2015 Samsung code. Instead, take a new,
-clean, decent driver and use it as template.
-
-Otherwise you ask us to do exactly the same review we already gave last
-10 years. Or review on issues we fixed last 10 years.
 
 Best regards,
 Krzysztof
