@@ -1,300 +1,151 @@
-Return-Path: <linux-pwm+bounces-2576-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2577-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8A509112E1
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 22:15:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F28B9113DB
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 22:56:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 179ED1C20D4A
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 20:15:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17D451F22B53
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 20:56:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B2191BA860;
-	Thu, 20 Jun 2024 20:15:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7094579B87;
+	Thu, 20 Jun 2024 20:56:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K3Q5hlmF"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Q1Em+ovT"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBC01B9AC7;
-	Thu, 20 Jun 2024 20:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20BC768F0
+	for <linux-pwm@vger.kernel.org>; Thu, 20 Jun 2024 20:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718914514; cv=none; b=cq+Y4XTgzkx7/lfMPb0lnMQhHhKT+CcVrr9BtLR0SiR7DLMt+eFZyDI4MGsvoX/RON/hlvhWV9iMtrWlmvTADJYVxrEmaI7TK+Mw8kGwPOU5sK5XmnJzwGESpRUi8gZOCJalElQMTpJsTyYWDHY7D7FHvL8QJfuK5DJsHwZ//4s=
+	t=1718916983; cv=none; b=cKwn03TLMICyH5sjCUGc9UfT3z5idjke/RAVnG00NkfG5rDfp3ju3Dmm0exlzHiIpH4h/i7i+coJ9OVBiu+z8lA1P/gdX0x59imHNjj3lClQ9J1XUxUDiwKwnRxHobT1Zkf3VZYdT+ch1HCXQ8+FFvLyZtUu8110fQMJbD8EfWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718914514; c=relaxed/simple;
-	bh=dx88qbfA3v0QDgtBAfkX2p+KZ894xqWOi1spAiEK79Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Af1zBzOILsRT342BYc8pOqu58eZzLRPucJ2hy4qpUAjwBgLyg+Q152fSU1v+SeVVGp/anlP8bErqF5pRaxb7By4Z8Dl0SOPLUlBYguzLA8RSDELdMUyyWLFny044WCNEgm/u6asLO7AK3iA0xEODUST4kdNLDq6pjF8JE58bQ4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K3Q5hlmF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3088C2BD10;
-	Thu, 20 Jun 2024 20:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718914513;
-	bh=dx88qbfA3v0QDgtBAfkX2p+KZ894xqWOi1spAiEK79Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=K3Q5hlmFTV2StGeAqV1ad3ALvO+at6HlmCfy/QXw80XBHI+CtCSJkAB6T0ljm1Cla
-	 h1FXTkMlJVy3YH8tdyanjrUGrMb+VoRevwm6fnqvKUM57OyG/H15yfbdSIVTdZCLh3
-	 37/vSJq/jpQHMF3G47KlhSq+OSUt8sc0+DmRekUGL9Bje93H8KLMY/PBtbK1Sh5Uks
-	 mrnDLEAMdFXzxRAKsxZtF13sVSaXwSWqY3ZjjuVcQ0QzyFwy2lQCNQLs4U6Y5wLWZ6
-	 YcyobmsG93CE3GImMYQqPd3ezOFin5JLavDjJQF6mCPAWzDHNK11PoA1fh2iITVrMb
-	 s0XuW0DNn177w==
-Message-ID: <dafab4dc-34ef-4abd-9f3f-1dee675a1a56@kernel.org>
-Date: Thu, 20 Jun 2024 22:14:59 +0200
+	s=arc-20240116; t=1718916983; c=relaxed/simple;
+	bh=7bmaecOL5bwpzLgvqJZsDJE8Wz4/YnnOp7I+iv3R9q0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qtiUoIVoT4Ihf4Pn/jtpWyskD6dEnB2rNkYjmy3Yjux1tDjHRB/iSs92kSQ9Q/3RxFnTR3qho+yomBdhX7dwu+zIHnMRKuAqdjaKsXdaP9io9IDwC2C5iC0uI5lKPd3ObuZ8XfdWERROzwY6HXqrTADibSKwGvVP9sRsivaNvjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Q1Em+ovT; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42198492353so12768435e9.1
+        for <linux-pwm@vger.kernel.org>; Thu, 20 Jun 2024 13:56:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718916979; x=1719521779; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tParEw4TnP3wUXcwkDyOi4Scz2rhjwIoECr/A9aobTg=;
+        b=Q1Em+ovTDiXpq6buKyKfqbO0VSOc8H2KH7eGw8WeB780V5f28n/Wt4aUrKkPRhiOmK
+         675w61ZBV25U3oZmwIuI8YeIugAYfeQXykUJOzh9RchXlLgca0d3xS+CVvxzEvpVFer6
+         SX27eKy7/mLsQRaBuRp84a6rrv1w/cEptyY+9sFnHPzNoB5Wj26u6Jax7cYt+74dsxlz
+         zx4x0a6BNL+rOCjf4oY5wBLd/NWFNlmXAkwU4dVx2uNlEWnvn/U3vMv5D8b892CKlm8X
+         prP5Agk8VCaBm9AKRzKg+LESKPCTb+y9c+E59T0x8IXirYBAlUhHGzPIVVQCcpqi6BYh
+         nzKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718916979; x=1719521779;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tParEw4TnP3wUXcwkDyOi4Scz2rhjwIoECr/A9aobTg=;
+        b=MMZS1cIXEIRalSTsvPx18mgQ/wRmMuVjOGgWpgtda0UBydSYdpRXwTPSRWbqswnWoG
+         Bv8DyAmLSC7vEaTY93+sSNuX5R4Jn6v3ejmMMdAgGSjxxjb0iqNwtd5UrvBtUqPrlz6L
+         eKRUuxBF+9s4801r0s3LmG0ATos/ve8SomlqV0T3fHDBJMtH+HCzKZwbQUOKgJqnbP9m
+         qgtUkZ3osLATUJRh+g0kjn3ssln5/BgdN2XEW5oQtE/dBTx/agpvp9uXs+LQi4Pcveqk
+         pQI0ZlKqfFoD5yuMLZWyCu9afiwgMHLlxvH0gI0EglupuNXsGH5LhoZc3LwvKUHxMpZs
+         Y/fA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyAAGB7OSPc6tgdzN5akF/Bb392REdNBXPD6JUN1dbPcscs7a7fDiewvAYBp3NbxBhn60uM8cP4onH/w7jeP9JNdMVu4BpqmJK
+X-Gm-Message-State: AOJu0YwPi8GguJr1c2MKHEgrM9J+Eag6telAtQVIX8OWB3p3/rlJD0Nk
+	fI+7ad4BsYGgeThY9c5o1hgTKKlTrTyr/hHhEIbTTLK6Iv/C8ZJflqZE9/i4zaw=
+X-Google-Smtp-Source: AGHT+IF8t8LppDcAmDZ+UAbN2U2Xv9mXuQyfexbNH4CmjdFqAlZe48YByq17RrjbGyxJj0+YBSnHjQ==
+X-Received: by 2002:a05:6000:d52:b0:362:ad5d:4df4 with SMTP id ffacd0b85a97d-363192d0833mr4782800f8f.48.1718916978597;
+        Thu, 20 Jun 2024 13:56:18 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6fcf56eeadsm8781966b.216.2024.06.20.13.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 13:56:18 -0700 (PDT)
+Date: Thu, 20 Jun 2024 22:56:15 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Lee Jones <lee@kernel.org>
+Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
+	William Breathitt Gray <wbg@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-pwm@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Thorsten Scherer <T.Scherer@eckelmann.de>
+Subject: Re: [PATCH v2 3/5] counter: stm32-timer-cnt: Use TIM_DIER_CCxIE(x)
+ instead of TIM_DIER_CCxIE(x)
+Message-ID: <ip5aysvcuchc6q6sikghcz7vjn6zvih5r3amkvp7n7xpvncbhh@jdq5lkckeoej>
+References: <cover.1718791090.git.u.kleine-koenig@baylibre.com>
+ <126bd153a03f39e42645573eecf44ffab5354fc7.1718791090.git.u.kleine-koenig@baylibre.com>
+ <20240620084451.GC3029315@google.com>
+ <imyuhtcsjrbyodsndzbaqfwa4jxny25eylfdh4u4xtsiotsk5g@45l556pcrzys>
+ <20240620173838.GB1318296@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 16/23] leds: max77705: Add LEDs support
-To: Dzmitry Sankouski <dsankouski@gmail.com>,
- Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Chanwoo Choi <cw00.choi@samsung.com>, phone-devel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
- <20240618-starqltechn_integration_upstream-v3-16-e3f6662017ac@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240618-starqltechn_integration_upstream-v3-16-e3f6662017ac@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 18/06/2024 15:59, Dzmitry Sankouski wrote:
-> This adds basic support for LEDs for the max77705 PMIC.
-> 
-> Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
-> ---
->  MAINTAINERS                  |   1 +
->  drivers/leds/Kconfig         |   6 ++
->  drivers/leds/Makefile        |   1 +
->  drivers/leds/leds-max77705.c | 166 +++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 174 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f66f08825db9..f3c245d432d9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13691,6 +13691,7 @@ F:	drivers/*/max14577*.c
->  F:	drivers/*/max77686*.c
->  F:	drivers/*/max77693*.c
->  F:	drivers/*/max77705*.c
-> +F:	drivers/leds/leds-max77705.c
->  F:	drivers/clk/clk-max77686.c
->  F:	drivers/extcon/extcon-max14577.c
->  F:	drivers/extcon/extcon-max77693.c
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 05e6af88b88c..14d483011308 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -728,6 +728,12 @@ config LEDS_MAX77650
->  	help
->  	  LEDs driver for MAX77650 family of PMICs from Maxim Integrated.
->  
-> +config LEDS_MAX77705
-> +	tristate "LED support for Maxim MAX77705 RGB"
-> +	depends on MFD_MAX77705 && LEDS_CLASS && I2C
-> +	help
-> +	  LED driver for MAX77705 MFD chip from Maxim Integrated.
-> +
->  config LEDS_MAX8997
->  	tristate "LED support for MAX8997 PMIC"
->  	depends on LEDS_CLASS && MFD_MAX8997
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index effdfc6f1e95..be064e3d678e 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -58,6 +58,7 @@ obj-$(CONFIG_LEDS_LP8860)		+= leds-lp8860.o
->  obj-$(CONFIG_LEDS_LT3593)		+= leds-lt3593.o
->  obj-$(CONFIG_LEDS_MAX5970)		+= leds-max5970.o
->  obj-$(CONFIG_LEDS_MAX77650)		+= leds-max77650.o
-> +obj-$(CONFIG_LEDS_MAX77705)		+= leds-max77705.o
->  obj-$(CONFIG_LEDS_MAX8997)		+= leds-max8997.o
->  obj-$(CONFIG_LEDS_MC13783)		+= leds-mc13783.o
->  obj-$(CONFIG_LEDS_MENF21BMC)		+= leds-menf21bmc.o
-> diff --git a/drivers/leds/leds-max77705.c b/drivers/leds/leds-max77705.c
-> new file mode 100644
-> index 000000000000..f91c0e41056c
-> --- /dev/null
-> +++ b/drivers/leds/leds-max77705.c
-> @@ -0,0 +1,166 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Based on leds-max77650 driver:
-> + *		Copyright (C) 2018 BayLibre SAS
-> + *		Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> + *
-> + * LED driver for MAXIM 77705 MFD.
-> + * Copyright (C) 2024 Dzmitry Sankouski <dsankouski@gmail.org>
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/leds.h>
-> +#include <linux/mfd/max77705.h>
-> +#include <linux/mfd/max77705-private.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#define MAX77705_LED_NUM_LEDS		4
-> +#define MAX77705_LED_EN_MASK		GENMASK(1, 0)
-> +#define MAX77705_LED_MAX_BRIGHTNESS	0xff
-> +
-> +#define LEDBLNK_ON(time)	((time < 100) ? 0 :			\
-> +				(time < 500) ? time/100-1 :		\
-> +				(time < 3250) ? (time-500)/250+4 : 15)
-> +
-> +#define LEDBLNK_OFF(time)	((time < 1) ? 0x00 :			\
-> +				(time < 500) ? 0x01 :			\
-> +				(time < 5000) ? time/500 :		\
-> +				(time < 8000) ? (time-5000)/1000+10 :	 \
-> +				(time < 12000) ? (time-8000)/2000+13 : 15)
-
-Make both static functions, if really needed, but these appear only in
-one place, so maybe just code it directly.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ny374adlpexcdnhr"
+Content-Disposition: inline
+In-Reply-To: <20240620173838.GB1318296@google.com>
 
 
-> +
-> +struct max77705_led {
-> +	struct led_classdev cdev;
-> +	struct regmap *regmap;
-> +	unsigned int en_shift;
-> +	unsigned int reg_brightness;
-> +	unsigned int regB;
+--ny374adlpexcdnhr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-noCamelCase.
+Hello Lee,
 
-> +};
-> +
-> +static struct max77705_led *max77705_to_led(struct led_classdev *cdev)
-> +{
-> +	return container_of(cdev, struct max77705_led, cdev);
-> +}
-> +
+On Thu, Jun 20, 2024 at 06:38:38PM +0100, Lee Jones wrote:
+> Which patches need to be in the pull-request and which can be hoovered
+> up by their associated subsystems?
 
+The dependencies are as follows:
 
-> +		led = &leds[reg];
-> +		led->regmap = map;
-> +		led->reg_brightness = MAX77705_RGBLED_REG_LED0BRT + reg;
-> +		led->en_shift = 2 * reg;
-> +		led->cdev.brightness_set_blocking = max77705_led_brightness_set;
-> +		led->cdev.blink_set = max77705_rgb_blink;
-> +		led->cdev.max_brightness = MAX77705_LED_MAX_BRIGHTNESS;
-> +
-> +		init_data.fwnode = child;
-> +		init_data.devicename = "max77705";
-> +		/* for backwards compatibility if `label` is not present */
-> +		init_data.default_label = ":";
+	#1 <- #2 <- #3 <- #4
+	       ^
+	      #5
 
-There is no backwards compatibility - it's fresh driver.
+So the practical options are (in the order of my not very strong preference):
 
-> +
-> +		rv = devm_led_classdev_register_ext(dev, &led->cdev,
-> +							&init_data);
-> +		if (rv)
-> +			goto err_node_put;
-> +
-> +		rv = max77705_led_brightness_set(&led->cdev, LED_OFF);
-> +		if (rv)
-> +			goto err_node_put;
-> +	}
-> +
-> +	return 0;
-> +err_node_put:
-> +	fwnode_handle_put(child);
-> +	return rv;
-> +}
-> +
-> +static const struct of_device_id max77705_led_of_match[] = {
-> +	{ .compatible = "maxim,max77705-led" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max77705_led_of_match);
-> +
-> +static struct platform_driver max77705_led_driver = {
-> +	.driver = {
-> +		.name = "max77705-led",
-> +		.of_match_table = max77705_led_of_match,
-> +	},
-> +	.probe = max77705_led_probe,
-> +};
-> +module_platform_driver(max77705_led_driver);
-> +
-> +MODULE_DESCRIPTION("MAXIM 77705 LED driver");
-> +MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
-> +MODULE_AUTHOR("Dzmitry Sankouski <dsankouski@gmail.com>");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:max77705-led");
+ - Immutable branch with #1 - #4 (assuming William is ok to let you
+   merge #3), and then I can add #5 (and further work on the pwm-stm32
+   driver that I'm currently working on). Maybe William even doesn't
+   need to pull; I didn't check.
 
-You should not need MODULE_ALIAS() in normal cases. If you need it,
-usually it means your device ID table is wrong (e.g. misses either
-entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
-for incomplete ID table.
+ - Immutable branch with only #1 and #2. Then William can pull and add
+   #3 and I can pull and add #5. #4 can be applied later then.
+   (I can remind about #4 in the next cycle.)
 
+ - Immutable branch with #1 - #5
+   (Reminder: In that case please fixup the pwm patch's short log with
+   s/-/: /)
+   I would add this for sure to the pwm tree. I didn't even try to check
+   if it's needed for mfd and/or counter. So if you don't need it, I
+   volunteer to create that branch, but if you want to do it, that's
+   just fine, too.
 
-Best regards,
-Krzysztof
+Best regards
+Uwe
 
+--ny374adlpexcdnhr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ0l20ACgkQj4D7WH0S
+/k6mfwf+PSqfL8bo56onxdPLgXeRSRFlGHnohlXLPJBHSNS5MN0nKoVkWb3Qrx9j
+0iMDVTrmGbfB3Bi2hVznoi3CFEaRhRzGSm0de3kSbJiXzqNacDdNVbM5WTzr38GI
+wfXotmIxx6lAnt5QMb672g2S8AVqvuO+64QzFAoStGh+BtBFcZCQmTsgQEVbWzNU
+WeMX5vPGvMwWEjjqkgnAscNxW0KGCwt1j2BlBDvxlacxSosQtjjROYl+mFaz8ii0
+1LevCg4/MxvJQd+LsXFitEFa7ObSpFku33S9mllK7EtR/pcJyrxVXn/+yRMFIWWb
+D3NxQShAbnZwVqj4+grvDGqCZKImYA==
+=nFFT
+-----END PGP SIGNATURE-----
+
+--ny374adlpexcdnhr--
 
