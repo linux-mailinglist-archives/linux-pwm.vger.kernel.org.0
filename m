@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-2571-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2572-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BF65910B5B
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 18:09:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B372910B82
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 18:12:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD32F1C23EB1
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 16:09:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 015B6286D2B
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 16:12:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E91841B14E6;
-	Thu, 20 Jun 2024 16:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC1F31B1518;
+	Thu, 20 Jun 2024 16:11:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AH69ZUGz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fgmb//Gr"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1821B142D;
-	Thu, 20 Jun 2024 16:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9717C1B3F26;
+	Thu, 20 Jun 2024 16:11:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718899751; cv=none; b=X3iCqcApPhH+Y6yH/xYdhaGL0TB4bqODJJE8HCXg+FqEtH+in/XdmSfaYO8Qruun0lV3pUw2Eu9+POXnXoGuKRwdDu5W4ojSx0/pP2K6Ge2nVJjgunsHjyEvQM8bD9We5oOBmF8qKc57av7At2HJsKpgaZjklnURdWk8y2JycDg=
+	t=1718899909; cv=none; b=UdPFX/VL+GE75bafqZj5AXhMK8UoB93nZlmPME60/rjFfkdVkOk/P0XW7CYC1rnguNosDFgIikD0yhVQB5TZXt1PJgU4AskFUz+ktFgy0OJzX3lix2MjuFbHLmKaiKYdkT7lg7cFUusQviXe36D4eMfV2HC9IiePbkNZWFarc5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718899751; c=relaxed/simple;
-	bh=34O7gW2yBam0ge5klqAdg/eHW6SgzwqEsPIFcsKnJEQ=;
+	s=arc-20240116; t=1718899909; c=relaxed/simple;
+	bh=WeTUKEDtm6DluJNLL2ts96rpxWNm5O31C45eYJesU7A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S/MayN6M4eUIJ8xM+SZGazyhaWevb8ycqYlUpr9tL5xfjYDAsSxHH9RIt4mcDn25WnhutVozbafEIKmeQMVNa+2/zg4Ntz0586uy60kRvopbJ+gRPp0i/ZaxgpXBJpfdyzOx/y31HhfVWsfACto+xMtLHYfH0emok02uN8zxxto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AH69ZUGz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D78A7C2BD10;
-	Thu, 20 Jun 2024 16:09:00 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=KXkUL3wE6n6n5WiyyuWttE2f3Hq9c7QB7d+njKi+rc49y6WgjTxicMhRGd8RyuPSl0Lfdc6OAjDU3qPpg3kLUSNuuy8qLwjaVBH439GaaerjpKEytOmI0klYiRcAeHPzI2d3Wy9j9u4w38U6LQj9Gf7Q2PQrCfsliDpTH/LCvOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fgmb//Gr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62875C4AF07;
+	Thu, 20 Jun 2024 16:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718899751;
-	bh=34O7gW2yBam0ge5klqAdg/eHW6SgzwqEsPIFcsKnJEQ=;
+	s=k20201202; t=1718899909;
+	bh=WeTUKEDtm6DluJNLL2ts96rpxWNm5O31C45eYJesU7A=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AH69ZUGzuQU83J/KptlSyZ/iRATC4iwWDlQz0Nr4xI/p0Wz9dswnyPtEVNrKt3A+V
-	 lUvtQoqN+ycg6ivrcr5ekOI6egU+qariyHGGCNG1ZontZCc5B+qfLWVTRo7F6Dpy2j
-	 Zez5pWQzdsC3AeZ7KPyEgiilFaBRzvmMkbAfrdxcqnXf9f71++ieCXTyt07Tf5dWhl
-	 mwc6Fn7TohNm6XarhV8pxfNomAWLXNYVfbwxcvKm2awnakpxYWdNthOcRBvJOS0FN2
-	 9QX7kmsm2uJ6hp6CsdW0YsxuMNTVVN9DxMfD0HZVzbMvp69Vd/HU7EXaAskwH2LIFU
-	 +IJnOTfGLBgnQ==
-Message-ID: <29d55d6a-8b4c-4374-b5df-64f22d846ac9@kernel.org>
-Date: Thu, 20 Jun 2024 18:08:58 +0200
+	b=Fgmb//GrOgY8zUVSZnyWqvMcmAIj7N4HyKCz95jVlI4QOBXogKvvbELBgqtQyAdft
+	 oonRlboGw8KZoUCr6sRoaghD58IHy26JPSBk/6h33UuMIoSK8Ca0Cpou46d3ikh7s5
+	 DfBoTrijAzXOp9pa7MTObGTbjhVPcFE9IJDKPCYmVW6aedBLfbazoGmsWcDN7P9fLF
+	 kpHg9mfLLiP17e4gvHuq7d7xER4C002Lf14GKu2m8U3bb7q+mw59t2oK5HXLGCClou
+	 MqlsbiEGssS8T9a5OGD7jpdOHVoL4QmHNNfVBZOJ3y0VjMKLU1765XSZDp2MIhJA8D
+	 AZaJ9TAegRtxQ==
+Message-ID: <1e7bc737-af3b-4b10-9f15-a40da97803f0@kernel.org>
+Date: Thu, 20 Jun 2024 18:11:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 18/23] regulator: add s2dos05 regulator support
+Subject: Re: [PATCH v3 19/23] power: supply: s2dos05: Add fuel gauge driver
+ for s2dos05
 To: Dzmitry Sankouski <dsankouski@gmail.com>,
  Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
@@ -72,7 +73,7 @@ Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
- <20240618-starqltechn_integration_upstream-v3-18-e3f6662017ac@gmail.com>
+ <20240618-starqltechn_integration_upstream-v3-19-e3f6662017ac@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -118,49 +119,132 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240618-starqltechn_integration_upstream-v3-18-e3f6662017ac@gmail.com>
+In-Reply-To: <20240618-starqltechn_integration_upstream-v3-19-e3f6662017ac@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 18/06/2024 15:59, Dzmitry Sankouski wrote:
-> S2dos05 has 1 buck and 4 LDO regulators, used for powering
-> panel/touchscreen.
+> Add fuel gauge driver for s2dos05 PMIC. It uses adc to measure power
+> on each power output s2dos05 provides, including regulator outputs
+> and AVDD, ELVSS, ELVDD lines. Driver registers power supply for each
+> corresponding power line.
 > 
-> Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
+> Adc can be disabled and enabled via sysfs.
+> 
 
 
-> diff --git a/drivers/regulator/s2dos05-regulator.c b/drivers/regulator/s2dos05-regulator.c
+> +
+> +static const struct power_supply_desc s2dos05_avdd_fg_desc = {
+> +	.name		= "s2dos05_avdd",
+> +	.type		= POWER_SUPPLY_TYPE_UNKNOWN,
+> +	.get_property	= s2dos05_fg_get_property_avdd,
+> +	.properties	= s2dos05_fg_properties,
+> +	.num_properties	= ARRAY_SIZE(s2dos05_fg_properties),
+> +};
+> +
+> +static const struct power_supply_desc s2dos05_buck_fg_desc = {
+> +	.name		= "s2dos05_buck",
+> +	.type		= POWER_SUPPLY_TYPE_UNKNOWN,
+> +	.get_property	= s2dos05_fg_get_property_buck,
+> +	.properties	= s2dos05_fg_properties,
+> +	.num_properties	= ARRAY_SIZE(s2dos05_fg_properties),
+> +};
+
+Buck is a regulator. Not power supply.
+
+Entire driver is something odd. NAK.
+
+> +static int s2dos05_fuelgauge_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct s2dos_core *iodev = dev_get_drvdata(dev->parent);
+> +	struct s2dos05_fg	*drv_data;
+
+Drop redundant spaces.
+
+> +	struct power_supply_config pscfg = {};
+> +	int ret;
+> +
+> +	drv_data = devm_kzalloc(dev, sizeof(struct s2dos05_fg),
+
+Drop 2015 code. Use new drivers as template.
+
+> +							GFP_KERNEL);
+> +	if (!drv_data)
+> +		ret = -ENOMEM;
+
+
+> +
+> +MODULE_DESCRIPTION("s2dos05 power meter");
+> +MODULE_AUTHOR("Dzmitry Sankouski <dsankouski@gmail.com>");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/mfd/s2dos05.h b/include/linux/mfd/s2dos05.h
 > new file mode 100644
-> index 000000000000..3c58a1bd2262
+> index 000000000000..8d216064bc78
 > --- /dev/null
-> +++ b/drivers/regulator/s2dos05-regulator.c
-> @@ -0,0 +1,362 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * s2dos05.c - Regulator driver for the Samsung s2dos05
+> +++ b/include/linux/mfd/s2dos05.h
+
+Why this is MFD? Squash the header into C code.
+
+> @@ -0,0 +1,123 @@
+> +/* SPDX-License-Identifier: GPL-2.0+
+> + * s2dos05.h
+
+Drop
+
 > + *
-> + * Copyright (C) 2016 Samsung Electronics
-
-Not happy. You upstream old issues. :( Please drop all junk Samsung code.
-
-> + * Copyright (C) 2023 Dzmitry Sankouski <dsankouski@gmail.com>
+> + * Copyright (c) 2016 Samsung Electronics Co., Ltd
+> + *              http://www.samsung.com
 > + *
 > + */
+> +
+> +#ifndef __LINUX_MFD_S2DOS05_H
+> +#define __LINUX_MFD_S2DOS05_H
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define MFD_DEV_NAME "s2dos05"
 
-...
+Drop
 
 > +
-> +	return ret;
+> +struct s2dos05_dev {
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +};
 > +
-> +err_data:
-> +	devm_kfree(dev, (void *)s2dos05);
+> +/* S2DOS05 registers */
+> +/* Slave Addr : 0xC0 */
+> +enum S2DOS05_reg {
+> +	S2DOS05_REG_DEV_ID,
+> +	S2DOS05_REG_TOPSYS_STAT,
+> +	S2DOS05_REG_STAT,
+> +	S2DOS05_REG_EN,
+> +	S2DOS05_REG_LDO1_CFG,
+> +	S2DOS05_REG_LDO2_CFG,
+> +	S2DOS05_REG_LDO3_CFG,
+> +	S2DOS05_REG_LDO4_CFG,
+> +	S2DOS05_REG_BUCK_CFG,
+> +	S2DOS05_REG_BUCK_VOUT,
+> +	S2DOS05_REG_IRQ_MASK = 0x0D,
+> +	S2DOS05_REG_SSD_TSD = 0x0E,
+> +	S2DOS05_REG_OCL = 0x10,
+> +	S2DOS05_REG_IRQ = 0x11
+> +};
+> +
+> +/* S2DOS05 regulator ids */
+> +enum S2DOS05_regulators {
 
-Why?
+What does it have to do with power supply / fuel gauge?
 
-> +	kfree(s2dos05);
+> +	S2DOS05_LDO1,
+> +	S2DOS05_LDO2,
+> +	S2DOS05_LDO3,
+> +	S2DOS05_LDO4,
+> +	S2DOS05_BUCK1,
+> +	S2DOS05_REG_MAX,
+> +};
 
-Please test this first. This is obviously wrong and having such trivial
-issue makes me question what else is in this Samsung code.
 
 
 Best regards,
