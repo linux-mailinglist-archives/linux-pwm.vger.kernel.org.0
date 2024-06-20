@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-2562-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2563-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AA59910A6F
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 17:47:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9863910A90
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 17:48:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB5AC1C225B5
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 15:47:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B28C1F21764
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jun 2024 15:48:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65F1E1AD9D2;
-	Thu, 20 Jun 2024 15:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C7E91B141D;
+	Thu, 20 Jun 2024 15:47:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sfn5yzZG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjYzZhJB"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE0B1E876;
-	Thu, 20 Jun 2024 15:47:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C551AD411;
+	Thu, 20 Jun 2024 15:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718898443; cv=none; b=iaOnPU/ncj5yBa1BA9DhvJ3C46ugPgW24tNWqJke7A+8weWV6yvWnpXJiUJYaaU0V5+qQ+9ulVDJx3bulOqkNh/s5sJa/mO5vho2VVro4Kb2g7Irsu6x1r0yhb8U8zKbRq6NEq/JdWWoOPxQoo9QHlcVL7rJcKX3Xx7N3YnIm/A=
+	t=1718898475; cv=none; b=B1C0qiF4ToZt5KIZFJCFW//xg3vHCJyriviQ/qdPCABS/3eJzDZE/XXdD+AhiP89f/MmYaS+nc9yWlCNgiqKdFew9E99vWJdOGRpjxAbDdw33kagfELH3DAQ1/AXmvfEjaf7xkjUs7l3Pd0BCkk5zUmxRd6p4U/qnhH2OqG0id4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718898443; c=relaxed/simple;
-	bh=JUgVrLZya9tGplzbGst8Monj0IIE+1T54xT5fKorBlQ=;
+	s=arc-20240116; t=1718898475; c=relaxed/simple;
+	bh=OZfi+hDc0CC+30ZKwuSV2Z2N+albFN0Wfv5xyTkQ4xo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VrB1e2vMQbXb6uQuiQSbr/MVyqFBC2hbKxKPbnuTTTJFarEcRsJeJWzeNXeoxHNZmrEov6U0ZOQnWhNbo1o2gLAcAm1aVbDKRLtke/ZIrKgy1f+kE4UkO7kY7eQHTg+p5zHynroR1BUnA7CeGi5Ut7WIJiTD0e5N+X01bqCKU9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sfn5yzZG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C07C3C32786;
-	Thu, 20 Jun 2024 15:47:11 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=uXCZR3lQBu9A//BrEjCjQvr2Gw2Yoo2+XRLQBTrtC5e4qqEdK28YWzu8DwUMZzjJgoubONxOYwBlFUAqm9sJPzMpEjoPAnKX9FfbEyqWTQLq46+u29Z2H+t9qvEnJdIR/sQyK15XksP7qw0rwFsGBNZEq447TLi6G5Rx72tHIII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OjYzZhJB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71CC8C32786;
+	Thu, 20 Jun 2024 15:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718898442;
-	bh=JUgVrLZya9tGplzbGst8Monj0IIE+1T54xT5fKorBlQ=;
+	s=k20201202; t=1718898475;
+	bh=OZfi+hDc0CC+30ZKwuSV2Z2N+albFN0Wfv5xyTkQ4xo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Sfn5yzZGKUVfEoqZedb/DCcMoPNrajFOpiyOe7M4hoYfqEkU6nmfEW8CBEIJyhTju
-	 WHVrpH97fGOgCtKX/vv+pshLFSw2KJm6x2OUQxMGzlMtMaOhxeooFAMW0L7q2FpP8V
-	 YZaXlmhH3WnYXEf4ojRaZScjiIwgUExo+CLnkS1PkqjC17A0kBj6qYWQSC7rJ7RecT
-	 J3mxwaNuFEbcbIhpXWr9zgmusf3umJHJUZpvgKZ+T+svghgmAk9YXdMoPptV9+6hrJ
-	 DFG9787kLpntdN1a1wopMLm/XaPkEy1zTQgCcgM2CPEsprtr6RWiL9FhVwM2xHiT4C
-	 2Auo4eQSAwWbQ==
-Message-ID: <95113743-b9a7-419d-8d57-6be5c6db5f58@kernel.org>
-Date: Thu, 20 Jun 2024 17:47:09 +0200
+	b=OjYzZhJBUZmdH+cgVPHvaFSJ0rY7ESZmTq70MY663oyaqb36GZlvKov3+5TpRQgpz
+	 3qIBtxiumbvwnPDz6GL+l1PPnaplNOzPyv9afai+mtN8HkfjF0supFLvUT4Qcn/wPj
+	 O0qZhlHGwN/DEiLmL55ZHWI4vwF724HLz2INSgChrDOo8HzPbhBb9kwXYooS1erdDg
+	 WS4z6ZJ6Ms1I88CbnHE+s9hRqzMcc/sQOd5qd+jiZGskTgzaIWna2tlAL4gLmNbwxg
+	 0b1sXzGqjLRdM13KO1A9OrG/nou7tWvylQ22O8NXo1U5McWFQa+3M7Smm6ljVsfcUR
+	 X5rZaS+DRlZww==
+Message-ID: <7353ad33-f26c-49de-9565-36e76d9b6e53@kernel.org>
+Date: Thu, 20 Jun 2024 17:47:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/23] dt-bindings: input: add maxim,max77705-haptic
+Subject: Re: [PATCH v3 06/23] dt-bindings: power: supply: add maxim,max77705
+ charger
 To: Dzmitry Sankouski <dsankouski@gmail.com>,
  Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
  Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
@@ -72,7 +73,7 @@ Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
- <20240618-starqltechn_integration_upstream-v3-5-e3f6662017ac@gmail.com>
+ <20240618-starqltechn_integration_upstream-v3-6-e3f6662017ac@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -118,38 +119,53 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240618-starqltechn_integration_upstream-v3-5-e3f6662017ac@gmail.com>
+In-Reply-To: <20240618-starqltechn_integration_upstream-v3-6-e3f6662017ac@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 18/06/2024 15:59, Dzmitry Sankouski wrote:
-> maxim,max77705-haptic is MAX77705 pmic binding part
+> add maxim,max77705 charger binding part
+
+Make it a proper sentence.
+
 > 
-
-
+> Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
+> ---
+>  .../power/supply/maxim,max77705-charger.yaml       | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/maxim,max77705-charger.yaml b/Documentation/devicetree/bindings/power/supply/maxim,max77705-charger.yaml
+> new file mode 100644
+> index 000000000000..2b805da2a328
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/maxim,max77705-charger.yaml
+> @@ -0,0 +1,30 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/supply/maxim,max77705-charger.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Maxim MAX77705 and Companion Power Management IC charger
 > +
 > +maintainers:
 > +  - Dzmitry Sankouski <dsankouski@gmail.com>
 > +
 > +description: |
 > +  This is a part of device tree bindings for Maxim MAX77705 multi functional device.
-
-Wrap according to Linux coding style, so at 80. All your bindings have
-the same issue.
-
 > +
 > +  See also Documentation/devicetree/bindings/mfd/maxim,max77705.yaml for
 > +  additional information and example.
 > +
+> +allOf:
+> +  - $ref: power-supply.yaml#
+> +
 > +properties:
 > +  compatible:
-> +    const: maxim,max77705-haptic
-> +
-> +  haptic-supply: true
-> +
-> +  pwms: true
+> +    const: maxim,max77705-charger
 
-maxItems
+Looks pointless. Merge it to parent node.
+
 
 
 Best regards,
