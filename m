@@ -1,135 +1,137 @@
-Return-Path: <linux-pwm+bounces-2579-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2580-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D51F6911C23
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 Jun 2024 08:54:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF72C911CA8
+	for <lists+linux-pwm@lfdr.de>; Fri, 21 Jun 2024 09:18:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 854AA283D96
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 Jun 2024 06:54:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A8081F22324
+	for <lists+linux-pwm@lfdr.de>; Fri, 21 Jun 2024 07:18:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A55DB12C801;
-	Fri, 21 Jun 2024 06:54:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7874A16B396;
+	Fri, 21 Jun 2024 07:18:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RCWS5O0e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="avcQT1bA"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A47912BEBE
-	for <linux-pwm@vger.kernel.org>; Fri, 21 Jun 2024 06:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547F816B390
+	for <linux-pwm@vger.kernel.org>; Fri, 21 Jun 2024 07:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718952882; cv=none; b=T7IcCaS47tPyss8/pVJoW2+sLm6VjwrxbzfjY/dea+pPWIlY0vV6Zi6fMOAdyIJD0lEAwMHN6KO69ATZ0e6sMFtbsoDfVAnlnf4ujDX6AWxiV5EIHz5bROqGb/WGh6dkTMaG2n9vDzGfyr8PFT6BJjDPeB4GZZiJi0SiS6TvAxc=
+	t=1718954291; cv=none; b=f/4TY8109V7Ac4RVCd7QNfHMMoL7oDXW+0HweH3GSTrIQX76FO/BUPC/1RPHZSK3rml+/oG7t3ZX/avpXZCW1LRivLOkn1xTQ7jNUrQ3vyIfBUapGcduqrPddL74q4Jc1RT/Xc7hJUxDF0VS48Ro/bmyIIzQktSBoOl51JLQ1Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718952882; c=relaxed/simple;
-	bh=MXCWIEHjZagT0uCOJ+g+R76lwVk/kK6hKx6erlJbECU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=caUTG9GnoM+F3ZtFE5JdiBj7+Kyu7pCazHkN64FusNS5CzsSm3The3xoWSQ+01hmkq/4d6XN2Sj73DYuMvNNhi3me8Bf3LSHa7NG/yLfk1vmHHqJVpk9n3crSXsXb04nHTzcB5oSliplpdNUEfFqGuEFz54UHc5Yi6wT/69Or/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RCWS5O0e; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57d1d45ba34so1775589a12.3
-        for <linux-pwm@vger.kernel.org>; Thu, 20 Jun 2024 23:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718952876; x=1719557676; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eTkDcANmcuZleL0PmBZXzJ8dQlOYVbwGmUQGEpaTcvk=;
-        b=RCWS5O0ezI1KNsgTd5y1omuWUWtxYAJrtcbcbYkde2UYouQQCaT2KbQO/Hbg/x9Yvn
-         iqxhM4CH+BC/QrTCMa5ktJhttri4+C8U6TTIHwOdra+7a2rOIFwOuV7JVTgkbKdJ7s4T
-         fx6DQ0WBdRSSxLGvhQCMVMhHTU6e7F3vpu7G3FSsXtZLIHkV1qEG4yPhFH5Y1+8unZIe
-         bN1JSgAjwq+U+vZ/MmAXHPLKtV70HtW4PIE15KlKW9dfYk6kecPSpa1t6e1sKDESkA7Q
-         hizfet0TBBxqjyK46CLPz1Lpxu+iY0LNrhmNdW+h5FS8uK4vnJ5hrobhX9+ZgrrLSxFq
-         LElA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718952876; x=1719557676;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eTkDcANmcuZleL0PmBZXzJ8dQlOYVbwGmUQGEpaTcvk=;
-        b=szts03BkE5/2lecP87o4pXRLjLqrhZrIrNO/qbHKe6SnXsriWDluCe4jvpOlF7x4B6
-         JgT22gXiPOVw4po6kFPU7xx7ap681G+5A10eTm5ASMIkKBHyahwOaJuBQ9aFoLniB+vW
-         fM0RpjkyGt0tgeJaGMYMP9WpOVbpHWomVZCqP2z6H7oKW5ypO7tyIFWj6LxrOzWalp0/
-         EQWpru66RnQeQnJqM56ySkIXszYH2XByickvSMkq2rD6y2/ef2jeffMqc8ie8qLwGL5W
-         NaR3ruZ8GyaTPJ6GRsaSVupdWGAgqzvCqjmRJw3xikQLR0MQ8yYvRQNWBoWeuGQS9Yif
-         3OvA==
-X-Gm-Message-State: AOJu0YzlDJelkb8TBuwnmZOwn7bCt9sy//F8IOIjcVDwLIMxs5oNu+Qg
-	ANcZxej16wGnoi//yjQjtbOZMGQ3eCBahgEpPgwfnB0gb3CsvLop5Xzw6j2fmqY=
-X-Google-Smtp-Source: AGHT+IGLODE/V4p7R0sIIFSMmoxTGUJxgRGk7dfcAmBtIMl5OqgZ3hMha7NpDNa9+6zqYk6YZBDHJA==
-X-Received: by 2002:a50:9e67:0:b0:57d:57c:ce99 with SMTP id 4fb4d7f45d1cf-57d07e68e29mr3936219a12.2.1718952876161;
-        Thu, 20 Jun 2024 23:54:36 -0700 (PDT)
-Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d305351dbsm505883a12.77.2024.06.20.23.54.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 23:54:35 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: linux-pwm@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] pwm: stm32: Fix error message to not describe the previous error path
-Date: Fri, 21 Jun 2024 08:54:17 +0200
-Message-ID: <20240621065418.2760898-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1718954291; c=relaxed/simple;
+	bh=TwdRhfZYZjB0WdAFUJlw4yH0tiLdcgngfMR0zmuG/DY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=gzkPD+wcvEZ73tCTPaYv+XR5DPXq5Xp5V0vYhzSms9OJ3BCUMnmJZ4g0RQNcXTj6WLUNNbEa5AD11SPlWJ6122Xc8Mvk9YAe9utKqyBmGxtsl47Cx/H+A+Y3zsIfTpYFXM513s781ytrKsDSJF6n0y32gpwvD51eHuhjRW+LS7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=avcQT1bA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89D50C2BBFC;
+	Fri, 21 Jun 2024 07:18:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718954290;
+	bh=TwdRhfZYZjB0WdAFUJlw4yH0tiLdcgngfMR0zmuG/DY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=avcQT1bAhpT58Umrh4FjJA552YbRL6ddzHl5m6ZJH86XXzZzjKd3D+biPvbKku+MD
+	 JZQ0ZGm7nl5xbLLUkFjZ9nMOAHbXx4gSvaKOF30ImmCVrz1imJ2E0HMsMaBUDQGKeF
+	 oopqEJIDVsP03jNyO0efiHavmRaCCwmHeYn60TQ2x7tD5s7DHSzMOnAqmqSASSGyxJ
+	 ZV3qOxAmJOb1WuVkx3kH5A63D1egSFy6ivtNtD4YJyo9k0s8nLShtBTlKD+kQ6otmP
+	 igOpVZG9zpP8tiXfoE/9/Gp+OkcPE1uPVBLTv0tLEMTFa8TuoCvMXWkFR1snDoDUCY
+	 eydER+buRg7sw==
+Date: Fri, 21 Jun 2024 09:18:08 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pwm@vger.kernel.org, 
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Trevor Gamblin <tgamblin@baylibre.com>
+Subject: [GIT PULL] pwm: Three fixes for the pwm-stm32 driver
+Message-ID: <2d2qmxla4hcug3mx4puvhrnezwjw6xp6xdnwodggcdglghmx4w@wqd7rv5qys73>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1500; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=MXCWIEHjZagT0uCOJ+g+R76lwVk/kK6hKx6erlJbECU=; b=owGbwMvMwMXY3/A7olbonx/jabUkhrRS5VkZv/vvcYVeZVioJNofXpqyzyvx0aLf/HEbjYSFk 4oFcyd1MhqzMDByMciKKbLYN67JtKqSi+xc++8yzCBWJpApDFycAjCRwmvsf8U/hJ0+0+pcp5Uy JyauT9m0xWb3D1+LVr7k3g3df/OzTvMZ3u70vb05oqni++uKclH3Ni32GrEdT2M1lJ5cfHCoQ+H SCu9LcZlNR+XmN9x2PL55l6rP+u+61hcexK9L0vSVmbDl97Pf8xY09b42nX58aqobY6qX0EXWnx uqarZsmLfBqrZP9vhmGcGTj9W2vchstLyy7uFPv+3sncVuCwT73gdPKW7hzzRi+y6769j/qXyWm iz9fzX75vX0zjyl+14+v+PpneVLOvY0vLvLyvYwrUfPQLxwlxKf7wFpjgnuLQ5R2y6n3uAM5ba3 ldQt54lO6V/XmyDQ5bOu8lDxg90sX59O2pl+I8jfeEEiAA==
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fgkxgnr4wy444m5c"
+Content-Disposition: inline
 
-"Failed to lock the clock" is an appropriate error message for
-clk_rate_exclusive_get() failing, but not for the clock running too
-fast for the driver's calculations.
 
-Adapt the error message accordingly.
+--fgkxgnr4wy444m5c
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: d44d635635a7 ("pwm: stm32: Fix for settings using period > UINT32_MAX")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
-Hello,
+Hello Linus,
 
-I just found this issue while preparing a PR including the two pwm-stm32
-fixes available at
-https://lore.kernel.org/all/cover.1718788826.git.u.kleine-koenig@baylibre.com/ .
+The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
 
-This patch being trivial and useful I'll send it along with the other
-two. So when you notice this patch it's probably already to late to send
-a review :-)
+  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
 
-d44d635635a7 was only included in v6.10-rc1, so no stable tag necessary.
+are available in the Git repository at:
 
-Best regards
+  https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/p=
+wm/for-6.10-rc5-fixes
+
+for you to fetch changes up to 4120bc75cf95bb1b10df83e85a0478f292ea97cc:
+
+  pwm: stm32: Fix error message to not describe the previous error path (20=
+24-06-21 08:57:12 +0200)
+
+The first two patches were in next since Wednesday as
+
+	215d1aa8b5a7 ("pwm: stm32: Refuse too small period requests")
+	ea80bdb90a5d ("pwm: stm32: Fix calculation of prescaler")
+
+I rewrote them for this PR to add a review tag and improve the commit
+log. I also dropped Cc: stable for the latter, because the offending
+commit is only included in v6.10-rc1; there are no code changes.
+
+While preparing this PR I noticed the bogus error message fixed in the
+third patch. I consider this obviously right enough to include it here
+without cooking in next.
+
+Please pull this for 6.10-rc5.
+
+Thanks
 Uwe
 
- drivers/pwm/pwm-stm32.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+----------------------------------------------------------------
+pwm: Three fixes for the pwm-stm32 driver
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index a2f231d13a9f..cd7245183360 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -673,7 +673,8 @@ static int stm32_pwm_probe(struct platform_device *pdev)
- 	 * .apply() won't overflow.
- 	 */
- 	if (clk_get_rate(priv->clk) > 1000000000)
--		return dev_err_probe(dev, -EINVAL, "Failed to lock clock\n");
-+		return dev_err_probe(dev, -EINVAL, "Clock freq too high (%lu)\n",
-+				     clk_get_rate(priv->clk));
- 
- 	chip->ops = &stm32pwm_ops;
- 
+The first patch prevents an integer wrap-around for small periods. In
+the second patch the calculation for the input clock prescaler is
+corrected which resulted in another wrap-around and so bogus period
+configurations. The last commit improves an error message that was
+wrongly copied from another error path.
 
-base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
--- 
-2.43.0
+----------------------------------------------------------------
 
+Uwe Kleine-K=F6nig (3):
+      pwm: stm32: Refuse too small period requests
+      pwm: stm32: Fix calculation of prescaler
+      pwm: stm32: Fix error message to not describe the previous error path
+
+ drivers/pwm/pwm-stm32.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
+
+--fgkxgnr4wy444m5c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ1KS0ACgkQj4D7WH0S
+/k4+7gf8CH5gqo9ioWc5je2+c9HnPTMGlcJaJ5yxKthq9VVi2K9Zb59o8p7S2OsJ
+LP8OFNuI33BH0LepRFVbG/dzDahWtvLrEdi7dqCvbIU+IR985RSnwHf7ck8WsruR
+jsmx3SVtGcRGaCCuIezZpQlfHR7SI7tmyrFhXahoneoMpJ2msWqUCkvmV1kmEphj
+//XTiTKXrK27YoQ17CPR5Lz4MA9aVbjlSDJUm+ZeOiz4IiK6BSQizCEnSKonifym
+7eiQji9d/RfQV4RQXUlbVZh8eKb4dzUmhDU06ylkGzHp1mUjHG/TjaTeAKwxhHBy
+sxAdx5nO9o6LP8juwhhyz/OmSZsFQw==
+=vIff
+-----END PGP SIGNATURE-----
+
+--fgkxgnr4wy444m5c--
 
