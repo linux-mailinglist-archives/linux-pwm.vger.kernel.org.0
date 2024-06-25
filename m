@@ -1,196 +1,140 @@
-Return-Path: <linux-pwm+bounces-2612-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2613-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3FA0916DEE
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2024 18:22:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE2EF917438
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Jun 2024 00:29:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57E6A1F26C09
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2024 16:22:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8997C28460A
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2024 22:29:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C296171668;
-	Tue, 25 Jun 2024 16:22:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B55C817F375;
+	Tue, 25 Jun 2024 22:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kgDzJGYh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHIBw3DB"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5992F17082D;
-	Tue, 25 Jun 2024 16:22:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E27617E905;
+	Tue, 25 Jun 2024 22:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719332543; cv=none; b=cemuWuaTmbQQ5vWwrvOexgfFmNDwPxmavh8iihHpLjQj1Wy1ERzQjHwMEmVaT6pa18puySL6JfAQclkW7bfmdw45tP7Twns99Oo7V5MG8BL7LobaVK1Ob/iNZkV7hvEnR3BUL6KeUCmExjdgZW/OQfs9VZ+JoRD/lU37nn7OexQ=
+	t=1719354544; cv=none; b=lRLgrbZ/+i8ofiZ9DUYt0OSJt4GMsLPzhoHJ/X5TtTmLph2ype4Tm9MQ2aJwT6EaFRXz+vtjCfii9YLrpj6lwJeSP7FrpgCsj87ptZTjpeek2M913vcHz4Iwj7sLGFmh6ePznLIG7KFKfXLfM5bqBD4A/Wc/jqG/nny8T5fO23I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719332543; c=relaxed/simple;
-	bh=akzr2Tcmr8hvoXCrldFTf3vxOcOP1rC3e1w/56iBGCw=;
+	s=arc-20240116; t=1719354544; c=relaxed/simple;
+	bh=+L/emvVgtDd3ULOJoo20PaysUqptsWugNLJKhSGnCkg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rx89qVRU7DaJMdhzioxKerS3Wil5hHQTO+D+beAX7vzjFbNuD26ixI60neMpbgUtwZ90Xmk1tjyOVMKR8sx39ZKqHRRts6mIpnHda+tqdybFZtQOxXMWaWOWTw2H2sp1kThWna2szv8yLpjMYS1Q++Vt479esCU7jtvaOQoYSQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kgDzJGYh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8676DC32781;
-	Tue, 25 Jun 2024 16:22:20 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=N9xY9Hpih9mjZ7Ip6VPGC7OL0QIgFTRkTY0NzRH7cbZi4NG0U46xFjs897PTGMpgaYRXl7TndyaaWMqKR+lj3t1vyAUAnQI52Cw8/a6cqnZ4ni62Gs0BzfpDM8EmAxfcYlfB0DWLUrtJEkz6PR/rlDns0h3XaS4Fy9Bbs+F4oJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHIBw3DB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0F0AC32781;
+	Tue, 25 Jun 2024 22:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719332542;
-	bh=akzr2Tcmr8hvoXCrldFTf3vxOcOP1rC3e1w/56iBGCw=;
+	s=k20201202; t=1719354544;
+	bh=+L/emvVgtDd3ULOJoo20PaysUqptsWugNLJKhSGnCkg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kgDzJGYhBaKcP6lEFjj4Tas4lTM4uNMNjxCcJSfTfs7MGHnesN9d6V0ysjucd8ApJ
-	 oGsYgeiLYVUa2J5vjhepCeohL/GNZjw7XkXjWHaYssoEdRIhI2n7uODbb8iBMwyEqX
-	 4S57r7ji7tpfhAJcbpsLJY34qc4ZNUCjdN9MVMn1g88vg6Tk+pRScjFqmoIxmueID9
-	 r4VRe56YSCVllR1HdOYWbROv/2LVmyhvDR7V4/VcP66FC1vZTZ9Q+9cNvSMdrdbsdn
-	 wrR0GQFivlLs3qkoVNHJ9F0yODORAVaO98ansY5enl0Y2V3pUPM9LcJMkkXNN4/SKr
-	 qq+kKY/VEPUYw==
-Date: Tue, 25 Jun 2024 17:22:18 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, jdelvare@suse.com,
-	linux@roeck-us.net, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, ukleinek@kernel.org,
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-Message-ID: <20240625-oppressor-scaling-5713b4719a89@spud>
-References: <20240528225638.1211676-1-chris.packham@alliedtelesis.co.nz>
- <20240528225638.1211676-2-chris.packham@alliedtelesis.co.nz>
- <20240529-faucet-vending-3e330f8eb67b@wendy>
+	b=aHIBw3DBgsgjmcpsG44SasdTK/47SLheszc2AagGPy/V7LIt+KIuH7AKrKN0mdQ4m
+	 v/86HnwE7/KWPAzxgOoR5hd/JrDeNRp9OvGbCb53WyGFL4HooYtZJcZIp7AkX2QJaT
+	 +vHjK7JhSOiOAkpK9K/Uyzwtlo1NR5gjQek9RAJpOZqYT6fUx1Eow01E9Q9ijR15CZ
+	 38Zdrwgb2Jm2MNu4wtYm/QCdZo2set9VEJc9HQaVddLzXwUicN4X+XaslvpbMn/EO5
+	 WLDZHpj95vw9bZc+CTbvXsK9O1YX/XaWex8fqU8mdI6PeHJvGwff4q5XmL1qsCihxt
+	 HbV5Mb4qb0ZXA==
+Date: Tue, 25 Jun 2024 16:29:02 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>,
+	linux-gpio@vger.kernel.org,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Guenter Roeck <linux@roeck-us.net>, linux-pwm@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>, linux-pm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Jonathan Cameron <jic23@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	linux-watchdog@vger.kernel.org, linux-iio@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-i2c@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	linux-clk@vger.kernel.org, Dong Aisheng <aisheng.dong@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Abel Vesa <abelvesa@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+	Zhang Rui <rui.zhang@intel.com>, Andi Shyti <andi.shyti@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] dt-bindings: drop stale Anson Huang from maintainers
+Message-ID: <171935453992.325655.11101198917545671907.robh@kernel.org>
+References: <20240617065828.9531-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="R3N5fZNUTuh/Iu6H"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240529-faucet-vending-3e330f8eb67b@wendy>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240617065828.9531-1-krzysztof.kozlowski@linaro.org>
 
 
---R3N5fZNUTuh/Iu6H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, 17 Jun 2024 08:58:28 +0200, Krzysztof Kozlowski wrote:
+> Emails to Anson Huang bounce:
+> 
+>   Diagnostic-Code: smtp; 550 5.4.1 Recipient address rejected: Access denied.
+> 
+> Add IMX platform maintainers for bindings which would become orphaned.
+> 
+> Acked-by: Uwe Kleine-König <ukleinek@kernel.org>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> Acked-by: Peng Fan <peng.fan@nxp.com>
+> Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com> # for I2C
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
+> 
+> Changes in v2:
+> 1. Add acks/Rbs.
+> 2. Change clock maintainers to Abel Vesa and Peng Fan.
+> 3. Change iio/magnetometer maintainer to Jonathan.
+> ---
+>  .../devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.yaml    | 4 +++-
+>  Documentation/devicetree/bindings/clock/imx6q-clock.yaml      | 3 ++-
+>  Documentation/devicetree/bindings/clock/imx6sl-clock.yaml     | 3 ++-
+>  Documentation/devicetree/bindings/clock/imx6sll-clock.yaml    | 3 ++-
+>  Documentation/devicetree/bindings/clock/imx6sx-clock.yaml     | 3 ++-
+>  Documentation/devicetree/bindings/clock/imx6ul-clock.yaml     | 3 ++-
+>  Documentation/devicetree/bindings/clock/imx7d-clock.yaml      | 1 -
+>  Documentation/devicetree/bindings/clock/imx8m-clock.yaml      | 3 ++-
+>  Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml      | 4 +++-
+>  Documentation/devicetree/bindings/gpio/gpio-mxs.yaml          | 1 -
+>  Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml      | 4 +++-
+>  .../devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml     | 2 +-
+>  .../devicetree/bindings/memory-controllers/fsl/mmdc.yaml      | 4 +++-
+>  Documentation/devicetree/bindings/nvmem/imx-iim.yaml          | 4 +++-
+>  Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml        | 4 +++-
+>  Documentation/devicetree/bindings/nvmem/mxs-ocotp.yaml        | 4 +++-
+>  Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml        | 4 +++-
+>  Documentation/devicetree/bindings/pwm/mxs-pwm.yaml            | 1 -
+>  Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml      | 4 +++-
+>  Documentation/devicetree/bindings/thermal/imx-thermal.yaml    | 1 -
+>  Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml | 4 +++-
+>  Documentation/devicetree/bindings/thermal/qoriq-thermal.yaml  | 4 +++-
+>  Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml   | 4 +++-
+>  .../devicetree/bindings/watchdog/fsl-imx7ulp-wdt.yaml         | 4 +++-
+>  24 files changed, 52 insertions(+), 24 deletions(-)
+> 
 
-Uwe,
+Applied, thanks!
 
-On Wed, May 29, 2024 at 08:58:41AM +0100, Conor Dooley wrote:
-> On Wed, May 29, 2024 at 10:56:36AM +1200, Chris Packham wrote:
-> > Add fan child nodes that allow describing the connections for the
-> > ADT7475 to the fans it controls. This also allows setting some
-> > initial values for the pwm duty cycle and frequency.
-> >=20
-> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> > ---
-> >=20
-> > Notes:
-> >     I realise there is still some discussion about how to express the
-> >     frequency and duty cycle. I have a personal preference for using he=
-rtz
-> >     for the frequency and 0-255 for the duty cycle but if the consensus=
- is
-> >     to express these things some other way I'm fine with doing some mat=
-h.
->=20
-> Probably worth carrying a link to it here:
-> https://lore.kernel.org/all/4de798f3-069e-4028-a5b5-5e6a639277e3@alliedte=
-lesis.co.nz/
->=20
-> I asked Uwe to take a look & it's on his todo list.
-
-This is an attempt to bump this up on your todo list a bit!
-
-Thanks,
-Conor.
-
-> >    =20
-> >     Changes in v4:
-> >     - 0 is not a valid frequency value
-> >     Changes in v3:
-> >     - Use the pwm provider/consumer bindings
-> >     Changes in v2:
-> >     - Document 0 as a valid value (leaves hardware as-is)
-> >=20
-> >  .../devicetree/bindings/hwmon/adt7475.yaml    | 25 ++++++++++++++++++-
-> >  1 file changed, 24 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Doc=
-umentation/devicetree/bindings/hwmon/adt7475.yaml
-> > index 051c976ab711..bfef4c803bf7 100644
-> > --- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> > +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> > @@ -51,6 +51,15 @@ properties:
-> >        enum: [0, 1]
-> >        default: 1
-> > =20
-> > +  "#pwm-cells":
-> > +    const: 4
-> > +    description: |
-> > +      Number of cells in a PWM specifier.
-> > +      - 0: The pwm channel
-> > +      - 1: The pwm frequency in hertz - 11, 14, 22, 29, 35, 44, 58, 88=
-, 22500
-> > +      - 2: PWM flags 0 or PWM_POLARITY_INVERTED
-> > +      - 3: The default pwm duty cycle - 0-255
-> > +
-> >  patternProperties:
-> >    "^adi,bypass-attenuator-in[0-4]$":
-> >      description: |
-> > @@ -81,6 +90,10 @@ patternProperties:
-> >        - smbalert#
-> >        - gpio
-> > =20
-> > +  "^fan-[0-9]+$":
-> > +    $ref: fan-common.yaml#
-> > +    unevaluatedProperties: false
-> > +
-> >  required:
-> >    - compatible
-> >    - reg
-> > @@ -89,11 +102,12 @@ additionalProperties: false
-> > =20
-> >  examples:
-> >    - |
-> > +    #include <dt-bindings/pwm/pwm.h>
-> >      i2c {
-> >        #address-cells =3D <1>;
-> >        #size-cells =3D <0>;
-> > =20
-> > -      hwmon@2e {
-> > +      pwm: hwmon@2e {
-> >          compatible =3D "adi,adt7476";
-> >          reg =3D <0x2e>;
-> >          adi,bypass-attenuator-in0 =3D <1>;
-> > @@ -101,5 +115,14 @@ examples:
-> >          adi,pwm-active-state =3D <1 0 1>;
-> >          adi,pin10-function =3D "smbalert#";
-> >          adi,pin14-function =3D "tach4";
-> > +        #pwm-cells =3D <4>;
-> > +
-> > +        fan-0 {
-> > +          pwms =3D <&pwm 0 22500 PWM_POLARITY_INVERTED 255>;
-> > +        };
-> > +
-> > +        fan-1 {
-> > +          pwms =3D <&pwm 2 22500 PWM_POLARITY_INVERTED 255>;
-> > +        };
-> >        };
-> >      };
-> > --=20
-> > 2.45.1
-> >=20
-
-
-
---R3N5fZNUTuh/Iu6H
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnruugAKCRB4tDGHoIJi
-0kFRAQCZIrHaisIz4R0cjPl4ENnCGHKMXBh7j/mC8rYE/KB85wD/RTIZIcVxwnp3
-vJJ40zdLuhvyve24lm/u4nEf90mDYwc=
-=rn/M
------END PGP SIGNATURE-----
-
---R3N5fZNUTuh/Iu6H--
 
