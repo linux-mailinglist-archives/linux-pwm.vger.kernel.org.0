@@ -1,157 +1,196 @@
-Return-Path: <linux-pwm+bounces-2611-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2612-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC696916AF3
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2024 16:50:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3FA0916DEE
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2024 18:22:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F007B1C22D68
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2024 14:50:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57E6A1F26C09
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jun 2024 16:22:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DBB216D4F6;
-	Tue, 25 Jun 2024 14:50:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C296171668;
+	Tue, 25 Jun 2024 16:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qYfM3O/c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kgDzJGYh"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2710A16D33B
-	for <linux-pwm@vger.kernel.org>; Tue, 25 Jun 2024 14:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5992F17082D;
+	Tue, 25 Jun 2024 16:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719327016; cv=none; b=C2yu00k3Mtv14T7dp/4E+AvgmUNtD2Xef9HyUoyaeHz1DazeftGW6AhQ6J/XfX0nqKCokiwH2bg/QlIraXwahCHp/KE2xfZJISS0IyuIeQtZWK7twPle2h1wqs+hhAgCN7Q23HvksPgh4gdHHy0NeYOVStOBNt1UAi14texabso=
+	t=1719332543; cv=none; b=cemuWuaTmbQQ5vWwrvOexgfFmNDwPxmavh8iihHpLjQj1Wy1ERzQjHwMEmVaT6pa18puySL6JfAQclkW7bfmdw45tP7Twns99Oo7V5MG8BL7LobaVK1Ob/iNZkV7hvEnR3BUL6KeUCmExjdgZW/OQfs9VZ+JoRD/lU37nn7OexQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719327016; c=relaxed/simple;
-	bh=jWqxo3mchFiP1MenyU8LEUTbrCGM0e3VDgqj6/yFdZw=;
+	s=arc-20240116; t=1719332543; c=relaxed/simple;
+	bh=akzr2Tcmr8hvoXCrldFTf3vxOcOP1rC3e1w/56iBGCw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H5c1egNwHG5OVEY5pCH6US3cNdJpHkJeHM9codFPr8Zrirub9DLgw18E9Tc5U4dDa4yA1cy2Etp1iGrttvNqReQAUZ4CswCo3CSvlq91sFMCOFvAQXUdWst2CgGGTWEI4CQRnHotWAzPv4cg2cYOPGhOc6sCqgokdUhuq3Y8B18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qYfM3O/c; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a7241b2fe79so366340466b.1
-        for <linux-pwm@vger.kernel.org>; Tue, 25 Jun 2024 07:50:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719327012; x=1719931812; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jWqxo3mchFiP1MenyU8LEUTbrCGM0e3VDgqj6/yFdZw=;
-        b=qYfM3O/cTetPun2wmSIA5WBfU5YLvzRKVPMT5RZezoyhxu09FO6WTaC1JPSrVY/89k
-         /c/iKot5HxBCtuoIT3djg6QuDV+4qDcFuUwVOlQcsNqZpgY/7oCMCMmOsDKrSOYsugj/
-         cUtOM9O21jY7HeEzeoq44hj0eCGDwnXa5moL/VwvBmXs71aC0lGpz5UDnsiub/6Yol52
-         eddjPhLGU1vjTOMMQGLjijo6tC0xXyaHLpDuJIUm53mKatOD0GXx924mSMvybTPWG98v
-         gRFkcTIF/aK13mtBhIuMf9YySXZUkMZyliDvy3atp+KN5TC/XIY5Sat4k/7zcWntDVf5
-         Eryg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719327012; x=1719931812;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jWqxo3mchFiP1MenyU8LEUTbrCGM0e3VDgqj6/yFdZw=;
-        b=mM0/PTNQvxj/SlhxOJ36krismcrV1PirVxh33g4pYW6jdujhu7ibQAJUP/yq1odnxe
-         u9PugVFoavNMdmSky77NaNHNu4EgXkAF/CkfkeZHBZUU0k6RoNSI7syefz3kBDii7pOA
-         zhobiJ9Tk53tf/Cc+/2vH74ov8eOrswqJa7FWF+cKsalHQ9Ge8Xnqsyq5MZQy33F/dPE
-         U+DH7jPgCrtp1/c3tnMaLBuqWfrkbzq+X4frYZryo3iACkRb7WyTfVePTBzEpt1y1nXR
-         fi23lONiNHiFkpAVwaU6OiW6MZbBTFlvzWtQjHKsHNjjF8H4Dxt7pCmZ2e6nxDxfqF+F
-         xuQw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7JkqWxz2Ir4Xupun4SKGy3aaRLOVhmsA5++q9KXWQ9wcKnKB/Cu5ojKmsDL6EV/UgLmvWQRX9Fz3/ZakpUswcR/EyuwVFDfnC
-X-Gm-Message-State: AOJu0Yy6FrFa9OGc5m7TVgxjRZBHhEqpbKEMGuk5ho1gUQeTuc7P/XrO
-	8uFFSa7/bu9cXW6UlYTBbJV44/2Jq46UsEKdi/dFw4rwtqhz0awfgE+3RGuOGjc=
-X-Google-Smtp-Source: AGHT+IEwnwBd/P6t2ddwhrLb8bvz6kYx+1hLSg0mmfREs2jeseCHj5DRkS89BkTTTiW651tXR4AAuQ==
-X-Received: by 2002:a17:906:70d6:b0:a6f:e8ee:9e3c with SMTP id a640c23a62f3a-a7242c39107mr509610266b.22.1719327012436;
-        Tue, 25 Jun 2024 07:50:12 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:aab0:97bd:4d50:ddf1])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7120187c22sm373994466b.110.2024.06.25.07.50.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 07:50:12 -0700 (PDT)
-Date: Tue, 25 Jun 2024 16:50:10 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Kelvin Zhang <kelvin.zhang@amlogic.com>
-Cc: Junyi Zhao <junyi.zhao@amlogic.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, 
-	Kelvin Zhang via B4 Relay <devnull+kelvin.zhang.amlogic.com@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v8 1/2] pwm: meson: Add support for Amlogic S4 PWM
-Message-ID: <coriionza2db7jqz23bcig3zwufktgdbfakixcrlllxrqkomcj@zle67mswm346>
-References: <20240613-s4-pwm-v8-0-b5bd0a768282@amlogic.com>
- <20240613-s4-pwm-v8-1-b5bd0a768282@amlogic.com>
- <1jfrtgj0so.fsf@starbuckisacylon.baylibre.com>
- <tnwdnwiruoty5yd42bmkupgg6hjxib5lblhqcyouoyx5y3zvnq@2d7cnrei24m4>
- <1jbk44htqr.fsf@starbuckisacylon.baylibre.com>
- <948ba34a-1e05-45c4-8ba7-66c72bdb6fa5@amlogic.com>
- <6bzysc3jwugo3epcxsef7uupk536prsc3phlf3m64n3jjwpxus@2uigg44uotuh>
- <9b457c30-6093-437b-b9af-44c3a768020f@amlogic.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rx89qVRU7DaJMdhzioxKerS3Wil5hHQTO+D+beAX7vzjFbNuD26ixI60neMpbgUtwZ90Xmk1tjyOVMKR8sx39ZKqHRRts6mIpnHda+tqdybFZtQOxXMWaWOWTw2H2sp1kThWna2szv8yLpjMYS1Q++Vt479esCU7jtvaOQoYSQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kgDzJGYh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8676DC32781;
+	Tue, 25 Jun 2024 16:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719332542;
+	bh=akzr2Tcmr8hvoXCrldFTf3vxOcOP1rC3e1w/56iBGCw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kgDzJGYhBaKcP6lEFjj4Tas4lTM4uNMNjxCcJSfTfs7MGHnesN9d6V0ysjucd8ApJ
+	 oGsYgeiLYVUa2J5vjhepCeohL/GNZjw7XkXjWHaYssoEdRIhI2n7uODbb8iBMwyEqX
+	 4S57r7ji7tpfhAJcbpsLJY34qc4ZNUCjdN9MVMn1g88vg6Tk+pRScjFqmoIxmueID9
+	 r4VRe56YSCVllR1HdOYWbROv/2LVmyhvDR7V4/VcP66FC1vZTZ9Q+9cNvSMdrdbsdn
+	 wrR0GQFivlLs3qkoVNHJ9F0yODORAVaO98ansY5enl0Y2V3pUPM9LcJMkkXNN4/SKr
+	 qq+kKY/VEPUYw==
+Date: Tue, 25 Jun 2024 17:22:18 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, jdelvare@suse.com,
+	linux@roeck-us.net, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, ukleinek@kernel.org,
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
+Message-ID: <20240625-oppressor-scaling-5713b4719a89@spud>
+References: <20240528225638.1211676-1-chris.packham@alliedtelesis.co.nz>
+ <20240528225638.1211676-2-chris.packham@alliedtelesis.co.nz>
+ <20240529-faucet-vending-3e330f8eb67b@wendy>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="be37srvqrjutjyvd"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="R3N5fZNUTuh/Iu6H"
 Content-Disposition: inline
-In-Reply-To: <9b457c30-6093-437b-b9af-44c3a768020f@amlogic.com>
+In-Reply-To: <20240529-faucet-vending-3e330f8eb67b@wendy>
 
 
---be37srvqrjutjyvd
-Content-Type: text/plain; charset=iso-8859-1
+--R3N5fZNUTuh/Iu6H
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Kelvin,
+Uwe,
 
-On Tue, Jun 25, 2024 at 05:33:22PM +0800, Kelvin Zhang wrote:
-> On 2024/6/17 22:11, Uwe Kleine-K=F6nig wrote:
-> > On Mon, Jun 17, 2024 at 04:44:13PM +0800, Junyi Zhao wrote:
-> > > > > So yes, please use dev_err_probe() also to handle
-> > > > > devm_add_action_or_reset().
-> > > > My point here is also that devm_add_action_or_reset() can only fail=
- on
-> > > > memory allocation, like (devm_)kzalloc. Looking around the kernel, =
-we
-> > > > tend to not add messages for that and just return the error code,
-> > > > presumably because those same 'out of memory' messages would prolif=
-erate
-> > > > everywhere.
-> > > Hi Uwe, I didnt get the clear point.
-> > > So, if we need "return ret" directly? or keep "dev_err_probe()" to pr=
-int?
-> > Please keep the dev_err_probe(). There is a problem with that approach
-> > (as Jerome pointed out), but that is about to be addressed in driver
-> > core code.
+On Wed, May 29, 2024 at 08:58:41AM +0100, Conor Dooley wrote:
+> On Wed, May 29, 2024 at 10:56:36AM +1200, Chris Packham wrote:
+> > Add fan child nodes that allow describing the connections for the
+> > ADT7475 to the fans it controls. This also allows setting some
+> > initial values for the pwm duty cycle and frequency.
+> >=20
+> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > ---
+> >=20
+> > Notes:
+> >     I realise there is still some discussion about how to express the
+> >     frequency and duty cycle. I have a personal preference for using he=
+rtz
+> >     for the frequency and 0-255 for the duty cycle but if the consensus=
+ is
+> >     to express these things some other way I'm fine with doing some mat=
+h.
+>=20
+> Probably worth carrying a link to it here:
+> https://lore.kernel.org/all/4de798f3-069e-4028-a5b5-5e6a639277e3@alliedte=
+lesis.co.nz/
+>=20
+> I asked Uwe to take a look & it's on his todo list.
 
-FTR, this is done in
-https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/comm=
-it/?h=3Ddriver-core-next&id=3D2f3cfd2f4b7cf3026fe6b9b2a5320cc18f4c184e
+This is an attempt to bump this up on your todo list a bit!
 
-> For this patchset, is there anything that needs improvement?
+Thanks,
+Conor.
 
-It's on my (not particularily short) todo list to review this patch. I'm
-aware there are several people waiting for that one. I intend to work on
-this one later this week.
+> >    =20
+> >     Changes in v4:
+> >     - 0 is not a valid frequency value
+> >     Changes in v3:
+> >     - Use the pwm provider/consumer bindings
+> >     Changes in v2:
+> >     - Document 0 as a valid value (leaves hardware as-is)
+> >=20
+> >  .../devicetree/bindings/hwmon/adt7475.yaml    | 25 ++++++++++++++++++-
+> >  1 file changed, 24 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Doc=
+umentation/devicetree/bindings/hwmon/adt7475.yaml
+> > index 051c976ab711..bfef4c803bf7 100644
+> > --- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> > +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+> > @@ -51,6 +51,15 @@ properties:
+> >        enum: [0, 1]
+> >        default: 1
+> > =20
+> > +  "#pwm-cells":
+> > +    const: 4
+> > +    description: |
+> > +      Number of cells in a PWM specifier.
+> > +      - 0: The pwm channel
+> > +      - 1: The pwm frequency in hertz - 11, 14, 22, 29, 35, 44, 58, 88=
+, 22500
+> > +      - 2: PWM flags 0 or PWM_POLARITY_INVERTED
+> > +      - 3: The default pwm duty cycle - 0-255
+> > +
+> >  patternProperties:
+> >    "^adi,bypass-attenuator-in[0-4]$":
+> >      description: |
+> > @@ -81,6 +90,10 @@ patternProperties:
+> >        - smbalert#
+> >        - gpio
+> > =20
+> > +  "^fan-[0-9]+$":
+> > +    $ref: fan-common.yaml#
+> > +    unevaluatedProperties: false
+> > +
+> >  required:
+> >    - compatible
+> >    - reg
+> > @@ -89,11 +102,12 @@ additionalProperties: false
+> > =20
+> >  examples:
+> >    - |
+> > +    #include <dt-bindings/pwm/pwm.h>
+> >      i2c {
+> >        #address-cells =3D <1>;
+> >        #size-cells =3D <0>;
+> > =20
+> > -      hwmon@2e {
+> > +      pwm: hwmon@2e {
+> >          compatible =3D "adi,adt7476";
+> >          reg =3D <0x2e>;
+> >          adi,bypass-attenuator-in0 =3D <1>;
+> > @@ -101,5 +115,14 @@ examples:
+> >          adi,pwm-active-state =3D <1 0 1>;
+> >          adi,pin10-function =3D "smbalert#";
+> >          adi,pin14-function =3D "tach4";
+> > +        #pwm-cells =3D <4>;
+> > +
+> > +        fan-0 {
+> > +          pwms =3D <&pwm 0 22500 PWM_POLARITY_INVERTED 255>;
+> > +        };
+> > +
+> > +        fan-1 {
+> > +          pwms =3D <&pwm 2 22500 PWM_POLARITY_INVERTED 255>;
+> > +        };
+> >        };
+> >      };
+> > --=20
+> > 2.45.1
+> >=20
 
-Best regards
-Uwe
 
---be37srvqrjutjyvd
+
+--R3N5fZNUTuh/Iu6H
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ62R8ACgkQj4D7WH0S
-/k5S+Qf/SNvnQBfAaVksxx8eIEYT2jY0QUITMY+QWmZsieNi/glkSoIaiy+VWXyg
-Pzfhjo4Z+GwYudqoI7gq/mzllhM1I4H2O4poOEw6YXjZxjdAbq2FfBdljtlOzHIn
-W1uQnE6r0UYEPpfMQH4GIZ1VrxhluhAzz7dPcn7Ja71Tqj34pCP7Z2zFI6vXlJHa
-AHEx28lK05wnnWMYqBElrZsEe0Jqj0KfrL9Dc87NNzvA/MAdqqe9MUIt6/8V59D1
-VRpFgVhCGXve2l+TtRvB5gpkRAJ4DaBV9WNxoph8+9Tis+IB5efxsCFXrDR/ym5f
-Xxco7/DhoBatXM8sLd8EYHf73vxhmQ==
-=87Qb
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZnruugAKCRB4tDGHoIJi
+0kFRAQCZIrHaisIz4R0cjPl4ENnCGHKMXBh7j/mC8rYE/KB85wD/RTIZIcVxwnp3
+vJJ40zdLuhvyve24lm/u4nEf90mDYwc=
+=rn/M
 -----END PGP SIGNATURE-----
 
---be37srvqrjutjyvd--
+--R3N5fZNUTuh/Iu6H--
 
