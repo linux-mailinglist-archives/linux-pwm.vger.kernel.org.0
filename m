@@ -1,130 +1,140 @@
-Return-Path: <linux-pwm+bounces-2625-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2626-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E8C491A0F5
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 09:56:25 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 494C591A140
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 10:17:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 293DA282D93
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 07:56:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C1AEDB21B3B
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 08:17:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6C61763F8;
-	Thu, 27 Jun 2024 07:56:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F8547602D;
+	Thu, 27 Jun 2024 08:17:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fzE44u76"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="q+HYppaU"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD9573509
-	for <linux-pwm@vger.kernel.org>; Thu, 27 Jun 2024 07:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583601CAB3
+	for <linux-pwm@vger.kernel.org>; Thu, 27 Jun 2024 08:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719474970; cv=none; b=QGRgILDRVphYFEeLXL9nd/a29ICThlG5LmE3lrIuswvYYPbx7Ufh6ILsJ96U0McmD21klExo6ek3fCagn2kWWQIbzVz9/BOTiyHNrBq7FR+nlko0ut2GUwt+U+cAAs0Vm/dWbwrNnb2LdsY0OrHHzz1X2FERUqnK6PPQp8EvJpU=
+	t=1719476221; cv=none; b=OcaxDlJd8Y6yMOOGdodbr++APjPugwDeC6EK84ogqSYZHNsflGVARJ++I76JK7y4TaQ4qS01QbpX5k/zq+1Vf87FePJxGAG7om4DyBB3Lm3cohXn4G3aXuhiF26Pyah4Pbg+SQu24pfCZHOdFcXekyhA+pb/0j6w42miI8Anylg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719474970; c=relaxed/simple;
-	bh=A346QiIXS00xNk3ASUpVgw5Wdt0aDVi+VgTddZx6WCg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=O57MU4V0nD21K7uSe6mlVI4x9TLljk2Cj097oVMkR1ryi+fys3/4mBB4KbfQTdBy3cLlkVX/DxmyLd7NHegbEyI5nrccKaYriF5ouybNFSwqcoLCF15ZE9pDiFQxD/IA4r1dsp83xxsvUcW0vNb0g/ULNL7MUU7Fxpbr9BfffJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fzE44u76; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-36742cc9c12so322259f8f.2
-        for <linux-pwm@vger.kernel.org>; Thu, 27 Jun 2024 00:56:09 -0700 (PDT)
+	s=arc-20240116; t=1719476221; c=relaxed/simple;
+	bh=KEm0f3yMC1lTsMQP2mEqK6dYKNV66vYfR0qO4oI6gVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DH5QItyVo50z4nIcigv75RmUsknzGq0V1/4vZYnQyCIJreHxYnsVnv/T8c4q9GPSifrXiLStL/zzxr2ni++FeMnvQ7tVk2vN4DFB1TFIGMj5FQjqGC0jG9fr7JHexKjNYwfqR4ovGXvM0wI7Q+0mhUwY+ZdPWsqsZbq7IhAxqEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=q+HYppaU; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ec52fbb50aso63515271fa.3
+        for <linux-pwm@vger.kernel.org>; Thu, 27 Jun 2024 01:16:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719474968; x=1720079768; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rhb8tshU4UTCoUKCJ0uFCvR9IBtcpzLcynFRgzyN5xo=;
-        b=fzE44u76GlrBgDuxaRzaIZVWX/cykXkLr3j53FsgA5Gr/uG30jZUg30B7X8rk54Qk8
-         zTr9vTvYOm8FtyhGDRHkHiG6WfY//OEtayST8JopWwNk8a/ZIcDX3X0mZyzVO6uhh2UJ
-         1AHPkq8G/6k/OWMgY4LuZQV17Fva309L3uNtArTKehaRvgpjRvJWzKDSuB4sKuOIBLjB
-         Q06DbgNFaeWeMcbuk3qNFhmmn43UXv3JLZ4spn03nNOJ2Ja75RAUtXggnoDAXxazv0eQ
-         PqynOOXfVFKm0P6cbifa1VknehLMCp/84LTwSgUVUsE62G5XIBrQX/u+z4b0xyFQIJmy
-         FZXw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719476217; x=1720081017; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KEm0f3yMC1lTsMQP2mEqK6dYKNV66vYfR0qO4oI6gVE=;
+        b=q+HYppaUKsH1WN7Za/nSVU7nH68GK1bwopSsO08cM3caaJllp/EAZErpIYevAYtH8F
+         AoEUctTlEucWxIaBLUa7bWIlLcw3KPXJXq/02xkh3cSbPHy7v5ctGVz0uHIv3J0zq2/c
+         B2hHibpcaB93quLFzlwBkxDNmzCSrd8VhxHW+JownhVpiumKq+XugW/fEd3xeO8NEo+4
+         7AhWIygGvEEgfYCrnn2RsqzuFe/Q/WzFzMarxWzuYI+noSDVvtFrMXwdFOFsMstwrZuK
+         ecSceisTl6oHUArgA+lCfDTKTPEwxJZnG1FojZGT+Ltsjn01oeQisDUOVcZ8vnESHiAP
+         zDCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719474968; x=1720079768;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rhb8tshU4UTCoUKCJ0uFCvR9IBtcpzLcynFRgzyN5xo=;
-        b=acbTMaBjEn51pheUpFOdSSNfN1N/wBuhTIHL9ztUqQB+vEJdN9FQSUrnJY3nTbzunr
-         ZolSDH9hZCzfVsbGBOx9OLP605YL6cG35nZvuRTOwkks2LaZMa0UC5tAc1Ftog5vR7k4
-         I3FqaNJU2xfgWiL2BD0pbvrnfebqnH4m2X+sBC2LVaYaAykJJH2hBMW+Ln50iBSPHYBi
-         QxUegPN476hhb8m7WJhdnNtm6K43NI03k/d/h2jgH6PORrz4qqWOihffQpquZ+USYn+h
-         IlqQd6DsW5cuvwrPLMbECPBOxZP5eyVxppM7Bs+RC16NSbuqAd2t3k+0YLCl2TnUnxHZ
-         M6UQ==
-X-Gm-Message-State: AOJu0Yzees2UGVlL9Fuhf1QiWwy24w7fG7cWEJKLP2tHxNGJJOSLBQGv
-	M7HWctLwkeuI55NiLxT7UEw24DRxqv472pLbtEfv+k9G5mP4DmwuVnYAzPZrnws=
-X-Google-Smtp-Source: AGHT+IHGlNZJk2OgRWQ8EYg2rsbzX9mhgpwNdd4jOMVlOFKRnwWm3q8FMrXLPKl2frkadi+gta/3Gw==
-X-Received: by 2002:a05:6000:24f:b0:367:43ce:9c92 with SMTP id ffacd0b85a97d-36743ce9f2emr425332f8f.20.1719474967330;
-        Thu, 27 Jun 2024 00:56:07 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3674357c089sm1024019f8f.7.2024.06.27.00.56.06
+        d=1e100.net; s=20230601; t=1719476217; x=1720081017;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KEm0f3yMC1lTsMQP2mEqK6dYKNV66vYfR0qO4oI6gVE=;
+        b=XQkxcTs3RML7vb6lAMVSDWAasz02gx6GsYM1KDgeJS2vQp9fXOG2ICqNlMFhlvLTOC
+         U7MvuNFSCXPFiCiq15NUDtXMJZFa6KaimwdUIA1aMO5evZVVUqwkXFAErw3504sgBkYU
+         gt7oITh51m0Elgvl+OtwbyoxK2XCAdElDqLvHFRSArpYKrxPzHwkWWVrauviR3H1/FMA
+         iFQTH1rfRRq9AOdrQtr1eqGP72d1tTgFcHXXO4f+SIVtMMr/Zm1/MM+i02obXXnIEiD6
+         OmN3O0ecnDIFjULtYYZLLZS8lIikbE5497SXr7wLQPZzjNCi5lQdmj91PynJHNGtMnlp
+         AYaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2zVgZ/lzmzAqR6u5kwLr07E4KjAUa6hbmw4Rvsem1gjvgvvoH7QrKmeOoJt/NESd6rFhG2vpnL8hDfxrRGw6QSYcJHRD7B61Y
+X-Gm-Message-State: AOJu0YwMMzuac3/ChJpQuE0rwFHYLA1S1bPlLdo5o0EmQqJ+Ksbdna7p
+	fDNeYbcSbLemRosjpREOrGyUW75o3qfVSTZ2EDqgMDBgKx2GE9/ZrLnCvmEiy5A=
+X-Google-Smtp-Source: AGHT+IG/lOE4K/dxtmNROMYE5tpBQ4PfaZZjQoprWIxtfxc9uup5H2fD6gZ79Ng0DJruLnzyAi0a+w==
+X-Received: by 2002:a2e:9d88:0:b0:2e9:768a:12b0 with SMTP id 38308e7fff4ca-2ec5b36c1bamr95025771fa.50.1719476213391;
+        Thu, 27 Jun 2024 01:16:53 -0700 (PDT)
+Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42564bc5176sm14283215e9.45.2024.06.27.01.16.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jun 2024 00:56:06 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Kelvin Zhang <kelvin.zhang@amlogic.com>
-Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Junyi Zhao <junyi.zhao@amlogic.com>, 
- George Stark <gnstark@salutedevices.com>
-In-Reply-To: <20240613-s4-pwm-v8-0-b5bd0a768282@amlogic.com>
+        Thu, 27 Jun 2024 01:16:52 -0700 (PDT)
+Date: Thu, 27 Jun 2024 10:16:51 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: kelvin.zhang@amlogic.com
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Junyi Zhao <junyi.zhao@amlogic.com>
+Subject: Re: [PATCH v8 1/2] pwm: meson: Add support for Amlogic S4 PWM
+Message-ID: <ayemo4ysl5qotj4pfmclxdtshoqgybl4xqmrmkmpbd3vsugf47@pgsezohr4vel>
 References: <20240613-s4-pwm-v8-0-b5bd0a768282@amlogic.com>
-Subject: Re: (subset) [PATCH v8 0/2] Add support for Amlogic S4 PWM
-Message-Id: <171947496641.3255632.14959368201943139429.b4-ty@linaro.org>
-Date: Thu, 27 Jun 2024 09:56:06 +0200
+ <20240613-s4-pwm-v8-1-b5bd0a768282@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rsedrqskqx5olerr"
+Content-Disposition: inline
+In-Reply-To: <20240613-s4-pwm-v8-1-b5bd0a768282@amlogic.com>
 
-Hi,
 
-On Thu, 13 Jun 2024 19:46:34 +0800, Kelvin Zhang wrote:
-> Add support for Amlogic S4 PWM, including the driver and DTS.
-> 
-> 
+--rsedrqskqx5olerr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.11/arm64-dt)
+Hello,
 
-[2/2] arm64: dts: amlogic: Add Amlogic S4 PWM
-      https://git.kernel.org/amlogic/c/e227c1e14dfe06a54844014c076d11e9cdef87e4
+On Thu, Jun 13, 2024 at 07:46:35PM +0800, Kelvin Zhang via B4 Relay wrote:
+> From: Junyi Zhao <junyi.zhao@amlogic.com>
+>=20
+> Add support for Amlogic S4 PWM.
+>=20
+> Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
+> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
 
-These changes has been applied on the intermediate git tree [1].
+Applied this patch with George Stark's Reviewed-by: to
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+=2E
 
-The v6.11/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-for inclusion in their intermediate git branches in order to be sent to Linus during
-the next merge window, or sooner if it's a set of fixes.
+You signed your patch using gpg, that's fine. However I failed to find
+your key to verify that signature. I suggest you to upload your key to
+https://keys.openpgp.org/ (note you have to register your email
+addresses there to make this useful) and read through
+https://korg.docs.kernel.org/pgpkeys.html#submitting-keys-to-the-keyring
+=2E
 
-In the cases of fixes, those will be merged in the current release candidate
-kernel and as soon they appear on the Linux master branch they will be
-backported to the previous Stable and Long-Stable kernels [2].
+Best regards
+Uwe
 
-The intermediate git branches are merged daily in the linux-next tree [3],
-people are encouraged testing these pre-release kernels and report issues on the
-relevant mailing-lists.
+--rsedrqskqx5olerr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If problems are discovered on those changes, please submit a signed-off-by revert
-patch followed by a corrective changeset.
+-----BEGIN PGP SIGNATURE-----
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ9H/AACgkQj4D7WH0S
+/k4TGwf/Zq7fInk7zIeHl44mqXSTwaWdnCftKpYsQYNhI57+Pr2qmGnMZfWo9Z0g
+qTQZtc9veyYI7od541wZ6cSYR878sstNK+GZzJe4lYeZpbIhYHaTjk2DzjCh5tjy
+NqgBMCvSSK++TZpBTRPbsYgJwemdFsWlB1UdIAEHXe3wkKhy9Kt6nmw78TqnqwDo
+EELQDqhCzF7qZSYXi5SlpvHQyTuKzPRDosvgoM5HDcyUcnTDQ7qsryPnVBV3OJKc
+P9TwMOPaBCckz4MnXpHAw8SfRKYQ/INNLRd9Cng5l2npcVy7FBZ7ZHvfN40xZtlf
+wXZAead9xYAyIMZ5LyDLhS0MjgXbxA==
+=wNYU
+-----END PGP SIGNATURE-----
 
--- 
-Neil
-
+--rsedrqskqx5olerr--
 
