@@ -1,127 +1,143 @@
-Return-Path: <linux-pwm+bounces-2620-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2621-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3A78919A9B
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 00:26:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 847E2919EE5
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 07:50:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE5031C21CCF
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Jun 2024 22:25:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ED8AEB228AF
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 05:50:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78FEA16EB40;
-	Wed, 26 Jun 2024 22:25:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F1791CAB9;
+	Thu, 27 Jun 2024 05:50:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JEcAI9tZ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jb52/yUF"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5869953364
-	for <linux-pwm@vger.kernel.org>; Wed, 26 Jun 2024 22:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7341CD3F
+	for <linux-pwm@vger.kernel.org>; Thu, 27 Jun 2024 05:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719440758; cv=none; b=Oi0iepktEE8MIhRha6IOPJ2atR1+0ONXrMPTeetBYM68BfZU5uMzZQF3EIIUpwRUgEQ+CP42sWQMja3Q+mbeFWhllSjy+S/2+90hyZ4wd5ivPD6Hcd+Am/y1cS6s98jgFCrjsKkR1svCHCA05lvSwtrJObTptRnLHG5QeLjtkAc=
+	t=1719467411; cv=none; b=fUgaLIMWoBH2kiAaZjuz0KcWTq738QqhDNRlitYZnVkkSmLNzwN0buXqoaKYcEfuFJ2UOhVHu/RJ6zzI4rIODUWBui5gP13nfM7yRQetf9hY8dBtvQ4GljVAdUC20YIw4bdY5+fUzZ6lHbBKS4MSZhdsJ56aQ3BZ7pMVxBJVOec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719440758; c=relaxed/simple;
-	bh=J1XVyEOCM9D/QPBBfY3apTjdu9KutPPVWZNpdioMHM8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BVH2Mvz89w0sqGHznDtY+VaZ3I8hQZTU/QVPXyIxBMLO3IuAe2u4PieI1a2pbKgjoLNZ7Rj/5/xM2pdDcnFwp6ARXyYGWzmjkL5QXnTxXVCbms5s5Mz7W9i9BZQptLht1I0iR2U4UUn5ajgZI74DFdn2e2yseyQx6bU8HK2P24c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JEcAI9tZ; arc=none smtp.client-ip=209.85.208.45
+	s=arc-20240116; t=1719467411; c=relaxed/simple;
+	bh=5cLIaOfl9qDGf8YuSFVMk0VlEeiMpoxE23Zx+DRPQ7I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t6RtSCi1fRfuVElZDNd5N+H55f9+kpwJdzykzOwmJ7PMdPOP9ZOBSsqWT0tzhIuOqyIF/vZthE7lP3GEAgZ41d89fQ7wluGw+F2ZbMYUVWDe5Cyo1rvBrLylo1X/EAWXqjhwXPS+/6rSMXpxMEtmKMssehlnM5TTGNhUE3ARAVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jb52/yUF; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-57d07673185so1017029a12.1
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Jun 2024 15:25:53 -0700 (PDT)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57cf8880f95so1223118a12.3
+        for <linux-pwm@vger.kernel.org>; Wed, 26 Jun 2024 22:50:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719440752; x=1720045552; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wYuZf5Z2NC7R7+vrIBjbDYF0Tmp3wM8zb645VDrs6O8=;
-        b=JEcAI9tZZiqI07FkYpJCZ/esLahSuMStFFmXIfFuf01ecbZCF/UKm5pK2L/Y+LGf+K
-         ZvU+dRdPot+0PbePUMhMvBTDNGIf0soAan8/jfUk/oQ6gPWToWbusUsB49Pdf3CoGffE
-         plDwdlGNPjET5whCikZaC2eGuLGyD9+rKTVbzoHG/Lmu7OyhrxKEjBDd0GPIVfi+Su/9
-         ugeWM5ppcwQMPdoe0v3ZnGwprievlziq2DZ+WJIwswlLU3L8zec7P64eII6mYUZN7vn7
-         HUTPGs+4MS7LLUZEw68dX3k3dJCQUNvJFsYT5Cz8Xtww2jOWSxqqgKLw6/40yZNxbD5o
-         rHmg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719467406; x=1720072206; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VvKgNFKOYO5t0cqQNQZcn4eu1S8+gS3tvS6/ghdOTQs=;
+        b=jb52/yUFkqvlHb/mCyWqIZbxvwR3Pbbb4j87AzWj2RbWYYn3BPIuAj/r8tLYEdr/Fx
+         lgAr7uTw+T+DnTLPIyot2WUDdVUFMEVq6CbuJ2v23+L1fD1yRwGaVrjrvXiMgmzTZ+uL
+         3zkjVtLH5nDT3oUTvAzMyKgqkCPxnFVM4lW6jp2aWcJqudG2nDeThMZq4QYyXvpf1Qi9
+         py4Bxf7werp4FKNnzltQRxsngcxp4EndBYbtIaMp84asuDsDneKQkIG6rV0sHm3UKMvu
+         suVNiy5w8WFI8HzfYhUDiiWlQROZdxDphXW82Vt6RA36URgucF6D6p3N3AOo7Qd3Gnb5
+         ytEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719440752; x=1720045552;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wYuZf5Z2NC7R7+vrIBjbDYF0Tmp3wM8zb645VDrs6O8=;
-        b=ccLp2JXIhWayZEeLR1JaPDJgR2kX++9SQJaY3yfoLDVDSVJFcexMFH8CvgGyCKf0Vg
-         IKlRPg7yWG2GKtDb6u45s0uBSMeb9lDoTqCEtgRg6N9y23OW40to0zBjHbknw5vy4gxS
-         n1kPDWZ21HfAksSZCWYIOKmkkC7nLE5JCQpHCPg0L6VADh18Wghlq+9swECh2llkbNAJ
-         2G36Tq3YcqrQ3n5+DCSszd4tF+3sDO0yMSYNNQB5c+x/TIqepVDoePe//EY4P1g0zpzZ
-         naDYNxNRkFH5QWwSTJh43boowBijD2iG+XEaQCKyfIqYy7eRmqTfx5n6Scxtv2iraH44
-         Gu3A==
-X-Gm-Message-State: AOJu0Yyib07EYUx67joeBFnfgdgpapTi/R9fPe1WjMCPbEFgu15Km6ji
-	G3TlVpFoHefRA85GNDUzdjGnCCJxgP+nEtlMfRXhSnT6IY6VuK3VhWKKSGaevuKI8QIrdxuMD/y
-	2EzQ=
-X-Google-Smtp-Source: AGHT+IFDFIUXuttI89JCJAxYOKHIzuPHed7dJzLiqWIDFtr4bi+BRmmffNQgoYuW8J0icg4hF93HVw==
-X-Received: by 2002:a50:f607:0:b0:57d:49b:ee06 with SMTP id 4fb4d7f45d1cf-57d4a281f1emr8563587a12.16.1719440752315;
-        Wed, 26 Jun 2024 15:25:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719467406; x=1720072206;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VvKgNFKOYO5t0cqQNQZcn4eu1S8+gS3tvS6/ghdOTQs=;
+        b=UFylmgTDF5LomFMTUWENjIoaoTGOgzjd/ND20iCGw76FqoyCiUNLilmlA2VK9h2j2m
+         ZkmJ5uwC6sSYD7e6JcqT9uI3RroH9NuJFgvJUFZrW37pehdacwPWABnzb9H+Y00+yyLs
+         WcACa1H7m88pqIrIwtzsLXtpwY5M9xo778nW5EhLyXVpKVdW9FKOFoZHGA0akUmXchq1
+         98WTaB5bTNZJiLdQRccklDJPgGmortvrUQrrxcDXB8gjmGW0wA+AWmxDQnNYdmjcgDWW
+         wboo1S9h4TVtpqeYJpwyMfNGRpZ8LhCNf3pJIe7Vv6lX79Jpmr2V1jFWAlrxWDkEOd4U
+         32gA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKeAGYH2J7XVC2GkdLqqnZtotqufAaLZYpFOVpXHt4vTbxCmXxks47sGPgQFqtk+usPoYde0KdzvywBeHgGLhnwTmQBBO3w32i
+X-Gm-Message-State: AOJu0Yx7kfjNEpRclRs56h7EvDBn4l3ZROj0XAhGgn7clxelXkP3SQkY
+	J/ek3MF+Bat77uB1JNDyUj52bqV2rOeVXOwVstYOQwQy5G657zGDCaTO7MJE28s=
+X-Google-Smtp-Source: AGHT+IFMSEsF4qzDE6K+kVs2+z+J0EYFtmK9uPOnYvzPhDJB52Fq0giOaVIUIMLWuhsIXvT9ZWwMpw==
+X-Received: by 2002:a17:906:d001:b0:a6f:bd27:3f33 with SMTP id a640c23a62f3a-a7245bf675cmr866996866b.45.1719467405915;
+        Wed, 26 Jun 2024 22:50:05 -0700 (PDT)
 Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-584d2c591edsm48140a12.79.2024.06.26.15.25.51
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a729d6fdd7esm25926066b.6.2024.06.26.22.50.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 15:25:52 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Subject: [PATCH] pwm: Register debugfs operations after the pwm class
-Date: Thu, 27 Jun 2024 00:25:27 +0200
-Message-ID: <20240626222529.2901200-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.43.0
+        Wed, 26 Jun 2024 22:50:05 -0700 (PDT)
+Date: Thu, 27 Jun 2024 07:50:03 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>
+Cc: kelvin.zhang@amlogic.com, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Junyi Zhao <junyi.zhao@amlogic.com>, 
+	George Stark <gnstark@salutedevices.com>
+Subject: Re: [PATCH v8 2/2] arm64: dts: amlogic: Add Amlogic S4 PWM
+Message-ID: <a5ucz5r4eb2z5uzi4zaunpqhym5b6l37qszozhv4igcuduatnp@lzzk4tvil3yd>
+References: <20240613-s4-pwm-v8-0-b5bd0a768282@amlogic.com>
+ <20240613-s4-pwm-v8-2-b5bd0a768282@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1215; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=J1XVyEOCM9D/QPBBfY3apTjdu9KutPPVWZNpdioMHM8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmfJVZ0GhHnt91PBslpzXWOCjsdKIdVZSfV0rv0 oc5c0LkKhiJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZnyVWQAKCRCPgPtYfRL+ TtR1B/9V7Ok/25HqurXpo2aKuXrTmdLKwVxMzgJW8vSp7AzyFH3hJKrUYlaBgaIJJZoSlOeapgo tn8SDJ1+gRzZiOcGhMlGtXnpTmuo88UWNbu8MAn1djrSXunlA28BbUHasV04rLlZHZ7phiOh4QW LIVSK0/kUZilLA/DH2igcZ0sasQwzkAVwtWgrk3R7VHm3D1WjyIv2KANWgR6s0Ig3lEP6UX5rJY /V7z8oi/ibDZVbL+lJyaiqx/6vHwheGDSm5Kif5S72jbOeyzLwZ4JyRRVtNL5NWwrVFI6BkZ3Wx KSvmdgJHJhuYt9cNHftydXJFjSiQCHBF6teTttum339DyaON
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="l7tgoew2az5t2art"
+Content-Disposition: inline
+In-Reply-To: <20240613-s4-pwm-v8-2-b5bd0a768282@amlogic.com>
 
-While the debugfs operations don't technically depend on an initialized
-class, they loop over the idr that only can get entries when the class
-is properly initialized.
 
-This also fixes the ugly (but harmless) corner case that the debugfs
-file stays around after the pwm class failed to initialize.
+--l7tgoew2az5t2art
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-While at it, add an appropriate error message when class initialization
-fails.
+Hello,
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
- drivers/pwm/core.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+On Thu, Jun 13, 2024 at 07:46:36PM +0800, Kelvin Zhang via B4 Relay wrote:
+> From: Junyi Zhao <junyi.zhao@amlogic.com>
+>=20
+> Add device nodes for PWM_AB, PWM_CD, PWM_EF, PWM_GH and PWM_IJ
+> along with GPIO PIN configs of each channel.
+>=20
+> Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
+> Reviewed-by: George Stark <gnstark@salutedevices.com>
+> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-s4.dtsi | 199 ++++++++++++++++++++++++=
+++++++
+>  1 file changed, 199 insertions(+)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 5c1d20985148..84ca846120a2 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -1705,9 +1705,17 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
- 
- static int __init pwm_init(void)
- {
-+	int ret;
-+
-+	ret = class_register(&pwm_class);
-+	if (ret) {
-+		pr_err("Failed to initialize PWM class (%pe)\n", ERR_PTR(ret));
-+		return ret;
-+	}
-+
- 	if (IS_ENABLED(CONFIG_DEBUG_FS))
- 		debugfs_create_file("pwm", 0444, NULL, NULL, &pwm_debugfs_fops);
- 
--	return class_register(&pwm_class);
-+	return 0;
- }
- subsys_initcall(pwm_init);
+What is the merge plan for this patch? Technically it's independent from
+driver support (i.e. patch #1 in this series). The obvious options are:
 
-base-commit: 888564d8d708d1c91900ed3a11761f46297fd748
--- 
-2.43.0
+ - I pick it up together with patch #1 via pwm
+ - You pick it up via arm-soc
 
+Can I please get an Ack iff you prefer the first option?
+
+Best regards
+Uwe
+
+--l7tgoew2az5t2art
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ8/YgACgkQj4D7WH0S
+/k5UDgf/QOPPBNuaLKBJUagn4uUEJPYgeJIRiaOj6rMdtmXP5tdK3Oyn+urWA4qr
+um+zStcFoW4Kyvxkp1PUt5cvrIodzeDq+8gxBd/20sX5iL/S0+uBTqk4cv85XOuj
+C8YjB5/WKc8v2f5UtRCrfqG0HwC5l+2YDB8i/vyuI17FMWm3RWhzM1mOt/wYzzC7
+qW4WnovcWkL3v82ltEFHF4ZCnUVILjVTRKk1obmDPaA2C+0LbkxBqaI+RMDnLAjb
+IVPOBIGHWtNJhKG0jiiF8g+UPpzs5HoHpgu6zQURpiN6EPlJ8uPe2MCMHpkxeNVk
+JlHGFQvD1W1pejEQFomdPTbasA1qiA==
+=DZ5d
+-----END PGP SIGNATURE-----
+
+--l7tgoew2az5t2art--
 
