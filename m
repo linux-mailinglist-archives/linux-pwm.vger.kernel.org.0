@@ -1,158 +1,161 @@
-Return-Path: <linux-pwm+bounces-2623-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2624-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1622919F95
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 08:52:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B59F91A0D9
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 09:52:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 979D1285D78
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 06:52:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD4BD282819
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 07:52:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D577E3D579;
-	Thu, 27 Jun 2024 06:52:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CFE074040;
+	Thu, 27 Jun 2024 07:52:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Yy/nypQh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="USSkShYw"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E283D0D5
-	for <linux-pwm@vger.kernel.org>; Thu, 27 Jun 2024 06:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB0C6E61B
+	for <linux-pwm@vger.kernel.org>; Thu, 27 Jun 2024 07:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719471167; cv=none; b=jUL1bRaie6reMYaQ33SMqMgXKkc7oGzvZqJcb8c7vmhvkfjXLKnmTjowTR4AS7o53XxpOTMZrtstk93HcB73Hguv9rGwRH6lgAt8ik/wQMp6Toqpbh1Ci1tnB704HuCfPz7X/lLIMAWSL7SVxe0Hu9x+hQm5PRtICLB3NCbEaSc=
+	t=1719474738; cv=none; b=pMOXGGqO56lxRV8bh+S/db5MY0gtxXcvFqI7KFTlvUVsayMBeaKUYwa1HiSxzcDi2t+HwlGZP/IbuA8qEOlGxI8zc8mmvGIfysB6gvcqKf66htIQg8pFvceZbs/mDkm2UlFA89kD3IkmbmcBXzqgA3fWz8blBiWq6DYpDXAzAtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719471167; c=relaxed/simple;
-	bh=iADA5e2bx1YDluIZn5+VR399Udq6ZrVy4Mf32NSBuaw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fWY8mPOJ10MFJYowmRpL94TBZWhrZAtbC9TlLGvtjU4aHKA53RlfECYKEn6J+q0SQ+KYSs18SKZwqt33WJiqEbbCvpKNY8g2zFeyzII3JsnU2soDJ2qMVMgyt8QltC9cEU/XzO/sC9iuey7qA6okvAspJvlzzkhGXT+8S63wyOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Yy/nypQh; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57d1782679fso1361207a12.0
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Jun 2024 23:52:45 -0700 (PDT)
+	s=arc-20240116; t=1719474738; c=relaxed/simple;
+	bh=CPYR1hPVE1flFMf8KEd5p3bzirmrED+VzmsLSEVpaMg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZNY4K2e2CgYa0nWjGglsCpyljsOLZ402S4w2T8aJo8HGV9OV4pEI8lmvF/k75Xlqf7yEby3mIEFbvo5toUlnLuB771sALVrUjd6makl6Sb/PGUCGZ0PoMo/7AaVtX/CVJQMxb0y3JkRRufgmSKcwnEZqcyN6Khx61Y2khmIiarM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=USSkShYw; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-424ad991c1cso19066045e9.1
+        for <linux-pwm@vger.kernel.org>; Thu, 27 Jun 2024 00:52:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719471164; x=1720075964; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ms/cUmH/O2t0XouINBi6+IS/85WouIg6lT0ZWpSqnic=;
-        b=Yy/nypQhvz1VPQUSLY94w/EQHPYrQ0W6/RR4gmaP68edql7BORXko4TsSF29HQrefQ
-         6geVrrOyYe9FtON5694gWRKP781NxvuChSSr698QWO1eCv5pmh3APGCFqTJ2g9uN2i/7
-         oe7SgSsSyKXV9G47bi99GEFWtUD+7aflF3hooVUH3IIsuVNW3MYA1qk5mD5SNFEQ9qKN
-         SXMqcHVMcsb3b92wEZ/gW4bDOp9Spmwk0OSSrUkwHWg3VnVj2G5sOpUM1q963+RVuIwA
-         wk+XOtsytLKDCtU4ezjOvZyKtMljotxWLVxDojeb1oLXGt+kulsyJ9OLUyZxo9VqqOlp
-         w7Og==
+        d=linaro.org; s=google; t=1719474735; x=1720079535; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XBCMffxn4LAJXAIWptmBWF5BGGjLSTVC76JfyXsytmc=;
+        b=USSkShYwiuTuFhaE2eHRdkyItogmBk6sPyMx6ejYzbQKh8pFsfJAVFbHZe4i5XwRgB
+         +9JaSySgCkvkWVZzhJiDF93VeKK/dYzJ7dI2oh+/9G/mc4+f2BjnWOj28d3bnIfURx+v
+         nENDdldtKbM73d6pKrJ0SGn64dwqR8hHNwc/KtnleHzZzOYCzo5ynE9XWB97BdDe0qWp
+         rTkOlknopHqppa6yZjwE6SdlknHY7jWWnWcuS0NwdCXOjRG4yCRtZ9OGVEj16bIEn1Jw
+         s1Wx9yCWC15imDgTHM/iLwDsHETJ7QZ/CKZDktTkEN6GXysdZy8WhWp60lPjAJHzVLY/
+         6qUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719471164; x=1720075964;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ms/cUmH/O2t0XouINBi6+IS/85WouIg6lT0ZWpSqnic=;
-        b=ErFz90VzkEl79PWGpsUlumUlS00GPDKP49ORZvIh8SoB3L86OwpJpjOcbzZKdb7hXt
-         bLfnQbIPPAEfDBz2MTr3CoWuKXj+KW5ufUtHourdbAmjcWZY4YBebdD4y9xcxGiHH5sg
-         UtcBGhP/78Jx9qDR8mdPgMiGpd/IQDY/hjQQiw40wG/SkJBygwZ+uT6Vd43XmQFIW1is
-         +HihIJrAD9E7BCEVESw4YZLNFCh5mFjuAUZCS08W5RG7iBcG9Oyf1RqgBZw/+PJzlNct
-         0CdEajBP5ENbL4Ere4v1xKquSth8Z859iojVTzZuRNTwJyn0QmE/VApKOwzgUwxfjja9
-         o9XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHyH5iMRyBnCbfc/WzLLLPVN8bCoMskv+JWOn57O2rr35JP/trIqDkjdgHVtBz9ml3n1+SsCEwtqnYpHYyDV3WFL7QUIgysw/W
-X-Gm-Message-State: AOJu0Yz7EUtYUGWYZoUUDAYKizAOecv7gDXVwM2WWVcBP6fImjaccwLX
-	AIhn9UixuPEWgn6S5Rr+dw8s7yvZzQfLDTJFchi+Iqlu93ofvWzRf6asnpkjNtw=
-X-Google-Smtp-Source: AGHT+IF9xaEP7tkBb+5aSd2QHhMnb9VhzKEwv9ybERwT5f3jp+rE3EP81yWIer37PPUEjIEN1hYQTA==
-X-Received: by 2002:a50:8e5c:0:b0:57d:3691:baf9 with SMTP id 4fb4d7f45d1cf-57d4bd8151bmr8522557a12.22.1719471163898;
-        Wed, 26 Jun 2024 23:52:43 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-584d17b0292sm466844a12.50.2024.06.26.23.52.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 23:52:43 -0700 (PDT)
-Date: Thu, 27 Jun 2024 08:52:41 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com, 
-	Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>, 
-	Chris Morgan <macromorgan@hotmail.com>, Stefan Wahren <wahrenst@gmx.net>, linux-gpio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	Nicola Di Lieto <nicola.dilieto@gmail.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Dhruva Gole <d-gole@ti.com>, Vincent Whitchurch <vincent.whitchurch@axis.com>, 
-	Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH v7 0/2] pwm: Add GPIO PWM driver
-Message-ID: <oytpr6q3rmyj4n6ufktl5okg7ugusks5csgkg3zvs32b4jqh24@lmfovdemzi4y>
-References: <20240604-pwm-gpio-v7-0-6b67cf60db92@linaro.org>
+        d=1e100.net; s=20230601; t=1719474735; x=1720079535;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XBCMffxn4LAJXAIWptmBWF5BGGjLSTVC76JfyXsytmc=;
+        b=j8KJAq0wCYNizslUTvHzqj7if0I/1z868ronfGoRtlaHu/LpEzczBB5PwbXM+5EgY3
+         u1XaJv8wTbDEXadyB9m9HNYvFPOQqkDW/g84TQzWwhVmXbdLZyWjprH3KIk4no2xr5mj
+         kIMN/vv4qe2GPQ//f3gQDItjgwGjaeZDoTKlD4OWaIPSAnn80bpyZViQxOZ0hGKRbKnY
+         Nq2HK6LXpqeOee8+tfc8EZfK3TqoT9TV8dw8cZSSNMmwVfR1tMFS7T3Z5khaByHv9hXm
+         jOQne+A0melA0L37puvv2rxpoOLgh9fdcYrd0bEo8i/oBba3nJTyu55ym5bjb6cTa9e1
+         E8Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmu4uFrqYJ0TFP+F9cDi4o2CRywdSSoWhTZ2pTTOwYw8M47FIC6Ds9mnUy/n5jpR2xEI65UVAYSk10gVYtx6jR5Hz4BO0ZSXKc
+X-Gm-Message-State: AOJu0Yw7iXQLnm8oFcTENOjkezN1zA7/paYKtSmAqaaVqy8yNRxPhZuG
+	hrUqiuFC+NwlV5jrDJX9aSilUjTSCeB7AHbCapGGpbu3uUSmB4ZCKNn9BUtOyh8=
+X-Google-Smtp-Source: AGHT+IEjUL+j70G/hi3yuY2Bt9Gi9CL/4CNNycH9kWTRZ1nc6f9jw44NE1DzWx8PIaKqbU2R2xAN0Q==
+X-Received: by 2002:a05:600c:681:b0:424:a578:fcc with SMTP id 5b1f17b1804b1-424a5781102mr48497425e9.7.1719474734436;
+        Thu, 27 Jun 2024 00:52:14 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:feeb:faed:66fa:9e6a? ([2a01:e0a:982:cbb0:feeb:faed:66fa:9e6a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-424c8266a37sm52129085e9.19.2024.06.27.00.52.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Jun 2024 00:52:13 -0700 (PDT)
+Message-ID: <02a58f83-2340-4004-9412-692967639908@linaro.org>
+Date: Thu, 27 Jun 2024 09:52:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pp6rs6j5l4nvlrpn"
-Content-Disposition: inline
-In-Reply-To: <20240604-pwm-gpio-v7-0-6b67cf60db92@linaro.org>
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v8 2/2] arm64: dts: amlogic: Add Amlogic S4 PWM
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>
+Cc: kelvin.zhang@amlogic.com,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ Junyi Zhao <junyi.zhao@amlogic.com>, George Stark <gnstark@salutedevices.com>
+References: <20240613-s4-pwm-v8-0-b5bd0a768282@amlogic.com>
+ <20240613-s4-pwm-v8-2-b5bd0a768282@amlogic.com>
+ <a5ucz5r4eb2z5uzi4zaunpqhym5b6l37qszozhv4igcuduatnp@lzzk4tvil3yd>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <a5ucz5r4eb2z5uzi4zaunpqhym5b6l37qszozhv4igcuduatnp@lzzk4tvil3yd>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Hi Uwe,
 
---pp6rs6j5l4nvlrpn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 27/06/2024 07:50, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Thu, Jun 13, 2024 at 07:46:36PM +0800, Kelvin Zhang via B4 Relay wrote:
+>> From: Junyi Zhao <junyi.zhao@amlogic.com>
+>>
+>> Add device nodes for PWM_AB, PWM_CD, PWM_EF, PWM_GH and PWM_IJ
+>> along with GPIO PIN configs of each channel.
+>>
+>> Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
+>> Reviewed-by: George Stark <gnstark@salutedevices.com>
+>> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+>> ---
+>>   arch/arm64/boot/dts/amlogic/meson-s4.dtsi | 199 ++++++++++++++++++++++++++++++
+>>   1 file changed, 199 insertions(+)
+> 
+> What is the merge plan for this patch? Technically it's independent from
+> driver support (i.e. patch #1 in this series). The obvious options are:
+> 
+>   - I pick it up together with patch #1 via pwm
+>   - You pick it up via arm-soc
+> 
+> Can I please get an Ack iff you prefer the first option?
 
-Hello,
+I can take but I was waiting for the driver part to be merged.
 
-On Tue, Jun 04, 2024 at 11:00:39PM +0200, Linus Walleij wrote:
-> Add a software PWM which toggles a GPIO from a high-resolution timer.
->=20
-> Recent discussions in the Raspberry Pi community revealt that a lot
-> of users still use MMIO userspace tools for GPIO access. One argument
-> for this approach is the lack of a GPIO PWM kernel driver. So this
-> series tries to fill this gap.
->=20
-> This continues the work of Vincent Whitchurch [1], which is easier
-> to read and more consequent by rejecting sleeping GPIOs than Nicola's
-> approach [2]. It further takes over where Stefan Wahren left off.
->=20
-> I have not looked into the interrupt storm problem mentioned in [3]
-> but instead focused on some real-life tests:
->=20
-> The IXP4xx NSLU2 has a speaker connected directly to a GPIO, and I
-> wanted to use this patch to provide a proper beeper for the machine
-> and not have to rely on custom hacks.
->=20
-> I added a DTS patch like this:
->=20
-> gpio_pwm: pwm {
->         #pwm-cells =3D <3>;
->         compatible =3D "pwm-gpio";
->         gpios =3D <&gpio0 4 GPIO_ACTIVE_HIGH>;
-> };
->=20
-> beeper {
->         compatible =3D "pwm-beeper";
->         pwms =3D <&gpio_pwm 0 1 0>;
->         beeper-hz =3D <1000>;
-> };
+Anyway, I'll take, something less on the list!
 
-Applied both patches to=20
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
+Neil
+> 
+> Best regards
+> Uwe
 
-Thanks
-Uwe
-
---pp6rs6j5l4nvlrpn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ9DDEACgkQj4D7WH0S
-/k4KZAgAtNWJdmwlEMhZOwvZcVKNbX7ry4oBUx913GFfdeUdWjjNByvUYeayfXke
-iLuijeUhvcsPDtjB5+aKPZG2rUtaO5IUWiiYwMbpNktkzlvgHUzxLpP094FLT6Rg
-JEWi7DmTuY6ko64jcu442XDdK3twsEoyUBefxZG4NNw74SIzaB/Q6w+UsKU2Ft0u
-uUfBo8C/Pj5n6wOFooygWhGT+ApTVxpwlsL7T5UG3OsMLGWAvt86V8wpMLC1UIrB
-Wzky3wLhfIszSNJMt643Cr1NApEYyu76AgtYiS81SZHoSWKKPZ8WhRM0w1fo4dmV
-aE1My1jHPBKKIGFtYqfpxrLYv82i/w==
-=0Ius
------END PGP SIGNATURE-----
-
---pp6rs6j5l4nvlrpn--
 
