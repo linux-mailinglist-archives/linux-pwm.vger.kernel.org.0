@@ -1,144 +1,104 @@
-Return-Path: <linux-pwm+bounces-2629-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2630-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49CA791A31B
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 11:54:48 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 866DE91B070
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 22:32:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 058DF283EB1
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 09:54:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB6DCB21FFC
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jun 2024 20:32:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 794AA13C820;
-	Thu, 27 Jun 2024 09:54:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9594819E7FF;
+	Thu, 27 Jun 2024 20:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="C+wJ9AO2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="3atbTrhj"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC1113C3C2;
-	Thu, 27 Jun 2024 09:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDD914D6EB
+	for <linux-pwm@vger.kernel.org>; Thu, 27 Jun 2024 20:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719482068; cv=none; b=jqaUBk9yLgFpYORy2oOoQuIXbC7YFa+Jh6A/QpNamjT+2pYHyPG9wAbla66MxeGoBA9nwPqhdpNder0kUj2ywpGyCotO6NaI5S0/+OrC1EK4u5xPJXeb6orYDe6MxZdMJi5abPy1GGep5FG/hAdYDKq/9TGXJh5e85mCZqkj35g=
+	t=1719520315; cv=none; b=JDCKkFQ71NEqZ6HLUABKqibUe7JJ1AjwlFx7+zoxxKeW/zUIbVA4eneqrFondiezq0L78CXvhrUaqAqOwN8xvxhkchELc56zd2oCpnV++UJ7cPjf8T/B86wVN3k/Klh6RV7jFjTy8br0fJ8rXpZLQXXHYHDsVzPKpq7L703IwCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719482068; c=relaxed/simple;
-	bh=ds5qgnPrb2bN+kFBGjS/sc0PxsC5dx7vPl8UC1KzFmk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IWNSt5zXMNG3+F1DqmW9hSkNYsq9nmPQCYdYkBL/WLcqOSBhuA3xpUd+NlOpfvggKv8Tj6gpgfvdI3ILjKWGHEXrQbdukyUS3iXgPMSnQpdlHXOzHDtrCalHW+V1V3YdB8m8RIUVmvGqEprb+gu+CZxycP4TVozM3yZmp9xhBtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=C+wJ9AO2; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1719482049; x=1720086849; i=wahrenst@gmx.net;
-	bh=qe5FDI+md3Pge9LtwMQZf8FokKyoNNSJDrbmKAhp1tY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=C+wJ9AO2f72MXxZw6oTrZHYZPBDf1f5r9nmClivCv6w5OeIXYnCzm/zsQiv2ZOuU
-	 GJFkpvn8xoF+Y0ywOsg4egdgjNAvcfq5Ui0t8NHfAkFUX0VcyRuQzHvMa2g3Ko63C
-	 TlLAkY0GI7xtnAj4IaQtTO4Xjc4Fm0Bk5qtd3NN/UX4TIHZIYa7ivYSMHG0nQeA4K
-	 BbqfUWrreBk81h7LwjzOlBvmOQ1bfF4qqdZRly0iHMFMqbXqM49IH1fF7vk3CF1kB
-	 EM2mBs6/B6kA6df2gLL1x0ur0TPpM0nyOsq5lW7HqjsXKoe34DBiWIDU5BdpLofo3
-	 x9tD+LUrjYIxMg0Lfg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.127] ([37.4.248.43]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N4hvR-1sUuWs0y3z-00yzZ8; Thu, 27
- Jun 2024 11:54:09 +0200
-Message-ID: <964072fc-1aa9-4d4e-955f-8777e2692346@gmx.net>
-Date: Thu, 27 Jun 2024 11:54:05 +0200
+	s=arc-20240116; t=1719520315; c=relaxed/simple;
+	bh=iEIWZCVjVQKtRn7rDnf2p/Vd/JafHSjNKie6u2wtoZo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gHNBoN1JT8XyUoM9Bo02BGdNyPtOj1qEnJkijYUuJi+ALQ35eMypYV0CEnWqOwtx7EKsNwO23W+JmdOLSR3Dl2/vNGcdRJ5TFLBwDqisLpopgW9EJzTddlc1XpM4OX0T5y+EtGdE4l24L93/HI7BorbkHjfPOe/CkjI2kyk/wOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=3atbTrhj; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a725a918edaso497055566b.3
+        for <linux-pwm@vger.kernel.org>; Thu, 27 Jun 2024 13:31:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719520310; x=1720125110; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OtHzH8KmjoZADW96XJ+dwPlkxs/BXUiYhFeA3cwmdJ4=;
+        b=3atbTrhj8YtM6L8UdBRCC5FGt6zYk8SZx36NpGcCBwnQIbXl0Z6wm1IlhsUwcfYn8o
+         HgosIJ5YUIJX0EIeZ7odiqjjeOmwQ5yZSVUjTztvx3QNNmMeAIoHu0qb5AoG9nmmrx3r
+         iMLPf8dYNWVu3KRAuLWi3scn7sJc5LPIFPcgG7k/rRnbi8sBQc/YCKxScG0DI/WIN09W
+         LJe/cBL7SBdlZpiMXctniXLWvfvyfa9DaFLFa2A9mU4vk2tOzxmkJhIq3M1dtc/XWlB+
+         doEd4uFaij/Ig1L5VjGiZZms9SMPuCc9rEpXpF96zsVOTRTmInIIieKC/Q/5xXZ/jLJM
+         dCqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719520310; x=1720125110;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OtHzH8KmjoZADW96XJ+dwPlkxs/BXUiYhFeA3cwmdJ4=;
+        b=MH3Ya/YNOpGZb5QT1vZoeTFr7Ynv+7F4p/MmXAp4JzR7lk4gy4mPhG5hoJEL5NhUJJ
+         a9XuiN6NN3OAxUTP4U1f9q0CYlHxqzI+NAWgFoQjsNan4QeBaeWQr6wUMY0X9II6mZZK
+         iouE/YufNDL3gFEyfwjr5mJ1zbJC7qTtaGBf9kNxCT6ugRJieO7KELPMN1LDq2cSKL/g
+         pC2p/Ue5sMlkjQdBItBigE6cu6FplqbJrp2Gpi8CPcrTX6ZoyA8qnUJ5xTjsf7F23kAh
+         SSPHOTcU75Th4gbxrse05pR0NZUm1PoiI0lSkTVhhIMy2ze0QtumXX9vCqf/SYvguyhL
+         eKqg==
+X-Gm-Message-State: AOJu0YxSGpzCx1E0q8arJwqHmuMvoYXRLMlsLyMNZa30q2yki1qGvva9
+	S1R3KMJ9MVDqMlPLLWQyaHA8Bwamt8OJqhlZfJvTX6HVlt6uKcDnIDperj/ddgYniwb0feLl8TH
+	uGYk=
+X-Google-Smtp-Source: AGHT+IEgSWxalBm+E/6vODPNxU8OYjsXJnfTSjQYc2TPttm9+dUvQ0DiYTSeLS1cO67n18JWlDdlkw==
+X-Received: by 2002:a17:906:a847:b0:a6f:6721:b065 with SMTP id a640c23a62f3a-a7245bb25e6mr1081879666b.32.1719520309660;
+        Thu, 27 Jun 2024 13:31:49 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf628d6sm9530866b.60.2024.06.27.13.31.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 13:31:49 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Subject: [PATCH 0/3] pwm: Use guards instead of explicity mutex_lock + mutex_unlock
+Date: Thu, 27 Jun 2024 22:31:18 +0200
+Message-ID: <cover.1719520143.git.u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/2] pwm: Add GPIO PWM driver
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com,
- Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>,
- Chris Morgan <macromorgan@hotmail.com>, linux-gpio@vger.kernel.org,
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- Nicola Di Lieto <nicola.dilieto@gmail.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Dhruva Gole <d-gole@ti.com>, Vincent Whitchurch
- <vincent.whitchurch@axis.com>, Andy Shevchenko <andy@kernel.org>
-References: <20240604-pwm-gpio-v7-0-6b67cf60db92@linaro.org>
- <oytpr6q3rmyj4n6ufktl5okg7ugusks5csgkg3zvs32b4jqh24@lmfovdemzi4y>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <oytpr6q3rmyj4n6ufktl5okg7ugusks5csgkg3zvs32b4jqh24@lmfovdemzi4y>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GsRmZwGIvZ7DCjXsgmLZHA3JY0bbTTqncYRKHdX4LgqHeSr7LsJ
- ksd46B0pIsXtEbHZb2D+DmW4k+jwXSWG6Fd5oy8OoILvnGnlu1yJwGI+arSglVl1yTUDJLW
- uErzWFWchsnWPMj0r2VLFA5sFS4Kdr1uFh/MnyXPqMLPDftmamY9BBcrPSESqt2M8KEcA2R
- /VZgsSYw4Z/6vocebkVsQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:26aPyoLUc1o=;dvfuFXGeATA9mtObEvreSzN9uJB
- +fXEQOUoMRn44xph2lQst/l9biO/VDikJ2dZrO4dQR/n50URJnSlIrsvxvnoTp6g/YGCoaAZh
- nRMiNWKM+znz5NRlx99T6oZD/Hs/FfLQTkTZP44GRxra0pBFiT+4Phy+bRmzhrjdhwagLRELy
- Jrv0QehrVTktMXj11Bm5olrzY935xxWmZWY2Lq4gyV1ab5rrN3ryB7knxwLopS6GLmSIT908y
- nsod2YE5IJNxG3CIhOyHmju6vZT8EuIZ3KqdWQESpSPutKxc0l4rR91YBQ8KVLhWFyiohCB86
- KNh128w+87xdVhJp/OIJwo36UANpwABb2hshX0EudXtHkiBqJ1rYGt9aTMwXXFY/FixmXPBKD
- Kq37IdMEt18YxtMiA8m22U6GG1lwHzaH/BIEBwfs24t9tZDn68cVKxK8ygUOscog2yAt87Txd
- LBBIaRLO7GVchvy7enMe/TR6JPIRw7db8diUoUL8m4vukqrvLkvaeu9S66JwehVZjy8caSH9A
- vOwP/cXY7GX2c/GQoubJCLGj+bIYShDRIpa1Wu9hJQk/uxLGrdE9hEitbTMHqqnp2DCmdlqqk
- /RK7rp/fKNctzGFMiuQ989u+bfr0xeSKPZmmD3YrOHfweDgPDmUQ2ChfEu6j2vOkXcWJsOMLU
- U8yZE7mqHowjGYTSS4547aQ9NvNJuUYXmSTWw1m2tME0BASjzlm/8ZcMUYEfkJ51g+xgkPx3a
- JhgJEFydFu3t14ngb09Gtz0JKYihjxCZL8FDqK22N/WeOIh4mmKBoOC7M5TsoQxv3XA3zjhUH
- OpebLZZ0RCNDaLQgf3tVuD2eKkXeEE8D6KM71sVzeG1mI=
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=651; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=iEIWZCVjVQKtRn7rDnf2p/Vd/JafHSjNKie6u2wtoZo=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmfcwhqXNJevGMn3Ia542qYrX2yxiX73yWYo6rH RKCsUsvdxSJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZn3MIQAKCRCPgPtYfRL+ To5bB/9mJgGe49x/t6u39UyoBOJLwoDKj8k+woxFKRNMFmuc3wUSfb/nhsrnxggvAt30Ijo80AR rrpQI695SNsMzSE4x87pBBhslxUrDZyaWbQzPNMJdxsi8BDFoni4CBIbuzeT3jZ6G2yxVzLISpK zgs4eICbiubqM5sXuFRGVmSevTjCoIzEgOlFiEWJIU5M1sYlzhluIoN9BGoTQH1kRFcfBQUd9+P PgzCUXuICj7sjYPl48EgkV03naEhDhPSdDr8VJcMNCdwD2+Dp+UMWIFypDOLwNhoAsfNJLGjJwQ a8y5+k1gVxH+qTk7j3CgCQ21cpKf9PpGUvg1ZrQLdm8O/piZ
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-Am 27.06.24 um 08:52 schrieb Uwe Kleine-K=C3=B6nig:
-> Hello,
->
-> On Tue, Jun 04, 2024 at 11:00:39PM +0200, Linus Walleij wrote:
->> Add a software PWM which toggles a GPIO from a high-resolution timer.
->>
->> Recent discussions in the Raspberry Pi community revealt that a lot
->> of users still use MMIO userspace tools for GPIO access. One argument
->> for this approach is the lack of a GPIO PWM kernel driver. So this
->> series tries to fill this gap.
->>
->> This continues the work of Vincent Whitchurch [1], which is easier
->> to read and more consequent by rejecting sleeping GPIOs than Nicola's
->> approach [2]. It further takes over where Stefan Wahren left off.
->>
->> I have not looked into the interrupt storm problem mentioned in [3]
->> but instead focused on some real-life tests:
->>
->> The IXP4xx NSLU2 has a speaker connected directly to a GPIO, and I
->> wanted to use this patch to provide a proper beeper for the machine
->> and not have to rely on custom hacks.
->>
->> I added a DTS patch like this:
->>
->> gpio_pwm: pwm {
->>          #pwm-cells =3D <3>;
->>          compatible =3D "pwm-gpio";
->>          gpios =3D <&gpio0 4 GPIO_ACTIVE_HIGH>;
->> };
->>
->> beeper {
->>          compatible =3D "pwm-beeper";
->>          pwms =3D <&gpio_pwm 0 1 0>;
->>          beeper-hz =3D <1000>;
->> };
-> Applied both patches to
-> https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/f=
-or-next
-\o/
+Hello,
 
-Thanks
->
-> Thanks
-> Uwe
+I consider this a nice cleanup. It makes the code more compact and it's less
+prone to error, because you cannot forget an unlock in an error path.
+
+Best regards
+Uwe
+
+Uwe Kleine-König (3):
+  pwm: Use guards for pwm_lock instead of explicity mutex_lock + mutex_unlock
+  pwm: Use guards for export->lock instead of explicity mutex_lock + mutex_unlock
+  pwm: Use guards for pwm_lookup_lock instead of explicity mutex_lock + mutex_unlock
+
+ drivers/pwm/core.c | 128 +++++++++++++++++----------------------------
+ 1 file changed, 48 insertions(+), 80 deletions(-)
+
+base-commit: 888564d8d708d1c91900ed3a11761f46297fd748
+-- 
+2.43.0
 
 
