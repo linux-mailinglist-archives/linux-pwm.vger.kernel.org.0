@@ -1,50 +1,50 @@
-Return-Path: <linux-pwm+bounces-2647-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2645-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2534991E684
-	for <lists+linux-pwm@lfdr.de>; Mon,  1 Jul 2024 19:20:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CB8191E683
+	for <lists+linux-pwm@lfdr.de>; Mon,  1 Jul 2024 19:20:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D02241F22216
-	for <lists+linux-pwm@lfdr.de>; Mon,  1 Jul 2024 17:20:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B0C42B2769D
+	for <lists+linux-pwm@lfdr.de>; Mon,  1 Jul 2024 17:20:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30FF316EB7E;
-	Mon,  1 Jul 2024 17:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DE4316E88C;
+	Mon,  1 Jul 2024 17:20:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="OjvS0KAd"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="RoC65GH0"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5906416EB44;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7405116EB58;
 	Mon,  1 Jul 2024 17:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719854437; cv=none; b=I331dvAar8Vpvq8HibB/0RsrlHN+R++fP2ed18G05l0b3KxkG/7/nDqLINi6S77CgBJ/CrARloR38MPRVTMSs5ih5EDF6hIfxrxoy0FSs75tm+AGOglNYvixH/3QhxrHoZzc6H5VYBdLjb2h92awvtXgPcbQmqeNAZ6n+aISSNA=
+	t=1719854436; cv=none; b=eorh5Hguy2XolMcJ/QWpMv1I07Sri35JyFXpBCIWR4Is1kpCkhlTatAbbPmiLOQuCxOHGQw7aKGNiY8oxoemiTQcfdi5clJQMTAOjqH8dmbKeGxYg2bJktKxSeNniqTJqhQMxqiYHEviDtRLEqT7cfwXx3RsbnR1H7t4IyD1TRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719854437; c=relaxed/simple;
-	bh=oMGxMij320FnXrlNJ1UPrPbMoD+rcMcr+C/mf55fP1U=;
+	s=arc-20240116; t=1719854436; c=relaxed/simple;
+	bh=usMRf1Vd4J/AEmlm3b5/kfR2hMHjbigPx3s9/T+GJGk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U9bKDmI+9S3GGX2NJyMkTDCe48MKITITBh6Ov/NqZ9gwE0e+c4Wu+BwHO8ZzZEFS0zI25co21sEux2pkombEvdpukRcvEbUBJTCti22zmLtZVxJu6uwl6VHkbhN0vvN1430qdpsvc6H4mqX7eBEuh0Aih3gDrfDrKvxlAQRyTjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=OjvS0KAd; arc=none smtp.client-ip=45.89.224.132
+	 MIME-Version:Content-Type; b=kCiZFTVvpgVBBHKEZIIZf4FYTqnCHV/mzsOVfMT3PFQv4aeevdV3GlVWkM9e5XegExbXb4MAdo1Q2Z57PUZFbVPuJhcmme3Ug2Syb/oG6xmHZlgLxZ6hgIEiyxLHEvh74nCCAxZmkEwo3LeI/kI8ydAqDrmlqgs0l4D+JAiyX2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=RoC65GH0; arc=none smtp.client-ip=45.89.224.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id B9F1C12000C;
+	by mx1.sberdevices.ru (Postfix) with ESMTP id E198612000E;
 	Mon,  1 Jul 2024 20:20:24 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru B9F1C12000C
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru E198612000E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
 	s=mail; t=1719854424;
-	bh=MVrEHcT3w02APU44tB6WifIiHTjFlslKUbhO+5L4/wA=;
+	bh=diVNqID/MGkMdTyDKdINrkVVaAY/As8G0XNme6aprQw=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=OjvS0KAdRHucfTWybqd5mlVuBALqzpYPe5zNyxAuCiMEjGtU47J9QMAF4+hZrUc+4
-	 +PJseiFkhtdIMU8JXJZvJdTZ5FepXZNdNwiLLvC+DNHmO+9/txib3lmrTtk8ZRh69B
-	 3jd1/GMUVIUm4PaUGMyc/Y1X8ZAvXwqJWFXo6Uvs0Fl+LbnZyohw9eQXPpfbFuWpDD
-	 zicYQ7KOgAEi9GoNAAB0R7oTgu0IJldVaGp4RJ5zeHNyZFf7kwnzq4jPnxgfj8mNkP
-	 fv09zpI59Dg8BnPvlT8sHKBYSUJIPeFEJssYw5qHkPDqVDZr3OIbn3EhBCvm+21Vyc
-	 1lVz3H3zhyWiA==
+	b=RoC65GH0KfW8FsXubZ0oUOM1HsJ4hojKje3R5FRMIrcuNRRq1WtaMy9GYt6UWTWWA
+	 XYCH7gKTZqmiLS/VvbauxvDGugZBZ8fvykbPkSOpnSUSEZo9SPTeM/rwEEj4fkDa8P
+	 RH5iKOsQY/AiTYjTEUeVnsVP9Sd8C2fUcaB9d/nuSW/QVqUN1rZgTQTbtSov4AbwMc
+	 6TFkyHB4AgaRGTiFFICFJntMSPIbW3OKM5LdaHuxE8vH0m8iMS0eFwjUwv6955FL93
+	 oU0k2FLxFSoEHUKBGiCNu3MimSir5WZ4whdze/lHXq/YWlTLFrGNpozFxwhqy4uWgT
+	 hNe1sQg116YuA==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
@@ -53,7 +53,7 @@ Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.1
 Received: from work.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 1 Jul 2024 20:20:23 +0300
+ 15.2.1118.40; Mon, 1 Jul 2024 20:20:24 +0300
 From: George Stark <gnstark@salutedevices.com>
 To: <ukleinek@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
 	<conor+dt@kernel.org>, <neil.armstrong@linaro.org>, <khilman@baylibre.com>,
@@ -62,10 +62,10 @@ To: <ukleinek@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
 CC: <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>, George Stark
-	<gnstark@salutedevices.com>, Dmitry Rokosov <ddrokosov@salutedevices.com>
-Subject: [PATCH v2 1/3] dt-bindings: pwm: amlogic: Add new bindings for meson A1 PWM
-Date: Mon, 1 Jul 2024 20:20:14 +0300
-Message-ID: <20240701172016.523402-2-gnstark@salutedevices.com>
+	<gnstark@salutedevices.com>
+Subject: [PATCH v2 2/3] dt-bindings: pwm: amlogic: Add optional power-domains
+Date: Mon, 1 Jul 2024 20:20:15 +0300
+Message-ID: <20240701172016.523402-3-gnstark@salutedevices.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240701172016.523402-1-gnstark@salutedevices.com>
 References: <20240701172016.523402-1-gnstark@salutedevices.com>
@@ -96,29 +96,28 @@ X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/01 15:14:00 #25789329
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-The chip has 3 dual-channel PWM modules PWM_AB, PWM_CD, PWM_EF.
+On newer SoCs, the PWM can require a power-domain to operate so add it
+as optional.
 
 Signed-off-by: George Stark <gnstark@salutedevices.com>
-Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
 ---
- Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-index 1d71d4f8f328..da22cb3ed878 100644
+index da22cb3ed878..c814d88748dd 100644
 --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
 +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-@@ -37,6 +37,10 @@ properties:
-       - enum:
-           - amlogic,meson8-pwm-v2
-           - amlogic,meson-s4-pwm
-+      - items:
-+          - enum:
-+              - amlogic,meson-a1-pwm
-+          - const: amlogic,meson-s4-pwm
-       - items:
-           - enum:
-               - amlogic,meson8b-pwm-v2
+@@ -60,6 +60,9 @@ properties:
+     minItems: 1
+     maxItems: 2
+ 
++  power-domains:
++    maxItems: 1
++
+   "#pwm-cells":
+     const: 3
+ 
 -- 
 2.25.1
 
