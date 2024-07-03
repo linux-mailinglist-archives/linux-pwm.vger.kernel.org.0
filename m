@@ -1,39 +1,39 @@
-Return-Path: <linux-pwm+bounces-2691-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2692-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C907292604A
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 14:27:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E0AE92605E
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 14:32:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D353FB23EEE
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:19:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CBAE8B286F9
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:22:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3058173348;
-	Wed,  3 Jul 2024 12:19:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22CC6176240;
+	Wed,  3 Jul 2024 12:22:05 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7922F16EC15;
-	Wed,  3 Jul 2024 12:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DE7D13DBB1;
+	Wed,  3 Jul 2024 12:22:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720009195; cv=none; b=V6Fj9JQ/+kLJxq8Nec7W/UziWQnsu3MTsi+ns/Z1jCkPNxUQb0Rt+9FlxJAoKyCdYaVbmuoc2dasYAwrZAMn5BWbO2o/E9lR14e9DohIIh4lyMqZmcSaG8Z+0UxlpUqVZGiHDZ/ORFclMrbU4WXpR3JaE3k3hvwOlMGWDj7QRxk=
+	t=1720009325; cv=none; b=EG+Gi+IoIyozaWJ5B5nly9+/38IqvrdU/5/HEpzzcZNoLnGGpmjxCkyLAmGtX4stpnvze6i4Rj3lO5XWB3D/eqURriOStY+h/Pb386fQf89ORJ/lzEPhJFQ6Vj5zwB4cvOZeJ2GqfHWXZaWPnGCMuuYDoCfzU4qQTkRoRzydyRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720009195; c=relaxed/simple;
-	bh=PV2N/+E0TeveYq/L7WEz74LT6mDkLMAp/0Rtz5xspzk=;
+	s=arc-20240116; t=1720009325; c=relaxed/simple;
+	bh=vYuco9/NSRpqebQ4mYUp/0sTq0aoO3JjDyeQJOZxcqs=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ajf0HalFv18fqqjwz7uvCWnXYv55c1C8sL9wIbwk667GbU7oka9D5PIlsIuaeWq4Ch+whTQnht+DW0xu7KxcDMBrUX91IpqYjrTCj576N3Udn0/zNCvz8qf7AVvbAcUEeNH2j0W28ubebFXbBhqqBAI0++q02Wz9O+UrwlmiCZU=
+	 MIME-Version:Content-Type; b=nVXPYLfTHoNcPLCei7GoPbI+PMLsNT+zSA4k5OEs6nBcoLlSi/2GJJZ1PWOKY6vkcskQbnHmZwDkOZiJFWLn25m+UNR4+W3Mm8NbK1T3mvJbMnFZmOjZL+qT1vHoN89RS/+S8CM26CwIO3oiFGEmFp4tljSdSgXMQ0wBRV/lA8M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9F361007;
-	Wed,  3 Jul 2024 05:20:16 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2CF51007;
+	Wed,  3 Jul 2024 05:22:27 -0700 (PDT)
 Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE8AA3F766;
-	Wed,  3 Jul 2024 05:19:44 -0700 (PDT)
-Date: Wed, 3 Jul 2024 13:19:42 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 079283F766;
+	Wed,  3 Jul 2024 05:21:54 -0700 (PDT)
+Date: Wed, 3 Jul 2024 13:21:52 +0100
 From: Andre Przywara <andre.przywara@arm.com>
 To: Luca Ceresoli <luca.ceresoli@bootlin.com>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, Saravana
@@ -69,12 +69,12 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, Saravana
  linux-usb@vger.kernel.org, patches@opensource.cirrus.com,
  linux-sound@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
  linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 05/20] clk: sunxi: clk-sun8i-bus-gates: convert to
+Subject: Re: [PATCH 04/20] clk: sunxi: clk-simple-gates: convert to
  of_property_for_each_u32_new()
-Message-ID: <20240703131942.1fc653fa@donnerap.manchester.arm.com>
-In-Reply-To: <20240703-of_property_for_each_u32-v1-5-42c1fc0b82aa@bootlin.com>
+Message-ID: <20240703132152.6c306a48@donnerap.manchester.arm.com>
+In-Reply-To: <20240703-of_property_for_each_u32-v1-4-42c1fc0b82aa@bootlin.com>
 References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
-	<20240703-of_property_for_each_u32-v1-5-42c1fc0b82aa@bootlin.com>
+	<20240703-of_property_for_each_u32-v1-4-42c1fc0b82aa@bootlin.com>
 Organization: ARM
 X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
@@ -86,7 +86,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 03 Jul 2024 12:36:49 +0200
+On Wed, 03 Jul 2024 12:36:48 +0200
 Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
 
 > Simplify code using of_property_for_each_u32_new() as the two additional
@@ -100,29 +100,29 @@ Cheers,
 Andre
 
 > ---
->  drivers/clk/sunxi/clk-sun8i-bus-gates.c | 4 +---
+>  drivers/clk/sunxi/clk-simple-gates.c | 4 +---
 >  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> diff --git a/drivers/clk/sunxi/clk-sun8i-bus-gates.c b/drivers/clk/sunxi/clk-sun8i-bus-gates.c
-> index b87f331f63c9..21f036457a86 100644
-> --- a/drivers/clk/sunxi/clk-sun8i-bus-gates.c
-> +++ b/drivers/clk/sunxi/clk-sun8i-bus-gates.c
-> @@ -24,11 +24,9 @@ static void __init sun8i_h3_bus_gates_init(struct device_node *node)
->  	const char *parents[PARENT_MAX];
+> diff --git a/drivers/clk/sunxi/clk-simple-gates.c b/drivers/clk/sunxi/clk-simple-gates.c
+> index 0399627c226a..a30d14937e0b 100644
+> --- a/drivers/clk/sunxi/clk-simple-gates.c
+> +++ b/drivers/clk/sunxi/clk-simple-gates.c
+> @@ -21,11 +21,9 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
+>  {
 >  	struct clk_onecell_data *clk_data;
->  	const char *clk_name;
+>  	const char *clk_parent, *clk_name;
 > -	struct property *prop;
 >  	struct resource res;
 >  	void __iomem *clk_reg;
 >  	void __iomem *reg;
 > -	const __be32 *p;
->  	int number, i;
+>  	int number, i = 0, j;
 >  	u8 clk_bit;
->  	int index;
-> @@ -58,7 +56,7 @@ static void __init sun8i_h3_bus_gates_init(struct device_node *node)
+>  	u32 index;
+> @@ -47,7 +45,7 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
+>  	if (!clk_data->clks)
 >  		goto err_free_data;
 >  
->  	i = 0;
 > -	of_property_for_each_u32(node, "clock-indices", prop, p, index) {
 > +	of_property_for_each_u32_new(node, "clock-indices", index) {
 >  		of_property_read_string_index(node, "clock-output-names",
