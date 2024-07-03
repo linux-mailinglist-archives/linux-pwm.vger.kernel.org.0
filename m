@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-2695-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2696-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 980A792678A
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 20:01:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48DB99267BE
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 20:07:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 36443B2109E
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 18:01:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A69D1C24DB0
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 18:07:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E921185E42;
-	Wed,  3 Jul 2024 18:01:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45AA31862A4;
+	Wed,  3 Jul 2024 18:07:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rdkJI5WT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3bpvJgx"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEE117995;
-	Wed,  3 Jul 2024 18:01:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D201CF9D4;
+	Wed,  3 Jul 2024 18:07:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720029672; cv=none; b=H/MKdj/drNNOp1OFEVvNNYYnItrmigABwgr1+X5ROIIdNn5qwdXzNdOvZlZR0it1RlDyz1KwDb4MXtqMyZAVscUuiPboMjQ0PcW93u9MryOJE+Dr+Fc3x/vy7dB3unEN690iYzWz/0YCyaQD4qYOjKpsaCZXZ6muBtC3d+JL9ew=
+	t=1720030064; cv=none; b=i9XdwKQC4XV3xSPFlK/JYqpMJIbcTREXhPXjgN0PglgwgMJJxS/+FIgelBReg3LS8Wzr9omICAep/mLO8s/VRcYZWAgXPeH3ibLmzwNTHG0n6qRVW0wTQiJm72dFqXlMnCR8jdlYTenorftNIGnZvhQN6COL5MjlO98R8wLz1qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720029672; c=relaxed/simple;
-	bh=Zf7O3ePlvok3MwLuehq8buoZy5+PWBs/kgvIKrrVIKA=;
+	s=arc-20240116; t=1720030064; c=relaxed/simple;
+	bh=7VkdfXXbnQAAagurnl0t1uowHfXXxqv6JWqV5yzvHyc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j1BiRYs8nSWl9SipKYexNvOZVG1bdzlgpRba+SAT/A3bwL+HBK/h+HAu5b5mfmKCMzD38XN1Go10OMlowf/NGzsskv5NR0B9ABwR+1I4+/xpG9GEbA7e0y5ug0jXPP8KPSzXaqivwPtU6SO0MieQtKDQkCIpp9hbg+53p8GIEhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rdkJI5WT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF3A5C2BD10;
-	Wed,  3 Jul 2024 18:01:11 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=CiMPUxASSVAdQ8N1jrJ4jlLETUK7VWDp3bpK1DeOHc+gim4rshy99CIXb9XQjsp7n9GbL6+VnGBgMdVXmLlMVfo34rFFswixa9gasJlyUYqZ0OkyMARPECxh1EncSIm+fCuZJJ8KcUj3zfgBnQWwkNnfSOHqyyF1gRKjH2P3384=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3bpvJgx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2346AC2BD10;
+	Wed,  3 Jul 2024 18:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720029672;
-	bh=Zf7O3ePlvok3MwLuehq8buoZy5+PWBs/kgvIKrrVIKA=;
+	s=k20201202; t=1720030063;
+	bh=7VkdfXXbnQAAagurnl0t1uowHfXXxqv6JWqV5yzvHyc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rdkJI5WT7xR8B3hhsVMq+7XqeIkJEsIaADXyaLtB4dJe9NXrYcxikXDJ/5KktssvA
-	 7etBQGsm2VyizVMZQmA9ihpwtZYUhvkMhDqqm7DZaL9YJ8uOiDoPSmPVoICg9OuK8h
-	 kf2w10dmNI2g0dOA0U+6i+Cgm8jgljOb/gfgRYI1OPkrO1v+GfL/rY1cUvohqOzaun
-	 TOkDyEhrJNtkGWe8cABu77lnRtMdZJu1H5b2xga3Mp3ipQTM+FMCsdeacpzsjDre6d
-	 /YbhzFbSXtxBcBUyDKr/EWUY3kR0SbLGgb2vJo3YUT8TlNsacvEqcfVsQLO/+01IoD
-	 8zVzREV5iKd4A==
-Date: Wed, 3 Jul 2024 12:01:11 -0600
+	b=X3bpvJgxZPWMXNOzcyielDafYLsorlGeMfGsYxZsE3DcfgNG38u+IpqkFauqV7JBb
+	 5vrbm1WYc3A6PpB/BYRkykAD7OTF0Cj7mNGz1MOi0sa5ZMS/EgfduMIqZfBT2ojOEE
+	 bFo2aTY3NN6jY868V+Ef+HPG5nwsrIILcL4gaARoEmQ/3VJxlw8KNvls5K1NJbvrcL
+	 liQUqmGsYZrzJg5w0kk4/LvcK6Tdp62Zk7+kzOZ/GnWL+VAWuwzwfMk9DNJ/Cy73bN
+	 +KSVQC/fntqBgC8EoMj80EdF4hoVvz6Kgpa3QHWVeUvUPp8LsLtGUtLPC5Ip21htEj
+	 aLChwBO4AdEcA==
+Date: Wed, 3 Jul 2024 12:07:42 -0600
 From: Rob Herring <robh@kernel.org>
 To: Luca Ceresoli <luca.ceresoli@bootlin.com>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Saravana Kannan <saravanak@google.com>,
@@ -86,10 +86,9 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Saravana Kannan <saravanak@google.com>,
 	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
 	patches@opensource.cirrus.com, linux-sound@vger.kernel.org,
 	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 20/20] of: deprecate and rename of_property_for_each_u32()
-Message-ID: <20240703180111.GA1245093-robh@kernel.org>
+Subject: Re: [PATCH 00/20] Simplify of_property_for_each_u32()
+Message-ID: <20240703180742.GB1245093-robh@kernel.org>
 References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
- <20240703-of_property_for_each_u32-v1-20-42c1fc0b82aa@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -98,79 +97,59 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240703-of_property_for_each_u32-v1-20-42c1fc0b82aa@bootlin.com>
+In-Reply-To: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 
-On Wed, Jul 03, 2024 at 12:37:04PM +0200, Luca Ceresoli wrote:
-> of_property_for_each_u32() is meant to disappear. All the call sites not
-> using the 3rd and 4th arguments have already been replaced by
-> of_property_for_each_u32_new().
+On Wed, Jul 03, 2024 at 12:36:44PM +0200, Luca Ceresoli wrote:
+> [Note: to reduce the noise I have trimmed the get_maintainers list
+> manually. Should you want to be removed, or someone else added, to future
+> versions, just tell me. Sorry for the noise.]
 > 
-> Deprecate the old macro. Also rename it to minimize the number of new
-> usages and encourage conversion to the of_property_for_each_u32_new() macro
-> in not(-yet)-upstream code.
+> This series aims at simplifying of_property_for_each_u32() as well as
+> making it more difficult to misuse it in the future.
 > 
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> The long-term goal is changing this pattern:
 > 
-> ---
+>   struct property *prop;
+>   const __be32 *p;
+>   u32 val;
+>  
+>   of_property_for_each_u32(np, "xyz", prop, p, val) { ... }
 > 
-> Notes:
+> to this:
 > 
->  * The following files have not been build-tested simply because I haven't
->    managed to have a config that enables them so far:
+>   u32 val;
 > 
->      drivers/irqchip/irq-pic32-evic.c
->      drivers/pinctrl/pinctrl-k210.c
+>   of_property_for_each_u32(np, "xyz", val) { ... }
 > 
->  * These have not been converted yet as they are not trivial, and they will
->    need to use a more specific function that does the lookup they need and
->    returns the result:
+> So, removing the 3rd and 4th arguments which are typically meant to be
+> internal. Those two parameters used to be unavoidable until the kernel
+> moved to building with the C11 standard unconditionally. Since then, it is
+> now possible to get rid of them. However a few users of
+> of_property_for_each_u32() do actually use those arguments, which
+> complicates the transition. For this reason this series does the following:
 > 
->      drivers/clk/clk-si5351.c
+>  * Add of_property_for_each_u32_new(), which does not have those two
+>    arguments (patch 1)
+>  * Convert _almost_ every usage to of_property_for_each_u32_new()
+>  * Rename of_property_for_each_u32() to of_property_for_each_u32_old() and
+>    deprecate it, as a incentive to code not (yet) in mainline to upgrade
+>    to the *_new() version (last patch)
 
-I would do something like this:
+I don't really see the point of introducing the _old variant. Let's get 
+this done in one step.
 
-	sz = of_property_read_variable_u32_array(np, "silabs,pll-source", array, 2, 4);
-	if (sz >= 2)
-		pdata->pll_src[array[0]] = val_to_src(array[1]);
-	if (sz >= 4)
-		pdata->pll_src[array[2]] = val_to_src(array[3]);
+> 
+> The plan for the next series is to additionally:
+> 
+>  * Convert the few remaining of_property_for_each_u32_old() instantes to
+>    of_property_for_each_u32_new()
+>  * Remove of_property_for_each_u32_old()
+>  * Rename of_property_for_each_u32_new() to of_property_for_each_u32()
 
+Honestly, I think there's few enough users we could just convert the 
+whole thing in one patch. It's all got to go thru 1 tree anyways. If 
+there's new cases in -next, then I'd be happy to send it to Linus at the 
+end of the merge window.
 
->      drivers/clk/clk.c
-
-Wouldn't this work:
-
-8<------------------------------------------------------
-
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 8cca52be993f..33a8cc193556 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -5371,6 +5371,7 @@ const char *of_clk_get_parent_name(const struct device_node *np, int index)
-        int rc;
-        int count;
-        struct clk *clk;
-+       bool found = false;
- 
-        rc = of_parse_phandle_with_args(np, "clocks", "#clock-cells", index,
-                                        &clkspec);
-@@ -5383,15 +5384,16 @@ const char *of_clk_get_parent_name(const struct device_node *np, int index)
-        /* if there is an indices property, use it to transfer the index
-         * specified into an array offset for the clock-output-names property.
-         */
--       of_property_for_each_u32(clkspec.np, "clock-indices", prop, vp, pv) {
-+       of_property_for_each_u32_new(clkspec.np, "clock-indices", pv) {
-                if (index == pv) {
-                        index = count;
-+                       found = true;
-                        break;
-                }
-                count++;
-        }
-        /* We went off the end of 'clock-indices' without finding it */
--       if (prop && !vp)
-+       if (of_property_present(clkspec.np, "clock-indices") && !found)
-                return NULL;
- 
-        if (of_property_read_string_index(clkspec.np, "clock-output-names",
+Rob
 
