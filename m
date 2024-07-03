@@ -1,53 +1,54 @@
-Return-Path: <linux-pwm+bounces-2669-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2670-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A66959258F6
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:39:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 111EC925906
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:39:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C42F1F29412
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:39:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 43FE71C203A7
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:39:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A396176FB4;
-	Wed,  3 Jul 2024 10:37:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D89D17994C;
+	Wed,  3 Jul 2024 10:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CGb70O0L"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hQT95D3u"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8D3174EDF;
-	Wed,  3 Jul 2024 10:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AC3178386;
+	Wed,  3 Jul 2024 10:37:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720003062; cv=none; b=GGKf4l8dpfBsCccWQ99uLEiK78zr3tJ0LGTLOHzOSCf8pvpSbCHQ4xKG67W3ugodhv2k/4ef3qNpLJfteVv5hbFnW0/u+GM7QXsQtmgHLKpPbGZ7ykJ6fnx4AxjYQwX5rXFmx7WYhWFAUzzOdyJeUFJaiOWzmwFZgSWY68HO+Bo=
+	t=1720003066; cv=none; b=M/OaDwKtALCzWOvtBZFlcIn0MiJzPQ27OxG0WoFvSdkVZAj9VBnvWMtGIWAFHSgQ4Ep6IGCzObA+io8uO6v974FKb6gerW6VubU7Kufa82KSahsW2w7QTxR/sCZJININDso45vKJS6L7cKw1zcU7TQAvYQ0zW4Fpw7aZBnAyLWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720003062; c=relaxed/simple;
-	bh=rtNZnRiWa1jmI3Y6+8iWCBBruHAuuVtSN7QCEAUjhh0=;
+	s=arc-20240116; t=1720003066; c=relaxed/simple;
+	bh=j5j7znmI5fd3w2hwt9/RrT1UaJBOGy5KU1T1L8mUMro=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DiWzovYZ5UCmALgfqXMtx43+9o1XJiUbtuJmQXg9MeTZpKmhxwOE7BgdDEYEzabQfS+5njeOTa1UzmY1T9/mLMrbYiGK8J5OaeAgF6rmVzVccoE4gcDTsIZuze/UT8qJ6RfUGbNGSd/y/jeT8dqiUlsMEMO7tCo+FCylTKYLVwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CGb70O0L; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=ZUQAf5L6WdpieZaN5xysEH2+4DUr6mRRNgiof04QbkpEkasmBNaKBbXzfxQDRixM6zBUr/cH9UC/airG6Gc859bJklr7Mv0x6yIyPflkpLGi1ihZJUnOPqIz+GPnLbKUGtrTlM3FdMsvL5tPZiiIy5dxlbd8ZTGkMHNpOW1lezQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hQT95D3u; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 714AB40007;
-	Wed,  3 Jul 2024 10:37:33 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 63F4940008;
+	Wed,  3 Jul 2024 10:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720003057;
+	t=1720003061;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rx4+azxs/nr6UN4dbsJ4ODf9UYt0TlbIW0kWebCuftU=;
-	b=CGb70O0LKHcH8JXuy55spACA4E8LSU1InmxWYOYScMS2hs1YLLU2skVvLnutVN2WF1NPHL
-	RPN6+r3bLqcWXGEDa9iqym02HcVIQUVd6Hu7IFw22ugx7l1Bi+ewm0r0FibgVh8trCF9Sz
-	I+dCgIbVyvn9KpMbwFtzeM8VuYEJgEe3RF5/rZLE9v/ga2IcN+OW1Y6MUwT0RGI9MinjsN
-	INdiY7a/ahocLBOYh10W1sqtY6WtH7LnqN1n79lCm4l8vjxreVupuDYNO7cyq4imKsqrAE
-	3zWphVZXKmEAHYJt7dn1p50FPaTRVrJPzlrkk5D+KbVEeqsvoKIeHs0lE5lDEg==
+	bh=rSl3CDHUnEkCbFzcda9N1h+bslENch8LOeZ/5QfMN+g=;
+	b=hQT95D3u1VMRIY9xcB1E834k+wK1UnCHPD1+uqs62UJ0G281n+vVWCbTnLIcL5tDXrSGX0
+	ukrOE06tTmXg6wVVic1Yf1zGDJvxZxPI2cs/Vh2G9Whgnc+CbuHfCZ5r1Y+IfJI3YN9GYH
+	8eFlmQvV3foLOCuokJlfWVdnjsf2ov4KcybfiiUGmEnTLUhWoxIkSD4AU2A3WdQ0JdEhNU
+	Yw4iTB7EVnyoDn5NNwCxQEsljM1j1WbYUIrPAE0OAYdx5VIF+fs/XKQl2qXueJGuZ497uO
+	xs/dP5ikFWEjtBAsz65ywcc5sPmTSSy+n884HlDWWF6SwE8fKJHq3xSlkJEWLQ==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Wed, 03 Jul 2024 12:36:47 +0200
-Subject: [PATCH 03/20] clk: qcom: convert to of_property_for_each_u32_new()
+Date: Wed, 03 Jul 2024 12:36:48 +0200
+Subject: [PATCH 04/20] clk: sunxi: clk-simple-gates: convert to
+ of_property_for_each_u32_new()
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -56,7 +57,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240703-of_property_for_each_u32-v1-3-42c1fc0b82aa@bootlin.com>
+Message-Id: <20240703-of_property_for_each_u32-v1-4-42c1fc0b82aa@bootlin.com>
 References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 In-Reply-To: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -105,25 +106,33 @@ parameters in of_property_for_each_u32() are not used here.
 
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- drivers/clk/qcom/common.c | 4 +---
+ drivers/clk/sunxi/clk-simple-gates.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
-index 48f81e3a5e80..43e4918dc4e9 100644
---- a/drivers/clk/qcom/common.c
-+++ b/drivers/clk/qcom/common.c
-@@ -226,11 +226,9 @@ EXPORT_SYMBOL_GPL(qcom_cc_register_sleep_clk);
- static void qcom_cc_drop_protected(struct device *dev, struct qcom_cc *cc)
+diff --git a/drivers/clk/sunxi/clk-simple-gates.c b/drivers/clk/sunxi/clk-simple-gates.c
+index 0399627c226a..a30d14937e0b 100644
+--- a/drivers/clk/sunxi/clk-simple-gates.c
++++ b/drivers/clk/sunxi/clk-simple-gates.c
+@@ -21,11 +21,9 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
  {
- 	struct device_node *np = dev->of_node;
+ 	struct clk_onecell_data *clk_data;
+ 	const char *clk_parent, *clk_name;
 -	struct property *prop;
+ 	struct resource res;
+ 	void __iomem *clk_reg;
+ 	void __iomem *reg;
 -	const __be32 *p;
- 	u32 i;
+ 	int number, i = 0, j;
+ 	u8 clk_bit;
+ 	u32 index;
+@@ -47,7 +45,7 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
+ 	if (!clk_data->clks)
+ 		goto err_free_data;
  
--	of_property_for_each_u32(np, "protected-clocks", prop, p, i) {
-+	of_property_for_each_u32_new(np, "protected-clocks", i) {
- 		if (i >= cc->num_rclks)
- 			continue;
+-	of_property_for_each_u32(node, "clock-indices", prop, p, index) {
++	of_property_for_each_u32_new(node, "clock-indices", index) {
+ 		of_property_read_string_index(node, "clock-output-names",
+ 					      i, &clk_name);
  
 
 -- 
