@@ -1,53 +1,53 @@
-Return-Path: <linux-pwm+bounces-2668-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2669-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0EFD9258FE
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:39:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A66959258F6
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:39:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51C8B28815F
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:38:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C42F1F29412
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:39:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA9CD1741FC;
-	Wed,  3 Jul 2024 10:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A396176FB4;
+	Wed,  3 Jul 2024 10:37:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="e7Z06DzD"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CGb70O0L"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B0613DDBD;
-	Wed,  3 Jul 2024 10:37:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8D3174EDF;
+	Wed,  3 Jul 2024 10:37:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720003058; cv=none; b=M4+zfuYRDX7PDhvVaV1tIueqO/sPn6Lxxfqf9LY5jMegTzjCoTvVh5ObsrrPd5RMoPBOlwKn6NxCHNQ50W24mRYam+JE5eIWLv6SAHZT8gsHleZegxqDQGU8D5wKtSbdrTfeyTQqHyiDhbiU+CZHDghg7JjXuiEuHRwIS1re/QM=
+	t=1720003062; cv=none; b=GGKf4l8dpfBsCccWQ99uLEiK78zr3tJ0LGTLOHzOSCf8pvpSbCHQ4xKG67W3ugodhv2k/4ef3qNpLJfteVv5hbFnW0/u+GM7QXsQtmgHLKpPbGZ7ykJ6fnx4AxjYQwX5rXFmx7WYhWFAUzzOdyJeUFJaiOWzmwFZgSWY68HO+Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720003058; c=relaxed/simple;
-	bh=DTuftCsdyHTYXLuPnKToYa/e/4bqNCbejvDMDH3oLCA=;
+	s=arc-20240116; t=1720003062; c=relaxed/simple;
+	bh=rtNZnRiWa1jmI3Y6+8iWCBBruHAuuVtSN7QCEAUjhh0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rW80CbkxqZnAdmTFr3tXlZl4SY5fZmS8QcIEHnxWCBSdfFzGOgAvmZJrsIhwkLuLMMUDMdCKqy7YPnsqpF7h7JltxVzOb/gPKmNI2vJLnzpSOTtQcV77mSUx4k+FWg3AI9zaan6cyFI6SRnEtRdexL3TyzJtHaajZBCU/PdKdsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=e7Z06DzD; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=DiWzovYZ5UCmALgfqXMtx43+9o1XJiUbtuJmQXg9MeTZpKmhxwOE7BgdDEYEzabQfS+5njeOTa1UzmY1T9/mLMrbYiGK8J5OaeAgF6rmVzVccoE4gcDTsIZuze/UT8qJ6RfUGbNGSd/y/jeT8dqiUlsMEMO7tCo+FCylTKYLVwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CGb70O0L; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6BA6540009;
-	Wed,  3 Jul 2024 10:37:29 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 714AB40007;
+	Wed,  3 Jul 2024 10:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720003053;
+	t=1720003057;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iOQ14xyN4CI0MwaGvACquTtxcpYCfC508bOrtYrOfp8=;
-	b=e7Z06DzD1HcQuX5TerA/2Xsss/y/ZRNpQXK11rzZa7obUz29MA15WorQAg1MKq8nLfH9d0
-	bbmyIu+yCTBdYrQoxkYKdADdB3aoUvNMXqdixaC6m2rGHUqt5ekuhIfxF3M9RChIKHeQnB
-	V0CBdJ0g7INGyWplrKyBCDD6UASS4bRrfElBF2x4YkjRP4Jr2rlztdNABgz9PEq/+o9dIW
-	ZE+NjmTH9io4Ti1GokZjpq8Gpraec2pfnl7F5jYzQmbiKrEhSZzxpvBC3R03WDqdDf5NMM
-	KHyH3mV7aq4FTjuCFSLk0D+Kyy9H3G4rmyEpTkueNHkwZiCr4RmAeEWVM6UTHA==
+	bh=rx4+azxs/nr6UN4dbsJ4ODf9UYt0TlbIW0kWebCuftU=;
+	b=CGb70O0LKHcH8JXuy55spACA4E8LSU1InmxWYOYScMS2hs1YLLU2skVvLnutVN2WF1NPHL
+	RPN6+r3bLqcWXGEDa9iqym02HcVIQUVd6Hu7IFw22ugx7l1Bi+ewm0r0FibgVh8trCF9Sz
+	I+dCgIbVyvn9KpMbwFtzeM8VuYEJgEe3RF5/rZLE9v/ga2IcN+OW1Y6MUwT0RGI9MinjsN
+	INdiY7a/ahocLBOYh10W1sqtY6WtH7LnqN1n79lCm4l8vjxreVupuDYNO7cyq4imKsqrAE
+	3zWphVZXKmEAHYJt7dn1p50FPaTRVrJPzlrkk5D+KbVEeqsvoKIeHs0lE5lDEg==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Wed, 03 Jul 2024 12:36:46 +0200
-Subject: [PATCH 02/20] clk: convert to of_property_for_each_u32_new()
+Date: Wed, 03 Jul 2024 12:36:47 +0200
+Subject: [PATCH 03/20] clk: qcom: convert to of_property_for_each_u32_new()
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240703-of_property_for_each_u32-v1-2-42c1fc0b82aa@bootlin.com>
+Message-Id: <20240703-of_property_for_each_u32-v1-3-42c1fc0b82aa@bootlin.com>
 References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 In-Reply-To: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -105,28 +105,25 @@ parameters in of_property_for_each_u32() are not used here.
 
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- drivers/clk/clk.c | 4 +---
+ drivers/clk/qcom/common.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 8cca52be993f..8ea168c00997 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -5504,14 +5504,12 @@ static int parent_ready(struct device_node *np)
- int of_clk_detect_critical(struct device_node *np, int index,
- 			   unsigned long *flags)
+diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
+index 48f81e3a5e80..43e4918dc4e9 100644
+--- a/drivers/clk/qcom/common.c
++++ b/drivers/clk/qcom/common.c
+@@ -226,11 +226,9 @@ EXPORT_SYMBOL_GPL(qcom_cc_register_sleep_clk);
+ static void qcom_cc_drop_protected(struct device *dev, struct qcom_cc *cc)
  {
+ 	struct device_node *np = dev->of_node;
 -	struct property *prop;
--	const __be32 *cur;
- 	uint32_t idx;
+-	const __be32 *p;
+ 	u32 i;
  
- 	if (!np || !flags)
- 		return -EINVAL;
- 
--	of_property_for_each_u32(np, "clock-critical", prop, cur, idx)
-+	of_property_for_each_u32_new(np, "clock-critical", idx)
- 		if (index == idx)
- 			*flags |= CLK_IS_CRITICAL;
+-	of_property_for_each_u32(np, "protected-clocks", prop, p, i) {
++	of_property_for_each_u32_new(np, "protected-clocks", i) {
+ 		if (i >= cc->num_rclks)
+ 			continue;
  
 
 -- 
