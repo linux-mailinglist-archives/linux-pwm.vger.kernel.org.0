@@ -1,53 +1,53 @@
-Return-Path: <linux-pwm+bounces-2673-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2674-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A507992593B
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:41:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B029925967
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:44:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73C53B2C05A
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:41:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 408EA292727
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:41:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DBB217BB2A;
-	Wed,  3 Jul 2024 10:37:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AFC117CA09;
+	Wed,  3 Jul 2024 10:38:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mKr+b4Ho"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M1vtRZ/I"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7EE17B51A;
-	Wed,  3 Jul 2024 10:37:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE60014430D;
+	Wed,  3 Jul 2024 10:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720003077; cv=none; b=PxssgoV7kzmykfwSC4SJt62QKsi74A7Yqq/ZPmAXo6qUNhAGVrbd5VTzf+UdVNdDs7Bs299C9pLjNGckOTusySnFzmsTcuxrqXjsdfY5hszVqn7MosASVVAJW8j4rzqkE7lfc0tFHIwHhFdrJOF+YrCXDRy8y07ZWq7p1xjiTqw=
+	t=1720003082; cv=none; b=Bk902aM+Hv/ulcusant1lvjTkW6gy/mjA43Ue1A/yiidSnRuJtyhhl00Kuaea4iqvxyfSVvc0G4q3S77waeQ+mJlviMgV8BIgDHYjoyqpcwsYEHcuzdoO/rq+5Fm9oA7vJodZnjoS4LLG+TNNdm8Fl7b5xFNAwKt5GM/T9bPt7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720003077; c=relaxed/simple;
-	bh=fq9DUV8ZkrGGfr2sPMEi/bzlK5AgIQ455+exy/1Df0k=;
+	s=arc-20240116; t=1720003082; c=relaxed/simple;
+	bh=Siwwo3GBEP5mTY9Rcl5UPHfZGLF8rw0KZ6wcPCYaSUY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tdnGtfWfPH2dWkN9nYhWIj3jlKGYfU6n1PpmNF/F6QKoYyEBXUuoC8b4zVFtwCE+tMZpiMmrWYU3ejHp/+0u0wX17Xob0ozM08YEetsWeF+Ep+yDA7s6Jjt3JvcFx4qRiCc6LRKPXib6sHQ6Rc1BSaHe4V5I2oE22hKeka3QOys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mKr+b4Ho; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=PeP5+EyOZAIzRVUdsgCFgZgMzPHehbUsjZxak3qJDAgXieg8oyB8avwigLJbLM7ubLvTI/5dOPwzNVajEcQPJr9QvlE6EbiyND9jNNWsNDjcn7+2mCWQuhOT4kixn33ZdKCR+/X0KR9tk4dnM4K+VKKJWCs2kLkVnZ8ezKvdKtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M1vtRZ/I; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7254D40004;
-	Wed,  3 Jul 2024 10:37:49 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8268640007;
+	Wed,  3 Jul 2024 10:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720003073;
+	t=1720003077;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eb/MG1X9ZyCPKkfMiLJRzBYl1psyg/JqqItzDc7u8oM=;
-	b=mKr+b4HoPQo1Bbt3MDOJiBq9QDRNlzbhJzVl4AeA0Bf+v1zIO3zjJ/lkkLWUl9vVQjJwMj
-	GttRzJh2ll37uZc3T9+da0g8WgP0WK4eBV3Vh0zxip1Vyrqw9JcBUeUdIOgoHNg3KBvJnT
-	+8ed+7bmTxXLLfO8t+hFeawDez5BRpjqW2qGF4j8JnxhgjW/jZ7ECR4H1QVqTgA6x9xaSf
-	mBsmesIOt9vICeLPBULX+Ry1Hki1Qv3FUm4I418GCg27OH8dyMjyOfFD63735uKDyNeZQ2
-	A1FFEdDsCYFcBwTrZOYROGc6Z8mRxdAtz9zOk9dgBIRpvPyxCrCsgAvEr2f/4A==
+	bh=ObZqIn61RNEy1X0aCEEJcJ3TWqr0KXyZ0h8jl51/dRQ=;
+	b=M1vtRZ/IwZA73ShP/81Am2+1HF7s4FmiDSV9DEbuggRaHcKQERp7OSPzywsZUadCPqsxaR
+	RZ7oCjkG0C8ViUS6anX2ndvvJHX2z7DdcITxSZ12zgS3G5KqbQAXHCT4KkxX9nIVquZUy5
+	15LLa5bd5PLS4v07vuIgeRs4STDPZtGPsgXPh06/GA6Qudtdx0Fny6/LYyK5olTsct1HMA
+	CU4vip10scfCAV+QM/o2bhZlf4YgKbKpZ2BH1KagdlEV/37l3LzbomatP49hAXtTXvQgU2
+	EKMDSO4JJomZuAYfInK+g5FgIWtvH9+N8OhUTELm/RUseTXOmmYBYbCHO97pNg==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Wed, 03 Jul 2024 12:36:51 +0200
-Subject: [PATCH 07/20] bus: ti-sysc: convert to
+Date: Wed, 03 Jul 2024 12:36:52 +0200
+Subject: [PATCH 08/20] lk: clk-conf: convert to
  of_property_for_each_u32_new()
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240703-of_property_for_each_u32-v1-7-42c1fc0b82aa@bootlin.com>
+Message-Id: <20240703-of_property_for_each_u32-v1-8-42c1fc0b82aa@bootlin.com>
 References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 In-Reply-To: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -106,26 +106,28 @@ parameters in of_property_for_each_u32() are not used here.
 
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- drivers/bus/ti-sysc.c | 4 +---
+ drivers/clk/clk-conf.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 8767e04d6c89..3d19777f1e31 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -2291,11 +2291,9 @@ static int sysc_init_idlemode(struct sysc *ddata, u8 *idlemodes,
- 			      const char *name)
+diff --git a/drivers/clk/clk-conf.c b/drivers/clk/clk-conf.c
+index 1a4e6340f95c..290dd1230bad 100644
+--- a/drivers/clk/clk-conf.c
++++ b/drivers/clk/clk-conf.c
+@@ -81,13 +81,11 @@ static int __set_clk_parents(struct device_node *node, bool clk_supplier)
+ static int __set_clk_rates(struct device_node *node, bool clk_supplier)
  {
- 	struct device_node *np = ddata->dev->of_node;
--	struct property *prop;
--	const __be32 *p;
- 	u32 val;
+ 	struct of_phandle_args clkspec;
+-	struct property	*prop;
+-	const __be32 *cur;
+ 	int rc, index = 0;
+ 	struct clk *clk;
+ 	u32 rate;
  
--	of_property_for_each_u32(np, name, prop, p, val) {
-+	of_property_for_each_u32_new(np, name, val) {
- 		if (val >= SYSC_NR_IDLEMODES) {
- 			dev_err(ddata->dev, "invalid idlemode: %i\n", val);
- 			return -EINVAL;
+-	of_property_for_each_u32(node, "assigned-clock-rates", prop, cur, rate) {
++	of_property_for_each_u32_new(node, "assigned-clock-rates", rate) {
+ 		if (rate) {
+ 			rc = of_parse_phandle_with_args(node, "assigned-clocks",
+ 					"#clock-cells",	index, &clkspec);
 
 -- 
 2.34.1
