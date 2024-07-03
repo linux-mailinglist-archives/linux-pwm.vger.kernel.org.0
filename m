@@ -1,53 +1,53 @@
-Return-Path: <linux-pwm+bounces-2679-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2680-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDD58925968
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:44:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD3E5925973
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:44:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 71CD31F29086
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:44:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 733101F29669
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:44:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C34F183079;
-	Wed,  3 Jul 2024 10:38:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEA6B184101;
+	Wed,  3 Jul 2024 10:38:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ib/PFCUF"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="oXUa31OD"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4FA1822CC;
-	Wed,  3 Jul 2024 10:38:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206EE183095;
+	Wed,  3 Jul 2024 10:38:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720003102; cv=none; b=LgbOMrcPR9TorjqSNL1buhmqSEr32vKPHpOLHmoWDBopRpZ0s3l9hRN7LfZsEM2WqQ3w5OviJORoSsL9lXmqQdOfEcKWsKcc+ll/YGe/ZmY4F/1EseHwRPrD2jUBjGwcY5CMG4bsySz7mCMkz/Y8U5SHS2OgH2LZq3m3LfpTHk4=
+	t=1720003106; cv=none; b=TpQaQXvkSroeJFVfMVpVvNCdgunZyBVPcOTrgMa0vdZEo6S/of53rR30STPN5ZjFx+nNC/DI/eppNowCq/LK0zgSyV3JdmROg4bsuFJU8t8ZpLT3m4o7uoOL4mZHnpZffIAjPt3Y9Xez4BNh1Fphgt9P0eNPSoldp9rgGyRxgTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720003102; c=relaxed/simple;
-	bh=8F+2pnZqcbzuv30oTMR83+vxjtItRaeqDfsbeU/W1U8=;
+	s=arc-20240116; t=1720003106; c=relaxed/simple;
+	bh=I9iBNVjeQxL9Gpmd8TxfYsLoUBB81r7M+FReCkPJlx0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mDvqhy33AZImbY4aP5Ez9RT0sMWZjU6+qtd+npqdap+Ff11NfXMccG3JLnhIXWPdVaJOULQ0vCHfMZ5rLOVJetVgLJWuVEzMRBSwz9+1DyPKneQR7wgikpXBVtN++dYHI0ipHwyO41wdgtBzD3Qp1h7mhgqgGx6WjjoZzYMVrHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ib/PFCUF; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=sx299AM/21JFAxQAGdbg8kEieEYlO6RV0pyVJIGQ+EJtnToSmMWnzp24DzuzvUe2KiENVUjgFiQ3YqiueVpDksOifqdYjYpG0SBsgmg2BprW138/uaxLdrjbb2PEpvxyo58CWyyBsCRd5awdbHpPICvWQCh2WsRgBppYJMCpgH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=oXUa31OD; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D49E740006;
-	Wed,  3 Jul 2024 10:38:13 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E28834000D;
+	Wed,  3 Jul 2024 10:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720003097;
+	t=1720003101;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dZPPBHSyI/+YbF/9TI9GwF+CUzeEA2RsST6wsDA28Y0=;
-	b=Ib/PFCUFguJgExTJzeLBH/xgT815E4W6OuByXZJoKzK1jTZ0BKQ6yzzGZ+tFwqfA+nCZYT
-	Nmi154RSR+0y3gE4okF0tI41PAeQtJ50AXcE2FBzGNCKJm0u904u7dys+Dc3UYYescC8Zz
-	az7DlTYiLVXAhIJX13CFLr5t+nXUAObbnbENT/513x1OxOrNGXGFixyBZdKaOaECjwQu88
-	JWAT+gu9maylMym9RKrd330DygX8qEP5aYKWm9bqPbP2r2J/O6+BKDQiocvcfc0vyNX3JR
-	0Loom3v5nYdkLj1K0iaDilqc1db8vDYfnvgGOk0A6qwaJtrYHrYDqx3ld+tbwA==
+	bh=78C35tW4lsYFlY1YR8UtHYwhkc3TnVCBtcNefWaJVZc=;
+	b=oXUa31ODiP9nVQgcAJYvkSJjw3Nl2xFkxoaUzbjkYfoZy0WqW3XM09Ra2i4md0DVO/df0t
+	uzTPi9Mn7rVmhdGD7Y1I3UmO0z3XeaklUDL1qX4csSZO2ZrOFbBlsG9UPGLp+QmqkV+Hoc
+	TRCec4TuUqXAgW/qR2UGILaYaPYt4+pBAtb/OP9thxJesMbY+DSuiw7MnpCGOmmB4MmI3b
+	Km2dkMTd/9bCebKT2xBVzdPVNVEg86RF7Y/XtEw8Yg2UwoWQu7+Z12VU1X/ofhPrafsSC0
+	0RKAGKrDYJ4h9dTCEnLg/BUsSSq/9f/jPdbkRxLFapx2puNRwIHp/UMj7smt6Q==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Wed, 03 Jul 2024 12:36:57 +0200
-Subject: [PATCH 13/20] pwm: samsung: convert to
+Date: Wed, 03 Jul 2024 12:36:58 +0200
+Subject: [PATCH 14/20] tty: sysrq: convert to
  of_property_for_each_u32_new()
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240703-of_property_for_each_u32-v1-13-42c1fc0b82aa@bootlin.com>
+Message-Id: <20240703-of_property_for_each_u32-v1-14-42c1fc0b82aa@bootlin.com>
 References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 In-Reply-To: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -106,31 +106,31 @@ parameters in of_property_for_each_u32() are not used here.
 
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- drivers/pwm/pwm-samsung.c | 4 +---
+ drivers/tty/sysrq.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pwm/pwm-samsung.c b/drivers/pwm/pwm-samsung.c
-index efb60c9f0cb3..fef02a0b023e 100644
---- a/drivers/pwm/pwm-samsung.c
-+++ b/drivers/pwm/pwm-samsung.c
-@@ -510,8 +510,6 @@ static int pwm_samsung_parse_dt(struct pwm_chip *chip)
- 	struct samsung_pwm_chip *our_chip = to_samsung_pwm_chip(chip);
- 	struct device_node *np = pwmchip_parent(chip)->of_node;
- 	const struct of_device_id *match;
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index e5974b8239c9..719376dda5c1 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -770,8 +770,6 @@ static void sysrq_of_get_keyreset_config(void)
+ {
+ 	u32 key;
+ 	struct device_node *np;
 -	struct property *prop;
--	const __be32 *cur;
- 	u32 val;
+-	const __be32 *p;
  
- 	match = of_match_node(samsung_pwm_matches, np);
-@@ -520,7 +518,7 @@ static int pwm_samsung_parse_dt(struct pwm_chip *chip)
+ 	np = of_find_node_by_path("/chosen/linux,sysrq-reset-seq");
+ 	if (!np) {
+@@ -782,7 +780,7 @@ static void sysrq_of_get_keyreset_config(void)
+ 	/* Reset in case a __weak definition was present */
+ 	sysrq_reset_seq_len = 0;
  
- 	memcpy(&our_chip->variant, match->data, sizeof(our_chip->variant));
- 
--	of_property_for_each_u32(np, "samsung,pwm-outputs", prop, cur, val) {
-+	of_property_for_each_u32_new(np, "samsung,pwm-outputs", val) {
- 		if (val >= SAMSUNG_PWM_NUM) {
- 			dev_err(pwmchip_parent(chip),
- 				"%s: invalid channel index in samsung,pwm-outputs property\n",
+-	of_property_for_each_u32(np, "keyset", prop, p, key) {
++	of_property_for_each_u32_new(np, "keyset", key) {
+ 		if (key == KEY_RESERVED || key > KEY_MAX ||
+ 		    sysrq_reset_seq_len == SYSRQ_KEY_RESET_MAX)
+ 			break;
 
 -- 
 2.34.1
