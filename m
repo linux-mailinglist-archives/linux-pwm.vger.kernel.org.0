@@ -1,53 +1,53 @@
-Return-Path: <linux-pwm+bounces-2676-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2677-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 039AD925947
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:42:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD4279259A3
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:47:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 35D4E1C209A6
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:42:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BFA32933A9
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:43:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9FA7180A79;
-	Wed,  3 Jul 2024 10:38:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E586181B80;
+	Wed,  3 Jul 2024 10:38:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KDra0sLx"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MG5/4/cp"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542A417FAA2;
-	Wed,  3 Jul 2024 10:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083FA181304;
+	Wed,  3 Jul 2024 10:38:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720003090; cv=none; b=DIMKXFu0gOKe/1AcIAV11ZZyc9cKyqss8mcYq+E3FjYnfEwjtbitVg29YTHR+iC14WYHRG+bu7xtsZZz7zU4dpip/hP71ktFkogUv9xFJ1zH1sN2ItsAuSKdlq9gdVajN71NMCPyaAWqvnMGdM7lwW8shIUFzS3EMAsmm2ag0sA=
+	t=1720003094; cv=none; b=eCemMZsLl9/FT6sq0ImDN5oct0L5D1Bc40YmInsXS0yb6SSl7VNE//pEaa4w5wNSsdEEzvzTNA78UgnG99qv6bSeqrh+7nxQYyWs0xaZLhdLUCQ17VGF09kCu7EQyKj6li1Lu7xnL2AkB4xJSKIiO+PZ4+f8S+NXnYr1VcH5SWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720003090; c=relaxed/simple;
-	bh=tLDf0jN/+OTJID5VEM05S7mVHbzKVdlHVZuoTJIUcFA=;
+	s=arc-20240116; t=1720003094; c=relaxed/simple;
+	bh=MWb3iKSy3KuhMAp3Fcz0XaJXmnFKQzA4tbf+M+qvL1I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=h4nc+GmBQTcX6NBTwUvjw3yob9AJOPo/5weJ6rVfJXezEdpcbF0bPdWm2oWzAPTt9veGgAoCQY3MVZDdCTcEObn+NwMfrdvzD5Jvz9G3Hl2ggxe78LlgqVbuG3/BjfifLoUimcMmN4lknRM/uGxHTI8wIglUUvtryWhxILEpDtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KDra0sLx; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=KdS5omXaffs4dZVl0a00ihcyusx4BXU5nPSe+ILAAFbpYhREfknubFyGxz6C5yvozo9oL/thBeJU3Z11FmT/vnjlPkogNbgHQbEer8PQHDg3FzeuZ8YUT5NEhGGCm/w/YkuOBbjlJUwtjnNqi6dPndnX5HUIzZcMlWxI9i0GZhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MG5/4/cp; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D3A6A4000B;
-	Wed,  3 Jul 2024 10:38:01 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E6DCC4000C;
+	Wed,  3 Jul 2024 10:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720003085;
+	t=1720003089;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kkDzWgqNUaE82FJnkubFv5bmOm6gl+/qOlOF60MzBZI=;
-	b=KDra0sLx8nTaCo2T20Rc+TTQn6dCftv+NLxXaIVH+RIs1q2YoMq0B82YrEyVgDvGjds6nu
-	RC2jLpfRcLHtf2pR9BxXyBbFfxUIIlp6w5d5IuYUNsHEqb0XXHvrI6eTEkZI8Pao8QkZo1
-	npSEexxCHK5YjW6udTXDNIQB9KQm5SQTA+Q1D4zyO5QgOyHhdtDJdiG5AWTLN6xyGdm7mn
-	/rWYkwWLKd5725CoTxczcY5BmOKymQHIaEPwiKZRPPwVVLko5kKwiYIOwkX0YkSZs8ExX0
-	uWjIn4FxLkr+64anVbbkf4GN0HOCjjfWYJVJmVaQxxlx9SayHwzv1TA6Kd/5CQ==
+	bh=m4n9Na9c++gxwPPGLgqtYV2GyYYvNsA2Yt/HwrgABCM=;
+	b=MG5/4/cpLUMYOoTYdFn5GEE4xSFBzFjdeyIQ7Ld1HS4jyQDwPVsZ+sRL0NZJG4V/L8kZmK
+	AgucvPwKtMSRmVMMFP/pyy6BmAd8dH0RIR69LfAGutPOXk4KF/W3VXvSAyQduxnAUBUPwU
+	l6wZER48jsIRJRKiz33tDEYUFGUJy6RCkV/TNP4d5b5SSy7IpASLaQ+r2nHReMZ3eLbjM2
+	HGa18fhNeNscNVPKqWC9mUCVYrb5FfcvTdaf/U2NNGahQ78hr7yJ98q08+AVuSs0yLA1OB
+	fumgPcFVsUlRIKMhXK5RBPsv4fND81CPBwB7KkNckBhTs8MkFV9Mxy1yBSsghg==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Wed, 03 Jul 2024 12:36:54 +0200
-Subject: [PATCH 10/20] pinctrl: s32cc: convert to
+Date: Wed, 03 Jul 2024 12:36:55 +0200
+Subject: [PATCH 11/20] irqchip/atmel-aic: convert to
  of_property_for_each_u32_new()
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240703-of_property_for_each_u32-v1-10-42c1fc0b82aa@bootlin.com>
+Message-Id: <20240703-of_property_for_each_u32-v1-11-42c1fc0b82aa@bootlin.com>
 References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 In-Reply-To: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -106,32 +106,31 @@ parameters in of_property_for_each_u32() are not used here.
 
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- drivers/pinctrl/nxp/pinctrl-s32cc.c | 4 +---
+ drivers/irqchip/irq-atmel-aic-common.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/nxp/pinctrl-s32cc.c b/drivers/pinctrl/nxp/pinctrl-s32cc.c
-index f0cad2c501f7..6aeb93af77ed 100644
---- a/drivers/pinctrl/nxp/pinctrl-s32cc.c
-+++ b/drivers/pinctrl/nxp/pinctrl-s32cc.c
-@@ -735,9 +735,7 @@ static int s32_pinctrl_parse_groups(struct device_node *np,
- 				     struct s32_pin_group *grp,
- 				     struct s32_pinctrl_soc_info *info)
- {
--	const __be32 *p;
- 	struct device *dev;
+diff --git a/drivers/irqchip/irq-atmel-aic-common.c b/drivers/irqchip/irq-atmel-aic-common.c
+index 072bd227b6c6..543ea249df53 100644
+--- a/drivers/irqchip/irq-atmel-aic-common.c
++++ b/drivers/irqchip/irq-atmel-aic-common.c
+@@ -111,8 +111,6 @@ static void __init aic_common_ext_irq_of_init(struct irq_domain *domain)
+ 	struct device_node *node = irq_domain_get_of_node(domain);
+ 	struct irq_chip_generic *gc;
+ 	struct aic_chip_data *aic;
 -	struct property *prop;
- 	unsigned int *pins, *sss;
- 	int i, npins;
- 	u32 pinmux;
-@@ -768,7 +766,7 @@ static int s32_pinctrl_parse_groups(struct device_node *np,
- 		return -ENOMEM;
+-	const __be32 *p;
+ 	u32 hwirq;
  
- 	i = 0;
--	of_property_for_each_u32(np, "pinmux", prop, p, pinmux) {
-+	of_property_for_each_u32_new(np, "pinmux", pinmux) {
- 		pins[i] = get_pin_no(pinmux);
- 		sss[i] = get_pin_func(pinmux);
+ 	gc = irq_get_domain_generic_chip(domain, 0);
+@@ -120,7 +118,7 @@ static void __init aic_common_ext_irq_of_init(struct irq_domain *domain)
+ 	aic = gc->private;
+ 	aic->ext_irqs |= 1;
  
+-	of_property_for_each_u32(node, "atmel,external-irqs", prop, p, hwirq) {
++	of_property_for_each_u32_new(node, "atmel,external-irqs", hwirq) {
+ 		gc = irq_get_domain_generic_chip(domain, hwirq);
+ 		if (!gc) {
+ 			pr_warn("AIC: external irq %d >= %d skip it\n",
 
 -- 
 2.34.1
