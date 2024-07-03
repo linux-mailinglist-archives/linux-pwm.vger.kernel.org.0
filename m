@@ -1,53 +1,53 @@
-Return-Path: <linux-pwm+bounces-2670-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2671-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 111EC925906
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:39:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45681925911
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:40:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 43FE71C203A7
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:39:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE80D1F26B4A
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:40:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D89D17994C;
-	Wed,  3 Jul 2024 10:37:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4748017B409;
+	Wed,  3 Jul 2024 10:37:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hQT95D3u"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TPCAz/T0"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AC3178386;
-	Wed,  3 Jul 2024 10:37:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBAE17A5A7;
+	Wed,  3 Jul 2024 10:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720003066; cv=none; b=M/OaDwKtALCzWOvtBZFlcIn0MiJzPQ27OxG0WoFvSdkVZAj9VBnvWMtGIWAFHSgQ4Ep6IGCzObA+io8uO6v974FKb6gerW6VubU7Kufa82KSahsW2w7QTxR/sCZJININDso45vKJS6L7cKw1zcU7TQAvYQ0zW4Fpw7aZBnAyLWs=
+	t=1720003070; cv=none; b=Dh4I+sEOOtpyUIHTn8MCvlq2FbJKprsAU2ZHCuettmgEfD4wFveq/inzpNmRvkhW9ZkYkRFhb/EbWqozWvBdA3oQ6f7GhTJ/MK8GOq0wkGUOwAMYhSYhOcVWamLmx8eWcKber1q3ndatMNBtS19LVUB6xriDhfcL0mVEodilbrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720003066; c=relaxed/simple;
-	bh=j5j7znmI5fd3w2hwt9/RrT1UaJBOGy5KU1T1L8mUMro=;
+	s=arc-20240116; t=1720003070; c=relaxed/simple;
+	bh=s9vFYXP3nXOAk7cL4g544PIIrJmopU3NhWQWiHJFr6U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZUQAf5L6WdpieZaN5xysEH2+4DUr6mRRNgiof04QbkpEkasmBNaKBbXzfxQDRixM6zBUr/cH9UC/airG6Gc859bJklr7Mv0x6yIyPflkpLGi1ihZJUnOPqIz+GPnLbKUGtrTlM3FdMsvL5tPZiiIy5dxlbd8ZTGkMHNpOW1lezQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hQT95D3u; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=c1amoh0nzYUaRwkaI7npmoy8n6c040UUfSRdkRgPe8HAq5cLGbXVDcuPt4o7U7GsX2EMKDshSuyBcCUYfdHx0I1bkf2M+ik9asjJPzHmzQJHU4ZP6B/QgyCaodWmapIneRyqDX8zghI7hDzTbbOkUtwoBePopW7otqAdYwFoiJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TPCAz/T0; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 63F4940008;
-	Wed,  3 Jul 2024 10:37:37 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5EC1A40006;
+	Wed,  3 Jul 2024 10:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720003061;
+	t=1720003065;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rSl3CDHUnEkCbFzcda9N1h+bslENch8LOeZ/5QfMN+g=;
-	b=hQT95D3u1VMRIY9xcB1E834k+wK1UnCHPD1+uqs62UJ0G281n+vVWCbTnLIcL5tDXrSGX0
-	ukrOE06tTmXg6wVVic1Yf1zGDJvxZxPI2cs/Vh2G9Whgnc+CbuHfCZ5r1Y+IfJI3YN9GYH
-	8eFlmQvV3foLOCuokJlfWVdnjsf2ov4KcybfiiUGmEnTLUhWoxIkSD4AU2A3WdQ0JdEhNU
-	Yw4iTB7EVnyoDn5NNwCxQEsljM1j1WbYUIrPAE0OAYdx5VIF+fs/XKQl2qXueJGuZ497uO
-	xs/dP5ikFWEjtBAsz65ywcc5sPmTSSy+n884HlDWWF6SwE8fKJHq3xSlkJEWLQ==
+	bh=EvMBzEn14e6yKk5PjlGvtI8raWMZkyEBi2fnHcWl8HU=;
+	b=TPCAz/T0KUC1JcWljkNS1m/3QQPUV+bEGPxCj8IHbM5VT+MElhk1+4+fNs6/MFLApyfzQI
+	XLJb5BEYNj8uvqWA4kyMPl4VmRum+z/g0Ey74g1rLWcXwUeikXEzM9WDrlRUXnYH6PIW3F
+	Iox3ELMaRCRQsdNxNJSALqvTH7jyOCz3FLcvVMpM8XCWuLzYOPQEJQVgcrzlZkwO8cjQ74
+	Wy0xJhEAkgSRmRNZfzP0Jh/MXKV5VlDWmYeb0/gSRSP5GeluQZFz3bTg1YW7cvWASusmH7
+	xWIVXdz5a4TLRvuZ/izHJASIV+zkOOFdhl3RbgDSucxASS+p1shj+JY6WfKcQw==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Wed, 03 Jul 2024 12:36:48 +0200
-Subject: [PATCH 04/20] clk: sunxi: clk-simple-gates: convert to
+Date: Wed, 03 Jul 2024 12:36:49 +0200
+Subject: [PATCH 05/20] clk: sunxi: clk-sun8i-bus-gates: convert to
  of_property_for_each_u32_new()
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240703-of_property_for_each_u32-v1-4-42c1fc0b82aa@bootlin.com>
+Message-Id: <20240703-of_property_for_each_u32-v1-5-42c1fc0b82aa@bootlin.com>
 References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 In-Reply-To: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -106,29 +106,29 @@ parameters in of_property_for_each_u32() are not used here.
 
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- drivers/clk/sunxi/clk-simple-gates.c | 4 +---
+ drivers/clk/sunxi/clk-sun8i-bus-gates.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/clk/sunxi/clk-simple-gates.c b/drivers/clk/sunxi/clk-simple-gates.c
-index 0399627c226a..a30d14937e0b 100644
---- a/drivers/clk/sunxi/clk-simple-gates.c
-+++ b/drivers/clk/sunxi/clk-simple-gates.c
-@@ -21,11 +21,9 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
- {
+diff --git a/drivers/clk/sunxi/clk-sun8i-bus-gates.c b/drivers/clk/sunxi/clk-sun8i-bus-gates.c
+index b87f331f63c9..21f036457a86 100644
+--- a/drivers/clk/sunxi/clk-sun8i-bus-gates.c
++++ b/drivers/clk/sunxi/clk-sun8i-bus-gates.c
+@@ -24,11 +24,9 @@ static void __init sun8i_h3_bus_gates_init(struct device_node *node)
+ 	const char *parents[PARENT_MAX];
  	struct clk_onecell_data *clk_data;
- 	const char *clk_parent, *clk_name;
+ 	const char *clk_name;
 -	struct property *prop;
  	struct resource res;
  	void __iomem *clk_reg;
  	void __iomem *reg;
 -	const __be32 *p;
- 	int number, i = 0, j;
+ 	int number, i;
  	u8 clk_bit;
- 	u32 index;
-@@ -47,7 +45,7 @@ static void __init sunxi_simple_gates_setup(struct device_node *node,
- 	if (!clk_data->clks)
+ 	int index;
+@@ -58,7 +56,7 @@ static void __init sun8i_h3_bus_gates_init(struct device_node *node)
  		goto err_free_data;
  
+ 	i = 0;
 -	of_property_for_each_u32(node, "clock-indices", prop, p, index) {
 +	of_property_for_each_u32_new(node, "clock-indices", index) {
  		of_property_read_string_index(node, "clock-output-names",
