@@ -1,96 +1,68 @@
-Return-Path: <linux-pwm+bounces-2693-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2694-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F81F926169
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 15:09:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C09C9264E5
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 17:34:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2A38828D8F2
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 13:09:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2B02BB256D1
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 15:34:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39B7317967E;
-	Wed,  3 Jul 2024 13:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Rj5CV6gj"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58027181302;
+	Wed,  3 Jul 2024 15:34:44 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2482B13DDA6;
-	Wed,  3 Jul 2024 13:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CD4168C4;
+	Wed,  3 Jul 2024 15:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720012168; cv=none; b=nv7MEfG3FNCOvPbqzTVUwEgyghlZVtsMysLpL3piHkRemeXN5sJ1tCOX4hnnhvFxqhe0k83Dodi+BS1h44qpmNT2xrdkArfhaR6Ix7573N4sPpToFh4foNitjEJhThlngUsqXYS65ncUntsCzSFOUqEfRuO52fvw9WnEqSP582c=
+	t=1720020884; cv=none; b=bsFP2/ABMMvXKs0Yf8D746jqloE9inkaPqKu4IBvdwX0JLScNKli0+n5miip3CD+L24/+dlKXYkiVNnuSgS6vm0OHpjVIiVt6on2YDWWoMZNmHrMrCAfmiYpJWGgjSDCn8ENkX6v2kVqG4vYpFaQ70W2MXCfPkwHxRaL5UU4ZPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720012168; c=relaxed/simple;
-	bh=W8KnSELxoOeLFO4Bkg8ypBzvhOg9ofBU1heW/xaRe4k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KUhXTWIBUcGJyrpGl9mRkHUag8woUY3otXdtjRNvvabYEdY73vcDJFBl9fA5XE6aFhbD2PrzCDHV6YWjq+3eFALhAP5PAzno3U2KyHs+nA2KruyiT3S8xqQIqoXyOGO7HSJLYrEnTXLOlP0GiTNkrw03jVXoNrDDzfwqmEgEo7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Rj5CV6gj; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1720012167; x=1751548167;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=W8KnSELxoOeLFO4Bkg8ypBzvhOg9ofBU1heW/xaRe4k=;
-  b=Rj5CV6gjA7bdouczrb90jR05EmC8s1gMOWvzhsKmCBE2E7JT4vVZzOdS
-   uBUAswn6AJt3J0nSb+5FoxsxGyLZ8Qjxbfu2zmiNjjSxvu3WcD7WYWqAw
-   oaL948Izy4XK6SU6PNJj+gGWNskvdmGM16iSYixj+uE9bizQTgIeC96WQ
-   jjhud9EqkR3dkpschvbXGcx6IIodTZym3NgjEus87t6wVzF7FWhj8WJbu
-   N9q0TBlMOh7Imj2TJnnXptonwil+6DUI/YFI1Gcz2Bxy0O0NlYYzOOR1K
-   jJPxapoEb0zIRrd1OwkSQ3tjgKtWYGanpCYw+DuuPYiytBf/vuZz1EKfX
-   Q==;
-X-CSE-ConnectionGUID: EqW5S7eWRE2aTexdHZiS+A==
-X-CSE-MsgGUID: NasQoXC7S5Kaxo5UL3Vsag==
-X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="28777735"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Jul 2024 06:09:24 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Jul 2024 06:09:03 -0700
-Received: from [10.180.116.202] (10.10.85.11) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Wed, 3 Jul 2024 06:08:46 -0700
-Message-ID: <a8cc31a9-d58f-4a4e-98fb-a7ba47bc744e@microchip.com>
-Date: Wed, 3 Jul 2024 15:09:07 +0200
-Precedence: bulk
-X-Mailing-List: linux-pwm@vger.kernel.org
-List-Id: <linux-pwm.vger.kernel.org>
-List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/20] irqchip/atmel-aic: convert to
- of_property_for_each_u32_new()
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>, Miguel Ojeda
-	<ojeda@kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan
-	<saravanak@google.com>, Nathan Chancellor <nathan@kernel.org>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tony
- Lindgren <tony@atomide.com>, Bjorn Andersson <andersson@kernel.org>,
-	=?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>, Chen-Yu Tsai
+	s=arc-20240116; t=1720020884; c=relaxed/simple;
+	bh=bfaw19uuK8TQlCj0Vgpd7pA788Xds97aFClcqdNEz8I=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rEjV3qmZCYULnqkDT33u0WSguEBqjzlbw0t7ydB9YAKkWv16d00xtaUR3AXsPAIzhvAqyqwfk8NON8N91hXxCAydlcfrLmQnbuRb1N9v0vc4tfqcNOzX6jpKd9R/8moupA33oG0NfmG4zCKOujryLVzE2m/oog3KKd2Vqfaq4VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WDkMk3zykz6HJX9;
+	Wed,  3 Jul 2024 23:33:54 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6253A140A87;
+	Wed,  3 Jul 2024 23:34:33 +0800 (CST)
+Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 3 Jul
+ 2024 16:34:32 +0100
+Date: Wed, 3 Jul 2024 16:34:31 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+CC: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, "Saravana
+ Kannan" <saravanak@google.com>, Nathan Chancellor <nathan@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+	Tony Lindgren <tony@atomide.com>, Bjorn Andersson <andersson@kernel.org>,
+	Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Chen-Yu Tsai
 	<wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
-	<samuel@sholland.org>, Krzysztof Kozlowski <krzk@kernel.org>, Daniel Lezcano
-	<daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Florian
- Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel review
- list <bcm-kernel-feedback-list@broadcom.com>, Linus Walleij
-	<linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan
- Cameron <jic23@kernel.org>, Lee Jones <lee@kernel.org>, Shawn Guo
-	<shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>,
-	=?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Richard
- Leitner <richard.leitner@linux.dev>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
-	<christophe.leroy@csgroup.eu>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Damien Le Moal <dlemoal@kernel.org>
-CC: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Thomas Petazzoni
+	<samuel@sholland.org>, "Krzysztof Kozlowski" <krzk@kernel.org>, Daniel
+ Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel
+ review list <bcm-kernel-feedback-list@broadcom.com>, Linus Walleij
+	<linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, "Jonathan
+ Cameron" <jic23@kernel.org>, Lee Jones <lee@kernel.org>, Shawn Guo
+	<shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, "Richard
+ Leitner" <richard.leitner@linux.dev>, Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
+	<naveen.n.rao@linux.ibm.com>, Damien Le Moal <dlemoal@kernel.org>, "Peng Fan
+ (OSS)" <peng.fan@oss.nxp.com>, Thomas Petazzoni
 	<thomas.petazzoni@bootlin.com>, <linux-kernel@vger.kernel.org>,
 	<devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
 	<linux-clk@vger.kernel.org>, <linux-omap@vger.kernel.org>,
@@ -101,52 +73,31 @@ CC: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Thomas Petazzoni
 	<linux-usb@vger.kernel.org>, <patches@opensource.cirrus.com>,
 	<linux-sound@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
 	<linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH 12/20] iio: adc: ti_am335x_adc: convert to
+ of_property_for_each_u32_new()
+Message-ID: <20240703163431.0000268f@Huawei.com>
+In-Reply-To: <20240703-of_property_for_each_u32-v1-12-42c1fc0b82aa@bootlin.com>
 References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
- <20240703-of_property_for_each_u32-v1-11-42c1fc0b82aa@bootlin.com>
-Content-Language: en-US, fr-FR
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-In-Reply-To: <20240703-of_property_for_each_u32-v1-11-42c1fc0b82aa@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+	<20240703-of_property_for_each_u32-v1-12-42c1fc0b82aa@bootlin.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Precedence: bulk
+X-Mailing-List: linux-pwm@vger.kernel.org
+List-Id: <linux-pwm.vger.kernel.org>
+List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 03/07/2024 at 12:36, Luca Ceresoli wrote:
+On Wed, 03 Jul 2024 12:36:56 +0200
+Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
+
 > Simplify code using of_property_for_each_u32_new() as the two additional
 > parameters in of_property_for_each_u32() are not used here.
 > 
 > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-
-> ---
->   drivers/irqchip/irq-atmel-aic-common.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-atmel-aic-common.c b/drivers/irqchip/irq-atmel-aic-common.c
-> index 072bd227b6c6..543ea249df53 100644
-> --- a/drivers/irqchip/irq-atmel-aic-common.c
-> +++ b/drivers/irqchip/irq-atmel-aic-common.c
-> @@ -111,8 +111,6 @@ static void __init aic_common_ext_irq_of_init(struct irq_domain *domain)
->          struct device_node *node = irq_domain_get_of_node(domain);
->          struct irq_chip_generic *gc;
->          struct aic_chip_data *aic;
-> -       struct property *prop;
-> -       const __be32 *p;
->          u32 hwirq;
-> 
->          gc = irq_get_domain_generic_chip(domain, 0);
-> @@ -120,7 +118,7 @@ static void __init aic_common_ext_irq_of_init(struct irq_domain *domain)
->          aic = gc->private;
->          aic->ext_irqs |= 1;
-> 
-> -       of_property_for_each_u32(node, "atmel,external-irqs", prop, p, hwirq) {
-> +       of_property_for_each_u32_new(node, "atmel,external-irqs", hwirq) {
->                  gc = irq_get_domain_generic_chip(domain, hwirq);
->                  if (!gc) {
->                          pr_warn("AIC: external irq %d >= %d skip it\n",
-> 
-> --
-> 2.34.1
-> 
-
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
