@@ -1,53 +1,53 @@
-Return-Path: <linux-pwm+bounces-2675-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2676-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F23FE92593D
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:42:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 039AD925947
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 12:42:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A85871F2274B
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:42:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 35D4E1C209A6
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jul 2024 10:42:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7689817DA2E;
-	Wed,  3 Jul 2024 10:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9FA7180A79;
+	Wed,  3 Jul 2024 10:38:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PXSKTR7G"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KDra0sLx"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034B417DA04;
-	Wed,  3 Jul 2024 10:38:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542A417FAA2;
+	Wed,  3 Jul 2024 10:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720003086; cv=none; b=aWXR/P/vrOL6fs7wnA9lKnYPO5QWMO2nlfRMrwcB6SBv/5ReG9JACRMoV56HETCZflvnzas22BQh2/7xrRwpmhlN/701Q181GLl4fj6t0BK1Lm08549uHKrafSSl5q6P4HndJIiJ006hUu+hRyyb7MvupZ0JuMS5jIdNI5i2oCQ=
+	t=1720003090; cv=none; b=DIMKXFu0gOKe/1AcIAV11ZZyc9cKyqss8mcYq+E3FjYnfEwjtbitVg29YTHR+iC14WYHRG+bu7xtsZZz7zU4dpip/hP71ktFkogUv9xFJ1zH1sN2ItsAuSKdlq9gdVajN71NMCPyaAWqvnMGdM7lwW8shIUFzS3EMAsmm2ag0sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720003086; c=relaxed/simple;
-	bh=FiM2tocmKQVG72xvG87Ocg3vkwWai7QxIW/GdxV84YQ=;
+	s=arc-20240116; t=1720003090; c=relaxed/simple;
+	bh=tLDf0jN/+OTJID5VEM05S7mVHbzKVdlHVZuoTJIUcFA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EWwFE6gE3F/JCcFYAE7AHUEQRSVGOJA4XQyG0FCH4NxxW7NEB1r1ycHvcYAhcPXMuMYIO8wTzgO9OJp8D0Q6YQqqLNmeAbNstVVL+7bVeHMo3nuGcJMqjjLzzzl7/7w2GHu+JoyLhPq9Wk6XF2syUwmJXTdgOQH3qfoqDw1vC+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PXSKTR7G; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=h4nc+GmBQTcX6NBTwUvjw3yob9AJOPo/5weJ6rVfJXezEdpcbF0bPdWm2oWzAPTt9veGgAoCQY3MVZDdCTcEObn+NwMfrdvzD5Jvz9G3Hl2ggxe78LlgqVbuG3/BjfifLoUimcMmN4lknRM/uGxHTI8wIglUUvtryWhxILEpDtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KDra0sLx; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B050440008;
-	Wed,  3 Jul 2024 10:37:57 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D3A6A4000B;
+	Wed,  3 Jul 2024 10:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720003081;
+	t=1720003085;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8VfUyDEnUBHMYjfO4mnvOnujVbzdny+Xmf64Qw4TtE0=;
-	b=PXSKTR7G+vhp1MMTIX4fVICs2eEattO3+fekPacJce4Q3BwGaDyX9bly0M5x71zeAYENq3
-	L+POg1T5oDgJ4hjGA1TfmlgtRH6J5muhqFmouMew+3B3PVI/kLqFjUiQKFWpabiv6tYatP
-	v13RUSFpPI3eDcNeXOmLySxD2K7vRVyninm9hhPO/ZBUNHKJIgss785QRGfdw8AothmYH9
-	pA6ARdXWf+WrxVGQR6omvR1D3LW5TRKisC7GFZfe5Wb2Fj5idDzXZ5dzslvY1pKt2PJuEm
-	PgJRmL+vSfc7mtPsMGz+qHi/1PgiwBVfhsgcDcBw5DwdPBozOdPur1QtHlbTCg==
+	bh=kkDzWgqNUaE82FJnkubFv5bmOm6gl+/qOlOF60MzBZI=;
+	b=KDra0sLx8nTaCo2T20Rc+TTQn6dCftv+NLxXaIVH+RIs1q2YoMq0B82YrEyVgDvGjds6nu
+	RC2jLpfRcLHtf2pR9BxXyBbFfxUIIlp6w5d5IuYUNsHEqb0XXHvrI6eTEkZI8Pao8QkZo1
+	npSEexxCHK5YjW6udTXDNIQB9KQm5SQTA+Q1D4zyO5QgOyHhdtDJdiG5AWTLN6xyGdm7mn
+	/rWYkwWLKd5725CoTxczcY5BmOKymQHIaEPwiKZRPPwVVLko5kKwiYIOwkX0YkSZs8ExX0
+	uWjIn4FxLkr+64anVbbkf4GN0HOCjjfWYJVJmVaQxxlx9SayHwzv1TA6Kd/5CQ==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Wed, 03 Jul 2024 12:36:53 +0200
-Subject: [PATCH 09/20] gpio: brcmstb: convert to
+Date: Wed, 03 Jul 2024 12:36:54 +0200
+Subject: [PATCH 10/20] pinctrl: s32cc: convert to
  of_property_for_each_u32_new()
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240703-of_property_for_each_u32-v1-9-42c1fc0b82aa@bootlin.com>
+Message-Id: <20240703-of_property_for_each_u32-v1-10-42c1fc0b82aa@bootlin.com>
 References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 In-Reply-To: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -106,31 +106,31 @@ parameters in of_property_for_each_u32() are not used here.
 
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- drivers/gpio/gpio-brcmstb.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/pinctrl/nxp/pinctrl-s32cc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-index 8dce78ea7139..77557bc596cd 100644
---- a/drivers/gpio/gpio-brcmstb.c
-+++ b/drivers/gpio/gpio-brcmstb.c
-@@ -591,8 +591,6 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 	void __iomem *reg_base;
- 	struct brcmstb_gpio_priv *priv;
- 	struct resource *res;
--	struct property *prop;
+diff --git a/drivers/pinctrl/nxp/pinctrl-s32cc.c b/drivers/pinctrl/nxp/pinctrl-s32cc.c
+index f0cad2c501f7..6aeb93af77ed 100644
+--- a/drivers/pinctrl/nxp/pinctrl-s32cc.c
++++ b/drivers/pinctrl/nxp/pinctrl-s32cc.c
+@@ -735,9 +735,7 @@ static int s32_pinctrl_parse_groups(struct device_node *np,
+ 				     struct s32_pin_group *grp,
+ 				     struct s32_pinctrl_soc_info *info)
+ {
 -	const __be32 *p;
- 	u32 bank_width;
- 	int num_banks = 0;
- 	int num_gpios = 0;
-@@ -636,8 +634,7 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 	flags = BGPIOF_BIG_ENDIAN_BYTE_ORDER;
- #endif
+ 	struct device *dev;
+-	struct property *prop;
+ 	unsigned int *pins, *sss;
+ 	int i, npins;
+ 	u32 pinmux;
+@@ -768,7 +766,7 @@ static int s32_pinctrl_parse_groups(struct device_node *np,
+ 		return -ENOMEM;
  
--	of_property_for_each_u32(np, "brcm,gpio-bank-widths", prop, p,
--			bank_width) {
-+	of_property_for_each_u32_new(np, "brcm,gpio-bank-widths", bank_width) {
- 		struct brcmstb_gpio_bank *bank;
- 		struct gpio_chip *gc;
+ 	i = 0;
+-	of_property_for_each_u32(np, "pinmux", prop, p, pinmux) {
++	of_property_for_each_u32_new(np, "pinmux", pinmux) {
+ 		pins[i] = get_pin_no(pinmux);
+ 		sss[i] = get_pin_func(pinmux);
  
 
 -- 
