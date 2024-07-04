@@ -1,118 +1,166 @@
-Return-Path: <linux-pwm+bounces-2698-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2699-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFAF0927A6C
-	for <lists+linux-pwm@lfdr.de>; Thu,  4 Jul 2024 17:46:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC5DE927E8E
+	for <lists+linux-pwm@lfdr.de>; Thu,  4 Jul 2024 23:32:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA32628243F
-	for <lists+linux-pwm@lfdr.de>; Thu,  4 Jul 2024 15:46:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80E8D284A40
+	for <lists+linux-pwm@lfdr.de>; Thu,  4 Jul 2024 21:32:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 280E61AEFC1;
-	Thu,  4 Jul 2024 15:46:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE280143872;
+	Thu,  4 Jul 2024 21:32:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M79pxWxm"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="S0JEVBhI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DDF1BC23;
-	Thu,  4 Jul 2024 15:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E7D7346E;
+	Thu,  4 Jul 2024 21:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720107962; cv=none; b=aQoC96zrXMWjRxkCY81xkPhmvoYRlLzPwOLCVGJJHEgW1lrtlZiujnGrIgOO4yQjV5bk4GZWJTpqXhmXW6dWlDqUth3bYjOHcbIoRSZ7pvo2nrXItC16d8/P8SERrLDuNOJiz0ncXRDWYKx491U9BfALekiaFt2s/WGpw1Y9P9E=
+	t=1720128735; cv=none; b=DZGw/OcogMQof1U3M+hlIY6X5j6CVY1XLLiEmj75OJ4vNcH67GwiW1Q8fhQ15g8G+XXA0LR330OR5vyKarSVOeeg2a9p7t47Zdes1N8Kw5+CT0kprR4Kqnmi38L02p2yYojUV/pX6wjtUxiYvnbv5yLeeGt0ZrDb0+wz78d0MAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720107962; c=relaxed/simple;
-	bh=ikOqTh/MUlIZlNenqgKLen74t9yi5HfP2j1aIiu+p2c=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=PbGMwueS1yhZLQL0UIZbYG3lytPgYZMn//KrFXd5eCQ9F6lDIZ1pFtwyWgWpgbYv7sELHX2LLykTkmg7JXP+KHF9q0kgheDoa5QlatTcjS8BI5pq6vDKhwnAP+A9uBYP+2emIE20yH4jCLSZWz6tVVRfP+po/vxvNv+Vd0z+kSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M79pxWxm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF0BC3277B;
-	Thu,  4 Jul 2024 15:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720107961;
-	bh=ikOqTh/MUlIZlNenqgKLen74t9yi5HfP2j1aIiu+p2c=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=M79pxWxmvR20BDCjHvKzcsgsT1LIbfvpngUCC02oPX6v+Y2srb89pSrp3fccLxCBO
-	 SU3mS+j37mhQQYlLmjwuU7f6Jf3pEcAFQ2aSx5+qTYw8nVdfCSUmb/ZXFPxrLUq6iN
-	 Nhrq3DmaphKiBgmnDKEkGl6hgHscKSEe/+VuD+qtsa1gjFV+TWEkIp8iATOJDMIWO8
-	 LA0TotsZ4+rHRNZ74n36LNdYVDrS8QCHTIo7ZQVPqZOdff7Jog86xAPFC4h2C54yNQ
-	 QNFqnx/bowx/0494Gm1k2A3DulJO8Tnkq0induXo3w8ks8htsLoQL3jUbi31Ornl3p
-	 Q8FF13SfEsG+Q==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org, daniel.thompson@linaro.org, sam@ravnborg.org, 
- jingoohan1@gmail.com, deller@gmx.de, linus.walleij@linaro.org, 
- f.suligoi@asem.it, ukleinek@kernel.org, 
- Thomas Zimmermann <tzimmermann@suse.de>
-Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
- linux-pwm@vger.kernel.org
-In-Reply-To: <20240624152033.25016-1-tzimmermann@suse.de>
-References: <20240624152033.25016-1-tzimmermann@suse.de>
-Subject: Re: [PATCH v2 00/17] backlight: Introduce power-state constants
-Message-Id: <172010795899.506663.6662347475872437728.b4-ty@kernel.org>
-Date: Thu, 04 Jul 2024 16:45:58 +0100
+	s=arc-20240116; t=1720128735; c=relaxed/simple;
+	bh=jEOP4tmTJgNwT4VJJ/H4/e/Pm5Ggkrq6iv0SA5dQ8ws=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aEdY1vZXnp4q1ZgWKD8Vx0Yl1lmjGa63OpOWxBKnb1JMPmzahNymJaKTYM9dMXW3sfI3/I92OfBmhKNRocf2tGVCwclQLhO8sRY17opnqDGp/7nA+2sF6W46EPjS0rfT1qULVpw7otozRNkiTDVerLmxMvlGOfheEWGOHH9tEiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=S0JEVBhI; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BD86AFF802;
+	Thu,  4 Jul 2024 21:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720128729;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rey18xTlnMgOgIPL25ImB7B15sMWYzxAsvnHNthV5S0=;
+	b=S0JEVBhI3tfc5ntPMObRrKKeyUXsGRrO+dmrSHHiA/CXiaTrDzUnuWN/8RLan/W8yEPBYy
+	WTaC4P67s78ijbrvczP1KnuPtKQbrRcwlYEqUPZPpZW0nhX/siqNP/GhziUB79nYOQPi8r
+	PhP0fpq9va52mSjevxSqg9gaf/S2Ukug9XtKh8mzSUYLpNZp80MAwL96mMkrYY7WNzzmay
+	5AT/X7DCWHP8tVhsE6o3C1PHb0Q9g3z2DXN4uHMidHU5Rwoaz4Y/LepANuZA6Uuvs21L3L
+	95mP/Ounvba0aITTStBPv4Esd+fhuzK/5YdBxhSIiG700JAP0NMtF9NGxcnshQ==
+Date: Thu, 4 Jul 2024 23:31:55 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ Nathan Chancellor <nathan@kernel.org>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tony Lindgren
+ <tony@atomide.com>, Bjorn Andersson <andersson@kernel.org>, Emilio
+ =?UTF-8?Q?L=C3=B3pez?= <emilio@elopez.com.ar>, Chen-Yu Tsai
+ <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+ <samuel@sholland.org>, Krzysztof Kozlowski <krzk@kernel.org>, Daniel
+ Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel
+ review list <bcm-kernel-feedback-list@broadcom.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan
+ Cameron <jic23@kernel.org>, Lee Jones <lee@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Uwe
+ =?UTF-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Richard
+ Leitner <richard.leitner@linux.dev>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
+ <naveen.n.rao@linux.ibm.com>, Damien Le Moal <dlemoal@kernel.org>, "Peng
+ Fan (OSS)" <peng.fan@oss.nxp.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, llvm@lists.linux.dev,
+ linux-clk@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-usb@vger.kernel.org, patches@opensource.cirrus.com,
+ linux-sound@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 00/20] Simplify of_property_for_each_u32()
+Message-ID: <20240704233155.61b5323c@booty>
+In-Reply-To: <20240703180742.GB1245093-robh@kernel.org>
+References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
+	<20240703180742.GB1245093-robh@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Mon, 24 Jun 2024 17:19:55 +0200, Thomas Zimmermann wrote:
-> The backlight code currently uses fbdev's FB_BLANK_ constants to
-> represent power states UNBLANK and POWERDOWN. Introduce dedicated
-> backlight constants to remove this dependency on fbdev.
+Hello Rob,
+
+On Wed, 3 Jul 2024 12:07:42 -0600
+Rob Herring <robh@kernel.org> wrote:
+
+> On Wed, Jul 03, 2024 at 12:36:44PM +0200, Luca Ceresoli wrote:
+> > [Note: to reduce the noise I have trimmed the get_maintainers list
+> > manually. Should you want to be removed, or someone else added, to future
+> > versions, just tell me. Sorry for the noise.]
+> > 
+> > This series aims at simplifying of_property_for_each_u32() as well as
+> > making it more difficult to misuse it in the future.
+> > 
+> > The long-term goal is changing this pattern:
+> > 
+> >   struct property *prop;
+> >   const __be32 *p;
+> >   u32 val;
+> >  
+> >   of_property_for_each_u32(np, "xyz", prop, p, val) { ... }
+> > 
+> > to this:
+> > 
+> >   u32 val;
+> > 
+> >   of_property_for_each_u32(np, "xyz", val) { ... }
+> > 
+> > So, removing the 3rd and 4th arguments which are typically meant to be
+> > internal. Those two parameters used to be unavoidable until the kernel
+> > moved to building with the C11 standard unconditionally. Since then, it is
+> > now possible to get rid of them. However a few users of
+> > of_property_for_each_u32() do actually use those arguments, which
+> > complicates the transition. For this reason this series does the following:
+> > 
+> >  * Add of_property_for_each_u32_new(), which does not have those two
+> >    arguments (patch 1)
+> >  * Convert _almost_ every usage to of_property_for_each_u32_new()
+> >  * Rename of_property_for_each_u32() to of_property_for_each_u32_old() and
+> >    deprecate it, as a incentive to code not (yet) in mainline to upgrade
+> >    to the *_new() version (last patch)  
 > 
-> Patch 1 introduces BACKLIGHT_POWER_ON and BACKLIGHT_POWER_OFF, which
-> replace constants from fbdev. There's also BACKLIGHT_POWER_REDUCED,
-> which is required by a few drivers that appear to use incorrect or
-> uncommon blanking semantics.
+> I don't really see the point of introducing the _old variant. Let's get 
+> this done in one step.
 > 
-> [...]
+> > 
+> > The plan for the next series is to additionally:
+> > 
+> >  * Convert the few remaining of_property_for_each_u32_old() instantes to
+> >    of_property_for_each_u32_new()
+> >  * Remove of_property_for_each_u32_old()
+> >  * Rename of_property_for_each_u32_new() to of_property_for_each_u32()  
+> 
+> Honestly, I think there's few enough users we could just convert the 
+> whole thing in one patch. It's all got to go thru 1 tree anyways. If 
+> there's new cases in -next, then I'd be happy to send it to Linus at the 
+> end of the merge window.
 
-Applied, thanks!
+Sure, make sense. I'll need to convert the few remaining users, then
+I'm sending a squashed v2.
 
-[01/17] backlight: Add BACKLIGHT_POWER_ constants for power states
-        commit: a1cacb8a8e70c38ec0c78910c668abda99fcb780
-[02/17] backlight: aat2870-backlight: Use blacklight power constants
-        commit: 26dcf62333f1c1ec33a469339a287ab8eecfb06e
-[03/17] backlight: ams369fb06: Use backlight power constants
-        commit: 1adf98242e0ec33f15c4f7a1e86ad76abf209665
-[04/17] backlight: corgi-lcd: Use backlight power constants
-        commit: e263c051910190feba884179aef15e548273a7aa
-[05/17] backlight: gpio-backlight: Use backlight power constants
-        commit: ef51815c5f970b228a775ceb3bb06ce46fe9ff86
-[06/17] backlight: ipaq-micro-backlight: Use backlight power constants
-        commit: b6675c59473a26dec33281e4e872cf09f6321523
-[07/17] backlight: journada_bl: Use backlight power constants
-        commit: 6910d19bb861db0721a171f4e351c290a40f1d19
-[08/17] backlight: kb3886-bl: Use backlight power constants
-        commit: cebc25971f7f988dfd4d6c7269deea4c1ca5898e
-[09/17] backlight: ktd253-backlight: Use backlight power constants
-        commit: def5831f09db8937218be50fc652d20c0a68e417
-[10/17] backlight: led-backlight: Use backlight power constants
-        commit: 814d3e820039348f1467ada9a8a812c0b80733de
-[11/17] backlight: lm3533-backlight: Use backlight power constants
-        commit: 761c83910b3d10e731b03438b883d271c295a9a5
-[12/17] backlight: mp3309c: Use backlight power constants
-        commit: c2d9c4934bf4e12b531312bbf02a8543f6a23aae
-[13/17] backlight: pandora-backlight: Use backlight power constants
-        commit: d4db2f193490415386ee13f714a0940943cbb149
-[14/17] backlight: pcf50633-backlight: Use backlight power constants
-        commit: eca6b3ddfc554a9a51795cf035ccd60f2d842074
-[15/17] backlight: pwm-backlight: Use backlight power constants
-        commit: eb1c4b6ddde6867498ead8d4b92d6abb5f736a7d
-[16/17] backlight: rave-sp-backlight: Use backlight power constants
-        commit: 22f8a85ef0c563ba7e53d9ece39c1f2dc99f53ed
-[17/17] backlight: sky81452-backlight: Use backlight power constants
-        commit: 1df5aa3754cac2045998ca505edb84d994786c67
+Luca
 
---
-Lee Jones [李琼斯]
-
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
