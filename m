@@ -1,137 +1,139 @@
-Return-Path: <linux-pwm+bounces-2711-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2712-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EB109286C0
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jul 2024 12:27:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2D3A928EBA
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jul 2024 23:15:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9CD21C22B2E
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jul 2024 10:26:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4B6E1C20A51
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jul 2024 21:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C51CC148832;
-	Fri,  5 Jul 2024 10:26:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E5DA14BF98;
+	Fri,  5 Jul 2024 21:15:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ZHAYlIox"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="aa3WSvXw"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940251487E1
-	for <linux-pwm@vger.kernel.org>; Fri,  5 Jul 2024 10:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA432145A10
+	for <linux-pwm@vger.kernel.org>; Fri,  5 Jul 2024 21:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720175187; cv=none; b=Y4Ewrrrsyniprx5TQDI9n1Aleptumk0Vu8G4IMoPlZ7g9PQ+Vi3AiVqJqagVDZ26xrkIMZDa1zCNPIgPyNVR33854Xxc7DEqLrsS1RIlE3M3xPt6NhElKKBqF5q6JfNrS3ozq3tyyomJeG4ycdxhO5wFr6ZfHfvK+NDCmXA3T6o=
+	t=1720214109; cv=none; b=QGhCwjsGIatg24xakEfPPw16wz2LncPt9qgjCaLvhNDBfI0L8tN95mOMTBPrH/Lfp1PBZmGi9pAAwI/GhS6sLJ5UHn5sDMIQbVe1mzy/OZccJr3y+/wglbnrWwTra56b+pGRhw+xEdc52mjGqD+8WfDITD5XMHT0uqsN0rtbWxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720175187; c=relaxed/simple;
-	bh=BUmE3qER9ieyD2/NrG82vKREHf6CuM644mPR05VblOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hU1cuwzxVf55ocMI1cniSImpYE0Kd6lWibeIlU3tCU1/je5BshpAmGUFEnPqOwNvv/nX8Y+ABWJBriLAV+zmCod8efENeHdJYIg0/ZWC7XtLOa6ACxDNZD9ftUV/VyTfSlfPfnKO+DrbYP3nFcxmbdflG/SWCvtLJf2XxPS3jOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ZHAYlIox; arc=none smtp.client-ip=209.85.208.47
+	s=arc-20240116; t=1720214109; c=relaxed/simple;
+	bh=jw8m2Q8SxhikYPSpGO5e6XgC5WWnQALTy43ul0xbcKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=m2aNbuSUvb60k2ZWecxIha4XkmAT8BIeMBPotqt5LwpLyj13r5h5FCTXtMoUOAaxW2WZLRdAvdr1nXZCKdU/bguTxMwu1emaq/9zaAxRvYNpkHX7ljZ9kxiDAr8kpu8tXImLk4IjefNkJcwfRj3mawOX8rahyG2KClTabT8CGRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=aa3WSvXw; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-58ef19aa69dso1402124a12.3
-        for <linux-pwm@vger.kernel.org>; Fri, 05 Jul 2024 03:26:25 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52ea33671ffso1517221e87.3
+        for <linux-pwm@vger.kernel.org>; Fri, 05 Jul 2024 14:15:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720175184; x=1720779984; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BUmE3qER9ieyD2/NrG82vKREHf6CuM644mPR05VblOc=;
-        b=ZHAYlIoxZLFPO/iXn4WSJin98oVcK//dtsQY+iwUgkq9uhdv/XzUeeXDwi8bu9AeQs
-         BOfflcuS61mb0i6tPqBmWRP0k+kgJeI8datPSyE/zyejL1o73XUa9Dgc8bmRcPa9ee80
-         QOQVPT/mKGMkWz5+PkT+SeuOfckiT60OVIi3IuM43D71iC8HDT0pB8uouwDYzZY4u/kW
-         FhVR7mPdwkwEPraPKlF9YJ0XRHem26LyLqR9WRy4eHLCw8nFraNAZy9rSQQBySlpVcyl
-         G6vApY3ctlrtNtum+zvihf8nnyP+nNFOgrrEtS+juGAkVJrOo+WYAxdCrgsluR0sLWSC
-         xB0w==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720214104; x=1720818904; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uip5gtsGJN8be4BC5gcYviodP+GbV+3zApaZVxbcrG0=;
+        b=aa3WSvXwKfk2cM5qh8zsVYPHpfpgTV90tdCC0tNLQkChiZboaoTTZEWNASP84VARuY
+         rx9xlEUpapxJGQhfz9gdqfJ9JooIUyvX3L13mOQONe1xXqRWmCUa1hiX4I9qsyVjDIOp
+         /xV6JoyfEBovzAWHyXOwDrHY+qfUXBJfr5EfugzgNaWRvEqOzV8ZEZzxoRDDgMQSONkC
+         VJ0Rp7eAewCDjywtkjAzbI8LOAx+S+LLoBi1LvIy43V4xN7P8vv4/4yr9hEhDM2V1XS7
+         srFestvnQ4DyoSMWMcyEfdBCkQoJsFS9Hm3P6BayHuZxdR1Wutp/eJLkUzLZ90K0DJOo
+         XCuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720175184; x=1720779984;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BUmE3qER9ieyD2/NrG82vKREHf6CuM644mPR05VblOc=;
-        b=uem2uFDPfn/RJ7SSTfCc+91WtDII5/fQLx/JFd6LuoCuiEtFcbbiroWnyYeNa7ADod
-         lpKkZHmVQRK1wMUvEMMLoyln28o1aSANGTVg6yhjjDEifxG2RvzQXoV8H4qbhsEIhXiC
-         0PqUrJc39R9q+u1kC8wmrcogEyyR5WwDTNbeoyXgDYDUnxFNuf5j9+033Hca+XRxKbR2
-         LR3hWcs59sckiroeIMEgbv/C2J3zftj56iqejWI3QySXnEvhHhq5Tyf4HhO2xwjCl+gh
-         nI40lDpSNev/iKuhMOrSNssczyvtcp6rW0vLkXZDcg6FYnVhjHrj4r55dyQ2TzqzK9zP
-         jj5w==
-X-Gm-Message-State: AOJu0YysLLLXd3agN8xXzc6+oSpPHz0kLRZ3tt4/O9HyruOd8s5Ru05d
-	2GWmLS3UKv1efA0ooE6DQ/3TC6YUn812z3nzKQ/KGai8bC/ZIc18ZGrAphOMhyMaAn/DiS4c53K
-	t
-X-Google-Smtp-Source: AGHT+IE1rSn2X87qkqdJmwZGsXpatgj+zUD7FMouIiZKXjQib+9BvbIpc6TZOqy3RHvp9AY7UVImmg==
-X-Received: by 2002:a17:906:ae97:b0:a77:b516:3026 with SMTP id a640c23a62f3a-a77ba44c954mr262337166b.3.1720175183877;
-        Fri, 05 Jul 2024 03:26:23 -0700 (PDT)
-Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab0b35a5sm667175866b.201.2024.07.05.03.26.23
+        d=1e100.net; s=20230601; t=1720214104; x=1720818904;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uip5gtsGJN8be4BC5gcYviodP+GbV+3zApaZVxbcrG0=;
+        b=MiyFEAbFU7FELXiQOwaIqyOUJ+zoTLyNgZPIk4KyYETzgm6O9rmqP/4d+mPVTtDwtJ
+         Dcj7991aUCoi+EiaGBv5v92hSQfn5xYf/ugLKH2VkzEwHh+Pmi/RYIXUq9oYweoFG1be
+         XqZZk1H8SCBMOhQjTE50YQnG5E2R/MNrRIXCqpqAz8byx9OUxy5RnApw60VY3R8TSWfx
+         eOLdt2OCXAsMItAaMk7q+7AR6JDAUHfcOqR+xmyozpizVNqrUvLcuFq9GzFVS+UhEZs3
+         6hVnMgr9alNHU4t3+Ggpay/rHWc0HfSpYIH+DIIr8f4lIGH01n8e+yHl3JYRm8sCEZ54
+         CrnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNigjm/+kO5ep8uueOqaXbuZxDzr+X3k4sM8bRz63YLaP7D+EEjOVqMJvxYGJJzyujDGnj2E4gWkcer0DTpEljvJ6Bs41y5rzz
+X-Gm-Message-State: AOJu0YznXveSEdhnxrXS68/HOlV+WiMNRcJkYFEIPwtE21ElcZyJPlnU
+	LCGaAOfhSIOHy0RL+93iPml5lPbFEcw0ZA/P9c5cle/w0KswA0t3Dy+dycaLa82GHFhXnv6Wsk2
+	2oeA=
+X-Google-Smtp-Source: AGHT+IF5Ap1gpOOKIeYhmDrnv6TWcHQ27uju4b+P8Pp6OHSdvTAizrxr2T6HxI9xOc7L/vWCVEbRCA==
+X-Received: by 2002:a05:6512:3e19:b0:52c:86d6:e8d7 with SMTP id 2adb3069b0e04-52ea0636acemr5778613e87.13.1720214103948;
+        Fri, 05 Jul 2024 14:15:03 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72b033f3a3sm682994666b.187.2024.07.05.14.15.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 03:26:23 -0700 (PDT)
-Date: Fri, 5 Jul 2024 12:26:22 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: Thorsten Scherer <t.scherer@eckelmann.de>
-Subject: Re: [PATCH] pwm: Allow pwm state transitions from an invalid state
-Message-ID: <iy4nsk4o45exoszyym4jfb67svv4rxre5eicummbqt2v4fucos@sqgkqdajgahk>
-References: <20240628103519.105020-2-u.kleine-koenig@baylibre.com>
+        Fri, 05 Jul 2024 14:15:03 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] pwm: Make info in traces about affected pwm more useful
+Date: Fri,  5 Jul 2024 23:14:51 +0200
+Message-ID: <20240705211452.1157967-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3ia3wlhnar7ys7dq"
-Content-Disposition: inline
-In-Reply-To: <20240628103519.105020-2-u.kleine-koenig@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1550; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=jw8m2Q8SxhikYPSpGO5e6XgC5WWnQALTy43ul0xbcKU=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmiGJMK+QFWU9D9g3FagOCuuzwOs8vNO0cfgd/4 u1BgUtRureJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZohiTAAKCRCPgPtYfRL+ TtWIB/47LiQT3BQPF/H6bE9LJozKnweLcc29sF5trcTNndjr5H8CUkx8w9HAnxYoEThOASjHdML Owm3rvh9J3a5DrMetpHDEAPKfBWb8lUvF5yw7CN8tHa2EdHyDx42jiiljw6JPxhi2JqfFXwpz10 mWfdFOzQPAix9qzPSCHdB9BB+sLUuhNjIeaeaxjeOkH/jIsKSEno8xrvzaiYgkxOE/RxoaGQPNE dS0xiZv5KsSQReNYqOnGM6Rr8mXK2vLCNrLtc1XfzS4JFv47oGCLzPm0STGwGaJ30XlYC+hF154 s/dVGZoOr4KVsb7yEq71+3sH0iokiACknr65DkyJOQxha9gU
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
+The hashed pointer isn't useful to identify the pwm device. Instead
+store and emit chipid and hwpwm.
 
---3ia3wlhnar7ys7dq
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ include/trace/events/pwm.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Hello,
+diff --git a/include/trace/events/pwm.h b/include/trace/events/pwm.h
+index 12b35e4ff917..8022701c446d 100644
+--- a/include/trace/events/pwm.h
++++ b/include/trace/events/pwm.h
+@@ -15,7 +15,8 @@ DECLARE_EVENT_CLASS(pwm,
+ 	TP_ARGS(pwm, state, err),
+ 
+ 	TP_STRUCT__entry(
+-		__field(struct pwm_device *, pwm)
++		__field(unsigned int, chipid)
++		__field(unsigned int, hwpwm)
+ 		__field(u64, period)
+ 		__field(u64, duty_cycle)
+ 		__field(enum pwm_polarity, polarity)
+@@ -24,7 +25,8 @@ DECLARE_EVENT_CLASS(pwm,
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->pwm = pwm;
++		__entry->chipid = pwm->chip->id;
++		__entry->hwpwm = pwm->hwpwm;
+ 		__entry->period = state->period;
+ 		__entry->duty_cycle = state->duty_cycle;
+ 		__entry->polarity = state->polarity;
+@@ -32,8 +34,8 @@ DECLARE_EVENT_CLASS(pwm,
+ 		__entry->err = err;
+ 	),
+ 
+-	TP_printk("%p: period=%llu duty_cycle=%llu polarity=%d enabled=%d err=%d",
+-		  __entry->pwm, __entry->period, __entry->duty_cycle,
++	TP_printk("pwmchip%u.%u: period=%llu duty_cycle=%llu polarity=%d enabled=%d err=%d",
++		  __entry->chipid, __entry->hwpwm, __entry->period, __entry->duty_cycle,
+ 		  __entry->polarity, __entry->enabled, __entry->err)
+ 
+ );
 
-On Fri, Jun 28, 2024 at 12:35:19PM +0200, Uwe Kleine-K=F6nig wrote:
-> While driving a PWM via the sysfs API it's hard to determine the right
-> order of writes to the pseudo files "period" and "duty_cycle":
->=20
-> If you want to go from duty_cycle/period =3D 50/100 to 150/300 you have to
-> write period first (because 150/100 is invalid). If however you start at
-> 400/500 the duty_cycle must be configured first. The rule that works is:
-> If you increase period write period first, otherwise write duty_cycle
-> first. A complication however is that it's usually sensible to configure
-> the polarity before both period and duty_cycle. This can only be done if
-> the current state's duty_cycle and period configuration isn't bogus
-> though. It is still worse (but I think only theoretic) if you have a PWM
-> that only supports inverted polarity and you start with period =3D 0 and
-> polarity =3D normal. Then you can change neither period (because polarity
-> =3D normal is refused) nor polarity (because there is still period =3D 0).
->=20
-> To simplify the corner cases for userspace, let invalid target states
-> pass if the current state is invalid already.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+base-commit: 6ba37c70795abf1d59976b3a49acafac14b72a4f
+-- 
+2.43.0
 
-Applied to pwm/for-next.
-
-Thanks
-Uwe
-
---3ia3wlhnar7ys7dq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaHykYACgkQj4D7WH0S
-/k7tmQf6AsfYpGqkQ1U14HlOiU8hHae5JDl7t7o7RAyOA64b7I7sML4WenWj5ndO
-EGqhf1u9ioTpjHCOxXqbMk3SXC13tNsqpK2PLPOEEFJg0tcsJgk4Oivy96zAYV3g
-m1c4x8mSv5XCEsHCFGKa789ZTZ0M/E7olFjvrh5qr1tF9+MF5Cx9KCdfmSKPqJnq
-OjGmbMtMNRn13P34KiE3D/tF94Na9obk9QxZT+cCdgNccAyRV7zk5a9DMOBZMUmA
-gRcCDGhXNxhurtIiPzlpVl/JBLLPZwU9WvHRbg+iVO1gNiYXO3OBfLtczvZGXmUm
-uZmK4e6xn3C3BGXNLrW/Y2sLKflu+Q==
-=VN9j
------END PGP SIGNATURE-----
-
---3ia3wlhnar7ys7dq--
 
