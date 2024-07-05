@@ -1,79 +1,80 @@
-Return-Path: <linux-pwm+bounces-2709-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2710-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C942C9286B8
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jul 2024 12:24:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72ECD9286BE
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jul 2024 12:25:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F3C91F23DBF
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jul 2024 10:24:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84EFA1C22979
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jul 2024 10:25:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5621514658F;
-	Fri,  5 Jul 2024 10:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67AE6148836;
+	Fri,  5 Jul 2024 10:25:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="sD32wygm"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RGmJkZ3r"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5231EE576
-	for <linux-pwm@vger.kernel.org>; Fri,  5 Jul 2024 10:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E0D1487C0
+	for <linux-pwm@vger.kernel.org>; Fri,  5 Jul 2024 10:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720175057; cv=none; b=QzcCFORQ8ntR/iuHYZ+g9Q5S1Sp1mA1QAuFPM0DO8NZM2IWteeGn9qjbwbzIAPvRZPmjwGy84SUWpug0d8S3MuUbKuGMQbpJ20OsFZhivW48ce+8+cJZfeF6X9Mwbi7jDK7DA1prHMXxfGht07yZTKaumVi+vTIdJJsoTLpN6u4=
+	t=1720175128; cv=none; b=SX+EMTe7uoeERqVltihJNgQ8EDOqdndG+8TT6MmKFwpeuvv8ibK0kQe/9KuyDs+32FJ0HiMdn/mS9VIUsOBa1KH9Et4NUmDVY71ieY0xGsCkZZfS8WC3YLN5SDiATlNTt2DZnb1Tli3GdA1RY2RB089PZdVNYqa38T2vnFMFDYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720175057; c=relaxed/simple;
-	bh=P1nA1h6YOIbEnYGcIW2Ke6Rh04m/vOPb/zX43OeAYOw=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n9JyXdQufhmULa0xpxmWpKKX1S/cN44lMeciIp2sC3e5DfNq4jbqB98eXma3cmysGJleCWv5Mb7/ZWxAGvUIEqP4lKDrcAXMxB8gRznsr2POyDZ9RPoPKVGNRI0zXfzv9qBHcwwBvacZMuKUzYVAP0EKxQOP3cm/AMpNm1BD9Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=sD32wygm; arc=none smtp.client-ip=209.85.218.46
+	s=arc-20240116; t=1720175128; c=relaxed/simple;
+	bh=ywsX3rqyJDEnXGfB7lQ77XNLltDqNQ0HeFlGYMpcJkU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l1jo/Qbw8fb2YKOp2avCsgFKgSnRxX4Z3su3dNA0NXFkOqGGuFu9chT7OwI+w2Phdvyjs0QGUOrrT28nFQ49AVUryK7JEQ/zN/St4pOUVowZqwXRiAR4UhMGKW7YnZeVD/thvOCkxA+d0QyrN0Mp5ryh/o504L/SDx39ccF/WuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RGmJkZ3r; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a72988749f0so200081066b.0
-        for <linux-pwm@vger.kernel.org>; Fri, 05 Jul 2024 03:24:14 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5854ac817afso1833257a12.2
+        for <linux-pwm@vger.kernel.org>; Fri, 05 Jul 2024 03:25:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720175053; x=1720779853; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720175123; x=1720779923; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vut5Som8NiXgZ4rQxUUsqKPoLtpmIn0mBcuKAT2Zubs=;
-        b=sD32wygmoh6WPCzRCR7xjnVM1lxrqkmGGSBRYT1qRaWlHlD7XNVwB/y0GBYjfHRNRc
-         Lj2BusTn2RDKg+fRESd3WI3QrruBwZE1MZREu0VQ4xW7OadAqOoM+YcJ2QJHcN7HE8jg
-         CuBs5+rGfF4TrU8gvl3RPpll/vVdeNpOAl7qndGaZHKvX+5cYl4+9PVGVvk15B/0y7Ei
-         fnu2/nGgToyVKTH1/udntmoT/ejrkmTMdXVFea5zTW3sRhRDj4ExjacTJnJKEEBEUCOV
-         Q/GzBi/VSSF/95N9EyjuRKeiK2WIBxVfMkhbtmF7n15FwzkQAm6Q64/xIz0kMYhhuiOD
-         MDDg==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ywsX3rqyJDEnXGfB7lQ77XNLltDqNQ0HeFlGYMpcJkU=;
+        b=RGmJkZ3r3bj40PduIzvLPK0kztdWXK23bUulHnecEBaRipm56OTeBakzp8PvGlqp4V
+         Q354leq7vKwD9y0ORvLrn4ivpSpUBj+1exyERBbkJKk1Vz0IVlKqbZsQ0a1FJzBzRNdB
+         CABo2wyO5sXbb4I3UgchHtXyGHyZX0DoilWLh9E/ovZE7dSVKFK+VVVPIzISGoIO3Avb
+         SB9KQbS8KKI0vqR0vmx+liZUE0EF1LDbYcaJ8Z6OOIUFTTYJogAAs9Sr4cntnH9bDz4p
+         1n18Xt1vlLBwQnOtjmq5l62OJ7RbfFBzuQYIRv2njI9sznqyaUzVbUWuYGUnXpInwPfn
+         DaVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720175053; x=1720779853;
+        d=1e100.net; s=20230601; t=1720175123; x=1720779923;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Vut5Som8NiXgZ4rQxUUsqKPoLtpmIn0mBcuKAT2Zubs=;
-        b=M1m1hiuO1zmIUnYkmv19mxZN/794MqwrIDHHCg48ekz2kuAABRzY8rUP0ijveCMSLB
-         Zkvb2izvio8X2+Ms/DdEWIMThShsqLhWIVUn2qreUskTKMA46PriTrn64IDV1DnWb1QH
-         btCIzCSpMAkpAjVf3QUxwMxZ8WmkZA/VNQsWt61Enuozy6SCyHbTofP3cN1nUSTkjqa5
-         hId6HJ32jXJfFH4U4oEWlzxXhrlOpClCtbPg9/XoCKH7KS04pld3cK3lPrXj10JlS4m8
-         5rOEGjijxLbU6ErkbVZwhaQLWhRHyQxzuryGC4bPIZFQg2knMmm0LSofG7K/0kn2K/L7
-         xfnQ==
-X-Gm-Message-State: AOJu0YxDScQp1jw5k+eCv0YNYu8hM7rY5EpHRVGi1M4GiogLv5ekV/3Q
-	kdPJshBHe+ODFgGQlsZEkoO01IUam9CHJjXVAITKG1QYdwdcVafXhCF1M14Xco9w7N+rcgnY/lf
-	2
-X-Google-Smtp-Source: AGHT+IGGI6ibTe9MT8WtwCGyev7cismVExOZV1jVs7L/Cph795gtegB8Hl+IN+4F52tMvcoMuhK+tw==
-X-Received: by 2002:a17:906:ae47:b0:a72:4b31:13b5 with SMTP id a640c23a62f3a-a77ba7099bamr293701766b.54.1720175052594;
-        Fri, 05 Jul 2024 03:24:12 -0700 (PDT)
+        bh=ywsX3rqyJDEnXGfB7lQ77XNLltDqNQ0HeFlGYMpcJkU=;
+        b=dVCf09tL1k0GKX8NX+HR+Z+OiLHPdUNOrPx1g4vKud3rs1w+SdpqpigkK81BsDNU42
+         FEgruVZG+EHRmeAalA+w97Vw+7vfe9f+CoxHQJEy1FVTSZEC3vPyE/XC+WKz+VxjkvFd
+         pPEj3gOVXX1JQcpvTtiqMcVEVZ/K8w3Oh2R8PuIWlkYngIOR+XrP68KinPDx/7Gz5gGv
+         O993aPoybuB7mxeuR9B3ettLLTJSY2OYhevQWWmP35JbhlrekCMSdVJHjakFwAmjgACK
+         sVp6+pXeNW0Frga+W54GRMEMj/lh95EVVJ/p467QOIJPWOx2+yoF2vzWB/Rt6DWQapvC
+         oREw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/pzgbpAzGZheo7DvLmzPGZeIpH+HwW87iS1M1HCgfy6aR1nQUG4BjIfObFJjHGCOJjlGVAPifTAsk3Izj4nOhFF4FUo+/6ycK
+X-Gm-Message-State: AOJu0YwdWob93npN8lW8Ad8J16y1cYJ05ekONPqg9VymOVlt31K2to7B
+	mdDynp+sV257nMq/+TtXKmEJIO+k1V+f513f3Zf828eBvnxx0um6c5rTPpCJ1s/h+aoaxhMotZ3
+	B
+X-Google-Smtp-Source: AGHT+IHrVKzJibG1DmMinK/eI7ZRdyf9y3+X603s3gHlos0umcceNm4Cu2VqtwH2Bm5lvFEqe26iMA==
+X-Received: by 2002:a05:6402:3594:b0:57c:6740:f47c with SMTP id 4fb4d7f45d1cf-58e5c6366a2mr2586980a12.27.1720175122761;
+        Fri, 05 Jul 2024 03:25:22 -0700 (PDT)
 Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77da4d20e6sm12348566b.182.2024.07.05.03.24.11
-        for <linux-pwm@vger.kernel.org>
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58ffe0f88d0sm366991a12.85.2024.07.05.03.25.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 03:24:12 -0700 (PDT)
-Date: Fri, 5 Jul 2024 12:24:11 +0200
+        Fri, 05 Jul 2024 03:25:22 -0700 (PDT)
+Date: Fri, 5 Jul 2024 12:25:21 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 0/3] pwm: Use guards instead of explicity mutex_lock +
- mutex_unlock
-Message-ID: <kc5g5dg7pakgy4n6clb4a665vo3eyyuwt6uwbdt2nuydtvjfai@sgh33ljymsre>
-References: <cover.1719520143.git.u.kleine-koenig@baylibre.com>
+To: Sean Anderson <sean.anderson@seco.com>
+Cc: Michal Simek <michal.simek@amd.com>, linux-pwm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] pwm: xilinx: Simplify using devm_ functions
+Message-ID: <vfumnk5botofe5mk746kqivsnzfxvimn2fz57rtxsdzdzxsjvc@ma3ro5df6plm>
+References: <20240628063524.92907-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -81,53 +82,48 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="d7bx635jlr4yx4rh"
+	protocol="application/pgp-signature"; boundary="pu6l6bnwpzdrd2g6"
 Content-Disposition: inline
-In-Reply-To: <cover.1719520143.git.u.kleine-koenig@baylibre.com>
+In-Reply-To: <20240628063524.92907-2-u.kleine-koenig@baylibre.com>
 
 
---d7bx635jlr4yx4rh
+--pu6l6bnwpzdrd2g6
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-On Thu, Jun 27, 2024 at 10:31:18PM +0200, Uwe Kleine-K=F6nig wrote:
-> I consider this a nice cleanup. It makes the code more compact and it's l=
-ess
-> prone to error, because you cannot forget an unlock in an error path.
+On Fri, Jun 28, 2024 at 08:35:23AM +0200, Uwe Kleine-K=F6nig wrote:
+> There are devm variants for clk_prepare_enable() and pwmchip_add(); and
+> clk_prepare_enable() can be done together with devm_clk_get(). This
+> allows to simplify the error paths in .probe() and drop .remove()
+> completely.
 >=20
-> Best regards
-> Uwe
+> With the remove callback gone, the last user of platform_get_drvdata()
+> is gone and so the call to platform_set_drvdata() can be dropped, too.
 >=20
-> Uwe Kleine-K=F6nig (3):
->   pwm: Use guards for pwm_lock instead of explicity mutex_lock + mutex_un=
-lock
->   pwm: Use guards for export->lock instead of explicity mutex_lock + mute=
-x_unlock
->   pwm: Use guards for pwm_lookup_lock instead of explicity mutex_lock + m=
-utex_unlock
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
 
-I applied the series to my pwm/for-next branch.
+Applied to pwm/for-next with Sean's R-b.
 
 Best regards
 Uwe
 
---d7bx635jlr4yx4rh
+--pu6l6bnwpzdrd2g6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaHycMACgkQj4D7WH0S
-/k4jZggAlFtgs3v01s7sXgX7DZlddYHClZz5k7m/H4dTmDJER1M/2KqJ3apEuwXt
-MLh3uHsJgtZ0qTLrccN54LroBBRA625OEk/aHc3gLHLsK5XHLrXQQp4lhxcnKT44
-HjMO1n6uU8WtDl/+e4q8/4fWpt3xoFuNIFS42Wu7aNnpKjv+Kpztw+aXFsd4Wo5T
-POFNQrOdbNMOIOJf8drOQsVebxv1jcO2RnocQLKLXQ4j+TTvfrQWGLg2Jh87GEZs
-Q9vcJT7R0iTKAWj7Ko7mRLE/A8ytCBYLTSLUWzLW1684krfoA94wRf7TlHqf2+nX
-MCwIqyx62oIzmyFr7ewehHkZ2nJsRg==
-=KhQ6
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaHygkACgkQj4D7WH0S
+/k7j/Af/fkhiOgbpjlVGDl4SdA66m03wL/TRezmBiA8vf9freUOvBPmfE4iVKrTy
+Bq5ONHqq36aQcjE+DBSyUiYPqXf/Bnr8cA5158UdcrskpPlsDb1GLvihH6BciBGZ
+abe+miOAQz7cAha1I0C12pQeNLZHtH6W6yjjkBxnHbmSdmAuL4CjtBAiGt1a0Ui6
+xf5RGFyfwhwKY+GNW6lrmMbsIfdcxWIQld9Nwq1RwFiycZOo6XaGvUMeY4Rqnl7Y
+3xSeYQg1c4nJjXDz539RRWr6P0Q7fLtmyYbxO8lx1X8p/dSrc/u2xfaKQbJ9Rqfi
+O1pMvDeWi22ZFZbOw/AGk1e7crR63w==
+=/Qlb
 -----END PGP SIGNATURE-----
 
---d7bx635jlr4yx4rh--
+--pu6l6bnwpzdrd2g6--
 
