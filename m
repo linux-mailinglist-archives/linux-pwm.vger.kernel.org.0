@@ -1,81 +1,105 @@
-Return-Path: <linux-pwm+bounces-2705-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2706-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBF899284C4
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jul 2024 11:09:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5A8C9284F8
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jul 2024 11:21:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92AC52863F9
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jul 2024 09:09:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0081C1C20A4A
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jul 2024 09:21:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEDC31465B0;
-	Fri,  5 Jul 2024 09:09:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19A021465BF;
+	Fri,  5 Jul 2024 09:21:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KK6SxJ5n"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="BHxXWldj"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12ED1146583
-	for <linux-pwm@vger.kernel.org>; Fri,  5 Jul 2024 09:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E47145FF5
+	for <linux-pwm@vger.kernel.org>; Fri,  5 Jul 2024 09:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720170558; cv=none; b=MSsfgCeo71oz4uAYP8H5WaeXRcnd6UgE79ED4JmBBVjHEqvc/WdVps2UWEZImzwt5bqV8p1woqYWE4oOpgH8u2P8zlLOVmkGWRDmRTXvsoseHUkkirSqTPnWhZursACohAUKXqawyB8xTGwhclp/sa280Q4rUOkrL37w1+isUcc=
+	t=1720171290; cv=none; b=d4Yfwn+eXjRO38BXLSFe3K8u3PsXSEBqy6YnB2ZuQErV93HiUj77ZC6d69fthb6LR6DaOUN6FdfEmre5EMMotl11VVdzTNi6G+QG9sL1Zsk6uKBnuSpiezvNijmwaXn7d6KVgT4foOvC4N+gWk/DY0ziqt6/UI+WJOORXUQy5C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720170558; c=relaxed/simple;
-	bh=z7uln/wCHBuVL23Qb6fK90d/XfI2YedBBgXbvaPu1+4=;
+	s=arc-20240116; t=1720171290; c=relaxed/simple;
+	bh=DAsvD8/mLkcQAkkYRWz+VC5gPXf282xVyAGgndXBPhk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q8CcNi1ZBbjOXUf0RMT3NJZ/VKbfeUHs7GDoQ+v5dIqhviEZpmA570wNx9LrU3bPuQSt6h9vYJotIq9+dJUoZbrBmzv0p7OAYI4by921e0gMyB9FogamWBsIZ8daiBY0NbmGf5VJHiO76u1IrTmgtlJi3ew7oCUmd/BLuBqYPfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KK6SxJ5n; arc=none smtp.client-ip=209.85.208.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=eKsUP/fbdIak/oHCopZET/OFbuuKBWXLnHsulp/3gNh2eSsIoEQxgxEHwtV7wjC5jS885eNqfVk9Hwrfs9gms9V7heHh15TGMsT+eGh+Zwh0ZgOEtHsXSrPhCe152Ib9ZzNIT2qNDQmXVqo0hgpbBs+qP4B2Q0y+kXtoRA/GaHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=BHxXWldj; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-58bac81f40bso1992226a12.1
-        for <linux-pwm@vger.kernel.org>; Fri, 05 Jul 2024 02:09:15 -0700 (PDT)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a77c349bb81so93378166b.3
+        for <linux-pwm@vger.kernel.org>; Fri, 05 Jul 2024 02:21:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720170554; x=1720775354; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720171286; x=1720776086; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yawcdPmdc9R5nFHXmROZ5YiAiTzKYfck2rMJGJ0W1kc=;
-        b=KK6SxJ5nU4lB3JZ8mP8u1ghrSqksETJhT/kH9xC3+3a8HjgDkh6MKG0pWQPQI9kbjx
-         bJ/oPeOAESH/Iift8cL/5LOuVgOeba08dTKenKMxeyXNEoz8scd+F7UHyMaMwgI/BUTF
-         z+5HiGbEkuBPyZiGQFKMmZgDih9tqs9qZWEzbEAaTd24efRqWxvWka+J9ZVvC2VwhnT0
-         kSOH8zoZI9JcvVJOxhN+JkGgpoCKzpJY7sPKIp5FdYFwYuv2+7yY5zavlfuHhcjxhP/n
-         p2Jc7VKrWIZvfbAtAzUfyZCAtfWCaJvsBerkjUvGbJmOX856jiKb97mKngjb7DsoYnc1
-         2F9Q==
+        bh=DAsvD8/mLkcQAkkYRWz+VC5gPXf282xVyAGgndXBPhk=;
+        b=BHxXWldj+hHqE2ns8S7/HAU42Z7MkYBmemSuhBWSrNKLJElFlh+Q7FcO+aA+P9LbaA
+         EAYq1RdO44rOCVBQIN7NgVzw5+vw9GZXvknaG0YFg/JZExIY6Ex6YAvsSbvIyrCbT1Fk
+         SymdVF1FI8op/8C6GBynndXKuBvrUlCd7+Orq+SdWWRrmREve0aOYgn+m9F7lNz8pCmy
+         FX7mtN7hJUMBz7mmYMIbddHt6ohOM24jP83x4BCkktmhK91m4j7HsLvHwH7jy1VI5k4S
+         M7Qyb+ARd26QRITXmUIfMXUvfuVm+MhhkaFkNiZglCxndpvv5En9S08MJPo8WpnSxewy
+         oRRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720170554; x=1720775354;
+        d=1e100.net; s=20230601; t=1720171286; x=1720776086;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yawcdPmdc9R5nFHXmROZ5YiAiTzKYfck2rMJGJ0W1kc=;
-        b=GyCtWXDy1v46XXFU8922cRggBpI0PGoXEwbjdwdC/5g75/FPE+P66rGjKx1MTlH04v
-         Ak6sSC+VhfaJHByyiIECpFcihKUDIXncVUix6RHlwweVRW8Zlxqr7aoGqWQWJb8fl1Fa
-         /G+NbqIbz/6hFOdPJBMsEQu/DJjCrZ/84w0qgHNg9aEJODm+Yc8ZfLvRHjaLULqVFRrs
-         FPt3goDaC2oKgaKJ1MVyHngWH5ic3m237mN845jLab7kH7NmPp+DTU1Hby/OS6uuTFdA
-         0h0MZ8mA+kM71BzW0ZYNR4TrOhmfkyynDrm0guyzJpdayYJ5m0osn1l9wPnC7vW9qFyK
-         Vs0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXcQ5A7gfNlNnl73N8WKinu9NJaKdnlF72iyczbnvo7XT2w/mYmIBFgFDAXlCx5snbSfBLszQPKMhutcqPrnkPVXtGdhSQ/BOCm
-X-Gm-Message-State: AOJu0YxgfKtMr1iKTVzdKXo2v0ZBrhsMYAAqbtD4RvG3ssDIdtvF84xd
-	7LYIzBsdm9f2eyPCM8flBhGt7Ce6vxdGUD14Ut8N30NhLEG0UnpvYotmR/LE0oY=
-X-Google-Smtp-Source: AGHT+IHsYMalDL4OFCPxRq3oohtjYA/UuspzbffcUEicK/5Ws4VMPv3kobeNAJ/RWF12C4F4dwAbOw==
-X-Received: by 2002:a05:6402:278c:b0:587:86d8:8b54 with SMTP id 4fb4d7f45d1cf-58e5a6ee9f5mr3180323a12.4.1720170554293;
-        Fri, 05 Jul 2024 02:09:14 -0700 (PDT)
+        bh=DAsvD8/mLkcQAkkYRWz+VC5gPXf282xVyAGgndXBPhk=;
+        b=ZHoJDqwYoUOcWeAZ1i+Wr91LFpeo2+xARKSuIqJeLHGKnu7MAQB2qACWNVXMTaV3KS
+         0KhrIO/BbHf6qxcS7aeU1fR/xrJ18JxUvUB8S2s3+qcCRx1y87jyBTE2kTnCjU0YNURy
+         cn3jeSaABSmSgHKXfG+8VkYTgOl5WfBDIIP5BiJhd6dT4buA/CTmcxAncI/VhKgfXJA0
+         tYUTA5caBeshX1zaCqKxJ8amGKk+YHcacTFEML36QnTp0hukqeTPZeOcYsDQMdalCL9+
+         Zqg7CgnMJMyt0xylWEudYIx+0vZRJtMvk9keHLrNLtrmCayMVBaCxO0XSn7a1gaPuuwp
+         TQgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVolUssVuSXjIeNUXfsoURINOvg86n6r1Za3M+P7wWNBX+XzNkGYB7+gWgoT3MSALQ77DcC/hoEBpqJT5OR+FHY+OvRAlwvltea
+X-Gm-Message-State: AOJu0YwC1A2b96pT+NKAKi+9wCHUmS5s25zpU1Vf36c+D9SPs9QeXLY/
+	dBkp46/yaHnxwVAGMxUKP4wI0sQglxcB+umKw/GL6z4UW/gdjP3hHEOSkfxsy88=
+X-Google-Smtp-Source: AGHT+IH5GBzifj2YL+uV1tph7kmD/UU37Fput+e22tUxmHwQFDW0cLo/eN2fRQ1OiC6xRmZjvtbAaw==
+X-Received: by 2002:a17:906:fb95:b0:a6f:b400:4751 with SMTP id a640c23a62f3a-a77ba46ccffmr181755366b.22.1720171286291;
+        Fri, 05 Jul 2024 02:21:26 -0700 (PDT)
 Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58f90b20091sm646111a12.45.2024.07.05.02.09.13
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77d9cdf337sm10855266b.53.2024.07.05.02.21.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 02:09:13 -0700 (PDT)
-Date: Fri, 5 Jul 2024 11:09:12 +0200
+        Fri, 05 Jul 2024 02:21:25 -0700 (PDT)
+Date: Fri, 5 Jul 2024 11:21:25 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: jdelvare@suse.com, linux@roeck-us.net, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-hwmon@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-Message-ID: <drqvaon5lb2ei3jqofutbr6demibyfdhbmr24sva27gzpqdnon@fxa7rpl33iih>
-References: <20240528225638.1211676-1-chris.packham@alliedtelesis.co.nz>
- <20240528225638.1211676-2-chris.packham@alliedtelesis.co.nz>
+To: Nikita Shubin <nikita.shubin@maquefel.me>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, 
+	Hartley Sweeten <hsweeten@visionengravers.com>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Sergey Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Ralf Baechle <ralf@linux-mips.org>, "Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
+	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-spi@vger.kernel.org, netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	linux-ide@vger.kernel.org, linux-input@vger.kernel.org, linux-sound@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v10 00/38] ep93xx device tree conversion
+Message-ID: <jyvlqfvqn5bp3jmvxvwyrcqmihjohuq3o757mfph7x37kbwvtq@gtgyh4fca4fq>
+References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
+ <CAHp75VfSC9gAD9ipeWRPdQOxUp4FXqYYei-cJTs38nbz0cHpkg@mail.gmail.com>
+ <48c242838c77034485a9e667dc0e867207c5beed.camel@maquefel.me>
+ <241a4cf9830b0118f01e8fcf2853c62527636049.camel@maquefel.me>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -83,172 +107,127 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bgu6tv6sylwa4466"
+	protocol="application/pgp-signature"; boundary="icynwgj6p72h37hs"
 Content-Disposition: inline
-In-Reply-To: <20240528225638.1211676-2-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <241a4cf9830b0118f01e8fcf2853c62527636049.camel@maquefel.me>
 
 
---bgu6tv6sylwa4466
-Content-Type: text/plain; charset=us-ascii
+--icynwgj6p72h37hs
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Chris,
+Hello,
 
-sorry for taking so long to respond. Don't take it personal, I'm way
-behind my maintainer dutys in general.
-
-On Wed, May 29, 2024 at 10:56:36AM +1200, Chris Packham wrote:
-> Add fan child nodes that allow describing the connections for the
-> ADT7475 to the fans it controls. This also allows setting some
-> initial values for the pwm duty cycle and frequency.
+On Thu, Jun 27, 2024 at 11:29:44AM +0300, Nikita Shubin wrote:
+> On Tue, 2024-06-18 at 19:20 +0300, Nikita Shubin wrote:
+> > Hello Andy!
+> > On Mon, 2024-06-17 at 12:58 +0200, Andy Shevchenko wrote:
+> > > On Mon, Jun 17, 2024 at 11:38=E2=80=AFAM Nikita Shubin via B4 Relay
+> > > <devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
+> > > >=20
+> > > > The goal is to recieve ACKs for all patches in series to merge it
+> > > > via Arnd branch.
+> > >=20
+> > > 'receive'
+> > >=20
+> > > > Unfortunately, CLK subsystem suddenly went silent on clk portion
+> > > > of
+> > > > series V2 reroll,
+> > > > tried to ping them for about a month but no luck.
+> > > >=20
+> > > > Link:
+> > > > https://lore.kernel.org/r/20240408-ep93xx-clk-v2-1-adcd68c13753@maq=
+uefel.me
+> > > >=20
+> > > > Some changes since last version (v9) - see "Changes in v10",
+> > > > mostly
+> > > > cosmetic.
+> > >=20
+> > > ...
+> > >=20
+> > > > Patches should be formated with '--histogram'
+> > >=20
+> > > 'formatted'
+> > >=20
+> > > ...
+> > >=20
+> > > > Changes in v10:
+> > > >=20
+> > > > Reordered SoB tags to make sure they appear before Rb and Acked
+> > > > tags.
+> > >=20
+> > > This is not required. The importance is only the order of SoBs
+> > > themselves. If they are interleaved with other tags, it's fine.
+> >=20
+> > Ah - ok. Just saw someone was complaining about b4 reordering them.=20
+> >=20
+> > >=20
+> > > ...
+> > >=20
+> > >=20
+> > > Hopefully to see this series being eventually applied soon.
+> > > Arnd? (Do we have all necessary subsystem maintainers' tags, btw?)
+> > >=20
+> > >=20
+> >=20
+> > As i see from my perspective only three left:
+> >=20
+> > Clk subsystem:
+> >=20
+> > - clk: ep93xx: add DT support for Cirrus EP93xx
+> >=20
+> > DMA subsystem (but the only request from Vinod, as far as i remember,
+> > was fixing commits titles):
+> >=20
+> > - dmaengine: cirrus: Convert to DT for Cirrus EP93xx
+> > - dmaengine: cirrus: remove platform code
+> >=20
+> > Beside that tags missing on platform code removal (which can be Acked
+> > by Arnd himself i believe) and dtsi/dts files (same ?).
 >=20
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
+> Vinod acked the above two patches:
 >=20
-> Notes:
->     I realise there is still some discussion about how to express the
->     frequency and duty cycle. I have a personal preference for using hertz
->     for the frequency and 0-255 for the duty cycle but if the consensus is
->     to express these things some other way I'm fine with doing some math.
->    =20
->     Changes in v4:
->     - 0 is not a valid frequency value
->     Changes in v3:
->     - Use the pwm provider/consumer bindings
->     Changes in v2:
->     - Document 0 as a valid value (leaves hardware as-is)
+> https://lore.kernel.org/all/ZnkIp8bOcZK3yVKP@matsya/
+> https://lore.kernel.org/all/ZnkImp8BtTdxl7O3@matsya/
 >=20
->  .../devicetree/bindings/hwmon/adt7475.yaml    | 25 ++++++++++++++++++-
->  1 file changed, 24 insertions(+), 1 deletion(-)
+> so only:
 >=20
-> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Docum=
-entation/devicetree/bindings/hwmon/adt7475.yaml
-> index 051c976ab711..bfef4c803bf7 100644
-> --- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> @@ -51,6 +51,15 @@ properties:
->        enum: [0, 1]
->        default: 1
-> =20
-> +  "#pwm-cells":
-> +    const: 4
-> +    description: |
-> +      Number of cells in a PWM specifier.
-> +      - 0: The pwm channel
-> +      - 1: The pwm frequency in hertz - 11, 14, 22, 29, 35, 44, 58, 88, =
-22500
+> - clk: ep93xx: add DT support for Cirrus EP93xx
+>=20
+> https://lore.kernel.org/all/20240617-ep93xx-v10-3-662e640ed811@maquefel.m=
+e/
+>=20
+> left.
+>=20
+> Hope Stephen will find some time for this one.
 
-Nack, don't deviate from how PWMs are usually referenced. So specify the
-period in nanoseconds, not Hertz.
+As we're approaching the merge window and this is still unclear, I
+applied the pwm bits (i.e. patches 12, 13). If I understand correctly,
+patch 33 isn't suitable for application yet as it has a dependency on
+pinctrl changes in that series.
 
-> +      - 2: PWM flags 0 or PWM_POLARITY_INVERTED
-> +      - 3: The default pwm duty cycle - 0-255
-
-I'd be ok with that, however please add support for that in the pwm core
-and then just use that.
-
-You wrote that you find it irritating that the duty is specified in
-nanoseconds and not a percentage. The reason for that is historic. Also
-it gives a more precise specification (at least compared to the naive
-representation of the integer percentage as an integer type).
-For the rework of how PWM waveforms are represented I picked
-"duty_length" as variable name for this value, in the hope this is less
-confusing.
-
-untested prototype for a 4th member in pwm specifiers:
-
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 5c1d20985148..f732235df12d 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -251,7 +251,7 @@ int pwm_adjust_config(struct pwm_device *pwm)
- 	 * duty cycle of 0.
- 	 */
- 	if (!state.period) {
--		state.duty_cycle =3D 0;
-+		state.duty_cycle =3D pargs.duty_length;
- 		state.period =3D pargs.period;
- 		state.polarity =3D pargs.polarity;
-=20
-@@ -437,6 +437,10 @@ of_pwm_xlate_with_flags(struct pwm_chip *chip, const s=
-truct of_phandle_args *arg
- 	if (args->args_count > 2 && args->args[2] & PWM_POLARITY_INVERTED)
- 		pwm->args.polarity =3D PWM_POLARITY_INVERSED;
-=20
-+	pwm->args.duty_length =3D 0;
-+	if (args->args_count > 3)
-+		pwm->args.duty_length =3D args->args[3];
-+
- 	return pwm;
- }
- EXPORT_SYMBOL_GPL(of_pwm_xlate_with_flags);
-@@ -457,6 +461,10 @@ of_pwm_single_xlate(struct pwm_chip *chip, const struc=
-t of_phandle_args *args)
- 	if (args->args_count > 1 && args->args[1] & PWM_POLARITY_INVERTED)
- 		pwm->args.polarity =3D PWM_POLARITY_INVERSED;
-=20
-+	pwm->args.duty_length =3D 0;
-+	if (args->args_count > 2)
-+		pwm->args.duty_length =3D args->args[2];
-+
- 	return pwm;
- }
- EXPORT_SYMBOL_GPL(of_pwm_single_xlate);
-@@ -1353,6 +1361,9 @@ static struct pwm_device *acpi_pwm_get(const struct f=
-wnode_handle *fwnode)
- 	if (args.nargs > 2 && args.args[2] & PWM_POLARITY_INVERTED)
- 		pwm->args.polarity =3D PWM_POLARITY_INVERSED;
-=20
-+	/* Maybe extend this to apply args.args[3] if args.nargs > 3? */
-+	pwm->args.duty_cycle =3D 0;
-+
- 	return pwm;
- }
-=20
-@@ -1514,6 +1525,7 @@ struct pwm_device *pwm_get(struct device *dev, const =
-char *con_id)
-=20
- 	pwm->args.period =3D chosen->period;
- 	pwm->args.polarity =3D chosen->polarity;
-+	pwm->args.duty_length =3D 0;
-=20
- 	return pwm;
- }
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index f8c2dc12dbd3..678a97706eac 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -41,6 +41,7 @@ enum pwm_polarity {
-  */
- struct pwm_args {
- 	u64 period;
-+	u32 duty_length;
- 	enum pwm_polarity polarity;
- };
-=20
-(I think it doesn't make sense to use a u64 here. At least the oftree
-values are only 32 bit wide. I didn't check the ACPI part, if that is
-only 32 bit wide, too, it would make sense to make period use a 32 bit
-type, too.)
+(side note: Your patches are signed, but that doesn't bring any benefit
+if the receivers don't have your key. I didn't find it neither on
+keys.openpgp.org nor in the kernel pgp key collection.)
 
 Best regards
 Uwe
 
---bgu6tv6sylwa4466
+--icynwgj6p72h37hs
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaHuDYACgkQj4D7WH0S
-/k4H9Af+O1HkX2H4GXenGFqpvtMnbx935Ir2D1Fj9LzGpibaiBBA3v2zbr22qpPJ
-YwlBG7YQken7sjySLxHLYTtgsqofwWThNKkRE94iJmGLNcE29IW0oq6ATryTiry4
-V/F3T3X78rjpK5lTWnLZzs1A8lsIwD+XBZfczkq79fcwUOFN5bLCXHv/GyMTkwuQ
-4uedlGEPZZ/kL1QfzBztKuw9Z46Yfkh8KRYAuW75EkDjfyl8VMWGDFi+lX1wGioC
-eIaBxX9qcBhoKmT+27g4HctQ3Cp4XdLD2qM856PO1I5+dTaGFKuZXeN4KdjeULnn
-l/5NTnIRGwFWHmasBFUe0VAxOnWoaQ==
-=KiYp
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaHuxIACgkQj4D7WH0S
+/k63agf/ctyXHUSwirhdvMJNeHEME1eqwJPf8P71cxUigi0cvcf0NrTT4jEqglzC
+BqT8dRZCw6LKUShZlhwO7ymRXcAjNYTvFLuJKQYOGuVQZQEtoK7PDa80NeQjFhZP
+r0CwuOQfcg2ovACIA1T/iSX2APqGatvsO4Ke7h2u5kawsGxQIu2TZnfPDhwTIdqj
+Ib33BChvzlU45YrMZrQUHKE3/3XOHyxVvZSutJmaHLtSdIOE/fPr/U5anDzjdWFS
+gxrbDGE0Z3LyDIb0OB8iZiVIeyXDjysmlTdYpfPQi3/4JT+ohaNXgpSC5dmYo/s+
+R6QHGSe+ahTTQGyCjdYkOM/hMh/CiQ==
+=1/WB
 -----END PGP SIGNATURE-----
 
---bgu6tv6sylwa4466--
+--icynwgj6p72h37hs--
 
