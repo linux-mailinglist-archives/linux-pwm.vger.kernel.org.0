@@ -1,87 +1,80 @@
-Return-Path: <linux-pwm+bounces-2720-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2721-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA80D92A087
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 12:53:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 21FD792A08A
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 12:53:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DA4A41C20F99
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 10:53:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 431621C20FC0
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 10:53:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E6C117721;
-	Mon,  8 Jul 2024 10:53:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6131878276;
+	Mon,  8 Jul 2024 10:53:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lpUfoC0d"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="pihhcRLN"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8486178C70
-	for <linux-pwm@vger.kernel.org>; Mon,  8 Jul 2024 10:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2B578C7F
+	for <linux-pwm@vger.kernel.org>; Mon,  8 Jul 2024 10:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720435980; cv=none; b=V/43wgzGuR3U6mjjKzjOMNCg3rCvi6xTv84I96tI3QLeVbZ9+D4rWwVTnd8SMt4gzVW2wBz5vVU0UljVSSV05Z8iGDGlxLH4ZyYErOwLc86qYs3tThGuQhlzyTEk8rp1JIs/6aoSix45Ad7c2W8MZBPOMN0UemK8Wt38xUtIGqc=
+	t=1720435981; cv=none; b=YS4CawsbvXT/aTFT3PBD8fGa7SRg0699Is7tYaTlX00HMaNvN/rq7fQHUBpMB1ky4ki6jEsRLTiIzSuK09XRNb7on3OTDEuFHU/DakcBYvOt8RPHp24BCjYq+Syn43+l2IEVWzBlASEpzyiPhEzJKYsumzDCcKjnRtl/RGGt/a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720435980; c=relaxed/simple;
-	bh=Yb0WIAoaOKNp5Xv4PSSI4KumM0UVBL2yI5MvTxK0YKQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o1jMVGvgheCkI/3UHmgFhYWXbno28XmD//ETAxAF/McgWZlOK49W/AAnGeOKMV1hUf5Gs3CtR/HpJ0/0CIetPRDixfOU/+1derL3tmoJ6nq5NgMX/AT9ZsUqj7tENobkTy0TvudrWRSb4os/egWotDrHttNFfvhaOA1bbF4zwaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lpUfoC0d; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1720435981; c=relaxed/simple;
+	bh=GGCCgLkO274+XDpQcgYgeQzKCK43CBf3srjmHwgoVz4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lq0o5e9SwMjCQlphohFUjuaYsYOCoRtyB6zCg+MlNJn1UnUEjEQohviE0k7qTZXOx9BjQcUFqMA+BFc3Ff8O/xSdW2raPLnUmgJvCh2pDFJWeCegfnI3WyaqXqXnzvXl/aDD4Wj+kZ3RhbSTG2Ar3cZGNmunz1ycq6ULyZcl5To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=pihhcRLN; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-36799fb93baso2534701f8f.0
-        for <linux-pwm@vger.kernel.org>; Mon, 08 Jul 2024 03:52:57 -0700 (PDT)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-367ab50a07aso1846381f8f.0
+        for <linux-pwm@vger.kernel.org>; Mon, 08 Jul 2024 03:52:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720435976; x=1721040776; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9t9CW2ikDJ93nVzHMjsfMYNAYP8IQbMk6FtSVUZ+Oyo=;
-        b=lpUfoC0dLAyD9F/v1/cnFdgcq9/TJtG0vk8VwrRsPFlT9x/tMH4pQAzH1OfGJFLuC1
-         2y2zKrTVD0RHWUehsJbdbkkoB8GdwmwpK44JKRztK7IFZZ2rgJutyoNgwGeJzhiznWww
-         QXGTFkfO9CAkJoyEaYLPOdQICnLRxauUs2lFDbbi9q5PjVIhMP2z9EWwW3qjQYSg+yzC
-         ZbseQYn/vMufCgh5/kuytEVG35zfb5C8+UZrjwso37QKNCGVr1bwW1RlqPz+zc7mj054
-         mhrMu2sefqiik0kdT2/tLA0cUhL2eNoltXNk2Wgxot0S30PzBqxiJD2vDwjIOsGMoF3Y
-         T7rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720435976; x=1721040776;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720435977; x=1721040777; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9t9CW2ikDJ93nVzHMjsfMYNAYP8IQbMk6FtSVUZ+Oyo=;
-        b=TrYmzI9eOE1SAV2T1kIGsqpxyH06fynSQ/ZRf8s1e/Y8RnSxQGXnv+Mc2jrTv+dGwh
-         qpEqDmLTLMGWJzKC2Gjz4UgT9q7mtHbasdxIFqJX2qsZg7DhzG2kAwTHTlo+LdLLTnZ3
-         nrOHljE/ahksB11kE+EckoAzW2agIAGhMdkuH0bmZTwQvKUTwZTZeXxkVL+zZ8UraLlz
-         Id8urjriwllnSCfXcfw793C0a56M1sOh3PuBFtXUQkw4qAAfaPEyVPCiWE3HEUN9+lB6
-         SQKfn49rzIgDVC1p69biaA7SB8Wbnr0uqrVfJI3vFW7swGZ5iM+Rep6hNfT9BYBoDFtV
-         +xXA==
-X-Gm-Message-State: AOJu0Yx+Mazix23f7nJ+7w921r0GGvjpcrgwPnV7ixKw1YhtZZIqr+uK
-	ud8plbIThCQ1YZX+Uoja1DsTJG7D3dfLt3x5q+nmgUaxXHc/yjaEe3Q1tOmFckvgtAOSHtQtdLT
-	R
-X-Google-Smtp-Source: AGHT+IGdYnypB7xTlH719+DjiVuD4czKnIEonrQHHTOzz00kZsM072lcPEtJDLFCd8IDnJcosZHsxA==
-X-Received: by 2002:a5d:698b:0:b0:367:8fee:443b with SMTP id ffacd0b85a97d-3679dd56208mr7132968f8f.41.1720435975893;
-        Mon, 08 Jul 2024 03:52:55 -0700 (PDT)
+        bh=ENr9C6wqLScYtM/ACpfJbtdpg2MMvtMfkrf/bCmK5uo=;
+        b=pihhcRLNHv5wlWg/h20sfFaLUJ/Builg2AfQ9dVKx7yEzy49ieN54yU4pRFfio6cmp
+         7n1usQRmv/qSXvXWI0zCBXm/QH5oB/zE00+DbHNxzGD+3AEPBk7g+yjPI2dgcJfI6kuh
+         bXZh8w6lYSiKRu+PF4oKgnZVW31nKgaOJq8yerNPp0/MTsHv658TCbYndhMjaeKLHIGO
+         DOVFbDzBVz0ynAh7w9ZuCBw2eO3szgLmY52omFIXYQuQDSwWXaOCtc9XgWbcd6dQ027Y
+         A11XRtCLKRZ6ykBH9xZLzt6IjTh4+BsHy6kzGRgLe/kGw7VCL2TLvcAvJ86OtFkKdt3+
+         qkLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720435977; x=1721040777;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ENr9C6wqLScYtM/ACpfJbtdpg2MMvtMfkrf/bCmK5uo=;
+        b=lRFrJb9ABk1bjCF6IjK9Rgsy42TZKhMtQATfuG7eg1MW6nJj4RoHKB1rv8vZdIyO0X
+         MB3cmfLj0ciSpC/t1ydH8fQ6XVH5c7hBoIqq0/g4v6clEH35u9gUwAlJ55xXiuCf1w0F
+         Qo0xKeCQ3sATfRjDuIJsLGp2f9+s705Jb5G494qBtjAEucKXDtjvRQeIoCjZ3XAuufVE
+         qEuL4M1fykgCpe7zBYW3JZvlDKLtf6MEOtoAO3kwEGDAE3mhmHmd24h6sPKI6GkavzRs
+         OJFSHsN8iWp759y3ZniZweMB9EbLoK1sJwNTTPoy1HfdVYaf7m58Q2FzszxvZnMDuONX
+         3mXA==
+X-Gm-Message-State: AOJu0YyqQzZGQV406VDhhQgypFhFE8RWPQQc0DEwfc37j1N9J2kDmJgT
+	kIyfM4+tTE8Vzj5meu41djQGqxuYzrCPdI+Sic6d0y1bRKgn8wLmm33Nfo+Hm34kkzYin9QDJIZ
+	i
+X-Google-Smtp-Source: AGHT+IE3XZYNK/otDFabY0D3eQVUP+Cv9yOwc4qG8Hwmy+sRItsFqJrh3eAZzXttYUP89mj0NxUqJg==
+X-Received: by 2002:a5d:5184:0:b0:367:8a2b:734e with SMTP id ffacd0b85a97d-3679dd15b85mr7272537f8f.12.1720435977086;
+        Mon, 08 Jul 2024 03:52:57 -0700 (PDT)
 Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3678a648dd3sm15478080f8f.89.2024.07.08.03.52.55
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3678e68a622sm14852116f8f.106.2024.07.08.03.52.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 03:52:55 -0700 (PDT)
+        Mon, 08 Jul 2024 03:52:56 -0700 (PDT)
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 To: linux-pwm@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 0/6] pwm: New abstraction and userspace API
-Date: Mon,  8 Jul 2024 12:52:26 +0200
-Message-ID: <cover.1720435656.git.u.kleine-koenig@baylibre.com>
+Subject: [PATCH 1/6] pwm: Add more locking
+Date: Mon,  8 Jul 2024 12:52:27 +0200
+Message-ID:  <d8172fd493b074372bbc2ad1f4ac38023e3552b5.1720435656.git.u.kleine-koenig@baylibre.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1720435656.git.u.kleine-koenig@baylibre.com>
+References: <cover.1720435656.git.u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -89,78 +82,271 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2672; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=Yb0WIAoaOKNp5Xv4PSSI4KumM0UVBL2yI5MvTxK0YKQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmi8TrEwrhSTsU+WYFtDXfVOsElXp4JJimZYycX tewSw9AhzyJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZovE6wAKCRCPgPtYfRL+ TpT8B/4vQpye6kHDXbHQtKqAcG7Sgx9KXOlhnKnRcpDujDsY4SrDDFUOJPa7BlanQ0cSAMjHreK rHzfyEKef43R5JBJF5F3jR9u1rUqEEeAiYbT9S9VnekSqSWvIM3urOm4iat7fF9u0rZcq6Vu+iB 67lAEXjus5D3kI01bmaOWTP07W2orpkPJJB5Wa92l+VIjTTLy0TzjfjWHDjdMdaIwS0sDlnWw5Z hFcXNfJnX9eL+HgkJ375kbLNlfZ3fmvCipjYjxtX/R6i+WszdErNUBtImwe7LEf1+8D0xo7drSn w2P2Sy2CLGEOZahAreDlzGG6Irq+Q8QsMCPI2lsnw+hBK1XH
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7925; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=GGCCgLkO274+XDpQcgYgeQzKCK43CBf3srjmHwgoVz4=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmi8Tu9ZyBSyVaUpMvWXKbfRcG+ujGgzL1EVJbA qdZ9LATbnaJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZovE7gAKCRCPgPtYfRL+ TvCbCACJXbnpg+uU7RDnForMsnpQWvQYxhNRLhgQPrACJD2tvZFsnsvK9LxSaRc1VYL1uNHSWu4 InW5q/nEa9bro6+gS/JmAMaZmhWCAYCynFdqfmVZIf8X0WB38Zb/t4gW0C9X1c6EzVO4kOlLsdi 7fy35XGWUMzrKmkLNHjUgLXnDKXMKRazny2BUPDrJ33B5niitJ4oQIzwvVMSmzY3kGCKiB/diGG 9B8Wnzaa+I/oi06kg0uDtFSU5ieloSnhGgWoSRts+6nxS18PwcvKgz5alHalYigPhRBmrvskAtB +72fYdLBUw+cs3ktFRJb2vTfAtTMLKvPzaq00t12iOzwVF94
 X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-Hello,
+This ensures that a pwm_chip that has no corresponding driver isn't used
+and that a driver doesn't go away while a callback is still running.
 
-this series implements a new abstraction to model the output waveform of
-a PWM. The main improvement is that it defines a duty_offset instead of
-a polarity and so allows to model more wave forms. The motivation for
-this is that we need a PWM channel to have an offset compared to another
-channel from the same chip, that is something like that:
+In the presence of device links this isn't necessary yet (so this is no
+fix) but for pwm character device support this is needed.
 
-         __                 __                 __
-        /  \_______________/  \_______________/  \_________
-        ^    __            ^    __            ^    __
-        ____/  \_______________/  \_______________/  \_____
-        ^                  ^                  ^
+To not serialize all pwm_apply_state() calls, this introduces a per chip
+lock. An additional complication is that for atomic chips a mutex cannot
+be used (as pwm_apply_atomic() must not sleep) and a spinlock cannot be
+held while calling an operation for a sleeping chip. So depending on the
+chip being atomic or not a spinlock or a mutex is used.
 
-The kernel API for that is still missing (so it cannot be used yet from
-the iio driver we intend to use it), but there is a userspace API that
-makes use of it.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ drivers/pwm/core.c  | 103 +++++++++++++++++++++++++++++++++++++++-----
+ include/linux/pwm.h |  13 ++++++
+ 2 files changed, 105 insertions(+), 11 deletions(-)
 
-This is actually the 2nd series that implements a userspace API using a
-chardev, the userspace lib from the last iteration is updated
-accordingly. See
-
-        https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/libpwm.git
-
-The series bases on top of
-
-        https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-next
-
-plus the patch
-
-        pwm: Make info in traces about affected pwm more useful
-
-available at
-https://lore.kernel.org/linux-pwm/20240705211452.1157967-2-u.kleine-koenig@baylibre.com/
-.
-
-Unfortunately this requires a new set of callbacks for lowlevel drivers.
-In this series axi-pwmgen and stm32 are converted accordingly.
-
-The documentation situation is not optimal yet, and I expect that the
-locking patch triggers a lockdep warning for the meson driver. This is
-however a false positive and a problem that needs addressing in the clk
-subsystem.
-
-Looking forward to your feedback,
-Uwe Kleine-König
-
-Uwe Kleine-König (6):
-  pwm: Add more locking
-  pwm: New abstraction for PWM waveforms
-  pwm: Add support for pwmchip devices for faster and easier userspace
-    access
-  pwm: Add tracing for waveform callbacks
-  pwm: axi-pwmgen: Implementation of the waveform callbacks
-  pwm: stm32: Implementation of the waveform callbacks
-
- drivers/pwm/core.c           | 678 +++++++++++++++++++++++++++++++++--
- drivers/pwm/pwm-axi-pwmgen.c | 148 +++++---
- drivers/pwm/pwm-stm32.c      | 605 +++++++++++++++++++------------
- include/linux/pwm.h          |  51 +++
- include/trace/events/pwm.h   | 134 ++++++-
- include/uapi/linux/pwm.h     |  24 ++
- 6 files changed, 1334 insertions(+), 306 deletions(-)
- create mode 100644 include/uapi/linux/pwm.h
-
-
-base-commit: 120a528213b6693214e3cbc24a9c3052a4b1024b
-prerequisite-patch-id: 0e21153cd012f41ba9db52357fd08219af53e26c
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 8acbcf5b6673..c31e12e76495 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -31,6 +31,24 @@ static DEFINE_MUTEX(pwm_lock);
+ 
+ static DEFINE_IDR(pwm_chips);
+ 
++static void pwmchip_lock(struct pwm_chip *chip)
++{
++	if (chip->atomic)
++		spin_lock(&chip->atomic_lock);
++	else
++		mutex_lock(&chip->nonatomic_lock);
++}
++
++static void pwmchip_unlock(struct pwm_chip *chip)
++{
++	if (chip->atomic)
++		spin_unlock(&chip->atomic_lock);
++	else
++		mutex_unlock(&chip->nonatomic_lock);
++}
++
++DEFINE_GUARD(pwmchip, struct pwm_chip *, pwmchip_lock(_T), pwmchip_unlock(_T))
++
+ static void pwm_apply_debug(struct pwm_device *pwm,
+ 			    const struct pwm_state *state)
+ {
+@@ -220,6 +238,7 @@ static int __pwm_apply(struct pwm_device *pwm, const struct pwm_state *state)
+ int pwm_apply_might_sleep(struct pwm_device *pwm, const struct pwm_state *state)
+ {
+ 	int err;
++	struct pwm_chip *chip = pwm->chip;
+ 
+ 	/*
+ 	 * Some lowlevel driver's implementations of .apply() make use of
+@@ -230,7 +249,12 @@ int pwm_apply_might_sleep(struct pwm_device *pwm, const struct pwm_state *state)
+ 	 */
+ 	might_sleep();
+ 
+-	if (IS_ENABLED(CONFIG_PWM_DEBUG) && pwm->chip->atomic) {
++	guard(pwmchip)(chip);
++
++	if (!chip->operational)
++		return -ENODEV;
++
++	if (IS_ENABLED(CONFIG_PWM_DEBUG) && chip->atomic) {
+ 		/*
+ 		 * Catch any drivers that have been marked as atomic but
+ 		 * that will sleep anyway.
+@@ -254,9 +278,16 @@ EXPORT_SYMBOL_GPL(pwm_apply_might_sleep);
+  */
+ int pwm_apply_atomic(struct pwm_device *pwm, const struct pwm_state *state)
+ {
+-	WARN_ONCE(!pwm->chip->atomic,
++	struct pwm_chip *chip = pwm->chip;
++
++	WARN_ONCE(!chip->atomic,
+ 		  "sleeping PWM driver used in atomic context\n");
+ 
++	guard(pwmchip)(chip);
++
++	if (!chip->operational)
++		return -ENODEV;
++
+ 	return __pwm_apply(pwm, state);
+ }
+ EXPORT_SYMBOL_GPL(pwm_apply_atomic);
+@@ -328,15 +359,22 @@ EXPORT_SYMBOL_GPL(pwm_adjust_config);
+ int pwm_capture(struct pwm_device *pwm, struct pwm_capture *result,
+ 		unsigned long timeout)
+ {
+-	if (!pwm || !pwm->chip->ops)
++	struct pwm_chip *chip;
++
++	if (!pwm || !(chip = pwm->chip)->ops)
+ 		return -EINVAL;
+ 
+-	if (!pwm->chip->ops->capture)
++	if (!chip->ops->capture)
+ 		return -ENOSYS;
+ 
+ 	guard(mutex)(&pwm_lock);
+ 
+-	return pwm->chip->ops->capture(pwm->chip, pwm, result, timeout);
++	guard(pwmchip)(chip);
++
++	if (!chip->operational)
++		return -ENODEV;
++
++	return chip->ops->capture(pwm->chip, pwm, result, timeout);
+ }
+ EXPORT_SYMBOL_GPL(pwm_capture);
+ 
+@@ -369,6 +407,14 @@ static int pwm_device_request(struct pwm_device *pwm, const char *label)
+ 	if (test_bit(PWMF_REQUESTED, &pwm->flags))
+ 		return -EBUSY;
+ 
++	/*
++	 * This function is called while holding pwm_lock. As .operational only
++	 * changes while holding this lock, checking it here without holding the
++	 * chip lock is fine.
++	 */
++	if (!chip->operational)
++		return -ENODEV;
++
+ 	if (!try_module_get(chip->owner))
+ 		return -ENODEV;
+ 
+@@ -397,7 +443,9 @@ static int pwm_device_request(struct pwm_device *pwm, const char *label)
+ 		 */
+ 		struct pwm_state state = { 0, };
+ 
+-		err = ops->get_state(chip, pwm, &state);
++		scoped_guard(pwmchip, chip)
++			err = ops->get_state(chip, pwm, &state);
++
+ 		trace_pwm_get(pwm, &state, err);
+ 
+ 		if (!err)
+@@ -1021,6 +1069,7 @@ struct pwm_chip *pwmchip_alloc(struct device *parent, unsigned int npwm, size_t
+ 
+ 	chip->npwm = npwm;
+ 	chip->uses_pwmchip_alloc = true;
++	chip->operational = false;
+ 
+ 	pwmchip_dev = &chip->dev;
+ 	device_initialize(pwmchip_dev);
+@@ -1126,6 +1175,11 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
+ 
+ 	chip->owner = owner;
+ 
++	if (chip->atomic)
++		spin_lock_init(&chip->atomic_lock);
++	else
++		mutex_init(&chip->nonatomic_lock);
++
+ 	guard(mutex)(&pwm_lock);
+ 
+ 	ret = idr_alloc(&pwm_chips, chip, 0, 0, GFP_KERNEL);
+@@ -1139,6 +1193,9 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
+ 	if (IS_ENABLED(CONFIG_OF))
+ 		of_pwmchip_add(chip);
+ 
++	scoped_guard(pwmchip, chip)
++		chip->operational = true;
++
+ 	ret = device_add(&chip->dev);
+ 	if (ret)
+ 		goto err_device_add;
+@@ -1146,6 +1203,9 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
+ 	return 0;
+ 
+ err_device_add:
++	scoped_guard(pwmchip, chip)
++		chip->operational = false;
++
+ 	if (IS_ENABLED(CONFIG_OF))
+ 		of_pwmchip_remove(chip);
+ 
+@@ -1165,11 +1225,27 @@ void pwmchip_remove(struct pwm_chip *chip)
+ {
+ 	pwmchip_sysfs_unexport(chip);
+ 
+-	if (IS_ENABLED(CONFIG_OF))
+-		of_pwmchip_remove(chip);
++	scoped_guard(mutex, &pwm_lock) {
++		unsigned int i;
++
++		scoped_guard(pwmchip, chip)
++			chip->operational = false;
++
++		for (i = 0; i < chip->npwm; ++i) {
++			struct pwm_device *pwm = &chip->pwms[i];
++
++			if (test_and_clear_bit(PWMF_REQUESTED, &pwm->flags)) {
++				dev_alert(&chip->dev, "Freeing requested PWM #%u\n", i);
++				if (pwm->chip->ops->free)
++					pwm->chip->ops->free(pwm->chip, pwm);
++			}
++		}
++
++		if (IS_ENABLED(CONFIG_OF))
++			of_pwmchip_remove(chip);
+ 
+-	scoped_guard(mutex, &pwm_lock)
+ 		idr_remove(&pwm_chips, chip->id);
++	}
+ 
+ 	device_del(&chip->dev);
+ }
+@@ -1539,12 +1615,17 @@ void pwm_put(struct pwm_device *pwm)
+ 
+ 	guard(mutex)(&pwm_lock);
+ 
+-	if (!test_and_clear_bit(PWMF_REQUESTED, &pwm->flags)) {
++	/*
++	 * If the chip isn't operational, PWMF_REQUESTED was already cleared. So
++	 * don't warn in this case. This can only happen if a consumer called
++	 * pwm_put() twice.
++	 */
++	if (chip->operational && !test_and_clear_bit(PWMF_REQUESTED, &pwm->flags)) {
+ 		pr_warn("PWM device already freed\n");
+ 		return;
+ 	}
+ 
+-	if (chip->ops->free)
++	if (chip->operational && chip->ops->free)
+ 		pwm->chip->ops->free(pwm->chip, pwm);
+ 
+ 	pwm->label = NULL;
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index f8c2dc12dbd3..5176dfebfbfd 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -275,6 +275,9 @@ struct pwm_ops {
+  * @of_xlate: request a PWM device given a device tree PWM specifier
+  * @atomic: can the driver's ->apply() be called in atomic context
+  * @uses_pwmchip_alloc: signals if pwmchip_allow was used to allocate this chip
++ * @operational: signals if the chip can be used (or is already deregistered)
++ * @nonatomic_lock: mutex for nonatomic chips
++ * @atomic_lock: mutex for atomic chips
+  * @pwms: array of PWM devices allocated by the framework
+  */
+ struct pwm_chip {
+@@ -290,6 +293,16 @@ struct pwm_chip {
+ 
+ 	/* only used internally by the PWM framework */
+ 	bool uses_pwmchip_alloc;
++	bool operational;
++	union {
++		/*
++		 * depending on the chip being atomic or not either the mutex or
++		 * the spinlock is used. It protects .operational and
++		 * synchronizes calls to the .ops->apply and .ops->get_state()
++		 */
++		struct mutex nonatomic_lock;
++		struct spinlock atomic_lock;
++	};
+ 	struct pwm_device pwms[] __counted_by(npwm);
+ };
+ 
 -- 
 2.43.0
 
