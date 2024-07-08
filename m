@@ -1,75 +1,75 @@
-Return-Path: <linux-pwm+bounces-2731-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2732-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C7CE92A8AD
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 20:08:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D386192A8B3
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 20:09:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 00B68281B0E
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 18:08:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 109991C21624
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 18:09:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD7BA14388F;
-	Mon,  8 Jul 2024 18:08:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A29D814A0A3;
+	Mon,  8 Jul 2024 18:09:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="pUoR+WbL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iSv0hOMT"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC03E26AC1
-	for <linux-pwm@vger.kernel.org>; Mon,  8 Jul 2024 18:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC6A148FED
+	for <linux-pwm@vger.kernel.org>; Mon,  8 Jul 2024 18:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720462115; cv=none; b=uK+feDrz4c6GgefFjK193zrx9/bYP/zScDzIkTz6g+QX4oIVSe51TbulmLsYvI5oGBw5kQIxoKN3zNFGaI+YFuUevXCi1oUh5WmPaLUqiq2uNCDCxe43xlEi12XXYxPw3id6T5//DpVa4sVHyg9ZE0J0t804A+6yXSPUAmPe4bg=
+	t=1720462147; cv=none; b=gWVoziTLRofgS4Zei9G7eORPnL1IQNlstmjA72HRO7oLummnVHIkXQN9hYs5yFpLTbPrzoG406Z8DYK64f2ppe7yq3sqMG71DauhheSLm6c3gZPzxkKAat77PSbgBC+QoyCFW23/7nUuubpTCslo4PG8QiaSLGBEyU+lV/IgpLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720462115; c=relaxed/simple;
-	bh=2vbhKFAO8Oq5p1ygQonwJTYPic6WmIEbRSxRnVcswR8=;
+	s=arc-20240116; t=1720462147; c=relaxed/simple;
+	bh=CG707koYbJnede1fww7JQ7JLqlDrWGnQkLN5J+JJjnM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MkuXE8BzkAW3KaM4CRUTVIuBtdguaf27zfddllS18p59OA7zvQebTW7T4UGzOtwjadtu0l9dfQf/ITq75MvJIRnhzeSHrJUeu/ipcljxVItvWPBOjfqBtuOfMTjEbK1qqBbpn7PVeXsfiBAXBnmcncDgM8koE1t9YOLcP0SVFmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=pUoR+WbL; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6b5f128b199so23017646d6.0
-        for <linux-pwm@vger.kernel.org>; Mon, 08 Jul 2024 11:08:31 -0700 (PDT)
+	 In-Reply-To:Content-Type; b=GWvbGld9oPD4P2WkR5mjVdrVKLcI7TXGpkmXcgR7hg5NJ9KY7tds49kdBLaB3maAjcLLG7GLSiSq1XCWZMrddNVCOM5D0bqFmZmhplaZ7yrbsgZdlBZv4fe2nxWmS9e+FmPaE4534N+RUnqtsQUoRZYJAGh+H1MnBOQTulK6M+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iSv0hOMT; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-58b447c519eso5236326a12.3
+        for <linux-pwm@vger.kernel.org>; Mon, 08 Jul 2024 11:09:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720462111; x=1721066911; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rVnJxc1tqgWcdZIzdsWGnl02Eqn6JG/k3Te0qhqkp9g=;
-        b=pUoR+WbL/ultZmwKwIF80KV8j3OtHFOb0hjYymEeBepAweb68RFUTWAPkda8Pg2Jg2
-         6XZH0JdP2Lf3YBYr9xWrra140FQMZWJNcEcum1HzVblzJ4WJAZHlrYUV+HNzeV8CMJD5
-         bA8mO7AQximAvbe1OgwoZjz8jP0oFUJKqA/TfsiykzR2vzSRzH/Q4dhq0ghZmbOjhSDh
-         N9N3VhSpAOAti4dVtp0Hcwx6GoshRskhL1GYIgAwgxvyMwpeeYQhnzTjBF7zebBasRN+
-         U155/dMOKJKf1BWQR+oe8Rn3PauIvIINh/RE79NRvfEID0jclLWXLFJIz7guUUHOyk7e
-         8tkw==
+        d=linaro.org; s=google; t=1720462144; x=1721066944; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=h9SclVHHKmhSqXdWBkdjpfcUGGg73PYZ76UnLpmlrPA=;
+        b=iSv0hOMTxQjy252hK+lJdahNOjRMvdEM754WGhaHmKvdZn+uL5HbMYCm5HzFGCd9Mg
+         Qoh8rPuVsmMt1d0R9toj0TW3zv85+OeMpy0TRr4AJxPM7DROF4Pb7AVTtMF1mzCHIymm
+         m7bXDqZ7oOYAZf4unDE3AMj0MlBzdaqHCUUdsXjQHLVnXB8bOWUCcIRVkpbh/X0lvl7n
+         SEfogpmSKiTN7i1eY8Ro0Z6Y6ja506Ilq3iP+/IQLa5QaNo7iuYwWjeW4xZXsNmTQ9t7
+         pL4zmJ93Uhyx3J11MP7tSG9d/LOi/Azji0lTSgX7jXaaIMEH4A5k9QlBAfk91VgYzBYT
+         paTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720462111; x=1721066911;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rVnJxc1tqgWcdZIzdsWGnl02Eqn6JG/k3Te0qhqkp9g=;
-        b=Q0SWUHJjX/hJYWpRf7OvlJbzCahJrSrLTRGtULbXFpvXT8Pn01zbTMRFvPiQmi/l53
-         kLawzrR2o5FNblTo3E4l5/9IwLeCm5rQ2hQLlHaLB6c9hDkVpMyWZbwZU7eL3dvbw9jw
-         2/t9NhWZ0nVvYPEv4HQuizo3e+LQ4Wqg0yqPz2agh+H5Ph6jQnvRPIn29DcWQWw6Fh/6
-         +iiLvfmvob00lNDPaKKdhyCy1iCgqqsIDSddaDGJQeEKA1jhTRDPyyt1HDzg0d1EHpoO
-         +uLB3tlrAl19PBR29cZT42mXyJdYRJHiOoQwsEUcCZsbjMVjPnwJkWIebHWzvLxwie1u
-         1pdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTEEt5KfWhdrzIwPhNGAAVLtNzZT4tFQHZ7os06gnzq4RtcWRI+C3bVQsBsaoAjR+Aht62y3xHZzpfq9dQxdokjL5VKvKgMV3G
-X-Gm-Message-State: AOJu0YxsrqT1w+BNgBZtbAitPtLE3r5kAv2mlTzLoE8sL64qc4IOqT6T
-	viYm7HPzoXf+FdJ82bD3ZhZhcazhi+3RoHzz0ODNK6TfZmxNxAn8c6NUVSewwlUeSF+suLwM7dp
-	p
-X-Google-Smtp-Source: AGHT+IH3g6QR3pYMKYMQol6rkI9r0hRb+3Abohg7GFpOS25AD7muRVSWRBO2RXuxK6+bwtNGO4mghA==
-X-Received: by 2002:a05:6214:2a83:b0:6b5:2838:efd7 with SMTP id 6a1803df08f44-6b61c1af515mr4866946d6.50.1720462110751;
-        Mon, 08 Jul 2024 11:08:30 -0700 (PDT)
-Received: from [192.168.40.12] (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b61b9c4daasm1658346d6.18.2024.07.08.11.08.30
+        d=1e100.net; s=20230601; t=1720462144; x=1721066944;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h9SclVHHKmhSqXdWBkdjpfcUGGg73PYZ76UnLpmlrPA=;
+        b=mxk7nAdkO0UR+39cRxCgxs4vZf6cY9560K4CVyT2g2fq0fqY6VNYPcAIL2is+FOzhC
+         bsP189Sha+k6LtynAA8Fxr+wPRB4xlzuol6yZN5TyOgwb5Y/2fHVUw1t4Z1s9Akfp8bV
+         MMrG57droJhHTAe+/8OxuhWUW4xHgckSMgaPQWkB8aK8mKYZZbeFNNSNzrGpb+Nr9LNu
+         cr44d3tBCN1vLMdWsfhaHfX3O77itqnGabtyweaji5GQAnlF36LO/mec27hJKMOMa/mY
+         k0xdfNmRsj2wsUvhq6F/0w3ykGJWWtlWAEa3fEMNc2ObmLkwFGoWYKP40IX8P88JdHCU
+         kYkg==
+X-Forwarded-Encrypted: i=1; AJvYcCV6OKuzSh26+mNfiVFirryD8Ngb/bpTfcZRn5w+8VcX0+rPpLWTg4mZug7NKYKrQos8njg+gHVza90CeWDCJ1Phk6A2Wo8qpQgM
+X-Gm-Message-State: AOJu0YxoREofIQ72xG2SHR5uzY5/Yo20Pv6M/Lan58N2o+t+3leE/ZHz
+	Y3dqC+rLx7XVCxkK1R4r8+Zj8d/9bTDGzevOOIP4BRNCMyOmFPbM6RhlN0d+CFQ=
+X-Google-Smtp-Source: AGHT+IEY4wUlDLgxf2i3rdkVHcpk1OUK0j5ihUIo/iySjtcBRkZ3zUlg7nzE4G/y1pYBhf9gKCamKg==
+X-Received: by 2002:a05:6402:84c:b0:58e:2b65:385b with SMTP id 4fb4d7f45d1cf-594ba0c9e5dmr286249a12.14.1720462143775;
+        Mon, 08 Jul 2024 11:09:03 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bda308efsm98182a12.81.2024.07.08.11.08.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jul 2024 11:08:30 -0700 (PDT)
-Message-ID: <a86fe0e0-5c41-4aa1-b93f-84a70a28cc5e@baylibre.com>
-Date: Mon, 8 Jul 2024 14:08:29 -0400
+        Mon, 08 Jul 2024 11:09:03 -0700 (PDT)
+Message-ID: <d83ff8c4-15de-4e20-9c27-eb0247184b5f@linaro.org>
+Date: Mon, 8 Jul 2024 20:08:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -77,224 +77,91 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] pwm: axi-pwmgen: Implementation of the waveform
- callbacks
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- linux-pwm@vger.kernel.org
-Cc: Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-References: <cover.1720435656.git.u.kleine-koenig@baylibre.com>
- <2c54a25eecc6f4745861568c49b98ca5b34a2f73.1720435656.git.u.kleine-koenig@baylibre.com>
+Subject: Re: [PATCH v3 23/23] arm64: dts: qcom: starqltechn: add new features
+To: Dzmitry Sankouski <dsankouski@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Bjorn Andersson
+ <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>,
+ phone-devel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org
+References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
+ <20240618-starqltechn_integration_upstream-v3-23-e3f6662017ac@gmail.com>
+ <13fea5c0-5906-4075-b734-52649e35eb69@linaro.org>
+ <CABTCjFDebBxf=XcvTbVtifROFHrQLXtArLtj0wHVF_e529NVAg@mail.gmail.com>
 Content-Language: en-US
-From: Trevor Gamblin <tgamblin@baylibre.com>
-In-Reply-To: <2c54a25eecc6f4745861568c49b98ca5b34a2f73.1720435656.git.u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
+ BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
+ HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
+ TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
+ zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
+ MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
+ t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
+ UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
+ aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
+ kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
+ Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
+ R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
+ BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
+ yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
+ xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
+ 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
+ GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
+ mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
+ x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
+ BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
+ mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
+ Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
+ xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
+ AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
+ 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
+ jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
+ cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
+ jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
+ cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
+ bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
+ YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
+ bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
+ nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
+ izWDgYvmBE8=
+In-Reply-To: <CABTCjFDebBxf=XcvTbVtifROFHrQLXtArLtj0wHVF_e529NVAg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+On 8.07.2024 5:54 PM, Dzmitry Sankouski wrote:
+> вт, 18 июн. 2024 г. в 17:12, Konrad Dybcio <konrad.dybcio@linaro.org>:
+>>
+>>
+> ...
+>>
+>>>       gpio-reserved-ranges = <0 4>, <27 4>, <81 4>, <85 4>;
+>>
+>> Do you know what these are for?
+>>
+>> Konrad
+> 
+> <85 4> is spi for fingerprint.
+> <27 4> is spi for eSE(embedded Secure Element)
+> The rest shouldn't be reserved.
 
-On 2024-07-08 6:52 a.m., Uwe Kleine-König wrote:
-> Convert the axi-pwmgen driver to use the new callbacks for hardware
-> programming.
->
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
-Tested-by: Trevor Gamblin <tgamblin@baylibre.com>
-> ---
->   drivers/pwm/pwm-axi-pwmgen.c | 148 ++++++++++++++++++++++++-----------
->   1 file changed, 102 insertions(+), 46 deletions(-)
->
-> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
-> index aac4f395497b..757ae037d5d6 100644
-> --- a/drivers/pwm/pwm-axi-pwmgen.c
-> +++ b/drivers/pwm/pwm-axi-pwmgen.c
-> @@ -23,6 +23,7 @@
->   #include <linux/err.h>
->   #include <linux/fpga/adi-axi-common.h>
->   #include <linux/io.h>
-> +#include <linux/minmax.h>
->   #include <linux/module.h>
->   #include <linux/platform_device.h>
->   #include <linux/pwm.h>
-> @@ -53,81 +54,136 @@ static const struct regmap_config axi_pwmgen_regmap_config = {
->   	.val_bits = 32,
->   };
->   
-> -static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> -			    const struct pwm_state *state)
-> +/* This represents a hardware configuration for one channel */
-> +struct axi_pwmgen_waveform {
-> +	u32 period_cnt;
-> +	u32 duty_cycle_cnt;
-> +	u32 duty_offset_cnt;
-> +};
-> +
-> +static int axi_pwmgen_round_waveform_tohw(struct pwm_chip *chip,
-> +					  struct pwm_device *pwm,
-> +					  const struct pwm_waveform *wf,
-> +					  void *_wfhw)
->   {
-> +	struct axi_pwmgen_waveform *wfhw = _wfhw;
-> +	struct axi_pwmgen_ddata *ddata = pwmchip_get_drvdata(chip);
-> +
-> +	if (wf->period_length == 0) {
-> +		*wfhw = (struct axi_pwmgen_waveform){
-> +			.period_cnt = 0,
-> +			.duty_cycle_cnt = 0,
-> +			.duty_offset_cnt = 0,
-> +		};
-> +	} else {
-> +		/* With ddata->clk_rate_hz < NSEC_PER_SEC this won't overflow. */
-> +		wfhw->period_cnt = min_t(u64, mul_u64_u32_div(wf->period_length, ddata->clk_rate_hz, NSEC_PER_SEC), U32_MAX);
-> +
-> +		if (wfhw->period_cnt == 0) {
-> +			/*
-> +			 * The specified period is too short for the hardware.
-> +			 * Let's round .duty_cycle down to 0 to get a (somewhat)
-> +			 * valid result.
-> +			 */
-> +			wfhw->period_cnt = 1;
-> +			wfhw->duty_cycle_cnt = 0;
-> +			wfhw->duty_offset_cnt = 0;
-> +		} else {
-> +			wfhw->duty_cycle_cnt = min_t(u64, mul_u64_u32_div(wf->duty_length, ddata->clk_rate_hz, NSEC_PER_SEC), U32_MAX);
-> +			wfhw->duty_offset_cnt = min_t(u64, mul_u64_u32_div(wf->duty_offset, ddata->clk_rate_hz, NSEC_PER_SEC), U32_MAX);
-> +		}
-> +	}
-> +
-> +	dev_dbg(&chip->dev, "pwm#%u: %lld/%lld [+%lld] @%lu -> PERIOD: %08x, DUTY: %08x, OFFSET: %08x\n",
-> +		pwm->hwpwm, wf->duty_length, wf->period_length, wf->duty_offset,
-> +                ddata->clk_rate_hz, wfhw->period_cnt, wfhw->duty_cycle_cnt, wfhw->duty_offset_cnt);
-> +
-> +	return 0;
-> +}
-> +
-> +static int axi_pwmgen_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_device *pwm,
-> +					     const void *_wfhw, struct pwm_waveform *wf)
-> +{
-> +	const struct axi_pwmgen_waveform *wfhw = _wfhw;
-> +	struct axi_pwmgen_ddata *ddata = pwmchip_get_drvdata(chip);
-> +
-> +	wf->period_length = DIV64_U64_ROUND_UP((u64)wfhw->period_cnt * NSEC_PER_SEC,
-> +					ddata->clk_rate_hz);
-> +
-> +	wf->duty_length = DIV64_U64_ROUND_UP((u64)wfhw->duty_cycle_cnt * NSEC_PER_SEC,
-> +					    ddata->clk_rate_hz);
-> +
-> +	wf->duty_offset = DIV64_U64_ROUND_UP((u64)wfhw->duty_offset_cnt * NSEC_PER_SEC,
-> +					     ddata->clk_rate_hz);
-> +
-> +	return 0;
-> +}
-> +
-> +static int axi_pwmgen_write_waveform(struct pwm_chip *chip,
-> +				     struct pwm_device *pwm,
-> +				     const void *_wfhw)
-> +{
-> +	const struct axi_pwmgen_waveform *wfhw = _wfhw;
->   	struct axi_pwmgen_ddata *ddata = pwmchip_get_drvdata(chip);
-> -	unsigned int ch = pwm->hwpwm;
->   	struct regmap *regmap = ddata->regmap;
-> -	u64 period_cnt, duty_cnt;
-> +	unsigned int ch = pwm->hwpwm;
->   	int ret;
->   
-> -	if (state->polarity != PWM_POLARITY_NORMAL)
-> -		return -EINVAL;
-> +	ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), wfhw->period_cnt);
-> +	if (ret)
-> +		return ret;
->   
-> -	if (state->enabled) {
-> -		period_cnt = mul_u64_u64_div_u64(state->period, ddata->clk_rate_hz, NSEC_PER_SEC);
-> -		if (period_cnt > UINT_MAX)
-> -			period_cnt = UINT_MAX;
-> +	ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), wfhw->duty_cycle_cnt);
-> +	if (ret)
-> +		return ret;
->   
-> -		if (period_cnt == 0)
-> -			return -EINVAL;
-> -
-> -		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), period_cnt);
-> -		if (ret)
-> -			return ret;
-> -
-> -		duty_cnt = mul_u64_u64_div_u64(state->duty_cycle, ddata->clk_rate_hz, NSEC_PER_SEC);
-> -		if (duty_cnt > UINT_MAX)
-> -			duty_cnt = UINT_MAX;
-> -
-> -		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), duty_cnt);
-> -		if (ret)
-> -			return ret;
-> -	} else {
-> -		ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), 0);
-> -		if (ret)
-> -			return ret;
-> -
-> -		ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), 0);
-> -		if (ret)
-> -			return ret;
-> -	}
-> +	ret = regmap_write(regmap, AXI_PWMGEN_CHX_OFFSET(ch), wfhw->duty_offset_cnt);
-> +	if (ret)
-> +		return ret;
->   
->   	return regmap_write(regmap, AXI_PWMGEN_REG_CONFIG, AXI_PWMGEN_LOAD_CONFIG);
->   }
->   
-> -static int axi_pwmgen_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> -				struct pwm_state *state)
-> +static int axi_pwmgen_read_waveform(struct pwm_chip *chip,
-> +				    struct pwm_device *pwm,
-> +				    void *_wfhw)
->   {
-> +	struct axi_pwmgen_waveform *wfhw = _wfhw;
->   	struct axi_pwmgen_ddata *ddata = pwmchip_get_drvdata(chip);
->   	struct regmap *regmap = ddata->regmap;
->   	unsigned int ch = pwm->hwpwm;
-> -	u32 cnt;
->   	int ret;
->   
-> -	ret = regmap_read(regmap, AXI_PWMGEN_CHX_PERIOD(ch), &cnt);
-> +	ret = regmap_read(regmap, AXI_PWMGEN_CHX_PERIOD(ch), &wfhw->period_cnt);
->   	if (ret)
->   		return ret;
->   
-> -	state->enabled = cnt != 0;
-> -
-> -	state->period = DIV_ROUND_UP_ULL((u64)cnt * NSEC_PER_SEC, ddata->clk_rate_hz);
-> -
-> -	ret = regmap_read(regmap, AXI_PWMGEN_CHX_DUTY(ch), &cnt);
-> +	ret = regmap_read(regmap, AXI_PWMGEN_CHX_DUTY(ch), &wfhw->duty_cycle_cnt);
->   	if (ret)
->   		return ret;
->   
-> -	state->duty_cycle = DIV_ROUND_UP_ULL((u64)cnt * NSEC_PER_SEC, ddata->clk_rate_hz);
-> +	ret = regmap_read(regmap, AXI_PWMGEN_CHX_OFFSET(ch), &wfhw->duty_offset_cnt);
-> +	if (ret)
-> +		return ret;
->   
-> -	state->polarity = PWM_POLARITY_NORMAL;
-> +	if (wfhw->duty_cycle_cnt > wfhw->period_cnt)
-> +		wfhw->duty_cycle_cnt = wfhw->period_cnt;
-> +
-> +	/* XXX: is this the actual behaviour of the hardware? */
-> +	if (wfhw->duty_offset_cnt >= wfhw->period_cnt) {
-> +		wfhw->duty_cycle_cnt = 0;
-> +		wfhw->duty_offset_cnt = 0;
-> +	}
->   
->   	return 0;
->   }
->   
->   static const struct pwm_ops axi_pwmgen_pwm_ops = {
-> -	.apply = axi_pwmgen_apply,
-> -	.get_state = axi_pwmgen_get_state,
-> +	.sizeof_wfhw = sizeof(struct axi_pwmgen_waveform),
-> +	.round_waveform_tohw = axi_pwmgen_round_waveform_tohw,
-> +	.round_waveform_fromhw = axi_pwmgen_round_waveform_fromhw,
-> +	.read_waveform = axi_pwmgen_read_waveform,
-> +	.write_waveform = axi_pwmgen_write_waveform,
->   };
->   
->   static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev)
+Thanks for digging this up!
+
+Please add a comment for it, like in x1e80100-crd.dts
+
+Konrad
 
