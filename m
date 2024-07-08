@@ -1,170 +1,121 @@
-Return-Path: <linux-pwm+bounces-2729-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2730-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7A6592A5DB
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 17:37:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C322392A676
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 17:58:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27A8C282145
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 15:37:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3C2A1C20880
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 15:58:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E9EA13F426;
-	Mon,  8 Jul 2024 15:37:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D8A4146003;
+	Mon,  8 Jul 2024 15:54:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="v1VQQhwl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWpyd+WJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77F61E898;
-	Mon,  8 Jul 2024 15:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4AB145A01;
+	Mon,  8 Jul 2024 15:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720453050; cv=none; b=op33gn6icAj/o5vHfmROC01R1AeIZkU9veE23snhzAM2J/QE2otwZmfZR9xdcIAKo1AWg7ZjiK45Kl1S+UXsjPT3q25W9O4FfSqDTEDjhv0P9DTdA4IUYFJb/6N0leAcFUdfrejXCzhmPb5VR8ML+I5IVsqshthU3Jg6hQmPkfU=
+	t=1720454072; cv=none; b=IpnB6o7IFjpr8BUS40NqX0/PIqOgQPlyntlPuzgfOCrZ/mc5747FDdcrZlEgD6eHlKTEJYMH2h8mq1dMSJQW36BTMUKATbbGMk+TG0h3pzq4PXV059qwxxMjSPLoTk4vWjU64Fe075IKBjp4YiLSFGpBGHs2/TRON2QYisjsdu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720453050; c=relaxed/simple;
-	bh=91QbJhmZE7ivkt7ImAusrGfiOF3UCW7ZXNMXwT01oH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Tkhcdb4osRZoRnpxVE38SI4/NIi1eZ4JhZlFL+NgNnk3vEMGEcvWeggArvaTawHq4Qc5A+2RE4dSyTRIHOkwEt4NFt/SnmhGxeS4JCo020pV17/DRgtHc6HajmJlTVMBWNhHYmn5PuRHlHG1vQutNHyMzshlnjIdSecC0KwBIDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=v1VQQhwl; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 10192120005;
-	Mon,  8 Jul 2024 18:37:22 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 10192120005
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1720453042;
-	bh=Bo/6XCu3DzX8pb2DXto2aIjlWq7K1MB2e/LDCsAwPr0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=v1VQQhwlvdIQcefu+5VOdf7ahVdnlEg1GJcsptyzWz02GK5Bj4V/Zer5Fv6yXQOK7
-	 02NUnd2qSIJ+LT1tBtFr8Bh6ksotDPwLM9ttqdDOcG/OKEkx4rAkqR/cishfu7iDFy
-	 /XczqEpgrlTs+mTlk4aecTuT/Z5STeoIn7pN2Gh5tKCXcCvMBe02X9ZZ5Y/ODo2TYV
-	 QK2568OIt1RZrrQ0GisIHSAc1vU7/uWbdTjT8fRaPU5oe0RSJZ5b4FDLxFOB3g2UJU
-	 /XZb/XMcGqSyn/c9MZBvd42O0gTRaNGvD3UC1aP1M9f2qot/IWtd1t4+j0hixdeEVK
-	 aI3aFVmir5bdg==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Mon,  8 Jul 2024 18:37:21 +0300 (MSK)
-Received: from [172.28.64.179] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 8 Jul 2024 18:37:21 +0300
-Message-ID: <4ec6b50e-b915-4e18-a8a5-97ca7ab9e4ce@salutedevices.com>
-Date: Mon, 8 Jul 2024 18:37:21 +0300
+	s=arc-20240116; t=1720454072; c=relaxed/simple;
+	bh=TrC9tl/J8IWK07HqC0Jtxhbm3VnByPog6tc9bj27EIM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u7wEpEPJMGdcqUJZfmo4u9XZHkQgTp2B1oI5Kyu7jp4T5kvhLB7kEqWyaHd9hTRA2ets1bUlX63pi+afPWr2+eCSNM3k6iJsy+2VvU0ZsIHd6573utL6uB1wIEgikFJYTl+1DUIiwnx5MeAPCeExAUDZer3f+zk6dy++h4iGEgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GWpyd+WJ; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-810177d1760so1293087241.2;
+        Mon, 08 Jul 2024 08:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720454069; x=1721058869; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/jA0wRlSERdOUIy/qi57GffPjw/ZRlZpxkgmsgkKytY=;
+        b=GWpyd+WJly4QUzCEGbz3X2t7plZbhggDCNRPbS4VFXha03z0P2jzihULbUd26Jslwr
+         CTMzqnXEW3dOYNQY334FIfvzL0pfJ2FkK2q6NEV5HjdBguS8pmykDhzhJDF0Q+HjvUBw
+         UDIzz1zQf3YLwRax4F3sRShF3oy2w6emndJMbO3FTBjLTNEJI9YadSIp8WNQvpjq9Yli
+         DwUKSIDzig0HSd63l4Ru5rW7ryS7cn4REfrQTNjydSKtMMIJeebBLBOcKyDggd7YMD03
+         6zHzr+yal7Hd6gg6QXPhvPgg7sTLRWZ3+1eD+0D9WMpLJwPQWeE8C7HUYhVKgB1PPzOc
+         3u5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720454069; x=1721058869;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/jA0wRlSERdOUIy/qi57GffPjw/ZRlZpxkgmsgkKytY=;
+        b=ZfIPn3qjqZ3BttO63JrOaYo+qIKq9GhxYZuzTVuJZG+KqS0P/5A1YgwrvTCSWmWMME
+         GcEStq+Mzs8asyNGYaCK3B4mR9yt9hWndGywDJLzjic/hjvmMbpqYE5OFnro27lggvCK
+         7/0EItkrF3jnrV0O22vpSWb/7nNN0RPVMY1U+UEu0I8bxGTUoV8s+dEe385XNLRGPMAa
+         NBtQC9bejRuMgkHxlZag72GAkflyytH6t6AWQu0Cusvrgkb71m5sNmFgmE5MHkPmO0DP
+         7ME9x+15eOHg1Bpcu7AfrqRfevvvrgg1YxsrHLTqCNWygQQcg6Q6FIOepAb5JEwvIeqH
+         I/6g==
+X-Forwarded-Encrypted: i=1; AJvYcCXCHotjeM4tNX0u89KI9PiREfoGzbwsEv9lBI+M//90++TZO+QOh5c42iv9jadcGqH0gb9zkkq3wt7i3oIKJkq7PAMnNbpFY+g57UtSRFqXy7Eig1gOmHDEM+LX35MI6AWL2OSHpUdlr+N8TSig4WsS9Y+kiUK/s8MOcEmcIIczVBPgVjf9b3eGchncvfU0f6jjz1Dnxyrwbgwwg4VO9ngw8s3xVr9a6BUNEV0o6vkeUw/2+GmvDF+res7H+h8wQ1Ah+01ql0DW68Acfogv48B7B8YuTthFGleVOWWm4ylsOmipT+tatpQFIy6/dPaVWhXUYtEIXUNntqNPOLFxjxC3iMT+dE82fx7ouEscJePK6fGAWtpL1gZIpXzQO55AKiXe4qRaC/SLPwtDv7qRUtasYiKpaq0RQ85U7q3MMdrq2XkEl4x6Ii3X+I1LmuuF1dE=
+X-Gm-Message-State: AOJu0YywDrsVU/7FUPnOCt6b4gzyXPg6rAiHjIlrEXCht9iVZ8I9SwF9
+	glL7W5vxJ56R82scCtZ56FD/Ue4emt8S+uf06VJyXQYy/BuDzE5LTuTeIw+1hWV4VOfResmiTG1
+	86/auE7SfXofThq6z0Ej80jHGpGWE6lKB
+X-Google-Smtp-Source: AGHT+IEZBoFU3ZLzG609wCmA5rnXqDuMLd0d2n5SrJ2I0lXatTkHpvsta1P7z0S7Pi2hNjQpBbhQnvIV2JNr2DTMmOU=
+X-Received: by 2002:a67:e302:0:b0:48f:eabd:d72a with SMTP id
+ ada2fe7eead31-48fee8a4cb2mr13105031137.17.1720454069449; Mon, 08 Jul 2024
+ 08:54:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: amlogic: Add new bindings for
- meson A1 PWM
-To: Jerome Brunet <jbrunet@baylibre.com>
-CC: <ukleinek@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <neil.armstrong@linaro.org>, <khilman@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>, <hkallweit1@gmail.com>,
-	<linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>, Dmitry Rokosov
-	<ddrokosov@salutedevices.com>
-References: <20240702123425.584610-1-gnstark@salutedevices.com>
- <20240702123425.584610-2-gnstark@salutedevices.com>
- <1j8qychvv6.fsf@starbuckisacylon.baylibre.com>
-Content-Language: en-US
-From: George Stark <gnstark@salutedevices.com>
-In-Reply-To: <1j8qychvv6.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186376 [Jul 08 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 23 0.3.23 8881c50ebb08f9085352475be251cf18bb0fcfdd, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, lore.kernel.org:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;100.64.160.123:7.1.2;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/08 12:56:00
-X-KSMG-LinksScanning: Clean, bases: 2024/07/08 14:31:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/08 12:25:00 #25908179
-X-KSMG-AntiVirus-Status: Clean, skipped
+References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
+ <20240618-starqltechn_integration_upstream-v3-23-e3f6662017ac@gmail.com> <13fea5c0-5906-4075-b734-52649e35eb69@linaro.org>
+In-Reply-To: <13fea5c0-5906-4075-b734-52649e35eb69@linaro.org>
+From: Dzmitry Sankouski <dsankouski@gmail.com>
+Date: Mon, 8 Jul 2024 18:54:18 +0300
+Message-ID: <CABTCjFDebBxf=XcvTbVtifROFHrQLXtArLtj0wHVF_e529NVAg@mail.gmail.com>
+Subject: Re: [PATCH v3 23/23] arm64: dts: qcom: starqltechn: add new features
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Sam Ravnborg <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, phone-devel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-input@vger.kernel.org, linux-leds@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Jerome
-
-Thanks for the review
-
-On 7/8/24 16:11, Jerome Brunet wrote:
-> On Tue 02 Jul 2024 at 15:34, George Stark <gnstark@salutedevices.com> wrote:
-> 
->> The chip has 3 dual-channel PWM modules PWM_AB, PWM_CD, PWM_EF.
->>
->> Signed-off-by: George Stark <gnstark@salutedevices.com>
->> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
->> ---
->>   .../devicetree/bindings/pwm/pwm-amlogic.yaml    | 17 +++++++++++++++++
->>   1 file changed, 17 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
->> index 1d71d4f8f328..e021cf59421a 100644
->> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
->> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-
+=D0=B2=D1=82, 18 =D0=B8=D1=8E=D0=BD. 2024=E2=80=AF=D0=B3. =D0=B2 17:12, Kon=
+rad Dybcio <konrad.dybcio@linaro.org>:
+>
+>
 ...
+>
+> >       gpio-reserved-ranges =3D <0 4>, <27 4>, <81 4>, <85 4>;
+>
+> Do you know what these are for?
+>
+> Konrad
 
-> 
-> The change is not only introducing a1 compatibility but also allowing a
-> power-domain for the other SoC, even if optional.
-> 
-> If that is intended, it should be stated in the description and probably
-> a separate change.
+<85 4> is spi for fingerprint.
+<27 4> is spi for eSE(embedded Secure Element)
+The rest shouldn't be reserved.
 
-AFAIK the only SoC with a separate PD for PWM is A1 (currently). I added 
-PD to bindings by an independent change in series #2 [1] but Rob
-proposed it should be squashed into compatible patch. The only thing 
-missed in series #2 was the conditional schema making PD required for A1.
+--=20
 
-I personally would prefer to add PD as a separate change.
-I'll give it a try.
-
-[1] 
-https://lore.kernel.org/lkml/20240701172016.523402-1-gnstark@salutedevices.com/T/#m0e004fc0d22e205aa3bf6bdd0284d251f26eb0f3
-
-
-> 
->>     "#pwm-cells":
->>       const: 3
->>   
->> @@ -136,6 +143,16 @@ allOf:
->>         required:
->>           - clocks
->>   
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - amlogic,meson-a1-pwm
->> +    then:
->> +      required:
->> +        - power-domains
->> +
->>   additionalProperties: false
->>   
->>   examples:
-> 
-
--- 
-Best regards
-George
+Best regards,
+Dzmitry
 
