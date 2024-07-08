@@ -1,293 +1,219 @@
-Return-Path: <linux-pwm+bounces-2716-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2717-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7447B92948B
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jul 2024 17:26:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8229929D59
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 09:42:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D8588B20BAC
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jul 2024 15:26:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E937D1C21AAB
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jul 2024 07:42:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4CAC13AD3F;
-	Sat,  6 Jul 2024 15:25:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 993AA36AEC;
+	Mon,  8 Jul 2024 07:42:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zILM/dt9"
+	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="VhLZU4xm"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward500d.mail.yandex.net (forward500d.mail.yandex.net [178.154.239.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2544E24B5B
-	for <linux-pwm@vger.kernel.org>; Sat,  6 Jul 2024 15:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522F5381B9;
+	Mon,  8 Jul 2024 07:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720279512; cv=none; b=flTHRgZwz6PNlQpnU9jv9LVMdlid8SAfB2HQkxw7dCy9wZbnFr0RnUOGoTMhSPhK7rGaHP+1bZY0xxixdhEfF9vQ+8Rt998IakQsUmXoAmr3R4VznvMEwh+2mNacWOO9909E4Zk0oiDTtMeIz58CHN+GdOxux77Hvb2a7fXkhnc=
+	t=1720424534; cv=none; b=aCBRDhC+fQSIyKfGLvD9JovgMnyrTTrcT41pG4eHKAsC+PtnC9yiEwGk1TJGLyOHu9SPG8OE+8yUp0qBunhRnZeaJZabqH+nHO7A2lnyMB9+8ckJHPzSQbggwQD+A3SP+mVWLgZnR46JIl0sBGIf44o9j+s/n+JWVn/0V7Efhwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720279512; c=relaxed/simple;
-	bh=MMjpgBOos9366GDTm1UOWVsWsj4zBPMgnBONKbFX28Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qtDGZ4ctQcwgFgGVPEw2Vt/b+kqlLlSxYamGkl1AV71nZtzlzCePK/A9/+eFZLTknG2AElcx/vWEauXfJSQy7jjSON8/It1n6daTkQ4wrsnPe+2T+mK8I/CyqPx/F547b0KYXb80K7NbBlqCMp45k0IzJ3S35zuEWHvqrTnhBq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zILM/dt9; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57d05e0017aso3056142a12.1
-        for <linux-pwm@vger.kernel.org>; Sat, 06 Jul 2024 08:25:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720279508; x=1720884308; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BK8LdtUzBaUosA9+7VEP7WADZJTDrOQiZ2DP4ZbEJEs=;
-        b=zILM/dt9vNuui+bzAzN9w9GBV4xAYtq4W53kRJ09PuKEa8TURW1L/z5MjUik03V2x+
-         g116ZjmRAYTur6v94hZBy4u43qQ6YtANW0cdAqhDhrkH1kFVXYQLJVEBmbOk6yLRIdRs
-         Ar2p3JngYj1xamUnOemMAMwYKEJYty/ccPAslyf1I0x7L1jXCyflf+FaW7AmqjbNPdWb
-         0QyBrUCmBlQgbYSH7P3FOmh8DOtsiy01o3E/K14NFq3ijcVQculGXDkXPrSwYAMvdLq/
-         uH7COlH166NgEREtCXH2Ix4DnTkwkfTRa4Hl7plOLZM+D0c6CYd09GV+Z8Y1fKXhyT7p
-         klwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720279508; x=1720884308;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BK8LdtUzBaUosA9+7VEP7WADZJTDrOQiZ2DP4ZbEJEs=;
-        b=V+7HCdHFGmOsNQQYL6rKial5AbNTRTOnPwzCPssNw+3QZSTEz2vxjkXH3JN4OEPO03
-         5TCudzsyL4DzATTuN/HDEwy9XH5oa8A30I7ywqG0qZ0XcCDYmqlezAjUBVZEDQDD6xPJ
-         yQdc8mEwT0s3/FL+3nxoGMaH+dZYJax28a3pdZyCnsyFKcbw0zRL9+hfQ+tUuaO1uzH+
-         /UdNYxd3nsauK+CieBYzOzJg/4S97/g6hrft/IPPC+y6cuFMKDrC1jtur4AB3O5B6MJt
-         PWCBxU47qEcrHB8F2lS5MHQuImPjvRMrvlPCGSFcmNmvKNK0h6XIUixaHSPfs6y0FuSi
-         ulfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYeC0Br13YpNessAS4a5ZYB6yi5SBVL9ZxLMvGO8WCvTLxsVb6fmIXwlVHskS6rB19Y9G8Oso+MpIWncOXg1FuZ+J+vkUxm5YQ
-X-Gm-Message-State: AOJu0YxJVmkZM3Z8LXumBvxKVt3eFBewSeR4WKGxLlOlGGk4mSBPAXTZ
-	iAHCLiSns5iG2VgXno8VwgJ16BBjXNG+YjAghsuE71AxrG/2n0Xg66AJM5DqMrs=
-X-Google-Smtp-Source: AGHT+IEnWqknQxLnJEpexUB0z6PrbG+3ja7xvUWGsdML6+Dfe1thhIKgJ7dK9+/TLjN2rT5ex8eOVQ==
-X-Received: by 2002:a05:6402:612:b0:58b:abc6:9cec with SMTP id 4fb4d7f45d1cf-58e5cd15312mr3739642a12.40.1720279507998;
-        Sat, 06 Jul 2024 08:25:07 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5861324fe5dsm10895092a12.36.2024.07.06.08.25.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jul 2024 08:25:07 -0700 (PDT)
-Date: Sat, 6 Jul 2024 17:25:05 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	loongson-kernel@lists.loongnix.cn, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v4 2/2] pwm: Add Loongson PWM controller support
-Message-ID: <2mrfd5qe742zxz4mxd64jiwiebuvqnlxo5ezbikk77f6eh6rnw@ebc3uxneij5m>
-References: <cover.1716795485.git.zhoubinbin@loongson.cn>
- <23d08fa45237efd83cb9dd51a259e2c980f01b3f.1716795485.git.zhoubinbin@loongson.cn>
- <b2lyte7dtrdxxoj4rwwrxbt5myc3td7v3psus7h36qc7dp3thh@czfp25bferl4>
- <CAMpQs4Lo55VhFCNKFxjdA2zMt8GdMTo4sn4BXdy8Nr+kq2OfvQ@mail.gmail.com>
+	s=arc-20240116; t=1720424534; c=relaxed/simple;
+	bh=O9RoOO9HvF5SuUCeDg6vUA4wVmtzSSul9Xm5/s61R6Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GZvza9XF6nJILN6gLmoEHqQ9x8nje2HC//JgXX1onsz18q0bmZF87ZXtK401h6yLmsqZlTjYumbt54CpIWxqOvPMdhOIdd+9tu5rPaAtPegM8g7CQ2Z4dejZltQLbRzPUlvLaRHsYodxcKvQYCvqnD1gCliZs5P7kLaOUFGUk7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=VhLZU4xm; arc=none smtp.client-ip=178.154.239.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
+Received: from mail-nwsmtp-smtp-production-main-24.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-24.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:7dca:0:640:d4d9:0])
+	by forward500d.mail.yandex.net (Yandex) with ESMTPS id C5DDC60A3F;
+	Mon,  8 Jul 2024 10:34:32 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-24.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 6YW3mBQe3W20-qUQtuv72;
+	Mon, 08 Jul 2024 10:34:30 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
+	t=1720424070; bh=O9RoOO9HvF5SuUCeDg6vUA4wVmtzSSul9Xm5/s61R6Y=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=VhLZU4xmXX2w4OBfMMBdLTuYfNHiVS81wr+5BeazZfJVOu+yyXSQdoaO60cjQziKc
+	 M0uTvIyCbbrFj9TBj/klf6qeczg17/a4YJiSE0dCEH6yKJCldgKqcd4qvfnukuaDOU
+	 WcbQbDv7ImiZUeCsbYrO017QDF3uXjKDnJWXQ9oc=
+Authentication-Results: mail-nwsmtp-smtp-production-main-24.klg.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
+Message-ID: <663b1749afeb5cec281149fdb445ed36fdcbc68e.camel@maquefel.me>
+Subject: Re: [PATCH v10 00/38] ep93xx device tree conversion
+From: Nikita Shubin <nikita.shubin@maquefel.me>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
+	Arnd Bergmann
+	 <arnd@arndb.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Stephen Boyd
+ <sboyd@kernel.org>,  Hartley Sweeten <hsweeten@visionengravers.com>,
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy
+ Shevchenko <andy@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+ Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter
+ Roeck <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, Mark
+ Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Liam Girdwood
+ <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,  Takashi Iwai
+ <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>, "Wu, Aaron"
+ <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, Olof Johansson
+ <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-pm@vger.kernel.org,  devicetree@vger.kernel.org,
+ dmaengine@vger.kernel.org,  linux-watchdog@vger.kernel.org,
+ linux-pwm@vger.kernel.org,  linux-spi@vger.kernel.org,
+ netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-sound@vger.kernel.org, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>,  Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, Vinod
+ Koul <vkoul@kernel.org>
+Date: Mon, 08 Jul 2024 10:34:05 +0300
+In-Reply-To: <jyvlqfvqn5bp3jmvxvwyrcqmihjohuq3o757mfph7x37kbwvtq@gtgyh4fca4fq>
+References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
+	 <CAHp75VfSC9gAD9ipeWRPdQOxUp4FXqYYei-cJTs38nbz0cHpkg@mail.gmail.com>
+	 <48c242838c77034485a9e667dc0e867207c5beed.camel@maquefel.me>
+	 <241a4cf9830b0118f01e8fcf2853c62527636049.camel@maquefel.me>
+	 <jyvlqfvqn5bp3jmvxvwyrcqmihjohuq3o757mfph7x37kbwvtq@gtgyh4fca4fq>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6grgdfuogy5smzhk"
-Content-Disposition: inline
-In-Reply-To: <CAMpQs4Lo55VhFCNKFxjdA2zMt8GdMTo4sn4BXdy8Nr+kq2OfvQ@mail.gmail.com>
+
+Arnd,=20
+
+Are we continuing this patch series ?
+
+You are silent since last version submit, which makes me a bit worried.
+
+If you suddenly changed your mind please let us know, cause anyway we
+have no possibility to merge these series without you.
 
 
---6grgdfuogy5smzhk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Binbin,
-
-On Sat, Jul 06, 2024 at 03:08:30PM +0600, Binbin Zhou wrote:
-> Hi Uwe:
+On Fri, 2024-07-05 at 11:21 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
 >=20
-> Thanks for your reply.
+> On Thu, Jun 27, 2024 at 11:29:44AM +0300, Nikita Shubin wrote:
+> > On Tue, 2024-06-18 at 19:20 +0300, Nikita Shubin wrote:
+> > > Hello Andy!
+> > > On Mon, 2024-06-17 at 12:58 +0200, Andy Shevchenko wrote:
+> > > > On Mon, Jun 17, 2024 at 11:38=E2=80=AFAM Nikita Shubin via B4 Relay
+> > > > <devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
+> > > > >=20
+> > > > > The goal is to recieve ACKs for all patches in series to
+> > > > > merge it
+> > > > > via Arnd branch.
+> > > >=20
+> > > > 'receive'
+> > > >=20
+> > > > > Unfortunately, CLK subsystem suddenly went silent on clk
+> > > > > portion
+> > > > > of
+> > > > > series V2 reroll,
+> > > > > tried to ping them for about a month but no luck.
+> > > > >=20
+> > > > > Link:
+> > > > > https://lore.kernel.org/r/20240408-ep93xx-clk-v2-1-adcd68c13753@m=
+aquefel.me
+> > > > >=20
+> > > > > Some changes since last version (v9) - see "Changes in v10",
+> > > > > mostly
+> > > > > cosmetic.
+> > > >=20
+> > > > ...
+> > > >=20
+> > > > > Patches should be formated with '--histogram'
+> > > >=20
+> > > > 'formatted'
+> > > >=20
+> > > > ...
+> > > >=20
+> > > > > Changes in v10:
+> > > > >=20
+> > > > > Reordered SoB tags to make sure they appear before Rb and
+> > > > > Acked
+> > > > > tags.
+> > > >=20
+> > > > This is not required. The importance is only the order of SoBs
+> > > > themselves. If they are interleaved with other tags, it's fine.
+> > >=20
+> > > Ah - ok. Just saw someone was complaining about b4 reordering
+> > > them.=20
+> > >=20
+> > > >=20
+> > > > ...
+> > > >=20
+> > > >=20
+> > > > Hopefully to see this series being eventually applied soon.
+> > > > Arnd? (Do we have all necessary subsystem maintainers' tags,
+> > > > btw?)
+> > > >=20
+> > > >=20
+> > >=20
+> > > As i see from my perspective only three left:
+> > >=20
+> > > Clk subsystem:
+> > >=20
+> > > - clk: ep93xx: add DT support for Cirrus EP93xx
+> > >=20
+> > > DMA subsystem (but the only request from Vinod, as far as i
+> > > remember,
+> > > was fixing commits titles):
+> > >=20
+> > > - dmaengine: cirrus: Convert to DT for Cirrus EP93xx
+> > > - dmaengine: cirrus: remove platform code
+> > >=20
+> > > Beside that tags missing on platform code removal (which can be
+> > > Acked
+> > > by Arnd himself i believe) and dtsi/dts files (same ?).
+> >=20
+> > Vinod acked the above two patches:
+> >=20
+> > https://lore.kernel.org/all/ZnkIp8bOcZK3yVKP@matsya/
+> > https://lore.kernel.org/all/ZnkImp8BtTdxl7O3@matsya/
+> >=20
+> > so only:
+> >=20
+> > - clk: ep93xx: add DT support for Cirrus EP93xx
+> >=20
+> > https://lore.kernel.org/all/20240617-ep93xx-v10-3-662e640ed811@maquefel=
+.me/
+> >=20
+> > left.
+> >=20
+> > Hope Stephen will find some time for this one.
 >=20
-> On Sat, Jul 6, 2024 at 5:26=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@baylibre.com> wrote:
-> >
-> > Hello,
-> >
-> > On Mon, May 27, 2024 at 03:51:12PM +0800, Binbin Zhou wrote:
-> > > +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_devi=
-ce *pwm,
-> > > +                           const struct pwm_state *state)
-> > > +{
-> > > +     int ret;
-> > > +     u64 period, duty_cycle;
-> > > +     bool enabled =3D pwm->state.enabled;
-> > > +
-> > > +     period =3D min(state->period, NANOHZ_PER_HZ);
-> > > +     duty_cycle =3D min(state->duty_cycle, NANOHZ_PER_HZ);
-> > > +
-> > > +     if (state->polarity !=3D pwm->state.polarity) {
-> > > +             if (enabled) {
-> > > +                     pwm_loongson_disable(chip, pwm);
-> > > +                     enabled =3D false;
-> > > +             }
-> > > +
-> > > +             ret =3D pwm_loongson_set_polarity(chip, pwm, state->pol=
-arity);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +     }
-> > > +
-> > > +     if (!state->enabled) {
-> > > +             if (enabled)
-> > > +                     pwm_loongson_disable(chip, pwm);
-> > > +             return 0;
-> > > +     }
-> >
-> > Given that the configured polarity isn't relevant for a disabled PWM, I
-> > suggest to swap these two if blocks. However then you have to be a bit
-> > more careful for the polarity check because otherwise the following
-> > series of commands yields wrong results:
-> >
-> >         pwm_apply_might_sleep(pwm, {.duty_cycle =3D D, .period =3D P, .=
-polarity =3D PWM_POLARITY_NORMAL, .enabled =3D true});
-> >         pwm_apply_might_sleep(pwm, {.duty_cycle =3D D, .period =3D P, .=
-polarity =3D PWM_POLARITY_INVERSED, .enabled =3D false});
-> >         pwm_apply_might_sleep(pwm, {.duty_cycle =3D D, .period =3D P, .=
-polarity =3D PWM_POLARITY_INVERSED, .enabled =3D true});
-> >
+> As we're approaching the merge window and this is still unclear, I
+> applied the pwm bits (i.e. patches 12, 13). If I understand
+> correctly,
+> patch 33 isn't suitable for application yet as it has a dependency on
+> pinctrl changes in that series.
 >=20
-> Yes, we'd better make sure pwm is enabled first.
-> I will swap the two if blocks.
+> (side note: Your patches are signed, but that doesn't bring any
+> benefit
+> if the receivers don't have your key. I didn't find it neither on
+> keys.openpgp.org nor in the kernel pgp key collection.)
 >=20
-> > > +     ret =3D pwm_loongson_config(chip, pwm, duty_cycle, period);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     if (!enabled)
-> > > +             ret =3D pwm_loongson_enable(chip, pwm);
-> > > +
-> > > +     return ret;
-> > > +}
-> > > +
-> > > +static int pwm_loongson_get_state(struct pwm_chip *chip, struct pwm_=
-device *pwm,
-> > > +                               struct pwm_state *state)
-> > > +{
-> > > +     u32 duty, period, ctrl;
-> > > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip=
-);
-> > > +
-> > > +     /* duty_cycle =3D ddata->duty * NSEC_PER_SEC / ddata->clk_rate =
-*/
-> > > +     duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
-> > > +     state->duty_cycle =3D mul_u64_u64_div_u64(duty, NSEC_PER_SEC, d=
-data->clk_rate);
-> > > +
-> > > +     /* period =3D ddata->period * NSEC_PER_SEC / ddata->clk_rate */
-> > > +     period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
-> > > +     state->period =3D mul_u64_u64_div_u64(period, NSEC_PER_SEC, dda=
-ta->clk_rate);
-> > > +
-> > > +     ctrl =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
-> > > +     state->polarity =3D (ctrl & LOONGSON_PWM_CTRL_INVERT) ? PWM_POL=
-ARITY_INVERSED :
-> > > +                       PWM_POLARITY_NORMAL;
-> > > +     state->enabled =3D (ctrl & LOONGSON_PWM_CTRL_EN) ? true : false;
-> > > +
-> > > +     return 0;
-> >
-> > You didn't test extensively with PWM_DEBUG enabled, right? You need to
-> > round up the divisions here otherwise you get strange rounding results:
-> >
-> > Consider ddata->clk_rate =3D 1594323. When a state with .period =3D 200=
-00 is
-> > applied, LOONGSON_PWM_REG_PERIOD is assigned 31.
-> > Calling .get_state() in this situation gives .period =3D 19443. Reapply=
-ing
-> > .period =3D 19443 results in LOONGSON_PWM_REG_PERIOD :=3D 30. Iterating=
- this
-> > further yields:
-> >
-> >  - .period =3D 18816
-> >  - LOONGSON_PWM_REG_PERIOD :=3D 29
-> >  - .period =3D 18189
-> >  - LOONGSON_PWM_REG_PERIOD :=3D 28
-> >  - ...
-> >
-> Yes, I'm very sorry I didn't do extensive testing with PWM_DEBUG enabled.
-> Here I do need to use DIV64_U64_ROUND_UP().
->=20
-> Below:
->=20
->         /* duty_cycle =3D ddata->duty * NSEC_PER_SEC / ddata->clk_rate */
->         duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
->         state->duty_cycle =3D DIV64_U64_ROUND_UP((u64)duty *
-> NSEC_PER_SEC, ddata->clk_rate);
->=20
->         /* period =3D ddata->period * NSEC_PER_SEC / ddata->clk_rate */
->         period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
->         state->period =3D DIV64_U64_ROUND_UP((u64)period * NSEC_PER_SEC,
-> ddata->clk_rate);
->=20
->=20
-> I'd also like to ask which tests I still need to do to make sure the
-> driver is more complete?
+> Best regards
+> Uwe
 
-There is no official lower limit on tests. But the goal is that your
-driver behaves correctly and some of the typical errors can be catched
-by enabling PWM_DEBUG and then doing the following tests for sensible
-values of A and B:
-
-	# Sequence of increasing periods
-	for period in A ... B:
-		configure 0/period
-
-	# Sequence of decreasing periods
-	for period in A ... B:
-		configure 0/(B + A - period)
-
-	for period in some set:
-		# Sequence of increasing duty length
-		for duty_cycle in 0 ... period:
-			configure duty_cycle/period
-
-		# Sequence of decreasing duty length
-		for duty_cycle in 0 ... period:
-			configure (period - duty_cycle)/period
-
-That should give you a good coverage.
-
-The idea of extensive testing on your side is also: Review capacities
-are a scarce resource and you suffer from that because it takes some
-patience between you sending a patch and a maintainer coming around to
-review it. If your code is well tested, there is less for the
-maintainers to find and so I save time because there are less revisions
-and they mature quicker. The direct consequence for you and the others
-waiting for my attention should be obvious. (This also means: If you
-look into other's patch submissions and point out the things you already
-learned to them, you also save maintainer time and so might get their
-attention earlier yourself.)
-
-I'm working on a bigger change for the pwm subsystem. One of the results
-will be a new userspace API. I intend to create a test program that does
-the above tests, so in the foreseeable future testing should get easier.
-(In return writing a lowlevel driver will become a bit harder, as the
-requirements for precision increase.)
-
-Best regards
-Uwe
-
---6grgdfuogy5smzhk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaJYc4ACgkQj4D7WH0S
-/k5GjAf/T5cnZCbZWPmsKHJi6Yk0Kx4vG6/4qPLHyqW6p9SD659LCAGHwkP9cVPc
-rf5WvR5J0ZNwt0JHR+6C3QSp29HYmzCOTPWMVKK3E/bSUGygVqHtQGFkRa8I8g3F
-XqKAJD96fUMGzE+lPA8L0XxLez0Bez8rKpwjm70CkIw1fAeSZvS7sDj9xT8qTQAF
-qnTRQZNRdUvNhesBxRnEO279ER8wO78FMlo31LTWWoP3aBMVGnjdy/l3xqUUQIbC
-Z83cnxp4Zmor8vTCsscHs9v6Xm5mG5q3yLZYRQNxOyvZ98eJ83rFoZXyHscLJb5v
-2YZztNZrch2uKGnT1AMimKotTYoJAA==
-=JU6c
------END PGP SIGNATURE-----
-
---6grgdfuogy5smzhk--
 
