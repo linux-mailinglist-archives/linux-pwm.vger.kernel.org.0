@@ -1,139 +1,180 @@
-Return-Path: <linux-pwm+bounces-2738-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2739-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B559A92B3E6
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jul 2024 11:33:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB1A192B500
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jul 2024 12:18:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D8A428146B
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jul 2024 09:33:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDFBD1C22AA7
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jul 2024 10:18:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43CE914BFB0;
-	Tue,  9 Jul 2024 09:33:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5473514EC61;
+	Tue,  9 Jul 2024 10:18:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qw8pftww"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="MOyvE1Hb"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1E6153582
-	for <linux-pwm@vger.kernel.org>; Tue,  9 Jul 2024 09:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59EA1FA3
+	for <linux-pwm@vger.kernel.org>; Tue,  9 Jul 2024 10:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720517603; cv=none; b=cUU48HFK0wJWF4lp9cbrlm3wpQwSGkVL35pBh6KahGthEizc8nMrTE/D1OS3No0Jq7f9kEXdMVZnW6wsSVXlfibSBfM01oHmySu7s9LTRp+3hQdMuLnoFs0r8zLhfv59wGlrcy2sCpEA621oKFexZJw5enkrOFEBG83c3GjLZA8=
+	t=1720520312; cv=none; b=Uq9jBCvZNZhgIrt0AuHncuaYo+9yIkYm4RtFePSdrhCGL6C6sSlfOQaCHKxZDvueo2NXkZG/cGRDKxYxlyOPD25+SVKG5qS2nw4QGv7Rp7p68jbWbGAlTlwcxucWZdziRGrlUQGJ7ikTMPJRdj3T5dwsS3UDKpBwnH5yiT10dUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720517603; c=relaxed/simple;
-	bh=2Dv/HXa4tu3ES90YGGfrQdJ1WgZFYtmB/QWSg4nC4pU=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tHNeuGClTgLlmd7q0MH9pYbCYjkbhlZeE0V7Xjh+Abgf3z49acXQ2p9B07YIJUGjtj/rHBfY8AqQhFxzBOOZtW3uJC84xsJDCIl93T4TipgHN8VxS2R/TYCR7dyK3BaLAcv0aS4l666iuUdUOw+g6oAaUeO3sRv0i/Q6b4xvvNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qw8pftww; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-36798779d75so4326762f8f.3
-        for <linux-pwm@vger.kernel.org>; Tue, 09 Jul 2024 02:33:21 -0700 (PDT)
+	s=arc-20240116; t=1720520312; c=relaxed/simple;
+	bh=mXyUzOkvkfb+kJ85JoB+gVRy5JglbPng3lB2rtsWqsQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fQ34+K/y7YbsrjPfA0DOk8U8lEiboPubgaKey9+C+rpAuVJIschRHFCcZxcb0/ek29c5TIoDfQLFT0C9V551i4f0o8LrKK1jRqAO1UznUxzs/dSZPeKz1CnnDaoCN6uMnYvl6r6pXwDZ2IY/R1EeQ36fOo/OsfxNAGqSzxZWC6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=MOyvE1Hb; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-58b0dddab8cso7314159a12.0
+        for <linux-pwm@vger.kernel.org>; Tue, 09 Jul 2024 03:18:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720517600; x=1721122400; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KrAV5FP6mpmqfMuaOax0m60JFOumBPDoV6/ZNX+4Nn8=;
-        b=Qw8pftwwjXxaM2ckwu3K+/2nwkof0UpdwT4U/EtveVz/PE5KNledMViz4srxxz4YpL
-         cxWUItL3bYPMOG1xxhOMJNNluXnN3bSFgv3maJZUeqb8H58i5DwtsnGUE/Ki17iXEOVJ
-         o8kIti4exsln47QLCNpIKcj+fDyp63QDgAmQYRyCWeqMuLBpX4cI7c5WSU7VaGpfQwmT
-         cZhLJ8hV6s3TtDiKJ1/7gHhazaOp47QQM8+2h75KZKlBAD6beeSIVd0FkZMDnhejrdqP
-         ms5Y+U1k5XvoFhJjnOf1mRqoMDwAut/MEr0JNV0DkQn8yU/Av5Zv0fJc8Yj3avbd3azi
-         OqAw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720520307; x=1721125107; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=55skElxOMrOCjPUV7UX9C7ptFLmqKM5oP3GtZJKO37w=;
+        b=MOyvE1HbUyy8UlYvFnREv+CAKwPMd0rBpPyGUqWoBs31ikdj7+VK97P82KHmz9ZjF7
+         1mt4Tq65BSZAl4tDNFMs9L3Tx3VE/HlRtymCpb+cRtLdaQghfs6CMJw1ZnsKm+g2ZJdK
+         YEBxC+N/pPcDaBkDki3YyXDROShQqE/dNf0EW/cA6yqzPuR+/GBh1lWSPfsjdXLDeQwI
+         27k/1QGDfITdWUMtHL6V+rlks8B6Cdyq8Zt1TXuhNyByR2a+dQsH3/vHybVpSJNEj0Xz
+         lUY+/27WJpo9bMjxhQuQgFLEoG/8YzGlYgGOKSc9FzjF+4qNizSESTsW4VXT4hwIGanf
+         TC+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720517600; x=1721122400;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KrAV5FP6mpmqfMuaOax0m60JFOumBPDoV6/ZNX+4Nn8=;
-        b=ZZShk8h43MuiRmJmBYwuapaKanjELTMqP7u4BYtWbv6cfXkIyrLGDAcsRkOiNjWC+U
-         W8qEyVdVBDXNswl1MDf93R6SwU8xl0T0iLIGgQFUeLsg3aOPp+GKsQ6PcvynRYVFQw1h
-         vRlHBzM/ir8II3lH0+7kv6q1PPAdQXgSqf5nMSfv27Z5WvPUW9B63lsi1HKBQzsB995/
-         45aFyjgEd7WRiaVBdzWwPrFegiyvzw2oKlfydQJ5mWvF67hSr8mqQcg3bNIluzwnXR02
-         IlYKofqnXVUlidBjCMRhtroA7KLJzV2/TAUpowXsa6BfHSTbiaASUr/LenWPRFUZFzyu
-         jAmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZR/Cf3QUo6J0G7brZgBNKvYLrAAQq/p2M3BZNdxEkybO4qOR1LFGlCCeleKgKj4d1xbDqqB9eNDvzKafkgAoUBjsWKsYd9Eit
-X-Gm-Message-State: AOJu0YwkPHWIZq4noN40JN16v0r4i6XzHEiLiV+X5tdnCsweZ+dksxNE
-	mGhlhg8yRAtR5cO2m/YipjM/MmetsM4PIgPeKiiXpv9CxPX868FQ
-X-Google-Smtp-Source: AGHT+IHjs54FJosOI/sKErGKVEGc3++IcZjiPsOyJ4qGvD0aH7BXuokChQT09EQp9znzBW57vKSX/w==
-X-Received: by 2002:a5d:4e46:0:b0:367:8ff5:5870 with SMTP id ffacd0b85a97d-367cead15f4mr1503258f8f.47.1720517599413;
-        Tue, 09 Jul 2024 02:33:19 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfa06b6sm2001271f8f.86.2024.07.09.02.33.19
+        d=1e100.net; s=20230601; t=1720520307; x=1721125107;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=55skElxOMrOCjPUV7UX9C7ptFLmqKM5oP3GtZJKO37w=;
+        b=UBiSsj0rElEwdT54SNv4CSlqPEors8E34ThxLcLgisGSKRnIxXSTzCV8lvhnLr97+0
+         ch9TDoJloyWzqh9EF7UHvsiogV9tT8mULvCSUO8DB70neP2LNxY7y6XSZOiUmhNHRkwv
+         tRLLgEXcCeL27KfoqRKEyNcSBCw0yOs0PP+/yFoekyK5OaM7jqEWaPgy3mD9KKKqHWel
+         0WLih3MUGjwbJNDsUvf14MxPT9/8YgRv+xaw1e67i4NpPbS/RlafTcU3dajHtnNo+7cz
+         F/3YrGMXDfFowItAeIzD5iwAh6SRKOV8TRCtYfOJTRaOXi2sLcYqSqK94uz0Vpk0RVXq
+         Q+Mg==
+X-Gm-Message-State: AOJu0YzCj9iBATD8h32+RK497mc+09GFBqodxPVkvSkz/mpwBvC80LPH
+	fvjqEzHsmKGvs5YSGOiaJvt6aGGBPoBe0YIT4qM0p84TLWdexx0FvxKhZeOWr1U=
+X-Google-Smtp-Source: AGHT+IFKicBvL2WppGJx9Wp7stHGuv3aT4Zjx+F3UAzn59KIF3x/7SLjKWmnyoCEK+rfT5yAZNwixg==
+X-Received: by 2002:aa7:da8b:0:b0:57c:5fcf:b570 with SMTP id 4fb4d7f45d1cf-594bc7ca0fbmr1260673a12.32.1720520307223;
+        Tue, 09 Jul 2024 03:18:27 -0700 (PDT)
+Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bbe2d338sm901811a12.39.2024.07.09.03.18.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 02:33:19 -0700 (PDT)
-Message-ID: <86fdb6409c8f439bf75d2ed31d1031fb910aa435.camel@gmail.com>
-Subject: Re: [PATCH 3/6] pwm: Add support for pwmchip devices for faster and
- easier userspace access
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
-	linux-pwm@vger.kernel.org
-Date: Tue, 09 Jul 2024 11:37:13 +0200
-In-Reply-To: <7490e64bbe12e2046d92716dadef7070881592e6.1720435656.git.u.kleine-koenig@baylibre.com>
-References: <cover.1720435656.git.u.kleine-koenig@baylibre.com>
-	 <7490e64bbe12e2046d92716dadef7070881592e6.1720435656.git.u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 
+        Tue, 09 Jul 2024 03:18:26 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Boris Brezillon <boris.brezillon@collabora.com>
+Cc: linux-pwm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/2] pwm: atmel-tcb: Fix race condition and convert to guards
+Date: Tue,  9 Jul 2024 12:18:05 +0200
+Message-ID: <20240709101806.52394-3-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3472; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=mXyUzOkvkfb+kJ85JoB+gVRy5JglbPng3lB2rtsWqsQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmjQ5eGS57zLE42aid3aguQbgn0NuMDGAxKRy/n 3iaE1X9mMuJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZo0OXgAKCRCPgPtYfRL+ TvG1CACmwn+592GoOBW/oopHdgC+X0LAPRPOFcx/zX94/es7aEaPFsG3x/6RvQ1hDMYU06Ol61S l64ePJvBLXBYg/IPONdjY+cNm1GVIRn2QprIOGVdEVRxBj52RG7xRAWBJSXz5mmyuHV9qsc6mUW 5ZgVB0ULWJ1vOBSNV3juB0xGqBUgE7+iBYQNlD2wihw1kOEve4KkZAzkHsrtGvzupWvbYf6DMZ5 iADh5ZZveyvNxdJqAdh8p6UafPaznR1NsOCcFtfZUocCQ/VvSip8fxg1zHnI25noA2haqgJD+8S K11Kzl5GrQcDEYmIVER1gNlAUCLlv6GwXvlYH19FxSTOCcuC
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-07-08 at 12:52 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> With this change each pwmchip can be accessed from userspace via a
-> character device. Compared to the sysfs-API this is faster (on a
-> stm32mp157 applying a new configuration takes approx 25% only) and
-> allows to pass the whole configuration in a single ioctl allowing atomic
-> application.
->=20
-> Thanks to Randy Dunlap for pointing out a missing kernel-doc
-> description.
->=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
-> ---
+The hardware only supports a single period length for both PWM outputs. So
+atmel_tcb_pwm_config() checks the configuration of the other output if it's
+compatible with the currently requested setting. The register values are
+then actually updated in atmel_tcb_pwm_enable(). To make this race free
+the lock must be held during the whole process, so grab the lock in
+.apply() instead of individually in atmel_tcb_pwm_disable() and
+atmel_tcb_pwm_enable() which then also covers atmel_tcb_pwm_config().
 
-I didn't looked very carefully at the patch but one thing did caught my
-attention
+To simplify handling, use the guard helper to let the compiler care for
+unlocking. Otherwise unlocking would be more difficult as there is more
+than one exit path in atmel_tcb_pwm_apply().
 
-...
+Fixes: 9421bade0765 ("pwm: atmel: add Timer Counter Block PWM driver")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ drivers/pwm/pwm-atmel-tcb.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-> +
-> +struct pwmchip_waveform {
-> +	unsigned int hwpwm;
-> +	__u64 period_length;
-> +	__u64 duty_length;
-> +	__u64 duty_offset;
-> +};
-> +
+diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
+index 528e54c5999d..aca11493239a 100644
+--- a/drivers/pwm/pwm-atmel-tcb.c
++++ b/drivers/pwm/pwm-atmel-tcb.c
+@@ -81,7 +81,8 @@ static int atmel_tcb_pwm_request(struct pwm_chip *chip,
+ 	tcbpwm->period = 0;
+ 	tcbpwm->div = 0;
+ 
+-	spin_lock(&tcbpwmc->lock);
++	guard(spinlock)(&tcbpwmc->lock);
++
+ 	regmap_read(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), &cmr);
+ 	/*
+ 	 * Get init config from Timer Counter registers if
+@@ -107,7 +108,6 @@ static int atmel_tcb_pwm_request(struct pwm_chip *chip,
+ 
+ 	cmr |= ATMEL_TC_WAVE | ATMEL_TC_WAVESEL_UP_AUTO | ATMEL_TC_EEVT_XC0;
+ 	regmap_write(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), cmr);
+-	spin_unlock(&tcbpwmc->lock);
+ 
+ 	return 0;
+ }
+@@ -137,7 +137,6 @@ static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (tcbpwm->duty == 0)
+ 		polarity = !polarity;
+ 
+-	spin_lock(&tcbpwmc->lock);
+ 	regmap_read(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), &cmr);
+ 
+ 	/* flush old setting and set the new one */
+@@ -172,8 +171,6 @@ static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			     ATMEL_TC_SWTRG);
+ 		tcbpwmc->bkup.enabled = 0;
+ 	}
+-
+-	spin_unlock(&tcbpwmc->lock);
+ }
+ 
+ static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -194,7 +191,6 @@ static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (tcbpwm->duty == 0)
+ 		polarity = !polarity;
+ 
+-	spin_lock(&tcbpwmc->lock);
+ 	regmap_read(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), &cmr);
+ 
+ 	/* flush old setting and set the new one */
+@@ -256,7 +252,6 @@ static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	regmap_write(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CCR),
+ 		     ATMEL_TC_SWTRG | ATMEL_TC_CLKEN);
+ 	tcbpwmc->bkup.enabled = 1;
+-	spin_unlock(&tcbpwmc->lock);
+ 	return 0;
+ }
+ 
+@@ -341,9 +336,12 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ static int atmel_tcb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			       const struct pwm_state *state)
+ {
++	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+ 	int duty_cycle, period;
+ 	int ret;
+ 
++	guard(spinlock)(&tcbpwmc->lock);
++
+ 	if (!state->enabled) {
+ 		atmel_tcb_pwm_disable(chip, pwm, state->polarity);
+ 		return 0;
 
-I do not think we should have holes in the struct given this is an userspac=
-e
-interface.
-
-One other thing is how likely is this struct to grow? If that is expected w=
-e
-should probably think in adding some __reserved__ parameters or maybe to mo=
-dify
-the interface so we could make use of:
-
-https://elixir.bootlin.com/linux/latest/source/include/linux/uaccess.h#L348
-
-Like wrapping struct pwmchip_waveform in another struct with an extra membe=
-r
-forcing userspace to specify pwmchip_waveform size. But I agree it's a bit
-awkward and ugly (but it could be hidden in libpwm).
-
-Anyways, if this is not likely to change disregard all the compatibility
-thingy...
-
-- Nuno S=C3=A1
+base-commit: 120a528213b6693214e3cbc24a9c3052a4b1024b
+-- 
+2.43.0
 
 
