@@ -1,354 +1,153 @@
-Return-Path: <linux-pwm+bounces-2758-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2760-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8FA992DCBA
-	for <lists+linux-pwm@lfdr.de>; Thu, 11 Jul 2024 01:41:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAAD492DFEC
+	for <lists+linux-pwm@lfdr.de>; Thu, 11 Jul 2024 08:15:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 764C1283384
-	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jul 2024 23:41:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8EF3A1F22F33
+	for <lists+linux-pwm@lfdr.de>; Thu, 11 Jul 2024 06:15:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24AA4158D6D;
-	Wed, 10 Jul 2024 23:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 072BD8003F;
+	Thu, 11 Jul 2024 06:15:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="s4uxAe4p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZAKBJ+03"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FC914D428;
-	Wed, 10 Jul 2024 23:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C314E2904
+	for <linux-pwm@vger.kernel.org>; Thu, 11 Jul 2024 06:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720654890; cv=none; b=feXfaZeBI+V+Lk54pDLkZ2EEVTndxEHi0pRS9y+Awbq9deyD4OE5aKHUHaNeAHo+mRISWqsonE85R8N1l8ceHO4+RHMLyjAu1S8sj+L2pwz903FA5foVojMC5MQMtSNS1C6jjExMFLYQfzS+SVO/wygZKXCphIqShH0+IizzC+E=
+	t=1720678501; cv=none; b=Aof0VkiQW/4tYiuTdq5N4iHa93KcfqMaQrEJMK/VQbsxxn4IIoNIeBjP+ss6apoMI34gFj99SxNqmGuTqjWZNgFtcqMmlexra5ioFFYVIIACkFXwMmTSPRSHMsXOaMFZqmSVWXMCtX/fAmI5OySlmk4LkvYGi54ADpB0sKvfTN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720654890; c=relaxed/simple;
-	bh=dKFjxkZdtnZUoLhr2PrdX1lc7Ess3zGR8UBRJNQvEIY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g//7Agpt/yt3hp2Y9FMiJf6zYy8tXU3NXLBLNqQlEld7Knw/8cBhfqNNUqKQlrcjooMWjsVXpHlWeQwyksgy79hN562eeT9PzwWS4U2NjSzRVHdgX8NGgDSCkAd6EWeetKLAi4LGrJZnzTJmI8xQzdlhAMUvxQXZXXenohCaGaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=s4uxAe4p; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id D27CB12000F;
-	Thu, 11 Jul 2024 02:41:23 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru D27CB12000F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1720654883;
-	bh=9kR5DRSgGX30EoSyDUitp1Cc//79tcnSd50jyX29VWM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=s4uxAe4pDlI9cDDlJq5u/cxIPEQ6I6oq/58rrRx9GtYB4dDvRWElIItmo2F5hphlC
-	 jmyTTeAXaA9CsXC4sxPVkDAnDVwsgCptK+UROLVS+4P21RP9iVbSgla3tBytueFVud
-	 RWelS3kG+YNmDdni/CsjO8i5F5RNwbVrwfdvSXKVo6eRz7zCysrRpIvbzjjNjWbl6z
-	 QQnU9hqfRCCvltwBkwELQ+jXew2o0F97o57dSAGXrrLfClxHQpIR4VrsAY1t7AzYtW
-	 2W+QC2ZswBAljgCHVpfCctiuJC6Weg2U9V1Co3QpkyK68ORd/hA4/lefEGpfImU0jj
-	 t6nKH5qAbhUiA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Thu, 11 Jul 2024 02:41:23 +0300 (MSK)
-Received: from work.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 11 Jul 2024 02:41:23 +0300
-From: George Stark <gnstark@salutedevices.com>
-To: <ukleinek@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <neil.armstrong@linaro.org>, <khilman@baylibre.com>,
-	<jbrunet@baylibre.com>, <martin.blumenstingl@googlemail.com>,
-	<hkallweit1@gmail.com>
-CC: <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>, George Stark
-	<gnstark@salutedevices.com>, Dmitry Rokosov <ddrokosov@salutedevices.com>
-Subject: [PATCH v4 3/3] arm64: dts: meson: a1: add definitions for meson PWM
-Date: Thu, 11 Jul 2024 02:41:16 +0300
-Message-ID: <20240710234116.2370655-4-gnstark@salutedevices.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240710234116.2370655-1-gnstark@salutedevices.com>
-References: <20240710234116.2370655-1-gnstark@salutedevices.com>
+	s=arc-20240116; t=1720678501; c=relaxed/simple;
+	bh=x93dtdtgjqICi5YTryd4ySyRs8zvVKGeiVnU2tAH3ps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bem+0G4wWHlKS7RW/l0fZcMPuNrArImcBlcQYCAtWEsQqxhlxHTJz9ep+7BUcipShduxwu5IkJQapxoMLeM63lBgLxIP39r1HuedgnJdg0JLC9ujM+0nS/0r2LxX3Y7p2jWFlT8Hfep2/42OMNEaeDz1hmRbyHi2ANDNH+PIrlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZAKBJ+03; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so2776775e9.1
+        for <linux-pwm@vger.kernel.org>; Wed, 10 Jul 2024 23:14:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720678498; x=1721283298; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=p2Rl2+dd6QxHyiNKQxsyOzmIl6p3bvxYSe/W6Fkw2yo=;
+        b=ZAKBJ+03oWvmgrAllzZ6xI1ps6OXksLcghepnpUnfIoGv+lyG4dBeH7M9QuflakdCn
+         07Hbeq9eILBxxCf6FijROwY3+1mDoELmWVjYB3ZxjMK1uU/Aw7IUnvmmXibFrKae0pVc
+         d6J+feJxOArn6oDU+wguaH7RKLG87ptI8MqGJTZDBQnWIbcPgvj5W1N/w4AVoiAe1uLW
+         PhFLYzppsnelR7KCjILMpW4UIJQXfRQ/dGi6xwPcvJfEOa36vtfw3LhV4OK8gwVPkyxh
+         OcyokA3RJhDJ1oZVxnMpkCe7v75MgNKgJh/2CgUxYZ/Em6KYEcxujoChRNzzQG5nYriZ
+         wSTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720678498; x=1721283298;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p2Rl2+dd6QxHyiNKQxsyOzmIl6p3bvxYSe/W6Fkw2yo=;
+        b=tY+CvLDsX83EsHQkwMD+1MjbU4PGPJh0SZmUc4PGUq1cHkGY8aH6R68+UiL9dcLFjJ
+         Xzeqf3J6wx00BibH+J6eLwp4GvLZf1B/nzO+mjmXYyMIwO6186Gx5Qr1B7fHkKOw9FqE
+         5U9r2uixMjnzbkgQn+Fz/bMByEEQJE6zmRBfa6rAZFEhplwfijZcLZ/lLS8OA6nQqGxu
+         qG9g2fMUFnJMzsiQJCf9EAFwKT3LqKMfBtjHhvkg34boGuY2NfJZK1q4Ra2Wfe9Pti2Z
+         re8ymitQ/cE3x2Euawk6WT7XAJYvObskiqmSHYu11rAGAtTf7TRmCDyWy/xe9TVyoCQy
+         j7wQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6rwuFwtpnnNUi8S79pgvWoToPWB+C2/7bYhBbJ4eosI52ySMw/lkuXih4m+34cSlfKjOhCCMqZVTf8idB0f0lDoRKE4zJVtni
+X-Gm-Message-State: AOJu0YzXISPiSrjSshWyyTl67TDUvJANgRE0lqndty2NAlo4RleOlLZJ
+	fGf6uvs3YSX6QRuPLA8anAc0z+my3lIf+jYrebhhmNDfMdFFTJ1SBz+J7IhoN08=
+X-Google-Smtp-Source: AGHT+IHmsUmU+Irw8Wa1o1Hes8dCOBKIG62T/Nrs6dqgaSc4l8HN0kN+wwBwW8PMjlRRKwxnMtxKXw==
+X-Received: by 2002:a05:600c:3049:b0:424:8836:310c with SMTP id 5b1f17b1804b1-427981b76bcmr11447385e9.5.1720678498138;
+        Wed, 10 Jul 2024 23:14:58 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279772508fsm27554435e9.42.2024.07.10.23.14.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jul 2024 23:14:57 -0700 (PDT)
+Message-ID: <17ce46e8-b964-4b19-9789-65d969104a5c@linaro.org>
+Date: Thu, 11 Jul 2024 08:14:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186446 [Jul 10 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;100.64.160.123:7.1.2;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/10 21:42:00 #25942395
-X-KSMG-AntiVirus-Status: Clean, skipped
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: pwm: at91: Add sama7d65 compatible string
+To: nicolas.ferre@microchip.com, Conor Dooley <conor.dooley@microchip.com>,
+ Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+ ukleinek@kernel.org
+Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-pwm@vger.kernel.org
+References: <20240710163651.343751-1-nicolas.ferre@microchip.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240710163651.343751-1-nicolas.ferre@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The chip has 3 dual-channel PWM modules PWM_AB, PWM_CD, PWM_EF those
-can be connected to various digital I/O pins.
+On 10/07/2024 18:36, nicolas.ferre@microchip.com wrote:
+> From: Nicolas Ferre <nicolas.ferre@microchip.com>
+> 
+> Add compatible string for sama7d65. Like sama7g5, it currently binds to
+> "atmel,sama5d2-pwm" compatibility string for this driver, so add an
+> "enum" to reflect that.
+> 
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-Each of 6 PWM is driven by individually selected clock parent and
-8-bit divider. The PWM signal is generated using two 16-bit counters.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: George Stark <gnstark@salutedevices.com>
-Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 215 ++++++++++++++++++++++
- 1 file changed, 215 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 85e56c021e99..0dc39fb8f59d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -307,6 +307,188 @@ mux {
- 					};
- 				};
- 
-+				pwm_a_pins1: pwm-a-pins1 {
-+					mux {
-+						groups = "pwm_a_x6";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_a_pins2: pwm-a-pins2 {
-+					mux {
-+						groups = "pwm_a_x7";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_a_pins3: pwm-a-pins3 {
-+					mux {
-+						groups = "pwm_a_f10";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_a_pins4: pwm-a-pins4 {
-+					mux {
-+						groups = "pwm_a_f6";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_a_pins5: pwm-a-pins5 {
-+					mux {
-+						groups = "pwm_a_a";
-+						function = "pwm_a";
-+					};
-+				};
-+
-+				pwm_b_pins1: pwm-b-pins1 {
-+					mux {
-+						groups = "pwm_b_x";
-+						function = "pwm_b";
-+					};
-+				};
-+
-+				pwm_b_pins2: pwm-b-pins2 {
-+					mux {
-+						groups = "pwm_b_f";
-+						function = "pwm_b";
-+					};
-+				};
-+
-+				pwm_b_pins3: pwm-b-pins3 {
-+					mux {
-+						groups = "pwm_b_a";
-+						function = "pwm_b";
-+					};
-+				};
-+
-+				pwm_c_pins1: pwm-c-pins1 {
-+					mux {
-+						groups = "pwm_c_x";
-+						function = "pwm_c";
-+					};
-+				};
-+
-+				pwm_c_pins2: pwm-c-pins2 {
-+					mux {
-+						groups = "pwm_c_f3";
-+						function = "pwm_c";
-+					};
-+				};
-+
-+				pwm_c_pins3: pwm-c-pins3 {
-+					mux {
-+						groups = "pwm_c_f8";
-+						function = "pwm_c";
-+					};
-+				};
-+
-+				pwm_c_pins4: pwm-c-pins4 {
-+					mux {
-+						groups = "pwm_c_a";
-+						function = "pwm_c";
-+					};
-+				};
-+
-+				pwm_d_pins1: pwm-d-pins1 {
-+					mux {
-+						groups = "pwm_d_x15";
-+						function = "pwm_d";
-+					};
-+				};
-+
-+				pwm_d_pins2: pwm-d-pins2 {
-+					mux {
-+						groups = "pwm_d_x13";
-+						function = "pwm_d";
-+					};
-+				};
-+
-+				pwm_d_pins3: pwm-d-pins3 {
-+					mux {
-+						groups = "pwm_d_x10";
-+						function = "pwm_d";
-+					};
-+				};
-+
-+				pwm_d_pins4: pwm-d-pins4 {
-+					mux {
-+						groups = "pwm_d_f";
-+						function = "pwm_d";
-+					};
-+				};
-+
-+				pwm_e_pins1: pwm-e-pins1 {
-+					mux {
-+						groups = "pwm_e_p";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_e_pins2: pwm-e-pins2 {
-+					mux {
-+						groups = "pwm_e_x16";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_e_pins3: pwm-e-pins3 {
-+					mux {
-+						groups = "pwm_e_x14";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_e_pins4: pwm-e-pins4 {
-+					mux {
-+						groups = "pwm_e_x2";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_e_pins5: pwm-e-pins5 {
-+					mux {
-+						groups = "pwm_e_f";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_e_pins6: pwm-e-pins6 {
-+					mux {
-+						groups = "pwm_e_a";
-+						function = "pwm_e";
-+					};
-+				};
-+
-+				pwm_f_pins1: pwm-f-pins1 {
-+					mux {
-+						groups = "pwm_f_b";
-+						function = "pwm_f";
-+					};
-+				};
-+
-+				pwm_f_pins2: pwm-f-pins2 {
-+					mux {
-+						groups = "pwm_f_x";
-+						function = "pwm_f";
-+					};
-+				};
-+
-+				pwm_f_pins3: pwm-f-pins3 {
-+					mux {
-+						groups = "pwm_f_f4";
-+						function = "pwm_f";
-+					};
-+				};
-+
-+				pwm_f_pins4: pwm-f-pins4 {
-+					mux {
-+						groups = "pwm_f_f12";
-+						function = "pwm_f";
-+					};
-+				};
-+
- 				sdio_pins: sdio {
- 					mux0 {
- 						groups = "sdcard_d0_x",
-@@ -648,6 +830,28 @@ uart_AO_B: serial@2000 {
- 				status = "disabled";
- 			};
- 
-+			pwm_ab: pwm@2400 {
-+				compatible = "amlogic,meson-a1-pwm",
-+					     "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x2400 0x0 0x24>;
-+				#pwm-cells = <3>;
-+				clocks = <&clkc_periphs CLKID_PWM_A>,
-+					 <&clkc_periphs CLKID_PWM_B>;
-+				power-domains = <&pwrc PWRC_I2C_ID>;
-+				status = "disabled";
-+			};
-+
-+			pwm_cd: pwm@2800 {
-+				compatible = "amlogic,meson-a1-pwm",
-+					     "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x2800 0x0 0x24>;
-+				#pwm-cells = <3>;
-+				clocks = <&clkc_periphs CLKID_PWM_C>,
-+					 <&clkc_periphs CLKID_PWM_D>;
-+				power-domains = <&pwrc PWRC_I2C_ID>;
-+				status = "disabled";
-+			};
-+
- 			saradc: adc@2c00 {
- 				compatible = "amlogic,meson-g12a-saradc",
- 					"amlogic,meson-saradc";
-@@ -732,6 +936,17 @@ sec_AO: ao-secure@5a20 {
- 				amlogic,has-chip-id;
- 			};
- 
-+			pwm_ef: pwm@5400 {
-+				compatible = "amlogic,meson-a1-pwm",
-+					     "amlogic,meson-s4-pwm";
-+				reg = <0x0 0x5400 0x0 0x24>;
-+				#pwm-cells = <3>;
-+				clocks = <&clkc_periphs CLKID_PWM_E>,
-+					 <&clkc_periphs CLKID_PWM_F>;
-+				power-domains = <&pwrc PWRC_I2C_ID>;
-+				status = "disabled";
-+			};
-+
- 			clkc_pll: pll-clock-controller@7c80 {
- 				compatible = "amlogic,a1-pll-clkc";
- 				reg = <0 0x7c80 0 0x18c>;
--- 
-2.25.1
+Best regards,
+Krzysztof
 
 
