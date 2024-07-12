@@ -1,130 +1,193 @@
-Return-Path: <linux-pwm+bounces-2786-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2787-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCB6592FD41
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 17:12:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3124992FE8A
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 18:29:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 917881F21517
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 15:12:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8B7A1F23A2D
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 16:29:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 649DC172BB2;
-	Fri, 12 Jul 2024 15:12:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C208B175567;
+	Fri, 12 Jul 2024 16:29:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="KjJOdeOG"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="MdY2RqYX"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F7A1094E;
-	Fri, 12 Jul 2024 15:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3D1173345
+	for <linux-pwm@vger.kernel.org>; Fri, 12 Jul 2024 16:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720797161; cv=none; b=nFZrwVFQWPpIAHuF0ibW4rhWjvVJbFK3Vf0kH7/XNqMTnGefXP9VhM3poBc+4EnVDQ8D7Ckm/Tfi9l6qvKRUylpN4NoHfx90SotNEmSd1YHGf0CvdyTkST14+VJeSJ9rGjD9+rjEbsIq2qBkFpy4OSbum4h7wuuDTz/wcKthPOM=
+	t=1720801740; cv=none; b=UZM1Fze/OAakOTnzwWJUixNXZCRp6S1wqvTuq8sclOEeigFsawQHYyNdWORy3/hXX8IOMdWHkFpki1XgpsRunN21LE2LnbBVTWzyyp4lkdp4RuOp/GKzZgFC4riON8FD4oGm9sfZR//0PPh4dG8RbKcjzTzYNtSBXRIP8Kz1El0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720797161; c=relaxed/simple;
-	bh=kk3VCsodT36p1OeCq7qcg3gMsTSpYlykPwJM1lIha/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bjYfyVwfAh2ewgS70WWmk4HMqpg75cdTOV3cRPJA7jbGV4Ao+Y4xGYk3L6b4gDFqrvvx/uM0wpm1J7JLXUdJt1P3tj0KOHy7dF9c4nwshRQahQK/4dQ8nEP2RW8y1jPsxkOiQs7TEfqlTNegfE80mRr3/yr42uBWsGikDsy73w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=KjJOdeOG; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 34EE5100005;
-	Fri, 12 Jul 2024 18:12:27 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 34EE5100005
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1720797147;
-	bh=+oxJwwvIdh6XFlSXZQ495IyXoY1J3oreqmYkj7vcugo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=KjJOdeOG76Q/rAZsj2JmvtveqrzZacRH75soOoKP2TSZ+DHiWb9SHcY4EluR+zotX
-	 b992bisjVeImpjzb2Bya0dNgU3Y9vLS0TAcTMxFGhH5GccKeaxZ7LMU/d5phZBa/Cd
-	 hYirI3PI4Xu7JXf16ceezKUWz+TczVobknnKK9qqWKxkcgUzGOdTPJFanlSpi2lLK4
-	 x935kV7C8zJvnvWsx67rC5/nZ2QXV8XL36fBDhhHjpZH2iZzJmCDdPkRFSlkK30+at
-	 Cv+sSaMTp4wzqiW0TmqtWmhsEVbAVTOODkqHrmPYEEOwoP2t54KmIBwPqXqBZo8j/e
-	 m1MLz3d9wGMKg==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Fri, 12 Jul 2024 18:12:27 +0300 (MSK)
-Received: from [172.28.64.36] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 12 Jul 2024 18:12:26 +0300
-Message-ID: <55f73e79-2d21-48ba-8486-26ee168c7bc3@salutedevices.com>
-Date: Fri, 12 Jul 2024 18:12:26 +0300
+	s=arc-20240116; t=1720801740; c=relaxed/simple;
+	bh=0hC4+8k7KgddI+mj9vy1HLjJ7Eiog0c76Z/OStKOMOc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YPQ8QEONdM9rWsCYgldJ+1xEQ/AP7mXYN0i3XCQEEzw+CiQ7ZkXLbMk35jsvQjZiVKurWGfFxMRAAIKwLg1aBEb0hfcB71/2GIJ0yPKLdOc+dVrvgd+1xfgujnyl9ubCJvREj05wgUPPvoYS0ZtXOnq3ctsbPaM9qkeHS2uSxoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=MdY2RqYX; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-58b447c519eso2969325a12.3
+        for <linux-pwm@vger.kernel.org>; Fri, 12 Jul 2024 09:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720801736; x=1721406536; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cLbDj6WenJao7KJoLRxFWrmWsBncRgLRIPDzBRaAH64=;
+        b=MdY2RqYX2XffakDWBowLu2VsXPJkV5eSMaAySD4r6UJDeidj+j9rH5knLRFCnMJVuL
+         +5vCeRRxy04OvQ4LK0HS7T6J80VRyt+fS33CfepUgLqkGU2EgKc821AJ600bt+PyGbb2
+         UHXb+sYR8AWgRy6M9OrdAuhSVtdyIT9LlUGE/h5FNvr2eqe5yRcmJHjIDLjcm2Uyf3xx
+         oinPyf5PqweNAPwyTcWqzjyGPGfVQ2vnUCF3wwh8fxhEfEdZTmudajEqLLR8FJAhq7Lr
+         4NzBV1MUF/3Rz137SqGHL7IY5SSXG99O3GvIElgp4G2CXd3jpZCvDDMQ+z6cKGCH8oVw
+         CNEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720801736; x=1721406536;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cLbDj6WenJao7KJoLRxFWrmWsBncRgLRIPDzBRaAH64=;
+        b=dbSljssIzOwsTUAtI8emi9dP0inKE/lp4vWyw4Kuq20ATqZMmqFbKcUsOnzIGEnGq2
+         qBGO95WRoJUEpJgCJXsZSCfiV3e+WZEdDvEDfCl9BIeXYGI3H3j1hT4i0C92PsM9zkv+
+         gLiSdp2fXa9/5xJQ61CAx1mSlWOCXkkLMIhRszFUBzujjom5fIZlHHzOl+5LcWvLocK1
+         kBZ8uVpddztmMW9M8G5HJrNSQ08xY68dKqQq7Hyf7C2lWKhhkEWAAUsLLYit4/1t8vAT
+         HgCSOYu0lc9r/Hc/2OVk6P3pxUl5gducjuaXiOPzg2J82BLfXZ8h0aG0yzyk5DoIGrja
+         ypiQ==
+X-Gm-Message-State: AOJu0Yzy59nWJ2H7Z9ufLbQym5OivXjihllwFwyH47bImNCrLays4dk7
+	XT4vsDqLB+8209PsdRfHSWWgrz+zTviLioM9RzCT2KE5BxCgOEk0ZGNeWdSAk/SLmBLAq7TtF6Q
+	E
+X-Google-Smtp-Source: AGHT+IEA10HynvBUuRRDt4YiHGzlmd54sv2AwbGnFZlxEKQ0JbIcWwZBFnl+yWAJzHiHWK0LzSHWAA==
+X-Received: by 2002:a17:906:6c93:b0:a75:2387:7801 with SMTP id a640c23a62f3a-a780b885f65mr688091566b.61.1720801736026;
+        Fri, 12 Jul 2024 09:28:56 -0700 (PDT)
+Received: from localhost (p50915eb1.dip0.t-ipconnect.de. [80.145.94.177])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a7fefb5sm356906966b.104.2024.07.12.09.28.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jul 2024 09:28:55 -0700 (PDT)
+Date: Fri, 12 Jul 2024 18:28:54 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 3/6] pwm: Add support for pwmchip devices for faster and
+ easier userspace access
+Message-ID: <lsl34pvo3vbnqwnzrv36fguasxxb3brrgq44e2w3flgrdjzlx6@5vx53mvpi5fi>
+References: <cover.1720435656.git.u.kleine-koenig@baylibre.com>
+ <7490e64bbe12e2046d92716dadef7070881592e6.1720435656.git.u.kleine-koenig@baylibre.com>
+ <86fdb6409c8f439bf75d2ed31d1031fb910aa435.camel@gmail.com>
+ <hogxczszsbqtxu7b2dgllyclnr2pztellxzq3figkhdlajhowi@6vmjvyoifkjk>
+ <d625777dfeb5a53a232835e9abb1f39de55e6a17.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] dt-bindings: pwm: amlogic: Add new bindings for
- meson A1 PWM
-To: Rob Herring <robh@kernel.org>, <conor+dt@kernel.org>
-CC: <ukleinek@kernel.org>, <krzk+dt@kernel.org>, <neil.armstrong@linaro.org>,
-	<khilman@baylibre.com>, <jbrunet@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>, <hkallweit1@gmail.com>,
-	<linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>, Dmitry Rokosov
-	<ddrokosov@salutedevices.com>
-References: <20240710234116.2370655-1-gnstark@salutedevices.com>
- <20240710234116.2370655-3-gnstark@salutedevices.com>
- <20240712125219.GA472311-robh@kernel.org>
-Content-Language: en-US
-From: George Stark <gnstark@salutedevices.com>
-In-Reply-To: <20240712125219.GA472311-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186493 [Jul 12 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_arrow_text}, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:7.1.1,5.0.1;100.64.160.123:7.1.2;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/12 14:32:00 #25964803
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qxpqwalmvkjrglht"
+Content-Disposition: inline
+In-Reply-To: <d625777dfeb5a53a232835e9abb1f39de55e6a17.camel@gmail.com>
 
-Hello Rob, Conor
 
-On 7/12/24 15:52, Rob Herring wrote:
-> On Thu, Jul 11, 2024 at 02:41:15AM +0300, George Stark wrote:
->> The chip has 3 dual-channel PWM modules PWM_AB, PWM_CD, PWM_EF.
->>
->> Signed-off-by: George Stark <gnstark@salutedevices.com>
->> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
-> 
-> Missing ack from Conor. When you submit new versions, it is your
-> responsibility to add tags.
+--qxpqwalmvkjrglht
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I had Conor's ack in my mind but his response was related to the
-squashed patch (a1 compatible + power domains) and the current patch was
-a bit different that's why I didn't dare to add the ack.
+On Fri, Jul 12, 2024 at 01:01:04PM +0200, Nuno S=C3=A1 wrote:
+> On Fri, 2024-07-12 at 11:48 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > On Tue, Jul 09, 2024 at 11:37:13AM +0200, Nuno S=C3=A1 wrote:
+> > > On Mon, 2024-07-08 at 12:52 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > > > With this change each pwmchip can be accessed from userspace via a
+> > > > character device. Compared to the sysfs-API this is faster (on a
+> > > > stm32mp157 applying a new configuration takes approx 25% only) and
+> > > > allows to pass the whole configuration in a single ioctl allowing a=
+tomic
+> > > > application.
+> > > >=20
+> > > > Thanks to Randy Dunlap for pointing out a missing kernel-doc
+> > > > description.
+> > > >=20
+> > > > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
+> > > > ---
+> > >=20
+> > > I didn't looked very carefully at the patch but one thing did caught =
+my
+> > > attention
+> > >=20
+> > > ...
+> > >=20
+> > > > +
+> > > > +struct pwmchip_waveform {
+> > > > +	unsigned int hwpwm;
+> > > > +	__u64 period_length;
+> > > > +	__u64 duty_length;
+> > > > +	__u64 duty_offset;
+> > > > +};
+> > > > +
+> > >=20
+> > > I do not think we should have holes in the struct given this is an us=
+erspace
+> > > interface.
+> >=20
+> > Ack, will add explicit padding (and a check that it is zeroed).
+> >=20
+>=20
+> Why not having the __u64 coming first :)? It also save you 4 bytes (yeah,=
+ should
+> not make a difference)
 
-Conor, do you mind if I resend this patch (and may be [PATCH v4 1/3])
-with your ack?
+Well no. First conceptually hwpwm should come first and second there is
+https://www.kernel.org/doc/html/latest/process/botching-up-ioctls.html
+which recommends:
 
-> 
->> ---
->>   .../devicetree/bindings/pwm/pwm-amlogic.yaml       | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
+	Align everything to the natural size and use explicit padding.
+	32-bit platforms don=E2=80=99t necessarily align 64-bit values to 64-bit
+	boundaries, but 64-bit platforms do. So we always need padding
+	to the natural size to get this right.
 
--- 
+> > > If that is expected we should probably think in adding some
+> > > __reserved__ parameters or maybe to modify the interface so we could
+> > > make use of:
+> > >=20
+> > > https://elixir.bootlin.com/linux/latest/source/include/linux/uaccess.=
+h#L348
+> > >=20
+> > > Like wrapping struct pwmchip_waveform in another struct with an extra=
+ member
+> > > forcing userspace to specify pwmchip_waveform size. But I agree it's =
+a bit
+> > > awkward and ugly (but it could be hidden in libpwm).
+> >=20
+> > The size is already encoded in the ioctl request constants. So I think
+> > we're set to use copy_struct_from_user() if my expectation about
+> > pwmchip_waveform not growing turns out to be wrong.
+> >=20
+>=20
+> Oh, indeed. I had to go and remember the IO* macros...
+
+I did that recently and fixed a thing I considered wrong/unintuitive:
+https://lore.kernel.org/all/20240712093524.905556-2-u.kleine-koenig@baylibr=
+e.com/
+
 Best regards
-George
+Uwe
+
+--qxpqwalmvkjrglht
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaRWcIACgkQj4D7WH0S
+/k6guwf/SyKagj1oNtxfVGj42oHmiep6DjeuZZ6ZBMcJMgkYGRxsC496BS6VIJAf
+tRNoiEzX2YomjE50NzAqSuhN9Wv6LoBrGmMJQOikmOdF2TSH94CoNI1qJnxchWBc
+7O2xKxUKsSiq3TL7ygObFD/bGonQiTcv/Fz+WJ1UfBAVywwouHYeInkgSMwPhd0p
+1hUYolSOSUrJ+ov8pSG/eGrRgiuBXon3Sg1bw3e/778SwISWPUkX29k+4X6wsv6O
+Fpx0xPjAJmNRCBO4snrfrJxnvMlAZptp45wcy9rszx+OTrfOI+A6ytTBT+xvjTxP
+YbGKB6Nn0SkmBYVmCZMatn22nqH1Xg==
+=e6ho
+-----END PGP SIGNATURE-----
+
+--qxpqwalmvkjrglht--
 
