@@ -1,83 +1,83 @@
-Return-Path: <linux-pwm+bounces-2787-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2788-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3124992FE8A
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 18:29:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1962A92FEA0
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 18:34:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8B7A1F23A2D
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 16:29:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B50871F239E2
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 16:34:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C208B175567;
-	Fri, 12 Jul 2024 16:29:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 323E4176AAC;
+	Fri, 12 Jul 2024 16:34:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="MdY2RqYX"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GBm0CJTS"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3D1173345
-	for <linux-pwm@vger.kernel.org>; Fri, 12 Jul 2024 16:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2966E176250
+	for <linux-pwm@vger.kernel.org>; Fri, 12 Jul 2024 16:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720801740; cv=none; b=UZM1Fze/OAakOTnzwWJUixNXZCRp6S1wqvTuq8sclOEeigFsawQHYyNdWORy3/hXX8IOMdWHkFpki1XgpsRunN21LE2LnbBVTWzyyp4lkdp4RuOp/GKzZgFC4riON8FD4oGm9sfZR//0PPh4dG8RbKcjzTzYNtSBXRIP8Kz1El0=
+	t=1720802071; cv=none; b=G4xanoinq5oW5MrwvN8IlF7ry/JCDJ10F6DUy6c5+J3jBYQhzqdEbEah92LFt0YgJTAImaQz0hkwIwZleSQ92WrGDsRXKFG+owcnt78JMmRTCUb7Nz8HddL7tIcHZ82bFdL0WX/AKrtcDIOBD5aV/fPdqE8BQK3qAv9o+5h8Hko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720801740; c=relaxed/simple;
-	bh=0hC4+8k7KgddI+mj9vy1HLjJ7Eiog0c76Z/OStKOMOc=;
+	s=arc-20240116; t=1720802071; c=relaxed/simple;
+	bh=Ko5ApnctGqxTLJF9SLd3BZfsxJs9G8s9AyRIX4oqdd4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YPQ8QEONdM9rWsCYgldJ+1xEQ/AP7mXYN0i3XCQEEzw+CiQ7ZkXLbMk35jsvQjZiVKurWGfFxMRAAIKwLg1aBEb0hfcB71/2GIJ0yPKLdOc+dVrvgd+1xfgujnyl9ubCJvREj05wgUPPvoYS0ZtXOnq3ctsbPaM9qkeHS2uSxoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=MdY2RqYX; arc=none smtp.client-ip=209.85.208.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dvv6Bg5AmtIP4J2f6sTu1R+phlEXq1hjK6IsgWosUs0f6Vwm8sCjPMHxSoEegioHuS6e/5DswcQK3zhQS4hSc/Pf+bc0VI9qWs0XbnI8qRXWzJQGLQzk3BVAbz0Hqo8IzabZcr4D3yFwoW8vdjkJduWoM+A4U9LCAsZSe0YdhhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GBm0CJTS; arc=none smtp.client-ip=209.85.218.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-58b447c519eso2969325a12.3
-        for <linux-pwm@vger.kernel.org>; Fri, 12 Jul 2024 09:28:57 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a77e392f59fso295314466b.1
+        for <linux-pwm@vger.kernel.org>; Fri, 12 Jul 2024 09:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720801736; x=1721406536; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720802067; x=1721406867; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cLbDj6WenJao7KJoLRxFWrmWsBncRgLRIPDzBRaAH64=;
-        b=MdY2RqYX2XffakDWBowLu2VsXPJkV5eSMaAySD4r6UJDeidj+j9rH5knLRFCnMJVuL
-         +5vCeRRxy04OvQ4LK0HS7T6J80VRyt+fS33CfepUgLqkGU2EgKc821AJ600bt+PyGbb2
-         UHXb+sYR8AWgRy6M9OrdAuhSVtdyIT9LlUGE/h5FNvr2eqe5yRcmJHjIDLjcm2Uyf3xx
-         oinPyf5PqweNAPwyTcWqzjyGPGfVQ2vnUCF3wwh8fxhEfEdZTmudajEqLLR8FJAhq7Lr
-         4NzBV1MUF/3Rz137SqGHL7IY5SSXG99O3GvIElgp4G2CXd3jpZCvDDMQ+z6cKGCH8oVw
-         CNEQ==
+        bh=Ko5ApnctGqxTLJF9SLd3BZfsxJs9G8s9AyRIX4oqdd4=;
+        b=GBm0CJTSNo3w4jJgRJOiuN05cn4tZ1/XgRS3faGJBoGFR7yAyEYeqVGKJG3vs9DixU
+         mwxYQAOEfVTGfBX4iIdqzgd4PWsQAdWDRfN6iogDgeAqa8sskG9e4pBeVKv8CpkFKcKu
+         nRZtBozHZPkUARnijkHjKbd0hC76PBkdMjUtf8VWa5cRyuPBqvombQvBIC83gRyfii4V
+         iNCny+DNRraPh3MM8txIUZdJ6tzCb5SPcmqqpamnS0gbZ7ShD8uqP1gv38NIqppaAEIa
+         BghHRhIvTIIdA9vIJJXheH/X4D0OKXW71TNFdVLhGZDW5hJ3jK5iPzkvYrsAQKY+gnE3
+         LU7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720801736; x=1721406536;
+        d=1e100.net; s=20230601; t=1720802067; x=1721406867;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cLbDj6WenJao7KJoLRxFWrmWsBncRgLRIPDzBRaAH64=;
-        b=dbSljssIzOwsTUAtI8emi9dP0inKE/lp4vWyw4Kuq20ATqZMmqFbKcUsOnzIGEnGq2
-         qBGO95WRoJUEpJgCJXsZSCfiV3e+WZEdDvEDfCl9BIeXYGI3H3j1hT4i0C92PsM9zkv+
-         gLiSdp2fXa9/5xJQ61CAx1mSlWOCXkkLMIhRszFUBzujjom5fIZlHHzOl+5LcWvLocK1
-         kBZ8uVpddztmMW9M8G5HJrNSQ08xY68dKqQq7Hyf7C2lWKhhkEWAAUsLLYit4/1t8vAT
-         HgCSOYu0lc9r/Hc/2OVk6P3pxUl5gducjuaXiOPzg2J82BLfXZ8h0aG0yzyk5DoIGrja
-         ypiQ==
-X-Gm-Message-State: AOJu0Yzy59nWJ2H7Z9ufLbQym5OivXjihllwFwyH47bImNCrLays4dk7
-	XT4vsDqLB+8209PsdRfHSWWgrz+zTviLioM9RzCT2KE5BxCgOEk0ZGNeWdSAk/SLmBLAq7TtF6Q
-	E
-X-Google-Smtp-Source: AGHT+IEA10HynvBUuRRDt4YiHGzlmd54sv2AwbGnFZlxEKQ0JbIcWwZBFnl+yWAJzHiHWK0LzSHWAA==
-X-Received: by 2002:a17:906:6c93:b0:a75:2387:7801 with SMTP id a640c23a62f3a-a780b885f65mr688091566b.61.1720801736026;
-        Fri, 12 Jul 2024 09:28:56 -0700 (PDT)
+        bh=Ko5ApnctGqxTLJF9SLd3BZfsxJs9G8s9AyRIX4oqdd4=;
+        b=sTS5vaeh7S5P4WQxxXA54AdQdI8E8Aw9Sddu12gwwLBEvW+kqEjyCld3Ccog9KKTLZ
+         qH8AMQYOemPs8SHyp/GoRRDv/Lx+KvxDz9WN/PE03I5WJST2t/7gI/fpDiu81cdFceoJ
+         /IASDsgAb2rId61vfwZNQ0AfO7bL6UlIBHDtF89x+LfZD//47WvEmbr4grOQ+dUZqBnk
+         Rt37oUiovXUqegdmngAbAFVGVmy9w9zM78VQSAmks5nRhBPxYCPSgFp2TBz9sy3UmttL
+         Q9WI1q29dA0HoEdcXjv3OjQkS26Ya8vY4aJjHt72PaDeYk0x3TDeKOmiRrlHSalASTS8
+         uSAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWBMKf6FjehWEgAYgczcqfFTCkiImluDsLDTrl6c6YQQqywyHk9ePnEoLcU4Pp7I27mboGUZBFbX63Et6swKyadSJhCiKO0743A
+X-Gm-Message-State: AOJu0Yx20Tro9C0L0Yer/b/89mbT/RP29jProcDPtmGcqwbVVFVLv7Jj
+	pPz65RWdn3Ivwcgv2fjmRpzmoFVJ47ZKrMnN3Dw45PMB29hOGcGUh3b4PP7nbLE=
+X-Google-Smtp-Source: AGHT+IFIkSLn+xMw/ggbyUGVHPR8oXe4gw9aACxLjgf3iesFhHrqTH2XCriTFDtXu1o/lJmDVUkazw==
+X-Received: by 2002:a17:906:39d6:b0:a72:9963:eb8e with SMTP id a640c23a62f3a-a780b6b307emr658574666b.28.1720802067472;
+        Fri, 12 Jul 2024 09:34:27 -0700 (PDT)
 Received: from localhost (p50915eb1.dip0.t-ipconnect.de. [80.145.94.177])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a7fefb5sm356906966b.104.2024.07.12.09.28.55
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6bc6c0sm359609866b.44.2024.07.12.09.34.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 09:28:55 -0700 (PDT)
-Date: Fri, 12 Jul 2024 18:28:54 +0200
+        Fri, 12 Jul 2024 09:34:27 -0700 (PDT)
+Date: Fri, 12 Jul 2024 18:34:26 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 3/6] pwm: Add support for pwmchip devices for faster and
- easier userspace access
-Message-ID: <lsl34pvo3vbnqwnzrv36fguasxxb3brrgq44e2w3flgrdjzlx6@5vx53mvpi5fi>
-References: <cover.1720435656.git.u.kleine-koenig@baylibre.com>
- <7490e64bbe12e2046d92716dadef7070881592e6.1720435656.git.u.kleine-koenig@baylibre.com>
- <86fdb6409c8f439bf75d2ed31d1031fb910aa435.camel@gmail.com>
- <hogxczszsbqtxu7b2dgllyclnr2pztellxzq3figkhdlajhowi@6vmjvyoifkjk>
- <d625777dfeb5a53a232835e9abb1f39de55e6a17.camel@gmail.com>
+To: kernel test robot <lkp@intel.com>
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, jdelvare@suse.com, 
+	linux@roeck-us.net, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, linux-hwmon@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] hwmon: (adt7475) Add support for configuring
+ initial PWM state
+Message-ID: <xqniwjyz7jrf2vb46uql5eag6fttgybzbg36laqmfarplmxu6a@bgdksqe5dq6f>
+References: <20240711234614.3104839-4-chris.packham@alliedtelesis.co.nz>
+ <202407122021.YFqdjjQS-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -85,109 +85,40 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qxpqwalmvkjrglht"
+	protocol="application/pgp-signature"; boundary="uvbasbsoovfjy5qv"
 Content-Disposition: inline
-In-Reply-To: <d625777dfeb5a53a232835e9abb1f39de55e6a17.camel@gmail.com>
+In-Reply-To: <202407122021.YFqdjjQS-lkp@intel.com>
 
 
---qxpqwalmvkjrglht
-Content-Type: text/plain; charset=utf-8
+--uvbasbsoovfjy5qv
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 12, 2024 at 01:01:04PM +0200, Nuno S=C3=A1 wrote:
-> On Fri, 2024-07-12 at 11:48 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > On Tue, Jul 09, 2024 at 11:37:13AM +0200, Nuno S=C3=A1 wrote:
-> > > On Mon, 2024-07-08 at 12:52 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > > > With this change each pwmchip can be accessed from userspace via a
-> > > > character device. Compared to the sysfs-API this is faster (on a
-> > > > stm32mp157 applying a new configuration takes approx 25% only) and
-> > > > allows to pass the whole configuration in a single ioctl allowing a=
-tomic
-> > > > application.
-> > > >=20
-> > > > Thanks to Randy Dunlap for pointing out a missing kernel-doc
-> > > > description.
-> > > >=20
-> > > > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
-> > > > ---
-> > >=20
-> > > I didn't looked very carefully at the patch but one thing did caught =
-my
-> > > attention
-> > >=20
-> > > ...
-> > >=20
-> > > > +
-> > > > +struct pwmchip_waveform {
-> > > > +	unsigned int hwpwm;
-> > > > +	__u64 period_length;
-> > > > +	__u64 duty_length;
-> > > > +	__u64 duty_offset;
-> > > > +};
-> > > > +
-> > >=20
-> > > I do not think we should have holes in the struct given this is an us=
-erspace
-> > > interface.
-> >=20
-> > Ack, will add explicit padding (and a check that it is zeroed).
-> >=20
->=20
-> Why not having the __u64 coming first :)? It also save you 4 bytes (yeah,=
- should
-> not make a difference)
+Hello,
 
-Well no. First conceptually hwpwm should come first and second there is
-https://www.kernel.org/doc/html/latest/process/botching-up-ioctls.html
-which recommends:
+On Fri, Jul 12, 2024 at 08:45:52PM +0800, kernel test robot wrote:
+> >> ERROR: modpost: "__udivdi3" [drivers/hwmon/adt7475.ko] undefined!
 
-	Align everything to the natural size and use explicit padding.
-	32-bit platforms don=E2=80=99t necessarily align 64-bit values to 64-bit
-	boundaries, but 64-bit platforms do. So we always need padding
-	to the natural size to get this right.
-
-> > > If that is expected we should probably think in adding some
-> > > __reserved__ parameters or maybe to modify the interface so we could
-> > > make use of:
-> > >=20
-> > > https://elixir.bootlin.com/linux/latest/source/include/linux/uaccess.=
-h#L348
-> > >=20
-> > > Like wrapping struct pwmchip_waveform in another struct with an extra=
- member
-> > > forcing userspace to specify pwmchip_waveform size. But I agree it's =
-a bit
-> > > awkward and ugly (but it could be hidden in libpwm).
-> >=20
-> > The size is already encoded in the ioctl request constants. So I think
-> > we're set to use copy_struct_from_user() if my expectation about
-> > pwmchip_waveform not growing turns out to be wrong.
-> >=20
->=20
-> Oh, indeed. I had to go and remember the IO* macros...
-
-I did that recently and fixed a thing I considered wrong/unintuitive:
-https://lore.kernel.org/all/20240712093524.905556-2-u.kleine-koenig@baylibr=
-e.com/
+FTR, this happens if you use a long division using plain /. You have to
+use on of the helper functions for that.
 
 Best regards
 Uwe
 
---qxpqwalmvkjrglht
+--uvbasbsoovfjy5qv
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaRWcIACgkQj4D7WH0S
-/k6guwf/SyKagj1oNtxfVGj42oHmiep6DjeuZZ6ZBMcJMgkYGRxsC496BS6VIJAf
-tRNoiEzX2YomjE50NzAqSuhN9Wv6LoBrGmMJQOikmOdF2TSH94CoNI1qJnxchWBc
-7O2xKxUKsSiq3TL7ygObFD/bGonQiTcv/Fz+WJ1UfBAVywwouHYeInkgSMwPhd0p
-1hUYolSOSUrJ+ov8pSG/eGrRgiuBXon3Sg1bw3e/778SwISWPUkX29k+4X6wsv6O
-Fpx0xPjAJmNRCBO4snrfrJxnvMlAZptp45wcy9rszx+OTrfOI+A6ytTBT+xvjTxP
-YbGKB6Nn0SkmBYVmCZMatn22nqH1Xg==
-=e6ho
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaRWw8ACgkQj4D7WH0S
+/k5Sjgf9En6EDzoXQtBhmc4s/93+KbRCAlhxs/MIhtH1wfGU2SInNC6Bzzi7TW1l
+z1/4LG4VW0QIru/jNxRZWC+ko1Y1aboC/ZpBDeHKsLl4drbzivFSg13dEL2xv/dS
++QuuW3BFKf/iaMBL/o1BSga0zLTwJabS0CaWWrtv+SokR0lkzFG7bDnMjECGyvg3
+BymdnZMJSS0gutvVumXYrj3WXMM1vaVxDgB9g4Eliqnt99mRqoKt79V1fuJac1pd
+tdqn6QWKRUnePqLaTMe2bKdYXIrzERZIFWFATlUeQ858I0F8a1Zjdik9HMVM/UGz
+SW9L1yZzboDZhwHzxM+KryaI9xspyA==
+=nT91
 -----END PGP SIGNATURE-----
 
---qxpqwalmvkjrglht--
+--uvbasbsoovfjy5qv--
 
