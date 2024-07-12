@@ -1,166 +1,138 @@
-Return-Path: <linux-pwm+bounces-2776-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2777-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AB4F92F512
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 07:27:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E29B92F584
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 08:26:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F1001C22D0D
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 05:27:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09FA52835F3
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 06:26:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 309E01B978;
-	Fri, 12 Jul 2024 05:24:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66DE13D50C;
+	Fri, 12 Jul 2024 06:26:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jsOCNPzx"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="VvK2WtOX"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BB61BC37
-	for <linux-pwm@vger.kernel.org>; Fri, 12 Jul 2024 05:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC3B17BBE;
+	Fri, 12 Jul 2024 06:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720761895; cv=none; b=IYZxe2b9G7wDDED7tE6tvzlgxUzIZck3z6graqfZuKmSSXvZoBmRJGbxGN3BxnBACwZmSKXbOQ0kusO9mz54zv2mhx+BQJjrncd7PUY9eAqV8d7Qa9qRe9O/6MFXbUI5wmbhhkX7IS/nM9SzInEiHCUrs6P/RcLXmciO8PHbaic=
+	t=1720765595; cv=none; b=OXZM+32B7LTg/jFodhJidOVuoGsenNa7bEMSD66i55IPr5CY9N6Baom0x6lxG6HaRu/56H7EkVv7+/JusqfLY3aou49tTF0XnZykEbxaGpP3kmfLikmvKUP14cYASMSVEvY5jzcXToq5U6evdF9Vf4amUPP16FcDNF+paFYE14g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720761895; c=relaxed/simple;
-	bh=XHfigyBjT+CgXGMlCvld9DMNDHAk27FSPXgPpwiz43o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W+WWLd0XHOxGfXnU/N/3W/W938DpgSvDmLn4UjONdPBAmgmChD6oiKbrjQGAPN6LGTs7GPJK3o1U8b+IT2c68DiDDaJBA0fsrNNR4ZXMofRMcnbIHLGk7S+9ACXR4dvW7RD12FY76NPuvzjQ/kQzSmLt1n8tmZuMG1PP9RN7ThY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jsOCNPzx; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a77d9217e6fso211306766b.2
-        for <linux-pwm@vger.kernel.org>; Thu, 11 Jul 2024 22:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720761891; x=1721366691; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FGo+hSrAlPy13Ul/ZVnWIL7u/LbXO49zCpNTXIfAOyw=;
-        b=jsOCNPzxIwQ0wiDhaIMKvWpBOKmmhsl4JNTaEHZZffd6Y8NIZntn8sNefb1CS0H5El
-         2IqliBJ6g/PauXR4ubVKI93Bk27I9GMzBybjUWRSKlrblHvVjRfQvXC3mdBhIYo8vNtg
-         6tqzt3Hibqy+jlt1FAMXetj4O2dogURZhTLtrsOqqwKyyl60n59tL/gyjHMKJsxYs01+
-         91EruymJ/u11f+PsAbTnE46qe9oSbiQNReHBthdtF+jUS00VAUson4SYgzsh+gdNp/ko
-         GxbPLXW2Dm1wbu3lTmPJuCNUs/5tMnTqBQtxXzggHBjrCheKOwy6NQvQuCmWDTw/hP9Q
-         s7oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720761891; x=1721366691;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FGo+hSrAlPy13Ul/ZVnWIL7u/LbXO49zCpNTXIfAOyw=;
-        b=LNcT7SaL1tNoRNXFZ6YSXE8sKUJR/cCfm7j+7fdCy4MNgMQYdiFNV+uheWtZAKGuc4
-         blguppy2kL3hFe8p7E0XpzXfgdd1brf/piCY8CMzjHErQVxS9/nx6wTs6MnQwpq17e3W
-         O5dQH9F2/wt2dLNgxJ791zNKyKfLGBIxI4wiu2jo7zjlF+ays+8aMrFUjGDTq3J5wt0+
-         pDtaGbzU40UmLJKKJAUdp8zkGrvuFHBMaQ6bl/OEtmrSIRVF6ys6xqhk5mHm9LB1q8eR
-         rYqCPwLxxcnomi4BM3KnQ01tuFHggz6HOt8p0sXx1+JBTR7Zy6K2lzykJXPhVvFfQ98F
-         xpSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNg+LMhSYBzbEwgM1ZrFgs9E0B8mP7DfQjTMx6jV2EUnRPZNUhnxkXCuUPGKFz7Eg9ViDIPDcSK/LpRN1/7sx9qNVCcdWflkKs
-X-Gm-Message-State: AOJu0YzSCV9hjlQc0gaP4A5MmyKwXX4UHjd/sXW8tRi46UPtN/WEYZzB
-	odou2W2X8Qmt5qcdTDpXgkVnLJHYk+pxtNNm2lP6MO22Wf7/1qSyvfDfRug8KjA=
-X-Google-Smtp-Source: AGHT+IEd96HjaarzC2ykB4hyN1Fc9UhtgUOEzJTAlsfbZc1qt4dSfkTHdoOS6/uDl2YbmzC9DkaZsg==
-X-Received: by 2002:a17:906:28cf:b0:a77:e0ed:8c2 with SMTP id a640c23a62f3a-a780b89f6b5mr559350666b.71.1720761890635;
-        Thu, 11 Jul 2024 22:24:50 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:d576:ed0d:77d7:71c7])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a797f300b05sm193858066b.134.2024.07.11.22.24.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jul 2024 22:24:50 -0700 (PDT)
-Date: Fri, 12 Jul 2024 07:24:47 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, jdelvare@suse.com, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] hwmon: (adt7475) Add support for configuring
- initial PWM state
-Message-ID: <2oyfx2i7bsadqmlqtmqhc2ee6vn4r7knfyq5kizgdjx3zpov6c@isiflqgza2gc>
-References: <20240711234614.3104839-1-chris.packham@alliedtelesis.co.nz>
- <20240711234614.3104839-4-chris.packham@alliedtelesis.co.nz>
- <bd2b256b-5149-491a-a482-6e4488467fa5@roeck-us.net>
+	s=arc-20240116; t=1720765595; c=relaxed/simple;
+	bh=TmSLg3cGo8e+RfLvNoIr5p2SU527l8ZLtxxAgdMewyo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KVp3qNZZufAMbuHiDnHh9/MzqxbzlXgy5M8ym5TGbCSzFiuxPvgnyN4uXiSzqyJd104WeHwrVuUBBcC8JV6urIokkAN0kXePniUloOrP/4+lj8E/GP/XHbQ4KVL7oDjrQzv7OI7ZIpEA3KKcN61gW4SU2Ni71jhprUaWVeP41jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=VvK2WtOX; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1720765579; x=1721370379; i=wahrenst@gmx.net;
+	bh=TmSLg3cGo8e+RfLvNoIr5p2SU527l8ZLtxxAgdMewyo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=VvK2WtOXwkIH86PI/FIG6CW9xhznvkL88pY+uoa2fYIlQbF2+44xMrcjKvqKGkMp
+	 ZE5TAtEFAW+piTo6mQ7ZcZd7d1Kh2bA8n4tgRpQ24gT48EfeDFoQ1y24DMYQ0Jtm/
+	 /G1BmFx6kCiaUYwjr6LmkOWwRytMMNXZ9XCpCBZOd7Zzhtv4vT2X1ST7mvbZBTip2
+	 S/tpkZqxAIM6YyH+DcXG0dgv9mFV4CoP2Bzo0E4FGL9e3ofXajzGXlYHi4KfoCORJ
+	 ASs1aVp73C1/dnNuz0jKkfNlaCUOO76PX8BrF6Kj5qBMqZ2FdSji8gZYHg7CRKw9c
+	 qb4BmBotUhgRvhpAHg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.127] ([37.4.248.43]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MBm1e-1seHDy3ly0-00E9ed; Fri, 12
+ Jul 2024 08:26:19 +0200
+Message-ID: <78119193-98b7-446f-82d6-37884a5b03ad@gmx.net>
+Date: Fri, 12 Jul 2024 08:26:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fbml44lxa55gm2fp"
-Content-Disposition: inline
-In-Reply-To: <bd2b256b-5149-491a-a482-6e4488467fa5@roeck-us.net>
-
-
---fbml44lxa55gm2fp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] pwm: imx27: workaround of the pwm output bug when
+ decrease the duty cycle
+To: Frank Li <Frank.Li@nxp.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Clark Wang <xiaoning.wang@nxp.com>,
+ Jun Li <jun.li@nxp.com>, pratikmanvar09@gmail.com
+References: <20240711-pwm-v1-0-4d5766f99b8b@nxp.com>
+ <20240711-pwm-v1-3-4d5766f99b8b@nxp.com>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <20240711-pwm-v1-3-4d5766f99b8b@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:lAnRdLo/NzQOq22G2oDt0rwsAIoHHWZflscox3YXMhJtJ1InvcD
+ 2xDGz3CIruiicfCSBF1XCZ7t7tKw5mVL6BFN1FY8rVtg1/t2fBYsX3ipl9XjbPs+RLAqaUo
+ xwao/7pFGcQHOzxxfZQM0gQ4qFidpJ3BGeeqLJSVq5PFR2XQoUPq3B3L/lkFPTzqy5ENLhd
+ 59jjDy6JPhjZOQm5XYEJw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:4qvoVPpZ5vg=;CqThS0ovliZ34aePm5IljqA3g7M
+ eFJUg+mi1DiRQMo6XQK4zS7G/mDOrh90AxqTHrW5jLGHbk5BUD4SyE64N9qn4ySVW/5kR+YuM
+ LMl8jBNel7WhwBkgHJS33MuDGCzgjet8wSjd8fPJMBIAoIQtOTEPytvRqJm17P5Bt4EwRtSo3
+ KRH79Id68PWGjYp72gLNmTClEGy57q0dMF5rG3Z76ILcsri6Z/mKLS8H+cRfKm9ZEGdfuRXcF
+ Gj/u40Ed4Z5BN/QS6W350veFGHWjYhOYZVrnhd1q47JoS3uC7xMxhtbkSSGBz8o1uksvq/zes
+ MmRVfFn2TKoaPcFgdspdykWezoIGDhohm33bxM1pi8ROMfTyQVcDP4fSFvxyTopByos1aVsMO
+ jtDnjW9QZc7wIGE80lStJ3FHU2tL3atstd6KxWTy9lcp7dnwo5E8HILBGBFWoJXfuAX9/xcAN
+ 93UboUEl6F8IE+Su9HPYxdzmJvLawaOZF78y2UHMkCdykbamD0CzJ29x6WH863NI6AsVzfjhi
+ /J6XsOG81wTosh3dCvHTd34ym7tOCWb9zUEvdkznYsphzKqMzLPlkSf/U9YhjfrIlL4RCaWuf
+ OkI87OTpTM0oyLxP7zh4bipuqhuqNyncOr27ESNuuiU72xCGWL9wcVE0+Z2PlmlYnpGKnNnH9
+ tIMSvbcNQZTJ5bdfFoqkepmhQkzEvD07xxM5f9T9TpVaLJwpTLo8CZbpcQDYPIqxxJBhS1z1w
+ oR0z5L4Z2pAPdW0FG3i/tTlKgrTMm7Wiu80qxo24pdQrubmPisvw9XSNVmKWPOBJ7xl1gKqtR
+ rL1TARzAGofrI7h85VaAte7Q==
 
-On Thu, Jul 11, 2024 at 09:37:29PM -0700, Guenter Roeck wrote:
-> On 7/11/24 16:46, Chris Packham wrote:
-> > By default the PWM duty cycle in hardware is 100%. On some systems this
-> > can cause unwanted fan noise. Add the ability to specify the fan
-> > connections and initial state of the PWMs via device properties.
-> >=20
-> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> > ---
-> ...
-> > +static int adt7475_pwm_properties_parse_reference_args(struct fwnode_h=
-andle *fwnode,
-> > +						       struct adt7475_pwm_config *cfg)
-> > +{
-> > +	int ret;
-> > +	struct fwnode_reference_args args =3D {};
-> > +	int freq_hz;
-> > +	int duty;
-> > +
-> > +	ret =3D fwnode_property_get_reference_args(fwnode, "pwms", "#pwm-cell=
-s", 0, 0, &args);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (args.nargs !=3D 4) {
-> > +		fwnode_handle_put(args.fwnode);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	freq_hz =3D 1000000000UL / args.args[1];
-> > +	duty =3D 255 / (args.args[1] / args.args[3]);
-> > +
-> You'll need to validate args.args[1] and args.args[3] to ensure that ther=
-e are no
-> divide by 0 errors.
->=20
-> On a side note,
-> 	a =3D b / (c / d) =3D=3D b / c * d (at least for d !=3D 0)
-> Since the result is defined for d =3D=3D 0, you'd only have to make sure
-> that args.args[1] > 0 and that the result for the duty cycle is <=3D 255.
+Hi Frank,
 
-On a side side note: Depending on the actual values it might be
-beneficial to use
+Am 11.07.24 um 23:08 schrieb Frank Li:
+> From: Clark Wang <xiaoning.wang@nxp.com>
+>
+> When the SAR FIFO is empty, the write value is directly applied to SAR e=
+ven
+> though the current period is not over. If the new SAR value is less than
+> the old one and the counter is greater than the new SAR value, the curre=
+nt
+> period will not flip the level. This result in a pulse with a 100% duty
+> cycle.
+>
+> Write the old SAR value before updating the new duty cycle to SAR. This
+> avoids writing the new value into an empty FIFO.
+>
+> This only resolves the issue when the PWM period is longer than 2us
+> (or <500KHz) because write register is not quick enough when PWM period =
+is
+> very short.
+>
+> Reviewed-by: Jun Li <jun.li@nxp.com>
+> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+the same patch has been submitted from other people in the past and they
+received many review comments [1], [2].
 
-	b * d / c
-
-instead. b * d might overflow, but in other cases (e.g. b =3D 7, c =3D 8, d
-=3D 8) the resulting precision is much better.
+Can you please explain which version of the patch this is and does it
+address any review comments?
 
 Best regards
-Uwe
 
---fbml44lxa55gm2fp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaQvhwACgkQj4D7WH0S
-/k5O9gf/SRj0PUdgLMLU7/WvQKY+E2t8EHpYd7Ezpg7XKdpfVoFl8mOROFQuPS9M
-AUghvoi+cNAapjf32YjAxAef+rAdcJTO9CANrvFYPcKsuLe9yy2OlJR5bP4tUfHp
-gHmrNspPISVFl9BTiJfx+EPzcFfQbP6G6QYEV6D7AoRH97OjG/lG8qKFkdJkK774
-Lhj107eoxG5FVpAU0hS+e6nNKgO4qUCS0UMJPVBM5mqdIPLkEasfyONZF126cOQd
-uQHHFduf1JeEaC5hZlIWpKW8clyFnMzlNReCUfXE5K1m4jDul76Eh1Zb8AQL1TJu
-9nA5zTUPZlrjGYIG+ZwgvQCiV1jy6A==
-=YCbH
------END PGP SIGNATURE-----
-
---fbml44lxa55gm2fp--
+[1] -
+https://lore.kernel.org/linux-pwm/20211220073130.1429723-1-xiaoning.wang@n=
+xp.com/
+[2] -
+https://lore.kernel.org/linux-pwm/20231229063013.1786-1-pratikmanvar09@gma=
+il.com/
 
