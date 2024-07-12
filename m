@@ -1,165 +1,218 @@
-Return-Path: <linux-pwm+bounces-2780-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2781-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 134CB92F92F
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 12:57:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EA9B92FA98
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 14:47:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AC23B1F24823
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 10:57:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 072EB283564
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jul 2024 12:47:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C14AC14EC73;
-	Fri, 12 Jul 2024 10:57:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5809C16F83A;
+	Fri, 12 Jul 2024 12:46:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIaiZ/V7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NSRq5EBl"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EC9146D7A
-	for <linux-pwm@vger.kernel.org>; Fri, 12 Jul 2024 10:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1D716EBFC;
+	Fri, 12 Jul 2024 12:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720781833; cv=none; b=nQ6P5KgE2kDjA3ctP0oIuaNG82jMmhsEEoqBLoLYeBQBjB9lSx3j8o7iDUqZG6CCjQCflBvm6vSHbWGcXf2FKsm37gtLGA8ohJlqycAOQYgl9BOD+y7T5px2m58C8Bgm6J9vp7AJsSBY68JEcVhKq98pXZHUs7dc3yIT3H/0m6M=
+	t=1720788391; cv=none; b=lc7V4tBSt9BQcZTMSQI8t1EnzAj8rFEvzLAIwaCwYWdF645MKK1SZlWIWCcm+nLi1ZVt9YAwfjv3dAZBq8H3iqj3a8rfTroWgeZZE3tA5xnEJbIzmPihhFWBz7bV8owvXdS0E4L2DbELvxw92SfY5rRle/nq6p2baVl7PAK7u88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720781833; c=relaxed/simple;
-	bh=FvGQ6E1zkTFF2hYyXkrFwgHNUoRnYb/yNF0+tUtDMvY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VgCX2w297d1l5gDMiCHorTAyWHdP6AhUey6xiqf+gDyR753efPezC9ChdgM+gd8inxzHMzI9FJn+ZvyHLuJJ39OiqyvtLgMFRTti9elbrd8an0XDrq+1AGy3kpXlHP7fjczp95uQskhokycJf/Ut5qlpdn1EIp2aScsqUjjh7Nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HIaiZ/V7; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42679f33fefso12440935e9.2
-        for <linux-pwm@vger.kernel.org>; Fri, 12 Jul 2024 03:57:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720781830; x=1721386630; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZgtOL082WZTsJAeug3L4TOOF66Ki9aV73G2f//iNPMk=;
-        b=HIaiZ/V7tR/tkwbECvvZOBFN3XAZxysI/kuGIoBEQpLkr1mMdGu4+8pZ2rypqz4x5W
-         z3JgJnnyjXYgi8F0ukXFe94ZGkSz4sA+FUwguS1zk3LcHR9DKq8LKGN7X2w7qwY6Xzzb
-         1A8gtaGgqc5V5/mQIoZYRX00t8NWSGzDNAspdaix/vMenykADnTihCb3eUhqhJGR6m0W
-         6EpfH+AYB+BPtsYGDlzkD8Buux9vA2yla+0Il27u0WmM4JcQF8f2gR5zNkS9lmqAC4X1
-         loSEMWTIx4MD1Jus2UA5216HFPa1i+0vpxgT+oVaEtGdrdsPD4+Om7ADr77EhsgjB4U6
-         gDZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720781830; x=1721386630;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZgtOL082WZTsJAeug3L4TOOF66Ki9aV73G2f//iNPMk=;
-        b=o3h3eQlG3sfXh5X7X0kD0DKUzxnaEr/TiQeOmAJEp2DgoTk0Rj9lSYNuWm5sQhZn7k
-         SLwFOyJpzS46RUPqq8+zv20UZUhM/+mktYSnqjxiw42omiGkiifR2Hu8KSP72m4ufQ37
-         pn7N+dRyI6pImZcPD26+iPxUshTdTz9nD3I4pomp5vtMHHFYomKQ8DFwDVz+rH1lJ6CC
-         KolvGLvSRh3hCkmpbVBSbYLFQyUECkqi/xMB4e3n+9Whd7JiRRhrbl8YHsagJvWnPdtz
-         sht8hkIU2dCW4ZFNFBu7AzuZipquapnYpxt0MiqOQupPe81dL/MpKVltCBgQ7O7y6z6Y
-         3Qhg==
-X-Gm-Message-State: AOJu0YzqHrsV3ZtysS61t6FKyEpI37JZYeJhlFsAYjeE3XZY/JwNaBrd
-	7o97AsaVzrMmUt3xAr8hMM9OYupft5W8eb96IogjqXRsqG2Q02AXCE/cFaNAgmM=
-X-Google-Smtp-Source: AGHT+IHTH5ilkdKhDl3Q/of+l69ZVZUrrfom8jpjgf1X6qX8G+tk52E46mC4hV55kEcLOeNyrX9lLg==
-X-Received: by 2002:a7b:c458:0:b0:426:64f5:b10d with SMTP id 5b1f17b1804b1-426707db59bmr65977935e9.14.1720781829976;
-        Fri, 12 Jul 2024 03:57:09 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f28c31dsm19306225e9.28.2024.07.12.03.57.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 03:57:09 -0700 (PDT)
-Message-ID: <d625777dfeb5a53a232835e9abb1f39de55e6a17.camel@gmail.com>
-Subject: Re: [PATCH 3/6] pwm: Add support for pwmchip devices for faster and
- easier userspace access
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Cc: linux-pwm@vger.kernel.org
-Date: Fri, 12 Jul 2024 13:01:04 +0200
-In-Reply-To: <hogxczszsbqtxu7b2dgllyclnr2pztellxzq3figkhdlajhowi@6vmjvyoifkjk>
-References: <cover.1720435656.git.u.kleine-koenig@baylibre.com>
-	 <7490e64bbe12e2046d92716dadef7070881592e6.1720435656.git.u.kleine-koenig@baylibre.com>
-	 <86fdb6409c8f439bf75d2ed31d1031fb910aa435.camel@gmail.com>
-	 <hogxczszsbqtxu7b2dgllyclnr2pztellxzq3figkhdlajhowi@6vmjvyoifkjk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 
+	s=arc-20240116; t=1720788391; c=relaxed/simple;
+	bh=Erx0gIUMC5sqOzJTfoUmK6Hj8OfOwuZt+Y0hxU1mY18=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZI25YuMAugGi8j++nXTuCwpXFka7cYn6/GmC51AVBWaChQL/qi+0aTCzZSBAB9PB7QS5DZ2+3CE9J2wD2PSvmIRQZQIZUhVlUBGmH8tYY+9LjaKjtJwZVPxqweyrm1Qj9at7FcR/PIODS6l21uFpvPE/2oZ95aHROz9NtMOdrUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NSRq5EBl; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720788389; x=1752324389;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Erx0gIUMC5sqOzJTfoUmK6Hj8OfOwuZt+Y0hxU1mY18=;
+  b=NSRq5EBlb7K1nWYJMVgbGsxa5K+WmXsTh/9iLhMO7sHQ26CMB7qBH5R+
+   erFAiW5u0y/6KdsbiX+amyULqvuHcVawEG92Hf1ZlNOBrLwD6YrzTbWEI
+   RwqDkuU+QK8IYx/tNm5x8qiEbXF8uh31uOU9uOkOuRaBKitd5FsqA9gYt
+   hrmn2UjxRGEmV5ZXcpMqeNvHu7KEbxblzBQwQE55YcC1uohi362e+d8Pw
+   xqcnh2uEHUevAttYnlSaWvwrunmXisZt9DaqWPUZGsA3q1uS0QjieeVau
+   UV7BxM1OOs58DjpIvXXm+V6RszjzwPe5w0tFLDXWyi9/bFi7TsPiw6BPI
+   w==;
+X-CSE-ConnectionGUID: ntrCyXSGS9KrCPMN/hLpoQ==
+X-CSE-MsgGUID: J3UFfIr9T5WHWSqejI+GiA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="18092313"
+X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
+   d="scan'208";a="18092313"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 05:46:28 -0700
+X-CSE-ConnectionGUID: EDVtn1l5QK2eRdquepR0IA==
+X-CSE-MsgGUID: 7jGGRIxoQjiXaAkF7BUY2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
+   d="scan'208";a="86398888"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 12 Jul 2024 05:46:24 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sSFfJ-000am6-39;
+	Fri, 12 Jul 2024 12:46:21 +0000
+Date: Fri, 12 Jul 2024 20:45:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>, jdelvare@suse.com,
+	linux@roeck-us.net, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, ukleinek@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH v5 3/3] hwmon: (adt7475) Add support for configuring
+ initial PWM state
+Message-ID: <202407122021.YFqdjjQS-lkp@intel.com>
+References: <20240711234614.3104839-4-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240711234614.3104839-4-chris.packham@alliedtelesis.co.nz>
 
-On Fri, 2024-07-12 at 11:48 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> On Tue, Jul 09, 2024 at 11:37:13AM +0200, Nuno S=C3=A1 wrote:
-> > On Mon, 2024-07-08 at 12:52 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > > With this change each pwmchip can be accessed from userspace via a
-> > > character device. Compared to the sysfs-API this is faster (on a
-> > > stm32mp157 applying a new configuration takes approx 25% only) and
-> > > allows to pass the whole configuration in a single ioctl allowing ato=
-mic
-> > > application.
-> > >=20
-> > > Thanks to Randy Dunlap for pointing out a missing kernel-doc
-> > > description.
-> > >=20
-> > > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
-> > > ---
-> >=20
-> > I didn't looked very carefully at the patch but one thing did caught my
-> > attention
-> >=20
-> > ...
-> >=20
-> > > +
-> > > +struct pwmchip_waveform {
-> > > +	unsigned int hwpwm;
-> > > +	__u64 period_length;
-> > > +	__u64 duty_length;
-> > > +	__u64 duty_offset;
-> > > +};
-> > > +
-> >=20
-> > I do not think we should have holes in the struct given this is an user=
-space
-> > interface.
->=20
-> Ack, will add explicit padding (and a check that it is zeroed).
->=20
+Hi Chris,
 
-Why not having the __u64 coming first :)? It also save you 4 bytes (yeah, s=
-hould
-not make a difference)
+kernel test robot noticed the following build errors:
 
-> > One other thing is how likely is this struct to grow?
->=20
-> I don't expect it to grow. Extensions I could imagine only concern
-> things like:
->=20
-> =C2=A0- request the currently running period to be completed
-> =C2=A0- block until the hardware is programmed
->=20
-> and these don't fit into pwmchip_waveform and would require a different
-> ioctl command and parameter struct anyhow.
->=20
-> > If that is expected we should probably think in adding some
-> > __reserved__ parameters or maybe to modify the interface so we could
-> > make use of:
-> >=20
-> > https://elixir.bootlin.com/linux/latest/source/include/linux/uaccess.h#=
-L348
-> >=20
-> > Like wrapping struct pwmchip_waveform in another struct with an extra m=
-ember
-> > forcing userspace to specify pwmchip_waveform size. But I agree it's a =
-bit
-> > awkward and ugly (but it could be hidden in libpwm).
->=20
-> The size is already encoded in the ioctl request constants. So I think
-> we're set to use copy_struct_from_user() if my expectation about
-> pwmchip_waveform not growing turns out to be wrong.
->=20
+[auto build test ERROR on groeck-staging/hwmon-next]
+[also build test ERROR on linus/master v6.10-rc7 next-20240712]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Oh, indeed. I had to go and remember the IO* macros...
+url:    https://github.com/intel-lab-lkp/linux/commits/Chris-Packham/dt-bindings-hwmon-Add-adt7475-fan-pwm-properties/20240712-074936
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+patch link:    https://lore.kernel.org/r/20240711234614.3104839-4-chris.packham%40alliedtelesis.co.nz
+patch subject: [PATCH v5 3/3] hwmon: (adt7475) Add support for configuring initial PWM state
+config: i386-randconfig-002-20240712 (https://download.01.org/0day-ci/archive/20240712/202407122021.YFqdjjQS-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240712/202407122021.YFqdjjQS-lkp@intel.com/reproduce)
 
-- Nuno S=C3=A1
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407122021.YFqdjjQS-lkp@intel.com/
 
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_plane_helper_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_probe_helper_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_rect_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/panel/panel-abt-y030xx067a.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/panel/panel-novatek-nt39016.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/panel/panel-orisetech-ota5601a.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/lontium-lt9611.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/lontium-lt9611uxc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/sil-sii8620.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/sii9234.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/drm_panel_orientation_quirks.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/drm_mipi_dbi.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/udl/udl.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-kunit.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-i2c.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-ram.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-raw-ram.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-slimbus.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-w1.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/misc/open-dice.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/rt4831.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_pci.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_mem.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spi/spi-fsl-lib.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firewire/uapi-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firewire/packet-serdes-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pcmcia/yenta_socket.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/storage/uas.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/ch341.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/mxuport.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/navman.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/symbolserial.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/misc/ezusb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/misc/isight_firmware.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/misc/yurex.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/mon/usbmon.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/chipidea/ci_hdrc_msm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/libcomposite.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_acm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_ss_lb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/u_serial.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_serial.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_obex.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_mass_storage.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_fs.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_hid.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_printer.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_tcm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/legacy/g_dbgp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ccgx-ucsi.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/tuners/tda9887.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firmware/google/framebuffer-coreboot.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-belkin.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-betopff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-chicony.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-cypress.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-holtek-kbd.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-holtek-mouse.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-keytouch.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-kye.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-letsketch.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-logitech.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-lg-g15.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-logitech-hidpp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-megaworld.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-primax.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-redragon.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-saitek.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-speedlink.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-gaff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-tmff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-uclogic.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-xinmo.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-zpff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-zydacron.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-viewsonic.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-winwing.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/of/of_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-bootrom.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-hid.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-log.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-loopback.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-power-supply.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-raw.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-vibrator.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-gbphy.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-gpio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-pwm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-spi.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-spilib.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-uart.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-usb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/siemens/simatic-ipc-batt.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/ibm_rtl.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_performance.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/perf/cxl_pmu.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwtracing/intel_th/intel_th_msu_sink.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/parport/parport.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/greybus/greybus.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/siox/siox-bus-gpio.o
+>> ERROR: modpost: "__udivdi3" [drivers/hwmon/adt7475.ko] undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
