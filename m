@@ -1,93 +1,77 @@
-Return-Path: <linux-pwm+bounces-2793-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2794-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60F689305AB
-	for <lists+linux-pwm@lfdr.de>; Sat, 13 Jul 2024 14:58:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63D61930C33
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jul 2024 01:56:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE3371F21C40
-	for <lists+linux-pwm@lfdr.de>; Sat, 13 Jul 2024 12:58:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C52221F21812
+	for <lists+linux-pwm@lfdr.de>; Sun, 14 Jul 2024 23:56:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E6E012FB2A;
-	Sat, 13 Jul 2024 12:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2145E13CFAD;
+	Sun, 14 Jul 2024 23:56:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="WXgmwa1o"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="EK7DQzx5"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B83F13210F
-	for <linux-pwm@vger.kernel.org>; Sat, 13 Jul 2024 12:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B8B8F48
+	for <linux-pwm@vger.kernel.org>; Sun, 14 Jul 2024 23:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720875523; cv=none; b=TBkFkgoYMc2p5t1IMFH7QkEHeo5e2mjscNMbJl05hCnmi2hdj19LYQPUC2lCQzmF+jRzNCMNUoPI5KrHfvrn+CbsQcEAIv09pGY82/Tvh1C1joWYzHEnFxL3B86VPwmg1ZpeW12G6FVwsIb8SfkaK4qhKVv6hpd1P1yiFYeHhCo=
+	t=1721001367; cv=none; b=cSYMMUc/VRmVCvyPxLw+vbO6QEQqHGh1sigTbrzQIKO59fLiGdzx2NAxn7wCujNaw0SpFerbcq5W+7d8qN6+sJQpaCqcs82IYEkuasO0WA4+i5wmd35lRY7E5+xkkZgEmD2eXZvWqLvQwcEGRnqnytIjfxf4u0cJlY0Gc1dzBUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720875523; c=relaxed/simple;
-	bh=WAquGU1sAv0NQOiFQhQCK/WB0bF5GrpFisW+DKCCuOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A7OalIdMxRGFDp1Fuxw/RkPTv/cxsOOLySfgYfvBOrNIRHjUdZGoSxq5FruQfU/5xiYkmjl8sH4KxGbxTm0tbzlKHAdsuM5y/F8dIpiQ0SQAPm3YNKWeNUHiDOaxBQwBnTUrju457rOqV2k6+sKFDaNvpAFWQxzfk5XjNJlWU0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=WXgmwa1o; arc=none smtp.client-ip=209.85.208.46
+	s=arc-20240116; t=1721001367; c=relaxed/simple;
+	bh=ElBxmtdBto7oBgv7kUfIe7S/l59erU+DSUFlELa14E0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=e0LH63vSCbnv9em5q/Xe6qk9Q9X2M9Y9XxZMNZoq7PI9JMo6ZtJAWJZXfoPvv0Ow1htArdkIEcqt2yfEJNpx6t4H+v8OB6xH9ENRb8sDmzRUmUdfM2oRIjBGPtshxoPz0yuNAiWP4o+6rD++mwOjeU5E35f/O5A3wg9kP6HPmNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=EK7DQzx5; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-58bac81f419so3447375a12.0
-        for <linux-pwm@vger.kernel.org>; Sat, 13 Jul 2024 05:58:41 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52ea34ffcdaso3993549e87.1
+        for <linux-pwm@vger.kernel.org>; Sun, 14 Jul 2024 16:56:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720875520; x=1721480320; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0vmUQWDwVUQYFm+xuW2pF4/BnR+RAgeFcmOR+FIC/lg=;
-        b=WXgmwa1oP4aaIFVrDwU1dm9AFmIkCCTH5qs4U0ICLnvKVecYwtpKUl6uYg2hVN/TsM
-         696sQGQONuSL8kuU5ilI1GTa1m98Sb2R+Z+MU13jYHJQrasc14TrWMGU/hOJHO5lzMoQ
-         3eQTR1WAuOcWT2PW0TPP7Dr3FAmZCuPGZGhul86Ad5ZnHoTn1cn8whjb6MJNoZr1cOAP
-         qiNve6enVxq92gtvJjHYuVUbUnGnYtXdKCaAkb8Shv3d3dKd9aVsinBHKq9ouGWA0tbg
-         nHm9zt23F87krPS/rMGM+mOU3OOiGai9kmCuxLw6PMp5Ss4Ugnjch4BKD8NBYe6LhCNJ
-         6sVA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1721001360; x=1721606160; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WgLjksFUS/fpTTt4dDxH0mDzUxX++BLo+vL4+PdbEI4=;
+        b=EK7DQzx5mq5geLpfok7g4LgjfFoyOYZZD/7RpcaSuzlZWd17YLO+g9H9UmeHHpzJ+Q
+         7L5CIJ+z/n3hiK0bBPrdZuPCTeqNzsv70C025qJwlyrw//M15PoF1HDJ7aJimhZwNvrf
+         3WxLaHhF7NVeOGS3mKeBfstAkz4TvYlB83M6C7d+21ag7L3XNzRjH1xhTWaphIwl092u
+         05cYxb3lpt05ONtJ+kCqCcb7jdBKa6kFRW9K+QOAWu81UClHZK+LAt6nV//pzPr/wDNV
+         EUq8H3M8an5UxhJycw42Q/eancigJC1AJHr3j3e781LMtjsGRStSRN++aqWP/gSr7u8t
+         idrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720875520; x=1721480320;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0vmUQWDwVUQYFm+xuW2pF4/BnR+RAgeFcmOR+FIC/lg=;
-        b=Y7vh4a273nX16daMMYs61UTcTkAWv1p/YkeeGKya3/edz3XDmhkvWAkzvs6tnsl8zb
-         I7ESOBxe5XDPzM7KaGUsbJ8noRNs7P4busGghDG6NzLh+/7M+G3x9LN3x21heMTBRa3C
-         w92I6LJg4oVJ5+Z8dHM2xrYpZXAAsF4ma6bY0A3HfoIp2G04V12sTAwJjObaEZENNt03
-         zSTU3c1v6zREFc4FTAKw++JG9fK3yuqN/OrsFowSr70igfdospZk7tE7jsLAlqlGBs/g
-         BdOESY9J5LXFC14IBAPLMnv7kXxAMoN5ZrAvR8dQhd4VnFOnKoAabre3lD23T/ToAsXu
-         85yg==
-X-Forwarded-Encrypted: i=1; AJvYcCWX0k2h5hDZSthNjOb08azm/wgKymciAHJC7fJTZNzknXLDxs/yPf88M1M6TDcBLUZ9nNZmSaL1UPZykxgdsGMZPJnva4fSxiGk
-X-Gm-Message-State: AOJu0YwZIjD6ue3Rg9Gp5Zy2xV3txPWoR58BtUiwSNPfuEirV/RaM7qW
-	sOxB6ednSteWUAUJkIE4zBtwk1iZI0Ryze4a2v9QeJ2E/FJ85ujrQL8lnMwX8VXtXsIMGheNY4N
-	c
-X-Google-Smtp-Source: AGHT+IE8wLD/Rbqxem5MwJOVkSSIYdsvSdPnmm+cu+yuuQej1nhyJW0GbSd3h+h9V0sEUnfR/NKrAg==
-X-Received: by 2002:a05:6402:26c6:b0:595:7640:ee79 with SMTP id 4fb4d7f45d1cf-5957640f148mr10139310a12.17.1720875517634;
-        Sat, 13 Jul 2024 05:58:37 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-59b255263ecsm740996a12.44.2024.07.13.05.58.36
+        d=1e100.net; s=20230601; t=1721001360; x=1721606160;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WgLjksFUS/fpTTt4dDxH0mDzUxX++BLo+vL4+PdbEI4=;
+        b=CkJVuLAMVPP0Jz+lw+BEsbfp0DruMrvjdrOE2DRrCjMpAwI07vbW1rAmfG0pJDjTDO
+         xud6FM96RcU/a39HvI3v25QDzT/8HHzqWQ+3fl5YguSO4TjGTT6q/f8tc0JuI1vB/Rak
+         GVQ6vZVL4rqe0I2R4EB0MytXWfo2h6qMgHhA2+cIVZwTU/x/EvjxlZSb20lBYPe2LXRp
+         blLTZy0N7ibvyTwGqjZ8avB9qQDMZ5wnpq35AXuV5uTsFSwCQw9/+o0pKXqcQFS3Nt7I
+         rObDiSICK9TuZWJyGDC18nByLN0mf8aRiuM3Aandy1Dllo4evKNKJjzfJvRF5E17uSB3
+         dqeA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpgm0/Kb4hDLahr0qWX4a7pVedGYFXfLE50t5jbKf6sdbom6o3mJ22PzFqTFtLYeDQ3JM3T/2RcxGDFhtuAtP1r14VLCoPGbYu
+X-Gm-Message-State: AOJu0YzFZ61gwaVTqJ/28GJkfIkxjdHjYPA+VdiURlppxNndRas/7uQc
+	0McOLDEh07ItV6E1RV06gEVBb4K4USGN8PdPqSWgH3AGW2B6s0alg7igXLiRtvs=
+X-Google-Smtp-Source: AGHT+IHrM10H3xb9tX0zTngYHwN73jJ1hToYujAvBtl+XhOIQKAhbN9QB0lPSLipBcK2FFEilbfJ3w==
+X-Received: by 2002:ac2:5f71:0:b0:52e:9b9f:9377 with SMTP id 2adb3069b0e04-52eb9995381mr8893593e87.21.1721001359681;
+        Sun, 14 Jul 2024 16:55:59 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:b07d:2def:f39:af34])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc7f2356sm168508366b.128.2024.07.14.16.55.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Jul 2024 05:58:36 -0700 (PDT)
-Date: Sat, 13 Jul 2024 14:58:35 +0200
+        Sun, 14 Jul 2024 16:55:59 -0700 (PDT)
+Date: Mon, 15 Jul 2024 01:55:57 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Hironori KIKUCHI <kikuchan98@gmail.com>
-Cc: Andre Przywara <andre.przywara@arm.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Aleksandr Shubin <privatesub2@gmail.com>, Cheo Fusi <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH 5/5] dt-bindings: pwm: sun20i: Add options to select a
- clock source and DIV_M
-Message-ID: <e7dvk2g4ymz527tklywy2elka4ndzvftfujobnjmfdepgt3lm5@dzex45st2wya>
-References: <20240531141152.327592-1-kikuchan98@gmail.com>
- <20240531141152.327592-6-kikuchan98@gmail.com>
- <851280ad-ac0e-47d1-99e2-4f3b5ea29f2f@kernel.org>
- <CAG40kxEbMQc-ni0HDVR7rtj48aFu-jz8sYUAO+fdmZSmXWrizw@mail.gmail.com>
- <da382d43-fa82-44c0-9630-086f59e6efa2@kernel.org>
- <CAG40kxHKdC=uwyWzsBo1LTAXARDQGs0N4TBdD5nE1zhos48cbg@mail.gmail.com>
- <20240603010912.44b99988@minigeek.lan>
- <CAG40kxETZBO1-UBr=rqEu0uWrfOe74k-M12qW7Rg_kX8U32UPg@mail.gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	William Breathitt Gray <wbg@kernel.org>, Lee Jones <lee@kernel.org>
+Subject: [GIT PULL] pwm: Changes for 6.11-rc1
+Message-ID: <lajhejp2frzxdzjj4zdw645uabt3y77rg6rmbk737cel4bytrp@wqr3zbdu6pg4>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -95,129 +79,193 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="uowver6aitbe3emx"
+	protocol="application/pgp-signature"; boundary="wzyzmm7voeopd3vd"
 Content-Disposition: inline
-In-Reply-To: <CAG40kxETZBO1-UBr=rqEu0uWrfOe74k-M12qW7Rg_kX8U32UPg@mail.gmail.com>
 
 
---uowver6aitbe3emx
-Content-Type: text/plain; charset=utf-8
+--wzyzmm7voeopd3vd
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello Linus,
 
-On Mon, Jun 03, 2024 at 05:42:08PM +0900, Hironori KIKUCHI wrote:
-> 2024=E5=B9=B46=E6=9C=883=E6=97=A5(=E6=9C=88) 9:10 Andre Przywara <andre.p=
-rzywara@arm.com>:
-> >
-> > On Sun, 2 Jun 2024 15:15:13 +0900
-> > Hironori KIKUCHI <kikuchan98@gmail.com> wrote:
-> >
-> > > > On 31/05/2024 19:57, Hironori KIKUCHI wrote:
-> > > > >>> ---
-> > > > >>>  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 19 +++++++++++=
-++++++++
-> > > > >>>  1 file changed, 19 insertions(+)
-> > > > >>>
-> > > > >>> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,su=
-n20i-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.=
-yaml
-> > > > >>> index b9b6d7e7c87..436a1d344ab 100644
-> > > > >>> --- a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pw=
-m.yaml
-> > > > >>> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pw=
-m.yaml
-> > > > >>> @@ -45,6 +45,25 @@ properties:
-> > > > >>>      description: The number of PWM channels configured for thi=
-s instance
-> > > > >>>      enum: [6, 9]
-> > > > >>>
-> > > > >>> +  allwinner,pwm-pair-clock-sources:
-> > > > >>> +    description: The clock source names for each PWM pair
-> > > > >>> +    items:
-> > > > >>> +      enum: [hosc, apb]
-> > > > >>> +    minItems: 1
-> > > > >>> +    maxItems: 8
-> > > > >>
-> > > > >> Missing type... and add 8 of such items to your example to make =
-it complete.
-> > > > >
-> > > > > Thank you. I'll fix it.
-> > > > >
-> > > > >>
-> > > > >>> +
-> > > > >>> +  allwinner,pwm-pair-clock-prescales:
-> > > > >>> +    description: The prescale (DIV_M register) values for each=
- PWM pair
-> > > > >>> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> > > > >>> +    items:
-> > > > >>> +      items:
-> > > > >>> +        minimum: 0
-> > > > >>> +        maximum: 8
-> > > > >>> +      minItems: 1
-> > > > >>> +      maxItems: 1
-> > > > >>> +    minItems: 1
-> > > > >>> +    maxItems: 8
-> > > > >>
-> > > > >> This does not look like matrix but array.
-> > > > >
-> > > > > I wanted to specify values like this:
-> > > > >
-> > > > >     allwinner,pwm-pair-clock-prescales =3D <0>, <1>, <3>;
-> > > > >     allwinner,pwm-pair-clock-sources =3D "hosc", "apb", "hosc":
-> > > > >
-> > > > > These should correspond to each PWM pair.
-> > > > > This way, I thought we might be able to visually understand the r=
-elationship
-> > > > > between prescalers and sources, like clock-names and clocks.
-> > > > >
-> > > > > Is this notation uncommon, perhaps?
-> > > >
-> > > > It's still an array.
-> > >
-> > > Oh I understood and clear. Thank you.
+the following changes since commit f01af3022d4a46362c5dda3d35dea939f3246d10:
 
-For clocks there is already a binding to assign a working configuration.
-assigned-clocks, assigned-clock-rates and assigned-clock-parents are the
-relevant properties. If you create a clk from the parent clock selector
-and mdiv, you can stick to the existing bindings.
+  pwm: stm32: Fix error message to not describe the previous error path (20=
+24-06-22 16:13:19 +0200)
 
-> > > [...]
-> >
-> > So I understand the problem, but I don't think expressing this in the
-> > devicetree is the right solution. It seems like a tempting pragmatical
-> > approach, but it sounds like the wrong way: this is not a hardware
-> > *description* of any kind, but rather a way to describe a certain user
-> > intention or a configuration. So this looks like a rather embedded
-> > approach to me, where you have a certain fixed register setup in mind,
-> > and want to somehow force this to the hardware.
-> > Another problem with this approach is that it doesn't really cover the
-> > sysfs interface, which is very dynamic by nature.
->=20
-> ... Indeed. You're right.
-> Now I've realized it was a bad idea.
-> It should be done in sysfs or sysctl perhaps.
+that is part of v6.10-rc5 are available in the Git repository at:
 
-I don't think a driver specific knob somewhere is a practical solution.
+  https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/p=
+wm/for-6.11-rc1
+
+for you to fetch changes up to 240b129d597cb8a8880eb3a381ff10eb98ca0c07:
+
+  pwm: axi-pwmgen: add .max_register to regmap (2024-07-11 15:44:40 +0200)
+
+Summary of the changes and shortlog below. Please pull these changes for
+v6.11-rc1.
 
 Best regards
 Uwe
 
---uowver6aitbe3emx
+----------------------------------------------------------------
+pwm: Changes for v6.11-rc1
+
+This contains the usual mix of fixes, cleanups, two new drivers and
+several dt binding updates. The fixes are for minor issues that are
+already old (4.11-rc1 and 3.9-rc1) and were found by code review and not
+during usage, so I didn't sent them for earlier inclusion.
+
+The changes to include/linux/mfd/stm32-timers.h and
+drivers/counter/stm32-timer-cnt.c are part of an immutable branch that
+will also be included in the mfd and counter PR. It changes some
+register definitions and affects the pwm-stm32 driver.
+
+Thanks go to Andy Shevchenko, AngeloGioacchino Del Regno, Conor Dooley,
+David Lechner, Dhruva Gole, Drew Fustini, Frank Li, Jeff Johnson, Junyi
+Zhao, Kelvin Zhang, Krzysztof Kozlowski, Lee Jones, Linus Walleij, Linus
+Walleij, Michael Hennerich, Nicola Di Lieto, Nicolas Ferre, Nuno Sa,
+Paul Cercueil, Raag Jadav, Rob Herring, Sean Anderson, Sean Young,
+Shenwei Wang, Stefan Wahren, Trevor Gamblin, Tzung-Bi Shih, Vincent
+Whitchurch and William Breathitt Gray for their contributions to this
+pull request; they authored changes, spend time reviewing changes and
+coordinated the above mentioned immutable branch.
+
+----------------------------------------------------------------
+
+Conor Dooley (1):
+      dt-bindings: pwm: describe the cells in #pwm-cells in pwm.yaml
+
+Drew Fustini (2):
+      dt-bindings: pwm: Add AXI PWM generator
+      pwm: Add driver for AXI PWM generator
+
+Frank Li (2):
+      dt-bindings: pwm: fsl-ftm: Convert to yaml format
+      dt-bindings: pwm: imx: remove interrupt property from required
+
+Jeff Johnson (1):
+      pwm: add missing MODULE_DESCRIPTION() macros
+
+Junyi Zhao (1):
+      pwm: meson: Add support for Amlogic S4 PWM
+
+Nicola Di Lieto (1):
+      dt-bindings: pwm: Add pwm-gpio
+
+Nicolas Ferre (1):
+      dt-bindings: pwm: at91: Add sama7d65 compatible string
+
+Raag Jadav (2):
+      pwm: lpss: use devm_pm_runtime_enable() helper
+      pwm: lpss: drop redundant runtime PM handles
+
+Sean Young (1):
+      bus: ts-nbus: Use pwm_apply_might_sleep()
+
+Shenwei Wang (1):
+      pwm: imx-tpm: Enable pinctrl setting for sleep state
+
+Trevor Gamblin (1):
+      pwm: axi-pwmgen: add .max_register to regmap
+
+Uwe Kleine-K=F6nig (24):
+      mfd: stm32-timers: Unify alignment of register definition
+      mfd: stm32-timers: Add some register definitions with a parameter
+      counter: stm32-timer-cnt: Use TIM_DIER_CCxIE(x) instead of TIM_DIER_C=
+CxIE(x)
+      mfd: stm32-timers: Drop unused TIM_DIER_CC_IE
+      pwm: stm32: Always do lazy disabling
+      pwm: atmel-tcb: Fix race condition and convert to guards
+      pwm: jz4740: Another few conversions to regmap_{set,clear}_bits()
+      pwm: axi-pwmgen: Make use of regmap_clear_bits()
+      pwm: Make use of a symbol namespace for the core
+      pwm: cros-ec: Don't care about consumers in .get_state()
+      pwm: cros-ec: Simplify device tree xlation
+      pwm: Make pwm_request_from_chip() private to the core
+      pwm: Remove wrong implementation details from pwm_ops's documentation
+      pwm: Drop pwm_apply_state()
+      Merge tag 'ib-mfd-counter-v5.11' of https://git.kernel.org/pub/scm/li=
+nux/kernel/git/lee/mfd into HEAD
+      pwm-stm32: Make use of parametrised register definitions
+      pwm: Register debugfs operations after the pwm class
+      pwm: Use guards for pwm_lock instead of explicity mutex_lock + mutex_=
+unlock
+      pwm: Use guards for export->lock instead of explicity mutex_lock + mu=
+tex_unlock
+      pwm: Use guards for pwm_lookup_lock instead of explicity mutex_lock +=
+ mutex_unlock
+      pwm: xilinx: Simplify using devm_ functions
+      pwm: Allow pwm state transitions from an invalid state
+      pwm: atmel-tcb: Simplify checking the companion output
+      pwm: atmel-tcb: Make private data variable naming consistent
+
+Vincent Whitchurch (1):
+      pwm: Add GPIO PWM driver
+
+ .../devicetree/bindings/pwm/adi,axi-pwmgen.yaml    |  48 ++++
+ .../devicetree/bindings/pwm/atmel,at91sam-pwm.yaml |   4 +-
+ .../devicetree/bindings/pwm/fsl,vf610-ftm-pwm.yaml |  92 ++++++++
+ Documentation/devicetree/bindings/pwm/imx-pwm.yaml |   1 -
+ .../devicetree/bindings/pwm/pwm-fsl-ftm.txt        |  55 -----
+ .../devicetree/bindings/pwm/pwm-gpio.yaml          |  46 ++++
+ Documentation/devicetree/bindings/pwm/pwm.yaml     |   6 +-
+ Documentation/driver-api/gpio/drivers-on-gpio.rst  |   7 +-
+ MAINTAINERS                                        |   9 +
+ drivers/bus/ts-nbus.c                              |   2 +-
+ drivers/counter/stm32-timer-cnt.c                  |   4 +-
+ drivers/pwm/Kconfig                                |  24 ++
+ drivers/pwm/Makefile                               |   2 +
+ drivers/pwm/core.c                                 | 187 ++++++++--------
+ drivers/pwm/pwm-atmel-tcb.c                        | 113 +++++-----
+ drivers/pwm/pwm-axi-pwmgen.c                       | 242 +++++++++++++++++=
+++++
+ drivers/pwm/pwm-cros-ec.c                          |  64 +-----
+ drivers/pwm/pwm-gpio.c                             | 241 +++++++++++++++++=
++++
+ drivers/pwm/pwm-imx-tpm.c                          |  16 +-
+ drivers/pwm/pwm-imx1.c                             |   1 +
+ drivers/pwm/pwm-imx27.c                            |   1 +
+ drivers/pwm/pwm-intel-lgm.c                        |   1 +
+ drivers/pwm/pwm-jz4740.c                           |   9 +-
+ drivers/pwm/pwm-lpss-pci.c                         |  22 --
+ drivers/pwm/pwm-lpss-platform.c                    |  10 +-
+ drivers/pwm/pwm-mediatek.c                         |   1 +
+ drivers/pwm/pwm-meson.c                            |  39 ++++
+ drivers/pwm/pwm-pxa.c                              |   1 +
+ drivers/pwm/pwm-samsung.c                          |   1 +
+ drivers/pwm/pwm-spear.c                            |   1 +
+ drivers/pwm/pwm-stm32.c                            |  27 +--
+ drivers/pwm/pwm-visconti.c                         |   1 +
+ drivers/pwm/pwm-xilinx.c                           |  27 +--
+ include/linux/mfd/stm32-timers.h                   | 179 +++++++--------
+ include/linux/pwm.h                                |  26 +--
+ 35 files changed, 1068 insertions(+), 442 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.ya=
+ml
+ create mode 100644 Documentation/devicetree/bindings/pwm/fsl,vf610-ftm-pwm=
+=2Eyaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
+ create mode 100644 drivers/pwm/pwm-axi-pwmgen.c
+ create mode 100644 drivers/pwm/pwm-gpio.c
+
+--wzyzmm7voeopd3vd
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaSefgACgkQj4D7WH0S
-/k4PpQf+JL1igIDXxEuQOrrhdPtcCKOdnbzUcXc+5O9UEjZtnLuPHQl7QQwJlQlE
-hdaGoTu19JrWCqs6c2NBp7Bfvudj9NxreEMVkZoWwneCx8FlpJ4Ize5UPUSJKM/S
-UQsh2krG6bGultPD95aHLU0y1xAlgosDgBt1LNnBEADuXFsoQDJwalzjsV6pCiNI
-YBk0rdnq2CA1F6821F1qDQxo/0HwaYD8li3/88pPJwk0chy1GghP+rQs14lanT0c
-p5aPUo5lgT9FX0kamw2LKClegbbmGiXVqzdquxyEvZXGVCOs03RMfp87X9TqSYvd
-X6oU4c5oER1lPKnzIbBMXuhAjzFr/Q==
-=09cS
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaUZYkACgkQj4D7WH0S
+/k4aTgf9E8oOaPv1vvIY6e+gTrRP7gZLj+CW9S6ckwfD79xpl3JgYzsSKHKsmNav
+6V4a2y/OnnZkl+xaRBd5M9xnNqkTJThcN33DJTeXcGNgP7nBryiJ6N4OX52Po7yP
+zh+sZX8uGgBGHJryT/2+X/d0xxSe9UzJcA9V7hDIkInPLon2xHBhElvjaikNUx/V
+GobwfONv2UUW6GeumholBClc9orQ3usHsubwV/ydBKryafier9KP+pGyJVuLaV/q
+ZT99H7BJSHFoEohhrQEixKNII+kx3dFpESK9AkLPthh/uX9LpzFIbbq1VTyau8JN
+/FnILzrsAWnaKqXk35GF7fD/Hw2PxQ==
+=/7lq
 -----END PGP SIGNATURE-----
 
---uowver6aitbe3emx--
+--wzyzmm7voeopd3vd--
 
