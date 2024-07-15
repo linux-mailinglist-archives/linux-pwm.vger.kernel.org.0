@@ -1,728 +1,618 @@
-Return-Path: <linux-pwm+bounces-2807-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2808-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4CF59312EB
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jul 2024 13:17:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEBCF9313C3
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jul 2024 14:13:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B092AB22711
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jul 2024 11:17:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 65A7F28128D
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jul 2024 12:13:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D24E91891A2;
-	Mon, 15 Jul 2024 11:16:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB96B18C321;
+	Mon, 15 Jul 2024 12:12:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yX1o+Lif"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gXEEW3ex"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242D418732B
-	for <linux-pwm@vger.kernel.org>; Mon, 15 Jul 2024 11:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C86E18C18E;
+	Mon, 15 Jul 2024 12:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721042217; cv=none; b=WK0MpnrqUo2rHaUPdbNYy7jLMllLdwqlsTgsjYz1NJZ7H/eRUDH0WUgi8AnUjj/xsTKrGXcTkDn9aDOJjrNSKlXv3aKt8m7WoojSHLq+Zw9i617v8z9x7o7HdQUPXesWaygipVVYUn7i8J5+qOwLEjqImc6Q/euAIvG2VXEmSk4=
+	t=1721045569; cv=none; b=AR4tkEBYhCQ0iaN33TuDO8eDB4G2aY6oRknTsMt7HheCm17+WxQg72lRTm5tp5SWLaFJaEjmSQ/3mi9Mn1YeaRx6H43LRhWv/NjXw6Z7NxhY+xrI6Q95ODD4j5ETwCa7wEsQCgMjXXuQVYG3J8wIHG+oK6l+PNQNWPbHAc9q0AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721042217; c=relaxed/simple;
-	bh=yhsRxTmP+cPE+8kUf176lTv2yrrTFVO2vxSx26zHd0I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q9fx94RxN8yGfCS+8HGvw+avAqrX31V3ExDtaIKa9bTdOIaZ4MLNEgKARsE3mtxkJIF/Gh15B78qlLxb8ezZHXDCd4Pu26JnG9nDpduKE+6WE+wgB9lt6PHEvAf7ZS38gpVUZDELuXBLp6epiUmNvW62PXKB96bO+ZPA4AlFXRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yX1o+Lif; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4266f535e82so27792325e9.1
-        for <linux-pwm@vger.kernel.org>; Mon, 15 Jul 2024 04:16:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1721042213; x=1721647013; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yzQ12MBO5tx4hCgekxUxY/qWko2QtfYvPcuwIh1kocA=;
-        b=yX1o+LifCeStCMspjo7lNCohvg6RN+fsyFbnmiB0NfcXhbaQ2YPsMCfxU1nuL5S7RU
-         AE0Yf0q2A0s0Nr7y+cRc3RKtNlbcJNJ4mOrQn8ibGbzcHpxKOIxU4Si/dQWcXv2geCrg
-         vrOoT24+VTNSOoGXyLDwccPaIB8cR4pPxZhXChBuXaLHD72vGjLyDcXZ47WKVXCwQze9
-         keO6pmlA+l7MCeMQXTB5Z3c0RtLZdmE1oaLh/4bj3AKj6XpW5GJD5fIBVPhi2IqTximT
-         x5gc8cxGWpmXNIEsFZx7GXe4fTEN6oGPm2bfhwyg1nu5lG+c1/b95o3mV2jHhuePZwQe
-         dDVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721042213; x=1721647013;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yzQ12MBO5tx4hCgekxUxY/qWko2QtfYvPcuwIh1kocA=;
-        b=OTnReRZKAyQSXM2ODq1ai060fnqsT6427qOYzcYBIYQjhlM/XTkpPSIaIyMLGoHEFN
-         YAG/JQMrAX59jsrQLabga0n8kf6qcvyQ+vWQhHT5R8IiVKO5UNvdZNw+cCGJ58mBny7X
-         A5rUpnnyIrKL9I9D02AA639C2hJfsQtRKVfVdiD4CFSUQqXao9JfLkyDX2ILx8KeC7iW
-         iY1tC834xsb3LJGdBVE/YmiE029+AzFM+VRHKtvAk5aoRYRD3pcocb/q3hP6lD1Q/+1r
-         z4j5rMrNkbpL9blQQ2dPw5En3raaCveArGn26rrMQHdcTR6Y2FOjTJTSMNK/uC1rAWu4
-         Leug==
-X-Forwarded-Encrypted: i=1; AJvYcCVbKGo9T53HL8rN1GFTntFVlRJ2svHWCrTi3yvofhb/oONmHv2FxkpNEhyd1UdRkoZNHdupo8uIERTs7+uM2X9V358lHgVN/sID
-X-Gm-Message-State: AOJu0Yx55KIZxLmhYFFU1uvXRt6JEo2T9IiIUQWFGgRB+w1muGUXhnb9
-	IgFOHKch7NDvQrzeXnykNRDekiMLzKopzy6FaS5MaCaOKDP7Bq0h38bz6QG9xLU=
-X-Google-Smtp-Source: AGHT+IEttkbu380i40H7Izaz2W3K4X3lu7Hub9mUvX27AEeTXM/vAiXvAUVt9oAwMG9zx7TpuA1LUw==
-X-Received: by 2002:a7b:cb97:0:b0:426:6004:cc97 with SMTP id 5b1f17b1804b1-426708faa16mr137147945e9.38.1721042213484;
-        Mon, 15 Jul 2024 04:16:53 -0700 (PDT)
-Received: from localhost (p50915eb1.dip0.t-ipconnect.de. [80.145.94.177])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e7749esm83490095e9.2.2024.07.15.04.16.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 04:16:52 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-pwm@vger.kernel.org
-Cc: Trevor Gamblin <tgamblin@baylibre.com>
-Subject: [PATCH v2 8/8] pwm: stm32: Implementation of the waveform callbacks
-Date: Mon, 15 Jul 2024 13:16:13 +0200
-Message-ID:  <2dd2364c0ea5f8b81df25f5c839e033a03619708.1721040875.git.u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1721040875.git.u.kleine-koenig@baylibre.com>
-References: <cover.1721040875.git.u.kleine-koenig@baylibre.com>
+	s=arc-20240116; t=1721045569; c=relaxed/simple;
+	bh=WYjF6U6nibfk7u3cHUo6gwUQDC1Ss/Tcj2bYgTGZ2l4=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=q+/zZycaoWkiyHZx92i+/AeI1PSfVmL3p3A5LISF6Duc2gmmRQSOmuiDyM97gZcvxVbLMufEvAU3uxGMGf4S+fIYB8E47Qisfc4ruqUhTSOGdc+rsLj2OqTVx+0EdcUqjvAZdf357MrC3ZrPrE+Q393WFdl89sgLA4C9NJPjPAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gXEEW3ex; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B084BC32782;
+	Mon, 15 Jul 2024 12:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721045568;
+	bh=WYjF6U6nibfk7u3cHUo6gwUQDC1Ss/Tcj2bYgTGZ2l4=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=gXEEW3exOJjCXclpGKoQYGG9opyBMzVA24PMJsQnTeml1rcJ1fVsWZ8UkBXdRlIJi
+	 0oFnQ4q3FICDYfiT/nBv8KshYO7W/1A7oU5/h4m9VNp4v60U3oEtBs9eOnYF00PkNx
+	 4x1ENkvnC0mwVZ2f856zAC92FDY3hMLyzuUsnTgylGgIuKfKpi6p2D2T2Xa62QeH6g
+	 8y2YFBrdFGcvw+Wv6Q/Ta+uadx7cg+sVyZrWpHao8EkC8qCtt7g1O1QvlkLOMq0xoa
+	 D3ACsA6zkhrPBcRV0jE/6uwu6t8F4t5gq08lkReU0UzMdkCttZ9MMMkU4L+IItHtdO
+	 XzO/VsLMCTRlQ==
+Date: Mon, 15 Jul 2024 06:12:47 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=17011; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=yhsRxTmP+cPE+8kUf176lTv2yrrTFVO2vxSx26zHd0I=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmlQUK2nwGGGsh07zAF7oavk5DLsrPRTLU9wXQY QaE4VuSXJSJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZpUFCgAKCRCPgPtYfRL+ TiKgCACKBS92jQSttGCiIq8j2xinba4idFfjSgYX4SO4ZySQ6R79nsCdCzF16Ai7BHvLx+EUW0S UQPgEGJlh016WRBTJdw3/mZs4coQ93qIFGfL2M9xIXUuZpJs+1HnfOcpWUiTHboQ5LtHCSY/Z55 IQZosA3OaUGY58KCk25l7G/CTEnm1DeoB/0vVWw3PYryPI3SizAJ5KrTkte3uthMMvfPBpqmk9v woqoGVVF51ehWQVPGfv7x7WBxHSTrNxmEsc0VpNAc/J6gayh90WdGYHcgNppcySV4idXGTWutMW YCTPfWuYfm/SQpQKlO3rrErTWAteXwpBfnvHEmH/z+Nzzfmm
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Nikita Shubin <nikita.shubin@maquefel.me>
+Cc: linux-gpio@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
+ Paolo Abeni <pabeni@redhat.com>, Andy Shevchenko <andy@kernel.org>, 
+ linux-mtd@lists.infradead.org, Liam Girdwood <lgirdwood@gmail.com>, 
+ linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, netdev@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Vinod Koul <vkoul@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, Jakub Kicinski <kuba@kernel.org>, 
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
+ Andy Shevchenko <andy.shevchenko@gmail.com>, dmaengine@vger.kernel.org, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Russell King <linux@armlinux.org.uk>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Rob Herring <robh+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ "Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
+ linux-watchdog@vger.kernel.org, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Damien Le Moal <dlemoal@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, linux-pwm@vger.kernel.org, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+ Ralf Baechle <ralf@linux-mips.org>, Sebastian Reichel <sre@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ linux-ide@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ linux-spi@vger.kernel.org, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Mark Brown <broonie@kernel.org>, 
+ Hartley Sweeten <hsweeten@visionengravers.com>, 
+ linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Richard Weinberger <richard@nod.at>, 
+ Eric Dumazet <edumazet@google.com>, linux-sound@vger.kernel.org, 
+ Arnd Bergmann <arnd@arndb.de>, linux-input@vger.kernel.org, 
+ Jaroslav Kysela <perex@perex.cz>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+ Lukasz Majewski <lukma@denx.de>
+In-Reply-To: <20240715-ep93xx-v11-0-4e924efda795@maquefel.me>
+References: <20240715-ep93xx-v11-0-4e924efda795@maquefel.me>
+Message-Id: <172104541245.3725513.13547524352291855487.robh@kernel.org>
+Subject: Re: [PATCH v11 00/38] ep93xx device tree conversion
 
-Convert the stm32 pwm driver to use the new callbacks for hardware
-programming.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
- drivers/pwm/pwm-stm32.c | 605 +++++++++++++++++++++++++---------------
- 1 file changed, 384 insertions(+), 221 deletions(-)
+On Mon, 15 Jul 2024 11:38:04 +0300, Nikita Shubin wrote:
+> The goal is to recieve ACKs for all patches in series to merge it via Arnd branch.
+> 
+> It was decided from the very beginning of these series, mostly because
+> it's a full conversion of platform code to DT and it seemed not
+> convenient to maintain compatibility with both platform and DT.
+> 
+> Following patches require attention from Stephen Boyd or clk subsystem:
+> 
+> - clk: ep93xx: add DT support for Cirrus EP93xx
+> 
+> It is purely possible to add something like devm_clk_hw_register_fixed_rate_parent_data()
+> for devm managed version clk_hw_register_fixed_rate_parent_data(), still i would like to
+> leave for the time after this series if it's all possible.
+> 
+> Couse may be it's better to add something like
+> devm_clk_hw_register_fixed_rate_index() like it's done for
+> devm_clk_hw_register_fixed_factor_index().
+> 
+> Changelog for this patch:
+> - added devm_ep93xx_clk_hw_register_fixed_rate_parent_data() for
+>   devm_ version of clk_hw_register_fixed_rate_parent_data()
+> - s/devm_clk_hw_register_fixed_rate()/devm_ep93xx_clk_hw_register_fixed_rate_parent_data()/
+> - replaced all devm_clk_hw_register_fixed_factor() to
+>   devm_clk_hw_register_fixed_factor_parent_hw() or
+>   devm_clk_hw_register_fixed_factor_index()
+> - s/devm_clk_hw_register_gate()/devm_clk_hw_register_gate_parent_data()
+> 
+> Stephen - it think that's you was aiming for - to get rid of all
+> functions that are using const char* parent_name directly instead of
+> clk_hw or clk_parent_data.
+> 
+> Patches should be formated with '--histogram'
+> 
+> ---
+> Changes in v11:
+> - clk: ep93xx: add DT support for Cirrus EP93xx
+>   - added devm_ep93xx_clk_hw_register_fixed_rate_parent_data() for
+>     devm_ version of clk_hw_register_fixed_rate_parent_data()
+>   - s/devm_clk_hw_register_fixed_rate()/devm_ep93xx_clk_hw_register_fixed_rate_parent_data()/
+>   - replaced all devm_clk_hw_register_fixed_factor() to
+>     devm_clk_hw_register_fixed_factor_parent_hw() or
+>     devm_clk_hw_register_fixed_factor_index()
+>   - s/devm_clk_hw_register_gate()/devm_clk_hw_register_gate_parent_data()
+> 
+> - Link to v10: https://lore.kernel.org/r/20240617-ep93xx-v10-0-662e640ed811@maquefel.me
+> 
+> Changes in v10:
+> 
+> Reordered SoB tags to make sure they appear before Rb and Acked tags.
+> 
+> dmaengine: cirrus: Convert to DT for Cirrus EP93xx
+>     - s/dma/dmaengine/ title
+> 
+> dmaengine: cirrus: remove platform code
+>     - s/dma/dmaengine/ title
+> 
+> soc: Add SoC driver for Cirrus ep93xx:
+>     - added __init for ep93xx_adev_alloc(), ep93xx_controller_register()
+>     - added static, __initconst for pinctrl_names[]
+>     - clk revision for SPI is now resolved here through differently named
+>       clk device
+>     - more verbose Kconfig description
+> 
+> clk: ep93xx: add DT support for Cirrus EP93xx:
+>     - dropped includes
+>     - dropped ep93xx_soc_table[]
+>     - add different named clk and dropped involved includes
+>     - moved pll's and fclk, hclk, pclk init to separate function
+>     - fixed ep93xx_clk_ids[] explicit lines
+> 
+> - Link to v9: https://lore.kernel.org/r/20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me
+> - Link to v2 clk: https://lore.kernel.org/r/20240408-ep93xx-clk-v2-1-adcd68c13753@maquefel.me
+> 
+> Changes in v9:
+> 
+> ARM: dts: add Cirrus EP93XX SoC .dtsi
+>     - added #interrupt-cells to gpio nodes with interrupts-controller
+>     - fixed EOF
+> 
+> ARM: dts: ep93xx: Add EDB9302 DT
+>     - Alexander Sverdlin: fixed bug in Device Tree resulting in CS4271 not working
+> 
+> input: keypad: ep93xx: add DT support for Cirrus EP93xx
+>     - fixed identation and type
+> 
+> - Link to v8: https://lore.kernel.org/r/20240226-ep93xx-v8-0-3136dca7238f@maquefel.me/
+> 
+> Changes in v8:
+> 
+> soc: Add SoC driver for Cirrus ep93xx
+>     - fixed freeing adev instead of rdev
+>     - use __free() and no_free_ptr() for rdev allocation
+>     - s/of_device_get_match_data()/device_get_match_data()/
+> 
+> ata: pata_ep93xx: add device tree support
+>     - more appropriate usage of dev_err_probe()
+> 
+> pinctrl: add a Cirrus ep93xx SoC pin controller
+>     - 8 per row in ide_9312_pins
+> 
+> mtd: rawnand: add support for ts72xx
+>     - fwnode_handle_put() for fwnode in ts72xx_nand_remove()
+> 
+> - Link to v7: https://lore.kernel.org/r/20240118-ep93xx-v7-0-d953846ae771@maquefel.me
+> 
+> Changes in v7:
+> 
+> mtd: rawnand: add support for ts72xx
+>     - fixed KConfig description
+> 
+> ARM: ep93xx: Add terminator to gpiod_lookup_table
+>     - + Reported-by, Fixes
+> 
+> ARM: ep93xx: add regmap aux_dev
+>     - + trailing comma
+>     - - #include <linux/spinlock.h>
+> 
+> clk: ep93xx: add DT support for Cirrus EP93xx
+>     - dropped unused defines
+>     - return from default in ep93xx_mux_get_parent()
+>     - use guard() in ep93xx_mux_set_parent_lock()
+>     - <math.h> header for abs_diff()
+>     - fixed comments
+> 
+> pinctrl: add a Cirrus ep93xx SoC pin controller
+>     - dropped comments for DEVCFG defines
+>     - <linux/array_size.h> for ARRAY_SIZE()
+>     - + default in ep93xx_get_group_name()
+>     - correct cast for id->driver_data
+>     - s/device_set_of_node_from_dev()/device_set_node()/
+> 
+> power: reset: Add a driver for the ep93xx reset
+>     - Add <linux/container_of.h>, <linux/errno.h>, <linux/slab.h>
+>     - Add <linux/module.h>, <linux/mod_devicetable.h>
+>     - Remove <platform_device.h>
+> 
+> spi: ep93xx: add DT support for Cirrus EP93xx
+>     - Replace with ret = dev_err_probe(...);
+> 
+> ata: pata_ep93xx: add device tree support
+>     - fixed wrong rebase with some partes leaked in "ata: pata_ep93xx: remove legacy pinctrl use"
+>     - fix dma_request_chan() error processing
+> 
+> dma: cirrus: Convert to DT for Cirrus EP93xx
+>     - fixed commit message (dropped explicit "only")
+>     - fixed clk_get() processing to defer probe and log spamming
+>     - refactor ep93xx_m2p_dma_filter()
+>     - dropped blank line in ep93xx_m2p_dma_of_xlate()
+>     - refactor ep93xx_m2m_dma_of_xlate()
+> 
+> dma: cirrus: remove platform code
+>     - s/dma/DMA/ in commit message
+> 
+> soc: Add SoC driver for Cirrus ep93xx
+>     - add period
+>     - use cleanup and guard() for spinlocking
+>     - correct cast for device_get_match_data()
+>     - dropped dev_info() with SoC revision - i can't find it anywhere since 2.6 :/,
+>       don't know why i was so sured that ep93xx always printed that
+> 
+> ata: pata_ep93xx: remove legacy pinctrl use
+>     - made error handling in DMA as Uwe suggested
+> 
+> - Link to v6: https://lore.kernel.org/r/20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me
+> 
+> Changes in v6:
+> 
+> - clk: ep93xx: add DT support for Cirrus EP93xx
+>   - s/spin_lock_irqsave()/guard()/
+>   - refactor index check in ep93xx_mux_set_parent_lock() to something more readable
+>   - use in_range in ep93xx_mux_set_parent_lock()/ep93xx_ddiv_set_rate()
+>   - use GENMASK() in ep93xx_ddiv_recalc_rate()
+>   - comment reserved bit in ep93xx_ddiv_set_rate()
+>   - move out from loop ClkDiv value assigment
+>   - some style fixes
+> 
+> Andy, i was i asked to set index of XTALI explicitly, i am not setting ddiv_pdata
+> there becouse only XTALI is jnown in advance, and i think setting them in one place is more convenient.
+> 
+> - pinctrl: add a Cirrus ep93xx SoC pin controller
+>   - drop OF from Kconfig
+>   - droped linux/of.h include
+>   - add space to */ where it is applicable
+>   - add coma in multiline assigment
+>   - "return NULL" as default case in ep93xx_get_group_name()
+>   - fixed casting id->driver_data
+>   - use device_set_of_node_from_dev()
+>   - use dev_err_probe()
+> 
+> - power: reset: Add a driver for the ep93xx reset
+>   - drop linux/of.h include
+> 
+> - soc: Add SoC driver for Cirrus ep93xx
+>   - s/GPL-2.0/GPL-2.0-only/
+>   - drop linux/kernel.h include
+>   - + blank line before linux/soc/cirrus/ep93xx.h
+>   - + blank line after ep93xx_get_soc_rev()
+>   - + coma for pinctrl_names
+>   - valid casting to int for of_device_get_match_data() return value
+> 
+> - mtd: rawnand: add support for ts72xx
+>   - return as part of switch case
+>   - s/iowrite8/iowrite8_rep/
+> 
+> - net: cirrus: add DT support for Cirrus EP93xx
+>   - fix header sorting
+> 
+> - dma: cirrus: Convert to DT for Cirrus EP93xx
+>   - use devm_clk_get
+>   - use is_slave_direction
+> 
+> Changes in v5:
+> 
+> - gpio: ep93xx: split device in multiple
+>   - ordered headers
+>   - use irqd_to_hwirq()
+>   - s/platform_get_irq()/platform_get_irq_optional()/
+> 
+> - [PATCH v4 02/42] ARM: ep93xx: add swlocked prototypes
+>   - replaced with ARM: ep93xx: add regmap aux_dev
+> 
+> - [PATCH v4 03/42] dt-bindings: clock: Add Cirrus EP93xx
+>   - fixed identation
+>   - removed EP93XX_CLK_END
+>   - and dropped it
+>   - clock bindings moved to syscon with renaming to cirrus,ep9301-syscon.h
+> 
+> - clk: ep93xx: add DT support for Cirrus EP93xx
+>   - convert to auxiliary and use parent device tree node
+>   - moved all clocks except XTALI here
+>   - used devm version everywhere and *_parent_hw() instead of passing name where it's possible
+>   - unfortunately devm_clk_hw_register_fixed_rate doesn't have a parent index version
+> 
+> - [PATCH v4 05/42] dt-bindings: pinctrl: Add Cirrus EP93xx
+>   - "unevaluatedProperties: false" for pins
+>   - returned "additionalProperties: false" where it was
+>   - and dropped it
+> 
+> - pinctrl: add a Cirrus ep93xx SoC pin controller
+>   - sorted includes
+>   - convert to auxiliary and use parent device tree node
+> 
+> - power: reset: Add a driver for the ep93xx reset
+>   - convert to auxiliary device
+> 
+> - dt-bindings: soc: Add Cirrus EP93xx
+>   - dropped all ref to reboot, clk, pinctrl subnodes
+>   - added pins, as it's now used for pinctrl
+>   - added #clock-cells, as it's now used for clk
+> 
+> - dt-bindings: pwm: Add Cirrus EP93xx
+>   - $ref to pwm.yaml
+>   - fixed 'pwm-cells'
+>   - s/additionalProperties/unevaluatedProperties/
+> 
+> - soc: Add SoC driver for Cirrus ep93xx
+>   - removed clocks, they are moved to clk auxiliary driver, as we dropped the clk dt node
+>   - removed all swlocked exported functions
+>   - dropped static spinlock
+>   - added instantiating auxiliary reboot, clk, pinctrl
+> 
+> - dt-bindings: spi: Add Cirrus EP93xx
+>   - Document DMA support
+> 
+> - spi: ep93xx: add DT support for Cirrus EP93xx
+>   - dropped CONFIG_OF and SPI/DMA platform data entirely
+>   - s/master/host/
+>   - reworked DMA setup so we can use probe defer
+> 
+> - dt-bindings: dma: Add Cirrus EP93xx
+>   - dropped bindings header (moved ports description to YAML)
+>   - changed '#dma-cells' to 2, we use port, direction in cells so we can drop platform code completely
+> 
+> - dma: cirrus: add DT support for Cirrus EP93xx
+>   - dropped platform probing completely
+>   - dropped struct ep93xx_dma_data replaced with internal struct ep93xx_dma_chan_cfg with port/direction
+>   - added xlate functions for m2m/m2p
+>   - we require filters to set dma_cfg before hw_setup
+> 
+> - dt-bindings: ata: Add Cirrus EP93xx
+>   - Document DMA support
+> 
+> - ata: pata_ep93xx: add device tree support
+>   - drop DMA platform header with data
+>   - use DMA OF so we can defer probing until DMA is up
+> 
+> - ARM: dts: add Cirrus EP93XX SoC .dtsi
+> - ARM: dts: ep93xx: add ts7250 board
+> - ARM: dts: ep93xx: Add EDB9302 DT
+>   - replaced "eclk: clock-controller" to syscon reference
+>   - replaced "pinctrl: pinctrl" to syscon reference
+>   - gpios are now "enabled" by default
+>   - reworked i2s node
+>   - change all dma nodes and refs
+> 
+> - new additions to I2S
+>   - Document DMA
+>   - Document Audio Port usage
+>   - drop legacy DMA support
+> 
+> - Link to v4: https://lore.kernel.org/r/20230915-ep93xx-v4-0-a1d779dcec10@maquefel.me
+> 
+> Changes in v4:
+> 
+> - gpio: ep93xx: split device in multiple
+>   - s/generic_handle_irq/generic_handle_domain_irq/
+>   - s/int offset/irq_hw_number_t offset/ though now it looks a bit odd to me
+>   - drop i = 0
+>   - drop 'error'
+>   - use dev_err_probe withour printing devname once again
+> 
+> dt-bindings: clock: Add Cirrus EP93xx
+>   - renamed cirrus,ep93xx-clock.h -> cirrus,ep9301-clk.h
+> 
+> clk: ep93xx: add DT support for Cirrus EP93xx
+>   - drop unused includes
+>   - use .name only for xtali, pll1, pll2 parents
+>   - convert // to /*
+>   - pass clk_parent_data instead of char* clock name
+> 
+> dt-bindings: pinctrl: Add Cirrus EP93xx
+>   - s/additionalProperties/unevaluatedProperties/
+> 
+> dt-bindings: soc: Add Cirrus EP93xx
+>   - move syscon to soc directory
+>   - add vendor prefix
+>   - make reboot same style as pinctrl, clk
+>   - use absolute path for ref
+>   - expand example
+> 
+> soc: Add SoC driver for Cirrus ep93xx
+>   - s/0xf0000000/GENMASK(31, 28)/
+>   - s/ret/ep93xx_chip_revision(map)/
+>   - drop symbol exports
+>   - convert to platform driver
+> 
+> dt-bindings: rtc: Add Cirrus EP93xx
+>   - allOf: with $ref to rtc.yaml
+>   - s/additionalProperties/unevaluatedProperties/
+> 
+> dt-bindings: watchdog: Add Cirrus EP93x
+>   - drop description
+>   - reword
+> 
+> power: reset: Add a driver for the ep93xx reset
+>   - lets use 'GPL-2.0+' instead of '(GPL-2.0)'
+>   - s/of_device/of/
+>   - drop mdelay with warning
+>   - return 0 at the end
+> 
+> net: cirrus: add DT support for Cirrus EP93xx
+>   - fix leaking np
+> 
+> mtd: nand: add support for ts72xx
+>   - +bits.h
+>   - drop comment
+>   - ok to fwnode_get_next_child_node
+>   - use goto to put handle and nand and report error
+> 
+> ARM: dts: add Cirrus EP93XX SoC .dtsi
+>   - add simple-bus for ebi, as we don't require to setup anything
+>   - add arm,pl011 compatible to uart nodes
+>   - drop i2c-gpio, as it's isn't used anywhere
+> 
+> ARM: dts: ep93xx: add ts7250 board
+>   - generic node name for temperature-sensor
+>   - drop i2c
+>   - move nand, rtc, watchdog to ebi node
+> 
+> - Link to v3: https://lore.kernel.org/r/20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me
+> 
+> ---
+> Alexander Sverdlin (3):
+>       ASoC: ep93xx: Drop legacy DMA support
+>       ARM: dts: ep93xx: Add EDB9302 DT
+>       ASoC: cirrus: edb93xx: Delete driver
+> 
+> Nikita Shubin (35):
+>       gpio: ep93xx: split device in multiple
+>       ARM: ep93xx: add regmap aux_dev
+>       clk: ep93xx: add DT support for Cirrus EP93xx
+>       pinctrl: add a Cirrus ep93xx SoC pin controller
+>       power: reset: Add a driver for the ep93xx reset
+>       dt-bindings: soc: Add Cirrus EP93xx
+>       soc: Add SoC driver for Cirrus ep93xx
+>       dt-bindings: dma: Add Cirrus EP93xx
+>       dmaengine: cirrus: Convert to DT for Cirrus EP93xx
+>       dt-bindings: watchdog: Add Cirrus EP93x
+>       watchdog: ep93xx: add DT support for Cirrus EP93xx
+>       dt-bindings: pwm: Add Cirrus EP93xx
+>       pwm: ep93xx: add DT support for Cirrus EP93xx
+>       dt-bindings: spi: Add Cirrus EP93xx
+>       spi: ep93xx: add DT support for Cirrus EP93xx
+>       dt-bindings: net: Add Cirrus EP93xx
+>       net: cirrus: add DT support for Cirrus EP93xx
+>       dt-bindings: mtd: Add ts7200 nand-controller
+>       mtd: rawnand: add support for ts72xx
+>       dt-bindings: ata: Add Cirrus EP93xx
+>       ata: pata_ep93xx: add device tree support
+>       dt-bindings: input: Add Cirrus EP93xx keypad
+>       input: keypad: ep93xx: add DT support for Cirrus EP93xx
+>       wdt: ts72xx: add DT support for ts72xx
+>       gpio: ep93xx: add DT support for gpio-ep93xx
+>       ASoC: dt-bindings: ep93xx: Document DMA support
+>       ASoC: dt-bindings: ep93xx: Document Audio Port support
+>       ARM: dts: add Cirrus EP93XX SoC .dtsi
+>       ARM: dts: ep93xx: add ts7250 board
+>       ARM: ep93xx: DT for the Cirrus ep93xx SoC platforms
+>       pwm: ep93xx: drop legacy pinctrl
+>       ata: pata_ep93xx: remove legacy pinctrl use
+>       ARM: ep93xx: delete all boardfiles
+>       ARM: ep93xx: soc: drop defines
+>       dmaengine: cirrus: remove platform code
+> 
+>  .../bindings/arm/cirrus/cirrus,ep9301.yaml         |   38 +
+>  .../bindings/ata/cirrus,ep9312-pata.yaml           |   42 +
+>  .../bindings/dma/cirrus,ep9301-dma-m2m.yaml        |   84 ++
+>  .../bindings/dma/cirrus,ep9301-dma-m2p.yaml        |  144 ++
+>  .../bindings/input/cirrus,ep9307-keypad.yaml       |   87 ++
+>  .../devicetree/bindings/mtd/technologic,nand.yaml  |   45 +
+>  .../devicetree/bindings/net/cirrus,ep9301-eth.yaml |   59 +
+>  .../devicetree/bindings/pwm/cirrus,ep9301-pwm.yaml |   53 +
+>  .../bindings/soc/cirrus/cirrus,ep9301-syscon.yaml  |   94 ++
+>  .../bindings/sound/cirrus,ep9301-i2s.yaml          |   16 +
+>  .../devicetree/bindings/spi/cirrus,ep9301-spi.yaml |   70 +
+>  .../bindings/watchdog/cirrus,ep9301-wdt.yaml       |   42 +
+>  arch/arm/Makefile                                  |    1 -
+>  arch/arm/boot/dts/cirrus/Makefile                  |    4 +
+>  arch/arm/boot/dts/cirrus/ep93xx-bk3.dts            |  125 ++
+>  arch/arm/boot/dts/cirrus/ep93xx-edb9302.dts        |  181 +++
+>  arch/arm/boot/dts/cirrus/ep93xx-ts7250.dts         |  145 ++
+>  arch/arm/boot/dts/cirrus/ep93xx.dtsi               |  444 ++++++
+>  arch/arm/mach-ep93xx/Kconfig                       |   20 +-
+>  arch/arm/mach-ep93xx/Makefile                      |   11 -
+>  arch/arm/mach-ep93xx/clock.c                       |  733 ----------
+>  arch/arm/mach-ep93xx/core.c                        | 1018 --------------
+>  arch/arm/mach-ep93xx/dma.c                         |  114 --
+>  arch/arm/mach-ep93xx/edb93xx.c                     |  368 -----
+>  arch/arm/mach-ep93xx/ep93xx-regs.h                 |   38 -
+>  arch/arm/mach-ep93xx/gpio-ep93xx.h                 |  111 --
+>  arch/arm/mach-ep93xx/hardware.h                    |   25 -
+>  arch/arm/mach-ep93xx/irqs.h                        |   76 --
+>  arch/arm/mach-ep93xx/platform.h                    |   42 -
+>  arch/arm/mach-ep93xx/soc.h                         |  212 ---
+>  arch/arm/mach-ep93xx/timer-ep93xx.c                |  143 --
+>  arch/arm/mach-ep93xx/ts72xx.c                      |  422 ------
+>  arch/arm/mach-ep93xx/ts72xx.h                      |   94 --
+>  arch/arm/mach-ep93xx/vision_ep9307.c               |  321 -----
+>  drivers/ata/pata_ep93xx.c                          |  107 +-
+>  drivers/clk/Kconfig                                |    8 +
+>  drivers/clk/Makefile                               |    1 +
+>  drivers/clk/clk-ep93xx.c                           |  846 ++++++++++++
+>  drivers/dma/ep93xx_dma.c                           |  287 +++-
+>  drivers/gpio/gpio-ep93xx.c                         |  345 ++---
+>  drivers/input/keyboard/ep93xx_keypad.c             |   74 +-
+>  drivers/mtd/nand/raw/Kconfig                       |    6 +
+>  drivers/mtd/nand/raw/Makefile                      |    1 +
+>  drivers/mtd/nand/raw/technologic-nand-controller.c |  222 +++
+>  drivers/net/ethernet/cirrus/ep93xx_eth.c           |   63 +-
+>  drivers/pinctrl/Kconfig                            |    7 +
+>  drivers/pinctrl/Makefile                           |    1 +
+>  drivers/pinctrl/pinctrl-ep93xx.c                   | 1434 ++++++++++++++++++++
+>  drivers/power/reset/Kconfig                        |   10 +
+>  drivers/power/reset/Makefile                       |    1 +
+>  drivers/power/reset/ep93xx-restart.c               |   84 ++
+>  drivers/pwm/pwm-ep93xx.c                           |   26 +-
+>  drivers/soc/Kconfig                                |    1 +
+>  drivers/soc/Makefile                               |    1 +
+>  drivers/soc/cirrus/Kconfig                         |   17 +
+>  drivers/soc/cirrus/Makefile                        |    2 +
+>  drivers/soc/cirrus/soc-ep93xx.c                    |  252 ++++
+>  drivers/spi/spi-ep93xx.c                           |   66 +-
+>  drivers/watchdog/ep93xx_wdt.c                      |    8 +
+>  drivers/watchdog/ts72xx_wdt.c                      |    8 +
+>  include/dt-bindings/clock/cirrus,ep9301-syscon.h   |   46 +
+>  include/linux/platform_data/dma-ep93xx.h           |   94 --
+>  include/linux/platform_data/eth-ep93xx.h           |   10 -
+>  include/linux/platform_data/keypad-ep93xx.h        |   32 -
+>  include/linux/platform_data/spi-ep93xx.h           |   15 -
+>  include/linux/soc/cirrus/ep93xx.h                  |   47 +-
+>  sound/soc/cirrus/Kconfig                           |    9 -
+>  sound/soc/cirrus/Makefile                          |    4 -
+>  sound/soc/cirrus/edb93xx.c                         |  116 --
+>  sound/soc/cirrus/ep93xx-i2s.c                      |   19 -
+>  sound/soc/cirrus/ep93xx-pcm.c                      |   19 +-
+>  71 files changed, 5161 insertions(+), 4550 deletions(-)
+> ---
+> base-commit: 0c3836482481200ead7b416ca80c68a29cfdaabd
+> change-id: 20230605-ep93xx-01c76317e2d2
+> 
+> Best regards,
+> --
+> Nikita Shubin <nikita.shubin@maquefel.me>
+> 
+> 
+> 
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index fd754a99cf2e..4dedfabce63b 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -51,6 +51,384 @@ static u32 active_channels(struct stm32_pwm *dev)
- 	return ccer & TIM_CCER_CCXE;
- }
- 
-+struct stm32_pwm_waveform {
-+	u32 ccer;
-+	u32 psc;
-+	u32 arr;
-+	u32 ccr;
-+};
-+
-+static int stm32_pwm_round_waveform_tohw(struct pwm_chip *chip,
-+					 struct pwm_device *pwm,
-+					 const struct pwm_waveform *wf,
-+					 void *_wfhw)
-+{
-+	struct stm32_pwm_waveform *wfhw = _wfhw;
-+	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
-+	unsigned int ch = pwm->hwpwm;
-+	unsigned long rate;
-+	u64 ccr, duty;
-+	int ret;
-+
-+	if (wf->period_length == 0) {
-+		*wfhw = (struct stm32_pwm_waveform){
-+			.ccer = 0,
-+		};
-+
-+		return 0;
-+	}
-+
-+	ret = clk_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	wfhw->ccer = TIM_CCER_CCxE(ch + 1);
-+	if (priv->have_complementary_output)
-+		wfhw->ccer = TIM_CCER_CCxNE(ch);
-+
-+	rate = clk_get_rate(priv->clk);
-+
-+	if (active_channels(priv) & ~(1 << ch * 4)) {
-+		u64 arr;
-+
-+		/*
-+		 * Other channels are already enabled, so the configured PSC and
-+		 * ARR must be used for this channel, too.
-+		 */
-+		ret = regmap_read(priv->regmap, TIM_PSC, &wfhw->psc);
-+		if (ret)
-+			goto out;
-+
-+		ret = regmap_read(priv->regmap, TIM_ARR, &wfhw->arr);
-+		if (ret)
-+			goto out;
-+
-+		/*
-+		 * calculate the best value for ARR for the given PSC, refuse if
-+		 * the resulting period gets bigger than the requested one.
-+		 */
-+		arr = mul_u64_u64_div_u64(wf->period_length, rate,
-+					  (u64)NSEC_PER_SEC * (wfhw->psc + 1));
-+		if (arr <= wfhw->arr) {
-+			/*
-+			 * requested period is small than the currently
-+			 * configured and unchangable period, report back the smallest
-+			 * possible period, i.e. the current state; Initialize
-+			 * ccr to anything valid.
-+			 */
-+			wfhw->ccr = 0;
-+			ret = 1;
-+			goto out;
-+		}
-+
-+	} else {
-+		/*
-+		 * .probe() asserted that clk_get_rate() is not bigger than 1 GHz, so
-+		 * the calculations here won't overflow.
-+		 * First we need to find the minimal value for prescaler such that
-+		 *
-+		 *        period_ns * clkrate
-+		 *   ------------------------------ < max_arr + 1
-+		 *   NSEC_PER_SEC * (prescaler + 1)
-+		 *
-+		 * This equation is equivalent to
-+		 *
-+		 *        period_ns * clkrate
-+		 *   ---------------------------- < prescaler + 1
-+		 *   NSEC_PER_SEC * (max_arr + 1)
-+		 *
-+		 * Using integer division and knowing that the right hand side is
-+		 * integer, this is further equivalent to
-+		 *
-+		 *   (period_ns * clkrate) // (NSEC_PER_SEC * (max_arr + 1)) ≤ prescaler
-+		 */
-+		u64 psc = mul_u64_u64_div_u64(wf->period_length, rate,
-+					      (u64)NSEC_PER_SEC * ((u64)priv->max_arr + 1));
-+		u64 arr;
-+
-+		wfhw->psc = min_t(u64, psc, MAX_TIM_PSC);
-+
-+		arr = mul_u64_u64_div_u64(wf->period_length, rate,
-+					  (u64)NSEC_PER_SEC * (wfhw->psc + 1));
-+		if (!arr) {
-+			/*
-+			 * requested period is too small, report back the smallest
-+			 * possible period, i.e. ARR = 0. The only valid CCR
-+			 * value is then zero, too.
-+			 */
-+			wfhw->arr = 0;
-+			wfhw->ccr = 0;
-+			ret = 1;
-+			goto out;
-+		}
-+
-+		/*
-+		 * ARR is limited intentionally to values less than
-+		 * priv->max_arr to allow 100% duty cycle.
-+		 */
-+		wfhw->arr = min_t(u64, arr, priv->max_arr) - 1;
-+	}
-+
-+	duty = mul_u64_u64_div_u64(wf->duty_length, rate,
-+				   (u64)NSEC_PER_SEC * (wfhw->psc + 1));
-+	duty = min_t(u64, duty, wfhw->arr + 1);
-+
-+	if (wf->duty_length && wf->duty_offset &&
-+	    wf->duty_length + wf->duty_offset >= wf->period_length) {
-+		wfhw->ccer |= TIM_CCER_CCxP(ch + 1);
-+		if (priv->have_complementary_output)
-+			wfhw->ccer |= TIM_CCER_CCxNP(ch + 1);
-+
-+		ccr = wfhw->arr + 1 - duty;
-+	} else {
-+		ccr = duty;
-+	}
-+
-+	wfhw->ccr = min_t(u64, ccr, wfhw->arr + 1);
-+
-+	dev_dbg(&chip->dev, "pwm#%u: %lld/%lld [+%lld] @%lu -> CCER: %08x, PSC: %08x, ARR: %08x, CCR: %08x\n",
-+		pwm->hwpwm, wf->duty_length, wf->period_length, wf->duty_offset,
-+		rate, wfhw->ccer, wfhw->psc, wfhw->arr, wfhw->ccr);
-+
-+out:
-+	clk_disable(priv->clk);
-+
-+	return ret;
-+}
-+
-+/*
-+ * This should be moved to lib/math/div64.c. Currently there are some changes
-+ * pending to mul_u64_u64_div_u64. Uwe will care for that when the dust settles.
-+ */
-+static u64 stm32_pwm_mul_u64_u64_div_u64_roundup(u64 a, u64 b, u64 c)
-+{
-+	u64 res = mul_u64_u64_div_u64(a, b, c);
-+	/* Those multiplications might overflow but it doesn't matter */
-+	u64 rem = a * b - c * res;
-+
-+	if (rem)
-+		res += 1;
-+
-+	return res;
-+}
-+
-+static int stm32_pwm_round_waveform_fromhw(struct pwm_chip *chip,
-+					   struct pwm_device *pwm,
-+					   const void *_wfhw,
-+					   struct pwm_waveform *wf)
-+{
-+	const struct stm32_pwm_waveform *wfhw = _wfhw;
-+	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
-+	unsigned int ch = pwm->hwpwm;
-+
-+	if (wfhw->ccer & TIM_CCER_CCxE(ch + 1)) {
-+		unsigned long rate = clk_get_rate(priv->clk);
-+		u64 ccr_ns;
-+
-+		/* The result doesn't overflow for rate >= 15259 */
-+		wf->period_length = stm32_pwm_mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * (wfhw->arr + 1), NSEC_PER_SEC, rate);
-+
-+		ccr_ns = stm32_pwm_mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * wfhw->ccr, NSEC_PER_SEC, rate);
-+
-+		if (wfhw->ccer & TIM_CCER_CCxP(ch + 1)) {
-+			wf->duty_length =
-+				stm32_pwm_mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * (wfhw->arr + 1 - wfhw->ccr),
-+								      NSEC_PER_SEC, rate);
-+
-+			wf->duty_offset = ccr_ns;
-+		} else {
-+			wf->duty_length = ccr_ns;
-+			wf->duty_offset = 0;
-+		}
-+	} else {
-+		*wf = (struct pwm_waveform){
-+			.period_length = 0,
-+		};
-+	}
-+
-+	return 0;
-+}
-+
-+static int stm32_pwm_read_waveform(struct pwm_chip *chip,
-+				     struct pwm_device *pwm,
-+				     void *_wfhw)
-+{
-+	struct stm32_pwm_waveform *wfhw = _wfhw;
-+	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
-+	unsigned int ch = pwm->hwpwm;
-+	int ret;
-+
-+	ret = clk_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(priv->regmap, TIM_CCER, &wfhw->ccer);
-+	if (ret)
-+		goto out;
-+
-+	if (wfhw->ccer & TIM_CCER_CCxE(ch + 1)) {
-+		ret = regmap_read(priv->regmap, TIM_PSC, &wfhw->psc);
-+		if (ret)
-+			goto out;
-+
-+		ret = regmap_read(priv->regmap, TIM_ARR, &wfhw->arr);
-+		if (ret)
-+			goto out;
-+
-+		if (wfhw->arr == U32_MAX)
-+			wfhw->arr -= 1;
-+
-+		ret = regmap_read(priv->regmap, TIM_CCRx(ch + 1), &wfhw->ccr);
-+		if (ret)
-+			goto out;
-+
-+		if (wfhw->ccr > wfhw->arr + 1)
-+			wfhw->ccr = wfhw->arr + 1;
-+	}
-+
-+out:
-+	clk_disable(priv->clk);
-+
-+	return ret;
-+}
-+
-+static int stm32_pwm_write_waveform(struct pwm_chip *chip,
-+				      struct pwm_device *pwm,
-+				      const void *_wfhw)
-+{
-+	const struct stm32_pwm_waveform *wfhw = _wfhw;
-+	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
-+	unsigned int ch = pwm->hwpwm;
-+	int ret;
-+
-+	ret = clk_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	if (wfhw->ccer & TIM_CCER_CCxE(ch + 1)) {
-+		u32 ccer, mask;
-+		unsigned shift;
-+		u32 ccmr;
-+
-+		ret = regmap_read(priv->regmap, TIM_CCER, &ccer);
-+		if (ret)
-+			goto out;
-+
-+		/* If there are other channels enabled, don't update PSC and ARR */
-+		if (ccer & ~TIM_CCER_CCxE(ch + 1) & TIM_CCER_CCXE) {
-+			u32 psc, arr;
-+
-+			ret = regmap_read(priv->regmap, TIM_PSC, &psc);
-+			if (ret)
-+				goto out;
-+
-+			if (psc != wfhw->psc) {
-+				ret = -EBUSY;
-+				goto out;
-+			}
-+
-+			regmap_read(priv->regmap, TIM_ARR, &arr);
-+			if (ret)
-+				goto out;
-+
-+			if (arr != wfhw->arr) {
-+				ret = -EBUSY;
-+				goto out;
-+			}
-+		} else {
-+			ret = regmap_write(priv->regmap, TIM_PSC, wfhw->psc);
-+			if (ret)
-+				goto out;
-+
-+			ret = regmap_write(priv->regmap, TIM_ARR, wfhw->arr);
-+			if (ret)
-+				goto out;
-+
-+			ret = regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE);
-+			if (ret)
-+				goto out;
-+
-+		}
-+
-+		/* set polarity */
-+		mask = TIM_CCER_CCxP(ch + 1) | TIM_CCER_CCxNP(ch + 1);
-+		ret = regmap_update_bits(priv->regmap, TIM_CCER, mask, wfhw->ccer);
-+		if (ret)
-+			goto out;
-+
-+		ret = regmap_write(priv->regmap, TIM_CCRx(ch + 1), wfhw->ccr);
-+		if (ret)
-+			goto out;
-+
-+		/* Configure output mode */
-+		shift = (ch & 0x1) * CCMR_CHANNEL_SHIFT;
-+		ccmr = (TIM_CCMR_PE | TIM_CCMR_M1) << shift;
-+		mask = CCMR_CHANNEL_MASK << shift;
-+
-+		if (ch < 2)
-+			ret = regmap_update_bits(priv->regmap, TIM_CCMR1, mask, ccmr);
-+		else
-+			ret = regmap_update_bits(priv->regmap, TIM_CCMR2, mask, ccmr);
-+		if (ret)
-+			goto out;
-+
-+		ret = regmap_set_bits(priv->regmap, TIM_BDTR, TIM_BDTR_MOE);
-+		if (ret)
-+			goto out;
-+
-+		if (!(ccer & TIM_CCER_CCxE(ch + 1))) {
-+			mask = TIM_CCER_CCxE(ch + 1) | TIM_CCER_CCxNE(ch + 1);
-+
-+			ret = clk_enable(priv->clk);
-+			if (ret)
-+				goto out;
-+
-+			ccer = (ccer & ~mask) | (wfhw->ccer & mask);
-+			regmap_write(priv->regmap, TIM_CCER, ccer);
-+
-+			/* Make sure that registers are updated */
-+			regmap_set_bits(priv->regmap, TIM_EGR, TIM_EGR_UG);
-+
-+			/* Enable controller */
-+			regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
-+		}
-+
-+	} else {
-+		/* disable channel */
-+		u32 mask, ccer;
-+
-+		mask = TIM_CCER_CCxE(ch + 1);
-+		if (priv->have_complementary_output)
-+			mask |= TIM_CCER_CCxNE(ch + 1);
-+
-+		ret = regmap_read(priv->regmap, TIM_CCER, &ccer);
-+		if (ret)
-+			goto out;
-+
-+		if (ccer & mask) {
-+			ccer = ccer & ~mask;
-+
-+			ret = regmap_write(priv->regmap, TIM_CCER, ccer);
-+			if (ret)
-+				goto out;
-+
-+			if (!(ccer & TIM_CCER_CCXE)) {
-+				/* When all channels are disabled, we can disable the controller */
-+				ret = regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
-+				if (ret)
-+					goto out;
-+			}
-+
-+			clk_disable(priv->clk);
-+		}
-+	}
-+
-+out:
-+	clk_disable(priv->clk);
-+
-+	return ret;
-+}
-+
- #define TIM_CCER_CC12P (TIM_CCER_CC1P | TIM_CCER_CC2P)
- #define TIM_CCER_CC12E (TIM_CCER_CC1E | TIM_CCER_CC2E)
- #define TIM_CCER_CC34P (TIM_CCER_CC3P | TIM_CCER_CC4P)
-@@ -308,228 +686,13 @@ static int stm32_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
- 	return ret;
- }
- 
--static int stm32_pwm_config(struct stm32_pwm *priv, unsigned int ch,
--			    u64 duty_ns, u64 period_ns)
--{
--	unsigned long long prd, dty;
--	unsigned long long prescaler;
--	u32 ccmr, mask, shift;
--
--	/*
--	 * .probe() asserted that clk_get_rate() is not bigger than 1 GHz, so
--	 * the calculations here won't overflow.
--	 * First we need to find the minimal value for prescaler such that
--	 *
--	 *        period_ns * clkrate
--	 *   ------------------------------ < max_arr + 1
--	 *   NSEC_PER_SEC * (prescaler + 1)
--	 *
--	 * This equation is equivalent to
--	 *
--	 *        period_ns * clkrate
--	 *   ---------------------------- < prescaler + 1
--	 *   NSEC_PER_SEC * (max_arr + 1)
--	 *
--	 * Using integer division and knowing that the right hand side is
--	 * integer, this is further equivalent to
--	 *
--	 *   (period_ns * clkrate) // (NSEC_PER_SEC * (max_arr + 1)) ≤ prescaler
--	 */
--
--	prescaler = mul_u64_u64_div_u64(period_ns, clk_get_rate(priv->clk),
--					(u64)NSEC_PER_SEC * ((u64)priv->max_arr + 1));
--	if (prescaler > MAX_TIM_PSC)
--		return -EINVAL;
--
--	prd = mul_u64_u64_div_u64(period_ns, clk_get_rate(priv->clk),
--				  (u64)NSEC_PER_SEC * (prescaler + 1));
--	if (!prd)
--		return -EINVAL;
--
--	/*
--	 * All channels share the same prescaler and counter so when two
--	 * channels are active at the same time we can't change them
--	 */
--	if (active_channels(priv) & ~(1 << ch * 4)) {
--		u32 psc, arr;
--
--		regmap_read(priv->regmap, TIM_PSC, &psc);
--		regmap_read(priv->regmap, TIM_ARR, &arr);
--
--		if ((psc != prescaler) || (arr != prd - 1))
--			return -EBUSY;
--	}
--
--	regmap_write(priv->regmap, TIM_PSC, prescaler);
--	regmap_write(priv->regmap, TIM_ARR, prd - 1);
--	regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE);
--
--	/* Calculate the duty cycles */
--	dty = mul_u64_u64_div_u64(duty_ns, clk_get_rate(priv->clk),
--				  (u64)NSEC_PER_SEC * (prescaler + 1));
--
--	regmap_write(priv->regmap, TIM_CCRx(ch + 1), dty);
--
--	/* Configure output mode */
--	shift = (ch & 0x1) * CCMR_CHANNEL_SHIFT;
--	ccmr = (TIM_CCMR_PE | TIM_CCMR_M1) << shift;
--	mask = CCMR_CHANNEL_MASK << shift;
--
--	if (ch < 2)
--		regmap_update_bits(priv->regmap, TIM_CCMR1, mask, ccmr);
--	else
--		regmap_update_bits(priv->regmap, TIM_CCMR2, mask, ccmr);
--
--	regmap_set_bits(priv->regmap, TIM_BDTR, TIM_BDTR_MOE);
--
--	return 0;
--}
--
--static int stm32_pwm_set_polarity(struct stm32_pwm *priv, unsigned int ch,
--				  enum pwm_polarity polarity)
--{
--	u32 mask;
--
--	mask = TIM_CCER_CCxP(ch + 1);
--	if (priv->have_complementary_output)
--		mask |= TIM_CCER_CCxNP(ch + 1);
--
--	regmap_update_bits(priv->regmap, TIM_CCER, mask,
--			   polarity == PWM_POLARITY_NORMAL ? 0 : mask);
--
--	return 0;
--}
--
--static int stm32_pwm_enable(struct stm32_pwm *priv, unsigned int ch)
--{
--	u32 mask;
--	int ret;
--
--	ret = clk_enable(priv->clk);
--	if (ret)
--		return ret;
--
--	/* Enable channel */
--	mask = TIM_CCER_CCxE(ch + 1);
--	if (priv->have_complementary_output)
--		mask |= TIM_CCER_CCxNE(ch);
--
--	regmap_set_bits(priv->regmap, TIM_CCER, mask);
--
--	/* Make sure that registers are updated */
--	regmap_set_bits(priv->regmap, TIM_EGR, TIM_EGR_UG);
--
--	/* Enable controller */
--	regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
--
--	return 0;
--}
--
--static void stm32_pwm_disable(struct stm32_pwm *priv, unsigned int ch)
--{
--	u32 mask;
--
--	/* Disable channel */
--	mask = TIM_CCER_CCxE(ch + 1);
--	if (priv->have_complementary_output)
--		mask |= TIM_CCER_CCxNE(ch + 1);
--
--	regmap_clear_bits(priv->regmap, TIM_CCER, mask);
--
--	/* When all channels are disabled, we can disable the controller */
--	if (!active_channels(priv))
--		regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
--
--	clk_disable(priv->clk);
--}
--
--static int stm32_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
--			   const struct pwm_state *state)
--{
--	bool enabled;
--	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
--	int ret;
--
--	enabled = pwm->state.enabled;
--
--	if (!state->enabled) {
--		if (enabled)
--			stm32_pwm_disable(priv, pwm->hwpwm);
--		return 0;
--	}
--
--	if (state->polarity != pwm->state.polarity)
--		stm32_pwm_set_polarity(priv, pwm->hwpwm, state->polarity);
--
--	ret = stm32_pwm_config(priv, pwm->hwpwm,
--			       state->duty_cycle, state->period);
--	if (ret)
--		return ret;
--
--	if (!enabled && state->enabled)
--		ret = stm32_pwm_enable(priv, pwm->hwpwm);
--
--	return ret;
--}
--
--static int stm32_pwm_apply_locked(struct pwm_chip *chip, struct pwm_device *pwm,
--				  const struct pwm_state *state)
--{
--	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
--	int ret;
--
--	/* protect common prescaler for all active channels */
--	mutex_lock(&priv->lock);
--	ret = stm32_pwm_apply(chip, pwm, state);
--	mutex_unlock(&priv->lock);
--
--	return ret;
--}
--
--static int stm32_pwm_get_state(struct pwm_chip *chip,
--			       struct pwm_device *pwm, struct pwm_state *state)
--{
--	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
--	int ch = pwm->hwpwm;
--	unsigned long rate;
--	u32 ccer, psc, arr, ccr;
--	u64 dty, prd;
--	int ret;
--
--	mutex_lock(&priv->lock);
--
--	ret = regmap_read(priv->regmap, TIM_CCER, &ccer);
--	if (ret)
--		goto out;
--
--	state->enabled = ccer & TIM_CCER_CCxE(ch + 1);
--	state->polarity = (ccer & TIM_CCER_CCxP(ch + 1)) ?
--			  PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
--	ret = regmap_read(priv->regmap, TIM_PSC, &psc);
--	if (ret)
--		goto out;
--	ret = regmap_read(priv->regmap, TIM_ARR, &arr);
--	if (ret)
--		goto out;
--	ret = regmap_read(priv->regmap, TIM_CCRx(ch + 1), &ccr);
--	if (ret)
--		goto out;
--
--	rate = clk_get_rate(priv->clk);
--
--	prd = (u64)NSEC_PER_SEC * (psc + 1) * (arr + 1);
--	state->period = DIV_ROUND_UP_ULL(prd, rate);
--	dty = (u64)NSEC_PER_SEC * (psc + 1) * ccr;
--	state->duty_cycle = DIV_ROUND_UP_ULL(dty, rate);
--
--out:
--	mutex_unlock(&priv->lock);
--	return ret;
--}
--
- static const struct pwm_ops stm32pwm_ops = {
--	.apply = stm32_pwm_apply_locked,
--	.get_state = stm32_pwm_get_state,
-+	.sizeof_wfhw = sizeof(struct stm32_pwm_waveform),
-+	.round_waveform_tohw = stm32_pwm_round_waveform_tohw,
-+	.round_waveform_fromhw = stm32_pwm_round_waveform_fromhw,
-+	.read_waveform = stm32_pwm_read_waveform,
-+	.write_waveform = stm32_pwm_write_waveform,
-+
- 	.capture = IS_ENABLED(CONFIG_DMA_ENGINE) ? stm32_pwm_capture : NULL,
- };
- 
--- 
-2.43.0
+
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y cirrus/ep93xx-bk3.dtb cirrus/ep93xx-edb9302.dtb cirrus/ep93xx-ts7250.dtb' for 20240715-ep93xx-v11-0-4e924efda795@maquefel.me:
+
+arch/arm/boot/dts/cirrus/ep93xx-edb9302.dtb: /soc/spi@808a0000/codec@0: failed to match any schema with compatible: ['cirrus,cs4271']
+
+
+
+
 
 
