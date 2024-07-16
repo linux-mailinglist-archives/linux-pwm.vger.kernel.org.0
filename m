@@ -1,191 +1,198 @@
-Return-Path: <linux-pwm+bounces-2826-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2827-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C6E1932122
-	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jul 2024 09:25:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53B5B9328FA
+	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jul 2024 16:35:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A55E71F21959
-	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jul 2024 07:25:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 771CB1C22F03
+	for <lists+linux-pwm@lfdr.de>; Tue, 16 Jul 2024 14:35:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38698225A8;
-	Tue, 16 Jul 2024 07:25:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C76A1A98E8;
+	Tue, 16 Jul 2024 14:28:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBa4i1dP"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="eX2bXI+o"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CBB22619
-	for <linux-pwm@vger.kernel.org>; Tue, 16 Jul 2024 07:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E650D1A08CB
+	for <linux-pwm@vger.kernel.org>; Tue, 16 Jul 2024 14:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721114708; cv=none; b=etU2aWAilU8aEbPb2/nr3SuTZPI17iX/ZbzX9tTOfvfUdt6PZnXTxEhCll/IFhlB5j6roYojBfgkH96YvlAdZzu9wWIyThJ4HML9WKmj1m+TiyibYTc2K2ZlGJzT2GnB13vAaYDwBx1V+rOKM1EfMmx5dkCzEDgHBMeoWnOWTgw=
+	t=1721140118; cv=none; b=oNqz22tVfwu4owWGWSzTfZXhh18j8XKmwUfMWpfusIOGQ7snRp/rSZ/Bj847+pBB3gOJhp5BC88yEZAWqNBw8kZnKddFCaXAQbFsZ242A4ZeieUWAdudHofV+X4yfNx2/gmdUcH7RccnaFI1Y1pT5nOGbcp5uCUldE76sg3lq1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721114708; c=relaxed/simple;
-	bh=NVggNvsmIv1f8GhkklI3KgZS0xF/Bw+JDUihRlYPtqQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fI7MU4oEICe7ZDRW5DG3XQFAdTPOvG4QHzt66kARmcdy7oGLOskpVTsq5Us5tON5VrtkYd1Xp/xsQJsQg07wLPRl1lxGQ1zW/tARYPveMWEBVel8dtjTVaWzeMogEK6R9CuAW0Z6h/z9XTehUXK86iLiEGwdcuWkG/DF72zvi2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IBa4i1dP; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-585e774fd3dso6613744a12.0
-        for <linux-pwm@vger.kernel.org>; Tue, 16 Jul 2024 00:25:06 -0700 (PDT)
+	s=arc-20240116; t=1721140118; c=relaxed/simple;
+	bh=+SqsDGbmCRKMaJBpHdLFBLmpBYssobPbBFkFeCWg+B8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aQXH6gvFQOhcv6axoGK586VM/faJjDdaZAJE15kaF5YvhoS4zB8Tpe63pajgzteiF/KO+8iU96QRLucF3lJlwpAzzziE4zk8QHJpmjlOthnVUh6Y9WNtW6IAluj7DO6r3qaGH21Ol54as5F66YgP0m2IH3QQ9cl3ys4ShVQai58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=eX2bXI+o; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5c6924f2383so2700372eaf.2
+        for <linux-pwm@vger.kernel.org>; Tue, 16 Jul 2024 07:28:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721114704; x=1721719504; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=b8k8ZNIr+Zorp2/9e/Cl7uFfpAvdmUZuw5BXs788bgE=;
-        b=IBa4i1dPAaJTa3EXJCRm90P0MOZv5kWpDZHh0P7z52ysyka5V6J2y1KoaV9oGJZP+j
-         A0W+K9lNndrsfp2M3I73bqUGk2kizwO17Qm3GlH94YVpjOdwH1ArzqibNCxd0fEAX9Pi
-         bKF9z3OvTQcRXrAxaRYTnHl+1rbboJVloc+ptzfdU1p5ibU4k+B3FF9Wv6hsD8k//uFj
-         T2TR7DCigF9wDqK/9farrzOlc2Xf7ESFPT92Q1gOc+MU5Q2YhI0KRWYa+OWjfQnlVSHq
-         l+Zzbl00GGPY+FJNwYaa78RKBLKwgvOp/LdD5o4HHctEZPwOLYe6oiKuyWFdDYqUhqjX
-         BWKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721114704; x=1721719504;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1721140114; x=1721744914; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=b8k8ZNIr+Zorp2/9e/Cl7uFfpAvdmUZuw5BXs788bgE=;
-        b=XiBJ1y1HFRGSNR8lgXSoqFPajtmp5XKiSfhE2UN/HtJ+xp9nTjrBkjSZ7AabDfvuyb
-         JYkaRDlnAlY6+KtFCmcdoShy9IFVdFMZ5nB+k+HbeFI0QV0HvfcVIF+ULZFZKn0uA3bO
-         EISi04hEdjWwAWD1zvhkSWfRK/JcliPS5qNNFI+YZb1X6flJdnYFBaGFlAEN1h+I7GPc
-         t60ors+Gw9Kh9Wo5Lq40gC1xfLfTvh5YbHv5/+5DLou/EQ+jgkCs2kPZWwO34UkrbDK0
-         gyjiC++o37Eom2wsPnq11Uyjhin94dlJAcDSuz8NKIVkU5O5oEf+O+IskZ/VdpUV6Mje
-         7X3A==
-X-Gm-Message-State: AOJu0YwFSMa2wvFtwx4e5cO9kwPOJSzNW8BwJUs22FLYjVaZPUesf5lA
-	MdE/62qPrJFtiLXjIZ62anbjuWHaZLFsywWUBTSA+RNzcbPcg3DSDuJBRE67
-X-Google-Smtp-Source: AGHT+IGtu2S8aGbwn1bUj4pftwd6dY+4tGRcZ1Twed5S27ZWpPaOZCVP1ylwo4Msxs/yEEGvNRLU/Q==
-X-Received: by 2002:a17:906:5293:b0:a79:7dc0:4fed with SMTP id a640c23a62f3a-a79ea461316mr79761466b.34.1721114704155;
-        Tue, 16 Jul 2024 00:25:04 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc820ea8sm273155666b.217.2024.07.16.00.25.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jul 2024 00:25:03 -0700 (PDT)
-Message-ID: <eb1a27967dd15e15f1985ba8b0506e72bdc3f910.camel@gmail.com>
-Subject: Re: [PATCH v2 3/8] pwm: New abstraction for PWM waveforms
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
- David Lechner <dlechner@baylibre.com>
-Cc: linux-pwm@vger.kernel.org, Trevor Gamblin <tgamblin@baylibre.com>
-Date: Tue, 16 Jul 2024 09:29:00 +0200
-In-Reply-To: <yai3vygaf2k3udqaybn63uvokly64dfdxioyahr6g5vaj2isle@ycydrttrcvnp>
-References: <cover.1721040875.git.u.kleine-koenig@baylibre.com>
-	 <a4bdcfd66bc40fd245f521b89797993eba993afe.1721040875.git.u.kleine-koenig@baylibre.com>
-	 <0b267668-a02f-4052-8075-d7134c9f8242@baylibre.com>
-	 <yai3vygaf2k3udqaybn63uvokly64dfdxioyahr6g5vaj2isle@ycydrttrcvnp>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3 
+        bh=/yl0R0GrWfxUHkOIos4obcPgixfGNOqUJyJIVXXpvRs=;
+        b=eX2bXI+o7d77VKH57KSoqNsOODryyt27ScIKA228KKJUdAfVKlmYNN7xArqZt5nR8z
+         nu9HAQxxcz3JFDlcgnozZvdqAJVhfTboSlIvLTxt0Mlh2Al1ujabvFk2p/PVeqrek2qq
+         Vn0EGn0H7eDd8Ix/UxM26bip24TfabBO/18jgcWsQXszmLQXkg1dYV6U1NWEgM6q1T0E
+         sr6RiZFtotmgAlN08vn64H2AiVAZhArp+AEnIKJL4mFQuK9UYxxBbpYhBNSt3OakJ0e6
+         bmnebeUg2m5I3yUxaucPtVKO5d1JNjJAsc8UcwaQrM+yh6sBZ839v+qWgXduNU53KqrS
+         4BCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721140114; x=1721744914;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/yl0R0GrWfxUHkOIos4obcPgixfGNOqUJyJIVXXpvRs=;
+        b=k5PcdsWuFy3doS3Cc3DBuJJpVyxqsd+hVn/gtvLZRPEQyw1pdMw1oML7OKrfOA6XYu
+         Y3okT5tEPSNOQQjCkyuUUDYkb/ydswLHs24p8vmPHXNgawwmMs7xjSBvl0UkKghvl79f
+         sdiRZTyGYLNofj2VdwgrV+2NJP5Q14y/H1YzqsF0xsB502sP+b+SZRkykg5OfGctTOkY
+         4U7+K9Xqcd5E6umL1nu0jRnb9mBQs8F6uYynzXcqVzHXJXB+BgTDiHA7henRkVkX/juU
+         FGTO0nY/IpHKpwj6wZECeVm9MmijB8EVqQU0DEj4/TXaYKE/AgTf3nrBT1MFal9BpSWU
+         2F4g==
+X-Gm-Message-State: AOJu0Yy6g7MSnVyrXXgcvgQu/gB8Vtk6XRbxaRwAuq+VPIu8av5LmZAy
+	1SyEXpQUIowKX7aVxq35UwBMyu7SWqRlEYsh8+vs0bL3jJeuGD7yGHkOwuHgX5k=
+X-Google-Smtp-Source: AGHT+IHbxQd+i7MGH0hgaf6ZleBKXHuj2xaZiX9uCAz57dkgNOiyIMsxTNt9nQWPfTe5r/4Oil3HLg==
+X-Received: by 2002:a4a:ee8b:0:b0:5b9:e7db:1cf8 with SMTP id 006d021491bc7-5d288b520e1mr2787312eaf.4.1721140113864;
+        Tue, 16 Jul 2024 07:28:33 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5ce753d1bdbsm1209711eaf.16.2024.07.16.07.28.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jul 2024 07:28:33 -0700 (PDT)
+Message-ID: <23a181c4-80b1-4545-ad48-54e89e4bf690@baylibre.com>
+Date: Tue, 16 Jul 2024 09:28:32 -0500
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/8] pwm: Provide new consumer API functions for
+ waveforms
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, Trevor Gamblin <tgamblin@baylibre.com>
+References: <cover.1721040875.git.u.kleine-koenig@baylibre.com>
+ <8db2c6f239b9e101f85d556d9e203935c2da2570.1721040875.git.u.kleine-koenig@baylibre.com>
+ <ff628d7e-bd87-48e7-b80c-aff2d4e61f2c@baylibre.com>
+ <cwgrbvzc73hnsmkfigq2t5t43y73oyz54tugad6ayxwzrlawlw@qd3bylzfqvns>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <cwgrbvzc73hnsmkfigq2t5t43y73oyz54tugad6ayxwzrlawlw@qd3bylzfqvns>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-07-15 at 22:17 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello,
->=20
-> On Mon, Jul 15, 2024 at 01:55:43PM -0500, David Lechner wrote:
-> > On 7/15/24 6:16 AM, Uwe Kleine-K=C3=B6nig wrote:
-> > > @@ -213,18 +311,60 @@ static int __pwm_apply(struct pwm_device *pwm, =
-const
-> > > struct pwm_state *state)
-> > > =C2=A0	=C2=A0=C2=A0=C2=A0 state->usage_power =3D=3D pwm->state.usage_=
-power)
-> > > =C2=A0		return 0;
-> > > =C2=A0
-> > > -	err =3D chip->ops->apply(chip, pwm, state);
-> > > -	trace_pwm_apply(pwm, state, err);
-> > > -	if (err)
-> > > -		return err;
-> > > +	if (ops->write_waveform) {
-> > > +		struct pwm_waveform wf;
-> > > +		char wfhw[WFHWSIZE];
-> > > =C2=A0
-> > > -	pwm->state =3D *state;
-> > > +		BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
-> >=20
-> > Since this is already validated in pwm_ops_check(), do we really need t=
-he
-> > BUG_ON() check?
->=20
-> It indeed should not happen, and I'm glad you seem to agree it's safe.
-> The motivation to still keep it is that if (now or after some changes
-> in the future) I missed a code path, it's IMHO better when the kernel
-> dies on a BUG_ON (which indicates the error condition) than via some
-> stack corruption some time later.
->=20
-> > > diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> > > index 464054a45e57..2a1f1f25a56c 100644
-> > > --- a/include/linux/pwm.h
-> > > +++ b/include/linux/pwm.h
-> > > @@ -49,6 +49,30 @@ enum {
-> > > =C2=A0	PWMF_EXPORTED =3D 1,
-> > > =C2=A0};
-> > > =C2=A0
-> > > +/*
-> > > + * struct pwm_waveform - description of a PWM waveform
-> > > + * @period_length: PWM period
-> > > + * @duty_length: PWM duty cycle
-> > > + * @duty_offset: offset of the rising edge from the period's start
-> > > + *
-> > > + * This is a representation of a PWM waveform alternative to struct
-> > > pwm_state
-> > > + * below. It's more expressive than struct pwm_state as it contains =
-a
-> > > + * duty_offset and so can represent offsets other than $period -
-> > > $duty_cycle
-> > > + * which is done using .polarity =3D PWM_POLARITY_INVERSED. Note the=
-re is
-> > > no
-> > > + * explicit bool for enabled. A "disabled" PWM is represented by .pe=
-riod
-> > > =3D 0.
-> > > + *
-> > > + * Note that the behaviour of a "disabled" PWM is undefined. Dependi=
-ng on
-> > > the
-> > > + * hardware's capabilities it might drive the active or inactive lev=
-el,
-> > > go
-> > > + * high-z or even continue to toggle.
-> > > + *
-> > > + * The unit for all three members is nanoseconds.
-> > > + */
-> > > +struct pwm_waveform {
-> > > +	u64 period_length;
-> > > +	u64 duty_length;
-> > > +	u64 duty_offset;
-> > > +};
-> >=20
-> > Perhaps it would be helpful to take a hint from the IIO subsystem
-> > and include the units of measurement in the field names here?
-> > For example, period_length_ns or even just period_ns. This way,
-> > the value is obvious even without reading the documentation.
->=20
-> Good idea. For duty_length the "length" part is more important than for
-> period_length. And indeed I wasn't sure if I should rename period at
-> all. Being a fan of consistency I prefer to keep "length" also for
-> period (length). But I like the _ns suffix and will rework accordingly.
->=20
+On 7/16/24 2:06 AM, Uwe Kleine-König wrote:
+> Hello David,
+> 
+> On Mon, Jul 15, 2024 at 05:23:45PM -0500, David Lechner wrote:
+>> On 7/15/24 6:16 AM, Uwe Kleine-König wrote:
+>>> Provide API functions for consumers to work with waveforms.
+>>>
+>>> Note that one relevant difference between pwm_get_state() and
+>>> pwm_get_waveform*() is that the latter yields the actually configured
+>>> hardware state, while the former yields the last state passed to
+>>> pwm_apply*() and so doesn't account for hardware specific rounding.
+>>>
+>>
+>> ...
+>>
+>>> +
+>>> +/* PWM consumer APIs */
+>>> +int pwm_round_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf);
+>>> +int pwm_get_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf);
+>>> +int pwm_set_waveform_might_sleep(struct pwm_device *pwm, const struct pwm_waveform *wf, bool exact);
+>>>  int pwm_apply_might_sleep(struct pwm_device *pwm, const struct pwm_state *state);
+>>>  int pwm_apply_atomic(struct pwm_device *pwm, const struct pwm_state *state);
+>>>  int pwm_adjust_config(struct pwm_device *pwm);
+>>
+>>
+>> It seems like there could be a potential race condition between rounding
+>> and setting a PWM.
+>>
+>> Consider two PWM devices that share the same clock and the driver can
+>> set the clock rate to accommodate a wider range of periods or get a
+>> more accurate duty length.
+>>
+>> Thread 1				Thread 2
+>> --------				--------
+>> PWM consumer A calls round_waveform()
+>> a few times, e.g. to round up or round
+>> closest. Clock is not exclusive so
+>> rounding assumes the rate can be
+>> changed to get the best rate.
+>> 					PWM consumer B call set_waveform().
+>> 					clk_set_rate_exclusive() is called
+>> 					on the clock so the rate can no
+>> 					longer be changed and the rate is
+>> 					not the one PWM consumer A selected
+>> 					in the rounding operation.
+>> PWM consumer A calls set_waveform().
+>> This will either fail or will
+>> not get the same results that
+>> was returned by round_waveform().
+> 
+> The "exact" parameter has the purpose to make this fail. While
+> implementing the idea I wondered if I should drop the parameter and
+> make .set_waveform() imply exact=true.
 
-Just as a side note. BUG_ON() usage is highly discouraged [1]... Even WARN_=
-ON()
-- which I don't agree much FWIW - is also being discouraged because of
-panic_on_warn. But it actually seems that WARN* is fine but should really b=
-e
-used with care.
+Would consumers then be expected to implement a retry loop to
+handle the error when an exact=true call failed because the same
+rounding was no longer possible?
 
-[1]: https://docs.kernel.org/process/coding-style.html#use-warn-rather-than=
--bug
+> 
+> Two more thoughts about this: First, I think the most usual use cases
+> are rounding up or maybe rounding closest (instead of rounding down as
+> done by default). It's easy to implement a helper function in the pwm
+> core that holds the chip lock and does the necessary function calls to
+> determine the rounded setting needed.
 
-- Nuno S=C3=A1
+Would these same functions also get ioctls for the cdev interface?
 
+> 
+> The second thought is: Even when holding the chip lock, another clk
+> consumer can theoretically change the flexibility of a participating clk
+> while the right settings are determined for a given pwm consumer. Also
+> if I use clk_round_rate() to determine the resulting rate of a parent
+> clock, it's not sure that I can set this rate because again the
+> situation might have changed since I called clk_round_rate() or because
+> another consumer refuses my request to change the rate.
+> 
+> So as soon as you consider changing an upstream clock to reach a certain
+> PWM setting, this all degrades to a racy best effort quest.
+> 
+>> If it wasn't for the userspace cdev interface, I would suggest
+>> to drop pwm_round_waveform_might_sleep() and pass an optional
+>> function pointer to pwm_set_waveform_might_sleep() instead of
+>> the `bool exact` argument so that the full operation of rounding
+>> and setting could be performed with the pwmchip lock held without
+>> consumer drivers having to worry about getting it right. Consumer
+>> drivers would then just have to implement functions to suit their
+>> needs, or there could even be standard ones like round_closest().
+>>
+>> But that still might not fix it in all cases e.g. if two pwmchips
+>> share the same clock as opposed to one pwmchip with two outputs.
+>> If this is possible, then then "pwm: Add more locking" patch
+>> might already cause some problems with race conditions in the
+>> existing PWM apply() ops. Although, I suppose this kind of
+>> clock coordination between pwm chips (and potentially other
+>> devices) should be handled outside of the PWM subsystem.
+> 
+> I would expect that the "Add more locking" patch doesn't enable more
+> races than are possible without it? I don't understand the problems you
+> think of here.
+> 
+
+When we consider other non-PWM clock consumers you are right, it
+is not any different that before. I think you understood me fully.
+I agree that there aren't any serious issues here any more than
+the current state of things.
 
 
