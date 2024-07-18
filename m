@@ -1,157 +1,145 @@
-Return-Path: <linux-pwm+bounces-2849-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2850-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 468AC934CC8
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jul 2024 13:51:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2386D934DD0
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jul 2024 15:09:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AC394B228A7
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jul 2024 11:51:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3173282304
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jul 2024 13:09:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9892E13A405;
-	Thu, 18 Jul 2024 11:51:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2AB13C806;
+	Thu, 18 Jul 2024 13:09:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zevrOBOT"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="mPWZxvdB"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578FC1369BB
-	for <linux-pwm@vger.kernel.org>; Thu, 18 Jul 2024 11:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CCD13C3F6;
+	Thu, 18 Jul 2024 13:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721303463; cv=none; b=M34qbr4n3E4pD4bYxyHnAhDRHC6WM7GeepPX5NI4CqP+tUPVidyPX73tNDZrqR5MUBiYaa2IiggzufTj5NULTxR8gjB8fztoyBUipvnA0T5OcUbJHfvo74iXwmRrPX2DFnRxMNMLbDIc0scmQOT4eMwmRVb6B9WBMWc3vZtCpG8=
+	t=1721308153; cv=none; b=cdtQI/tI2IsLhaJXxEBUTAU5eXrBZ6oZn/N426sNH6Idu5K/xS1MGJASmz1nQYcJ1IB+LrsbqWhvePL2OjlmYx/4DOYDiQk2x7TFu9eeZw8UJVHV6qwv+ydlz1G5dkn/nJIMi3IL2rvmGHnJbAxlDekM68VenUtBNZBS3sWUH00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721303463; c=relaxed/simple;
-	bh=vD3tfVsWGs13fLKirLM+QMolfsmQJwO7QPEf2sxf1ks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z3OMFr6t1A2K0MPJ0wJblClv5GF+f3mLZcbhrfJUkv6IrG1PGg8+80RQMsAr/yudfYmh8nrxqRfWTPe5GowMNR9/Ey/ddt/bmUE/oORLA5KPjm4h1Yos5EAzWyR9pCHOPO7XYspYQUP4AeRric9blwo4Ntu9rYGYKVwWLkYxyJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zevrOBOT; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a77abe5c709so73185866b.2
-        for <linux-pwm@vger.kernel.org>; Thu, 18 Jul 2024 04:51:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1721303460; x=1721908260; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vD3tfVsWGs13fLKirLM+QMolfsmQJwO7QPEf2sxf1ks=;
-        b=zevrOBOTfQssDP8/bbpgUa7VXzjUA4xtdvNvDjTAgv/DXuA1vgzp5ttbWK1A8W0Bk+
-         Vc1zI+OlqZ5lDw5A0ruRlYDnb/xSyY5ae1o1+h/WlULR+RdbJdMrY346jCljROlRt/Bu
-         jevaQnKIIUkDqeUx9xwQ1etZFJvCx8+a1K/Y8WMidGDggRB12KTkOOwe738THxJKb/sd
-         py2mjEe8r+/3p5EuM2sK3ZpCOoj7kmDsWxc+40uH9pnsuVnmt4WQQZP6K55UhasZlWcY
-         OlZTF+D3RBez9TIg18vPZjlApp9YVhrygrly2Xvo4mrxrAQTlxIAZEmtkZVaqgy5C6W/
-         66cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721303460; x=1721908260;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vD3tfVsWGs13fLKirLM+QMolfsmQJwO7QPEf2sxf1ks=;
-        b=eAu+70qH9PIPcJwz7KFw14e8zLHRIcX8x7Dqi9d26V9jFFI2vh3Icq61+Mm9DeQ8Ev
-         lSWBxn2QvPuA1NqTXr4QQskdXUaPEMXgDMvSEYMQmHk/9CmI5yU1SmOmKSZIGBO15uTJ
-         8ZsdEaa0TYttp9VBczihOPp0bbw/Z5z903P/QSyZ0n866aBNlc/wlTjWC403VhjMsa9f
-         Czbh+usL8rbyl9TNES+S58HiJkLFF8PaXHEaJkM8HITVNnZuIboNWFhJLfrXNyHsjnQQ
-         57mMladX0wy53U12ROP2qdyiO4gszOOfOl+XQBpbW8sRs//cQmfBtIeJOHSvvfkEkC9f
-         i3fg==
-X-Forwarded-Encrypted: i=1; AJvYcCV26fY45djlv+F/NUCVBAcX5kMt1yUp/AnMgMyC9BhlZLGP60C+skkKDXnXyW4Wlwz7kwHuroDI0Whj8Y8O6deP92w7KP09vlzC
-X-Gm-Message-State: AOJu0Yx0BnXvzFYhe5huygNIhaq8nldoCP3PlydMG1FOVoM51IBLjN6y
-	j23S0Gej4HfLg89Z+/Q1WODxee4h8uCZIAFP61LuqpT3nS/40MAuD2hSwKNS9Qc=
-X-Google-Smtp-Source: AGHT+IFwXIStMSuamLLszfwue44fiFsyS5r1vkhJKc/V6fjTvStINXv3htkE7bc+brSBhJS1PmJGBQ==
-X-Received: by 2002:a17:906:e0d5:b0:a77:c26c:a56f with SMTP id a640c23a62f3a-a7a01130925mr304316966b.3.1721303459640;
-        Thu, 18 Jul 2024 04:50:59 -0700 (PDT)
-Received: from localhost ([193.197.128.38])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a79bc820d2fsm546971466b.200.2024.07.18.04.50.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 04:50:59 -0700 (PDT)
-Date: Thu, 18 Jul 2024 13:50:57 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Quentin Schulz <quentin.schulz@cherry.de>
-Cc: Farouk Bouabid <farouk.bouabid@cherry.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 2/6] pwm: add mule pwm-over-i2c driver
-Message-ID: <fgpb3aswlk25kkziiwe62cjk5ajwx6xy6xvyfzlx35uc7quzwh@cov5otcowkgv>
-References: <20240529-buzzer_support-v1-0-fd3eb0a24442@cherry.de>
- <20240529-buzzer_support-v1-2-fd3eb0a24442@cherry.de>
- <5hd7fndgivgusx76wq6mbvgefngd3tllqsfsk6pppbphchczte@ujagkep4miet>
- <25d71c19-6e94-477d-8d04-758015ca4b2c@cherry.de>
- <e7b3bfpvtrvt5g637yy7qxsbvfiylyzrjvwsro4hzp5t6cmeux@eqafx3k7oaks>
- <33d93798-459b-4d33-ac59-623a68ea48cf@cherry.de>
+	s=arc-20240116; t=1721308153; c=relaxed/simple;
+	bh=WX7ukJI8n3jjzffY/JPZ9oaOhlROEeN4zgp0zjWA1Gw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eviHdXF5CAZZOS8nzU+oCwvTfq3b6ju15BuVYip9lojDjRmtWrVWQeQPPFpKBE3sPggdwF0Lk+WBTuQTpt5AmqC4PGJr4QBpMOamCOXSpJ1SKUpDhUuR7r/VVKqoGSra5w+8XNY4tlatDN4fhYdy2qugLzD0sGQPxZo10njYHC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=mPWZxvdB; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id AC9D5120010;
+	Thu, 18 Jul 2024 16:09:05 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru AC9D5120010
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1721308145;
+	bh=Rs10WoBRGbxVA1tpxhegD8xnv3KUn3Y5nh+zd+3yfX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
+	b=mPWZxvdBkbvEFNl+vpCubAemBLzMi854k4tuKT+wtnijRwNNVDI2bcUA2E99Tw9qA
+	 Tp2U+oSqZgn9qewJg5NmYD0DHC3xyUC53V0cxO5YNYzNvLRreJ66GXyYekraMVmJMJ
+	 sM7XHAs3TQ5ZnzFjopWxJw6JXN4XBGmr6rQ5fUR4qxqVwcubdG+jGdfMbO2nxlnODy
+	 /57f97dKMW9T68Gb0AFUxRIrvyjmz9TNcikU0+sz3b/DzdPsMTuDkb28DP6uasJk3b
+	 odCaxC/YWGyHDFmnbgFJUoUJZ8doNrcikgpUu6AV09A50Uih34uc5F9joe93ol4YuP
+	 v4TEPm+nfrMZA==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Thu, 18 Jul 2024 16:09:05 +0300 (MSK)
+Received: from [172.28.129.66] (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 18 Jul 2024 16:09:05 +0300
+Message-ID: <52e2e211-a0b7-47b1-a451-34c304028097@salutedevices.com>
+Date: Thu, 18 Jul 2024 16:09:04 +0300
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ddsoalw7wih372qx"
-Content-Disposition: inline
-In-Reply-To: <33d93798-459b-4d33-ac59-623a68ea48cf@cherry.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] pwm: meson: add pwm support for A1
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<neil.armstrong@linaro.org>
+CC: <ukleinek@kernel.org>, <linux-pwm@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <martin.blumenstingl@googlemail.com>,
+	<jbrunet@baylibre.com>, <khilman@baylibre.com>,
+	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>,
+	<hkallweit1@gmail.com>
+References: <20240710234116.2370655-1-gnstark@salutedevices.com>
+Content-Language: en-US
+From: George Stark <gnstark@salutedevices.com>
+In-Reply-To: <20240710234116.2370655-1-gnstark@salutedevices.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 186588 [Jul 18 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/07/18 08:50:00
+X-KSMG-LinksScanning: Clean, bases: 2024/07/18 08:50:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/18 08:29:00 #26061289
+X-KSMG-AntiVirus-Status: Clean, skipped
 
+Hello
 
---ddsoalw7wih372qx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Excuse me, should I fix/improve anything on this series?
 
-Hello Quentin,
+On 7/11/24 02:41, George Stark wrote:
+> Add support for Amlogic meson A1 SoC family PWM
+> 
+> Changes in v2:
+>    add patch with optional power-domains to pwm bindings;
+>    fix syntax in a1 bindigns patch:
+>    - use enum over const for amlogic,meson-a1-pwm beacuse adding more devices here
+>      are expected
+>    - leave only base compatible amlogic,meson-s4-pwm in check section
+>    dt_binding_check and dtbs_check run ok now;
+>    previous version: [1]
+> 
+> Changes in v3:
+>    squash power-domains patch into main bindigns patch
+>    add conditional to bindings that power-domains property is required only for a1
+>    previous version: [2]
+> 
+> Changes in v4:
+>    split bindings patch into power-domains patch and new compatible patch
+>    previous version: [3]
+> 
+> [1] https://lore.kernel.org/lkml/20240701130113.433169-3-gnstark@salutedevices.com/T/
+> [2] https://lore.kernel.org/lkml/20240701172016.523402-1-gnstark@salutedevices.com/T/
+> [3] https://lore.kernel.org/lkml/20240702123425.584610-1-gnstark@salutedevices.com/T/
+> 
+> George Stark (3):
+>    dt-bindings: pwm: amlogic: Add optional power-domains
+>    dt-bindings: pwm: amlogic: Add new bindings for meson A1 PWM
+>    arm64: dts: meson: a1: add definitions for meson PWM
+> 
+>   .../devicetree/bindings/pwm/pwm-amlogic.yaml  |  17 ++
+>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi     | 215 ++++++++++++++++++
+>   2 files changed, 232 insertions(+)
+> 
+> --
+> 2.25.1
+> 
 
-On Wed, Jul 17, 2024 at 10:48:52AM +0200, Quentin Schulz wrote:
-> On 7/15/24 5:09 PM, Uwe Kleine-K=F6nig wrote:
-> > On Mon, Jul 15, 2024 at 02:16:15PM +0200, Quentin Schulz wrote:
-> > > To give a bit more info on this, there are two possible flavors of th=
-e MCU,
-> > > ATtiny 816 (datasheet: https://ww1.microchip.com/downloads/en/DeviceD=
-oc/ATtiny416-816-DataSheet-DS40001913B.pdf)
-> > > and STM32F072CB (datasheet: https://www.st.com/content/ccc/resource/t=
-echnical/document/reference_manual/c2/f8/8a/f2/18/e6/43/96/DM00031936.pdf/f=
-iles/DM00031936.pdf/jcr:content/translations/en.DM00031936.pdf).
-> > >=20
-> > > FYI, on ATtiny, we use TCA in single-slope PWM generation mode and PE=
-RBUF
-> > > and CMP2BUF as period and duty-cycle registers. On STM32, we use TIM1=
-5 in
-> > > PWM mode and ARR and CCR1 as period and duty-cycle registers.
-> >=20
-> > Wouldn't it be more natural with these to have duty in a base-2 register
-> > for duty, in the assumption that your MCUs habe this, too?
->=20
-> Not sure to understand what you meant by base-2 register here? I am guess=
-ing
-> you rather wanted to suggest a different unit/representation of the duty
-> cycle in the register in the FW API?
-
-For humans 100 as maximal value for a register is natural, but hardware
-usually uses binary representation ("base-2") for values and usually a
-register (or bit field) is used completely. That is, valid values range
-beween 0 and 2^n (or 2^n - 1) for some n.
-
-Note this discussion isn't really relevant to the driver. Just me
-wondering about the hardware design. So if you don't want to follow up,
-that's fine for me.
-
+-- 
 Best regards
-Uwe
-
---ddsoalw7wih372qx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaZAYsACgkQj4D7WH0S
-/k4txQgAm2WzqXl0JXzy98Aebusbt2VhAwr2jKTv4YxBaue6sXmXUxAWnguTQCxy
-nLoe42a8AStJHRpj8fo1gZe2/2cBr+/0gr6+/VnMvSl4mcMeU6Djur4GTUrMLq52
-q73wDi1ujB/D3EqSiBv9lDQazE3HE27hiEIl3DtftfHURQcXW6Lcv34Px2opdkK5
-6hwJdNw9orw6h15+QblnBv4SCDNgzf8F3qPR9YNZneGIBkkLPInBSEeRYuGZpOX6
-FdAcYHdocdWg7b80RVgEWiDsupOOhEM/UWvxypLeA3/5GnZokkuEli0w8DaYBvl4
-E59r+LLHZgfIgeWdZhBw31y8J0G83w==
-=3jTY
------END PGP SIGNATURE-----
-
---ddsoalw7wih372qx--
+George
 
