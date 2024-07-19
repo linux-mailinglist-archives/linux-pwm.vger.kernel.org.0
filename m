@@ -1,145 +1,126 @@
-Return-Path: <linux-pwm+bounces-2850-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2851-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2386D934DD0
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jul 2024 15:09:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09727937451
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jul 2024 09:20:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3173282304
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jul 2024 13:09:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1DD91F22A5E
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jul 2024 07:20:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2AB13C806;
-	Thu, 18 Jul 2024 13:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83A15502BD;
+	Fri, 19 Jul 2024 07:20:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="mPWZxvdB"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CKwA7xE7"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CCD13C3F6;
-	Thu, 18 Jul 2024 13:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0A64D8A7
+	for <linux-pwm@vger.kernel.org>; Fri, 19 Jul 2024 07:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721308153; cv=none; b=cdtQI/tI2IsLhaJXxEBUTAU5eXrBZ6oZn/N426sNH6Idu5K/xS1MGJASmz1nQYcJ1IB+LrsbqWhvePL2OjlmYx/4DOYDiQk2x7TFu9eeZw8UJVHV6qwv+ydlz1G5dkn/nJIMi3IL2rvmGHnJbAxlDekM68VenUtBNZBS3sWUH00=
+	t=1721373648; cv=none; b=eo/J7dl5SKlkjqAvPizABUsl/T9mVdH2bUs3WkiC5cAl9Huw9s8cblGjJAMZZYi6R9eOWEiUsQLtKB++qLMIzGjHI4n6XLrEZwU9EAHLlSSRpiYJBxa+qxgS360oY+s/yUWqE1yxEBT2Y30oFu/d5e+9d+sgcxld6n/YD3RmDfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721308153; c=relaxed/simple;
-	bh=WX7ukJI8n3jjzffY/JPZ9oaOhlROEeN4zgp0zjWA1Gw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eviHdXF5CAZZOS8nzU+oCwvTfq3b6ju15BuVYip9lojDjRmtWrVWQeQPPFpKBE3sPggdwF0Lk+WBTuQTpt5AmqC4PGJr4QBpMOamCOXSpJ1SKUpDhUuR7r/VVKqoGSra5w+8XNY4tlatDN4fhYdy2qugLzD0sGQPxZo10njYHC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=mPWZxvdB; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id AC9D5120010;
-	Thu, 18 Jul 2024 16:09:05 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru AC9D5120010
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1721308145;
-	bh=Rs10WoBRGbxVA1tpxhegD8xnv3KUn3Y5nh+zd+3yfX4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=mPWZxvdBkbvEFNl+vpCubAemBLzMi854k4tuKT+wtnijRwNNVDI2bcUA2E99Tw9qA
-	 Tp2U+oSqZgn9qewJg5NmYD0DHC3xyUC53V0cxO5YNYzNvLRreJ66GXyYekraMVmJMJ
-	 sM7XHAs3TQ5ZnzFjopWxJw6JXN4XBGmr6rQ5fUR4qxqVwcubdG+jGdfMbO2nxlnODy
-	 /57f97dKMW9T68Gb0AFUxRIrvyjmz9TNcikU0+sz3b/DzdPsMTuDkb28DP6uasJk3b
-	 odCaxC/YWGyHDFmnbgFJUoUJZ8doNrcikgpUu6AV09A50Uih34uc5F9joe93ol4YuP
-	 v4TEPm+nfrMZA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Thu, 18 Jul 2024 16:09:05 +0300 (MSK)
-Received: from [172.28.129.66] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 18 Jul 2024 16:09:05 +0300
-Message-ID: <52e2e211-a0b7-47b1-a451-34c304028097@salutedevices.com>
-Date: Thu, 18 Jul 2024 16:09:04 +0300
+	s=arc-20240116; t=1721373648; c=relaxed/simple;
+	bh=snCOMfSAIZ7BN7SEbXap79VN++oHgdcE3AI+lBWfejI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=At863lWLCrh7a1UqRd1n2cXI+BcGurMPTwYdwDecwzxtu0ORo5t27Iv31o61087EbXsRVwpm6qJHFO+LfzTOyL1ICUrjlOGMPAKutYLunemHsDU+c5734ZKY7boqcSa2B23MhpkzEDaMA5PoAyvAr7BGAhAGpWILxO6lC+GPaxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CKwA7xE7; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5a3458bf989so228706a12.0
+        for <linux-pwm@vger.kernel.org>; Fri, 19 Jul 2024 00:20:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1721373644; x=1721978444; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=snCOMfSAIZ7BN7SEbXap79VN++oHgdcE3AI+lBWfejI=;
+        b=CKwA7xE7/Ff/gcwjddW+QvFZ38IRkEJiatecI+IzqMYs0f3/b7sLIxH6TWvuEiX0mS
+         Ytr5+0OM8CEW6WOBz/oUyU6nFm/i3cR/MtiFmj/TQQvmUPHgdusADDIzJKMbuDHd6Ute
+         XRdNosgpmvYeVqyZM2g+67KjHukPvy6EU/wGlYoo8JNaXIEsZkBhAs7FVq7LYmx0akTx
+         2e50+c/MMSIjeAm47Babd1Qzw3Sr94aBqfF0XZkipI/U1iGT8PIO6E+vbw1nTY1FN6j+
+         723YvUPeyPseHkUQZ5SIdTki+czF5jkeLfg0CozCs3CcbTUgze78iSFN9mtWHAXRHso3
+         90cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721373644; x=1721978444;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=snCOMfSAIZ7BN7SEbXap79VN++oHgdcE3AI+lBWfejI=;
+        b=EPNXBGLKRcPBymT+fX2bWZL3cw5BWZJ/+xFkGoIgxCKWN+MrX8t4ZWL7kMC5ddFBLn
+         VCDiH5IzbpOFstPuKVi137PbIXScqkRq4NZcZYHrDZb/CtAWmFZm2L4cDjgtozhdVmaH
+         A6MrEThBT+YtlnuAoZcZv2cp8NFPKqE1K0FfEH/bcpxTUBcfSZqmsmgVOWUnzj4IkBZV
+         6LuO9F0oG/D1N1kXFBpnGOnUwMOLRDE2k3P5ywLetNtQUnGpecESLq5m0j174lMlLmS+
+         A1rP5lCdeOIbD+iAjmK2FfWnOdSdi79/8/PfJH1kb42qEsDCkMDib1XGYCDIx7dPGpuC
+         WMhA==
+X-Forwarded-Encrypted: i=1; AJvYcCXL/MyMTNjTGPfHwOxOZ9msL24v4qVI14Am7rME2rM6W59gezcuerU/z5bB7eUjh3aD+m9ZbFh7lVZEPAF+qfU6ZLKUa/W+4e/7
+X-Gm-Message-State: AOJu0Yy82Od1jP+gMi5k6V76OREA4O7XWAvoUAp/Yl/C4On2qaZ/lDxJ
+	4vNQY2jZ69GN4z1J/oyLFAVJav+EhmWcUu0CXGlTfGQmHpk29b3gi5NeoUklZnY=
+X-Google-Smtp-Source: AGHT+IHSnMJiPqKXQFc7TqXz25zzG8NVyoXNnDQ32Bkv6V9d4Cr9qVr7e/wI2y2FwvE11QdoZJJXTA==
+X-Received: by 2002:a50:d682:0:b0:57d:46f4:7df5 with SMTP id 4fb4d7f45d1cf-5a05bfaa613mr3897320a12.23.1721373644032;
+        Fri, 19 Jul 2024 00:20:44 -0700 (PDT)
+Received: from localhost (p50915eb1.dip0.t-ipconnect.de. [80.145.94.177])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5a30c7d30a0sm669323a12.83.2024.07.19.00.20.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jul 2024 00:20:43 -0700 (PDT)
+Date: Fri, 19 Jul 2024 09:20:42 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: George Stark <gnstark@salutedevices.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	neil.armstrong@linaro.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	martin.blumenstingl@googlemail.com, jbrunet@baylibre.com, khilman@baylibre.com, 
+	linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, kernel@salutedevices.com, hkallweit1@gmail.com
+Subject: Re: [PATCH v4 0/3] pwm: meson: add pwm support for A1
+Message-ID: <bp3hbxl6zs6lwomfdj6edhq35pde3gr5i2qizgdf2varke2eai@weeodo6gacd7>
+References: <20240710234116.2370655-1-gnstark@salutedevices.com>
+ <52e2e211-a0b7-47b1-a451-34c304028097@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] pwm: meson: add pwm support for A1
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<neil.armstrong@linaro.org>
-CC: <ukleinek@kernel.org>, <linux-pwm@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <martin.blumenstingl@googlemail.com>,
-	<jbrunet@baylibre.com>, <khilman@baylibre.com>,
-	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <kernel@salutedevices.com>,
-	<hkallweit1@gmail.com>
-References: <20240710234116.2370655-1-gnstark@salutedevices.com>
-Content-Language: en-US
-From: George Stark <gnstark@salutedevices.com>
-In-Reply-To: <20240710234116.2370655-1-gnstark@salutedevices.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186588 [Jul 18 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 24 0.3.24 186c4d603b899ccfd4883d230c53f273b80e467f, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/07/18 08:50:00
-X-KSMG-LinksScanning: Clean, bases: 2024/07/18 08:50:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/07/18 08:29:00 #26061289
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="a4mrqcrkf7uvtgvq"
+Content-Disposition: inline
+In-Reply-To: <52e2e211-a0b7-47b1-a451-34c304028097@salutedevices.com>
 
-Hello
 
-Excuse me, should I fix/improve anything on this series?
+--a4mrqcrkf7uvtgvq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 7/11/24 02:41, George Stark wrote:
-> Add support for Amlogic meson A1 SoC family PWM
-> 
-> Changes in v2:
->    add patch with optional power-domains to pwm bindings;
->    fix syntax in a1 bindigns patch:
->    - use enum over const for amlogic,meson-a1-pwm beacuse adding more devices here
->      are expected
->    - leave only base compatible amlogic,meson-s4-pwm in check section
->    dt_binding_check and dtbs_check run ok now;
->    previous version: [1]
-> 
-> Changes in v3:
->    squash power-domains patch into main bindigns patch
->    add conditional to bindings that power-domains property is required only for a1
->    previous version: [2]
-> 
-> Changes in v4:
->    split bindings patch into power-domains patch and new compatible patch
->    previous version: [3]
-> 
-> [1] https://lore.kernel.org/lkml/20240701130113.433169-3-gnstark@salutedevices.com/T/
-> [2] https://lore.kernel.org/lkml/20240701172016.523402-1-gnstark@salutedevices.com/T/
-> [3] https://lore.kernel.org/lkml/20240702123425.584610-1-gnstark@salutedevices.com/T/
-> 
-> George Stark (3):
->    dt-bindings: pwm: amlogic: Add optional power-domains
->    dt-bindings: pwm: amlogic: Add new bindings for meson A1 PWM
->    arm64: dts: meson: a1: add definitions for meson PWM
-> 
->   .../devicetree/bindings/pwm/pwm-amlogic.yaml  |  17 ++
->   arch/arm64/boot/dts/amlogic/meson-a1.dtsi     | 215 ++++++++++++++++++
->   2 files changed, 232 insertions(+)
-> 
-> --
-> 2.25.1
-> 
+Hello George,
 
--- 
+On Thu, Jul 18, 2024 at 04:09:04PM +0300, George Stark wrote:
+> Excuse me, should I fix/improve anything on this series?
+
+The known issue with this series is just that it's one of several patch
+series that I didn't come around to review yet. I tackle them one at a
+time, usually in a FIFO order as listed on
+https://patchwork.ozlabs.org/project/linux-pwm/list/ .
+
 Best regards
-George
+Uwe
+
+--a4mrqcrkf7uvtgvq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaaE8cACgkQj4D7WH0S
+/k6nDgf8D5F2Na4nH6HLwiqFon8plnLTpbHNktSH8KoKVdGii8LxI9VwSaFm625x
+7TRIUvuD6Ss2nW8Wyy5XN+Jj7GjFT4l2A6YOTtbPYqpnAKryKUPmu5QPFLE/UrH6
+HqoABIBLJsFFFFLHN8DSJm6EwHOLyfqmhtYt3ReQLYvu9flXIht4E+JCUnZSrxRM
+dw1WSK1yJBMhDcnIMcFZ48C+ymj4t3bzImEt8mjoExdlFC/sUzsZr2853Dme9QJk
+Gqi3tjsgTHFBMq1CpjXdJNBTnQaqRECKVvrEntWW66s8ocdF4Q5Ib3M8TeOY2WLg
+EpCoY/o9x4O2xTSQ0Y0C7kRbNln1rw==
+=tWvy
+-----END PGP SIGNATURE-----
+
+--a4mrqcrkf7uvtgvq--
 
