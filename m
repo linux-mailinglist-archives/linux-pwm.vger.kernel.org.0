@@ -1,153 +1,146 @@
-Return-Path: <linux-pwm+bounces-2852-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2853-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 151A7937471
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jul 2024 09:36:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9C42937572
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jul 2024 11:02:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7CBA1B21243
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jul 2024 07:36:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED1E71C21796
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jul 2024 09:02:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 071BB535D4;
-	Fri, 19 Jul 2024 07:36:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A08A87E583;
+	Fri, 19 Jul 2024 09:02:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iSOPtPQn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWIsad0+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70B52CA6;
-	Fri, 19 Jul 2024 07:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B2B5CB8;
+	Fri, 19 Jul 2024 09:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721374604; cv=none; b=NLJmnUmKG+QbFDUS6PQF5LlrwtyLqaemTGQYbeMxqCrCTW8gRAotkLRUOuEbZPSejuPam59lEIWEvfVa4gYXFJUdVi3aWRw/HGT55dTFJHW5bx9E1s39/Z8bi9LgApuJGuIPTGdKQz3Q4PZT/1AcB/WEZFHhAaJ8rUz8KJ/QOh0=
+	t=1721379722; cv=none; b=VrTmIPgKQk7cAtvk/dWp5SZhdq7eVx1QDiEje3tynvijmHNqfjnlz9usEPJ2mY346g13Izs7gPOwsxCJMw8XcSPCnAPyr4czGRNZJorlN1nJnd8jYhWMxSP5bJLPwjt1BCnRWXhmhYaFAzBMbxsn1S4v+GLp5jmh+TKhPXOKsuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721374604; c=relaxed/simple;
-	bh=aC9MkwUDJk7T/TtXgzd8e6HDNqDjDkQL+GKqceDP1Ho=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r1o/Wz5rPH5CijvWJqPSs8RKapv7Xd1IksU/9IPV/CkFcSpVPxz48Kk0zEJlhASGsHn3zwOclfmZFZ96nJDpfwSaCfTmZeVe4ebYMdChPYDzjms15jWqb78j3t6NxLJHJsCGVMMtU+JVGrUgHQ2RDt0x4S2RodqS9UFuZtgrZjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=iSOPtPQn; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3CF85471;
-	Fri, 19 Jul 2024 09:36:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1721374561;
-	bh=aC9MkwUDJk7T/TtXgzd8e6HDNqDjDkQL+GKqceDP1Ho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iSOPtPQnAN2dN+dPrtvML40dvEnFrkSH/9buEzj8weB6O99NTguiVaDRAWzJKgbkl
-	 /6qAPZZwbTGIeh8HhLQAcZbm47LQcoPXdY80ICPwbzH1whRI2dWu/PbvGXoyJUzpuG
-	 3Ol5HkEZnWBSQ1bhVwVYc+2l1CIK2rbIWGbs1nSQ=
-Date: Fri, 19 Jul 2024 10:36:25 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>
-Subject: Re: [PATCH v4 2/4] mfd: adp5585: Add Analog Devices ADP5585 core
- support
-Message-ID: <20240719073625.GA12656@pendragon.ideasonboard.com>
-References: <20240608141633.2562-1-laurent.pinchart@ideasonboard.com>
- <20240608141633.2562-3-laurent.pinchart@ideasonboard.com>
- <Zpcu3+6Ar/zR78Ma@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1721379722; c=relaxed/simple;
+	bh=e8NqB4UXXfRhq7xibWmOKgLLvVoy7/cBoXSoL07ZZd8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o76o0GYU4/fcYeuwHK+BWb06TB4fXqRK36oTmn0JKf3fqjR2NnsTF2+AlH+7RzdjN4EFS6tU9edE7Cvki8xE6n0G1rjb/2mh8psPL8d5vCh7rN8Q7mjZ5swKLvk1OeuiU635LhtWSTkj5924WDIyp3EzwS1sYxmGJFzykEjlRXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gWIsad0+; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4926a732a8dso594491137.0;
+        Fri, 19 Jul 2024 02:02:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721379720; x=1721984520; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e8NqB4UXXfRhq7xibWmOKgLLvVoy7/cBoXSoL07ZZd8=;
+        b=gWIsad0+rK05aE2J0pIqWynBQvX5NXxf+dO/jYm9yr8gV2jqJIFwANJusPXVqMCmrH
+         jniY/TQ61EdnV3WrOK/m9w8eU8bnfzeGCqwv/T5TEBv22Iruk+HPMaNPkyq0PBhF4EWu
+         /YS8kjVlE/Kyw1qqiTFYSkOX6nn1357bZsLBFMfPjiEOrYNM1YkbdTJNywd5jzha9nnP
+         RyGOh2FhRjY+QkqikTJ7ZRyJQIwOsVcYVOXOYMQdNBmpQVZ6JZCb4TbtGKD7n4cf0/Tp
+         YR7ypVSick/YoE4JUY3Q4YUhETlTRznq5DOMZT9gXi1MxgcaeAhU+XfTJdUs119eqse3
+         iAsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721379720; x=1721984520;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e8NqB4UXXfRhq7xibWmOKgLLvVoy7/cBoXSoL07ZZd8=;
+        b=anXTFeDXvOgCp2jA0B2jP4IylWxt6720HtgVze121XboLnJ5RqGWWHLGYC3dhhg/pc
+         NmlD6YVWA0ccooEfXppi+hgRTHcITD3mUjls66T2ndN0bew8W+80FNysBeTkOD3fwp0J
+         t4tBMdniC8HhG3fWmBeG5UHtIjTAJ/lmY7/bxYl8B0yfPmOU3OU/WhQe1hxtEHEYB5jy
+         eoZkijlM8uLnx6tRW7Z/q9XxfjlbLWa3Nxq1+fMX5DOBwxyAQrbsf0a/UDNSTMjLjosq
+         3xev6uBi0vKauhfELu07o2k7tksBYYtyYpDhdJBhsKw19J89cIuSokfWjTWZrEnUhqvG
+         2jYg==
+X-Forwarded-Encrypted: i=1; AJvYcCViLsYqEB55E+Q2g0PR2N5Di2yzjY7QDgldXn+lNBJDClTW1dRo07iDRzO9Qt5QZu64j3wfbQ+Jt7LRjUZHpv8cpDMLdO8jPegIFMsbAcHjg9vqT+IpO+2Dt/R2groU7oeAxS/WdD+Z4NoyWzMoUACCwQWqc6PRQAP+1VrrPf0Cn0yvJwb+pCkbN/S074O5uOHeEqMD7y+wKzlWlDVb5mITRCu9Q9gbRfdw4aLJhnTOlP8qmTn1CYBAwRPdZkKbw/LtjiW/pJKnK+ultQDMXR8260A3kb3tQZ0slW7dDEcoQEYNzUaiEKZUenJP5vnl7rWehy1U2SY0J8kSnDlB/7jtQvxzC9EthZXa6YhMxgEaTtrhoU+u25AD4SQL0+wpEs4kSNlPmMNWSjE+NnTwPlq7VsPrFy3Lr3nkUY4aS1LJkoCtgsipKvh5YxPxIuxIlCs=
+X-Gm-Message-State: AOJu0YwT/5FysG9Is/GOIs0KT6geaz7AuOgWhS71fCORHg6Zh331R5rD
+	nH38otIhsT1rJOU7bxEiErQFxjktzz7wrpCGwLmU4KhtXpiYzHf5BiceGFYcgV3Wi9iQ1JkUzvt
+	L9cLL9Q2b43tU4OpQjXsJyvH3GyE=
+X-Google-Smtp-Source: AGHT+IEEXrAtw5qdg+6Tlto0/IkkAm7AL1K/G5e76SlvQXcdxQq43WWyLQGsGDvFSp5tU2oxcT8DtAITdKNEJ/5OAbQ=
+X-Received: by 2002:a05:6102:512a:b0:48f:eb37:fd86 with SMTP id
+ ada2fe7eead31-491599ec471mr8207968137.30.1721379719734; Fri, 19 Jul 2024
+ 02:01:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Zpcu3+6Ar/zR78Ma@lizhi-Precision-Tower-5810>
+References: <20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com>
+ <20240618-starqltechn_integration_upstream-v3-2-e3f6662017ac@gmail.com>
+ <wnf3mfgdm4p4f5wrxdtlx4wccnizdvohc7iiyu5t22eeb67r57@xun3r73hksrg>
+ <ad04e203-4244-4cd3-9c9a-fae002962990@linaro.org> <lwrz4rvn6ogseea5v6j7plc3yi3xnzo76dvrsl3muat3iswlkb@zmwa3xo3xgw4>
+ <85e03d10-59a2-4f15-bb85-7b2c0354a5d1@linaro.org>
+In-Reply-To: <85e03d10-59a2-4f15-bb85-7b2c0354a5d1@linaro.org>
+From: Dzmitry Sankouski <dsankouski@gmail.com>
+Date: Fri, 19 Jul 2024 12:01:48 +0300
+Message-ID: <CABTCjFBxOEdpbdYnbvPyf2MRE5m-3gfvHtaPbDF5PmkQZ2kV1w@mail.gmail.com>
+Subject: Re: [PATCH v3 02/23] gcc-sdm845: Add rates to the GP clocks
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sebastian Reichel <sre@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, phone-devel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-input@vger.kernel.org, linux-leds@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Frank,
+Why cannot max values be defined as ((2 ^ mnd_width) - 1) and ((2 ^
+hid_width) - 1)?
 
-On Tue, Jul 16, 2024 at 10:39:27PM -0400, Frank Li wrote:
-> On Sat, Jun 08, 2024 at 05:16:31PM +0300, Laurent Pinchart wrote:
-> > From: Haibo Chen <haibo.chen@nxp.com>
-> > 
-> > The ADP5585 is a 10/11 input/output port expander with a built in keypad
-> > matrix decoder, programmable logic, reset generator, and PWM generator.
-> > This driver supports the chip by modelling it as an MFD device, with two
-> > child devices for the GPIO and PWM functions.
-> > 
-> > The driver is derived from an initial implementation from NXP, available
-> > in commit 8059835bee19 ("MLK-25917-1 mfd: adp5585: add ADI adp5585 core
-> > support") in their BSP kernel tree. It has been extensively rewritten.
-> > 
-> > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> Laurent:
-> 	Just saw you already sent out adp5585 patches. Do you plan to
-> continue work on this? If you are busy, I can help follow up this.
-
-I just came back from vacation and have a large backlog. Please feel
-free to take my v4, rebase it, address any review comments, and send a
-v5 if you would like to help merging the driver faster. Please CC me on
-the patch submission.
-
-> > ---
-> > Changes since v2:
-> > 
-> > - Add missing and remove extraneous headers
-> > - Use i2c_get_match_data()
-> > - Drop unneeded parentheses
-> > - Use GENMASK()
-> > - Drop of_match_ptr()
-> > - Allow compilation on !OF with COMPILE_TEST
-> > - Replace ADP5585_MAN_ID() macro with ADP5585_MAN_ID_MASK
-> > - Drop unneeded macro
-> > 
-> > Changes since v1:
-> > 
-> > - Add comment to explain BANK and BIT macros
-> > - Drop compatible strings from cells
-> > - White space fixes
-> > - Fix comparison to NULL
-> > 
-> > Changes compared to the NXP original version:
-> > 
-> > - Add MAINTAINERS entry
-> > - Fix compatible strings for child devices
-> > - Fix header guards
-> > - Use lowercase hex constants
-> > - White space fixes
-> > - Use module_i2c_driver()
-> > - Switch to regmap
-> > - Drop I2C device ID table
-> > - Drop ADP5585_REG_MASK
-> > - Support R5 GPIO pin
-> > - Drop dev field from adp5585_dev structure
-> > - Check device ID at probe time
-> > - Fix register field names
-> > - Update copyright
-> > - Update license to GPL-2.0-only
-> > - Implement suspend/resume
-> > ---
-> >  MAINTAINERS                 |   2 +
-> >  drivers/mfd/Kconfig         |  12 +++
-> >  drivers/mfd/Makefile        |   1 +
-> >  drivers/mfd/adp5585.c       | 199 ++++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/adp5585.h | 126 +++++++++++++++++++++++
-> >  5 files changed, 340 insertions(+)
-> >  create mode 100644 drivers/mfd/adp5585.c
-> >  create mode 100644 include/linux/mfd/adp5585.h
-
-[snip]
-
--- 
-Regards,
-
-Laurent Pinchart
+=D0=B2=D1=82, 18 =D0=B8=D1=8E=D0=BD. 2024=E2=80=AF=D0=B3. =D0=B2 22:12, Kon=
+rad Dybcio <konrad.dybcio@linaro.org>:
+>
+>
+>
+> On 6/18/24 20:55, Dmitry Baryshkov wrote:
+> > On Tue, Jun 18, 2024 at 08:50:52PM GMT, Konrad Dybcio wrote:
+> >>
+> >>
+> >> On 6/18/24 19:50, Dmitry Baryshkov wrote:
+> >>> On Tue, Jun 18, 2024 at 04:59:36PM GMT, Dzmitry Sankouski wrote:
+> >>>> sdm845 has "General Purpose" clocks that can be muxed to
+> >>>> SoC pins.
+> >>>>
+> >>>> Those clocks may be used as e.g. PWM sources for external peripheral=
+s.
+> >>>> Add more frequencies to the table for those clocks so it's possible
+> >>>> for arbitrary peripherals to make use of them.
+> >>>>
+> >>>> See also: bf8bb8eaccf(clk: qcom: gcc-msm8916: Add rates to the GP cl=
+ocks)
+> >>>
+> >>> Each time I look at the table attached to the GP CLK, I feel that it'=
+s
+> >>> plain wrong. In the end the GPCLK can in theory have arbitrary value
+> >>> depending on the usecase.
+> >>>
+> >>> Bjorn, Konrad, maybe we should add special clk_ops for GP CLK which
+> >>> allow more flexibility than a default clk_rcg2_ops?
+> >>
+> >> If we can somehow get max m/n/d values for all possible parents, sure
+> >
+> > Calculate them at runtime?
+>
+> We'd be calculating the mnd values for a frequency that's either equal or
+> reasonably close to the one requested. My worry is that we somehow need
+> to get the maximum values they can take (unless they're well-known)
+>
+> Konrad
 
