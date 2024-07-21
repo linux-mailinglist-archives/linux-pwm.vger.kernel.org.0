@@ -1,366 +1,165 @@
-Return-Path: <linux-pwm+bounces-2868-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2869-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFBF39383B2
-	for <lists+linux-pwm@lfdr.de>; Sun, 21 Jul 2024 09:09:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BC5793842F
+	for <lists+linux-pwm@lfdr.de>; Sun, 21 Jul 2024 11:23:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 09197B20C50
-	for <lists+linux-pwm@lfdr.de>; Sun, 21 Jul 2024 07:09:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABB481F21294
+	for <lists+linux-pwm@lfdr.de>; Sun, 21 Jul 2024 09:23:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1934A79F6;
-	Sun, 21 Jul 2024 07:09:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC7ADC8D7;
+	Sun, 21 Jul 2024 09:23:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uILMsfn7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jEB+wv9q"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47D233E1
-	for <linux-pwm@vger.kernel.org>; Sun, 21 Jul 2024 07:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7641C440C;
+	Sun, 21 Jul 2024 09:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721545755; cv=none; b=mcJgkRUK+lw0BrCoWTqi1S+r1cT2hwwiJZ/sEQ8E0nhgnLwtwFXhnJufva7RP32TaU4VLa5SiE2vYT6YZT3GYU+6F/Xa9IHQaP5wXzCGLIkaRHswwBSNGgHrJJhm4ykysPbtmgab5qKW3KWmrDR3xFfm428V61LL+S3Sc979Pi8=
+	t=1721553800; cv=none; b=U2WlruMqb6b1PGGWOOCxjIW30Y8QWEBk8Jm3FOzVBBy235XbZqlP/4DpxzzXMlWoC2puWsJyhSFaBE+df3ewdrnpnDrBv6PQ44ombiJctOLB+Ve7z3oevc4DXCSxDIWY4+8uPk1F5RfaOSEuNEjzDEg10kXOKlk9oob3u84G4vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721545755; c=relaxed/simple;
-	bh=pMJdIVFXUV0jPyMfrq9r4HmUqfPE8+RVSkprxtzq3bU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HvkaC2UjeXEmzNDv3PRHeJQmWaeM46MetV3PG+BBGH40u+t2+VJYFwbixrfPRN4aMBhd5mf5vaF/JE77rTE5rimkQ5k6JhTD2TMcmq6LIDYgT5JikRiAV5auR642LGlWvXAAWHdHcA7mE89nIYHg2pJjuCxPNek0+6EncdEb0Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uILMsfn7; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5a20de39cfbso2308855a12.1
-        for <linux-pwm@vger.kernel.org>; Sun, 21 Jul 2024 00:09:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1721545750; x=1722150550; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UUDgu7D7Ct1nAM9S+bl/Sf6wVjrqY3o5E3DSE4E1Kng=;
-        b=uILMsfn78fs8R8/+JL727Kqg4XyVIazld20dVscuxD3uADOY78aPMx6t+HXSQd7jDe
-         iqKiRhPHbQj6CyY3jPToHSM8QPSK82CbHFii2MknpxendNqIJCBP+P6CmZIBy7jsNgbr
-         xrlp7WmdNWijeZZA5vpmnizpt6qO5xxw8uA0YCPS4YdYZi2ndSJsb1LW+Oo6BjXtTDjY
-         7vuokZODGc01QfeeIiQI3v1iv9wwrsph6DSzODd6mDtfmtBgYSHtDBdkhhTae1KIS5s2
-         qdGa10YiKipaVVU7KCJCU3hmOvLGw6PKKuuKe2+SuYBfKv34Gw/a7BvFg54j+AzMIX6b
-         kURA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721545750; x=1722150550;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UUDgu7D7Ct1nAM9S+bl/Sf6wVjrqY3o5E3DSE4E1Kng=;
-        b=vYpSNZcog6DC5ljV1vRAW+/Zv7uenqH/xxgKdWhvvC3TVW+rPwsuMCB542TMks34Q4
-         BYg+xeBtOSWGPyb/yuG9qpCjOnaAgR28SUYl2TkSbxsL9nwECRA9uyC94Xbju9inZpbD
-         o38x4SZMG5d2Pkz7GP0K3T6uwMr2yCr4UC10ns1WCD5g3W1G4tbxM0i0mlgBz/vCG2dn
-         3lQXQ6FFIlUkSV6rEkAxZP/lhQ2VY9e6flov2iejWuHegmsJEeIGJar+Ek6bOek7hnc5
-         qCmHu/iSm21pPWYmsgFb0fkyNUCKlSh5g+LBgyXuoeFNuAvV8OoAcdRI/C+biDyLLKbo
-         rGWw==
-X-Forwarded-Encrypted: i=1; AJvYcCU29IA9rZGfuCqtmZHSBaZ7Q0w1oHyjkDKtmEEndB7VtjYfU+cPFt7vbziuuYw+a8grhR78C7b83Oa+kjCVYl+1dOkteCPlB0c4
-X-Gm-Message-State: AOJu0YxozOEshR0Hn6p+6zx3JlkTbSkZ8Ix+toCXDIIGzQ3oanC7ngIE
-	0DHfxrrGGQctpvYB+1vGXojCDDybTwZ/IX87aeixDOwWQz+DroEI+bGaDGo3gj0=
-X-Google-Smtp-Source: AGHT+IECWO1lxZRYT2qdadrixcc6+Dfvn+Es8q3wInLwWOOvOoGPxZb8rEQdmjKisGLzPbLnTl1CNw==
-X-Received: by 2002:a50:871d:0:b0:5a1:b0b2:798d with SMTP id 4fb4d7f45d1cf-5a3f089cc4fmr2614907a12.25.1721545749706;
-        Sun, 21 Jul 2024 00:09:09 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:4f36:15af:aac:697f])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5a30aaa3842sm4044283a12.36.2024.07.21.00.09.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jul 2024 00:09:09 -0700 (PDT)
-Date: Sun, 21 Jul 2024 09:09:07 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Haibo Chen <haibo.chen@nxp.com>, 
-	Clark Wang <xiaoning.wang@nxp.com>, Frank Li <Frank.li@nxp.com>
-Subject: Re: [PATCH v5 4/4] pwm: adp5585: Add Analog Devices ADP5585 support
-Message-ID: <cc3omm4oaenx6knihusxbez4bntcsa72ht75yvelyyl6irkpwr@uotoqchzdh2o>
-References: <20240719203946.22909-1-laurent.pinchart@ideasonboard.com>
- <20240719203946.22909-5-laurent.pinchart@ideasonboard.com>
+	s=arc-20240116; t=1721553800; c=relaxed/simple;
+	bh=eQPrAKfHki9GUQpcy3CID1wSwZtDcapXmQlsQbBOiXY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ViqG6JBJeq4MNbvYCjGpmLnKdwXhNY6+YAjLBJEHNTuW5eJUGk3WTY+6oYqzhGeKGp1gMlCi6kfqz0gevP5XhqPMKX+1w8g6sB/gSNKTUSLohM3lUCPSZ/ta8lamQJedInRhNtTkezwWcqZS2xXqVpC/XX6N3hJy9U2YYuTpAVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jEB+wv9q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 307A8C116B1;
+	Sun, 21 Jul 2024 09:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721553800;
+	bh=eQPrAKfHki9GUQpcy3CID1wSwZtDcapXmQlsQbBOiXY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jEB+wv9qH56H3DHG2itDcyyvVXskxMni1JzT/KQZ4mj3d6KzoHgRkLA2PvNqtbLf2
+	 HmFkv0+yh9OTLAvgAfKUvXTB+ByWWh2fZ+HKgusXz4YIsIoY73TKcOA+UaMtIk9eKz
+	 Bjn8Kz0gx9Eh5cn2QlxfInPPQFT8ZktUQrldQqLKpmUsvnRVyI9c1WN3I9ZFZhi1BX
+	 ZxXs3E/M7OM6ZlFeeaHwsyasm/ebXn1dNR3y+HlM6ENRfY5mM8aOTv/iZYm8jRbAwZ
+	 ZSpdQsOp19QM+HndiqvRfXjo5GMG5dVGZeHX/nIeC0Kb5u7Q3Fzdmnxb/SvuqxdGhf
+	 wuul8dXk5J/9A==
+Message-ID: <f962a71c-6be7-4ad2-9753-e1f9ab7a38a0@kernel.org>
+Date: Sun, 21 Jul 2024 11:23:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="w2vqc6i5xu3vs527"
-Content-Disposition: inline
-In-Reply-To: <20240719203946.22909-5-laurent.pinchart@ideasonboard.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/4] dt-bindings: mfd: Add Analog Devices ADP5585
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Haibo Chen <haibo.chen@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+ Frank Li <Frank.li@nxp.com>
+References: <20240719203946.22909-1-laurent.pinchart@ideasonboard.com>
+ <20240719203946.22909-2-laurent.pinchart@ideasonboard.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240719203946.22909-2-laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 19/07/2024 22:39, Laurent Pinchart wrote:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vdd-supply: true
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  gpio-reserved-ranges: true
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +  - "#pwm-cells"
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: adi,adp5585-01
+> +    then:
+> +      properties:
+> +        gpio-reserved-ranges: false
+> +    else:
+> +      properties:
+> +        gpio-reserved-ranges:
+> +          items:
+> +            - const: 5
+> +            - const: 1
+
+Why reserved ranges are fixed? If they pins are *always* not accessible,
+then these are not GPIOs. This really looks incorrect.
+
+Anyway, testing reports failures which *must* be addressed, one way or
+another.
 
 
---w2vqc6i5xu3vs527
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Best regards,
+Krzysztof
 
-Hello Laurent,
-
-thanks for your reiteration of the series.
-
-Just a few questions and minor suggestions left; see below.
-
-On Fri, Jul 19, 2024 at 11:39:46PM +0300, Laurent Pinchart wrote:
-> From: Clark Wang <xiaoning.wang@nxp.com>
->=20
-> The ADP5585 is a 10/11 input/output port expander with a built in keypad
-> matrix decoder, programmable logic, reset generator, and PWM generator.
-> This driver supports the PWM function using the platform device
-> registered by the core MFD driver.
->=20
-> The driver is derived from an initial implementation from NXP, available
-> in commit 113113742208 ("MLK-25922-1 pwm: adp5585: add adp5585 PWM
-> support") in their BSP kernel tree. It has been extensively rewritten.
->=20
-> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-Would your changes justify a Co-developed-by:?
-
-> diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
-> new file mode 100644
-> index 000000000000..472a4c20b7a9
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-adp5585.c
-> @@ -0,0 +1,189 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Analog Devices ADP5585 PWM driver
-> + *
-> + * Copyright 2022 NXP
-> + * Copyright 2024 Ideas on Board Oy
-> + *
-> + * Limitations:
-> + * - The .apply() operation executes atomically, but may not wait for the
-> + *   period to complete (this is not documented and would need to be tes=
-ted).
-
-So writing to ADP5585_PWM_OFFT and ADP5585_PWM_ONT is shadowed until
-what happens?
-
-> + * - Disabling the PWM drives the output pin to a low level immediately.
-> + * - The hardware can only generate normal polarity output.
-> + */
-> +
-> +#include <asm/byteorder.h>
-> +
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/math64.h>
-> +#include <linux/mfd/adp5585.h>
-> +#include <linux/minmax.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/time.h>
-> +#include <linux/types.h>
-> +
-> +#define ADP5585_PWM_CHAN_NUM		1
-> +
-> +#define ADP5585_PWM_OSC_FREQ_HZ		1000000U
-> +#define ADP5585_PWM_MIN_PERIOD_NS	(2ULL * NSEC_PER_SEC / ADP5585_PWM_OSC=
-_FREQ_HZ)
-> +#define ADP5585_PWM_MAX_PERIOD_NS	(2ULL * 0xffff * NSEC_PER_SEC / ADP558=
-5_PWM_OSC_FREQ_HZ)
-> +
-> +static int pwm_adp5585_request(struct pwm_chip *chip, struct pwm_device =
-*pwm)
-> +{
-> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
-> +	int ret;
-> +
-> +	ret =3D regmap_update_bits(regmap, ADP5585_PIN_CONFIG_C,
-> +				 ADP5585_R3_EXTEND_CFG_MASK,
-> +				 ADP5585_R3_EXTEND_CFG_PWM_OUT);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_update_bits(regmap, ADP5585_GENERAL_CFG,
-> +				  ADP5585_OSC_EN, ADP5585_OSC_EN);
-
-The purpose of this function is pinmuxing and oscillator enabling,
-right? Would it make sense to enable the oscillator only in .apply() with
-=2Eenabled =3D true to save some power?
-
-> +}
-> +
-> +static void pwm_adp5585_free(struct pwm_chip *chip, struct pwm_device *p=
-wm)
-> +{
-> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
-> +
-> +	regmap_update_bits(regmap, ADP5585_PIN_CONFIG_C,
-> +			   ADP5585_R3_EXTEND_CFG_MASK,
-> +			   ADP5585_R3_EXTEND_CFG_GPIO4);
-> +	regmap_update_bits(regmap, ADP5585_GENERAL_CFG,
-> +			   ADP5585_OSC_EN, 0);
-> +}
-> +
-> +static int pwm_adp5585_apply(struct pwm_chip *chip,
-> +			     struct pwm_device *pwm,
-> +			     const struct pwm_state *state)
-> +{
-> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
-> +	u64 period, duty_cycle;
-> +	u32 on, off;
-> +	__le16 val;
-> +	int ret;
-> +
-> +	if (!state->enabled)
-> +		return regmap_update_bits(regmap, ADP5585_PWM_CFG,
-> +					  ADP5585_PWM_EN, 0);
-> +
-> +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> +		return -EINVAL;
-> +
-> +	if (state->period < ADP5585_PWM_MIN_PERIOD_NS)
-> +		return -EINVAL;
-> +
-> +	period =3D min(state->period, ADP5585_PWM_MAX_PERIOD_NS);
-> +	duty_cycle =3D min(state->duty_cycle, period);
-> +
-> +	/*
-> +	 * Compute the on and off time. As the internal oscillator frequency is
-> +	 * 1MHz, the calculation can be simplified without loss of precision.
-> +	 */
-> +	on =3D div_u64(duty_cycle, NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
-> +	off =3D div_u64(period, NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ) - on;
-> +
-> +	val =3D cpu_to_le16(off);
-> +	ret =3D regmap_bulk_write(regmap, ADP5585_PWM_OFFT_LOW, &val, 2);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val =3D cpu_to_le16(on);
-> +	ret =3D regmap_bulk_write(regmap, ADP5585_PWM_ONT_LOW, &val, 2);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Enable PWM in continuous mode and no external AND'ing. */
-> +	ret =3D regmap_update_bits(regmap, ADP5585_PWM_CFG,
-> +				 ADP5585_PWM_IN_AND | ADP5585_PWM_MODE |
-> +				 ADP5585_PWM_EN, ADP5585_PWM_EN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-
-This could be simplified to just:
-
-	return regmap_update_bits(...);
-
-(but some people feel strong here, so just a suggestion)
-
-> +}
-> +
-> +static int pwm_adp5585_get_state(struct pwm_chip *chip,
-> +				 struct pwm_device *pwm,
-> +				 struct pwm_state *state)
-> +{
-> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
-> +	unsigned int on, off;
-> +	unsigned int val;
-> +	__le16 on_off;
-> +	int ret;
-> +
-> +	ret =3D regmap_bulk_read(regmap, ADP5585_PWM_OFFT_LOW, &on_off, 2);
-> +	if (ret)
-> +		return ret;
-> +	off =3D le16_to_cpu(on_off);
-> +
-> +	ret =3D regmap_bulk_read(regmap, ADP5585_PWM_ONT_LOW, &on_off, 2);
-> +	if (ret)
-> +		return ret;
-> +	on =3D le16_to_cpu(on_off);
-> +
-> +	state->duty_cycle =3D on * (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
-> +	state->period =3D (on + off) * (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
-> +
-> +	state->polarity =3D PWM_POLARITY_NORMAL;
-> +
-> +	regmap_read(regmap, ADP5585_PWM_CFG, &val);
-> +	state->enabled =3D !!(val & ADP5585_PWM_EN);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops adp5585_pwm_ops =3D {
-> +	.request =3D pwm_adp5585_request,
-> +	.free =3D pwm_adp5585_free,
-> +	.apply =3D pwm_adp5585_apply,
-> +	.get_state =3D pwm_adp5585_get_state,
-> +};
-> +
-> +static int adp5585_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct adp5585_dev *adp5585 =3D dev_get_drvdata(dev->parent);
-> +	struct pwm_chip *chip;
-> +	int ret;
-> +
-> +	chip =3D devm_pwmchip_alloc(dev, ADP5585_PWM_CHAN_NUM, 0);
-
-ADP5585_PWM_CHAN_NUM is only used once. I would prefer passing a plain 1
-here, as this makes the output of $(grep devm_pwmchip_alloc) a bit more
-useful.
-
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +
-> +	device_set_of_node_from_dev(dev, dev->parent);
-> +
-> +	pwmchip_set_drvdata(chip, adp5585->regmap);
-> +	chip->ops =3D &adp5585_pwm_ops;
-> +
-> +	ret =3D devm_pwmchip_add(dev, chip);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct platform_device_id adp5585_pwm_id_table[] =3D {
-> +	{ "adp5585-pwm" },
-> +	{ /* Sentinel */ },
-
-The trailing comma should be dropped here.
-
-> +};
-> +MODULE_DEVICE_TABLE(platform, adp5585_pwm_id_table);
-> +
-> +static struct platform_driver adp5585_pwm_driver =3D {
-> +	.driver	=3D {
-> +		.name =3D "adp5585-pwm",
-> +	},
-> +	.probe =3D adp5585_pwm_probe,
-> +	.id_table =3D adp5585_pwm_id_table,
-> +};
-> +module_platform_driver(adp5585_pwm_driver);
-> +
-> +MODULE_AUTHOR("Xiaoning Wang <xiaoning.wang@nxp.com>");
-> +MODULE_DESCRIPTION("ADP5585 PWM Driver");
-> +MODULE_LICENSE("GPL");
-
-Thanks
-Uwe
-
---w2vqc6i5xu3vs527
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmactBAACgkQj4D7WH0S
-/k5GhQf/T0W255qx1/fAMkVpmRQ4+r1A+CRpUEOBXfOOFQuF4/g5qjsviPUZzGZj
-aERxHd2wOGrxO+9Qak6o3pXbA7O3UJl6CjYiCwfgfOZfFdaJI7yZAlyG9XSDXWAQ
-wDscjrTmSRaC812MT8/UuIoBl2kWJRa57PzrLqDmmh/oCG0XpzbIs4MIaB5jyz2/
-TOMPTL/0xZFLUDn39s+DqlyUi1QtpJE9JAfQYFs0Rvcj/ZZOdqm7fVaj3ZN72/WO
-uUTPM9xY323XHWLGL6rm2pnPfKqrz1o6GLiqkOg5z4TvAj7m0a+pB4150vjGY0XP
-cHKLUVTiqVP1cEJbAPCw0J/W+MH1cQ==
-=/hhJ
------END PGP SIGNATURE-----
-
---w2vqc6i5xu3vs527--
 
