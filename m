@@ -1,202 +1,210 @@
-Return-Path: <linux-pwm+bounces-2883-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2884-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 837D89387B8
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 05:36:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E03519387D7
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 05:53:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A63EE1C20D57
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 03:36:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0FCC6B20F5F
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 03:53:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15C7913FFC;
-	Mon, 22 Jul 2024 03:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B9F13FFC;
+	Mon, 22 Jul 2024 03:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j3l+vZsf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJiL7/61"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2AB14A90;
-	Mon, 22 Jul 2024 03:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177DA10979;
+	Mon, 22 Jul 2024 03:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721619365; cv=none; b=aU+khf0IcBUH6vyTGKIT/FeFvEMDJj6ktmmZ3KxfOFSSnapTdJLJzwOb1FysTXiPhLcg5ean136PKaTuTdlGZwUBSV149NsNu4BYFg2ziX5+8otEg4KXfJEkvgxgoe0VD2RK1ezj7u0nU5NrdKCroUmCkuBKuaJ0XYBSwHGpr6Q=
+	t=1721620417; cv=none; b=GZk0tO0THbOn9lRS2yqoG2RW/LoQivmyIWUqOvmVkdfgXUl0Nx1R7IgzyT3TVVjIudbN6QmZ501bBRElQCqVw5KIec9SXqB6yc9Kt2c+DMLKurE1kLnC0S6KoQsrnfneRuaJiQ81Iaue8xA9vKc+N2wg9Urnq8GuKmLtSRqCw7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721619365; c=relaxed/simple;
-	bh=PwFT7B1VJB/UXjjpWDCkDoQ6sX7XM3WUzIPOQ+mIUNQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TUnbhpQvBEvvHndHLy7PGaMRjyLU34NraJqjc/uIrEaXVbk+K1c3bl234G0QsjkqRnMbctgacBlI80WlVSSr7m1a5UEj7mIpteFwlOnbo9b/OKAEo9Pzp3GuqOdwxqbDT6ud0vnMaI+jZTuMM1pGfUXC6b0g5GJK0cvK2iPd/Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j3l+vZsf; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721619364; x=1753155364;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PwFT7B1VJB/UXjjpWDCkDoQ6sX7XM3WUzIPOQ+mIUNQ=;
-  b=j3l+vZsfsp1gmgtJ+lY7VwH78P1NZ2M3NO0RUem4e0e8B6/yZcdrsxpG
-   0bjznLkk8Yl0hANQjd0u7X6wx1EStvdkt8zTfT2kofTgEHUkzNgWe78rs
-   Jz1bx/XMKNgiYTdL9EXnOFj9iuFXGz6Aybhd+tGayoP/UumrpXPZeLz8P
-   lxUeaQeQ3Z448gYgrP6HNrVecCWDnH/rPkjt8UhzHRfs5FeUNGyyfA9ev
-   I6I75KlW+q6BS2t6vTUQMqgMF/6GgL4qk4GIJD/sVqPSgc/+XAvGDcRTq
-   tx8taBiruir16KdPPyT+EKElV46SOGXa8N+jFM58vYw8SMWwtLFoUpgea
-   w==;
-X-CSE-ConnectionGUID: 9fSXWEdnRU+N0QoaYAYTfw==
-X-CSE-MsgGUID: omcauA4ySYGkoMbA144Q6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11140"; a="30554900"
-X-IronPort-AV: E=Sophos;i="6.09,227,1716274800"; 
-   d="scan'208";a="30554900"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2024 20:36:03 -0700
-X-CSE-ConnectionGUID: 2gtp3AbRQmGUQ2ZIJi9ldQ==
-X-CSE-MsgGUID: tkEtpGauSueOyIL1HE3XIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,227,1716274800"; 
-   d="scan'208";a="51460628"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 21 Jul 2024 20:35:59 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sVjq8-000kqK-3A;
-	Mon, 22 Jul 2024 03:35:56 +0000
-Date: Mon, 22 Jul 2024 11:35:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>, jdelvare@suse.com,
-	linux@roeck-us.net, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, ukleinek@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v6 3/3] hwmon: (adt7475) Add support for configuring
- initial PWM state
-Message-ID: <202407221153.LJjYD5i7-lkp@intel.com>
-References: <20240722005825.1800403-4-chris.packham@alliedtelesis.co.nz>
+	s=arc-20240116; t=1721620417; c=relaxed/simple;
+	bh=v5ej+QHAYRtzwvwyNZuFnJwqbwaB/QFI5GNYhKWRc3w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=saUG8oJAEWtiQIxICyJYHZiCZ0Q27z6zTV6KqwpkBFdkLA5JTfgmihEuOSk0fwgVf7/Z22BvPaPAl8AXxUyzgLQI7MKBqn+DwCzT/2JeMKlq9hZ1RIPNYEVQaujTo0Bb6b5or6VfPsPo+ypgqPVL86H8bu/PsW+Ik7t+yQljF78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SJiL7/61; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-260e5b2dfb5so2235386fac.3;
+        Sun, 21 Jul 2024 20:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721620415; x=1722225215; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=1iD8loJCEK8S+S3SAkzQSxIdWLCgBghxXkHptXFwg0g=;
+        b=SJiL7/613ghvmmN93kaDuPScC+91ARfJWsUGIM6pWJRB7BJ5j8K6CWryiTVoPTEWha
+         xcdFv3XNPZoegTP/nSjw+z+wIga6Xfq/0UlUFXWQ1qh+ERZGh16o5ZgPTZWdGM5DV/Tx
+         C3oyjBeHko3q2ZRNx6z4q2XgZ9r7Az1j/Qlg5dRdnFJNdnyKenEYI0b9TDLiMfdVlAAd
+         WXnjnY2aXRKyeQKXUomsFVyB7d40NXdi7lI+CemBQQjTcwBTAmHNvN1M3RzTOhbwrbx5
+         qw/qxLyeOj4Ssg/EE/20hmhOwHYSN3rzSI3dMXfI1oauHm5W6Fsn003uk7zWLH2+7BD/
+         uidg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721620415; x=1722225215;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1iD8loJCEK8S+S3SAkzQSxIdWLCgBghxXkHptXFwg0g=;
+        b=rBm9suQ1oD0s+sYWTqpHCFEUjVSTUDCjZr4SGojHxUDKF3TFYjg9wy5W52bCHtxByF
+         wKwmJcpvj/5cT5anZon3c/DnovC475KkIDfBY5IYlvnqwvIe1aLCoEd7sbDbOng0ipq+
+         DBPhtqL7DA4P9YBA3FQrGIYlnf4lTBN1XJJMZsO8h54caI1AEWWd4IbaCPS+1QnM7hkE
+         VrIJ6Qz0nEVK+YdT3NLw2ts/ECxR8ZLf3ojFZfnwxoRS+ze4HNwym33Kpdi78qysHJKT
+         brUMbK+iwrMHPw8sIqLsXrl8mfWpJ2uZzy7G65+RrI9wJrZB/ONsCm7aw6iyPo4HnGo4
+         gkNg==
+X-Forwarded-Encrypted: i=1; AJvYcCU5pP5sZVl9TfYvORcnr1yAp9GQ1eUQT0rAtcQEu6qGIwaxiiyBYAPDYofAxGzA1n/Bm0VJpBVd2yc6f0V/4zkBSP/0yXLp+spnBiVx30WTEH3hOOAaEnJVvInP4k6T7396U7tnE1jg+Ey63oyJqE/rpZ1Mkoj0yWhySKiIeQ70STo0wA==
+X-Gm-Message-State: AOJu0YzQIHMzVR9sVDsmBK2ntsiCDnuuEp/c8STA6LnMGqPL+46uhFVJ
+	J40xopymEZEVk1CjdWLuS4NRpIBjF2TpJE5td91/MnwotcdygD+x
+X-Google-Smtp-Source: AGHT+IHZijDAM2ucUD2gE3ulZWZMetR+HHznBRaBWoqS0qs44a/XCCWbKW4MnlXinzoO6Qa/XwHbtA==
+X-Received: by 2002:a05:6870:71c3:b0:260:ffaf:811a with SMTP id 586e51a60fabf-2638de5ba01mr5240250fac.8.1721620415145;
+        Sun, 21 Jul 2024 20:53:35 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70cff4b2f6esm4488837b3a.67.2024.07.21.20.53.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 21 Jul 2024 20:53:34 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <15f4c51c-3f7d-4e93-9c3a-71ac1d626463@roeck-us.net>
+Date: Sun, 21 Jul 2024 20:53:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/3] hwmon: (adt7475) Add support for configuring
+ initial PWM state
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>, jdelvare@suse.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, ukleinek@kernel.org
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20240722005825.1800403-1-chris.packham@alliedtelesis.co.nz>
+ <20240722005825.1800403-4-chris.packham@alliedtelesis.co.nz>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
 In-Reply-To: <20240722005825.1800403-4-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Chris,
+On 7/21/24 17:58, Chris Packham wrote:
+> By default the PWM duty cycle in hardware is 100%. On some systems this
+> can cause unwanted fan noise. Add the ability to specify the fan
+> connections and initial state of the PWMs via device properties.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+> 
+> Notes:
+>      Changes in v6:
+>      - Use do_div() instead of plain /
+>      - Use a helper function to avoid repetition between the of and non-of
+>        code paths.
+>      Changes in v5:
+>      - Deal with PWM frequency and duty cycle being specified in nanoseconds
+>      Changes in v4:
+>      - Support DT and ACPI fwnodes
+>      - Put PWM into manual mode
+>      Changes in v3:
+>      - Use the pwm provider/consumer bindings
+>      Changes in v2:
+>      - Use correct device property string for frequency
+>      - Allow -EINVAL and only warn on error
+>      - Use a frequency of 0 to indicate that the hardware should be left as-is
+> 
+>   drivers/hwmon/adt7475.c | 130 ++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 130 insertions(+)
+> 
+> diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
+> index 4224ffb30483..fc5605d34f36 100644
+> --- a/drivers/hwmon/adt7475.c
+> +++ b/drivers/hwmon/adt7475.c
+> @@ -21,6 +21,8 @@
+>   #include <linux/of.h>
+>   #include <linux/util_macros.h>
+>   
+> +#include <dt-bindings/pwm/pwm.h>
+> +
+>   /* Indexes for the sysfs hooks */
+>   
+>   #define INPUT		0
+> @@ -1662,6 +1664,130 @@ static int adt7475_set_pwm_polarity(struct i2c_client *client)
+>   	return 0;
+>   }
+>   
+> +struct adt7475_pwm_config {
+> +	int index;
+> +	int freq;
+> +	int flags;
+> +	int duty;
+> +};
+> +
+> +static int _adt7475_pwm_properties_parse_args(u32 args[4], struct adt7475_pwm_config *cfg)
+> +{
+> +	unsigned long freq_hz;
+> +	unsigned long duty;
+> +
+> +	if (args[1] == 0)
+> +		return -EINVAL;
+> +
+> +	freq_hz = 1000000000UL;
+> +	do_div(freq_hz, args[1]);
+> +	duty = 255 * args[3];
+> +	do_div(duty, args[1]);
+> +
 
-kernel test robot noticed the following build errors:
+Gues I am a bit at loss here, just as 0-day. Why use do_div ? It is only needed
+for 64-bit divide operations.
 
-[auto build test ERROR on groeck-staging/hwmon-next]
-[also build test ERROR on linus/master v6.10 next-20240719]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks,
+Guenter
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Chris-Packham/dt-bindings-hwmon-Add-adt7475-fan-pwm-properties/20240722-091004
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
-patch link:    https://lore.kernel.org/r/20240722005825.1800403-4-chris.packham%40alliedtelesis.co.nz
-patch subject: [PATCH v6 3/3] hwmon: (adt7475) Add support for configuring initial PWM state
-config: arm-randconfig-002-20240722 (https://download.01.org/0day-ci/archive/20240722/202407221153.LJjYD5i7-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project ad154281230d83ee551e12d5be48bb956ef47ed3)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240722/202407221153.LJjYD5i7-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407221153.LJjYD5i7-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   In file included from drivers/hwmon/adt7475.c:15:
-   In file included from include/linux/i2c.h:19:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:21:
-   In file included from include/linux/mm.h:2253:
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> drivers/hwmon/adt7475.c:1683:2: warning: comparison of distinct pointer types ('typeof ((freq_hz)) *' (aka 'unsigned long *') and 'uint64_t *' (aka 'unsigned long long *')) [-Wcompare-distinct-pointer-types]
-    1683 |         do_div(freq_hz, args[1]);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/div64.h:222:28: note: expanded from macro 'do_div'
-     222 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
-         |                ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
->> drivers/hwmon/adt7475.c:1683:2: error: incompatible pointer types passing 'unsigned long *' to parameter of type 'uint64_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
-    1683 |         do_div(freq_hz, args[1]);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/div64.h:238:22: note: expanded from macro 'do_div'
-     238 |                 __rem = __div64_32(&(n), __base);       \
-         |                                    ^~~~
-   arch/arm/include/asm/div64.h:24:45: note: passing argument to parameter 'n' here
-      24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
-         |                                             ^
->> drivers/hwmon/adt7475.c:1685:2: warning: comparison of distinct pointer types ('typeof ((duty)) *' (aka 'unsigned long *') and 'uint64_t *' (aka 'unsigned long long *')) [-Wcompare-distinct-pointer-types]
-    1685 |         do_div(duty, args[1]);
-         |         ^~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/div64.h:222:28: note: expanded from macro 'do_div'
-     222 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
-         |                ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
-   drivers/hwmon/adt7475.c:1685:2: error: incompatible pointer types passing 'unsigned long *' to parameter of type 'uint64_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
-    1685 |         do_div(duty, args[1]);
-         |         ^~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/div64.h:238:22: note: expanded from macro 'do_div'
-     238 |                 __rem = __div64_32(&(n), __base);       \
-         |                                    ^~~~
-   arch/arm/include/asm/div64.h:24:45: note: passing argument to parameter 'n' here
-      24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
-         |                                             ^
->> drivers/hwmon/adt7475.c:1683:2: warning: shift count >= width of type [-Wshift-count-overflow]
-    1683 |         do_div(freq_hz, args[1]);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/div64.h:234:25: note: expanded from macro 'do_div'
-     234 |         } else if (likely(((n) >> 32) == 0)) {          \
-         |                                ^  ~~
-   include/linux/compiler.h:76:40: note: expanded from macro 'likely'
-      76 | # define likely(x)      __builtin_expect(!!(x), 1)
-         |                                             ^
-   drivers/hwmon/adt7475.c:1685:2: warning: shift count >= width of type [-Wshift-count-overflow]
-    1685 |         do_div(duty, args[1]);
-         |         ^~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/div64.h:234:25: note: expanded from macro 'do_div'
-     234 |         } else if (likely(((n) >> 32) == 0)) {          \
-         |                                ^  ~~
-   include/linux/compiler.h:76:40: note: expanded from macro 'likely'
-      76 | # define likely(x)      __builtin_expect(!!(x), 1)
-         |                                             ^
-   5 warnings and 2 errors generated.
-
-
-vim +1683 drivers/hwmon/adt7475.c
-
-  1673	
-  1674	static int _adt7475_pwm_properties_parse_args(u32 args[4], struct adt7475_pwm_config *cfg)
-  1675	{
-  1676		unsigned long freq_hz;
-  1677		unsigned long duty;
-  1678	
-  1679		if (args[1] == 0)
-  1680			return -EINVAL;
-  1681	
-  1682		freq_hz = 1000000000UL;
-> 1683		do_div(freq_hz, args[1]);
-  1684		duty = 255 * args[3];
-> 1685		do_div(duty, args[1]);
-  1686	
-  1687		cfg->index = args[0];
-  1688		cfg->freq = find_closest(freq_hz, pwmfreq_table, ARRAY_SIZE(pwmfreq_table));
-  1689		cfg->flags = args[2];
-  1690		cfg->duty = clamp_val(duty, 0, 0xFF);
-  1691	
-  1692		return 0;
-  1693	}
-  1694	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
