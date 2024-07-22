@@ -1,58 +1,59 @@
-Return-Path: <linux-pwm+bounces-2880-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2882-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F52C938724
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 03:08:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 727E093872F
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 03:09:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 914F01C20C64
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 01:08:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 187A61F21357
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 01:09:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6C0B610C;
-	Mon, 22 Jul 2024 01:08:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0130DDF53;
+	Mon, 22 Jul 2024 01:08:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="aX0Zew5+"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="zCEVQkxz"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE064C7D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62151748F
 	for <linux-pwm@vger.kernel.org>; Mon, 22 Jul 2024 01:08:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721610519; cv=none; b=WS8ZmuC2LOuuTm4tFMTng7tUz2/PGoG7TdtdzGRIgs3gzMYhAUBvu2/xmGeeYDtFCT/tFmTZzQA9cjZMq4lVLyIbRcL0rponr1SjlzuOsT6OFn0cSjtUTMjsrWvKX5GSRyEdoFltR3Lx8h9vflCRukcfZDAqA3Ol/+cpTKFoVNQ=
+	t=1721610520; cv=none; b=Bkq4SbaAsp/HoDafkz6oAo/4Sd99ERfNv4IJ5cLsfucbHc0OgleNfpOlVYAYEV4/rOd0Ut8mJiLixDop+zDL33eqtvuF+MU3+b9PG9ddU9XUQOe7xf8d8KD9Wuh/J3qbih7/sGMalO6Vms9wRqvqmwZgHZ3n09sn+uk+d17u4wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721610519; c=relaxed/simple;
-	bh=LQGGwmtPQi83POL6jKJzd0CjYqPPGixiEWajpJj6uAM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FDpKronOlbhAO3t94hhaoLFNpwFyLPXzy0q3LnSI10n4cL7JQ/knHuzjDgEQkUKs7jWYkkkVJE04ah/X5jztX14iyx4vVv2IOeEecd5lB1aQ8M7vu7y0t2UPVnW5YnqTITW/7GG7a6LYf2fPtlPF/DV7ceyOkXHdGzhHGueHnmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=aX0Zew5+; arc=none smtp.client-ip=202.36.163.20
+	s=arc-20240116; t=1721610520; c=relaxed/simple;
+	bh=sBAG8CgQvJNf1n1v9OA5RdPMZATzxBlvnrmNXiecv08=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=r3mImJPezGDecjFjvfQtr1d3JuT00b6oYUW4j/M9GkcPU6GhAocOch+Xz9b3daluX+sgCX1w5DyxPlg6p3fBawT33f1DxezlSM/vMxSMYimHPxA0zByqobVboa3FmOCAOZaxXVEea3mVfSMc7wXRZxDSlHj7cBs1YUMdxb5s+ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=zCEVQkxz; arc=none smtp.client-ip=202.36.163.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 637C32C0D4E;
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 8E0142C0E30;
 	Mon, 22 Jul 2024 12:58:41 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
 	s=mail181024; t=1721609921;
-	bh=WfH33PLAldYMJ+pDXxUw1Ptq8AZh9K0ykjWg0OEjoPI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aX0Zew5+S4dJiKNyg55TtCyZwLmnjLafQnBufLfeR4DZ4o1XKeV0YP1uivW5kIl6P
-	 jHRIepWNwuALy7vRKLeNElDmZb33fzA7bKRBDkKNJfkhNx1iHbOIELO82V2IgS1LQQ
-	 3obVG1hfntMSkw5UTQ4yW/wCsRFekXrI+H/I/TSoqW9kKS3sSyqSwojfkhnK7PKJ1r
-	 TDayatyONOZJ+yog7CjJLo+0/orq1XKamWXX7QMpGSAUngVnqlod6FhIQE70bafC9L
-	 9QCflE1alt9jwoHN00crjBNKt92PsK/iBWuQakJ/1VwH8ihAdrnNvMbDAm15TuK//j
-	 ShGiGNtgL2Jog==
+	bh=CEQoIEZwGjggOOe+cMGdGFt8ELGSd5VDRabos8qlvQ8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=zCEVQkxzbS6k6P9vF8NkLfxGpsx5COsZzlU1m626EWug8vYY1qsBK6vyW/052rcu0
+	 KHDk9JZd/LPotcfbT+h8jI4ymW9Dya2avGe23sixicctmI+/QizCNWjdmlOxe2sFlS
+	 UoApyrQxs3a9Ku1ViIvnFkKVluKwsEea6Kev1fpzJDC65TCh3WJk2B6q1NP9xD8fRq
+	 KMKd9DOpx5ttq9QbPlvXJSDkLTCTjdEbaW0R/am0fzosc65ZR0MLuCQMN7qoSYGZFn
+	 uw3zERKWnt6fgrp1YQ8vdznhnxR2AI79PTwV8aIeaVKcIzocfsfOttNFUpIRtH3814
+	 6QKzTs8MhMYAg==
 Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B669daec10000>; Mon, 22 Jul 2024 12:58:41 +1200
+	id <B669daec10001>; Mon, 22 Jul 2024 12:58:41 +1200
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 3649813ED2A;
+	by pat.atlnz.lc (Postfix) with ESMTP id 38D0613EE6D;
 	Mon, 22 Jul 2024 12:58:41 +1200 (NZST)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 31C3328095E; Mon, 22 Jul 2024 12:58:41 +1200 (NZST)
+	id 34E522808D5; Mon, 22 Jul 2024 12:58:41 +1200 (NZST)
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 To: jdelvare@suse.com,
 	linux@roeck-us.net,
@@ -65,10 +66,12 @@ Cc: linux-hwmon@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
 	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v6 0/3] hwmon: (adt7475) duty cycle configuration
-Date: Mon, 22 Jul 2024 12:58:22 +1200
-Message-ID: <20240722005825.1800403-1-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v6 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
+Date: Mon, 22 Jul 2024 12:58:23 +1200
+Message-ID: <20240722005825.1800403-2-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240722005825.1800403-1-chris.packham@alliedtelesis.co.nz>
+References: <20240722005825.1800403-1-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -76,88 +79,106 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=Gqbh+V1C c=1 sm=1 tr=0 ts=669daec1 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=4kmOji7k6h8A:10 a=1vY5SClPdTbzMX9iZtUA:9 a=3ZKOabzyN94A:10
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=Gqbh+V1C c=1 sm=1 tr=0 ts=669daec1 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=4kmOji7k6h8A:10 a=VwQbUJbxAAAA:8 a=nd0hpPEdzzsPhCuWCasA:9 a=3ZKOabzyN94A:10 a=MKNsf3uAAu3gLl-MH12z:22 a=AjGcO6oz07-iQ99wixmX:22
 X-SEG-SpamProfiler-Score: 0
 x-atlnz-ls: pat
 
-I have a system that has very over spec'd fans so the amount of noise whe=
-n they
-run at 100% duty cycle is considerable. We have userspace monitoring tool=
-s that
-will configure appropriate fan control parameters but there is a bit of a=
- delay
-between the kernel loading the driver and the userland tools catching up =
-to
-configure the fan control. This series adds device properties that allow =
-the
-PWM duty cycle to be specified via device properties so the PWM duty cycl=
-e can
-be reduced as soon as possible.
+Add fan child nodes that allow describing the connections for the
+ADT7475 to the fans it controls. This also allows setting some
+initial values for the pwm duty cycle and frequency.
 
-This series attempts to setup the adt7475 as a pwm provider so that we ca=
-n
-specify these properties. The devicetree support was reasonably straight
-forward (example usage is in the binding patch). I struggled to get the A=
-CPI
-version working well and in the end the code had to distinguish between t=
-he
-of_node and other case. The ASL I've ended up with is
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
 
-    Device (ADT0)
-    {
-        Name (_HID, "PRP0001")
-        Name (_CRS, ResourceTemplate () {
-            I2cSerialBusV2 (0x2E, ControllerInitiated,
-                            100000, AddressingMode7Bit,
-                            "^^CH00", 0x00,
-                            ResourceConsumer, , Exclusive, )
-        })
-        Name (_DSD, Package () {
-            ToUUID (UUID_DEVICE_PROPERTIES),
-            Package () {
-                Package () { "compatible", "adi,adt7476" },
-                Package () { "#pwm-cells", 4 },
-            },
-        })
-        Device (FAN0)
-        {
-            Name (_ADR, 0)
-            Name (_DSD, Package () {
-                ToUUID (UUID_DEVICE_PROPERTIES),
-                Package () {
-                    Package () { "pwms", Package () { 0, 44444, 1, 22222 =
-} },
-                }
-            })
-        }
-        Device (FAN1)
-        {
-            Name (_ADR, 0)
-            Name (_DSD, Package () {
-                ToUUID (UUID_DEVICE_PROPERTIES),
-                Package () {
-                    Package () { "pwms", Package () { 2, 44444, 1, 22222 =
-} },
-                }
-            })
-        }
-    }
+Notes:
+    Changes in v6:
+    - Collect r-by from Rob
+    Changes in v5:
+    - Use nanoseconds for PWM frequency and duty cycle as per existing
+      conventions for PWMs
+    - Set flags to 0 in example to match adi,pwm-active-state setting
+    Changes in v4:
+    - 0 is not a valid frequency value
+    Changes in v3:
+    - Use the pwm provider/consumer bindings
+    Changes in v2:
+    - Document 0 as a valid value (leaves hardware as-is)
 
-If had to introduce a code path that parses that because try as I might I=
- could
-not convince fwnode_property_get_reference_args() to fetch the informatio=
-n out
-of the ACPI data. If I've missed something obvious please let me know.
+ .../devicetree/bindings/hwmon/adt7475.yaml    | 35 ++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
-Chris Packham (3):
-  dt-bindings: hwmon: Add adt7475 fan/pwm properties
-  dt-bindings: hwmon: adt7475: Deprecate adi,pwm-active-state
-  hwmon: (adt7475) Add support for configuring initial PWM state
-
- .../devicetree/bindings/hwmon/adt7475.yaml    |  37 ++++-
- drivers/hwmon/adt7475.c                       | 130 ++++++++++++++++++
- 2 files changed, 165 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Docum=
+entation/devicetree/bindings/hwmon/adt7475.yaml
+index 051c976ab711..df2b5b889e4d 100644
+--- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
++++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
+@@ -51,6 +51,24 @@ properties:
+       enum: [0, 1]
+       default: 1
+=20
++  "#pwm-cells":
++    const: 4
++    description: |
++      Number of cells in a PWM specifier.
++      - 0: The PWM channel
++      - 1: The PWM period in nanoseconds
++           - 90909091 (11 Hz)
++           - 71428571 (14 Hz)
++           - 45454545 (22 Hz)
++           - 34482759 (29 Hz)
++           - 28571429 (35 Hz)
++           - 22727273 (44 Hz)
++           - 17241379 (58 Hz)
++           - 11363636 (88 Hz)
++           - 44444 (22 kHz)
++      - 2: PWM flags 0 or PWM_POLARITY_INVERTED
++      - 3: The default PWM duty cycle in nanoseconds
++
+ patternProperties:
+   "^adi,bypass-attenuator-in[0-4]$":
+     description: |
+@@ -81,6 +99,10 @@ patternProperties:
+       - smbalert#
+       - gpio
+=20
++  "^fan-[0-9]+$":
++    $ref: fan-common.yaml#
++    unevaluatedProperties: false
++
+ required:
+   - compatible
+   - reg
+@@ -89,11 +111,12 @@ additionalProperties: false
+=20
+ examples:
+   - |
++    #include <dt-bindings/pwm/pwm.h>
+     i2c {
+       #address-cells =3D <1>;
+       #size-cells =3D <0>;
+=20
+-      hwmon@2e {
++      pwm: hwmon@2e {
+         compatible =3D "adi,adt7476";
+         reg =3D <0x2e>;
+         adi,bypass-attenuator-in0 =3D <1>;
+@@ -101,5 +124,15 @@ examples:
+         adi,pwm-active-state =3D <1 0 1>;
+         adi,pin10-function =3D "smbalert#";
+         adi,pin14-function =3D "tach4";
++        #pwm-cells =3D <4>;
++
++        /* PWMs at 22.5 kHz frequency, 50% duty*/
++        fan-0 {
++          pwms =3D <&pwm 0 44444 0 22222>;
++        };
++
++        fan-1 {
++          pwms =3D <&pwm 2 44444 0 22222>;
++        };
+       };
+     };
 --=20
 2.45.2
 
