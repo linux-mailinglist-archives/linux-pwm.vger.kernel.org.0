@@ -1,224 +1,204 @@
-Return-Path: <linux-pwm+bounces-2886-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2887-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A9F3938813
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 06:28:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 153C7938818
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 06:36:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D805C2812C3
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 04:28:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 316E11C20D7A
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 04:36:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65A1F15E86;
-	Mon, 22 Jul 2024 04:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAEB017543;
+	Mon, 22 Jul 2024 04:36:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqysGY1I"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="RZD4xAoD"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DDF134B2;
-	Mon, 22 Jul 2024 04:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0F32FB2
+	for <linux-pwm@vger.kernel.org>; Mon, 22 Jul 2024 04:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721622479; cv=none; b=fGHRiHlzIx8mLH4Sc6mKkRA584huRwGy48Y6HS6atB9pkiAz1PXzoG0oXZEMBvXyJJ4mpKr4FRym0aWl/Auvi97WxOsPLFgyHvV65L3E7oeLawG3Lk0hYKG7txIg/e/setE08gjT8xWxPX4cRBHO5z4jg2sFZgDswhXLymLwlbw=
+	t=1721623003; cv=none; b=M44fahC36B1hlebStSjSX7npIJDPi7OVDEczVNezXgirpHEWBbTyQ8Tg2X+yFTKH6bGjVPQU3c+5CCGpvdEIaoCTxOCtnws7qDGxLwN3vzoK0Kn/xwJ+AB/4bWcaTDLJLZKpvVKM3teoNXLvNmfDdOo4jzyuKcXojLlhKycc9Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721622479; c=relaxed/simple;
-	bh=K8JWcAkS4a4liaNBpSRVd5qQrnIj7BxckMCwh1u91hA=;
+	s=arc-20240116; t=1721623003; c=relaxed/simple;
+	bh=kawPWjJUSiyPbHtiTN23EdJFTn7YCLOnWW85D2j4qlY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tvW/vxdviC4/oc4dD2+uuiXh5P1ieFQCmfiOHCN+xknBxlSA7NUu7uy7D5434Ihg7M4gwKdUn2AbtnZRp6UzSPaLoJ92kE/yC/RonCWclBCqJkKGYHTU1QK31xX+43uEwoKO57Tjbi8HCMSTPJEgLoZyttVEkWWH/paZkqdp/Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nqysGY1I; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fc569440e1so31226155ad.3;
-        Sun, 21 Jul 2024 21:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721622477; x=1722227277; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=o8ZTrvUyb7a00X6v0/4Q9nPa7JlF0Pt0DDiwaLxc7V0=;
-        b=nqysGY1I3J089wXrZ2AcSqJDlTJLszRNSpczT8Sk6bsBQwX6szlSB/FLtXxUJFOi/O
-         rGprnneL9KKc3YRSi06qVnUXwbEBPp+nrUkqiFkoVGF91ctF4qh6fHN2hYY5mFTz3mPu
-         JKgklzi0PXDs0gmtuOym6LZ1swNb5tYtPw6Gh0KBtHyTGQ10RQHO9MSC9EpYzBIxzC6G
-         Vio/HbT8ul5gFVqOJ9oHpfmQvvXGKVbDVghUkSDMcN2uwZOR1dMFBUxiWZwAD/b+BN7Z
-         IqMKI0GQ8A8p4B53SuUg9N3L3/5E5120KkOcGoIi+NaCxanNCQbGjHJBVYOqCQBEwBdl
-         TL2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721622477; x=1722227277;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o8ZTrvUyb7a00X6v0/4Q9nPa7JlF0Pt0DDiwaLxc7V0=;
-        b=VGyHi9v+ShSrk5XmyH52JnJ7mw+/BWqCi6TNTFFthAFaG51IbWSoIdjOxUi9Z9Q/ae
-         sI1tvhk6aCfkPIhhXZT48ByQeJgOhv0PmTQBskQZlWiV4v0NCUMkcRuOaW1vx2Z/zQxw
-         M/LfOIhoDzhFMfjFymlkOsY81dthKWgSqsiFKalP8cqnqwDCjvqURfozwQm5psV2iKHT
-         nDLlSV5yYTMIA6MgbSZ4OZbHKsvBaebq2FMgvUERW750DN71w4Ob7MHnyMYo2L9wlu7/
-         Ev5BgfvrFf4fw7GMir27tMueo9sRYHRXDgYpcs/IBj6fP+FgsDB29VAzLlLsRvXqeOij
-         xHeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUG8aObHx7mbkpzCggL07j0Gajzhe8vDZrDruKhqCxtRlnbp4ZOdgi3///meTus7EX9hzGjohlgmHhGNq5XJaBH1UPiZvxbMzxLvJb2NI7JH1tXDcWr6SPmPj5rvcPoWqASNMIauv6Lho1UAUKjGwfmNvbHzyC4oDaDofG1rAIbcfjpKw==
-X-Gm-Message-State: AOJu0YwiGS2Q78+9b6231NwNOLNm3BTSwDi66IJDfqTt83ZQf+BGW8Kh
-	m6IQuMDydYzXOdPHze1aeg58bUlgX+z9mq20MjmT/XWXqJVAtvZe
-X-Google-Smtp-Source: AGHT+IFFAOebhIiytgdnqRaEc/t69UnHbGRcN2PED+JI2D/d663/6m7itP5I9AIglNcqreMqnHVGqw==
-X-Received: by 2002:a17:902:fb4d:b0:1fc:6c23:8a3b with SMTP id d9443c01a7336-1fd74561d13mr57572865ad.17.1721622476663;
-        Sun, 21 Jul 2024 21:27:56 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fd6f433e87sm44390545ad.195.2024.07.21.21.27.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Jul 2024 21:27:55 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <ed179848-2c8c-41ef-acca-a53d958a30b6@roeck-us.net>
-Date: Sun, 21 Jul 2024 21:27:53 -0700
+	 In-Reply-To:Content-Type; b=jRDD8y4J5pBVyj5e6BLmGIV/Hz8QR+PGls1m9umSiIJkcEaFa8pY9dfehniLZLRmnRJwRZtuT5cLLyEzu46tCGEzPFEX8PP+FkotrQIrKTFIjvuFArCPiZWB7jLJ/9t86R3e3sXE4KsS7HTu3eH6UKQZtaufGfn80ZA83U6Dm+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=RZD4xAoD; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 31CCC2C04C9;
+	Mon, 22 Jul 2024 16:36:38 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1721622998;
+	bh=kawPWjJUSiyPbHtiTN23EdJFTn7YCLOnWW85D2j4qlY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RZD4xAoDjCh72n2OBfaULCMovvEFyVfFcZKYqt76E8CyjJZ8GlQLb1rj8Ak9nIz3H
+	 tTPlYdkVGlQV65SrsAJ170qO07FOc1eufuDzHzgNGbVuGS+cf4qd+L1EMOYD82dSGY
+	 p7T+lWAd60qv6gkrSJv9D2X0vLFOuhhnPiVMTa8fcMctUBg6YDflKrt/2tAldNlX9V
+	 SzSJaydzKGH7N0oBgVVdtAu/lhDhTi5b5G8Yh3PB/S7jUzncpKtbA4kZI5xu8MC/ql
+	 z5OUqchk6Az21MGZWALvoSJsIbrw5zf4TQUMHQhMmeRk5LiXaxjecjmWeYhZnXHigG
+	 n20Q2E//08V1Q==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B669de1d60000>; Mon, 22 Jul 2024 16:36:38 +1200
+Received: from [10.33.22.30] (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+	by pat.atlnz.lc (Postfix) with ESMTP id 1F88C13ED2A;
+	Mon, 22 Jul 2024 16:36:38 +1200 (NZST)
+Message-ID: <e28e9ff2-a48e-4cf2-b763-6bf3b5d9a959@alliedtelesis.co.nz>
+Date: Mon, 22 Jul 2024 16:36:38 +1200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH v6 3/3] hwmon: (adt7475) Add support for configuring
  initial PWM state
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>, jdelvare@suse.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, ukleinek@kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, jdelvare@suse.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, ukleinek@kernel.org
 Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 References: <20240722005825.1800403-1-chris.packham@alliedtelesis.co.nz>
  <20240722005825.1800403-4-chris.packham@alliedtelesis.co.nz>
  <15f4c51c-3f7d-4e93-9c3a-71ac1d626463@roeck-us.net>
  <c261c74f-6829-4888-9836-6f27ba87dc25@alliedtelesis.co.nz>
+ <ed179848-2c8c-41ef-acca-a53d958a30b6@roeck-us.net>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <c261c74f-6829-4888-9836-6f27ba87dc25@alliedtelesis.co.nz>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <ed179848-2c8c-41ef-acca-a53d958a30b6@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=Gqbh+V1C c=1 sm=1 tr=0 ts=669de1d6 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=IkcTkHD0fZMA:10 a=4kmOji7k6h8A:10 a=hpbk-zw_1wb9Up7sGCwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
-On 7/21/24 21:09, Chris Packham wrote:
-> 
-> On 22/07/24 15:53, Guenter Roeck wrote:
->> On 7/21/24 17:58, Chris Packham wrote:
->>> By default the PWM duty cycle in hardware is 100%. On some systems this
->>> can cause unwanted fan noise. Add the ability to specify the fan
->>> connections and initial state of the PWMs via device properties.
->>>
->>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->>> ---
->>>
->>> Notes:
->>>      Changes in v6:
->>>      - Use do_div() instead of plain /
->>>      - Use a helper function to avoid repetition between the of and non-of
->>>        code paths.
->>>      Changes in v5:
->>>      - Deal with PWM frequency and duty cycle being specified in nanoseconds
->>>      Changes in v4:
->>>      - Support DT and ACPI fwnodes
->>>      - Put PWM into manual mode
->>>      Changes in v3:
->>>      - Use the pwm provider/consumer bindings
->>>      Changes in v2:
->>>      - Use correct device property string for frequency
->>>      - Allow -EINVAL and only warn on error
->>>      - Use a frequency of 0 to indicate that the hardware should be left as-is
->>>
->>>   drivers/hwmon/adt7475.c | 130 ++++++++++++++++++++++++++++++++++++++++
->>>   1 file changed, 130 insertions(+)
->>>
->>> diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
->>> index 4224ffb30483..fc5605d34f36 100644
->>> --- a/drivers/hwmon/adt7475.c
->>> +++ b/drivers/hwmon/adt7475.c
->>> @@ -21,6 +21,8 @@
->>>   #include <linux/of.h>
->>>   #include <linux/util_macros.h>
->>>   +#include <dt-bindings/pwm/pwm.h>
->>> +
->>>   /* Indexes for the sysfs hooks */
->>>     #define INPUT        0
->>> @@ -1662,6 +1664,130 @@ static int adt7475_set_pwm_polarity(struct i2c_client *client)
->>>       return 0;
->>>   }
->>>   +struct adt7475_pwm_config {
->>> +    int index;
->>> +    int freq;
->>> +    int flags;
->>> +    int duty;
->>> +};
->>> +
->>> +static int _adt7475_pwm_properties_parse_args(u32 args[4], struct adt7475_pwm_config *cfg)
->>> +{
->>> +    unsigned long freq_hz;
->>> +    unsigned long duty;
->>> +
->>> +    if (args[1] == 0)
->>> +        return -EINVAL;
->>> +
->>> +    freq_hz = 1000000000UL;
->>> +    do_div(freq_hz, args[1]);
->>> +    duty = 255 * args[3];
->>> +    do_div(duty, args[1]);
->>> +
+
+On 22/07/24 16:27, Guenter Roeck wrote:
+> On 7/21/24 21:09, Chris Packham wrote:
 >>
->> Gues I am a bit at loss here, just as 0-day. Why use do_div ? It is only needed
->> for 64-bit divide operations.
-> 
-> Mainly because of Uwe's comment on v5. I think I've avoided the original u64 issue now that I'm converting fwnode_reference_args::args to a u32 array. I can probably get away with plain division, although 255 * args[3] / args[1] might overflow in theory but shouldn't in practice.
-> 
-> I'll let the earth turn and send out a v7 that uses plain division unless someone has a strong opinion that I should sprinkle some more u64s around.
-> 
-
-You lost me, sorry. Neither duty nor freq_hz are u64. What u64 variables
-are you talking about ? Using so_div doesn't make those variables u64.
-
-Guenter
-
+>> On 22/07/24 15:53, Guenter Roeck wrote:
+>>> On 7/21/24 17:58, Chris Packham wrote:
+>>>> By default the PWM duty cycle in hardware is 100%. On some systems=20
+>>>> this
+>>>> can cause unwanted fan noise. Add the ability to specify the fan
+>>>> connections and initial state of the PWMs via device properties.
+>>>>
+>>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>>>> ---
+>>>>
+>>>> Notes:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 Changes in v6:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 - Use do_div() instead of plain /
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 - Use a helper function to avoid repetition=
+ between the of and=20
+>>>> non-of
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 code paths.
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 Changes in v5:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 - Deal with PWM frequency and duty cycle be=
+ing specified in=20
+>>>> nanoseconds
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 Changes in v4:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 - Support DT and ACPI fwnodes
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 - Put PWM into manual mode
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 Changes in v3:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 - Use the pwm provider/consumer bindings
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 Changes in v2:
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 - Use correct device property string for fr=
+equency
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 - Allow -EINVAL and only warn on error
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 - Use a frequency of 0 to indicate that the=
+ hardware should be=20
+>>>> left as-is
+>>>>
+>>>> =C2=A0 drivers/hwmon/adt7475.c | 130=20
+>>>> ++++++++++++++++++++++++++++++++++++++++
+>>>> =C2=A0 1 file changed, 130 insertions(+)
+>>>>
+>>>> diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
+>>>> index 4224ffb30483..fc5605d34f36 100644
+>>>> --- a/drivers/hwmon/adt7475.c
+>>>> +++ b/drivers/hwmon/adt7475.c
+>>>> @@ -21,6 +21,8 @@
+>>>> =C2=A0 #include <linux/of.h>
+>>>> =C2=A0 #include <linux/util_macros.h>
+>>>> =C2=A0 +#include <dt-bindings/pwm/pwm.h>
+>>>> +
+>>>> =C2=A0 /* Indexes for the sysfs hooks */
+>>>> =C2=A0 =C2=A0 #define INPUT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ 0
+>>>> @@ -1662,6 +1664,130 @@ static int adt7475_set_pwm_polarity(struct=20
+>>>> i2c_client *client)
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>> =C2=A0 }
+>>>> =C2=A0 +struct adt7475_pwm_config {
+>>>> +=C2=A0=C2=A0=C2=A0 int index;
+>>>> +=C2=A0=C2=A0=C2=A0 int freq;
+>>>> +=C2=A0=C2=A0=C2=A0 int flags;
+>>>> +=C2=A0=C2=A0=C2=A0 int duty;
+>>>> +};
+>>>> +
+>>>> +static int _adt7475_pwm_properties_parse_args(u32 args[4], struct=20
+>>>> adt7475_pwm_config *cfg)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 unsigned long freq_hz;
+>>>> +=C2=A0=C2=A0=C2=A0 unsigned long duty;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 if (args[1] =3D=3D 0)
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 freq_hz =3D 1000000000UL;
+>>>> +=C2=A0=C2=A0=C2=A0 do_div(freq_hz, args[1]);
+>>>> +=C2=A0=C2=A0=C2=A0 duty =3D 255 * args[3];
+>>>> +=C2=A0=C2=A0=C2=A0 do_div(duty, args[1]);
+>>>> +
+>>>
+>>> Gues I am a bit at loss here, just as 0-day. Why use do_div ? It is=20
+>>> only needed
+>>> for 64-bit divide operations.
 >>
->> Thanks,
->> Guenter
+>> Mainly because of Uwe's comment on v5. I think I've avoided the=20
+>> original u64 issue now that I'm converting=20
+>> fwnode_reference_args::args to a u32 array. I can probably get away=20
+>> with plain division, although 255 * args[3] / args[1] might overflow=20
+>> in theory but shouldn't in practice.
 >>
+>> I'll let the earth turn and send out a v7 that uses plain division=20
+>> unless someone has a strong opinion that I should sprinkle some more=20
+>> u64s around.
+>>
+>
+> You lost me, sorry. Neither duty nor freq_hz are u64. What u64 variable=
+s
+> are you talking about ? Using so_div doesn't make those variables u64.
 
+One way of fixing the 0-day complaint (I think) is to declare freq_hz=20
+and duty as u64 which would avoid all the theoretical overflow issues.
+
+But plain division is probably easier to understand for everyone so I'll=20
+send out something like this in v7
+
+ =C2=A0 (unsigned?) int freq_hz;
+ =C2=A0 (unsigned?) int duty;
+ =C2=A0 ...
+ =C2=A0 freq_hz =3D 1000000000UL / args[1];
+ =C2=A0 duty =3D 255 * args[3] / args[1];
+ =C2=A0 ...
+
+>
+> Guenter
+>
+>>>
+>>> Thanks,
+>>> Guenter
+>>>
+>
 
