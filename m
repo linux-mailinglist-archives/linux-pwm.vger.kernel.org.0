@@ -1,46 +1,46 @@
-Return-Path: <linux-pwm+bounces-2897-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2898-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25C8D938EEC
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 14:12:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39CA5938EEF
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 14:12:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8689281687
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 12:12:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B82E71F225BD
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 12:12:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3468A16DC05;
-	Mon, 22 Jul 2024 12:11:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04D9F16DC17;
+	Mon, 22 Jul 2024 12:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Jn+OXwr5"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="M9VyePZn"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4657B16D9D5;
-	Mon, 22 Jul 2024 12:11:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A04E16D9DB;
+	Mon, 22 Jul 2024 12:11:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721650288; cv=none; b=lxWyUX7LQkLcy3mA7QYcQ09yzKEGFqeLwjLW6Msq4pvwOavLpvWDGFEm/frTgQlFIldrcVQUAZrYkbJVVqrud+qMj3ev7bpQlzrudLe9FPkh4sjmxEizTpgbjMgiAtsZ8JqTdh2Y2QuCD4vYnvbWnyhq4hlhXtmzPxvjyhglKAA=
+	t=1721650288; cv=none; b=Ijqymrd0QSvYsh5T7dQyc/Q7QDHTvrmtPyVIbWOE5wPP3bL1WAVMavEKTotkOaNXATLF7KdQDFZ7sGWWVN9j9bKGDg6t6yNZjcYhLFqz0reviF9Z6MZb+Rz+mkjHt7ZzjLEtWeaM/F7Y/k102+56B2LcqUn8vaIRKKMGATAis6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721650288; c=relaxed/simple;
-	bh=qpinTA7pyg2EZPJdVlunxWUDHVgPpmjdfbf/QnW7sjw=;
+	bh=ohNqJW3xb9MesqCo1KQznvFTgo2nYKmsaVHHiF391O0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ro/ygpUj4RMJ6T9lij/CuswKJbya6TTAzcSQhUGAmwq5DtbeMBKrvKMOtBW/DXd+qXKJNeJxoEeXf0ARYe7BsZ6KZIF65miUcBeFEFHcFuYFK+OSOsnXtVQUXjxv2YrcqLIhFs6FJqo3tDYb+jfe+RfWb8LC30huhY7UjwXCgd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Jn+OXwr5; arc=none smtp.client-ip=213.167.242.64
+	 MIME-Version:Content-Type; b=vD1J6ZgDkTD8c1E/mXx8hzQS+yq2ZLD75JU3/5kGmVth3f9wSpUjCVVauVgHdWTlX7IfE8WZRrmHJB4ZZioYZ4PnIUNLU5J/YwcCXYp/8dOZtCHMGyRNVYL8JIhePFKXRhGcLoHXM8Qn9qnCyGzavRtJZPSmcExdaFRPazQEMH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=M9VyePZn; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C8EACFF1;
-	Mon, 22 Jul 2024 14:10:40 +0200 (CEST)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3B5A945B;
+	Mon, 22 Jul 2024 14:10:42 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1721650241;
-	bh=qpinTA7pyg2EZPJdVlunxWUDHVgPpmjdfbf/QnW7sjw=;
+	s=mail; t=1721650242;
+	bh=ohNqJW3xb9MesqCo1KQznvFTgo2nYKmsaVHHiF391O0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Jn+OXwr5FtGnjFUpw0eeBw9xEbuC05YSMBpOZdr3lpw+C6xF63N5u5r/rY8c9u+xL
-	 wGJaBdE5wNWzlCBN8v+UIZb6+1JtrnnedkQby12pt8jqQKATBYm1MJQVwOdqHeQCUg
-	 598d0IwgPyPQbVdyCaVhVmvJ25FzOaaCRr+DF4Gc=
+	b=M9VyePZniiokCfjehnGVMuuriFkrY+SXryVV7KMMb6Mq1KSK3V0FqZ20iMV+w2u+K
+	 iRZdCm8BIrcapWn8etA5hnEoG9yL3HvFEQ4/PiX/Tg/K5cCruYcRfVwMLafHI3Y05p
+	 twLPnPLjQBRoOFp1hwcMaB8Uy2TrJOffMA0sAdgs=
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
@@ -56,9 +56,9 @@ Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
 	Haibo Chen <haibo.chen@nxp.com>,
 	Clark Wang <xiaoning.wang@nxp.com>,
 	Frank Li <Frank.li@nxp.com>
-Subject: [PATCH v7 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
-Date: Mon, 22 Jul 2024 15:10:59 +0300
-Message-ID: <20240722121100.2855-4-laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v7 4/4] pwm: adp5585: Add Analog Devices ADP5585 support
+Date: Mon, 22 Jul 2024 15:11:00 +0300
+Message-ID: <20240722121100.2855-5-laurent.pinchart@ideasonboard.com>
 X-Mailer: git-send-email 2.44.2
 In-Reply-To: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
 References: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
@@ -68,351 +68,321 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Haibo Chen <haibo.chen@nxp.com>
+From: Clark Wang <xiaoning.wang@nxp.com>
 
 The ADP5585 is a 10/11 input/output port expander with a built in keypad
 matrix decoder, programmable logic, reset generator, and PWM generator.
-This driver supports the GPIO function using the platform device
+This driver supports the PWM function using the platform device
 registered by the core MFD driver.
 
 The driver is derived from an initial implementation from NXP, available
-in commit 451f61b46b76 ("MLK-25917-2 gpio: adp5585-gpio: add
-adp5585-gpio support") in their BSP kernel tree. It has been extensively
-rewritten.
+in commit 113113742208 ("MLK-25922-1 pwm: adp5585: add adp5585 PWM
+support") in their BSP kernel tree. It has been extensively rewritten.
 
-Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Co-developed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Uwe Kleine-König <ukleinek@kernel.org>
 ---
+Changes since v6:
+
+- Add comment to explain pinmuxing in .request()
+
 Changes since v5:
 
-- Use regmap_set_bits() and regmap_clear_bits()
-- Fix value argument to regmap_update_bits()
+- Use regmap_clear_bits() and regmap_set_bits()
+- Move ADP5585_OSC_EN bit handling to .apply()
 - Drop comma after sentinel
+
+Changes since v4:
+
+- Use the regmap bulk API
 
 Changes since v2:
 
 - Add missing headers
-- Drop platform_set_drvdata()
-- Fix bit shift in bias configuration
+- Sort headers
 
 Changes since v1:
 
+- Drop mutex
+- Restore R3 pinconfig to known value
+- Simplify error check in pwm_adp5585_request()
+- Don't fake PWM_POLARITY_INVERSED
+- Fix rounding of period and duty cycle
 - Drop OF match table
-- Fix .get() for GPOs
+- Drop empty .remove() handler
+- Allocate pwm_chip dynamically
+- Document limitations
 - Add platform ID table
 - Set struct device of_node manually
 - Merge child DT node into parent node
-- Implement .get_direction()
-- Drop mutex
 
 Changes compared to the NXP original version
 
 - Add MAINTAINERS entry
+- Drop pwm_ops.owner
+- Fix compilation
 - Add prefix to compatible string
 - Switch to regmap
-- White space fixes
-- Use sizeof(*variable)
-- Initialize variables at declaration time
-- Use mutex scope guards
+- Use devm_pwmchip_add()
 - Cleanup header includes
-- Support R5 GPIO pin
+- White space fixes
+- Drop ADP5585_REG_MASK
+- Fix register field names
+- Use mutex scope guards
+- Clear OSC_EN when freeing PWM
 - Reorder functions
-- Add bias support
-- Return real pin value from .get()
-- Add debounce support
-- Add drive mode support
+- Clear PWM_IN_AND and PWM_MODE bits
+- Support inverted polarity
+- Clean up on/off computations
+- Fix duty cycle computation in .get_state()
 - Destroy mutex on remove
 - Update copyright
 - Update license to GPL-2.0-only
 ---
- MAINTAINERS                 |   1 +
- drivers/gpio/Kconfig        |   7 ++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-adp5585.c | 229 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 238 insertions(+)
- create mode 100644 drivers/gpio/gpio-adp5585.c
+ MAINTAINERS               |   1 +
+ drivers/pwm/Kconfig       |   7 ++
+ drivers/pwm/Makefile      |   1 +
+ drivers/pwm/pwm-adp5585.c | 184 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 193 insertions(+)
+ create mode 100644 drivers/pwm/pwm-adp5585.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index ebb1a1833bbc..b748af2acf9f 100644
+index b748af2acf9f..a2087f6647e8 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -532,6 +532,7 @@ L:	linux-gpio@vger.kernel.org
- L:	linux-pwm@vger.kernel.org
- S:	Maintained
+@@ -534,6 +534,7 @@ S:	Maintained
  F:	Documentation/devicetree/bindings/*/adi,adp5585*.yaml
-+F:	drivers/gpio/gpio-adp5585.c
+ F:	drivers/gpio/gpio-adp5585.c
  F:	drivers/mfd/adp5585.c
++F:	drivers/pwm/pwm-adp5585.c
  F:	include/linux/mfd/adp5585.h
  
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 1c28a48915bb..fc66e8264eef 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1233,6 +1233,13 @@ config GPIO_ADP5520
- 	  This option enables support for on-chip GPIO found
- 	  on Analog Devices ADP5520 PMICs.
+ ADP5588 QWERTY KEYPAD AND IO EXPANDER DRIVER (ADP5588/ADP5587)
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 1dd7921194f5..b778ecee3e9b 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -47,6 +47,13 @@ config PWM_AB8500
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-ab8500.
  
-+config GPIO_ADP5585
-+	tristate "GPIO Support for ADP5585"
++config PWM_ADP5585
++	tristate "ADP5585 PWM support"
 +	depends on MFD_ADP5585
 +	help
-+	  This option enables support for the GPIO function found in the Analog
++	  This option enables support for the PWM function found in the Analog
 +	  Devices ADP5585.
 +
- config GPIO_ALTERA_A10SR
- 	tristate "Altera Arria10 System Resource GPIO"
- 	depends on MFD_ALTERA_A10SR
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index e2a53013780e..04bfa2bc7e11 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_GPIO_74X164)		+= gpio-74x164.o
- obj-$(CONFIG_GPIO_74XX_MMIO)		+= gpio-74xx-mmio.o
- obj-$(CONFIG_GPIO_ADNP)			+= gpio-adnp.o
- obj-$(CONFIG_GPIO_ADP5520)		+= gpio-adp5520.o
-+obj-$(CONFIG_GPIO_ADP5585)		+= gpio-adp5585.o
- obj-$(CONFIG_GPIO_AGGREGATOR)		+= gpio-aggregator.o
- obj-$(CONFIG_GPIO_ALTERA_A10SR)		+= gpio-altera-a10sr.o
- obj-$(CONFIG_GPIO_ALTERA)  		+= gpio-altera.o
-diff --git a/drivers/gpio/gpio-adp5585.c b/drivers/gpio/gpio-adp5585.c
+ config PWM_APPLE
+ 	tristate "Apple SoC PWM support"
+ 	depends on ARCH_APPLE || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 90913519f11a..f24d518d20f2 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_PWM)		+= core.o
+ obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
++obj-$(CONFIG_PWM_ADP5585)	+= pwm-adp5585.o
+ obj-$(CONFIG_PWM_APPLE)		+= pwm-apple.o
+ obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
+ obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+= pwm-atmel-hlcdc.o
+diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
 new file mode 100644
-index 000000000000..000d31f09671
+index 000000000000..ed7e8c6bcf32
 --- /dev/null
-+++ b/drivers/gpio/gpio-adp5585.c
-@@ -0,0 +1,229 @@
++++ b/drivers/pwm/pwm-adp5585.c
+@@ -0,0 +1,184 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Analog Devices ADP5585 GPIO driver
++ * Analog Devices ADP5585 PWM driver
 + *
 + * Copyright 2022 NXP
 + * Copyright 2024 Ideas on Board Oy
++ *
++ * Limitations:
++ * - The .apply() operation executes atomically, but may not wait for the
++ *   period to complete (this is not documented and would need to be tested).
++ * - Disabling the PWM drives the output pin to a low level immediately.
++ * - The hardware can only generate normal polarity output.
 + */
 +
++#include <asm/byteorder.h>
++
 +#include <linux/device.h>
-+#include <linux/gpio/driver.h>
++#include <linux/err.h>
++#include <linux/math64.h>
 +#include <linux/mfd/adp5585.h>
++#include <linux/minmax.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
++#include <linux/pwm.h>
 +#include <linux/regmap.h>
++#include <linux/time.h>
 +#include <linux/types.h>
 +
-+#define ADP5585_GPIO_MAX	11
++#define ADP5585_PWM_CHAN_NUM		1
 +
-+struct adp5585_gpio_dev {
-+	struct gpio_chip gpio_chip;
-+	struct regmap *regmap;
-+};
++#define ADP5585_PWM_OSC_FREQ_HZ		1000000U
++#define ADP5585_PWM_MIN_PERIOD_NS	(2ULL * NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
++#define ADP5585_PWM_MAX_PERIOD_NS	(2ULL * 0xffff * NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
 +
-+static int adp5585_gpio_get_direction(struct gpio_chip *chip, unsigned int off)
++static int pwm_adp5585_request(struct pwm_chip *chip, struct pwm_device *pwm)
 +{
-+	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
-+	unsigned int bank = ADP5585_BANK(off);
-+	unsigned int bit = ADP5585_BIT(off);
-+	unsigned int val;
++	struct regmap *regmap = pwmchip_get_drvdata(chip);
 +
-+	regmap_read(adp5585_gpio->regmap, ADP5585_GPIO_DIRECTION_A + bank, &val);
-+
-+	return val & bit ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
++	/* Configure the R3 pin as PWM output. */
++	return regmap_update_bits(regmap, ADP5585_PIN_CONFIG_C,
++				  ADP5585_R3_EXTEND_CFG_MASK,
++				  ADP5585_R3_EXTEND_CFG_PWM_OUT);
 +}
 +
-+static int adp5585_gpio_direction_input(struct gpio_chip *chip, unsigned int off)
++static void pwm_adp5585_free(struct pwm_chip *chip, struct pwm_device *pwm)
 +{
-+	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
-+	unsigned int bank = ADP5585_BANK(off);
-+	unsigned int bit = ADP5585_BIT(off);
++	struct regmap *regmap = pwmchip_get_drvdata(chip);
 +
-+	return regmap_clear_bits(adp5585_gpio->regmap,
-+				 ADP5585_GPIO_DIRECTION_A + bank, bit);
++	regmap_update_bits(regmap, ADP5585_PIN_CONFIG_C,
++			   ADP5585_R3_EXTEND_CFG_MASK,
++			   ADP5585_R3_EXTEND_CFG_GPIO4);
 +}
 +
-+static int adp5585_gpio_direction_output(struct gpio_chip *chip, unsigned int off, int val)
++static int pwm_adp5585_apply(struct pwm_chip *chip,
++			     struct pwm_device *pwm,
++			     const struct pwm_state *state)
 +{
-+	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
-+	unsigned int bank = ADP5585_BANK(off);
-+	unsigned int bit = ADP5585_BIT(off);
++	struct regmap *regmap = pwmchip_get_drvdata(chip);
++	u64 period, duty_cycle;
++	u32 on, off;
++	__le16 val;
 +	int ret;
 +
-+	ret = regmap_update_bits(adp5585_gpio->regmap,
-+				 ADP5585_GPO_DATA_OUT_A + bank, bit,
-+				 val ? bit : 0);
++	if (!state->enabled) {
++		regmap_clear_bits(regmap, ADP5585_GENERAL_CFG, ADP5585_OSC_EN);
++		regmap_clear_bits(regmap, ADP5585_PWM_CFG, ADP5585_PWM_EN);
++		return 0;
++	}
++
++	if (state->polarity != PWM_POLARITY_NORMAL)
++		return -EINVAL;
++
++	if (state->period < ADP5585_PWM_MIN_PERIOD_NS)
++		return -EINVAL;
++
++	period = min(state->period, ADP5585_PWM_MAX_PERIOD_NS);
++	duty_cycle = min(state->duty_cycle, period);
++
++	/*
++	 * Compute the on and off time. As the internal oscillator frequency is
++	 * 1MHz, the calculation can be simplified without loss of precision.
++	 */
++	on = div_u64(duty_cycle, NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
++	off = div_u64(period, NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ) - on;
++
++	val = cpu_to_le16(off);
++	ret = regmap_bulk_write(regmap, ADP5585_PWM_OFFT_LOW, &val, 2);
 +	if (ret)
 +		return ret;
 +
-+	return regmap_set_bits(adp5585_gpio->regmap,
-+			       ADP5585_GPIO_DIRECTION_A + bank, bit);
++	val = cpu_to_le16(on);
++	ret = regmap_bulk_write(regmap, ADP5585_PWM_ONT_LOW, &val, 2);
++	if (ret)
++		return ret;
++
++	/* Enable PWM in continuous mode and no external AND'ing. */
++	ret = regmap_update_bits(regmap, ADP5585_PWM_CFG,
++				 ADP5585_PWM_IN_AND | ADP5585_PWM_MODE |
++				 ADP5585_PWM_EN, ADP5585_PWM_EN);
++	if (ret)
++		return ret;
++
++	return regmap_set_bits(regmap, ADP5585_PWM_CFG, ADP5585_PWM_EN);
 +}
 +
-+static int adp5585_gpio_get_value(struct gpio_chip *chip, unsigned int off)
++static int pwm_adp5585_get_state(struct pwm_chip *chip,
++				 struct pwm_device *pwm,
++				 struct pwm_state *state)
 +{
-+	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
-+	unsigned int bank = ADP5585_BANK(off);
-+	unsigned int bit = ADP5585_BIT(off);
-+	unsigned int reg;
++	struct regmap *regmap = pwmchip_get_drvdata(chip);
++	unsigned int on, off;
 +	unsigned int val;
-+
-+	/*
-+	 * The input status register doesn't reflect the pin state when the
-+	 * GPIO is configured as an output. Check the direction, and read the
-+	 * input status from GPI_STATUS or output value from GPO_DATA_OUT
-+	 * accordingly.
-+	 *
-+	 * We don't need any locking, as concurrent access to the same GPIO
-+	 * isn't allowed by the GPIO API, so there's no risk of the
-+	 * .direction_input(), .direction_output() or .set() operations racing
-+	 * with this.
-+	 */
-+	regmap_read(adp5585_gpio->regmap, ADP5585_GPIO_DIRECTION_A + bank, &val);
-+	reg = val & bit ? ADP5585_GPO_DATA_OUT_A : ADP5585_GPI_STATUS_A;
-+	regmap_read(adp5585_gpio->regmap, reg + bank, &val);
-+
-+	return !!(val & bit);
-+}
-+
-+static void adp5585_gpio_set_value(struct gpio_chip *chip, unsigned int off, int val)
-+{
-+	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
-+	unsigned int bank = ADP5585_BANK(off);
-+	unsigned int bit = ADP5585_BIT(off);
-+
-+	regmap_update_bits(adp5585_gpio->regmap, ADP5585_GPO_DATA_OUT_A + bank,
-+			   bit, val ? bit : 0);
-+}
-+
-+static int adp5585_gpio_set_bias(struct adp5585_gpio_dev *adp5585_gpio,
-+				 unsigned int off, unsigned int bias)
-+{
-+	unsigned int bit, reg, mask, val;
-+
-+	/*
-+	 * The bias configuration fields are 2 bits wide and laid down in
-+	 * consecutive registers ADP5585_RPULL_CONFIG_*, with a hole of 4 bits
-+	 * after R5.
-+	 */
-+	bit = off * 2 + (off > 5 ? 4 : 0);
-+	reg = ADP5585_RPULL_CONFIG_A + bit / 8;
-+	mask = ADP5585_Rx_PULL_CFG_MASK << (bit % 8);
-+	val = bias << (bit % 8);
-+
-+	return regmap_update_bits(adp5585_gpio->regmap, reg, mask, val);
-+}
-+
-+static int adp5585_gpio_set_drive(struct adp5585_gpio_dev *adp5585_gpio,
-+				  unsigned int off, enum pin_config_param drive)
-+{
-+	unsigned int bank = ADP5585_BANK(off);
-+	unsigned int bit = ADP5585_BIT(off);
-+
-+	return regmap_update_bits(adp5585_gpio->regmap,
-+				  ADP5585_GPO_OUT_MODE_A + bank, bit,
-+				  drive == PIN_CONFIG_DRIVE_OPEN_DRAIN ? bit : 0);
-+}
-+
-+static int adp5585_gpio_set_debounce(struct adp5585_gpio_dev *adp5585_gpio,
-+				     unsigned int off, unsigned int debounce)
-+{
-+	unsigned int bank = ADP5585_BANK(off);
-+	unsigned int bit = ADP5585_BIT(off);
-+
-+	return regmap_update_bits(adp5585_gpio->regmap,
-+				  ADP5585_DEBOUNCE_DIS_A + bank, bit,
-+				  debounce ? 0 : bit);
-+}
-+
-+static int adp5585_gpio_set_config(struct gpio_chip *chip, unsigned int off,
-+				   unsigned long config)
-+{
-+	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
-+	enum pin_config_param param = pinconf_to_config_param(config);
-+	u32 arg = pinconf_to_config_argument(config);
-+
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		return adp5585_gpio_set_bias(adp5585_gpio, off,
-+					     ADP5585_Rx_PULL_CFG_DISABLE);
-+
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		return adp5585_gpio_set_bias(adp5585_gpio, off, arg ?
-+					     ADP5585_Rx_PULL_CFG_PD_300K :
-+					     ADP5585_Rx_PULL_CFG_DISABLE);
-+
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		return adp5585_gpio_set_bias(adp5585_gpio, off, arg ?
-+					     ADP5585_Rx_PULL_CFG_PU_300K :
-+					     ADP5585_Rx_PULL_CFG_DISABLE);
-+
-+	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-+	case PIN_CONFIG_DRIVE_PUSH_PULL:
-+		return adp5585_gpio_set_drive(adp5585_gpio, off, param);
-+
-+	case PIN_CONFIG_INPUT_DEBOUNCE:
-+		return adp5585_gpio_set_debounce(adp5585_gpio, off, arg);
-+
-+	default:
-+		return -ENOTSUPP;
-+	};
-+}
-+
-+static int adp5585_gpio_probe(struct platform_device *pdev)
-+{
-+	struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
-+	struct adp5585_gpio_dev *adp5585_gpio;
-+	struct device *dev = &pdev->dev;
-+	struct gpio_chip *gc;
++	__le16 on_off;
 +	int ret;
 +
-+	adp5585_gpio = devm_kzalloc(dev, sizeof(*adp5585_gpio), GFP_KERNEL);
-+	if (!adp5585_gpio)
-+		return -ENOMEM;
-+
-+	adp5585_gpio->regmap = adp5585->regmap;
-+
-+	device_set_of_node_from_dev(dev, dev->parent);
-+
-+	gc = &adp5585_gpio->gpio_chip;
-+	gc->parent = dev;
-+	gc->get_direction = adp5585_gpio_get_direction;
-+	gc->direction_input = adp5585_gpio_direction_input;
-+	gc->direction_output = adp5585_gpio_direction_output;
-+	gc->get = adp5585_gpio_get_value;
-+	gc->set = adp5585_gpio_set_value;
-+	gc->set_config = adp5585_gpio_set_config;
-+	gc->can_sleep = true;
-+
-+	gc->base = -1;
-+	gc->ngpio = ADP5585_GPIO_MAX;
-+	gc->label = pdev->name;
-+	gc->owner = THIS_MODULE;
-+
-+	ret = devm_gpiochip_add_data(dev, &adp5585_gpio->gpio_chip,
-+				     adp5585_gpio);
++	ret = regmap_bulk_read(regmap, ADP5585_PWM_OFFT_LOW, &on_off, 2);
 +	if (ret)
-+		return dev_err_probe(dev, ret, "failed to add GPIO chip\n");
++		return ret;
++	off = le16_to_cpu(on_off);
++
++	ret = regmap_bulk_read(regmap, ADP5585_PWM_ONT_LOW, &on_off, 2);
++	if (ret)
++		return ret;
++	on = le16_to_cpu(on_off);
++
++	state->duty_cycle = on * (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
++	state->period = (on + off) * (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
++
++	state->polarity = PWM_POLARITY_NORMAL;
++
++	regmap_read(regmap, ADP5585_PWM_CFG, &val);
++	state->enabled = !!(val & ADP5585_PWM_EN);
 +
 +	return 0;
 +}
 +
-+static const struct platform_device_id adp5585_gpio_id_table[] = {
-+	{ "adp5585-gpio" },
++static const struct pwm_ops adp5585_pwm_ops = {
++	.request = pwm_adp5585_request,
++	.free = pwm_adp5585_free,
++	.apply = pwm_adp5585_apply,
++	.get_state = pwm_adp5585_get_state,
++};
++
++static int adp5585_pwm_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct adp5585_dev *adp5585 = dev_get_drvdata(dev->parent);
++	struct pwm_chip *chip;
++	int ret;
++
++	chip = devm_pwmchip_alloc(dev, ADP5585_PWM_CHAN_NUM, 0);
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
++
++	device_set_of_node_from_dev(dev, dev->parent);
++
++	pwmchip_set_drvdata(chip, adp5585->regmap);
++	chip->ops = &adp5585_pwm_ops;
++
++	ret = devm_pwmchip_add(dev, chip);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
++
++	return 0;
++}
++
++static const struct platform_device_id adp5585_pwm_id_table[] = {
++	{ "adp5585-pwm" },
 +	{ /* Sentinel */ }
 +};
-+MODULE_DEVICE_TABLE(platform, adp5585_gpio_id_table);
++MODULE_DEVICE_TABLE(platform, adp5585_pwm_id_table);
 +
-+static struct platform_driver adp5585_gpio_driver = {
++static struct platform_driver adp5585_pwm_driver = {
 +	.driver	= {
-+		.name = "adp5585-gpio",
++		.name = "adp5585-pwm",
 +	},
-+	.probe = adp5585_gpio_probe,
-+	.id_table = adp5585_gpio_id_table,
++	.probe = adp5585_pwm_probe,
++	.id_table = adp5585_pwm_id_table,
 +};
-+module_platform_driver(adp5585_gpio_driver);
++module_platform_driver(adp5585_pwm_driver);
 +
-+MODULE_AUTHOR("Haibo Chen <haibo.chen@nxp.com>");
-+MODULE_DESCRIPTION("GPIO ADP5585 Driver");
++MODULE_AUTHOR("Xiaoning Wang <xiaoning.wang@nxp.com>");
++MODULE_DESCRIPTION("ADP5585 PWM Driver");
 +MODULE_LICENSE("GPL");
 -- 
 Regards,
