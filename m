@@ -1,281 +1,202 @@
-Return-Path: <linux-pwm+bounces-2881-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2883-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CE7593872B
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 03:08:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 837D89387B8
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 05:36:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 901511C20CBF
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 01:08:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A63EE1C20D57
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jul 2024 03:36:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 606E48BFC;
-	Mon, 22 Jul 2024 01:08:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15C7913FFC;
+	Mon, 22 Jul 2024 03:36:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="FG+0njog"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j3l+vZsf"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEF2611E
-	for <linux-pwm@vger.kernel.org>; Mon, 22 Jul 2024 01:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2AB14A90;
+	Mon, 22 Jul 2024 03:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721610520; cv=none; b=uWU8/gMtSD2u9rs9J63XO0mh55gF67zncV+8bwS4ibBxTv/9wF628QT4G1YZ+LRYs2Gk2+gNCPWa7Xv5zwSX9n1J/OKkMV/PUX7IfJOC4rdZ77woByuWr0C4pkNVBg0ggOKHhtm85uzAZUYYrlryfGxjYx/omxsOZYmQtW/1p1g=
+	t=1721619365; cv=none; b=aU+khf0IcBUH6vyTGKIT/FeFvEMDJj6ktmmZ3KxfOFSSnapTdJLJzwOb1FysTXiPhLcg5ean136PKaTuTdlGZwUBSV149NsNu4BYFg2ziX5+8otEg4KXfJEkvgxgoe0VD2RK1ezj7u0nU5NrdKCroUmCkuBKuaJ0XYBSwHGpr6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721610520; c=relaxed/simple;
-	bh=DNyVObbdbJVdi/P6CGl+fix7Tl3TWS/WBFlw4NpsCsQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n9QxBbOq2kqAp62wePWLDmUpboq+MWKoqjDgiTGe3PD8i0540i7MKJjf9jLhyK39A9IncUposqQG5O9ABK1GfeMIo5QeXxfCQz6NJuT1qOHU1EtUZ9wy0pNJkR+9Ys+xx0451anoSeDw0bNvcZFr6HsOzLFbBWtTfcXCWagfboo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=FG+0njog; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 80B312C0E27;
-	Mon, 22 Jul 2024 12:58:41 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1721609921;
-	bh=VV02Np9Kd7WYDspFLZTpFMwWK72ogN13gPcn8ggs8Lo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FG+0njog8cgOJF/tNziMXmA3EkuYdMrEcl2C4OW9xkG56NP3ZanE6u0OvSBE6z3/N
-	 PRRjqJYB+LidqBCa+FtTJ4WaACEs7lvzy4GibHPIRtG3tKyxM7sOD5Z8S1Ssc45uAa
-	 n6x5FoUPWuuQ4pVq3G5bnurYITk30RLYk2yh0hlypdxb1CzdF5S8DA2U7TLMr1SMPL
-	 r2yefD6Mre2eUU0NpeTwlBpE0JcbGbkyqYCKsjKT7TPSfFoNVMhhb75dEWhrYMcfwG
-	 Ep12Z/Ct3XWvCx0neBqrA9aQCkAABzujiLaUy6DQu2KKTlznaMDAUREmjYB+kHZ4Z1
-	 wiFT/3BZwTWmA==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B669daec10003>; Mon, 22 Jul 2024 12:58:41 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 40F1413EE85;
-	Mon, 22 Jul 2024 12:58:41 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 3F403280B00; Mon, 22 Jul 2024 12:58:41 +1200 (NZST)
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-To: jdelvare@suse.com,
-	linux@roeck-us.net,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	ukleinek@kernel.org
-Cc: linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
+	s=arc-20240116; t=1721619365; c=relaxed/simple;
+	bh=PwFT7B1VJB/UXjjpWDCkDoQ6sX7XM3WUzIPOQ+mIUNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TUnbhpQvBEvvHndHLy7PGaMRjyLU34NraJqjc/uIrEaXVbk+K1c3bl234G0QsjkqRnMbctgacBlI80WlVSSr7m1a5UEj7mIpteFwlOnbo9b/OKAEo9Pzp3GuqOdwxqbDT6ud0vnMaI+jZTuMM1pGfUXC6b0g5GJK0cvK2iPd/Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j3l+vZsf; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721619364; x=1753155364;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PwFT7B1VJB/UXjjpWDCkDoQ6sX7XM3WUzIPOQ+mIUNQ=;
+  b=j3l+vZsfsp1gmgtJ+lY7VwH78P1NZ2M3NO0RUem4e0e8B6/yZcdrsxpG
+   0bjznLkk8Yl0hANQjd0u7X6wx1EStvdkt8zTfT2kofTgEHUkzNgWe78rs
+   Jz1bx/XMKNgiYTdL9EXnOFj9iuFXGz6Aybhd+tGayoP/UumrpXPZeLz8P
+   lxUeaQeQ3Z448gYgrP6HNrVecCWDnH/rPkjt8UhzHRfs5FeUNGyyfA9ev
+   I6I75KlW+q6BS2t6vTUQMqgMF/6GgL4qk4GIJD/sVqPSgc/+XAvGDcRTq
+   tx8taBiruir16KdPPyT+EKElV46SOGXa8N+jFM58vYw8SMWwtLFoUpgea
+   w==;
+X-CSE-ConnectionGUID: 9fSXWEdnRU+N0QoaYAYTfw==
+X-CSE-MsgGUID: omcauA4ySYGkoMbA144Q6Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11140"; a="30554900"
+X-IronPort-AV: E=Sophos;i="6.09,227,1716274800"; 
+   d="scan'208";a="30554900"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2024 20:36:03 -0700
+X-CSE-ConnectionGUID: 2gtp3AbRQmGUQ2ZIJi9ldQ==
+X-CSE-MsgGUID: tkEtpGauSueOyIL1HE3XIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,227,1716274800"; 
+   d="scan'208";a="51460628"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 21 Jul 2024 20:35:59 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sVjq8-000kqK-3A;
+	Mon, 22 Jul 2024 03:35:56 +0000
+Date: Mon, 22 Jul 2024 11:35:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>, jdelvare@suse.com,
+	linux@roeck-us.net, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, ukleinek@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
 	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v6 3/3] hwmon: (adt7475) Add support for configuring initial PWM state
-Date: Mon, 22 Jul 2024 12:58:25 +1200
-Message-ID: <20240722005825.1800403-4-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240722005825.1800403-1-chris.packham@alliedtelesis.co.nz>
-References: <20240722005825.1800403-1-chris.packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH v6 3/3] hwmon: (adt7475) Add support for configuring
+ initial PWM state
+Message-ID: <202407221153.LJjYD5i7-lkp@intel.com>
+References: <20240722005825.1800403-4-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=Gqbh+V1C c=1 sm=1 tr=0 ts=669daec1 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=4kmOji7k6h8A:10 a=oTqbJ0pJKTyCvHz9JCwA:9 a=3ZKOabzyN94A:10
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240722005825.1800403-4-chris.packham@alliedtelesis.co.nz>
 
-By default the PWM duty cycle in hardware is 100%. On some systems this
-can cause unwanted fan noise. Add the ability to specify the fan
-connections and initial state of the PWMs via device properties.
+Hi Chris,
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+kernel test robot noticed the following build errors:
 
-Notes:
-    Changes in v6:
-    - Use do_div() instead of plain /
-    - Use a helper function to avoid repetition between the of and non-of
-      code paths.
-    Changes in v5:
-    - Deal with PWM frequency and duty cycle being specified in nanosecon=
-ds
-    Changes in v4:
-    - Support DT and ACPI fwnodes
-    - Put PWM into manual mode
-    Changes in v3:
-    - Use the pwm provider/consumer bindings
-    Changes in v2:
-    - Use correct device property string for frequency
-    - Allow -EINVAL and only warn on error
-    - Use a frequency of 0 to indicate that the hardware should be left a=
-s-is
+[auto build test ERROR on groeck-staging/hwmon-next]
+[also build test ERROR on linus/master v6.10 next-20240719]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
- drivers/hwmon/adt7475.c | 130 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 130 insertions(+)
+url:    https://github.com/intel-lab-lkp/linux/commits/Chris-Packham/dt-bindings-hwmon-Add-adt7475-fan-pwm-properties/20240722-091004
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+patch link:    https://lore.kernel.org/r/20240722005825.1800403-4-chris.packham%40alliedtelesis.co.nz
+patch subject: [PATCH v6 3/3] hwmon: (adt7475) Add support for configuring initial PWM state
+config: arm-randconfig-002-20240722 (https://download.01.org/0day-ci/archive/20240722/202407221153.LJjYD5i7-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project ad154281230d83ee551e12d5be48bb956ef47ed3)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240722/202407221153.LJjYD5i7-lkp@intel.com/reproduce)
 
-diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
-index 4224ffb30483..fc5605d34f36 100644
---- a/drivers/hwmon/adt7475.c
-+++ b/drivers/hwmon/adt7475.c
-@@ -21,6 +21,8 @@
- #include <linux/of.h>
- #include <linux/util_macros.h>
-=20
-+#include <dt-bindings/pwm/pwm.h>
-+
- /* Indexes for the sysfs hooks */
-=20
- #define INPUT		0
-@@ -1662,6 +1664,130 @@ static int adt7475_set_pwm_polarity(struct i2c_cl=
-ient *client)
- 	return 0;
- }
-=20
-+struct adt7475_pwm_config {
-+	int index;
-+	int freq;
-+	int flags;
-+	int duty;
-+};
-+
-+static int _adt7475_pwm_properties_parse_args(u32 args[4], struct adt747=
-5_pwm_config *cfg)
-+{
-+	unsigned long freq_hz;
-+	unsigned long duty;
-+
-+	if (args[1] =3D=3D 0)
-+		return -EINVAL;
-+
-+	freq_hz =3D 1000000000UL;
-+	do_div(freq_hz, args[1]);
-+	duty =3D 255 * args[3];
-+	do_div(duty, args[1]);
-+
-+	cfg->index =3D args[0];
-+	cfg->freq =3D find_closest(freq_hz, pwmfreq_table, ARRAY_SIZE(pwmfreq_t=
-able));
-+	cfg->flags =3D args[2];
-+	cfg->duty =3D clamp_val(duty, 0, 0xFF);
-+
-+	return 0;
-+}
-+
-+static int adt7475_pwm_properties_parse_reference_args(struct fwnode_han=
-dle *fwnode,
-+						       struct adt7475_pwm_config *cfg)
-+{
-+	int ret, i;
-+	struct fwnode_reference_args rargs =3D {};
-+	u32 args[4] =3D {};
-+
-+	ret =3D fwnode_property_get_reference_args(fwnode, "pwms", "#pwm-cells"=
-, 0, 0, &rargs);
-+	if (ret)
-+		return ret;
-+
-+	if (rargs.nargs !=3D 4) {
-+		fwnode_handle_put(rargs.fwnode);
-+		return -EINVAL;
-+	}
-+
-+	for (i =3D 0; i < 4; i++)
-+		args[i] =3D rargs.args[i];
-+
-+	ret =3D _adt7475_pwm_properties_parse_args(args, cfg);
-+
-+	fwnode_handle_put(rargs.fwnode);
-+
-+	return ret;
-+}
-+
-+static int adt7475_pwm_properties_parse_args(struct fwnode_handle *fwnod=
-e,
-+					     struct adt7475_pwm_config *cfg)
-+{
-+	int ret;
-+	u32 args[4] =3D {};
-+
-+	ret =3D fwnode_property_read_u32_array(fwnode, "pwms", args, ARRAY_SIZE=
-(args));
-+	if (ret)
-+		return ret;
-+
-+	return _adt7475_pwm_properties_parse_args(args, cfg);
-+
-+}
-+
-+static int adt7475_fan_pwm_config(struct i2c_client *client)
-+{
-+	struct adt7475_data *data =3D i2c_get_clientdata(client);
-+	struct fwnode_handle *child;
-+	struct adt7475_pwm_config cfg =3D {};
-+	int ret;
-+
-+	device_for_each_child_node(&client->dev, child) {
-+		if (!fwnode_property_present(child, "pwms"))
-+			continue;
-+
-+		if (is_of_node(child))
-+			ret =3D adt7475_pwm_properties_parse_reference_args(child, &cfg);
-+		else
-+			ret =3D adt7475_pwm_properties_parse_args(child, &cfg);
-+
-+		if (cfg.index >=3D ADT7475_PWM_COUNT)
-+			return -EINVAL;
-+
-+		ret =3D adt7475_read(PWM_CONFIG_REG(cfg.index));
-+		if (ret < 0)
-+			return ret;
-+		data->pwm[CONTROL][cfg.index] =3D ret;
-+		if (cfg.flags & PWM_POLARITY_INVERTED)
-+			data->pwm[CONTROL][cfg.index] |=3D BIT(4);
-+		else
-+			data->pwm[CONTROL][cfg.index] &=3D ~BIT(4);
-+
-+		/* Force to manual mode so PWM values take effect */
-+		data->pwm[CONTROL][cfg.index] &=3D ~0xE0;
-+		data->pwm[CONTROL][cfg.index] |=3D 0x07 << 5;
-+
-+		ret =3D i2c_smbus_write_byte_data(client, PWM_CONFIG_REG(cfg.index),
-+						data->pwm[CONTROL][cfg.index]);
-+		if (ret)
-+			return ret;
-+
-+		data->pwm[INPUT][cfg.index] =3D cfg.duty;
-+		ret =3D i2c_smbus_write_byte_data(client, PWM_REG(cfg.index),
-+						data->pwm[INPUT][cfg.index]);
-+		if (ret)
-+			return ret;
-+
-+		data->range[cfg.index] =3D adt7475_read(TEMP_TRANGE_REG(cfg.index));
-+		data->range[cfg.index] &=3D ~0xf;
-+		data->range[cfg.index] |=3D cfg.freq;
-+
-+		ret =3D i2c_smbus_write_byte_data(client, TEMP_TRANGE_REG(cfg.index),
-+						data->range[cfg.index]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int adt7475_probe(struct i2c_client *client)
- {
- 	enum chips chip;
-@@ -1778,6 +1904,10 @@ static int adt7475_probe(struct i2c_client *client=
-)
- 	if (ret && ret !=3D -EINVAL)
- 		dev_warn(&client->dev, "Error configuring pwm polarity\n");
-=20
-+	ret =3D adt7475_fan_pwm_config(client);
-+	if (ret)
-+		dev_warn(&client->dev, "Error %d configuring fan/pwm\n", ret);
-+
- 	/* Start monitoring */
- 	switch (chip) {
- 	case adt7475:
---=20
-2.45.2
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407221153.LJjYD5i7-lkp@intel.com/
 
+All error/warnings (new ones prefixed by >>):
+
+   In file included from drivers/hwmon/adt7475.c:15:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:21:
+   In file included from include/linux/mm.h:2253:
+   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/hwmon/adt7475.c:1683:2: warning: comparison of distinct pointer types ('typeof ((freq_hz)) *' (aka 'unsigned long *') and 'uint64_t *' (aka 'unsigned long long *')) [-Wcompare-distinct-pointer-types]
+    1683 |         do_div(freq_hz, args[1]);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/div64.h:222:28: note: expanded from macro 'do_div'
+     222 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
+>> drivers/hwmon/adt7475.c:1683:2: error: incompatible pointer types passing 'unsigned long *' to parameter of type 'uint64_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
+    1683 |         do_div(freq_hz, args[1]);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/div64.h:238:22: note: expanded from macro 'do_div'
+     238 |                 __rem = __div64_32(&(n), __base);       \
+         |                                    ^~~~
+   arch/arm/include/asm/div64.h:24:45: note: passing argument to parameter 'n' here
+      24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
+         |                                             ^
+>> drivers/hwmon/adt7475.c:1685:2: warning: comparison of distinct pointer types ('typeof ((duty)) *' (aka 'unsigned long *') and 'uint64_t *' (aka 'unsigned long long *')) [-Wcompare-distinct-pointer-types]
+    1685 |         do_div(duty, args[1]);
+         |         ^~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/div64.h:222:28: note: expanded from macro 'do_div'
+     222 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
+   drivers/hwmon/adt7475.c:1685:2: error: incompatible pointer types passing 'unsigned long *' to parameter of type 'uint64_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
+    1685 |         do_div(duty, args[1]);
+         |         ^~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/div64.h:238:22: note: expanded from macro 'do_div'
+     238 |                 __rem = __div64_32(&(n), __base);       \
+         |                                    ^~~~
+   arch/arm/include/asm/div64.h:24:45: note: passing argument to parameter 'n' here
+      24 | static inline uint32_t __div64_32(uint64_t *n, uint32_t base)
+         |                                             ^
+>> drivers/hwmon/adt7475.c:1683:2: warning: shift count >= width of type [-Wshift-count-overflow]
+    1683 |         do_div(freq_hz, args[1]);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/div64.h:234:25: note: expanded from macro 'do_div'
+     234 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^  ~~
+   include/linux/compiler.h:76:40: note: expanded from macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   drivers/hwmon/adt7475.c:1685:2: warning: shift count >= width of type [-Wshift-count-overflow]
+    1685 |         do_div(duty, args[1]);
+         |         ^~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/div64.h:234:25: note: expanded from macro 'do_div'
+     234 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^  ~~
+   include/linux/compiler.h:76:40: note: expanded from macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   5 warnings and 2 errors generated.
+
+
+vim +1683 drivers/hwmon/adt7475.c
+
+  1673	
+  1674	static int _adt7475_pwm_properties_parse_args(u32 args[4], struct adt7475_pwm_config *cfg)
+  1675	{
+  1676		unsigned long freq_hz;
+  1677		unsigned long duty;
+  1678	
+  1679		if (args[1] == 0)
+  1680			return -EINVAL;
+  1681	
+  1682		freq_hz = 1000000000UL;
+> 1683		do_div(freq_hz, args[1]);
+  1684		duty = 255 * args[3];
+> 1685		do_div(duty, args[1]);
+  1686	
+  1687		cfg->index = args[0];
+  1688		cfg->freq = find_closest(freq_hz, pwmfreq_table, ARRAY_SIZE(pwmfreq_table));
+  1689		cfg->flags = args[2];
+  1690		cfg->duty = clamp_val(duty, 0, 0xFF);
+  1691	
+  1692		return 0;
+  1693	}
+  1694	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
