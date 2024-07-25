@@ -1,109 +1,132 @@
-Return-Path: <linux-pwm+bounces-2912-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2913-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98BFB93C3C2
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jul 2024 16:09:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0D4F93C70A
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jul 2024 18:16:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4DF2E1F21143
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jul 2024 14:09:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0DC4E1C20846
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jul 2024 16:16:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ABEC19CCF0;
-	Thu, 25 Jul 2024 14:09:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC1119D884;
+	Thu, 25 Jul 2024 16:16:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bEVy5acl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SNzI3fKY"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D487C16DEA8;
-	Thu, 25 Jul 2024 14:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F8817588;
+	Thu, 25 Jul 2024 16:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721916578; cv=none; b=NT96wZMTciYFvdQSgBlKf0ZJ3uH6vnuGA7zTa4AhdPbi+Me5/0vC7XrTTVkw+IQlubysjikaPIawQoyf1Bt2DwLrXWcvt1H1pQQbVFelG93J7n7NYdgI+2cwAmEtTA0FGMBDZJ2XW7CyvwMWuen+wK18Spx2FZ7txlwmPfMJ4RA=
+	t=1721924182; cv=none; b=b+yaZSvWTw5LqpR6o6LHYmB6vZftGgOcbGMPQdzjeuo/WcHMwLV7otqVlmOP7eVqt4VRB/PTikJGig2BDHeluzD4GtiEUZ5OXbdnw7NtDPE6NYlaAKgmtYCcdsZQxmu62+t3Di1RKoNFoO2K+LXU2iK6+9GTvLEJtcqC/le9NUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721916578; c=relaxed/simple;
-	bh=U/uAOTdYfC2F+wnRdy4AsQFPTVSnYTBO9SwUlVbukMU=;
+	s=arc-20240116; t=1721924182; c=relaxed/simple;
+	bh=wSl7dU8k38O3kEBowowvVz0xiEyS8E2H52ryb/QbeBI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hx09LGtSIpScM56s2V/KODESM4b/kHQDcq5NnE9mOQtgjgp/aWO3jzZiv0/KkZrn7tWz7POcqw+w3Hx6szcgZ9KJ3VgPpyl3FGYUdFrZt5AEiC3sB10Yd8O91UusQeqGRUc4aSS51nqpkkvzPe0+ReXzx393dQ9Fiu3gWSNy9eU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bEVy5acl; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1fc56fd4de1so6724375ad.0;
-        Thu, 25 Jul 2024 07:09:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721916576; x=1722521376; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iipe01EYYFLSHptlnXHBTS73LbEfJBsYOUZlLZ0zqO8=;
-        b=bEVy5aclU1d9cGYWWqpFwXZTJAKbYg/d/8egwxiOSYNWvj2Ze58BJyazjFtDiknmK0
-         n75wB06hXcAPtwtyp5HMkeQATb6eByVOCJOXgv30tb7NW18Dfi0wMiclkJUA3oBd/S+c
-         JzI/T0fy6u+QO3G5NJF2mQO8oEkKLN07uVRlqkmNZnoZZgi2nDRFKReUO/GVj7F6a9qh
-         WgLP0rv6mnly3ArnnhgB4Elv3T1QzRweEYMNyEb5kvxYosmEBtq73WrkeFYD7wfqYqsi
-         EKKTLxxLMKPncOOnPFDmzviWj9ytiV51AHaZoZfYpLXAxhPf6/dNqRt+nZoXnhPThwGZ
-         bedg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721916576; x=1722521376;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iipe01EYYFLSHptlnXHBTS73LbEfJBsYOUZlLZ0zqO8=;
-        b=DCWQQqi5G+OQ0hCoJq5kYoYFNoZIDHqI6TXdJWgiw/muJY87GdWI/lDSeERsE0bCpv
-         kg0d5DSyFxzk+vXf41A1K+1MEKRq57mTtwlh5F+o7ly8iOlZvqRu/vrlBa0H78uOUyw5
-         lBgYFaptalrC3LypqOhCIAQYd24dk8zuW5pTsEQAyGlb7swpWW8PUWwel5qSeDUVhI4F
-         jZu2k1ff9fCH/dORn10wX4HJ1hSYwBpmr1uN+oIbY3ncPMxqPJ8ejebWKcexOqtzXDTc
-         gfbZB/QkzBTAOwvwZmc4JYWFtDJJHbbjxzRgOGYtYmB4g3zG4cN5KdJrrOfWfgaOGneb
-         1mhw==
-X-Forwarded-Encrypted: i=1; AJvYcCX01U7+LAhhaBFp6xwLEm5FT0Y82MumvfjUCuA7wHdnpIDso43ImWs7/aHKeaIrN24j9QQt+ro4IrXQkTWarYw3FXo8oJrnxcBGD3FLwEMnSpps9ZFT7YL9zWviElLD0VRGUT4WUHNgaFba806DCcYvxt3k8MTifxeAoX45JDb4ghfmEy1IaStZSHMdH0l3WE1jQd1dbTQ1OpKH0QOq+C7g
-X-Gm-Message-State: AOJu0YyGZDRynyJep0Aq9aw0/TA0FFkovwXotXpia4bos1aviNOXXmS5
-	nMtfOgtXUXPBz+5Q3bbe8mJ4eq6MChBRk3a6sTRb8VYQ+Ea2HTIi
-X-Google-Smtp-Source: AGHT+IEaPtNdrTWZZ5e0/beamAel5CJ+dgspi0CP+esfYOaGUUmHT7NNGzPkhbwhmXQx2HjaRCzP/w==
-X-Received: by 2002:a17:902:d486:b0:1fb:8e29:621f with SMTP id d9443c01a7336-1fed277f45dmr47080355ad.16.1721916575986;
-        Thu, 25 Jul 2024 07:09:35 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7fe1a26sm14459805ad.288.2024.07.25.07.09.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jul 2024 07:09:35 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 25 Jul 2024 07:09:34 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: jdelvare@suse.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, ukleinek@kernel.org,
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v7 3/3] hwmon: (adt7475) Add support for configuring
- initial PWM state
-Message-ID: <aaa8217b-031d-40e7-96a7-b9ed8482748a@roeck-us.net>
-References: <20240722221737.3407958-1-chris.packham@alliedtelesis.co.nz>
- <20240722221737.3407958-4-chris.packham@alliedtelesis.co.nz>
+	 Content-Type:Content-Disposition:In-Reply-To; b=g1mmOKbaQ0DNn1tTIYdK8u7ZkstBKetTbr/f6zxGo4wvHkE40SpM/qmp98nyJsHiNIIjz/rLOtll8k2dLlNmlGhPhw4VcKHFV/ZcChXhL8MiueDLqVwwuZVvJI3p5BWRtTLqgVhJ+gy+zeg3LkGSXXEX7CJQBA8X+JleLItRt3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SNzI3fKY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4316AC32782;
+	Thu, 25 Jul 2024 16:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721924182;
+	bh=wSl7dU8k38O3kEBowowvVz0xiEyS8E2H52ryb/QbeBI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SNzI3fKYixRUWNQpyNNkIGvI6aaRP1z2Jwy/L5siZ7h11j9aje2SDTUtweUc+p02a
+	 Mlu8F8o9Q4AC2ClVmv8jh6X+TS8IKHkOTom1T5HmBaFgHXFVXRGTm+4bJJXbLX25Tc
+	 Wj/7N4lZN+AVYeuDFuNfXZcCU11WB7JchW6L1f/YeJXc+6OyetD8POx0ikDFZrlZlL
+	 jrn1CL/57c9fR9u9PNK3NvRboMA8wOMJ9MjcAIhKDsfXCZyCwkermnBWyZqbXjUFGI
+	 YjnYEqak+/T7bs6bhRVHdoPOK/WCoR5HrMULHRBAO0uysxS0B9qUU6tJBOY/+LdZB7
+	 1EZFjX1+j4unA==
+Date: Thu, 25 Jul 2024 17:16:16 +0100
+From: Lee Jones <lee@kernel.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Haibo Chen <haibo.chen@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+	Frank Li <Frank.li@nxp.com>
+Subject: Re: [PATCH v7 0/4] ADP5585 GPIO expander, PWM and keypad controller
+ support
+Message-ID: <20240725161616.GJ501857@google.com>
+References: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240722221737.3407958-4-chris.packham@alliedtelesis.co.nz>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
 
-On Tue, Jul 23, 2024 at 10:17:37AM +1200, Chris Packham wrote:
-> By default the PWM duty cycle in hardware is 100%. On some systems this
-> can cause unwanted fan noise. Add the ability to specify the fan
-> connections and initial state of the PWMs via device properties.
+On Mon, 22 Jul 2024, Laurent Pinchart wrote:
+
+> Hello,
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> This patch series introduces support for the Analog Devices ADP5585, a
+> GPIO expander, PWM and keyboard controller. It models the chip as an MFD
+> device, and includes DT bindings (1/4), an MFD driver (2/4) and drivers
+> for the GPIO (3/4) and PWM (4/4) functions.
+> 
+> Support for the keypad controller is left out, as I have no means to
+> test it at the moment. The chip also includes a tiny reset controller,
+> as well as a 3-bit input programmable logic block, which I haven't tried
+> to support (and also have no means to test).
+> 
+> The driver is based on an initial version from the NXP BSP kernel, then
+> extensively and nearly completely rewritten, with added DT bindings. I
+> have nonetheless retained original authorship. Clark, Haibo, if you
+> would prefer not being credited and/or listed as authors, please let me
+> know.
+> 
+> Compared to v6, this version addresses small review comments. I believe
+> it is ready to go, as the PWM and GPIO drivers have been acked by the
+> respective subsystem maintainers, and I have addressed Lee's comments on
+> the MFD side. Lee, if there's no more issue, could you apply this to
+> your tree for v6.12 ?
+> 
+> Clark Wang (1):
+>   pwm: adp5585: Add Analog Devices ADP5585 support
+> 
+> Haibo Chen (2):
+>   mfd: adp5585: Add Analog Devices ADP5585 core support
+>   gpio: adp5585: Add Analog Devices ADP5585 support
+> 
+> Laurent Pinchart (1):
+>   dt-bindings: mfd: Add Analog Devices ADP5585
+> 
+>  .../devicetree/bindings/mfd/adi,adp5585.yaml  |  92 +++++++
+>  .../devicetree/bindings/trivial-devices.yaml  |   4 -
+>  MAINTAINERS                                   |  11 +
+>  drivers/gpio/Kconfig                          |   7 +
+>  drivers/gpio/Makefile                         |   1 +
+>  drivers/gpio/gpio-adp5585.c                   | 229 ++++++++++++++++++
+>  drivers/mfd/Kconfig                           |  12 +
+>  drivers/mfd/Makefile                          |   1 +
+>  drivers/mfd/adp5585.c                         | 205 ++++++++++++++++
+>  drivers/pwm/Kconfig                           |   7 +
+>  drivers/pwm/Makefile                          |   1 +
+>  drivers/pwm/pwm-adp5585.c                     | 184 ++++++++++++++
+>  include/linux/mfd/adp5585.h                   | 126 ++++++++++
+>  13 files changed, 876 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+>  create mode 100644 drivers/gpio/gpio-adp5585.c
+>  create mode 100644 drivers/mfd/adp5585.c
+>  create mode 100644 drivers/pwm/pwm-adp5585.c
+>  create mode 100644 include/linux/mfd/adp5585.h
 
-CHECK: Blank lines aren't necessary before a close brace '}'
-#207: FILE: drivers/hwmon/adt7475.c:1734:
-+
-+}
+Note to self: This looks good to go.  Merge after -rc1 is released.
 
-Never mind, applied after fixing the above.
-
-Thanks,
-Guenter
+-- 
+Lee Jones [李琼斯]
 
