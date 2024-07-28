@@ -1,131 +1,128 @@
-Return-Path: <linux-pwm+bounces-2919-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2920-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38B8D93CF67
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jul 2024 10:16:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CB5C93E4E0
+	for <lists+linux-pwm@lfdr.de>; Sun, 28 Jul 2024 13:46:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7A84B2215A
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jul 2024 08:16:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 887181F21515
+	for <lists+linux-pwm@lfdr.de>; Sun, 28 Jul 2024 11:46:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 967801369B1;
-	Fri, 26 Jul 2024 08:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73C5C2C6BB;
+	Sun, 28 Jul 2024 11:46:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="fC/YTSK8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciuQ5fNJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC8A41C63
-	for <linux-pwm@vger.kernel.org>; Fri, 26 Jul 2024 08:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429DC3C466;
+	Sun, 28 Jul 2024 11:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721981769; cv=none; b=XJdZeAt5TnIk8LYsSub9QGuiAXJZJpQnvrYpBzZQ5shezj3gE04g6dzb1YDEIvOkOIUuEVoz/AxQBKElUGATfJiu1WbCxF/GtJXQ5nWewRgaNzKF/BEju9Fc1KP+AxDX3IwFv0MGJXVpIyC8UJP9mU72+oFG8zZj9FGWgydFKYY=
+	t=1722167203; cv=none; b=f7hbbZ0/giZftBDbrnzJXoJmD5nPJ8A8txX7mO4tPPebMTmCAW+raVnqKLywOaUEqLT2NegWi9MeFcV9dtZ96ENp8u2lOIBMWA3JHh4+XcRdmu+L0eBuDXc9PZ4facmQCthvkKBnjfk2ajJQLMVlpXnHTSDzUSD58NgcYJYpJWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721981769; c=relaxed/simple;
-	bh=S/Hoh4bXg1UZDdZJQBXsz2bQKhdvNuE+/OwIDUSIuQU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nrTnHKnCKC6xgRPoNaUqj1ih3Zamfgum1eJ68TJRCkWor18OgRoBSccI/vY093naoJKNkCIf6hkVlamc338wwT9mwYywfPIdMBbxx2ifpjpT19ktUEqC+ElpaVZ+GS2VpVMHTz9iadU0d8rF2ktvSfQqGojgO9dHvpJa1VfRkHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=fC/YTSK8; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2f029e9c9cfso15595731fa.2
-        for <linux-pwm@vger.kernel.org>; Fri, 26 Jul 2024 01:16:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1721981765; x=1722586565; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TYTI0CSVKI2TXvDPdpXJ4Kmrco4gw3sbLMb/7A/5juI=;
-        b=fC/YTSK8L1YD9K5Oqk1qxjGBzj2TxFC9/AfxfAA2k5Lk4HVsYWWY93nj9VqY2NDJR6
-         4Xx3RkGbXLglJGpnX959nZ8nlBSCfINi1mXXPJGMbsdAvrHhb78dXZg0REtjGGgx9KTR
-         cXdyDjHiuLEoRXUxc0j82qu4rWbjwcoMSoAggzExeebeG8s86apktOvj069x7ahrkdt4
-         MQVXC+8pXIBpXkvW00Kyl7VF8M4k2o6X5IIytWGl9gMgsmKmTfhyaI+I5ATNeUFaauHJ
-         ARIamJjEQFtt8U47MnhsD91k3afWf+vwBZj1elV0WuN3P/EDUO/3qCJSmawH8ESTpD7n
-         UHaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721981765; x=1722586565;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TYTI0CSVKI2TXvDPdpXJ4Kmrco4gw3sbLMb/7A/5juI=;
-        b=S8cnyqN9Q4yuBhIdv875NNIc4frdT+wOwYLz95vqdQPzTsz9TO0A0qB+ofqmsMLeJ8
-         6Qf7G4WL72wWal7IfcBvuZiUgTQee6Hno+Oa9TXRmJ9F1sLiRBHtF04qW64JRydAmOHc
-         hWdIDwF6VzPOactIiklfW/Wm3yZsYyfWKziKeNtITctGvlFGxbQQRsGckmP3SEUNdbTl
-         NbNNwMCpP1pnBaGKTnIL/jtQlRsWCyXw1ubYt358X6broL4/9FhrPt8bPmSo6fuPxer5
-         G0yi4LYYZmSKSnS5BoTcbYe/NY0hNNZ3qyClBOigMsIP+oW1TrZoFsuRRKz06Vj3J1Dl
-         W8nA==
-X-Forwarded-Encrypted: i=1; AJvYcCUb4tiQLnrq5Cv2yQPawXivJ8HwcohrfbjJvu6OS9/5r20paEsuK7+aZJdPT5coQ/aYg8WqQaYFMu+NjX8lTlV7Wr5v3mXN05AM
-X-Gm-Message-State: AOJu0Yz83uQfLZi8bkjjIeWj4O+SeWilkYGQUMLosLNZp4UsD/PMw7p4
-	zYwTkokcBl9d4lEzEwxhxo3Rr18gcDxebqicdhvUEB33XeVaPNiVdFcmKImbCGs=
-X-Google-Smtp-Source: AGHT+IFARq9FwsB8RjXSIH+GWglIVcZ0UrF3Y3kjl0RxuQLU9iezQhGVz2hdxK4T5dKSzYVooaeGgw==
-X-Received: by 2002:a2e:8812:0:b0:2ef:296d:1de3 with SMTP id 38308e7fff4ca-2f03dabebd2mr35897911fa.0.1721981765244;
-        Fri, 26 Jul 2024 01:16:05 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:3ebe:e31b:885d:414e])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acad41164sm147206766b.102.2024.07.26.01.16.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jul 2024 01:16:04 -0700 (PDT)
-Date: Fri, 26 Jul 2024 10:16:02 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
-	devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH 0/2] dt-bindings: pwm: Add r8a779h0 support
-Message-ID: <yaavvcimdwatogeiejd4q6s325scnxdspqkl3d7u4x3qgho6sa@jgi2smviz4bz>
-References: <20240725193803.14130-4-wsa+renesas@sang-engineering.com>
+	s=arc-20240116; t=1722167203; c=relaxed/simple;
+	bh=yygPUstBZwisSVr9S9BFcnYH3+3NoHJF1btJ9ZzlpBk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V0Yxl0uwMoG0q/aejCjOapBmHAb20fchA3kfz0vk1I089VeFbHS/EfE4A9gnoKwOzHD6rVTb+jYXYSrsb9swxvokfCVGVFNGhBFbovPu1uCyH8xH1Uc8qg+DPLU2DvStgCMwC5jrl9pIJhU4guoqW3T6j+u8kewsozrr646igmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciuQ5fNJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AECFC116B1;
+	Sun, 28 Jul 2024 11:46:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722167202;
+	bh=yygPUstBZwisSVr9S9BFcnYH3+3NoHJF1btJ9ZzlpBk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ciuQ5fNJyVCg3/AzYwvqJ18m4ijgKSunhz/g1weN4V5rmC5m4ahfYxrSWri1+f4uW
+	 S+8CyYKf2MiCxQBbzLVsUZrl9lWlCAAPMt1JsMTgZL+JmFgRJeapYvyZ9UgLJNfO7W
+	 cSH/YUjUDSgGYJlisD4Y7GJh42DtbU+bRL+jgkxOMBs1RGEoVoZdoA+ncUg6hBvKPd
+	 nnh6jo+WWEP1+Yu3+pcoY6XDX3zo7v/1j5HPigi5tQhSfSHyMNrLuxHyHPLoXqemFt
+	 25+AW50Tk7PO7sVxpBVPx0MgdsIk0QSQvtnuy/vm1xB2ggEnRpEDqEGjPt//LKX2A9
+	 NWFgn8iHYZy2w==
+Message-ID: <66ffa58a-2d4e-45bb-91e9-be486a99b14f@kernel.org>
+Date: Sun, 28 Jul 2024 13:46:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pynesepz3mktlh7g"
-Content-Disposition: inline
-In-Reply-To: <20240725193803.14130-4-wsa+renesas@sang-engineering.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: renesas,pwm-rcar: Add r8a779h0
+ support
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ linux-renesas-soc@vger.kernel.org
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Magnus Damm <magnus.damm@gmail.com>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240725193803.14130-4-wsa+renesas@sang-engineering.com>
+ <20240725193803.14130-5-wsa+renesas@sang-engineering.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240725193803.14130-5-wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 25/07/2024 21:38, Wolfram Sang wrote:
+> Document support for the PWM timers in the Renesas R-Car V4M (R8A779H0)
+> SoC.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
 
---pynesepz3mktlh7g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Hello Wolfram,
+Best regards,
+Krzysztof
 
-On Thu, Jul 25, 2024 at 09:38:03PM +0200, Wolfram Sang wrote:
-> Add the bindings for both PWM controllers in this SoC.
->=20
-> Wolfram Sang (2):
->   dt-bindings: pwm: renesas,pwm-rcar: Add r8a779h0 support
->   dt-bindings: pwm: renesas,tpu: Add r8a779h0 support
-
-Looks straight forward. I applied it to my for-nexxt branch at
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-nexxt
-=2E It will migrate to the branch with a single x that is included in next
-after the merge window closes. Still open to accept review tags for it.
-
-Thanks
-Uwe
-
---pynesepz3mktlh7g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmajWz8ACgkQj4D7WH0S
-/k7iQwf/SaZmhQb38lBOdeLuTyTAHQtHPx1LsLQ1pL2L65kY5d0vkly20vvGKG/J
-fNwcramcSMUtCJy8UhEBvIcMzxAhcBHhvkCAmLeWriVwwDRUZBiw+vzzVrxMYw/+
-h8XvwTZNBNMQ1k1feEQDxeWlGNo2n1HewQ61r/ge3VTWjL9efWAjVslIMs+vfFI5
-KCb5NNigStrQ7+MkXKhRT9p/WlQV+dhkRNrijMBxXUJZ5PnaTmpvF+wnYwXPekbC
-3XXvh4158OywG8Xo7WOUsz+e+GmkhJUsp351dpph/J3y4qjIRApkk1vpQxouMEM+
-KrWAc2L3vOtZB5u4KqST1Qqxzl1T3g==
-=CLxK
------END PGP SIGNATURE-----
-
---pynesepz3mktlh7g--
 
