@@ -1,137 +1,173 @@
-Return-Path: <linux-pwm+bounces-2921-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2922-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5701F93F355
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2024 12:57:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A760F93F84F
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2024 16:38:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F39911F223EB
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2024 10:57:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 528B61F22BFF
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jul 2024 14:38:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07BE6145353;
-	Mon, 29 Jul 2024 10:57:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29D1A15B11D;
+	Mon, 29 Jul 2024 14:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jUnCZID0"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Tk2HF6sn"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784FC145336;
-	Mon, 29 Jul 2024 10:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50E415B113
+	for <linux-pwm@vger.kernel.org>; Mon, 29 Jul 2024 14:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722250621; cv=none; b=XtXrO7MpmZDhcwJB51+D+e11fNiN3eteMM62Em/kYDLFxrtpZlefbWY4BciAH/AE8m1j7i3d651b7Ox9nzzCvLdlRjebLvn6SfEDziWXRWk5sBDITFEmhzXBI/yKFXT9nVthgTF/6Z+PPLqHmOGsIbqVYFAQdZKcSLRySxEC/q4=
+	t=1722263709; cv=none; b=ZgKlsqc98K0PdIZlyiLmLoNERrOi6MHWLBZUkdy1qrpyOgVT4KCWGt9+JK6NgC/EbDKXgP1cTcNDK30ErDnG/Js4ryR1I0hZk2NTFlNPypZfojd62Am7XLBIKPUN1nW0eG6P+ytDhDRLJUmO+j45VmAPQhw7vG5TaSwp0tn+/Ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722250621; c=relaxed/simple;
-	bh=lhVH4+aoI0xTEIrQarhaSOUs8dYRYg751A0Xq0lAqN0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D/2VwmpBGR1s20lJndUc3TyNlrvYjW/eBrx+Q5ZUeVzokYPRVSChl6iSJpLtUlp0ClqN5F2K8Gab4v7V4mYwyoK+W7nefohBibwXq/4oFfBWWKW1b/CYkrMrYqXHD1CokSc48OOA93ZTb3rNYfhy4MCH2Qr2cHm6fqWL97UQC+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=jUnCZID0; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id AAD8345A;
-	Mon, 29 Jul 2024 12:56:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1722250572;
-	bh=lhVH4+aoI0xTEIrQarhaSOUs8dYRYg751A0Xq0lAqN0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jUnCZID0H/M4IU8LXXfQcl8baksFh4hFEBeHo38cKxwLM8oY5fIXVpXZWdo7HteeG
-	 kzlN1aSVl0CEJ30rz+xtSFE77BI+tIhR7xfhxRH506jyfhh8gRa71E4bi+K3Co83BH
-	 A4d6wknr4TxyijV338GJXG7LX1KXsijrCqzMym2U=
-Date: Mon, 29 Jul 2024 13:56:38 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
-	Frank Li <Frank.li@nxp.com>
-Subject: Re: [PATCH v7 0/4] ADP5585 GPIO expander, PWM and keypad controller
- support
-Message-ID: <20240729105638.GF2320@pendragon.ideasonboard.com>
-References: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
- <20240725161616.GJ501857@google.com>
+	s=arc-20240116; t=1722263709; c=relaxed/simple;
+	bh=5lbmiKqvBboL1pVsuj1bTn4xbLJ3cUxP0YgCBw+dVpI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uiVpuNP45u+mvzta81UqaESGzp9kRdyHtORIWrlWmrCKKCpR0TJIkKZPyMo9YAMj4hMyq3RpnDoFoGSIyOF0UDJ5LITolrHmWENI2TI0z3LWAnobABEWKhotTFLSqOFe8jjMeO8COimoHbAgnjNF8bt4EgnlEDk0gbvMIVFK5S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Tk2HF6sn; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4280ee5f1e3so17519565e9.0
+        for <linux-pwm@vger.kernel.org>; Mon, 29 Jul 2024 07:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1722263705; x=1722868505; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pf2db82vhdizcqTMN+1MBUArjDRrCG8c+iUPxc5CsU4=;
+        b=Tk2HF6snxJ2vymmzm8xZ+wlJDNDZRmPkTRaeheqYe+wh5pZeinaA/2vaSAebqMWO3a
+         8hsJ+9shnuJhhAGkUxgPc8chXH+YRAVPYoeMoWz21Bm+0MNgQNtUhU9pFFF+U1cIwBFK
+         PLAa2L47WAGvUhTaDI2puwFtOTzQ506cWQS69UPkOt+Gz4ewpzPI0YRhtRADxEoOIpDv
+         WuyzbJ4TR5JCMdOMaf4diWvUV0iT6YFJJJBFpr8fLgMAw4/CBePNDJx77diYSiHubGMs
+         tDjc7d33alSJ/u7vBQKQa5H0C/9FzMeyCfObV3v9o2fS3r9nVJO6Bx3A33mcL2K3S8uD
+         k88g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722263705; x=1722868505;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pf2db82vhdizcqTMN+1MBUArjDRrCG8c+iUPxc5CsU4=;
+        b=TAlmZPyUZAzCq0jUt/+u+O4flT1cJGpbryKV0Zo7alb/VLqqrj7JIwkCxoVWtbgQF8
+         kKb3Sr4B33+cIPsjOgPAqfCD2Ns9o/T4nTEUUMcLbiRLKtnWvPLL2Q1t0KYp/H4GMgje
+         QWzCApK3/gtBhm1DptIckvd4DeBCLKlpD2fl8GPpY+dlVP2TD99WbGyCfTvRP+i6WP03
+         /Atw3dZAyNmKsioV/RG11SPBQJw7WH0nSrrUiZPi4RkhFv/fgSu5Cbo5gUfSaOxpglbL
+         g9MVc+2qePHFf2GQ68d/0AoDKnvV0RUGBpqt+eZmRaMzg/PqOGit6y17Mn16kGUujM+l
+         bfRA==
+X-Gm-Message-State: AOJu0YwivkDQcwP636wGRfRerZF+nJQldY24FJ33FOTsy/JYOXxtKmn0
+	gs1bIPhE8+PeFxcHE8F9Vx08gGJBHU1yMe9H31bESQeLQyfh8vqOOJ2lZ4G7sH4pza2GtpCrLik
+	6
+X-Google-Smtp-Source: AGHT+IGt6eS97Xgca8KV0NOgFfHn5nHcp4nZrPormB0sSwBcBc31n8q1yejiOGdqCUHmIOkFibwqOw==
+X-Received: by 2002:a05:600c:4511:b0:427:abed:3602 with SMTP id 5b1f17b1804b1-42811e12d41mr57503285e9.24.1722263704828;
+        Mon, 29 Jul 2024 07:35:04 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:59dd:510e:47d0:643f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4280a867e7esm135348575e9.27.2024.07.29.07.35.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jul 2024 07:35:04 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Trevor Gamblin <tgamblin@baylibre.com>
+Subject: [PATCH v3 0/8] pwm: New abstraction and userspace API
+Date: Mon, 29 Jul 2024 16:34:16 +0200
+Message-ID: <cover.1722261050.git.u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240725161616.GJ501857@google.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3152; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=5lbmiKqvBboL1pVsuj1bTn4xbLJ3cUxP0YgCBw+dVpI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmp6hqpBrMchkTq7UblpQiiB/gXoWgj5QCpOMh5 UeL+gmP5SWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZqeoagAKCRCPgPtYfRL+ TlqNB/9IGnXLN9EXn6TBjOIgvmlIXGnB8Qjq58LozRpFWTT6bUlCZDNhYGIClk+Gc1Pz+lGVx7+ 4bVNReS62OkAxag/y/JjyVittMs1CR++VAuDxsMtxT7nCUVGYoXGS3AClsDjJQUgYHMv4HNaCHH NvpiitBaP2ro3UIlBLtsUrDVYSzsrK5VBtb+EKUAGC4i1BZvUV6DfJhiKLiX4THlPnxcjMlxrE/ 8AI1yyGUL+dEFeAKwhF+ezl5z5gunHggAc1DUrIO6Nw+R+8zhX/I4ZM8Lnnevce03fLD2Zdu7eB zCBFbI6JTMZCR1kU4Oz9fqKJBo2ugwZfCYLmi49CCy/9iEKu
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 25, 2024 at 05:16:16PM +0100, Lee Jones wrote:
-> On Mon, 22 Jul 2024, Laurent Pinchart wrote:
-> 
-> > Hello,
-> > 
-> > This patch series introduces support for the Analog Devices ADP5585, a
-> > GPIO expander, PWM and keyboard controller. It models the chip as an MFD
-> > device, and includes DT bindings (1/4), an MFD driver (2/4) and drivers
-> > for the GPIO (3/4) and PWM (4/4) functions.
-> > 
-> > Support for the keypad controller is left out, as I have no means to
-> > test it at the moment. The chip also includes a tiny reset controller,
-> > as well as a 3-bit input programmable logic block, which I haven't tried
-> > to support (and also have no means to test).
-> > 
-> > The driver is based on an initial version from the NXP BSP kernel, then
-> > extensively and nearly completely rewritten, with added DT bindings. I
-> > have nonetheless retained original authorship. Clark, Haibo, if you
-> > would prefer not being credited and/or listed as authors, please let me
-> > know.
-> > 
-> > Compared to v6, this version addresses small review comments. I believe
-> > it is ready to go, as the PWM and GPIO drivers have been acked by the
-> > respective subsystem maintainers, and I have addressed Lee's comments on
-> > the MFD side. Lee, if there's no more issue, could you apply this to
-> > your tree for v6.12 ?
-> > 
-> > Clark Wang (1):
-> >   pwm: adp5585: Add Analog Devices ADP5585 support
-> > 
-> > Haibo Chen (2):
-> >   mfd: adp5585: Add Analog Devices ADP5585 core support
-> >   gpio: adp5585: Add Analog Devices ADP5585 support
-> > 
-> > Laurent Pinchart (1):
-> >   dt-bindings: mfd: Add Analog Devices ADP5585
-> > 
-> >  .../devicetree/bindings/mfd/adi,adp5585.yaml  |  92 +++++++
-> >  .../devicetree/bindings/trivial-devices.yaml  |   4 -
-> >  MAINTAINERS                                   |  11 +
-> >  drivers/gpio/Kconfig                          |   7 +
-> >  drivers/gpio/Makefile                         |   1 +
-> >  drivers/gpio/gpio-adp5585.c                   | 229 ++++++++++++++++++
-> >  drivers/mfd/Kconfig                           |  12 +
-> >  drivers/mfd/Makefile                          |   1 +
-> >  drivers/mfd/adp5585.c                         | 205 ++++++++++++++++
-> >  drivers/pwm/Kconfig                           |   7 +
-> >  drivers/pwm/Makefile                          |   1 +
-> >  drivers/pwm/pwm-adp5585.c                     | 184 ++++++++++++++
-> >  include/linux/mfd/adp5585.h                   | 126 ++++++++++
-> >  13 files changed, 876 insertions(+), 4 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-> >  create mode 100644 drivers/gpio/gpio-adp5585.c
-> >  create mode 100644 drivers/mfd/adp5585.c
-> >  create mode 100644 drivers/pwm/pwm-adp5585.c
-> >  create mode 100644 include/linux/mfd/adp5585.h
-> 
-> Note to self: This looks good to go.  Merge after -rc1 is released.
+Hello,
 
-\o/ Looking forward to that, now that -rc1 is out :-)
+here comes v3 of the series to add support for duty offset in PWM
+waveforms. For a single PWM output there is no gain, but if you have a
+chip with two (or more) outputs and both operate with the same period,
+you can generate an output like:
 
+
+               ______         ______         ______         ______
+   PWM #0  ___/      \_______/      \_______/      \_______/      \_______
+                 __             __             __             __    
+   PWM #1  _____/  \___________/  \___________/  \___________/  \_________
+              ^              ^              ^              ^
+
+Changes since v2, which is available from
+https://lore.kernel.org/linux-pwm/cover.1721040875.git.u.kleine-koenig@baylibre.com
+include:
+
+ - Degrade a dev_alert() to dev_warn() on feedback by David Lechner
+
+ - Improvement of various comments (partly in reply to David Lechner)
+
+ - Add _ns suffixes for members of pwm_waveform, thanks David for that suggestion.
+
+ - Rebased to v6.11-rc1 + pwm/for-next.
+
+Because of these changes I didn't add Trevor's Reviewed-by tag for patch
+#3.
+
+I kept the BUG_ONs. There are a few check_patch warnings about it, but I still
+prefer these given that it is safe they don't trigger without further (bogus)
+code changes and when they trigger crashing early is better than stack
+corruption. Also checkpatch tells
+        WARNING: Comparisons should place the constant on the right side of the test
+        #158: FILE: drivers/pwm/core.c:262:
+        +       BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
+
+But as the BUG_ON is about WFHWSIZE being wrong, this order is OK.
+
+There are a few more checkpatch warnings about line lengths. Breaking
+the criticised lines further hurts readability IMHO, so I kept them. It
+gets a bit better once stm32_pwm_mul_u64_u64_div_u64_roundup() is
+implemented (without the stm32_pwm prefix) alongside
+mul_u64_u64_div_u64() in lib/math/div64.c, but I don't want to wait for
+that. I will address that once Nicolas's patch improving precision of
+mul_u64_u64_div_u64() landed. (Hmm, it's not in next any more since
+next-20240724, before it was 3cc8bf1a81efde105d8e57398cf8554b57768777 +
+dbbe95af0fad2a9d22a4b910cfc4b87949d61a3c).
+
+Best regards
+Uwe
+
+Uwe Kleine-König (8):
+  pwm: Simplify pwm_capture()
+  pwm: Add more locking
+  pwm: New abstraction for PWM waveforms
+  pwm: Provide new consumer API functions for waveforms
+  pwm: Add support for pwmchip devices for faster and easier userspace
+    access
+  pwm: Add tracing for waveform callbacks
+  pwm: axi-pwmgen: Implementation of the waveform callbacks
+  pwm: stm32: Implementation of the waveform callbacks
+
+ drivers/pwm/core.c           | 809 +++++++++++++++++++++++++++++++++--
+ drivers/pwm/pwm-axi-pwmgen.c | 154 +++++--
+ drivers/pwm/pwm-stm32.c      | 607 ++++++++++++++++----------
+ include/linux/pwm.h          |  58 ++-
+ include/trace/events/pwm.h   | 134 +++++-
+ include/uapi/linux/pwm.h     |  25 ++
+ 6 files changed, 1479 insertions(+), 308 deletions(-)
+ create mode 100644 include/uapi/linux/pwm.h
+
+base-commit: b9b6bd3dcceed371829a022caeb6b51cb9f67be9
 -- 
-Regards,
+2.43.0
 
-Laurent Pinchart
 
