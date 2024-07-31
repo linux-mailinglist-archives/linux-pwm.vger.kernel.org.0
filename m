@@ -1,151 +1,320 @@
-Return-Path: <linux-pwm+bounces-2942-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2943-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3652C94272A
-	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jul 2024 08:51:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4484A94297E
+	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jul 2024 10:47:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9AA80B22C9C
-	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jul 2024 06:51:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C57261F24EBD
+	for <lists+linux-pwm@lfdr.de>; Wed, 31 Jul 2024 08:47:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4126B16A39E;
-	Wed, 31 Jul 2024 06:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 966F21A8BEF;
+	Wed, 31 Jul 2024 08:46:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yfydGHg7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5X8WkFo"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BF974413
-	for <linux-pwm@vger.kernel.org>; Wed, 31 Jul 2024 06:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A831C43169;
+	Wed, 31 Jul 2024 08:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722408607; cv=none; b=Zf1gHKDZxGEWkvLPyf3XX6Pk+pi50wnyXuUbCHPZyd8+UkcIpjuT/48fs2FmXQ3Wy1/e+YhpwOgJJWNbp1KRwWj18acjJhHNtRGtA9q3zZvWTRHnhLL+jxsSm3ZsZmG1h8OmC9uN7SRerxQDnKfUMH1SSdmhzmCUreUDAMvXzLQ=
+	t=1722415615; cv=none; b=klYFjHZFGVMowutDphpawHJrynRlB5B85ZYtoPx2UflqOrNg5LlPaBU7Ffv4QHJWI8RAjxr2nYKMIJHbKWcKLEtWblWmoPajoLOu5Kw3YD+n1RIt/FRdEKCLuwqiCvWDHyvAjK7dtUBkTmSJl72zYdQBpwuCylpq7HJuSebRUuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722408607; c=relaxed/simple;
-	bh=i6XxmDrD/zooGcZ4phmJIYPP/6e2e0Clj4uofChOHlo=;
+	s=arc-20240116; t=1722415615; c=relaxed/simple;
+	bh=EcLUai8puZv+oubCoR+USsYHTmJR8FRADIRjqIyMSqo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YHleAcwGWxdnK1P7d5z50vbF1Cjvo8q212bJc//a9aUMZaunk/1R/JQA49WZ7mu635UZcjIcQXTSMcBRVSWA3oyhw/C63LqtcUUqQLPRIZBdRu6nnpDqeUSg5Znum/BBojAYz/lHvNKEn0R8j+NOvaELCvzfPPWNMf4SBaDSnSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yfydGHg7; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52efba36802so9195863e87.2
-        for <linux-pwm@vger.kernel.org>; Tue, 30 Jul 2024 23:50:02 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=phEYx0+YO+eYqiItxhXLX6VeIbe7PtgJHrM8+3mtRbOe5b+pvkehfNnaLszahSYUUEKP2bV0DgwcgDL4CeUB7k9Q8DhkgynYT+mu5Nb9oKvj6DwKna0unyEu4dkMifn4di/BTEjHN0VcJFjL65vAOrFJWOgUkBrpSDLZbMBM6TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G5X8WkFo; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-59589a9be92so8162629a12.2;
+        Wed, 31 Jul 2024 01:46:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1722408601; x=1723013401; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i6XxmDrD/zooGcZ4phmJIYPP/6e2e0Clj4uofChOHlo=;
-        b=yfydGHg7Kj6uFYwkIEr3cUXSkRpHjoKwUYNsS6SFbQYeweRab3l1cleFa7e/RfMbsY
-         fyTvUGYj6AFQoMC7JG7p0I+xBzQL5wc4lJqXPicw9mncHwQWgmX9Y8WQ5URvOelJCYIs
-         xM/1bRamprIUZ0Ea8XO2AvDdfk0VZ2yyBmsdKezuaWCCS+ph71nnkXsdig1Uofu36BVn
-         IOi0Z+KFd/Dp/DkAbcZ0ygmzoRkcEpKnrQfJdX3pWaY5CHEGtegd4ZdZ832wYu4wjZjF
-         b7IFrsbYuSGzdxQiak9B3ru2dRwgmv7GZSVuK5pJokU/ZHz8cugUGJyBqjv4W2wnxVT1
-         DA3w==
+        d=gmail.com; s=20230601; t=1722415612; x=1723020412; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Fdoov56BhyXFrrpuPxNAzdSwKPOoGW7Wnv2Q1w89FEM=;
+        b=G5X8WkFo1ixqcNrGC17Ikg8228+mlaD3G+EVQ2eQSNCUrUEF3ec2l6j10zooVPvqYr
+         8S94yR+Wqrp/Odu5shPzKIf7AA/nC+D0oAyNtoARpgOhRjGoZqkQSNyYbFdy/lXPYaQY
+         GW2UPk2eWt+ZkYGGP2MUSx9uASaxDxQR1IhdrqI+uGJuBunkrk9bwMPEziPH+yAoNY/G
+         CXT0D4fRPmSMbXiEF4tQz5HNy+tJJMyreVHP92JS2K8VF4yIGPmpiFa7Q8+pt9zeed0h
+         SyKxsxyLsTBmWcDxwERcx8Lu3RNQRRREjmT1I0Q2P2V31LgtpyQOD3gicOiAM5BWeCbW
+         2FHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722408601; x=1723013401;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i6XxmDrD/zooGcZ4phmJIYPP/6e2e0Clj4uofChOHlo=;
-        b=AH3i+WTKZ40xtC7MYPQmgSos+LJDhY8THxnTt8RmPdJ5Lo43ZpgT3WinXz+txgKlNH
-         I7HRL7Hp1JPYx0cs+3TEcheuMeBgX4jz0B6yoTDXYfD+yV3YSSz6o04vIlyHxKBicJKd
-         2ufX4gFRBNgJ+WI1O0J8dCPnpCV3R7x/EAJ99/ZrQC6JwLTxYa3/06logu5TqWTp2dp9
-         Q2QRlQo/+0yD5vUoEBNSGsn5VkL0A5hYp7NOj4oAJpjhuwIJyyHOJPzjIAoYW4aJXXYd
-         ePTrbEQuMDmh97fMIqkEcCjQ69VHk+BfPakPZ766DGpwnnNALSP9y8dquo5Yi/guCKZ/
-         fLww==
-X-Gm-Message-State: AOJu0YwlNt3JzIiyWz7+L0BQH/NtikgKF7kbKtcNVubyuDSlz+Omc7cN
-	wYQYQZLeNjehJRj2mRs0tidRiWkY8rpPy5mFVuwdAXS11LoEvIAD2s2VDnjGsCk=
-X-Google-Smtp-Source: AGHT+IFZqTNsJLJgRJ4eT+fjHh3JB8voB7D3OP+G5m+Xx66UKomnClF+t/p67ZkQsyVFoF76gmdnHw==
-X-Received: by 2002:ac2:5923:0:b0:52c:a0b8:4dc0 with SMTP id 2adb3069b0e04-5309b27b0bdmr8908612e87.28.1722408600649;
-        Tue, 30 Jul 2024 23:50:00 -0700 (PDT)
-Received: from localhost (p200300f65f164800ca5d02fee8f4878b.dip0.t-ipconnect.de. [2003:f6:5f16:4800:ca5d:2fe:e8f4:878b])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ac63d4720dsm8353533a12.58.2024.07.30.23.49.59
+        d=1e100.net; s=20230601; t=1722415612; x=1723020412;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fdoov56BhyXFrrpuPxNAzdSwKPOoGW7Wnv2Q1w89FEM=;
+        b=CqwHMo3ynrWAY4noI3HYsUsW0DH5qpgBJiouc0so2g86h3WbHZOYrAGgS+/46VO6CS
+         XHpqHw9YFMyWyyo5BmupUHZYLkeW1c1Bz6DGJynFMUEfzxHua9DMFwcsVwsFjSzPqJW5
+         W+Smuyi+64l1LJed5KScJuXG1OyZOaxhfu4kWM/N8KsFa2l79NFfloQ5KPvRePKW7eT4
+         4Wqv0BKRa3oe0AMGrQOwE0tTr+bSZlzXb6kt1Sjwgn0MKwWTBYVR0Qlq9q7sW4iYFCi9
+         H24TWEF8VRUX27/HqOQ+CuTrjeFDiA/QMQkQQWTFcT2ILFdAR5JMlKahNbtuROktlaNR
+         +0xA==
+X-Forwarded-Encrypted: i=1; AJvYcCUY5sKZaTF72+RLkOL+Mu5bA/A62akOsQoJlmVG3f2EszUAI0uncnrkKSC3gBcY7hqaqkNSA3oMYMLOYtvqad0Wwqf17GA17FyEFTqzZXETRC6i/fGlYB25pkmLTyUPcO1H/mu+UsU9k5ECEBFvTuYp10rvKGc7Wjy/jmx/TWNHOB+6Gg==
+X-Gm-Message-State: AOJu0YwzbrCVonc2//gCSfdbNZtjLcD93BZuuqCT1MlQ3RgffBGCPTep
+	46rCXK5m/YtZ/Rp3pm0FoGXZWDoeuN8b38CAOySyQim+LtDn9XBuXLSqjnHP
+X-Google-Smtp-Source: AGHT+IF1nPhIrXaIqS08sTpvKWy9YSO4UfeVVUfbu2iPgIg1qtLvq/pNU9HiR1jo7b849HypgQFuXg==
+X-Received: by 2002:a17:907:7209:b0:a77:f2c5:84b3 with SMTP id a640c23a62f3a-a7d40057776mr934755866b.22.1722415611304;
+        Wed, 31 Jul 2024 01:46:51 -0700 (PDT)
+Received: from debian ([2a00:79c0:620:8300:303:6c5b:4b07:6715])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7acab23094sm741718966b.5.2024.07.31.01.46.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jul 2024 23:50:00 -0700 (PDT)
-Date: Wed, 31 Jul 2024 08:49:58 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-pwm@vger.kernel.org, Trevor Gamblin <tgamblin@baylibre.com>
-Subject: Re: [PATCH v2 5/8] pwm: Add support for pwmchip devices for faster
- and easier userspace access
-Message-ID: <cjmj5p3czu5hbwnk2xfhsz4yftyw5qgjcdkglfzxolcn6ml2qh@lqzurmeecqfn>
-References: <cover.1721040875.git.u.kleine-koenig@baylibre.com>
- <7e50f9901d63c3aa27cdd02194f95b0ed79765f6.1721040875.git.u.kleine-koenig@baylibre.com>
- <80dbe964-6e83-4085-b56c-609babac2ee5@baylibre.com>
- <impohkxfro2udihqhckracjhzo66ft66c3o4vgnje3phtauf5b@4mvr74dupo2h>
- <9902d366-5abe-42c2-a355-66c6e0a366dd@baylibre.com>
+        Wed, 31 Jul 2024 01:46:50 -0700 (PDT)
+Date: Wed, 31 Jul 2024 10:46:48 +0200
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] pwm: add support for NXPs high-side switch
+ MC33XS2410
+Message-ID: <20240731084648.GA18584@debian>
+References: <20240515112034.298116-1-dima.fedrau@gmail.com>
+ <20240515112034.298116-3-dima.fedrau@gmail.com>
+ <aczpsiqyh4qsbvnqhqdnvkj2j3fihkltafop5ajkxm57sehbx5@mn4vp7avpeac>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bfnaqs4j5q74pqtp"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9902d366-5abe-42c2-a355-66c6e0a366dd@baylibre.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aczpsiqyh4qsbvnqhqdnvkj2j3fihkltafop5ajkxm57sehbx5@mn4vp7avpeac>
 
+Am Mon, Jul 29, 2024 at 11:28:56PM +0200 schrieb Uwe Kleine-König:
+Hi Uwe,
 
---bfnaqs4j5q74pqtp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-Hello David,
+> > +static int mc33xs2410_xfer_regs(struct spi_device *spi, bool read, u8 *reg,
+> > +				u16 *val, bool *ctrl, int len)
+> > +{
+> > +	struct spi_transfer t[MC33XS2410_MAX_TRANSFERS] = { { 0 } };
+> > +	u8 tx[MC33XS2410_MAX_TRANSFERS * MC33XS2410_WORD_LEN];
+> > +	u8 rx[MC33XS2410_MAX_TRANSFERS * MC33XS2410_WORD_LEN];
+> > +	int i, ret, reg_i, val_i;
+> > +
+> > +	if (!len)
+> > +		return 0;
+> > +
+> > +	if (read)
+> > +		len++;
+> > +
+> > +	if (len > MC33XS2410_MAX_TRANSFERS)
+> > +		return -EINVAL;
+> > +
+> > +	for (i = 0; i < len; i++) {
+> > +		reg_i = i * MC33XS2410_WORD_LEN;
+> > +		val_i = reg_i + 1;
+> > +		if (read) {
+> > +			if (i < len - 1) {
+> > +				tx[reg_i] = reg[i];
+> > +				tx[val_i] = ctrl[i] ? MC33XS2410_RD_CTRL : 0;
+> > +				t[i].tx_buf = &tx[reg_i];
+> > +			}
+> > +
+> > +			if (i > 0)
+> > +				t[i].rx_buf = &rx[reg_i - MC33XS2410_WORD_LEN];
+> > +		} else {
+> > +			tx[reg_i] = reg[i] | MC33XS2410_WR;
+> > +			tx[val_i] = val[i];
+> > +			t[i].tx_buf = &tx[reg_i];
+> > +		}
+> > +
+> > +		t[i].len = MC33XS2410_WORD_LEN;
+> > +		t[i].cs_change = 1;
+> > +	}
+> > +
+> > +	t[len - 1].cs_change = 0;
+> > +
+> > +	ret = spi_sync_transfer(spi, &t[0], len);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	if (read) {
+> > +		for (i = 0; i < len - 1; i++) {
+> > +			reg_i = i * MC33XS2410_WORD_LEN;
+> > +			val[i] = FIELD_GET(MC33XS2410_RD_DATA_MASK,
+> > +					   get_unaligned_be16(&rx[reg_i]));
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> 
+> Huh, this is complicated. Isn't that covered by regmap somehow?
+>
 
-On Tue, Jul 30, 2024 at 01:41:32PM -0500, David Lechner wrote:
-> > This way a consumer could find the
-> > respective device directory below /sys/class/pwm without parsing the
-> > chip id from the filename (assuming a sane udev configuration).
-> >=20
-> > Would that make sense to you, too?
->=20
-> How do we expect users to find the "right" PWM to use in the first
-> place? If libpwm is going to use libudev to enumerate all PWM devices
-> to find a match then we will already be able to get both the /sys/ and
-> /dev/ paths for the device from libudev.
+AFAIK it isn't supported. The main reason why regmap-spi doesn't work for
+this device is that the device needs a CS change after transmitting 16
+bits. This is not covered by regmap-spi. So I would end up implementing
+reg_read, regmap_write should be fine in regmap-spi. Besides that if I
+want to come as close as possible to an atomic configuration, which is not
+possible, I would have to implement some bulk read/write operations and
+end up with a similar implementation. I would stick to the current
+implementation if you agree.
 
-I guess I have to take a deeper look into libudev. Until then just
-dropping the ioctl for getting the number of pwm lines seems sensible.
-Adding something later should be easy, when and if we see that an ioctl
-for getting the chip number would be helpful.
-=20
-> And wouldn't the file name in both cases be "pwmchipX" (e.g.
-> /dev/pwm/pwmchip0 and /sys/class/pwm/pwmchip0) so we wouldn't need
-> to scrape the number out of the name if we wanted to do the matching
-> that way?
+> > +}
+> > +
+> > [...]
+> > +
+> > +static u8 mc33xs2410_pwm_get_freq(u64 period)
+> > +{
+> > +	u8 step, count;
+> > +
+> > +	/*
+> > +	 * Check if period is within the limits of each of the four frequency
+> > +	 * ranges, starting with the highest frequency(lowest period). Higher
+> > +	 * frequencies are represented with better resolution by the device.
+> > +	 * Therefore favor frequency range with the better resolution to
+> > +	 * minimize error introduced by the frequency steps.
+> 
+> I'm not a native English speaker, but I find that misleading. That
+> period is in the "possible" range is already asserted by the caller. So
+> the switch is about "Check which step is appropriate for the given
+> period", right?
+> 
 
-My train of thought was independent to libpwm. It was just: What if I
-have a file descriptor for a pwm device (provided by some HAL lib maybe)
-and I want to find out the /sys dir for it? But maybe that's not
-something that will occur in practise. And if there is no such ioctl,
-I just need more info than a plain file descriptor.
-=20
-> So I'm not convinced yet that having an IOCTL to get the device ID
-> it is especially useful.
+Yes, you are right. Will fix it in the next version.
 
-Thanks for your input.
+> > +	 */
+> > +
+> > +	switch (period) {
+> > +	case MC33XS2410_MIN_PERIOD_STEP(3) + 1 ... MC33XS2410_MAX_PERIOD_STEP(3):
+> > +		step = 3;
+> > +		break;
+> > +	case MC33XS2410_MAX_PERIOD_STEP(3) + 1 ... MC33XS2410_MAX_PERIOD_STEP(2):
+> > +		step = 2;
+> > +		break;
+> > +	case MC33XS2410_MAX_PERIOD_STEP(2) + 1 ... MC33XS2410_MAX_PERIOD_STEP(1):
+> > +		step = 1;
+> > +		break;
+> > +	case MC33XS2410_MAX_PERIOD_STEP(1) + 1 ... MC33XS2410_MAX_PERIOD_STEP(0):
+> > +		step = 0;
+> > +		break;
+> > +	}
+> > +
+> > +	count = DIV_ROUND_UP(MC33XS2410_MAX_PERIOD_STEP(step), period) - 1;
+> > +
+> > +	return FIELD_PREP(MC33XS2410_PWM_FREQ_STEP_MASK, step) |
+> > +	       FIELD_PREP(MC33XS2410_PWM_FREQ_COUNT_MASK, count);
+> > +}
+> > +
+> > [...]
+> > +
+> > +static int mc33xs2410_pwm_get_relative_duty_cycle(u64 period, u64 duty_cycle)
+> > +{
+> > +	if (!period)
+> > +		return 0;
+> > +
+> > +	duty_cycle *= 256;
+> 
+> This might overflow.
+> 
+
+How ? Max period and duty_cycle is checked by the caller and can be
+maximum 2000000000, 2000000000 * 256 = 512000000000, fits in u64. Did I
+miss anything ?
+
+> > +	duty_cycle = DIV_ROUND_CLOSEST_ULL(duty_cycle, period);
+> 
+> round-closest is most probably wrong. Please test your driver with
+> PWM_DEBUG enabled and increasing and decreasing series of duty_cycle and
+> period.
+>
+
+Yes, I should probably round it down. But I tested with PWM_DEBUG enabled
+and it gave me the best results so far. There are still few cases where
+there are complaints. I try to fix it.
+
+> > +
+> > +	/* Device is not able to generate 0% duty cycle */
+> > +	if (!duty_cycle)
+> > +		return -ERANGE;
+> 
+> Given that the hardware emits a low level when disabled, please disable
+> if duty_cycle = 0 is requested.
+> 
+
+Ok.
+
+> > +	return duty_cycle - 1;
+> > +}
+> > +
+> > [...]
+> > +static int mc33xs2410_pwm_get_state(struct pwm_chip *chip,
+> > +				    struct pwm_device *pwm,
+> > +				    struct pwm_state *state)
+> > +{
+> > +	struct mc33xs2410_pwm *mc33xs2410 = to_pwm_mc33xs2410_chip(chip);
+> > +	struct spi_device *spi = mc33xs2410->spi;
+> > +	u8 reg[4] = {
+> > +			MC33XS2410_PWM_FREQ(pwm->hwpwm + 1),
+> > +			MC33XS2410_PWM_DC(pwm->hwpwm + 1),
+> > +			MC33XS2410_PWM_CTRL1,
+> > +			MC33XS2410_PWM_CTRL3,
+> > +		    };
+> > +	bool ctrl[4] = { true, true, true, true };
+> > +	u16 val[4];
+> > +	int ret;
+> > +
+> > +	ret = mc33xs2410_read_regs(spi, reg, ctrl, val, 4);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	state->period = mc33xs2410_pwm_get_period(val[0]);
+> > +	pwm_set_relative_duty_cycle(state, val[1] + 1, 256);
+> 
+> pwm_set_relative_duty_cycle doesn't use the right rounding for
+> .get_state().
+> 
+
+As mentioned above, will try to fix it.
+
+> > +	state->polarity = (val[2] & MC33XS2410_PWM_CTRL1_POL_INV(pwm->hwpwm)) ?
+> > +			  PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
+> > +
+> > +	state->enabled = !!(val[3] & MC33XS2410_PWM_CTRL3_EN(pwm->hwpwm));
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > [...]
+> > +static int mc33xs2410_probe(struct spi_device *spi)
+> > +{
+> > [...]
+> > +	/* Disable watchdog */
+> > +	ret = mc33xs2410_write_reg(spi, MC33XS2410_WDT, 0x0);
+> > +	if (ret < 0)
+> > +		return dev_err_probe(dev, ret, "Failed to disable watchdog\n");
+> 
+> Wouldn't the watchdog functionality better be handled by a dedicated
+> watchdog driver? Disabling it here unconditionally looks wrong.
+> 
+
+Yes, would be better. I planned this after this patchset is accepted.
+Without disabling the watchdog, the device is not able to operate. So I
+would stick to it for now and come up with a patch later on.
+
+> > +	/* Transition to normal mode */
+> > +	ret = mc33xs2410_modify_reg(spi, MC33XS2410_GLB_CTRL,
+> > +				    MC33XS2410_GLB_CTRL_MODE_MASK,
+> > +				    MC33XS2410_GLB_CTRL_NORMAL_MODE);
+> > [...]
+> 
+> Best regards
+> Uwe
 
 Best regards
-Uwe
+Dimitri
 
---bfnaqs4j5q74pqtp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmap3owACgkQj4D7WH0S
-/k7Lfgf6Aia5wQv3rqNu2BI3g4rK9twW33qoref306nfzgEwdz67cgRPRXFw+rm3
-2oScPiwlTJn2fkXcZMk9pxu3SKrzwah+G9L4idw9efm34SJ+YR4P7BkMS2OvY+qk
-7WsP6CmA3oGkasAUIFUnxLxJ/OwiBeTzzpj/X/ogujgQfhNibe0jusqxL3xZh9Ej
-7fuH1OoOKWn+EMkR10CZVzQ23FxJD15hgKu+BGWNUKp8vtVwcsk9GYYw43+6Xjit
-2HjitNaxRFXetPpWubKbzYQBYAXvyWB8+Fl+PYHg6NIVXS+t6PlbaCP4U4OFKkBs
-CQ2xqVFkMTW5vKZ7H1y3mHaBzx14JA==
-=HUxM
------END PGP SIGNATURE-----
-
---bfnaqs4j5q74pqtp--
 
