@@ -1,55 +1,64 @@
-Return-Path: <linux-pwm+bounces-2954-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2955-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E5D7944B55
-	for <lists+linux-pwm@lfdr.de>; Thu,  1 Aug 2024 14:32:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FA02944CDC
+	for <lists+linux-pwm@lfdr.de>; Thu,  1 Aug 2024 15:15:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD6C41F222BA
-	for <lists+linux-pwm@lfdr.de>; Thu,  1 Aug 2024 12:32:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CAD91283BBA
+	for <lists+linux-pwm@lfdr.de>; Thu,  1 Aug 2024 13:15:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E85D198832;
-	Thu,  1 Aug 2024 12:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EBD21A0B06;
+	Thu,  1 Aug 2024 13:10:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kDe5rfuX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R2jub7gC"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44F3143C42;
-	Thu,  1 Aug 2024 12:31:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BCC183CC5;
+	Thu,  1 Aug 2024 13:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722515512; cv=none; b=WFwM+Cq1SvMsps13Wzf/TtaFV42OfQr4wgoRjsU26U1kaU6hSLTqiEGQ+Z/KIDXOXpq7xWIqL4zNcWngTHBfqUGZLzfTA9ms/7tKVGOzpy3FxJw0oiYje4OrHbmQMWB+1zctvC0Pd3cgnkoOfHHuVdOkaBOfIEXzcHwZ+aEKV0A=
+	t=1722517850; cv=none; b=eWwWfrtrlPJhea0MCU192SlcZb18uX4X3oovnHSK7VqdUlsNt3LjFXSWfu1pbp4pOPTpofbI1id1p25rSQ0d2P7DSNa5H9R1T+ZHmw1O44Ak1rJ03d4v2T5r1ClSrHyPoINE4+z1i8CBc8oAUcKx5nuDUBlE8R90tZHX8x+tYGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722515512; c=relaxed/simple;
-	bh=ZjQuBDumfc/DgkWQGmObSG2aAiMcovJ0npp+N3X9kwg=;
+	s=arc-20240116; t=1722517850; c=relaxed/simple;
+	bh=7jgGoq3kHAetq8lHpHCYvhYxpy6UwVAIz5wE90KY7Ko=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZYo/eTBGF3AmCITjZ4+HjAahRZy+YIR9EhfwYDP4e50o7fN/cqPl+B/3UJ3ML9or89FVFZShF6hFip357P+zQMtMnDRl6QPKwMJR6HKrfkgf2dBlBykqB5qE3sPkN4coFM0OVFQiGE4xSDTdFaeIDYbr7ma/wzKYXtIiHRL6zog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kDe5rfuX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2212C4AF0A;
-	Thu,  1 Aug 2024 12:31:50 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=uXw5Sp5/ccjDQXrZVKI5eScfi7N9jfDFAvNQLzUTZTQFNJlmIwJuZA8xwA5rky7z3WynHjxTCN23nX9sxHUTkMePDYxoAO54xO2oyhLbDztzsVAlnJ2IcfIoA56V4KgAnZsULLvfVAr2LzxvDMeA0uzFJmTIoMykYmlZaRWpUKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R2jub7gC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA0C4C32786;
+	Thu,  1 Aug 2024 13:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722515512;
-	bh=ZjQuBDumfc/DgkWQGmObSG2aAiMcovJ0npp+N3X9kwg=;
+	s=k20201202; t=1722517849;
+	bh=7jgGoq3kHAetq8lHpHCYvhYxpy6UwVAIz5wE90KY7Ko=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kDe5rfuXsj6HdkLVTT5zLVTRnJxyeVMzODaxsf1CrRy7PhL0LaD4drQqVKUBJvqM7
-	 lwojFwJAkMnmzVXKqdlHJXidx88D/9wN+jWMMnYdhR4jVDavvpgrzFcIAmgLrwgXxI
-	 PYmpoSnxLclazfAl8ndhtFEnx/WyF1RD0283anZZXv7OHNWX2WIFmTB+lMwQLOp/a4
-	 7JIwCmPyfFNuAdZeloplWCOCZErkWLJVRUfExIhkN3ApbQRmNeT8bjYN/ysitFaaEH
-	 xLEW20oMTmiU5YXZcyMPJsDo5BfURlOGiBzYN9IWSrtKrLuS6mlszGKBKI/xzMny9K
-	 +k7FOH2wYDjTg==
-Date: Thu, 1 Aug 2024 13:31:47 +0100
+	b=R2jub7gCIeqcSxZuuYmIHuUyRyJROegf85SByA87QSvkcJ/g6Jh2fOiU/+rIBMKOJ
+	 7y3AtHbQr/wHgT/PmkRRHfIU382zoIu+QIfMUoqhOqHunnLn3jHBsihHmCMp+w6Aqk
+	 2Y3uDqWl36b3ZMJ2AKvZqRNL3LouRWpZPIVAvxfY/WDz7dabpqgPQopYucX1gYiV9S
+	 v5OQxnxDc8jqOq94jK80MEjU5FBwmNRp8H2JqfGzo4K5Oxj4HRigz2kYDOYd9gsJ5G
+	 to83GlKq2G8gceF2rYisjgzn1kgUzXAYl2+Q3S1DenSHC3tyJORpPOEddeMJYn3Ctf
+	 ASIJDarMOeiPw==
+Date: Thu, 1 Aug 2024 14:10:44 +0100
 From: Lee Jones <lee@kernel.org>
-To: Martin =?utf-8?Q?Kepplinger-Novakovi=C4=87?= <martin.kepplinger-novakovic@ginzinger.com>
-Cc: ukleinek@kernel.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
-	linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] backlight: pwm_bl: print errno for probe errors
-Message-ID: <20240801123147.GA6756@google.com>
-References: <20240801091255.1410027-1-martin.kepplinger-novakovic@ginzinger.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Haibo Chen <haibo.chen@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+	Frank Li <Frank.li@nxp.com>
+Subject: Re: [PATCH v7 0/4] ADP5585 GPIO expander, PWM and keypad controller
+ support
+Message-ID: <20240801131044.GF6756@google.com>
+References: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
+ <20240725161616.GJ501857@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -59,21 +68,71 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240801091255.1410027-1-martin.kepplinger-novakovic@ginzinger.com>
+In-Reply-To: <20240725161616.GJ501857@google.com>
 
-On Thu, 01 Aug 2024, Martin Kepplinger-Novaković wrote:
+On Thu, 25 Jul 2024, Lee Jones wrote:
 
-> This makes debugging often easier.
+> On Mon, 22 Jul 2024, Laurent Pinchart wrote:
 > 
-> Signed-off-by: Martin Kepplinger-Novaković <martin.kepplinger-novakovic@ginzinger.com>
-> ---
->  drivers/video/backlight/pwm_bl.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+> > Hello,
+> > 
+> > This patch series introduces support for the Analog Devices ADP5585, a
+> > GPIO expander, PWM and keyboard controller. It models the chip as an MFD
+> > device, and includes DT bindings (1/4), an MFD driver (2/4) and drivers
+> > for the GPIO (3/4) and PWM (4/4) functions.
+> > 
+> > Support for the keypad controller is left out, as I have no means to
+> > test it at the moment. The chip also includes a tiny reset controller,
+> > as well as a 3-bit input programmable logic block, which I haven't tried
+> > to support (and also have no means to test).
+> > 
+> > The driver is based on an initial version from the NXP BSP kernel, then
+> > extensively and nearly completely rewritten, with added DT bindings. I
+> > have nonetheless retained original authorship. Clark, Haibo, if you
+> > would prefer not being credited and/or listed as authors, please let me
+> > know.
+> > 
+> > Compared to v6, this version addresses small review comments. I believe
+> > it is ready to go, as the PWM and GPIO drivers have been acked by the
+> > respective subsystem maintainers, and I have addressed Lee's comments on
+> > the MFD side. Lee, if there's no more issue, could you apply this to
+> > your tree for v6.12 ?
+> > 
+> > Clark Wang (1):
+> >   pwm: adp5585: Add Analog Devices ADP5585 support
+> > 
+> > Haibo Chen (2):
+> >   mfd: adp5585: Add Analog Devices ADP5585 core support
+> >   gpio: adp5585: Add Analog Devices ADP5585 support
+> > 
+> > Laurent Pinchart (1):
+> >   dt-bindings: mfd: Add Analog Devices ADP5585
+> > 
+> >  .../devicetree/bindings/mfd/adi,adp5585.yaml  |  92 +++++++
+> >  .../devicetree/bindings/trivial-devices.yaml  |   4 -
+> >  MAINTAINERS                                   |  11 +
+> >  drivers/gpio/Kconfig                          |   7 +
+> >  drivers/gpio/Makefile                         |   1 +
+> >  drivers/gpio/gpio-adp5585.c                   | 229 ++++++++++++++++++
+> >  drivers/mfd/Kconfig                           |  12 +
+> >  drivers/mfd/Makefile                          |   1 +
+> >  drivers/mfd/adp5585.c                         | 205 ++++++++++++++++
+> >  drivers/pwm/Kconfig                           |   7 +
+> >  drivers/pwm/Makefile                          |   1 +
+> >  drivers/pwm/pwm-adp5585.c                     | 184 ++++++++++++++
+> >  include/linux/mfd/adp5585.h                   | 126 ++++++++++
+> >  13 files changed, 876 insertions(+), 4 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+> >  create mode 100644 drivers/gpio/gpio-adp5585.c
+> >  create mode 100644 drivers/mfd/adp5585.c
+> >  create mode 100644 drivers/pwm/pwm-adp5585.c
+> >  create mode 100644 include/linux/mfd/adp5585.h
+> 
+> Note to self: This looks good to go.  Merge after -rc1 is released.
 
-Please refrain from signing your mails like this.  It means that some of
-us have to physically click a pop-up box as we are parsing our inboxes.
+Submitted for build testing.
 
-I'm deleting all mails in this thread.
+Note to self: ib-mfd-gpio-pwm-6.12
 
 -- 
 Lee Jones [李琼斯]
