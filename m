@@ -1,392 +1,404 @@
-Return-Path: <linux-pwm+bounces-2971-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2972-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32122949440
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Aug 2024 17:13:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29E5A9494C4
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Aug 2024 17:47:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF9B32882F8
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Aug 2024 15:13:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C73F1C2196E
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Aug 2024 15:47:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DEE61EA0D5;
-	Tue,  6 Aug 2024 15:13:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 748CC2AF1D;
+	Tue,  6 Aug 2024 15:47:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Nyexg0HP"
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="sJg7Jp8X"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011048.outbound.protection.outlook.com [52.101.125.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B4B1BCA09
-	for <linux-pwm@vger.kernel.org>; Tue,  6 Aug 2024 15:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722957182; cv=none; b=g00GupSRKlaEXTj405vjVUVrWD4G5biY0iNnOoc98JSBwfHSEI17zlb1sovVFNpJMEBfswdo/q/7Tt1P2ngX3cA6K8hDr+mdXFw9Yddb+Rozz2k5rjJ8K9VGRuO1FUK/XGqVLIuRzHfDnUwGC9a8Vj+AeyCzrWCzTo+Mc6tP7n0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722957182; c=relaxed/simple;
-	bh=pjR8Os6yrA/j8jdP7OCLYVREIGpqEpvc+amwNGlooCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cmvQf52By7s2MVBha7Q55R6gdcscYSPIihNSJVfje/5m84G6rzmiqHB7s4PjQX90cPjao2jJyP/gqLL2G6zqxxv3dCB7kBbGarulDXb8MDR5Hft4Ma3lnftLBmYAresXfjIksyBypBX0FcHXBftvT4zaXdKOh2v3bfNBQQ+Bs0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Nyexg0HP; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5a108354819so1044690a12.0
-        for <linux-pwm@vger.kernel.org>; Tue, 06 Aug 2024 08:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1722957177; x=1723561977; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7a4P/FyUJ5dmvEi2k87q9zZKNUEe1jU6FxpoN7R+XCo=;
-        b=Nyexg0HP78kDJkLS+QsSSGGIJ7anZB9kJsVUe7pcLYnCFyfZSjLb6t/IhRJIku25/m
-         Q0eOK/D9396Jc59X2lHkjsX3ucEQlxc6cXZa4AmGDwmeNkFKm28g3miRCM1TWItqS95r
-         PqxtBNkiQnamPbj3/eqhEsvxcuSWvt/jrq7dCUKH7VDv/tRChAUVmHuw4x5RfI4IvQtE
-         TOd0D5YeCB1zzZFr1Tlu0y4L++YST8g+diRj2RIL0mkf8le7Q8idIUSrILMSWfefhtxF
-         ZRM7nvAtXgf6uzSqONi2Xs+vQP4USIOd3b3rxyMTaJREvmEz4dNr8rNMvPcRiQvp9KtQ
-         nGOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722957177; x=1723561977;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7a4P/FyUJ5dmvEi2k87q9zZKNUEe1jU6FxpoN7R+XCo=;
-        b=nCmYgKnWpeQacRXC1ZcMll6vg0jOkJnmhiUMBCIIji3BlcZzA9ySZifjsCdf0KXyPY
-         N/xyiZ0KesHSVDRKIl1FLv9qR9mlKv79Ez5BQqyJptwm5bPpBLuaLrytKjwe5RtaQrNZ
-         wKSHO9+e5tqhlXaqf9dnyG8rLNzpRP0vlU9MMATxla0fHbFQKYTG38RUMuwAhWETRw0t
-         +hWd8lj2fs5w9KSsp+aXJDSz3Pmj7KYhr1kd8XyMkcRVv0eBopprnbdrcIOv5e++lSyX
-         FVBQ94lBccH6CCIHnAu+9vyRBb523MctjRSg0VKeoXS2ExK6gBQbTsKXAf7C7HYvKAcb
-         C38w==
-X-Forwarded-Encrypted: i=1; AJvYcCW534m4EFOUGccdFtk2opc2ACJB4PNdhfqhVl1jip0ynK95rzKMJn+bg92sJn6uWZ7yflypEFpggb266q+t5EdIFL2rRsHNXoj5
-X-Gm-Message-State: AOJu0YxLjqAHf86nieN770iCH80zgTdse9ifH1ptozThXjwAnqzXZA7V
-	mI14UhEb3O1aEMpYzGmle7mwF1xIBgRPY7kLBP7xWMnkaHZu1xS9BCWS31Ihuz4=
-X-Google-Smtp-Source: AGHT+IGqCJvLc1QNKQS80dPtrqP6daybCUfoTTLK3gct/kU9ydPH2EzJg+PPNGeKJN74PsrRMr/ZTA==
-X-Received: by 2002:a50:ff0b:0:b0:5a1:a447:9fab with SMTP id 4fb4d7f45d1cf-5b7f54148a1mr9785330a12.28.1722957177259;
-        Tue, 06 Aug 2024 08:12:57 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:deb2:1e03:7213:3dc4])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5b83a24fdedsm5970184a12.50.2024.08.06.08.12.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Aug 2024 08:12:56 -0700 (PDT)
-Date: Tue, 6 Aug 2024 17:12:53 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Magnus Damm <magnus.damm@gmail.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	"biju.das.au" <biju.das.au@gmail.com>
-Subject: Re: [PATCH v20 3/4] pwm: Add support for RZ/G2L GPT
-Message-ID: <azkn7g7fsoupilafhuu3walz5ecwyqeb42citlrimuey2oyuc6@4tmsaq2kaymd>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F977282F7;
+	Tue,  6 Aug 2024 15:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722959241; cv=fail; b=W67IW2JkpwRX065vSKIXpWpZ+UG6o2o8fEZ15hVSG/DgQsAhD9iNq6PliFSP/Cfsd6Y+Pdvb+5qmUI0UrydcbmW0RvXhP7ejkZq+DQZCHU8GqLMU04OQTtHVaBvzBay5tdyAJE+6EG1immKv4tHxUI1iIivpXA3pV3MGldKJBBQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722959241; c=relaxed/simple;
+	bh=OUWCpgPbUr4sPdpvO1sf7ImFoN2sSqur+qNPEPe8avk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=F2QtZc8KOU2SkUL/eHwAMXZW3YDow2lDPDCBAms31MWDegaim3craZ+0Yx+gpmeJ4yzg63mif5p+edLMdHrFK/+HyU5gIZ5cqfd4w9pC/OBtMIaPyjZQhGrML5ag14+yZziePzvAI/pyW0PAM6abKwympmJLVrTx1RyAkGrR1MQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=sJg7Jp8X; arc=fail smtp.client-ip=52.101.125.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=l5cjTyO2qPcqnUCiajqunWucoCHEv6L8hyw8fxqHRvEiXWFIyXnodro0Sj4/pCsS/ji12OFLNbMi8G0nAbQvkASncBezzck40HdlLr21oHL7KjhvuPL4k1jPZwrVnnigDSjnES+4kDIJtemSM9bGBbaCvVnK3sQ0L2fPbidhtB3DwtFW/NlVLN3sWYqAGtoB5x0WJECvlkJxxZOCAW/opLb+WMDt3V/mKxvhpde5FGxwWkpes/HMTC3hoWO9hwFaIfaP6ArXFZJPvMQ5EXCSDevK4iussP2shszN5bT2tebeEZnjrOxCiwp0J8SYxAEiHLgHTbBBUhRURpMqNAMv9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OUWCpgPbUr4sPdpvO1sf7ImFoN2sSqur+qNPEPe8avk=;
+ b=BcvqkCzR4keARDJOK/1hTK0zhece0efhkJAvZyFPhLW+6Pq7BzXe+u/AMaSUl4eNsrmeS1dXvx/TxDOqKlYDF66Z1Aym5VvReweH0ytgF7DtgCu8PL/vTotY9xjobHvNW/foCmw6qWIxF0hmLdCwY2spQShOZIKoRIKyeWKenB/xbvZskYbY/JYewGtnIbULskHgcWz+nQfsFKHX0qMzX2roNmk2+MM8GB1qrHGOvtc42DyaPsgbX1FezpSVuJ3ngz9OHqa/qNEz9wssbdkDHKKZR8vfuTFeAYnmeWXXdnZez/vUgDKopwBHEtQyMb85bDYR7GRjinPPJaBqbP3vCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OUWCpgPbUr4sPdpvO1sf7ImFoN2sSqur+qNPEPe8avk=;
+ b=sJg7Jp8XJYiW6KZjZgd4Ir6ucAvPlkGtEPAjRitowwF9HR9uVcHXxzgd0nfmCuOO0vGCxdcfQEXguBb9JJ+ZcsktbreMRV3SHkWJP0NBy2wnp4SyoJOlgN1Jg14IvJ1XlgOddwc4ZLbvc1O5CE2TRuEyJ++a+4gNyjaHG270+94=
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
+ by TY3PR01MB11415.jpnprd01.prod.outlook.com (2603:1096:400:374::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.27; Tue, 6 Aug
+ 2024 15:47:13 +0000
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1%5]) with mapi id 15.20.7828.023; Tue, 6 Aug 2024
+ 15:47:11 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@baylibre.com>
+CC: Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven
+	<geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Magnus Damm <magnus.damm@gmail.com>, "linux-pwm@vger.kernel.org"
+	<linux-pwm@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>, biju.das.au
+	<biju.das.au@gmail.com>
+Subject: RE: [PATCH v20 3/4] pwm: Add support for RZ/G2L GPT
+Thread-Topic: [PATCH v20 3/4] pwm: Add support for RZ/G2L GPT
+Thread-Index:
+ AQHavnGMz9LMb58VWEmVuB+LKlDD6LIP966AgAPJDmCABlskAIAAHdCwgABvpICAAAivMA==
+Date: Tue, 6 Aug 2024 15:47:11 +0000
+Message-ID:
+ <TY3PR01MB11346174EDBF7456CAA9FE4BA86BF2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
 References: <20240614154242.419043-1-biju.das.jz@bp.renesas.com>
  <20240614154242.419043-4-biju.das.jz@bp.renesas.com>
  <yli3bq6i2467mzdtwkn3czls4w2snvegkzyun3uq4lto35wuhv@2wcju755otau>
  <TY3PR01MB11346D2E29B1A8E4F71EFF15E86B32@TY3PR01MB11346.jpnprd01.prod.outlook.com>
  <cbgy643dk54zx2l6px7oe6vgqc6swihymmcyjrtcorflgi5t3l@aqnd5byiqwt6>
  <TY3PR01MB11346F097EF5CEB6C05884B1286BF2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <azkn7g7fsoupilafhuu3walz5ecwyqeb42citlrimuey2oyuc6@4tmsaq2kaymd>
+In-Reply-To: <azkn7g7fsoupilafhuu3walz5ecwyqeb42citlrimuey2oyuc6@4tmsaq2kaymd>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TY3PR01MB11415:EE_
+x-ms-office365-filtering-correlation-id: b39441f2-b93c-4746-3b94-08dcb62f090f
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?eHFGVTcrcEkySks4WllDRFd3d2xydjlLRnlQY2RBVUZlSzRENGpWWWdoZXVq?=
+ =?utf-8?B?NXQ5Q00vMnJCSllBRE1rbE9pcEREeVpFSUtGblVIV3VGWTFwbFpsR1RqVm9U?=
+ =?utf-8?B?THc3VWZBVWxCbzR0VmVDQnR3cW81TlVSZjlhMWNBbDQ0cjhxbDBkVmNtRGM0?=
+ =?utf-8?B?YzloSGhEWEdpZFNqN3lzcFlkaWgzRm1TMkFsZXRNWXpBM0ZteE00TDE3Znl2?=
+ =?utf-8?B?RlZUOW56L3V5dFl3SEcycVR2aFpFMG1KNUQzbndXNlZYYUY1VVdYTE1tb0gy?=
+ =?utf-8?B?RmJlcTdZaVhsNDI5NGdHVk9nWGQzNzI4Ty8rL2VNUmdnaUxPQ1kzZEtOeWdR?=
+ =?utf-8?B?WFZQMmNFUlhpYUtWYjhOK1NPcjNaMytiZERuR3RsRFJNOHR1L1J6aWlkN1JS?=
+ =?utf-8?B?aGVraDhVMXRQVnI3YmRtQ0dBanVUckkyenIzMUJuZU12ZUgyVHNGZEozYkZD?=
+ =?utf-8?B?UG52b0FldDVhcUE3MVZIQXJ1b2Z3b2NiWm83WFFnMXgxVVhHYlRUTlZGYVN3?=
+ =?utf-8?B?REp6dWRBSUdxc29lWEUwQU81a2N1NlVjUng2ZzJENnVDMU1uMUtCU04xMnc3?=
+ =?utf-8?B?OWZlcisxQk15SzFvNGNJVG92Y3BwK0pPbG1PcS8rVGxyWU1SalJOK2lUNjcy?=
+ =?utf-8?B?T1V3cm52K3JFMjJSWkNlbUI5Njllc1BnRitrbjRRdTBwSUNMU0Zvd3p4eDZD?=
+ =?utf-8?B?cy91WTJsSlBwUHdURTVpNHB3OWdjNEV0SURvSytYbjF4RzZJN0k0SVhVY3Rp?=
+ =?utf-8?B?N3BsYld4OWp3YmxmTlNsZ1did20wWGh3YWpXVXFZdTRyM0x1VkJyVkk2R0lp?=
+ =?utf-8?B?MW1qeU5wbGc2VlBpUHlIcGwzd0NDdGkyeGxMWnRDQm41eG5NVGlZNEI5d2t3?=
+ =?utf-8?B?cXdvYUovUWdqZG9NS0gzS2ZabTBMck1yQTQxQU1UT2tOWFh4Z0NSTXdDVnhM?=
+ =?utf-8?B?Sm1sMkZabjJxNmE2emhDL1VXME1uUTA4U081QzZCaGRHcVFLV3BXMzF5NE54?=
+ =?utf-8?B?clNsbjVKVjlIMFFiWEU2SXU0dk9rQU9CYW1JbEM1SXFaUXN3bWRTZTdQeUE3?=
+ =?utf-8?B?bjF0dWdaR2NCaXA5ekxTMk1oL3hPcG8rRFhjZnViNGk1d3E4azdGckoyS0Vk?=
+ =?utf-8?B?dXltVHBrVXVvU2xNVFNrZWRJTUs2dHhSdnlQRTQ0VzZsalBNU0t1ZG1KZUVs?=
+ =?utf-8?B?c3JmL1RpUXZZL2RrRFFKRDRSR0h4NGVLVlVNV21GaDlCTzMwMTIzTzJqaklM?=
+ =?utf-8?B?ZXBhcldVcW5iUzVhUzVweHZNL3E2UGpac3VXZVJZUlR0ODBVdnlXSlV4ZS9a?=
+ =?utf-8?B?cVZuamhubnJzTE1RWTlPZ1kxdjJVYzJXTW1VMytwNDl2L2VsTGdkVTRKZW5o?=
+ =?utf-8?B?WUtkTVQyQjJ2ZDdXN2wwN0pnSGFNMnlsTUJTNDVoTW9HZlJrU1N5ZElpL1ZK?=
+ =?utf-8?B?bTJLM1BVSlZzQ0F6V0l2cnRyY245MHd6OUNKLzFzb3N1OEdCeHRJNDFsb1N4?=
+ =?utf-8?B?UkVCNHY0bWx2WjVtUzhYWGlka0d5QmJHc0pCS05lZUlsY252T1R5blJNM0Y2?=
+ =?utf-8?B?ZFNZRmVJVWJnelp4Z3dlSGxXQ0xaeHlsbktIUlBJVHpkMzBJS2dzWWtVN1Yr?=
+ =?utf-8?B?ZWt6T2VMbVZHZHdZRFlJSmlleWxWMDM0TXBkUkxwVGlPYTEwaVMyU2ltYVQ2?=
+ =?utf-8?B?WlVUMld3S2lOd3UzQWxnNmovVU1Gc1ZGU3JGUzgxVlpSZUloem5YOTYvL2x4?=
+ =?utf-8?B?TWYyZ3h4R3VNS0o5K2xTR1Yzc1FWKzJoTFJkZTMwbWRtM2hHdjd1a00yNWRR?=
+ =?utf-8?Q?jevU1kH4cswTpmfRzXUQBQyAyCGEYv0xIyuLw=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?TDNkSDA4dnlwNTdOdE45VnZaSjdwWFFjWGxVN280d3lqbEVZOThBd2tPVWtP?=
+ =?utf-8?B?RGVWYzZnSFpiTmJDWjdXdXNhUEViSVBKTU9LWXhRVzRUOHVWL3dWZXR0Mi9R?=
+ =?utf-8?B?SGRta3JGTDFQbHZPVHR2WTFBZkZ0MmxSTGhKbmFNb2EzQ0NDU2F4U3JvWVM1?=
+ =?utf-8?B?RHArbm9FdjhvbnBWOWJ2TTEyY3ZITFFRa3VzS2Y2ai9pR29MbCtyM3FnS0J2?=
+ =?utf-8?B?YXQzOVhpbThMcHVlSktUWTh5NU9GRUlmdHpzdHpqc2tOZGpVM3MyWjZOYjhq?=
+ =?utf-8?B?YVd1OWFQU2RmaWxGWE5CQWRXUFRvUExPRkk5U3RmMnUwQTlDN2tiRUJVamp6?=
+ =?utf-8?B?d3FVTFBabDc3K3ppODNTQ0QvaDdzSTJSeDFseVZUbmI3SzRIcVFWQVhCclpN?=
+ =?utf-8?B?THNPYkVZNjlHWDdLY09CYXF1Y2FTS2ZBU3V5c2g2QThidmVPSmdWOHBwQ0pQ?=
+ =?utf-8?B?NzJUMTRNUWNYbWRUanJpVTNwb2x1MmNGZklqdCtWb0xrQkttWC9oTXAwYXAw?=
+ =?utf-8?B?VzVHYWpSMHZMaSthZEt5aFlTUUFRSzVncTBlTFdWT2ZZcUlSaXhJS1FtSDFF?=
+ =?utf-8?B?QWxwV1VESCs4NWlvb1AzZEhNL1UrM0Zwd05kaDBOOXN4MVZ1c0F0b2xyMjk0?=
+ =?utf-8?B?ZU1paUtoSGxrWGJxS0hxYnZwdlpPWlpCN3pXbDVYZC8vcUJCdzh2UlJXMWlw?=
+ =?utf-8?B?RnovelFvQlFkM29NNjJWaC9NMjA2K0RsREtuN1c4T1VHZHZZKzE4MG8zV2pw?=
+ =?utf-8?B?S2hMbUFEc2tkWm5nY3BQSUNPLzNIYmhhcXY5UXA2SGxpeW1UamxTT3crM0Ni?=
+ =?utf-8?B?VDJHc0FTeUpNNTJGOU1ma1ZZYldsRW5qSzg0U1hORjg0dGtDM1Q3Z2loR1NR?=
+ =?utf-8?B?NlNObzROWFFWam9wMmVFN3J5TVZRNkpob0MwUGdxZWt5aFlwU1VnNTh1bm94?=
+ =?utf-8?B?MXVtTEhrR0NWTWdRTW9zUTFFNGk4Si9MS3NNcmxpVjF3SlYrY2JJZmtVVlcr?=
+ =?utf-8?B?VGM3Rk5xSmtWb2pEdkhOeXFvaW1PZ1MyT0tEWmVQUkR0Sjc5TGdxOEZtcHlv?=
+ =?utf-8?B?dTluU2FqbXFhKzJOWjFXQ2NKZGdTbC9ScnpyajNHSE1od1NGQ2kxZkwvZ2xW?=
+ =?utf-8?B?aE9JTS9tV2JXSDF5ZTRlZmN4cytzSG5XQ0N3emRjZTU3cWJ6V3NHMFE3eS94?=
+ =?utf-8?B?ZUlpbGRSN2kyeTY3NEZCZmluVHVEMUtyMXBNTVNNNHU3SzJUQmphU1YwWHVp?=
+ =?utf-8?B?dHFpd1lNSTBWaDJOWHhScEhMUmkxclVscTg4R2Z6bkFpeTJTTHNsZXA0NXlJ?=
+ =?utf-8?B?MWlqQ3FMVmRXbGRoYzRwYkkxZ0EzVGx4a05DSmFERWg3NFpNTjBETFI4N0RW?=
+ =?utf-8?B?S21YVmZxazhEdC9MVnZoSm1pOVlYbXVPc3RxbURwQVpLRkZEUXBZQ0ZzMytX?=
+ =?utf-8?B?OFordWg5ZUYrNk5QVDdMRWs3WkxDS2QxbzVhU0hlcVROV21Dd2RXUjBCRXJQ?=
+ =?utf-8?B?SDVmeFQvSU9MRWpmMGd4Rm81ZTljZUdWZVU5UlJmb2NBVStlT0hMbEZhRU5O?=
+ =?utf-8?B?TnBwWjB0bms0MTh4M1RPa1pqc25jeXE3NU1QSXprSmNqS0YrMlU0SkhjUzFj?=
+ =?utf-8?B?dDJzTjZLaGF0eGpYa1NuNzI0b0tabGJkRmJXVGNFTndtZjMyZEhBa2hXa2hR?=
+ =?utf-8?B?cmpMRVl3VEIwTjkrOTQ1Ny9Fc2pRT2hBQW9QVlVKM1M1WFFMTHBOaGEyNC8w?=
+ =?utf-8?B?WkZOQ1FNbjdnczdGVzVBOC9SeGd3Tk5MSW55MWV3S0prd0VuL0YxM05Ib2VU?=
+ =?utf-8?B?TkhicW5QWENuM21haXRoc0htSjJScHJLbzMrbjVSYVM1YmIxV3pMNFRyV0xu?=
+ =?utf-8?B?TkpJNHh5R1NaaVlEVStHTXRjVWFUdVh6QTBvMEs1c084NXE4SUg3dkRscU80?=
+ =?utf-8?B?WDJ4Q0pYdXhwbmphV2hUNEsvWUQzVkFERk94UEpUdHM2T015N0F0TUxIa2l1?=
+ =?utf-8?B?N1ZxZTB4cFhuSUpRRXVycXZtdy9JdnUrQUhSSWk4dFJUN1crYzNTTzBON1Ns?=
+ =?utf-8?B?YUxBblRZVGxVUVRNMy9xbHlMNzN2eVhnczlZZUFDdUtJcUxzbS9BQjBJaFpD?=
+ =?utf-8?Q?Qeey+PXPICcrv3sJBd3jYbKyX?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kephizyyiahpjuov"
-Content-Disposition: inline
-In-Reply-To: <TY3PR01MB11346F097EF5CEB6C05884B1286BF2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b39441f2-b93c-4746-3b94-08dcb62f090f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2024 15:47:11.0930
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VcQKURtU/UMFen1ocPXjhpld0nguEsWsaTvqflG2UlxZ81EVUR1FUVauQRf8w04vMpVKxwqh4IPMMSy+6h/84CyDfRevt0Flptzub3MmSuA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB11415
 
-
---kephizyyiahpjuov
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Biju,
-
-On Tue, Aug 06, 2024 at 08:35:39AM +0000, Biju Das wrote:
-> > -----Original Message-----
-> > From: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
-> > Sent: Tuesday, August 6, 2024 7:47 AM
-> > Subject: Re: [PATCH v20 3/4] pwm: Add support for RZ/G2L GPT
-> >=20
-> > Hello Biju,
-> >=20
-> > On Fri, Aug 02, 2024 at 07:02:19AM +0000, Biju Das wrote:
-> > > > -----Original Message-----
-> > > > From: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
-> > > > Sent: Tuesday, July 30, 2024 8:54 PM
-> > > > Subject: Re: [PATCH v20 3/4] pwm: Add support for RZ/G2L GPT
-> > > >
-> > > > Hello,
-> > > >
-> > > > I'm a bit unlucky about this driver. I have the impression it is
-> > > > complicated and wonder if that is necessary because the hardware is=
- unusual or if we just have to
-> > spot some simplifications.
-> > >
-> > > I agree it is little bit complex driver. Once this driver is accepted,
-> > > going forward, I need to support other drivers like (Counter , ADC tr=
-iggering and POEG(Output
-> > disable) support).
-> > >
-> > > > I guess another problem is that the time between two consecutive
-> > > > reviews is long and I forget most things I learned about the
-> > > > hardware from one to the other. While this is mostly my problem, the
-> > > > same problem arises if the driver is touched later again. So I
-> > > > wonder if some more documentation is needed about the relation
-> > > > between channels and outputs and subchannels. If the driver only su=
-pported one output per channel,
-> > it could be considerably simpler (I think). But I guess that would be a=
- practically relevant
-> > restriction??
-> > >
-> > > Yes, one output per channel means, we cannot use POEG IP which is for
-> > > short circuit protection in switching circuits.  So, we need to use b=
-oth IOs in the channel.
-> > >
-> > > I will add the below documentation to make it clear.
-> > >
-> > > * - General PWM Timer (GPT) has 8 HW channels for PWM operations and
-> > > *   each HW channel have 2 IOs.
-> > > * - Each IO is modelled as an independent PWM channel.
-> > >
-> > > Please let me know is it ok with respect to the initial driver?
-> >=20
-> > looks fine.
-> >=20
-> > > > Some simplifications spotted below.
-> > > >
-> > > > On Fri, Jun 14, 2024 at 04:42:41PM +0100, Biju Das wrote:
-> > > > > RZ/G2L General PWM Timer (GPT) composed of 8 channels with 32-bit
-> > > > > timer (GPT32E). It supports the following functions
-> > > > >  * 32 bits x 8 channels
-> > > > >  * Up-counting or down-counting (saw waves) or up/down-counting
-> > > > >    (triangle waves) for each counter.
-> > > > >  * Clock sources independently selectable for each channel
-> > > > >  * Two I/O pins per channel
-> > > > >  * Two output compare/input capture registers per channel
-> > > > >  * For the two output compare/input capture registers of each cha=
-nnel,
-> > > > >    four registers are provided as buffer registers and are capabl=
-e of
-> > > > >    operating as comparison registers when buffering is not in use.
-> > > > >  * In output compare operation, buffer switching can be at crests=
- or
-> > > > >    troughs, enabling the generation of laterally asymmetric PWM w=
-aveforms.
-> > > > >  * Registers for setting up frame cycles in each channel (with ca=
-pability
-> > > > >    for generating interrupts at overflow or underflow)
-> > > > >  * Generation of dead times in PWM operation
-> > > > >  * Synchronous starting, stopping and clearing counters for arbit=
-rary
-> > > > >    channels
-> > > > >  * Starting, stopping, clearing and up/down counters in response =
-to input
-> > > > >    level comparison
-> > > > >  * Starting, clearing, stopping and up/down counters in response =
-to a
-> > > > >    maximum of four external triggers
-> > > > >  * Output pin disable function by dead time error and detected
-> > > > >    short-circuits between output pins
-> > > > >  * A/D converter start triggers can be generated (GPT32E0 to
-> > > > > GPT32E3)
-> > > > >  * Enables the noise filter for input capture and external trigger
-> > > > >    operation
-> > > > >
-> > > > > Add basic pwm support for RZ/G2L GPT driver by creating separate
-> > > > > logical channels for each IOs.
-> > > > >
-> > > > > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > > > > ---
-> > > > > v19->v20:
-> > > > >  * Added locks for rmw operations in rzg2l_gpt_{en,dis}able().
-> > > > >  * Dropped decremeng enable_count based ch_en_bits in rzg2l_gpt_d=
-isable().
-> > > > >  * Added a comment in calculate_period_or_duty() related to overf=
-low.
-> > > > >  * Replaced ch_en_bits->bootloader_enabled_channels and used this=
- variable
-> > > > >    in probe(), apply() and remove() for simplification
-> > > > >  * Replaced pm_runtime_enable()->devm_pm_runtime_enable()
-> > > > > [...]
-> > > > > ---
-> > > > >  drivers/pwm/Kconfig         |  11 +
-> > > > >  drivers/pwm/Makefile        |   1 +
-> > > > >  drivers/pwm/pwm-rzg2l-gpt.c | 555
-> > > > > ++++++++++++++++++++++++++++++++++++
-> > > > >  3 files changed, 567 insertions(+)  create mode 100644
-> > > > > drivers/pwm/pwm-rzg2l-gpt.c
-> > > > >
-> > > > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig index
-> > > > > 00a543de8f82..3d398b308e3f 100644
-> > > > > --- a/drivers/pwm/Kconfig
-> > > > > +++ b/drivers/pwm/Kconfig
-> > > > > @@ -522,6 +522,17 @@ config PWM_ROCKCHIP
-> > > > >  	  Generic PWM framework driver for the PWM controller found on
-> > > > >  	  Rockchip SoCs.
-> > > > >
-> > > > > +config PWM_RZG2L_GPT
-> > > > > +	tristate "Renesas RZ/G2L General PWM Timer support"
-> > > > > +	depends on ARCH_RZG2L || COMPILE_TEST
-> > > > > +	depends on HAS_IOMEM
-> > > > > +	help
-> > > > > +	  This driver exposes the General PWM Timer controller found in=
- Renesas
-> > > > > +	  RZ/G2L like chips through the PWM API.
-> > > > > +
-> > > > > +	  To compile this driver as a module, choose M here: the module
-> > > > > +	  will be called pwm-rzg2l-gpt.
-> > > > > +
-> > > > >  config PWM_RZ_MTU3
-> > > > >  	tristate "Renesas RZ/G2L MTU3a PWM Timer support"
-> > > > >  	depends on RZ_MTU3
-> > > > > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile index
-> > > > > 6964ba45c795..fb9a2d9b9adb 100644
-> > > > > --- a/drivers/pwm/Makefile
-> > > > > +++ b/drivers/pwm/Makefile
-> > > > > @@ -47,6 +47,7 @@ obj-$(CONFIG_PWM_RASPBERRYPI_POE)	+=3D pwm-rasp=
-berrypi-poe.o
-> > > > >  obj-$(CONFIG_PWM_RCAR)		+=3D pwm-rcar.o
-> > > > >  obj-$(CONFIG_PWM_RENESAS_TPU)	+=3D pwm-renesas-tpu.o
-> > > > >  obj-$(CONFIG_PWM_ROCKCHIP)	+=3D pwm-rockchip.o
-> > > > > +obj-$(CONFIG_PWM_RZG2L_GPT)	+=3D pwm-rzg2l-gpt.o
-> > > > >  obj-$(CONFIG_PWM_RZ_MTU3)	+=3D pwm-rz-mtu3.o
-> > > > >  obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
-> > > > >  obj-$(CONFIG_PWM_SIFIVE)	+=3D pwm-sifive.o
-> > > > > diff --git a/drivers/pwm/pwm-rzg2l-gpt.c
-> > > > > b/drivers/pwm/pwm-rzg2l-gpt.c new file mode 100644 index
-> > > > > 000000000000..6005a689173e
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/pwm/pwm-rzg2l-gpt.c
-> > > > > @@ -0,0 +1,555 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > +/*
-> > > > > + * Renesas RZ/G2L General PWM Timer (GPT) driver
-> > > > > + *
-> > > > > + * Copyright (C) 2024 Renesas Electronics Corporation
-> > > > > + *
-> > > > > + * Hardware manual for this IP can be found here
-> > > > > + *
-> > > > > +https://www.renesas.com/eu/en/document/mah/rzg2l-group-rzg2lc-gro
-> > > > > +up-u sers-manual-hardware-0?language=3Den
-> > > > > + *
-> > > > > + * Limitations:
-> > > > > + * - Counter must be stopped before modifying Mode and Prescaler.
-> > > > > + * - When PWM is disabled, the output is driven to inactive.
-> > > > > + * - While the hardware supports both polarities, the driver (fo=
-r now)
-> > > > > + *   only handles normal polarity.
-> > > > > + * - When both channels are used, disabling the channel on one s=
-tops the
-> > > > > + *   other.
-> > > > > + */
-> > > > > +
-> > > > > +#include <linux/bitfield.h>
-> > > > > +#include <linux/clk.h>
-> > > > > +#include <linux/io.h>
-> > > > > +#include <linux/limits.h>
-> > > > > +#include <linux/module.h>
-> > > > > +#include <linux/of.h>
-> > > > > +#include <linux/platform_device.h> #include <linux/pm_runtime.h>
-> > > > > +#include <linux/pwm.h> #include <linux/reset.h> #include
-> > > > > +<linux/time.h> #include <linux/units.h>
-> > > > > +
-> > > > > +#define RZG2L_GTCR		0x2c
-> > > > > +#define RZG2L_GTUDDTYC		0x30
-> > > > > +#define RZG2L_GTIOR		0x34
-> > > > > +#define RZG2L_GTBER		0x40
-> > > > > +#define RZG2L_GTCNT		0x48
-> > > > > +#define RZG2L_GTCCR(i)		(0x4c + 4 * (i))
-> > > > > +#define RZG2L_GTPR		0x64
-> > >
-> > > These will be replaced as
-> > >
-> > > +#define RZG2L_GET_CH_OFFS(i)   (0x100 * (i))
-> > > +
-> > > +#define RZG2L_GTCR(ch)         (0x2c + RZG2L_GET_CH_OFFS(ch))
-> > > +#define RZG2L_GTUDDTYC(ch)     (0x30 + RZG2L_GET_CH_OFFS(ch))
-> > > +#define RZG2L_GTIOR(ch)                (0x34 + RZG2L_GET_CH_OFFS(ch))
-> > > +#define RZG2L_GTINTAD(ch)      (0x38 + RZG2L_GET_CH_OFFS(ch))
-> > > +#define RZG2L_GTBER(ch)                (0x40 + RZG2L_GET_CH_OFFS(ch))
-> > > +#define RZG2L_GTCNT(ch)                (0x48 + RZG2L_GET_CH_OFFS(ch))
-> > > +#define RZG2L_GTCCR(ch, sub_ch)        (0x4c + RZG2L_GET_CH_OFFS(ch)=
- + 4 * (sub_ch))
-> > > +#define RZG2L_GTPR(ch)         (0x64 + RZG2L_GET_CH_OFFS(ch))
-> >=20
-> > I like this better, thanks.
-> >=20
-> > > > > +	 */
-> > > > > +	tmp =3D (u64)val << (2 * prescale);
-> > > > > +	tmp *=3D USEC_PER_SEC;
-> > > > > +
-> > > > > +	return DIV64_U64_ROUND_UP(tmp, rzg2l_gpt->rate_khz); }
-> > > > > +
-> > > > > +static int rzg2l_gpt_get_state(struct pwm_chip *chip, struct pwm=
-_device *pwm,
-> > > > > +			       struct pwm_state *state) {
-> > > > > +	struct rzg2l_gpt_chip *rzg2l_gpt =3D to_rzg2l_gpt_chip(chip);
-> > > > > +	int rc;
-> > > > > +
-> > > > > +	rc =3D pm_runtime_resume_and_get(pwmchip_parent(chip));
-> > > > > +	if (rc)
-> > > > > +		return rc;
-> > > > > +
-> > > > > +	state->enabled =3D rzg2l_gpt_is_ch_enabled(rzg2l_gpt, pwm->hwpw=
-m);
-> > > > > +	if (state->enabled) {
-> > > > > +		u32 ch =3D RZG2L_GET_CH(pwm->hwpwm);
-> > > > > +		u32 offs =3D RZG2L_GET_CH_OFFS(ch);
-> > > > > +		u8 prescale;
-> > > > > +		u32 val;
-> > > > > +
-> > > > > +		val =3D rzg2l_gpt_read(rzg2l_gpt, offs + RZG2L_GTCR);
-> > > > > +		prescale =3D FIELD_GET(RZG2L_GTCR_TPCS, val);
-> > > >
-> > > > Can it happen that prescale is > 5 here?
-> > >
-> > > Yes, if bootloader wrongly set it to 6 or 7. I will add a check in
-> > > Probe and forcefully set to 5, if that the case. Is it ok?
-> >=20
-> > >
-> > > +                       if (prescale > 5) {
-> > > +                               dev_warn(dev, "Invalid prescale %d > =
-5, force setting to 5",
-> > prescale);
-> > > +                               /* Set prescale value of 5. */
-> > > +                               rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTC=
-R(ch), RZG2L_GTCR_TPCS,
-> > > +                                                FIELD_PREP(RZG2L_GTC=
-R_TPCS, 5));
-> > > +                       }
-> >=20
-> > I wouldn't write back the 5 then. Just assume that the value read back =
-was 5. (Well unless the
-> > hardware behaves according to the normal formula that applies for presc=
-ale =E2=89=A4 5, then it might make
-> > sense to continue with the read value.)
->=20
-> OK, will just print the warning.
->=20
-> dev_warn(dev, "Invalid prescale set %d > 5, prescale);
-
-No, please don't warn (or do it at most once per pwm_device).
-
-Best regards
-Uwe
-
---kephizyyiahpjuov
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmayPXIACgkQj4D7WH0S
-/k4eLQf/RgjYIPMG+rMsEppe4QEm3ObH5u6/lZdla9x6WgyncZZ0fQ0TR9dbgT1e
-Je3aO8OgdjrKtU3W17Finco5PViuo9FeZSbyLEaSlISJQcG9AEPc/pucx/n9ZqJW
-MVgJ0+9svNr1bQ0KuwpUEIHZJg4RFcew/BFPP9ElRnM62FU0qgtUPVBgtRBlz9c+
-8a5dcI/JoHCLNiWXa6tsd10r37lnZgbMIiF+iQU9JZL3LRS0DSmtif/m5RnVcUKo
-CoZZiycvb9wEfTXWojsvO6pMM4RI1j87VY0JoCyD5vh0dBGcNDEi0a7vH0IhLxPS
-dSajVoavtYlBLzqBA6mXKCzqtRXppA==
-=NyBs
------END PGP SIGNATURE-----
-
---kephizyyiahpjuov--
+SGVsbG8gVXdlLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFV3ZSBL
+bGVpbmUtS8O2bmlnIDx1LmtsZWluZS1rb2VuaWdAYmF5bGlicmUuY29tPg0KPiBTZW50OiBUdWVz
+ZGF5LCBBdWd1c3QgNiwgMjAyNCA0OjEzIFBNDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIwIDMv
+NF0gcHdtOiBBZGQgc3VwcG9ydCBmb3IgUlovRzJMIEdQVA0KPiANCj4gSGVsbG8gQmlqdSwNCj4g
+DQo+IE9uIFR1ZSwgQXVnIDA2LCAyMDI0IGF0IDA4OjM1OjM5QU0gKzAwMDAsIEJpanUgRGFzIHdy
+b3RlOg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFV3ZSBL
+bGVpbmUtS8O2bmlnIDx1LmtsZWluZS1rb2VuaWdAYmF5bGlicmUuY29tPg0KPiA+ID4gU2VudDog
+VHVlc2RheSwgQXVndXN0IDYsIDIwMjQgNzo0NyBBTQ0KPiA+ID4gU3ViamVjdDogUmU6IFtQQVRD
+SCB2MjAgMy80XSBwd206IEFkZCBzdXBwb3J0IGZvciBSWi9HMkwgR1BUDQo+ID4gPg0KPiA+ID4g
+SGVsbG8gQmlqdSwNCj4gPiA+DQo+ID4gPiBPbiBGcmksIEF1ZyAwMiwgMjAyNCBhdCAwNzowMjox
+OUFNICswMDAwLCBCaWp1IERhcyB3cm90ZToNCj4gPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQ0KPiA+ID4gPiA+IEZyb206IFV3ZSBLbGVpbmUtS8O2bmlnIDx1LmtsZWluZS1rb2Vu
+aWdAYmF5bGlicmUuY29tPg0KPiA+ID4gPiA+IFNlbnQ6IFR1ZXNkYXksIEp1bHkgMzAsIDIwMjQg
+ODo1NCBQTQ0KPiA+ID4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIwIDMvNF0gcHdtOiBBZGQg
+c3VwcG9ydCBmb3IgUlovRzJMIEdQVA0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gSGVsbG8sDQo+ID4g
+PiA+ID4NCj4gPiA+ID4gPiBJJ20gYSBiaXQgdW5sdWNreSBhYm91dCB0aGlzIGRyaXZlci4gSSBo
+YXZlIHRoZSBpbXByZXNzaW9uIGl0IGlzDQo+ID4gPiA+ID4gY29tcGxpY2F0ZWQgYW5kIHdvbmRl
+ciBpZiB0aGF0IGlzIG5lY2Vzc2FyeSBiZWNhdXNlIHRoZSBoYXJkd2FyZQ0KPiA+ID4gPiA+IGlz
+IHVudXN1YWwgb3IgaWYgd2UganVzdCBoYXZlIHRvDQo+ID4gPiBzcG90IHNvbWUgc2ltcGxpZmlj
+YXRpb25zLg0KPiA+ID4gPg0KPiA+ID4gPiBJIGFncmVlIGl0IGlzIGxpdHRsZSBiaXQgY29tcGxl
+eCBkcml2ZXIuIE9uY2UgdGhpcyBkcml2ZXIgaXMNCj4gPiA+ID4gYWNjZXB0ZWQsIGdvaW5nIGZv
+cndhcmQsIEkgbmVlZCB0byBzdXBwb3J0IG90aGVyIGRyaXZlcnMgbGlrZQ0KPiA+ID4gPiAoQ291
+bnRlciAsIEFEQyB0cmlnZ2VyaW5nIGFuZCBQT0VHKE91dHB1dA0KPiA+ID4gZGlzYWJsZSkgc3Vw
+cG9ydCkuDQo+ID4gPiA+DQo+ID4gPiA+ID4gSSBndWVzcyBhbm90aGVyIHByb2JsZW0gaXMgdGhh
+dCB0aGUgdGltZSBiZXR3ZWVuIHR3byBjb25zZWN1dGl2ZQ0KPiA+ID4gPiA+IHJldmlld3MgaXMg
+bG9uZyBhbmQgSSBmb3JnZXQgbW9zdCB0aGluZ3MgSSBsZWFybmVkIGFib3V0IHRoZQ0KPiA+ID4g
+PiA+IGhhcmR3YXJlIGZyb20gb25lIHRvIHRoZSBvdGhlci4gV2hpbGUgdGhpcyBpcyBtb3N0bHkg
+bXkgcHJvYmxlbSwNCj4gPiA+ID4gPiB0aGUgc2FtZSBwcm9ibGVtIGFyaXNlcyBpZiB0aGUgZHJp
+dmVyIGlzIHRvdWNoZWQgbGF0ZXIgYWdhaW4uIFNvDQo+ID4gPiA+ID4gSSB3b25kZXIgaWYgc29t
+ZSBtb3JlIGRvY3VtZW50YXRpb24gaXMgbmVlZGVkIGFib3V0IHRoZSByZWxhdGlvbg0KPiA+ID4g
+PiA+IGJldHdlZW4gY2hhbm5lbHMgYW5kIG91dHB1dHMgYW5kIHN1YmNoYW5uZWxzLiBJZiB0aGUg
+ZHJpdmVyIG9ubHkNCj4gPiA+ID4gPiBzdXBwb3J0ZWQgb25lIG91dHB1dCBwZXIgY2hhbm5lbCwN
+Cj4gPiA+IGl0IGNvdWxkIGJlIGNvbnNpZGVyYWJseSBzaW1wbGVyIChJIHRoaW5rKS4gQnV0IEkg
+Z3Vlc3MgdGhhdCB3b3VsZA0KPiA+ID4gYmUgYSBwcmFjdGljYWxseSByZWxldmFudCByZXN0cmlj
+dGlvbj8/DQo+ID4gPiA+DQo+ID4gPiA+IFllcywgb25lIG91dHB1dCBwZXIgY2hhbm5lbCBtZWFu
+cywgd2UgY2Fubm90IHVzZSBQT0VHIElQIHdoaWNoIGlzDQo+ID4gPiA+IGZvciBzaG9ydCBjaXJj
+dWl0IHByb3RlY3Rpb24gaW4gc3dpdGNoaW5nIGNpcmN1aXRzLiAgU28sIHdlIG5lZWQgdG8gdXNl
+IGJvdGggSU9zIGluIHRoZSBjaGFubmVsLg0KPiA+ID4gPg0KPiA+ID4gPiBJIHdpbGwgYWRkIHRo
+ZSBiZWxvdyBkb2N1bWVudGF0aW9uIHRvIG1ha2UgaXQgY2xlYXIuDQo+ID4gPiA+DQo+ID4gPiA+
+ICogLSBHZW5lcmFsIFBXTSBUaW1lciAoR1BUKSBoYXMgOCBIVyBjaGFubmVscyBmb3IgUFdNIG9w
+ZXJhdGlvbnMgYW5kDQo+ID4gPiA+ICogICBlYWNoIEhXIGNoYW5uZWwgaGF2ZSAyIElPcy4NCj4g
+PiA+ID4gKiAtIEVhY2ggSU8gaXMgbW9kZWxsZWQgYXMgYW4gaW5kZXBlbmRlbnQgUFdNIGNoYW5u
+ZWwuDQo+ID4gPiA+DQo+ID4gPiA+IFBsZWFzZSBsZXQgbWUga25vdyBpcyBpdCBvayB3aXRoIHJl
+c3BlY3QgdG8gdGhlIGluaXRpYWwgZHJpdmVyPw0KPiA+ID4NCj4gPiA+IGxvb2tzIGZpbmUuDQo+
+ID4gPg0KPiA+ID4gPiA+IFNvbWUgc2ltcGxpZmljYXRpb25zIHNwb3R0ZWQgYmVsb3cuDQo+ID4g
+PiA+ID4NCj4gPiA+ID4gPiBPbiBGcmksIEp1biAxNCwgMjAyNCBhdCAwNDo0Mjo0MVBNICswMTAw
+LCBCaWp1IERhcyB3cm90ZToNCj4gPiA+ID4gPiA+IFJaL0cyTCBHZW5lcmFsIFBXTSBUaW1lciAo
+R1BUKSBjb21wb3NlZCBvZiA4IGNoYW5uZWxzIHdpdGgNCj4gPiA+ID4gPiA+IDMyLWJpdCB0aW1l
+ciAoR1BUMzJFKS4gSXQgc3VwcG9ydHMgdGhlIGZvbGxvd2luZyBmdW5jdGlvbnMNCj4gPiA+ID4g
+PiA+ICAqIDMyIGJpdHMgeCA4IGNoYW5uZWxzDQo+ID4gPiA+ID4gPiAgKiBVcC1jb3VudGluZyBv
+ciBkb3duLWNvdW50aW5nIChzYXcgd2F2ZXMpIG9yIHVwL2Rvd24tY291bnRpbmcNCj4gPiA+ID4g
+PiA+ICAgICh0cmlhbmdsZSB3YXZlcykgZm9yIGVhY2ggY291bnRlci4NCj4gPiA+ID4gPiA+ICAq
+IENsb2NrIHNvdXJjZXMgaW5kZXBlbmRlbnRseSBzZWxlY3RhYmxlIGZvciBlYWNoIGNoYW5uZWwN
+Cj4gPiA+ID4gPiA+ICAqIFR3byBJL08gcGlucyBwZXIgY2hhbm5lbA0KPiA+ID4gPiA+ID4gICog
+VHdvIG91dHB1dCBjb21wYXJlL2lucHV0IGNhcHR1cmUgcmVnaXN0ZXJzIHBlciBjaGFubmVsDQo+
+ID4gPiA+ID4gPiAgKiBGb3IgdGhlIHR3byBvdXRwdXQgY29tcGFyZS9pbnB1dCBjYXB0dXJlIHJl
+Z2lzdGVycyBvZiBlYWNoIGNoYW5uZWwsDQo+ID4gPiA+ID4gPiAgICBmb3VyIHJlZ2lzdGVycyBh
+cmUgcHJvdmlkZWQgYXMgYnVmZmVyIHJlZ2lzdGVycyBhbmQgYXJlIGNhcGFibGUgb2YNCj4gPiA+
+ID4gPiA+ICAgIG9wZXJhdGluZyBhcyBjb21wYXJpc29uIHJlZ2lzdGVycyB3aGVuIGJ1ZmZlcmlu
+ZyBpcyBub3QgaW4gdXNlLg0KPiA+ID4gPiA+ID4gICogSW4gb3V0cHV0IGNvbXBhcmUgb3BlcmF0
+aW9uLCBidWZmZXIgc3dpdGNoaW5nIGNhbiBiZSBhdCBjcmVzdHMgb3INCj4gPiA+ID4gPiA+ICAg
+IHRyb3VnaHMsIGVuYWJsaW5nIHRoZSBnZW5lcmF0aW9uIG9mIGxhdGVyYWxseSBhc3ltbWV0cmlj
+IFBXTSB3YXZlZm9ybXMuDQo+ID4gPiA+ID4gPiAgKiBSZWdpc3RlcnMgZm9yIHNldHRpbmcgdXAg
+ZnJhbWUgY3ljbGVzIGluIGVhY2ggY2hhbm5lbCAod2l0aCBjYXBhYmlsaXR5DQo+ID4gPiA+ID4g
+PiAgICBmb3IgZ2VuZXJhdGluZyBpbnRlcnJ1cHRzIGF0IG92ZXJmbG93IG9yIHVuZGVyZmxvdykN
+Cj4gPiA+ID4gPiA+ICAqIEdlbmVyYXRpb24gb2YgZGVhZCB0aW1lcyBpbiBQV00gb3BlcmF0aW9u
+DQo+ID4gPiA+ID4gPiAgKiBTeW5jaHJvbm91cyBzdGFydGluZywgc3RvcHBpbmcgYW5kIGNsZWFy
+aW5nIGNvdW50ZXJzIGZvciBhcmJpdHJhcnkNCj4gPiA+ID4gPiA+ICAgIGNoYW5uZWxzDQo+ID4g
+PiA+ID4gPiAgKiBTdGFydGluZywgc3RvcHBpbmcsIGNsZWFyaW5nIGFuZCB1cC9kb3duIGNvdW50
+ZXJzIGluIHJlc3BvbnNlIHRvIGlucHV0DQo+ID4gPiA+ID4gPiAgICBsZXZlbCBjb21wYXJpc29u
+DQo+ID4gPiA+ID4gPiAgKiBTdGFydGluZywgY2xlYXJpbmcsIHN0b3BwaW5nIGFuZCB1cC9kb3du
+IGNvdW50ZXJzIGluIHJlc3BvbnNlIHRvIGENCj4gPiA+ID4gPiA+ICAgIG1heGltdW0gb2YgZm91
+ciBleHRlcm5hbCB0cmlnZ2Vycw0KPiA+ID4gPiA+ID4gICogT3V0cHV0IHBpbiBkaXNhYmxlIGZ1
+bmN0aW9uIGJ5IGRlYWQgdGltZSBlcnJvciBhbmQgZGV0ZWN0ZWQNCj4gPiA+ID4gPiA+ICAgIHNo
+b3J0LWNpcmN1aXRzIGJldHdlZW4gb3V0cHV0IHBpbnMNCj4gPiA+ID4gPiA+ICAqIEEvRCBjb252
+ZXJ0ZXIgc3RhcnQgdHJpZ2dlcnMgY2FuIGJlIGdlbmVyYXRlZCAoR1BUMzJFMCB0bw0KPiA+ID4g
+PiA+ID4gR1BUMzJFMykNCj4gPiA+ID4gPiA+ICAqIEVuYWJsZXMgdGhlIG5vaXNlIGZpbHRlciBm
+b3IgaW5wdXQgY2FwdHVyZSBhbmQgZXh0ZXJuYWwgdHJpZ2dlcg0KPiA+ID4gPiA+ID4gICAgb3Bl
+cmF0aW9uDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gQWRkIGJhc2ljIHB3bSBzdXBwb3J0IGZv
+ciBSWi9HMkwgR1BUIGRyaXZlciBieSBjcmVhdGluZw0KPiA+ID4gPiA+ID4gc2VwYXJhdGUgbG9n
+aWNhbCBjaGFubmVscyBmb3IgZWFjaCBJT3MuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gU2ln
+bmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzLmp6QGJwLnJlbmVzYXMuY29tPg0KPiA+ID4g
+PiA+ID4gLS0tDQo+ID4gPiA+ID4gPiB2MTktPnYyMDoNCj4gPiA+ID4gPiA+ICAqIEFkZGVkIGxv
+Y2tzIGZvciBybXcgb3BlcmF0aW9ucyBpbiByemcybF9ncHRfe2VuLGRpc31hYmxlKCkuDQo+ID4g
+PiA+ID4gPiAgKiBEcm9wcGVkIGRlY3JlbWVuZyBlbmFibGVfY291bnQgYmFzZWQgY2hfZW5fYml0
+cyBpbiByemcybF9ncHRfZGlzYWJsZSgpLg0KPiA+ID4gPiA+ID4gICogQWRkZWQgYSBjb21tZW50
+IGluIGNhbGN1bGF0ZV9wZXJpb2Rfb3JfZHV0eSgpIHJlbGF0ZWQgdG8gb3ZlcmZsb3cuDQo+ID4g
+PiA+ID4gPiAgKiBSZXBsYWNlZCBjaF9lbl9iaXRzLT5ib290bG9hZGVyX2VuYWJsZWRfY2hhbm5l
+bHMgYW5kIHVzZWQgdGhpcyB2YXJpYWJsZQ0KPiA+ID4gPiA+ID4gICAgaW4gcHJvYmUoKSwgYXBw
+bHkoKSBhbmQgcmVtb3ZlKCkgZm9yIHNpbXBsaWZpY2F0aW9uDQo+ID4gPiA+ID4gPiAgKiBSZXBs
+YWNlZCBwbV9ydW50aW1lX2VuYWJsZSgpLT5kZXZtX3BtX3J1bnRpbWVfZW5hYmxlKCkNCj4gPiA+
+ID4gPiA+IFsuLi5dDQo+ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiA+ICBkcml2ZXJzL3B3bS9L
+Y29uZmlnICAgICAgICAgfCAgMTEgKw0KPiA+ID4gPiA+ID4gIGRyaXZlcnMvcHdtL01ha2VmaWxl
+ICAgICAgICB8ICAgMSArDQo+ID4gPiA+ID4gPiAgZHJpdmVycy9wd20vcHdtLXJ6ZzJsLWdwdC5j
+IHwgNTU1DQo+ID4gPiA+ID4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysN
+Cj4gPiA+ID4gPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDU2NyBpbnNlcnRpb25zKCspICBjcmVhdGUg
+bW9kZSAxMDA2NDQNCj4gPiA+ID4gPiA+IGRyaXZlcnMvcHdtL3B3bS1yemcybC1ncHQuYw0KPiA+
+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3B3bS9LY29uZmlnIGIv
+ZHJpdmVycy9wd20vS2NvbmZpZyBpbmRleA0KPiA+ID4gPiA+ID4gMDBhNTQzZGU4ZjgyLi4zZDM5
+OGIzMDhlM2YgMTAwNjQ0DQo+ID4gPiA+ID4gPiAtLS0gYS9kcml2ZXJzL3B3bS9LY29uZmlnDQo+
+ID4gPiA+ID4gPiArKysgYi9kcml2ZXJzL3B3bS9LY29uZmlnDQo+ID4gPiA+ID4gPiBAQCAtNTIy
+LDYgKzUyMiwxNyBAQCBjb25maWcgUFdNX1JPQ0tDSElQDQo+ID4gPiA+ID4gPiAgCSAgR2VuZXJp
+YyBQV00gZnJhbWV3b3JrIGRyaXZlciBmb3IgdGhlIFBXTSBjb250cm9sbGVyIGZvdW5kIG9uDQo+
+ID4gPiA+ID4gPiAgCSAgUm9ja2NoaXAgU29Dcy4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAr
+Y29uZmlnIFBXTV9SWkcyTF9HUFQNCj4gPiA+ID4gPiA+ICsJdHJpc3RhdGUgIlJlbmVzYXMgUlov
+RzJMIEdlbmVyYWwgUFdNIFRpbWVyIHN1cHBvcnQiDQo+ID4gPiA+ID4gPiArCWRlcGVuZHMgb24g
+QVJDSF9SWkcyTCB8fCBDT01QSUxFX1RFU1QNCj4gPiA+ID4gPiA+ICsJZGVwZW5kcyBvbiBIQVNf
+SU9NRU0NCj4gPiA+ID4gPiA+ICsJaGVscA0KPiA+ID4gPiA+ID4gKwkgIFRoaXMgZHJpdmVyIGV4
+cG9zZXMgdGhlIEdlbmVyYWwgUFdNIFRpbWVyIGNvbnRyb2xsZXIgZm91bmQgaW4gUmVuZXNhcw0K
+PiA+ID4gPiA+ID4gKwkgIFJaL0cyTCBsaWtlIGNoaXBzIHRocm91Z2ggdGhlIFBXTSBBUEkuDQo+
+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArCSAgVG8gY29tcGlsZSB0aGlzIGRyaXZlciBhcyBh
+IG1vZHVsZSwgY2hvb3NlIE0gaGVyZTogdGhlIG1vZHVsZQ0KPiA+ID4gPiA+ID4gKwkgIHdpbGwg
+YmUgY2FsbGVkIHB3bS1yemcybC1ncHQuDQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiAgY29u
+ZmlnIFBXTV9SWl9NVFUzDQo+ID4gPiA+ID4gPiAgCXRyaXN0YXRlICJSZW5lc2FzIFJaL0cyTCBN
+VFUzYSBQV00gVGltZXIgc3VwcG9ydCINCj4gPiA+ID4gPiA+ICAJZGVwZW5kcyBvbiBSWl9NVFUz
+DQo+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wd20vTWFrZWZpbGUgYi9kcml2ZXJz
+L3B3bS9NYWtlZmlsZSBpbmRleA0KPiA+ID4gPiA+ID4gNjk2NGJhNDVjNzk1Li5mYjlhMmQ5Yjlh
+ZGIgMTAwNjQ0DQo+ID4gPiA+ID4gPiAtLS0gYS9kcml2ZXJzL3B3bS9NYWtlZmlsZQ0KPiA+ID4g
+PiA+ID4gKysrIGIvZHJpdmVycy9wd20vTWFrZWZpbGUNCj4gPiA+ID4gPiA+IEBAIC00Nyw2ICs0
+Nyw3IEBAIG9iai0kKENPTkZJR19QV01fUkFTUEJFUlJZUElfUE9FKQkrPSBwd20tcmFzcGJlcnJ5
+cGktcG9lLm8NCj4gPiA+ID4gPiA+ICBvYmotJChDT05GSUdfUFdNX1JDQVIpCQkrPSBwd20tcmNh
+ci5vDQo+ID4gPiA+ID4gPiAgb2JqLSQoQ09ORklHX1BXTV9SRU5FU0FTX1RQVSkJKz0gcHdtLXJl
+bmVzYXMtdHB1Lm8NCj4gPiA+ID4gPiA+ICBvYmotJChDT05GSUdfUFdNX1JPQ0tDSElQKQkrPSBw
+d20tcm9ja2NoaXAubw0KPiA+ID4gPiA+ID4gK29iai0kKENPTkZJR19QV01fUlpHMkxfR1BUKQkr
+PSBwd20tcnpnMmwtZ3B0Lm8NCj4gPiA+ID4gPiA+ICBvYmotJChDT05GSUdfUFdNX1JaX01UVTMp
+CSs9IHB3bS1yei1tdHUzLm8NCj4gPiA+ID4gPiA+ICBvYmotJChDT05GSUdfUFdNX1NBTVNVTkcp
+CSs9IHB3bS1zYW1zdW5nLm8NCj4gPiA+ID4gPiA+ICBvYmotJChDT05GSUdfUFdNX1NJRklWRSkJ
+Kz0gcHdtLXNpZml2ZS5vDQo+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wd20vcHdt
+LXJ6ZzJsLWdwdC5jDQo+ID4gPiA+ID4gPiBiL2RyaXZlcnMvcHdtL3B3bS1yemcybC1ncHQuYyBu
+ZXcgZmlsZSBtb2RlIDEwMDY0NCBpbmRleA0KPiA+ID4gPiA+ID4gMDAwMDAwMDAwMDAwLi42MDA1
+YTY4OTE3M2UNCj4gPiA+ID4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ID4gPiA+ICsrKyBiL2Ry
+aXZlcnMvcHdtL3B3bS1yemcybC1ncHQuYw0KPiA+ID4gPiA+ID4gQEAgLTAsMCArMSw1NTUgQEAN
+Cj4gPiA+ID4gPiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ID4g
+PiA+ID4gKy8qDQo+ID4gPiA+ID4gPiArICogUmVuZXNhcyBSWi9HMkwgR2VuZXJhbCBQV00gVGlt
+ZXIgKEdQVCkgZHJpdmVyDQo+ID4gPiA+ID4gPiArICoNCj4gPiA+ID4gPiA+ICsgKiBDb3B5cmln
+aHQgKEMpIDIwMjQgUmVuZXNhcyBFbGVjdHJvbmljcyBDb3Jwb3JhdGlvbg0KPiA+ID4gPiA+ID4g
+KyAqDQo+ID4gPiA+ID4gPiArICogSGFyZHdhcmUgbWFudWFsIGZvciB0aGlzIElQIGNhbiBiZSBm
+b3VuZCBoZXJlDQo+ID4gPiA+ID4gPiArICoNCj4gPiA+ID4gPiA+ICtodHRwczovL3d3dy5yZW5l
+c2FzLmNvbS9ldS9lbi9kb2N1bWVudC9tYWgvcnpnMmwtZ3JvdXAtcnpnMmxjDQo+ID4gPiA+ID4g
+PiArLWdybyB1cC11IHNlcnMtbWFudWFsLWhhcmR3YXJlLTA/bGFuZ3VhZ2U9ZW4NCj4gPiA+ID4g
+PiA+ICsgKg0KPiA+ID4gPiA+ID4gKyAqIExpbWl0YXRpb25zOg0KPiA+ID4gPiA+ID4gKyAqIC0g
+Q291bnRlciBtdXN0IGJlIHN0b3BwZWQgYmVmb3JlIG1vZGlmeWluZyBNb2RlIGFuZCBQcmVzY2Fs
+ZXIuDQo+ID4gPiA+ID4gPiArICogLSBXaGVuIFBXTSBpcyBkaXNhYmxlZCwgdGhlIG91dHB1dCBp
+cyBkcml2ZW4gdG8gaW5hY3RpdmUuDQo+ID4gPiA+ID4gPiArICogLSBXaGlsZSB0aGUgaGFyZHdh
+cmUgc3VwcG9ydHMgYm90aCBwb2xhcml0aWVzLCB0aGUgZHJpdmVyIChmb3Igbm93KQ0KPiA+ID4g
+PiA+ID4gKyAqICAgb25seSBoYW5kbGVzIG5vcm1hbCBwb2xhcml0eS4NCj4gPiA+ID4gPiA+ICsg
+KiAtIFdoZW4gYm90aCBjaGFubmVscyBhcmUgdXNlZCwgZGlzYWJsaW5nIHRoZSBjaGFubmVsIG9u
+IG9uZSBzdG9wcyB0aGUNCj4gPiA+ID4gPiA+ICsgKiAgIG90aGVyLg0KPiA+ID4gPiA+ID4gKyAq
+Lw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9iaXRmaWVsZC5o
+Pg0KPiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4NCj4gPiA+ID4gPiA+ICsjaW5j
+bHVkZSA8bGludXgvaW8uaD4NCj4gPiA+ID4gPiA+ICsjaW5jbHVkZSA8bGludXgvbGltaXRzLmg+
+DQo+ID4gPiA+ID4gPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ID4gPiA+ID4gKyNp
+bmNsdWRlIDxsaW51eC9vZi5oPg0KPiA+ID4gPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9y
+bV9kZXZpY2UuaD4gI2luY2x1ZGUNCj4gPiA+ID4gPiA+ICs8bGludXgvcG1fcnVudGltZS5oPiAj
+aW5jbHVkZSA8bGludXgvcHdtLmg+ICNpbmNsdWRlDQo+ID4gPiA+ID4gPiArPGxpbnV4L3Jlc2V0
+Lmg+ICNpbmNsdWRlIDxsaW51eC90aW1lLmg+ICNpbmNsdWRlDQo+ID4gPiA+ID4gPiArPGxpbnV4
+L3VuaXRzLmg+DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArI2RlZmluZSBSWkcyTF9HVENS
+CQkweDJjDQo+ID4gPiA+ID4gPiArI2RlZmluZSBSWkcyTF9HVFVERFRZQwkJMHgzMA0KPiA+ID4g
+PiA+ID4gKyNkZWZpbmUgUlpHMkxfR1RJT1IJCTB4MzQNCj4gPiA+ID4gPiA+ICsjZGVmaW5lIFJa
+RzJMX0dUQkVSCQkweDQwDQo+ID4gPiA+ID4gPiArI2RlZmluZSBSWkcyTF9HVENOVAkJMHg0OA0K
+PiA+ID4gPiA+ID4gKyNkZWZpbmUgUlpHMkxfR1RDQ1IoaSkJCSgweDRjICsgNCAqIChpKSkNCj4g
+PiA+ID4gPiA+ICsjZGVmaW5lIFJaRzJMX0dUUFIJCTB4NjQNCj4gPiA+ID4NCj4gPiA+ID4gVGhl
+c2Ugd2lsbCBiZSByZXBsYWNlZCBhcw0KPiA+ID4gPg0KPiA+ID4gPiArI2RlZmluZSBSWkcyTF9H
+RVRfQ0hfT0ZGUyhpKSAgICgweDEwMCAqIChpKSkNCj4gPiA+ID4gKw0KPiA+ID4gPiArI2RlZmlu
+ZSBSWkcyTF9HVENSKGNoKSAgICAgICAgICgweDJjICsgUlpHMkxfR0VUX0NIX09GRlMoY2gpKQ0K
+PiA+ID4gPiArI2RlZmluZSBSWkcyTF9HVFVERFRZQyhjaCkgICAgICgweDMwICsgUlpHMkxfR0VU
+X0NIX09GRlMoY2gpKQ0KPiA+ID4gPiArI2RlZmluZSBSWkcyTF9HVElPUihjaCkgICAgICAgICAg
+ICAgICAgKDB4MzQgKyBSWkcyTF9HRVRfQ0hfT0ZGUyhjaCkpDQo+ID4gPiA+ICsjZGVmaW5lIFJa
+RzJMX0dUSU5UQUQoY2gpICAgICAgKDB4MzggKyBSWkcyTF9HRVRfQ0hfT0ZGUyhjaCkpDQo+ID4g
+PiA+ICsjZGVmaW5lIFJaRzJMX0dUQkVSKGNoKSAgICAgICAgICAgICAgICAoMHg0MCArIFJaRzJM
+X0dFVF9DSF9PRkZTKGNoKSkNCj4gPiA+ID4gKyNkZWZpbmUgUlpHMkxfR1RDTlQoY2gpICAgICAg
+ICAgICAgICAgICgweDQ4ICsgUlpHMkxfR0VUX0NIX09GRlMoY2gpKQ0KPiA+ID4gPiArI2RlZmlu
+ZSBSWkcyTF9HVENDUihjaCwgc3ViX2NoKSAgICAgICAgKDB4NGMgKyBSWkcyTF9HRVRfQ0hfT0ZG
+UyhjaCkgKyA0ICogKHN1Yl9jaCkpDQo+ID4gPiA+ICsjZGVmaW5lIFJaRzJMX0dUUFIoY2gpICAg
+ICAgICAgKDB4NjQgKyBSWkcyTF9HRVRfQ0hfT0ZGUyhjaCkpDQo+ID4gPg0KPiA+ID4gSSBsaWtl
+IHRoaXMgYmV0dGVyLCB0aGFua3MuDQo+ID4gPg0KPiA+ID4gPiA+ID4gKwkgKi8NCj4gPiA+ID4g
+PiA+ICsJdG1wID0gKHU2NCl2YWwgPDwgKDIgKiBwcmVzY2FsZSk7DQo+ID4gPiA+ID4gPiArCXRt
+cCAqPSBVU0VDX1BFUl9TRUM7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArCXJldHVybiBE
+SVY2NF9VNjRfUk9VTkRfVVAodG1wLCByemcybF9ncHQtPnJhdGVfa2h6KTsgfQ0KPiA+ID4gPiA+
+ID4gKw0KPiA+ID4gPiA+ID4gK3N0YXRpYyBpbnQgcnpnMmxfZ3B0X2dldF9zdGF0ZShzdHJ1Y3Qg
+cHdtX2NoaXAgKmNoaXAsIHN0cnVjdCBwd21fZGV2aWNlICpwd20sDQo+ID4gPiA+ID4gPiArCQkJ
+ICAgICAgIHN0cnVjdCBwd21fc3RhdGUgKnN0YXRlKSB7DQo+ID4gPiA+ID4gPiArCXN0cnVjdCBy
+emcybF9ncHRfY2hpcCAqcnpnMmxfZ3B0ID0gdG9fcnpnMmxfZ3B0X2NoaXAoY2hpcCk7DQo+ID4g
+PiA+ID4gPiArCWludCByYzsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJcmMgPSBwbV9y
+dW50aW1lX3Jlc3VtZV9hbmRfZ2V0KHB3bWNoaXBfcGFyZW50KGNoaXApKTsNCj4gPiA+ID4gPiA+
+ICsJaWYgKHJjKQ0KPiA+ID4gPiA+ID4gKwkJcmV0dXJuIHJjOw0KPiA+ID4gPiA+ID4gKw0KPiA+
+ID4gPiA+ID4gKwlzdGF0ZS0+ZW5hYmxlZCA9IHJ6ZzJsX2dwdF9pc19jaF9lbmFibGVkKHJ6ZzJs
+X2dwdCwgcHdtLT5od3B3bSk7DQo+ID4gPiA+ID4gPiArCWlmIChzdGF0ZS0+ZW5hYmxlZCkgew0K
+PiA+ID4gPiA+ID4gKwkJdTMyIGNoID0gUlpHMkxfR0VUX0NIKHB3bS0+aHdwd20pOw0KPiA+ID4g
+PiA+ID4gKwkJdTMyIG9mZnMgPSBSWkcyTF9HRVRfQ0hfT0ZGUyhjaCk7DQo+ID4gPiA+ID4gPiAr
+CQl1OCBwcmVzY2FsZTsNCj4gPiA+ID4gPiA+ICsJCXUzMiB2YWw7DQo+ID4gPiA+ID4gPiArDQo+
+ID4gPiA+ID4gPiArCQl2YWwgPSByemcybF9ncHRfcmVhZChyemcybF9ncHQsIG9mZnMgKyBSWkcy
+TF9HVENSKTsNCj4gPiA+ID4gPiA+ICsJCXByZXNjYWxlID0gRklFTERfR0VUKFJaRzJMX0dUQ1Jf
+VFBDUywgdmFsKTsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IENhbiBpdCBoYXBwZW4gdGhhdCBwcmVz
+Y2FsZSBpcyA+IDUgaGVyZT8NCj4gPiA+ID4NCj4gPiA+ID4gWWVzLCBpZiBib290bG9hZGVyIHdy
+b25nbHkgc2V0IGl0IHRvIDYgb3IgNy4gSSB3aWxsIGFkZCBhIGNoZWNrIGluDQo+ID4gPiA+IFBy
+b2JlIGFuZCBmb3JjZWZ1bGx5IHNldCB0byA1LCBpZiB0aGF0IHRoZSBjYXNlLiBJcyBpdCBvaz8N
+Cj4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmIChwcmVz
+Y2FsZSA+IDUpIHsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZXZf
+d2FybihkZXYsICJJbnZhbGlkIHByZXNjYWxlICVkDQo+ID4gPiA+ICsgPiA1LCBmb3JjZSBzZXR0
+aW5nIHRvIDUiLA0KPiA+ID4gcHJlc2NhbGUpOw0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIC8qIFNldCBwcmVzY2FsZSB2YWx1ZSBvZiA1LiAqLw0KPiA+ID4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJ6ZzJsX2dwdF9tb2RpZnkocnpnMmxfZ3B0LCBS
+WkcyTF9HVENSKGNoKSwgUlpHMkxfR1RDUl9UUENTLA0KPiA+ID4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRklFTERfUFJFUChSWkcyTF9HVENSX1RQ
+Q1MsIDUpKTsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfQ0KPiA+ID4NCj4gPiA+
+IEkgd291bGRuJ3Qgd3JpdGUgYmFjayB0aGUgNSB0aGVuLiBKdXN0IGFzc3VtZSB0aGF0IHRoZSB2
+YWx1ZSByZWFkDQo+ID4gPiBiYWNrIHdhcyA1LiAoV2VsbCB1bmxlc3MgdGhlIGhhcmR3YXJlIGJl
+aGF2ZXMgYWNjb3JkaW5nIHRvIHRoZQ0KPiA+ID4gbm9ybWFsIGZvcm11bGEgdGhhdCBhcHBsaWVz
+IGZvciBwcmVzY2FsZSDiiaQgNSwgdGhlbiBpdCBtaWdodCBtYWtlDQo+ID4gPiBzZW5zZSB0byBj
+b250aW51ZSB3aXRoIHRoZSByZWFkIHZhbHVlLikNCj4gPg0KPiA+IE9LLCB3aWxsIGp1c3QgcHJp
+bnQgdGhlIHdhcm5pbmcuDQo+ID4NCj4gPiBkZXZfd2FybihkZXYsICJJbnZhbGlkIHByZXNjYWxl
+IHNldCAlZCA+IDUsIHByZXNjYWxlKTsNCj4gDQo+IE5vLCBwbGVhc2UgZG9uJ3Qgd2FybiAob3Ig
+ZG8gaXQgYXQgbW9zdCBvbmNlIHBlciBwd21fZGV2aWNlKS4NCg0KT0ssIFdpbGwgY2hhbmdlIGl0
+IHRvIGRldl93YXJuX29uY2UoKSwgc28gdGhhdCBpdCB3aWxsIHByaW50IG9ubHkgb25jZSBhcyBp
+dCBpcw0KYW4gdW5saWtlbHkgY2FzZShib290bG9hZGVyIHNldHRpbmcgd3JvbmcgcHJlc2NhbGUg
+dmFsdWVzKS4NCg0KQ2hlZXJzLA0KQmlqdQ0K
 
