@@ -1,193 +1,127 @@
-Return-Path: <linux-pwm+bounces-2974-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2975-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93D8994971C
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Aug 2024 19:51:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 26B28949DC8
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Aug 2024 04:34:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3CDF71F2177C
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Aug 2024 17:51:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C501E1F226CC
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Aug 2024 02:34:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5618259164;
-	Tue,  6 Aug 2024 17:51:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7640E18D65D;
+	Wed,  7 Aug 2024 02:34:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="P10s3HNE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MCuqbIiC"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97A046444
-	for <linux-pwm@vger.kernel.org>; Tue,  6 Aug 2024 17:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF1110E6
+	for <linux-pwm@vger.kernel.org>; Wed,  7 Aug 2024 02:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722966694; cv=none; b=nQpZuGlXW8o0bV0NfdzKD+J+XRtEFeSATKVLUPaswMGCrttS/g0ujusjqP3EfRzirie1kI8MsWL4l76KLhdRjk4pCd11uahb53+J6am6ucu7k4HU+p9ZF6nO9Q2Qb9AsOytcdcGGwaJPjyk21RzHATtDvca3oVEyXKl8zRuKo7I=
+	t=1722998081; cv=none; b=Pbof+Pec48Q4dha0uGWyBuBuInFxvLcRqJzxUud14TAxHuSwpR9gsL/Ou9bbtz8DLFZ03h/KrBS3G3ydgC0Y7utuplLmRI0vW9601X6BHJzi2O7sqfboT17ALpBZ06+d1LNFVIVJqib9nxUIVHn/HqWRg+VNZVO/23qSK1c+xXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722966694; c=relaxed/simple;
-	bh=jSP80QQ3RIwbB9d2cbCqSvQyj8bH6VyQMJspvBsB0A4=;
+	s=arc-20240116; t=1722998081; c=relaxed/simple;
+	bh=Z3TsrzjXZ9XdRU5w5yZoIkkq0IcM2feua1ijpUYZwmU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U0D786yptaL8Sc0uKPeqRBsue0Uo6EICXqHVpS7WNw5gMvEdRdNZAQnkuJUUB9tsvOSfDNz7rnXvsA1hmPS/MgbCakShyeGxtS/4DH30CxNPOkPAXYPi0I66TcyLXlUep6VGfHSrzFI4L3XL//1hPKCIx2r26Gr42HqPiddGOLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=P10s3HNE; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52efabf5d7bso1311822e87.1
-        for <linux-pwm@vger.kernel.org>; Tue, 06 Aug 2024 10:51:31 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=fuq48Ltn/AtVelU8stUAtJ1bPj7gSNpRcnvRjlLsfEtS0+RLfMQVT1rBYcZSBxtSDkuDia1meXds0ZdFquOT0kaPQgA1M/Ew9sZMA8Ch6XhHWL6yD3s9H09/vWQPxuidxfLzaytgAVCuvZ8pwBcH0lP18YKhKXR4sDwE443Hvvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MCuqbIiC; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-7b594936e9bso988578a12.1
+        for <linux-pwm@vger.kernel.org>; Tue, 06 Aug 2024 19:34:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1722966690; x=1723571490; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cEPV8O/bobIi5p9nTTiWHc/1HlnUPMSVdRAVbmjiJfA=;
-        b=P10s3HNEmmZGmCx90vULhdlcrb7A96X4fR12ATSZMCfscuS90h5t/Byaf70Jrxqehk
-         6/twOFQ4VoISHzNk3564BgSvZTpU474tPYfGNuW7sPuVYfydXnZsR+LZE9KwFGXcgeco
-         2WAtjHxfeMir2vjrANbXkADp5R9JmBSvXwG3LDm0GyoGxsnE6oms0zRtX4MWWx4a3JIg
-         zcWhmy55jQkwRS+sGn8imCkCZRhcl0dewQ6Al8E4P5RSMazCmpssKAnPektZfL5QCh2K
-         1uKx33t5xXJfPYq7c8MGhzDIjQeltLqlMdKRTjcrCw1Ahtfh4gVG6oZnlEIzMW/yLIHX
-         suzQ==
+        d=gmail.com; s=20230601; t=1722998079; x=1723602879; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7Z/MdL1PXu7LrRSTix+28snUA2zDcCpwJ/1SGOpgySo=;
+        b=MCuqbIiCxMtgsYX5b3yoOm+NJ/G3j3gzxbMq4IALmwOP6M0zSZMUNvxJLRTaGTE9cY
+         sb7+eNZgm5zElI3gsnTKYbXeTWTQh0nG3xDqGGOZdD9enrJ1lFuJLS6rttCxHvFfVC9X
+         P/MVopOr3vj5ov7LYtEwwfVEe05n6zhDKicrq+LozEK1ywUqju9J3ZXWlY1bnCWYkAyL
+         JN40cA+oZFFSr/mzzKkvciUhlOaUlIYSG17/uHpicO7in0n+OLsyr03aT3VBOpN6HLKk
+         uN036viEYHPfJ2WXarBoi5+QSkvdpjxODKU27Xgboayf5D06cUr/IRE7Cb1Z2stqOphH
+         2Atw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722966690; x=1723571490;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cEPV8O/bobIi5p9nTTiWHc/1HlnUPMSVdRAVbmjiJfA=;
-        b=tMzE7qpAX29jGxtK99QfOeCqrYvgCpuxYijow3Q5SQBRUWXaJppn2ukUd3gKeZ1vcq
-         Wmf9IV9LZWaTzM0uoeksCR8UW8056thDC10aUxvgSHHHEnGwHVjbdlRFt6H6y9s5lmnl
-         lwN54uk6tmt/j4Qzpe0+1MNAtv3Yv/kcaaRGlfmNXyZl1MCY7oc0wvZtodiTBnx0cw1g
-         ehBKF1m+B/KDfOF0KwjHBaZGkNvxCdJzu+GoMPQCPo59aPnEWYJ5X0Df3RJVDC+VqRTc
-         MhB10KsaDwW+MO3ADVwocrbOsBOvkIHmIwkYOTXr67DG6aZtyQlUhsLIjJ0PyLFnwjdg
-         rkYQ==
-X-Gm-Message-State: AOJu0YwIQaQlxcbxXWLEA5Lr/woIs76cqoSLIyzLOEdXcv8GE0tbs21H
-	P1bEYylFt8aEzsDkiC1uezzpvVD8O2WkILkDD5Qnjp/Jf8ZIuyjsdMiErYiIRWU54D0NLHqG/GJ
-	Y
-X-Google-Smtp-Source: AGHT+IGSi4GuJh9qmDt/eZ6cr3AQur9jVGY7A+ektYUqG98TbGGq6brOhPykx5o83fi+1WZZTOQ8kw==
-X-Received: by 2002:a05:6512:3ba5:b0:52e:fefe:49c9 with SMTP id 2adb3069b0e04-530bb39ddf8mr12022225e87.36.1722966689606;
-        Tue, 06 Aug 2024 10:51:29 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ba442ed7f1sm4416778a12.81.2024.08.06.10.51.28
+        d=1e100.net; s=20230601; t=1722998079; x=1723602879;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Z/MdL1PXu7LrRSTix+28snUA2zDcCpwJ/1SGOpgySo=;
+        b=pSVqh4bdzZmJ7K9FDAJuOU0jnrInjXep1xR+OMYSpiyTmflCt43xo/I7xgjym7qA9Y
+         6p0hsUPXg0/lYAbI+45W0rCSzNARXoJk1LggzJqyikkI5XhdspvO7Eb3SsORXM+eYh2t
+         94uCgnjR5DNeSdc1vdVix2yDz0TLbhj3fVEiz/+fT1Za/8o0ycmNgSbOjwr3+M556H8H
+         x9ydskvAfMLpm8BKxV/mOOHS3R3Yfql8bc95BQpYdsZRxKZIPmso8MTctk3pitI1I3Mi
+         7qbC0W+Fslu6FLHmgsl0H/9PfA0QS7EAyyW4UXY0uaCuje2s9IXXYemQ1ZE9gtHeH2Yr
+         V1jA==
+X-Gm-Message-State: AOJu0Ywv4TDEvo6ANmDwTX4ysbI9V9aT3Nc2XEaUrjV4/my+vI+8MjO8
+	QZ3hGGwCHeg0gadLsReaxj0oxdBID7Ouf4vQaFGoG19p6vDsUz9Sfn8KLg==
+X-Google-Smtp-Source: AGHT+IE6bEpZvvPvr5XU0xoR19qEu+Mg9IvTBl1RAOGLfV/CBrC2mcyCCXQLUahFTaAyfxWf8sjRew==
+X-Received: by 2002:a05:6a21:6f87:b0:1c4:c7ac:9e5b with SMTP id adf61e73a8af0-1c6996605e3mr14531797637.45.1722998078529;
+        Tue, 06 Aug 2024 19:34:38 -0700 (PDT)
+Received: from rigel ([118.209.204.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d1b3addc29sm205238a91.29.2024.08.06.19.34.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Aug 2024 10:51:29 -0700 (PDT)
-Date: Tue, 6 Aug 2024 19:51:27 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-trace-kernel@vger.kernel.org, Michael Hennerich <michael.hennerich@analog.com>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
-	Trevor Gamblin <tgamblin@baylibre.com>
-Subject: Re: [PATCH v3 0/8] pwm: New abstraction and userspace API
-Message-ID: <ld2hbd7tnltcrwihhcjrloicpoorrve7ugtjxgyjcowoneas6p@dircm3eb6yok>
+        Tue, 06 Aug 2024 19:34:38 -0700 (PDT)
+Date: Wed, 7 Aug 2024 10:34:33 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, Trevor Gamblin <tgamblin@baylibre.com>
+Subject: Re: [PATCH v3 5/8] pwm: Add support for pwmchip devices for faster
+ and easier userspace access
+Message-ID: <20240807023433.GA29189@rigel>
 References: <cover.1722261050.git.u.kleine-koenig@baylibre.com>
+ <e61728fdc9e3c80c4cf6961883754095b604a399.1722261050.git.u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rnjsu6vonelo7pj6"
-Content-Disposition: inline
-In-Reply-To: <cover.1722261050.git.u.kleine-koenig@baylibre.com>
-
-
---rnjsu6vonelo7pj6
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e61728fdc9e3c80c4cf6961883754095b604a399.1722261050.git.u.kleine-koenig@baylibre.com>
 
-On Mon, Jul 29, 2024 at 04:34:16PM +0200, Uwe Kleine-K=F6nig wrote:
-> Hello,
->=20
-> here comes v3 of the series to add support for duty offset in PWM
-> waveforms. For a single PWM output there is no gain, but if you have a
-> chip with two (or more) outputs and both operate with the same period,
-> you can generate an output like:
->=20
->=20
->                ______         ______         ______         ______
->    PWM #0  ___/      \_______/      \_______/      \_______/      \_______
->                  __             __             __             __   =20
->    PWM #1  _____/  \___________/  \___________/  \___________/  \_________
->               ^              ^              ^              ^
->=20
-> Changes since v2, which is available from
-> https://lore.kernel.org/linux-pwm/cover.1721040875.git.u.kleine-koenig@ba=
-ylibre.com
-> include:
->=20
->  - Degrade a dev_alert() to dev_warn() on feedback by David Lechner
->=20
->  - Improvement of various comments (partly in reply to David Lechner)
->=20
->  - Add _ns suffixes for members of pwm_waveform, thanks David for that su=
-ggestion.
->=20
->  - Rebased to v6.11-rc1 + pwm/for-next.
->=20
-> Because of these changes I didn't add Trevor's Reviewed-by tag for patch
-> #3.
->=20
-> I kept the BUG_ONs. There are a few check_patch warnings about it, but I =
-still
-> prefer these given that it is safe they don't trigger without further (bo=
-gus)
-> code changes and when they trigger crashing early is better than stack
-> corruption. Also checkpatch tells
->         WARNING: Comparisons should place the constant on the right side =
-of the test
->         #158: FILE: drivers/pwm/core.c:262:
->         +       BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
->=20
-> But as the BUG_ON is about WFHWSIZE being wrong, this order is OK.
->=20
-> There are a few more checkpatch warnings about line lengths. Breaking
-> the criticised lines further hurts readability IMHO, so I kept them. It
-> gets a bit better once stm32_pwm_mul_u64_u64_div_u64_roundup() is
-> implemented (without the stm32_pwm prefix) alongside
-> mul_u64_u64_div_u64() in lib/math/div64.c, but I don't want to wait for
-> that. I will address that once Nicolas's patch improving precision of
-> mul_u64_u64_div_u64() landed. (Hmm, it's not in next any more since
-> next-20240724, before it was 3cc8bf1a81efde105d8e57398cf8554b57768777 +
-> dbbe95af0fad2a9d22a4b910cfc4b87949d61a3c).
->=20
-> Best regards
-> Uwe
->=20
-> Uwe Kleine-K=F6nig (8):
->   pwm: Simplify pwm_capture()
->   pwm: Add more locking
->   pwm: New abstraction for PWM waveforms
->   pwm: Provide new consumer API functions for waveforms
->   pwm: Add support for pwmchip devices for faster and easier userspace
->     access
->   pwm: Add tracing for waveform callbacks
->   pwm: axi-pwmgen: Implementation of the waveform callbacks
->   pwm: stm32: Implementation of the waveform callbacks
+On Mon, Jul 29, 2024 at 04:34:21PM +0200, Uwe Kleine-König wrote:
+> With this change each pwmchip defining the new-style waveform callbacks
+> can be accessed from userspace via a character device. Compared to the
+> sysfs-API this is faster (on a stm32mp157 applying a new configuration
+> takes approx 25% only) and allows to pass the whole configuration in a
+> single ioctl allowing atomic application.
+>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
 
-I applied patch #1 which is a harmless cleanup for now. I will wait a
-bit for the rest of the series, as during August I won't be able to
-react to fall-outs reliably and quickly. I plan to apply this series
-with PWM_IOCTL_GET_NUM_PWMS dropped directly after the next merge window
-for cooking in next as long as possible.
+> diff --git a/include/uapi/linux/pwm.h b/include/uapi/linux/pwm.h
+> new file mode 100644
+> index 000000000000..c89ba3e3def8
+> --- /dev/null
+> +++ b/include/uapi/linux/pwm.h
+> @@ -0,0 +1,25 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
+> +
+> +#ifndef _UAPI_PWM_H_
+> +#define _UAPI_PWM_H_
+> +
+> +#include <linux/ioctl.h>
+> +#include <linux/types.h>
+> +
+> +struct pwmchip_waveform {
+> +	unsigned int hwpwm;
+> +	unsigned int __pad; /* padding, must be zero */
+> +	__u64 period_length_ns;
+> +	__u64 duty_length_ns;
+> +	__u64 duty_offset_ns;
+> +};
+> +
 
-Best regards
-Uwe
+I would go with __u32, rather than unsigned int, to be absolutely clear
+on sizing.
 
---rnjsu6vonelo7pj6
-Content-Type: application/pgp-signature; name="signature.asc"
+Cheers,
+Kent.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmayYpwACgkQj4D7WH0S
-/k5X6Af5AcYk85/lzILYN6aUXwXaafFzMLqD0NyuhAkvVU5nIXZV4zCAe5RIcAPQ
-aMYc9HZgZcjnSLLwQdfUviOyI4O5pRXsTHlbhCww1G1iS5o0QWb5ioODTaJUmAFc
-cgqGhmkIlFjA98c8ByAtxtS7NqpnuAcMmZSGf5YoFj7EAElBxKEOXApRVL6oUkpc
-JURo6Ea4n/grMcvwkdT0px09TdCs80ZK5efU5QgVduB3ME8fzoI/S4vvNjgp10x6
-Ur4eoGnXGRoJ4Uzcv3OY/ydc3STvoJ6mmTvFO2cgCDdpdHs8LwNM7GoDx8/jJ8gZ
-HW0SHHwcjYziOe9BuAsEz4bw4JwdkA==
-=FH+q
------END PGP SIGNATURE-----
-
---rnjsu6vonelo7pj6--
 
