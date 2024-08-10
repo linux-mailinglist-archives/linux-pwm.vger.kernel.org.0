@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-2995-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-2996-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1936A94DC83
-	for <lists+linux-pwm@lfdr.de>; Sat, 10 Aug 2024 13:34:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F48594DC84
+	for <lists+linux-pwm@lfdr.de>; Sat, 10 Aug 2024 13:36:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2232F1C211E8
-	for <lists+linux-pwm@lfdr.de>; Sat, 10 Aug 2024 11:34:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F6B62828D8
+	for <lists+linux-pwm@lfdr.de>; Sat, 10 Aug 2024 11:36:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94BA215749C;
-	Sat, 10 Aug 2024 11:34:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FA6115749E;
+	Sat, 10 Aug 2024 11:36:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhMHYN0u"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EdmQ0nEY"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD5E182D8;
-	Sat, 10 Aug 2024 11:34:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CE9182D8;
+	Sat, 10 Aug 2024 11:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723289664; cv=none; b=UUpm1Bjh/w/CWP1Bcl0eqCsbd6m1QlGQcOcen+syQOwECbkSXvFftIK9TYnZzM9gAL5ZpClQy1NskctdrAr4VEh26sdcHfdqgxvLKxSNcEcSOzoC6F5+GegNgp0N1FbIfx+y4tgAbZq3it5Tc2MoJMkI859r29/8iWpmzxktlVM=
+	t=1723289772; cv=none; b=FUx0/ytuyJi01ougYhWFQpeH375kKIQy/+S/BixUbWpJQsdGeZgjsNUE9pdcmI85ZWSaBR9l1eUfYpuj+YmFOrBqanhoavvR7euXge9B7fir1aMcGuEC07tgn8xBATYlC1RM+SmJ1tFpcBjr+TSulu0Nvd43i3HJTj1rbpI5I1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723289664; c=relaxed/simple;
-	bh=JJ/+mmEM+8xbPzM21IrIBeyxA2AgTYGqFaQ5w0B64fg=;
+	s=arc-20240116; t=1723289772; c=relaxed/simple;
+	bh=DeJEgI5k58Kbpg4ajl/Syu1aU1SL3rCzmjF4McNqyik=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sRMiTwTcf+9rjGjeY2HvVxztiv3+wjQQTZRwwgL4zJr9fpb6WBgk0DipngDstghF45EzS9K6uyjnifqLkhWf2nYeCZ9Q+apS7QQN/yyUC0X25Qh7ema77/+Z2Snzcb6vzMdnS+47Z8UiOr7Lkq6Oyvv4Yu+9sJ7TeCvCfjYKVEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhMHYN0u; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59A11C32781;
-	Sat, 10 Aug 2024 11:34:20 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=di9g5M5xwYqlVcRt1PBdQ+Hr+qZTyRKRhAWEt2sYOZdWZQguAGmZeGuu07zqlLHugzYPizJWj5MxRDvl30wXhtaGn5+NFVW6jacQDBthj08bb21WIvXX7PJKOgAKhxmsamgCRaj5YYrx24iSHrL5IevA/x8z2+vPikQEChSGztE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EdmQ0nEY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F007C32781;
+	Sat, 10 Aug 2024 11:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723289663;
-	bh=JJ/+mmEM+8xbPzM21IrIBeyxA2AgTYGqFaQ5w0B64fg=;
+	s=k20201202; t=1723289771;
+	bh=DeJEgI5k58Kbpg4ajl/Syu1aU1SL3rCzmjF4McNqyik=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HhMHYN0uQ9U9KjtTzSGJCZ40lqRZ27WCmrPA4Co1HHqPI46MoQ2poZ9vaPwCaY3UF
-	 pBsHLQCJyog2SqzzrGmxZgB5ZoRWjdqiPMs9SFpZOzkXM2RzHrMo0D0nzdGn9KD3DP
-	 ou4Gx5bwFzUDY+ILY1tnJ5iCHeOIVTlPtGcofWKn/YmAUH/fsGyCiqKz8YKFcM8UwA
-	 ojy7P7zCDPYE5L2m6I4AqVENJjVibFORZS8BhUACaOJ5T/bhiWR6c4EKv88d0kg0xN
-	 sHsM5xkcYat8JjJ75te7UtTSII2dPQ+jM8Si3QKiaZZOvqKaE6qTJHkqsWozB5F3sa
-	 sjcL65vpBTZdQ==
-Message-ID: <1f8905b0-aff6-4932-b936-191aa5529f0e@kernel.org>
-Date: Sat, 10 Aug 2024 13:34:18 +0200
+	b=EdmQ0nEY0+mSG2R2YpV9QmfqaV7WfFGxT6lGYthk+dRG4R1/Q5rJHh5gWe+jx1x7N
+	 IRrdrQ4FzNznsO3Yxna9o7V+HrLtA2hiGjNB5Z81dfo1wlRymfokBmEo08BdP7Vhiq
+	 yIdFKnWA0Mp4neEdgdtIygwU1CHxNXKPzFqH2ZAxEKoqzbCMbmkEMoT18PJG3qZhRO
+	 GDVlzSnz9SgJ/jMY77gvOS4yCgTyTGnmoxUk08hri7P3aqBqv43VGxB4FezQFX7A2X
+	 O4TbhiflX+MtmX8gL2EnGaYnvc44Xpq47P5iR9R7GICzunvK2G/U4gWBJN24XnX7nc
+	 gkTcGQYTxtrdg==
+Message-ID: <4c63b64b-b6f2-4e72-95c5-5555681f6d10@kernel.org>
+Date: Sat, 10 Aug 2024 13:36:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] pwm: airoha: Add support for EN7581 SoC
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: Document Airoha EN7581 PWM
 To: Lorenzo Bianconi <lorenzo@kernel.org>, linux-pwm@vger.kernel.org
 Cc: ukleinek@kernel.org, lorenzo.bianconi83@gmail.com, krzk+dt@kernel.org,
  robh@kernel.org, devicetree@vger.kernel.org,
@@ -58,7 +58,7 @@ Cc: ukleinek@kernel.org, lorenzo.bianconi83@gmail.com, krzk+dt@kernel.org,
  angelogioacchino.delregno@collabora.com, benjamin.larsson@genexis.eu,
  conor+dt@kernel.org, ansuelsmth@gmail.com
 References: <cover.1723264979.git.lorenzo@kernel.org>
- <a03f5ea9291e39eab303696eb03fdd44cf04e8d9.1723264979.git.lorenzo@kernel.org>
+ <6a95b1d7fb90045a51a0cf51b9fafff26790904b.1723264979.git.lorenzo@kernel.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -104,76 +104,30 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <a03f5ea9291e39eab303696eb03fdd44cf04e8d9.1723264979.git.lorenzo@kernel.org>
+In-Reply-To: <6a95b1d7fb90045a51a0cf51b9fafff26790904b.1723264979.git.lorenzo@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 10/08/2024 06:48, Lorenzo Bianconi wrote:
-> From: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> 
-> Introduce driver for PWM module available on EN7581 SoC.
-> 
-> Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
-
-
-...
-
 > +
-> +static void airoha_pwm_config_flash_map(struct airoha_pwm *pc,
-> +					unsigned int hwpwm, int index)
-> +{
-> +	u32 addr, mask, val;
+> +required:
+> +  - compatible
+> +  - reg
 > +
-> +	if (hwpwm < PWM_NUM_GPIO) {
-> +		addr = REG_GPIO_FLASH_MAP(hwpwm / 8);
-> +	} else {
-> +		addr = REG_SIPO_FLASH_MAP(hwpwm / 8);
-> +		hwpwm -= PWM_NUM_GPIO;
-> +	}
+> +additionalProperties: false
 > +
-> +	if (index < 0) {
-> +		/* Change of waveform takes effect immediately but
+> +examples:
+> +  - |
+> +    pwm@1fbf0224 {
+> +        compatible = "airoha,en7581-pwm";
+> +        reg = <0x1fbf0224 0x10>,
+> +              <0x1fbf0238 0x28>,
+> +              <0x1fbf0298 0x8>;
 
-This and other comments should be not netdev-style but general Linux style.
+These look almost continuous, so I wonder what's in between? E.g.
+between 0x1fbf0224+10=0x1fbf0234 and 0x1fbf0238?
 
-> +		 * disabling has some delay so to prevent glitching
-> +		 * only the enable bit is touched when disabling
-> +		 */
-> +		airoha_pwm_flash_clear(pc, addr, GPIO_FLASH_EN(hwpwm % 8));
-> +		return;
-
-...
-
-
-> +
-> +static const struct of_device_id airoha_pwm_of_match[] = {
-> +	{ .compatible = "airoha,en7581-pwm" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, airoha_pwm_of_match);
-> +
-> +static struct platform_driver airoha_pwm_driver = {
-> +	.driver = {
-> +		.name = "airoha-pwm",
-> +		.of_match_table = airoha_pwm_of_match,
-> +	},
-> +	.probe = airoha_pwm_probe,
-> +};
-> +module_platform_driver(airoha_pwm_driver);
-> +
-> +MODULE_ALIAS("platform:airoha-pwm");
-
-You should not need MODULE_ALIAS() in normal cases. If you need it,
-usually it means your device ID table is wrong (e.g. misses either
-entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
-for incomplete ID table.
-
-Especially that it does not match compatible, so you cannot use excuse
-module autoloading does not work for given OF node...
-
+Rest looks good.
 
 Best regards,
 Krzysztof
