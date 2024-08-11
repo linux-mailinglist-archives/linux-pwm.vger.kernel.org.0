@@ -1,179 +1,125 @@
-Return-Path: <linux-pwm+bounces-3001-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3002-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5398894DF6C
-	for <lists+linux-pwm@lfdr.de>; Sun, 11 Aug 2024 03:16:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D36F594E116
+	for <lists+linux-pwm@lfdr.de>; Sun, 11 Aug 2024 14:26:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C87841F215CF
-	for <lists+linux-pwm@lfdr.de>; Sun, 11 Aug 2024 01:16:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 737581F21191
+	for <lists+linux-pwm@lfdr.de>; Sun, 11 Aug 2024 12:26:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DB25522A;
-	Sun, 11 Aug 2024 01:16:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A78AE49637;
+	Sun, 11 Aug 2024 12:26:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bd/zs+97"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YrBcLGED"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A725223;
-	Sun, 11 Aug 2024 01:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5BF4502F;
+	Sun, 11 Aug 2024 12:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723338984; cv=none; b=nbHRbXMi6WYTsY+qFR2m0jR/Bi6FyCqRSA4b2v5PanBV2rA3pElRF8w2NzG+B/JuMltL7pgZmMGbt3I2OJx3hnYKWNjTQXJhd3TAWE3WCnntLjCKBxbknw3c5izsIsd9Jp0rTwwstuqRpWiWN8EBvbkxv1zac9JC9zmR9diBhdU=
+	t=1723379182; cv=none; b=h/DgfgT3a6wMHebzDeYg7yRu1tpoS+kJ+zrDC4vOmsjOsS+W7+7AHBj9pyc5l5XdGKuP+IoyGyWWmPZ+XAIX1o6u7whYBbxdSRDiDpV9Lc7nlUGHPs3YdhF9fQ2ixkGy7nF5uQBrApRKPrnILn6/Nrxv4nPKPhDEXcWcWfoTrdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723338984; c=relaxed/simple;
-	bh=3TC40Bj7SfvFrdCPW3F0lPZBq4YcUtzaKyXJ1rYP0II=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y7/GmKp9tQWSxj+J9z8x5rInOVbutbVqt41KN0HtkXxCRRf+s+OJSzKXLMYn1KJcfFrLb0/Qzwcxkp3WW7N1DXbSdoIcvIucAtYIR96YzYArmA7HTzrrZ218V7UXerOG7R2Tbdf36QdCZFAH78rdmVN8jcIIA9uZPjcICL65ZKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bd/zs+97; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723338983; x=1754874983;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3TC40Bj7SfvFrdCPW3F0lPZBq4YcUtzaKyXJ1rYP0II=;
-  b=bd/zs+97G8cH4Vz9IT9x1hPd2Sum2fwMU22MpPXd3DAxFmwTGLIwD4qP
-   iW3RW1yChBGmh4qJ29NathtqEm9oBoSrc7fpDKM8DV5N9IoSx0c0quOg9
-   IVLRbCndOA28STmArWjCImyfbH5+xxptRfRJCi3iJUeH/ooFX71LzS18F
-   DOf/LZuNxsHJB43wJK01QTHmP8A1WLVU+lgyZlpciz4gflG0vVDwyfh70
-   be7LabcJoXHaSVGKKosWd+TOQLHAvTNmYcxkxw90NWpFqOvsYjXvhAIlU
-   CAzOllRdo3y43E32xXxvmlZZq99AS/LOHuu2beLJ98ExutWPyANw3/2KX
-   A==;
-X-CSE-ConnectionGUID: Kh+7mC/HT+K96CsBoJCFMA==
-X-CSE-MsgGUID: RE7H/62ySKeHPmKrWvsKtQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11160"; a="21289868"
-X-IronPort-AV: E=Sophos;i="6.09,280,1716274800"; 
-   d="scan'208";a="21289868"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2024 18:16:22 -0700
-X-CSE-ConnectionGUID: xeTS7v2OSYGPJ3Y8wISTDA==
-X-CSE-MsgGUID: r+CI+Az8TjmyOGPYlCSUwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,280,1716274800"; 
-   d="scan'208";a="81144904"
-Received: from unknown (HELO b6bf6c95bbab) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 10 Aug 2024 18:16:18 -0700
-Received: from kbuild by b6bf6c95bbab with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1scxBw-000ASL-0R;
-	Sun, 11 Aug 2024 01:16:16 +0000
-Date: Sun, 11 Aug 2024 09:15:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Lorenzo Bianconi <lorenzo@kernel.org>, linux-pwm@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	ukleinek@kernel.org, lorenzo.bianconi83@gmail.com,
-	krzk+dt@kernel.org, robh@kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, upstream@airoha.com,
-	angelogioacchino.delregno@collabora.com,
-	benjamin.larsson@genexis.eu, conor+dt@kernel.org,
-	ansuelsmth@gmail.com
-Subject: Re: [PATCH 2/2] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <202408110920.KEW33sRE-lkp@intel.com>
-References: <a03f5ea9291e39eab303696eb03fdd44cf04e8d9.1723264979.git.lorenzo@kernel.org>
+	s=arc-20240116; t=1723379182; c=relaxed/simple;
+	bh=gFGhrhytefmdsEZ0s+z+vBqSrdlXI6Uwy2r4kbpiI9Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S+/PfCkyxt5rlWcvVae6olDXOMvVoyNa7ZvDGTBpoDtAF4VbrXyIAho5XVLgUnuYR+fH/baQB62ZaeQTn/ZpGDplkGYxJKLy0LG1jUN/sb8ViMyT8CpK7/42ysT5H21jFxlZBrBvfCIYknkO2hIlX4ODuO57ga8B/Hhr0ekuVQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YrBcLGED; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24E4CC32786;
+	Sun, 11 Aug 2024 12:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723379182;
+	bh=gFGhrhytefmdsEZ0s+z+vBqSrdlXI6Uwy2r4kbpiI9Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YrBcLGEDK7TMRRaQO/JXcJYK4RPbXqFrOj8zdCqbTI0OkSxYYX0cE7jYsjIiaieMo
+	 RJZr/bPyGgEPtSIW3yi/NDn52yhq/sHmMfgP3JKZlrJqy+KPW1XRHiMSNPAS4IPel0
+	 34B+AhQs44/N0rzhzKmFjWDOL0VHjHY5M+MxuxBfGOAEjknrCPFDk99edoBJkoRwCw
+	 AGF14P9UDgqX/BmMOW+8SZyXGLL5d/8lAFWn/lth1tRhEP9XcmlXMLt4edhskTlSls
+	 qpTiKh0uB0epQxPeyHRUTAW3WsGq8AoSh6XeOAyiD09HSe6uLJXHnIw/mkAoWDBO88
+	 Wo237yyuEGeuQ==
+Message-ID: <7066f860-f529-44de-81d8-b5bf61a3c33d@kernel.org>
+Date: Sun, 11 Aug 2024 14:26:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a03f5ea9291e39eab303696eb03fdd44cf04e8d9.1723264979.git.lorenzo@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: Document Airoha EN7581 PWM
+To: Lorenzo Bianconi <lorenzo@kernel.org>, linux-pwm@vger.kernel.org
+Cc: ukleinek@kernel.org, lorenzo.bianconi83@gmail.com, krzk+dt@kernel.org,
+ robh@kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, upstream@airoha.com,
+ angelogioacchino.delregno@collabora.com, benjamin.larsson@genexis.eu,
+ conor+dt@kernel.org, ansuelsmth@gmail.com
+References: <cover.1723264979.git.lorenzo@kernel.org>
+ <6a95b1d7fb90045a51a0cf51b9fafff26790904b.1723264979.git.lorenzo@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <6a95b1d7fb90045a51a0cf51b9fafff26790904b.1723264979.git.lorenzo@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Lorenzo,
+On 10/08/2024 06:48, Lorenzo Bianconi wrote:
+> From: Christian Marangi <ansuelsmth@gmail.com>
+> 
+> Document required property for the Airoha EN7581 PWM. The device
+> requires 3 different address for the sgpio, flash and cycle config.
+> 
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-kernel test robot noticed the following build errors:
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master thierry-reding-pwm/for-next v6.11-rc2 next-20240809]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Best regards,
+Krzysztof
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Lorenzo-Bianconi/dt-bindings-pwm-Document-Airoha-EN7581-PWM/20240810-143716
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/a03f5ea9291e39eab303696eb03fdd44cf04e8d9.1723264979.git.lorenzo%40kernel.org
-patch subject: [PATCH 2/2] pwm: airoha: Add support for EN7581 SoC
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20240811/202408110920.KEW33sRE-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project f86594788ce93b696675c94f54016d27a6c21d18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240811/202408110920.KEW33sRE-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202408110920.KEW33sRE-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/pwm/pwm-airoha.c:7:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     548 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/pwm/pwm-airoha.c:7:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/pwm/pwm-airoha.c:7:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
->> drivers/pwm/pwm-airoha.c:239:19: error: call to undeclared function '__bf_shf'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     239 |         val = (period << __bf_shf(mask)) & mask;
-         |                          ^
-   drivers/pwm/pwm-airoha.c:271:24: error: call to undeclared function '__bf_shf'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     271 |         val = ((index & 7) << __bf_shf(mask)) & mask;
-         |                               ^
-   6 warnings and 2 errors generated.
-
-
-vim +/__bf_shf +239 drivers/pwm/pwm-airoha.c
-
-   231	
-   232	static void airoha_pwm_config_waveform(struct airoha_pwm *pc, int index,
-   233					       u32 duty, u32 period)
-   234	{
-   235		u32 mask, val;
-   236	
-   237		/* Configure frequency divisor */
-   238		mask = WAVE_GEN_CYCLE_MASK(index % 4);
- > 239		val = (period << __bf_shf(mask)) & mask;
-   240		airoha_pwm_cycle_rmw(pc, REG_CYCLE_CFG_VALUE(index / 4), mask, val);
-   241	
-   242		/* Configure duty cycle */
-   243		duty = ((DUTY_FULL - duty) << 8) | duty;
-   244		mask = GPIO_FLASH_PRD_MASK(index % 2);
-   245		val = (duty << __bf_shf(mask)) & mask;
-   246		airoha_pwm_flash_rmw(pc, REG_GPIO_FLASH_PRD_SET(index / 2), mask, val);
-   247	}
-   248	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
