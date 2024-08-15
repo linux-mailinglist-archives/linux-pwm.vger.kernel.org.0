@@ -1,74 +1,75 @@
-Return-Path: <linux-pwm+bounces-3017-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3018-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A4FC952DFB
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Aug 2024 14:12:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9C41952E00
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Aug 2024 14:12:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6844B1C21CB1
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Aug 2024 12:12:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18D7A1C2214C
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Aug 2024 12:12:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5A9017E44F;
-	Thu, 15 Aug 2024 12:12:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A77A91990DB;
+	Thu, 15 Aug 2024 12:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ZEmvrITb"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="o/wKZo/t"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6873D17BEB2
-	for <linux-pwm@vger.kernel.org>; Thu, 15 Aug 2024 12:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4983A17BEC9
+	for <linux-pwm@vger.kernel.org>; Thu, 15 Aug 2024 12:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723723932; cv=none; b=mSWmGf9vBRqTx4hQJsKrjaFNST+YpdqAYw+Mf/3xhaRDo9n3IATvN1DJSp4oKjhMmZKHSs75qiXRl3+55NX6Kqg3bQHmlLzn2ZPISiumYtux4dgQ0WW0+XFLI02HoqoXvWC88FCOv1KqrDOeKqa62ES9FSgCu5PrMV+Rs4VaolU=
+	t=1723723933; cv=none; b=l5qAuw+yKGgM9SN3IdJ0nHuzSbF4dB/zQXOpK8LFprg722yUldkQVvSaSNRgvmtWG9jANGfUWZ9zKl5MXZLYZwqZf+ptrkEm6DsjoKVcm9NyFR3fntS94Pbpy/WKi1qG1LKhYFsFPBZx5P8qjPbAU9SE4HGijyuG0hvQOI4FpPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723723932; c=relaxed/simple;
-	bh=B299RubzcyeAZYqSINS1JMw78PJqVT8lqVWbm+KhLHQ=;
+	s=arc-20240116; t=1723723933; c=relaxed/simple;
+	bh=NbKx0MzTSy4AkOnvlPHkNNwV65/pkwG9IF0PJXDZUNw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hjSCLHn3vpLr/yT8LeeVYYEkHOXwl7n6GOEpB2/TaTPe6ntyIdwbCedn9askS+3M4bvBJOFiJjqYAxvN/NNtritWEBQJ9iGC/lnLHYthMVrOI0U8E5I0PX4wnX3MbCf1NJ3mWsWuqKrjeU1EumTNt92yiS+2kZZPMCiOIygr4NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ZEmvrITb; arc=none smtp.client-ip=209.85.128.54
+	 In-Reply-To:To:Cc; b=CCHHpx+unP7BsFp1JfEzE3en21EMK4VoEj5vp2/k1QZcXYn5v4LrneYL7FwX6+5e/B20wo9g8NXQ0OTNmCwqui1rfEqKFH+1mcYaL3GaSG9pZfS9GuwAeTAfn/KPdRcCQdhIsTqKrMFvD/1y0E3bLnVR8DSvPZX+XqeMPMc1Kaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=o/wKZo/t; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-428fb103724so10163025e9.1
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-42816ca797fso5613945e9.2
         for <linux-pwm@vger.kernel.org>; Thu, 15 Aug 2024 05:12:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1723723927; x=1724328727; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1723723928; x=1724328728; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aIfifid+gNmxqdjRD2+a9HhTRK2zF1nl/3in+BtGhPo=;
-        b=ZEmvrITbVbmkcj5jQFb/DuAQwP1GSlJcJyhT1Fo9l4OWrmQsUIA0CmstuSK+C4nn4e
-         +maA6XI7ioCWHKIng9ypRFOTs3scA6NFtiQEyI0EVF/cRoVxaRzgbBgVrcw7DaDS4jN9
-         WakjrUmtwTS8NC/it8wu2LI5mD6OYwLVtNNV9mevmY9sbrKhxARZU1EjahEuGFluMbKP
-         t6xqHFCqUiReiLzDXOvfTLOAgXmoXEw7VRRKggIhGkJQ0M7UJi2vTLSwXXcIgjy9H1Dl
-         yvxRVv7Qex+W37iTWCuWu/PAxmZ4FdoU3dM5U1nGsNAkckTVLbK/UAMsFRPzqvdsRB1+
-         Zz8g==
+        bh=Nlruai3BQqsm2YC4dPuHFKVGpCYgCvlc+hshYkB6H2k=;
+        b=o/wKZo/tDnKqm0doODysO8m8dYXNXqCSMbezw+IhBudRcpzNE3+m6W3OnhxG3BW9b2
+         4iIZ7CjifrOGx+AWR3vXAP58Le2OAMhaEGv4tMQWJ76R++erQz1Qw6tNkxbEyZv9LWbI
+         Ss0uP57a0UQwoM847ZAt3OcnrFzewDypuhEvzTKMWJZTkiXTLuVQLYV0AdQ22pYQEdOD
+         Cf8Odsr/SRGlaGL/ZU5z/EAVXl/sU9bvkNPkMVmMyHulUVT8zCzKUiot2eSXXx68QTcu
+         SxbJv9fXHdWjznC/h2JjdLvr55GDpC5bPw0v5LtPDX54YtogaVnA4Tu5kw2Vnvc4T+2O
+         MS/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723723927; x=1724328727;
+        d=1e100.net; s=20230601; t=1723723928; x=1724328728;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aIfifid+gNmxqdjRD2+a9HhTRK2zF1nl/3in+BtGhPo=;
-        b=Hs7nMbwHxyp+s8CLsOVb227M9VNjvD/Uq2HrWirKM3QhgncDUSbtjvbBdcUYDEBQkp
-         06+s0y7tRWP26deSXcbsvSjN1HkO2gDcc9dKi8ofJ3K4fG0DDBSad9TrpQI6qEOYBI4y
-         PMJ7GzljFA4AwHjzLDz4U7qBYwsYFUip0ryUPRGOEzImYm98O0Q9s5peurPTRDhHpPbk
-         R9zkCl9FtTKVZki33CivztWv9Oc+xFiXjS6yE7ow2uwqLHWoRJ/oVtuoa9C/dD1zIHTC
-         Vtc1n8KTnLcvDV5AQwaSjmghLmLd6hPfkLBfw1X5R9YI18ylmjVOcH3Yb9eC70v1nXQM
-         1Q6A==
-X-Gm-Message-State: AOJu0Yx032Cl1vkDMyhFny3Kq7sevF+KF7tIDARQyHbZnaRsFywrJcqz
-	rqDtRi35p9/bG/Hf7ij2GjHnloaswM6q22J5F/ROSUEf5CFFqFx5jTe66IDl8pk=
-X-Google-Smtp-Source: AGHT+IEuybZDakhKeQ5LH52V3RpeDuVw/uxz9FrF2X2Ngvg5W3lc4Fx9NnyZt1280p66tj9dqkB9jg==
-X-Received: by 2002:a05:600c:348b:b0:424:8be4:f2c with SMTP id 5b1f17b1804b1-429e231f76dmr18552725e9.2.1723723927027;
+        bh=Nlruai3BQqsm2YC4dPuHFKVGpCYgCvlc+hshYkB6H2k=;
+        b=v6WmP0FKencDrdz2QD+yuP/V0S3ZF/VO8SD9Y7ZzaDgwWqIbbdhvM08HGTaCB+da11
+         PvxCRQcX1malBGHu5XTsoKkhUc8jjobPRkK10NHDlajMsEzpcroneY2dwhnXe64suy3q
+         xct8OIhpBkTJu8SOPxrxKRYI6kLJF2AwLltycsHCT3ipl+TBt/kSEXAZ9TaIyLi6o4Os
+         iFW/89lnX4eTzwh6lTN4D56SDhMFJbac33LHssFeE5w+GL+LwVk24ZSujrOevs2H54hv
+         HWqj2UwwCN5R1PDaum2bstqjWBNS0XpRiwFARTvjNWs11tgMoI3GryBEUzUEW4Nysf3t
+         LFyQ==
+X-Gm-Message-State: AOJu0Yyz9PhRFinIZL/23Y5Ybym+4HQOVum0kA82f3FydV1AE1Rfxnx8
+	DPL7ohBCMYROr2oiV1UfXl9Zq+zX6IvMGtlpAspwUbsIfZrupFl1bPZbv2tVTtZkYaQ0IN2PG58
+	U
+X-Google-Smtp-Source: AGHT+IFqE0M2OmpEvxD4duj5kGOQWRtd+obMKR2lPW9I+CeIS+oRNhsQvPM4dCQIxcqphRcbR+qxkQ==
+X-Received: by 2002:a5d:59a5:0:b0:371:728e:d000 with SMTP id ffacd0b85a97d-3717775c9b2mr4340274f8f.1.1723723927819;
         Thu, 15 Aug 2024 05:12:07 -0700 (PDT)
 Received: from [127.0.1.1] (frhb82016ds.ikexpress.com. [185.246.87.17])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37189897926sm1365082f8f.87.2024.08.15.05.12.06
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37189897926sm1365082f8f.87.2024.08.15.05.12.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Aug 2024 05:12:06 -0700 (PDT)
+        Thu, 15 Aug 2024 05:12:07 -0700 (PDT)
 From: Guillaume Stols <gstols@baylibre.com>
-Date: Thu, 15 Aug 2024 12:11:58 +0000
-Subject: [PATCH 4/8] pwm: Export pwm_get_state_hw
+Date: Thu, 15 Aug 2024 12:11:59 +0000
+Subject: [PATCH 5/8] platform: add platform_get_device_match_data() helper
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -77,7 +78,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240815-ad7606_add_iio_backend_support-v1-4-cea3e11b1aa4@baylibre.com>
+Message-Id: <20240815-ad7606_add_iio_backend_support-v1-5-cea3e11b1aa4@baylibre.com>
 References: <20240815-ad7606_add_iio_backend_support-v1-0-cea3e11b1aa4@baylibre.com>
 In-Reply-To: <20240815-ad7606_add_iio_backend_support-v1-0-cea3e11b1aa4@baylibre.com>
 To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
@@ -97,56 +98,61 @@ Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
  20240712171821.1470833-2-u.kleine-koenig@baylibre.com, 
  cover.1721040875.git.u.kleine-koenig@baylibre.com, aardelean@baylibre.com
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1723723923; l=1631;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1723723923; l=1781;
  i=gstols@baylibre.com; s=20240417; h=from:subject:message-id;
- bh=B299RubzcyeAZYqSINS1JMw78PJqVT8lqVWbm+KhLHQ=;
- b=R0SYVR5ABChT/agrkOGtqE560UOP8iseJdjHPPNT794iaKR5TkwlROnIsf6vbGNXL+qEbca08
- 3vR+WhJM5zGB++xcBB8es5v4vgNmrPQDw8zW1fS8VOXM6g+CfvJksiB
+ bh=NbKx0MzTSy4AkOnvlPHkNNwV65/pkwG9IF0PJXDZUNw=;
+ b=VOYJGuD/1ccizW8foihyuYIcvcsufWDfHQhMJgly8oXiPmQELygHZcqqg/NPsa767PekcfJOM
+ vx/cis54SwFDlOLGtkc07Yo/YSNxVhQeNHA7o9alToZqiRWmpOqxr9/
 X-Developer-Key: i=gstols@baylibre.com; a=ed25519;
  pk=XvMm5WHuV67sGYOJZqIYzXndbaJOlNd8Q6li6vnb4Cs=
 
-This function can be used in some other drivers, for instance when we
-want to retrieve the real frequency vs the one that was asked.
+Inspired from spi_get_device_match_data() helper: if OF or ACPI driver
+data is available, platform_get_device_id will return NULL because
+platform_match_id is not called, and pdev->id_entry is never populated.
+This helper function checks if match data is available, and otherwise
+returns the ID table data.
 
 Signed-off-by: Guillaume Stols <gstols@baylibre.com>
 ---
- drivers/pwm/core.c  | 3 ++-
- include/linux/pwm.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/base/platform.c         | 12 ++++++++++++
+ include/linux/platform_device.h |  1 +
+ 2 files changed, 13 insertions(+)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 21fca27bb8a3..82e05ed88310 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -651,7 +651,7 @@ int pwm_apply_atomic(struct pwm_device *pwm, const struct pwm_state *state)
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 4c3ee6521ba5..26e9a026eb05 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -1090,6 +1090,18 @@ static const struct platform_device_id *platform_match_id(
+ 	return NULL;
  }
- EXPORT_SYMBOL_GPL(pwm_apply_atomic);
  
--static int pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *state)
-+int pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *state)
- {
- 	struct pwm_chip *chip = pwm->chip;
- 	const struct pwm_ops *ops = chip->ops;
-@@ -685,6 +685,7 @@ static int pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *state)
++const void *platform_get_device_match_data(const struct platform_device *pdev)
++{
++	const struct platform_device_id *match;
++
++	match = device_get_match_data(&pdev->dev);
++	if (match)
++		return match;
++
++	return (const void *)platform_get_device_id(pdev)->driver_data;
++}
++EXPORT_SYMBOL_GPL(platform_get_device_match_data);
++
+ #ifdef CONFIG_PM_SLEEP
  
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(pwm_get_state_hw);
+ static int platform_legacy_suspend(struct device *dev, pm_message_t mesg)
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index d422db6eec63..e2cc09ecc447 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -45,6 +45,7 @@ struct platform_device {
+ };
  
- /**
-  * pwm_adjust_config() - adjust the current PWM config to the PWM arguments
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index fd100c27f109..d48ea3051e28 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -369,6 +369,7 @@ int pwm_apply_might_sleep(struct pwm_device *pwm, const struct pwm_state *state)
- int pwm_apply_atomic(struct pwm_device *pwm, const struct pwm_state *state);
- int pwm_adjust_config(struct pwm_device *pwm);
+ #define platform_get_device_id(pdev)	((pdev)->id_entry)
++extern const void *platform_get_device_match_data(const struct platform_device *pdev);
  
-+int pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *state);
- /**
-  * pwm_config() - change a PWM device configuration
-  * @pwm: PWM device
+ #define dev_is_platform(dev) ((dev)->bus == &platform_bus_type)
+ #define to_platform_device(x) container_of((x), struct platform_device, dev)
 
 -- 
 2.34.1
