@@ -1,122 +1,129 @@
-Return-Path: <linux-pwm+bounces-3026-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3027-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D353B954D9E
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2024 17:27:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49F15955004
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2024 19:31:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7147E2825DA
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2024 15:27:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 013591F23CFA
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Aug 2024 17:31:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 849291BC9F9;
-	Fri, 16 Aug 2024 15:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE28D175B1;
+	Fri, 16 Aug 2024 17:31:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5GbSN+q"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="srUeYDKj"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5163A127E3A;
-	Fri, 16 Aug 2024 15:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493822F43
+	for <linux-pwm@vger.kernel.org>; Fri, 16 Aug 2024 17:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723822064; cv=none; b=VOPRPJx4lCxLYBUlZ6xe94/VB6R9oQMe4orNg0GSOAEhXCWX01UhyKemWi6+JNO6iNmYSCDg0fPg8jIXwovMtctxBGdpQlq9Xgs2yrCbhwO7Y541kOPWrONHK9QXueXsluqUalAm2grgk79lzAyAItR+E2oUKVhTFxSPLVy3MYU=
+	t=1723829475; cv=none; b=o2MTwAX1x4AwdS/5oFVsOEPUxZaNbxx8rPQG2+qV39+ozOnc4kde7kaZK9CPeOTEyBW8jx7m4CA6EN0mpW2GowtNzlaafsYk6sNxBhNVeKZ8kLmUwf3KsfrTq92FGVs2ovAkMtn49iHBvNno7Y/mfAUtjm0eW6jXEa9wPv7yDlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723822064; c=relaxed/simple;
-	bh=bHbg28x9ZF+oj+ApGQowOZXBQpdCPk7yj6dFt1qAqA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AskTsQA5Ws+PzYwjOohofllFdcGGNt8877rN5O5yfNW9EraMj+ZTEFXO8Noq8kQIXix/hHJMR0vZJIJKZnADqt2aSMqYYHeySZ9//ja7bEIYzLUiLAraXDpC4hqF+AwRLNbTJKO1ErU4kbzVKwF4InHo/bvwXPi3hKcmJf0FZDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5GbSN+q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D31E5C32782;
-	Fri, 16 Aug 2024 15:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723822063;
-	bh=bHbg28x9ZF+oj+ApGQowOZXBQpdCPk7yj6dFt1qAqA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X5GbSN+qy510lSQK1FxZQnUty4+MnPqHsbFFaZT7+swchpDR+oOVEIvxsi28VMKuk
-	 Yotd23wKg3KdLPxx8eo92jtDLS8asHG4JTNeFZ7dPtDDvuTGZHUVkKpYu6aqMu38zd
-	 iOwmMBR+H0gLWJq2/IBP/lnjid8+tAIrCeKwgyxZA6bvPFYneut7+jj0YPt4xXRvO+
-	 fcMhx0gIL5ah8TmS71IcLCxgbwedSNMnCybrc2gRqLUcO7KNOKi8GPSrAAA1SXdKTI
-	 7Tw+58+jTwUsqxj/3Jwlruuh1lRc//GcO5Q3uq7Lr1Z3C05CFO9C+CC9xAzxo0M0Ty
-	 5+mSo4kXQni1Q==
-Date: Fri, 16 Aug 2024 16:27:38 +0100
-From: Lee Jones <lee@kernel.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
-	Frank Li <Frank.li@nxp.com>
-Subject: Immutable branch between MFD, GPIO and PWM due for the v6.12 merge
- window
-Message-ID: <20240816152738.GB5853@google.com>
-References: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
+	s=arc-20240116; t=1723829475; c=relaxed/simple;
+	bh=C4ChMrlmR4SCYUoSS51oOWEYKzN8OTpaOktFdHWEj/g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Hc7JMjfyPLHu8YqFsn34d+La6GmfuAce/qNRjV+g3hr36UuBzX7BWJOwwzZ338VUg/mGklPDp5hEN9d5YkcmNmMKJagz3wJy2lGQ7+dHSH70GyYBMUzbiktnj3y8/iTDRfwpP/pAWGn4OTprzCUUbxv1QL0ETKOPl2rbkCkZdsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=srUeYDKj; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5d5c324267aso1327727eaf.0
+        for <linux-pwm@vger.kernel.org>; Fri, 16 Aug 2024 10:31:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1723829472; x=1724434272; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c0btoFnPYk+qNzMwKHS5SY2OrE4TJjZMmUV+2C7SJP0=;
+        b=srUeYDKj0rxVad704Nr/MKGdPTRFjCGw1u0ePsMbotLVBxKzqKgFxHEsvXFpisw3gb
+         hDxXFdKOK2enlZ4oX4jhGxb0FZWaCBQTrWZBo3Z2zHQwirvk5edSkgVQuQKhyMUDoU+K
+         3zSkhhZzFDrv1FoqvXNIiJz2/ew/g2z7s107p6S1i3yyw2aFbofjiHcwryTszXagaZdX
+         dwWbSJ6daMNEEpMGBCwDptat6ZTdV2MFxpz39vVNBw/HienWcJWPy6mrbSOFmwTmvXpL
+         vNFEa1Sj0HMnqJ39/sexTxFMeJvN4Yj5i1NWXogqKrQDDcGZJUzmT08TLrdJySGGl/Sl
+         UcNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723829472; x=1724434272;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c0btoFnPYk+qNzMwKHS5SY2OrE4TJjZMmUV+2C7SJP0=;
+        b=YnikLVmZDa1jVpj9reuaVzOUe1GCP1fW+jVBJqaq9kQhkqekv48+gpuyNEzIob1JW8
+         wsAbngXrbva/EWe79gKhNmzl76AQm6MqKSF356l1IiMBiD2VXsec8ns755LH89xdRpz7
+         V8TGp/OqdFiR+EVT6SPn7jGrLZ77WgknmpdmEbJ+wN68yQ+ijtDyCmIA3oAeujyZyp3J
+         vdPpJ6iIF6EzH0EJ+KvHWeHOs9VwZghjgdUzzgMR9cTJsXoYfPLRSfXXV0a/YC+3/cv3
+         c66G/2F1wXCgMhx3+ZdgaAM6hxY69GxWVZ86IjWXUO2P/PMv+/Dqi7aez1JdE3lvFLWN
+         MggA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFm/1f/yLW8RBmq4Ip0Q+gbV3jNltrkNy/KYvPeKSAbRpNmUOnZkb+gexXvlfvsyvdeGWdHohCNXtQmoopg9Wy300LaeKVl8G+
+X-Gm-Message-State: AOJu0Yxeu29rkieezUKOcfGNuaVnDMUI8cVkYM6zv1eOrmBSwSJSnJpo
+	nF0E2UOVrapvQz1c7plRppQiS/7SrGFoTwMHrB3oz4ymaFCwESwTKqjThYzMS+zpkJVxrL9ssvE
+	D
+X-Google-Smtp-Source: AGHT+IHFUwh5sGqr/mezM8yIRxrOYMu7KqUUpC+VZEPvcRIv81ksTjrelEo8+qGrvG3cx3YCh4pYKQ==
+X-Received: by 2002:a05:6820:514:b0:5d6:ae6:a852 with SMTP id 006d021491bc7-5da98052f1cmr4644034eaf.6.1723829472327;
+        Fri, 16 Aug 2024 10:31:12 -0700 (PDT)
+Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5da8cd699dfsm759453eaf.5.2024.08.16.10.31.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Aug 2024 10:31:11 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Date: Fri, 16 Aug 2024 12:30:58 -0500
+Subject: [PATCH] pwm: axi-pwmgen: use shared macro for version reg
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240816-pwm-axi-pwmgen-use-shared-macro-v1-1-994153ebc3a7@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIANGMv2YC/x2NywqDMBAAf0X23IUkBh/9leIhmI3uwSi7tBXEf
+ zd6GuYyc4CSMCm8qwOEfqy85iL2VcE4hzwRciwOzjhvOtvg9l8w7HxzooxfJdQ5CEVcwigr9nV
+ vWp+8jS5BqWxCiffn8BnO8wLbn6HMcQAAAA==
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Michael Hennerich <michael.hennerich@analog.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, linux-pwm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.0
 
-Sorry for the tardy PR - enjoy!
+The linux/fpga/adi-axi-common.h header already defines a macro for the
+version register offset. Use this macro in the axi-pwmgen driver instead
+of defining it again.
 
-The following changes since commit 8400291e289ee6b2bf9779ff1c83a291501f017b:
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+ drivers/pwm/pwm-axi-pwmgen.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-  Linux 6.11-rc1 (2024-07-28 14:19:55 -0700)
+diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+index 3ad60edf20a5..b5477659ba18 100644
+--- a/drivers/pwm/pwm-axi-pwmgen.c
++++ b/drivers/pwm/pwm-axi-pwmgen.c
+@@ -29,7 +29,6 @@
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+ 
+-#define AXI_PWMGEN_REG_CORE_VERSION	0x00
+ #define AXI_PWMGEN_REG_ID		0x04
+ #define AXI_PWMGEN_REG_SCRATCHPAD	0x08
+ #define AXI_PWMGEN_REG_CORE_MAGIC	0x0C
+@@ -145,7 +144,7 @@ static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev)
+ 			"failed to read expected value from register: got %08x, expected %08x\n",
+ 			val, AXI_PWMGEN_REG_CORE_MAGIC_VAL);
+ 
+-	ret = regmap_read(regmap, AXI_PWMGEN_REG_CORE_VERSION, &val);
++	ret = regmap_read(regmap, ADI_AXI_REG_VERSION, &val);
+ 	if (ret)
+ 		return ret;
+ 
 
-are available in the Git repository at:
+---
+base-commit: 861a4272660ac0ff51aa4e2dbfbc3276c06b35eb
+change-id: 20240816-pwm-axi-pwmgen-use-shared-macro-939074f41d2f
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-gpio-pwm-v6.12
-
-for you to fetch changes up to e9b503879fd2b6332eaf8b719d1e07199fc70c6b:
-
-  pwm: adp5585: Add Analog Devices ADP5585 support (2024-08-01 14:09:28 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD, GPIO and PWM due for the v6.12 merge window
-
-----------------------------------------------------------------
-Clark Wang (1):
-      pwm: adp5585: Add Analog Devices ADP5585 support
-
-Haibo Chen (2):
-      mfd: adp5585: Add Analog Devices ADP5585 core support
-      gpio: adp5585: Add Analog Devices ADP5585 support
-
-Laurent Pinchart (1):
-      dt-bindings: mfd: Add Analog Devices ADP5585
-
- .../devicetree/bindings/mfd/adi,adp5585.yaml       |  92 +++++++++
- .../devicetree/bindings/trivial-devices.yaml       |   4 -
- MAINTAINERS                                        |  11 +
- drivers/gpio/Kconfig                               |   7 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-adp5585.c                        | 229 +++++++++++++++++++++
- drivers/mfd/Kconfig                                |  12 ++
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/adp5585.c                              | 205 ++++++++++++++++++
- drivers/pwm/Kconfig                                |   7 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-adp5585.c                          | 184 +++++++++++++++++
- include/linux/mfd/adp5585.h                        | 126 ++++++++++++
- 13 files changed, 876 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
- create mode 100644 drivers/gpio/gpio-adp5585.c
- create mode 100644 drivers/mfd/adp5585.c
- create mode 100644 drivers/pwm/pwm-adp5585.c
- create mode 100644 include/linux/mfd/adp5585.h
-
+Best regards,
 -- 
-Lee Jones [李琼斯]
+David Lechner <dlechner@baylibre.com>
+
 
