@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-3030-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3031-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0E66955895
-	for <lists+linux-pwm@lfdr.de>; Sat, 17 Aug 2024 17:14:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 59F1395589F
+	for <lists+linux-pwm@lfdr.de>; Sat, 17 Aug 2024 17:19:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8618C282631
-	for <lists+linux-pwm@lfdr.de>; Sat, 17 Aug 2024 15:14:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1D8E02826AE
+	for <lists+linux-pwm@lfdr.de>; Sat, 17 Aug 2024 15:19:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09D2B1509A5;
-	Sat, 17 Aug 2024 15:14:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B23627735;
+	Sat, 17 Aug 2024 15:19:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o6Wa0RzT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jjVNVhU1"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1181494DC;
-	Sat, 17 Aug 2024 15:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5619D8C0B;
+	Sat, 17 Aug 2024 15:19:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723907641; cv=none; b=FRWRS0uJVE570whBrL26aQejq3BP2HcwaxwcBA21fqqFraoFhjXy6iSh+bMLB57zih6sIWtJpoBfgl48IE0hShjP/x+mj/EaZse0OMcBSs21KQ2Xml3b7FKgUxF8SJS5fbYsaPxQ8w/HdCtk461UKrYZbyk+/QsmfRTWLgjsFuA=
+	t=1723907950; cv=none; b=pmm1P9Rh898Hkg0ajhmm05b0CNOgquUWk9FRYMWseVQSEWxUlOUteDaos8L7IMZFOrbPFvEqA7K1tLJ2HpAUpuC0tRcLQvNz9NARjgRaS8+0Zmih3MM87Gql1TMcjTHCzlnRA4uiYEwtkUJk4iCzRDB0L1nVLAdX93tY3sXJk4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723907641; c=relaxed/simple;
-	bh=jlh8YQOzcxvQeTjYCF15meBYhlr8C79cP3mOrCILxTU=;
+	s=arc-20240116; t=1723907950; c=relaxed/simple;
+	bh=rnPfDtCHCBHIbR+ymgFphW97czO9N4w1uU0i56yHB9c=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NdyVjwQz2L3EJMBZSrVnGK5CqmxPxZsgp5WrGIma2O+Z1/imdP7QC98bb4pSQQfuGq4zs8X4z/6Jf9pJfSc2fiEmbDbu3jWudNER1TifSOwWO6UOGYlzi3uVmodG8xH3VQdn2pX/YSimY+H06IkhYkLqfnBpWPJJ9LGWbs0S96M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o6Wa0RzT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47A67C4AF0D;
-	Sat, 17 Aug 2024 15:13:55 +0000 (UTC)
+	 MIME-Version:Content-Type; b=EEZKtp1+N3A4sXVU2PCgguzxp3G6yNLFHkplzJSa4PhUdHHyrM16ogX9aXlH1BXJYv5l5hz+/QBdaDjKNcTK6a5pj7EuubejdHyIV4dlxHfc1tI5cBFq+AXhesNjNeX78JNHBUo6ECy+N+4Tc5znwW0oiAkJ/Jo1ZT5unL/D+3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jjVNVhU1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A90EC116B1;
+	Sat, 17 Aug 2024 15:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723907641;
-	bh=jlh8YQOzcxvQeTjYCF15meBYhlr8C79cP3mOrCILxTU=;
+	s=k20201202; t=1723907949;
+	bh=rnPfDtCHCBHIbR+ymgFphW97czO9N4w1uU0i56yHB9c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=o6Wa0RzTpG0OPlZryM9o6iYr22P5kQkxjHGSb21jVtkugSC7trOnSi3A0TU85UmNa
-	 FOCK7Gk020NdnNsUNqY7VHC6nNh7hRCDj+5Ohv8YLIVosNhDbCgfJLuDfe7xE99aR2
-	 ruc3H74tigFtomGAUlYbP2uyC429rKgM82EJVHeKSk/3bAdRxTC7gpzQ6j0uGcH0fu
-	 +cu2banvmG4Mdywkb+Ri+S/YcFP3sz2zUOWls75tpQsXasbtVzwUPYVzqskXTsNM4O
-	 KLT6afmm7P3jD9WXV0/fD8i6/LES5Wf4r2vv7l/1TyrHaX1gpADvChwi0n3ltUqefw
-	 7DF9Sy8tKIzcQ==
-Date: Sat, 17 Aug 2024 16:13:52 +0100
+	b=jjVNVhU1Bw9FBulL8rpdN7Ptz+aAwdOPpDCEcrlLf18r8coO1gKnUAbI6/ZNT5EgK
+	 RFLFsejT5jejzOpUeuaHALwKu/u2UvsDVYTlAJaqlmrG6Fvl4ggmKJbVRUs0RjOOkH
+	 Yefgrl+/wrRAdf/nHRCtX3xoj2yo5v7GQkERnDr1VdazoTgUfVhKZD1WxaiuTtfIui
+	 cZciXDm8U//h63/6uxs8WL2dBh6Bx+MCQIl2t8vnWuxbu++/54wjJrkCXy823fEHeT
+	 Cjvl5yoCds55roHsgkhB6V57sJKfDrPQGTYQzVoKcGJPZNq/4diniELufwGmQ/n4MJ
+	 YGBtfFFgYsmZQ==
+Date: Sat, 17 Aug 2024 16:18:59 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Guillaume Stols <gstols@baylibre.com>
 Cc: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Lars-Peter
@@ -54,11 +54,12 @@ Cc: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Lars-Peter
  linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
  aardelean@baylibre.com
-Subject: Re: [PATCH 3/8] Documentation: iio: Document ad7606 driver
-Message-ID: <20240817161352.61661418@jic23-huawei>
-In-Reply-To: <20240815-ad7606_add_iio_backend_support-v1-3-cea3e11b1aa4@baylibre.com>
+Subject: Re: [PATCH 5/8] platform: add platform_get_device_match_data()
+ helper
+Message-ID: <20240817161859.3fef7a8d@jic23-huawei>
+In-Reply-To: <20240815-ad7606_add_iio_backend_support-v1-5-cea3e11b1aa4@baylibre.com>
 References: <20240815-ad7606_add_iio_backend_support-v1-0-cea3e11b1aa4@baylibre.com>
-	<20240815-ad7606_add_iio_backend_support-v1-3-cea3e11b1aa4@baylibre.com>
+	<20240815-ad7606_add_iio_backend_support-v1-5-cea3e11b1aa4@baylibre.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -69,181 +70,75 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 15 Aug 2024 12:11:57 +0000
+On Thu, 15 Aug 2024 12:11:59 +0000
 Guillaume Stols <gstols@baylibre.com> wrote:
 
-> The Analog Devices Inc. AD7606 (and similar chips) are complex ADCs that
-> will benefit from a detailed driver documentation.
-> 
-> This documents the current features supported by the driver.
+> Inspired from spi_get_device_match_data() helper: if OF or ACPI driver
+> data is available, platform_get_device_id will return NULL because
+> platform_match_id is not called, and pdev->id_entry is never populated.
+> This helper function checks if match data is available, and otherwise
+> returns the ID table data.
+
+Likely no one will read the patch description but for these it's worth
+some scary text to point out that the driver_data must be a pointer.
+If people use an enum we need to do a dance to avoid the value 0.
+
+We get quite a few buggy conversions of i2c/spi drivers as a result
+of that little gotcha.
+
+Otherwise this seems like a sensible addition to me.
+
+Potentially worth pulling out as a precursor series with a few examples
+of how it saves on repeating this same code block in a bunch
+of existing drivers.  Up to GregKH I think for how he'd like this
+(assuming he approves!)
+
+
+Jonathan
+
+
 > 
 > Signed-off-by: Guillaume Stols <gstols@baylibre.com>
-A few typos that I spotted, but other than that lgtm
 > ---
->  Documentation/iio/ad7606.rst | 142 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 142 insertions(+)
+>  drivers/base/platform.c         | 12 ++++++++++++
+>  include/linux/platform_device.h |  1 +
+>  2 files changed, 13 insertions(+)
 > 
-> diff --git a/Documentation/iio/ad7606.rst b/Documentation/iio/ad7606.rst
-> new file mode 100644
-> index 000000000000..e9578399e80d
-> --- /dev/null
-> +++ b/Documentation/iio/ad7606.rst
-> @@ -0,0 +1,142 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index 4c3ee6521ba5..26e9a026eb05 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -1090,6 +1090,18 @@ static const struct platform_device_id *platform_match_id(
+>  	return NULL;
+>  }
+>  
+> +const void *platform_get_device_match_data(const struct platform_device *pdev)
+> +{
+> +	const struct platform_device_id *match;
 > +
-> +=============
-> +AD7606 driver
-> +=============
+> +	match = device_get_match_data(&pdev->dev);
+> +	if (match)
+> +		return match;
 > +
-> +ADC driver for Analog Devices Inc. AD7606 and similar devices. The module name
-> +is ``ad7606``.
+> +	return (const void *)platform_get_device_id(pdev)->driver_data;
+> +}
+> +EXPORT_SYMBOL_GPL(platform_get_device_match_data);
 > +
-> +Supported devices
-> +=================
-> +
-> +The following chips are supported by this driver:
-> +
-> +* `AD7605 <https://www.analog.com/en/products/ad7605.html>`_
-> +* `AD7606 <https://www.analog.com/en/products/ad7606.html>`_
-> +* `AD7606B <https://www.analog.com/en/products/ad7606b.html>`_
-> +* `AD7616 <https://www.analog.com/en/products/ad7616.html>`_
-> +
-> +Supported features
-> +==================
-> +
-> +SPI wiring modes
-> +----------------
-> +
-> +ad7606x ADCs can output data on several SDO lines (1/2/4/8). The driver
-> +currently supports only 1 SDO line.
-> +
-> +Parallel wiring mode
-> +--------------------
-> +
-> +AD7606x ADC have also a parallel interface, with 16 lines (that can be reduced
-> +to 8 in byte mode). The parallel interface is selected by declaring the device
-> +as platform in the device tree (with no io-backends node defined, see below).
-> +
-> +IIO-backend mode
-> +----------------
-> +
-> +This mode allows to reach the best sample rates, but it requires an external
-> +hardware (eg HDL or APU) to handle the low level communication.
-> +The backend mode is enabled when trough the definition of the "io-backends"
-
-through.  Spell check in general as I'm bad at spotting these.
-
-> +property in the device tree.
-> +The reference configuration for the current implementation of IIO-backend mode
-> +is the HDL reference provided by ADI:
-> +https://wiki.analog.com/resources/eval/user-guides/ad7606x-fmc/hdl
-> +This implementation embeds an IIO-backend compatible IP (adi-axi-adc) and a PWM
-> +connected to the conversion trigger pin.
-> +
-> ++---+                                       +----------------------------
-> +|   |               +-------+               |AD76xx
-> +| A |  controls     |       |               |
-> +| D |-------------->|  PWM  |-------------->| cnvst
-> +| 7 |               |       |               |
-> +| 6 |               +-------+               |
-> +| 0 | controls  +-----------+------------   |
-> +| 6 |---------->|           |           |<--| frstdata
-> +|   |           | Backend   |  Backend  |<--| busy
-> +| D |           | Driver    |           |   |
-> +| R |           |           |           |-->| clk
-> +| I |  requests |+---------+| DMA       |   |
-> +| V |----------->|  Buffer ||<----      |<=>| DATA
-> +| E |           |+---------+|           |   |
-> +| R |           +-----------+-----------+   |
-> +|   |-------------------------------------->| reset/configuration gpios
-> ++---+                                       +-----------------------------
-> +
-> +
-> +Software and hardware modes
-> +---------------------------
-> +
-> +While all the AD7606 series parts can be configured using GPIOs, some of them
-> +can be configured using register.
-
-I'd add blank lines between paragraphs as makes it easier to read as text
-
-> +The chip that support software mode have more values avalaible for configuring
-
-available
-
-> +the device, as well as more settings, and allow to control the range and
-> +calibration per channel.
-> +The following settings are available per channel in software mode:
-> + - Scale
-> +Also, there is a broader choice of oversampling ratios in software mode.
-> +
-> +Conversion triggering
-> +---------------------
-> +
-> +The conversion can be triggered by two distinct ways:
-> +
-> + - A GPIO is connected to the conversion trigger pin, and this GPIO is controlled
-> +   by the driver directly.  In this configuration, the driver set back the
-the driver sets back
-
-> +   conversion trigger pin to high as soon as it has read all the conversions.
-> +
-> + - An external source is connected to the conversion trigger pin. In the
-> +   current implementation, it must be a PWM. In this configuration, the driver
-> +   does not control directly the conversion trigger pin. Instead, it can
-> +   control the PWM's frequency. This trigger is enabled only for iio-backend.
-> +
-> +Reference voltage
-> +-----------------
-> +
-> +2 possible reference voltage sources are supported:
-> +
-> + - Internal reference (2.5V)
-> + - External reference (2.5V)
-> +
-> +The source is determined by the device tree. If ``refin-supply`` is present,
-> +then the external reference is used, else the internal reference is used.
-> +
-> +Oversampling
-> +------------
-> +
-> +This family supports oversampling to improve SNR.
-> +In software mode, the following ratios are available:
-> +1 (oversampling disabled)/2/4/8/16/32/64/128/256.
-> +
-> +Unimplemented features
-> +----------------------
-> +
-> +- 2/4/8 SDO lines
-> +- CRC indication
-> +- Calibration
-> +
-> +Device buffers
-> +==============
-> +
-> +IIO triggered buffer
-> +--------------------
-> +
-> +This driver supports IIO triggered buffers, with a "built in" trigger, i.e the
-> +trigger is allocated and linked by the driver, and a new conversion is triggered
-> +as soon as the samples are transferred, and a timestamp channel is added to make
-> +up for the potential jitter induced by the delays in the interrupt handling.
-> +
-> +IIO backend buffer
-> +------------------
-> +
-> +When IIO backend is used, the trigger is not needed, and the sample rate is
-> +considered as stable, hence there is no timestamp channel. The communication is
-> +delegated to an external logic, called a backend, and the backend's driver
-> +handles the buffer. When this mode is enabled, the driver cannot control the
-> +conversion pin, because the busy pin is bound to the backend.
-> +
-> +
-> +
-> +
-> +
-Drop this trailing whitespace.
-
+>  #ifdef CONFIG_PM_SLEEP
+>  
+>  static int platform_legacy_suspend(struct device *dev, pm_message_t mesg)
+> diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+> index d422db6eec63..e2cc09ecc447 100644
+> --- a/include/linux/platform_device.h
+> +++ b/include/linux/platform_device.h
+> @@ -45,6 +45,7 @@ struct platform_device {
+>  };
+>  
+>  #define platform_get_device_id(pdev)	((pdev)->id_entry)
+> +extern const void *platform_get_device_match_data(const struct platform_device *pdev);
+>  
+>  #define dev_is_platform(dev) ((dev)->bus == &platform_bus_type)
+>  #define to_platform_device(x) container_of((x), struct platform_device, dev)
 > 
 
 
