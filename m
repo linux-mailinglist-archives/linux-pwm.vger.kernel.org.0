@@ -1,62 +1,73 @@
-Return-Path: <linux-pwm+bounces-3043-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3044-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9574B9571C5
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Aug 2024 19:14:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD7D7957CE2
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Aug 2024 07:50:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 463801F20F2F
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Aug 2024 17:14:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97D78284637
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Aug 2024 05:50:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CDCD186E2E;
-	Mon, 19 Aug 2024 17:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45F23446A1;
+	Tue, 20 Aug 2024 05:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jvt+CIbR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bTn5go0U"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A39E186E25;
-	Mon, 19 Aug 2024 17:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6098623A9;
+	Tue, 20 Aug 2024 05:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724087627; cv=none; b=WxXSDQ9bdXso/2U3pq7z9D0rKxYKjN4WBlpT/ybMOi3kywjruVqbA2rgFfSMgyL2ebshnMsx7zIAW8uL49L6vump+fL5jm71zLnBStpx0z9C64miBeVUB2eVDsbaKSuezFAiVjFOGANclbGUT3arBB7Y+m5aLunlAClYmStTiZM=
+	t=1724133037; cv=none; b=YLm54tkdwA815bolNLCL07Ic6F1+SCHyM5y/TVBkA9Ji2bz8vJ5Pl5epYFTkEdW3bGwbHUUd4fwHSDrdHpxrtd1XjtigkZNycFRZdZKxuzCoEVQWs4Xu04TA8oiGBBLmSdOAcjfRcBzyNfx+CVipR/5guQfx0p/cDllmLB9sew0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724087627; c=relaxed/simple;
-	bh=napo6BfmJMdbvolQhaKJC1m2XKrao4NNuQMOueQKJe0=;
+	s=arc-20240116; t=1724133037; c=relaxed/simple;
+	bh=65lYnY/nh/DhnHaW0ZYs7pWSXREzeM0x3lfD5X3xRlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rwnPewlNe2CBWB23fX0EP5eUqaASoUzm2Iy1A7F3MDIH5ceAkT7Z/7fEtBov+FvyVD/ggrOp/HcOy3cAceISVuzrIr01bDpz3tLgdiBtOYTwSkDur/5X28YaF/FPuRp3zvsEBVUIFNKyYmwi8nZTZyXEc4m9dULU5JgnjR0G/Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jvt+CIbR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C29D7C32782;
-	Mon, 19 Aug 2024 17:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724087627;
-	bh=napo6BfmJMdbvolQhaKJC1m2XKrao4NNuQMOueQKJe0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jvt+CIbRuYPq99FdwovQL657EePeIzf8voBnDOoTLjjjkhlfdocfplR85n4D0q+GI
-	 dFflu2mcRON3EvaIHUAhC/KDN/EB9hgdk+scHJypVy4ht8lJRpnWUWk5FAXfARhw7q
-	 I5kNFRNpys6uFY0ZavKWqSy2mA8KNgN1xlU+jJIav08SbSJdCZgVKG/IY/ZfwJAFZF
-	 dM3sRjtk/oSWI+pYnEgRCGRfQ9EdBcIUxGh0wJEV81Q/mIK2lFKkW50O/sKtBsZ4EO
-	 9lNBzgdJw6ZibdiAfeejK4j8KZ2H1r5F/TFjUz6Kg6m1iCio5RTdV2Sm22cnKM6KYs
-	 zsD9+3wBIKYLg==
-Date: Mon, 19 Aug 2024 11:13:44 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-sunxi@lists.linux.dev,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH] dt-bindings: pwm: allwinner,sun4i-a10-pwm: add top-level
- constraints
-Message-ID: <172408762413.1696811.7492411750766259030.robh@kernel.org>
-References: <20240818172828.121728-1-krzysztof.kozlowski@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LuQE4s4KSpKvGRBZ3+0RxzinNNuOeVepJrJLMI5ieC4zhfrRiz09YsZ6HPgLyGB3+ZL2Uc61HA6+V/ODGmOjxatH+M7iK+XqvMQc4th3v0Pq6AlSlMOVJZ/l6IXzBqX1zNbpghH68qD2sTvVsWqgLYNXThanz570RG0dCkfgxzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bTn5go0U; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724133036; x=1755669036;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=65lYnY/nh/DhnHaW0ZYs7pWSXREzeM0x3lfD5X3xRlw=;
+  b=bTn5go0UxBRJfd5pW4GC6yB5P+WT7Pb3I85Z6jzgd/0ZkgJ3eFap/f83
+   2clCGj6EMuSjNBGnTebctXIdma1ETFCwyZINtatvf+bWlO1ZBIh7fTiAX
+   gyFfak64/jvkzztdXbEgpFEnjcNHomlqUPzjCMUDW71AuycNWzG0oefsK
+   HoEFFFlPfFTSvxIzGB/MJoybKfklNKQhvi0wgwHoQYAGAWI/2pmATzQq7
+   oQOlHdaTCr7EZM40TrKOn/LhO47F8vH4prLV12zyznXgK1Eqs74LI8m1f
+   UkrTzrUBxFTahuoX1FNFsQN9OtHzNDOQCpaVbaUKt6i4nL4YmUMOqqIvd
+   g==;
+X-CSE-ConnectionGUID: ATfzKlKOSI6YG5piRcl9KQ==
+X-CSE-MsgGUID: otw3R+ARTxSVDp/xbp5UvQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11169"; a="47804935"
+X-IronPort-AV: E=Sophos;i="6.10,161,1719903600"; 
+   d="scan'208";a="47804935"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2024 22:50:25 -0700
+X-CSE-ConnectionGUID: i0Wiw6L3TV+rpYb7lFVuNg==
+X-CSE-MsgGUID: TkEl+b70Q1ODsjHbwnqEPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,161,1719903600"; 
+   d="scan'208";a="61163015"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2024 22:50:23 -0700
+Date: Tue, 20 Aug 2024 08:50:20 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: ukleinek@kernel.org, mika.westerberg@linux.intel.com,
+	jarkko.nikula@linux.intel.com, linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] pwm: lpss: wait_for_update() before configuring pwm
+Message-ID: <ZsQunMKglYdUwzqo@black.fi.intel.com>
+References: <20240819080412.15115-1-raag.jadav@intel.com>
+ <ZsMAn3hQ4yDq-Gg6@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -65,21 +76,32 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240818172828.121728-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <ZsMAn3hQ4yDq-Gg6@smile.fi.intel.com>
 
-
-On Sun, 18 Aug 2024 19:28:28 +0200, Krzysztof Kozlowski wrote:
-> Properties with variable number of items per each device are expected to
-> have widest constraints in top-level "properties:" block and further
-> customized (narrowed) in "if:then:".  Add missing top-level constraints
-> for clock-names.
+On Mon, Aug 19, 2024 at 11:21:51AM +0300, Andy Shevchenko wrote:
+> On Mon, Aug 19, 2024 at 01:34:12PM +0530, Raag Jadav wrote:
+> > Wait for SW_UPDATE bit to clear before configuring pwm channel instead of
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+> PWM
 > 
+> > failing right away, which will reduce failure rates on early access.
+> 
+> So, what is the problem this patch solves (or is trying to solve)?
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Less failures with less code, so just a minor improvement.
 
+> Second, there are two important behavioural changes:
+> - error code change (it's visible to user space);
+
+This function is already used in this path just a few lines below.
+
+> - an additional, quite a long by the way, timeout.
+> 
+> Second one does worry me a lot as it might add these 0.5s to the boot time
+> or so per PWM in question.
+
+On the contrary, having a working set of PWMs would be a relatively
+rewarding experience IMHO.
+
+Raag
 
