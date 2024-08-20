@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-3047-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3048-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 533DB95869F
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Aug 2024 14:13:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C00295869D
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Aug 2024 14:12:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BD106B22EBC
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Aug 2024 12:12:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E42901F28066
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Aug 2024 12:12:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3812918F2C1;
-	Tue, 20 Aug 2024 12:12:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A45118F2EF;
+	Tue, 20 Aug 2024 12:12:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzuryPV6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RO8wgfIU"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F68018EFDE;
-	Tue, 20 Aug 2024 12:12:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E608618EFDE;
+	Tue, 20 Aug 2024 12:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724155973; cv=none; b=RO9S6rBXPsPUqQhmHCteGXdXVyPpzNjCZxK24GgIS02+R6UkvA7QtnBPnbC96jz8mfZMwhNWQkCVU5NOUjbtaq1kXWweQylQhTgF4Sjgoq4AT+2bl0wE7rB8kcwNBi3FKANPZPw7LB8wRptDoGaGeuHvVboSIiD6QZzainG0x3Q=
+	t=1724155977; cv=none; b=asM+IX0xeFdeh/Q8Ps/0Rn/syNowUUtCsyODJpt81GuB554mb7nOTQzl/7PlS42YgcMR+4aAyrZ9BmQPZ5EuFwJcl3vwdPQfIB/Gy1InW+pdUC8Dx43F2xI8rqJ0Z11PwopldxpV3G6s7VrkzHMaiQCqaHhU1k87sIvops2u7E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724155973; c=relaxed/simple;
-	bh=wAFYBWvy2aohpaOsZuTOOMzrh2vQd2xgJrn5HVeKbBA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=p6CUaJ98vajG0KfJ+0pzo7fWJy3WSlTCTQ/aGYx9julJAFIOEjTgqVHzXk6Kck9k3wTtlNkG9V3K+Rl+o5NWcvQiU/ibvo9FlIzG2xeGE3NdgXssWGja96WavFtao4fQ1NSH3BbgcKz2uPZ7v7PJrpC/qBK6fIgPWW8v6dsMLRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzuryPV6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECAEDC4AF09;
-	Tue, 20 Aug 2024 12:12:51 +0000 (UTC)
+	s=arc-20240116; t=1724155977; c=relaxed/simple;
+	bh=JRyNTg0BGW3/QLQuzTD0wSUydNEf34YgmH0Ssm2r2Sc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cNHvxCAnCcvtLofHXJrkyh+8RszUfsyaxzq1Ms8MeIoGM9lTc/DsE7jOVYyAXqo7WmoakAgipZp6HGCuNpEIE9MBGFjCBXhks4O5KJEkSG7AbBevCK8aKSa5mvV03QtFAa9doOHQPzMp3vrXhoQ3ML0V6SQ0tKjzLMZ8Xy0jrRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RO8wgfIU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1ED5C4AF09;
+	Tue, 20 Aug 2024 12:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724155972;
-	bh=wAFYBWvy2aohpaOsZuTOOMzrh2vQd2xgJrn5HVeKbBA=;
-	h=From:Subject:Date:To:Cc:From;
-	b=gzuryPV6ZRSA4NOtDIoEPUBEXUkwvR8RB+06b7TFwf/sp4nuTz37EpijzD2swElwJ
-	 gBuqqgOfaa8oezPQKYPNhiu5uBQB62goReYbzNkNlCeyxPphpAfx/sV0wmLr58sCIK
-	 wyyefVPs9LFePS20ukz3jHu9Ze5j8OuHz6hUN3s2wteJm6kaHH4VSS2m7pujGDGX3u
-	 MoOXu2nOquL5qAGNAyRm/mLUpKaIS2FBnFjbZkD4tSK/vy/UhbExsLyZjCuTH+SdDs
-	 cgCJ8qHaDcqjExxrP2I5iLOV4Ds5jJIHJiKClC13p70q0KgteT5S33BJfszSaPIKIN
-	 M/xw2XwGB7apQ==
+	s=k20201202; t=1724155976;
+	bh=JRyNTg0BGW3/QLQuzTD0wSUydNEf34YgmH0Ssm2r2Sc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=RO8wgfIUY81DnpadrE9+R1NMfG5RI0CNN82Wyg6nZzF1DaHpXYKx6PX2Rlc/gIki/
+	 F17o5iwqE0xnY+LbcH23i3lVxit9OkIyXWUlQnd3ZUedRU2e4dXvGtgLeLY5wNO025
+	 hIH7vYNHWIzma4xP4nZmhyoWB47LPnEJoqmn9QzO9PPGCwuvyKZ5yW+ux39V/7Rcy/
+	 vF6uLyWHNidDSRBWBkx0wW+xcz6x46EQ1DU/UjRuTzxQJuJZzZGTKB7h+WKUr93ycy
+	 mdQIUZT7xTdB+FLygNhz90iIrqlLFQc5p6UOIyzBap3+zNpqHkixR7zpqqEse6VNzP
+	 bXH963wtyOe3A==
 From: Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: [PATCH v4 0/2] Add PWM support to EN7581
-Date: Tue, 20 Aug 2024 14:12:14 +0200
-Message-Id: <20240820-airoha-pwm-drv-v4-0-2b1c2b760744@kernel.org>
+Date: Tue, 20 Aug 2024 14:12:15 +0200
+Subject: [PATCH v4 1/2] dt-bindings: pwm: Document Airoha EN7581 PWM
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -52,11 +52,9 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAB6IxGYC/3WPy26DMBBFfwV53UF+QDCs8h9RFg4eg9UEk4E4b
- SL+Pa5bqd10eRb36NwnW5A8Lqwrnoww+sWHKUH1VrB+NNOA4G1iJrmsuBYajKcwGpjvF7AUwWJ
- tncSe8xNnaTQTOv+RhYdjYkfhAutIaLKmDxGpFI1UqlW6bsrBr+U5EE6PsH9HmvBcBhp+TITXW
- ypav3W/QV2RcxpegwsEOxACTrMDo6oWXc+1dbqLkn0FjH5ZA33mg1Flz39fogIOqFrtFFaiFbu
- /Rcdt2162fVvTLgEAAA==
+Message-Id: <20240820-airoha-pwm-drv-v4-1-2b1c2b760744@kernel.org>
+References: <20240820-airoha-pwm-drv-v4-0-2b1c2b760744@kernel.org>
+In-Reply-To: <20240820-airoha-pwm-drv-v4-0-2b1c2b760744@kernel.org>
 To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -69,40 +67,68 @@ Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
  Lorenzo Bianconi <lorenzo@kernel.org>
 X-Mailer: b4 0.14.0
 
-Introduce driver for PWM module available on EN7581 SoC.
+From: Christian Marangi <ansuelsmth@gmail.com>
 
+Document required property for the Airoha EN7581 PWM. The device
+requires 3 different address for the sgpio, flash and cycle config.
+
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 ---
-Changes in v4:
-- fix compilation error on sh
-- Link to v3: https://lore.kernel.org/r/20240818-airoha-pwm-drv-v3-0-e398f3e41916@kernel.org
+ .../devicetree/bindings/pwm/airoha,en7581-pwm.yaml | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-Changes in v3:
-- fix compilation errors on arm32
+diff --git a/Documentation/devicetree/bindings/pwm/airoha,en7581-pwm.yaml b/Documentation/devicetree/bindings/pwm/airoha,en7581-pwm.yaml
+new file mode 100644
+index 000000000000..52470668f90e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/airoha,en7581-pwm.yaml
+@@ -0,0 +1,42 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/airoha,en7581-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Airoha EN7581 PWM
++
++maintainers:
++  - Christian Marangi <ansuelsmth@gmail.com>
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    const: airoha,en7581-pwm
++
++  reg:
++    items:
++      - description: sgpio config address
++      - description: flash config address
++      - description: cycle config address
++
++  "#pwm-cells":
++    const: 3
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    pwm@1fbf0224 {
++        compatible = "airoha,en7581-pwm";
++        reg = <0x1fbf0224 0x10>,
++              <0x1fbf0238 0x28>,
++              <0x1fbf0298 0x8>;
++        #pwm-cells = <3>;
++    };
 
-Changes in v2:
-- fix compilation errors
-- fix comment style
-- get rid of MODULE_ALIAS()
-
----
-Benjamin Larsson (1):
-      pwm: airoha: Add support for EN7581 SoC
-
-Christian Marangi (1):
-      dt-bindings: pwm: Document Airoha EN7581 PWM
-
- .../devicetree/bindings/pwm/airoha,en7581-pwm.yaml |  42 +++
- drivers/pwm/Kconfig                                |  10 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-airoha.c                           | 408 +++++++++++++++++++++
- 4 files changed, 461 insertions(+)
----
-base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
-change-id: 20240818-airoha-pwm-drv-de5df2ec00b0
-prerequisite-change-id: 20240705-for-6-11-bpf-a349efc08df8:v2
-
-Best regards,
 -- 
-Lorenzo Bianconi <lorenzo@kernel.org>
+2.46.0
 
 
