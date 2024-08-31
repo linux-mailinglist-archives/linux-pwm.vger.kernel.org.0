@@ -1,79 +1,80 @@
-Return-Path: <linux-pwm+bounces-3061-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3062-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E10F1965A33
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Aug 2024 10:24:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96ABE96703C
+	for <lists+linux-pwm@lfdr.de>; Sat, 31 Aug 2024 09:59:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D38C28B2BD
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Aug 2024 08:24:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C769D1C21688
+	for <lists+linux-pwm@lfdr.de>; Sat, 31 Aug 2024 07:59:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 418DE167DA4;
-	Fri, 30 Aug 2024 08:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjnDETLW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62C6F16EBEC;
+	Sat, 31 Aug 2024 07:59:24 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5B114D294;
-	Fri, 30 Aug 2024 08:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD63B13A885;
+	Sat, 31 Aug 2024 07:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725006263; cv=none; b=nWd53U+60B7f7jWzJ/4klD/x0eMsyTIC9Gb4SaT1ytITKLtyY9mjRJrumXmglPrLBQACHYY7EIvO7wVHo9ue2ZVlj6NryMAJc2yk0KxKYYNeJCtSbfr/1uTnwL8RhmZWYewuTum8m/7q06OLs4sBCFwNX87WUNeoCyOmTd3q1G4=
+	t=1725091164; cv=none; b=Fd6WpEBlt/z4k4DUfv1d4gR+7Qyr/nezVOAOGU+rvjdpFy8wNxzkJ8y8cZwEO/kpZTqriIijbzGBcKqERNBHbztRptHgQ65FCnuahfdhj/VjwQGgSee0bbOuGgTYdTqV1jeE8hYtU6H4y6ZTjYwm3Iz4EHxrnmZ+dsTVg+3isps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725006263; c=relaxed/simple;
-	bh=2tR2hRQ1rYChuVlupkc+56arNudu9Oi8Rf0EuNIq87E=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Pwk1JvZEGnoPU28ZS5F+v5jTaADlrJXvbQtSc4Wm3KNVE+JZQeJFMLmbCPxM7nwq68n03zkuCyxawbdl0RXPIjyIEI0gCoMoF0IkGDQpTflTDpPE9I1sqEiYJJ9sxOLp41CyNNUtie+s76ZoC3nbycLobeztznIwMyl5TTg2zp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjnDETLW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9697EC4CEC2;
-	Fri, 30 Aug 2024 08:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725006262;
-	bh=2tR2hRQ1rYChuVlupkc+56arNudu9Oi8Rf0EuNIq87E=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=QjnDETLWpLZXqCOaY0PTfKYzUTjf0S/WCjJ+24pvcV2pOXSaOMQqYXTjRiVpXRjUd
-	 dflF9AcXoJrXxBVRs2ojyVuvHr7efs27Hd2AGWkncR6zW8+GbjtK+mV1upJf6O0KEd
-	 IaDl4O32tmXGz5zMIdRI6dncE3w1N0l5aTbnrS1uM8OAXVx6VG3qT0G21fbW1ra1bw
-	 kSw5DCFqIC62VyG2QBxsCEaV0lXCxFpGht/bqSZtBBgoEaZ+HvkdUt3UrIKMDeHe+3
-	 lMDMLdAF8boF6t4F/daeaN0jJSckP72nzJbZjUCq1DkyWKxxZjUqD6ecKtS0evGstV
-	 DKFY50zVLaKhA==
-From: Lee Jones <lee@kernel.org>
-To: laurent.pinchart@ideasonboard.com, lee@kernel.org, robh@kernel.org, 
- krzk+dt@kernel.org, conor+dt@kernel.org, haibo.chen@nxp.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- imx@lists.linux.dev
-In-Reply-To: <20240828030405.2851611-1-haibo.chen@nxp.com>
-References: <20240828030405.2851611-1-haibo.chen@nxp.com>
-Subject: Re: (subset) [PATCH v2] dt-bindings: mfd: adp5585: Add parsing of
- hogs
-Message-Id: <172500626034.92906.922008422255613833.b4-ty@kernel.org>
-Date: Fri, 30 Aug 2024 09:24:20 +0100
+	s=arc-20240116; t=1725091164; c=relaxed/simple;
+	bh=yFrfAlGm8Gi9nd6jx/MCHS3aL6q9XfayKwfYM7wKyo0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Wage3VrMmN30vkjbvcW0llnY9AdjpglcmJ1BWhidOOkJkmKnIElo7/ohIbhsmHQnm3DS9pN8UYqfBuOTdGW6OXKgebpI6SNnYswlQDCs8PKp+RcPDQ+FffgJRLKj1pMI7tA+0JmEwiNwuHArqPI8nEvEGXA6jWJ2CGJX6Wv2Ll0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WwnTh4yhQz1j7Y6;
+	Sat, 31 Aug 2024 15:59:04 +0800 (CST)
+Received: from dggpemm500020.china.huawei.com (unknown [7.185.36.49])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8AB031400D7;
+	Sat, 31 Aug 2024 15:59:19 +0800 (CST)
+Received: from huawei.com (10.67.174.77) by dggpemm500020.china.huawei.com
+ (7.185.36.49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Sat, 31 Aug
+ 2024 15:59:19 +0800
+From: Liao Chen <liaochen4@huawei.com>
+To: <linux-pwm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <ukleinek@kernel.org>, <nicolas.ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
+	<liaochen4@huawei.com>
+Subject: [PATCH -next 0/2] pwm: atmel-hlcdc: workaround
+Date: Sat, 31 Aug 2024 07:50:57 +0000
+Message-ID: <20240831075059.790861-1-liaochen4@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500020.china.huawei.com (7.185.36.49)
 
-On Wed, 28 Aug 2024 11:04:05 +0800, haibo.chen@nxp.com wrote:
-> Allow parsing GPIO controller children nodes with GPIO hogs.
-> 
-> 
+Hi all, 
 
-Applied, thanks!
+This patch enables the autoloading feature of atmel-hlcdc module. By 
+registering MDT, the kernel is allowed to automatically bind modules to 
+devices that match the specified compatible strings. This patch also
+drops trailing comma from definitions of device table arrays, which
+makes the code robust against misrebases.
 
-[1/1] dt-bindings: mfd: adp5585: Add parsing of hogs
-      commit: c9530dd31470c071b364801c90466a5c15942c25
+Liao Chen (2):
+  pwm: atmel-hlcdc: Enable module autoloading
+  pwm: atmel-hlcdc: Drop trailing comma
 
---
-Lee Jones [李琼斯]
+ drivers/pwm/pwm-atmel-hlcdc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+-- 
+2.34.1
 
 
