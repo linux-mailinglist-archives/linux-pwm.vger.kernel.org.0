@@ -1,139 +1,157 @@
-Return-Path: <linux-pwm+bounces-3081-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3082-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFF0696A41F
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Sep 2024 18:20:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E4A796A4AB
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Sep 2024 18:42:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAF321C24132
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Sep 2024 16:20:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E805BB21206
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Sep 2024 16:42:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DB3418BC17;
-	Tue,  3 Sep 2024 16:20:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1054F18BBAD;
+	Tue,  3 Sep 2024 16:42:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2xDt6aZG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgCqPXZa"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D0818BB9A
-	for <linux-pwm@vger.kernel.org>; Tue,  3 Sep 2024 16:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA701E492;
+	Tue,  3 Sep 2024 16:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725380417; cv=none; b=Qsiui1HRIEkse385TxCclpZ0bMFwP8Gzw+rBeWHcxBUjORYWevoTWysrSMmVe6tPhem6cPaxVPW09cvVlDTQQmzIE6/rjRQavaT7GEnM+2uQysPh0rlwk5J8k5/U7iz3QkdtvY5i8CvBT+q3k7b90S5Ijn3oZ0yC8YwZDnNKqQo=
+	t=1725381745; cv=none; b=YSYHG854Xuq8998zug2+NNJBUvpsN6PKdKIJae6IgE64MbUs1M1HVU4skPS6PcGwG5II2Fe77oed41Iy/IjDjB45LNjFi9OfFtA9SMo/YfIYxWZ7lHnTTlYKEU7HkWVKkC1Wq8ZxuuXh5GSvO9pD2RzqOIox1ESVZ752jRlMUSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725380417; c=relaxed/simple;
-	bh=H74pYIhXSdOFwMm2aJy9P2vz5eCGVW8B8NAt3TGxtpU=;
+	s=arc-20240116; t=1725381745; c=relaxed/simple;
+	bh=ysx2yq2EzG2SmeMo3CLySNMcvk3ddYkzx0Kw43XPAxo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CwR4oqD4DrkS5P9eoIxzclyq3VBszxVb/TSOS1CHgO6CIyk2cZefBhraihll/vNMN3hqBqi5HBvg4DuDMgFoolOTlADAzrZfl4wJ/hnSP5n/9JYG3prfPgX0inkMDTU1dxCbml8rIQdRgKdE6JxdpYgzO7nVDhI9fUaotkmcw+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2xDt6aZG; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a83597ce5beso884881566b.1
-        for <linux-pwm@vger.kernel.org>; Tue, 03 Sep 2024 09:20:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725380412; x=1725985212; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H74pYIhXSdOFwMm2aJy9P2vz5eCGVW8B8NAt3TGxtpU=;
-        b=2xDt6aZG6POoEJim/Es6+VfEgvXYihL1Gq00yhUe5jbP9B2k9oKNcLx0fUvobXHXm0
-         qqivlVmZUO0ykDaxLGUHJ7ugtJYkBc4V9+HwXMA+8h2RP4/dm+Fq6eGk1fuKzWGxFlv7
-         PKdnE6B+gE1negs2ZpyQ02qrfMAnkTr64bWFcDPY96D4IMz9blXNmuSQEuIr2lAcf+qr
-         IQQGS2fpisIbonvLwlWZA5VQiPKSOuq731iAfxscJ6AaBuFAzLwIzn0ctNV9uNhqZ7uI
-         VFTTIMcMN/uEvuih0Zz5aMoLH64vyVgTS7LzR3YX+gIHlcpTZ81uuAKiWuVmZG3qACND
-         h7mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725380412; x=1725985212;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H74pYIhXSdOFwMm2aJy9P2vz5eCGVW8B8NAt3TGxtpU=;
-        b=K/BFmLaP0nVLjtTtiNVLtNoS+MPoQVQlhgFxHbEOGEgT5K1V0gl0u2Gshq7+rkaZ3W
-         M9ER1AfurvT069ssLRgWSiEJu8sJoHADp5a8d3GMM9ezwV9htBqsMD3/vx/xt0Q77rQD
-         6FkgmHCORUNeWYkjaAR6FFuQQxsUiAEK5E5XDhllNIZ12pvfYCpn2Ms44Gyx0bzRfna5
-         3Qy/Lic9RJ1IjsdRgp7V7U1aHmmq+SwTxfDiGwIhLo+9uhy6IHqg/YtuYszpA5A2rcy/
-         EI5BNvVq3XFTZB/iBFf0iKZzTneiocykrmHYvQcvtjXAAjHpYgF7ba66JLq2gBeUdhfA
-         /sUg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLU+xhJcdGw+NLROHWZlqKx0Mmg6FcO456sBa8RhlDSPuEeIYHlNSztW6m3IHseLsHdTPgt3b/owQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxouxgqN7Eb8SP86FvjTJ/Kz9fYqY5xUDg/9Kj5FVjVtmjEDnJ
-	S9iDYuNRg/wRgsKZtxcRRt8NSSRIdWovnZocAcsHspyRJoYeyRxHjCuDfsmr6kQ=
-X-Google-Smtp-Source: AGHT+IEr5QVGgWbiVYfCs11rGjeX6QjZhxJmrTzkAqzKLetbWL3snVsaK/w2xgyZunk5r3yWMEi8Iw==
-X-Received: by 2002:a17:907:7286:b0:a86:beb2:1d6d with SMTP id a640c23a62f3a-a89827a4283mr1958213666b.26.1725380412471;
-        Tue, 03 Sep 2024 09:20:12 -0700 (PDT)
-Received: from localhost (p5dc68f76.dip0.t-ipconnect.de. [93.198.143.118])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a898919670asm708945766b.140.2024.09.03.09.20.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 09:20:12 -0700 (PDT)
-Date: Tue, 3 Sep 2024 18:20:10 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Liu Ying <victor.liu@nxp.com>, linux-gpio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, xiaoning.wang@nxp.com, 
-	Frank.Li@nxp.com, lee@kernel.org
-Subject: Re: [PATCH] pwm: adp5585: Set OSC_EN bit to 1 when PWM state is
- enabled
-Message-ID: <tpjuy3wiaxoowyry5r23ubm5veznenrvdzrqcpqp3rid5hjoxh@yiqctlab32le>
-References: <20240826083337.1835405-1-victor.liu@nxp.com>
- <20240826085049.GA23129@pendragon.ideasonboard.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CuvbiJqUwGe8I1RaEfq/DBlgANOv91ZwXsH4VE5c3xuzzKFbxV+5/eRvMYdA2LvqTAr9TYepvcvkHYAIcS2BZnhQPpojMcl3BnfGNyxgXt6AwmWesTZp3DXWmFa+7Ecf/8Ykuq1dxne8q52sJqiKPejwFCAsvYUfqiMXhHgnRAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgCqPXZa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A82BC4CEC4;
+	Tue,  3 Sep 2024 16:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725381744;
+	bh=ysx2yq2EzG2SmeMo3CLySNMcvk3ddYkzx0Kw43XPAxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XgCqPXZazwzGXgfGAhqlE+vpCryS6mxbB6qDi2nJMtReK0UuPyw1UIERUdA36XOgx
+	 WDxqlO5jl7O5CapgicZ8MVPOkcojtyHi3qvPdKgYDGAzo9OtCWfBzAZh7QqeQC3MrK
+	 1VrUL5vWukZR8FWRGHp14byhFqupVrqQpdh985FojvyqjwFs4XVGr5ZJAvd6PglQ4U
+	 XQk5k3/pmyZBDIQdpxVRXXGile+ffCXoRKvpg0sEZmBvfU5PVA9tametbMV8sM87Jn
+	 o84+B+tFOlo+AgtR5XGka5zi/SBUFzD/yIQOeONzQyeIzkRV4u7WAn1fGUSuI4RW7Z
+	 YQeezY7rQRlQA==
+Date: Tue, 3 Sep 2024 17:42:18 +0100
+From: Lee Jones <lee@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com, benjamin.larsson@genexis.eu,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Add support for Airoha EN7581
+ GPIO System Controller
+Message-ID: <20240903164218.GC6858@google.com>
+References: <20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org>
+ <20240831-en7581-pinctrl-v3-2-98eebfb4da66@kernel.org>
+ <20240903153353.GZ6858@google.com>
+ <66d72ea9.df0a0220.21f5f.029f@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="orgfecggc6qxpui4"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240826085049.GA23129@pendragon.ideasonboard.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <66d72ea9.df0a0220.21f5f.029f@mx.google.com>
 
+On Tue, 03 Sep 2024, Christian Marangi wrote:
 
---orgfecggc6qxpui4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Tue, Sep 03, 2024 at 04:33:53PM +0100, Lee Jones wrote:
+> > On Sat, 31 Aug 2024, Lorenzo Bianconi wrote:
+> > 
+> > > From: Christian Marangi <ansuelsmth@gmail.com>
+> > > 
+> > > Add support for Airoha EN7581 GPIO System Controller which provide a
+> > > register map for controlling the GPIO, pinctrl and PWM of the SoC.
+> > > 
+> > > Schema define cells for both gpio/interrupt controller and PWM.
+> > > Moreover it provides a dedicated pinctrl node for pins and config
+> > > definitions.
+> > > 
+> > > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> > > Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > > ---
+> > >  .../bindings/mfd/airoha,en7581-gpio-sysctl.yaml    | 433 +++++++++++++++++++++
+> > >  1 file changed, 433 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml b/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml
+> > > new file mode 100644
+> > > index 000000000000..a9080c7f50f9
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml
+> > > @@ -0,0 +1,433 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/mfd/airoha,en7581-gpio-sysctl.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Airoha EN7581 GPIO System Controller
+> > > +
+> > > +maintainers:
+> > > +  - Christian Marangi <ansuelsmth@gmail.com>
+> > > +  - Lorenzo Bianconi <lorenzo@kernel.org>
+> > > +
+> > > +description:
+> > > +  Airoha EN7581 SoC GPIO system controller which provided a register map
+> > > +  for controlling the GPIO, pins and PWM of the SoC.
+> > 
+> > This whole thing is just about pins.
+> > 
+> > The MFD portion of this submission doesn't do anything.
+> >
+> 
+> Hi Lee,
+> 
+> thanks for the review. I think you missed the other series as it was
+> requested to use MFD implementation due to shared register map.
+> 
+> > Please rework this to omit the MFD driver.
+> 
+> I'm a bit confused by this you mean in the schema? Putting PWM property
+> in a pinctrl schema looks wrong to me :(
+> 
+> > 
+> > After just a glance, it looks like simple-mfd _might_ work.
+> 
+> Simple-mfd works if register map are well defined and you can have
+> something like
+> - parent define the whole register
+> - child can user reg property to register offset and subsection of the
+>   parent register
+> 
+> Here it's all mixed and scrambled and also it was requested to have a
+> very simple node that include both pwm and pinctrl property (cause that
+> is how the HW register block is designed and schema must reflect HW)
+> 
+> Hope you can understand these reasons.
 
-Hello Laurent,
+Thinking very quickly before I have to rush off.
 
-On Mon, Aug 26, 2024 at 11:50:49AM +0300, Laurent Pinchart wrote:
-> Thank you for the patch.
->=20
-> On Mon, Aug 26, 2024 at 04:33:37PM +0800, Liu Ying wrote:
-> > It turns out that OSC_EN bit in GERNERAL_CFG register has to be set to 1
-> > when PWM state is enabled, otherwise PWM signal won't be generated.
->=20
-> Indeed, this likely got lost during one of the reworks. The apply
-> function correctly clears the bit when disabling PWM, but doesn't set it
-> otherwise.
->=20
-> > Fixes: e9b503879fd2 ("pwm: adp5585: Add Analog Devices ADP5585 support")
-> > Signed-off-by: Liu Ying <victor.liu@nxp.com>
->=20
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->=20
-> Uwe, would you be able to queue this for v6.12 ?
+Have you considered syscon?
 
-Yes, I just merged Lee's immutable branch into my for-next branch to get
-e9b503879fd2 and applied this patch on top.
-
-Best regards
-Uwe
-
---orgfecggc6qxpui4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbXNzQACgkQj4D7WH0S
-/k7d/wgAkOCSryP0aa2OHiPimr3aQ59Aq7DHTjNLIsOXmVjJwgRlwH1+QWVuAWpL
-1rGSNLnhgeaAARgbXAWnIwcklDUu8Q10slOXg9BSEoY0Ikrz8l0IMuB6TyXPxjEM
-6OcXyZz/kdWRQd4lDVKosPmyimSUjaRFHpCZ/kz5Ms8eWWgsvXEtgPDFKccy34KL
-mbDVVi+5QuZRraizVpUT6E0c17l/+21wnumsrFcl5HCy6bRFUkVqgOqPQoeR3445
-irfbJEmkyOG2dqYjdrJ+hMBbz6/TkKza3ImH1ClXe1q7PYCxOBBUk28D2CBNdJ3z
-AzhHsAzA9XMQvcOPjQSAqD7tG0On3A==
-=RtDb
------END PGP SIGNATURE-----
-
---orgfecggc6qxpui4--
+-- 
+Lee Jones [李琼斯]
 
