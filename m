@@ -1,546 +1,200 @@
-Return-Path: <linux-pwm+bounces-3078-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3080-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59F7F96A2D2
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Sep 2024 17:34:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FD6296A333
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Sep 2024 17:47:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EECD9B203B4
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Sep 2024 15:34:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 592D6282E90
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Sep 2024 15:47:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86FA313E41A;
-	Tue,  3 Sep 2024 15:34:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A943118990B;
+	Tue,  3 Sep 2024 15:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tRnJd7Zs"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="L48TaurI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A76412B94;
-	Tue,  3 Sep 2024 15:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846D013F43E
+	for <linux-pwm@vger.kernel.org>; Tue,  3 Sep 2024 15:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725377640; cv=none; b=j3c//DyihdRRPrsb7WuOqRBKAfEIN/Ec3XHqFjmlTowS2kxCteoShl9rZjqcSZGpYUnPYVXjOpm0OJFfuxq/eSg156Nsd952mMlN3lnK02RD+LJqmJSAb0wKX2VDMxPodQdD/Em3bp2qliO2ThtoqZMcAhH8bSDAVV/oXa+DqiM=
+	t=1725378443; cv=none; b=PgR6NBqXgHac6qFLcrHgFaUQv/xh2rNK2w27ZzVw/5HlwXvPyn8PYZsf3q3WqU91b+CUajBcjbNcZzyrMEv3yzqUtXCkE+sKz+DuoltaTcG406//a37mUy48WtGNqrR+BHYzEuVuswSxAJ3v9V88GmOdRxu7ZEAxjlFAHV3DEj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725377640; c=relaxed/simple;
-	bh=ACsj0l+2UVfRxDV7jR+nkjUSIPe5eAHlHqzxtK9MgxQ=;
+	s=arc-20240116; t=1725378443; c=relaxed/simple;
+	bh=LvBXEbIisKwGT6qOIk72h1Fr9uy96Bh5J6Eqpru+ceY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bQ2XegHowzagBuB8tlzbVbLvFCk3ZGnckBCpJysh9xmssX2allRCyx5XZ/g0+HI6Mkl8xoSrNAL0TqNcK18+0A9TIzWm9xjRVWkUjdatf6P8KFdN/K5c565+y8V0OvxIwxRvxHemC0UJL6w693c6mkJCIWIBdp8pvBBGDEymRV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tRnJd7Zs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 911FDC4CEC4;
-	Tue,  3 Sep 2024 15:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725377639;
-	bh=ACsj0l+2UVfRxDV7jR+nkjUSIPe5eAHlHqzxtK9MgxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tRnJd7ZsCHhZ63y8ffut2gcmMjzeajaOqH/t/PDG6bPBtnvtSgg+rIt7UV07jcOhm
-	 SewvAgJ947ex5ehM9SbRMgWHUTCXTVF4kwkY0RUCGGpN4CV0NS2fhMYcKQn5aOcNgx
-	 h7SXR6COZ9zZWAwpTBKYumWci4Of+u0W+efk6YBuS3ldEVnCw5gxNN6yx3vq8nREN7
-	 JpUs1Xo4dMXQog8ZTUpI9v37gI4f6EnA+QIxrLeBEfcOuFrE5z1T6Kg6iUvxVPnk/Y
-	 U1FhdefJJO9qddqA9j7FXcHuNy2RGGMAeJddyw7UYNmVw8MKI+VOiwohtdaZWAoxS0
-	 jisQ/QS2r2VsQ==
-Date: Tue, 3 Sep 2024 16:33:53 +0100
-From: Lee Jones <lee@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Add support for Airoha EN7581
- GPIO System Controller
-Message-ID: <20240903153353.GZ6858@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=WdUa72dTjgu1XQKgHo2By9dt9BK3nZMlw8UD3PEcKHJW28rSRWdBwWvBGpSrottyeBwJ+2ID33TU218j7mzkIUlk9bxTiIFE/PaRqBJ3arptrjRyN9rHbE6BbUTOO5vQrvscJ8QJ5FYxAw63wqd5CDzse6fIKZiVM1nxaC+insQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=L48TaurI; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-374c4c6cb29so2368266f8f.3
+        for <linux-pwm@vger.kernel.org>; Tue, 03 Sep 2024 08:47:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725378440; x=1725983240; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4J1hWIhMeEBX4XcRwGAiYhtZhrFDDZNJhYxSDwEqNxg=;
+        b=L48TaurIne0KuKBhM5SsgvkUF52TSzvf8eK8g5FrPFOljkzNJQsMUnEaEon1+Cegv6
+         EMID8NiSM5BYlylUVwhuh2aFs7At3aVsvYTEM3FKIiYHskCVgxaGzqTw+ELaoKM7Lx87
+         yMiTd3XDPlaXP4JPafD7+/JtkF7DykYV7jpP2tEAg+wrKwqm9mYzbBgL+JUCcMqdHO/5
+         DY3pp3EuwNgGOEnzbj1upJqqHzLfWFfFN1dW7KE1OgdT70mHH0j6ReTF9O6kz6tZ23PF
+         8mdoONPEcP6lIWawscTKRvlYQ4gyb5OGz+qI+7b7SDvFStkRaP6wO/9oWsDUAOZIDoSi
+         lJeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725378440; x=1725983240;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4J1hWIhMeEBX4XcRwGAiYhtZhrFDDZNJhYxSDwEqNxg=;
+        b=WGK6vzMQI/rVsxVvJThDmRg/b6/aoT7GxRYQ9X6jXsnrJ/ZMBshLmQTyczsTpZnTo8
+         iRjvpzqsBwAzmzakiAFqE7HGaYMJXgfgEROhVcQgBIu7tjQUI187P0n1RB0kRgy2nnK2
+         wG1VWdQ6bWXHCWBlleCDPS7/xIjfK7meOmdcIZb1pt9vzAwK5AyiW7r+XygRR7G7U4AF
+         lowAPG5hfueO3beLFIk2fVe9px1VsKanOIrWN908mjvYM9LklckxwHtaBCETBCHVu9kH
+         jGq7R/yBWAcrOgI6KWSQYCD4z5sgY/DNnGwMZq0VqJ5k3aCX+wMY5aTsPtlgabmPy9Zn
+         CFZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXEpc18d2HfpdduvfqYzX97teagZ4bLewdyy83bAOklFEY4cZgxR3xFJAA5xkfRHTceo5hDjblO+iA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZZlCNgTc04hDmoFqOLJO7ulBY1t4/4ZZGUgFM0ld47f7fyjts
+	WTKEF03S/y46oMmRG5iDWPGbW8BYoDjvM7pUxXy03tDOCja9EGISS23zNJCbGxY=
+X-Google-Smtp-Source: AGHT+IGjH/wqwzifWC85mnNCghQMRNaevAc3MRc1SI1ZJsOicR9cri3LYdbd5RxgvIaDuVDdAGoZiw==
+X-Received: by 2002:a05:6000:4014:b0:374:d07a:c136 with SMTP id ffacd0b85a97d-374d07ac2f2mr5572813f8f.36.1725378439436;
+        Tue, 03 Sep 2024 08:47:19 -0700 (PDT)
+Received: from localhost (p5dc68f76.dip0.t-ipconnect.de. [93.198.143.118])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8988feb592sm708368466b.13.2024.09.03.08.47.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2024 08:47:18 -0700 (PDT)
+Date: Tue, 3 Sep 2024 17:47:16 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Benjamin Larsson <benjamin.larsson@genexis.eu>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lee Jones <lee@kernel.org>, linux-mediatek@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	upstream@airoha.com, ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <t2f5kockuvfi66qqumda6jxf5a4c4zf35ld5ainsnksavkchyj@kdueaqlhjoar>
 References: <20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org>
- <20240831-en7581-pinctrl-v3-2-98eebfb4da66@kernel.org>
+ <20240831-en7581-pinctrl-v3-5-98eebfb4da66@kernel.org>
+ <yfqmlca6cnhrghpo5s6tml36tngmekcfbyjakxs7or7wtap3ka@7qlrxjowo4ou>
+ <d9298199-fe10-4b28-8e28-dc252bd6832c@genexis.eu>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ohdzxy7xz4ztpby7"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240831-en7581-pinctrl-v3-2-98eebfb4da66@kernel.org>
+In-Reply-To: <d9298199-fe10-4b28-8e28-dc252bd6832c@genexis.eu>
 
-On Sat, 31 Aug 2024, Lorenzo Bianconi wrote:
 
-> From: Christian Marangi <ansuelsmth@gmail.com>
-> 
-> Add support for Airoha EN7581 GPIO System Controller which provide a
-> register map for controlling the GPIO, pinctrl and PWM of the SoC.
-> 
-> Schema define cells for both gpio/interrupt controller and PWM.
-> Moreover it provides a dedicated pinctrl node for pins and config
-> definitions.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
->  .../bindings/mfd/airoha,en7581-gpio-sysctl.yaml    | 433 +++++++++++++++++++++
->  1 file changed, 433 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml b/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml
-> new file mode 100644
-> index 000000000000..a9080c7f50f9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml
-> @@ -0,0 +1,433 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/airoha,en7581-gpio-sysctl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Airoha EN7581 GPIO System Controller
-> +
-> +maintainers:
-> +  - Christian Marangi <ansuelsmth@gmail.com>
-> +  - Lorenzo Bianconi <lorenzo@kernel.org>
-> +
-> +description:
-> +  Airoha EN7581 SoC GPIO system controller which provided a register map
-> +  for controlling the GPIO, pins and PWM of the SoC.
+--ohdzxy7xz4ztpby7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This whole thing is just about pins.
+Hello Benjamin,
 
-The MFD portion of this submission doesn't do anything.
+On Tue, Sep 03, 2024 at 01:58:30PM +0200, Benjamin Larsson wrote:
+> On 2024-09-03 12:46, Uwe Kleine-K=F6nig wrote:
+> > Would you please add a "Limitations" paragraph here covering the
+> > following questions:
+> >=20
+> >   - How does the hardware behave on changes of configuration (does it
+> >     complete the currently running period? Are there any glitches?)
+> >   - How does the hardware behave on disabling?
+> >=20
+> > Please stick to the format used in several other drivers such that
+> >=20
+> > 	sed -rn '/Limitations:/,/\*\/?$/p' drivers/pwm/*.c
+> >=20
+> > emits the informations.
+>=20
+> The answer to your questions are currently unknown. Is this information
+> needed for a merge of the driver ?
 
-Please rework this to omit the MFD driver.
+It would be very welcome and typically isn't that hard to work out if
+you have an LED connected to the output or a similar means to observe
+the output. An oscilloscope makes it still easier.
 
-After just a glance, it looks like simple-mfd _might_ work.
+For example to check if the current period is completed configure the
+PWM with period =3D 1s and duty_cycle =3D 0 disabling the LED. (I leave it
+as an exercise for the reader what to do if duty_cycle =3D 0 enables the
+LED :-) Then do:
 
-> +properties:
-> +  compatible:
-> +    const: airoha,en7581-gpio-sysctl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  "#pwm-cells":
-> +    const: 3
-> +
-> +  pinctrl:
-> +    type: object
-> +
-> +    $ref: /schemas/pinctrl/pinctrl.yaml
-> +
-> +    patternProperties:
-> +      '-pins$':
-> +        type: object
-> +
-> +        patternProperties:
-> +          '^.*mux.*$':
-> +            type: object
-> +
-> +            description:
-> +              pinmux configuration nodes.
-> +
-> +            $ref: /schemas/pinctrl/pinmux-node.yaml
-> +
-> +            properties:
-> +              function:
-> +                description:
-> +                  A string containing the name of the function to mux to the group.
-> +                enum: [pon, tod_1pps, sipo, mdio, uart, i2c, jtag, pcm, spi,
-> +                       pcm_spi, i2s, emmc, pnand, pcie_reset, pwm, phy1_led0,
-> +                       phy2_led0, phy3_led0, phy4_led0, phy1_led1, phy2_led1,
-> +                       phy3_led1, phy4_led1]
-> +
-> +              groups:
-> +                description:
-> +                  An array of strings. Each string contains the name of a group.
-> +
-> +            required:
-> +              - function
-> +              - groups
-> +
-> +            allOf:
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: pon
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [pon]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: tod_1pps
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [pon_tod_1pps, gsw_tod_1pps]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: sipo
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [sipo, sipo_rclk]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: mdio
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [mdio]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: uart
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      items:
-> +                        enum: [uart2, uart2_cts_rts, hsuart, hsuart_cts_rts, uart4,
-> +                               uart5]
-> +                      maxItems: 2
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: i2c
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [i2c1]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: jtag
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [jtag_udi, jtag_dfd]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: pcm
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [pcm1, pcm2]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: spi
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      items:
-> +                        enum: [spi_quad, spi_cs1]
-> +                      maxItems: 2
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: pcm_spi
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      items:
-> +                        enum: [pcm_spi, pcm_spi_int, pcm_spi_rst, pcm_spi_cs1,
-> +                               pcm_spi_cs2_p156, pcm_spi_cs2_p128, pcm_spi_cs3,
-> +                               pcm_spi_cs4]
-> +                      maxItems: 7
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: i2c
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [i2s]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: emmc
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [emmc]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: pnand
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [pnand]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: pcie_reset
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [pcie_reset0, pcie_reset1, pcie_reset2]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: pwm
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6,
-> +                             gpio7, gpio8, gpio9, gpio10, gpio11, gpio12, gpio13,
-> +                             gpio14, gpio15, gpio16, gpio17, gpio18, gpio19,
-> +                             gpio20, gpio21, gpio22, gpio23, gpio24, gpio25,
-> +                             gpio26, gpio27, gpio28, gpio29, gpio30, gpio31,
-> +                             gpio36, gpio37, gpio38, gpio39, gpio40, gpio41,
-> +                             gpio42, gpio43, gpio44, gpio45, gpio46, gpio47]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy1_led0
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio33, gpio34, gpio35, gpio42]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy2_led0
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio33, gpio34, gpio35, gpio42]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy3_led0
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio33, gpio34, gpio35, gpio42]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy4_led0
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio33, gpio34, gpio35, gpio42]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy1_led1
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio43, gpio44, gpio45, gpio46]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy2_led1
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio43, gpio44, gpio45, gpio46]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy3_led1
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio43, gpio44, gpio45, gpio46]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy4_led1
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio43, gpio44, gpio45, gpio46]
-> +
-> +            additionalProperties: false
-> +
-> +          '^.*conf.*$':
-> +            type: object
-> +
-> +            description:
-> +              pinconf configuration nodes.
-> +
-> +            $ref: /schemas/pinctrl/pincfg-node.yaml
-> +
-> +            properties:
-> +              pins:
-> +                description:
-> +                  An array of strings. Each string contains the name of a pin.
-> +                items:
-> +                  enum: [uart1_txd, uart1_rxd, i2c_scl, i2c_sda, spi_cs0, spi_clk,
-> +                         spi_mosi, spi_miso, gpio0, gpio1, gpio2, gpio3, gpio4,
-> +                         gpio5, gpio6, gpio7, gpio8, gpio9, gpio10, gpio11, gpio12,
-> +                         gpio13, gpio14, gpio15, gpio16, gpio17, gpio18, gpio19,
-> +                         gpio20, gpio21, gpio22, gpio23, gpio24, gpio25, gpio26,
-> +                         gpio27, gpio28, gpio29, gpio30, gpio31, gpio32, gpio33,
-> +                         gpio34, gpio35, gpio36, gpio37, gpio38, gpio39, gpio40,
-> +                         gpio41, gpio42, gpio43, gpio44, gpio45, gpio46,
-> +                         pcie_reset0, pcie_reset1, pcie_reset2]
-> +                minItems: 1
-> +                maxItems: 58
-> +
-> +              bias-disable: true
-> +
-> +              bias-pull-up: true
-> +
-> +              bias-pull-down: true
-> +
-> +              input-enable: true
-> +
-> +              output-enable: true
-> +
-> +              output-low: true
-> +
-> +              output-high: true
-> +
-> +              drive-open-drain: true
-> +
-> +              drive-strength:
-> +                description:
-> +                  Selects the drive strength for MIO pins, in mA.
-> +                enum: [2, 4, 6, 8]
-> +
-> +            required:
-> +              - pins
-> +
-> +            additionalProperties: false
-> +
-> +        additionalProperties: false
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +  - "#pwm-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    mfd@1fbf0200 {
-> +        compatible = "airoha,en7581-gpio-sysctl";
-> +        reg = <0x1fbf0200 0xc0>;
-> +
-> +        interrupt-parent = <&gic>;
-> +        interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +
-> +        #pwm-cells = <3>;
-> +
-> +        pinctrl {
-> +            pcie1-rst-pins {
-> +                conf {
-> +                    pins = "pcie_reset1";
-> +                    drive-open-drain = <1>;
-> +                };
-> +            };
-> +
-> +            pwm-pins {
-> +                mux {
-> +                    function = "pwm";
-> +                    groups = "gpio18";
-> +                };
-> +            };
-> +
-> +            spi-pins {
-> +                mux {
-> +                    function = "spi";
-> +                    groups = "spi_quad", "spi_cs1";
-> +                };
-> +            };
-> +
-> +            uart2-pins {
-> +                mux {
-> +                    function = "uart";
-> +                    groups = "uart2", "uart2_cts_rts";
-> +                };
-> +            };
-> +
-> +            uar5-pins {
-> +                mux {
-> +                    function = "uart";
-> +                    groups = "uart5";
-> +                };
-> +            };
-> +
-> +            mmc-pins {
-> +                mux {
-> +                    function = "emmc";
-> +                    groups = "emmc";
-> +                };
-> +            };
-> +
-> +            mdio-pins {
-> +                mux {
-> +                    function = "mdio";
-> +                    groups = "mdio";
-> +                };
-> +
-> +                conf {
-> +                    pins = "gpio2";
-> +                    output-enable;
-> +                };
-> +            };
-> +
-> +            gswp1-led0-pins {
-> +                mux {
-> +                    function = "phy1_led0";
-> +                    groups = "gpio33";
-> +                };
-> +            };
-> +
-> +            gswp2-led1-pins {
-> +                mux {
-> +                    function = "phy2_led1";
-> +                    groups = "gpio44";
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> 
-> -- 
-> 2.46.0
-> 
+	pwm_apply_might_sleep(mypwm, &(struct pwm_state){
+		.period =3D NSEC_PER_SEC,
+		.duty_cycle =3D NSEC_PER_SEC,
+		.enabled =3D true,
+	});
+	pwm_apply_might_sleep(mypwm, &(struct pwm_state){
+		.period =3D NSEC_PER_SEC,
+		.duty_cycle =3D 0,
+		.enabled =3D true,
+	});
 
--- 
-Lee Jones [李琼斯]
+Iff that enables the LED for a second, the period is completed. The
+question about glitches is a bit harder to answer, but with a tool like
+memtool should be possible to answer. Alternatively add delays and
+printk output to .apply() in the critical places.
+
+> > > +#define airoha_pwm_sgpio_clear(pc, offset, mask)				\
+> > > +	airoha_pwm_sgpio_rmw((pc), (offset), (mask), 0)
+> > > +#define airoha_pwm_flash_set(pc, offset, val)					\
+> > > +	airoha_pwm_flash_rmw((pc), (offset), 0, (val))
+> > > +#define airoha_pwm_flash_clear(pc, offset, mask)				\
+> > > +	airoha_pwm_flash_rmw((pc), (offset), (mask), 0)
+> > > +
+> > > +static int airoha_pwm_get_waveform(struct airoha_pwm *pc, u64 duty_n=
+s,
+> > > +				   u64 period_ns)
+> > Given that "waveform" will gain some specific semantic soon, but this
+> > usage is different, I'd like to see this function renamed.
+>=20
+> I suggest pwm_generator. Is that acceptable ?
+
+This function determines the register values to write for a given
+duty_ns + period_ns combination, right? airoha_pwm_calc_bucket_config()?
+=20
+> > If you limit the number of requested pwm devices to 8, the code gets a
+> > tad simpler (because you can map a fixed bucket to each pwm device and
+> > don't need to search during .apply()) and each consumer has maximal
+> > freedom to configure its device.
+>=20
+> The main use for this solution is for led-dimming which uses the same tim=
+ing
+> among groups of leds. Most (of our) products have more then 8 leds in tot=
+al,
+> with a limit of only 8 pwm devices it would not be possible to use the
+> mainline driver with our hardware. I suggest that the current logic is ke=
+pt
+> but properly documented in the limitations section.
+
+Fine for me.
+
+Best regards
+Uwe
+
+--ohdzxy7xz4ztpby7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbXL4IACgkQj4D7WH0S
+/k7Qxgf9HKjh6qEXybuTmQsw9gXqCLG6sQDJ3eltrqYR5ftvRUSX2bTTaElsodvb
+9ybgn2+uGwILAgr9v1bJO5q2fdzbz2zkNQFni+drU/p5HdGMKMk+YFDUnNLfIn4n
+UzjD9kIPDy3Vzud/yHLRipP6Wx3EsqGhC6pLD6fJkHI9m1OdSYzVXhMUkKDhZuNT
+awjxQL2cojXnkT5P1LggRuod+rFEZvlVDtrA76PkQlfUz4Thq+BHQcU1sjc+6Wh+
+wgMaaGdl4W50Je77nYiZds7n5+KNgheNggsf3Z+BHUYEnjOAtYihydQw5U0pXeWM
+Gccw6+nVraP9M4BPw5I2un855jsxIg==
+=tWuu
+-----END PGP SIGNATURE-----
+
+--ohdzxy7xz4ztpby7--
 
