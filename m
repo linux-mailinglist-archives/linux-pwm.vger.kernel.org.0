@@ -1,56 +1,55 @@
-Return-Path: <linux-pwm+bounces-3077-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3078-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BFB596A1BB
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Sep 2024 17:10:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 59F7F96A2D2
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Sep 2024 17:34:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C9DB9B22B72
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Sep 2024 15:10:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EECD9B203B4
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Sep 2024 15:34:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9716D188902;
-	Tue,  3 Sep 2024 15:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86FA313E41A;
+	Tue,  3 Sep 2024 15:34:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z2G2SLdR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tRnJd7Zs"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FA82A1DC;
-	Tue,  3 Sep 2024 15:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A76412B94;
+	Tue,  3 Sep 2024 15:34:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725376195; cv=none; b=skuLYswgzt9UaZU0wPEmCFcBaBCs14w5HxtX3FV1RXvp7tnjfnR+MVpie5PDXp3Zh/UKQWzNmLjf8/uSJJA26NwCEHj8TPMm6UtmQhf/3glON4ginokmS6SaqlnyLfbBuh3kaCJLZLBtkZcA584XvxERYLww1+tVD4fiRvSX5n0=
+	t=1725377640; cv=none; b=j3c//DyihdRRPrsb7WuOqRBKAfEIN/Ec3XHqFjmlTowS2kxCteoShl9rZjqcSZGpYUnPYVXjOpm0OJFfuxq/eSg156Nsd952mMlN3lnK02RD+LJqmJSAb0wKX2VDMxPodQdD/Em3bp2qliO2ThtoqZMcAhH8bSDAVV/oXa+DqiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725376195; c=relaxed/simple;
-	bh=jIW79MyAeLnLk8Tf9pgkACo++H/cWJ8aF/7auE5Di5E=;
+	s=arc-20240116; t=1725377640; c=relaxed/simple;
+	bh=ACsj0l+2UVfRxDV7jR+nkjUSIPe5eAHlHqzxtK9MgxQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQJAq1mstTXqNI8rCRAYS/1NAF26xm7tHng1b+fbi6f4c/BbUB9Iw8n8+HxJW7wspvD54TqO/7RDumrZFBUFpg2x654HFD/Z+kmb5ceq6gWRXXrA43LVfJf9fwSKw2VQN+8wNZ9TB9XFiEXANEPNBk6e2qfo/vsSCXnrmJ4YkDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z2G2SLdR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC08AC4CEC6;
-	Tue,  3 Sep 2024 15:09:54 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=bQ2XegHowzagBuB8tlzbVbLvFCk3ZGnckBCpJysh9xmssX2allRCyx5XZ/g0+HI6Mkl8xoSrNAL0TqNcK18+0A9TIzWm9xjRVWkUjdatf6P8KFdN/K5c565+y8V0OvxIwxRvxHemC0UJL6w693c6mkJCIWIBdp8pvBBGDEymRV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tRnJd7Zs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 911FDC4CEC4;
+	Tue,  3 Sep 2024 15:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725376194;
-	bh=jIW79MyAeLnLk8Tf9pgkACo++H/cWJ8aF/7auE5Di5E=;
+	s=k20201202; t=1725377639;
+	bh=ACsj0l+2UVfRxDV7jR+nkjUSIPe5eAHlHqzxtK9MgxQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z2G2SLdRclDbvhec0I/IM6qfdwMkFkKRdAwrbdb4LcwYBforMi081pghUbCiH+ikU
-	 pf8eOgNuu4GKjJndPsp0bUpLQsqyL/xQojXURGO6pRw16lavL3OXlcHMNtsnrSE7DA
-	 9Pk1ZYCw09IArWMq/tyHVR358Rb9nHAjMhyuNjyfiS4Pdl543MYWdZSZyXk98ErRsN
-	 RIrkdgdzsjK4rAJGFn8oo71d5M4VYVkGVVP9G2q91VhjomojxPxx8y+NyLbo5tNMHu
-	 kB/+4nYrU4F/yg8rQ/uVBGDrS4tBosF+4pMjH4Xs5uigffi/atniW5MuL6N7zdz5si
-	 lP9qrfXXFcrCA==
-Date: Tue, 3 Sep 2024 10:09:53 -0500
-From: Rob Herring <robh@kernel.org>
+	b=tRnJd7ZsCHhZ63y8ffut2gcmMjzeajaOqH/t/PDG6bPBtnvtSgg+rIt7UV07jcOhm
+	 SewvAgJ947ex5ehM9SbRMgWHUTCXTVF4kwkY0RUCGGpN4CV0NS2fhMYcKQn5aOcNgx
+	 h7SXR6COZ9zZWAwpTBKYumWci4Of+u0W+efk6YBuS3ldEVnCw5gxNN6yx3vq8nREN7
+	 JpUs1Xo4dMXQog8ZTUpI9v37gI4f6EnA+QIxrLeBEfcOuFrE5z1T6Kg6iUvxVPnk/Y
+	 U1FhdefJJO9qddqA9j7FXcHuNy2RGGMAeJddyw7UYNmVw8MKI+VOiwohtdaZWAoxS0
+	 jisQ/QS2r2VsQ==
+Date: Tue, 3 Sep 2024 16:33:53 +0100
+From: Lee Jones <lee@kernel.org>
 To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Sean Wang <sean.wang@kernel.org>,
 	Matthias Brugger <matthias.bgg@gmail.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lee Jones <lee@kernel.org>,
 	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
 	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -58,7 +57,7 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
 Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Add support for Airoha EN7581
  GPIO System Controller
-Message-ID: <20240903150953.GA1018489-robh@kernel.org>
+Message-ID: <20240903153353.GZ6858@google.com>
 References: <20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org>
  <20240831-en7581-pinctrl-v3-2-98eebfb4da66@kernel.org>
 Precedence: bulk
@@ -67,11 +66,13 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <20240831-en7581-pinctrl-v3-2-98eebfb4da66@kernel.org>
 
-On Sat, Aug 31, 2024 at 04:27:47PM +0200, Lorenzo Bianconi wrote:
+On Sat, 31 Aug 2024, Lorenzo Bianconi wrote:
+
 > From: Christian Marangi <ansuelsmth@gmail.com>
 > 
 > Add support for Airoha EN7581 GPIO System Controller which provide a
@@ -109,7 +110,15 @@ On Sat, Aug 31, 2024 at 04:27:47PM +0200, Lorenzo Bianconi wrote:
 > +description:
 > +  Airoha EN7581 SoC GPIO system controller which provided a register map
 > +  for controlling the GPIO, pins and PWM of the SoC.
-> +
+
+This whole thing is just about pins.
+
+The MFD portion of this submission doesn't do anything.
+
+Please rework this to omit the MFD driver.
+
+After just a glance, it looks like simple-mfd _might_ work.
+
 > +properties:
 > +  compatible:
 > +    const: airoha,en7581-gpio-sysctl
@@ -144,10 +153,6 @@ On Sat, Aug 31, 2024 at 04:27:47PM +0200, Lorenzo Bianconi wrote:
 > +
 > +        patternProperties:
 > +          '^.*mux.*$':
-
-Do you really need 'mux' anywhere in the node names? Isn't either a 
-prefix or a suffix enough?
-
 > +            type: object
 > +
 > +            description:
@@ -376,10 +381,166 @@ prefix or a suffix enough?
 > +            additionalProperties: false
 > +
 > +          '^.*conf.*$':
+> +            type: object
+> +
+> +            description:
+> +              pinconf configuration nodes.
+> +
+> +            $ref: /schemas/pinctrl/pincfg-node.yaml
+> +
+> +            properties:
+> +              pins:
+> +                description:
+> +                  An array of strings. Each string contains the name of a pin.
+> +                items:
+> +                  enum: [uart1_txd, uart1_rxd, i2c_scl, i2c_sda, spi_cs0, spi_clk,
+> +                         spi_mosi, spi_miso, gpio0, gpio1, gpio2, gpio3, gpio4,
+> +                         gpio5, gpio6, gpio7, gpio8, gpio9, gpio10, gpio11, gpio12,
+> +                         gpio13, gpio14, gpio15, gpio16, gpio17, gpio18, gpio19,
+> +                         gpio20, gpio21, gpio22, gpio23, gpio24, gpio25, gpio26,
+> +                         gpio27, gpio28, gpio29, gpio30, gpio31, gpio32, gpio33,
+> +                         gpio34, gpio35, gpio36, gpio37, gpio38, gpio39, gpio40,
+> +                         gpio41, gpio42, gpio43, gpio44, gpio45, gpio46,
+> +                         pcie_reset0, pcie_reset1, pcie_reset2]
+> +                minItems: 1
+> +                maxItems: 58
+> +
+> +              bias-disable: true
+> +
+> +              bias-pull-up: true
+> +
+> +              bias-pull-down: true
+> +
+> +              input-enable: true
+> +
+> +              output-enable: true
+> +
+> +              output-low: true
+> +
+> +              output-high: true
+> +
+> +              drive-open-drain: true
+> +
+> +              drive-strength:
+> +                description:
+> +                  Selects the drive strength for MIO pins, in mA.
+> +                enum: [2, 4, 6, 8]
+> +
+> +            required:
+> +              - pins
+> +
+> +            additionalProperties: false
+> +
+> +        additionalProperties: false
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +  - "#pwm-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    mfd@1fbf0200 {
+> +        compatible = "airoha,en7581-gpio-sysctl";
+> +        reg = <0x1fbf0200 0xc0>;
+> +
+> +        interrupt-parent = <&gic>;
+> +        interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +
+> +        #pwm-cells = <3>;
+> +
+> +        pinctrl {
+> +            pcie1-rst-pins {
+> +                conf {
+> +                    pins = "pcie_reset1";
+> +                    drive-open-drain = <1>;
+> +                };
+> +            };
+> +
+> +            pwm-pins {
+> +                mux {
+> +                    function = "pwm";
+> +                    groups = "gpio18";
+> +                };
+> +            };
+> +
+> +            spi-pins {
+> +                mux {
+> +                    function = "spi";
+> +                    groups = "spi_quad", "spi_cs1";
+> +                };
+> +            };
+> +
+> +            uart2-pins {
+> +                mux {
+> +                    function = "uart";
+> +                    groups = "uart2", "uart2_cts_rts";
+> +                };
+> +            };
+> +
+> +            uar5-pins {
+> +                mux {
+> +                    function = "uart";
+> +                    groups = "uart5";
+> +                };
+> +            };
+> +
+> +            mmc-pins {
+> +                mux {
+> +                    function = "emmc";
+> +                    groups = "emmc";
+> +                };
+> +            };
+> +
+> +            mdio-pins {
+> +                mux {
+> +                    function = "mdio";
+> +                    groups = "mdio";
+> +                };
+> +
+> +                conf {
+> +                    pins = "gpio2";
+> +                    output-enable;
+> +                };
+> +            };
+> +
+> +            gswp1-led0-pins {
+> +                mux {
+> +                    function = "phy1_led0";
+> +                    groups = "gpio33";
+> +                };
+> +            };
+> +
+> +            gswp2-led1-pins {
+> +                mux {
+> +                    function = "phy2_led1";
+> +                    groups = "gpio44";
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> 
+> -- 
+> 2.46.0
+> 
 
-Same here.
-
-Otherwise, LGTM.
-
-Rob
+-- 
+Lee Jones [李琼斯]
 
