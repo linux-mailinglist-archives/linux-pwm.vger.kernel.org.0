@@ -1,130 +1,205 @@
-Return-Path: <linux-pwm+bounces-3103-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3104-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BED096DA31
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Sep 2024 15:24:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D73F296DE85
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Sep 2024 17:40:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8F4181C246DD
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Sep 2024 13:24:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90D5B282BBF
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Sep 2024 15:40:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D55719D898;
-	Thu,  5 Sep 2024 13:23:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CC1119D8AF;
+	Thu,  5 Sep 2024 15:39:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j3c3HpEP"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="21bH+4M7"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B63719D07F;
-	Thu,  5 Sep 2024 13:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10067D529
+	for <linux-pwm@vger.kernel.org>; Thu,  5 Sep 2024 15:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725542608; cv=none; b=gQrUWQxY8aoipx2NeiR4asHr2VKqkiQZzg8aY1mpI4pJs2Xs6v9gPlfjORdGMYgmBu6M0LvsnBb/5qP2oEkS38chmwUlVmbzjPXpJ/3vb0NJv0RckFRV58+2SgGs6p4a1+lBndNU5HlzNAFaEVkoAnAmtxniSiFv3FbcqhbnFLo=
+	t=1725550799; cv=none; b=ItCglqNfEhe3fNqSDV1/Do1HtqWSYfkgSOSWrEJaJQ4wSQ2Q0Swz6RwCbS3iePytoD9sLWm00rV4N45lI20195NPp1UNiKDe+TO1wmtUTl6krEcDwK12hg8kgUNZQ7yArKlNEWClAUpRZ2bIgYcfZfKxLXUJrRuCBjmyB47+i4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725542608; c=relaxed/simple;
-	bh=XQUjsAC0HxJIc98Z9NWzSHnpbnIOxRr1q4RYdDEzP/M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GgcHS6DAUQrxoi+qJh6Nlqq2xh9uMpZKUWvjOrIjoTGoTfH0Cb1tEAc3kfKbiMLEPAneIdkxZnQNmim7I53nTDtgjGVwPKMBBv8CkgUXQpMgDuNpGQlOtGyZDE3yd0qoWGFD2WsonO/R4K/ajFfrnrAWEJiXCxN1oC4MCpPUyVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j3c3HpEP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 459C1C4CEC3;
-	Thu,  5 Sep 2024 13:23:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725542608;
-	bh=XQUjsAC0HxJIc98Z9NWzSHnpbnIOxRr1q4RYdDEzP/M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j3c3HpEPwS6hMf9CzYoJPQTauvVWH2X+4k3m53gqUC0QZXFPwGlr64oFiv/ElLsZV
-	 5H5xalY7QznB16ShPZH+Xpb0BL+esq+NKrOoasDEz2hXQo/GRyqcdIhfuOiVrvwjXy
-	 NitZyl8lJvrzJf3A6bQzH1V8YTNwEKPmbFx+YfHCYRfY2orjCkYna+NFfNlka7iN++
-	 V/NkCYHG/PBpr181WZ0yHH+xjfxu9Ht5XgClp2IA4N0iqE6WWb9wktVmSP9cP8XR/w
-	 VhB94JJO62nvgH7qkeHY29wzpf98kKsfaVrUTVgzKLMM0CWEMKGWtts2vgNbOfOQu6
-	 3gAivu7Yz+exA==
-Message-ID: <a4520c05-d64b-4ef0-823c-6c568b459e21@kernel.org>
-Date: Thu, 5 Sep 2024 15:23:20 +0200
+	s=arc-20240116; t=1725550799; c=relaxed/simple;
+	bh=mShTR0wpUdAvfg0TksQhUCmqef7LUJGPiigyw0CK2LQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mp54RZR03qd+IZ1D35utPRLZV2RttL0qUlNsTIC/Hr9S9FfeGlL/n7Ff06SZrR7nAOYEmzOxo5kpnO47zwR2DEa5ssv62qjF4VQ3u+Pr7Cd4DFnZdQfhxgOlPHIk5jowkndpjDjn73tWBoOsjWwdashm/+R02UC9krVhUPxAsl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=21bH+4M7; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5c25554ec1eso1069825a12.1
+        for <linux-pwm@vger.kernel.org>; Thu, 05 Sep 2024 08:39:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725550795; x=1726155595; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DCkjd5aRXE77wTFecBrQlqKGiGvnECId8mwviesTQiQ=;
+        b=21bH+4M79YVD1AvLSjsNszbykZ6lwQw9vLhVehqdbJyTmaM3qMK4vf2jIzm5jb0VYz
+         GhJDPYadEt+hZq2ILm4bxHQu0xL01TqfYm+3CeosrrMCehhLN3nYP/mG5iFrzNA7DB7y
+         UYOoHBj7apFejjFbsEdoTzsvueVILzdaxdqKIx/raCez1yRiCxpEIosoc9JpWseWF4jA
+         h9fIM820t781vWXhS6EJnn2Nym1BPFgEa4SCHlqw2MWO7gzspmPThBxk5O7NgmdSYXU7
+         vXe0njjhiOvWhMap8/XBcF3JvzCn6RjkqX5/CdwVrpM9KFaXwcL6VVaFwQ09oEMD4z9n
+         fF9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725550795; x=1726155595;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DCkjd5aRXE77wTFecBrQlqKGiGvnECId8mwviesTQiQ=;
+        b=Mn4ly7IUfEQ0YUN3i21OA150NgL4mQAxT09gQ214p+FyEXdiJm/sp2qW2zIN3UgxiP
+         ULAM3nNTCHaf7KEzOUrTzBfSqtqZF1O86aasFTg2CzkKYS2FRoxgoUQ0bO2laO3KilCh
+         gcoEBlXgumhMN8cCzxI7IRg1ouZZU9EmunHwJwS67e3T5CQ0ML9T4BDrLSURuJbBPDdR
+         tt6y7rlAYQU2E2gVPZTv4YCuTa7Rx7bQE1D7v0Gmb6qOrqKFoyukHyFqYM8i0lg4Gj1/
+         8ddPuiEdUYAyi5pyxQa8tk/VD6ji2k8mBy99SIToo9GpKyDV2fCM5QQhNBIDZMjZJfDC
+         arEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVN2P3Vj9NLOcL6jGuhorCZAIXbbGoArDkWMfO9xH8NfJ08zX8w4ZpUFUD0BwvLoj3FooaWnTrSdk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr/Jj9VGVEMOQQGRh7mi4I07/nD0WbvL0MrRVfzQmllDULaXhC
+	bhsrnI2Q1dlXc8lrkmM8uQlY+I6rCr6YRE2+uWWGvccvFbeCDERu3KriirSIWXg=
+X-Google-Smtp-Source: AGHT+IFRAW1z6DKEHOmqApoikHOpDiIceOIq97SzaMQ4yjqsbOsT+Hzh1euIiYVWcaR+nXNdRuDAkA==
+X-Received: by 2002:a05:6402:2750:b0:5c2:4cbe:abfc with SMTP id 4fb4d7f45d1cf-5c24cbeb2f2mr11708577a12.2.1725550795189;
+        Thu, 05 Sep 2024 08:39:55 -0700 (PDT)
+Received: from localhost (p200300f65f01db004d6a46a6454a1385.dip0.t-ipconnect.de. [2003:f6:5f01:db00:4d6a:46a6:454a:1385])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c3cc544a33sm1349974a12.24.2024.09.05.08.39.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2024 08:39:54 -0700 (PDT)
+Date: Thu, 5 Sep 2024 17:39:52 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Benjamin Larsson <benjamin.larsson@genexis.eu>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lee Jones <lee@kernel.org>, linux-mediatek@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	upstream@airoha.com, ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 5/5] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <64zfjgmc2dutmsukg2bxhb44k3wu2y7tt3h26hej7d4fx5nc7z@5zvo3hsucipc>
+References: <20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org>
+ <20240831-en7581-pinctrl-v3-5-98eebfb4da66@kernel.org>
+ <yfqmlca6cnhrghpo5s6tml36tngmekcfbyjakxs7or7wtap3ka@7qlrxjowo4ou>
+ <d9298199-fe10-4b28-8e28-dc252bd6832c@genexis.eu>
+ <t2f5kockuvfi66qqumda6jxf5a4c4zf35ld5ainsnksavkchyj@kdueaqlhjoar>
+ <b7e44fb2-6cf6-4530-a271-9e1730d4f431@genexis.eu>
+ <xmlta4za6malgthd6cmt5fcipxgyzwmqwxqdg5e4qahcuqzcrt@eidsf6mexrkz>
+ <a0a14b57-cc4e-43ef-984f-fb405949b41d@genexis.eu>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] dt-bindings: display: Add Sharp Memory LCD
- bindings
-To: Alex Lanzano <lanzano.alex@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Mehdi Djait <mehdi.djait@bootlin.com>
-Cc: christophe.jaillet@wanadoo.fr, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org
-References: <20240905124432.834831-1-lanzano.alex@gmail.com>
- <20240905124432.834831-2-lanzano.alex@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240905124432.834831-2-lanzano.alex@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4ikk7wbgmsrnb7sr"
+Content-Disposition: inline
+In-Reply-To: <a0a14b57-cc4e-43ef-984f-fb405949b41d@genexis.eu>
 
-On 05/09/2024 14:43, Alex Lanzano wrote:
-> Add device tree bindings for the monochrome Sharp Memory LCD
-> 
-> Co-developed-by: Mehdi Djait <mehdi.djait@bootlin.com>
-> Signed-off-by: Mehdi Djait <mehdi.djait@bootlin.com>
-> Signed-off-by: Alex Lanzano <lanzano.alex@gmail.com>
 
-I don't understand what happened here. Your process of handling patches
-is odd. Tags do not disappear, you had to remove them, right? So where
-is the explanation for this?
+--4ikk7wbgmsrnb7sr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+Hello Benjamin,
 
+On Thu, Sep 05, 2024 at 02:18:41PM +0200, Benjamin Larsson wrote:
+> On 2024-09-05 11:30, Uwe Kleine-K=F6nig wrote:
+> > 1 second long pulses with a period size of 1 second, so a constant high
+> > signal?
+>=20
+> Hi, I think I was unclear. The SoC documentation is not that detailed. Bu=
+t I
+> think I understand how it works now.
+>=20
+> One register contains the minimum duration (d_min). And then there is one=
+ 8
+> bit register for the signal low period (lp) and then another 8bit register
+> for the high period (hp). Per my understanding a change of polarity is th=
+en
+> just a swap of lp and hp.
+
+that doesn't sound right.
+
+A "normal" waveform with period =3D 10 ns and duty_cycle =3D 2 ns looks as
+follows:
+
+   _         _         _
+  / \_______/ \_______/ \_______/=20
+  ^         ^         ^         ^
+
+assuming a monospace font that's 1 char per ns, the ^ marking the period
+start.
+
+Ignoring scaling, your hardware needs to have hp =3D 2 and lp =3D 8. If you
+switch that (assuming you mean switching in the same way as I do) to hp
+=3D 8 and lp =3D 2, you get:
+
+   _______   _______   _______
+  /       \_/       \_/       \_/
+  ^         ^         ^         ^
+
+which is still a "normal" polarity output as a period starts with the
+active part.
+
+I admit that's a bit artificial, because the waveform for
+
+	period =3D 10 ns
+	duty_cycle =3D 2 ns
+	polarity =3D inversed
+
+looks as follows:
+
+     _______   _______   _______
+  \_/       \_/       \_/       \_/
+  ^         ^         ^         ^
+
+which isn't any different from the 2nd waveform above if you ignore the
+period start markers (which are not observable apart from the moments
+where you reconfigure the output).
+
+However it matters if you have a chip with >1 output that are not
+independent.
+
+> The period is d_min * (lp + hp) and duty_cycle (on time) is then d_min*hp
+> (per my understanding of the linux api). This means that there can be
+> different settings that result in the same pwm signal (if you double d_min
+> and halving lp and hp the signal should be the same).
+
+Sounds correct.
+
+> This means that when requesting a period and duty cycle you need to search
+> through the configuration space to find the optimal value.
+
+Or restrict yourself consistently to something simpler than a exhaustive
+search through the complete configuration space.
+
+> MvH
+
+(BTW, I had to research the meaning of MvH. In case someone else doesn't
+know it: It's the usual abbreviation for "Med v=E4nliga h=E4lsningar" in
+Sweden or "Med vennlig hilsen" in Norway; both meaning "With friendly
+greetings".)
+
+Best regards
+Uwe
+
+--4ikk7wbgmsrnb7sr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbZ0L0ACgkQj4D7WH0S
+/k5w+ggAhG/7cx2AC8jLk85B+JBlhL2wJdDDlAagB0gHc/M5PrmMLmMzMI0RoXJA
+k3N0WNIK7uipsz8wWQLP8TKSzHS5Q94UE+6J7l1rTZX9iev8fuLDuRPV2pB3TtXo
+o0b4P3QQDlB/Fo+WHBGijmr9EtYDbFwxYDDkZ+bg5P4+XmAIRRHEBy4QyP133+i1
+1KBlJbVlqYNgh9UKqVo7+CZkmADApYkFskMjJeFS/rEtYfWbqRRijU31stgEaR1A
+RhsNH6wnCOsTidBctYbl1QZ1iTnPhHElZKIqYOU2j6Ysrq4mBunVZSv9WZ2PDR55
+IW/+aoHhp58nBftvSM+AO2NIWPC82Q==
+=rwIW
+-----END PGP SIGNATURE-----
+
+--4ikk7wbgmsrnb7sr--
 
