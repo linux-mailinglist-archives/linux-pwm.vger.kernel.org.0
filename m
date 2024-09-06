@@ -1,79 +1,79 @@
-Return-Path: <linux-pwm+bounces-3131-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3132-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52B6A96F881
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Sep 2024 17:43:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 015B696F885
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Sep 2024 17:43:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B6AE282EF9
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Sep 2024 15:43:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78BA21F219B3
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Sep 2024 15:43:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC7F41D1F60;
-	Fri,  6 Sep 2024 15:43:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC3E41D1F60;
+	Fri,  6 Sep 2024 15:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lpCuLeIH"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="m/JmY9wN"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71ECB1D2F61
-	for <linux-pwm@vger.kernel.org>; Fri,  6 Sep 2024 15:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D6981D2F65
+	for <linux-pwm@vger.kernel.org>; Fri,  6 Sep 2024 15:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725637418; cv=none; b=nmOv8TN6ZnMpePXW3jX/UMIohrXeh7r3X43a7tlzdjCpOJVT4oN3ms4cvX0lpWOFUG5P2EmgjXEFf2aZejoWPD2k6gJOiJs4vq/REceO5IgknoPJabFzhyM1ed5NLyTF87yAnvlEphfmsBUW11SJl/TwQZ6bDKEHgc3hWd1sueM=
+	t=1725637420; cv=none; b=OGZWYuPCOqBmuhngoO0YFJ/kzRkMEGaq9dsESn9PwaniIkKfva57ndqRmvHFHJgqm+gdPYRb4S4TeBz86MQbXU8QuG/B16VIThz7X130ipOtGhSx/JiqSrlhAcabxSQ96rlOizXSea4mtN6S+pxC+9SAZLCMij3gIknalc63N8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725637418; c=relaxed/simple;
-	bh=Jf0tLkCEoX06MlQMEniRHbvB1Cz6mgIW9+EWndqQs6E=;
+	s=arc-20240116; t=1725637420; c=relaxed/simple;
+	bh=1+UgVgx1qhTzZi1feD5wI2qQhA+Jv6DPEStkH5+XFrA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RR2/tl0rj0FzXBeLI5knijTlIbHNDR5w1b32Y4Cu8NeY5wYU3WZTPwyDleHrL9XTRx7pwhSehBI5lGyLvzRyO/1I0L2haFVp/bzWG13DhKV8yyfNx+0gN1ujHyK0bfAcNQ2qCm/DyqCFU7pW3f4/JsH6WMywSYpoxHEpyt/juG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lpCuLeIH; arc=none smtp.client-ip=209.85.218.45
+	 MIME-Version:Content-Type; b=iS7X4LlnEkIwPNmKBjFPIf9Vyv2T6ygAQAdVdt1dEdbeEN69ysfaJgGFFmkhzq8o7UDrxAM5LK2Ug8LMKNKryexeMRJM3hN0cpp+hQwQsZfZK5hfCpfZBHcNaM9C2VZcZNC5/PNFZg3dIpuR/L+19G4HgJ6PKSVP48FjKw7/H40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=m/JmY9wN; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a8d0d82e76aso45163966b.3
-        for <linux-pwm@vger.kernel.org>; Fri, 06 Sep 2024 08:43:36 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2f029e9c9cfso30561501fa.2
+        for <linux-pwm@vger.kernel.org>; Fri, 06 Sep 2024 08:43:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725637415; x=1726242215; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725637416; x=1726242216; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3xE+RaCzyvHzx8+xEzyBU8o/Wv9M+0XIF/9Ark42tQc=;
-        b=lpCuLeIHLOjUGs58fcHE9O5HiYraiexClg8TpdkmemewVYJwrSnglCgY5lfs3q7KJl
-         rexekPZ6txo03odhum34hlue+OiTBWFS+dE9+is5dXNM9UbxcBc4NpGe+lqesOb3VHsa
-         9GGxnfBQdoNUn9dODjXPuUmGcyx0NObsbIc0JRVJ18eFUi04Uj9Ijs1H0nr3bNfkKiNz
-         1Ktr6dCWBvAy6kHt82CwEtue+DKXJIj21LpIcrm6qXaFHIoAwK3dvEh7AQXnSgmGDbCz
-         BS3qcrc5AzLGnDocTkd/OyM7MNCMi/+RylVCrbfzkg7c4UQHTOC/pXLyEIAkPIkJk0kG
-         S23g==
+        bh=1n2RMN+I4vtbcBYZHpZs5IMjkfWDjfHruPM54Nwp9ac=;
+        b=m/JmY9wNtz5TnBWn/WXcP4M9BnwDc87GJds4Lh1HfYVjDZrILFqAMAU4nklyYNGXfk
+         deQ24ngzkON3wlEymd+gsqtKYWqPaa6zPB/9KKhT0Iyks/5yNSMIM+KrDyNOvuQu/EbY
+         F/xbRhr8SfpBPZGhBpbT5xLEDmwBzKel+/5zc0lAdY0dGu9dvC8qmAME3NbFU2er4Mc7
+         Z55puyck+BpImK7PuYoBwgLNem8gLRL8H83Am9cAgFSRi6hV7Z2zVwJGCuU+9JBDaVtm
+         JI2K7MvLyvJvciRZ3HYRp3JDxByBRwJ0TynqdG7g4uL9/dp9OGLmSdCBuM+bQxTUwr9+
+         KA0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725637415; x=1726242215;
+        d=1e100.net; s=20230601; t=1725637416; x=1726242216;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3xE+RaCzyvHzx8+xEzyBU8o/Wv9M+0XIF/9Ark42tQc=;
-        b=nYTDn2JOcmAm3DmV2NOmi4iPohXBPgtBJtdg7RavRD+68Vtp+l+OCRwMnhtgHyg1kw
-         kiVbCYj0DBJ6DjymgI7Gdx23K4q607BVZ1au6DZR8pqGVw4tT3P/wIzdvrmbsMS1SKMM
-         askXdYfLSeTuqliADNy/DWbqymW4NWke+tkfIsNiZi0CdTGHeTV0ze8uFlu1/Xe0/4dn
-         gAHOzy/69lQGSRNa3WfduIOcilz+6D0URpV2X4W5lxakxrI3f6KD92EzhbHoJEuzGeDH
-         fyH4LJ2N4vVv8ab4L89pTqIEq5KD/uReqAwzhlCyXazHLxPdeK3eANRRDAMrtSqoUta9
-         vfJQ==
-X-Gm-Message-State: AOJu0YwFHylDXNe22T3swSYsOQXSrNvS3AYEd318KV2srrbtYT0+XlPK
-	IbVXf8ST5LrE0dlTveUgDhdvUGbApCxaaXECvbXGm8m88HU9pXHPUaXe5RgCudHZA+yo5iV5lQi
-	5
-X-Google-Smtp-Source: AGHT+IGThrs+UK3wSO8S+TtbXJhlwKbYaik5gjTjQKVOQ+9RCoKN1aon4MSMQntOjHQn4TE/on8wWg==
-X-Received: by 2002:a17:907:9802:b0:a86:7b71:7b74 with SMTP id a640c23a62f3a-a897fa719ebmr2040199566b.55.1725637414651;
-        Fri, 06 Sep 2024 08:43:34 -0700 (PDT)
+        bh=1n2RMN+I4vtbcBYZHpZs5IMjkfWDjfHruPM54Nwp9ac=;
+        b=bEEpnNmZGN4jaidZ2uQ8htttSny1jSw0yojhVbkGfvu2RjuW21jHBRNmueMQsvoyVL
+         5QxgM68N2omC0d6QazSqD+KSuBPHpFOsaPuNW0KG00wZztrY1WcSYtRuz0aoY9/LRYwI
+         CScTVrG04kHYnS5rwHllowty+nNK+fRmiSrfw9fShxAhhMNF1gzbNU41j750NUbSQ3yq
+         LWGR0D5t0eZK1RmKP0tei4a65Q3X5Wtp5P2FN+O2Hc8mxyb5DcF9en3czeQssodsNzeY
+         pk+MeXZOIzX6EP4TI1BjhIXSQfWUgD6/gPVg/sbmNN8FYONgGqjgojXOMQ/VcWVxKMYn
+         WCIQ==
+X-Gm-Message-State: AOJu0Yxbrb1EXxKh88dHzFsAE6Fd9qJdGUiDDmZPYbCrScT3ZcmksJB1
+	ipvOTuKDSkv9KPpVLtscroGTccq4ybFVCIHjoZG7w5/CdIwXdi+ZOMV0u68LlndTgh+bjZNmEHY
+	9
+X-Google-Smtp-Source: AGHT+IHemKvQNjyT1+8YgL5GlSf/otEShvBYKHpKN5d6yUNvqC3fYz8IKTYWkjR9rP5lzjhzmA7+GQ==
+X-Received: by 2002:a2e:4c19:0:b0:2f2:a1f1:39ed with SMTP id 38308e7fff4ca-2f6108af59dmr165597561fa.48.1725637416353;
+        Fri, 06 Sep 2024 08:43:36 -0700 (PDT)
 Received: from localhost (p5dc68d3d.dip0.t-ipconnect.de. [93.198.141.61])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8a6236d26esm292697966b.140.2024.09.06.08.43.34
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8a7c504701sm182670966b.25.2024.09.06.08.43.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2024 08:43:34 -0700 (PDT)
+        Fri, 06 Sep 2024 08:43:36 -0700 (PDT)
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 To: linux-pwm@vger.kernel.org
 Cc: Kent Gibson <warthog618@gmail.com>,
 	David Lechner <dlechner@baylibre.com>
-Subject: [PATCH v4 3/7] pwm: Provide new consumer API functions for waveforms
-Date: Fri,  6 Sep 2024 17:42:59 +0200
-Message-ID:  <857ae911c23a474e6de4a1ba0b224bc8d982d624.1725635013.git.u.kleine-koenig@baylibre.com>
+Subject: [PATCH v4 4/7] pwm: Add support for pwmchip devices for faster and easier userspace access
+Date: Fri,  6 Sep 2024 17:43:00 +0200
+Message-ID:  <00c9f1181dc351e1e6041ba6e41e4c30b12b6a27.1725635013.git.u.kleine-koenig@baylibre.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
 References: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
@@ -84,326 +84,391 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10837; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=Jf0tLkCEoX06MlQMEniRHbvB1Cz6mgIW9+EWndqQs6E=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBm2yMJrdE7OTayrvuYhnHLoweN/4mfyiqQ5S4ZM BUxfRW4dYmJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZtsjCQAKCRCPgPtYfRL+ TgBlB/91CsUBnYu+MjP+aetzJ8XE3u9RKP3V1ckq8wmcXmqF1iSJDh5pz0g1SGqWSJGZzABanzR Ng7vN1hFU4g47wN0VzKKqotm7aFLW1CDSaAEJx3Zihu8144+qeI3ZTD9iU3vXo2sb8d9gYe+3Xz 75S4mYKO0MYIhoOQJR8T21Hngt/mzxHgIYhIJUJbTX4yP6LSZp1O81l3YxjhdS7EnAYpBpSp3Pt t8XuFQJthyvGCr2XxI7fdOmJiFJxh2jgl8Cx7hoxJNHjrpX1f09bI6cu7r4OjIhcFxAKIaRkUwY ivl8QlUrKv45c6VGqdSlAX+xsClazKct4UBoPL75Slt4NxWj
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9480; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=1+UgVgx1qhTzZi1feD5wI2qQhA+Jv6DPEStkH5+XFrA=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBm2yMMqDfWx53KdTyD/qaH7tdF983jVEB8nlVbh nws3NJW/BGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZtsjDAAKCRCPgPtYfRL+ ToNcB/9JufIAH2XKE9tsl2Yj6eVC98/Tgl45+Ijx7thfBZwYo7kTEjZjloMe0zOjFTKt67Ck1n7 LOiWJO/o6AzaXuMjgwrRywZPO92tL2vChssDGkJrgjfLNmjihUSm/YVDFSod57gznqmomeybEF0 /Md+YY2OGw19ZRA0r3BiWSmt/fbJwzxqE56zLBrrwn/k2dG+oZUckx3McYujr27mnPjSpBkvhKa hv5A2rEU4z/Zhazn+sw4SqRvUssmW4iSruXTIeM993YBfPmBDY5x7BVIr0fL6ZSoKi0yCcipvHP B6upyVV4joui06gV5DtiAvyRVUYGc+Ghu6BR8gjDNpWoIBMI
 X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-Provide API functions for consumers to work with waveforms.
-
-Note that one relevant difference between pwm_get_state() and
-pwm_get_waveform*() is that the latter yields the actually configured
-hardware state, while the former yields the last state passed to
-pwm_apply*() and so doesn't account for hardware specific rounding.
+With this change each pwmchip defining the new-style waveform callbacks
+can be accessed from userspace via a character device. Compared to the
+sysfs-API this is faster (on a stm32mp157 applying a new configuration
+takes approx 25% only) and allows to pass the whole configuration in a
+single ioctl allowing atomic application.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
 ---
- drivers/pwm/core.c  | 261 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/pwm.h |   6 +-
- 2 files changed, 266 insertions(+), 1 deletion(-)
+ drivers/pwm/core.c       | 267 ++++++++++++++++++++++++++++++++++++++-
+ include/linux/pwm.h      |   3 +
+ include/uapi/linux/pwm.h |  24 ++++
+ 3 files changed, 292 insertions(+), 2 deletions(-)
+ create mode 100644 include/uapi/linux/pwm.h
 
 diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index a5aec732e2a4..c7f39f9f4bcf 100644
+index c7f39f9f4bcf..16615a4673ef 100644
 --- a/drivers/pwm/core.c
 +++ b/drivers/pwm/core.c
-@@ -49,6 +49,30 @@ static void pwmchip_unlock(struct pwm_chip *chip)
+@@ -23,6 +23,8 @@
  
- DEFINE_GUARD(pwmchip, struct pwm_chip *, pwmchip_lock(_T), pwmchip_unlock(_T))
+ #include <dt-bindings/pwm/pwm.h>
  
-+static bool pwm_wf_valid(const struct pwm_waveform *wf)
-+{
-+	/*
-+	 * For now restrict waveforms to period_length_ns <= S64_MAX to provide
-+	 * some space for future extensions. One possibility is to simplify
-+	 * representing waveforms with inverted polarity using negative values
-+	 * somehow.
-+	 */
-+	if (wf->period_length_ns > S64_MAX)
-+		return false;
++#include <uapi/linux/pwm.h>
 +
-+	if (wf->duty_length_ns > wf->period_length_ns)
-+		return false;
-+
-+	/*
-+	 * .duty_offset_ns is supposed to be smaller than .period_length_ns, apart
-+	 * from the corner case .duty_offset_ns = 0 + .period_length_ns = 0.
-+	 */
-+	if (wf->duty_offset_ns && wf->duty_offset_ns >= wf->period_length_ns)
-+		return false;
-+
-+	return true;
-+}
-+
- static void pwm_wf2state(const struct pwm_waveform *wf, struct pwm_state *state)
- {
- 	if (wf->period_length_ns) {
-@@ -95,6 +119,29 @@ static void pwm_state2wf(const struct pwm_state *state, struct pwm_waveform *wf)
- 	}
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/pwm.h>
+ 
+@@ -1594,6 +1596,254 @@ static bool pwm_ops_check(const struct pwm_chip *chip)
+ 	return true;
  }
  
-+static int pwmwfcmp(const struct pwm_waveform *a, const struct pwm_waveform *b)
++struct pwm_cdev_data {
++	struct pwm_chip *chip;
++	struct pwm_device *pwm[];
++};
++
++static int pwm_cdev_open(struct inode *inode, struct file *file)
 +{
-+	if (a->period_length_ns > b->period_length_ns)
-+		return 1;
++	struct pwm_chip *chip = container_of(inode->i_cdev, struct pwm_chip, cdev);
++	struct pwm_cdev_data *cdata;
 +
-+	if (a->period_length_ns < b->period_length_ns)
-+		return -1;
++	guard(mutex)(&pwm_lock);
 +
-+	if (a->duty_length_ns > b->duty_length_ns)
-+		return 1;
++	if (!chip->operational)
++		return -ENXIO;
 +
-+	if (a->duty_length_ns < b->duty_length_ns)
-+		return -1;
++	cdata = kzalloc(struct_size(cdata, pwm, chip->npwm), GFP_KERNEL);
++	if (!cdata)
++		return -ENOMEM;
 +
-+	if (a->duty_offset_ns > b->duty_offset_ns)
-+		return 1;
++	cdata->chip = chip;
 +
-+	if (a->duty_offset_ns < b->duty_offset_ns)
-+		return -1;
++	file->private_data = cdata;
++
++	return nonseekable_open(inode, file);
++}
++
++static int pwm_cdev_release(struct inode *inode, struct file *file)
++{
++	struct pwm_cdev_data *cdata = file->private_data;
++	unsigned int i;
++
++	for (i = 0; i < cdata->chip->npwm; ++i) {
++		if (cdata->pwm[i])
++			pwm_put(cdata->pwm[i]);
++	}
++	kfree(cdata);
 +
 +	return 0;
 +}
 +
- static int pwm_check_rounding(const struct pwm_waveform *wf,
- 			      const struct pwm_waveform *wf_rounded)
- {
-@@ -145,6 +192,220 @@ static int __pwm_write_waveform(struct pwm_chip *chip, struct pwm_device *pwm, c
- 
- #define WFHWSIZE 20
- 
-+/**
-+ * pwm_round_waveform_might_sleep - Query hardware capabilities
-+ * Cannot be used in atomic context.
-+ * @pwm: PWM device
-+ * @wf: waveform to round and output parameter
-+ *
-+ * Typically a given waveform cannot be implemented exactly by hardware, e.g.
-+ * because hardware only supports coarse period resolution or no duty_offset.
-+ * This function returns the actually implemented waveform if you pass wf to
-+ * pwm_set_waveform_might_sleep now.
-+ *
-+ * Note however that the world doesn't stop turning when you call it, so when
-+ * doing
-+ *
-+ * 	pwm_round_waveform_might_sleep(mypwm, &wf);
-+ * 	pwm_set_waveform_might_sleep(mypwm, &wf, true);
-+ *
-+ * the latter might fail, e.g. because an input clock changed its rate between
-+ * these two calls and the waveform determined by
-+ * pwm_round_waveform_might_sleep() cannot be implemented any more.
-+ *
-+ * Returns 0 on success, 1 if there is no valid hardware configuration matching
-+ * the input waveform under the PWM rounding rules or a negative errno.
-+ */
-+int pwm_round_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf)
++static int pwm_cdev_request(struct pwm_cdev_data *cdata, unsigned int hwpwm)
 +{
-+	struct pwm_chip *chip = pwm->chip;
-+	const struct pwm_ops *ops = chip->ops;
-+	struct pwm_waveform wf_req = *wf;
-+	char wfhw[WFHWSIZE];
-+	int ret_tohw, ret_fromhw;
++	struct pwm_chip *chip = cdata->chip;
 +
-+	BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
-+
-+	if (!pwm_wf_valid(wf))
++	if (hwpwm >= chip->npwm)
 +		return -EINVAL;
 +
-+	guard(pwmchip)(chip);
++	if (!cdata->pwm[hwpwm]) {
++		struct pwm_device *pwm = &chip->pwms[hwpwm];
++		int ret;
++
++		ret = pwm_device_request(pwm, "pwm-cdev");
++		if (ret < 0)
++			return ret;
++
++		cdata->pwm[hwpwm] = pwm;
++	}
++
++	return 0;
++}
++
++static int pwm_cdev_free(struct pwm_cdev_data *cdata, unsigned int hwpwm)
++{
++	struct pwm_chip *chip = cdata->chip;
++
++	if (hwpwm >= chip->npwm)
++		return -EINVAL;
++
++	if (cdata->pwm[hwpwm]) {
++		struct pwm_device *pwm = cdata->pwm[hwpwm];
++
++		pwm_put(pwm);
++
++		cdata->pwm[hwpwm] = NULL;
++	}
++
++	return 0;
++}
++
++static long pwm_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++{
++	int ret = 0;
++	struct pwm_cdev_data *cdata = file->private_data;
++	struct pwm_chip *chip = cdata->chip;
++
++	guard(mutex)(&pwm_lock);
 +
 +	if (!chip->operational)
 +		return -ENODEV;
 +
-+	ret_tohw = __pwm_round_waveform_tohw(chip, pwm, wf, wfhw);
-+	if (ret_tohw < 0)
-+		return ret_tohw;
++	switch (cmd) {
++	case PWM_IOCTL_REQUEST:
++		{
++			unsigned int hwpwm;
 +
-+	if (IS_ENABLED(CONFIG_PWM_DEBUG) && ret_tohw > 1)
-+		dev_err(&chip->dev, "Unexpected return value from __pwm_round_waveform_tohw: requested %llu/%llu [+%llu], return value %d\n",
-+			wf_req.duty_length_ns, wf_req.period_length_ns, wf_req.duty_offset_ns, ret_tohw);
++			ret = get_user(hwpwm, (unsigned int __user *)arg);
++			if (ret)
++				return ret;
 +
-+	ret_fromhw = __pwm_round_waveform_fromhw(chip, pwm, wfhw, wf);
-+	if (ret_fromhw < 0)
-+		return ret_fromhw;
-+
-+	if (IS_ENABLED(CONFIG_PWM_DEBUG) && ret_fromhw > 0)
-+		dev_err(&chip->dev, "Unexpected return value from __pwm_round_waveform_fromhw: requested %llu/%llu [+%llu], return value %d\n",
-+			wf_req.duty_length_ns, wf_req.period_length_ns, wf_req.duty_offset_ns, ret_tohw);
-+
-+	if (IS_ENABLED(CONFIG_PWM_DEBUG) &&
-+	    ret_tohw == 0 && pwm_check_rounding(&wf_req, wf))
-+		dev_err(&chip->dev, "Wrong rounding: requested %llu/%llu [+%llu], result %llu/%llu [+%llu]\n",
-+			wf_req.duty_length_ns, wf_req.period_length_ns, wf_req.duty_offset_ns,
-+			wf->duty_length_ns, wf->period_length_ns, wf->duty_offset_ns);
-+
-+	return ret_tohw;
-+}
-+EXPORT_SYMBOL_GPL(pwm_round_waveform_might_sleep);
-+
-+/**
-+ * pwm_get_waveform_might_sleep - Query hardware about current configuration
-+ * Cannot be used in atomic context.
-+ * @pwm: PWM device
-+ * @wf: output parameter
-+ *
-+ * Stores the current configuration of the PWM in @wf. Note this is the
-+ * equivalent of pwm_get_state_hw() (and not pwm_get_state()) for pwm_waveform.
-+ */
-+int pwm_get_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf)
-+{
-+	struct pwm_chip *chip = pwm->chip;
-+	const struct pwm_ops *ops = chip->ops;
-+	char wfhw[WFHWSIZE];
-+	int err;
-+
-+	BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
-+
-+	guard(pwmchip)(chip);
-+
-+	if (!chip->operational)
-+		return -ENODEV;
-+
-+	err = __pwm_read_waveform(chip, pwm, &wfhw);
-+	if (err)
-+		return err;
-+
-+	return __pwm_round_waveform_fromhw(chip, pwm, &wfhw, wf);
-+}
-+EXPORT_SYMBOL_GPL(pwm_get_waveform_might_sleep);
-+
-+/* Called with the pwmchip lock held */
-+static int __pwm_set_waveform(struct pwm_device *pwm,
-+			      const struct pwm_waveform *wf,
-+			      bool exact)
-+{
-+	struct pwm_chip *chip = pwm->chip;
-+	const struct pwm_ops *ops = chip->ops;
-+	char wfhw[WFHWSIZE];
-+	struct pwm_waveform wf_rounded;
-+	int err;
-+
-+	BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
-+
-+	if (!pwm_wf_valid(wf))
-+		return -EINVAL;
-+
-+	err = __pwm_round_waveform_tohw(chip, pwm, wf, &wfhw);
-+	if (err)
-+		return err;
-+
-+	if ((IS_ENABLED(CONFIG_PWM_DEBUG) || exact) && wf->period_length_ns) {
-+		err = __pwm_round_waveform_fromhw(chip, pwm, &wfhw, &wf_rounded);
-+		if (err)
-+			return err;
-+
-+		if (IS_ENABLED(CONFIG_PWM_DEBUG) && pwm_check_rounding(wf, &wf_rounded))
-+			dev_err(&chip->dev, "Wrong rounding: requested %llu/%llu [+%llu], result %llu/%llu [+%llu]\n",
-+				wf->duty_length_ns, wf->period_length_ns, wf->duty_offset_ns,
-+				wf_rounded.duty_length_ns, wf_rounded.period_length_ns, wf_rounded.duty_offset_ns);
-+
-+		if (exact && pwmwfcmp(wf, &wf_rounded)) {
-+			dev_dbg(&chip->dev, "Requested no rounding, but %llu/%llu [+%llu] -> %llu/%llu [+%llu]\n",
-+				wf->duty_length_ns, wf->period_length_ns, wf->duty_offset_ns,
-+				wf_rounded.duty_length_ns, wf_rounded.period_length_ns, wf_rounded.duty_offset_ns);
-+
-+			return 1;
++			return pwm_cdev_request(cdata, hwpwm);
 +		}
++		break;
++
++	case PWM_IOCTL_FREE:
++		{
++			unsigned int hwpwm;
++
++			ret = get_user(hwpwm, (unsigned int __user *)arg);
++			if (ret)
++				return ret;
++
++			return pwm_cdev_free(cdata, hwpwm);
++		}
++		break;
++
++	case PWM_IOCTL_ROUNDWF:
++		{
++			struct pwmchip_waveform cwf;
++			struct pwm_waveform wf;
++			struct pwm_device *pwm;
++
++			ret = copy_from_user(&cwf,
++					     (struct pwmchip_waveform __user *)arg,
++					     sizeof(cwf));
++			if (ret)
++				return -EFAULT;
++
++			if (cwf.__pad != 0)
++				return -EINVAL;
++
++			ret = pwm_cdev_request(cdata, cwf.hwpwm);
++			if (ret)
++				return ret;
++
++			pwm = cdata->pwm[cwf.hwpwm];
++
++			wf = (struct pwm_waveform) {
++				.period_length_ns = cwf.period_length_ns,
++				.duty_length_ns = cwf.duty_length_ns,
++				.duty_offset_ns = cwf.duty_offset_ns,
++			};
++
++			ret = pwm_round_waveform_might_sleep(pwm, &wf);
++			if (ret)
++				return ret;
++
++			cwf = (struct pwmchip_waveform) {
++				.hwpwm = cwf.hwpwm,
++				.period_length_ns = wf.period_length_ns,
++				.duty_length_ns = wf.duty_length_ns,
++				.duty_offset_ns = wf.duty_offset_ns,
++			};
++
++			return copy_to_user((struct pwmchip_waveform __user *)arg,
++					    &cwf, sizeof(cwf));
++		}
++		break;
++
++	case PWM_IOCTL_GETWF:
++		{
++			struct pwmchip_waveform cwf;
++			struct pwm_waveform wf;
++			struct pwm_device *pwm;
++
++			ret = copy_from_user(&cwf,
++					     (struct pwmchip_waveform __user *)arg,
++					     sizeof(cwf));
++			if (ret)
++				return -EFAULT;
++
++			if (cwf.__pad != 0) {
++				pr_warn("huh\n");
++				return -EINVAL;
++			}
++
++			ret = pwm_cdev_request(cdata, cwf.hwpwm);
++			if (ret)
++				return ret;
++
++			pwm = cdata->pwm[cwf.hwpwm];
++
++			ret = pwm_get_waveform_might_sleep(pwm, &wf);
++			if (ret)
++				return ret;
++
++			cwf.period_length_ns = wf.period_length_ns;
++			cwf.duty_length_ns = wf.duty_length_ns;
++			cwf.duty_offset_ns = wf.duty_offset_ns;
++
++			return copy_to_user((struct pwmchip_waveform __user *)arg,
++					    &cwf, sizeof(cwf));
++		}
++		break;
++
++	case PWM_IOCTL_SETROUNDEDWF:
++	case PWM_IOCTL_SETEXACTWF:
++		{
++			struct pwmchip_waveform cwf;
++			struct pwm_waveform wf;
++			struct pwm_device *pwm;
++
++			ret = copy_from_user(&cwf,
++					     (struct pwmchip_waveform __user *)arg,
++					     sizeof(cwf));
++			if (ret)
++				return -EFAULT;
++			if (cwf.__pad != 0) {
++				pr_warn("huh\n");
++				return -EINVAL;
++			}
++
++			if (cwf.period_length_ns > 0 &&
++			    (cwf.duty_length_ns > cwf.period_length_ns ||
++			     cwf.duty_offset_ns >= cwf.period_length_ns))
++				return -EINVAL;
++
++			ret = pwm_cdev_request(cdata, cwf.hwpwm);
++			if (ret)
++				return ret;
++
++			pwm = cdata->pwm[cwf.hwpwm];
++
++			wf = (struct pwm_waveform){
++				.period_length_ns = cwf.period_length_ns,
++				.duty_length_ns = cwf.duty_length_ns,
++				.duty_offset_ns = cwf.duty_offset_ns,
++			};
++
++			return pwm_set_waveform_might_sleep(pwm, &wf,
++							    cmd == PWM_IOCTL_SETEXACTWF);
++		}
++		break;
++
++	default:
++		return -ENOTTY;
 +	}
-+
-+	err = __pwm_write_waveform(chip, pwm, &wfhw);
-+	if (err)
-+		return err;
-+
-+	/* update .state */
-+	pwm_wf2state(wf, &pwm->state);
-+
-+	if (IS_ENABLED(CONFIG_PWM_DEBUG) && ops->read_waveform && wf->period_length_ns) {
-+		struct pwm_waveform wf_set;
-+
-+		err = __pwm_read_waveform(chip, pwm, &wfhw);
-+		if (err)
-+			/* maybe ignore? */
-+			return err;
-+
-+		err = __pwm_round_waveform_fromhw(chip, pwm, &wfhw, &wf_set);
-+		if (err)
-+			/* maybe ignore? */
-+			return err;
-+
-+		if (pwmwfcmp(&wf_set, &wf_rounded) != 0)
-+			dev_err(&chip->dev,
-+				"Unexpected setting: requested %llu/%llu [+%llu], expected %llu/%llu [+%llu], set %llu/%llu [+%llu]\n",
-+				wf->duty_length_ns, wf->period_length_ns, wf->duty_offset_ns,
-+				wf_rounded.duty_length_ns, wf_rounded.period_length_ns, wf_rounded.duty_offset_ns,
-+				wf_set.duty_length_ns, wf_set.period_length_ns, wf_set.duty_offset_ns);
-+	}
-+	return 0;
 +}
 +
-+/**
-+ * pwm_set_waveform_might_sleep - Apply a new waveform
-+ * Cannot be used in atomic context.
-+ * @pwm: PWM device
-+ * @wf: The waveform to apply
-+ * @exact: If true no rounding is allowed
-+ *
-+ * Typically a requested waveform cannot be implemented exactly, e.g. because
-+ * you requested .period_length_ns = 100 ns, but the hardware can only set
-+ * periods that are a multiple of 8.5 ns. With that hardware passing exact =
-+ * true results in pwm_set_waveform_might_sleep() failing and returning 1. If
-+ * exact = false you get a period of 93.5 ns (i.e. the biggest period not bigger
-+ * than the requested value).
-+ * Note that even with exact = true, some rounding by less than 1 is
-+ * possible/needed. In the above example requesting .period_length_ns = 94 and
-+ * exact = true, you get the hardware configured with period = 93.5 ns.
-+ */
-+int pwm_set_waveform_might_sleep(struct pwm_device *pwm,
-+				 const struct pwm_waveform *wf, bool exact)
-+{
-+	struct pwm_chip *chip = pwm->chip;
-+	int err;
++static const struct file_operations pwm_cdev_fileops = {
++	.open = pwm_cdev_open,
++	.release = pwm_cdev_release,
++	.owner = THIS_MODULE,
++	.llseek = no_llseek,
++	.unlocked_ioctl = pwm_cdev_ioctl,
++};
 +
-+	might_sleep();
++static dev_t pwm_devt;
 +
-+	guard(pwmchip)(chip);
+ /**
+  * __pwmchip_add() - register a new PWM chip
+  * @chip: the PWM chip to add
+@@ -1646,7 +1896,13 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
+ 	scoped_guard(pwmchip, chip)
+ 		chip->operational = true;
+ 
+-	ret = device_add(&chip->dev);
++	if (chip->id < 256 && chip->ops->write_waveform)
++		chip->dev.devt = MKDEV(MAJOR(pwm_devt), chip->id);
 +
-+	if (!chip->operational)
-+		return -ENODEV;
++	cdev_init(&chip->cdev, &pwm_cdev_fileops);
++	chip->cdev.owner = owner;
 +
-+	if (IS_ENABLED(CONFIG_PWM_DEBUG) && chip->atomic) {
-+		/*
-+		 * Catch any drivers that have been marked as atomic but
-+		 * that will sleep anyway.
-+		 */
-+		non_block_start();
-+		err = __pwm_set_waveform(pwm, wf, exact);
-+		non_block_end();
-+	} else {
-+		err = __pwm_set_waveform(pwm, wf, exact);
-+	}
-+
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(pwm_set_waveform_might_sleep);
-+
- static void pwm_apply_debug(struct pwm_device *pwm,
- 			    const struct pwm_state *state)
++	ret = cdev_device_add(&chip->cdev, &chip->dev);
+ 	if (ret)
+ 		goto err_device_add;
+ 
+@@ -1697,7 +1953,7 @@ void pwmchip_remove(struct pwm_chip *chip)
+ 		idr_remove(&pwm_chips, chip->id);
+ 	}
+ 
+-	device_del(&chip->dev);
++	cdev_device_del(&chip->cdev, &chip->dev);
+ }
+ EXPORT_SYMBOL_GPL(pwmchip_remove);
+ 
+@@ -2241,9 +2497,16 @@ static int __init pwm_init(void)
  {
+ 	int ret;
+ 
++	ret = alloc_chrdev_region(&pwm_devt, 0, 256, "pwm");
++	if (ret) {
++		pr_warn("Failed to initialize chrdev region for PWM usage\n");
++		return ret;
++	}
++
+ 	ret = class_register(&pwm_class);
+ 	if (ret) {
+ 		pr_err("Failed to initialize PWM class (%pe)\n", ERR_PTR(ret));
++		unregister_chrdev_region(pwm_devt, 256);
+ 		return ret;
+ 	}
+ 
 diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 6a26a5210dab..40cef0bc0de7 100644
+index 40cef0bc0de7..b12ca9531e32 100644
 --- a/include/linux/pwm.h
 +++ b/include/linux/pwm.h
-@@ -358,7 +358,11 @@ static inline void pwmchip_set_drvdata(struct pwm_chip *chip, void *data)
- }
+@@ -2,6 +2,7 @@
+ #ifndef __LINUX_PWM_H
+ #define __LINUX_PWM_H
  
- #if IS_ENABLED(CONFIG_PWM)
--/* PWM user APIs */
++#include <linux/cdev.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
+ #include <linux/module.h>
+@@ -304,6 +305,7 @@ struct pwm_ops {
+ /**
+  * struct pwm_chip - abstract a PWM controller
+  * @dev: device providing the PWMs
++ * @cdev: &struct cdev for this device
+  * @ops: callbacks for this PWM controller
+  * @owner: module providing this chip
+  * @id: unique number of this PWM chip
+@@ -318,6 +320,7 @@ struct pwm_ops {
+  */
+ struct pwm_chip {
+ 	struct device dev;
++	struct cdev cdev;
+ 	const struct pwm_ops *ops;
+ 	struct module *owner;
+ 	unsigned int id;
+diff --git a/include/uapi/linux/pwm.h b/include/uapi/linux/pwm.h
+new file mode 100644
+index 000000000000..ed127a80afbf
+--- /dev/null
++++ b/include/uapi/linux/pwm.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
 +
-+/* PWM consumer APIs */
-+int pwm_round_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf);
-+int pwm_get_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf);
-+int pwm_set_waveform_might_sleep(struct pwm_device *pwm, const struct pwm_waveform *wf, bool exact);
- int pwm_apply_might_sleep(struct pwm_device *pwm, const struct pwm_state *state);
- int pwm_apply_atomic(struct pwm_device *pwm, const struct pwm_state *state);
- int pwm_adjust_config(struct pwm_device *pwm);
++#ifndef _UAPI_PWM_H_
++#define _UAPI_PWM_H_
++
++#include <linux/ioctl.h>
++#include <linux/types.h>
++
++struct pwmchip_waveform {
++	__u32 hwpwm;
++	__u32 __pad; /* padding, must be zero */
++	__u64 period_length_ns;
++	__u64 duty_length_ns;
++	__u64 duty_offset_ns;
++};
++
++#define PWM_IOCTL_REQUEST	_IOW(0x75, 1, unsigned int)
++#define PWM_IOCTL_FREE		_IOW(0x75, 2, unsigned int)
++#define PWM_IOCTL_ROUNDWF	_IOWR(0x75, 3, struct pwmchip_waveform)
++#define PWM_IOCTL_GETWF		_IOWR(0x75, 4, struct pwmchip_waveform)
++#define PWM_IOCTL_SETROUNDEDWF	_IOW(0x75, 5, struct pwmchip_waveform)
++#define PWM_IOCTL_SETEXACTWF	_IOW(0x75, 6, struct pwmchip_waveform)
++
++#endif /* _UAPI_PWM_H_ */
 -- 
 2.45.2
 
