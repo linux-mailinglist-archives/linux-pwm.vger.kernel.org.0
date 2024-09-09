@@ -1,181 +1,222 @@
-Return-Path: <linux-pwm+bounces-3151-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3152-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B82297084F
-	for <lists+linux-pwm@lfdr.de>; Sun,  8 Sep 2024 16:59:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 59FBE970ACA
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 02:29:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E2E91C20881
-	for <lists+linux-pwm@lfdr.de>; Sun,  8 Sep 2024 14:59:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 827101C20A7E
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 00:29:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1326116D332;
-	Sun,  8 Sep 2024 14:59:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BECE46AAD;
+	Mon,  9 Sep 2024 00:29:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Gyfu0SDM"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="K4Od1vjg"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from IND01-MAX-obe.outbound.protection.outlook.com (mail-maxind01olkn2026.outbound.protection.outlook.com [40.92.102.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133D9156243
-	for <linux-pwm@vger.kernel.org>; Sun,  8 Sep 2024 14:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725807586; cv=none; b=nOEPGvPfcBVnBiIrPyoKf8ogNhUivSHbq0VAyjEkcu58jniBluXmaZuRupl8TFsaajtFDJ02mZvLzdrSFF37Ghaj7IJG0zrDSevOpgMohz/8DWm8woMcnIOZ3vi6H2mohFOUIFjEXZpHLvhfqaGK3du5XPnugXSGZdsgg4OX+SA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725807586; c=relaxed/simple;
-	bh=5EYRa4wxLim2nTIv2ttBKyxla4itO+B3ApUaBXi7Lyw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fP5JKXxZiFjyembXTRikyal9/ymtFHQs6OMdsh4LRp9Roy/shlmKYr506GTPZVZXbqhsSS2qfX1BYYS0NRG8H5EEW4nGk9oiEP/Ey1ka+DVXED+sd0cdltQKPTDstPKpn40kaxn2GsXjT8cVuzBOFNgtSr4MK6BZebA2bC0uQng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Gyfu0SDM; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a8a7903cb7dso157652566b.3
-        for <linux-pwm@vger.kernel.org>; Sun, 08 Sep 2024 07:59:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725807580; x=1726412380; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RdjZuwklg3W2mfIeBzz/NQICPspSzY1LH3dp75KuGqg=;
-        b=Gyfu0SDMXcZsOrd97bdORWB/9d34Itp95zGBNNQadYyILPJNQnmTl9vHrA/IfUStzm
-         sN9cE/ydvupDnXpiL9crYWqY1ZundXCl9OY/Mbe+r/t8qTUTZA5Ej/YhlbmIoxRkSGzj
-         6osdlTysS+5WBFdNA3g+0UNBJp7XCiXv4ALAy1Fi2bW1UdCgmhYF58sSDTEtwRCUlXCk
-         fgBrZTy2s3I1Uk+4R00cwIbJ1fOqLX4pTolMmiqxFXofYc/tMhsLnVzT6q95Il4JxSC5
-         28pZvOkobIC+kFD8/Dmk2HEWkVNtdBUMkzGzhcHLlV12cWXNMrW8KEKA5GUpXU3PWBNK
-         QB/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725807580; x=1726412380;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RdjZuwklg3W2mfIeBzz/NQICPspSzY1LH3dp75KuGqg=;
-        b=GubotmsVKt6Xrb8VtVmro5iGiAEmSZ7wz3uUCHZesWYVdka+RxTpdQ7kwSPaI55jkA
-         O7TqGxBG7Fph8xdsNvsg1mkJ5zHPg+++SrMZ4z8r3rWAqgd4+sD7SGS3aNIxR9nAYMgc
-         r3hp1EIPOvxMds8oIn1Bu7JYuZVfZ+ifQI2aO7j/RmawGvtXYAoK4YMEfouJpjLA6BhB
-         dmtKbc+oJ2Es2zPTegMj1GOdNo4N26pRs7vbn5Vtz4JDqvS0u0tKmYmZjOmnlhd+Exlw
-         WsHd7JITuMSsx9/eJep3onTT3tN3uk8m3MnWoxUw5p6w98mCR2QW95Hn3eo82npfrmxF
-         Hpvw==
-X-Gm-Message-State: AOJu0YxE2S7ZmftcT3xAAF1Nb+uRz2BdllzfmZy1Oku8lNoLIf9cTXGx
-	hIi2m8Hlu0QVSG63RwSaKU6QZiFazPQuGXIwBpQrOycBgWO7vsofQAWifICBsBY=
-X-Google-Smtp-Source: AGHT+IEU8t8wlA8Zfbu8SnCigT3UoH2UzqMyk7MFMohGp65QdPhHUM98O7lmKgXggA5inVNesFkz3w==
-X-Received: by 2002:a05:6402:2807:b0:5c3:cb45:2e with SMTP id 4fb4d7f45d1cf-5c3dc77b0b3mr7996209a12.5.1725807580038;
-        Sun, 08 Sep 2024 07:59:40 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:3473:41ca:c39b:2ff3])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c3ebd4679csm1935036a12.32.2024.09.08.07.59.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2024 07:59:39 -0700 (PDT)
-Date: Sun, 8 Sep 2024 16:59:35 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-pwm@vger.kernel.org, Kent Gibson <warthog618@gmail.com>
-Subject: Re: [PATCH v4 4/7] pwm: Add support for pwmchip devices for faster
- and easier userspace access
-Message-ID: <5qrct3wt2e544vfoxaaacdifxcc7k243hnlrs7rki5nkbki4os@vfss2f2g4hvu>
-References: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
- <00c9f1181dc351e1e6041ba6e41e4c30b12b6a27.1725635013.git.u.kleine-koenig@baylibre.com>
- <7acc85f6-69e9-4e44-ab04-88eaf2ffa291@baylibre.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1B979FD;
+	Mon,  9 Sep 2024 00:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.102.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725841775; cv=fail; b=VmePLraj5HrYFE5SrMWCggrmQmBmVB2EUNyc1mFxvBS7+9cpHJZ2qtZ09ezcXsHbRefi2Xv+POLhE/WxGcmVp0ypDLPDaRzD66iJUDVtA24hshtgRHqnYhd+aIju55eSS7p1kXAcxykXdeXIx1DjpTl5fHIi7/M8BbQvt7tTD2A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725841775; c=relaxed/simple;
+	bh=AvdRPJDGAivMlhczHbYaG+Mw731I5OY7GADmGWDPjrg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=kEOFBEPf6B47fQPb70UG0X1v1jFHi+zfzTZWtJ6JMhgignrrpghQjI3aLk4gXLdxKJG0m///9UgvKOH/RNecfHqtciWGyNdVYpQJNZAwVxbZNb4a66jsyybh48pbJ4cAD6RXiWgCZXPBJdrtlTZwprR+NaZ5Z5u7wd9uRLQvdQU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=K4Od1vjg; arc=fail smtp.client-ip=40.92.102.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mUBzOSRX5zPW4FwWEogWuofsfxTZ7FMbkyHKSu4lvbuOrIIGqjepkjZeuGZC6wAKUdX6oKI5iz+oVTPtSmfEm0UNBzyXwDjpyzTjlmpCGFS8ktiWlbA0kIWA/FmxlcMWQCuJOHdQp8Btj4xrjqXz64+NxVpNhVgY0+UvC02WkkaN5Qzpkc8EPYSnmiDF7aziuW15sqkCjBpuZmcB9OvnXLs+p8fgLfkA3utj2+uu1o/Z3IbfrhlSnZ4Mg0W0VJ7i1eLL6VrYrojC9Gy8JutvzNLZLA2Zas6XxNQspaBVB+R2AOZzLqPZOkcWMzuuLEud8PxW0Z9tXPtyKRFuIvrP9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XBDF3ze7Cj4nScaXHZ6M8qtl688MJuVP0rCq2nuw8yM=;
+ b=FJ3jzQlLwXkHYIJaLCU2F6LKS1DEFZAYBgMcfIr1tcQ25n367Pyrb027k/8kK+CJfrfJhMXRyq0WDF+P056HaTRnuefbSUIaJ4ROndlz4rK6mkv148bKsbGeYZlmeOaox14paLAu8KxTnGHfHj/NgboZ/Me3MhHwN0yhbErtqwqnFSEkjJ4nb4va080p4fjCCh1dqdMz2OGM9ezu3AQ+PlwlG6o6JAp9z00tJlXkofwyeFqUrCYzwvGXWWPtjdoUZZF8pBG6NPTC/HjQOeqSH6xEGnywvcCh60H0XBwYEpo3JBBh9X0nWUtk2XkZxFKoqbmFfQeBu2CJHVQLi5f/XA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XBDF3ze7Cj4nScaXHZ6M8qtl688MJuVP0rCq2nuw8yM=;
+ b=K4Od1vjgNm5gdaSaB2/tRS2h2pChAYBXNnF0gbZTAEYWWgZUl5kguUunISD03lrMUXidPZ/v2xwdZt4oWWKweJccfHdRWJpMXG22v9ERaK9I0xAjN2TRuNq6WW4FC++e4gYQSSQ5nh7L4uqroRhWURJjjyxcN3OyTDm6EGCT6vn4Gor9tCEtsXajhySHIZ8jsPyYEIt3uZUNqRObQVM+v5Fbxd++lm2DibNQExIChVAJam76v1mbLMYhtQtugUoeKEyI2Db399sD1vT6dLwRxnyBMfb4H1Js5mvi6AtNuEF3PWiwzxxFdu//46UzRdiDq90aXU2LV/aVZzgsoNPOkw==
+Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:138::5)
+ by PN3P287MB0354.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:d8::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.22; Mon, 9 Sep
+ 2024 00:29:24 +0000
+Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
+ ([fe80::a94:ad0a:9071:806c]) by MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
+ ([fe80::a94:ad0a:9071:806c%4]) with mapi id 15.20.7939.022; Mon, 9 Sep 2024
+ 00:29:24 +0000
+Message-ID:
+ <MA0P287MB28227F2A65ADCC493499B7CEFE992@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
+Date: Mon, 9 Sep 2024 08:29:15 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: sophgo: add bindings for sg2042
+To: Yixun Lan <dlan@gentoo.org>, Chen Wang <unicornxw@gmail.com>
+Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, inochiama@outlook.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-riscv@lists.infradead.org, chao.wei@sophgo.com,
+ haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, chunzhi.lin@sophgo.com
+References: <cover.1725536870.git.unicorn_wang@outlook.com>
+ <6e5fb37472b916cb9d9abfbe3bea702d8d0d9737.1725536870.git.unicorn_wang@outlook.com>
+ <20240906024435-GYA153340@gentoo>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20240906024435-GYA153340@gentoo>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TMN: [r69EZut5XYbg2Gpv33Dmwx4k7CGMkBGp]
+X-ClientProxiedBy: TYBP286CA0007.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:404:ce::19) To MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:138::5)
+X-Microsoft-Original-Message-ID:
+ <6fc9c5b7-a69e-48f7-9a88-d416bcc15791@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lydg36clmni7ufgj"
-Content-Disposition: inline
-In-Reply-To: <7acc85f6-69e9-4e44-ab04-88eaf2ffa291@baylibre.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MA0P287MB2822:EE_|PN3P287MB0354:EE_
+X-MS-Office365-Filtering-Correlation-Id: 68b058eb-6ad0-45c9-691a-08dcd06673eb
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|6090799003|19110799003|5072599009|8060799006|8022599003|15080799006|461199028|1602099012|4302099013|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	jrasYkjBdX39CibHSftUQZF44M5+mMCMcD7UM7ydTOnzOi0DqFD0XQh4ZyylHHi/wBQvZkHC/fYz1rIuOhx5Mgx3Tu6ysxBcuHQwAs+KRqRpV6yvEcFhoQovmQSUiYgQ9vOUmW+Lrxa5sbTHbToSzUxkzykIM+CrMvCUeQYwL8VULSSFkouBEYhRbBmGxblypUo6dNfAUfhrBPfAIK3nG73/HJJK+zTuzejDBrdV0VMYrF1/fyWynxSfpBdymIcgyZAKEHWRDkomTQL0D9gmpH73pE43Yv0lQdgkkvCAYxo2DklK2OzfAkixdgrqdOYs/yc1Fm2B6Lc7405Dpj0jtKdFJ6qcEptY6sftg6vkzJY56Q07RWNJCH8ceH9PVqN4FxkRK9OTgLryyCGjbX0V03Fp5w66qwQl2doV999uPCYVvM/L9ErgkcS1X3AaYjvdSJX880FyLX649W8lIJhENsEqA485a9FXHeLzn5w2z6fBApy3Q3z3Oas7rsXuwu1yXtht3gNU2lyvft12B7s4ZwjemTJfhWnsGSLQpl53LB7SdRXkuV2GXC6h6fOvqXIpCCqb9SNl2VDNfKnKjvUwEYlZN5H8DLCr7LGlkz5f4LxGdAtUZ55Pn+/MyocktTcBVO/9ErJ5M2OmVLztLrk7I7qKgq56L6gDHLETpV6TvGdpDZ9JK4RvkK6MSCgJngFpotDuAXjArirTvKZuTyLUwvleVtcqtKz6gbTmSlLt9qcIqxKN1bSxlTxpFxddnrHyK2Ag2es3vxEdMmbG8bRZTOh2y/5LXg0M6fKOSmArEynrJuaKM4x8DTncSP2Qk+IDLjqaclh+NibRhzpnwLbOWT1CORlDA810MxyLqBX8hxdBAoqq2ta0ZEZkF/d1FPR4
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NlNJbmtNMEgxcGwveVJ3RElUREtFZHpxTWNTcm9OYWQwSElVVzE1UjVvbUY2?=
+ =?utf-8?B?ZVk4TTJLbWhIbnF3eERCSjBHemhhTmNFQjZGdVhiTFNkRDkrV1BLNEJTV0E3?=
+ =?utf-8?B?WDhza1lIQXQvazVCTGpLMFU3NEVUYzRvblNMdENNTkUyTXMxKzRMN2hqeUY0?=
+ =?utf-8?B?a2EvczlsZmNma1AwWDZvSVBvOVY3OVJZYVFZcTdWREIrTW4zNlZrVjY5YkNp?=
+ =?utf-8?B?czFlbllNWCs2MkNZRGY4UzNZZ2FjR0hJdUhSOTZvR3M2Y1VEVkNsTGg4TFJx?=
+ =?utf-8?B?b1ZiQXRZcFdPRE9oaDFLbzhUVFhVVTRnY2VEMkRoSlZ6Y1BBMlc2WmFJTlBE?=
+ =?utf-8?B?b0N1M1F6TmJ6L0VYNmdJeUxrcnBBQzNKck9jbEFwVTVET3VuTlE2dHFERE1i?=
+ =?utf-8?B?dG1OWnIyMkpBTGFjcmRHNXVLR0YwQ3NSbjdMdVRJZHBuMkRTMlVDazVNaGgy?=
+ =?utf-8?B?WXRja0FZVDRxUnhjckdaQlZJbHhVcDlFd1F2MkNUS29iMXdoVzFLWjcrNHd3?=
+ =?utf-8?B?MVloVHkzay9uOCtaY2tNVkVMLzFXYVg3bDVaOTJoRlpLYStObkpCYXNWdEFj?=
+ =?utf-8?B?VG9OL05KMktJckdOSWxXTjFKY0NMUDIvb1M0MjZRNEJ0d1hZZ0FwL2lOL3pa?=
+ =?utf-8?B?V2lXcm14VTNYUzE1VXY0VXNsQnU2ekVwSHRsbFd3bmxwR0tiZUZCZm5vTHZt?=
+ =?utf-8?B?QkNjOE1EQjRtdHBld3hwU2RjUENVVUc4UFJDbUJ0UnIxZXpobFppS1JNajl5?=
+ =?utf-8?B?R3NubkpDenlFT05aUGpzc2U1enpOS2VNdThSSERnY1JsdmhFTXR4WkNUS3Bu?=
+ =?utf-8?B?ZmloZ2tIRnFmWVZFdWhpSVMyaDJNSDJtcnRvMy8vUFl5d29DZXFLL3BDTnNI?=
+ =?utf-8?B?Nmx5a2dFWGg4bW9CVENNcTVvNkJ4UHprUzhrWkVrelg5MzJiWUpxSHlFbUh1?=
+ =?utf-8?B?QWQ0dWd3eGw1azM4QjdSeDFleUQwM1gram50SjE3L3hRUnVsQjM4S2lTR056?=
+ =?utf-8?B?UW5DUUR4dUJPRXdyODNLUnY3MUJ3ZVpxczlFNjJ1S0lwOUQ5RTVrSlU3b3hW?=
+ =?utf-8?B?S0xkMlVVUjNieTJiVG8wTGxoQnc5Smh6aFBJa0hjaktUU3VISkJFcXZVR1Jq?=
+ =?utf-8?B?MjVWUmJPUHc2Y2RhTnhRU09PRkZvYmpPeTBZekY0MUY0M1I1R2JSRTU0bkNJ?=
+ =?utf-8?B?MVUxdm1mOHpyZHZqaDhjcHpqZUpicEZic09WcDlEQXc1aTA0bkk1Mk4zM2NE?=
+ =?utf-8?B?ZTVjN051OHpnU00vKzJSSzFtSkZYNHVpK3JmVXF1OUxsNTZMem5Za1BUalNW?=
+ =?utf-8?B?NFMvQk83UHUzdlFQZjBiS2pUblJ6WExRbGVFMldSc2JZcTlTL05mY2w5bXVm?=
+ =?utf-8?B?cS9rOHYvSjlUR0grK3ByTHQydHJ5VlM4MWRVSytJc0NBRUVBdE43dVFCVlZi?=
+ =?utf-8?B?bW4veXVXNWg5SVczUWZsZnljMHJTLzNtYUdaOHdjL2Fnc2x0Q243TStRNmx4?=
+ =?utf-8?B?Y3RIQWxyaXZjVzdjWENuZUs5SFg3TDN2Y1l3TXp5MEplWEVpL08ycExFdEI2?=
+ =?utf-8?B?UHdhOGRoNG9BNi94UHlsNy9sVDFzbnNodXdxblBmTHBhdXNvb1FFNzAzL096?=
+ =?utf-8?B?czlhTktraTZhYjBXTFR6WUl4V3Rxem5ka2o1cHhnQ1MxaHI0bkd2L1JZa1NS?=
+ =?utf-8?Q?+/NewZ4M9Kl5PCM2x1dz?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68b058eb-6ad0-45c9-691a-08dcd06673eb
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2024 00:29:24.7576
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3P287MB0354
 
 
---lydg36clmni7ufgj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello David,
-
-On Fri, Sep 06, 2024 at 05:26:46PM -0500, David Lechner wrote:
-> Maybe a potential problem here with multiple requests.
->=20
-> Suppose an applications does:
->=20
-> // main thread
-> fd =3D open("/dev/pwm0", ...);
->=20
-> // start some threads
->=20
-> // thread A
->=20
-> ioctl(fd, PWM_IOCTL_REQUEST, 0);
-> // in kernel, pwm_device_request() is called and
-> // cdata->pwm[0] is assigned
->=20
-> // does some stuff - OK
->=20
-> 	// thread B
->=20
-> 	ioctl(fd, PWM_IOCTL_REQUEST, 0);
-> 	// succeeds since cdata->pwm[0] is assigned
->=20
-> 	// does some stuff - messes up thread A
->=20
-> // does some stuff - messes up thread B
-
-If two threads share a single fd for a given pwmchip char device, it's
-in the responsibility of the application to not shoot in its own foot.
-There are similar problems if two threads write to the same fd
-corresponding to an ordinary file or directory. I think behaving
-differently here isn't a good idea.
-=20
-> 	// cleans up after itself
-> 	ioctl(fd, PWM_IOCTL_FREE, 0);
-> 	// pwm_put() is called and
-> 	// cdata->pwm[0] is set to NULL
-> =09
-> // does some stuff - kernel has to call pwm_device_request()
-> // again, which may fail? e.g. if sysfs stole it in the meantime
->=20
-> // cleans up after itself
-> ioctl(fd, PWM_IOCTL_FREE, 0);
->=20
-> Maybe we should be more strict and only allow one requester at a time?
-
-=46rom the POV of the kernel code, there is only one requestor, identified
-by the opened file. Handling that in a different way isn't a good idea I
-think.
-
-> Or maybe we just don't need the REQUEST and FREE ioctls?
-
-The idea of the REQUEST ioctl is that an application can make sure it
-can access all PWMs it needs before starting to change the
-configuration.
-
-> > +			if (cwf.__pad !=3D 0) {
-> > +				pr_warn("huh\n");
->=20
-> This is what I will say when I see this in the kernel log. :-p
-
-So the message seems to be chosen correctly :-)
-
-Of course will drop that, thanks for finding that.
-
-Best regards
-Uwe
-
---lydg36clmni7ufgj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbdu9UACgkQj4D7WH0S
-/k5mfAgAiX9FkqBGzcctBlRKpaPyeVUHhQfEfVuoCiaCaGVobKr2DEzt659Ue81R
-2+p0fbkcG9/i2EE2T5eVj0l5Rzq46drkMkX8XmTWsKkyWg8BoiDxWv2Z71Du5glh
-PXTo4swd2qjjyHz1+Ehr8n/mYd1ODgwGZto0YJmk52b1mZEW7dY6+VAYcwhefypt
-kuGyUuixEtfX3zRfmSmwCP6aNbYatrGkN2RZUEL7stAMolh53vme9KFLFXg2xDor
-pH4UK+gwN7Xy18o8TG2rxT0gJyZNAuXoj3MM5DraOP5oHuzsmQ99ewM6OVc8RXhj
-hOjgUNePo6pBnGd2BcDeS7FsWQCj/w==
-=l+1l
------END PGP SIGNATURE-----
-
---lydg36clmni7ufgj--
+On 2024/9/6 10:44, Yixun Lan wrote:
+> On 20:10 Thu 05 Sep     , Chen Wang wrote:
+>> From: Chen Wang <unicorn_wang@outlook.com>
+>>
+>> Add binding document for sophgo,sg2042-pwm.
+>>
+>> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+>> ---
+>>   .../bindings/pwm/sophgo,sg2042-pwm.yaml       | 52 +++++++++++++++++++
+>>   1 file changed, 52 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
+>> new file mode 100644
+>> index 000000000000..10212694dd41
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
+>> @@ -0,0 +1,52 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pwm/sophgo,sg2042-pwm.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Sophgo SG2042 PWM controller
+>> +
+>> +maintainers:
+>> +  - Chen Wang <unicorn_wang@outlook.com>
+>> +
+>> +description: |
+> you can drop | here
+Ack and thanks.
+>> +  This controller contains 4 channels which can generate PWM waveforms.
+>> +
+>> +allOf:
+>> +  - $ref: pwm.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: sophgo,sg2042-pwm
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: apb
+>> +
+>> +  "#pwm-cells":
+> ..
+>> +    # See pwm.yaml in this directory for a description of the cells format.
+> I think you can drop this comment, since no useful information added
+> also it's already refered to standard pwm.yaml
+I add this comment just want to reminder.  Ok, anyway, it can be removed 
+to make doc clear.
+>> +    const: 2
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+> also "#pwm-cells"?
+I think it has been required in pwm.yaml, so no need to required it 
+again here.
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    pwm@7f006000 {
+>> +        compatible = "sophgo,sg2042-pwm";
+>> +        reg = <0x7f006000 0x1000>;
+>> +        #pwm-cells = <2>;
+>> +        clocks = <&clock 67>;
+>> +        clock-names = "apb";
+>> +    };
+>> -- 
+>> 2.34.1
+>>
 
