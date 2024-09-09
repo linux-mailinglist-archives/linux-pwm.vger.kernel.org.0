@@ -1,215 +1,315 @@
-Return-Path: <linux-pwm+bounces-3153-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3154-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73828970AD6
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 02:45:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A800C970FE5
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 09:32:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 010A31F21669
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 00:45:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 615162813D7
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 07:32:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25C6CAD2D;
-	Mon,  9 Sep 2024 00:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6214E1B0108;
+	Mon,  9 Sep 2024 07:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="I+ux4opw"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="f35d3/xG"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from IND01-BMX-obe.outbound.protection.outlook.com (mail-bmxind01olkn2027.outbound.protection.outlook.com [40.92.103.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D23F4C8D;
-	Mon,  9 Sep 2024 00:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.103.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725842723; cv=fail; b=R4CnjE52WCiKDoeoQyW3hjLut6CFEr0m+QXh6Gu3nPrzs8fnnowkJEchnj2w2Q6yl9GcKjKWgDmRaavv9jz3kVAhCIqOXGqTvyS1ef3VH9d5XLqyFVfhmDrHspQKgfzmwqTs4JQxDFQQmVel3ny5ZwpO4I0GVTjfPbkRC7zoXag=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725842723; c=relaxed/simple;
-	bh=+DPe5+mbADSnz1iqKPH14J19Rqp4ZUJB4RRpmipPfEs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=URV5PgUpKtrl899Ieab+YTeMQx6RAoBYiUCIVaSG10sZV5z1qfW1EJPhhrL7nXpQrmu/OqKQ36yWr0nAUyBMgfAV9KlHj56BjpYY9CcQdvlEj3aqeh/QmUk1jLR661VTdQF9VuCkFM5S2Cf2diEyq4UspWgWv1UGN7nvr9olzMQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=I+ux4opw; arc=fail smtp.client-ip=40.92.103.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tOJu31gcoR3QDB+9Nz3Y1yYVg/SxCfwR0b3uB91hOPcTMc4Gg4cZuOJPTA4Xh6zBqJdhswwH5PAVUbi6YVxh0azKCwXG6A/HGlmel3smG1Wqu0adlpg6wppiu475zdHBPGRbxWqpXatD/8yBw82ytX7KDgIIWeL89ATM7bPn4CM0ygXXEEI1zZYjOG1l+YA090H3l3gsqx46C7bvb5VGpHMB5yyYfyqTpqEAsq4seLTEuO6koTT3Tm6OtkWVVTcD7eLK8ISPDpaDC1Ok6JRGRZQRMI+Xaz+TCSq9sXUnvwdTJGvBFzMvPiJ7Kh07wC3wqvACMJPq5eg+5PNysabxCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vzrsSpjTbMITQ+WG9Mk3Yh/o8s/ex1WGywDnClXjzKI=;
- b=UIY4cj8e2l9MCc8WK4E/ANgQKk9cLLmFGWiAZyAz1xsA8fUikHsB9XalMR2Lj8KYnjly3pY4UKzqAsAOYGJvHaR4GucH1b+S6Q5WTjcrLmq85KJ4zsLmjRFXm2TBsIWikjwZ9hG0FPcRir51+e2yO3RcsZEixn6UzpSU53aSNbUMb1yKnjxrP40NUL/haH6idNm2Cz8Ah7xARinPv5tJ/MwkYcanvSkZ4VVRf2dlaAVRQEQqYfsrQz3KBuZaNwzWALg3EnH8rq1lUXiTBFOYlHL9/Phqd2N5vesb/jsRF2w1C77oIXJPuBk4jJu3mrZjCApUUPLwQmU/v8a4pbDeIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vzrsSpjTbMITQ+WG9Mk3Yh/o8s/ex1WGywDnClXjzKI=;
- b=I+ux4opw3SlAXtnmLcFemy1G8Q3YNWtf5RdhWtX6OZsr1rXpWj2W/oSzmDKMvwbeQfYSk9P5FWZVyOCirxFKFs7e17x1/aEY5zudtgY7m4UJN/m3OcP8W1lYguq55aZMDivyQcqaYfg5MMtx3REA9KISAAAC0R34z1+QDXZCbyd69WyABZjlloKeph4faGnRQhT0Yph57QCXOPOaalbtZ70jMEhpQrQEmV6JX/bTY11gnIdnQBOpBkK0r/dFfRSxYJx2meJxH31nVaTqw2ZQT+l5JszoVhUFV3SHiYV5dQXgL9BRpuPPcNs5ese/wrh6fo0mbPQFLUD9xTdf1MEcOw==
-Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:138::5)
- by MA0P287MB0916.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:e0::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.23; Mon, 9 Sep
- 2024 00:45:14 +0000
-Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- ([fe80::a94:ad0a:9071:806c]) by MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- ([fe80::a94:ad0a:9071:806c%4]) with mapi id 15.20.7939.022; Mon, 9 Sep 2024
- 00:45:14 +0000
-Message-ID:
- <MA0P287MB28222BA933FA505DDAC89CEBFE992@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
-Date: Mon, 9 Sep 2024 08:45:09 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: sophgo: add bindings for sg2042
-To: Krzysztof Kozlowski <krzk@kernel.org>, Chen Wang <unicornxw@gmail.com>
-Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, inochiama@outlook.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-riscv@lists.infradead.org, chao.wei@sophgo.com,
- haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, chunzhi.lin@sophgo.com
-References: <cover.1725536870.git.unicorn_wang@outlook.com>
- <6e5fb37472b916cb9d9abfbe3bea702d8d0d9737.1725536870.git.unicorn_wang@outlook.com>
- <clq2dwmsks56553cythofgd3x5sw4t6pss7cxup2hrvj2n563g@3ishagojtabx>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <clq2dwmsks56553cythofgd3x5sw4t6pss7cxup2hrvj2n563g@3ishagojtabx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TMN: [eEI5scsklPZ1p9qOPj/U6wDOGRUh7rlH]
-X-ClientProxiedBy: TYCP286CA0012.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:26c::16) To MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:138::5)
-X-Microsoft-Original-Message-ID:
- <c1c15693-925b-451c-aa10-60df07d18467@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95621AF4EF
+	for <linux-pwm@vger.kernel.org>; Mon,  9 Sep 2024 07:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725867098; cv=none; b=dnDk02raUlTQClhzOLMVlEddWF/xrxjF7W1dhhebolr51TjqFVOSKSTVjJGYanh4ylgI7VNLG4UkFO7FfR7joiGLM0sa9yxMSGVLapyBmoLaPLeIYAo6iDKwrMwmfepkefGG6CGzoIxGoQ8zxE4yVxsZlmbLIqWmmgHTX6McLmA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725867098; c=relaxed/simple;
+	bh=gQiHO3f1Zn1rXB9zUJbXdejwW615HN9Fc/TavEGaxCk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RsqDGSRCIfVF3BfUgjrjRbvjU9sri/faP2lcxIf6Tv1TansOesI/L4z1BhumCy4JKUoonZEvfmGfOZZyNuPxgWeY4HifmJk39bzkmIHvqFZOAZj7RW/41ah6n+fXsmGd+4Pcbaz4V8lkwYIHW9yaNvfI7OV8bcoAKwQtsTOB/xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=f35d3/xG; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-374c6187b6eso2405255f8f.0
+        for <linux-pwm@vger.kernel.org>; Mon, 09 Sep 2024 00:31:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725867093; x=1726471893; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=algUI0QLeOROhTSxgwM/XgwQRVsCRfSMXvqmelJBycM=;
+        b=f35d3/xGzyJqmAOYurO3cN1+fvAz282fHnhoK1Tl25uSaeil+q3OW1QwlQlZfmfr6Q
+         6xUQycKFetHC8CX6jcEIj8V5Yk0nB8/Srl3oSqd7G7Ua/blOdtCyJbJvm54YwFUi7Uby
+         OlxlCOHwkVkpGTGFpfjP54qRWkBmlSVYKXajLX70WeEpElV+7HMkf4FPgkPbJuQY5bnt
+         VWFW+I5z+mfNZbwWMGCkoa3iKyx33LZ1WCXguyZK7TXwyqw8olp8ufYGb8lSSK8M09oS
+         mYm627PN6Yl9E1YQji9jjnWLvhoFidIGQE+WfIe0FJx94S9XwxnY8JESDIcYb5E51GAH
+         hTsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725867093; x=1726471893;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=algUI0QLeOROhTSxgwM/XgwQRVsCRfSMXvqmelJBycM=;
+        b=jepzwyzz7W3X+PDw3kY98KRQbihWloIgkMkQiM+CLJuLZdRqUapTRaDeD2GycQm0M+
+         O9WzETS4HIKU7iqEpCK9t8bXiQp49xGw7hS8h0KIKY7hHutgME+rL0HxWdbX7VeZhr9b
+         qCXttVEDEPUI+Tqxv37rMycHZd3Sb8EVPCJ0OINRBAP9gDAKcNW7lG0IkCn6lCueJjHO
+         r0QV/zWdEE4prlIuz6mhKRZZ+WlgCsGLbXsYAAv8/PNF0QU9wUi/0NEvJKQLiz4Z8wrY
+         RU3kLTGbi4GNHzbnEkd67uJmpvAe+piQQx4QLQQDwjyryAfqaDObqN9w3jKSornrNuow
+         QzvA==
+X-Gm-Message-State: AOJu0YysrcR/ptLZrJ9gV/zessHjgzwgVgWLwRW/jZWLDON+g1Cy33Fv
+	SRwqJR0v2URr8sG3L0/FCF8H8o3iD2qx1x6/es7EJmfIK9DfF+alndD1ivUvVjt4KVchtwr6Xaj
+	U
+X-Google-Smtp-Source: AGHT+IHgaZuUQkXgiW70YsGx6pFN2Q8UnleEfPWXf2SEjd85hOos1vXa+FbgCunpBcCwXced94bUxg==
+X-Received: by 2002:adf:eb92:0:b0:374:c42f:bac1 with SMTP id ffacd0b85a97d-378895c28camr5533266f8f.8.1725867092934;
+        Mon, 09 Sep 2024 00:31:32 -0700 (PDT)
+Received: from localhost (p5dc68d3d.dip0.t-ipconnect.de. [93.198.141.61])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37895649728sm5246202f8f.16.2024.09.09.00.31.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2024 00:31:32 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH] pwm: Switch back to struct platform_driver::remove()
+Date: Mon,  9 Sep 2024 09:31:24 +0200
+Message-ID: <20240909073125.382040-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0P287MB2822:EE_|MA0P287MB0916:EE_
-X-MS-Office365-Filtering-Correlation-Id: 99743621-d3e0-4eb1-a0e3-08dcd068aac0
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|15080799006|461199028|6090799003|5072599009|19110799003|8060799006|3412199025|440099028|4302099013|1602099012;
-X-Microsoft-Antispam-Message-Info:
-	lKntOInxYLx2HCLzTXKuayj5jI/iU3eFwcqkTrUotiJXPFocOjKfS8tx+N7RwsdPgrXKv+VeJisndqrxxwSso4ZCkoouBEacI1pEvZvuF8Jyf9dQbbXjvsPSpMjnj0E4tAZsA6ksmsIn2RzZJu4KN14bb6W23tl7XuXaDx2a4ppWqgyYUaCPR5zWOWJt/VpEb3QLhi1hA4vVXn+m+mR5b0dZ3QgC3P4E3iyZiW+U4M4q3QWKCHnYOaRr49BNbzsQ5vJHtLk5yOsNNdAu4F0rf3VrWWimTJUoavVHDOPGBbj7/kVwAvYLJhTIlJtkGwjI+goiT4Mn2Kqi3ggWeNH87v+DcOkeJ+LIXofJntDUsimw4sj6SjfewzyZFZQnTWJvMpiI5PQwCSikyZQn8BcqDFjcxJiuUvfguoQNPJu3Kqj9O8rq+9jtzmaT23VNC1L9L7scxFmx5HXP2V4ncutyVkyEn4WPUVSkXloUxYHTD2ilLYP1DazPjNzgmoMvqUYnGXdYGX7nLdkBFn/4q5/ra+7myUz5JHaI+cUU/AUOgiJp9/b/FvFa1ZEvyXViRPP84zDyd2f0/WbW0ZXdv1tJ9dQLXdDO/c09wVCExjNH1DqECGfpZjqLGzB3Fh7gMP03GJSIhbSVCOs/SYMc9WzHYHpI9gRCASHbD+1AbFQjbJMuZN3DcYtaxDw32HnubLnTSIuTwniZJMZ7QGKVqVQD0IJZN3lA/m1z9bVJb9dLnsOmZY/kNwb9R7nGCZpfAQG4//91OEcbCaxizZkeWm8kcFemfvEAAZw+W710vvitORTuHbrCXfswvuD/LZ8KkXAAswbbdOvxopB24S2lVt8sTTn4+kJO2V8onoIyd2lI5oo=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?M1Npd09EcHBRYXV1cUtac3hjRmUvUXpwM000ZmxXeTJ3WUhURW8xaVYzakQv?=
- =?utf-8?B?djNnZStJTDBTOEdWNThMLzJwZHZienhpZFpsWnFvSXVuT1lLL0hoSHBFQ21J?=
- =?utf-8?B?Q0hvREtQYW5Vcm1PeW90cFQ1YW5rRUlQSkU4OC94STQ0cWZlZGs5eXZ4bWRm?=
- =?utf-8?B?WXJwTGZkdGVQSkhLbGxER1U1ZC9GRm5GbDNmazNURDJibzVnMWxkUjVlY0VW?=
- =?utf-8?B?a1h3Z0VaQ011RzJaRmtVS05mT2puamtCUFF5RWNSMHRmMjNFcFh5bEVKS1Fn?=
- =?utf-8?B?V01ycTlPMnJMTzdYWkZRbzVTNHJJVUF1WndBcjIvSm5jdHliU1R0M0ozY2dZ?=
- =?utf-8?B?MUU5S0xpS3U0MWpKYkpXczNLaUdzRTJ0TytXOGNJY2F1V2VSY1QwbWtjODl1?=
- =?utf-8?B?SmhkaXB6QmU0MFA5ZVk0TGcrWUtuek51N0tBMUxrdW9aZUpBSWNWWXp0WGZC?=
- =?utf-8?B?UWZUN0F4VlNldE8wMHNkc1hZOHNDODhBVGhEb3N1bGVZWUFyNlRxa2VPenVL?=
- =?utf-8?B?djVYZythN3VUSW50d09uUUhsNmc3QzJ3NjhjZ0JvalJSOS9sdkdRYVJJb0ZH?=
- =?utf-8?B?eGFVNE9tREZubnBpNE94NUQwM3Axai9sc0ZENHFac0lwcTNqODF4aHRHajdW?=
- =?utf-8?B?NExLVGtTV2dUUFlnc0crc0ZkbmxLRzYxUnBpQy93T1hDUlFpeCtTc2hHRUZm?=
- =?utf-8?B?bDRGUkdZcmM1VnV2aUg5V09NRE1WSFRCWFBOekNmd0hvdkNMdGp4bTV1NEVR?=
- =?utf-8?B?T09Fb1FlR0pibHBFOVlyRXVDUForR20wY1U5R3F5UWRQL2VlekxMazJVZVJz?=
- =?utf-8?B?d1IxQytHUkoxTXM5VS9lcUl5UENXODNNRlJoRUlTUlZYSDFVTEJLYTQ2bjNU?=
- =?utf-8?B?SW1mS3pnSm95TWpwOFlDU1RVajdSRTJkLzgrUlczSGtlU0hHQ0hOb1JuS3ow?=
- =?utf-8?B?Ry9mMHJXL3pPaDc1RTk5eTJ4L0loNEZZS1pQcDgzSHZIalFhQjFYWm8rV0JV?=
- =?utf-8?B?OEg4UHFJTU9JL3NoMUxQWmxMZ1pQdU03U0NzbWQ2U0xyK2JBcjNzZTBxTGUv?=
- =?utf-8?B?OE9ydVlXd3VVcmZhNEhTc2xteVViSFBTMXBOY0pkT25Zb3JacmUxZHBQaWJB?=
- =?utf-8?B?Zm41SU4vOFFZS1Nacmo5aFo3TGQ3eTNCZVg0RUlYMDRBWHEwTlFYVXpkTWRs?=
- =?utf-8?B?cUtPMEN0MVVPajVhcm40Ri9VZEh1UkVuLythT1IyVzY4aUU3M2Y1Z3dJWmIw?=
- =?utf-8?B?amVvZ0g2Y3NxcXBublNOVzZlY0xwd3J4emNZY1gvN1lMdnA0dy9vN2RhMkN3?=
- =?utf-8?B?TkxWOTJRYWRUcWp2TFlsVjVTcXloS01oVVNUUzZ0ZkgxZytqZUVla3dsdldq?=
- =?utf-8?B?aS82cVNqZWk0aVFWNXE4TTBWd0xEalN2OTdHdFMrc0NaWE5IVEV2NnhER3ph?=
- =?utf-8?B?M29KOEEwY0toRWhPN2NyRlA5U1UvRFpBVXdCcDE1S0Q3SERmS0IwQ2hVdW0z?=
- =?utf-8?B?T3JYZVplN3UveDBzSGJvT0I5NksvV2c0SG1ld1B5RE5Ob0NhTkJMamJKaTVr?=
- =?utf-8?B?RmJ3akgzbVdiY3NDRmFKTTV5clByNGMwcmlOSitDc0lQY29RR0pFUjBzeFJn?=
- =?utf-8?B?RmZtM1BOVEx0MHFiZERYZEI5YmRrVGwzWGRxZHRzREJVaUdZY2dRdGl2U0RC?=
- =?utf-8?Q?zEQpviX16NEWu5ez9zo6?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99743621-d3e0-4eb1-a0e3-08dcd068aac0
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2024 00:45:14.2324
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB0916
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7495; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=gQiHO3f1Zn1rXB9zUJbXdejwW615HN9Fc/TavEGaxCk=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBm3qRNwHXKVLHdqMWmR3m01/w7KD4IOtJZ2S4S3 hYoZ/t4eHWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZt6kTQAKCRCPgPtYfRL+ TgX3B/94GOc20Ud5SybmEO6X7+ZHeMi2EdjC6V3OaNIZmgYLs5uv92kOlCXXcC9uGt1NMRRw4da V6Es5MQoRRjOhngbOvUMFVEPqQUOPvSvvIcyEqHrdSgNR+kLuwABJwItWQUubgbHEmwrxcsApJL d8lyKl1Uii2vUiElWUwSMzuClaIrfebDrtVoTcsoh5czARG2CZvwwU/6AEELqeVd+7lJ4b/8VpJ HG2TIghljnNvmGk3VBo8ozMkuo65Cn4hujYa2+da01e+XHptnq9s6b12VhJpTX0vOKllydeD9ai cr1LrA1aDC32bvCovGyljSCuwyBq6EVpkStdVsvemLEZPQyX
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
+After commit 0edb555a65d1 ("platform: Make platform_driver::remove()
+return void") .remove() is (again) the right callback to implement for
+platform drivers.
 
-On 2024/9/6 18:31, Krzysztof Kozlowski wrote:
-> On Thu, Sep 05, 2024 at 08:10:25PM +0800, Chen Wang wrote:
->> From: Chen Wang <unicorn_wang@outlook.com>
->>
->> Add binding document for sophgo,sg2042-pwm.
-> A nit, subject: drop second/last, redundant "bindings for". The
-> "dt-bindings" prefix is already stating that these are bindings.
-> See also:
-> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
->
-> Say something useful about hardware instead. The same in commit msg -
-> you keep saying obvious and duplicated commit subject.
-OK, thanks
->> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
->> ---
->>   .../bindings/pwm/sophgo,sg2042-pwm.yaml       | 52 +++++++++++++++++++
->>   1 file changed, 52 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
->> new file mode 100644
->> index 000000000000..10212694dd41
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
->> @@ -0,0 +1,52 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pwm/sophgo,sg2042-pwm.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Sophgo SG2042 PWM controller
->> +
->> +maintainers:
->> +  - Chen Wang <unicorn_wang@outlook.com>
->> +
->> +description: |
-> drop |
-Ack and thansk.
->> +  This controller contains 4 channels which can generate PWM waveforms.
->> +
->> +allOf:
->> +  - $ref: pwm.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    const: sophgo,sg2042-pwm
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    items:
->> +      - const: apb
->> +
->> +  "#pwm-cells":
->> +    # See pwm.yaml in this directory for a description of the cells format.
-> Drop
-Ack and thanks.
->> +    const: 2
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +
->> +additionalProperties: false
-> unevaluatedProperties instead
-Yes, my mistake, thanks.
-> Best regards,
-> Krzysztof
->
+Convert all pwm drivers to use .remove(), with the eventual goal to drop
+struct platform_driver::remove_new(). As .remove() and .remove_new() have
+the same prototypes, conversion is done by just changing the structure
+member name in the driver initializer.
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ drivers/pwm/pwm-atmel-hlcdc.c  | 2 +-
+ drivers/pwm/pwm-atmel-tcb.c    | 2 +-
+ drivers/pwm/pwm-clk.c          | 2 +-
+ drivers/pwm/pwm-hibvt.c        | 2 +-
+ drivers/pwm/pwm-img.c          | 2 +-
+ drivers/pwm/pwm-lpc18xx-sct.c  | 2 +-
+ drivers/pwm/pwm-omap-dmtimer.c | 2 +-
+ drivers/pwm/pwm-rcar.c         | 2 +-
+ drivers/pwm/pwm-rockchip.c     | 2 +-
+ drivers/pwm/pwm-sifive.c       | 2 +-
+ drivers/pwm/pwm-sun4i.c        | 2 +-
+ drivers/pwm/pwm-tegra.c        | 2 +-
+ drivers/pwm/pwm-tiecap.c       | 2 +-
+ drivers/pwm/pwm-tiehrpwm.c     | 2 +-
+ 14 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
+index eb39955a6d77..387a0d1fa4f2 100644
+--- a/drivers/pwm/pwm-atmel-hlcdc.c
++++ b/drivers/pwm/pwm-atmel-hlcdc.c
+@@ -299,7 +299,7 @@ static struct platform_driver atmel_hlcdc_pwm_driver = {
+ 		.pm = pm_ptr(&atmel_hlcdc_pwm_pm_ops),
+ 	},
+ 	.probe = atmel_hlcdc_pwm_probe,
+-	.remove_new = atmel_hlcdc_pwm_remove,
++	.remove = atmel_hlcdc_pwm_remove,
+ };
+ module_platform_driver(atmel_hlcdc_pwm_driver);
+ 
+diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
+index f9a9c12cbcdd..5ee4254d1e48 100644
+--- a/drivers/pwm/pwm-atmel-tcb.c
++++ b/drivers/pwm/pwm-atmel-tcb.c
+@@ -527,7 +527,7 @@ static struct platform_driver atmel_tcb_pwm_driver = {
+ 		.pm = pm_ptr(&atmel_tcb_pwm_pm_ops),
+ 	},
+ 	.probe = atmel_tcb_pwm_probe,
+-	.remove_new = atmel_tcb_pwm_remove,
++	.remove = atmel_tcb_pwm_remove,
+ };
+ module_platform_driver(atmel_tcb_pwm_driver);
+ 
+diff --git a/drivers/pwm/pwm-clk.c b/drivers/pwm/pwm-clk.c
+index c19a482d7e28..f8f5af57acba 100644
+--- a/drivers/pwm/pwm-clk.c
++++ b/drivers/pwm/pwm-clk.c
+@@ -130,7 +130,7 @@ static struct platform_driver pwm_clk_driver = {
+ 		.of_match_table = pwm_clk_dt_ids,
+ 	},
+ 	.probe = pwm_clk_probe,
+-	.remove_new = pwm_clk_remove,
++	.remove = pwm_clk_remove,
+ };
+ module_platform_driver(pwm_clk_driver);
+ 
+diff --git a/drivers/pwm/pwm-hibvt.c b/drivers/pwm/pwm-hibvt.c
+index 2eb0b13d4e10..e02ee6383dbc 100644
+--- a/drivers/pwm/pwm-hibvt.c
++++ b/drivers/pwm/pwm-hibvt.c
+@@ -276,7 +276,7 @@ static struct platform_driver hibvt_pwm_driver = {
+ 		.of_match_table = hibvt_pwm_of_match,
+ 	},
+ 	.probe = hibvt_pwm_probe,
+-	.remove_new = hibvt_pwm_remove,
++	.remove = hibvt_pwm_remove,
+ };
+ module_platform_driver(hibvt_pwm_driver);
+ 
+diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
+index d6596583ed4e..71542956feca 100644
+--- a/drivers/pwm/pwm-img.c
++++ b/drivers/pwm/pwm-img.c
+@@ -416,7 +416,7 @@ static struct platform_driver img_pwm_driver = {
+ 		.of_match_table = img_pwm_of_match,
+ 	},
+ 	.probe = img_pwm_probe,
+-	.remove_new = img_pwm_remove,
++	.remove = img_pwm_remove,
+ };
+ module_platform_driver(img_pwm_driver);
+ 
+diff --git a/drivers/pwm/pwm-lpc18xx-sct.c b/drivers/pwm/pwm-lpc18xx-sct.c
+index 04b76d257fd8..f351baa63453 100644
+--- a/drivers/pwm/pwm-lpc18xx-sct.c
++++ b/drivers/pwm/pwm-lpc18xx-sct.c
+@@ -446,7 +446,7 @@ static struct platform_driver lpc18xx_pwm_driver = {
+ 		.of_match_table = lpc18xx_pwm_of_match,
+ 	},
+ 	.probe = lpc18xx_pwm_probe,
+-	.remove_new = lpc18xx_pwm_remove,
++	.remove = lpc18xx_pwm_remove,
+ };
+ module_platform_driver(lpc18xx_pwm_driver);
+ 
+diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+index e514f3614c43..1858a77401f8 100644
+--- a/drivers/pwm/pwm-omap-dmtimer.c
++++ b/drivers/pwm/pwm-omap-dmtimer.c
+@@ -455,7 +455,7 @@ static struct platform_driver pwm_omap_dmtimer_driver = {
+ 		.of_match_table = pwm_omap_dmtimer_of_match,
+ 	},
+ 	.probe = pwm_omap_dmtimer_probe,
+-	.remove_new = pwm_omap_dmtimer_remove,
++	.remove = pwm_omap_dmtimer_remove,
+ };
+ module_platform_driver(pwm_omap_dmtimer_driver);
+ 
+diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
+index 4cfecd88ede0..2261789cc27d 100644
+--- a/drivers/pwm/pwm-rcar.c
++++ b/drivers/pwm/pwm-rcar.c
+@@ -253,7 +253,7 @@ MODULE_DEVICE_TABLE(of, rcar_pwm_of_table);
+ 
+ static struct platform_driver rcar_pwm_driver = {
+ 	.probe = rcar_pwm_probe,
+-	.remove_new = rcar_pwm_remove,
++	.remove = rcar_pwm_remove,
+ 	.driver = {
+ 		.name = "pwm-rcar",
+ 		.of_match_table = rcar_pwm_of_table,
+diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+index 0fa7575dbb54..c5f50e5eaf41 100644
+--- a/drivers/pwm/pwm-rockchip.c
++++ b/drivers/pwm/pwm-rockchip.c
+@@ -386,7 +386,7 @@ static struct platform_driver rockchip_pwm_driver = {
+ 		.of_match_table = rockchip_pwm_dt_ids,
+ 	},
+ 	.probe = rockchip_pwm_probe,
+-	.remove_new = rockchip_pwm_remove,
++	.remove = rockchip_pwm_remove,
+ };
+ module_platform_driver(rockchip_pwm_driver);
+ 
+diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+index ed7957cc51fd..d5b647e6be78 100644
+--- a/drivers/pwm/pwm-sifive.c
++++ b/drivers/pwm/pwm-sifive.c
+@@ -336,7 +336,7 @@ MODULE_DEVICE_TABLE(of, pwm_sifive_of_match);
+ 
+ static struct platform_driver pwm_sifive_driver = {
+ 	.probe = pwm_sifive_probe,
+-	.remove_new = pwm_sifive_remove,
++	.remove = pwm_sifive_remove,
+ 	.driver = {
+ 		.name = "pwm-sifive",
+ 		.of_match_table = pwm_sifive_of_match,
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index 5c29590d1821..e60dc7d6b591 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -493,7 +493,7 @@ static struct platform_driver sun4i_pwm_driver = {
+ 		.of_match_table = sun4i_pwm_dt_ids,
+ 	},
+ 	.probe = sun4i_pwm_probe,
+-	.remove_new = sun4i_pwm_remove,
++	.remove = sun4i_pwm_remove,
+ };
+ module_platform_driver(sun4i_pwm_driver);
+ 
+diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+index a3d69976148f..172063b51d44 100644
+--- a/drivers/pwm/pwm-tegra.c
++++ b/drivers/pwm/pwm-tegra.c
+@@ -432,7 +432,7 @@ static struct platform_driver tegra_pwm_driver = {
+ 		.pm = &tegra_pwm_pm_ops,
+ 	},
+ 	.probe = tegra_pwm_probe,
+-	.remove_new = tegra_pwm_remove,
++	.remove = tegra_pwm_remove,
+ };
+ 
+ module_platform_driver(tegra_pwm_driver);
+diff --git a/drivers/pwm/pwm-tiecap.c b/drivers/pwm/pwm-tiecap.c
+index d6c2b1b1387e..d91b2bdc88fc 100644
+--- a/drivers/pwm/pwm-tiecap.c
++++ b/drivers/pwm/pwm-tiecap.c
+@@ -324,7 +324,7 @@ static struct platform_driver ecap_pwm_driver = {
+ 		.pm = pm_ptr(&ecap_pwm_pm_ops),
+ 	},
+ 	.probe = ecap_pwm_probe,
+-	.remove_new = ecap_pwm_remove,
++	.remove = ecap_pwm_remove,
+ };
+ module_platform_driver(ecap_pwm_driver);
+ 
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index e5104725d9b7..0125e73b98df 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -603,7 +603,7 @@ static struct platform_driver ehrpwm_pwm_driver = {
+ 		.pm = pm_ptr(&ehrpwm_pwm_pm_ops),
+ 	},
+ 	.probe = ehrpwm_pwm_probe,
+-	.remove_new = ehrpwm_pwm_remove,
++	.remove = ehrpwm_pwm_remove,
+ };
+ module_platform_driver(ehrpwm_pwm_driver);
+ 
+
+base-commit: 9aaeb87ce1e966169a57f53a02ba05b30880ffb8
+-- 
+2.45.2
+
 
