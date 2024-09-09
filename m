@@ -1,153 +1,144 @@
-Return-Path: <linux-pwm+bounces-3160-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3161-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C832397126A
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 10:45:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4E50971298
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 10:50:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 574501F22D8E
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 08:45:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C36E11C228A2
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 08:50:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6A511B1D4B;
-	Mon,  9 Sep 2024 08:45:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80AA61B29AA;
+	Mon,  9 Sep 2024 08:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+q5e+Mi"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614B38248D;
-	Mon,  9 Sep 2024 08:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2B01B1515;
+	Mon,  9 Sep 2024 08:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725871536; cv=none; b=o4VRWAhfebsuvrYv2/sAwYVFIqKderk0XB/FfIUojGpkmgDtsCSPmyr/oqJl5JJue7Dj5MmLGOO+cTs5I4AzuCn8t3H91uUxyNhkBedctrdYBArXUPLoPt3wiyHLYPGeA7oE6EBvDncRKBajK47qSR7ItdQINgLJGfKQv5U/Ppw=
+	t=1725871835; cv=none; b=Mlp4mKVjn+pmtHpMd3XjHAwbRhBvSvJT2K6cdtHWnIkZvZnTkoCw0tfkj4WkeZuHxH0uwokE2oWGZARY5QuJkXVr0KxQZ2qoOxtKIipjDXTRpiK9+pei4r+Tjm+8sih7vpN6h5FktLfNVvxa/qaGXdFGPbZmHWQk4sr0wuPRjvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725871536; c=relaxed/simple;
-	bh=Hjz+O50xaShzsCzJW4dtU4OnYeaMBQRxnhVWq8j2+HA=;
+	s=arc-20240116; t=1725871835; c=relaxed/simple;
+	bh=UExkI6GiOyg9fq7gq7e9415xYQTdFebhf5cMaTDpOac=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aa4f+Uhtxtgtzvs7QO8yqtoxwZYV5AtwBuVsmN6c0+bDCVWY0NBBZJ40ReZN61pwyJQ5NpAbX+mL/O0YGNpOnKmLqFX7TUI+t8wjPeP3u+crw5+QNfMPVL72ZALEEvP0YN1UZljrcZ/nejDQpe6PUk25aCymjwJrEL+PfI3Iu9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=No9uvi03izYkHLV/KxNvTZw0uuY3csSCeRxaEHiy6/O0gQdH1yciw6LarJgMs94mRQyqn7u0QnawnzX/iQzYQ4HchBHyLBXSuzQrAGbFV1zl0miwKyxBojFUGE4NIcKveYbKp9Zs1NMjVeWFSQEsJnYTECW6UpRo/l0ebJKCbAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S+q5e+Mi; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6c49c9018ebso36300287b3.3;
-        Mon, 09 Sep 2024 01:45:34 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5365aa568ceso3341838e87.0;
+        Mon, 09 Sep 2024 01:50:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725871832; x=1726476632; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qMJgZ9pgfiljRe+M72ZqUEaho/KQ7dkzOtNSpn7FOBk=;
+        b=S+q5e+MipOaJkFm6hsiB6NN0IOHTbPaHgjv4/SN7yeuHg2SPP53T7v3DFVVdvE20xF
+         BTxGN3X/ho6TGWYEqEJVJmdIeh1LiiuU5WHYKIwSY7NmtaybwkscOZBhQNUY2HMnrRM5
+         ghJxt/nCCZ+9bQJZPmc6YsIx4t6OYE4CXTUbqFTN5CaWWJGClFa2LwnQbzHLNFlB6i0U
+         ejdW9JT3rfLnQoJClpWElwQqUksJlZRSaILE980xjGliZY8s2Ql/ftA29nnw6V8bJf5Q
+         gRG7CPg8jBsjAcVnhIRQxKn4faVC/MHOdFwD3iLQYL6jaRop5lTLbtYuu00/WKP45Q4E
+         +2TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725871533; x=1726476333;
+        d=1e100.net; s=20230601; t=1725871832; x=1726476632;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OClx8FdjyQ2dYCnYDOmUx9fSX8zEhQ05R0o7VQeRBrI=;
-        b=ZiKNMaA8NsDgq8HkhVPz9KIWExFmAZxnMeA7ATPJ9vz8MIdToMrKP4M3aSYY73c8Ap
-         56BXt/EgXm6/IkdIKTVgcFSJx3yG6zH+JxmuovDRr6rgp3C9Gctah6UwFz0zk1PIromN
-         lKMx2nfvgIamwOsJh76ofwMV/11X3Ta+1ERbkCW/9hzzOcCJmZcEf0Htic0ECFM6ZWW6
-         86IhqxHnN5TFeuJfMTpc4hxv21/8lj9d1pukHxT7K2i7NM66TjIcY60YEYFy3O036Ls6
-         L7zw7gflfg1hcoSGzbcx+xS4LCWflSxllp/B0yIgTTfZPoD7R/kAbgFEXTZre3U8/3zv
-         /0mg==
-X-Forwarded-Encrypted: i=1; AJvYcCWLmVhBhptRs/9do85g+ztSXZe4++RxAM/NCJu2VwRDc9VgwpiQnK9w2XTczgpKwmr1GIPxMWoNoL6XRk49@vger.kernel.org, AJvYcCWW8WpJBHwQumkdDzUmqTTQjao7qYax7mwGfIpsUIEzcdHsMg0tKqnnatHBPcLdgcaL4IL5WagFnT48@vger.kernel.org, AJvYcCXqeDV/gXlab/1u9mApLiQp4L8EjCgA/tkq/+/2sJCPf1vHnNnEc8lX/rAYiuF26URQac5aIJgQI5rn@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSVzh++tCxgWn6oXrAcqs6Ig4/xcaKLDhKK+y2CIyuJMoN6sLF
-	q22yKNzi174tPctYKbJmORJLpdSfC9Pt6YhADRd8Xpe3Iw/vR6/q+sKGlege
-X-Google-Smtp-Source: AGHT+IGb9gqXqKIN9fIUjDtAcew9X5va5dHZFxhuGA86ZEXsNGRocZ9KPLZ13REy0m/66vLNKPCBHA==
-X-Received: by 2002:a05:690c:2b10:b0:6d3:c634:f5eb with SMTP id 00721157ae682-6db44dc362bmr64560687b3.14.1725871532813;
-        Mon, 09 Sep 2024 01:45:32 -0700 (PDT)
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6db6ea880a8sm5739467b3.114.2024.09.09.01.45.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Sep 2024 01:45:31 -0700 (PDT)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6d3c10af2efso37150937b3.0;
-        Mon, 09 Sep 2024 01:45:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU/5+KcGSF/B5mfjAZntafFkOc6xnWN3CewGIg01UjO5DoMHHNvoruFCjBLqW5NZLn/iLvzjT5hFdAV@vger.kernel.org, AJvYcCVjaRuaIhcDO14CrBdEk2cuiwECr07tOAFiZeqLICtEA82C8iR/SBwT0TduUtU8AtsID39Jj/EsD5jc@vger.kernel.org, AJvYcCWt5eubhF6bNBqNBIUI062bnoZv8ROV404VLp32vML36M1i9qJ1jYoTLrZFMM5vw+nUUweARfOqijA+YHdK@vger.kernel.org
-X-Received: by 2002:a05:690c:113:b0:64a:7040:2d8a with SMTP id
- 00721157ae682-6db44f10494mr80803477b3.23.1725871531566; Mon, 09 Sep 2024
- 01:45:31 -0700 (PDT)
+        bh=qMJgZ9pgfiljRe+M72ZqUEaho/KQ7dkzOtNSpn7FOBk=;
+        b=mrKjzx+L+WrZJeIF/k4gE7/1rwHpke3KyEQtKvruYTv5qZxRm29V6LvNcbMw55dw7i
+         zyyY9lLLqENoiNQl17mS2F/CclP9h4hQ4GKGWB4j/TblFaNeQf4Au/t2OrvMwswT5EXP
+         Ms5cXsZQC1lnE1Nj29bCza26GQB3nV3Wn4U8Ly9h2R+a8zA54wzsHj+VK7AP2ZwbLbJz
+         SRsfSJc1O+avKpVYMFVZi9rEufT1eHfZAxgRdrCHaiC2J/XLBUCx2a9dOgddtwieSj+/
+         zJB7xiFij/o6diq/RYJXKhVL/k8IvdmmYTZOjzxQyjHDwh5JT+nbfHNIuqNapO9glGkk
+         VDCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtpZwjw4AliwUr2Ly4NtdWc1206fUbRSJALbr8fjg9HYXiiOm95tW1++2hiqZrhUMc+omo1eCrZFHf@vger.kernel.org, AJvYcCV2KOpkQW14fNqmzGbFCh/juqxBgqLb/F6njDNsfXTejsDU6SomLSbCJrZKkLfii2WVe+hoara5520Z@vger.kernel.org, AJvYcCVjqvKthfPfBDICcjuCzxVHI+fPaw2cEX1HRUOttRGG8mW7kver96a72S5Bx3Ur4LMDEnW2f3OE2RuWQas=@vger.kernel.org, AJvYcCVpRoHKD8wfsgQKJ74NNYcWsuZU9TeKU5cRD+cYgfdyZZuYo0CJt9jDrbTI81jzsTNHAxO0TxQny6P8ncA=@vger.kernel.org, AJvYcCVzX+utP2+R0gPNtKj4Q8jurtFGBYNqfJOHsAr04Y4V7F1RRHoILB5ySP8ghNAD95hxbXyyj3aZrZqH@vger.kernel.org, AJvYcCW1b3lU+DGSuffo/6kXRxDg8FhIxkcI9rCCqBoB1mowiOM6msqOeiCN2f/4YiIdYK6SxuFDbZLMaHJy@vger.kernel.org, AJvYcCWq1gU/rGWULCcafKjqSkHZzlW+pFp/tfbwYZZNdYXzKC8Un/Rweip4yUbp13euWZMDoTzzJ+0/Txxfq7arxkw=@vger.kernel.org, AJvYcCWzNpg8f2GG8jUBSkHTxa8VF/Lfv/ELcaOPB7LjsEAZOhMEe90qTAPw9ku0mxKfKmu1RgzLZ3Gl/QZd@vger.kernel.org, AJvYcCX8vm0bSWbzrhQfa85++rE3jvYsldvfvDQ1a+jPLGqbLAt58evuuA07e6RrjVYxqj/apsKJmfLu@vger.kernel.org, AJvYcCXMcBBmaCMYZ+0DpZk6ggtL3XRfiqh+SbT8
+ gW531k2le02MItrDTLHyIMYiw7UokuNpMdf+hoN+8S8BKA==@vger.kernel.org, AJvYcCXTk9BJBaa3oBZtHvGUdaqGs+4RmKI9fvc2ix6Kvcjew+ZR36CWbTKDbdOZ9HFSeoVEA9IQ0qQXQNDL@vger.kernel.org, AJvYcCXfBYWIJc1lM042B4AalZjxAjbQaNLN0mihj8KnuAeMjLKBinty3YGfGjRBz1xA3K608Q7rmPN+xJM=@vger.kernel.org, AJvYcCXtClLhTwJsUUPPzV2zkTAPfr3Is4MEXT3xBcTT9JM1EabLFCcY9RpVAYGWF73g76lpAaVA+obSVStK/N5o@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2+u7EhnODfDQLmMij6gUzFEYdIqUF67gmtUhkoxW26B4KLj9S
+	e540vUH54PEbaDWHfjYkF1Lpbsc+QrO+mWjhwlAX9dm9Z8xRAWy/piGTwX5hY2DGTURCAYzlP+n
+	IOzGJOZl5Mbvhv/2yLlCzkyuqvgw=
+X-Google-Smtp-Source: AGHT+IFcTF6tcgjMw6D6S0XG2rYkA0vJft71zEud+Bt80oehc9COujaTfpbyb07ODKbKRYsDsEFhP0R5k4x+NMVw2vM=
+X-Received: by 2002:a05:6512:1395:b0:536:555d:11ed with SMTP id
+ 2adb3069b0e04-536587a67d8mr8746687e87.12.1725871831380; Mon, 09 Sep 2024
+ 01:50:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3985690b29340982a45314bdcc914c554621e909.1725536870.git.unicorn_wang@outlook.com>
- <202409080100.h6lX5Asm-lkp@intel.com> <MA0P287MB28225ECCF1D263A20917AD5DFE992@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
-In-Reply-To: <MA0P287MB28225ECCF1D263A20917AD5DFE992@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 9 Sep 2024 10:45:19 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXOAmCsdcvdo41qD9f4L=K2uZa6nJN7D5YOTTuCnBHtWA@mail.gmail.com>
-Message-ID: <CAMuHMdXOAmCsdcvdo41qD9f4L=K2uZa6nJN7D5YOTTuCnBHtWA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pwm: sophgo: add driver for Sophgo SG2042 PWM
-To: Chen Wang <unicorn_wang@outlook.com>
-Cc: kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev, 
-	Chen Wang <unicornxw@gmail.com>, ukleinek@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, inochiama@outlook.com, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	chao.wei@sophgo.com, haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, 
-	chunzhi.lin@sophgo.com
+References: <20240909-ep93xx-v12-0-e86ab2423d4b@maquefel.me>
+In-Reply-To: <20240909-ep93xx-v12-0-e86ab2423d4b@maquefel.me>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 9 Sep 2024 11:49:54 +0300
+Message-ID: <CAHp75Veusv=f6Xf9-gL3ctoO5Njn7wiWMw-aMN45KbZ=YB=mQw@mail.gmail.com>
+Subject: Re: [PATCH v12 00/38] ep93xx device tree conversion
+To: nikita.shubin@maquefel.me
+Cc: Arnd Bergmann <arnd@arndb.de>, Hartley Sweeten <hsweeten@visionengravers.com>, 
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Lukasz Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	Guenter Roeck <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Sergey Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Ralf Baechle <ralf@linux-mips.org>, "Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
+	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-spi@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org, 
+	linux-input@vger.kernel.org, linux-sound@vger.kernel.org, 
+	20240904-devm_clk_hw_register_fixed_rate_parent_data-v1-1-7f14d6b456e5@maquefel.me, 
+	20240829-cs4271-yaml-v3-1-f1624cc838f6@maquefel.me, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Chen,
+On Mon, Sep 9, 2024 at 11:12=E2=80=AFAM Nikita Shubin via B4 Relay
+<devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
+>
+> The goal is to recieve ACKs for all patches in series to merge it via Arn=
+d branch.
+>
+> It was decided from the very beginning of these series, mostly because
+> it's a full conversion of platform code to DT and it seemed not
+> convenient to maintain compatibility with both platform and DT.
+>
+> Following patches require attention from Stephen Boyd or clk subsystem:
 
-On Mon, Sep 9, 2024 at 10:26=E2=80=AFAM Chen Wang <unicorn_wang@outlook.com=
-> wrote:
-> I wonder why CONFIG_PWM_SOPHGO_SG2042 is enabeld for m68k? Please remove
-> this.
+Does it mean you still have a few patches without tags?
+What are their respective numbers?
 
-Because it depends on ARCH_SOPHGO || COMPILE_TEST.
-So it can be enabled on all architectures when compile-testing.
-
-> On 2024/9/8 1:58, kernel test robot wrote:
-> > kernel test robot noticed the following build warnings:
-> >
-> > [auto build test WARNING on 431c1646e1f86b949fa3685efc50b660a364c2b6]
-> >
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Chen-Wang/dt-bin=
-dings-pwm-sophgo-add-bindings-for-sg2042/20240905-201303
-> > base:   431c1646e1f86b949fa3685efc50b660a364c2b6
-> > patch link:    https://lore.kernel.org/r/3985690b29340982a45314bdcc914c=
-554621e909.1725536870.git.unicorn_wang%40outlook.com
-> > patch subject: [PATCH 2/2] pwm: sophgo: add driver for Sophgo SG2042 PW=
-M
-> > config: m68k-randconfig-r133-20240907 (https://download.01.org/0day-ci/=
-archive/20240908/202409080100.h6lX5Asm-lkp@intel.com/config)
-> > compiler: m68k-linux-gcc (GCC) 14.1.0
-> > reproduce: (https://download.01.org/0day-ci/archive/20240908/2024090801=
-00.h6lX5Asm-lkp@intel.com/reproduce)
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
-rsion of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202409080100.h6lX5Asm-l=
-kp@intel.com/
-> >
-> > All warnings (new ones prefixed by >>):
-> >
-> >>> drivers/pwm/pwm-sophgo-sg2042.c:99:34: warning: 'sg2042_pwm_match' de=
-fined but not used [-Wunused-const-variable=3D]
-> >        99 | static const struct of_device_id sg2042_pwm_match[] =3D {
-> >           |                                  ^~~~~~~~~~~~~~~~
-> >
-> >
-> > vim +/sg2042_pwm_match +99 drivers/pwm/pwm-sophgo-sg2042.c
-> >
-> >      98
-> >    > 99       static const struct of_device_id sg2042_pwm_match[] =3D {
-> >     100               { .compatible =3D "sophgo,sg2042-pwm" },
-> >     101               { },
-> >     102       };
-> >     103       MODULE_DEVICE_TABLE(of, sg2042_pwm_match);
-> >     104
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> - clk: ep93xx: add DT support for Cirrus EP93xx:
+>   - tristate
+>   - drop MFD_SYSCON/REGMAP
+>   - add AUXILIARY_BUS/REGMAP_MMIO
+>   - prefixed all static with ep9xx_
+>   - s/clk_hw_register_ddiv()/ep93xx_clk_register_ddiv()/
+>   - s/clk_register_div()/ep93xx_clk_register_div()/
+>   - dropped devm_ep93xx_clk_hw_register_fixed_rate_parent_data macro
+>   - s/devm_ep93xx_clk_hw_register_fixed_rate_parent_data()/devm_clk_hw_re=
+gister_fixed_rate_parent_data()/
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+With Best Regards,
+Andy Shevchenko
 
