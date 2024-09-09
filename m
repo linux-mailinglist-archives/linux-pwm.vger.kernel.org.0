@@ -1,110 +1,104 @@
-Return-Path: <linux-pwm+bounces-3165-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3166-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 180E0971425
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 11:45:27 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA79D971553
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 12:29:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B6EC4B255C6
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 09:45:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 476FEB2365F
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Sep 2024 10:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35CE71B3B01;
-	Mon,  9 Sep 2024 09:45:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B838F1B3F2D;
+	Mon,  9 Sep 2024 10:29:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyV2kapX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LfIcKxUW"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2321B1D4E;
-	Mon,  9 Sep 2024 09:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93381B3B2A;
+	Mon,  9 Sep 2024 10:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725875109; cv=none; b=jlvdpBO5Ft6fuvC67C42Qc3awcrT8qNzcmYHcdI7Bf4ZSMAyU/VRx4bKXFydx7qDzwZthRLWgX46jw467X91WYQn7BgVLvnJ4IAlfqn5s7MFmYBt75QaXie+W4yMS5fEmEB872fxnPr2asVockEz3LWMAb+VlXWEeDm+eR/dRao=
+	t=1725877741; cv=none; b=Gfy9eNGWXvYo3aBQ0SqurndABM/WVKG9Q+2C1x6Ajj/YQUCLp9FKjtPlMwmD5mwv8VgYlHlTQOwyGmU9vAkJg7Dxxfvf1cF+HuZodaLtnX4rC3sDDcFJwaliIlQYd4Fn3viCt0qsLq2vh14QBbw7QSWXTQCmtkbWKqCjjUYW6Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725875109; c=relaxed/simple;
-	bh=jhqHA0uVnwtC2Pdc0XOc7SW+3wqNA2H0J2IUl/abSxA=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=eVJZJqj/Wt8Z/ScpemeFSomw3cAiae8uEwLeWwTzU1luIl8RN6ojdVYaGkGbyFMAxd+3aOkcYEKfYDi1DiKX3h30yo8Yq7dpmVGtpiKp2JmhET4tfxXNxZ4p/1Yo+10IgCMj2nloLUt6y0zuTgvqTfPBNK06/PJVmgGb3fSkUOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DyV2kapX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C0C4C4CEC5;
-	Mon,  9 Sep 2024 09:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725875108;
-	bh=jhqHA0uVnwtC2Pdc0XOc7SW+3wqNA2H0J2IUl/abSxA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=DyV2kapXelG+iFIT+i6zbWTfEkFG8Q36rstlUCDkoS5HGNCKtjIrUVh83IYCNFSqu
-	 GKdlY5ReQTfyrpAzuQvqVIq11h0183HbST2mNUKwsQ2bqS5LkMTx5hhXh/IJpqtPPY
-	 2E5Q8fKy4VhLGMoy9t8P6qNEidtclLa5RLLvoLPVjXi50MPaagXffZoPLsf28kSb9N
-	 NfcYToaXX9DgOVV5Ii6Pyq5Vjd6AV8UMedlrZm4Fd8QC3/UWoL3QTgSyF9H17ykAqQ
-	 dX0ksoGv9ul7IgsH8jAb/c/MDDNRZjBME4Ezp78vHEHOCZ6K+HbGgpeK50fHJ427bt
-	 cpDLXbQjWi+HA==
-Date: Mon, 09 Sep 2024 04:45:07 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1725877741; c=relaxed/simple;
+	bh=j/5zo3J+1syvwV8Fyx6cdd+5FuNkHVAOK/IKOmDoCwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d0+5U9BoeDuMc3R84u59+P5k7+jzxRbY2+fFIUXPd+F2DLmt+2Ecu8TkpKCi10htnuruMi9fYIubcgh3C4mU93o4X3kONtcaPytDeOp+gIkOeLcr0NzbdfvtlMPfw2Jc4xvOZQppWpgHD9kWQZgou3ro4Jh7IIe40Rg06qHPqdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LfIcKxUW; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725877740; x=1757413740;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=j/5zo3J+1syvwV8Fyx6cdd+5FuNkHVAOK/IKOmDoCwU=;
+  b=LfIcKxUWDgnuyPda+ZpnCKxjm6Ck5omu7PC66hZhNi9qmyLDhSzv9WlC
+   xcITsl2I3eBsbIez32ydw0vlYuTZaOS6z55EYudEcI8eNjJBJVHgzYweu
+   yzNPPZjbHkb4+MiqhekPqYChGQt85qgkdSKUuazHSshawdizp2Mphtjwp
+   1d9bafKpx3MtWDSgdwiwxSpFBOvkq8fU3/kSfbPdgQzz/85Yxu7/riyea
+   Zko31/ysxJEqrGO/wDAi2j48LADSc4M4n7CFcIkj7SYvVI6KW6ZfRFzKt
+   OUMYPrmgLR1zi6qNjJJSLFqhFhTUCUY6w2rkwzJdahciVMOqFp7GZugiF
+   g==;
+X-CSE-ConnectionGUID: MZ4pSAWkT9KQVFtOhqRiWQ==
+X-CSE-MsgGUID: vcsToSzCRvqsU/8mbClD1Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11189"; a="28449493"
+X-IronPort-AV: E=Sophos;i="6.10,214,1719903600"; 
+   d="scan'208";a="28449493"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 03:28:59 -0700
+X-CSE-ConnectionGUID: wD7fQusdT4GjBsM4MF1GLw==
+X-CSE-MsgGUID: Wb7IZAzdRxW96w+Zv+Hnjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,214,1719903600"; 
+   d="scan'208";a="66868180"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 03:28:58 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1snbdf-00000006kik-3K5V;
+	Mon, 09 Sep 2024 13:28:55 +0300
+Date: Mon, 9 Sep 2024 13:28:55 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: nikita.shubin@maquefel.me
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 13/38] pwm: ep93xx: add DT support for Cirrus EP93xx
+Message-ID: <Zt7N56YRS9u_8zwm@smile.fi.intel.com>
+References: <20240909-ep93xx-v12-0-e86ab2423d4b@maquefel.me>
+ <20240909-ep93xx-v12-13-e86ab2423d4b@maquefel.me>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Nikita Shubin <nikita.shubin@maquefel.me>
-Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- linux-pwm@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240909-ep93xx-v12-12-e86ab2423d4b@maquefel.me>
-References: <20240909-ep93xx-v12-0-e86ab2423d4b@maquefel.me>
- <20240909-ep93xx-v12-12-e86ab2423d4b@maquefel.me>
-Message-Id: <172587509814.3289077.10746482650513855019.robh@kernel.org>
-Subject: Re: [PATCH v12 12/38] dt-bindings: pwm: Add Cirrus EP93xx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240909-ep93xx-v12-13-e86ab2423d4b@maquefel.me>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-On Mon, 09 Sep 2024 11:10:37 +0300, Nikita Shubin wrote:
-> Add YAML bindings for ep93xx SoC PWM.
+On Mon, Sep 09, 2024 at 11:10:38AM +0300, Nikita Shubin via B4 Relay wrote:
+> From: Nikita Shubin <nikita.shubin@maquefel.me>
+> 
+> Add OF ID match table.
 > 
 > Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-> Acked-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../devicetree/bindings/pwm/cirrus,ep9301-pwm.yaml | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
-> 
+> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-My bot found errors running 'make dt_binding_check' on your patch:
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-yamllint warnings/errors:
+If you need to send a v13, drop one of the above.
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/pwm/cirrus,ep9301-pwm.example.dts:18:18: fatal error: dt-bindings/clock/cirrus,ep9301-syscon.h: No such file or directory
-   18 |         #include <dt-bindings/clock/cirrus,ep9301-syscon.h>
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[2]: *** [scripts/Makefile.lib:442: Documentation/devicetree/bindings/pwm/cirrus,ep9301-pwm.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1432: dt_binding_check] Error 2
-make: *** [Makefile:224: __sub-make] Error 2
+-- 
+With Best Regards,
+Andy Shevchenko
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240909-ep93xx-v12-12-e86ab2423d4b@maquefel.me
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
 
 
