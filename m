@@ -1,333 +1,235 @@
-Return-Path: <linux-pwm+bounces-3180-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3181-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87B659726FF
-	for <lists+linux-pwm@lfdr.de>; Tue, 10 Sep 2024 04:08:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09D57972718
+	for <lists+linux-pwm@lfdr.de>; Tue, 10 Sep 2024 04:23:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E2EEAB226EA
-	for <lists+linux-pwm@lfdr.de>; Tue, 10 Sep 2024 02:08:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4A83AB2371D
+	for <lists+linux-pwm@lfdr.de>; Tue, 10 Sep 2024 02:23:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D6811428F4;
-	Tue, 10 Sep 2024 02:08:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F06C114AD38;
+	Tue, 10 Sep 2024 02:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqZLXeuB"
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="TCy+EER+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2133.outbound.protection.outlook.com [40.107.117.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACD273467;
-	Tue, 10 Sep 2024 02:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725934115; cv=none; b=p97mwVBrN68Yx0jdFCRK78WBjlmk47QVl3V1gcVRNP87FYFSEPnpRtJIciSQ3wqK7mIR0AuMoRJCkVDkTEYjkYC72J2tc2rOmpS2o1d0YIlJfgmVzJI3yuMwaeEEOugWsIFEeldNxtj5UPBpVjMSy65+5gsBXNQW8l+UXTh9L28=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725934115; c=relaxed/simple;
-	bh=xuI2m8ZDcTZYOE6qtsEutp9iwcGt9nE8d2UQVgQGwXc=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IrH6VPW6RsMr65SLuOoTU0IKNGAw4NXSrxFc71xBFLUNa9m3KVszBxEiGJ02BcorMB2ZJR2kYGwC+3UL38p2Bb/UuhaAMkZp+DY0qQ6LP6xx2XC1Qd75vSqbpfBGkAMObT0QEjHFU9cvv1PXwqnDx+cuKpp4dTt4mBRtLBNRcEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JqZLXeuB; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-710d77380cdso1701579a34.0;
-        Mon, 09 Sep 2024 19:08:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725934112; x=1726538912; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=61LOB963c0reRM1b7i4Xf550C2dkifjVL8GXx7YaxlE=;
-        b=JqZLXeuB+m0d2aEjhvFw0dC0GvP34TqP/Yzv4lwLDaMsa2GwSsfBZbIdYmcLJTqHG5
-         S6X9++S2/+oyFmwjuYweVzmP8DZm2kY5lJey1Ngt6tuzCRemCdy8Uac7R5z79NXfC9fu
-         NC4ySZlhzU2ehhiPqB2tTdakuRd6UaQdawA6tMnhKg7B4GM1dU5LpKPDBV2pSMP7mkVc
-         TwUSGS14nmHj+g1e5LilSBJLN+5RGr+JD8yeHVSrT1fFOwEKGu/gGvahdbBNkQ56r8wQ
-         aJNbKUtcpfTfaiHC7IUu9m3gplR6qJt99lmlLvRhd0a6Hy4pucBTD24IvU0k1sKX0bXv
-         Ufjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725934112; x=1726538912;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=61LOB963c0reRM1b7i4Xf550C2dkifjVL8GXx7YaxlE=;
-        b=afQWDw/d9Va71DE/POvNm5fFnkmHLfi5fKVYjEnqyPschk2/MtWjdL51VnyUIm/EPm
-         iTkbSMw9WbE10xbYrgKHBhKnMaaA/7+p57o2a34Yud1tCIlQogQqEcMGGUIj44uZ7PD9
-         3+BBjoJNu9PTu9yWICT+jo7jvPlLcfW+9gt7vE3ucx4Lv4Viht2SaIR7CItBO1G8P755
-         96tXZLNC1HSZeyVh2HXgGEMvlDzX83szuXEshHomt/6PBRpIU5c3q9X566+nO8qEQsCh
-         ZXDxBAo77/IjgTUZQEjmBSRplk15Tm2PRa6GFQoVRrvP7Pi+kQnP2nb2zcFy+IlpP0XA
-         Fq7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUA6mv0XVs9MXrcNi0E3Xd6doDM5PWokB6sKubirj3CmJs3gYsC3PQgw9raRIcp6Wt7pDSovg5BN9HS@vger.kernel.org, AJvYcCVskcMaBvFFa2jZ6eXUxYM9u+pCbBQpVTmdQ6BaQskUvrSbOVokg9TlLfXFDBvmd20Nz0cE+AifDRS+nvr5@vger.kernel.org, AJvYcCXwPeGXW1Xr4z1ONLh6Q/m7EUCpfDIXkO6nBWPoCkWQI7Gp4vV5Tn82G/t2hPGLaPRU7vHKdsoyPPSL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVcHdpItvWkycKJ9lKMdh5JQPHOgbwyzcsVUzEBvJW9tzSravj
-	TwG4v4q76uryFFiV4LhBnRVMs6qwm1dW+cyN1WydhORnniQaCrgZAwLGziF8QFk=
-X-Google-Smtp-Source: AGHT+IE2vPR/qjcTLgGYGRs2+UIdrx4oMV7VBm305dj7Y/944NVKU1/5y8dc06G7sdVzql2mhGsNwA==
-X-Received: by 2002:a05:6830:4993:b0:710:f536:a840 with SMTP id 46e09a7af769-710f536a9damr1161072a34.31.1725934112186;
-        Mon, 09 Sep 2024 19:08:32 -0700 (PDT)
-Received: from localhost.localdomain ([122.8.183.87])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-710d9db3280sm1693616a34.61.2024.09.09.19.08.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2024 19:08:31 -0700 (PDT)
-From: Chen Wang <unicornxw@gmail.com>
-To: ukleinek@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	unicorn_wang@outlook.com,
-	inochiama@outlook.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	chao.wei@sophgo.com,
-	haijiao.liu@sophgo.com,
-	xiaoguang.xing@sophgo.com,
-	chunzhi.lin@sophgo.com
-Subject: [PATCH v2 2/2] pwm: sophgo: add driver for Sophgo SG2042 PWM
-Date: Tue, 10 Sep 2024 10:08:25 +0800
-Message-Id: <0f7568620c2ad3d21885e83182c51f4fe9202367.1725931796.git.unicorn_wang@outlook.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1725931796.git.unicorn_wang@outlook.com>
-References: <cover.1725931796.git.unicorn_wang@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67ED82FB6;
+	Tue, 10 Sep 2024 02:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.133
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725934969; cv=fail; b=jKDpuQ1RAiziBmReGWxkJoaf6vEvFcSO197Q47anPJ6U+yUEgrIjEBZ2L+Jl3sQ4zRwH/o+6tILFXkDoV6fdSe7El66t8itGOjAjbrejS860c4/gQN8KtIsO+fhIohPh0wZmNgwRhSjJRO6vIEZzXBTNbUsUuBPxcLwSeBahNtk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725934969; c=relaxed/simple;
+	bh=Esm9SeUoy3rq2iwA4jJqKP4eVac/KnsX4sbjB4zCGb8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=R+3r9eNKy3l+BkXlEWQCxLJocmpBKEvscwA4NQTMbfGnAlDIdmnrOSqAOOe4U6At4+TKXbQtUDoHapH1ey73nzqrflLVwE2pLaLO5OmJql2wIvSxgiujPZFTzwvRXOWjV+ATyJ/f3GTRFPrW0kSlZpZqDWuggxN9p2eXJBmZ6z0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=TCy+EER+; arc=fail smtp.client-ip=40.107.117.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kbdn21ZxfHuJQBvpc83YEyeETp8o/XzeCAkzbbubxtnjLc65BztPqxd5sb+cUcAGQE+LN3UfABQgfRxM8BTu/uLjVVyVDQvAdyXNPegT9VC2TsqhD7P60WiqGNXxcECZMm/bSWmoLfnl5oMd/ZASMP+/Rqlf57A1foItUO5/0te1V6r+k1zsJ7TwWT2DfwsIrbQ/ay0Oe92rarHunqyf5X7XLsdwfW1ueaFtd+ocqdO2uVYgXO7EnqO8gKqWzOGWBTmQDYwYGfAw0mtJsxpyLgmpIhFOJIQoawXTn5jAWreOeMCrLlrywraZuO8MRkNbyG0B+mhCwR4MhGrsOsAikg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ofUAISy9bGR4TM5pCTSgjUbg8kAgrPKbnBS9O+i+E8g=;
+ b=vUPjCymNp/BOTEJaFyKsbMRx321CrFUTpAErKZl8d/vk1A1D83w5K5hZ0my+Uekcs+e8x/hSmIIrZv/Z+0gNx/i69Ib9f5zmsjEmncwUVbBDz+OFCNVR1ONIzPfdFJoTDa/2VkDdC9MML5DZljyEkr80IhzQzfXjVkPo/lGyjm7gZ3CAZrHg7/b4wfK+xUeEHngE1x6m08O5tl+5LRPUvyIu5+hu5eNLKlbXI4kpYsksyISSPrjJK9ksOTshiVafQee7wdsWWnzB8wZD2yiV73vxZtMoQpfh5CwD7o4t5Ilrt5Y5NuayBKzV4ncpcTUtPdE9SV7onoiQ6QuReIsEZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ofUAISy9bGR4TM5pCTSgjUbg8kAgrPKbnBS9O+i+E8g=;
+ b=TCy+EER+8LpU3He8x0yFj4UX8igzOPDdXV4umNaujTZTEll+RplSRmzEHzJttt8IUnStnnpsOicfrh59F/DWocuDOGtQofPmAyGSSmjJAwSX8Ly9YB3xBwPc++vK3l9rId5X115RcCT00jmI6LrRb0WAnyOTAy/51IRfF9txSQJC5rzeU0lYYvqitJ/3roPPJD6vs9XT9ABNitvyVAZ7zH8geQcpI7/vpm+SE6PVYsJwUaZ2ZVyn+4XOYc7TgS4KYGV/HTzjGN1e4g5/nkJo2dCnPerLVu2T66gLHEFSfn2VZi+bbC4mCoOQO8QFj6IEJaeZmxV/IUGaA7wKRjT1HQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from JH0PR03MB7384.apcprd03.prod.outlook.com (2603:1096:990:11::8)
+ by TY0PR03MB6655.apcprd03.prod.outlook.com (2603:1096:400:211::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.23; Tue, 10 Sep
+ 2024 02:22:41 +0000
+Received: from JH0PR03MB7384.apcprd03.prod.outlook.com
+ ([fe80::1ff4:d29:cc2e:7732]) by JH0PR03MB7384.apcprd03.prod.outlook.com
+ ([fe80::1ff4:d29:cc2e:7732%5]) with mapi id 15.20.7939.017; Tue, 10 Sep 2024
+ 02:22:41 +0000
+Message-ID: <6326decd-cb9f-4095-9aca-4d40819d2eb4@amlogic.com>
+Date: Tue, 10 Sep 2024 10:22:38 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [DMARC error][DKIM error] [PATCH 1/2] dt-bindings: pwm: amlogic:
+ Document C3 PWM
+To: George Stark <gnstark@salutedevices.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Kevin Hilman <khilman@baylibre.com>, linux-pwm@vger.kernel.org,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>
+References: <20240906-c3-pwm-v1-0-acaf17fad247@amlogic.com>
+ <20240906-c3-pwm-v1-1-acaf17fad247@amlogic.com>
+ <fcd005d2-dba4-4980-8d0d-f55632c7a6d9@salutedevices.com>
+From: Kelvin Zhang <kelvin.zhang@amlogic.com>
+Content-Language: en-US
+In-Reply-To: <fcd005d2-dba4-4980-8d0d-f55632c7a6d9@salutedevices.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR02CA0107.apcprd02.prod.outlook.com
+ (2603:1096:4:92::23) To JH0PR03MB7384.apcprd03.prod.outlook.com
+ (2603:1096:990:11::8)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: JH0PR03MB7384:EE_|TY0PR03MB6655:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8708e577-e9bd-4687-2891-08dcd13f7271
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R2dpUHZkWHVuYzhQZ0FKTVVmZW5qZ2JxZGZQdUpqT3RFdFhCM3ljVDhjcUdC?=
+ =?utf-8?B?M3VTRm5iY2s4eklhbEZ4eUNVWi9nK2NmUlVCZGRBZXNWQlE5dVZzS0RlVGRD?=
+ =?utf-8?B?eG5wckVJRHpTZmdOMkwzVGFSTUZTa0UrZncweGdkVWxYZHJBV3dXaExOUkRK?=
+ =?utf-8?B?NUlLNFVCbFB4ZDFKTWRLVUk2RzNBRVk2cUZ3L1Y5aHUvK2M5d1lKeXkzSE1X?=
+ =?utf-8?B?V2NNZUxMMmhTZGlTZHpPcVRTbDFNcE9UZnd0am1Xcm1TdGRuUnZkQ2ZSOGJJ?=
+ =?utf-8?B?Y1dBemZIem5iN0pSMURxOGwwNGJ6KzdIOU43TUdZL0xTczNHVWRNYThOMTRv?=
+ =?utf-8?B?M1lwRmJQMzVYWUtoa3ZOb0FLRFVPM2lMVjFnVy9TUHFqR1R5M01JTm1RcXh0?=
+ =?utf-8?B?ektqeUQ2NlVJbjYzcStSaTFUTzByWVB6N1g3TUQzbjM1elk2eXZoWGFyTjNa?=
+ =?utf-8?B?OWVYOFdSZ2Q1SVlPYnZVK0hkU1JvdHFsWmpjRDdSekllOHFhM2E0WHQyWEY5?=
+ =?utf-8?B?Qzd6cHV5dWdEZ3BENUlidWhtTnh5ODV6cGtYWlMwUXJKOENYTDhNdndXalB3?=
+ =?utf-8?B?TzJzU1lRRU9kMEt3SHdyWWxwbVY5ZjRBN1I2NkNWbVowZUd6R1V5Qlc0Uk9W?=
+ =?utf-8?B?R096MVRxRjFJRnBDSXl1Q2czbk9lQ21teHVuaEFUL1BqUUxST3JaRlVnTk8y?=
+ =?utf-8?B?L3pMZXFXTURZVnB4M3hjZXN1aDd4MEszaDlrV3phbVJKQVZwSVVmeUFKV0tn?=
+ =?utf-8?B?cFVYWW5EUHZ0RVJVTnhCcE5YS3AwWEFHaEUwbVRsZGhDd0pwUjBCRkYxMThG?=
+ =?utf-8?B?RnpEaURNNXBPQUhyejY1YlF6U2pFQlpBQ3N0SHhiR3VJRFJLQ3Z1SExuSzVY?=
+ =?utf-8?B?TEJVaVJtZmM3YVlzOWQ4K0lDeDhQQ0hndU83aFNqUEhCNnhZb1BIcEhOTGVp?=
+ =?utf-8?B?bEFYeFhyZHRsQ3lBN3A5T00yNXY0VXQ5MHFDRk1COW1HcTRQTFU1YkdnYkpq?=
+ =?utf-8?B?R1pDaVVoNko0M09oQThZdjlweWN4ZFBELzg2OXpjdU1qenpoQ05LN2V0ZFNj?=
+ =?utf-8?B?dllUL0J0M0tIVXV3cWRyaUZnQkhMdE4wbXVMOXZKam1XbWh4U05vYitVb3l4?=
+ =?utf-8?B?MUxPMElZRUI2RFhJQ21JaHpJMGZYR3RrOHVlM0QvQmg2b0hRVnlKY25LRWNo?=
+ =?utf-8?B?ZDBHVmd1Q2VtajJweFowTlcyREFUQkg3ekRBZGJld2V1a1RScE9tR3NTa0g2?=
+ =?utf-8?B?eFphS3BsSFFmSDc5MXNQTHhla1hlc1dOQ1hydDlSQmFCdWVDbXRvUkg3dVJJ?=
+ =?utf-8?B?K3FCQ0x2cWlLeEdVeFJ5SHhvbHBzQjg0bkJGdG9tejB1M3d2VEozcGUyT1cv?=
+ =?utf-8?B?bEJ0SVlTK1lzWUZrMnBJU29NNkFkK2xuMEtZVFN2WTE0eXBvME9ML1QyR2Zj?=
+ =?utf-8?B?MnkveThCR2JONFRhSmhtWGFtL0RzU0NFbkJ1QThVZzhDeVhZd1hldDU2bEZU?=
+ =?utf-8?B?OFQ0c00vbEFKQ3Q3Z0NsbVAwcW5xV0VTL2ZvNTRRYko0anI5NHpSVzI2am5n?=
+ =?utf-8?B?K3ZIT0ZhQnIyd2J2RjV6NnppS2d5MSsxbDF6OXA5NEY5NFJZakNkZDVIdm5l?=
+ =?utf-8?B?MHJNSkE0Q0p3UzdRUmcxeURlYUhSanJnL0kxT0twU2RLakhxekg2dm93ZWhO?=
+ =?utf-8?B?R2d5WGJwQU9XdUpuVEx1S0ZoQ1JoNW9sODdHYzdSeEt1OWMwNWVCSnNpMzcy?=
+ =?utf-8?Q?Wv2WT6VbArLSlhdnmQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:JH0PR03MB7384.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dm9TNExvM0l5ODRkcXNOSVNHYW0zclFWWll3S0NiN3kvL0RHNDkyUEljNkI3?=
+ =?utf-8?B?Q09mM1U2QURWMStWdnVaNjU4L3ZGYzIreTJwUTZFelVCUDRvN3hkLzVtNEpw?=
+ =?utf-8?B?dkNwQVhLbjVxNjNqOGZOQjVTVmJrcXNLVEVKYm55R3hOenFNVGVlS1FKS3RJ?=
+ =?utf-8?B?ZWFlUWVFT2VXQWFBZXpwSDZVVG1YSkg4Y2lOSmdOUlB1aEVXZVByZlNXWmNm?=
+ =?utf-8?B?clZSNlE2Tjg1V3JoSnNLM0lXN0tseGN3U3FvSWJybHJobHdzWmpyWVZaYmdx?=
+ =?utf-8?B?MkJKTUMyNE9lT21ZdndqMmlrTFJhNGNTak5NaWJMK1p4QTMvenc1SzlTRXI3?=
+ =?utf-8?B?dC9FYVFBK1JrR2M5QWkxOGlsK0tiOVR0aTRsb2xDSWxiWE5IRTE4UHhkbnhm?=
+ =?utf-8?B?QW5WcXAxZjNPZTVJZUZFSTJtSlJxdEpMUUFWcmMyV2ZSR0xTUXdGSXhiVEds?=
+ =?utf-8?B?ajVLR25WMXNRSTRoWWUyVXJZL2pnTlNMMk40akliT1FxcVlKWEIxQ2J4a0ls?=
+ =?utf-8?B?bGJPd3NUbkpnemZrOGU3NUF3a3llRGNCbXREZUtGOHY0T0J5d2dLdVJmZXY2?=
+ =?utf-8?B?S0xVNzAySFNuSzMxcEdQUG9pRWJTOUpERGtwanNZN2VrcmhZK24xQjdzWkZh?=
+ =?utf-8?B?V0duWHl0WkhuR055WFRTanJmYiszMUE4b2hhbHYxVi9uejl5dTY2LzRPUHJY?=
+ =?utf-8?B?d2hsZDMxY29MVW5BS2J2RldPMVVPOHJBLzBjYlNWZDdqUWtvMUlXQ0lHbm9I?=
+ =?utf-8?B?VnhLbE9hOWV0Mm1Ldm1FNXZKT2VzcVdKSW5vQWFaK1dIVEtydnErSlU5Z3pu?=
+ =?utf-8?B?SVRYa3FiQW90RWcvWEhWVVF1MGNGVnlZRC95cnBYcXlJbWZ2RXdRdzVHWG1P?=
+ =?utf-8?B?TmtjUGdrOWhEOW90Q0RibXlxYjlCZWM4U2c4akZraW1nWTE3M2lCWlNYQiti?=
+ =?utf-8?B?VTgxWUlqUXBwYlpuRmUwSGpmN2VTU1E0RFF3VWo2Ym1tOVZmSDMxVUtackdF?=
+ =?utf-8?B?RGJXa0ZyUlkyYUJmbWRacHpKalFaMWp2QnlXYThmQW9aZ3dnOWw1Qk9jV3F6?=
+ =?utf-8?B?SWxvOElrMWQ4bERvZWU5emhLdUNlT0UrLzNyK0FEOVF0elZ5WlFWMnQyVEhx?=
+ =?utf-8?B?Z1U1MnMrc1ZxKzJmQUdoMXVOTUU5Si83U1FJSTBpVERSY3h6RzZkUldPSWt6?=
+ =?utf-8?B?VENqRlpBVEtnMDZ1OFRsdG85bnZIM3BGYjkyQlVjMSsxNzNNMERlcGhnVU5m?=
+ =?utf-8?B?ZkRINjRwcHBvOHZ1dmdsUGhQR1BJMU1kYjJmUVlJN1c0SElaYlZzd01kTjRx?=
+ =?utf-8?B?L2R6UkF2Y3JRelM2TkJEdmdXSndjWWJMQS9WR1BoREszN0FRT2VTdkdOYnFU?=
+ =?utf-8?B?cXgyVDJEYlB3cnV6M1I2L2FtYURTYmNjT21LMlZyZ1I2WDNRdHJCTEhDdzl1?=
+ =?utf-8?B?T1RybmlRS0ZYMnE0S05YaU9meVdBQmVGTDdMVE9COHpZTFp4K0NYUFJNL1Ra?=
+ =?utf-8?B?UUg3YnM3Q293aXBQbUZPZllzeXVpZGxPbGZZdjVpVEJXM0Z6aVUrZFQ3T2ZY?=
+ =?utf-8?B?eXBKT09BVjRFOU54SkE2VUdDbDU0dXNNOUM3UmpNaU5USS80T1gzbXQ1MVpT?=
+ =?utf-8?B?RmR1VDBEcmtKMlFIM0lVblByMEJqd1JnaU1haEY1bDU4bTBJUzNJQXVCOG1s?=
+ =?utf-8?B?R2FjZWo5c1pjaG9wUDVJSHR1TUhlcStkT21ObHoxNXhQTFRGRjMwbHIxaHR6?=
+ =?utf-8?B?SzdxTGptM2N0QWg5aWVTSkUycXM0Zk1Ic3AxWHNoaG5EbTlvbVd6RXRhTGlC?=
+ =?utf-8?B?Vmg4R2Y4b2tOdUdxVWdNNXBHQkMwSnhWOEpPbUQybGVsKzlZMDN3dzJ3Wkli?=
+ =?utf-8?B?RDNMTEhqZ1ZSVFdOYWhuVGJjYkhuRFVJRFB2am9PM3U4dmNRZzV2S2dVVVhz?=
+ =?utf-8?B?S2pHRDkzYk5ubFNHUTdCM2VZZmE0enNPZWt6cUVGWEtxcWR4RmtVbVEyeGl0?=
+ =?utf-8?B?Sm5mRGpxL1BzKzlVY01LaVp2M0NpY1JZL2NxN1p5cnRBS2pWWUhjaFZPODF5?=
+ =?utf-8?B?eFo1S3hlc09SQlhiVldDMEhWek1lY3dNclpadTlyWTAzbXdvdUdBZHZpZ09M?=
+ =?utf-8?B?akoycmc0SWd6SEZKSFlsVmU2cXB4NEppWkozVU9ZclR2eEFFbkJYckJvMHZh?=
+ =?utf-8?B?NUE9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8708e577-e9bd-4687-2891-08dcd13f7271
+X-MS-Exchange-CrossTenant-AuthSource: JH0PR03MB7384.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2024 02:22:41.3820
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5KM5Ts7N3sCmSpJrBNDKxuvFY/jupjOx1dTzro5Zrc/9aCQiYbPS1KiGpfY6THt7jxNWw8NBud/7Fj3XeXyoq8iIHDONn1D1DmiQmtXjpAM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR03MB6655
 
-From: Chen Wang <unicorn_wang@outlook.com>
 
-Add a PWM driver for PWM controller in Sophgo SG2042 SoC.
 
-Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
----
- drivers/pwm/Kconfig             |  10 ++
- drivers/pwm/Makefile            |   1 +
- drivers/pwm/pwm-sophgo-sg2042.c | 180 ++++++++++++++++++++++++++++++++
- 3 files changed, 191 insertions(+)
- create mode 100644 drivers/pwm/pwm-sophgo-sg2042.c
+On 2024/9/9 20:49, George Stark wrote:
+> [ EXTERNAL EMAIL ]
+> 
+> Hello Kelvin, Krzysztof
+> 
+> There's acked yet not merged patch [1] adding amlogic,meson-a1-pwm with
+> s4 as back-compatible. Should amlogic,c3-pwm be added in the enum along
+> with a1?
+> 
+> [1]
+> https://lore.kernel.org/linux-arm-kernel/dbb4be50-4793-40ab- 
+> b362-6c9a6dd87324@salutedevices.com/T/
+> 
+Hello George,
+I've noticed your patch.
+Once it is merged, I will rebase my submission.
+Thanks!
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 3e53838990f5..de8a36ecabbb 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -577,6 +577,16 @@ config PWM_SL28CPLD
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-sl28cpld.
- 
-+config PWM_SOPHGO_SG2042
-+	tristate "Sophgo SG2042 PWM support"
-+	depends on ARCH_SOPHGO || COMPILE_TEST
-+	help
-+	  PWM driver for the PWM controller on Sophgo SG2042 SoC. The PWM
-+	  controller supports outputing 4 channels of PWM waveforms.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm_sophgo_sg2042.
-+
- config PWM_SPEAR
- 	tristate "STMicroelectronics SPEAr PWM support"
- 	depends on PLAT_SPEAR || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 0be4f3e6dd43..ef2555e83183 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -52,6 +52,7 @@ obj-$(CONFIG_PWM_RZ_MTU3)	+= pwm-rz-mtu3.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
- obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
- obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
-+obj-$(CONFIG_PWM_SOPHGO_SG2042)	+= pwm-sophgo-sg2042.o
- obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
- obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
- obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
-diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg2042.c
-new file mode 100644
-index 000000000000..198019b751ad
---- /dev/null
-+++ b/drivers/pwm/pwm-sophgo-sg2042.c
-@@ -0,0 +1,180 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Sophgo SG2042 PWM Controller Driver
-+ *
-+ * Copyright (C) 2024 Sophgo Technology Inc.
-+ * Copyright (C) 2024 Chen Wang <unicorn_wang@outlook.com>
-+ *
-+ * Limitations:
-+ * - After reset, the output of the PWM channel is always high.
-+ *   The value of HLPERIOD/PERIOD is 0.
-+ * - When HLPERIOD or PERIOD is reconfigured, PWM will start to
-+ *   output waveforms with the new configuration after completing
-+ *   the running period.
-+ * - When PERIOD and HLPERIOD is set to 0, the PWM wave output will
-+ *   be stopped and the output is pulled to high.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+
-+#include <asm/div64.h>
-+
-+/*
-+ * Offset RegisterName
-+ * 0x0000 HLPERIOD0
-+ * 0x0004 PERIOD0
-+ * 0x0008 HLPERIOD1
-+ * 0x000C PERIOD1
-+ * 0x0010 HLPERIOD2
-+ * 0x0014 PERIOD2
-+ * 0x0018 HLPERIOD3
-+ * 0x001C PERIOD3
-+ * Four groups and every group is composed of HLPERIOD & PERIOD
-+ */
-+#define SG2042_HLPERIOD(chan) ((chan) * 8 + 0)
-+#define SG2042_PERIOD(chan) ((chan) * 8 + 4)
-+
-+#define SG2042_PWM_CHANNELNUM	4
-+
-+/**
-+ * struct sg2042_pwm_ddata - private driver data
-+ * @base:		base address of mapped PWM registers
-+ * @clk_rate_hz:	rate of base clock in HZ
-+ */
-+struct sg2042_pwm_ddata {
-+	void __iomem *base;
-+	unsigned long clk_rate_hz;
-+};
-+
-+static void pwm_sg2042_config(void __iomem *base, unsigned int chan, u32 period, u32 hlperiod)
-+{
-+	writel(period, base + SG2042_PERIOD(chan));
-+	writel(hlperiod, base + SG2042_HLPERIOD(chan));
-+}
-+
-+static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    const struct pwm_state *state)
-+{
-+	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
-+	u32 hlperiod;
-+	u32 period;
-+
-+	if (state->polarity == PWM_POLARITY_INVERSED)
-+		return -EINVAL;
-+
-+	if (!state->enabled) {
-+		pwm_sg2042_config(ddata->base, pwm->hwpwm, 0, 0);
-+		return 0;
-+	}
-+
-+	/*
-+	 * Period of High level (duty_cycle) = HLPERIOD x Period_clk
-+	 * Period of One Cycle (period) = PERIOD x Period_clk
-+	 */
-+	period = min(mul_u64_u64_div_u64(ddata->clk_rate_hz, state->period, NSEC_PER_SEC), U32_MAX);
-+	hlperiod = min(mul_u64_u64_div_u64(ddata->clk_rate_hz, state->duty_cycle, NSEC_PER_SEC), U32_MAX);
-+
-+	if (hlperiod > period) {
-+		dev_err(pwmchip_parent(chip), "period < hlperiod, failed to apply current setting\n");
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(pwmchip_parent(chip), "chan[%u]: period=%u, hlperiod=%u\n",
-+		pwm->hwpwm, period, hlperiod);
-+
-+	pwm_sg2042_config(ddata->base, pwm->hwpwm, period, hlperiod);
-+
-+	return 0;
-+}
-+
-+static int pwm_sg2042_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				struct pwm_state *state)
-+{
-+	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
-+	unsigned int chan = pwm->hwpwm;
-+	u32 hlperiod;
-+	u32 period;
-+
-+	period = readl(ddata->base + SG2042_PERIOD(chan));
-+	hlperiod = readl(ddata->base + SG2042_HLPERIOD(chan));
-+
-+	if (!period && !hlperiod)
-+		state->enabled = false;
-+	else
-+		state->enabled = true;
-+
-+	state->period = DIV_ROUND_UP_ULL((u64)period * NSEC_PER_SEC, ddata->clk_rate_hz);
-+	state->duty_cycle = DIV_ROUND_UP_ULL((u64)hlperiod * NSEC_PER_SEC, ddata->clk_rate_hz);
-+
-+	state->polarity = PWM_POLARITY_NORMAL;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops pwm_sg2042_ops = {
-+	.apply = pwm_sg2042_apply,
-+	.get_state = pwm_sg2042_get_state,
-+};
-+
-+static const struct of_device_id sg2042_pwm_ids[] = {
-+	{ .compatible = "sophgo,sg2042-pwm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
-+
-+static int pwm_sg2042_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sg2042_pwm_ddata *ddata;
-+	struct pwm_chip *chip;
-+	struct clk *clk;
-+	int ret;
-+
-+	chip = devm_pwmchip_alloc(dev, SG2042_PWM_CHANNELNUM, sizeof(*ddata));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	ddata = pwmchip_get_drvdata(chip);
-+
-+	ddata->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(ddata->base))
-+		return PTR_ERR(ddata->base);
-+
-+	clk = devm_clk_get_enabled(dev, "apb");
-+	if (IS_ERR(clk))
-+		return dev_err_probe(dev, PTR_ERR(clk), "failed to get base clk\n");
-+
-+	ret = devm_clk_rate_exclusive_get(dev, clk);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to get exclusive rate\n");
-+
-+	ddata->clk_rate_hz = clk_get_rate(clk);
-+	if (!ddata->clk_rate_hz || ddata->clk_rate_hz > NSEC_PER_SEC)
-+		return dev_err_probe(dev, -EINVAL,
-+				     "Invalid clock rate: %lu\n", ddata->clk_rate_hz);
-+
-+	chip->ops = &pwm_sg2042_ops;
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "failed to register PWM chip\n");
-+
-+	return 0;
-+}
-+
-+static struct platform_driver pwm_sg2042_driver = {
-+	.driver	= {
-+		.name = "sg2042-pwm",
-+		.of_match_table = sg2042_pwm_ids,
-+	},
-+	.probe = pwm_sg2042_probe,
-+};
-+module_platform_driver(pwm_sg2042_driver);
-+
-+MODULE_AUTHOR("Chen Wang");
-+MODULE_DESCRIPTION("Sophgo SG2042 PWM driver");
-+MODULE_LICENSE("GPL");
--- 
-2.34.1
+> On 9/6/24 15:46, Kelvin Zhang via B4 Relay wrote:
+>> From: Kelvin Zhang <kelvin.zhang@amlogic.com>
+>>
+>> Document amlogic,c3-pwm compatible, which falls back to the meson-s4-pwm
+>> group.
+>>
+>> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+>> ---
+>>   Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/ 
+>> Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>> index 1d71d4f8f328..356371164acd 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+>> @@ -44,6 +44,10 @@ properties:
+>>                 - amlogic,meson-axg-pwm-v2
+>>                 - amlogic,meson-g12-pwm-v2
+>>             - const: amlogic,meson8-pwm-v2
+>> +      - items:
+>> +          - enum:
+>> +              - amlogic,c3-pwm
+>> +          - const: amlogic,meson-s4-pwm
+>>
+>>     reg:
+>>       maxItems: 1
+>>
+> 
+> -- 
+> Best regards
+> George
 
 
