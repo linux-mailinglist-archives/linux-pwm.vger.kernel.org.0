@@ -1,54 +1,54 @@
-Return-Path: <linux-pwm+bounces-3218-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3219-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06FA9975E1A
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Sep 2024 02:48:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00F71975E1D
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Sep 2024 02:48:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C61BA285B08
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Sep 2024 00:48:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BAF62285B13
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Sep 2024 00:48:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 426368C07;
-	Thu, 12 Sep 2024 00:48:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FA171A288;
+	Thu, 12 Sep 2024 00:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="eBfVkyDN"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="mUVLP5gc"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750E92F3E;
-	Thu, 12 Sep 2024 00:48:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66C93209;
+	Thu, 12 Sep 2024 00:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726102082; cv=none; b=gUbFVClz9wAcTKGY/uN1iEcz23LLNgmnVzYnSFu9KaZ9fbYMapJ1WPeyRTsB+h3TmFszuYMf8ixH/jC+D0qYkP6GKPCPxmGOmPz/0K+rqJMn7FGNuVi7VkOZ5L750+HxOOWaNBlZB3RvPaI5pGkvr0mzHC2OFhdPLjUBvLErrw8=
+	t=1726102083; cv=none; b=tuAuRCVCj+Q+lrFpgbhXx6dJhZR6xLAs1mTfhYjKK/2/8xul9fFfjQNtAHMoxcXmlFOKiXOJ8niKa/MK31fCK+w1miwAqUYiyXGbfVmPFJMC7U03unJT22K8hQSniQVwikAbk/xyERyxZxKqvzTeplpTbeo++XT5L8DXpI0YEY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726102082; c=relaxed/simple;
-	bh=GOa4DvAI+iAtw7Bld2LWvZe2Z7Z8JBi0H6zIfMGiyA0=;
+	s=arc-20240116; t=1726102083; c=relaxed/simple;
+	bh=0eysDtgRRa65JkJQOs3PKV4EUwS47bDFQDXpBNYg4Ec=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X1WuDqwJgsgW/RgidCdsiG0cM0Vs3Prtm6uDpkKnEVUlD1ZZiXvmdZDiCPubB39fbZwYUIKaqpRYUHcvWZpa3pFBhzTKGWZ8JbD/C0/o0DG8MaxPVMPPJ/AiKT5yOfhEd87yHRsarPT+wUfgIQnO7BkB5rGnk97adBSgDWYvoOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=eBfVkyDN; arc=none smtp.client-ip=85.214.62.61
+	 In-Reply-To:Content-Type; b=V/BaQbDtdqPAfvuNwvGPI40KrRagcjDsls3u2LQc9piBIwRF7CTrjAnXAZVJAuIgITJflXq3g31JdfXV+1Rm7X+2swA0JVsMw/5NqHDjb+a840roqgqJMWibymIRoSEDWqJBWtfj6klPvsC6HbTIxzxs19Q2ccZbKYMUQKh2Odw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=mUVLP5gc; arc=none smtp.client-ip=85.214.62.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
 	(No client certificate requested)
 	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 5621488ABF;
-	Thu, 12 Sep 2024 02:47:57 +0200 (CEST)
+	by phobos.denx.de (Postfix) with ESMTPSA id E65F788CEB;
+	Thu, 12 Sep 2024 02:47:58 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1726102078;
-	bh=V1pvavRlucmUWFj87Kof6Y+0KiBkjYpzg5jNu3rdjBQ=;
+	s=phobos-20191101; t=1726102080;
+	bh=sc503OWPpPYu83ILRstAasVNUOftYWoZvWdM7aKBsdY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eBfVkyDNh7XvfozoPzCrSFvh7eO5+SnCK7j4MTP15UZLStwpVcx1p36+dHcDpUyB/
-	 xlWzTOWqUHmCp1VQV85L2HIDuRf4M07g+TZcksjAToxWEFXH2wPbw+0ZL0RYq5D4sF
-	 Cxo56L3EQKEuu3ZhCkibH/wo9gvJDYF+F8y7usBbZgvoUsIYBS4H320g0eo8Ff9+wh
-	 RQxt654zmeMGpvs2rlCPq45hfjepkYwVt4lBJle7+DTMouKB2mcDjhKvzKPrIKdYDV
-	 Zu1DiMNyFNwlubMAukeEIv8nYGxh866blr3ckY3N0tQyOtah22MY1VJE6/s0fRWlFr
-	 2qVKJQZXO087Q==
-Message-ID: <7b2982e3-7193-459c-8724-c88ab6773058@denx.de>
-Date: Thu, 12 Sep 2024 02:15:18 +0200
+	b=mUVLP5gcJk4q+oo5qPmwe6keLWLN7aA1RO/qVVZHwoUPcwuyq8YzhmHxr+5DvR/C5
+	 j6W4MRX3JC5JzkHrWf6m3zXxhxmwNpRCSgOFq20AoVg58np5OBOU2B2t6r2xOWcmFP
+	 1LtXyMdIJ85doT/PXT6oSX7GSBNoKGTahQiTvh/iRazNHsTlOeLPmg/NFieWo5uNr0
+	 LiH6zJXbKj5lO9iCQoj1falZkb82Fdm+R62L3zz1zeWIdd/yi184am+Tf+UbM6oLB4
+	 FaiZcHUiE4ox2HIqFS4GFozib3cnnmxoMd3bI99ciUzPWAsPgASTt1JxU0m5Gba5aU
+	 C+Y5KeDhqPmng==
+Message-ID: <0c69242f-7ce6-463a-b704-a5c0b94389cf@denx.de>
+Date: Thu, 12 Sep 2024 02:22:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -56,69 +56,79 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dt-bindings: pwm: imx: Add optional clock '32k'
+Subject: Re: [PATCH v5 1/1] pwm: imx27: workaround of the pwm output bug when
+ decrease the duty cycle
 To: Frank Li <Frank.li@nxp.com>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>,
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, imx@lists.linux.dev,
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com,
+ francesco@dolcini.it, imx@lists.linux.dev, jun.li@nxp.com,
+ kernel@pengutronix.de, krzk+dt@kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- pratikmanvar09@gmail.com, francesco@dolcini.it,
- Conor Dooley <conor.dooley@microchip.com>
-References: <20240910-pwm-v3-0-fbb047896618@nxp.com>
- <20240910-pwm-v3-1-fbb047896618@nxp.com>
- <2ede9457-8102-47e4-86dd-5888b6e5b8e6@denx.de>
- <ZuIHLRhOjDOouWD7@lizhi-Precision-Tower-5810>
- <a34ae0b8-ff5c-415c-9d36-1f94fba99243@denx.de>
- <ZuIXVTk4q0eA8L7H@lizhi-Precision-Tower-5810>
+ linux-pwm@vger.kernel.org, p.zabel@pengutronix.de, pratikmanvar09@gmail.com,
+ robh@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org,
+ ukleinek@kernel.org, xiaoning.wang@nxp.com
+References: <20240910152455.2425152-1-Frank.Li@nxp.com>
+ <f42fefb6-2815-4f74-b403-fecd2aa79688@denx.de>
+ <ZuIR04pr59mepdBB@lizhi-Precision-Tower-5810>
 Content-Language: en-US
 From: Marek Vasut <marex@denx.de>
-In-Reply-To: <ZuIXVTk4q0eA8L7H@lizhi-Precision-Tower-5810>
+In-Reply-To: <ZuIR04pr59mepdBB@lizhi-Precision-Tower-5810>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
 X-Virus-Status: Clean
 
-On 9/12/24 12:19 AM, Frank Li wrote:
-> On Wed, Sep 11, 2024 at 11:14:15PM +0200, Marek Vasut wrote:
->> On 9/11/24 11:10 PM, Frank Li wrote:
->>> On Wed, Sep 11, 2024 at 10:28:52PM +0200, Marek Vasut wrote:
->>>> On 9/10/24 9:07 PM, Frank Li wrote:
->>>>> The pwm in imx8qxp mipi subsystem require one extra '32k' clock. So
->>>>> increase maxItems for clock and clock-names.
->>>>
->>>> This mentions MIPI subsystem, but the IP in question here is PWM.
->>>
->>> Here, mipi just name of subsystem, not related MIPI IP at all.
->>>
->>> There are many IP in i.MX8QXP mipi subsystem, such as i2c, PWM, MIPI PHY,
->>> MIPI controller, PLL, clock-gate, ...
->>>
->>>>
->>>> Are you sure the clock are assigned to the correct IP ?
->>>>
->>>> Shouldn't the clock be assigned to some MIPI IP instead ?
->>>>
->>>
->>> Are both question still validate if treat 'mipi' just name of subsystem.
->>>
->>>> Could you please clarify this in the commit message ?
->>>
->>> 'mipi' just name of subsystem because the major ip is for MIPI. is word
->>> 'mipi-subsystem' better?
->> Let's find out.
+On 9/11/24 11:55 PM, Frank Li wrote:
+
+Hi,
+
+>>> This only resolves the issue when the PWM period is longer than 2us
+>>> (or <500KHz) because write register is not quick enough when PWM period is
+>>> very short.
 >>
->> What is the 32kHz clock used for in the PWM block ?
+>> You did mention the IPS bus is slow. Do I understand it correctly that the
+>> IPS bus write takes about 1us ? Because of the PWM consumes a sample every
+>> 2us and we need to write 2 samples to avoid FIFO underrun, then to safely
+>> write those 2 samples, we need to be able to write 1 sample per 1 us into
+>> the FIFO ?
 > 
-> After read document again, it is one option of input, CLKSRC in PWMCR.
-Thank you for checking.
+> The above time is just estimated, which variance at difference platform and
+> impact by other IPs. If there are pending write/read from GPIO, PWM write
+> have to wait for GPIO's write finish. It actually depend on IPS bus's
+> loading.
+> 
+> <500Khz is very less possiblity that write slower than PWM's consumes.
+> 
+>>
+>> Also, would writing more samples help with such "fast" use cases ?
+>> Something like this:
+>>
+>> if (clkrate > 500000) {
+>>    // This usleep() could use some further improvement, e.g. calculate
+>>    // precise delay for the FIFO to get empty based on PWM clkrate
+>>    usleep(2 * 5); // wait 2us for each of the 4 samples in FIFO and a bit
+>>    // Now the FIFO is surely empty, write all four FIFO slots
+>>    writel_relaxed(imx->duty_cycle, imx->mmio_base + MX3_PWMSAR);
+>>    writel_relaxed(imx->duty_cycle, imx->mmio_base + MX3_PWMSAR);
+>>    writel_relaxed(imx->duty_cycle, imx->mmio_base + MX3_PWMSAR);
+>>    writel_relaxed(imx->duty_cycle, imx->mmio_base + MX3_PWMSAR);
+> 
+> It can help at some possiblity, but still have problem if > 1Mhz, write
+> will always less than consume.
+> 
+> If errata happen, only 1 cycle is full high. I think it is quite less
+> impact at such high frequency.
+> 
+> We found this problem by observe a screen backlight flick when change
+> ducty_cycle. I think we try fix it after a real user visible impact happen.
 
-It seems PWMCR CLKSRC is currently hard-coded to IPG_HIGH in this PWM 
-driver, so the 32kHz clock are currently not used ?
+Indeed, I observed similar problem.
 
-The question is, does it make sense to add them ? And if so, what would 
-be the use case compared to current IPG_HIGH ?
+> Put code here can reduce some possiblity at certain freq range, but may
+> miss-leading user the problem fixed when > 500k.
+
+You already have good code comments, maybe expanding one would help 
+clarify this issue cannot really be fully fixed with current hardware.
+
+I think the multi-write for > 500 kHz could further improve the patch, 
+but let's wait for input from others, let's see what they think.
 
