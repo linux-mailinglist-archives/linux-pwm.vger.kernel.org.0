@@ -1,76 +1,75 @@
-Return-Path: <linux-pwm+bounces-3253-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3254-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D250978437
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Sep 2024 17:16:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCAA1978440
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Sep 2024 17:17:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F25551F258BF
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Sep 2024 15:16:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1EB5FB26504
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Sep 2024 15:17:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC3C418733B;
-	Fri, 13 Sep 2024 15:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8883189F29;
+	Fri, 13 Sep 2024 15:09:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NWs4o221"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEYJ1wXF"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F65185935;
-	Fri, 13 Sep 2024 15:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC91354647;
+	Fri, 13 Sep 2024 15:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726240151; cv=none; b=SAzzLZV9kpuvX/M0aKaJqAE6k88/guIVCYC5QLo1S9uAisE9ZWCmQcF4TDoHaUR/qXXtdIE076TF+yOKFH6wLFzpCt+honAc/AWHFxVSBuoUGWYv3M0wK8OKHTIg0SfxUYGuYJ1I57Y8bOw4R4eXp/5OpV1fdO6NoHxHUfffF1Q=
+	t=1726240154; cv=none; b=GsUp6hyEXBcokfCfqJAgBcSHtzZZQCzj73bxkM+UrgDPWwF+nRwieycUwvJPsEagVqNDB8WBweuVrPDrnz1iOq0e23xaAck5/T+0PV2Z/XHEjRzFaEjMW9llb8LNf5zWSYB0FdxftTZ91mzhRAxHHX3Nuj+1AA5eReYQy2PFfOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726240151; c=relaxed/simple;
-	bh=v2ECB5b4RvqZNQX0iHQLIiWI4r9KcdLBWF4yxk3AOSQ=;
+	s=arc-20240116; t=1726240154; c=relaxed/simple;
+	bh=o9Qd/8JMpOJPQYcP3TU2sS+epu62uYpYthXa4YYQCgY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kbd1mVPMsgnfVF0+zyKySnaA8msXoLsF4B1cyCYV2BPLQTxgzdzyFddEz9XWNLqGeC6enFi6OJiQUXZCnI7xAZP//rEULWjm78qmU4fz/1xsP3HZSyrJdmkPhJ9y+ctl7lYoqniUJFYN+WK08rEgVscFsiA+HB9LTWVYAloEfRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NWs4o221; arc=none smtp.client-ip=209.85.208.175
+	 In-Reply-To:To:Cc; b=cM3n0356CNWUOcfs1bgEnfJfxZzvUakWzyMEi23tKwvXSCuM0UM3x9KSnQ8GyX3QV4nJEvqNSYfNyin64+F0hli2Y1bJFIA12HniFQg2s7W+Cp37I2+wfZ8FD1z8OC8JvkO0PyCxdGR56wx5awun98gXHObmouuAZbHdGs7lTeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZEYJ1wXF; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2f752d9ab62so12227591fa.3;
-        Fri, 13 Sep 2024 08:09:09 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2f75c56f16aso31099701fa.0;
+        Fri, 13 Sep 2024 08:09:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726240148; x=1726844948; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1726240151; x=1726844951; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=55ASwlpj93CUVgS/uPubEqfpV10Z+LfDh1X/v5EhTrc=;
-        b=NWs4o221nBkCsWgtKoECYtwJ8xJfCIg+zRoz27wyH0II3wdcgCYpLUFwLhjq8Q6hty
-         Qe7VzohsNkLAmj0NN4j8YOQPzuzkEXou1I0+RvRbo68abo/Ykr2zZDNqB5O/sPUIoxVU
-         jOKfo+mtFtG+gjpcJc1nGV21NgSQtP1vCcf5wJj+X6bT0CdvHqc9JH96aeeF86kSYCWE
-         eaOt2f9iozSA96hVgjVbVZvc8nJnqLTQl46hXtpJbs1sCvlZ+shF9tYFRAUk22zatfjx
-         u2aL7Zqbiy89bn//I2cB7lVxdQlfjYIJ6wUIPDHgJP1vFp+AtJ9KJ9ExRnSKFduG7O+4
-         hveA==
+        bh=BqCw/4kHuYfS+tegSJD+cV90aIl+wTusfRyt9G+zPuk=;
+        b=ZEYJ1wXFUxdl3fXh6VxMD8/ucZuctN+A/jEq3IsT/BHvlHaxoxOXcBu7c7YNT2yMOr
+         XKM8AfkYudKj4upLVTK7Mf3rtHko8GroW4wGhx/dgnPVG1g4soZ3FJ1lNw7uTBOzVdOt
+         4hyjMiQLUkiXV/qBC9Gu9VNNHl2qFuSQEWF0uTb9ZkMivdBBkOjLdE2286ZbsRFd0C21
+         CRoYheZDZCQo2ZtY5RwdXtFna4nyWRkAZj+uVUrDD3+yw1skCQUiSmmxu87rqYKLB0QJ
+         +RP5JaORAvuhP4RFAAxQoNE+21wBxy/QVYZvsdDE0dItYVpis7hV7OlLAd4d7z1tCaSO
+         01ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726240148; x=1726844948;
+        d=1e100.net; s=20230601; t=1726240151; x=1726844951;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=55ASwlpj93CUVgS/uPubEqfpV10Z+LfDh1X/v5EhTrc=;
-        b=SohmWlPAwUhF1al2yItX2MRKHlhc2tUL/MuujmEFGB6F9pOkP9U//nUkPM0Q5/YeU+
-         8u9nd3QFzpl159TCAweHxlYyFJhSVVcwIn+soI9T0hRy0SOAg4naBD9HMCzNXkqY6Cgf
-         SNYVnEvdfD4AZfQOeMilB5p1xf9nmBzpNpQHz7Zd4PlXh1Ydp+LUXhZw4mxpYbG3lEYL
-         rph0boeyUtDhKnpdvbQw+/Y46Wbt51sGgvy9vEiSVS3AYTdHWeAaHHIFLT+S4kPRtARP
-         vTo55ZP3f90KSpBLjrpKylgkYmeNZOSyHLZ5N8AKfaBuqxWKCSe7a453fOYHzO4tCCiH
-         gU5g==
-X-Forwarded-Encrypted: i=1; AJvYcCU4PpV1LZhNdJp7k6kyUdbITsbFjUs3LRVHoaD7ziTwqnI7eU1BlwepGy54htMveUKU4/xw9dxwU6k9@vger.kernel.org, AJvYcCUfT8nO+u4GAaO+Xu305QqiS8uV5S8oSZYGejmCKWdbOZGD7rZe8puU9Qe+Azfm4YrVlo1KOGGGXU4C@vger.kernel.org, AJvYcCUvIxMTGkIs0YY1xPj7qGbgGeSs+irLzRA5BwkWLEUq2SK32rCgnGAFpVwIOyqFt1jBK/fO2X4Q6GspxjeV@vger.kernel.org, AJvYcCVBGS67PyUNtRmFAMd2BzetKUjLM0bGOokg4hTH55Sl6Zsiu4mVoEXxnLN6/yoRM7yMdsKkC0t1mkg5kghGgRxmxa0=@vger.kernel.org, AJvYcCWij0RFladrh/jVPzIDfJaSevubP6qUhL1fQEDiMKIHKN4qb5H6/eAgHrV4V2CNMlxJw0x1HovVynRO550mCw==@vger.kernel.org, AJvYcCX2KG5xaudZZiDVutiT/Lk2SD/xmGrHcidNiSrZin+mq1Q8d/Rp8S4BJd1PId9KvIoE2X0ZfYW4cB3r6Vg=@vger.kernel.org, AJvYcCX4dI/2mSIcBwfKtv2Dp5pP6LTnVLeQn8f1U5emd5uwJowyMrJg4AHYsFjYGPZl/vTJ9ADRq+igvM6Bzw==@vger.kernel.org, AJvYcCXaCB7YEvnqQ+/JpmHivqC3HRxv4Vbhp5e+Mcczs4NAiwPn9BYH6VpqTd8hS7qZ6Z72f2UzkaxGnWIx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7SpG8aspAbCBgUSI87PdVXyw7xblMGqqbPyTRVD4d01SziMH2
-	/hrHj/qmZcJZLELEeHlKFshYX4yWWU5ZyW5H6P+v1rZc6cBgazVDSsYUyg==
-X-Google-Smtp-Source: AGHT+IGTgrigkN3pYFgry+y4pbIiHE6qcSI1txzxF+Y/VDsmiKk4E4issoAeEk9L+DNueAZu2NHRsg==
-X-Received: by 2002:a2e:a99d:0:b0:2f7:5239:5d9b with SMTP id 38308e7fff4ca-2f7918e095fmr18494721fa.4.1726240147864;
-        Fri, 13 Sep 2024 08:09:07 -0700 (PDT)
+        bh=BqCw/4kHuYfS+tegSJD+cV90aIl+wTusfRyt9G+zPuk=;
+        b=G8hrOKfUh7tKlRJw2qO/N2PBXZ9bF9BYFV/B2yq8dcshFb1gfXH5217VN9GNDNckpL
+         LEyKw89d2JDwWuRVrdLxI4UbL2XM82Stl301RMvaBtdBQpZdXHk+qTD15EKcHNs2z98z
+         oe4JK20Ri1CsDid0a1blD7wwtP+yDRbWqne9j10LXs/JVnMReLFvBChavcBecaR3qEPK
+         uNAt6fGJUIQwdek6NitKWovPh1wJXMTsPfW8X7rc5Q37QyPKYTaPm1If7HbXNlQW2T+o
+         yZ80lslNP1hXWGWwoUm5mRjqdXVVngOgTNpBqrcBkzPfqErC+/v71nSB6rdFUDKcZD/w
+         4IEg==
+X-Forwarded-Encrypted: i=1; AJvYcCUV/D/djQPB+q5edLRj9MIyUNHY/TxV+mJ89DbtTYnjJ2IAmBR+ByxLT9OKI82PRvpaTrpIsLzE7/LnLZHbbQ==@vger.kernel.org, AJvYcCUa0d460KDL5oSL04F9C+1USn35MOQzXXmwJYOl0UIYilW1TOaniPAEz+geimwJH43SirR22ikUKfLy@vger.kernel.org, AJvYcCUe3Cy9uOBjP5QVf6WQDL5OEE5nXcH2/Gq25T+rKe3FqS1p1cfIj+VvXQ6vAepuTsN0FRpErsSvw+AWDw==@vger.kernel.org, AJvYcCUfTvgBzM1t45h+azer4JpimECl81B73GSjN/3OgdPj+1+xqf2GYPnKWKtqvAwmQgSPmyBqejfvAVh5@vger.kernel.org, AJvYcCVC07gJ8ORuv5/6oQRGZgDvoVT5qVRFhQTY4070iHfJ+D8yv6mcXKmB2SshFObNu3TZmoBDfzW1NjGQg7LRxqqoetI=@vger.kernel.org, AJvYcCVeIu5xJMNnbHWyElbd9uG909m5uDtMiag8ZN+LEiKjcIlZw1EdPwU1wE3JW6FEJS3wUaAHnCmfpUVg1JY=@vger.kernel.org, AJvYcCVpdVqFo2T5LVTeCrVLA2hlLQCcWuQ0UTR6YfO5GkVutFT7if4yulEUGK8+kaGpLOdl0FIAplwhC7ss+Jul@vger.kernel.org, AJvYcCWH88PIgs+RKVzV05NXUmJhU52l4/+4f/FzYviOMtEhFGQgPqn5R/hkuX9Xi7r+ERdM3ysdjl5+RdoW@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFqIwSHrP8L7bqMiz2m4B60NSBbj3h5etL1kmTO1sIgHIVGNg5
+	fwMaPbAXl6e/qQD8MAIJc1TTNv0I8lbY0dJulv3yP8v5HFvrNTYiO7OZ6Q==
+X-Google-Smtp-Source: AGHT+IG1Q7xjN4CCu4u9SogSo32R938De4uTV77FDjfykgt4K+bzKzlFr+lhvVtVxKIfcKXPkEja+Q==
+X-Received: by 2002:a2e:1311:0:b0:2f3:ed34:41c9 with SMTP id 38308e7fff4ca-2f787f32dc2mr31568371fa.37.1726240150365;
+        Fri, 13 Sep 2024 08:09:10 -0700 (PDT)
 Received: from [127.0.1.1] ([178.127.153.210])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5c3ebd523b4sm7774318a12.51.2024.09.13.08.09.05
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5c3ebd523b4sm7774318a12.51.2024.09.13.08.09.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2024 08:09:07 -0700 (PDT)
+        Fri, 13 Sep 2024 08:09:09 -0700 (PDT)
 From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Fri, 13 Sep 2024 18:08:03 +0300
-Subject: [PATCH v4 20/27] arm64: dts: qcom: starqltechn: remove excess
- reserved gpios
+Date: Fri, 13 Sep 2024 18:08:04 +0300
+Subject: [PATCH v4 21/27] arm64: dts: qcom: starqltechn: add gpio keys
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -79,7 +78,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240913-starqltechn_integration_upstream-v4-20-2d2efd5c5877@gmail.com>
+Message-Id: <20240913-starqltechn_integration_upstream-v4-21-2d2efd5c5877@gmail.com>
 References: <20240913-starqltechn_integration_upstream-v4-0-2d2efd5c5877@gmail.com>
 In-Reply-To: <20240913-starqltechn_integration_upstream-v4-0-2d2efd5c5877@gmail.com>
 To: Sebastian Reichel <sre@kernel.org>, 
@@ -107,41 +106,85 @@ Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
  Dzmitry Sankouski <dsankouski@gmail.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1726240085; l=1067;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1726240085; l=1745;
  i=dsankouski@gmail.com; s=20240618; h=from:subject:message-id;
- bh=v2ECB5b4RvqZNQX0iHQLIiWI4r9KcdLBWF4yxk3AOSQ=;
- b=4rmtARmU2EIXalBZ1YEh56okxvR/WWLGICjzf9qlRYTxw4Wc2L5F5ymCc5pFjSqPbYSbY8eqF
- A4xNCOKo9FLCLQtQSVVyxjvBnH72jTVfhz9UR6iFZq/Bu+mqtgmcbo2
+ bh=o9Qd/8JMpOJPQYcP3TU2sS+epu62uYpYthXa4YYQCgY=;
+ b=Gc/pkDKuxyPTs3pg3UWl6auHuVwfoE4b3u1agqq5dHZFsSc4ONRWz+4NC93OHSJAhu/oPayI+
+ RcHdt2uTR0FAbMdall9kokXqK0okx2IEy8ANaIXU7dyWkzVKYBe1gYG
 X-Developer-Key: i=dsankouski@gmail.com; a=ed25519;
  pk=6pMMVVDDReSiRgPCbMOUauN5nS3ty4Sf5b7a2gi4x0M=
 
-Starqltechn has 2 reserved gpio ranges <27 4>, <85 4>.
-<27 4> is spi for eSE(embedded Secure Element).
-<85 4> is spi for fingerprint.
-
-Remove excess reserved gpio regions.
-
-Fixes: d711b22eee55 ("arm64: dts: qcom: starqltechn: add initial device tree for starqltechn")
+Add support for phone buttons.
 
 Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../boot/dts/qcom/sdm845-samsung-starqltechn.dts   | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts b/arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts
-index 8a0d63bd594b..5948b401165c 100644
+index 5948b401165c..a3bd5231569d 100644
 --- a/arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts
 +++ b/arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts
-@@ -418,7 +418,8 @@ &usb_1_qmpphy {
+@@ -7,9 +7,11 @@
+ 
+ /dts-v1/;
+ 
++#include <dt-bindings/input/linux-event-codes.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+ #include "sdm845.dtsi"
++#include "pm8998.dtsi"
+ 
+ / {
+ 	chassis-type = "handset";
+@@ -69,6 +71,25 @@ memory@a1300000 {
+ 			pmsg-size = <0x40000>;
+ 		};
+ 	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		autorepeat;
++
++		key-vol-up {
++			label = "volume_up";
++			gpios = <&pm8998_gpios 6 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEUP>;
++			debounce-interval = <15>;
++		};
++
++		key-wink {
++			label = "key_wink";
++			gpios = <&pm8998_gpios 19 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_ENTER>;
++			debounce-interval = <15>;
++		};
++	};
  };
  
- &tlmm {
--	gpio-reserved-ranges = <0 4>, <27 4>, <81 4>, <85 4>;
-+	gpio-reserved-ranges = <27 4>, /* SPI (eSE - embedded Secure Element) */
-+			       <85 4>; /* SPI (fingerprint reader) */
  
- 	sdc2_clk_state: sdc2-clk-state {
- 		pins = "sdc2_clk";
+@@ -417,6 +438,21 @@ &usb_1_qmpphy {
+ 	status = "okay";
+ };
+ 
++&pm8998_resin {
++	linux,code = <KEY_VOLUMEDOWN>;
++	status = "okay";
++};
++
++&pm8998_gpios {
++	chg_int_default: chg-int-default-state {
++		pins = "gpio11";
++		function = "normal";
++		input-enable;
++		bias-disable;
++		power-source = <0>;
++	};
++};
++
+ &tlmm {
+ 	gpio-reserved-ranges = <27 4>, /* SPI (eSE - embedded Secure Element) */
+ 			       <85 4>; /* SPI (fingerprint reader) */
 
 -- 
 2.39.2
