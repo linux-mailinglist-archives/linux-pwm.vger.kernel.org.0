@@ -1,142 +1,246 @@
-Return-Path: <linux-pwm+bounces-3232-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3233-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21DF597834A
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Sep 2024 17:06:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBE44978361
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Sep 2024 17:08:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB06E28ABAF
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Sep 2024 15:06:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D5AC28BB2C
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Sep 2024 15:08:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BDB52EB02;
-	Fri, 13 Sep 2024 15:06:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 005323B782;
+	Fri, 13 Sep 2024 15:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhHyyols"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGkq9+RJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDAC4776E;
-	Fri, 13 Sep 2024 15:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BB426AED;
+	Fri, 13 Sep 2024 15:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726240010; cv=none; b=Epdl1p2d7lYKLo5Tgf3Y30I9W+4gMgL7PTtSZEDwg0X6IMqmFJP4MjO6Yikj6rhjmxrXB9GIgkjAXm+dj8z3bephUjNH2ouepIGGlKPfNGJW+LFxjC16nQXpKgXbriYdYNuBEz7VGdKz0CsXn/I1RTBZfF4lMFgkgHJfSw8iGuQ=
+	t=1726240093; cv=none; b=VikjrV2D7Yf67dAKI39aDsvYvzzvWkyDnnvnKbPPl1NoFhELjBGR0fDQGE5YzQakxBiRK8HRi+qb9mP+/PYM/GM/zlR0v/veyP9J0+kmE3siX2EFaNW8Q6GpUo+67yHq1R4B6taUfMr1WfIQnA7JeaVyqd2dpuxJhRNu7RtAWhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726240010; c=relaxed/simple;
-	bh=wz+c8oAd6WLW7uFv0JHSMpd9jMorPWZVWklbkOfGZzI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ju58lvn7YIHrVyduBsH2z/5dySXl2eIirn9WoNcQF8PQUOyPYs+qxzb3ur/r+bGhV5GpZtaH0IM53PzWWjHiRWll1yl95npTCVsEZ9afja/AVMvxOnF5vaBEjFm8uJEMpp57tdq7KCap946ie1uHRKHInxXzIk1HwP4wpdqBSZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mhHyyols; arc=none smtp.client-ip=209.85.167.176
+	s=arc-20240116; t=1726240093; c=relaxed/simple;
+	bh=zNden+m4S4qeBBrgrI7oJVPZCF0D5TInPx+aEZ7wheQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rQRqmiwm6fbt51wmOWaVSlXNozrMrQY+3krgBtKE/1pSLEF6btAGeYXlr1AIagTuOENtYekVk7OxOpYOjeCa/ItBTRyk4AsReewsSDd+fCXNyM8yKe1Y9qYk8ZXrCiUJ66lY1NYD4NaRNjLAE2UUEk+idXnghleRHd2IS6Wa40E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lGkq9+RJ; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3e037b80140so900606b6e.3;
-        Fri, 13 Sep 2024 08:06:48 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5c4136f7f1fso2521810a12.2;
+        Fri, 13 Sep 2024 08:08:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726240007; x=1726844807; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s5xW7wFZXBPvsr8C7DrncpqkE2kHm1pCShCK0/i9/lc=;
-        b=mhHyyolss7hpb0ZSWogWNSNtwbNjPY6ufBUVPmmBMwaUpSzzWCHOO/UJEcZBLqw+8z
-         wI18IGq7b9e3lIeOfbPhehKiejs7W35gYdm170CiwgpPU4fpP5KOcxNTzrziFri/Y6Z8
-         lbqWkKM3mhNJLCy2gYtcXs4JSJZwIHhwB8MASVoG4BuBs9NZBry0e+di8NwrUrcqlskD
-         3keiaf3ogKG56B3hY0CnAttfYqE/460UzEhfJX985Vx8mF/B5Tgebmv/rk/nmyclhFoC
-         TWH6qWBc/rKxu6Uc1amqZ7k3aYisNKcy/ueRv4LzJzMqYm2ics6frIhXNw1kr+lDpxkj
-         SJCA==
+        d=gmail.com; s=20230601; t=1726240089; x=1726844889; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8TL6f8TKN7Y/fNaq3ZvIvFLqSapBDT3e44bO5HpzYRM=;
+        b=lGkq9+RJaP5Xldycl/gkyudJeHK1E/APrNpM8CuDUJnPKMlUH48mfVH2eWPbaPH2OE
+         NDg+uxWz8UPkOXQxJbmqUyS1+XO2dNXWbGtl0y8EOlzgqFXiVjqGfJMlGfoZYnXOjHHC
+         O7vqZJBFWXaVMh0c+SHirm39rK8Fw7dig3JAWSotk/pg9th3jMd93FXGNikACJAmzu0g
+         C+B9Er8nCgsWpbqvJLbfhjuv6nSPIkwCIVIe8u52w9L/1b5cqom82K/wBS+95eOuiGyp
+         oxT+kv++T8BcOE77iz3srsQxnzXN2QDmeqF3Cp7IEYVnvMSZ4t9PUHN3eibGWIn9OX76
+         BP2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726240007; x=1726844807;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s5xW7wFZXBPvsr8C7DrncpqkE2kHm1pCShCK0/i9/lc=;
-        b=qk7MkEiepCWw7kPnHggqoOc/ck4EfpxzGQufGirnsDaSdi3fVUMrEbETbu/Ld2RpNl
-         Owjwmoze9VbzjwpI0/yYg0dJqOyqKTlA0xl3r7lFb105BYeLXgITt/cBvH8hYfHw4NBc
-         7WtjBpFQbNo4VQ2u5mk3vLijzpacwCnQewLHhfBEQJ+/h1rRVWO58NN8Rt5Ck4uVaxT5
-         OkS5WQH3UvKMbImu6j2B0tgo0G2vErEwLmTXBoEOGsSgMx6nLnfqKObXYCQ+iERteZnB
-         skCitnhR0cY3WA4qr2CzQnITxojf1Cug7tpJEjZytKUAzJf3qdy3XzNlHyWno56SowH8
-         L6Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9il6q7gzf7DJ4vYA+l55I2ZXcprEaQ9rRiB5gOTPH1E82xN+MqsB6/vU86eA8b6vaxdk9C4Bb4eQkXQ==@vger.kernel.org, AJvYcCUAyW0LSzRSV24Qb7os/9WMFvS6ARJa40H+WMaToU6twBx20KLjLqyiea6YUjhR1oQcwfURtBnhB85pLrxAQPkrYjg=@vger.kernel.org, AJvYcCUTBS+HX+k3K3RdQa4IJMxJnDP/n09N6Je1+RkaMN2IdMjhuLcSsWVmzcsaeV/DLAxOauw1pSGL8RU=@vger.kernel.org, AJvYcCVePBL1qrrXLctZizepDh2yPM8zTmyk5ogDb+mjnCzSxQDxFxblro6zXzztnMP2sPE9/XxKpfHVRyJV56tlJA==@vger.kernel.org, AJvYcCWDU5dh8qC+vyVJEzxVqqKzf1sdgxUmuKb3ImODaLHJH8HYuaAHVTa80tt/itW8uKSS5f6da0ZRb5zzxR4=@vger.kernel.org, AJvYcCWEnFUbv9JFSez1ot4NZKyANTRwY2LRlMyj4mUUZ7MRGD+KFuXEHLA6xrYB6Y5wtiD8HzW7lucnYW9C@vger.kernel.org, AJvYcCWHVQLQ3j7fMWnHiaoRYdhQbfNqJVxZUyISIOFImd+dRBUSZ03Yy8hgMY3bL6rZHukOJ9MsKWfibMCeyTlq@vger.kernel.org, AJvYcCWJ8/YG5dQqwvyEi65coNdxK0b1ukTNAuAE5gKSX14l0dKLkvTr6wBRoUZW0RYPQcYFes4ttWdR9heI@vger.kernel.org, AJvYcCX8khivKX9Xhq+E/A9HsMuQv39ywUMbLKMR4UMqTWquyjlyhTjxZjDKOtb7x6QptiMKEJ8GHz7gC+zR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCm/OLAD8E4Xo2kZRuXCjwQCshJW/BoyRE3L/WD5ApyLtgQ6j5
-	dHVu/ZuOe4o6oZqUtcl4DKJM4E3+jk+IfbQgQ9LjP0poZdhaRneZniSuubznee0PbgFEcZXIzIx
-	ufnYzlnRfTxK+o9btch7QTqKtatk=
-X-Google-Smtp-Source: AGHT+IHpQNpk1RPbqhgaZak33vQVpNCMrUXMzkQcxSmZLbxJpQEgL7VG8czofXsUN5d9oYR08U0ZzgsDFVqScsKOzcg=
-X-Received: by 2002:a05:6808:220b:b0:3d9:245c:4225 with SMTP id
- 5614622812f47-3e071a93899mr4047532b6e.6.1726240007552; Fri, 13 Sep 2024
- 08:06:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1726240089; x=1726844889;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8TL6f8TKN7Y/fNaq3ZvIvFLqSapBDT3e44bO5HpzYRM=;
+        b=c7XQwZoIVqs7cfnpRtUH8LRmvmAPltvOtDE8oPMzRPs1rAWOq/v9Wd7IoVCnFJT6cB
+         iL86Mip8Yz+3ocv3PDM6Q2yiPlrVUmvmvnLEiqh5k+9Yzo1i2zZyi8L3ZmtSOby3VhFH
+         qcaqfgxgFDWoZkCEginOBFW1lStBesrSJmllU8e9S4jAguhnUiS62e2S5rtjMaPbukQ5
+         fvkvDBuLQk1W3LE2Rx705d4o/O6RI/THE3L9dPwBZX83mFTbdk/7rcXQcBeD3/lIktxP
+         2/eN5OaZsxQ6hzbNkKaMUALPyC0t0jqLf1eQlnRBtlgc/xYD17mQQmdo+ekxhBZEMP3A
+         SHsA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOedyt7/reIr5de7j/J+psibw97xFeYQzMX8+6tIwArJ5QarqtYsZgnxP4/ViIfh39DOD6MlTZzzLjnqw=@vger.kernel.org, AJvYcCUdYOSdZ/vtQWIAW3NKhLOBbONNSlt8BW7ppvBlKpzzOszzeF43kfIPzR4V5oTa7GVsvURABgiYkX19@vger.kernel.org, AJvYcCVbaDgp/6M41ae/7c+/yTtkpmjcyYlaLqS08qmQjzpY1EmeRffhgC9VPo40EodDla0qo5RPuIbTzKeufJok@vger.kernel.org, AJvYcCVu7tGxB4zYAWLXNkIQ6FEOP8itaYkx7XrEQWeFsXl932QdOD5XV2L6m2onHKBTcQluYthq/02BoLwIFQ==@vger.kernel.org, AJvYcCVz7vD8iVbjn6786PRMHxRzGWDcYsSiJr+JrHVA3IWBJ97d+70CvgtsyayZ5tvfWeOpuapSuuib/H2aJqj2Se4X8Kw=@vger.kernel.org, AJvYcCWkPAZkskQF5XtcFmrNtuSghYzTSro4mHydLKOsYpZzzScoApm5787LS5ozazNyOfTw9Q5I2lbWmgWK@vger.kernel.org, AJvYcCWt9XWAR9RrmoQZmMb9wgPQPifnZrixc0Dst/mr551SpUyiiXr1Az1svIJUQTJQVXLrJtziZ6ICGlPAbO16rQ==@vger.kernel.org, AJvYcCX+LKWXhBls7H75euJbZ3jwdZEvhG0KEMHEHu6ArkkHrn7HPJx8afmYQBgN/auqc40fkpG8k27pLEIh@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsFP+ijDCwzZoqOG2Ytb0dzd1ivRRpVlKVUUPRgWZ8DZuSY5Ml
+	jDAsVoqOBapiNEdBzanlI7juSPQVovJEvvx9igN2/2I3NCnnX0krCfCtsA==
+X-Google-Smtp-Source: AGHT+IGCrPHc6XJmItNolCKG1S2T9m458hednz3DQSJjw+4zbXzSksgr4EytAX8pJ7+f4cKbcW2T4A==
+X-Received: by 2002:a05:6402:254d:b0:5be:eb19:ee56 with SMTP id 4fb4d7f45d1cf-5c413e4beb1mr4913390a12.24.1726240088850;
+        Fri, 13 Sep 2024 08:08:08 -0700 (PDT)
+Received: from [127.0.1.1] ([178.127.153.210])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5c3ebd523b4sm7774318a12.51.2024.09.13.08.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2024 08:08:08 -0700 (PDT)
+From: Dzmitry Sankouski <dsankouski@gmail.com>
+Subject: [PATCH v4 00/27] This is continued work on Samsung S9(SM-9600)
+ starqltechn
+Date: Fri, 13 Sep 2024 18:07:43 +0300
+Message-Id: <20240913-starqltechn_integration_upstream-v4-0-2d2efd5c5877@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240719-starqltechn_integration_upstream-v4-0-a7f644821941@gmail.com>
- <20240719-starqltechn_integration_upstream-v4-27-a7f644821941@gmail.com> <uevafpb6r7rfutiqrm5asfvv7zfxcb3acrlxqpispele5er52x@eegonpzqlm7j>
-In-Reply-To: <uevafpb6r7rfutiqrm5asfvv7zfxcb3acrlxqpispele5er52x@eegonpzqlm7j>
-From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Fri, 13 Sep 2024 18:06:36 +0300
-Message-ID: <CABTCjFA+4+37+gF2FcvGVMLmzwM01MVvSjBDinVJyRaw007jTg@mail.gmail.com>
-Subject: Re: [PATCH v4 27/28] gcc-sdm845: Add general purpose clock ops
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: dmitry.baryshkov@linaro.org, Sebastian Reichel <sre@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAEBV5GYC/4WOQQ6DIBREr2JYlwbBoumq92iM+dCvkCBaQNPGe
+ PdSk667fJPMvNlIxGAxkmuxkYCrjXbyGapTQbQBPyC1j8yEM14xWdY0JghPl1Ab31mfcAiQcqd
+ b5pgCwkiVbmRzYYr3KEieURCRqgBemzzkF+dyOAfs7evw3tvMxsY0hfdxYxXf9Gds/htXQRlF0
+ UspOStr0LdhBOvOehpJu+/7B8ia1HHlAAAA
+To: Sebastian Reichel <sre@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, 
+ Simona Vetter <simona@ffwll.ch>, cros-qcom-dts-watchers@chromium.org, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Simona Vetter <simona.vetter@ffwll.ch>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-input@vger.kernel.org, linux-leds@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ Dzmitry Sankouski <dsankouski@gmail.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1726240085; l=6082;
+ i=dsankouski@gmail.com; s=20240618; h=from:subject:message-id;
+ bh=zNden+m4S4qeBBrgrI7oJVPZCF0D5TInPx+aEZ7wheQ=;
+ b=UUZqRammNe7VcfWZLb30fPL0Xxh1/CVZzJysjzjyy73+yDJfntHzaz6edzfCSsVZPKwnXtfqT
+ U0ypRVySOtbBmhAnJqwywXsdHXAhJEiJ+ZWn4X6xLJ47gQEVHvejpSv
+X-Developer-Key: i=dsankouski@gmail.com; a=ed25519;
+ pk=6pMMVVDDReSiRgPCbMOUauN5nS3ty4Sf5b7a2gi4x0M=
 
-=D0=B2=D1=82, 10 =D1=81=D0=B5=D0=BD=D1=82. 2024=E2=80=AF=D0=B3. =D0=B2 12:5=
-9, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>:
->
-> Hello,
->
-> On Fri, Jul 19, 2024 at 03:55:04PM +0300, Dzmitry Sankouski wrote:
-> > SDM845 has "General Purpose" clocks that can be muxed to
-> > SoC pins to clock various external devices.
-> > Those clocks may be used as e.g. PWM sources for external peripherals.
-> >
-> > GPCLK can in theory have arbitrary value depending on the use case, so
-> > the concept of frequency tables, used in rcg2 clock driver, is not
-> > efficient, because it allows only defined frequencies.
-> >
-> > Introduce clk_rcg2_gp_ops, which automatically calculate clock
-> > mnd values for arbitrary clock rate.
-> >
-> > Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
-> > ---
-> >  drivers/clk/qcom/clk-rcg.h    |   1 +
-> >  drivers/clk/qcom/clk-rcg2.c   | 162 ++++++++++++++++++++++++++++++++++=
-++++++--
-> >  drivers/clk/qcom/gcc-sdm845.c |  19 ++---
-> >  drivers/pwm/pwm-clk.c         |   5 ++
->
-> I don't understand why a change to some qcom clk implementation detail
-> needs a change to drivers/pwm/pwm-clk.c in the same commit. I guess if
-> the change to drivers/pwm/pwm-clk.c is needed it should better go into a
-> separate patch with an appropriate commit log?!
->
-You're right, I'll fix that. Also I heavily rewrote this patch, and
-included it in
-starqltechn patch series. Since this patch has the wrong version (sorry for=
- my
-mistake) and order numbering, please consider the next patch a successor of=
- it.
+Add support for new features:
+- sound (headphones and mics only)
+- gpu
+- panel
+- buttons
+- MAX77705 MFD:
+  - charger
+  - fuelgauge
+  - haptic
+  - led
 
---=20
+Changes in version 2:
+- s2dos05 regulator:
+  - hex to decimal in regulator values
+  - fix compatible value
+  - remove interrupt specific code, because it's
+    empty in vendor kernel, and I cannot test it on
+    available hardware anyway.
+
+Changes in version 3:
+Version 3 has significant changes:
+- more drivers added
+- s2dos05 driver converted to MFD
+- disable crypto patch removed(disabled on distro level)
+- dts framebuffer node along with related patches removed,
+because panel driver added
+- fix 'make O=.output_arm64 CHECK_DTBS=y qcom/sdm845-samsung-starqltechn.dtb'
+errors, but it still complains on 'monitored-battery' and
+'power-supplies' though I have 'power-supply.yaml' link in charger
+and fuel gauge bindings.
+
+Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
+---
+Changes in v4:
+- Rewrite max77705, max77705_charger, max77705_fuel_gauge from scratch
+- Reorder patches:
+  - squash max77705 subdevice bindings in core file because
+    no resources there
+  - split device tree changes
+- Use _ as space for filenames in power/supply like the majority
+- Replace gcc-845 freq_tbl frequencies patch with new approach,
+  based on automatic m/n/pre_div value generation
+- Link to v3: https://lore.kernel.org/r/20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com
+
+---
+Dzmitry Sankouski (27):
+      power: supply: add undervoltage health status property
+      clk: qcom: clk-rcg2: name refactoring
+      gcc-sdm845: Add general purpose clock ops
+      dt-bindings: panel: add Samsung s6e3ha8
+      dt-bindings: mfd: add maxim,max77705
+      dt-bindings: mfd: add samsung,s2dos05
+      drm/panel: Add support for S6E3HA8 panel driver
+      mfd: max77693: remove unused declarations
+      mfd: Add new driver for MAX77705 PMIC
+      input: max77693: add max77705 haptic support
+      power: supply: max77705: Add charger driver for Maxim 77705
+      power: supply: max77705: Add fuel gauge driver for Maxim 77705
+      leds: max77705: Add LEDs support
+      mfd: sec-core: add s2dos05 support
+      regulator: add s2dos05 regulator support
+      arm64: dts: qcom: sdm845: enable gmu
+      arm64: dts: qcom: starqltechn: remove wifi
+      arm64: dts: qcom: starqltechn: fix usb regulator mistake
+      arm64: dts: qcom: starqltechn: refactor node order
+      arm64: dts: qcom: starqltechn: remove excess reserved gpios
+      arm64: dts: qcom: starqltechn: add gpio keys
+      arm64: dts: qcom: starqltechn: add max77705 PMIC
+      arm64: dts: qcom: starqltechn: add display PMIC
+      arm64: dts: qcom: starqltechn: add touchscreen support
+      arm64: dts: qcom: starqltechn: add initial sound support
+      arm64: dts: qcom: starqltechn: add graphics support
+      arm64: dts: qcom: starqltechn: add modem support
+
+ .../bindings/display/panel/samsung,s6e3ha8.yaml    |  75 +++
+ .../devicetree/bindings/mfd/maxim,max77705.yaml    | 169 ++++++
+ .../devicetree/bindings/mfd/samsung,s2dos05.yaml   |  99 ++++
+ MAINTAINERS                                        |  12 +
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi         |   4 -
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts         |   4 -
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts            |   4 -
+ .../arm64/boot/dts/qcom/sdm845-oneplus-common.dtsi |   4 -
+ .../boot/dts/qcom/sdm845-samsung-starqltechn.dts   | 573 +++++++++++++++++++-
+ arch/arm64/boot/dts/qcom/sdm845-shift-axolotl.dts  |   4 -
+ .../boot/dts/qcom/sdm845-sony-xperia-tama.dtsi     |   4 -
+ .../dts/qcom/sdm845-xiaomi-beryllium-common.dtsi   |   4 -
+ arch/arm64/boot/dts/qcom/sdm845-xiaomi-polaris.dts |   4 -
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               |   2 -
+ drivers/clk/qcom/clk-rcg.h                         |   1 +
+ drivers/clk/qcom/clk-rcg2.c                        | 243 ++++++++-
+ drivers/clk/qcom/gcc-sdm845.c                      |  21 +-
+ drivers/gpu/drm/panel/Kconfig                      |   7 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-samsung-s6e3ha8.c      | 350 ++++++++++++
+ drivers/input/misc/Kconfig                         |   4 +-
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/max77693-haptic.c               |  15 +-
+ drivers/leds/Kconfig                               |   6 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-max77705.c                       | 158 ++++++
+ drivers/mfd/Kconfig                                |  12 +
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/max77705.c                             | 248 +++++++++
+ drivers/mfd/sec-core.c                             |  11 +
+ drivers/power/supply/Kconfig                       |  13 +
+ drivers/power/supply/Makefile                      |   2 +
+ drivers/power/supply/max77705_charger.c            | 585 +++++++++++++++++++++
+ drivers/power/supply/max77705_fuel_gauge.c         | 348 ++++++++++++
+ drivers/regulator/Kconfig                          |   8 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/s2dos05-regulator.c              | 176 +++++++
+ include/linux/mfd/max77693-common.h                |   6 +-
+ include/linux/mfd/max77693-private.h               |  11 -
+ include/linux/mfd/max77705-private.h               | 180 +++++++
+ include/linux/mfd/max77705_charger.h               | 215 ++++++++
+ include/linux/mfd/samsung/core.h                   |   1 +
+ include/linux/power/max77705_fuelgauge.h           |  65 +++
+ include/linux/power_supply.h                       |   1 +
+ include/linux/regulator/s2dos05.h                  |  73 +++
+ 45 files changed, 3627 insertions(+), 101 deletions(-)
+---
+base-commit: 5acd9952f95fb4b7da6d09a3be39195a80845eb6
+change-id: 20240617-starqltechn_integration_upstream-bc86850b2fe3
 
 Best regards,
-Dzmitry
+-- 
+Dzmitry Sankouski <dsankouski@gmail.com>
+
 
