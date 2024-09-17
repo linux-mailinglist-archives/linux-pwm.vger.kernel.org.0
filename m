@@ -1,80 +1,80 @@
-Return-Path: <linux-pwm+bounces-3283-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3284-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACDF897B1FD
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Sep 2024 17:40:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2661C97B27C
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Sep 2024 18:01:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72FA228381C
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Sep 2024 15:40:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 592D11C20C72
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Sep 2024 16:01:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08B321C9EC5;
-	Tue, 17 Sep 2024 15:16:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21877535DC;
+	Tue, 17 Sep 2024 16:01:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dzNROLnS"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="owXtdADW"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544D61C2DD8
-	for <linux-pwm@vger.kernel.org>; Tue, 17 Sep 2024 15:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C6914D71E
+	for <linux-pwm@vger.kernel.org>; Tue, 17 Sep 2024 16:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726586166; cv=none; b=TjLFGmBHqvuuVEQC0pupCvCJDoi0ZghFP5euk6R99Xbnzwbgi/86tv5QLj5oNw7b8j+S1WNWBjtGXiOOR7Hxw6dwzxY26XJyOf10WXjtuckFu9z2EntGRs2CHb2IMGJko40G8zQ9BEDgdMdnU0NFpvX/qi7FIuf2Ls8y70Irtmk=
+	t=1726588892; cv=none; b=U6ZsgQCQyPKxeSDT05Pt3NzkcGJ4Tq7WDjoNjaKndywdw3Guoh5fdurWjJx98cpFbKSZyJVcrG3Jk6D6eMPxr7iePWkiI/wMUb4PhcU+6lTd3+a316Tr6ECBs2licfcKdEBFKofcbMP0wPwS1Qm5ZIvkArrqH7w8fzFwi1bkRcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726586166; c=relaxed/simple;
-	bh=BHulxewA/TznO0Vd1SKpkcERt7nE9S/q+tUe13aDxgM=;
+	s=arc-20240116; t=1726588892; c=relaxed/simple;
+	bh=hdXqSCdNxoPoX+DywFZn352mfbmIqc9RPWZo8eDvWjI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gkfXOLCsndcTRdM+VLk7W9nxPuW12ditxnYlNRvvFwpV/TtBw9XYGKY5aJj3fhe/UxkVp55KhfEHgDQ1SYdQToV7RJsXKkCocUZLXmU2WrJKuB0gLSm/82TnRqNG6Gq61lfkBnnFTVA2uCWXuiJC/WdP7JfxJY9R/Xkw/Oouc4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dzNROLnS; arc=none smtp.client-ip=209.85.218.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=L4/eBGvHdYjRu545EffPF4gLnvjhoYoJrOu1XcOnFrq4g3CLJjRJulxvFsePoNnldaOH7KrSZWJPdCnW2w9SmWQocB/hfrZ2e/NAQIpHK9S6xRao4GnIMhugzw+Hdkjgm15RWLynL3yeo3C9667iwKwKP1Yn2qS4i42fCspbq+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=owXtdADW; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a7a843bef98so601447966b.2
-        for <linux-pwm@vger.kernel.org>; Tue, 17 Sep 2024 08:16:02 -0700 (PDT)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5c26a52cf82so2478152a12.2
+        for <linux-pwm@vger.kernel.org>; Tue, 17 Sep 2024 09:01:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1726586161; x=1727190961; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1726588887; x=1727193687; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BHulxewA/TznO0Vd1SKpkcERt7nE9S/q+tUe13aDxgM=;
-        b=dzNROLnSc8xG6JZXuCXmlnvrXRuoGMzudMpWHui8f6ASxlUXBllRMz1JYrOxamY8uD
-         NOnZ6kwTHlY8BFNVJfyqVdSDOmwK0eKaxbHSmMN//9krEvwBE7o6tUdlr5rHcUCVyM5r
-         IHZp11lYaeEx05iCzqXsuapNnkGr5TvJYpo87ZFoXVv8PLsseINouvpVOpF1khYz13ui
-         uw6B9MidW2bK64I7cx2hZ7o018VLmDUhDV/oVUpnuCzPDzsvZor3xViUaOG8p07BQHGe
-         WGsyYSJU5BgbXqTr8uQiH8EhN4A3xj6QUl1dA4GqFgTZMk2ip3Zv3QKrDYwJy4BZx2G1
-         O8hg==
+        bh=uuEYPgrDf2j8L7z5gATu0mjFEDNmwvkpCaFkTninaAo=;
+        b=owXtdADWZ36g9t8OqRZ1SOrPp65AlogkCv/yeFPV4H8GyUREBd9u5UJQd1tbwwG4bE
+         WRB8o8kisj2yNSqwxSLF+ZToUS94ckygpRHctSU2EoTtfilONaYo05tcpSlUOQZyn5Iz
+         qJM6aqsusj9x+n29ZDxTzLYrWdb+vxt0mErhxOvBYkl8+c0EOodttGNZEubzTWPryJpq
+         ZfTHEf3XQ/8Uvdo0KaGG9u1N++AhHJUQk7lxqujV4gcuvpJskk8hyCsM4peGP23hLDnH
+         GHCyqTDJk7+8Y8Al6l1tbj4USObasXCDOEn1hTnfHV1fRSVeacXui8ke2XEaMXBMk7Qw
+         iJhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726586161; x=1727190961;
+        d=1e100.net; s=20230601; t=1726588887; x=1727193687;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BHulxewA/TznO0Vd1SKpkcERt7nE9S/q+tUe13aDxgM=;
-        b=Ep3W3rr4ZCIZc9N653TFLMe4f9Z6iEE9DzGDa9Qp8r25oQ2Z/lv+PKwXoq3GOjYiE9
-         yj+Q8tHlLL4+SHtWGbZy8H2eTRL3ovLx7/1etfaknATMluPQrd37YJ9h+8QLVZB2su4B
-         s1x/fcNiLondnCCJKqyTM8qCP++KunwUpRZ80OqvVU9TneOCvOMr9cvDlZG146I7xz5J
-         ZXw8kf593uBRZqrFV1I68vMXII0fctbPX2lXI0BvZPEtCgXmv/i+vW46MfzaAgnLeW7S
-         K9Yz73fUmrRzHkQiMmpMaWmsAH/pZSGomWd1rPBdBbMX05Sq7UH3PnBbo2r4J/rLhZRX
-         iGpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWgnhDp+zKJ2mSwzQP/NghiuCXKPXFz1DaGEi+x1k1HoLrl38i/UuuvF5wfYijgu2tUfXCkrIYUOJU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyY7eRrjhOSPWCuieqC7gpBT5/E7gXEhJLe4AHx0TTLrkF66gCg
-	DzXZNR27+/Lgl+1Zj+4yT95EtuUvGtdEBm0e+d7Nl+d8iX/x+PLTSYOySPclk6Q=
-X-Google-Smtp-Source: AGHT+IHPEVRV5SnmeE41rHg/+adxtF9yuzVAFT0b91fKlCbyw2kCVFjjFxtULs4ctjtIniGFRmiG0w==
-X-Received: by 2002:a17:907:3fa7:b0:a8d:5472:b56c with SMTP id a640c23a62f3a-a9047ca91a1mr1827350066b.22.1726586160558;
-        Tue, 17 Sep 2024 08:16:00 -0700 (PDT)
+        bh=uuEYPgrDf2j8L7z5gATu0mjFEDNmwvkpCaFkTninaAo=;
+        b=wTCgifVBBoNtQXxCkABtOLOY3Ei1Y1f6O7NSvKvJ4QCIztUdqc8B07oL1ggUgGHZ1g
+         bhuZduD9HEDmXZxxHsXUpOcXsCQddueAbtYm3F3VwuD5bAFcSlEsp06U5mK1vjYgZ0Hy
+         978DwTBx73ai2wjX/rWYDOfNusochMzUnp1RqCj04CeeGYiqvx6qVHKDO2a+P8Ty3vOC
+         6LiMQw56+abN7cWMm/gyuci4AUui5dMobTcSSGoDO++PimOMXkGeSFcoMT4ExY2XUAFX
+         IuNqOeNbCeiCWLw2vqGjX0N95Mj4ko1MbVHjUm5AOBmxsBsHkbj1YK4sSj6fmYZiSQ1X
+         Eo9A==
+X-Gm-Message-State: AOJu0YxTh1PWPShRfP8yjRnyXh40LG0kw43l2gAA18CNdlVTYP4qwme8
+	UI44Tr+1v/rvbLtayac1sizoqGkgSbksoJq7Cyxmu30NgylS+xMY6aqXo4iZPUjiXeVhR4dL4v5
+	o
+X-Google-Smtp-Source: AGHT+IFehvn6undS7AZ9St3IRyGjc+hflZg1jw9rxPGAn/1MUFeHmMFU7CftvCBvwlIjBwLnXC9Znw==
+X-Received: by 2002:a05:6402:5d3:b0:5c3:c530:e99a with SMTP id 4fb4d7f45d1cf-5c41e1930c7mr25040964a12.15.1726588885865;
+        Tue, 17 Sep 2024 09:01:25 -0700 (PDT)
 Received: from localhost (p5dc68d3d.dip0.t-ipconnect.de. [93.198.141.61])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90610f440bsm459801366b.86.2024.09.17.08.15.59
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c42bb5dc0dsm3814193a12.42.2024.09.17.09.01.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2024 08:16:00 -0700 (PDT)
-Date: Tue, 17 Sep 2024 17:15:58 +0200
+        Tue, 17 Sep 2024 09:01:25 -0700 (PDT)
+Date: Tue, 17 Sep 2024 18:01:22 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Shen Lichuan <shenlichuan@vivo.com>
-Cc: nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
-	claudiu.beznea@tuxon.dev, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
-Subject: Re: [PATCH v1] pwm: atmel-tcb: Use min() macro
-Message-ID: <ctq63nbymavhh5ikg4zycoq56h3wmp6zhucqsjrbkspmf2b7qc@asldgk2z7jku>
-References: <20240827075749.67583-1-shenlichuan@vivo.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, Kent Gibson <warthog618@gmail.com>
+Subject: Re: [PATCH v4 1/7] pwm: Add more locking
+Message-ID: <7cop5lj6v4aaobdarwdewelhjkd5asy4b3yk7vtxfwuppo5apz@zoafbb26aysp>
+References: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
+ <a519af534a6670fdb0c3ee9c2aa80106c35ff489.1725635013.git.u.kleine-koenig@baylibre.com>
+ <561434b8-c13d-48a0-86ea-026f83dfc98f@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -82,43 +82,73 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ozx5bdkryl6kxbsb"
+	protocol="application/pgp-signature"; boundary="63ajnbzfcbs22blx"
 Content-Disposition: inline
-In-Reply-To: <20240827075749.67583-1-shenlichuan@vivo.com>
+In-Reply-To: <561434b8-c13d-48a0-86ea-026f83dfc98f@baylibre.com>
 
 
---ozx5bdkryl6kxbsb
-Content-Type: text/plain; charset=us-ascii
+--63ajnbzfcbs22blx
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello David,
 
-On Tue, Aug 27, 2024 at 03:57:49PM +0800, Shen Lichuan wrote:
-> Use the min() macro to simplify the atmel_tcb_pwm_apply() function
-> and improve its readability.
+On Fri, Sep 06, 2024 at 02:54:29PM -0500, David Lechner wrote:
+> On 9/6/24 10:42 AM, Uwe Kleine-K=F6nig wrote:
+> > @@ -336,6 +367,11 @@ static int pwm_capture(struct pwm_device *pwm, str=
+uct pwm_capture *result,
+> > =20
+> >  	guard(mutex)(&pwm_lock);
+>=20
+> Do we still need to hold pwm_lock here? Maybe we can remove it?
+> Or add a comment about why it is still necessary even though we
+> also hold pwmchip lock.
 
-applied to
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-nexxt
-. As the merge window is currently open this will not go into next yet,
-but I'll schedule it for 6.13-rc1.
+Probably we don't. And even if it were required from a theoretic POV,
+it's most probably still not needed because nobody actually uses
+pwm_capture(). So I suggest to add a comment like:
 
-Best regards and thanks for your contribution,
+/*
+ * Holding the pwm_lock is probably not needed. If you use pwm_capture()
+ * and you're interested to speed it up, please convince yourself it's
+ * really not needed, test and then suggest a patch on the mailing list.
+ */
+
+Until someone speaks up and tells that pwm_capture is still useful, I'm
+happy if I don't have to spend brain cycles about it.
+
+I also still consider
+https://lore.kernel.org/linux-pwm/20220523174502.987113-3-u.kleine-koenig@p=
+engutronix.de
+a good idea to make it more likely that someone who still uses capture
+support shows up on the list.
+
+> > +	guard(pwmchip)(chip);
+> > +
+> > +	if (!chip->operational)
+> > +		return -ENODEV;
+> > +
+> >  	return ops->capture(chip, pwm, result, timeout);
+> >  }
+
+Best regards
 Uwe
 
---ozx5bdkryl6kxbsb
+--63ajnbzfcbs22blx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbpnSsACgkQj4D7WH0S
-/k6q/Af+NQHGFrL/T3ofm5LBinf8ILU9v516yAEw72V+Ifa4JjX2yz8yLo7fjp4i
-gBT1dUg6uXVS5ArJByFXCk6dzcl9AuJYPRnr0EpOnQb6lr6S44bb6xVQ0O8UPUHg
-uYt18ISsBIsCaOIgNVmphiMq7Uf66LMqSvKqkiUWrZ3pyc/17R6gmdqKQchlDNne
-86yv7rNx714M++6LVDS6zSs0AJW7pjv8ha0tqYxh5WMTRtzHmGy+hoGJ01tCt33F
-h2uUrhlRW17DPQ3riCTIN2wz13esfOXaBhRoKcC0QAB0Rjym25Nl/GTJgsfApwKV
-sxBtYCQBKSIk6kWrD0H12DqvwaKvkA==
-=HSkK
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbpp9AACgkQj4D7WH0S
+/k7VsAf/Zboj5dWwVxL8thgWLZ4v8yT/RDnioHnHdQzY2P/Mn76x6A67Nu42NSbL
+AkK/XzvWyExP1BbHQLq1tZyVtdzUCq3SquoHCJgQ+cSJnKpG+FsQ3FqX7KIbWLkU
+V1ejVEQbzkJxDVQtfwbUwPE4AEkep7jd1vAZ4KHj7hZ3HT7ijkf0OxOuwpienPIX
+9W2NuHU0dQnUM5jH787bNLflqP35Aww8Uu4NqMQ8mBu4mcqVxr5gysUW64VvRAY8
+cHupDJ94UT301mh6Xz8iY6kmP0QSPVSOt047/TnRiXAc4m5CJVCBMb9gYpgdfyfo
+Gku7X2+iKzK+d2NiiPs9UrIK7xC1Gw==
+=Q1Zq
 -----END PGP SIGNATURE-----
 
---ozx5bdkryl6kxbsb--
+--63ajnbzfcbs22blx--
 
