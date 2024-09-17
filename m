@@ -1,184 +1,124 @@
-Return-Path: <linux-pwm+bounces-3282-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3283-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FB2897A817
-	for <lists+linux-pwm@lfdr.de>; Mon, 16 Sep 2024 22:08:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACDF897B1FD
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Sep 2024 17:40:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A84228698E
-	for <lists+linux-pwm@lfdr.de>; Mon, 16 Sep 2024 20:08:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72FA228381C
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Sep 2024 15:40:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C25915CD7C;
-	Mon, 16 Sep 2024 20:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08B321C9EC5;
+	Tue, 17 Sep 2024 15:16:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DCc4wEl1"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dzNROLnS"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C706ABE6C;
-	Mon, 16 Sep 2024 20:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544D61C2DD8
+	for <linux-pwm@vger.kernel.org>; Tue, 17 Sep 2024 15:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726517293; cv=none; b=je0QMuSTiN2BtFSlktD3YbOj+dTpsqp6j2AYaQdyY2qg+tkYpS9Yqg/VQotRXoOb6lAjaMXa4CDIRPpDjFlwu2QZ7U5hzHsbGS3zNEU/1Zyn3Y2BMC/IOYZU3ZlT9ujtoL++sb12vLREcz/ZGZIafMa9mRaeyCeKCYROXwjIYFM=
+	t=1726586166; cv=none; b=TjLFGmBHqvuuVEQC0pupCvCJDoi0ZghFP5euk6R99Xbnzwbgi/86tv5QLj5oNw7b8j+S1WNWBjtGXiOOR7Hxw6dwzxY26XJyOf10WXjtuckFu9z2EntGRs2CHb2IMGJko40G8zQ9BEDgdMdnU0NFpvX/qi7FIuf2Ls8y70Irtmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726517293; c=relaxed/simple;
-	bh=YBjWbfo0a0keCQPpKYbQNbu61ItDdyOZQNE68ZGbl3M=;
+	s=arc-20240116; t=1726586166; c=relaxed/simple;
+	bh=BHulxewA/TznO0Vd1SKpkcERt7nE9S/q+tUe13aDxgM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kifx2puFdEVocehIEV+YuDhVxVX8qCvh2hEppCnew2RdNFNTX12YgfeFCjMcBuE7/3uuoTN+gE2z3vY/WWO0XpCpXxWLoOhjOkRh307x+o7QiKX0EHzNLfaIVCfUOYrdo6EMPZ8zThxjXyA2qePAHZTCtstvfLoW2IB/ZAhlZk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DCc4wEl1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70FD6C4CEC4;
-	Mon, 16 Sep 2024 20:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726517292;
-	bh=YBjWbfo0a0keCQPpKYbQNbu61ItDdyOZQNE68ZGbl3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DCc4wEl18k4kWLqBq6iNCPK6cahPYo3qxIvef7bzOZEcMsaklUsZ/9Ikn+ieTTqso
-	 26VxtnAJENQ+rpPAAXF4d6yIE9QA1f/qvHhymWujw9IA3PY7CgA1QPh13MqeBxpn8Z
-	 RX+xwBGIMuB8UozvYwQ7YE0IuPhUSx2ivrKllorV4d2IrifhxK8NEiAg1CIPKsZFIs
-	 CGszExjt27bjR+I+saWIrhWkocBeCBJdT9ctx05FDwlZDj8F4ei+AJyCxir62WTpAT
-	 g+WHnXXtDrbr6Gx43p8h9c8MmgVZZnzia19ZEtCOjFOMxY2J/V9Ru/dYeO7z8Gpnzn
-	 YjcnTucvqpqOQ==
-Date: Mon, 16 Sep 2024 22:08:08 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Dzmitry Sankouski <dsankouski@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Chanwoo Choi <cw00.choi@samsung.com>, Simona Vetter <simona@ffwll.ch>, 
-	cros-qcom-dts-watchers@chromium.org, Konrad Dybcio <konradybcio@kernel.org>, 
-	Simona Vetter <simona.vetter@ffwll.ch>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v4 04/27] dt-bindings: panel: add Samsung s6e3ha8
-Message-ID: <oldqqsnonmbczvhbtzuaxvnpm23uq3kuyvy5o2igq7c4ojlmsl@bket5pssbmmc>
-References: <20240913-starqltechn_integration_upstream-v4-0-2d2efd5c5877@gmail.com>
- <20240913-starqltechn_integration_upstream-v4-4-2d2efd5c5877@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gkfXOLCsndcTRdM+VLk7W9nxPuW12ditxnYlNRvvFwpV/TtBw9XYGKY5aJj3fhe/UxkVp55KhfEHgDQ1SYdQToV7RJsXKkCocUZLXmU2WrJKuB0gLSm/82TnRqNG6Gq61lfkBnnFTVA2uCWXuiJC/WdP7JfxJY9R/Xkw/Oouc4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dzNROLnS; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a7a843bef98so601447966b.2
+        for <linux-pwm@vger.kernel.org>; Tue, 17 Sep 2024 08:16:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1726586161; x=1727190961; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BHulxewA/TznO0Vd1SKpkcERt7nE9S/q+tUe13aDxgM=;
+        b=dzNROLnSc8xG6JZXuCXmlnvrXRuoGMzudMpWHui8f6ASxlUXBllRMz1JYrOxamY8uD
+         NOnZ6kwTHlY8BFNVJfyqVdSDOmwK0eKaxbHSmMN//9krEvwBE7o6tUdlr5rHcUCVyM5r
+         IHZp11lYaeEx05iCzqXsuapNnkGr5TvJYpo87ZFoXVv8PLsseINouvpVOpF1khYz13ui
+         uw6B9MidW2bK64I7cx2hZ7o018VLmDUhDV/oVUpnuCzPDzsvZor3xViUaOG8p07BQHGe
+         WGsyYSJU5BgbXqTr8uQiH8EhN4A3xj6QUl1dA4GqFgTZMk2ip3Zv3QKrDYwJy4BZx2G1
+         O8hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726586161; x=1727190961;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BHulxewA/TznO0Vd1SKpkcERt7nE9S/q+tUe13aDxgM=;
+        b=Ep3W3rr4ZCIZc9N653TFLMe4f9Z6iEE9DzGDa9Qp8r25oQ2Z/lv+PKwXoq3GOjYiE9
+         yj+Q8tHlLL4+SHtWGbZy8H2eTRL3ovLx7/1etfaknATMluPQrd37YJ9h+8QLVZB2su4B
+         s1x/fcNiLondnCCJKqyTM8qCP++KunwUpRZ80OqvVU9TneOCvOMr9cvDlZG146I7xz5J
+         ZXw8kf593uBRZqrFV1I68vMXII0fctbPX2lXI0BvZPEtCgXmv/i+vW46MfzaAgnLeW7S
+         K9Yz73fUmrRzHkQiMmpMaWmsAH/pZSGomWd1rPBdBbMX05Sq7UH3PnBbo2r4J/rLhZRX
+         iGpw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgnhDp+zKJ2mSwzQP/NghiuCXKPXFz1DaGEi+x1k1HoLrl38i/UuuvF5wfYijgu2tUfXCkrIYUOJU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY7eRrjhOSPWCuieqC7gpBT5/E7gXEhJLe4AHx0TTLrkF66gCg
+	DzXZNR27+/Lgl+1Zj+4yT95EtuUvGtdEBm0e+d7Nl+d8iX/x+PLTSYOySPclk6Q=
+X-Google-Smtp-Source: AGHT+IHPEVRV5SnmeE41rHg/+adxtF9yuzVAFT0b91fKlCbyw2kCVFjjFxtULs4ctjtIniGFRmiG0w==
+X-Received: by 2002:a17:907:3fa7:b0:a8d:5472:b56c with SMTP id a640c23a62f3a-a9047ca91a1mr1827350066b.22.1726586160558;
+        Tue, 17 Sep 2024 08:16:00 -0700 (PDT)
+Received: from localhost (p5dc68d3d.dip0.t-ipconnect.de. [93.198.141.61])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90610f440bsm459801366b.86.2024.09.17.08.15.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2024 08:16:00 -0700 (PDT)
+Date: Tue, 17 Sep 2024 17:15:58 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Shen Lichuan <shenlichuan@vivo.com>
+Cc: nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
+	claudiu.beznea@tuxon.dev, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
+Subject: Re: [PATCH v1] pwm: atmel-tcb: Use min() macro
+Message-ID: <ctq63nbymavhh5ikg4zycoq56h3wmp6zhucqsjrbkspmf2b7qc@asldgk2z7jku>
+References: <20240827075749.67583-1-shenlichuan@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ozx5bdkryl6kxbsb"
 Content-Disposition: inline
-In-Reply-To: <20240913-starqltechn_integration_upstream-v4-4-2d2efd5c5877@gmail.com>
-
-On Fri, Sep 13, 2024 at 06:07:47PM +0300, Dzmitry Sankouski wrote:
-> Add binding for the Samsung s6e3ha8 panel found in the Samsung S9.
-> 
-> Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
-> 
-> ---
-> Changes in v4:
-> - change dts example intendation from tabs
->  to spaces
-> - remove reset-gpios description
-> ---
->  .../bindings/display/panel/samsung,s6e3ha8.yaml    | 75 ++++++++++++++++++++++
->  MAINTAINERS                                        |  5 ++
->  2 files changed, 80 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e3ha8.yaml b/Documentation/devicetree/bindings/display/panel/samsung,s6e3ha8.yaml
-> new file mode 100644
-> index 000000000000..94c812e07571
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e3ha8.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/samsung,s6e3ha8.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung s6e3ha8 AMOLED DSI panel
-> +
-> +description: The s6e3ha8 is a 1440x2960 DPI display panel from Samsung Mobile
-> +  Displays (SMD).
-> +
-> +maintainers:
-> +  - Dzmitry Sankouski <dsankouski@gmail.com>
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: samsung,s6e3ha8
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  reset-gpios: true
-> +
-> +  port: true
-> +
-> +  vdd3-supply:
-> +    description: VDD regulator
-> +
-> +  vci-supply:
-> +    description: VCI regulator
-> +
-> +  vddr-supply:
-> +    description: VDDR regulator
-> +
-> +required:
-> +  - compatible
-> +  - reset-gpios
-> +  - vdd3-supply
-> +  - vddr-supply
-> +  - vci-supply
-
-If there is going to be resend, then keep the same order as in
-properties: block.
+In-Reply-To: <20240827075749.67583-1-shenlichuan@vivo.com>
 
 
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    dsi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        panel@0 {
-> +            compatible = "samsung,s6e3ha8";
-> +            reg = <0>;
-> +            vci-supply = <&s2dos05_ldo4>;
-> +            vddr-supply = <&s2dos05_buck1>;
-> +            vdd3-supply = <&s2dos05_ldo1>;
-> +            te-gpios = <&tlmm 10 GPIO_ACTIVE_HIGH>;
-> +            reset-gpios = <&tlmm 6 GPIO_ACTIVE_HIGH>;
-> +            pinctrl-0 = <&sde_dsi_active &sde_te_active_sleep>;
-> +            pinctrl-1 = <&sde_dsi_suspend &sde_te_active_sleep>;
-> +            pinctrl-names = "default", "sleep";
-> +
-> +            port {
-> +                panel_in: endpoint {
-> +                    remote-endpoint = <&mdss_dsi0_out>;
-> +                };
-> +            };
-> +      };
+--ozx5bdkryl6kxbsb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Indentation is still mixed up.
+Hello,
 
-> +    };
-> +
-> +...
+On Tue, Aug 27, 2024 at 03:57:49PM +0800, Shen Lichuan wrote:
+> Use the min() macro to simplify the atmel_tcb_pwm_apply() function
+> and improve its readability.
 
-Best regards,
-Krzysztof
+applied to
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-nexxt
+. As the merge window is currently open this will not go into next yet,
+but I'll schedule it for 6.13-rc1.
 
+Best regards and thanks for your contribution,
+Uwe
+
+--ozx5bdkryl6kxbsb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbpnSsACgkQj4D7WH0S
+/k6q/Af+NQHGFrL/T3ofm5LBinf8ILU9v516yAEw72V+Ifa4JjX2yz8yLo7fjp4i
+gBT1dUg6uXVS5ArJByFXCk6dzcl9AuJYPRnr0EpOnQb6lr6S44bb6xVQ0O8UPUHg
+uYt18ISsBIsCaOIgNVmphiMq7Uf66LMqSvKqkiUWrZ3pyc/17R6gmdqKQchlDNne
+86yv7rNx714M++6LVDS6zSs0AJW7pjv8ha0tqYxh5WMTRtzHmGy+hoGJ01tCt33F
+h2uUrhlRW17DPQ3riCTIN2wz13esfOXaBhRoKcC0QAB0Rjym25Nl/GTJgsfApwKV
+sxBtYCQBKSIk6kWrD0H12DqvwaKvkA==
+=HSkK
+-----END PGP SIGNATURE-----
+
+--ozx5bdkryl6kxbsb--
 
