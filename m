@@ -1,70 +1,69 @@
-Return-Path: <linux-pwm+bounces-3294-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3295-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64E8597C97F
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Sep 2024 14:50:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A01197CA00
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Sep 2024 15:18:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89BAE1C21CA3
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Sep 2024 12:50:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D2431C220A7
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Sep 2024 13:18:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 640ED19DFB3;
-	Thu, 19 Sep 2024 12:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C57A719DFAE;
+	Thu, 19 Sep 2024 13:17:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTvUIWUA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2k6WjgM"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AA819D88C;
-	Thu, 19 Sep 2024 12:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCE2179AE;
+	Thu, 19 Sep 2024 13:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726750239; cv=none; b=NDIA2Hf4+RWNFhyf6H5yPQ74rwSod9CRu/T3nCjpBdhRy3KXvi28nr6J19GDdYkNIja4Jy5TG1Cxec7ohtXDv/acweCxdOjLXArdWQfsBNr50TiiaB37Rip+JbVZ/W6LgeblqAax7ExxZbuQJTpJ7GsDQCMYjVy7vb1ZCQLvqCQ=
+	t=1726751878; cv=none; b=rYjBxAhVyTeBKVkarcO4aFvqJkSezto2ONt7j4a4THMIyq2p/2uXZArazfbPACGAmnmIRKeGCMHgFNCjGABFRzwdNPkJmp7olohkkHYeunklsFKC4HxKsSGFZtmwYg1LdJG+FHFIEmVquu0x5txPGkQYN59mRJDaBVKUa77yPvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726750239; c=relaxed/simple;
-	bh=P2CnPHZ3uuaFOCRYko5ENjgy3AttJLJU7pg7w5qMQhc=;
+	s=arc-20240116; t=1726751878; c=relaxed/simple;
+	bh=8RMp6DtzWha32Via1txQCdHxjj/HpMtXKzFb3Ncg6pk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V4X1uoTcRSF+XXl8QgGvVfWlt4HyWTsQmVokli6uBBXruMhtZrstUE/akmnwnDqI6H5v2tTV9NxZlpXN41DNa8NPj530LuyjkwEEF+fxZSeakTFCUSWzzkKkxu74/v2FA54J9gpIH/4w2gI02kNzp2Eh1/WTfWGzzdZEdLW1zrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hTvUIWUA; arc=none smtp.client-ip=209.85.217.52
+	 To:Cc:Content-Type; b=l7oMNaykL64mEe2zNmwCDEVBnp4rHoukcD1+tCQKmDOfDBxQSH6gsIzeiVAf1rbQChyYbEPy6yiakXr29DZEocN5N2aCu7QIydG1nhk2phhvC1McbiK314ReUxxjDgtyq+Yq+OEQuwyjmU/kt4ziVMRl86MMAHMwnIT+xucJBFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a2k6WjgM; arc=none smtp.client-ip=209.85.222.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-49bd76fa981so296206137.3;
-        Thu, 19 Sep 2024 05:50:37 -0700 (PDT)
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7a99fd5beb6so166887685a.0;
+        Thu, 19 Sep 2024 06:17:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726750236; x=1727355036; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lynh9AqoNJtlb54yCwbo34NdMY498MNudPm3PDmLEVM=;
-        b=hTvUIWUA7iyITPEypNFVLojrZBi8omlrpCTRUiSOT052NuBYyTlKnaePx1d9j78TTl
-         XRdBVbfNvHG3U/uM/IGdGTAUqSAIRyPWjgm2g60xKVXwmhOjlENckdFN9wYVSehb+ltA
-         ZJtNottFFiyODkPQdklcZ23FnS/Fdyw9uS8YY6ptI1XfABocPVOnPIUG5+ycM34duarn
-         HCsdMr0EAsj14jxgstzxVWMKSWpRlLD4Ke4F/4RwLXEKo9Mg1Fvh2qGGxh5dmaDi1oRd
-         QizA6ODRWgw0TVHfO177j6HThethwAoB3LyuxYfzRU2XPkMPlYy6NLfBAFFDMaaJ6ieR
-         1iTQ==
+        d=gmail.com; s=20230601; t=1726751876; x=1727356676; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=anfCIpzkOCIiGL9EDPttCS594d1L2okUuXy0ncEeGXA=;
+        b=a2k6WjgMX/6aSU1FZ8m0ofRnfO9HCGtDFY99hBd4dz7iXD9yifokzlc0HE6fAOwvbW
+         PLN+ykaab2istqyQ0vDtKviF62JziNXWPkcpO1L9SSWQORee/vo+gkCTHDSJ2TXgHe5I
+         RfzXuTNaRL6eAThEQYZv7pQRRqgoPVY0WgNkfKxY98ujhXCE98wYxIGz2I7BHlXflvGs
+         bssqWyIUCSUmeBVxRxZ3GXfnmv2Imyxzk+LcRGm6Nsy5D+z103lyDoTwtRT8Q/vo8abv
+         gw2KtjvMAsvXdEMlxbzvC64RKiqCeerP9/IH2uXS8CSsH8mE8W+6m5b+z4J+UtfTqrW+
+         1YNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726750236; x=1727355036;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lynh9AqoNJtlb54yCwbo34NdMY498MNudPm3PDmLEVM=;
-        b=ZyRuvlouTR+Oeb3kZgpoMQHw3VdVLo1g2yLnnJoVza+BVID3PQ9gjRoyqjYrLWrt3i
-         Nq6F8aiBXuwMNvRjLc1u4quIfZGlit+Xd+HDrJFANgCXyLr5Ij9SUPcr3zqkxK1MiZOP
-         zDYAgfB4Uwz/sI2rj17vD/uzMq7Xf8UApmQLxXCAOMYTdat91Be20x+1MusQSp/YAG62
-         3GkZswPLiREbEGX+ZBkfG09mRVDathXWA4qiZ7sg7RSf/3jM6Kh1C9DuXsK3h7ieAZIh
-         mKmtcu1nkNXHbOAUpbiEEKWzY5Ukg8F6yKMHsL9mNWg7NbVzM/vPasFy1QPcL6Q+n6o5
-         O1qg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSHiylbsSN41D8k4GRSh8iiSjYbxpfWTjaEH5pnk+qjtzjV6uRPNg9YVxsAKsIJ0pjNW/nQx7u71zH@vger.kernel.org, AJvYcCUpvIrvzHiyroGhnRKyriApawf/s+WUh2bxPlDAbLo3hX4I++oj7kTcLw4A/+86hV5sz5irtCWPn5MC@vger.kernel.org, AJvYcCV4gadrXPyOWoDWiYqmwox/jvfrk/MyjCx+Y73tqM9hnnqd1D20Qdi8T4CQzCtf5qbeldy9voi6Tnc=@vger.kernel.org, AJvYcCVOuhd4vZ5JoE+kF/NbLiNwXbZoetc0sdgLa+G2d0N5zUcoxcA6DJYrmY5jeu/LZZUzFY/Wtu0+REfa5w==@vger.kernel.org, AJvYcCVt6m8Ivjh/Ib8bojdbHucfdLqFK5T/gktl+VcMWE2SoU5OUSYZR4Bp45i7DTgHz6K+VtmDAvJ9/zM8oYjLn3ceNCM=@vger.kernel.org, AJvYcCWlnrM/aAJYAXSyLEqSk/IWQcZhJzsJzjexUJX2rMcc2LLPCGdRhBnlsTUEjpcXpupKUg83EzFihzyVmKs=@vger.kernel.org, AJvYcCXAJ45z2X1scgJn9URla5GOVF5tvL8SIh/VvShMh+awDYcVS5fWYTso0rlKhT0iuinWC1ctPHKBpZXTNmGl@vger.kernel.org, AJvYcCXVhh8NjI+bRlKMM+iduhmE1SIiDpvfbsFn8QPgilV8U1sMPZcQ9NxQE6b+E27lgxhbtpJVT9h6MtTY@vger.kernel.org, AJvYcCXvU2AC1rZAABd1JeUNp78w1qyFDPu3mWQgg4uqfuozCeiTlVLkyahhwYGdpJUsnU6h5B2PC8VPR836JNezbg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+U1uOxND4t4oQhX1nyw40gVrPxlU8jPOETFME31LdPf0XFrjE
-	l5x45mCvozUc7/bHc5oN97BWrEg+P7uI4UCM7L+2lDoIhCH7nOmmZPZ7u6p9FwxQYWqZxAlEwfG
-	spfJ1lemH0MS9AaYxq7VE4u1KgjU=
-X-Google-Smtp-Source: AGHT+IEKMNbTQZXLRsS7SXG2H/9yDkohzhnwPtb9QKmG2n0WI6EVG/Fv5duzKAwAkVqQrCI53KiuMLSBZ1iaMAbwZsI=
-X-Received: by 2002:a05:6102:e0d:b0:493:dee7:9b8a with SMTP id
- ada2fe7eead31-49d41513da0mr18959356137.13.1726750236464; Thu, 19 Sep 2024
- 05:50:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1726751876; x=1727356676;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=anfCIpzkOCIiGL9EDPttCS594d1L2okUuXy0ncEeGXA=;
+        b=TzeQR6/yIdR2denFDdnonZ0wqDJFB5p7jdhhtgSAwseRpcko2zazQ8cv/0e7hNG3dI
+         R8YzcZ9nkzjZe4aQzNMNM3fBdAgO6SWZQ1zeOKlzehQEwJ2b3VdrABEBdJdYBHnCtEuw
+         +z8NIRDiXawHlVPyGk8GN6Wq6m1gKHIseqd9S0c94zBBK7gZAry/kssdJl0vi2Oayos/
+         Z9OBSOgF2F2XxqVKb+RBCZWwus5W3gufgkhY3Wxq+1O51qvM6DFbsTJw+GVwXSNzywmG
+         /dfKaW97fCoA47TNurmwT+uIvvUrX/uzuHQ/LP+BJ+WHGABGlY1uit8R4yj+jrHCc705
+         a2tg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVcXknJUiMsmRSHTvl8HV+0+m96Sk5vAL+P4s8nCR4/T994uCTIrdB+S7mVYi26YdP1yNcvSAdtemj8cc=@vger.kernel.org, AJvYcCUi8XNvpifqpLA48ULy1e9zRNpB0vUXlXAst7RydrF9o0VNu0C98Pc6Mda6hhfDr6ktq0dQfphq97scRB54@vger.kernel.org, AJvYcCV+tA37Dz0H191AB5jARvvdkIdNzibyt0gy3GKhQ0LDgrQKLDp3nhcQBNWboOJiEfh7nsVnrw8koYY=@vger.kernel.org, AJvYcCVt4SxzhPXDPU2CEQRiZuRCFfmGr5xvsR7L/YEnRiYRWXl3CujW/fHWccIWhVWofMHRvfMGb/sTZVAZ30H8hQ==@vger.kernel.org, AJvYcCW+IFMVOpjM1WF3i6WYkb/rZutccb7/n+ZutqA0hcnm7qpMY0Ev9+MeU3J0pMoFv+HHJF0pbG7yJXpcmL6BUJeyj4s=@vger.kernel.org, AJvYcCWGPE5g6LNLgVbbhoTE0d674035HJ6vgfz/UEeARbSSX70FrTHU1bl/nZ4ybVUShSslXwwvgSDc2t93@vger.kernel.org, AJvYcCWqyX+36ywZxFH0ClvGSP3PmUYpk0jm3CUY6+kUXz65CBQQ2bppqakGa/ncvcZOZNKzajsOLFCA218e8A==@vger.kernel.org, AJvYcCX9d+1J79SH2NxHZ7ZKCvUEhOhERlYEKJpz6M83i7Q8XbtgzJOrAViyHD6jWjSk/TJXQBKRXaSkUR2w@vger.kernel.org, AJvYcCXxv+1yVPNgg9I5SvXlzTeYWDhh2/ERUlCXqBT3S9v/lBN47T/IE+vPG/h/l40v7l/uSZLpZUm+9ucc@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYycFoAXJR585/2Yvx2Maq0pa5LIKQncZRD8fyTND7njdx4DHG
+	rvcOYXmPigTq9PZrDejBt+0y/Utpsg14hp124VghCjOO8x7IfHzVL4b/c09JCiln0GNuQC7yyPH
+	WQ57xsFfEsX4bi1qiEn7bl+Ta+kA=
+X-Google-Smtp-Source: AGHT+IF9IGnoFymNrY96ZdfBvRdXpeFvTASmMi6xugMQ0/+PzTD5PFJN6ulZK08RbShyMHH/uKX0/0RAUmq5n3tkuIs=
+X-Received: by 2002:a05:620a:1728:b0:7a7:d6f2:95f8 with SMTP id
+ af79cd13be357-7acaf5a0246mr459527785a.20.1726751875987; Thu, 19 Sep 2024
+ 06:17:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -72,12 +71,12 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240913-starqltechn_integration_upstream-v4-0-2d2efd5c5877@gmail.com>
- <20240913-starqltechn_integration_upstream-v4-6-2d2efd5c5877@gmail.com> <bpujvanzp4yph2jkgog2rkvoywjtqad3jgk47kkex6v223flpb@66zporslyjzt>
-In-Reply-To: <bpujvanzp4yph2jkgog2rkvoywjtqad3jgk47kkex6v223flpb@66zporslyjzt>
+ <20240913-starqltechn_integration_upstream-v4-23-2d2efd5c5877@gmail.com> <rfoxnd4axyqxvexgq3mm2zntzvpihv4g424hepkoh7bfr2izjz@htjeqbfuq2gu>
+In-Reply-To: <rfoxnd4axyqxvexgq3mm2zntzvpihv4g424hepkoh7bfr2izjz@htjeqbfuq2gu>
 From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Thu, 19 Sep 2024 15:50:25 +0300
-Message-ID: <CABTCjFCTKoZK58rXBnTd22J2w_mkPp5=nx292eOwW5dAMbp9OA@mail.gmail.com>
-Subject: Re: [PATCH v4 06/27] dt-bindings: mfd: add samsung,s2dos05
+Date: Thu, 19 Sep 2024 16:17:44 +0300
+Message-ID: <CABTCjFCwg9HJcAQOG4+jeHviPiXoSiQgzX-ogUPQt1M2494aBQ@mail.gmail.com>
+Subject: Re: [PATCH v4 23/27] arm64: dts: qcom: starqltechn: add display PMIC
 To: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
 	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
@@ -98,79 +97,26 @@ Cc: Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
 	linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, 
 	linux-samsung-soc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-=D0=BF=D0=BD, 16 =D1=81=D0=B5=D0=BD=D1=82. 2024=E2=80=AF=D0=B3. =D0=B2 12:1=
-4, Krzysztof Kozlowski <krzk@kernel.org>:
->
-> On Fri, Sep 13, 2024 at 06:07:49PM +0300, Dzmitry Sankouski wrote:
-> > Add samsung,s2dos05 MFD module binding.
-> >
-> > Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
-> >
-> > ---
-> > Changes in v4:
-> > - split long(>80) lines
-> > - fix indentation
-> > - merge with regulators binding
-> > - drop pmic suffix
-> > - drop unused labels in example
-> > - correct description
-> > ---
-> >  .../devicetree/bindings/mfd/samsung,s2dos05.yaml   | 99 ++++++++++++++=
-++++++++
-> >  MAINTAINERS                                        |  1 +
-> >  2 files changed, 100 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mfd/samsung,s2dos05.yaml=
- b/Documentation/devicetree/bindings/mfd/samsung,s2dos05.yaml
-> > new file mode 100644
-> > index 000000000000..534434002045
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/samsung,s2dos05.yaml
-> > @@ -0,0 +1,99 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mfd/samsung,s2dos05.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +             pmic@60 {
+> > +                     compatible = "samsung,s2dos05";
+> > +                     reg = <0x60>;
 > > +
-> > +title: Samsung S2DOS05 Power Management IC
-> > +
-> > +maintainers:
-> > +  - Dzmitry Sankouski <dsankouski@gmail.com>
-> > +
-> > +description:
-> > +  This is a device tree bindings for S2DOS family of Power Management =
-IC (PMIC).
+> > +                     regulators {
+> > +                             s2dos05_ldo1: ldo1 {
+> > +                                     regulator-active-discharge = <1>;
+> > +                                     regulator-enable-ramp-delay = <12000>;
+> > +                                     regulator-min-microvolt = <1500000>;
+> > +                                     regulator-max-microvolt = <2000000>;
+> > +                                     regulator-name = "s2dos05-ldo1";
 >
-> Drop this sentence, not really useful. I know that I put it into other
-> Samsung PMIC bindings, but let's don't grow this pattern.
->
-> > +
-> > +  The S2DOS05 is a companion power management IC for the panel and tou=
-chscreen
-> > +  in smart phones. Provides voltage regulators and
-> > +  ADC for power/current measurements.
-> > +
-> > +  Regulator section has 4 LDO and 1 BUCK regulators and also
-> > +  provides ELVDD, ELVSS, AVDD lines.
->
-> What are these? Input supplies?
->
+> Useless name. Please use rather names from the schematics, but I guess
+> you might not have them, so maybe downstream has reasonable name?
 
-ELVSS and ELVDD are common abbreviations for AMOLED panel backlight supplie=
-s,
-AVDD for panel electronics. I conclude that s2dos05 ic provides
-ELVSS, ELVDD, AVDD from the facts, it can measure its current and power.
-Those power lines are controlled by display hardware [1],
-i.e. vendor kernel driver has no clue how to control those regulators.
+Unfortunately, downstream uses that same name.
 
-I guess they just combined regular regulator ic with ELVSS, ELVDD, AVDD ic
-like [2].
+-- 
 
-[1]: https://github.com/klabit87/twrp_android_samsung_kernel_sdm845/blob/an=
-droid-8.0/drivers/gpu/drm/msm/samsung/S6E3HA8_AMB577PX01/dsi_panel_S6E3HA8_=
-AMB577PX01_wqhd_octa_cmd.dtsi#L3508
-[2]: https://www.st.com/resource/en/data_brief/stmp30.pdf
+Best regards,
+Dzmitry
 
