@@ -1,85 +1,80 @@
-Return-Path: <linux-pwm+bounces-3304-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3305-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5BA097D338
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Sep 2024 11:00:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D037D97D336
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Sep 2024 11:00:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3402EB23258
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C7A01F26416
 	for <lists+linux-pwm@lfdr.de>; Fri, 20 Sep 2024 09:00:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7878113AA3F;
-	Fri, 20 Sep 2024 08:58:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E0813E02B;
+	Fri, 20 Sep 2024 08:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="OS5hM2Bn"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="08swwj1R"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D4413C69E
-	for <linux-pwm@vger.kernel.org>; Fri, 20 Sep 2024 08:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC72E13C810
+	for <linux-pwm@vger.kernel.org>; Fri, 20 Sep 2024 08:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726822732; cv=none; b=oB877+JylgWZY5qEk0KxU0pwpvwPX1f5aylPAYjfOnkWs7EzdV3TdXGZhyNyiKR72n5c+Vlwm0meo5yeBCMDU50eXMZXYNgPD8sE3iCVV/MoHUz8ds4zHNt9HIctjaAL/WittUrzSYMe8KxCatZi/qx3oTTSMsXBi26bnoZNtdo=
+	t=1726822733; cv=none; b=FFLDGJHzi7YfsUvpkV3+duv4RHxhI9foH8/7FRf+5OmNU5HMojCo4UWTuQGsETg0INIj7Nur5TeJAhahB2EfCBHgr/eUclSSGu3O5xz/08/xf/h8GrgoxmkXJp5Hy7uzxPsFBLZZLdD70jlKJDEknz/oTXi3tb73I2JxdS981ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726822732; c=relaxed/simple;
-	bh=Pt0gGq5PqUYKMJVbZTZGrF1lXLaJKbMjz12HL+NgmpE=;
+	s=arc-20240116; t=1726822733; c=relaxed/simple;
+	bh=u1lBSyY6qYK+SxoNMoz1RD+fsFtj7+ZFHuzaV93Ce24=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QwiqnMuVgr/tO7boWgMhWiOo/N3qxBJhgokZTvYdjPoxSWtpXUFaAATZRYXkUZzfGbgYZR/s6Jkb5bflRLq3Ab25pZrihOqCTgPV8tcanJxWFVZR3vDt78E2jsgl6xy1eZ1VN58lHU7ZO49TBQ9PYohgDmGArKJTZ435iYofmuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=OS5hM2Bn; arc=none smtp.client-ip=209.85.128.45
+	 MIME-Version:Content-Type; b=H118HiEtV642UjH3H0Ll+HVywZa/b9+6VyiSIa98jSjif/ee53vtivkr1QaYYfWaxepP0fG5+3opu6hHxVsPA1PXGqZukhZowrkP6yliVJbj/WQZcUdswPWSRZutPVaXWLHuZ4+ze4x0CgblH0WXaAIfLUFs3MpFNKeHEs6yrwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=08swwj1R; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4280ca0791bso16287705e9.1
-        for <linux-pwm@vger.kernel.org>; Fri, 20 Sep 2024 01:58:49 -0700 (PDT)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42cafda818aso16198005e9.2
+        for <linux-pwm@vger.kernel.org>; Fri, 20 Sep 2024 01:58:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1726822728; x=1727427528; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1726822730; x=1727427530; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pRYFIX4QNA1UrKn7Y+CTn9YbiEsF2DJR8AyC9fr371A=;
-        b=OS5hM2BnuB0/YaOpCLy/SfMFhUCK8effZPK9ySKU4K3U3pEhb0WQLmDJcLHVGsgPsZ
-         8zo9/eQlATQJIDRcyntiAY8o1YJYVIJIHPXUiRGHYY+ovdhEtQ7lWmnk7cGIi9ORFiOV
-         MV0au6sZpwtDRwvkYFK13JmmCEf3pf7GYBEeU6+RatPz+BK3s7mcHfbHSV5XYqtdeHTW
-         W3BGTZe3UJXnnFmlztOZZdp/y3USulsVA4DErmN2Bw+RAQVNVqGv6pRZHbZyh7ZeEf7b
-         yH08eu99oZ6eFbgVx8lObBErimdk/oBZNlkZTim/jq09Ko0AG4UnD8R+2rcBWB2VQ7ea
-         hSKQ==
+        bh=5qZNEW7jIV2Looori87SEdf/xGTsIl5IUfGCSmv77mw=;
+        b=08swwj1RA/BdIuZu4FNmdvMIAW2JfbSrHSiqcdWqPCMRTUydytdpPgkUzu1Vi7ln8p
+         Z7NTKolkoaZl5CnJfuugVm5nUsEuz89fbPXqmKzzvOxdzNdepW9EdMUIfcadFd8vAIlO
+         HVwq4G+cOQYoR5ct0uf9ZhbgUv+iLC+1j1nNFEhRehM4wKNLe6VaFRw4t47bVlrD4nxf
+         pQrrwUaYRmzYLlOMjpj9icyBUw/LcHl0I3pL080HEBUg5QlwaSWSiYAYGjiOG2JCeuzK
+         OwnljLJG7DEd0TQRoSoo8LBaPsoMm6w8zvxW/sC4yKpra1wRXELE6FxxsaEOHV3Ix0bO
+         Ly6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726822728; x=1727427528;
+        d=1e100.net; s=20230601; t=1726822730; x=1727427530;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pRYFIX4QNA1UrKn7Y+CTn9YbiEsF2DJR8AyC9fr371A=;
-        b=WNRsC2HHO95X53YBrCM/S6Ddv7p0b+tESjLke70hXAvc14JvpmA+gy30AJe/oMcKTx
-         cTQdvKAf5jEMiQY95Wp+XsmzWrSVNY9M+4U49V2tICBCm8CZU5Vnkk087qwPX0mHyc10
-         2DRrfX6gKnB6TO3woiKEgM5TDgEVKWddCm4jjnpB9dGKGXAHq33UoGHBJJKCtHwcvKZ9
-         NKnLtceR0xE3oKZZhEBxpS7UKYVYjU2xpQ74bopil096vxEMcWbsuSQYJyNu4oPsCnWR
-         MGADIfiYzU2n6iK+lEmmVPH/lvFZmRe72QkdfUmwMAbt5Uci+txIJQJI6fMHbSONjCe1
-         ICUQ==
-X-Gm-Message-State: AOJu0YzR1qGSk7i5KGn9s6tdETuoewdvFvnmAiTQJaXVl8vLJnDLXyP3
-	cAgTkC5Wo5GdN/myyDRyzrkkEEzDRLnTf/rs55a0uvae97OBVRlpDNSDhm+oyEmGeAxHPxSRO6n
-	S
-X-Google-Smtp-Source: AGHT+IHgss2TTzbJSnRe+z3u6lOXm9dOvhSHzvfDZ4w9a9nr6VZRVMftMwLfPcmmi2xeISHkjY8jUg==
-X-Received: by 2002:a05:600c:358b:b0:42c:b1e1:a45b with SMTP id 5b1f17b1804b1-42e7c16ed53mr12779775e9.19.1726822727996;
-        Fri, 20 Sep 2024 01:58:47 -0700 (PDT)
+        bh=5qZNEW7jIV2Looori87SEdf/xGTsIl5IUfGCSmv77mw=;
+        b=w8HLbWb9y2V1HL+m7eIXQHNCLL6tPto1uJgK6cUoyuHFO6Vp5rv1nUzA/DDevH/RqH
+         +OxRiZay7gXUceAdRzAnFSb9GaVwHSFqZdbcuseY9mlWRBcqEL63kxUdN39Iz/nBfJuU
+         FUAdfptwrZMNmSS35zr5lkMd3ac3TRxTMZDZjSsa7AgozsD75/ZeP1gV1A9EfPIQ0bfX
+         5YeH/OtSqKVJWCk0RE4ZJnOnQZ0Q6UNn3dB/l7Vpw+gpZRZRg3NnmX2jfyFJ39gmj94v
+         SgUezHWBqIkdqLh2uuxO8w19k7LBmDImJxfHjJ7zNYM6JnKbsjKNWX38FBLAsYM7+y7i
+         a1aQ==
+X-Gm-Message-State: AOJu0YyfvHcGNLynhtJqax5f4vexiF9v59z6kM7tmooaLuGgWhF25m+3
+	H+AG+kePkOsA82byRjAVPu2aC5/vsWZuyrRF35QVEnhn+5IoAmAIK9XmUdLwxtV36UxDB2frqdQ
+	J
+X-Google-Smtp-Source: AGHT+IF55LuUzSxMhyIFaFbrMCMTjVyZvCC4hx/7yzr1qmDt0FUtDGz2wOYMslizPyvVR8roYpO/CA==
+X-Received: by 2002:a05:600c:8718:b0:42c:b4f2:7c30 with SMTP id 5b1f17b1804b1-42e7c1a2e78mr11881865e9.23.1726822729815;
+        Fri, 20 Sep 2024 01:58:49 -0700 (PDT)
 Received: from localhost (p200300f65f01db004d6a46a6454a1385.dip0.t-ipconnect.de. [2003:f6:5f01:db00:4d6a:46a6:454a:1385])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e754a6d46sm44247015e9.36.2024.09.20.01.58.45
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e754a6379sm43416545e9.35.2024.09.20.01.58.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2024 01:58:46 -0700 (PDT)
+        Fri, 20 Sep 2024 01:58:49 -0700 (PDT)
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 To: linux-pwm@vger.kernel.org
 Cc: Trevor Gamblin <tgamblin@baylibre.com>,
 	David Lechner <dlechner@baylibre.com>,
-	Kent Gibson <warthog618@gmail.com>,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 6/8] pwm: stm32: Implementation of the waveform callbacks
-Date: Fri, 20 Sep 2024 10:58:02 +0200
-Message-ID:  <332d4f736d8360038d03f109c013441c655eea23.1726819463.git.u.kleine-koenig@baylibre.com>
+	Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v5 7/8] pwm: Reorder symbols in core.c
+Date: Fri, 20 Sep 2024 10:58:03 +0200
+Message-ID:  <193b3d933294da34e020650bff93b778de46b1c5.1726819463.git.u.kleine-koenig@baylibre.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1726819463.git.u.kleine-koenig@baylibre.com>
 References: <cover.1726819463.git.u.kleine-koenig@baylibre.com>
@@ -90,649 +85,369 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=17361; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=Pt0gGq5PqUYKMJVbZTZGrF1lXLaJKbMjz12HL+NgmpE=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBm7TkkjaFdly+FWEFMq+p7KM5CxkHAVSu4QZw/Q 4VVeQPZBsKJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZu05JAAKCRCPgPtYfRL+ TgcMB/9ph0ze1nTTLt/8ZEG2/ErhswCZB1v6dq6MA9/BqURZygtPMHJ1SwMRZRHF/FMXHPJBRad PwXniMlcitUe2lzzoexbGvZqqdHioi/JFiM2m0qotHiIVc+RAJOeB1Dwk+richo66HYg6y1ntm3 6kLPb7XeI6yO7xagSYeHFCw6YRj+Mrxe0gw97BbFCmGvEXfS6Xy7lhPT0W7+PpFh4EbyltNtMRa UtZVGdmHDY5PAqCiM48lkOu4kDqAf24EQ19iczaUuXM+9OYVc+jmbFuwGjwbJXQQmezIEvuKkYc 0MC1p3A1Dzt3Yup2SmJ6+FSbmJ2d6ry5pClvPga0I6ygzLBQ
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8872; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=u1lBSyY6qYK+SxoNMoz1RD+fsFtj7+ZFHuzaV93Ce24=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBm7TknaHQg2Lhk52KXKNo1rq6kCrrKxw3agU7vg LmPJ41ZOWiJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZu05JwAKCRCPgPtYfRL+ Tt0cCACqfef4j6lanqubIi3MqQacVryZfFOk/JA11n8hQf+q95WcAgVYY+saCQE/wzQ4B64aNHg aPKQozUrzJQpZzGJ91iDwHmOF2QQbLQ4VWsVEH8877z+TU17tT7bH0lQo6c/XFgie07DMZYb+S+ RwOc5Pd4S3ysKu9YvrKqe+oWHopTkX9wD5st7UDC89WVfTuP9StPC6x0UJ/GZlpM5izNgeTu3I3 pLcZLjE1u+eg0vdpbe8Zo0FNpGy++ycmQqVRp/JX/O7vdt5v5FAP9rKAYuWPYCQbd6OCbyLub96 1rIedV1lC2jrmwMKH8FgxUM5QlNBTdaXaH2wwfExDm7+e8Xm
 X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-Convert the stm32 pwm driver to use the new callbacks for hardware
-programming.
+This moves pwm_get() and friends above the functions handling
+registration of pwmchips. The motivation is that character device
+support needs pwm_get() and pwm_put() and so ideally is defined below
+these and when a pwmchip is registered this registers the character
+device. So the natural order is
+
+	pwm_get() and friend
+	pwm character device symbols
+	pwm_chip functions
+
+. The advantage of having these in their natural order is that static
+functions don't need to be forward declared.
+
+Note that the diff that git produces for this change some functions are
+moved down instead. This is technically equivalent, but not how this
+change was created.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
 ---
- drivers/pwm/pwm-stm32.c | 612 +++++++++++++++++++++++++---------------
- 1 file changed, 391 insertions(+), 221 deletions(-)
+ drivers/pwm/core.c | 312 ++++++++++++++++++++++-----------------------
+ 1 file changed, 156 insertions(+), 156 deletions(-)
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index eb24054f9729..d2c1085aee74 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -51,6 +51,391 @@ static u32 active_channels(struct stm32_pwm *dev)
- 	return ccer & TIM_CCER_CCXE;
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index b688c72aba1f..ed620e35db61 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -1615,132 +1615,6 @@ static bool pwm_ops_check(const struct pwm_chip *chip)
+ 	return true;
  }
  
-+struct stm32_pwm_waveform {
-+	u32 ccer;
-+	u32 psc;
-+	u32 arr;
-+	u32 ccr;
-+};
-+
-+static int stm32_pwm_round_waveform_tohw(struct pwm_chip *chip,
-+					 struct pwm_device *pwm,
-+					 const struct pwm_waveform *wf,
-+					 void *_wfhw)
+-/**
+- * __pwmchip_add() - register a new PWM chip
+- * @chip: the PWM chip to add
+- * @owner: reference to the module providing the chip.
+- *
+- * Register a new PWM chip. @owner is supposed to be THIS_MODULE, use the
+- * pwmchip_add wrapper to do this right.
+- *
+- * Returns: 0 on success or a negative error code on failure.
+- */
+-int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
+-{
+-	int ret;
+-
+-	if (!chip || !pwmchip_parent(chip) || !chip->ops || !chip->npwm)
+-		return -EINVAL;
+-
+-	/*
+-	 * a struct pwm_chip must be allocated using (devm_)pwmchip_alloc,
+-	 * otherwise the embedded struct device might disappear too early
+-	 * resulting in memory corruption.
+-	 * Catch drivers that were not converted appropriately.
+-	 */
+-	if (!chip->uses_pwmchip_alloc)
+-		return -EINVAL;
+-
+-	if (!pwm_ops_check(chip))
+-		return -EINVAL;
+-
+-	chip->owner = owner;
+-
+-	if (chip->atomic)
+-		spin_lock_init(&chip->atomic_lock);
+-	else
+-		mutex_init(&chip->nonatomic_lock);
+-
+-	guard(mutex)(&pwm_lock);
+-
+-	ret = idr_alloc(&pwm_chips, chip, 0, 0, GFP_KERNEL);
+-	if (ret < 0)
+-		return ret;
+-
+-	chip->id = ret;
+-
+-	dev_set_name(&chip->dev, "pwmchip%u", chip->id);
+-
+-	if (IS_ENABLED(CONFIG_OF))
+-		of_pwmchip_add(chip);
+-
+-	scoped_guard(pwmchip, chip)
+-		chip->operational = true;
+-
+-	ret = device_add(&chip->dev);
+-	if (ret)
+-		goto err_device_add;
+-
+-	return 0;
+-
+-err_device_add:
+-	scoped_guard(pwmchip, chip)
+-		chip->operational = false;
+-
+-	if (IS_ENABLED(CONFIG_OF))
+-		of_pwmchip_remove(chip);
+-
+-	idr_remove(&pwm_chips, chip->id);
+-
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(__pwmchip_add);
+-
+-/**
+- * pwmchip_remove() - remove a PWM chip
+- * @chip: the PWM chip to remove
+- *
+- * Removes a PWM chip.
+- */
+-void pwmchip_remove(struct pwm_chip *chip)
+-{
+-	pwmchip_sysfs_unexport(chip);
+-
+-	scoped_guard(mutex, &pwm_lock) {
+-		unsigned int i;
+-
+-		scoped_guard(pwmchip, chip)
+-			chip->operational = false;
+-
+-		for (i = 0; i < chip->npwm; ++i) {
+-			struct pwm_device *pwm = &chip->pwms[i];
+-
+-			if (test_and_clear_bit(PWMF_REQUESTED, &pwm->flags)) {
+-				dev_warn(&chip->dev, "Freeing requested PWM #%u\n", i);
+-				if (pwm->chip->ops->free)
+-					pwm->chip->ops->free(pwm->chip, pwm);
+-			}
+-		}
+-
+-		if (IS_ENABLED(CONFIG_OF))
+-			of_pwmchip_remove(chip);
+-
+-		idr_remove(&pwm_chips, chip->id);
+-	}
+-
+-	device_del(&chip->dev);
+-}
+-EXPORT_SYMBOL_GPL(pwmchip_remove);
+-
+-static void devm_pwmchip_remove(void *data)
+-{
+-	struct pwm_chip *chip = data;
+-
+-	pwmchip_remove(chip);
+-}
+-
+-int __devm_pwmchip_add(struct device *dev, struct pwm_chip *chip, struct module *owner)
+-{
+-	int ret;
+-
+-	ret = __pwmchip_add(chip, owner);
+-	if (ret)
+-		return ret;
+-
+-	return devm_add_action_or_reset(dev, devm_pwmchip_remove, chip);
+-}
+-EXPORT_SYMBOL_GPL(__devm_pwmchip_add);
+-
+ static struct device_link *pwm_device_link_add(struct device *dev,
+ 					       struct pwm_device *pwm)
+ {
+@@ -1918,36 +1792,6 @@ static struct pwm_device *acpi_pwm_get(const struct fwnode_handle *fwnode)
+ static DEFINE_MUTEX(pwm_lookup_lock);
+ static LIST_HEAD(pwm_lookup_list);
+ 
+-/**
+- * pwm_add_table() - register PWM device consumers
+- * @table: array of consumers to register
+- * @num: number of consumers in table
+- */
+-void pwm_add_table(struct pwm_lookup *table, size_t num)
+-{
+-	guard(mutex)(&pwm_lookup_lock);
+-
+-	while (num--) {
+-		list_add_tail(&table->list, &pwm_lookup_list);
+-		table++;
+-	}
+-}
+-
+-/**
+- * pwm_remove_table() - unregister PWM device consumers
+- * @table: array of consumers to unregister
+- * @num: number of consumers in table
+- */
+-void pwm_remove_table(struct pwm_lookup *table, size_t num)
+-{
+-	guard(mutex)(&pwm_lookup_lock);
+-
+-	while (num--) {
+-		list_del(&table->list);
+-		table++;
+-	}
+-}
+-
+ /**
+  * pwm_get() - look up and request a PWM device
+  * @dev: device for PWM consumer
+@@ -2174,6 +2018,162 @@ struct pwm_device *devm_fwnode_pwm_get(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(devm_fwnode_pwm_get);
+ 
++/**
++ * __pwmchip_add() - register a new PWM chip
++ * @chip: the PWM chip to add
++ * @owner: reference to the module providing the chip.
++ *
++ * Register a new PWM chip. @owner is supposed to be THIS_MODULE, use the
++ * pwmchip_add wrapper to do this right.
++ *
++ * Returns: 0 on success or a negative error code on failure.
++ */
++int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
 +{
-+	struct stm32_pwm_waveform *wfhw = _wfhw;
-+	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
-+	unsigned int ch = pwm->hwpwm;
-+	unsigned long rate;
-+	u64 ccr, duty;
 +	int ret;
 +
-+	if (wf->period_length_ns == 0) {
-+		*wfhw = (struct stm32_pwm_waveform){
-+			.ccer = 0,
-+		};
++	if (!chip || !pwmchip_parent(chip) || !chip->ops || !chip->npwm)
++		return -EINVAL;
 +
-+		return 0;
-+	}
++	/*
++	 * a struct pwm_chip must be allocated using (devm_)pwmchip_alloc,
++	 * otherwise the embedded struct device might disappear too early
++	 * resulting in memory corruption.
++	 * Catch drivers that were not converted appropriately.
++	 */
++	if (!chip->uses_pwmchip_alloc)
++		return -EINVAL;
 +
-+	ret = clk_enable(priv->clk);
-+	if (ret)
++	if (!pwm_ops_check(chip))
++		return -EINVAL;
++
++	chip->owner = owner;
++
++	if (chip->atomic)
++		spin_lock_init(&chip->atomic_lock);
++	else
++		mutex_init(&chip->nonatomic_lock);
++
++	guard(mutex)(&pwm_lock);
++
++	ret = idr_alloc(&pwm_chips, chip, 0, 0, GFP_KERNEL);
++	if (ret < 0)
 +		return ret;
 +
-+	wfhw->ccer = TIM_CCER_CCxE(ch + 1);
-+	if (priv->have_complementary_output)
-+		wfhw->ccer = TIM_CCER_CCxNE(ch + 1);
++	chip->id = ret;
 +
-+	rate = clk_get_rate(priv->clk);
++	dev_set_name(&chip->dev, "pwmchip%u", chip->id);
 +
-+	if (active_channels(priv) & ~(1 << ch * 4)) {
-+		u64 arr;
++	if (IS_ENABLED(CONFIG_OF))
++		of_pwmchip_add(chip);
 +
-+		/*
-+		 * Other channels are already enabled, so the configured PSC and
-+		 * ARR must be used for this channel, too.
-+		 */
-+		ret = regmap_read(priv->regmap, TIM_PSC, &wfhw->psc);
-+		if (ret)
-+			goto out;
++	scoped_guard(pwmchip, chip)
++		chip->operational = true;
 +
-+		ret = regmap_read(priv->regmap, TIM_ARR, &wfhw->arr);
-+		if (ret)
-+			goto out;
-+
-+		/*
-+		 * calculate the best value for ARR for the given PSC, refuse if
-+		 * the resulting period gets bigger than the requested one.
-+		 */
-+		arr = mul_u64_u64_div_u64(wf->period_length_ns, rate,
-+					  (u64)NSEC_PER_SEC * (wfhw->psc + 1));
-+		if (arr <= wfhw->arr) {
-+			/*
-+			 * requested period is small than the currently
-+			 * configured and unchangable period, report back the smallest
-+			 * possible period, i.e. the current state; Initialize
-+			 * ccr to anything valid.
-+			 */
-+			wfhw->ccr = 0;
-+			ret = 1;
-+			goto out;
-+		}
-+
-+	} else {
-+		/*
-+		 * .probe() asserted that clk_get_rate() is not bigger than 1 GHz, so
-+		 * the calculations here won't overflow.
-+		 * First we need to find the minimal value for prescaler such that
-+		 *
-+		 *        period_ns * clkrate
-+		 *   ------------------------------ < max_arr + 1
-+		 *   NSEC_PER_SEC * (prescaler + 1)
-+		 *
-+		 * This equation is equivalent to
-+		 *
-+		 *        period_ns * clkrate
-+		 *   ---------------------------- < prescaler + 1
-+		 *   NSEC_PER_SEC * (max_arr + 1)
-+		 *
-+		 * Using integer division and knowing that the right hand side is
-+		 * integer, this is further equivalent to
-+		 *
-+		 *   (period_ns * clkrate) // (NSEC_PER_SEC * (max_arr + 1)) ≤ prescaler
-+		 */
-+		u64 psc = mul_u64_u64_div_u64(wf->period_length_ns, rate,
-+					      (u64)NSEC_PER_SEC * ((u64)priv->max_arr + 1));
-+		u64 arr;
-+
-+		wfhw->psc = min_t(u64, psc, MAX_TIM_PSC);
-+
-+		arr = mul_u64_u64_div_u64(wf->period_length_ns, rate,
-+					  (u64)NSEC_PER_SEC * (wfhw->psc + 1));
-+		if (!arr) {
-+			/*
-+			 * requested period is too small, report back the smallest
-+			 * possible period, i.e. ARR = 0. The only valid CCR
-+			 * value is then zero, too.
-+			 */
-+			wfhw->arr = 0;
-+			wfhw->ccr = 0;
-+			ret = 1;
-+			goto out;
-+		}
-+
-+		/*
-+		 * ARR is limited intentionally to values less than
-+		 * priv->max_arr to allow 100% duty cycle.
-+		 */
-+		wfhw->arr = min_t(u64, arr, priv->max_arr) - 1;
-+	}
-+
-+	duty = mul_u64_u64_div_u64(wf->duty_length_ns, rate,
-+				   (u64)NSEC_PER_SEC * (wfhw->psc + 1));
-+	duty = min_t(u64, duty, wfhw->arr + 1);
-+
-+	if (wf->duty_length_ns && wf->duty_offset_ns &&
-+	    wf->duty_length_ns + wf->duty_offset_ns >= wf->period_length_ns) {
-+		wfhw->ccer |= TIM_CCER_CCxP(ch + 1);
-+		if (priv->have_complementary_output)
-+			wfhw->ccer |= TIM_CCER_CCxNP(ch + 1);
-+
-+		ccr = wfhw->arr + 1 - duty;
-+	} else {
-+		ccr = duty;
-+	}
-+
-+	wfhw->ccr = min_t(u64, ccr, wfhw->arr + 1);
-+
-+	dev_dbg(&chip->dev, "pwm#%u: %lld/%lld [+%lld] @%lu -> CCER: %08x, PSC: %08x, ARR: %08x, CCR: %08x\n",
-+		pwm->hwpwm, wf->duty_length_ns, wf->period_length_ns, wf->duty_offset_ns,
-+		rate, wfhw->ccer, wfhw->psc, wfhw->arr, wfhw->ccr);
-+
-+out:
-+	clk_disable(priv->clk);
-+
-+	return ret;
-+}
-+
-+/*
-+ * This should be moved to lib/math/div64.c. Currently there are some changes
-+ * pending to mul_u64_u64_div_u64. Uwe will care for that when the dust settles.
-+ */
-+static u64 stm32_pwm_mul_u64_u64_div_u64_roundup(u64 a, u64 b, u64 c)
-+{
-+	u64 res = mul_u64_u64_div_u64(a, b, c);
-+	/* Those multiplications might overflow but it doesn't matter */
-+	u64 rem = a * b - c * res;
-+
-+	if (rem)
-+		res += 1;
-+
-+	return res;
-+}
-+
-+static int stm32_pwm_round_waveform_fromhw(struct pwm_chip *chip,
-+					   struct pwm_device *pwm,
-+					   const void *_wfhw,
-+					   struct pwm_waveform *wf)
-+{
-+	const struct stm32_pwm_waveform *wfhw = _wfhw;
-+	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
-+	unsigned int ch = pwm->hwpwm;
-+
-+	if (wfhw->ccer & TIM_CCER_CCxE(ch + 1)) {
-+		unsigned long rate = clk_get_rate(priv->clk);
-+		u64 ccr_ns;
-+
-+		/* The result doesn't overflow for rate >= 15259 */
-+		wf->period_length_ns = stm32_pwm_mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * (wfhw->arr + 1),
-+									     NSEC_PER_SEC, rate);
-+
-+		ccr_ns = stm32_pwm_mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * wfhw->ccr,
-+							       NSEC_PER_SEC, rate);
-+
-+		if (wfhw->ccer & TIM_CCER_CCxP(ch + 1)) {
-+			wf->duty_length_ns =
-+				stm32_pwm_mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * (wfhw->arr + 1 - wfhw->ccr),
-+								      NSEC_PER_SEC, rate);
-+
-+			wf->duty_offset_ns = ccr_ns;
-+		} else {
-+			wf->duty_length_ns = ccr_ns;
-+			wf->duty_offset_ns = 0;
-+		}
-+
-+		dev_dbg(&chip->dev, "pwm#%u: CCER: %08x, PSC: %08x, ARR: %08x, CCR: %08x @%lu -> %lld/%lld [+%lld]\n",
-+			pwm->hwpwm, wfhw->ccer, wfhw->psc, wfhw->arr, wfhw->ccr, rate,
-+			wf->duty_length_ns, wf->period_length_ns, wf->duty_offset_ns);
-+
-+	} else {
-+		*wf = (struct pwm_waveform){
-+			.period_length_ns = 0,
-+		};
-+	}
++	ret = device_add(&chip->dev);
++	if (ret)
++		goto err_device_add;
 +
 +	return 0;
-+}
 +
-+static int stm32_pwm_read_waveform(struct pwm_chip *chip,
-+				     struct pwm_device *pwm,
-+				     void *_wfhw)
-+{
-+	struct stm32_pwm_waveform *wfhw = _wfhw;
-+	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
-+	unsigned int ch = pwm->hwpwm;
-+	int ret;
++err_device_add:
++	scoped_guard(pwmchip, chip)
++		chip->operational = false;
 +
-+	ret = clk_enable(priv->clk);
-+	if (ret)
-+		return ret;
++	if (IS_ENABLED(CONFIG_OF))
++		of_pwmchip_remove(chip);
 +
-+	ret = regmap_read(priv->regmap, TIM_CCER, &wfhw->ccer);
-+	if (ret)
-+		goto out;
-+
-+	if (wfhw->ccer & TIM_CCER_CCxE(ch + 1)) {
-+		ret = regmap_read(priv->regmap, TIM_PSC, &wfhw->psc);
-+		if (ret)
-+			goto out;
-+
-+		ret = regmap_read(priv->regmap, TIM_ARR, &wfhw->arr);
-+		if (ret)
-+			goto out;
-+
-+		if (wfhw->arr == U32_MAX)
-+			wfhw->arr -= 1;
-+
-+		ret = regmap_read(priv->regmap, TIM_CCRx(ch + 1), &wfhw->ccr);
-+		if (ret)
-+			goto out;
-+
-+		if (wfhw->ccr > wfhw->arr + 1)
-+			wfhw->ccr = wfhw->arr + 1;
-+	}
-+
-+out:
-+	clk_disable(priv->clk);
++	idr_remove(&pwm_chips, chip->id);
 +
 +	return ret;
 +}
++EXPORT_SYMBOL_GPL(__pwmchip_add);
 +
-+static int stm32_pwm_write_waveform(struct pwm_chip *chip,
-+				      struct pwm_device *pwm,
-+				      const void *_wfhw)
++/**
++ * pwmchip_remove() - remove a PWM chip
++ * @chip: the PWM chip to remove
++ *
++ * Removes a PWM chip.
++ */
++void pwmchip_remove(struct pwm_chip *chip)
 +{
-+	const struct stm32_pwm_waveform *wfhw = _wfhw;
-+	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
-+	unsigned int ch = pwm->hwpwm;
++	pwmchip_sysfs_unexport(chip);
++
++	scoped_guard(mutex, &pwm_lock) {
++		unsigned int i;
++
++		scoped_guard(pwmchip, chip)
++			chip->operational = false;
++
++		for (i = 0; i < chip->npwm; ++i) {
++			struct pwm_device *pwm = &chip->pwms[i];
++
++			if (test_and_clear_bit(PWMF_REQUESTED, &pwm->flags)) {
++				dev_warn(&chip->dev, "Freeing requested PWM #%u\n", i);
++				if (pwm->chip->ops->free)
++					pwm->chip->ops->free(pwm->chip, pwm);
++			}
++		}
++
++		if (IS_ENABLED(CONFIG_OF))
++			of_pwmchip_remove(chip);
++
++		idr_remove(&pwm_chips, chip->id);
++	}
++
++	device_del(&chip->dev);
++}
++EXPORT_SYMBOL_GPL(pwmchip_remove);
++
++static void devm_pwmchip_remove(void *data)
++{
++	struct pwm_chip *chip = data;
++
++	pwmchip_remove(chip);
++}
++
++int __devm_pwmchip_add(struct device *dev, struct pwm_chip *chip, struct module *owner)
++{
 +	int ret;
 +
-+	ret = clk_enable(priv->clk);
++	ret = __pwmchip_add(chip, owner);
 +	if (ret)
 +		return ret;
 +
-+	if (wfhw->ccer & TIM_CCER_CCxE(ch + 1)) {
-+		u32 ccer, mask;
-+		unsigned int shift;
-+		u32 ccmr;
++	return devm_add_action_or_reset(dev, devm_pwmchip_remove, chip);
++}
++EXPORT_SYMBOL_GPL(__devm_pwmchip_add);
 +
-+		ret = regmap_read(priv->regmap, TIM_CCER, &ccer);
-+		if (ret)
-+			goto out;
++/**
++ * pwm_add_table() - register PWM device consumers
++ * @table: array of consumers to register
++ * @num: number of consumers in table
++ */
++void pwm_add_table(struct pwm_lookup *table, size_t num)
++{
++	guard(mutex)(&pwm_lookup_lock);
 +
-+		/* If there are other channels enabled, don't update PSC and ARR */
-+		if (ccer & ~TIM_CCER_CCxE(ch + 1) & TIM_CCER_CCXE) {
-+			u32 psc, arr;
-+
-+			ret = regmap_read(priv->regmap, TIM_PSC, &psc);
-+			if (ret)
-+				goto out;
-+
-+			if (psc != wfhw->psc) {
-+				ret = -EBUSY;
-+				goto out;
-+			}
-+
-+			regmap_read(priv->regmap, TIM_ARR, &arr);
-+			if (ret)
-+				goto out;
-+
-+			if (arr != wfhw->arr) {
-+				ret = -EBUSY;
-+				goto out;
-+			}
-+		} else {
-+			ret = regmap_write(priv->regmap, TIM_PSC, wfhw->psc);
-+			if (ret)
-+				goto out;
-+
-+			ret = regmap_write(priv->regmap, TIM_ARR, wfhw->arr);
-+			if (ret)
-+				goto out;
-+
-+			ret = regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE);
-+			if (ret)
-+				goto out;
-+
-+		}
-+
-+		/* set polarity */
-+		mask = TIM_CCER_CCxP(ch + 1) | TIM_CCER_CCxNP(ch + 1);
-+		ret = regmap_update_bits(priv->regmap, TIM_CCER, mask, wfhw->ccer);
-+		if (ret)
-+			goto out;
-+
-+		ret = regmap_write(priv->regmap, TIM_CCRx(ch + 1), wfhw->ccr);
-+		if (ret)
-+			goto out;
-+
-+		/* Configure output mode */
-+		shift = (ch & 0x1) * CCMR_CHANNEL_SHIFT;
-+		ccmr = (TIM_CCMR_PE | TIM_CCMR_M1) << shift;
-+		mask = CCMR_CHANNEL_MASK << shift;
-+
-+		if (ch < 2)
-+			ret = regmap_update_bits(priv->regmap, TIM_CCMR1, mask, ccmr);
-+		else
-+			ret = regmap_update_bits(priv->regmap, TIM_CCMR2, mask, ccmr);
-+		if (ret)
-+			goto out;
-+
-+		ret = regmap_set_bits(priv->regmap, TIM_BDTR, TIM_BDTR_MOE);
-+		if (ret)
-+			goto out;
-+
-+		if (!(ccer & TIM_CCER_CCxE(ch + 1))) {
-+			mask = TIM_CCER_CCxE(ch + 1) | TIM_CCER_CCxNE(ch + 1);
-+
-+			ret = clk_enable(priv->clk);
-+			if (ret)
-+				goto out;
-+
-+			ccer = (ccer & ~mask) | (wfhw->ccer & mask);
-+			regmap_write(priv->regmap, TIM_CCER, ccer);
-+
-+			/* Make sure that registers are updated */
-+			regmap_set_bits(priv->regmap, TIM_EGR, TIM_EGR_UG);
-+
-+			/* Enable controller */
-+			regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
-+		}
-+
-+	} else {
-+		/* disable channel */
-+		u32 mask, ccer;
-+
-+		mask = TIM_CCER_CCxE(ch + 1);
-+		if (priv->have_complementary_output)
-+			mask |= TIM_CCER_CCxNE(ch + 1);
-+
-+		ret = regmap_read(priv->regmap, TIM_CCER, &ccer);
-+		if (ret)
-+			goto out;
-+
-+		if (ccer & mask) {
-+			ccer = ccer & ~mask;
-+
-+			ret = regmap_write(priv->regmap, TIM_CCER, ccer);
-+			if (ret)
-+				goto out;
-+
-+			if (!(ccer & TIM_CCER_CCXE)) {
-+				/* When all channels are disabled, we can disable the controller */
-+				ret = regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
-+				if (ret)
-+					goto out;
-+			}
-+
-+			clk_disable(priv->clk);
-+		}
++	while (num--) {
++		list_add_tail(&table->list, &pwm_lookup_list);
++		table++;
 +	}
-+
-+out:
-+	clk_disable(priv->clk);
-+
-+	return ret;
 +}
 +
- #define TIM_CCER_CC12P (TIM_CCER_CC1P | TIM_CCER_CC2P)
- #define TIM_CCER_CC12E (TIM_CCER_CC1E | TIM_CCER_CC2E)
- #define TIM_CCER_CC34P (TIM_CCER_CC3P | TIM_CCER_CC4P)
-@@ -308,228 +693,13 @@ static int stm32_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
- 	return ret;
- }
- 
--static int stm32_pwm_config(struct stm32_pwm *priv, unsigned int ch,
--			    u64 duty_ns, u64 period_ns)
--{
--	unsigned long long prd, dty;
--	unsigned long long prescaler;
--	u32 ccmr, mask, shift;
--
--	/*
--	 * .probe() asserted that clk_get_rate() is not bigger than 1 GHz, so
--	 * the calculations here won't overflow.
--	 * First we need to find the minimal value for prescaler such that
--	 *
--	 *        period_ns * clkrate
--	 *   ------------------------------ < max_arr + 1
--	 *   NSEC_PER_SEC * (prescaler + 1)
--	 *
--	 * This equation is equivalent to
--	 *
--	 *        period_ns * clkrate
--	 *   ---------------------------- < prescaler + 1
--	 *   NSEC_PER_SEC * (max_arr + 1)
--	 *
--	 * Using integer division and knowing that the right hand side is
--	 * integer, this is further equivalent to
--	 *
--	 *   (period_ns * clkrate) // (NSEC_PER_SEC * (max_arr + 1)) ≤ prescaler
--	 */
--
--	prescaler = mul_u64_u64_div_u64(period_ns, clk_get_rate(priv->clk),
--					(u64)NSEC_PER_SEC * ((u64)priv->max_arr + 1));
--	if (prescaler > MAX_TIM_PSC)
--		return -EINVAL;
--
--	prd = mul_u64_u64_div_u64(period_ns, clk_get_rate(priv->clk),
--				  (u64)NSEC_PER_SEC * (prescaler + 1));
--	if (!prd)
--		return -EINVAL;
--
--	/*
--	 * All channels share the same prescaler and counter so when two
--	 * channels are active at the same time we can't change them
--	 */
--	if (active_channels(priv) & ~(1 << ch * 4)) {
--		u32 psc, arr;
--
--		regmap_read(priv->regmap, TIM_PSC, &psc);
--		regmap_read(priv->regmap, TIM_ARR, &arr);
--
--		if ((psc != prescaler) || (arr != prd - 1))
--			return -EBUSY;
--	}
--
--	regmap_write(priv->regmap, TIM_PSC, prescaler);
--	regmap_write(priv->regmap, TIM_ARR, prd - 1);
--	regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE);
--
--	/* Calculate the duty cycles */
--	dty = mul_u64_u64_div_u64(duty_ns, clk_get_rate(priv->clk),
--				  (u64)NSEC_PER_SEC * (prescaler + 1));
--
--	regmap_write(priv->regmap, TIM_CCRx(ch + 1), dty);
--
--	/* Configure output mode */
--	shift = (ch & 0x1) * CCMR_CHANNEL_SHIFT;
--	ccmr = (TIM_CCMR_PE | TIM_CCMR_M1) << shift;
--	mask = CCMR_CHANNEL_MASK << shift;
--
--	if (ch < 2)
--		regmap_update_bits(priv->regmap, TIM_CCMR1, mask, ccmr);
--	else
--		regmap_update_bits(priv->regmap, TIM_CCMR2, mask, ccmr);
--
--	regmap_set_bits(priv->regmap, TIM_BDTR, TIM_BDTR_MOE);
--
--	return 0;
--}
--
--static int stm32_pwm_set_polarity(struct stm32_pwm *priv, unsigned int ch,
--				  enum pwm_polarity polarity)
--{
--	u32 mask;
--
--	mask = TIM_CCER_CCxP(ch + 1);
--	if (priv->have_complementary_output)
--		mask |= TIM_CCER_CCxNP(ch + 1);
--
--	regmap_update_bits(priv->regmap, TIM_CCER, mask,
--			   polarity == PWM_POLARITY_NORMAL ? 0 : mask);
--
--	return 0;
--}
--
--static int stm32_pwm_enable(struct stm32_pwm *priv, unsigned int ch)
--{
--	u32 mask;
--	int ret;
--
--	ret = clk_enable(priv->clk);
--	if (ret)
--		return ret;
--
--	/* Enable channel */
--	mask = TIM_CCER_CCxE(ch + 1);
--	if (priv->have_complementary_output)
--		mask |= TIM_CCER_CCxNE(ch + 1);
--
--	regmap_set_bits(priv->regmap, TIM_CCER, mask);
--
--	/* Make sure that registers are updated */
--	regmap_set_bits(priv->regmap, TIM_EGR, TIM_EGR_UG);
--
--	/* Enable controller */
--	regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
--
--	return 0;
--}
--
--static void stm32_pwm_disable(struct stm32_pwm *priv, unsigned int ch)
--{
--	u32 mask;
--
--	/* Disable channel */
--	mask = TIM_CCER_CCxE(ch + 1);
--	if (priv->have_complementary_output)
--		mask |= TIM_CCER_CCxNE(ch + 1);
--
--	regmap_clear_bits(priv->regmap, TIM_CCER, mask);
--
--	/* When all channels are disabled, we can disable the controller */
--	if (!active_channels(priv))
--		regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
--
--	clk_disable(priv->clk);
--}
--
--static int stm32_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
--			   const struct pwm_state *state)
--{
--	bool enabled;
--	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
--	int ret;
--
--	enabled = pwm->state.enabled;
--
--	if (!state->enabled) {
--		if (enabled)
--			stm32_pwm_disable(priv, pwm->hwpwm);
--		return 0;
--	}
--
--	if (state->polarity != pwm->state.polarity)
--		stm32_pwm_set_polarity(priv, pwm->hwpwm, state->polarity);
--
--	ret = stm32_pwm_config(priv, pwm->hwpwm,
--			       state->duty_cycle, state->period);
--	if (ret)
--		return ret;
--
--	if (!enabled && state->enabled)
--		ret = stm32_pwm_enable(priv, pwm->hwpwm);
--
--	return ret;
--}
--
--static int stm32_pwm_apply_locked(struct pwm_chip *chip, struct pwm_device *pwm,
--				  const struct pwm_state *state)
--{
--	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
--	int ret;
--
--	/* protect common prescaler for all active channels */
--	mutex_lock(&priv->lock);
--	ret = stm32_pwm_apply(chip, pwm, state);
--	mutex_unlock(&priv->lock);
--
--	return ret;
--}
--
--static int stm32_pwm_get_state(struct pwm_chip *chip,
--			       struct pwm_device *pwm, struct pwm_state *state)
--{
--	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
--	int ch = pwm->hwpwm;
--	unsigned long rate;
--	u32 ccer, psc, arr, ccr;
--	u64 dty, prd;
--	int ret;
--
--	mutex_lock(&priv->lock);
--
--	ret = regmap_read(priv->regmap, TIM_CCER, &ccer);
--	if (ret)
--		goto out;
--
--	state->enabled = ccer & TIM_CCER_CCxE(ch + 1);
--	state->polarity = (ccer & TIM_CCER_CCxP(ch + 1)) ?
--			  PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
--	ret = regmap_read(priv->regmap, TIM_PSC, &psc);
--	if (ret)
--		goto out;
--	ret = regmap_read(priv->regmap, TIM_ARR, &arr);
--	if (ret)
--		goto out;
--	ret = regmap_read(priv->regmap, TIM_CCRx(ch + 1), &ccr);
--	if (ret)
--		goto out;
--
--	rate = clk_get_rate(priv->clk);
--
--	prd = (u64)NSEC_PER_SEC * (psc + 1) * (arr + 1);
--	state->period = DIV_ROUND_UP_ULL(prd, rate);
--	dty = (u64)NSEC_PER_SEC * (psc + 1) * ccr;
--	state->duty_cycle = DIV_ROUND_UP_ULL(dty, rate);
--
--out:
--	mutex_unlock(&priv->lock);
--	return ret;
--}
--
- static const struct pwm_ops stm32pwm_ops = {
--	.apply = stm32_pwm_apply_locked,
--	.get_state = stm32_pwm_get_state,
-+	.sizeof_wfhw = sizeof(struct stm32_pwm_waveform),
-+	.round_waveform_tohw = stm32_pwm_round_waveform_tohw,
-+	.round_waveform_fromhw = stm32_pwm_round_waveform_fromhw,
-+	.read_waveform = stm32_pwm_read_waveform,
-+	.write_waveform = stm32_pwm_write_waveform,
++/**
++ * pwm_remove_table() - unregister PWM device consumers
++ * @table: array of consumers to unregister
++ * @num: number of consumers in table
++ */
++void pwm_remove_table(struct pwm_lookup *table, size_t num)
++{
++	guard(mutex)(&pwm_lookup_lock);
 +
- 	.capture = IS_ENABLED(CONFIG_DMA_ENGINE) ? stm32_pwm_capture : NULL,
- };
- 
++	while (num--) {
++		list_del(&table->list);
++		table++;
++	}
++}
++
+ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
+ {
+ 	unsigned int i;
 -- 
 2.45.2
 
