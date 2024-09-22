@@ -1,246 +1,114 @@
-Return-Path: <linux-pwm+bounces-3320-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3321-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C365397DF5A
-	for <lists+linux-pwm@lfdr.de>; Sun, 22 Sep 2024 00:19:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 989BC97E323
+	for <lists+linux-pwm@lfdr.de>; Sun, 22 Sep 2024 22:14:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 527041F2168B
-	for <lists+linux-pwm@lfdr.de>; Sat, 21 Sep 2024 22:19:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41D1D1F210E5
+	for <lists+linux-pwm@lfdr.de>; Sun, 22 Sep 2024 20:14:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39B5C153BF8;
-	Sat, 21 Sep 2024 22:19:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3941636124;
+	Sun, 22 Sep 2024 20:14:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LKtEWDwW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cIGwx6sK"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE3A257B;
-	Sat, 21 Sep 2024 22:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBAD405C9
+	for <linux-pwm@vger.kernel.org>; Sun, 22 Sep 2024 20:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726957150; cv=none; b=ofVB5E05CAQFnvGlewBw4hBzEFvFydPLgfWbjvOeueYanQicOevdyDayJPMzmVTkX2vEMIf90CFqGvXr6+l1nd6XEUbizuhsy3kIRhoNN90hpK0QhFlYCTBkcIYTALBvuz/ZO89OgFmfceH9ztia6g+55hIX/socQgocdg+WDSU=
+	t=1727036064; cv=none; b=L3Qgn2OLKsMNXBaw7n4xjFgFUZTF+AJYiPtbazxI8FIzDzVO/iYZ+eJHCDf9yxr8ebhsfduzVXgRXD1fap/McYnofg4GrIYL0X5mvQy5LqiK6f6yDA7EKshwo8t9U36GPT3m0/Ti6IYd9qGULgmafquDtsAT8y05CFcLgOD8AWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726957150; c=relaxed/simple;
-	bh=kfR14K5vrihyjIzfXPTU8e1xRsbb7EB2RB9CxAyKGns=;
+	s=arc-20240116; t=1727036064; c=relaxed/simple;
+	bh=US1Fcoz+Y1LQZL0oT9Tl/6knfi8gDalPGn1nY8wLJEI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uGR7lScVjz2isv/QhoSWV3GNZ0dbrKs2Rg2Cic/IFKjTF2EYbQbWzCbnM53/jqhtO5nhjeFpYb2hKZiVup6nGkl0jieQxgB8hQr1GCUh2Cwf646CbN2ChwlAeOHykl2rqarelBxzJLEnKO+h/VBHIVbTT7tubgZiDNerwDHUCnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LKtEWDwW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A88C4CEC2;
-	Sat, 21 Sep 2024 22:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726957149;
-	bh=kfR14K5vrihyjIzfXPTU8e1xRsbb7EB2RB9CxAyKGns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LKtEWDwWofb5y/OGX5gOxNGrMyVa8YcbIRHQu6UCj/KmRABpTVAnFHfdEFHEA9Fkf
-	 lyjBml+k7UppNw7slrDXufzcHG1EPQp3u9rhVpAOgqC/6eG4atC+4WKx7SjqbjqNN6
-	 8+PGvpylJ11aa4N44u7wkfDlkAzkaFOFcP2gSg9koZ0D7hBvaR8dyI8bB7rae9G3tW
-	 ++dUzQjreatME31JfJIqy/QdGbzYOC7twHAP5o1cY60yVp7G0jdyg/KOxJqGV5BUDt
-	 gOAo6LJHyX6W9hSlju+mYoF1vbWgIWumSOdP0ANHlqeGx6VxVcDdWpaZAmk6/yepUx
-	 bw10rLBy2IblQ==
-Date: Sat, 21 Sep 2024 23:19:03 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Guillaume Stols <gstols@baylibre.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Michal Marek <mmarek@suse.com>,
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-	aardelean@baylibre.com, dlechner@baylibre.com,
-	jstephan@baylibre.com
-Subject: Re: [PATCH v2 03/10] dt-bindings: iio: adc: ad7606: Add iio backend
- bindings
-Message-ID: <20240921-charter-grouped-9f77e0a640a0@spud>
-References: <20240920-ad7606_add_iio_backend_support-v2-0-0e78782ae7d0@baylibre.com>
- <20240920-ad7606_add_iio_backend_support-v2-3-0e78782ae7d0@baylibre.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yvn0telNNp5g7dJPIlStkp1TCifpCiJdEXgM3jbLGmoitATJ3gyZrGR79otWifgl9CPvlNXFeIL9ITVQUHIheq+6YK/8CWnrMH4icdwmmsygsPtQXl8YnXtc22lLhdcSjWnwFNh9JWEHzgetpbE6lCe9m8kyPUml2PcAEmKJf+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cIGwx6sK; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5356ab89665so4363204e87.1
+        for <linux-pwm@vger.kernel.org>; Sun, 22 Sep 2024 13:14:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1727036060; x=1727640860; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hXnO0dAhio8cKR7ZLjPPkbdRt1uauj4aZsdYTjUljaA=;
+        b=cIGwx6sKn4aTrX1mPY8h2GLuza5SoPVzx4RStj/NpUD69Vyt97VSiXnpyI+KGbWrAC
+         1+kz113mD7Od+5BODUDxPSuJd0nNofo2h7JzZyybvRjSZ5+QpqCExe+SvzdRTxm90Nc8
+         FCRru/4aoAJw1rBrJIql8a94C5RpR1ffY84aSCPOst4yXICP2unQdml4RKCmaafIWUnO
+         Oe6r2s3imh0/4NtDhsasHkh+jN25uiRo2h6dZwTF9eqPUYkqdiqP8mdAZuvXzgkQanuD
+         DzNt3yZBarvgYu4vG4OFeRdjIERrc1UXdG1Pkc1oxsSmf2NC8oHAm+N7QeUa8S6vCLrJ
+         tovA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727036060; x=1727640860;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hXnO0dAhio8cKR7ZLjPPkbdRt1uauj4aZsdYTjUljaA=;
+        b=beXjZ2kMaNiJUvYU3hRmrBZYf8qxw9yXjiHCT9/HV7phDi49qaP9PpGQ2HcygPv5cf
+         uuwWqu/0YqchK8uOxy3skuWTvxgxVWYMstAEnIp686cVzAUCYmvdAeMFSOeGU2NfEe/i
+         Ikka8KYCWD+ZF6vHTacxeZ2p9cYYWtBAhoTCX9Adbdrf8QrrAkTchcMZPqvH6WTzQS83
+         JBCn9YzqYrvOKgFAsd6QcG9x3lDb4HcHD6P6rZo1dPh25wReTuHyePGPwbQUHKNLuuzQ
+         3zAImXCIBGwaiK/HcOIhSlq1bBN0z/pn6830/ewJmK0C0Qgzvy4nWAVzQADWBVcLtXTu
+         ZE6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVw2OD65+C+ZL4uHy7b5Eiwy7Y7OynlCOTkCuP0aHhabERRpPMt0yjyTG2hodmSGAs+/57tQoycwPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqiiyDG2uslHRt/2HpZQS6Oh3Vtcgnw4nHLWP11OTqqf2CNBUx
+	8TTtlTKWjnSMWTzNFoBkWqA5fCTzrDHDSCCjqe2EStVaUOT/L7zIeewbvxARLjw=
+X-Google-Smtp-Source: AGHT+IHNntfHeoqZClLotGkHewiODZdHeP2Ru6UbyB/4XkBdQbNOsyJ6quJdr+0d7MsOdO94wbCHTg==
+X-Received: by 2002:a05:6512:3f04:b0:52c:e1cd:39b7 with SMTP id 2adb3069b0e04-536acf6a527mr4485424e87.5.1727036059628;
+        Sun, 22 Sep 2024 13:14:19 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5368704665bsm3052672e87.55.2024.09.22.13.14.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Sep 2024 13:14:19 -0700 (PDT)
+Date: Sun, 22 Sep 2024 23:14:17 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Alex Lanzano <lanzano.alex@gmail.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Mehdi Djait <mehdi.djait@bootlin.com>, 
+	christophe.jaillet@wanadoo.fr, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] drm/tiny: Add driver for Sharp Memory LCD
+Message-ID: <5brnhm3yqqbsnukllo4l53ohaeqmxum53mwq7dme74ny5dsnjq@shjoravp6beg>
+References: <20240905124432.834831-3-lanzano.alex@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="/E6hod+IHxfXaUGB"
-Content-Disposition: inline
-In-Reply-To: <20240920-ad7606_add_iio_backend_support-v2-3-0e78782ae7d0@baylibre.com>
-
-
---/E6hod+IHxfXaUGB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240905124432.834831-3-lanzano.alex@gmail.com>
 
-On Fri, Sep 20, 2024 at 05:33:23PM +0000, Guillaume Stols wrote:
-> Add the required properties for iio-backend support, as well as an
-> example and the conditions to mutually exclude interruption and
-> conversion trigger with iio-backend.
-> The iio-backend's function is to controls the communication, and thus the
-> interruption pin won't be available anymore.
-> As a consequence, the conversion pin must be controlled externally since
-> we will miss information about when every single conversion cycle (i.e
-> conversion + data transfer) ends, hence a PWM is introduced to trigger
-> the conversions.
->=20
-> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+On Thu, Sep 05, 2024 at 08:44:00AM GMT, Alex Lanzano wrote:
+> Add support for the monochrome Sharp Memory LCDs.
+> 
+> Co-developed-by: Mehdi Djait <mehdi.djait@bootlin.com>
+> Signed-off-by: Mehdi Djait <mehdi.djait@bootlin.com>
+> Signed-off-by: Alex Lanzano <lanzano.alex@gmail.com>
 > ---
->  .../devicetree/bindings/iio/adc/adi,ad7606.yaml    | 76 ++++++++++++++++=
-+++++-
->  1 file changed, 74 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> index 12995ebcddc2..74a8680904b1 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> @@ -118,13 +118,32 @@ properties:
->        this property must be defined.
->      type: boolean
-> =20
-> +  pwms:
-> +    description:
-> +      In case the conversion is triggered by a PWM instead of a GPIO plu=
-gged to
-> +      the CONVST pin, the PWM must be referenced.
-> +    minItems: 1
-> +    maxItems: 2
+>  MAINTAINERS                         |   6 +
+>  drivers/gpu/drm/tiny/Kconfig        |  20 +
+>  drivers/gpu/drm/tiny/Makefile       |   1 +
+>  drivers/gpu/drm/tiny/sharp-memory.c | 682 ++++++++++++++++++++++++++++
+>  4 files changed, 709 insertions(+)
+>  create mode 100644 drivers/gpu/drm/tiny/sharp-memory.c
 
-Please use an items list to describe what each item is, rather than
-doing so in the pwm-names description below.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-> +
-> +  pwm-names:
-> +    description:
-> +      The name of each PWM, the first is connected to CONVST, and the se=
-cond is
-> +      connected to CONVST2 if CONVST2 is available and not connected to =
-CONVST1.
-> +    minItems: 1
-> +    maxItems: 2
+Please sort out the review tags for dt bindings (either as a v7 or as a
+reply to the corresponding patch). Then the series can be applied.
 
-You need to define what the names actually are, otherwise you have no
-ABI.
-
-Cheers,
-Conor.
-
-> +
-> +  io-backends:
-> +    description:
-> +      A reference to the iio-backend, which is responsible handling the =
-BUSY
-> +      pin's falling edge and communication.
-> +      An example of backend can be found at
-> +      http://analogdevicesinc.github.io/hdl/library/axi_ad7606x/index.ht=
-ml
-> +
->  required:
->    - compatible
->    - reg
->    - avcc-supply
->    - vdrive-supply
-> -  - interrupts
-> -  - adi,conversion-start-gpios
-> =20
->  oneOf:
->    - required:
-> @@ -138,6 +157,34 @@ oneOf:
->            - spi-cpol
-> =20
->  allOf:
-> +  - if:
-> +      properties:
-> +        pwms: false
-> +    then:
-> +      required:
-> +        - adi,conversion-start-gpios
-> +
-> +  - if:
-> +      properties:
-> +        adi,conversion-start-gpios: false
-> +    then:
-> +      required:
-> +        - pwms
-> +
-> +  - if:
-> +      properties:
-> +        interrupts: false
-> +    then:
-> +      required:
-> +        - io-backends
-> +
-> +  - if:
-> +      properties:
-> +        io-backends: false
-> +    then:
-> +      required:
-> +        - interrupts
-> +
->    - if:
->        properties:
->          compatible:
-> @@ -179,12 +226,37 @@ allOf:
->          adi,sw-mode: false
->      else:
->        properties:
-> +        pwms:
-> +          maxItems: 1
-> +        pwm-names:
-> +          maxItems: 1
->          adi,conversion-start-gpios:
->            maxItems: 1
-> =20
->  unevaluatedProperties: false
-> =20
->  examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    / {
-> +        adi_adc {
-> +            compatible =3D "adi,ad7606b";
-> +            parallel-interface;
-> +            pwms =3D <&axi_pwm_gen 0 0>;
-> +
-> +            avcc-supply =3D <&adc_vref>;
-> +            vdrive-supply =3D <&vdd_supply>;
-> +
-> +            reset-gpios =3D <&gpio0 91 GPIO_ACTIVE_HIGH>;
-> +            standby-gpios =3D <&gpio0 90 GPIO_ACTIVE_LOW>;
-> +            adi,range-gpios =3D <&gpio0 89 GPIO_ACTIVE_HIGH>;
-> +            adi,oversampling-ratio-gpios =3D <&gpio0 88 GPIO_ACTIVE_HIGH
-> +                                            &gpio0 87 GPIO_ACTIVE_HIGH
-> +                                            &gpio0 86 GPIO_ACTIVE_HIGH>;
-> +            io-backends =3D <&iio_backend>;
-> +        };
-> +    };
-> +
->    - |
->      #include <dt-bindings/gpio/gpio.h>
->      #include <dt-bindings/interrupt-controller/irq.h>
->=20
-> --=20
-> 2.34.1
->=20
-
---/E6hod+IHxfXaUGB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZu9GVwAKCRB4tDGHoIJi
-0sp1AP9PpuRy60rPk9JYWnURXlbuDdPob0rbthuXpOdAIPJZewD/bmxcvaFLN3N6
-mVszPN0fIfm39hSecA50i4isHCxlTwA=
-=cklL
------END PGP SIGNATURE-----
-
---/E6hod+IHxfXaUGB--
+-- 
+With best wishes
+Dmitry
 
