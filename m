@@ -1,118 +1,116 @@
-Return-Path: <linux-pwm+bounces-3323-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3324-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E918A97E4D3
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2024 04:37:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5963897E79D
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2024 10:35:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6EA1281085
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2024 02:37:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8B0C01C21264
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2024 08:35:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B7461FA5;
-	Mon, 23 Sep 2024 02:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1C7319408C;
+	Mon, 23 Sep 2024 08:35:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0Gcnp8M"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YmPukJah"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA22184;
-	Mon, 23 Sep 2024 02:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB3B19342D
+	for <linux-pwm@vger.kernel.org>; Mon, 23 Sep 2024 08:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727059046; cv=none; b=uoFUnSwWTLAlsnfk2isIIq1DSJPHaaeMHJrjqf473ilTLAL1N48Pn+xaqcqD6SDIqAxO2ingenDD6hcvpm23oNRyJQWTHHaRflEqd44A2gr2WZcwE1dwfWMYVK16oi+RQYrJvu2oo+AAUX1NgeXoSDjeRMcvJdyJFaocLwMvP7Y=
+	t=1727080506; cv=none; b=p0bGH6xa7X7zHua77fpSGvj+yJQ72lS+Lh/vZWWbGer/jyTsLYZQ1NojMQEK058OZL0lcRrehZjNXMuefuP/nlIS5MhICcjeTcmt+bHY0OULb/tTtVmd0kPp9chZjYJ0UiZxZy6+qAqTZHELj/kuFEGDJ0+FyQU1UW2G32pkf9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727059046; c=relaxed/simple;
-	bh=Ciikf128OS0hgTBt14xTPCABhuz2zFT9Q7RLcouaqOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TPXUFcWrdCQ7K4oifAFBQ26eWEfWwvIMva6OxCXAsTuJUZF9Xf2kCVJ8Jv1JqNj454YZUsJjetcdBfTC+pxQrYkbiUMV4j2yHa18DKZ4toBhFJzTH1lViKnd7kesFDYRwvf8b3aLDpD6GLZ/LYjO6pQYg5bG/Ax8sIcu24hhk9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0Gcnp8M; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6c35334dfb1so26274216d6.0;
-        Sun, 22 Sep 2024 19:37:24 -0700 (PDT)
+	s=arc-20240116; t=1727080506; c=relaxed/simple;
+	bh=WCn0BjX16f0sbfaNXaV5vArZJvaoV0TjIkATMCuqyzc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f7zRW28FIzKnz8vfwl/S+YozZlJ/V+LjtMRXcU8+bsqtuwk1Qw5ew+km19wFiKpqzSg6Xk0h84DFc/PJWqDjCp3nhWQJu0e6co2drsiv8eHRhoVwruCf7GdGq8GVAmaNGdXMEpIS+cmHqcCB4mvv8k22a7krpAz3oxNvRzrEN/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YmPukJah; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2f761461150so45355981fa.0
+        for <linux-pwm@vger.kernel.org>; Mon, 23 Sep 2024 01:35:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727059044; x=1727663844; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VIqzX0FBqD/ZNeBFpuyexZ2T62Ip7J8jtfwLOqLZqmY=;
-        b=T0Gcnp8M9mK18AtDhp2o1LPMI6vX8h471JGje8oGCfwsZjPHn+abuODZ84+B5Nim8X
-         I7+nlhaTf65YAwsxGhMVhPjJp9zHNOmrqV8UDaWbl+gqbJHGnRtNijHjvNPfN0NbRUYQ
-         g01bQSm2KFXREFZCY+6ftRoq9WNChkxBZa4cwdiLDITHTRPuxvbLnR0nldQBPPZTvvyM
-         ioCCBdVf5B3m9jfhDExGB4ObROdVvSduyA1nBfn6fCMu1ogQZ8xvLsi7WhU+FwFRAU5T
-         PP7oUa/mDyoatxn1GxdcLP53XSxXRXSj09WVJrAlTFJ9tV/bh8mb10CbgTUHb+OawLcA
-         FsRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727059044; x=1727663844;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727080503; x=1727685303; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VIqzX0FBqD/ZNeBFpuyexZ2T62Ip7J8jtfwLOqLZqmY=;
-        b=tsk+LHVuHt0A+LSxp4AGOXdw5yElGNgsmlYYQWWveP9USpqxF8Ew66lWSkz/qexOFL
-         KZmL9+1rpvyopq3CmO1v+KF6yF6T5vvys8tTLa86Wn9miZBpLDlvRirJlWQtPZAyl9ww
-         lRqzZ5SmnR8bYVm/1Yn2ImpegZ8sq4zHGgxdG4+6hKPhWAFadyTX1/ubD50MSSx1dF+L
-         9E0aydHzC14IKgXtJBIF+hkXg3/tzDt0JqPvDdlU1CEVCifzENmFx+qApz7xN1JquW7E
-         j8HkPloC7Mdt5wjsb+TSxPon6IX13CtdLnn6+Hj3+b8RsVKUYKXwNr4JrnSS9sO/g1FK
-         7rZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcPtAbhKJyRoj4wAl4iKF2QZMP7VvLV1MiXppLgDA6Frnfij9HlhIYSttdnXdq1z045jY7PS6wXmn0@vger.kernel.org, AJvYcCV+zFkKTDMQZvF5i+pDiyudPGnj4NPaYHWcFmyH/bPdYAoWvAh7r0lkyYO79eUg5j6dL9v+RNZqcuyT@vger.kernel.org, AJvYcCXc4fHv4oHpzOSXHs8wbnUfqzlSU64zBtL7UZIU83A4KLIXRpzeUIiaoyU39Ni6FFZ2MRM0Jgc+dDcIXzas@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkjecJpw7D/HaIHp5roq9pGhLe3CnHDn6H6Cea6f28omP6Gaci
-	DW/5JVD4YUY4Qd92+mBlXvJl7SLGEYeMU2VioQCqDwgA34iQYAKuvFS8R9+T
-X-Google-Smtp-Source: AGHT+IE+mYw96iWRcnEj8dIXoH9CWm44dytWYvziov5CUGy0gWmSkBVDokP8NrxBtb+/rO6CisPuug==
-X-Received: by 2002:a05:6214:3904:b0:6c7:c81a:690f with SMTP id 6a1803df08f44-6c7c81a6970mr133771536d6.7.1727059043749;
-        Sun, 22 Sep 2024 19:37:23 -0700 (PDT)
-Received: from VM-Arch (ool-1826d901.dyn.optonline.net. [24.38.217.1])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c75e557a79sm42696686d6.76.2024.09.22.19.37.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Sep 2024 19:37:22 -0700 (PDT)
-Date: Sun, 22 Sep 2024 22:37:19 -0400
-From: Alex Lanzano <lanzano.alex@gmail.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Mehdi Djait <mehdi.djait@bootlin.com>, 
-	christophe.jaillet@wanadoo.fr, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] drm/tiny: Add driver for Sharp Memory LCD
-Message-ID: <mm52ohzvg6v2ggnlzin5i2bofuustwpmjhwtd23yyak3wv4ivt@z642uzexaumy>
-References: <20240905124432.834831-3-lanzano.alex@gmail.com>
- <5brnhm3yqqbsnukllo4l53ohaeqmxum53mwq7dme74ny5dsnjq@shjoravp6beg>
+        bh=WCn0BjX16f0sbfaNXaV5vArZJvaoV0TjIkATMCuqyzc=;
+        b=YmPukJahIBWJ4D4MaecjXhemlkGwS2BQFoTIMwpY5qBktTKhdxV6pC7JK9D3Kbm7Qj
+         4Ye7Lu3iMOEXaH5tIIAnozRmSFvUzKPv/hQzZY6UkFVGsTJPbYrGx8D2NhJa5TDeG1o0
+         03yPubG8wZq18S+xZewQWlDNUl2Gr9/WoRkexoq34VQHHOIZiCv//i4+FhIOW//dnBJb
+         e9bPsSvfcNh2N6VnUNVSM26N6hLcFdg+421bZfqqs3LfLxR3hXJvr9THWu9rIpiG4q5T
+         dmqNxpR0WUSpbyuYqRJlNiAxWxiPNHxCXuPKpelwC9+DUAPXEW4+7n4o0YndBqNPfZag
+         WLyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727080503; x=1727685303;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WCn0BjX16f0sbfaNXaV5vArZJvaoV0TjIkATMCuqyzc=;
+        b=uSDZIwsDJBP9oSfUwbRt9ZZP6uE0sYv1RbgT4WROv+NcIz9agWcK9Wck8E7tVB8Dsq
+         EzlkxEmeMOFJuBF98tR/hR8XXjyHkPJySY3c3jQPMpKd7nPC2goJsripskaXESfrCL8z
+         Ll/OkuU7aTMxDQtjVytgh68tFr1X8ttnC+KQnfSV+FpJuAcGzdGNnLCeDBGeFW5tcNXh
+         nrtLGjTuizUPSxU3mocC573gBYz8fu6ZEUKt4tPmQ+mYnd+nsRuNYKo2hl2fEI3rN76o
+         kzvA80i05uMqLmCxlcInEaNbk3v6CneQZNeD04wKtimGapcR1ueJxnsfma6tMt8dIJzF
+         XKSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW67i8r2NUkFioCk58bhbVezWuw7ePUrD2gvGNa6h7a838GsLPbcbD8QgquCNuk5J4p4obxWzJNpX0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY/vHnuKbqK8Bes1CY91ijaFEi2kR52MrxvcbB6mpADQjh7xmF
+	MA6TvEbMG4B/KBv9VWMPpuhbc5wRVeWVF0v/vEle4lGKh5ACWZ1McXkoBub4LkRwES+E5WvpazE
+	BtEZ/2LAptAKYLTnqkE4+bDV0sHajlGwEoWURyA==
+X-Google-Smtp-Source: AGHT+IGB0HmD4yUCXfyiEGHZvou7JbCti99d3PK2v6+1ygu6PUNxbcxYam6wZ0jMVxzgb9p/QjTuS1exJPMjEaQahlc=
+X-Received: by 2002:a05:651c:1543:b0:2f7:c7f3:1d2e with SMTP id
+ 38308e7fff4ca-2f7cb31c4e8mr59626701fa.19.1727080502814; Mon, 23 Sep 2024
+ 01:35:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5brnhm3yqqbsnukllo4l53ohaeqmxum53mwq7dme74ny5dsnjq@shjoravp6beg>
+References: <20240920-ad7606_add_iio_backend_support-v2-0-0e78782ae7d0@baylibre.com>
+ <20240920-ad7606_add_iio_backend_support-v2-10-0e78782ae7d0@baylibre.com>
+In-Reply-To: <20240920-ad7606_add_iio_backend_support-v2-10-0e78782ae7d0@baylibre.com>
+From: David Lechner <dlechner@baylibre.com>
+Date: Mon, 23 Sep 2024 10:34:51 +0200
+Message-ID: <CAMknhBE51oUjNZVE1mq1xtdOzAG2fpxXW7S+haMGQosdweaZsQ@mail.gmail.com>
+Subject: Re: [PATCH v2 10/10] iio: adc: ad7606: Disable PWM usage for non
+ backend version
+To: Guillaume Stols <gstols@baylibre.com>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Michal Marek <mmarek@suse.com>, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-doc@vger.kernel.org, aardelean@baylibre.com, jstephan@baylibre.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 22, 2024 at 11:14:17PM GMT, Dmitry Baryshkov wrote:
-> On Thu, Sep 05, 2024 at 08:44:00AM GMT, Alex Lanzano wrote:
-> > Add support for the monochrome Sharp Memory LCDs.
-> > 
-> > Co-developed-by: Mehdi Djait <mehdi.djait@bootlin.com>
-> > Signed-off-by: Mehdi Djait <mehdi.djait@bootlin.com>
-> > Signed-off-by: Alex Lanzano <lanzano.alex@gmail.com>
-> > ---
-> >  MAINTAINERS                         |   6 +
-> >  drivers/gpu/drm/tiny/Kconfig        |  20 +
-> >  drivers/gpu/drm/tiny/Makefile       |   1 +
-> >  drivers/gpu/drm/tiny/sharp-memory.c | 682 ++++++++++++++++++++++++++++
-> >  4 files changed, 709 insertions(+)
-> >  create mode 100644 drivers/gpu/drm/tiny/sharp-memory.c
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
-> Please sort out the review tags for dt bindings (either as a v7 or as a
-> reply to the corresponding patch). Then the series can be applied.
-> 
+On Fri, Sep 20, 2024 at 7:33=E2=80=AFPM Guillaume Stols <gstols@baylibre.co=
+m> wrote:
+>
+> Since the pwm was introduced before backend, there was an example use
+> whit triggered buffers. However, using it may be dangerous, because if
 
-Will do! Thanks for the review!
+with
 
-Best regards,
-Alex
+> the PWM goes too fast, a new conversion can be triggered before the
+> transmission is over, whit the associated mess in the buffers.
+
+with
+
+> Until a solution is found to mitigate this risk, for instante CRC
+
+instance
+
+> support, the PWM will be disabled.
+>
+> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+> ---
 
