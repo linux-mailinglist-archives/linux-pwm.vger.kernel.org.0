@@ -1,189 +1,160 @@
-Return-Path: <linux-pwm+bounces-3328-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3329-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C578897E920
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2024 11:54:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC14497E9A5
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2024 12:16:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 562BA1F21D34
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2024 09:54:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1AD791C2176C
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2024 10:16:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 341EA194AFE;
-	Mon, 23 Sep 2024 09:53:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1116194A54;
+	Mon, 23 Sep 2024 10:16:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvUneDpE"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="zM/hHxDt"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCFA8479;
-	Mon, 23 Sep 2024 09:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8AD846425;
+	Mon, 23 Sep 2024 10:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727085237; cv=none; b=oguVboyZ6gOOkXU16oz/ncanXxgZYgq3jc0OCK7n+GXUNSeu2ugeD2CwDXm5ZjHH8rEVflDAXOEEviyIBs0qIwFrmxh/YejR2tebCx4R/eutOMHULwh/KFx3d5BQN1hvB5ENDz76MSkifw1WBb+SERNQAgF/P+Skxs/Do29gZ38=
+	t=1727086582; cv=none; b=ol5bwQFTTQgeKGugmRSPZEs0sBJzyf1+QNwj9TgGVUJ0opFGQxNnKSBDq6A+x8vxPOAZRlabysidZ2HHMX4Crl2HW/YgiD757m+D2aUHKCH7rqOboerDRX+3VQ4gdzZcjLjiYyE8Ve+CIvPCx668GaHlSLruQcwl6wUQYHWZksY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727085237; c=relaxed/simple;
-	bh=2d106uzkR+8RT+3V8DfFcnrtgh3IoT5F3iqW40LwDNM=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKyl7rNjmvctXYM0N3PI7Vr+At2bVPXGCBE9hxeKBrbXdt1p5bNQz+f6Yd6w6BPK+oVzr/V8URkR/rlbFmO5DL7N7Z481yO1eOb+vrgkjcYi3dqodcsT/8e5PpLB0fDK0cDfFFg+k+pAZe8hriWyDyBRlyzhuxG537cKxZB7doo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TvUneDpE; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-378f600e090so2318874f8f.3;
-        Mon, 23 Sep 2024 02:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727085233; x=1727690033; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=W/G5Y1Yc2GdbX/HaGBtPNbObghnd/ierGxsK5LlHR+M=;
-        b=TvUneDpEWXe0KAHmm/mAHmajWaaIDWHnd/P1qGgu+lVy3NFIh/Q68WxJiXTumSj6gk
-         kEdt9Mg8JQtz+snk9Jw6Hhxwxr70hS06IbvpdZMbzhQCVZMyEy80br5anDwKUuOV6x/a
-         9jEZqVZxBTNtFpbAgnmNXZx/KkQ/9s0RyFhDCpJgeSaTjlKpJ9N3sTZ3bQdIAIYpv27h
-         mgVrAK7/eM0J618HmGlJK78LztN+0JthrfnDG24AEz42afuuJ4pxmVUewM04EgfWAWci
-         hNv4kDNbVqdFYYFIqK4mlh172IlYrzlRwCI0614UDEjTQDxyD4nHl5Rq0Muqazeg74UR
-         p/Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727085233; x=1727690033;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W/G5Y1Yc2GdbX/HaGBtPNbObghnd/ierGxsK5LlHR+M=;
-        b=O9yQ/BTnUvV27w0gXWM5DJE+dSAQRB1tahjXZbkYzrED7pSIR1Veg6U3sKQrxExE4P
-         mXGV83ji/4UvElyDTDtTQ3gbsxKRTojkJBKaOQJihxJgFG5irwMCGlzZQLzMfXa9iKp1
-         AzR+wO5fIGf1lQgnJyGDhMiVkr38/KjljozzKmhxru98gMb6ZlD0+wOFxhtEkFppfTWM
-         Tl7VuON5Q36ciuMFkEod9YT1JOS7SpZXttWcvXbXRYae3U64sQftg05tnsdY7V2rw9uK
-         MGyRver4b/PgDyzwmeSXYeAYMwOzLqYCZkHB/eT6YONNeS/nSR3K44SA/7sVQmgut+k6
-         z95g==
-X-Forwarded-Encrypted: i=1; AJvYcCU8vmZSeRvJJ0rvzPNmDroQEM/edvY6azUI7i9yKK8oaG0SmG0CNsab3YnBbYszNgsIeHOewuDGiq3i@vger.kernel.org, AJvYcCWhVHE7IHYXj9Rz/S8D1zc02gMTHRQ/vllg8QrNJDlKoi158H89jdJNy+DoYWoK4aHq5FEBlv+bDcBTZg==@vger.kernel.org, AJvYcCWmPUHSO8Jwqkl9btt+SHw2+ILwWOMO7nxZoqFZYS3BryGkWWEFSo+4sQB1Z8ZLNdUp3tezH6/xOY1d@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVDaZhS4U68mTQUoELdGblKNSloNaVcqwDO8MBuJVO4kYgh8w4
-	d/PUcmk+L8gEVSlBRboqfPWEU5JRQB1VbQwcFIwyVJ8kATWdbGph
-X-Google-Smtp-Source: AGHT+IHFcRqze8NF48rSN4RfnRVSC5MCHRlQsylzZ05QxbfMJ+tA5vQe9UKElu6ng0HSNIhzNc4qfQ==
-X-Received: by 2002:a5d:5f83:0:b0:374:c977:363 with SMTP id ffacd0b85a97d-37a43154e86mr7174926f8f.24.1727085233174;
-        Mon, 23 Sep 2024 02:53:53 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e7805193sm23850774f8f.98.2024.09.23.02.53.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2024 02:53:52 -0700 (PDT)
-Message-ID: <66f13ab0.5d0a0220.b0c27.b441@mx.google.com>
-X-Google-Original-Message-ID: <ZvE6rpnzlrUJHKLx@Ansuel-XPS.>
-Date: Mon, 23 Sep 2024 11:53:50 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lee Jones <lee@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] Add mfd, pinctrl and pwm support to EN7581 SoC
-References: <20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org>
+	s=arc-20240116; t=1727086582; c=relaxed/simple;
+	bh=53IWbInwjlO7Z5VBHcWpCMQqe7HNtwdsn8Flx18kno4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DGIn5uPj5LYWAyym7fpbHxHziE21M9q2usSAmhxJUGbAgBTAYeL9ewflMVh+3Xinl0YfwK2NzjbS2tdEoz8PbAd85yEvbxO/bZQVdSVA9GR1jL7T5sJseMe8zyduOKYYjLLjLGxTJ4iCu0PoKWOKjZOA2Aw2UEdH7YrjJAHAb/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=zM/hHxDt; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48N74q7j015348;
+	Mon, 23 Sep 2024 06:15:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=4ytrpuro3bSWG9Tt8uGzvDdhz3t
+	76ddrHBtHeXSYhV8=; b=zM/hHxDtOgq1gZdpsEGCO1R84ERuefeoYW4hZGSvidV
+	JfTwHUqg0NUw7SBa0fVnm40+syZKKDol5CHlv+QKTzrg8aGX6ARalSnLKomQ/urj
+	27w9ilP4oW5mCM4LIF6ruzognXfJRyUQmSDX+1u+6gq3k02eAFzyha5rTqCpB8iC
+	6ZCgToNwyhtjbRZkQ6jxNooX09comZWY43GY23GF+MjMhrK8Ewr9rFsHiSfDXwJc
+	S3+4gCcDWs5WjGAL8ksqDPhkwZotzcHeWPUerw+5Jmat95IEoANrjBhrblad5yZg
+	gmz2GorlFSKIll0xsFLzRgEDSPlyT8gDXB7STcPVPWg==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 41u3frrqmh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 23 Sep 2024 06:15:39 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 48NAFbFk028020
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 23 Sep 2024 06:15:37 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Mon, 23 Sep
+ 2024 06:15:37 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Mon, 23 Sep 2024 06:15:37 -0400
+Received: from amiclaus-VirtualBox.ad.analog.com ([10.65.36.213])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 48NAFIQQ001918;
+	Mon, 23 Sep 2024 06:15:20 -0400
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
+        Olivier Moysan
+	<olivier.moysan@foss.st.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<ukleinek@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        David Lechner
+	<dlechner@baylibre.com>,
+        Marcelo Schmitt <marcelo.schmitt@analog.com>,
+        Ivan
+ Mikhaylov <fr0st61te@gmail.com>,
+        Alisa-Dariana Roman
+	<alisadariana@gmail.com>,
+        Dumitru Ceclan <mitrutzceclan@gmail.com>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Gon=C3=A7alves?= <joao.goncalves@toradex.com>,
+        Marius Cristea <marius.cristea@microchip.com>,
+        Sergiu Cuciurean
+	<sergiu.cuciurean@analog.com>,
+        Dragos Bogdan <dragos.bogdan@analog.com>,
+        Antoniu Miclaus <antoniu.miclaus@analog.com>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-pwm@vger.kernel.org>
+Subject: [PATCH 0/7] *** Add support for AD485x DAS Family ***
+Date: Mon, 23 Sep 2024 13:10:17 +0300
+Message-ID: <20240923101206.3753-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: 3KMmdx-vrpxJ5ksvCG0-7JpgEGy81Q2C
+X-Proofpoint-GUID: 3KMmdx-vrpxJ5ksvCG0-7JpgEGy81Q2C
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 phishscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 clxscore=1011 mlxscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2409230075
 
-On Wed, Sep 11, 2024 at 09:50:00PM +0200, Lorenzo Bianconi wrote:
-> Introduce airoha-mfd driver in order to load pinctrl and pwm drivers for
-> EN7581 SoC. airoha-mfd is needed since both pinctrl and pwm drivers
-> needs to access the same memory block (gpio memory region) to configure
-> {gio,irq}_chip and pwm functionalities respectively, so model them as
-> childs of a parent mfd driver.
-> Current EN7581 pinctrl driver supports the following functionalities:
-> - pin multiplexing via chip_scu syscon
-> - pin pull-up, pull-down, open-drain, current strength,
->   {input,output}_enable, output_{low,high} via chip_scu syscon
-> - gpio controller
-> - irq controller
-> 
-> ---
-> Changes in v4:
-> - add 'Limitation' description in pwm driver
-> - fix comments in pwm driver
-> - rely on mfd->base __iomem pointer in pwm driver, modify register
->   offsets according to it and get rid of sgpio_cfg, flash_cfg and
->   cycle_cfg pointers
-> - simplify register utility routines in pwm driver
-> - use 'generator' instead of 'waveform' suffix for pwm routines
-> - fix possible overflow calculating duty cycle in pwm driver
-> - do not modify pwm state in free callback in pwm driver
-> - cap the maximum period in pwm driver
-> - do not allow inverse polarity in pwm driver
-> - do not set of_xlate callback in the pwm driver and allow the stack to
->   do it
-> - fix MAINTAINERS file for airoha pinctrl driver
-> - fix undefined reference to __ffsdi2 in pinctrl driver
-> - simplify airoha,en7581-gpio-sysctl.yam binding
-> - Link to v3: https://lore.kernel.org/r/20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org
-> 
-> Changes in v3:
-> - introduce airoha-mfd driver
-> - add pwm driver to the same series
-> - model pinctrl and pwm drivers as childs of a parent mfd driver.
-> - access chip-scu memory region in pinctrl driver via syscon
-> - introduce a single airoha,en7581-gpio-sysctl.yaml binding and get rid
->   of dedicated bindings for pinctrl and pwm
-> - add airoha,en7581-chip-scu.yaml binding do the series
-> - Link to v2: https://lore.kernel.org/r/20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org
-> 
-> Changes in v2:
-> - Fix compilation errors
-> - Collapse some register mappings for gpio and irq controllers
-> - update dt-bindings according to new register mapping
-> - fix some dt-bindings errors
-> - Link to v1: https://lore.kernel.org/all/cover.1723392444.git.lorenzo@kernel.org/
-> 
-> ---
-> Benjamin Larsson (1):
->       pwm: airoha: Add support for EN7581 SoC
-> 
-> Christian Marangi (2):
->       dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Controller
->       mfd: airoha: Add support for Airoha EN7581 MFD
-> 
-> Lorenzo Bianconi (2):
->       dt-bindings: arm: airoha: Add the chip-scu node for EN7581 SoC
->       pinctrl: airoha: Add support for EN7581 SoC
-> 
->  .../bindings/arm/airoha,en7581-chip-scu.yaml       |   42 +
->  .../bindings/mfd/airoha,en7581-gpio-sysctl.yaml    |  433 +++
->  MAINTAINERS                                        |    7 +
->  drivers/mfd/Kconfig                                |    8 +
->  drivers/mfd/Makefile                               |    2 +
->  drivers/mfd/airoha-en7581-gpio-mfd.c               |   72 +
->  drivers/pinctrl/mediatek/Kconfig                   |   16 +-
->  drivers/pinctrl/mediatek/Makefile                  |    1 +
->  drivers/pinctrl/mediatek/pinctrl-airoha.c          | 2964 ++++++++++++++++++++
->  drivers/pwm/Kconfig                                |   10 +
->  drivers/pwm/Makefile                               |    1 +
->  drivers/pwm/pwm-airoha.c                           |  414 +++
->  include/linux/mfd/airoha-en7581-mfd.h              |    9 +
->  13 files changed, 3978 insertions(+), 1 deletion(-)
-> ---
-> base-commit: 264c13114bd71ddfd7b25c7b94f6cda4587eca25
-> change-id: 20240818-en7581-pinctrl-1bf120154be0
-> prerequisite-change-id: 20240705-for-6-11-bpf-a349efc08df8:v2
-> 
->
+Add support for AD485X fully buffered, 8-channel simultaneous sampling,
+16/20-bit, 1 MSPS data acquisition system (DAS) with differential, wide
+common-mode range inputs.
 
-Hi,
+Some particularities:
+1. softspan - the devices support multiple softspans which are represented in iio
+              through offset/scale. The current handling implies changing both
+              the scale and the offset separately via IIO, therefore in order to
+              properly set the softspan, each time the offset changes the softspan
+              is set to the default value. And only after changing also the scale
+              the desired softspan is set. This is the approach we are suggesting
+              since we need the softspan configurable from userspace and not from
+              devicetree.
 
-any news with this? Rob reviewed the DT schemas and he is ok with them.
+2. packet format - Data provided on the CMOS and LVDS conversion data output buses
+                   are packaged into eight channel packets. This is currently handled
+                   as extended info.
 
-Any other comments for the MFD driver and/or the pinctrl or PWM driver?
+Antoniu Miclaus (7):
+  iio: backend: add API for interface get
+  iio: backend: add support for data size set
+  iio: adc: adi-axi-adc: add interface type
+  iio: adc: adi-axi-adc: set data format
+  dt-bindings: iio: adc: add ad458x
+  iio: adc: ad485x: add ad485x driver
+  Documentation: ABI: testing: ad485x: add ABI docs
+
+ .../ABI/testing/sysfs-bus-iio-adc-ad485x      |   14 +
+ .../bindings/iio/adc/adi,ad485x.yaml          |   82 ++
+ drivers/iio/adc/Kconfig                       |   12 +
+ drivers/iio/adc/Makefile                      |    1 +
+ drivers/iio/adc/ad485x.c                      | 1061 +++++++++++++++++
+ drivers/iio/adc/adi-axi-adc.c                 |   44 +
+ drivers/iio/industrialio-backend.c            |   45 +
+ include/linux/iio/backend.h                   |   13 +
+ 8 files changed, 1272 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-ad485x
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad485x.yaml
+ create mode 100644 drivers/iio/adc/ad485x.c
 
 -- 
-	Ansuel
+2.46.0
+
 
