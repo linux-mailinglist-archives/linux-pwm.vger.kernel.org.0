@@ -1,158 +1,148 @@
-Return-Path: <linux-pwm+bounces-3349-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3350-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F333B983904
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2024 23:20:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3073983D91
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2024 09:07:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 77FD4B2148B
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Sep 2024 21:20:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 60BC42810DB
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2024 07:07:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F22C06F2F2;
-	Mon, 23 Sep 2024 21:20:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C20BF12C7FB;
+	Tue, 24 Sep 2024 07:07:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hwmeCcrJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QpOrVQtX"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF2617BA9;
-	Mon, 23 Sep 2024 21:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2852F870;
+	Tue, 24 Sep 2024 07:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727126432; cv=none; b=gAa06B0gZvzY5Oho3IEUhvKdbR5BGGt0AVo0BQhzoonkmNmzrf51+HH5cwod83qrr8PPHVnPNApv/6vkamgmtrzcRKO8H5sZulRYWJCuLbdVyq5Jad5zI3XL98zMZQH191Ivlw0zjKe2au3lUPcazEGoqXrM5x16nT/HBGC3mBE=
+	t=1727161658; cv=none; b=ptsG+7RKyiyLniDnR200BoTmnE8t65LLJuwbGpoZhoHNmdcuM2HOPvK9gN4hVe/IPrBFqBw5B9VKSKdWAYm+o3ud8rrOmvbSZKn28j6u6YcOkr6YkOHvf4sO5KuSWJitWUUOq1CwgPRS5u0LZ3xFz0qW+XwbGS5Z7D7AM41uSb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727126432; c=relaxed/simple;
-	bh=6vjF9h6w0iEBpOGjYebX1Lq37GOam2h0x4QliCpQwrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kBv/RSFZDd67mGQKojsoS+TRPo5RhBb2BOxRZvimg91BczERdR7Xr3jvqqSsF8czu4toHVmnV8Nze+EEUuI02519PT9KgrLRFxNinBWRdZs4/OlL9SEIpRc11RCuDwQ+vmiUoHic29KZtnbr4MDUHPlQ8XafXfBidprflyg2k/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hwmeCcrJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A72FCC4CEC4;
-	Mon, 23 Sep 2024 21:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727126432;
-	bh=6vjF9h6w0iEBpOGjYebX1Lq37GOam2h0x4QliCpQwrM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hwmeCcrJMyYBKFdoe86A3XvkH7w61IryBRX8M2uIqrA4Zcm0yf4vQYgIv7VTm568P
-	 SXug/ALW0a1tAL634B7PzGii72GpabjqI3Cj6b9cVcbkycyAF55OwCuNTOhvfU311v
-	 FxQZE9L9XuZIQ65RuDMGBEPPqEctMd0DPrlkDZSljb173zSy17hjIoIiiWmA45uaGh
-	 6ivcVl6u2NAQb7bNh2tHy/i5oBWLcnN2upwJAqlY7wtG31/ukbAwkj2kamdIPzzR2E
-	 euxON1ae4M9OobqRdxuQkjBJTcrlxHTnA7kaiNlowzEJoSDt53EzE+arxxGSHFivps
-	 JTFFfL2Szq7dA==
-Date: Mon, 23 Sep 2024 22:20:25 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Marcelo Schmitt <marcelo.schmitt@analog.com>,
-	Mike Looijmans <mike.looijmans@topic.nl>,
-	Marius Cristea <marius.cristea@microchip.com>,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>,
-	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <joao.goncalves@toradex.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Alisa-Dariana Roman <alisadariana@gmail.com>,
-	Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
-	Dragos Bogdan <dragos.bogdan@analog.com>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 5/7] dt-bindings: iio: adc: add ad458x
-Message-ID: <20240923-yippee-symptom-77aaab7d99da@spud>
-References: <20240923101206.3753-1-antoniu.miclaus@analog.com>
- <20240923101206.3753-6-antoniu.miclaus@analog.com>
+	s=arc-20240116; t=1727161658; c=relaxed/simple;
+	bh=LusOixPIEihzkNGxEaRVYOgMp9CGVjC235iqe783FsE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jVKGfjyxVFT0Prh3utzGA0u7wYryb3/VLNkcfZUUNINGF+LS9hXHM95EuKpMAvUzJeQ+F6eaF70u8+tOxD2kUCnzqhN9R9zKl6ED083qfOKnKTY2W9G1y4yEVH+pz3W1PIj7NQYjLqXgobA/ni8tODSYRFtJdCQ52HLlgW07ANk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QpOrVQtX; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5c2561e8041so7130316a12.2;
+        Tue, 24 Sep 2024 00:07:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727161655; x=1727766455; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=H/SZ96mhvfmweQ60Q5E5P959Yd7EdsII+tg5+PPqOoc=;
+        b=QpOrVQtXhSbFp+1meub22NiP19v0Q4uuw2szQEahrXr7YRb0adtb+5zTYSQYyQjZsw
+         mCSpOha5dQo3jFaSBJizOvbjlxyWVNWk3WsRcJ32T+zDTW/otWMYWwWslmNUgRk5GU9k
+         cImrqC8HDPz4dBZqJvIJ1sFu44Va2jhCKLEkCS3kO7EM2a1U6DKYRi9gQytRmRy9aSh9
+         6a/uHYrnKxaiG8D3Gpx2W/vIpspZOnBXA4J7u0fLhIaAOdQPSaOvZ9Y/ltGdRC+ifZos
+         FunyChnZ0FJhyIHzs8sOCyoBp32UVUDzS/4vNncOrio/0deBjg5HgVI4y/lhxWItFW91
+         VIvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727161655; x=1727766455;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H/SZ96mhvfmweQ60Q5E5P959Yd7EdsII+tg5+PPqOoc=;
+        b=p5BK3HhjJKXYX007NdRsU5XX0xdbgsM2cf772CIttPF5I1rT73rEVEBFiFIV0q6otN
+         6xZ3CJV3q/gTINSBKL/qlbfHVSoL83BMCDvvrkjRTldTVcd2D6Vx2F9onDh3Y8tWBcuS
+         moZaXOyhdYrVLeTuH9mIeR7QXhYXVN/wMvU44UAgkqA9pcV/Chi9/Cl5o2prrMvPcT+I
+         /5cs6xVNp9CwvXPe0viUBGfRjE+6IVzzCdAq5obezvBngvtcDwq5GzzhG2eHbyC+vr2Y
+         C4v7GhSMm+SzuTfwEzrYaeSMvyMCQyOUn3o2hoQ8jD7PlDsxPLJysLLTj+3pXalmX5IF
+         lgAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV6m2ZmkTgsMqEYnPxSVd4m0wcbEBEILSiMS862ubKAXTMDVmaMODQ/e46psXOrGuyh1brs+cFwuT5yeIY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCM3TT7/z9mibUQM96xztpDwvf7to4IbeWp7leRopRS9FUpBXH
+	Aiyx7GRK8O1PkjreTAiF0nwzg09bkQtmH1fceX3eTun4BB5x9wa+m45a7adbKsc=
+X-Google-Smtp-Source: AGHT+IHkcliqxp/sd2zZNzMnqY3l8lSVD0gNPkKmkMmRPrXsT9dZ19UQkUHvQZWVKFFf5YCAfRwm2Q==
+X-Received: by 2002:a05:6402:5110:b0:5c2:6090:4047 with SMTP id 4fb4d7f45d1cf-5c464a3aaa9mr10803025a12.8.1727161654949;
+        Tue, 24 Sep 2024 00:07:34 -0700 (PDT)
+Received: from nsa.fritz.box ([2001:a61:341e:1201:c434:b5b1:98a6:efed])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c5cf48c357sm456825a12.11.2024.09.24.00.07.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2024 00:07:34 -0700 (PDT)
+Message-ID: <2bf20010512ce94c117cb0e58313e72c7772d3c5.camel@gmail.com>
+Subject: Re: [PATCH] pwm: axi-pwmgen: Create a dedicated function for
+ getting driver data from a chip
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
+ Michael Hennerich <michael.hennerich@analog.com>, Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Trevor Gamblin
+ <tgamblin@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 24 Sep 2024 09:07:34 +0200
+In-Reply-To: <20240923125418.16558-2-u.kleine-koenig@baylibre.com>
+References: <20240923125418.16558-2-u.kleine-koenig@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="RKWl+KWZ2pFNeJy9"
-Content-Disposition: inline
-In-Reply-To: <20240923101206.3753-6-antoniu.miclaus@analog.com>
 
-
---RKWl+KWZ2pFNeJy9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Sep 23, 2024 at 01:10:22PM +0300, Antoniu Miclaus wrote:
-> Add devicetree bindings for ad458x DAS family.
+On Mon, 2024-09-23 at 14:54 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Compared to direct calls to pwmchip_get_drvdata() a dedicated function
+> has two upsides: A better name and the right type. So the code becomes
+> easier to read and the new function is harder to use wrongly.
 >=20
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> Another side effect (which is the secret motivation for this patch, but
+> shhh) is that the driver becomes a bit easier to backport to kernel
+> versions that don't have devm_pwmchip_alloc() yet.
+>=20
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
 > ---
->  .../bindings/iio/adc/adi,ad485x.yaml          | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad485x.=
-yaml
+
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+
+> =C2=A0drivers/pwm/pwm-axi-pwmgen.c | 9 +++++++--
+> =C2=A01 file changed, 7 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad485x.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad485x.yaml
-> new file mode 100644
-> index 000000000000..5f5bdfa9522b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad485x.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright 2022 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad485x.yaml#
-
-The filename should match one of the compatibles.
-
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+> index b5477659ba18..e5162f3e511e 100644
+> --- a/drivers/pwm/pwm-axi-pwmgen.c
+> +++ b/drivers/pwm/pwm-axi-pwmgen.c
+> @@ -53,10 +53,15 @@ static const struct regmap_config axi_pwmgen_regmap_c=
+onfig =3D {
+> =C2=A0	.max_register =3D 0xFC,
+> =C2=A0};
+> =C2=A0
+> +static struct axi_pwmgen_ddata axi_pwmgen_ddata_from_chip(struct pwm_chi=
+p *chip)
+> +{
+> +	return pwmchip_get_drvdata(chip);
+> +}
 > +
-> +title: Analog Devices AD485X DAS family device driver
-> +
-> +maintainers:
-> +  - Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> +  - Dragos Bogdan <dragos.bogdan@analog.com>
-> +  - Antoniu Miclaus <antoniu.miclaus@analog.com>
-> +
-> +description: |
-> +  Analog Devices AD485X DAS family
-> +
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
-4858.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad4858
-> +      - adi,ad4857
-> +      - adi,ad4856
-> +      - adi,ad4855
-> +      - adi,ad4854
-> +      - adi,ad4853
-> +      - adi,ad4852
-> +      - adi,ad4851
-> +      - adi,ad4858i
+> =C2=A0static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> =C2=A0			=C2=A0=C2=A0=C2=A0 const struct pwm_state *state)
+> =C2=A0{
+> -	struct axi_pwmgen_ddata *ddata =3D pwmchip_get_drvdata(chip);
+> +	struct axi_pwmgen_ddata *ddata =3D axi_pwmgen_ddata_from_chip(chip);
+> =C2=A0	unsigned int ch =3D pwm->hwpwm;
+> =C2=A0	struct regmap *regmap =3D ddata->regmap;
+> =C2=A0	u64 period_cnt, duty_cnt;
+> @@ -100,7 +105,7 @@ static int axi_pwmgen_apply(struct pwm_chip *chip, st=
+ruct
+> pwm_device *pwm,
+> =C2=A0static int axi_pwmgen_get_state(struct pwm_chip *chip, struct pwm_d=
+evice *pwm,
+> =C2=A0				struct pwm_state *state)
+> =C2=A0{
+> -	struct axi_pwmgen_ddata *ddata =3D pwmchip_get_drvdata(chip);
+> +	struct axi_pwmgen_ddata *ddata =3D axi_pwmgen_ddata_from_chip(chip);
+> =C2=A0	struct regmap *regmap =3D ddata->regmap;
+> =C2=A0	unsigned int ch =3D pwm->hwpwm;
+> =C2=A0	u32 cnt;
+>=20
+> base-commit: 62f92d634458a1e308bb699986b9147a6d670457
 
-I take it that all of these devices have some differences between them?
-
-Everything else here seems pretty okay.
-
---RKWl+KWZ2pFNeJy9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZvHbmQAKCRB4tDGHoIJi
-0uihAPsFIAcwaj9rm40O2Lclx/waGRS3P/spBRg1rFcbejwerQD/XCxmG3zGzKIf
-P9268UDee4q7qdLW6O/r6SYrQgUxiQY=
-=P/EX
------END PGP SIGNATURE-----
-
---RKWl+KWZ2pFNeJy9--
 
