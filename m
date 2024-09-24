@@ -1,510 +1,243 @@
-Return-Path: <linux-pwm+bounces-3352-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3353-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F06C984336
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2024 12:12:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA7629846EE
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2024 15:43:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F561281CA0
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2024 10:12:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8ABB42841FF
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2024 13:43:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3EFF16E860;
-	Tue, 24 Sep 2024 10:12:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0857F14F124;
+	Tue, 24 Sep 2024 13:42:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGPE0KNZ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JK1VvNao"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FD615B56E;
-	Tue, 24 Sep 2024 10:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D061AAE05
+	for <linux-pwm@vger.kernel.org>; Tue, 24 Sep 2024 13:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727172734; cv=none; b=sAngKONxRzX4y+jBfXLvflv+f+cySR0bY1dFXzZuDDIba8cMspyq+7vnmNPO/oNCcKJwmZDEhq6phBAoRiqojbgVQjDb2DgaiEmLsUT5FDTANzXC/f5M7X0La4HV7Gjat15feGKBxpV4ykAS6+KJhVW9MveTWAVOF+FCUYk/wyw=
+	t=1727185374; cv=none; b=j0DMykhjlGdsinTtCNA/3hJ1ieqWmFkif/Io0S/8NxFuttOgixOlBigVj9RuaP5VhvzNoQLFtcEqufxwsfH/dKlBlO3kCJD6TrxzM1rIBzNlg8KH0rtpGpKYjFg+ojflJcJEvlKw5yeotR/ia9GSaqNYELG9ivU8qbZTKU/0u3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727172734; c=relaxed/simple;
-	bh=L8nehSf1ZOWTYA7cXJfnk7AMsnnjUPB0KMCQdqx1vvc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aE9yVX/4G/4OAElSkV/vcbYNqjfovqTGEiU3+QqZKTrI+cMQoM1EpiefL1T0A8I1h8zx0gf3sLKDTKGgWztW2oQfKJm40oOYKucrmk2GEcMjwjAMGiNYoFr6fiKEP8K0VWc9zAiwnvcY+y2whN2Z8b2FIz4NrtoZPkcme7N+7oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGPE0KNZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2968C4CEC4;
-	Tue, 24 Sep 2024 10:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727172734;
-	bh=L8nehSf1ZOWTYA7cXJfnk7AMsnnjUPB0KMCQdqx1vvc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dGPE0KNZWP7YRM5BS/k4gZtY4TbZr6vYgqkmBMXed8fatRJdCyT2sfvxuAoRJTRlU
-	 p+6EMeDhKgEGdxBDlnkMNTGtti/a5AS9ScNaEPNHQkFEVvWMopblMKjW9lqLvQ+HwB
-	 C5JltiFiov4SLtPEco1w/7W2PridJU50+qxQ64GYxu+YhudSIivmdj71FpTnZcveFA
-	 QA/i9NcDQwFzc1etWvEL73QGx0/uRSSdJBjDVzxxIv9dqa2MTs+g55Ve2EC/ZS1d8x
-	 Gs4b2n7Cw2FqMyslME+HrDU2XM7tW7LTatIMYly8Ye9LqY/Ci1wtgpn4hBTUfr5C7H
-	 Fz7OulLApdbyg==
-Date: Tue, 24 Sep 2024 12:12:11 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lee Jones <lee@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 4/5] pinctrl: airoha: Add support for EN7581 SoC
-Message-ID: <ZvKQe73ZKIFy4fny@lore-desk>
-References: <20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org>
- <20240911-en7581-pinctrl-v4-4-60ac93d760bb@kernel.org>
- <CACRpkdZbyQ5bk8oR+Q4UmQCdM5h1mF1ztBc26YzqNsze_B=ehA@mail.gmail.com>
+	s=arc-20240116; t=1727185374; c=relaxed/simple;
+	bh=JBAqJKIn6erssC6h7Fru/SUmSHqFjR15KojsKwYgo9w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P9JFbFlD0S2OROV9y9RWzcYAFhqAgkBwiVPFW+Z9fypIpKBj8SGijasTsjpRZ7g87R8adpOd6gjKX8PjoY2MU/m649anjBqBHwocJJYeyPXL4rEdoR1erAP8tbNlwduVai5MTJGFsYdMKIU5yIRr3LN1DV/NqDuNMSQR8HtPYqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JK1VvNao; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2f77be8ffecso55434361fa.1
+        for <linux-pwm@vger.kernel.org>; Tue, 24 Sep 2024 06:42:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727185371; x=1727790171; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5c1M7ohqRDqRP9lr59f4TBK5eNeNiABegCv0HpvHngk=;
+        b=JK1VvNaoudfAypA/xNo4Pr3cBLv486zmTOrbFGqs8rm46fS/7ahtY3oDex05aLQkPm
+         VdfgrvgNBjs4LRy5GtxJh22zPzLBAFPwyJgxT9VliXtk+WhIYW7WK18AtcLaTSOefyBy
+         Ww3MyjwiVue8mNtkKOzU9ZF1DIvuer4dArmILwePVRgMMzNjxGyEHF6L81fCrX5nirfj
+         LoofpFT/+qPf6NHNMLHvQkkgGnUp02pyhuV02RXAT+t7f3ZkCUrOkAq5+mqYSd/p0Fa3
+         XkuaDvz/IlNz22EwRb/4UMND9rk4hEt15IOWSmKG2l2/lP0dNkkax19G79EMEie+jj/A
+         BrPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727185371; x=1727790171;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5c1M7ohqRDqRP9lr59f4TBK5eNeNiABegCv0HpvHngk=;
+        b=b31WVeSeKLo2oltKOoegoBG8x6Vi34visIA+i3TDAK+fqN3DAa3O70ON9TdrpLHkW/
+         VYnc1S3zlfrAat6Q2kgb4t8DqZ2dqTFQir4D5QMrpxWS54vbcEX8mBN65q/maPWOjMNA
+         80ifDabK91Yc8UMrGF3L9Jk5JfjecEC/S9hrs/WT2aRpmeeEPNrlA3tHETd+Vd+ASeyD
+         o+kEUdJ0KKp8DC3KKv/8NaQfKAAOXfueOycSqsKAXpjcyYKlGgEAzAlfqC+DCcV73MoE
+         i/xIZd+VbefADIfqE6gbnWPn5v7cFg+lM+gp1lCYI717QwyuURPDfvOzgGI4W1Vq0hyg
+         Ag3w==
+X-Forwarded-Encrypted: i=1; AJvYcCXVkp1v18sHvEiPeNocnoGJ4aHVmD3J+PtLWDHf/+EZvze+WPy2Y3xr6y2eashdYWSRngI7qG7hWmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHtPChXuPVcY/0OVFh+LPJoZIJJ1mSxbABsWM4P+BvmgitqyBC
+	gtr0oHq789Dr/M7V7E35xodnTxpLUAhh9gwq3a2vApPpCgt3Gl84Y60kUrtHVTGpOG5iBVcD4Cz
+	4a9UgyFo5YILwkVZR+WXY0+H/5nB+n0rAkuSlJQ==
+X-Google-Smtp-Source: AGHT+IFMCvX6ZomfwNVSQWZNrBg2XpB69scXfnzM6UFVXcdM7yblmJSqpExFckfnrrDnAlkTcnMFVsc76PzpIEqxbmM=
+X-Received: by 2002:a2e:4c0a:0:b0:2f6:2b51:ee3e with SMTP id
+ 38308e7fff4ca-2f7cc5bb64emr56870301fa.41.1727185370526; Tue, 24 Sep 2024
+ 06:42:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="odZwuQpJyyMuG14N"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZbyQ5bk8oR+Q4UmQCdM5h1mF1ztBc26YzqNsze_B=ehA@mail.gmail.com>
-
-
---odZwuQpJyyMuG14N
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20240923101206.3753-1-antoniu.miclaus@analog.com> <20240923101206.3753-6-antoniu.miclaus@analog.com>
+In-Reply-To: <20240923101206.3753-6-antoniu.miclaus@analog.com>
+From: David Lechner <dlechner@baylibre.com>
+Date: Tue, 24 Sep 2024 15:42:39 +0200
+Message-ID: <CAMknhBE_RoDg+EhqF5+UbqV1z7i1PvVRi3HC48SAsR5AYDF6TQ@mail.gmail.com>
+Subject: Re: [PATCH 5/7] dt-bindings: iio: adc: add ad458x
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>, 
+	Olivier Moysan <olivier.moysan@foss.st.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Marcelo Schmitt <marcelo.schmitt@analog.com>, 
+	Mike Looijmans <mike.looijmans@topic.nl>, Marius Cristea <marius.cristea@microchip.com>, 
+	Dumitru Ceclan <mitrutzceclan@gmail.com>, 
+	=?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Alisa-Dariana Roman <alisadariana@gmail.com>, Sergiu Cuciurean <sergiu.cuciurean@analog.com>, 
+	Dragos Bogdan <dragos.bogdan@analog.com>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-> Hi Lorenzo / Benjamin,
->=20
-> thanks for your patch!
->=20
-> This is a real nice driver, I like the design of the pin database to supp=
-ort
-> this pretty complex pin controller.
+On Mon, Sep 23, 2024 at 12:17=E2=80=AFPM Antoniu Miclaus
+<antoniu.miclaus@analog.com> wrote:
+>
+> Add devicetree bindings for ad458x DAS family.
+>
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
+>  .../bindings/iio/adc/adi,ad485x.yaml          | 82 +++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad485x.=
+yaml
+>
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad485x.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad485x.yaml
+> new file mode 100644
+> index 000000000000..5f5bdfa9522b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad485x.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2022 Analog Devices Inc.
+> +%YAML 1.2
+> +---
 
-Hi Linus,
+I think we could make the bindings a bit more complete (even if the
+driver doesn't use everything yet). Some suggestions below.
 
-thx for the review, some questions inline.
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad485x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD485X DAS family device driver
+> +
+> +maintainers:
+> +  - Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> +  - Dragos Bogdan <dragos.bogdan@analog.com>
+> +  - Antoniu Miclaus <antoniu.miclaus@analog.com>
+> +
+> +description: |
+> +  Analog Devices AD485X DAS family
+> +
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
+4858.pdf
 
-Regards,
-Lorenzo
+Links for other parts? (I only looked at this datasheet, so some of my
+comments below might only apply to this part and not the others.)
 
->=20
-> Some comments and nits:
->=20
-> On Wed, Sep 11, 2024 at 9:51=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel.=
-org> wrote:
->=20
-> > Introduce pinctrl driver for EN7581 SoC. Current EN7581 pinctrl driver
-> > supports the following functionalities:
-> > - pin multiplexing
-> > - pin pull-up, pull-down, open-drain, current strength,
-> >   {input,output}_enable, output_{low,high}
-> > - gpio controller
-> > - irq controller
-> >
-> > Tested-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> > Co-developed-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> > Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
->=20
-> (...)
->=20
-> > +#include <dt-bindings/pinctrl/mt65xx.h>
-> > +#include <linux/bitfield.h>
->=20
-> Isn't just <linux/bits.h> enough for what you're using?
+Since this is a SPI peripheral, we should add...
 
-ack, I will fix it in v5
+$ref: /schemas/spi/spi-peripheral-props.yaml#
 
->=20
-> > +#include <linux/gpio/driver.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/io.h>
-> > +#include <linux/irq.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/kernel.h>
->=20
-> What do you use from kernel.h? We usually use more fingrained
-> headers these days.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad4858
+> +      - adi,ad4857
+> +      - adi,ad4856
+> +      - adi,ad4855
+> +      - adi,ad4854
+> +      - adi,ad4853
+> +      - adi,ad4852
+> +      - adi,ad4851
+> +      - adi,ad4858i
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vcc-supply: true
 
-ack, I will remove it in v5
+Do we also need vee-supply (it can be a negative voltage or 0V)? Or is
+vcc-supply the voltage between V_CC and V_EE?
 
->=20
-> (...)
->=20
-> > +#include <linux/mfd/airoha-en7581-mfd.h>
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/pinctrl/consumer.h>
->=20
-> Why do you need the consumer header?
+> +
+> +  vdd-supply: true
+> +
+> +  vddh-supply: true
 
-we need it for pinctrl_gpio_direction_output() and
-pinctrl_gpio_direction_input() for direction_input and direction_output
-callbacks.
+Datasheet says V_DDL can be the same or separate supply as V_DDH, so
+should probably also have vddl-supply: true.
 
->=20
-> (...)
->=20
-> > +static u32 airoha_pinctrl_rmw_unlock(void __iomem *addr, u32 mask, u32=
- val)
-> > +{
-> > +       val |=3D (readl(addr) & ~mask);
-> > +       writel(val, addr);
-> > +
-> > +       return val;
-> > +}
-> > +
-> > +#define airoha_pinctrl_set_unlock(addr, val)                          =
-         \
-> > +       airoha_pinctrl_rmw_unlock((addr), 0, (val))
-> > +#define airoha_pinctrl_clear_unlock(addr, mask)                       =
-                 \
-> > +       airoha_pinctrl_rmw_unlock((addr), (mask), (0))
-> > +
-> > +static u32 airoha_pinctrl_rmw(struct airoha_pinctrl *pinctrl,
-> > +                             void __iomem *addr, u32 mask, u32 val)
-> > +{
-> > +       mutex_lock(&pinctrl->mutex);
-> > +       val =3D airoha_pinctrl_rmw_unlock(addr, mask, val);
-> > +       mutex_unlock(&pinctrl->mutex);
-> > +
-> > +       return val;
-> > +}
->=20
-> Thus looks like a reimplementation of regmap-mmio, can't you just use
-> regmap MMIO? You use it for the SCU access already...
->=20
-> If you persist with this solution, please use a guard:
->=20
-> #include <linux/cleanup.h>
->=20
-> guard(mutex)(&pinctrl->mutex);
->=20
-> And the lock will be released when you exit the function.
+> +
+> +  vio-supply: true
 
-I am fine to switch to regmap but I guess we need to enable fast_io
-since it can run even in interrupt context. Btw, I figured out even
-airoha_pinctrl_rmw needs to grab a spin_lock since we can exec a led
-trigger (like timer) where we run airoha_pinctrl_rmw in interrupt context
-(so it should be fine to use a single regmap for it).
-However, I guess we need to keep the spin_lock in airoha_pinctrl_gpiochip
-since we need to grab it in airoha_pinctrl_gpio_irq_unmask() and
-airoha_pinctrl_gpio_irq_type() (we access irq_type array there).
-A possible solution would be to keep the local spin_lock and set
-disable_locking. What do you think? Do you prefer to switch to regmap or
-keep the current implementation using 'guard(spinlock_irqsave)' instead?
+What about reference supplies (REFIO and REFBUF)?
 
->=20
-> > +static int airoha_pinctrl_get_gpio_from_pin(struct pinctrl_dev *pctrl_=
-dev,
-> > +                                           int pin)
-> > +{
-> > +       struct pinctrl_gpio_range *range;
-> > +       int gpio;
-> > +
-> > +       range =3D pinctrl_find_gpio_range_from_pin_nolock(pctrl_dev, pi=
-n);
-> > +       if (!range)
-> > +               return -EINVAL;
-> > +
-> > +       gpio =3D pin - range->pin_base;
-> > +       if (gpio < 0)
-> > +               return -EINVAL;
-> > +
-> > +       return gpio;
-> > +}
->=20
-> This function is just used here:
+> +
+> +  pwms:
+> +    maxItems: 1
 
-it is used in airoha_pinconf_get()/airoha_pinconf_set()
+I suppose this is connected to the CNV pin? Probably worth adding a
+description to say that since it isn't so obvious.
 
->=20
-> > +static int airoha_pinconf_get(struct pinctrl_dev *pctrl_dev,
-> > +                             unsigned int pin, unsigned long *config)
-> > +{
-> > +       struct airoha_pinctrl *pinctrl =3D pinctrl_dev_get_drvdata(pctr=
-l_dev);
-> > +       enum pin_config_param param =3D pinconf_to_config_param(*config=
-);
-> > +       u32 arg;
-> > +
-> > +       switch (param) {
-> > +       case PIN_CONFIG_BIAS_PULL_DOWN:
-> > +       case PIN_CONFIG_BIAS_DISABLE:
-> > +       case PIN_CONFIG_BIAS_PULL_UP: {
-> > +               u32 pull_up, pull_down;
-> > +
-> > +               if (airoha_pinctrl_get_pullup_conf(pinctrl, pin, &pull_=
-up) ||
-> > +                   airoha_pinctrl_get_pulldown_conf(pinctrl, pin, &pul=
-l_down))
-> > +                       return -EINVAL;
-> > +
-> > +               if (param =3D=3D PIN_CONFIG_BIAS_PULL_UP &&
-> > +                   !(pull_up && !pull_down))
-> > +                       return -EINVAL;
-> > +               else if (param =3D=3D PIN_CONFIG_BIAS_PULL_DOWN &&
-> > +                        !(pull_down && !pull_up))
-> > +                       return -EINVAL;
-> > +               else if (pull_up || pull_down)
-> > +                       return -EINVAL;
-> > +
-> > +               arg =3D 1;
-> > +               break;
-> > +       }
-> > +       case PIN_CONFIG_DRIVE_STRENGTH: {
-> > +               u32 e2, e4;
-> > +
-> > +               if (airoha_pinctrl_get_drive_e2_conf(pinctrl, pin, &e2)=
- ||
-> > +                   airoha_pinctrl_get_drive_e4_conf(pinctrl, pin, &e4))
-> > +                       return -EINVAL;
-> > +
-> > +               arg =3D e4 << 1 | e2;
-> > +               break;
-> > +       }
-> > +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> > +               if (airoha_pinctrl_get_pcie_rst_od_conf(pinctrl, pin, &=
-arg))
-> > +                       return -EINVAL;
-> > +               break;
-> > +       case PIN_CONFIG_OUTPUT_ENABLE:
-> > +       case PIN_CONFIG_INPUT_ENABLE: {
-> > +               int gpio =3D airoha_pinctrl_get_gpio_from_pin(pctrl_dev=
-, pin);
-> > +
-> > +               if (gpio < 0)
-> > +                       return gpio;
-> > +
-> > +               arg =3D airoha_pinctrl_gpio_get_direction(pinctrl, gpio=
-);
->=20
-> I don't see why a pin would have to exist in a GPIO range in order to
-> be set as output or input?
->=20
-> Can't you just set up the pin as requested and not care whether
-> it has a corresponding GPIO range?
->=20
-> Is it over-reuse of the GPIO code? I'd say just set up the pin instead.
+> +
+> +  io-backends:
+> +    maxItems: 1
 
-Do you mean to get rid of PIN_CONFIG_OUTPUT_ENABLE, PIN_CONFIG_INPUT_ENABLE
-(and even PIN_CONFIG_OUTPUT in airoha_pinconf_set()) here?
-E.g. we need PIN_CONFIG_OUTPUT_ENABLE to enable pwm for pwm-leds:
+For PD pin (power down):
 
-&mfd {
-	...
-	pio: pinctrl {
-		...
-		pwm_gpio18_idx10_pins: pwm-gpio18-idx10-pins {
-			function =3D "pwm";
-			pins =3D "gpio18";
-			output-enable;
-		};
-	};
-};
+pd-gpios:
+    maxItems: 1
 
->=20
-> > +static int airoha_pinconf_set(struct pinctrl_dev *pctrl_dev,
-> > +                             unsigned int pin, unsigned long *configs,
-> > +                             unsigned int num_configs)
-> > +{
-> > +       struct airoha_pinctrl *pinctrl =3D pinctrl_dev_get_drvdata(pctr=
-l_dev);
-> > +       int i;
-> > +
-> > +       for (i =3D 0; i < num_configs; i++) {
-> > +               u32 param =3D pinconf_to_config_param(configs[i]);
-> > +               u32 arg =3D pinconf_to_config_argument(configs[i]);
-> > +
-> > +               switch (param) {
-> > +               case PIN_CONFIG_BIAS_DISABLE:
-> > +                       airoha_pinctrl_set_pulldown_conf(pinctrl, pin, =
-0);
-> > +                       airoha_pinctrl_set_pullup_conf(pinctrl, pin, 0);
-> > +                       break;
-> > +               case PIN_CONFIG_BIAS_PULL_UP:
-> > +                       airoha_pinctrl_set_pulldown_conf(pinctrl, pin, =
-0);
-> > +                       airoha_pinctrl_set_pullup_conf(pinctrl, pin, 1);
-> > +                       break;
-> > +               case PIN_CONFIG_BIAS_PULL_DOWN:
-> > +                       airoha_pinctrl_set_pulldown_conf(pinctrl, pin, =
-1);
-> > +                       airoha_pinctrl_set_pullup_conf(pinctrl, pin, 0);
-> > +                       break;
-> > +               case PIN_CONFIG_DRIVE_STRENGTH: {
-> > +                       u32 e2 =3D 0, e4 =3D 0;
-> > +
-> > +                       switch (arg) {
-> > +                       case MTK_DRIVE_2mA:
-> > +                               break;
-> > +                       case MTK_DRIVE_4mA:
-> > +                               e2 =3D 1;
-> > +                               break;
-> > +                       case MTK_DRIVE_6mA:
-> > +                               e4 =3D 1;
-> > +                               break;
-> > +                       case MTK_DRIVE_8mA:
-> > +                               e2 =3D 1;
-> > +                               e4 =3D 1;
-> > +                               break;
-> > +                       default:
-> > +                               return -EINVAL;
-> > +                       }
-> > +
-> > +                       airoha_pinctrl_set_drive_e2_conf(pinctrl, pin, =
-e2);
-> > +                       airoha_pinctrl_set_drive_e4_conf(pinctrl, pin, =
-e4);
-> > +                       break;
-> > +               }
-> > +               case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> > +                       airoha_pinctrl_set_pcie_rst_od_conf(pinctrl, pi=
-n, !!arg);
-> > +                       break;
-> > +               case PIN_CONFIG_OUTPUT_ENABLE:
-> > +               case PIN_CONFIG_INPUT_ENABLE:
-> > +               case PIN_CONFIG_OUTPUT: {
-> > +                       int gpio =3D airoha_pinctrl_get_gpio_from_pin(p=
-ctrl_dev, pin);
-> > +                       bool input =3D param =3D=3D PIN_CONFIG_INPUT_EN=
-ABLE;
-> > +
-> > +                       if (gpio < 0)
-> > +                               return gpio;
-> > +
-> > +                       airoha_pinctrl_gpio_set_direction(pinctrl, gpio=
-, input);
-> > +                       if (param =3D=3D PIN_CONFIG_OUTPUT)
-> > +                               airoha_pinctrl_gpio_set_value(pinctrl, =
-gpio, !!arg);
-> > +                       break;
->=20
-> Dito. No need to reuse the GPIO set direction function. Make a helper
-> that just work on the pin instead, and perhaps the GPIO set direction
-> can use that instead.
+> +
+> +  spi-max-frequency:
+> +    maximum: 100000000
 
-ack, I will fix it in v5.
+Datasheet says that minimum CSCK Period is 40 ns, so that would be
+25000000 Hz max frequency.
 
->=20
-> > +static int airoha_pinctrl_gpio_direction_output(struct gpio_chip *chip,
-> > +                                               unsigned int gpio, int =
-value)
-> > +{
-> > +       int err;
-> > +
-> > +       err =3D pinctrl_gpio_direction_output(chip, gpio);
-> > +       if (err)
-> > +               return err;
-> > +
-> > +       airoha_pinctrl_gpio_set(chip, gpio, value);
->=20
-> Hm I get a bit confused by the similarly named helpers I guess...
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - vcc-supply
+> +  - vdd-supply
+> +  - vddh-supply
 
-Naming is always hard, I will try to improve :)
+Datasheet says to tie V_DDH to GND to disable LDO, so it sounds like
+vddh-supply should be optional, not required.
 
->=20
-> > +static void airoha_pinctrl_gpio_irq_unmask(struct irq_data *data)
-> > +{
-> > +       u8 offset =3D data->hwirq % AIROHA_REG_GPIOCTRL_NUM_GPIO;
-> > +       u8 index =3D data->hwirq / AIROHA_REG_GPIOCTRL_NUM_GPIO;
-> > +       u32 mask =3D GENMASK(2 * offset + 1, 2 * offset);
-> > +       struct airoha_pinctrl_gpiochip *gpiochip;
-> > +       u32 val =3D BIT(2 * offset);
-> > +       unsigned long flags;
-> > +
-> > +       gpiochip =3D irq_data_get_irq_chip_data(data);
-> > +       if (WARN_ON_ONCE(data->hwirq >=3D ARRAY_SIZE(gpiochip->irq_type=
-)))
-> > +               return;
-> > +
-> > +       spin_lock_irqsave(&gpiochip->lock, flags);
->=20
-> Use a scoped guard here
->=20
-> guard(spinlock_irqsave)(&gpiochip->lock);
->=20
-> > +static void airoha_pinctrl_gpio_irq_mask(struct irq_data *data)
-> > +{
-> > +       u8 offset =3D data->hwirq % AIROHA_REG_GPIOCTRL_NUM_GPIO;
-> > +       u8 index =3D data->hwirq / AIROHA_REG_GPIOCTRL_NUM_GPIO;
-> > +       u32 mask =3D GENMASK(2 * offset + 1, 2 * offset);
-> > +       struct airoha_pinctrl_gpiochip *gpiochip;
-> > +       unsigned long flags;
-> > +
-> > +       gpiochip =3D irq_data_get_irq_chip_data(data);
-> > +
-> > +       spin_lock_irqsave(&gpiochip->lock, flags);
->=20
-> Dito
->=20
-> > +static int airoha_pinctrl_gpio_irq_type(struct irq_data *data,
-> > +                                       unsigned int type)
-> > +{
-> > +       struct airoha_pinctrl_gpiochip *gpiochip;
-> > +       unsigned long flags;
-> > +
-> > +       gpiochip =3D irq_data_get_irq_chip_data(data);
-> > +       if (data->hwirq >=3D ARRAY_SIZE(gpiochip->irq_type))
-> > +               return -EINVAL;
-> > +
-> > +       spin_lock_irqsave(&gpiochip->lock, flags);
->=20
-> Dito
->=20
-> > +       girq->chip =3D devm_kzalloc(dev, sizeof(*girq->chip), GFP_KERNE=
-L);
-> > +       if (!girq->chip)
-> > +               return -ENOMEM;
-> > +
-> > +       girq->chip->name =3D dev_name(dev);
-> > +       girq->chip->irq_unmask =3D airoha_pinctrl_gpio_irq_unmask;
-> > +       girq->chip->irq_mask =3D airoha_pinctrl_gpio_irq_mask;
-> > +       girq->chip->irq_mask_ack =3D airoha_pinctrl_gpio_irq_mask;
-> > +       girq->chip->irq_set_type =3D airoha_pinctrl_gpio_irq_type;
-> > +       girq->chip->flags =3D IRQCHIP_SET_TYPE_MASKED | IRQCHIP_IMMUTAB=
-LE;
-> > +       girq->default_type =3D IRQ_TYPE_NONE;
-> > +       girq->handler =3D handle_simple_irq;
->=20
-> If the irqchip is immutable it is const and there is no point to malloc i=
-t.
->=20
-> Just
->=20
-> static const struct irq_chip airoha_gpio_irq_chip =3D {...
->=20
-> And assign it:
->=20
-> girq =3D &g->gc.irq;
-> gpio_irq_chip_set_chip(girq, &airoha_gpio_irq_chip);
-
-ack, I will fix it in v5.
-
-Regards,
-Lorenzo
-
->=20
-> Yours,
-> Linus Walleij
-
---odZwuQpJyyMuG14N
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZvKQewAKCRA6cBh0uS2t
-rIOEAPwLJEIGo9DhC/Xay+37OQZdNofyAqZbZXQ3ppCO2RL7KwEArtuiHhhh7M2s
-P2gdNhRr/6e9slvOcmFY9kXml90vmgI=
-=y5LY
------END PGP SIGNATURE-----
-
---odZwuQpJyyMuG14N--
+> +  - vio-supply
+> +  - pwms
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    spi {
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +
+> +        adc@0{
+> +            compatible =3D "adi,ad4858";
+> +            reg =3D <0>;
+> +            spi-max-frequency =3D <10000000>;
+> +            vcc-supply =3D <&vcc>;
+> +            vdd-supply =3D <&vdd>;
+> +            vddh-supply =3D <&vddh>;
+> +            vio-supply =3D <&vio>;
+> +            pwms =3D <&pwm_gen 0 0>;
+> +            io-backends =3D <&iio_backend>;
+> +        };
+> +    };
+> +...
+> --
+> 2.46.0
+>
 
