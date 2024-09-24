@@ -1,243 +1,188 @@
-Return-Path: <linux-pwm+bounces-3353-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3354-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA7629846EE
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2024 15:43:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 531119847DF
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2024 16:42:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8ABB42841FF
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2024 13:43:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C05A51F214D3
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Sep 2024 14:42:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0857F14F124;
-	Tue, 24 Sep 2024 13:42:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A9DE1A7273;
+	Tue, 24 Sep 2024 14:41:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JK1VvNao"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="U7rY0Xzx"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D061AAE05
-	for <linux-pwm@vger.kernel.org>; Tue, 24 Sep 2024 13:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5BD1AAE2E
+	for <linux-pwm@vger.kernel.org>; Tue, 24 Sep 2024 14:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727185374; cv=none; b=j0DMykhjlGdsinTtCNA/3hJ1ieqWmFkif/Io0S/8NxFuttOgixOlBigVj9RuaP5VhvzNoQLFtcEqufxwsfH/dKlBlO3kCJD6TrxzM1rIBzNlg8KH0rtpGpKYjFg+ojflJcJEvlKw5yeotR/ia9GSaqNYELG9ivU8qbZTKU/0u3w=
+	t=1727188917; cv=none; b=E16pQ4y52uEn3xCJXWznn5YVrbJ4gtUbhCz3kOM/UT3d3rnBJ6FCVX74jeNHdAHsoeK/EKAhXfwGb07vE8ICDj7OA4Numt4UGg885nq0nYeBkCp7q857rfkWWvbXtg06KXqFNl9PpcOzHuW8vFq/aHrFGtzvOGavyBT7HAf/AVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727185374; c=relaxed/simple;
-	bh=JBAqJKIn6erssC6h7Fru/SUmSHqFjR15KojsKwYgo9w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P9JFbFlD0S2OROV9y9RWzcYAFhqAgkBwiVPFW+Z9fypIpKBj8SGijasTsjpRZ7g87R8adpOd6gjKX8PjoY2MU/m649anjBqBHwocJJYeyPXL4rEdoR1erAP8tbNlwduVai5MTJGFsYdMKIU5yIRr3LN1DV/NqDuNMSQR8HtPYqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JK1VvNao; arc=none smtp.client-ip=209.85.208.178
+	s=arc-20240116; t=1727188917; c=relaxed/simple;
+	bh=bYB6sGjl6OVpPbQmVT28nlrtD0q2IZNJFbiVeu2P4QM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IVWJSe6VdHYIDvZdYbWTtqSSQWCD5Bxjc3NWnCCytRPC3aV038v/e07xn4ITQxJ7U0lxQ/qedBYwcSHPP4TR1EZyIWXYRLoAeR7nvtnEDbymsD9O3SSVgXoKyQ0+TA7SXzCpG1dQUBe++w9ASDsqCpE1M+EKO6CjW9L/UTCBDDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=U7rY0Xzx; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2f77be8ffecso55434361fa.1
-        for <linux-pwm@vger.kernel.org>; Tue, 24 Sep 2024 06:42:52 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-374bfc395a5so3639516f8f.0
+        for <linux-pwm@vger.kernel.org>; Tue, 24 Sep 2024 07:41:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727185371; x=1727790171; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5c1M7ohqRDqRP9lr59f4TBK5eNeNiABegCv0HpvHngk=;
-        b=JK1VvNaoudfAypA/xNo4Pr3cBLv486zmTOrbFGqs8rm46fS/7ahtY3oDex05aLQkPm
-         VdfgrvgNBjs4LRy5GtxJh22zPzLBAFPwyJgxT9VliXtk+WhIYW7WK18AtcLaTSOefyBy
-         Ww3MyjwiVue8mNtkKOzU9ZF1DIvuer4dArmILwePVRgMMzNjxGyEHF6L81fCrX5nirfj
-         LoofpFT/+qPf6NHNMLHvQkkgGnUp02pyhuV02RXAT+t7f3ZkCUrOkAq5+mqYSd/p0Fa3
-         XkuaDvz/IlNz22EwRb/4UMND9rk4hEt15IOWSmKG2l2/lP0dNkkax19G79EMEie+jj/A
-         BrPA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727188913; x=1727793713; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mZI5U1pschJSs8BzcO25TabRksZf6E5sGIBvFGZUMG4=;
+        b=U7rY0Xzxp5qUIBOHjB/KdjSy3pXBs3ONP+ht5a10bxfEKmXJil3IUiDN2rFkI7/Sn3
+         7qOo7+xJQW+7MAx0V+JN5pxhuIfGpWtJ50Lqi8DZ7MkIBImuuGBJ8xPnIBxctUlcLHUa
+         RCtgPr0ffBa0Lht9k7IEHLhkEiEcWArJYtZ3ksZlo10WtVczlnVb9U6xMtsOCyClpH7L
+         iFBKsbjAcjg3znnby1b913MDatxzoOUqK6BYt/bxI2MOXCccowlIBwLK5zDuHzn3MPMW
+         4ANueQs0HtrxXcz3Ojy2wBdmkVIGdmRpSyDF0YjTupzyYuyFHASj9csHlx5lsPu+QkSk
+         Z5AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727185371; x=1727790171;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5c1M7ohqRDqRP9lr59f4TBK5eNeNiABegCv0HpvHngk=;
-        b=b31WVeSeKLo2oltKOoegoBG8x6Vi34visIA+i3TDAK+fqN3DAa3O70ON9TdrpLHkW/
-         VYnc1S3zlfrAat6Q2kgb4t8DqZ2dqTFQir4D5QMrpxWS54vbcEX8mBN65q/maPWOjMNA
-         80ifDabK91Yc8UMrGF3L9Jk5JfjecEC/S9hrs/WT2aRpmeeEPNrlA3tHETd+Vd+ASeyD
-         o+kEUdJ0KKp8DC3KKv/8NaQfKAAOXfueOycSqsKAXpjcyYKlGgEAzAlfqC+DCcV73MoE
-         i/xIZd+VbefADIfqE6gbnWPn5v7cFg+lM+gp1lCYI717QwyuURPDfvOzgGI4W1Vq0hyg
-         Ag3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXVkp1v18sHvEiPeNocnoGJ4aHVmD3J+PtLWDHf/+EZvze+WPy2Y3xr6y2eashdYWSRngI7qG7hWmE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHtPChXuPVcY/0OVFh+LPJoZIJJ1mSxbABsWM4P+BvmgitqyBC
-	gtr0oHq789Dr/M7V7E35xodnTxpLUAhh9gwq3a2vApPpCgt3Gl84Y60kUrtHVTGpOG5iBVcD4Cz
-	4a9UgyFo5YILwkVZR+WXY0+H/5nB+n0rAkuSlJQ==
-X-Google-Smtp-Source: AGHT+IFMCvX6ZomfwNVSQWZNrBg2XpB69scXfnzM6UFVXcdM7yblmJSqpExFckfnrrDnAlkTcnMFVsc76PzpIEqxbmM=
-X-Received: by 2002:a2e:4c0a:0:b0:2f6:2b51:ee3e with SMTP id
- 38308e7fff4ca-2f7cc5bb64emr56870301fa.41.1727185370526; Tue, 24 Sep 2024
- 06:42:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1727188913; x=1727793713;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mZI5U1pschJSs8BzcO25TabRksZf6E5sGIBvFGZUMG4=;
+        b=GGW/jfmntYuks5ahwEIoOb1kMQmIjbelGcAP9gDApHGA5kB/DVzpmJLKWzinTID/dK
+         I9MziVCP/28m15gvuWcNKLervd4X7KXcHGYDUQ6Mk8y4eKU2NWJ6iTpH5RGhtCc72p6f
+         ptJM0ik3Bw0HAB93zFw7lCH2Qtbz51VxLbzIHX97eg8VyS58g1rlRSwTzTfklVcpu7nV
+         fcAVsRnMAC2rtdMxUcBEy+sLp4/yMOGkvwMKXlyuafDHt/3cF3xhMpYvBNgIYS7edf6Q
+         0TPe72fzNsIWNC81SnZMka8T8th+aK05Jliwo/y0mIrihV+cMNSV07S8cG0B9Jsun7Zp
+         aOew==
+X-Forwarded-Encrypted: i=1; AJvYcCWAsm881nvQtMLmbmCfy/761XT78U7roj5EO9eBatPBI/BfAHWgz5u4RzP5NnOIjXxy3Nxxz6dk53o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMZwZjgWcSXJjsK173NYyorHQJ/+2PJbBAqBT4M11dBdxtN0kT
+	CmidA0vedEosaf+mVi6d+P8FU5I+CPMhr57++ciFqzdxj5TFx38cEdoi0Juck5o=
+X-Google-Smtp-Source: AGHT+IE54V4mWS0E1fGBaRhuYszEux79BQYQMRS6jlkq3ZgzaXmmKTdVDlYlx0Pt83jGSNgZCcuilQ==
+X-Received: by 2002:adf:a193:0:b0:374:cb84:13d3 with SMTP id ffacd0b85a97d-37c7ebab09bmr2110323f8f.12.1727188912452;
+        Tue, 24 Sep 2024 07:41:52 -0700 (PDT)
+Received: from [10.2.5.161] (amontpellier-556-1-151-252.w109-210.abo.wanadoo.fr. [109.210.7.252])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e90291ebbsm24907615e9.10.2024.09.24.07.41.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Sep 2024 07:41:52 -0700 (PDT)
+Message-ID: <56090167-15a0-4386-89a6-c379d70faae6@baylibre.com>
+Date: Tue, 24 Sep 2024 16:41:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240923101206.3753-1-antoniu.miclaus@analog.com> <20240923101206.3753-6-antoniu.miclaus@analog.com>
-In-Reply-To: <20240923101206.3753-6-antoniu.miclaus@analog.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Tue, 24 Sep 2024 15:42:39 +0200
-Message-ID: <CAMknhBE_RoDg+EhqF5+UbqV1z7i1PvVRi3HC48SAsR5AYDF6TQ@mail.gmail.com>
-Subject: Re: [PATCH 5/7] dt-bindings: iio: adc: add ad458x
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>, 
-	Olivier Moysan <olivier.moysan@foss.st.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Marcelo Schmitt <marcelo.schmitt@analog.com>, 
-	Mike Looijmans <mike.looijmans@topic.nl>, Marius Cristea <marius.cristea@microchip.com>, 
-	Dumitru Ceclan <mitrutzceclan@gmail.com>, 
-	=?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Alisa-Dariana Roman <alisadariana@gmail.com>, Sergiu Cuciurean <sergiu.cuciurean@analog.com>, 
-	Dragos Bogdan <dragos.bogdan@analog.com>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/10] dt-bindings: iio: adc: ad7606: Make corrections
+ on spi conditions
+To: Conor Dooley <conor@kernel.org>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+ aardelean@baylibre.com, dlechner@baylibre.com, jstephan@baylibre.com
+References: <20240920-ad7606_add_iio_backend_support-v2-0-0e78782ae7d0@baylibre.com>
+ <20240920-ad7606_add_iio_backend_support-v2-2-0e78782ae7d0@baylibre.com>
+ <20240921-playgroup-regally-f26c17be26dc@spud>
+Content-Language: en-US
+From: Guillaume Stols <gstols@baylibre.com>
+In-Reply-To: <20240921-playgroup-regally-f26c17be26dc@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 23, 2024 at 12:17=E2=80=AFPM Antoniu Miclaus
-<antoniu.miclaus@analog.com> wrote:
+
+On 9/21/24 23:55, Conor Dooley wrote:
+> On Fri, Sep 20, 2024 at 05:33:22PM +0000, Guillaume Stols wrote:
+>> The SPI conditions are not always required, because there is also a
+>> parallel interface. The way used to detect that the SPI interface is
+>> used is to check if the reg value is between 0 and 256.
+> And, yaknow, not that the bus you're on is a spi bus? I don't think this
+> comment is relevant to the binding, especially given you have a property
+> for it.
+
+Apologies, I missed to change the commit message, it will be fixed in 
+the next series.
+
+Since Jonathan did not like very much inferring the interface with the 
+reg's value that I used i the previous verison, I introduced this flag.
+
+However this is only intended to be use in bindings, to determine 
+whether or not spi properties should be added.
+
+In the driver side of things, the bus interface is inferred by the 
+parent's node (SPI driver is an module_spi_driver while parallel driver 
+is module_platform_driver).
+
 >
-> Add devicetree bindings for ad458x DAS family.
+>> There is also a correction on the spi-cpha that is not required when SPI
+>> interface is selected, while spi-cpol is.
+> I don't see this change in your patch, there's no cpha in the before.
 >
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
->  .../bindings/iio/adc/adi,ad485x.yaml          | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad485x.=
-yaml
+Again a problem with the commit message, this belongs now to another commit.
+>> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+>> ---
+>>   .../devicetree/bindings/iio/adc/adi,ad7606.yaml      | 20 +++++++++++++++++---
+>>   1 file changed, 17 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+>> index 75334a033539..12995ebcddc2 100644
+>> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+>> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+>> @@ -112,18 +112,32 @@ properties:
+>>         assumed that the pins are hardwired to VDD.
+>>       type: boolean
+>>   
+>> +  parallel-interface:
+>> +    description:
+>> +      If the parallel interface is used, be it directly or through a backend,
+>> +      this property must be defined.
+>> +    type: boolean
+> The type you would want here is actually "flag", but I'm not sure why a
+> property is needed. If you're using the parallel interface, why would
+> you still be on a spi bus? I think I'm a bit confused here as to how
+> this interface is supposed to be used.
 >
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad485x.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad485x.yaml
-> new file mode 100644
-> index 000000000000..5f5bdfa9522b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad485x.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright 2022 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-
-I think we could make the bindings a bit more complete (even if the
-driver doesn't use everything yet). Some suggestions below.
-
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad485x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD485X DAS family device driver
-> +
-> +maintainers:
-> +  - Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> +  - Dragos Bogdan <dragos.bogdan@analog.com>
-> +  - Antoniu Miclaus <antoniu.miclaus@analog.com>
-> +
-> +description: |
-> +  Analog Devices AD485X DAS family
-> +
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
-4858.pdf
-
-Links for other parts? (I only looked at this datasheet, so some of my
-comments below might only apply to this part and not the others.)
-
-Since this is a SPI peripheral, we should add...
-
-$ref: /schemas/spi/spi-peripheral-props.yaml#
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad4858
-> +      - adi,ad4857
-> +      - adi,ad4856
-> +      - adi,ad4855
-> +      - adi,ad4854
-> +      - adi,ad4853
-> +      - adi,ad4852
-> +      - adi,ad4851
-> +      - adi,ad4858i
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vcc-supply: true
-
-Do we also need vee-supply (it can be a negative voltage or 0V)? Or is
-vcc-supply the voltage between V_CC and V_EE?
-
-> +
-> +  vdd-supply: true
-> +
-> +  vddh-supply: true
-
-Datasheet says V_DDL can be the same or separate supply as V_DDH, so
-should probably also have vddl-supply: true.
-
-> +
-> +  vio-supply: true
-
-What about reference supplies (REFIO and REFBUF)?
-
-> +
-> +  pwms:
-> +    maxItems: 1
-
-I suppose this is connected to the CNV pin? Probably worth adding a
-description to say that since it isn't so obvious.
-
-> +
-> +  io-backends:
-> +    maxItems: 1
-
-For PD pin (power down):
-
-pd-gpios:
-    maxItems: 1
-
-> +
-> +  spi-max-frequency:
-> +    maximum: 100000000
-
-Datasheet says that minimum CSCK Period is 40 ns, so that would be
-25000000 Hz max frequency.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vcc-supply
-> +  - vdd-supply
-> +  - vddh-supply
-
-Datasheet says to tie V_DDH to GND to disable LDO, so it sounds like
-vddh-supply should be optional, not required.
-
-> +  - vio-supply
-> +  - pwms
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        adc@0{
-> +            compatible =3D "adi,ad4858";
-> +            reg =3D <0>;
-> +            spi-max-frequency =3D <10000000>;
-> +            vcc-supply =3D <&vcc>;
-> +            vdd-supply =3D <&vdd>;
-> +            vddh-supply =3D <&vddh>;
-> +            vio-supply =3D <&vio>;
-> +            pwms =3D <&pwm_gen 0 0>;
-> +            io-backends =3D <&iio_backend>;
-> +        };
-> +    };
-> +...
-> --
-> 2.46.0
+> Thanks,
+> Conor.
 >
+>> +
+>>   required:
+>>     - compatible
+>>     - reg
+>> -  - spi-cpol
+>>     - avcc-supply
+>>     - vdrive-supply
+>>     - interrupts
+>>     - adi,conversion-start-gpios
+>>   
+>> -allOf:
+>> -  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+>> +oneOf:
+>> +  - required:
+>> +      - parallel-interface
+>> +  - allOf:
+>> +      - properties:
+>> +          parallel-interface: false
+>> +          spi-cpol: true
+>> +      - $ref: /schemas/spi/spi-peripheral-props.yaml#
+>> +      - required:
+>> +          - spi-cpol
+>>   
+>> +allOf:
+>>     - if:
+>>         properties:
+>>           compatible:
+>>
+>> -- 
+>> 2.34.1
+>>
 
