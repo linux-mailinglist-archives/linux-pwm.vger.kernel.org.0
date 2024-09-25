@@ -1,93 +1,79 @@
-Return-Path: <linux-pwm+bounces-3362-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3363-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20EB29856A9
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Sep 2024 11:51:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BB25598602C
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Sep 2024 16:16:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 108841C2112D
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Sep 2024 09:51:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DDDE21C26343
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Sep 2024 14:16:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 646E31514CB;
-	Wed, 25 Sep 2024 09:51:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDE60189BA4;
+	Wed, 25 Sep 2024 12:42:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QUX3m39M"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S4Dpmm5v"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD4D14B967;
-	Wed, 25 Sep 2024 09:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A147A189BA5;
+	Wed, 25 Sep 2024 12:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727257878; cv=none; b=cGeWjYBY/mw21mrlkoI6dwAfb/RUTm5bVP18xMxuvU6W6ZWeJoYJgTpQT6wjec1f5Z8gIfrk7LfSDVZAe6Hz6L6hEQVYdIb1DMRW0GWw4pQVbIoPFTMZ2ZX7qPt8t/Lwu+KR4xeEiOgtV+Th02VYU+tcEtlv7QtKDPTXq3DSi9M=
+	t=1727268142; cv=none; b=qGUPv6klZ9Ap5E8KvkeDeuZyVECkqdBfs67P0ZHuAYmEAPFA08om96fS1LDJsJjQzL4AcejP3lMBnsu5EAuq7W9Nt5kRa4K60ZgMw6op0uRWH8IzS/rHZbBYi/7axsGuqns2HD+HVcehDqLAVq8c3xtEqAQRJ5ougk7pEcLnJR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727257878; c=relaxed/simple;
-	bh=6mcOV4Z2H7iVA1xos5dXGhlymzzh+HH/+oqm9Q+z15U=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j/SPpJKBa12qKLcePwjDD86uvsuGH+IuJuH5RJ30rM8WE5AlSQWTZDjfYzGdrCPKBQB7vGAs0OKy8MCXZz+B3snCE9tbNqAZyYQoAPizy0tPVbBmxmUM0UZZ9DE2KG3mFNfJVye/2cE6T5aAz67HR6+wRaCCUIPN6Y3Y1zRwaPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QUX3m39M; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42cb806623eso56647365e9.2;
-        Wed, 25 Sep 2024 02:51:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727257874; x=1727862674; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=dDln4KXF/7+F5/JQmkbmDgtFCiDcW7/b23N8sYic+uc=;
-        b=QUX3m39MAumBj/R+erwYII1mX/IF1eM4mGO6RIph67JPPmlUFiKbsOgdExV+D3xCEK
-         9f6+4Z5lDkBYu9sJZzxawgXXSQX1xmf6lMz+aU7IxwNDkfhtYurvRTHXKYsW9n2NuDRO
-         q73XcqcxqMXEbvmg98eQDnG0ACTT7AhJ7jdBbrm3roRSaCd/CuEr4bzpoL7PAbggThaI
-         gdKh8pFLICZsqt1fm2nLY7XnJA4mO1Wmn9qzCil+KD1H0UuQ+0c0vckquIo8isQ0Te7z
-         hUcPDZI8bW9LVWKsxv9QRthaDgypW+I57TPQRO3fuohqSo1Pbo/Il/SSofcpH16IlJVE
-         UcLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727257874; x=1727862674;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dDln4KXF/7+F5/JQmkbmDgtFCiDcW7/b23N8sYic+uc=;
-        b=EzX36mJrmcEkSJ5bk7DQMddU9stLK8q+dGxWMtcNndipDZRGu9dYfBJU6ap8SAcNxB
-         uZF7dGceSdpUKmc4p1gTCqhBEBiq3kIY0faCUWnG4lHyYjfPDWklUHnnoDFO7f8HM84m
-         vf/HWOLKLOY6ctlQiQchUKRNC2XR2+E+Ovw8QMw61pito4MaTlwMZ1/b9yHxDPWqBfvo
-         +3uMJsr7yx4mWTR4Bv97AoXc7cn6FmpT4xQHNnQylP2HMxufvQSZNqV6e3nF40xHdCeu
-         EGTDqfJS1Z7UAw6WsYp6WG6d2twoahKjXbgpfpeDxzWGkG0UtgnKwJV1itnuEQJbaQR2
-         gzdw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7Eb0s2FqPYGlmJOdHb4txLjDEGIxX6WXaK528fm7F4/pAENKptwGQzznAAKAHYUt8VTzP8ZA68Ssj@vger.kernel.org, AJvYcCVH4qLOSzi0Xfqdr+BQjq8ubWbIh0iW58T2Ed3hvovfe4Wjyrm19CSd1UIY2pv296uVPQ3sL+67+858@vger.kernel.org, AJvYcCW41dT0ENRccqaEyj9HPJQf2OZprmdN9nyQoee9189aAWgDj1m/t0YN/yWZUFN29f3+fbqoXyDib5bu0w==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6pMk02WSSVshV728C+TZzGJBQlf8r3yl1hsGWIf8AKqnOOHXL
-	8zP3sQsjEUgU6RhWdW7jV6jIrNcRZd4EFqHcrVA06btUQwqt1ebX
-X-Google-Smtp-Source: AGHT+IHDUsmFcuyEuiXMU148+jNbNpI9r1/wqGCcgHuH7haynKQZFs61GjDI7QM15qHBWVStwTWHaw==
-X-Received: by 2002:a05:600c:3b29:b0:42c:bd4d:e8ba with SMTP id 5b1f17b1804b1-42e9610a6famr13626365e9.8.1727257874435;
-        Wed, 25 Sep 2024 02:51:14 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cbc1560a7sm3576976f8f.0.2024.09.25.02.51.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2024 02:51:14 -0700 (PDT)
-Message-ID: <66f3dd12.5d0a0220.8f8b6.af43@mx.google.com>
-X-Google-Original-Message-ID: <ZvPdDqLlCVrf5k9R@Ansuel-XPS.>
-Date: Wed, 25 Sep 2024 11:51:10 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] Add mfd, pinctrl and pwm support to EN7581 SoC
-References: <20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org>
- <66f13ab0.5d0a0220.b0c27.b441@mx.google.com>
- <20240925094738.GD7545@google.com>
+	s=arc-20240116; t=1727268142; c=relaxed/simple;
+	bh=WXAQYtZyqCVW4wBSXVV7iEu+jmbm65WGzIo4hviMllI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h0QGZ0vDqsw20I+xPk9fq1GnbstyPabArTlrlEkVq8sRSADtx3ojWa04ZbdT7WGoP/myrvVJdT2VIMQLCtsQQB/PWrZfxiQQJv9Ytj2p8NxaC36KSpVckPom99ErQXb/Oj/1qrkS6Rk/hpRV/xCY1ROEKsSUO/QpVl+BYowG/rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S4Dpmm5v; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727268140; x=1758804140;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WXAQYtZyqCVW4wBSXVV7iEu+jmbm65WGzIo4hviMllI=;
+  b=S4Dpmm5vMVfO8gF1Dr5GTZ+0j6JI535td0TiJHuxJpM/i3PT9swnTHc1
+   KPvaJtIuc2Wqf5ZjUBeZsbz48J6cztfs+HDLoEU6XOX+/2xB0c2DygxgA
+   Sp9sBXBQi8B3KYmdzrbuRUOVUADbEvUXVG/7bGtcgtsmeK6e/g7RYvonY
+   t2BargIdjBsXSv9A7Fghceg3JfgcnIIydzucFB2Ov1Wo7s38ic/pA2Szb
+   sPYRVuYCMrcISgJkuICxNYzs5mB+0xPHKpVD8loUjCItm0yG8JsOi/kG6
+   6z4KBXpVVAy+pqAVb48iEmnNQQYvIu02ioQJ1p3wzdhB3bJAuKi2Dhgbf
+   g==;
+X-CSE-ConnectionGUID: cJc+V9J4S3eCfHZesrtEow==
+X-CSE-MsgGUID: 3ur+eU46TiCKgAsCXDzfPQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11206"; a="26176194"
+X-IronPort-AV: E=Sophos;i="6.10,257,1719903600"; 
+   d="scan'208";a="26176194"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2024 05:42:20 -0700
+X-CSE-ConnectionGUID: NUqdowHsSfCR8WZAZzCtfg==
+X-CSE-MsgGUID: /B3t6mycQySzKBvhQktK+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,257,1719903600"; 
+   d="scan'208";a="71419940"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 25 Sep 2024 05:42:18 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1stRLT-000JXz-2K;
+	Wed, 25 Sep 2024 12:42:15 +0000
+Date: Wed, 25 Sep 2024 20:41:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: axi-pwmgen: Create a dedicated function for getting
+ driver data from a chip
+Message-ID: <202409252009.ZbXikiQJ-lkp@intel.com>
+References: <20240923125418.16558-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -96,108 +82,183 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240925094738.GD7545@google.com>
+In-Reply-To: <20240923125418.16558-2-u.kleine-koenig@baylibre.com>
 
-On Wed, Sep 25, 2024 at 10:47:38AM +0100, Lee Jones wrote:
-> On Mon, 23 Sep 2024, Christian Marangi wrote:
-> 
-> > On Wed, Sep 11, 2024 at 09:50:00PM +0200, Lorenzo Bianconi wrote:
-> > > Introduce airoha-mfd driver in order to load pinctrl and pwm drivers for
-> > > EN7581 SoC. airoha-mfd is needed since both pinctrl and pwm drivers
-> > > needs to access the same memory block (gpio memory region) to configure
-> > > {gio,irq}_chip and pwm functionalities respectively, so model them as
-> > > childs of a parent mfd driver.
-> > > Current EN7581 pinctrl driver supports the following functionalities:
-> > > - pin multiplexing via chip_scu syscon
-> > > - pin pull-up, pull-down, open-drain, current strength,
-> > >   {input,output}_enable, output_{low,high} via chip_scu syscon
-> > > - gpio controller
-> > > - irq controller
-> > > 
-> > > ---
-> > > Changes in v4:
-> > > - add 'Limitation' description in pwm driver
-> > > - fix comments in pwm driver
-> > > - rely on mfd->base __iomem pointer in pwm driver, modify register
-> > >   offsets according to it and get rid of sgpio_cfg, flash_cfg and
-> > >   cycle_cfg pointers
-> > > - simplify register utility routines in pwm driver
-> > > - use 'generator' instead of 'waveform' suffix for pwm routines
-> > > - fix possible overflow calculating duty cycle in pwm driver
-> > > - do not modify pwm state in free callback in pwm driver
-> > > - cap the maximum period in pwm driver
-> > > - do not allow inverse polarity in pwm driver
-> > > - do not set of_xlate callback in the pwm driver and allow the stack to
-> > >   do it
-> > > - fix MAINTAINERS file for airoha pinctrl driver
-> > > - fix undefined reference to __ffsdi2 in pinctrl driver
-> > > - simplify airoha,en7581-gpio-sysctl.yam binding
-> > > - Link to v3: https://lore.kernel.org/r/20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org
-> > > 
-> > > Changes in v3:
-> > > - introduce airoha-mfd driver
-> > > - add pwm driver to the same series
-> > > - model pinctrl and pwm drivers as childs of a parent mfd driver.
-> > > - access chip-scu memory region in pinctrl driver via syscon
-> > > - introduce a single airoha,en7581-gpio-sysctl.yaml binding and get rid
-> > >   of dedicated bindings for pinctrl and pwm
-> > > - add airoha,en7581-chip-scu.yaml binding do the series
-> > > - Link to v2: https://lore.kernel.org/r/20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org
-> > > 
-> > > Changes in v2:
-> > > - Fix compilation errors
-> > > - Collapse some register mappings for gpio and irq controllers
-> > > - update dt-bindings according to new register mapping
-> > > - fix some dt-bindings errors
-> > > - Link to v1: https://lore.kernel.org/all/cover.1723392444.git.lorenzo@kernel.org/
-> > > 
-> > > ---
-> > > Benjamin Larsson (1):
-> > >       pwm: airoha: Add support for EN7581 SoC
-> > > 
-> > > Christian Marangi (2):
-> > >       dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Controller
-> > >       mfd: airoha: Add support for Airoha EN7581 MFD
-> > > 
-> > > Lorenzo Bianconi (2):
-> > >       dt-bindings: arm: airoha: Add the chip-scu node for EN7581 SoC
-> > >       pinctrl: airoha: Add support for EN7581 SoC
-> > > 
-> > >  .../bindings/arm/airoha,en7581-chip-scu.yaml       |   42 +
-> > >  .../bindings/mfd/airoha,en7581-gpio-sysctl.yaml    |  433 +++
-> > >  MAINTAINERS                                        |    7 +
-> > >  drivers/mfd/Kconfig                                |    8 +
-> > >  drivers/mfd/Makefile                               |    2 +
-> > >  drivers/mfd/airoha-en7581-gpio-mfd.c               |   72 +
-> > >  drivers/pinctrl/mediatek/Kconfig                   |   16 +-
-> > >  drivers/pinctrl/mediatek/Makefile                  |    1 +
-> > >  drivers/pinctrl/mediatek/pinctrl-airoha.c          | 2964 ++++++++++++++++++++
-> > >  drivers/pwm/Kconfig                                |   10 +
-> > >  drivers/pwm/Makefile                               |    1 +
-> > >  drivers/pwm/pwm-airoha.c                           |  414 +++
-> > >  include/linux/mfd/airoha-en7581-mfd.h              |    9 +
-> > >  13 files changed, 3978 insertions(+), 1 deletion(-)
-> > > ---
-> > > base-commit: 264c13114bd71ddfd7b25c7b94f6cda4587eca25
-> > > change-id: 20240818-en7581-pinctrl-1bf120154be0
-> > > prerequisite-change-id: 20240705-for-6-11-bpf-a349efc08df8:v2
-> > > 
-> > >
-> > 
-> > Hi,
-> > 
-> > any news with this? Rob reviewed the DT schemas and he is ok with them.
-> > 
-> > Any other comments for the MFD driver and/or the pinctrl or PWM driver?
-> 
-> Note that the merge-window is still open.  Some maintainers, myself
-> included, use this lull to prioritise other things.  This set is on my
-> list and will be dealt with shortly.
-> 
+Hi Uwe,
 
-Wasn't aware the merge window was still open and sorry for the noise.
-Thanks for the feedback!
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 62f92d634458a1e308bb699986b9147a6d670457]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Uwe-Kleine-K-nig/pwm-axi-pwmgen-Create-a-dedicated-function-for-getting-driver-data-from-a-chip/20240923-205606
+base:   62f92d634458a1e308bb699986b9147a6d670457
+patch link:    https://lore.kernel.org/r/20240923125418.16558-2-u.kleine-koenig%40baylibre.com
+patch subject: [PATCH] pwm: axi-pwmgen: Create a dedicated function for getting driver data from a chip
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20240925/202409252009.ZbXikiQJ-lkp@intel.com/config)
+compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 7773243d9916f98ba0ffce0c3a960e4aa9f03e81)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240925/202409252009.ZbXikiQJ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409252009.ZbXikiQJ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/pwm/pwm-axi-pwmgen.c:25:
+   In file included from include/linux/io.h:14:
+   In file included from arch/s390/include/asm/io.h:93:
+   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     548 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
+         |                                                           ^
+   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
+     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+         |                                                      ^
+   In file included from drivers/pwm/pwm-axi-pwmgen.c:25:
+   In file included from include/linux/io.h:14:
+   In file included from arch/s390/include/asm/io.h:93:
+   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
+         |                                                           ^
+   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
+     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
+         |                                                      ^
+   In file included from drivers/pwm/pwm-axi-pwmgen.c:25:
+   In file included from include/linux/io.h:14:
+   In file included from arch/s390/include/asm/io.h:93:
+   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     585 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     693 |         readsb(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     701 |         readsw(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     709 |         readsl(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     718 |         writesb(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     727 |         writesw(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     736 |         writesl(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   In file included from drivers/pwm/pwm-axi-pwmgen.c:26:
+   In file included from include/linux/module.h:19:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/s390/include/asm/elf.h:181:
+   In file included from arch/s390/include/asm/mmu_context.h:11:
+   In file included from arch/s390/include/asm/pgalloc.h:18:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     505 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     512 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     525 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/pwm/pwm-axi-pwmgen.c:58:9: error: returning 'void *' from a function with incompatible result type 'struct axi_pwmgen_ddata'
+      58 |         return pwmchip_get_drvdata(chip);
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/pwm/pwm-axi-pwmgen.c:64:27: error: initializing 'struct axi_pwmgen_ddata *' with an expression of incompatible type 'struct axi_pwmgen_ddata'
+      64 |         struct axi_pwmgen_ddata *ddata = axi_pwmgen_ddata_from_chip(chip);
+         |                                  ^       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/pwm/pwm-axi-pwmgen.c:108:27: error: initializing 'struct axi_pwmgen_ddata *' with an expression of incompatible type 'struct axi_pwmgen_ddata'
+     108 |         struct axi_pwmgen_ddata *ddata = axi_pwmgen_ddata_from_chip(chip);
+         |                                  ^       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   16 warnings and 3 errors generated.
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for OMAP2PLUS_MBOX
+   Depends on [n]: MAILBOX [=y] && (ARCH_OMAP2PLUS || ARCH_K3)
+   Selected by [m]:
+   - TI_K3_M4_REMOTEPROC [=m] && REMOTEPROC [=y] && (ARCH_K3 || COMPILE_TEST [=y])
+
+
+vim +58 drivers/pwm/pwm-axi-pwmgen.c
+
+    55	
+    56	static struct axi_pwmgen_ddata axi_pwmgen_ddata_from_chip(struct pwm_chip *chip)
+    57	{
+  > 58		return pwmchip_get_drvdata(chip);
+    59	}
+    60	
+    61	static int axi_pwmgen_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+    62				    const struct pwm_state *state)
+    63	{
+  > 64		struct axi_pwmgen_ddata *ddata = axi_pwmgen_ddata_from_chip(chip);
+    65		unsigned int ch = pwm->hwpwm;
+    66		struct regmap *regmap = ddata->regmap;
+    67		u64 period_cnt, duty_cnt;
+    68		int ret;
+    69	
+    70		if (state->polarity != PWM_POLARITY_NORMAL)
+    71			return -EINVAL;
+    72	
+    73		if (state->enabled) {
+    74			period_cnt = mul_u64_u64_div_u64(state->period, ddata->clk_rate_hz, NSEC_PER_SEC);
+    75			if (period_cnt > UINT_MAX)
+    76				period_cnt = UINT_MAX;
+    77	
+    78			if (period_cnt == 0)
+    79				return -EINVAL;
+    80	
+    81			ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), period_cnt);
+    82			if (ret)
+    83				return ret;
+    84	
+    85			duty_cnt = mul_u64_u64_div_u64(state->duty_cycle, ddata->clk_rate_hz, NSEC_PER_SEC);
+    86			if (duty_cnt > UINT_MAX)
+    87				duty_cnt = UINT_MAX;
+    88	
+    89			ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), duty_cnt);
+    90			if (ret)
+    91				return ret;
+    92		} else {
+    93			ret = regmap_write(regmap, AXI_PWMGEN_CHX_PERIOD(ch), 0);
+    94			if (ret)
+    95				return ret;
+    96	
+    97			ret = regmap_write(regmap, AXI_PWMGEN_CHX_DUTY(ch), 0);
+    98			if (ret)
+    99				return ret;
+   100		}
+   101	
+   102		return regmap_write(regmap, AXI_PWMGEN_REG_CONFIG, AXI_PWMGEN_LOAD_CONFIG);
+   103	}
+   104	
 
 -- 
-	Ansuel
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
