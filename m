@@ -1,134 +1,251 @@
-Return-Path: <linux-pwm+bounces-3366-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3367-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52F2898639C
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Sep 2024 17:32:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D575A9863BF
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Sep 2024 17:38:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1159E2914AC
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Sep 2024 15:32:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92D67287ECE
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Sep 2024 15:38:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1DB838FA3;
-	Wed, 25 Sep 2024 15:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3441E1D5ABC;
+	Wed, 25 Sep 2024 15:38:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gn1G19OX"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DbwS6BrZ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0589F1A702
-	for <linux-pwm@vger.kernel.org>; Wed, 25 Sep 2024 15:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEF91849
+	for <linux-pwm@vger.kernel.org>; Wed, 25 Sep 2024 15:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727278116; cv=none; b=GRee9FNpx7Q9iwuvp2OL9j+RWnsNhpPEKIwomPH5r8c/pBsHsN9LDbfqOCGJLffm4+yA0xUyhSS/AtCB1H3tPUJyMb7QsvyEem7OTzMK4zMqxx07Q9FtYlEWXdrPR/3UBvWjW5xkAPzT+6bYcdZIJ625yCj8fEqBP0n/jGid20w=
+	t=1727278720; cv=none; b=PJINww4JCciXSJh/8kgEHKthzGEv8Yve23MkXLC685d95d0r4kxf2QDXpcuSUAHnTRH8xmIhj0mX6YEwpi2mOKLBAtw9E0/eH/76TH4W3UWWpJdHUOMbDH+qLrxpfRbiiExHobwZ6LTn8SjEP3r9q8lwthOZ0qkn7FGV8mNWvQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727278116; c=relaxed/simple;
-	bh=/B5KIkZH/dNJd7K8EFl1NpdgaaqQMbqnQYkG9BZCTKU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dZEbbmo2B3TSg7c8mzWhUJ6elqWqSsb/VW5BoKizWC7qX62YG/Ofh5D/VSz0EeE3udnnSY51FsRCXAC7nON0SqHb7kSUnzL3Zrfgy6Pb2mXqtWHt4waRA6N0+l9q7qIR9utg8uOTbapStmTYigBvlXMEM5bxCspQ4fH27XeTRqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gn1G19OX; arc=none smtp.client-ip=209.85.221.50
+	s=arc-20240116; t=1727278720; c=relaxed/simple;
+	bh=Ppgu3Ihbk/CmVOQL+/gsAa1aI2YarJnQiUihXQNZPwI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aybod7DaQcZNrBIVzysfqnVXbYR9Hx6zfCTH1JuNrtx8y7hu1aXy8aff4PyJy64xt/Ce5TB/iGtFNaguo3yOyHwRepO4/zjfFuK6NjshBweakC9WPa6ubPswlHMmDGM1CewqRCD3+mk/hyVx6fRZy1W11pYs14HsbU5pXZUIm3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DbwS6BrZ; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3770320574aso4449954f8f.2
-        for <linux-pwm@vger.kernel.org>; Wed, 25 Sep 2024 08:28:34 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42cbb08a1a5so65716745e9.3
+        for <linux-pwm@vger.kernel.org>; Wed, 25 Sep 2024 08:38:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727278113; x=1727882913; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7PSyy4BN71dy5mqHVexLDzboTAsKUKc2hyFTi3KyPtk=;
-        b=gn1G19OXvt7rEurdAa8o/mgW1cbswZDlAue5/ctfmtRQnkDA1PZbr8XG69QmmNTOMH
-         YBxkygZYOg0nYw09E6kpdKdpiBb9uyWyZtSRlAq/PvGDMii6Di+aRKWE5pz+YtVcEreb
-         TD32bPwy5GO+cbESQHN+PCkcjY0XXnbufAuT1QzXvqbSivMPxPLgw427ztIBVVtXdbJm
-         y01UAZPFDNDnjdID6dRcx20sj7mKtG+DOzG1nUTNYFG+KKDEF46On9UcrgP0kGIhB0uK
-         Ahw9N3fVEz4NwH3JR19ciq4Cmr0jojnbfcc9hCkb2Zs13GWbbRcSExLP2q3r5Mn7t4ev
-         Wfdw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727278716; x=1727883516; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gleAVhem5eHU5K/a+/j+vn/FuUaf5+HzHEW7eiV/4EU=;
+        b=DbwS6BrZZwEluaGA82+Q2fOiY3SVeepTqeJ6XQ2hNJW6UJwqFbGfHt4nNBpMJsHQrQ
+         BHwEFmPcB/PKCanYa8pmt4mSI2kbF9vbtMDxt8ABTcFiM+cNWyyQqJinctdsfTzt8WiH
+         04i6sL3uwwrzocjVqBkchdYqyzQ3fsBB7VtgvEVBq413ctg7V0yBGlwCuAwxbDqR52Td
+         WB+0MNyKX19npXLuXlsCesKXFZYznELCp4gW2ksAH4gWmOfMOzWIw0GLLT+5xaDmy3R+
+         asyVq0yQp5TcyJCLhb0SpWgVtdCkH1Fmpk/ZPTnWnslk9MO4E+wlhYeBRBlgQ2b3Fvx9
+         a+hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727278113; x=1727882913;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7PSyy4BN71dy5mqHVexLDzboTAsKUKc2hyFTi3KyPtk=;
-        b=fuMwXPfBAI3/qyc45hkILwnWU5X/pQKMW09htiHSpsxztAMcYsLN3Z4COgw71zy0M/
-         jTXQOhe9Rop5ufJtCzN6SYSXobuzIeebGg3tI9N2sEgYk8r+kFZ902W3ulaaifxqLciV
-         zO+eu/1stR/1QPWoz/vQ7Fadf3P6Shb3x5kipCPGwhM/ji81r4K57qBX2L1SvREHkJdo
-         55VxKofY072fPQMw8UbvqTSwsmP0qNF3mQgz1H0NWlXuV0bUtnMVeHm42+f59zSt6U9A
-         9TCstzNYtl1dLlCOr4qFd+ao7dLNsS7A7Ebkng4Fs25Zcn9596ambAdACjlRQroILHFS
-         624A==
-X-Forwarded-Encrypted: i=1; AJvYcCUMFwHVBmGk6jumFKMNU74zUA1jYZR7Uche3I75yFtsVPR4pfdEdXov8HaE6yAT+O7GHlqbV3EeYJ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuvTpovlqmTgOOLrJ375CTRbcpyP1d7pzFGDJ0aY7nQV3DsMVl
-	qDepYmRvpigaZgeBj8ge7LLWPjdpuv4OGVXDoi4hB7gTWIXnk6DZXq3FXXD+vc8=
-X-Google-Smtp-Source: AGHT+IFp1PAa7fUkvNR1Hu5TOkbb60Z/zetDN4Gii2Kf3uJUYk6thZOMukVHn10+sCEkHp+fUTfHpw==
-X-Received: by 2002:a5d:6e10:0:b0:374:cea0:7d3d with SMTP id ffacd0b85a97d-37cc24c5a71mr2197820f8f.53.1727278112851;
-        Wed, 25 Sep 2024 08:28:32 -0700 (PDT)
-Received: from [10.2.5.161] (amontpellier-556-1-151-252.w109-210.abo.wanadoo.fr. [109.210.7.252])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cc4a57d00sm1747754f8f.64.2024.09.25.08.28.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Sep 2024 08:28:32 -0700 (PDT)
-Message-ID: <da15af17-e5cc-4714-9fe1-4683d990abbb@baylibre.com>
-Date: Wed, 25 Sep 2024 17:28:30 +0200
+        d=1e100.net; s=20230601; t=1727278716; x=1727883516;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gleAVhem5eHU5K/a+/j+vn/FuUaf5+HzHEW7eiV/4EU=;
+        b=A4dZOj6s0Zqz1SqCzoR5qeGOOflY36F6OQRRolv6A/37jcDvUs4q0oiX2jzpVDcrCy
+         BaWtHC0bLlVvfxu5FJfmrOA8gsEgdV0jHAI1/QjrIOy/McBP+UGTJqSq5ufCSbwc2WZU
+         g9o6yVX1Pcd5VJ8mJvv5Ke2yw2oXw9rop4BGI/i9tXMO5Cw6xy9oqyfC9mXvV0kYwOxC
+         OuG+TJiDEqiZdXVhwNswWIy+2qlQdvHwiqNPRbcjbuYl3nTypKBSodV+Ao8m9Lq0cRY7
+         zomSwDVYBfFPnGA3wWl2HklerEGP12F5nYAArS358p1GNZ1hAgLTJYyP165sqX7qj6VE
+         NaAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgqcnppsI1U166shFk9XgK2S4MYDGZ/T2QJMQpToXkB8XgNT+zxlEHoDeNK8+pflDxqyPg7PHrkGk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe7Ijlx8S6E1I3LAn34bRxSafHtELWsPJu3bigzRTsJjEWxtYC
+	wR3/2gN/p8pVWcyjkzCAMMdti4lUxLAHgyekbYtroVsDTDH6Wx2++rCIoKyGfEOYdDr/puwjGkd
+	r
+X-Google-Smtp-Source: AGHT+IG69kh5nH1IoPNONMBg4amKCyNKha9peszSwtvOlvHTYEFk1DLmAVqNiZgxQiaytt2s3JOQXg==
+X-Received: by 2002:a05:600c:1e27:b0:42c:acb0:dda5 with SMTP id 5b1f17b1804b1-42e9610182cmr23057525e9.1.1727278715724;
+        Wed, 25 Sep 2024 08:38:35 -0700 (PDT)
+Received: from localhost (amontpellier-556-1-151-252.w109-210.abo.wanadoo.fr. [109.210.7.252])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e969fb822sm22430665e9.14.2024.09.25.08.38.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2024 08:38:35 -0700 (PDT)
+Date: Wed, 25 Sep 2024 17:38:34 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Biju Das <biju.das.au@gmail.com>
+Subject: Re: [PATCH v21 3/4] pwm: Add support for RZ/G2L GPT
+Message-ID: <slpywmbmamr4kw4jg2vyydheop44ioladvvm52aocnojgjkcsy@3eoztwsej5mn>
+References: <20240808131626.87748-1-biju.das.jz@bp.renesas.com>
+ <20240808131626.87748-4-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/10] dt-bindings: iio: adc: ad7606: Make corrections
- on spi conditions
-To: Conor Dooley <conor@kernel.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
- aardelean@baylibre.com, dlechner@baylibre.com, jstephan@baylibre.com
-References: <20240920-ad7606_add_iio_backend_support-v2-0-0e78782ae7d0@baylibre.com>
- <20240920-ad7606_add_iio_backend_support-v2-2-0e78782ae7d0@baylibre.com>
- <20240921-playgroup-regally-f26c17be26dc@spud>
- <56090167-15a0-4386-89a6-c379d70faae6@baylibre.com>
- <20240924-unvocal-playback-2753bbbb0e45@spud>
-Content-Language: en-US
-From: Guillaume Stols <gstols@baylibre.com>
-In-Reply-To: <20240924-unvocal-playback-2753bbbb0e45@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="k35xue77xwzp4foo"
+Content-Disposition: inline
+In-Reply-To: <20240808131626.87748-4-biju.das.jz@bp.renesas.com>
 
 
-On 9/24/24 16:59, Conor Dooley wrote:
-> On Tue, Sep 24, 2024 at 04:41:50PM +0200, Guillaume Stols wrote:
->> On 9/21/24 23:55, Conor Dooley wrote:
->>> On Fri, Sep 20, 2024 at 05:33:22PM +0000, Guillaume Stols wrote:
->>>> The SPI conditions are not always required, because there is also a
->>>> parallel interface. The way used to detect that the SPI interface is
->>>> used is to check if the reg value is between 0 and 256.
->>> And, yaknow, not that the bus you're on is a spi bus? I don't think this
->>> comment is relevant to the binding, especially given you have a property
->>> for it.
->> Apologies, I missed to change the commit message, it will be fixed in the
->> next series.
->>
->> Since Jonathan did not like very much inferring the interface with the reg's
->> value that I used i the previous verison, I introduced this flag.
->>
->> However this is only intended to be use in bindings, to determine whether or
->> not spi properties should be added.
-> To be honest, if it is not needed by software to understand what bus the
-> device is on, it shouldn't be in the bindings at all. What was Jonathan
-> opposed to? Doing an if reg < 1000: do y, otherwise do x?
-> I'd not bother with any of that, and just make cpha (or w/e it was)
-> optional with a description explaining the circumstances in which is it
-> needed.
-OK, it will be removed from the series and sent as a side patch because 
-it anyways does not really belong to this series.
->> In the driver side of things, the bus interface is inferred by the parent's
->> node (SPI driver is an module_spi_driver while parallel driver is
->> module_platform_driver).
+--k35xue77xwzp4foo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hello Biju,
+
+just a few minor issues left---see below ...
+
+On Thu, Aug 08, 2024 at 02:16:19PM +0100, Biju Das wrote:
+> +static int rzg2l_gpt_request(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct rzg2l_gpt_chip *rzg2l_gpt = to_rzg2l_gpt_chip(chip);
+> +	u32 ch = RZG2L_GET_CH(pwm->hwpwm);
+> +
+> +	mutex_lock(&rzg2l_gpt->lock);
+> +	rzg2l_gpt->user_count[ch]++;
+> +	mutex_unlock(&rzg2l_gpt->lock);
+
+Please consider using guard(mutex)(&rzg2l_gpt->lock);
+
+> +
+> +	return 0;
+> +}
+> +
+> [...]
+> +static u32 rzg2l_gpt_calculate_pv_or_dc(u64 period_or_duty_cycle, u8 prescale)
+> +{
+> +	return min_t(u64, (period_or_duty_cycle + (1 << (2 * prescale)) - 1) >> (2 * prescale),
+> +		     U32_MAX);
+> +}
+
+Hmm, why does this round up? This is used during .apply() and converts a
+nanosecond value to a register value. This should be rounded down. What
+am I missing? (Maybe a code comment with an explanation :-)
+
+> [...]
+> +static int rzg2l_gpt_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			   const struct pwm_state *state)
+> +{
+> +	struct rzg2l_gpt_chip *rzg2l_gpt = to_rzg2l_gpt_chip(chip);
+> +	bool enabled = pwm->state.enabled;
+> +	int ret;
+> +
+> +	if (state->polarity != PWM_POLARITY_NORMAL)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Probe() sets bootloader_enabled_channels. In such case,
+
+.probe() ?
+
+> +	 * clearing the flag will avoid errors during unbind.
+> +	 */
+> +	if (enabled && rzg2l_gpt->bootloader_enabled_channels[pwm->hwpwm])
+> +		rzg2l_gpt->bootloader_enabled_channels[pwm->hwpwm] = false;
+
+Hmm, not 100% sure, but I think if rzg2l_gpt_config() below fails,
+cleaning this flag is wrong.
+
+Does rzg2l_gpt->bootloader_enabled_channels[pwm->hwpwm] == true imply
+enabled == true? If so, the if condition can be simplified to just the
+right hand side of the &&. Then even an unconditional assignment works,
+because
+
+	rzg2l_gpt->bootloader_enabled_channels[pwm->hwpwm] = false;
+
+is a nop if the flag is already false.
+
+> +	if (!state->enabled) {
+> +		if (enabled) {
+> +			rzg2l_gpt_disable(rzg2l_gpt, pwm);
+> +			pm_runtime_put_sync(pwmchip_parent(chip));
+> +		}
+> +
+> +		return 0;
+> +	}
+> +
+> +	if (!enabled) {
+> +		ret = pm_runtime_resume_and_get(pwmchip_parent(chip));
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	mutex_lock(&rzg2l_gpt->lock);
+> +	ret = rzg2l_gpt_config(chip, pwm, state);
+> +	mutex_unlock(&rzg2l_gpt->lock);
+> +	if (!ret && !enabled)
+> +		ret = rzg2l_gpt_enable(rzg2l_gpt, pwm);
+> +
+> +	return ret;
+> +}
+> +
+> [...]
+> +
+> +static int rzg2l_gpt_probe(struct platform_device *pdev)
+> +{
+> +	struct rzg2l_gpt_chip *rzg2l_gpt;
+> +	struct device *dev = &pdev->dev;
+> +	struct reset_control *rstc;
+> +	struct pwm_chip *chip;
+> +	unsigned long rate;
+> +	struct clk *clk;
+> +	int ret;
+> +	u32 i;
+> +
+> +	chip = devm_pwmchip_alloc(dev, RZG2L_MAX_PWM_CHANNELS, sizeof(*rzg2l_gpt));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	rzg2l_gpt = to_rzg2l_gpt_chip(chip);
+> +
+> +	rzg2l_gpt->mmio = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(rzg2l_gpt->mmio))
+> +		return PTR_ERR(rzg2l_gpt->mmio);
+> +
+> +	rstc = devm_reset_control_get_exclusive(dev, NULL);
+> +	if (IS_ERR(rstc))
+> +		return dev_err_probe(dev, PTR_ERR(rstc), "get reset failed\n");
+> +
+> +	clk = devm_clk_get(dev, NULL);
+
+Please use devm_clk_get_enabled() here. Otherwise the result of
+clk_get_rate() isn't well-defined.
+
+> +	if (IS_ERR(clk))
+> +		return dev_err_probe(dev, PTR_ERR(clk), "cannot get clock\n");
+> +
+> +	ret = reset_control_deassert(rstc);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "cannot deassert reset control\n");
+> +
+> +	ret = devm_add_action_or_reset(dev, rzg2l_gpt_reset_assert, rstc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_pm_runtime_enable(dev);
+> +	if (ret)
+> +		return ret;
+> [...]
+
+Best regards
+Uwe
+
+--k35xue77xwzp4foo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmb0LncACgkQj4D7WH0S
+/k7hwQf/eCYFblVI0c19ckmdIczjcp5bFj6Hq+IeNC3w/eTLFIRUXUKVOPBTDbyk
+pgyXz/4iToVM+sXLoWoyzIEaRMPkFpu1QFMUdlXOYbXSLXJ5JTGp0boyzYEhcdVj
+GFBZM51V6R2a1bzJm4wBKQIOUJnKH3QYEIfTZLx2IyJtEDfHYBStMRbalvzMLk0a
+Z1tBtHSz6GrIb7+0ktlMEQvDLSSQwuwXHU5rp51pwCYRux1+ziTbp76IcO4TUKui
+u7bIAI5TRTvDB7CKLw5TTP0v+Zn9ltcGwCSQaGARluxmV7sMj2GCyx7p+Z8H4JFp
+lcYNgvDEgdrEn5vGYZVUHAkwJ74ZQw==
+=DkrE
+-----END PGP SIGNATURE-----
+
+--k35xue77xwzp4foo--
 
