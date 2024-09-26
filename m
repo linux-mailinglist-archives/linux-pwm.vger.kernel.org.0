@@ -1,221 +1,127 @@
-Return-Path: <linux-pwm+bounces-3369-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3370-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F78C98680B
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Sep 2024 23:07:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BD26986E47
+	for <lists+linux-pwm@lfdr.de>; Thu, 26 Sep 2024 09:55:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6AF428521B
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Sep 2024 21:07:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16A8C1F243E0
+	for <lists+linux-pwm@lfdr.de>; Thu, 26 Sep 2024 07:55:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3959814B959;
-	Wed, 25 Sep 2024 21:07:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF3951898F8;
+	Thu, 26 Sep 2024 07:55:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="VKQgcD7k"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="PcxDir91"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF49D1714C6
-	for <linux-pwm@vger.kernel.org>; Wed, 25 Sep 2024 21:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA1F1422D4
+	for <linux-pwm@vger.kernel.org>; Thu, 26 Sep 2024 07:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727298428; cv=none; b=s1ffl7EV/wAMdV6d0E2iilhOUwCOrfTRa8MwNS9Tva5Gj6ogbRWHqCmQnHmPfb0G/rsMDqt1vurM+f6cDKIsP/DKMahAPGGHKB9lgCFmORwsSAYIT0US2YLVWx7HQm2ZP7HHpIv/Rc5rZfprahD2XqX1IvJ8wIU4pknREv15JTo=
+	t=1727337312; cv=none; b=W6ck+TPniSl5fxykoziK9fJdefBNyPzNdFhBt8zaxiwqizzJROjIJKr6UAX1W8snjmKNcbCCPMVCVsA8pPzSEZDrSEkzh0q6Gwju0M0MTrXKbBrBwolzPB292Q+JruYdOAr6umvy+RCeYoUxQO18rO5mRBfPBrySdKEqIv4fnYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727298428; c=relaxed/simple;
-	bh=cGWWbYfWIqUGOYMgUw+A87wStl8/rHXH1B1SA/5SgGU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WrUKz7jCCVN97uUjsapft3csafO5A9U+dPtzsPBguUr8nkLDWGrXZ2pCeONSl9arHi/sG1EqchG7Lias6gQzCobR434LK0oo895IHvMJP1kpfhFoiB5dphIr6GrYyGSrRfjCLywxp6goG6QI9jqwLdx2A/+0Hq69lzfTpk8MD40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=VKQgcD7k; arc=none smtp.client-ip=209.85.221.42
+	s=arc-20240116; t=1727337312; c=relaxed/simple;
+	bh=YVRCRU6UhPsLwCb4xrJkhgDMUl9fpoQExCURUKyb08g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dyFO78DQsNRKJhULL9kowXAV5e2j1tHaFtPsOK0tWh+qeZddy06lx+CZPPUZDkSnovr+X4TubvycsZ/4R5y83L8UrcQmh7H2IADifkdNU0/tEXYgX76ZHMjkNsfoKsld5BOBsVreZDcEEQKUS0r/UaUo0YUUIlSrSy/koqVB+mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=PcxDir91; arc=none smtp.client-ip=209.85.208.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3787f30d892so156156f8f.0
-        for <linux-pwm@vger.kernel.org>; Wed, 25 Sep 2024 14:07:05 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2f75de9a503so6753921fa.0
+        for <linux-pwm@vger.kernel.org>; Thu, 26 Sep 2024 00:55:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727298424; x=1727903224; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1eUf1b5sBeEa+R24gGQ9aEEgDksXQ+YlPL6/W/duLKU=;
-        b=VKQgcD7k0Zbl1eNd7FLuDBOTlZ1OuAUn4J+cTTvwgwpjBUr8lhygefI9POVUcZUwVX
-         9IEJeQczOrqp8eskzQsssv5xVR7kOwCDONu5tOAWvDBJU3D4c3sTaIyfqwB0+u8GWVxR
-         qa6GaB8AY5UtoJbwElbpAqKS4VMQicDB9qP9Jqpbx/KbvjPV2hxOmtIk2HuCyvtnwkfb
-         yQxsQpDtHTxZJ2Js2nGZPvvQMr+liswRbxlIKmH4B4R56RX11whAcVN5bU0y8A81m7aS
-         qy45RJ2LOBFFEvLcc154uQtAuQJN3p4oAhSfOtNDd20n4qOrlB+D6hjSsJ9k/f05YOZh
-         WVlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727298424; x=1727903224;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727337308; x=1727942108; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1eUf1b5sBeEa+R24gGQ9aEEgDksXQ+YlPL6/W/duLKU=;
-        b=wSh4MgaXLPdXXhqiwCLIRWRebbyzwHjkE3yluJqmVXZ01sbuhATMTPzmWqghTMETpm
-         Ghtg41TQHgzwDxI9I2dIvheZV1XO4XmDDglfqC9fZ9l2ZT+3gP7PgOVmYb9NDKJq9yQp
-         bWYAYpVraE6IfbrgMyu8xzKD21LJHPQKJN97Vh3MpjtMLiHqabUD4vYkSAKQ2ThIr1/6
-         JJw3Y78Xuz5avlXYwr1Sc3yu+anpcCma9bBdWzj/DC7JVqxG2A9+0Iurhq+mLtYdK/W5
-         FqEnuckh0EkyP6ImJNTzLWjty54ImA9OSmMMf77oVfsCtN7u6FklsNM4fqCC3Kuv2dmw
-         S0TA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVERxMaLqz4YKv43pfh8MUMxC++IvZJmjOAcVaMEzecJFK/aMduUiDswlLrINLnZv/JAzahbZORRw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt19gOmKXGr8zSJWe+e9nkajo0Aa1jTIAftqZlZhYgFNLyLYYb
-	lUxD1nkA7fza42pxJPV9E202RFH8/QgPKYfkqow3BeRGqtV2lhOLuaI144MGFHA=
-X-Google-Smtp-Source: AGHT+IHDoFkGKB1bUmLWhLANh/i/kng9W0x9TR8bISvn6Efb45zS2dgcqducbkWBM86Lea49/HxWBA==
-X-Received: by 2002:a5d:6c61:0:b0:371:9360:c4a8 with SMTP id ffacd0b85a97d-37cc246702cmr3213015f8f.6.1727298423544;
-        Wed, 25 Sep 2024 14:07:03 -0700 (PDT)
-Received: from localhost (lfbn-nic-1-357-249.w90-116.abo.wanadoo.fr. [90.116.189.249])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cbc2cec21sm4796837f8f.52.2024.09.25.14.07.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2024 14:07:02 -0700 (PDT)
-Date: Wed, 25 Sep 2024 23:07:00 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Alex Lanzano <lanzano.alex@gmail.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Mehdi Djait <mehdi.djait@bootlin.com>, christophe.jaillet@wanadoo.fr, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] drm/tiny: Add driver for Sharp Memory LCD
-Message-ID: <q2njnpzpkd3xrrv6icr5wq6uztja3wfmy2x2ldreqemzbwkedv@ixywmn7qy34q>
-References: <20240905124432.834831-1-lanzano.alex@gmail.com>
- <20240905124432.834831-3-lanzano.alex@gmail.com>
+        bh=h2Y3LBKzWWz0JTPIJu1jnjmO44NMJo/cD4/MkEe5rdE=;
+        b=PcxDir91oRIWU2Srk1ZJhSlchEE+Uc7bb9SsFFFUhj9GshomHYup/TMfqCx9Ne3dlR
+         vL+CrQnEYv9ujYL0YZCaAeUFYxjYGun10OMdiXQ7jRm0Ys/7pQQml9XqxBQEAYj6bQ/g
+         ji3jnkbuXYeRKFF905GAaUuDYFqXwbTap2h3UJuKCbPvhIFnmkUzc1pUVL/6YNiVK40g
+         OvzjJKxsDtderksiIUm2XkCC/8R9AsHT1XCVsl6rPjw2bIYxri8bH6Kn/HPm/dsdflU1
+         TksHGYOgSnBQ8XFNL+wOSnBg28cReigFpedI8MFW94x6FghOePiy+YhMyoZz1xS64Ob4
+         I25g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727337308; x=1727942108;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h2Y3LBKzWWz0JTPIJu1jnjmO44NMJo/cD4/MkEe5rdE=;
+        b=DoI/52ENNy8D39v9Z5M9oDvdYWsiZP/s0FL43CM3CoQdRymamVtyKS1HKjfoFR9oTI
+         QmhHA2aMf6KVCY8xClWIcSDRYd3lNchY+q4OrqriFOpO4QunOFT7h3es+Xko7+aLymlK
+         2fYDbz84jOA8g8yAIhtXDELDqBKcQwb9Bm1bubexus4Hxf55AjVlGW9gSWyNLrJcjTmr
+         rFjXM/X1RarJNExaSsPvmuEQ9yHS56tGchv0gCcJRQvRoCrR7mFgzUlI0lVWDxBlBKVx
+         AqlSezCozS5NfJm1BgTG+xMVA9LPySo/oqllnKbkWpsgecj+EfHX9TMLgEg3QV1mALhT
+         CyLQ==
+X-Gm-Message-State: AOJu0YxamE08Y6TzBXn/OSXSnX+xCE5DB2ZC2PPm1lLiFRea7kvy6f/Z
+	CeEcJwec5LJkwdwTFjK9U0FXvjMgjAQtFvwm9uIbeL09if9fMEKZcj/yJ37tDvhX63UaziQj/Ms
+	eSTT+NpJ1iIhm//0ilPJeLExeErAx8scmzd+3MQ==
+X-Google-Smtp-Source: AGHT+IFkR3Y6XOk4k+dfm0I1kFBr9qpLnyXuqsfx0cMDKZODaEaGmqIUcQDdBPHTIZPDiPGBZ6W8Kh+s8FzCRgsqBD0=
+X-Received: by 2002:a2e:4609:0:b0:2f9:c0be:3b0e with SMTP id
+ 38308e7fff4ca-2f9c0be3c0dmr19575751fa.41.1727337307686; Thu, 26 Sep 2024
+ 00:55:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gufllnff6auc6cvc"
-Content-Disposition: inline
-In-Reply-To: <20240905124432.834831-3-lanzano.alex@gmail.com>
+References: <cover.1726819463.git.u.kleine-koenig@baylibre.com> <df0faa33bf9e7c9e2e5eab8d31bbf61e861bd401.1726819463.git.u.kleine-koenig@baylibre.com>
+In-Reply-To: <df0faa33bf9e7c9e2e5eab8d31bbf61e861bd401.1726819463.git.u.kleine-koenig@baylibre.com>
+From: David Lechner <dlechner@baylibre.com>
+Date: Thu, 26 Sep 2024 09:54:56 +0200
+Message-ID: <CAMknhBGPyOEA0ZT_4zi4on1mwi+ozM27uo1rTOkiWQtkU7+JGQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/8] pwm: New abstraction for PWM waveforms
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, Trevor Gamblin <tgamblin@baylibre.com>, 
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Kent Gibson <warthog618@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Sep 20, 2024 at 10:58=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
+>
 
---gufllnff6auc6cvc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+...
 
-Hello,
+>
+> The rounding rules that are expected to be implemented in the
+> round_waveform_tohw() are: First pick the biggest possible period not
+> bigger than wf->period_length_ns. For that period pick the biggest
+> possible duty setting not bigger than wf->duty_length_ns. Third pick the
+> biggest possible offset not bigger than wf->duty_offset_ns. If the
+> requested period is too small for the hardware, it's expected that a
+> setting with the minimal period and duty_length_ns =3D duty_offset_ns =3D=
+ 0
+> is returned and this fact is signaled by a return value of 1.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
+> ---
 
-On Thu, Sep 05, 2024 at 08:44:00AM -0400, Alex Lanzano wrote:
-> +static void sharp_memory_crtc_enable(struct drm_crtc *crtc,
-> +				     struct drm_atomic_state *state)
+...
+
+> +static int pwm_check_rounding(const struct pwm_waveform *wf,
+> +                             const struct pwm_waveform *wf_rounded)
 > +{
-> +	struct pwm_state pwm_state;
-> +	struct sharp_memory_device *smd = drm_to_sharp_memory_device(crtc->dev);
+> +       if (!wf->period_length_ns)
+> +               return 0;
 > +
-> +	sharp_memory_clear_display(smd);
+> +       if (wf->period_length_ns < wf_rounded->period_length_ns)
+> +               return 1;
 > +
-> +	if (smd->enable_gpio)
-> +		gpiod_set_value(smd->enable_gpio, 1);
+> +       if (wf->duty_length_ns < wf_rounded->duty_length_ns)
+> +               return 1;
 > +
-> +	switch (smd->vcom_mode) {
-> +	case SHARP_MEMORY_SOFTWARE_VCOM:
-> +		smd->sw_vcom_signal = kthread_run(sharp_memory_sw_vcom_signal_thread,
-> +						  smd, "sw_vcom_signal");
-> +		break;
+> +       if (wf->duty_offset_ns < wf_rounded->duty_offset_ns)
+> +               return 1;
 > +
-> +	case SHARP_MEMORY_EXTERNAL_VCOM:
-> +		break;
-> +
-> +	case SHARP_MEMORY_PWM_VCOM:
-> +		pwm_get_state(smd->pwm_vcom_signal, &pwm_state);
-
-I'd prefer using pwm_init_state() here instead of pwm_get_state(), The
-former only depends on machine description (probably device tree), the
-latter depends on what happend before to the PWM. While it probably
-doesn't make a difference in practise, the former is more deterministic.
-
-> +		pwm_state.period =    1000000000;
-> +		pwm_state.duty_cycle = 100000000;
-
-Unusual indention.
-
-The device tree (and also ACPI) defines a default period for a PWM. If
-you used pwm_init_state() -- as suggested above -- you could just use
-pwm_set_relative_duty_cycle(smd->pwm_vcom_signal, 1, 10); here.
-
-> +		pwm_state.enabled = true;
-> +		pwm_apply_might_sleep(smd->pwm_vcom_signal, &pwm_state);
-> +		break;
-> +	}
-> +}
-> +
-> +static void sharp_memory_crtc_disable(struct drm_crtc *crtc,
-> +				      struct drm_atomic_state *state)
-> +{
-> +	struct sharp_memory_device *smd = drm_to_sharp_memory_device(crtc->dev);
-> +
-> +	sharp_memory_clear_display(smd);
-> +
-> +	if (smd->enable_gpio)
-> +		gpiod_set_value(smd->enable_gpio, 0);
-> +
-> +	switch (smd->vcom_mode) {
-> +	case SHARP_MEMORY_SOFTWARE_VCOM:
-> +		kthread_stop(smd->sw_vcom_signal);
-> +		break;
-> +
-> +	case SHARP_MEMORY_EXTERNAL_VCOM:
-> +		break;
-> +
-> +	case SHARP_MEMORY_PWM_VCOM:
-> +		pwm_disable(smd->pwm_vcom_signal);
-
-What is the objective here? Do you want to save energy and don't care
-about the output? Or do you want the PWM to emit the inactive level?
-Note that for the second case, pwm_disable() is wrong, as depending on
-the underlying hardware the PWM might continue to toggle or emit a
-constant active level.
-
-> +		break;
-> +	}
-> +}
-> +
-> [...]
-> +
-> +static int sharp_memory_init_pwm_vcom_signal(struct sharp_memory_device *smd)
-> +{
-> +	struct pwm_state state;
-> +	struct device *dev = &smd->spi->dev;
-> +
-> +	smd->pwm_vcom_signal = devm_pwm_get(dev, NULL);
-> +	if (IS_ERR(smd->pwm_vcom_signal))
-> +		return dev_err_probe(dev, -EINVAL, "Could not get pwm device\n");
-> +
-> +	pwm_init_state(smd->pwm_vcom_signal, &state);
-> +	state.enabled = false;
-> +	pwm_apply_might_sleep(smd->pwm_vcom_signal, &state);
-
-Same question as above. If you care about the output level, use
-
-	{
-		.period = ...,
-		.duty_cycle = 0,
-		.enabled = true,
-	}
-
-> +
-> +	return 0;
+> +       return 0;
 > +}
 
-Best regards
-Uwe
-
---gufllnff6auc6cvc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmb0e1oACgkQj4D7WH0S
-/k68sgf+KYIiaD1KzjAI6h4LyzOtgTo4g9sAIrf/9XEfC8Ym5WDznk4zxlf18J2J
-jfvTI4VtUF6UvCcEQASWeyHcRnhLnWFa0ZL+qGcMNb+vkXkQcFtToUPA8urOSGM7
-KeXUFqbrZ9S3u3TKtBJ5NJRbyu+AtU7W/VQn2FVf8AUPuzuJpltmw7YfWdbHgG6H
-QZUlQzzAIqtD+MVMp2r3zWFQXiIdoBVtahQMv672eU10Fx+wRiwgL10swYM6MWKd
-uNK998JsuZV24+I8w/2gNAprjRl+0cI5k4v0oS4hoV97m3+7+3KBQsWZW8sp+oSY
-lZPkNJXisBhHLM+yBvp5M3FJWULTaQ==
-=MZIJ
------END PGP SIGNATURE-----
-
---gufllnff6auc6cvc--
+It looks like this return value is being used as a bool, so maybe the
+return type should be bool?
 
