@@ -1,124 +1,222 @@
-Return-Path: <linux-pwm+bounces-3398-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3399-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24FAC989710
-	for <lists+linux-pwm@lfdr.de>; Sun, 29 Sep 2024 21:22:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26A78989729
+	for <lists+linux-pwm@lfdr.de>; Sun, 29 Sep 2024 21:48:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DAC6A2825A4
-	for <lists+linux-pwm@lfdr.de>; Sun, 29 Sep 2024 19:22:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9EDE4281E0A
+	for <lists+linux-pwm@lfdr.de>; Sun, 29 Sep 2024 19:48:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D09C5674D;
-	Sun, 29 Sep 2024 19:22:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E21E757EB;
+	Sun, 29 Sep 2024 19:48:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i3aI0hXq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hMcqinDr"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEA72C1B4;
-	Sun, 29 Sep 2024 19:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7163C46434;
+	Sun, 29 Sep 2024 19:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727637753; cv=none; b=cAmF0xZCdK9SRqOX4TOs18Bz0Gm9AEvJyDuvj2pcVbjNG+JJ2BRFBskcJfkajfBjudlCkz2b3JXxDcwqcCNWqtijh5uQsQCJRsZX4AXvb9A25w9gtekRgLikL+cl6piqST8q2ANz2Q7J8iJBUWLpTZX06t7tG3j/GHv1xMZTluc=
+	t=1727639298; cv=none; b=NDO5bgOEis0b/TBSrX8o3NSOwKBwMFJS8y7G/pOZ1iwpxLMJdYFKnJnb6ct0H5EoAqZ8huwUaIAA6P8bxhniAQZY+17TxOHWdhwlQOCvTCGCn1kkIRGPiJZ5aMQDta5npxDctiFwOBIpfGkTw8biP1TEvZ7hXE1AuuriEfmt02w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727637753; c=relaxed/simple;
-	bh=oLXxoh6aKOly9Powt/xFXlfDVV5wCoeAxlXMnKhDi6I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lGJ9qKTSTv1BTGJWjtLqy0mAtSEWbgIhaF3pJkkMSjXyyyFZm89M7LxqZTq9Lj7oxfOyRBJd5jaKCbAMJzBRmvTu/tGcfVGFewCaafFpXGYF6RJ3T85dOYqqIOpHOfOaJV1Gerkz73bUuUpSI3WB/dTWbAjBEhteICRbV1dMJI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i3aI0hXq; arc=none smtp.client-ip=209.85.208.45
+	s=arc-20240116; t=1727639298; c=relaxed/simple;
+	bh=n4Gy5P+xTKV6CevjkFfFjH/AY+oUiDjB5BqTBlcvez8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sQ2WBEU0+rRC/1iscNUFxNNAQMDch1q9+K19nks37EwWqxAZrKnZquaCMExpGV7Eysv90Ix3OcwyWYqcR4YD4CGTllndEyiuygVD0DdcmLYnAw+sScgxMQVM7kaR1e3fw0OYETkdGbisiXrNJ7qgmsdbiyvUUgjuRKxjJaou9cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hMcqinDr; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5c8952f7f95so760678a12.0;
-        Sun, 29 Sep 2024 12:22:30 -0700 (PDT)
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7a99de9beb2so233139785a.3;
+        Sun, 29 Sep 2024 12:48:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727637749; x=1728242549; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pobc+AJ4aXejENeOegO+U6SgRutUJx4h2NJgcJv9KmI=;
-        b=i3aI0hXqpyd8gy7P7yBb18DMWn+OSmtEwK+yzPmsbr0a8yVG6cskE7iQ+DoY4xqoZ2
-         0bLPzdiNFn52RL044KtbXjyZ1jKi15pVbhcDC4TNqb1oC95srrusCjRyJjMValt7bOqI
-         SwDW4f+NfQWPHTiG6/SypQ/9uOISTewyChVSgnl6gvj8cMEWmbuNUl7wRbdkXsYKmEs8
-         yQIVYxR1yW2RbGADxTjmIo3bfFwQco+6NsIKxLmfiTGylVr7uJsKeKBIMd8ylFxdhmDB
-         qOqK+0QeqK3HPNlB4jVGS78VxVGP/hqz9nNJbFjJ8D+me4sZxUiYj9OAQihKXOWVxczp
-         t1Jg==
+        d=gmail.com; s=20230601; t=1727639296; x=1728244096; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=C/yNLMI4Dfa1JOu9ZZ5KMcnVN9OakoAYGWQtbvgWXzk=;
+        b=hMcqinDr5/o8p6Moo/fz+PssS3pgUkdabH3YxVyGK4kfiUc5jaacT7WigOaziiGMhd
+         AzTbQhmCE2hJx9/ZaVn3Wi2t4x2QxTpQn1tglEG37udvhR291kDVhE5PSZ5WgUpTIww2
+         ZvZisctmrD/Dv56Mkn/GL+PMPNoLL7OlMrXlXeQ1W8HgwLWGykErJKm7awLWww2ZuNEM
+         9T8+5jvo96o50Ko8+9oyDnxqLXVZ6vSSozdWfLmaedtARXDOMwyBW7UBbsxGmtNfjFzc
+         YLtR8J+wGJJ+yJDYQHDNPL6W+/M78DgJkLQJvJdViKIZf0WmjKRtI26MXrzNhPNqxgRf
+         WfRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727637749; x=1728242549;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pobc+AJ4aXejENeOegO+U6SgRutUJx4h2NJgcJv9KmI=;
-        b=lHmHQ057VCl0kvp4QYIByelq8aHmRubREVrZBzfnaxuriNNbZy4rVMjCP0tEuq85uh
-         H8PFmZv07Kh60kzjk2WXLPxVEl5MKA1D+F9k+cLOeGudvjD3nC5871NFvAm9kjLH8p4U
-         IF2QuNnCfmpjgW/pITv2JEraj6EK84NpsIM0HhP0VCJ4sVekr1aMga3a0Nm0WztkN3sH
-         OJCqsTi7Q0ApLzJjqX+H5+bSYHi4WwPOzwT5iQv3swyv0U/5KRtNQBclEL9F7FqoywpT
-         YtzsBDeAZUEjS7S5fyqdOTDUg9zRkrmtqfhVFo3Ackbklhion9fJWWtx96JDx4NZ8dcI
-         TMgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVC2EeYVnaixfz5Mi1D7uA8B9DfYVuT03wfqe79HlUaRauuu8rG9Q1zJvOX/6MDQ88dXAcamFuRf2sQQbVe@vger.kernel.org, AJvYcCVN8TQ8xXvesQKz6bCJTcWFJdW6vgJR00sAgqYx131ls2NjqUPmMyh8fGCU6hou49fgdjFZ2crKoDsA@vger.kernel.org, AJvYcCWL5nO1BH3AXM0e5+aNro/QC0NUxVOvegKOm8zUI9UJzBc+2YOR0nnizzEZpa0AOL5CDdQVi9OykrR9@vger.kernel.org, AJvYcCXLQuen2hHu3dst0UifhhgkD0aG140W/GL8vwrzYxmXvqpusjjDSssZn316+biEK96Om59rbNfx3GVn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxnzl7LOImXY/WQXJuRU9nbBJ4xjeHfq8DKJgxfeBCpq3PhCQ1w
-	CaW2syt8hh0chUXYD2iCoR2W+rzVlI/NhfLSZG7RjN5B3K9yDq/YOcU2nubcyikGi/ucxoQSY2v
-	+H+J2cGqjZ4WPHecDG5yTxX9eRbE=
-X-Google-Smtp-Source: AGHT+IGaxFv21uXx+/xZJU/kjl1OxZbW01D0pVYnfO3CdcXbQ/N3kGxbqbV7+Ze+Pe9bRVYVDyDb9xLbba+Qkot3y1k=
-X-Received: by 2002:a17:907:789:b0:a80:f6a9:c311 with SMTP id
- a640c23a62f3a-a93c47e2257mr1167476366b.0.1727637748858; Sun, 29 Sep 2024
- 12:22:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1727639296; x=1728244096;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C/yNLMI4Dfa1JOu9ZZ5KMcnVN9OakoAYGWQtbvgWXzk=;
+        b=Eca8u7cp23OX60Bf/OQKgXgT+94ySvO7rhf74KBfaLg63AFog/3d1vm4O8XuBNDuGv
+         WpKbZNH8fKNMcZuRB0l5Cn0ZLuFi48dmBUa6e899r2qOY3OhvfDdD8OSoWcRwrDrpcn/
+         DnaRHONfhLZbgGIxkrWpHZUE070+hndE52pwDm7WLyI2Yeu3uyh1qbxtbAxQuU3hXhZd
+         XIbJmft9ls15CluSZQEhEb8P/drkeS7rSB06TWXzaDUgikL+RDYYbZlEDZCp7NjpEhyF
+         ZZ4u90xeXx1MmKJRXkd1g534XxRk+3ybNaaLSFPpGF/q+NPm8/GxYF8TiNrpT3q6Ka+5
+         aafA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQHOmsELJeW4wnajgVDHF7Y7VU1Cq7L0bTU9cTgTEuy1nwTyyg4IK9w2sOrUrwCMHMEZk16//aybDF@vger.kernel.org, AJvYcCWrOGZ0xdgA3YB9LD3gFybEkmHKNWgQt6qvojd6n/da6vHm7RkKRED4BsfhEUNeFAwRXbzc8aeVtrF0@vger.kernel.org, AJvYcCXei0GwX4xr5hsN40AcunN4f7HC9zevUVJUuTWdgnHJdgTy+TW3wygn8cKKLi1FZ9jUj+IKhHk0JOCuE8WX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4NLECLypBUZkSqugMW1G92ryJxMtZvyy+Dzi8dLBFq1kaD7cG
+	EqG1bX9t6/FBVM4LWgnZBsbwbHvZA3RNff/csZ9Qvgx/d67cbQr+
+X-Google-Smtp-Source: AGHT+IFeeeUii0kxH//xLKWlv0LXOHbVcGPm/7q0EHdBCNjq4YERwamx3b7Evz0ZK+RetrYdcveDXA==
+X-Received: by 2002:a05:620a:370b:b0:7ac:bb36:5c5d with SMTP id af79cd13be357-7ae378529admr1444074285a.31.1727639296140;
+        Sun, 29 Sep 2024 12:48:16 -0700 (PDT)
+Received: from VM-Arch (ool-1826d901.dyn.optonline.net. [24.38.217.1])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ae3783d613sm347893685a.121.2024.09.29.12.48.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Sep 2024 12:48:15 -0700 (PDT)
+Date: Sun, 29 Sep 2024 15:48:11 -0400
+From: Alex Lanzano <lanzano.alex@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Mehdi Djait <mehdi.djait@bootlin.com>, christophe.jaillet@wanadoo.fr, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] drm/tiny: Add driver for Sharp Memory LCD
+Message-ID: <znyfkop6lm5a734hsuko56xcmeeessqrkhbjhf5iwbtllmli2k@kcwbo7fh6yah>
+References: <20240905124432.834831-1-lanzano.alex@gmail.com>
+ <20240905124432.834831-3-lanzano.alex@gmail.com>
+ <q2njnpzpkd3xrrv6icr5wq6uztja3wfmy2x2ldreqemzbwkedv@ixywmn7qy34q>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240923101206.3753-1-antoniu.miclaus@analog.com>
- <20240923101206.3753-7-antoniu.miclaus@analog.com> <CAMknhBHRfj7d8Uea8vX=t+y+9dqoPABQSzsgNhBMTK-8-f6L7w@mail.gmail.com>
- <20240928183044.0b5ea2e0@jic23-huawei>
-In-Reply-To: <20240928183044.0b5ea2e0@jic23-huawei>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 29 Sep 2024 22:21:52 +0300
-Message-ID: <CAHp75VfChXnRsQVA7nQu0L8evqFZrNoCXMq_KEc6_md4EWPyvA@mail.gmail.com>
-Subject: Re: [PATCH 6/7] iio: adc: ad485x: add ad485x driver
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>, Antoniu Miclaus <antoniu.miclaus@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Nuno Sa <nuno.sa@analog.com>, Olivier Moysan <olivier.moysan@foss.st.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Marcelo Schmitt <marcelo.schmitt@analog.com>, 
-	=?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>, 
-	Mike Looijmans <mike.looijmans@topic.nl>, Dumitru Ceclan <mitrutzceclan@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Alisa-Dariana Roman <alisadariana@gmail.com>, Sergiu Cuciurean <sergiu.cuciurean@analog.com>, 
-	Dragos Bogdan <dragos.bogdan@analog.com>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <q2njnpzpkd3xrrv6icr5wq6uztja3wfmy2x2ldreqemzbwkedv@ixywmn7qy34q>
 
-On Sat, Sep 28, 2024 at 8:30=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
- wrote:
+Hi thanks for the review! I'll address these in v8. Looks like you
+missed my v7 of this patch
 
-...
+On Wed, Sep 25, 2024 at 11:07:00PM GMT, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Thu, Sep 05, 2024 at 08:44:00AM -0400, Alex Lanzano wrote:
+> > +static void sharp_memory_crtc_enable(struct drm_crtc *crtc,
+> > +				     struct drm_atomic_state *state)
+> > +{
+> > +	struct pwm_state pwm_state;
+> > +	struct sharp_memory_device *smd = drm_to_sharp_memory_device(crtc->dev);
+> > +
+> > +	sharp_memory_clear_display(smd);
+> > +
+> > +	if (smd->enable_gpio)
+> > +		gpiod_set_value(smd->enable_gpio, 1);
+> > +
+> > +	switch (smd->vcom_mode) {
+> > +	case SHARP_MEMORY_SOFTWARE_VCOM:
+> > +		smd->sw_vcom_signal = kthread_run(sharp_memory_sw_vcom_signal_thread,
+> > +						  smd, "sw_vcom_signal");
+> > +		break;
+> > +
+> > +	case SHARP_MEMORY_EXTERNAL_VCOM:
+> > +		break;
+> > +
+> > +	case SHARP_MEMORY_PWM_VCOM:
+> > +		pwm_get_state(smd->pwm_vcom_signal, &pwm_state);
+> 
+> I'd prefer using pwm_init_state() here instead of pwm_get_state(), The
+> former only depends on machine description (probably device tree), the
+> latter depends on what happend before to the PWM. While it probably
+> doesn't make a difference in practise, the former is more deterministic.
+> 
 
-> > We have quite a few parts in the pipline right like this one that have
-> > per-sample status bits. In the past, these were generally handled with
-> > IIO events, but this doesn't really work for these high-speed backends
-> > since the data is being piped directly to DMA and we don't look at
-> > each sample in the ADC driver. So it would be worthwhile to try to
-> > find some general solution here for handling this sort of thing.
->
-> We have previously talked about schemes to describe metadata
-> alongside channels. I guess maybe it's time to actually look at how
-> that works.  I'm not sure dynamic control of that metadata
-> is going to be easy to do though or if we even want to
-> (as opposed to always on or off for a particular device).
+Will fix in v8.
 
-Time for the kernel to return JSON on a per channel basis?
+> > +		pwm_state.period =    1000000000;
+> > +		pwm_state.duty_cycle = 100000000;
+> 
+> Unusual indention.
+> 
 
-Just saying :-)
+Will fix
 
---=20
-With Best Regards,
-Andy Shevchenko
+> The device tree (and also ACPI) defines a default period for a PWM. If
+> you used pwm_init_state() -- as suggested above -- you could just use
+> pwm_set_relative_duty_cycle(smd->pwm_vcom_signal, 1, 10); here.
+> 
+
+Will fix
+
+> > +		pwm_state.enabled = true;
+> > +		pwm_apply_might_sleep(smd->pwm_vcom_signal, &pwm_state);
+> > +		break;
+> > +	}
+> > +}
+> > +
+> > +static void sharp_memory_crtc_disable(struct drm_crtc *crtc,
+> > +				      struct drm_atomic_state *state)
+> > +{
+> > +	struct sharp_memory_device *smd = drm_to_sharp_memory_device(crtc->dev);
+> > +
+> > +	sharp_memory_clear_display(smd);
+> > +
+> > +	if (smd->enable_gpio)
+> > +		gpiod_set_value(smd->enable_gpio, 0);
+> > +
+> > +	switch (smd->vcom_mode) {
+> > +	case SHARP_MEMORY_SOFTWARE_VCOM:
+> > +		kthread_stop(smd->sw_vcom_signal);
+> > +		break;
+> > +
+> > +	case SHARP_MEMORY_EXTERNAL_VCOM:
+> > +		break;
+> > +
+> > +	case SHARP_MEMORY_PWM_VCOM:
+> > +		pwm_disable(smd->pwm_vcom_signal);
+> 
+> What is the objective here? Do you want to save energy and don't care
+> about the output? Or do you want the PWM to emit the inactive level?
+> Note that for the second case, pwm_disable() is wrong, as depending on
+> the underlying hardware the PWM might continue to toggle or emit a
+> constant active level.
+> 
+
+I want the PWM to stop emitting to save energy.
+
+> > +		break;
+> > +	}
+> > +}
+> > +
+> > [...]
+> > +
+> > +static int sharp_memory_init_pwm_vcom_signal(struct sharp_memory_device *smd)
+> > +{
+> > +	struct pwm_state state;
+> > +	struct device *dev = &smd->spi->dev;
+> > +
+> > +	smd->pwm_vcom_signal = devm_pwm_get(dev, NULL);
+> > +	if (IS_ERR(smd->pwm_vcom_signal))
+> > +		return dev_err_probe(dev, -EINVAL, "Could not get pwm device\n");
+> > +
+> > +	pwm_init_state(smd->pwm_vcom_signal, &state);
+> > +	state.enabled = false;
+> > +	pwm_apply_might_sleep(smd->pwm_vcom_signal, &state);
+> 
+> Same question as above. If you care about the output level, use
+> 
+> 	{
+> 		.period = ...,
+> 		.duty_cycle = 0,
+> 		.enabled = true,
+> 	}
+> 
+
+See answer above!
+
+> > +
+> > +	return 0;
+> > +}
+> 
+> Best regards
+> Uwe
+
+
 
