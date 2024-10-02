@@ -1,172 +1,188 @@
-Return-Path: <linux-pwm+bounces-3430-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3431-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C3A498CFFB
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 11:24:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44E0198D3E2
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 14:59:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 774541C2124F
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 09:24:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 68E301C20BAB
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 12:59:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3968198A0C;
-	Wed,  2 Oct 2024 09:24:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 605CA1D078E;
+	Wed,  2 Oct 2024 12:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="QuJwwvjC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Zj8iDjWg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UzFlDqkF"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from flow-a5-smtp.messagingengine.com (flow-a5-smtp.messagingengine.com [103.168.172.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254AE84A52;
-	Wed,  2 Oct 2024 09:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA2C1D0172
+	for <linux-pwm@vger.kernel.org>; Wed,  2 Oct 2024 12:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727861042; cv=none; b=VlakwSfLwip3Av8ehvWHx+MlxSQsqqpFOwL0HpNKCy4f6iNSLmVRgXuLTQ/IoWONKZ0+LlWGzQrYn6qse7GzzEp7Q0ZzUB4blpQCqjtP6Vq0uUydAmSskVn9SFH/epqFtJ/mCvrRRsAg5ji5BwN5QdQv32+9QlIVymWnZCRkETM=
+	t=1727873913; cv=none; b=Qaoi86xHsFd3kEezk/Ecv8uEPKbwyimuYOodMwejQKe4MkwJopb9dSnnYvZfsgSO4RVVWJO/OLJu3EDQMCccDbAzA5/LJodhYU9LChHxpL8GJ9asy1phplEjExkgFb2bTiK+5kNeCH+8E0hISMFrpbQbEK4nQTMhXSQeLWgmI9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727861042; c=relaxed/simple;
-	bh=AAYI3Gt+D9Cgzx0LmTcoxOcLDnJz9sHzdQg9tl29d8Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aGWdi6BBpMSYNJriHC8OcYRMDsWWIs7m+be1ASvrcWrWl6senGp3OuDllXih7NNP2u3ZEK5C+aorjZMmJiyVyMpClZeRWVdpF0acN0a6Wi8LskDjNq8s7sDjHe9kZqOCnuXILMDx8P3YrvxqpYoE1C5bCJR0OO1eHanuePBSYAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=QuJwwvjC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Zj8iDjWg; arc=none smtp.client-ip=103.168.172.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailflow.phl.internal (Postfix) with ESMTP id E8846200A49;
-	Wed,  2 Oct 2024 05:23:58 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Wed, 02 Oct 2024 05:23:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1727861038;
-	 x=1727868238; bh=1wPBV2CtAfCxsHt6vXI1u7/VDJf3lNbwZEi9inaErLs=; b=
-	QuJwwvjCXMBstSyTt2ibEcamIo2+Gkt90Ah/ZbVHiRDstxzJJXbaBPREgIPVQtDu
-	2IQiferN53Cm6St7whHPmdOCIlFeTyrYcZh/Jq5IaR4X2z0nLmCCK2vvAbrFN9rt
-	lT/tFrFbm+KWuL247BtXQUEfIGOPGehSxO+9/ABynpifTYx+GAksIzfxFLCQ54R1
-	s5QxcZ2/UqX2aXxtCNwx4tq6XiUlKOTGLG+BOT4jkGtCdhQbyX2DsgpgmxSpF/Ve
-	QAKm1uce+DWccvFZOglfv8Ox/9gYmH4BTuJzVG9yK+UiPTcNGfGvVt5tVhSSd0e8
-	B7Ekv3pmNSUowCLWbXl46A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1727861038; x=
-	1727868238; bh=1wPBV2CtAfCxsHt6vXI1u7/VDJf3lNbwZEi9inaErLs=; b=Z
-	j8iDjWgaTEBk3vDijGRlGTVogBTQiUXXfbABiYMbBTTwj53/TxFN6jMfBAjEpT0b
-	3Lo4uFHvEZwkNx00/qRGgjmM2pDH4DCzosU7CI7FDnVbtKCEUi6F5hmwD0DqLY5L
-	U7/OTcXTNl3aV9mcgutaovqICSjQv0nHnZP0CKfDwceqJo0YX5BpcgWmkgDeyfod
-	KSTzeTNoiyddV08Tom4/QXVInro66UeWqW0yjiUAJtF+ZVFGZbRNpCcp5qJ+pF/O
-	5rX5MIpFo6tEi9gmu4xvqdbtcGa7Iv/O+uSvcoxbjI1/abVZDhLPwGhZRpKzZ9cI
-	qVGJK+VbypI97CYT/ArJw==
-X-ME-Sender: <xms:LRH9Zsk_WXCJbPDRc2vNMGPlguniQZhgwM-wdwKir_XUfkd0zKe-Uw>
-    <xme:LRH9Zr3akGgxBjqqxq3WB0wyBxE2Y4Xru-zWIcrO-2kxO6nmcGOMy9asyMHh6TAif
-    aviRRCyts7heQ>
-X-ME-Received: <xmr:LRH9ZqpIzy1iQYkrdNhrVZ-Nq_saUdDrSpOUkyPCIlq6QbFdVss64OeuNNPkw6g1qGyhL9gosugMwpIFHtjUaFCdl98zqbJ28fgkoQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdduledguddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdej
-    necuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtf
-    frrghtthgvrhhnpeehfffftdehkeevfeeujeduhefggfetffeijefgkeelffdtjeefhedt
-    tdfffeffueenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtgho
-    mhdpnhgspghrtghpthhtohepgedvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhope
-    hmrghrkhhushdrvghlfhhrihhnghesfigvsgdruggvpdhrtghpthhtoheplhgrnhiirghn
-    ohdrrghlvgigsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgvhhguihdrughjrghith
-    essghoohhtlhhinhdrtghomhdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhs
-    rdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvse
-    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphifmhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhdqmh
-    gvnhhtvggvsheslhhishhtshdrlhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgt
-    phhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnh
-    hivghlsehffhiflhhlrdgthh
-X-ME-Proxy: <xmx:LRH9ZokYJmotGcGhC28P1JQ0SfIfGOhWrLJ4ei_uog9Hep3W-u2ZVA>
-    <xmx:LRH9Zq1M0xTfph_85-Qn3YiyB140f5sId7AuT9Atf4uE0fREMzbOHQ>
-    <xmx:LRH9ZvuvPeu2RSpNdmtow7zR36WzX-imbT-NLcyUAbF6GvPvpMicFA>
-    <xmx:LRH9ZmUBYe0IbYVvg1kRfj_5jZOkQEHBGaO113FTK9qTPjORkr3QcQ>
-    <xmx:LhH9ZgVnyXxYwMI2ap2i61BR4vYQUGzIXKqLe69Xv4COkBz9kONmCKLb>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 2 Oct 2024 05:23:56 -0400 (EDT)
-Date: Wed, 2 Oct 2024 11:23:54 +0200
-From: Greg KH <greg@kroah.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Alex Lanzano <lanzano.alex@gmail.com>,
-	Mehdi Djait <mehdi.djait@bootlin.com>,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	Conor Dooley <conor+dt@kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
-	David Airlie <airlied@gmail.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Subject: Re: [PATCH v8 2/2] drm/tiny: Add driver for Sharp Memory LCD
-Message-ID: <2024100246-gladly-overfed-75b9@gregkh>
-References: <20241002033807.682177-3-lanzano.alex@gmail.com>
- <b671e4d2-e969-4b9a-a7ff-b3b688689ee8@web.de>
+	s=arc-20240116; t=1727873913; c=relaxed/simple;
+	bh=pDOeQLUv5z6DD8N9F3KZvA1Zx3tJwMWz/s42V6VQSVo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qDPu50PqjQZMF7qKgUP8mAI7kWUK73VkAXmP6CGN904BZKDciD/mTSLC+gFu4QjfIzWRdo4pimKt8VBSOKWjxowTaFsvxlx9qe5zY2zD7pajXA2sIepyTPqlWm9J06bQVIgaBpsU4K8tCmsJJWtWapm6goZlMTt7SmU/GHWX80U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UzFlDqkF; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2facf48166bso35543471fa.0
+        for <linux-pwm@vger.kernel.org>; Wed, 02 Oct 2024 05:58:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1727873909; x=1728478709; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+jtQ4FXFUCWol1Gkt0yViKyzB2pgtdbXcRu7N5DjSOU=;
+        b=UzFlDqkFwY4gODcYBTbP4v/7zdHUFpvHI9+G+ka+pWxYt80swqx3v8H9K/I1oLs2w4
+         /bPuFWAqpcBtfyJ4nYRApRdPnTsXzMfSQQ1qF5S03HWY2YCoPn7u+si3k8PYBH+Mp7vD
+         yia3R/DBvrP30yqXY+7hxUviK27DnPuSyttcv/uVjT3ynKaoJpbTxLtuAkvgMnPg0JRQ
+         Ch9lURD9eylM9td1/+kIK0IyB93HtlFVP7AwUk8SQ4tNCrjkbfudZBzPbRL2nIAlaViH
+         x5tQD3wGDcW+bBG8CL+kiJ8FzgeD7kVOZikdeWrvoGieXze4jeojv7lzhdiGdPJnaz5z
+         nbiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727873909; x=1728478709;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+jtQ4FXFUCWol1Gkt0yViKyzB2pgtdbXcRu7N5DjSOU=;
+        b=Ao4cNYm9o6vp2k83ckPwhzn/Y4xRXHqQCALQzCR3pfH4+toaw1w5N9Zn6bG/PGsDgB
+         ECnOnqmPLpBDFvXsB2bBPUWHVFXBrmUx6cnp0YSYdF/JbaNn4duUHsmroCWz+Fx5cHUY
+         0kTXmy6l2NCgqfJqQtXRknWXZ5mstPMfhvl+v6b52XFC+Xj1be9ayeBk17XK54RESE9N
+         fWZRV4C+apGNmHssOj91HA3AGs37Uar3CapRyruFEQLB/LTX1MKXTi/ihY9UX9ZR8YlB
+         83dKeBIVR1LV0pTLAg12jFSm7MHkDxg4Dd8CEsgeB2LJfqWOFkfOE4rIbp55WvWuTuiu
+         FPYg==
+X-Forwarded-Encrypted: i=1; AJvYcCWucv/d3rrOoW497+tru5oX+lYpJp2EoKhoMUKl1vM8S2v8nbKoIOwKZzOLvYtMgfJ3Cif1/MXi8MY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsIBn/4k3u6FZX07NOsWn+ZAqZntA6LLM/sz5DwdC75uelzqR0
+	20OvTsRB5MvtOljwMvSmFBf+mWtdjHtulV4d73PaU3wA2FHbu2LWBXAHIfY1dm32T+/0J/7vpVf
+	Zy20AKd6Zkn2kJHWbnh48FrR2IExMsklJbO+trw==
+X-Google-Smtp-Source: AGHT+IFymKX6xkCaDUcGspB/q99qwrePGX9n7ttzq0hdMpKbNdFfvpYD++sfznNvBnR4emleP82gL6p2kJe45ABDpf4=
+X-Received: by 2002:a2e:be2b:0:b0:2f7:4f46:8344 with SMTP id
+ 38308e7fff4ca-2fae1029a1bmr17813371fa.21.1727873909295; Wed, 02 Oct 2024
+ 05:58:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b671e4d2-e969-4b9a-a7ff-b3b688689ee8@web.de>
+References: <20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org>
+ <20240911-en7581-pinctrl-v4-4-60ac93d760bb@kernel.org> <CACRpkdZbyQ5bk8oR+Q4UmQCdM5h1mF1ztBc26YzqNsze_B=ehA@mail.gmail.com>
+ <ZvKQe73ZKIFy4fny@lore-desk>
+In-Reply-To: <ZvKQe73ZKIFy4fny@lore-desk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 2 Oct 2024 14:58:17 +0200
+Message-ID: <CACRpkdbXWMU+wq6DvviCQPQ0EzKUm9oOnyFh34Bm=Y8K-HmT0Q@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] pinctrl: airoha: Add support for EN7581 SoC
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lee Jones <lee@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
+	linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 02, 2024 at 10:56:42AM +0200, Markus Elfring wrote:
-> …
-> > +++ b/drivers/gpu/drm/tiny/sharp-memory.c
-> > @@ -0,0 +1,681 @@
-> …
-> > +static int sharp_memory_maintain_display(struct sharp_memory_device *smd)
-> > +{
-> …
-> > +	u8 *tx_buffer = smd->tx_buffer;
-> > +
-> > +	mutex_lock(&smd->tx_mutex);
-> …
-> > +	mutex_unlock(&smd->tx_mutex);
-> > +
-> > +	return ret;
-> > +}
-> …
-> 
-> Will development interests grow for the application of a statement
-> like “guard(mutex)(&smd->tx_mutex);”?
-> https://elixir.bootlin.com/linux/v6.12-rc1/source/include/linux/mutex.h#L201
+Hi Lorenzo,
 
+so these comments:
 
-Hi,
+On Tue, Sep 24, 2024 at 12:12=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel.o=
+rg> wrote:
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+> > > +#include <linux/pinctrl/consumer.h>
+> >
+> > Why do you need the consumer header?
+>
+> we need it for pinctrl_gpio_direction_output() and
+> pinctrl_gpio_direction_input() for direction_input and direction_output
+> callbacks.
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
+I looked it over again and it looks good, I was just confused.
 
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
+> > > +               arg =3D airoha_pinctrl_gpio_get_direction(pinctrl, gp=
+io);
+> >
+> > I don't see why a pin would have to exist in a GPIO range in order to
+> > be set as output or input?
+> >
+> > Can't you just set up the pin as requested and not care whether
+> > it has a corresponding GPIO range?
+> >
+> > Is it over-reuse of the GPIO code? I'd say just set up the pin instead.
+>
+> Do you mean to get rid of PIN_CONFIG_OUTPUT_ENABLE, PIN_CONFIG_INPUT_ENAB=
+LE
+> (and even PIN_CONFIG_OUTPUT in airoha_pinconf_set()) here?
+> E.g. we need PIN_CONFIG_OUTPUT_ENABLE to enable pwm for pwm-leds:
 
-thanks,
+I was mainly thinking that the
+airoha_pinctrl_gpio_get_direction() is limited to pins that are
+used for GPIO.
 
-greg k-h's patch email bot
+The callback should be usable on any pins, no matter if they
+can be muxed to GPIO or not?
+
+> &mfd {
+>         ...
+>         pio: pinctrl {
+>                 ...
+>                 pwm_gpio18_idx10_pins: pwm-gpio18-idx10-pins {
+>                         function =3D "pwm";
+>                         pins =3D "gpio18";
+>                         output-enable;
+>                 };
+>         };
+> };
+
+Like this one.
+
+Which I think works.
+
+It's the name of the function which confuses me:
+airoha_pinctrl_gpio_get_direction() and anything else that
+is used directly from the airoha_pinconf_set() function
+doesn't really care if the pin is used as GPIO or not does
+it?
+
+Can you rename the functions just e.g. airoha_pinctrl_get_direction()
+because it has nothing to do with GPIO. It's jus pin control.
+
+Also some defines are confusing this way:
+
++       /* set output enable */
++       mask =3D BIT(gpio % AIROHA_GPIO_BANK_SIZE);
++       index =3D gpio / AIROHA_GPIO_BANK_SIZE;
++       airoha_pinctrl_rmw(pinctrl, pinctrl->gpiochip.out[index],
++                          mask, !input ? mask : 0);
+
+Variables named "gpio" and AIROHA_GPIO_BANK_SIZE despite
+it is used for pins that are not (in the Linux sense) GPIO all the time.
+This is a big confusion for the mind.
+
+Can you rename the variable from "gpio" to "pin" or so
+and the AIROHA_GPIO_BANK_SIZE to AIROHA_PIN_BANK_SIZE
+etc so it is clear what is going on?
+
+I understand that the datasheet might be talking about
+"GPIO this and GPIO that" but what hardware engineers mean
+with GPIO is something else than what Linux mean: for them
+it means "it can be muxed so it is kinda-general-purpose-kinda"
+but in Linux this has a strict meaning: it can be used by the
+gpiolib to control individual lines.
+
+I think this would make it easier for me (and possibly others)
+ton understand the driver.
+
+Yours,
+Linus Walleij
 
