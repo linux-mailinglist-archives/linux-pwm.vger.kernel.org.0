@@ -1,188 +1,227 @@
-Return-Path: <linux-pwm+bounces-3431-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3432-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44E0198D3E2
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 14:59:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FB3298D4F9
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 15:26:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 68E301C20BAB
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 12:59:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A0361C21C17
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 13:26:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 605CA1D078E;
-	Wed,  2 Oct 2024 12:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 285B91D07B6;
+	Wed,  2 Oct 2024 13:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UzFlDqkF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LSTUlm5c"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA2C1D0172
-	for <linux-pwm@vger.kernel.org>; Wed,  2 Oct 2024 12:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9031D07B2;
+	Wed,  2 Oct 2024 13:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727873913; cv=none; b=Qaoi86xHsFd3kEezk/Ecv8uEPKbwyimuYOodMwejQKe4MkwJopb9dSnnYvZfsgSO4RVVWJO/OLJu3EDQMCccDbAzA5/LJodhYU9LChHxpL8GJ9asy1phplEjExkgFb2bTiK+5kNeCH+8E0hISMFrpbQbEK4nQTMhXSQeLWgmI9c=
+	t=1727875525; cv=none; b=ldF1/b9cT79JG9WpXiwYtYHXVgsOFo6MZHJq09jc/vkYkWUWw5QPpHTG1f/X/ChOS6aKP3xeq48aIrFhIDOGyzY4BHemM9L/brneQBvR79Xk0ZBLsr6hS0Bc4wx69O6itaQT1tI3bHTqDHLCimVq0zBUszl60EyxSDWBNa3l77w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727873913; c=relaxed/simple;
-	bh=pDOeQLUv5z6DD8N9F3KZvA1Zx3tJwMWz/s42V6VQSVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qDPu50PqjQZMF7qKgUP8mAI7kWUK73VkAXmP6CGN904BZKDciD/mTSLC+gFu4QjfIzWRdo4pimKt8VBSOKWjxowTaFsvxlx9qe5zY2zD7pajXA2sIepyTPqlWm9J06bQVIgaBpsU4K8tCmsJJWtWapm6goZlMTt7SmU/GHWX80U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UzFlDqkF; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2facf48166bso35543471fa.0
-        for <linux-pwm@vger.kernel.org>; Wed, 02 Oct 2024 05:58:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727873909; x=1728478709; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+jtQ4FXFUCWol1Gkt0yViKyzB2pgtdbXcRu7N5DjSOU=;
-        b=UzFlDqkFwY4gODcYBTbP4v/7zdHUFpvHI9+G+ka+pWxYt80swqx3v8H9K/I1oLs2w4
-         /bPuFWAqpcBtfyJ4nYRApRdPnTsXzMfSQQ1qF5S03HWY2YCoPn7u+si3k8PYBH+Mp7vD
-         yia3R/DBvrP30yqXY+7hxUviK27DnPuSyttcv/uVjT3ynKaoJpbTxLtuAkvgMnPg0JRQ
-         Ch9lURD9eylM9td1/+kIK0IyB93HtlFVP7AwUk8SQ4tNCrjkbfudZBzPbRL2nIAlaViH
-         x5tQD3wGDcW+bBG8CL+kiJ8FzgeD7kVOZikdeWrvoGieXze4jeojv7lzhdiGdPJnaz5z
-         nbiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727873909; x=1728478709;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+jtQ4FXFUCWol1Gkt0yViKyzB2pgtdbXcRu7N5DjSOU=;
-        b=Ao4cNYm9o6vp2k83ckPwhzn/Y4xRXHqQCALQzCR3pfH4+toaw1w5N9Zn6bG/PGsDgB
-         ECnOnqmPLpBDFvXsB2bBPUWHVFXBrmUx6cnp0YSYdF/JbaNn4duUHsmroCWz+Fx5cHUY
-         0kTXmy6l2NCgqfJqQtXRknWXZ5mstPMfhvl+v6b52XFC+Xj1be9ayeBk17XK54RESE9N
-         fWZRV4C+apGNmHssOj91HA3AGs37Uar3CapRyruFEQLB/LTX1MKXTi/ihY9UX9ZR8YlB
-         83dKeBIVR1LV0pTLAg12jFSm7MHkDxg4Dd8CEsgeB2LJfqWOFkfOE4rIbp55WvWuTuiu
-         FPYg==
-X-Forwarded-Encrypted: i=1; AJvYcCWucv/d3rrOoW497+tru5oX+lYpJp2EoKhoMUKl1vM8S2v8nbKoIOwKZzOLvYtMgfJ3Cif1/MXi8MY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsIBn/4k3u6FZX07NOsWn+ZAqZntA6LLM/sz5DwdC75uelzqR0
-	20OvTsRB5MvtOljwMvSmFBf+mWtdjHtulV4d73PaU3wA2FHbu2LWBXAHIfY1dm32T+/0J/7vpVf
-	Zy20AKd6Zkn2kJHWbnh48FrR2IExMsklJbO+trw==
-X-Google-Smtp-Source: AGHT+IFymKX6xkCaDUcGspB/q99qwrePGX9n7ttzq0hdMpKbNdFfvpYD++sfznNvBnR4emleP82gL6p2kJe45ABDpf4=
-X-Received: by 2002:a2e:be2b:0:b0:2f7:4f46:8344 with SMTP id
- 38308e7fff4ca-2fae1029a1bmr17813371fa.21.1727873909295; Wed, 02 Oct 2024
- 05:58:29 -0700 (PDT)
+	s=arc-20240116; t=1727875525; c=relaxed/simple;
+	bh=t2xGM0n6vLNavXXQOnciDAXLytPrgVcYlQAYYF1hRgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fFavLBOPICrr2lJRgpGWasFAWuuVU/1phk71K8aKvDxJzQNhqMOoQmjwj4FSl8xIK6EgxicpbHy94wBd/yJr103aMYKQL/4YleCJxtFbYhqN0e+Kkad4BBPwLocjC03hfTmuKArEjC/DIkk6BaHO/YP3U3m7+oOs9iF9fxzGSyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LSTUlm5c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E5ACC4CECF;
+	Wed,  2 Oct 2024 13:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727875524;
+	bh=t2xGM0n6vLNavXXQOnciDAXLytPrgVcYlQAYYF1hRgI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LSTUlm5co/SiLPHSg6yOj/iz0uAL2OzcmiV/OsCsmh9ioHTCJU8X9ZIOdn66nWuhG
+	 BF723ZbeakpPHUHgIoku8K0FCTaRGBFaPlgfLI6z/ezHvYT85kr0eNRlbdRhq0Mj/+
+	 2wYkbzcEEh+JFVhgjJf6+V6RSlbr+J8zwoFCmGBpFidp+HsVUagDoSPE6ovppTQ+Ft
+	 Ll9A4elZeVJxaWhpIN8R3PeeW9N3YediPmikV/gGT/s9nYbS812oQiGZohlqgfyc2F
+	 jKhUBv1zf36R6+KqdogmrmBa6Ij9H10a9uuDE097yXB+Aflc2pRvevSH5ICrlEXVn+
+	 7PS9BS4vKB4Tg==
+Date: Wed, 2 Oct 2024 14:25:18 +0100
+From: Lee Jones <lee@kernel.org>
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com, benjamin.larsson@genexis.eu,
+	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] mfd: airoha: Add support for Airoha EN7581 MFD
+Message-ID: <20241002132518.GD7504@google.com>
+References: <20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org>
+ <20241001-en7581-pinctrl-v5-3-dc1ce542b6c6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org>
- <20240911-en7581-pinctrl-v4-4-60ac93d760bb@kernel.org> <CACRpkdZbyQ5bk8oR+Q4UmQCdM5h1mF1ztBc26YzqNsze_B=ehA@mail.gmail.com>
- <ZvKQe73ZKIFy4fny@lore-desk>
-In-Reply-To: <ZvKQe73ZKIFy4fny@lore-desk>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 2 Oct 2024 14:58:17 +0200
-Message-ID: <CACRpkdbXWMU+wq6DvviCQPQ0EzKUm9oOnyFh34Bm=Y8K-HmT0Q@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] pinctrl: airoha: Add support for EN7581 SoC
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lee Jones <lee@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
-	linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241001-en7581-pinctrl-v5-3-dc1ce542b6c6@kernel.org>
 
-Hi Lorenzo,
+On Tue, 01 Oct 2024, Lorenzo Bianconi wrote:
 
-so these comments:
+> From: Christian Marangi <ansuelsmth@gmail.com>
+> 
+> Support for Airoha EN7581 Multi Function Device that
+> expose PINCTRL functionality and PWM functionality.
 
-On Tue, Sep 24, 2024 at 12:12=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel.o=
-rg> wrote:
+The device is a jumble of pinctrl registers, some of which can oscillate.
 
-> > > +#include <linux/pinctrl/consumer.h>
-> >
-> > Why do you need the consumer header?
->
-> we need it for pinctrl_gpio_direction_output() and
-> pinctrl_gpio_direction_input() for direction_input and direction_output
-> callbacks.
+This is *still* not an MFD.
 
-I looked it over again and it looks good, I was just confused.
+If you wish to spread this functionality over 2 drivers, use syscon to
+obtain the registers and simple-mfd to automatically probe the drivers.
 
-> > > +               arg =3D airoha_pinctrl_gpio_get_direction(pinctrl, gp=
-io);
-> >
-> > I don't see why a pin would have to exist in a GPIO range in order to
-> > be set as output or input?
-> >
-> > Can't you just set up the pin as requested and not care whether
-> > it has a corresponding GPIO range?
-> >
-> > Is it over-reuse of the GPIO code? I'd say just set up the pin instead.
->
-> Do you mean to get rid of PIN_CONFIG_OUTPUT_ENABLE, PIN_CONFIG_INPUT_ENAB=
-LE
-> (and even PIN_CONFIG_OUTPUT in airoha_pinconf_set()) here?
-> E.g. we need PIN_CONFIG_OUTPUT_ENABLE to enable pwm for pwm-leds:
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>  drivers/mfd/Kconfig                   |  8 ++++
+>  drivers/mfd/Makefile                  |  2 +
+>  drivers/mfd/airoha-en7581-gpio-mfd.c  | 72 +++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/airoha-en7581-mfd.h |  9 +++++
+>  4 files changed, 91 insertions(+)
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index f9325bcce1b9..eca221351ab7 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -32,6 +32,14 @@ config MFD_ADP5585
+>  	  the core APIs _only_, you have to select individual components like
+>  	  the GPIO and PWM functions under the corresponding menus.
+>  
+> +config MFD_AIROHA_EN7581
+> +	bool "Airoha EN7581 Multi Function Device"
+> +	depends on (ARCH_AIROHA || COMPILE_TEST) && OF
+> +	select MFD_CORE
+> +	help
+> +	  Support for Airoha EN7581 Multi Function Device that
+> +	  expose PINCTRL functionality and PWM functionality.
+> +
+>  config MFD_ALTERA_A10SR
+>  	bool "Altera Arria10 DevKit System Resource chip"
+>  	depends on ARCH_INTEL_SOCFPGA && SPI_MASTER=y && OF
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 2a9f91e81af8..be8448e81a5b 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -257,6 +257,8 @@ obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)	+= intel_soc_pmic_mrfld.o
+>  
+> +obj-$(CONFIG_MFD_AIROHA_EN7581)	+= airoha-en7581-gpio-mfd.o
+> +
+>  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
+>  obj-$(CONFIG_MFD_ALTERA_SYSMGR) += altera-sysmgr.o
+>  obj-$(CONFIG_MFD_STPMIC1)	+= stpmic1.o
+> diff --git a/drivers/mfd/airoha-en7581-gpio-mfd.c b/drivers/mfd/airoha-en7581-gpio-mfd.c
+> new file mode 100644
+> index 000000000000..88407ce5747e
+> --- /dev/null
+> +++ b/drivers/mfd/airoha-en7581-gpio-mfd.c
+> @@ -0,0 +1,72 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * MFD driver for Airoha EN7581
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/mfd/airoha-en7581-mfd.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +
+> +static struct resource airoha_mfd_pinctrl_intr[] = {
+> +	{
+> +		.flags = IORESOURCE_IRQ,
+> +	},
+> +};
+> +
+> +static const struct mfd_cell airoha_mfd_devs[] = {
+> +	{
+> +		.name = "pinctrl-airoha",
+> +		.resources = airoha_mfd_pinctrl_intr,
+> +		.num_resources = ARRAY_SIZE(airoha_mfd_pinctrl_intr),
+> +	}, {
+> +		.name = "pwm-airoha",
+> +	},
+> +};
+> +
+> +static int airoha_mfd_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct airoha_mfd *mfd;
+> +	int irq;
+> +
+> +	mfd = devm_kzalloc(dev, sizeof(*mfd), GFP_KERNEL);
+> +	if (!mfd)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, mfd);
+> +
+> +	mfd->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(mfd->base))
+> +		return PTR_ERR(mfd->base);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	airoha_mfd_pinctrl_intr[0].start = irq;
+> +	airoha_mfd_pinctrl_intr[0].end = irq;
+> +
+> +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, airoha_mfd_devs,
+> +				    ARRAY_SIZE(airoha_mfd_devs), NULL, 0,
+> +				    NULL);
+> +}
+> +
+> +static const struct of_device_id airoha_mfd_of_match[] = {
+> +	{ .compatible = "airoha,en7581-gpio-sysctl" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, airoha_mfd_of_match);
+> +
+> +static struct platform_driver airoha_mfd_driver = {
+> +	.probe = airoha_mfd_probe,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = airoha_mfd_of_match,
+> +	},
+> +};
+> +module_platform_driver(airoha_mfd_driver);
+> +
+> +MODULE_AUTHOR("Christian Marangi <ansuelsmth@gmail.com>");
+> +MODULE_DESCRIPTION("Driver for Airoha EN7581 MFD");
+> diff --git a/include/linux/mfd/airoha-en7581-mfd.h b/include/linux/mfd/airoha-en7581-mfd.h
+> new file mode 100644
+> index 000000000000..25e73952a777
+> --- /dev/null
+> +++ b/include/linux/mfd/airoha-en7581-mfd.h
+> @@ -0,0 +1,9 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_INCLUDE_MFD_AIROHA_EN7581_MFD_H_
+> +#define _LINUX_INCLUDE_MFD_AIROHA_EN7581_MFD_H_
+> +
+> +struct airoha_mfd {
+> +	void __iomem *base;
+> +};
+> +
+> +#endif  /* _LINUX_INCLUDE_MFD_AIROHA_EN7581_MFD_H_ */
+> 
+> -- 
+> 2.46.2
+> 
 
-I was mainly thinking that the
-airoha_pinctrl_gpio_get_direction() is limited to pins that are
-used for GPIO.
-
-The callback should be usable on any pins, no matter if they
-can be muxed to GPIO or not?
-
-> &mfd {
->         ...
->         pio: pinctrl {
->                 ...
->                 pwm_gpio18_idx10_pins: pwm-gpio18-idx10-pins {
->                         function =3D "pwm";
->                         pins =3D "gpio18";
->                         output-enable;
->                 };
->         };
-> };
-
-Like this one.
-
-Which I think works.
-
-It's the name of the function which confuses me:
-airoha_pinctrl_gpio_get_direction() and anything else that
-is used directly from the airoha_pinconf_set() function
-doesn't really care if the pin is used as GPIO or not does
-it?
-
-Can you rename the functions just e.g. airoha_pinctrl_get_direction()
-because it has nothing to do with GPIO. It's jus pin control.
-
-Also some defines are confusing this way:
-
-+       /* set output enable */
-+       mask =3D BIT(gpio % AIROHA_GPIO_BANK_SIZE);
-+       index =3D gpio / AIROHA_GPIO_BANK_SIZE;
-+       airoha_pinctrl_rmw(pinctrl, pinctrl->gpiochip.out[index],
-+                          mask, !input ? mask : 0);
-
-Variables named "gpio" and AIROHA_GPIO_BANK_SIZE despite
-it is used for pins that are not (in the Linux sense) GPIO all the time.
-This is a big confusion for the mind.
-
-Can you rename the variable from "gpio" to "pin" or so
-and the AIROHA_GPIO_BANK_SIZE to AIROHA_PIN_BANK_SIZE
-etc so it is clear what is going on?
-
-I understand that the datasheet might be talking about
-"GPIO this and GPIO that" but what hardware engineers mean
-with GPIO is something else than what Linux mean: for them
-it means "it can be muxed so it is kinda-general-purpose-kinda"
-but in Linux this has a strict meaning: it can be used by the
-gpiolib to control individual lines.
-
-I think this would make it easier for me (and possibly others)
-ton understand the driver.
-
-Yours,
-Linus Walleij
+-- 
+Lee Jones [李琼斯]
 
