@@ -1,133 +1,127 @@
-Return-Path: <linux-pwm+bounces-3428-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3429-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3AA998CE57
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 10:03:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BA04A98CF52
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 10:57:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D90A61C212DB
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 08:03:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB8801C2239E
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 08:57:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B06084A40;
-	Wed,  2 Oct 2024 08:03:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8980D197A95;
+	Wed,  2 Oct 2024 08:57:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qE2tqjpl"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="m6VzFZ0y"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [217.72.192.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D6181723
-	for <linux-pwm@vger.kernel.org>; Wed,  2 Oct 2024 08:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1641E195FE3;
+	Wed,  2 Oct 2024 08:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727856184; cv=none; b=mFCGKaLyXpr/3AbJunvgliRxRDXzHoDevEp8aXkw4rGKvhNe4/bbtc+UX6YLt8Jz6loHbq3jXaD2XujI4wqyww3Xzz4gZP3BvmFsS1H6b/DFJbXN3TVq/nCj0zeGDMi9kENcoQSKQUslEb9CZAq5fF35GWu477L/D1z+Sv0OrmM=
+	t=1727859447; cv=none; b=XJaGOLLJn+j6rFWxHqbDzf5sMF6AHuaffXqEXTSiiCIQKdG4tX4oPbMUsrW/KAZcSJiyAvcI4byun7MIJNAR4JdVx4/E6bPs+HqYyQOzhOQrCHwbTkhpzUovzQ+C3xlm4vgDKSk1s3hvboaq4VD4sh4/wvW/ErzzLbND5DwozQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727856184; c=relaxed/simple;
-	bh=ryeKUacjvqqQUkwVPydYYH5r3fymWIkSLATzfrwZqr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C1xGF40fWJfy+V8MsVZBNGIvvNs9Z3tbKAaTgsX3Bifx4HdlnTNd5ToKOXb8pjEaBPS4W1JrjhgpxsnIGeC+Zkr+slGlV12dB/Rc7k/fpHqmfWJrf/UfZH0y/PsaHg5e/7R1RoFGeneJ4Sdu1jEa6hmBnE0/gVv9S2SAQvk+sYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qE2tqjpl; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a8b155b5e9eso137157966b.1
-        for <linux-pwm@vger.kernel.org>; Wed, 02 Oct 2024 01:03:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727856179; x=1728460979; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hdcJyRPpVgyLrAYHhcOHffwlDloxz/bcgIEwIdRrCLc=;
-        b=qE2tqjpl2Pv2vlPwvVAOn9wejUOxhk82zXROn7tQJ84VR71VZ9KCLVyJ/hiHAccuN8
-         7rda/BfYWfMjTQSo/yB0So43ygyJY50zsS2vcm9p6fKfKJ8MSXiNtLmda3kz/g580Dov
-         DjHjndiTH+7DRgMy/lYox+1dgj/74jVi4dIRgfRJKpV811BmcLti5uAUn0MwOioquMfK
-         7iCiI/xXQdt2r/gQo9dzOb19UdexF3gUxgbkegGpMOaoDJCiTroF71t1nubR619GIBAr
-         2hr6zFXr3UpkeprnNWUf8Wky/c8CXNYhwX79X+Kszt+/W+WuxDD1MRa03+weCxe/eGMi
-         dv0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727856179; x=1728460979;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hdcJyRPpVgyLrAYHhcOHffwlDloxz/bcgIEwIdRrCLc=;
-        b=Lu9W0cxvuReD6tzqARD/Gb0w6Vx0s0YIcqkvk3+0HuVqpXG2SgF7aHU6EB/hVJ8HOy
-         AdVBHWMXWj+FhXdsVPtYRfArcRsApc0B5PvsuvcZZazMWAjEOB0TXkp2gujIAzBAhNoo
-         /NyqJ0YjIcl+DZT+Xq9UKntnSEhXyEiSqArgH39AYNTJSCzDqOwbsDwU3UBE1WdOoyhE
-         01N23H1MWbBSuIjaIgWK3UYCy+7oTUy5sd6/0t+NQzoSz0qHAlIAmmL4f7+37QRqbF8/
-         yjNggImukaYK1za6qUjkovybiydu8LDJLF6DbeNyjaJ8Ri5cOBEFUpeUejoezzYOd7Fi
-         wW4Q==
-X-Gm-Message-State: AOJu0YzXye9ns1r63N5qP/K7zQ1EifYVJW35Zbls6jf+ovx6fv8sWCf5
-	TXlS8PhPe3WNZqAwYhcN1U3I4XesC2IRenIqrcXeSbPSvsQLd5LdfexQzqtljLI=
-X-Google-Smtp-Source: AGHT+IGf6A0q+qgQWjijjqt+Tz0p7nyHr8dMHpu1Hkc/80jtLo+MhLmWkP69hGodPJJFwuXzTaJEaQ==
-X-Received: by 2002:a17:906:6a20:b0:a8a:4e39:a462 with SMTP id a640c23a62f3a-a98f8207942mr206253566b.7.1727856179420;
-        Wed, 02 Oct 2024 01:02:59 -0700 (PDT)
-Received: from localhost (p5dc68d3d.dip0.t-ipconnect.de. [93.198.141.61])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a93c27770desm820149366b.32.2024.10.02.01.02.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2024 01:02:59 -0700 (PDT)
-Date: Wed, 2 Oct 2024 10:02:57 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Kees Bakker <kees@ijzerbout.nl>
-Cc: linux-pwm@vger.kernel.org, Trevor Gamblin <tgamblin@baylibre.com>, 
-	David Lechner <dlechner@baylibre.com>, Kent Gibson <warthog618@gmail.com>, 
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 6/8] pwm: stm32: Implementation of the waveform
- callbacks
-Message-ID: <wl4wpipx2jaixlmdjv7uq5ghewwid5wo6gpmz5bkqj5chnu3vc@6bougxe3rzbx>
-References: <cover.1726819463.git.u.kleine-koenig@baylibre.com>
- <332d4f736d8360038d03f109c013441c655eea23.1726819463.git.u.kleine-koenig@baylibre.com>
- <b0199625-9dbb-414b-8948-26ad86fd2740@ijzerbout.nl>
+	s=arc-20240116; t=1727859447; c=relaxed/simple;
+	bh=ulMyylkHSMIpkflrRuTjpsi9ymfR21Y31b+clxaonpk=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=rloqX3mRPxppQ16LO8G1aDlgDCy8HoOMgelCUKyG1sRVh0xYQiQ3bNVSudoAhiGKfLH5yWyegsgWC+rAk/CYo/GYYs3xg6N7MxWqv4SvlBTj8dz7L+fMJonoUDDJIHa9fXvh53fN0XUKJViZInSKmuVNpcP/88IoExpnTU+yosY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=m6VzFZ0y; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1727859410; x=1728464210; i=markus.elfring@web.de;
+	bh=bS8/Xo3kRqtJJnblPciGzaxgOW4xTAy+DHMyFQruVtM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=m6VzFZ0yBUDS1oCExgnIui3IEtH7mkn99HbiFEK7ylIvyGriIQ5hoIYYurbVgltt
+	 2PFKL/Nq05L2SgfbSRNsPrYlrlcumaK+c96DbVNSeSDJ5utsPaeol4Nb8FS+doCDC
+	 uDpqxOL7cJ3k6niYTS+DwaUZdFMESs4wyX2rWGRxnIbGr04EM/Xg3OXuM3bxtEY3u
+	 Cn7XGa/uIzf7BxgPo3v/zIh9LSGKs4HCXRkOjX70os3MRB+K6snBJTuog1+Sqt4Ar
+	 wYDHQ4VpgrWNcglp+LZGFa0fYkPccK2ehfbe4LKdNumH/MAl9DEFhLZcRkfsO/mV3
+	 0zKLwksD0Ya1pG8RUg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.81.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MRW6Z-1sYdeB3FsT-00P6Px; Wed, 02
+ Oct 2024 10:56:50 +0200
+Message-ID: <b671e4d2-e969-4b9a-a7ff-b3b688689ee8@web.de>
+Date: Wed, 2 Oct 2024 10:56:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lw6wwepyh7fx5yuf"
-Content-Disposition: inline
-In-Reply-To: <b0199625-9dbb-414b-8948-26ad86fd2740@ijzerbout.nl>
-
-
---lw6wwepyh7fx5yuf
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+To: Alex Lanzano <lanzano.alex@gmail.com>,
+ Mehdi Djait <mehdi.djait@bootlin.com>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-kernel-mentees@lists.linuxfoundation.org,
+ Conor Dooley <conor+dt@kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
+ David Airlie <airlied@gmail.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+ Shuah Khan <skhan@linuxfoundation.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+References: <20241002033807.682177-3-lanzano.alex@gmail.com>
+Subject: Re: [PATCH v8 2/2] drm/tiny: Add driver for Sharp Memory LCD
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20241002033807.682177-3-lanzano.alex@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vhLcqF0l3a1X0tEXBQvzRNAEyzfq1m372/WAvOxH0gS0gZSBK2O
+ tCsVmgDAgiOZiw5OetbQvcOa/+cbIK+Q+iyCim8FwFNTx4ta//XJhV9D6TF9RGzQhRHGVWV
+ u4r5aD03tsvkq2VkZhjTPcdc1Tsqvj9uV0SPbxruvh+Qm1zFt/J0vtOf+W1rzHriomrGGPN
+ wpdniAA0lVwzDGSlBDmWA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:2NpKZLPepfU=;OSLZD+gSJ/tWmd3PAiHH6gnDnQX
+ liX5Mc6vboAfHQGI6OOGMV/ZNas2zszXWEcONymMRa35Aq8zw3V5VMfwe09BKWIb/QJ1HT2zo
+ 5BI/Q/gwr0G3Efzm0QpAvdGpbqim5crQHFDrMVGM4S44p5fjr/EgrVT6ll9XumlQfN3oqMi4R
+ nYYj0Z6Ifv4FPwtmK+nuBHcSZ157LypZsj0dLX67lT1sMt327Of+OHtHtR9IuNAo4GWTSEEG4
+ TIVfTONS/oQBnnGVWhw8MQoPlMwN5bqLbBDGA1l7ZWr28g23ThYpkJCv0heW4KlzSHQZ1ZNGF
+ kIr3xvI68pvaCDXhn7WH9GvC77oBcuIIfwQ7k1lKhyxV8fV/cAqiH9xeHKOu5hbKmP68/paRL
+ ZL9xVrg8d7IALPIMM70AKERLl66PiY6fDK3FZIyJjG7hcl5pH/jr5bLQYKSzZBO68wF1onFCK
+ opIHE4U41wWA3DBp03wcRiR+MZzCD24I97lMH/V1yK3MG7g6rYllkI0IdCmKzjkFysukJwVPx
+ CJGrKjfRzQlpJv+PWqYBM3Y16tnaKU7epCKI3YQFRxphWDRF/YNP0ICc84git46f6Zz2rWOUE
+ E9s9/gMqoqZvnIZP81wZClKpW9F6z+TCjr2Wy/zrJmb+NuJ0RX5DNQ+djBrs21kCIN7dwwgK4
+ zsi/hRlzHmqqTE75ZC7A1NfxVit5fPh7IAp2p4LSkE9ym7GIwa/1LninDNWYSTgaQPMXzs0E3
+ kY5hBEF8Ky7YyJa4OE9+eJgjF4ZSRzjKUy74hPVkVEuWpo8xjmoxyYdfySNstt3dUGhZ8uEEK
+ zsf+6I1O8TWUXYceHOdiJcWQ==
 
-Hello Kees,
+=E2=80=A6
+> +++ b/drivers/gpu/drm/tiny/sharp-memory.c
+> @@ -0,0 +1,681 @@
+=E2=80=A6
+> +static int sharp_memory_maintain_display(struct sharp_memory_device *sm=
+d)
+> +{
+=E2=80=A6
+> +	u8 *tx_buffer =3D smd->tx_buffer;
+> +
+> +	mutex_lock(&smd->tx_mutex);
+=E2=80=A6
+> +	mutex_unlock(&smd->tx_mutex);
+> +
+> +	return ret;
+> +}
+=E2=80=A6
 
-On Tue, Oct 01, 2024 at 09:17:47PM +0200, Kees Bakker wrote:
-> Op 20-09-2024 om 10:58 schreef Uwe Kleine-K=F6nig:
-> > +			regmap_read(priv->regmap, TIM_ARR, &arr);
-> Did you forget to assign to ret?
-> > +			if (ret)
-> > +				goto out;
-> > +
-> > [...]
+Will development interests grow for the application of a statement
+like =E2=80=9Cguard(mutex)(&smd->tx_mutex);=E2=80=9D?
+https://elixir.bootlin.com/linux/v6.12-rc1/source/include/linux/mutex.h#L2=
+01
 
-It seems so, yes. How did you find that one?
-
-When I create a patch, is it ok if I add a Reported-by: for you?
-
-Best reagrds
-Uwe
-
---lw6wwepyh7fx5yuf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmb8/i8ACgkQj4D7WH0S
-/k4LjQf+IuQXl7qrFJl9cpY+KX3OCGqk4Jj7v5/cv2R0jEn6bCZlJpgSxmPU50ir
-C7H6qhNKKrGXivDS3CqeFFtbzDKha7sk/SJkRGFfSsFNawdAtBQnV//VzdNEFEEL
-/NWC4hzyTo/Jyji5UuSQfXalLIoBK3fwZ1I0uC9nrbRvaf4OEBT3ozo3TqsHU+64
-JgyOsypiVfgH1V+QGOFj9LcqE3QIsd1f1fdvYx1snilU8d8r9Ky8FDvrtwok5ELX
-b5kny40D3wAg1LKC0iMa+aP0+4bNz1XU+PqsoY8ogtjzPLYpeuBI+f0kgCXW5nYM
-N2K+48tvR32EiZkDqrBQmYMlXWuAKw==
-=Fe7s
------END PGP SIGNATURE-----
-
---lw6wwepyh7fx5yuf--
+Regards,
+Markus
 
