@@ -1,220 +1,163 @@
-Return-Path: <linux-pwm+bounces-3423-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3424-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06F3998C9F7
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 02:12:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ECB1F98CB90
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 05:38:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D93AC1C234C1
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 00:12:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4ECF283434
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 03:38:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D73281392;
-	Wed,  2 Oct 2024 00:12:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A05A91078F;
+	Wed,  2 Oct 2024 03:38:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="bO03AL+3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFqnoT5x"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3852E635
-	for <linux-pwm@vger.kernel.org>; Wed,  2 Oct 2024 00:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDC9101E6;
+	Wed,  2 Oct 2024 03:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727827956; cv=none; b=ZLjCfTQQDlI7JZcuZiBALn5ImAY7t55qBWpfe/uJU5n8NkRjKCcAbew7X+03prfQofyiyb8EOLJnbptiHYGMGuYCO6T5g/aNBm50TUmj27ZIa8iSLSQ+LuAgp4IseDN7TOOz+iiliphZ/1v81xFY3LA1IQ0+hiMWnvUYRxKd37I=
+	t=1727840312; cv=none; b=PV9ec0XQSSmYBIjiJVnOf6UaAN8Y5P2ZGvTdwxxIUiqU8SlM05h43lDLjN3ZUAIDZkET+U+AOsoFaqZpjIu+K+F6yAgdQaqQznNbF+mtyfZ3Hx1EjipArz5BPEF0g+Zd9iV4pBgr2p9eBGOYtmselvJoGomnjKQdbR5cnj6rPUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727827956; c=relaxed/simple;
-	bh=1dvAewY9SUvb0mk5qJ4rGjPDkImylQFiv3WD7bkPzv8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nzIsHYc987Szd6i3yZzwZPCc0P2gPv6QkkC20IXXtRzEdxZC/exBr0CVykolGWI8ZfB+JBwAuhsBwL3YN6GFz/ZPVvwmusopqxzu5J8N/S/8Yg4AX1vh44aKu9Gk1sQQEQPOLghcIyha+8uPkRTvQrokywP0ZjGhYuhayQTQTQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=bO03AL+3; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42cbc38a997so1774385e9.1
-        for <linux-pwm@vger.kernel.org>; Tue, 01 Oct 2024 17:12:33 -0700 (PDT)
+	s=arc-20240116; t=1727840312; c=relaxed/simple;
+	bh=ubntFyn+U170UHY/EMBXcg7nDyc7ap8EztnP7A+f/oI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t/FYv/XD9zhBhGJ5XCRwtqKLT2f/Qe8k73Ex7OoGG1jJ6UB+/wUk5/J6NjOcUp73McFm3l9TkQE+oZ38+29gzGW5DfdaAjwZhXVEXlvopSfvl1tdkWqI9iU6EkIiYX+PIwyPO0+JrA+XujYUwcjo/88opseqSXpz4BzYzV53X3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CFqnoT5x; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6cb7f5f9fb7so7608876d6.1;
+        Tue, 01 Oct 2024 20:38:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727827951; x=1728432751; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vnlZlNXn2r5SdItECP2y/9nvB0cJmPdzYGUIF7uGZ04=;
-        b=bO03AL+3bDEKFXQWWSDcEOAkKy6YCO0ay/c9IommrCjY9RheiNV1saQDYRINQl6eeH
-         m3kmOL5cgwNUuhuYZm6jjsuZYxU4veO4onAbW9C7wm3AOE5aRqsqBhv9+TK3MvFQGzDx
-         8KmMrqMquOlXdMgQLloDg+UxBjJzFkzmHWSK4HoX8osw8aqF3wBoUXoobJgOISwrogct
-         lqa9TrikDCD9RqFhbgQWAp+m38Vre4wc3wtBQcDlauJgcwCjSmdrc91Websbvc4xUlxd
-         n6qbkR1UxTHpNhxsyBN1hnHkHgXO/J+xPfOFkNw/WgvAf8qJAHC5gkK4jh3Q+BnN9tCG
-         Zg0Q==
+        d=gmail.com; s=20230601; t=1727840310; x=1728445110; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iUOKiBUXnpsFTZ5jMqyjR0K9mCXZ+ssrPBDzZNi8o+w=;
+        b=CFqnoT5xRGA6F8mbb8BDXdpa2iQeKYMLsSehG6dEkclE36gBe6LC/j+MxjEtPl/nSi
+         nYiLw+PwbGOY18/OUvUYxSX/PL0rtE2Fyrze+31ODFO4CKQGj4pBV182grVPNTzTPcgV
+         zdVLZpF41cALAq+26VfNIpYuNwkbXAUBoq1Z6RiC05kmI27vBODTmNvIwOSXRyDwil5w
+         GkKe6KJAyduIe9T6t4lkqOakrt33LclIdQhTveGR5clyJEzvss3IGfAlsBJgDKT/pEoo
+         o7MEjWVH6jbF+sWY8XRLOauEJ5Ub2+5oYVUfwEF6BaC/HCo36qXzFIix7FhqMuMj/3nE
+         8+pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727827951; x=1728432751;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vnlZlNXn2r5SdItECP2y/9nvB0cJmPdzYGUIF7uGZ04=;
-        b=DoG2M7CfR3rFR/G+3+z/DKRKqHVVyK2H0SN7M4M0bEaovtLiT0RpMAGGUOEfxVWwYV
-         jyCgnSlZvS1CW4TcHK8fLBhdc1dMzdp+DQcbxWbTbWlKTaR2tWc7YPDR9Z3T9t/YgYWR
-         p8LPs9qGC3PCZEBEJzdZqGEvouE7HRQHXo3maPVjhOU1s3vj4oVcZAN/gEuhC1BLZLDC
-         y4M1LyXbf/ZaASY65gMVwLoXVKwItoCX3y1IWIVjsv+FCcujUMyNAf8qtxbfZY5CtWF9
-         IfF+4XYVYoXQ25InnzgeZwBtVpnTeZp6ASX6oAqy59Bt2ORrygoJI+CRiMt6aArmoSX7
-         5Eyg==
-X-Forwarded-Encrypted: i=1; AJvYcCXRorJoeE8oYSBginxJvpD3L3zmYdOZ/bk6IVYSbwzoBXpJz9sZ+iqFJQBU2h2h0KSGiPdhUG5c4ic=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfaZ50KpigIl8o5hPu6rel6ZHMImf8WTzjKQSbrJNm3+WLJN6M
-	7DxpV3Z8I0XDiSlpZ0aCYO+IQ4FdBpVNu74DSI/IRTMySbaJaaMP7LUayFrdhgU=
-X-Google-Smtp-Source: AGHT+IFp1BBQhueLTaa7zDs8f+Zi5EqjDi4QIQvUe7MIuBWL3xI+PhtuHQuGbzZ+x1anGNvzpcEkAw==
-X-Received: by 2002:a05:600c:1c1d:b0:42c:b98d:b993 with SMTP id 5b1f17b1804b1-42f776cf4f5mr6796725e9.2.1727827951070;
-        Tue, 01 Oct 2024 17:12:31 -0700 (PDT)
-Received: from ?IPV6:2a04:cec2:b:2aca:1b10:f81f:8179:6179? ([2a04:cec2:b:2aca:1b10:f81f:8179:6179])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f7727f72fsm11119285e9.1.2024.10.01.17.12.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Oct 2024 17:12:30 -0700 (PDT)
-Message-ID: <57c5d8b1-295a-492f-b17c-b44caf8aeb2d@baylibre.com>
-Date: Wed, 2 Oct 2024 02:12:28 +0200
+        d=1e100.net; s=20230601; t=1727840310; x=1728445110;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iUOKiBUXnpsFTZ5jMqyjR0K9mCXZ+ssrPBDzZNi8o+w=;
+        b=ca6crqI7X536p6FuDj6HD6JL4uz2xl62GTQG7q3udZJPyJDpTvOo5SZJfgWkuQ0dOx
+         N0FdAHkITk8/4eSpI08SMhS92RMCU7tiJLj05FJVUuy1Ejp95W0B9ZXnJD5XJj2T9R28
+         s9Lse5Yv7r63Yb1GWFfbnWp/wpfx3DE8uvIfbeELM0KvqH9FAFPzGXV5QoB1+Xzmp1iH
+         iN3rX1v3NUgd54yZNCrw/BqLa12u2WKzScwjh3+LdjQ2YNJtXLatWxIZ5tknl9vuwuM9
+         LSEHPDRDhBSs3K25cg29YXtgVva24XUGZqcZJlaXpGnxdkLIOQ3DrAavt329I/wMoiim
+         SDtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUhxDIbxUB9xx2bsTq4OkSHpGYg0Ve8dl2BuiF0VDE5y7L1ZMYgrCEjcAO9RbPNX5A6hhJcxLvqslmj@vger.kernel.org, AJvYcCVR+cj5gFvDsl4s3Jtci6mwpDOLNurCl2LoXTA5tV9LZY7AAVFSSKMoF8h9zLL+1+dbSvWCDXHa16dX@vger.kernel.org, AJvYcCXqI6gin2XH0IrDAAxKfaVvesVkI3VM1wYGGkfbtdfWRtE2puvx10Dc1jA62pHhxUN/Ghds6f84J8mrfWNC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2cxD6akYpUpIxKGxaoe/di4axJnB1C1SZHf7KOFjOOsKxZ1KV
+	qIKMCbEbaf+j719AGKMOOunF/7AVpyc2ZaWgDaYSR7348diO/GfW
+X-Google-Smtp-Source: AGHT+IFB3Rfsz3+Lfr4kTvzv/Vj1epWm/jyj0EIrItSKQRLruClkbfn6m+DM4X6WPN4Ew4cmQ35Y1A==
+X-Received: by 2002:a05:6214:41a0:b0:6cb:3a7b:96b9 with SMTP id 6a1803df08f44-6cb81a05676mr22602866d6.15.1727840309742;
+        Tue, 01 Oct 2024 20:38:29 -0700 (PDT)
+Received: from localhost.localdomain (ool-1826d901.dyn.optonline.net. [24.38.217.1])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cb3b62d9e6sm55640446d6.69.2024.10.01.20.38.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2024 20:38:28 -0700 (PDT)
+From: Alex Lanzano <lanzano.alex@gmail.com>
+To: u.kleine-koenig@baylibre.com,
+	Alex Lanzano <lanzano.alex@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Mehdi Djait <mehdi.djait@bootlin.com>
+Cc: skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Subject: [PATCH v8 0/2] Add driver for Sharp Memory LCD
+Date: Tue,  1 Oct 2024 23:37:35 -0400
+Message-ID: <20241002033807.682177-1-lanzano.alex@gmail.com>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/10] iio: adc: ad7606: Add compatibility to fw_nodes
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Michal Marek <mmarek@suse.com>, linux-pwm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-doc@vger.kernel.org, aardelean@baylibre.com, dlechner@baylibre.com,
- jstephan@baylibre.com
-References: <20240920-ad7606_add_iio_backend_support-v2-0-0e78782ae7d0@baylibre.com>
- <20240920-ad7606_add_iio_backend_support-v2-7-0e78782ae7d0@baylibre.com>
- <20240929134412.506998db@jic23-huawei>
-Content-Language: en-US
-From: Guillaume Stols <gstols@baylibre.com>
-In-Reply-To: <20240929134412.506998db@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+This patch series add support for the monochrome Sharp Memory LCD
+panels. This series is based off of the work done by Mehdi Djait.
 
-On 9/29/24 14:44, Jonathan Cameron wrote:
-> On Fri, 20 Sep 2024 17:33:27 +0000
-> Guillaume Stols <gstols@baylibre.com> wrote:
->
->> On the parallel version, the current implementation is only compatible
->> with id tables and won't work with fw_nodes, this commit intends to fix
->> it.
->>
->> Also, chip info is moved in the .h file so to be accessible to all the
-> chip info is not moved (I was going to say no to that) but an
-> extern is used to make it available. So say that rather than moved here.
->
->> driver files that can set a pointer to the corresponding chip as the
->> driver data.
->>
->>   
->> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
->> index c13dda444526..18c87fe9a41a 100644
->> --- a/drivers/iio/adc/ad7606.h
->> +++ b/drivers/iio/adc/ad7606.h
->> @@ -38,8 +38,19 @@
->>   	AD760X_CHANNEL(num, BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),\
->>   		0, BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO))
->>   
->> +enum ad7606_supported_device_ids {
->> +	ID_AD7605_4,
->> +	ID_AD7606_8,
->> +	ID_AD7606_6,
->> +	ID_AD7606_4,
->> +	ID_AD7606B,
->> +	ID_AD7616,
->> +};
->> +
->>   /**
->>    * struct ad7606_chip_info - chip specific information
->> + * @name		device name
->> + * @id			device id
-> ID in chip info normally indicates something bad in the design. In that somewhere
-> we have code that is ID dependent rather than all such code / data being
-> found directly in this structure (or callbacks found from here).
-> Can we avoid it here?
+References:
+https://lore.kernel.org/dri-devel/71a9dbf4609dbba46026a31f60261830163a0b99.1701267411.git.mehdi.djait@bootlin.com/
+https://www.sharpsde.com/fileadmin/products/Displays/2016_SDE_App_Note_for_Memory_LCD_programming_V1.3.pdf
 
-Hi Jonathan,
+Co-developed-by: Mehdi Djait <mehdi.djait@bootlin.com>
+Signed-off-by: Mehdi Djait <mehdi.djait@bootlin.com>
+Signed-off-by: Alex Lanzano <lanzano.alex@gmail.com>
+---
+Changes in v8:
+- Addressed review comments from Uwe
+    - Replace pwm_get_state with pwm_init_state
+    - Use pwm_set_relative_duty_cycle instead of manually setting period and duty cycle
 
-chip_info has to describe the chip hardwarewise, but there are different 
-bops depending on the wiring (interface used, and backend/no backend).
+Changes in v7:
+- Add Reviewed-by tag back to dt-binding patch
 
-The easiest way I found was to use the ID in a switch/case to 
-determinate which bops I should take (well it was only needed in the spi 
-version since it is the one supporting almost all the chips while the 
-other ones still support only one). For instance, the ad7606B will use 
-ad7606_bi_bops if it has a backend and ad7606B_spi_bops for spi version.
+Changes in v6:
+- Rebase off latest drm-misc-next
+- Replace pwm_apply_state with pwm_apply_might_sleep
 
-If I can't use the ID, the only way I see is creating 3 fields in 
-chip_info (spi_ops, par_ops, backend_ops) and to initialize every 
-chip_info structure with its associated op(s) for the associated 
-interface. This would also lead to declare the different instances of 
-ad7606_bus_ops directly in ad7606.h  (I dont like it very much but see 
-no other option).
+Changes in v5:
+- Address minor style issues in sharp-memory.c
 
-Do you think it's better that way ? Or do you have any other idea ?
+Changes in v4:
+- Remove redundant dev_err
 
-Regards,
+Changes in v3:
+- Fix file path in MAINTAINERS file
+- Address review comments
+- Simplify mode selection based on match data instead of model
 
-Guillaume
+Changes in v2:
+- Credited Mehdi Djait in commit messages
+- Renamed sharp,sharp-memory.yaml to sharp,ls010b7dh04.yaml
+- Using strings instead of int for vcom-mode in dt-binding
+- Fixed indentation of binding example
+- Removed binding header
+- Removed extra whitespace in sharp-memory.c
+- Fixed error handling in sharp-memory.c
+- Added match data to of_device_id table to be in-sync with spi_device_id table
+- Replaced redundant function with spi_get_device_match_data
+- Sorted header files in sharp-memory.c
+---
 
->
->>    * @channels:		channel specification
->>    * @num_channels:	number of channels
->>    * @oversampling_avail	pointer to the array which stores the available
->> @@ -50,6 +61,8 @@
-> ...
->
->> diff --git a/drivers/iio/adc/ad7606_par.c b/drivers/iio/adc/ad7606_par.c
->> index d651639c45eb..7bac39033955 100644
->> --- a/drivers/iio/adc/ad7606_par.c
->> +++ b/drivers/iio/adc/ad7606_par.c
->> @@ -11,6 +11,7 @@
->>   #include <linux/mod_devicetable.h>
->>   #include <linux/module.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/property.h>
->>   #include <linux/types.h>
->>   
->>   #include <linux/iio/iio.h>
->> @@ -89,12 +90,20 @@ static const struct ad7606_bus_ops ad7606_par8_bops = {
->>   
->>   static int ad7606_par_probe(struct platform_device *pdev)
->>   {
->> -	const struct platform_device_id *id = platform_get_device_id(pdev);
->> +	const struct ad7606_chip_info *chip_info;
->> +	const struct platform_device_id *id;
->>   	struct resource *res;
->>   	void __iomem *addr;
->>   	resource_size_t remap_size;
->>   	int irq;
->>   
->> +	if (dev_fwnode(&pdev->dev)) {
->> +		chip_info = device_get_match_data(&pdev->dev);
->> +	} else {
->> +		id = platform_get_device_id(pdev);
->> +		chip_info = (const struct ad7606_chip_info *)id->driver_data;
->> +	}
->> +
->>   	irq = platform_get_irq(pdev, 0);
->>   	if (irq < 0)
->>   		return irq;
->> @@ -106,25 +115,25 @@ static int ad7606_par_probe(struct platform_device *pdev)
->>   	remap_size = resource_size(res);
->>   
->>   	return ad7606_probe(&pdev->dev, irq, addr,
->> -			    id->name, id->driver_data,
-> Rewrap to move chip_info up a line perhaps.
->
->> +			    chip_info,
->>   			    remap_size > 1 ? &ad7606_par16_bops :
->>   			    &ad7606_par8_bops);
+Alex Lanzano (2):
+  dt-bindings: display: Add Sharp Memory LCD bindings
+  drm/tiny: Add driver for Sharp Memory LCD
+
+ .../bindings/display/sharp,ls010b7dh04.yaml   |  92 +++
+ MAINTAINERS                                   |   6 +
+ drivers/gpu/drm/tiny/Kconfig                  |  20 +
+ drivers/gpu/drm/tiny/Makefile                 |   1 +
+ drivers/gpu/drm/tiny/sharp-memory.c           | 681 ++++++++++++++++++
+ 5 files changed, 800 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/sharp,ls010b7dh04.yaml
+ create mode 100644 drivers/gpu/drm/tiny/sharp-memory.c
+
+-- 
+2.46.2
+
 
