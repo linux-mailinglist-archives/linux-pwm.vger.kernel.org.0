@@ -1,220 +1,277 @@
-Return-Path: <linux-pwm+bounces-3439-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3440-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EFBC98E3C0
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 21:58:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9DA598E62B
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Oct 2024 00:42:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 88C791F242D1
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 19:58:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C23621C216AF
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 22:42:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18427216A12;
-	Wed,  2 Oct 2024 19:58:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFB6E199934;
+	Wed,  2 Oct 2024 22:42:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CBBTzj3x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqyYenck"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2076.outbound.protection.outlook.com [40.107.22.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A34216A06;
-	Wed,  2 Oct 2024 19:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727899085; cv=fail; b=eissGWdXiurHXmAU6ZLuxtkfbk4CYSDYL9rSLZ+LRguV+5EaDkjr4UiKxPLY778IzcUJa91URa3BrCK0Z877qDv4s2xlBiUbNTJIX397QeX0fdK54yowTNBEopCnccADfYnr8sE+toVBxpZ0s2ROkhXKdHl1I71S8+Kgg2bX/aY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727899085; c=relaxed/simple;
-	bh=IEn6fYNYlS+8TRFMs4/spTOAL8XjXimYbqhpoAa6J/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=slj1F2Z8QU5pceSM1cGilCzKi473ozoaWOQpoVAkxsYPtytLMGTkMKiGt38+U66BFz5lZBs6rqkM+FzBTUFt9r8Tuac+dtRm6GO+/HrTaiO+AxjT2mehi1tTkB+vO+P7GJz6wVe7aQRVB1jOTH3Zzprvz3Ct+B2YjTl6UhvfHAY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CBBTzj3x; arc=fail smtp.client-ip=40.107.22.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Voua9D1dszc5gl+pfoNraNk5TNjkpV8fxbjY04sXHSmpyuGY0VCRn/minTns9gqARDrkrToPxA2b3mJuWfMEJ92WIpTxPXqmIBWZHfiSnuvDE7vMXqYCRhk6a77fLpZlsMOncmN+DYvYnFp2bPDyyqYTYZRLhCVBqch6PtY7RICLOlQeX7AKh46zQx0A7hQfs9SR4auCyi4tKJSJAXLUYDXfliLiUqoKR3WRWdhDOuF/Y1esEYJE4LWHfCvgNQ+8WMN6MPTI6ZybsNCmrD1odL2ztLSgMIHHLHoM7GhWr0hz98uALhkDiNNx2ZP5Z+zMY+P+r8LIqiXDxnAZcltUuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RK4OR3JLvX1SMHTSbtLt2DYbZM3qwqdrASVRKl29YJE=;
- b=aT8+WRIRyvBH/J9pR1odsvDzxzfDr51FbCB+ehR2V2lgoMLVCGODzKeHr4xfHq25+q83S6Wubp0gnkFAFI5yMJtd3ckQV712qDkAhs+dO7lR46/krEqwe4RhER5t74nPYTwCUzpBAuWDfEVo3mUVyv22rOUwgXbpr6OvJ6mnL5AikANBTDGFTiPpMoZ/ymxftYZ86VrXKmAZvT4ma/ADCs14M4++TpZunyC+6kMxLgBYaC0rD6PzPs+S//CxNFZSok8ab6gDH7b0jZt5T/iM4gvq4mxa+ASKx4VMKVXMkOsgY8IKyBr/F7am5lC6sPmPmlLlPWR32EF6Lay6xEyhcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RK4OR3JLvX1SMHTSbtLt2DYbZM3qwqdrASVRKl29YJE=;
- b=CBBTzj3xtCLT+I18G3H+cGIczISbKN4CnYR4dr8bYIVTeEX/2JYiaqKLmVjWcfJ/6cWBLUtz33eXZUXEyswEbrvUfFE6cZ7vkBDZXRk948PuendDYpxJQPrTx9K7Dej72qoAs8DD3rot+1slbdiumQwqhHIK8Y0EaK9r1rDSnIJVKkXxEfsreQp2CDCtXDyiZ917oyJXgoPV6HRmUtyFhAhUMqSKtdMNhkrCPkDgOwnLSi+anhnU4p7ApImUsuu5WfBFbc2Utk9dPASYdKTMm3Ag8P1iJs3DkRZFJPJNlK+sGpRt3EOLw5amjQAur2lXzCstFMEzA1qErr1kntm5BA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by GV1PR04MB10453.eurprd04.prod.outlook.com (2603:10a6:150:1d2::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.16; Wed, 2 Oct
- 2024 19:57:58 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%4]) with mapi id 15.20.8026.016; Wed, 2 Oct 2024
- 19:57:58 +0000
-Date: Wed, 2 Oct 2024 15:57:48 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Marek Vasut <marex@denx.de>
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com,
-	francesco@dolcini.it, imx@lists.linux.dev, jun.li@nxp.com,
-	kernel@pengutronix.de, krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, p.zabel@pengutronix.de,
-	pratikmanvar09@gmail.com, robh@kernel.org, s.hauer@pengutronix.de,
-	shawnguo@kernel.org, ukleinek@kernel.org, xiaoning.wang@nxp.com
-Subject: Re: [PATCH v6 1/1] pwm: imx27: workaround of the pwm output bug when
- decrease the duty cycle
-Message-ID: <Zv2lvPzCdxKNElkr@lizhi-Precision-Tower-5810>
-References: <20240917192510.3031493-1-Frank.Li@nxp.com>
- <4bbee009-3985-4679-a85e-76f4259ff8d6@denx.de>
- <Zv2i73MvKASJA+2x@lizhi-Precision-Tower-5810>
- <ab75066d-31ae-4725-b524-9cf6720bc866@denx.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ab75066d-31ae-4725-b524-9cf6720bc866@denx.de>
-X-ClientProxiedBy: BYAPR04CA0020.namprd04.prod.outlook.com
- (2603:10b6:a03:40::33) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C2512B63;
+	Wed,  2 Oct 2024 22:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727908967; cv=none; b=c4TM2irC0MFYQrd9wPoU+1E6U59PdA7tKX3JwzE71LV7paKoPzcoQBAQb6lNMnof9kAJ4udLquKFkmkAPYqClU+VUivoM6ISnlU5nra36dH3Y5ZZBkMbEC3IUWESIU81GOXWyhLc40r5VgIYYlp/O1OptiIQ/qW59Sxx82C6yRs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727908967; c=relaxed/simple;
+	bh=gtvN60JxUU+oPzyRigM/mR6Z7ienkrBpP7+1WtznRZM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IcGlOsGTNrezWBxxqdtpqjUyWyn3vEyT4GYjzLJPFnurRDx55/LW2deryiNFyRb0mcu8saacjgm8u2g1A3b1yOJyjEGoXjPSJa4WEhsqZIrAwbWAJWBJKegFp48MgytE3uenCwmS4Rf/qKX/aQ2guDgrWg6ZqvB195ezDK2tdVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aqyYenck; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42cba6cdf32so2443135e9.1;
+        Wed, 02 Oct 2024 15:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727908964; x=1728513764; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=2p0RBsu7N/ikXAXwnKT3iU6dfYBdSsewWojsryZ8yU8=;
+        b=aqyYenckN1kIRO3/nNbWjl64Q2cK58tWrPDIP1BaU6rhvAQISaSh3xenn4WwbGj9nZ
+         cVSu8MmOK/9F6cbW3/HQ5YXEJAmPOhhWwx4hHaOUmHbgpTvsQGcxAejPZRWQvqiToZZn
+         qKD9eOgz446LwPGwuGnQyikXETEmTB7zVmmyxoMd2kg0unarnU9Lx9SknXyZOQcAuO8F
+         6b2xQ0+mVoLy9MFLaEQ8qUa28wMcbOQoW272rHmIAv37pCYGn00VPS1F6L+iOpxRXAw/
+         h77Jldc24duXJzzqxdwPNkgbFh4Pgel2TRLgXnF6kcAFDCZZeAfaGDEuQPrJZVmrqxGd
+         ZUfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727908964; x=1728513764;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2p0RBsu7N/ikXAXwnKT3iU6dfYBdSsewWojsryZ8yU8=;
+        b=l7KbKkdH1Y+pzAzDB3tbafwpgnyD2EYHQLfKP/t6EudHj1Of4nQ8Uonpuo20w+ZzPr
+         geRx5/oDEBHlgaimB/ZNwBGdpLEPdeWXX0bPlnEpBJbBoOTGjoCng1uMBTOx9Wxl2We4
+         n9/NZM3xy4qEVOwymZtTDJ+DMPQ3VAl37+Ee5W+Aqp2LEp6NPzs+SIl7ye51FTvnwiKO
+         DPwVqdZqCiKHfuyhiRI+dhyNH22OtBsJegSU1k3h9AMmsaDUCuqxC5lC7F0DAekMFgYR
+         2AHVmRAkckaL3okbG8o0qM47m60KSqcVcm79M7Of5sOJb3atH7fqj995R2zwQrXcFyMF
+         pQqw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3evMZhxmvhbWFos74exG8Dxf0j5/tJYqs/BfGqp6txAyW8v6dka0UZWET2D9opfMVvJWUvW+oIce6@vger.kernel.org, AJvYcCWkBFiXAfjrXQ5cRpDsAfmOkSE5Jgn6GSbTm0qeUYCagElSYVpPClkoqC/aQbDa1LNIfLlVj29qO0ww@vger.kernel.org, AJvYcCWtO+O3uuUDrG890RV3Qwbjflz9ovBH4UeQbmergxC6WY/jyCl6Hb2IvUXs60jBX2IrGg4ufU/ipkyecg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNuNXi10iBd3LRfjlTOjlH2Zj6gacovcJg3yDt7FnubxG9xf8h
+	dD4HtzD/gFAWn5HCQu8H88FcnuW6LAKpD800j8uEd7SjuNx12oCO
+X-Google-Smtp-Source: AGHT+IGuS5mbK7XVp3K4dA2IOkM9MUozkblHFQyW/rtCI15UZMMVWwioBkHnlLQdNZX3oeUM5mifCA==
+X-Received: by 2002:a05:6000:50f:b0:37c:d49c:3ac7 with SMTP id ffacd0b85a97d-37cfba16a65mr3033353f8f.48.1727908964057;
+        Wed, 02 Oct 2024 15:42:44 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cd5742602sm14778829f8f.94.2024.10.02.15.42.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2024 15:42:42 -0700 (PDT)
+Message-ID: <66fdcc62.df0a0220.15bce8.4398@mx.google.com>
+X-Google-Original-Message-ID: <Zv3MX0046FvdpeYU@Ansuel-XPS.>
+Date: Thu, 3 Oct 2024 00:42:39 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Lee Jones <lee@kernel.org>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com, benjamin.larsson@genexis.eu,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] mfd: airoha: Add support for Airoha EN7581 MFD
+References: <20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org>
+ <20241001-en7581-pinctrl-v5-3-dc1ce542b6c6@kernel.org>
+ <20241002132518.GD7504@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GV1PR04MB10453:EE_
-X-MS-Office365-Filtering-Correlation-Id: c22ebde9-7311-4518-65a2-08dce31c8334
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sHmYSQ30yzQVSskbRXlkHs407hvWRwBQYOyx4eN8Iw/D20im8+G1ZqM7rDqJ?=
- =?us-ascii?Q?8gRN7D+XHwGwzlWroI4g8lqfVjrdRBkTymRbW3b6BAZROfgKizwZ5ZThNBSj?=
- =?us-ascii?Q?8C55RW0HluvKVEE4cM/hYWbfkJ6nh3fqUCpHyeK7oHb/jJ+K+gJG3RK8uU+x?=
- =?us-ascii?Q?Hy/wyftZdW/laQinXzERx8Ba00O5EJiFJjc+ha8suznM2JzpKOSXU6gzvELf?=
- =?us-ascii?Q?F1yeN7Wtm9VZi83/RS7YwlU7Wvv3R4HvV66Lc+ZM/7gw+XuB7JwiiEqO5kw9?=
- =?us-ascii?Q?LVOJxIoSql/qy8hS9v4YBum+vN2ySi4mrgtWpVpdvvKFr9Heif3Bj0laYDQk?=
- =?us-ascii?Q?6vwkYteqP8YgunMuq//yVIeq7U7Mec6ZkkH7EFEUZyFDmgDwDUAEdW+Dcz8N?=
- =?us-ascii?Q?OCzMiPbxdKKWDXDhtNlUc1CZxNt7KdQ0lckCJLlyqZ6FfxAO96zEaXsGqFfF?=
- =?us-ascii?Q?ULDlcHFrrgptriI59o8RtkIT8jAU7GjaYhsuVNMSUoXPygbRFWF9FK7ohfLE?=
- =?us-ascii?Q?+Wv6cDqGYWqR00ylyj8wpOPNPtH0g3fCMfSvB7/3lAuQh3DRpC93++VHeRyo?=
- =?us-ascii?Q?0yCwQTUpQacl0Lj70kMDOmmnwQEvt9wpMEZuQpF+WlsB+GD211KHzrChalxp?=
- =?us-ascii?Q?Ca5rYwuF7OPHYI0yFSm0WjjmsQ7SR8VYBFq149aIqeYef47VBTJTjiv/FBo1?=
- =?us-ascii?Q?xs90yYauHuUsVh2lFSs00idXJFqGon7HcZk9j2bItk0N7P/rDbkjigK4EdVI?=
- =?us-ascii?Q?LzPHWbi6Swgiy6vsXpYRBtll4siwknKSxiKNU5zUxnajP84G8hklHjcjgIm4?=
- =?us-ascii?Q?W9kGGpLuWrPdN1wDThK/ZCFr8kVlty04bhfeEl5KxVYt+sYBK5DfNbJF1Ow5?=
- =?us-ascii?Q?zM9BdU6ZgDrUmyZVpJeXVzq7DlhuNnYUbrDFR9721K8tgtrf0nESLqF/ltUX?=
- =?us-ascii?Q?r0U8Y4QLemGleJcr+sOgP5bBoFmZ3Or7fC9m9jSscmZy+Z8a2OMeBiDbK82I?=
- =?us-ascii?Q?VQuHAAobM2V+Js5YuEc4dQp/sVFdTsiq4DOlK4iOPYtVE+xZwULvI6AvaQP9?=
- =?us-ascii?Q?nr1DYywkf6uwXvM6i4o7Q8YiD2ROYqszFlSKVpYHtwvgzRKDNcQ8NK2cABq3?=
- =?us-ascii?Q?mwX55df0r9AublAbp5PWv08mFEsEJnc4N6CG4khcSWh4XfaHrJhy8PB4PTel?=
- =?us-ascii?Q?xc+2Ee2CSVtYeYkFscpSJJ17SYqjbHwYhDTlVCZ7jbl1EyD1mxaf6RMLOK1O?=
- =?us-ascii?Q?Fl3qmUPSspjg8OgTJpVMB7jo7h1IOhGvwhbVEEMCud2/mqfcrWMGEJ1ZsIXG?=
- =?us-ascii?Q?WYVY2d3CCTJNuMdrUB/uE7ehQZV95pBr4MIv2kZ+FOVxrA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tqj7OXDz6QOK/o6CRoB7HaZqfuPP5ok74pYiBQ+axL4NyjxenYd7i/WqE7g+?=
- =?us-ascii?Q?hB55kQymtGZ0KeHUzseW/eWFaEdqHjcH0g11voK0a7LsblLHx3rh3hW829kj?=
- =?us-ascii?Q?a5KH2pOr0aTE2ky7yC4XaEEALEojAs6MLsILS4CprlO9T1frnY5opPRvuOVA?=
- =?us-ascii?Q?mVhi1OqoTXDyi094mxTUabSbggmaz+1BhuZUHz9d4zK/2ZKhLpmLXy/naYNX?=
- =?us-ascii?Q?4IBIKzT5CbHR+mT7nyHGar48BTKEDPcql4eb9yGQ+Cgb9dFycRY0uluV6AHN?=
- =?us-ascii?Q?RDhrXbOtwoqKASYBUXz6vAz1NsVQVlqnchOYWldrJHdCdaOiTfMfMDQ/f+T6?=
- =?us-ascii?Q?mTOtHXW/bm41+qBYTEO1KX5aTEAl+DWzrvDU5EDZsQ5oRgVii3k78NpC5+h7?=
- =?us-ascii?Q?dhgmjY3BtBq8kuLvM2m9/LBhJE6EwTHlhCFj2/Y3B2/lO6LefAipG9dcMrkw?=
- =?us-ascii?Q?xLsOryw1gkNULTFv38KJ6bPbPsGFXIUm2gAxnu7FdTlKK5dh3muxQPEzhGgy?=
- =?us-ascii?Q?vtmc/o2HFtkdyqbM9fGN5FtV7bJ38/RziTXi29juSykHX4tjmuP+F/9eRMGV?=
- =?us-ascii?Q?vAtGk/mGLZOnFZXJinijzwzq8NJ9guAe07baPYKLQ7HvTaMGoIKsq2gZPFGF?=
- =?us-ascii?Q?GU6PUKF+wl+ocyDQdoJVTVZrn8nG2grvNLx6IayaGIpOyhE0jvslaHUoBJB9?=
- =?us-ascii?Q?VhLV1t804kcMCpUtuVZ7SKizfJeSPsrdaW+S6a8N61MVTPsH1HrWRvj5P5wl?=
- =?us-ascii?Q?GUrRnjMaKCvoY0W9bgMVsMiS5KrJpopRruQQhfi+uUiJ4gasUQyneG65BNp+?=
- =?us-ascii?Q?Ae7lqEeeFh6L9LLDRUm92cmUI3MoI86DewDLPC7v/mIBkfDhpJrh1k2s/Blp?=
- =?us-ascii?Q?bbnvuH/6J/Jp0Tr6uj17DiwWKM2q35jjJaK4wZiZr9dNgLWxme/CRbmax4PR?=
- =?us-ascii?Q?tvxunDiHcGnNiKjUcdkgi5Wjf85c3AKZcezmzRoTyxYZoOfoYYTHC2M+g+dA?=
- =?us-ascii?Q?Jh6M98O/Y2qHppeRfP6f+DjYiLKx6ak33y7yxAe26KftFY8dDDAw4DEkxOjQ?=
- =?us-ascii?Q?g24/cXUADfuXrNa+RbAgnxgrPpSqtMgUy/gJtgVkHVB/U7Wcq9GlJ2BPZbsb?=
- =?us-ascii?Q?WSnx6Vr0lbKlBe6IQbrzjCI1vzVtV7ufewnDU9xi1eOPp+zIrVDixQVJGYow?=
- =?us-ascii?Q?5eN5G7gDxsI1EIZLOo37YROt+zZaQGCxrfGQtU8hHy5vicrgLrSA0lIzZ4g0?=
- =?us-ascii?Q?iEm933VznIQNhFB6fLzxvcvuvug+dQoAPtYkziYX5UwXBVeS+mA2G8BCk1OE?=
- =?us-ascii?Q?o4dYulXtfWQghSmZFZXop3nI0WXRePEU+6wvZEOnlettYiZWwMmqMLRbHOxO?=
- =?us-ascii?Q?k9uJaDh+F1fcp/Rjv7NVV1qpndmRl72Wvf3vNliF7afUiitFnWtUuAebsLRY?=
- =?us-ascii?Q?Qln6LbU7DfPs9Niyu+xnDaHkaGXXaAYRlcUbVkGnzA0lP3KTwm+09zHAFVEQ?=
- =?us-ascii?Q?DkTtl4OIjVa8ktQUKBaOp+7J4dLw3kcb1uXHfv3EDw+z5Cjgdjn60Mp+Z9tb?=
- =?us-ascii?Q?JoN7wGrRXT1O/7u4Rp0xeVFdL3BcAskU/cfNeu80?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c22ebde9-7311-4518-65a2-08dce31c8334
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2024 19:57:58.1286
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: v2+w2ADRqSyS/1U3QB3crpi7F0iu79Qj6GyycPY/7nk9JUceS5y14ykALCW1bIBShF9Oowo0T+VkhYJpQ5w4dw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10453
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241002132518.GD7504@google.com>
 
-On Wed, Oct 02, 2024 at 09:48:12PM +0200, Marek Vasut wrote:
-> On 10/2/24 9:45 PM, Frank Li wrote:
-> > On Sun, Sep 22, 2024 at 10:28:02PM +0200, Marek Vasut wrote:
-> > > Hi,
-> > >
-> > > On 9/17/24 9:25 PM, Frank Li wrote:
-> > >
-> > > [...]
-> > >
-> > > > @@ -223,6 +224,8 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > >    	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
-> > > >    	unsigned long long c;
-> > > >    	unsigned long long clkrate;
-> > > > +	unsigned long flags;
-> > > > +	int val;
-> > > >    	int ret;
-> > > >    	u32 cr;
-> > > > @@ -263,7 +266,69 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > >
-> > > [...]
-> > >
-> > > > +	c = clkrate * 1500;
-> > > > +	do_div(c, NSEC_PER_SEC);
-> > > > +
-> > > > +	local_irq_save(flags);
-> > > > +	val = FIELD_GET(MX3_PWMSR_FIFOAV, readl_relaxed(imx->mmio_base + MX3_PWMSR));
-> > >
-> > > I think the multi-write I mentioned in v5 for > 500 kHz case could further
-> > > improve the patch, let's see what others think:
-> > >
-> > > if (state->period < 2000) { /* 2000ns = 500 kHz */
-> > >     /* Best effort attempt to fix up >500 kHz case */
-> > >     udelay(6); /* 2us per FIFO entry, 3 FIFO entries written => 6 us */
-> > >     writel_relaxed(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-> > >     writel_relaxed(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-> > >     /* Last write is outside, after this conditional */
-> > > } else if (duty_cycles ...
+On Wed, Oct 02, 2024 at 02:25:18PM +0100, Lee Jones wrote:
+> On Tue, 01 Oct 2024, Lorenzo Bianconi wrote:
+> 
+> > From: Christian Marangi <ansuelsmth@gmail.com>
+> > 
+> > Support for Airoha EN7581 Multi Function Device that
+> > expose PINCTRL functionality and PWM functionality.
+> 
+> The device is a jumble of pinctrl registers, some of which can oscillate.
+> 
+> This is *still* not an MFD.
+> 
+> If you wish to spread this functionality over 2 drivers, use syscon to
+> obtain the registers and simple-mfd to automatically probe the drivers.
 >
-> Can you have a look at this part ?
 
-I can put here and it should be no harmful.
+Hi Lee,
 
-Frank
+let me summarize the situation so it's more clear why
+this additional mfd driver.
 
->
-> > > > +	if (duty_cycles < imx->duty_cycle && val < MX3_PWMSR_FIFOAV_2WORDS) {
-> > > > +		val = readl_relaxed(imx->mmio_base + MX3_PWMCNR);
-> > > > +		/*
-> > > > +		 * If counter is close to period, controller may roll over when
-> > > > +		 * next IO write.
-> > > > +		 */
-> > >
-> > > c is only used in this if (duty_cycles ...) { } conditional, the do_div()
-> > > above can be moved here:
-> >
-> > It is in local_irq_save(flags) scope, it'd better as less as possible. So
-> > I prefer do_div() is outside local_irq_save()
-> Good point, either way is fine by me.
+There were various iteration for these 2 driver (pinctrl and PWM).
+Due to the fact that these 2 are placed in the same register block
+with the PWM register in the middle, we proposed various .yaml schema
+that could better model it.
+
+The first idea was to map the single register used by the 2 driver.
+
+        pio: pinctrl@1fa20214 {
+                compatible = "airoha,en7581-pinctrl";
+                reg = <0x0 0x1fa20214 0x0 0x30>,
+                        <0x0 0x1fa2027c 0x0 0x8>,
+                        <0x0 0x1fbf0234 0x0 0x4>,
+                        <0x0 0x1fbf0268 0x0 0x4>,
+                        <0x0 0x1fa2001c 0x0 0x50>,
+                        <0x0 0x1fa2018c 0x0 0x4>,
+                        <0x0 0x1fbf0204 0x0 0x4>,
+                        <0x0 0x1fbf0270 0x0 0x4>,
+                        <0x0 0x1fbf0200 0x0 0x4>,
+                        <0x0 0x1fbf0220 0x0 0x4>,
+                        <0x0 0x1fbf0260 0x0 0x4>,
+                        <0x0 0x1fbf0264 0x0 0x4>,
+                        <0x0 0x1fbf0214 0x0 0x4>,
+                        <0x0 0x1fbf0278 0x0 0x4>,
+                        <0x0 0x1fbf0208 0x0 0x4>,
+                        <0x0 0x1fbf027c 0x0 0x4>,
+                        <0x0 0x1fbf0210 0x0 0x4>,
+                        <0x0 0x1fbf028c 0x0 0x4>,
+                        <0x0 0x1fbf0290 0x0 0x4>,
+                        <0x0 0x1fbf0294 0x0 0x4>,
+                        <0x0 0x1fbf020c 0x0 0x4>,
+                        <0x0 0x1fbf0280 0x0 0x4>,
+                        <0x0 0x1fbf0284 0x0 0x4>,
+                        <0x0 0x1fbf0288 0x0 0x4>;
+
+                gpio-controller;
+                #gpio-cells = <2>;
+                gpio-ranges = <&pio 0 13 47>;
+
+                ...
+
+        };
+
+        pwm@1fbf0224 {
+                compatible = "airoha,en7581-pwm";
+                reg = <0x1fbf0224 0x10>,
+                      <0x1fbf0238 0x28>,
+                      <0x1fbf0298 0x8>;
+                #pwm-cells = <3>;
+        };
+
+This was quickly rejected as it introduced way more complication
+to workaround the overlapping addresses. (the device should map the
+entire register space)
+
+The second proposal was a parent+child implementation with the
+pinctrl parent and the PWM child by referencing a syscon from
+the parent.
+
+        pio: pinctrl@1fbf0200 {
+                compatible = "airoha,en7581-pinctrl", "simple-mfd", "syscon";
+                reg = <0x1fbf0200 0x0 0xbc>;
+                airoha,chip-scu = <&chip_scu>;
+                ....
+
+                pwm {
+                        compatible = "airoha,en7581-pwm";
+                        ...
+                };
+        };
+
+Also this second proposal was rejected by device tree folks
+as the device implement both pinctrl and PWM in the register
+space and they are not actually separate devices.
+
+There was also an additional proposal with the entire register
+map in a dedicated node with syscon and pwm + pinctrl using it.
+This was also rejected by device tree folks. (node that have only
+a syscon are a nono)
+
+It was suggested that this is a case of MFD (multi-functional-device)
+
+As suggested we proposed a simple-mfd implementation following
+common pattern. Parent node with simple-mfd and syscon compatible
+and 2 child nodes, one with pinctrl and the other with PWM with each
+his own compatible.
+
+        mfd@1fbf0200 {
+                compatible = "airoha,en7581-gpio-mfd";
+                reg = <0x0 0x1fbf0200 0x0 0xc0>;
+
+                interrupt-parent = <&gic>;
+                interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+
+                pio: pinctrl {
+                        compatible = "airoha,en7581-pinctrl";
+
+                        gpio-controller;
+                        #gpio-cells = <2>;
+
+                        interrupt-controller;
+                        #interrupt-cells = <2>;
+                };
+
+                pwm: pwm {
+                        compatible = "airoha,en7581-pwm";
+
+                        #pwm-cells = <3>;
+                        status = "disabled";
+                };
+        };
+
+Also this was rejected by device tree folks as the property for
+pinctrl and pwm needed to be in the MFD node and there should't
+be child node with single compatible.
+This comes from the fact that DT needs to describe how the HW is
+modelled and not how the drivers are implemented.
+
+Finally Rob agreed and added the Reviwed-by on the current
+implementation with single MFD node with pinctrl and pwm.
+Also Conor and Krzysztof agreed on this solution for the task.
+
+    mfd@1fbf0200 {
+        compatible = "airoha,en7581-gpio-sysctl";
+        reg = <0x1fbf0200 0xc0>;
+
+        interrupt-parent = <&gic>;
+        interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+
+        gpio-controller;
+        #gpio-cells = <2>;
+
+        interrupt-controller;
+        #interrupt-cells = <2>;
+
+        #pwm-cells = <3>;
+
+        pinctrl {
+                ...
+        };
+    };
+
+With the following implementation, the only way to probe the
+additional driver is with a specialized mfd driver that probe the
+2 driver by name and we can't really use a simple-mfd implementation
+as that requires child nodes with compatibles.
+
+Sorry for the long message and I honestly hope we can find together
+a common path for this between driver and Documentation.
+
+Is it clear now why we had to ultimely had to implement and model things
+this way?
+
+--
+        Ansuel
+
 
