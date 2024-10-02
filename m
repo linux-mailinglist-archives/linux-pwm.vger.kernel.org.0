@@ -1,53 +1,74 @@
-Return-Path: <linux-pwm+bounces-3422-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3423-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5378C98C5E0
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Oct 2024 21:18:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06F3998C9F7
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 02:12:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C9951F21936
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Oct 2024 19:18:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D93AC1C234C1
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 00:12:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C367D1B5820;
-	Tue,  1 Oct 2024 19:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D73281392;
+	Wed,  2 Oct 2024 00:12:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="V5KHtRtl"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="bO03AL+3"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FA4C286A8
-	for <linux-pwm@vger.kernel.org>; Tue,  1 Oct 2024 19:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3852E635
+	for <linux-pwm@vger.kernel.org>; Wed,  2 Oct 2024 00:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727810279; cv=none; b=KkUyjWV7liSjzAe1WtEntItt51UOPs1U461m25d3TEEvaQM/6RzaQvNpIMWGK+IOt82I7akJc5aW3G3bGrtZbrSwSe1C6AWn7QMobms/cPRpSH1gKQwMQX5TZc7kR7ulTIeBNBvSJ9vXTQ8tkwVVXtoZtTN8Gtm1eMAXobpgqWw=
+	t=1727827956; cv=none; b=ZLjCfTQQDlI7JZcuZiBALn5ImAY7t55qBWpfe/uJU5n8NkRjKCcAbew7X+03prfQofyiyb8EOLJnbptiHYGMGuYCO6T5g/aNBm50TUmj27ZIa8iSLSQ+LuAgp4IseDN7TOOz+iiliphZ/1v81xFY3LA1IQ0+hiMWnvUYRxKd37I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727810279; c=relaxed/simple;
-	bh=lIo8OG6VbAv8H4Grlk0j3HIMUEAfAXQn/RIndj4B8Ks=;
+	s=arc-20240116; t=1727827956; c=relaxed/simple;
+	bh=1dvAewY9SUvb0mk5qJ4rGjPDkImylQFiv3WD7bkPzv8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jlodQzMhNdrog181M/pX4F3pAGrrq5ZwGGw4/tzh1tKUBDP5S3dym9B+q3jQu8bQJLN7kDCsPU2gNio1suZy7lXWpx3nI80SeUR7zR0m5wQXEvqmQ8BaamnNOAENkciZSd0hWJNhmvIN2eKSKlMwEdBhzyG25lBGXQcELBOkDa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=pass smtp.mailfrom=ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=V5KHtRtl; arc=none smtp.client-ip=136.144.140.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ijzerbout.nl
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
-	t=1727810275; bh=lIo8OG6VbAv8H4Grlk0j3HIMUEAfAXQn/RIndj4B8Ks=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=V5KHtRtluKV4bT47DZaJlF55V5xhVeZmXX6jcYZ/JYw8ZZaxHDxWuZcIKoQ9Ks2eL
-	 UyamxX49KFg88aHW8tN3tQJIogVe86HduVL0o+obpsNAMjMEguj4rSGjzo+DH8vkCB
-	 /MX83AsrzmHmRftI+uPi4TLA1n1At6XfN89LD+43t514kDDr+k8Iwy1H/BL/WcTXcg
-	 3g7Px/V+tpaj3N/+xWv4083ssVFF4fpwvSzElCEkZs01tPRDvDEhAWioJCkZuk+BiX
-	 DBjU8qyZHd66Vyj3grrNq+F4IwJek/vFuTOvsiMcSoQJYCL5WsC+3WLC/rkmp8Z8oL
-	 ox3O3qCnLBFVvYieZKHR0DsclEza7oVa8ID+F0O70EduF3Dx0Qef06kFHQ85zAO3n3
-	 jR86hHBZe4ECpUuHBVlYWNzBeZtPyWtS9ZZur8kAuV2XZNoQz8Sh0Kp6yEsIYzZXCm
-	 Q9KNpHCbp1zhewv3PntGSsTX52XNuiCgs3FCLeLCVDOZ4QUpqgRaJStic8ejLD4KNY
-	 5XACRFn0q49EQBsjzWtaUN5lveVESPL75cf+ZZEHPpWrKTCz0JETd8GQidef6hRmtT
-	 rn+bY0iFSZ9Vj2rgTwwlOX0zuxk2YB6X+8aDeGxpL+JKMhtoa/O5ISBXMoLjkGbsvW
-	 LCntESKGfVa1VfYZSJmRv2cc=
-Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
-	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id ECA461842FC;
-	Tue,  1 Oct 2024 21:17:51 +0200 (CEST)
-Message-ID: <b0199625-9dbb-414b-8948-26ad86fd2740@ijzerbout.nl>
-Date: Tue, 1 Oct 2024 21:17:47 +0200
+	 In-Reply-To:Content-Type; b=nzIsHYc987Szd6i3yZzwZPCc0P2gPv6QkkC20IXXtRzEdxZC/exBr0CVykolGWI8ZfB+JBwAuhsBwL3YN6GFz/ZPVvwmusopqxzu5J8N/S/8Yg4AX1vh44aKu9Gk1sQQEQPOLghcIyha+8uPkRTvQrokywP0ZjGhYuhayQTQTQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=bO03AL+3; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42cbc38a997so1774385e9.1
+        for <linux-pwm@vger.kernel.org>; Tue, 01 Oct 2024 17:12:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727827951; x=1728432751; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vnlZlNXn2r5SdItECP2y/9nvB0cJmPdzYGUIF7uGZ04=;
+        b=bO03AL+3bDEKFXQWWSDcEOAkKy6YCO0ay/c9IommrCjY9RheiNV1saQDYRINQl6eeH
+         m3kmOL5cgwNUuhuYZm6jjsuZYxU4veO4onAbW9C7wm3AOE5aRqsqBhv9+TK3MvFQGzDx
+         8KmMrqMquOlXdMgQLloDg+UxBjJzFkzmHWSK4HoX8osw8aqF3wBoUXoobJgOISwrogct
+         lqa9TrikDCD9RqFhbgQWAp+m38Vre4wc3wtBQcDlauJgcwCjSmdrc91Websbvc4xUlxd
+         n6qbkR1UxTHpNhxsyBN1hnHkHgXO/J+xPfOFkNw/WgvAf8qJAHC5gkK4jh3Q+BnN9tCG
+         Zg0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727827951; x=1728432751;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vnlZlNXn2r5SdItECP2y/9nvB0cJmPdzYGUIF7uGZ04=;
+        b=DoG2M7CfR3rFR/G+3+z/DKRKqHVVyK2H0SN7M4M0bEaovtLiT0RpMAGGUOEfxVWwYV
+         jyCgnSlZvS1CW4TcHK8fLBhdc1dMzdp+DQcbxWbTbWlKTaR2tWc7YPDR9Z3T9t/YgYWR
+         p8LPs9qGC3PCZEBEJzdZqGEvouE7HRQHXo3maPVjhOU1s3vj4oVcZAN/gEuhC1BLZLDC
+         y4M1LyXbf/ZaASY65gMVwLoXVKwItoCX3y1IWIVjsv+FCcujUMyNAf8qtxbfZY5CtWF9
+         IfF+4XYVYoXQ25InnzgeZwBtVpnTeZp6ASX6oAqy59Bt2ORrygoJI+CRiMt6aArmoSX7
+         5Eyg==
+X-Forwarded-Encrypted: i=1; AJvYcCXRorJoeE8oYSBginxJvpD3L3zmYdOZ/bk6IVYSbwzoBXpJz9sZ+iqFJQBU2h2h0KSGiPdhUG5c4ic=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfaZ50KpigIl8o5hPu6rel6ZHMImf8WTzjKQSbrJNm3+WLJN6M
+	7DxpV3Z8I0XDiSlpZ0aCYO+IQ4FdBpVNu74DSI/IRTMySbaJaaMP7LUayFrdhgU=
+X-Google-Smtp-Source: AGHT+IFp1BBQhueLTaa7zDs8f+Zi5EqjDi4QIQvUe7MIuBWL3xI+PhtuHQuGbzZ+x1anGNvzpcEkAw==
+X-Received: by 2002:a05:600c:1c1d:b0:42c:b98d:b993 with SMTP id 5b1f17b1804b1-42f776cf4f5mr6796725e9.2.1727827951070;
+        Tue, 01 Oct 2024 17:12:31 -0700 (PDT)
+Received: from ?IPV6:2a04:cec2:b:2aca:1b10:f81f:8179:6179? ([2a04:cec2:b:2aca:1b10:f81f:8179:6179])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f7727f72fsm11119285e9.1.2024.10.01.17.12.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Oct 2024 17:12:30 -0700 (PDT)
+Message-ID: <57c5d8b1-295a-492f-b17c-b44caf8aeb2d@baylibre.com>
+Date: Wed, 2 Oct 2024 02:12:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -55,70 +76,145 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 6/8] pwm: stm32: Implementation of the waveform
- callbacks
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- linux-pwm@vger.kernel.org
-Cc: Trevor Gamblin <tgamblin@baylibre.com>,
- David Lechner <dlechner@baylibre.com>, Kent Gibson <warthog618@gmail.com>,
- Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <cover.1726819463.git.u.kleine-koenig@baylibre.com>
- <332d4f736d8360038d03f109c013441c655eea23.1726819463.git.u.kleine-koenig@baylibre.com>
+Subject: Re: [PATCH v2 07/10] iio: adc: ad7606: Add compatibility to fw_nodes
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Michal Marek <mmarek@suse.com>, linux-pwm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-doc@vger.kernel.org, aardelean@baylibre.com, dlechner@baylibre.com,
+ jstephan@baylibre.com
+References: <20240920-ad7606_add_iio_backend_support-v2-0-0e78782ae7d0@baylibre.com>
+ <20240920-ad7606_add_iio_backend_support-v2-7-0e78782ae7d0@baylibre.com>
+ <20240929134412.506998db@jic23-huawei>
 Content-Language: en-US
-From: Kees Bakker <kees@ijzerbout.nl>
-In-Reply-To: <332d4f736d8360038d03f109c013441c655eea23.1726819463.git.u.kleine-koenig@baylibre.com>
+From: Guillaume Stols <gstols@baylibre.com>
+In-Reply-To: <20240929134412.506998db@jic23-huawei>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Op 20-09-2024 om 10:58 schreef Uwe Kleine-König:
-> Convert the stm32 pwm driver to use the new callbacks for hardware
-> programming.
+
+On 9/29/24 14:44, Jonathan Cameron wrote:
+> On Fri, 20 Sep 2024 17:33:27 +0000
+> Guillaume Stols <gstols@baylibre.com> wrote:
 >
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
-[...]
-> +static int stm32_pwm_write_waveform(struct pwm_chip *chip,
-> +				      struct pwm_device *pwm,
-> +				      const void *_wfhw)
-> +{
-> +	const struct stm32_pwm_waveform *wfhw = _wfhw;
-> +	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
-> +	unsigned int ch = pwm->hwpwm;
-> +	int ret;
-> +
-> +	ret = clk_enable(priv->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (wfhw->ccer & TIM_CCER_CCxE(ch + 1)) {
-> +		u32 ccer, mask;
-> +		unsigned int shift;
-> +		u32 ccmr;
-> +
-> +		ret = regmap_read(priv->regmap, TIM_CCER, &ccer);
-> +		if (ret)
-> +			goto out;
-> +
-> +		/* If there are other channels enabled, don't update PSC and ARR */
-> +		if (ccer & ~TIM_CCER_CCxE(ch + 1) & TIM_CCER_CCXE) {
-> +			u32 psc, arr;
-> +
-> +			ret = regmap_read(priv->regmap, TIM_PSC, &psc);
-> +			if (ret)
-> +				goto out;
-> +
-> +			if (psc != wfhw->psc) {
-> +				ret = -EBUSY;
-> +				goto out;
-> +			}
-> +
-> +			regmap_read(priv->regmap, TIM_ARR, &arr);
-Did you forget to assign to ret?
-> +			if (ret)
-> +				goto out;
-> +
-> [...]
+>> On the parallel version, the current implementation is only compatible
+>> with id tables and won't work with fw_nodes, this commit intends to fix
+>> it.
+>>
+>> Also, chip info is moved in the .h file so to be accessible to all the
+> chip info is not moved (I was going to say no to that) but an
+> extern is used to make it available. So say that rather than moved here.
+>
+>> driver files that can set a pointer to the corresponding chip as the
+>> driver data.
+>>
+>>   
+>> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+>> index c13dda444526..18c87fe9a41a 100644
+>> --- a/drivers/iio/adc/ad7606.h
+>> +++ b/drivers/iio/adc/ad7606.h
+>> @@ -38,8 +38,19 @@
+>>   	AD760X_CHANNEL(num, BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),\
+>>   		0, BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO))
+>>   
+>> +enum ad7606_supported_device_ids {
+>> +	ID_AD7605_4,
+>> +	ID_AD7606_8,
+>> +	ID_AD7606_6,
+>> +	ID_AD7606_4,
+>> +	ID_AD7606B,
+>> +	ID_AD7616,
+>> +};
+>> +
+>>   /**
+>>    * struct ad7606_chip_info - chip specific information
+>> + * @name		device name
+>> + * @id			device id
+> ID in chip info normally indicates something bad in the design. In that somewhere
+> we have code that is ID dependent rather than all such code / data being
+> found directly in this structure (or callbacks found from here).
+> Can we avoid it here?
+
+Hi Jonathan,
+
+chip_info has to describe the chip hardwarewise, but there are different 
+bops depending on the wiring (interface used, and backend/no backend).
+
+The easiest way I found was to use the ID in a switch/case to 
+determinate which bops I should take (well it was only needed in the spi 
+version since it is the one supporting almost all the chips while the 
+other ones still support only one). For instance, the ad7606B will use 
+ad7606_bi_bops if it has a backend and ad7606B_spi_bops for spi version.
+
+If I can't use the ID, the only way I see is creating 3 fields in 
+chip_info (spi_ops, par_ops, backend_ops) and to initialize every 
+chip_info structure with its associated op(s) for the associated 
+interface. This would also lead to declare the different instances of 
+ad7606_bus_ops directly in ad7606.h  (I dont like it very much but see 
+no other option).
+
+Do you think it's better that way ? Or do you have any other idea ?
+
+Regards,
+
+Guillaume
+
+>
+>>    * @channels:		channel specification
+>>    * @num_channels:	number of channels
+>>    * @oversampling_avail	pointer to the array which stores the available
+>> @@ -50,6 +61,8 @@
+> ...
+>
+>> diff --git a/drivers/iio/adc/ad7606_par.c b/drivers/iio/adc/ad7606_par.c
+>> index d651639c45eb..7bac39033955 100644
+>> --- a/drivers/iio/adc/ad7606_par.c
+>> +++ b/drivers/iio/adc/ad7606_par.c
+>> @@ -11,6 +11,7 @@
+>>   #include <linux/mod_devicetable.h>
+>>   #include <linux/module.h>
+>>   #include <linux/platform_device.h>
+>> +#include <linux/property.h>
+>>   #include <linux/types.h>
+>>   
+>>   #include <linux/iio/iio.h>
+>> @@ -89,12 +90,20 @@ static const struct ad7606_bus_ops ad7606_par8_bops = {
+>>   
+>>   static int ad7606_par_probe(struct platform_device *pdev)
+>>   {
+>> -	const struct platform_device_id *id = platform_get_device_id(pdev);
+>> +	const struct ad7606_chip_info *chip_info;
+>> +	const struct platform_device_id *id;
+>>   	struct resource *res;
+>>   	void __iomem *addr;
+>>   	resource_size_t remap_size;
+>>   	int irq;
+>>   
+>> +	if (dev_fwnode(&pdev->dev)) {
+>> +		chip_info = device_get_match_data(&pdev->dev);
+>> +	} else {
+>> +		id = platform_get_device_id(pdev);
+>> +		chip_info = (const struct ad7606_chip_info *)id->driver_data;
+>> +	}
+>> +
+>>   	irq = platform_get_irq(pdev, 0);
+>>   	if (irq < 0)
+>>   		return irq;
+>> @@ -106,25 +115,25 @@ static int ad7606_par_probe(struct platform_device *pdev)
+>>   	remap_size = resource_size(res);
+>>   
+>>   	return ad7606_probe(&pdev->dev, irq, addr,
+>> -			    id->name, id->driver_data,
+> Rewrap to move chip_info up a line perhaps.
+>
+>> +			    chip_info,
+>>   			    remap_size > 1 ? &ad7606_par16_bops :
+>>   			    &ad7606_par8_bops);
 
