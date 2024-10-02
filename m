@@ -1,125 +1,98 @@
-Return-Path: <linux-pwm+bounces-3435-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3436-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7228598DF5F
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 17:37:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8015798E125
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 18:46:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2958728123C
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 15:37:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A08E281816
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 16:46:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4793D1D0B8B;
-	Wed,  2 Oct 2024 15:37:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EFDA198A1A;
+	Wed,  2 Oct 2024 16:46:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4xcgL3G"
+	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="oxyGFHuV"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4E81D0977;
-	Wed,  2 Oct 2024 15:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43D6538DF9
+	for <linux-pwm@vger.kernel.org>; Wed,  2 Oct 2024 16:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727883443; cv=none; b=Y+RK20yS+5eaW945SF+9qzJNLQske2rXmiz1N6f0uf+9aW/rANdOmsqdoyMm8PNwRKx/oWkjZywuIeBJVqKnfkogYS/HI+Vp6C3R86m/JLUmrY5b8WqHLCHwTW19wZoiLQxnApe2tfUVk6vStqzpEbPH3Ht3A4CH3kBUIskA8T0=
+	t=1727887564; cv=none; b=ephjc2IOG5kOt0WaaUtLYHbMvZGclGO10wjfGRwOtsNXn68Bn1Ya67417hEnz7AbcvBbVqTxTah0oX6LXI5MR0VRSRtNN29kPUTe/4lIieivCv9vQ2Nwyld0EHp1LDH4irm1UgmdJR2UaDHWyl1LC97h+cWKyWdpvNTGnz27NRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727883443; c=relaxed/simple;
-	bh=MT4X6dcUBubM7lv3hZ3oqvwfLote9SJ8fD8+SCx2gBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j7isk/CzBc5rca+ZiSVGc3fVKp8RX2B6TYbR1DMOUkbcLW1lZQ13q26+65gvajgzUHtTXxQaooEs9g/SxMyzZ83lrAKONZYEiDSw6FMBypg8EzoGQ70VcBi5lBNmJ+hGuE5VdeIe9+Gts3kYcfU/QslY2kdqTyHTKtLqit7kZzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4xcgL3G; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E7E8C4CEC2;
-	Wed,  2 Oct 2024 15:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727883442;
-	bh=MT4X6dcUBubM7lv3hZ3oqvwfLote9SJ8fD8+SCx2gBI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U4xcgL3GFikjK83sb/zEk3muR672O4FB+EWjIvN1EEV0kUm4SyD2xrOJXtA2aT5p9
-	 rQVMEm0ENcfjYKOVo3/gQs/7/tPnRY5rOKXeGjyaAJMHtu4nXx4hHN2lXeZgxoT81L
-	 R+p/DzvgaPRn8dUhkxF7L5OkWXR9Zu0IQgIOMc2VE72/mczuJFLeFvpnUnqERk1v4K
-	 fyvqSnq3TBG1MYWD+YQl+fXtsnjlPDomZTi5spljfD9e7k7ZdzZ4vLrcjFFvsh++OD
-	 f2RoU6509kT+8jhnpFaI0S4rthE0CS5eLXeBVbvpbgNshz4xzUaQcOzzAXPEy1oJF4
-	 7XwOUUSsFmSZA==
-Date: Wed, 2 Oct 2024 17:37:20 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lee Jones <lee@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v5 4/5] pinctrl: airoha: Add support for EN7581 SoC
-Message-ID: <Zv1osANiy8n8Um6y@lore-desk>
-References: <20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org>
- <20241001-en7581-pinctrl-v5-4-dc1ce542b6c6@kernel.org>
- <CACRpkdZMWKb1h0-sWECCY0E3CxxMyLwCr4M3k6vrY9aAfpzMVg@mail.gmail.com>
+	s=arc-20240116; t=1727887564; c=relaxed/simple;
+	bh=S5oWTL07Z27zMnu/W4EqJbn2gKD9ls6Wmzpi8m05GrA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bk9KhgfKa9pZPe9QEiMpiqnYHD61U/JDtpAZ80x2pVbx45XcKxDKT3lKYHjX30NNrJe4hwB7H7S5Re+ol2nsuwbzBTI8WWUyF5Yzxn5hRKJJ3iDAmWnS+DdPqwbhuvotLY9t0gtsnFHdIhpy5yPs96+Cvl80FfksH5/pmxAh9b8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=pass smtp.mailfrom=ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=oxyGFHuV; arc=none smtp.client-ip=136.144.140.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ijzerbout.nl
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
+	t=1727887557; bh=S5oWTL07Z27zMnu/W4EqJbn2gKD9ls6Wmzpi8m05GrA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oxyGFHuVJOfD5lPU2ru/RnfzDFVxqEqK/hSOYnaJgmQdXwA7N0cvxy7wCe49hL9d4
+	 Pojkx+Ms79FG0h9hIm502IKf1Wr20lr7rsF/MbAiZcl69DWef3Sa4Ld22fdFzKYDd1
+	 M+EW0xm1T+EKPOyJLynRIxFKNzP/jIq0bTmfC0H4ipySvqrbZe1/b+ZO3eLQnFQQ1q
+	 zIGzZB8sp36TVVcbBlf4vuf3WdEic9xiHCrbhp/ZhOO7v3RUe6iFRJY1EHZ3ulzJ5T
+	 6NlZ46Ym3iaoR/iUHHN67vuYH0FjQBZD1ckpHUMz1B+lae48K0/eoyfXl+m4MAqyd1
+	 yL1okg/F1KelgcW58wj+Bvjk1BL1yF5owHzYd5Ll/JgJ1KTZbfDAicex23+Tmf3Pkz
+	 c65Ie9h61N6voS65s4/MlFDUCE98g8gCUbasg/vIRX7zisLzShFa/Fj+OVCEtjjBwP
+	 gK71ompUfwPA6FpZ5E6x7ORfDGcMipQcUtrqSGIbRr1ECvHL/sfriXC8Ra/xbCJ3RW
+	 1CIWCy94G5JXY11/UUu4ix2MgW+KUvmNfQpymtM8DQJG+mU/7gJ9g8FVdIRE51su0l
+	 oguxGwISAQSaeqLPm+XbDgpcvISu0YP6epS8GbdyXmmxEtU7K2Uh3LSSQ+8UGNF6Cv
+	 9HvBqZAsTgV4HK3h+d6rmxWU=
+Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
+	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id 300C0168387;
+	Wed,  2 Oct 2024 18:45:57 +0200 (CEST)
+Message-ID: <cc8e3a21-ce15-472a-b838-3dc6e80f68e0@ijzerbout.nl>
+Date: Wed, 2 Oct 2024 18:45:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="WN0rmCbHDTHdyjt5"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZMWKb1h0-sWECCY0E3CxxMyLwCr4M3k6vrY9aAfpzMVg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 6/8] pwm: stm32: Implementation of the waveform
+ callbacks
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, Trevor Gamblin <tgamblin@baylibre.com>,
+ David Lechner <dlechner@baylibre.com>, Kent Gibson <warthog618@gmail.com>,
+ Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <cover.1726819463.git.u.kleine-koenig@baylibre.com>
+ <332d4f736d8360038d03f109c013441c655eea23.1726819463.git.u.kleine-koenig@baylibre.com>
+ <b0199625-9dbb-414b-8948-26ad86fd2740@ijzerbout.nl>
+ <wl4wpipx2jaixlmdjv7uq5ghewwid5wo6gpmz5bkqj5chnu3vc@6bougxe3rzbx>
+Content-Language: en-US
+From: Kees Bakker <kees@ijzerbout.nl>
+In-Reply-To: <wl4wpipx2jaixlmdjv7uq5ghewwid5wo6gpmz5bkqj5chnu3vc@6bougxe3rzbx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
---WN0rmCbHDTHdyjt5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Oct 02, Linus Walleij wrote:
-> On Tue, Oct 1, 2024 at 7:30=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel.o=
-rg> wrote:
->=20
-> > Introduce pinctrl driver for EN7581 SoC. Current EN7581 pinctrl driver
-> > supports the following functionalities:
-> > - pin multiplexing
-> > - pin pull-up, pull-down, open-drain, current strength,
-> >   {input,output}_enable, output_{low,high}
-> > - gpio controller
-> > - irq controller
-> >
-> > Tested-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> > Co-developed-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> > Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
->=20
-> I missed that there was a v5 out and responded more to v4.
->=20
-> Anyway, I think the last comments on v4 still need to be
-> adressed:
-> https://lore.kernel.org/linux-gpio/CACRpkdbXWMU+wq6DvviCQPQ0EzKUm9oOnyFh3=
-4Bm=3DY8K-HmT0Q@mail.gmail.com/
-
-ack, I will do in v6.
-
-Regards,
-Lorenzo
-
->=20
-> Yours,
-> Linus Walleij
-
---WN0rmCbHDTHdyjt5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZv1orwAKCRA6cBh0uS2t
-rK7xAP93gThE4rrEfzNcqrw85E3kcerWOJOqVnoTi+WpWW2JEQD5AeuJvNtGZp6n
-HH4wNjZ7Z5fXcCBfgVML15h4HOZWowg=
-=eXGw
------END PGP SIGNATURE-----
-
---WN0rmCbHDTHdyjt5--
+Op 02-10-2024 om 10:02 schreef Uwe Kleine-König:
+> Hello Kees,
+>
+> On Tue, Oct 01, 2024 at 09:17:47PM +0200, Kees Bakker wrote:
+>> Op 20-09-2024 om 10:58 schreef Uwe Kleine-König:
+>>> +			regmap_read(priv->regmap, TIM_ARR, &arr);
+>> Did you forget to assign to ret?
+>>> +			if (ret)
+>>> +				goto out;
+>>> +
+>>> [...]
+> It seems so, yes. How did you find that one?
+>
+> When I create a patch, is it ok if I add a Reported-by: for you?
+Fine by me. But I have to be honest here. It was reported by Coverity [1].
+I'm subscribed to daily reports of linux-next scanning.
+>
+> Best reagrds
+> Uwe
+[1] https://scan.coverity.com/projects/linux-next-weekly-scan?tab=overview
 
