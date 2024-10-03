@@ -1,277 +1,130 @@
-Return-Path: <linux-pwm+bounces-3440-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3441-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9DA598E62B
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Oct 2024 00:42:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D62198E871
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Oct 2024 04:33:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C23621C216AF
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Oct 2024 22:42:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C6CD280F1B
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Oct 2024 02:33:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFB6E199934;
-	Wed,  2 Oct 2024 22:42:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 827B417993;
+	Thu,  3 Oct 2024 02:33:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqyYenck"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3zqQNe+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C2512B63;
-	Wed,  2 Oct 2024 22:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B1816415;
+	Thu,  3 Oct 2024 02:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727908967; cv=none; b=c4TM2irC0MFYQrd9wPoU+1E6U59PdA7tKX3JwzE71LV7paKoPzcoQBAQb6lNMnof9kAJ4udLquKFkmkAPYqClU+VUivoM6ISnlU5nra36dH3Y5ZZBkMbEC3IUWESIU81GOXWyhLc40r5VgIYYlp/O1OptiIQ/qW59Sxx82C6yRs=
+	t=1727922800; cv=none; b=PjdAkDr3eN5MvVuUlwoQ6xxI2XER6kZJ/QP9LPgnRH4InorJgyalvnEjEesZpqTl33/Zjwb2/hh6Q3/ZgwURtYSySTyioWoK66pkWIuoVQf3MjRPsnJt8z4R7+R0yonrHtUKC6M87QIK6PWur89uOpIXWqz4s9VHrObJT3oqc/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727908967; c=relaxed/simple;
-	bh=gtvN60JxUU+oPzyRigM/mR6Z7ienkrBpP7+1WtznRZM=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IcGlOsGTNrezWBxxqdtpqjUyWyn3vEyT4GYjzLJPFnurRDx55/LW2deryiNFyRb0mcu8saacjgm8u2g1A3b1yOJyjEGoXjPSJa4WEhsqZIrAwbWAJWBJKegFp48MgytE3uenCwmS4Rf/qKX/aQ2guDgrWg6ZqvB195ezDK2tdVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aqyYenck; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1727922800; c=relaxed/simple;
+	bh=ievyg8trTrRHAB+z6Z6DCj1Tu10iG5GzPRJdGpAVUbg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oAYgp1p5EDcjsL9pIBapXHqX6d6/2xju/AEoBDFO+bzuSe9DsTbZ+T+w+ADTEbaHh8Fnp6c+B4HaaZIl9EXWmVvFvLJ/KDY0getgqoIKd6ZGn5U8X5z9iIdxRfRu3YJGYed6/PKTlz3z2/0XQ6RfMWJG2/od7lPbtcx7r7TiMQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l3zqQNe+; arc=none smtp.client-ip=209.85.219.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42cba6cdf32so2443135e9.1;
-        Wed, 02 Oct 2024 15:42:45 -0700 (PDT)
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6cb2458774dso3668176d6.3;
+        Wed, 02 Oct 2024 19:33:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727908964; x=1728513764; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=2p0RBsu7N/ikXAXwnKT3iU6dfYBdSsewWojsryZ8yU8=;
-        b=aqyYenckN1kIRO3/nNbWjl64Q2cK58tWrPDIP1BaU6rhvAQISaSh3xenn4WwbGj9nZ
-         cVSu8MmOK/9F6cbW3/HQ5YXEJAmPOhhWwx4hHaOUmHbgpTvsQGcxAejPZRWQvqiToZZn
-         qKD9eOgz446LwPGwuGnQyikXETEmTB7zVmmyxoMd2kg0unarnU9Lx9SknXyZOQcAuO8F
-         6b2xQ0+mVoLy9MFLaEQ8qUa28wMcbOQoW272rHmIAv37pCYGn00VPS1F6L+iOpxRXAw/
-         h77Jldc24duXJzzqxdwPNkgbFh4Pgel2TRLgXnF6kcAFDCZZeAfaGDEuQPrJZVmrqxGd
-         ZUfQ==
+        d=gmail.com; s=20230601; t=1727922797; x=1728527597; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xkpfPr0EYRdlxNhthgj3FTAxfyKqmJJR9nkwDDTRTpI=;
+        b=l3zqQNe+FyOfhgo1e2Rc5FdgJUNyLfr6WYmEVZaaEcd+pyudEjH3lLXWJC8JUHCIty
+         t7SWOFZbkAomhXtZKobA1HttPnViEcZ/B9c8ssFRu2tCdSFOTUVJELVyh5vWoI0c6Vtk
+         nbVdcauHk6UmAGMv0oP+QMOzMs+1D4oGCciLxeL3+KvqSLOKfdat7Ltr2qn+gTKBqzCV
+         wjvVMO+uGNxqfyFBKrdF0aZ5dtyTyukZVSxec3C4Dw3J9WHxcmpkpXvZwdu0kYwrVIkm
+         1Vv65Rcaw8aqZost4vC4+5WBovN2jjISm7w9dNkObTWWvo54DYQOOa5BK0gpmt03Y+mq
+         7RQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727908964; x=1728513764;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2p0RBsu7N/ikXAXwnKT3iU6dfYBdSsewWojsryZ8yU8=;
-        b=l7KbKkdH1Y+pzAzDB3tbafwpgnyD2EYHQLfKP/t6EudHj1Of4nQ8Uonpuo20w+ZzPr
-         geRx5/oDEBHlgaimB/ZNwBGdpLEPdeWXX0bPlnEpBJbBoOTGjoCng1uMBTOx9Wxl2We4
-         n9/NZM3xy4qEVOwymZtTDJ+DMPQ3VAl37+Ee5W+Aqp2LEp6NPzs+SIl7ye51FTvnwiKO
-         DPwVqdZqCiKHfuyhiRI+dhyNH22OtBsJegSU1k3h9AMmsaDUCuqxC5lC7F0DAekMFgYR
-         2AHVmRAkckaL3okbG8o0qM47m60KSqcVcm79M7Of5sOJb3atH7fqj995R2zwQrXcFyMF
-         pQqw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3evMZhxmvhbWFos74exG8Dxf0j5/tJYqs/BfGqp6txAyW8v6dka0UZWET2D9opfMVvJWUvW+oIce6@vger.kernel.org, AJvYcCWkBFiXAfjrXQ5cRpDsAfmOkSE5Jgn6GSbTm0qeUYCagElSYVpPClkoqC/aQbDa1LNIfLlVj29qO0ww@vger.kernel.org, AJvYcCWtO+O3uuUDrG890RV3Qwbjflz9ovBH4UeQbmergxC6WY/jyCl6Hb2IvUXs60jBX2IrGg4ufU/ipkyecg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNuNXi10iBd3LRfjlTOjlH2Zj6gacovcJg3yDt7FnubxG9xf8h
-	dD4HtzD/gFAWn5HCQu8H88FcnuW6LAKpD800j8uEd7SjuNx12oCO
-X-Google-Smtp-Source: AGHT+IGuS5mbK7XVp3K4dA2IOkM9MUozkblHFQyW/rtCI15UZMMVWwioBkHnlLQdNZX3oeUM5mifCA==
-X-Received: by 2002:a05:6000:50f:b0:37c:d49c:3ac7 with SMTP id ffacd0b85a97d-37cfba16a65mr3033353f8f.48.1727908964057;
-        Wed, 02 Oct 2024 15:42:44 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cd5742602sm14778829f8f.94.2024.10.02.15.42.41
+        d=1e100.net; s=20230601; t=1727922797; x=1728527597;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xkpfPr0EYRdlxNhthgj3FTAxfyKqmJJR9nkwDDTRTpI=;
+        b=IHPRM6QEqs5GC8HtEjoVMvQZzPgTcisQX975ENwJrjeEnExUD0WW2f1rhfTDs+tg3N
+         KLUEe2u0BE7WiqbX6Ul1Uqgk5lC2XAJ5Q/aHFMNtp/8leuucd8PlqX+GrsUqyhAENTuh
+         3jGANE7iOkzNTJXV3pEjfXcrBkW2QGADMcrQ3ebmbrvLhtI825R6K77FicVvAesYoELp
+         aTszZcE+vNKiBprxatTXjlD6rh3ix6ajHylxmKmonSxWOSNhR2fvKkJjYHV1z9+//tFF
+         Oulyd3YKJRdfmolQGkbSAFOzYuex8jSytJRAGXULTYQs3S/Q5hA9YWwJJLb5+HZV5k8e
+         OcsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNndxGm5ctYh/+jszHrzDo44naB39K7H1RBRsPWNmghCEGiGc/itBOUZBh6i/h1GuGaGS3cBLBOXFT@vger.kernel.org, AJvYcCWbg3FJJpJgTOFLb0snP9M0ijHBc1EiA2FjkMReivw/9ioku7scaTnT/q+4M6nKVi4tC/hL1HTwhv6z@vger.kernel.org, AJvYcCXYU613aB6DggVkjvuGHpA7EELuW4VJMwFwK2+5JHK6EMEKs6hOAouy65FV2gEnsBIA6c/7SSThTpcOH/mW@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMd9IC5Mv2TCnp4HOkLKkggI1e+2S7CtiElEXj++umU9xd1362
+	bVHS0OxvYKnbJr2HSRkhqXJUFQxV+pA8pdjIVN+FtxqIlrqCY7tH
+X-Google-Smtp-Source: AGHT+IFI/jVC3KeK2s+JU4a0+Yt+Rz9wy+dcMj8aCK/vKQWCiYwY7iHn9bnCY+q25G+oSsBZcN4Q1w==
+X-Received: by 2002:a05:6214:3f84:b0:6c3:58b7:d703 with SMTP id 6a1803df08f44-6cb81a24c2bmr86793316d6.22.1727922797436;
+        Wed, 02 Oct 2024 19:33:17 -0700 (PDT)
+Received: from VM-Arch (ool-1826d901.dyn.optonline.net. [24.38.217.1])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cb937fba50sm1501446d6.116.2024.10.02.19.33.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2024 15:42:42 -0700 (PDT)
-Message-ID: <66fdcc62.df0a0220.15bce8.4398@mx.google.com>
-X-Google-Original-Message-ID: <Zv3MX0046FvdpeYU@Ansuel-XPS.>
-Date: Thu, 3 Oct 2024 00:42:39 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] mfd: airoha: Add support for Airoha EN7581 MFD
-References: <20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org>
- <20241001-en7581-pinctrl-v5-3-dc1ce542b6c6@kernel.org>
- <20241002132518.GD7504@google.com>
+        Wed, 02 Oct 2024 19:33:16 -0700 (PDT)
+Date: Wed, 2 Oct 2024 22:33:13 -0400
+From: Alex Lanzano <lanzano.alex@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Mehdi Djait <mehdi.djait@bootlin.com>, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linuxfoundation.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v8 0/2] Add driver for Sharp Memory LCD
+Message-ID: <ees3m2qmazah2547ys62zvbrvo4dsgki2z2jwulwz4dfjtm4hk@kpmlapv6occv>
+References: <20241002033807.682177-1-lanzano.alex@gmail.com>
+ <t4lefcykpoe5i36wb4x5u23sseh6drnphtivuqc3mjviat2vvc@7hg4jyhxvpye>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20241002132518.GD7504@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <t4lefcykpoe5i36wb4x5u23sseh6drnphtivuqc3mjviat2vvc@7hg4jyhxvpye>
 
-On Wed, Oct 02, 2024 at 02:25:18PM +0100, Lee Jones wrote:
-> On Tue, 01 Oct 2024, Lorenzo Bianconi wrote:
+On Wed, Oct 02, 2024 at 09:56:38AM GMT, Uwe Kleine-König wrote:
+> Hello,
 > 
-> > From: Christian Marangi <ansuelsmth@gmail.com>
+> On Tue, Oct 01, 2024 at 11:37:35PM -0400, Alex Lanzano wrote:
+> > This patch series add support for the monochrome Sharp Memory LCD
+> > panels. This series is based off of the work done by Mehdi Djait.
 > > 
-> > Support for Airoha EN7581 Multi Function Device that
-> > expose PINCTRL functionality and PWM functionality.
+> > References:
+> > https://lore.kernel.org/dri-devel/71a9dbf4609dbba46026a31f60261830163a0b99.1701267411.git.mehdi.djait@bootlin.com/
+> > https://www.sharpsde.com/fileadmin/products/Displays/2016_SDE_App_Note_for_Memory_LCD_programming_V1.3.pdf
+> > 
+> > Co-developed-by: Mehdi Djait <mehdi.djait@bootlin.com>
+> > Signed-off-by: Mehdi Djait <mehdi.djait@bootlin.com>
+> > Signed-off-by: Alex Lanzano <lanzano.alex@gmail.com>
+> > ---
+> > Changes in v8:
+> > - Addressed review comments from Uwe
+> >     - Replace pwm_get_state with pwm_init_state
+> >     - Use pwm_set_relative_duty_cycle instead of manually setting period and duty cycle
 > 
-> The device is a jumble of pinctrl registers, some of which can oscillate.
+> You didn't explicitly mention that it's fine if the PWM doesn't emit the
+> inactive state when you call pwm_disable(). You're code should continue
+> to work if you drop all calls to pwm_disable().
 > 
-> This is *still* not an MFD.
-> 
-> If you wish to spread this functionality over 2 drivers, use syscon to
-> obtain the registers and simple-mfd to automatically probe the drivers.
->
+> Ideally you mention that in a code comment to make others reading your
+> code understand that.
 
-Hi Lee,
+Sorry about that! The intent of the code is to stop the pwm from outputing
+when the display is disabled since the signal is no longer needed. If
+it's best to emit the inactive state rather than calling pwm_disable()
+I'm fine with making that change.
 
-let me summarize the situation so it's more clear why
-this additional mfd driver.
-
-There were various iteration for these 2 driver (pinctrl and PWM).
-Due to the fact that these 2 are placed in the same register block
-with the PWM register in the middle, we proposed various .yaml schema
-that could better model it.
-
-The first idea was to map the single register used by the 2 driver.
-
-        pio: pinctrl@1fa20214 {
-                compatible = "airoha,en7581-pinctrl";
-                reg = <0x0 0x1fa20214 0x0 0x30>,
-                        <0x0 0x1fa2027c 0x0 0x8>,
-                        <0x0 0x1fbf0234 0x0 0x4>,
-                        <0x0 0x1fbf0268 0x0 0x4>,
-                        <0x0 0x1fa2001c 0x0 0x50>,
-                        <0x0 0x1fa2018c 0x0 0x4>,
-                        <0x0 0x1fbf0204 0x0 0x4>,
-                        <0x0 0x1fbf0270 0x0 0x4>,
-                        <0x0 0x1fbf0200 0x0 0x4>,
-                        <0x0 0x1fbf0220 0x0 0x4>,
-                        <0x0 0x1fbf0260 0x0 0x4>,
-                        <0x0 0x1fbf0264 0x0 0x4>,
-                        <0x0 0x1fbf0214 0x0 0x4>,
-                        <0x0 0x1fbf0278 0x0 0x4>,
-                        <0x0 0x1fbf0208 0x0 0x4>,
-                        <0x0 0x1fbf027c 0x0 0x4>,
-                        <0x0 0x1fbf0210 0x0 0x4>,
-                        <0x0 0x1fbf028c 0x0 0x4>,
-                        <0x0 0x1fbf0290 0x0 0x4>,
-                        <0x0 0x1fbf0294 0x0 0x4>,
-                        <0x0 0x1fbf020c 0x0 0x4>,
-                        <0x0 0x1fbf0280 0x0 0x4>,
-                        <0x0 0x1fbf0284 0x0 0x4>,
-                        <0x0 0x1fbf0288 0x0 0x4>;
-
-                gpio-controller;
-                #gpio-cells = <2>;
-                gpio-ranges = <&pio 0 13 47>;
-
-                ...
-
-        };
-
-        pwm@1fbf0224 {
-                compatible = "airoha,en7581-pwm";
-                reg = <0x1fbf0224 0x10>,
-                      <0x1fbf0238 0x28>,
-                      <0x1fbf0298 0x8>;
-                #pwm-cells = <3>;
-        };
-
-This was quickly rejected as it introduced way more complication
-to workaround the overlapping addresses. (the device should map the
-entire register space)
-
-The second proposal was a parent+child implementation with the
-pinctrl parent and the PWM child by referencing a syscon from
-the parent.
-
-        pio: pinctrl@1fbf0200 {
-                compatible = "airoha,en7581-pinctrl", "simple-mfd", "syscon";
-                reg = <0x1fbf0200 0x0 0xbc>;
-                airoha,chip-scu = <&chip_scu>;
-                ....
-
-                pwm {
-                        compatible = "airoha,en7581-pwm";
-                        ...
-                };
-        };
-
-Also this second proposal was rejected by device tree folks
-as the device implement both pinctrl and PWM in the register
-space and they are not actually separate devices.
-
-There was also an additional proposal with the entire register
-map in a dedicated node with syscon and pwm + pinctrl using it.
-This was also rejected by device tree folks. (node that have only
-a syscon are a nono)
-
-It was suggested that this is a case of MFD (multi-functional-device)
-
-As suggested we proposed a simple-mfd implementation following
-common pattern. Parent node with simple-mfd and syscon compatible
-and 2 child nodes, one with pinctrl and the other with PWM with each
-his own compatible.
-
-        mfd@1fbf0200 {
-                compatible = "airoha,en7581-gpio-mfd";
-                reg = <0x0 0x1fbf0200 0x0 0xc0>;
-
-                interrupt-parent = <&gic>;
-                interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-
-                pio: pinctrl {
-                        compatible = "airoha,en7581-pinctrl";
-
-                        gpio-controller;
-                        #gpio-cells = <2>;
-
-                        interrupt-controller;
-                        #interrupt-cells = <2>;
-                };
-
-                pwm: pwm {
-                        compatible = "airoha,en7581-pwm";
-
-                        #pwm-cells = <3>;
-                        status = "disabled";
-                };
-        };
-
-Also this was rejected by device tree folks as the property for
-pinctrl and pwm needed to be in the MFD node and there should't
-be child node with single compatible.
-This comes from the fact that DT needs to describe how the HW is
-modelled and not how the drivers are implemented.
-
-Finally Rob agreed and added the Reviwed-by on the current
-implementation with single MFD node with pinctrl and pwm.
-Also Conor and Krzysztof agreed on this solution for the task.
-
-    mfd@1fbf0200 {
-        compatible = "airoha,en7581-gpio-sysctl";
-        reg = <0x1fbf0200 0xc0>;
-
-        interrupt-parent = <&gic>;
-        interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-
-        gpio-controller;
-        #gpio-cells = <2>;
-
-        interrupt-controller;
-        #interrupt-cells = <2>;
-
-        #pwm-cells = <3>;
-
-        pinctrl {
-                ...
-        };
-    };
-
-With the following implementation, the only way to probe the
-additional driver is with a specialized mfd driver that probe the
-2 driver by name and we can't really use a simple-mfd implementation
-as that requires child nodes with compatibles.
-
-Sorry for the long message and I honestly hope we can find together
-a common path for this between driver and Documentation.
-
-Is it clear now why we had to ultimely had to implement and model things
-this way?
-
---
-        Ansuel
+Best regards,
+Alex
 
 
