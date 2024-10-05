@@ -1,238 +1,269 @@
-Return-Path: <linux-pwm+bounces-3486-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3487-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42B28991391
-	for <lists+linux-pwm@lfdr.de>; Sat,  5 Oct 2024 02:42:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC81E991637
+	for <lists+linux-pwm@lfdr.de>; Sat,  5 Oct 2024 12:51:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B82381F21F55
-	for <lists+linux-pwm@lfdr.de>; Sat,  5 Oct 2024 00:42:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DBF7283EAD
+	for <lists+linux-pwm@lfdr.de>; Sat,  5 Oct 2024 10:51:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BC864C7C;
-	Sat,  5 Oct 2024 00:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC61AF9FE;
+	Sat,  5 Oct 2024 10:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Yl4sbFGH"
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="UHVDr5qE"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011043.outbound.protection.outlook.com [40.107.74.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04797182;
-	Sat,  5 Oct 2024 00:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728088964; cv=none; b=kwiQsr4XfnDGXDFEpLtfTIyuxypq+xRvphNhNtR7+Hl+KtN7n4q6rBvKyxEHLH0cBIGaMY2k+Hni/HJIQ+rOPefhYI2hgXz+1abevXu0Lt6djcGzZN9UVSeJnKDxx66xf9s8iWqbPa/f3eh7gqGwjwJ6RaSEJRsWfuvlzQcBEHk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728088964; c=relaxed/simple;
-	bh=Ie/XQKbbsSR4D1iycCkYUWZ0G1cgjLVrrylLn+TcNoA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tT5rPKDfJKBG7ysAlbUl054onvBOwf4aJT+tFTYQnf7MXyjbATlv6zU5fH30KfD1d8rF94LnZcsaoDZDig7UYB/+I51kT7kplOsKN0+9hsjSs1fSThIQhYRWLH1UAxC49P2KP0BoCWYilXVGIQ+8gxj1oNftzsH2mIDoMxT4r/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Yl4sbFGH; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id E99AB886DF;
-	Sat,  5 Oct 2024 02:42:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1728088960;
-	bh=WAlganDHVley7ZzJIIV/eYDB7QCfZKEuedzG4few7pU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Yl4sbFGHy7P6Uvuq8TsiS5SQZx4pBiuGMXIy/ORX5r1NG6KFbr6cMfUJPvV0DpViX
-	 k8SGyAZkhLRKIhg5DcalNvj2PvTQt+X0dwcTbMJdYpjK9U8Px3V8UuYtFzoJ2Lm8Kl
-	 YlQw7mWKdAKFaLqovVZD/yEG4BntIR92Bh3WzZhuKBze6Hvwcw0jKPDCXkNInHmX56
-	 Rdc0EpmMnTt30ZcHbKyzVMNZsIFmfZzbR/IjEUy748cUakqgAhwhc1PyaziWq8aQ3l
-	 BRQODyEfukPWa/fHotGUdMRO69N5jSbSZsOF5wtspYc4yxkI5aHyc3NU3EE90q31sg
-	 wY1Iqo6sVDJ4w==
-Message-ID: <4166d68c-5eca-406a-936f-412dd2ae72fc@denx.de>
-Date: Sat, 5 Oct 2024 02:41:29 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CC0231C87;
+	Sat,  5 Oct 2024 10:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728125472; cv=fail; b=ijdQjGBAMilHEpq4VBrVCSzAYXqL02UdtCtcYcXJ/XiTtgO4Nh0B6Q8DO74M67dBTHsQuplJ9d44ZIvrsFwpDbiuO7pELYxfftBOF8yaNPbQMyv0Zp4P6V+BMgT3C7ycz1qTKbx4bUILOng+qGPKB8+UauZaSy1UUmHWMrmAZNg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728125472; c=relaxed/simple;
+	bh=hyUoYVE5XpkWMd5XT26jY/8fu1loSNC/g4u8Ch/sRDE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dIipMIwsWs4lPAsTd7O/+YwE8U4DwGLJ9Hnom1YLRzWAwueA0rvQ7X8ipTAONLtIqY38sBHCH9fHJKbxogNyQItsqCqA7zdaeytAtBu8pLnTRheVT2LHmUFmK0kd4Md3ahaKptY+hWyEgCXuf4n49Xf1eMnf+RVkC3p2tbtU5Dc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=UHVDr5qE; arc=fail smtp.client-ip=40.107.74.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FoZdPdJ4Yh4iWh9x9CH/wERuDOcphcwK/57qnOL9ApOARuvoub6MmnRtyW0KwWmWeiTU9HArkDANSirx/wxYZLoOAUjAHQPLBSeZ3wqsiHX9wED+fJPLIowNOf2N8MXu6dlUE4KhIDI2wAXAPfDvHl/KvhIcmrXZAVFIsaw0EWLFpmRqX7s67HHJYB00tIZoiUzD82gppm5Q3i5S7GlYvH5OMyTnTS/Dkm8HWab7MM1/Je1DjtgAlIsQQn53GGd7c8bSqb0pg8uSKrhVl7GpZFPxxII43xRjSyJyS3GhGlKyJhPZ6SdBIjlXEhHF/WidEib3RzrlXujaU4+xdPeTnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gcIcCssbNfJ72eAYZyFB4P8Y0YvcGWWNAOSD4QhIkAY=;
+ b=rVB0JKLKgkTzXW93zSAdJCCPWewxJsTwJbCH5N8h1f+UFhpcvSwmGLRtjG8l/J5dakc0FeOs3fDz8bw8MObn3/EM/pr8QqPvMHluv2zXpEn82TDyjrB3Bq7s1Ysk8atIgtA9aQa4J0XTasNNiCk0J/xghsYN6wxc2lFOMC185mlDrZW6xOgiyBtjDrk8/DxWk/bYckFFgcICJNfT4OqoAGtZvkeQx4msF2bOD5up+gdkOLfLqf2ic/IIJh0bguYztmIBHv3n0MKn+NtYHUHx8tGyumRTcPiZrRKoQL/mJ2Sn86qJHnoeJJF1TwLwJDFFfuPrLzJBS24hyirPdoxK+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gcIcCssbNfJ72eAYZyFB4P8Y0YvcGWWNAOSD4QhIkAY=;
+ b=UHVDr5qEGxPvwF3yc5VJ/Z7p4XfpPnvTx4iZWPrJAG+MIcd3kDOFfz1IxYtPRZ+Uaqc3Z4VguTZ6TsutrcsXzOzaOSNEGTWXjBLlvToy3HUXXwppWw+Sbnu19nUfHZgtXc1dws+0i4N9++s+a0ZRXb5IzuwEXpGZy5eeofwlukw=
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
+ by TY3PR01MB11851.jpnprd01.prod.outlook.com (2603:1096:400:3dd::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.19; Sat, 5 Oct
+ 2024 10:51:03 +0000
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1%3]) with mapi id 15.20.8026.019; Sat, 5 Oct 2024
+ 10:50:56 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+CC: Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven
+	<geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>,
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, biju.das.au
+	<biju.das.au@gmail.com>
+Subject: RE: [PATCH v21 3/4] pwm: Add support for RZ/G2L GPT
+Thread-Topic: [PATCH v21 3/4] pwm: Add support for RZ/G2L GPT
+Thread-Index: AQHa6ZU4yCrTG4vERkWCKtT81J70kbJo7ssAgA3CQuCAADLRAIAAAuRwgAFtp0A=
+Date: Sat, 5 Oct 2024 10:50:56 +0000
+Message-ID:
+ <TY3PR01MB113463CD49C37B05B3D5D5E8286732@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+References: <20240808131626.87748-1-biju.das.jz@bp.renesas.com>
+ <20240808131626.87748-4-biju.das.jz@bp.renesas.com>
+ <slpywmbmamr4kw4jg2vyydheop44ioladvvm52aocnojgjkcsy@3eoztwsej5mn>
+ <TYCPR01MB113320CDF49DB0564A958241A86722@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+ <thfymed6o42wcascazgpvgq6zcqrjxloz3nt5h2pwypqgs4fra@zeyh36lcphia>
+ <TYCPR01MB11332D536A0F4F2CA375924F086722@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+In-Reply-To:
+ <TYCPR01MB11332D536A0F4F2CA375924F086722@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TY3PR01MB11851:EE_
+x-ms-office365-filtering-correlation-id: f18ea3f2-f709-4314-8ad4-08dce52b9726
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?h5sSG7pWm/WZiDRxr+pz1qc+SB0QUJFrwK049JXRYt5uSsKyj962NEM+EN?=
+ =?iso-8859-1?Q?PEMTd0C7y1bMScC0VcfgmvBfQm93fFEX0MFQlb8CWOYfvB4wigV7QJjAX1?=
+ =?iso-8859-1?Q?fEO4HzO7RZ/8C/PARxfAk+oF/68lSP6SRzfs1Kj6Mmbr5mn3zr4u/t+oii?=
+ =?iso-8859-1?Q?6AbdENgVQHbFOxnSTuuF6vFNZS+j8TtiQN8MHxuFKNdWJdj9StaF47tf5B?=
+ =?iso-8859-1?Q?WItSB82nKE00D6BWyIlm6T6/Timk8daGBBOWZKdWIAGGV1Ze6N2fDbZ6P1?=
+ =?iso-8859-1?Q?PMke0BSpNrvG8ARx24iD70GpGHc+qqHB54p3f/rAg2iKVxzlLIh1BvgVA9?=
+ =?iso-8859-1?Q?3WHsoZiVJI21N0jV64MLy07zL6XCsz5lcbI7lxGDJow38Pbdjw/wNkYTLy?=
+ =?iso-8859-1?Q?WPFMdJdTBppttSNRNMy4YVt/kLQv3sul7vJ61RfL5JizzZleoVS/sHVU9g?=
+ =?iso-8859-1?Q?/+aPjvPsT+WAh7Zsp+gIQys9UX34lfDMs0Kz3nspQdhb/PMtXPZ5CHqKRt?=
+ =?iso-8859-1?Q?8sLtZJHso5dxHAhFawjyFIydz1aUsvCRkvxowVwE0W2WFdOQ/j98HkBhuQ?=
+ =?iso-8859-1?Q?P00jgi7SA5WnTfbxWPZRF2Ki3107Ga/w3mavm2fnK6A0iuoA9MX+7V872/?=
+ =?iso-8859-1?Q?Q1WhFMwWtYYwrIz8LrpYRz+BT1Go58RWqrnV8H9nFfcNc8E+F+S6JOAXtc?=
+ =?iso-8859-1?Q?YAtkwvX+FI6hz63dVrz1ylyFkEXc5hk1nLSzn0+1owH4j36I8tnBLUjNOQ?=
+ =?iso-8859-1?Q?v1D+iq8bUnVRSONtCRAdp8Dbq6Nw6McuvOvnou3Z4gbUcp834exytUZcH/?=
+ =?iso-8859-1?Q?qsR8m02VOsWvWjg7RXQiZgfxre/CcdwpGnL8hT66IHilEwXgZcT0gfAhU+?=
+ =?iso-8859-1?Q?p03G8Or2e4EWjck3iJoa/5YcsRKeawMewX/eBMzReVtFsJG7ma7BNGTWwE?=
+ =?iso-8859-1?Q?iodJlo6Qh4yhBfVbeMY89eMMd9rzTcxhuk96h7DKtANQvvoe6dsOosMF9w?=
+ =?iso-8859-1?Q?DS6RVyiUvZJdKmijpUCkk1EeSCrHjs62vaKJe/q+Lid3PEcZVW5OWKoOpP?=
+ =?iso-8859-1?Q?tWydULHCOf6/N/MFtmsw5QywuyAaJ9ttl5fSm+rL17s0lUyVJ2hzWCTXHD?=
+ =?iso-8859-1?Q?+zVp/D62eEAn5ee+zgM8C+lfZdyVkBcDGClehdMptHkCcVosJo8V1mxazx?=
+ =?iso-8859-1?Q?tSu+YJs8vUvky35B4qnnNTKks3k/If+9CgjDadzTkK9cgLQoB+eUQ53zx4?=
+ =?iso-8859-1?Q?PsUd08QmLdbWHo9aMtD1oQpk4mhB2wYcjiCkAyMy34834rN2dWdYFn4NoT?=
+ =?iso-8859-1?Q?TVyW2tjf/WxBipjzshqpZbODNvODDK4mo0h6b49eTsRHErQ+uqzui2QvQS?=
+ =?iso-8859-1?Q?ODslPU86FU5fVwGb6rmMQNUiIieCe31A=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?6iW+O1zILtGFi11yYO4KfBNiz69EHGYIn6XHLIpFMXyTM5fdTrVZfVkidV?=
+ =?iso-8859-1?Q?Ix043V6qkk5s3BbOfgALifdSLsJMshMCPcuibYduHTS7hb/AVg+b+0AsUS?=
+ =?iso-8859-1?Q?6/A+04Jd/JZtGeDf63zq6UFEsp33rcaOF6olc4CRKsPQHeXao9hzLSsjqF?=
+ =?iso-8859-1?Q?KGWYTLl/sKSB/W6Wvs/tHFoEeeK8Q8cNObfAN+HV+qdrB/DTR2gl4xyDSw?=
+ =?iso-8859-1?Q?2ZGTu+RoYV/iyp7O+H2RmIIuHCVlBvFfgD8ig9vNaJF/eaH6xGysIFSQ16?=
+ =?iso-8859-1?Q?Q5Tgbij1NjKSpeenGrbf0SG4bARsPGQ96MAwQIS5rWFogxO6se9Zwf+ygn?=
+ =?iso-8859-1?Q?CHzw+ZQ9PcxvJsNSFSmpkzD2Cf3r4yhbvOfWqimNAhO5AJ7h7Cv0kbRwZM?=
+ =?iso-8859-1?Q?gyc2xqZX+lVcyWWVgkS+jQeJHhLkgf+Z8jBIIXg1Ym0tNZcxid0HqiawJw?=
+ =?iso-8859-1?Q?t6DGc1poDj0v1bzs4jdC+AuzBd0rLeAHljy5EZRPj08Ew1eIuxznG6z8cG?=
+ =?iso-8859-1?Q?yI8KCHtLZtiypMlGVJVSx482DDCI4aTOyYdNug/2fTcX1hR99ObH88S4Sc?=
+ =?iso-8859-1?Q?bAMmghTr7B0B7kjSa2VyM5eVeQhFgwNfJthaLbk3i4sgBHSAiKeRs1DLEF?=
+ =?iso-8859-1?Q?U8qYku25tK6lNQnrvGvT11qFnS1Swj90+2bTg0s8icsmSexx6NezN5WlHw?=
+ =?iso-8859-1?Q?GiVOltf4SchAqZWrJ66EyXUPvDFrK39on431/zDBcNPoWrVTvUkxOgW3F7?=
+ =?iso-8859-1?Q?DGnn13oogEcH5EC/syWOn0g/1AGdJtHkjjVdHbX7vaFi5q9ducduxDMmbh?=
+ =?iso-8859-1?Q?DRoyJmEmsXrEteqLmi+XmVrrqFG5XAz4EESoHdhcLMUdc4wTK7+kp8bsYl?=
+ =?iso-8859-1?Q?9n/rrkoZiZ8AFiZ+02k5zJvTXjl2FpY6WL6myjCaMTD9hS1y4wltXPxU2P?=
+ =?iso-8859-1?Q?KYIZoypxX0XnY7cWKGpmfgD00YnvaMHmu8K2hcMsybD6yG/1B/oM8RwiOD?=
+ =?iso-8859-1?Q?D5hLddRABQBPD0Ub/y3DJPzOs0ZhDMtwxVutQMqrOIMSKvK8/60tKJ7feI?=
+ =?iso-8859-1?Q?ASsvyzqUmADdU9eV5qkEndFHmyfgYNfHSCP0S9DWX+0agNuaxrWM2Jggo5?=
+ =?iso-8859-1?Q?41wazzBgft645EWRQRDBmtv5bz0y30qZrQzhyf7psQTcGwywK2iC4Qzi3t?=
+ =?iso-8859-1?Q?ZndGMQgbVCwzVKbBXkFoHIwVQsP6nBiw+bjrLtXy9vqN2boPP30OAKRtj6?=
+ =?iso-8859-1?Q?nClFPBvoRCAEy5l7F5Bx4zMMXHgC6Brzwxu4qWnbKX/OTWJSwLut5lHYuY?=
+ =?iso-8859-1?Q?LCIguITHW7sWWc73PJaefs/VYP6OZezEGdawdNN/wVeO6sFWZqbrxkIG4J?=
+ =?iso-8859-1?Q?4e+qDB82II7IVumuMRtnIzWt16KsLEoLCmNPs03t8OtT7sCb/P0WKlx1kJ?=
+ =?iso-8859-1?Q?zaCK9yzOLQ6vj/xoBNPQy8nho1KYS/OJO+PJ69nHWkIZ0OqZcPQhgdyBut?=
+ =?iso-8859-1?Q?VGXp5BMKPZhCH9UwS/G20cFtQv+CLD51vPv+RJjqAW+p+QWoQLvYOxODwt?=
+ =?iso-8859-1?Q?HAFCqp6fwPm4qqOLYN8WFedS2L8PrJ2oBkC1NOyOY8ruLO6fdLsLC5UqqR?=
+ =?iso-8859-1?Q?Km9GGPpcDUUgMVlKUjynQpGAmiPI7/u5ab/mai4YWCj+uCXzACMn3Ljg?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/1] pwm: imx27: workaround of the pwm output bug when
- decrease the duty cycle
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Frank Li <Frank.Li@nxp.com>
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com,
- francesco@dolcini.it, imx@lists.linux.dev, jun.li@nxp.com,
- kernel@pengutronix.de, krzk+dt@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org, p.zabel@pengutronix.de, pratikmanvar09@gmail.com,
- robh@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org,
- xiaoning.wang@nxp.com
-References: <20241004193531.673488-1-Frank.Li@nxp.com>
- <5cvzarqkldstuziokdbxxne75i35odexkcykzikyq2gm6ytdyd@5wkm7mhotgej>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <5cvzarqkldstuziokdbxxne75i35odexkcykzikyq2gm6ytdyd@5wkm7mhotgej>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f18ea3f2-f709-4314-8ad4-08dce52b9726
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Oct 2024 10:50:56.1519
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8rhQ+gMBwr2uIO623vULrY3dxPilMZnySo9OdFuiMGEb1PYGAZ+TM1Pyqws7nWzNq+fJCagdi6dz+Ysp0ti3mY+13yDPzkV9YGE9HjnSgnk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB11851
 
-On 10/4/24 10:58 PM, Uwe Kleine-König wrote:
+Hi Uwe,
 
-[...]
+> -----Original Message-----
+> From: Biju Das
+> Sent: Friday, October 4, 2024 2:48 PM
+> Subject: RE: [PATCH v21 3/4] pwm: Add support for RZ/G2L GPT
+>=20
+> Hi Uwe,
+>=20
+> Thanks for the feedback.
+>=20
+> > -----Original Message-----
+> > From: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+> > Sent: Friday, October 4, 2024 1:47 PM
+> > Subject: Re: [PATCH v21 3/4] pwm: Add support for RZ/G2L GPT
+> >
+> > Hello Biju,
+> >
+> > On Fri, Oct 04, 2024 at 09:53:08AM +0000, Biju Das wrote:
+> > > On Wed, Sep 25, Uwe Kleine-K=F6nig wrote:
+> > > > On Thu, Aug 08, 2024 at 02:16:19PM +0100, Biju Das wrote:
+> > > > > +static int rzg2l_gpt_request(struct pwm_chip *chip, struct
+> > > > > +pwm_device
+> > > > > +*pwm) {
+> > > > > +	struct rzg2l_gpt_chip *rzg2l_gpt =3D to_rzg2l_gpt_chip(chip);
+> > > > > +	u32 ch =3D RZG2L_GET_CH(pwm->hwpwm);
+> > > > > +
+> > > > > +	mutex_lock(&rzg2l_gpt->lock);
+> > > > > +	rzg2l_gpt->user_count[ch]++;
+> > > > > +	mutex_unlock(&rzg2l_gpt->lock);
+> > > >
+> > > > Please consider using guard(mutex)(&rzg2l_gpt->lock);
+> > >
+> > > Agreed. expect rzg2l_gpt_apply() as it will cause deadlock as
+> > > rzg2l_gpt_enable acquires same lock.
+> >
+> > Note there is scoped_guard() if you don't want to hold the lock for
+> > the whole function but only for a block. Regarding rzg2l_gpt_apply()
+> > calling
+> > rzg2l_gpt_enable(): It might make sense to shift the semantic of
+> > rzg2l_gpt_enable() to expect the caller to hold the lock already. This
+> > way you won't release the lock just to allow a called function to
+> > retake it. This is usually also safer, consider someone manages to grab=
+ the lock in between.
+>=20
+> OK, will remove the lock from rzg2l_gpt_enable().
+>=20
+> >
+> > > > > +	 * clearing the flag will avoid errors during unbind.
+> > > > > +	 */
+> > > > > +	if (enabled && rzg2l_gpt->bootloader_enabled_channels[pwm->hwpw=
+m])
+> > > > > +		rzg2l_gpt->bootloader_enabled_channels[pwm->hwpwm] =3D false;
+> > > >
+> > > > Hmm, not 100% sure, but I think if rzg2l_gpt_config() below fails, =
+cleaning this flag is wrong.
+> > > >
+> > > > Does rzg2l_gpt->bootloader_enabled_channels[pwm->hwpwm] =3D=3D true
+> > > > imply enabled =3D=3D true? If so, the if condition can be simplifie=
+d
+> > > > to just the right hand side of the &&. Then even an unconditional
+> > > > assignment works, because
+> > > >
+> > > > 	rzg2l_gpt->bootloader_enabled_channels[pwm->hwpwm] =3D false;
+> > > >
+> > > > is a nop if the flag is already false.
+> > >
+> > > I am planning to drop "bootloader_enabled_channels" based on your
+> > > comment in probe() which simplifies the driver.
+> >
+> > If by saying "drop" you mean that you remove
+> > bootloader_enabled_channels completely from the driver, that is the wro=
+ng conclusion.
+>=20
+> "bootloader_enabled_channels" is added mainly for avoiding PM unbalance f=
+or bind() followed by
+> Unbind(). By adding devm_clock_enabled() to make clk_get_rate() well-defi=
+ned, the clock will be always
+> on and there is no need for PM run time calls.
+>=20
+> Am I miss anything here??
 
->> @@ -263,7 +266,77 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->>   		pwm_imx27_sw_reset(chip);
->>   	}
->>   
->> -	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
->> +	/*
->> +	 * This is a limited workaround. When the SAR FIFO is empty, the new
->> +	 * write value will be directly applied to SAR even the current period
->> +	 * is not over.
->> +	 *
->> +	 *           ─────────────────────┐
->> +	 * PWM OUTPUT                     │
->> +	 *                                └─────────────────────────
->> +	 *
->> +	 *           ┌──────────────────────────────────────────────┐
->> +	 * Counter   │       XXXXXXXXXXXXXX                         │
->> +	 *           └──────────────────────────────────────────────┘
->> +	 *                   ▲            ▲
->> +	 *                   │            │
->> +	 *                 New SAR      Old SAR
->> +	 *
->> +	 *           XXXX  Errata happen window
-> 
-> Hmm, ok, so SAR is the register value that implements the duty cycle
-> setting. And if a new SAR is written, it is directly applied to the
-> hardware and this way it can happen (if SAR_new < counter < SAR_old)
-> that no falling edge happens in the current period. Right?
 
-Yes
+Just to add,
 
-> If so, I think the depicted PWM output is misleading. I'd describe and
-> picture it as follows:
+previously,=20
+a) For bootloader enabled channel case: Clock is ON till linux takes contro=
+l in .apply().
+b)For bootloader disabled case: Clock is OFF and turned on during enable().
 
-Why not simply duplicate the ERRATA description for iMX8M Nano 
-MX8MN_0N14Y errata sheet ?
+Now, after introducing devm_clock_enabled():
+a) For bootloader enabled channel case: Clock is ON and will stay ON till u=
+nbind/remove().
+b) For bootloader disabled case: Clock is on during probe and will stay ON =
+till unbind/remove().
 
-"
-ERR051198:
-PWM: PWM output may not function correctly if the FIFO is empty when a 
-new SAR value is programmed
-
-Description:
-When the PWM FIFO is empty, a new value programmed to the PWM Sample 
-register (PWM_PWMSAR) will be directly applied even if the current timer 
-period has not expired.
-
-If the new SAMPLE value programmed in the PWM_PWMSAR register is less 
-than the previous value, and the PWM counter register (PWM_PWMCNR) that 
-contains the current COUNT value is greater than the new programmed 
-SAMPLE value, the current period will not flip the level. This may 
-result in an output pulse with a duty cycle of 100%.
-"
-
-That is very clear to me.
-
-> 	/*
-> 	 * At each clock tick the hardware compares the SAR value with
-> 	 * the current counter. If they are equal the output is changed
-> 	 * to the inactive level.
-
-I would skip this ^ part unless you can surely say the IP works exactly 
-that way because you checked the RTL.
-
-> As a new SAR value is applied
-> 	 * immediately to the currently running period, it can happen
-> 	 * that no falling edge happens in a period and so the output is
-> 	 * active for a whole period. Consider a change from
->           *     ________
-> 	 *    /        \______/
->           *    ^      *        ^
-> 	 * to
->           *     ____
-> 	 *    /    \__________/
->           *    ^               ^
-> 	 *
-> 	 * where SAR is written at the time marked by *. The counter
-> 	 * didn't reach the old (bigger) value because it was changed
-> 	 * before the counter reached that value and when the new value
-> 	 * becomes active it is already lower than the current counter
-> 	 * and so doesn't trigger either while the counter continues to
-> 	 * grow. So the resulting waveform looks as follows:
-> 	 *
->           *     ________        ____________________
-> 	 *    /        \______/                    \__________/
->           *    ^               ^      *        ^               ^
-> 	 *    |<-- old SAR -->|               |<-- new SAR -->|
-> 	 *
-> 	 * that is the output is active for a whole period.
-
-The ascii/infographics is nice and would be good to keep, but regarding 
-the description, frankly, the NXP errata description says the same thing 
-in fewer words :)
-
-> 	 */
-> 
->> +	 *
->> +	 * If the new SAR value is less than the old one, and the counter is
->> +	 * greater than the new SAR value (see above diagram XXXX), the current
->> +	 * period will not flip the level. This will result in a pulse with a
->> +	 * duty cycle of 100%.
->> +	 *
->> +	 * Check new SAR less than old SAR and current counter is in errata
->> +	 * windows, write extra old SAR into FIFO and new SAR will effect at
->> +	 * next period.
->> +	 *
->> +	 * Sometime period is quite long, such as over 1 second. If add old SAR
->> +	 * into FIFO unconditional, new SAR have to wait for next period. It
->> +	 * may be too long.
->> +	 *
->> +	 * Turn off the interrupt to ensure that not IRQ and schedule happen
->> +	 * during above operations. If any irq and schedule happen, counter
->> +	 * in PWM will be out of data and take wrong action.
->> +	 *
->> +	 * Add a safety margin 1.5us because it needs some time to complete
->> +	 * IO write.
->> +	 *
->> +	 * Use __raw_writel() to minimize the interval between two writes to
->> +	 * the SAR register to increase the fastest PWM frequency supported.
->> +	 *
->> +	 * When the PWM period is longer than 2us(or <500kHz), this workaround
->> +	 * can solve this problem. No software workaround is available if PWM
->> +	 * period is shorter than IO write.
->> +	 */
->> +	c = clkrate * 1500;
->> +	do_div(c, NSEC_PER_SEC);
->> +
->> +	local_irq_save(flags);
->> +	val = FIELD_GET(MX3_PWMSR_FIFOAV, readl_relaxed(imx->mmio_base + MX3_PWMSR));
->> +
->> +	if (duty_cycles < imx->duty_cycle) {
->> +		if (state->period < 2000) { /* 2000ns = 500 kHz */
->> +			/* Best effort attempt to fix up >500 kHz case */
->> +			udelay(6); /* 2us per FIFO entry, 3 FIFO entries written => 6 us */
-> 
-> I don't understand the motivation to wait here. Wouldn't it be better to
-> write the old value 3 - val times and not sleep?
-
-No, because you would overflow the FIFO, see:
-
-137fd45ffec1 ("pwm: imx: Avoid sample FIFO overflow for i.MX PWM version2")
-
-> Or busy loop until
-> MX3_PWMSR_FIFOAV becomes 0?
-
-Do we really want a busy wait here if we can avoid it ?
-
-We can do udelay(3 * state->period / 1000); so faster PWMs would wait 
-shorter.
-
-The delay is here to basically wait until the FIFO is surely empty and 
-has space for 3 consecutive writes (see the commit above wrt. FIFO 
-overflow).
-
-[...]
+Cheers,
+Biju
 
