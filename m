@@ -1,180 +1,238 @@
-Return-Path: <linux-pwm+bounces-3484-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3486-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10F129911C7
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Oct 2024 23:51:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42B28991391
+	for <lists+linux-pwm@lfdr.de>; Sat,  5 Oct 2024 02:42:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 34FE81C2299A
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Oct 2024 21:51:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B82381F21F55
+	for <lists+linux-pwm@lfdr.de>; Sat,  5 Oct 2024 00:42:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF1871D9673;
-	Fri,  4 Oct 2024 21:49:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BC864C7C;
+	Sat,  5 Oct 2024 00:42:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="pc718Dyw"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Yl4sbFGH"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61031D9596
-	for <linux-pwm@vger.kernel.org>; Fri,  4 Oct 2024 21:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04797182;
+	Sat,  5 Oct 2024 00:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728078543; cv=none; b=gNEiXU+Uo9aTJOOz/2q1e4H3j3048AWERIyEcwR5Z/RbOdPYUiPkzIcm6PykY6wC0ehKsSf/r/8g2fhLAWaTkyDmV907OQ/c50tRgMGRKAMHOe1fjajlmEwJ4rUksQn2vnDrulYUPTyPTw5tNLn6q2YjPkVSoh+mNBpfRk3USL8=
+	t=1728088964; cv=none; b=kwiQsr4XfnDGXDFEpLtfTIyuxypq+xRvphNhNtR7+Hl+KtN7n4q6rBvKyxEHLH0cBIGaMY2k+Hni/HJIQ+rOPefhYI2hgXz+1abevXu0Lt6djcGzZN9UVSeJnKDxx66xf9s8iWqbPa/f3eh7gqGwjwJ6RaSEJRsWfuvlzQcBEHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728078543; c=relaxed/simple;
-	bh=KILZmuz9ow44vIq//sP6mcCwlyWKYRWENjjTm5mPzG0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lX0QWy3cUuRr+VMEz386LcDcpHvR9TafKC6gPHPpU/BVTfcqeet8lL/Ny5lG9Q1VB/4ceAy8b/G6Q0DZMAp3jSNTvt9gCpP2vHB1xaEelXkBljjZuOGkj9Qv9jWG58FuvgA0UhuRS+qnv2g/0ZRwL436bxM4ArmSSTcCpJNOXjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=pc718Dyw; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-37cfff59d04so2199641f8f.1
-        for <linux-pwm@vger.kernel.org>; Fri, 04 Oct 2024 14:49:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728078539; x=1728683339; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KfbnsxkeeqEEncvUI/2jM+8bMu3HinvuaG19icxbGgs=;
-        b=pc718DywKK1fOPwI+ys7JzBeSZ2dwVwJGEeQoU6Nz+yJqTbyPvKV5R5/k4RI6LyNe1
-         BH6c7lpjgB3W3PXK26OEJyMApqzRzlDuWfMU3GIa56V0xaTzpuj0V0ypI5XeATh7nwvq
-         H2M4CmmjHPiab5jLx8e4yRtOykmvvkia5phhDcbPcOPuOtEpwG7nf6jpczIiGVhoKZE5
-         V93OXr+HeMa8NSyFNXTo7Ff6M3uPLTsNpIIJVqJQRNUAtpmJXHNrCT8+mjxLksGIdewN
-         PAhCq/oKdV89uDrdivgkqayo3FOYR2kh9G0suuq7w9rXX10BYWUX2CYh9piF2v8xKfjA
-         vt7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728078539; x=1728683339;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KfbnsxkeeqEEncvUI/2jM+8bMu3HinvuaG19icxbGgs=;
-        b=aJge6Iue/Hiv8Gk0mIO/Pch4ZQftXFo8vWZRrXuIxjnmE6ZBUO+jLgiFjFeX14CHAG
-         ErFLzQwMF1wRVi5TvYHoqejAxVEGfuUTA5cdUnqsx5x0g6DfygbQMpHOFk3gugYAiFDp
-         A5VZGdZ4a0QGmpvlWNVDc3qEd1zf3zVRPnmy4wwS0mzhyQdZ9YKm4rrCoQyedoCY5spH
-         6zhkMOB0uMAWiS+oKVjNN8kkJA1p9SUaX58ixOvLIe9shiO5aqSyk0LsABLZ7yPOtTdM
-         3/ANwn0Y5QkRdHLIbClfzhU3NrFM8oZAO6dAOQb1+2ebluQx74TJvxjX3QEjNPs7yWtY
-         a3JA==
-X-Gm-Message-State: AOJu0Yx0ihpc2AWW6/wvDUBGkfaJ05PvqjE7pLCzIvr/iq2AtVWoCxxN
-	ep3FFQknq6+a5jUHQlueoVT3inWtWIwUVrKusU14W8+quWRSWdyPWx3wIZkVsWA=
-X-Google-Smtp-Source: AGHT+IETPUO4x+K1ayVzkXTAt5fy1m+nf2IbmK885d24N2g/sLQUZx6PDrGLnw75Jn056V+py2IoJA==
-X-Received: by 2002:a5d:4a12:0:b0:374:bf6b:1021 with SMTP id ffacd0b85a97d-37d04a7b139mr5447913f8f.27.1728078538832;
-        Fri, 04 Oct 2024 14:48:58 -0700 (PDT)
-Received: from [127.0.1.1] (frhb82016ds.ikexpress.com. [185.246.87.17])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f86b4ab63sm24680375e9.40.2024.10.04.14.48.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2024 14:48:58 -0700 (PDT)
-From: Guillaume Stols <gstols@baylibre.com>
-Date: Fri, 04 Oct 2024 21:48:44 +0000
-Subject: [PATCH v3 10/10] iio: adc: ad7606: Disable PWM usage for non
- backend version
+	s=arc-20240116; t=1728088964; c=relaxed/simple;
+	bh=Ie/XQKbbsSR4D1iycCkYUWZ0G1cgjLVrrylLn+TcNoA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tT5rPKDfJKBG7ysAlbUl054onvBOwf4aJT+tFTYQnf7MXyjbATlv6zU5fH30KfD1d8rF94LnZcsaoDZDig7UYB/+I51kT7kplOsKN0+9hsjSs1fSThIQhYRWLH1UAxC49P2KP0BoCWYilXVGIQ+8gxj1oNftzsH2mIDoMxT4r/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Yl4sbFGH; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id E99AB886DF;
+	Sat,  5 Oct 2024 02:42:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1728088960;
+	bh=WAlganDHVley7ZzJIIV/eYDB7QCfZKEuedzG4few7pU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Yl4sbFGHy7P6Uvuq8TsiS5SQZx4pBiuGMXIy/ORX5r1NG6KFbr6cMfUJPvV0DpViX
+	 k8SGyAZkhLRKIhg5DcalNvj2PvTQt+X0dwcTbMJdYpjK9U8Px3V8UuYtFzoJ2Lm8Kl
+	 YlQw7mWKdAKFaLqovVZD/yEG4BntIR92Bh3WzZhuKBze6Hvwcw0jKPDCXkNInHmX56
+	 Rdc0EpmMnTt30ZcHbKyzVMNZsIFmfZzbR/IjEUy748cUakqgAhwhc1PyaziWq8aQ3l
+	 BRQODyEfukPWa/fHotGUdMRO69N5jSbSZsOF5wtspYc4yxkI5aHyc3NU3EE90q31sg
+	 wY1Iqo6sVDJ4w==
+Message-ID: <4166d68c-5eca-406a-936f-412dd2ae72fc@denx.de>
+Date: Sat, 5 Oct 2024 02:41:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/1] pwm: imx27: workaround of the pwm output bug when
+ decrease the duty cycle
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Frank Li <Frank.Li@nxp.com>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com,
+ francesco@dolcini.it, imx@lists.linux.dev, jun.li@nxp.com,
+ kernel@pengutronix.de, krzk+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-pwm@vger.kernel.org, p.zabel@pengutronix.de, pratikmanvar09@gmail.com,
+ robh@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org,
+ xiaoning.wang@nxp.com
+References: <20241004193531.673488-1-Frank.Li@nxp.com>
+ <5cvzarqkldstuziokdbxxne75i35odexkcykzikyq2gm6ytdyd@5wkm7mhotgej>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <5cvzarqkldstuziokdbxxne75i35odexkcykzikyq2gm6ytdyd@5wkm7mhotgej>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20241004-ad7606_add_iio_backend_support-v3-10-38757012ce82@baylibre.com>
-References: <20241004-ad7606_add_iio_backend_support-v3-0-38757012ce82@baylibre.com>
-In-Reply-To: <20241004-ad7606_add_iio_backend_support-v3-0-38757012ce82@baylibre.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michael Hennerich <michael.hennerich@analog.com>, 
- linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
- aardelean@baylibre.com, dlechner@baylibre.com, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Guillaume Stols <gstols@baylibre.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1728078523; l=2322;
- i=gstols@baylibre.com; s=20240417; h=from:subject:message-id;
- bh=KILZmuz9ow44vIq//sP6mcCwlyWKYRWENjjTm5mPzG0=;
- b=V1//BkjB3KmevEEh7iNe+Ik1D5yorX+BR9PwVTNLgBma08CQC6efmz2xTQWL70TtsmmAjdxN8
- zoDQV9i4/KCCNsoS49wGya0TBkhVp3ptAH3YD9OUUo86YOXEL5TeLem
-X-Developer-Key: i=gstols@baylibre.com; a=ed25519;
- pk=XvMm5WHuV67sGYOJZqIYzXndbaJOlNd8Q6li6vnb4Cs=
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-Since the pwm was introduced before backend, there was a mock use, with
-a GPIO emulation. Now that iio backend is introduced, the mock use can
-be removed.
+On 10/4/24 10:58 PM, Uwe Kleine-König wrote:
 
-Signed-off-by: Guillaume Stols <gstols@baylibre.com>
----
- drivers/iio/adc/ad7606.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+[...]
 
-diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-index d86eb7c3e4f7..7d02aad45242 100644
---- a/drivers/iio/adc/ad7606.c
-+++ b/drivers/iio/adc/ad7606.c
-@@ -473,8 +473,6 @@ static int ad7606_pwm_set_high(struct ad7606_state *st)
- 	cnvst_pwm_state.duty_cycle = cnvst_pwm_state.period;
- 
- 	ret = pwm_apply_might_sleep(st->cnvst_pwm, &cnvst_pwm_state);
--	/* sleep 2 µS to let finish the current pulse */
--	fleep(2)
- 
- 	return ret;
- }
-@@ -492,8 +490,6 @@ static int ad7606_pwm_set_low(struct ad7606_state *st)
- 	cnvst_pwm_state.duty_cycle = 0;
- 
- 	ret = pwm_apply_might_sleep(st->cnvst_pwm, &cnvst_pwm_state);
--	/* sleep 2 µS to let finish the current pulse */
--	fleep(2)
- 
- 	return ret;
- }
-@@ -576,7 +572,6 @@ static irqreturn_t ad7606_trigger_handler(int irq, void *p)
- 	iio_trigger_notify_done(indio_dev->trig);
- 	/* The rising edge of the CONVST signal starts a new conversion. */
- 	gpiod_set_value(st->gpio_convst, 1);
--	ad7606_pwm_set_high(st);
- 
- 	return IRQ_HANDLED;
- }
-@@ -900,7 +895,6 @@ static int ad7606_buffer_postenable(struct iio_dev *indio_dev)
- 	struct ad7606_state *st = iio_priv(indio_dev);
- 
- 	gpiod_set_value(st->gpio_convst, 1);
--	ad7606_pwm_set_high(st);
- 
- 	return 0;
- }
-@@ -910,7 +904,6 @@ static int ad7606_buffer_predisable(struct iio_dev *indio_dev)
- 	struct ad7606_state *st = iio_priv(indio_dev);
- 
- 	gpiod_set_value(st->gpio_convst, 0);
--	ad7606_pwm_set_low(st);
- 
- 	return 0;
- }
-@@ -1204,6 +1197,12 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
- 		indio_dev->setup_ops = &ad7606_pwm_buffer_ops;
- 	} else {
- 		init_completion(&st->completion);
-+
-+		/* Reserve the PWM use only for backend (force gpio_convst definition) */
-+		if (!st->gpio_convst)
-+			return dev_err_probe(dev, -EINVAL,
-+					     "No backend, connect convst to a GPIO");
-+
- 		st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
- 						  indio_dev->name,
- 						  iio_device_id(indio_dev));
+>> @@ -263,7 +266,77 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>>   		pwm_imx27_sw_reset(chip);
+>>   	}
+>>   
+>> -	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
+>> +	/*
+>> +	 * This is a limited workaround. When the SAR FIFO is empty, the new
+>> +	 * write value will be directly applied to SAR even the current period
+>> +	 * is not over.
+>> +	 *
+>> +	 *           ─────────────────────┐
+>> +	 * PWM OUTPUT                     │
+>> +	 *                                └─────────────────────────
+>> +	 *
+>> +	 *           ┌──────────────────────────────────────────────┐
+>> +	 * Counter   │       XXXXXXXXXXXXXX                         │
+>> +	 *           └──────────────────────────────────────────────┘
+>> +	 *                   ▲            ▲
+>> +	 *                   │            │
+>> +	 *                 New SAR      Old SAR
+>> +	 *
+>> +	 *           XXXX  Errata happen window
+> 
+> Hmm, ok, so SAR is the register value that implements the duty cycle
+> setting. And if a new SAR is written, it is directly applied to the
+> hardware and this way it can happen (if SAR_new < counter < SAR_old)
+> that no falling edge happens in the current period. Right?
 
--- 
-2.34.1
+Yes
 
+> If so, I think the depicted PWM output is misleading. I'd describe and
+> picture it as follows:
+
+Why not simply duplicate the ERRATA description for iMX8M Nano 
+MX8MN_0N14Y errata sheet ?
+
+"
+ERR051198:
+PWM: PWM output may not function correctly if the FIFO is empty when a 
+new SAR value is programmed
+
+Description:
+When the PWM FIFO is empty, a new value programmed to the PWM Sample 
+register (PWM_PWMSAR) will be directly applied even if the current timer 
+period has not expired.
+
+If the new SAMPLE value programmed in the PWM_PWMSAR register is less 
+than the previous value, and the PWM counter register (PWM_PWMCNR) that 
+contains the current COUNT value is greater than the new programmed 
+SAMPLE value, the current period will not flip the level. This may 
+result in an output pulse with a duty cycle of 100%.
+"
+
+That is very clear to me.
+
+> 	/*
+> 	 * At each clock tick the hardware compares the SAR value with
+> 	 * the current counter. If they are equal the output is changed
+> 	 * to the inactive level.
+
+I would skip this ^ part unless you can surely say the IP works exactly 
+that way because you checked the RTL.
+
+> As a new SAR value is applied
+> 	 * immediately to the currently running period, it can happen
+> 	 * that no falling edge happens in a period and so the output is
+> 	 * active for a whole period. Consider a change from
+>           *     ________
+> 	 *    /        \______/
+>           *    ^      *        ^
+> 	 * to
+>           *     ____
+> 	 *    /    \__________/
+>           *    ^               ^
+> 	 *
+> 	 * where SAR is written at the time marked by *. The counter
+> 	 * didn't reach the old (bigger) value because it was changed
+> 	 * before the counter reached that value and when the new value
+> 	 * becomes active it is already lower than the current counter
+> 	 * and so doesn't trigger either while the counter continues to
+> 	 * grow. So the resulting waveform looks as follows:
+> 	 *
+>           *     ________        ____________________
+> 	 *    /        \______/                    \__________/
+>           *    ^               ^      *        ^               ^
+> 	 *    |<-- old SAR -->|               |<-- new SAR -->|
+> 	 *
+> 	 * that is the output is active for a whole period.
+
+The ascii/infographics is nice and would be good to keep, but regarding 
+the description, frankly, the NXP errata description says the same thing 
+in fewer words :)
+
+> 	 */
+> 
+>> +	 *
+>> +	 * If the new SAR value is less than the old one, and the counter is
+>> +	 * greater than the new SAR value (see above diagram XXXX), the current
+>> +	 * period will not flip the level. This will result in a pulse with a
+>> +	 * duty cycle of 100%.
+>> +	 *
+>> +	 * Check new SAR less than old SAR and current counter is in errata
+>> +	 * windows, write extra old SAR into FIFO and new SAR will effect at
+>> +	 * next period.
+>> +	 *
+>> +	 * Sometime period is quite long, such as over 1 second. If add old SAR
+>> +	 * into FIFO unconditional, new SAR have to wait for next period. It
+>> +	 * may be too long.
+>> +	 *
+>> +	 * Turn off the interrupt to ensure that not IRQ and schedule happen
+>> +	 * during above operations. If any irq and schedule happen, counter
+>> +	 * in PWM will be out of data and take wrong action.
+>> +	 *
+>> +	 * Add a safety margin 1.5us because it needs some time to complete
+>> +	 * IO write.
+>> +	 *
+>> +	 * Use __raw_writel() to minimize the interval between two writes to
+>> +	 * the SAR register to increase the fastest PWM frequency supported.
+>> +	 *
+>> +	 * When the PWM period is longer than 2us(or <500kHz), this workaround
+>> +	 * can solve this problem. No software workaround is available if PWM
+>> +	 * period is shorter than IO write.
+>> +	 */
+>> +	c = clkrate * 1500;
+>> +	do_div(c, NSEC_PER_SEC);
+>> +
+>> +	local_irq_save(flags);
+>> +	val = FIELD_GET(MX3_PWMSR_FIFOAV, readl_relaxed(imx->mmio_base + MX3_PWMSR));
+>> +
+>> +	if (duty_cycles < imx->duty_cycle) {
+>> +		if (state->period < 2000) { /* 2000ns = 500 kHz */
+>> +			/* Best effort attempt to fix up >500 kHz case */
+>> +			udelay(6); /* 2us per FIFO entry, 3 FIFO entries written => 6 us */
+> 
+> I don't understand the motivation to wait here. Wouldn't it be better to
+> write the old value 3 - val times and not sleep?
+
+No, because you would overflow the FIFO, see:
+
+137fd45ffec1 ("pwm: imx: Avoid sample FIFO overflow for i.MX PWM version2")
+
+> Or busy loop until
+> MX3_PWMSR_FIFOAV becomes 0?
+
+Do we really want a busy wait here if we can avoid it ?
+
+We can do udelay(3 * state->period / 1000); so faster PWMs would wait 
+shorter.
+
+The delay is here to basically wait until the FIFO is surely empty and 
+has space for 3 consecutive writes (see the commit above wrt. FIFO 
+overflow).
+
+[...]
 
