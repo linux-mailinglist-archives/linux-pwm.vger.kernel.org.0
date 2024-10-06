@@ -1,203 +1,164 @@
-Return-Path: <linux-pwm+bounces-3504-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3505-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50B79991CBF
-	for <lists+linux-pwm@lfdr.de>; Sun,  6 Oct 2024 08:24:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 670E89920A9
+	for <lists+linux-pwm@lfdr.de>; Sun,  6 Oct 2024 21:22:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D56B7281A38
-	for <lists+linux-pwm@lfdr.de>; Sun,  6 Oct 2024 06:23:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E72121F217B0
+	for <lists+linux-pwm@lfdr.de>; Sun,  6 Oct 2024 19:22:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CFB1167296;
-	Sun,  6 Oct 2024 06:23:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF8DA18A6BF;
+	Sun,  6 Oct 2024 19:22:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n8qBoDWu"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="cvFDF1C/"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E63D4C9D;
-	Sun,  6 Oct 2024 06:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF447189B9C;
+	Sun,  6 Oct 2024 19:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728195834; cv=none; b=nZ4eRCRjNriMRB3GKDST2g798Qo9uQilKZB5aMCmVBAS8A+sc/24wXF7x4CAhGAe5GS26ifu2F99G3F09QOn12NjRFA6q0k6uSBhGZmkhExv3NB4kD/0qhqb8mYqWChfvat0K5ABGAo5MCIG3OkcuyAxrGatep6yz4P/KnfvTmw=
+	t=1728242531; cv=none; b=VHB+IUdEKhMRM/HoKJ3vvPhOWEdgcplezQRYjdd1a06orMaiLtD1UyVt0zO0YdVbv8WdcSsPpsBjvXlBZ1tRkPw9OdSdiKnmT3MmyQcQuy4nmyAxcWrTyXh8YsRGjpEi1N1CQHyzimEp4UzSRs5SkIh/YoaEojCXp1CUILjrrIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728195834; c=relaxed/simple;
-	bh=H/emNg2aVZv4n2YTV6WagRn5Age0z2hVFcUSuk6iDKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tvi4FSTSLK2+4wcpQu+9BWLdBGhX/IR/AMg9XzWdYQsETPkGZ0xktOCKtHA0Yyz6CqgntHVGIgES9fb8FY0F35eUYD0blG9jIBpOK1G5wMJNQapyyWKDFiqCfnN5LU34aitqGdMXUSEjXlED2q5Uge23EYcSbSCGUrAk14XRQGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n8qBoDWu; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728195833; x=1759731833;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=H/emNg2aVZv4n2YTV6WagRn5Age0z2hVFcUSuk6iDKk=;
-  b=n8qBoDWubJK+tzTZjyr9TnvUzF3b14EKjJCnhMURusXYgDnby8ETYN1t
-   UjmxnNPqhjhQ41WMG8teopxFo6kCuCZSZ0msfO3X7H1ADBkMK+Yqcqm5s
-   Bdog/7FRcPUwSYbzspkGZi6XzhtJVGWHyyh91nRyS+s8og9N6f0QiYZXV
-   1mkOoH8gquy0ZkhzWuzhYiLy7SdNJdps4iU/eX5mnWdMtdKW2rBnjqFIC
-   oYTAlPw3lVfj8eqJMOe8aWC9T3S1wpuKbHUIVG91/xo645ALF0xD4KzK8
-   KkRAcVumsDUQs9Non+UJQgWPneZJRu7DtJnoJjzXo/ePKQB6NaIxhhx8k
-   Q==;
-X-CSE-ConnectionGUID: bl4LoanqQealht3LruVIqA==
-X-CSE-MsgGUID: aqd3TEuzTgSyiNzfMKBxBA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11216"; a="27254801"
-X-IronPort-AV: E=Sophos;i="6.11,181,1725346800"; 
-   d="scan'208";a="27254801"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2024 23:23:52 -0700
-X-CSE-ConnectionGUID: gkqTNOEbSYqLP/6WzoJMHA==
-X-CSE-MsgGUID: 2L3DpjURSSmUkBiqjKKkbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,181,1725346800"; 
-   d="scan'208";a="79703327"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 05 Oct 2024 23:23:48 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sxKgD-0003em-1y;
-	Sun, 06 Oct 2024 06:23:45 +0000
-Date: Sun, 6 Oct 2024 14:23:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Guillaume Stols <gstols@baylibre.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org, aardelean@baylibre.com,
-	dlechner@baylibre.com, Guillaume Stols <gstols@baylibre.com>
-Subject: Re: [PATCH v3 07/10] iio: adc: ad7606: Add compatibility to fw_nodes
-Message-ID: <202410061420.L3sUSK8b-lkp@intel.com>
-References: <20241004-ad7606_add_iio_backend_support-v3-7-38757012ce82@baylibre.com>
+	s=arc-20240116; t=1728242531; c=relaxed/simple;
+	bh=5Ej/roX0hBsFAsuY5HOV6xxMHJnnvuBYZnHZd7USqw8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=pRDnBKDYKcedOtcZciv09nMb5Pv1gPAw80wS5oz/IKyRVjToEFPmkevKW3sbdXPE3hrB5T0GwFgclUAT0qk3QxeSt7ETlcaXaN2Eg6ulO4xCZ8ln+okwZO2WeP5VOFjVRfAEjbdp/Ebd7fVybIKnuelBig6FcnnaDWne0Q78WjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=cvFDF1C/; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 7D66188896;
+	Sun,  6 Oct 2024 21:13:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1728241983;
+	bh=k1vovXXkKC3Gh/6LzZZyo6822HUQ4nfaTQ3gBfRXD2Y=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=cvFDF1C/K/pRBgSKo3l20U3tN3baBrziLPXPbhNgvzGJQn91kg6xdJ8w3mUVg+EAd
+	 BohABlcLOjzu9ZByMIc++xw4of1YNo7gC9k9adAEldbb4MeVqSJsvqoBgdIIbpXwAk
+	 z3C07mq+LQPJ4SFhE+ack7nU/df25t9UXKoQkq3JyzKrPxJq14fHhuFboTpyYrXbvg
+	 r4vDgB9zl3C9dfWXtL9mSwGyNv28359ao1tCtEb2dEVtFTBIMT2PMl7aH0ayKlXofn
+	 mXGuECDKQosJgn9nu8MYwrefXg8T+cTxr+FGcOdnt3z3jB8H3GFzd5T82FawKXj7h3
+	 GFsJPZiSrDhSA==
+Message-ID: <1e6600a8-0b1a-472b-9f84-9b3c646a931a@denx.de>
+Date: Sun, 6 Oct 2024 21:12:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241004-ad7606_add_iio_backend_support-v3-7-38757012ce82@baylibre.com>
+User-Agent: Mozilla Thunderbird
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v7 1/1] pwm: imx27: workaround of the pwm output bug when
+ decrease the duty cycle
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Frank Li <Frank.Li@nxp.com>, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, festevam@gmail.com, francesco@dolcini.it,
+ imx@lists.linux.dev, jun.li@nxp.com, kernel@pengutronix.de,
+ krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ p.zabel@pengutronix.de, pratikmanvar09@gmail.com, robh@kernel.org,
+ s.hauer@pengutronix.de, shawnguo@kernel.org, xiaoning.wang@nxp.com
+References: <20241004193531.673488-1-Frank.Li@nxp.com>
+ <5cvzarqkldstuziokdbxxne75i35odexkcykzikyq2gm6ytdyd@5wkm7mhotgej>
+ <4166d68c-5eca-406a-936f-412dd2ae72fc@denx.de>
+ <gnlm4u7dc2aktycxzn4nqw3anzeit6tbtgcq7kv3pzbrorwg6o@h35yxit5y2a3>
+Content-Language: en-US
+In-Reply-To: <gnlm4u7dc2aktycxzn4nqw3anzeit6tbtgcq7kv3pzbrorwg6o@h35yxit5y2a3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-Hi Guillaume,
+On 10/5/24 5:57 PM, Uwe Kleine-König wrote:
+> On Sat, Oct 05, 2024 at 02:41:29AM +0200, Marek Vasut wrote:
+>> On 10/4/24 10:58 PM, Uwe Kleine-König wrote:
+>>
+>> [...]
+>>
+>> Why not simply duplicate the ERRATA description for iMX8M Nano MX8MN_0N14Y
+>> errata sheet ?
+>>
+>> "
+>> [...]
+>> "
+>>
+>> That is very clear to me.
+> 
+> Fine for me. Frank, do you want to try creating the right mix of the NXP
+> text, your and my description?
+> 
+>>> 	/*
+>>> 	 * At each clock tick the hardware compares the SAR value with
+>>> 	 * the current counter. If they are equal the output is changed
+>>> 	 * to the inactive level.
+>>
+>> I would skip this ^ part unless you can surely say the IP works exactly that
+>> way because you checked the RTL.
+> 
+> That it works that way is clear from the errata text IMHO.
 
-kernel test robot noticed the following build warnings:
+The errata description does not say anything about comparing SAR value 
+on each clock tick. Better stick to exactly what the errata does say.
 
-[auto build test WARNING on 35307f34d6fef8f9d41a1e8f4f532e4b0a7ee422]
+[...]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Guillaume-Stols/iio-adc-ad7606-Fix-typo-in-the-driver-name/20241005-055256
-base:   35307f34d6fef8f9d41a1e8f4f532e4b0a7ee422
-patch link:    https://lore.kernel.org/r/20241004-ad7606_add_iio_backend_support-v3-7-38757012ce82%40baylibre.com
-patch subject: [PATCH v3 07/10] iio: adc: ad7606: Add compatibility to fw_nodes
-config: i386-randconfig-062-20241006 (https://download.01.org/0day-ci/archive/20241006/202410061420.L3sUSK8b-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241006/202410061420.L3sUSK8b-lkp@intel.com/reproduce)
+>>>> +	c = clkrate * 1500;
+>>>> +	do_div(c, NSEC_PER_SEC);
+>>>> +
+>>>> +	local_irq_save(flags);
+>>>> +	val = FIELD_GET(MX3_PWMSR_FIFOAV, readl_relaxed(imx->mmio_base + MX3_PWMSR));
+>>>> +
+>>>> +	if (duty_cycles < imx->duty_cycle) {
+>>>> +		if (state->period < 2000) { /* 2000ns = 500 kHz */
+>>>> +			/* Best effort attempt to fix up >500 kHz case */
+>>>> +			udelay(6); /* 2us per FIFO entry, 3 FIFO entries written => 6 us */
+>>>
+>>> I don't understand the motivation to wait here. Wouldn't it be better to
+>>> write the old value 3 - val times and not sleep?
+>>
+>> No, because you would overflow the FIFO, see:
+>>
+>> 137fd45ffec1 ("pwm: imx: Avoid sample FIFO overflow for i.MX PWM version2")
+> 
+> val holds the number of uses FIFO entries, so writing (3 - val) new
+> items should be fine?!
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410061420.L3sUSK8b-lkp@intel.com/
+Not necessarily, consider the case where:
+- The PWM is very fast
+- There are currently 3 entries in the FIFO according to driver state
+- The driver determines 3-val is 1 and performs 1 single write to FIFO
+=> If the PWM consumed the FIFO (FIFO is empty) before the 1 single
+    write arrives, then the aforementioned errata still occurs
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/iio/adc/ad7606_spi.c:324:29: sparse: sparse: symbol 'ad7606_spi_bops' was not declared. Should it be static?
->> drivers/iio/adc/ad7606_spi.c:328:29: sparse: sparse: symbol 'ad7616_spi_bops' was not declared. Should it be static?
->> drivers/iio/adc/ad7606_spi.c:337:29: sparse: sparse: symbol 'ad7606b_spi_bops' was not declared. Should it be static?
->> drivers/iio/adc/ad7606_spi.c:346:29: sparse: sparse: symbol 'ad7606c_18_spi_bops' was not declared. Should it be static?
->> drivers/iio/adc/ad7606_spi.c:370:30: sparse: sparse: symbol 'ad7606_4_bus_info' was not declared. Should it be static?
->> drivers/iio/adc/ad7606_spi.c:375:30: sparse: sparse: symbol 'ad7606b_bus_info' was not declared. Should it be static?
->> drivers/iio/adc/ad7606_spi.c:380:30: sparse: sparse: symbol 'ad7606c_16_bus_info' was not declared. Should it be static?
->> drivers/iio/adc/ad7606_spi.c:385:30: sparse: sparse: symbol 'ad7606c_18_bus_info' was not declared. Should it be static?
->> drivers/iio/adc/ad7606_spi.c:390:30: sparse: sparse: symbol 'ad7616_bus_info' was not declared. Should it be static?
+I believe the better option is to wait until the FIFO is surely depleted 
+and then write three entries in short sequence -- OLD-OLD-NEW -- this 
+way the FIFO would get updated with old value first and then switched to 
+new value, hopefully mitigating the issue as best as possible even for 
+fast PWM settings.
 
-vim +/ad7606_spi_bops +324 drivers/iio/adc/ad7606_spi.c
+btw. the two writes here should be writing the old value twice, now 
+there are three new value writes in this patch version.
 
-   323	
- > 324	const struct ad7606_bus_ops ad7606_spi_bops = {
-   325		.read_block = ad7606_spi_read_block,
-   326	};
-   327	
- > 328	const struct ad7606_bus_ops ad7616_spi_bops = {
-   329		.read_block = ad7606_spi_read_block,
-   330		.reg_read = ad7606_spi_reg_read,
-   331		.reg_write = ad7606_spi_reg_write,
-   332		.write_mask = ad7606_spi_write_mask,
-   333		.rd_wr_cmd = ad7616_spi_rd_wr_cmd,
-   334		.sw_mode_config = ad7616_sw_mode_config,
-   335	};
-   336	
- > 337	const struct ad7606_bus_ops ad7606b_spi_bops = {
-   338		.read_block = ad7606_spi_read_block,
-   339		.reg_read = ad7606_spi_reg_read,
-   340		.reg_write = ad7606_spi_reg_write,
-   341		.write_mask = ad7606_spi_write_mask,
-   342		.rd_wr_cmd = ad7606B_spi_rd_wr_cmd,
-   343		.sw_mode_config = ad7606B_sw_mode_config,
-   344	};
-   345	
- > 346	const struct ad7606_bus_ops ad7606c_18_spi_bops = {
-   347		.read_block = ad7606_spi_read_block18to32,
-   348		.reg_read = ad7606_spi_reg_read,
-   349		.reg_write = ad7606_spi_reg_write,
-   350		.write_mask = ad7606_spi_write_mask,
-   351		.rd_wr_cmd = ad7606B_spi_rd_wr_cmd,
-   352		.sw_mode_config = ad7606c_18_sw_mode_config,
-   353	};
-   354	
-   355	static const struct ad7606_bus_info ad7605_4_bus_info = {
-   356		.chip_info = &ad7605_4_info,
-   357		.bops = &ad7606_spi_bops,
-   358	};
-   359	
-   360	static const struct ad7606_bus_info ad7606_8_bus_info = {
-   361		.chip_info = &ad7606_8_info,
-   362		.bops = &ad7606_spi_bops,
-   363	};
-   364	
-   365	static const struct ad7606_bus_info ad7606_6_bus_info = {
-   366		.chip_info = &ad7606_6_info,
-   367		.bops = &ad7606_spi_bops,
-   368	};
-   369	
- > 370	const struct ad7606_bus_info ad7606_4_bus_info = {
-   371		.chip_info = &ad7606_4_info,
-   372		.bops = &ad7606_spi_bops,
-   373	};
-   374	
- > 375	const struct ad7606_bus_info ad7606b_bus_info = {
-   376		.chip_info = &ad7606b_info,
-   377		.bops = &ad7606b_spi_bops,
-   378	};
-   379	
- > 380	const struct ad7606_bus_info ad7606c_16_bus_info = {
-   381		.chip_info = &ad7606c_16_info,
-   382		.bops = &ad7606b_spi_bops,
-   383	};
-   384	
- > 385	const struct ad7606_bus_info ad7606c_18_bus_info = {
-   386		.chip_info = &ad7606c_18_info,
-   387		.bops = &ad7606c_18_spi_bops,
-   388	};
-   389	
- > 390	const struct ad7606_bus_info ad7616_bus_info = {
-   391		.chip_info = &ad7616_info,
-   392		.bops = &ad7616_spi_bops,
-   393	};
-   394	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>>> Or busy loop until
+>>> MX3_PWMSR_FIFOAV becomes 0?
+>>
+>> Do we really want a busy wait here if we can avoid it ?
+> 
+> udelay(6) is a busy loop, so we're already there.
+> 
+>> We can do udelay(3 * state->period / 1000); so faster PWMs would wait
+>> shorter.
+> 
+> state->period is the new value (and you want the old, right?), but
+> otherwise I agree
+Right
 
