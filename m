@@ -1,127 +1,203 @@
-Return-Path: <linux-pwm+bounces-3512-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3513-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A64F8992929
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Oct 2024 12:26:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7BA29935ED
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Oct 2024 20:19:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3BD9AB22E6E
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Oct 2024 10:26:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99BD52867CE
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Oct 2024 18:19:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D36621B85E7;
-	Mon,  7 Oct 2024 10:25:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 465491DE2AD;
+	Mon,  7 Oct 2024 18:19:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wYDUdQlO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BDiTCBmT"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8B71BB686
-	for <linux-pwm@vger.kernel.org>; Mon,  7 Oct 2024 10:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684401DDC18;
+	Mon,  7 Oct 2024 18:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728296756; cv=none; b=H0ayj9BJwkdywRizEcRSvpCxVPL5lUYXoWc3rd05KEIJ2C5W6wbqALenFkWttXYsjrTH4pG8ZFAkoHE5l7WYToJJRUtcAgtRf6rVz3kxPl9t33wdCDDhBewKZMh75aiPYsEeGlXlXzKF/X6k+LQKH+Y2ZIA1RCTlgXuiLq4GMSc=
+	t=1728325157; cv=none; b=YFdeRKjXuP6KUbI6uECLexfo8GkTIGXjCgN6/gI7hZrlBh81xCfB0FHkWdQf/vpL1FDio9PcLMi9WxfYiCAuiUsQEIyYot7utkkEY+EOj89V4saL80zyOvD6jvn2C7docMRnaKgFFjxDiAOgyGpmtiWpqpaSSBd32tVvLViHTh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728296756; c=relaxed/simple;
-	bh=AZ4aYTqXTb9q4p3DEsDM0IbTpvbwQAKE5iXBImqWgpk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XjEM/ZBBvH3BOJfVLei32jQrb3B96AFQUBGfULea6wtszA9x/acOIVhV22CGu7S82NSjvJtwkFPNc2PIXJDW+FeLDrl4Ktbap38M1OP0FmvhaEcqquXVQA1YrWxU7GL4ruoFv5FWL7dI55b3AbTJqc6s2FlG3nxYQSofzLVP59g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wYDUdQlO; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-37cc810ce73so2224539f8f.1
-        for <linux-pwm@vger.kernel.org>; Mon, 07 Oct 2024 03:25:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728296753; x=1728901553; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=m8uYf00EYYgczHi2fziShElLaaQfAMmUckBMhY+cS7o=;
-        b=wYDUdQlOzBf+oyWGS9ksJRL+DcRhz8M4uG8QWQpBwJsx8PDzEWiY/3BF+voeFmOCod
-         xw3UxMPM5Jr8JW4J9GiNE0N8VYdRYivmKK+OYV+iNz1Tjed27TMNBjYsP/Z9Grk4PVJZ
-         aWAueuuZD/pMVvedUboBOg2+63s7w24YbowcrcWK6UO0zX77pg+0Z+S+vidjw824Xndv
-         E27+Af0DX6J0pNqOv3759NZEHjLOsCtPrdXrQ1HTItMqUzfG4/N1cBrhQ2wOZVuo/jX5
-         qndn432/oDnJO6BgKK5ShwHFFqQ/QNGYGM38EYzJ4AAOlpU2ZRbfttoMykircc/aaHSu
-         ubEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728296753; x=1728901553;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m8uYf00EYYgczHi2fziShElLaaQfAMmUckBMhY+cS7o=;
-        b=ZRE+NZ2r2iKIdlVj6BKxgVtWXgRc9DsocwSh6htLIi0EUFcJ4LT8zY5mWpwO3VhK5T
-         P4b7G3l0nkywhACttmzkiS4bmuPuU+uYnP5csuiNt+kXko6VRpmLeVawaUXPxqqZG2os
-         Q7lzmWGSLKriXsE9MNDsv52g7y8suW3GUbg2Cxr38OJolyfv9hjzK5hcgEmNOHZ4eqvs
-         brzLUnSezwhDzkT32RPTOrj/DPJfQwbVmT5hSU5RsXvxivU1m4PVeeaqDx92sWq7sDLS
-         PFQGzmI5+CpZXlIjNcGB15uR2p6ekg4DgdVA4qj1Lb6FK2Aw53d2bJYETvL9UcZbh38h
-         LBrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXntCPRAxiiSPOAz0nGM0Pd+4AAEWd0wTmzLnA6ORvUNLGhARbmKn/tgf+y8OzoVbc7FU7m2sU2Txs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/kDntDTQ4PLhykvpG0kwVRoRGPgQNzSkiUKAngyuaYsbcEWTR
-	4D5YJAZHjFR+pxVUuMpEodIXN9IZtplowPp+X7tf74gBnQVWF4XXaw5tUypG1O8=
-X-Google-Smtp-Source: AGHT+IGoWnkzT8525AyTFXUAMe09p4H7f1gY6gqLj2BHWQIwWIeqaenHWlKIXmGcXpVtGMX/wdXI9Q==
-X-Received: by 2002:a05:6000:1816:b0:37c:cd7e:6642 with SMTP id ffacd0b85a97d-37d0e736e43mr5873702f8f.13.1728296752831;
-        Mon, 07 Oct 2024 03:25:52 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:6100:637:cbe9:f3bc])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d1691a495sm5386900f8f.26.2024.10.07.03.25.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Oct 2024 03:25:52 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: vf610: use generic device_get_match_data()
-Date: Mon,  7 Oct 2024 12:25:49 +0200
-Message-ID: <20241007102549.34926-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1728325157; c=relaxed/simple;
+	bh=+fqlVs8atMU9JNdpn1K4HbRS8JdgD3pcPFhRP5DgDK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UYb7Y+DHxQaNuCl+IOH3O0pzy6AiaKLFmCjtLKSSzfcX8Lt1Ey5xYkPlgoprsf6jyT4TPH6Y1id0HdxbhYF0ztf9sirDqJyBHOg3N93M+i7MM0QTmX1tgUKGtwM7dqsii070Y9hPVyYdPlbMVStZjMFOwJ61ohsthswsTVmQeEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BDiTCBmT; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728325156; x=1759861156;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+fqlVs8atMU9JNdpn1K4HbRS8JdgD3pcPFhRP5DgDK8=;
+  b=BDiTCBmT60NDF8pHBIURy9ZMvqHX+TmByK7Oj8l8v3a5Eridv3pquect
+   V5BMGH7e1V8LZvIWFOqL3R8yTZLLIiaWiHhKFrlQ+guLyGJw7LXhaJLCB
+   ZLfl21C8ZyWYdnKpY+epIIUUaT5JoHOFjai/z/ke4wtI6lENYNO6oOoQY
+   IYI4GAk76ImY+05eK4G7xrB9zuFrsVRqq1OTryo6eLo4VX53f9iPWkYbA
+   bAfZlG7gN0o/Ggb3IAWkdUu85ZrTChFWqk3XQOLtSOhC29YqDecGUueJ9
+   VhHebtjYCsm8VbxSxVYBDm+KfGAet2kav7jT5n0AKvYoFHfR+LFf+cTLo
+   w==;
+X-CSE-ConnectionGUID: r5KkQIHgQwmc3tqXDp0aSA==
+X-CSE-MsgGUID: YQT/+OYrRV2ItfkPQdBakw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11218"; a="26949054"
+X-IronPort-AV: E=Sophos;i="6.11,184,1725346800"; 
+   d="scan'208";a="26949054"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2024 11:19:15 -0700
+X-CSE-ConnectionGUID: OERP3/j8SFuuGDqa6h8Yaw==
+X-CSE-MsgGUID: x/MZW99BQQGt4JlOnuv+3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,184,1725346800"; 
+   d="scan'208";a="75396018"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 07 Oct 2024 11:19:09 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sxsK2-0005Ns-1T;
+	Mon, 07 Oct 2024 18:19:06 +0000
+Date: Tue, 8 Oct 2024 02:18:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	Mike Looijmans <mike.looijmans@topic.nl>,
+	Marius Cristea <marius.cristea@microchip.com>,
+	Dumitru Ceclan <mitrutzceclan@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Alisa-Dariana Roman <alisadariana@gmail.com>,
+	Ivan Mikhaylov <fr0st61te@gmail.com>,
+	Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+	Dragos Bogdan <dragos.bogdan@analog.com>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v2 6/7] iio: adc: ad485x: add ad485x driver
+Message-ID: <202410080232.6SxmYFFA-lkp@intel.com>
+References: <20241004140922.233939-6-antoniu.miclaus@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241004140922.233939-6-antoniu.miclaus@analog.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Antoniu,
 
-There's no need to use the OF-specific variant to get the match data.
-Switch to using device_get_match_data() and with that remove the of.h
-include. Also remove of_irq.h as none of its interfaces is used here and
-order the includes in alphabetical order.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-vf610.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+[auto build test ERROR on v6.11]
+[cannot apply to jic23-iio/togreg robh/for-next v6.12-rc1 linus/master next-20241004]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-index 27eff741fe9a..c4f34a347cb6 100644
---- a/drivers/gpio/gpio-vf610.c
-+++ b/drivers/gpio/gpio-vf610.c
-@@ -15,10 +15,9 @@
- #include <linux/io.h>
- #include <linux/ioport.h>
- #include <linux/irq.h>
--#include <linux/platform_device.h>
--#include <linux/of.h>
--#include <linux/of_irq.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
- 
- #define VF610_GPIO_PER_PORT		32
- 
-@@ -297,7 +296,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
- 	if (!port)
- 		return -ENOMEM;
- 
--	port->sdata = of_device_get_match_data(dev);
-+	port->sdata = device_get_match_data(dev);
- 
- 	dual_base = port->sdata->have_dual_base;
- 
+url:    https://github.com/intel-lab-lkp/linux/commits/Antoniu-Miclaus/iio-backend-add-support-for-data-size-set/20241004-221608
+base:   v6.11
+patch link:    https://lore.kernel.org/r/20241004140922.233939-6-antoniu.miclaus%40analog.com
+patch subject: [PATCH v2 6/7] iio: adc: ad485x: add ad485x driver
+config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20241008/202410080232.6SxmYFFA-lkp@intel.com/config)
+compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project fef3566a25ff0e34fb87339ba5e13eca17cec00f)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241008/202410080232.6SxmYFFA-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410080232.6SxmYFFA-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/iio/adc/ad485x.c:18:
+   In file included from include/linux/regmap.h:20:
+   In file included from include/linux/iopoll.h:14:
+   In file included from include/linux/io.h:14:
+   In file included from arch/hexagon/include/asm/io.h:328:
+   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     548 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+         |                                                   ^
+   In file included from drivers/iio/adc/ad485x.c:18:
+   In file included from include/linux/regmap.h:20:
+   In file included from include/linux/iopoll.h:14:
+   In file included from include/linux/io.h:14:
+   In file included from arch/hexagon/include/asm/io.h:328:
+   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+         |                                                   ^
+   In file included from drivers/iio/adc/ad485x.c:18:
+   In file included from include/linux/regmap.h:20:
+   In file included from include/linux/iopoll.h:14:
+   In file included from include/linux/io.h:14:
+   In file included from arch/hexagon/include/asm/io.h:328:
+   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     585 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   In file included from drivers/iio/adc/ad485x.c:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:21:
+   In file included from include/linux/mm.h:2232:
+   include/linux/vmstat.h:517:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     517 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/iio/adc/ad485x.c:408:9: error: call to undeclared function 'FIELD_GET'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     408 |         return FIELD_GET(AD485X_PACKET_FORMAT_MASK, format);
+         |                ^
+   7 warnings and 1 error generated.
+
+
+vim +/FIELD_GET +408 drivers/iio/adc/ad485x.c
+
+   396	
+   397	static int ad485x_get_packet_format(struct iio_dev *indio_dev,
+   398					    const struct iio_chan_spec *chan)
+   399	{
+   400		struct ad485x_state *st = iio_priv(indio_dev);
+   401		unsigned int format;
+   402		int ret;
+   403	
+   404		ret = regmap_read(st->regmap, AD485X_REG_PACKET, &format);
+   405		if (ret)
+   406			return ret;
+   407	
+ > 408		return FIELD_GET(AD485X_PACKET_FORMAT_MASK, format);
+   409	}
+   410	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
