@@ -1,194 +1,174 @@
-Return-Path: <linux-pwm+bounces-3521-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3526-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 670E1993A4D
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 00:35:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61E9A993D49
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 05:05:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8728C1C22F17
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Oct 2024 22:35:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26F67282B37
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 03:05:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7857D192586;
-	Mon,  7 Oct 2024 22:35:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C9B633993;
+	Tue,  8 Oct 2024 03:04:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e3VL5Ud8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZWeEK+N"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A0B18DF6D
-	for <linux-pwm@vger.kernel.org>; Mon,  7 Oct 2024 22:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C6428E37;
+	Tue,  8 Oct 2024 03:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728340531; cv=none; b=g0icqhNpIVNYYjkB8phFMFSowSElonI8XNOoQsW60mhqPFr8uYy11S3/+afPT8B438p5qO3FU4GOzk7NDPjCl7jHpRTtLzt1mzbneqOEqvy7kpzfcooYkJzjOCrCJGSYmwU7Kla5ygLmgbwOabadrrfngLAfgJHS5kvpugo0fuo=
+	t=1728356693; cv=none; b=BlGMIprpOnAKro+G+HfArMvgLdPY3EzvqfaQJI4qmzAih7ScuG4Uuugih5JruJTFS4ZrSczR6e1PkJPQ2jdXohSREtkGArIVfgoQWFXZ891gvygBXJZUMSbtVI9kwHs3zpGAjNVZHuxmArLZUdcUZt5k0ThkK90W1DrBXyX0Cmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728340531; c=relaxed/simple;
-	bh=gesjil9Y0RZgbcjmX5qHd/S97rHztDCcedkOm+1cl0k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bu5AdPzC+HFly0hwh3yMhT3CE7IbdOl8/uD/k23dKZcOJl4eZyRStdFppLGy8flHl5xYxJty478Gc0/QL+UQq9ffo5Z1Ybvo/lxyTDurszvSnnGc2znfnnxTNy0ik0B9+v+BD6eF2PjZpTwFGOS1FBx9AOBH50wW9Ng2eJVR47s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e3VL5Ud8; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e25d164854dso4139032276.2
-        for <linux-pwm@vger.kernel.org>; Mon, 07 Oct 2024 15:35:27 -0700 (PDT)
+	s=arc-20240116; t=1728356693; c=relaxed/simple;
+	bh=+aBbq3flXoKbzSexegYMj70l1IJBXlrUtdKER/ZxnbM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DnkoO60ZRvbSgfEESd3Oynjzb0EAjO+J4N8XCKqOozAi9RRhEj/XmTbk2/+RY/F/OK16jhDQMacdnkBoQNAHemFDOZkqGPkYrmpLlX519EimPGMN31bAca9yiiVqNiF4Oa6isMlXkS/q9zySbr1maZTSCKKEQI+5gc8uowM7xp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CZWeEK+N; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6cb2aac40faso51897376d6.1;
+        Mon, 07 Oct 2024 20:04:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728340526; x=1728945326; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gesjil9Y0RZgbcjmX5qHd/S97rHztDCcedkOm+1cl0k=;
-        b=e3VL5Ud84GLI+E2x3bA8ztpqvuFMv57yd9aYEVQJXCzdGLPTTmXpQqv3Opq72bJmux
-         KBHMo3MVO1HOzdmTO8H+pcTCfVPqaiTDnPTpbQzl0qQR7IL44jHkwS4bzBufrjeR8qhe
-         DDLiaWivcex7UxcVlthWRdgNLBWzi+M8qTeDx57baSkDWFH1agIYPgvRPadbYLCLtjZu
-         06qTHbdte5aRDCOnGRwQe0feCJbqguEWevqetTaa5WoZI91EWlvvh0bLcBUS4nMqHsf9
-         D1KWrNcsh7YIcTiYbXUJhkPijHa5aKTMIfa20aY8luGYazLflzR5ecy/UydbOSAfiQM/
-         3TDg==
+        d=gmail.com; s=20230601; t=1728356689; x=1728961489; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QGhZ9VuDoP4GsoTXaMvOaT1WODV/aEdRH+9/FcI3aps=;
+        b=CZWeEK+N5A5ct0m5whzuYJDcFZVV1cIfgiAgMpWvPiv7/h6U1Qi1Q7rJvhxxn8u5Wv
+         UiBmv1cWakZmPnA+rKsZ1zrrXF92bGvykTzwdioI+2NLB7EpWDT4rYFH+3Vhp25WlzJS
+         P9RnEHno5P0mWZ5zODfUXS7s8yIFnfw1mz+hXegQy2vb2A8hCrwvm7ZKIy5KCOeauj98
+         ZBtLrfnmlNMfoLxL5O5lprILE0UfpAjuUE2jpRAc6cVYNBbGWj+9H5hzCsCFh2qzePrv
+         dbvSdZVfLR9QEvYipvvYwo7y/iPGGSKBUMFmy9tTwuQVd874yDEaC2uEFK1vPbbmd8cN
+         3X1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728340526; x=1728945326;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1728356689; x=1728961489;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gesjil9Y0RZgbcjmX5qHd/S97rHztDCcedkOm+1cl0k=;
-        b=Zl1BwLqH3vRWtDIZlrMYRm6JKdMXDKTcXwuvTPgmoTVeHInKmbsHNdCY7tdOSUrWvg
-         tNr4RlUt2I6TB9TeoLuqhuA0d8jprbIsZ+MFgkNNN/OLlrLG6eAMf94mk6pkBC6sQcQV
-         8n/afAYyuSkv3st+ka7SQZ8v8qTOGejjK8KAFiuEtpTGMAlrpVkboeiem6vXcb4X36No
-         GqpQEO0PWM53lXCbdaP1HsvdR8wlWsmswASaz02/lErbNxtzo1436DFjOms4BegVlzR9
-         FKK+9gPaKNLR4E6Xi9BIugz6gwFb07UFRNC+09A8SAyVhL32k5U5EGLo6kSESWaMIaHg
-         Yugg==
-X-Forwarded-Encrypted: i=1; AJvYcCWjbIWa00Os3y45etgJObJTKYuFhHkfDK1Y1Cx/WPXyTCsy2YQ+UcIXRCoFzYwePISqXhfOj48MUfs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzK7UNbIDAU44rnvjwP5tJeReeTFp3X/DUiC+pySB+4tvqtRVU9
-	cZ9AGsOkQoWXxYfpPp2JN7MiZhsRydb80O5Gg8apc4VTPU2wlf20YKCz5YEe/28DJy9rbJWEtmp
-	JBij8vWreI4xRiqc5E5+qPHJHk0QGmu416SftWg==
-X-Google-Smtp-Source: AGHT+IGYLLRVc3CeXKReIUVnntYlZ+ULRb29gPUl3UTx4hoqAUGdx6q2aFDzdnacRWqcM/cOYseo4GoEdp7e3a8qLZE=
-X-Received: by 2002:a05:6902:2305:b0:e28:6ec7:4353 with SMTP id
- 3f1490d57ef6-e2893964043mr10612649276.54.1728340526338; Mon, 07 Oct 2024
- 15:35:26 -0700 (PDT)
+        bh=QGhZ9VuDoP4GsoTXaMvOaT1WODV/aEdRH+9/FcI3aps=;
+        b=E7XX9C4ZrqhJU7JkH6/Ro0mszAloD8TWeX3fa8zGinQWqbGa/U9/6Gb+AiMq9i+hiw
+         peghdX+xVn5glxL+u8JGpsEOJJkn7A73HevoPbSi5Y4+IDHCrcsBi1czzCDGBoFArW1U
+         E90IU+f7+9dm+SsbJG8VbB8CABH/RrCQjERvVpmX2GL57EZHz3Wfm3e475N7Vw+3zet6
+         Nlo8ttRe9nS0lFT1qf573ReC4691xOlvB4WQffe88EysqQ0Ky98L9N6RyP0FzfhuHbGC
+         mvoAL1IdKOCFfTf4qIq2DOSMgf4BPL9vqUFesHgilugIIPGPLzWtheysYkTyuQobOfb3
+         M79w==
+X-Forwarded-Encrypted: i=1; AJvYcCVGSXJpLrw74PATACS2UsP4YYq6Xt4tmgnCjAgQiUtjb96hNkzFXmNj+GFB5wnQYP4AOZs5sE2w3T1a@vger.kernel.org, AJvYcCVcFIr2d2KFc4POE1OAw4WDq8LY/u6CyVfhDsVNw36xSxqaZIL4LUfOLgh3YkzDFpgWJfap/U71wYkB@vger.kernel.org, AJvYcCXWMbvzaodvRW3EXmrS9VNT+Uhnse/f8klVJBHQCgnXK4eeL5xRtQgYISLyRBpn5yIuO5/zbmV9RqdpL46V@vger.kernel.org
+X-Gm-Message-State: AOJu0Yye8m1RbljMl2UySI816LGacZgZkbjvxxWUlc0FMi+kT8qpHgLd
+	ofiVXN3zPNOXPdcZBAce8RoRWnpn4c0a5g7SLWNd+bHzEQ2+vA43
+X-Google-Smtp-Source: AGHT+IEogcPxh7rtiPjTL7FYbzz/R9JCFjhQzfI0u9Q655Yju+TjjSDcnvCTZAxwaHKGj7/ldWfmCQ==
+X-Received: by 2002:a05:6214:4291:b0:6cb:4835:b1bc with SMTP id 6a1803df08f44-6cbba921706mr41803976d6.4.1728356689370;
+        Mon, 07 Oct 2024 20:04:49 -0700 (PDT)
+Received: from localhost.localdomain (ool-1826d901.dyn.optonline.net. [24.38.217.1])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cba46f1912sm31107156d6.61.2024.10.07.20.04.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Oct 2024 20:04:48 -0700 (PDT)
+From: Alex Lanzano <lanzano.alex@gmail.com>
+To: u.kleine-koenig@baylibre.com,
+	Alex Lanzano <lanzano.alex@gmail.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Mehdi Djait <mehdi.djait@bootlin.com>
+Cc: linux-kernel-mentees@lists.linuxfoundation.org,
+	skhan@linuxfoundation.org,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Subject: [PATCH v10 0/2] Add driver for Sharp Memory LCD
+Date: Mon,  7 Oct 2024 23:03:09 -0400
+Message-ID: <20241008030341.329241-1-lanzano.alex@gmail.com>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241004094101.113349-1-sakari.ailus@linux.intel.com>
- <CAPDyKFp0N6UJhnHS164Tdf=xkWB0jzq65L9TdvYazeBQ-6WjeQ@mail.gmail.com>
- <20241007184924.GH14766@pendragon.ideasonboard.com> <CAPDyKFpQVnF7eQv3dup8k-3EijnMjuveCG9sZ=Rpey1Y6MBJEg@mail.gmail.com>
- <20241007222502.GG30699@pendragon.ideasonboard.com>
-In-Reply-To: <20241007222502.GG30699@pendragon.ideasonboard.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 8 Oct 2024 00:34:49 +0200
-Message-ID: <CAPDyKFrGNwna6Y2pqSRaBbRYHKRaD2ayqQHLtoqLPOu9Et7qTg@mail.gmail.com>
-Subject: Re: [PATCH 00/51] treewide: Switch to __pm_runtime_put_autosuspend()
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
-	linux-i3c@lists.infradead.org, linux-iio@vger.kernel.org, 
-	linux-input@vger.kernel.org, patches@opensource.cirrus.com, 
-	iommu@lists.linux.dev, imx@lists.linux.dev, 
-	linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-staging@lists.linux.dev, linux-usb@vger.kernel.org, 
-	linux-serial@vger.kernel.org, greybus-dev@lists.linaro.org, 
-	asahi@lists.linux.dev, rafael@kernel.org, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 8 Oct 2024 at 00:25, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Ulf,
->
-> On Tue, Oct 08, 2024 at 12:08:24AM +0200, Ulf Hansson wrote:
-> > On Mon, 7 Oct 2024 at 20:49, Laurent Pinchart wrote:
-> > > On Fri, Oct 04, 2024 at 04:38:36PM +0200, Ulf Hansson wrote:
-> > > > On Fri, 4 Oct 2024 at 11:41, Sakari Ailus wrote:
-> > > > >
-> > > > > Hello everyone,
-> > > > >
-> > > > > This set will switch the users of pm_runtime_put_autosuspend() to
-> > > > > __pm_runtime_put_autosuspend() while the former will soon be re-purposed
-> > > > > to include a call to pm_runtime_mark_last_busy(). The two are almost
-> > > > > always used together, apart from bugs which are likely common. Going
-> > > > > forward, most new users should be using pm_runtime_put_autosuspend().
-> > > > >
-> > > > > Once this conversion is done and pm_runtime_put_autosuspend() re-purposed,
-> > > > > I'll post another set to merge the calls to __pm_runtime_put_autosuspend()
-> > > > > and pm_runtime_mark_last_busy().
-> > > >
-> > > > That sounds like it could cause a lot of churns.
-> > > >
-> > > > Why not add a new helper function that does the
-> > > > pm_runtime_put_autosuspend() and the pm_runtime_mark_last_busy()
-> > > > things? Then we can start moving users over to this new interface,
-> > > > rather than having this intermediate step?
-> > >
-> > > I think the API would be nicer if we used the shortest and simplest
-> > > function names for the most common use cases. Following
-> > > pm_runtime_put_autosuspend() with pm_runtime_mark_last_busy() is that
-> > > most common use case. That's why I like Sakari's approach of repurposing
-> > > pm_runtime_put_autosuspend(), and introducing
-> > > __pm_runtime_put_autosuspend() for the odd cases where
-> > > pm_runtime_mark_last_busy() shouldn't be called.
-> >
-> > Okay, so the reason for this approach is because we couldn't find a
-> > short and descriptive name that could be used in favor of
-> > pm_runtime_put_autosuspend(). Let me throw some ideas at it and maybe
-> > you like it - or not. :-)
->
-> I like the idea at least :-)
->
-> > I don't know what options you guys discussed, but to me the entire
-> > "autosuspend"-suffix isn't really that necessary in my opinion. There
-> > are more ways than calling pm_runtime_put_autosuspend() that triggers
-> > us to use the RPM_AUTO flag for rpm_suspend(). For example, just
-> > calling pm_runtime_put() has the similar effect.
->
-> To be honest, I'm lost there. pm_runtime_put() calls
-> __pm_runtime_idle(RPM_GET_PUT | RPM_ASYNC), while
-> pm_runtime_put_autosuspend() calls __pm_runtime_suspend(RPM_GET_PUT |
-> RPM_ASYNC | RPM_AUTO).
+This patch series add support for the monochrome Sharp Memory LCD
+panels. This series is based off of the work done by Mehdi Djait.
 
-__pm_runtime_idle() ends up calling rpm_idle(), which may call
-rpm_suspend() - if it succeeds to idle the device. In that case, it
-tags on the RPM_AUTO flag in the call to rpm_suspend(). Quite similar
-to what is happening when calling pm_runtime_put_autosuspend().
+References:
+https://lore.kernel.org/dri-devel/71a9dbf4609dbba46026a31f60261830163a0b99.1701267411.git.mehdi.djait@bootlin.com/
+https://www.sharpsde.com/fileadmin/products/Displays/2016_SDE_App_Note_for_Memory_LCD_programming_V1.3.pdf
 
->
-> >
-> > Moreover, it's similar for pm_runtime_mark_last_busy(), it's called
-> > during rpm_resume() too, for example. So why bother about having
-> > "mark_last_busy" in the new name too.
-> >
-> > That said, my suggestion is simply "pm_runtime_put_suspend".
->
-> Can we do even better, and make pm_runtime_put() to handle autosuspend
-> automatically when autosuspend is enabled ?
+Co-developed-by: Mehdi Djait <mehdi.djait@bootlin.com>
+Signed-off-by: Mehdi Djait <mehdi.djait@bootlin.com>
+Signed-off-by: Alex Lanzano <lanzano.alex@gmail.com>
+---
+Changes in v10:
+- Address comments from from Uwe
+    - Replaced -EINVAL with PTR_ERR
+    - Error check pwm_apply_might_sleep function
+    - Remove redundant error message
 
-As stated above, this is already the case.
+Changes in v9:
+- Move pwm and software VCOM generation to probe/remove functions instead of crtc enable/disable functions.
+  pwd_disable will suffice on driver removal.
+- Change comment format to match Linux Kernel style.
 
->
-> > If you don't like it, I will certainly not object to your current
-> > approach, even if I think it leads to unnecessary churns.
-> >
-> > [...]
-> >
-> > Kind regards
-> > Uffe
->
-> --
-> Regards,
->
-> Laurent Pinchart
+Changes in v8:
+- Addressed review comments from Uwe
+    - Replace pwm_get_state with pwm_init_state
+    - Use pwm_set_relative_duty_cycle instead of manually setting period and duty cycle
 
-Kind regards
-Uffe
+Changes in v7:
+- Add Reviewed-by tag back to dt-binding patch
+
+Changes in v6:
+- Rebase off latest drm-misc-next
+- Replace pwm_apply_state with pwm_apply_might_sleep
+
+Changes in v5:
+- Address minor style issues in sharp-memory.c
+
+Changes in v4:
+- Remove redundant dev_err
+
+Changes in v3:
+- Fix file path in MAINTAINERS file
+- Address review comments
+- Simplify mode selection based on match data instead of model
+
+Changes in v2:
+- Credited Mehdi Djait in commit messages
+- Renamed sharp,sharp-memory.yaml to sharp,ls010b7dh04.yaml
+- Using strings instead of int for vcom-mode in dt-binding
+- Fixed indentation of binding example
+- Removed binding header
+- Removed extra whitespace in sharp-memory.c
+- Fixed error handling in sharp-memory.c
+- Added match data to of_device_id table to be in-sync with spi_device_id table
+- Replaced redundant function with spi_get_device_match_data
+- Sorted header files in sharp-memory.c
+---
+
+Alex Lanzano (2):
+  dt-bindings: display: Add Sharp Memory LCD bindings
+  drm/tiny: Add driver for Sharp Memory LCD
+
+ .../bindings/display/sharp,ls010b7dh04.yaml   |  92 +++
+ MAINTAINERS                                   |   6 +
+ drivers/gpu/drm/tiny/Kconfig                  |  20 +
+ drivers/gpu/drm/tiny/Makefile                 |   1 +
+ drivers/gpu/drm/tiny/sharp-memory.c           | 669 ++++++++++++++++++
+ 5 files changed, 788 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/sharp,ls010b7dh04.yaml
+ create mode 100644 drivers/gpu/drm/tiny/sharp-memory.c
+
+-- 
+2.46.2
+
 
