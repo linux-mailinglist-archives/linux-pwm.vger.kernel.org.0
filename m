@@ -1,114 +1,316 @@
-Return-Path: <linux-pwm+bounces-3533-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3534-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3802299428F
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 10:47:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0237C9942B5
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 10:50:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 21516B298B5
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 08:45:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D9B81F22607
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 08:50:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60ADD18FDA6;
-	Tue,  8 Oct 2024 08:16:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B3A91DFE2F;
+	Tue,  8 Oct 2024 08:24:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DtmtZsze"
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="B4dTXIaI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E9F18C34C
-	for <linux-pwm@vger.kernel.org>; Tue,  8 Oct 2024 08:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C9D1DFE31;
+	Tue,  8 Oct 2024 08:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.97.38.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728375363; cv=none; b=aUyGRuljO/VsozCaqw4hAJZihmY49EJYKxIcsa7KqbNe3slqLKf2fXOUxGJP+NYtIX/4CL8PJcxWUY6blHPDUo80mMztMi5Q/KR/ucCFhHzKSWH+PByBSgVXVWK1YwpnTu0Sa5ljHqMuMmvi02m5ueuVSLXKAPdQBaSpMxV9NV0=
+	t=1728375896; cv=none; b=XOS5IQBm6k4xZdsz8e5yusmznbVcLAZoTZZSSW7uTqR7qTpQTWYkmxfhWuyygpCaoCwy8nVbuD0ZgD8TdKR2uD+hx+7NFTmHjh1HdZ9WplDTuqZjYgskHNs2SYJsk5bEHW+eXNJl5O5TLVMOsuExm/RdJHTqWKghxGkUK3GkFD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728375363; c=relaxed/simple;
-	bh=UEYJraEY/4Y2HOvK6ZVGKjPI2JChba/+KAdpE40jGKU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k228Vq6eCBPVLFi5pMR31tMhK0qjLoDOihJrMowQjwCNsfk5brE3x7i7IQdPtHcnipWQj5laPzOsD7fVo6LOcbDJ4dOlNXBqNnFciwiY4xiGt5/R8KABRLkOsBdsruEDVk/AwI3q9DMIt+b1ybUksMbbqFSOzTsP7j75vFYxgac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DtmtZsze; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42ca4e0299eso47408785e9.2
-        for <linux-pwm@vger.kernel.org>; Tue, 08 Oct 2024 01:16:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728375359; x=1728980159; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EWgRCowkm008kJFVLy9y4f+hhyNI0jf/IB10ECXWRmo=;
-        b=DtmtZszeVpRg32vUzBBA7ziIKijFeFXs51Hl8xDve4VXjoIQ+5/3om7INSgw4z/P+y
-         nzowovb8P03O32EZfAUV+FYkwEL+0h+Lx6IgCT8LMFOLTBJ4dQECarVW7JCRraG6N64o
-         EP3FM24AwL/7fbQX6Z1+2lDp0Xqtnay7Mx7kYY/cc3ua7/bnHMO761TGvinUR54CXveR
-         nXWGAxIYpT77OuqQ3sqX++58PsqPAeoJZbS038RYEmV84xVWGRq/AOkVNgNrPUMUJ6Q0
-         Fy4NJqarQ/9Oc4znZa5WldDnBXFIaSFYNTREpGDF9It0uyzzBi8NzRcb1NDNo72ETkJ0
-         gwLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728375359; x=1728980159;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EWgRCowkm008kJFVLy9y4f+hhyNI0jf/IB10ECXWRmo=;
-        b=PQfJLsDqLIu08DDFAEk0jjr35yxX73ly9OVHk6Su19JrAZsfxy+vSBicnXMavZKEG8
-         KtNnjFNMVY5R6EK2gV9WGsKUAV2PDsiHKwHEA3QMciDDVutoWdwKoZxcsHlud4osWgmv
-         WnvYtOMplEEEoT30GjAOkwVHutTwPSoOrXqF3/C8anKu18CV2jIpGPLnrHUSQT0k5cA9
-         8rp9OyQQ6+MW/BgLOC6nAvxynE2BpVJpyt2j5UOBTAX1T13VA80z3qI/fJDlEC6VqKze
-         3bCpv/uG4vQ4/CCb0CK/xtxljTDxvlr9S/ClA2rvh7S39axbho9WplQfyfo+WDPuM2bU
-         PNNw==
-X-Forwarded-Encrypted: i=1; AJvYcCW5bwGTY/HMwPaupYIl4K8865Kdd8DixkBx+Vifc80RHZ1eGhE86iZ5gia9lR7kRNGEEAySlfpV5gk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAiZTWtp/KQt9KgR9Kst6xhKQ8b9a6tg4r1cXD06zZHd3NWqJs
-	XTisYsTEKZQA1KmNKUqBVITzKW1dN1A2BMQkYM+cS+Obxqp1Fizl9Aj4gy53uck=
-X-Google-Smtp-Source: AGHT+IGKWkpI9mLOgAreEezYfLuvGOehSyb/NSFc2oMuBD6dCg10MIxmAr5oWCUqlWwWgmwWOofi1A==
-X-Received: by 2002:a05:600c:3146:b0:42a:a6aa:4135 with SMTP id 5b1f17b1804b1-42f85ac11b5mr98495885e9.20.1728375358868;
-        Tue, 08 Oct 2024 01:15:58 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:738a:20da:f541:94ff])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d1691ba45sm7492431f8f.44.2024.10.08.01.15.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2024 01:15:58 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: mvebu: drop dependency on OF_GPIO
-Date: Tue,  8 Oct 2024 10:15:55 +0200
-Message-ID: <20241008081555.23465-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1728375896; c=relaxed/simple;
+	bh=p8O/sEYZVbUMhVZQJSEP2Q1Ny12LP28b8VlON+FkH54=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhzjUp86UIQ3+XPvtRe+QRtkn/fno2Hk4O1bgMBZHU9b1A39stkTLqUDtb/NgMTQwp7H1lrtJqeD/qTfkCQHeY9LK+JhvIhG9Z1YURXhpW5wVJ7e28q7jW+HzB9JmnHEHruXHGhPJgKwOl/oi7fpDHXhqXbaXk910Gq1DlHYa/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org; spf=pass smtp.mailfrom=mess.org; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=B4dTXIaI; arc=none smtp.client-ip=88.97.38.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1728375885; bh=p8O/sEYZVbUMhVZQJSEP2Q1Ny12LP28b8VlON+FkH54=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B4dTXIaI6Bnt8yB3TnEYNb+az8JLv5lvmWJWGjc/PndukWyuiXbT9Tlz9E15MOno+
+	 Jat56Qrgcnp7/9QHOYWs0XxBOri4ClVwyX21PQoRbSKiZBNwdPJp486SzvcMgGbKah
+	 HEoHAQ2tHIc2ahMaJXIZ4r2rJKTygL3eZgaPEW189J37JQwN03ZbelxqmuomDBxqD2
+	 80qpZ5CrfNEAzRjY6XMB2407NhusmJxUX5Kbx7TqFhgK7TttLa3bU9zuv5D3hk3Jm/
+	 1eeAGoF6kQbZIYIFKqvAx4R2CD8Fg42Fk+EThx1l24gLu/pK13701yAmaRlr0LsXNu
+	 j3pVd79uFS35g==
+Received: by gofer.mess.org (Postfix, from userid 1000)
+	id 6C2DC1002BF; Tue,  8 Oct 2024 09:24:45 +0100 (BST)
+Date: Tue, 8 Oct 2024 09:24:45 +0100
+From: Sean Young <sean@mess.org>
+To: Chen Wang <unicornxw@gmail.com>
+Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, unicorn_wang@outlook.com,
+	inochiama@outlook.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-riscv@lists.infradead.org, chao.wei@sophgo.com,
+	haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com,
+	chunzhi.lin@sophgo.com
+Subject: Re: [PATCH v3 2/3] pwm: sophgo: add driver for Sophgo SG2042 PWM
+Message-ID: <ZwTsTQiTkFFu3pwX@gofer.mess.org>
+References: <cover.1728355974.git.unicorn_wang@outlook.com>
+ <57cf7ac3b4c092df1a6962d310b6d2603ca26995.1728355974.git.unicorn_wang@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <57cf7ac3b4c092df1a6962d310b6d2603ca26995.1728355974.git.unicorn_wang@outlook.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Oct 08, 2024 at 11:04:14AM +0800, Chen Wang wrote:
+> From: Chen Wang <unicorn_wang@outlook.com>
+> 
+> Add a PWM driver for PWM controller in Sophgo SG2042 SoC.
+> 
+> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+> ---
+>  drivers/pwm/Kconfig             |  10 ++
+>  drivers/pwm/Makefile            |   1 +
+>  drivers/pwm/pwm-sophgo-sg2042.c | 180 ++++++++++++++++++++++++++++++++
+>  3 files changed, 191 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-sophgo-sg2042.c
+> 
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 0915c1e7df16..ec85f3895936 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -584,6 +584,16 @@ config PWM_SL28CPLD
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-sl28cpld.
+>  
+> +config PWM_SOPHGO_SG2042
+> +	tristate "Sophgo SG2042 PWM support"
+> +	depends on ARCH_SOPHGO || COMPILE_TEST
+> +	help
+> +	  PWM driver for the PWM controller on Sophgo SG2042 SoC. The PWM
+> +	  controller supports outputing 4 channels of PWM waveforms.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm_sophgo_sg2042.
+> +
+>  config PWM_SPEAR
+>  	tristate "STMicroelectronics SPEAr PWM support"
+>  	depends on PLAT_SPEAR || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 9081e0c0e9e0..539e0def3f82 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -53,6 +53,7 @@ obj-$(CONFIG_PWM_RZ_MTU3)	+= pwm-rz-mtu3.o
+>  obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
+>  obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
+>  obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
+> +obj-$(CONFIG_PWM_SOPHGO_SG2042)	+= pwm-sophgo-sg2042.o
+>  obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
+>  obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
+>  obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
+> diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg2042.c
+> new file mode 100644
+> index 000000000000..198019b751ad
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-sophgo-sg2042.c
+> @@ -0,0 +1,180 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Sophgo SG2042 PWM Controller Driver
+> + *
+> + * Copyright (C) 2024 Sophgo Technology Inc.
+> + * Copyright (C) 2024 Chen Wang <unicorn_wang@outlook.com>
+> + *
+> + * Limitations:
+> + * - After reset, the output of the PWM channel is always high.
+> + *   The value of HLPERIOD/PERIOD is 0.
+> + * - When HLPERIOD or PERIOD is reconfigured, PWM will start to
+> + *   output waveforms with the new configuration after completing
+> + *   the running period.
+> + * - When PERIOD and HLPERIOD is set to 0, the PWM wave output will
+> + *   be stopped and the output is pulled to high.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +
+> +#include <asm/div64.h>
+> +
+> +/*
+> + * Offset RegisterName
+> + * 0x0000 HLPERIOD0
+> + * 0x0004 PERIOD0
+> + * 0x0008 HLPERIOD1
+> + * 0x000C PERIOD1
+> + * 0x0010 HLPERIOD2
+> + * 0x0014 PERIOD2
+> + * 0x0018 HLPERIOD3
+> + * 0x001C PERIOD3
+> + * Four groups and every group is composed of HLPERIOD & PERIOD
+> + */
+> +#define SG2042_HLPERIOD(chan) ((chan) * 8 + 0)
+> +#define SG2042_PERIOD(chan) ((chan) * 8 + 4)
+> +
+> +#define SG2042_PWM_CHANNELNUM	4
+> +
+> +/**
+> + * struct sg2042_pwm_ddata - private driver data
+> + * @base:		base address of mapped PWM registers
+> + * @clk_rate_hz:	rate of base clock in HZ
+> + */
+> +struct sg2042_pwm_ddata {
+> +	void __iomem *base;
+> +	unsigned long clk_rate_hz;
+> +};
+> +
+> +static void pwm_sg2042_config(void __iomem *base, unsigned int chan, u32 period, u32 hlperiod)
+> +{
+> +	writel(period, base + SG2042_PERIOD(chan));
+> +	writel(hlperiod, base + SG2042_HLPERIOD(chan));
+> +}
+> +
+> +static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
+> +	u32 hlperiod;
+> +	u32 period;
+> +
+> +	if (state->polarity == PWM_POLARITY_INVERSED)
+> +		return -EINVAL;
+> +
+> +	if (!state->enabled) {
+> +		pwm_sg2042_config(ddata->base, pwm->hwpwm, 0, 0);
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * Period of High level (duty_cycle) = HLPERIOD x Period_clk
+> +	 * Period of One Cycle (period) = PERIOD x Period_clk
+> +	 */
+> +	period = min(mul_u64_u64_div_u64(ddata->clk_rate_hz, state->period, NSEC_PER_SEC), U32_MAX);
+> +	hlperiod = min(mul_u64_u64_div_u64(ddata->clk_rate_hz, state->duty_cycle, NSEC_PER_SEC), U32_MAX);
+> +
+> +	if (hlperiod > period) {
+> +		dev_err(pwmchip_parent(chip), "period < hlperiod, failed to apply current setting\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	dev_dbg(pwmchip_parent(chip), "chan[%u]: period=%u, hlperiod=%u\n",
+> +		pwm->hwpwm, period, hlperiod);
+> +
+> +	pwm_sg2042_config(ddata->base, pwm->hwpwm, period, hlperiod);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pwm_sg2042_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> +				struct pwm_state *state)
+> +{
+> +	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
+> +	unsigned int chan = pwm->hwpwm;
+> +	u32 hlperiod;
+> +	u32 period;
+> +
+> +	period = readl(ddata->base + SG2042_PERIOD(chan));
+> +	hlperiod = readl(ddata->base + SG2042_HLPERIOD(chan));
+> +
+> +	if (!period && !hlperiod)
+> +		state->enabled = false;
+> +	else
+> +		state->enabled = true;
+> +
+> +	state->period = DIV_ROUND_UP_ULL((u64)period * NSEC_PER_SEC, ddata->clk_rate_hz);
+> +	state->duty_cycle = DIV_ROUND_UP_ULL((u64)hlperiod * NSEC_PER_SEC, ddata->clk_rate_hz);
+> +
+> +	state->polarity = PWM_POLARITY_NORMAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pwm_ops pwm_sg2042_ops = {
+> +	.apply = pwm_sg2042_apply,
+> +	.get_state = pwm_sg2042_get_state,
+> +};
+> +
+> +static const struct of_device_id sg2042_pwm_ids[] = {
+> +	{ .compatible = "sophgo,sg2042-pwm" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
+> +
+> +static int pwm_sg2042_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct sg2042_pwm_ddata *ddata;
+> +	struct pwm_chip *chip;
+> +	struct clk *clk;
+> +	int ret;
+> +
+> +	chip = devm_pwmchip_alloc(dev, SG2042_PWM_CHANNELNUM, sizeof(*ddata));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	ddata = pwmchip_get_drvdata(chip);
+> +
+> +	ddata->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(ddata->base))
+> +		return PTR_ERR(ddata->base);
+> +
+> +	clk = devm_clk_get_enabled(dev, "apb");
+> +	if (IS_ERR(clk))
+> +		return dev_err_probe(dev, PTR_ERR(clk), "failed to get base clk\n");
+> +
+> +	ret = devm_clk_rate_exclusive_get(dev, clk);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to get exclusive rate\n");
+> +
+> +	ddata->clk_rate_hz = clk_get_rate(clk);
+> +	if (!ddata->clk_rate_hz || ddata->clk_rate_hz > NSEC_PER_SEC)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "Invalid clock rate: %lu\n", ddata->clk_rate_hz);
+> +
+> +	chip->ops = &pwm_sg2042_ops;
 
-This driver doesn't really depend on interfaces from OF_GPIO so the
-Kconfig dependency can be dropped.
+I think you can add here:
 
-Suggested-by: Uwe Kleine-König <ukleinek@kernel.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+	chip->atomic = true;
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 98722e814e81..6643e81bf11e 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -488,7 +488,6 @@ config GPIO_MT7621
- config GPIO_MVEBU
- 	def_bool y
- 	depends on PLAT_ORION || ARCH_MVEBU || COMPILE_TEST
--	depends on OF_GPIO
- 	select GENERIC_IRQ_CHIP
- 	select REGMAP_MMIO
- 
--- 
-2.43.0
+As far as I can see, the driver does not do any sleeping operations
+in pwm_sg2042_apply(). This probably should be tested with 
+CONFIG_PWM_DEBUG and CONFIG_DEBUG_ATOMIC_SLEEP just to be sure.
 
+Thanks,
+Sean
+
+> +
+> +	ret = devm_pwmchip_add(dev, chip);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "failed to register PWM chip\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver pwm_sg2042_driver = {
+> +	.driver	= {
+> +		.name = "sg2042-pwm",
+> +		.of_match_table = sg2042_pwm_ids,
+> +	},
+> +	.probe = pwm_sg2042_probe,
+> +};
+> +module_platform_driver(pwm_sg2042_driver);
+> +
+> +MODULE_AUTHOR("Chen Wang");
+> +MODULE_DESCRIPTION("Sophgo SG2042 PWM driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.34.1
+> 
 
