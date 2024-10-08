@@ -1,93 +1,65 @@
-Return-Path: <linux-pwm+bounces-3545-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3546-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8E7E995896
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 22:38:24 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEF2A9959C6
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 00:04:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 702A2281633
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 20:38:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0077B1C20506
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 22:04:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D554721642B;
-	Tue,  8 Oct 2024 20:38:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25D7C21503B;
+	Tue,  8 Oct 2024 22:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="18fWZBkO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clxtKb6u"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBF9215021
-	for <linux-pwm@vger.kernel.org>; Tue,  8 Oct 2024 20:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1CD179954;
+	Tue,  8 Oct 2024 22:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728419890; cv=none; b=FH8wQe9dMm/FWhQMfygiYgDMo7bSBiuy5tyRJI98f29q6eay4dCFg0/so2HaoGY20II8UUcPl6xuNai89N8myM8QIfzExcbaZHrhY+T5jg545JNrmvSL+psB9qIJTUpal0SmMVL1w61WQVf/0nZKqtYSnEajPEV8UKHJlSoKhEc=
+	t=1728425076; cv=none; b=eUkO79LxKoQQGoJtOmqXLrWF3vJjN/SKLJV3tE/0hfROJHsoZNGHBkV0jcKvEcOt7jvm8Are2g/NAsBSqVUi9wMM9yT9psySOuHXPP/5Q1F5ViuVEMu01C0hCsu2yztEpWde5VxC/T+GUjqy2eWzpjgxE340sXeRRr2rDb8zQIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728419890; c=relaxed/simple;
-	bh=jBKc56vBxPYaOUWcC+VFZKlnp8sdizUoPysD1KL2n2Y=;
+	s=arc-20240116; t=1728425076; c=relaxed/simple;
+	bh=ms7y13SKSl3l6x54yKv0dqYa0hkXrQlTObop68w2TTI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R9hxaFCZfFLwnFxoE8pcsaXAydYU0GwOgr6rmCIpMx5h37u2P1xfx0CYRFXuLNDr9PGcovNB3FjmTovUUbKSdbeWgDCwU6ohDhLNESS2h6hWDxuFyTM1f5joi0uLr58h9u/KFnYHmubIdTLd+NWQR8uJat4+UppM/s1D+YqgT2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=18fWZBkO; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a9951fba3b4so404169066b.1
-        for <linux-pwm@vger.kernel.org>; Tue, 08 Oct 2024 13:38:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728419885; x=1729024685; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jBKc56vBxPYaOUWcC+VFZKlnp8sdizUoPysD1KL2n2Y=;
-        b=18fWZBkO9cDHNP5XkQ39MRLClR2iDC1zySqkncD3SsZKu5Rgs7Dl8pH8lKJp2p962M
-         ZQCXVVOIGzjU5UY81OJcQw0kiLkVxi82epBgL4dI4RqabJSCfzsJV/w4rEU39jnWCoY7
-         yG6e+6Huic3MWrYC1oSE1/3jjgRJEPNAKN3ZTXu7yDRI5rDcTHA6JVJ03K88LUsNIndN
-         hxu1wyd0FmRvkB0XvGhYzl60f9BZXhmzkblJFg6rToFyXPRB5BLZ/aQ9AquxPwlKwAUC
-         26vZdSJyysWVJfHabIaR2zJD8Gkd7meZi0reyXepjlExZa64VCzKDkCcaGkjDZZZyvzq
-         ni5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728419885; x=1729024685;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jBKc56vBxPYaOUWcC+VFZKlnp8sdizUoPysD1KL2n2Y=;
-        b=XVecb+5WiP9E0xaeSuUY9x0DlgQ/qxOe/6pWvPv6bmqkaXpt6zxa/JAfwTRfN0QgLp
-         iJXrHgwPpyvm569Mi5l9tEJJjjnS5vp/P6HsptbEznMN0IG8Y+4fWnpbCXeLdUWOUqoM
-         dS7Kb40MuJqBsRB33zUklEioDEtv6UCn6kgF23MYf6574AYpUo5PYiTxnOlK+iQHawrm
-         Q65MCZh8ggbGJwGYZ9nsRQEiZmj70sHs+azB5T4sUsyPF/EJ4WUiJ4P3SyO/CdbcZCJy
-         xV5PRyQHskNZl/ys/pEkf+kXoQApSckeqdC05wUX4V2Cx4BhxwYyyV5XCjE/rlXSRg/o
-         pytQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxhleFe3d0iXDPUdoMlLiWmcdc1dIgbA+VM9+TVxmEUzXTwOe4pax6CKdPS6hKQS61UfH9nw5M988=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeFNF7icMI/u09Wdix3+vgxTIYIUUSns69IQPTXbmF8P7QU8Gq
-	sIMB46t5bYWLLosx2a5+A26OZHdsHccUO8C5UhlfNEGXETRzUi/H9oyJ6bAC324=
-X-Google-Smtp-Source: AGHT+IFQsuFQDnMORn6KRqls83kXMRALTmz1xji/Zv3nzyXsaV17OwyYMIY5gtZ7u9n9SjQRNHRlFg==
-X-Received: by 2002:a17:907:94d4:b0:a8d:250a:52b2 with SMTP id a640c23a62f3a-a998d114bbemr3268366b.6.1728419884897;
-        Tue, 08 Oct 2024 13:38:04 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:c420:a9b6:c5e1:5b65])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a996274deeesm196971266b.103.2024.10.08.13.38.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2024 13:38:04 -0700 (PDT)
-Date: Tue, 8 Oct 2024 22:38:02 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	nouveau@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org, 
-	linux-iio@vger.kernel.org, linux-input@vger.kernel.org, patches@opensource.cirrus.com, 
-	iommu@lists.linux.dev, imx@lists.linux.dev, linux-mediatek@lists.infradead.org, 
-	linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-spi@vger.kernel.org, linux-staging@lists.linux.dev, 
-	linux-usb@vger.kernel.org, linux-serial@vger.kernel.org, greybus-dev@lists.linaro.org, 
-	asahi@lists.linux.dev, rafael@kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 00/51] treewide: Switch to __pm_runtime_put_autosuspend()
-Message-ID: <ttmnzgsdyng5vab63pvj7csrotbsmwnultjelvdotrvyg2snac@iv7afgect5f3>
-References: <20241004094101.113349-1-sakari.ailus@linux.intel.com>
- <CAPDyKFp0N6UJhnHS164Tdf=xkWB0jzq65L9TdvYazeBQ-6WjeQ@mail.gmail.com>
- <20241007184924.GH14766@pendragon.ideasonboard.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=vA3cqzXlealvKlzKqjNRo7vbLO9Sw3SMXcBOqDIbF4rUBhB0eaVC8RSntei/4VlcPxTLdpEZ8YrfCLNAwfYUSZm0P0f4c+LSywEtP1VvBpq/PsmyXZmmvooMmU8lxfVVz6tvAqFdVARHLlxUIbQS0gbjvFM9juyJa3mqQDStdbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clxtKb6u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 394CDC4CECF;
+	Tue,  8 Oct 2024 22:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728425075;
+	bh=ms7y13SKSl3l6x54yKv0dqYa0hkXrQlTObop68w2TTI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=clxtKb6uPWfUDdD1z+NjKt4020Xf1psaH3OQVC3cD4jDYPJWXAHFmHyJcBvcZ5DYw
+	 r2yUu15NRPsHpKLM48JiRf8G4jN5hXP15K03DUppXPtn7rAH9bKT75MIdg3VFVzhb0
+	 hYT2IL21c5XIRJECdGWnNfUegiUMWKvu6zAut6bGuIV0RydpOqOjcVz8VGwDKlIP1H
+	 IDI2Cwc8Qa/N/BvMSM1vp0g2Jy1cyaiPdoU3CJ0Bx/zNXrkN0mrSieEoX+m9OXo3R9
+	 Arcqd9hwGNKGfX9Nst20wL/IJ2giwlTEwU6ooSENHogKWxiWXcO0nyuweXFRBznC9o
+	 NdMgHmAoRYFYw==
+Date: Wed, 9 Oct 2024 00:04:33 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com, benjamin.larsson@genexis.eu,
+	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] mfd: airoha: Add support for Airoha EN7581 MFD
+Message-ID: <ZwWscWk5axQI9H1t@lore-desk>
+References: <20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org>
+ <20241001-en7581-pinctrl-v5-3-dc1ce542b6c6@kernel.org>
+ <20241002132518.GD7504@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -95,85 +67,243 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2ocqjla6tcmukjn3"
+	protocol="application/pgp-signature"; boundary="Ck0ElvyZLVpyJemd"
 Content-Disposition: inline
-In-Reply-To: <20241007184924.GH14766@pendragon.ideasonboard.com>
+In-Reply-To: <20241002132518.GD7504@google.com>
 
 
---2ocqjla6tcmukjn3
-Content-Type: text/plain; charset=us-ascii
+--Ck0ElvyZLVpyJemd
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Mon, Oct 07, 2024 at 09:49:24PM +0300, Laurent Pinchart wrote:
-> On Fri, Oct 04, 2024 at 04:38:36PM +0200, Ulf Hansson wrote:
-> > On Fri, 4 Oct 2024 at 11:41, Sakari Ailus <sakari.ailus@linux.intel.com=
-> wrote:
-> > >
-> > > Hello everyone,
-> > >
-> > > This set will switch the users of pm_runtime_put_autosuspend() to
-> > > __pm_runtime_put_autosuspend() while the former will soon be re-purpo=
-sed
-> > > to include a call to pm_runtime_mark_last_busy(). The two are almost
-> > > always used together, apart from bugs which are likely common. Going
-> > > forward, most new users should be using pm_runtime_put_autosuspend().
-> > >
-> > > Once this conversion is done and pm_runtime_put_autosuspend() re-purp=
-osed,
-> > > I'll post another set to merge the calls to __pm_runtime_put_autosusp=
-end()
-> > > and pm_runtime_mark_last_busy().
-> >=20
-> > That sounds like it could cause a lot of churns.
-> >=20
-> > Why not add a new helper function that does the
-> > pm_runtime_put_autosuspend() and the pm_runtime_mark_last_busy()
-> > things? Then we can start moving users over to this new interface,
-> > rather than having this intermediate step?
+On Oct 02, Lee Jones wrote:
+> On Tue, 01 Oct 2024, Lorenzo Bianconi wrote:
 >=20
-> I think the API would be nicer if we used the shortest and simplest
-> function names for the most common use cases. Following
-> pm_runtime_put_autosuspend() with pm_runtime_mark_last_busy() is that
-> most common use case. That's why I like Sakari's approach of repurposing
-> pm_runtime_put_autosuspend(), and introducing
-> __pm_runtime_put_autosuspend() for the odd cases where
-> pm_runtime_mark_last_busy() shouldn't be called.
+> > From: Christian Marangi <ansuelsmth@gmail.com>
+> >=20
+> > Support for Airoha EN7581 Multi Function Device that
+> > expose PINCTRL functionality and PWM functionality.
+>=20
+> The device is a jumble of pinctrl registers, some of which can oscillate.
+>=20
+> This is *still* not an MFD.
+>=20
+> If you wish to spread this functionality over 2 drivers, use syscon to
+> obtain the registers and simple-mfd to automatically probe the drivers.
 
-That's ok for me. However this patch series isn't the optimal path to
-there because most drivers (i.e. those that already today do
-pm_runtime_mark_last_busy() in combination with
-pm_runtime_put_autosuspend()) have to be patched twice.
+Hi Lee,
 
-The saner route is: Only convert the drivers with a sole
-pm_runtime_put_autosuspend() (i.e. without pm_runtime_mark_last_busy())
-to __pm_runtime_put_autosuspend(). Then add the mark_last_busy() bits to
-pm_runtime_put_autosuspend() and then drop the explicit calls to
-pm_runtime_mark_last_busy() before pm_runtime_put_autosuspend().
+IIUC you are suggesting two possible approaches here:
 
-(Note this doesn't take into account Rafael's position that
-pm_runtime_put() might be the saner option. My argument applies for that
-conversion analogously.)
+1- have a single driver implementing both pinctrl and pwm functionalities.
+   This approach will not let us reuse the code for future devices that
+   have just one of them in common, like pwm (but we can live with that).
 
-Best regards
-Uwe
+2- use a device node like the one below (something similar to [0])
 
---2ocqjla6tcmukjn3
+system-controller@1fbf0200 {
+	compatible =3D "syscon", "simple-mfd";
+	reg =3D <0x0 0x1fbf0200 0x0 0xc0>;
+
+	interrupt-parent =3D <&gic>;
+	interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+
+	gpio-controller;
+	#gpio-cells =3D <2>;
+
+	interrupt-controller;
+	#interrupt-cells =3D <2>;
+
+	pio: pinctrl {
+		compatible =3D "airoha,en7581-pinctrl";
+
+		[ some pinctrl properties here ]
+	};
+
+	#pwm-cells =3D <3>;
+
+	pwm {
+		compatible =3D "airoha,en7581-pwm";
+	};
+};
+
+Please correct me if I am wrong, but using syscon/simple-mfd as compatible
+string for the 'parent' device, will require to introduce the compatible st=
+rings
+even for the child devices in order to probe them, correct?=20
+If so, as pointed out by Christian, this is something nacked by Rob/Krzyszt=
+of/Conor
+(this is the main reason why we introduced a full mfd driver here).
+
+@Rob, Krzysztof, Conor: am I right?
+
+I guess we need to find a middle ground here between mfd and dts to support=
+ this
+uncommon hw device.
+
+Regards,
+Lorenzo
+
+[0] https://elixir.bootlin.com/linux/v6.11.2/source/arch/arm64/boot/dts/mar=
+vell/armada-ap80x.dtsi#L269
+
+>=20
+> > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> > ---
+> >  drivers/mfd/Kconfig                   |  8 ++++
+> >  drivers/mfd/Makefile                  |  2 +
+> >  drivers/mfd/airoha-en7581-gpio-mfd.c  | 72 +++++++++++++++++++++++++++=
+++++++++
+> >  include/linux/mfd/airoha-en7581-mfd.h |  9 +++++
+> >  4 files changed, 91 insertions(+)
+> >=20
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index f9325bcce1b9..eca221351ab7 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -32,6 +32,14 @@ config MFD_ADP5585
+> >  	  the core APIs _only_, you have to select individual components like
+> >  	  the GPIO and PWM functions under the corresponding menus.
+> > =20
+> > +config MFD_AIROHA_EN7581
+> > +	bool "Airoha EN7581 Multi Function Device"
+> > +	depends on (ARCH_AIROHA || COMPILE_TEST) && OF
+> > +	select MFD_CORE
+> > +	help
+> > +	  Support for Airoha EN7581 Multi Function Device that
+> > +	  expose PINCTRL functionality and PWM functionality.
+> > +
+> >  config MFD_ALTERA_A10SR
+> >  	bool "Altera Arria10 DevKit System Resource chip"
+> >  	depends on ARCH_INTEL_SOCFPGA && SPI_MASTER=3Dy && OF
+> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > index 2a9f91e81af8..be8448e81a5b 100644
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> > @@ -257,6 +257,8 @@ obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+=3D intel_soc_p=
+mic_chtwc.o
+> >  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+=3D intel_soc_pmic_chtdc_ti.o
+> >  obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)	+=3D intel_soc_pmic_mrfld.o
+> > =20
+> > +obj-$(CONFIG_MFD_AIROHA_EN7581)	+=3D airoha-en7581-gpio-mfd.o
+> > +
+> >  obj-$(CONFIG_MFD_ALTERA_A10SR)	+=3D altera-a10sr.o
+> >  obj-$(CONFIG_MFD_ALTERA_SYSMGR) +=3D altera-sysmgr.o
+> >  obj-$(CONFIG_MFD_STPMIC1)	+=3D stpmic1.o
+> > diff --git a/drivers/mfd/airoha-en7581-gpio-mfd.c b/drivers/mfd/airoha-=
+en7581-gpio-mfd.c
+> > new file mode 100644
+> > index 000000000000..88407ce5747e
+> > --- /dev/null
+> > +++ b/drivers/mfd/airoha-en7581-gpio-mfd.c
+> > @@ -0,0 +1,72 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * MFD driver for Airoha EN7581
+> > + */
+> > +
+> > +#include <linux/io.h>
+> > +#include <linux/of.h>
+> > +#include <linux/mfd/airoha-en7581-mfd.h>
+> > +#include <linux/mfd/core.h>
+> > +#include <linux/module.h>
+> > +
+> > +static struct resource airoha_mfd_pinctrl_intr[] =3D {
+> > +	{
+> > +		.flags =3D IORESOURCE_IRQ,
+> > +	},
+> > +};
+> > +
+> > +static const struct mfd_cell airoha_mfd_devs[] =3D {
+> > +	{
+> > +		.name =3D "pinctrl-airoha",
+> > +		.resources =3D airoha_mfd_pinctrl_intr,
+> > +		.num_resources =3D ARRAY_SIZE(airoha_mfd_pinctrl_intr),
+> > +	}, {
+> > +		.name =3D "pwm-airoha",
+> > +	},
+> > +};
+> > +
+> > +static int airoha_mfd_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev =3D &pdev->dev;
+> > +	struct airoha_mfd *mfd;
+> > +	int irq;
+> > +
+> > +	mfd =3D devm_kzalloc(dev, sizeof(*mfd), GFP_KERNEL);
+> > +	if (!mfd)
+> > +		return -ENOMEM;
+> > +
+> > +	platform_set_drvdata(pdev, mfd);
+> > +
+> > +	mfd->base =3D devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(mfd->base))
+> > +		return PTR_ERR(mfd->base);
+> > +
+> > +	irq =3D platform_get_irq(pdev, 0);
+> > +	if (irq < 0)
+> > +		return irq;
+> > +
+> > +	airoha_mfd_pinctrl_intr[0].start =3D irq;
+> > +	airoha_mfd_pinctrl_intr[0].end =3D irq;
+> > +
+> > +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, airoha_mfd_devs,
+> > +				    ARRAY_SIZE(airoha_mfd_devs), NULL, 0,
+> > +				    NULL);
+> > +}
+> > +
+> > +static const struct of_device_id airoha_mfd_of_match[] =3D {
+> > +	{ .compatible =3D "airoha,en7581-gpio-sysctl" },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, airoha_mfd_of_match);
+> > +
+> > +static struct platform_driver airoha_mfd_driver =3D {
+> > +	.probe =3D airoha_mfd_probe,
+> > +	.driver =3D {
+> > +		.name =3D KBUILD_MODNAME,
+> > +		.of_match_table =3D airoha_mfd_of_match,
+> > +	},
+> > +};
+> > +module_platform_driver(airoha_mfd_driver);
+> > +
+> > +MODULE_AUTHOR("Christian Marangi <ansuelsmth@gmail.com>");
+> > +MODULE_DESCRIPTION("Driver for Airoha EN7581 MFD");
+> > diff --git a/include/linux/mfd/airoha-en7581-mfd.h b/include/linux/mfd/=
+airoha-en7581-mfd.h
+> > new file mode 100644
+> > index 000000000000..25e73952a777
+> > --- /dev/null
+> > +++ b/include/linux/mfd/airoha-en7581-mfd.h
+> > @@ -0,0 +1,9 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _LINUX_INCLUDE_MFD_AIROHA_EN7581_MFD_H_
+> > +#define _LINUX_INCLUDE_MFD_AIROHA_EN7581_MFD_H_
+> > +
+> > +struct airoha_mfd {
+> > +	void __iomem *base;
+> > +};
+> > +
+> > +#endif  /* _LINUX_INCLUDE_MFD_AIROHA_EN7581_MFD_H_ */
+> >=20
+> > --=20
+> > 2.46.2
+> >=20
+>=20
+> --=20
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+
+--Ck0ElvyZLVpyJemd
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcFmCEACgkQj4D7WH0S
-/k6xnwf/QOZhbtT562rFFa3JIiBatDxTcqyEXoXClrP7jSyQFY/VFzq2S2jRHOFt
-wM6zQUX1bTUqDtC4HozJIbQDjLxd3qFgc5RoTRLV8VhRJbcq9cOo5Nf1h4KJ5Ip9
-nhpzoHwUHoEjEHj1f9UvEWfnFAVCSLFxgb14ZDHZyb2pQue3G5OYI2f2cJYT8YVB
-xQktDFp7rUu4xWDTzoIxNKvR1Ipy5fGxdf9R2/+IQhW64sWuDG2ZH6tAmfn6mEb8
-ecspbesJx+NMbZ06Zl7wqBvyj/DpQGgPaCnWUQ5cI0Of/kOzqxh4+65JK68CLLs0
-/Goin2zz55IZITGC5zHuAA07bW/c7Q==
-=7Wup
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZwWscAAKCRA6cBh0uS2t
+rEz/AQCFBJOOtzJqJ2Zgfn+hqeD0mG44RsxTxw/hCr8oWqE2TAD8CvJfaYJ/spUO
+GPey9tflRamTmCSiSKdx1wZE17e4Gwc=
+=OMHu
 -----END PGP SIGNATURE-----
 
---2ocqjla6tcmukjn3--
+--Ck0ElvyZLVpyJemd--
 
