@@ -1,382 +1,179 @@
-Return-Path: <linux-pwm+bounces-3544-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3545-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 600C29957C7
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 21:42:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8E7E995896
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 22:38:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8CE36B23A12
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 19:41:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 702A2281633
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Oct 2024 20:38:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FEDD213EDF;
-	Tue,  8 Oct 2024 19:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D554721642B;
+	Tue,  8 Oct 2024 20:38:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="iV9gi4K3"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="18fWZBkO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010033.outbound.protection.outlook.com [52.101.69.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D521E0DCC;
-	Tue,  8 Oct 2024 19:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.33
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728416512; cv=fail; b=pmrzGsSGkzRF1epfWBa7K89Qtkf2lHjMNeQ0WL0Fm7oRLOkBrRA1kT39/NTCKk6h5oBsNEkwodKKhSWyZbuC2+pR/dmztFWM0iJd2WJRjhROAvKYaD1sfEpW8g6GVpbQ9Tup4dn8Nn6Uvp1ayJjNV7/ueq/cUQ2ZjGjWYSGXc5o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728416512; c=relaxed/simple;
-	bh=w4m+C3MA+uF99iaYqBpHoN8HtNlLgOwjLrQS1SWbCDg=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=XKlCQhT3ry7p8+GWFSiipcwftqE1a2qmlWSEIeyAlcM4CysYut3/wrvCyN/UJmvlDW6GdhOMFKVVf2BwbsurLiKVb6nVT8bj+HQVRxevtW1Ll1B+mO6J06JBAGkWhZ6gU/On1HQWRyZNIepvMaZR1IhKsrlFGDgRqYxOD19vFRY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=iV9gi4K3; arc=fail smtp.client-ip=52.101.69.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SyvkddGhVIUq+NJHWhIE39hGASP2ix8DbuiMETw2zCGv+Udj/v95EoSjcYr6KsGmgFrGHhmit96u0RMmw2iA6ioL+G0WfSyZsCiGMyM3F3Zcz5AyaZfnzRvPC5rYLIwrUP/hD++7fnzGZAGoS3tvMjjFnT91q4Lz2zpUED7Fo72nSgBFiryOCdx5AC/4u+gMr/0cFRKfCpUOWPjI/CcLnbz7VFz0QP2ciBpbgXo/ZgqwOZ0GZ+ny5xnYx5ekKxjfU8fMcpYSnALmGSHR1IPUp7bcepdAAbKkJ7uya5NoAFy3+ZZy7gPdg6AStyiQkIedc9bQkcWJvqcDG3zmkul6iQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mQqM2YdVVqMejLuSUwuShuQnVSs+FR7EYfdGkIIsH3Q=;
- b=VTWaADAdMml3oVBI2+cQPPzLrMwWlMgJAX8jMD17uItSQ7jM+7r9OuueN2n+vV6DkB0iTPJNprAVlfJbvm9Cn77AU7q291gjQGslGzLt/5rxEmUx3ZRUbnXfXrTJsw0tF2RR6IOCLljdu4mL8fvmNE9sRY3rHCK5FYXIdRJD1jp8JB6ivaGER3t94rn0+UWEr5kP1G9MPjQjAIbRelcqLoGO9TiGUsndXhVVNG3pKFGRmM+OhjrbXlPMf/Rtzd6I8SKwXmj2QsMcsBv0VLMOFyYi1vFjMESEsof9stLMxtILiSL4V8XJnYO5yDIA61GaQjU+7WgTeH/xB7FeRKaPAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mQqM2YdVVqMejLuSUwuShuQnVSs+FR7EYfdGkIIsH3Q=;
- b=iV9gi4K35QvRz3tKp5i999ROLCNGYKknYVIbkRcaAdiq1gdD228E3PvhkOx9/WsdzD+7fnB0H8lXV4UvadWIHcUNbA9VK1+RnOIXFSuRDQzlRkVB49guM91Da57lKKhr5/O3IFRJzeFJoq/sIMfmoCUu9pnOZhK92Vpwh5VcVWnDRevtriGVyHy9HyfAia1ZoumiJ5m36Ng+3hHHtu5rbSk1t2Qa/WtG84sDIibS8t29fKuKG/5NstX+M4OR2KfBgSfbYGWXE1j78E1Q8USi6zsC0hseic6qJ8Tfm9HlmaBKYbyd7WmQ7Pcx+yWFp4uiv0luuJqtlEr632yaN1mpvA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by AM0PR04MB7138.eurprd04.prod.outlook.com (2603:10a6:208:19e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.16; Tue, 8 Oct
- 2024 19:41:47 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%3]) with mapi id 15.20.8026.019; Tue, 8 Oct 2024
- 19:41:47 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: u.kleine-koenig@baylibre.com
-Cc: Frank.Li@nxp.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	festevam@gmail.com,
-	francesco@dolcini.it,
-	imx@lists.linux.dev,
-	jun.li@nxp.com,
-	kernel@pengutronix.de,
-	krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	marex@denx.de,
-	p.zabel@pengutronix.de,
-	pratikmanvar09@gmail.com,
-	robh@kernel.org,
-	s.hauer@pengutronix.de,
-	shawnguo@kernel.org,
-	xiaoning.wang@nxp.com
-Subject: [PATCH v8 1/1] pwm: imx27: workaround of the pwm output bug when decrease the duty cycle
-Date: Tue,  8 Oct 2024 15:41:23 -0400
-Message-Id: <20241008194123.1943141-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY5PR03CA0010.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::20) To AS4PR04MB9621.eurprd04.prod.outlook.com
- (2603:10a6:20b:4ff::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBF9215021
+	for <linux-pwm@vger.kernel.org>; Tue,  8 Oct 2024 20:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728419890; cv=none; b=FH8wQe9dMm/FWhQMfygiYgDMo7bSBiuy5tyRJI98f29q6eay4dCFg0/so2HaoGY20II8UUcPl6xuNai89N8myM8QIfzExcbaZHrhY+T5jg545JNrmvSL+psB9qIJTUpal0SmMVL1w61WQVf/0nZKqtYSnEajPEV8UKHJlSoKhEc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728419890; c=relaxed/simple;
+	bh=jBKc56vBxPYaOUWcC+VFZKlnp8sdizUoPysD1KL2n2Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R9hxaFCZfFLwnFxoE8pcsaXAydYU0GwOgr6rmCIpMx5h37u2P1xfx0CYRFXuLNDr9PGcovNB3FjmTovUUbKSdbeWgDCwU6ohDhLNESS2h6hWDxuFyTM1f5joi0uLr58h9u/KFnYHmubIdTLd+NWQR8uJat4+UppM/s1D+YqgT2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=18fWZBkO; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a9951fba3b4so404169066b.1
+        for <linux-pwm@vger.kernel.org>; Tue, 08 Oct 2024 13:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728419885; x=1729024685; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jBKc56vBxPYaOUWcC+VFZKlnp8sdizUoPysD1KL2n2Y=;
+        b=18fWZBkO9cDHNP5XkQ39MRLClR2iDC1zySqkncD3SsZKu5Rgs7Dl8pH8lKJp2p962M
+         ZQCXVVOIGzjU5UY81OJcQw0kiLkVxi82epBgL4dI4RqabJSCfzsJV/w4rEU39jnWCoY7
+         yG6e+6Huic3MWrYC1oSE1/3jjgRJEPNAKN3ZTXu7yDRI5rDcTHA6JVJ03K88LUsNIndN
+         hxu1wyd0FmRvkB0XvGhYzl60f9BZXhmzkblJFg6rToFyXPRB5BLZ/aQ9AquxPwlKwAUC
+         26vZdSJyysWVJfHabIaR2zJD8Gkd7meZi0reyXepjlExZa64VCzKDkCcaGkjDZZZyvzq
+         ni5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728419885; x=1729024685;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jBKc56vBxPYaOUWcC+VFZKlnp8sdizUoPysD1KL2n2Y=;
+        b=XVecb+5WiP9E0xaeSuUY9x0DlgQ/qxOe/6pWvPv6bmqkaXpt6zxa/JAfwTRfN0QgLp
+         iJXrHgwPpyvm569Mi5l9tEJJjjnS5vp/P6HsptbEznMN0IG8Y+4fWnpbCXeLdUWOUqoM
+         dS7Kb40MuJqBsRB33zUklEioDEtv6UCn6kgF23MYf6574AYpUo5PYiTxnOlK+iQHawrm
+         Q65MCZh8ggbGJwGYZ9nsRQEiZmj70sHs+azB5T4sUsyPF/EJ4WUiJ4P3SyO/CdbcZCJy
+         xV5PRyQHskNZl/ys/pEkf+kXoQApSckeqdC05wUX4V2Cx4BhxwYyyV5XCjE/rlXSRg/o
+         pytQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxhleFe3d0iXDPUdoMlLiWmcdc1dIgbA+VM9+TVxmEUzXTwOe4pax6CKdPS6hKQS61UfH9nw5M988=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeFNF7icMI/u09Wdix3+vgxTIYIUUSns69IQPTXbmF8P7QU8Gq
+	sIMB46t5bYWLLosx2a5+A26OZHdsHccUO8C5UhlfNEGXETRzUi/H9oyJ6bAC324=
+X-Google-Smtp-Source: AGHT+IFQsuFQDnMORn6KRqls83kXMRALTmz1xji/Zv3nzyXsaV17OwyYMIY5gtZ7u9n9SjQRNHRlFg==
+X-Received: by 2002:a17:907:94d4:b0:a8d:250a:52b2 with SMTP id a640c23a62f3a-a998d114bbemr3268366b.6.1728419884897;
+        Tue, 08 Oct 2024 13:38:04 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:c420:a9b6:c5e1:5b65])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a996274deeesm196971266b.103.2024.10.08.13.38.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Oct 2024 13:38:04 -0700 (PDT)
+Date: Tue, 8 Oct 2024 22:38:02 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-bluetooth@vger.kernel.org, linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
+	nouveau@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org, 
+	linux-iio@vger.kernel.org, linux-input@vger.kernel.org, patches@opensource.cirrus.com, 
+	iommu@lists.linux.dev, imx@lists.linux.dev, linux-mediatek@lists.infradead.org, 
+	linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	netdev@vger.kernel.org, linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	linux-sound@vger.kernel.org, linux-spi@vger.kernel.org, linux-staging@lists.linux.dev, 
+	linux-usb@vger.kernel.org, linux-serial@vger.kernel.org, greybus-dev@lists.linaro.org, 
+	asahi@lists.linux.dev, rafael@kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 00/51] treewide: Switch to __pm_runtime_put_autosuspend()
+Message-ID: <ttmnzgsdyng5vab63pvj7csrotbsmwnultjelvdotrvyg2snac@iv7afgect5f3>
+References: <20241004094101.113349-1-sakari.ailus@linux.intel.com>
+ <CAPDyKFp0N6UJhnHS164Tdf=xkWB0jzq65L9TdvYazeBQ-6WjeQ@mail.gmail.com>
+ <20241007184924.GH14766@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|AM0PR04MB7138:EE_
-X-MS-Office365-Filtering-Correlation-Id: 49d15dd0-39f0-46d1-4986-08dce7d13e9d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|7416014|366016|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?l5Vn3kgd1gryaNCc50ug3RCpHmpX08VASDwSsCe5OUlNOJNRc/mmYMdkHaJH?=
- =?us-ascii?Q?473aHteaLNgz+nEn8N/GX4zHVRNCTNDo7qYhefLc2sbOWDDJ5h+Hp5nnZA3z?=
- =?us-ascii?Q?TFmh8GbU8yiOI5euDsN1VzDbYY4ETceBXSDFTx5V+eqCJGS6HnKdCyyqg30q?=
- =?us-ascii?Q?NxxOwNQea1r8xdJNah87p2LTOXsY7gySWOVI7GzApJNeEyqzLxT0FCrVmyF4?=
- =?us-ascii?Q?EXrGyJCuxTVpZRzyU7Tg514R6hWEei0dJcZZFmJi+DnqG6SflT1A8kxdFuYh?=
- =?us-ascii?Q?TFG2DHRMZjwvSqlmnd9y5gX9rPd4F18gD27JjrWSnPg0D7zkDikzmpVPKKR9?=
- =?us-ascii?Q?dxJyGsNLMNMFDnScFKdpUHHaYesv1YWsSZeIIwXZKu+CZHTDAo7jXZJYw2iD?=
- =?us-ascii?Q?2s5v16IgdVAkTmm5voJvRON/1SX85YUlo6JvtYeWoKXhgbK0uLeq9/U/BNjs?=
- =?us-ascii?Q?j8BDjhzHE3sYPhgKNOMcl3lhM6oWhyLw04MSEzHrMlY7daiiyDaiM7jFyQs4?=
- =?us-ascii?Q?9khEXC4lM/l9nk//mjIQEXSt27WJeTJwbu1lY0z+BQ6EyZyUZo8xs9d7GIXD?=
- =?us-ascii?Q?RWyn1dqIDzT366frW7+degYTWVheWoWd7PKJLysgN9Bn4GEl8dzvztwNBL6v?=
- =?us-ascii?Q?0MKO2Nca6JiSiaQ+nGf1GM3oyQiFfZK2pXy0xTsoM5GntXMY/yR31hvbUl3a?=
- =?us-ascii?Q?nTfxdzzYq9r0uXMBlG49n/SXFzs3/mD7qZATQnvDySxee2kNmYQyRkOwMYQ9?=
- =?us-ascii?Q?ht9DU7oJyrGh+DwCHvX22IsxDOpAoCgefuwH84gPEhNkWHG19UGdPmbG/tBO?=
- =?us-ascii?Q?uTSkNutR6+CGOEiiJsh7awy92KRTh8HESZlSB6ycF/w9u128DQxxi23p1AF/?=
- =?us-ascii?Q?heQp0dSij+baTejv2VBSccVbQXD9OnZ+LuU+cXHEiU6JBxNM1GORc0bNvCkn?=
- =?us-ascii?Q?h+dBEVvF/Umgz/47xUaVoslRIxWrmJBxnBYq5wpCSAt1SwbgozMPYhyCDjgB?=
- =?us-ascii?Q?pTA59Be1hXy+EQUqrr8A9FFkdacRY2cSMOsmSBNNia9t7MTFjl6hhobqAO+5?=
- =?us-ascii?Q?oWcSjDJsFBOpqk+HjIMNb7RxmAZ05Qv1ZhZ9FRBMt3FocYqlpWKOHSFGFpMO?=
- =?us-ascii?Q?VsGmw+BiNRVdGuh0mEVZDmRySQxXnF2JFYbrYgOQlGCKrQ8qHtikm7m86aEs?=
- =?us-ascii?Q?X3R8iHHeWAII4wX/rC6HADzV/3kKs52e03gY28El5fDjnOrlkRQOYQJTgMXx?=
- =?us-ascii?Q?fdi8A9oF4JX1I13OijhhtpTxCn8hW2vEwfchHzucuBrcd3wYsG0/RpgYLIPS?=
- =?us-ascii?Q?rnmIn0beypyJ3lIoACG09kksWvfzALpvjx9tzC4Urzt00A=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+wGXK1VAsLLSDkyiHyHjV5J8mvICS3IrkdNLFtttEuizbEnYwIVFdWrTwskq?=
- =?us-ascii?Q?AkDKAeQwg61S2OFG32xKEztdXMrjEfqt59a+8b+6vfLbYTJGWGpnl5UtJir3?=
- =?us-ascii?Q?j76QYBfQISnPQcBQZyJiWA8o2xcHMDVcCxTfaADWwv/YR2elrt/GUSJ7jIfK?=
- =?us-ascii?Q?X4gnpqVq7gkUFryzf0Pk8IjduCpzQLxsb8g6V8zx4tRy0B2Uk6upqrcHJROq?=
- =?us-ascii?Q?U5ROr7PNb9SG+jEEI7YrSH1Jd9WDC3ZDiKejsfWbN3w8AaYw789M9s3Zsi7d?=
- =?us-ascii?Q?VODJ2bInLsYDrdNjUjFJybHwJeOswNCIB+mm6DxAMlUPMhNpexFmHDgQl5Dh?=
- =?us-ascii?Q?ZhIrkPOG4OZ6/xckHsOOkMgw5QlOIBYueJK+yyiHt5wzv3uZfO525XklRKjr?=
- =?us-ascii?Q?vcKgGZInSUVQx21ZCUVfk60zSo4PHX1gytrU1ueqQLNyjXS75apJz5IQIu9b?=
- =?us-ascii?Q?QKrt9cr+3bsVwHyUn9Fk3XETvygMiLXSXXk7EQRBO4x78IQSvnYxvaArY6CE?=
- =?us-ascii?Q?hT29m8FuSW9ueseloP3EaBcB+dX8AqKlRknaE+s0I/KKdCy82ZmsbMskdbY7?=
- =?us-ascii?Q?FELWWotTTJQWIJqtNh4rjRc2vm1Y4VXTq67aWtuMmKRpEipl4RO4mN0TVKQt?=
- =?us-ascii?Q?kMFI5dQwdIJcMclKRbeahzX1O36mvVDBiUAclBe/DWdq0B00/Prgq/org1tU?=
- =?us-ascii?Q?147bmBm+84p08jS8/z87b151IGm7lR00hPupseEb2WAmuCU65/2JHHNdDXXv?=
- =?us-ascii?Q?eorbN8S1UdOsU1yz/JZjqWulvHPdOhUKjuNwkLfWO7wfXMxct2rLmCqEqEwu?=
- =?us-ascii?Q?G2GjbUHFf+HiaNQVEctJQbpBtudK9momrpxR1CoFEICHG0iNQW4MW2HOoObP?=
- =?us-ascii?Q?sKgoZ1VGIOScwtLLLqknslVkqbGDYnp3gVbCZXv/fUEQrViB1lewZRxBwZlF?=
- =?us-ascii?Q?JOniGh12gQ6pjW0Y5KdFCJ/d9GJJV9VrAnxalc25l4ACDRrujXY+X1NY1OH2?=
- =?us-ascii?Q?BoyoDlFTSy34j1EU8L5maAW3ln4tb+dkisXUQfLc0RhHEvNxAFc+EEGnWy6v?=
- =?us-ascii?Q?2U1gs5QLlNUBneVrO4lzPXzLBKiZGYGjtGlRyqJDTEU/tplWckATS7CVksE3?=
- =?us-ascii?Q?x0RFDmO3p/9R6CfBmTvwyfcjFaDBAX9F0tHEM2jODROCFc+59PH8KbxhblJG?=
- =?us-ascii?Q?fQmhK04QmQJNGuLoShQPaoWc9SspQdjyLvua7sP3+wO1LC4qO/9uVoQ2PF/+?=
- =?us-ascii?Q?sEzRNxXo/AW+IFLeOia1amXoaA1tmvjwLMP6N26Od7TB19euVdZ+rfPTff9/?=
- =?us-ascii?Q?AI/+bfLxrY2P93xEh4rs2dZlL3ptF0Oe3TcnF5ltDDBlr1HEcAkRoRbD3FJG?=
- =?us-ascii?Q?AxAQJdCRYy7ka1UwvVVDf/lnfWLu6k5pu2cjgSXCz6zzyHr4FcUBl0G75ORI?=
- =?us-ascii?Q?7gcghmJiLC0KcghdcZh/aCFyrLC0FY/12f4tsrtnwRPrGyVN72UEjCp48wtd?=
- =?us-ascii?Q?afRZNLQ0CsMylcXhRJf5ZqVeY8SnGc5mcEwklLZOOMpva9fi9PKbmxdGWiFa?=
- =?us-ascii?Q?RWwnDT2X4xrZQhv2fZkc4s9OfT2QWOcKTJREnIWf?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49d15dd0-39f0-46d1-4986-08dce7d13e9d
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9621.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2024 19:41:47.2000
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EduocVXZREFp5/voTMZB4IgUuErB+/74+OqT5x8ac0o2IQ0mtjt5ZKB91aQRWnC/e+TgsHmMOo5gv8bcbWhKCw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7138
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2ocqjla6tcmukjn3"
+Content-Disposition: inline
+In-Reply-To: <20241007184924.GH14766@pendragon.ideasonboard.com>
 
-From: Clark Wang <xiaoning.wang@nxp.com>
 
-Implement workaround for ERR051198
-(https://www.nxp.com/docs/en/errata/IMX8MN_0N14Y.pdf)
+--2ocqjla6tcmukjn3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-PWM output may not function correctly if the FIFO is empty when a new SAR
-value is programmed
+Hello,
 
-Description:
-  When the PWM FIFO is empty, a new value programmed to the PWM Sample
-  register (PWM_PWMSAR) will be directly applied even if the current timer
-  period has not expired. If the new SAMPLE value programmed in the
-  PWM_PWMSAR register is less than the previous value, and the PWM counter
-  register (PWM_PWMCNR) that contains the current COUNT value is greater
-  than the new programmed SAMPLE value, the current period will not flip
-  the level. This may result in an output pulse with a duty cycle of 100%.
+On Mon, Oct 07, 2024 at 09:49:24PM +0300, Laurent Pinchart wrote:
+> On Fri, Oct 04, 2024 at 04:38:36PM +0200, Ulf Hansson wrote:
+> > On Fri, 4 Oct 2024 at 11:41, Sakari Ailus <sakari.ailus@linux.intel.com=
+> wrote:
+> > >
+> > > Hello everyone,
+> > >
+> > > This set will switch the users of pm_runtime_put_autosuspend() to
+> > > __pm_runtime_put_autosuspend() while the former will soon be re-purpo=
+sed
+> > > to include a call to pm_runtime_mark_last_busy(). The two are almost
+> > > always used together, apart from bugs which are likely common. Going
+> > > forward, most new users should be using pm_runtime_put_autosuspend().
+> > >
+> > > Once this conversion is done and pm_runtime_put_autosuspend() re-purp=
+osed,
+> > > I'll post another set to merge the calls to __pm_runtime_put_autosusp=
+end()
+> > > and pm_runtime_mark_last_busy().
+> >=20
+> > That sounds like it could cause a lot of churns.
+> >=20
+> > Why not add a new helper function that does the
+> > pm_runtime_put_autosuspend() and the pm_runtime_mark_last_busy()
+> > things? Then we can start moving users over to this new interface,
+> > rather than having this intermediate step?
+>=20
+> I think the API would be nicer if we used the shortest and simplest
+> function names for the most common use cases. Following
+> pm_runtime_put_autosuspend() with pm_runtime_mark_last_busy() is that
+> most common use case. That's why I like Sakari's approach of repurposing
+> pm_runtime_put_autosuspend(), and introducing
+> __pm_runtime_put_autosuspend() for the odd cases where
+> pm_runtime_mark_last_busy() shouldn't be called.
 
-Workaround:
-  Program the current SAMPLE value in the PWM_PWMSAR register before
-  updating the new duty cycle to the SAMPLE value in the PWM_PWMSAR
-  register. This will ensure that the new SAMPLE value is modified during
-  a non-empty FIFO, and can be successfully updated after the period
-  expires.
+That's ok for me. However this patch series isn't the optimal path to
+there because most drivers (i.e. those that already today do
+pm_runtime_mark_last_busy() in combination with
+pm_runtime_put_autosuspend()) have to be patched twice.
 
-Write the old SAR value before updating the new duty cycle to SAR. This
-avoids writing the new value into an empty FIFO.
+The saner route is: Only convert the drivers with a sole
+pm_runtime_put_autosuspend() (i.e. without pm_runtime_mark_last_busy())
+to __pm_runtime_put_autosuspend(). Then add the mark_last_busy() bits to
+pm_runtime_put_autosuspend() and then drop the explicit calls to
+pm_runtime_mark_last_busy() before pm_runtime_put_autosuspend().
 
-This only resolves the issue when the PWM period is longer than 2us
-(or <500kHz) because write register is not quick enough when PWM period is
-very short.
+(Note this doesn't take into account Rafael's position that
+pm_runtime_put() might be the saner option. My argument applies for that
+conversion analogously.)
 
-Reproduce steps:
-  cd /sys/class/pwm/pwmchip1/pwm0
-  echo 2000000000 > period     # It is easy to observe by using long period
-  echo 1000000000 > duty_cycle
-  echo 1 > enable
-  echo       8000 > duty_cycle # One full high pulse will be seen by scope
+Best regards
+Uwe
 
-Fixes: 166091b1894d ("[ARM] MXC: add pwm driver for i.MX SoCs")
-Reviewed-by: Jun Li <jun.li@nxp.com>
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-Chagne from v7 to v8
-- combine Uwe's diagram and errata document.
-- use old period
-- use udelay(3 * period / 1000)
-- Only apply workaround when PWM enabled.
+--2ocqjla6tcmukjn3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Change from v6 to v7
-- Add continue write for < 500hz case to try best to workaround this
-problem.
+-----BEGIN PGP SIGNATURE-----
 
-Change from v5 to v6
-- KHz to KHz
-- sar to SAR
-- move comments above if
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcFmCEACgkQj4D7WH0S
+/k6xnwf/QOZhbtT562rFFa3JIiBatDxTcqyEXoXClrP7jSyQFY/VFzq2S2jRHOFt
+wM6zQUX1bTUqDtC4HozJIbQDjLxd3qFgc5RoTRLV8VhRJbcq9cOo5Nf1h4KJ5Ip9
+nhpzoHwUHoEjEHj1f9UvEWfnFAVCSLFxgb14ZDHZyb2pQue3G5OYI2f2cJYT8YVB
+xQktDFp7rUu4xWDTzoIxNKvR1Ipy5fGxdf9R2/+IQhW64sWuDG2ZH6tAmfn6mEb8
+ecspbesJx+NMbZ06Zl7wqBvyj/DpQGgPaCnWUQ5cI0Of/kOzqxh4+65JK68CLLs0
+/Goin2zz55IZITGC5zHuAA07bW/c7Q==
+=7Wup
+-----END PGP SIGNATURE-----
 
-Change from v4 to v5
-- fix typo PMW & If
-- using imx->mmio_base + MX3_PWMSAR
-
-Change from v3 to v4
-- none, wrong bump version number
-Change from v2 to v3
-- simple workaround implement.
-- add reproduce steps.
-
-Change from v1 to v2
-- address comments in https://lore.kernel.org/linux-pwm/20211221095053.uz4qbnhdqziftymw@pengutronix.de/
-  About disable/enable pwm instead of disable/enable irq:
-  Some pmw periphal may sensitive to period. Disable/enable pwm will
-increase period, althouhg it is okay for most case, such as LED backlight
-or FAN speed. But some device such servo may require strict period.
-
-- address comments in https://lore.kernel.org/linux-pwm/d72d1ae5-0378-4bac-8b77-0bb69f55accd@gmx.net/
-  Using official errata number
-  fix typo 'filp'
-  add {} for else
-
-I supposed fixed all previous issues, let me know if I missed one.
----
- drivers/pwm/pwm-imx27.c | 98 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 96 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 9e2bbf5b4a8ce..0375987194318 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -26,6 +26,7 @@
- #define MX3_PWMSR			0x04    /* PWM Status Register */
- #define MX3_PWMSAR			0x0C    /* PWM Sample Register */
- #define MX3_PWMPR			0x10    /* PWM Period Register */
-+#define MX3_PWMCNR			0x14    /* PWM Counter Register */
- 
- #define MX3_PWMCR_FWM			GENMASK(27, 26)
- #define MX3_PWMCR_STOPEN		BIT(25)
-@@ -219,10 +220,12 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			   const struct pwm_state *state)
- {
--	unsigned long period_cycles, duty_cycles, prescale;
-+	unsigned long period_cycles, duty_cycles, prescale, period_us, tmp;
- 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
- 	unsigned long long c;
- 	unsigned long long clkrate;
-+	unsigned long flags;
-+	int val;
- 	int ret;
- 	u32 cr;
- 
-@@ -263,7 +266,98 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		pwm_imx27_sw_reset(chip);
- 	}
- 
--	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-+	val = readl(imx->mmio_base + MX3_PWMPR);
-+	val = val >= MX3_PWMPR_MAX ? MX3_PWMPR_MAX : val;
-+	cr = readl(imx->mmio_base + MX3_PWMCR);
-+	tmp = NSEC_PER_SEC * (u64)(val + 2) * MX3_PWMCR_PRESCALER_GET(cr);
-+	tmp = DIV_ROUND_UP_ULL(tmp, clkrate);
-+	period_us = DIV_ROUND_UP_ULL(tmp, 1000);
-+
-+	/*
-+	 * ERR051198:
-+	 * PWM: PWM output may not function correctly if the FIFO is empty when
-+	 * a new SAR value is programmed
-+	 *
-+	 * Description:
-+	 * When the PWM FIFO is empty, a new value programmed to the PWM Sample
-+	 * register (PWM_PWMSAR) will be directly applied even if the current
-+	 * timer period has not expired.
-+	 *
-+	 * If the new SAMPLE value programmed in the PWM_PWMSAR register is
-+	 * less than the previous value, and the PWM counter register
-+	 * (PWM_PWMCNR) that contains the current COUNT value is greater than
-+	 * the new programmed SAMPLE value, the current period will not flip
-+	 * the level. This may result in an output pulse with a duty cycle of
-+	 * 100%.
-+	 *
-+	 * Consider a change from
-+	 *     ________
-+	 *    /        \______/
-+	 *    ^      *        ^
-+	 * to
-+	 *     ____
-+	 *    /    \__________/
-+	 *    ^               ^
-+	 * At the time marked by *, the new write value will be directly applied
-+	 * to SAR even the current period is not over if FIFO is empty.
-+	 *
-+	 *     ________        ____________________
-+	 *    /        \______/                    \__________/
-+	 *    ^               ^      *        ^               ^
-+	 *    |<-- old SAR -->|               |<-- new SAR -->|
-+	 *
-+	 * That is the output is active for a whole period.
-+	 *
-+	 * Workaround:
-+	 * Check new SAR less than old SAR and current counter is in errata
-+	 * windows, write extra old SAR into FIFO and new SAR will effect at
-+	 * next period.
-+	 *
-+	 * Sometime period is quite long, such as over 1 second. If add old SAR
-+	 * into FIFO unconditional, new SAR have to wait for next period. It
-+	 * may be too long.
-+	 *
-+	 * Turn off the interrupt to ensure that not IRQ and schedule happen
-+	 * during above operations. If any irq and schedule happen, counter
-+	 * in PWM will be out of data and take wrong action.
-+	 *
-+	 * Add a safety margin 1.5us because it needs some time to complete
-+	 * IO write.
-+	 *
-+	 * Use writel_relaxed() to minimize the interval between two writes to
-+	 * the SAR register to increase the fastest PWM frequency supported.
-+	 *
-+	 * When the PWM period is longer than 2us(or <500kHz), this workaround
-+	 * can solve this problem. No software workaround is available if PWM
-+	 * period is shorter than IO write. Just try best to fill old data
-+	 * into FIFO.
-+	 */
-+	c = clkrate * 1500;
-+	do_div(c, NSEC_PER_SEC);
-+
-+	local_irq_save(flags);
-+	val = FIELD_GET(MX3_PWMSR_FIFOAV, readl_relaxed(imx->mmio_base + MX3_PWMSR));
-+
-+	if (duty_cycles < imx->duty_cycle && (cr & MX3_PWMCR_EN)) {
-+		if (period_us < 2) { /* 2us = 500 kHz */
-+			/* Best effort attempt to fix up >500 kHz case */
-+			udelay(3 * period_us);
-+			writel_relaxed(imx->duty_cycle, imx->mmio_base + MX3_PWMSAR);
-+			writel_relaxed(imx->duty_cycle, imx->mmio_base + MX3_PWMSAR);
-+		} else if (val < MX3_PWMSR_FIFOAV_2WORDS) {
-+			val = readl_relaxed(imx->mmio_base + MX3_PWMCNR);
-+			/*
-+			 * If counter is close to period, controller may roll over when
-+			 * next IO write.
-+			 */
-+			if ((val + c >= duty_cycles && val < imx->duty_cycle) ||
-+			    val + c >= period_cycles)
-+				writel_relaxed(imx->duty_cycle, imx->mmio_base + MX3_PWMSAR);
-+		}
-+	}
-+	writel_relaxed(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-+	local_irq_restore(flags);
-+
- 	writel(period_cycles, imx->mmio_base + MX3_PWMPR);
- 
- 	/*
--- 
-2.34.1
-
+--2ocqjla6tcmukjn3--
 
