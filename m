@@ -1,75 +1,74 @@
-Return-Path: <linux-pwm+bounces-3568-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3569-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACC1B996DC7
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 16:29:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F6B6996E4B
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 16:40:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 02B0EB21759
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 14:29:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01C5D281497
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 14:40:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BEA619DF60;
-	Wed,  9 Oct 2024 14:29:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 611E314A0AB;
+	Wed,  9 Oct 2024 14:40:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DYegVRLP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1mjMCoJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA53190671;
-	Wed,  9 Oct 2024 14:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66093BBEB;
+	Wed,  9 Oct 2024 14:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728484183; cv=none; b=Vs7XXyIIf56ef/+3VJuvAzUcUmTJ89f1AnzIhWtMr3uvDvll8cYOPx4sDD1gfYBwojEZBBs9dP3rKurfx8tvRXw15urrRkZoM+5i2gpyndmGN6jWxv9LeW2kaT3c2JpX3vCCuLFdtlJUuRwkUKaLvlSS6z/ORxTu91uhuSa7k4Y=
+	t=1728484803; cv=none; b=nVIlDR3ZI3ajDeVxxephkIMEU0kHQ9aJrYJl/9xxsnsGWg30+09bh8lekKNF5d7lAS4tUAQS+kryUdmQd2QyW/Iu0DT/9j0SQBAcEJfJaMn/xUcHjCmZnaUojL8uZJ4UuMeqLM1h6Th/kOW0ghdWNeXSP6cpgpcDf85rAQ4OO0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728484183; c=relaxed/simple;
-	bh=E5l7XLUph4CroFoG9mgsfyCmACzVRqqisf8fJBYUGFg=;
+	s=arc-20240116; t=1728484803; c=relaxed/simple;
+	bh=WIxVQAkTWICRZjnmzg7/+ehtFeF1lYh/jn7EQ5extqY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z/ckAwlgcWIVicQdK2RoGHgNvp9BqAee6VJlAP0pJtvyOkdT1n2LO9hU7mSjePdY1ELk3VSEe09aNf6aRoG991JfDn5YIwkiED44SzBae5NEbaycoDzc2SRTJJlG7DZHhoC+1iFrrqjCz3pUnxXu6C4D67EJoE5yu4NdX6OLV9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DYegVRLP; arc=none smtp.client-ip=209.85.167.45
+	 Content-Type:MIME-Version; b=ZwWanaR3Er+wCZpqcRHxZO2XKfuiFlQYHbZ51rQ9rs7Uu+ct/kT0rtY4xZFvjjyeAxs4j+bV+lx3e5zhYMAQlM1SuMPOuwqGqTgupXeWj1joiQ90j4/3ACKM2qkV8wEFjGcQQgX9hZr243jMxx6DPMLBZyReQ2rVKJ75CvGdrBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z1mjMCoJ; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-53997328633so9365706e87.3;
-        Wed, 09 Oct 2024 07:29:37 -0700 (PDT)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a9943897c07so609913766b.3;
+        Wed, 09 Oct 2024 07:40:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728484176; x=1729088976; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1728484800; x=1729089600; darn=vger.kernel.org;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=x1exwFMCtjID6DoZpDSkqCzWTlshQQhxAhHFrjRH1NA=;
-        b=DYegVRLPMOUWFNc5e9bJVPrdCZHicA2qVQ6OPwafLliK1XS4pYZfccjX4hNxXeHX9l
-         HTFSmkuuooshHtxOMSwAfOFZ7/fbCis6EIoXZOejs5lS9f1JlDMagJfmI7ioEPAn2ja5
-         7xZiTpbOS10SZEwDEDDgUEp7rkDZygnrZzqt5/hopHbncLGXFs57Rpi04dJvcxNagjgA
-         uIhHTFSW3YYGI8+L2WW709AzRox3o8dq0IyF2wwCojYwFDK//6tDsmObEao2gppOCyH+
-         eZ4ShYs1Ufm1oM9aIBQPO2RhHrcTBluWCsKQCHCVaD6u4ATT2yTYawN0iUCfXg/z6sdc
-         wczQ==
+        bh=fQH4Rjgx8wyc4kWG1BHXE6ckcwQoBaKiq9RmNTLAvtQ=;
+        b=Z1mjMCoJEOh00FmiAQvJgxQDC3okeyhKdytIMP3GJBqZXQ6Jad1fM/Mxs42tWdR1mz
+         s7J5bM7/72JZGDioxnz94K2D4VFGvz1OaH8uNqMIO/oW7zuxGa+hm2xaSy/J1UEl9S9n
+         6vsHQOS/aYxftUWONwbpnK/2SpzbN4gBghgZhZrXft6cEjbN8uUcfLb6Fz97Bfn6b/zg
+         MoZqD/DsxuUMbns/6dr8MNoTbhrXJa4TUwA34U8ptDUwEObrLcTPYlOFaII/sOkcshG+
+         bgu+anzcPWQMqr+InHWNfrg70yKBY4XC+3Thdh5UaNcciFUcfapWP5pYwF4DJ6sinG+Q
+         PilQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728484176; x=1729088976;
+        d=1e100.net; s=20230601; t=1728484800; x=1729089600;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=x1exwFMCtjID6DoZpDSkqCzWTlshQQhxAhHFrjRH1NA=;
-        b=fm0rG5BWTCEiZGfwiTMccheCUoNM2d/HxjWZ/lzkd0rAnLWR3yozKlMw0Oxb0yo0KU
-         ARZXxdsYeWeatYIjCpOKSCpHR8NNBqLsce8l66Q+FrdDWT092s0yNoofcUsamX2xnRsD
-         m/my/DmOKXSpDkseAAnwE0AX3cm0VC1UoUgpxX1iWrm5c4CoX8j96xduJXydUGiwUfgK
-         0kgtfNyzDJC5aO/ewMXcJrhOzSclwCm3Ft0G5zzANZXfYdRG9QA3Hx742q+6MAbZXGDJ
-         ++A8DYL94a4qKo02jIFgtQWJWehltqDRT+mSTphmvsggTyEe+V93CpVloJ3QxNQ7rKyu
-         rnxA==
-X-Forwarded-Encrypted: i=1; AJvYcCVG+FKKe3rCEgsgtsH4pP5kFK0A13PfbXrtBtIYAWcshXHiYimW/uEwHxOF2Tk6jFvG+XjKsVyB/0Ki@vger.kernel.org, AJvYcCVSWTciFWL0gf7GZS4SRvXcWTzuNUM0Ijn8RnCw7wQvsbsiGtEFVoALVEa/qNrdVoUb8dXYcTD0Ya8v@vger.kernel.org, AJvYcCX1//2YmP6NInH4R/e/OENZamXaH6Tmo/xI5DBTQyrH0Ie/cYnqZo+VagHiepwuCdu2UIZnK+fiEyqJgvMK@vger.kernel.org, AJvYcCXpuExWdzlRiZ20V4uoibLyYwHcbMDf4O27EVJF4HAQj5G6dcJa9Q5aDfnMI9Yqf21Z7BLLM9DWqk57VAc=@vger.kernel.org, AJvYcCXqMMNHJgWRRa6wxCI19POGLV7AjIHr2Ws2l84n7k/vG9DhaQJOq9ltHw2bkw/mbOZ8Ef9gxndy8hII@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIIU7iF0H4yHRY148cjZu88wQszR5HPibz9pijG9Pf2NqwTk49
-	96TJYPZNce8MvNo46g9VOGM1dyBDPbxITVgOWccyqhuk/Qwupewq
-X-Google-Smtp-Source: AGHT+IHypRgzpda4UOn7tUpkG6oM5G0fDPn+ptPE33yjZYSablG58wP1fcey4fCgQzqtBNml3VEhew==
-X-Received: by 2002:a05:6512:3a91:b0:52c:9ae0:beed with SMTP id 2adb3069b0e04-539c4967fd4mr2586186e87.52.1728484175915;
-        Wed, 09 Oct 2024 07:29:35 -0700 (PDT)
+        bh=fQH4Rjgx8wyc4kWG1BHXE6ckcwQoBaKiq9RmNTLAvtQ=;
+        b=tctQWVQLVRK97Qm8hz5hhyOYocmjFx9MP4QE/eXtSwnnOWV9PcyYjDdNBXgRktHZRu
+         nivLH+X5Tp2S61k4/wR/MhePvdUFH5XG7Yhczphh3VKOmygyfLQ0dbdyGWiDPBl4TBVk
+         2KKTAxiiC5M9NaT+tL5inHsZhEYKubemEpeBdhjiCmYUMnfZd6xyAGJ0Ek0P5JrRS5SA
+         Ro1yLfSRK72jjXACB5W0DVpkoX4QM0Dkp1ulVEIIJ0KqncAh1HtJSMvGElNep8MCQnBJ
+         o93S9/7I4iwGc0h/GbIRPmJFSwUv06Q8RzasC5xIw/Pc+CQRUc0EkwZn2hzugB4V7Ia/
+         9Z3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUZYnxZLevoA+O0Uq5+cGe6if2s699Oyzde2B5k46sLij3VnKw5nmiskltly59fylsA/YjhmJpAPjpk@vger.kernel.org, AJvYcCUd20exIu2I3r8LqPt7eY1dbiT9NTUmnAMwRxQbJrhhUy8sl67Nx/Q4f6Ywpqcd1KfaVbEwmyQgcvaoEzX2@vger.kernel.org, AJvYcCVrA3r3gl8O6FjAsb6lGIe7yqRBxj7g641eLcaSadvve7/RAU99IUUx29rmzUxmJ0m3kECXBWkbhuMYkCo=@vger.kernel.org, AJvYcCXZc1U0hR9cPbynGWSS0MrCZwcS3tgXugfjnajB8SJLhegivr1qoztDUviNYgFHufeaULOT11Rn1RhC@vger.kernel.org, AJvYcCXfMiEGZ3b6+lOhOXbW7cY0hbggSwe3rwZPdAvyUb4Y/ICkTcb2XtRiNfWIbpGfGOhuokaxd0Qqvksj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRy/irq1d36ykPGtYSJYjXBeNrbcW1BKcyl4Hc8iLXCzDr8LbY
+	ggKwaF/I6mHHvfqXDB0YbJXUS3uLqtJedcd05rTotPuyffLwMfet
+X-Google-Smtp-Source: AGHT+IGf82so3ncJqcp1r2jhONc3QpN1q4ZExW5+Xw94byLu7PFFtYP9NN/erIT9QH3fFHdER/oNEQ==
+X-Received: by 2002:a17:907:7d9f:b0:a99:8abf:3610 with SMTP id a640c23a62f3a-a998d197392mr214942866b.14.1728484799774;
+        Wed, 09 Oct 2024 07:39:59 -0700 (PDT)
 Received: from ?IPv6:2001:a61:34c9:ea01:14b4:7ed9:5135:9381? ([2001:a61:34c9:ea01:14b4:7ed9:5135:9381])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9963760779sm298304366b.204.2024.10.09.07.29.34
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a994610bccdsm532582766b.1.2024.10.09.07.39.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2024 07:29:34 -0700 (PDT)
-Message-ID: <5860310e0413038ac477b9e191c3d15029487628.camel@gmail.com>
-Subject: Re: [PATCH v4 4/8] iio: adc: ad7606: Add PWM support for conversion
- trigger
+        Wed, 09 Oct 2024 07:39:59 -0700 (PDT)
+Message-ID: <facfe06f51a815f4ff5604aeacd8bd6ed0629be4.camel@gmail.com>
+Subject: Re: [PATCH v4 5/8] iio: adc: ad7606: Add compatibility to fw_nodes
 From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
 To: Guillaume Stols <gstols@baylibre.com>, Uwe
  =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, Lars-Peter Clausen
@@ -83,11 +82,11 @@ Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
  aardelean@baylibre.com,  dlechner@baylibre.com, jstephan@baylibre.com,
  Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date: Wed, 09 Oct 2024 16:29:33 +0200
-In-Reply-To: <20241009-ad7606_add_iio_backend_support-v4-4-6971a8c0f1d5@baylibre.com>
+Date: Wed, 09 Oct 2024 16:39:58 +0200
+In-Reply-To: <20241009-ad7606_add_iio_backend_support-v4-5-6971a8c0f1d5@baylibre.com>
 References: 
 	<20241009-ad7606_add_iio_backend_support-v4-0-6971a8c0f1d5@baylibre.com>
-	 <20241009-ad7606_add_iio_backend_support-v4-4-6971a8c0f1d5@baylibre.com>
+	 <20241009-ad7606_add_iio_backend_support-v4-5-6971a8c0f1d5@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
@@ -99,303 +98,50 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Wed, 2024-10-09 at 09:19 +0000, Guillaume Stols wrote:
-> Until now, the conversion were triggered by setting high the GPIO
-> connected to the convst pin. This commit gives the possibility to
-> connect the convst pin to a PWM.
-> Connecting a PWM allows to have a better control on the samplerate,
-> but it must be handled with care, as it is completely decorrelated of
-> the driver's busy pin handling.
-> Hence it is not recommended to be used "as is" but must be exploited
-> in conjunction with IIO backend, and for now only a mock functionality
-> is enabled, i.e PWM never swings, but is used as a GPIO, i.e duty_cycle
-> =3D=3D period equals high state, duty_cycle =3D=3D 0 equals low state.
+> On the parallel version, the current implementation is only compatible
+> with id tables and won't work with fw_nodes, this commit intends to fix
+> it.
 >=20
-> This mock functionality will be disabled after the IIO backend usecase
-> is introduced.
+> Doing so required to declare ad7606_chip_info structures in the .h file
+> so to make them accessible to all the driver files that can set a
+> pointer to the corresponding chip as the driver data.
 >=20
 > Signed-off-by: Guillaume Stols <gstols@baylibre.com>
 > ---
-
-Hi Guillaume,
-
-Looks overall good, just some minor stuff
-
-> =C2=A0drivers/iio/adc/ad7606.c | 143 ++++++++++++++++++++++++++++++++++++=
-+++++++----
-> =C2=A0drivers/iio/adc/ad7606.h |=C2=A0=C2=A0 2 +
-> =C2=A02 files changed, 135 insertions(+), 10 deletions(-)
+> =C2=A0drivers/iio/adc/ad7606.c=C2=A0=C2=A0=C2=A0=C2=A0 | 283 ++++++++++++=
+++++++++++++-------------------
+> =C2=A0drivers/iio/adc/ad7606.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 32 +++--
+> =C2=A0drivers/iio/adc/ad7606_par.c |=C2=A0 30 +++--
+> =C2=A0drivers/iio/adc/ad7606_spi.c |=C2=A0 96 +++++++++------
+> =C2=A04 files changed, 254 insertions(+), 187 deletions(-)
 >=20
 > diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> index 71362eafe838..5b276d087ec3 100644
+> index 5b276d087ec3..dfbdea8c28ba 100644
 > --- a/drivers/iio/adc/ad7606.c
 > +++ b/drivers/iio/adc/ad7606.c
-> @@ -13,10 +13,12 @@
-> =C2=A0#include <linux/kernel.h>
-> =C2=A0#include <linux/module.h>
-> =C2=A0#include <linux/property.h>
-> +#include <linux/pwm.h>
-> =C2=A0#include <linux/regulator/consumer.h>
-> =C2=A0#include <linux/sched.h>
-> =C2=A0#include <linux/slab.h>
-> =C2=A0#include <linux/sysfs.h>
-> +#include <linux/units.h>
-> =C2=A0#include <linux/util_macros.h>
-> =C2=A0
-> =C2=A0#include <linux/iio/buffer.h>
-> @@ -299,6 +301,82 @@ static int ad7606_reg_access(struct iio_dev *indio_d=
-ev,
-> =C2=A0	}
-> =C2=A0}
-> =C2=A0
-> +static int ad7606_pwm_set_high(struct ad7606_state *st)
-> +{
-> +	struct pwm_state cnvst_pwm_state;
-> +	int ret;
-> +
-> +	if (!st->cnvst_pwm)
-> +		return -EINVAL;
-> +
+> @@ -78,6 +78,155 @@ static const unsigned int ad7616_oversampling_avail[8=
+] =3D {
+>=20
+...
 
-Maybe consider doing the check before calling the API (for the cases that n=
-eed it)?
-It seems at least that in a couple of cases you actually already know that =
-the PWM
-must be here (since you check for the gpio presence)...
-
-> +	pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
-> +	cnvst_pwm_state.enabled =3D true;
-> +	cnvst_pwm_state.duty_cycle =3D cnvst_pwm_state.period;
-> +
-> +	ret =3D pwm_apply_might_sleep(st->cnvst_pwm, &cnvst_pwm_state);
-> +	/* sleep 2 =C2=B5S to let finish the current pulse */
-> +	fsleep(2);
-> +
-> +	return ret;
-> +}
-> +
-> +static int ad7606_pwm_set_low(struct ad7606_state *st)
-> +{
-> +	struct pwm_state cnvst_pwm_state;
-> +	int ret;
-> +
-> +	if (!st->cnvst_pwm)
-> +		return -EINVAL;
-> +
-
-Same deal...
-
-> +	pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
-> +	cnvst_pwm_state.enabled =3D true;
-> +	cnvst_pwm_state.duty_cycle =3D 0;
-> +
-> +	ret =3D pwm_apply_might_sleep(st->cnvst_pwm, &cnvst_pwm_state);
-> +	/* sleep 2 =C2=B5S to let finish the current pulse */
-> +	fsleep(2);
-> +
-> +	return ret;
-> +}
-> +
-> +static bool ad7606_pwm_is_swinging(struct ad7606_state *st)
-> +{
-> +	struct pwm_state cnvst_pwm_state;
-> +
-> +	if (!st->cnvst_pwm)
-> +		return false;
-> +
-
-This one also seems to be redundant? ad7606_set_sampling_freq() should be o=
-nly called
-from a context where the PWM exists right?
-
-> +	pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
-> +
-> +	return cnvst_pwm_state.duty_cycle !=3D cnvst_pwm_state.period &&
-> +	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cnvst_pwm_state.duty_cycle !=3D 0;
-> +}
-> +
-> +static int ad7606_set_sampling_freq(struct ad7606_state *st, unsigned lo=
-ng freq)
-> +{
-> +	struct pwm_state cnvst_pwm_state;
-> +	bool is_swinging =3D ad7606_pwm_is_swinging(st);
-> +	bool is_high;
-> +
-> +	if (freq =3D=3D 0)
-> +		return -EINVAL;
-> +
-> +	/* Retrieve the previous state. */
-> +	pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
-> +	is_high =3D cnvst_pwm_state.duty_cycle =3D=3D cnvst_pwm_state.period;
-> +
-> +	cnvst_pwm_state.period =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, freq);
-> +	cnvst_pwm_state.polarity =3D PWM_POLARITY_NORMAL;
-> +	if (is_high)
-> +		cnvst_pwm_state.duty_cycle =3D cnvst_pwm_state.period;
-> +	else if (is_swinging)
-> +		cnvst_pwm_state.duty_cycle =3D cnvst_pwm_state.period / 2;
-> +	else
-> +		cnvst_pwm_state.duty_cycle =3D 0;
-> +
-> +	return pwm_apply_might_sleep(st->cnvst_pwm, &cnvst_pwm_state);
-> +}
-> +
-> =C2=A0static int ad7606_read_samples(struct ad7606_state *st)
-> =C2=A0{
-> =C2=A0	unsigned int num =3D st->chip_info->num_channels - 1;
-> @@ -325,6 +403,7 @@ static irqreturn_t ad7606_trigger_handler(int irq, vo=
-id *p)
-> =C2=A0	iio_trigger_notify_done(indio_dev->trig);
-> =C2=A0	/* The rising edge of the CONVST signal starts a new conversion. *=
-/
-> =C2=A0	gpiod_set_value(st->gpio_convst, 1);
-> +	ad7606_pwm_set_high(st);
-> =C2=A0
-> =C2=A0	return IRQ_HANDLED;
-> =C2=A0}
-> @@ -337,7 +416,13 @@ static int ad7606_scan_direct(struct iio_dev *indio_=
-dev,
-> unsigned int ch,
-> =C2=A0	const struct iio_chan_spec *chan;
-> =C2=A0	int ret;
-> =C2=A0
-> -	gpiod_set_value(st->gpio_convst, 1);
-> +	if (st->gpio_convst) {
-> +		gpiod_set_value(st->gpio_convst, 1);
-> +	} else {
-> +		ret =3D ad7606_pwm_set_high(st);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> =C2=A0	ret =3D wait_for_completion_timeout(&st->completion,
-> =C2=A0					=C2=A0 msecs_to_jiffies(1000));
-> =C2=A0	if (!ret) {
-> @@ -363,6 +448,11 @@ static int ad7606_scan_direct(struct iio_dev *indio_=
-dev,
-> unsigned int ch,
-> =C2=A0	}
-> =C2=A0
-> =C2=A0error_ret:
-> +	if (!st->gpio_convst) {
-> +		ret =3D ad7606_pwm_set_low(st);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> =C2=A0	gpiod_set_value(st->gpio_convst, 0);
-> =C2=A0
-> =C2=A0	return ret;
-> @@ -662,8 +752,9 @@ static int ad7606_request_gpios(struct ad7606_state *=
-st)
-> =C2=A0{
-> =C2=A0	struct device *dev =3D st->dev;
-> =C2=A0
-> -	st->gpio_convst =3D devm_gpiod_get(dev, "adi,conversion-start",
-> -					 GPIOD_OUT_LOW);
-> +	st->gpio_convst =3D devm_gpiod_get_optional(dev, "adi,conversion-start"=
-,
-> +						=C2=A0 GPIOD_OUT_LOW);
-> +
-> =C2=A0	if (IS_ERR(st->gpio_convst))
-> =C2=A0		return PTR_ERR(st->gpio_convst);
-> =C2=A0
-> @@ -708,6 +799,7 @@ static irqreturn_t ad7606_interrupt(int irq, void *de=
-v_id)
-> =C2=A0
-> =C2=A0	if (iio_buffer_enabled(indio_dev)) {
-> =C2=A0		gpiod_set_value(st->gpio_convst, 0);
-> +		ad7606_pwm_set_low(st);
-> =C2=A0		iio_trigger_poll_nested(st->trig);
-> =C2=A0	} else {
-> =C2=A0		complete(&st->completion);
-> @@ -732,6 +824,7 @@ static int ad7606_buffer_postenable(struct iio_dev *i=
-ndio_dev)
-> =C2=A0	struct ad7606_state *st =3D iio_priv(indio_dev);
-> =C2=A0
-> =C2=A0	gpiod_set_value(st->gpio_convst, 1);
-> +	ad7606_pwm_set_high(st);
-
-error handling?
-> =C2=A0
-> =C2=A0	return 0;
-> =C2=A0}
-> @@ -741,6 +834,7 @@ static int ad7606_buffer_predisable(struct iio_dev *i=
-ndio_dev)
-> =C2=A0	struct ad7606_state *st =3D iio_priv(indio_dev);
-> =C2=A0
-> =C2=A0	gpiod_set_value(st->gpio_convst, 0);
-> +	ad7606_pwm_set_low(st);
+> +const struct ad7606_chip_info ad7616_info =3D {
+> +	.channels =3D ad7616_channels,
+> +	.init_delay_ms =3D 15,
+> +	.name =3D "ad7616",
+> +	.num_channels =3D 17,
+> +	.oversampling_avail =3D ad7616_oversampling_avail,
+> +	.oversampling_num =3D ARRAY_SIZE(ad7616_oversampling_avail),
+> +	.os_req_reset =3D true,
+> +	.scale_setup_cb =3D ad7606_16bit_chan_scale_setup,
+> +};
+> +EXPORT_SYMBOL_NS_GPL(ad7616_info, IIO_AD7606);
 >=20
 
-error handling?
-
-> =C2=A0	return 0;
-> =C2=A0}
-> @@ -874,6 +968,11 @@ static int ad7606_chan_scales_setup(struct iio_dev *=
-indio_dev)
-> =C2=A0	return 0;
-> =C2=A0}
-> =C2=A0
-> +static void ad7606_pwm_disable(void *data)
-> +{
-> +	pwm_disable(data);
-> +}
-> +
-> =C2=A0int ad7606_probe(struct device *dev, int irq, void __iomem *base_ad=
-dress,
-> =C2=A0		 const char *name, unsigned int id,
-> =C2=A0		 const struct ad7606_bus_ops *bops)
-> @@ -950,6 +1049,31 @@ int ad7606_probe(struct device *dev, int irq, void =
-__iomem
-> *base_address,
-> =C2=A0	if (ret)
-> =C2=A0		return ret;
-> =C2=A0
-> +	/* If convst pin is not defined, setup PWM. */
-> +	if (!st->gpio_convst) {
-> +		st->cnvst_pwm =3D devm_pwm_get(dev, NULL);
-> +		if (IS_ERR(st->cnvst_pwm))
-> +			return PTR_ERR(st->cnvst_pwm);
-> +
-> +		/* The PWM is initialized at 1MHz to have a fast enough GPIO
-> emulation. */
-> +		ret =3D ad7606_set_sampling_freq(st, 1 * MEGA);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret =3D ad7606_pwm_set_low(st);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/*
-> +		 * PWM is not disabled when sampling stops, but instead its duty
-> cycle is set
-> +		 * to 0% to be sure we have a "low" state. After we unload the
-> driver, let's
-> +		 * disable the PWM.
-> +		 */
-> +		ret =3D devm_add_action_or_reset(dev, ad7606_pwm_disable,
-> +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 st->cnvst_pwm);
-> +		if (ret)
-> +			return ret;
-> +	}
-> =C2=A0	st->trig =3D devm_iio_trigger_alloc(dev, "%s-dev%d",
-> =C2=A0					=C2=A0 indio_dev->name,
-> =C2=A0					=C2=A0 iio_device_id(indio_dev));
-> @@ -963,6 +1087,12 @@ int ad7606_probe(struct device *dev, int irq, void =
-__iomem
-> *base_address,
-> =C2=A0		return ret;
-> =C2=A0
-> =C2=A0	indio_dev->trig =3D iio_trigger_get(st->trig);
-> +	ret =3D devm_iio_triggered_buffer_setup(dev, indio_dev,
-> +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &iio_pollfunc_store_time,
-> +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &ad7606_trigger_handler,
-> +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &ad7606_buffer_ops);
-> +	if (ret)
-> +		return ret;
->=20
-
-The above change seems unrelated?
+Maybe my eyes are tricking me but I'm not seeing any MODULE_IMPORT_NS() in =
+the
+drivers?
 
 - Nuno S=C3=A1
+
 
 
