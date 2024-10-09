@@ -1,74 +1,74 @@
-Return-Path: <linux-pwm+bounces-3573-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3574-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37EB4996EDF
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 16:55:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 72605996F07
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 17:00:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E22B8281D45
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 14:55:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 33225282FAA
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 15:00:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64A9C126C18;
-	Wed,  9 Oct 2024 14:55:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A39321DF249;
+	Wed,  9 Oct 2024 14:59:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXnNrSNj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hh5/x0LT"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8655C1925BB;
-	Wed,  9 Oct 2024 14:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE81E1A0B06;
+	Wed,  9 Oct 2024 14:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728485739; cv=none; b=D+6Y9o9UOggejdKj3tDsFm972jc3g8JgVjElh9HgYRJ+g9keZKA/wqjX0nxm/4toshHEo8eTGtRkpcZxsBBkns0+sNik+thtMh0ljIU76LI0mg0uThXx19yva6MExbKAOyU4awuf1dfkRyt1rIuzKdK4t9se6xXoxraC5FXaLkw=
+	t=1728485976; cv=none; b=j3pkHI9w9QPG3jxfvxsYGwVgpjZy4g6KqqkiX7qUbRC0ZwmEBDV79nHcI2ntsyagLH4gy9WosEjQwpeO/R62hWa2CWjZYn+LPJ66EhyhTqbtxehCsPu7PPhukFGiKQpgT/iJlgqdMnaZR1IBUeE6rEZadTrEUkhT6WMGQ4VgiIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728485739; c=relaxed/simple;
-	bh=WKqDfBMt2+San1ujEiAobO6HQc511/f7GYD5jNvUNt8=;
+	s=arc-20240116; t=1728485976; c=relaxed/simple;
+	bh=bMAvKTxqdqHiwcL4OB2FVzz4YshB8ALhlNR8QDtvW/A=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jJzux231ZToc/aMwpJGyeshs+dHgj9CwLvvJpz6Oktb11Wq7mHYegteehbau8KMSLAJNksZKOxLwGrqsd++f87R/Dqz9cF1MRwCix0I5VcwB+ylthSDCuR9ZPwPqCvMbWceraEehyez/XyHF2UHIiLxqArmGSx+Bkd5zVr6yYCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dXnNrSNj; arc=none smtp.client-ip=209.85.208.182
+	 Content-Type:MIME-Version; b=FiBO5o6JDmogXGIOFury+BH7Ek3eR8ebEbGRL1qWjOUiKSycF3d0t3yU94MCwii9cAsvFDyCRRb8gmt3gt3Eq9ZcZHpwws1TyD67s+xWqjxmAdk9/zTiZek//qmLQDGYIiAQ1EiQkiHdU4GJe/lLF2SD2z1i0R9QRAVohngBixA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hh5/x0LT; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fad100dd9eso70032501fa.3;
-        Wed, 09 Oct 2024 07:55:37 -0700 (PDT)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a9977360f9fso249048066b.0;
+        Wed, 09 Oct 2024 07:59:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728485736; x=1729090536; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1728485972; x=1729090772; darn=vger.kernel.org;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=ib9pTBarNRQuNCwz+qBm/wz+0ti+ak4vscLv1XgOMQg=;
-        b=dXnNrSNjqdzSmmITLNUsCfUMhUKm5y+FVgHggvJslbz1jY/pAwXzakwCV3jr4VfvSG
-         +GmWKeRbnQuqvjEtwkJuxRsxEAaefh24vHFVGzPDdOPXEdR4Psj0xdfTujZl34+3PzY/
-         FQ7Jt3XnPofD2h6h3/7Qh7qfkR+J3WJ1+DjbUEvs73LcYjp27Blm/DpwbwZJFbjcsWxz
-         YbVEVI7YmMRL5Y7mJIWwi4jXgcVLc0a1eQRCJtJVBDWO4TMPyD1py5T/MIiNnK3BtJ+Y
-         uaiLwFpV7O6ZeZcVoHztDqysIfjUHxoOqV6bL4ONpVagPlICdZ330Co6trImsqP1+0js
-         wZJA==
+        bh=E3WtsCpgNIXHaF0APsCrNftN5SWrqWtnB+nbBJCHGk8=;
+        b=hh5/x0LT8DCbBth308ip/feOXF6YVINilmYR77o41XwrCzTbpatozF5eUMSNBcO2Le
+         zecY7fJeUgQ6Y5sX9stq5jHs52gbFOsnPmI0R6z6HB9DY7cCjpeWoR4JlBjHUWEfUmJc
+         DicdZbXPVQRV6VZjEWDtzWDgnCXajZKYiYeAkFdXdjVuefB9xTIbiqXPIqriK3BxtcSu
+         dbkFphNtLMOwfo2We28A/vYMwZOIesncbqyUotQBbHFNjJGmFinjohod2kfof5vWkA05
+         PK2caf+/ijRT+TTpUKSOGc5s+MWz874TB+ooRS7tCteDvvJHUsKNAm8aNL2BQTQ4JZ7k
+         fZHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728485736; x=1729090536;
+        d=1e100.net; s=20230601; t=1728485972; x=1729090772;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ib9pTBarNRQuNCwz+qBm/wz+0ti+ak4vscLv1XgOMQg=;
-        b=D3WRq1wy4McWMxpH/c+yzXnkFjfzsmMxg+V9ltapVroHlQamaIOEz343JhABmI38BD
-         JB/X7MDvpMrT9AsF0MzNPxB9qgn6iKMzDUzsM3U1728LjpHfYUadumDue24VJbaiFC3m
-         ijrznSDNLyZQp0fcorkXJMElllPZZqXXXdxnvOufqp7B9OssfPG67VhBYmc44irBbnAA
-         QNHbld8iGN/uB6MCSZIxxvwJYNfBfHQaTsWokAwKOeAHzIAG8fbulgcEFvRzZ2/9KyMQ
-         J1pV5+OoGseQb1t9DAks7oMEawm07wd+m4AZx2jlm+Hye3vXAeR5tlFPYA4mtFPup/0V
-         VU1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUOwXzxcLhkZ2ZfgCqftKQTgo6zR0X2/n3/w1eZpBlOuDKq4UkFlhSDMZCan6lURh1ZZoL/d+H9afAA@vger.kernel.org, AJvYcCV+SIS1uO00aPORM5SQW51rQK+xSJvNWRWeOC3UDd/fQ8brNlMe61fTAm4DqVggHclpJi9t2dvQx9Q691yq@vger.kernel.org, AJvYcCVcnnL7JVvdfRurNgzw5NCYNRItIussJ3OwpdSzFm8AX7I8hstJ1YEFHXxYHfZfAZcXraBWH9PS1rj2@vger.kernel.org, AJvYcCVzSscGQmo+dQmzFkBL7UlXtWja7/jGMcQXhpCRMmi/DctvUAYq9nEZsLj55JaaddtHd4IpdEbr0NTuCgI=@vger.kernel.org, AJvYcCWgrXhPyYNVUu7NxAZVWjPMA5SBQU1/DI6aHK1lPSi+fGKbghbiiqrpk7Sn23WafOnX1jS0JbPcSZw0@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqoBwmcad5A5VX4SqtnI0jws5vIpfHyVn47LWZ12OylUQWbaQZ
-	edWQpfPUHJ7DXgSqDDwZYLtGSL/60fnm0QBeZnkULBcRC+zJIWBn
-X-Google-Smtp-Source: AGHT+IELRKbRjHccAAmXS1Grd+rb5wmXwLUO+kxGpjzcE5qfCHJPhxFU6mlM6e/UKadHfK2GZPlKjA==
-X-Received: by 2002:a05:651c:2222:b0:2fa:e52f:446e with SMTP id 38308e7fff4ca-2fb187212f1mr18024161fa.3.1728485735231;
-        Wed, 09 Oct 2024 07:55:35 -0700 (PDT)
+        bh=E3WtsCpgNIXHaF0APsCrNftN5SWrqWtnB+nbBJCHGk8=;
+        b=EjI3GUdmpsE5LrzyzLXUDIGlUlyPY53oRK4EPrMCpJhe09iQe5d3pkgc5h3lJmZQQx
+         K2frWQBFfKqMurZpE2bMreLzr0Ht++hv3D174U/96MSWW49t6DqIqkUDdKXOQhDSWQLg
+         2xjEwkQNBOea4dWbZ33uOp+ClV0DN2/HjJ4Ssv4gRlFtPrrOLjPqna900hEAxoeVmUEV
+         z+OUUBsW/G+xyDNbaH6PgYQUhv9SookLcsMTF6Vv0HOC27yrNdZ5d7BlyLlbE2Z0t7cw
+         beedNn0a+GIckKxYzI+HtaZnVtvBQ/xKP66NhZ1Zoi+SmcqzPz8ez+vmiWyRitsAWjD9
+         tvcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVA+pyzzXQq8jj49Yre1R2cme706hcepKT2LaVq4AUO8jPoa2L5obw8vw+OQdGxaquB+CuXlW6Y55p9@vger.kernel.org, AJvYcCW+yQuVY0vkLuLrCJjXOVKgcTfo8/pBzPqRawnaLm7sH1T02QG6lj5PYTSLlUaxADbmtRMQ9/Cob71t@vger.kernel.org, AJvYcCWx39NxT9lPkUyqV0CUHB/Gyfu7VLzQCOYdyvmlJ8mZ4OizhLQgvlQEL4rjCvY53qP0YRnPHrJ90zvuvTs=@vger.kernel.org, AJvYcCXj3Ks1spsbtOKk5Gvzej1MCcey6yfhui9dGzZvoAmVsgpWoKALsZ2Ylth4mtaDdDIvGSyqS6vg2eTt@vger.kernel.org, AJvYcCXxPyOpidVu2VJipBIjrAWd7utDOMy8np+qs/GAOTQ04bCpHJ/1MPpIN+CiYT5U9qwQjOGENNY5CP+2HTnM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvmyy1lMgroXHt1SQxM5Fc46p0XHzER2dxEB9T41U4g6NlELpG
+	sln3AIrl29YxgkbNP6pfOlg7/L8vdPSV7m6Z8KYhd/JRbxxrFXcCNfGR9P1ENBY=
+X-Google-Smtp-Source: AGHT+IEJKBcrFnVSMldqrFkSB32VcoGZJx7VO9bzRb/opmzn+IGK9ULEl7e4QRixKBFGGfKcFRB8IA==
+X-Received: by 2002:a17:907:c7dd:b0:a99:446e:3b5f with SMTP id a640c23a62f3a-a998d3158c1mr250285466b.50.1728485971918;
+        Wed, 09 Oct 2024 07:59:31 -0700 (PDT)
 Received: from ?IPv6:2001:a61:34c9:ea01:14b4:7ed9:5135:9381? ([2001:a61:34c9:ea01:14b4:7ed9:5135:9381])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c8e05f22bbsm5579853a12.80.2024.10.09.07.55.34
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a992e787eecsm661220066b.125.2024.10.09.07.59.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2024 07:55:34 -0700 (PDT)
-Message-ID: <66a4daad65dc8dbb319af38e26ee4290b08c7bff.camel@gmail.com>
-Subject: Re: [PATCH v4 7/8] iio: adc: ad7606: Add iio-backend support
+        Wed, 09 Oct 2024 07:59:31 -0700 (PDT)
+Message-ID: <bb0874600cb0c74f1a3ff8d41a0c3f9e76829009.camel@gmail.com>
+Subject: Re: [PATCH v4 5/8] iio: adc: ad7606: Add compatibility to fw_nodes
 From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
 To: Guillaume Stols <gstols@baylibre.com>, Uwe
  =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, Lars-Peter Clausen
@@ -82,11 +82,13 @@ Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
  aardelean@baylibre.com,  dlechner@baylibre.com, jstephan@baylibre.com,
  Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date: Wed, 09 Oct 2024 16:55:33 +0200
-In-Reply-To: <20241009-ad7606_add_iio_backend_support-v4-7-6971a8c0f1d5@baylibre.com>
+Date: Wed, 09 Oct 2024 16:59:30 +0200
+In-Reply-To: <d1229162-b97b-4261-9c4a-e1f83ef14378@baylibre.com>
 References: 
 	<20241009-ad7606_add_iio_backend_support-v4-0-6971a8c0f1d5@baylibre.com>
-	 <20241009-ad7606_add_iio_backend_support-v4-7-6971a8c0f1d5@baylibre.com>
+	 <20241009-ad7606_add_iio_backend_support-v4-5-6971a8c0f1d5@baylibre.com>
+	 <facfe06f51a815f4ff5604aeacd8bd6ed0629be4.camel@gmail.com>
+	 <d1229162-b97b-4261-9c4a-e1f83ef14378@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
@@ -97,101 +99,72 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2024-10-09 at 09:19 +0000, Guillaume Stols wrote:
-> - Basic support for iio backend.
-> - Supports IIO_CHAN_INFO_SAMP_FREQ R/W.
-> - Only hardware mode is available, and that IIO_CHAN_INFO_RAW is not
-> =C2=A0 supported if iio-backend mode is selected.
+On Wed, 2024-10-09 at 16:53 +0200, Guillaume Stols wrote:
 >=20
-> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
-> ---
-
-Just minor stuff...
-
-> =C2=A0drivers/iio/adc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=
- 2 +
-> =C2=A0drivers/iio/adc/ad7606.c=C2=A0=C2=A0=C2=A0=C2=A0 | 156 ++++++++++++=
-++++++++++++++++++++++---------
-> =C2=A0drivers/iio/adc/ad7606.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 15 +++++
-> =C2=A0drivers/iio/adc/ad7606_par.c |=C2=A0 93 +++++++++++++++++++++++++-
-> =C2=A04 files changed, 234 insertions(+), 32 deletions(-)
+> On 10/9/24 16:39, Nuno S=C3=A1 wrote:
+> > On Wed, 2024-10-09 at 09:19 +0000, Guillaume Stols wrote:
+> > > On the parallel version, the current implementation is only compatibl=
+e
+> > > with id tables and won't work with fw_nodes, this commit intends to f=
+ix
+> > > it.
+> > >=20
+> > > Doing so required to declare ad7606_chip_info structures in the .h fi=
+le
+> > > so to make them accessible to all the driver files that can set a
+> > > pointer to the corresponding chip as the driver data.
+> > >=20
+> > > Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+> > > ---
+> > > =C2=A0=C2=A0drivers/iio/adc/ad7606.c=C2=A0=C2=A0=C2=A0=C2=A0 | 283 ++=
+++++++++++++++++++++++------------------
+> > > -
+> > > =C2=A0=C2=A0drivers/iio/adc/ad7606.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 =
+32 +++--
+> > > =C2=A0=C2=A0drivers/iio/adc/ad7606_par.c |=C2=A0 30 +++--
+> > > =C2=A0=C2=A0drivers/iio/adc/ad7606_spi.c |=C2=A0 96 +++++++++------
+> > > =C2=A0=C2=A04 files changed, 254 insertions(+), 187 deletions(-)
+> > >=20
+> > > diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> > > index 5b276d087ec3..dfbdea8c28ba 100644
+> > > --- a/drivers/iio/adc/ad7606.c
+> > > +++ b/drivers/iio/adc/ad7606.c
+> > > @@ -78,6 +78,155 @@ static const unsigned int ad7616_oversampling_ava=
+il[8] =3D {
+> > >=20
+> > ...
+> >=20
+> > > +const struct ad7606_chip_info ad7616_info =3D {
+> > > +	.channels =3D ad7616_channels,
+> > > +	.init_delay_ms =3D 15,
+> > > +	.name =3D "ad7616",
+> > > +	.num_channels =3D 17,
+> > > +	.oversampling_avail =3D ad7616_oversampling_avail,
+> > > +	.oversampling_num =3D ARRAY_SIZE(ad7616_oversampling_avail),
+> > > +	.os_req_reset =3D true,
+> > > +	.scale_setup_cb =3D ad7606_16bit_chan_scale_setup,
+> > > +};
+> > > +EXPORT_SYMBOL_NS_GPL(ad7616_info, IIO_AD7606);
+> > >=20
+> > Maybe my eyes are tricking me but I'm not seeing any MODULE_IMPORT_NS()=
+ in the
+> > drivers?
 >=20
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 85b82a708c36..9f7e9fc4b1fe 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -224,9 +224,11 @@ config AD7606_IFACE_PARALLEL
-> =C2=A0	tristate "Analog Devices AD7606 ADC driver with parallel interface
-> support"
-> =C2=A0	depends on HAS_IOPORT
-> =C2=A0	select AD7606
-> +	select IIO_BACKEND
-> =C2=A0	help
-> =C2=A0	=C2=A0 Say yes here to build parallel interface support for Analog=
- Devices:
-> =C2=A0	=C2=A0 ad7605-4, ad7606, ad7606-6, ad7606-4 analog to digital conv=
-erters (ADC).
-> +	=C2=A0 It also support iio_backended devices for AD7606B.
-> =C2=A0
-> =C2=A0	=C2=A0 To compile this driver as a module, choose M here: the
-> =C2=A0	=C2=A0 module will be called ad7606_par.
-> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> index ec902b268388..1313b5cbb0aa 100644
-> --- a/drivers/iio/adc/ad7606.c
-> +++ b/drivers/iio/adc/ad7606.c
-> @@ -21,6 +21,7 @@
-> =C2=A0#include <linux/units.h>
-> =C2=A0#include <linux/util_macros.h>
-> =C2=A0
-> +#include <linux/iio/backend.h>
-> =C2=A0#include <linux/iio/buffer.h>
-> =C2=A0#include <linux/iio/iio.h>
-> =C2=A0#include <linux/iio/sysfs.h>
-> @@ -191,6 +192,7 @@ EXPORT_SYMBOL_NS_GPL(ad7606_4_info, IIO_AD7606);
+> Hi Nuno,
+>=20
+> The ad7606_spi.c and ad7606_par.c use MODULE_IMPORT_NS(IIO_AD7606).
+>=20
+> Chip infos are used in the "coupling" structures, e.g:
+>=20
+> =C2=A0=C2=A0static const struct ad7606_bus_info ad7616_bus_info =3D {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .chip_info =3D &ad7616_info,=C2=AC
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .bops =3D &ad7616_spi_bops,=C2=AC
+> =C2=A0=C2=A0};=C2=AC
+>=20
 
-> =C2=A0const struct ad7606_chip_info ad7606b_info =3D {
-> =C2=A0	.channels =3D ad7606_channels_16bit,
-> +	.max_samplerate =3D 800 * KILO,
-> =C2=A0	.name =3D "ad7606b",
-> =C2=A0	.num_adc_channels =3D 8,
-> =C2=A0	.num_channels =3D 9,
-> @@ -496,6 +498,20 @@ static int ad7606_pwm_set_low(struct ad7606_state *s=
-t)
-> =C2=A0	return ret;
-> =C2=A0}
-> =C2=A0
-> +static int ad7606_pwm_set_swing(struct ad7606_state *st)
-> +{
-> +	struct pwm_state cnvst_pwm_state;
-> +
-> +	if (!st->cnvst_pwm)
-> +		return -EINVAL;
-> +
-
-Can we get into this function without knowing cnvst_pwm must be present? IO=
-W, do we
-really need the above check?
-
-...
-
-> @@ -96,9 +170,23 @@ static int ad7606_par_probe(struct platform_device *p=
-dev)
-> =C2=A0	void __iomem *addr;
-> =C2=A0	resource_size_t remap_size;
-> =C2=A0	int irq;
-> +	struct iio_backend *back;
-> =C2=A0
-> +	/*
-> +	 * If a firmware node is available (ACPI or DT), platform_device_id is
-> null
-> +	 * and we must use get_match_data.
-> +	 */
-> =C2=A0	if (dev_fwnode(&pdev->dev)) {
-> =C2=A0		chip_info =3D device_get_match_data(&pdev->dev);
-> +		back =3D devm_iio_backend_get(&pdev->dev, NULL);
-
-Can't we use device_property_present()?=20
+You were faster than me. I just realized that code is only in the testing b=
+ranch of
+IIO and was going to reply to disregard my comment :).
 
 - Nuno S=C3=A1
-
 
