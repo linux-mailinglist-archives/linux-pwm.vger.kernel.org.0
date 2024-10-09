@@ -1,131 +1,274 @@
-Return-Path: <linux-pwm+bounces-3551-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3552-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A7429961A2
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 09:59:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3158D9961F2
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 10:10:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8CEFEB24424
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 07:59:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D4FB5287612
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 08:10:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 217A1187859;
-	Wed,  9 Oct 2024 07:58:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F87B184527;
+	Wed,  9 Oct 2024 08:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IDPPCijk"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="pTzDL30i"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48761187561
-	for <linux-pwm@vger.kernel.org>; Wed,  9 Oct 2024 07:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BB8184528
+	for <linux-pwm@vger.kernel.org>; Wed,  9 Oct 2024 08:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728460731; cv=none; b=ri57B5GhHK5IGzvdTpFp1LPxWOO1HFnG3hCsUwkQxHm2rbRVTwRz8LiqtfNtSpwKK9OT5vfYDR3YZzIt7n9pIZh5LPa7qrDiFt/aK0Xpa1sJEwjrm2domeyfme+WdsicWGwGc6nWQDfN9ku94rnyT6TwFbN/BDqq697b0hnUoVk=
+	t=1728461446; cv=none; b=TOPYKzqwXKrlW+KC3yaYb0TbupQHBa7H8Q6Rzopfwau4JU6YsAyFzFZD8EUTeZ032qdcI3OKu6igeRfMZPnN1l/EEMldtQfckI2o2Z0+Q963cZcA3LSN/NyA8oSQzuFRGMbUcXcvX1QohKEyu8HP3nh7b/rzBFBJxo1M9pmHzCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728460731; c=relaxed/simple;
-	bh=g8O0kpK9MpWWGfSwkN2fZwYo7lbfsttN4HuU//J2yCY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=CW2a+0NxglGDiZczvxZSz7lw36+oJPOQ6Aq0bNtKf4eGJQsAxeCTljfr+eNh/11X1s+2A4bIt7uf9i51F+8FynVhdrw+zqchXRekX+L8XF1DWdlLiIc85ECLUdxdfrgctUF+jQkBrCBJNRyyjH6VtG/nt1pZ86vboG0tWJnkPOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IDPPCijk; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42cc43454d5so52336935e9.3
-        for <linux-pwm@vger.kernel.org>; Wed, 09 Oct 2024 00:58:49 -0700 (PDT)
+	s=arc-20240116; t=1728461446; c=relaxed/simple;
+	bh=JTALTDfpJwLvZW8krOmlWY7fXxiJm7mB5IXqDHxOnis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tjn5PvyG9WXDDPA5PpYNcns9+YndwJUbiUwiLgI1hLAQmGT2K20PnRShlzdk5kB/vT0aQn6sCx/iIsKMv4W+EndwfuHMfZ993IIr7iQ24lDm/d+BceHNmUyUv8JrGyrxW0Ubqcj766v9+ZBh664YsHReeQmFJC5IrDmxBe+l8S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=pTzDL30i; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-37cd8972738so4562098f8f.3
+        for <linux-pwm@vger.kernel.org>; Wed, 09 Oct 2024 01:10:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728460728; x=1729065528; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OjzblqqkUrGrcgPZNRxLPE0DkoF25DAjXSyZMk0r9GM=;
-        b=IDPPCijkhfcmpmL5TaKgLrbhZcAfwsdPM8XDWEReTWzbbWIsEqnnFfffcmHOrtxblL
-         evEsPoMud0skznqwF56iDdMeM3JYUEsM62LsBQfsY2E13DzcX/yN/1ehpVZbCV51OG/e
-         nEuVf3YJp8c9H5onIGT7I8DoohsI4LmeuLec5ruiTS83JlS2XWCyaGD2xF1RkHB+OnoN
-         nRgF1iMxmAWYn6Lqy6GQ6LDYH4SN1PvyoSVyFfPUG17HnKm84i0BQVJ2dtxhy7BuH7zC
-         d9NYLatN7sFDLAFoF2yzbVDDeLivOaVcNXdiT3hJJ1tGU0bXlAZMNer855dL64zib19C
-         sIkw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728461442; x=1729066242; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gnWodi7I3io7lPP1RwAH8LUYr+WZNKZMf06zlJ4yNoo=;
+        b=pTzDL30i4XA6nuvXQiuLfQ4ITZ7VNA1EUZQD5hibztUpgAdYS+nxkqJWq56uEGPKUm
+         6z/wCAcIkGOtxT2zrc2G4xykj0aDHUKysz8zHE4CfY1525m3O8InNQVTkMiJdWhHVwIu
+         AuaUCl7OMM+mnPCNX0UaHYYuCptFJlbCSJ/05Hj3s18QXj/wfqHsIaImwVxhXeczv7uL
+         dbuiYddYgdiM9BXuNorXI2iXMA+qRey8hcpBxjKEaTMacbsz/66uFD9vH7ZYUaIuBTEM
+         xceXARKzHL2u/p8mIDaKXT5spNjELZmjuo5uummUA6HOAIFP/Cfy+m20AV97YQB2k+rJ
+         ZZSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728460728; x=1729065528;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OjzblqqkUrGrcgPZNRxLPE0DkoF25DAjXSyZMk0r9GM=;
-        b=Wl5ca30bZa54Vuxb7b/7XQRz2cMLLfKaOHlTFXasvMI/wT/x1p3lnrn1QNSM4BzYQN
-         AGuWLJ0InuWmTeEULRWBY0i5+5NrwwqrMWmxzdxkBVFKtrgjoPN+zCcB1hTrJb0nm7mL
-         fNr8xokpSB8oQ+zIzVZng/TStCWVMRft1zPgflfjPbryBBe9+/R9bUrAjM5h3Dtfie1N
-         oSVO/UQVgsuo1H5zTchr5PKNidPi6VwlrDo9fEPT6Zsnonweib8M1iK7MqmKdZPqAeiR
-         9biwhIlee5EXAv6KqSny8o8lBWxvq0PUpJ1WCI4V9MNU1Fz3w+rABi5wPcQsmHMaYcct
-         uYvA==
-X-Gm-Message-State: AOJu0YzDd0mDS35bXpA67g/4UA6PymaUN0/wCgfK1xSxojG3MLDLAjVA
-	yIA/Vg1faNtycISHgIv/3OMwFAz9A/eCE4O9/Ey+JpPSlvu25v6Sf8+Qkk9+u6c=
-X-Google-Smtp-Source: AGHT+IGkZyd5nOvtOQMkfiXw6MplVM65s68N7024BeRJ7gwwQuAN7MTfkYoNCh3XuzltFnAl7/W9Dg==
-X-Received: by 2002:a5d:6dac:0:b0:374:c847:85c with SMTP id ffacd0b85a97d-37d3aa54328mr871144f8f.24.1728460727644;
-        Wed, 09 Oct 2024 00:58:47 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d3a14bce4sm1157704f8f.92.2024.10.09.00.58.46
+        d=1e100.net; s=20230601; t=1728461442; x=1729066242;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gnWodi7I3io7lPP1RwAH8LUYr+WZNKZMf06zlJ4yNoo=;
+        b=ooJ/qCYK9iAZn87oSuB7g1LzLhy60hLVEFUNQ7+aIhNKCJCrDAiIASJ0s6zNz6R7Dp
+         BCs6oRg4swt+ZXEfWlZ71Hl+Z5OF+eat1pRuSSP2HxhlOAn0UT5k+NzlWJb5HbsImpn+
+         wA/Pue8LINxEQORPIo0FAc5+BquYD8m/tVXRLLZX790+2cdAMY2KkL7YoxJFUnQqnKQx
+         tdDFVCxFBpA8wv3CS2TWVZ8DOjb3P6WXu3l/6K3704G/Yumavh4e/0ZmbQ5d2iZ2WOxR
+         dmqdlkZkgIOrSjWQpdviF69eXs05OjSNToDKTDkrU1jkN9O+Glbk3SSTsxxxi7PeGaL5
+         cGlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYLk0fMwpKgXOptxTOjwSJQrcvC//Qsgr12J+j2EBktl0XLXnJKsu0OgBilYI9dq/oITkktaoZerY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0TNfDFxib9EKS2m6XYtlUXAhej3hkpddutTavuhzqYTbKV9yc
+	nCrL+wrbtuw9xIktFJ17BpXiFI0gN/7lpoaQnUXTFsCVNVRt2MlJ07M36l7NnpyKbDAwGBGJ0Sp
+	5
+X-Google-Smtp-Source: AGHT+IGh8K2dUO1w72QQsRRDwWg/X9XbAnFa43Fl/ahd72gRhImUWO/xzGJZhmEAsokUQYN6eBnxCg==
+X-Received: by 2002:a5d:4e51:0:b0:37d:39e8:cb6d with SMTP id ffacd0b85a97d-37d3ab318acmr716234f8f.56.1728461442237;
+        Wed, 09 Oct 2024 01:10:42 -0700 (PDT)
+Received: from localhost (p509151f9.dip0.t-ipconnect.de. [80.145.81.249])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-430ccf1f776sm12305265e9.3.2024.10.09.01.10.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2024 00:58:47 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Kelvin Zhang <kelvin.zhang@amlogic.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240914-c3-pwm-v2-0-ac1f34c68ac2@amlogic.com>
-References: <20240914-c3-pwm-v2-0-ac1f34c68ac2@amlogic.com>
-Subject: Re: (subset) [PATCH v2 0/2] Add support for Amlogic C3 PWM
-Message-Id: <172846072651.3041625.14039974148857351568.b4-ty@linaro.org>
-Date: Wed, 09 Oct 2024 09:58:46 +0200
+        Wed, 09 Oct 2024 01:10:41 -0700 (PDT)
+Date: Wed, 9 Oct 2024 10:10:40 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: William Qiu <william.qiu@starfivetech.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Hal Feng <hal.feng@starfivetech.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v15] pwm: opencores: Add PWM driver support
+Message-ID: <na6yfg45w74l3deaoi5gr5wcefxbjslztsltm6737rs4cktpbn@myvsa6ye6xpp>
+References: <20240914095114.31100-1-william.qiu@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5ft5dx5frm54rk25"
+Content-Disposition: inline
+In-Reply-To: <20240914095114.31100-1-william.qiu@starfivetech.com>
 
-Hi,
 
-On Sat, 14 Sep 2024 13:48:57 +0800, Kelvin Zhang wrote:
-> Add support for Amlogic C3 PWM, including the DT binding document and DTS.
-> 
-> 
+--5ft5dx5frm54rk25
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.13/arm64-dt)
+Hello William,
 
-[2/2] arm64: dts: amlogic: Add Amlogic C3 PWM
-      https://git.kernel.org/amlogic/c/be90cd4bd422e8ae235f534a2fa46d40dae0816b
+On Sat, Sep 14, 2024 at 05:51:14PM +0800, William Qiu wrote:
+> diff --git a/drivers/pwm/pwm-ocores.c b/drivers/pwm/pwm-ocores.c
+> new file mode 100644
+> index 000000000000..d0161b9379d1
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-ocores.c
+> @@ -0,0 +1,241 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * OpenCores PWM Driver
+> + *
+> + * https://opencores.org/projects/ptc
+> + *
+> + * Copyright (C) 2018-2023 StarFive Technology Co., Ltd.
+> + *
+> + * Limitations:
+> + * - The hardware only supports inverted polarity.
+> + * - The hardware minimum period / duty_cycle is (1 / pwm_apb clock frequency).
+> + * - The hardware maximum period / duty_cycle is (U32_MAX / pwm_apb clock frequency).
+> + * - The output is set to a low level immediately when disabled.
 
-These changes has been applied on the intermediate git tree [1].
+Huh, that's a 100% relative duty cycle. But fine, that gives the
+opportunity to find bugs in consumer drivers. :-)
 
-The v6.13/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-for inclusion in their intermediate git branches in order to be sent to Linus during
-the next merge window, or sooner if it's a set of fixes.
+> + * - When configuration changes are done, they get active immediately without resetting
+> + *   the counter. This might result in one period affected by both old and new settings.
+> + */
+> +
+> [...]
+> +static inline void ocores_pwm_writel(struct ocores_pwm_device *ddata,
+> +				     unsigned int channel,
+> +				     unsigned int offset, u32 val)
+> [...]
+> +static inline struct ocores_pwm_device *chip_to_ocores(struct pwm_chip *chip)
+> [...]
+> +static void __iomem *starfive_get_ch_base(void __iomem *base,
+> +					  unsigned int channel)
 
-In the cases of fixes, those will be merged in the current release candidate
-kernel and as soon they appear on the Linux master branch they will be
-backported to the previous Stable and Long-Stable kernels [2].
+Would be great if all functions had the same prefix. This simplifies
+debugging with tracing, because you can just enable traces for
+"ocores_pwm_*".
 
-The intermediate git branches are merged daily in the linux-next tree [3],
-people are encouraged testing these pre-release kernels and report issues on the
-relevant mailing-lists.
+> [...]
+> +static int ocores_pwm_apply(struct pwm_chip *chip,
+> +			    struct pwm_device *pwm,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct ocores_pwm_device *ddata = chip_to_ocores(chip);
+> +	u32 ctrl_data = 0;
+> +	u64 period_data, duty_data;
+> +
+> +	if (state->polarity != PWM_POLARITY_INVERSED)
+> +		return -EINVAL;
+> +
+> +	period_data = mul_u64_u32_div(state->period, ddata->clk_rate, NSEC_PER_SEC);
+> +	if (!period_data)
+> +		return -EINVAL;
+> +
+> +	if (period_data > U32_MAX)
+> +		period_data = U32_MAX;
+> +
+> +	ocores_pwm_writel(ddata, pwm->hwpwm, REG_OCPWM_LRC, (u32)period_data);
 
-If problems are discovered on those changes, please submit a signed-off-by revert
-patch followed by a corrective changeset.
+The cast isn't needed.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> +	duty_data = mul_u64_u32_div(state->duty_cycle, ddata->clk_rate, NSEC_PER_SEC);
+> +	if (!duty_data)
+> +		return -EINVAL;
+> +
+> +	if (duty_data > U32_MAX)
+> +		duty_data = U32_MAX;
+> +
+> +	ocores_pwm_writel(ddata, pwm->hwpwm, REG_OCPWM_HRC, (u32)duty_data);
 
--- 
-Neil
+ditto.
 
+> +	ctrl_data = ocores_pwm_readl(ddata, pwm->hwpwm, REG_OCPWM_CTRL);
+> +	if (state->enabled)
+> +		ocores_pwm_writel(ddata, pwm->hwpwm, REG_OCPWM_CTRL,
+> +				  ctrl_data | REG_OCPWM_CNTR_EN | REG_OCPWM_CNTR_OE);
+> +	else
+> +		ocores_pwm_writel(ddata, pwm->hwpwm, REG_OCPWM_CTRL,
+> +				  ctrl_data & ~(REG_OCPWM_CNTR_EN | REG_OCPWM_CNTR_OE));
+
+If you're clearing REG_OCPWM_CNTR_OE (Output Enable?), does the output
+really go low? Or is that due to an external pull down on your board?
+
+> +
+> +	return 0;
+> +}
+> [...]
+> +static int ocores_pwm_probe(struct platform_device *pdev)
+> +{
+> +	const struct of_device_id *id;
+> +	struct device *dev = &pdev->dev;
+> +	struct ocores_pwm_device *ddata;
+> +	struct pwm_chip *chip;
+> +	struct clk *clk;
+> +	struct reset_control *rst;
+> +	int ret;
+> +
+> +	id = of_match_device(ocores_pwm_of_match, dev);
+> +	if (!id)
+> +		return -EINVAL;
+
+Error message here? Better use device_get_match_data() here. Then you
+don't need the of-specific headers (IIUC).
+
+> +	chip = devm_pwmchip_alloc(&pdev->dev, 8, sizeof(*ddata));
+> +	if (IS_ERR(chip))
+> +		return -ENOMEM;
+> +
+> +	ddata = chip_to_ocores(chip);
+> +	ddata->data = id->data;
+> +	chip->ops = &ocores_pwm_ops;
+> +
+> +	ddata->regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(ddata->regs))
+> +		return dev_err_probe(dev, PTR_ERR(ddata->regs),
+> +				     "Unable to map IO resources\n");
+> +
+> +	clk = devm_clk_get_enabled(dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return dev_err_probe(dev, PTR_ERR(clk),
+> +				     "Unable to get pwm's clock\n");
+> +
+> +	ret = devm_clk_rate_exclusive_get(dev, clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	rst = devm_reset_control_get_optional_exclusive(dev, NULL);
+> +	if (IS_ERR(rst))
+> +		return dev_err_probe(dev, PTR_ERR(rst),
+> +				     "Unable to get pwm's reset\n");
+> +
+> +	ret = reset_control_deassert(rst);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_add_action_or_reset(dev, ocores_pwm_reset_control_assert, rst);
+> +	if (ret)
+> +		return ret;
+
+If you respin anyhow, switch to
+devm_reset_control_get_optional_exclusive_deasserted(). Up to now this
+only exists in next, but I'd care to apply this is a way that doesn't
+fail to build then.
+
+> +	ddata->clk_rate = clk_get_rate(clk);
+> +	if (ddata->clk_rate > NSEC_PER_SEC)
+> +		return -EINVAL;
+> +
+> +	ret = devm_pwmchip_add(dev, chip);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Could not register PWM chip\n");
+> +
+> +	return 0;
+> +}
+
+Best regards
+Uwe
+
+--5ft5dx5frm54rk25
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcGOn0ACgkQj4D7WH0S
+/k7nQAf/bNcqXvu5TM3xqi4I4b+vs57zbYGuw+lY9NUbX36V9Jb2oWrOO1Tx+nh2
+RJnM2SCN7UyH4+LHxlMmwBeIiTKRUDJNxmA9b0pUq4EJEGu+xFRaKuMQwKfQIvxI
+WiHmMTOpNykYfyG2tWfSC36Hjkg1oUT1JoYVsOpQsld6oF6MVmeWBVRY7eGA0EV0
+/kLjPJPUTWHAMv6IW679W8HzWJqoSg6b+c8Y5Xi6sYAo6Nu9SX9WR43BFPV3Kj4N
+USlNSw2dUgzd8aTvJhNpX5WIaWwi8X3xUwxP5BtY5540clB68nzkFJHrw65nZKwz
+ERTDsQkQT2C2tZ63uMZGmFUp+PRmXA==
+=9Var
+-----END PGP SIGNATURE-----
+
+--5ft5dx5frm54rk25--
 
