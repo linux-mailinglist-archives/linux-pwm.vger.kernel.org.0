@@ -1,84 +1,90 @@
-Return-Path: <linux-pwm+bounces-3548-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3549-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 682EF99611C
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 09:41:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDED8996164
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 09:50:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 998381C2157A
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 07:41:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 797EE281483
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 07:50:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D114A17279E;
-	Wed,  9 Oct 2024 07:41:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7156181D00;
+	Wed,  9 Oct 2024 07:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lUN8gD02"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="VArRZVCI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF2717BB06
-	for <linux-pwm@vger.kernel.org>; Wed,  9 Oct 2024 07:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E3E161313
+	for <linux-pwm@vger.kernel.org>; Wed,  9 Oct 2024 07:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728459674; cv=none; b=knBtENp6bYGpYS+IipaKYYUsqthdx6QD7WJqiuesYDf3I4dC+yjGMnKnKuKRXndyFJt8ETJHpJARZGa8yax93V/2DQxYuskFV1ccR+FM9bdrgv8OpdQzcir9x+QPPcBFAt6enDdSrPt4yzcdMkvcmPf1RcgvHyjXsoRP1P3S2ks=
+	t=1728460216; cv=none; b=TC7qYrKFKSnu8UpUeqSFWtDWJ04iDl4Vh1Ry9agYWqwwaPpMnMN6GDoaQPkjJbjOHqsXac041+cBceEy9xO+deRSV6KwotrwqfzESiXNDHhA9wNtrklIYXibwGQVCH7c/XEQdNc+xt+C6YxzpAEs9TLK3CSgGs/24MBgnCfOMGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728459674; c=relaxed/simple;
-	bh=8Om95y4F6es/Wxnlpk2uQdvoXMVAL2YO3FbbfSfgtM8=;
+	s=arc-20240116; t=1728460216; c=relaxed/simple;
+	bh=5x55/08d462FYxOjcK0FvLQICBYvfjVVslgvjMLUgWU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UCSJWll9mliOvUF8ek9k9NH2ftIbyU7IOM2HJMjsXj00MBnCepS5meowoUAFezJAhMnUpc1YkB1YebostRfiGN/lN1vNSJHtgJpp5I10dQG09cusl79TC9d4ePV6PCeK7+/soHP5WAAIE/cJueXcLTcLDhdrmCkvnBIg/TGzhOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lUN8gD02; arc=none smtp.client-ip=209.85.221.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=agSvr834M/nUub++9bJpD6nPCkK+58NSXexssF2E4F3vQWHD+b56lMssEQ/xIX+f/E6PlWCjmSvTaz1ItUETAFOtT+2QGZHfdE9cf3lHUrcQN7b1KbHtpoN8UFjpBaKFWWJu/ne2vh08YyBm+SqL4ijQUxg7BjT6u48Unsal5GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=VArRZVCI; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-37cd1ccaf71so303704f8f.0
-        for <linux-pwm@vger.kernel.org>; Wed, 09 Oct 2024 00:41:12 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9957588566so379669466b.3
+        for <linux-pwm@vger.kernel.org>; Wed, 09 Oct 2024 00:50:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728459671; x=1729064471; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728460213; x=1729065013; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y2viIowtWPbXMalgfD8+O9ZrcVwo57XCKNmEpCFwYjQ=;
-        b=lUN8gD02yxE0qRJ8Feslg8hK0KALM8ZjRnAs9aYwMBdFKtrlNDc0b2U5M7u3x5KP7d
-         uQgCI5vbIj/4AYO6IVSzUJKNSRZuFzndNmIaEfJClGynP7Nlc07/v1LOvH8/HY+8qbrz
-         mARjtAHkX4tpjvd1ewOAPZWIh0gN1vPYGYaMwl6Aply2tTCA24gn85GQwtLDhVehLcJx
-         06g+TQrgPfUHzJG6sIDEpZLIIEMKPvMopJrzlF+JG/MHEmjPogf44fn8MRdGtpiC5wF0
-         cEII5VQ+5za6iJYE6emU2WzL+usYTkSP7H4Ek1kL9ZotQBMb0jTcSaZ+9+rKsOds2tFn
-         4K0g==
+        bh=MfO7/CdyTSaSdDUH8300s0Lf+paI5a7n8TXHV5lBIng=;
+        b=VArRZVCIU4rvaFKHRIE9BVna8CvLQ6Ivba4vIi4N21HovmLm/Tg1Hu0jhvaKkoLjlT
+         x3vaE9rSVyoJvosqmzz7QDbMj+Cz61FOm9N5IemI0hSyjtgo3YZJe1oUfBhWdxDVMXsN
+         rYQMojK2XzsJ162ZZcl/rA15QFvUY3RSlXgnvyWGuWMqIXYs95j8DzD7ozUNUwC/Io31
+         UpAlN0Qb9Q8RTWP+TOzKlvnjpxkqjIhQJ1vEXx8VwJhiqAlxb4k/ZjZQdMyvWRIRqSZs
+         7dhKHx9VMNXyl7etQ+9VB3KJ1w0nTLHBJv0ViehP4zlTqCiiC1XO2I9jOy11NXbequbV
+         4CXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728459671; x=1729064471;
+        d=1e100.net; s=20230601; t=1728460213; x=1729065013;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y2viIowtWPbXMalgfD8+O9ZrcVwo57XCKNmEpCFwYjQ=;
-        b=t3ZQtwrJP2vm8GYFQMCIRe6KXoU5dVURHxvYJLAc15E0s2tsQOTpVsk38lm8afGgrB
-         qGhwkqzR8Xax07leJb2Az08f/EKOxUXvbJiUazoXQ+r/aIb/w6GyhoyiX1+lLkr1fFkq
-         tT3CL1BNuzoCMM7q+oLa37fBuEBmErMByPbXHtKG5jsmYeilwlfU7pMpna6fAv7eXRFd
-         JzCz+g7mi/msDRToGec+4UFMbuad6Xd/lVzbnnJjtZUV+UFn5c0Iuqp2kzJx5C0XjXOc
-         OriWHHs5uTdPtF81Fx0XZM68Kzk57gLucZR2In57+5SDyDoHP1gVAqgGqV5ZYrMBMDeH
-         tAow==
-X-Forwarded-Encrypted: i=1; AJvYcCVEdh/N3bz9jRJjuDIBCx3BoYTwcULW5Bmvfcn9VEaUMfH7zQxTKibBUTwgw9Vl0eF42mn4vjI46Yg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0418ytL5F+zsRhrDuaDP2S3DjZYeKJw7T+VtnoCcigW6+O2Ng
-	BV2r0NU91TJSlO8xP+kBLWRn3X9kncicUB1X3IUI/338fI26tvL9mY0+8uW8Nfo=
-X-Google-Smtp-Source: AGHT+IEyd05ui1VmLA1rJ5jgdYGapO6L5DJBjVw/NMVD99NroiPJMW7cLe8u+UN9UqCyNM8dGfTC/g==
-X-Received: by 2002:a05:6000:23c6:b0:37d:321e:ef0c with SMTP id ffacd0b85a97d-37d321ef108mr2946699f8f.11.1728459670763;
-        Wed, 09 Oct 2024 00:41:10 -0700 (PDT)
+        bh=MfO7/CdyTSaSdDUH8300s0Lf+paI5a7n8TXHV5lBIng=;
+        b=aX22RgEUXN6g43YszTnkFuTyOIdnjIe2wJbVkPEv/ocJsHrvgyD+DTf4gkHJ0aQ7YA
+         SjOW9MhUpBCAZS87oXKhoIUNPclnEz7a+P2C4e9Ix0lDcnf0pBazAHWm8EJ8GTGnLF8u
+         N4gLP1NAGAntLTNuzqTkVYQ1cpcYkxWGChT6Qd4l69csS7CWmJREESU1GM+1mIZZnJmP
+         QgxRjxDFN3pGmNXxyg0fxFq5ajkC8z54S9RCg+SylQO49ToqSbg0hdolwlKkDJenyz5i
+         10+zwULYJQTd7//8qQ7NorTtKgK87ADLvNTCtNS6xzrI3327/dANXbtPqzCVJIdSFM24
+         N92w==
+X-Forwarded-Encrypted: i=1; AJvYcCU3SlD0L8SKM34EI7tAwIiZoKxeiAPXhcJyka7vJUp9ZhVlAzo0d1Y5qrTTvEfMwlxqRRBXNQwNvDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtEhJvewZ6PsPCMSXDpxKUq5DmtzwCecK9enpdIt4DptEdhWAW
+	ggazfPtXIx4GUTCByz4GufvBizszBFURFjpSSg3aJsFxetYTRA7zm/nuug6QWqM=
+X-Google-Smtp-Source: AGHT+IELkJha79eNO85lN2ia3GPVqHwF4PlD+FNkuvqkfUBcPiLqrkXjVGjtvNtH+Ngh14I9Ck87wQ==
+X-Received: by 2002:a17:907:c7d6:b0:a99:33dd:d8a0 with SMTP id a640c23a62f3a-a998d220fd7mr124352766b.38.1728460212845;
+        Wed, 09 Oct 2024 00:50:12 -0700 (PDT)
 Received: from localhost (p509151f9.dip0.t-ipconnect.de. [80.145.81.249])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d2e65d618sm3025569f8f.23.2024.10.09.00.41.09
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a994c1c4c57sm457157566b.208.2024.10.09.00.50.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2024 00:41:10 -0700 (PDT)
-Date: Wed, 9 Oct 2024 09:41:08 +0200
+        Wed, 09 Oct 2024 00:50:12 -0700 (PDT)
+Date: Wed, 9 Oct 2024 09:50:11 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: kelvin.zhang@amlogic.com
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v2 0/2] Add support for Amlogic C3 PWM
-Message-ID: <nrrw2vvhyw2gsbqpne5pgw43yyp4uzkjq2ioskvjjwgfk4ahuo@rryumcqojbhm>
-References: <20240914-c3-pwm-v2-0-ac1f34c68ac2@amlogic.com>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>, 
+	Olivier Moysan <olivier.moysan@foss.st.com>, Andy Shevchenko <andy@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Marcelo Schmitt <marcelo.schmitt@analog.com>, 
+	Mike Looijmans <mike.looijmans@topic.nl>, Marius Cristea <marius.cristea@microchip.com>, 
+	Dumitru Ceclan <mitrutzceclan@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Alisa-Dariana Roman <alisadariana@gmail.com>, 
+	Ivan Mikhaylov <fr0st61te@gmail.com>, Sergiu Cuciurean <sergiu.cuciurean@analog.com>, 
+	Dragos Bogdan <dragos.bogdan@analog.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 6/7] iio: adc: ad485x: add ad485x driver
+Message-ID: <mv2smx6m3iqocvplham74aqdcn2eaqmmj36tu7c7qzdjq7jlwu@w2zyijdslrpc>
+References: <20241004140922.233939-1-antoniu.miclaus@analog.com>
+ <20241004140922.233939-6-antoniu.miclaus@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -86,61 +92,79 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3g32dk24m6nlnxrf"
+	protocol="application/pgp-signature"; boundary="zvp6fihhtexug34p"
 Content-Disposition: inline
-In-Reply-To: <20240914-c3-pwm-v2-0-ac1f34c68ac2@amlogic.com>
+In-Reply-To: <20241004140922.233939-6-antoniu.miclaus@analog.com>
 
 
---3g32dk24m6nlnxrf
+--zvp6fihhtexug34p
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 14, 2024 at 01:48:57PM +0800, Kelvin Zhang via B4 Relay wrote:
-> Add support for Amlogic C3 PWM, including the DT binding document and DTS.
->=20
-> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
-> ---
-> Changes in v2:
-> - Rebase this patchset due to recent upstream changes.
-> - Link to v1: https://lore.kernel.org/r/20240906-c3-pwm-v1-0-acaf17fad247=
-@amlogic.com
->=20
-> ---
-> Kelvin Zhang (2):
->       dt-bindings: pwm: amlogic: Document C3 PWM
->       arm64: dts: amlogic: Add Amlogic C3 PWM
->=20
->  .../devicetree/bindings/pwm/pwm-amlogic.yaml       |   1 +
->  arch/arm64/boot/dts/amlogic/amlogic-c3.dtsi        | 364 +++++++++++++++=
-++++++
->  2 files changed, 365 insertions(+)
-> ---
-> base-commit: 5acd9952f95fb4b7da6d09a3be39195a80845eb6
-> change-id: 20240906-c3-pwm-d17072517826
+Hello,
 
-Applied patch #1 to
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
-=2E I guess patch #2 will go in via arm-soc?
+On Fri, Oct 04, 2024 at 05:07:55PM +0300, Antoniu Miclaus wrote:
+> +static int ad485x_set_sampling_freq(struct ad485x_state *st, unsigned int freq)
+> +{
+> +	struct pwm_state cnv_state = {
+> +		.duty_cycle = AD485X_T_CNVH_NS,
+> +		.enabled = true,
+> +	};
+> +	int ret;
+> +
+> +	freq = clamp(freq, 0, st->info->throughput);
 
-Thanks
+freq == 0 will become a problem in the next code line. Increase the
+lower limit of the clamp to 1?!
+
+> +	cnv_state.period = DIV_ROUND_CLOSEST_ULL(GIGA, freq);
+
+Is ROUND_CLOSEST really the right thing here? The resulting period might
+result in a frequency higher than freq, still more given that
+pwm_apply_might_sleep() might round the period further down.
+
+> +	ret = pwm_apply_might_sleep(st->cnv, &cnv_state);
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->sampling_freq = freq;
+> +
+> +	return 0;
+> +}
+> [...]
+> +static int ad485x_probe(struct spi_device *spi)
+> +{
+> [...]
+> +	st->cnv = devm_pwm_get(&spi->dev, NULL);
+> +	if (IS_ERR(st->cnv))
+> +		return PTR_ERR(st->cnv);
+
+devm_pwm_get() is silent on error, so adding an error message here would
+be appropriate. I think the same applies to spi_get_device_match_data()
+below.
+
+> +	st->info = spi_get_device_match_data(spi);
+> +	if (!st->info)
+> +		return -ENODEV;
+> [...]
+
+Best regards
 Uwe
 
---3g32dk24m6nlnxrf
+--zvp6fihhtexug34p
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcGM5EACgkQj4D7WH0S
-/k422Af/WeAeMG12qlVL9TxVyfgCoOaW67cCbyllbKGrSYC7OkgI+ujL4WpeqBw7
-S0buIREm1V5mtmzXBboD2scB1+QGKalmVSObFXMtgSfJnGszpUViETfwBI9c8az9
-oXC9IJSfmF7aqlfugMWcAhrlIZFXEn5I6RMQi8e4fM+F/i83G9aoXVJ6qqQKscr8
-uvcpfGZ+hXCdcjPLX2nryNaqNqmlHBk7RYncDYYLPsAnM1gVITTHf0rc/cjKotVj
-jcFV+dSSWr8bz6bR8ANt/Tv4reR+NVl3fzmEeQhkWT9gOZEy1YFsnjA+v7L+ect3
-+CVMHadCSQx0G3uAK1jTKvVf8PyFRw==
-=Njq5
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcGNbAACgkQj4D7WH0S
+/k79MAgAjXjh105N9kSxlycZQZdNxMqX57sWrLJQeFsKBrUH0z/v4SGfMejN2rYN
+XT+RQLRrNMIAqOpU6Akg8g5j2be4UBcEWbSLNgGoqeNZZHsfee6cIwHbfiFtIBEp
+mvVGWNGTjy0pExX3rui3t7Io/ox7/B0zYUa/UNDDuIED+7IVCAqrKAGxm/fCptzB
+eHqVj6LL1olNfpBRNiq4Bt3GX6VXausnsJnUL++Q1uD/iMtf87GoOZlq9nKC3KnO
+huG3IIJ/8XoDHCeSWk6hYYzivQKy9gop6jTojT5wBwrGo4KxWvDn/+/Dal5qnCIO
+qZw+/0E9QyXg5UThi+T1evBJ35a1CA==
+=sDLV
 -----END PGP SIGNATURE-----
 
---3g32dk24m6nlnxrf--
+--zvp6fihhtexug34p--
 
