@@ -1,148 +1,101 @@
-Return-Path: <linux-pwm+bounces-3578-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3580-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E69A799774C
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 23:12:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D533A997B44
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Oct 2024 05:29:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67253B216FF
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Oct 2024 21:12:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97970284341
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Oct 2024 03:29:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D85851E2821;
-	Wed,  9 Oct 2024 21:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6805D1917D2;
+	Thu, 10 Oct 2024 03:29:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GgcjrlGC"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Bz4DAGzl"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7661DFE2B
-	for <linux-pwm@vger.kernel.org>; Wed,  9 Oct 2024 21:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840D4BE57;
+	Thu, 10 Oct 2024 03:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728508317; cv=none; b=p9e9Rg5Zv2ZmVfOri+NmXBBtr10B6TETgGFngOP90N1SFFb1v5v/2+9q9V3GhB3G/Xmc/Sa91Xi+C8GK/8TyuPODfjkeFhpJvhnG+U21iy0YdkOlL5+6e4D1dCtdSNLU8p0cnjZjW5h9B9hmTmNN35bvtJaVR7WdB56QaX/wufQ=
+	t=1728530970; cv=none; b=bMIFuAo3bdR8WDgO2/aUKJlRcBl3UMrsBbC1JxX4MGiygcCB0JswXRupDNTrgHwV5TKdZQN3m1BOv8zJEgKhhpbtq0cT1ykIDo7ub6mKhYuP6StrVTmJVLC6f/Hy/UDAZiBaSB0bI4aa06dF6Kp3mBzorGLYgJFG/XL6QE3n/Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728508317; c=relaxed/simple;
-	bh=0cV0cyyyQ1bZABKVOC7av6Ej39bBbJtonUrGUcTyX1U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IJXjhubHLVc0fvKVriZGXUioAnoyK0AdGTWmUhqd0D+faMzvWcFgHgCWDs5LRfxc3qhZ7dLvFRIWjfNmfXBHhbRf147/BJggu2G2K/SEJW8IZev3oKXmzPvNExisqsvynIqgiGvxcsp7SkV6dVmlZyA5etmMtvTauHOPEGLpdZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GgcjrlGC; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-710dad96bf7so105510a34.0
-        for <linux-pwm@vger.kernel.org>; Wed, 09 Oct 2024 14:11:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728508315; x=1729113115; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rVFF0E6/gb9kFOjmVnyiMsngj2f6Uhyx5US2JDKt1a0=;
-        b=GgcjrlGCLVO6ogpw8zjbBJN/wk13EsMrhrDITIgEgf1PhHLP7XeUW1RP1a3tI4WY18
-         gvwRf51szIWuZAoemMkT7iugnQWj2ry429A+lN3ttNkDqxTLKn1ApORV4evFqL8EGTfT
-         Gmn89D6pbqsoM9oQuJ+kKL8caM1SJ+Jr3DaiUQ9FN5yG0PE3lPdIYGkO37vzvxLXDkhC
-         W8L5DoQgxBPvoqo9hIjO19AUrf6vf80eSJQzg1rbiiHctDCxyZlsWDQGHM7kaJD17b9p
-         v3yPuBi6IjVozodTflg+zRhO+yU0U8+RULQFBfyXGGa0nxoENXL+C7H2KxVq33EbJC9L
-         PvdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728508315; x=1729113115;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rVFF0E6/gb9kFOjmVnyiMsngj2f6Uhyx5US2JDKt1a0=;
-        b=tNWtErUedR2G6h8DebldSYS0ieE54yqBnF61LcZZHroXS/RkR5xPw6qFwGP8VTklvd
-         FmjuuugFgCi4b0+oVnWUZDwQiqCNwToRZQvzDipP9SNaJe+Jr4bQNybRy4QPjG5piFPX
-         Z+zs5+B4lGSHl3Vjup8Pt9T74bo4DTKbF+y1osoNBbjOuVzWtWyKDW8yH+GVi7tTG6iY
-         veatjViX9GbQ1ye5Xe7aqk75wG57t7LWtjlKnjUgXoP4ULlEtwAyzTe5z3CtSc7bKyPC
-         MPMHThdBblpZgQb0c6at6RK/PgaQ58GHKdA+EI3rPN9sxnxuk5zyfquC5bENL3EDEn9R
-         FktA==
-X-Forwarded-Encrypted: i=1; AJvYcCXV2YLyyUZRBB/PcJGBRA5nBIUAD+bTJjqcazuQ6T6sL5QolmtdW9DiUSvjHaTGTgHwaajo/YIDmLM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLXpRyS9Npoiv9rxFQrlbmgFUmZDA6Qo0gmzaUDmSrAd26xyvE
-	C8TxZcVi4nWl89W678yeaW4HniUvqJCIlrw5HVvzbEAm9hBCy+DbkwTlzrtKpnBlxhZeLAOeC32
-	S
-X-Google-Smtp-Source: AGHT+IEvJZngVeGRk73y394qZT0oT0wpSwPHi2bTK3SdGZFK1isXZ+7q99wfWlKZqLS1SWgXBcDzAQ==
-X-Received: by 2002:a05:6830:6c0f:b0:709:3b06:d578 with SMTP id 46e09a7af769-716a4218490mr2332056a34.26.1728508315134;
-        Wed, 09 Oct 2024 14:11:55 -0700 (PDT)
-Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7155688a874sm2455747a34.81.2024.10.09.14.11.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2024 14:11:53 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Wed, 09 Oct 2024 16:11:50 -0500
-Subject: [PATCH 2/2] pwm: axi-pwmgen: enable FORCE_ALIGN by default
+	s=arc-20240116; t=1728530970; c=relaxed/simple;
+	bh=PyF5geQSl03RGWICGtUFnjvq/wA03VKXDbCICjL6w14=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H5NCtozIfcvbnofYujDVVksWRFqi/qBLLOi2JhG1NaTb4Bpk8DDC8irEgHYvdCuFf3wf/kyHymHvnSpykEfz5B2QbTviYxUx5gy2Jsiq2s5BtRMJyUgIcBSa29xWIikHfm/AjiedoHKUWZaFOLWfAESgAjQsmcJS0LMl0f6ZQfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Bz4DAGzl; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 723AF88FAB;
+	Thu, 10 Oct 2024 05:29:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1728530966;
+	bh=gQnsQNQ/PBK1SteM9oC4cO5u8kTLGnBUpC1Tp8O2a+Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Bz4DAGzlzPqKpi94IKhRnwm9EDdVDYpweUjGZCxQC5/5v0ZScB7AHUZz99xNZ3sO4
+	 fXwHcb7Wfo9g1chTT07xZ3hg5iFnq2wW6XoqMOs1YdkzmI9d3BtX9usExRCZZJQLzV
+	 fO3hNP8Mq+sf/y5TZAPx6e7mnwBjwjBGeNJ724egjSM81vhEV5VWl+VcmLrtD8e50W
+	 EECJ93i9aovobS4t1zqCX1ZT0BP6CJDEKP02T/pxQj/Vfe3eBSSbD8ndTnnMHse5+3
+	 by8zd7hh3H5bfHb22YWv0AwSVzznnQYTNEq0KmGuZSzbip+bdhut1fsmmlM4iYJJg2
+	 HMrbWIqvnBwMg==
+Message-ID: <0ea547b0-5ccb-4cf7-bb57-807caf8649ca@denx.de>
+Date: Thu, 10 Oct 2024 03:18:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/1] pwm: imx27: workaround of the pwm output bug when
+ decrease the duty cycle
+To: Frank Li <Frank.li@nxp.com>
+Cc: u.kleine-koenig@baylibre.com, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, festevam@gmail.com, francesco@dolcini.it,
+ imx@lists.linux.dev, jun.li@nxp.com, kernel@pengutronix.de,
+ krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ p.zabel@pengutronix.de, pratikmanvar09@gmail.com, robh@kernel.org,
+ s.hauer@pengutronix.de, shawnguo@kernel.org, xiaoning.wang@nxp.com
+References: <20241008194123.1943141-1-Frank.Li@nxp.com>
+ <41cc47bd-f18f-463b-a0dc-843088ecf91e@denx.de>
+ <ZwajVXRwDLDg2rc7@lizhi-Precision-Tower-5810>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <ZwajVXRwDLDg2rc7@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241009-pwm-axi-pwmgen-enable-force_align-v1-2-5d6ad8cbf5b4@baylibre.com>
-References: <20241009-pwm-axi-pwmgen-enable-force_align-v1-0-5d6ad8cbf5b4@baylibre.com>
-In-Reply-To: <20241009-pwm-axi-pwmgen-enable-force_align-v1-0-5d6ad8cbf5b4@baylibre.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Trevor Gamblin <tgamblin@baylibre.com>, linux-pwm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.1
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-Enable the FORCE_ALIGN flag by default in the AXI PWMGEN driver. This
-flag makes the behavior of the PWM output consistent with the
-description at the top of the driver file.
+On 10/9/24 5:37 PM, Frank Li wrote:
+> On Wed, Oct 09, 2024 at 03:55:35AM +0200, Marek Vasut wrote:
+>> On 10/8/24 9:41 PM, Frank Li wrote:
+>>
+>> [...]
+>>
+>>> +	c = clkrate * 1500;
+>>> +	do_div(c, NSEC_PER_SEC);
+>>> +
+>>> +	local_irq_save(flags);
+>>> +	val = FIELD_GET(MX3_PWMSR_FIFOAV, readl_relaxed(imx->mmio_base + MX3_PWMSR));
+>>> +
+>>> +	if (duty_cycles < imx->duty_cycle && (cr & MX3_PWMCR_EN)) {
+>>
+>> I think you can use state->enabled instead of (cr & MX3_PWMCR_EN).
+> 
+> state->enabled is new state. Need check old state here. If old state is
+> disable, needn't this workaround at all.
+Can you add code comment like this please ?
 
-    * Limitations:
-    * - The writes to registers for period and duty are shadowed until
-    *   LOAD_CONFIG is written to AXI_PWMGEN_REG_RSTN, at which point
-    *   they take effect.
-    * - Writing LOAD_CONFIG also has the effect of re-synchronizing all
-    *   enabled channels, which could cause glitching on other channels. It
-    *   is therefore expected that channels are assigned harmonic periods
-    *   and all have a single user coordinating this.
-
-Without this flag, the PWM output does not change until the period of
-all PWM output channels has run out, which makes the PWM impossible to
-use in some cases because it takes too long to change the output.
-
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/pwm/pwm-axi-pwmgen.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
-index e1ddeaa4998b..4259a0db9ff4 100644
---- a/drivers/pwm/pwm-axi-pwmgen.c
-+++ b/drivers/pwm/pwm-axi-pwmgen.c
-@@ -37,6 +37,8 @@
- #define   AXI_PWMGEN_REG_RSTN_LOAD_CONFIG	BIT(1)
- #define   AXI_PWMGEN_REG_RSTN_RESET		BIT(0)
- #define AXI_PWMGEN_REG_NPWM		0x14
-+#define AXI_PWMGEN_REG_CONFIG		0x18
-+#define   AXI_PWMGEN_REG_CONFIG_FORCE_ALIGN	BIT(1)
- #define AXI_PWMGEN_CHX_PERIOD(ch)	(0x40 + (4 * (ch)))
- #define AXI_PWMGEN_CHX_DUTY(ch)		(0x80 + (4 * (ch)))
- #define AXI_PWMGEN_CHX_OFFSET(ch)	(0xC0 + (4 * (ch)))
-@@ -227,6 +229,16 @@ static int axi_pwmgen_setup(struct regmap *regmap, struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	/*
-+	 * Enable force align so that changes to PWM period and duty cycle take
-+	 * effect immediately. Otherwise, the effect of the change is delayed
-+	 * until the period of all channels run out, which can be long after the
-+	 * apply function returns.
-+	 */
-+	ret = regmap_set_bits(regmap, AXI_PWMGEN_REG_CONFIG, AXI_PWMGEN_REG_CONFIG_FORCE_ALIGN);
-+	if (ret)
-+		return ret;
-+
- 	ret = regmap_read(regmap, AXI_PWMGEN_REG_NPWM, &val);
- 	if (ret)
- 		return ret;
-
--- 
-2.43.0
-
+Thank you !
 
