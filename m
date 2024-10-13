@@ -1,83 +1,82 @@
-Return-Path: <linux-pwm+bounces-3623-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3624-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5214999BBE7
-	for <lists+linux-pwm@lfdr.de>; Sun, 13 Oct 2024 23:03:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E2AF99BBF9
+	for <lists+linux-pwm@lfdr.de>; Sun, 13 Oct 2024 23:12:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DEF01B20D3C
-	for <lists+linux-pwm@lfdr.de>; Sun, 13 Oct 2024 21:03:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C6BE6282808
+	for <lists+linux-pwm@lfdr.de>; Sun, 13 Oct 2024 21:12:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74E8514A4D1;
-	Sun, 13 Oct 2024 21:03:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DEF77F48C;
+	Sun, 13 Oct 2024 21:12:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MEv5d3ww"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="imWwclgL"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A913E148314
-	for <linux-pwm@vger.kernel.org>; Sun, 13 Oct 2024 21:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D97139D0B
+	for <linux-pwm@vger.kernel.org>; Sun, 13 Oct 2024 21:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728853426; cv=none; b=hBH8pUEND3n35TPCDKq2k3816tqJ4zWguoMhWk3UWJ7UaJw9f3juBIEajCFXnaKA8YM6mJrtPa9ZhiXt3pVOgblsyWtnccNzUZCsk/fWB89hUDIrrStipEpZD4dBscA8Mxk9wHJIAEGxhrr7Qwio5qmybr17L6BBeR2IrzYOJT8=
+	t=1728853942; cv=none; b=RrWzkMrKR1LpZi/g+xYaqmxmpHOj/eMPuH4D3Pe1TRMsHofrQdpvnaJXxvOjyU7S09710y1MuGExIbg6yIjJhdzWjLr6ORsV+oWussZRiTvln+eps91JJ7vptlvnyA0+lumBe9E05ugL/HlgobOIMRiKddjI99+fkyw0uAPLCQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728853426; c=relaxed/simple;
-	bh=FLf9Ev/wQgipDcZlw83jwm5kLXK/zBmwzvq/PiQYMQI=;
+	s=arc-20240116; t=1728853942; c=relaxed/simple;
+	bh=JpAsQjdO8xDgz+DjNBuDcK+8eQNAm/nQvmxK2hx0Obk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PPfdwD7S1kaWjQPnIDAVJ6BnE02cbLDzob/3uxslUIQG6OrTX3Hke9rCLr/yQ//ShnKszuF8paoOb9pZwn16R85FVmbB6bSHnCaABD4Uw3vAO9Ux3koBIk3AF1ss0P7V9NJTG1ZEyOlNsO+EaBRLwax8jhoSEqSpgLMW1plM2d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MEv5d3ww; arc=none smtp.client-ip=209.85.167.44
+	 To:Cc:Content-Type; b=WtRKvle7mXJ+OrfEHqrjVGwdnXGhi5UGrNvwHL66qGfoJt4Xk+v+DuSgArNsLfZWZAT13K9YNcFYdaMV3Zzo7ODa/C52iK0mputbElS257mthPfu87aXNG86jmt3AOPX3YUbvyQhEFVWHEpnp/X0uYTctK11mRzwDIjNecRHt10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=imWwclgL; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-539f4d8ef66so509746e87.1
-        for <linux-pwm@vger.kernel.org>; Sun, 13 Oct 2024 14:03:44 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-539e8607c2aso1123082e87.3
+        for <linux-pwm@vger.kernel.org>; Sun, 13 Oct 2024 14:12:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728853423; x=1729458223; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1728853937; x=1729458737; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FLf9Ev/wQgipDcZlw83jwm5kLXK/zBmwzvq/PiQYMQI=;
-        b=MEv5d3wwVIUqTbl2pHpmtwr7hFhF83mPwrxJ1OxG9YdnGSzLcagjdDnCwAqJPknC+B
-         MtQZUGk5qEmV/YbRej+enym7WPFvOnp3Gp8Nn1HGDLmk11m8hcsW9/s9y54UQ5PbiYXp
-         mVAlVJ3Fn7myC0zTKaepZhXiOFgx7FeAthEW5+Bx82OvK1mwymB9jXPdBywtiuC2FirN
-         Z2WnWcF44sfWr/hqPWiHoxDBiS5OBMqpzVPZdXjziP9ulf5ViKrXl+e6V69ImXA65uj5
-         7GnsquMF/mlKjItiexlU9eO+MqP5FMTzyEE0FF6x4M3pa4JwG5as8kYqEfFNey2JYHAG
-         7H6Q==
+        bh=pwQ+0QBqpruUrAoix4rKJMBSmDvfPtsp4gDbiv475pg=;
+        b=imWwclgLmB1f33vAaYTs6COSLkFQRzbULOw6bmbLGIGroYsr4RrIVw1nMMcNsL12Bj
+         2bT2ae735QKR5hs8oI22iVYc3cvKcsat6IDzmmKLcl21Ev8wxM2cftrVQX3d6pBYmwdl
+         5BCEzAMRylWPc1sWfi41WXg9U7mZdLZNSP316fLtguQMr4iADRdDpPHgyZwMpMcELJgR
+         rra5Q5Ud8KrP4Cj8jsZy4S+zv7RafFAs1/VytOBhO+Rr3Lq+oBxzZxBDFaGPlHje6BoX
+         dq3r97aZIaspDXqwemmkyuvCMU+F77MAASCPGZbtPtBTx7GH6TwWkyQDcQg2rTndTLbD
+         +KxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728853423; x=1729458223;
+        d=1e100.net; s=20230601; t=1728853937; x=1729458737;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FLf9Ev/wQgipDcZlw83jwm5kLXK/zBmwzvq/PiQYMQI=;
-        b=sw99BTDeZpscGsm43JK5vCmzfr0Vgwm52cshRiGSB7E4AM+449wgCFYsyV2GlGq1lk
-         lIUY5mlG8lhNb/7jAjW3v1qFbUgm7uBwnP8ver9bJVB9i4bbiOgZFKizPjZme9MYSWDs
-         qVGQcthGOr+YmGUohtmUeN+efDU9NEChhkPNUCr9vHY4mgF+k7yFZAmcx6Hb3Ynnh2x/
-         s8JKDwXnGV0On2WNzVbp87KQRhIndtKKzgV+Fi0ooLIZcswlY0XiOq9Zdafp8sSn8wHo
-         eIC95mw2iPP2j7fFV9LBOFVH8qDfwEokTFbQDIXUkU4qHKaqSZbD1pR6ngocw+SXJEJF
-         rhrA==
-X-Forwarded-Encrypted: i=1; AJvYcCXebe9cq65UZGJMiI55HztNNKYBZofS5FX59MSDDnsUTFaYA9xTE+xeLM3eCIcAdAmDCK+L5O4PVbY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyI++eunoPF/9OyGCw7qEV2DaJnogBYF1cP+9SVe3jrxK44v2Kc
-	trnA07gJr+9DtcYIq3Ycph4Nd9/1xcbLmX2Yi/Rbok0NC7lX6DFVP1dVE1KdgJX1VVkQOG3Tx4e
-	f/MlImlxIWVtYnDB0jjlwjNlJvY8/J7MVDCohcg==
-X-Google-Smtp-Source: AGHT+IFa3Un5SUZOY+WLd4u8uuT8jEO8T34DA1v0bhROVGdMNVLjn6uobn3EByZ64OPzccOgb3Fhg81/qWo8P87tPkk=
-X-Received: by 2002:a05:6512:1193:b0:539:e65a:8a7c with SMTP id
- 2adb3069b0e04-539e65a8b8emr1533379e87.58.1728853422775; Sun, 13 Oct 2024
- 14:03:42 -0700 (PDT)
+        bh=pwQ+0QBqpruUrAoix4rKJMBSmDvfPtsp4gDbiv475pg=;
+        b=bVCBpgoEyXSbaNXLuQfxWh8pnzTjMOVsRzpvCKBN4zYg70pOrS5RzMGygCRmLhGfsY
+         BbLuD3BdvKzny1PG415h6eRxEtrowEgmladT7GqXaZSr7H/kxrLfiM3czSjbuRTOP40C
+         3hLKbhWm8Btf1R6fTZo2Q+J4X9MI/vVgFvTvI4mRmv7Vkfl6BNwSyWpVmKVWmKjpt7e5
+         4hDvNQx4uH3Rb3rnz+uSySNnykIeNOc4kr0Y/bz0NUiheQljPMA+nlGW371rsOJEaT2+
+         UyHgmCTOyKdsrBS8SynzPnd6Rmq8JDCK5I7RJhXWTHoY/dpMUudP3wvquOu0Knf7A3yM
+         lEWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxOXR4xA0FuXoJwPWSOsn7cbMam4ZlcakDuYncuSwwYUFVKmtfczCPYSPQfnas5zQJedr1s+7/EzY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnEOTCdVY+39gabegyIPtcGy02uvvJlRsYKTM6gH0LpSnkrU7c
+	2g1pIftLA0pXXQWQFXopMWovtF8ZwdjbKsU7taB4vsLiE4QDa6PsbvO4gruKUbmFVPh0AQNNp7g
+	kpuZl0AvdELO+WU8H8s9NRXc9Cx6K/rkZY0kRJQ==
+X-Google-Smtp-Source: AGHT+IG22JRYupZ1fLsDed6hOclviXUZ6gkDKTz/1J3tmXWEWFDaDkSBlGmH4CesWUEdr/RrovlO1A4TEXMMoyRsCbs=
+X-Received: by 2002:ac2:4e16:0:b0:536:554a:24c2 with SMTP id
+ 2adb3069b0e04-539da3c5ee1mr4707787e87.13.1728853937291; Sun, 13 Oct 2024
+ 14:12:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241013-en7581-pinctrl-v6-0-2048e2d099c2@kernel.org> <20241013-en7581-pinctrl-v6-4-2048e2d099c2@kernel.org>
-In-Reply-To: <20241013-en7581-pinctrl-v6-4-2048e2d099c2@kernel.org>
+References: <20241013-en7581-pinctrl-v6-0-2048e2d099c2@kernel.org> <20241013-en7581-pinctrl-v6-5-2048e2d099c2@kernel.org>
+In-Reply-To: <20241013-en7581-pinctrl-v6-5-2048e2d099c2@kernel.org>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 13 Oct 2024 23:03:31 +0200
-Message-ID: <CACRpkdbCBJVQsSwYJPBpjbpNvxUportnxxKObb-cYjqcSTpOFg@mail.gmail.com>
-Subject: Re: [PATCH v6 4/6] dt-bindings: mfd: Add support for Airoha EN7581
- GPIO System Controller
+Date: Sun, 13 Oct 2024 23:12:06 +0200
+Message-ID: <CACRpkdZKkv=CKkA1WS4ZwSj8vXzzZFM-uv6eiMeij+fL_cvTzQ@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] pinctrl: airoha: Add support for EN7581 SoC
 To: Lorenzo Bianconi <lorenzo@kernel.org>
 Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
 	Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
@@ -94,18 +93,58 @@ Content-Transfer-Encoding: quoted-printable
 On Sun, Oct 13, 2024 at 12:08=E2=80=AFAM Lorenzo Bianconi <lorenzo@kernel.o=
 rg> wrote:
 
-> From: Christian Marangi <ansuelsmth@gmail.com>
+> Introduce pinctrl driver for EN7581 SoC. Current EN7581 pinctrl driver
+> supports the following functionalities:
+> - pin multiplexing
+> - pin pull-up, pull-down, open-drain, current strength,
+>   {input,output}_enable, output_{low,high}
+> - gpio controller
+> - irq controller
 >
-> Add support for Airoha EN7581 GPIO System Controller which provide a
-> register map for controlling the GPIO, pinctrl and PWM of the SoC via
-> dedicated pinctrl and pwm child nodes.
->
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> Tested-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
+> Co-developed-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
+> Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
 > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-LGTM!
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Nitpicks follow:
+
+I would have changed the below:
+
++       pinctrl->gpiochip.data =3D gpio_data_regs;
++       pinctrl->gpiochip.dir =3D gpio_dir_regs;
++       pinctrl->gpiochip.out =3D gpio_out_regs;
++       pinctrl->gpiochip.status =3D irq_status_regs;
++       pinctrl->gpiochip.level =3D irq_level_regs;
++       pinctrl->gpiochip.edge =3D irq_edge_regs;
+
+Can't you just use e.g.
+
+chip->data =3D ... etc in the top section?
+
++       chip->parent =3D dev;
++       chip->label =3D dev_name(dev);
++       chip->request =3D gpiochip_generic_request;
++       chip->free =3D gpiochip_generic_free;
++       chip->direction_input =3D pinctrl_gpio_direction_input;
++       chip->direction_output =3D airoha_gpio_direction_output;
++       chip->set =3D airoha_gpio_set;
++       chip->get =3D airoha_gpio_get;
++       chip->base =3D -1;
++       chip->ngpio =3D AIROHA_NUM_PINS;
+
+I always call that varible "gc" rather than chip, but no big deal.
+
++       chip->irq.default_type =3D IRQ_TYPE_NONE;
++       chip->irq.handler =3D handle_simple_irq;
++       gpio_irq_chip_set_chip(&chip->irq, &airoha_gpio_irq_chip);
+
+I usually declare a local variable
+struct gpio_irq_chip *girq;
+
+girq =3D &chip->irq;
+girq->default_type =3D...
 
 Yours,
 Linus Walleij
