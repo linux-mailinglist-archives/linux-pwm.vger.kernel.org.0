@@ -1,111 +1,211 @@
-Return-Path: <linux-pwm+bounces-3628-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3629-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A2A999C36A
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 10:33:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8D0A99C655
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 11:49:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3283283A24
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 08:33:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7032A1F236D7
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 09:49:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53F0F159583;
-	Mon, 14 Oct 2024 08:32:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDD5815687D;
+	Mon, 14 Oct 2024 09:49:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Wao6WulG"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="sbsNL09D"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B488D158A18
-	for <linux-pwm@vger.kernel.org>; Mon, 14 Oct 2024 08:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D0214B96E;
+	Mon, 14 Oct 2024 09:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728894720; cv=none; b=rc2fXraSGM1UMGka24V6W2gmEq0gSamYbDt+U3hpPConQN/KJy1kF+XWJ2VR0jlsY8K1FoAr2+UY1UmqFJzfvVbjV9VAfqn9IFyfn0SHspiNVGouWcCk6O6Xj5f2JoTP7c5TGCe4JHbSHGe3KZXaAEsiWjaxXzCmPL2qNZ0jRag=
+	t=1728899376; cv=none; b=tLiuYol/ja92gTEwIKCzhwCwQCDhk7mV6gnWX83/It+ISJEfnuHMmZoH7++9+BRs3+h+XiZ8eCMdn9+ks9LgfcLiyiPRkXb65fw4OAQtgGKIp857xohvRcWmcIH8n40kcuMYEDZE+Jzh5hqEaYs7KEbQffHM5Fntvx02+NbEohs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728894720; c=relaxed/simple;
-	bh=HOQuL05aTcz38UQAXd6dFnZM0C3Y3Fs1xb6v+HFs2rQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=he+oVGxCSS8JG8RiZP44Tn8AV5VCTJAdhU8udoXQ6fvyK0s3OIwFQ4Zo9RHoyrXwZyC1PDUSs3h+myxiHSiOD96v2PfWQKTGzyuyY86OxiV9yOJUjYUNofHS6tS33P6CP2HmMibc0wCc2acRVLA0Am4IgmfFloeASoAqLBAQSJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Wao6WulG; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4305413aec9so39045255e9.2
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Oct 2024 01:31:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1728894717; x=1729499517; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BnqEt7xHoA/xDc8TV9q3o1UbtE0Cr8uGVizTXc1c8c8=;
-        b=Wao6WulGa/RU9eFMHjos9HqE6IVyuZ30AoThee+rH1AojU+kjg2w5scjTX1cHDv8nz
-         UoXZTd0qCZTSLrp2jOGmNqTCh0sLjb4JOn9HFZtAbedYMFDQuzIEQyaymPukHZ5xdzx6
-         s77B0nvYifBlGXfVqjfLPQxDYk91+QqDMYSSR3iZ1Q7ulBvL4wp5NvOWOVWXHFZGHuPc
-         twmIHpemfCbNzidHoHR1EH6V2EQRtsn6I5tBhDXXo98s8P/bHabCj2DVgJ7RMPKzExVd
-         lP3/VTKtq1rG11Sg9NzmgXA6Gkj369oycyydxuC/gl2Kx6WMwZ+GgpZyaQhlJ0qGwQFQ
-         0q6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728894717; x=1729499517;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BnqEt7xHoA/xDc8TV9q3o1UbtE0Cr8uGVizTXc1c8c8=;
-        b=XRIm1HSelBndgz87X3MXTgF73Wts4oQpSw1iDsCa9oys365G0Y5vPYlPFIw0AhXdSo
-         yrsdli0yqYngQZ1N+antqW+iubRNRZI9DFC6qey4HD4I/oP7FI8/LqDB8S7e7Ys7g3D3
-         k8HhniUxehf6Z7vw6GXAPuhwVVHBIkiI75ZegE2W3OQPv1ZN6lQ6bzHGK9us2dSJScOS
-         M9fiBm/RtPDiSaMHLwZ+wNFlgCP6h3r82S7pR/Y18L5YJChimxjcZMpTq19wj4lRSONE
-         O/DHzkMJ38AAh7MCoKSVX/BOpxyelIEnozAmau/ueQoWsSIFunjorbwh4W/ggKq1di06
-         TOrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKGcA0MYEYf4ZKwyaJ4SBIy8t3/MiAh1Kb+SKBBYwWGiGpQMXHCMLQ5AK9khUUwzinC72gq3CQlj0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyy1Xc6do9PLkM7990l4uJY4DUe7KpW8ugxbg25ZKeR+xC87xJ9
-	Ha6BOA0TDUZfpWNpmLVQpiH5oeTrt0tNIiBl62qLXuIqdhCF6Rd3qmY/BRoHhX4=
-X-Google-Smtp-Source: AGHT+IFypyDVPNB7GTsY0jbyqffL/WpbjaCVbT/mDxbT4wDXJ36Piix6XrL6ax+D9xuwuNyBr5Jfcg==
-X-Received: by 2002:adf:a306:0:b0:374:c92e:f69f with SMTP id ffacd0b85a97d-37d551b473bmr7205594f8f.16.1728894717195;
-        Mon, 14 Oct 2024 01:31:57 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:de54:ebb2:31be:53a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b7ed69dsm10737698f8f.92.2024.10.14.01.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 01:31:55 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] gpio: vf610: use generic device_get_match_data()
-Date: Mon, 14 Oct 2024 10:31:36 +0200
-Message-ID: <172889468798.57095.6447484996457464693.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241007102549.34926-1-brgl@bgdev.pl>
-References: <20241007102549.34926-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1728899376; c=relaxed/simple;
+	bh=JpEXltiIOmmvzmLMRpSPLrxMeQ48oLm1fDT94sQzMxw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KFz1Y7I5zrIR2MDrigLJxByU+LwBS6HCk78yjWgn3L5ReKjBHQICraFcpNl0Op3wdbmgyZiPiCWjMZKDc7+66ORfa9OMkGKOpTaedATVZKhtXK34k2NsXY4jl8UvnH9dfytXfunuBVGjRajH7oxK2PBJOZjw1xT5P6JLkm/TXII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=sbsNL09D; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49E8LdXG001989;
+	Mon, 14 Oct 2024 05:48:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=CQ8z4oxWup1w6nbm5jbDnlve15C
+	K21AYqGfTSdiqiEA=; b=sbsNL09Df2LILJj6WrOfXiLYhLLhigbB7q9i/u1lrq6
+	cXNDS47x5EmShDPBts9UAuns8wMplBwGjN3/J+Q3tXJheSfDFkMbHQSMxOhD64zd
+	HM4jjjlXQXs5n0ovc7Z3LFkDoAxuTy64lhTUBd7xgF+0WzSkilYsltk4vLhOCH3q
+	aA6chB7S1kH2uVTTQfsga0o9wgn0WVpoO6fhknhgmvyXPZ0sYpGXUFPBrz6Qo10y
+	Ma+J7SmLXlMpzXwKImsixx7tk3IB3pPYAaFLhH4iTtsOqzCDV86nE+rZRARNOqD3
+	KiH0kqQ7OUVb+GHGrPEgrPloZykcBVSQHVX6xfRWRoA==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 428yqm0anp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Oct 2024 05:48:28 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 49E9mR1R027901
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 14 Oct 2024 05:48:27 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Mon, 14 Oct
+ 2024 05:48:26 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Mon, 14 Oct 2024 05:48:26 -0400
+Received: from amiclaus-VirtualBox.ad.analog.com ([10.65.36.213])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 49E9m0Gl024017;
+	Mon, 14 Oct 2024 05:48:04 -0400
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich
+	<Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>, Rob
+ Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
+        Olivier Moysan
+	<olivier.moysan@foss.st.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<ukleinek@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        David Lechner
+	<dlechner@baylibre.com>,
+        Marcelo Schmitt <marcelo.schmitt@analog.com>,
+        Dumitru Ceclan <mitrutzceclan@gmail.com>,
+        Ivan Mikhaylov
+	<fr0st61te@gmail.com>,
+        Antoniu Miclaus <antoniu.miclaus@analog.com>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        Alisa-Dariana Roman <alisadariana@gmail.com>,
+        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Gon=C3=A7alves?= <joao.goncalves@toradex.com>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+        Dragos Bogdan
+	<dragos.bogdan@analog.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>
+Subject: [PATCH v3 1/6] iio: backend: add API for interface get
+Date: Mon, 14 Oct 2024 12:40:35 +0300
+Message-ID: <20241014094154.9439-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: GyH6B_MXqAsY4PyA3YLuusSnnlLTECUt
+X-Proofpoint-GUID: GyH6B_MXqAsY4PyA3YLuusSnnlLTECUt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1015 bulkscore=0 priorityscore=1501 mlxscore=0
+ malwarescore=0 lowpriorityscore=0 phishscore=0 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410140071
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Add backend support for obtaining the interface type used.
 
+Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+---
+changes in v3:
+ - fix spelling
+ - add serial cmos/lvds in interface type enum
+ - drop comma for last element in enum.
+ drivers/iio/industrialio-backend.c | 24 ++++++++++++++++++++++++
+ include/linux/iio/backend.h        | 13 +++++++++++++
+ 2 files changed, 37 insertions(+)
 
-On Mon, 07 Oct 2024 12:25:49 +0200, Bartosz Golaszewski wrote:
-> There's no need to use the OF-specific variant to get the match data.
-> Switch to using device_get_match_data() and with that remove the of.h
-> include. Also remove of_irq.h as none of its interfaces is used here and
-> order the includes in alphabetical order.
-> 
-> 
-
-Applied, thanks!
-
-[1/1] gpio: vf610: use generic device_get_match_data()
-      commit: 1b35c124f961b355dafb1906c591191bd0b37417
-
-Best regards,
+diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
+index efe05be284b6..ef1fd4cb0b24 100644
+--- a/drivers/iio/industrialio-backend.c
++++ b/drivers/iio/industrialio-backend.c
+@@ -449,6 +449,30 @@ ssize_t iio_backend_ext_info_set(struct iio_dev *indio_dev, uintptr_t private,
+ }
+ EXPORT_SYMBOL_NS_GPL(iio_backend_ext_info_set, IIO_BACKEND);
+ 
++/**
++ * iio_backend_interface_type_get - get the interface type used.
++ * @back: Backend device
++ * @type: Interface type
++ *
++ * RETURNS:
++ * 0 on success, negative error number on failure.
++ */
++int iio_backend_interface_type_get(struct iio_backend *back,
++				   enum iio_backend_interface_type *type)
++{
++	int ret;
++
++	ret = iio_backend_op_call(back, interface_type_get, type);
++	if (ret)
++		return ret;
++
++	if (*type >= IIO_BACKEND_INTERFACE_MAX)
++		return -EINVAL;
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(iio_backend_interface_type_get, IIO_BACKEND);
++
+ /**
+  * iio_backend_extend_chan_spec - Extend an IIO channel
+  * @indio_dev: IIO device
+diff --git a/include/linux/iio/backend.h b/include/linux/iio/backend.h
+index 8099759d7242..ad9fa0ada9b2 100644
+--- a/include/linux/iio/backend.h
++++ b/include/linux/iio/backend.h
+@@ -63,6 +63,14 @@ enum iio_backend_sample_trigger {
+ 	IIO_BACKEND_SAMPLE_TRIGGER_MAX
+ };
+ 
++enum iio_backend_interface_type {
++	IIO_BACKEND_INTERFACE_LVDS,
++	IIO_BACKEND_INTERFACE_CMOS,
++	IIO_BACKEND_INTERFACE_SERIAL_LVDS,
++	IIO_BACKEND_INTERFACE_SERIAL_CMOS,
++	IIO_BACKEND_INTERFACE_MAX
++};
++
+ /**
+  * struct iio_backend_ops - operations structure for an iio_backend
+  * @enable: Enable backend.
+@@ -81,6 +89,7 @@ enum iio_backend_sample_trigger {
+  * @extend_chan_spec: Extend an IIO channel.
+  * @ext_info_set: Extended info setter.
+  * @ext_info_get: Extended info getter.
++ * @interface_type_get: Interface type.
+  **/
+ struct iio_backend_ops {
+ 	int (*enable)(struct iio_backend *back);
+@@ -113,6 +122,8 @@ struct iio_backend_ops {
+ 			    const char *buf, size_t len);
+ 	int (*ext_info_get)(struct iio_backend *back, uintptr_t private,
+ 			    const struct iio_chan_spec *chan, char *buf);
++	int (*interface_type_get)(struct iio_backend *back,
++				  enum iio_backend_interface_type *type);
+ };
+ 
+ int iio_backend_chan_enable(struct iio_backend *back, unsigned int chan);
+@@ -142,6 +153,8 @@ ssize_t iio_backend_ext_info_set(struct iio_dev *indio_dev, uintptr_t private,
+ ssize_t iio_backend_ext_info_get(struct iio_dev *indio_dev, uintptr_t private,
+ 				 const struct iio_chan_spec *chan, char *buf);
+ 
++int iio_backend_interface_type_get(struct iio_backend *back,
++				   enum iio_backend_interface_type *type);
+ int iio_backend_extend_chan_spec(struct iio_dev *indio_dev,
+ 				 struct iio_backend *back,
+ 				 struct iio_chan_spec *chan);
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.46.2
+
 
