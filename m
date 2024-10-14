@@ -1,123 +1,135 @@
-Return-Path: <linux-pwm+bounces-3641-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3642-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53C0999D806
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 22:15:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 34AE399D9A7
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Oct 2024 00:08:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17678281513
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 20:15:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 03079282B99
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 22:08:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 052F314D2B3;
-	Mon, 14 Oct 2024 20:15:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F8AC1D2F40;
+	Mon, 14 Oct 2024 22:08:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvQL74/K"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lT+tEeVN"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CA1148FF5;
-	Mon, 14 Oct 2024 20:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B78F156230
+	for <linux-pwm@vger.kernel.org>; Mon, 14 Oct 2024 22:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728936913; cv=none; b=j5ZtfICcAN7YxU7SaB7RExEtEq0GTwVya/SdX5sWQRuVsXXV57mrscR51i4TtYIw5RII0HijxmaHr2W8MvSN46W2SVEgwmko6TQPqlGC/2gbZ574tWxMLSg8gpwRe77SI1d8l+WQQ07+cKNOViQFvIyoGvxvE032fze5pxhAup4=
+	t=1728943731; cv=none; b=jII31sjQARGoZnd0qzAg9eF59rg+v6fZLmDoo6YmdvdFCwND2VUENz3GOcdZib9hHEGT5vsr9a94nUEuvOcPQ74dJ5hxL9ufzEoOukwMbI0d9A7FeKw9tAMff2nxQJae9wWgjaUtYnxJDK/g4SdaZG4CaG1qNh2wXozh49MEclg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728936913; c=relaxed/simple;
-	bh=OJs6zdOtIeAhgerCz4fGfsBYiuRtasrfJZ4O8b/wJJM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BSi4XE1+0Q6GdGz9zcULxZvJNSEuy3VmKgS7GBydtdJBuT51LefB+yjsk+9uL66xgS+NRH+CrY/CUYQlW4vgjL/bjenmcQZk4Wk6/NDZSwF6oriye0OWR9FlaoJHQuCdAHT5B3A6NF/cVeksi+WJ/3QLjNg46uuF2m6BqwJU18c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MvQL74/K; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7b120428a3cso243242085a.3;
-        Mon, 14 Oct 2024 13:15:12 -0700 (PDT)
+	s=arc-20240116; t=1728943731; c=relaxed/simple;
+	bh=RwiWGV2rzLk4cT6vGo2hf7iXveFtHH9FPuvO1qveBSk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a95UZmad7tIC9TBhLHM5/M6ocz4U7Huhix5IQbeG9/olU/8L8DH3/n6cQKm/EG+r/JZtz+E48m9+i3O34SnTqFOUvptfbVu2r+sndlvuALgZJTAZ09sEL5HzF+kT2daCJ2ZOgf/zWAASmQsqo3HdeLTpQ/DyWEOEFPwq6Zty/kE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lT+tEeVN; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-715884fcf32so1830758a34.0
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Oct 2024 15:08:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728936911; x=1729541711; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dpw2WNuTyCqysTkudvUql0camhRiNDGOcryatLTQ+dk=;
-        b=MvQL74/K88Lb9w9Y3bbAc0a3rrosPnRzLRkcMmDSBkH15oCT4DGURA7I7T9Oo0LHdf
-         YJ9eUfJ83DmWwkHSIUtfda2FeE20Or4oExpwFJ87UIP+gdxhqbFyiFFDp+WD5VBngYND
-         lIwL2sJjLU8/UQj87sha7cOOZBFQgdT6UUs4o81qoDHlYBPM7Qd2JdW+eptmvSnkm8lA
-         i288TdaJduoBtndFCSE53UoynfehNbnKnL19/vrnTX8Y6t+Bd37AM2jX7fB10yhilCMy
-         BV+cy/PZSH4yiBnZHHGvgvxkvZ0sA0WtiLyNcRsMJHtmnbsYG/XufK2sIJ3DjhU4mT8f
-         jQzA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728943728; x=1729548528; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CE71Pg+9qQgmK3mJbmPthhcZO1J5ofFDM3FllRmUogo=;
+        b=lT+tEeVN0xGWgs+x4V9vNAiPWxKgu1AV3NjGgTIrMBGIXOf9+MhPnUKn1w9Q5QnPgU
+         LQ/Z6dcbU1eYPKyXskY/O37o6ts3TRvVT9MXhf0TNXCvaPhA+jnUe/ta2i47mxVN+F/o
+         wdSRHBLIYBx6837VAgQkbrwhCgl+J+0ASnprk/URj03MpbYCpRxwS+KNw+OH3sP4bi2N
+         9plioMKvVNGuPbEh9ovOa0OoNUFPMrrulp0lVt7kuUPg3/TrCBKXT49FGLTyOlnVxxNL
+         p3+AH3FV+Otvi/Hqhn1bVRKSIID056yOlCNUasyj+lmK/aR/pCcjKRB/m2Kc9e805QDp
+         +3Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728936911; x=1729541711;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dpw2WNuTyCqysTkudvUql0camhRiNDGOcryatLTQ+dk=;
-        b=O0vD3hiwx5u0yjeAl7DsbZf1QHTijrRPrEGnKmbvlN6EA+JzANjr/HhXTphbtwrn89
-         Gc154XVP5gpn5e/iotrubeUrSC7+jE9zJbptCRYN9pDt3bMPEEP0lnEjZz8NxTbT3xfK
-         ucXnW3YrrFd4bIaWqXQhT0Zn3ikTPfGd4b3gnrTyAS7Q88/V9raepN2RogciJOypSyhf
-         EU/Dy6TSKjWmrqQ01TDf863TzGCHL1GTkb7adVZ0E8XIZNEIlzbnAdqHeMF2at+m7FRo
-         6d95QlIga+B0WoahwJAtL413afG3cHuuoWldLnC4cevS2fbJxpC14K3WCN8gvVfDREMc
-         mUmw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEJd1l6DbLyOUKA3Bf9MdgOril5rTdBYxxbaZ620KMAKUxRqY+2EOkZoMQ1PxFilHKENCYxzznjkuz@vger.kernel.org, AJvYcCVqYIRFzkC/bymtSyTVOaZZ4MZ/QW6HUe/mbYgeIsVgEVuoFV2TuYzrHS2cTw9UUztvSNxYRsTJapL+SqNU@vger.kernel.org, AJvYcCXZtWfK+k/8BwxePmOI0avrod2707wGABuKJWjDsl6HAvxORJtJd7yirIudYv4Akeg3mR12dAXtVRxO@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAOrvjhkWOEWXNccKaDqCNYLSY/9m2r0P793ikwloQmv6QITXD
-	T5SNmYn9GGoZWWbRG3d5TkcxIw4oOmE0eCPGcILWvdKHjwsUVIG9KSwYAfcI
-X-Google-Smtp-Source: AGHT+IFcMk5820x03/AY7v0duvIy0JMNHUd1BnYfTeb0HIwZnlUhGZf9L7CFpFzNKinLIdNqMfdDrQ==
-X-Received: by 2002:a05:620a:28cc:b0:7a9:a883:e22b with SMTP id af79cd13be357-7b11a34b9dcmr2292551885a.7.1728936911258;
-        Mon, 14 Oct 2024 13:15:11 -0700 (PDT)
-Received: from VM-Arch ([2600:1001:b148:c0ba:c7c4:edb8:1e9:3521])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b11497a931sm451280085a.110.2024.10.14.13.15.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 13:15:10 -0700 (PDT)
-Date: Mon, 14 Oct 2024 16:15:02 -0400
-From: Alex Lanzano <lanzano.alex@gmail.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: u.kleine-koenig@baylibre.com, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Mehdi Djait <mehdi.djait@bootlin.com>, linux-kernel-mentees@lists.linuxfoundation.org, 
-	skhan@linuxfoundation.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v10 0/2] Add driver for Sharp Memory LCD
-Message-ID: <sxxpdm66dukbef27nnvnxa5igglepkcer6qtgv2hdfaim2jmqy@5xd3zwu2ta5f>
-References: <20241008030341.329241-1-lanzano.alex@gmail.com>
- <hfpq35cxext6vd7shppa4ovtszywzqkc5gqo3t7p77uldasxts@gyfrypofijmd>
+        d=1e100.net; s=20230601; t=1728943728; x=1729548528;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CE71Pg+9qQgmK3mJbmPthhcZO1J5ofFDM3FllRmUogo=;
+        b=ttZLLlmhIhY5ujg2bagVMXwPRaOvobjSPMqeIDF/VDhOElxe2VdQTUDHcdBt+GgEKX
+         +o6ZqAqKwz5/qYboTUEf81Z8oSkeYoXHFN2uBBu/YqnQjmskiQjT5E6BwqCRlcidjhRC
+         8w5ftmAz0vA2346zJPnhMNtyV1wAG5NlymYRdDEt/x2lC08GsHU2eO8EY0Uo8ooTsslF
+         1K67LLrArFP4yNyO0jqD4cBI1lJZUjb4w30M7IXN8c8XDNysdM3sQbF9hJCLyv6081HD
+         8zmk6JZrivnIilKaPXaexLLvmWiUm4xVCSLh0QUejiJPdNBdvf5hN20p1yynF+FHG+YU
+         HM0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXjDdru/mFei67ToHQl9kAA3fg733NLhuPEY4eK1hE7+jZavDqSk/6ZE36RFxoblR4Q8esWL5ViBR4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7mFEYPg/6be1FLAs9wu40kZHvGMdlo+AukuB0RioidWLosdtG
+	mcMzxnYke3lxvBgGNwd9tbRr6edgDAccRQIpmiCjyHO52ALkduFHmTx7VZnxhFc=
+X-Google-Smtp-Source: AGHT+IHJnl83Mw1D/U95VcdXHn7KiobS+KbDMYq68e+4vVzo3kcSL5k6sBEGoQjwDIdvMPPL4KFOQw==
+X-Received: by 2002:a05:6830:65c4:b0:703:6434:aba8 with SMTP id 46e09a7af769-717df1e1178mr7335220a34.0.1728943728669;
+        Mon, 14 Oct 2024 15:08:48 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-717fb9f022asm13921a34.27.2024.10.14.15.08.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Oct 2024 15:08:48 -0700 (PDT)
+Message-ID: <c70139f8-c0ba-4e28-9477-964db3fbfbba@baylibre.com>
+Date: Mon, 14 Oct 2024 17:08:47 -0500
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <hfpq35cxext6vd7shppa4ovtszywzqkc5gqo3t7p77uldasxts@gyfrypofijmd>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 6/6] iio: adc: ad4851: add ad485x driver
+To: Andy Shevchenko <andy@kernel.org>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
+ Olivier Moysan <olivier.moysan@foss.st.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Marcelo Schmitt <marcelo.schmitt@analog.com>,
+ Ivan Mikhaylov <fr0st61te@gmail.com>,
+ Marius Cristea <marius.cristea@microchip.com>,
+ Dumitru Ceclan <mitrutzceclan@gmail.com>,
+ =?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>,
+ Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Mike Looijmans <mike.looijmans@topic.nl>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+ Dragos Bogdan <dragos.bogdan@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+References: <20241014094154.9439-1-antoniu.miclaus@analog.com>
+ <20241014094154.9439-6-antoniu.miclaus@analog.com>
+ <Zw0ZM0vQXJep3dFJ@smile.fi.intel.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <Zw0ZM0vQXJep3dFJ@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 14, 2024 at 10:35:03AM GMT, Dmitry Baryshkov wrote:
-> On Mon, Oct 07, 2024 at 11:03:09PM -0400, Alex Lanzano wrote:
-> > This patch series add support for the monochrome Sharp Memory LCD
-> > panels. This series is based off of the work done by Mehdi Djait.
-> > 
-> > References:
-> > https://lore.kernel.org/dri-devel/71a9dbf4609dbba46026a31f60261830163a0b99.1701267411.git.mehdi.djait@bootlin.com/
-> > https://www.sharpsde.com/fileadmin/products/Displays/2016_SDE_App_Note_for_Memory_LCD_programming_V1.3.pdf
-> > 
-> > Co-developed-by: Mehdi Djait <mehdi.djait@bootlin.com>
-> > Signed-off-by: Mehdi Djait <mehdi.djait@bootlin.com>
-> > Signed-off-by: Alex Lanzano <lanzano.alex@gmail.com>
-> > ---
-> > Changes in v10:
-> > - Address comments from from Uwe
-> >     - Replaced -EINVAL with PTR_ERR
-> >     - Error check pwm_apply_might_sleep function
-> >     - Remove redundant error message
+On 10/14/24 8:14 AM, Andy Shevchenko wrote:
+> On Mon, Oct 14, 2024 at 12:40:40PM +0300, Antoniu Miclaus wrote:
+>> Add support for the AD485X a fully buffered, 8-channel simultaneous
+>> sampling, 16/20-bit, 1 MSPS data acquisition system (DAS) with
+>> differential, wide common-mode range inputs.
 > 
-> Let's wait for an Ack from Uwe's side. If there are no further issues,
-> the series seems to be ready.
 
-Looks like I'll need to make one more version to accommodate the new
-client setup by Thomas Zimmermann.
+...
 
-https://lore.kernel.org/all/20240924071734.98201-1-tzimmermann@suse.de/
+>> +	return regmap_update_bits(st->regmap, AD4851_REG_PACKET,
+>> +				  AD4851_PACKET_FORMAT_MASK, (osr == 1) ? 0 : 1);
+> 
+> I would do it with a conditional
+> 
+> 	if (osr ...)
+> 		return regmap_update_bits(st->regmap, AD4851_REG_PACKET,
+> 					  AD4851_PACKET_FORMAT_MASK, 0);
+> 
+> 	return regmap_update_bits(st->regmap, AD4851_REG_PACKET,
+> 				  AD4851_PACKET_FORMAT_MASK, 1);
+> 
+If we do this, regmap_set_bits() and regmap_clear_bits() would
+be even better.
 
-Best regards,
-Alex
+
 
