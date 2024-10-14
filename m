@@ -1,132 +1,123 @@
-Return-Path: <linux-pwm+bounces-3640-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3641-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F10AA99D7DA
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 22:05:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53C0999D806
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 22:15:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8D986B20C23
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 20:05:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17678281513
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 20:15:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 942531CF5C0;
-	Mon, 14 Oct 2024 20:05:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 052F314D2B3;
+	Mon, 14 Oct 2024 20:15:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="bFNy/FGK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvQL74/K"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F891CF2A2
-	for <linux-pwm@vger.kernel.org>; Mon, 14 Oct 2024 20:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CA1148FF5;
+	Mon, 14 Oct 2024 20:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728936346; cv=none; b=Yhn0HSNa9hm965TUYXJuo+M9RTKMMfXXo/pe4i/QUfWu1Uy0SF2Wlchj2P2uP0hlOffenwIS8ce1tt51M8Vu2lKga2ArpIvpCpa8h29oudigeg9eoxg2ZyfCJwt1WriH8J+9f4mM0fuGgocsoh7aDehDXbdGk14LDYo/xIYOLz8=
+	t=1728936913; cv=none; b=j5ZtfICcAN7YxU7SaB7RExEtEq0GTwVya/SdX5sWQRuVsXXV57mrscR51i4TtYIw5RII0HijxmaHr2W8MvSN46W2SVEgwmko6TQPqlGC/2gbZ574tWxMLSg8gpwRe77SI1d8l+WQQ07+cKNOViQFvIyoGvxvE032fze5pxhAup4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728936346; c=relaxed/simple;
-	bh=/p0fsinLEF+6jqle9DFYB7wdd7XNPvVlqtJXR24v4JQ=;
+	s=arc-20240116; t=1728936913; c=relaxed/simple;
+	bh=OJs6zdOtIeAhgerCz4fGfsBYiuRtasrfJZ4O8b/wJJM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xcyg7VGf/Bj7KC3kUHyd3natr9I2MKAXeOA5JEcaSNGPj6PKua5qZDfQkWOO+A43YZgKizZEDOpWyIZ6lZbH9Rr/EMuVq8nkolzjC9PsWFM4h8DZBqFzNC4cZa3kaFa/WH5IGZuJuHqfSCMp+8cSgUqYh43A4wjP7kFv+/h4mf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=bFNy/FGK; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-37d4a5ecc44so3301060f8f.2
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Oct 2024 13:05:44 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=BSi4XE1+0Q6GdGz9zcULxZvJNSEuy3VmKgS7GBydtdJBuT51LefB+yjsk+9uL66xgS+NRH+CrY/CUYQlW4vgjL/bjenmcQZk4Wk6/NDZSwF6oriye0OWR9FlaoJHQuCdAHT5B3A6NF/cVeksi+WJ/3QLjNg46uuF2m6BqwJU18c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MvQL74/K; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7b120428a3cso243242085a.3;
+        Mon, 14 Oct 2024 13:15:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728936343; x=1729541143; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1728936911; x=1729541711; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/p0fsinLEF+6jqle9DFYB7wdd7XNPvVlqtJXR24v4JQ=;
-        b=bFNy/FGKbuW8mqxxfuPRBmPajG5CWHd19UEPFs1T8mG3DI6lkasD5ru18XmRvhH7j6
-         s+kuFpSuzJ/8jiGYai9w2Yjo/A2qXDep/XkdknD481d/D9yhHn1U81SXYJncrtgW6EK3
-         cxgwMQb5SPi3kYJ4CbXuDdFL+btv9O8Gzw5KD2wmPIFT3wJAYcIQB9GtsS+mWpg1BWQl
-         sz28upbeggmdlQuEYDjaj8sO0qAaObHMGpW543gkAvtlX71j+EJ46kw2tUeoSkhCHfH6
-         EknILaN41mbKoJL1fQ+hnAj4sDDrCgk11zpKNgrqQJiWvA8Dei1H7AzqJlvInHEAFbTm
-         Ax7A==
+        bh=dpw2WNuTyCqysTkudvUql0camhRiNDGOcryatLTQ+dk=;
+        b=MvQL74/K88Lb9w9Y3bbAc0a3rrosPnRzLRkcMmDSBkH15oCT4DGURA7I7T9Oo0LHdf
+         YJ9eUfJ83DmWwkHSIUtfda2FeE20Or4oExpwFJ87UIP+gdxhqbFyiFFDp+WD5VBngYND
+         lIwL2sJjLU8/UQj87sha7cOOZBFQgdT6UUs4o81qoDHlYBPM7Qd2JdW+eptmvSnkm8lA
+         i288TdaJduoBtndFCSE53UoynfehNbnKnL19/vrnTX8Y6t+Bd37AM2jX7fB10yhilCMy
+         BV+cy/PZSH4yiBnZHHGvgvxkvZ0sA0WtiLyNcRsMJHtmnbsYG/XufK2sIJ3DjhU4mT8f
+         jQzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728936343; x=1729541143;
+        d=1e100.net; s=20230601; t=1728936911; x=1729541711;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/p0fsinLEF+6jqle9DFYB7wdd7XNPvVlqtJXR24v4JQ=;
-        b=iDgCNnID2rCqwSrGPUFexhYuMMba6aUrcJ8oa99lptvRekbStxjVS+1DKsFQmVxgYM
-         f7PIF3b+hoV95HMqkrzdoLXVHAnNQORD5mJxxQl8O0P7oKSXmP+cf0Ab7a/NoF6/oABv
-         Ins7AFbr/uQDyblf68928keNBYxSLNmLacruWoumdX7iwAqDIRrXKTBqK5UPrvGw1mWm
-         Qe121ePbmwnq9n25l++SpuyAHrxA1g3WHBDDOV1R5SdArntnYVQtZqzo0UC/UCmSUrtX
-         yjxEJCg2W1u+i+bEt6dyI7OKaA0tgFUvXJUqPhgWbWochW0TtiTl0pNL60Sj3n1lGb+F
-         dcYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVa0197NgEgQvO4G1bsLw21VDTc0RKYG38Zq7owSUUUk5aSGJc9QZ9bDZFuzm/qj3MKqh7NM3bhKd0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxwkivm03plFxiO+EpywI7Dr2Oh2nsl+kytOKbT82M76lTVm6CI
-	hTJcTJuBwct1dq22F43QKekGv+7tuR3Zl7oEz6yeHdrpTzbXotLSZYjX5lCAI3A=
-X-Google-Smtp-Source: AGHT+IFOPR8MYYQWwDkLVexcUVJZet9k0gP7hpDIjbBtdgwb/++D2QZVJSpb0Xd1vOfW2SNUD6dHNA==
-X-Received: by 2002:a05:6000:cf:b0:37d:5133:8cba with SMTP id ffacd0b85a97d-37d55204527mr8720364f8f.20.1728936343009;
-        Mon, 14 Oct 2024 13:05:43 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:9cc:1a74:296e:df4d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b9180adsm12253910f8f.112.2024.10.14.13.05.42
+        bh=dpw2WNuTyCqysTkudvUql0camhRiNDGOcryatLTQ+dk=;
+        b=O0vD3hiwx5u0yjeAl7DsbZf1QHTijrRPrEGnKmbvlN6EA+JzANjr/HhXTphbtwrn89
+         Gc154XVP5gpn5e/iotrubeUrSC7+jE9zJbptCRYN9pDt3bMPEEP0lnEjZz8NxTbT3xfK
+         ucXnW3YrrFd4bIaWqXQhT0Zn3ikTPfGd4b3gnrTyAS7Q88/V9raepN2RogciJOypSyhf
+         EU/Dy6TSKjWmrqQ01TDf863TzGCHL1GTkb7adVZ0E8XIZNEIlzbnAdqHeMF2at+m7FRo
+         6d95QlIga+B0WoahwJAtL413afG3cHuuoWldLnC4cevS2fbJxpC14K3WCN8gvVfDREMc
+         mUmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEJd1l6DbLyOUKA3Bf9MdgOril5rTdBYxxbaZ620KMAKUxRqY+2EOkZoMQ1PxFilHKENCYxzznjkuz@vger.kernel.org, AJvYcCVqYIRFzkC/bymtSyTVOaZZ4MZ/QW6HUe/mbYgeIsVgEVuoFV2TuYzrHS2cTw9UUztvSNxYRsTJapL+SqNU@vger.kernel.org, AJvYcCXZtWfK+k/8BwxePmOI0avrod2707wGABuKJWjDsl6HAvxORJtJd7yirIudYv4Akeg3mR12dAXtVRxO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAOrvjhkWOEWXNccKaDqCNYLSY/9m2r0P793ikwloQmv6QITXD
+	T5SNmYn9GGoZWWbRG3d5TkcxIw4oOmE0eCPGcILWvdKHjwsUVIG9KSwYAfcI
+X-Google-Smtp-Source: AGHT+IFcMk5820x03/AY7v0duvIy0JMNHUd1BnYfTeb0HIwZnlUhGZf9L7CFpFzNKinLIdNqMfdDrQ==
+X-Received: by 2002:a05:620a:28cc:b0:7a9:a883:e22b with SMTP id af79cd13be357-7b11a34b9dcmr2292551885a.7.1728936911258;
+        Mon, 14 Oct 2024 13:15:11 -0700 (PDT)
+Received: from VM-Arch ([2600:1001:b148:c0ba:c7c4:edb8:1e9:3521])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b11497a931sm451280085a.110.2024.10.14.13.15.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 13:05:42 -0700 (PDT)
-Date: Mon, 14 Oct 2024 22:05:40 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	"open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
-	"moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, justin.chen@broadcom.com
-Subject: Re: [PATCH 0/2] pwm: brcmstb: Support configurable open-drain mode
-Message-ID: <2lxrtu6mnzs4v6h3x7skbmxwtdmhgn7g3qmmxyr5n4lof6lkb2@6rfckn2g45ho>
-References: <20241012025603.1644451-1-florian.fainelli@broadcom.com>
+        Mon, 14 Oct 2024 13:15:10 -0700 (PDT)
+Date: Mon, 14 Oct 2024 16:15:02 -0400
+From: Alex Lanzano <lanzano.alex@gmail.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: u.kleine-koenig@baylibre.com, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Mehdi Djait <mehdi.djait@bootlin.com>, linux-kernel-mentees@lists.linuxfoundation.org, 
+	skhan@linuxfoundation.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v10 0/2] Add driver for Sharp Memory LCD
+Message-ID: <sxxpdm66dukbef27nnvnxa5igglepkcer6qtgv2hdfaim2jmqy@5xd3zwu2ta5f>
+References: <20241008030341.329241-1-lanzano.alex@gmail.com>
+ <hfpq35cxext6vd7shppa4ovtszywzqkc5gqo3t7p77uldasxts@gyfrypofijmd>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="74noghsmn7dtdnbd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241012025603.1644451-1-florian.fainelli@broadcom.com>
+In-Reply-To: <hfpq35cxext6vd7shppa4ovtszywzqkc5gqo3t7p77uldasxts@gyfrypofijmd>
 
+On Mon, Oct 14, 2024 at 10:35:03AM GMT, Dmitry Baryshkov wrote:
+> On Mon, Oct 07, 2024 at 11:03:09PM -0400, Alex Lanzano wrote:
+> > This patch series add support for the monochrome Sharp Memory LCD
+> > panels. This series is based off of the work done by Mehdi Djait.
+> > 
+> > References:
+> > https://lore.kernel.org/dri-devel/71a9dbf4609dbba46026a31f60261830163a0b99.1701267411.git.mehdi.djait@bootlin.com/
+> > https://www.sharpsde.com/fileadmin/products/Displays/2016_SDE_App_Note_for_Memory_LCD_programming_V1.3.pdf
+> > 
+> > Co-developed-by: Mehdi Djait <mehdi.djait@bootlin.com>
+> > Signed-off-by: Mehdi Djait <mehdi.djait@bootlin.com>
+> > Signed-off-by: Alex Lanzano <lanzano.alex@gmail.com>
+> > ---
+> > Changes in v10:
+> > - Address comments from from Uwe
+> >     - Replaced -EINVAL with PTR_ERR
+> >     - Error check pwm_apply_might_sleep function
+> >     - Remove redundant error message
+> 
+> Let's wait for an Ack from Uwe's side. If there are no further issues,
+> the series seems to be ready.
 
---74noghsmn7dtdnbd
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH 0/2] pwm: brcmstb: Support configurable open-drain mode
-MIME-Version: 1.0
+Looks like I'll need to make one more version to accommodate the new
+client setup by Thomas Zimmermann.
 
-Hello Florian,
+https://lore.kernel.org/all/20240924071734.98201-1-tzimmermann@suse.de/
 
-On Fri, Oct 11, 2024 at 07:56:01PM -0700, Florian Fainelli wrote:
-> This patch series updates the pwm-brcmstb driver to not assume an
-> open-drain mode, but instead get that sort of configuration from Device
-> Tree using the 'open-drain' property.
-
-Just for me to be sure to understand correctly: A kernel without your
-patch #2 behaves identical to a kernel with that patch if the open-drain
-property is present, right?
-
-It's not clear to me why totem-pole is the better default and the commit
-logs don't justify the updated default. Can you improve here?
-
-Best regards
-Uwe
-
---74noghsmn7dtdnbd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcNeZEACgkQj4D7WH0S
-/k5NLAgAnE0plbMtCwz2Wv6bQ8vEDVdoNHD3hCUdvomaNZPj5Dy1f0/u2J5Hj/NW
-KRn/AUbVCJYGa4LQ+7MJ5VMLY8GGeAYgpv1jdnBMJJX9yXp1Hwovz8akFV1Hc8LI
-fQPoBICMk+bVDNB8j5iFplnH5G5cDespFv56Nns0ImOp3maL5CjojP1RZmUsayM6
-3RQafWpyPIkhuI4mrjAtGSAoLoWig7E08ZD2UPIs0vw9phZEB08fUhW6CGf88pev
-fNHViOI4wyumI7l9RO2LvotnV1syhNy052zzgM1e43WwxosYhKfG2xmbGRaOTkGT
-P/6yQseolE3vX7bwd14iAgbYEmoY5g==
-=fdY+
------END PGP SIGNATURE-----
-
---74noghsmn7dtdnbd--
+Best regards,
+Alex
 
