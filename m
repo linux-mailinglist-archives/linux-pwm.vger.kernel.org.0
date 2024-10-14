@@ -1,117 +1,135 @@
-Return-Path: <linux-pwm+bounces-3625-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3626-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2094899C179
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 09:35:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B6BE99C274
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 10:02:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C9EB71F20FE6
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 07:35:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA768283C38
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 08:02:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75BF9149013;
-	Mon, 14 Oct 2024 07:35:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07DBA14A60F;
+	Mon, 14 Oct 2024 08:02:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o28VWOZg"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="x9gGR+60"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F27C148857
-	for <linux-pwm@vger.kernel.org>; Mon, 14 Oct 2024 07:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB4113B792
+	for <linux-pwm@vger.kernel.org>; Mon, 14 Oct 2024 08:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728891310; cv=none; b=eyDBtnRUxmh8B0PaQOL1I/NtJsjKb5yO0X9gcsChbl1KJrO/nnXJxKoxG4xOElK7k5QPp9GkFePogdjWzXBu1vywb9bIhZnvDX0fvQLIWeT0kPXAV4S7M9Y6X3ahGteNEJYhYhV+Agcs/jiXU3VYXszVDgOLdKJvwqj5InvUWaA=
+	t=1728892963; cv=none; b=REFo88FQTD1V99+mowEUrrObnCs0FUzHODePORQd07Z27fZcrpjRmip6mw9L5I6FRKzPUftcp6ITIgp2Gas8+iRAjid18XTGUcvK72ox7bRsw0UcNiu02dyQG5yebjvvl9Yg3H4KxuNWPsQkH5IMrWMQ8d2Kjv1LBk8W6lNnod0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728891310; c=relaxed/simple;
-	bh=NEIbyKWfSfDfYub7dOi2+DthG1dy6lDUSX8rgR7BuE0=;
+	s=arc-20240116; t=1728892963; c=relaxed/simple;
+	bh=4RlZOlgSupAxgWagLLro/53S7NCRTENxGSsZn/UbRdU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eL7LWmnKpsER1Gl5mGSDTvzSrLvfF9mTKVpMcYORI474YYM9v+VhTUiHSpSqYmQEJ/XMwQdI831O06FQT0BpBfi7Qya0UCjKcVxARE5DqE6IOg62n9b8Z7//btQF3mStmMHzp5aQk5af6Xbf61iDiejQNiI6bR97U0yU4VZ0Iqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o28VWOZg; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-539f4d8ef66so904425e87.1
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Oct 2024 00:35:08 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=UJptux8gGNegn9/bI+7jp4m+cBiL8yZN3v6d4KB/tfyK5E3DNkGNNY9FxXDKZ8sad6B0mNxDYot7568z67Kj2SudDTWckDadyehLPpVXT2S2CtsEbnOHIz8BT3YB9Vq3hcRci/7ki+TY8ufFAttMGfs0jERBJ8IRRFRPEZcpeQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=x9gGR+60; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-37cea34cb57so2615609f8f.0
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Oct 2024 01:02:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728891307; x=1729496107; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728892960; x=1729497760; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RXd9IRsJ/Q2GAEkeQwvXUDlljQikHHqovvpnz4Mnaes=;
-        b=o28VWOZgDxC2YkO7SeBGhYEmy06T1djyswuxcia2ZYFIw82gwyfbyjAq6sm3ypoX+W
-         d6SGya+dTqshAJViGaI/Qm+hXai3tM0NIkhgBLLDGvFXxx5GpoCSBNMdVMWWG8QLyDtn
-         w7/EnEfH5zxqUn7EoIQ95qlPAmU3cjUyWRezPE6PvEukTYSR6XsCURWvMJPetX+apjHj
-         tHLeXcwaCY669ioyzjMYGTW6cI0dIn/GzJwENbm+EZDg8CKojtS/B06HqIgO1AhCqThz
-         ttAsdtu4gsbuLyCLybapI0mZamtn435Sb78kdCqGptC7VKJHAzSOvpV8zkXxqlHVzuDq
-         El3A==
+        bh=4RlZOlgSupAxgWagLLro/53S7NCRTENxGSsZn/UbRdU=;
+        b=x9gGR+60wvZ0qvORTFqLbGAuzN6S8gV1lxEAC4RKEBoMyxHIoOaj4QsmCkHzd55Rc8
+         DWZlqJatAQKUfek39+uEEj/e7LSG6y2RImsjhSXE1PVGfU4tfAEUazfrPHXzXy2Zhtw/
+         RWlog6JyJCqfmbwkyd8MdNhybTXTQXUylD6i0WYRYfakR/HU7/98LTvdLaEYT4+aemTo
+         ft8+FtvlOaXsNEmRSUEBLUVPGNKzNa2Sl/zKfFCqp05ROgNeqDH17I6WZ+R4evuj32ry
+         P4GhhgILIDg1e9G6tKLtCaHFl644ngITrGkLKslQ1puYXoGThT6hWh8XsAVkmZ1SulXX
+         nqfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728891307; x=1729496107;
+        d=1e100.net; s=20230601; t=1728892960; x=1729497760;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RXd9IRsJ/Q2GAEkeQwvXUDlljQikHHqovvpnz4Mnaes=;
-        b=U1rtEgJ927MhkIUtIR+YAgXif+v6ODHDBRVQVkiYrq52lCbN+W6N1wzbCwa0NseXEn
-         3xw4f4I9Bjy6acepR0InAw1aG55wdoOpghE38UVukkdVFKWWopU12sdSYj4Ivd1czopU
-         hSrznqxqyuqGUbwggg7wON7jxJ2v6TCJ4I4L4nf94as3Y6Jqwfm32xoPPenMpzrgXnWM
-         pRlyupLoQ8LwA1BFAQuUReLxwFkUGZWifsN30mvS85rGmcPLjKholPKaz16RVwkyLGuQ
-         LyiNeCwuvZu/zUSIWGkBwe+u/+gqVeJ2yiqr8NbD7zZI0wnJAEyDEiEtElzh2Vi2hEBs
-         v3vg==
-X-Forwarded-Encrypted: i=1; AJvYcCXpZKp/JzmZNvyTgwksaaXozqwcig89ICE2PkArfa2NJ4MN+LEc/D8HWuX+pVPXPf5192m26Bmw6hA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzuC63TY2b+8VF9T8k4r8PgB06UdukbvkZDB2CBMU8Y2eZWiOt
-	4MZrneXA8WJl5WD3QnlFQigdyBhCjxjlub/16pxRQzysVn4xv0Xelq/N5oo1bzY=
-X-Google-Smtp-Source: AGHT+IFG5mAcJza7yiles85LfH/G0lB/xgU5IoFW9zjQX8bagRJinxpczK+JtOryP0YxXrBGl1BZ1Q==
-X-Received: by 2002:a05:6512:3c95:b0:539:d0c4:5b2c with SMTP id 2adb3069b0e04-539da595273mr4520019e87.51.1728891306540;
-        Mon, 14 Oct 2024 00:35:06 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-539e48c1807sm953064e87.237.2024.10.14.00.35.04
+        bh=4RlZOlgSupAxgWagLLro/53S7NCRTENxGSsZn/UbRdU=;
+        b=EW8RhFMDkxeafnfL6i3ZDbG7r2ndiUI2KySxnEegzcJan4sdf0q5vHQ41JHwF+or5/
+         70s5KiPedcv+8AymVUQO5w2sWk2YAZPvRbF4DynRvNQDlFXTsQPSeDFvZdlx2SzwVlgb
+         AW5nfxHJrHIyXtQyYkD/axa38yVmeLQDIXW1qEYfmNNYMYHKbLY/T6EqCTG28qx5a6Kz
+         XEZdC/vssDMd61HexwwnIfl6UAleFLl59MfLIxSs5POKQm3EXmoMy2ryoxO4NwrCeG78
+         sBUZhP3GdHGC7msLZaJdEs7QXUD+PUvlej3+VuL3diBep1YJpk3uZI8Ug8QstI30pZWI
+         dXgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWaSbfepJDNygebr8ZrNRFI8/XcLJM2foRaTFaB2VRH/rzenywps6zOp6qLP/afqJTRHDKI2yyVsXc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7obPYRyZDqU6d5eY76MGGRVj2JGdnVZ98ZM8l7ulZbHYcjiS+
+	g5RYvfQoWYThjfsMMkzqcWnXeNskBYbvWeeYlgPtUpVR0Gzb3luH80CpMvwZYqA=
+X-Google-Smtp-Source: AGHT+IGHI1oWFXV9DcSfHKsT0K9KY6FX9DQ9bVpIzkaaGAOafugiZ3ojqGus5aCjg1CPitlaHNm9Qg==
+X-Received: by 2002:a5d:688b:0:b0:37d:462a:9bc6 with SMTP id ffacd0b85a97d-37d552fd82dmr7764949f8f.36.1728892959854;
+        Mon, 14 Oct 2024 01:02:39 -0700 (PDT)
+Received: from localhost (p509151f9.dip0.t-ipconnect.de. [80.145.81.249])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b79fe7csm10751841f8f.70.2024.10.14.01.02.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2024 00:35:05 -0700 (PDT)
-Date: Mon, 14 Oct 2024 10:35:03 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+        Mon, 14 Oct 2024 01:02:39 -0700 (PDT)
+Date: Mon, 14 Oct 2024 10:02:38 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 To: Alex Lanzano <lanzano.alex@gmail.com>
-Cc: u.kleine-koenig@baylibre.com, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Mehdi Djait <mehdi.djait@bootlin.com>, linux-kernel-mentees@lists.linuxfoundation.org, 
-	skhan@linuxfoundation.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v10 0/2] Add driver for Sharp Memory LCD
-Message-ID: <hfpq35cxext6vd7shppa4ovtszywzqkc5gqo3t7p77uldasxts@gyfrypofijmd>
+Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Mehdi Djait <mehdi.djait@bootlin.com>, 
+	linux-kernel-mentees@lists.linuxfoundation.org, skhan@linuxfoundation.org, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v10 2/2] drm/tiny: Add driver for Sharp Memory LCD
+Message-ID: <zlgxam2ph67gbxaf64tznc6gaediik5vzfus3kgbanu6ke4vxs@6emuicykaike>
 References: <20241008030341.329241-1-lanzano.alex@gmail.com>
+ <20241008030341.329241-3-lanzano.alex@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nfdjdy6igf2fhtdw"
 Content-Disposition: inline
-In-Reply-To: <20241008030341.329241-1-lanzano.alex@gmail.com>
+In-Reply-To: <20241008030341.329241-3-lanzano.alex@gmail.com>
 
-On Mon, Oct 07, 2024 at 11:03:09PM -0400, Alex Lanzano wrote:
-> This patch series add support for the monochrome Sharp Memory LCD
-> panels. This series is based off of the work done by Mehdi Djait.
-> 
-> References:
-> https://lore.kernel.org/dri-devel/71a9dbf4609dbba46026a31f60261830163a0b99.1701267411.git.mehdi.djait@bootlin.com/
-> https://www.sharpsde.com/fileadmin/products/Displays/2016_SDE_App_Note_for_Memory_LCD_programming_V1.3.pdf
-> 
+
+--nfdjdy6igf2fhtdw
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v10 2/2] drm/tiny: Add driver for Sharp Memory LCD
+MIME-Version: 1.0
+
+Hello,
+
+On Mon, Oct 07, 2024 at 11:03:11PM -0400, Alex Lanzano wrote:
+> Add support for the monochrome Sharp Memory LCDs.
+>=20
 > Co-developed-by: Mehdi Djait <mehdi.djait@bootlin.com>
 > Signed-off-by: Mehdi Djait <mehdi.djait@bootlin.com>
 > Signed-off-by: Alex Lanzano <lanzano.alex@gmail.com>
-> ---
-> Changes in v10:
-> - Address comments from from Uwe
->     - Replaced -EINVAL with PTR_ERR
->     - Error check pwm_apply_might_sleep function
->     - Remove redundant error message
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Let's wait for an Ack from Uwe's side. If there are no further issues,
-the series seems to be ready.
+The pwm bits look ok now.
 
--- 
-With best wishes
-Dmitry
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+
+Best regards
+Uwe
+
+--nfdjdy6igf2fhtdw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcM0BsACgkQj4D7WH0S
+/k5wWQf9FfmMItjVRgRZH9tOPUX8zANyqph7Rsnz7icv4muLFmBRJDz3p4s02Ifw
+vnjzp3F3ONPAom9POqZn5akcxHl+98+LD9D/fX4eKwdQVxYZsPlFi72VcoQ1Bree
+tIfmZxTDoP0HWpqDB4zDyVbvRlnYgtPHteFddN4vCa81Ua0K5zOqgl1lqTyen/FX
+XfhKS3GGBml9wTgjQ31Us0EXkQaELjXwURwCRobwCRiEm5j5bJ5o7juVymoKwLSc
+c07MB/X1DR7G0Z2CegTx88SCcpBq/wd68vzn5bn8fbf+JoMvJ3YGp1j9pdjyJpQK
+RRVObhQN7P7/nIVqvo8XhmUk3Rf2Yg==
+=IozP
+-----END PGP SIGNATURE-----
+
+--nfdjdy6igf2fhtdw--
 
