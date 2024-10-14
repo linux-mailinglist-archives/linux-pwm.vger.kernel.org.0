@@ -1,128 +1,132 @@
-Return-Path: <linux-pwm+bounces-3639-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3640-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E20F899D715
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 21:15:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F10AA99D7DA
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 22:05:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B0F21C20615
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 19:15:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8D986B20C23
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Oct 2024 20:05:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AA331C7603;
-	Mon, 14 Oct 2024 19:15:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 942531CF5C0;
+	Mon, 14 Oct 2024 20:05:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G9oVzOP5"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="bFNy/FGK"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AB212B73;
-	Mon, 14 Oct 2024 19:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F891CF2A2
+	for <linux-pwm@vger.kernel.org>; Mon, 14 Oct 2024 20:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728933330; cv=none; b=o86iDypKlU/eCIJ5rXXoZjwP+bJcLohvVtQk2/RjODAWJowjFBTUsHS03ou8lT3fX+/l000ed+Z7kDXjHArVFIwmeUV7TMPoH50/5CniRMZoNCK3LjnEO3GjnuGe55ghMYKLB0IbT0/Ax2gKICiGnBBnL5n0Wjus7GiJYjuJssw=
+	t=1728936346; cv=none; b=Yhn0HSNa9hm965TUYXJuo+M9RTKMMfXXo/pe4i/QUfWu1Uy0SF2Wlchj2P2uP0hlOffenwIS8ce1tt51M8Vu2lKga2ArpIvpCpa8h29oudigeg9eoxg2ZyfCJwt1WriH8J+9f4mM0fuGgocsoh7aDehDXbdGk14LDYo/xIYOLz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728933330; c=relaxed/simple;
-	bh=2Zo/obCSn5sslgsyI7NcI4a9viaES0kEmjXw1Txs1R8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XwC/ClgDbRiSusyXpwy4MjG9IIhAefsXx2x4oBQXL6vFXGTFUKRb9rAF3RVc/kblYKYysSXsFzNijgVnPE4QDf+0jj0UGQX7s5bjJvCk6vrSLlqao/KNfW4UaNCl6VFEzPxMehK92vt9hrLXiO23KFBGKIGk92RvxK+thHjlV1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G9oVzOP5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16985C4CEC3;
-	Mon, 14 Oct 2024 19:15:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728933329;
-	bh=2Zo/obCSn5sslgsyI7NcI4a9viaES0kEmjXw1Txs1R8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=G9oVzOP5A+O3Y10xCy8sTnXEiZTjgSttozIQKYSb9hWODlNOskBcYxxesmM7nJ8w6
-	 IAtL4Kd83dsPQUBqFRqGH1K/G4r8OURptnimqufsHMCv0WDFzJWarc1kM/gUfUbbsf
-	 6iW/iGWdizJY5kKq8SoOej6kehFEVoqwAJQLjJAD8P5CcyAT6fidhDhjNPv+20/bLu
-	 34Q99LGSMbo73je22Ekl20bBhCnpqC0YwaYLhMDnmDq0sRTLQoaP4mGtcLVO+0TDl/
-	 RYOL+s8g/el5jVuwZ2NF6o1PuObwg7LMqF+uN6ojVgYv14wiFPptZn+PNo8qRczMgv
-	 46+s6JWpQw42Q==
-Date: Mon, 14 Oct 2024 20:15:15 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Antoniu Miclaus <antoniu.miclaus@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>, Olivier Moysan
- <olivier.moysan@foss.st.com>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <ukleinek@kernel.org>, David Lechner <dlechner@baylibre.com>, Marcelo
- Schmitt <marcelo.schmitt@analog.com>, Ivan Mikhaylov <fr0st61te@gmail.com>,
- Marius Cristea <marius.cristea@microchip.com>, Dumitru Ceclan
- <mitrutzceclan@gmail.com>, =?UTF-8?B?Sm/Do28=?= Paulo =?UTF-8?B?R29uw6dh?=
- =?UTF-8?B?bHZlcw==?= <joao.goncalves@toradex.com>, Alisa-Dariana Roman
- <alisadariana@gmail.com>, Mike Looijmans <mike.looijmans@topic.nl>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Sergiu Cuciurean <sergiu.cuciurean@analog.com>, Dragos Bogdan
- <dragos.bogdan@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] iio: adc: ad4851: add ad485x driver
-Message-ID: <20241014201515.463c7c07@jic23-huawei>
-In-Reply-To: <Zw0ZM0vQXJep3dFJ@smile.fi.intel.com>
-References: <20241014094154.9439-1-antoniu.miclaus@analog.com>
-	<20241014094154.9439-6-antoniu.miclaus@analog.com>
-	<Zw0ZM0vQXJep3dFJ@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1728936346; c=relaxed/simple;
+	bh=/p0fsinLEF+6jqle9DFYB7wdd7XNPvVlqtJXR24v4JQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xcyg7VGf/Bj7KC3kUHyd3natr9I2MKAXeOA5JEcaSNGPj6PKua5qZDfQkWOO+A43YZgKizZEDOpWyIZ6lZbH9Rr/EMuVq8nkolzjC9PsWFM4h8DZBqFzNC4cZa3kaFa/WH5IGZuJuHqfSCMp+8cSgUqYh43A4wjP7kFv+/h4mf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=bFNy/FGK; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-37d4a5ecc44so3301060f8f.2
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Oct 2024 13:05:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1728936343; x=1729541143; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/p0fsinLEF+6jqle9DFYB7wdd7XNPvVlqtJXR24v4JQ=;
+        b=bFNy/FGKbuW8mqxxfuPRBmPajG5CWHd19UEPFs1T8mG3DI6lkasD5ru18XmRvhH7j6
+         s+kuFpSuzJ/8jiGYai9w2Yjo/A2qXDep/XkdknD481d/D9yhHn1U81SXYJncrtgW6EK3
+         cxgwMQb5SPi3kYJ4CbXuDdFL+btv9O8Gzw5KD2wmPIFT3wJAYcIQB9GtsS+mWpg1BWQl
+         sz28upbeggmdlQuEYDjaj8sO0qAaObHMGpW543gkAvtlX71j+EJ46kw2tUeoSkhCHfH6
+         EknILaN41mbKoJL1fQ+hnAj4sDDrCgk11zpKNgrqQJiWvA8Dei1H7AzqJlvInHEAFbTm
+         Ax7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728936343; x=1729541143;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/p0fsinLEF+6jqle9DFYB7wdd7XNPvVlqtJXR24v4JQ=;
+        b=iDgCNnID2rCqwSrGPUFexhYuMMba6aUrcJ8oa99lptvRekbStxjVS+1DKsFQmVxgYM
+         f7PIF3b+hoV95HMqkrzdoLXVHAnNQORD5mJxxQl8O0P7oKSXmP+cf0Ab7a/NoF6/oABv
+         Ins7AFbr/uQDyblf68928keNBYxSLNmLacruWoumdX7iwAqDIRrXKTBqK5UPrvGw1mWm
+         Qe121ePbmwnq9n25l++SpuyAHrxA1g3WHBDDOV1R5SdArntnYVQtZqzo0UC/UCmSUrtX
+         yjxEJCg2W1u+i+bEt6dyI7OKaA0tgFUvXJUqPhgWbWochW0TtiTl0pNL60Sj3n1lGb+F
+         dcYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVa0197NgEgQvO4G1bsLw21VDTc0RKYG38Zq7owSUUUk5aSGJc9QZ9bDZFuzm/qj3MKqh7NM3bhKd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxwkivm03plFxiO+EpywI7Dr2Oh2nsl+kytOKbT82M76lTVm6CI
+	hTJcTJuBwct1dq22F43QKekGv+7tuR3Zl7oEz6yeHdrpTzbXotLSZYjX5lCAI3A=
+X-Google-Smtp-Source: AGHT+IFOPR8MYYQWwDkLVexcUVJZet9k0gP7hpDIjbBtdgwb/++D2QZVJSpb0Xd1vOfW2SNUD6dHNA==
+X-Received: by 2002:a05:6000:cf:b0:37d:5133:8cba with SMTP id ffacd0b85a97d-37d55204527mr8720364f8f.20.1728936343009;
+        Mon, 14 Oct 2024 13:05:43 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:9cc:1a74:296e:df4d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b9180adsm12253910f8f.112.2024.10.14.13.05.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2024 13:05:42 -0700 (PDT)
+Date: Mon, 14 Oct 2024 22:05:40 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	"open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
+	"moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, justin.chen@broadcom.com
+Subject: Re: [PATCH 0/2] pwm: brcmstb: Support configurable open-drain mode
+Message-ID: <2lxrtu6mnzs4v6h3x7skbmxwtdmhgn7g3qmmxyr5n4lof6lkb2@6rfckn2g45ho>
+References: <20241012025603.1644451-1-florian.fainelli@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="74noghsmn7dtdnbd"
+Content-Disposition: inline
+In-Reply-To: <20241012025603.1644451-1-florian.fainelli@broadcom.com>
 
-On Mon, 14 Oct 2024 16:14:27 +0300
-Andy Shevchenko <andy@kernel.org> wrote:
 
-> On Mon, Oct 14, 2024 at 12:40:40PM +0300, Antoniu Miclaus wrote:
-> > Add support for the AD485X a fully buffered, 8-channel simultaneous
-> > sampling, 16/20-bit, 1 MSPS data acquisition system (DAS) with
-> > differential, wide common-mode range inputs.  
-> 
-> ...
-> 
-> > +config AD4851
-> > +	tristate "Analog Device AD4851 DAS Driver"
-> > +	depends on SPI
-> > +	select REGMAP_SPI
-> > +	select IIO_BACKEND
-> > +	help
-> > +	  Say yes here to build support for Analog Devices AD4851, AD4852,
-> > +	  AD4853, AD4854, AD4855, AD4856, AD4857, AD4858, AD4858I high speed
-> > +	  data acquisition system (DAS).  
-> 
-> I think I already commented on this... Anyway, it's much better to support when
-> this list is broke down on per device per line. In such a case it's less churn
-> if we need to remove or add an entry in the future.
-> 
-> > +	  To compile this driver as a module, choose M here: the module will be
-> > +	  called ad4851.  
-> 
-> Also, with all these devices to be supported why not ad485x as the name of
-> the driver? Is it a preference by the IIO subsystem?
+--74noghsmn7dtdnbd
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH 0/2] pwm: brcmstb: Support configurable open-drain mode
+MIME-Version: 1.0
 
-Don't.  We've been bitten by too many cases of manufacturers noticing
-a hole in their part numbers and 'slotting' something unrelated in.
-So it just causes confusion.  Hence strong preference for any new code
-is pick a name from the list.  The wild card also implies restrictions
-that tend to break overtime when other part numbers outside the range
-are used.  Not using a wildcard keeps it consistently wrong so people
-get used to it :)
+Hello Florian,
 
-> 
-> ...
-> 
-> > +#include <asm/unaligned.h>  
-> 
-> linux/unaligned nowadays (I learnt it quite recently).
-> (It requires v6.12-rc2).
+On Fri, Oct 11, 2024 at 07:56:01PM -0700, Florian Fainelli wrote:
+> This patch series updates the pwm-brcmstb driver to not assume an
+> open-drain mode, but instead get that sort of configuration from Device
+> Tree using the 'open-drain' property.
 
-Yup.  That bit me in the IIO tree 3 times so far. I've
-merged rc2 in for that reason.
+Just for me to be sure to understand correctly: A kernel without your
+patch #2 behaves identical to a kernel with that patch if the open-drain
+property is present, right?
 
+It's not clear to me why totem-pole is the better default and the commit
+logs don't justify the updated default. Can you improve here?
+
+Best regards
+Uwe
+
+--74noghsmn7dtdnbd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcNeZEACgkQj4D7WH0S
+/k5NLAgAnE0plbMtCwz2Wv6bQ8vEDVdoNHD3hCUdvomaNZPj5Dy1f0/u2J5Hj/NW
+KRn/AUbVCJYGa4LQ+7MJ5VMLY8GGeAYgpv1jdnBMJJX9yXp1Hwovz8akFV1Hc8LI
+fQPoBICMk+bVDNB8j5iFplnH5G5cDespFv56Nns0ImOp3maL5CjojP1RZmUsayM6
+3RQafWpyPIkhuI4mrjAtGSAoLoWig7E08ZD2UPIs0vw9phZEB08fUhW6CGf88pev
+fNHViOI4wyumI7l9RO2LvotnV1syhNy052zzgM1e43WwxosYhKfG2xmbGRaOTkGT
+P/6yQseolE3vX7bwd14iAgbYEmoY5g==
+=fdY+
+-----END PGP SIGNATURE-----
+
+--74noghsmn7dtdnbd--
 
