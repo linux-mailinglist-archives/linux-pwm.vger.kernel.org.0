@@ -1,64 +1,63 @@
-Return-Path: <linux-pwm+bounces-3644-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3645-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AAD699E541
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Oct 2024 13:12:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 529BD99E54A
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Oct 2024 13:14:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3C322819E7
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Oct 2024 11:12:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E39511F22FEF
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Oct 2024 11:14:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 946141E32AF;
-	Tue, 15 Oct 2024 11:12:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84BF61E3764;
+	Tue, 15 Oct 2024 11:13:59 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41961D5AC8;
-	Tue, 15 Oct 2024 11:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D211D89F3;
+	Tue, 15 Oct 2024 11:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728990728; cv=none; b=mqgRYt+vHgMF/By0zQdo3pJxAmG05Z5mg9jOMI2nyW4FJFBdj3rNn5DW6IdzsTYMYUEUHZpi2Vlb6I/cys+BmSajN0g7KRO12AhVSl1PDSBPVM9i/01WkUHHGDjWKN1QL5WA2iIgFw7xgalnUzwMJ5bmRowJ3qLyQf+pmQi7Xu8=
+	t=1728990839; cv=none; b=tBt25FFcAb3kpKGeNl85M2UuKhtJ7f3qXdOysO4Y/mzcIgst45Pdf2PVl77mGftlm40XklhGPRsCLp23sYA3NrXwwz/DEkmHi0o3fmiSOyOWBOe2S9zuFwNSA2p9End126zwdX5+g4wfQnJ0TIkzg4+wAhHh6oJYeLRhXvBIuHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728990728; c=relaxed/simple;
-	bh=0Y13YaOF0ifXz9dAPlgHesxwsuYGyA8FSURb52R4BFw=;
+	s=arc-20240116; t=1728990839; c=relaxed/simple;
+	bh=WvOBu/y7FFpCn+M/r8vBiywVPF77IlJRf6ph7rkqysU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lsVd87ZvqQf/Hoq50QQzA0gEnGtxXQ1NVOiC9Itt8hZ4wvfKZc5Y9b+jxHfbXJsEukkzRjIfDnLMK+k45ttivaGLWnRIzwuTzF9F/UVugoOdmEq3H+RBKuHzcZH44B+PMasR3Mj9sFXAFxfg6kCZtPrKrJmNpEJbLxEwaO0pL+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=GrwwpctpXy+pIDkm4M/GRhBcqm1MH69/zplV7HE1eIGMEUEC6xD66xQ60DMDr2kUpDbddAdEw+rh0jc0GAT6CetRUD/6Guov4tqdHPBtMthh9zTinJA9bicFKDqeB/ISVuNnVwqai7rPL7wFf7VFjH08yo1VbDqlUfkjZVYWa94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: mdqjkey8RTKtkXDXlzRYvQ==
-X-CSE-MsgGUID: 3iQotRwwQJqt3f21M/p2Dg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11225"; a="38955412"
+X-CSE-ConnectionGUID: BKQ7Vu59SkmeIazDZCyYlA==
+X-CSE-MsgGUID: aOjOjgHgQCW52kdzqla80A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11225"; a="28257774"
 X-IronPort-AV: E=Sophos;i="6.11,204,1725346800"; 
-   d="scan'208";a="38955412"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 04:12:07 -0700
-X-CSE-ConnectionGUID: t089w9YdQdWUvW+++wB9+A==
-X-CSE-MsgGUID: QoJIyq4ARCO4/Py/pbfc4w==
+   d="scan'208";a="28257774"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 04:13:51 -0700
+X-CSE-ConnectionGUID: 0MXsz2toRPKXWw+85noTVQ==
+X-CSE-MsgGUID: HvfYLc6DTHCUipDyy5GClw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.11,204,1725346800"; 
-   d="scan'208";a="77871980"
+   d="scan'208";a="108654600"
 Received: from smile.fi.intel.com ([10.237.72.154])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 04:12:01 -0700
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 04:13:45 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
 	(envelope-from <andy@kernel.org>)
-	id 1t0fT4-00000003FFc-0cTt;
-	Tue, 15 Oct 2024 14:11:58 +0300
-Date: Tue, 15 Oct 2024 14:11:57 +0300
+	id 1t0fUj-00000003FHF-0i05;
+	Tue, 15 Oct 2024 14:13:41 +0300
+Date: Tue, 15 Oct 2024 14:13:40 +0300
 From: Andy Shevchenko <andy@kernel.org>
-To: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
 Cc: Antoniu Miclaus <antoniu.miclaus@analog.com>,
 	Lars-Peter Clausen <lars@metafoo.de>,
 	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Rob Herring <robh@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
 	Olivier Moysan <olivier.moysan@foss.st.com>,
 	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
 	Marcelo Schmitt <marcelo.schmitt@analog.com>,
 	Ivan Mikhaylov <fr0st61te@gmail.com>,
 	Marius Cristea <marius.cristea@microchip.com>,
@@ -72,11 +71,11 @@ Cc: Antoniu Miclaus <antoniu.miclaus@analog.com>,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pwm@vger.kernel.org
 Subject: Re: [PATCH v3 6/6] iio: adc: ad4851: add ad485x driver
-Message-ID: <Zw5N_fxdDKQxlPoj@smile.fi.intel.com>
+Message-ID: <Zw5OZAhzyhNUTPae@smile.fi.intel.com>
 References: <20241014094154.9439-1-antoniu.miclaus@analog.com>
  <20241014094154.9439-6-antoniu.miclaus@analog.com>
  <Zw0ZM0vQXJep3dFJ@smile.fi.intel.com>
- <20241014201515.463c7c07@jic23-huawei>
+ <c70139f8-c0ba-4e28-9477-964db3fbfbba@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -85,50 +84,32 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241014201515.463c7c07@jic23-huawei>
+In-Reply-To: <c70139f8-c0ba-4e28-9477-964db3fbfbba@baylibre.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Oct 14, 2024 at 08:15:15PM +0100, Jonathan Cameron wrote:
-> On Mon, 14 Oct 2024 16:14:27 +0300
-> Andy Shevchenko <andy@kernel.org> wrote:
+On Mon, Oct 14, 2024 at 05:08:47PM -0500, David Lechner wrote:
+> On 10/14/24 8:14 AM, Andy Shevchenko wrote:
 > > On Mon, Oct 14, 2024 at 12:40:40PM +0300, Antoniu Miclaus wrote:
 
 ...
 
-> > > +config AD4851
-> > > +	tristate "Analog Device AD4851 DAS Driver"
-> > > +	depends on SPI
-> > > +	select REGMAP_SPI
-> > > +	select IIO_BACKEND
-> > > +	help
-> > > +	  Say yes here to build support for Analog Devices AD4851, AD4852,
-> > > +	  AD4853, AD4854, AD4855, AD4856, AD4857, AD4858, AD4858I high speed
-> > > +	  data acquisition system (DAS).  
+> >> +	return regmap_update_bits(st->regmap, AD4851_REG_PACKET,
+> >> +				  AD4851_PACKET_FORMAT_MASK, (osr == 1) ? 0 : 1);
 > > 
-> > I think I already commented on this... Anyway, it's much better to support when
-> > this list is broke down on per device per line. In such a case it's less churn
-> > if we need to remove or add an entry in the future.
+> > I would do it with a conditional
 > > 
-> > > +	  To compile this driver as a module, choose M here: the module will be
-> > > +	  called ad4851.  
+> > 	if (osr ...)
+> > 		return regmap_update_bits(st->regmap, AD4851_REG_PACKET,
+> > 					  AD4851_PACKET_FORMAT_MASK, 0);
 > > 
-> > Also, with all these devices to be supported why not ad485x as the name of
-> > the driver? Is it a preference by the IIO subsystem?
-> 
-> Don't.  We've been bitten by too many cases of manufacturers noticing
-> a hole in their part numbers and 'slotting' something unrelated in.
-> So it just causes confusion.  Hence strong preference for any new code
-> is pick a name from the list.  The wild card also implies restrictions
-> that tend to break overtime when other part numbers outside the range
-> are used.  Not using a wildcard keeps it consistently wrong so people
-> get used to it :)
+> > 	return regmap_update_bits(st->regmap, AD4851_REG_PACKET,
+> > 				  AD4851_PACKET_FORMAT_MASK, 1);
+> > 
+> If we do this, regmap_set_bits() and regmap_clear_bits() would
+> be even better.
 
-I see your point!
-
-But shouldn't we have a formal criteria for choosing that one from the list?
-I would go with "most featured device" as it may be aligned with all enabled
-features that otherwise would be questionable / confusing for the chips that
-do not support them or support in a limited manner.
+Sure, but I want also to have the only one conditional, so the respective
+helper functions can be easily read and followed.
 
 -- 
 With Best Regards,
