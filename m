@@ -1,195 +1,157 @@
-Return-Path: <linux-pwm+bounces-3654-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3655-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09C0099EE75
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Oct 2024 15:58:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB43C99F24F
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Oct 2024 18:08:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B263A28303F
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Oct 2024 13:58:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C4981F232E7
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Oct 2024 16:08:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3765A1DD0D6;
-	Tue, 15 Oct 2024 13:56:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 620311EC006;
+	Tue, 15 Oct 2024 16:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="k86ZN16M"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="i/dXZ2II"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5031AF0D1
-	for <linux-pwm@vger.kernel.org>; Tue, 15 Oct 2024 13:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587F61DD0D8
+	for <linux-pwm@vger.kernel.org>; Tue, 15 Oct 2024 16:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729000606; cv=none; b=LsmX7F4ymn56stmceHotg/2ass+HRoM5/ZpbKuCAoCyQMdI1qbqw9zYIgB3HfBUEC9frqgsb0t0ni7zmHUpGYAm3kV4iAEMF9JyBwr49rlcwrhHpLHEA/fF5WMnRzyzx6n2n60OwWE89x5OwGVddfMeQZ7VCsGU53EbNTJr5ZE4=
+	t=1729008503; cv=none; b=efHZFuXOwXMYw/0rlUn2KEeJpbLmc8L4gUqXCWSpHHQymC3PGuDkHn+AXK/ZE2o/F3Md+WWcnD4gAL8seCGiWZNwwT943ZEa+FIFV1Ydk5r+VUVbzPEDmwMp0wvWRNV1bHtWDXS6d7xZvblDpGvpjgIGgLuz1jcxlEkySoI+B7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729000606; c=relaxed/simple;
-	bh=8sj2ik6YIhgGPpUYAJWB3DqY/rpxFFg132670LOYgCg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=el1W1C0K2eW6zmni8Qsd2RuGnhdc0QS3Oh6SIPLUlim0zZlFMB0Rh+WYeR7hyvF5BqW+S/LA0K/ahFA/F2bpOygWaDWrF1aZBilnPo6DZ1Kg6g32iU3dNEmcCscPXNMg/JKAuCOIgMMMCHWv+O3NKL2RRsZ6DDVpy+iL6P4GBJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=k86ZN16M; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1729008503; c=relaxed/simple;
+	bh=4Bzdfhl+m7ShnIiiJTobPwP7Xgi6C+hX2rwg3xphCJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mL54pbq/J/EmLIyGIp0zgz/zahVhrU9w58R3A2+Ha72nvSvIP0YGSlGg9CohiuXWFpGcGfzDhB0KHW9RK2GdfJ7wK9QkOhklnSkZPszLISiRukiVeu2JssNCgucqcv77dB6QOSp9lE7O93POOgCUigO2BKnt8Ja5acVJvHdSfJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=i/dXZ2II; arc=none smtp.client-ip=209.85.210.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-430576ff251so47361225e9.0
-        for <linux-pwm@vger.kernel.org>; Tue, 15 Oct 2024 06:56:41 -0700 (PDT)
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-71578c14972so3246321a34.3
+        for <linux-pwm@vger.kernel.org>; Tue, 15 Oct 2024 09:08:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729000599; x=1729605399; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wfimGBiPs/xd5kQ6SFTwCIGnDDLl5cZX78W/oQcH5gw=;
-        b=k86ZN16MyOFbYo+4JwKQ1xYBdHCj8NQ7vdKdaNWoDZEWrBO8ejFRucdjROOoFkC/gl
-         pmk11MKPXInSGbNBzM/cf0FMne9YQ0uFHNv7kLEY9TQQ7rajZwRjfJZnN+GdykPHkyD0
-         3ID4vhIk9+Uafm4PRoohApwNV9HkEcm8OXvKXVP1a4xDRzXj/8nDzr33ZMZUa0r4SFd9
-         dSmB937849lTZ5BGX/XvveaKx6MUMZv1xbgP+R0y6X+4kR8r/ufrEylPIAyCRlU0znwO
-         QIh1ZD5Y/es7U7z0fi110oiW1GVTjjz/yWL6zAKchw51P3mxfaVOkJX27AIjqnTq7S9r
-         ZYeg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729008500; x=1729613300; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=swtPW+tLLd0OzR6ekCZ+L05YNw5hBkLTnVHdB063/5s=;
+        b=i/dXZ2IIxke8jaX3Vdp7BpaSW/1VCxIE32jLHX0OXehjHTiwukbn+e5ozb1jqMNFIQ
+         E5GWz8ALGnxe20sCyiFp+l5iMpoUi3ywzhq6qu/DEVcvABQjEyOsytKm7IMZ/cE5o9WN
+         JQ1C6BgHvH/nWN7H5dKYYHqQLrnBoqpCnBxqN6yLk5Su+t9TuuvNt/2p3WphC9MylTk9
+         ZIlznqIGkTJTnu64EQOj/aT6RqtyrpSCcTz0UP8R824NQ8HKGTfw2Kw6PlJyYxUUF4ga
+         yoZgAwoEHHXI/vJSJ9oqZCIVblYnWlnBX+iaOLKIHVxl7EHu8/85GvRy7QsdLVFIfzhC
+         yzow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729000599; x=1729605399;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wfimGBiPs/xd5kQ6SFTwCIGnDDLl5cZX78W/oQcH5gw=;
-        b=uvup1yLf3cLaufsZylpk7p8leLp8pEpvs+3BDyXvR5+GnWM2EzNylioy28cKjUhs0m
-         hiZkwHK3YkwDLnGaUYAM6Un8v+La0stfpU9YaFPegfcr5NACbTO6fi0HUQcOV508nchh
-         bgPaTFuP1XPb+pnJ5VF+6rdppHfoLMHKkAEHg4WLZzZ+v2MpfskTHcuqhpAPQ+ndmj81
-         nUAn714zvfaYv1fjUUmjQtmCPKlulN00ol9zvsnz0UwVAzwfnr9cxvlZurPfvDBlpGos
-         rRkzQWWw+fYl0f/NXxQOS1+yjDBgyXuQr7yREtWy6sgweXzcwe5Olilfzd0n8DVIU76v
-         iWoA==
-X-Gm-Message-State: AOJu0YwH0jYmcnUhtyvxfwWGO573Sii4DZgZ2EIBwNUmtHr0FwAXBvQN
-	BpwawbUPXlA7eP089ICOnMy2da397W3wAHlUaNeOD8HGCIEW/KC/Qa7MoFdoe6k=
-X-Google-Smtp-Source: AGHT+IEKh3xWTi5hf4sbT5P8PdIbNsnQOa5kUn7o9v8bR0uMH7vd17OSHnnAv62Xz75tzpQ58/ip5g==
-X-Received: by 2002:a05:600c:1e18:b0:431:166b:fc1e with SMTP id 5b1f17b1804b1-4311df42cdamr131676955e9.25.1729000599280;
-        Tue, 15 Oct 2024 06:56:39 -0700 (PDT)
-Received: from [127.0.1.1] (frhb82016ds.ikexpress.com. [185.246.87.17])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4313f56f241sm18848295e9.22.2024.10.15.06.56.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2024 06:56:38 -0700 (PDT)
-From: Guillaume Stols <gstols@baylibre.com>
-Date: Tue, 15 Oct 2024 13:56:21 +0000
-Subject: [PATCH v5 8/8] iio: adc: ad7606: Disable PWM usage for non backend
- version
+        d=1e100.net; s=20230601; t=1729008500; x=1729613300;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=swtPW+tLLd0OzR6ekCZ+L05YNw5hBkLTnVHdB063/5s=;
+        b=Fg/VpWKAEFiTMk1gi3hn1JYjVUubddLxmix9IWtf3ncXniH9b4B8WjPXnNjHtPN/z+
+         Kayp1bZp/aBLgCXQVX8lzOb8Pm4BUiM/2/2x/kyaXHwt2W266M4b+R3xP/X1o1ZrgRYJ
+         ZkXkZ4+Wu+al0vvdXrGBv7jeH0epm65oQ+5pYGJc7DM9KpPB8z0KF1/26W093gmChE+y
+         KfGfnwsfQEHES0taY0/Zc31sbFZFlg0Oh8Y7fSnyWDaxAY+sOW5+SgHTRc9EbbHxoIA+
+         4cJiRpGpiidCmSiZvywLE8Rc9UyBoyyNgSO4dTj4qJqjUKV2d9YH3sbpEy9mLCK2aDGS
+         dxbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXs7z2SupHCAQvokJcG/8LepxeCz4l2LuIKlWi5VL3joNhnzlfmygr2o1L9BF08i8EvBodPG10khXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwobQ35eWKijtdzAt5dSi18ITYA1AE/f61f14kjlx/X4cZNfj0s
+	TeF5KzOu/9y31PXFGPxk7jiisMg14KEJxe/Jgd6B8VYnDI2WBudJb3vwoGpO/G0=
+X-Google-Smtp-Source: AGHT+IEwPPYkT6dxAxzECLc4uz6QgfRyPeTxs3ZCoeVmhMjxDE6Q2Jva1e5+jR93VB23GYq/ngQhtA==
+X-Received: by 2002:a05:6830:3688:b0:717:d601:eb42 with SMTP id 46e09a7af769-7180350411amr1306094a34.31.1729008500459;
+        Tue, 15 Oct 2024 09:08:20 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-717fb9ee9d6sm347988a34.21.2024.10.15.09.08.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Oct 2024 09:08:19 -0700 (PDT)
+Message-ID: <704f4440-9699-48ef-acd7-e0bf9c4ae5b0@baylibre.com>
+Date: Tue, 15 Oct 2024 11:08:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20241015-ad7606_add_iio_backend_support-v5-8-654faf1ae08c@baylibre.com>
-References: <20241015-ad7606_add_iio_backend_support-v5-0-654faf1ae08c@baylibre.com>
-In-Reply-To: <20241015-ad7606_add_iio_backend_support-v5-0-654faf1ae08c@baylibre.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michael Hennerich <michael.hennerich@analog.com>, 
- linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
- aardelean@baylibre.com, dlechner@baylibre.com, jstephan@baylibre.com, 
- nuno.sa@analog.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Guillaume Stols <gstols@baylibre.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1729000592; l=2658;
- i=gstols@baylibre.com; s=20240417; h=from:subject:message-id;
- bh=8sj2ik6YIhgGPpUYAJWB3DqY/rpxFFg132670LOYgCg=;
- b=1u2rG+kjJiMqYohGDsnjVlDj3sIi34d9AcBG26SyutZ8VN80TTEQ0g/9rRT0jd/zVf+8HUkLX
- 24VBapyaxS3BkB8VGn298idC036IGXhLHEHFHfCi9s6y6b7XT1p5QNF
-X-Developer-Key: i=gstols@baylibre.com; a=ed25519;
- pk=XvMm5WHuV67sGYOJZqIYzXndbaJOlNd8Q6li6vnb4Cs=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 6/6] iio: adc: ad4851: add ad485x driver
+To: Andy Shevchenko <andy@kernel.org>, Jonathan Cameron <jic23@kernel.org>
+Cc: Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
+ Olivier Moysan <olivier.moysan@foss.st.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Marcelo Schmitt <marcelo.schmitt@analog.com>,
+ Ivan Mikhaylov <fr0st61te@gmail.com>,
+ Marius Cristea <marius.cristea@microchip.com>,
+ Dumitru Ceclan <mitrutzceclan@gmail.com>,
+ =?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>,
+ Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Mike Looijmans <mike.looijmans@topic.nl>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+ Dragos Bogdan <dragos.bogdan@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+References: <20241014094154.9439-1-antoniu.miclaus@analog.com>
+ <20241014094154.9439-6-antoniu.miclaus@analog.com>
+ <Zw0ZM0vQXJep3dFJ@smile.fi.intel.com> <20241014201515.463c7c07@jic23-huawei>
+ <Zw5N_fxdDKQxlPoj@smile.fi.intel.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <Zw5N_fxdDKQxlPoj@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Since the pwm was introduced before backend, there was a mock use, with
-a GPIO emulation. Now that iio backend is introduced, the mock use can
-be removed.
+On 10/15/24 6:11 AM, Andy Shevchenko wrote:
+> On Mon, Oct 14, 2024 at 08:15:15PM +0100, Jonathan Cameron wrote:
+>> On Mon, 14 Oct 2024 16:14:27 +0300
+>> Andy Shevchenko <andy@kernel.org> wrote:
+>>> On Mon, Oct 14, 2024 at 12:40:40PM +0300, Antoniu Miclaus wrote:
+> 
+> ...
+> 
+>>>> +config AD4851
+>>>> +	tristate "Analog Device AD4851 DAS Driver"
+>>>> +	depends on SPI
+>>>> +	select REGMAP_SPI
+>>>> +	select IIO_BACKEND
+>>>> +	help
+>>>> +	  Say yes here to build support for Analog Devices AD4851, AD4852,
+>>>> +	  AD4853, AD4854, AD4855, AD4856, AD4857, AD4858, AD4858I high speed
+>>>> +	  data acquisition system (DAS).  
+>>>
+>>> I think I already commented on this... Anyway, it's much better to support when
+>>> this list is broke down on per device per line. In such a case it's less churn
+>>> if we need to remove or add an entry in the future.
+>>>
+>>>> +	  To compile this driver as a module, choose M here: the module will be
+>>>> +	  called ad4851.  
+>>>
+>>> Also, with all these devices to be supported why not ad485x as the name of
+>>> the driver? Is it a preference by the IIO subsystem?
+>>
+>> Don't.  We've been bitten by too many cases of manufacturers noticing
+>> a hole in their part numbers and 'slotting' something unrelated in.
+>> So it just causes confusion.  Hence strong preference for any new code
+>> is pick a name from the list.  The wild card also implies restrictions
+>> that tend to break overtime when other part numbers outside the range
+>> are used.  Not using a wildcard keeps it consistently wrong so people
+>> get used to it :)
+> 
+> I see your point!
+> 
+> But shouldn't we have a formal criteria for choosing that one from the list?
+> I would go with "most featured device" as it may be aligned with all enabled
+> features that otherwise would be questionable / confusing for the chips that
+> do not support them or support in a limited manner.
+> 
 
-Signed-off-by: Guillaume Stols <gstols@baylibre.com>
----
- drivers/iio/adc/ad7606.c | 28 +++++++++-------------------
- 1 file changed, 9 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-index 7871552ce5ac..0e830a17fc19 100644
---- a/drivers/iio/adc/ad7606.c
-+++ b/drivers/iio/adc/ad7606.c
-@@ -470,8 +470,6 @@ static int ad7606_pwm_set_high(struct ad7606_state *st)
- 	cnvst_pwm_state.duty_cycle = cnvst_pwm_state.period;
- 
- 	ret = pwm_apply_might_sleep(st->cnvst_pwm, &cnvst_pwm_state);
--	/* sleep 2 µS to let finish the current pulse */
--	fsleep(2);
- 
- 	return ret;
- }
-@@ -486,8 +484,6 @@ static int ad7606_pwm_set_low(struct ad7606_state *st)
- 	cnvst_pwm_state.duty_cycle = 0;
- 
- 	ret = pwm_apply_might_sleep(st->cnvst_pwm, &cnvst_pwm_state);
--	/* sleep 2 µS to let finish the current pulse */
--	fsleep(2);
- 
- 	return ret;
- }
-@@ -563,13 +559,7 @@ static irqreturn_t ad7606_trigger_handler(int irq, void *p)
- error_ret:
- 	iio_trigger_notify_done(indio_dev->trig);
- 	/* The rising edge of the CONVST signal starts a new conversion. */
--	if (st->gpio_convst) {
--		gpiod_set_value(st->gpio_convst, 1);
--	} else {
--		ret = ad7606_pwm_set_high(st)
--		if (ret < 0)
--			dev_err(st->dev, "Could not set PWM to high.");
--	}
-+	gpiod_set_value(st->gpio_convst, 1);
- 
- 	return IRQ_HANDLED;
- }
-@@ -900,10 +890,7 @@ static int ad7606_buffer_postenable(struct iio_dev *indio_dev)
- {
- 	struct ad7606_state *st = iio_priv(indio_dev);
- 
--	if (st->gpio_convst)
--		gpiod_set_value(st->gpio_convst, 1);
--	else
--		return ad7606_pwm_set_high(st);
-+	gpiod_set_value(st->gpio_convst, 1);
- 
- 	return 0;
- }
-@@ -912,10 +899,7 @@ static int ad7606_buffer_predisable(struct iio_dev *indio_dev)
- {
- 	struct ad7606_state *st = iio_priv(indio_dev);
- 
--	if (st->gpio_convst)
--		gpiod_set_value(st->gpio_convst, 0);
--	else
--		return ad7606_pwm_set_low(st);
-+	gpiod_set_value(st->gpio_convst, 0);
- 
- 	return 0;
- }
-@@ -1210,6 +1194,12 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
- 
- 		indio_dev->setup_ops = &ad7606_backend_buffer_ops;
- 	} else {
-+
-+		/* Reserve the PWM use only for backend (force gpio_convst definition) */
-+		if (!st->gpio_convst)
-+			return dev_err_probe(dev, -EINVAL,
-+					     "No backend, connect convst to a GPIO");
-+
- 		init_completion(&st->completion);
- 		st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
- 						  indio_dev->name,
-
--- 
-2.34.1
-
+I always go with the lowest number supported by the driver at the time
+the driver was created. It is a simple, objective criteria and no one
+has to spend time looking through features to decide which one is "best".
 
