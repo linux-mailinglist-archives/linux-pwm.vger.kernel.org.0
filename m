@@ -1,43 +1,43 @@
-Return-Path: <linux-pwm+bounces-3714-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3715-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A95929A3F01
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 15:01:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A05719A3F05
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 15:01:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 245251F23757
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 13:01:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 22E8B1F23A05
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 13:01:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C046C801;
-	Fri, 18 Oct 2024 13:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AE001E49F;
+	Fri, 18 Oct 2024 13:01:14 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA7C91BC49;
-	Fri, 18 Oct 2024 13:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BFC62AEE4;
+	Fri, 18 Oct 2024 13:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729256467; cv=none; b=OldedcfSLgAB/fJSoJFNTy5n5ZcHTnCXelLtbLI9/NJ09zkzd340wiPSlyoMxl+t0kWXCC37cU3ksZQdrJ2O4FM+gKoABvMkWZ56IV8M6hutt3d28SnwuyWNUPD8Fiq/t2I3ssZLFJwI+7f0HrK1Wm+KhbXxMDfTNpDtUklqtyc=
+	t=1729256474; cv=none; b=rkqCNfQ7051nkKp8EQHUwGKydMsOBQhjxwrN8cENVG1LYy5y8xbuTUyKwPmtJthBu/ii4rLSoXjG9YOK4iljcYuyC9HU5HAP3ah9CPP3vIpws2cbXu0XabXxblgky6PpygWwkSlrxW7j1Ss+Wa8DNMozH/v3FOxzPpcaxIcOHec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729256467; c=relaxed/simple;
-	bh=T8dNw4HRpUG8QI5yMlIJ/BPf9H+BE+xZb88T/B5s82E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I8D0dzCNjH0y34dZlyv0aJWNK4dpQBgFURcSca0xKpvJrVwGn3XAh3RNfE2ecRkBZtS5he6+1f5fFKowLT+Ie/WDuDaE+mll5YBgPFPtNevWlGYtvdgc1Gw2XnEiObKvQO32MmbogbsYQwFAEDnxKZWkEzVtvIdNsLT24sBIw2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+	s=arc-20240116; t=1729256474; c=relaxed/simple;
+	bh=9zZwjbQuMpv6vwO/XI9JAKa2hvDwcgmeXyeBb9e+IKY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aK2KJO3uBEqLEvCTS3qSobbb5dkPgc9aaP2lTSMRMVONM5ShMbM6ZekKSd7pAI/KVWM04Y3M3eeUqRNZBt3N2r2fAn5mX2Kl9xhIVBLurbpeiLPfrRTvmXT8IHSfCB3DpFgeb5W7/cAX1p85b00fCMxI8M9gAEWnh4Y6HK+oJm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 X-IronPort-AV: E=Sophos;i="6.11,213,1725289200"; 
-   d="scan'208";a="222337123"
+   d="scan'208";a="226319655"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 18 Oct 2024 22:00:56 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 18 Oct 2024 22:01:04 +0900
 Received: from localhost.localdomain (unknown [10.226.93.163])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id B65EF4009A3E;
-	Fri, 18 Oct 2024 22:00:52 +0900 (JST)
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 5EA504007D02;
+	Fri, 18 Oct 2024 22:00:57 +0900 (JST)
 From: Biju Das <biju.das.jz@bp.renesas.com>
 To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
 	Conor Dooley <conor+dt@kernel.org>
 Cc: Biju Das <biju.das.jz@bp.renesas.com>,
 	Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -47,10 +47,12 @@ Cc: Biju Das <biju.das.jz@bp.renesas.com>,
 	linux-renesas-soc@vger.kernel.org,
 	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
 	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH v22 0/4] Add support for RZ/G2L GPT
-Date: Fri, 18 Oct 2024 14:00:41 +0100
-Message-ID: <20241018130049.138775-1-biju.das.jz@bp.renesas.com>
+Subject: [PATCH v22 1/4] dt-bindings: pwm: Add RZ/G2L GPT binding
+Date: Fri, 18 Oct 2024 14:00:42 +0100
+Message-ID: <20241018130049.138775-2-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241018130049.138775-1-biju.das.jz@bp.renesas.com>
+References: <20241018130049.138775-1-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -59,376 +61,453 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-RZ/G2L General PWM Timer (GPT) composed of 8 channels with 32-bit timer
-(GPT32E). It supports the following functions
- * 32 bits x 8 channels
- * Up-counting or down-counting (saw waves) or up/down-counting
-   (triangle waves) for each counter.
- * Clock sources independently selectable for each channel
- * Two I/O pins per channel
- * Two output compare/input capture registers per channel
- * For the two output compare/input capture registers of each channel,
-   four registers are provided as buffer registers and are capable of
-   operating as comparison registers when buffering is not in use.
- * In output compare operation, buffer switching can be at crests or
-   troughs, enabling the generation of laterally asymmetric PWM waveforms.
- * Registers for setting up frame cycles in each channel (with capability
-   for generating interrupts at overflow or underflow)
- * Generation of dead times in PWM operation
- * Synchronous starting, stopping and clearing counters for arbitrary
-   channels
- * Starting, stopping, clearing and up/down counters in response to input
-   level comparison
- * Starting, clearing, stopping and up/down counters in response to a
-   maximum of four external triggers
- * Output pin disable function by dead time error and detected
-   short-circuits between output pins
- * A/D converter start triggers can be generated (GPT32E0 to GPT32E3)
- * Enables the noise filter for input capture and external trigger
-   operation
+Add device tree bindings for the General PWM Timer (GPT).
 
-This patch series aims to add basic pwm support for RZ/G2L GPT driver
-by creating separate logical channels for each IOs.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
 v21->v22:
- * Started using guard(mutex)calls.
- * Replaced round up->down operation in rzg2l_gpt_calculate_pv_or_dc() as
-   it converts a nanosecond value to a register value.
- * Replaced devm_clk_get->devm_clk_get_enabled() to make clock on during
-   the lifetime of driver and get rid of bootloader_enabled_channels
-   variable. Also dropped rzg2l_gpt_rpm_put(), pm_runtime.h header and
-   pm runtime calls, that simplified the probe() and other functions.
- * Replaced return type of the rzg2l_gpt_enable() as void as it is not
-   returning any error.
- * Dropped lock from enable() and disable() as caller is holding the lock.
-   this way we won't release the lock just to allow a called function to retake
-   it.
+ * No change.
 v20->v21:
- * Added documentation about the relation between channels and outputs and
-   subchannels.
- * Dropped using the local variable offs for calculating channel regs and
-   instead start using macros.
- * Replaced u8->bool for the  bootloader_enabled_channels variable in
-   struct rzg2l_gpt_chip
- * Replaced duty_cycles->duty_ticks and period_cycles->period_ticks as it
-   represent hw ticks.
- * Introduced RZG2L_MAX_TICKS macro for max hw ticks and dropped the
-   variable max_val from struct rzg2l_gpt_chip.
- * Updated comment related to 64-bit overflow calculation in
-   calculate_period_or_duty().
- * Simplified handling of bootloader_enabled_channels[pwm->hwpwm] == true
-   in a single place in rzg2l_gpt_apply()
- * For config error case, don't call pm_runtime_put_sync() and with
-   enable()->acquire pm_runtime reference and disable()-->release the
-   pm_runtime reference
- * Split the cleanups into two. One for reset_control_deassert() earlier
-   in .probe() and dropped rstc variable from struct rzg2l_gpt_chip.
- * Added warn_once() message in probe() for bootloader setting wrong
-   prescale values.
+ * No change.
 v19->v20:
- * Added locks for rmw operations in rzg2l_gpt_{en,dis}able().
- * Dropped decremeng enable_count based ch_en_bits in rzg2l_gpt_disable().
- * Added a comment in calculate_period_or_duty() related to overflow.
- * Replaced ch_en_bits->bootloader_enabled_channels and used this variable
-   in probe(), apply() and remove() for simplification
- * Replaced pm_runtime_enable()->devm_pm_runtime_enable()
+ * No change.
 v18->v19:
- * Replaced RZG2L_UP_COUNTING->RZG2L_GTUDDTYC_UP_COUNTING macro.
- * Aligned RZG2L_GET_CH and RZG2L_GET_CH_OFFS macro
- * Dropped chip and clk from struct rzg2l_gpt_chip as started using
-   devm_pwmchip_alloc() and devm_clk_rate_exclusive_get() to replace it.
- * Replaced rate->rate_khz in struct rzg2l_gpt_chip and added a check in
-   probe() to make sure rate is multiple of 1000.
- * Replaced container_of->pwmchip_get_drvdata() to get device data.
- * Added a check in rzg2l_gpt_disable() not to decrement enable_count if
-   ch_en_bits is set by the probe.
- * Dropped rzg2l_gpt_mul_u64_u64_div_u64()
- * Simplified calculate_period_or_duty() using rate_khz
- * Simplified rzg2l_gpt_config() using min macro for calculating period
-   and duty_cycle.
- * Added checks in rzg2l_gpt_config() to prevent second channel setting
-   shared register.
- * Updated error handling rzg2l_gpt_apply()
- * Added local variable dev for &pdev->dev in probe()
- * Added local varibles rate, chip and clk in probe()
- * Dropped err_clk_rate_put label as started using
-   devm_clk_rate_exclusive_get()
- * Replaced rzg2l_gpt->chip as data for devm_add_action_or_reset().
- * Added error message for rate > 1GHz in probe.
+ * No change.
 v17->v18:
- * Added units.h for KILO macro.
- * Replaced RZG2L_GTCCR{A,B}->RZG2L_GTCCR(i)
- * Introduced macros RZG2L_GTIOR_{GTIOx,OxE} to handle subchannels.
- * Replaced RZG2L_IS_IOB()->rzg2l_gpt_subchannel()
- * Replaced the cache period->period_cycles.
- * Updated rzg2l_gpt_is_ch_enabled() to return early if counter is not
-   running.
- * Updated calculate_period_or_duty() for avoiding overflows.
- * Updated rzg2l_gpt_calculate_pv_or_dc() with simplified calculation for
-   DIV64_U64_ROUND_UP() and dropped the cast for U32_MAX in min_t.
- * Replaced mul_u64_u32_div->rzg2l_gpt_mul_u64_u64_div_u64() helper.
- * Dropped pm pointer from struct rzg2l_gpt_driver() and simplified clk
-   handling in probe().
- * Updated copyright from 2023->2024.
- * Moved bitpos near to the user in patch#4.
+ * No change.
 v16->v17:
- * Added ret = dev_err_probe() to avoid return success in probe().
- * Dropped unneeded MODULE_ALIAS().
- * Dropped .owner from struct rzg2l_gpt_ops.
- * Fixed build issue reported by kernel test robot <lkp@intel.com> by
-   replacing DIV_ROUND_UP()->DIV64_U64_ROUND_UP() in
-   rzg2l_gpt_calculate_pv_or_dc().
- * Added max_val to struct rzg2l_gpt_chip to compute maximum period
-   supported by the HW in probe() and limit its value in apply() to
-   avoid 64-bit overflow with computation.
- * Added helper function calculate_period_or_duty() to avoid losing
-   precision for smaller period/duty cycle values
-   ((2^32 * 10^9 << 2) < 2^64), by not processing the rounded values.
- * Replaced mul_u64_u64_div_u64()->mul_u64_u32_div() as the former is
-   giving warnings with CONFIG_PWM_DEBUG enabled for very high values. 
+ * No change.
 v15->v16:
- * Replaced the macro DIV_ROUND_UP_ULL->DIV64_U64_ROUND_UP
- * Added DIV_ROUND_UP in rzg2l_gpt_calculate_pv_or_dc() to avoid loss of
-   precision.
- * Replaced min->min_t() in rzg2l_gpt_calculate_pv_or_dc().
- * Added a comment for rzg2l_gpt_config()
- * Replaced mul_u64_u32_div()->mul_u64_u64_div_u64() in rzg2l_gpt_config()
- * Fixed the logical condition related to counter stop in
-   rzg2l_gpt_config().
- * Dropped pm_runtime_resume_*() from rzg2l_gpt_config() as it is managed
-   by rzg2l_gpt_apply().
- * Moved pm_runtime_resume_*() from rzg2l_gpt_{en,dis}able() to
-   rzg2l_gpt_apply().
+ * No change.
 v14->v15:
- * Added enable_count and ch_en_bits variables to struct rzg2l_gpt_chip
-   based on feedback for pwm_mtu3 driver.
- * Updated copyright header and commit description by replacing "This patch
-   adds"-> "Add"
- * Replaced macro RZG2L_GET_CH_INDEX->RZG2L_GET_CH and replaced ch_index->ch
-   throughout
- * rzg2l_gpt_{enable,disable}() enables/disables PWM based on the
-   enable_count.
- * Replaced pm_runtime_get_sync->pm_runtime_resume_and_get and propogated
-   the error in rzg2l_gpt_get_state() and rzg2l_gpt_config()
- * Reduced variable scope in rzg2l_gpt_get_state() by moving most of
-   variables inside the if statement.
- * Updated rzg2l_gpt_get_state() by moving duty > period check
-   inside the top if block.
- * Added helper functions rzg2l_gpt_calculate_pv_or_dc()to simplify config. 
-   Also Improved the logic in rzg2l_gpt_calculate_pv_or_dc() by using
-   min(period_or_duty_cycle >> (2 * prescale), (u64)U32_MAX);
- * Updated rzg2l_gpt_get_state() by moving duty > period check
-   inside the top if block.
- * Simplified rzg2l_gpt_config() for updating registers
- * Dropped pm_runtime_get_sync() and used bitmap variable "ch_en_bits"
-   to make balanced PM usage count in rzg2l_gpt_reset_assert_pm_disable()
-   For case were unbind is called before apply where pwm is enabled by
-   bootloader.
- * Added error check for clk_rate_exclusive_get() and clk_get_rate() in
-   probe().
- * Dropped prescale from struct rzg2l_gpt_chip.
- * Replaced of_match_ptr(rzg2l_gpt_of_table)->rzg2l_gpt_of_table in struct
-   rzg2l_gpt_driver
- * Updated commit description of patch#4 by replacing "This patch add"->
-   "Add".
+ * No change.
 v13->v14:
- * Moved the patch from series[1] to here.
- [1] https://lore.kernel.org/linux-renesas-soc/20221215205843.4074504-1-biju.das.jz@bp.renesas.com/T/#t
- * Add Rb tag from Rob for patch#2
- * Removed parenthesis for RZG2L_MAX_HW_CHANNELS and RZG2L_CHANNELS_PER_IO
- * Removed duty_cycle variable from struct rzg2l_gpt_chip and added comment
-   for cache for prescale variable.
- * Fixed a bug in rzg2l_gpt_cntr_need_stop().
- * Reordered rzg2l_gpt_config() just above apply()
- * Replaced pwm_is_enabled()->pwm->state.enabled in config
- * Replaced pm_runtime_resume_and_get with unconditional
-   pm_runtime_get_sync() in config().
- * Restored duty_cycle > period check in rzg2l_gpt_get_state().
- * Added error check for clk_prepare_enable() in probe() and propagating
-   error to the caller for pm_runtime_resume()
- * clk_get_rate() is called after enabling the clock and
-   clk_rate_exclusive_get()
- * Simplified rzg2l_gpt_probe() by removing bitmap variables.
- * Added pm_runtime_idle() to suspend the device during probe.
- * Moved overflow condition check from config->probe().
- * Simplified rzg2l_gpt_reset_assert_pm_disable().
- * Removed the parenthesis for RZG2L_MAX_POEG_GROUPS.
- * Renamed rzg2l_gpt_parse_properties()->rzg2l_gpt_poeg_init() as it
-   not only parse the properties but also implements the needed register
-   writes.
- * Added acomment here about the purpose of the function
-   rzg2l_gpt_poeg_init()
- * Removed magic numbers from rzg2l_gpt_poeg_init()
- * Fixed resource leak in rzg2l_gpt_poeg_init().
+ * No change.
 v12->v13:
- * Added test logs in [1] below
- * Replaced Kconfig dependency from ARCH_RENESAS->ARCH_RZG2L
- * Sorted #include <linux/limits.h> alphabetically
- * Added a comment for mutex_lock to fix check patch warning
- * Replaced data type of duty_cycle from unsigned int->u32 as
-   the maximum value stored is U32_MAX.
- * Improved rzg2l_gpt_config() by removing unwanted duty_cycle related
-   code.
- * Improved rzg2l_gpt_get_state() by setting
-  "val = rzg2l_gpt->duty_cycle[pwm->hwpwm];",  and factor
-  "tmp = NSEC_PER_SEC * (u64)val;" out of the if-statement.
- * Started using DEFINE_RUNTIME_DEV_PM_OPS(), and dropped __maybe_unused
-   from the callbacks.
+ * No change.
 v11->v12:
- * Added return code for get_state()
- * Cache duty cycle/prescale as the driver cannot read the current duty
-   cycle/prescale from the hardware if the hardware is disabled. Cache the
-   last programmed duty cycle/prescale value to return in that case.
- * Updated rzg2l_gpt_enable to enable the clocks.
- * Updated rzg2l_gpt_disable to disable the clocks.
- * Updated rzg2l_gpt_config() to cache duty cucle/prescale value
- * Updated rzg2l_gpt_get_state to use cached value of duty cycle/prescale,
-   If the PWM is disabled.
- * Simplified rzg2l_gpt_apply()
- * Added comments in rzg2l_gpt_reset_assert_pm_disable()
+ * No change.
 v10->v11:
- * Used bitmap_zero for initializing bitmap varable.
- * Fixed clock imbalance during remove for the case bootloader turning
-   on PWM and module unload is called just after the boot.
- * Fixed over flow condition in get_state() for a prescale value of
-   2 & more.
- * Improved rzg2l_gpt_cntr_need_stop() based on prescale as it is the
-   only runtime variable.
- * Added array for Cache variables state_period and prescale
- * Probe caches the prescale value set by the bootloader.
- * Updated rzg2l_gpt_config() to make use of array variables.
+ * No change.
 v9->v10:
  * Updated the example gpt4: pwm@10048400-> gpt: pwm@10048000
  * Keep Rb tag from Rob as the above change is trivial one.
- * Updated the error handling in probe(), clk_disable_unprepare called
-   on the error path.
- * Removed ch_en array and started using bitmask instead.
 v8->v9:
  * Added Rb tag from Rob.
- * deassert after devm_clk_get() to avoid reset stays deasserted,in case
-   clk_get() fails.
- * Removed ch_offs from struct rzg2l_gpt_chip and use macro instead.
- * Updated error handling in probe()
 v7->v8:
  * Removed Rb tags from Rob and Geert as it modelled as single GPT
    device handling multiple channels.
  * Updated description
  * Updated interrupts and interrupt-names properties
- * Updated binding example
- * Modelled as single PWM device handling multiple channels
- * Replaced shared reset->devm_reset_control_get_exclusive()
- * Added PM runtime callbacks
- * Updated PM handling and removed "pwm_enabled_by_bootloader" variable
- * Replaced iowrite32->writel and ioread32->readl
- * Updated prescale calculation
- * Introduced rzg2l_gpt_is_ch_enabled for checking enable status on both
-   IO's
- * Moved enable/disable output pins from config->enable/disable.
- * Added rzg2l_gpt_cntr_need_stop() for caching prescalar/mode values.
+ * Updated example
 v6->v7:
- * Added the comment for cacheing rzg2l_gpt->state_period.
- * Fixed boundary values for pv and dc.
- * Added comment for modifying mode, prescaler, timer counter and buffer
-   enable registers.
- * Fixed buffer overflow in get_state()
- * Removed unnecessary assignment of state->period value in get_state().
- * Fixed state->duty_cycle value in get_state().
- * Added a limitation for disabling the channels, when both channels used
+ * No change.
 v5->v6:
- * Updated macros RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH and
-   RZG2L_GTIOR_GTIOB_OUT_LO_END_TOGGLE_CMP_MATCH with computation
-   involving FIELD_PREP macro.
- * Removed struct rzg2l_gpt_phase and started using RZG2L_GTCCR macro
-   for duty_offset.
- * replaced misnomer real_period->state_period.
- * Added handling for values >= (1024 << 32) for both period
-   and duty cycle.
- * Added comments for pwm {en,dis}abled by bootloader during probe.
+ * No change.
 v4->v5:
- * Added Hardware manual details
- * Replaced the comment GTCNT->Counter
- * Removed the macros RZG2L_GPT_IO_PER_CHANNEL and chip.npwm directly
-   used in probe.
- * Removed the unsed macro RZG2L_GTPR_MAX_VALUE
- * Added driver prefix for the type name and the variable.
- * Initialization of per_channel data moved from request->probe.
- * Updated clr parameter for rzg2l_gpt_modify for Start count.
- * Started using mutex and usage_count for handling shared
-   period and prescalar for the 2 channels.
- * Updated the comment cycle->period.
- * Removed clk_disable from rzg2l_gpt_reset_assert_pm_disable()
- * Replaced pc->rzg2l_gpt.
- * Updated prescale calculation.
- * Moved pm_runtime_{get_sync,put} from {request,free}->{enable,disable}
- * Removed platform_set_drvdata as it is unused
- * Removed the variable pwm_enabled_by_bootloader 
- * Added dev_err_probe in various probe error path.
- * Added an error message, if devm_pwmchip_add fails.
+ * No change.
 v3->v4:
- * Changed the local variable type i from u16->u8 and prescaled_period_
-   cycles from u64->u32 in calculate_prescale().
- * Replaced mul_u64_u64_div_u64()->mul_u64_u32_div()
- * Dropped the comma after the sentinel.
- * Add a variable to track pwm enabled by bootloader and added comments
-   in probe().
- * Removed unnecessary rzg2l_gpt_reset_assert_pm_disable() from probe.
- * Replaced devm_clk_get()->devm_clk_get_prepared()
- * Removed devm_clk_get_optional_enabled()
+ * No change.
 v2->v3:
- * Added Rb tag from Rob for the bindings.
- * Updated limitation section
- * Added prefix "RZG2L_" for all macros
- * Modified prescale calculation
- * Removed pwm_set_chip_data
- * Updated comment related to modifying Mode and Prescaler
- * Updated setting of prescale value in rzg2l_gpt_config()
- * Removed else branch from rzg2l_gpt_get_state()
- * removed the err label from rzg2l_gpt_apply()
- * Added devm_clk_get_optional_enabled() to retain clk on status,
-   in case bootloader turns on the clk of pwm.
- * Replaced devm_reset_control_get_exclusive->devm_reset_control_get_shared
-   as single reset shared between 8 channels.
+ * Added Rb tag from Rob.
 v1->v2:
  * Added '|' after 'description:' to preserve formatting.
  * Removed description for pwm_cells as it is common property.
  * Changed the reg size in example from 0xa4->0x100
- * Added Rb tag from Geert for bindings.
- * Added Limitations section
- * dropped "_MASK" from the define names.
- * used named initializer for struct phase
- * Added gpt_pwm_device into a flexible array member in rzg2l_gpt_chip
- * Revised the logic for prescale
- * Added .get_state callback
- * Improved error handling in rzg2l_gpt_apply
- * Removed .remove callback
- * Tested the driver with PWM_DEBUG enabled.
-
+ * Added Rb tag from Geert.
 RFC->v1:
- * Added Description in binding patch
+ * Added Description
  * Removed comments from reg and clock
- * replaced rzg2l_gpt_write_mask()->rzg2l_gpt_modify()
- * Added rzg2l_gpt_read() and updated macros
- * Removed dtsi patches, will send it separately
-
-RFC:
- * https://lore.kernel.org/linux-renesas-soc/20220430075915.5036-1-biju.das.jz@bp.renesas.com/T/#t
-
-Biju Das (4):
-  dt-bindings: pwm: Add RZ/G2L GPT binding
-  dt-bindings: pwm: rzg2l-gpt: Document renesas,poegs property
-  pwm: Add support for RZ/G2L GPT
-  pwm: rzg2l-gpt: Add support for gpt linking with poeg
-
- .../bindings/pwm/renesas,rzg2l-gpt.yaml       | 401 +++++++++++++
- drivers/pwm/Kconfig                           |  11 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-rzg2l-gpt.c                   | 553 ++++++++++++++++++
- 4 files changed, 966 insertions(+)
+---
+ .../bindings/pwm/renesas,rzg2l-gpt.yaml       | 378 ++++++++++++++++++
+ 1 file changed, 378 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt.yaml
- create mode 100644 drivers/pwm/pwm-rzg2l-gpt.c
 
-
-base-commit: 4f6938e6ed2ee8fffb5ca36d4984beac3c9763a0
+diff --git a/Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt.yaml b/Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt.yaml
+new file mode 100644
+index 000000000000..d9374144d82d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt.yaml
+@@ -0,0 +1,378 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/renesas,rzg2l-gpt.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas RZ/G2L General PWM Timer (GPT)
++
++maintainers:
++  - Biju Das <biju.das.jz@bp.renesas.com>
++
++description: |
++  RZ/G2L General PWM Timer (GPT) composed of 8 channels with 32-bit timer
++  (GPT32E). It supports the following functions
++  * 32 bits x 8 channels.
++  * Up-counting or down-counting (saw waves) or up/down-counting
++    (triangle waves) for each counter.
++  * Clock sources independently selectable for each channel.
++  * Two I/O pins per channel.
++  * Two output compare/input capture registers per channel.
++  * For the two output compare/input capture registers of each channel,
++    four registers are provided as buffer registers and are capable of
++    operating as comparison registers when buffering is not in use.
++  * In output compare operation, buffer switching can be at crests or
++    troughs, enabling the generation of laterally asymmetric PWM waveforms.
++  * Registers for setting up frame cycles in each channel (with capability
++    for generating interrupts at overflow or underflow)
++  * Generation of dead times in PWM operation.
++  * Synchronous starting, stopping and clearing counters for arbitrary
++    channels.
++  * Starting, stopping, clearing and up/down counters in response to input
++    level comparison.
++  * Starting, clearing, stopping and up/down counters in response to a
++    maximum of four external triggers.
++  * Output pin disable function by dead time error and detected
++    short-circuits between output pins.
++  * A/D converter start triggers can be generated (GPT32E0 to GPT32E3)
++  * Enables the noise filter for input capture and external trigger
++    operation.
++
++  The below pwm channels are supported.
++    pwm0  - GPT32E0.GTIOC0A channel
++    pwm1  - GPT32E0.GTIOC0B channel
++    pwm2  - GPT32E1.GTIOC1A channel
++    pwm3  - GPT32E1.GTIOC1B channel
++    pwm4  - GPT32E2.GTIOC2A channel
++    pwm5  - GPT32E2.GTIOC2B channel
++    pwm6  - GPT32E3.GTIOC3A channel
++    pwm7  - GPT32E3.GTIOC3B channel
++    pwm8  - GPT32E4.GTIOC4A channel
++    pwm9  - GPT32E4.GTIOC4B channel
++    pwm10 - GPT32E5.GTIOC5A channel
++    pwm11 - GPT32E5.GTIOC5B channel
++    pwm12 - GPT32E6.GTIOC6A channel
++    pwm13 - GPT32E6.GTIOC6B channel
++    pwm14 - GPT32E7.GTIOC7A channel
++    pwm15 - GPT32E7.GTIOC7B channel
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,r9a07g044-gpt  # RZ/G2{L,LC}
++          - renesas,r9a07g054-gpt  # RZ/V2L
++      - const: renesas,rzg2l-gpt
++
++  reg:
++    maxItems: 1
++
++  '#pwm-cells':
++    const: 2
++
++  interrupts:
++    items:
++      - description: GPT32E0.GTCCRA input capture/compare match
++      - description: GPT32E0.GTCCRB input capture/compare
++      - description: GPT32E0.GTCCRC compare match
++      - description: GPT32E0.GTCCRD compare match
++      - description: GPT32E0.GTCCRE compare match
++      - description: GPT32E0.GTCCRF compare match
++      - description: GPT32E0.GTADTRA compare match
++      - description: GPT32E0.GTADTRB compare match
++      - description: GPT32E0.GTCNT overflow/GTPR compare match
++      - description: GPT32E0.GTCNT underflow
++      - description: GPT32E1.GTCCRA input capture/compare match
++      - description: GPT32E1.GTCCRB input capture/compare
++      - description: GPT32E1.GTCCRC compare match
++      - description: GPT32E1.GTCCRD compare match
++      - description: GPT32E1.GTCCRE compare match
++      - description: GPT32E1.GTCCRF compare match
++      - description: GPT32E1.GTADTRA compare match
++      - description: GPT32E1.GTADTRB compare match
++      - description: GPT32E1.GTCNT overflow/GTPR compare match
++      - description: GPT32E1.GTCNT underflow
++      - description: GPT32E2.GTCCRA input capture/compare match
++      - description: GPT32E2.GTCCRB input capture/compare
++      - description: GPT32E2.GTCCRC compare match
++      - description: GPT32E2.GTCCRD compare match
++      - description: GPT32E2.GTCCRE compare match
++      - description: GPT32E2.GTCCRF compare match
++      - description: GPT32E2.GTADTRA compare match
++      - description: GPT32E2.GTADTRB compare match
++      - description: GPT32E2.GTCNT overflow/GTPR compare match
++      - description: GPT32E2.GTCNT underflow
++      - description: GPT32E3.GTCCRA input capture/compare match
++      - description: GPT32E3.GTCCRB input capture/compare
++      - description: GPT32E3.GTCCRC compare match
++      - description: GPT32E3.GTCCRD compare match
++      - description: GPT32E3.GTCCRE compare match
++      - description: GPT32E3.GTCCRF compare match
++      - description: GPT32E3.GTADTRA compare match
++      - description: GPT32E3.GTADTRB compare match
++      - description: GPT32E3.GTCNT overflow/GTPR compare match
++      - description: GPT32E3.GTCNT underflow
++      - description: GPT32E4.GTCCRA input capture/compare match
++      - description: GPT32E4.GTCCRB input capture/compare
++      - description: GPT32E4.GTCCRC compare match
++      - description: GPT32E4.GTCCRD compare match
++      - description: GPT32E4.GTCCRE compare match
++      - description: GPT32E4.GTCCRF compare match
++      - description: GPT32E4.GTADTRA compare match
++      - description: GPT32E4.GTADTRB compare match
++      - description: GPT32E4.GTCNT overflow/GTPR compare match
++      - description: GPT32E4.GTCNT underflow
++      - description: GPT32E5.GTCCRA input capture/compare match
++      - description: GPT32E5.GTCCRB input capture/compare
++      - description: GPT32E5.GTCCRC compare match
++      - description: GPT32E5.GTCCRD compare match
++      - description: GPT32E5.GTCCRE compare match
++      - description: GPT32E5.GTCCRF compare match
++      - description: GPT32E5.GTADTRA compare match
++      - description: GPT32E5.GTADTRB compare match
++      - description: GPT32E5.GTCNT overflow/GTPR compare match
++      - description: GPT32E5.GTCNT underflow
++      - description: GPT32E6.GTCCRA input capture/compare match
++      - description: GPT32E6.GTCCRB input capture/compare
++      - description: GPT32E6.GTCCRC compare match
++      - description: GPT32E6.GTCCRD compare match
++      - description: GPT32E6.GTCCRE compare match
++      - description: GPT32E6.GTCCRF compare match
++      - description: GPT32E6.GTADTRA compare match
++      - description: GPT32E6.GTADTRB compare match
++      - description: GPT32E6.GTCNT overflow/GTPR compare match
++      - description: GPT32E6.GTCNT underflow
++      - description: GPT32E7.GTCCRA input capture/compare match
++      - description: GPT32E7.GTCCRB input capture/compare
++      - description: GPT32E7.GTCCRC compare match
++      - description: GPT32E7.GTCCRD compare match
++      - description: GPT32E7.GTCCRE compare match
++      - description: GPT32E7.GTCCRF compare match
++      - description: GPT32E7.GTADTRA compare match
++      - description: GPT32E7.GTADTRB compare match
++      - description: GPT32E7.GTCNT overflow/GTPR compare match
++      - description: GPT32E7.GTCNT underflow
++
++  interrupt-names:
++    items:
++      - const: ccmpa0
++      - const: ccmpb0
++      - const: cmpc0
++      - const: cmpd0
++      - const: cmpe0
++      - const: cmpf0
++      - const: adtrga0
++      - const: adtrgb0
++      - const: ovf0
++      - const: unf0
++      - const: ccmpa1
++      - const: ccmpb1
++      - const: cmpc1
++      - const: cmpd1
++      - const: cmpe1
++      - const: cmpf1
++      - const: adtrga1
++      - const: adtrgb1
++      - const: ovf1
++      - const: unf1
++      - const: ccmpa2
++      - const: ccmpb2
++      - const: cmpc2
++      - const: cmpd2
++      - const: cmpe2
++      - const: cmpf2
++      - const: adtrga2
++      - const: adtrgb2
++      - const: ovf2
++      - const: unf2
++      - const: ccmpa3
++      - const: ccmpb3
++      - const: cmpc3
++      - const: cmpd3
++      - const: cmpe3
++      - const: cmpf3
++      - const: adtrga3
++      - const: adtrgb3
++      - const: ovf3
++      - const: unf3
++      - const: ccmpa4
++      - const: ccmpb4
++      - const: cmpc4
++      - const: cmpd4
++      - const: cmpe4
++      - const: cmpf4
++      - const: adtrga4
++      - const: adtrgb4
++      - const: ovf4
++      - const: unf4
++      - const: ccmpa5
++      - const: ccmpb5
++      - const: cmpc5
++      - const: cmpd5
++      - const: cmpe5
++      - const: cmpf5
++      - const: adtrga5
++      - const: adtrgb5
++      - const: ovf5
++      - const: unf5
++      - const: ccmpa6
++      - const: ccmpb6
++      - const: cmpc6
++      - const: cmpd6
++      - const: cmpe6
++      - const: cmpf6
++      - const: adtrga6
++      - const: adtrgb6
++      - const: ovf6
++      - const: unf6
++      - const: ccmpa7
++      - const: ccmpb7
++      - const: cmpc7
++      - const: cmpd7
++      - const: cmpe7
++      - const: cmpf7
++      - const: adtrga7
++      - const: adtrgb7
++      - const: ovf7
++      - const: unf7
++
++  clocks:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - clocks
++  - power-domains
++  - resets
++
++allOf:
++  - $ref: pwm.yaml#
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r9a07g044-cpg.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    gpt: pwm@10048000 {
++        compatible = "renesas,r9a07g044-gpt", "renesas,rzg2l-gpt";
++        reg = <0x10048000 0x800>;
++        interrupts = <GIC_SPI 218 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 219 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 220 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 221 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 222 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 223 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 224 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 225 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 226 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 227 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 231 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 232 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 233 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 234 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 235 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 236 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 237 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 238 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 239 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 240 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 244 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 245 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 246 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 247 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 248 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 249 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 250 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 251 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 252 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 253 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 257 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 258 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 259 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 260 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 261 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 262 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 263 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 264 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 265 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 270 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 271 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 272 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 273 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 274 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 275 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 276 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 277 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 278 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 279 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 283 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 284 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 285 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 286 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 287 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 288 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 289 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 290 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 291 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 292 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 296 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 297 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 298 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 299 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 300 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 301 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 302 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 303 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 304 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 305 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 309 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 310 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 311 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 312 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 313 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 314 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 315 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 316 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 317 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 318 IRQ_TYPE_EDGE_RISING>;
++        interrupt-names = "ccmpa0", "ccmpb0", "cmpc0", "cmpd0",
++                          "cmpe0", "cmpf0", "adtrga0", "adtrgb0",
++                          "ovf0", "unf0",
++                          "ccmpa1", "ccmpb1", "cmpc1", "cmpd1",
++                          "cmpe1", "cmpf1", "adtrga1", "adtrgb1",
++                          "ovf1", "unf1",
++                          "ccmpa2", "ccmpb2", "cmpc2", "cmpd2",
++                          "cmpe2", "cmpf2", "adtrga2", "adtrgb2",
++                          "ovf2", "unf2",
++                          "ccmpa3", "ccmpb3", "cmpc3", "cmpd3",
++                          "cmpe3", "cmpf3", "adtrga3", "adtrgb3",
++                          "ovf3", "unf3",
++                          "ccmpa4", "ccmpb4", "cmpc4", "cmpd4",
++                          "cmpe4", "cmpf4", "adtrga4", "adtrgb4",
++                          "ovf4", "unf4",
++                          "ccmpa5", "ccmpb5", "cmpc5", "cmpd5",
++                          "cmpe5", "cmpf5", "adtrga5", "adtrgb5",
++                          "ovf5", "unf5",
++                          "ccmpa6", "ccmpb6", "cmpc6", "cmpd6",
++                          "cmpe6", "cmpf6", "adtrga6", "adtrgb6",
++                          "ovf6", "unf6",
++                          "ccmpa7", "ccmpb7", "cmpc7", "cmpd7",
++                          "cmpe7", "cmpf7", "adtrga7", "adtrgb7",
++                          "ovf7", "unf7";
++        clocks = <&cpg CPG_MOD R9A07G044_GPT_PCLK>;
++        power-domains = <&cpg>;
++        resets = <&cpg R9A07G044_GPT_RST_C>;
++        #pwm-cells = <2>;
++    };
 -- 
 2.43.0
 
