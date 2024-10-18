@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-3698-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3699-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EDAE9A3503
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 08:01:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 141589A350A
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 08:03:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D5C5C1F25881
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 06:01:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 75BBBB209B2
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 06:03:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66AB1547C3;
-	Fri, 18 Oct 2024 06:01:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F142317B439;
+	Fri, 18 Oct 2024 06:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhxzLlld"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X/TBhu9q"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE9120E30C;
-	Fri, 18 Oct 2024 06:01:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C786014B941;
+	Fri, 18 Oct 2024 06:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729231293; cv=none; b=J4LmTiBYNrsEo8ug+RZ2n0T8eFwFQa1CzdTMGLNBKrG7PhtK+C0ud/B8R1n6QQw9ANR3iONW59KMvlvVC908wBUbWeSfvzF6Wv97sBU0Yndy0oEEh6/yj3vW6gDGJyRMMQMc5ymyLHNepOQnx/L4HgIgL3IcdjKuiIEG6/fBHgY=
+	t=1729231380; cv=none; b=GadRG8AeXo1Tt6vx5KEUPwiZgA+HnVQS6c27rPaIgTKUXIXg0xyGP6VmFxiv5aEHukEoE9qoUrgL6eK6Y5D8uFNDHs0wH+RXBKfm0bNeUstl7lvckLqy/uYs+HPrIavT7Htc/IRrwnxsDwGk7w07n7vU6IPC4zuhfQd9FY3Zf0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729231293; c=relaxed/simple;
-	bh=IHz/5c/bmxyb1gSSaBJ+FfMboaBAW8TT1l8VU237WdI=;
+	s=arc-20240116; t=1729231380; c=relaxed/simple;
+	bh=A/+1uORbg0LH//T1T/rLq+3zSzcOukSYdFUqBJMdftg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mn+B+EBdKBTvCFzHUv9faTUKZUxucBQVuZgs0biJTlGgo5AFZzDhbL8Bp4cRP0S5fplMlL5iGsVLU04oZHekdwzJnrBdWpqGRXttlsJghMIGP85Zwsvxi2lcCYeuxI7aCkGmrEK6eAuPE4a9l+1GwsdeDVnVqAGLo389EmTC2Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhxzLlld; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3347AC4CEC3;
-	Fri, 18 Oct 2024 06:01:28 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=pkSmACBR6ifllqwMv8VSg3rmdv1fzU8qdbH+XqLtuQ/bgIlmFxU47HOtBe7+M4AWEfJ0Pn/h8X9U9/CVF+gUNM+9s+2fUvILxsChpBg+ywKGcirKcat3ZTbNEwZEBSGVd3eO9fe462nzfjxHCGeimSW84ziONBuGwxM6T0jEmpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X/TBhu9q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AA81C4CEC5;
+	Fri, 18 Oct 2024 06:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729231293;
-	bh=IHz/5c/bmxyb1gSSaBJ+FfMboaBAW8TT1l8VU237WdI=;
+	s=k20201202; t=1729231380;
+	bh=A/+1uORbg0LH//T1T/rLq+3zSzcOukSYdFUqBJMdftg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JhxzLlldRVY6PJ38FGtZ2RISruVUqoIFwztA5lI0fnQsMY+m9RW7lCFU1uJ/9VKr+
-	 +MSmMA7vGB+C8OXM5t/DtzVtz78kBJtkk/4mhBWKDxFdACoM9m1lR+L4pUNSjVIdk5
-	 mmy6gmTAGn2gHv+3JN6Qic6azYSnKsW1HR7UrT85BdsU9zGZHPbifuL6vm+KjzUmIS
-	 jf6sE5rKzqiy8n9avbCVLuTEXiE4LtSkaZKGZDwyVIjkIdUj3Px+5QjbnoFZ6BosHQ
-	 05jRxjgPjOMMI68IJQdU6Ifz6ERQtUx5x1lnENVnkSuBM7ZbF/FpA54ptIpl4SjPld
-	 czJntBycxjQyw==
-Message-ID: <57f9093e-9f45-413a-bfd7-68f10e960fa3@kernel.org>
-Date: Fri, 18 Oct 2024 08:01:26 +0200
+	b=X/TBhu9qlfO6qm4IwQSSyNMUpRg+NwILBOVS9m9/lZy7ueCElK4DMtN3favGhq6PD
+	 H72reDmq8q5zOiReanG235JZijFJEr4roH8ZVs76edHdQCYKIx0W+vdkn6inkdKqvV
+	 FeiC5uwjJ7XmyGX8AuniURfD7SKLn2JNhWxVx4eauQ62og5vdTTs6QQNzH5UgIyLVr
+	 kAqdBpAqbd+rdl/pJ03lhiT8gR76cd/MvuJXuY0DpmXjYebnb4wOdf/6KezogRW/Ev
+	 Iwdb2NaHvean2DZEET+nAbPeI9d9p7GI1EbUXNzisigSmfz1Rxfk4KtayORYbxrmIX
+	 1aHMqtfmgu62A==
+Message-ID: <a06afa20-8f69-45dd-8dce-272ae7da6d39@kernel.org>
+Date: Fri, 18 Oct 2024 08:02:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,13 +50,14 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] pwm: Add Nuvoton PWM controller support
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: Add dt-bindings for Nuvoton MA35D1
+ SoC PWM Controller
 To: Chi-Wen Weng <cwweng.linux@gmail.com>, ukleinek@kernel.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
  devicetree@vger.kernel.org, ychuang3@nuvoton.com, schung@nuvoton.com
 References: <20241018034857.568-1-cwweng.linux@gmail.com>
- <20241018034857.568-3-cwweng.linux@gmail.com>
+ <20241018034857.568-2-cwweng.linux@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -102,44 +103,84 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241018034857.568-3-cwweng.linux@gmail.com>
+In-Reply-To: <20241018034857.568-2-cwweng.linux@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 18/10/2024 05:48, Chi-Wen Weng wrote:
-> This commit adds a generic PWM framework driver for Nuvoton MA35D1
-> PWM controller.
+> Add documentation to describe nuvoton ma35d1 PWM controller.
+
+A nit, subject: drop second/last, redundant "dt-bindings for". The
+"dt-bindings" prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+
 > 
 > Signed-off-by: Chi-Wen Weng <cwweng.linux@gmail.com>
+> ---
+>  .../bindings/pwm/nuvoton,ma35d1-pwm.yaml      | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/nuvoton,ma35d1-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/nuvoton,ma35d1-pwm.yaml b/Documentation/devicetree/bindings/pwm/nuvoton,ma35d1-pwm.yaml
+> new file mode 100644
+> index 000000000000..95f0a0819f53
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/nuvoton,ma35d1-pwm.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/nuvoton,ma35d1-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Nuvoton MA35D1 PWM controller
+> +
+> +maintainers:
+> +  - Chi-Wen Weng <cwweng@nuvoton.com>
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nuvoton,ma35d1-pwm
+> +
+> +  reg:
+> +    maxItems: 2
 
-
-...
-
+Instead list and describe the items.
 
 > +
-> +static const struct of_device_id nuvoton_pwm_of_match[] = {
-> +	{ .compatible = "nuvoton,ma35d1-pwm" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, nuvoton_pwm_of_match);
+> +  clocks:
+> +    maxItems: 1
 > +
-> +static struct platform_driver nuvoton_pwm_driver = {
-> +	.probe = nuvoton_pwm_probe,
-> +	.driver = {
-> +		.name = "nuvoton-pwm",
-> +		.of_match_table = nuvoton_pwm_of_match,
-> +	},
-> +};
-> +module_platform_driver(nuvoton_pwm_driver);
+> +  "#pwm-cells":
+> +    const: 2
 > +
-> +MODULE_ALIAS("platform:nuvoton-pwm");
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/nuvoton,ma35d1-clk.h>
+> +
+> +    pwm0: pwm@40580000 {
 
-Drop, not needed and not correct either. If you need platform alias for
-non-OF binds, this is supposed to match OF ID table.
+Drop unused label.
 
-> +MODULE_AUTHOR("Chi-Wen Weng <cwweng@nuvoton.com>");
-> +MODULE_DESCRIPTION("Nuvoton MA35D1 PWM driver");
-> +MODULE_LICENSE("GPL");
+> +      compatible = "nuvoton,ma35d1-pwm";
+> +      reg = <0 0x40580000 0 0x400>;
+
+But you have only one item here? No, that's just incorrect.
+
+
+> +      clocks = <&clk EPWM0_GATE>;
 
 Best regards,
 Krzysztof
