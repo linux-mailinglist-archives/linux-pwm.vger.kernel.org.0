@@ -1,550 +1,616 @@
-Return-Path: <linux-pwm+bounces-3725-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3726-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DBBE9A3F66
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 15:19:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DCAC9A40B0
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 16:07:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A68528130B
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 13:19:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE4951C245DA
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 14:07:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D199B1D5CE0;
-	Fri, 18 Oct 2024 13:19:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 934871D5AC7;
+	Fri, 18 Oct 2024 14:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wrd1PGYc"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="WtQ8jY8e"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6BE1D54D6;
-	Fri, 18 Oct 2024 13:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E45137C37
+	for <linux-pwm@vger.kernel.org>; Fri, 18 Oct 2024 14:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729257591; cv=none; b=PRRIHnZa/PA7Q60/DAawCrqB21EbAsNq/5pZl4+QuN/9cTWpsxu3ATOx7yd0XyTIg0wVXtlollq1hEAPlLv3lMNt8j8OTOTO9o37Vuzeh1Nw/9XGXDg03E2iIjluxGWj+yJl7tpermC7gVwQ/9YX5RNy/NSHs/vpLduSOr9ClgI=
+	t=1729260446; cv=none; b=Hz4KiihDwMd6/mo1SwGlaJOKpFVcAAd4hfv/Tuz+bYiDmq1rAsfXaSZvzgf8E06QePXTAYuIo/PkmI424sWYj7m7MneFm+2nhUb85j+Or1pD60ngJI4ocR/xfYGqPIM5YGVNPbL8OIR+y5qv7j4iDHYoZPOFyTTHxp0zkaWkCRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729257591; c=relaxed/simple;
-	bh=UPp5Q7zXtm4wkB8ImKE9gyBbsU4Xd+bAPVQriYvz69M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gIguL8e3qIyMqcGLphPheRkkPLPeNMxeU55hnXsD+HiqtwScqHaGkzW+1amd1z7LYU8IRCAPvyU6fAeWJppSwMknPkBAhApwSavixFdbPTj78v7bPfxzJefsE1HiCQ9BhkZdbAII9p5EibXDhAUmEM4QOmWlxxRgfZ1fQjb8JcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wrd1PGYc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7671C4CEC6;
-	Fri, 18 Oct 2024 13:19:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729257591;
-	bh=UPp5Q7zXtm4wkB8ImKE9gyBbsU4Xd+bAPVQriYvz69M=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Wrd1PGYcsdb5dHZKtr1sKHoF2cGH+zE3iLS2zgW/2m0ryoZ1EQQcnu7Q4KuVVeoes
-	 Pr+rJcIHrDJVY7HoWhsvJhSvmhxFBk8NewBRmCMVyoTm40gfppEniXsHyjpt4iy7lO
-	 mWyGAnbw/sOP+iKltoHXr/PCdkIgg2gnlJE27TWwJrHEzNcQKH4d9p40TTN4yjYzq3
-	 nhY7dI+CJgpPBio1ChD9zdBRJlt1wrNoBS4oS4ZI7bdJYT1vsQN+0p2FdbTV2K6gdv
-	 ORnkkdMKNqgBETZx85PWzBwa48Z3yewyDuEwDC7FOGxe2dkbbRwF4QzhHsoi2wPW8b
-	 SJDmA7k0Z+RuA==
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-Date: Fri, 18 Oct 2024 15:19:07 +0200
-Subject: [PATCH v8 6/6] pwm: airoha: Add support for EN7581 SoC
+	s=arc-20240116; t=1729260446; c=relaxed/simple;
+	bh=hTmOoeYkkKr1yWGiWUboixw3ZBG3rEt3g84e+t5hILY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EcZZBHhDmrK6IT/tm62uTUHrLVxSktJ+LFfrXh+lIHD/YxHwmwDY3vTjiJbGDjRZjA7nBgM5kglPGzy/BoYCTsYpyDI9DrzWqBWmju0XlueEB7r2CYs+I/lRg3+jQjb5LcCsgKy+WFmekMwQAPnWvnqNDorVKo09RYcyFLIhKGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=WtQ8jY8e; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2fb5014e2daso24215041fa.0
+        for <linux-pwm@vger.kernel.org>; Fri, 18 Oct 2024 07:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729260441; x=1729865241; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hSbRbtCh9+74ZMgaCPUKCrhIAEqMl+1p0/E2aSxWAUI=;
+        b=WtQ8jY8exNokgCUqn48Co6hTajk44zw7le1JdR/+eA6c4Ds/KCh+zSEsGBmYAEnyWN
+         CUXLTaznkEhy5Tewze8wRaV3SnUuiSlrSpGBAbKEUi53PA8dpY+Z98B+cZOFbrQMjvZD
+         QNmYgaYbh9xA2ti5e93BFcfOSlYp8GCDkMtB0vpvs4FXaDMvn/QLJeh5ICNwgIR2iN16
+         cmBPJz2TncigEPPkABJLBkS+gGBEyWd7HPmsPmW8a6gfsTES7crqDb/QjXZLmuyrngyk
+         RPBy+WyscL17VpZoK4rv2weH+f7NtFrL35wAMIYNxd6Kb5HhqYJJNaqgKEMSrvmcf01Z
+         4gLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729260441; x=1729865241;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hSbRbtCh9+74ZMgaCPUKCrhIAEqMl+1p0/E2aSxWAUI=;
+        b=Tbej9vQUZR+6zw8XiS6L/kIxG1MatRi62YhJZa0C28GZqMxeN7Pl5Fp9EGoonrDMds
+         ZiNiLBviXC+bNt5wJ3Bhua59z6lsuqeMC+SYZsIkjAu5avmMrMoE2xYa0Lf4UV/c7Tz7
+         A7pYs95u4j/jouhAx53Y85sPiXslkjlos1Xuv6PrN7yVVwRo1PxVX1Ib9oqAbW9P+5EI
+         jqDn0s7eKv8NY6Uq9wgdDSGLE7298Ce7Ctk3yV9Hs8I5L40mL8ZFd13NCyaxPN5ip4pU
+         WkgS1jYXfEvfsx8mfQW0QCkNzIgZcg+ahoXk7CiW/l50rDfV0OobIwN7v5qyZBSVQ9ao
+         iogQ==
+X-Gm-Message-State: AOJu0YxkKjYulP/3TpcRErw36lNNUx0BHVOV/JR2Uzoc/gPRNmZeDvYg
+	YqgPfpSvZevV0vG/2hHaGFxYWCiX4ac2PRIFkK2sxojd2e5H/rHvxRxG697gvTItXW4mDkHjiud
+	g
+X-Google-Smtp-Source: AGHT+IFWUujOYEHq4+rtVWMxZSQ9eS6rTnMd1FQFgPH9KP4HZ7SzmQUqy/+j0iM5qa2rPYDlF17HwQ==
+X-Received: by 2002:a05:651c:551:b0:2fa:d4ef:f222 with SMTP id 38308e7fff4ca-2fb8320b662mr12970311fa.38.1729260440215;
+        Fri, 18 Oct 2024 07:07:20 -0700 (PDT)
+Received: from ?IPV6:2a02:8428:e55b:1101:f480:6186:20d4:668a? (2a02-8428-e55b-1101-f480-6186-20d4-668a.rev.sfr.net. [2a02:8428:e55b:1101:f480:6186:20d4:668a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43160e4f7a6sm25067775e9.42.2024.10.18.07.07.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Oct 2024 07:07:19 -0700 (PDT)
+Message-ID: <a6bee0f1-3b06-44d6-9592-ab7f04a3ffcd@baylibre.com>
+Date: Fri, 18 Oct 2024 16:07:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 7/8] iio: adc: ad7606: Add iio-backend support
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+ aardelean@baylibre.com, dlechner@baylibre.com, jstephan@baylibre.com,
+ nuno.sa@analog.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20241015-ad7606_add_iio_backend_support-v5-0-654faf1ae08c@baylibre.com>
+ <20241015-ad7606_add_iio_backend_support-v5-7-654faf1ae08c@baylibre.com>
+Content-Language: en-US
+From: Guillaume Stols <gstols@baylibre.com>
+In-Reply-To: <20241015-ad7606_add_iio_backend_support-v5-7-654faf1ae08c@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241018-en7581-pinctrl-v8-6-b676b966a1d1@kernel.org>
-References: <20241018-en7581-pinctrl-v8-0-b676b966a1d1@kernel.org>
-In-Reply-To: <20241018-en7581-pinctrl-v8-0-b676b966a1d1@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Lee Jones <lee@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
- linux-pwm@vger.kernel.org
-X-Mailer: b4 0.14.2
 
-From: Benjamin Larsson <benjamin.larsson@genexis.eu>
 
-Introduce driver for PWM module available on EN7581 SoC.
+On 10/15/24 15:56, Guillaume Stols wrote:
+> - Basic support for iio backend.
+> - Supports IIO_CHAN_INFO_SAMP_FREQ R/W.
+> - Only hardware mode is available, and that IIO_CHAN_INFO_RAW is not
+>    supported if iio-backend mode is selected.
+>
+> Signed-off-by: Guillaume Stols <gstols@baylibre.com>
+> ---
+>   drivers/iio/adc/Kconfig      |   2 +
+>   drivers/iio/adc/ad7606.c     | 154 ++++++++++++++++++++++++++++++++++---------
+>   drivers/iio/adc/ad7606.h     |  15 +++++
+>   drivers/iio/adc/ad7606_par.c |  92 +++++++++++++++++++++++++-
+>   4 files changed, 231 insertions(+), 32 deletions(-)
+>
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 91873f60322d..a57b5f0bc070 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -224,9 +224,11 @@ config AD7606_IFACE_PARALLEL
+>   	tristate "Analog Devices AD7606 ADC driver with parallel interface support"
+>   	depends on HAS_IOPORT
+>   	select AD7606
+> +	select IIO_BACKEND
+>   	help
+>   	  Say yes here to build parallel interface support for Analog Devices:
+>   	  ad7605-4, ad7606, ad7606-6, ad7606-4 analog to digital converters (ADC).
+> +	  It also support iio_backended devices for AD7606B.
+>   
+>   	  To compile this driver as a module, choose M here: the
+>   	  module will be called ad7606_par.
+> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> index 34d377e9ac79..7871552ce5ac 100644
+> --- a/drivers/iio/adc/ad7606.c
+> +++ b/drivers/iio/adc/ad7606.c
+> @@ -21,6 +21,7 @@
+>   #include <linux/units.h>
+>   #include <linux/util_macros.h>
+>   
+> +#include <linux/iio/backend.h>
+>   #include <linux/iio/buffer.h>
+>   #include <linux/iio/iio.h>
+>   #include <linux/iio/sysfs.h>
+> @@ -191,6 +192,7 @@ EXPORT_SYMBOL_NS_GPL(ad7606_4_info, IIO_AD7606);
+>   
+>   const struct ad7606_chip_info ad7606b_info = {
+>   	.channels = ad7606_channels_16bit,
+> +	.max_samplerate = 800 * KILO,
+>   	.name = "ad7606b",
+>   	.num_adc_channels = 8,
+>   	.num_channels = 9,
+> @@ -490,6 +492,17 @@ static int ad7606_pwm_set_low(struct ad7606_state *st)
+>   	return ret;
+>   }
+>   
+> +static int ad7606_pwm_set_swing(struct ad7606_state *st)
+> +{
+> +	struct pwm_state cnvst_pwm_state;
+> +
+> +	pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
+> +	cnvst_pwm_state.enabled = true;
+> +	cnvst_pwm_state.duty_cycle = cnvst_pwm_state.period / 2;
+> +
+> +	return pwm_apply_might_sleep(st->cnvst_pwm, &cnvst_pwm_state);
+> +}
+> +
+>   static bool ad7606_pwm_is_swinging(struct ad7606_state *st)
+>   {
+>   	struct pwm_state cnvst_pwm_state;
+> @@ -576,11 +589,22 @@ static int ad7606_scan_direct(struct iio_dev *indio_dev, unsigned int ch,
+>   		if (ret < 0)
+>   			return ret;
+>   	}
+> -	ret = wait_for_completion_timeout(&st->completion,
+> -					  msecs_to_jiffies(1000));
+> -	if (!ret) {
+> -		ret = -ETIMEDOUT;
+> -		goto error_ret;
+> +
+> +	/*
+> +	 * If no backend, wait for the interruption on busy pin, otherwise just add
+> +	 * a delay to leave time for the data to be available. For now, the latter
+> +	 * will not happen because IIO_CHAN_INFO_RAW is not supported for the backend.
+> +	 * TODO: Add support for reading a single value when the backend is used.
+> +	 */
+> +	if (!st->back) {
+> +		ret = wait_for_completion_timeout(&st->completion,
+> +						  msecs_to_jiffies(1000));
+> +		if (!ret) {
+> +			ret = -ETIMEDOUT;
+> +			goto error_ret;
+> +		}
+> +	} else {
+> +		fsleep(1);
+>   	}
+>   
+>   	ret = ad7606_read_samples(st);
+> @@ -620,6 +644,7 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+>   	int ret, ch = 0;
+>   	struct ad7606_state *st = iio_priv(indio_dev);
+>   	struct ad7606_chan_scale *cs;
+> +	struct pwm_state cnvst_pwm_state;
+>   
+>   	switch (m) {
+>   	case IIO_CHAN_INFO_RAW:
+> @@ -640,6 +665,14 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+>   	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+>   		*val = st->oversampling;
+>   		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		/*
+> +		 * TODO: return the real frequency intead of the requested one once
+> +		 * pwm_get_state_hw comes upstream.
+> +		 */
+> +		pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
+> +		*val = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, cnvst_pwm_state.period);
+> +		return IIO_VAL_INT;
+>   	}
+>   	return -EINVAL;
+>   }
+> @@ -732,6 +765,10 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+>   			return ret;
+>   
+>   		return 0;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		if (val < 0 && val2 != 0)
+> +			return -EINVAL;
+> +		return ad7606_set_sampling_freq(st, val);
+>   	default:
+>   		return -EINVAL;
+>   	}
+> @@ -914,14 +951,50 @@ static int ad7606_read_avail(struct iio_dev *indio_dev,
+>   	return -EINVAL;
+>   }
+>   
+> +static int ad7606_backend_buffer_postenable(struct iio_dev *indio_dev)
+> +{
+> +	struct ad7606_state *st = iio_priv(indio_dev);
+> +
+> +	return ad7606_pwm_set_swing(st);
+> +}
+> +
+> +static int ad7606_backend_buffer_predisable(struct iio_dev *indio_dev)
+> +{
+> +	struct ad7606_state *st = iio_priv(indio_dev);
+> +
+> +	return ad7606_pwm_set_low(st);
+> +}
+> +
+> +static int ad7606_update_scan_mode(struct iio_dev *indio_dev,
+> +				   const unsigned long *scan_mask)
+> +{
+> +	struct ad7606_state *st = iio_priv(indio_dev);
+> +
+> +	/*
+> +	 * The update scan mode is only for iio backend compatible drivers.
+> +	 * If the specific update_scan_mode is not defined in the bus ops,
+> +	 * just do nothing and return 0.
+> +	 */
+> +	if (!st->bops->update_scan_mode)
+> +		return 0;
+> +
+> +	return st->bops->update_scan_mode(indio_dev, scan_mask);
+> +}
+> +
+>   static const struct iio_buffer_setup_ops ad7606_buffer_ops = {
+>   	.postenable = &ad7606_buffer_postenable,
+>   	.predisable = &ad7606_buffer_predisable,
+>   };
+>   
+> +static const struct iio_buffer_setup_ops ad7606_backend_buffer_ops = {
+> +	.postenable = &ad7606_backend_buffer_postenable,
+> +	.predisable = &ad7606_backend_buffer_predisable,
+> +};
+> +
+>   static const struct iio_info ad7606_info_no_os_or_range = {
+>   	.read_raw = &ad7606_read_raw,
+>   	.validate_trigger = &ad7606_validate_trigger,
+> +	.update_scan_mode = &ad7606_update_scan_mode,
+>   };
+>   
+>   static const struct iio_info ad7606_info_os_and_range = {
+> @@ -929,6 +1002,7 @@ static const struct iio_info ad7606_info_os_and_range = {
+>   	.write_raw = &ad7606_write_raw,
+>   	.attrs = &ad7606_attribute_group_os_and_range,
+>   	.validate_trigger = &ad7606_validate_trigger,
+> +	.update_scan_mode = &ad7606_update_scan_mode,
+>   };
+>   
+>   static const struct iio_info ad7606_info_sw_mode = {
+> @@ -937,6 +1011,7 @@ static const struct iio_info ad7606_info_sw_mode = {
+>   	.read_avail = &ad7606_read_avail,
+>   	.debugfs_reg_access = &ad7606_reg_access,
+>   	.validate_trigger = &ad7606_validate_trigger,
+> +	.update_scan_mode = &ad7606_update_scan_mode,
+>   };
+>   
+>   static const struct iio_info ad7606_info_os = {
+> @@ -944,6 +1019,7 @@ static const struct iio_info ad7606_info_os = {
+>   	.write_raw = &ad7606_write_raw,
+>   	.attrs = &ad7606_attribute_group_os,
+>   	.validate_trigger = &ad7606_validate_trigger,
+> +	.update_scan_mode = &ad7606_update_scan_mode,
+>   };
+>   
+>   static const struct iio_info ad7606_info_range = {
+> @@ -951,6 +1027,7 @@ static const struct iio_info ad7606_info_range = {
+>   	.write_raw = &ad7606_write_raw,
+>   	.attrs = &ad7606_attribute_group_range,
+>   	.validate_trigger = &ad7606_validate_trigger,
+> +	.update_scan_mode = &ad7606_update_scan_mode,
+>   };
+>   
+>   static const struct iio_trigger_ops ad7606_trigger_ops = {
+> @@ -1070,8 +1147,6 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+>   	indio_dev->channels = st->chip_info->channels;
+>   	indio_dev->num_channels = st->chip_info->num_channels;
+>   
+> -	init_completion(&st->completion);
+> -
+>   	ret = ad7606_reset(st);
+>   	if (ret)
+>   		dev_warn(st->dev, "failed to RESET: no RESET GPIO specified\n");
+> @@ -1118,34 +1193,51 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+>   		if (ret)
+>   			return ret;
+>   	}
+> -	st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
+> -					  indio_dev->name,
+> -					  iio_device_id(indio_dev));
+> -	if (!st->trig)
+> -		return -ENOMEM;
+>   
+> -	st->trig->ops = &ad7606_trigger_ops;
+> -	iio_trigger_set_drvdata(st->trig, indio_dev);
+> -	ret = devm_iio_trigger_register(dev, st->trig);
+> -	if (ret)
+> -		return ret;
+> +	if (st->bops->iio_backend_config) {
+> +		/*
+> +		 * If there is a backend, the PWM should not overpass the maximum sampling
+> +		 * frequency the chip supports.
+> +		 */
+> +		ret = ad7606_set_sampling_freq(st,
+> +					       chip_info->max_samplerate ? : 2 * KILO);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = st->bops->iio_backend_config(dev, indio_dev);
+> +		if (ret)
+> +			return ret;
+>   
+> -	indio_dev->trig = iio_trigger_get(st->trig);
+> +		indio_dev->setup_ops = &ad7606_backend_buffer_ops;
+> +	} else {
+> +		init_completion(&st->completion);
+> +		st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
+> +						  indio_dev->name,
+> +						  iio_device_id(indio_dev));
+> +		if (!st->trig)
+> +			return -ENOMEM;
+> +
+> +		st->trig->ops = &ad7606_trigger_ops;
+> +		iio_trigger_set_drvdata(st->trig, indio_dev);
+> +		ret = devm_iio_trigger_register(dev, st->trig);
+> +		if (ret)
+> +			return ret;
+>   
+> -	ret = devm_request_threaded_irq(dev, irq,
+> -					NULL,
+> -					&ad7606_interrupt,
+> -					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> -					chip_info->name, indio_dev);
+> -	if (ret)
+> -		return ret;
+> +		indio_dev->trig = iio_trigger_get(st->trig);
+>   
+> -	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
+> -					      &iio_pollfunc_store_time,
+> -					      &ad7606_trigger_handler,
+> -					      &ad7606_buffer_ops);
+> -	if (ret)
+> -		return ret;
+> +		ret = devm_request_threaded_irq(dev, irq, NULL, &ad7606_interrupt,
+> +						IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +						chip_info->name, indio_dev);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
+> +						      &iio_pollfunc_store_time,
+> +						      &ad7606_trigger_handler,
+> +						      &ad7606_buffer_ops);
+> +		if (ret)
+> +			return ret;
+> +	}
+>   
+>   	return devm_iio_device_register(dev, indio_dev);
+>   }
+> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+> index b26a11b2eba1..2c629a15cc33 100644
+> --- a/drivers/iio/adc/ad7606.h
+> +++ b/drivers/iio/adc/ad7606.h
+> @@ -61,6 +61,12 @@
+>   
+>   #define AD7616_CHANNEL(num)	AD7606_SW_CHANNEL(num, 16)
+>   
+> +#define AD7606_BI_CHANNEL(num)				\
+> +	AD760X_CHANNEL(num, 0,				\
+> +		BIT(IIO_CHAN_INFO_SCALE),		\
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ) |		\
+> +		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO), 16)
+> +
+>   struct ad7606_state;
+>   
+>   typedef int (*ad7606_scale_setup_cb_t)(struct ad7606_state *st,
+> @@ -69,6 +75,7 @@ typedef int (*ad7606_scale_setup_cb_t)(struct ad7606_state *st,
+>   /**
+>    * struct ad7606_chip_info - chip specific information
+>    * @channels:		channel specification
+> + * @max_samplerate:	maximum supported samplerate
+>    * @name		device name
+>    * @num_channels:	number of channels
+>    * @num_adc_channels	the number of channels the ADC actually inputs.
+> @@ -82,6 +89,7 @@ typedef int (*ad7606_scale_setup_cb_t)(struct ad7606_state *st,
+>    */
+>   struct ad7606_chip_info {
+>   	const struct iio_chan_spec	*channels;
+> +	unsigned int			max_samplerate;
+>   	const char			*name;
+>   	unsigned int			num_adc_channels;
+>   	unsigned int			num_channels;
+> @@ -152,6 +160,7 @@ struct ad7606_state {
+>   	bool				sw_mode_en;
+>   	const unsigned int		*oversampling_avail;
+>   	unsigned int			num_os_ratios;
+> +	struct iio_backend		*back;
+>   	int (*write_scale)(struct iio_dev *indio_dev, int ch, int val);
+>   	int (*write_os)(struct iio_dev *indio_dev, int val);
+>   
+> @@ -180,16 +189,21 @@ struct ad7606_state {
+>   
+>   /**
+>    * struct ad7606_bus_ops - driver bus operations
+> + * @iio_backend_config	function pointer for configuring the iio_backend for
+> + *			the compatibles that use it
+>    * @read_block		function pointer for reading blocks of data
+>    * @sw_mode_config:	pointer to a function which configured the device
+>    *			for software mode
+>    * @reg_read	function pointer for reading spi register
+>    * @reg_write	function pointer for writing spi register
+>    * @write_mask	function pointer for write spi register with mask
+> + * @update_scan_mode	function pointer for handling the calls to iio_info's update_scan
+> + *			mode when enabling/disabling channels.
+>    * @rd_wr_cmd	pointer to the function which calculates the spi address
+>    */
+>   struct ad7606_bus_ops {
+>   	/* more methods added in future? */
+> +	int (*iio_backend_config)(struct device *dev, struct iio_dev *indio_dev);
+>   	int (*read_block)(struct device *dev, int num, void *data);
+>   	int (*sw_mode_config)(struct iio_dev *indio_dev);
+>   	int (*reg_read)(struct ad7606_state *st, unsigned int addr);
+> @@ -200,6 +214,7 @@ struct ad7606_bus_ops {
+>   				 unsigned int addr,
+>   				 unsigned long mask,
+>   				 unsigned int val);
+> +	int (*update_scan_mode)(struct iio_dev *indio_dev, const unsigned long *scan_mask);
+>   	u16 (*rd_wr_cmd)(int addr, char isWriteOp);
+>   };
+>   
+> diff --git a/drivers/iio/adc/ad7606_par.c b/drivers/iio/adc/ad7606_par.c
+> index b87be2f1ca04..6946ff00e4cb 100644
+> --- a/drivers/iio/adc/ad7606_par.c
+> +++ b/drivers/iio/adc/ad7606_par.c
+> @@ -2,7 +2,8 @@
+>   /*
+>    * AD7606 Parallel Interface ADC driver
+>    *
+> - * Copyright 2011 Analog Devices Inc.
+> + * Copyright 2011 - 2024 Analog Devices Inc.
+> + * Copyright 2024 BayLibre SAS.
+>    */
+>   
+>   #include <linux/err.h>
+> @@ -14,9 +15,82 @@
+>   #include <linux/property.h>
+>   #include <linux/types.h>
+>   
+> +#include <linux/iio/backend.h>
+>   #include <linux/iio/iio.h>
+> +
+>   #include "ad7606.h"
+>   
+> +static const struct iio_chan_spec ad7606b_bi_channels[] = {
+> +	AD7606_BI_CHANNEL(0),
+> +	AD7606_BI_CHANNEL(1),
+> +	AD7606_BI_CHANNEL(2),
+> +	AD7606_BI_CHANNEL(3),
+> +	AD7606_BI_CHANNEL(4),
+> +	AD7606_BI_CHANNEL(5),
+> +	AD7606_BI_CHANNEL(6),
+> +	AD7606_BI_CHANNEL(7),
+> +};
+> +
+> +static int ad7606_bi_update_scan_mode(struct iio_dev *indio_dev, const unsigned long *scan_mask)
+> +{
+> +	struct ad7606_state *st = iio_priv(indio_dev);
+> +	unsigned int c, ret;
+> +
+> +	for (c = 0; c < indio_dev->num_channels; c++) {
+> +		if (test_bit(c, scan_mask))
+> +			ret = iio_backend_chan_enable(st->back, c);
+> +		else
+> +			ret = iio_backend_chan_disable(st->back, c);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ad7606_bi_setup_iio_backend(struct device *dev, struct iio_dev *indio_dev)
+> +{
+> +	struct ad7606_state *st = iio_priv(indio_dev);
+> +	unsigned int ret, c;
+> +	struct iio_backend_data_fmt data = {
+> +		.sign_extend = true,
+> +		.enable = true,
+> +	};
+> +
+> +	st->back = devm_iio_backend_get(dev, NULL);
+> +	if (IS_ERR(st->back))
+> +		return PTR_ERR(st->back);
+> +
+> +	/* If the device is iio_backend powered the PWM is mandatory */
+> +	if (!st->cnvst_pwm)
+> +		return dev_err_probe(st->dev, -EINVAL,
+> +				     "A PWM is mandatory when using backend.\n");
+> +
+> +	ret = devm_iio_backend_request_buffer(dev, st->back, indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_iio_backend_enable(dev, st->back);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (c = 0; c < indio_dev->num_channels; c++) {
+> +		ret = iio_backend_data_format_set(st->back, c, &data);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	indio_dev->channels = ad7606b_bi_channels;
+> +	indio_dev->num_channels = 8;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct ad7606_bus_ops ad7606_bi_bops = {
+> +	.iio_backend_config = ad7606_bi_setup_iio_backend,
+> +	.update_scan_mode = ad7606_bi_update_scan_mode,
+> +};
+> +
+>   static int ad7606_par16_read_block(struct device *dev,
+>   				   int count, void *buf)
+>   {
+> @@ -96,9 +170,22 @@ static int ad7606_par_probe(struct platform_device *pdev)
+>   	void __iomem *addr;
+>   	resource_size_t remap_size;
+>   	int irq;
+> +	struct iio_backend *back;
 
-Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- drivers/pwm/Kconfig      |  11 ++
- drivers/pwm/Makefile     |   1 +
- drivers/pwm/pwm-airoha.c | 421 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 433 insertions(+)
+Just spotted that I forgot to remove the declaration. Shall I send 
+another series with this correction ?
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 0915c1e7df16d451e987dcc5f10e0b57edc32ee1..99aa87136c272555c10102590fcf9f911161c3d3 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -54,6 +54,17 @@ config PWM_ADP5585
- 	  This option enables support for the PWM function found in the Analog
- 	  Devices ADP5585.
- 
-+config PWM_AIROHA
-+	tristate "Airoha PWM support"
-+	depends on ARCH_AIROHA || COMPILE_TEST
-+	depends on OF
-+	select REGMAP_MMIO
-+	help
-+	  Generic PWM framework driver for Airoha SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-airoha.
-+
- config PWM_APPLE
- 	tristate "Apple SoC PWM support"
- 	depends on ARCH_APPLE || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 9081e0c0e9e09713fe05479c257eebe5f02b91e9..fbf7723d845807fd1e2893c6ea4f736785841b0d 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_PWM)		+= core.o
- obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
- obj-$(CONFIG_PWM_ADP5585)	+= pwm-adp5585.o
-+obj-$(CONFIG_PWM_AIROHA)	+= pwm-airoha.o
- obj-$(CONFIG_PWM_APPLE)		+= pwm-apple.o
- obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
- obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+= pwm-atmel-hlcdc.o
-diff --git a/drivers/pwm/pwm-airoha.c b/drivers/pwm/pwm-airoha.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..71cf7a930ff69faa94207dc995ca6f94c713dac6
---- /dev/null
-+++ b/drivers/pwm/pwm-airoha.c
-@@ -0,0 +1,421 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2022 Markus Gothe <markus.gothe@genexis.eu>
-+ *
-+ *  Limitations:
-+ *  - No disable bit, so a disabled PWM is simulated by setting duty_cycle to 0
-+ *  - Only 8 concurrent waveform generators are available for 8 combinations of
-+ *    duty_cycle and period. Waveform generators are shared between 16 GPIO
-+ *    pins and 17 SIPO GPIO pins.
-+ *  - Supports only normal polarity.
-+ *  - On configuration the currently running period is completed.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/gpio.h>
-+#include <linux/bitops.h>
-+#include <linux/regmap.h>
-+#include <asm/div64.h>
-+
-+#define REG_SGPIO_LED_DATA		0x0024
-+#define SGPIO_LED_DATA_SHIFT_FLAG	BIT(31)
-+#define SGPIO_LED_DATA_DATA		GENMASK(16, 0)
-+
-+#define REG_SGPIO_CLK_DIVR		0x0028
-+#define REG_SGPIO_CLK_DLY		0x002c
-+
-+#define REG_SIPO_FLASH_MODE_CFG		0x0030
-+#define SERIAL_GPIO_FLASH_MODE		BIT(1)
-+#define SERIAL_GPIO_MODE		BIT(0)
-+
-+#define REG_GPIO_FLASH_PRD_SET(_n)	(0x003c + ((_n) << 2))
-+#define GPIO_FLASH_PRD_MASK(_n)		GENMASK(15 + ((_n) << 4), ((_n) << 4))
-+
-+#define REG_GPIO_FLASH_MAP(_n)		(0x004c + ((_n) << 2))
-+#define GPIO_FLASH_SETID_MASK(_n)	GENMASK(2 + ((_n) << 2), ((_n) << 2))
-+#define GPIO_FLASH_EN(_n)		BIT(3 + ((_n) << 2))
-+
-+#define REG_SIPO_FLASH_MAP(_n)		(0x0054 + ((_n) << 2))
-+
-+#define REG_CYCLE_CFG_VALUE(_n)		(0x0098 + ((_n) << 2))
-+#define WAVE_GEN_CYCLE_MASK(_n)		GENMASK(7 + ((_n) << 3), ((_n) << 3))
-+
-+#define PWM_NUM_BUCKETS			8
-+
-+struct airoha_pwm_bucket {
-+	/* Bitmask of PWM channels using this bucket */
-+	u64 used;
-+	u64 period_ns;
-+	u64 duty_ns;
-+};
-+
-+struct airoha_pwm {
-+	struct regmap *regmap;
-+
-+	struct device_node *np;
-+	u64 initialized;
-+
-+	struct airoha_pwm_bucket bucket[PWM_NUM_BUCKETS];
-+};
-+
-+/*
-+ * The first 16 GPIO pins, GPIO0-GPIO15, are mapped into 16 PWM channels, 0-15.
-+ * The SIPO GPIO pins are 17 pins which are mapped into 17 PWM channels, 16-32.
-+ * However, we've only got 8 concurrent waveform generators and can therefore
-+ * only use up to 8 different combinations of duty cycle and period at a time.
-+ */
-+#define PWM_NUM_GPIO	16
-+#define PWM_NUM_SIPO	17
-+
-+/* The PWM hardware supports periods between 4 ms and 1 s */
-+#define PERIOD_MIN_NS	(4 * NSEC_PER_MSEC)
-+#define PERIOD_MAX_NS	(1 * NSEC_PER_SEC)
-+/* It is represented internally as 1/250 s between 1 and 250 */
-+#define PERIOD_MIN	1
-+#define PERIOD_MAX	250
-+/* Duty cycle is relative with 255 corresponding to 100% */
-+#define DUTY_FULL	255
-+
-+static int airoha_pwm_get_generator(struct airoha_pwm *pc, u64 duty_ns,
-+				    u64 period_ns)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(pc->bucket); i++) {
-+		if (!pc->bucket[i].used)
-+			continue;
-+
-+		if (duty_ns == pc->bucket[i].duty_ns &&
-+		    period_ns == pc->bucket[i].period_ns)
-+			return i;
-+
-+		/*
-+		 * Unlike duty cycle zero, which can be handled by
-+		 * disabling PWM, a generator is needed for full duty
-+		 * cycle but it can be reused regardless of period
-+		 */
-+		if (duty_ns == DUTY_FULL && pc->bucket[i].duty_ns == DUTY_FULL)
-+			return i;
-+	}
-+
-+	return -1;
-+}
-+
-+static void airoha_pwm_release_bucket_config(struct airoha_pwm *pc,
-+					     unsigned int hwpwm)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(pc->bucket); i++)
-+		pc->bucket[i].used &= ~BIT_ULL(hwpwm);
-+}
-+
-+static int airoha_pwm_consume_generator(struct airoha_pwm *pc,
-+					u64 duty_ns, u64 period_ns,
-+					unsigned int hwpwm)
-+{
-+	int id = airoha_pwm_get_generator(pc, duty_ns, period_ns);
-+
-+	if (id < 0) {
-+		int i;
-+
-+		/* find an unused waveform generator */
-+		for (i = 0; i < ARRAY_SIZE(pc->bucket); i++) {
-+			if (!(pc->bucket[i].used & ~BIT_ULL(hwpwm))) {
-+				id = i;
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (id >= 0) {
-+		airoha_pwm_release_bucket_config(pc, hwpwm);
-+		pc->bucket[id].used |= BIT_ULL(hwpwm);
-+		pc->bucket[id].period_ns = period_ns;
-+		pc->bucket[id].duty_ns = duty_ns;
-+	}
-+
-+	return id;
-+}
-+
-+static int airoha_pwm_sipo_init(struct airoha_pwm *pc)
-+{
-+	u32 clk_divr_val, sipo_clock_delay, sipo_clock_divisor;
-+	u32 val;
-+
-+	if (!(pc->initialized >> PWM_NUM_GPIO))
-+		return 0;
-+
-+	/*
-+	 * Select the right shift register chip.
-+	 * By default 74HC164 is assumed. With this enabled
-+	 * 74HC595 chip is used that requires the latch pin
-+	 * to be triggered to apply the configuration.
-+	 */
-+	if (of_property_read_bool(pc->np, "airoha,74hc595-mode"))
-+		regmap_set_bits(pc->regmap, REG_SIPO_FLASH_MODE_CFG,
-+				SERIAL_GPIO_MODE);
-+	else
-+		regmap_clear_bits(pc->regmap, REG_SIPO_FLASH_MODE_CFG,
-+				  SERIAL_GPIO_MODE);
-+
-+	if (of_property_read_u32(pc->np, "airoha,sipo-clock-divisor",
-+				 &sipo_clock_divisor))
-+		sipo_clock_divisor = 32;
-+
-+	switch (sipo_clock_divisor) {
-+	case 4:
-+		clk_divr_val = 0;
-+		break;
-+	case 8:
-+		clk_divr_val = 1;
-+		break;
-+	case 16:
-+		clk_divr_val = 2;
-+		break;
-+	case 32:
-+		clk_divr_val = 3;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	/* Configure shift register timings */
-+	regmap_write(pc->regmap, REG_SGPIO_CLK_DIVR, clk_divr_val);
-+
-+	if (of_property_read_u32(pc->np, "airoha,sipo-clock-delay",
-+				 &sipo_clock_delay))
-+		sipo_clock_delay = 1;
-+
-+	if (sipo_clock_delay < 1 || sipo_clock_delay > sipo_clock_divisor / 2)
-+		return -EINVAL;
-+
-+	/*
-+	 * The actual delay is sclkdly + 1 so subtract 1 from
-+	 * sipo-clock-delay to calculate the register value
-+	 */
-+	sipo_clock_delay--;
-+	regmap_write(pc->regmap, REG_SGPIO_CLK_DLY, sipo_clock_delay);
-+
-+	/*
-+	 * It it necessary to after muxing explicitly shift out all
-+	 * zeroes to initialize the shift register before enabling PWM
-+	 * mode because in PWM mode SIPO will not start shifting until
-+	 * it needs to output a non-zero value (bit 31 of led_data
-+	 * indicates shifting in progress and it must return to zero
-+	 * before led_data can be written or PWM mode can be set)
-+	 */
-+	if (regmap_read_poll_timeout(pc->regmap, REG_SGPIO_LED_DATA, val,
-+				     !(val & SGPIO_LED_DATA_SHIFT_FLAG), 10,
-+				     200 * USEC_PER_MSEC))
-+		return -ETIMEDOUT;
-+
-+	regmap_clear_bits(pc->regmap, REG_SGPIO_LED_DATA, SGPIO_LED_DATA_DATA);
-+	if (regmap_read_poll_timeout(pc->regmap, REG_SGPIO_LED_DATA, val,
-+				     !(val & SGPIO_LED_DATA_SHIFT_FLAG), 10,
-+				     200 * USEC_PER_MSEC))
-+		return -ETIMEDOUT;
-+
-+	/* Set SIPO in PWM mode */
-+	regmap_set_bits(pc->regmap, REG_SIPO_FLASH_MODE_CFG,
-+			SERIAL_GPIO_FLASH_MODE);
-+
-+	return 0;
-+}
-+
-+static void airoha_pwm_calc_bucket_config(struct airoha_pwm *pc, int index,
-+					  u64 duty_ns, u64 period_ns)
-+{
-+	u32 period, duty, mask, val;
-+	u64 tmp;
-+
-+	tmp = duty_ns * DUTY_FULL;
-+	duty = clamp_val(div64_u64(tmp, period_ns), 0, DUTY_FULL);
-+	tmp = period_ns * 25;
-+	period = clamp_val(div64_u64(tmp, 100000000), PERIOD_MIN, PERIOD_MAX);
-+
-+	/* Configure frequency divisor */
-+	mask = WAVE_GEN_CYCLE_MASK(index % 4);
-+	val = (period << __ffs(mask)) & mask;
-+	regmap_update_bits(pc->regmap, REG_CYCLE_CFG_VALUE(index / 4),
-+			   mask, val);
-+
-+	/* Configure duty cycle */
-+	duty = ((DUTY_FULL - duty) << 8) | duty;
-+	mask = GPIO_FLASH_PRD_MASK(index % 2);
-+	val = (duty << __ffs(mask)) & mask;
-+	regmap_update_bits(pc->regmap, REG_GPIO_FLASH_PRD_SET(index / 2),
-+			   mask, val);
-+}
-+
-+static void airoha_pwm_config_flash_map(struct airoha_pwm *pc,
-+					unsigned int hwpwm, int index)
-+{
-+	u32 addr, mask, val;
-+
-+	if (hwpwm < PWM_NUM_GPIO) {
-+		addr = REG_GPIO_FLASH_MAP(hwpwm / 8);
-+	} else {
-+		addr = REG_SIPO_FLASH_MAP(hwpwm / 8);
-+		hwpwm -= PWM_NUM_GPIO;
-+	}
-+
-+	if (index < 0) {
-+		/*
-+		 * Change of waveform takes effect immediately but
-+		 * disabling has some delay so to prevent glitching
-+		 * only the enable bit is touched when disabling
-+		 */
-+		regmap_clear_bits(pc->regmap, addr, GPIO_FLASH_EN(hwpwm % 8));
-+		return;
-+	}
-+
-+	mask = GPIO_FLASH_SETID_MASK(hwpwm % 8);
-+	val = ((index & 7) << __ffs(mask)) & mask;
-+	regmap_update_bits(pc->regmap, addr, mask, val);
-+	regmap_set_bits(pc->regmap, addr, GPIO_FLASH_EN(hwpwm % 8));
-+}
-+
-+static int airoha_pwm_config(struct airoha_pwm *pc, struct pwm_device *pwm,
-+			     u64 duty_ns, u64 period_ns)
-+{
-+	int index = -1;
-+
-+	index = airoha_pwm_consume_generator(pc, duty_ns, period_ns,
-+					     pwm->hwpwm);
-+	if (index < 0)
-+		return -EBUSY;
-+
-+	if (!(pc->initialized & BIT_ULL(pwm->hwpwm)) &&
-+	    pwm->hwpwm >= PWM_NUM_GPIO)
-+		airoha_pwm_sipo_init(pc);
-+
-+	if (index >= 0) {
-+		airoha_pwm_calc_bucket_config(pc, index, duty_ns, period_ns);
-+		airoha_pwm_config_flash_map(pc, pwm->hwpwm, index);
-+	} else {
-+		airoha_pwm_config_flash_map(pc, pwm->hwpwm, index);
-+		airoha_pwm_release_bucket_config(pc, pwm->hwpwm);
-+	}
-+
-+	pc->initialized |= BIT_ULL(pwm->hwpwm);
-+
-+	return 0;
-+}
-+
-+static void airoha_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct airoha_pwm *pc = pwmchip_get_drvdata(chip);
-+
-+	/* Disable PWM and release the waveform */
-+	airoha_pwm_config_flash_map(pc, pwm->hwpwm, -1);
-+	airoha_pwm_release_bucket_config(pc, pwm->hwpwm);
-+
-+	pc->initialized &= ~BIT_ULL(pwm->hwpwm);
-+	if (!(pc->initialized >> PWM_NUM_GPIO))
-+		regmap_clear_bits(pc->regmap, REG_SIPO_FLASH_MODE_CFG,
-+				  SERIAL_GPIO_FLASH_MODE);
-+}
-+
-+static int airoha_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    const struct pwm_state *state)
-+{
-+	struct airoha_pwm *pc = pwmchip_get_drvdata(chip);
-+	u64 duty = state->enabled ? state->duty_cycle : 0;
-+	u64 period = state->period;
-+
-+	/* Only normal polarity is supported */
-+	if (state->polarity == PWM_POLARITY_INVERSED)
-+		return -EINVAL;
-+
-+	if (!state->enabled) {
-+		airoha_pwm_disable(chip, pwm);
-+		return 0;
-+	}
-+
-+	if (period < PERIOD_MIN_NS)
-+		return -EINVAL;
-+
-+	if (period > PERIOD_MAX_NS)
-+		period = PERIOD_MAX_NS;
-+
-+	return airoha_pwm_config(pc, pwm, duty, period);
-+}
-+
-+static int airoha_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				struct pwm_state *state)
-+{
-+	struct airoha_pwm *pc = pwmchip_get_drvdata(chip);
-+	int i;
-+
-+	/* find hwpwm in waveform generator bucket */
-+	for (i = 0; i < ARRAY_SIZE(pc->bucket); i++) {
-+		if (pc->bucket[i].used & BIT_ULL(pwm->hwpwm)) {
-+			state->enabled = pc->initialized & BIT_ULL(pwm->hwpwm);
-+			state->polarity = PWM_POLARITY_NORMAL;
-+			state->period = pc->bucket[i].period_ns;
-+			state->duty_cycle = pc->bucket[i].duty_ns;
-+			break;
-+		}
-+	}
-+
-+	if (i == ARRAY_SIZE(pc->bucket))
-+		state->enabled = false;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops airoha_pwm_ops = {
-+	.get_state = airoha_pwm_get_state,
-+	.apply = airoha_pwm_apply,
-+};
-+
-+static int airoha_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct airoha_pwm *pc;
-+	struct pwm_chip *chip;
-+
-+	chip = devm_pwmchip_alloc(dev, PWM_NUM_GPIO + PWM_NUM_SIPO,
-+				  sizeof(*pc));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+
-+	chip->ops = &airoha_pwm_ops;
-+	pc = pwmchip_get_drvdata(chip);
-+	pc->np = dev->of_node;
-+
-+	pc->regmap = device_node_to_regmap(dev->parent->of_node);
-+	if (IS_ERR(pc->regmap))
-+		return PTR_ERR(pc->regmap);
-+
-+	return devm_pwmchip_add(&pdev->dev, chip);
-+}
-+
-+static const struct of_device_id airoha_pwm_of_match[] = {
-+	{ .compatible = "airoha,en7581-pwm" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, airoha_pwm_of_match);
-+
-+static struct platform_driver airoha_pwm_driver = {
-+	.driver = {
-+		.name = "pwm-airoha",
-+		.of_match_table = airoha_pwm_of_match,
-+	},
-+	.probe = airoha_pwm_probe,
-+};
-+module_platform_driver(airoha_pwm_driver);
-+
-+MODULE_AUTHOR("Lorenzo Bianconi <lorenzo@kernel.org>");
-+MODULE_AUTHOR("Markus Gothe <markus.gothe@genexis.eu>");
-+MODULE_AUTHOR("Benjamin Larsson <benjamin.larsson@genexis.eu>");
-+MODULE_DESCRIPTION("Airoha EN7581 PWM driver");
-+MODULE_LICENSE("GPL");
-
--- 
-2.47.0
-
+>   
+> +	/*
+> +	 * If a firmware node is available (ACPI or DT), platform_device_id is null
+> +	 * and we must use get_match_data.
+> +	 */
+>   	if (dev_fwnode(&pdev->dev)) {
+>   		chip_info = device_get_match_data(&pdev->dev);
+> +		if (device_property_present(&pdev->dev, "io-backends"))
+> +			/*
+> +			 * If a backend is available ,call the core probe with backend
+> +			 * bops, otherwise use the former bops.
+> +			 */
+> +			return ad7606_probe(&pdev->dev, 0, NULL,
+> +					    chip_info,
+> +					    &ad7606_bi_bops);
+>   	} else {
+>   		id = platform_get_device_id(pdev);
+>   		chip_info = (const struct ad7606_chip_info *)id->driver_data;
+> @@ -124,6 +211,7 @@ static const struct platform_device_id ad7606_driver_ids[] = {
+>   	{ .name	= "ad7606-4", .driver_data = (kernel_ulong_t)&ad7606_4_info, },
+>   	{ .name	= "ad7606-6", .driver_data = (kernel_ulong_t)&ad7606_6_info, },
+>   	{ .name	= "ad7606-8", .driver_data = (kernel_ulong_t)&ad7606_8_info, },
+> +	{ .name	= "ad7606b", .driver_data = (kernel_ulong_t)&ad7606b_info, },
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(platform, ad7606_driver_ids);
+> @@ -133,6 +221,7 @@ static const struct of_device_id ad7606_of_match[] = {
+>   	{ .compatible = "adi,ad7606-4", .data = &ad7606_4_info },
+>   	{ .compatible = "adi,ad7606-6", .data = &ad7606_6_info },
+>   	{ .compatible = "adi,ad7606-8", .data = &ad7606_8_info },
+> +	{ .compatible = "adi,ad7606b", .data = &ad7606b_info },
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(of, ad7606_of_match);
+> @@ -152,3 +241,4 @@ MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
+>   MODULE_DESCRIPTION("Analog Devices AD7606 ADC");
+>   MODULE_LICENSE("GPL v2");
+>   MODULE_IMPORT_NS(IIO_AD7606);
+> +MODULE_IMPORT_NS(IIO_BACKEND);
+>
 
