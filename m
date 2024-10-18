@@ -1,83 +1,78 @@
-Return-Path: <linux-pwm+bounces-3702-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3703-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94B0D9A3867
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 10:22:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A76D79A3873
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 10:25:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B6C081C237C2
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 08:22:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C0011F29539
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 08:25:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BB4D18C93C;
-	Fri, 18 Oct 2024 08:22:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2503E18E025;
+	Fri, 18 Oct 2024 08:25:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Pi0eGeX2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="aaGa3toz"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B7818BBAE
-	for <linux-pwm@vger.kernel.org>; Fri, 18 Oct 2024 08:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF4118DF90
+	for <linux-pwm@vger.kernel.org>; Fri, 18 Oct 2024 08:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729239732; cv=none; b=XMW5zm/xVh87SbQmlDNlPEwDYNMWIpOsV5v3Gp2Q+BI8i2naPWs2qHFWKvJ5dCqkucfrLBspX7tHkX2EX1umy1ZQsLn6+CGBoLksJL8LnA69D/mvhIiF2CpFuGzsb+4tNlyo78sUUSqregDPd+6yvKS/l9b8lRsfcrMEZ1ypfnY=
+	t=1729239908; cv=none; b=nSMGfqmslfnEbWJ3lG3hGhp+vWSbu+q3q5IrYCayTOOL32jU/8cIHTU2Jc9aU0cuqSE+gXW0QgPQE5tigUl3rydxwCiBU3F3fSPkkHmRREJudS91QX5UOer8fds8sLtGnz2StHBjLTOFfMjxnSSfGQnfOvjoLxYeChQXG8aixg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729239732; c=relaxed/simple;
-	bh=PfoSX0vcdBGqEulNMTI8N3WIvciODyJ+lN0v+XJikqU=;
+	s=arc-20240116; t=1729239908; c=relaxed/simple;
+	bh=zHWvZeWAw1nXOZSuhULXmpmjc+rCAaz0RWexDlypXUU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sdjB74e9RZnzM/5031Am/6nO1XSdy6zjuB6z6i+r0y3b151ESIIGqWgWGUaCOvEMe33LK0Oq5EKxdvPi7Kcw3TzZozxIhjvzXyZpme+fU+/yiAxfRGuicguaTYXPCF38MnX8FFoQpRFaASfg/VoWeTUGr/zRyxT0regxmNwIliE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Pi0eGeX2; arc=none smtp.client-ip=209.85.128.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=fz06Fzyfuwxt1GQm6ebRhzR1Xhu1b1dlj1Q2OVdmwlfG78EI4w1T8aUG410VrXJf0MtHbXo19t1R04p/j9Lde31wfHMvvs8WTHxA6taykvaO88lRjFzORt47enal8Bi2Jb1Qlm3gMWjZXfKpVlKrS4kl6spMvjNy3Y1Q/a3qDr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=aaGa3toz; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43118c9a955so17425185e9.3
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Oct 2024 01:22:09 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-37d461162b8so1233597f8f.1
+        for <linux-pwm@vger.kernel.org>; Fri, 18 Oct 2024 01:25:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729239728; x=1729844528; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729239904; x=1729844704; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=srHDDYC+Ycf+RS8B2njBjHCnByCJ7cEy0nSCZb8/0go=;
-        b=Pi0eGeX2yN1eiiiICXUvntNDk6+mkyNwQfNiP7gQAXvXlLTHVkgvB2gBk4/56l0nDP
-         R681eJUNV+7SAxujjd0MXUgyxXM4vlaoZfq+JOlNlt620K2A5qIMUw/BalzmxxEtwT1v
-         uhYFnmnzsfvaibvSplL9KAXPZBrDVR0WliV4KrSKnQAi+cxz+C3f3XFM0BbxrGjTvP9B
-         Ti1hDH95//Tek0TMSwaeC+esX7CyckkolE5l83LeKQhagtfBAQQvDmn80J0OILhK+bYL
-         AFVYJFA3cZuggmoEsjp5md4M2unIldng/b2xBfBQ67+7pP/NWZ6Kv6Y4buFyX5vDsTV0
-         eppQ==
+        bh=zHWvZeWAw1nXOZSuhULXmpmjc+rCAaz0RWexDlypXUU=;
+        b=aaGa3tozDZzwc2G8DgWDvcKyz4jXffvunwttv/sZVbdvnn1MNI2JeN3c3Ya/jmk2MP
+         qeZDwQWeOxYp28VwA2qdG7iKDFEF0dG/ONz8cwLKXELPE64Lq7LAk1Gb5NSggL/aKnDE
+         tTIMJvDgt040Pul0tQlyO8j/wtO236ftXnUHTk8u3oZIkxDGIRky5/K/koGo12OteU2M
+         CfNSmtor8L12MpkzezHSxfVJit1oX7HLufaCQuTv+LqdES/B2HRHfe/Oa92ijfxQhiPU
+         rHvdP4Bt8r4JW/UC1jPuuX74Z7/Zu0fRorFog8bnRUPqSHnk5kn4iNFcZJ7xdSj+tiaP
+         fakg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729239728; x=1729844528;
+        d=1e100.net; s=20230601; t=1729239904; x=1729844704;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=srHDDYC+Ycf+RS8B2njBjHCnByCJ7cEy0nSCZb8/0go=;
-        b=woNIhYRFPg9sLZfCpb7xZ3cG4C7pWu/feOiTtOspWCAnyPnQuqScM93uVseq5YRYU4
-         31iakyCXK9J8VMumkzLAqN8XgSpSvHqq11VX3cakBjD8m4yAk8GpZ0FHT3FjuRdXnZaH
-         UnPhfPbpIFgdSMsQ9oITzXTxhpzcxQ/YVZ4KAaQHTSPCUhQf4kY0HIGR/4avLJIKEpqm
-         9fUuaCWt1vHibrtmyQI1qmdldv7YuZJp7nQE7cuon9lCfZP5uK/lvAA3czbaPz+fIEQL
-         0WakKFnyKg5NGRbieJpPavuNf2T9KpX3iuGfVvBMbSofO6AeMXjjQM5DO5DSrDIy82ie
-         cYhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWORAsIc+LmLXFs+enkeNvKBQvMFH8K7fUcj8pVlW4y+F/d3RicIxjhhAqzir2+G7ynaZVnYKSdMag=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzs5kl8Jrln0cbVeXMETzEdNxhPfe28qbzGCv+pDY4k3FIgsPY
-	xAFEgYcP1qiPWnW1uu98xMbPgO8BbnnbJFkwC5pBDbQitqB2SFO4fJvJ0XNwr8o=
-X-Google-Smtp-Source: AGHT+IGq/Xim2TdDYfZf2FCKjA4VwApeCGC93blGWI3Ut+huAOlhSQ88nXziiEC+W5XrM+cQyw5AYg==
-X-Received: by 2002:a05:600c:1c0a:b0:431:40ca:ce5d with SMTP id 5b1f17b1804b1-4316169a5c0mr11344205e9.23.1729239728199;
-        Fri, 18 Oct 2024 01:22:08 -0700 (PDT)
+        bh=zHWvZeWAw1nXOZSuhULXmpmjc+rCAaz0RWexDlypXUU=;
+        b=kDuMJUjKtNVizLNEDD6N2BOs59lXNM7xJFRBOZZKo7xd/2DYA+d6x6EoC8oDHhzyS2
+         frT1hba8L8yZ494je8nYTZc87gXdpxm+HOuA5q4eWf/MQbbXsjx35YXOkNi4sZdAWkLN
+         NTFii3Y2/jO1vY4rV7SGwI3iUVu1p/yck00EyegFoKbNTJyRw8i4eAWE47lXcbv+AeRy
+         cKNgqd9Z4aRLruVg5/+z2y56X6GG8NXnBDeXDpByIMTDNVoQL9MiifqMM84HXB3pAqgg
+         JLsug9o0sat9CG9oSNlh4O89iNihwTGHCRnvnW8EThgcoKQ6vv5O7yYZS0zTLIN5jDUt
+         RpFw==
+X-Gm-Message-State: AOJu0Yy5ZDlv5PmL9eIgV1aeREl2sCwPIWvdPIoJkPexvlbYpeD7fs13
+	dDUdv4s/LXgI+VPVIsy6EpgcYsMcvnf5ea3mn9h/kW7J54QaXTn0jfiP1f7GtOw=
+X-Google-Smtp-Source: AGHT+IGfGYoF1ues4V7q5yChqm3acmG0UxUp8HRtoojXSyzX8A69mfET9xFWRaEMAwwgylLokS3E1w==
+X-Received: by 2002:a5d:5e10:0:b0:37e:d2b7:acd5 with SMTP id ffacd0b85a97d-37ed2b7afc9mr386203f8f.8.1729239901491;
+        Fri, 18 Oct 2024 01:25:01 -0700 (PDT)
 Received: from localhost (p509151f9.dip0.t-ipconnect.de. [80.145.81.249])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431606ab65fsm14691865e9.1.2024.10.18.01.22.07
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37ecf027bebsm1284373f8f.7.2024.10.18.01.25.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2024 01:22:07 -0700 (PDT)
-Date: Fri, 18 Oct 2024 10:22:06 +0200
+        Fri, 18 Oct 2024 01:25:01 -0700 (PDT)
+Date: Fri, 18 Oct 2024 10:24:59 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Sean Young <sean@mess.org>
-Cc: Chi-Wen Weng <cwweng.linux@gmail.com>, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, ychuang3@nuvoton.com, 
-	schung@nuvoton.com
-Subject: Re: [PATCH 2/2] pwm: Add Nuvoton PWM controller support
-Message-ID: <obu4hy7dwioinyn3npwy42lwmijd2sctdsy4b3lad3d6bfvaq5@gzbcnua3unuv>
-References: <20241018034857.568-1-cwweng.linux@gmail.com>
- <20241018034857.568-3-cwweng.linux@gmail.com>
- <ZxISVBz1Os0T4eqP@gofer.mess.org>
+To: Trevor Gamblin <tgamblin@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, michael.hennerich@analog.com, 
+	nuno.sa@analog.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: add self as reviewer for AXI PWM GENERATOR
+Message-ID: <rk7vlz4dgs6oisbhwhewq6yah367t272pr7bzns6fz3rwlpv5i@mcom6trat3tj>
+References: <20241017174744.902454-1-tgamblin@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -85,90 +80,43 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gelwutqfbadgpdny"
+	protocol="application/pgp-signature"; boundary="wgwtgw3kyjry6xim"
 Content-Disposition: inline
-In-Reply-To: <ZxISVBz1Os0T4eqP@gofer.mess.org>
+In-Reply-To: <20241017174744.902454-1-tgamblin@baylibre.com>
 
 
---gelwutqfbadgpdny
+--wgwtgw3kyjry6xim
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 2/2] pwm: Add Nuvoton PWM controller support
+Subject: Re: [PATCH] MAINTAINERS: add self as reviewer for AXI PWM GENERATOR
 MIME-Version: 1.0
 
-Hello Sean,
-
-On Fri, Oct 18, 2024 at 08:46:28AM +0100, Sean Young wrote:
-> > +static int nuvoton_pwm_apply(struct pwm_chip *chip, struct pwm_device =
-*pwm,
-> > +			     const struct pwm_state *state)
-> > +{
-> > +	struct nuvoton_pwm *nvtpwm;
-> > +	unsigned int ch =3D pwm->hwpwm;
-> > +
-> > +	nvtpwm =3D to_nuvoton_pwm(chip);
-> > +	if (state->enabled) {
-> > +		u64 duty_cycles, period_cycles;
-> > +
-> > +		/* Calculate the duty and period cycles */
-> > +		duty_cycles =3D mul_u64_u64_div_u64(nvtpwm->clkrate,
-> > +						  state->duty_cycle, NSEC_PER_SEC);
-> > +		if (duty_cycles > 0xFFFF)
-> > +			duty_cycles =3D 0xFFFF;
-> > +
-> > +		period_cycles =3D mul_u64_u64_div_u64(nvtpwm->clkrate,
-> > +						    state->period, NSEC_PER_SEC);
-> > +		if (period_cycles > 0xFFFF)
-> > +			period_cycles =3D 0xFFFF;
+On Thu, Oct 17, 2024 at 01:47:44PM -0400, Trevor Gamblin wrote:
+> The initial author of the driver has moved on, so add the final
+> submitter (myself) as reviewer for the AXI PWM driver.
 >=20
-> If a period is not supported, return -EINVAL - maybe even do a dev_err().
-> Same for the duty cycle above. It might make sense to calculate the period
-> first, so that the error is more likely to be about the period than the
-> duty cycle.
+> Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
 
-That's a wrong advice. Drivers are supposed to implement the highest
-period possible that is not bigger than the requested one. So clamping
-the value to 0xFFFF looks right.
+Applied and pushed out with Nuno's Reviewed-by: tag.
 
-However I wonder what happens in hardware if period_cycles =3D=3D 0. If that
-disables the hardware that is something to catch and return an error
-for.
-
-> Then again I don't know if all the drivers do this, but at least some of
-> them do.
-
-Yeah, and I hesitate to align them because their behaviour might be
-relied on. But for new drivers the above rule applies.
-
-(And with the new waveform stuff, consumers can rely on the rounding
-rule and even query the resulting waveform before calling the equivalent
-of pwm_apply_might_sleep().
-
-
-> > +	chip->ops =3D &nuvoton_pwm_ops;
->=20
-> I think you can add chip->atomic =3D true; here
-
-ack.
-
-Best regards
+Thanks
 Uwe
 
---gelwutqfbadgpdny
+--wgwtgw3kyjry6xim
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcSGqsACgkQj4D7WH0S
-/k5R/Qf+OhKRH7FMIqfL+DOoX2BNksRDESeq3YgIfF/4QcgEHT+rqkeAMyx4ogd1
-A53Z2Ctl83dbogKFMbkh/T6mIjoUBldHzJCtXnHKPkBX+O9G5ZfmUdxhdOfflM6f
-qse1Nw1AFAOsSDMB6pA3SQdFiqTrCoJhvSH6/JGU91SqhqlV5CEV41UEbC0LmixG
-GoVA9CLC+nXpIF3XdqNODyHm3W0Wd5ISbRYEMNuAm1fTWReZfSkESPiVPINeitfA
-O1fqKI+XvLMloIiVm8c2hmQk8Ey+aBh+4k5k4/eqxWx2A+T0G2tgx0i4ClvdKvkz
-0MfiT/P4Zorru85PUPiJLFu5Q0E95g==
-=ezQS
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcSG1kACgkQj4D7WH0S
+/k5KPgf/RAAOaWwDMeXosltGXTcpEW4MQSHihXQoqed8LB8uGfbMtbC57Wt9A5nY
+a8J2Q2xS3ztKFV9E3qedy8hBK0AayA2Z4WZLScRX5hAMNLhcMzMcXmgBf4SEjQgV
+oZu3999XtH4VqfFocVWpQswZoCw9qwhi/MJ2n7G74ym2hYDW83nSPBaAe9MDjjjO
+9oJ3tpBa3806fIrSnohg//tEiJc4bkgjz4t2VMc4J0P26g1R+sCuf6icyoIw1azi
+cUwk0lBEMv7mfnEyLsRlV0CzUJzBkWRKHDckEmJPWYvwEEwQHiIrG98O5lhDzAM4
+hHeYsmvDrNGLqDEsph8rLXzQJ+oBcw==
+=ekwB
 -----END PGP SIGNATURE-----
 
---gelwutqfbadgpdny--
+--wgwtgw3kyjry6xim--
 
