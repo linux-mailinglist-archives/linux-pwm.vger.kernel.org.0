@@ -1,303 +1,174 @@
-Return-Path: <linux-pwm+bounces-3701-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3702-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE0779A3783
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 09:46:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94B0D9A3867
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 10:22:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B5DC2876D6
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 07:46:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B6C081C237C2
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 08:22:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACFAB18A952;
-	Fri, 18 Oct 2024 07:46:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BB4D18C93C;
+	Fri, 18 Oct 2024 08:22:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="YQZxR0fD"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Pi0eGeX2"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4029818A928;
-	Fri, 18 Oct 2024 07:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.97.38.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B7818BBAE
+	for <linux-pwm@vger.kernel.org>; Fri, 18 Oct 2024 08:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729237593; cv=none; b=RhXB7HewNf8Gn2v2ZbhOmeQ1BbQ39Hbj8/1DOUUCzBUnTo8PjQYnudWGEELhgkm5pasrDcsfoLEg4aHMQ9T/5pqmyWG5UCJv9gOlZ4d7VaSTK2SE+BGaQuVbxjgvxC+MWoGSS4D3QKzrNDJtarBO7gHMue+lwmZ7Mez+BY4eDRw=
+	t=1729239732; cv=none; b=XMW5zm/xVh87SbQmlDNlPEwDYNMWIpOsV5v3Gp2Q+BI8i2naPWs2qHFWKvJ5dCqkucfrLBspX7tHkX2EX1umy1ZQsLn6+CGBoLksJL8LnA69D/mvhIiF2CpFuGzsb+4tNlyo78sUUSqregDPd+6yvKS/l9b8lRsfcrMEZ1ypfnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729237593; c=relaxed/simple;
-	bh=sfxyH3CCteK+m0zEA4Sv5bH7E5P6haA9Zbq45UkQSsw=;
+	s=arc-20240116; t=1729239732; c=relaxed/simple;
+	bh=PfoSX0vcdBGqEulNMTI8N3WIvciODyJ+lN0v+XJikqU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZWr3kVbFZ60yc4WVt5p0U3yx2Qqv6AhsWiWNs3NfEyMkKHxSbBmiT1swUHmJifkvSoCTtOYh4ry0R+Yv9HEZ1k2f1V0GAN0ZBBd0uuUOGt/I49gvLsCbd35FSLW8wxl8I52dRDsEkiEGhcgFf8hGt0h8J/tUnTUXpMs5RiWAroA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org; spf=pass smtp.mailfrom=mess.org; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=YQZxR0fD; arc=none smtp.client-ip=88.97.38.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-	t=1729237588; bh=sfxyH3CCteK+m0zEA4Sv5bH7E5P6haA9Zbq45UkQSsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YQZxR0fDyeSEp83aZMTJm3ilN0wy4kQi1mkaESPEtg2fUN70ZnrlVBG7eq2W7KvLB
-	 EW6vj2h7+Nte6+9bTpkWopfLNfWreOjDJQam1wSB5MR853BxueZ8+YGWFfQRcTNiqR
-	 iMLL2ZXy5rQ9occLNa8DbbB6g5M8AJXxNqXHHg+psaw2bQkTsefDHzi/R2wLU/ZHNs
-	 3Gl36ZeSi7h3uoj11xvTjZZaN+g1KafMfvycU/XGUh2QGsAIoWoPvFf+2eip3fDLID
-	 PmUt/gNFDlkPAHHSsfShF5YfGsQw7q/45Wxvi/e2razbPSDmxh9qyZ+G4p8fgLCGGl
-	 QyQgEuRYl+Z+w==
-Received: by gofer.mess.org (Postfix, from userid 1000)
-	id 5C7031002B3; Fri, 18 Oct 2024 08:46:28 +0100 (BST)
-Date: Fri, 18 Oct 2024 08:46:28 +0100
-From: Sean Young <sean@mess.org>
-To: Chi-Wen Weng <cwweng.linux@gmail.com>
-Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-	ychuang3@nuvoton.com, schung@nuvoton.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sdjB74e9RZnzM/5031Am/6nO1XSdy6zjuB6z6i+r0y3b151ESIIGqWgWGUaCOvEMe33LK0Oq5EKxdvPi7Kcw3TzZozxIhjvzXyZpme+fU+/yiAxfRGuicguaTYXPCF38MnX8FFoQpRFaASfg/VoWeTUGr/zRyxT0regxmNwIliE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Pi0eGeX2; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43118c9a955so17425185e9.3
+        for <linux-pwm@vger.kernel.org>; Fri, 18 Oct 2024 01:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729239728; x=1729844528; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=srHDDYC+Ycf+RS8B2njBjHCnByCJ7cEy0nSCZb8/0go=;
+        b=Pi0eGeX2yN1eiiiICXUvntNDk6+mkyNwQfNiP7gQAXvXlLTHVkgvB2gBk4/56l0nDP
+         R681eJUNV+7SAxujjd0MXUgyxXM4vlaoZfq+JOlNlt620K2A5qIMUw/BalzmxxEtwT1v
+         uhYFnmnzsfvaibvSplL9KAXPZBrDVR0WliV4KrSKnQAi+cxz+C3f3XFM0BbxrGjTvP9B
+         Ti1hDH95//Tek0TMSwaeC+esX7CyckkolE5l83LeKQhagtfBAQQvDmn80J0OILhK+bYL
+         AFVYJFA3cZuggmoEsjp5md4M2unIldng/b2xBfBQ67+7pP/NWZ6Kv6Y4buFyX5vDsTV0
+         eppQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729239728; x=1729844528;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=srHDDYC+Ycf+RS8B2njBjHCnByCJ7cEy0nSCZb8/0go=;
+        b=woNIhYRFPg9sLZfCpb7xZ3cG4C7pWu/feOiTtOspWCAnyPnQuqScM93uVseq5YRYU4
+         31iakyCXK9J8VMumkzLAqN8XgSpSvHqq11VX3cakBjD8m4yAk8GpZ0FHT3FjuRdXnZaH
+         UnPhfPbpIFgdSMsQ9oITzXTxhpzcxQ/YVZ4KAaQHTSPCUhQf4kY0HIGR/4avLJIKEpqm
+         9fUuaCWt1vHibrtmyQI1qmdldv7YuZJp7nQE7cuon9lCfZP5uK/lvAA3czbaPz+fIEQL
+         0WakKFnyKg5NGRbieJpPavuNf2T9KpX3iuGfVvBMbSofO6AeMXjjQM5DO5DSrDIy82ie
+         cYhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWORAsIc+LmLXFs+enkeNvKBQvMFH8K7fUcj8pVlW4y+F/d3RicIxjhhAqzir2+G7ynaZVnYKSdMag=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyzs5kl8Jrln0cbVeXMETzEdNxhPfe28qbzGCv+pDY4k3FIgsPY
+	xAFEgYcP1qiPWnW1uu98xMbPgO8BbnnbJFkwC5pBDbQitqB2SFO4fJvJ0XNwr8o=
+X-Google-Smtp-Source: AGHT+IGq/Xim2TdDYfZf2FCKjA4VwApeCGC93blGWI3Ut+huAOlhSQ88nXziiEC+W5XrM+cQyw5AYg==
+X-Received: by 2002:a05:600c:1c0a:b0:431:40ca:ce5d with SMTP id 5b1f17b1804b1-4316169a5c0mr11344205e9.23.1729239728199;
+        Fri, 18 Oct 2024 01:22:08 -0700 (PDT)
+Received: from localhost (p509151f9.dip0.t-ipconnect.de. [80.145.81.249])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431606ab65fsm14691865e9.1.2024.10.18.01.22.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Oct 2024 01:22:07 -0700 (PDT)
+Date: Fri, 18 Oct 2024 10:22:06 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Sean Young <sean@mess.org>
+Cc: Chi-Wen Weng <cwweng.linux@gmail.com>, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, ychuang3@nuvoton.com, 
+	schung@nuvoton.com
 Subject: Re: [PATCH 2/2] pwm: Add Nuvoton PWM controller support
-Message-ID: <ZxISVBz1Os0T4eqP@gofer.mess.org>
+Message-ID: <obu4hy7dwioinyn3npwy42lwmijd2sctdsy4b3lad3d6bfvaq5@gzbcnua3unuv>
 References: <20241018034857.568-1-cwweng.linux@gmail.com>
  <20241018034857.568-3-cwweng.linux@gmail.com>
+ <ZxISVBz1Os0T4eqP@gofer.mess.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gelwutqfbadgpdny"
 Content-Disposition: inline
-In-Reply-To: <20241018034857.568-3-cwweng.linux@gmail.com>
-
-On Fri, Oct 18, 2024 at 03:48:57AM +0000, Chi-Wen Weng wrote:
-> This commit adds a generic PWM framework driver for Nuvoton MA35D1
-> PWM controller.
-> 
-> Signed-off-by: Chi-Wen Weng <cwweng.linux@gmail.com>
-> ---
->  drivers/pwm/Kconfig      |   9 +++
->  drivers/pwm/Makefile     |   1 +
->  drivers/pwm/pwm-ma35d1.c | 169 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 179 insertions(+)
->  create mode 100644 drivers/pwm/pwm-ma35d1.c
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 0915c1e7df16..97b9e83af020 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -411,6 +411,15 @@ config PWM_LPSS_PLATFORM
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-lpss-platform.
->  
-> +config PWM_MA35D1
-> +	tristate "Nuvoton MA35D1 PWM support"
-> +	depends on ARCH_MA35 || COMPILE_TEST
-> +	help
-> +	  Generic PWM framework driver for Nuvoton MA35D1.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-ma35d1.
-> +
->  config PWM_MESON
->  	tristate "Amlogic Meson PWM driver"
->  	depends on ARCH_MESON || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 9081e0c0e9e0..c1d3a1d8add0 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -36,6 +36,7 @@ obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
->  obj-$(CONFIG_PWM_LPSS)		+= pwm-lpss.o
->  obj-$(CONFIG_PWM_LPSS_PCI)	+= pwm-lpss-pci.o
->  obj-$(CONFIG_PWM_LPSS_PLATFORM)	+= pwm-lpss-platform.o
-> +obj-$(CONFIG_PWM_MA35D1)	+= pwm-ma35d1.o
->  obj-$(CONFIG_PWM_MESON)		+= pwm-meson.o
->  obj-$(CONFIG_PWM_MEDIATEK)	+= pwm-mediatek.o
->  obj-$(CONFIG_PWM_MICROCHIP_CORE)	+= pwm-microchip-core.o
-> diff --git a/drivers/pwm/pwm-ma35d1.c b/drivers/pwm/pwm-ma35d1.c
-> new file mode 100644
-> index 000000000000..dc2f1f494a91
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-ma35d1.c
-> @@ -0,0 +1,169 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Driver for the Nuvoton MA35D1 PWM controller
-> + *
-> + * Copyright (C) 2024 Nuvoton Corporation
-> + *               Chi-Wen Weng <cwweng@nuvoton.com>
-> + */
-> +
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/io.h>
-> +#include <linux/clk.h>
-> +#include <linux/math64.h>
-> +
-> +/* The following are registers for PWM controller */
-> +#define REG_PWM_CTL0            (0x00)
-> +#define REG_PWM_CNTEN           (0x20)
-> +#define REG_PWM_PERIOD0         (0x30)
-> +#define REG_PWM_CMPDAT0         (0x50)
-> +#define REG_PWM_WGCTL0          (0xB0)
-> +#define REG_PWM_POLCTL          (0xD4)
-> +#define REG_PWM_POEN            (0xD8)
-> +
-> +#define PWM_TOTAL_CHANNELS      6
-> +#define PWM_CH_REG_SIZE         4
-> +
-> +struct nuvoton_pwm {
-> +	void __iomem *base;
-> +	u64 clkrate;
-> +};
-> +
-> +static inline struct nuvoton_pwm *to_nuvoton_pwm(struct pwm_chip *chip)
-> +{
-> +	return pwmchip_get_drvdata(chip);
-> +}
-> +
-> +static int nuvoton_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			     const struct pwm_state *state)
-> +{
-> +	struct nuvoton_pwm *nvtpwm;
-> +	unsigned int ch = pwm->hwpwm;
-> +
-> +	nvtpwm = to_nuvoton_pwm(chip);
-> +	if (state->enabled) {
-> +		u64 duty_cycles, period_cycles;
-> +
-> +		/* Calculate the duty and period cycles */
-> +		duty_cycles = mul_u64_u64_div_u64(nvtpwm->clkrate,
-> +						  state->duty_cycle, NSEC_PER_SEC);
-> +		if (duty_cycles > 0xFFFF)
-> +			duty_cycles = 0xFFFF;
-> +
-> +		period_cycles = mul_u64_u64_div_u64(nvtpwm->clkrate,
-> +						    state->period, NSEC_PER_SEC);
-> +		if (period_cycles > 0xFFFF)
-> +			period_cycles = 0xFFFF;
-
-If a period is not supported, return -EINVAL - maybe even do a dev_err().
-Same for the duty cycle above. It might make sense to calculate the period
-first, so that the error is more likely to be about the period than the
-duty cycle.
-
-Then again I don't know if all the drivers do this, but at least some of
-them do.
-
-> +
-> +		/* Write the duty and period cycles to registers */
-> +		writel(duty_cycles, nvtpwm->base + REG_PWM_CMPDAT0 + (ch * PWM_CH_REG_SIZE));
-> +		writel(period_cycles, nvtpwm->base + REG_PWM_PERIOD0 + (ch * PWM_CH_REG_SIZE));
-> +		/* Enable counter */
-> +		writel(readl(nvtpwm->base + REG_PWM_CNTEN) | BIT(ch),
-> +		       nvtpwm->base + REG_PWM_CNTEN);
-> +		/* Enable output */
-> +		writel(readl(nvtpwm->base + REG_PWM_POEN) | BIT(ch),
-> +		       nvtpwm->base + REG_PWM_POEN);
-> +	} else {
-> +		/* Disable counter */
-> +		writel(readl(nvtpwm->base + REG_PWM_CNTEN) & ~BIT(ch),
-> +		       nvtpwm->base + REG_PWM_CNTEN);
-> +		/* Disable output */
-> +		writel(readl(nvtpwm->base + REG_PWM_POEN) & ~BIT(ch),
-> +		       nvtpwm->base + REG_PWM_POEN);
-> +	}
-> +
-> +	/* Set polarity state to register */
-> +	if (state->polarity == PWM_POLARITY_NORMAL)
-> +		writel(readl(nvtpwm->base + REG_PWM_POLCTL) & ~BIT(ch),
-> +		       nvtpwm->base + REG_PWM_POLCTL);
-> +	else
-> +		writel(readl(nvtpwm->base + REG_PWM_POLCTL) | BIT(ch),
-> +		       nvtpwm->base + REG_PWM_POLCTL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int nuvoton_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				 struct pwm_state *state)
-> +{
-> +	struct nuvoton_pwm *nvtpwm;
-> +	unsigned int duty_cycles, period_cycles, cnten, outen, polarity;
-> +	unsigned int ch = pwm->hwpwm;
-> +
-> +	nvtpwm = to_nuvoton_pwm(chip);
-> +
-> +	cnten = readl(nvtpwm->base + REG_PWM_CNTEN);
-> +	outen = readl(nvtpwm->base + REG_PWM_POEN);
-> +	duty_cycles = readl(nvtpwm->base + REG_PWM_CMPDAT0 + (ch * PWM_CH_REG_SIZE));
-> +	period_cycles = readl(nvtpwm->base + REG_PWM_PERIOD0 + (ch * PWM_CH_REG_SIZE));
-> +	polarity = readl(nvtpwm->base + REG_PWM_POLCTL) & BIT(ch);
-> +
-> +	state->enabled = (cnten & BIT(ch)) && (outen & BIT(ch));
-> +	state->polarity = polarity ? PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
-> +	state->duty_cycle = DIV64_U64_ROUND_UP((u64)duty_cycles * NSEC_PER_SEC, nvtpwm->clkrate);
-> +	state->period = DIV64_U64_ROUND_UP((u64)period_cycles * NSEC_PER_SEC, nvtpwm->clkrate);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops nuvoton_pwm_ops = {
-> +	.apply = nuvoton_pwm_apply,
-> +	.get_state = nuvoton_pwm_get_state,
-> +};
-> +
-> +static int nuvoton_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct pwm_chip *chip;
-> +	struct nuvoton_pwm *nvtpwm;
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	chip = devm_pwmchip_alloc(&pdev->dev, PWM_TOTAL_CHANNELS, sizeof(*nvtpwm));
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +
-> +	nvtpwm = to_nuvoton_pwm(chip);
-> +
-> +	nvtpwm->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(nvtpwm->base))
-> +		return PTR_ERR(nvtpwm->base);
-> +
-> +	clk = devm_clk_get_enabled(&pdev->dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(clk), "unable to get the clock");
-> +
-> +	nvtpwm->clkrate = clk_get_rate(clk);
-> +	if (nvtpwm->clkrate > NSEC_PER_SEC)
-> +		return dev_err_probe(&pdev->dev, -EINVAL, "pwm clock out of range");
-> +
-> +	chip->ops = &nuvoton_pwm_ops;
-
-I think you can add chip->atomic = true; here
+In-Reply-To: <ZxISVBz1Os0T4eqP@gofer.mess.org>
 
 
-Sean
+--gelwutqfbadgpdny
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/2] pwm: Add Nuvoton PWM controller support
+MIME-Version: 1.0
 
-> +
-> +	ret = devm_pwmchip_add(&pdev->dev, chip);
-> +	if (ret < 0)
-> +		return dev_err_probe(&pdev->dev, ret, "unable to add pwm chip");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id nuvoton_pwm_of_match[] = {
-> +	{ .compatible = "nuvoton,ma35d1-pwm" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, nuvoton_pwm_of_match);
-> +
-> +static struct platform_driver nuvoton_pwm_driver = {
-> +	.probe = nuvoton_pwm_probe,
-> +	.driver = {
-> +		.name = "nuvoton-pwm",
-> +		.of_match_table = nuvoton_pwm_of_match,
-> +	},
-> +};
-> +module_platform_driver(nuvoton_pwm_driver);
-> +
-> +MODULE_ALIAS("platform:nuvoton-pwm");
-> +MODULE_AUTHOR("Chi-Wen Weng <cwweng@nuvoton.com>");
-> +MODULE_DESCRIPTION("Nuvoton MA35D1 PWM driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.25.1
-> 
+Hello Sean,
+
+On Fri, Oct 18, 2024 at 08:46:28AM +0100, Sean Young wrote:
+> > +static int nuvoton_pwm_apply(struct pwm_chip *chip, struct pwm_device =
+*pwm,
+> > +			     const struct pwm_state *state)
+> > +{
+> > +	struct nuvoton_pwm *nvtpwm;
+> > +	unsigned int ch =3D pwm->hwpwm;
+> > +
+> > +	nvtpwm =3D to_nuvoton_pwm(chip);
+> > +	if (state->enabled) {
+> > +		u64 duty_cycles, period_cycles;
+> > +
+> > +		/* Calculate the duty and period cycles */
+> > +		duty_cycles =3D mul_u64_u64_div_u64(nvtpwm->clkrate,
+> > +						  state->duty_cycle, NSEC_PER_SEC);
+> > +		if (duty_cycles > 0xFFFF)
+> > +			duty_cycles =3D 0xFFFF;
+> > +
+> > +		period_cycles =3D mul_u64_u64_div_u64(nvtpwm->clkrate,
+> > +						    state->period, NSEC_PER_SEC);
+> > +		if (period_cycles > 0xFFFF)
+> > +			period_cycles =3D 0xFFFF;
+>=20
+> If a period is not supported, return -EINVAL - maybe even do a dev_err().
+> Same for the duty cycle above. It might make sense to calculate the period
+> first, so that the error is more likely to be about the period than the
+> duty cycle.
+
+That's a wrong advice. Drivers are supposed to implement the highest
+period possible that is not bigger than the requested one. So clamping
+the value to 0xFFFF looks right.
+
+However I wonder what happens in hardware if period_cycles =3D=3D 0. If that
+disables the hardware that is something to catch and return an error
+for.
+
+> Then again I don't know if all the drivers do this, but at least some of
+> them do.
+
+Yeah, and I hesitate to align them because their behaviour might be
+relied on. But for new drivers the above rule applies.
+
+(And with the new waveform stuff, consumers can rely on the rounding
+rule and even query the resulting waveform before calling the equivalent
+of pwm_apply_might_sleep().
+
+
+> > +	chip->ops =3D &nuvoton_pwm_ops;
+>=20
+> I think you can add chip->atomic =3D true; here
+
+ack.
+
+Best regards
+Uwe
+
+--gelwutqfbadgpdny
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcSGqsACgkQj4D7WH0S
+/k5R/Qf+OhKRH7FMIqfL+DOoX2BNksRDESeq3YgIfF/4QcgEHT+rqkeAMyx4ogd1
+A53Z2Ctl83dbogKFMbkh/T6mIjoUBldHzJCtXnHKPkBX+O9G5ZfmUdxhdOfflM6f
+qse1Nw1AFAOsSDMB6pA3SQdFiqTrCoJhvSH6/JGU91SqhqlV5CEV41UEbC0LmixG
+GoVA9CLC+nXpIF3XdqNODyHm3W0Wd5ISbRYEMNuAm1fTWReZfSkESPiVPINeitfA
+O1fqKI+XvLMloIiVm8c2hmQk8Ey+aBh+4k5k4/eqxWx2A+T0G2tgx0i4ClvdKvkz
+0MfiT/P4Zorru85PUPiJLFu5Q0E95g==
+=ezQS
+-----END PGP SIGNATURE-----
+
+--gelwutqfbadgpdny--
 
