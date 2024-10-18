@@ -1,111 +1,110 @@
-Return-Path: <linux-pwm+bounces-3694-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3695-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E70A89A2B56
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Oct 2024 19:47:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA1CA9A337D
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 05:49:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E9821F2420F
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Oct 2024 17:47:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D9421F2446C
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 03:49:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BED5F1DAC92;
-	Thu, 17 Oct 2024 17:47:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93F9314885E;
+	Fri, 18 Oct 2024 03:49:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="WdbWPib5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTq7PyNp"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430B91DFD92
-	for <linux-pwm@vger.kernel.org>; Thu, 17 Oct 2024 17:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C8320E31D;
+	Fri, 18 Oct 2024 03:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729187273; cv=none; b=OCfRK2nsnj36jys6Yj7V42zYJwoz5i6gJOAcbHYRrGuhLoPHISGLlcbO8mVnDVPqIkYD67DVH1umkzCYwd2NMACg370pMqHcYnktLwet/93ilnz59PlhhDNS59GghS/vVnPKMoonJeQBXqJsifOkmTlAls+4FnzvIlCj4DYufxI=
+	t=1729223346; cv=none; b=R/gLoB1iHDpIIlhHN7ZSGPrTFjE5dQ8XA7a6wJKrruQGa0hJQDmYnLH7elF6a8AePGdHFrVqHemX74cs01jRf1mDBC0CN1xFgUIuvi0RUonpD8YK3YHcu6rAyfdtker/bX+fuLWdUMYXC6XPKx5PbAwHlkp66aBl0jpHA9L1wCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729187273; c=relaxed/simple;
-	bh=eZjhXMRVyoTUk0OAje7sjGHZ/YnqTms9bJWWFzJAFYY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=JhLhZKCkHyBg6OFGWQE9S5Iz82CuF2W+/IJaOhWU+27zkT4GJs8eFEuI9mWdoLJpC/M4OESLXKztzyU4iQUiMfU1lmjTo4O723fMX0y99US7JxqO5cWLyhzHdoslLtl2sHk/NCm/GNVgCQdFmLEUWDDAnzKsXtiC79lgu3tI49g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=WdbWPib5; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b1511697a5so61097185a.2
-        for <linux-pwm@vger.kernel.org>; Thu, 17 Oct 2024 10:47:48 -0700 (PDT)
+	s=arc-20240116; t=1729223346; c=relaxed/simple;
+	bh=JIHI9gt8swxrHXqxbbqQQY1AU7yWxlIJqAcxkBR0HrE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mgyIpw3X/HwBdWtXjgWiG96IbJj0cII1ZjJNCutqsnpGJGDxhc8iCQHA1uAUWMX06LYvPef4ZeIBwo+xIc5uaRmL7a1hehHFh4FIysfmrzdrWJM673p7ax7+e+6CgahRlpB52P+8c65ISLJZD6DT2SqdRB6HLfKdBCSEQ9kM/Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jTq7PyNp; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-71e79f73aaeso1186438b3a.3;
+        Thu, 17 Oct 2024 20:49:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729187267; x=1729792067; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729223344; x=1729828144; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=54GhF2upJw4275dZmdws3Pd1W0s5MQOwhp0NxjAL5+c=;
-        b=WdbWPib5Q/RwJB8H2fx+zXRw90l0YRdis2tez44jvlq48dp/Y8IwEbo/lnSV6vKaab
-         srAM4Dntovc6BjSIZLcjCwJgML0X3zJCosCRJn81LD6ra9sEYQ8xDdO2bJix0i5D+7cu
-         4KLe2zOzcldELASAJ2QdWhBfNpkEWl29qU6tCDyaWUHOf7GXQZ5sCzto4Ecs1iMSmZcJ
-         heKxgFHut9gvdcJhBiVVRg1kXHetGk77RvxHlOXnw5+cVWetNe5L4y/hq8uBGSYL5A7a
-         xclyTN/CTpS/At/z9T0KosrZsI3irfl5fnxTHO3Ku1IF2mnhPq4ElrRzbhAP54dqsicC
-         x2Fg==
+        bh=SDMWPTZLTSceSfSI7tlS46UKbSdC7kfiGzUwE2DAU/w=;
+        b=jTq7PyNpQ2Qve6CvoTPuPYReFte6hwvGpvGQARsUD4Oyyg+abR7HLZE+Q7LNtVfAer
+         YwulMFTmViITwbJkRc1wdHVKmDZMkwRaTy5fWbMcqQQzViCnGAfQ/xM7cm7A8uDsIvKf
+         Moqz6uDG3+6kH2cry+mw/oNSNtx4z8hMkhEvKpO+LhbQv2NalUL5oyzPPfNYbFkS2UJ4
+         sk59VZZwtY5eXyMdIvMPXjXHDndAL+Y+i8R3WBhDgZiDRXeB3Bf6djT9PvNQK1PYQxCN
+         quOncBtC4ZUXqxPh+0e6dm5R5ToLr30vm9G8ZQXSL5BN9I43C1B/wTfWNcrWLzIKGOqs
+         V4YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729187267; x=1729792067;
+        d=1e100.net; s=20230601; t=1729223344; x=1729828144;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=54GhF2upJw4275dZmdws3Pd1W0s5MQOwhp0NxjAL5+c=;
-        b=r2eV2Myn5SHDgSZq+xUiFxFAW0XP6XJAOHhItB3NayZ9bFHdyClSbZd8Fvn4qlChcL
-         s92G8EA/Z6R46J1ee3bf1JhPvOEbdUfjb7z3g+/dWqbC+aMc0L9NxA1Fgt/R00PWoN/9
-         He7MmMXSDCwItzhu5G1FfB4q+SsuzOcbOu8YvKrDGLPMhm9g2lTK8fF69J/cepydpInI
-         PLfR2xJMsG20SHAzDctChIAEvHLoCA2SiiI1F3oth9UT6sr03V9X9SCLKyxAnQE6YIyR
-         udv4X8XqAzd8RawpmTXlG1ZD+UU/qMy4x4phbhQ3dV6uXesjJ8hAIbmBHTEoqA+lVSCD
-         KPWg==
-X-Gm-Message-State: AOJu0YxNMn7mn2FjVm1Rqt6EW5txzqWMxHcRcwNk6ay5bq2eNZQMJxRy
-	zHLQX9qgQ2ENtj8oeFf8MOI9ZIyBoI8YN5UpkogFOivxwGSi2pVXHLnlw7LNUx4AzVwUrXNNOIe
-	0
-X-Google-Smtp-Source: AGHT+IEFPUkOK0eLP6z1lBrU0QTOOYA3R3KSYRYiDrJyfydjWV6H8jXefX7+W+/cik2Ooc89qJjV7Q==
-X-Received: by 2002:a05:620a:2986:b0:7b1:1a1e:3013 with SMTP id af79cd13be357-7b1417a2b73mr1163907985a.8.1729187266985;
-        Thu, 17 Oct 2024 10:47:46 -0700 (PDT)
-Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b1435a2681sm238047685a.74.2024.10.17.10.47.46
+        bh=SDMWPTZLTSceSfSI7tlS46UKbSdC7kfiGzUwE2DAU/w=;
+        b=m1hOa1iaIYBtHU3rfeiGgo7hOnCX+uWvtG9bYG3vlRFNb8G1zFBevYyG9JEzbN8cg7
+         unDXDnusXZKbR0qD0cK91+wwLFTzXtO2P2AdrrKdiEUliaxW5iYe622wRQ9FVAzJV/VB
+         j8/CtSM91gIdqYPo+Zx7g2R4Hf0BOG/p6HwLydYprgYvC/JwC2g0xZgXQ5/sxernOCaC
+         CaNq3YIjjqjujREabIZ3FCM2zyhW5EYr8anPzeuAfjkqCwyd6CyVg5RVXRcY3LQZ95aj
+         4rMTMY3Hiq8DGsyTIYthvsLmPpNHRANzNjHc6Q+Vf8eVAj19mDOuP7vp5uGDgUgWp/Dt
+         3cew==
+X-Forwarded-Encrypted: i=1; AJvYcCVVNYb7RlE1BaHZhai1Nu+ZSWxRYnEZy11yL5uf5GRVNyxdroXfwY0mLDfcr3IDuHGtq0k/JINLtVsN@vger.kernel.org, AJvYcCXbKH2nTKqNhrHA3R3CNtGAzW48hSG+ZXZmZPqrMJ8gJ25+NUjeYSn/XRzPyU98bA8SIO1ItwuwMtB6@vger.kernel.org
+X-Gm-Message-State: AOJu0YwS8jcVBq3VTLYv406mexj64hCFF5R9m43qpZTGNRZZpphpbHFK
+	rEi8HblecMNcl64ybsPFbpRZk+YnSMLoN28vi+3SO2e0lH8IEwol
+X-Google-Smtp-Source: AGHT+IGqGNFGFh04PA1HczFsT4xsywTPwJ8IkIkw+augztSfLxDrKyN0WuJARigS0ey1NnO+gF9Klg==
+X-Received: by 2002:a05:6a00:140c:b0:71e:6122:5919 with SMTP id d2e1a72fcca58-71ea332adfemr1406062b3a.20.1729223344455;
+        Thu, 17 Oct 2024 20:49:04 -0700 (PDT)
+Received: from localhost.localdomain (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ea333d6e2sm459066b3a.66.2024.10.17.20.49.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2024 10:47:46 -0700 (PDT)
-From: Trevor Gamblin <tgamblin@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: ukleinek@kernel.org,
-	michael.hennerich@analog.com,
-	nuno.sa@analog.com,
-	linux-kernel@vger.kernel.org,
-	tgamblin@baylibre.com
-Subject: [PATCH] MAINTAINERS: add self as reviewer for AXI PWM GENERATOR
-Date: Thu, 17 Oct 2024 13:47:44 -0400
-Message-Id: <20241017174744.902454-1-tgamblin@baylibre.com>
-X-Mailer: git-send-email 2.39.5
+        Thu, 17 Oct 2024 20:49:04 -0700 (PDT)
+From: Chi-Wen Weng <cwweng.linux@gmail.com>
+To: ukleinek@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	ychuang3@nuvoton.com,
+	schung@nuvoton.com,
+	Chi-Wen Weng <cwweng.linux@gmail.com>
+Subject: [PATCH 0/2] Add support for nuvoton ma35d1 pwm controller
+Date: Fri, 18 Oct 2024 03:48:55 +0000
+Message-Id: <20241018034857.568-1-cwweng.linux@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The initial author of the driver has moved on, so add the final
-submitter (myself) as reviewer for the AXI PWM driver.
+This patch series adds pwm driver for the nuvoton ma35 ARMv8 SoC.
+It includes DT binding documentation and the ma35d1 pwm driver.
 
-Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Chi-Wen Weng (2):
+  dt-bindings: pwm: Add dt-bindings for Nuvoton MA35D1 SoC PWM
+    Controller
+  pwm: Add Nuvoton PWM controller support
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c27f3190737f..a506fa4f6825 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3758,6 +3758,7 @@ F:	drivers/spi/spi-axi-spi-engine.c
- AXI PWM GENERATOR
- M:	Michael Hennerich <michael.hennerich@analog.com>
- M:	Nuno Sá <nuno.sa@analog.com>
-+R:	Trevor Gamblin <tgamblin@baylibre.com>
- L:	linux-pwm@vger.kernel.org
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
+ .../bindings/pwm/nuvoton,ma35d1-pwm.yaml      |  45 +++++
+ drivers/pwm/Kconfig                           |   9 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-ma35d1.c                      | 169 ++++++++++++++++++
+ 4 files changed, 224 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/nuvoton,ma35d1-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-ma35d1.c
+
 -- 
-2.39.5
+2.25.1
 
 
