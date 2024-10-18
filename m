@@ -1,74 +1,74 @@
-Return-Path: <linux-pwm+bounces-3704-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3705-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBD4C9A3B78
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 12:27:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 114DB9A3B87
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 12:29:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4DF79B2097D
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 10:27:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A69B8284724
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 10:29:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE0321FF7C2;
-	Fri, 18 Oct 2024 10:27:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CEC22010E6;
+	Fri, 18 Oct 2024 10:29:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIZm/1eG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZ4RhNRA"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374FA168C3F;
-	Fri, 18 Oct 2024 10:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C862C1FF7C2;
+	Fri, 18 Oct 2024 10:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729247272; cv=none; b=sVF+zRf6GQk7iT8kFvBxmQnBvwIAp/SNh+pnDLkRGbYj40j1GUJyaJ9gRpH/5mTZZj6kJ0vnTPzaxWR0YvmyLpNUW8d1Duu8Uv2etMoeXwoyytc6Hr9BHJUeoaw+srsAmQ+roKR9iiL9WKEVPeQFe7C4FjFO5mK175Onc/viZSk=
+	t=1729247352; cv=none; b=Ni3muy/UOei7ftn1rAFzBKMwCiQQGCQKtjpmAv5efHt61Cq4v94cyTToOQLy4l+Brbpyhwv762O2PL07jikVSxxZW+YvlbwT3KyjSvGvGrbOEliTokhZm8V3PPeHuVkFTDYBa7lRcexyO/rfmv5NFgkSelfEDCReF9+GE7pPDHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729247272; c=relaxed/simple;
-	bh=D+k61GlGmp9xnyeEweCLRQhF29NqI4DCRl0Dei3Ft/U=;
+	s=arc-20240116; t=1729247352; c=relaxed/simple;
+	bh=j+JweKJCABr+qOQMvnIYUslicV8qVgTOOvIvcKKqEfo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I+EQp1fmIlVGbe6DS5keUTDNud1+MSsbw9isWSazUwqLLRNNKlealvb7kh3dQymEFNv9bOCTmbP61UObOOord9YaDN08cy03UPzDNTwsoWPYFNw+4cqgPaLxZBO0vt42gpzicyYuAUUPaIeWGepGbZvB0A1wZEfCtucZoNARYbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cIZm/1eG; arc=none smtp.client-ip=209.85.210.171
+	 In-Reply-To:Content-Type; b=WfSqnHS7kdlfAXo+2Mp5PdHsC7iP8F3rPusepatNSNlWxUSGxtRSWLZ8x0KC6tbZnpK6+0m8gd6iY5hHpZfrTfPpHtG9DCJVdW0lQhkvwytbndc3P5NV5mZC1LE47IvEfTUEqNxtgLgmZlIizJTq4FSJzL62VzQZocO9SViFiso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fZ4RhNRA; arc=none smtp.client-ip=209.85.160.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-71e72db7bb1so1432335b3a.0;
-        Fri, 18 Oct 2024 03:27:51 -0700 (PDT)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-287b8444ff3so810373fac.1;
+        Fri, 18 Oct 2024 03:29:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729247271; x=1729852071; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729247350; x=1729852150; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=KzGrat2AIxNp3RzAvcvun8G0SGCMp1qpX1sAcp7NBo0=;
-        b=cIZm/1eGqLP2tKm4N6T/azaZL+SZ69tQTxnFyZmqW+iuFKqaSDsTh5K8qCsNCEK9vu
-         yZLMsZXUKVSfd8DcFNlPjYo4PrwbpvWsAtsZCW7lmOEcnfAT/QXvM41T8+kDUhaN31Te
-         0GgXj4QnYqjj4kKrKJUICn3vFDYYgI/cRsIp5GPiFHT49WaEDgRQrfli4m3bHolo3Yqr
-         iSEcf5mZKiOSfXiKJJGWIF1uV071sKaWwjKZZYQHGFiUD/rXcHgtF/oU+ENO22eecfxB
-         DAQ/nrrEq8Ox6Z9FKzgMrSchW7HKVgNpNxGXhZpbxCf9DR2Z41RikjAeoGkCZ9bjBOvz
-         B77A==
+        bh=PH9bp5sNFtvJ03nSGmYK7jlqGxQcOJRnLBqL8n4Zt3o=;
+        b=fZ4RhNRAV+eGB/5njUDOuta1HZXwVhgnXRLLhAJfm0wjNSf9UXiYrVq8mJI1UuKbtS
+         fbLPGx1DFhKJTZ696Oifuwf5uXcX09gd7MPa+R5tDOoZCFnOAkra48azhBspMqWVuukZ
+         JnuNxsvuUgozYOZqMYtSx+qIdN2s/GarO2mo1tnPNcVmw8LfbwTN018YAfVW+30PrNKt
+         IZQ4uN0QzAGZigTFJQVqRUokaq8J1NTcqryLdYWHaUHA78rRKGqR2UvR0ZFXHsKpgBVU
+         r55n8PJEbdv+/pE6iIoAha1jqr7fcv/pYSrvwnXt/C5mzf/RJBOboycWNeW+KSKQVYUR
+         1JdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729247271; x=1729852071;
+        d=1e100.net; s=20230601; t=1729247350; x=1729852150;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KzGrat2AIxNp3RzAvcvun8G0SGCMp1qpX1sAcp7NBo0=;
-        b=LWbfFg0bfzkYexCk33eSjoheg7MxpNjjNw+oPKARcxqDwp9mI0MwLkepAD+m/geqgZ
-         U7tUR5wchzTHmfIu8IuVS4MK+rNYMMGVugUj3QzgMhh7PVSX/A1mE1jgVCHyoiwTZDTO
-         fM7cZCIFKAmjCs8i2ba/fkBlYzw31b6oBLx2A9ZsyfGGaeLD+559wpeT8UdZbp/3cRSd
-         hC38vZM2/JWYBHOvGFTp9Ecr7/RkPoQIcOQfY4pEjPStpIhN4iUqMCAZYTHLksLr+jfV
-         L5Y4jxHml97zysSFhWe+Wqnv18TWJ/dmklzYj3J30pTHYyE59Pj+p72Pivf9p2Ld2lPq
-         qD1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUDWWs0arL7cAyXIBDd1JalJqtFT/d4eVIQDMY20auNtwh2Sk8MyMuhYxaJhr++mzPjfczM/V6D3ILj@vger.kernel.org, AJvYcCWQc6oRZZkd1MdPcYe0pYV1J6C5ug61UAGIhl1ddSdjKtaNO5cupAGo3eN5hmsdFEYTzkYVMWrENgLr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJG0dH3mxdMbtXLrMaBrwtuEomAQ9RmojfdLm1KiRXV66p3nQY
-	sQEkBV6glfcLwvgR2f+G5/NSU5lojHbn4rVrQ1upvHXrDAWRHGbX9C/wixvi
-X-Google-Smtp-Source: AGHT+IHJFKH8VgX2jlAj3LDOHGle4eJKxnJIYbP1K/0wx6aabQpq0puQdRE4PgDjKb9NaNz+F1B6Og==
-X-Received: by 2002:a05:6a00:1a8a:b0:71e:60fc:ad11 with SMTP id d2e1a72fcca58-71ea325b1acmr2619040b3a.16.1729247270448;
-        Fri, 18 Oct 2024 03:27:50 -0700 (PDT)
+        bh=PH9bp5sNFtvJ03nSGmYK7jlqGxQcOJRnLBqL8n4Zt3o=;
+        b=m7MPDi/qBprFioTJE8vKzwsA0U6/1NU3Avr3F2kMzlwADTk0T5idKv6JZODTGQwryo
+         f/hrtdocZWP+181brFMMG5nUDriDRuJdjzOExhGnIvzxD4EFfD9LBA9Y7keLVhQSKeJF
+         78R/aCpAsqlvruL4NMYZsAQONJ/Fdj42pUf5RgkSlaQticGXSOuXgkl6iKtaS0Q+JEbw
+         ctvwkHcWG+xGHbVHQbFYgEuQvH7cjm5cjN0WhHA2ZopL9jDfRszo9WCnW62soDMvuLm0
+         z03aiXuetZmLPH/4QXSHeZZQTMWmVRuE7tqIoL62YSF2c0pWb/GIdDj4jx1yx+h0wyHe
+         x1iA==
+X-Forwarded-Encrypted: i=1; AJvYcCWR72By+zifBVNoETl0dvc9xNsfPkn33KMjD6icpvwvySddk9aPKviwenh8k63Zs6QYxrwGKwgdN4ib@vger.kernel.org, AJvYcCWXxa5e4a4z7niE3S5LTlA68iPD4/7PIbtRf44g8ga5ZBJJ7RfYtiH3pXd7UD55gj0wXQwxrhc06oAM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr+mqjYN8H8x+uoXyDCtgiBa3WCj+LpsQlyg2LFdXc7bmZ2VCF
+	8nhoLMFJNkzYqo7cWc7U5tKBLK/jzaTJ8/LZbe23EMWAQunEKb/c
+X-Google-Smtp-Source: AGHT+IHNd8wmIx/CgFPccgVlfZMrtbBMtRSiLFrPa8bpNp7QhCV6M1rvCM/3DYVBVI592Ii0RrnVDw==
+X-Received: by 2002:a05:6870:d0c9:b0:288:e7f2:e9db with SMTP id 586e51a60fabf-2892c543485mr1669456fac.41.1729247349626;
+        Fri, 18 Oct 2024 03:29:09 -0700 (PDT)
 Received: from [172.19.1.42] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ea34098f9sm1114907b3a.112.2024.10.18.03.27.48
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7eacc233431sm1049934a12.35.2024.10.18.03.29.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Oct 2024 03:27:50 -0700 (PDT)
-Message-ID: <3a3f5c78-f85c-4dd1-a559-3ce2dd8dcb25@gmail.com>
-Date: Fri, 18 Oct 2024 18:27:48 +0800
+        Fri, 18 Oct 2024 03:29:09 -0700 (PDT)
+Message-ID: <95606f94-979b-4277-a13c-312fb12dd0e0@gmail.com>
+Date: Fri, 18 Oct 2024 18:29:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -76,18 +76,17 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: Add dt-bindings for Nuvoton MA35D1
- SoC PWM Controller
+Subject: Re: [PATCH 2/2] pwm: Add Nuvoton PWM controller support
 To: Krzysztof Kozlowski <krzk@kernel.org>, ukleinek@kernel.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
  devicetree@vger.kernel.org, ychuang3@nuvoton.com, schung@nuvoton.com
 References: <20241018034857.568-1-cwweng.linux@gmail.com>
- <20241018034857.568-2-cwweng.linux@gmail.com>
- <a06afa20-8f69-45dd-8dce-272ae7da6d39@kernel.org>
+ <20241018034857.568-3-cwweng.linux@gmail.com>
+ <57f9093e-9f45-413a-bfd7-68f10e960fa3@kernel.org>
 Content-Language: en-US
 From: Chi-Wen Weng <cwweng.linux@gmail.com>
-In-Reply-To: <a06afa20-8f69-45dd-8dce-272ae7da6d39@kernel.org>
+In-Reply-To: <57f9093e-9f45-413a-bfd7-68f10e960fa3@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
@@ -95,76 +94,40 @@ Hi Krzysztof,
 
 Thank you for your reply.
 
-On 2024/10/18 下午 02:02, Krzysztof Kozlowski wrote:
+
+On 2024/10/18 下午 02:01, Krzysztof Kozlowski wrote:
 > On 18/10/2024 05:48, Chi-Wen Weng wrote:
->> Add documentation to describe nuvoton ma35d1 PWM controller.
-> A nit, subject: drop second/last, redundant "dt-bindings for". The
-> "dt-bindings" prefix is already stating that these are bindings.
-> See also:
-> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-Ok. I will fix it.
->> Signed-off-by: Chi-Wen Weng <cwweng.linux@gmail.com>
->> ---
->>   .../bindings/pwm/nuvoton,ma35d1-pwm.yaml      | 45 +++++++++++++++++++
->>   1 file changed, 45 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pwm/nuvoton,ma35d1-pwm.yaml
+>> This commit adds a generic PWM framework driver for Nuvoton MA35D1
+>> PWM controller.
 >>
->> diff --git a/Documentation/devicetree/bindings/pwm/nuvoton,ma35d1-pwm.yaml b/Documentation/devicetree/bindings/pwm/nuvoton,ma35d1-pwm.yaml
->> new file mode 100644
->> index 000000000000..95f0a0819f53
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pwm/nuvoton,ma35d1-pwm.yaml
->> @@ -0,0 +1,45 @@
->> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pwm/nuvoton,ma35d1-pwm.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Nuvoton MA35D1 PWM controller
->> +
->> +maintainers:
->> +  - Chi-Wen Weng <cwweng@nuvoton.com>
->> +
->> +allOf:
->> +  - $ref: pwm.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - nuvoton,ma35d1-pwm
->> +
->> +  reg:
->> +    maxItems: 2
-> Instead list and describe the items.
-Sorry, it should be 1. I will fix it.
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  "#pwm-cells":
->> +    const: 2
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/nuvoton,ma35d1-clk.h>
->> +
->> +    pwm0: pwm@40580000 {
-> Drop unused label.
-Ok. I will drop it.
->> +      compatible = "nuvoton,ma35d1-pwm";
->> +      reg = <0 0x40580000 0 0x400>;
-> But you have only one item here? No, that's just incorrect.
+>> Signed-off-by: Chi-Wen Weng <cwweng.linux@gmail.com>
 >
-Ok. I will fix it.
->> +      clocks = <&clk EPWM0_GATE>;
+> ...
+>
+>
+>> +
+>> +static const struct of_device_id nuvoton_pwm_of_match[] = {
+>> +	{ .compatible = "nuvoton,ma35d1-pwm" },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, nuvoton_pwm_of_match);
+>> +
+>> +static struct platform_driver nuvoton_pwm_driver = {
+>> +	.probe = nuvoton_pwm_probe,
+>> +	.driver = {
+>> +		.name = "nuvoton-pwm",
+>> +		.of_match_table = nuvoton_pwm_of_match,
+>> +	},
+>> +};
+>> +module_platform_driver(nuvoton_pwm_driver);
+>> +
+>> +MODULE_ALIAS("platform:nuvoton-pwm");
+> Drop, not needed and not correct either. If you need platform alias for
+> non-OF binds, this is supposed to match OF ID table.
+Ok. I will drop it.
+>> +MODULE_AUTHOR("Chi-Wen Weng <cwweng@nuvoton.com>");
+>> +MODULE_DESCRIPTION("Nuvoton MA35D1 PWM driver");
+>> +MODULE_LICENSE("GPL");
 > Best regards,
 > Krzysztof
 
