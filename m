@@ -1,129 +1,175 @@
-Return-Path: <linux-pwm+bounces-3727-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3728-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94A619A4A09
-	for <lists+linux-pwm@lfdr.de>; Sat, 19 Oct 2024 01:23:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15AE79A4AAB
+	for <lists+linux-pwm@lfdr.de>; Sat, 19 Oct 2024 02:37:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DC7A7B2211F
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Oct 2024 23:23:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC3BF284D94
+	for <lists+linux-pwm@lfdr.de>; Sat, 19 Oct 2024 00:37:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60EC618E758;
-	Fri, 18 Oct 2024 23:22:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C7381922EB;
+	Sat, 19 Oct 2024 00:37:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rnm7Nt4m"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gcv56uEv"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522DE143888
-	for <linux-pwm@vger.kernel.org>; Fri, 18 Oct 2024 23:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05E029CF6;
+	Sat, 19 Oct 2024 00:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729293775; cv=none; b=L4qXDTHe/B2Keh7WPBLglRJmT85GKKk1Lhna/XrjM02Rx4mkYLUf0ai1wfLeoVvonJxAUrO3UkvlIQ7kXV/FyW4pmJtKgr6C3gB4M5vsPG9wwaHSVUZ5BAqjlu3rpnqkSTfwD0EZS9e86F+YAON4qGx5EiwV1oaxRw+2aHfpyi8=
+	t=1729298243; cv=none; b=Qb11SaxX/l/QytKuqvrgiZpkmqVsnznAPua261ymEWily8dQjQQWoc1V+ZgU62QwALO6wn/c3DIc960OeukJCMYEygj41uwlvVF/JU1YcgA/mKdiF9BtEsPEpwbhgkBIR5qDfrnBptjyDYOjU8MwoILlAQN8NfGFh+v3fZQQpyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729293775; c=relaxed/simple;
-	bh=yVi2CBHNTAXqIwEu0lUukboe5GQpHdaPjfgHBK2A19E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K9jl85oq2LGBo3B1QFQUrd1vTFaW9aDzGQ06r9sWOkgxKf9natOiPzv8R44iSa5ahfnvy7k7H6iPuKk7DMofiCmtaAQPNwFQDcBjhhk+5izmo0i7VvCGNlh+G9x0ktwVHv8EnC4K6N6k/0MCkeAy6QUWhyfCFA96sPKEpukngU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rnm7Nt4m; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-539983beb19so3040811e87.3
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Oct 2024 16:22:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729293771; x=1729898571; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aX1Ed3MLmjAUFYDzujQv0rzYaNVm2pPy+pKKKWr8v3w=;
-        b=Rnm7Nt4mCOySYcrR+YMh/ijWbfPEagDP1fInUztXM/0KWsadaYchwwsSSHdJw4Hk7+
-         JDojCaKz57vtogFZM/rZx7cGsphURzs7NTpl69vPHaLUv73ZhPgk1anVyuD9Ow5LtRRJ
-         wk25NRujxTFXg7WNzXXPuneKy55ra8yu9vyPWW+VGGXL/KvU0WFlRqMjBWvBmvr/01Kj
-         wf5HR9XJGlSCQYX4m2eIDsljO3Er60ryxdOeRCYi2S+kxKbEdAjtvdCBJNLnJjGge9dq
-         PzD7KRDu+T2yO7ULjYpwzunwCmfcnwh69vfdsb022ZH8nI12QAK42iHfTFeyi9Zlmuak
-         8O6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729293771; x=1729898571;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aX1Ed3MLmjAUFYDzujQv0rzYaNVm2pPy+pKKKWr8v3w=;
-        b=XY4rAhyyWucQzrrszKgVahudyC+iD2a2OYSuSTMg1qGcfCfC+IIeYDKQRJFZMk+xP4
-         mfqJN9zdifKniXwlzXevqKHZIvCSS92MWjiDGvAqrAAp6o/2jWIwdq/HZuRfyTO0ze9B
-         KA92RoDjben6rUsyDL0n51kxJnda8bWukzIMvUNnTvBesC2ipAhFDF/xPK21TDq7p742
-         JKV5BYlORGbIeLVV98g8+rVZTDhfGuAsbdIuuvkfXCa+MBhOI+m6RYBPDzrr9i4jEtD4
-         uW4wwHx6drY7jGRxvzuXPrXniDIXOOPTorsS8aB6SlfR6SMe9n5+8a51hlNH3r9KiBYg
-         Tu8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVgN6jn12kSWeiOZJKGwYSopO/ulJgOuuweBzddVkbGeqwgFHAFLCq1lQ1eL1xpwj7vziM7Fi+cnXM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl4NRjxDHREN3Myp7TtjCRfOzdh5S64JIpTBtLX/Q2JDmVal9c
-	CT1OukB2ce9awM/j8NKU8uCTDnUASgqL8+XASZ1GGaUEig2PMW5klmi3xuwJd74=
-X-Google-Smtp-Source: AGHT+IGyfftMjWZHfQWKqWoQYQ8JI+p/ypISrL5eJ6+gCuABF4WiTfoXGbQLBF2l4svs55N/Vw1Axg==
-X-Received: by 2002:a05:6512:3192:b0:539:fa3d:a73 with SMTP id 2adb3069b0e04-53a154e7966mr2320766e87.39.1729293771084;
-        Fri, 18 Oct 2024 16:22:51 -0700 (PDT)
-Received: from eriador.lan (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53a151b9151sm349825e87.75.2024.10.18.16.22.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Oct 2024 16:22:50 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: u.kleine-koenig@baylibre.com,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	s=arc-20240116; t=1729298243; c=relaxed/simple;
+	bh=PfaYoaaPCu5DWdfaaTW12VQJY6h3MD3ntyNmux/6daA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ciharSbb853aMxwfR/JYpIm01UBK3efcveTcBALA54yNldnDIi1V/hp1vK3O03AJ1F++6mdlSQnekrdLlOMOwZBrXgZKt1EzJpLGB09xOiI/BK1BZRnzo3G9CLEbGr5xEvU3+sbXW+z0FeJHb2lohwfOZ49n000ZNjBGYI13aos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gcv56uEv; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729298241; x=1760834241;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PfaYoaaPCu5DWdfaaTW12VQJY6h3MD3ntyNmux/6daA=;
+  b=gcv56uEva/ctlcfisaZHxrXvvu0APnuamyfhAUh3Jfzvx1YxkuMIcm14
+   GB/tP+4qx0qFnlb17rnW+WFVKAmCdG82AOXsayVk4I82LiAm3jH8zWyFC
+   lb5q+0R0NPVgKz868Jh/+b2cOxpQFXL+Ecf8iHYu/3s0gwt3BxvtE85ko
+   8L+J6bg8XVVGDobC4HAT0buGdXfWy5Lzb0wqaMOFH5ftzNtSvMkAbaEyT
+   PF13VZ+qrPi1Qk4oLEibUqoOuCamUfRbIpZ6Ao39MhB0jKZkJnK7JtI2w
+   18Y2v3gz6TnHjuvI6dZ0J4L6KdjMiCgvvvZ9xXvCN1GmFO28Sw7gcDKzp
+   g==;
+X-CSE-ConnectionGUID: P2Y5Ib0YQ0KooHhXYQO8/A==
+X-CSE-MsgGUID: x90PeKqvT3GUstjntTtZ6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11229"; a="29054681"
+X-IronPort-AV: E=Sophos;i="6.11,214,1725346800"; 
+   d="scan'208";a="29054681"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2024 17:37:18 -0700
+X-CSE-ConnectionGUID: 6YMgxZiVR9emesg1GpNAHA==
+X-CSE-MsgGUID: 7zFAV9PvT6+fQq/pN8dEoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,214,1725346800"; 
+   d="scan'208";a="109771570"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 18 Oct 2024 17:37:13 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t1xSw-000OTl-3C;
+	Sat, 19 Oct 2024 00:37:10 +0000
+Date: Sat, 19 Oct 2024 08:36:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Guillaume Stols <gstols@baylibre.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	=?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-	David Lechner <david@lechnology.com>,
-	Mehdi Djait <mehdi.djait@bootlin.com>,
-	Alex Lanzano <lanzano.alex@gmail.com>
-Cc: linux-kernel-mentees@lists.linuxfoundation.org,
-	skhan@linuxfoundation.org,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v11 0/2] Add driver for Sharp Memory LCD
-Date: Sat, 19 Oct 2024 02:22:47 +0300
-Message-ID: <172929376314.2587927.2624699121778996381.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241015230617.3020230-1-lanzano.alex@gmail.com>
-References: <20241015230617.3020230-1-lanzano.alex@gmail.com>
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+	aardelean@baylibre.com, dlechner@baylibre.com,
+	jstephan@baylibre.com, nuno.sa@analog.com,
+	Guillaume Stols <gstols@baylibre.com>
+Subject: Re: [PATCH v5 7/8] iio: adc: ad7606: Add iio-backend support
+Message-ID: <202410190802.CLaySBOq-lkp@intel.com>
+References: <20241015-ad7606_add_iio_backend_support-v5-7-654faf1ae08c@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241015-ad7606_add_iio_backend_support-v5-7-654faf1ae08c@baylibre.com>
 
-On Tue, 15 Oct 2024 19:05:42 -0400, Alex Lanzano wrote:
-> This patch series add support for the monochrome Sharp Memory LCD
-> panels. This series is based off of the work done by Mehdi Djait.
-> 
-> References:
-> https://lore.kernel.org/dri-devel/71a9dbf4609dbba46026a31f60261830163a0b99.1701267411.git.mehdi.djait@bootlin.com/
-> https://www.sharpsde.com/fileadmin/products/Displays/2016_SDE_App_Note_for_Memory_LCD_programming_V1.3.pdf
-> 
-> [...]
+Hi Guillaume,
 
-Applied to drm-misc-next, thanks!
+kernel test robot noticed the following build warnings:
 
-[1/2] dt-bindings: display: Add Sharp Memory LCD bindings
-      commit: 12f6baa472e097d4d55dfef9eacc36b04071bdc1
-[2/2] drm/tiny: Add driver for Sharp Memory LCD
-      commit: b8f9f21716fecac41d083ec8c77809ecd0b100d8
+[auto build test WARNING on 465644ac29536d10178b5ca4684d0b84765b9fa4]
 
-Best regards,
+url:    https://github.com/intel-lab-lkp/linux/commits/Guillaume-Stols/dt-bindings-iio-adc-ad7606-Remove-spi-cpha-from-required/20241015-215831
+base:   465644ac29536d10178b5ca4684d0b84765b9fa4
+patch link:    https://lore.kernel.org/r/20241015-ad7606_add_iio_backend_support-v5-7-654faf1ae08c%40baylibre.com
+patch subject: [PATCH v5 7/8] iio: adc: ad7606: Add iio-backend support
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20241019/202410190802.CLaySBOq-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241019/202410190802.CLaySBOq-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410190802.CLaySBOq-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/iio/adc/ad7606_par.c:173:22: warning: unused variable 'back' [-Wunused-variable]
+     173 |         struct iio_backend *back;
+         |                             ^~~~
+   1 warning generated.
+
+
+vim +/back +173 drivers/iio/adc/ad7606_par.c
+
+   164	
+   165	static int ad7606_par_probe(struct platform_device *pdev)
+   166	{
+   167		const struct ad7606_chip_info *chip_info;
+   168		const struct platform_device_id *id;
+   169		struct resource *res;
+   170		void __iomem *addr;
+   171		resource_size_t remap_size;
+   172		int irq;
+ > 173		struct iio_backend *back;
+   174	
+   175		/*
+   176		 * If a firmware node is available (ACPI or DT), platform_device_id is null
+   177		 * and we must use get_match_data.
+   178		 */
+   179		if (dev_fwnode(&pdev->dev)) {
+   180			chip_info = device_get_match_data(&pdev->dev);
+   181			if (device_property_present(&pdev->dev, "io-backends"))
+   182				/*
+   183				 * If a backend is available ,call the core probe with backend
+   184				 * bops, otherwise use the former bops.
+   185				 */
+   186				return ad7606_probe(&pdev->dev, 0, NULL,
+   187						    chip_info,
+   188						    &ad7606_bi_bops);
+   189		} else {
+   190			id = platform_get_device_id(pdev);
+   191			chip_info = (const struct ad7606_chip_info *)id->driver_data;
+   192		}
+   193	
+   194		irq = platform_get_irq(pdev, 0);
+   195		if (irq < 0)
+   196			return irq;
+   197	
+   198		addr = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+   199		if (IS_ERR(addr))
+   200			return PTR_ERR(addr);
+   201	
+   202		remap_size = resource_size(res);
+   203	
+   204		return ad7606_probe(&pdev->dev, irq, addr, chip_info,
+   205				    remap_size > 1 ? &ad7606_par16_bops :
+   206				    &ad7606_par8_bops);
+   207	}
+   208	
+
 -- 
-With best wishes
-Dmitry
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
