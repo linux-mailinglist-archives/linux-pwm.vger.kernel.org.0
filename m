@@ -1,383 +1,179 @@
-Return-Path: <linux-pwm+bounces-3742-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3744-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 380EA9A9B8E
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Oct 2024 09:55:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 553BD9A9DD6
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Oct 2024 11:04:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E0F9B23DF0
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Oct 2024 07:55:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 16569284374
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Oct 2024 09:04:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D00EE1547E8;
-	Tue, 22 Oct 2024 07:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="C1mrNMrk"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19F29193427;
+	Tue, 22 Oct 2024 09:04:28 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E7D152160
-	for <linux-pwm@vger.kernel.org>; Tue, 22 Oct 2024 07:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61E31189BA6;
+	Tue, 22 Oct 2024 09:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729583696; cv=none; b=gMI3btfDXRu9nnOjSog2GqymbRxraRc81Yifr1ph2Ea2I5jthgR0ae0wsf+93lkC9QQ9pNrMysj2gIn99V1zY1amOvauHsrSRuDQZz+4MIzx9zmiPhIJQ58TE+kDmTirvZd2gJysf+RLGuiB19whPD+dE6fAIt4kv9MoZoHzBPs=
+	t=1729587868; cv=none; b=NJq75SCmMfb3VaH86PEGEnWwxYY/lbsVb4PLhLeGQC8G6hb+WjpEh3OkuJIrbH1nKNgUq9SKSK9JGjirk3Ohez4kg27bJYjJe8tlC3V05sOp44CPfm92LeCliUEGqhbRX592PCWeChbvsrZX1lIVdVUY3VQSPBUOhUXPnl0Kug8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729583696; c=relaxed/simple;
-	bh=9WM21p+RnWLh+ZhR6oWvDbmm7VDB++54Q3hivBG1jhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jiJZiC71NRp5n5/PKntr/At4v9b2CSlE2Rm01k+JNlXTPERj/Wsm4qNPUUYGzfcnC692eZYI5pty5r90f7pOLKvvVHymP4I1i+ibeytmaqxpg8AjXAwaDxrOsNi1IStvhC29Z4TRefhuA9AFf7Jur8kMBmWeSCcm5n7WMoCzTLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=C1mrNMrk; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-37d5aedd177so4395298f8f.1
-        for <linux-pwm@vger.kernel.org>; Tue, 22 Oct 2024 00:54:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729583692; x=1730188492; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VggQ4c0vf2QRmX8HQVFvhCWXUlqPrtmhOWfaTKfZQIY=;
-        b=C1mrNMrk5oZZdJ+PamLlbASDZrIMMBsWb/2FyJudZc5bm78epCRQi+xquT1BfunLnM
-         Zlw6d/+6d9ick/ml29ScTThYppxt/KjSNrJvX8DwSb7w4x5Ex1cnfPGxMS/Hq08ZY3Nj
-         G8egmTqh8vjv1H3byGFtZIkFzn1s7W63INqMJbbSL74ztGbrTf7+j0cwPYL/c8e0/m6I
-         q/rJOs5MZVrwgLHqbE8TkU6Wi8MpXILcyNiCXmUsvxTq386Nzk5pTK6FfE++VoWZpssE
-         UfmLiGW63pn0iYeuulcpEZG/G70cT2gqumrPLVA0zRE5Echdbv75A+KguXFui3P8UVat
-         RmCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729583692; x=1730188492;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VggQ4c0vf2QRmX8HQVFvhCWXUlqPrtmhOWfaTKfZQIY=;
-        b=rg3wzKyUwrWTmodEmyXMy7hF4KD7sCV/F7hdVhpaIO7j8nR1Y5tFeku+ISXJk89ma4
-         Gl6r1tGIBija7rOAYv0ruvC0VaO2wUH2wzbJ16GXaZd5VCv924/v3zF3uIfJ/mf58Ogd
-         AH3S4XBRXNb5MJ8QrrJqmHk/sJyByPLC/Khjk8rXJpjqxs9AXutwlr4q/jg0QQ9jovZH
-         /N88pCruwo51E/d5vRpzbC0GCABHLVhTKu9Zm/Ruins1uHYh4zL50OFbbs9BCV5NwhXa
-         mfkOzHzR/t292x5EMWBBQHI37i123zUM2lVTY8vV4R45n9XKnrzmYRIk/SQ4YjbC9PK1
-         AgjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbq70zbyRh3K7rrJIxO6Ga7Kj+L0yNTHDSHvmdd1eqFIlEsYk331I0BkRObHU833/ADk6W2TLqXIs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZzAkMCA9RiVySLPnIfbQwgkNQr73lLhyP0cslUxhnlYKd0FiW
-	GPHQCw2NpO2yzR6BbpeV8GQiUSXQObq4D6q1E2VkNYTRWEnLSwVpws2rfzR3qh4=
-X-Google-Smtp-Source: AGHT+IF5yWE4byH0MOm2aiQ8Eb3N24HZXpvdm77fwNAUd11/pIvQzT4oe8sm5ZTPV4mEfFDcFAX27A==
-X-Received: by 2002:a5d:458e:0:b0:37d:4706:f728 with SMTP id ffacd0b85a97d-37ef21bb0aamr1243999f8f.50.1729583692268;
-        Tue, 22 Oct 2024 00:54:52 -0700 (PDT)
-Received: from localhost (p50915d2d.dip0.t-ipconnect.de. [80.145.93.45])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37ee0a3805esm6076755f8f.9.2024.10.22.00.54.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2024 00:54:51 -0700 (PDT)
-Date: Tue, 22 Oct 2024 09:54:50 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] pwm: add support for NXPs high-side switch
- MC33XS2410
-Message-ID: <oppdnsda4tqjcpsb26j5ew62t4bkkmtxuu7e2fpinnazubk5ky@tmz76o5xdrlj>
-References: <20240927125745.38367-1-dima.fedrau@gmail.com>
- <20240927125745.38367-3-dima.fedrau@gmail.com>
+	s=arc-20240116; t=1729587868; c=relaxed/simple;
+	bh=FmDcReTPKUUV7YiJm+WOnQgrY+OEHQUfuIC7c1n0nYk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JfAgOLHJokdIzme0MWxo99+iUT29Bm9vsx8OWP/nsPZ2CG1UONryJ+fqBkWpBHwgNp8MvgLsyBivVk807NktIW6wXTdsZJVNzgN9yju/PfSmBeGYSFB36EuE2YEWpX1ntVHqpDePBIhSHI/jLc9/kC/WBFlM6OmWv8dv+LKmwfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.52])
+	by gateway (Coremail) with SMTP id _____8BxeeGVahdnsL4EAA--.10942S3;
+	Tue, 22 Oct 2024 17:04:21 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.52])
+	by front1 (Coremail) with SMTP id qMiowMAx7uCQahdnKy4HAA--.42603S2;
+	Tue, 22 Oct 2024 17:04:17 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Juxin Gao <gaojuxin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Sean Young <sean@mess.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v7 0/2] pwm: Introduce pwm driver for the Loongson family chips
+Date: Tue, 22 Oct 2024 17:04:13 +0800
+Message-ID: <cover.1729583747.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qsbe7bb5heigo3df"
-Content-Disposition: inline
-In-Reply-To: <20240927125745.38367-3-dima.fedrau@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAx7uCQahdnKy4HAA--.42603S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCr48WF4DXw4DGF4kury7CFX_yoW5Cr47pF
+	ZrC343Kr10qr10yrs3J348Cr1SvayrJF9rGFsay348X3yUCw4jqw4SgF45JFZrAr129F42
+	vrZ3CFWjka4UuFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUc9a9UUUUU
+
+Hi all:
+
+This patchset introduce a generic PWM framework driver for Loongson family.
+Each PWM has one pulse width output signal and one pulse input signal to be measured.
+
+It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips.
+
+Thanks.
+
+-------
+V7:
+Thanks for Sean's advice.
+patch (2/2):
+ - Set chip->atomic to keep pwm_apply_atomic() can be used with the pwm.
+ - Test with CONFIG_PWM_DEBUG and CONFIG_DEBUG_ATOMIC_SLEEP enabled.
+
+Link to V6:
+https://lore.kernel.org/all/cover.1728463622.git.zhoubinbin@loongson.cn/
+
+V6:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Add Reference Manual;
+ - Shortcut if !pwm->state.enabled;
+ - When state->enabled is true, unconditionally execute
+   pwm_loongson_set_polarity() to avoid that the polarity register is
+   not set correctly.
+
+Link to V5:
+https://lore.kernel.org/all/cover.1720516327.git.zhoubinbin@loongson.cn/
+
+V5:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Test with PWM_DEBUG enabled.
+ - In pwm_loongson_apply(), the pwm state is determined before the pwm
+   polarity, avoid test failures when PWM_DEBUG is enabled;
+ - Added DIV64_U64_ROUND_UP in pwm_loongson_get_state() to avoid
+   precision loss and to avoid test failures when PWM_DEBUG is enabled.
+
+Link to V4:
+https://lore.kernel.org/all/cover.1716795485.git.zhoubinbin@loongson.cn/
+
+V4:
+patch (2/2):
+ - Rebase on pwm/for-next;
+ - Addressed Uwe's review comments:
+   - Make use of devm_pwmchip_alloc() function;
+   - Add Limitations description;
+   - Add LOONGSON_ prefix for Loongson pwm register defines;
+   - Keep regs written only once;
+   - Rewrite duty/period calculation;
+   - Add dev_err_probe() in .probe();
+   - Fix some code style.
+
+Link to V3:
+https://lore.kernel.org/linux-pwm/cover.1713164810.git.zhoubinbin@loongson.cn/
+
+V3:
+patch (1/2):
+ - Add Reviewed-by tag from Krzysztof, thanks.
+patch (2/2):
+ - Several code stlye adjustments, such as line breaks.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1712732719.git.zhoubinbin@loongson.cn/
+
+v2:
+- Remove the dts-related patches and update dts at once after all
+relevant drivers are complete.
+patch (1/2):
+ - The dt-binding filename should match compatible, rename it as
+   loongson,ls7a-pwm.yaml;
+ - Update binding description;
+ - Add description for each pwm cell;
+ - Drop '#pwm-cells' from required, for pwm.yaml makes it required already.
+
+Link to v1:
+https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  dt-bindings: pwm: Add Loongson PWM controller
+  pwm: Add Loongson PWM controller support
+
+ .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
+ MAINTAINERS                                   |   7 +
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-loongson.c                    | 288 ++++++++++++++++++
+ 5 files changed, 374 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-loongson.c
 
 
---qsbe7bb5heigo3df
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v6 2/2] pwm: add support for NXPs high-side switch
- MC33XS2410
-MIME-Version: 1.0
+base-commit: c13bce43b32b06f2273c7961940c391cdaf13d1e
+-- 
+2.43.5
 
-Hello Dimitri,
-
-On Fri, Sep 27, 2024 at 02:57:45PM +0200, Dimitri Fedrau wrote:
-> diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
-> new file mode 100644
-> index 000000000000..f9a334a5e69b
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-mc33xs2410.c
-> @@ -0,0 +1,422 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2024 Liebherr-Electronics and Drives GmbH
-> + *
-> + * Reference Manual : https://www.nxp.com/docs/en/data-sheet/MC33XS2410.pdf
-> + *
-> + * Limitations:
-> + * - Supports frequencies between 0.5Hz and 2048Hz with following steps:
-> + *   - 0.5 Hz steps from 0.5 Hz to 32 Hz
-> + *   - 2 Hz steps from 2 Hz to 128 Hz
-> + *   - 8 Hz steps from 8 Hz to 512 Hz
-> + *   - 32 Hz steps from 32 Hz to 2048 Hz
-> + * - Cannot generate a 0 % duty cycle.
-> + * - Always produces low output if disabled.
-> + * - Configuration isn't atomic. When changing polarity, duty cycle or period
-> + *   the data is taken immediately, counters not being affected, resulting in a
-> + *   behavior of the output pin that is neither the old nor the new state,
-> + *   rather something in between.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/math64.h>
-> +#include <linux/minmax.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/pwm.h>
-> +
-> +#include <asm/unaligned.h>
-> +
-> +#include <linux/spi/spi.h>
-> +
-> +#define MC33XS2410_GLB_CTRL		0x00
-> +#define MC33XS2410_GLB_CTRL_MODE	GENMASK(7, 6)
-> +#define MC33XS2410_GLB_CTRL_MODE_NORMAL	FIELD_PREP(MC33XS2410_GLB_CTRL_MODE, 1)
-> +#define MC33XS2410_PWM_CTRL1		0x05
-> +#define MC33XS2410_PWM_CTRL1_POL_INV(x)	BIT(x)
-> +#define MC33XS2410_PWM_CTRL3		0x07
-> +/* x in { 0 ... 3 } */
-> +#define MC33XS2410_PWM_CTRL3_EN(x)	BIT(4 + (x))
-> +#define MC33XS2410_PWM_FREQ1		0x08
-> +/* x in { 1 ... 4 } */
-> +#define MC33XS2410_PWM_FREQ(x)		(MC33XS2410_PWM_FREQ1 + (x - 1))
-> +#define MC33XS2410_PWM_FREQ_STEP_MASK	GENMASK(7, 6)
-> +#define MC33XS2410_PWM_FREQ_COUNT_MASK	GENMASK(5, 0)
-> +#define MC33XS2410_PWM_DC1		0x0c
-> +/* x in { 1 ... 4 } */
-> +#define MC33XS2410_PWM_DC(x)		(MC33XS2410_PWM_DC1 + (x - 1))
-> +#define MC33XS2410_WDT			0x14
-> +
-> +#define MC33XS2410_WR			BIT(7)
-> +#define MC33XS2410_RD_CTRL		BIT(7)
-> +#define MC33XS2410_RD_DATA_MASK		GENMASK(13, 0)
-> +
-> +#define MC33XS2410_MIN_PERIOD		488282
-> +#define MC33XS2410_MAX_PERIOD_STEP0	2000000000
-> +/* x in { 0 ... 3 } */
-> +#define MC33XS2410_MAX_PERIOD_STEP(x)	(MC33XS2410_MAX_PERIOD_STEP0 >> (2 * x))
-
-Nitpick: These register definition become easier to parse for a human if
-you indent the RHS of register fields one tab further and add an empty
-line between the definitions for different registers.
-
-MC33XS2410_PWM_DC1 is only used once, I'd hard-code it into the
-definition of MC33XS2410_PWM_DC.
-
-The register fields [7:4] in MC33XS2410_PWM_CTRL3 are called PWM_ON4 ..
-PWM_ON1. So your x in { 0 ... 3 } is wrong. (Luckily, having some x
-range over { 0 ... 3 } and others orver { 1 ... 4 } is prone to error
-and confusion.)
-
-Also I'd drop all _MASK suffixes.
-
-For MC33XS2410_MAX_PERIOD_STEP maybe use a different variable name than
-for the others. For the register definitions the range is over hwpwm
-(which might be a good name there?), for MC33XS2410_MAX_PERIOD_STEP it's
-about MC33XS2410_PWM_FREQ_STEP.
-
-> +#define MC33XS2410_MAX_TRANSFERS	5
-> +#define MC33XS2410_WORD_LEN		2
-> +
-> +struct mc33xs2410_pwm {
-> +	struct spi_device *spi;
-> +};
-> +
-> +static inline struct mc33xs2410_pwm *mc33xs2410_from_chip(struct pwm_chip *chip)
-> +{
-> +	return pwmchip_get_drvdata(chip);
-> +}
-> +
-> +static int mc33xs2410_xfer_regs(struct spi_device *spi, bool read, u8 *reg,
-> +				u16 *val, bool *ctrl, int len)
-
-Should len better be unsigned?
-
-Unless I missed something all ctrl[x] are always identical. If so
-represent that by a single bool.
-
-> +{
-> +	struct spi_transfer t[MC33XS2410_MAX_TRANSFERS] = { { 0 } };
-> +	u8 tx[MC33XS2410_MAX_TRANSFERS * MC33XS2410_WORD_LEN];
-> +	u8 rx[MC33XS2410_MAX_TRANSFERS * MC33XS2410_WORD_LEN];
-> +	int i, ret, reg_i, val_i;
-> +
-> +	if (!len)
-> +		return 0;
-> +
-> +	if (read)
-> +		len++;
-> +
-> +	if (len > MC33XS2410_MAX_TRANSFERS)
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < len; i++) {
-> +		reg_i = i * MC33XS2410_WORD_LEN;
-> +		val_i = reg_i + 1;
-> +		if (read) {
-> +			if (i < len - 1) {
-> +				tx[reg_i] = reg[i];
-> +				tx[val_i] = ctrl[i] ? MC33XS2410_RD_CTRL : 0;
-> +				t[i].tx_buf = &tx[reg_i];
-> +			}
-> +
-> +			if (i > 0)
-> +				t[i].rx_buf = &rx[reg_i - MC33XS2410_WORD_LEN];
-> +		} else {
-> +			tx[reg_i] = reg[i] | MC33XS2410_WR;
-> +			tx[val_i] = val[i];
-> +			t[i].tx_buf = &tx[reg_i];
-> +		}
-> +
-> +		t[i].len = MC33XS2410_WORD_LEN;
-> +		t[i].cs_change = 1;
-
-Not sure if MC33XS2410_WORD_LEN really improves readability here.
-
-Why is this done using $len transfers, wouldn't a single one do (and
-maybe be more performant and not rely on a spi controller that supports
-cs_change)?
-
-> +	}
-> +
-> +	t[len - 1].cs_change = 0;
-> +
-> +	ret = spi_sync_transfer(spi, &t[0], len);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (read) {
-> +		for (i = 0; i < len - 1; i++) {
-> +			reg_i = i * MC33XS2410_WORD_LEN;
-> +			val[i] = FIELD_GET(MC33XS2410_RD_DATA_MASK,
-> +					   get_unaligned_be16(&rx[reg_i]));
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> [...]
-> +static
-> +int mc33xs2410_read_reg(struct spi_device *spi, u8 reg, u16 *val, bool ctrl)
-
-My personal opinion: Better break the line in the argument list or not
-at all. Having a "static" on its own line looks ugly.
-
-> +{
-> +	return mc33xs2410_read_regs(spi, &reg, &ctrl, val, 1);
-> +}
-> [...]
-> +static u64 mc33xs2410_pwm_get_period(u8 reg)
-> +{
-> [...]
-> +	/* Convert frequency to period, considering the doubled frequency. */
-> +	return DIV_ROUND_UP((u32)(2 * NSEC_PER_SEC), freq);
-
-That u32 cast isn't needed.
-
-> +}
-> [...]
-> +static int mc33xs2410_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				const struct pwm_state *state)
-> +{
-> [...]
-> +	/* frequency */
-> +	val[0] = mc33xs2410_pwm_get_freq(period);
-> +	/* Continue calculations with the possibly truncated period */
-> +	period = mc33xs2410_pwm_get_period(val[0]);
-> +
-> +	/* duty cycle */
-> +	duty_cycle = min(period, state->duty_cycle);
-> +	rel_dc = mc33xs2410_pwm_get_relative_duty_cycle(period, duty_cycle);
-> +	val[1] = rel_dc < 0 ? 0 : rel_dc;
-
-Handling of the duty cycle is correct here, but misleading. I already
-added a comment here that using val[1] = 0 if rel_dc < 0 is wrong and
-just deleted it again after I saw (rel_dc >= 0) being used determining
-the value for MC33XS2410_PWM_CTRL3_EN(pwm->hwpwm). An explicit if block
-would make this more obvious.
-
-mc33xs2410_pwm_get_relative_duty_cycle() is simple enough and only used
-once that I'd unroll it here.
-
-> +	/* polarity */
-> +	mask = MC33XS2410_PWM_CTRL1_POL_INV(pwm->hwpwm);
-> +	val[2] = (state->polarity == PWM_POLARITY_INVERSED) ?
-> +		 (val[2] | mask) : (val[2] & ~mask);
-> +
-> +	/* enable output */
-> +	mask = MC33XS2410_PWM_CTRL3_EN(pwm->hwpwm);
-> +	val[3] = (state->enabled && rel_dc >= 0) ? (val[3] | mask) :
-> +						   (val[3] & ~mask);
-> +
-> +	return mc33xs2410_write_regs(spi, reg, val, 4);
-> +}
-> +
-> +static int mc33xs2410_pwm_get_state(struct pwm_chip *chip,
-> +				    struct pwm_device *pwm,
-> +				    struct pwm_state *state)
-> +{
-> [...]
-> +	state->period = mc33xs2410_pwm_get_period(val[0]);
-> +	state->polarity = (val[2] & MC33XS2410_PWM_CTRL1_POL_INV(pwm->hwpwm)) ?
-> +			  PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
-> +	state->enabled = !!(val[3] & MC33XS2410_PWM_CTRL3_EN(pwm->hwpwm));
-> +	mc33xs2410_pwm_set_relative_duty_cycle(state, val[1]);
-
-No need to set state->duty_cycle = 0 if state->enabled is false. This is
-another function I suggest to unroll as it hides more than it abstracts.
-
-> +	return 0;
-> +}
-> +
-> [...]
-> +static int mc33xs2410_probe(struct spi_device *spi)
-> +{
-> [...]
-> +	/* Transition to normal mode */
-> +	ret = mc33xs2410_modify_reg(spi, MC33XS2410_GLB_CTRL,
-> +				    MC33XS2410_GLB_CTRL_MODE,
-> +				    MC33XS2410_GLB_CTRL_MODE_NORMAL);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret,
-> +				     "Failed to transition to normal mode\n");
-
-What is the effect of this register write if the PWM was already setup
-by the bootloader?
-
-> +
-> +	ret = devm_pwmchip_add(dev, chip);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to add pwm chip\n");
-> +
-> +	return 0;
-> +}
-
-Best regards
-Uwe
-
---qsbe7bb5heigo3df
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcXWkcACgkQj4D7WH0S
-/k4pggf+ITkiznKkAONwWvcQeARTGI61rBi4viBWne+BA1bVj6e5H0qoLShziOko
-n2skUg+vq4KcG7ic9kBghHnBDNPIU5op8l8GA/EtudpHZMmXUmhP1Q79xWHq+pJB
-hjVppWUo4P/vB2SfSCxpwK2qIInaum7BNkNCPRrcWYFaVBxKz5SwE0wHIhbPuBNX
-UTvoS6D1hsUWWlje+b3ysobFFYErFijkAQgyGuYFheNnNxpBkEmjQZdmFMLNJbU5
-ykgOf8MTUL/kDUce/yrDAexlpWMb4vQY3beT4guDlVvzdbs29+qIv5C1jxmcXBY7
-hCiIc+I5Fs9vu2qhAAtE7Ts+Y8dyoA==
-=Q9ho
------END PGP SIGNATURE-----
-
---qsbe7bb5heigo3df--
 
