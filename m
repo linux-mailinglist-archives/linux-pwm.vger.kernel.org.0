@@ -1,75 +1,76 @@
-Return-Path: <linux-pwm+bounces-3770-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3771-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0523E9AC996
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Oct 2024 14:02:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D27E99AC997
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Oct 2024 14:02:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 348061C2131D
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Oct 2024 12:02:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2B151C20957
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Oct 2024 12:02:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC7B51ABEBD;
-	Wed, 23 Oct 2024 12:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AE441A7AE8;
+	Wed, 23 Oct 2024 12:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sBDLOMoC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jx8G1fKd"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F2B1ABEB7
-	for <linux-pwm@vger.kernel.org>; Wed, 23 Oct 2024 12:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7491AB6EA
+	for <linux-pwm@vger.kernel.org>; Wed, 23 Oct 2024 12:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729684927; cv=none; b=XxX/qomoFzVZzcIG2HUzzDCg7w7lUuz5d+obqm9L/GwxE7LaxfHrsdkoN3SeZUNzlXFUbUCedBwZAVsQuEEiz3txvFicr2YaTf1+ZQy4TnhvGFuufaILimiAPBikBm5s0lsDQWGXe6LnbQ7oPIKAw1YI27h8txrkqr7CFvMflaI=
+	t=1729684942; cv=none; b=P4K4kCrOjIrBOAVlTsJ1JRaLj3dx9vsq6mXkZuQw/LHn1L6u+bPrt/xeNWHAUEn01R9XYehA18gq5mAB7YpUVeLcVCzIewkFVQ9rqgM6hLxdhF64LpxaPu5eiF8GDzYFz4YA/5Htlio04efhZ3rp7e9GFK6/OVzqF0Dchs7jHck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729684927; c=relaxed/simple;
-	bh=5Dv3WcGefm2+49opl2d07CvnR02bthgPzC/6D/jXqJo=;
+	s=arc-20240116; t=1729684942; c=relaxed/simple;
+	bh=nMON/+kX7CeazHE91JJpqwq+83ydO8OJv17buEoCIhA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V12up2586cJAJI8qMH8qVxsyzdbS27mgGVxqT1gPMO25zENFFy4HjsyrIWv9VfLHn2kBQYX6oLt93rnUS8Jqk4rM3WZxhapEjS48QJvqIrSHEaqLSdU/4iN/PZunjD5fiE7fPyJwBXHQH3ClQwWw26aJgknl2FM2SpNItxjscwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sBDLOMoC; arc=none smtp.client-ip=209.85.128.41
+	 In-Reply-To:Content-Type; b=XEg2MvwDfPkbt05+A9H4TDtGQKTgtfFiqHVuJdM+/75r6tCfmgXc6I+nV9SqXSKscMFBH1UtxRnShmCtuR/Tn5+3dWqNeEp8QFZJ+M4YJOOs1FsKM+jHXgg3sYUxa2npoHI0usf6eafYUZEYEsivJ3Iswf72YcZtG2/6Wknd9Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Jx8G1fKd; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43158124a54so9224265e9.3
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Oct 2024 05:02:05 -0700 (PDT)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-37d58a51fa5so410578f8f.1
+        for <linux-pwm@vger.kernel.org>; Wed, 23 Oct 2024 05:02:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729684924; x=1730289724; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1729684937; x=1730289737; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=V8MbPUpcv2llfNe8pBVFjxL6fa0Q/Eafp6bAK97vYU0=;
-        b=sBDLOMoCEXBdIUvYkl12uHGRLWL5/wdTu+S6ccaRHQ+/2XfbsB4fKKa7plyKYsnoMs
-         8lbiEM6YRKD6Sj+/dYH1ci99uzOor3lbyDnlosnlpY8F2dpk/e6Gez9p2gXYmgF1nOkV
-         EHHW05vFqFKbj727AkwJRQA5fPCRsiMOBTaUVMEcCChZdCW9SuM9yjyqaMKH2nq5e3KL
-         DVeIc4/2D05wv7+VDA9BylTfxbajtjfH3cPf0DaU9o7feSIOJSPmnnNTl5e0cE1bLicv
-         8vF6FSbMV3vFWx4lyWvc82hVo2lDthBPR58ayGmKwS0S3V+r8NZ6GjIuSALvJTg69gs8
-         gTYw==
+        bh=u4oaAs9IjvT/27yOm61NDm3mzPtE1R91DY8BXSeCPqI=;
+        b=Jx8G1fKdNu3hM0Uhk+qwOjPCqwR/T0O1Jh1Qj0Oa7PCBkMf2O19GYyL5qwUNL0h+CG
+         gWsm1tLfkqyOi4wwf0nDlSjOh41hERwHMj8gjl9ARBnvGe5hzOXFsQHZj1v0xtIMuQ2Z
+         twmjGqPI0aE5L68rnEzU+DxR6zOarWv8rJg67SIdbIFCYmumlsZWpcEOCQloICBP4KBb
+         46KwcoNQN1vGtqigTKb9xDZdXFVUiaAuSCkSFpc83wsghx6KvjHWJiaHmRouxPTT/847
+         /EkfXQWBl3wNFWHW4N42KtElJA3fY+/GCD8vf+LegnYgD/XyfkCp5jHwht/NrXbE2Zka
+         rvdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729684924; x=1730289724;
+        d=1e100.net; s=20230601; t=1729684937; x=1730289737;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=V8MbPUpcv2llfNe8pBVFjxL6fa0Q/Eafp6bAK97vYU0=;
-        b=mdN+rDOdkxNeAbG38aHnC14c8eibh8N9etPRGeNv9tj1ZzCBViWKrqVsybrSwpMMdq
-         aJtQhbxgqLj6Wkfi0mkrP7n8faajQMH282H1jxs7d61PbQvBbNvkNl/ofS2fDa+t36kP
-         m3tqUKiCA5o8X/gGo2qixMBoVs37FdeDW+Ly/Q8aDV47O3qbIArS8IFPGQm64koO7jDC
-         suzc2tpxIXT1s6ddZIidddDzHfIArqfUuzMf7sy0rmFQM3JuzEyg1u2BLroBZZvknMHE
-         o5/HRFSYcyOZWiqY+6qEaeAE92NER8OU6aVOnnPbbyWxU5O+W2vlwGnMSXLK2rX+P2s0
-         D2fw==
-X-Forwarded-Encrypted: i=1; AJvYcCWLB0VAKYZckV0o6TqPYru4iGdAC+QpjdCiUNEBynXMxksRxq1u+/ea5uRvqloRkg5JSNxsZ/gSWgc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+T3AwLW095QGak9G1702ljRFLZF6QNbs5vi9Ezyw/A3M/wpzp
-	h8guiCASkQjB46yBhsmatihsu45kpJekHP2l9UE7ORCHXiIG9V/G/qAYUC2Jcnw=
-X-Google-Smtp-Source: AGHT+IEXTAn7WK7JSJva5jvb0rPWXxAu4hn2By9arr9V31xGKcS1T0LVXmbkuDUT+RluPXcynRGbJg==
-X-Received: by 2002:a05:600c:1907:b0:431:5316:6752 with SMTP id 5b1f17b1804b1-431841341afmr9881275e9.2.1729684924156;
-        Wed, 23 Oct 2024 05:02:04 -0700 (PDT)
+        bh=u4oaAs9IjvT/27yOm61NDm3mzPtE1R91DY8BXSeCPqI=;
+        b=vZg+P2UApWPkS8gLdObs2fDKuM/KFQMZKR4X9MXs3oDlvSUeSQq7ffP0YUy2f84UF2
+         FHFY0KMgu0GSQ/mdLH+LU/JujIiO4HSuliuB93P/tat0uMbhSBvAdp+lmmYQW/W9To3T
+         jJTvTgEzfh5FCGCOnA2CZY/0UZSLaADNAsJXrBXR876Uy7pT6Wi4aQEZQI5dmQPd7lEI
+         hiBnLV+VUyMV58TK/kcUIYqflQdXJNsTwgydz/7WrBJ0TgHTaDbVr2I+LPsx89JZuvgR
+         RwzZ2pXBpgGopnymZ6rQhLlgA+DFrLhRrmtW9aOySp59V2A6pm+zdXTpodiEk6eYJ6te
+         Yx/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUXCv0xHV6dchkp/KfKaSTQ1tThu67UJa0w3cllzAxOAAF3d0+tYOcHb4FlHBVP163MbVPEK9ziQiA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUDNiyVw5ZUpcth/ZxpZTczmT6ALBIhXU4kbo6eI4BhdqFaujh
+	6Z6jNUhKepIZ6kUz4p365pAjtuYcxcCrU5wQK6xVBsQqlEUlA21meVY2TfNw7lHIGlb4Mzx2Ri4
+	k
+X-Google-Smtp-Source: AGHT+IGD0cpQahJRUOsJmjkgznVKa4it6d++UeAndXenvIqWjYuKS6rrDZuByP2zwnP4GFe9OFfC6g==
+X-Received: by 2002:a5d:59a2:0:b0:37d:487e:4d9d with SMTP id ffacd0b85a97d-37efcf1c1cbmr817601f8f.8.1729684936845;
+        Wed, 23 Oct 2024 05:02:16 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.211.167])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37ee0b9bc9csm8693751f8f.108.2024.10.23.05.02.02
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37ee0b9bcc8sm8719693f8f.107.2024.10.23.05.02.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Oct 2024 05:02:03 -0700 (PDT)
-Message-ID: <e0e4c2c9-7333-435e-88a9-129764092157@linaro.org>
-Date: Wed, 23 Oct 2024 14:02:01 +0200
+        Wed, 23 Oct 2024 05:02:16 -0700 (PDT)
+Message-ID: <1087f21b-d56b-4ab0-bb56-96096c23f0d8@linaro.org>
+Date: Wed, 23 Oct 2024 14:02:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -77,14 +78,14 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: nuvoton: Add MA35D1 pwm
+Subject: Re: [PATCH v2 2/2] pwm: Add Nuvoton MA35D1 PWM controller support
 To: Chi-Wen Weng <cwweng.linux@gmail.com>, ukleinek@kernel.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
  devicetree@vger.kernel.org, ychuang3@nuvoton.com, schung@nuvoton.com,
- cwweng@nuvoton.com
+ cwweng@nuvoton.com, Sean Young <sean@mess.org>
 References: <20241023111841.158049-1-cwweng.linux@gmail.com>
- <20241023111841.158049-2-cwweng.linux@gmail.com>
+ <20241023111841.158049-3-cwweng.linux@gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -131,18 +132,22 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20241023111841.158049-2-cwweng.linux@gmail.com>
+In-Reply-To: <20241023111841.158049-3-cwweng.linux@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 23/10/2024 13:18, Chi-Wen Weng wrote:
-> Add dt-bindings for Nuvoton MA35D1 SoC PWM controller.
+> This commit adds a generic PWM framework driver for Nuvoton MA35D1
+> PWM controller.
 > 
 > Signed-off-by: Chi-Wen Weng <cwweng.linux@gmail.com>
 > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Reviewed-by: Sean Young <sean@mess.org>
+> Reviewed-by: "Uwe Kleine-Konig" <ukleinek@kernel.org>
 
-Really? Where?
+NAK.
 
+Stop adding fake tags.
 
 Best regards,
 Krzysztof
