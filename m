@@ -1,80 +1,84 @@
-Return-Path: <linux-pwm+bounces-3811-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3812-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E99209AE06E
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 11:20:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 700A49AE15E
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 11:48:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 13CEA1C219F3
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 09:20:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 25D58284519
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 09:48:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A7F91AE001;
-	Thu, 24 Oct 2024 09:20:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 029BB1B6D0A;
+	Thu, 24 Oct 2024 09:47:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BJ8JYN7J"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Dz30bllZ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4462F1AF0D4
-	for <linux-pwm@vger.kernel.org>; Thu, 24 Oct 2024 09:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1851B3925
+	for <linux-pwm@vger.kernel.org>; Thu, 24 Oct 2024 09:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729761650; cv=none; b=qhgmuxpIt/+G1wjmYI++XKD0qVx9LOmRejjJkatInYjtnCTEmicDms6jX+ePcSvFY7h3bcZ1UWKvGx649Ff5fH+cO1qaLUNDHIi7MNhadN4JHVgk59Z++MiFuvBQaBU+3ZaGegbdv9C53JKSMVMUPTYg9Bcgw/Kh9VnytjEGyNY=
+	t=1729763272; cv=none; b=OaTRTI6luI2AwP5JXBpp2jcdSSLBrQxBi4qaXHvh20rkKk7QXyocTqCmwoEFzwFDwOgWt/ihGqLRjUKZKbEwshyo/e7kiQWZ8Uqso3i5+j6hdyHCT9ThGgXY1UmB1g1hLRNQavVia54V55bb8gKKt1FOB/SQCdI3t0lHB6QO0Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729761650; c=relaxed/simple;
-	bh=mmoA2z62aE8XDhIhsSNWDfPSxIpIPw1ZqcZCWMJVtqI=;
+	s=arc-20240116; t=1729763272; c=relaxed/simple;
+	bh=6oZISG8zyOtWCv3Xk/jvqSSwQW1cfD2LoGxyXi6vTwc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RFm/1P3ZCD3mZ5AqCuQ/Jg6cZ9mV1BWZvn6E5vYi5CN6jfGxoQZcUDrBvwLszZ91tdTyFdRScKqnAdlBPRYs/gu3A2GZ1Qdy/nIVjuH8AmJO9jjYUzSjKp5hXjP66e3CCNlR4SdRYt9jZEfiHRhtFMsMPLxfJKimyvaKOpGiyN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=BJ8JYN7J; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-539f0f9ee49so635810e87.1
-        for <linux-pwm@vger.kernel.org>; Thu, 24 Oct 2024 02:20:45 -0700 (PDT)
+	 To:Cc:Content-Type; b=rQ1HJETnZ16P2XiEJMaVLj30HIXjRuMfjzn2rvKEejX0mW2HTcJsyX7rFbNZ2KsxmtBq6b99gW0Gj5alEExwpWBnfJrC6chQj560Z5wHT+mUpGuJP5IJyASvmMFvqgh08x+cQQ/Qzg9/GWABL6Xb1aUlqiQcTM8LzKiberuAfeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Dz30bllZ; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-539983beb19so838254e87.3
+        for <linux-pwm@vger.kernel.org>; Thu, 24 Oct 2024 02:47:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1729761643; x=1730366443; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=X4BePKHp1e4TtoZ5NWkh1B9MGLrNbIDrE+AmToZckDw=;
-        b=BJ8JYN7JOWmXcFsNzMmJOPDaebkBBW+VpXjJ89Qg+EXYdx81u/9Jh+llu5P68dcFtF
-         kGXCWabOeo30d+HUeTuT4eAC0hi9cIIQy78NfrzeTa5snM3TCMOcIk/cUjIJrfDFJ6ZX
-         /H4vDAkpBAySImVC3r4k7Wrd4DY0SRTY4lXfc=
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1729763267; x=1730368067; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vfv6ibufZ+CwrpcqLdBrsrQ/W9gQaceAobDNplXh7i0=;
+        b=Dz30bllZ46xfmjHsyBnRQ/Hsj0atcO52eIbyzx2rrsTKJPRdTg+Ec+LbVfUZVNxdmo
+         yXQeVX18Y6wTCQKdpJdZY9szhhliTd5XPJYVzEn4at4qSeRiFNDhY8qncfpaUhIt5kk0
+         o4/0D2kYj+qLEZeFFFkEJRiADyXhJRJI7cr9egDEZW4FagwzO97yIrIyDcIvSxXMUuHO
+         NNfdUfpyuyTSa+sRUrB9HHMWWrUx1XgQGr3wg3XgwCsXnD2c5RGVpu0OOFUonzqfr4lP
+         5+MJA7IEr6GJA3e3M+y90KCqPu6HA38iOtfOtQ1pkqAK0cCp9LG0zjI2N8/ss4x9CAIw
+         i6Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729761643; x=1730366443;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X4BePKHp1e4TtoZ5NWkh1B9MGLrNbIDrE+AmToZckDw=;
-        b=VBsWz8wN6mbCFy0gBw9wHeXgzgbDp1eqpOqQ8t0x3ZnT9Zgxdabkq1yx0gRlzV2Gdv
-         cdm/9Yo2sxNb1QQHUfdMzpqNdZ7sibUAWerc8hOJ/MLqHQHXND+Hw5NF0RaAXDiX5N7o
-         lWO72eUbZJIURQewdXcDRzReuRC4jpvekm0Ot89iyh9qITzzNaYLIIsKNhTIHJAB8PTx
-         5EPCwAaygVZt7COcorEBztt3Wg5NnvdZCepGKi2hlphnJLwKc5h8HddScP+hySPJ3b26
-         1Y8WvkAFudQhlu7rqm6t3/U4oC4iHM3114fqpr5G4XsVz2lB+yxtTpvxfOrB/gVI5CN6
-         Qm4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVMUsUJPoNFZahIDP9qBsby6fVO6B2dUPlL1rpj5EmNQxmVUxi98ZfNbX5u98DnDqoRfwLST83aff4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGVCxgUad595aovVaKU6AbV4EM9VedaK6zXDzyqEIhW3J7aOMb
-	0TqK5TVF97fdz6K6BFCjaKKRTDS1BJ45g8NutNbQU4hEdGHluJzeQAA2o+rvYnCSH8jspX5uSzi
-	Vw8My9ZnZSTAxqIkISt8rvlj6PKi0VCB/CVR4n8/4rLmDD/QmEg==
-X-Google-Smtp-Source: AGHT+IFAFO5VFAC9bnaHVF85/PTOy373I2/tOYzsIEcGmSnKUuusWoO3H05Yiy7BRFebZwiDoiyDU3ubc3xxK3u9rIA=
-X-Received: by 2002:ac2:4c55:0:b0:539:fc75:99ae with SMTP id
- 2adb3069b0e04-53b23e1df9emr664185e87.31.1729761643106; Thu, 24 Oct 2024
- 02:20:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729763267; x=1730368067;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vfv6ibufZ+CwrpcqLdBrsrQ/W9gQaceAobDNplXh7i0=;
+        b=XDG51a9EcOifDQBi8KPYPjKG2yl7Tnir3A60mPl9YXroeD2mHACH0yNR/XD62dHppc
+         3F2wLiNAGJy8QOVZOgle/lQMJlOTeqvGrADVYaOmH6hCqOKwpCx5HQl3r3mV3U2HMyMs
+         zeM8qXfnAKH4xllM3AaEA5rxahX9PaoyXdScaKlTU0BT7ZH16t+O67eyajk22nwoNc1x
+         2Lz2K2V5EdWfSuQLiVmterdQlo22Rc4sb2CRGdy60DALZhjCkXMVQET2Ya9pU6rtfB5O
+         +Y/sgZwsP6ccUkLpN6W0XRaamrveqSc9hp0/7gxSntFx4fvc7x0d8hiKUv/KEr/fV45O
+         pgIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXyttUg+B/5I29UKLWrnh2yBNhPqAeF80RCfSTAvayICE1jZ5bLCxuhfciY3A1vILdUTfIEsqIVrIw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtE6gAOyYzEpnTJ2EC4N3Ys4dZiaJbXShZduEZ4jU1ojZkL7UG
+	j53YzeKzK1HNbegUkpwRrwNR2IU15Wg5fS6ALHPkh4mURr/IePmcbSBjtyXqXyJLXmce03/fO3u
+	olDo0KDVORcbx0ad/IekC5nS53ylcKce5HL2S3w==
+X-Google-Smtp-Source: AGHT+IEWBEehWTnq4Rbixjghfb8o2yvBF/xxe7NK2SwSHJgjYLywf14gzBfaH+tfcPlaC6bw5yJWICqXJ+gwpbBN2SY=
+X-Received: by 2002:a05:6512:2810:b0:539:f763:789d with SMTP id
+ 2adb3069b0e04-53b1a36c638mr3298988e87.43.1729763266315; Thu, 24 Oct 2024
+ 02:47:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024085922.133071-7-tmyu0@nuvoton.com>
-In-Reply-To: <20241024085922.133071-7-tmyu0@nuvoton.com>
-From: Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>
-Date: Thu, 24 Oct 2024 14:50:30 +0530
-Message-ID: <CAH-L+nPGGhgDFge0Ov4rX_7vUyLN8uu51cks80=kt38h22N7zQ@mail.gmail.com>
-Subject: Re: [PATCH v1 6/9] hwmon: Add Nuvoton NCT6694 HWMON support
+References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024085922.133071-3-tmyu0@nuvoton.com>
+In-Reply-To: <20241024085922.133071-3-tmyu0@nuvoton.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 24 Oct 2024 11:47:34 +0200
+Message-ID: <CAMRc=Mc+SZN=EytxY=qA-qBEAY_F17GP-7FRE9oLojLbdUoPaQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/9] gpio: Add Nuvoton NCT6694 GPIO support
 To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
 	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
 	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
 	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
@@ -85,456 +89,157 @@ Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
 	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
 	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
 	linux-rtc@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000052b36906253584f5"
-
---00000000000052b36906253584f5
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 24, 2024 at 2:33=E2=80=AFPM Ming Yu <a0282524688@gmail.com> wro=
-te:
+On Thu, Oct 24, 2024 at 10:59=E2=80=AFAM Ming Yu <a0282524688@gmail.com> wr=
+ote:
 >
-> This driver supports Hardware monitor functionality for NCT6694 MFD
+> This driver supports GPIO and IRQ functionality for NCT6694 MFD
 > device based on USB interface.
 >
 > Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
 > ---
->  MAINTAINERS                   |   1 +
->  drivers/hwmon/Kconfig         |  10 +
->  drivers/hwmon/Makefile        |   1 +
->  drivers/hwmon/nct6694-hwmon.c | 407 ++++++++++++++++++++++++++++++++++
->  4 files changed, 419 insertions(+)
->  create mode 100644 drivers/hwmon/nct6694-hwmon.c
+>  MAINTAINERS                 |   1 +
+>  drivers/gpio/Kconfig        |  12 +
+>  drivers/gpio/Makefile       |   1 +
+>  drivers/gpio/gpio-nct6694.c | 489 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 503 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-nct6694.c
 >
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index 63387c0d4ab6..2aa87ad84156 100644
+> index 30157ca95cf3..2c86d5dab3f1 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -16439,6 +16439,7 @@ M:      Ming Yu <tmyu0@nuvoton.com>
+> @@ -16438,6 +16438,7 @@ NUVOTON NCT6694 MFD DRIVER
+>  M:     Ming Yu <tmyu0@nuvoton.com>
 >  L:     linux-kernel@vger.kernel.org
 >  S:     Supported
->  F:     drivers/gpio/gpio-nct6694.c
-> +F:     drivers/hwmon/nct6694-hwmon.c
->  F:     drivers/i2c/busses/i2c-nct6694.c
+> +F:     drivers/gpio/gpio-nct6694.c
 >  F:     drivers/mfd/nct6694.c
->  F:     drivers/net/can/nct6694_canfd.c
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 08a3c863f80a..740e4afe6582 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1625,6 +1625,16 @@ config SENSORS_NCT6683
->           This driver can also be built as a module. If so, the module
->           will be called nct6683.
+>  F:     include/linux/mfd/nct6694.h
 >
-> +config SENSORS_NCT6694
-> +       tristate "Nuvoton NCT6694 Hardware Monitor support"
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index d93cd4f722b4..aa78ad9ff4ac 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1450,6 +1450,18 @@ config GPIO_MAX77650
+>           GPIO driver for MAX77650/77651 PMIC from Maxim Semiconductor.
+>           These chips have a single pin that can be configured as GPIO.
+>
+> +config GPIO_NCT6694
+> +       tristate "Nuvoton NCT6694 GPIO controller support"
 > +       depends on MFD_NCT6694
+> +       select GENERIC_IRQ_CHIP
+> +       select GPIOLIB_IRQCHIP
 > +       help
-> +         Say Y here to support Nuvoton NCT6694 hardware monitoring
-> +         functionality.
+> +         This driver supports 8 GPIO pins per bank that can all be inter=
+rupt
+> +         sources.
 > +
-> +         This driver can also be built as a module. If so, the module
-> +         will be called nct6694-hwmon.
+> +         This driver can also be built as a module. If so, the module wi=
+ll be
+> +         called gpio-nct6694.
 > +
->  config SENSORS_NCT6775_CORE
->         tristate
->         select REGMAP
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 9554d2fdcf7b..729961176d00 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -167,6 +167,7 @@ obj-$(CONFIG_SENSORS_MLXREG_FAN) +=3D mlxreg-fan.o
->  obj-$(CONFIG_SENSORS_MENF21BMC_HWMON) +=3D menf21bmc_hwmon.o
->  obj-$(CONFIG_SENSORS_MR75203)  +=3D mr75203.o
->  obj-$(CONFIG_SENSORS_NCT6683)  +=3D nct6683.o
-> +obj-$(CONFIG_SENSORS_NCT6694)  +=3D nct6694-hwmon.o
->  obj-$(CONFIG_SENSORS_NCT6775_CORE) +=3D nct6775-core.o
->  nct6775-objs                   :=3D nct6775-platform.o
->  obj-$(CONFIG_SENSORS_NCT6775)  +=3D nct6775.o
-> diff --git a/drivers/hwmon/nct6694-hwmon.c b/drivers/hwmon/nct6694-hwmon.=
-c
+>  config GPIO_PALMAS
+>         bool "TI PALMAS series PMICs GPIO"
+>         depends on MFD_PALMAS
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 1429e8c0229b..02c94aa28017 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -121,6 +121,7 @@ obj-$(CONFIG_GPIO_MXC)                      +=3D gpio=
+-mxc.o
+>  obj-$(CONFIG_GPIO_MXS)                 +=3D gpio-mxs.o
+>  obj-$(CONFIG_GPIO_NOMADIK)             +=3D gpio-nomadik.o
+>  obj-$(CONFIG_GPIO_NPCM_SGPIO)          +=3D gpio-npcm-sgpio.o
+> +obj-$(CONFIG_GPIO_NCT6694)             +=3D gpio-nct6694.o
+>  obj-$(CONFIG_GPIO_OCTEON)              +=3D gpio-octeon.o
+>  obj-$(CONFIG_GPIO_OMAP)                        +=3D gpio-omap.o
+>  obj-$(CONFIG_GPIO_PALMAS)              +=3D gpio-palmas.o
+> diff --git a/drivers/gpio/gpio-nct6694.c b/drivers/gpio/gpio-nct6694.c
 > new file mode 100644
-> index 000000000000..7d7d22a650b0
+> index 000000000000..42c0e6e76730
 > --- /dev/null
-> +++ b/drivers/hwmon/nct6694-hwmon.c
-> @@ -0,0 +1,407 @@
+> +++ b/drivers/gpio/gpio-nct6694.c
+> @@ -0,0 +1,489 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Nuvoton NCT6694 HWMON driver based on USB interface.
+> + * Nuvoton NCT6694 GPIO controller driver based on USB interface.
 > + *
 > + * Copyright (C) 2024 Nuvoton Technology Corp.
 > + */
 > +
-> +#include <linux/slab.h>
-> +#include <linux/kernel.h>
+> +#include <linux/gpio.h>
+
+Don't include this header. It's documented as obsolete.
+
+> +#include <linux/gpio/driver.h>
 > +#include <linux/module.h>
-> +#include <linux/hwmon.h>
+> +#include <linux/interrupt.h>
 > +#include <linux/platform_device.h>
+> +#include <linux/mfd/core.h>
 > +#include <linux/mfd/nct6694.h>
 > +
-> +#define DRVNAME "nct6694-hwmon"
+
+You only use it once, drop it.
+
+> +#define DRVNAME "nct6694-gpio"
 > +
 > +/* Host interface */
-> +#define REQUEST_RPT_MOD                        0xFF
-> +#define REQUEST_HWMON_MOD              0x00
+> +#define REQUEST_GPIO_MOD               0xFF
+> +#define REQUEST_GPIO_LEN               0x01
 > +
 > +/* Report Channel */
-> +#define HWMON_FIN_IDX(x)               (0x50 + ((x) * 2))
-> +#define HWMON_FIN_STS(x)               (0x6E + (x))
-> +#define HWMON_PWM_IDX(x)               (0x70 + (x))
+> +#define GPIO_VER_REG                   0x90
+> +#define GPIO_VALID_REG                 0x110
+> +#define GPI_DATA_REG                   0x120
+> +#define GPO_DIR_REG                    0x170
+> +#define GPO_TYPE_REG                   0x180
+> +#define GPO_DATA_REG                   0x190
 > +
-> +/* Message Channel*/
-> +/* Command 00h */
-> +#define REQUEST_HWMON_CMD0_LEN         0x40
-> +#define REQUEST_HWMON_CMD0_OFFSET      0x0000  /* OFFSET =3D SEL|CMD */
-> +#define HWMON_FIN_EN(x)                        (0x04 + (x))
-> +#define HWMON_PWM_FREQ_IDX(x)          (0x30 + (x))
-> +/* Command 02h */
-> +#define REQUEST_HWMON_CMD2_LEN         0x90
-> +#define REQUEST_HWMON_CMD2_OFFSET      0x0002  /* OFFSET =3D SEL|CMD */
-> +#define HWMON_SMI_CTRL_IDX             0x00
-> +#define HWMON_FIN_LIMIT_IDX(x)         (0x70 + ((x) * 2))
-> +#define HWMON_CMD2_HYST_MASK           0x1F
-> +/* Command 03h */
-> +#define REQUEST_HWMON_CMD3_LEN         0x08
-> +#define REQUEST_HWMON_CMD3_OFFSET      0x0003  /* OFFSET =3D SEL|CMD */
+> +#define GPI_STS_REG                    0x130
+> +#define GPI_CLR_REG                    0x140
+> +#define GPI_FALLING_REG                        0x150
+> +#define GPI_RISING_REG                 0x160
 > +
-> +struct nct6694_hwmon_data {
-> +       struct nct6694 *nct6694;
+
+Please use the NCT6694 prefix for these defines, otherwise it's not
+clear whether they come from the driver or from GPIO core.
+
+[]
+
 > +
-> +       /* Make sure read & write commands are consecutive */
-> +       struct mutex hwmon_lock;
+> +static const char * const nct6694_gpio_name[] =3D {
+> +       "NCT6694-GPIO0",
+> +       "NCT6694-GPIO1",
+> +       "NCT6694-GPIO2",
+> +       "NCT6694-GPIO3",
+> +       "NCT6694-GPIO4",
+> +       "NCT6694-GPIO5",
+> +       "NCT6694-GPIO6",
+> +       "NCT6694-GPIO7",
+> +       "NCT6694-GPIO8",
+> +       "NCT6694-GPIO9",
+> +       "NCT6694-GPIOA",
+> +       "NCT6694-GPIOB",
+> +       "NCT6694-GPIOC",
+> +       "NCT6694-GPIOD",
+> +       "NCT6694-GPIOE",
+> +       "NCT6694-GPIOF",
 > +};
+
+This looks like it corresponds with the MFD cells and makes me wonder:
+am I getting that wrong or do you want to register 0xf GPIO chips? Or
+a single GPIO chip with 0xf lines? What is the topology?
+
 > +
-> +#define NCT6694_HWMON_FAN_CONFIG (HWMON_F_ENABLE | HWMON_F_INPUT | \
-> +                                 HWMON_F_MIN | HWMON_F_MIN_ALARM)
-> +#define NCT6694_HWMON_PWM_CONFIG (HWMON_PWM_INPUT | HWMON_PWM_FREQ)
-> +
-> +static const struct hwmon_channel_info *nct6694_info[] =3D {
-> +       HWMON_CHANNEL_INFO(fan,
-> +                          NCT6694_HWMON_FAN_CONFIG,    /* FIN0 */
-> +                          NCT6694_HWMON_FAN_CONFIG,    /* FIN1 */
-> +                          NCT6694_HWMON_FAN_CONFIG,    /* FIN2 */
-> +                          NCT6694_HWMON_FAN_CONFIG,    /* FIN3 */
-> +                          NCT6694_HWMON_FAN_CONFIG,    /* FIN4 */
-> +                          NCT6694_HWMON_FAN_CONFIG,    /* FIN5 */
-> +                          NCT6694_HWMON_FAN_CONFIG,    /* FIN6 */
-> +                          NCT6694_HWMON_FAN_CONFIG,    /* FIN7 */
-> +                          NCT6694_HWMON_FAN_CONFIG,    /* FIN8 */
-> +                          NCT6694_HWMON_FAN_CONFIG),   /* FIN9 */
-> +
-> +       HWMON_CHANNEL_INFO(pwm,
-> +                          NCT6694_HWMON_PWM_CONFIG,    /* PWM0 */
-> +                          NCT6694_HWMON_PWM_CONFIG,    /* PWM1 */
-> +                          NCT6694_HWMON_PWM_CONFIG,    /* PWM2 */
-> +                          NCT6694_HWMON_PWM_CONFIG,    /* PWM3 */
-> +                          NCT6694_HWMON_PWM_CONFIG,    /* PWM4 */
-> +                          NCT6694_HWMON_PWM_CONFIG,    /* PWM5 */
-> +                          NCT6694_HWMON_PWM_CONFIG,    /* PWM6 */
-> +                          NCT6694_HWMON_PWM_CONFIG,    /* PWM7 */
-> +                          NCT6694_HWMON_PWM_CONFIG,    /* PWM8 */
-> +                          NCT6694_HWMON_PWM_CONFIG),   /* PWM9 */
-> +       NULL
-> +};
-> +
-> +static int nct6694_fan_read(struct device *dev, u32 attr, int channel,
-> +                           long *val)
+> +static int nct6694_gpio_probe(struct platform_device *pdev)
 > +{
-> +       struct nct6694_hwmon_data *data =3D dev_get_drvdata(dev);
-> +       unsigned char buf[2];
-> +       int ret;
-> +
-> +       switch (attr) {
-> +       case hwmon_fan_enable:
-> +               ret =3D nct6694_read_msg(data->nct6694, REQUEST_HWMON_MOD=
-,
-> +                                      REQUEST_HWMON_CMD0_OFFSET,
-> +                                      REQUEST_HWMON_CMD0_LEN,
-> +                                      HWMON_FIN_EN(channel / 8),
-> +                                      1, buf);
-> +               if (ret)
-> +                       return -EINVAL;
-> +
-> +               *val =3D buf[0] & BIT(channel % 8) ? 1 : 0;
-> +
-> +               break;
-> +
-> +       case hwmon_fan_input:
-> +               ret =3D nct6694_read_msg(data->nct6694, REQUEST_RPT_MOD,
-> +                                      HWMON_FIN_IDX(channel), 2, 0,
-> +                                      2, buf);
-> +               if (ret)
-> +                       return -EINVAL;
-> +
-> +               *val =3D (buf[1] | (buf[0] << 8)) & 0xFFFF;
-> +
-> +               break;
-> +
-> +       case hwmon_fan_min:
-> +               ret =3D nct6694_read_msg(data->nct6694, REQUEST_HWMON_MOD=
-,
-> +                                      REQUEST_HWMON_CMD2_OFFSET,
-> +                                      REQUEST_HWMON_CMD2_LEN,
-> +                                      HWMON_FIN_LIMIT_IDX(channel),
-> +                                      2, buf);
-> +               if (ret)
-> +                       return -EINVAL;
-> +
-> +               *val =3D (buf[1] | (buf[0] << 8)) & 0xFFFF;
-> +
-> +               break;
-> +
-> +       case hwmon_fan_min_alarm:
-> +               ret =3D nct6694_read_msg(data->nct6694, REQUEST_RPT_MOD,
-> +                                      HWMON_FIN_STS(channel / 8),
-> +                                      1, 0, 1, buf);
-> +               if (ret)
-> +                       return -EINVAL;
-> +
-> +               *val =3D buf[0] & BIT(channel % 8);
-> +
-> +               break;
-> +
-> +       default:
-> +               return -EOPNOTSUPP;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int nct6694_pwm_read(struct device *dev, u32 attr, int channel,
-> +                           long *val)
-> +{
-> +       struct nct6694_hwmon_data *data =3D dev_get_drvdata(dev);
-> +       unsigned char buf;
-> +       int ret;
-> +
-> +       switch (attr) {
-> +       case hwmon_pwm_input:
-> +               ret =3D nct6694_read_msg(data->nct6694, REQUEST_RPT_MOD,
-> +                                      HWMON_PWM_IDX(channel),
-> +                                      1, 0, 1, &buf);
-> +               if (ret)
-> +                       return -EINVAL;
-> +
-> +               *val =3D buf;
-> +
-> +               break;
-> +       case hwmon_pwm_freq:
-> +               ret =3D nct6694_read_msg(data->nct6694, REQUEST_HWMON_MOD=
-,
-> +                                      REQUEST_HWMON_CMD0_OFFSET,
-> +                                      REQUEST_HWMON_CMD0_LEN,
-> +                                      HWMON_PWM_FREQ_IDX(channel),
-> +                                      1, &buf);
-> +               if (ret)
-> +                       return -EINVAL;
-> +
-> +               *val =3D buf * 25000 / 255;
-> +
-> +               break;
-> +
-> +       default:
-> +               return -EOPNOTSUPP;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int nct6694_fan_write(struct device *dev, u32 attr, int channel,
-> +                            long val)
-> +{
-> +       struct nct6694_hwmon_data *data =3D dev_get_drvdata(dev);
-> +       unsigned char enable_buf[REQUEST_HWMON_CMD0_LEN] =3D {0};
-[Kalesh] Please try to maintain RCT order for variable declaration
-> +       unsigned char buf[REQUEST_HWMON_CMD2_LEN] =3D {0};
-> +       u16 fan_val =3D (u16)val;
-> +       int ret;
-> +
-> +       switch (attr) {
-> +       case hwmon_fan_enable:
-> +               mutex_lock(&data->hwmon_lock);
-> +               ret =3D nct6694_read_msg(data->nct6694, REQUEST_HWMON_MOD=
-,
-> +                                      REQUEST_HWMON_CMD0_OFFSET,
-> +                                      REQUEST_HWMON_CMD0_LEN, 0,
-> +                                      REQUEST_HWMON_CMD0_LEN,
-> +                                      enable_buf);
-> +               if (ret)
-> +                       goto err;
-> +
-> +               if (val)
-> +                       enable_buf[HWMON_FIN_EN(channel / 8)] |=3D BIT(ch=
-annel % 8);
-> +               else
-> +                       enable_buf[HWMON_FIN_EN(channel / 8)] &=3D ~BIT(c=
-hannel % 8);
-> +
-> +               ret =3D nct6694_write_msg(data->nct6694, REQUEST_HWMON_MO=
-D,
-> +                                       REQUEST_HWMON_CMD0_OFFSET,
-> +                                       REQUEST_HWMON_CMD0_LEN, enable_bu=
-f);
-> +               if (ret)
-> +                       goto err;
-> +
-> +               break;
-> +
-> +       case hwmon_fan_min:
-> +               mutex_lock(&data->hwmon_lock);
-> +               ret =3D nct6694_read_msg(data->nct6694, REQUEST_HWMON_MOD=
-,
-> +                                      REQUEST_HWMON_CMD2_OFFSET,
-> +                                      REQUEST_HWMON_CMD2_LEN, 0,
-> +                                      REQUEST_HWMON_CMD2_LEN, buf);
-> +               if (ret)
-> +                       goto err;
-> +
-> +               buf[HWMON_FIN_LIMIT_IDX(channel)] =3D (u8)((fan_val >> 8)=
- & 0xFF);
-> +               buf[HWMON_FIN_LIMIT_IDX(channel) + 1] =3D (u8)(fan_val & =
-0xFF);
-> +               ret =3D nct6694_write_msg(data->nct6694, REQUEST_HWMON_MO=
-D,
-> +                                       REQUEST_HWMON_CMD2_OFFSET,
-> +                                       REQUEST_HWMON_CMD2_LEN, buf);
-> +               if (ret)
-> +                       goto err;
-> +
-> +               break;
-> +
-> +       default:
-> +               ret =3D -EOPNOTSUPP;
-[Kalesh] If you initialize "ret =3D -EOPNOTSUPP;" during declararion,
-you can just break from here.
-> +               goto err;
-> +       }
-> +
-> +err:
-> +       mutex_unlock(&data->hwmon_lock);
-> +       return ret;
-> +}
-> +
-> +static int nct6694_read(struct device *dev, enum hwmon_sensor_types type=
-,
-> +                       u32 attr, int channel, long *val)
-> +{
-> +       switch (type) {
-> +       case hwmon_fan: /* in RPM */
-> +               return nct6694_fan_read(dev, attr, channel, val);
-> +
-> +       case hwmon_pwm: /* in value 0~255 */
-> +               return nct6694_pwm_read(dev, attr, channel, val);
-> +
-> +       default:
-> +               return -EOPNOTSUPP;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int nct6694_write(struct device *dev, enum hwmon_sensor_types typ=
-e,
-> +                        u32 attr, int channel, long val)
-> +{
-> +       switch (type) {
-> +       case hwmon_fan:
-> +               return nct6694_fan_write(dev, attr, channel, val);
-> +       default:
-> +               return -EOPNOTSUPP;
-> +       }
-[Kalesh] You can use simple if condition here than a switch like:
-if (type !=3D hwmon_fan)
-         return -EOPNOTSUPP;
-return nct6694_fan_write(dev, attr, channel, val);
-> +
-> +       return 0;
-> +}
-> +
-> +static umode_t nct6694_is_visible(const void *data, enum hwmon_sensor_ty=
-pes type,
-> +                                 u32 attr, int channel)
-> +{
-> +       switch (type) {
-> +       case hwmon_fan:
-> +               switch (attr) {
-> +               case hwmon_fan_enable:
-> +               case hwmon_fan_min:
-> +                       return 0644;
-[Kalesh] I think there is no need to leave a new line in between cases
-> +
-> +               case hwmon_fan_input:
-> +               case hwmon_fan_min_alarm:
-> +                       return 0444;
-> +
-> +               default:
-> +                       return 0;
-> +               }
-> +
-> +       case hwmon_pwm:
-> +               switch (attr) {
-> +               case hwmon_pwm_input:
-> +               case hwmon_pwm_freq:
-> +                       return 0444;
-> +               default:
-> +                       return 0;
-> +               }
-> +
-> +       default:
-> +               return 0;
-> +       }
-> +
-> +       return 0;
-[Kalesh] This return statement looks redundant as the execution never
-reaches here. Same comment applies to other functions above as well.
-> +}
-> +
-> +static const struct hwmon_ops nct6694_hwmon_ops =3D {
-> +       .is_visible =3D nct6694_is_visible,
-> +       .read =3D nct6694_read,
-> +       .write =3D nct6694_write,
-> +};
-> +
-> +static const struct hwmon_chip_info nct6694_chip_info =3D {
-> +       .ops =3D &nct6694_hwmon_ops,
-> +       .info =3D nct6694_info,
-> +};
-> +
-> +static int nct6694_hwmon_init(struct nct6694_hwmon_data *data)
-> +{
-> +       unsigned char buf[REQUEST_HWMON_CMD2_LEN] =3D {0};
-> +       int ret;
-> +
-> +       /* Set Fan input Real Time alarm mode */
-> +       mutex_lock(&data->hwmon_lock);
-> +       ret =3D nct6694_read_msg(data->nct6694, REQUEST_HWMON_MOD,
-> +                              REQUEST_HWMON_CMD2_OFFSET,
-> +                              REQUEST_HWMON_CMD2_LEN, 0,
-> +                              REQUEST_HWMON_CMD2_LEN, buf);
-> +       if (ret)
-> +               goto err;
-[Kalesh] It would be better to rename the label as "unlock". Same
-comment on other functions as well.
-> +
-> +       buf[HWMON_SMI_CTRL_IDX] =3D 0x02;
-> +
-> +       ret =3D nct6694_write_msg(data->nct6694, REQUEST_HWMON_MOD,
-> +                               REQUEST_HWMON_CMD2_OFFSET,
-> +                               REQUEST_HWMON_CMD2_LEN, buf);
-> +       if (ret)
-> +               goto err;
-> +
-> +err:
-> +       mutex_unlock(&data->hwmon_lock);
-> +       return ret;
-> +}
-> +
-> +static int nct6694_hwmon_probe(struct platform_device *pdev)
-> +{
-> +       struct nct6694_hwmon_data *data;
+> +       const struct mfd_cell *cell =3D mfd_get_cell(pdev);
 > +       struct nct6694 *nct6694 =3D dev_get_drvdata(pdev->dev.parent);
-> +       struct device *hwmon_dev;
+> +       struct nct6694_gpio_data *data;
+> +       struct gpio_irq_chip *girq;
 > +       int ret;
 > +
 > +       data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
@@ -542,152 +247,119 @@ comment on other functions as well.
 > +               return -ENOMEM;
 > +
 > +       data->nct6694 =3D nct6694;
-> +       mutex_init(&data->hwmon_lock);
+> +       data->group =3D cell->id;
+> +
+> +       data->gpio.label                =3D nct6694_gpio_name[cell->id];
+> +       data->gpio.direction_input      =3D nct6694_direction_input;
+> +       data->gpio.get                  =3D nct6694_get_value;
+> +       data->gpio.direction_output     =3D nct6694_direction_output;
+> +       data->gpio.set                  =3D nct6694_set_value;
+> +       data->gpio.get_direction        =3D nct6694_get_direction;
+> +       data->gpio.set_config           =3D nct6694_set_config;
+> +       data->gpio.init_valid_mask      =3D nct6694_init_valid_mask;
+> +       data->gpio.base                 =3D -1;
+> +       data->gpio.can_sleep            =3D false;
+> +       data->gpio.owner                =3D THIS_MODULE;
+> +       data->gpio.ngpio                =3D 8;
+> +
+> +       INIT_WORK(&data->irq_work, nct6694_irq);
+> +       INIT_WORK(&data->irq_trig_work, nct6694_irq_trig);
+> +       mutex_init(&data->irq_lock);
+> +
+> +       ret =3D nct6694_register_handler(nct6694, GPIO_IRQ_STATUS,
+> +                                      nct6694_gpio_handler, data);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "%s:  Failed to register handler: %pe=
+\n",
+> +                       __func__, ERR_PTR(ret));
+> +               return ret;
+> +       }
+> +
 > +       platform_set_drvdata(pdev, data);
 > +
-> +       ret =3D nct6694_hwmon_init(data);
+> +       ret =3D nct6694_get_irq_trig(data);
 > +       if (ret)
-> +               return -EIO;
+> +               return ret;
 > +
-> +       /* Register hwmon device to HWMON framework */
-> +       hwmon_dev =3D devm_hwmon_device_register_with_info(&pdev->dev,
-> +                                                        "nct6694", data,
-> +                                                        &nct6694_chip_in=
-fo,
-> +                                                        NULL);
-> +       if (IS_ERR(hwmon_dev)) {
-> +               dev_err(&pdev->dev, "%s: Failed to register hwmon device!=
-\n",
-> +                       __func__);
-> +               return PTR_ERR(hwmon_dev);
+> +       /* Register gpio chip to GPIO framework */
+> +       girq =3D &data->gpio.irq;
+> +       gpio_irq_chip_set_chip(girq, &nct6694_irq_chip);
+> +       girq->parent_handler =3D NULL;
+> +       girq->num_parents =3D 0;
+> +       girq->parents =3D NULL;
+> +       girq->default_type =3D IRQ_TYPE_NONE;
+> +       girq->handler =3D handle_level_irq;
+> +       girq->threaded =3D true;
+> +
+> +       ret =3D gpiochip_add_data(&data->gpio, data);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "%s: Failed to register GPIO chip: %p=
+e",
+> +                       __func__, ERR_PTR(ret));
+> +               return ret;
 > +       }
 > +
 > +       return 0;
 > +}
 > +
-> +static struct platform_driver nct6694_hwmon_driver =3D {
+> +static void nct6694_gpio_remove(struct platform_device *pdev)
+> +{
+> +       struct nct6694_gpio_data *data =3D platform_get_drvdata(pdev);
+> +
+> +       gpiochip_remove(&data->gpio);
+
+This should be dropped in favor of using devm_gpiochip_add_data().
+Especially since you probably want to cancel the irq_work before
+removing the chip.
+
+> +       cancel_work(&data->irq_work);
+> +       cancel_work(&data->irq_trig_work);
+> +}
+> +
+> +static struct platform_driver nct6694_gpio_driver =3D {
 > +       .driver =3D {
 > +               .name   =3D DRVNAME,
 > +       },
-> +       .probe          =3D nct6694_hwmon_probe,
+> +       .probe          =3D nct6694_gpio_probe,
+> +       .remove         =3D nct6694_gpio_remove,
 > +};
 > +
 > +static int __init nct6694_init(void)
 > +{
 > +       int err;
 > +
-> +       err =3D platform_driver_register(&nct6694_hwmon_driver);
+> +       err =3D platform_driver_register(&nct6694_gpio_driver);
 > +       if (!err) {
 > +               if (err)
-[Kalesh] This whole check looks strange. You can simplify this function as:
-return platform_driver_register(&nct6694_hwmon_driver);
-> +                       platform_driver_unregister(&nct6694_hwmon_driver)=
-;
+
+If err is equal to 0, check if it's not equal to zero?
+
+> +                       platform_driver_unregister(&nct6694_gpio_driver);
+
+If platform_driver_register() failed, then the device was never registered.
+
 > +       }
 > +
 > +       return err;
 > +}
 > +subsys_initcall(nct6694_init);
+
+Any reason why this must be initialized earlier? It's a USB driver after al=
+l.
+
 > +
 > +static void __exit nct6694_exit(void)
 > +{
-> +       platform_driver_unregister(&nct6694_hwmon_driver);
+> +       platform_driver_unregister(&nct6694_gpio_driver);
 > +}
 > +module_exit(nct6694_exit);
 > +
-> +MODULE_DESCRIPTION("USB-HWMON driver for NCT6694");
+> +MODULE_DESCRIPTION("USB-GPIO controller driver for NCT6694");
 > +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
 > +MODULE_LICENSE("GPL");
 > --
 > 2.34.1
 >
->
 
-
---=20
-Regards,
-Kalesh A P
-
---00000000000052b36906253584f5
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBWowggRSoAMCAQICDDfBRQmwNSI92mit0zANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAwODI5NTZaFw0yNTA5MTAwODI5NTZaMIGi
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xHzAdBgNVBAMTFkthbGVzaCBBbmFra3VyIFB1cmF5aWwxMjAw
-BgkqhkiG9w0BCQEWI2thbGVzaC1hbmFra3VyLnB1cmF5aWxAYnJvYWRjb20uY29tMIIBIjANBgkq
-hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnv1Reaeezfr6NEmg3xZlh4cz9m7QCN13+j4z1scrX+b
-JfnV8xITT5yvwdQv3R3p7nzD/t29lTRWK3wjodUd2nImo6vBaH3JbDwleIjIWhDXLNZ4u7WIXYwx
-aQ8lYCdKXRsHXgGPY0+zSx9ddpqHZJlHwcvas3oKnQN9WgzZtsM7A8SJefWkNvkcOtef6bL8Ew+3
-FBfXmtsPL9I2vita8gkYzunj9Nu2IM+MnsP7V/+Coy/yZDtFJHp30hDnYGzuOhJchDF9/eASvE8T
-T1xqJODKM9xn5xXB1qezadfdgUs8k8QAYyP/oVBafF9uqDudL6otcBnziyDBQdFCuAQN7wIDAQAB
-o4IB5DCCAeAwDgYDVR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZC
-aHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJj
-YTIwMjAuY3J0MEEGCCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3Iz
-cGVyc29uYWxzaWduMmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcC
-ARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNV
-HR8EQjBAMD6gPKA6hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNp
-Z24yY2EyMDIwLmNybDAuBgNVHREEJzAlgSNrYWxlc2gtYW5ha2t1ci5wdXJheWlsQGJyb2FkY29t
-LmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGP
-zzAdBgNVHQ4EFgQUI3+tdStI+ABRGSqksMsiCmO9uDAwDQYJKoZIhvcNAQELBQADggEBAGfe1o9b
-4wUud0FMjb/FNdc433meL15npjdYWUeioHdlCGB5UvEaMGu71QysfoDOfUNeyO9YKp0h0fm7clvo
-cBqeWe4CPv9TQbmLEtXKdEpj5kFZBGmav69mGTlu1A9KDQW3y0CDzCPG2Fdm4s73PnkwvemRk9E2
-u9/kcZ8KWVeS+xq+XZ78kGTKQ6Wii3dMK/EHQhnDfidadoN/n+x2ySC8yyDNvy81BocnblQzvbuB
-a30CvRuhokNO6Jzh7ZFtjKVMzYas3oo6HXgA+slRszMu4pc+fRPO41FHjeDM76e6P5OnthhnD+NY
-x6xokUN65DN1bn2MkeNs0nQpizDqd0QxggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYD
-VQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25h
-bFNpZ24gMiBDQSAyMDIwAgw3wUUJsDUiPdpordMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcN
-AQkEMSIEIAQVu6F7Fbsgh2O7hgqg+KcqcbRxJXxqkSheDu0Cab99MBgGCSqGSIb3DQEJAzELBgkq
-hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MTAyNDA5MjA0M1owaQYJKoZIhvcNAQkPMVwwWjAL
-BglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG
-9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCXgePVJX96
-YcmqvjhW+nb4/AamSxSFHNxkfEdPQo/L2+fEsTt/UvSP23zeJwyOLNUaIwPi17q5ymWpC3uObXrN
-nsTLH2O4UR/KNBNOsUl8urZI/oG+ivdVRKV5FlfAsgu/9NDjEU/aAAtEGjmTVb8cxudeWcCOgEF0
-qpC43FAr8QcB/q6MGbY/ymb6pmIhaILMlj9TbJSW5p6vWI7sUNn9/ztCgzhcfdUINSmCMxAqQypX
-5Rvz0BSbBv+eI/cvV5PYzPIA3Azl4X1KnfNy4oxgmnv05EJm9FBFb7e2eH7zVUAYZc7IE+AhU6W5
-qZgvkrQElo2VNkZZ3cN+aG/2Nu/K
---00000000000052b36906253584f5--
+Bart
 
