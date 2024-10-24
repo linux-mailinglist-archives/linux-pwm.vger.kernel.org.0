@@ -1,147 +1,144 @@
-Return-Path: <linux-pwm+bounces-3829-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3830-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2E749AE890
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 16:26:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 688CE9AE949
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 16:49:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E41E290960
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 14:26:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0C373B2507B
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 14:49:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2155F2003C1;
-	Thu, 24 Oct 2024 14:20:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 885201E32C4;
+	Thu, 24 Oct 2024 14:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yvW2F9zO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA83200133
-	for <linux-pwm@vger.kernel.org>; Thu, 24 Oct 2024 14:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EF61D90A4
+	for <linux-pwm@vger.kernel.org>; Thu, 24 Oct 2024 14:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729779656; cv=none; b=DQy10RRTzATRWe9/c5WXvbZYN5bnzCu29YFBksS+bwie1vaBCw+qQ0ZG/bOmJqDYef41b9vTBJYrtPXO/b4gX3TR5gP5Eiau8u+U5PconCIm1DYlWm836ov3/iysrB8N2oBjTmHNrfJafRrBqyQvpHQOFByc9ZnC2g963GbeVl8=
+	t=1729781392; cv=none; b=gaueikJnX/YHGuUSgRQQA5ELjo4nYsCrEyRd/r6Aj53e+V50PSZ6zlOjU1QiHw+kQXlVO6hvvBV/zKJVHsQwzBxq+eeQtQbV0p8yRYG25pXhLm83w4Rs3FubOmSYcvxFJkZt8Frw92sKHzx/VeuOagtQF9+hzLAPI03aL1maREw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729779656; c=relaxed/simple;
-	bh=CeH6d9jYHaUoXOEafD41IQtDoDuY9WGiGrn3lPFqJ9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PoQMr3yIM5PafIYqcRbsW/FJMYbxTeIXhaQoPkHh7HLCXLl0zGzro9NSA5rwe3BPTmc7mX+VVIs6EGcdWP+9FfEeHQzdtH1U4FFr7l3YyzuMKECLrmc+42vPUGNLWgX4DysshxASCjbeAUPuZ+0N/VHzclF0rN4jneF4MENEt4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t3yhJ-000452-8g; Thu, 24 Oct 2024 16:20:21 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t3yhI-000DEt-35;
-	Thu, 24 Oct 2024 16:20:20 +0200
-Received: from pengutronix.de (pd9e595f8.dip0.t-ipconnect.de [217.229.149.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 8119C35DCED;
-	Thu, 24 Oct 2024 14:20:20 +0000 (UTC)
-Date: Thu, 24 Oct 2024 16:20:20 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v1 4/9] can: Add Nuvoton NCT6694 CAN support
-Message-ID: <20241024-cryptic-giga-mole-54e2b5-mkl@pengutronix.de>
-References: <20241024085922.133071-1-tmyu0@nuvoton.com>
- <20241024085922.133071-5-tmyu0@nuvoton.com>
- <20241024-poetic-offbeat-alligator-d6b9fe-mkl@pengutronix.de>
+	s=arc-20240116; t=1729781392; c=relaxed/simple;
+	bh=gVUPvv/FnmRY7foM5Tyh9ireuXWq1boSSJ5EWGM8bO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lAmPnm1ycFN4DDIdX72PmeA7Xix4NDeG/zrHGVX0KBwfg+SsLmSsdvrPI4xBY5pBr7Ht5Y9nQ4nVBSkb+kTMOQJuR9nU/aTCkZLOJp4AcYYGxQcxrgpyPdSM5uudxld/8w03w9jKcdrB9zsNminBl+Oe2eXXhQGnWd5FHdPlqTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yvW2F9zO; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-7180ab89c58so638020a34.1
+        for <linux-pwm@vger.kernel.org>; Thu, 24 Oct 2024 07:49:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729781389; x=1730386189; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v94UAHAt0z/GlIRWzSb/aqpgf9U8SvwT3lelP7L/T8M=;
+        b=yvW2F9zOr9Sf1sqnEkbgC6EXZYUktEdcgHjquzA3w5nctGrXXS0YQQlvpTagDF70fE
+         u1IIvlJ4/CF0wns8G2I6AXN4b0+3DjGS4dpi7mvqZCC0SMee11i3rw67CS7WZFxbQ9Mf
+         csHS54c0thr3Pu821cyVYf9sDbUhwqz/q2v3BO/c9fcntGxAyJdqTNhbvYN3LGjIVfI4
+         buUXWu10WB3BgOtaIzMZCKjy7q68IEDt7I4zCQSCCvQP0k6uvp8utPAUP88H2D9xuiFQ
+         MURyC7IA3tRb+znUcPR90uXzIu3pCgry+mZrihIxWntVpqLmXHcLIg8QMsCg7RFXO29m
+         N3nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729781389; x=1730386189;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v94UAHAt0z/GlIRWzSb/aqpgf9U8SvwT3lelP7L/T8M=;
+        b=mYmp64Kh9k37VG5I4t39x0SlUFN1xe9VkvBh+063qxHUAsrNkbYjjGZLnjG6xltL2t
+         wyK+sS1JvyKM1yXETgeclvtP8epRgEuEpqCGjT4zim8hEjLzqOIA3NpQhN0hx62xiQ3E
+         F/3NAMT5Qv/mdvEw4W3lUK4w3cHwSZhFF/S4Z9X03gDL5g1zldeFyBCOITKDoCRKFwjb
+         4/RF58PunakP88uZQ8oh1OdXHlY0rgcfBlpFQpkGCwMDgE8cpZSfslQDDBmbA0AMLUuf
+         likq9//D7u77UhdA/ewKPCz51jxwVyc01OBHPrExPABPJrFoFltGhH3f9AjckCUT5rmr
+         bCJg==
+X-Forwarded-Encrypted: i=1; AJvYcCU5PbopIQ/LGG/deAfNDqxjN8EFCkeEkUCRYaCwWZ9ob82tT8y7uPs98E2tzx8S1JrK5Qfb7wEWB/g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVk7LlIUWq0xAsHC57afyuMwQ/h5metlaxZVzwO73q0B659p3K
+	QxxCDsdEiyFzdYGAqsRWvaUSGVGMGHZ1mrwDSslOSMuKoy0prHYb2UVv7fHYQ9E=
+X-Google-Smtp-Source: AGHT+IFSOJa5tZQDfiyvifYRt2spOoqw/LKgbaZOjiDrgieDP9qwmB+SmfLhxczWOx70km6r217TWg==
+X-Received: by 2002:a05:6830:2113:b0:718:8eb:531a with SMTP id 46e09a7af769-7184b29606dmr6867406a34.4.1729781389223;
+        Thu, 24 Oct 2024 07:49:49 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7182ec025cdsm2152200a34.68.2024.10.24.07.49.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Oct 2024 07:49:47 -0700 (PDT)
+Message-ID: <7782352b-b8b3-4f2c-8a6a-b92dab8cb1b6@baylibre.com>
+Date: Thu, 24 Oct 2024 09:49:46 -0500
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="umhghwnwqoavy3lt"
-Content-Disposition: inline
-In-Reply-To: <20241024-poetic-offbeat-alligator-d6b9fe-mkl@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v4 02/15] spi: add basic support for SPI offloading
+To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>,
+ Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20241023-dlech-mainline-spi-engine-offload-2-v4-0-f8125b99f5a1@baylibre.com>
+ <20241023-dlech-mainline-spi-engine-offload-2-v4-2-f8125b99f5a1@baylibre.com>
+ <ba3eed090e29deda797b0dea8162949c82743ccf.camel@gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <ba3eed090e29deda797b0dea8162949c82743ccf.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 10/24/24 8:27 AM, Nuno Sá wrote:
+> On Wed, 2024-10-23 at 15:59 -0500, David Lechner wrote:
+>> Add the basic infrastructure to support SPI offload providers and
+>> consumers.
+>>
 
---umhghwnwqoavy3lt
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 4/9] can: Add Nuvoton NCT6694 CAN support
-MIME-Version: 1.0
+...
 
-On 24.10.2024 16:17:52, Marc Kleine-Budde wrote:
-> On 24.10.2024 16:59:17, Ming Yu wrote:
-> > This driver supports Socket CANfd functionality for NCT6694 MFD
-> > device based on USB interface.
-> >=20
-> > Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
-> > ---
-> >  MAINTAINERS                     |   1 +
-> >  drivers/net/can/Kconfig         |  10 +
-> >  drivers/net/can/Makefile        |   1 +
-> >  drivers/net/can/nct6694_canfd.c | 843 ++++++++++++++++++++++++++++++++
+>> +struct spi_offload *devm_spi_offload_get(struct device *dev,
+>> +					 struct spi_device *spi,
+>> +					 const struct spi_offload_config *config)
+>> +{
+>> +	struct spi_offload *offload;
+>> +	int ret;
+>> +
+>> +	if (!spi || !config)
+>> +		return ERR_PTR(-EINVAL);
+>> +
+>> +	if (!spi->controller->get_offload)
+>> +		return ERR_PTR(-ENODEV);
+>> +
+>> +	offload = spi->controller->get_offload(spi, config);
+>> +	if (IS_ERR(offload))
+>> +		return offload;
+>> +
+>> +	if (offload->spi)
+>> +		return ERR_PTR(-EBUSY);
+>> +
+>> +	offload->spi = spi;
+>> +	get_device(offload->provider_dev);
+> 
+> Isn't this redundant? From what I can tell, we're assuming that the spi controller
+> (of the spi device) is the offload provider. Therefore, getting an extra reference
+> for it does not really seems necessary. The device cannot go away without under the
+> spi_device feet. If that could happen, then we would also need to take care about
+> callback access and things like that. Going this way, it would also be arguable to
+> have a try_module_get().
+> 
+> - Nuno Sá
+> 
+> 
 
-|   CC [M]  drivers/net/can/nct6694_canfd.o
-| drivers/net/can/nct6694_canfd.c: In function =E2=80=98nct6694_canfd_start=
-_xmit=E2=80=99:
-| drivers/net/can/nct6694_canfd.c:282:22: error: variable =E2=80=98echo_byt=
-e=E2=80=99 set but not used [-Werror=3Dunused-but-set-variable]
-|   282 |         unsigned int echo_byte;
-|       |                      ^~~~~~~~~
-| drivers/net/can/nct6694_canfd.c: In function =E2=80=98nct6694_canfd_rx_wo=
-rk=E2=80=99:
-| drivers/net/can/nct6694_canfd.c:677:34: error: variable =E2=80=98stats=E2=
-=80=99 set but not used [-Werror=3Dunused-but-set-variable]
-|   677 |         struct net_device_stats *stats;
-|       |                                  ^~~~~
-| cc1: all warnings being treated as errors
-
-If compiling with C=3D1, sparse throws the following errors:
-
-| drivers/net/can/nct6694_canfd.c:417:14: warning: cast to restricted __le32
-| drivers/net/can/nct6694_canfd.c:750:9: warning: cast to restricted __le32
-| drivers/net/can/nct6694_canfd.c:777:32: warning: cast to restricted __le32
-
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---umhghwnwqoavy3lt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmcaV6EACgkQKDiiPnot
-vG+E+Qf8CIIlMRqAUgax6FgoXWP0LDl3JVfJSfoClGvwvTGIR6r0hAAYhY6YXdy9
-gUPusFE69CRe780ZIu4/gR45YWIRpof1exG4JAIoKbU/4Bdq/42x1BKSXifWPayo
-Rm/mm+HyVCjb7WTpopxM7ZCnZMks9xOUwl6A+/ShIRZA3pWBz8ll4yRCtTq1V6xy
-GMKhYsYP4mDY3YyD1+hUfLBmiBu2XvhnGksdoLRZHNMNKlNhZnpRSLeQew5EHSy1
-03BltphJ6YsdAgTfyR7AT4nTisdNyYl+IhnJq1+FSKsWxdHcelNMaM3JwlLrXMBO
-FbotT17CV8J3M14xFrwqL7cRROi57A==
-=lV4A
------END PGP SIGNATURE-----
-
---umhghwnwqoavy3lt--
+Yes, you are right that we don't really need to take a reference to the device.
+This was left over from when I made an implementation that assumed the offload
+provider could be anything, not just a SPI controller.
 
