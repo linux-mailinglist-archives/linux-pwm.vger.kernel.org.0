@@ -1,218 +1,322 @@
-Return-Path: <linux-pwm+bounces-3822-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3823-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C2D99AE491
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 14:13:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E40BB9AE686
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 15:33:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD16B1F236AF
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 12:13:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A3637289716
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 13:32:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD76D1D63CB;
-	Thu, 24 Oct 2024 12:13:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29EAF1F76CD;
+	Thu, 24 Oct 2024 13:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lD8d0D6J"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A241C8FC6
-	for <linux-pwm@vger.kernel.org>; Thu, 24 Oct 2024 12:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5623F1BBBEB;
+	Thu, 24 Oct 2024 13:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729772004; cv=none; b=rFPhGjS4ETEhBvTW20mpaftKAhnwzbE5Z/q/M9uikjgenvEEGhyMrSrZxQawlf1FEvv1LLCqBepbD7Ukb8dJ0HCV4cdPjyUOFIiwIZ8YLwrVuDS36C7V06XDz5vTfBNRqkQBHVgDOhBmEetezGWEZops5oBP45kO/C/GhTWOLjM=
+	t=1729776442; cv=none; b=ReGCdo8LozE9iJVWzwCe7IsmPIyyxgsN8X1xMP7I8cE/jwIdoPbtCo6T2fEJ83hOUSJ25nuaTqn1wre4vWS0zXXpGSUhi8OFYcsS34MaU2dKRD59h8mg/8H1dwziQvj09P7YlaqsFW/rjC420iLUulIkzGPQXjv7do7YyfLBHXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729772004; c=relaxed/simple;
-	bh=757xfs4lzj57ukyiAsyKVVfqB5Ggr6DUtawVPHyIcbI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M59ol7e/O57roWdQDmPXMtUHgKsX1U7CPzYFby45BjPeq81UmiXBHYjdceUeBLN6rOhrD0HqJ56MraN9chFCP8TvYYsDQCxQ6a+uYefFzsPqYDkkkxsghe6LOm0VeX86m64xTbsMyg4DUuAKJDPq3L9dZVX5VF4z9HfHLiLTLBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t3whs-0006NN-0Q; Thu, 24 Oct 2024 14:12:48 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1t3whp-000CBK-1a;
-	Thu, 24 Oct 2024 14:12:45 +0200
-Received: from pengutronix.de (pd9e595f8.dip0.t-ipconnect.de [217.229.149.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 043E635DB21;
-	Thu, 24 Oct 2024 12:12:45 +0000 (UTC)
-Date: Thu, 24 Oct 2024 14:12:44 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v1 4/9] can: Add Nuvoton NCT6694 CAN support
-Message-ID: <20241024-majestic-chowchow-from-wonderland-096eb4-mkl@pengutronix.de>
-References: <20241024085922.133071-1-tmyu0@nuvoton.com>
- <20241024085922.133071-5-tmyu0@nuvoton.com>
+	s=arc-20240116; t=1729776442; c=relaxed/simple;
+	bh=YqJofZ36BW/TRJuXv7SdP08LIVcE0smc5fN4el3bLKs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QQNoOChkSxiEKYAe/e5g25Vx7hb6Z3csdy6VY3sjgdOlZkI2IymMC1YGmPrIkQgHkDdyLTllwBXbZ9JJTSJs6vc6/KWuY/JZz4YfaZRISmo75zM2mU0Wjlg5yDOM89jEkjkfMomAgH3sQY6hMoJa21vb1SxNp1z7Z/i8CmW6aJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lD8d0D6J; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-37d6ff1cbe1so628503f8f.3;
+        Thu, 24 Oct 2024 06:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729776438; x=1730381238; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lh/Aemo/gwLUT93xOhFMFPtYx/PANCkObOqWYsHf0oU=;
+        b=lD8d0D6JzKgS6avhOD2Y8kCIaAWZwBC4r58OCH7ZXsmKtPlnZwWQW51D35axwB2ezm
+         G3lzBk+obpvKKkrb8+RfYvHXjhgtuD+A1a+Km0PZjgVMia3skSU35+vk9jyPL8qyA7fx
+         Cp6M5ZR3K8clBokpMEbtB0Uri0PN68m6GKRz1a/37gGFPCoNwLmxuAktcv4yTJRe5S/W
+         01ljBeE0UqkbqOsW3WiaXpa+bG4ucyKyXD+uwyOcMwNOkmS+BIP1/YUYSLDWrdTKUdGK
+         c8kDxAG/S2dBDX75V8peiCeO/lX5Q610fBUUhMc9Wk3l9C9dXopoYTZepuZiZsfkQ2SG
+         kiqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729776438; x=1730381238;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lh/Aemo/gwLUT93xOhFMFPtYx/PANCkObOqWYsHf0oU=;
+        b=QDaO1UHncYcmlkn89F0FWonzV6A72R+CVMc98kCeniBSVtLNMTY/A+8lw5sVfDORVR
+         TDpw4FahKIhbmggOipquanE06U/Z9UqtGmXDWiT+/L7n96dR9gwR8RKgMn7gURmWtlbv
+         WHbvfF/mb7n926AfRVl2SwK+uo2LhPv1b3N4rt4qPNe+SQlcvy/NbczETUjSimzxJ4Oz
+         aehpoL8THnLNbOg7P1Qce9DvX18R/U98wVs+P7uc6+yMBs1Q5tg74UON5xotwnZiI9gw
+         Bild6HTR19HuWOWfdT5j5V9BJGyOOfJQ9E0WtdK+SnOSbr1P42LicgFzyB6F1LkOQ7GF
+         3ZCg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8msp3eoYJ8BP7vFe1eKv5tvVZ29j2DuJxddNM/XG5CTusxHQbIrJff8RDKCGLWIHNQgAR0ctAkaU0@vger.kernel.org, AJvYcCVE1Y/u9F7sxwHlyb5u4sFj7tADxCQ1syW31WnZF+Dp+1/0Qowg1vSOPC8IlVF13KgpX9WuRTzr9LgP@vger.kernel.org, AJvYcCVaQxmXqnY35rStocCRKvGXxSnBANU3qkRgcNx2Qh3A7Vaks46d5w+jZxfP2Mn47nUPGkzjSip6dDUu/FNK@vger.kernel.org, AJvYcCX+E5TzQ3WDto6RWgbF2PYix4t/8Vdh4fUq39uEHVifyQdBHj3gQBNYTv3r1VmOSxmAjyGvUjxTaNS2@vger.kernel.org, AJvYcCXwE0b3wpMfAD2UuCasTgdvpXg38MIchddg4oDGtwgJXm7NioBJEQ8akrDqKtVahSaYGRuicRhVZ5QB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8kkk6VoHqJ+v4+sjbB8NjzO2z+JDC3Map1xg6AZFuHjgHiLmU
+	wGbMCS58wGtvrH9SdlbYXs05i7sPv0nRCX59i2Wjbj0p5ytvDn8l
+X-Google-Smtp-Source: AGHT+IF9o4FDi/qZPAdyapVJFH/1h0r+fDXv1zwkewBYzgCtc4WAQVTBFq7r/5rH6N5woWxjtXTKvA==
+X-Received: by 2002:adf:e54b:0:b0:37d:4d80:34ae with SMTP id ffacd0b85a97d-37efcf00d4amr4051647f8f.4.1729776437276;
+        Thu, 24 Oct 2024 06:27:17 -0700 (PDT)
+Received: from ?IPv6:2001:a61:34c9:ea01:14b4:7ed9:5135:9381? ([2001:a61:34c9:ea01:14b4:7ed9:5135:9381])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43186bd6a52sm47556215e9.8.2024.10.24.06.27.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2024 06:27:17 -0700 (PDT)
+Message-ID: <ba3eed090e29deda797b0dea8162949c82743ccf.camel@gmail.com>
+Subject: Re: [PATCH RFC v4 02/15] spi: add basic support for SPI offloading
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>, 
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Lars-Peter Clausen
+	 <lars@metafoo.de>, David Jander <david@protonic.nl>, Martin Sperl
+	 <kernel@martin.sperl.org>, linux-spi@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
+Date: Thu, 24 Oct 2024 15:27:15 +0200
+In-Reply-To: <20241023-dlech-mainline-spi-engine-offload-2-v4-2-f8125b99f5a1@baylibre.com>
+References: 
+	<20241023-dlech-mainline-spi-engine-offload-2-v4-0-f8125b99f5a1@baylibre.com>
+	 <20241023-dlech-mainline-spi-engine-offload-2-v4-2-f8125b99f5a1@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6cwye7pcrjvlm26t"
-Content-Disposition: inline
-In-Reply-To: <20241024085922.133071-5-tmyu0@nuvoton.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
+On Wed, 2024-10-23 at 15:59 -0500, David Lechner wrote:
+> Add the basic infrastructure to support SPI offload providers and
+> consumers.
+>=20
+> SPI offloading is a feature that allows the SPI controller to perform
+> transfers without any CPU intervention. This is useful, e.g. for
+> high-speed data acquisition.
+>=20
+> SPI controllers with offload support need to implement the get_offload
+> callback and can use the devm_spi_offload_alloc() to allocate offload
+> instances.
+>=20
+> SPI peripheral drivers will call devm_spi_offload_get() to get a
+> reference to the matching offload instance. This offload instance can
+> then be attached to a SPI message to request offloading that message.
+>=20
+> It is expected that SPI controllers with offload support will check for
+> the offload instance in the SPI message in the optimize_message()
+> callback and handle it accordingly.
+>=20
+> CONFIG_SPI_OFFLOAD is intended to be a select-only option. Both
+> consumer and provider drivers should `select SPI_OFFLOAD` in their
+> Kconfig to ensure that the SPI core is built with offload support.
+>=20
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
 
---6cwye7pcrjvlm26t
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 4/9] can: Add Nuvoton NCT6694 CAN support
-MIME-Version: 1.0
+Hi David,
 
-Hello,
+Just one minor comment...
 
-thanks for your contribution. It seems to me that there is no proper
-TX-flow control and I have some questions.
+>=20
+> v4 changes:
+> * SPI offload functions moved to a separate file instead of spi.c
+> =C2=A0 (spi.c is already too long).
+> * struct spi_offload and devm_spi_offload_get() are back, similar to
+> =C2=A0 but improved over v1. This avoids having to pass the function ID
+> =C2=A0 string to every function call and re-lookup the offload instance.
+> * offload message prepare/unprepare functions are removed. Instead the
+> =C2=A0 existing optimize/unoptimize functions should be used. Setting
+> =C2=A0 spi_message::offload pointer is used as a flag to differentiate
+> =C2=A0 between an offloaded message and a regular message.
+>=20
+> v3 changes:
+> * Minor changes to doc comments.
+> * Changed to use phandle array for spi-offloads.
+> * Changed id to string to make use of spi-offload-names.
+>=20
+> v2 changes:
+> * This is a rework of "spi: add core support for controllers with offload
+> =C2=A0 capabilities" from v1.
+> * The spi_offload_get() function that Nuno didn't like is gone. Instead,
+> =C2=A0 there is now a mapping callback that uses the new generic devicetr=
+ee
+> =C2=A0 binding to request resources automatically when a SPI device is pr=
+obed.
+> * The spi_offload_enable/disable() functions for dealing with hardware
+> =C2=A0 triggers are deferred to a separate patch.
+> * This leaves adding spi_offload_prepare/unprepare() which have been
+> =C2=A0 reworked to be a bit more robust.
+> ---
+> =C2=A0drivers/spi/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 ++
+> =C2=A0drivers/spi/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0drivers/spi/spi-offload.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 104=
+ ++++++++++++++++++++++++++++++++++++++++
+> =C2=A0include/linux/spi/spi-offload.h |=C2=A0 64 ++++++++++++++++++++++++=
++
+> =C2=A0include/linux/spi/spi.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 |=C2=A0 16 +++++++
+> =C2=A05 files changed, 188 insertions(+)
+>=20
+> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+> index 823797217404..d65074b85f62 100644
+> --- a/drivers/spi/Kconfig
+> +++ b/drivers/spi/Kconfig
+> @@ -55,6 +55,9 @@ config SPI_MEM
+> =C2=A0	=C2=A0 This extension is meant to simplify interaction with SPI me=
+mories
+> =C2=A0	=C2=A0 by providing a high-level interface to send memory-like com=
+mands.
+> =C2=A0
+> +config SPI_OFFLOAD
+> +	bool
+> +
+> =C2=A0comment "SPI Master Controller Drivers"
+> =C2=A0
+> =C2=A0config SPI_AIROHA_SNFI
+> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+> index a9b1bc259b68..6a470eb475a2 100644
+> --- a/drivers/spi/Makefile
+> +++ b/drivers/spi/Makefile
+> @@ -10,6 +10,7 @@ ccflags-$(CONFIG_SPI_DEBUG) :=3D -DDEBUG
+> =C2=A0obj-$(CONFIG_SPI_MASTER)		+=3D spi.o
+> =C2=A0obj-$(CONFIG_SPI_MEM)			+=3D spi-mem.o
+> =C2=A0obj-$(CONFIG_SPI_MUX)			+=3D spi-mux.o
+> +obj-$(CONFIG_SPI_OFFLOAD)		+=3D spi-offload.o
+> =C2=A0obj-$(CONFIG_SPI_SPIDEV)		+=3D spidev.o
+> =C2=A0obj-$(CONFIG_SPI_LOOPBACK_TEST)		+=3D spi-loopback-test.o
+> =C2=A0
+> diff --git a/drivers/spi/spi-offload.c b/drivers/spi/spi-offload.c
+> new file mode 100644
+> index 000000000000..c344cbf50bdb
+> --- /dev/null
+> +++ b/drivers/spi/spi-offload.c
+> @@ -0,0 +1,104 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2024 Analog Devices Inc.
+> + * Copyright (C) 2024 BayLibre, SAS
+> + */
+> +
+> +#define DEFAULT_SYMBOL_NAMESPACE SPI_OFFLOAD
 
-On 24.10.2024 16:59:17, Ming Yu wrote:
-
-[...]
-
-> +static netdev_tx_t nct6694_canfd_start_xmit(struct sk_buff *skb,
-> +					    struct net_device *ndev)
+Cool, was not aware of this :)
+> +
+> +#include <linux/cleanup.h>
+> +#include <linux/device.h>
+> +#include <linux/export.h>
+> +#include <linux/mutex.h>
+> +#include <linux/property.h>
+> +#include <linux/spi/spi-offload.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/types.h>
+> +
+> +/**
+> + * devm_spi_offload_alloc() - Allocate offload instances
+> + * @dev: Device for devm purposes
+> + * @num_offloads: Number of offloads to allocate
+> + * @priv_size: Size of private data to allocate for each offload
+> + *
+> + * Offload providers should use this to allocate offload instances.
+> + *
+> + * Return: Pointer to array of offloads or error on failure.
+> + */
+> +struct spi_offload *devm_spi_offload_alloc(struct device *dev,
+> +					=C2=A0=C2=A0 size_t num_offloads,
+> +					=C2=A0=C2=A0 size_t priv_size)
 > +{
-> +	struct nct6694_canfd_priv *priv =3D netdev_priv(ndev);
-> +	struct nct6694 *nct6694 =3D priv->nct6694;
-> +	struct canfd_frame *cf =3D (struct canfd_frame *)skb->data;
-> +	struct net_device_stats *stats =3D &ndev->stats;
-> +	int can_idx =3D priv->can_idx;
-> +	u32 txid =3D 0;
-> +	int i;
-> +	unsigned int echo_byte;
-> +	u8 data_buf[REQUEST_CAN_CMD10_LEN] =3D {0};
+> +	struct spi_offload *offloads;
+> +	void *privs;
+> +	size_t i;
 > +
-> +	if (can_dropped_invalid_skb(ndev, skb))
-> +		return NETDEV_TX_OK;
+> +	offloads =3D devm_kcalloc(dev, num_offloads, sizeof(*offloads) + priv_s=
+ize,
+> +				GFP_KERNEL);
+> +	if (!offloads)
+> +		return ERR_PTR(-ENOMEM);
 > +
-> +	/*
-> +	 * No check for NCT66794 because the TX bit is read-clear
-> +	 * and may be read-cleared by other function
-> +	 * Just check the result of tx command.
-> +	 */
-
-Where do you check the result of the TX command?
-
-> +	/* Check if the TX buffer is full */
-
-Where's the check if the TX buffer is full?
-
-> +	netif_stop_queue(ndev);
+> +	privs =3D (void *)(offloads + num_offloads);
 > +
-> +	if (can_idx =3D=3D 0)
-> +		data_buf[CAN_TAG_IDX] =3D CAN_TAG_CAN0;
-> +	else
-> +		data_buf[CAN_TAG_IDX] =3D CAN_TAG_CAN1;
+> +	for (i =3D 0; i < num_offloads; i++) {
+> +		struct spi_offload *offload =3D offloads + i;
+> +		void *priv =3D privs + i * priv_size;
 > +
-> +	if (cf->can_id & CAN_EFF_FLAG) {
-> +		txid =3D cf->can_id & CAN_EFF_MASK;
-> +		/*
-> +		 * In case the Extended ID frame is transmitted, the
-> +		 * standard and extended part of the ID are swapped
-> +		 * in the register, so swap them back to send the
-> +		 * correct ID.
-> +		 */
-> +		data_buf[CAN_FLAG_IDX] |=3D CAN_FLAG_EFF;
-> +	} else {
-> +		txid =3D cf->can_id & CAN_SFF_MASK;
+> +		offload->provider_dev =3D dev;
+> +		offload->priv =3D priv;
 > +	}
 > +
-> +	set_buf32(&data_buf[CAN_ID_IDX], txid);
-> +
-> +	data_buf[CAN_DLC_IDX] =3D cf->len;
-> +
-> +	if ((priv->can.ctrlmode & CAN_CTRLMODE_FD) && can_is_canfd_skb(skb)) {
-> +		data_buf[CAN_FLAG_IDX] |=3D CAN_FLAG_FD;
-> +		if (cf->flags & CANFD_BRS)
-> +			data_buf[CAN_FLAG_IDX] |=3D CAN_FLAG_BRS;
-> +	}
-> +
-> +	if (cf->can_id & CAN_RTR_FLAG)
-> +		data_buf[CAN_FLAG_IDX] |=3D CAN_FLAG_RTR;
-> +
-> +	/* set data to buf */
-> +	for (i =3D 0; i < cf->len; i++)
-> +		data_buf[CAN_DATA_IDX + i] =3D *(u8 *)(cf->data + i);
-> +
-> +	can_put_echo_skb(skb, ndev, 0, 0);
-> +
-> +	memcpy(priv->data_buf, data_buf, REQUEST_CAN_CMD10_LEN);
-> +	queue_work(nct6694->async_workqueue, &priv->tx_work);
-> +
-> +	stats->tx_bytes +=3D cf->len;
-> +	stats->tx_packets++;
-> +	echo_byte =3D can_get_echo_skb(ndev, 0, NULL);
-> +
-> +	netif_wake_queue(ndev);
-
-How do you make sure that the tx_work has finished?
-Once you wake the queue, the xmit function can be called again. If your
-tx_work has not finished, you'll overwrite the priv->data_buf.
-
-> +
-> +	return NETDEV_TX_OK;
+> +	return offloads;
 > +}
+> +EXPORT_SYMBOL_GPL(devm_spi_offload_alloc);
 > +
-> +static void nct6694_canfd_tx_work(struct work_struct *work)
+> +static void spi_offload_put(void *data)
 > +{
-> +	struct nct6694_canfd_priv *priv;
+> +	struct spi_offload *offload =3D data;
 > +
-> +	priv =3D container_of(work, struct nct6694_canfd_priv, tx_work);
-> +
-> +	nct6694_write_msg(priv->nct6694, REQUEST_CAN_MOD,
-> +			  REQUEST_CAN_CMD10_OFFSET(1),
-> +			  REQUEST_CAN_CMD10_LEN,
-> +			  priv->data_buf);
+> +	offload->spi =3D NULL;
+> +	put_device(offload->provider_dev);
 > +}
+> +
+> +/**
+> + * devm_spi_offload_get() - Get an offload instance
+> + * @dev: Device for devm purposes
+> + * @spi: SPI device to use for the transfers
+> + * @config: Offload configuration
+> + *
+> + * Peripheral drivers call this function to get an offload instance that=
+ meets
+> + * the requirements specified in @config. If no suitable offload instanc=
+e is
+> + * available, -ENODEV is returned.
+> + *
+> + * Return: Offload instance or error on failure.
+> + */
+> +struct spi_offload *devm_spi_offload_get(struct device *dev,
+> +					 struct spi_device *spi,
+> +					 const struct spi_offload_config *config)
+> +{
+> +	struct spi_offload *offload;
+> +	int ret;
+> +
+> +	if (!spi || !config)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	if (!spi->controller->get_offload)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	offload =3D spi->controller->get_offload(spi, config);
+> +	if (IS_ERR(offload))
+> +		return offload;
+> +
+> +	if (offload->spi)
+> +		return ERR_PTR(-EBUSY);
+> +
+> +	offload->spi =3D spi;
+> +	get_device(offload->provider_dev);
 
-Marc
+Isn't this redundant? From what I can tell, we're assuming that the spi con=
+troller
+(of the spi device) is the offload provider. Therefore, getting an extra re=
+ference
+for it does not really seems necessary. The device cannot go away without u=
+nder the
+spi_device feet. If that could happen, then we would also need to take care=
+ about
+callback access and things like that. Going this way, it would also be argu=
+able to
+have a try_module_get().
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+- Nuno S=C3=A1
 
---6cwye7pcrjvlm26t
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmcaObkACgkQKDiiPnot
-vG+LQAgAhoMTmPVPW2b961itbbB9oiqWyTkhSh4BodeXFxnDPmkZXIOwf2jfKTkg
-U1rUoJ3PrsRcFjX7xP11xXV0jtNa/CKHpinjDL1P1ftYZEL3Sb3fGAEzT5tWA8ui
-d2AgBRmaEPXfJ4ru5nURHrt8t8XvQw2aVBMVWXQeOkYCGzjXKr1Zc1QMawCRzdCY
-FYppixW1eYbUkR4GC13th38n1p5eM5+AgUJqMipnj1ufTesWAiY1eAw3KFq+h8AW
-uiOqN5+4uRstPyaNzS/e0r8bfKk8s/KxNny0b14ACrO6aBWp9we9wSvC/SLxPJE7
-BgbbQ1zBu5RQVdURF4mPlfvt9z9NKA==
-=amjj
------END PGP SIGNATURE-----
-
---6cwye7pcrjvlm26t--
 
