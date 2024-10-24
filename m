@@ -1,74 +1,76 @@
-Return-Path: <linux-pwm+bounces-3832-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3833-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A15CA9AE9A7
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 17:03:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDBEB9AE9AF
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 17:04:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 252CF1F23ED6
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 15:03:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4922E1F21510
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 15:04:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EB341E7668;
-	Thu, 24 Oct 2024 15:03:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5F011E7668;
+	Thu, 24 Oct 2024 15:03:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="F2Q1qKjf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbCeA7Wz"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026B583A14
-	for <linux-pwm@vger.kernel.org>; Thu, 24 Oct 2024 15:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC39254738;
+	Thu, 24 Oct 2024 15:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729782187; cv=none; b=ft6ZxB+dyTUwdcik2+6I6GcBvZAQxeWW75082+rDiFG9K2SCTjfVx4u1Xb1af3b90GA6O8QIVUA/3GViQtFfjOIhfmZfstiHRrD5HfEFXsRXT+WTAUjHfSQtW0hQrX3XZOkwp1ai4wuehyrygSE7IJBEDkz8uNIQ7t7F5L5P8Z8=
+	t=1729782238; cv=none; b=sS3NBd/6VYo5TjMaXtVvUTZqOGiq49oj7JUx3IKdAuKrzF5XhrVyZRW79oGagIfEqswR5h6sO7C5bgnDdg3BQKWRrtVKG/rdajOt5nGRXec5R+zcW0p0E29ed7O7LZyjrCaA1OnD0BnpjHQfl29Hn2Q8RCY5LrOQfX6/zg14p/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729782187; c=relaxed/simple;
-	bh=SFCdL5GCriNAvcLQo78wBP7l5QqgAYxBKpVa+oiS28Y=;
+	s=arc-20240116; t=1729782238; c=relaxed/simple;
+	bh=AFR67uRO4ON1aeO4OoBQTKMZ7NlLsb70Wnr86oYnQEA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IwzB3Cg4/sPlcoCHpyQXlvA2hUr6Kn0KkQSdr0RGR5Eu9KSRQkYplJN7qy4Gc89C8hps3/SsRLqXFaITWW0Ez9p7NMX/89w7aIuWa/EDJOMwbU3Z7XTq4aDBqJsSPp65jqNQNGC9zaT4uSVm7l8HYNiwUlAwNuZ89tXKdEAhqu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=F2Q1qKjf; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3e605ffe10cso619198b6e.3
-        for <linux-pwm@vger.kernel.org>; Thu, 24 Oct 2024 08:03:02 -0700 (PDT)
+	 In-Reply-To:Content-Type; b=mMhrEIe8BRSuQfZBOJiouJJd2CRoaMvi00KQXLS5cTkN9ZtSmsfVMe0wXhvEUD574za1uglhxxt7iqoIfgL6Lw/UDSBZq72sbz1N4PJPzOYwlZl126z7OWZ14I1rSRHJ3AgCzruCzlg6NBA4f9cUrUtY7zi7v7AyMsdoZg4Mpr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CbCeA7Wz; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-20cdb889222so8695065ad.3;
+        Thu, 24 Oct 2024 08:03:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729782182; x=1730386982; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lw+zSJnzrNqCSHT1HVGgXzOqNxcf9oH83aOKEvogObw=;
-        b=F2Q1qKjfmu4y9wdpoMefmg18X+S2DFm2ouoP6L21ZNrVPgfZ+TVDJUax5WnYb7hs4e
-         XMPyE60/mHq029+azE9eQ4aMj6/pIXtjEntEBTGj2qga0HBWkxKTxTEh/kXSC0JnzR5e
-         8IlfkyGqGImWA8wn3yUewd3nQPQSeDozaKxE/j+lG/+XDzkLu3A+iya1xmobxLPkT2he
-         Wb+a8tr9PCFJE82xaw9LBypaSJ2zIEWAF0diAaChVPnSBrMS4iVOTpRXcsGMQannza0k
-         k2M3h4QeJzmLzBvNeimfdvthNAzJ8FdLBffroZ2O19NGXw6sMg2QHuDxPSfwaWnLrClv
-         NnDw==
+        d=gmail.com; s=20230601; t=1729782235; x=1730387035; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=n/c8nEmNbYzBt8O2igObrBrgbQcGdVBDm4mf4glNv8A=;
+        b=CbCeA7Wzff2pvF62NlFbLTrG/bOjKk9nOUvIAfnZeRy9TAL5EIDf0eVPGpvdJlGKaf
+         mOm+kPEZhLV7f+aBjbpgv1P9bio7jntCorhm7N+JsLH5hbbWYOjeiV0x4Y0lMLSitbK2
+         BBSpogPKN69+z1h8gBEO5ggOxUJAwartu87OpEDKPK/y/THND61aSp9gJ0wrnqXOw6ka
+         XoQdkAhEG88Ge6tgNtIDH14S7GLWYvT9uSyIJ+FBk3pR5Zsd0XwyyoyS+yXDLxZd8o47
+         6+e9gC/5GG3U9X/qSlTu124TIBGVHTP+p9nfTwsO92q28627BslbT+om3ckh/6mSuCIT
+         ZMog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729782182; x=1730386982;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lw+zSJnzrNqCSHT1HVGgXzOqNxcf9oH83aOKEvogObw=;
-        b=hwCXQL2P88SluQagTHjqFygHd7aBdyhZEaxaJUO89hAOOE+ErXfGznWy3JVMHZfQSI
-         esvlqJsoWKUIyZ4qNjp0kYg9CyuTkVH1LilZEqLW/W2p6tM6HLItTvf6avcDfLqU7AIr
-         x00Aw2J1c5zfUd1ue/wAdyQbaZW5S5+hfHNJus+7mafsFvMkVTH6d1Ua28pjKPhpPPGL
-         lD2z64ISf+h1Q+po9HSQPdOZz9pVNogXTX5u9obOr0LEYo2Got/J20deMUurZwkEjkK9
-         8vQ2WtJsXfSoUFxS5JiVpmn3kXuDmpfzaf+B7POn9JeaTlfSb3TZNeJzpHThuKisOMdL
-         +wUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUbVYtNAULzyaPmTQj1NV/dDPcH18ZNYsB95J2f73fXsEhBvNAp4wySRJsOK8sc9IqPQyxx005kfCk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz8Qtxtmg/W2/rFd66eJ23QjDyo+OhkLF3kUD5T6WX98i+uMRj
-	kxP7SjZaVy75nLtnPikdrVZpm/N/K7cUSoXmKwSz/43DIyGIhJ9NyVtXBGmfV2I=
-X-Google-Smtp-Source: AGHT+IGe5wQ2BpB0hosPe5xBOm3il4EuetYWdbJrO5GtrEKM+a114tHckeEQ1O1SMUzGwrFtHqd2cA==
-X-Received: by 2002:a05:6808:10c7:b0:3e3:982c:eb2e with SMTP id 5614622812f47-3e624500bd1mr6934073b6e.10.1729782181821;
-        Thu, 24 Oct 2024 08:03:01 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3e61035f582sm2271168b6e.47.2024.10.24.08.02.58
+        d=1e100.net; s=20230601; t=1729782235; x=1730387035;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n/c8nEmNbYzBt8O2igObrBrgbQcGdVBDm4mf4glNv8A=;
+        b=WwndxQlaZg8Wnh9tR/sP74xG4/KKkqKAZ3mG34+36IUMT5p8Sq32VB7EhfbVYtKhNV
+         YgqiUIjUH8Z/UVaTpU9IcTh28zRPcwb5p8YKvfpzmWoRp9czIWmYbO9T2XHlCQx2Rqon
+         CsOEkOL/HP+oIDqJQ1eVtY/q4ERpXTBB0BlWkOxSJsqkeVElgsUSrsZwZeC+4meLT3SH
+         7zopMDTErnStYkISN0A2leWCJKqkkCDz8dVOzRsDy36SnyqpiSSsDZczw0WuV79ikgVJ
+         tnsNZH4HWur5KVTzAWETxlPCT0if6VeZ22H+mqEmpUyW7DzZq0xdoHNJg+nA5SOky8Zg
+         cBeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUA8uet7qhCOeBnBWQShIXhN6bxNm68yTFOrbxkcZ7WWv0Jeo9dwNA2K+uLWH9GWzFq6mlRlN40FQQY@vger.kernel.org, AJvYcCUM6KFr3GW+arkJ+jG4GT4THj8AVUGt8H7CPYdbvybSOKNtkd5R0rTZLOgcakFxD8G48FA9XG2/j5K7@vger.kernel.org, AJvYcCUdBijR1G/5/pEmsCzE3xh9T55pqwO6DOjlRibHBlv4LJkEoHbfb6h5wpdETxYc7/sYf4IHXvvH1TQaGw==@vger.kernel.org, AJvYcCVOJ8BhT7uB4WFs/GT8lzhNYLo1HUIrQZkNreF0+fMRDmkiOnhfeT3YIokNdZ4rZ8IymNRuZ+nSwCAf@vger.kernel.org, AJvYcCVfhPaCKu0/hOEECLOGzEfbcwHTGWlUSJnDwe3MbdzeqPaSLe7/GglG/cFUl1Mi9bvKT8nowZBA03c=@vger.kernel.org, AJvYcCVr2eQVZSXJ72/Zp6lREeG/Q9Y7JE0fmb9ZGP6v7gGUdiI0q70xJiLlDNHMegeFJ7wesPLGWho7CS3SDoYr23Q=@vger.kernel.org, AJvYcCWgMIwnd8J+ZjwDrABLPMjdlPPKZcETY8tmTZyglBx7YEa+NHN9wc+L7U91gD7oqFPc2XVwPtla73PdR08=@vger.kernel.org, AJvYcCX5ugXj+DDIk7P+DSLp9vIcHCYgnrc2GGJHU4rQf5ucE1ZfhGb1sQnSNINdSggGqJEsF6zssW0j@vger.kernel.org, AJvYcCXYDfpEpD33y3P34ddEliFMUWZZMF6pbkldsnng+Tgi+RRD6+22Thy18jW6bjFn698uBakCbf/HRUNG@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNgRbLDytQK3anKhAbwgApZsT6xccUKzB0xkgbtppY50NaqWPy
+	VQas/Sxn8ITfaN4i5adNwdtbiRF0RIYWxuHohlb58Fj+WM1NtHWI
+X-Google-Smtp-Source: AGHT+IHt2wT8bNtscoXd2NwQnqYECClFYjU37or4IaIkyymMWQ0OmtHWHQYRhwsqsuvHQ0rpMeSZEg==
+X-Received: by 2002:a17:902:e847:b0:206:9a3f:15e5 with SMTP id d9443c01a7336-20fa9e783cfmr90646085ad.32.1729782234674;
+        Thu, 24 Oct 2024 08:03:54 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7eee710bsm73869215ad.15.2024.10.24.08.03.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Oct 2024 08:03:00 -0700 (PDT)
-Message-ID: <9d801823-aa90-4b15-9dbb-9da6ad2cb3e4@baylibre.com>
-Date: Thu, 24 Oct 2024 10:02:58 -0500
+        Thu, 24 Oct 2024 08:03:54 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <ef306d61-0e47-4a77-b934-7d1c8ab817df@roeck-us.net>
+Date: Thu, 24 Oct 2024 08:03:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -76,263 +78,573 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v4 03/15] spi: offload: add support for hardware
- triggers
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>,
- Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20241023-dlech-mainline-spi-engine-offload-2-v4-0-f8125b99f5a1@baylibre.com>
- <20241023-dlech-mainline-spi-engine-offload-2-v4-3-f8125b99f5a1@baylibre.com>
- <9762d3f3d3a2e5fbe5e5041cbdc928a9ab24e40b.camel@gmail.com>
+Subject: Re: [PATCH v1 6/9] hwmon: Add Nuvoton NCT6694 HWMON support
+To: Ming Yu <a0282524688@gmail.com>, tmyu0@nuvoton.com, lee@kernel.org,
+ linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+ mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, wim@linux-watchdog.org, jdelvare@suse.com,
+ jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org,
+ alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org
+References: <20241024085922.133071-1-tmyu0@nuvoton.com>
+ <20241024085922.133071-7-tmyu0@nuvoton.com>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <9762d3f3d3a2e5fbe5e5041cbdc928a9ab24e40b.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20241024085922.133071-7-tmyu0@nuvoton.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 10/24/24 9:04 AM, Nuno Sá wrote:
-> On Wed, 2024-10-23 at 15:59 -0500, David Lechner wrote:
->> Extend SPI offloading to support hardware triggers.
->>
->> This allows an arbitrary hardware trigger to be used to start a SPI
->> transfer that was previously set up with spi_optimize_message().
->>
->> A new struct spi_offload_trigger is introduced that can be used to
->> configure any type of trigger. It has a type discriminator and a union
->> to allow it to be extended in the future. Two trigger types are defined
->> to start with. One is a trigger that indicates that the SPI peripheral
->> is ready to read or write data. The other is a periodic trigger to
->> repeat a SPI message at a fixed rate.
->>
->> There is also a spi_offload_hw_trigger_validate() function that works
->> similar to clk_round_rate(). It basically asks the question of if we
->> enabled the hardware trigger what would the actual parameters be. This
->> can be used to test if the requested trigger type is actually supported
->> by the hardware and for periodic triggers, it can be used to find the
->> actual rate that the hardware is capable of.
->>
->> Signed-off-by: David Lechner <dlechner@baylibre.com>
->> ---
->>
->> In previous versions, we locked the SPI bus when the hardware trigger
->> was enabled, but we found this to be too restrictive. In one use case,
->> to avoid a race condition, we need to enable the SPI offload via a
->> hardware trigger, then write a SPI message to the peripheral to place
->> it into a mode that will generate the trigger. If we did it the other
->> way around, we could miss the first trigger.
->>
->> Another likely use case will be enabling two offloads/triggers at one
->> time on the same device, e.g. a read trigger and a write trigger. So
->> the exclusive bus lock for a single trigger would be too restrictive in
->> this case too.
->>
->> So for now, I'm going with Nuno's suggestion to leave any locking up to
->> the individual controller driver. If we do find we need something more
->> generic in the future, we could add a new spi_bus_lock_exclusive() API
->> that causes spi_bus_lock() to fail instead of waiting and add "locked"
->> versions of trigger enable functions. This would allow a peripheral to
->> claim exclusive use of the bus indefinitely while still being able to
->> do any SPI messaging that it needs.
->>
->> v4 changes:
->> * Added new struct spi_offload_trigger that is a generic struct for any
->>   hardware trigger rather than returning a struct clk.
->> * Added new spi_offload_hw_trigger_validate() function.
->> * Dropped extra locking since it was too restrictive.
->>
->> v3 changes:
->> * renamed enable/disable functions to spi_offload_hw_trigger_*mode*_...
->> * added spi_offload_hw_trigger_get_clk() function
->> * fixed missing EXPORT_SYMBOL_GPL
->>
->> v2 changes:
->> * This is split out from "spi: add core support for controllers with
->>   offload capabilities".
->> * Added locking for offload trigger to claim exclusive use of the SPI
->>   bus.
->> ---
->>  drivers/spi/spi-offload.c       | 266 ++++++++++++++++++++++++++++++++++++++++
->>  include/linux/spi/spi-offload.h |  78 ++++++++++++
->>  2 files changed, 344 insertions(+)
->>
->> diff --git a/drivers/spi/spi-offload.c b/drivers/spi/spi-offload.c
->> index c344cbf50bdb..2a1f9587f27a 100644
->> --- a/drivers/spi/spi-offload.c
->> +++ b/drivers/spi/spi-offload.c
->> @@ -9,12 +9,26 @@
->>  #include <linux/cleanup.h>
->>  #include <linux/device.h>
->>  #include <linux/export.h>
->> +#include <linux/list.h>
->>  #include <linux/mutex.h>
->> +#include <linux/of.h>
->>  #include <linux/property.h>
->>  #include <linux/spi/spi-offload.h>
->>  #include <linux/spi/spi.h>
->>  #include <linux/types.h>
->>  
->> +struct spi_offload_trigger {
->> +	struct list_head list;
->> +	struct device dev;
->> +	/* synchronizes calling ops and driver registration */
->> +	struct mutex lock;
->> +	const struct spi_offload_trigger_ops *ops;
->> +	void *priv;
->> +};
->> +
->> +static LIST_HEAD(spi_offload_triggers);
->> +static DEFINE_MUTEX(spi_offload_triggers_lock);
->> +
->>  /**
->>   * devm_spi_offload_alloc() - Allocate offload instances
->>   * @dev: Device for devm purposes
->> @@ -102,3 +116,255 @@ struct spi_offload *devm_spi_offload_get(struct device *dev,
->>  	return offload;
->>  }
->>  EXPORT_SYMBOL_GPL(devm_spi_offload_get);
->> +
->> +static void spi_offload_trigger_release(void *data)
->> +{
->> +	struct spi_offload_trigger *trigger = data;
->> +
->> +	guard(mutex)(&trigger->lock);
->> +	if (trigger->priv && trigger->ops->release)
->> +		trigger->ops->release(trigger->priv);
->> +
->> +	put_device(&trigger->dev);
->> +}
->> +
->> +struct spi_offload_trigger
->> +*devm_spi_offload_trigger_get(struct device *dev,
->> +			      struct spi_offload *offload,
->> +			      enum spi_offload_trigger_type type)
->> +{
->> +	struct spi_offload_trigger *trigger;
->> +	struct fwnode_reference_args args;
->> +	bool match = false;
->> +	int ret;
->> +
->> +	ret = fwnode_property_get_reference_args(dev_fwnode(offload-
->>> provider_dev),
->> +						 "trigger-sources",
->> +						 "#trigger-source-cells", 0, 0,
->> +						 &args);
->> +	if (ret)
->> +		return ERR_PTR(ret);
->> +
->> +	struct fwnode_handle *trigger_fwnode __free(fwnode_handle) = args.fwnode;
->> +
->> +	guard(mutex)(&spi_offload_triggers_lock);
->> +
->> +	list_for_each_entry(trigger, &spi_offload_triggers, list) {
->> +		if (trigger->dev.fwnode != args.fwnode)
->> +			continue;
->> +
->> +		match = trigger->ops->match(trigger->priv, type, args.args,
->> args.nargs);
->> +		if (match)
->> +			break;
->> +	}
->> +
->> +	if (!match)
->> +		return ERR_PTR(-EPROBE_DEFER);
->> +
->> +	guard(mutex)(&trigger->lock);
->> +
->> +	if (!trigger->priv)
->> +		return ERR_PTR(-ENODEV);
+On 10/24/24 01:59, Ming Yu wrote:
+> This driver supports Hardware monitor functionality for NCT6694 MFD
+> device based on USB interface.
 > 
-> This is a bit odd tbh. Not a real deal breaker for me but the typical pattern I would
-> expect is for methods of the trigger to get a struct spi_offload_trigger opaque
-> pointer. Then we provide a get_private kind of API for the private data. I guess you
-> want to avoid that but IMO it makes for neater API instead of getting void pointers.
-
-I was just trying to save a step of an extra call to get *priv
-in each callback implementation, but yeah, no problem to change
-it to something more "normal" looking.
-
+> Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
+> ---
+>   MAINTAINERS                   |   1 +
+>   drivers/hwmon/Kconfig         |  10 +
+>   drivers/hwmon/Makefile        |   1 +
+>   drivers/hwmon/nct6694-hwmon.c | 407 ++++++++++++++++++++++++++++++++++
+>   4 files changed, 419 insertions(+)
+>   create mode 100644 drivers/hwmon/nct6694-hwmon.c
 > 
-> Another thing is, can the above actually happen? We have the
-> spi_offload_triggers_lock grabbed and we got a match so the trigger should not be
-> able to go away (should block on the same lock).
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 63387c0d4ab6..2aa87ad84156 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16439,6 +16439,7 @@ M:	Ming Yu <tmyu0@nuvoton.com>
+>   L:	linux-kernel@vger.kernel.org
+>   S:	Supported
+>   F:	drivers/gpio/gpio-nct6694.c
+> +F:	drivers/hwmon/nct6694-hwmon.c
+>   F:	drivers/i2c/busses/i2c-nct6694.c
+>   F:	drivers/mfd/nct6694.c
+>   F:	drivers/net/can/nct6694_canfd.c
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 08a3c863f80a..740e4afe6582 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1625,6 +1625,16 @@ config SENSORS_NCT6683
+>   	  This driver can also be built as a module. If so, the module
+>   	  will be called nct6683.
+>   
+> +config SENSORS_NCT6694
+> +	tristate "Nuvoton NCT6694 Hardware Monitor support"
+> +	depends on MFD_NCT6694
+> +	help
+> +	  Say Y here to support Nuvoton NCT6694 hardware monitoring
+> +	  functionality.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called nct6694-hwmon.
+> +
+>   config SENSORS_NCT6775_CORE
+>   	tristate
+>   	select REGMAP
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index 9554d2fdcf7b..729961176d00 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -167,6 +167,7 @@ obj-$(CONFIG_SENSORS_MLXREG_FAN) += mlxreg-fan.o
+>   obj-$(CONFIG_SENSORS_MENF21BMC_HWMON) += menf21bmc_hwmon.o
+>   obj-$(CONFIG_SENSORS_MR75203)	+= mr75203.o
+>   obj-$(CONFIG_SENSORS_NCT6683)	+= nct6683.o
+> +obj-$(CONFIG_SENSORS_NCT6694)	+= nct6694-hwmon.o
+>   obj-$(CONFIG_SENSORS_NCT6775_CORE) += nct6775-core.o
+>   nct6775-objs			:= nct6775-platform.o
+>   obj-$(CONFIG_SENSORS_NCT6775)	+= nct6775.o
+> diff --git a/drivers/hwmon/nct6694-hwmon.c b/drivers/hwmon/nct6694-hwmon.c
+> new file mode 100644
+> index 000000000000..7d7d22a650b0
+> --- /dev/null
+> +++ b/drivers/hwmon/nct6694-hwmon.c
+> @@ -0,0 +1,407 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Nuvoton NCT6694 HWMON driver based on USB interface.
+> + *
+> + * Copyright (C) 2024 Nuvoton Technology Corp.
+> + */
+> +
+> +#include <linux/slab.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/nct6694.h>
+> +
+> +#define DRVNAME "nct6694-hwmon"
+> +
+> +/* Host interface */
+> +#define REQUEST_RPT_MOD			0xFF
+> +#define REQUEST_HWMON_MOD		0x00
+> +
+> +/* Report Channel */
+> +#define HWMON_FIN_IDX(x)		(0x50 + ((x) * 2))
+> +#define HWMON_FIN_STS(x)		(0x6E + (x))
+> +#define HWMON_PWM_IDX(x)		(0x70 + (x))
+> +
+> +/* Message Channel*/
+> +/* Command 00h */
+> +#define REQUEST_HWMON_CMD0_LEN		0x40
+> +#define REQUEST_HWMON_CMD0_OFFSET	0x0000	/* OFFSET = SEL|CMD */
+> +#define HWMON_FIN_EN(x)			(0x04 + (x))
+> +#define HWMON_PWM_FREQ_IDX(x)		(0x30 + (x))
+> +/* Command 02h */
+> +#define REQUEST_HWMON_CMD2_LEN		0x90
+> +#define REQUEST_HWMON_CMD2_OFFSET	0x0002	/* OFFSET = SEL|CMD */
+> +#define HWMON_SMI_CTRL_IDX		0x00
+> +#define HWMON_FIN_LIMIT_IDX(x)		(0x70 + ((x) * 2))
+> +#define HWMON_CMD2_HYST_MASK		0x1F
+> +/* Command 03h */
+> +#define REQUEST_HWMON_CMD3_LEN		0x08
+> +#define REQUEST_HWMON_CMD3_OFFSET	0x0003	/* OFFSET = SEL|CMD */
+> +
+> +struct nct6694_hwmon_data {
+> +	struct nct6694 *nct6694;
+> +
+> +	/* Make sure read & write commands are consecutive */
+> +	struct mutex hwmon_lock;
+> +};
+> +
+> +#define NCT6694_HWMON_FAN_CONFIG (HWMON_F_ENABLE | HWMON_F_INPUT | \
+> +				  HWMON_F_MIN | HWMON_F_MIN_ALARM)
+> +#define NCT6694_HWMON_PWM_CONFIG (HWMON_PWM_INPUT | HWMON_PWM_FREQ)
+> +
+> +static const struct hwmon_channel_info *nct6694_info[] = {
+> +	HWMON_CHANNEL_INFO(fan,
+> +			   NCT6694_HWMON_FAN_CONFIG,	/* FIN0 */
+> +			   NCT6694_HWMON_FAN_CONFIG,	/* FIN1 */
+> +			   NCT6694_HWMON_FAN_CONFIG,	/* FIN2 */
+> +			   NCT6694_HWMON_FAN_CONFIG,	/* FIN3 */
+> +			   NCT6694_HWMON_FAN_CONFIG,	/* FIN4 */
+> +			   NCT6694_HWMON_FAN_CONFIG,	/* FIN5 */
+> +			   NCT6694_HWMON_FAN_CONFIG,	/* FIN6 */
+> +			   NCT6694_HWMON_FAN_CONFIG,	/* FIN7 */
+> +			   NCT6694_HWMON_FAN_CONFIG,	/* FIN8 */
+> +			   NCT6694_HWMON_FAN_CONFIG),	/* FIN9 */
+> +
+> +	HWMON_CHANNEL_INFO(pwm,
+> +			   NCT6694_HWMON_PWM_CONFIG,	/* PWM0 */
+> +			   NCT6694_HWMON_PWM_CONFIG,	/* PWM1 */
+> +			   NCT6694_HWMON_PWM_CONFIG,	/* PWM2 */
+> +			   NCT6694_HWMON_PWM_CONFIG,	/* PWM3 */
+> +			   NCT6694_HWMON_PWM_CONFIG,	/* PWM4 */
+> +			   NCT6694_HWMON_PWM_CONFIG,	/* PWM5 */
+> +			   NCT6694_HWMON_PWM_CONFIG,	/* PWM6 */
+> +			   NCT6694_HWMON_PWM_CONFIG,	/* PWM7 */
+> +			   NCT6694_HWMON_PWM_CONFIG,	/* PWM8 */
+> +			   NCT6694_HWMON_PWM_CONFIG),	/* PWM9 */
+> +	NULL
+> +};
+> +
+> +static int nct6694_fan_read(struct device *dev, u32 attr, int channel,
+> +			    long *val)
+> +{
+> +	struct nct6694_hwmon_data *data = dev_get_drvdata(dev);
+> +	unsigned char buf[2];
+> +	int ret;
+> +
+> +	switch (attr) {
+> +	case hwmon_fan_enable:
+> +		ret = nct6694_read_msg(data->nct6694, REQUEST_HWMON_MOD,
+> +				       REQUEST_HWMON_CMD0_OFFSET,
+> +				       REQUEST_HWMON_CMD0_LEN,
+> +				       HWMON_FIN_EN(channel / 8),
+> +				       1, buf);
+> +		if (ret)
+> +			return -EINVAL;
 
-The problem is that it could have gone away before we took the lock.
+Do not overwrite error return values.
 
-It could happen like this:
+> +
+> +		*val = buf[0] & BIT(channel % 8) ? 1 : 0;
+> +
+> +		break;
+> +
+> +	case hwmon_fan_input:
+> +		ret = nct6694_read_msg(data->nct6694, REQUEST_RPT_MOD,
+> +				       HWMON_FIN_IDX(channel), 2, 0,
+> +				       2, buf);
+> +		if (ret)
+> +			return -EINVAL;
+> +
+> +		*val = (buf[1] | (buf[0] << 8)) & 0xFFFF;
+> +
+> +		break;
+> +
+> +	case hwmon_fan_min:
+> +		ret = nct6694_read_msg(data->nct6694, REQUEST_HWMON_MOD,
+> +				       REQUEST_HWMON_CMD2_OFFSET,
+> +				       REQUEST_HWMON_CMD2_LEN,
+> +				       HWMON_FIN_LIMIT_IDX(channel),
+> +				       2, buf);
+> +		if (ret)
+> +			return -EINVAL;
+> +
+> +		*val = (buf[1] | (buf[0] << 8)) & 0xFFFF;
+> +
+> +		break;
+> +
+> +	case hwmon_fan_min_alarm:
+> +		ret = nct6694_read_msg(data->nct6694, REQUEST_RPT_MOD,
+> +				       HWMON_FIN_STS(channel / 8),
+> +				       1, 0, 1, buf);
+> +		if (ret)
+> +			return -EINVAL;
+> +
+> +		*val = buf[0] & BIT(channel % 8);
+> +
+> +		break;
+> +
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int nct6694_pwm_read(struct device *dev, u32 attr, int channel,
+> +			    long *val)
+> +{
+> +	struct nct6694_hwmon_data *data = dev_get_drvdata(dev);
+> +	unsigned char buf;
+> +	int ret;
+> +
+> +	switch (attr) {
+> +	case hwmon_pwm_input:
+> +		ret = nct6694_read_msg(data->nct6694, REQUEST_RPT_MOD,
+> +				       HWMON_PWM_IDX(channel),
+> +				       1, 0, 1, &buf);
+> +		if (ret)
+> +			return -EINVAL;
+> +
+> +		*val = buf;
+> +
+> +		break;
+> +	case hwmon_pwm_freq:
+> +		ret = nct6694_read_msg(data->nct6694, REQUEST_HWMON_MOD,
+> +				       REQUEST_HWMON_CMD0_OFFSET,
+> +				       REQUEST_HWMON_CMD0_LEN,
+> +				       HWMON_PWM_FREQ_IDX(channel),
+> +				       1, &buf);
+> +		if (ret)
+> +			return -EINVAL;
+> +
+> +		*val = buf * 25000 / 255;
+> +
+> +		break;
+> +
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int nct6694_fan_write(struct device *dev, u32 attr, int channel,
+> +			     long val)
+> +{
+> +	struct nct6694_hwmon_data *data = dev_get_drvdata(dev);
+> +	unsigned char enable_buf[REQUEST_HWMON_CMD0_LEN] = {0};
+> +	unsigned char buf[REQUEST_HWMON_CMD2_LEN] = {0};
+> +	u16 fan_val = (u16)val;
 
-* Trigger driver registers trigger - sets *priv.
-* SPI peripheral driver gets reference to trigger.
-* Trigger driver unregisters trigger - removes *priv.
-* SPI peripheral tries to call trigger function.
+This is wrong. It will result in overflows/underflows if out of range
+values are provided, and the driver should not write 0 if the user
+writes 65536. You need to use clamp_val() instead. For values with
+well defined range (specifically hwmon_fan_enable) you need to validate
+the parameter, not just take it as boolean.
 
-> 
->>
->> +struct spi_offload_trigger
->> +*devm_spi_offload_trigger_alloc(struct device *dev,
->> +				struct spi_offload_trigger_info *info)
->> +{
->> +	struct spi_offload_trigger *trigger;
->> +	int ret;
->> +
->> +	trigger = kzalloc(sizeof(*trigger), GFP_KERNEL);
->> +	if (!trigger)
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +	device_initialize(&trigger->dev);
-> 
-> Do we really need the full struct device and the overhead of adding it to the driver
-> core? AFAICT, we're using it only for refcouting so we could use a plain kref for
-> that matter. It would make things simpler. Or do you envision an future usecase as
-> this might matter? Like allowing userspace to set some controls on the trigger (I
-> would expect to be done through consumers though)?
+> +	int ret;
+> +
+> +	switch (attr) {
+> +	case hwmon_fan_enable:
+> +		mutex_lock(&data->hwmon_lock);
+> +		ret = nct6694_read_msg(data->nct6694, REQUEST_HWMON_MOD,
+> +				       REQUEST_HWMON_CMD0_OFFSET,
+> +				       REQUEST_HWMON_CMD0_LEN, 0,
+> +				       REQUEST_HWMON_CMD0_LEN,
+> +				       enable_buf);
+> +		if (ret)
+> +			goto err;
+> +
+> +		if (val)
+> +			enable_buf[HWMON_FIN_EN(channel / 8)] |= BIT(channel % 8);
+> +		else
+> +			enable_buf[HWMON_FIN_EN(channel / 8)] &= ~BIT(channel % 8);
+> +
+> +		ret = nct6694_write_msg(data->nct6694, REQUEST_HWMON_MOD,
+> +					REQUEST_HWMON_CMD0_OFFSET,
+> +					REQUEST_HWMON_CMD0_LEN, enable_buf);
+> +		if (ret)
+> +			goto err;
+> +
+> +		break;
+> +
+> +	case hwmon_fan_min:
+> +		mutex_lock(&data->hwmon_lock);
+> +		ret = nct6694_read_msg(data->nct6694, REQUEST_HWMON_MOD,
+> +				       REQUEST_HWMON_CMD2_OFFSET,
+> +				       REQUEST_HWMON_CMD2_LEN, 0,
+> +				       REQUEST_HWMON_CMD2_LEN, buf);
+> +		if (ret)
+> +			goto err;
+> +
+> +		buf[HWMON_FIN_LIMIT_IDX(channel)] = (u8)((fan_val >> 8) & 0xFF);
+> +		buf[HWMON_FIN_LIMIT_IDX(channel) + 1] = (u8)(fan_val & 0xFF);
+> +		ret = nct6694_write_msg(data->nct6694, REQUEST_HWMON_MOD,
+> +					REQUEST_HWMON_CMD2_OFFSET,
+> +					REQUEST_HWMON_CMD2_LEN, buf);
+> +		if (ret)
+> +			goto err;
+> +
+> +		break;
 
-Agreed. We should not need a device at this point.
+The error handler goto and the break accomplish exactly the same,
+thus the conditional goto is pointless.
 
-> 
->> +	trigger->dev.parent = info->parent;
->> +	trigger->dev.fwnode = info->fwnode;
->> +	trigger->dev.of_node = of_node_get(to_of_node(trigger->dev.fwnode));
->> +	trigger->dev.of_node_reused = true;
->> +	trigger->dev.release = spi_offload_trigger_dev_release;
->> +
->> +	mutex_init(&trigger->lock);
->> +	trigger->ops = info->ops;
->> +
->> +	ret = devm_add_action_or_reset(dev, spi_offload_trigger_put, trigger);
->> +	if (ret)
->> +		return ERR_PTR(ret);
->> +
->> +	ret = dev_set_name(&trigger->dev, "%s-%d", info->name, info->id);
->> +	if (ret)
->> +		return ERR_PTR(ret);
->> +
->> +	return trigger;
->> +}
->> +EXPORT_SYMBOL_GPL(devm_spi_offload_trigger_alloc);
->> +
->> +static void spi_offload_trigger_unregister(void *data)
->> +{
->> +	struct spi_offload_trigger *trigger = data;
->> +
->> +	scoped_guard(mutex, &spi_offload_triggers_lock)
->> +		list_del(&trigger->list);
->> +
->> +	guard(mutex)(&trigger->lock);
->> +	trigger->priv = NULL;
-> 
-> nit: I guess this is a good as anything else but *ops could also be a good fit to
-> nullify :)
+> +
+> +	default:
+> +		ret = -EOPNOTSUPP;
+> +		goto err;
 
-I debated between the two. :-)
+As mentioned in my other reply, the lock is not acquired here,
+causing an unbalanced unlock.
 
-But if I change the priv handling like you suggest, I think ops will make
-more sense here.
+> +	}
+> +
+> +err:
+> +	mutex_unlock(&data->hwmon_lock);
+> +	return ret;
+> +}
+> +
+> +static int nct6694_read(struct device *dev, enum hwmon_sensor_types type,
+> +			u32 attr, int channel, long *val)
+> +{
+> +	switch (type) {
+> +	case hwmon_fan:	/* in RPM */
+> +		return nct6694_fan_read(dev, attr, channel, val);
+> +
+> +	case hwmon_pwm:	/* in value 0~255 */
+> +		return nct6694_pwm_read(dev, attr, channel, val);
+> +
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	return 0;
+
+Unnecessary return statement. Also seen elsewhere.
+
+> +}
+> +
+> +static int nct6694_write(struct device *dev, enum hwmon_sensor_types type,
+> +			 u32 attr, int channel, long val)
+> +{
+> +	switch (type) {
+> +	case hwmon_fan:
+> +		return nct6694_fan_write(dev, attr, channel, val);
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static umode_t nct6694_is_visible(const void *data, enum hwmon_sensor_types type,
+> +				  u32 attr, int channel)
+> +{
+> +	switch (type) {
+> +	case hwmon_fan:
+> +		switch (attr) {
+> +		case hwmon_fan_enable:
+> +		case hwmon_fan_min:
+> +			return 0644;
+> +
+> +		case hwmon_fan_input:
+> +		case hwmon_fan_min_alarm:
+> +			return 0444;
+> +
+> +		default:
+> +			return 0;
+> +		}
+> +
+> +	case hwmon_pwm:
+> +		switch (attr) {
+> +		case hwmon_pwm_input:
+> +		case hwmon_pwm_freq:
+> +			return 0444;
+> +		default:
+> +			return 0;
+> +		}
+> +
+> +	default:
+> +		return 0;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct hwmon_ops nct6694_hwmon_ops = {
+> +	.is_visible = nct6694_is_visible,
+> +	.read = nct6694_read,
+> +	.write = nct6694_write,
+> +};
+> +
+> +static const struct hwmon_chip_info nct6694_chip_info = {
+> +	.ops = &nct6694_hwmon_ops,
+> +	.info = nct6694_info,
+> +};
+> +
+> +static int nct6694_hwmon_init(struct nct6694_hwmon_data *data)
+> +{
+> +	unsigned char buf[REQUEST_HWMON_CMD2_LEN] = {0};
+> +	int ret;
+> +
+> +	/* Set Fan input Real Time alarm mode */
+> +	mutex_lock(&data->hwmon_lock);
+
+Pointless lock (this is init code)
+
+> +	ret = nct6694_read_msg(data->nct6694, REQUEST_HWMON_MOD,
+> +			       REQUEST_HWMON_CMD2_OFFSET,
+> +			       REQUEST_HWMON_CMD2_LEN, 0,
+> +			       REQUEST_HWMON_CMD2_LEN, buf);
+> +	if (ret)
+> +		goto err;
+> +
+> +	buf[HWMON_SMI_CTRL_IDX] = 0x02;
+> +
+> +	ret = nct6694_write_msg(data->nct6694, REQUEST_HWMON_MOD,
+> +				REQUEST_HWMON_CMD2_OFFSET,
+> +				REQUEST_HWMON_CMD2_LEN, buf);
+> +	if (ret)
+> +		goto err;
+> +
+> +err:
+> +	mutex_unlock(&data->hwmon_lock);
+> +	return ret;
+> +}
+> +
+> +static int nct6694_hwmon_probe(struct platform_device *pdev)
+> +{
+> +	struct nct6694_hwmon_data *data;
+> +	struct nct6694 *nct6694 = dev_get_drvdata(pdev->dev.parent);
+> +	struct device *hwmon_dev;
+> +	int ret;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->nct6694 = nct6694;
+> +	mutex_init(&data->hwmon_lock);
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	ret = nct6694_hwmon_init(data);
+> +	if (ret)
+> +		return -EIO;
+
+Again, do not overwrite error codes.
+
+> +
+> +	/* Register hwmon device to HWMON framework */
+> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
+> +							 "nct6694", data,
+> +							 &nct6694_chip_info,
+> +							 NULL);
+> +	if (IS_ERR(hwmon_dev)) {
+> +		dev_err(&pdev->dev, "%s: Failed to register hwmon device!\n",
+> +			__func__);
+
+Use dev_err_probe(), and the function name is pointless.
+
+> +		return PTR_ERR(hwmon_dev);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver nct6694_hwmon_driver = {
+> +	.driver = {
+> +		.name	= DRVNAME,
+> +	},
+> +	.probe		= nct6694_hwmon_probe,
+> +};
+> +
+> +static int __init nct6694_init(void)
+> +{
+> +	int err;
+> +
+> +	err = platform_driver_register(&nct6694_hwmon_driver);
+> +	if (!err) {
+> +		if (err)
+
+Seriously ? Read this code again. It is never reached (and pointless).
+
+> +			platform_driver_unregister(&nct6694_hwmon_driver);
+> +	}
+> +
+> +	return err;
+> +}
+> +subsys_initcall(nct6694_init);
+> +
+> +static void __exit nct6694_exit(void)
+> +{
+> +	platform_driver_unregister(&nct6694_hwmon_driver);
+> +}
+> +module_exit(nct6694_exit);
+> +
+> +MODULE_DESCRIPTION("USB-HWMON driver for NCT6694");
+> +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
+> +MODULE_LICENSE("GPL");
 
 
