@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-3798-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3799-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFDF59ADD61
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 09:16:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 256A59ADD67
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 09:16:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6EB01C21710
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 07:16:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 466E61C20EA8
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 07:16:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B21B18B494;
-	Thu, 24 Oct 2024 07:15:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B450119CD01;
+	Thu, 24 Oct 2024 07:15:58 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889A9189BB0;
-	Thu, 24 Oct 2024 07:15:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA6618BBA0;
+	Thu, 24 Oct 2024 07:15:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729754156; cv=none; b=IRorLllE6SkFUD6x4xuSqdOPObaLKFcu2zbfRKm2Fb6DoLao4Z3QsDz2bJw6Tr6nSV0SFQ4wd+0+y7B64fyq4GWALREiqyGL6N6ExkzOJxEDH2TSud7l7Z9WvZXKLvvb6ZQ3S87d9g2NqI5l42FkMba4Zi9ajBfieEYjr2/cAfc=
+	t=1729754158; cv=none; b=LViO/2c2GaFteFibhA0mQ0RIU1cX8CfQRGJCw1RX7AeAIHC42XLBdKNXnQHiaaxtHGQnoNHMnmMP4xIs6VaU9IiMI3ol+2DkuCKG19znsUjocJKsxZUcNDSaD51Aon1YWpCKe2R8Yyd4wLCGF36UcRWQQMlMXhrIolMJtolTJ/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729754156; c=relaxed/simple;
-	bh=Je127OCFXyUqe0CKrY1MU+acy6SPlGuFU4zUPri07Zk=;
+	s=arc-20240116; t=1729754158; c=relaxed/simple;
+	bh=oVST8IcSxvlu1YUMZVdQot5WSVbJEQ1NUm7B7sRhPUw=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dlmBF7MH/jSJc2/hlrXUEB8BJ9/y6lE613GPNGsX9gbpjLhZQm4Otg5SD+/ii7aYTBYDbXvCRQZICTHMgxDee2gYT3ELI/chr/dw3pTb3WuT3vjF+lP5z6yAu53/jsqKOkOQZ6seb8AI8PkDexXDzz/DDHJvLz5b2yJtJm4JBVw=
+	 MIME-Version:Content-Type; b=gLZe9VeN1eOrh+RzLAbtWHA6u+6xL2uGImly9GVtr39L10iQIqQe9JenA+soMyOmUatIKXGpP5kNaXvSLQFo54osvXMR/zzz14C7NMihDI/b/u1A/lNMDvFsOlqBMdQxaQ7DyhtsnO2H2abxhHpJslIINyyGmH1Gz868PK2fA3s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
@@ -44,9 +44,9 @@ To: <jdelvare@suse.com>, <linux@roeck-us.net>, <robh@kernel.org>,
 	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
 	<linux-pwm@vger.kernel.org>, <BMC-SW@aspeedtech.com>
-Subject: [PATCH v1 1/2] hwmon: (aspeed-g6-pwm-tacho): Extend the #pwm-cells to 4
-Date: Thu, 24 Oct 2024 15:15:47 +0800
-Message-ID: <20241024071548.3370363-2-billy_tsai@aspeedtech.com>
+Subject: [PATCH v1 2/2] hwmon: (aspeed-g6-pwm-tacho): Support the WDT reload
+Date: Thu, 24 Oct 2024 15:15:48 +0800
+Message-ID: <20241024071548.3370363-3-billy_tsai@aspeedtech.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20241024071548.3370363-1-billy_tsai@aspeedtech.com>
 References: <20241024071548.3370363-1-billy_tsai@aspeedtech.com>
@@ -59,56 +59,146 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Add an option to support #pwm-cells up to 4. The additional cell is used
-to enable the WDT reset feature, which is specific to the ASPEED PWM
-controller.
+Use the DTS property #pwm-cells to determine if the PWM controller needs
+to enable the WDT reload feature, which changes the duty cycle to a
+preprogrammed value after a WDT/EXTRST#. When #pwm-cells = <4>, the
+feature will be enabled, and the PWM consumer can use the 4th argument to
+set the reload duty cycle [0-255].
 
 Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-Change-Id: Iefcc9622ac3dc684441d3e77aeb53c00f2ce4097
+Change-Id: Ided520f73220581e3b37819a106ec81ebf9bb5a6
 ---
- .../bindings/hwmon/aspeed,g6-pwm-tach.yaml    | 25 ++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+ drivers/hwmon/aspeed-g6-pwm-tach.c | 49 ++++++++++++++++++++++++++++++
+ drivers/pwm/core.c                 |  6 ++--
+ include/linux/pwm.h                | 10 ++++++
+ 3 files changed, 62 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
-index 9e5ed901ae54..0cc92ce29ece 100644
---- a/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
-@@ -31,7 +31,11 @@ properties:
-     maxItems: 1
+diff --git a/drivers/hwmon/aspeed-g6-pwm-tach.c b/drivers/hwmon/aspeed-g6-pwm-tach.c
+index 75eadda738ab..df47f9aa8ee6 100644
+--- a/drivers/hwmon/aspeed-g6-pwm-tach.c
++++ b/drivers/hwmon/aspeed-g6-pwm-tach.c
+@@ -56,6 +56,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
++#include <dt-bindings/pwm/pwm.h>
+ #include <linux/reset.h>
+ #include <linux/sysfs.h>
  
-   "#pwm-cells":
--    const: 3
-+    enum: [3, 4]
-+    description: |
-+      The value should be 4 to enable the WDT reload feature, which will change the duty cycle to
-+      a preprogrammed value after WDT/EXTRST#.
-+      The range for the fourth cell value supported by this binding is 0 to 255.
+@@ -452,6 +453,51 @@ static void aspeed_pwm_tach_reset_assert(void *data)
+ 	reset_control_assert(rst);
+ }
  
- patternProperties:
-   "^fan-[0-9]+$":
-@@ -69,3 +73,22 @@ examples:
-         pwms = <&pwm_tach 1 40000 0>;
-       };
-     };
-+  - |
-+    #include <dt-bindings/clock/aspeed-clock.h>
-+    pwm_tach: pwm-tach-controller@1e610000 {
-+      compatible = "aspeed,ast2600-pwm-tach";
-+      reg = <0x1e610000 0x100>;
-+      clocks = <&syscon ASPEED_CLK_AHB>;
-+      resets = <&syscon ASPEED_RESET_PWM>;
-+      #pwm-cells = <4>;
++static void aspeed_pwm_set_wdt_reload(struct pwm_chip *chip,
++				      struct pwm_device *pwm,
++				      u64 reload_duty_cycle)
++{
++	struct aspeed_pwm_tach_data *priv = aspeed_pwm_chip_to_data(chip);
++	u32 hwpwm = pwm->hwpwm, val;
 +
-+      fan-0 {
-+        tach-ch = /bits/ 8 <0x0>;
-+        pwms = <&pwm_tach 0 40000 0 128>;
-+      };
++	val = readl(priv->base + PWM_ASPEED_DUTY_CYCLE(hwpwm));
++	val &= ~PWM_ASPEED_DUTY_CYCLE_POINT_AS_WDT;
++	val |= FIELD_PREP(PWM_ASPEED_DUTY_CYCLE_POINT_AS_WDT,
++			  reload_duty_cycle);
++	writel(val, priv->base + PWM_ASPEED_DUTY_CYCLE(hwpwm));
 +
-+      fan-1 {
-+        tach-ch = /bits/ 8 <0x1 0x2>;
-+        pwms = <&pwm_tach 1 40000 0 160>;
-+      };
-+    };
++	val = readl(priv->base + PWM_ASPEED_CTRL(hwpwm));
++	val |= PWM_ASPEED_CTRL_DUTY_LOAD_AS_WDT_ENABLE;
++	writel(val, priv->base + PWM_ASPEED_CTRL(hwpwm));
++}
++
++static struct pwm_device *
++aspeed_pwm_xlate(struct pwm_chip *chip, const struct of_phandle_args *args)
++{
++	struct pwm_device *pwm;
++
++	/* flags in the fourth cell are optional */
++	if (args->args_count < 3)
++		return ERR_PTR(-EINVAL);
++
++	if (args->args[0] >= chip->npwm)
++		return ERR_PTR(-EINVAL);
++
++	pwm = pwm_request_from_chip(chip, args->args[0], NULL);
++	if (IS_ERR(pwm))
++		return pwm;
++
++	pwm->args.period = args->args[1];
++	pwm->args.polarity = PWM_POLARITY_NORMAL;
++	if (args->args[2] & PWM_POLARITY_INVERTED)
++		pwm->args.polarity = PWM_POLARITY_INVERSED;
++
++	if (args->args_count > 3 && args->args[3] < U8_MAX)
++		aspeed_pwm_set_wdt_reload(chip, pwm, args->args[3]);
++
++	return pwm;
++}
++
+ static int aspeed_pwm_tach_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev, *hwmon;
+@@ -493,6 +539,9 @@ static int aspeed_pwm_tach_probe(struct platform_device *pdev)
+ 	pwmchip_set_drvdata(chip, priv);
+ 	chip->ops = &aspeed_pwm_ops;
+ 
++	if (IS_ENABLED(CONFIG_OF))
++		chip->of_xlate = aspeed_pwm_xlate;
++
+ 	ret = devm_pwmchip_add(dev, chip);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 6e752e148b98..8251f7b361ab 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -422,9 +422,8 @@ static int pwm_device_request(struct pwm_device *pwm, const char *label)
+  * chip. A negative error code is returned if the index is not valid for the
+  * specified PWM chip or if the PWM device cannot be requested.
+  */
+-static struct pwm_device *pwm_request_from_chip(struct pwm_chip *chip,
+-						unsigned int index,
+-						const char *label)
++struct pwm_device *pwm_request_from_chip(struct pwm_chip *chip,
++					 unsigned int index, const char *label)
+ {
+ 	struct pwm_device *pwm;
+ 	int err;
+@@ -442,6 +441,7 @@ static struct pwm_device *pwm_request_from_chip(struct pwm_chip *chip,
+ 
+ 	return pwm;
+ }
++EXPORT_SYMBOL_GPL(pwm_request_from_chip);
+ 
+ struct pwm_device *
+ of_pwm_xlate_with_flags(struct pwm_chip *chip, const struct of_phandle_args *args)
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 8acd60b53f58..95ae885f65c3 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -405,6 +405,8 @@ void pwmchip_remove(struct pwm_chip *chip);
+ int __devm_pwmchip_add(struct device *dev, struct pwm_chip *chip, struct module *owner);
+ #define devm_pwmchip_add(dev, chip) __devm_pwmchip_add(dev, chip, THIS_MODULE)
+ 
++struct pwm_device *pwm_request_from_chip(struct pwm_chip *chip,
++					 unsigned int index, const char *label);
+ struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip *chip,
+ 		const struct of_phandle_args *args);
+ struct pwm_device *of_pwm_single_xlate(struct pwm_chip *chip,
+@@ -504,6 +506,14 @@ static inline void pwm_put(struct pwm_device *pwm)
+ 	might_sleep();
+ }
+ 
++static inline struct pwm_device *pwm_request_from_chip(struct pwm_chip *chip,
++						       unsigned int index,
++						       const char *label)
++{
++	might_sleep();
++	return ERR_PTR(-ENODEV);
++}
++
+ static inline struct pwm_device *devm_pwm_get(struct device *dev,
+ 					      const char *consumer)
+ {
 -- 
 2.25.1
 
