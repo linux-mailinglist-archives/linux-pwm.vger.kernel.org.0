@@ -1,156 +1,181 @@
-Return-Path: <linux-pwm+bounces-3901-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3902-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0605A9B0A2A
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 18:42:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A5889B0D8D
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 20:40:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6E9AD1F21798
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 16:42:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB1EF286F26
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 18:40:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1868718B499;
-	Fri, 25 Oct 2024 16:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB06120BB49;
+	Fri, 25 Oct 2024 18:40:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="o9TCbAy4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmUlchIc"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D6D2AE94
-	for <linux-pwm@vger.kernel.org>; Fri, 25 Oct 2024 16:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80189185E50;
+	Fri, 25 Oct 2024 18:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729874526; cv=none; b=W84ET7FnKrBzbvJ0Diqp7Bc2ADdKV6vL2kdJrwvP2Cw6wsu6EkU6XUzjqXa7JK7cbW9deq4e1tenGThWtvKhG9K6eu7bb8madkc69RANFhCXYr9N/HTKVGiG3Kqu0CUDU3CWlEashqOffqvZt92iih9sWt35EHjoiUHwSHXOgSE=
+	t=1729881646; cv=none; b=Ed5awnu1NhkX9URuuMUW/6qU2ysMCntK+QWU85QVkJu2zslEg/OsjXuiwrGJkc2CakNyoirj8JoGmoPfTrDSRq2qdu8x/68cahoGwg4PhwtZa2holVyL6lisNZFuyLCpCXXJqCnvWRCSG8vdv1294aerNuCFTiTxy3jOpyXmpHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729874526; c=relaxed/simple;
-	bh=bZQFxBqJCoUYz3PAAj5GVi9qI9j8Xi0ZuxSzi6a7CW4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kx7vTOc/bP/3CCjJEPcvwrl2qj3ZgHMWXsKZ4Xd+E+Lif+rRayvM2G1bc4OJnbV1AgqeuqlVTbIIJQ0ouni1eVfTN3QFGh7SyMjOLn+RnigpJLLKw7uxN39ytzGVubfhYF4ZPsEfh0VBfPxz7ZUC9HGJJpWkArypJDy2QagtMFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=o9TCbAy4; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-7180a5ba498so1164866a34.2
-        for <linux-pwm@vger.kernel.org>; Fri, 25 Oct 2024 09:42:02 -0700 (PDT)
+	s=arc-20240116; t=1729881646; c=relaxed/simple;
+	bh=JRxNUr5yui2gNVAeX4FE/a5Z8KBgsyO2L2DGHu/TKtU=;
+	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=J4sBl3IhfUNIvQS8LUEBhFX2jMXVPrkCR9mL/esmXmQB6DFZvtxCAL3OKT++IKN7ttJ9Klw8jKM6uqpmZFl5FQ6+xnTaSOvL9DvwN/4H0GH32fo274mVXvnn9lfmdynyFtO3HzrHvHjskW2P2bEUxLzpo78iM4pPyxntUAui4So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmUlchIc; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-37d462c91a9so1598331f8f.2;
+        Fri, 25 Oct 2024 11:40:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729874522; x=1730479322; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=s/dAgQT3sLw1VNMbjsWYUyTB0NwG7xZCYWQp+yMNAOY=;
-        b=o9TCbAy4gVQDsKpp9/3FxpxwQkpHP72l8Q+Q5LeAL2Y5CoLV2dZqeZrsaGX4MIeee8
-         c4CHv+RmrUPCxLtkYMXciqm3XHkKjLCF0xhdkWByQ5/S4BFKEIQDHpX0MXOXomxcC2K+
-         w1mEBKxsimRMpTpfN1oj9S9cyWahFCwWfhJYyd8+5zMWtTfu+QHB8paIDYovAg7XLzje
-         Toq17mAeV1/TqCt7CpK5aDI4d4TWTWt0IwmovwQbRqYypyFEnUsQ8lPGUpp5dy8GUyqN
-         LPQ/yxovQ1CyOA0Qft5CyGwBgpRrxAeF/bqLHNJHz7LXcQRWuQvKIZUPmYrqTpTkTIgN
-         IKzw==
+        d=gmail.com; s=20230601; t=1729881643; x=1730486443; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:message-id:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JRxNUr5yui2gNVAeX4FE/a5Z8KBgsyO2L2DGHu/TKtU=;
+        b=PmUlchIchkKzpGCZm2vPQcINgkMTki8G8xL4aQVHV4lIKyUHIblgMKFC0HQuBdh4w2
+         md1esL0R77wspbiz0v57LTCcdpBYluHBS14BIWj2sy2I6oIvF+s8mg9YGiVHdgqoSOqt
+         HyN6bBLG0Ph5VGL6XYTrKULSx6ICVVkSszKOD3iyErVeCQncF3ZbYEnEVXFPHTG4+Wt2
+         4zqzozTmcQeqd+bCzSBWZ/Qa0IdOzkbnRtNQsTaY2n8BxZMYX/+hklToscp8QpeTdHNv
+         uzLRulQS9uKVY51SZfIu9tuUQoXdSwUyjbj8h0ZoNFSmm3LQn44enhMkGkF2dahV3R99
+         Rrtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729874522; x=1730479322;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s/dAgQT3sLw1VNMbjsWYUyTB0NwG7xZCYWQp+yMNAOY=;
-        b=FXrjs8p19a+iGg2fRvEiEJ/nxcg9o93fzGYBaEl9JQw7S2jMOwbXXVFE/vfv+WNfYH
-         5owZpf53vN0HMgyTsI3QCQe9kHhRczfhBeUabV0zCObWZqTrwQdWu8lOvy5a/wsiU1Tc
-         qc/ADnQ6B/GaP9WClS4pnODuFQnUBhDIfeQwbInEroVFazi5f12sEWorMBjlWtx93HvZ
-         tlF8j4wn23VjB0fdSqyvfTWhbH+GAWnfH8qs/XRLegX6YdrJsyuXnXDe3NaQD91bqQbz
-         H6az7N/PcSXZMB6Zm2uGhZAqy5D+F773tZb1UH+9taU3HlE79YxYmBRgjWcZbyJJ53Gs
-         1agw==
-X-Forwarded-Encrypted: i=1; AJvYcCVn+Hk/gwhEcsvtMrDAHdHxkiL2GXvCRmNkikSaDzED99qS7Ilt4XVXjJRaO0QOjyqnK+HiyfxsAKE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxq44pryEqeqv57QTlNNqmfGKLIbIrqr9UeUcgkwHYjkMtuywLW
-	BGDjjDTJPYgt/TgfrikvwQdKiOuJxlMpLMripUtmX2iTq2eJ8E0HFS77Svinq00=
-X-Google-Smtp-Source: AGHT+IGKHLpFac6i1JEpDgdAb/A8ZfR5LsdyJcTXFPCsZHKM/f3VteH3iR8BhJBy3Pr1CfWqY2TOaQ==
-X-Received: by 2002:a05:6830:2105:b0:715:4cb1:4409 with SMTP id 46e09a7af769-7186829a661mr214665a34.31.1729874522247;
-        Fri, 25 Oct 2024 09:42:02 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-718618c561esm283564a34.67.2024.10.25.09.42.00
+        d=1e100.net; s=20230601; t=1729881643; x=1730486443;
+        h=content-transfer-encoding:mime-version:subject:message-id:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JRxNUr5yui2gNVAeX4FE/a5Z8KBgsyO2L2DGHu/TKtU=;
+        b=xRWs4UwOraFmkorxze2F6cwl07h2MkwqRa9KJHozVsZy1BtehlYRua0pCaZmH7aFfU
+         KDmPvZvl00r/U1YVU2Vs+hFWurZtnKUDZgGvWL7USy59u2cXUgOtv+TzgcQX6LRpf4sh
+         FZqIcPox0RsVGjKvLcQghJ2pbtiJq1hG0lT0gxFPQI26FnAQNWjrFgIAiKStGWg3CYEh
+         dr/tuaA8qJRdfqcktmtMYdxiWxjU7rJG3CtZG78PC72qxIexPXFlyeSO4zG2N77T3NMD
+         0o1pSxnv1UadjN9UbkJHUPWmg/kkw/reJ+C13CpHNZgOZAkspR+JjHU7hL9pNwA9URDL
+         u1gA==
+X-Forwarded-Encrypted: i=1; AJvYcCU80Prdd9iHJTthnpNQfiQRK7iCfZ5uPMPnmLn2OPP6ueHPWP0Kk6Idd1Z8UYYDMRapCWXr8rphKs8j@vger.kernel.org, AJvYcCVBOlO4ZrpibAy0Rt2/xAi4vorXfSA5FaN0M/S0h5JXA9i/YKMtaariCKYKY0Yt9zXAyvKBdbYSAPWV@vger.kernel.org, AJvYcCX+OQET6fwLnlBNoiy4KBIronzbq1DE7HKfcwBfV0kCgQEL/TLgjlYC1WHKTZu4J65ss4S2ryq3qQ3c@vger.kernel.org, AJvYcCXCILfq2rWi4HxBw6dFBdbDG431pGcR+dE9mP87D9s0YwlXqMdLxcfUA45VnXp95pJgZaP8ACA/PBNN@vger.kernel.org, AJvYcCXqn17Q0wNCYjQaaXtWfuSDiiE8TMB+phzRXrzjDrOnxdWwCUbPjAGT/BhAsXBsMMEZIn1DCW1Cik04+Qft@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmdmgqyNNXaaRR0jmeL0/ipbdieoA6uYYx+PuMMD+qc0NbpXkP
+	Ono62HUdZiLJV7rrlw9W9dOPu3IyPKATuimMjT5BGBeBrp4SfpH99slHQj/jEb1kcqtt
+X-Google-Smtp-Source: AGHT+IGS6rcHOlbTprJsbT/HrRycQKHd080NuZIR69soUsvtun0u2f/I9JB4hvq+jJZoGz6PjNSYZQ==
+X-Received: by 2002:a5d:4311:0:b0:374:c17a:55b5 with SMTP id ffacd0b85a97d-3806111a1bemr275137f8f.14.1729881642551;
+        Fri, 25 Oct 2024 11:40:42 -0700 (PDT)
+Received: from [127.0.0.1] (aftr-62-216-210-211.dynamic.mnet-online.de. [62.216.210.211])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b70c91sm2193563f8f.85.2024.10.25.11.40.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2024 09:42:01 -0700 (PDT)
-Message-ID: <87614827-aec3-49cb-898b-f0f85e7efd81@baylibre.com>
-Date: Fri, 25 Oct 2024 11:42:00 -0500
+        Fri, 25 Oct 2024 11:40:42 -0700 (PDT)
+Date: Fri, 25 Oct 2024 20:40:42 +0200 (GMT+02:00)
+From: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	=?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	=?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	David Jander <david@protonic.nl>,
+	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
+Message-ID: <dc52cda0-47d9-4cbf-a68e-0af304edc32e@gmail.com>
+Subject: Re: [PATCH RFC v4 11/15] iio: buffer-dmaengine: add
+ devm_iio_dmaengine_buffer_setup_ext2()
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v4 11/15] iio: buffer-dmaengine: add
- devm_iio_dmaengine_buffer_setup_ext2()
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>,
- Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20241023-dlech-mainline-spi-engine-offload-2-v4-0-f8125b99f5a1@baylibre.com>
- <20241023-dlech-mainline-spi-engine-offload-2-v4-11-f8125b99f5a1@baylibre.com>
- <1f4156e8c6c4da09fc5d72661d1e002ae6ee4f31.camel@gmail.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <1f4156e8c6c4da09fc5d72661d1e002ae6ee4f31.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <dc52cda0-47d9-4cbf-a68e-0af304edc32e@gmail.com>
 
-On 10/25/24 8:24 AM, Nuno Sá wrote:
-> I still need to look better at this but I do have one though already :)
-> 
-> On Wed, 2024-10-23 at 15:59 -0500, David Lechner wrote:
->> Add a new devm_iio_dmaengine_buffer_setup_ext2() function to handle
->> cases where the DMA channel is managed by the caller rather than being
->> requested and released by the iio_dmaengine module.
+Oct 25, 2024 18:42:02 David Lechner <dlechner@baylibre.com>:
+
+> On 10/25/24 8:24 AM, Nuno S=C3=A1 wrote:
+>> I still need to look better at this but I do have one though already=20
+>> :)
 >>
->> Signed-off-by: David Lechner <dlechner@baylibre.com>
->> ---
+>> On Wed, 2024-10-23 at 15:59 -0500, David Lechner wrote:
+>>> Add a new devm_iio_dmaengine_buffer_setup_ext2() function to handle
+>>> cases where the DMA channel is managed by the caller rather than=20
+>>> being
+>>> requested and released by the iio_dmaengine module.
+>>>
+>>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+>>> ---
+>>>
+>>> v4 changes:
+>>> * This replaces "iio: buffer-dmaengine: generalize requesting DMA=20
+>>> channel"
+>>> ---
+>
+> ...
+>
+>>> @@ -282,12 +281,38 @@ void iio_dmaengine_buffer_free(struct=20
+>>> iio_buffer *buffer)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio_buffer_to_dmaengine_buff=
+er(buffer);
+>>> =C2=A0
+>>> =C2=A0=C2=A0=C2=A0 iio_dma_buffer_exit(&dmaengine_buffer->queue);
+>>> -=C2=A0=C2=A0 dma_release_channel(dmaengine_buffer->chan);
+>>> -
+>>> =C2=A0=C2=A0=C2=A0 iio_buffer_put(buffer);
+>>> +
+>>> +=C2=A0=C2=A0 if (dmaengine_buffer->owns_chan)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dma_release_channel(dmaengine_buf=
+fer->chan);
 >>
->> v4 changes:
->> * This replaces "iio: buffer-dmaengine: generalize requesting DMA channel"
->> ---
+>> Not sure if I agree much with this owns_chan flag. The way I see it,=20
+>> we should always
+>> handover the lifetime of the DMA channel to the IIO DMA framework.=20
+>> Note that even the
+>> device you pass in for both requesting the channel of the spi_offload=C2=
+=A0=20
+>> and for
+>> setting up the DMA buffer is the same (and i suspect it will always=20
+>> be) so I would
+>> not go with the trouble. And with this assumption we could simplify a=20
+>> bit more the
+>> spi implementation.
+>
+> I tried something like this in v3 but Jonathan didn't seem to like it.
+>
+> https://lore.kernel.org/all/20240727144303.4a8604cb@jic23-huawei/
+>
+>>
+>> And not even related but I even suspect the current implementation=20
+>> could be
+>> problematic. Basically I'm suspecting that the lifetime of the DMA=20
+>> channel should be
+>> attached to the lifetime of the iio_buffer. IOW, we should only=20
+>> release the channel
+>> in iio_dmaengine_buffer_release() - in which case the current=20
+>> implementation with the
+>> spi_offload would also be buggy.
+>
+> The buffer can outlive the iio device driver that created the buffer?
 
-...
+Yes, it can as the IIO device itself. In case a userspace app has an open=
+=20
+FD for the buffer chardev, we get a reference that is only released when=20
+the FD is closed (which can outlive the device behind bound to its=20
+driver). That is why we nullify indio_dev->info and check for it on the=20
+read() and write() fops.
 
->> @@ -282,12 +281,38 @@ void iio_dmaengine_buffer_free(struct iio_buffer *buffer)
->>  		iio_buffer_to_dmaengine_buffer(buffer);
->>  
->>  	iio_dma_buffer_exit(&dmaengine_buffer->queue);
->> -	dma_release_channel(dmaengine_buffer->chan);
->> -
->>  	iio_buffer_put(buffer);
->> +
->> +	if (dmaengine_buffer->owns_chan)
->> +		dma_release_channel(dmaengine_buffer->chan);
-> 
-> Not sure if I agree much with this owns_chan flag. The way I see it, we should always
-> handover the lifetime of the DMA channel to the IIO DMA framework. Note that even the
-> device you pass in for both requesting the channel of the spi_offload  and for
-> setting up the DMA buffer is the same (and i suspect it will always be) so I would
-> not go with the trouble. And with this assumption we could simplify a bit more the
-> spi implementation.
+FWIW, I raised concerns about this in the past (as we don't have any lock=
+=20
+in those paths) but Jonathan rightfully wanted to see a real race. And I=20
+was too lazy to try and reproduce one but I'm still fairly sure we have=20
+theoretical (at least) races in those paths. And one of them could be (I=20
+think) concurrently hitting a DMA submit block while the device is being=20
+unbound. In that case the DMA chan would be already released and we could=
+=20
+still try to initiate a transfer. I did not check if that would crash or=20
+something but it should still not happen.
 
-I tried something like this in v3 but Jonathan didn't seem to like it.
-
-https://lore.kernel.org/all/20240727144303.4a8604cb@jic23-huawei/
-
-> 
-> And not even related but I even suspect the current implementation could be
-> problematic. Basically I'm suspecting that the lifetime of the DMA channel should be
-> attached to the lifetime of the iio_buffer. IOW, we should only release the channel
-> in iio_dmaengine_buffer_release() - in which case the current implementation with the
-> spi_offload would also be buggy.
-
-The buffer can outlive the iio device driver that created the buffer?
-
-> 
-> But bah, the second point is completely theoretical and likely very hard to reproduce
-> in real life (if reproducible at all - for now it's only something I suspect)
-> 
-> - Nuno Sá 
-> 
-> 
-
+- Nuno S=C3=A1
 
