@@ -1,393 +1,188 @@
-Return-Path: <linux-pwm+bounces-3866-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3867-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA9DA9AFC42
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 10:13:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C10709AFC4A
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 10:14:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD02D1C20399
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 08:13:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1FCC6B222BC
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 08:14:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C691BCA0E;
-	Fri, 25 Oct 2024 08:13:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84BC71CACC0;
+	Fri, 25 Oct 2024 08:14:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="njn38wvm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nh/nAKIS"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from IND01-BMX-obe.outbound.protection.outlook.com (mail-bmxind01olkn2046.outbound.protection.outlook.com [40.92.103.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00739170A1C;
-	Fri, 25 Oct 2024 08:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.103.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729843995; cv=fail; b=csdd8wJoOGaT6wxh5rV1OYCKcZMNA1aTtP56Jn7i8bgOJPg98fNvij+f0vqrUy3Hf+XA0dtpgNKsVLQXs4Ejtvqs7xxo4Di3l4Wg7R102j6vSlPp7sdbqKNwILWyCXpXY2djt0QNf1L3qco+4YZxL59fshVZrFb3CyOMvSUZD6A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729843995; c=relaxed/simple;
-	bh=E2b8Gmczmf2MNV4Tt8TUoHEoHkNFTarWcKbtYqO/rXI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BWS3oBt1gtc4IIsdRiB9b7AjnT8yfJlWpZWaKdSxTF5E+GuEpciJxvReBf0LeIVXJ5l4cQ0L/JWg3xI+P7hHoEQIhrwWVF0TSG4cwmVPDYt9ZHGVgVX3aK3klT12gt2BjpoKdTSvKoQCoqRYl09xdwHnJlFnFH+/bOOLnCO84Zw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=njn38wvm; arc=fail smtp.client-ip=40.92.103.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pQ1/2AxTfW3W3adS329j4JhKQAXMDPknf8QzJXS7DcMBHEGOypI0dVE+vkEUZANTPNh/TOqJTXFUF07Z5OLMFnfpbN0j0gc8GoDInRsnLCuJy/KKgnWyt0m8ATTe+ted5oNdLxDtbvS/pe3hgNm5rBkRC15iEVQl3k5G+N11Qh7e2xwImiiaO6lYUq26NYm2KzfraL/Jr/REhaFllqzdrCLosIvIS0tSzZovdsNp8VKihu5hNC50k5C2+18TvnCZsfUQcVCt/cpPA1+acEowzr/x0JTb/cTrmr6PzDZIyTwy6WDv0fDYHq+rJkjQ61RIWTgDEhXjIbUGjPhzvIejCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/ecwvGMEL3/6e4MMFJv9eE9qOpOm+Y2AZIS11nN3DEA=;
- b=RjZ+vRfDc21Zq0UK1zuL61r4FeQn8pUJlghK1mD6xBzO99pg/PGS6HTcZ6oj8RkJ/Z5GIyzJ/zllECLgS2WrHOxJov9nw2XgSozmZ8ngVmHHB26384maAswpPla+24ARmqXCXDvA1sZ0Es13UY57Vgu2xb3QbelbbwaGp71hEgtNXkP5hsuL/Q1k1z6yfNB9JBWZOMxXI7++wFAn1rGA1pGL408xWBzx6zr91Wd5+i6mKEWMjh22Iolve2nXFvgu/zHCMqb063Fqwgohdflbb+5Fl5v0VfmjMFu46H678PopW2E/pEbOwG7ynN/ZdEhJfngSCpXCMj+Thi5WkoRg/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/ecwvGMEL3/6e4MMFJv9eE9qOpOm+Y2AZIS11nN3DEA=;
- b=njn38wvmDCAQISiMON+57A2t3ksc+3jJ+TXLSf6BNsxUJ4QvO6OdxH7J1oN3NbwRL43h5ouLTZO4M+MfyRHxRa75hE+SDuI3qmchiKfWAVobZN++PYGUSgwJ04FfEzfKJJ6//RIkCCFUUTQSj4qWftY/1F4EgJQgz3uiafwu/QAvAYuPzBRcXMHCUoQan//F5/9cvfnw/SLrC90IH2QJZfoBNAyuvP7Mh7nsj8XBcvuSAx7xvVXhrRH25D5hAVcGFdv2Hr0z/0O72WANCTy8XgCu2IJWmIEkaHyP3tQQnxPtzL7vWU04RVGwYrmmEjpQ1LA0fipIPPkTa3PPlUuq7g==
-Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:138::5)
- by PN3P287MB0337.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:d6::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.21; Fri, 25 Oct
- 2024 08:13:05 +0000
-Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- ([fe80::a94:ad0a:9071:806c]) by MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- ([fe80::a94:ad0a:9071:806c%3]) with mapi id 15.20.8093.018; Fri, 25 Oct 2024
- 08:13:05 +0000
-Message-ID:
- <MA0P287MB28222636F2331748170B6F16FE4F2@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
-Date: Fri, 25 Oct 2024 16:13:03 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/3] pwm: sophgo: add driver for Sophgo SG2042 PWM
-To: Sean Young <sean@mess.org>
-Cc: Chen Wang <unicornxw@gmail.com>, ukleinek@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, inochiama@outlook.com,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
- chao.wei@sophgo.com, haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com,
- chunzhi.lin@sophgo.com
-References: <cover.1729843087.git.unicorn_wang@outlook.com>
- <4abe3cd4a870fc15b5e54a48eb4554a7419a4ef8.1729843087.git.unicorn_wang@outlook.com>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <4abe3cd4a870fc15b5e54a48eb4554a7419a4ef8.1729843087.git.unicorn_wang@outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI1PR02CA0011.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::19) To MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:138::5)
-X-Microsoft-Original-Message-ID:
- <b2930b21-319d-4e92-996f-23e8222cfdb1@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E6A1C2DAE;
+	Fri, 25 Oct 2024 08:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729844057; cv=none; b=cJWi6C186B2SSuLx5oKw+fPDGs122p4XYpDhxn7Upa+8vuOlHV5/9mUqTm2nLjb52ro9K9Toc/T/+FpUZsEtX7sfN7EDCJHG2vmRdlsxwm7nYz4kPcCtGYSW9JVlfMAAnGy2uWm+GnZ0PbEuDiIqPB73A7sqqz3OXXq+9ahf4Fw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729844057; c=relaxed/simple;
+	bh=TAPPHqL2n0Xwr0NoSH36sJST1F+aVdGWi2GdH3wNlac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n8wrkyWyYpfIl+qqM9OdfTq+oTARwv956g7Nlk3NemHIDlTQitDzDtyM7Ri7sWMoyqM/IRT036u6+GFULufFEaUrlSuVlJ0jeYFwcy85RvGCmkUbYSKt55A/5oO+1/A4FboHKJvTw0HcnvKuZxQqLiH/c3lpOnxFH/+1RbUFHe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nh/nAKIS; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e29267b4dc4so2024195276.0;
+        Fri, 25 Oct 2024 01:14:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729844054; x=1730448854; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jo/S0Z9d3Mx8O5eOyETMe7V1wC7hFxb1IEsYWjqKqQk=;
+        b=nh/nAKIS3FbBfoLoBgjLdhr0aWMyaV3WkBjsucXN2YtFubXXHdw6Tng/jki6jAXQUO
+         kvdAbadwuBCBLylNT49FmCj7iloOP3BqqNbrzxucsD0EVWgzALKX2hONsl6ezCrjYfnC
+         F7hgoXQu4Ouf/oH+R932aLC2GvuhtbOQlt25eGny2t3faex/gVOeXikWNYxqLXxzxZoO
+         APOWsanguH1/YIMTgbBREPEkuh7U8QLJqEf58HD+GVWYsrSKAWaEQ3o+JYgYOmwWG64Z
+         HBkhBPqAVb727kLGRWgNlqjqQNtKTnIEDUM76XyFH8HchQqc8mQxVB+7yiM2B+wq3VeW
+         +ipw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729844054; x=1730448854;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jo/S0Z9d3Mx8O5eOyETMe7V1wC7hFxb1IEsYWjqKqQk=;
+        b=T9xiiFY2X9S4/GaIYAA7oU/c4CL3KzSid2z3jUqt+K3kvofh5UJknDOmxaRzKlRqbx
+         o8LQ5S8lOq6KwJ5wntPBKnMUasIRTHL2ux1LNUlrNjI3p4kAki6gJMWanjCaPxfezKKB
+         rMy1Zhn2TyrTVN2bibaLaTlVO0rhtIXlKPiVpAoHeffF8IJIQpEM9uIDy5DAKXU4hF7W
+         9Tq6vyS0L0IFw1zmTcJtvSVNz6XXbJ0ej55jtY/TbGNDiNAOXwGnNSDQQVIOxXx9VTT9
+         sdF6k8dcKneurJs39lkYcxAYiMIaS+2K4NsEn9BDVve0KQn8kqq2QY5BCQro1StdAuhA
+         C6YA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4+Ah7nVoXIwuRZEuHNbR0VrTi1gEMdDB9u3N1Eg/ACubD5Yjvn09xY9GGS169r5cnKpuW4hRowvYznNA=@vger.kernel.org, AJvYcCUEFVjr3OasxQgPx+7TdZPMTN7t4pW2qFAGhH4PUGagJyTW9LxM6O93kEzMUTOM7H1OlNcSzRpS1anLo3Cb@vger.kernel.org, AJvYcCUsPGaZ5R7Logx+EMmqpAODi7CV5WeuaXrnudpjpqnGNQ7cg5h0soKtOEwVogWoAVS4uoHbS2Slvb9/@vger.kernel.org, AJvYcCVLR9tlLTgc1IMBE36H1jLYIQtju2aqHMRfNB6lAU//gkCA83G4JTbpi4mtN1Hx0REIU6pfcfZBCdnn@vger.kernel.org, AJvYcCVsDrYI+0yd0haWsfC6LMpkncC2QShj2M+rhuc3bQLcLtn+VwYelyXC5uQ1QBoQITXii2DYfmBeuWlS1ypU+pA=@vger.kernel.org, AJvYcCWHGf5uCa4JvmSu2ZI8QaUKVaMT9jcC40LSrceZ5Tw89G80QA15Lcg2rZ7/iBTl+2DzhSAvy0h5ZFGbqg==@vger.kernel.org, AJvYcCWlXV7WsC0aDArgeW+I2yhEDxVRgWCJa39DBHs92fsb4G9w8fNz5JNoQozkLcYhQ6Hn767CrxJj@vger.kernel.org, AJvYcCX/D+Sa+2BkLpCx7v+rFyOPgr+jZ0IsbHbnskFBSxpT0oaKzmi6YMOtA/QdW1K1DiBe0Te3dVlouN0=@vger.kernel.org, AJvYcCXeE7q/RPCbbjGzeugeXEasAQvn/TKqGE5qaZGQ9Q8SodC9O9pZR6Fhq1bzJY4k86UrTHvzjZLRy8pW@vger.kernel.org, AJvYcCXlBgE5ECpxaPHY2AMY5YrwNa/K2UcB
+ /SWJKgqs0CGyUlw1xG5WeNnihUL8dFks/D41YdJlg70btILr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzay+VbYb3fIT66zgx/MVI78L7CFGJCy4k/Pp1rp7WaaUKfoS8k
+	6wPZq/n+C4OsGewHeH4Gfp2JniCUGI/guzN2kt69d5t+vfM6DWGyjG8ab+NLihyqz6mDcfcjl+K
+	xONQgRDRyMhZaN+0qYtU0s2sfVg8=
+X-Google-Smtp-Source: AGHT+IHWwn6ldcKO9RUgddlzHZLLBUXYX1h/LeWpLmoNkOiG3umKeZfWhL71WqRFX9+nAMhhyEMT1U/hQLjIcU3hOyM=
+X-Received: by 2002:a05:6902:2782:b0:e28:ece9:fb01 with SMTP id
+ 3f1490d57ef6-e2e3a614e5bmr8423686276.7.1729844054340; Fri, 25 Oct 2024
+ 01:14:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0P287MB2822:EE_|PN3P287MB0337:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2fad2497-e590-4296-261b-08dcf4ccda6a
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|5072599009|6090799003|461199028|19110799003|8060799006|7092599003|15080799006|440099028|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	iqwXcWlM9zwOz9XxiV/qADmk8cPmVQrmiHlnWofoVDmQRRF6KZkR1FXLFfm2wRRVGd+PrvUbENd5yjzpjiA/kkVH+roLk1lhWqtkdxGYLLPmkkgcsV83D7TqUuKPO7G1CnVk4siK2KpL/hYTvWsrUEaJ5q0KhM1EvFsFSUPzAjaigHIq67P05EJqGK1n6dgnFM7wC42lgKSLGYmJSJH5WycTI91+lSKxeiKRMyJqhSuedM4CZvN8FYbSucAz30HVZuSBVtEAsLB8VrKM1waFqv2XjCLiVlqoX/92knVx3SOYnA+3wYFveJoRVy+p19LJEzkvK4Qj5quDHLfYofo1SQP039HbPcq9zczuHRfrpI0Jx87K08oh5GG/LvHjfT+UCzq8qH/4qZfPoiq82Zw3X0uukjaD0HKlwu9PF8Kn7M+X2K8PPb02UMSlm5QQjX3QPsQQgoBKG+E3D2X9OfyJpMjVnnViLKG8NqwuRZBlrpsf0fM00pZ3JSk0ERTS69fi9seCOeiHUp7o9YKiuvSpoI6ZuifxawwlnUtafqyvdOgP6YFMMAwyUHyJ6a+abyN9opI2Uy6UOp5mzhq6ai1wGcXkG+upUBJIAh8bQMVVhCaXRJkU/EV18brOq4CJVSjP2r04atOgBTTvWdtZHLShAFJhMRuHb+6Rz+Ggd3HDqRL41LMWFdvqivZ1tjw1aLM9DHZ+n1/sNHxMzFwlWbeNjYlbMGEdM66yruI/ewS323SGxob76TGde5rc/WcAzpcp0xQDHdBnlMpLNrVYMIxf0g==
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZnhUenZLQmdxVzNpaHN4enlFdXdYRmVPNlJ5aWZLd3pOck9qQlVoVU9vbXVk?=
- =?utf-8?B?Zll5bEZ3QUlwRk1iR21BOUF4QWVCNkpUWTRaQVZ0WXlNZnN2RWRNdVZld29V?=
- =?utf-8?B?OC9xVWRyR21TS2FHYWNXOGE2NGdzemxIeHN3QnRTL3VQRDZJQStmYUl3VDZs?=
- =?utf-8?B?Ync3U281aVFPaHVIUG8zVnk3WExTcWNlN3FvV0pNTnM3ZmlHNFpQMzhzU3g2?=
- =?utf-8?B?VWxhMDYyRmtDN3F0bVZyOUZoU0IxMXYwSGp2SzQzbEd4Z1lXUm9QdHJBZDgw?=
- =?utf-8?B?bi84VUxzSWJxNitUcFdib0U2ZFluVkRYWnA3RW15Q3Qvazd6bU8xVnhwNmxn?=
- =?utf-8?B?MmNMVnhreXAyZzdWL0tLRUM2bkdKZ2ZUVk5oU2hsN1YwWnFpc3hiY21OUHdL?=
- =?utf-8?B?eVp4dzVjWjJxbnRwUmxuRSsrcFdlOUhpRXAwMjFkaWFmbk4zaWhQRXQ0Rzgz?=
- =?utf-8?B?TmFMMGllMHJEK1kwN1dHMi9ITWJTSjhmT0FaVVRvRzlkaUthMVRZNzhMV2RP?=
- =?utf-8?B?S2xvVWV6S3hPbnlxOUV2cVNtL21IZm5ZSlJHSDF1bTJHZXVxQndJSEhpbTU2?=
- =?utf-8?B?N2JFY1RpQndXYzkrcjlOY09zLytSVkRsWk9UZkNzODY2aE9XNUFvcU9LaHNG?=
- =?utf-8?B?a0hzcVg0d1BDbWlsRHBMZUF3YkRER2Z2cXFQSmYxWHRXL09tZzlVZ0tGUFFh?=
- =?utf-8?B?czF0elBlUk1iRUR6TEh3VWhkUmRnbFlaV1hiYWNWdTNqYVMyWkdhaG96U1hi?=
- =?utf-8?B?Q0FjbGtnN2c3N1JtUkU0RDFMcm5NVUZiTFFiYTVvOUpVVGlWNER3Nnp2S2dK?=
- =?utf-8?B?NzNhTjkrTzlNMVBWQ3B0R1JEQXFkdmhRUExEcG4vV3FtOFlKTjBVWVJpTGJu?=
- =?utf-8?B?QUcra01IVzRrZUQrT1B4dmoxVEI1dFRwR2NPUDJ0UENDUWtISlZDTE9YZEla?=
- =?utf-8?B?bnl2VVVCWnQyUDRmbXBuSktGRnNWL202QWtVVXZQbGVuRjlQb0NJNmhTRy9y?=
- =?utf-8?B?ZzNZVnVwSXNZaVkwVk1JcTk0RzFPakdLazV3NG54Tjhoc2Myb3MrVW1qZHVW?=
- =?utf-8?B?RGtHcmJvbkk0SnNXUDF2U1ZKRFZCeUNuYU9vNGhqcjFYKzNWcytWcURNNFNQ?=
- =?utf-8?B?aitkUDZOR2hqazNjTnN5SjFMV3Uxc3lDeVA0SmRtWUQ3amNmZXZwVkhRQ1Zk?=
- =?utf-8?B?TjVSa2theUR2Ry9CYlh1TktIZWh4ZmpwQS9SdWVXdGVFZ1Nod05qQytYT0Vx?=
- =?utf-8?B?UFM5Q2psRFZKTmUrMmhsMzJmeklZWUZPblEyNDR0NXFtQnFtS2ZJUkRRRzY5?=
- =?utf-8?B?SGRwV2J5a0lFYzQzR0JjbGdVVTBIMjRMZkFaYmZ0eXZrMHFsZ3A3eGVpRlZp?=
- =?utf-8?B?cklSd0NZVlBlaExQdzRWa1RLOEhoYlJDdnNra2NiZWlsaGszbWFQeHcxVUls?=
- =?utf-8?B?ZGxEQnNnS3l0WkVIbk9GV01wTzI1WGVySTJuVUlHOXFydDB0N1FGeTNSendU?=
- =?utf-8?B?cnNNb1ExNWt4R0p3aVIvUFlFa1RTdFdUZGp6T0I3U1h5N2c5Y1Q4bjFUUjlh?=
- =?utf-8?B?V29DN3ZRdkVxOUk2WUcxd2NPMzdvaVhoQjhwZnpqeklNZVg0dW9ONFdTaEY1?=
- =?utf-8?B?YmhNQ1lLRTdodDBJT1NsWWxjQ2NQai8yUFdDc0ZXV3NpN0E1WjFCVHFHQkpq?=
- =?utf-8?Q?L0S0UgDgITWpOU9tsDoe?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2fad2497-e590-4296-261b-08dcf4ccda6a
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2024 08:13:05.6227
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3P287MB0337
+References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024085922.133071-2-tmyu0@nuvoton.com>
+ <20241024-adventurous-imaginary-hornet-4d5c46-mkl@pengutronix.de> <20241024-pumpkin-parrot-of-excellence-299c57-mkl@pengutronix.de>
+In-Reply-To: <20241024-pumpkin-parrot-of-excellence-299c57-mkl@pengutronix.de>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Fri, 25 Oct 2024 16:14:03 +0800
+Message-ID: <CAOoeyxXX2fpHVJ8urLmy+pBjH1aRdYu6qrtwOmwUxTUyQq30DA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Sean,
+Dear Marc,
 
-Since the changes are minor compared to v4, I have kept your signature. 
-If you find any problem, please let me know.
+Excuse me, I'm a bit confused. Is there anything I need to
+improve on?
 
 Thanks,
+Ming
 
-Chen
-
-On 2024/10/25 16:07, Chen Wang wrote:
-> From: Chen Wang <unicorn_wang@outlook.com>
+Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2024=E5=B9=B410=E6=9C=8824=
+=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:34=E5=AF=AB=E9=81=93=EF=
+=BC=9A
 >
-> Add a PWM driver for PWM controller in Sophgo SG2042 SoC.
+> On 24.10.2024 17:20:57, Marc Kleine-Budde wrote:
 >
-> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
-> Signed-off-by: Sean Young <sean@mess.org>
-> ---
->   drivers/pwm/Kconfig             |  10 ++
->   drivers/pwm/Makefile            |   1 +
->   drivers/pwm/pwm-sophgo-sg2042.c | 194 ++++++++++++++++++++++++++++++++
->   3 files changed, 205 insertions(+)
->   create mode 100644 drivers/pwm/pwm-sophgo-sg2042.c
+> [...]
 >
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 0915c1e7df16..ec85f3895936 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -584,6 +584,16 @@ config PWM_SL28CPLD
->   	  To compile this driver as a module, choose M here: the module
->   	  will be called pwm-sl28cpld.
->   
-> +config PWM_SOPHGO_SG2042
-> +	tristate "Sophgo SG2042 PWM support"
-> +	depends on ARCH_SOPHGO || COMPILE_TEST
-> +	help
-> +	  PWM driver for the PWM controller on Sophgo SG2042 SoC. The PWM
-> +	  controller supports outputing 4 channels of PWM waveforms.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm_sophgo_sg2042.
-> +
->   config PWM_SPEAR
->   	tristate "STMicroelectronics SPEAr PWM support"
->   	depends on PLAT_SPEAR || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 9081e0c0e9e0..539e0def3f82 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -53,6 +53,7 @@ obj-$(CONFIG_PWM_RZ_MTU3)	+= pwm-rz-mtu3.o
->   obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
->   obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
->   obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
-> +obj-$(CONFIG_PWM_SOPHGO_SG2042)	+= pwm-sophgo-sg2042.o
->   obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
->   obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
->   obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
-> diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg2042.c
-> new file mode 100644
-> index 000000000000..a3d12505e4aa
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-sophgo-sg2042.c
-> @@ -0,0 +1,194 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Sophgo SG2042 PWM Controller Driver
-> + *
-> + * Copyright (C) 2024 Sophgo Technology Inc.
-> + * Copyright (C) 2024 Chen Wang <unicorn_wang@outlook.com>
-> + *
-> + * Limitations:
-> + * - After reset, the output of the PWM channel is always high.
-> + *   The value of HLPERIOD/PERIOD is 0.
-> + * - When HLPERIOD or PERIOD is reconfigured, PWM will start to
-> + *   output waveforms with the new configuration after completing
-> + *   the running period.
-> + * - When PERIOD and HLPERIOD is set to 0, the PWM wave output will
-> + *   be stopped and the output is pulled to high.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/reset.h>
-> +
-> +#include <asm/div64.h>
-> +
-> +/*
-> + * Offset RegisterName
-> + * 0x0000 HLPERIOD0
-> + * 0x0004 PERIOD0
-> + * 0x0008 HLPERIOD1
-> + * 0x000C PERIOD1
-> + * 0x0010 HLPERIOD2
-> + * 0x0014 PERIOD2
-> + * 0x0018 HLPERIOD3
-> + * 0x001C PERIOD3
-> + * Four groups and every group is composed of HLPERIOD & PERIOD
-> + */
-> +#define SG2042_HLPERIOD(chan) ((chan) * 8 + 0)
-> +#define SG2042_PERIOD(chan) ((chan) * 8 + 4)
-> +
-> +#define SG2042_PWM_CHANNELNUM	4
-> +
-> +/**
-> + * struct sg2042_pwm_ddata - private driver data
-> + * @base:		base address of mapped PWM registers
-> + * @clk_rate_hz:	rate of base clock in HZ
-> + */
-> +struct sg2042_pwm_ddata {
-> +	void __iomem *base;
-> +	unsigned long clk_rate_hz;
-> +};
-> +
-> +static void pwm_sg2042_config(void __iomem *base, unsigned int chan, u32 period, u32 hlperiod)
-> +{
-> +	writel(period, base + SG2042_PERIOD(chan));
-> +	writel(hlperiod, base + SG2042_HLPERIOD(chan));
-> +}
-> +
-> +static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			    const struct pwm_state *state)
-> +{
-> +	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
-> +	u32 hlperiod;
-> +	u32 period;
-> +
-> +	if (state->polarity == PWM_POLARITY_INVERSED)
-> +		return -EINVAL;
-> +
-> +	if (!state->enabled) {
-> +		pwm_sg2042_config(ddata->base, pwm->hwpwm, 0, 0);
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * Period of High level (duty_cycle) = HLPERIOD x Period_clk
-> +	 * Period of One Cycle (period) = PERIOD x Period_clk
-> +	 */
-> +	period = min(mul_u64_u64_div_u64(ddata->clk_rate_hz, state->period, NSEC_PER_SEC), U32_MAX);
-> +	hlperiod = min(mul_u64_u64_div_u64(ddata->clk_rate_hz, state->duty_cycle, NSEC_PER_SEC), U32_MAX);
-> +
-> +	if (hlperiod > period) {
-> +		dev_err(pwmchip_parent(chip), "period < hlperiod, failed to apply current setting\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_dbg(pwmchip_parent(chip), "chan[%u]: period=%u, hlperiod=%u\n",
-> +		pwm->hwpwm, period, hlperiod);
-> +
-> +	pwm_sg2042_config(ddata->base, pwm->hwpwm, period, hlperiod);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pwm_sg2042_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				struct pwm_state *state)
-> +{
-> +	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
-> +	unsigned int chan = pwm->hwpwm;
-> +	u32 hlperiod;
-> +	u32 period;
-> +
-> +	period = readl(ddata->base + SG2042_PERIOD(chan));
-> +	hlperiod = readl(ddata->base + SG2042_HLPERIOD(chan));
-> +
-> +	if (!period && !hlperiod)
-> +		state->enabled = false;
-> +	else
-> +		state->enabled = true;
-> +
-> +	state->period = DIV_ROUND_UP_ULL((u64)period * NSEC_PER_SEC, ddata->clk_rate_hz);
-> +	state->duty_cycle = DIV_ROUND_UP_ULL((u64)hlperiod * NSEC_PER_SEC, ddata->clk_rate_hz);
-> +
-> +	state->polarity = PWM_POLARITY_NORMAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops pwm_sg2042_ops = {
-> +	.apply = pwm_sg2042_apply,
-> +	.get_state = pwm_sg2042_get_state,
-> +};
-> +
-> +static const struct of_device_id sg2042_pwm_ids[] = {
-> +	{ .compatible = "sophgo,sg2042-pwm" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
-> +
-> +static int pwm_sg2042_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct sg2042_pwm_ddata *ddata;
-> +	struct reset_control *rst;
-> +	struct pwm_chip *chip;
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	chip = devm_pwmchip_alloc(dev, SG2042_PWM_CHANNELNUM, sizeof(*ddata));
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +	ddata = pwmchip_get_drvdata(chip);
-> +
-> +	ddata->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(ddata->base))
-> +		return PTR_ERR(ddata->base);
-> +
-> +	clk = devm_clk_get_enabled(dev, "apb");
-> +	if (IS_ERR(clk))
-> +		return dev_err_probe(dev, PTR_ERR(clk), "failed to get base clk\n");
-> +
-> +	ret = devm_clk_rate_exclusive_get(dev, clk);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to get exclusive rate\n");
-> +
-> +	ddata->clk_rate_hz = clk_get_rate(clk);
-> +	if (!ddata->clk_rate_hz || ddata->clk_rate_hz > NSEC_PER_SEC)
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "Invalid clock rate: %lu\n", ddata->clk_rate_hz);
-> +
-> +	rst = devm_reset_control_get_optional_shared(dev, NULL);
-> +	if (IS_ERR(rst))
-> +		return dev_err_probe(dev, PTR_ERR(rst), "failed to get reset\n");
-> +
-> +	/* Deassert reset */
-> +	ret = reset_control_deassert(rst);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to deassert\n");
-> +
-> +	chip->ops = &pwm_sg2042_ops;
-> +	chip->atomic = true;
-> +
-> +	ret = devm_pwmchip_add(dev, chip);
-> +	if (ret < 0) {
-> +		reset_control_assert(rst);
-> +		return dev_err_probe(dev, ret, "failed to register PWM chip\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver pwm_sg2042_driver = {
-> +	.driver	= {
-> +		.name = "sg2042-pwm",
-> +		.of_match_table = sg2042_pwm_ids,
-> +	},
-> +	.probe = pwm_sg2042_probe,
-> +};
-> +module_platform_driver(pwm_sg2042_driver);
-> +
-> +MODULE_AUTHOR("Chen Wang");
-> +MODULE_DESCRIPTION("Sophgo SG2042 PWM driver");
-> +MODULE_LICENSE("GPL");
+> > > +   nct6694->cmd_buffer =3D devm_kcalloc(dev, CMD_PACKET_SZ,
+> > > +                                      sizeof(unsigned char), GFP_KER=
+NEL);
+> > > +   if (!nct6694->cmd_buffer)
+> > > +           return -ENOMEM;
+> > > +   nct6694->rx_buffer =3D devm_kcalloc(dev, MAX_PACKET_SZ,
+> > > +                                     sizeof(unsigned char), GFP_KERN=
+EL);
+> > > +   if (!nct6694->rx_buffer)
+> > > +           return -ENOMEM;
+> > > +   nct6694->tx_buffer =3D devm_kcalloc(dev, MAX_PACKET_SZ,
+> > > +                                     sizeof(unsigned char), GFP_KERN=
+EL);
+> > > +   if (!nct6694->tx_buffer)
+> > > +           return -ENOMEM;
+> > > +   nct6694->int_buffer =3D devm_kcalloc(dev, MAX_PACKET_SZ,
+> > > +                                      sizeof(unsigned char), GFP_KER=
+NEL);
+> > > +   if (!nct6694->int_buffer)
+> > > +           return -ENOMEM;
+> > > +
+> > > +   nct6694->int_in_urb =3D usb_alloc_urb(0, GFP_KERNEL);
+> > > +   if (!nct6694->int_in_urb) {
+> > > +           dev_err(&udev->dev, "Failed to allocate INT-in urb!\n");
+> > > +           return -ENOMEM;
+> > > +   }
+> > > +
+> > > +   /* Bulk pipe maximum packet for each transaction */
+> > > +   bulk_pipe =3D usb_sndbulkpipe(udev, BULK_OUT_ENDPOINT);
+> > > +   nct6694->maxp =3D usb_maxpacket(udev, bulk_pipe);
+> > > +
+> > > +   mutex_init(&nct6694->access_lock);
+> > > +   nct6694->udev =3D udev;
+> > > +   nct6694->timeout =3D URB_TIMEOUT; /* Wait until urb complete */
+> > > +
+> > > +   INIT_LIST_HEAD(&nct6694->handler_list);
+> > > +   spin_lock_init(&nct6694->lock);
+> > > +
+> > > +   usb_fill_int_urb(nct6694->int_in_urb, udev, pipe,
+> > > +                    nct6694->int_buffer, maxp, usb_int_callback,
+> > > +                    nct6694, int_endpoint->bInterval);
+> > > +   ret =3D usb_submit_urb(nct6694->int_in_urb, GFP_KERNEL);
+> > > +   if (ret)
+> > > +           goto err_urb;
+> > > +
+> > > +   dev_set_drvdata(&udev->dev, nct6694);
+> > > +   usb_set_intfdata(iface, nct6694);
+> > > +
+> > > +   ret =3D mfd_add_hotplug_devices(&udev->dev, nct6694_dev,
+> > > +                                 ARRAY_SIZE(nct6694_dev));
+> > > +   if (ret) {
+> > > +           dev_err(&udev->dev, "Failed to add mfd's child device\n")=
+;
+> > > +           goto err_mfd;
+> > > +   }
+> > > +
+> > > +   nct6694->async_workqueue =3D alloc_ordered_workqueue("asyn_workqu=
+eue", 0);
+> >
+> > Where is the async_workqueue used?
+>
+> Sorry - it's used in the driver, which live in separate directories -
+> you can ignore this comment.
+>
+> But then the question comes up, it looks racy to _first_ add the devices
+> and _then_ the workqueue.
+>
+> regards,
+> Marc
+>
+> --
+> Pengutronix e.K.                 | Marc Kleine-Budde          |
+> Embedded Linux                   | https://www.pengutronix.de |
+> Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+> Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
