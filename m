@@ -1,175 +1,133 @@
-Return-Path: <linux-pwm+bounces-3903-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3904-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 864169B0F70
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 21:55:25 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E68429B1114
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 22:59:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 409FE283607
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 19:55:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73FC8B22657
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 20:59:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A76E20F3E5;
-	Fri, 25 Oct 2024 19:55:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBEF2213130;
+	Fri, 25 Oct 2024 20:54:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="J4eROmSF"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="urAwzhEo"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E727D20EA55
-	for <linux-pwm@vger.kernel.org>; Fri, 25 Oct 2024 19:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D5921312E
+	for <linux-pwm@vger.kernel.org>; Fri, 25 Oct 2024 20:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729886120; cv=none; b=I4kFy34pVVadSBYR7Lk25nQCu+NjXnJGNc2gguH9zncEgApfm3Y4MjymPaOQGufiAYunW2Ikg2qwzCjqhsH44oWpeehjuTAang9TiHwjNA4yXcKaIO/2WPlRaV6kIxsoP3B2oq1oMtGIKaJ7dNcmVLUypFnEq5zyCopICBXSKfU=
+	t=1729889673; cv=none; b=lcPtq0JJwFIZubcL4+HEKJxjPL+pD1f61J1r+m6v7NX5cuWcQfg7pYacmtIOaZj+SDx6WfGUyMvzuomdVMIy+WSVM4GLg1hlv3wnmpfjGPIw7LXBKMS/QRLIfB9O7cr73r10d96KTq8CW9+jur9ex4tioOeN5ZWgKlhKsplpwUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729886120; c=relaxed/simple;
-	bh=3i7gQSjPTVExJi+8tdLy48McQB4g9avSQB0iN/wuWbE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cQc6D++y7z8NELv7EoMW5lpekIdlwfqX0julyCecU+j5jHkDRLBuzEteYOcRjO5LITpTJyIUwa3TaYVi50VgSQ9y9X9aoHPnYalbKJtLoEG/K8+koZRyrBJOSc6+GVwvQ4rZyUNbfglJjpSFhJC0ZjEa4N88+p2mpeH+gtkCebE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=J4eROmSF; arc=none smtp.client-ip=209.85.160.43
+	s=arc-20240116; t=1729889673; c=relaxed/simple;
+	bh=UovCrfPyiLvrmTLVq2JyxreTUbMckaKmOg9CDHOp6jY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bk12M9Bq/3HDIF5fs7CnuN/2wwD/tnb3fodo8AGgr8uaPBh5ETQ0mCKbCRNMmnMkKvZ5MQaqLAc2ZHqpnNYnAjxltJB7NXdX+oP26lR2o+FWwWcHXZSPcr/WUMuszppAzgf/4pUyP+jW12At9dEKvGFlyU/nLGyYhVLYi8K6KtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=urAwzhEo; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-287b8444ff3so1220252fac.1
-        for <linux-pwm@vger.kernel.org>; Fri, 25 Oct 2024 12:55:17 -0700 (PDT)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43163667f0eso23671615e9.0
+        for <linux-pwm@vger.kernel.org>; Fri, 25 Oct 2024 13:54:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729886117; x=1730490917; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XenFGeBbkfIEOtggTpW3cCFFoS+71BDD/eIdcva33jU=;
-        b=J4eROmSFx56wUODeJhhRyAssBV4TVx0v0r/ZRbzVf8HIw0pdo70vSFo8FiHtnxH3SI
-         /1MFd22KazK/CU4Vl0kwlxf5566iDOMew6/lsNsZCMKS+WX7nvr9Si0xR3ray/44JfYE
-         g0ommjbxK6nyIdSL1f5wjB1fgus/GeWrgbnzo1n2C+iPUayQ+IlOIBvU33xuloWfgrSd
-         lky9srSyq8ZqcloLXQ62nNY9GqGqURZE0eNKKEQY1F5XE3y7qTkItXcFwBV9G2dh4UlR
-         UMdP+wfc/xgYjIoYx7SFuaDPqOMMZ8XXWNfUOn7GqrwqQ+73ih2R3YEnJdr1+HPw41Nh
-         yOSg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729889668; x=1730494468; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UovCrfPyiLvrmTLVq2JyxreTUbMckaKmOg9CDHOp6jY=;
+        b=urAwzhEo8ULau9QWpG2N+0iAoO+51bT9p3eX8fIEmEr5LkXaArUBIBnlJAqs8lOJVe
+         nVZI0X774EJ97rgTQy7ePSV/eRLC1F89p0aDNIURWmTHuiuW4n1LXQ7hRmZGgwWzd5l5
+         wioMNMf3z5ob4GQrtRlgtDLcV+F9WVl6yzUplyz98kjI42ZqQJvD91vnsR11jbs0F2yN
+         bGP5/bJOxu+BEXwqCUsc7RT9Iue36PYs0EPc4U0wuy6Bj6454+1Hx5KtjDX58BG8Saj1
+         xgPtpm/YUzDuaPTbZYrMebCxaffCr7JS/TzeDn+VOFjljkKFFUm4sGGqCxMVmRagBkH4
+         l/8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729886117; x=1730490917;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XenFGeBbkfIEOtggTpW3cCFFoS+71BDD/eIdcva33jU=;
-        b=gsem8vUgHCd0VzTmpXapKjAwUj2Nef932rJ3mVIqhsKLSGZmvPMXJ2XWpuPchrKH0I
-         1k0GLU+4S/WKBy9Ivw1MRTB9VgjssnpI8OlG7V0rdjhXpzjcc5BhnkwUyKDgF/qvLDXl
-         NTD4MepmK6IVceowoWzXTFLi/Ymvfkc5v7eeC0C6EIos9yQSqGm0kBQ7dUeJNBKiW8v7
-         A8mGnCEuGLwsVLx8+wahm4fLT3nTZXkLs10HwGpN7nIx0DDOlSVcQPvuIH62/bzY2Y4J
-         P9BcsrW4ut1DwpJX5y3j+LAB5A2zQ3wBVrjKjNO86m/PyWpVboedjzhICnDYiOcFjCnD
-         ikhg==
-X-Forwarded-Encrypted: i=1; AJvYcCVdggWzd1WbkD7OfVevEKLSGChR8i7xX6ecuo8XDryTUFq6mPXN/NuWMBtetLmP9kuMoBleeoeHf8c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmxUlHMU/Dd4RZoVeIbvZXcpRvkal720Or09Z1dIHrDqdO81/m
-	qdqfSvnkS+4fQaDbqe9B4nH1b9o2j4PKwhc8f5GmRFD4nm9DGE3aC74PeBW43E8=
-X-Google-Smtp-Source: AGHT+IEBl+YXrAx7Fjt8TZ4PB95TM0tvCHEv3iGvmCdxmV7t5b+SMDo5OvPmODXDlwoCVREfYK+Mtw==
-X-Received: by 2002:a05:6870:1645:b0:278:2272:fc73 with SMTP id 586e51a60fabf-29051b1a3f1mr806157fac.8.1729886116876;
-        Fri, 25 Oct 2024 12:55:16 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-290380f5fdesm458266fac.42.2024.10.25.12.55.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2024 12:55:15 -0700 (PDT)
-Message-ID: <315f158e-0c3b-48e3-b288-27170f0659ed@baylibre.com>
-Date: Fri, 25 Oct 2024 14:55:13 -0500
+        d=1e100.net; s=20230601; t=1729889668; x=1730494468;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UovCrfPyiLvrmTLVq2JyxreTUbMckaKmOg9CDHOp6jY=;
+        b=oVwNGFelerA53O4wEvhkbJzdaaXAJ0jVpucnhfd03hm8QQLjMq7KMaGh1bGaAy82Tx
+         drkUjc+M27vYWzDg6Pyr1VNIyL067TxVvOK+Ol0tfBrODPYUs/zekYWXoQVL6Bs6yleC
+         HOtzZyNCrIO8gbs30isiSzllJzFC6IVc2LN5mdHNl63hZ32/KviyVmeGp/bQBR3O8PCg
+         ERHEChkacdsQhPKHFDjrlOK9XBaRBEy9QdC9F9PadLHmegD2NZa0y/UnO7A59m6591NQ
+         4sADoTkPRIUE7yI9UGmLdvs3B2UTGIQOOR2K2ayaCFnK3i07CKQjmPu10troH147a5KY
+         qJ+g==
+X-Gm-Message-State: AOJu0YwcqDo4oE9ii9VTCMh3wvZoyW0FeGuCqrmqvK26Lc7loiYbdmsj
+	g1xWJzatK51T2HJ83dsfZQi6A2ecR+or64XQCUOswiZTRBta/HdPMRAImPmdEqvbQxuXlLJtZpV
+	d
+X-Google-Smtp-Source: AGHT+IHxLhLEfFxRgu7h9w0l+WztIyINqpEmMUJPx34Cr6SvnF+wJrpmY8/idMcg5DzJB4v8afF1Vw==
+X-Received: by 2002:a05:600c:4588:b0:431:51c0:c90f with SMTP id 5b1f17b1804b1-4319acc2ca1mr3810585e9.21.1729889668135;
+        Fri, 25 Oct 2024 13:54:28 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:e349:2d5e:1c7a:6c80])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4318b5431ecsm59693375e9.5.2024.10.25.13.54.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Oct 2024 13:54:27 -0700 (PDT)
+Date: Fri, 25 Oct 2024 22:54:25 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] pwm: core: use device_match_name() instead of
+ strcmp(dev_name(...
+Message-ID: <eojlu5tv3kltam2eumfqzcsl7npexzpm6elwt4uc5whpfnq7qs@z24uatucv75z>
+References: <20241025142704.405340-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/6] iio: adc: ad4851: add ad485x driver
-From: David Lechner <dlechner@baylibre.com>
-To: "Miclaus, Antoniu" <Antoniu.Miclaus@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, "Sa, Nuno" <Nuno.Sa@analog.com>,
- "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
- "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-References: <20241014094154.9439-1-antoniu.miclaus@analog.com>
- <20241014094154.9439-6-antoniu.miclaus@analog.com>
- <60452f83-28a1-4a80-8e90-1f1ed32a594e@baylibre.com>
- <CY4PR03MB33996900AAB90A050375CBB39B4F2@CY4PR03MB3399.namprd03.prod.outlook.com>
- <f3351a7f-318b-42d6-aa1a-e8279eb06b78@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <f3351a7f-318b-42d6-aa1a-e8279eb06b78@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 10/25/24 9:29 AM, David Lechner wrote:
-> On 10/25/24 6:35 AM, Miclaus, Antoniu wrote:
->>>
-> ...
-> 
->>>
->>> See the ad7380 driver as an example of how to impelemt this. [2]
->>>
->>> [2]: https://urldefense.com/v3/__https://lore.kernel.org/linux-
->>> iio/20240530-iio-add-support-for-multiple-scan-types-v3-5-
->>> cbc4acea2cfa@baylibre.com/__;!!A3Ni8CS0y2Y!4LS7UI11XqIHRgT3ckx76VYn
->>> CyeikpTumyjO0qDTn7eF7Fd-
->>> jFFL8yqpYcMAxP_u3VC09bfIAB7gW_rvGoM_sEA$
->>>
->>> Also, I would expect the .sign value to depend on how the
->>> input is being used. If it is differential or single-ended
->>> bipolar, then it is signed, but if it is signle-ended unipoloar
->>> then it is unsiged.
->>>
->>> Typically, this is coming from the devicetree because it
->>> depends on what is wired up to the input.
->>
->> This topic is mentioned in the cover letter, maybe not argued enough there.
->> Yes, the go-to approach is to specify the unipolar/bipolar configuration in the devicetree.
->> But this is a request from the actual users of the driver: to have the softspan fully
->> controlled from userspace. That's why the offset and scale implementations were added.
->> Both these attributes are influencing the softspan.
->>
->>>> +	},								\
->>>> +}
->>>
-> 
-> The cover letter did not get sent, so we did not see this.
-
-So please resend it so we can get the full explanation.
-
-> 
-> Still, I have doubts about using the offset attribute for
-> this since a 0 raw value is always 0V for both unipolar
-> and bipolar cases. There is never an offset to apply to
-> the raw value.
-> 
-> So I think we will need to find a different way to control
-> this other than the offset attribute.
-
-I thought about this some more and I have an idea to solve the
-issue without using devicetree or the offset attribute.
-
-But we should see what Jonathan thinks before implementing this
-in case it isn't a good idea.
-
-We can expose each voltage input to userspace as two different
-channels, a single-ended channel and a differential channel.
-
-For an 8 channel chip, we would have 16 IIO channels (in order
-of scan_index):
-
-in_voltage0_raw
-in_voltage0-voltage8_raw
-in_voltage1_raw
-in_voltage1-voltage9_raw
-...
-in_voltage7_raw
-in_voltage7-voltage15_raw
-
-If you read the voltage using in_voltageX_raw, then the SoftSpan
-for that channel gets set to the 0V to +V value based on
-in_voltageX_scale. Likewise, if you read the in_voltageX-voltageY_raw
-attribute, the SoftSpan gets set to -V to +V according to
-in_voltageX-voltageY_scale.
-
-For buffered reads, only one of each in_voltageX_raw/in_voltageX-voltageY_raw
-pair can be enabled at the same time (because the chip is simultaneous
-sampling).
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jxwieeydcay2izkt"
+Content-Disposition: inline
+In-Reply-To: <20241025142704.405340-1-andriy.shevchenko@linux.intel.com>
 
 
+--jxwieeydcay2izkt
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 1/1] pwm: core: use device_match_name() instead of
+ strcmp(dev_name(...
+MIME-Version: 1.0
+
+Hello Andy,
+
+On Fri, Oct 25, 2024 at 05:26:34PM +0300, Andy Shevchenko wrote:
+> Use the dedicated helper for comparing device names against strings.
+>=20
+> Note, the current code has a check for the dev_name() against NULL.
+> With the current implementations of the device_add() and dev_set_name()
+> it most likely a theoretical assumption that that might happen, while
+> I don't see how. Hence, that check has simply been removed.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+thanks, applied to
+
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+
+Best regards
+Uwe
+
+--jxwieeydcay2izkt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmccBX4ACgkQj4D7WH0S
+/k6nPAf/bhbbVveHHfmxCHN1jdSAQ8u1TN9jcvBoVp1VKY91cqkuOMI9hJknHCeE
+ytyw7c9VZ/BLat7W4TWUvSpDV6gNr/+VkzozpXX3TkObeqUn0IxUEvn9pfR0ZtN0
+z4vQCSieYXDdA40OIJCEnGpRaGyF0Xq6Yi7AdbsljPOmkH36mfWTZOJwvmEnlsf3
+2rkay4xJW8zk3+GxRl/r0hrZSYz7xLd8dPzhginc9n41XiVrS4qaVrGfWYslGXn/
+ufszpxIiccVQDaTz7r5B5+E9onqNASzgtQNg/2MeBv/HEgs/rVWFBBIP8t670iFX
+oUYrs+GWoZlnazEzPByfXezPOQ4W6g==
+=e/l3
+-----END PGP SIGNATURE-----
+
+--jxwieeydcay2izkt--
 
