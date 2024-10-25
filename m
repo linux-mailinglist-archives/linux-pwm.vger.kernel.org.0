@@ -1,77 +1,74 @@
-Return-Path: <linux-pwm+bounces-3897-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3898-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73BBB9B08D0
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 17:47:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B2059B09F0
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 18:28:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 83E91B273FC
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 15:45:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 943CF1C21C93
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 16:28:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E81A1632F6;
-	Fri, 25 Oct 2024 15:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1BD421A4BF;
+	Fri, 25 Oct 2024 16:28:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKAN5jJl"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dTZvx1h5"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FEA158219;
-	Fri, 25 Oct 2024 15:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C439187FE2
+	for <linux-pwm@vger.kernel.org>; Fri, 25 Oct 2024 16:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729871057; cv=none; b=JdKlwIUsJT5A59wJ4AR/iOXtAWmCGoKQngo70XL+imHYVO7zeIYta/vlXC0xfrn0LNKI1ti0DF+ZHHxLV15cnhAGbXIX6yW4ObasvES/tonVx1bx35CP5SDOQO5GD+b7O9fIHXD57ahTjepADHGRFMG7NU2oArGVBYibY9mzWA0=
+	t=1729873734; cv=none; b=seT87n4qE0N987z9Q8hz83Pl/Zo84IVvWwgl/EGerDK8MRQuc4WWhI3sK+QPMZ9ldcn7YhoTO3zxVxIwrqg0TD4zuQp4c4CNCDkONK0gV92rzWJI8LfCuhdZT1cf37/b93TeVYot2mE7yKofI18aZkH62xybIF5OPVv54Hnq6HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729871057; c=relaxed/simple;
-	bh=vn4L0Kssm4qHDv91ZX0qDxoa9pCjsHBUmi11Lv0rAEY=;
+	s=arc-20240116; t=1729873734; c=relaxed/simple;
+	bh=93KS7wKqZUu5xjDIvlWsHE3MqWdpZ1V0Yzrky7wwyv0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f5A4ENxXCUzmKMQvvxkL/ug9m3P4ZBJLEduKQTU5sWbS0ILG4+hxB7ytBWaEphLROHBlG4uSNyUJnn7QHhZZhb/tgOWjHBSN0r7OuNeBAi0G7nMcM5XvUuJaFkHeEiUCInfSTFTpvqZWxpMPMcY+DdyF5qEzTobEpUednJ2Xt7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eKAN5jJl; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-20c805a0753so21098445ad.0;
-        Fri, 25 Oct 2024 08:44:14 -0700 (PDT)
+	 In-Reply-To:Content-Type; b=OT1POHeV7HGhlMlR9MIDQ9c/N7ahOVWshXyMypypbnwwnJi0fb8B2DrJTUstp9HxWuODmtLPXM7wfZKQR8dngm7G1mI2yOYmN7EnMvKF836FR5h+7+G1KDnoUqDu6RiQNOrVkKeHCozAw3sDE9ou3GcsFtdyawq1nwr9ZZn34sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dTZvx1h5; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5eba450531eso1630152eaf.1
+        for <linux-pwm@vger.kernel.org>; Fri, 25 Oct 2024 09:28:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729871054; x=1730475854; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=SN8DcWX/dROqTArXD5nH9xajfGXdWvMk5oxxXOT+XxU=;
-        b=eKAN5jJlqIG/9pVTTQUuzq9wsu6M/HmM/KbKtiBF5OpUALPDMOhn8YfCcQoO9cM+/0
-         j2ACBVj4+Va1vYhfh4DsKe6UjgzbayFOEUcS8iT2VmWiOfwxYSKthFSBlxQigZGP++Cf
-         9ifsXnyJCEAGVRs2ovLdVqK8m9AlDhGFg093mh3CzgkxETTonf6bia7Mb9FLJIu2ba1L
-         GeihZfrG+mFxKzkihRfa09fcgO57y8hVSqHZDBzm3Cm6SRpA2f8LBIWLYQfESJ7v6LAz
-         yoWTd2rwV2BIh9GE8Y5Xi/H8s5+zPWGhGFPKVqd9qgfxvvXM7kkOy21Dn2riFEzVruVP
-         3pCQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729873730; x=1730478530; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4l3lkC9wZikEKYFjFKb6O10Jg4C+hdvveYAhrx24UCo=;
+        b=dTZvx1h5U1EGypbktC7D+A6M9dt80zMD8XeeHzOonJn+h1e50cW9TLM2E2lFnObyM4
+         re3c5O4emCxHSpksuVs+SlVFlL9Gfo0qjlT98yBcskHw2QqEwT5bIIs6lGZax8NlGVKx
+         5tnO6llhDiNXOMhT2YEs/9CVN4WHWAsaCAVeQoI6/z7xUaOnt1tIKdJukk6fQul22Vs+
+         9/CD83J7fqq4j9b/lyVaEvrrl17a7KUaYaeXu8Si6ZEEc2UbYzr6Rynb04dGkAQ3rczZ
+         D/Kn/53Xg86rEIDbtvQfKsAaiMEP6QROHMsBM7ovD1csThZdVQDjEDWGCIA9Ik9IuA18
+         EVAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729871054; x=1730475854;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SN8DcWX/dROqTArXD5nH9xajfGXdWvMk5oxxXOT+XxU=;
-        b=E23APc0XYcm+/debEqxXdnmVnnrEckVno0ZX7TyxhO1JB+3E+t064Adbg4U1Dj9YvZ
-         9fQtNyPuVmxNzIHRtTZu9I/Wy59St7MuvxxUZzLABaUBl9ssh0+sdqWTo5T0Og51m5pE
-         gjUVvVwBVVCb6cftjx7ET50zq4Z2cjZy7Zk69N2jTRScLM364fJDS9h/0gAOASU/Wljq
-         2alkZ9eAxevxgteHlD1To19EZDIKCsWYYlc2a6bASdtBmzWCvu0HiMFqva+1kjDdImAU
-         0QKMVkzGZOOPlpN+Rax4CQmSo26wNfQiM4fLOdeRSSWbaJu0nFVUT6T2aAGi/b0EZV1i
-         rAjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFWOz9N7ucZpdaoV6IuywkhcBGXy8c7KKh/tvXzhVGxqXm66GxcM4H8bj3+ogMxD8QGhXdYYfvbIU=@vger.kernel.org, AJvYcCUMh14mN4GYjQpPgX97Bt1s/P5PKf23KJHz/3/nCM/eWcJZIl6iOfTQC8UjRahnfX8ftgG4FYnBWefwzzr5@vger.kernel.org, AJvYcCUpk1fmZDAkb72U+nfmfiQpxku/TbjwY6CZbXnbuemRsqp5aaOlzITqVICggX9SsfpJw9sp1U7r02Ab@vger.kernel.org, AJvYcCUvxp7dnhpn9aDx0rwzvqI3sQOlQnoNaiANWCneoU5dAFtYhsytOx4xugUCL0UA6EwFY3111zh7@vger.kernel.org, AJvYcCVCxJ+XRZR6EQ0BLF3vEGah/gksdxilT4pXJE7B7xw8dYoctbrc87tL18SRuXKr/+NAkYwRhuhn6T5U@vger.kernel.org, AJvYcCVskDOMGAnA39rPr2zJ0ILMBVVTzIy1g3cmtClGQgkj3deXeQkx+N9ucjMUQsvKvZdMx5gmeqXKv4ai@vger.kernel.org, AJvYcCVznUGOYXdTV8gj7rt7oHcqADTYv68uBo/qXZS6dbcs79w482YyWEgkpseppaRbRUH3Y725cYDk7GUJaNs=@vger.kernel.org, AJvYcCWeh1amK8/z9mGNglE1ysuVQz4NdrPyBuIXv40fbywb1PTPZmPYvOh1CaJq1u7l3/GFFJTL8xdewjj+opuD0DU=@vger.kernel.org, AJvYcCX88ITaoM3RllEwTaauV7H1N78FG6smoCzL5sKxlxDsDXHfYjTPUqIFdUXuQ8y2s8LOFtpJbltaf4C37w==@vger.kernel.org, AJvYcCXs2TmkDtDG8RiNXXPvyAbHttVDL1u4
- ASluOqKm9nGHggjwix4jzRMBhcxqExnBLhNzeHEzG2E4wmfC@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNa2cgkmll2rMuBpVk6vTCMcudxkPUm7EYWiRknnV0wfar9pi4
-	QfEJZmZKUsoy55UUdxtX12TUWxbzfxtJsk1bRMr4XKJ7hJyZYL6y
-X-Google-Smtp-Source: AGHT+IE+7zMSTWMWl0WD/H7aqI4fO7bMiX7i3W2UCxfMlbQ/sZdV0uOKx4IL/fYIV7PAJP1kE+ECSA==
-X-Received: by 2002:a17:902:f549:b0:205:8bad:171c with SMTP id d9443c01a7336-20fb98f1e18mr74160475ad.12.1729871052720;
-        Fri, 25 Oct 2024 08:44:12 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-210bc02e94csm10715745ad.198.2024.10.25.08.44.09
+        d=1e100.net; s=20230601; t=1729873730; x=1730478530;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4l3lkC9wZikEKYFjFKb6O10Jg4C+hdvveYAhrx24UCo=;
+        b=Z/8L2XXvoeUDCD3HpG4QTGSsCMYMBmnYOUWUZz5rjCdktpsE3kMtzeUZSOKZLIlccO
+         OddBPh/tRe3FHxjcd3YagmFEIbqPXkiBrqZczsSo2tziQ6JyTi8nUHlUQi0qltv+2hXg
+         W4wCmuh/fzCyNWf4005CRPmpa4K8vFSsjfQ60qV9KHrT//dervJifyTOPxvJckePK03H
+         o9GugjmqFMlO2QsxFuB6udGmdj0xDyO2tICIE6ytwSn/y84DnPB+SGvrgSfrfK+rVr0u
+         w+xYKfJ2Xvz2Nt3Qvyy1GlHlt5w6ZZirDteABlOxhEDv6OfO5uPutJ4rMN8rOC2x38Hf
+         il5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVq2RV7jUFA6SNZQwXcx4TKpYignCoDxwxfGAq6fRTm/z3N+1fsPciAR7AiM2d4cAiQoALWcjJlhW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4+T/CDMmA4jM+FQEd+oyGsdMzAy2+FfaUXEWCC4E/ZOZTBEEj
+	gO07TkT7ZmXiSsdDp8tH97ymkav+sugU8yrNZblofiULtXMlW4gbZWnUQjJMgOw=
+X-Google-Smtp-Source: AGHT+IE1MPpVyfXpk/xMULvv56PfNu4FZfW1NuVB74DGltzpa6dH+QJb4+dxhvMUF5lk9e9p9xuTJw==
+X-Received: by 2002:a05:6871:296:b0:288:8b2b:8706 with SMTP id 586e51a60fabf-29051256df0mr74856fac.16.1729873730273;
+        Fri, 25 Oct 2024 09:28:50 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2903824c7d8sm339108fac.49.2024.10.25.09.28.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Oct 2024 08:44:11 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <817d24e1-6fdd-4ce2-9408-eccc94134559@roeck-us.net>
-Date: Fri, 25 Oct 2024 08:44:08 -0700
+        Fri, 25 Oct 2024 09:28:49 -0700 (PDT)
+Message-ID: <85184d56-b0c5-449a-9b69-cd141b186d6f@baylibre.com>
+Date: Fri, 25 Oct 2024 11:28:49 -0500
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -79,97 +76,81 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 6/9] hwmon: Add Nuvoton NCT6694 HWMON support
-To: Ming Yu <a0282524688@gmail.com>
-Cc: Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>,
- tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
- andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
- jdelvare@suse.com, jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org,
- alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-can@vger.kernel.org, netdev@vger.kernel.org,
- linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-rtc@vger.kernel.org
-References: <20241024085922.133071-1-tmyu0@nuvoton.com>
- <20241024085922.133071-7-tmyu0@nuvoton.com>
- <CAH-L+nPGGhgDFge0Ov4rX_7vUyLN8uu51cks80=kt38h22N7zQ@mail.gmail.com>
- <62ea5a91-816f-4600-bfec-8f70798051db@roeck-us.net>
- <CAOoeyxX=A5o5PhxpniPwPgMCBv1VwMstt=wXCxHiGPF59gm5wQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v4 06/15] spi: offload-trigger: add PWM trigger driver
+To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>,
+ Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20241023-dlech-mainline-spi-engine-offload-2-v4-0-f8125b99f5a1@baylibre.com>
+ <20241023-dlech-mainline-spi-engine-offload-2-v4-6-f8125b99f5a1@baylibre.com>
+ <b47e7168a58e840f65c1ef150c914c077905fabf.camel@gmail.com>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <CAOoeyxX=A5o5PhxpniPwPgMCBv1VwMstt=wXCxHiGPF59gm5wQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <b47e7168a58e840f65c1ef150c914c077905fabf.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 10/25/24 08:22, Ming Yu wrote:
-[ ... ]
-
->>>> +static int nct6694_fan_write(struct device *dev, u32 attr, int channel,
->>>> +                            long val)
->>>> +{
->>>> +       struct nct6694_hwmon_data *data = dev_get_drvdata(dev);
->>>> +       unsigned char enable_buf[REQUEST_HWMON_CMD0_LEN] = {0};
->>> [Kalesh] Please try to maintain RCT order for variable declaration
+On 10/25/24 7:07 AM, Nuno Sá wrote:
+> Hi David,
+> 
+> Looks mostly good... Just one minor comments from me.
+> 
+> On Wed, 2024-10-23 at 15:59 -0500, David Lechner wrote:
+>> Add a new driver for a generic PWM trigger for SPI offloads.
 >>
->> Ok, but that is already the case here ?
+>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+>> ---
+>>
+
+...
+
+>> +static bool spi_offload_trigger_pwm_match(void *priv,
+>> +					  enum spi_offload_trigger_type type,
+>> +					  u64 *args, u32 nargs)
+>> +{
+>> +	if (nargs)
+>> +		return false;
+>> +
+>> +	return type == SPI_OFFLOAD_TRIGGER_PERIODIC;
 > 
-> [Ming] Is there anything that needs to be changed?
+> Hmm will we ever be in a place where a trigger provide might have multiple types? If
+> so, then I'm mostly fine with this match() callback. But we could still avoid it if
+> we use a bitmask for trigger types and having any trigger provider to give the
+> supported types. Then the core could pretty much do the match between the requested
+> trigger type and what the provider supports.
+
+We will still need some callback though to handle drivers that use
+phandle args.
+
+> 
+>> +}
+>> +
+>> +static int spi_offload_trigger_pwm_validate(void *priv,
+>> +					    struct spi_offload_trigger_config
+>> *config)
+>> +{
+>> +	struct spi_offload_trigger_pwm_state *st = priv;
+>> +	struct spi_offload_trigger_periodic *periodic = &config->periodic;
+>> +	struct pwm_waveform wf = { };
+>> +	int ret;
+>> +
+>> +	if (config->type != SPI_OFFLOAD_TRIGGER_PERIODIC)
+>> +		return -EINVAL;
+> 
+> Checking the above every time seems redundant to me. We should match it once during
+> the trigger request and then just use that trigger type. Otherwise I'm not seeing the
+> point of the match() callback.
 > 
 
-I don't think so, If two lines have the same length, the order is up
-to the developer to decide.
-
-Question though is if the buffer needs to be initialized. You should drop
-the initialization if it is not necessary. In that case the second line
-would be shorter anyway, and the order question would not arise.
-
-Thanks,
-Guenter
+Here it is validating struct spi_offload_trigger_config has the right
+type, which is needed before we can safely trust that the correct
+union member was used in that struct. So it has a different purpose from
+the match check.
 
 
