@@ -1,305 +1,223 @@
-Return-Path: <linux-pwm+bounces-3847-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3848-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D1D09AF497
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 23:19:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A97049AF730
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 04:00:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 60D321C215BC
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Oct 2024 21:19:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C4B531C212C2
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 02:00:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35C521B0F32;
-	Thu, 24 Oct 2024 21:19:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6474745979;
+	Fri, 25 Oct 2024 02:00:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="sOktyzE6"
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="Nrd2PLWB"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023097.outbound.protection.outlook.com [40.107.44.97])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764841AF0AA
-	for <linux-pwm@vger.kernel.org>; Thu, 24 Oct 2024 21:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729804763; cv=none; b=cNuH9s/jPapERdZAscpv1RgAIzuACtC2KZTUXgkt1Ymzp9myPFPRBIe3aEf+nplooqNk+QdfpTmy1GNTxizfK1WOXKbEgj0dDDu1VBALRLkHVuwNJtrBouyOUWMW3HWJ+RFT3doTS2HgvNU+Lh1blLsKwF11WRL7Lh08o3EQ+ig=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729804763; c=relaxed/simple;
-	bh=LxNgM6OEG2refdE79AhxcGjPuTQUMHo9o67bdSKSZbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=angIuzLGfXgWEON8rJLxqE78QWXi+NNPyBfwPphneex74LKRxRyJ8/J/eD0zrjnO3ENAsEj1w8TVkmjpEHREcazNg10PFbwSQXXny/7YCwlMVPgFAi2dWGhsvdZGDtL9dlLcoTho8rkKbqSPdCKE2xoPnZRyDFoboWZb6tiLd8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=sOktyzE6; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-37d47b38336so933552f8f.3
-        for <linux-pwm@vger.kernel.org>; Thu, 24 Oct 2024 14:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729804759; x=1730409559; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pFvcoC488AfGA71diUr5gnpB0vBErIdVBK6D3oD+0Qg=;
-        b=sOktyzE6MNNawguKOwqZDn5nyBYa7vtBbgEh7y9T8jGt2nD0QXEGeDq0FOn1ajHoa9
-         jclGPCwrGu8dYy4nk9FZ62el0WaNpEzSgP7yAfcgCF/IV6cMMquLntrZH8uN9y22w6ck
-         EcxqUiXbttCsGrpe1E2WH8GEqk6+e0Irm2j/oJJwWlHEfiT+yZdUFzoNe0oiLJsgNi7k
-         5Ckxv6x6sTcbcKIP0ooR+nFQqHMPb7XtNCK7X5aTvMkgDq9EzP1JlbAcp4uXUV0Gn9kN
-         m//qMlGluKc2tUbgJnETh0VTnYu3zl3j2hI9F9SdI/O1NoZJlyBC59PST2pZ1s4tQKT2
-         NkNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729804759; x=1730409559;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pFvcoC488AfGA71diUr5gnpB0vBErIdVBK6D3oD+0Qg=;
-        b=RHiKEIq6mW/DHxtzQDB93SNeFeAMXtWwk9xkRFOZ3vtEfLZBI0Y0vWD0ps3bldMX+z
-         o/AQCu65mGi07qG5lO5DORvoDtgxaTDcGVCJdzQtOw2PMuOqlqSIMTMzrA0sPw7U9jil
-         C6mowoTqu3x9PAdV2JQg2SJM9kGPD8AupXcND6MKDxnRb9HUK0Ukox/weSpV1ijqiSis
-         CUqHNndhiH5pt5ZGLc9wGLIzHoWN6kw4dS3JK81PKscl6NjxBLM0Q0bdP5G0Jhc5Wimv
-         p8atDrzZlG4cLgWOepMaRYm6MmVbLYmp3dEszPxkmjK0NkxTADhoiHn271RPdbCoe2Zd
-         8jHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX4GsicdJ+s82e/cqu2FgZadR/EktQ8Lry+NCZp/xFcaSfqi8b0gtMcDqE2br8x6NecOSQxjhbDX9w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyszQ9COCqENKlJSM2DXjDYG5h99dktBbLiqAFoCLvtkXdyZXhp
-	m2OZHa3b/5QB+fUT/xCaqj2QS2WmRh459wpKoeK+UXQ9skiNNMvDnIMFnfsiLSk=
-X-Google-Smtp-Source: AGHT+IF3Wed+9TpTr9IMYHVE4Wg8LEyIqO5P26hksneByyONbFAY+RZznN2gRhFwj781oZ2PZlP+6Q==
-X-Received: by 2002:a5d:444f:0:b0:37d:4956:b0b4 with SMTP id ffacd0b85a97d-380458f42c6mr2398340f8f.59.1729804758627;
-        Thu, 24 Oct 2024 14:19:18 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:b203:5494:7e5a:8c7b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37ee0a37e1asm12197642f8f.20.2024.10.24.14.19.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2024 14:19:18 -0700 (PDT)
-Date: Thu, 24 Oct 2024 23:19:16 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] pwm: add support for NXPs high-side switch
- MC33XS2410
-Message-ID: <eyom32milbbqp6floun4r5bpozuewbe5kk2htvhp5cmcytj2oy@bpcrd2aiwk6m>
-References: <20240927125745.38367-1-dima.fedrau@gmail.com>
- <20240927125745.38367-3-dima.fedrau@gmail.com>
- <oppdnsda4tqjcpsb26j5ew62t4bkkmtxuu7e2fpinnazubk5ky@tmz76o5xdrlj>
- <20241023125221.GA197308@debian>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F264B4409;
+	Fri, 25 Oct 2024 02:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.97
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729821650; cv=fail; b=LdJtTlneQEa/EPZm3yeFuWAa+sRNy+rUwXIy+5pB/Bd7LH9Kcw9F8lvbuHxg1TdYecrpiRMkgWFcm1XcQQoBOmFCPmm8QyBLdtpLrLomPfJZfFLO3NrxlGY8qPCDETkztpMiCu+pIOHW1NA5CqqmKtjIsexLMLMmfCOfQiVB24k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729821650; c=relaxed/simple;
+	bh=T4FjnRE5uxlGs70h1EDpmF8BxZ1uXkPC2Fe9ZHpFTOM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cstYdApcot69d0VspRFaDL/eYhxOD8BpFZCz4OfOWM++gBrBrP9dpHjMrIfleyA6QF8pfSojCt8wZqOzDj3JuKnGuHOgGjKHRFNi3Ho8e+2oimMMdyWieynMbRIevYkCvlTse+XipX6F2t9lro2OEqd9cXo+UqHPdABEQud+qp4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=Nrd2PLWB; arc=fail smtp.client-ip=40.107.44.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zGkHC2cazMAWd4u3K9KnEzbBHBQS7ZI1ruhX108Abu4ifz2dOIn7Un67xW2woKKmrATO6sbzqoG/uUf0tQ2M5GwzNYa4P/5xOqxHLV9qCO2a6Th8SgC6FHNbb9u7e6J0BXI551FMvSAlJ7TnBaXQTYvOSPPG4R5tAlOlz2J+F0V1H6Bo8PfSEho/14TX6jDETQtt1OILXrGhGj/Mf+9MJlERdjOx/5ZQcVnBjz8gkAF9d+GcckZp3Gc5gMEmVGzM1sMj3N/dOSL61X08Cst3jdrwuuFlCd0MOIUsozGq6Xraknf5mOi1DZPvl3NInxoRo+UsjJ/BOJaRpjt2qd/N8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NIBItyeLgS4NsJoFHC3Mns5cjUi0/WCdrZeWtr8m5OI=;
+ b=gwKrruzB8SosnxgaQDQNereudcENu8+THtEzB0BABpfclokhC/AC2GHGVhFIxUjnwrOMlQ2U1rs4u6JlZw915Qtc0Rvjq4tsFGp7UvcnjqbR4gxttWvvQiL5cSS+nxUJI8me5CX2jQ+Ip339XQvnmUT++L+WU51gDW2Q9EeLuqcN1VbUba09rmmSoa72UB2Lj58/HScM1QqngPCGK9iV52TFEWCok4++EGCPstXMIWT643zntSM14PBPBO1ZmTvwTT9Q/mf6DAWIvIw3Z9WEM0oVsEQfJBy+W2MEcQ+JbeiHv8jT6uHcIO+WV+1vwrsM0ikA4y/hW67kqRvaLeYmog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NIBItyeLgS4NsJoFHC3Mns5cjUi0/WCdrZeWtr8m5OI=;
+ b=Nrd2PLWBeuQSOm3wGVMl8Hv18l9IOKtxHgAhxXvGG/r3uXQYfeHCi4qNHxU1i8RCpqKTlTOS8yu8y2PO/elo0jPhPwEBLBav5gpsD5LSQD280MgHTskqc9HB+pN7t7JCwuV1f82SojQOAhFnobGuU9sFukj3NNrNxGb30bS0qz2P7N5bsmmk1YW883r9NH3Pp0Hg+t5cfjmytYnVFLsvOqCdOFRWPbsGkT7VYfwQE7R3ubgg+anfBmy5f1CpEeGbXA5piA5DaCjYtaI1lVgJGnIoz5aqdCC+xvIrek9J+oGNIWQjCNGIrL35Ok7S7peIGa/ApxHx7pMr9gzt0U6ulg==
+Received: from OSQPR06MB7252.apcprd06.prod.outlook.com (2603:1096:604:29c::6)
+ by TY0PR06MB5658.apcprd06.prod.outlook.com (2603:1096:400:276::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.15; Fri, 25 Oct
+ 2024 02:00:39 +0000
+Received: from OSQPR06MB7252.apcprd06.prod.outlook.com
+ ([fe80::814e:819a:7d52:7448]) by OSQPR06MB7252.apcprd06.prod.outlook.com
+ ([fe80::814e:819a:7d52:7448%7]) with mapi id 15.20.8093.014; Fri, 25 Oct 2024
+ 02:00:39 +0000
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+To: Guenter Roeck <linux@roeck-us.net>, =?Windows-1252?Q?Uwe_Kleine-K=F6nig?=
+	<u.kleine-koenig@baylibre.com>
+CC: "jdelvare@suse.com" <jdelvare@suse.com>, "robh@kernel.org"
+	<robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "joel@jms.id.au"
+	<joel@jms.id.au>, "andrew@codeconstruct.com.au"
+	<andrew@codeconstruct.com.au>, "linux-hwmon@vger.kernel.org"
+	<linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
+	<linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org"
+	<linux-pwm@vger.kernel.org>, BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: [PATCH v1 0/2] Enable WDT reload feature
+Thread-Topic: [PATCH v1 0/2] Enable WDT reload feature
+Thread-Index: AQHbJeSSyha0WSkjXEyiFAbwEDTDJrKWCnCAgAAHbgCAAKOQ0w==
+Date: Fri, 25 Oct 2024 02:00:39 +0000
+Message-ID:
+ <OSQPR06MB72529E67E67D0D07E59AF1C08B4F2@OSQPR06MB7252.apcprd06.prod.outlook.com>
+References: <20241024071548.3370363-1-billy_tsai@aspeedtech.com>
+ <nm4ckxv6swajr6hnqlkq5uoo6ncjzlg6yfxroftat6dubiefyi@xbhi4dvqacxm>
+ <ea1be8af-0948-46b1-a1f4-fe572861cde4@roeck-us.net>
+In-Reply-To: <ea1be8af-0948-46b1-a1f4-fe572861cde4@roeck-us.net>
+Accept-Language: en-US, zh-TW
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSQPR06MB7252:EE_|TY0PR06MB5658:EE_
+x-ms-office365-filtering-correlation-id: c026687c-aae9-47fc-86d1-08dcf498d2fa
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?Windows-1252?Q?rjei5sVMOeLX2o9Mz5wQk8Lh5EbGFVdiQgzSLl3rnY3UA40sVg/qJVh2?=
+ =?Windows-1252?Q?6KLLv13lyfk5O+ZepKaoBCssKxB4tyilUvyWxE0LDl7kT9Tm58FtkxFV?=
+ =?Windows-1252?Q?KmLV7IrmRrEWiYfYqEH1Bj6V4LvBqgCXAn/UYibvxe55iYt+x5jNfcJP?=
+ =?Windows-1252?Q?2FeuP7dEzyEpGY3Bj56QkCAhatqmVlHPoEbo56GXLMHP7SzbSIRIY51a?=
+ =?Windows-1252?Q?2txq3amCgeGu+8tAT7Ei4xyfhnIHBC+i66oOKgz3i40MkbDUKQ7ay4cn?=
+ =?Windows-1252?Q?zdol9lLS6jMNeaqHKH9sxOuvYeEsEafN5wcNo7m0lrGWERyWQKEY4G5h?=
+ =?Windows-1252?Q?pT0D2mTCjAOeOHeEprMofRY57I7zj7tPT7ocgwFMbPl/s7cVQxNRvVWi?=
+ =?Windows-1252?Q?ahgVCkEuvAtw1ViUgiez52cZaoJpH7Yv2CuKaYxyRXnMqxh6OsYteP3S?=
+ =?Windows-1252?Q?Jte42dOmAgPiQcMZrTF6LYv6dfpVgheROf18wOee6tCuf+n0eUFqDgT+?=
+ =?Windows-1252?Q?bl2TX0+dhizxkAcllY8D1+I2IH4GAPXFkBr62NOJ713kbuW4rkrbOnVq?=
+ =?Windows-1252?Q?QyMj8pQJsN+tADgjm2UtRe02ZzlpMEnn0ABnYATHB2RKMRkXVdtvYtpW?=
+ =?Windows-1252?Q?p2f3+D+0yIEC8Dv5NibdMyqd5a/NDmEA5mneAY0Qckzt5Oh8KjXnpHY1?=
+ =?Windows-1252?Q?9jXwa2dvol7eTH++IsnI60O9k0y3b/GUNPXnXXGb1S/G7RcKFuvKm8Z5?=
+ =?Windows-1252?Q?xMozSGSO7/JrROlAH/IWNJcb+7qm2L6hUmJ91QfskFamC2RQrob9n5ey?=
+ =?Windows-1252?Q?KHPFrAVX34ZLqHK759QwYerae1cGmurRbeneIAT56ZG7ItNl/nDQtuI8?=
+ =?Windows-1252?Q?rDW63KxVE1Gg0LKGuAzot7dETyqeEC9y2OAmfjDhwkEeXO3PVlt535Eq?=
+ =?Windows-1252?Q?XePnm/ElEqJib8v4ABZhYAuZI5ZisaO9FP979ymVnoAqYQwYX83zJfcY?=
+ =?Windows-1252?Q?uxQmbkDof0qPSICG9qMoWYzEVCxGLWlbWmz2IAdXGNjoIYub3sJL9lyV?=
+ =?Windows-1252?Q?90Wp6JxSwD3qD+9mHsj2qQzh2fJh3WSnGReruGft+ec0wi8fnCijbClN?=
+ =?Windows-1252?Q?Mckf/K8FCdwPMO55KWQMc1YxsGzEzW7+T7Z8nxwIMC1RMXDw4ZRh/IoR?=
+ =?Windows-1252?Q?dHBZMgYSwQVAZpYM3wjYhtfY3sqP7ONXPhwLw7qH822ptyMvJg/8k8ZF?=
+ =?Windows-1252?Q?cAL3wA4M8q5UL152X2T9rJhNZaQ324ifWWypc4X8KQ0vNLekp31+V4ZS?=
+ =?Windows-1252?Q?KRpTgDNYwTFyTyL/yS3XrjfD0SyUGofzn5BwMn6Pao4eAQX6H5iSgTKN?=
+ =?Windows-1252?Q?7Lc4sWiVXD7oxTpu5p0/Xn9Y6fzP2pZ0iHkqyySGisdENSqRrrfGhYPl?=
+ =?Windows-1252?Q?0819yW1HhYXS7dDJ/2vDSEys17ZClrryUlgmVQNiMco=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSQPR06MB7252.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?Windows-1252?Q?Ul+0Ml2yaGancrIxQ0kkGKIMviwsAVbwJyhBlhuQTTzazjW1DnLIv7mq?=
+ =?Windows-1252?Q?p+afNV5EdXe2x1olFZOxe7UFwiWxPQeGyNpYgfkyDQs8C1AUZfgXDr85?=
+ =?Windows-1252?Q?3ypxYxRkop/7y9x1qQHQy4XxrDO0Izh9ToJPr/kT+vI3MhOuzr+8eB1C?=
+ =?Windows-1252?Q?m4n1QCUKbDkYDvuKotpRse5ITyxihdzfnnm/alOKJQY3PvVxz/ohEVdB?=
+ =?Windows-1252?Q?/kv3y5AAYu6wlrJ2mlBa1mRmQEmofq71Htg6VIgQXFkzqdQ3QbFHQ66/?=
+ =?Windows-1252?Q?4C7T4ac4sCN+AbRNdagZX9xXhCNdVYrGn05mG71hoSniVovmonxekP1L?=
+ =?Windows-1252?Q?0/soch5SsW5WzFuvWrN6EPbsT+OiEnqNjUmM2uM+bCxVXHF52rYAqRl2?=
+ =?Windows-1252?Q?unjFCXZG7OUz+huWMoTRFGDavEc+n6mWUcwAJRx08aF7ln/a70pPDJnH?=
+ =?Windows-1252?Q?yt2xn2li2bzMZjFbwOqALdQyHjF2+Df3iWE/WkmajsxM8+oGyBlRo04F?=
+ =?Windows-1252?Q?3gUD2OVF+/Xus3sthvvFW8Rhm0ymDeche4XVE36c5GLypWmdxBishGmm?=
+ =?Windows-1252?Q?vs6K2It0Xxd04F3gTClWOHk6cquZM0esPoUL3EuDTGUwxs+8F+WWcukb?=
+ =?Windows-1252?Q?H3kMqogXwyjjZ3rSBHgYSaBn25VG/JhHHT4FtCkkTbLx2Un+N4f4+ZgS?=
+ =?Windows-1252?Q?jc5XSWLgqDlYDfyA22Hay+NCvs4XF6oDATgwfsUN29XnBaf2VBkLMzRP?=
+ =?Windows-1252?Q?XQAJ8dGygBnSFKm4ha4KmKALP/ngKGvQKZHEYfm2bMlmx8od2TLXxgko?=
+ =?Windows-1252?Q?P2u0jeXQhvzAin8jLMiDWYAYkX5stJ9hgfD7NCA9Q9TMkmnPEQ6QbdjP?=
+ =?Windows-1252?Q?iEHdKaRa3OABX97983R2KgTGrAM6694L/Db8ZMuqcCB4RR4J2BMK/JUF?=
+ =?Windows-1252?Q?Uu/vZtsFKPQcp1JAblqjqg+HqzySrMMPNc8qdCnIRO8/UP1gAIY+x065?=
+ =?Windows-1252?Q?NbLmEpNrYjY7od/ak8dQ4kZAlkYstwfXnExBLjhVgKjkbe1NMcI5jazF?=
+ =?Windows-1252?Q?/3ugp6ZDY1iGP/5T6UROufI8QHS6GKTLogSjouS8c6OoMGOElMyb+rxe?=
+ =?Windows-1252?Q?khZdVx8Ft84aDQyqSuXTgpBC+nbUUXSYnDZW6/t06BnYjYF2o/0OWhV0?=
+ =?Windows-1252?Q?kdAZblwDqdFRCFJJ4eg2QfwaagWh61ptK4N9W8L0ydIpUHjUexbK+Z05?=
+ =?Windows-1252?Q?EH4xMWcb8YRCnK3Mp5aBbHw0RJ3GqFFG+88SuV3AiB8ulBAo8xj0/rSK?=
+ =?Windows-1252?Q?Amj6FsARvBud9pGdro7HxWMB3+GoDS1ZPrGu/A4kXOnkVJehcRwLoisk?=
+ =?Windows-1252?Q?N/ULKkTarEaEOGInaI8d1b8AGxdoc+4pI3Q+XgbNFFvhdwGgRisS95mC?=
+ =?Windows-1252?Q?pfojbyVv86cPs1uX1nEV8mlyQLokaJ8z3P3rwdz2144ktjvPsHh5SnpD?=
+ =?Windows-1252?Q?J6BCvQzmPpZcgJ1y+vGTc8vdTVIvqhyVp1ZYuzAi4984bcBY1Nxdnog6?=
+ =?Windows-1252?Q?ipSszhPwzu9OizF6914sAtcw5LUlzASB7yiQl7rvcQvtT53bpMp9GamL?=
+ =?Windows-1252?Q?BjAHDBfKsu92gA2kuqHqvukXg4DmdhXak/LnKdd22eBxIv9nXYln+fxv?=
+ =?Windows-1252?Q?cx46AWW2cbstaKeE8IdCl2MHEv+dq48e?=
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qeuo22de2j43gzbl"
-Content-Disposition: inline
-In-Reply-To: <20241023125221.GA197308@debian>
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSQPR06MB7252.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c026687c-aae9-47fc-86d1-08dcf498d2fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Oct 2024 02:00:39.1464
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AvSnIgNuUaSWsxAmVQxmw1hdrgoQy3yG5f/anKM1dfdBbt4aNXUZIvzoO159/t08YbhqEgugA0puVM9AbQcxkqLDSDUCGrkG74SDnMT3q+U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR06MB5658
 
-
---qeuo22de2j43gzbl
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 2/2] pwm: add support for NXPs high-side switch
- MC33XS2410
-MIME-Version: 1.0
-
-Hello Dimitri,
-
-On Wed, Oct 23, 2024 at 02:52:21PM +0200, Dimitri Fedrau wrote:
-> Am Tue, Oct 22, 2024 at 09:54:50AM +0200 schrieb Uwe Kleine-K=F6nig:
->=20
-> [...]
-> > > +
-> > > +#define MC33XS2410_MIN_PERIOD		488282
-> > > +#define MC33XS2410_MAX_PERIOD_STEP0	2000000000
-> > > +/* x in { 0 ... 3 } */
-> > > +#define MC33XS2410_MAX_PERIOD_STEP(x)	(MC33XS2410_MAX_PERIOD_STEP0 >=
-> (2 * x))
-> >=20
-> > Nitpick: These register definition become easier to parse for a human if
-> > you indent the RHS of register fields one tab further and add an empty
-> > line between the definitions for different registers.
->=20
-> Adding an empty line seems reasonable to me but the additional tab doesn't
-> help me to improve readability.
-
-OK, fine for me.
-
-> > MC33XS2410_PWM_DC1 is only used once, I'd hard-code it into the
-> > definition of MC33XS2410_PWM_DC.
->=20
-> Ok. Should I do the same for MC33XS2410_PWM_FREQ1 and
-> MC33XS2410_MAX_PERIOD_STEP0 ?
-
-yepp.
-
-> > The register fields [7:4] in MC33XS2410_PWM_CTRL3 are called PWM_ON4 ..
-> > PWM_ON1. So your x in { 0 ... 3 } is wrong. (Luckily, having some x
-> > range over { 0 ... 3 } and others orver { 1 ... 4 } is prone to error
-> > and confusion.)
->=20
-> Will fix it. Should I do the same for MC33XS2410_PWM_CTRL1_POL_INV ?
-
-I guess so, otherwise you don't get consistent ranges.
-
-> > For MC33XS2410_MAX_PERIOD_STEP maybe use a different variable name than
-> > for the others. For the register definitions the range is over hwpwm
-> > (which might be a good name there?), for MC33XS2410_MAX_PERIOD_STEP it's
-> > about MC33XS2410_PWM_FREQ_STEP.
->=20
-> What about MC33XS2410_PWM_MAX_PERIOD(x) ?
-
-Consistency is trump.
-
-> > > +#define MC33XS2410_MAX_TRANSFERS	5
-> > > +#define MC33XS2410_WORD_LEN		2
-> > > +
-> > > +struct mc33xs2410_pwm {
-> > > +	struct spi_device *spi;
-> > > +};
-> > > +
-> > > +static inline struct mc33xs2410_pwm *mc33xs2410_from_chip(struct pwm=
-_chip *chip)
-> > > +{
-> > > +	return pwmchip_get_drvdata(chip);
-> > > +}
-> > > +
-> > > +static int mc33xs2410_xfer_regs(struct spi_device *spi, bool read, u=
-8 *reg,
-> > > +				u16 *val, bool *ctrl, int len)
-> >=20
-> > Unless I missed something all ctrl[x] are always identical. If so
-> > represent that by a single bool.
->=20
-> Yes, they are identical. I added the crtl[x] to be able read from ctrl and
-> diag registers. I will change it so it is represented by a single bool, if
-> the feature is needed in the future I can still add it.
-
-ack.
-
-> > > +{
-> > > +	struct spi_transfer t[MC33XS2410_MAX_TRANSFERS] =3D { { 0 } };
-> > > +	u8 tx[MC33XS2410_MAX_TRANSFERS * MC33XS2410_WORD_LEN];
-> > > +	u8 rx[MC33XS2410_MAX_TRANSFERS * MC33XS2410_WORD_LEN];
-> > > +	int i, ret, reg_i, val_i;
-> > > +
-> > > +	if (!len)
-> > > +		return 0;
-> > > +
-> > > +	if (read)
-> > > +		len++;
-> > > +
-> > > +	if (len > MC33XS2410_MAX_TRANSFERS)
-> > > +		return -EINVAL;
-> > > +
-> > > +	for (i =3D 0; i < len; i++) {
-> > > +		reg_i =3D i * MC33XS2410_WORD_LEN;
-> > > +		val_i =3D reg_i + 1;
-> > > +		if (read) {
-> > > +			if (i < len - 1) {
-> > > +				tx[reg_i] =3D reg[i];
-> > > +				tx[val_i] =3D ctrl[i] ? MC33XS2410_RD_CTRL : 0;
-> > > +				t[i].tx_buf =3D &tx[reg_i];
-> > > +			}
-> > > +
-> > > +			if (i > 0)
-> > > +				t[i].rx_buf =3D &rx[reg_i - MC33XS2410_WORD_LEN];
-> > > +		} else {
-> > > +			tx[reg_i] =3D reg[i] | MC33XS2410_WR;
-> > > +			tx[val_i] =3D val[i];
-> > > +			t[i].tx_buf =3D &tx[reg_i];
-> > > +		}
-> > > +
-> > > +		t[i].len =3D MC33XS2410_WORD_LEN;
-> > > +		t[i].cs_change =3D 1;
-> >=20
-> > Not sure if MC33XS2410_WORD_LEN really improves readability here.
->=20
-> It is used throughout in the function and improves readability overall,
-> maybe not here but for consistency I would stick to it.
-
-Seems to be subjective.
-
-> > Why is this done using $len transfers, wouldn't a single one do (and
-> > maybe be more performant and not rely on a spi controller that supports
-> > cs_change)?
->=20
-> Without cs_change after every 16 bit, requests aren't processed by the
-> device. Reading/writing from/to device fails. The SPI controller therefore
-> must support cs_change. Single transfer is not possible because of the
-> cs_change after every 16bit.
-
-There is SPI_CS_WORD for this usecase.
-=20
-> > > +	/* polarity */
-> > > +	mask =3D MC33XS2410_PWM_CTRL1_POL_INV(pwm->hwpwm);
-> > > +	val[2] =3D (state->polarity =3D=3D PWM_POLARITY_INVERSED) ?
-> > > +		 (val[2] | mask) : (val[2] & ~mask);
-> > > +
-> > > +	/* enable output */
-> > > +	mask =3D MC33XS2410_PWM_CTRL3_EN(pwm->hwpwm);
-> > > +	val[3] =3D (state->enabled && rel_dc >=3D 0) ? (val[3] | mask) :
-> > > +						   (val[3] & ~mask);
-> > > +
-> > > +	return mc33xs2410_write_regs(spi, reg, val, 4);
-> > > +}
-> > > +
-> > > +static int mc33xs2410_pwm_get_state(struct pwm_chip *chip,
-> > > +				    struct pwm_device *pwm,
-> > > +				    struct pwm_state *state)
-> > > +{
-> > > [...]
-> > > +	state->period =3D mc33xs2410_pwm_get_period(val[0]);
-> > > +	state->polarity =3D (val[2] & MC33XS2410_PWM_CTRL1_POL_INV(pwm->hwp=
-wm)) ?
-> > > +			  PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
-> > > +	state->enabled =3D !!(val[3] & MC33XS2410_PWM_CTRL3_EN(pwm->hwpwm));
-> > > +	mc33xs2410_pwm_set_relative_duty_cycle(state, val[1]);
-> >=20
-> > No need to set state->duty_cycle =3D 0 if state->enabled is false. This=
- is
-> > another function I suggest to unroll as it hides more than it abstracts.
->=20
-> Function can be unrolled, but the check for state->enabled is needed. The
-> device is unable to generate a 0% duty cycle, so it is turned off to
-> generate a 0% duty cylce.
-
-What breaks if you drop the check for state->enabled?
-=20
-> > > [...]
-> > > +static int mc33xs2410_probe(struct spi_device *spi)
-> > > +{
-> > > [...]
-> > > +	/* Transition to normal mode */
-> > > +	ret =3D mc33xs2410_modify_reg(spi, MC33XS2410_GLB_CTRL,
-> > > +				    MC33XS2410_GLB_CTRL_MODE,
-> > > +				    MC33XS2410_GLB_CTRL_MODE_NORMAL);
-> > > +	if (ret < 0)
-> > > +		return dev_err_probe(dev, ret,
-> > > +				     "Failed to transition to normal mode\n");
-> >=20
-> > What is the effect of this register write if the PWM was already setup
-> > by the bootloader?
-> >=20
->=20
-> When its setup is done in the bootloader and the watchdog is disabled in
-> the bootloader it shouldn't have any impact.
-
-ok.
-
-Best regards
-Uwe
-
---qeuo22de2j43gzbl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcaudEACgkQj4D7WH0S
-/k412wgAhhuGRzfQOKAF0X4Z4/t1WK1gdfi8iWhKvKvP4hrx1ESX2QYqkAmfPa+2
-iz/EPW5egD5uVccERgRiUpYsn++lueMwY7a+096LkSzirBCZeQnlH5VBfwJkd7Ko
-l+on/AXmpCiSthFX8pqyv4h4wnBSz+ye4XeFi3tjpKiJxGZ2HmRLVJNDNzkAemKA
-dObtrDQfPkWOK1lTpeuF1c8YIWOxBMBMIHajTZ+yv4feSwquQDO9FONeN/lQgRyy
-7yhGv3ZOKv2ly34oa2K55+I9A43IP63QiFRWa5NY4bvUR8mPH4rvyuOWJEVH4tMG
-HObe9Cenh515ReB0rNQ35Ij+vGO9RA==
-=SOJB
------END PGP SIGNATURE-----
-
---qeuo22de2j43gzbl--
+> On 10/24/24 08:40, Uwe Kleine-K=F6nig wrote:=0A=
+> > Hello,=0A=
+> >=0A=
+> > On Thu, Oct 24, 2024 at 03:15:46PM +0800, Billy Tsai wrote:=0A=
+> >> Aspeed PWM controller has the WDT reload feature, which changes the du=
+ty=0A=
+> >> cycle to a preprogrammed value after a WDT/EXTRST#.=0A=
+> >>=0A=
+> >> Billy Tsai (2):=0A=
+> >>    hwmon: (aspeed-g6-pwm-tacho): Extend the #pwm-cells to 4=0A=
+> >>    hwmon: (aspeed-g6-pwm-tacho): Support the WDT reload=0A=
+> >=0A=
+> > Huh, I'm not convinced that extending #pwm-cells for that feature is a=
+=0A=
+> > good idea. Unless I'm missing something none of the other supported PWM=
+=0A=
+> > chips can do that, so I hesitate to change a standard for it. I suggest=
+=0A=
+> > to make this a separate property instead.=0A=
+> >=0A=
+=0A=
+> Agreed.=0A=
+> Guenter=0A=
+=0A=
+Hi Uwe and Guenter,=0A=
+=0A=
+Using a separate property to enable this feature is a straightforward metho=
+d, but I don=92t understand why extending #pwm-cells isn=92t a good idea in=
+ my situation. The feature =91WDT reload=92 can be set for individual PWM c=
+hannels, and the PWM subsystem has the of_xlate callback hook, which allows=
+ each driver to define its arguments for the PWM consumer. I=92m unsure if =
+I misunderstood this callback usage, as I couldn=92t find examples. If my u=
+nderstanding is correct, this method is better for adding our specific feat=
+ure, rather than using child nodes or separate properties to indicate which=
+ PWM channel should enable this feature with the corresponding duty cycle v=
+alues. I think using separate properties to achieve this feature would be q=
+uite cumbersome.=0A=
+As I know the arguments for this usage are as follows:=0A=
+First: PWM channel index=0A=
+Second: PWM period in ns=0A=
+Third: PWM polarity=0A=
+Therefore, I extended our feature to a fourth argument to avoid any confusi=
+on regarding usage and added the description in our yaml file.=0A=
+=0A=
+If my thinking is incorrect or doesn=92t make sense, please let me know.=0A=
+=0A=
+Thanks=0A=
+=0A=
 
