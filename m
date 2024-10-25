@@ -1,148 +1,127 @@
-Return-Path: <linux-pwm+bounces-3890-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3891-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 451329B0587
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 16:18:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AB319B05AE
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 16:23:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C6F92B261B9
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 14:18:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D149C2845A8
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Oct 2024 14:23:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B25461FB8B4;
-	Fri, 25 Oct 2024 14:17:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55BBD76036;
+	Fri, 25 Oct 2024 14:23:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="I7cryYdS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UC0QOnYR"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4FA1FB8A0
-	for <linux-pwm@vger.kernel.org>; Fri, 25 Oct 2024 14:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738A270828;
+	Fri, 25 Oct 2024 14:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729865831; cv=none; b=LouA15mTn4Nz/1+bJETF69Ss2qnNQbDJCQMG/r9RAQI5Hy4Y1nEWDj4uLUzXPle3EenDqlNArKtn05u6rurMf2OJMjfVIqCVVqWLv1QvdWQkMhs1i7hvvTInablH8P0x7p6FR2Z17krs3DD7bVWVMzif2ubM6OJdSMIiiYiyIBM=
+	t=1729866226; cv=none; b=ecYhE8M6I30zV7IP4g8+jasHTcPF27LdNqD0rPhC3pHAXo7pp80JP0TsIQHlh2ZUzCeMsc+E+soeLM331f2zBbzSK+OEg6hiX1PRSzM1mQAKEEW9ocCvyR4gGNrIyLlqH7NAviCDqT6t8Yj2eJrhPZ91FTW72hDgeCv5tRdl8TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729865831; c=relaxed/simple;
-	bh=yJImb6a2TS2WehlIdyKNelcdVYvHH2qOsVQHd/XOEZE=;
+	s=arc-20240116; t=1729866226; c=relaxed/simple;
+	bh=0W8DQ9KX/hU9D5Ho5Mls6otKE2aIUH3ZFgyulNGYdv8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4yiO5MFnbZ6Z6VPVzdhNl+4uyY2taFTASuYtUrENUdIReA4slaxXdqfaR4HkXNlFXke68qtY4heqRrHoZR0Ti089AMRIhr+capmZvX6RrUIoped4YXFARpOvoNR77+4A21KeE2AAOcmMLmmfmidq6kXX5udgeWBoupJEweCORQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=I7cryYdS; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4315c1c7392so21154595e9.1
-        for <linux-pwm@vger.kernel.org>; Fri, 25 Oct 2024 07:17:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1729865826; x=1730470626; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xCkmnhRivFdKkXUMS/aoyRmM+CvuAf01/s+OUtO/hVQ=;
-        b=I7cryYdS3PVbMr/AB7/rVLaawagAothm7zN56WC7sCC6cp+21JCeqa2aLZVyx6U23r
-         pdIHOlf7+G8cISKqVtrkt+IvzqsiQQNLj2ZGoFOSgNKKJLIO4bCL3gTQy3FSUVUPHTl3
-         QCBXdUcD/k+uA+qZWAehx4E7vc62Kby5EXstWD6vUOR/UzLTb1DuKTE4Y6bkdGVhAkMr
-         PX9RcRBW1eM878MDRtindxWWRKnkz7p+/FSyLQBvRu6CMgu4xGcCGd50xNgfXM65xeyA
-         eWrFKzZsFFMtnc5cwML+wU5YNvhniCqr7xIEi9B0XWVy7paW7wvBKVYk8TCeK13c1hCS
-         gp7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729865826; x=1730470626;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xCkmnhRivFdKkXUMS/aoyRmM+CvuAf01/s+OUtO/hVQ=;
-        b=Z2cFYTIII0JbS7LoEqLx17zYqNIMnNju/+qUbskz9bd1crqn6ctdt2Xny2fXjxKCYp
-         kxAT8wcQj7gCD7aQNldw1p2nwfRm3sWTu1j3mDIJFcMK/bTMiv9DGTkn4I7Nj7BGldkT
-         yI/CzUG5Bb91kM+nuaxf0x7NprM1nJVd286MZtMBqbiYl/TtAlO9k4+5Ph6ZBNcyBlQw
-         US50rTLVG9VyLXXv0g1QuGjwvF8AtSLzfOEUzEMx0YoYcJDOpaqiwZkcDaKoUkIe49G5
-         EoQmNLPxmitWabDgW6U8gImo8oUlMmxTsviDQFLigCZdU49dkIu1mFWoQ84/KVvR/loT
-         sDdw==
-X-Gm-Message-State: AOJu0Yyev3ibl69gV0oceHVsv2UyIo2vcftBnmfRC5Epg3hFSf8L7RpA
-	WRHGzIzXN+PBz78yolQvaCX1ctysF1ceDMtUBEwK7/ib+KMGbYqXObue8vaQGY0=
-X-Google-Smtp-Source: AGHT+IGp21kobzyg70q9vtrr3vqHctswzyrcr5K4JwE60KGWeg30ptzuiURgtinC5QraibRR/jtN+w==
-X-Received: by 2002:a05:600c:1c82:b0:430:53f8:38bc with SMTP id 5b1f17b1804b1-43184211345mr86750195e9.12.1729865826245;
-        Fri, 25 Oct 2024 07:17:06 -0700 (PDT)
-Received: from localhost (p50915d2d.dip0.t-ipconnect.de. [80.145.93.45])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b1cc0asm1649266f8f.10.2024.10.25.07.17.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2024 07:17:05 -0700 (PDT)
-Date: Fri, 25 Oct 2024 16:17:04 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sUgw7Uj4VwZN0IJt5BgrWTE7cBr82QAD6wcENCOZInNmz3I5/SRiilCgYZfBPM7SVM6HTokjBpIflEGWf3eB3Si2xW+Qwy607QxO/Z86j8KZ43OpA8s3PL3870fHuh6dmSxf+7HYkvX3elu+guhu3Kz9Ys6+9q3r5KMpHMWeUWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UC0QOnYR; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729866224; x=1761402224;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=0W8DQ9KX/hU9D5Ho5Mls6otKE2aIUH3ZFgyulNGYdv8=;
+  b=UC0QOnYRfO30uLQQNfGiXl67wFHYVHxNnYKNBfDUmxmd+/ZUDA1nJLI2
+   RWScYvNGBu+SMNbu7xo8iZfcPn0FGbsFn3Akdr976isN4m7oq3QcK20vv
+   4JrJbHDdehF+UhUuy1s5LsXFTpH5JpYQ+M7uqv85aGx3qb5+xDueq1CvP
+   7XxoR0IH4LoJVkSQpXQp+duqj3GgQPVZOWj5ghpeBthDCng+McjiZbFWk
+   YWfABKnCmMT52VGheyf2GDo2GgR8kqJFVvu1RG/qF2jM/5JzH2jyqVhhE
+   qN01oUpgBkwV7tFiljqaLDvv8P2HxblI90VE5ljKQfmnUItqeySc/D2th
+   Q==;
+X-CSE-ConnectionGUID: CIKZe05oRs6BeIJqHKzsEA==
+X-CSE-MsgGUID: sQSOocorSlutkAcJrgTWcQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11236"; a="33340663"
+X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
+   d="scan'208";a="33340663"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 07:23:44 -0700
+X-CSE-ConnectionGUID: rgh3hIowQridmmguvXv7RQ==
+X-CSE-MsgGUID: +FA9YOYrTEuXpwl0a7jaSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,232,1725346800"; 
+   d="scan'208";a="118384393"
+Received: from smile.fi.intel.com ([10.237.72.154])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 07:23:43 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1t4LE4-00000006wIj-1QFe;
+	Fri, 25 Oct 2024 17:23:40 +0300
+Date: Fri, 25 Oct 2024 17:23:40 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
 Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v1 1/1] pwm: core: use device_match_name() instead of
  strcmp(dev_name(...
-Message-ID: <d7ytkx4ncytkup7pxu4kjxhbh75szwoeafyxg2prem7vfjausj@5ea2nebshemg>
+Message-ID: <Zxup7PnsWFTABBqN@smile.fi.intel.com>
 References: <20241024151905.4038854-1-andriy.shevchenko@linux.intel.com>
  <2r7ey7fkt4k3s3kpi2vmesqrfntyd6jt7uf5jmwwbzglgxcohf@lr5gfy3ce2yu>
  <ZxuXU3nTuEwoTFiH@smile.fi.intel.com>
+ <d7ytkx4ncytkup7pxu4kjxhbh75szwoeafyxg2prem7vfjausj@5ea2nebshemg>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="agenko4zrklaplst"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <ZxuXU3nTuEwoTFiH@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d7ytkx4ncytkup7pxu4kjxhbh75szwoeafyxg2prem7vfjausj@5ea2nebshemg>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Fri, Oct 25, 2024 at 04:17:04PM +0200, Uwe Kleine-König wrote:
+> On Fri, Oct 25, 2024 at 04:04:19PM +0300, Andy Shevchenko wrote:
+> > On Thu, Oct 24, 2024 at 10:55:36PM +0200, Uwe Kleine-König wrote:
+> > > On Thu, Oct 24, 2024 at 06:19:05PM +0300, Andy Shevchenko wrote:
+
+...
+
+> > > >  	idr_for_each_entry_ul(&pwm_chips, chip, tmp, id) {
+> > > > -		const char *chip_name = dev_name(pwmchip_parent(chip));
+> > > > -
+> > > > -		if (chip_name && strcmp(chip_name, name) == 0)
+> > > > +		if (device_match_name(pwmchip_parent(chip), name))
+> > > 
+> > > This theoretically changes behaviour in a few cases. For example if
+> > > dev_name(pwmchip_parent(chip)) is NULL the new code would crash. Can
+> > > this happen? 
+> > 
+> > Please, tell me how
+> > (looking at the of device_add() and kobject_set_name_vargs() implementations)?
+> 
+> This is unfair, I intended to let you do the work and you just give it
+> back to me :-)
+
+Unfair to ask me about this code as you should know better as the maintainer
+than me why this code is there, no? :-)
+
+> ... a bit later ...
+> 
+> ok, willing to merge if you update the commit log to mention that the
+> theoretical changes (no check for NULL, more lax check (trailing \n))
+> don't matter.
+
+Okay.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---agenko4zrklaplst
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 1/1] pwm: core: use device_match_name() instead of
- strcmp(dev_name(...
-MIME-Version: 1.0
-
-Hello Andy,
-
-On Fri, Oct 25, 2024 at 04:04:19PM +0300, Andy Shevchenko wrote:
-> On Thu, Oct 24, 2024 at 10:55:36PM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Thu, Oct 24, 2024 at 06:19:05PM +0300, Andy Shevchenko wrote:
->=20
-> ...
->=20
-> > >  	idr_for_each_entry_ul(&pwm_chips, chip, tmp, id) {
-> > > -		const char *chip_name =3D dev_name(pwmchip_parent(chip));
-> > > -
-> > > -		if (chip_name && strcmp(chip_name, name) =3D=3D 0)
-> > > +		if (device_match_name(pwmchip_parent(chip), name))
-> >=20
-> > This theoretically changes behaviour in a few cases. For example if
-> > dev_name(pwmchip_parent(chip)) is NULL the new code would crash. Can
-> > this happen?=20
->=20
-> Please, tell me how
-> (looking at the of device_add() and kobject_set_name_vargs() implementati=
-ons)?
-
-This is unfair, I intended to let you do the work and you just give it
-back to me :-)
-
-=2E.. a bit later ...
-
-ok, willing to merge if you update the commit log to mention that the
-theoretical changes (no check for NULL, more lax check (trailing \n))
-don't matter.
-
-Best regards
-Uwe
-
---agenko4zrklaplst
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcbqF4ACgkQj4D7WH0S
-/k6tbAf+NFuIOeiNYrfvCdjgd12qTYzbRWpM6pJGG/uEHAI86ua4rgrUmOUWIEAY
-hqhYyuI1fH1synUtxvxkW1fIBDOIteIVBEZMcQCvDHawLTSM60K7Ut0T1BVHyexl
-94/SGIjPH4B8UJ3NVLrL3TpUmzai+5qbgMvBRZXV6JKDgK5Zs0FW15RUIrGF1e5d
-N71YQLsqrpmEXswS0eJ8wuBEkBnj6OI1qp6rj1SUOGTvfsSCb0DocC6YOp9nzfxz
-LSAiulB4ZIVzO1xzkl6YJZuqJRA9GqCV+rRkfSGWNaDDKWLY5d79t11xCcLmarmf
-ElRRwTJ0H9tVUnckAarpoMaHQhpESw==
-=4bDt
------END PGP SIGNATURE-----
-
---agenko4zrklaplst--
 
