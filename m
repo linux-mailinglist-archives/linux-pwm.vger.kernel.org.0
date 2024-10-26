@@ -1,218 +1,195 @@
-Return-Path: <linux-pwm+bounces-3907-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3908-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2B9F9B1565
-	for <lists+linux-pwm@lfdr.de>; Sat, 26 Oct 2024 08:33:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C23B39B167D
+	for <lists+linux-pwm@lfdr.de>; Sat, 26 Oct 2024 11:20:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 226831C210BE
-	for <lists+linux-pwm@lfdr.de>; Sat, 26 Oct 2024 06:33:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 26EF6B21603
+	for <lists+linux-pwm@lfdr.de>; Sat, 26 Oct 2024 09:20:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8208815D5A1;
-	Sat, 26 Oct 2024 06:33:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 771F71CFEA8;
+	Sat, 26 Oct 2024 09:20:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="tFs7N6QD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q714rRt/"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6859C217F2E;
-	Sat, 26 Oct 2024 06:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680A718C023;
+	Sat, 26 Oct 2024 09:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729924383; cv=none; b=im1HcXQQeweKs+xWF3jr97p2nVODG1VCYEB7OWTcBvibWv1PiU4HxEn256y7LUzSTVHiifES/PtwK/2DjYpkGRqMALzgLiSukWmZetgXT0VxkOWg4AI8rkLbIHCF/YKSk0o/c/r0CcOJ4iSn+L9q/gsmHfBcwjafBdFMW9rLI5E=
+	t=1729934406; cv=none; b=fDB6RfvfzqFMTRrwwJxqoeLd32mF2YvJ4hCtEG4RamiI/P0HxMx5NOvaAvz8Uy1zhYsoC1acMhExAimJsguXg+TrV8pg9dKfUMvsj4K/lD5AlcoTv3/TbuY9oY8NUxf7X3SgIpUMQcgULh0C8PiMHCGRBXyCi9zlWPJL7CXO7r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729924383; c=relaxed/simple;
-	bh=agr57+TwKsLYZRR5ZaPF7RExp8eb0fp9/mzsJ9nUsqY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t5gsYzFz16/NnWY0wqUy+UrUXrP8elInYz526oYB1w3H/6GWp0ZMW7hu2qIXIPnH6ZP+uHlwxQyyVedkzJCTV58QGsKqizx1TVGp9Wm84LUjBHrrRJRJfkGcNvaalI7fYSha0e37bo7PE9LMTg3phNdDgup4I+2fZPlTyyMggsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=tFs7N6QD; arc=none smtp.client-ip=80.12.242.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from localhost.localdomain ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id 4aM1tR7nLgeRP4aM1tvlXG; Sat, 26 Oct 2024 08:32:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1729924377;
-	bh=4QS1A65O3hsr8uWMktbnBm+HEJ1CiTpjN/zqDqUf/lw=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=tFs7N6QDolaDk7ESBYl8GFFTn+5HZ/WlloVaEE1Y7G7haduNLJhW4WvAmzayQlTk8
-	 sBsujEPYlcSb7F4Rd3UUj71cECce5/uCKSvSzHW5kHcHcB9aFWzTEcFh8rWPX2V1c+
-	 wRCLMqnZaTXU/Zh7uRoNPJPGwKWmslXSMdxZoDce5qRpzkpyQLu+N4rjQmaY7QwTpW
-	 Xuzb4TAXU1JEA0OScvK0Toeoz40tq3UVsrTjqi2zlImtLPe6n0iOAUs6FIaiGyCiiH
-	 AP4vXVXM2RaMwlkQO+T1+HAFWi8acVfhEOaxQy8YGNekW8fCHmpKDVoUgqPFqXzvde
-	 2rCMO7Ksvs41w==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 26 Oct 2024 08:32:57 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Alex Lanzano <lanzano.alex@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Mehdi Djait <mehdi.djait@bootlin.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-pwm@vger.kernel.org
-Subject: [PATCH] drm/tiny: Fix some error handling paths in sharp_memory_probe()
-Date: Sat, 26 Oct 2024 08:32:36 +0200
-Message-ID: <b218165cf9af60907e0912266134f1ef1d3617b9.1729924305.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1729934406; c=relaxed/simple;
+	bh=10Q0HTxapRuroNftzlAwfnnmV8FtywyCht+84Buc/bo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BXwxFv7SZIwP0cJd6F2G/ajoL+TQrnSVUtyZ60EvzVcQsZkIAc7uXpIHmq0MCTMyIys6mNCDKtJfjs5wHpSJl4iBC5zvX4mKJY/9vehkBl77NiGPiRoEikGfpaVXcsAK3yHMKBtchhXwSFOJG7tZexO5XsoIbJNJLXNwFNczwik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q714rRt/; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1729934404; x=1761470404;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=10Q0HTxapRuroNftzlAwfnnmV8FtywyCht+84Buc/bo=;
+  b=Q714rRt/34DyKrnM5vRl5o+qehTqQoCyrhFvNaOmWl+u5XpqNzUcshI0
+   RPyEeFORW8ItMuHELdzkG4Q03XBHRZnRKjtqGfkUOOOBuUU4mkNMp3nRi
+   Se0I5YzbvhlMKNC/3QOaBSHDw21dYFBn5U4aU3+DFpdlEDxWXzEcGMY/I
+   Ry8U2zfJoc3vNt1dLvREfLBq5fJ18JuvtatnopYlz5KRdq8NF3iLqeC76
+   0NXfVlTvHCeo5IoUHjUiiVWcfhgaLgnVjBUWvgQXiDnSVwcJiFUjVWsyt
+   77UfJDJ2SIA/zSvbtDfe1YiA1E6QtlQG8H5ssd8iwaMI4doEN8LeLzQSN
+   g==;
+X-CSE-ConnectionGUID: VhVXWAfoTsypcQgOYIxwdA==
+X-CSE-MsgGUID: x0ms3nWOT+qsQhXaW/oVwA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11236"; a="40181199"
+X-IronPort-AV: E=Sophos;i="6.11,234,1725346800"; 
+   d="scan'208";a="40181199"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2024 02:20:02 -0700
+X-CSE-ConnectionGUID: UUYp0zKATxul9nb+G/K1XQ==
+X-CSE-MsgGUID: 8WPtDW1qQ6uodo7Tr5GRxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,234,1725346800"; 
+   d="scan'208";a="85920356"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 26 Oct 2024 02:19:56 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t4cxc-000ZT6-2l;
+	Sat, 26 Oct 2024 09:19:52 +0000
+Date: Sat, 26 Oct 2024 17:19:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ming Yu <a0282524688@gmail.com>, tmyu0@nuvoton.com, lee@kernel.org,
+	linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
+	linux@roeck-us.net, jdelvare@suse.com, jic23@kernel.org,
+	lars@metafoo.de, ukleinek@kernel.org, alexandre.belloni@bootlin.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v1 5/9] watchdog: Add Nuvoton NCT6694 WDT support
+Message-ID: <202410261752.lUVTJO2Y-lkp@intel.com>
+References: <20241024085922.133071-6-tmyu0@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241024085922.133071-6-tmyu0@nuvoton.com>
 
-If an error occurs after allocating resources based on which
-"sharp,vcom-mode" is used, then these resources must be released, as
-already done in the .remove() function.
+Hi Ming,
 
-Use 2 new devm_add_action_or_reset() for that and simplify code
-accordingly.
+kernel test robot noticed the following build warnings:
 
-Fixes: b8f9f21716fe ("drm/tiny: Add driver for Sharp Memory LCD")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only
----
- drivers/gpu/drm/tiny/sharp-memory.c | 66 ++++++++++++++---------------
- 1 file changed, 32 insertions(+), 34 deletions(-)
+[auto build test WARNING on lee-mfd/for-mfd-next]
+[also build test WARNING on brgl/gpio/for-next andi-shyti/i2c/i2c-host mkl-can-next/testing groeck-staging/hwmon-next jic23-iio/togreg abelloni/rtc-next linus/master lee-mfd/for-mfd-fixes v6.12-rc4 next-20241025]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/gpu/drm/tiny/sharp-memory.c b/drivers/gpu/drm/tiny/sharp-memory.c
-index 2d2315bd6aef..01d1ce2462e1 100644
---- a/drivers/gpu/drm/tiny/sharp-memory.c
-+++ b/drivers/gpu/drm/tiny/sharp-memory.c
-@@ -48,12 +48,6 @@ enum sharp_memory_model {
- 	LS044Q7DH01,
- };
- 
--enum sharp_memory_vcom_mode {
--	SHARP_MEMORY_SOFTWARE_VCOM,
--	SHARP_MEMORY_EXTERNAL_VCOM,
--	SHARP_MEMORY_PWM_VCOM
--};
--
- struct sharp_memory_device {
- 	struct drm_device drm;
- 	struct spi_device *spi;
-@@ -67,10 +61,6 @@ struct sharp_memory_device {
- 
- 	struct gpio_desc *enable_gpio;
- 
--	struct task_struct *sw_vcom_signal;
--	struct pwm_device *pwm_vcom_signal;
--
--	enum sharp_memory_vcom_mode vcom_mode;
- 	u8 vcom;
- 
- 	u32 pitch;
-@@ -500,25 +490,41 @@ static int sharp_memory_pipe_init(struct drm_device *dev,
- 	return drm_connector_attach_encoder(connector, encoder);
- }
- 
-+static void sharp_memory_stop_kthread(void *data)
-+{
-+	struct task_struct *task = data;
-+
-+	kthread_stop(task);
-+}
-+
-+static void sharp_memory_disable_pwm(void *data)
-+{
-+	struct pwm_device *pwm = data;
-+
-+	pwm_disable(pwm);
-+}
-+
- static int sharp_memory_init_pwm_vcom_signal(struct sharp_memory_device *smd)
- {
- 	int ret;
- 	struct device *dev = &smd->spi->dev;
-+	struct pwm_device *pwm_vcom_signal;
- 	struct pwm_state pwm_state;
- 
--	smd->pwm_vcom_signal = devm_pwm_get(dev, NULL);
--	if (IS_ERR(smd->pwm_vcom_signal))
--		return dev_err_probe(dev, PTR_ERR(smd->pwm_vcom_signal),
-+	pwm_vcom_signal = devm_pwm_get(dev, NULL);
-+	if (IS_ERR(pwm_vcom_signal))
-+		return dev_err_probe(dev, PTR_ERR(pwm_vcom_signal),
- 				     "Could not get pwm device\n");
- 
--	pwm_init_state(smd->pwm_vcom_signal, &pwm_state);
-+	pwm_init_state(pwm_vcom_signal, &pwm_state);
- 	pwm_set_relative_duty_cycle(&pwm_state, 1, 10);
- 	pwm_state.enabled = true;
--	ret = pwm_apply_might_sleep(smd->pwm_vcom_signal, &pwm_state);
-+	ret = pwm_apply_might_sleep(pwm_vcom_signal, &pwm_state);
- 	if (ret)
- 		return dev_err_probe(dev, -EINVAL, "Could not apply pwm state\n");
- 
--	return 0;
-+	return devm_add_action_or_reset(dev, sharp_memory_disable_pwm,
-+					pwm_vcom_signal);
- }
- 
- static int sharp_memory_probe(struct spi_device *spi)
-@@ -595,15 +601,20 @@ static int sharp_memory_probe(struct spi_device *spi)
- 				     "Unable to find sharp,vcom-mode node in device tree\n");
- 
- 	if (!strcmp("software", vcom_mode_str)) {
--		smd->vcom_mode = SHARP_MEMORY_SOFTWARE_VCOM;
--		smd->sw_vcom_signal = kthread_run(sharp_memory_sw_vcom_signal_thread,
--						  smd, "sw_vcom_signal");
-+		struct task_struct *sw_vcom_signal;
-+
-+		sw_vcom_signal = kthread_run(sharp_memory_sw_vcom_signal_thread,
-+					     smd, "sw_vcom_signal");
-+
-+		ret = devm_add_action_or_reset(dev, sharp_memory_stop_kthread,
-+					       sw_vcom_signal);
-+		if (ret)
-+			return ret;
- 
- 	} else if (!strcmp("external", vcom_mode_str)) {
--		smd->vcom_mode = SHARP_MEMORY_EXTERNAL_VCOM;
-+		/* empty */
- 
- 	} else if (!strcmp("pwm", vcom_mode_str)) {
--		smd->vcom_mode = SHARP_MEMORY_PWM_VCOM;
- 		ret = sharp_memory_init_pwm_vcom_signal(smd);
- 		if (ret)
- 			return ret;
-@@ -640,19 +651,6 @@ static void sharp_memory_remove(struct spi_device *spi)
- 
- 	drm_dev_unplug(&smd->drm);
- 	drm_atomic_helper_shutdown(&smd->drm);
--
--	switch (smd->vcom_mode) {
--	case SHARP_MEMORY_SOFTWARE_VCOM:
--		kthread_stop(smd->sw_vcom_signal);
--		break;
--
--	case SHARP_MEMORY_EXTERNAL_VCOM:
--		break;
--
--	case SHARP_MEMORY_PWM_VCOM:
--		pwm_disable(smd->pwm_vcom_signal);
--		break;
--	}
- }
- 
- static struct spi_driver sharp_memory_spi_driver = {
+url:    https://github.com/intel-lab-lkp/linux/commits/Ming-Yu/mfd-Add-core-driver-for-Nuvoton-NCT6694/20241024-170528
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
+patch link:    https://lore.kernel.org/r/20241024085922.133071-6-tmyu0%40nuvoton.com
+patch subject: [PATCH v1 5/9] watchdog: Add Nuvoton NCT6694 WDT support
+config: arc-randconfig-r132-20241026 (https://download.01.org/0day-ci/archive/20241026/202410261752.lUVTJO2Y-lkp@intel.com/config)
+compiler: arceb-elf-gcc (GCC) 13.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20241026/202410261752.lUVTJO2Y-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410261752.lUVTJO2Y-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/watchdog/nct6694_wdt.c:133:42: sparse: sparse: cast to restricted __le32
+>> drivers/watchdog/nct6694_wdt.c:133:42: sparse: sparse: cast to restricted __le32
+>> drivers/watchdog/nct6694_wdt.c:133:42: sparse: sparse: cast to restricted __le32
+>> drivers/watchdog/nct6694_wdt.c:133:42: sparse: sparse: cast to restricted __le32
+>> drivers/watchdog/nct6694_wdt.c:133:42: sparse: sparse: cast to restricted __le32
+>> drivers/watchdog/nct6694_wdt.c:133:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:134:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:134:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:134:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:134:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:134:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:134:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:166:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:166:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:166:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:166:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:166:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:166:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:167:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:167:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:167:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:167:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:167:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:167:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:220:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:220:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:220:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:220:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:220:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:220:42: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:221:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:221:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:221:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:221:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:221:45: sparse: sparse: cast to restricted __le32
+   drivers/watchdog/nct6694_wdt.c:221:45: sparse: sparse: cast to restricted __le32
+
+vim +133 drivers/watchdog/nct6694_wdt.c
+
+   115	
+   116	static int nct6694_wdt_set_timeout(struct watchdog_device *wdev,
+   117					   unsigned int timeout)
+   118	{
+   119		struct nct6694_wdt_data *data = watchdog_get_drvdata(wdev);
+   120		struct nct6694 *nct6694 = data->nct6694;
+   121		unsigned int timeout_fmt, pretimeout_fmt;
+   122		unsigned char buf[REQUEST_WDT_CMD0_LEN];
+   123		int ret;
+   124	
+   125		if (timeout < wdev->pretimeout) {
+   126			pr_err("%s: 'timeout' must be greater than 'pre timeout'!\n",
+   127			       __func__);
+   128			return -EINVAL;
+   129		}
+   130	
+   131		timeout_fmt = timeout * 1000 | (WDT_TIMEOUT_ACT << 24);
+   132		pretimeout_fmt = wdev->pretimeout * 1000 | (WDT_PRETIMEOUT_ACT << 24);
+ > 133		set_buf32(&buf[WDT_TIMEOUT_IDX], le32_to_cpu(timeout_fmt));
+   134		set_buf32(&buf[WDT_PRETIMEOUT_IDX], le32_to_cpu(pretimeout_fmt));
+   135	
+   136		ret = nct6694_write_msg(nct6694, REQUEST_WDT_MOD,
+   137					REQUEST_WDT_CMD0_OFFSET(data->wdev_idx),
+   138					REQUEST_WDT_CMD0_LEN, buf);
+   139		if (ret) {
+   140			pr_err("%s: Don't write the setup command in Start stage!\n",
+   141			       __func__);
+   142			return ret;
+   143		}
+   144	
+   145		wdev->timeout = timeout;
+   146	
+   147		return 0;
+   148	}
+   149	
+
 -- 
-2.47.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
