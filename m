@@ -1,450 +1,571 @@
-Return-Path: <linux-pwm+bounces-3935-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3936-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B7E39B2AD4
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Oct 2024 09:57:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95DD79B2BD7
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Oct 2024 10:49:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0A4341F22713
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Oct 2024 08:57:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5357C2828D6
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Oct 2024 09:49:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A053B199247;
-	Mon, 28 Oct 2024 08:57:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2FA21CC8B8;
+	Mon, 28 Oct 2024 09:49:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHNPu75E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W4+xPrEc"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47CE193060;
-	Mon, 28 Oct 2024 08:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7684F199247;
+	Mon, 28 Oct 2024 09:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730105826; cv=none; b=YzmunXdKT+Xlr1UiEDqz1FdOUmd6dJrni9s93t/zPhIXbtSr1WBfZtHVIBqiYd6E7AjzFkE75+wOOw1hmUephToOyzU+WEdTUf+qm8oZ98t0REbmDWBj4LtAcYeAGzWnca9KsTYMIDRE5RBH327XI7khYL8SNqVwpbMApxYXpBY=
+	t=1730108982; cv=none; b=ZqCoRjjCwy0xj2zegNkAY7IEp4LCetmATgqyz99dARh/2VDlz55tt3w8vbWuF6w69+gB4ggpRUCMBONLXb3OEkbP0LH7kelsgf24FLMgBZUSVmaeQBLA3+kFXI5aa2Ufx9V/aOkbJEtNFNisYbvqVyNK5uustlF+fIuNnsWizbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730105826; c=relaxed/simple;
-	bh=Bcq0fO9Pxym95RWibiLq5Q1tL5fYFE8eVqoefhl/Omg=;
+	s=arc-20240116; t=1730108982; c=relaxed/simple;
+	bh=Li/zX1NMGiQvayP1B1aJKA3UADp1/9nYihQP1djZBfc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eKT38hcO9wrz3GiIiZSUCXpN01WQUzDM9h7mMjZS6UZfVDi+Iy0/hdiMSgzBSJCE//cwctNppVW4aQ/H29SZs6DQWn9dEQXJu8ZlCh8PfVes6phv6vRpCEx3v7sZyhOYnqvKuFuguJ8dzJaniLcAtoqKc6v87ImEc75x02PxCaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kHNPu75E; arc=none smtp.client-ip=209.85.219.173
+	 To:Cc:Content-Type; b=EldwzIeUqUVxkudzSfKBbb2RvsZ+5SjzjkImeY4rJP6SAWW6lHsCmjmc/7IrtnoiFFRkNXwZKa6CmC6xcJU8/FfZSKcIEhiSM3bD70exX/GwRyNx1UGLmBRK2TxWgh87z/pxZfFuQQYnJGk6XxGNW71h6P2f5mHaNm+rPXdxhJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W4+xPrEc; arc=none smtp.client-ip=209.85.219.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e290e857d56so3670536276.1;
-        Mon, 28 Oct 2024 01:57:03 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e308038caf9so2387400276.0;
+        Mon, 28 Oct 2024 02:49:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730105822; x=1730710622; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1730108978; x=1730713778; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xA4cE9U51TPg8RedW2fRonR3ROLTQ7izS+w6TopxWcw=;
-        b=kHNPu75E7XNc5+H9n2LMiadl9ud+iwKaQ0HSBOzBWOKzyfm5qmTJtQVFojgCn19nZ+
-         X91FWxgsc3PKcIlTmCp1bv2abQ9ubYMwAJKLlomQxv6jtH1J8KUZ1H/lzx722BdQL4BJ
-         vmbebm0rlhAifazASjbza8KRVmDVBtABo63Yv9i6O2Pyp9PaVxRTwC8kFSfl7VMC5X+M
-         d6UFvGboSq5mWa4vLOJ7G/lvhU6oezWIUhvuZjfPMZuva3Vw55VU+yg5MmMueIFB6vNC
-         owNQN/Q/PsQR5Rm2gvQDC87zOo2PiVjKGHLUghnuEqTuDJpqzEOcHCpOPl7GmNW3AFKc
-         HMqw==
+        bh=PhpScoTjsoE4TEraqLIv4xYHR/WULjEZZgJExIMyL3k=;
+        b=W4+xPrEcjDUUvVck1IxXN2mA/lK33yjsitef4xvdc8GkskceNwG5bmaiP/ViKDv408
+         r4VagANpXCkS+in+5UF9dZm8SXdULp8gTUqBtQFCKw08OUiemr3+DQa5Z2y4AL1q40il
+         1DSGoyw9uxP2lrwmN5oNWIrGdJnxueeV7zulx35hHF17D0aqNotQy4wirIJJNK6CUBPI
+         ZRGmXctCWs9SKiuTmqWegTlxwNbxFbNbXnNJV+8caworLTO64A+PiYYGJ/bRpbAbNBBz
+         V5Gxz8VW0bTw3YJeX7IMDxAIisQx73RysHTektRTcKf1XCB64/26y/2QfwC75atgSvq2
+         setQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730105822; x=1730710622;
+        d=1e100.net; s=20230601; t=1730108978; x=1730713778;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xA4cE9U51TPg8RedW2fRonR3ROLTQ7izS+w6TopxWcw=;
-        b=xMKXFgnKb3JYHKjDB6oy5UnRpef9+YdeRLQe/fiva8nLxKw8LBhx0tSqXUYwRwXsW8
-         5Xvj4DC3Y3/yboOgpAjh9IWP6jKwufCgpDN9jKLadxtpGJzqphVjStIJ0ii6m0BZaM5U
-         RB+wLoWnzuFw3KjiqGbC816CCi+8B/8fmP6zw924k1ZRVAtBWoIeTWp9IeCsSIADDCZN
-         14x3ZfEinQ0uoFOi+GK5NVIzMcqrdYM3/WND7bBWOjKGNogbHRoeF6pZu7c0lmLSvBtb
-         8LaZWfvxIndhulQQ5rAbPVHZ67eJqDhLbP9BcR+ScrcELgyA4zppkzsupI3Iak2F+opK
-         +rLg==
-X-Forwarded-Encrypted: i=1; AJvYcCUG0at1EkgGiSQtNaGMtxDP4rGtqjBjVvVS9j3uiNHUDAhOg+mTU2bd/yaq27L/Ooh1JFO9xuwzjM1N@vger.kernel.org, AJvYcCUdzZbOjPmckXVc2uKCxVcUBDGqfPCULtgp4ssdyvfg4V2uetPiuU1coKElC2O6fm9xw6cEY0osP02tDKA=@vger.kernel.org, AJvYcCV43LBP1zW1MnF7/ctv4avirNvhg+CNIuK4XcYKL7qL/P1Gy2qyxE0vdgjNYA6r6jTxNF6kULsR53B+VkTS@vger.kernel.org, AJvYcCVAiCfcf1Qf/JWBucTTfGJaeEz9Pr38CWLzAT159B8V0vTXtie2RqXj1zWjgFJlrsCOMEbNchA58xcx@vger.kernel.org, AJvYcCVnjep+eqvGWyH1fj89i3jHtbywh3FwupQuR9KjNsXkJD+aMmBJOnjf1d/f43/X4TERusJocDhe@vger.kernel.org, AJvYcCWE5gwA/N1PEB889SuRLvK+0jhp59qnqdeQUsUS2gdT2wUCP0gUVzBEXt9y632xkGGBIYY7XOlodzOK@vger.kernel.org, AJvYcCWT0rf0M6yis1YDw+TtWVMDX8KR7n+kX11u3aApD+uIhOKk+r6wUSXaG2g4PlA+CMJOJH8xUUo0DVx7xj4MaMs=@vger.kernel.org, AJvYcCWiINHc4gS6HHTkG2SdQqhOuQ26Ggt/J8wereDtuBXLeu/cMz01H5TjX00gUW3Y26nR7ZO1s51WXIk=@vger.kernel.org, AJvYcCXCuT3qTsc8aFZz03NmG0q7UQSlBrDJIMqroirbGbtbKJB0iYpazPr5RBLWln6Jwf1RIq0rRYhPD348hA==@vger.kernel.org, AJvYcCXlROj3SYDal1BwayWYUH1xt3/g6rAC
- LGFI69E3G7md1+DhoUxgDWmBMkAMcQORlzAo0QFjmMto3I76@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrpFBC/aWccssHJfbzbk75hlIfkXyZXLrcek/V/1CgBLFoG1N8
-	iv87tpB0p7rpXcvFqbPaCnUu6ELqg9qk/tgITRD94PHKAzu4SsyC9EjlIPD6p9B2t4MaXvYWUPz
-	J0tiQD5RImczU9es9naPjWmDgQNk=
-X-Google-Smtp-Source: AGHT+IE4UksOy84hxGbzbWeIH9i7eGolsfQtJRd/1c9LoziNujkHyuL7UiVtMDmnP7Rr/qQLZYMsNLGs1tvOmiZHpxM=
-X-Received: by 2002:a05:6902:2b8b:b0:e29:7e0a:38f4 with SMTP id
- 3f1490d57ef6-e3087c10616mr6393294276.52.1730105822487; Mon, 28 Oct 2024
- 01:57:02 -0700 (PDT)
+        bh=PhpScoTjsoE4TEraqLIv4xYHR/WULjEZZgJExIMyL3k=;
+        b=vV4Ti3giEpInAksHMLro7GzprGFGJ25TDHbKbHe8tKHmy4PHFxpnuxgq3wToByKHh9
+         eVjMRJ95BNUm1wUvCqDQxU1aX/RvF8yWR5Db4wlJtJg/fZGqKRwdHv3uMmqGpLfEhl8/
+         cSMEBVyfjlUQkLRSsBjlzGHGCeGBD0YNM6tI1atZCVh/m1YsYVG0DDLLnzYj++evs0oc
+         JbGvHrmKVom4OPVnia6RQ6R1BxAkUJ1eJZ5eI3KamLx+QS//zb2JQbq8tpC11CmpugEu
+         zgej1qEIypWC2sVEFV2Y+FoCpc1l55mv7izfu/jQ2xY/EUlCB+CmrvDKTL80WzFIN38G
+         rS1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUfJLxDcbbXsBEbOq/97A6dRt3BTjusEhkaUWPlDAu1K/J8xXXaTa/LY4N8GqOci7xBAtwBC4Nk@vger.kernel.org, AJvYcCUgKQgTkNSCTHMzpEtFxeJiLADOkwF7OHyTHzi9Ubkz9MWEDMlNN+cFKTN19rktSQq1L+CzQFkOEoXtrw3j@vger.kernel.org, AJvYcCV9clnBxlmm0uwKdB3a92PmWZABJ8YDY0WHYCHA4Gjqb86l7uVTLKexjPNJLuRe5Ovg5Z6JEvViBdBp@vger.kernel.org, AJvYcCW1MedrU6B50gTGf+EYFZ0aoIyIs32C5iMIJEtQb+qsw/YjV4Z1GSfWbAD0JIMJvfA7mq07+j+zPcc=@vger.kernel.org, AJvYcCWxTz8Vc3KO9fEQtKSiCyAB0O8PowYuu4qf9aiedZAgB77tfyNwPP02ww4ZCdUglZg4b4ZLM/HV4v+Z@vger.kernel.org, AJvYcCX6g/TcIzSOtWN7ozDIZaRLRjekh/6ZIGk80/cz2webSlhnMrloAOf2EGTPtw5bPvupXrMVv8iVVKmqCQ==@vger.kernel.org, AJvYcCXNzDyru1JtBWLrx/IKYOtJhwE+Y/HqaO+EsAyEf2kSjf+zPkHUKpNxaXuim4zPLuGzeytXrUE5q6bN38I=@vger.kernel.org, AJvYcCXjQJrzNOUJtaXJN01WUjl+dceVYoM8oM0+8U6e+79J3wLCXLzUw9LuDsn0ZzyoKkNqwXhNsCDmZtdi@vger.kernel.org, AJvYcCXlxphkzVE7iM8ne3tH5/hKqcRlnAxcKyDI+pH4UBJr4gVH+zhq6BF0fISlW9EHuEpXXpMHUrvceGub@vger.kernel.org, AJvYcCXvKa2RAA25F+MiDivpxfQbBi8jxG5YZI5HlTwu
+ 7hcqusahduXX1Zzjg1+dJF3bDdJ4wBWav9JIXFAzXZHligI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsbGQC2nmQU5ozBq8h+LPmA0HJNVqzc/1VQis61Nrq/x9RUkHU
+	uJOb1PGpWzcVVA1lrO/b/FxHPbB6vHiFdccSExNNnsqX1YJBGQevaehTVzHG/CBOJbkcHQdng/C
+	lHN96NdN2cIxmkrggFh9MEazX4yU=
+X-Google-Smtp-Source: AGHT+IGv/kQg5QwmYKV2g9AhyVpVmbcIttPyRL1Tcppmw9+CvLPoQ9tbgFB7KPK9h0QIakEEHmpKcrw3aHRnIlz8Afo=
+X-Received: by 2002:a05:6902:724:b0:e30:84f1:999a with SMTP id
+ 3f1490d57ef6-e3087a6e9a8mr6374575276.20.1730108978166; Mon, 28 Oct 2024
+ 02:49:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024085922.133071-3-tmyu0@nuvoton.com>
- <CAMRc=Mc+SZN=EytxY=qA-qBEAY_F17GP-7FRE9oLojLbdUoPaQ@mail.gmail.com>
- <CAOoeyxW4=+5-QMcd_wgncFC9jgx_1Zf1Tq8RTnBvVqZ1JcUBQg@mail.gmail.com> <CAMRc=MexqwSCDrsBS0mK0fo_MCwngAH9XVgjRuDQjw0TVUBmPw@mail.gmail.com>
-In-Reply-To: <CAMRc=MexqwSCDrsBS0mK0fo_MCwngAH9XVgjRuDQjw0TVUBmPw@mail.gmail.com>
+References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024085922.133071-6-tmyu0@nuvoton.com>
+ <5fa97399-25b8-4877-be6e-69ba1ae1837d@roeck-us.net>
+In-Reply-To: <5fa97399-25b8-4877-be6e-69ba1ae1837d@roeck-us.net>
 From: Ming Yu <a0282524688@gmail.com>
-Date: Mon, 28 Oct 2024 16:56:51 +0800
-Message-ID: <CAOoeyxXRrDuKJRMb3O2h3BF1vC=pwNN3DKfnEN9LnA+jiBCTQg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/9] gpio: Add Nuvoton NCT6694 GPIO support
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
+Date: Mon, 28 Oct 2024 17:49:26 +0800
+Message-ID: <CAOoeyxX1TS0u0qE+W3xD0gQWmC7nZWURNpOS-z0_j07uHmXmQQ@mail.gmail.com>
+Subject: Re: [PATCH v1 5/9] watchdog: Add Nuvoton NCT6694 WDT support
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
 	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
 	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
-	linux@roeck-us.net, jdelvare@suse.com, jic23@kernel.org, lars@metafoo.de, 
-	ukleinek@kernel.org, alexandre.belloni@bootlin.com, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, jdelvare@suse.com, 
+	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
 	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
 	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
 	linux-rtc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Dear Bartosz,
+Dear Guenter,
 
 Thank you for your comments,
+I will remove the unnecessary logs in the next patch.
 
-Bartosz Golaszewski <brgl@bgdev.pl> =E6=96=BC 2024=E5=B9=B410=E6=9C=8825=E6=
-=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=883:47=E5=AF=AB=E9=81=93=EF=BC=9A
+Guenter Roeck <linux@roeck-us.net> =E6=96=BC 2024=E5=B9=B410=E6=9C=8824=E6=
+=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:33=E5=AF=AB=E9=81=93=EF=BC=
+=9A
 >
-> On Fri, Oct 25, 2024 at 9:39=E2=80=AFAM =E6=B8=B8=E5=AD=90=E6=B0=91 <a028=
-2524688@gmail.com> wrote:
+> On 10/24/24 01:59, Ming Yu wrote:
+> > This driver supports Watchdog timer functionality for NCT6694 MFD
+> > device based on USB interface.
 > >
-> > Sorry, resending this email in plain text format.
+> > Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
+> > ---
+> >   MAINTAINERS                    |   1 +
+> >   drivers/watchdog/Kconfig       |  11 ++
+> >   drivers/watchdog/Makefile      |   1 +
+> >   drivers/watchdog/nct6694_wdt.c | 329 ++++++++++++++++++++++++++++++++=
++
+> >   4 files changed, 342 insertions(+)
+> >   create mode 100644 drivers/watchdog/nct6694_wdt.c
 > >
-> > Dear Bart,
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index eccd5e795daa..63387c0d4ab6 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -16442,6 +16442,7 @@ F:    drivers/gpio/gpio-nct6694.c
+> >   F:  drivers/i2c/busses/i2c-nct6694.c
+> >   F:  drivers/mfd/nct6694.c
+> >   F:  drivers/net/can/nct6694_canfd.c
+> > +F:   drivers/watchdog/nct6694_wdt.c
+> >   F:  include/linux/mfd/nct6694.h
 > >
-> > Thank you for your comments.
+> >   NVIDIA (rivafb and nvidiafb) FRAMEBUFFER DRIVER
+> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> > index 684b9fe84fff..bc9d63d69204 100644
+> > --- a/drivers/watchdog/Kconfig
+> > +++ b/drivers/watchdog/Kconfig
+> > @@ -739,6 +739,17 @@ config MAX77620_WATCHDOG
+> >         MAX77620 chips. To compile this driver as a module,
+> >         choose M here: the module will be called max77620_wdt.
 > >
-> > Bartosz Golaszewski <brgl@bgdev.pl> =E6=96=BC 2024=E5=B9=B410=E6=9C=882=
-4=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=885:47=E5=AF=AB=E9=81=93=EF=
-=BC=9A
-> > >
-> > > On Thu, Oct 24, 2024 at 10:59=E2=80=AFAM Ming Yu <a0282524688@gmail.c=
-om> wrote:
-> > > >
-> > > > This driver supports GPIO and IRQ functionality for NCT6694 MFD
-> > > > device based on USB interface.
-> > > >
-> > > > Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
-> > > > ---
-> > > >  MAINTAINERS                 |   1 +
-> > > >  drivers/gpio/Kconfig        |  12 +
-> > > >  drivers/gpio/Makefile       |   1 +
-> > > >  drivers/gpio/gpio-nct6694.c | 489 ++++++++++++++++++++++++++++++++=
-++++
-> > > >  4 files changed, 503 insertions(+)
-> > > >  create mode 100644 drivers/gpio/gpio-nct6694.c
-> > > >
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > index 30157ca95cf3..2c86d5dab3f1 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -16438,6 +16438,7 @@ NUVOTON NCT6694 MFD DRIVER
-> > > >  M:     Ming Yu <tmyu0@nuvoton.com>
-> > > >  L:     linux-kernel@vger.kernel.org
-> > > >  S:     Supported
-> > > > +F:     drivers/gpio/gpio-nct6694.c
-> > > >  F:     drivers/mfd/nct6694.c
-> > > >  F:     include/linux/mfd/nct6694.h
-> > > >
-> > > > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > > > index d93cd4f722b4..aa78ad9ff4ac 100644
-> > > > --- a/drivers/gpio/Kconfig
-> > > > +++ b/drivers/gpio/Kconfig
-> > > > @@ -1450,6 +1450,18 @@ config GPIO_MAX77650
-> > > >           GPIO driver for MAX77650/77651 PMIC from Maxim Semiconduc=
-tor.
-> > > >           These chips have a single pin that can be configured as G=
-PIO.
-> > > >
-> > > > +config GPIO_NCT6694
-> > > > +       tristate "Nuvoton NCT6694 GPIO controller support"
-> > > > +       depends on MFD_NCT6694
-> > > > +       select GENERIC_IRQ_CHIP
-> > > > +       select GPIOLIB_IRQCHIP
-> > > > +       help
-> > > > +         This driver supports 8 GPIO pins per bank that can all be=
- interrupt
-> > > > +         sources.
-> > > > +
-> > > > +         This driver can also be built as a module. If so, the mod=
-ule will be
-> > > > +         called gpio-nct6694.
-> > > > +
-> > > >  config GPIO_PALMAS
-> > > >         bool "TI PALMAS series PMICs GPIO"
-> > > >         depends on MFD_PALMAS
-> > > > diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> > > > index 1429e8c0229b..02c94aa28017 100644
-> > > > --- a/drivers/gpio/Makefile
-> > > > +++ b/drivers/gpio/Makefile
-> > > > @@ -121,6 +121,7 @@ obj-$(CONFIG_GPIO_MXC)                      +=
-=3D gpio-mxc.o
-> > > >  obj-$(CONFIG_GPIO_MXS)                 +=3D gpio-mxs.o
-> > > >  obj-$(CONFIG_GPIO_NOMADIK)             +=3D gpio-nomadik.o
-> > > >  obj-$(CONFIG_GPIO_NPCM_SGPIO)          +=3D gpio-npcm-sgpio.o
-> > > > +obj-$(CONFIG_GPIO_NCT6694)             +=3D gpio-nct6694.o
-> > > >  obj-$(CONFIG_GPIO_OCTEON)              +=3D gpio-octeon.o
-> > > >  obj-$(CONFIG_GPIO_OMAP)                        +=3D gpio-omap.o
-> > > >  obj-$(CONFIG_GPIO_PALMAS)              +=3D gpio-palmas.o
-> > > > diff --git a/drivers/gpio/gpio-nct6694.c b/drivers/gpio/gpio-nct669=
-4.c
-> > > > new file mode 100644
-> > > > index 000000000000..42c0e6e76730
-> > > > --- /dev/null
-> > > > +++ b/drivers/gpio/gpio-nct6694.c
-> > > > @@ -0,0 +1,489 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * Nuvoton NCT6694 GPIO controller driver based on USB interface.
-> > > > + *
-> > > > + * Copyright (C) 2024 Nuvoton Technology Corp.
-> > > > + */
-> > > > +
-> > > > +#include <linux/gpio.h>
-> > >
-> > > Don't include this header. It's documented as obsolete.
-> >
-> > [Ming] Okay! I'll drop it in the next patch.
-> >
-> > >
-> > > > +#include <linux/gpio/driver.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/interrupt.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +#include <linux/mfd/core.h>
-> > > > +#include <linux/mfd/nct6694.h>
-> > > > +
-> > >
-> > > You only use it once, drop it.
-> >
-> > [Ming] That line is blank, did you mean #include <linux/gpio.h>?
-> >
-> > >
-> > > > +#define DRVNAME "nct6694-gpio"
+> > +config NCT6694_WATCHDOG
+> > +     tristate "Nuvoton NCT6694 watchdog support"
+> > +     depends on MFD_NCT6694
+> > +     select WATCHDOG_CORE
+> > +     help
+> > +     If you say yes to this option, support will be included for Nuvot=
+on
+> > +     NCT6694, a USB device to watchdog timer.
+> > +
+> > +     This driver can also be built as a module. If so, the module
+> > +     will be called nct6694_wdt.
+> > +
+> >   config IMX2_WDT
+> >       tristate "IMX2+ Watchdog"
+> >       depends on ARCH_MXC || ARCH_LAYERSCAPE || COMPILE_TEST
+> > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> > index ab6f2b41e38e..453ceacd43ab 100644
+> > --- a/drivers/watchdog/Makefile
+> > +++ b/drivers/watchdog/Makefile
+> > @@ -231,6 +231,7 @@ obj-$(CONFIG_WM831X_WATCHDOG) +=3D wm831x_wdt.o
+> >   obj-$(CONFIG_WM8350_WATCHDOG) +=3D wm8350_wdt.o
+> >   obj-$(CONFIG_MAX63XX_WATCHDOG) +=3D max63xx_wdt.o
+> >   obj-$(CONFIG_MAX77620_WATCHDOG) +=3D max77620_wdt.o
+> > +obj-$(CONFIG_NCT6694_WATCHDOG)       +=3D nct6694_wdt.o
+> >   obj-$(CONFIG_ZIIRAVE_WATCHDOG) +=3D ziirave_wdt.o
+> >   obj-$(CONFIG_SOFT_WATCHDOG) +=3D softdog.o
+> >   obj-$(CONFIG_MENF21BMC_WATCHDOG) +=3D menf21bmc_wdt.o
+> > diff --git a/drivers/watchdog/nct6694_wdt.c b/drivers/watchdog/nct6694_=
+wdt.c
+> > new file mode 100644
+> > index 000000000000..68e2926ec504
+> > --- /dev/null
+> > +++ b/drivers/watchdog/nct6694_wdt.c
+> > @@ -0,0 +1,329 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Nuvoton NCT6694 WDT driver based on USB interface.
+> > + *
+> > + * Copyright (C) 2024 Nuvoton Technology Corp.
+> > + */
+> > +
+> > +#include <linux/watchdog.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mfd/core.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/mfd/nct6694.h>
+> > +
+> > +#define DRVNAME "nct6694-wdt"
+> > +
+> > +#define WATCHDOG_TIMEOUT     10
+> > +#define WATCHDOG_PRETIMEOUT  0
+> > +
+> > +/* Host interface */
+> > +#define REQUEST_WDT_MOD              0x07
+> > +
+> > +/* Message Channel*/
+> > +/* Command 00h */
+> > +#define REQUEST_WDT_CMD0_LEN 0x0F
+> > +#define REQUEST_WDT_CMD0_OFFSET(idx) (idx ? 0x0100 : 0x0000) /* OFFSET=
+ =3D SEL|CMD */
+> > +#define WDT_PRETIMEOUT_IDX   0x00
+> > +#define WDT_PRETIMEOUT_LEN   0x04    /* PRETIMEOUT(3byte) | ACT(1byte)=
+ */
+> > +#define WDT_TIMEOUT_IDX              0x04
+> > +#define WDT_TIMEOUT_LEN              0x04    /* TIMEOUT(3byte) | ACT(1=
+byte) */
+> > +#define WDT_COUNTDOWN_IDX    0x0C
+> > +#define WDT_COUNTDOWN_LEN    0x03
+> > +
+> > +#define WDT_PRETIMEOUT_ACT   BIT(1)
+> > +#define WDT_TIMEOUT_ACT              BIT(1)
+> > +
+> > +/* Command 01h */
+> > +#define REQUEST_WDT_CMD1_LEN         0x04
+> > +#define REQUEST_WDT_CMD1_OFFSET(idx) (idx ? 0x0101 : 0x0001) /* OFFSET=
+ =3D SEL|CMD */
+> > +#define WDT_CMD_IDX                  0x00
+> > +#define WDT_CMD_LEN                  0x04
+> > +
+> > +static unsigned int timeout;
+> > +module_param(timeout, int, 0);
+> > +MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds");
+> > +
+> > +static unsigned int pretimeout;
+> > +module_param(pretimeout, int, 0);
+> > +MODULE_PARM_DESC(pretimeout, "Watchdog pre-timeout in seconds");
+> > +
+> > +static bool nowayout =3D WATCHDOG_NOWAYOUT;
+> > +module_param(nowayout, bool, 0);
+> > +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (d=
+efault=3D"
+> > +                        __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> > +
+> > +struct nct6694_wdt_data {
+> > +     struct nct6694 *nct6694;
+> > +     struct watchdog_device wdev;
+> > +     unsigned int wdev_idx;
+> > +};
+> > +
+> > +static inline void set_buf32(void *buf, u32 u32_val)
+> > +{
+> > +     u8 *p =3D (u8 *)buf;
+> > +
+> > +     p[0] =3D u32_val & 0xFF;
+> > +     p[1] =3D (u32_val >> 8) & 0xFF;
+> > +     p[2] =3D (u32_val >> 16) & 0xFF;
+> > +     p[3] =3D (u32_val >> 24) & 0xFF;
+> > +}
+> > +
+> > +static int nct6694_wdt_start(struct watchdog_device *wdev)
+> > +{
+> > +     struct nct6694_wdt_data *data =3D watchdog_get_drvdata(wdev);
+> > +
+> > +     pr_debug("%s: WDT(%d) Start\n", __func__, data->wdev_idx);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int nct6694_wdt_stop(struct watchdog_device *wdev)
+> > +{
+> > +     struct nct6694_wdt_data *data =3D watchdog_get_drvdata(wdev);
+> > +     struct nct6694 *nct6694 =3D data->nct6694;
+> > +     unsigned char buf[REQUEST_WDT_CMD1_LEN] =3D {'W', 'D', 'T', 'C'};
+> > +     int ret;
+> > +
+> > +     pr_debug("%s: WDT(%d) Close\n", __func__, data->wdev_idx);
+> > +     ret =3D nct6694_write_msg(nct6694, REQUEST_WDT_MOD,
+> > +                             REQUEST_WDT_CMD1_OFFSET(data->wdev_idx),
+> > +                             REQUEST_WDT_CMD1_LEN, buf);
+> > +     if (ret)
+> > +             pr_err("%s: Failed to start WDT device!\n", __func__);
 >
-> I meant this line. Just put the driver name in the driver struct
-> definition directly.
+> Please refrain from logging noise. Besides, the message is wrong:
+> the watchdog is stopped here, not started.
 >
-> > > > +
-> > > > +/* Host interface */
-> > > > +#define REQUEST_GPIO_MOD               0xFF
-> > > > +#define REQUEST_GPIO_LEN               0x01
-> > > > +
-> > > > +/* Report Channel */
-> > > > +#define GPIO_VER_REG                   0x90
-> > > > +#define GPIO_VALID_REG                 0x110
-> > > > +#define GPI_DATA_REG                   0x120
-> > > > +#define GPO_DIR_REG                    0x170
-> > > > +#define GPO_TYPE_REG                   0x180
-> > > > +#define GPO_DATA_REG                   0x190
-> > > > +
-> > > > +#define GPI_STS_REG                    0x130
-> > > > +#define GPI_CLR_REG                    0x140
-> > > > +#define GPI_FALLING_REG                        0x150
-> > > > +#define GPI_RISING_REG                 0x160
-> > > > +
-> > >
-> > > Please use the NCT6694 prefix for these defines, otherwise it's not
-> > > clear whether they come from the driver or from GPIO core.
-> > >
-> > > []
-> >
-> > [Ming] Okay! I'll add the prefix to the defines in the next patch.
-> >
-> > >
-> > > > +
-> > > > +static const char * const nct6694_gpio_name[] =3D {
-> > > > +       "NCT6694-GPIO0",
-> > > > +       "NCT6694-GPIO1",
-> > > > +       "NCT6694-GPIO2",
-> > > > +       "NCT6694-GPIO3",
-> > > > +       "NCT6694-GPIO4",
-> > > > +       "NCT6694-GPIO5",
-> > > > +       "NCT6694-GPIO6",
-> > > > +       "NCT6694-GPIO7",
-> > > > +       "NCT6694-GPIO8",
-> > > > +       "NCT6694-GPIO9",
-> > > > +       "NCT6694-GPIOA",
-> > > > +       "NCT6694-GPIOB",
-> > > > +       "NCT6694-GPIOC",
-> > > > +       "NCT6694-GPIOD",
-> > > > +       "NCT6694-GPIOE",
-> > > > +       "NCT6694-GPIOF",
-> > > > +};
-> > >
-> > > This looks like it corresponds with the MFD cells and makes me wonder=
-:
-> > > am I getting that wrong or do you want to register 0xf GPIO chips? Or
-> > > a single GPIO chip with 0xf lines? What is the topology?
-> >
-> > [Ming] Yes, it corresponds to the MFD cells.
-> > I would like to register 16 GPIO chips, each with 8 lines.
-> > The chip has 128 pins totally, the core can check if the pin is valid t=
-hrough
-> > the init_valid_mask() callback.
-> >
->
-> Ok, that's fine but the GPIO chip names should be in the MFD driver
-> only, it doesn't make sense to have them here. It's the MFD core that
-> will register the GPIO platform devices.
+> Also, all messages should use dev_, not pr_ functions.
 
-I understand. I will remove it.
+[Ming] Okay! I will change it.
 
 >
-> No for line names - as this is a dynamic USB expander, I'd suggest to
-> have them in the driver and assign to gc->names.
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int nct6694_wdt_ping(struct watchdog_device *wdev)
+> > +{
+> > +     struct nct6694_wdt_data *data =3D watchdog_get_drvdata(wdev);
+> > +     struct nct6694 *nct6694 =3D data->nct6694;
+> > +     unsigned char buf[REQUEST_WDT_CMD1_LEN] =3D {'W', 'D', 'T', 'S'};
+> > +     int ret;
+> > +
+> > +     pr_debug("%s: WDT(%d) Ping\n", __func__, data->wdev_idx);
+> > +     ret =3D nct6694_write_msg(nct6694, REQUEST_WDT_MOD,
+> > +                             REQUEST_WDT_CMD1_OFFSET(data->wdev_idx),
+> > +                             REQUEST_WDT_CMD1_LEN, buf);
+> > +     if (ret)
+> > +             pr_err("%s: Failed to ping WDT device!\n", __func__);
+>
+> Same as above and everywhere else.
+>
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int nct6694_wdt_set_timeout(struct watchdog_device *wdev,
+> > +                                unsigned int timeout)
+> > +{
+> > +     struct nct6694_wdt_data *data =3D watchdog_get_drvdata(wdev);
+> > +     struct nct6694 *nct6694 =3D data->nct6694;
+> > +     unsigned int timeout_fmt, pretimeout_fmt;
+> > +     unsigned char buf[REQUEST_WDT_CMD0_LEN];
+> > +     int ret;
+> > +
+> > +     if (timeout < wdev->pretimeout) {
+> > +             pr_err("%s: 'timeout' must be greater than 'pre timeout'!=
+\n",
+> > +                    __func__);
+> > +             return -EINVAL;
+>
+> the driver is supposed to adjust pretimeout in this case. And please,
+> again, refrain from logging noise.
 
-Could I create an array to map each of the GPIO pins?
+[Ming] Excuse me, is any recommendation about pretimeout value?
+
+> > +     }
+> > +
+> > +     timeout_fmt =3D timeout * 1000 | (WDT_TIMEOUT_ACT << 24);
+> > +     pretimeout_fmt =3D wdev->pretimeout * 1000 | (WDT_PRETIMEOUT_ACT =
+<< 24);
+> > +     set_buf32(&buf[WDT_TIMEOUT_IDX], le32_to_cpu(timeout_fmt));
+> > +     set_buf32(&buf[WDT_PRETIMEOUT_IDX], le32_to_cpu(pretimeout_fmt));
+> > +
+> > +     ret =3D nct6694_write_msg(nct6694, REQUEST_WDT_MOD,
+> > +                             REQUEST_WDT_CMD0_OFFSET(data->wdev_idx),
+> > +                             REQUEST_WDT_CMD0_LEN, buf);
+> > +     if (ret) {
+> > +             pr_err("%s: Don't write the setup command in Start stage!=
+\n",
+> > +                    __func__);
+> > +             return ret;
+> > +     }
+> > +
+> > +     wdev->timeout =3D timeout;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int nct6694_wdt_set_pretimeout(struct watchdog_device *wdev,
+> > +                                   unsigned int pretimeout)
+> > +{
+> > +     struct nct6694_wdt_data *data =3D watchdog_get_drvdata(wdev);
+> > +     struct nct6694 *nct6694 =3D data->nct6694;
+> > +     unsigned int timeout_fmt, pretimeout_fmt;
+> > +     unsigned char buf[REQUEST_WDT_CMD0_LEN];
+> > +     int ret;
+> > +
+> > +     if (pretimeout > wdev->timeout) {
+> > +             pr_err("%s: 'pre timeout' must be less than 'timeout'!\n"=
+,
+> > +                    __func__);
+> > +             return -EINVAL;
+>
+> Already checked by the watchdog core.
+
+[Ming] I understand. I will remove it.
 
 >
-> > >
-> > > > +
-> > > > +static int nct6694_gpio_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +       const struct mfd_cell *cell =3D mfd_get_cell(pdev);
-> > > > +       struct nct6694 *nct6694 =3D dev_get_drvdata(pdev->dev.paren=
-t);
-> > > > +       struct nct6694_gpio_data *data;
-> > > > +       struct gpio_irq_chip *girq;
-> > > > +       int ret;
-> > > > +
-> > > > +       data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL=
-);
-> > > > +       if (!data)
-> > > > +               return -ENOMEM;
-> > > > +
-> > > > +       data->nct6694 =3D nct6694;
-> > > > +       data->group =3D cell->id;
-> > > > +
-> > > > +       data->gpio.label                =3D nct6694_gpio_name[cell-=
->id];
-> > > > +       data->gpio.direction_input      =3D nct6694_direction_input=
+> > +     }
+> > +     timeout_fmt =3D wdev->timeout * 1000 | (WDT_TIMEOUT_ACT << 24);
+> > +     pretimeout_fmt =3D pretimeout * 1000 | (WDT_PRETIMEOUT_ACT << 24)=
 ;
-> > > > +       data->gpio.get                  =3D nct6694_get_value;
-> > > > +       data->gpio.direction_output     =3D nct6694_direction_outpu=
-t;
-> > > > +       data->gpio.set                  =3D nct6694_set_value;
-> > > > +       data->gpio.get_direction        =3D nct6694_get_direction;
-> > > > +       data->gpio.set_config           =3D nct6694_set_config;
-> > > > +       data->gpio.init_valid_mask      =3D nct6694_init_valid_mask=
-;
-> > > > +       data->gpio.base                 =3D -1;
-> > > > +       data->gpio.can_sleep            =3D false;
-> > > > +       data->gpio.owner                =3D THIS_MODULE;
-> > > > +       data->gpio.ngpio                =3D 8;
-> > > > +
-> > > > +       INIT_WORK(&data->irq_work, nct6694_irq);
-> > > > +       INIT_WORK(&data->irq_trig_work, nct6694_irq_trig);
-> > > > +       mutex_init(&data->irq_lock);
-> > > > +
-> > > > +       ret =3D nct6694_register_handler(nct6694, GPIO_IRQ_STATUS,
-> > > > +                                      nct6694_gpio_handler, data);
-> > > > +       if (ret) {
-> > > > +               dev_err(&pdev->dev, "%s:  Failed to register handle=
-r: %pe\n",
-> > > > +                       __func__, ERR_PTR(ret));
-> > > > +               return ret;
-> > > > +       }
-> > > > +
-> > > > +       platform_set_drvdata(pdev, data);
-> > > > +
-> > > > +       ret =3D nct6694_get_irq_trig(data);
-> > > > +       if (ret)
-> > > > +               return ret;
-> > > > +
-> > > > +       /* Register gpio chip to GPIO framework */
-> > > > +       girq =3D &data->gpio.irq;
-> > > > +       gpio_irq_chip_set_chip(girq, &nct6694_irq_chip);
-> > > > +       girq->parent_handler =3D NULL;
-> > > > +       girq->num_parents =3D 0;
-> > > > +       girq->parents =3D NULL;
-> > > > +       girq->default_type =3D IRQ_TYPE_NONE;
-> > > > +       girq->handler =3D handle_level_irq;
-> > > > +       girq->threaded =3D true;
-> > > > +
-> > > > +       ret =3D gpiochip_add_data(&data->gpio, data);
-> > > > +       if (ret) {
-> > > > +               dev_err(&pdev->dev, "%s: Failed to register GPIO ch=
-ip: %pe",
-> > > > +                       __func__, ERR_PTR(ret));
-> > > > +               return ret;
-> > > > +       }
-> > > > +
-> > > > +       return 0;
-> > > > +}
-> > > > +
-> > > > +static void nct6694_gpio_remove(struct platform_device *pdev)
-> > > > +{
-> > > > +       struct nct6694_gpio_data *data =3D platform_get_drvdata(pde=
-v);
-> > > > +
-> > > > +       gpiochip_remove(&data->gpio);
-> > >
-> > > This should be dropped in favor of using devm_gpiochip_add_data().
-> > > Especially since you probably want to cancel the irq_work before
-> > > removing the chip.
-> >
-> > [Ming] Okay! I'll change it in the next patch.
-> >
-> > >
-> > > > +       cancel_work(&data->irq_work);
-> > > > +       cancel_work(&data->irq_trig_work);
-> > > > +}
-> > > > +
-> > > > +static struct platform_driver nct6694_gpio_driver =3D {
-> > > > +       .driver =3D {
-> > > > +               .name   =3D DRVNAME,
-> > > > +       },
-> > > > +       .probe          =3D nct6694_gpio_probe,
-> > > > +       .remove         =3D nct6694_gpio_remove,
-> > > > +};
-> > > > +
-> > > > +static int __init nct6694_init(void)
-> > > > +{
-> > > > +       int err;
-> > > > +
-> > > > +       err =3D platform_driver_register(&nct6694_gpio_driver);
-> > > > +       if (!err) {
-> > > > +               if (err)
-> > >
-> > > If err is equal to 0, check if it's not equal to zero?
-> > >
-> > > > +                       platform_driver_unregister(&nct6694_gpio_dr=
-iver);
-> > >
-> > > If platform_driver_register() failed, then the device was never regis=
-tered.
-> > >
-> > > > +       }
-> > > > +
-> > > > +       return err;
-> > > > +}
-> > > > +subsys_initcall(nct6694_init);
-> > >
-> > > Any reason why this must be initialized earlier? It's a USB driver af=
-ter all.
-> >
-> > [Ming] For platform driver registration, I'll change it to
-> > module_platform_driver()
-> > in the next patch.
-> >
+> > +     set_buf32(&buf[WDT_TIMEOUT_IDX], le32_to_cpu(timeout_fmt));
+> > +     set_buf32(&buf[WDT_PRETIMEOUT_IDX], le32_to_cpu(pretimeout_fmt));
+> > +
+> > +     ret =3D nct6694_write_msg(nct6694, REQUEST_WDT_MOD,
+> > +                             REQUEST_WDT_CMD0_OFFSET(data->wdev_idx),
+> > +                             REQUEST_WDT_CMD0_LEN, buf);
+> > +     if (ret) {
+> > +             pr_err("%s: Don't write the setup command in Start stage!=
+\n", __func__);
 >
-> Thanks,
-> Bartosz
+> Besides it being noise, I don't even understand what this message is
+> supposed to mean, and neither would anyone else.
 >
-> > >
-> > > > +
-> > > > +static void __exit nct6694_exit(void)
-> > > > +{
-> > > > +       platform_driver_unregister(&nct6694_gpio_driver);
-> > > > +}
-> > > > +module_exit(nct6694_exit);
-> > > > +
-> > > > +MODULE_DESCRIPTION("USB-GPIO controller driver for NCT6694");
-> > > > +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
-> > > > +MODULE_LICENSE("GPL");
-> > > > --
-> > > > 2.34.1
-> > > >
-> > >
-> > > Bart
+> > +             return ret;
+> > +     }
+> > +
+> > +     wdev->pretimeout =3D pretimeout;
+> > +     return 0;
+> > +}
+> > +
+> > +static unsigned int nct6694_wdt_get_time(struct watchdog_device *wdev)
+> > +{
+> > +     struct nct6694_wdt_data *data =3D watchdog_get_drvdata(wdev);
+> > +     struct nct6694 *nct6694 =3D data->nct6694;
+> > +     unsigned char buf[WDT_COUNTDOWN_LEN];
+> > +     unsigned int timeleft_ms;
+> > +     int ret;
+> > +
+> > +     ret =3D nct6694_read_msg(nct6694, REQUEST_WDT_MOD,
+> > +                            REQUEST_WDT_CMD0_OFFSET(data->wdev_idx),
+> > +                            REQUEST_WDT_CMD0_LEN, WDT_COUNTDOWN_IDX,
+> > +                            WDT_COUNTDOWN_LEN, buf);
+> > +     if (ret)
+> > +             pr_err("%s: Failed to get WDT device!\n", __func__);
+> > +
+> > +     timeleft_ms =3D ((buf[2] << 16) | (buf[1] << 8) | buf[0]) & 0xFFF=
+FFF;
+>
+> If the above command failed this will be a random number.
+
+[Ming] Okay! I will update error handling about return value.
+
+>
+> > +
+> > +     return timeleft_ms / 1000;
+> > +}
+> > +
+> > +static int nct6694_wdt_setup(struct watchdog_device *wdev)
+> > +{
+> > +     struct nct6694_wdt_data *data =3D watchdog_get_drvdata(wdev);
+> > +     struct nct6694 *nct6694 =3D data->nct6694;
+> > +     unsigned char buf[REQUEST_WDT_CMD0_LEN] =3D {0};
+> > +     unsigned int timeout_fmt, pretimeout_fmt;
+> > +     int ret;
+> > +
+> > +     if (timeout)
+> > +             wdev->timeout =3D timeout;
+> > +
+> Already set.
+>
+> > +     if (pretimeout) {
+> > +             wdev->pretimeout =3D pretimeout;
+>
+> Pretimeout is already set in the probe function. Do it completely there.
+>
+> > +             pretimeout_fmt =3D wdev->pretimeout * 1000 | (WDT_PRETIME=
+OUT_ACT << 24);
+> > +     } else {
+> > +             pretimeout_fmt =3D 0;
+> > +     }
+> > +
+> > +     timeout_fmt =3D wdev->timeout * 1000 | (WDT_TIMEOUT_ACT << 24);
+> > +     set_buf32(&buf[WDT_TIMEOUT_IDX], le32_to_cpu(timeout_fmt));
+> > +     set_buf32(&buf[WDT_PRETIMEOUT_IDX], le32_to_cpu(pretimeout_fmt));
+> > +
+> > +     ret =3D nct6694_write_msg(nct6694, REQUEST_WDT_MOD,
+> > +                             REQUEST_WDT_CMD0_OFFSET(data->wdev_idx),
+> > +                             REQUEST_WDT_CMD0_LEN, buf);
+>
+>
+> This seems pretty pointless at this time. Why not do it in the watchdog
+> start function ?
+
+[Ming] Yes, I will remove it and do it in the start callback in the next pa=
+tch.
+
+>
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     pr_info("Setting WDT(%d): timeout =3D %d, pretimeout =3D %d\n",
+> > +             data->wdev_idx, wdev->timeout, wdev->pretimeout);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct watchdog_info nct6694_wdt_info =3D {
+> > +     .options =3D WDIOF_SETTIMEOUT     |
+> > +                WDIOF_KEEPALIVEPING  |
+> > +                WDIOF_MAGICCLOSE     |
+> > +                WDIOF_PRETIMEOUT,
+> > +     .identity =3D DRVNAME,
+> > +};
+> > +
+> > +static const struct watchdog_ops nct6694_wdt_ops =3D {
+> > +     .owner =3D THIS_MODULE,
+> > +     .start =3D nct6694_wdt_start,
+> > +     .stop =3D nct6694_wdt_stop,
+> > +     .set_timeout =3D nct6694_wdt_set_timeout,
+> > +     .set_pretimeout =3D nct6694_wdt_set_pretimeout,
+> > +     .get_timeleft =3D nct6694_wdt_get_time,
+> > +     .ping =3D nct6694_wdt_ping,
+> > +};
+> > +
+> > +static int nct6694_wdt_probe(struct platform_device *pdev)
+> > +{
+> > +     const struct mfd_cell *cell =3D mfd_get_cell(pdev);
+> > +     struct nct6694 *nct6694 =3D dev_get_drvdata(pdev->dev.parent);
+> > +     struct nct6694_wdt_data *data;
+> > +     struct watchdog_device *wdev;
+> > +     int ret;
+> > +
+> > +     data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> > +     if (!data)
+> > +             return -ENOMEM;
+> > +
+> > +     data->nct6694 =3D nct6694;
+> > +     data->wdev_idx =3D cell->id;
+> > +
+> > +     wdev =3D &data->wdev;
+> > +     wdev->info =3D &nct6694_wdt_info;
+> > +     wdev->ops =3D &nct6694_wdt_ops;
+> > +     wdev->timeout =3D WATCHDOG_TIMEOUT;
+> > +     wdev->pretimeout =3D WATCHDOG_PRETIMEOUT;
+> > +     wdev->min_timeout =3D 1;
+> > +     wdev->max_timeout =3D 255;
+> > +
+> > +     platform_set_drvdata(pdev, data);
+> > +
+> > +     /* Register watchdog timer device to WDT framework */
+> > +     watchdog_set_drvdata(&data->wdev, data);
+> > +     watchdog_init_timeout(&data->wdev, timeout, &pdev->dev);
+> > +     watchdog_set_nowayout(&data->wdev, nowayout);
+> > +     watchdog_stop_on_reboot(&data->wdev);
+> > +
+> > +     ret =3D devm_watchdog_register_device(&pdev->dev, &data->wdev);
+> > +     if (ret) {
+> > +             dev_err(&pdev->dev, "%s: Failed to register watchdog devi=
+ce: %d\n",
+> > +                     __func__, ret);
+> > +             return ret;
+> > +     }
+> > +
+> > +     ret =3D nct6694_wdt_setup(&data->wdev);
+>
+> This is too late. It needs to be done before registering the watchdog.
+>
+> > +     if (ret) {
+> > +             dev_err(&pdev->dev, "Failed to setup WDT device!\n");
+> > +             return ret;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static struct platform_driver nct6694_wdt_driver =3D {
+> > +     .driver =3D {
+> > +             .name   =3D DRVNAME,
+> > +     },
+> > +     .probe          =3D nct6694_wdt_probe,
+> > +};
+> > +
+> > +static int __init nct6694_init(void)
+> > +{
+> > +     int err;
+> > +
+> > +     err =3D platform_driver_register(&nct6694_wdt_driver);
+> > +     if (!err) {
+> > +             if (err)
+> > +                     platform_driver_unregister(&nct6694_wdt_driver);
+> > +     }
+> > +
+> > +     return err;
+> > +}
+> > +subsys_initcall(nct6694_init);
+> > +
+> > +static void __exit nct6694_exit(void)
+> > +{
+> > +     platform_driver_unregister(&nct6694_wdt_driver);
+> > +}
+> > +module_exit(nct6694_exit);
+> > +
+> > +MODULE_DESCRIPTION("USB-WDT driver for NCT6694");
+> > +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
+> > +MODULE_LICENSE("GPL");
+>
 
 Best regards,
 Ming
