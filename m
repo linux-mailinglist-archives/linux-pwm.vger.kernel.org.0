@@ -1,90 +1,92 @@
-Return-Path: <linux-pwm+bounces-3929-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3930-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19B199B296D
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Oct 2024 09:00:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FDEF9B2982
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Oct 2024 09:01:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3DE6F1C21A2F
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Oct 2024 08:00:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55C5F2820C6
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Oct 2024 08:01:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 038821CC887;
-	Mon, 28 Oct 2024 07:37:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 887851DC1AF;
+	Mon, 28 Oct 2024 07:42:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BivVRDzN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KMQckb+5"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5B718D65C;
-	Mon, 28 Oct 2024 07:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8A11DBB1D;
+	Mon, 28 Oct 2024 07:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730101077; cv=none; b=VVFgGXbRX00uh7+/rvwUhA+uPYIUqKVYRgrVT9OlICvUPQQDWY3VAp7fEYlOKigJUOqXHZGy9C7o4VcYuruZ/BJwS5C+jnqiXTRmKBdWmIEs0Nx2tRjtBozknIvwhMtp+kZQ16hJb/T7DOscsNpTyCo3J3gEh61tGBgC7lr+lG0=
+	t=1730101365; cv=none; b=uEIzJotUBfb7C/BLwZeT7s/NGVDaVldxUx0nVxdbWWzOZKNgOHs3mvH8k4PomgWB9UrFL07+QNXYwFao66/dz0zBxsX4sgloFkE5thwJXEao86lFxAHjHMshRGppgHKKFVlPSGSxKmRn45bC2AYvnG53G9umgDHvgokhNPyVhPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730101077; c=relaxed/simple;
-	bh=ruN/420z3b1wnjd87sOahr4zGIjT2Cu7n4sM8yuT54o=;
+	s=arc-20240116; t=1730101365; c=relaxed/simple;
+	bh=JXKFC5VpBEHlPtIfVygRx6UJGuI4jfPDIOIO3j1t/UI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h6I52EEXPandAK0fUi9PU2/DQHDAA+0SHSw+JsZ6x99hPRtDKwKAVPQ9duBerPLk39X1BqITU6VjqIux3hk7MM8MWSKPaIP+tckR67dokgK+82qMJTKvVGf2fucc2nJYZyxxJVfGAn7aoLqA2j7sJcBmz4kVv4U39lwHB61zOAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BivVRDzN; arc=none smtp.client-ip=209.85.219.178
+	 To:Cc:Content-Type; b=MPC4bpXeNC3JaKQ4k0lXMjANUl0jl/g8eMGo/IzI+1cJtSBgYUVz/thFu9pulK2r+4lOe0jGf3g/K3pDTi+c6RkHbDLMdeLo061v7ZMu1r2WZYLPA5mMyVke8hgHKBnRyt4x+v4xKNmhB05Wy5ja1PsnqmDOV4JZoubJUVXWuEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KMQckb+5; arc=none smtp.client-ip=209.85.219.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e291f1d659aso4298171276.3;
-        Mon, 28 Oct 2024 00:37:55 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e2bdbdee559so4013304276.1;
+        Mon, 28 Oct 2024 00:42:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730101074; x=1730705874; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1730101362; x=1730706162; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T4OkPaMxm04jm0KOnFQqAtcSUWoQDpVpB5veezAdtVU=;
-        b=BivVRDzNX1McrUUMZNQDvbkgQeRBNdmUgJ7Er0oYBcn9K34avvLD3oEaGgUaTbHx1x
-         /8G4LgRE0gAcGa9EBdHu7LYp8fYU2VtZR8hDry0wgw5tBlU+fLgHCkGzo+I1nZaMhDKP
-         xj96jtREsOkDk6pw33A2n6k3OF20801wk9fHbSa1M48YyjbfhOG1zqphgV+Lfk5hgZzP
-         lozXBve/iOC6BPywWJa7cfps76y1FfZg2qqojGtpg/CtY++r8GgBO/nI+9b5ArcckHlz
-         YbKLL1NssxziTqoTPv05RBM4za0+YdImTmR2b8fg/jGy0R/fSnAbZWbcGYRzvBLEgFYS
-         YK+A==
+        bh=VfSo/759X3OS9N787muqObE8V5tHxeovvU61U0ecmlE=;
+        b=KMQckb+5T6gK2NSrN17OK8Xcm6Qj4tgxaLsZqEBhC2DtYsOcS52bpqDzxX71pMAOOg
+         4Sz1sEECWyIslcTdkkgaNPmpCb00fAR1Ur7zZxjYhpr8wtphrbUuCMzO4TX+eUWufDLx
+         b1Buy6GKmpuXuI4gP9BNRD18blCWwipi8BiWw9qcoIJypThNw8AeGqTyALrLfabQcrN6
+         SlxapW3jmEqeAv/CqcK0cQMqFAQ6IDl/Uc4Tbe1rCYUdVAWKB9QC04vn74GEfQl6JT6G
+         Lfyl3nmfzanlCpQaq+SkuSTr/VY+r6J2O2pV0gIJL4hTNJ+6kMFI+6CoqUp8GyEj7ysQ
+         NsFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730101074; x=1730705874;
+        d=1e100.net; s=20230601; t=1730101362; x=1730706162;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=T4OkPaMxm04jm0KOnFQqAtcSUWoQDpVpB5veezAdtVU=;
-        b=uh6cpaZNKMz5/KF9tJ5/ATNWWY/QDHHhbxBN9stUB6IjNp0OVSCG6Gc2zsOX6pYjqi
-         5wc4xbmXyf30BeLm4h1qxRDNFMzpB/dX8KDGSlC61YqJHk9bRFiBXEGmF3eXhoTVw3yv
-         pjE4C9CJQRgMJpj5Ig1XSzrg/1NivZz6nz7K+bpcK2dWDQUVQwBMQqgh23nqWNQSpsDP
-         TtL5ikp5S+BCzcUtsd3znovKIUduuz9RN/hOsOMzOfpnTEuZgWpcYz870PEDX1qcdpzU
-         Zd8M+UuqKGErFRMtgrYvTL/jcUQmB1m7jN1xcIPqkh3FlNkXoXM5u3cISDsTOLlXdxD8
-         byWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUljvM14dO1itmfJszN/sOeY+0e34uKIfZjJ9MbSC7TPUqmxxqSKRo08FYE5IGHctciC+2r9q3gI4gv@vger.kernel.org, AJvYcCVG6e0p79tRhvcXkuVmr8o0VEqgGfN7vcCFFvr47dN0mQatGsObvo5ov0H/ip6VloHJfKAgn1F8NGmS@vger.kernel.org, AJvYcCVXbbsJh7SQ2caUhrFTPmu6PyyZQScIlrnhRumE8dHKGhBFYL8cQmi+DTfmv0r/a9IWDoxVKsM868y9nO8=@vger.kernel.org, AJvYcCVzXb7mwTmcDxRURyuKKLdFlP40K0IiBbRudcNgXIpd6eW3AfxNKyX0hAU35xDdabIj8AnznA1ghMpxWA==@vger.kernel.org, AJvYcCW6IivjeyKsnbZjg5mYG02IqsEIsUP15IHFAWGN3lDJdkGEJUUfkyzLvSpsDnb1FNbLF+ViMUyujKFX@vger.kernel.org, AJvYcCWFebGigia/lNUgzXHGtem6QABgZ3tLkCzJEJT20ZSC3n9c8dHcDRjpP3KGPqm5CRM9gqyloYteLBS+gmfP@vger.kernel.org, AJvYcCWOvSTUGInAH0KGE5GrRTT+fmVosyJmbEqMNwJ3cgXMUE4ckJen/wcPZvsYx0UUqqPzBAq8JlfdWQQuV//Y4/A=@vger.kernel.org, AJvYcCWcZsd6eN5X9BO65+CYasRM91Rb+Xgslrbo/Ed/lyhUx8tL7cyoJkL2ag7NgXZW8Wy/eG7iRLPH@vger.kernel.org, AJvYcCXFXVoTvsv9vvKj2TmNehY0ox+V2Abcp2TjaWI8qfBvotHovQK9lXjIW3523+sNOUA+VRE4w3u8Bq6k@vger.kernel.org, AJvYcCXVY2TLucS0HAPY2MbdqUxHn18OkgxV
- +NLpPyiS2wF2LzRHBFlm3x2uAv0HKrU8/FwClePOqN/XAxc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcNq5J9z0J/q4y+iTp6aEm3V5ykakSt5lS19PV8OmzQxpoiv2J
-	IulPNWLOgopUfw9dYZej9P7/IPvgqumCp7tGutGlaJ3c9O5+BIGX9BO9Scq2K7ncc/hdI5p/528
-	bfLLsRGF76F1qX4b5MK1751mN/SA=
-X-Google-Smtp-Source: AGHT+IGG+sd5a6ZlflR/T5AMoo/rzP+HitP78/Q4CSUrJPoB5Q5bvXhaiPu1tpstJAYSFe9TTkXVw2vwpAQ+t7rdQnI=
-X-Received: by 2002:a05:6902:2b87:b0:e30:835e:947f with SMTP id
- 3f1490d57ef6-e3087c2253bmr4781623276.56.1730101074385; Mon, 28 Oct 2024
- 00:37:54 -0700 (PDT)
+        bh=VfSo/759X3OS9N787muqObE8V5tHxeovvU61U0ecmlE=;
+        b=ssFxPa5qD9uq/hkVwONu1DUzuMaEjygNOcudiGDAoSjKpq1Dt6xlyXrlwJabveIUfC
+         Wzjswe2S+TPOxNdGbxNz8b6BBXAQqQ7+kLfMd19ooC0cB991Sk4vbk+TQSSupMGEvSlN
+         MwQvBjoZJD0TlsacUsnbwaa4nLPrip1Jk8z+9TtOBxAsoIDPUQHSwGHFALo2T2wwPjcx
+         WM/QpKGFwQ97yY1QMJhLG1GJQuxL4tUvtuYHL94MEjCfca2RgbmPOjIRJAICXLemtqmw
+         ULk7tOx2rn0yPCPX3gI9RH1hm3EldmvMdLn55zbtEDs/hd40Glpn8mcjNO4rMQBoWMM5
+         SDFA==
+X-Forwarded-Encrypted: i=1; AJvYcCU5VySnwaZk0UH+8rwIwzZwOxX3MpvSA/wB4xCgEEDmLMq+hMZk8H3SR+pJNl/PJYyl6JeUYMYk1/iLCn4zlrA=@vger.kernel.org, AJvYcCUNlLwLlOzJLMFftHDNmKY0YkBdLEM6dOuOyJ0EkkNP4IWCwKEgQynZ49Mpavmf3FELCC++BWFpLtnnmYW4@vger.kernel.org, AJvYcCUZRMLqTqR2K3Bkhaneg3fxcibV6oZrC43kWR7Q9cBoMWGyBKMXfw6E7ezTITQIXNYqXHxMws3pXI+xkm8=@vger.kernel.org, AJvYcCUud7YTywR2UfyJ8rmdPcGSm2zbd8s0cA0tRL3K9RVgGhlMZvZtPktcw49OWZ089MG8FyfMr1Sa@vger.kernel.org, AJvYcCUwFZoubqJHO65zruExH4E16s1yriVYNPut8js34NhPeYo5OmyWzYaf0JpqQj+A7hURI0IlEMVr/krD@vger.kernel.org, AJvYcCVG3NvXhj9tyxd45MjRiuamZAcsx3KZwQhyQvWCnv0Hb0QG0xU8waXC82IHKrOxHDu83c5BaFIEnqI=@vger.kernel.org, AJvYcCVLlnGkX6tc64QONhAHSCXK5JmHXHbSw98HcDg2a3JxBnxiTJ1yVBqxnjRwhwbIUMe/iUphsPPodRsR@vger.kernel.org, AJvYcCVeLpdHLOVyR/jkQnnVolYJXJJE2d1054dykJwKQQ5R1Iv8alQJo328bPYgWPi1mVJ1VbplSdLHqvVnmA==@vger.kernel.org, AJvYcCWzQmEsks6gGXeEBN3/xrNYin0mT2C2JmxUYLu1DJo6CAnUVK0L0dC4e6l5UeWkwMFu7oDsbK2P+5Fz@vger.kernel.org, AJvYcCXbKqO0Nj5w5SbEMTnI+WcQvEMpQFgV
+ GlPYFBS0N/B9fuoys5bKe/fiLoKaic69WNIiRb9miyPo5C/F@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGK6k9K8KaaZ2bs445ksmiQSY2km5+SKM9K3DeoTyb74Qqm3OV
+	t82PA10igC8c3nezB25h98gg9d76ThKfi9vHdODT/Drn31vJHYjYaDEfJQXOzk2ueq7wTLrCW5O
+	p7EdoWfxlqkvxRtsA9HrblkiHDt4=
+X-Google-Smtp-Source: AGHT+IE7sSyqDVHOJ/jdGq64MHZ+33bDq+P02VTEX3r+LWDoPL8/lqvTrSpBYuxjao1IdyrL/sL8NYhH1E5VS7+KILg=
+X-Received: by 2002:a25:2611:0:b0:e2b:ade5:b925 with SMTP id
+ 3f1490d57ef6-e3087becb3amr4891484276.43.1730101362407; Mon, 28 Oct 2024
+ 00:42:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024085922.133071-2-tmyu0@nuvoton.com>
- <5d1c39c3-b686-40ce-b8af-72dfddeb68da@wanadoo.fr>
-In-Reply-To: <5d1c39c3-b686-40ce-b8af-72dfddeb68da@wanadoo.fr>
+References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024085922.133071-7-tmyu0@nuvoton.com>
+ <CAH-L+nPGGhgDFge0Ov4rX_7vUyLN8uu51cks80=kt38h22N7zQ@mail.gmail.com>
+ <62ea5a91-816f-4600-bfec-8f70798051db@roeck-us.net> <CAOoeyxX=A5o5PhxpniPwPgMCBv1VwMstt=wXCxHiGPF59gm5wQ@mail.gmail.com>
+ <817d24e1-6fdd-4ce2-9408-eccc94134559@roeck-us.net>
+In-Reply-To: <817d24e1-6fdd-4ce2-9408-eccc94134559@roeck-us.net>
 From: Ming Yu <a0282524688@gmail.com>
-Date: Mon, 28 Oct 2024 15:37:43 +0800
-Message-ID: <CAOoeyxWd5D0bZ5S3zhF87XKgVgTgWsZFFpzXU-qv2hfMx6K1Ng@mail.gmail.com>
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
-	linux@roeck-us.net, jdelvare@suse.com, jic23@kernel.org, lars@metafoo.de, 
+Date: Mon, 28 Oct 2024 15:42:31 +0800
+Message-ID: <CAOoeyxXiihVEbCri5=0xdQ2EWO=NJv2Y5a-nRLFEez391Lnmbg@mail.gmail.com>
+Subject: Re: [PATCH v1 6/9] hwmon: Add Nuvoton NCT6694 HWMON support
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>, tmyu0@nuvoton.com, lee@kernel.org, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, jdelvare@suse.com, jic23@kernel.org, lars@metafoo.de, 
 	ukleinek@kernel.org, alexandre.belloni@bootlin.com, 
 	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
 	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
@@ -94,168 +96,40 @@ Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Christophe
-
-Thank you for your comments,
-I will update the code in the next patch.
+Understood,
+Thank you.
 
 Best regards,
 Ming
 
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> =E6=96=BC 2024=E5=B9=B41=
-0=E6=9C=8826=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=8810:58=E5=AF=AB=
-=E9=81=93=EF=BC=9A
+Guenter Roeck <linux@roeck-us.net> =E6=96=BC 2024=E5=B9=B410=E6=9C=8825=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8811:44=E5=AF=AB=E9=81=93=EF=BC=
+=9A
 >
-> Le 24/10/2024 =C3=A0 10:59, Ming Yu a =C3=A9crit :
-> > The Nuvoton NCT6694 is a peripheral expander with 16 GPIO chips,
-> > 6 I2C controllers, 2 CANfd controllers, 2 Watchdog timers, ADC,
-> > PWM, and RTC.
+> On 10/25/24 08:22, Ming Yu wrote:
+> [ ... ]
+>
+> >>>> +static int nct6694_fan_write(struct device *dev, u32 attr, int chan=
+nel,
+> >>>> +                            long val)
+> >>>> +{
+> >>>> +       struct nct6694_hwmon_data *data =3D dev_get_drvdata(dev);
+> >>>> +       unsigned char enable_buf[REQUEST_HWMON_CMD0_LEN] =3D {0};
+> >>> [Kalesh] Please try to maintain RCT order for variable declaration
+> >>
+> >> Ok, but that is already the case here ?
 > >
-> > This driver implements USB device functionality and shares the
-> > chip's peripherals as a child device.
+> > [Ming] Is there anything that needs to be changed?
 > >
-> > Each child device can use the USB functions nct6694_read_msg()
-> > and nct6694_write_msg() to issue a command. They can also register
-> > a handler function that will be called when the USB device receives
-> > its interrupt pipe.
-> >
-> > Signed-off-by: Ming Yu <tmyu0-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
-> > ---
 >
-> ...
+> I don't think so, If two lines have the same length, the order is up
+> to the developer to decide.
 >
-> > +static int nct6694_usb_probe(struct usb_interface *iface,
-> > +                          const struct usb_device_id *id)
-> > +{
-> > +     struct usb_device *udev =3D interface_to_usbdev(iface);
-> > +     struct device *dev =3D &udev->dev;
-> > +     struct usb_host_interface *interface;
-> > +     struct usb_endpoint_descriptor *int_endpoint;
-> > +     struct nct6694 *nct6694;
-> > +     int pipe, maxp, bulk_pipe;
-> > +     int ret =3D EINVAL;
+> Question though is if the buffer needs to be initialized. You should drop
+> the initialization if it is not necessary. In that case the second line
+> would be shorter anyway, and the order question would not arise.
 >
-> Nitpick: no need to init
+> Thanks,
+> Guenter
 >
-> > +
-> > +     interface =3D iface->cur_altsetting;
-> > +     /* Binding interface class : 0xFF */
-> > +     if (interface->desc.bInterfaceClass !=3D USB_CLASS_VENDOR_SPEC ||
-> > +         interface->desc.bInterfaceSubClass !=3D 0x00 ||
-> > +         interface->desc.bInterfaceProtocol !=3D 0x00)
-> > +             return -ENODEV;
-> > +
-> > +     int_endpoint =3D &interface->endpoint[0].desc;
-> > +     if (!usb_endpoint_is_int_in(int_endpoint))
-> > +             return -ENODEV;
-> > +
-> > +     nct6694 =3D devm_kzalloc(&udev->dev, sizeof(*nct6694), GFP_KERNEL=
-);
-> > +     if (!nct6694)
-> > +             return -ENOMEM;
-> > +
-> > +     pipe =3D usb_rcvintpipe(udev, INT_IN_ENDPOINT);
-> > +     maxp =3D usb_maxpacket(udev, pipe);
-> > +
-> > +     nct6694->cmd_buffer =3D devm_kcalloc(dev, CMD_PACKET_SZ,
-> > +                                        sizeof(unsigned char), GFP_KER=
-NEL);
-> > +     if (!nct6694->cmd_buffer)
-> > +             return -ENOMEM;
-> > +     nct6694->rx_buffer =3D devm_kcalloc(dev, MAX_PACKET_SZ,
-> > +                                       sizeof(unsigned char), GFP_KERN=
-EL);
-> > +     if (!nct6694->rx_buffer)
-> > +             return -ENOMEM;
-> > +     nct6694->tx_buffer =3D devm_kcalloc(dev, MAX_PACKET_SZ,
-> > +                                       sizeof(unsigned char), GFP_KERN=
-EL);
-> > +     if (!nct6694->tx_buffer)
-> > +             return -ENOMEM;
-> > +     nct6694->int_buffer =3D devm_kcalloc(dev, MAX_PACKET_SZ,
-> > +                                        sizeof(unsigned char), GFP_KER=
-NEL);
-> > +     if (!nct6694->int_buffer)
-> > +             return -ENOMEM;
-> > +
-> > +     nct6694->int_in_urb =3D usb_alloc_urb(0, GFP_KERNEL);
-> > +     if (!nct6694->int_in_urb) {
-> > +             dev_err(&udev->dev, "Failed to allocate INT-in urb!\n");
-> > +             return -ENOMEM;
-> > +     }
-> > +
-> > +     /* Bulk pipe maximum packet for each transaction */
-> > +     bulk_pipe =3D usb_sndbulkpipe(udev, BULK_OUT_ENDPOINT);
-> > +     nct6694->maxp =3D usb_maxpacket(udev, bulk_pipe);
-> > +
-> > +     mutex_init(&nct6694->access_lock);
-> > +     nct6694->udev =3D udev;
-> > +     nct6694->timeout =3D URB_TIMEOUT; /* Wait until urb complete */
-> > +
-> > +     INIT_LIST_HEAD(&nct6694->handler_list);
-> > +     spin_lock_init(&nct6694->lock);
-> > +
-> > +     usb_fill_int_urb(nct6694->int_in_urb, udev, pipe,
-> > +                      nct6694->int_buffer, maxp, usb_int_callback,
-> > +                      nct6694, int_endpoint->bInterval);
-> > +     ret =3D usb_submit_urb(nct6694->int_in_urb, GFP_KERNEL);
-> > +     if (ret)
-> > +             goto err_urb;
-> > +
-> > +     dev_set_drvdata(&udev->dev, nct6694);
-> > +     usb_set_intfdata(iface, nct6694);
-> > +
-> > +     ret =3D mfd_add_hotplug_devices(&udev->dev, nct6694_dev,
-> > +                                   ARRAY_SIZE(nct6694_dev));
-> > +     if (ret) {
-> > +             dev_err(&udev->dev, "Failed to add mfd's child device\n")=
-;
-> > +             goto err_mfd;
-> > +     }
-> > +
-> > +     nct6694->async_workqueue =3D alloc_ordered_workqueue("asyn_workqu=
-eue", 0);
->
-> Missing error handling.
->
-> > +
-> > +     dev_info(&udev->dev, "Probed device: (%04X:%04X)\n",
-> > +              id->idVendor, id->idProduct);
-> > +     return 0;
-> > +
-> > +err_mfd:
-> > +     usb_kill_urb(nct6694->int_in_urb);
-> > +err_urb:
-> > +     usb_free_urb(nct6694->int_in_urb);
-> > +     return ret;
-> > +}
-> > +
-> > +static void nct6694_usb_disconnect(struct usb_interface *iface)
-> > +{
-> > +     struct usb_device *udev =3D interface_to_usbdev(iface);
-> > +     struct nct6694 *nct6694 =3D usb_get_intfdata(iface);
-> > +
-> > +     mfd_remove_devices(&udev->dev);
-> > +     flush_workqueue(nct6694->async_workqueue);
-> > +     destroy_workqueue(nct6694->async_workqueue);
-> > +     usb_set_intfdata(iface, NULL);
-> > +     usb_kill_urb(nct6694->int_in_urb);
-> > +     usb_free_urb(nct6694->int_in_urb);
-> > +}
-> > +
-> > +static const struct usb_device_id nct6694_ids[] =3D {
-> > +     { USB_DEVICE(NCT6694_VENDOR_ID, NCT6694_PRODUCT_ID)},
->
-> Nitpick: space missing before the ending }
->
-> > +     {},
->
-> Nitpick: usually, no comma is added after a {} terminator.
->
-> > +};
-> > +MODULE_DEVICE_TABLE(usb, nct6694_ids);
->
-> ...
->
-> CJ
 
