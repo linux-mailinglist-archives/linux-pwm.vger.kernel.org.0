@@ -1,235 +1,214 @@
-Return-Path: <linux-pwm+bounces-3951-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3952-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1516B9B41A8
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 05:57:20 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BC5B9B43B9
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 09:05:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD8332836CC
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 04:57:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C5676B2175B
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 08:05:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41C9B1DE4C0;
-	Tue, 29 Oct 2024 04:57:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6660D2036E6;
+	Tue, 29 Oct 2024 08:05:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4UZ7SQK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vfalQd62"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70C72FB2;
-	Tue, 29 Oct 2024 04:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC21D1854
+	for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 08:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730177836; cv=none; b=D1r4c2lFaFA2lRIdDJtchxFUbd45IEexOgfc2Iedk0JznDABfLsb8BhTvkE+887pc8JwpmiBvV54fbbLC0h8ZerApLOsIoXWzAJdcXI8GFucVIWWgyZDJgwhL04r8zUmwXUlX54A5RWQ9yrDOlVQJ1dYSjrGi1AyUmp6nA7h1VM=
+	t=1730189127; cv=none; b=GoMtLUYJoKrrXo897lMC+5qDMmqPClwDWvIj+4NHGHqJq+YW755xWD9AQjYruVBY27EDMOmwIsgJiBQXWxX+2ESe0IqlAOxxnw+TY1fr6DREjkxFWdw7+KL03+YryJS4M4jZ2TR6u3mgZheU0ygG0keLC5xWaHnNZEu8QLc84ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730177836; c=relaxed/simple;
-	bh=w3dNvlar+8hrakFCL0PJdSpSMr2MisQMbNqP8I8bRaE=;
+	s=arc-20240116; t=1730189127; c=relaxed/simple;
+	bh=Wgu4Q3YZ64aWSqvWoqqloTsZbrePlNg2P6R61VqI7S4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l2TIq5hkfHvi6AHbuBrFhGnw3wqPBf8NE25my7L256vTsPfCOLpjKuuHSyepWoHNx85LHvlQ0NXxY1OQxAn4aWHMx6l/0KQ2S5dC3si4x5H/Z6Wdg4QIscj3siCqPC8MpVaq8HdARwrJJeY5PjYKfwJtGfq8INv1A2aERny54Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T4UZ7SQK; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7b1507c42faso460393885a.0;
-        Mon, 28 Oct 2024 21:57:13 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=g9PYVXkc77Uyea1bDoXv0HT42SF6XheyfF7NgylgbMjldpLHukYrRYgu4wOTGqCzZsyVPsvSFFyOdiQMQ/B1O6K1vq4j+FmkhAsrybjllHdDlYrx8GtQGcZ7JlgGd6NhQDE1MnaS5AqIRKslBuX4ykqoMEBKywRB/mGLEPkdtCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vfalQd62; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4315f24a6bbso50118905e9.1
+        for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 01:05:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730177833; x=1730782633; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730189123; x=1730793923; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=miRKsVITHzAukzsj+/ygTCg9k/xHlCLYaDB0d4rUOqE=;
-        b=T4UZ7SQKh0lWAFPCrQ8snW57OQb0dhWhHbGjZqXTjfJPIe9Pjx7Ij516zaN0DHnZQ4
-         Hc+J7VMZA/+kxxM+dzxwEa07JszQoh9CLJ78FArgaDVnOeCGDWfzxbJDtABpRFcyM+e4
-         9Ri/Du20XwqaXbujI90ToFGwkVOFHSjNM+aigBZh4D9hwDpjioAqG/cdFDytqcMVEB/c
-         bO2pQzRxj0MtKvxVfH94C2Etrh3/dJkzaYN7bXHHhJkRsuWKeP1gixXdT03OI7psnbrS
-         1iSBWCFtqReCAXnUfdKbOcjhO6UDvDezFtAg17r2pbVoroRGQBT+yq8YerjBA/FlRpk/
-         3+gw==
+        bh=3lN2eRb6bl0eRsqhdld34k6abaNSa22uP0f7TfgqVgM=;
+        b=vfalQd62VFx9TyfFbm23aog8MWNlyilO7c+TXVpv/WyeQiZc5C1AddMIV8VL5J5sEx
+         qg/0DpK2AsAMon+bogO1Ez2RgCe+VOerS0m8Z9uLqgb2NB45VV6mP4vEVZsUiovcalBQ
+         3dJPiUCP+h8meYBsDjK29m4JXEjVwhvSIMxrpub6ERXJy1bLxhMzAa/sSWufKKGQhYBL
+         wTgx7o+wvbIjJSesxRcmgflIdH6RQOgm1QDif+sODDobRFWtwroXLPgVirLcJB+W38h9
+         NGa4Se6XB1nllE/e1useaOv8R0S+6wlJjUMTjCjZ7P3cyT99MjCazMDmESEdyyiuiQ9A
+         Fh8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730177833; x=1730782633;
+        d=1e100.net; s=20230601; t=1730189123; x=1730793923;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=miRKsVITHzAukzsj+/ygTCg9k/xHlCLYaDB0d4rUOqE=;
-        b=mRioeFOb3ajJ/LIl+9LIQ0JFfJyLrovHJYWprXAkKG+GgsFkz71C5H4SgJQGLvmrpq
-         X8nC7/JgiUFrP7neuzCQ+Jv0kFaBW8c4/ZMS0IqBd96wvB+Vrrz3xWGw9s1L/4RXvIEe
-         Aj/wk32hK8dpUkS7B11r9nZ0yqLF4AzCeKQUPp2bQBna3YlpvDsUFIzNAZBq/V2Isa8t
-         xmOf5kQNuKa6IwGJrnkuTcPUunujxcj0nLgZVjCU5bQ33N41FgazR2Cqk1wcsV41uepB
-         8orS+KXk098RbIjh7A2OKzF4dB1vI/8vxe19QT06FyyLagcig+NC6m8vi8KAScqAaD9Y
-         nS3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUhpC3RjTxcq9IlZS6rsPpPTq/Zv5UFATvC/6eRZJ2cmObAD21a/tNGnaa2IfbnLTl3yVHe5L4nIA/j@vger.kernel.org, AJvYcCUuuL+JpBN7u+do+Z8w3zw609PnLvjOrROwt2czxa76gI5mqogesE6n2nizk3mnGDRuY9lZhpS5SZ9+552g@vger.kernel.org, AJvYcCW3DsM/QKQHg6SpjxClrDO38nITvZwmx16ph3NKJ6pD2jnngFpf6e1VCKyc5j7jIeDtdGAiRspFK0XVPAwv0OQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ9XKJK4a1Cpp7RcD1PVVRUjOYiM+i/JmU5URYzdqHZVZzKAO4
-	B1VrA5eLImiQD599XH2RW3PCPd2qncAMPGTnz3QM6QM0Y4QyLdIb
-X-Google-Smtp-Source: AGHT+IGW1ooBeldcdGoeMJo+T427girUR5zVV1hzqHzNK8xt/vLyirJwTY09tBGqdQSIjGkKrufbxQ==
-X-Received: by 2002:a05:6214:2f88:b0:6cb:c661:49ce with SMTP id 6a1803df08f44-6d2f62d4b03mr13390146d6.23.1730177832557;
-        Mon, 28 Oct 2024 21:57:12 -0700 (PDT)
-Received: from yoga (ool-1826d901.dyn.optonline.net. [24.38.217.1])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d17972f622sm39003676d6.9.2024.10.28.21.57.10
+        bh=3lN2eRb6bl0eRsqhdld34k6abaNSa22uP0f7TfgqVgM=;
+        b=wWfPNHc2dZLXoOyea+h3TLRDsk7bRKaWa1IHWS1WiF3xTC4VLk/35HPxBwAesjf3Nc
+         qDebu8qS4DEyAPStgagdgOGI3/Bd7coVM1ragNE8HyUHtXFwE1YSh2wmh48miNY8P9qD
+         enG8q2rSfleyXNRHGyE/I62OgESANMJa6bU1lbbS4QgConPtrWRemX81tketFTgRR/Ii
+         330jjnl6t8olLFrz3AkLyVf2yjWiISVVzYMBYQlo9Ze9fgQKZrD86TemrP0x5f+3el9K
+         QyIWQHpNF8Wb6DYLvE+D9ZWegw5hwyLRURLFywFULs96BprMXwP8Cmk7DP3S2J/TgNPa
+         3ZgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWaOc0aYiZ3/hnVK3UtuM15zIYXHG5GhR/fbkbtZDRzPdB6UXG6uzgVhz3kRutcWg6otmiaL5igFK4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUHvXn3piAK6tOw7lrwojntUTQKSQFld4ua33sQXTR+8GiOzcL
+	j2qDxJolCUOrBJbNVQiLxE0F6uz4mnEG+PQclGZTRP4uatOQXiOfyn0iEGPW5N0=
+X-Google-Smtp-Source: AGHT+IFSjfQXCa5GW1Npbhe93OduAXI4SGUOVExv2PPgkmuE8+77dW4spir8TRXtu2Ia2kzTS2IFQA==
+X-Received: by 2002:a05:600c:46d4:b0:427:ff3b:7a20 with SMTP id 5b1f17b1804b1-4319ad049a8mr79735435e9.27.1730189123296;
+        Tue, 29 Oct 2024 01:05:23 -0700 (PDT)
+Received: from localhost (p50915d2d.dip0.t-ipconnect.de. [80.145.93.45])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4318b5433f2sm167003775e9.1.2024.10.29.01.05.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2024 21:57:11 -0700 (PDT)
-Date: Tue, 29 Oct 2024 00:57:08 -0400
-From: Alex Lanzano <lanzano.alex@gmail.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Mehdi Djait <mehdi.djait@bootlin.com>, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] drm/tiny: Fix some error handling paths in
- sharp_memory_probe()
-Message-ID: <7b4y5djihc4ov7o2h6t27qakvvunkmf4ieozf3earesseny4qd@wdcpk35zt3zg>
-References: <b218165cf9af60907e0912266134f1ef1d3617b9.1729924305.git.christophe.jaillet@wanadoo.fr>
+        Tue, 29 Oct 2024 01:05:22 -0700 (PDT)
+Date: Tue, 29 Oct 2024 09:05:21 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, 
+	David Jander <david@protonic.nl>, Martin Sperl <kernel@martin.sperl.org>, 
+	linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH RFC v4 01/15] pwm: core: export pwm_get_state_hw()
+Message-ID: <mavlxxjza7ud7ylgoewz6fz3chtuwljvcjjf6o3kcv555iolwa@wdnrsiow5u5w>
+References: <20241023-dlech-mainline-spi-engine-offload-2-v4-0-f8125b99f5a1@baylibre.com>
+ <20241023-dlech-mainline-spi-engine-offload-2-v4-1-f8125b99f5a1@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="j43zmgztsm2qmibl"
 Content-Disposition: inline
-In-Reply-To: <b218165cf9af60907e0912266134f1ef1d3617b9.1729924305.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20241023-dlech-mainline-spi-engine-offload-2-v4-1-f8125b99f5a1@baylibre.com>
 
-On Sat, Oct 26, 2024 at 08:32:36AM +0200, Christophe JAILLET wrote:
-> If an error occurs after allocating resources based on which
-> "sharp,vcom-mode" is used, then these resources must be released, as
-> already done in the .remove() function.
-> 
-> Use 2 new devm_add_action_or_reset() for that and simplify code
-> accordingly.
-> 
-> Fixes: b8f9f21716fe ("drm/tiny: Add driver for Sharp Memory LCD")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+
+--j43zmgztsm2qmibl
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH RFC v4 01/15] pwm: core: export pwm_get_state_hw()
+MIME-Version: 1.0
+
+Hello David,
+
+On Wed, Oct 23, 2024 at 03:59:08PM -0500, David Lechner wrote:
+> Export the pwm_get_state_hw() function. This is useful in cases where
+> we want to know what the hardware is actually doing, rather than what
+> what we requested it should do.
+>=20
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 > ---
-> Compile tested only
+>=20
+> v4 changes: new patch in v4
+>=20
+> And FYI for Uwe and Jonathan, there are a couple of other series
+> introducing PWM conversion triggers that could make use of this
+> so that the sampling_frequency attribute can return the actual rate
+> rather than the requested rate.
+>=20
+> Already applied:
+> https://lore.kernel.org/linux-iio/20241015-ad7606_add_iio_backend_support=
+-v5-4-654faf1ae08c@baylibre.com/
+>=20
+> Under review:
+> https://lore.kernel.org/linux-iio/aea7f92b-3d12-4ced-b1c8-90bcf1d992d3@ba=
+ylibre.com/T/#m1377d5acd7e996acd1f59038bdd09f0742d3ac35
 > ---
->  drivers/gpu/drm/tiny/sharp-memory.c | 66 ++++++++++++++---------------
->  1 file changed, 32 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/tiny/sharp-memory.c b/drivers/gpu/drm/tiny/sharp-memory.c
-> index 2d2315bd6aef..01d1ce2462e1 100644
-> --- a/drivers/gpu/drm/tiny/sharp-memory.c
-> +++ b/drivers/gpu/drm/tiny/sharp-memory.c
-> @@ -48,12 +48,6 @@ enum sharp_memory_model {
->  	LS044Q7DH01,
->  };
->  
-> -enum sharp_memory_vcom_mode {
-> -	SHARP_MEMORY_SOFTWARE_VCOM,
-> -	SHARP_MEMORY_EXTERNAL_VCOM,
-> -	SHARP_MEMORY_PWM_VCOM
-> -};
-> -
->  struct sharp_memory_device {
->  	struct drm_device drm;
->  	struct spi_device *spi;
-> @@ -67,10 +61,6 @@ struct sharp_memory_device {
->  
->  	struct gpio_desc *enable_gpio;
->  
-> -	struct task_struct *sw_vcom_signal;
-> -	struct pwm_device *pwm_vcom_signal;
-> -
-> -	enum sharp_memory_vcom_mode vcom_mode;
->  	u8 vcom;
->  
->  	u32 pitch;
-> @@ -500,25 +490,41 @@ static int sharp_memory_pipe_init(struct drm_device *dev,
->  	return drm_connector_attach_encoder(connector, encoder);
+>  drivers/pwm/core.c  | 55 +++++++++++++++++++++++++++++++++++++----------=
+------
+>  include/linux/pwm.h |  1 +
+>  2 files changed, 40 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index 634be56e204b..a214d0165d09 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -718,7 +718,7 @@ int pwm_apply_atomic(struct pwm_device *pwm, const st=
+ruct pwm_state *state)
 >  }
->  
-> +static void sharp_memory_stop_kthread(void *data)
-> +{
-> +	struct task_struct *task = data;
-> +
-> +	kthread_stop(task);
-> +}
-> +
-> +static void sharp_memory_disable_pwm(void *data)
-> +{
-> +	struct pwm_device *pwm = data;
-> +
-> +	pwm_disable(pwm);
-> +}
-> +
->  static int sharp_memory_init_pwm_vcom_signal(struct sharp_memory_device *smd)
+>  EXPORT_SYMBOL_GPL(pwm_apply_atomic);
+> =20
+> -static int pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *st=
+ate)
+> +static int __pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *=
+state)
 >  {
->  	int ret;
->  	struct device *dev = &smd->spi->dev;
-> +	struct pwm_device *pwm_vcom_signal;
->  	struct pwm_state pwm_state;
->  
-> -	smd->pwm_vcom_signal = devm_pwm_get(dev, NULL);
-> -	if (IS_ERR(smd->pwm_vcom_signal))
-> -		return dev_err_probe(dev, PTR_ERR(smd->pwm_vcom_signal),
-> +	pwm_vcom_signal = devm_pwm_get(dev, NULL);
-> +	if (IS_ERR(pwm_vcom_signal))
-> +		return dev_err_probe(dev, PTR_ERR(pwm_vcom_signal),
->  				     "Could not get pwm device\n");
->  
-> -	pwm_init_state(smd->pwm_vcom_signal, &pwm_state);
-> +	pwm_init_state(pwm_vcom_signal, &pwm_state);
->  	pwm_set_relative_duty_cycle(&pwm_state, 1, 10);
->  	pwm_state.enabled = true;
-> -	ret = pwm_apply_might_sleep(smd->pwm_vcom_signal, &pwm_state);
-> +	ret = pwm_apply_might_sleep(pwm_vcom_signal, &pwm_state);
->  	if (ret)
->  		return dev_err_probe(dev, -EINVAL, "Could not apply pwm state\n");
->  
-> -	return 0;
-> +	return devm_add_action_or_reset(dev, sharp_memory_disable_pwm,
-> +					pwm_vcom_signal);
->  }
->  
->  static int sharp_memory_probe(struct spi_device *spi)
-> @@ -595,15 +601,20 @@ static int sharp_memory_probe(struct spi_device *spi)
->  				     "Unable to find sharp,vcom-mode node in device tree\n");
->  
->  	if (!strcmp("software", vcom_mode_str)) {
-> -		smd->vcom_mode = SHARP_MEMORY_SOFTWARE_VCOM;
-> -		smd->sw_vcom_signal = kthread_run(sharp_memory_sw_vcom_signal_thread,
-> -						  smd, "sw_vcom_signal");
-> +		struct task_struct *sw_vcom_signal;
-> +
-> +		sw_vcom_signal = kthread_run(sharp_memory_sw_vcom_signal_thread,
-> +					     smd, "sw_vcom_signal");
-> +
-> +		ret = devm_add_action_or_reset(dev, sharp_memory_stop_kthread,
-> +					       sw_vcom_signal);
+>  	struct pwm_chip *chip =3D pwm->chip;
+>  	const struct pwm_ops *ops =3D chip->ops;
+> @@ -730,29 +730,50 @@ static int pwm_get_state_hw(struct pwm_device *pwm,=
+ struct pwm_state *state)
+> =20
+>  		BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
+> =20
+> -		scoped_guard(pwmchip, chip) {
+> -
+> -			ret =3D __pwm_read_waveform(chip, pwm, &wfhw);
+> -			if (ret)
+> -				return ret;
+> +		ret =3D __pwm_read_waveform(chip, pwm, &wfhw);
 > +		if (ret)
 > +			return ret;
->  
->  	} else if (!strcmp("external", vcom_mode_str)) {
-> -		smd->vcom_mode = SHARP_MEMORY_EXTERNAL_VCOM;
-> +		/* empty */
->  
->  	} else if (!strcmp("pwm", vcom_mode_str)) {
-> -		smd->vcom_mode = SHARP_MEMORY_PWM_VCOM;
->  		ret = sharp_memory_init_pwm_vcom_signal(smd);
->  		if (ret)
->  			return ret;
-> @@ -640,19 +651,6 @@ static void sharp_memory_remove(struct spi_device *spi)
->  
->  	drm_dev_unplug(&smd->drm);
->  	drm_atomic_helper_shutdown(&smd->drm);
+> =20
+> -			ret =3D __pwm_round_waveform_fromhw(chip, pwm, &wfhw, &wf);
+> -			if (ret)
+> -				return ret;
+> -		}
+> +		ret =3D __pwm_round_waveform_fromhw(chip, pwm, &wfhw, &wf);
+> +		if (ret)
+> +			return ret;
+> =20
+>  		pwm_wf2state(&wf, state);
+> =20
+>  	} else if (ops->get_state) {
+> -		scoped_guard(pwmchip, chip)
+> -			ret =3D ops->get_state(chip, pwm, state);
 > -
-> -	switch (smd->vcom_mode) {
-> -	case SHARP_MEMORY_SOFTWARE_VCOM:
-> -		kthread_stop(smd->sw_vcom_signal);
-> -		break;
-> -
-> -	case SHARP_MEMORY_EXTERNAL_VCOM:
-> -		break;
-> -
-> -	case SHARP_MEMORY_PWM_VCOM:
-> -		pwm_disable(smd->pwm_vcom_signal);
-> -		break;
-> -	}
+> +		ret =3D ops->get_state(chip, pwm, state);
+>  		trace_pwm_get(pwm, state, ret);
+>  	}
+> =20
+>  	return ret;
 >  }
->  
->  static struct spi_driver sharp_memory_spi_driver = {
-> -- 
-> 2.47.0
-> 
-Tested-by: Alex Lanzano <lanzano.alex@gmail.com>
-Reviewed-by: Alex Lanzano <lanzano.alex@gmail.com>
+
+I don't understand why you introduce __pwm_get_state_hw() (a variant of
+pwm_get_state_hw() that expects the caller to hold the chip lock) when the
+single caller (apart from plain pwm_get_state_hw()) could just continue
+to use pwm_get_state_hw().
+
+In principle I'm open to such a patch and wonder if there is already a
+merge plan for this series. If you send a simpler patch soon with the
+same objective, I'll make sure it goes into v6.13-rc1 in the assumption
+that it's to late for the whole series to go in then. Or do you still
+target 6.13-rc1 for the spi bits? Then it would probably better to let
+this patch go in with the rest via the spi tree.
+
+Best regards
+Uwe
+
+--j43zmgztsm2qmibl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcglz8ACgkQj4D7WH0S
+/k4VNgf/SnQ3FDnC2c7bg2CyahKuEnbI1V+Mh1n4mLdEhbjuD3kDrXmP8S8QoYN3
+UPKt/DB95LNR4rW23vH6A/VwT0Z2pxGUFkWUc+rph/XLlHGSlTHA24wqcAUFmv9U
+LrdFn6se1JD/0iqekbIgSw4Z1wmMUyDgVf5qPhCr0T8q/5xMfRnOnDRot9OLxHAE
+2wthItMXrD74GNxg7hYr+Egp9RNtEj+V8CUqOriJuHx3HDEgx+tPFT5zaBKAFOnf
+tNIEHM9s2IYxsbR97SmlSVnOdVHutuGAEsgaPGjzynuoLYqT5Wi39UbZc0Z4wCoP
+RnMNIRjxMCTHTibMjVPASVQRLwvN6g==
+=MQGh
+-----END PGP SIGNATURE-----
+
+--j43zmgztsm2qmibl--
 
