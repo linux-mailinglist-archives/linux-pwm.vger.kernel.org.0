@@ -1,88 +1,88 @@
-Return-Path: <linux-pwm+bounces-3956-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3957-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBF869B4506
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 09:56:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A95B99B4724
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 11:44:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2909C1C2226B
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 08:56:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD3A01C2254B
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 10:44:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C3EB204093;
-	Tue, 29 Oct 2024 08:56:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C16B5204924;
+	Tue, 29 Oct 2024 10:44:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="m6iiC17m"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qLKYBybE"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2950C2040A2
-	for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 08:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1609A204934
+	for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 10:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730192174; cv=none; b=R8mgSI+uk9axbATWD0XEQNpU+dlnhPXkc2/11E+jQh2PZHyAbmz9lJRGDxMpvLFlWExS7GOgEcVLOvGIRuc6tWsLzifNfHUvaVG8jBA6myZhPUlsdEKQ8QjgBYx4xALvEHyE+h09pZ6M4BFo64wNhxHsWZCWD0bzFALKc8kgmCY=
+	t=1730198652; cv=none; b=DL74J81xeQyvWcj/LJ7jiQVnpz4cqnR6lN3BqW5qkV7hkS+/vcXkGmAkarqw7TmRzQzW9PTYehWr+34e5jB7UlkjK66054kIHEPpffp3vaFwQ+VhSFyfREZF0gE2qDC1ABcgi2g/BTd7ADGd498iSqJ69htmkzzqaLssh8tEXw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730192174; c=relaxed/simple;
-	bh=621QT/rt7ppLCdf7pdKUgsxJWg9USCuHr9bCXeE3uYE=;
+	s=arc-20240116; t=1730198652; c=relaxed/simple;
+	bh=08v98m3masgehHn+A38/furMQeUNpa14MNDKpKMLv4Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EXFGgkdvkbmW0bwLYM36TaqbHS7wNhF2Y98G8a6P16OBjSzy3iN7U3lh2Bruzrg294caGTmgTLDzDpMfBOh7cHbPG2kazeiJPTdCHNH5YGUSky2G8MQrlj0VzNEGeVeU5OY4SjxPnUNRn0yFUv+Iqm/JxUwBmQ75MrqLAlvjtvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=m6iiC17m; arc=none smtp.client-ip=209.85.221.43
+	 Content-Type:Content-Disposition:In-Reply-To; b=BxDeNiGJodvqCfd9uEX3CX+yAEFf6wpaEksduhY4VMT7QWkkR0m+4jr6v32VnwSNLILq5QcW/0hb/qjTBsSSEWxLaidiTdU9Zgrxq8CYDC+00rLvwo1Nv0QTFBLqzadwfn3SFV3TF/R1bBXGmRCBwuJB/8AwLt7cP75ZGn4ZMDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qLKYBybE; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-37d70df0b1aso4147634f8f.3
-        for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 01:56:11 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4314f38d274so69760745e9.1
+        for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 03:44:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730192170; x=1730796970; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730198648; x=1730803448; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=q+tIuf+pw7VgqaoFXTVPLLVE0V3c5Y1bGL0baofA3s8=;
-        b=m6iiC17m9vkVd9SlIcGeqR5+84g1nCBaUyVmMnmfxVQ6ZjG/2GozCKaUPYHP8pDkO2
-         UgHWLK8OP5DgFGwWfV6Ff20GAvSE+fgJaYJWVT6zt5B0hWL6rXWzwT4PweOKCRlo3omw
-         jOzs85ukT2WykWZYDmAByKPmRZxqv5mNS5E1bN69Y2Y+yzOp4OeowIJGbfqdgV5cxezx
-         2T6tpxr/VxyCH+7TuhRtCiO7fp0oFDQPA8AkxgFTOdt+i85vIo7xX12OgyaabHxV4HdT
-         q5Ps6A5ouAvgNNPV0TlgULCSBklwaU5LvRJRmPBSFX6dg61lK76S63PAyAvrQIjGETCz
-         xKwA==
+        bh=uV0lBLqUhbRGXbbqopf6xRDXiTg4koFgUnIUJCqwVao=;
+        b=qLKYBybEjz+kCqpC+vqQJ1hqfebLKQaMkVtY17DbVf2YPL8UaRce6ki54/rdWOwWMz
+         Eld7RwIVK+hOizbH+3W8WPdRfFQ49NSs5Qt570YVDQs+xh6a+vaOwGHLeBrd8N6uBnZT
+         Irood5tpNEwo3PVm8h+E+h4ytJPgIihZeldZM8dkUhsoSu/pTGIBT+Ha5SveVoJupBrj
+         WZoYLD9wAdI22RTnWyro4RqxXEqLanfq1pIctznZoFx7uOxTbdz+EpcyVq0bYNUe3/Mr
+         vUPAvYrIld5Q4aMfAiVFxrbWQEYsCUPo8UJSVgz948vj8rGEQF5iVG+eYIA+5SmgHNNT
+         rgCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730192170; x=1730796970;
+        d=1e100.net; s=20230601; t=1730198648; x=1730803448;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=q+tIuf+pw7VgqaoFXTVPLLVE0V3c5Y1bGL0baofA3s8=;
-        b=Tnwt5evgm/lMfTH93X3o7WD7+9TC0shaL910p4tAea6BXpQAbAREb55pL4RbcAl+b1
-         ntIPmy5eP+tli13/kTu0zsfWtFFFni2Fisrk7yddYG0KPYww0dr0fiHnv5MZn9hO/de3
-         EJZTDuhcr7iMr0R9C2Ux+Se/KWRmQeTprxzttdyU4bAvuKL1zpvYuFo3jpWGaD8eEGX7
-         B/P+bdLZnNFqB0fCRROTZzQwSIajdDwcrQ77tVw0hif/arClJX1gEpIZU8RpxKrVjueF
-         6i6/8bLZdMvOlConnCEJkMkXJc+rSJDHcgRf0nmdxj+QM181t1SgTnSBLU41qz2Ur9Tr
-         O2rA==
-X-Forwarded-Encrypted: i=1; AJvYcCUuuZsPHVLScdqfuduFIYnyF7A3TRSNPShJKUYwuMxygOHsJyCPorIEj7iT93wlsKLfNuXGNykO/bU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEOZwfUBRRmceVMIGKVgAg8LirHxd+HhqmvUUDHVUQ/1E/7x24
-	bVWghOSLBHn6J5zpmxgQGc4xnGbZjc7Vnz6FJ8jFKpwpNLcnc7yzi3UOlXcIEoI=
-X-Google-Smtp-Source: AGHT+IEA5JJWXtQoHZ0PdS/MJdUSxxPT9oA+1aQ+m1nReUn2taETur8wxSZ4YWpYW5tyNcpUGNlwNg==
-X-Received: by 2002:a05:6000:1f11:b0:37d:52d0:a59d with SMTP id ffacd0b85a97d-380610f2bd6mr7564818f8f.10.1730192170391;
-        Tue, 29 Oct 2024 01:56:10 -0700 (PDT)
+        bh=uV0lBLqUhbRGXbbqopf6xRDXiTg4koFgUnIUJCqwVao=;
+        b=NATKsSC2NAISAfbXzwcdrS+YWkLWST4ufh/xBCwL+zciZomiN5F7XVIePfbV4Pmpex
+         7mmk2VZwKD+rnLPpO7cgbYBv5UzEt3XjbSfUpECFhUNuCIRqJNzkjdpRN4taxAO3DqZU
+         I0B5L5Aym29p9lm9aHTVOujY3Afaf4nkw844XRFbNVp9IIGivuFhC8LOWQBSnMKxmz1A
+         uQkH7Y4wBtXGjR10bDhkRXgUnMrOQeKQGtyy1wJRxqN96hgK0Txk4LpOrNHImyls/8J4
+         hqwxmB5mcaAoqjcgACGrJErNv3hrqZwwS9OyUxQ4psAnA0VLkvTOKSe3CcznsACKE59L
+         DXxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAdTZx6dKERSkUEPcDVggR07V0Rs1qVBaS6R85oce5LW5bUMVBDMV5vP21YSQrwGaK2jrkmzEaHJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYG8NgsAJtNlcCl6zNP/N97mV7N839T9L3cZS5bm7Lclfh4JUZ
+	bsGCO+xy0Lx6n3bYiTpBdqgO+9Yd0pxzK5sCzJL+Ttn5Yn5Ljqb464eYtwNtRnI=
+X-Google-Smtp-Source: AGHT+IFDd9toNEVebdV6GM2H3JKBp+TnL/N5UFyps7M6//NaEXMseAjAq8HwH15HVV5Fc5y5sz8WpQ==
+X-Received: by 2002:a05:600c:3512:b0:42c:b508:750e with SMTP id 5b1f17b1804b1-4319ac9a785mr107122565e9.11.1730198648310;
+        Tue, 29 Oct 2024 03:44:08 -0700 (PDT)
 Received: from localhost (p50915d2d.dip0.t-ipconnect.de. [80.145.93.45])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b132fbsm11900069f8f.4.2024.10.29.01.56.09
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b92f11sm12079610f8f.101.2024.10.29.03.44.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2024 01:56:09 -0700 (PDT)
-Date: Tue, 29 Oct 2024 09:56:08 +0100
+        Tue, 29 Oct 2024 03:44:07 -0700 (PDT)
+Date: Tue, 29 Oct 2024 11:44:06 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Conor Dooley <conor.dooley@microchip.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Aleksandr Shubin <privatesub2@gmail.com>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Cheo Fusi <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v10 1/3] dt-bindings: pwm: Add binding for Allwinner
- D1/T113-S3/R329 PWM controller
-Message-ID: <4ioz6f6efs2uhf5mitb4xhebqeryyz5ukple4fkn54wpqep3c4@4ktefld35c3s>
-References: <20241011102751.153248-1-privatesub2@gmail.com>
- <20241011102751.153248-2-privatesub2@gmail.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	"open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
+	"moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, justin.chen@broadcom.com
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: brcm,bcm7038: Document the
+ 'open-drain' property
+Message-ID: <7aok7zs7whxfg3bhv7koxfxq6qhgv34b7kg3mh526z2cf7e23l@ffbsxqdqjis3>
+References: <20241012025603.1644451-1-florian.fainelli@broadcom.com>
+ <20241012025603.1644451-2-florian.fainelli@broadcom.com>
+ <20241015163200.GA1220909-robh@kernel.org>
+ <252b6f39-3b06-43b7-b227-1c29c1c12bd5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -90,57 +90,66 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ulmatopmaqdyrkp3"
+	protocol="application/pgp-signature"; boundary="4cvjuzgzwtcm6jma"
 Content-Disposition: inline
-In-Reply-To: <20241011102751.153248-2-privatesub2@gmail.com>
+In-Reply-To: <252b6f39-3b06-43b7-b227-1c29c1c12bd5@gmail.com>
 
 
---ulmatopmaqdyrkp3
+--4cvjuzgzwtcm6jma
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
-Subject: Re: [PATCH v10 1/3] dt-bindings: pwm: Add binding for Allwinner
- D1/T113-S3/R329 PWM controller
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: brcm,bcm7038: Document the
+ 'open-drain' property
 MIME-Version: 1.0
 
 Hello,
 
-On Fri, Oct 11, 2024 at 01:27:32PM +0300, Aleksandr Shubin wrote:
-> +  allwinner,pwm-channels:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: The number of PWM channels configured for this instance
-> +    enum: [6, 9]
+On Tue, Oct 15, 2024 at 10:07:10AM -0700, Florian Fainelli wrote:
+> On 10/15/24 09:32, Rob Herring wrote:
+> > Another thing to consider is for any PWM controller with more than
+> > 1 output, you might want this to be per output and therefore should be
+> > a flag in the cells.
+>=20
+> Yes, that is a good point, this controller has two channels, so it seems
+> like increasing the #pwm-cells might be the way to go.
 
-I wonder if the number of channels is a property common enough that we
-can use "num-pwm-channels" here instead of a vendor specific property.
-Or would you suggest a different name? gpio-controller nodes have
-"ngpios", so maybe "npwms"?
+So the idea is something like:
 
-A quick grep suggests we already have:
+diff --git a/include/dt-bindings/pwm/pwm.h b/include/dt-bindings/pwm/pwm.h
+index ab9a077e3c7d..d18b006a7399 100644
+--- a/include/dt-bindings/pwm/pwm.h
++++ b/include/dt-bindings/pwm/pwm.h
+@@ -11,5 +11,6 @@
+ #define _DT_BINDINGS_PWM_PWM_H
+=20
+ #define PWM_POLARITY_INVERTED			(1 << 0)
++#define PWM_OUTPUT_OPEN_DRAIN			(1 << 1)
+=20
+ #endif
 
-	fsl,pwm-number in mxs-pwm.yaml
-	st,pwm-num-chan in pwm-st.txt
-	snps,pwm-number in snps,dw-apb-timers-pwm2.yaml
-
-As a follow up this could then be used by pwmchip_alloc() to determine
-the number of channels if the passed npwm value is 0.
+and then add support for that to the core and drivers? There is some
+intersection with pinctrl (depending on hardware). I wonder if
+abstracting this somehow using the typical pinctrl properties would be a
+saner option??
 
 Best regards
 Uwe
 
---ulmatopmaqdyrkp3
+--4cvjuzgzwtcm6jma
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcgoyUACgkQj4D7WH0S
-/k4BJwf8DvGu76czyjVYmp+JyjZGGyzYFVym3ObWj8LAQZ7pr5F6O61BxMrIC/a4
-RWe9joUnrwLy+UJgxerMNtgS1TgnCgb2r8VzdheUJcDwTjPBAPvaa8eOpybmRtSq
-TxJcKF0qlT8bGtWZjRsx/UYKWLZUrrhgOt7CM0LY4kubCeDEwruXHZSy/FtuPvlM
-STFxNDN8fT7KuaqVY7HYvYZw6tOROAwFaxQhMWUIWQIruQyF4+WJ2bVgBQM77bxK
-OgE8BcqpFcCB2NU0qnyDXMqalDPYeh9necn8LrbQ0qXtE11vn5+bOlJvOHQhet8x
-DYJfsCSOcurHrnvmYo50GYpNdoJUrA==
-=2jh3
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcgvHQACgkQj4D7WH0S
+/k4+iwgAjc7XEedu+25b7SNYH5vkBjaMm+K01V70SIUTshAMpLovuNsjbzQq6gNo
+SJIwRMnsjcofeOlME5jeQYNZFA+M1nq9cihDvbUntoS2ylkwgNhFggKKQPXQ8goB
+uPGWeRngZsmodqIRBw6nSQgGXlELsQkBchj3pM9XjlOKApNq1SKu9VqgQVY/C/ku
+ObxIaFk4POIAW/W4VUm/sTpP7do75qWVemdrckfEs3orE/1x8w+9JKEYqQmus8vQ
+yeVPDEVIFAnI1rx7qXUOH3ojZRhAsom35euFMSY0oumokNN0VUQdkB0ZVPr7O4fn
+0On/5fTjF4nnOTVxM1IrMrqLNz9fvg==
+=tPDq
 -----END PGP SIGNATURE-----
 
---ulmatopmaqdyrkp3--
+--4cvjuzgzwtcm6jma--
 
