@@ -1,155 +1,195 @@
-Return-Path: <linux-pwm+bounces-3957-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3958-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A95B99B4724
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 11:44:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EFE09B4E00
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 16:30:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD3A01C2254B
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 10:44:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A1FE1F2170B
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 15:30:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C16B5204924;
-	Tue, 29 Oct 2024 10:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 244BF19415D;
+	Tue, 29 Oct 2024 15:30:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qLKYBybE"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="z6cIzhPE"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1609A204934
-	for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 10:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CE5191F7C
+	for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 15:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730198652; cv=none; b=DL74J81xeQyvWcj/LJ7jiQVnpz4cqnR6lN3BqW5qkV7hkS+/vcXkGmAkarqw7TmRzQzW9PTYehWr+34e5jB7UlkjK66054kIHEPpffp3vaFwQ+VhSFyfREZF0gE2qDC1ABcgi2g/BTd7ADGd498iSqJ69htmkzzqaLssh8tEXw0=
+	t=1730215852; cv=none; b=oUbsZk0IX5tr6cmFFIulKYsX/6SVvifRrIeYecdNiVFUezPu7667HU3HiyU/8/M5TXXj0dtBsRRPfwJuimDJA+GI1cEZczlK1hA1Ay+NA0Cfw1MsMNTeHmDfR+RS4rrZNIXDzrRnkpRlqhghmRnlGgTe5QiQFrWr90DnBzogGy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730198652; c=relaxed/simple;
-	bh=08v98m3masgehHn+A38/furMQeUNpa14MNDKpKMLv4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BxDeNiGJodvqCfd9uEX3CX+yAEFf6wpaEksduhY4VMT7QWkkR0m+4jr6v32VnwSNLILq5QcW/0hb/qjTBsSSEWxLaidiTdU9Zgrxq8CYDC+00rLvwo1Nv0QTFBLqzadwfn3SFV3TF/R1bBXGmRCBwuJB/8AwLt7cP75ZGn4ZMDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qLKYBybE; arc=none smtp.client-ip=209.85.128.50
+	s=arc-20240116; t=1730215852; c=relaxed/simple;
+	bh=C2Bf/CpiazCRHi+JMjkoraHCMogNvMrpX8KWNoU7cSs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E7uFnKia/ehbAtHEtIYSMn+lVNyuJb16pM3VfajQd1bpPGV1ub8ViU8FppFCIOgrHw5B7HoF6N7a8nP2F9t8JdVqjrTdvrYSZ0KTrIB/YndWooYx4evcg/TuDDPoE0k3ICMAo1MdAhgmUHSdfewkwjZpWQSi9Nn8UuvguyXBxNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=z6cIzhPE; arc=none smtp.client-ip=209.85.167.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4314f38d274so69760745e9.1
-        for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 03:44:09 -0700 (PDT)
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3e6005781c0so2983452b6e.3
+        for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 08:30:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730198648; x=1730803448; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uV0lBLqUhbRGXbbqopf6xRDXiTg4koFgUnIUJCqwVao=;
-        b=qLKYBybEjz+kCqpC+vqQJ1hqfebLKQaMkVtY17DbVf2YPL8UaRce6ki54/rdWOwWMz
-         Eld7RwIVK+hOizbH+3W8WPdRfFQ49NSs5Qt570YVDQs+xh6a+vaOwGHLeBrd8N6uBnZT
-         Irood5tpNEwo3PVm8h+E+h4ytJPgIihZeldZM8dkUhsoSu/pTGIBT+Ha5SveVoJupBrj
-         WZoYLD9wAdI22RTnWyro4RqxXEqLanfq1pIctznZoFx7uOxTbdz+EpcyVq0bYNUe3/Mr
-         vUPAvYrIld5Q4aMfAiVFxrbWQEYsCUPo8UJSVgz948vj8rGEQF5iVG+eYIA+5SmgHNNT
-         rgCw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730215849; x=1730820649; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=n6oLt4cwqIvtLgDoKzl4RIUjXVN/+Dx6j96wTlFjHfs=;
+        b=z6cIzhPEa1IGJh40CFi+FEMWamYrZIx08dC+vmYjtQCDOxvW364Gclqd78i3pcDygY
+         XrJGjkkYmldK/lyBICRa0H8sSFN2kihL8XYLFJm7qte+ktQQldASeI39x93WHJ55EP2z
+         0InmLEndWN6PjlmGFTImRaDr9PYRIsP9doGC/gQY6uqschjpZl6m652tdNgvG5q67Zjc
+         pqNXnCvtIEwibGgpAPtu44nHhaigJfiUMO7pp8OKTfhSrw2fEztFj+hLsfnai6gnZvz8
+         VTqqsN94QhMtfsTDfiDemVi8Ot1L8XFgpwhg4ro7rOdfdrk64tWThk79aEBxDe8cb703
+         24kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730198648; x=1730803448;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uV0lBLqUhbRGXbbqopf6xRDXiTg4koFgUnIUJCqwVao=;
-        b=NATKsSC2NAISAfbXzwcdrS+YWkLWST4ufh/xBCwL+zciZomiN5F7XVIePfbV4Pmpex
-         7mmk2VZwKD+rnLPpO7cgbYBv5UzEt3XjbSfUpECFhUNuCIRqJNzkjdpRN4taxAO3DqZU
-         I0B5L5Aym29p9lm9aHTVOujY3Afaf4nkw844XRFbNVp9IIGivuFhC8LOWQBSnMKxmz1A
-         uQkH7Y4wBtXGjR10bDhkRXgUnMrOQeKQGtyy1wJRxqN96hgK0Txk4LpOrNHImyls/8J4
-         hqwxmB5mcaAoqjcgACGrJErNv3hrqZwwS9OyUxQ4psAnA0VLkvTOKSe3CcznsACKE59L
-         DXxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUAdTZx6dKERSkUEPcDVggR07V0Rs1qVBaS6R85oce5LW5bUMVBDMV5vP21YSQrwGaK2jrkmzEaHJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYG8NgsAJtNlcCl6zNP/N97mV7N839T9L3cZS5bm7Lclfh4JUZ
-	bsGCO+xy0Lx6n3bYiTpBdqgO+9Yd0pxzK5sCzJL+Ttn5Yn5Ljqb464eYtwNtRnI=
-X-Google-Smtp-Source: AGHT+IFDd9toNEVebdV6GM2H3JKBp+TnL/N5UFyps7M6//NaEXMseAjAq8HwH15HVV5Fc5y5sz8WpQ==
-X-Received: by 2002:a05:600c:3512:b0:42c:b508:750e with SMTP id 5b1f17b1804b1-4319ac9a785mr107122565e9.11.1730198648310;
-        Tue, 29 Oct 2024 03:44:08 -0700 (PDT)
-Received: from localhost (p50915d2d.dip0.t-ipconnect.de. [80.145.93.45])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38058b92f11sm12079610f8f.101.2024.10.29.03.44.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2024 03:44:07 -0700 (PDT)
-Date: Tue, 29 Oct 2024 11:44:06 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	"open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
-	"moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, justin.chen@broadcom.com
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: brcm,bcm7038: Document the
- 'open-drain' property
-Message-ID: <7aok7zs7whxfg3bhv7koxfxq6qhgv34b7kg3mh526z2cf7e23l@ffbsxqdqjis3>
-References: <20241012025603.1644451-1-florian.fainelli@broadcom.com>
- <20241012025603.1644451-2-florian.fainelli@broadcom.com>
- <20241015163200.GA1220909-robh@kernel.org>
- <252b6f39-3b06-43b7-b227-1c29c1c12bd5@gmail.com>
+        d=1e100.net; s=20230601; t=1730215849; x=1730820649;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n6oLt4cwqIvtLgDoKzl4RIUjXVN/+Dx6j96wTlFjHfs=;
+        b=hVgUxMDmlp3BkYVwppaMzQettjrHTenzKWdQVMLI7zPwB2cisWbq8vln7vyutu8iQ+
+         5yuOQtA/qpPESFig67e4E5f/admUDryaC7fOdTO1cxD8rP0SZclmnTJ6e4jR0mpeTYu2
+         gkkCZlE3NiJCM73q1SdOlLB49Az6kOkZmt6SRcjkTYzM2QCYOTmirWwpZz09unElOdyK
+         EiTxZ0uj/DgbsfmNfwzGFnpQgmqXbfdIovma0v5fYeUQb7h9oe6E4pveM5/KxxFT/dse
+         gffkeRUcyFBUkyNi7kUjyayg7UtPCJ+o0IBl7cljCJcLoeixARLHE+eqgw/GO3aB1bFs
+         byoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVT1RPBElDW+O1NqpR/iSK3sY7BvlgW20S03V6Vo+g8jMMvd16HgNmDEUBfGG4ljrwr/uMopcLwN/A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym8kaiIOJmu4qanle5kGNIdyjFVBQ5A8qkAxLlxsuZZS8REEJl
+	4ulsEY+KDELLUQ9Mz0mxeBEANlZh9ue5ivONXq6bmGjgTN2ULsrDt07rHxbAcyI=
+X-Google-Smtp-Source: AGHT+IE2SkDygBFnyOcXc/xSl2iBsuYxGCBH6q3GOhnV+kWltCIyrT3d5jLZv9ddzix44MMFYznHAA==
+X-Received: by 2002:a05:6871:69f:b0:288:34aa:20a3 with SMTP id 586e51a60fabf-294649be62amr49618fac.45.1730215847206;
+        Tue, 29 Oct 2024 08:30:47 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-290360f4540sm2856004fac.31.2024.10.29.08.30.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Oct 2024 08:30:45 -0700 (PDT)
+Message-ID: <82edfbb9-5e65-4292-b15b-d5cde7b53e42@baylibre.com>
+Date: Tue, 29 Oct 2024 10:30:43 -0500
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4cvjuzgzwtcm6jma"
-Content-Disposition: inline
-In-Reply-To: <252b6f39-3b06-43b7-b227-1c29c1c12bd5@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v4 01/15] pwm: core: export pwm_get_state_hw()
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Guillaume Stols <gstols@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>,
+ Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20241023-dlech-mainline-spi-engine-offload-2-v4-0-f8125b99f5a1@baylibre.com>
+ <20241023-dlech-mainline-spi-engine-offload-2-v4-1-f8125b99f5a1@baylibre.com>
+ <mavlxxjza7ud7ylgoewz6fz3chtuwljvcjjf6o3kcv555iolwa@wdnrsiow5u5w>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <mavlxxjza7ud7ylgoewz6fz3chtuwljvcjjf6o3kcv555iolwa@wdnrsiow5u5w>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 10/29/24 3:05 AM, Uwe Kleine-König wrote:
+> Hello David,
+> 
+> On Wed, Oct 23, 2024 at 03:59:08PM -0500, David Lechner wrote:
+>> Export the pwm_get_state_hw() function. This is useful in cases where
+>> we want to know what the hardware is actually doing, rather than what
+>> what we requested it should do.
+>>
+>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+>> ---
+>>
+>> v4 changes: new patch in v4
+>>
+>> And FYI for Uwe and Jonathan, there are a couple of other series
+>> introducing PWM conversion triggers that could make use of this
+>> so that the sampling_frequency attribute can return the actual rate
+>> rather than the requested rate.
+>>
+>> Already applied:
+>> https://lore.kernel.org/linux-iio/20241015-ad7606_add_iio_backend_support-v5-4-654faf1ae08c@baylibre.com/
+>>
+>> Under review:
+>> https://lore.kernel.org/linux-iio/aea7f92b-3d12-4ced-b1c8-90bcf1d992d3@baylibre.com/T/#m1377d5acd7e996acd1f59038bdd09f0742d3ac35
+>> ---
+>>  drivers/pwm/core.c  | 55 +++++++++++++++++++++++++++++++++++++----------------
+>>  include/linux/pwm.h |  1 +
+>>  2 files changed, 40 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+>> index 634be56e204b..a214d0165d09 100644
+>> --- a/drivers/pwm/core.c
+>> +++ b/drivers/pwm/core.c
+>> @@ -718,7 +718,7 @@ int pwm_apply_atomic(struct pwm_device *pwm, const struct pwm_state *state)
+>>  }
+>>  EXPORT_SYMBOL_GPL(pwm_apply_atomic);
+>>  
+>> -static int pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *state)
+>> +static int __pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *state)
+>>  {
+>>  	struct pwm_chip *chip = pwm->chip;
+>>  	const struct pwm_ops *ops = chip->ops;
+>> @@ -730,29 +730,50 @@ static int pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *state)
+>>  
+>>  		BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
+>>  
+>> -		scoped_guard(pwmchip, chip) {
+>> -
+>> -			ret = __pwm_read_waveform(chip, pwm, &wfhw);
+>> -			if (ret)
+>> -				return ret;
+>> +		ret = __pwm_read_waveform(chip, pwm, &wfhw);
+>> +		if (ret)
+>> +			return ret;
+>>  
+>> -			ret = __pwm_round_waveform_fromhw(chip, pwm, &wfhw, &wf);
+>> -			if (ret)
+>> -				return ret;
+>> -		}
+>> +		ret = __pwm_round_waveform_fromhw(chip, pwm, &wfhw, &wf);
+>> +		if (ret)
+>> +			return ret;
+>>  
+>>  		pwm_wf2state(&wf, state);
+>>  
+>>  	} else if (ops->get_state) {
+>> -		scoped_guard(pwmchip, chip)
+>> -			ret = ops->get_state(chip, pwm, state);
+>> -
+>> +		ret = ops->get_state(chip, pwm, state);
+>>  		trace_pwm_get(pwm, state, ret);
+>>  	}
+>>  
+>>  	return ret;
+>>  }
+> 
+> I don't understand why you introduce __pwm_get_state_hw() (a variant of
+> pwm_get_state_hw() that expects the caller to hold the chip lock) when the
+> single caller (apart from plain pwm_get_state_hw()) could just continue
+> to use pwm_get_state_hw().
 
---4cvjuzgzwtcm6jma
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: brcm,bcm7038: Document the
- 'open-drain' property
-MIME-Version: 1.0
+Hmm... it seems like I thought there was a good reason for it at the
+time, but looking at it again, I agree with your assessment.
 
-Hello,
+> 
+> In principle I'm open to such a patch and wonder if there is already a
+> merge plan for this series. If you send a simpler patch soon with the
+> same objective, I'll make sure it goes into v6.13-rc1 in the assumption
+> that it's to late for the whole series to go in then. Or do you still
+> target 6.13-rc1 for the spi bits? Then it would probably better to let
+> this patch go in with the rest via the spi tree.
 
-On Tue, Oct 15, 2024 at 10:07:10AM -0700, Florian Fainelli wrote:
-> On 10/15/24 09:32, Rob Herring wrote:
-> > Another thing to consider is for any PWM controller with more than
-> > 1 output, you might want this to be per output and therefore should be
-> > a flag in the cells.
->=20
-> Yes, that is a good point, this controller has two channels, so it seems
-> like increasing the #pwm-cells might be the way to go.
+The SPI offload stuff is not likely to be merged soon. But there is
+ad7606 + AXI ADC support from Guillaume that was just merged that
+could make use of this. So I can send this as a stand-alone patch
+so that it can be made available for that too.
 
-So the idea is something like:
-
-diff --git a/include/dt-bindings/pwm/pwm.h b/include/dt-bindings/pwm/pwm.h
-index ab9a077e3c7d..d18b006a7399 100644
---- a/include/dt-bindings/pwm/pwm.h
-+++ b/include/dt-bindings/pwm/pwm.h
-@@ -11,5 +11,6 @@
- #define _DT_BINDINGS_PWM_PWM_H
-=20
- #define PWM_POLARITY_INVERTED			(1 << 0)
-+#define PWM_OUTPUT_OPEN_DRAIN			(1 << 1)
-=20
- #endif
-
-and then add support for that to the core and drivers? There is some
-intersection with pinctrl (depending on hardware). I wonder if
-abstracting this somehow using the typical pinctrl properties would be a
-saner option??
-
-Best regards
-Uwe
-
---4cvjuzgzwtcm6jma
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcgvHQACgkQj4D7WH0S
-/k4+iwgAjc7XEedu+25b7SNYH5vkBjaMm+K01V70SIUTshAMpLovuNsjbzQq6gNo
-SJIwRMnsjcofeOlME5jeQYNZFA+M1nq9cihDvbUntoS2ylkwgNhFggKKQPXQ8goB
-uPGWeRngZsmodqIRBw6nSQgGXlELsQkBchj3pM9XjlOKApNq1SKu9VqgQVY/C/ku
-ObxIaFk4POIAW/W4VUm/sTpP7do75qWVemdrckfEs3orE/1x8w+9JKEYqQmus8vQ
-yeVPDEVIFAnI1rx7qXUOH3ojZRhAsom35euFMSY0oumokNN0VUQdkB0ZVPr7O4fn
-0On/5fTjF4nnOTVxM1IrMrqLNz9fvg==
-=tPDq
------END PGP SIGNATURE-----
-
---4cvjuzgzwtcm6jma--
 
