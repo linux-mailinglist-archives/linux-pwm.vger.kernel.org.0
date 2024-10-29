@@ -1,130 +1,112 @@
-Return-Path: <linux-pwm+bounces-3963-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3964-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB4CD9B54EF
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 22:20:01 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8A379B5577
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 23:03:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 608BF1F22078
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 21:20:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 363B7B22400
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 22:03:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7636D20ADC6;
-	Tue, 29 Oct 2024 21:19:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9126120A5C9;
+	Tue, 29 Oct 2024 22:03:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uFDUo/Yt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MoW+GWGq"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D761208237
-	for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 21:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659152076A3
+	for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 22:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730236748; cv=none; b=KpbEtw8IjkzrxCO6bL2bZCcVKf99Px1sFbKD1cdD/SMy5TUMXTjDdqO9rjYdtj0J37ihSj5EaTpQty8ye9F+KCFlBhw/6esxdn6XRvJHeRvP3n4Mk+ajLGeW25TbcTmp+uAsPvfwQaoe5bGu7kyv/DpYkN1G6zKEws6vjf34IAo=
+	t=1730239410; cv=none; b=pVMeDMIIzNClXt4nd5ejm0N2iPzAcXbyZQ4KbG+5KnhEKNJYHZzGvxtHzRCbPr9aqiI//JA3eDV3zdL+UtBC+r2e3EgAD5z61kuIqXOGloWm4WAtIwjgAk+U8vKpjFRGrOHdnhb1dCyaWRLWwyuXMVN0lt8dOFf8xiFR85c9j8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730236748; c=relaxed/simple;
-	bh=pTM0zMdu3d6TO9urzgyfiUUlPjCSI6OIMoF7GWE/KtA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CHPeFBxp9AzecgqYrftZFj3vwNLcxm5qYLBMba0bkHksvywojAhq3f9a+MlcmDTRPcTnAQT7CrdMkKO9UPNn9NRPFWpKwbBtY4upHDDdWM8rDAOnAVyVa/rxqxUpx2eYpJ6huBZGkBoQDvBB1uqBdGmwMSK6ZRtBpaU+Wk3AXyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uFDUo/Yt; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3e607556c83so3489212b6e.1
-        for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 14:19:06 -0700 (PDT)
+	s=arc-20240116; t=1730239410; c=relaxed/simple;
+	bh=2pAo8yXwp7EZT+YMqcaITNqvg6hNd8KJ9Uj2bnSqyIs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zo6CtYeUO9JinOxro80Hvu0pGPflKJvOfMwpSE+sqEWDvwsxBG0u9FTS86wTdQ12OLDpHBkwairw3Y8iLMNYd9ey+fH/8bMKCKxpfxpk7brRDtVC762s8vW+/7L4QOPffaAAtCTPPrPpZJpeY7pZEVyb169l8AEPmO+aC8eVjgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MoW+GWGq; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2fb5014e2daso57373851fa.0
+        for <linux-pwm@vger.kernel.org>; Tue, 29 Oct 2024 15:03:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730236745; x=1730841545; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=x1eyK4YeafZM3wWbxx8SgDvrmQ+/xdJDtwtTgNckCGQ=;
-        b=uFDUo/YtT/plC2lRd8HNa3IAb08SCXC9qtTccrzgrUQ0hwU3T5Aku1/ysh9JYrEGWS
-         OW3lFbz+UmJm0xXdArKcVcdhIjmJr7tRiTwQqhGaS830VKh719tBA/tHSxxDzcWY7yOs
-         lXkRjsjnW24T6hM1DWIuV3Dit/zcQukr/aGG+rX7LHAi2geIZwouqDl7t082a4VMfN2P
-         UTKjGtpPpDnp1GHILccA5C91mmliCNjn8+I6L6hMeEu6sli7YVBt23L8Mo3qhRBxJExg
-         lJe2VfZrs54xAAwuwqFVM6xiJKVmTLyN2X6TvsEe2l3MKr8M5Q311ZZczN96z1AuIOt8
-         Elng==
+        d=linaro.org; s=google; t=1730239407; x=1730844207; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2pAo8yXwp7EZT+YMqcaITNqvg6hNd8KJ9Uj2bnSqyIs=;
+        b=MoW+GWGqFYb18C38tw767NGzbRWH7mPLNINeizqDuRC1iYBwICoZ4QfVIurrWPclsd
+         JNCRZpHd+mw/fjfA1+vcs4BefNK7vBgCPG3ecRoB4W5KMP744EcEq6/rN2ck5YGDLSk8
+         KZlUCr0X+o5F+vg1zqHE3n7012CcBvpEJ59RuGb1R4xK8maLJGQcDc2OUNnaBCrQdxay
+         YqFbvri7MJ1OEaYi45IgM53jTIlYOZz8uSA065IwKqGERX5fTsc1oaOEH/YZ4qMGXDHW
+         LtmdL2WyrqrTks5fkwLOO2Fio9zAFoQETN2YcXgIMrrPrG6ixiR7ZApvOiF64y+WUhnZ
+         LoIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730236745; x=1730841545;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1730239407; x=1730844207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x1eyK4YeafZM3wWbxx8SgDvrmQ+/xdJDtwtTgNckCGQ=;
-        b=ues4vO2Yglu5a4WcTyLtd0PA3C0yRJeqERgS3W46Dn+oycj1iDpylH+nan27V/Gyt9
-         HGG68pifmaYsouqqOTNLNG3d/CpSOcdsDJ+fo/ChQ/MKqSDQGbSWsy5f1JxaCwulGi1S
-         17gflk1LQctQXd281xTGQ/b0AURqS9PTkbULGeCe0aJWpgPaB7lrKghpJMUUDBkpFsKQ
-         P/PACAXCrN9+JxN4TIEaMYW6aqMwIRWIdZvHCdeyfI+J6vD2L9O/MiyEIc5Ry5aAsZ46
-         RFBAxoOegy5DO9qzFqPek4kA9WTmqd1a3Am6D4aCV8pcr3r5SdtdxT2Xs+QXv/Pp9RXP
-         lUUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBxA8LVUG9zSJYnkYpcTmmLvq1uvuY1DN/KVYKdozUkOKzRQKUIyCQOhfZ1RvJu9bQYuLrFoYwL74=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuOJp66Hb7IQuOFql/inW+8a2cVKCTPIQJZOAm5NYSndfGrfJV
-	kDPkcvamOOl4OsQhgdp0d8BIhztq/6Ibs7zKUueRUv2/eN/dL9opWaHuC5vaziA=
-X-Google-Smtp-Source: AGHT+IHNyylNNYk4pJl4v9Wic0OnFFDI+mUGd5rmtr8KeXqE5vw1L04LSd4rV1eOn4xDGik8dGnw4g==
-X-Received: by 2002:a05:6808:2183:b0:3e5:fd08:d020 with SMTP id 5614622812f47-3e6384c54ebmr12182255b6e.42.1730236745444;
-        Tue, 29 Oct 2024 14:19:05 -0700 (PDT)
-Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3e6325b87ecsm2280559b6e.54.2024.10.29.14.19.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2024 14:19:04 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Tue, 29 Oct 2024 16:18:50 -0500
-Subject: [PATCH v2 2/2] iio: adc: ad7606: finish pwm_get_state_hw() TODO
+        bh=2pAo8yXwp7EZT+YMqcaITNqvg6hNd8KJ9Uj2bnSqyIs=;
+        b=gnczL6tzmo2CrikYmgHCcQpwz13M018SRQ1ExvUW6xDjU+Fx+zjj6mjCSO8IFcnFQl
+         TnXyTdxH3fU32Rk++M6ci8pBTh4vAgejPDzw1B2Hdomd4D/0ool/skMhOmscvY1Je28R
+         yiVknGENf3bcMS2PyFvaqUU8jvczTeW5dVuS4BZwDBLqoa0f0sKSgbV7PLFlTEFoxW09
+         ++3JNaueG/angvxUhoYwd3gHDGEyFJR7QQjO7PdQ971Y+/MgBUVMieVw1whfsT073o96
+         /Iqc3PZGIkaLvBHb91KSLUqHsxJg9XDUJslTt+WYJ/bpEglcJBarpeU53fAywvu30xGw
+         Ccqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCw0Sfet3F2/bSb7dlSbnIfQmGMdG7YCbePd6nSQfEO5aDabZcxvXSjAdU2jya+2zF31PP0opb8EM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI4TteysQ/T+DVuihAbPL8DrOX/wQUwDLr1GQc9cCO/49Bdi3O
+	2S65o9hTTBcEzrDkGjW3HWBjs9DmB5/PuIKwUmJW7vKwls2Ta/jrKtmXs59chY4vXYnpKaWvT3r
+	gGOnfWmhK8oGtHzr7jPET7GYnPeWEAmKRl2Gp5w==
+X-Google-Smtp-Source: AGHT+IGcZQz6tTz7pENhFcPJcjvryEeZRAirjIXuUi7C7dPCymNJLcuzkHhPfZv22aI+RYtsi5iRg8Bn14ptPLiFVos=
+X-Received: by 2002:a2e:be9f:0:b0:2fb:3bef:6233 with SMTP id
+ 38308e7fff4ca-2fcbe08cf3bmr61215001fa.33.1730239406513; Tue, 29 Oct 2024
+ 15:03:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241029-pwm-export-pwm_get_state_hw-v2-2-03ba063a3230@baylibre.com>
-References: <20241029-pwm-export-pwm_get_state_hw-v2-0-03ba063a3230@baylibre.com>
-In-Reply-To: <20241029-pwm-export-pwm_get_state_hw-v2-0-03ba063a3230@baylibre.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Jonathan Cameron <jic23@kernel.org>, Guillaume Stols <gstols@baylibre.com>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>, 
- linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-iio@vger.kernel.org, David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.1
+References: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
+In-Reply-To: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 29 Oct 2024 23:03:14 +0100
+Message-ID: <CACRpkdaEQYBim8TuDCCw15QDUWhHC-VqhGq1Le7eOd76k56zwQ@mail.gmail.com>
+Subject: Re: [PATCH v9 0/6] Add mfd, pinctrl and pwm support to EN7581 SoC
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lee Jones <lee@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
+	linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Replace the call to pwm_get_state() with a call to pwm_get_state_hw() in
-the ad7606 driver. This allows reading the sampling_frequency attribute
-to return the rate the hardware is actually running at rather than the
-rate that was requested. These may differ when the hardware isn't
-capable of running at exactly the requested frequency.
+On Wed, Oct 23, 2024 at 1:21=E2=80=AFAM Lorenzo Bianconi <lorenzo@kernel.or=
+g> wrote:
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
+> Introduce airoha-mfd driver in order to load pinctrl and pwm drivers for
+> EN7581 SoC. airoha-mfd is needed since both pinctrl and pwm drivers
+> needs to access the same memory block (gpio memory region) to configure
+> {gio,irq}_chip and pwm functionalities respectively, so model them as
+> childs of a parent mfd driver.
 
-I went ahead and made this patch since it is trivial, but it would be
-nice to get a Tested-by from Guillaume to make sure it actually works
-as expected.
----
- drivers/iio/adc/ad7606.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+OK someone has to merge this and I suggest that I merge patches 1-5
+(all bindings and the pinctrl driver) since the different bindings have
+dependencies between them.
 
-diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-index 8b2046baaa3e..1581eb31b8f9 100644
---- a/drivers/iio/adc/ad7606.c
-+++ b/drivers/iio/adc/ad7606.c
-@@ -762,11 +762,9 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
- 		*val = st->oversampling;
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SAMP_FREQ:
--		/*
--		 * TODO: return the real frequency intead of the requested one once
--		 * pwm_get_state_hw comes upstream.
--		 */
--		pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
-+		ret = pwm_get_state_hw(st->cnvst_pwm, &cnvst_pwm_state);
-+		if (ret < 0)
-+			return ret;
- 		*val = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, cnvst_pwm_state.period);
- 		return IIO_VAL_INT;
- 	}
+Then Uwe can merge patch 6/6 (the pwm driver).
 
--- 
-2.43.0
+Anyone against?
 
+Yours,
+Linus Walleij
 
