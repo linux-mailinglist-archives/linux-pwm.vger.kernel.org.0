@@ -1,247 +1,235 @@
-Return-Path: <linux-pwm+bounces-3950-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3951-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A095E9B412E
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 04:45:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1516B9B41A8
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 05:57:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3DA49B21AF3
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 03:45:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD8332836CC
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Oct 2024 04:57:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBD521FE10A;
-	Tue, 29 Oct 2024 03:45:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41C9B1DE4C0;
+	Tue, 29 Oct 2024 04:57:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gtowu2h4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4UZ7SQK"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC34282FB;
-	Tue, 29 Oct 2024 03:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70C72FB2;
+	Tue, 29 Oct 2024 04:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730173545; cv=none; b=cU7VKgyN9Tbvo4XaXV/Z9jcFkjBu/61ZvBF71HWbW2+z2ElSZ3zPizBqzwhtni4HG87khRIMTjkAyUyFtQJdsbMJpfzChO9VgjovyiioqkMgcRxaVn6Fpe/TLMcL0y+77SsK7jwMe2T1saPLDxsa2QKH/CK6Vov0kjv0pQ36C6Q=
+	t=1730177836; cv=none; b=D1r4c2lFaFA2lRIdDJtchxFUbd45IEexOgfc2Iedk0JznDABfLsb8BhTvkE+887pc8JwpmiBvV54fbbLC0h8ZerApLOsIoXWzAJdcXI8GFucVIWWgyZDJgwhL04r8zUmwXUlX54A5RWQ9yrDOlVQJ1dYSjrGi1AyUmp6nA7h1VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730173545; c=relaxed/simple;
-	bh=XYnM6DX+CYxWd6ljUMrgeFtnN/QrAB98BtTRnD5Ohn8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MiR/hcCUb0gDngSvQhBeGQPD+IZPoTW4Xq9DDjwYwu9NUQ/h/AG4qCdlLjGD+UJyudlbaMZZztjdpOeXGBx1ieFPpGM11lRP5sRV+oQ2/vIgyo+dO1IgY+C0l60yFiqIj+cQuWjvkhEjAGd/PkrNe1JtXRx7Mn2cBi2dhZVHQnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gtowu2h4; arc=none smtp.client-ip=209.85.219.175
+	s=arc-20240116; t=1730177836; c=relaxed/simple;
+	bh=w3dNvlar+8hrakFCL0PJdSpSMr2MisQMbNqP8I8bRaE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l2TIq5hkfHvi6AHbuBrFhGnw3wqPBf8NE25my7L256vTsPfCOLpjKuuHSyepWoHNx85LHvlQ0NXxY1OQxAn4aWHMx6l/0KQ2S5dC3si4x5H/Z6Wdg4QIscj3siCqPC8MpVaq8HdARwrJJeY5PjYKfwJtGfq8INv1A2aERny54Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T4UZ7SQK; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e2974743675so4472896276.1;
-        Mon, 28 Oct 2024 20:45:43 -0700 (PDT)
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7b1507c42faso460393885a.0;
+        Mon, 28 Oct 2024 21:57:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730173542; x=1730778342; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T/CTs5K1y1Wb1h73no9mebagu5POeGng1N3JgW2OuRU=;
-        b=Gtowu2h4SGC7DktSemUBNe3r4C20PuuQUK1Gu13xI6e/FzBpc6IK+U5Xtv2IntjXSo
-         E/mdfhK58XXJ6Nmo511UJF8+qnTHJ3QvrtDdBQirngGPLaK4iv/qJx9re8QSbQ3XYhtt
-         W4Hm8gNlTjDjX3FZ7MxCSx4KJGQXa/hsQQpTuDwUN89K5E4Hi9QagrHiuifwTOTtI6gA
-         +b1QLEEATwH7r0iBWRsC+hHQyPqtchS6ycs94PG2YO3inqkwSVolknfWdGjfQduQbhZS
-         4qutj6pb2Gpa/EOuXiHiuEH4iPTSaH29O+HQflMy0BvcFUB0bYmsC10NCYE5SGNy3OWo
-         ifbA==
+        d=gmail.com; s=20230601; t=1730177833; x=1730782633; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=miRKsVITHzAukzsj+/ygTCg9k/xHlCLYaDB0d4rUOqE=;
+        b=T4UZ7SQKh0lWAFPCrQ8snW57OQb0dhWhHbGjZqXTjfJPIe9Pjx7Ij516zaN0DHnZQ4
+         Hc+J7VMZA/+kxxM+dzxwEa07JszQoh9CLJ78FArgaDVnOeCGDWfzxbJDtABpRFcyM+e4
+         9Ri/Du20XwqaXbujI90ToFGwkVOFHSjNM+aigBZh4D9hwDpjioAqG/cdFDytqcMVEB/c
+         bO2pQzRxj0MtKvxVfH94C2Etrh3/dJkzaYN7bXHHhJkRsuWKeP1gixXdT03OI7psnbrS
+         1iSBWCFtqReCAXnUfdKbOcjhO6UDvDezFtAg17r2pbVoroRGQBT+yq8YerjBA/FlRpk/
+         3+gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730173542; x=1730778342;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T/CTs5K1y1Wb1h73no9mebagu5POeGng1N3JgW2OuRU=;
-        b=t5i8r6dSCwm8eh0UCn896urLAM+3epkSM9lcBqYB6b3P1aoI4KXVqFRjR1O/cqW2je
-         BMgH5cLTwqJ+cvnGbmwJBrrPWbpL0spBB2RAd5XZmbkyU7RKtpRIPTbQ2U3l9xbFl4KU
-         Gw253pZRTdsSQSMNQHMIR6hValDX6getVKGCKPMYFUz4UYS6I7u+RUe4+9Pl5nJuQTt4
-         ut/fjBngAFYXY4XD5OejU+3fbotvFmv6pJPMP8DXRpRNKcjC1oqiZ44/JW9tdO10l6Qt
-         Y5HVHmiouDUp7qhhJtgmO8cLpWpOinM/H5faPk7oR3yS4BRzk7JntSlAcyFjd2HxFU1A
-         ubdA==
-X-Forwarded-Encrypted: i=1; AJvYcCURcLGxst1+NU9cIT5bXYzfKvq1OhgGIkaKyW7Ri6MdUap5aSYEpgl7z8GnVuiNu0hp96JUC34I@vger.kernel.org, AJvYcCVLpI+LIcNFeJPFqtgZIQ2tsbWzTQ7YWsnaPoLNBB2vBBlnLNjri45qawrDzCh0urB8T24MSogosFlGCg==@vger.kernel.org, AJvYcCVXEz+IAHGrePm4MZiwdutlNHBRGkpnm5G1vcZWgRH68ka4v13M4aCe9iM5LepavSF4ciqqVSpVNG8=@vger.kernel.org, AJvYcCW0hbK0CU9DKLaZRoRV1/cDBjvrfeDOwlaiZZYpiSlQ3nTWMZvFG/nK28Iv3FTuiQxN8Du0nRVq9L3TQJaF@vger.kernel.org, AJvYcCWAPdNVkHsOdMKm82yQiPuJodMGvS9cLfznjib4cu/RpZoHf3DAXM4NfnVy8R9XPN80OWxKjQ5/lyGX/sGDzxU=@vger.kernel.org, AJvYcCWZkA/Ebsvrsm1nzQqmVI2QoA1ZLgpgTRitgXjN8jvi04UxfTJXUSdvJJZBI29dEHCW19EocshcjMsD@vger.kernel.org, AJvYcCWkG26bwOBYdHuWuIx/w2ArSIw3v87kU1Y4rlaRyWYjU2BOAb7kM0cLziyhhTStxp9nn8JjpB2oIZmG@vger.kernel.org, AJvYcCWuMZkQ6fiBJUd6dKzdOqopu9ee/4dLre2VnjOYGotjP8a2gaFhmngHb70e9lgWIL+Kf7t2PCK6twu8@vger.kernel.org, AJvYcCXQ9JdtvqAXoRNx/prs/2BJ1/R5lr+9AN9OJrqABJIqbhtaB8GOL7kBwuXkw12C7k2tW+FfHJPkHZTMyXg=@vger.kernel.org, AJvYcCXWHd0MgKNNBFnsAHuLjCoPlYuEUNEx
- lw2sttxwdG7itDJKcHe38WKblEkalUz8d8Ebu0alXzNU+97Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXuBDcQF97Vo9aOSBY2QbzEN1iEoyEskfpXMznDbVuFeJHiGq2
-	JIRFRrYrFA/4rwSxWfoURJb/LvIvvRHnE8HDCUl65E04W88xv3VvrwGjfWotcyiVg7ZrPX+Smna
-	jUxy+V7JjyNEx1npWxMvPC9R4Rek=
-X-Google-Smtp-Source: AGHT+IGfm8i1NTOjdK59ar/oHoMjiqsPSqbc0JD5K9R4kxYreI+daaN7dVKfGowPbsaVFEJzyIlEL4zXfN95OO4rnFY=
-X-Received: by 2002:a05:6902:12cc:b0:e28:faf8:5cd7 with SMTP id
- 3f1490d57ef6-e3087a6c107mr8166564276.15.1730173542428; Mon, 28 Oct 2024
- 20:45:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1730177833; x=1730782633;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=miRKsVITHzAukzsj+/ygTCg9k/xHlCLYaDB0d4rUOqE=;
+        b=mRioeFOb3ajJ/LIl+9LIQ0JFfJyLrovHJYWprXAkKG+GgsFkz71C5H4SgJQGLvmrpq
+         X8nC7/JgiUFrP7neuzCQ+Jv0kFaBW8c4/ZMS0IqBd96wvB+Vrrz3xWGw9s1L/4RXvIEe
+         Aj/wk32hK8dpUkS7B11r9nZ0yqLF4AzCeKQUPp2bQBna3YlpvDsUFIzNAZBq/V2Isa8t
+         xmOf5kQNuKa6IwGJrnkuTcPUunujxcj0nLgZVjCU5bQ33N41FgazR2Cqk1wcsV41uepB
+         8orS+KXk098RbIjh7A2OKzF4dB1vI/8vxe19QT06FyyLagcig+NC6m8vi8KAScqAaD9Y
+         nS3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUhpC3RjTxcq9IlZS6rsPpPTq/Zv5UFATvC/6eRZJ2cmObAD21a/tNGnaa2IfbnLTl3yVHe5L4nIA/j@vger.kernel.org, AJvYcCUuuL+JpBN7u+do+Z8w3zw609PnLvjOrROwt2czxa76gI5mqogesE6n2nizk3mnGDRuY9lZhpS5SZ9+552g@vger.kernel.org, AJvYcCW3DsM/QKQHg6SpjxClrDO38nITvZwmx16ph3NKJ6pD2jnngFpf6e1VCKyc5j7jIeDtdGAiRspFK0XVPAwv0OQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQ9XKJK4a1Cpp7RcD1PVVRUjOYiM+i/JmU5URYzdqHZVZzKAO4
+	B1VrA5eLImiQD599XH2RW3PCPd2qncAMPGTnz3QM6QM0Y4QyLdIb
+X-Google-Smtp-Source: AGHT+IGW1ooBeldcdGoeMJo+T427girUR5zVV1hzqHzNK8xt/vLyirJwTY09tBGqdQSIjGkKrufbxQ==
+X-Received: by 2002:a05:6214:2f88:b0:6cb:c661:49ce with SMTP id 6a1803df08f44-6d2f62d4b03mr13390146d6.23.1730177832557;
+        Mon, 28 Oct 2024 21:57:12 -0700 (PDT)
+Received: from yoga (ool-1826d901.dyn.optonline.net. [24.38.217.1])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d17972f622sm39003676d6.9.2024.10.28.21.57.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2024 21:57:11 -0700 (PDT)
+Date: Tue, 29 Oct 2024 00:57:08 -0400
+From: Alex Lanzano <lanzano.alex@gmail.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Mehdi Djait <mehdi.djait@bootlin.com>, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] drm/tiny: Fix some error handling paths in
+ sharp_memory_probe()
+Message-ID: <7b4y5djihc4ov7o2h6t27qakvvunkmf4ieozf3earesseny4qd@wdcpk35zt3zg>
+References: <b218165cf9af60907e0912266134f1ef1d3617b9.1729924305.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024085922.133071-2-tmyu0@nuvoton.com>
- <20241024-adventurous-imaginary-hornet-4d5c46-mkl@pengutronix.de>
- <CAOoeyxUhnyYG3p+DQJG-tvU5vc5WYQZLLqCXW=uPcXTjq2gVfw@mail.gmail.com>
- <20241025-truthful-honest-newt-c371c8-mkl@pengutronix.de> <CAOoeyxUEf5vjqL67WjR-DbrhE0==2hqHLEyZ5XEBhEfMfQ5pag@mail.gmail.com>
- <20241025-spirited-nocturnal-antelope-ce93dd-mkl@pengutronix.de>
- <CAOoeyxW5QwPMGAYCWhQDtZwJJLG5xj9HXpL3-cduRSgF+4VHhg@mail.gmail.com>
- <20241028-uptight-modest-puffin-0556e7-mkl@pengutronix.de>
- <CAOoeyxU1r3ayhNWrbE_muDhA0imfZYX3-UHxSen9TqsTrSsxyA@mail.gmail.com> <20241028-observant-gentle-doberman-0a2baa-mkl@pengutronix.de>
-In-Reply-To: <20241028-observant-gentle-doberman-0a2baa-mkl@pengutronix.de>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Tue, 29 Oct 2024 11:45:30 +0800
-Message-ID: <CAOoeyxWh1-=NVQdmNp5HBzf1YPo9tQdh=OzUUVFmvC-F7sCHWg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/9] mfd: Add core driver for Nuvoton NCT6694
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b218165cf9af60907e0912266134f1ef1d3617b9.1729924305.git.christophe.jaillet@wanadoo.fr>
 
-Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2024=E5=B9=B410=E6=9C=8828=
-=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8810:06=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
-> On 28.10.2024 16:31:25, Ming Yu wrote:
-> > > > > > > > > The Linux USB stack can receive bulk messages longer than=
- the max packet size.
-> > > > > > > >
-> > > > > > > > [Ming] Since NCT6694's bulk pipe endpoint size is 128 bytes=
- for this MFD device.
-> > > > > > > > The core will divide packet 256 bytes for high speed USB de=
-vice, but
-> > > > > > > > it is exceeds
-> > > > > > > > the hardware limitation, so I am dividing it manually.
-> > > > > > >
-> > > > > > > You say the endpoint descriptor is correctly reporting it's m=
-ax packet
-> > > > > > > size of 128, but the Linux USB will send packets of 256 bytes=
-?
-> > > > > >
-> > > > > > [Ming] The endpoint descriptor is correctly reporting it's max =
-packet
-> > > > > > size of 256, but the Linux USB may send more than 256 (max is 5=
-12)
-> > > > > > https://elixir.bootlin.com/linux/v6.11.5/source/drivers/usb/hos=
-t/xhci-mem.c#L1446
-> > > > >
-> > > > > AFAIK according to the USB-2.0 spec the maximum packet size for
-> > > > > high-speed bulk transfers is fixed set to 512 bytes. Does this me=
-an that
-> > > > > your device is a non-compliant USB device?
-> > > >
-> > > > We will reduce the endpoint size of other interfaces to ensure that=
- MFD device
-> > > > meets the USB2.0 spec. In other words, I will remove the code for m=
-anual
-> > > > unpacking in the next patch.
-> > >
-> > > I was not talking about the driver, but your USB device. According to
-> > > the USB2.0 spec, the packet size is fixed to 512 for high-speed bulk
-> > > transfers. So your device must be able to handle 512 byte transfers o=
-r
-> > > it's a non-compliant USB device.
-> >
-> > I understand. Therefore, the USB device's firmware will be modified to =
-support
-> > bulk pipe size of 512 bytes to comply with the USB 2.0 spec.
->
-> Then you don't need manual segmentation of bulk transfers anymore!
-
-Understood, thank you very much.
-
->
-> > > > > > > > > > +     for (i =3D 0, len =3D length; len > 0; i++, len -=
-=3D packet_len) {
-> > > > > > > > > > +             if (len > nct6694->maxp)
-> > > > > > > > > > +                     packet_len =3D nct6694->maxp;
-> > > > > > > > > > +             else
-> > > > > > > > > > +                     packet_len =3D len;
-> > > > > > > > > > +
-> > > > > > > > > > +             ret =3D usb_bulk_msg(udev, usb_rcvbulkpip=
-e(udev, BULK_IN_ENDPOINT),
-> > > > > > > > > > +                                nct6694->rx_buffer + n=
-ct6694->maxp * i,
-> > > > > > > > > > +                                packet_len, &rx_len, n=
-ct6694->timeout);
-> > > > > > > > > > +             if (ret)
-> > > > > > > > > > +                     goto err;
-> > > > > > > > > > +     }
-> > > > > > > > > > +
-> > > > > > > > > > +     for (i =3D 0; i < rd_len; i++)
-> > > > > > > > > > +             buf[i] =3D nct6694->rx_buffer[i + rd_idx]=
-;
-> > > > > > > > >
-> > > > > > > > > memcpy()?
-> > > > > > > > >
-> > > > > > > > > Or why don't you directly receive data into the provided =
-buffer? Copying
-> > > > > > > > > of the data doesn't make it faster.
-> > > > > > > > >
-> > > > > > > > > On the other hand, receiving directly into the target buf=
-fer means the
-> > > > > > > > > target buffer must not live on the stack.
-> > > > > > > >
-> > > > > > > > [Ming] Okay! I'll change it to memcpy().
-> > > > > > >
-> > > > > > > fine!
-> > > > > > >
-> > > > > > > > This is my perspective: the data is uniformly received by t=
-he rx_bffer held
-> > > > > > > > by the MFD device. does it need to be changed?
-> > > > > > >
-> > > > > > > My question is: Why do you first receive into the nct6694->rx=
-_buffer and
-> > > > > > > then memcpy() to the buffer provided by the caller, why don't=
- you
-> > > > > > > directly receive into the memory provided by the caller?
-> > > > > >
-> > > > > > [Ming] Due to the bulk pipe maximum packet size limitation, I t=
-hink consistently
-> > > > > > using the MFD'd dynamically allocated buffer to submit URBs wil=
-l better
-> > > > > > manage USB-related operations
-> > > > >
-> > > > > The non-compliant max packet size limitation is unrelated to the
-> > > > > question which RX or TX buffer to use.
-> > > >
-> > > > I think these two USB functions can be easily called using the buff=
-er
-> > > > dynamically
-> > > > allocated by the MFD. However, if they transfer data directly to th=
-e
-> > > > target buffer,
-> > > > they must ensure that it is not located on the stack.
-> > >
-> > > You have a high coupling between the MFD driver and the individual
-> > > drivers anyways, so why not directly use the dynamically allocated
-> > > buffer provided by the caller and get rid of the memcpy()?
-> >
-> > Okay! I will provide a function to request and free buffer for child de=
-vices,
-> > and update the caller's variables to use these two functions in the nex=
-t patch.
->
-> I don't see a need to provide dedicated function to allocate and free
-> the buffers. The caller can allocate them as part of their private data,
-> or allocate them during probe().
-
-Okay, so each child device may allocate a buffer like this during probe():
-priv->xmit_buf =3D devm_kcalloc(dev, MAX_PACKET_SZ, sizeof(unsigned char),
-GFP_KERNEL), right?
-
->
-> regards,
-> Marc
->
-> --
-> Pengutronix e.K.                 | Marc Kleine-Budde          |
-> Embedded Linux                   | https://www.pengutronix.de |
-> Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-> Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
-Thanks,
-Ming
+On Sat, Oct 26, 2024 at 08:32:36AM +0200, Christophe JAILLET wrote:
+> If an error occurs after allocating resources based on which
+> "sharp,vcom-mode" is used, then these resources must be released, as
+> already done in the .remove() function.
+> 
+> Use 2 new devm_add_action_or_reset() for that and simplify code
+> accordingly.
+> 
+> Fixes: b8f9f21716fe ("drm/tiny: Add driver for Sharp Memory LCD")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Compile tested only
+> ---
+>  drivers/gpu/drm/tiny/sharp-memory.c | 66 ++++++++++++++---------------
+>  1 file changed, 32 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tiny/sharp-memory.c b/drivers/gpu/drm/tiny/sharp-memory.c
+> index 2d2315bd6aef..01d1ce2462e1 100644
+> --- a/drivers/gpu/drm/tiny/sharp-memory.c
+> +++ b/drivers/gpu/drm/tiny/sharp-memory.c
+> @@ -48,12 +48,6 @@ enum sharp_memory_model {
+>  	LS044Q7DH01,
+>  };
+>  
+> -enum sharp_memory_vcom_mode {
+> -	SHARP_MEMORY_SOFTWARE_VCOM,
+> -	SHARP_MEMORY_EXTERNAL_VCOM,
+> -	SHARP_MEMORY_PWM_VCOM
+> -};
+> -
+>  struct sharp_memory_device {
+>  	struct drm_device drm;
+>  	struct spi_device *spi;
+> @@ -67,10 +61,6 @@ struct sharp_memory_device {
+>  
+>  	struct gpio_desc *enable_gpio;
+>  
+> -	struct task_struct *sw_vcom_signal;
+> -	struct pwm_device *pwm_vcom_signal;
+> -
+> -	enum sharp_memory_vcom_mode vcom_mode;
+>  	u8 vcom;
+>  
+>  	u32 pitch;
+> @@ -500,25 +490,41 @@ static int sharp_memory_pipe_init(struct drm_device *dev,
+>  	return drm_connector_attach_encoder(connector, encoder);
+>  }
+>  
+> +static void sharp_memory_stop_kthread(void *data)
+> +{
+> +	struct task_struct *task = data;
+> +
+> +	kthread_stop(task);
+> +}
+> +
+> +static void sharp_memory_disable_pwm(void *data)
+> +{
+> +	struct pwm_device *pwm = data;
+> +
+> +	pwm_disable(pwm);
+> +}
+> +
+>  static int sharp_memory_init_pwm_vcom_signal(struct sharp_memory_device *smd)
+>  {
+>  	int ret;
+>  	struct device *dev = &smd->spi->dev;
+> +	struct pwm_device *pwm_vcom_signal;
+>  	struct pwm_state pwm_state;
+>  
+> -	smd->pwm_vcom_signal = devm_pwm_get(dev, NULL);
+> -	if (IS_ERR(smd->pwm_vcom_signal))
+> -		return dev_err_probe(dev, PTR_ERR(smd->pwm_vcom_signal),
+> +	pwm_vcom_signal = devm_pwm_get(dev, NULL);
+> +	if (IS_ERR(pwm_vcom_signal))
+> +		return dev_err_probe(dev, PTR_ERR(pwm_vcom_signal),
+>  				     "Could not get pwm device\n");
+>  
+> -	pwm_init_state(smd->pwm_vcom_signal, &pwm_state);
+> +	pwm_init_state(pwm_vcom_signal, &pwm_state);
+>  	pwm_set_relative_duty_cycle(&pwm_state, 1, 10);
+>  	pwm_state.enabled = true;
+> -	ret = pwm_apply_might_sleep(smd->pwm_vcom_signal, &pwm_state);
+> +	ret = pwm_apply_might_sleep(pwm_vcom_signal, &pwm_state);
+>  	if (ret)
+>  		return dev_err_probe(dev, -EINVAL, "Could not apply pwm state\n");
+>  
+> -	return 0;
+> +	return devm_add_action_or_reset(dev, sharp_memory_disable_pwm,
+> +					pwm_vcom_signal);
+>  }
+>  
+>  static int sharp_memory_probe(struct spi_device *spi)
+> @@ -595,15 +601,20 @@ static int sharp_memory_probe(struct spi_device *spi)
+>  				     "Unable to find sharp,vcom-mode node in device tree\n");
+>  
+>  	if (!strcmp("software", vcom_mode_str)) {
+> -		smd->vcom_mode = SHARP_MEMORY_SOFTWARE_VCOM;
+> -		smd->sw_vcom_signal = kthread_run(sharp_memory_sw_vcom_signal_thread,
+> -						  smd, "sw_vcom_signal");
+> +		struct task_struct *sw_vcom_signal;
+> +
+> +		sw_vcom_signal = kthread_run(sharp_memory_sw_vcom_signal_thread,
+> +					     smd, "sw_vcom_signal");
+> +
+> +		ret = devm_add_action_or_reset(dev, sharp_memory_stop_kthread,
+> +					       sw_vcom_signal);
+> +		if (ret)
+> +			return ret;
+>  
+>  	} else if (!strcmp("external", vcom_mode_str)) {
+> -		smd->vcom_mode = SHARP_MEMORY_EXTERNAL_VCOM;
+> +		/* empty */
+>  
+>  	} else if (!strcmp("pwm", vcom_mode_str)) {
+> -		smd->vcom_mode = SHARP_MEMORY_PWM_VCOM;
+>  		ret = sharp_memory_init_pwm_vcom_signal(smd);
+>  		if (ret)
+>  			return ret;
+> @@ -640,19 +651,6 @@ static void sharp_memory_remove(struct spi_device *spi)
+>  
+>  	drm_dev_unplug(&smd->drm);
+>  	drm_atomic_helper_shutdown(&smd->drm);
+> -
+> -	switch (smd->vcom_mode) {
+> -	case SHARP_MEMORY_SOFTWARE_VCOM:
+> -		kthread_stop(smd->sw_vcom_signal);
+> -		break;
+> -
+> -	case SHARP_MEMORY_EXTERNAL_VCOM:
+> -		break;
+> -
+> -	case SHARP_MEMORY_PWM_VCOM:
+> -		pwm_disable(smd->pwm_vcom_signal);
+> -		break;
+> -	}
+>  }
+>  
+>  static struct spi_driver sharp_memory_spi_driver = {
+> -- 
+> 2.47.0
+> 
+Tested-by: Alex Lanzano <lanzano.alex@gmail.com>
+Reviewed-by: Alex Lanzano <lanzano.alex@gmail.com>
 
