@@ -1,171 +1,154 @@
-Return-Path: <linux-pwm+bounces-3973-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3974-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D5EF9B5DD3
-	for <lists+linux-pwm@lfdr.de>; Wed, 30 Oct 2024 09:28:19 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AFFA9B5DE4
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Oct 2024 09:30:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD876283F70
-	for <lists+linux-pwm@lfdr.de>; Wed, 30 Oct 2024 08:28:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12A97B21D6F
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Oct 2024 08:30:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 780891991CF;
-	Wed, 30 Oct 2024 08:28:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E73911E0E0E;
+	Wed, 30 Oct 2024 08:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="q0A+LHSk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHjwf91M"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621A31E0E0E
-	for <linux-pwm@vger.kernel.org>; Wed, 30 Oct 2024 08:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA65114F90;
+	Wed, 30 Oct 2024 08:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730276888; cv=none; b=ZdJy9r5xOlNUYXhprIKSrI8rVwfvQSeUlX5rLn2ZwnlLj8jQYDpI/25kwid2lPMLCzdbRoLm2bA6aXWUGeuLyQzffZviWf14RbFuaA+O94aqKFkQsbG4Bo6aPak0URSmYLx3EP5BkaE0j/Ca607YxjjKyi+GvBp/Su3JWNGDKg4=
+	t=1730277051; cv=none; b=YINPAZRjdZgjj3IRQMZ53I7xi6iXJAzBsdy6Pbrlm6T4K54n7tKQz3ReTcBLOShXH+X8MkLgSqs+/kQAddSbfrRzE30frJ7bdZYqFMWSkQbnaDJHz3hzSA+bPAWXTYbOF88Fmt20DdkCplSi+GbiWdiD9qiaRw4aE/6SjQHjrl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730276888; c=relaxed/simple;
-	bh=2EJQviS+R0eeRdt1aLK6bINveA2q82bII4Ab8JdcMJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D6AmiZVhc/1J8iS0oeuCZ/otFBMsp8GJ73ymZZETwHkjM1iwmZ4ZDl/Yw0+W66G8gYRwSICNxWcxVmKmIyPHplB7NKj5MxKxtrJT7pTnA+6T46OxRQJWicMHhwEbQG1r+3OzPLJ2Q0KTAQRHxHO+4dSoGp3WdlbRpdTXV7ufI4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=q0A+LHSk; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2fb5740a03bso61931911fa.1
-        for <linux-pwm@vger.kernel.org>; Wed, 30 Oct 2024 01:28:05 -0700 (PDT)
+	s=arc-20240116; t=1730277051; c=relaxed/simple;
+	bh=kaltN+RuaBtKA+njTIOTqNhKc1ILmMjKsnquuYPjYb4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iiaQn1oBnWypIBAYv7bwtGgGZRYK++KWXbxS/H80wgn3ksfYaliJMw/2/hIaAxrZ6g6fhBUbJkg3x3NGFKBlthedW+bfgI5EWAzIZglfnJB3mbOMQCn5vDJG9tSjORQwX1QbK1H3PJMxJT43VYbv5zt7lX6F+Bq9b332c4EpXT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHjwf91M; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e2972abc807so6172157276.3;
+        Wed, 30 Oct 2024 01:30:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730276883; x=1730881683; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tBYL9vmtVYAL0EFLZkcBgrxKAFI5YLz3NtbAqMnDtEY=;
-        b=q0A+LHSkZgKRpQ0YsO/IS27P75R1MQGURPshorq5S1qWWvA8rWZHDqpus1rXxu8t+Q
-         ZoH1aIaCWnMw0VnUOJ/qOC4U58yOWIJA+HmI5q/jpvX8nomJbXN+5nfXSq9tUptDjKC/
-         vFN6jXxfNw2CRYiXPDIVED7XRY/KAR7bROaUtZbTEv8FfiNg+WXJ8fKjQ9GmIJBEcE9O
-         F70G26H9Lo3UXNpmf6suiFsvUXl96R9LTM3g6+HxH5BHPVqGx4Vc+KJf7v3Av2iG0cuT
-         ddRdLWBhZsB/RK8oinX7He3YRo5ApMWzKtop08GvdRPZibE8YoSjoMl/BeosAXpZsAKO
-         keJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730276883; x=1730881683;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1730277049; x=1730881849; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tBYL9vmtVYAL0EFLZkcBgrxKAFI5YLz3NtbAqMnDtEY=;
-        b=B3NQ518xYrhLmrb/hCmUVk0VL5KsQY1Z9qBfXpu1Z9LxHiOCnGCnQugIurpI/R1DI8
-         BqNZVum+MtNGfEj/CKJpfxNVynOosaDae0nCTohTGuUIxjtG8d652OuTgZOgcbZbHdd2
-         Ch0i/taHKlzUEJ7772flFFMV+CnlQ1vcQ0ukhWR+BYFtsCaRbGg+lFWnivcbDWSs0L9i
-         VFE5P1MWJx2IJwyKfrTmuxXVl3gYfWOUqL1hmE+QZymuBIJPSajHAjaciquuckMzbj+i
-         wsV0iRMfGVeJU8QKm5cXtUrcxq9Zvzmkpct4uIeKr8c54FTGhIICpITnYc53yHpdqAg0
-         SLQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEFunze3xdZog2YhBtMCJW2bLa2mV2trWbufEwK+d+ZkAEpSlR56AUAV3WKDWncC9SVI7or76amxI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywye44cpxow4iTkh1p5LBgfXbp3CA7+0eO0hFEujvwtq0mOC6uq
-	9j7JlMEBb+JpTtYHJ5w/WA60ULfBp5fWL4XV8Yk4kseoFQpYBuYgcUoZuO0UOl0=
-X-Google-Smtp-Source: AGHT+IHLXshujnLj55pap6bOslh51Qbc83Y5ZvmdLqv/90zLHoTuLWDGQOvp4ELrigrr0rv56OxcoA==
-X-Received: by 2002:a2e:a99b:0:b0:2fb:5bb8:7c00 with SMTP id 38308e7fff4ca-2fd058fb962mr13655171fa.2.1730276883393;
-        Wed, 30 Oct 2024 01:28:03 -0700 (PDT)
-Received: from localhost (p50915d2d.dip0.t-ipconnect.de. [80.145.93.45])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431bd97d5fcsm13934505e9.28.2024.10.30.01.28.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2024 01:28:03 -0700 (PDT)
-Date: Wed, 30 Oct 2024 09:28:01 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
-	Guillaume Stols <gstols@baylibre.com>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] iio: adc: ad7606: finish pwm_get_state_hw() TODO
-Message-ID: <iajs2rk7odutqwoih4h6besd4b4nnksap6om5r7i2cw5arqcip@rvztnliokuk3>
-References: <20241029-pwm-export-pwm_get_state_hw-v2-0-03ba063a3230@baylibre.com>
- <20241029-pwm-export-pwm_get_state_hw-v2-2-03ba063a3230@baylibre.com>
+        bh=83QsD+0SmOIU2ZSbEm0g75qhVVIQnebcpG7P/LY0U3o=;
+        b=EHjwf91MtE6JMHX9Ebi1m61WjVZvdJmB+3zHLskYVQNrOGDil7hZiAcc4GVHAd6Pas
+         5eaO0lQQfdtj859uCfrCCDDmSUGOtAkOAWgxeTQ1SdE/V6nQ2ZzGGNiGrNNYoKpXGHfQ
+         j1BEoVLl5NPI/D1dHI5jqvUClIJ3GQeL5y/ZLD+p7tCxMvySDcxhSCkk8rO7FPjdbRTJ
+         BGAQAvwjWrkefaxJOmse/N2R0OIJys79ttCbgFBZ7qB+SlLOkoXPUQoK3VVnKAxs2peu
+         /K13ysnTZIV0m1BpipkM02pLVHBFA0w8iWjHwlpeNll3kSdAAWUJg66O/wkUGV4omBVh
+         Rqzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730277049; x=1730881849;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=83QsD+0SmOIU2ZSbEm0g75qhVVIQnebcpG7P/LY0U3o=;
+        b=jhtqIFe3mbzqvtbJKl2ld8fna/N2XxDbd9VnWsry+6TrHVaRunbg3mb1/c6cTx6EJv
+         szk6j8Hk6nqR3NnoyuqsBEulggWL8W70MFlOh1UYLWsU4EDZeamCxu1JexPMWnxpgz8E
+         gB+CzoSzlT5iGS8fmyyt5CtcuSBUz0nF9wcNPLk/nDIk8xpxOCOomQLTw+cyrIIpmNur
+         c+xf9+OAVjoAMH0Cmg/DbUzbc+S8PK1vLFhJlany1Z+q9UxQAFo8nbuFaoDtavXucnrX
+         cTI74MpSSy6SVpoul9nCbMyo4FX26d7ENxYBtQKFHDHM/ooa/pdPzE7ngDTvPtqAKqY5
+         PZrg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7xnoX3QHKM8BfrdZQ6kCyMmpV9XORVR5Z5nw8lMaUjUcTyP0ksCUTVVNGWGsrvqpmlbHadnpqE8pL@vger.kernel.org, AJvYcCUKOQRmyBco+TUNRLB9/5HncvM9JrzY9GpfLf6Cz/tUFVcwsZjGM2A0hmq7+FBZICPtOwR1pdmuuF8jF6hY1qY=@vger.kernel.org, AJvYcCUiH6SOhc9QxVCoQfcSqfZXcTtBqGblOoZT/hRAhrBaF0Mi4+KbxndZF4R+WLSuecxx/KNvdKC63T+v@vger.kernel.org, AJvYcCVRndUBZx4ULbzi5/XKSIfXl4+GX6PiY496AWkySkIUNFTmByL5UWo8LlKfXY9Yti0qJbYS2JC2ziVJ@vger.kernel.org, AJvYcCVYo5kZOQ6kHg6XYmYEcLz+7sSixrg49qf3vcFfNMTaJ2/aNtRd6PQXP9NpkF69pTG1+3dbBp0v1qw=@vger.kernel.org, AJvYcCVfdg/TcpLk+2+Y4VJbciae/J88tpWANkysluUaOFdL1K27ddq+pux7dGldq5pZwn+xsAZVILN2N6+zXw==@vger.kernel.org, AJvYcCW1eJc578bgGWqhk9N987kqvapowvrwrYAZXjqPRo1PjxqfecQ7sYrs6pCByS7D+mLhQdxM0QOyewxVWp8=@vger.kernel.org, AJvYcCWhMVHWaA3z8CAB2jKAUiBC/I9BqnVzCzmjGb0gvi8wD/PQMqRddAeFpPVtVMFFn39o6gnPdJv0@vger.kernel.org, AJvYcCWqEbZxVo+obMyLaNjQFvKfxb+g+ZKNaAGTDXk+HhrLu75NizClGuKuHaqXcEYnvvHFNrlDcyJ67i9P@vger.kernel.org, AJvYcCXRBQ1u0uqMoro+5Q9nmYeRPumVVfUJp7KM
+ w5A6EHLfWbylMuWkmx3PS8z+Bakm0H9Ea/ZSJiTrqjbyXT5W@vger.kernel.org
+X-Gm-Message-State: AOJu0YzK2JYi9nzaEbVbDnfg7hcEIE+NclBxRic87I2vcJ5u0YRYe+k/
+	MhtxdOBC8Pffqqyq2weB2MyuE4aR5VWir9japz4jThdLfycmFhByb42PoVt+q9SDM4igTvX1OFo
+	Gbb7NVpxfObYXN/1+2j8sMApt/mk=
+X-Google-Smtp-Source: AGHT+IGXNYy381QkNndFOp7Kep7v+AsfnJYrtU85o86EwyuP7sESCo7RFZ/IU1mfbniSwKfrtjlalqvrFol9fGaaTOU=
+X-Received: by 2002:a05:6902:1144:b0:e30:da6f:ccb4 with SMTP id
+ 3f1490d57ef6-e30da6fce98mr354099276.43.1730277048550; Wed, 30 Oct 2024
+ 01:30:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="n5xp3y2il3quy7aj"
-Content-Disposition: inline
-In-Reply-To: <20241029-pwm-export-pwm_get_state_hw-v2-2-03ba063a3230@baylibre.com>
-
-
---n5xp3y2il3quy7aj
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
+References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024-eminent-dancing-narwhal-8f25dd-mkl@pengutronix.de>
+ <CAOoeyxV4K=jR+tofeQtsMB7+smuu+Ghas5Tqfx4JvhuVK8dXrA@mail.gmail.com> <20241025-modest-hasty-angelfish-1e9193-mkl@pengutronix.de>
+In-Reply-To: <20241025-modest-hasty-angelfish-1e9193-mkl@pengutronix.de>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Wed, 30 Oct 2024 16:30:37 +0800
+Message-ID: <CAOoeyxU9VwsM=mRZy5AtjH=V3iSGQxkKw18qL+yeUxkh1OVHgQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/9] Add Nuvoton NCT6694 MFD devices
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	jic23@kernel.org, lars@metafoo.de, ukleinek@kernel.org, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 2/2] iio: adc: ad7606: finish pwm_get_state_hw() TODO
-MIME-Version: 1.0
 
-On Tue, Oct 29, 2024 at 04:18:50PM -0500, David Lechner wrote:
-> Replace the call to pwm_get_state() with a call to pwm_get_state_hw() in
-> the ad7606 driver. This allows reading the sampling_frequency attribute
-> to return the rate the hardware is actually running at rather than the
-> rate that was requested. These may differ when the hardware isn't
-> capable of running at exactly the requested frequency.
->=20
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->=20
-> I went ahead and made this patch since it is trivial, but it would be
-> nice to get a Tested-by from Guillaume to make sure it actually works
-> as expected.
-> ---
->  drivers/iio/adc/ad7606.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> index 8b2046baaa3e..1581eb31b8f9 100644
-> --- a/drivers/iio/adc/ad7606.c
-> +++ b/drivers/iio/adc/ad7606.c
-> @@ -762,11 +762,9 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
->  		*val =3D st->oversampling;
->  		return IIO_VAL_INT;
->  	case IIO_CHAN_INFO_SAMP_FREQ:
-> -		/*
-> -		 * TODO: return the real frequency intead of the requested one once
-> -		 * pwm_get_state_hw comes upstream.
-> -		 */
-> -		pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
-> +		ret =3D pwm_get_state_hw(st->cnvst_pwm, &cnvst_pwm_state);
-> +		if (ret < 0)
-> +			return ret;
->  		*val =3D DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, cnvst_pwm_state.period);
->  		return IIO_VAL_INT;
->  	}
+Dear Marc,
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+I am trying to register interrupt controller for the MFD deivce.
+I need to queue work to call handle_nested_irq() in the callback
+of the interrupt pipe, right?
 
-There is a slight inconsistency compared to ad7606_set_sampling_freq():
+Best regards,
+Ming
 
-ad7606_set_sampling_freq uses
-
-	cnvst_pwm_state.period =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, freq);
-
-=2E So if cnvst_pwm_state.period happens to be 3 ns then reading
-the freq value yields 333333333, but if you feed freq=3D333333333 into
-ad7606_set_sampling_freq() it sets period =3D 4.
-
-To fix that you'd better use a plain / here in ad7606_read_raw().
-(Note that with using round-closest for both there are still corner
-cases, e.g. period =3D 31796 ns yields freq =3D 31450.496917851302 but
-setting freq =3D 31450 yields 31796.50238473768 and so 31797.)
-
-Best regards
-Uwe
-
---n5xp3y2il3quy7aj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmch7g8ACgkQj4D7WH0S
-/k5cyAf9ELnSckQLX02VlSjt88Fhbhbb+mCKMOBryiijJlYNtGhk+dfI5Yqyv6mf
-WM50/KzHu4CqA6owAQuhfqzL4og2AiOJN3QazfHKK1Dtltll/135JgUptuwu+W5n
-n9BS/HNMXCJa/TcMtHXvPbo4FgLdG1gvuXyV+/Ic5iPga+9AWTv++0PxxIENEjFK
-yN/cy7bOuvrtTwCgZ/i1DTKh3h2/IDADYoxgTWtWxJ4qKLy2a6yROYBFyAR5jE7d
-KsY2s855/TWYIRj0MCp6aOLSjo+sO1Eve5zjdzxz6kAilWwPe60BMScL7PTYevVL
-6tL+ZU4J7tKazH3J9Y6alWU+W/OZMg==
-=Gx0C
------END PGP SIGNATURE-----
-
---n5xp3y2il3quy7aj--
+Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2024=E5=B9=B410=E6=9C=8825=
+=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:33=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> On 25.10.2024 16:22:01, Ming Yu wrote:
+> > Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2024=E5=B9=B410=E6=9C=
+=8824=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:57=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> > > On 24.10.2024 16:59:13, Ming Yu wrote:
+> > > > This patch series introduces support for Nuvoton NCT6694, a periphe=
+ral
+> > > > expander based on USB interface. It models the chip as an MFD drive=
+r
+> > > > (1/9), GPIO driver(2/9), I2C Adapter driver(3/9), CANfd driver(4/9)=
+,
+> > > > WDT driver(5/9), HWMON driver(6/9), IIO driver(7/9), PWM driver(8/9=
+),
+> > > > and RTC driver(9/9).
+> > > >
+> > > > The MFD driver implements USB device functionality to issue
+> > > > custom-define USB bulk pipe packets for NCT6694. Each child device =
+can
+> > > > use the USB functions nct6694_read_msg() and nct6694_write_msg() to=
+ issue
+> > > > a command. They can also register a handler function that will be c=
+alled
+> > > > when the USB device receives its interrupt pipe.
+> > >
+> > > What about implementing a proper IRQ demux handler instead?
+>
+> > I think the currently planned IRQ process meets expectations.
+> > Is there anything that needs improvement?
+>
+> You can register the IRQs of the MFD device with the Linux kernel. This
+> way the devices can request a threaded IRQ handler directly via the
+> kernel function, instead of registering the callback.
+>
+> With a threaded IRQ handler you can directly call the
+> nct6694_read_msg(), nct6694_write_msg() without the need to start a
+> workqueue from the callback.
+>
+> Marc
+>
+> --
+> Pengutronix e.K.                 | Marc Kleine-Budde          |
+> Embedded Linux                   | https://www.pengutronix.de |
+> Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+> Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
