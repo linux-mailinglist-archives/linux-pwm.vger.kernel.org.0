@@ -1,128 +1,235 @@
-Return-Path: <linux-pwm+bounces-3970-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3971-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B50AD9B5D22
-	for <lists+linux-pwm@lfdr.de>; Wed, 30 Oct 2024 08:42:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CC119B5D58
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Oct 2024 09:05:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C46C1F243B9
-	for <lists+linux-pwm@lfdr.de>; Wed, 30 Oct 2024 07:42:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 858821F22147
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Oct 2024 08:05:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDE581E0B96;
-	Wed, 30 Oct 2024 07:42:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D333E1C4603;
+	Wed, 30 Oct 2024 08:05:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5FIz6fJ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="nnvI9yec"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D441DFD8E;
-	Wed, 30 Oct 2024 07:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BB518B46E
+	for <linux-pwm@vger.kernel.org>; Wed, 30 Oct 2024 08:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730274147; cv=none; b=n8019ZGPCemp/DWqce5E3FuN9DTa8wjIK1FrjNl/uGoskGPo2ray0GEK0n2fygz0PjTnsJ/5l3v2GHguFAfP/Kfc6LjFBSRoSM4D1urOVLHnDBLb487eCFkwSv/IMDRLjGHQ4L6mRl2JL7aJ1ZvKBhAwTJNSfH6j5Zvwq29BSDk=
+	t=1730275527; cv=none; b=Z8YiJsRB8hzRHk4y9Jwh/HrwLJU2QRYlgKTAOC2tNDvyoE+YCDh3Z242iFcjLhbL15hyUIf9Sr8G6hsrHQeLApgcWya18jRuSl0spiOf+ozKGfb9u7dKzyhlKsGiPGjG2jDnbrWPXSf1/U4ccRz/gLx/5x9K1MS/JdpOhd4R0pQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730274147; c=relaxed/simple;
-	bh=vBPcXotyGZ/i5JXyF/OdPr9Pqo7sjFrngRcld4peje8=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uRMFi9PI6MFSt2NDD+tOMiE6WmqkYoFk2Ar82prlQkhaUY1ixsodnJJWV4vA/cIQfZLs1Fq45+OLd8ruamHsK8nbPXi4MhRMzSpvfozthMfm4cpvxWqzAJiE5SzOCtpnA+uAGFe2UekdcrM+kUft2XL0r39gvvkLAw7SppU65r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g5FIz6fJ; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4315f24a6bbso59398325e9.1;
-        Wed, 30 Oct 2024 00:42:25 -0700 (PDT)
+	s=arc-20240116; t=1730275527; c=relaxed/simple;
+	bh=xC9SDy6NXbn2MbGBsoWI1wrFZt4s6GO3mVUzc8cbiTw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KK/8yq0ro0D8HXv1qVrBFdjUwrpZhr5S+GJgPJMshyT6GOgmgtUlV5ynmFHlujpKIeZ2nU3QWAEvliBsVxtUg25PJNev1qUK6tIiDLrq93/LyNnIJsGPcwGS/PR3rEHrgg7m1e/Zzj40am0TiJ0gYTam7gWKnA7BI8u5dYZ20Sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=nnvI9yec; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-37d495d217bso5669808f8f.0
+        for <linux-pwm@vger.kernel.org>; Wed, 30 Oct 2024 01:05:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730274144; x=1730878944; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=F/obSxVgLXYAZ3S4bATKBujgO8U8oWR6WSGb4BNz1Rc=;
-        b=g5FIz6fJTW0gjCBWvAg7rj+Qe5PVTzyIBgX7WLvy+lTnoZR2VpU0BoruRAwDJ+Y1kp
-         /vrt/o1qKRZyUxp52ZkidoKJhh/jdmPRQV7PuGDyjEZzxed3PmdLbdMR7ry7FucIoZtY
-         RClT1ESCbsN3OrB/QWUcmrPlrxikZaQlxhtzJhhsdvXxYU0/ZiZC1hI8k3RAhymTMk1j
-         MXOiqXB3LmXYTiihe9sqoqdVbEuT0CaNyAbG8eWB/p2VvyFzp8loO32SdV8oBeTbb10K
-         eJZGLwEK7xbq7MeXhrSQwLL8wZSwTKzCK5LZUrNJGOAF6b3CNqix76TQxBYd0Vx7Xx33
-         KqdQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730275523; x=1730880323; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PBSXK7Wg5WPAyNzi9dlLEOve6W9CQsYBAJ6iQX8H4CY=;
+        b=nnvI9yecWX5PYC3ROyrEzSdvaXYbh7IfV079+W21tejbFQoM4BaqBmsZmWObDM5VI6
+         vUSuZhvvlZR4NoQ2R8xOy3dgdzqljy53SphyB2NlEeLPm4EpCw3ODPI6Q/1LQFjxCKcj
+         y5+vt7IWx89lMtE0SS+aoR+NgRF9XlKlpgxsMZzUO0jY5t/b6J0HbTOLr8XRhfycg5lU
+         oYdTvJxZn/pefvFuccvwSkzdVdPlgH4yxFGg+O6ntwehHjKt5PZIKpXYBPCNfP5hSJZN
+         e+z6vYGHGjfmEZyY9WSZAhztY141Cj1Zd2rMPlInz75nFPQuydfgJxp9B9H9/asI0mgx
+         MyMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730274144; x=1730878944;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F/obSxVgLXYAZ3S4bATKBujgO8U8oWR6WSGb4BNz1Rc=;
-        b=O9UviuLrAWyd2YHs3ZoWHgROxNkMjAmA0eJou24yT0DMXuyOSOeLwuDt/wqYmciNcL
-         O3yqebdzhJ5aj9a+oiTUtUNZbl2Kx0MDhsAe1FU/5i8SOYQ4xjQt77nyBtz7CV50q/M7
-         uIfisVIDb4Ce7nSHcrM7v8GkFV1DoQJeqcA4CO8/Kt/KFYfJ7m6FPhgKgQtj77IrunC6
-         I22d54upLwoLHhxdp7RTIaxxzi0vtHUprm2AnxUs4Wdyk7IFrHqPjd9Kjr3K/naGYJD9
-         UpWxRNUIjD2qE/cCvnp0yyFjNIb+1A2Zo711RU2l8njBZXFem1f9kMO9QnY7C3Pd5xQx
-         kG/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUC7+iI0zyEu+6CcLCdUwahutecIBoZlfQsOjbnYjcfSzC+rsLVskgVFWEE6eAgmG53PYE9rq4Wdbx4@vger.kernel.org, AJvYcCVS+MKL1UraOQ1D+jURzZpi6FNUZUZZdtAROwnWB6bl8yS1TfihAzTMS+F1wGAmvhBwhzVN22PewgY9jw==@vger.kernel.org, AJvYcCWWeiLYmvXaXiMAe8JpDs0gm/+/es2xYNrhxaE1FuGK9iyOipg7HUA9IP6WgTD+6gr8v0RahYJS9t7l@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxhp4785s+WAP/qOH3PZTD53lMYsiTr4SBuvgmq9+qsE0DxIZbR
-	yXf544/2FAgp75pH27F1N/uZTL5407ut3KkGW+1SyVvkCRdQ5uSO
-X-Google-Smtp-Source: AGHT+IETsV7UXMLp399BinpD0w900qG3hOgbxpUxgRBwxez5FYrcNIGJm85eQ9FYoXQ64YlW1Wx4Ow==
-X-Received: by 2002:a05:600c:4fd3:b0:431:60d0:9088 with SMTP id 5b1f17b1804b1-4319ac9acedmr136064005e9.13.1730274143634;
-        Wed, 30 Oct 2024 00:42:23 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-91-161.ip49.fastwebnet.it. [93.34.91.161])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431bd91096asm12658425e9.13.2024.10.30.00.42.21
+        d=1e100.net; s=20230601; t=1730275523; x=1730880323;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PBSXK7Wg5WPAyNzi9dlLEOve6W9CQsYBAJ6iQX8H4CY=;
+        b=HPJZMa5HtlqgIqgKdOgoMRKeu2j2mEYtro+iJrXFMZWGVoKKmCk5S5ElF4Lu07FjG+
+         KmAwQe6HiByg8z6w8eoW2q1ElhJsbTYlk80dRDme6tsQIUU65QTxrahDFqcDfexHuGKm
+         6zKLhyUfxYtWHZCdcY/AudHt3QxTum06i7MHll77UQJWlQz/n3Z+zXGsB8t6KFT7j4/e
+         Q6Z1g63HYIndSl3VqWqapbMwmrKY35CxFnD6xJ5zxUEFzvTMfzwehFyOzum0SsGeS7g5
+         XNgAMShlrkljRLLcHkU69JfcA9nWZi+QOTAjTw/4MRpuE3KmZH71Z7zDKrQKaXO+AKks
+         22tw==
+X-Forwarded-Encrypted: i=1; AJvYcCXeptxk9nPH+mXLLu0oX3JpjQT3Bu83ZwPW0KlQQoYbox0sYG/SWeBY/6oXgKpk4fGHig0BEi9u/Bo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7TLftfccnzk0dFtH+yAiPcjrgeROwloPp6QBxNa8PMEx+Pbx+
+	tT7qjKFG71Vd3yTIZ/O0xTFC9/+EagSzBfSBehBTaK5w3P47NV+AkM9CnSEaBuE=
+X-Google-Smtp-Source: AGHT+IGceO7R29gh2xhL8jB1UfhwxoZLLZgd3BfsnBexJNOLf5xxbem07mn/P4nQljDwmtDKiKtHBA==
+X-Received: by 2002:a5d:484b:0:b0:37d:3705:84e7 with SMTP id ffacd0b85a97d-380611721b4mr13268064f8f.17.1730275523040;
+        Wed, 30 Oct 2024 01:05:23 -0700 (PDT)
+Received: from localhost (p50915d2d.dip0.t-ipconnect.de. [80.145.93.45])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431bd97d84bsm13254625e9.30.2024.10.30.01.05.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2024 00:42:23 -0700 (PDT)
-Message-ID: <6721e35f.050a0220.b8d65.2cd0@mx.google.com>
-X-Google-Original-Message-ID: <ZyHjXKFEqqbkJkHz@Ansuel-XPS.>
-Date: Wed, 30 Oct 2024 08:42:20 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lee Jones <lee@kernel.org>, linux-mediatek@lists.infradead.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, upstream@airoha.com,
-	benjamin.larsson@genexis.eu, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v9 0/6] Add mfd, pinctrl and pwm support to EN7581 SoC
-References: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
- <CACRpkdaEQYBim8TuDCCw15QDUWhHC-VqhGq1Le7eOd76k56zwQ@mail.gmail.com>
- <t7i6lkx5oedjma6uauiygnvbgzixnsqmolmkse3j2qiy5znf7t@kfozote6mm2k>
+        Wed, 30 Oct 2024 01:05:22 -0700 (PDT)
+Date: Wed, 30 Oct 2024 09:05:21 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	Guillaume Stols <gstols@baylibre.com>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] pwm: core: export pwm_get_state_hw()
+Message-ID: <5nhyokdabeuw73btvkyyvoohbnqqyxpe64dxkrpwa4jvdpdqjr@zmpfnngcceq3>
+References: <20241029-pwm-export-pwm_get_state_hw-v2-0-03ba063a3230@baylibre.com>
+ <20241029-pwm-export-pwm_get_state_hw-v2-1-03ba063a3230@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="prvkimffi7gaxyfc"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <t7i6lkx5oedjma6uauiygnvbgzixnsqmolmkse3j2qiy5znf7t@kfozote6mm2k>
+In-Reply-To: <20241029-pwm-export-pwm_get_state_hw-v2-1-03ba063a3230@baylibre.com>
 
-On Wed, Oct 30, 2024 at 08:34:01AM +0100, Uwe Kleine-König wrote:
-> Hello Linus,
-> 
-> On Tue, Oct 29, 2024 at 11:03:14PM +0100, Linus Walleij wrote:
-> > On Wed, Oct 23, 2024 at 1:21 AM Lorenzo Bianconi <lorenzo@kernel.org> wrote:
-> > 
-> > > Introduce airoha-mfd driver in order to load pinctrl and pwm drivers for
-> > > EN7581 SoC. airoha-mfd is needed since both pinctrl and pwm drivers
-> > > needs to access the same memory block (gpio memory region) to configure
-> > > {gio,irq}_chip and pwm functionalities respectively, so model them as
-> > > childs of a parent mfd driver.
-> > 
-> > OK someone has to merge this and I suggest that I merge patches 1-5
-> > (all bindings and the pinctrl driver) since the different bindings have
-> > dependencies between them.
-> 
-> Fine for me.
-> 
-> > Then Uwe can merge patch 6/6 (the pwm driver).
-> 
-> The pwm patch needs some more love, we can handle that separately then.
-> 
 
-Thanks for the feedback, so I assume we will detach the DT and PWM
-driver from this driver and handle it separately.
+--prvkimffi7gaxyfc
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 1/2] pwm: core: export pwm_get_state_hw()
+MIME-Version: 1.0
 
--- 
-	Ansuel
+Hello David,
+
+On Tue, Oct 29, 2024 at 04:18:49PM -0500, David Lechner wrote:
+> Export the pwm_get_state_hw() function. This is useful in cases where
+> we want to know what the hardware is actually doing, rather than what
+> what we requested it should do.
+>=20
+> Locking had to be rearranged to ensure that the chip is still
+> operational before trying to access ops now that this can be called
+> from outside the pwm core.
+
+Good point, I didn't notice that in my review of v1.
+=20
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>=20
+> v2 changes:
+> * Dropped __pwm_get_state_hw() function.
+> * Reworded commit message.
+> ---
+>  drivers/pwm/core.c  | 40 +++++++++++++++++++++++++++-------------
+>  include/linux/pwm.h |  1 +
+>  2 files changed, 28 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index 4399e793efaf..ccbdd6dd1410 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -718,40 +718,54 @@ int pwm_apply_atomic(struct pwm_device *pwm, const =
+struct pwm_state *state)
+>  }
+>  EXPORT_SYMBOL_GPL(pwm_apply_atomic);
+> =20
+> -static int pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *st=
+ate)
+> +/**
+> + * pwm_get_state_hw() - get the current PWM state from hardware
+> + * @pwm: PWM device
+> + * @state: state to fill with the current PWM state
+> + *
+> + * Similar to pwm_get_state() but reads the current PWM state from hardw=
+are
+> + * instead of the requested state.
+> + *
+> + * Returns: 0 on success or a negative error code on failure.
+> + * Context: May sleep.
+> + */
+> +int pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *state)
+>  {
+>  	struct pwm_chip *chip =3D pwm->chip;
+>  	const struct pwm_ops *ops =3D chip->ops;
+>  	int ret =3D -EOPNOTSUPP;
+> =20
+> +	might_sleep();
+
+Maybe this should be better
+
+	if (!chip->atomic)
+		might_sleep();
+
+but I'm open to keep it unconditional until someone wails about it.
+
+> +	guard(pwmchip)(chip);
+> +
+> +	if (!chip->operational)
+> +		return -ENODEV;
+> +
+
+Huh, that means that __pwm_read_waveform() et al were called before
+without holding the chip lock. How embarrassing. I think nothing bad
+happens (because at this stage the PWM wasn't exposed to its consumer
+yet and so no concurrency could happen), but still.
+
+>  	if (ops->read_waveform) {
+>  		char wfhw[WFHWSIZE];
+>  		struct pwm_waveform wf;
+> =20
+>  		BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
+> =20
+> -		scoped_guard(pwmchip, chip) {
+> +		ret =3D __pwm_read_waveform(chip, pwm, &wfhw);
+> +		if (ret)
+> +			return ret;
+> =20
+> -			ret =3D __pwm_read_waveform(chip, pwm, &wfhw);
+> -			if (ret)
+> -				return ret;
+> -
+> -			ret =3D __pwm_round_waveform_fromhw(chip, pwm, &wfhw, &wf);
+> -			if (ret)
+> -				return ret;
+> -		}
+> +		ret =3D __pwm_round_waveform_fromhw(chip, pwm, &wfhw, &wf);
+> +		if (ret)
+> +			return ret;
+> =20
+>  		pwm_wf2state(&wf, state);
+> =20
+>  	} else if (ops->get_state) {
+> -		scoped_guard(pwmchip, chip)
+> -			ret =3D ops->get_state(chip, pwm, state);
+> -
+> +		ret =3D ops->get_state(chip, pwm, state);
+>  		trace_pwm_get(pwm, state, ret);
+>  	}
+> =20
+>  	return ret;
+>  }
+> +EXPORT_SYMBOL_GPL(pwm_get_state_hw);
+> =20
+>  /**
+>   * pwm_adjust_config() - adjust the current PWM config to the PWM argume=
+nts
+
+I applied that patch to
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+
+Best regards
+Uwe
+
+--prvkimffi7gaxyfc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmch6L4ACgkQj4D7WH0S
+/k5KDwgApe8+6qRz714F7VZDGYPSHpvJlgBvVHDUxARmJz3UbLD6bxux2z16SCft
+fNuGMLcyuEZUVDDAgkJbJisOBGmO3OdRutS35F7tFTCNlx7Ge2x2ngc08ix32RY+
+/6+3EDbDZvHGv0xvO+cSTv15u6BNN2kBri5qjyw+oH3bZEUAmcXW/+0ZIOXYTOLK
+VgpkVAu3/cWfqbeMnxesCpc+SCkJuQ5udpEYgEW0dJLB7K1pdorUxRsKE9YDjpSC
+SNkW0IdlIm1NFx8ExGUuAwY8bijNHffCSTWjz0HZFL+yf1d5MfWOosXi+n85FAdf
+s0XQ/2Osvsw9bIEeijXdOOai73gpFA==
+=Z/Pr
+-----END PGP SIGNATURE-----
+
+--prvkimffi7gaxyfc--
 
