@@ -1,109 +1,108 @@
-Return-Path: <linux-pwm+bounces-3980-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3981-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A19E29B6884
-	for <lists+linux-pwm@lfdr.de>; Wed, 30 Oct 2024 16:55:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D56169B6B8F
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Oct 2024 19:02:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B95DB1C21AFD
-	for <lists+linux-pwm@lfdr.de>; Wed, 30 Oct 2024 15:55:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A218281347
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Oct 2024 18:02:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD6E22141B9;
-	Wed, 30 Oct 2024 15:55:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71ACA19E83C;
+	Wed, 30 Oct 2024 18:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="II0PQP69"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TgGnQw5O"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842502141B5;
-	Wed, 30 Oct 2024 15:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779641BD9F6;
+	Wed, 30 Oct 2024 18:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730303730; cv=none; b=QRMEUOS+A9MdoeKLfbG9E0TV/Us4eCzQUTJPz/9iYEy+wkADMqB2aItynUALOOAPAJMwvBmSlfz9XyCAXfczyq1JrxlUZVMUgeQdVCNZsOJVyKqZeGPY5WrDBlyQjyyhHcwujTsLczEegytmMuVbI6zXqWMQYlpghIf4Tc/8e9g=
+	t=1730311360; cv=none; b=PUdGUOZkNCY7rdaZjd82bNgXCilcri+mS+t+3hVHSqHRHkloUJxnTyhG74EJnjdSlu6mJ4RLAUNWdnd4K+p0iulvS+pDk1oybxVsJGqlz1L9tr7N8nymeE2YldhbWvfNsPdUJgqmAUwS5J0ZTQMf/1oaEKC3qEljs/RH1zSH++o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730303730; c=relaxed/simple;
-	bh=3yyLl30TQjYKD071Dpap+W12aDnptjFmDQr9KsgJj4U=;
+	s=arc-20240116; t=1730311360; c=relaxed/simple;
+	bh=VJQ/ae3Mkm9u4W2mXTamHVBG9ReQzeVjbtwnNX/s1bA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WAYXw3vMHugbSbXEJk300/OkuDToPYQv/eQGwvPTKIeyuVRVQVFOAZpu824VAxRi5MXhA2yAqX9LXksqX1BkVMggT2YkpHL+N03nXERqWKPL4RNL8FqF/6K3t9diiaW6gj/rgKT7au+8wocsIfyOgL21kqXf5VqxlWYRw+kczxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=II0PQP69; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03BDEC4CECE;
-	Wed, 30 Oct 2024 15:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730303730;
-	bh=3yyLl30TQjYKD071Dpap+W12aDnptjFmDQr9KsgJj4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=II0PQP69uWeP8lH2TXSIqUAQTe8WyNMJpjFfn+2Ctqok/d+umG4MHgWALYdMPIzVY
-	 mCKwu5o+4F+M0RaJEHnflVbiau/dHaakOVDDWkC2gejogLJ3G3UFyb65te+GHzG8LP
-	 09bMmB/73rZFHV7tiJS9uTCZh7nqqsam6un7bSc2ygu25rAoUPD785aZHTMA/tSYYa
-	 FZbCf6ZRYSopkB5ThsQNKWjF+5kmXV1j/+cWRSX3yxE3zU03j/r8TC1+9bdLCBFmsZ
-	 zHJWnFjAUtwG+smzYdbgEPbqgk+ujO4X5KRB8q9jZjBSWYo9oEeqdaaLo3J+MhKlJj
-	 /9Dh9N2CvzTEQ==
-Date: Wed, 30 Oct 2024 15:55:24 +0000
-From: Mark Brown <broonie@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=tEvOsqIN8fXsOmXOPAPpvUc7j2uDsqEWQccNpaWT34K+bIuAyyc70MYwSTBsMKEmpWSBpLv3ZSjobyQ9FEWRqC+P23UCySrBdM0yGhRQNJNC1fY2QZxaLTxrA/g1SEmQJlWgUwqZLuwyV/tciwQmLVsvmSkcRoGRq9UqktcOJ6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TgGnQw5O; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a99ebb390a5so223098066b.1;
+        Wed, 30 Oct 2024 11:02:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730311357; x=1730916157; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VJQ/ae3Mkm9u4W2mXTamHVBG9ReQzeVjbtwnNX/s1bA=;
+        b=TgGnQw5OlOBqhPrBJntHRNZ1ZNAmKWybucs91k+LWLtmpWa88XE1iS10QxPeuwfaA/
+         FaPVqK2YZZcqeJgoyY41YhcqP7elf9fqx7rog1wycSbuzII7qBsuKs14NO7j2eKTLO4s
+         gM2yoWTP2+MUdIeAoSSTi5l71lzCeq0kOpDmqzlCz500T7YgN27cdN7oYMiQdqsKQEHv
+         um/WByjP0ih0j0I6Z9XywEHirr348rRj3dmA05k6Q5MAiUA4/aFSTzhRym9pNfAPrVSY
+         aCjPWDFYwHUufdLr1a7srxM8w4rLhzW03gqmSDgQg9revbGdDg8KIKCrsLdZG2dR8b9E
+         MsIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730311357; x=1730916157;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VJQ/ae3Mkm9u4W2mXTamHVBG9ReQzeVjbtwnNX/s1bA=;
+        b=PpjV18NbR5Z3KBd/oe+Qw2uoc/sbV6TgyozOScle6cedWKM9I3ipJUIPyB2irh5Hz1
+         gWii2rPANkKsBhQIH+Pxitkkyp5yr/3L1xikvZwmCJAqlGvYFX1kheWlJWJY9ZU4RdKr
+         zgE/7V+uonCXW0psOEnw4SSXhWAFj6saVFHYU4pPsUnWOSe+ClTYJc4MRdURshtAk20x
+         j+2oh5q8XGbutUGrqHQ1SpI4EVpCjvTr6SYXKqVI1UOTCoZXwbamO+hlBeThoAM9sFwf
+         Ly+eAgY0xs00h2FqGHcDQGgXPVweGqf0HupJw0WyUmLmzx/VgkywMzcEc40JG/0Wqarg
+         mZ/A==
+X-Forwarded-Encrypted: i=1; AJvYcCW7pwMY7bE/iWfnvV+mIXjvJu2TJYVTtJd/QPNJCQzRJdrMEO84RCgEw3y5xKlVXCwrrAg0QFSRn3wt@vger.kernel.org, AJvYcCXZtvNb5ScdiCRfkE03uWCPqmeCVXw0PkjqAMn98fCM5t2FdpY2iNZh+vrpPkcYgNx/tFavzWlQq8lAYRnZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqoAzEHazVaGQPKDF+GDrt1UwQtW+cXFJLd7ex51iRLNINqebV
+	rQ/f8N3WRTqG66dHsncD2z1BVhjqn2Jopa4HtLahpW/lQIlWpyoS
+X-Google-Smtp-Source: AGHT+IF+mYI8VI7ar3ka2bquEPNqWDRXFq5nmJD1BFj5bnn2DHWR0Vq2CYNy5B+wSmVbI6T2f/gyXQ==
+X-Received: by 2002:a17:907:3f9d:b0:a9a:1d85:9d31 with SMTP id a640c23a62f3a-a9e2b5a4bf2mr579117466b.21.1730311356572;
+        Wed, 30 Oct 2024 11:02:36 -0700 (PDT)
+Received: from standask-GA-A55M-S2HP (lu-nat-113-247.ehs.sk. [188.123.113.247])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b1f298d8fsm588258366b.112.2024.10.30.11.02.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Oct 2024 11:02:36 -0700 (PDT)
+Date: Wed, 30 Oct 2024 19:02:34 +0100
+From: Stanislav Jakubek <stano.jakubek@gmail.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	David Jander <david@protonic.nl>,
-	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH RFC v4 02/15] spi: add basic support for SPI offloading
-Message-ID: <e1b4f91a-ac94-4939-90eb-fc10e9a72ee9@sirena.org.uk>
-References: <20241023-dlech-mainline-spi-engine-offload-2-v4-0-f8125b99f5a1@baylibre.com>
- <20241023-dlech-mainline-spi-engine-offload-2-v4-2-f8125b99f5a1@baylibre.com>
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Wenhua Lin <wenhua.lin1994@gmail.com>,
+	Wenhua Lin <Wenhua.Lin@unisoc.com>,
+	Xiongpeng Wu <xiongpeng.wu@unisoc.com>,
+	Zhaochen Su <zhaochen.su29@gmail.com>,
+	Zhaochen Su <Zhaochen.Su@unisoc.com>,
+	Xiaolong Wang <Xiaolong.Wang@unisoc.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: sprd,ums512-pwm: convert to YAML
+Message-ID: <ZyJ0urvkMZVzZa7S@standask-GA-A55M-S2HP>
+References: <ZyH-JASRcpMXYsmH@standask-GA-A55M-S2HP>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wIB7CppBQdb9BVMQ"
-Content-Disposition: inline
-In-Reply-To: <20241023-dlech-mainline-spi-engine-offload-2-v4-2-f8125b99f5a1@baylibre.com>
-X-Cookie: I feel partially hydrogenated!
-
-
---wIB7CppBQdb9BVMQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <ZyH-JASRcpMXYsmH@standask-GA-A55M-S2HP>
 
-On Wed, Oct 23, 2024 at 03:59:09PM -0500, David Lechner wrote:
+Hi all,
 
-> +struct spi_offload *devm_spi_offload_alloc(struct device *dev,
-> +					   size_t num_offloads,
-> +					   size_t priv_size)
+just noticed this older patch [1] doing the same conversion, so I've also
+CC'd other people from that patch series.
 
-> +	privs = (void *)(offloads + num_offloads);
+[1] https://lore.kernel.org/lkml/20240125025533.10315-5-Wenhua.Lin@unisoc.com/
 
-Casting to or from void * is generally suspicious.
-
-> +		void *priv = privs + i * priv_size;
-
-Can we have some brackets here for clarity please?
-
---wIB7CppBQdb9BVMQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmciVusACgkQJNaLcl1U
-h9Chqgf8DW8de4pnIgIUw/jsiKAtu3L5MxZFUkpBXjxY07ECczmWImt2iWoseFYJ
-rILRHF01ca8kZn1PRVsO9CFoP89a+jkwZgvXjYT7A+9jy3yBgGSddeOkrrvgOUBD
-1R5JngdpYU4IesCQWUopjqKJw61zFZvwmKboQR38z3Yxnfb88Ea1+XkwE/sCofPp
-KB7Z918mA4iyn5L9p8nrA1t8ivRc/KC0zBzH3smen+WzAqsLz5HfIJke5UzbTN6I
-zsYQP0gBHr0SDkivg9dKJ3oCcTwGpQ8iZySndgpLOHbBVEUxMTTmKetyOGldmpKF
-1MR7dfo/8rpKErN0COB/DbEgmN2RBQ==
-=NEXq
------END PGP SIGNATURE-----
-
---wIB7CppBQdb9BVMQ--
+Sorry for the noise,
+Stanislav
 
