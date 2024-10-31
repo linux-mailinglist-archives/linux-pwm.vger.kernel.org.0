@@ -1,138 +1,123 @@
-Return-Path: <linux-pwm+bounces-3983-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-3984-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CC279B7913
-	for <lists+linux-pwm@lfdr.de>; Thu, 31 Oct 2024 11:53:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BBFF9B8265
+	for <lists+linux-pwm@lfdr.de>; Thu, 31 Oct 2024 19:16:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D11971F21DB0
-	for <lists+linux-pwm@lfdr.de>; Thu, 31 Oct 2024 10:53:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D46F1C20EE0
+	for <lists+linux-pwm@lfdr.de>; Thu, 31 Oct 2024 18:16:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B16B13A25F;
-	Thu, 31 Oct 2024 10:53:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 432B11C8FC0;
+	Thu, 31 Oct 2024 18:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="e2+lkE7b"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DoWxXegU"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE8A198E86
-	for <linux-pwm@vger.kernel.org>; Thu, 31 Oct 2024 10:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B07B1BD501;
+	Thu, 31 Oct 2024 18:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730371993; cv=none; b=ivcKXqDti7Qx3QZPYuDY0ywUuDiaR2V65VKQTNUioTtKQLWsn0Y0Q9i49ZJEjEN8oQhZ9F3aFx5sE9H1R8hCWqKiES0M3576iWEahHUG4Rlwd8d7OZmsTWcyp3rxJ1TNJnM7WOAipyKMaF5EvKr2joShQ4ASeM7n1QDp2UQH5aw=
+	t=1730398576; cv=none; b=QLxR3YE2C+DVV/YRps68yWcpRsP4Uh/TZsAjWgrn0jjFgnQr3/60bUiaoyR64Wwjq4bWJZnjsfsRuZ0EIoluYQTO56NGmel3TWY4EUKVcUqwBXfgq9XDRJ6Gb5ds7d75FPaXDh0OnAZUKDFkyav4i4FQsD4I6Z2cpZqbYtVtcN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730371993; c=relaxed/simple;
-	bh=VoH550F/rVtXbdjnsH8N0Kb36JWps2TBibjKOZE7pfE=;
+	s=arc-20240116; t=1730398576; c=relaxed/simple;
+	bh=a0XxDbtJwqAkMvK39cpkd2F8PdsdCUxiE0cP0WUw1vU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pzdObGnU7y4vnSGD6AW03Vj3/iY5XDn7rQFLRPlry7/OLBk/aIFiFqaPgMtZZxY5HmzZEBZVFn0i+zOptjdkpL0jslmDsNL2Tn5HsEBgChpIKas5KUptf3Zzenue68lJeSLMZlRG0JV9mobBwI6xldjzRoutCg9/bbR9ejDo3s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=e2+lkE7b; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-37f52925fc8so440847f8f.1
-        for <linux-pwm@vger.kernel.org>; Thu, 31 Oct 2024 03:53:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730371989; x=1730976789; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L2/PPaAetYxmKzv3sgVnjzcQ59oLRc0dcwRBbTXacjU=;
-        b=e2+lkE7bM/xRb95I0mlH9/THJb5QR6TIHHhZN22/tKMggJSbQ34YOxWLpqvDwgeHt0
-         lbbnbbQ/mzGWjeDtFVPFkrwO91uWer3dsqTeCecdfkMUzEcS4Ym/l8CecHRKHz3ecI+W
-         Jb4bGaOtWiy+lgSwqWqI+vD2x6TcJ5dfflLusj0DcOIyIP7XxUk8JmVyp1V3b945bOXk
-         9cyUyCjD2Jq3zLsdPezxxiLTH2ZS4ECFfTBZlYxLvn/EMTBtud5BIwlvJX3Y8qKpM7B4
-         kRXReLlbp76ykxf1drkIWKH1SVvZgkoak4yrKumLUjXL5UWs+YRnu7h6gX69A50aUY6t
-         KI5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730371989; x=1730976789;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L2/PPaAetYxmKzv3sgVnjzcQ59oLRc0dcwRBbTXacjU=;
-        b=QZsCwpy/9weNN+0MCR5uA5veEOe7LIj72OVNSLmc1i70hodIjPAss6up3fQE9j9pAN
-         p4wzVoLxVIj9UT/+G+l79MR+slRrhZNGJiDqO2Gnhz41Z4WFHshxKBhJfsGPTDQ9/WNZ
-         XoO0KjTVUDSGRQR/LuOCORsNjMtoc8Ql7JisnLQTu3z7aEUyTLKLiLo6/kVLQnVLaj+M
-         Cs9hHcRDQpewcHa76Zl3F9XDmycWOrQi1ca70/sZOOW3w7mqBj5Nxh+DmWAHKtkLZwkw
-         hL70pj+m2jjVjp6rQEL/r4ccD/DluiAmWUNyqeImpgWCMr5Z/s6VcVDCce5SEFx8paXq
-         PddA==
-X-Forwarded-Encrypted: i=1; AJvYcCWSK+ATxkuv0JlF9GrZlBpNYt3lAdk/3Ci/N0IoXG4MZY+qmLde/l4N+w23vfHn7V1w92rOmCxfvW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGwnyw3ny2l+M5xjksGy+gypXpKxPsVI1LmyAaJeBqHX4+bgUI
-	Qrggvp93iBXy843kQUVBN4WDIMYPaPaacnuKZ+B5F+EizV3znhjNX4aSkMciQlQ=
-X-Google-Smtp-Source: AGHT+IEj2PmCrm+rjaPGqCqvTA61rjlM2smHZN2BDqZGjYKUG6p+9lHCct26bf+Hc89r3OBtcRNNrg==
-X-Received: by 2002:a05:6000:ccd:b0:37d:2edd:b731 with SMTP id ffacd0b85a97d-380611639f9mr12661409f8f.30.1730371989006;
-        Thu, 31 Oct 2024 03:53:09 -0700 (PDT)
-Received: from localhost (p50915d2d.dip0.t-ipconnect.de. [80.145.93.45])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c10b7c1esm1764015f8f.12.2024.10.31.03.53.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Oct 2024 03:53:08 -0700 (PDT)
-Date: Thu, 31 Oct 2024 11:53:07 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Benjamin Larsson <benjamin.larsson@genexis.eu>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lee Jones <lee@kernel.org>, linux-mediatek@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	upstream@airoha.com, ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v9 6/6] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <ljpgey6oqeisnhnf3zojnmczxvpduabj6cgf3utef3oic2k27e@r5sbpdxwzghs>
-References: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
- <20241023-en7581-pinctrl-v9-6-afb0cbcab0ec@kernel.org>
- <bf5lpb3dwfywzgnbcel6de57ick7hfzxfaovyqrt7juif6tgp7@sdmugrua6t3c>
- <184f8707-0b4b-474a-b2d4-b54a3438f4a3@genexis.eu>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ufXx/FycyUDnMDBy2du0iptFGm6bRAtPQmIYUugAwZ62Zlt9iykk/cqjQGc3VQOLGDlKATL0f7XG2QW0rvsu3rbICfU039rOnWarVsv7hGeu3SrunmWIUHChBKqfg+uqQCDN0GqqSLooz+hsqCKLDMtrmzqU50yCTqhqLLudJhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DoWxXegU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55DC0C4CEC3;
+	Thu, 31 Oct 2024 18:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730398575;
+	bh=a0XxDbtJwqAkMvK39cpkd2F8PdsdCUxiE0cP0WUw1vU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DoWxXegU1p/t/x19dGfnMq/kDCEoZeI9+y0FMrYykBQOyJIc9q/ohxuRbJYxhkylK
+	 YagvMlX50thLX3ltS0k6ualhU7oWE50jZ4G/ea/tlT/xyzW8Loxa47A0rRz7OTMwEd
+	 a9sFbDnTTU4FpQitrOsQQ6hr1Zka3loLzTLacGmKY3/J65vw/fG0prF4zxEOMxTiAM
+	 G0kSLdi1EiD/b/TN1+4znIJwOEYm1De2UOIRTyhk+6SbAS+8hti0pXrftJFF6XwOgc
+	 LW3Q8iZzCgJtbW/JxTrgr+weCC6b43XZwjG15xrN/Sx576n0cAmcZTNlz71DvVJqFx
+	 20cxF+emjs4fA==
+Date: Thu, 31 Oct 2024 18:16:10 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	David Jander <david@protonic.nl>,
+	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH RFC v4 05/15] spi: dt-bindings: add PWM SPI offload
+ trigger
+Message-ID: <20241031-croon-boss-3b30ff9e9333@spud>
+References: <20241023-dlech-mainline-spi-engine-offload-2-v4-0-f8125b99f5a1@baylibre.com>
+ <20241023-dlech-mainline-spi-engine-offload-2-v4-5-f8125b99f5a1@baylibre.com>
+ <20241026161837.30a56ae1@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wg4oaapc6iokbp6v"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uFDjMC94MKRrYJ2w"
 Content-Disposition: inline
-In-Reply-To: <184f8707-0b4b-474a-b2d4-b54a3438f4a3@genexis.eu>
+In-Reply-To: <20241026161837.30a56ae1@jic23-huawei>
 
 
---wg4oaapc6iokbp6v
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+--uFDjMC94MKRrYJ2w
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v9 6/6] pwm: airoha: Add support for EN7581 SoC
-MIME-Version: 1.0
 
-Hello Benjamin,
-
-On Wed, Oct 30, 2024 at 11:14:41AM +0100, Benjamin Larsson wrote:
-> On 2024-10-30 08:32, Uwe Kleine-K=F6nig wrote:
-> > > +	/* Configure frequency divisor */
-> > > +	mask =3D WAVE_GEN_CYCLE_MASK(index % 4);
-> > > +	val =3D (period << __ffs(mask)) & mask;
-> > FIELD_PREP please.
+On Sat, Oct 26, 2024 at 04:18:37PM +0100, Jonathan Cameron wrote:
+> On Wed, 23 Oct 2024 15:59:12 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
 >=20
-> Per my understanding FIELD_PREP only work on compile time constants.
+> > Add a new binding for using a PWM signal as a trigger for SPI offloads.
+>=20
+> I don't have a better suggestion for this, but it does smell rather like
+> other bridge binding (iio-hwmon for example) where we have had push back =
+on
+> representing something that doesn't really exist but is just a way to
+> tie two bits of hardware together. Those kind of exist because we snuck
+> them in a long time back when no one was paying attention.
 
-Then please create an alternative macro with the same semantic that also
-works when the mask isn't known at compile time instead of open coding
-the same concept several times.
+I dunno. iio-hwmon to me is a particularly strange one, because it is
+the exact same device being used in different subsystems. Like that
+voltage monitoring device with 10000 compatibles that I CCed you and
+Peter on the other day feels like it should really in your subsytem. A
+"hwmon" isn't a class of device at all.
 
-Best regards
-Uwe
+This however, I think is more like pwm-clock (or clk-pwm, they both
+exist and are opposites) where the node is used to change the type of
+device rather than the subsystem using it.
 
---wg4oaapc6iokbp6v
+> So this one may need more explanation and justification and I'd definitely
+> like some DT maintainer review on this at a fairly early stage!
+
+Ye, /shrug. Maybe the others have dissenting opinions. I'd like to hear
+=66rom them, but I don't personally have a problem with this.
+
+--uFDjMC94MKRrYJ2w
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcjYZAACgkQj4D7WH0S
-/k5i+Qf/QUXWMBOT0BMZ7vYNOddtUYFZcRph+Cgv/55I6yp0wo0c8gGiYBTgjdls
-BZkBjvIPurO3QEZd8dGjcYFSDkJFCfuikUofKD7RQ4wWxRsfmY88TBsztrkfqbg2
-aIjBeZlp3n3SyIQ4lsQV9HdMzUGvITEGLBN3k8cbmaZyfZU08CN9n6hmZN1EwduZ
-+yQtVPlDRq2k7jUiTTLbRcSqb6ngR8FajPEP+s+vYXawI8a43BIBVHZzt80AXfkG
-NZTgD+fW8qmB4uUevfuVq8+yw5cTAGrTxkjh/fMNsIArbA5bNdVBUKLhTrUvMHTI
-NK5mFlK9MFcl5mK6ETI1KgnKNHa75Q==
-=lv66
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZyPJagAKCRB4tDGHoIJi
+0typAQCEmnsI5mzHHvq89+khhenHZThZa1J9UsxH41LEsVWFPAD/WefyfVnQD3JS
+OyCiDnA+Y6CorQ7SLLilyBtOMN4XGgc=
+=UiW6
 -----END PGP SIGNATURE-----
 
---wg4oaapc6iokbp6v--
+--uFDjMC94MKRrYJ2w--
 
