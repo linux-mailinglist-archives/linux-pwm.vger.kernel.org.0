@@ -1,175 +1,208 @@
-Return-Path: <linux-pwm+bounces-4011-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4012-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 347319B9964
-	for <lists+linux-pwm@lfdr.de>; Fri,  1 Nov 2024 21:25:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3ADE99B99C0
+	for <lists+linux-pwm@lfdr.de>; Fri,  1 Nov 2024 22:00:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D983D2821A2
-	for <lists+linux-pwm@lfdr.de>; Fri,  1 Nov 2024 20:25:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF9191F21DC4
+	for <lists+linux-pwm@lfdr.de>; Fri,  1 Nov 2024 21:00:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 117E81D63E3;
-	Fri,  1 Nov 2024 20:25:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CBC11E2611;
+	Fri,  1 Nov 2024 21:00:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nFr5gNK3"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lQXmySVY"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64D21D130B;
-	Fri,  1 Nov 2024 20:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3740C12D758
+	for <linux-pwm@vger.kernel.org>; Fri,  1 Nov 2024 21:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730492705; cv=none; b=D5WDHgYNiovUKphtz7n2kQaU5UPKE6XQbwAdGZTE+47r8Aqe7Tp3hJKrfdzJEg780IggJKonBcMNopbezwBCa197tvW0xW8KwYnI6RyG7Dsz0bOH8xf07hSR48TAEKuAc/0HGXGHR0Q/hErkt+TZbH1WX0hwQ4yUZ6xNCaWuiOg=
+	t=1730494822; cv=none; b=RlT2skSQ5T5qWQ0KFLtU0tYha9g7TmcHy/dpcgzrGzDhGBst1jNegRYETuHmmywDMmk+ZswNC0dS+coVQz7I3/y2agKKXNmCbVgBMkHA6LWhcA9VabcbnvCj9idGUz9iC4tExtorU1fKe7U0Y24mCojJwjvPlx/UeuX6cuQXCJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730492705; c=relaxed/simple;
-	bh=bjW/NCoam4Vnhany8p1O01mp0aqm+EOKnkh+sbXImR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HFOtBk+WJZh31YOvPS9S1pN6NJ881mQ5zCn78IuuMwY6Po4mdKSuIUl1mSQW4USxpWMaKilbSWNQ2+DMkJBPjrTkMZfAh70q56UcipbJDJAzxRykfSIkbrCkx79V/T4pV2nd4+g/awJNbZrsL+mqA84SZ4JEyGu5SYD0RN7uPGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nFr5gNK3; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1730492703; x=1762028703;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bjW/NCoam4Vnhany8p1O01mp0aqm+EOKnkh+sbXImR4=;
-  b=nFr5gNK3qwUE75vyYt/oO9uqnhORSUFUeO0B0Ol1XFKVM/r9KRd7c6nP
-   oTnE1kM8tlYPjqqA7lcIYS0g1e0vRfmEuCSdW2OH7E7h3/YCigLC3nk0Z
-   OYs8kwHFVsXGPOJHBq9qU5d+KnG+D/+YSamXxBTWDoOTiC7Jc3u7QrAzL
-   vOOpescNbE6wXyIHVcuJv/UZMFTKjuOf5kcE3esO7a/Ax+pqnOfqDorPu
-   F1+p+R8sEDngbKJ40FnJUor/4TAXolzPxXUmavPORDaom63bLpICmWz1z
-   RZ7qcQnOlDrGTZvTS8ypNEf5KMANler5g25UdAXPcW/F1WOUdrjaosSmw
-   A==;
-X-CSE-ConnectionGUID: v3CbH+HaT8m2Rz4u1vBn+w==
-X-CSE-MsgGUID: n0q/YNyhSmy5Fp9Xl8JM+w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="47720865"
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="47720865"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 13:25:02 -0700
-X-CSE-ConnectionGUID: X5qYRDRrQ1uEsmAEOs6W1g==
-X-CSE-MsgGUID: 5vrLubZPSsG4Mh/qtxgQuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="87841658"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 01 Nov 2024 13:24:59 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t6yCW-000i0Y-2D;
-	Fri, 01 Nov 2024 20:24:56 +0000
-Date: Sat, 2 Nov 2024 04:24:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: David Lechner <dlechner@baylibre.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Guillaume Stols <gstols@baylibre.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, David Lechner <dlechner@baylibre.com>
-Subject: Re: [PATCH v2 2/2] iio: adc: ad7606: finish pwm_get_state_hw() TODO
-Message-ID: <202411020416.BsBZy5XU-lkp@intel.com>
-References: <20241029-pwm-export-pwm_get_state_hw-v2-2-03ba063a3230@baylibre.com>
+	s=arc-20240116; t=1730494822; c=relaxed/simple;
+	bh=yd1oNMlXQNHRuMi9NKJGY6s8WrK4lyJGOmQW7IQTstg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=ol7tXMJQDQXqa2jVij0wZW4rVMgwS2TBAYZ7KbLQDN2Lvr34woRoDMjptxsANKFqkHZgoQ5K5C42f8+zT99ToqiXp1S/SncJbwp163zILEKXvx1YAWwKAHQL0Q2cOvqFSeTvTzNaRqnfqfDZOna7i2cTnxg3yCqFWUa3I5pXOgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lQXmySVY; arc=none smtp.client-ip=209.85.167.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3e600add5dcso1335026b6e.2
+        for <linux-pwm@vger.kernel.org>; Fri, 01 Nov 2024 14:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730494818; x=1731099618; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:from:subject:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QK/XrqgDzkOhN4kuc7qZmLsvJLPawrpRaDB6kgscLdM=;
+        b=lQXmySVYehuOhc7BQQQ/s7pyqfrMG2u0vr8cPMmjmIQ5RC+6UBqUDRPcxIYeN8h9d4
+         6f1qc44zGoIxs/I2/LKvSPQvCpUpeKsO3FU0TH9aOp2cBEaUQqS14zndjk8M+ych9qCk
+         FMgkGClqYJRJY8TQ081sH5Tn9cx/vkFCjLnDelRKq+rwHE/4lmhQHSVYrnK0uGBYvYt5
+         guQTC3848v73IMLNxNFoqQRIDmXTDs4ygnlyp3G6rfQKzDh7WoqX3nuOOUzr7i5ofwL0
+         rmezQSP2Rb7wSb2HrqNwFdImjU2VF1u9UUfuB0/mS1JzrC/B3Kmqv9/42UiViFc7URAP
+         IEIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730494818; x=1731099618;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QK/XrqgDzkOhN4kuc7qZmLsvJLPawrpRaDB6kgscLdM=;
+        b=R8thRJg3jzPXJgYeTEyOImOUBMD8IR+p/3uJLUpkx23xWLvw7TIdOJ9f3Nxn2uC0rK
+         eWDIM/WBpxw/v3yjnzeox79MkVgG2c+IkXJzxXcQo9/GWvaRtKPfAhov0x3cRT7X4ARn
+         ftrnW9qQvoKicv93YthCQgG0vp7qgt3G/rClBljcacBKGviJqX2B3XChV2PA67kVTaIy
+         VIeHSOUBI/qiDKJ+AAD7fvzNKhmGaZn9vGKD2xm7LvWrq/uObQEl4vGfGNuHrCmosfkf
+         mPDTbF1aj5Kyv5dn6YYzKHnj1IPvq8BAG6yTj5BeGKxcfSnkTPbZkkqodlcxTkt3OCfj
+         oPlg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQj8kFgPJpnrW8IuCe6ChuhbjeSKsgUZMX4dMfniX4JU/7anVfs1zDvZvO/+jy/y/nGV8Fz5E1Qi8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNXOZyWNUk8KaJFaEcj6uAR+AC24tn8Fr+oFT+pigMohvloNUP
+	fDX0I5Pv4zr6aZQyO2Rxb1Oq5NqnE34LhUb6CjHPxlXX/6YiRHZjx8V1WrxvBWwEp76yFoJUHA0
+	U
+X-Google-Smtp-Source: AGHT+IGeoavYr/rIDZkAnrFaEnGlzF7zFA9Ef48oqV2Y27RnuBBx8c5ltJ+SujJAWX1hr8+KRN0XLw==
+X-Received: by 2002:a05:6808:de7:b0:3e7:60b9:d62b with SMTP id 5614622812f47-3e760b9da08mr1870355b6e.43.1730494818274;
+        Fri, 01 Nov 2024 14:00:18 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5ec704e25dbsm793593eaf.12.2024.11.01.14.00.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Nov 2024 14:00:16 -0700 (PDT)
+Message-ID: <54d39d0c-2021-4571-8d03-92456f2d1a4d@baylibre.com>
+Date: Fri, 1 Nov 2024 16:00:14 -0500
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241029-pwm-export-pwm_get_state_hw-v2-2-03ba063a3230@baylibre.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/6] iio: adc: adi-axi-adc: set data format
+From: David Lechner <dlechner@baylibre.com>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org,
+ conor+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20241101112358.22996-1-antoniu.miclaus@analog.com>
+ <20241101112358.22996-5-antoniu.miclaus@analog.com>
+ <0f4a6e40-a7c8-43e4-8596-4fa495159378@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <0f4a6e40-a7c8-43e4-8596-4fa495159378@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi David,
+On 11/1/24 2:52 PM, David Lechner wrote:
+> On 11/1/24 6:23 AM, Antoniu Miclaus wrote:
+>> Add support for selecting the data format within the AXI ADC ip.
+>>
+>> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+>> ---
+>> no changes in v5.
+>>  drivers/iio/adc/adi-axi-adc.c | 22 ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>
+>> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
+>> index f6475bc93796..6f658d9b4c9d 100644
+>> --- a/drivers/iio/adc/adi-axi-adc.c
+>> +++ b/drivers/iio/adc/adi-axi-adc.c
+>> @@ -45,6 +45,9 @@
+>>  #define ADI_AXI_ADC_REG_CTRL			0x0044
+>>  #define    ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
+>>  
+>> +#define ADI_AXI_ADC_REG_CNTRL_3			0x004c
+>> +#define   ADI_AXI_ADC_CNTRL_3_CUSTOM_CTRL_MSK	GENMASK(7, 0)
+>> +
+>>  #define ADI_AXI_ADC_REG_DRP_STATUS		0x0074
+>>  #define   ADI_AXI_ADC_DRP_LOCKED		BIT(17)
+>>  
+>> @@ -312,6 +315,24 @@ static int axi_adc_interface_type_get(struct iio_backend *back,
+>>  	return 0;
+>>  }
+>>  
+>> +static int axi_adc_data_size_set(struct iio_backend *back, ssize_t size)
+>> +{
+>> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
+>> +	unsigned int val;
+>> +
+>> +	if (size <= 20)
+>> +		val = 0;
+>> +	else if (size <= 24)
+>> +		val = 1;
+>> +	else if (size <= 32)
+>> +		val = 3;
+> 
+> Should these be exact matches instead of "<="?
+> 
+> Also, what would val = 2 mean? Perhaps we need some macros to explain
+> the meanings of these values. The docs linked below give the meaning
+> for a different chip, but not AD485x.
+> 
+>> +	else
+>> +		return -EINVAL;
+>> +
+>> +	return regmap_update_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
+>> +				  ADI_AXI_ADC_CNTRL_3_CUSTOM_CONTROL_MSK, val);
+> 
 
-kernel test robot noticed the following build errors:
+Answering my own question:
 
-[auto build test ERROR on 6fb2fa9805c501d9ade047fc511961f3273cdcb5]
+I did some digging in the HDL source code and found that there
+are actually multiple field here.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/David-Lechner/pwm-core-export-pwm_get_state_hw/20241030-052134
-base:   6fb2fa9805c501d9ade047fc511961f3273cdcb5
-patch link:    https://lore.kernel.org/r/20241029-pwm-export-pwm_get_state_hw-v2-2-03ba063a3230%40baylibre.com
-patch subject: [PATCH v2 2/2] iio: adc: ad7606: finish pwm_get_state_hw() TODO
-config: i386-buildonly-randconfig-004-20241102 (https://download.01.org/0day-ci/archive/20241102/202411020416.BsBZy5XU-lkp@intel.com/config)
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241102/202411020416.BsBZy5XU-lkp@intel.com/reproduce)
+So instead of ADI_AXI_ADC_CNTRL_3_CUSTOM_CTRL_MSK, we should have
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202411020416.BsBZy5XU-lkp@intel.com/
+#define AD485X_CNTRL_3_CUSTOM_CTRL_OVERSAMPLING_EN	BIT(2)
+#define AD485X_CNTRL_3_CUSTOM_CTRL_PACKET_FORMAT	GENMASK(1, 0)
 
-All errors (new ones prefixed by >>):
+And the meaning of PACKET_FORMAT is different for 16-bit vs.
+20-bit chips and in some cases if oversampling is enabled or not.
 
-   In file included from drivers/iio/adc/ad7606.c:17:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:21:
-   In file included from include/linux/mm.h:2225:
-   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> drivers/iio/adc/ad7606.c:765:9: error: call to undeclared function 'pwm_get_state_hw'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     765 |                 ret = pwm_get_state_hw(st->cnvst_pwm, &cnvst_pwm_state);
-         |                       ^
-   drivers/iio/adc/ad7606.c:765:9: note: did you mean 'pwm_get_state'?
-   include/linux/pwm.h:127:20: note: 'pwm_get_state' declared here
-     127 | static inline void pwm_get_state(const struct pwm_device *pwm,
-         |                    ^
-   1 warning and 1 error generated.
+For 16-bit chips:
+	0 = 16-bit data and no status bits
+	1 = 16-bit data and 8 status bits
 
+For 20-bit chips:
+	0 = 20-bit data and no status bits
+	1 = 20-bit data and 4 status bits OR
+	    24-bit data and no status bits (oversampling)
+	2 = 20-bit data and 8 status bits and 4 bit padding OR
+	    24-bit data and 8 status bits (oversampling)
+	3 = Same as 2
 
-vim +/pwm_get_state_hw +765 drivers/iio/adc/ad7606.c
+So this tells me that A) we probably need a separate oversampling
+enable callback and B) we should be more clear about what "data
+size" means. Do we mean just the sample data size (realbits) or
+do we mean the sample data plus status bit (realbits + shift).
 
-   733	
-   734	static int ad7606_read_raw(struct iio_dev *indio_dev,
-   735				   struct iio_chan_spec const *chan,
-   736				   int *val,
-   737				   int *val2,
-   738				   long m)
-   739	{
-   740		int ret, ch = 0;
-   741		struct ad7606_state *st = iio_priv(indio_dev);
-   742		struct ad7606_chan_scale *cs;
-   743		struct pwm_state cnvst_pwm_state;
-   744	
-   745		switch (m) {
-   746		case IIO_CHAN_INFO_RAW:
-   747			iio_device_claim_direct_scoped(return -EBUSY, indio_dev) {
-   748				ret = ad7606_scan_direct(indio_dev, chan->address, val);
-   749				if (ret < 0)
-   750					return ret;
-   751				return IIO_VAL_INT;
-   752			}
-   753			unreachable();
-   754		case IIO_CHAN_INFO_SCALE:
-   755			if (st->sw_mode_en)
-   756				ch = chan->address;
-   757			cs = &st->chan_scales[ch];
-   758			*val = cs->scale_avail[cs->range][0];
-   759			*val2 = cs->scale_avail[cs->range][1];
-   760			return IIO_VAL_INT_PLUS_MICRO;
-   761		case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-   762			*val = st->oversampling;
-   763			return IIO_VAL_INT;
-   764		case IIO_CHAN_INFO_SAMP_FREQ:
- > 765			ret = pwm_get_state_hw(st->cnvst_pwm, &cnvst_pwm_state);
-   766			if (ret < 0)
-   767				return ret;
-   768			*val = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, cnvst_pwm_state.period);
-   769			return IIO_VAL_INT;
-   770		}
-   771		return -EINVAL;
-   772	}
-   773	
+The implementation is fine for now (other than we should remove the
+val = 3 case). But if we need to enable status bit in the future,
+it won't be compatible with this function.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> My understanding is that the use of REG_CHAN_CNTRL_3 is different
+> for every HDL project depending on what (frontend) chip is is being
+> used with. In the AXI DAC, we added a new compatible string for this
+> (and other reasons). Not sure if we need to go that far here, but I
+> would at least put a comment here explaining that this use of the
+> register is highly specific to the AXI AD485x variant [1] of the
+> AXI ADC IP core.
+> 
+> Ideally though, there should be an ID register that we can read
+> to get this info or use a different DT compatible string.
+> 
+> [1]: http://analogdevicesinc.github.io/hdl/library/axi_ad485x/index.html
+> 
+>> +}
+>> +
+>>  static struct iio_buffer *axi_adc_request_buffer(struct iio_backend *back,
+>>  						 struct iio_dev *indio_dev)
+>>  {
+>> @@ -360,6 +381,7 @@ static const struct iio_backend_ops adi_axi_adc_ops = {
+>>  	.test_pattern_set = axi_adc_test_pattern_set,
+>>  	.chan_status = axi_adc_chan_status,
+>>  	.interface_type_get = axi_adc_interface_type_get,
+>> +	.data_size_set = axi_adc_data_size_set,
+>>  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
+>>  	.debugfs_print_chan_status = iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
+>>  };
+> 
+
 
