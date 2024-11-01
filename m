@@ -1,57 +1,59 @@
-Return-Path: <linux-pwm+bounces-4001-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4002-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE3019B944E
-	for <lists+linux-pwm@lfdr.de>; Fri,  1 Nov 2024 16:22:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6FE29B9693
+	for <lists+linux-pwm@lfdr.de>; Fri,  1 Nov 2024 18:32:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 849CC1F24826
-	for <lists+linux-pwm@lfdr.de>; Fri,  1 Nov 2024 15:22:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5481D281E93
+	for <lists+linux-pwm@lfdr.de>; Fri,  1 Nov 2024 17:32:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB0061C75F2;
-	Fri,  1 Nov 2024 15:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80B411CC179;
+	Fri,  1 Nov 2024 17:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhJj0DYE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrWXqw2l"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762D41C0DD6;
-	Fri,  1 Nov 2024 15:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A2B84E1C;
+	Fri,  1 Nov 2024 17:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730474496; cv=none; b=hpaZuIiENNOMVCGNw3OtKToiZjiphX+HTgL/Nwg2QuicfGpFirLL2x5AePDOowk7v+9AjHl5xvn6TrdR3oEg/5jeUrLxtKwzXjQyLlv/YiZBjwkIF7QrX+ZHetcvQtKXWC54Qgru+mlXzWDclFNVKICvhPG3gXSAZzo/ClQ9sAE=
+	t=1730482355; cv=none; b=mCRGXUhVs9V77NZo3yib2dCfM71/TqvlBQKpciEkHY5SYw+uRCUw7UZ8PYJGfsLdNhalaEQ4W00+LDneoMlDX92hCvOZPFCofspBkciyaIdXQivYq/eG+qrK8oUDwkilmKQ3etbMzJPTu2nF6yv6LBjE3L7+an8im9lKa9qFIKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730474496; c=relaxed/simple;
-	bh=Z51TdSB5ihgzOjhRHjuOdOQEElBPvJ0Ajww02Qjzc80=;
+	s=arc-20240116; t=1730482355; c=relaxed/simple;
+	bh=TBvAl6JwjlFw9tXtrS/PEMIswlFCQXaZiHrErj6MXUI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q1iBMPKPjZ0EJnJIHjYOTrQJsjx/tUeEJOpWj8QzfPfo5FsC9Zhev3r1iRsUbqPwshtxD5DsJHWkt1z4lDZ/JR+549e7YZohTsCF1xy8ZH205lMQnJLLmHinT4VJEHkvIyzSwgM0Xby26qUJa8G2fS5NiNZPWmiIw0oRZL41NKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhJj0DYE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BBA7C4CECD;
-	Fri,  1 Nov 2024 15:21:32 +0000 (UTC)
+	 MIME-Version:Content-Type; b=GCjV9VRf7pwC9AVphXznCNHP1QaCXP4ENTbjbC02/6i1mDSKLu9S2CwXDztBN8aWJBAFLK2QcfrrmJNg5WBGHL4O5K962eME6TDaXAcXnUN7QUVcC6V+UjUlpm/RRN7RhJ6viPPYaczD/f8j0CKrPk0eD+hXzj3raoJxweH8QZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrWXqw2l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94E84C4CED1;
+	Fri,  1 Nov 2024 17:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730474496;
-	bh=Z51TdSB5ihgzOjhRHjuOdOQEElBPvJ0Ajww02Qjzc80=;
+	s=k20201202; t=1730482354;
+	bh=TBvAl6JwjlFw9tXtrS/PEMIswlFCQXaZiHrErj6MXUI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jhJj0DYE8D5WHUk8Iro/B8F4AFLf2sdoCE5ui6flPsheh2uM3QZvdwAptgY+va7kX
-	 /ZoEZkPBMJjAJBkvmTi9DMD2QMOMFvcics35eQgNteORLnImx2d3Ds1RlhwPFfyNjN
-	 DzNEpIn5dIIp+F77LUoGIaOdSeLHW2lLtm3vVsvdrASRpQEfFwtpS6ggwm3Iy/Zc2A
-	 wTVThfLDpcuof0kQjQzpV7j11oc/UEDh/eNbgdb9zVRx2dQ3Hwr6YMyTD7FuFWdqxr
-	 AOKJ6iTwbTYSVHBWeRIKltGFeJNyPNtJfKY9dK9iYNl0wVO84u0vPDTZaRwdtJj9cl
-	 VLPfgd67S4xkw==
-Date: Fri, 1 Nov 2024 15:21:29 +0000
+	b=OrWXqw2lUOsFBtj20dBa5dnuFNP0ZFvvjJMSTHp18F8FK9gjwaSpdNSvC9tLr0XW/
+	 7HNRkDVtYeZtarVzdx9MCJ2u4g1fFqxqmd3XVxSvXYfK91vGELXrZiVu1LV5HYSdGC
+	 IEA1k+uRYGUxz2U7NDm2wQJ3uka3v3JfbSU19wJgOFl7brZbqNj5rLk3ssIM+BPcLx
+	 wpA/vaEpg7QgN/N3zSsFiNXDqRfFp7YICFZzQoQl8+2mwrXzUm7CnAFQIQpJKr5qO2
+	 gX8o/6yws99zxCw0xfYQXo1MXp9vtG6wDqGdU28zAuikQgTkOFIk/TUvchXy5oXJDM
+	 b2EoPolNJ+okQ==
+Date: Fri, 1 Nov 2024 17:32:28 +0000
 From: Jonathan Cameron <jic23@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: <conor+dt@kernel.org>, <dlechner@baylibre.com>,
- <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v5 6/6] iio: adc: ad4851: add ad485x driver
-Message-ID: <20241101152129.4111408f@jic23-huawei>
-In-Reply-To: <20241101112358.22996-7-antoniu.miclaus@analog.com>
-References: <20241101112358.22996-1-antoniu.miclaus@analog.com>
-	<20241101112358.22996-7-antoniu.miclaus@analog.com>
+To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>
+Cc: David Lechner <dlechner@baylibre.com>, Guillaume Stols
+ <gstols@baylibre.com>, Michael Hennerich <Michael.Hennerich@analog.com>,
+ linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] iio: adc: ad7606: finish pwm_get_state_hw() TODO
+Message-ID: <20241101173228.1db50f7c@jic23-huawei>
+In-Reply-To: <iajs2rk7odutqwoih4h6besd4b4nnksap6om5r7i2cw5arqcip@rvztnliokuk3>
+References: <20241029-pwm-export-pwm_get_state_hw-v2-0-03ba063a3230@baylibre.com>
+	<20241029-pwm-export-pwm_get_state_hw-v2-2-03ba063a3230@baylibre.com>
+	<iajs2rk7odutqwoih4h6besd4b4nnksap6om5r7i2cw5arqcip@rvztnliokuk3>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -59,56 +61,74 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 1 Nov 2024 13:23:58 +0200
-Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
+On Wed, 30 Oct 2024 09:28:01 +0100
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> wrote:
 
-> Add support for the AD485X a fully buffered, 8-channel simultaneous
-> sampling, 16/20-bit, 1 MSPS data acquisition system (DAS) with
-> differential, wide common-mode range inputs.
-> 
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Hi Antoniu.
+> On Tue, Oct 29, 2024 at 04:18:50PM -0500, David Lechner wrote:
+> > Replace the call to pwm_get_state() with a call to pwm_get_state_hw() in
+> > the ad7606 driver. This allows reading the sampling_frequency attribute
+> > to return the rate the hardware is actually running at rather than the
+> > rate that was requested. These may differ when the hardware isn't
+> > capable of running at exactly the requested frequency.
+> >=20
+> > Signed-off-by: David Lechner <dlechner@baylibre.com>
+> > ---
+> >=20
+> > I went ahead and made this patch since it is trivial, but it would be
+> > nice to get a Tested-by from Guillaume to make sure it actually works
+> > as expected.
+> > ---
+> >  drivers/iio/adc/ad7606.c | 8 +++-----
+> >  1 file changed, 3 insertions(+), 5 deletions(-)
+> >=20
+> > diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> > index 8b2046baaa3e..1581eb31b8f9 100644
+> > --- a/drivers/iio/adc/ad7606.c
+> > +++ b/drivers/iio/adc/ad7606.c
+> > @@ -762,11 +762,9 @@ static int ad7606_read_raw(struct iio_dev *indio_d=
+ev,
+> >  		*val =3D st->oversampling;
+> >  		return IIO_VAL_INT;
+> >  	case IIO_CHAN_INFO_SAMP_FREQ:
+> > -		/*
+> > -		 * TODO: return the real frequency intead of the requested one once
+> > -		 * pwm_get_state_hw comes upstream.
+> > -		 */
+> > -		pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
+> > +		ret =3D pwm_get_state_hw(st->cnvst_pwm, &cnvst_pwm_state);
+> > +		if (ret < 0)
+> > +			return ret;
+> >  		*val =3D DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, cnvst_pwm_state.period);
+> >  		return IIO_VAL_INT;
+> >  	} =20
+>=20
+> Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
+Probably not something we need to hurry so assuming it is fine, please
+send again after the merge window.
 
-I only took a very quick look and one thing jumped out at me.
+>=20
+> There is a slight inconsistency compared to ad7606_set_sampling_freq():
+>=20
+> ad7606_set_sampling_freq uses
+>=20
+> 	cnvst_pwm_state.period =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, freq);
+>=20
+> . So if cnvst_pwm_state.period happens to be 3 ns then reading
+> the freq value yields 333333333, but if you feed freq=3D333333333 into
+> ad7606_set_sampling_freq() it sets period =3D 4.
+>=20
+> To fix that you'd better use a plain / here in ad7606_read_raw().
+> (Note that with using round-closest for both there are still corner
+> cases, e.g. period =3D 31796 ns yields freq =3D 31450.496917851302 but
+> setting freq =3D 31450 yields 31796.50238473768 and so 31797.)
 
-Jonathan
+Ouch.
 
-> diff --git a/drivers/iio/adc/ad4851.c b/drivers/iio/adc/ad4851.c
-> new file mode 100644
-> index 000000000000..0ef8ea0d2fc2
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad4851.c
+>=20
+> Best regards
+> Uwe
 
-> +
-> +static int ad4851_set_calibscale(struct ad4851_state *st, int ch, int val,
-> +				 int val2)
-> +{
-> +	u64 gain;
-> +	u8 buf[0];
-
-A zero size array?
-
-> +	int ret;
-> +
-> +	if (val < 0 || val2 < 0)
-> +		return -EINVAL;
-> +
-> +	gain = val * MICRO + val2;
-> +	gain = DIV_U64_ROUND_CLOSEST(gain * 32768, MICRO);
-> +
-> +	put_unaligned_be16(gain, buf);
-> +
-> +	guard(mutex)(&st->lock);
-> +
-> +	ret = regmap_write(st->regmap, AD4851_REG_CHX_GAIN_MSB(ch),
-> +			   buf[0]);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_write(st->regmap, AD4851_REG_CHX_GAIN_LSB(ch),
-> +			    buf[1]);
-> +}
 
