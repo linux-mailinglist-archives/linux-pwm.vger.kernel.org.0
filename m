@@ -1,131 +1,130 @@
-Return-Path: <linux-pwm+bounces-4018-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4019-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 383889BA7EB
-	for <lists+linux-pwm@lfdr.de>; Sun,  3 Nov 2024 21:24:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 283F99BA80C
+	for <lists+linux-pwm@lfdr.de>; Sun,  3 Nov 2024 21:52:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4779B1C20322
-	for <lists+linux-pwm@lfdr.de>; Sun,  3 Nov 2024 20:24:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2F452817AF
+	for <lists+linux-pwm@lfdr.de>; Sun,  3 Nov 2024 20:52:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABA5A18A95B;
-	Sun,  3 Nov 2024 20:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F67818BBBD;
+	Sun,  3 Nov 2024 20:52:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="oyZsnxVg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L19Xm/T3"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFED4140E5F
-	for <linux-pwm@vger.kernel.org>; Sun,  3 Nov 2024 20:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606F083CD3;
+	Sun,  3 Nov 2024 20:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730665469; cv=none; b=QeVAIL483UFcBG9+BFzH24rQAMjzKfuC2EtOmpe4J9JRJywnAclapVvJTs/BNAoDAju9SnT4FdiQDwgpJ5u3xcI2GYRjZjI8htJq2z0pGogdzQ8b9b0QwmGD4qXshQE2S4s7IFOY0V1wA+4O/SrOa+HEW3sRgHy4AkUm/jjX440=
+	t=1730667143; cv=none; b=rnDsB0vTxIKRPZq0Z7qA++L+7PasdBgez+s/87t44xyTPh/Itoiv5o4AdNQ6tQFTOZcJ3lr6Op0pRJ3L/dWEPgyWROBNYzrdHNTXp1ztiBlF5e49LJxfZ9neNhRy/7Y25EjRDnN3Xzbj7RgmZhVArN/Fmd/Z/SVwSghUTBckfGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730665469; c=relaxed/simple;
-	bh=+IuVaiSHVBtyyhgrrn4thrcTjVD/nWVrVaIQ5nYlKpI=;
+	s=arc-20240116; t=1730667143; c=relaxed/simple;
+	bh=CLSbQ6BNFBif9u+81PM50aXLEE10VwBvWHMzGBM7NBc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LH74wDt4tTf/+31uj5LHzlyHJJteojF91VNNVJNugXD1ujXc9G1ecwYhe5Ohx7aUTSPcxq9EaGLT8JWnbLIDM14pGIGUJ+uPZGuYT1aWkoODNy21aCZAKtjIbQrxfIWAqXa92vxQq5hivvIfzs111PJno4gUZ/COHJlfqtNWE5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=oyZsnxVg; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a9e71401844so297044066b.3
-        for <linux-pwm@vger.kernel.org>; Sun, 03 Nov 2024 12:24:27 -0800 (PST)
+	 Content-Type:Content-Disposition:In-Reply-To; b=mJZCdbKjQrI9B8XQPdOJvbJ/kTpm8IX8btGHGDxVOCVbheVWpdW66cl7r/Bn7a0Mib3mHBEAQrTatXSH6M2g9QJ2fMMjos873gcTMIrQ92YhBGIwATgMNhTxEXlAqz/BK6++/1hVJvn76Twv2lkWG4FYSE8d4WqH9q0Tcp8iLO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L19Xm/T3; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4314f38d274so44333945e9.1;
+        Sun, 03 Nov 2024 12:52:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730665466; x=1731270266; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZbLucy1vznAm/L7ME+S69Mz2iLBOGTcx7R6cx9WeRk0=;
-        b=oyZsnxVgTB1unlJJCuZF+5BNQrXk4fTI3XkFL2mGqO0MwVoLErO7lOvjL21LSv7Qh3
-         2rU8jhXvDLrvB9ev+WapZD6j3Sf8LblqbLwQ5ZQ+l/LtoZ9ZIMLudJCvIjqPERI9MIKK
-         RjG4uLquCIchfDK5fdm/w7b8cEE5HoQksN/6CBYn/fyBJc8lUBgZGtRc7gA0IQlvk3Nj
-         qgiKd+rEYH3oga+Id3fYUtjnLrhUeWkHy0Gj7cAbOiYmx2SG5saOSqcxMZpO4PjESFM4
-         6PkLdpV/gRDUW6ZHKJ36fLOi/p7ydhwLtBu2tOgSp/1GRurOv5veheINjYmMme4Rj68i
-         LJBA==
+        d=gmail.com; s=20230601; t=1730667140; x=1731271940; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=iH1YN/Y7vMbe+Q32uUgavVIhZywzTnAITsZxQEjUsQQ=;
+        b=L19Xm/T3lO1GNwdO1d7e5uZBkPnjsHs/Po1+NoHOy69Er2CMn7czeHt4JdjLaUYu9z
+         bCDKlzq8ffmhiQJGPJFfrbLAlHmaGF7T5MTqUNZopkIilVfzKhYUDGyzAv6BACXRyBki
+         m8B/mtPuaGx1nkVQN31By7KycHCeAkI2tETA4svfKU34PwFXJKXv4JIJCDNwJTCKeedd
+         +PDYpc5rX4oGz7yzqVLkUsNj+XXKC/zY+7ipIdBxEaW+LZwQEE8PZB06jJbTo0ceNVmQ
+         YuD481y29a0TLy0i2+TvizWHjH92OZsnMCXI34XVlt3mc3trBVunPkhO5bBRpaoVlTtE
+         APug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730665466; x=1731270266;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZbLucy1vznAm/L7ME+S69Mz2iLBOGTcx7R6cx9WeRk0=;
-        b=mx6EZ1U2sE3Z3Cx75F5+LsgQfm3AuYXkggBTfbmNj9UIwS/K+9ENCPAPE6uZFRHEIF
-         a7Qwi7Ej6SRDEAwza+vzFlsHdiiij8BRjTXf+MP20/0wGW2eTkmSyGBY3LNGk8VC+bwL
-         fZWT6YR+IUxUg9QKY3dKoAmYkDus+p2haHw4vyZeL0z7MUd8mPl3vBmEBIA5dylZRbbU
-         4JkPVsRrCBUuSc2simU+KRkbsHvnKuEP1TSB69zqcB8QnJUi455pqWDN1uM8fkJcOmkk
-         Xf6tVdiPqr3YcINwEcOWz+CQRwJYLRO6UYmkDF1F+QeSQphMH07K/1W6JYj7gejK9IWv
-         hXsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXQ6FTxEFmbqBZJo7J4QlLD3VIhVSRsSuvbMlikrAKowAQUMdU26+yKcVePN7I2ldDMFirzsuMdcU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV6jt91CzOOQ2CVgWTJ7HII4AR4afgU0ufFaxn4tFP6PpL+kYd
-	Q1UJJX7LgVwaaUzmWQDG2jWHsrh1/55ZWFwAkQQ8zE/2MVSxoRq6n6dhZo9ox0s=
-X-Google-Smtp-Source: AGHT+IHIlVtG5Rh5KjMK9FRTNAdhyoVG02VD9/dw3U9OPVj6iEGlEmzj0nuvnJG8VTlgktXo97a9ug==
-X-Received: by 2002:a17:907:7fa8:b0:a9a:1bb4:800c with SMTP id a640c23a62f3a-a9e508aace0mr1403350166b.4.1730665466154;
-        Sun, 03 Nov 2024 12:24:26 -0800 (PST)
-Received: from localhost ([2a02:8071:b783:6940:711f:c21d:28dc:9f01])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9e564cc430sm461284066b.88.2024.11.03.12.24.25
+        d=1e100.net; s=20230601; t=1730667140; x=1731271940;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iH1YN/Y7vMbe+Q32uUgavVIhZywzTnAITsZxQEjUsQQ=;
+        b=G/E+tzXqxQTFntCt5VHB1CA8RlhpRJ8we8SBX0fK87IdcUWqnZQ82ENSnS1mG4HsW5
+         WkiJ2f8uvS7eZ7vgeYfQKGj546+mRpTFh85vlNeAtmBvF7ecnGba09qOWetumr3rm4wJ
+         XkGVSythmN3VUTlYE1shOHQmBgwS72BBKJXgtFy72PKdV6tS+whjD8LXE3Bp4NQsFSMz
+         2MNrrU+J8gEh2VHDXS+0fAo/aNOxCd1P6aXWPflsPxHuSOEx1JUY0mQpaT339WiPAzF9
+         mHJaIrKfU5fYE2DVRAmx7yL/wD8jEjrUG9h5b4e4yzWYW219l2f6BjOg7TpVYzB1M/k/
+         Fhew==
+X-Forwarded-Encrypted: i=1; AJvYcCUGGyFMa0cmsQ9HfTzyCEDpMzD3sYylfZdThr7Z7h1MMnrNd6eISXujNErU+R6IwZR6GXIbQtYjKS9j@vger.kernel.org, AJvYcCUcOYbIuPuqOqMCpr0xKqwxWK5j87aDd1VcksF+JqboN3gjdl0sZx9VF32qnelOlz4w4tDq/k9onLVf4h6A@vger.kernel.org, AJvYcCXCNEG/TlOuOOfqHOk6QM14n+OllCR1W2Fzf+iHZ3XUnRZyXWfNonw2Vq6MYYPUfCXIuvw0FnC3tqS0@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWtlFXFpmb9Sw+FcSM8fjIhKN7e+RHveyUppwf1K1qD63xEJxe
+	o9lpU4yPmPDneuz082wy1EPl0Zj3E8nWKY5K4GtULzQvbuahZo1J
+X-Google-Smtp-Source: AGHT+IHl+PAHqugAup4MaxG3BV4VMU1IvR9qU9iP/6wI2w0BLxULjq+3BZK6K1pAxY4A6or2C63+lA==
+X-Received: by 2002:a05:600c:4689:b0:431:52a3:d9d5 with SMTP id 5b1f17b1804b1-432831cb9demr122399465e9.0.1730667139375;
+        Sun, 03 Nov 2024 12:52:19 -0800 (PST)
+Received: from debian ([2a00:79c0:63e:e900:224:9bff:fe22:6dd6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-431bd947bf4sm166879175e9.27.2024.11.03.12.52.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Nov 2024 12:24:25 -0800 (PST)
-Date: Sun, 3 Nov 2024 21:24:23 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Stanislav Jakubek <stano.jakubek@gmail.com>, 
-	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Chunyan Zhang <zhang.lyra@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
+        Sun, 03 Nov 2024 12:52:17 -0800 (PST)
+Date: Sun, 3 Nov 2024 21:52:15 +0100
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pwm: sprd,ums512-pwm: convert to YAML
-Message-ID: <ielio4ys77kgo5qsvrbbqfg6yzlit33yun4leei2giplbedsc4@5qmkwgvqe6xl>
-References: <ZyH-JASRcpMXYsmH@standask-GA-A55M-S2HP>
+Subject: Re: [PATCH v6 2/2] pwm: add support for NXPs high-side switch
+ MC33XS2410
+Message-ID: <20241103205215.GA509903@debian>
+References: <20240927125745.38367-1-dima.fedrau@gmail.com>
+ <20240927125745.38367-3-dima.fedrau@gmail.com>
+ <oppdnsda4tqjcpsb26j5ew62t4bkkmtxuu7e2fpinnazubk5ky@tmz76o5xdrlj>
+ <20241023125221.GA197308@debian>
+ <eyom32milbbqp6floun4r5bpozuewbe5kk2htvhp5cmcytj2oy@bpcrd2aiwk6m>
+ <20241103190709.GA466098@debian>
+ <atkj7wnhl4n6frl5swjwrto6r6dhofjtnqisqrn5z6w3cmfl3h@dgqgdxovrqb4>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="w5kjnyt6erghd2zh"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZyH-JASRcpMXYsmH@standask-GA-A55M-S2HP>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <atkj7wnhl4n6frl5swjwrto6r6dhofjtnqisqrn5z6w3cmfl3h@dgqgdxovrqb4>
 
+Hello Uwe,
 
---w5kjnyt6erghd2zh
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH] dt-bindings: pwm: sprd,ums512-pwm: convert to YAML
-MIME-Version: 1.0
+Am Sun, Nov 03, 2024 at 09:19:36PM +0100 schrieb Uwe Kleine-König:
+> Hello Dimitri,
+> 
+> On Sun, Nov 03, 2024 at 08:07:09PM +0100, Dimitri Fedrau wrote:
+> > Am Thu, Oct 24, 2024 at 11:19:16PM +0200 schrieb Uwe Kleine-König:
+> > > What breaks if you drop the check for state->enabled?
+> > >  
+> > The device is unable to generate a 0% duty cycle, to support this you
+> > proposed in an earlier review to disable the output. Without checking if
+> > the output is disabled, the mc33xs2410_pwm_get_state function returns the
+> > wrong duty cycle for a previously setted 0% duty cycle. A "0" value in the
+> > MC33XS2410_PWM_DC register means that the relative duty cylce is 1/256. As
+> > a result there are complaints if PWM_DEBUG is enabled.
+> 
+> I fail to follow. If .enabled=true + .duty_cycle=0 is requested you
+> disable. That's fine. However it shouldn't be necessary to use
+> state->enabled in .get_state(). I didn't look at the actual code, but if
+> you provide a sequence of writes to /sys that trigger a PWM_DEBUG
+> output, I'll take another look.
+> 
+Apply 0% duty cycle: .enabled=false + .duty_cycle=0
+Below some writes triggering PWM_DEBUG output:
 
-Hello,
+# echo 488282 > /sys/class/pwm/pwmchip3/pwm0/period
+# echo 244140 > /sys/class/pwm/pwmchip3/pwm0/duty_cycle
+# echo 0 > /sys/class/pwm/pwmchip3/pwm0/duty_cycle
+[   91.813513] mc33xs2410-pwm spi0.0: .apply is supposed to round down duty_cycle (requested: 0/488282, applied: 1908/488282)
 
-thanks for your patch, looks fine for me.
-
-On Wed, Oct 30, 2024 at 10:36:36AM +0100, Stanislav Jakubek wrote:
-> +maintainers:
-> +  - Orson Zhai <orsonzhai@gmail.com>
-> +  - Baolin Wang <baolin.wang7@gmail.com>
-> +  - Chunyan Zhang <zhang.lyra@gmail.com>
-
-An Ack from (at least one of) them would be great. I see Baolin Wang in
-the recipients of this mail, but with a different address. Does the
-maintainer entry need updating?
-
-Best regards
-Uwe
-
---w5kjnyt6erghd2zh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcn2/AACgkQj4D7WH0S
-/k4o2Qf9GDLGUusJ6j8lnQsZtz0p4dM9bgK5TBtjFfMNViYS3m42wb1dyY01JK9V
-9el6EJfM4hxSiRXy2xfUZucDL24iBW1cNuLSoHaSDl8QqwigBsoZWS4N0WmZXrfy
-gD46prwESmWEGeC674kzn1LXzUgTdk4ltNy8CJOZdKknu6IVmoYKi4TjEBmv5k3d
-ABFeyT8A3fKRz2FdcCQo6WpXZ59MPewenPKZRaJco31M+c6B6aEuWrN/7DX+Jn3B
-d+JP/OpUo6ltk2A7T5PHJOqPNNlyWhqvUG9p5KpxqvkL4md3iZhRk77+0cjnFTU+
-eKacDeel68acKHq85vClumTmMIa4gA==
-=631T
------END PGP SIGNATURE-----
-
---w5kjnyt6erghd2zh--
+Best regards,
+Dimitri
 
