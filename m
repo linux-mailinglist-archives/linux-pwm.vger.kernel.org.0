@@ -1,447 +1,164 @@
-Return-Path: <linux-pwm+bounces-4013-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4014-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECA859BA0E9
-	for <lists+linux-pwm@lfdr.de>; Sat,  2 Nov 2024 15:59:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B09C9BA5DD
+	for <lists+linux-pwm@lfdr.de>; Sun,  3 Nov 2024 15:00:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 202981C20DB3
-	for <lists+linux-pwm@lfdr.de>; Sat,  2 Nov 2024 14:59:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B47181F210A0
+	for <lists+linux-pwm@lfdr.de>; Sun,  3 Nov 2024 14:00:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1265019CC27;
-	Sat,  2 Nov 2024 14:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EF2970833;
+	Sun,  3 Nov 2024 14:00:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0x0jfiO"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ZUlANDey"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDC982890;
-	Sat,  2 Nov 2024 14:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63032582
+	for <linux-pwm@vger.kernel.org>; Sun,  3 Nov 2024 14:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730559534; cv=none; b=R3Tq2GF8PjFvFdghVump81L6XAM2CJoWYcZ+jqN1Ff42fpkRyjivSCYvWD7VLvchqiB/OcbZhYzu3sPNpz4dG7AaudfeWe9ni5ECb/Geqe8Uk+CKDBa8NfsPzpJe3ZuOIW0d/bLDUfRLpi63ccbUjcT3GsxQ2BZ6k96ePU0hN5E=
+	t=1730642424; cv=none; b=bqzuT57dpJwwj7f/DD+GE0px7KIieDXN8Wcu5MIBVnMYqJwQ400ALi/a/fv2LMvMtK/bf3KO3qLNJiEyXhbBen+oRrsC1QjkL1hb2iHjOVInQWTWjSx49zXvG7xhYPe8tcOAJzfXRayoptkStTk8WJ9rNcSzzJ7TlUCDPgw4lC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730559534; c=relaxed/simple;
-	bh=hA5mig55eMiPG+mSvid5SDtNAli6m8IprtfZYjNaRRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I2X8HWAKXizDfRncuKr188Y+OiiPhk3TctHi9HkGn+5/vYnByIFVqopSdc16M1sBUYFSANDuf56UiENYMb7Q69gHpYjPVNnBTt1QrawGgC7YrUwGRPIbQfNfdZqzzigM9ARqVd75L8NW3sf+GH8WWo52u0yjNFrLn/UtmdgeMBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0x0jfiO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64891C4CEC3;
-	Sat,  2 Nov 2024 14:58:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730559534;
-	bh=hA5mig55eMiPG+mSvid5SDtNAli6m8IprtfZYjNaRRU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=p0x0jfiOVJzwlcSmKaBvmUeHbqe/qzlkiZhAcUs/D1hZYxAQF4D8gnK332OSriG3Z
-	 pu7u1f+E54BV2UUbfeib8XO54kYhoGHO5wsuBV0Gtbbh5kNfjCVrgU3BxlwDwaLnvJ
-	 un11o8+sfcoFHRrTNVv84KbwU+CjX7bOM3Beo1GH+bPHPwg+3xZOdJ0u/Jf6keZVfb
-	 O9IOWguuPxc1wgxGEgOaaY8NCI+aqWAmeFSSQ7pljnLqzL6Ua8vrLpXSfBSLflSIw/
-	 j3HhqZw9/ITOjx6cAK0RvDxuz7JJNiWQvac1l+igdjJqnD6ARoPfPLVj4mAeuvahQt
-	 zONnSk+Jb3ZyQ==
-Date: Sat, 2 Nov 2024 14:58:47 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: <conor+dt@kernel.org>, <dlechner@baylibre.com>,
- <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v5 6/6] iio: adc: ad4851: add ad485x driver
-Message-ID: <20241102145847.6e615d42@jic23-huawei>
-In-Reply-To: <20241101112358.22996-7-antoniu.miclaus@analog.com>
-References: <20241101112358.22996-1-antoniu.miclaus@analog.com>
-	<20241101112358.22996-7-antoniu.miclaus@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1730642424; c=relaxed/simple;
+	bh=HW0xkDerZUwC1H4Kuq1940vxcFFwZNOG+FdLrgr34zE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uoQq4357QIMb220qfLXDXaSEKJF/GGQAAFnkMW22EBCOhxEyJ07+WlnJu2UrgNDkjanB64WbUxAsooNH9yUDJk/GiR7teXB1V2t0UUc7p5WCiXIe6bGUlXjBst9nRvmJ8Yyr2VVXacUwr6gaR2f0kZrU4yBnb4e2eCoWUUK78sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ZUlANDey; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5cb615671acso2085722a12.1
+        for <linux-pwm@vger.kernel.org>; Sun, 03 Nov 2024 06:00:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730642420; x=1731247220; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6Zwcc6mJ2Z+M1jD5t38WLUuaC+7Hx/sCtRGVgR6vlbk=;
+        b=ZUlANDeyvzxiHScaQ2FEQ9Jq9RuXItkIYIFLsjKRosBPwOWPUzSQkKdBmQ9j9DRSaK
+         t2NPdgYqRT8XQyqXTAeZ46IWepony0ntayu2WwMuFBllwStN6pVbvyScsAbiGU2+L37Z
+         VHyfJEqXZZz4wQHNldqLVMJNWPISvKqMP4Z7yGfgrl+gHFCyQt9wnD/C3UW3m82wX54k
+         +m6eN714llaNVAdsnpjVXkrKffAtGWYGSY8i9bReez95c4HcNZ5LNaR1XjTF6XzhkUZJ
+         JWJ9BCYeoHMJCnvfVHaQex+YKzTO1hHihLRwKf4YHhiC1R4vQUa5hWJNvxrLbFVRoNgv
+         2DPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730642420; x=1731247220;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Zwcc6mJ2Z+M1jD5t38WLUuaC+7Hx/sCtRGVgR6vlbk=;
+        b=JmRxMAJYzLzk/LRQ8UjP943SoLNkGVKFmi9iEaQc4q5xa9yENwROFins2WaLypsj6K
+         +iOZtmdu/wAW35KabjpyBMFy1J/Mx4e7M5fqJYszCv7B0ZXGRT6bzOh6AbdpfnyFZFrk
+         ES37o36bm1RQDjWHpP3cLQdKXQx6Cb99Ci5n2Q+zKrsg8BE+/Z1NcH7kIS13OT4uUP3Q
+         JhoL9v3qk7tXaNEmGGpryhuXuyfDHOnTfNoL/VG5dywOuxHjiZeXFzEu7E8bKN7/P6E2
+         X2uOZZSP/9A4AqjDLJTviOprb/M0mSdGXfQLwbEXHudSjHeRrPZfWAy+1fDd3Y4+m5tq
+         NTbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/3ruD+xbLIRGwvLLN1jqQmTcca9ajIGKGvYmpK23eRv6Qut/7R9pF7yn8WoJ91ry0vZpf6QKWz5U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkWTm6u6lc6KSaSv06mzeDtiXMc9ka5WV8J2mH13P4cCwK/avc
+	nGvESWQGvQCqDnWKYhlk+9R0V18AOKqpwt9IFgHYLfiyr9Lx9YUxDF73tQlObg1/gA5Zw65LGF7
+	j
+X-Google-Smtp-Source: AGHT+IHuuxLDk9hwg0+iu/v28lzVF3K4zk9CZmxe8Kkj+OthvudFByHtLuWu3au1z0eWR3PyoVpO5g==
+X-Received: by 2002:a05:6402:2106:b0:5ce:b715:6529 with SMTP id 4fb4d7f45d1cf-5ceb923efadmr10173655a12.3.1730642419742;
+        Sun, 03 Nov 2024 06:00:19 -0800 (PST)
+Received: from localhost ([2a02:8071:b783:6940:d0c0:5ce1:4bb1:2797])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ceac7c8c77sm3265183a12.61.2024.11.03.06.00.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Nov 2024 06:00:18 -0800 (PST)
+Date: Sun, 3 Nov 2024 15:00:14 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: kernel test robot <lkp@intel.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Guillaume Stols <gstols@baylibre.com>, oe-kbuild-all@lists.linux.dev, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] iio: adc: ad7606: finish pwm_get_state_hw() TODO
+Message-ID: <d44ab5s73kmochmwis3buhd6ci7ff4rwd7kgh47aqar6xeyqna@f4plwf6qbvlm>
+References: <20241029-pwm-export-pwm_get_state_hw-v2-2-03ba063a3230@baylibre.com>
+ <202411020101.5Hs6MkwQ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Fri, 1 Nov 2024 13:23:58 +0200
-Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
-
-> Add support for the AD485X a fully buffered, 8-channel simultaneous
-> sampling, 16/20-bit, 1 MSPS data acquisition system (DAS) with
-> differential, wide common-mode range inputs.
-> 
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-
-Hi Antoniu.
-
-Various things inline to add to David's much more thorough review.
-
-Jonathan
-
-> +enum {
-> +	AD4851_SCAN_TYPE_NORMAL,
-> +	AD4851_SCAN_TYPE_RESOLUTION_BOOST,
-> +};
-> +
-> +struct ad4851_state {
-> +	struct spi_device *spi;
-> +	struct pwm_device *cnv;
-> +	struct iio_backend *back;
-> +	/*
-> +	 * Synchronize access to members the of driver state, and ensure
-> +	 * atomicity of consecutive regmap operations.
-> +	 */
-> +	struct mutex lock;
-> +	struct regmap *regmap;
-> +	struct regulator *vrefbuf;
-> +	struct regulator *vrefio;
-> +	const struct ad4851_chip_info *info;
-> +	struct gpio_desc *pd_gpio;
-> +	bool resolution_boost_enabled;
-> +	unsigned long sampling_freq;
-> +	unsigned int (*scales)[2];
-
-As described below consider clearer type definition by using
-a structure.
-
-> +	int *offsets;
-> +};
->
-> +static int ad4851_setup(struct ad4851_state *st)
-> +{
-> +	unsigned int product_id;
-> +	int ret;
-> +
-> +	if (st->pd_gpio) {
-
-Not obvious why you are pulsing twice. Add a comment.
-
-> +		gpiod_set_value(st->pd_gpio, GPIOD_OUT_HIGH);
-> +		fsleep(1);
-> +		gpiod_set_value(st->pd_gpio, GPIOD_OUT_LOW);
-> +		fsleep(1);
-> +		gpiod_set_value(st->pd_gpio, GPIOD_OUT_HIGH);
-> +		fsleep(1);
-> +		gpiod_set_value(st->pd_gpio, GPIOD_OUT_LOW);
-> +		fsleep(1000);
-> +	}
-...
-
-> +static int ad4851_calibrate(struct ad4851_state *st)
-> +{
-> +	unsigned int opt_delay, lane_num, delay, i, s, c;
-> +	enum iio_backend_interface_type interface_type;
-> +	DECLARE_BITMAP(pn_status, AD4851_MAX_LANES * AD4851_MAX_IODELAY);
-> +	bool status;
-> +	int ret;
-> +
-> +	ret = iio_backend_interface_type_get(st->back, &interface_type);
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (interface_type) {
-> +	case IIO_BACKEND_INTERFACE_SERIAL_CMOS:
-> +		lane_num = st->info->num_channels;
-
-num_lanes is probably a better name as lane_num sounds like the number
-of a particular lane rather than now many there are.
-
-> +		break;
-> +	case IIO_BACKEND_INTERFACE_SERIAL_LVDS:
-> +		lane_num = 1;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (st->info->resolution == 16) {
-> +		ret = iio_backend_data_size_set(st->back, 24);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = regmap_write(st->regmap, AD4851_REG_PACKET,
-> +				   AD4851_TEST_PAT | AD4857_PACKET_SIZE_24);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		ret = iio_backend_data_size_set(st->back, 32);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = regmap_write(st->regmap, AD4851_REG_PACKET,
-> +				   AD4851_TEST_PAT | AD4858_PACKET_SIZE_32);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	for (i = 0; i < st->info->num_channels; i++) {
-> +		ret = regmap_write(st->regmap, AD4851_REG_TESTPAT_0(i),
-> +				   AD4851_TESTPAT_0_DEFAULT);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = regmap_write(st->regmap, AD4851_REG_TESTPAT_1(i),
-> +				   AD4851_TESTPAT_1_DEFAULT);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = regmap_write(st->regmap, AD4851_REG_TESTPAT_2(i),
-> +				   AD4851_TESTPAT_2_DEFAULT);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = regmap_write(st->regmap, AD4851_REG_TESTPAT_3(i),
-> +				   AD4851_TESTPAT_3_DEFAULT(i));
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = iio_backend_chan_enable(st->back, i);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	for (i = 0; i < lane_num; i++) {
-> +		for (delay = 0; delay < AD4851_MAX_IODELAY; delay++) {
-> +			ret = iio_backend_iodelay_set(st->back, i, delay);
-> +			if (ret)
-> +				return ret;
-
-Blank line here is more consistent with surounding code (which looks better
-than this block does).
-
-> +			ret = iio_backend_chan_status(st->back, i, &status);
-> +			if (ret)
-> +				return ret;
-> +
-> +			if (status)
-> +				set_bit(i * AD4851_MAX_IODELAY + delay, pn_status);
-> +			else
-> +				clear_bit(i * AD4851_MAX_IODELAY + delay, pn_status);
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < lane_num; i++) {
-> +		status = test_bit(i * AD4851_MAX_IODELAY, pn_status);
-> +		c = ad4851_find_opt(&status, AD4851_MAX_IODELAY, &s);
-> +		if (c < 0)
-> +			return c;
-> +
-> +		opt_delay = s + c / 2;
-> +		ret = iio_backend_iodelay_set(st->back, i, opt_delay);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	for (i = 0; i < st->info->num_channels; i++) {
-> +		ret = iio_backend_chan_disable(st->back, i);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = iio_backend_data_size_set(st->back, 20);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_write(st->regmap, AD4851_REG_PACKET, 0);
-> +}
-
-> +
-> +static int ad4851_set_calibscale(struct ad4851_state *st, int ch, int val,
-> +				 int val2)
-> +{
-> +	u64 gain;
-> +	u8 buf[0];
-
-As per my very brief review the other day, 0 length is a problem.
-
-> +	int ret;
-> +
-> +	if (val < 0 || val2 < 0)
-> +		return -EINVAL;
-> +
-> +	gain = val * MICRO + val2;
-> +	gain = DIV_U64_ROUND_CLOSEST(gain * 32768, MICRO);
-> +
-> +	put_unaligned_be16(gain, buf);
-> +
-> +	guard(mutex)(&st->lock);
-> +
-> +	ret = regmap_write(st->regmap, AD4851_REG_CHX_GAIN_MSB(ch),
-> +			   buf[0]);
-
-Don't wrap so early. It fits under 80 chars on oneline.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_write(st->regmap, AD4851_REG_CHX_GAIN_LSB(ch),
-> +			    buf[1]);
-> +}
-
-> +
-> +static const unsigned int ad4851_scale_table[][2] = {
-I'd suggest a structure for each entry. Then you can do
-ad4851_scale_table[i].reg_val etc
-rather than opaque indexing to 0 or 1.
-
-> +	{ 2500, 0x0 },
-> +	{ 5000, 0x1 },
-> +	{ 5000, 0x2 },
-> +	{ 10000, 0x3 },
-> +	{ 6250, 0x04 },
-> +	{ 12500, 0x5 },
-> +	{ 10000, 0x6 },
-> +	{ 20000, 0x7 },
-> +	{ 12500, 0x8 },
-> +	{ 25000, 0x9 },
-> +	{ 20000, 0xA },
-> +	{ 40000, 0xB },
-> +	{ 25000, 0xC },
-> +	{ 50000, 0xD },
-> +	{ 40000, 0xE },
-> +	{ 80000, 0xF },
-> +};
-...
-
-> +
-> +static int ad4851_get_scale(struct ad4851_state *st,
-> +			    const struct iio_chan_spec *chan, int *val,
-> +			    int *val2)
-> +{
-> +	int i, softspan_val;
-> +	int ret;
-> +
-> +	ret = regmap_read(st->regmap, AD4851_REG_CHX_SOFTSPAN(chan->channel),
-> +			  &softspan_val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(ad4851_scale_table); i++) {
-> +		if (softspan_val == ad4851_scale_table[i][1])
-
-See above - I'd use a structure for the scale_table entries
-so this and the [0] below can be named structure elements.
-
-> +			break;
-> +	}
-> +
-> +	if (i == ARRAY_SIZE(ad4851_scale_table))
-> +		return -EIO;
-> +
-> +	__ad4851_get_scale(st, ad4851_scale_table[i][0], val, val2);
-> +
-> +	return IIO_VAL_INT_PLUS_MICRO;
-> +}
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vwkk7mov6pa2u6sg"
+Content-Disposition: inline
+In-Reply-To: <202411020101.5Hs6MkwQ-lkp@intel.com>
 
 
-> +
-> +static int ad4851_probe(struct spi_device *spi)
-> +{
-> +	struct iio_dev *indio_dev;
+--vwkk7mov6pa2u6sg
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/2] iio: adc: ad7606: finish pwm_get_state_hw() TODO
+MIME-Version: 1.0
 
-struct device *dev = *spi->dev;
-will shorten a lot of code in here so probably worth doing.
+Hello David,
 
-> +	struct ad4851_state *st;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	st = iio_priv(indio_dev);
-> +	st->spi = spi;
-> +
-> +	ret = devm_mutex_init(&spi->dev, &st->lock);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_regulator_bulk_get_enable(&spi->dev,
-> +					     ARRAY_SIZE(ad4851_power_supplies),
-> +					     ad4851_power_supplies);
-> +	if (ret)
-> +		return dev_err_probe(&spi->dev, ret,
-> +				     "failed to get and enable supplies\n");
-> +
-> +	ret = devm_regulator_get_enable_optional(&spi->dev, "vddh");
-> +	if (ret < 0 && ret != -ENODEV)
-> +		return dev_err_probe(&spi->dev, ret, "failed to get vddh voltage\n");
-You aren't trying to get the voltage, just turn it on.  So update the commit
-message to "failed to enable vddh\n"
+On Sat, Nov 02, 2024 at 01:50:35AM +0800, kernel test robot wrote:
+> kernel test robot noticed the following build errors:
+>=20
+> [auto build test ERROR on 6fb2fa9805c501d9ade047fc511961f3273cdcb5]
+>=20
+> url:    https://github.com/intel-lab-lkp/linux/commits/David-Lechner/pwm-=
+core-export-pwm_get_state_hw/20241030-052134
+> base:   6fb2fa9805c501d9ade047fc511961f3273cdcb5
+> patch link:    https://lore.kernel.org/r/20241029-pwm-export-pwm_get_stat=
+e_hw-v2-2-03ba063a3230%40baylibre.com
+> patch subject: [PATCH v2 2/2] iio: adc: ad7606: finish pwm_get_state_hw()=
+ TODO
+> config: i386-randconfig-141-20241101 (https://download.01.org/0day-ci/arc=
+hive/20241102/202411020101.5Hs6MkwQ-lkp@intel.com/config)
+> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20241102/202411020101.5Hs6MkwQ-lkp@intel.com/reproduce)
+>=20
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202411020101.5Hs6MkwQ-lkp=
+@intel.com/
+>=20
+> All errors (new ones prefixed by >>):
+>=20
+>    drivers/iio/adc/ad7606.c: In function 'ad7606_read_raw':
+> >> drivers/iio/adc/ad7606.c:765:23: error: implicit declaration of functi=
+on 'pwm_get_state_hw'; did you mean 'pwm_get_state'? [-Werror=3Dimplicit-fu=
+nction-declaration]
+>      765 |                 ret =3D pwm_get_state_hw(st->cnvst_pwm, &cnvst=
+_pwm_state);
+>          |                       ^~~~~~~~~~~~~~~~
+>          |                       pwm_get_state
+>    cc1: some warnings being treated as errors
 
-> +
-> +	ret = devm_regulator_get_enable_optional(&spi->dev, "vddl");
-> +	if (ret < 0 && ret != -ENODEV)
-> +		return dev_err_probe(&spi->dev, ret, "failed to get vddl voltage\n");
-Same here.
-> +
-> +	st->vrefbuf = devm_regulator_get_optional(&spi->dev, "vrefbuf");
-> +	if (IS_ERR(st->vrefbuf)) {
-> +		if (PTR_ERR(st->vrefbuf) != -ENODEV)
-> +			return dev_err_probe(&spi->dev, PTR_ERR(st->vrefbuf),
-> +					     "Failed to get vrefbuf regulator\n");
-> +	}
-> +
-> +	st->vrefio = devm_regulator_get_optional(&spi->dev, "vrefio");
-> +	if (IS_ERR(st->vrefio)) {
-> +		if (PTR_ERR(st->vrefio) != -ENODEV)
-> +			return dev_err_probe(&spi->dev, PTR_ERR(st->vrefio),
-> +					     "Failed to get vrefbuf regulator\n");
+The problem here is that there is no declaration (and implementation) of
+pwm_get_state_hw() with CONFIG_PWM=3Dn. Does it make sense to enable the
+ad7606 driver without enabling PWM support? If yes, we should add a
+dummy implementation of pwm_get_state_hw(), if not, a depends on PWM
+should be introduced.
 
-wrong regulator in the message.
+Best regards
+Uwe
 
-> +	}
-> +
-> +	st->pd_gpio = devm_gpiod_get_optional(&spi->dev, "pd", GPIOD_OUT_LOW);
-> +	if (IS_ERR(st->pd_gpio))
-> +		return dev_err_probe(&spi->dev, PTR_ERR(st->pd_gpio),
-> +				     "Error on requesting pd GPIO\n");
-> +
-> +	st->cnv = devm_pwm_get(&spi->dev, NULL);
-> +	if (IS_ERR(st->cnv))
-> +		return dev_err_probe(&spi->dev, PTR_ERR(st->cnv),
-> +				     "Error on requesting pwm\n");
-> +
-> +	st->info = spi_get_device_match_data(spi);
-> +	if (!st->info)
-> +		return -ENODEV;
-> +
-> +	st->regmap = devm_regmap_init_spi(spi, &regmap_config);
-> +	if (IS_ERR(st->regmap))
-> +		return PTR_ERR(st->regmap);
-> +
-> +	ret = ad4851_scale_fill(st);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ad4851_setup(st);
-> +	if (ret)
-> +		return ret;
-> +
-> +	indio_dev->name = st->info->name;
-> +	indio_dev->channels = st->info->channels;
-> +	indio_dev->num_channels = st->info->num_channels;
-> +	indio_dev->info = &ad4851_iio_info;
+--vwkk7mov6pa2u6sg
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Whilst it's not actively used, current best practice is to set
-indio_dev->modes = INDIO_DIRECT_MODE;
+-----BEGIN PGP SIGNATURE-----
 
-> +
-> +	st->back = devm_iio_backend_get(&spi->dev, NULL);
-> +	if (IS_ERR(st->back))
-> +		return PTR_ERR(st->back);
-> +
-> +	ret = devm_iio_backend_request_buffer(&spi->dev, st->back, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_iio_backend_enable(&spi->dev, st->back);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ad4851_calibrate(st);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_iio_device_register(&spi->dev, indio_dev);
-> +}
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmcngewACgkQj4D7WH0S
+/k7XQgf/S5oqIxrk+tCZrofLS72CSpw69wFvTYhfwN/NrMGBNVp95W3Ophsa+Pkr
+XdTPbdySiDYjjnL1fdSTpiQSYCm9hKuJG/656ke78cPP6duNzPVpckAyAJcvNhjb
+NbbQdNn+HtQCH/MXFX4iqoTZw0jR/IT7F1KE/+1Dm5DszUQMreoC94p9IcCwUdcH
+kwxwZph/2ztSwcAqOGlIQOy+qo3Jb2GXD+rTlJ46t2hNqji0P7XvMLwspODMf3EV
+7qYGcw83e5J+TBvXiloklNFCaP9YBIyeijW2TrWq9SoPFLc4otl6YJUMytgjWL8H
+4YxpizEk2QB8e6Qdh2eyTObScTuqIw==
+=RL7H
+-----END PGP SIGNATURE-----
+
+--vwkk7mov6pa2u6sg--
 
