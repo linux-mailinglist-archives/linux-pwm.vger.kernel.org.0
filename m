@@ -1,103 +1,169 @@
-Return-Path: <linux-pwm+bounces-4029-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4030-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAE389BC552
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2024 07:21:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 859B89BC916
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2024 10:27:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D9281F24B2C
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2024 06:21:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B5791F21DBA
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Nov 2024 09:27:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 860931CACE1;
-	Tue,  5 Nov 2024 06:21:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8D451CEEB8;
+	Tue,  5 Nov 2024 09:27:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UDFgIUEv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PYDsUC7u"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37D61DFE8;
-	Tue,  5 Nov 2024 06:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED0A2C1A2
+	for <linux-pwm@vger.kernel.org>; Tue,  5 Nov 2024 09:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730787681; cv=none; b=ih3smCWuWoEbV6VlCEHO1c82ZcsLepxipfN7S03Jfuj4sO7bQNClp3cmS9pVz+zDvIpqvYNP7ZArMMp46rdwVqRnUFBI3mcwyiQTpIqTXrjAT/e6/q6iF0KyoAORF2Qsq3wcBaVohSv5/6ucUj/p+mg01i/oyuv2rrhlOqe8RDU=
+	t=1730798844; cv=none; b=qvs7XwBER4bo1mOfEMJCNMS3ObT5OYfXPRofdgXuhOFt0sbvqTeeJQRD8MLb1YhIlqd3o8UDCv5ckz9XG7gQWHoOoxz526xO+r3soH0R7HVolEKW2EuJPUSEQLpi5aWtPeAj559mGXdFDGGFaEXhTlPTY3pNMSaqWI6fGbXyUA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730787681; c=relaxed/simple;
-	bh=kk8dszoqp8PqiEkZB9fm5YAoTt8ToqdKlYqHvKHmOa0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IlJS7697aGpqVaEpgQd8jHgV0+YIKxO5wflOiHia7UFc2Hl1LUJkb5pB+ldLjNI4O6bbvH6X6jzxgOA7Vcd6hkQ3dI3Jh87RzPlUPvyzJSIbvx/wk0rnGKfKQnce0EW8LOlhYdbgGoWhyJmbgz67Wx+0NgyU6reS25ArGlqzh3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UDFgIUEv; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e2e340218daso5050854276.0;
-        Mon, 04 Nov 2024 22:21:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730787678; x=1731392478; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=t3wFW12/6RoBqXny0VQWOTmH5aSf+LWh0KZ4bCkVkr0=;
-        b=UDFgIUEvoXQ0tOWsfZzd1cNcMKWGiquULIjrzIFwCHnkVplP2eDnjXVmcLVPlfFDMe
-         KQ6qiRkSrjpLMaEM6Byr4D4Q2bh5ZZbxkXwis3FWGZWaJ8jG/tIDSX3TVXVswvjx26rw
-         6IB/Ur+rmXACuoIxpa8QuGq6C6/ttJ04ATeGt9gdGLMKL8eML3RnLH3shH47tzEEwqcq
-         sFct5hre/HVGudfOOMnvwuXZK1Cic4ONXk+3hWAL29PQJge7sBYozlLuDpWFsMuTFD2e
-         i0D9I/9rlxwZOqEQjMM+kOhdhCbv9w9CFHJsohW36p/zQxnT0bHUjSUEgG9pMXv0moqZ
-         iA1g==
+	s=arc-20240116; t=1730798844; c=relaxed/simple;
+	bh=HuHzf+MqhJGpURxtX9qNPh+hM10o/G7WSixEaE9uEys=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hPJF7M8396tM7YH3hJnCCZTSf9sYCbx+TnBGuqzRIkikBK5Yr5r4vWNFqxk8Fvwdw5tA59IoqpZZpzoj+zVatPUKm+GTNPGqmTIdUejsDJuK4Q9v0uhPhIPJQmp1ssdUXjImM6Vdc5PAyAcBE41SlWbyzUZ7qRyW2MrjdAX9NWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PYDsUC7u; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730798841;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=K3diC4LcG5d/+GbrQGIZW0Sx7qNZLaP/PHesTT7qPXI=;
+	b=PYDsUC7uME3nTcvKznWaZAJ0X/SpkdIMbA4mP7xbA7PanmFRwPwWe3ddu9t+mXbfLpbwJ1
+	Ruw5GYcLC7ymfgbhoKwsK+x2BJtLrdtN9KLvEF2hnglreU6EvP7Gp2WjwWg/2FhvHChKei
+	q5+d+PMWHZvwZFXtHb6sBlbimOitisU=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-661-BhgLLm6xM2aaYMdS_vWdKw-1; Tue, 05 Nov 2024 04:27:20 -0500
+X-MC-Unique: BhgLLm6xM2aaYMdS_vWdKw-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-37d45f1e935so2665214f8f.0
+        for <linux-pwm@vger.kernel.org>; Tue, 05 Nov 2024 01:27:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730787678; x=1731392478;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1730798839; x=1731403639;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=t3wFW12/6RoBqXny0VQWOTmH5aSf+LWh0KZ4bCkVkr0=;
-        b=FtCWOynGII977DVSQlLV7a4hsKaGZpfuH/i01hoEb8OLqcsBqlQtwY/lu6W4Bzr3x/
-         N/f2vO6LVxKTSsl4rDbHcGYbMbijOeIAlPvjRB7CYzUM5QD3ORt7067Byus4mDDNEyQt
-         S6Fs7soDKuWK/HLQbriF0yDF3fdol3YqGj5l7lx3CammjhHRiDcQigBr6Y6Z587oLmg+
-         wGZvcKXa9mMnTQm5cbJ6Oee2TbZgx0DK4gVR+ue6x7aTHtQSVXLvfQegTuFxrggFv/7l
-         A8yZT19UAYmwHvlEMpWTH4DSaECgCP41sX3Jzci6m5eddsVJaIKKPcTAIqvAcuhJRIrt
-         dpsg==
-X-Forwarded-Encrypted: i=1; AJvYcCUi/RTmww2fBBEhsWqJ9/KHrrITWMZpj5STIQw5d9k+Ra/jL6dbQdMsEa9LQdmhUwZbHhNPuVGq598=@vger.kernel.org, AJvYcCVEMTymjrGQlbPG6Js2UUFRG1IKGf6bB1OcUm7yKQ62B8rGvZmIvkRCQxVgwYcE/dqKYCIC1L9Keg4112E=@vger.kernel.org, AJvYcCVI/7mIgZg+iIDJO74Jp/dytKeSqMLQvWNkkHClT7dcXc5ucMJpdschNYUSGFdF0c7PBIj1AbYr/L+gGJ04aHA=@vger.kernel.org, AJvYcCVQ9jkFV2yot1V4G0v7SmjTDxV1ezvqpoPZBjprZuGJJGy9Eg7uBIB+zb7Nc7dKRo0qokRR+GX71sRi@vger.kernel.org, AJvYcCVV2bUUeRfQaEnzYcTJbqP3pkZe95JvP4Dxs4qbst2psN0Iv4a0+nxczqm0sX+TL3wKmq23LZ7BqX9Ym8gY@vger.kernel.org, AJvYcCVrcpzf0qWH+i9h0n4UyAoYiN2ZMJL8QAkL8dKCirEXu9xXQHFDCCwlMDkGEbpuaeBEC/0Z7XwExPLsYQ==@vger.kernel.org, AJvYcCW5uOgORflXjroIlWko1DsoP3ZEf0u7Sjrzj0MnCMc6hRTHVxIlv2v28IPGMYukfQDsZW0tBzs9Epxk@vger.kernel.org, AJvYcCWDeBrSTQObBrgZSLyQwPtZgM2+iQYA3di0r2Zl6blPG7D5E1s6hn8KiU2an3+P/2330sjEg8Zf@vger.kernel.org, AJvYcCWcFjTndcE21ow7Scl64CaeiJgtoDLmZzmd38/JFDoTzBlMeksMZktDy0fvzmJzet7ht1HngbJ5x/wJ@vger.kernel.org, AJvYcCWrEZCgWtO8USER3+roGYiOPHQ9BYlc
- wEYOntV+6fYSQYOvzN/14gEZ75o8HLe14OjKuIcq1S330o2B@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWHGP4ZAPPfIcq23xAHxbqPgWVbn9m11d/au4Dyj9nnlXVY1id
-	CKBvSYr6Rwq65vvv6t6JDqgncMsxdoDPj29Nk5gPCRbyc2IXgdfOtiqgQ3BD9AzuuEV74L++Lsr
-	B+XnmiQu99yBFqErlyAoOeLrRHiA=
-X-Google-Smtp-Source: AGHT+IHa9Wl6kaZMC2Iqh+PZ97OJD2htTC9UI9oFXhLn0ebZGsBU/q2UeprWViXbP5D6nHQs3LLDaTs6iEW2fsyU8bY=
-X-Received: by 2002:a05:6902:15c4:b0:e29:24c:1d82 with SMTP id
- 3f1490d57ef6-e30e5b576e7mr16882810276.38.1730787677760; Mon, 04 Nov 2024
- 22:21:17 -0800 (PST)
+        bh=K3diC4LcG5d/+GbrQGIZW0Sx7qNZLaP/PHesTT7qPXI=;
+        b=NLjwWoqW/ukId/V0KUp0KoV5rOxcJ8Of7qhBcDAgNnzF8r0vQss1ZDyqWLYyNJ+zHV
+         rdvIfOgnKu/YBbrTlvlq3Mlm+1XVuWq3vNGyvUe3gr6iKjxZOB2AZ2y7+dBA/GDpvckd
+         9I9V6OdHVMnyaru1Z8Fl4AI38TBAVGDfsP4GZP0boAX7Semf8OKofVcYDzvaplMECcsC
+         YrCrl4mpnBlvpgFf5hvSyTIrEJFg0R5gs1z3IHq8AU8GVBirve0NYVPdYGcaBLRWH0K1
+         VWWyVNk5VMmuPckwqqMjMZtXnPNBveJ8/gQCX/VwhL5WBrDBqC94TPQBs0Nsl8VOQy/7
+         IN2g==
+X-Gm-Message-State: AOJu0YycyV8u7yB890V8+rjne5/xsjea5XHjIPDsRzfLvH3bLsBgVuK7
+	CdkVemflrf4X3Kk0calRpabKAZT6WN5sG0LEvYQfwvUm3u4Xno48N2VHoABMUVOWkeinATdrJRH
+	0rUtVIRzxCfhrMCrsLL9C9Fr9XN335Sn9m/R2H4Yj2rE0p49CZpj4kBiWNA==
+X-Received: by 2002:a5d:64c5:0:b0:37d:5429:9004 with SMTP id ffacd0b85a97d-381c7a3a52amr9948971f8f.3.1730798839491;
+        Tue, 05 Nov 2024 01:27:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGd0D0YfbnU3NzZsDpew5RZ831pQ7qFlOc9vb73OqtmymlL7yjzae5dufSS8ZhcRxOhmi2/iQ==
+X-Received: by 2002:a5d:64c5:0:b0:37d:5429:9004 with SMTP id ffacd0b85a97d-381c7a3a52amr9948964f8f.3.1730798839092;
+        Tue, 05 Nov 2024 01:27:19 -0800 (PST)
+Received: from eisenberg.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c10d7e0fsm15393636f8f.47.2024.11.05.01.27.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2024 01:27:18 -0800 (PST)
+From: Philipp Stanner <pstanner@redhat.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Philipp Stanner <pstanner@redhat.com>
+Subject: [PATCH] pwm: Replace deprecated PCI functions
+Date: Tue,  5 Nov 2024 10:26:42 +0100
+Message-ID: <20241105092641.49541-2-pstanner@redhat.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241024085922.133071-1-tmyu0@nuvoton.com> <20241024085922.133071-8-tmyu0@nuvoton.com>
- <20241026154113.66fe0324@jic23-huawei>
-In-Reply-To: <20241026154113.66fe0324@jic23-huawei>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Tue, 5 Nov 2024 14:21:06 +0800
-Message-ID: <CAOoeyxXmOE5R03Gof9zXS_E+32AFaY-miPN7jNZU+2GGX+nsKQ@mail.gmail.com>
-Subject: Re: [PATCH v1 7/9] iio: adc: Add Nuvoton NCT6694 IIO support
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
-	linux@roeck-us.net, jdelvare@suse.com, lars@metafoo.de, ukleinek@kernel.org, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Dear Jonathan,
+pcim_iomap_table() and pcim_request_regions() have been deprecated in
+commit e354bb84a4c1 ("PCI: Deprecate pcim_iomap_table(),
+pcim_iomap_regions_request_all()") and commit d140f80f60358 ("PCI:
+Deprecate pcim_iomap_regions() in favor of pcim_iomap_region()").
 
-Thank you for your comments,
-I will make changes based on the part you mentioned in the  future.
+Replace these functions with pcim_iomap_region().
 
+Additionally, pass the actual driver names to pcim_iomap_region()
+instead of the previous pci_name(), since the 'name' parameter should
+always reflect which driver owns a region.
 
-Best regards
-Ming
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+---
+ drivers/pwm/pwm-dwc.c      | 14 +++++---------
+ drivers/pwm/pwm-lpss-pci.c |  9 +++++----
+ 2 files changed, 10 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
+index fb3eadf6fbc4..9101a89447d6 100644
+--- a/drivers/pwm/pwm-dwc.c
++++ b/drivers/pwm/pwm-dwc.c
+@@ -66,20 +66,16 @@ static int dwc_pwm_probe(struct pci_dev *pci, const struct pci_device_id *id)
+ 
+ 	pci_set_master(pci);
+ 
+-	ret = pcim_iomap_regions(pci, BIT(0), pci_name(pci));
+-	if (ret)
+-		return dev_err_probe(dev, ret, "Failed to iomap PCI BAR\n");
+-
+ 	info = (const struct dwc_pwm_info *)id->driver_data;
+ 	ddata = devm_kzalloc(dev, struct_size(ddata, chips, info->nr), GFP_KERNEL);
+ 	if (!ddata)
+ 		return -ENOMEM;
+ 
+-	/*
+-	 * No need to check for pcim_iomap_table() failure,
+-	 * pcim_iomap_regions() already does it for us.
+-	 */
+-	ddata->io_base = pcim_iomap_table(pci)[0];
++	ddata->io_base = pcim_iomap_region(pci, 0, "pwm-dwc");
++	ret = PTR_ERR_OR_ZERO(ddata->io_base);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to iomap PCI BAR\n");
++
+ 	ddata->info = info;
+ 
+ 	for (idx = 0; idx < ddata->info->nr; idx++) {
+diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
+index f7ece2809e6b..823f570afb80 100644
+--- a/drivers/pwm/pwm-lpss-pci.c
++++ b/drivers/pwm/pwm-lpss-pci.c
+@@ -18,6 +18,7 @@ static int pwm_lpss_probe_pci(struct pci_dev *pdev,
+ 			      const struct pci_device_id *id)
+ {
+ 	const struct pwm_lpss_boardinfo *info;
++	void __iomem *io_base;
+ 	struct pwm_chip *chip;
+ 	int err;
+ 
+@@ -25,12 +26,12 @@ static int pwm_lpss_probe_pci(struct pci_dev *pdev,
+ 	if (err < 0)
+ 		return err;
+ 
+-	err = pcim_iomap_regions(pdev, BIT(0), pci_name(pdev));
+-	if (err)
+-		return err;
++	io_base = pcim_iomap_region(pdev, 0, "pwm-lpss");
++	if (IS_ERR(io_base))
++		return PTR_ERR(io_base);
+ 
+ 	info = (struct pwm_lpss_boardinfo *)id->driver_data;
+-	chip = devm_pwm_lpss_probe(&pdev->dev, pcim_iomap_table(pdev)[0], info);
++	chip = devm_pwm_lpss_probe(&pdev->dev, io_base, info);
+ 	if (IS_ERR(chip))
+ 		return PTR_ERR(chip);
+ 
+-- 
+2.47.0
+
 
