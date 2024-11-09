@@ -1,70 +1,72 @@
-Return-Path: <linux-pwm+bounces-4051-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4052-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E69649C2EDB
-	for <lists+linux-pwm@lfdr.de>; Sat,  9 Nov 2024 18:41:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E99FF9C2EDD
+	for <lists+linux-pwm@lfdr.de>; Sat,  9 Nov 2024 18:41:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F5701F216DA
-	for <lists+linux-pwm@lfdr.de>; Sat,  9 Nov 2024 17:41:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 14EF51C20BDF
+	for <lists+linux-pwm@lfdr.de>; Sat,  9 Nov 2024 17:41:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D67919DF44;
-	Sat,  9 Nov 2024 17:41:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54F4B19E836;
+	Sat,  9 Nov 2024 17:41:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EOUqwQYi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLi/DUS6"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B612556E;
-	Sat,  9 Nov 2024 17:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D4913BC35;
+	Sat,  9 Nov 2024 17:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731174105; cv=none; b=tpj6GJzihPlSNCpMPhzfEbBl66UrTUrDuw0mF/JylrNYQ9weGFzdV4LRc9iALnRAy/DGTtgp9dy4P5FkhXxECZxhFP6gfHGek22/7rxlG1OYLfNmqc25zepFULFGs0dJpEgarDmsFzjO/9ysYxD3KjsyNb5JtKzoWINQ4U4i3UQ=
+	t=1731174106; cv=none; b=U2oO3u1mhSM4PHB/rNyypHz6B5AJY4w/y7JhDw75bsPGWEKal/GHvUgD1PEe9nanxslgcpulwBOCHfWqRAOFSZb/GrJY12RnZNZbxQPvWkdn0nE6vauGn9DBg2/K7C826DEXtdptCWTVEImVAOdYH+YYMC0CvemAQKOdber4R0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731174105; c=relaxed/simple;
-	bh=dTvJYOkoE1f4F1tHTzNw8Qs/H3DeiNEj+RAk7PgdRpQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lYVrB4otxs1KkYS1CHv5bPhEt+jJGTULluP5pyRzH7/uPM34eSbr5+n691QjJTHXHIVX7Oadel+exohHpEh84+dR9CSR2wqPFEAhJcyb9NbsUG88w31Fk9HlmBonO4adAzF1uG4JKrHr+NVJrh4OKcYS3WrbcCRKP8RNgt3+Bfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EOUqwQYi; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1731174106; c=relaxed/simple;
+	bh=gx2AN6g8CBHOQhQWVvBpRtBLyzQubEgkJDNlqL08IzM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=L6OTO0nbWTRvORHVE1qW3wCJ/39kP79OtrFXXNQE5yhn51ZyFhialan06XgWshF0zaKeR8mwqcH2Of8T7J9LzSIKNH2kNgpmNfz7Qr+rJFur7tiqORvSE/kNmg65o9FGMM7HJNAP9d6H3ZCS5HPYUoTYK9r0KOLv24+9I9QX2lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iLi/DUS6; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43161c0068bso27667235e9.1;
-        Sat, 09 Nov 2024 09:41:43 -0800 (PST)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-37d50fad249so2373985f8f.1;
+        Sat, 09 Nov 2024 09:41:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731174102; x=1731778902; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=p42kdSg5X+QbjzAtyCojljK0tRBvSq62OLyKQkdrGcw=;
-        b=EOUqwQYikEGlTkroJlr47Q/sTDzNFWphH0L5RvAFDZdObj2ysFMnGiU3Ty3Myzisa4
-         wlB7ptajUEEHKmBEXlXCt4Z0k3tVfIo9wo6Sq+qbric/vQTltuBfUb9VFH2bfJqA/811
-         Y9qhx5/084XlIj2aH5/ooTETJB+ksQHfSLOYL0y2ToIBWKJ60OpmMBe9IkNlhuixSUpP
-         tOuu3Nlukom0aCZTCjLUv+tu5jswpmR9AG0Hi4sZ6lIf8xT9TxHnbnDrpMC87oJoeS06
-         nb1WJ5Hiy5wGMKUV6QJk57yqErlsg7z6unRiJA3gZ/QSkggxXF5R+9QJawbiW1lOPEv6
-         nulA==
+        d=gmail.com; s=20230601; t=1731174103; x=1731778903; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GkinVYGPyGwJ32i1kYAOsHhIvbGugGjjdqxMHgIEwAU=;
+        b=iLi/DUS6GCJwNo0pF/iphnk2/uSdDUtW6AFJ+DopmwD28IxUQIzzzOK1klH2BJPbY4
+         XW6LBhGJxgH4uhp4naxMAJBrC+NdIODO/TFLbfBMEr6FWV/9yTL1bnuAh1/83hcqEbLZ
+         rO6isV5Ydp02Wk6me9uQzSTW+OpdT0J1vUPIGidFxqgn6oNaQ2F+fQWntuCzu5C6n0Ib
+         HlMegCkjMrjrCqQUIcqhrgmr3Zqyp3IborULlSo7PuIbiKmri42x56CKAO3Wi6QimgRU
+         oNmtOfBD7RmR27Y3yK0UjrowzODWiqXV+n1rfMLBeCBD+RMr4NZkxSodM5xISSb2A+Oe
+         Vk3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731174102; x=1731778902;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p42kdSg5X+QbjzAtyCojljK0tRBvSq62OLyKQkdrGcw=;
-        b=H6VjnNscakhaZrkk1xN7R2KdDflYmDeWl8XmrL22bJAACo1KTR3pJMPikmozS3xvDg
-         b2RvmGX6g3DnRiPk3FNhsPKrnaDOeUYnMLKfM0NEFuSvAfwzXdN016Ycr1Xt4IgX3w22
-         epFkJwAxR4uLWKv5jX57ly9nuMkwbG5w8nnu8OCK2Mq1l8oqhQ+CjzKIlEZ8fW8yUtc2
-         kLK/bXEC8MBos0649RwMp0Big8Kz6zYN+EqzBqDggOlEMSgCCeE6nkIdWMjWBH4TKRYZ
-         Tw4ObVpv5Tou2NNHlnthejZcN4eTO78YW1DmsPrPKNYHoWoa2V4ztWGgwhlo2QDRcw6+
-         nVkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVCpLSkSRBh27SIU/NNLSd0ExmLuyPPbcvurxpOrmj4zfE84VboAl1ScI6bigmpb10bQHB9dMKaZkhQRhYt@vger.kernel.org, AJvYcCWYNJysLqhpsuMR3aqWB8654sdieEZQkApSueCGVE3yhqv9zJaZv7vBrVo1JoztYA8qmABD49HwtnDh@vger.kernel.org, AJvYcCXDsE02W9puo8XaXL6mLFnOxmMvoUsDjyeQ/gjL5Lbp3Gs2JcQXieVcXLvifCVxEACmyEsqb7+uzcpo@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvdK7odXGfOAUaEdfYp6fljoNBM/gCx0Nf7j7gSzWzshF1BBlm
-	/IyTlEJu5KMVSgpCsOhS0ULdXl7m1jgkhsYdnAOKZ8FnZyUnZqsw
-X-Google-Smtp-Source: AGHT+IGSAAGcsqym35eljJ+OR/erLDOIhsA/VgcN/4zQOhabPcFzZ1gspDt2k2rgvb44i/NACTxVMA==
-X-Received: by 2002:a05:600c:1c11:b0:431:5bb1:f088 with SMTP id 5b1f17b1804b1-432b751f00bmr60446275e9.29.1731174101546;
-        Sat, 09 Nov 2024 09:41:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1731174103; x=1731778903;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GkinVYGPyGwJ32i1kYAOsHhIvbGugGjjdqxMHgIEwAU=;
+        b=vbaXw0isyxpmsK1uf0lQCI3yGkZNstX6q9Ll8fb1SRDLUQA6gLnPEeAeUR7WrQEKcR
+         yYEpSpCO2XD7hwjJj/8rn0vciEDNCCvY61nKKet65NVOCrCStoW2SDx0Kqdorzm2womF
+         ls4EVNmyza++uUko8oVWbYu8IwioWughBIUwCPyLS6YRNBKCMfz2SFfF+1NOONkSdzKe
+         jvhbGhlCpL3wKdZlH8ig8DzMS3mo7L2uL3DeHq3T/AJ8eAUp0Vu4YBeCnS6iSgxOKxnD
+         1j9xYmvzPi5LvGzT6py71DVAptbwi4yQpt0eR6aPuyjer2rDGL5RxPwR4k5cPCL4Vh+T
+         U5ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUmkHzpuIfPJc+MyNjjW53ZuPsQKZM+MF63PdtvoK3oQNE/4LC5iWLSYyVRnNIcyI7P8MifZQilrId6o8xC@vger.kernel.org, AJvYcCWj7IdzIGVx5WB9YklS0xSjYt/qq+9Vq4XLMccmnPAdnaLOWyoPa3dB+k9+tt8U3+3AObT59qdd2DGC@vger.kernel.org, AJvYcCWnryzgvBhCoq2GqR9lt0a+nbKswbgK2GMlZPLpWvyVlougxaI8iR8Ni7N6aihE6+6WWWJtU/Z7Qk3P@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6EpST/7GIF3fYiuXz7p3Kh0GFVQebc62Ag0/vVQ3+SbDfibC6
+	en5jN45PuQI2vetVk3K7Au+37GUMsA/sNIQmGrJXgnzFtstWJ5xF
+X-Google-Smtp-Source: AGHT+IEh4J97FEYorYsztkOFKAsNtA+wdT1GmST8Y5PJSkDl/MlMVznGOlav5qUxAOIj7LrJEClF1g==
+X-Received: by 2002:a5d:59a6:0:b0:37d:4d3f:51e6 with SMTP id ffacd0b85a97d-381f186bf72mr6098216f8f.14.1731174102612;
+        Sat, 09 Nov 2024 09:41:42 -0800 (PST)
 Received: from debian.fritz.box ([2a00:79c0:605:8200:303:6c5b:4b07:6715])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432b05c202asm117582285e9.30.2024.11.09.09.41.39
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432b05c202asm117582285e9.30.2024.11.09.09.41.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Nov 2024 09:41:40 -0800 (PST)
+        Sat, 09 Nov 2024 09:41:42 -0800 (PST)
 From: Dimitri Fedrau <dima.fedrau@gmail.com>
 To: 
 Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
@@ -74,11 +76,14 @@ Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
 	Conor Dooley <conor+dt@kernel.org>,
 	linux-pwm@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 0/2] pwm: add support for NXPs high-side switch MC33XS2410
-Date: Sat,  9 Nov 2024 18:41:33 +0100
-Message-Id: <20241109174135.26292-1-dima.fedrau@gmail.com>
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v7 1/2] dt-bindings: pwm: add support for MC33XS2410
+Date: Sat,  9 Nov 2024 18:41:34 +0100
+Message-Id: <20241109174135.26292-2-dima.fedrau@gmail.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20241109174135.26292-1-dima.fedrau@gmail.com>
+References: <20241109174135.26292-1-dima.fedrau@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -87,113 +92,139 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The MC33XS2410 is a four channel high-side switch. Featuring advanced
-monitoring and control function, the device is operational from 3.0 V to
-60 V. The device is controlled by SPI port for configuration.
+Adding documentation for NXPs MC33XS2410 high side switch.
 
-Changes in V2:
-  - fix title in devicetree binding
-  - fix commit message in devicetree binding patch
-  - remove external clock from pwms and create clocks property
-  - switch to unevaluatedProperties: false
-  - add missing properties for complete example:
-    - pwm-names
-    - pwms
-    - interrupts
-    - clocks
-
-Changes in V3:
-  - Add description of the general behaviour of the device (limitations)
-  - Drop unused defines
-  - Add ranges comments for defines with parameters
-  - Drop MC33XS2410_PERIOD_MAX, MC33XS2410_PERIOD_MIN defines
-  - Drop mc33xs2410_period variable
-  - Round down when calculating period and duty cycle
-  - Use switch instead of loop when calculating frequency
-  - Removed ret variable in mc33xs2410_pwm_get_freq
-  - Handle all accesses in a single call to spi_sync_transfer
-  - Fix comments in function mc33xs2410_pwm_get_period
-  - Fix call pwm_set_relative_duty_cycle(state, ret, 255), instead
-    pwm_set_relative_duty_cycle(state, val[1] + 1, 256);
-  - Use devm_pwmchip_alloc
-  - Fix typo s/Transitition/Transition/
-  - Drop driver_data
-  - Removed patch for direct inputs from series
-  - Tested with PWM_DEBUG enabled, didn't before !
-
-Changes in V4:
-  - removed include of math.h, already included in math64.h
-  - removed include of mutex.h, no mutexes are used
-  - added include of bitfield.h(FIELD_GET, FIELD_PREP), fixes errors
-    discovered by kernel test robot
-  - cast parameters in DIV_ROUND_UP to u32, fixes errors discovered by
-    kernel test robot
-
-Changes in V5:
-  - Fix comment in mc33xs2410_pwm_get_freq, selecting steps instead of
-    period
-  - Add comment in mc33xs2410_pwm_get_relative_duty_cycle that duty_cycle
-    cannot overflow and and period is not zero, guaranteed by the caller
-  - Hardware emits a low level when disabled, disable if duty_cycle = 0 is
-    requested.
-  - Fix complaints when PWM_DEBUG enabled, round-down division in
-    mc33xs2410_pwm_apply and round-up in mc33xs2410_pwm_get_state.
-  - Add comment for disabling watchdog in probe
-
-Changes in V6:
-  - Add link to manual
-  - Redefine MC33XS2410_GLB_CTRL_MODE_MASK as MC33XS2410_GLB_CTRL_MODE and
-    MC33XS2410_GLB_CTRL_NORMAL_MODE as MC33XS2410_GLB_CTRL_MODE_NORMAL
-  - Remove define MC33XS2410_MIN_PERIOD_STEP(x) as there is no need for
-    parameters and use instead MC33XS2410_MIN_PERIOD
-  - Rename function to_pwm_mc33xs2410_chip to mc33xs2410_from_chip
-  - Add comment in mc33xs2410_pwm_get_freq why count should be rounded up
-  - Fix incorrect comment in mc33xs2410_pwm_get_period
-  - Rename steps variable to doubled_steps in function
-    mc33xs2410_pwm_get_freq
-  - remove cast in mc33xs2410_pwm_set_relative_duty_cycle
-  - remove duty_cycle from if in mc33xs2410_pwm_set_relative_duty_cycle
-
-Changes in V7:
-  - Add empty lines for defines with parameter
-  - Hardcode into:
-    - MC33XS2410_PWM_DC1 -> MC33XS2410_PWM_DC
-    - MC33XS2410_PWM_FREQ1 -> MC33XS2410_PWM_FREQ
-    - MC33XS2410_MAX_PERIOD_STEP0 -> MC33XS2410_MAX_PERIOD_STEP
-  - Rename:
-    - MC33XS2410_MIN_PERIOD -> MC33XS2410_PWM_MIN_PERIOD
-    - MC33XS2410_MAX_PERIOD_STEP -> MC33XS2410_PWM_MAX_PERIOD
-    - MC33XS2410_WR -> MC33XS2410_FRAME_IN_ADDR_WR
-    - MC33XS2410_RD_CTRL -> MC33XS2410_FRAME_IN_DATA_RD
-    - MC33XS2410_RD_DATA_MASK -> MC33XS2410_FRAME_OUT_DATA
-  - Change range for MC33XS2410_PWM_CTRL1_POL_INV
-  - Drop mask suffixes
-  - Switch to unsigned int len in mc33xs2410_write_regs and
-    mc33xs2410_read_regs
-  - Remove define MC33XS2410_WORD_LEN
-  - Use a single spi transfer in mc33xs2410_write_regs and
-    mc33xs2410_read_regs by using SPI_CS_WORD and 16 bits per word
-  - Break the line in the argument list instead of having a static in its
-    own for mc33xs2410_read_reg definition
-  - Remove u32 cast mc33xs2410_pwm_get_period
-  - Unroll mc33xs2410_pwm_get_relative_duty_cycle
-  - Unroll mc33xs2410_pwm_set_relative_duty_cycle and remove check for
-    state->enabled
-  - Remove ctrl[x] and use instead a u8 flag which indicates from which
-    registers to read
-
-Dimitri Fedrau (2):
-  dt-bindings: pwm: add support for MC33XS2410
-  pwm: add support for NXPs high-side switch MC33XS2410
-
- .../bindings/pwm/nxp,mc33xs2410.yaml          | 118 ++++++
- drivers/pwm/Kconfig                           |  12 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-mc33xs2410.c                  | 388 ++++++++++++++++++
- 4 files changed, 519 insertions(+)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
+---
+ .../bindings/pwm/nxp,mc33xs2410.yaml          | 118 ++++++++++++++++++
+ 1 file changed, 118 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
- create mode 100644 drivers/pwm/pwm-mc33xs2410.c
 
+diff --git a/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml b/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+new file mode 100644
+index 000000000000..1729fe5c3dfb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+@@ -0,0 +1,118 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/nxp,mc33xs2410.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: High-side switch MC33XS2410
++
++maintainers:
++  - Dimitri Fedrau <dima.fedrau@gmail.com>
++
++allOf:
++  - $ref: pwm.yaml#
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++properties:
++  compatible:
++    const: nxp,mc33xs2410
++
++  reg:
++    maxItems: 1
++
++  spi-max-frequency:
++    maximum: 10000000
++
++  spi-cpha: true
++
++  spi-cs-setup-delay-ns:
++    minimum: 100
++    default: 100
++
++  spi-cs-hold-delay-ns:
++    minimum: 10
++    default: 10
++
++  spi-cs-inactive-delay-ns:
++    minimum: 300
++    default: 300
++
++  reset-gpios:
++    description:
++      GPIO connected to the active low reset pin.
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 3
++
++  pwm-names:
++    items:
++      - const: di0
++      - const: di1
++      - const: di2
++      - const: di3
++
++  pwms:
++    description:
++      Direct inputs(di0-3) are used to directly turn-on or turn-off the
++      outputs.
++    maxItems: 4
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    description:
++      The external clock can be used if the internal clock doesn't meet
++      timing requirements over temperature and voltage operating range.
++    maxItems: 1
++
++  vdd-supply:
++    description:
++      Logic supply voltage
++
++  vspi-supply:
++    description:
++      Supply voltage for SPI
++
++  vpwr-supply:
++    description:
++      Power switch supply
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++       pwm@0 {
++           compatible = "nxp,mc33xs2410";
++           reg = <0x0>;
++           spi-max-frequency = <4000000>;
++           spi-cpha;
++           spi-cs-setup-delay-ns = <100>;
++           spi-cs-hold-delay-ns = <10>;
++           spi-cs-inactive-delay-ns = <300>;
++           reset-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
++           #pwm-cells = <3>;
++           pwm-names = "di0", "di1", "di2", "di3";
++           pwms = <&pwm0 0 1000000>,
++                  <&pwm1 0 1000000>,
++                  <&pwm2 0 1000000>,
++                  <&pwm3 0 1000000>;
++           interrupt-parent = <&gpio0>;
++           interrupts = <31 IRQ_TYPE_LEVEL_LOW>;
++           clocks = <&clk_ext_fixed>;
++           vdd-supply = <&reg_3v3>;
++           vspi-supply = <&reg_3v3>;
++           vpwr-supply = <&reg_24v0>;
++       };
++    };
 -- 
 2.39.5
 
