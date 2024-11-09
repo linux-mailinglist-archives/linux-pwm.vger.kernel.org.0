@@ -1,209 +1,153 @@
-Return-Path: <linux-pwm+bounces-4049-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4050-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB64B9C2C18
-	for <lists+linux-pwm@lfdr.de>; Sat,  9 Nov 2024 12:07:47 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 166699C2E49
+	for <lists+linux-pwm@lfdr.de>; Sat,  9 Nov 2024 16:40:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AA58D1C20CEE
-	for <lists+linux-pwm@lfdr.de>; Sat,  9 Nov 2024 11:07:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9F8A6B20DB7
+	for <lists+linux-pwm@lfdr.de>; Sat,  9 Nov 2024 15:39:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 529D014EC4A;
-	Sat,  9 Nov 2024 11:07:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A97A19C562;
+	Sat,  9 Nov 2024 15:39:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQTa6kdW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOdrh8UI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935602233B;
-	Sat,  9 Nov 2024 11:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D1C19B3D8;
+	Sat,  9 Nov 2024 15:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731150463; cv=none; b=MocdyEZhcGhEZlqvb1Y7IVwPRqnjNrl0vr2OG+wX2V0iMo/SAp81WXbDYiy38PPdAVeKievJ+TqnZaiXrAZiM+TqsDkbdGVvvf4/kKUz5F4oujn2Sme9/ncXRi6nEEtCXaD0PbPU7TT4nxDUNaFNDnhYtg2U/s0uKuiuwxrh7zk=
+	t=1731166795; cv=none; b=LPuj+w3iIcKmPEiGZGLrUscwoHhQEFqyjT6RSEfr05+oFyj4XiZFIZ+/zWoWUMdVNeOOIdnn3MRNvCqveBkg5CzDQNcfSdBxgb3GLSkW53z9+oa7xS39edftRV01nUp+w1a9oHmEk/DaEaEnimm1lMPlX1Ub1AM0Os1n4N8QjsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731150463; c=relaxed/simple;
-	bh=QS9QXHA9aIA753MlX+rgP6S52wu6QOzrQQPQXLb4Oug=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NqpDCYcQ/KVvotVs/jwP8UqPRxH9c1VCAYRoy4iB9/71MnV/rEiqk3qgza/I1HM0HS9d3x+NjsXGZuTKTab/DiBtklGP1DPTT0nJss1TDVHMY1zsGJ3k8bRtP7YkkOOfx/Aaf14S7kk9UpMIytzeEwBJrGbjOJ47WQebcD8B65Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XQTa6kdW; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5ceccffadfdso4009864a12.2;
-        Sat, 09 Nov 2024 03:07:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731150460; x=1731755260; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=awye95iv1yEMNkGuGKMnnPe3aEgESR2qeEte2B8YfLU=;
-        b=XQTa6kdWr8x+Fn1LGIemSbQE30tUal3TRYv/x/VU10t1Q1qYqnf9xoeTu9jwAb1+hX
-         l1MENe9ScEsR5F329kJZqM+WWMPx1fMJv7AbKWywEztqhcaZiFSFr9ypelwKiADfDDob
-         vRcI9GRNrLrmaIIF2vk8epsVHmnBBBZt6vnLASE9frBSo+nscNB9kC081d5YFLM/JgXM
-         mVAtsFY4zgaolfsKaRb3rc44HmhpjPvLzRGGZ/2/opTvE12HNZP6EzjZ3KJLBgaVukkm
-         sYuMP79L87EY/La+/NVPwj+cpCC2fFcmMMutT0gUICmWEJSl6JjkrdLNZEFTyIzSK1Ns
-         BgUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731150460; x=1731755260;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=awye95iv1yEMNkGuGKMnnPe3aEgESR2qeEte2B8YfLU=;
-        b=wG2F2HZIZGAvpOrukOE/1FiKWjpu2Ty5jAYN2Vlro89z4eXOnohV3AxuyriCD1PFFl
-         om5SDjt92pPthTiuHYQK3ujMH+cHYtUuLUnJwxpUAQ1OtvSD+jkwasHR2Bny12bws5hY
-         RUQhzHaLL2jT9fSEb7bFo4uqJlHTA5hzT8GrDlaWJ2duAYP1+TD7OwhsfwoXstGY87+d
-         gZhdMGBjCHSf6aCC+tzEzSx+sxBnideAvv/nhrV5MjgPQe3a8B6stGP4YzgXvSo8aaEC
-         L/OFm9zz0D4QkjIF4+OqDpC4C12CM9mwxMtx240VHuRdKds/1Azl3+Ze0oV9YfddDWlN
-         NSJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJxZYhAx1jWXFokrHyTzMkE5wW+v7c7B2wIonYdcuFBAPq2MpOiaArkZjVxVnuGNuJ2nUhvnu4Hz2U@vger.kernel.org, AJvYcCWHp4CCM9kfb70tFPkafzxe0AGnwyl9ZHHJJxRfYairJCPtzRUl0QaYj/OT/oqe8OmzLmLKj/YZohX5@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSrtr/ctTXJuu1W2hijI1SUq8R5ajpqe2sudYzAh9yTURnCU2X
-	lUGl4tLWGhANPfiEKoT2bwhXMhebz3piDCarZ91qmeTWBwI07Mvg4QLNE1Leg4SL9MMX0DRHfGx
-	qjBZ3MRZG9BQdgxz54tZiwI6A+Js=
-X-Google-Smtp-Source: AGHT+IE7QnnwmUPJHAhpYjQ53+P2XjG8mYIekPucikrnAm6nBdhxXkmutfFnCQ+ZZUdwIEe3sKpwxcnrh3kFtMAUPPU=
-X-Received: by 2002:a05:6402:40d6:b0:5cf:1b53:1bf4 with SMTP id
- 4fb4d7f45d1cf-5cf1b531cfemr1676430a12.17.1731150459603; Sat, 09 Nov 2024
- 03:07:39 -0800 (PST)
+	s=arc-20240116; t=1731166795; c=relaxed/simple;
+	bh=tXfocABwPBFTxx/MOXWvovhlbtkWeZ2PINylPXQqA3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EJWuMZwOUbQnOHbkldma6FKCKXO2fg1QqdSvfTHAiwzcJ5fmkPa4KcVCMq5dZjPC8IPJzD81+gJOPVNaGNIKW7oSMfYjOfQRWLxTtpHSleLuUx7hPiHJaOKO2iIzqfRkgzUMfv6GdAQQpBRo5sx7lQf+PaFIUm8WJquiVAdmAeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOdrh8UI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30028C4CECE;
+	Sat,  9 Nov 2024 15:39:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731166794;
+	bh=tXfocABwPBFTxx/MOXWvovhlbtkWeZ2PINylPXQqA3o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bOdrh8UIoov3JPWAru6BaEk9TPiON1p456mTnNf6HMXan0tm2FSSP389HzEgkg5Qr
+	 +SdFKQu0gze9veDUGcar2LggftfuEb1jnO0KnWRrt36/SwoEua9A1m8Mhts84rtK/2
+	 SJ5Y4u/rds2CUqw4pCArxqVqv4JlUxoIL5zU1Aucuedhr/wnK9sVNdo9rt8m7KGWZ/
+	 L8U3HFHG0LdKrv+dKZd68MndMrE+ewSx8mrDIf0Oi4w+W3r+kXt4RyiwQEFjWXB/Ti
+	 LS2hDRxKLJlowNEi7DGdYmDbSEgmGCpV0ROHMBEGoZ9TGqzs05EkD4z2RZAWHGQC/t
+	 SaKsbYE+AxEDA==
+Date: Sat, 9 Nov 2024 15:39:46 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: "Miclaus, Antoniu" <Antoniu.Miclaus@analog.com>, "conor+dt@kernel.org"
+ <conor+dt@kernel.org>, "linux-iio@vger.kernel.org"
+ <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org"
+ <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org"
+ <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v5 6/6] iio: adc: ad4851: add ad485x driver
+Message-ID: <20241109153946.4f4df9d2@jic23-huawei>
+In-Reply-To: <146a24a7-d7a1-4969-98c0-f621a1709dd7@baylibre.com>
+References: <20241101112358.22996-1-antoniu.miclaus@analog.com>
+	<20241101112358.22996-7-antoniu.miclaus@analog.com>
+	<de120709-b60b-4e85-912e-b60ca18a8001@baylibre.com>
+	<CY4PR03MB339993CDE9BA8DD3976CF2F29B5C2@CY4PR03MB3399.namprd03.prod.outlook.com>
+	<1f2b8d91-19be-46b7-9202-824aa177dff6@baylibre.com>
+	<146a24a7-d7a1-4969-98c0-f621a1709dd7@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1729583747.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1729583747.git.zhoubinbin@loongson.cn>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Sat, 9 Nov 2024 17:07:24 +0600
-Message-ID: <CAMpQs4Lv0_RjoyzJHtrekbHB+OiV5Si6yPEgp_u1ZZKkthGzhw@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] pwm: Introduce pwm driver for the Loongson family chips
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	Sean Young <sean@mess.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 22, 2024 at 3:04=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> Hi all:
->
-> This patchset introduce a generic PWM framework driver for Loongson famil=
-y.
-> Each PWM has one pulse width output signal and one pulse input signal to =
-be measured.
->
-> It can be found on Loongson-2K series cpus and Loongson LS7A bridge chips=
-.
->
-> Thanks.
->
-> -------
-> V7:
-> Thanks for Sean's advice.
-> patch (2/2):
->  - Set chip->atomic to keep pwm_apply_atomic() can be used with the pwm.
->  - Test with CONFIG_PWM_DEBUG and CONFIG_DEBUG_ATOMIC_SLEEP enabled.
->
-> Link to V6:
-> https://lore.kernel.org/all/cover.1728463622.git.zhoubinbin@loongson.cn/
+On Thu, 7 Nov 2024 10:47:52 -0600
+David Lechner <dlechner@baylibre.com> wrote:
 
-Hi Uwe:
+> On 11/7/24 10:13 AM, David Lechner wrote:
+> > On 11/7/24 4:51 AM, Miclaus, Antoniu wrote:  
+> 
+> 
+> >>> I'm pretty sure that calibscale and calibbias also need to take into
+> >>> account if resolution boost is enabled or not.  
+> >>
+> >> Can you please detail a bit on this topic? I am not sure what I should do.
+> >>  
+> > 
+> > We haven't implemented oversampling yet in ad4695 yet, so I don't know
+> > exactly what we need to do either. ;-)
+> > 
+> > But this is how I would test it to see if it is working correctly or
+> > not. We will need to test this with a 20-bit chip since that is the
+> > only one that will change the _scale attribute when oversampling is
+> > enabled.
+> > 
+> > First, with oversampling disabled (_oversampling_ratio = 1), generate
+> > a constant voltage of 1V for the input. Read the _raw attribute. Let's
+> > call this value raw0. Read the _scale attribute, call it scale0 and
+> > the _offset attribute, call it offset0.
+> > 
+> > Then we should have (raw0 + offset0) * scale0 = 1000 mV (+/- some
+> > noise).
+> > 
+> > Then change the offset calibrate to 100 mV. To do this, we reverse
+> > the calculation 100 mV / scale0 = calibbias (raw units). Write the
+> > raw value to the _calibbias attribute. Then read the _raw
+> > attribute again, call it raw0_with_calibbias.
+> > 
+> > This time, we should have (raw0_with_calibbias + offset0) * scale0
+> > = 1100 mV (+/- some noise).
+> > 
+> > Then set _calibbias back to 0 and repeat the above by setting the
+> > _calibscale attribute to 0.90909 (this is 1 / 1.1, which should  
+> 
+> Now that I have written this, this has me second-guessing if I
+> implemented calibscale correctly on ad4695. It would seem more
+> logical that if we have an actual input voltage of 1 V and a
+> calibscale of 1.1, then the resulting processed value we read
+> should be 1100 mV.
+> 
+> Jonathan, can you set me straight? The sysfs ABI docs aren't
+> clear on this point.
 
-Gentle ping.
-Any comments about this patchset ?
+Deliberately vague in this case.  calibbias is kind of the wild west
+of ABI. Often we have no meaningful information on what the tweak
+register settings actually do beyond 'up vs down'.  In some cases
+the datasheets even refer to them as taps up or taps down.
 
->
-> V6:
-> patch (2/2):
->  - Rebase on pwm/for-next;
->  - Add Reference Manual;
->  - Shortcut if !pwm->state.enabled;
->  - When state->enabled is true, unconditionally execute
->    pwm_loongson_set_polarity() to avoid that the polarity register is
->    not set correctly.
->
-> Link to V5:
-> https://lore.kernel.org/all/cover.1720516327.git.zhoubinbin@loongson.cn/
->
-> V5:
-> patch (2/2):
->  - Rebase on pwm/for-next;
->  - Test with PWM_DEBUG enabled.
->  - In pwm_loongson_apply(), the pwm state is determined before the pwm
->    polarity, avoid test failures when PWM_DEBUG is enabled;
->  - Added DIV64_U64_ROUND_UP in pwm_loongson_get_state() to avoid
->    precision loss and to avoid test failures when PWM_DEBUG is enabled.
->
-> Link to V4:
-> https://lore.kernel.org/all/cover.1716795485.git.zhoubinbin@loongson.cn/
->
-> V4:
-> patch (2/2):
->  - Rebase on pwm/for-next;
->  - Addressed Uwe's review comments:
->    - Make use of devm_pwmchip_alloc() function;
->    - Add Limitations description;
->    - Add LOONGSON_ prefix for Loongson pwm register defines;
->    - Keep regs written only once;
->    - Rewrite duty/period calculation;
->    - Add dev_err_probe() in .probe();
->    - Fix some code style.
->
-> Link to V3:
-> https://lore.kernel.org/linux-pwm/cover.1713164810.git.zhoubinbin@loongso=
-n.cn/
->
-> V3:
-> patch (1/2):
->  - Add Reviewed-by tag from Krzysztof, thanks.
-> patch (2/2):
->  - Several code stlye adjustments, such as line breaks.
->
-> Link to V2:
-> https://lore.kernel.org/all/cover.1712732719.git.zhoubinbin@loongson.cn/
->
-> v2:
-> - Remove the dts-related patches and update dts at once after all
-> relevant drivers are complete.
-> patch (1/2):
->  - The dt-binding filename should match compatible, rename it as
->    loongson,ls7a-pwm.yaml;
->  - Update binding description;
->  - Add description for each pwm cell;
->  - Drop '#pwm-cells' from required, for pwm.yaml makes it required alread=
-y.
->
-> Link to v1:
-> https://lore.kernel.org/linux-pwm/cover.1711953223.git.zhoubinbin@loongso=
-n.cn/
->
-> Binbin Zhou (2):
->   dt-bindings: pwm: Add Loongson PWM controller
->   pwm: Add Loongson PWM controller support
->
->  .../bindings/pwm/loongson,ls7a-pwm.yaml       |  66 ++++
->  MAINTAINERS                                   |   7 +
->  drivers/pwm/Kconfig                           |  12 +
->  drivers/pwm/Makefile                          |   1 +
->  drivers/pwm/pwm-loongson.c                    | 288 ++++++++++++++++++
->  5 files changed, 374 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-p=
-wm.yaml
->  create mode 100644 drivers/pwm/pwm-loongson.c
->
->
-> base-commit: c13bce43b32b06f2273c7961940c391cdaf13d1e
-> --
-> 2.43.5
->
+I don't think we've ever said if it should be consistent as you
+change other parameters.  If you care about calibration you probably
+need to redo it for your new settings anyway and tweak the calibbias
+/calibscale till it gives the right values.
 
+Obviously that is easier to do if you have a consistent scheme for
+a given device and if possible allow calibrating at just one setting
+but I don't think we can apply general rules.
 
---
-Thanks.
-Binbin
+Jonathan
+
+> 
+> > add 10% to the measured raw value). Read, the _raw attribute again,
+> > call it raw0_with_caliscale.
+> > 
+> > This time, we should have (raw0_with_caliscale + offset0) * scale0
+> > = 1100 mV (+/- some noise).
+> > 
+> > Set _calibscale back to 0. Then set _oversampling_ratio to 2. Read
+> > _scale and _offset again, call these scale1 and offset1.
+> > 
+> > Then repeat the steps above using scale1 and offset1 in the
+> > calculations. The raw values will be different but the resulting
+> > processed values (mV) should all be the same if the attributes
+> > are implemented correctly.
+> >   
+
 
