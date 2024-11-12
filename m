@@ -1,152 +1,168 @@
-Return-Path: <linux-pwm+bounces-4073-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4075-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 718919C5C37
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Nov 2024 16:47:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90B619C6242
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Nov 2024 21:11:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CD1E3B800B2
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Nov 2024 14:46:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 21BA81F2197A
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Nov 2024 20:11:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE410200118;
-	Tue, 12 Nov 2024 14:44:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 865CC219CA1;
+	Tue, 12 Nov 2024 20:11:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQkBdyJI"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NNgq+tKe"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA4D20010A;
-	Tue, 12 Nov 2024 14:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E96219CAE
+	for <linux-pwm@vger.kernel.org>; Tue, 12 Nov 2024 20:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731422673; cv=none; b=KPHJnNRihufnqR/HcUhNJrAcaTL5/iodm8aZttaBWLmew9TSHaRo2dmbvBfrP2Z2HcXesszgHBLghW/Y/03d+WA9cNpvDsVQ7uMrNdm6ukvfzLyzgMxmtdEWb96AMqMmY/3BnyttZtiSYEvAR1mCn61rrU7Ul0X6PgJvMYDRdyI=
+	t=1731442269; cv=none; b=Krs8BSz3mK8b8dlgn4NeZGrmDIi+wH9OZlUzFTtA+7JreDlIA8+HbYZXktt1Xab94APnu1+PpLk47TC7Bvk7UGu524JgSqKCrgbdD3GCnlcVUHQZgj6n+M/brc5bvME8ms7wAXkE0+1TYV9rbKwZ2QToj7z9xBtrB4Mq/i/P3GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731422673; c=relaxed/simple;
-	bh=EjPK34+AC2Pfhya/hAO/+gef3LLKikFCHohkMhTY3fI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pH0O+723Y20RYot48oSYP9IrMq8HCzRdFIhkbSgK/1k65WQRneevcZswg/HFiLARmMl3KOmaQivBnS+LQRf1XBVtjKtRvDIkPrI29Kv3OeQYqp7GVb4+o00dcTvkalvNXylVTHW2ytVIfFRvyeDC4VNk+Cb0tNZc+6/twJfhO1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQkBdyJI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D8B7C4CED0;
-	Tue, 12 Nov 2024 14:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731422673;
-	bh=EjPK34+AC2Pfhya/hAO/+gef3LLKikFCHohkMhTY3fI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uQkBdyJIPNx6GWYU+T7x82rGzvF8PeuQfl+zs/tOQRDrp2LJbaCDsytTuAlUH0nKQ
-	 CrX2QB6TyMhise0BmTtJRqJrEqwTUYLiVqRKSdXW8kTwoM5jYxXrY9mtWd73RAmiu7
-	 sXIhil1Q71nmi0K7oCMXIt8/aSH3EMQJuRs/RLsPuxJfNYmamJXsHZjRZYlLafXb1q
-	 nXE/pO6NON06KK6vDHDkJBqa2QPHDH/Isva5SRn4c2+qPRcGBZ5Yh6fG1JOZOKQI45
-	 MGy11AdgoqVsSGitWcvmduyYXmzKW+UEbGvYdnWMyWg4itCsl3YzwMhegY+dty5nZ6
-	 h7LyGhAFVB9Ig==
-Date: Tue, 12 Nov 2024 14:44:27 +0000
-From: Lee Jones <lee@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
-Subject: Re: (subset) [PATCH v9 4/6] dt-bindings: mfd: Add support for Airoha
- EN7581 GPIO System Controller
-Message-ID: <20241112144427.GI8552@google.com>
-References: <20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org>
- <20241023-en7581-pinctrl-v9-4-afb0cbcab0ec@kernel.org>
- <173088099542.3237297.18018729158887853624.b4-ty@kernel.org>
- <ZyssJpR7xwbMzUsm@lore-desk>
- <20241106110046.GR1807686@google.com>
- <CACRpkdbf4Pb+n-F-K-JaUvytwCGUHHh8d2rYP4A9KgVTzqSnGw@mail.gmail.com>
- <20241111165120.GD8552@google.com>
+	s=arc-20240116; t=1731442269; c=relaxed/simple;
+	bh=fteZp6EQzbZ911bBZrJ6izyV2r05kYP0Pbayo+oFsoc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Jd39NPtPr1j7uJzDRu9KjuYMreflnkDYnVfDGih0OVPm0m+JTOBQl6+aevYv2W7v/CimTZ7yBF+od98VyP7k/ie65N2nw7qbLadAPvXkwiWb5zc1ieOKOkM264ULMO+5v0TebkRgJOzdmweBWo/cKu4fudFVPThpGpLg8aaB7uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NNgq+tKe; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-288916b7fceso3105495fac.3
+        for <linux-pwm@vger.kernel.org>; Tue, 12 Nov 2024 12:11:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1731442266; x=1732047066; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=JbULEEF6aEIKAIsr8AyCaOWu9fse79T/kPGd6JJ3qrc=;
+        b=NNgq+tKeUvh6Mvuzx9PNbxxx+sZYwO6lvLj5chZLNXCxsDR9/8p8easKSPVhwTSUIk
+         9azGamJBkTwCb69IsSu0gSj7BNCnDUGj8E/wO9tuNko2IOZ6YOZM/+VSAKpsqXtGu3RQ
+         IoB5NQzIYkSYz68qaff3g9fJc0TmPGnKALXomif7/+j0XsD5Qu5Z4elLpl1tLUCtedtQ
+         7C9IgvxC6j3oILuQYFy40uV6h+VXNruN2TIOhkY5f0c6teHYTgaoqO631+0xJAJf4K60
+         A5gQabP4XgeM6/YT2teJxCekLVo5BC+/qwJ6hfIk+V5EYS/h8JOGfBnEFDnLt7Lv5HA9
+         5tfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731442266; x=1732047066;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JbULEEF6aEIKAIsr8AyCaOWu9fse79T/kPGd6JJ3qrc=;
+        b=Plc6LJf284mC+XapWJA2som2diNfSDmXNgz2U6KsZ9YbCddRIMhTKkdloaxlfUmJxa
+         f/fveJdaGaF6NlTzHx2Aw7cmavKYAYEiQeF8QWRHMQhzm0aQ06WJQN8PhBrzEieqU8Mo
+         5MvpJ4WRcbU0KlkhRW1EbC4PzMeeVS+tDRHPvWSn/DhgBPQbDnYohTrEvF829xCfi2yz
+         gdmncUcgFvuax88yl8jSNxaZgA0Ql1uopGFKDNgQFEAVkMOiAqBNO0SVV5CSEqfiNNHq
+         IXBbQ3NPBFVWUnyVkPY5LydwY2BG40P4Xtir3U+OEY4QpdZV3DrF3EgFD1C19pbhdpBP
+         aiPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUuVbxPM31Kv6AL2kChmX2frOFZP+CykXEOw+ntgOotol0UmzY+K6cRjCTzF01t/RwjNriMwxpISxE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwryrTq/ojXesoCsqX7G0Y7W/D/hd0loK2gBwrKMAn5Mu5zOie1
+	WbHrIeG2dx1afqoHEaBLXlDngc/sNd+LWgOLG9GCmGrc6jTUnZF/9mminsjz9+4=
+X-Google-Smtp-Source: AGHT+IGoJL24zLoc7lvgsozAskpdsa9m6cU2yrPoyHpCZDMO49GHOItUjTiLdNCCiXLwQXg7LdgbkQ==
+X-Received: by 2002:a05:6871:378f:b0:27b:5890:bd38 with SMTP id 586e51a60fabf-295e8ccb3b6mr417797fac.7.1731442266484;
+        Tue, 12 Nov 2024 12:11:06 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-295e92c5ab0sm55643fac.39.2024.11.12.12.11.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Nov 2024 12:11:05 -0800 (PST)
+Message-ID: <c42a631a-4d07-44ec-9cec-862ca25af15e@baylibre.com>
+Date: Tue, 12 Nov 2024 14:11:05 -0600
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241111165120.GD8552@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/8] iio: adc: adi-axi-adc: set data format
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org,
+ robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+References: <20241111121203.3699-1-antoniu.miclaus@analog.com>
+ <20241111121203.3699-6-antoniu.miclaus@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20241111121203.3699-6-antoniu.miclaus@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 11 Nov 2024, Lee Jones wrote:
-
-> On Wed, 06 Nov 2024, Linus Walleij wrote:
+On 11/11/24 6:12 AM, Antoniu Miclaus wrote:
+> Add support for selecting the data format within the AXI ADC ip.
 > 
-> > On Wed, Nov 6, 2024 at 12:00 PM Lee Jones <lee@kernel.org> wrote:
-> > > On Wed, 06 Nov 2024, Lorenzo Bianconi wrote:
-> > >
-> > > > On Nov 06, Lee Jones wrote:
-> > > > > On Wed, 23 Oct 2024 01:20:04 +0200, Lorenzo Bianconi wrote:
-> > > > > > Add support for Airoha EN7581 GPIO System Controller which provide a
-> > > > > > register map for controlling the GPIO, pinctrl and PWM of the SoC via
-> > > > > > dedicated pinctrl and pwm child nodes.
-> > > > > >
-> > > > > >
-> > > > >
-> > > > > Applied, thanks!
-> > > > >
-> > > > > [4/6] dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Controller
-> > > > >       commit: f49f37f3cfe1482d4dc77d26f3e8c38eab630d52
-> > > > >
-> > > > > --
-> > > > > Lee Jones [李琼斯]
-> > > > >
-> > > >
-> > > > Hi Lee,
-> > > >
-> > > > according to my understanding this patch has been already applied by Linus
-> > > > here:
-> > > >
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/commit/?h=devel&id=50dedb1eb1e6755ccab55f6140916c2d192be765
-> > >
-> > > An interesting choice.  Linus?
-> > 
-> > Yes I suggested that I merge patches 1-5 on oct 29 and applied the
-> > day after:
-> > https://lore.kernel.org/linux-gpio/CACRpkdYshPusdA7bDW2y8H_wp-Fm3N-YCsY1_Qn=dZqRiFy12w@mail.gmail.com/
-> > 
-> > It's because the bindings are dependent on each other, this one patch has:
-> > 
-> > +  pinctrl:
-> > +    type: object
-> > +    $ref: /schemas/pinctrl/airoha,en7581-pinctrl.yaml
-> > +    description:
-> > +      Child node definition for EN7581 Pin controller
-> > +
-> > +  pwm:
-> > +    type: object
-> > +    $ref: /schemas/pwm/airoha,en7581-pwm.yaml
-> > +    description:
-> > +      Child node definition for EN7581 PWM controller
-> > 
-> > Those refs will explode unless the two others are merged at the same
-> > time.
-> > 
-> > Usually we merge the whole shebang through MFD but this one felt
-> > different because there is no actual MFD driver, just using simple-mfd.
-> > 
-> > In hindsight I should probs not have been so trigger happy and give
-> > some more time for this to settle... Merge window stress I guess. :/
-> > 
-> > It's fine to apply textually identical patches to two trees though as
-> > git will sort
-> > that out so technically it's no big deal, you can keep it applied if you
-> > want.
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
+> changes in v6:
+>  - use switch case
+>  - add macro definition for packet format mask and sizes 
+>  drivers/iio/adc/adi-axi-adc.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
-> It's okay.  Life will be easier for everyone if I remove it.
+> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
+> index f6475bc93796..9bf967d5b730 100644
+> --- a/drivers/iio/adc/adi-axi-adc.c
+> +++ b/drivers/iio/adc/adi-axi-adc.c
+> @@ -45,6 +45,12 @@
+>  #define ADI_AXI_ADC_REG_CTRL			0x0044
+>  #define    ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
+>  
+> +#define ADI_AXI_ADC_REG_CNTRL_3			0x004c
+> +#define   AD485X_CNTRL_3_CUSTOM_CTRL_PACKET_FORMAT_MSK	GENMASK(1, 0)
+> +#define   AD485X_PACKET_FORMAT_20BIT		0x0
+> +#define   AD485X_PACKET_FORMAT_24BIT		0x1
+> +#define   AD485X_PACKET_FORMAT_32BIT		0x2
+> +
+>  #define ADI_AXI_ADC_REG_DRP_STATUS		0x0074
+>  #define   ADI_AXI_ADC_DRP_LOCKED		BIT(17)
+>  
+> @@ -312,6 +318,29 @@ static int axi_adc_interface_type_get(struct iio_backend *back,
+>  	return 0;
+>  }
+>  
+> +static int axi_adc_data_size_set(struct iio_backend *back, unsigned int size)
+> +{
+> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
+> +	unsigned int val;
+> +
+> +	switch (size) {
 
-Okay, I dropped it from my tree.
+What happened to 16 bit for 16-bit chips?
 
-Next time I would like a say/opportunity to Ack please.
+Ideally there should be an identification register we can read or
+a compatible string from the devicetree that says if the HDL was
+compiled for a 16-bit or 20-bit chip and we would have two different
+versions of this function and pick one based on what HDL is being
+used.
 
--- 
-Lee Jones [李琼斯]
+> +	case 20:
+> +		val = AD485X_PACKET_FORMAT_20BIT;
+> +		break;
+> +	case 24:
+> +		val = AD485X_PACKET_FORMAT_24BIT;
+> +		break;
+> +	case 32:
+> +		val = AD485X_PACKET_FORMAT_32BIT;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return regmap_update_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
+> +				  AD485X_CNTRL_3_CUSTOM_CTRL_PACKET_FORMAT_MSK, val);
+> +}
+> +
+>  static struct iio_buffer *axi_adc_request_buffer(struct iio_backend *back,
+>  						 struct iio_dev *indio_dev)
+>  {
+> @@ -360,6 +389,7 @@ static const struct iio_backend_ops adi_axi_adc_ops = {
+>  	.test_pattern_set = axi_adc_test_pattern_set,
+>  	.chan_status = axi_adc_chan_status,
+>  	.interface_type_get = axi_adc_interface_type_get,
+> +	.data_size_set = axi_adc_data_size_set,
+>  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
+>  	.debugfs_print_chan_status = iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
+>  };
+
 
