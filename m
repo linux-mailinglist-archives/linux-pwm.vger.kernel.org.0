@@ -1,75 +1,75 @@
-Return-Path: <linux-pwm+bounces-4084-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4085-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 852479CF5B0
-	for <lists+linux-pwm@lfdr.de>; Fri, 15 Nov 2024 21:19:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5BB99CF5B6
+	for <lists+linux-pwm@lfdr.de>; Fri, 15 Nov 2024 21:20:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 315701F22766
-	for <lists+linux-pwm@lfdr.de>; Fri, 15 Nov 2024 20:19:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C74D1F21A7E
+	for <lists+linux-pwm@lfdr.de>; Fri, 15 Nov 2024 20:20:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9333C1E32CF;
-	Fri, 15 Nov 2024 20:18:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EDEA1E5729;
+	Fri, 15 Nov 2024 20:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hleUTxoT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Hc2TLK+W"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F6C1D88D7
-	for <linux-pwm@vger.kernel.org>; Fri, 15 Nov 2024 20:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F621E3DD5
+	for <linux-pwm@vger.kernel.org>; Fri, 15 Nov 2024 20:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731701935; cv=none; b=Ov+KQsrcQoI8mjbaX7pucCqpnkJOhHRlMcVwWgEYDM5VuKdlX6tJCI+97OnYjrJr4GXU8yHPFwp2n7t1HGI9R5EOW4dsWuEl+ve0c3zSgm6+/MWh91QTXN7uNDeBcre6nXXebnnGQq4D+nNMaXS/In8542IPQz3Qr3Vt6taoZN8=
+	t=1731701938; cv=none; b=BSXjWSak7i/KjzskqYCNG7DNweAXqdaS4qwWNtVkxe1qRaHqJMDxcBteF0ze+/dpjwWsA9NVaKrqKu+XHX+K1dDfjRxNu7lDuvh63fM2IH6w+wJy9at8UY4dlrp4oZsPLh9AdwiRfDzveL9TDNqJS1jWDKs+faSc59MsWpzhcwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731701935; c=relaxed/simple;
-	bh=/brcg85kbnd2G8W/XlwOERT7c14hy3w6WyG/qyK3teM=;
+	s=arc-20240116; t=1731701938; c=relaxed/simple;
+	bh=wsgGx84cWBUtGa7G4wtbH/BWpIo6zEAdmqzXQ6w3/1c=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P73hO2F2ZVfTGUE9zfCJUadsHd3XjtjXR0u/lqRKbXpx9cH86sz8Ly0aiBVWSqGrw/2vJIzBUWzJqHao8Qv1Bg5B8uMZr2TJwvP55srfRPhpXrnr6/DFBY/q1cGTrZAj5YR98PcV0Ud351sIS/NdYoII0sUTtsw9R/k0Z8gd1g4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hleUTxoT; arc=none smtp.client-ip=209.85.160.44
+	 In-Reply-To:To:Cc; b=nq2sM5ML+Czh4TyXeVR7I3MNzaXH3XS+VZ4Icbl6CVKvIm4CDYE3R6p5x5H1K/AGCLvwsivuitk8/YG3rG9WULX+obli/IzRPyNmjz/oAmb4XRY2h/4+rXKuPAwztcLqZhKDOwBfJHw38Xlz0dgh1+6cIvwawwoPkDIKYzP8JCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Hc2TLK+W; arc=none smtp.client-ip=209.85.160.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-290d8d5332cso5071fac.2
-        for <linux-pwm@vger.kernel.org>; Fri, 15 Nov 2024 12:18:53 -0800 (PST)
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-28896d9d9deso988898fac.2
+        for <linux-pwm@vger.kernel.org>; Fri, 15 Nov 2024 12:18:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1731701933; x=1732306733; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1731701936; x=1732306736; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=mRU4AU2p10ANc+DkhnwT4CXPMLQZx70yMguYOCpfFSY=;
-        b=hleUTxoT1VZU4cAgMHLKRXPdHPg2xv04kUBAv51NpVmEObB8PM0ApWZ4NZZ4kz1tX5
-         Wm67MnmAiJYgZVLkrcrrUkEiIM0XrfeRm0HYii9qRUYiNHWOzm7RfJcVx2ijoK4dEyNW
-         9DnLfERBZ56Lr20mMv0izH8om2eSTbU+W+e/Y9nWFSFAnhy6IVDcfl0v/Y6twqBBNjhJ
-         aFdBu3U7d/jiollqz+W5nP9L89N1RcbJEvOqhgOBQELrU4gSaOu3h3Ves0C2wWW3b1P1
-         kVENjuDeG8dgjXcCfMKq+VOPLskrpX6yq4ZcWi9Lzpge6NltfGnLahseieiSrlYs3jSP
-         0urA==
+        bh=3err676nsDhVRmrJ3FZsk1bPZcnOqEf2IqEsHND5yQ8=;
+        b=Hc2TLK+WCyNylftJ1Ghnqidab30k6a4FIErC/STwtwJSYhYIlLKpCKr8YkU0qS25By
+         CGd5WXUj26ThVrYTDKN39NTX3AA4AFT0DwzE7Y+i4O+XgFBJyCyJHl6JdRlMaYfunjgI
+         kAkeN4NWU3T7DXmjHTV+sKA73+RjCFKhoy/oDliAOHuTBpqjuD4RsRKEOANE3079kGdc
+         14Kb5dJb6MkeZ38pimvMKEvbTal92aisGTNF8FLms533xxtKW+iJfbDtw1CiS5E73MvP
+         8yohe8hrel29Kd3ArwbUku/q9CFyK2pVfzAbxjNfCYwMCzUGLLVfCf3f6o44gKxdgvcO
+         MDmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731701933; x=1732306733;
+        d=1e100.net; s=20230601; t=1731701936; x=1732306736;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mRU4AU2p10ANc+DkhnwT4CXPMLQZx70yMguYOCpfFSY=;
-        b=n7jRXyfqR3Lm9qzZ535mooxJsxdqtQlBLPYuG50/NbykrlvzZvV49Bz6SpmgmtsgyH
-         2nxoON9iSlOCADeusLOaxyk0phVSOkRE28Pg0IBwldP3tnAJiNv4hGo+QPDIEROK6Xzj
-         /WQjbCkOrzSCrLzgOeXI9uSZDG9/ZTRr+LwqHxHzzbvAaKco03yMj7nRHbaM5apzfhsj
-         zMWBULyR65FJo9pmX2eeLAO5YkMrnrhJv22VzDELiyxI3hinOQiy1kvHdUhacStkXVTw
-         vex47Iz7wdE+Qjn6M00PfUGJeDaKz5KPv+JPEXAHbz24kUwV4kFrqHMBtJW8Udo2jYJA
-         L4OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZUgIT3cr8WXoRq32aB3ZeH1mFLl4tatUrSXzjxpH+LNAWYXqq4t9lb8NSWfeKbOLFORa5ZD5DAtc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQNF/YULW0JbWhcR3DsZaQeVACyCoqN2lIxA5NfKWk2dAXv645
-	OHzlBZn5K9KQM62jt0VeCKE+Dil739oHGArSF70GZ1B5DSQqmp9tv236Zl4DplU=
-X-Google-Smtp-Source: AGHT+IEq4dvxzsxFEL++1N4Levf1DEfOWHAxo1ifVYZbayZTOwOVP2E9GaVwjZAe8BvQjJvrahEhEQ==
-X-Received: by 2002:a05:6870:96a2:b0:287:0:9ecc with SMTP id 586e51a60fabf-2962dfe8e32mr4184189fac.33.1731701932849;
-        Fri, 15 Nov 2024 12:18:52 -0800 (PST)
+        bh=3err676nsDhVRmrJ3FZsk1bPZcnOqEf2IqEsHND5yQ8=;
+        b=AC6tFU3aey8RkT0Mhi9MDCbbMMJ91jsnTi+tsS1vVNzHY+EXMYOeMEpxWZWIS5/dUS
+         KxoE2EJnTaH2hO2vWm7H9SZaSGAouoIvNF9d3SeOxjwCtKFjhmyNO7OA9pmmvFHV3Jv6
+         d72tY8ufaRQ7I7ZjkE33RqbQ/YiBRDBQn+aYufK94XMyaRKHOHQF72AfYM07wpUuvyn2
+         OrRbHcJwTBCqQflrd385nIXyjnfOfDKBs+nbmGR/c1pJyEcbFDuQuy0qPg3z01KjWffG
+         Sxs+qBnZVpcPxNEpwtKQVWtD/h1biW5gCgVOhlGiuWVZzK5LoBX1iVbiuwKK4zHBrzbE
+         7ivg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgcEDhOk1QKkrZGc2/3iFOWQp9ToHHVzmZZwfqwUg5QC7r+QsNgOlSjeGeJs9psOsH9vpngeinoQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeEWA6bLpC66j2KlvExUlk73lCf1MsNJwHFnpmF552kmYbRhMl
+	iQlJO7KQkmFOLmlHe7YwAqOqz5x7K88z2xr5/+E002dGuvtDQcvC9GFJgiyHFjs=
+X-Google-Smtp-Source: AGHT+IFslhtXy2tcMW9lG2cdKDAvgBpEw3gZ1sN7XsFjpAzVktIDpcBrd6KtQD9GxRg2iyWZ/5Xb+g==
+X-Received: by 2002:a05:6870:7028:b0:287:b9:349 with SMTP id 586e51a60fabf-2962e20d981mr3793513fac.36.1731701935768;
+        Fri, 15 Nov 2024 12:18:55 -0800 (PST)
 Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-71a780ea62esm748978a34.5.2024.11.15.12.18.51
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-71a780ea62esm748978a34.5.2024.11.15.12.18.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2024 12:18:52 -0800 (PST)
+        Fri, 15 Nov 2024 12:18:54 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 15 Nov 2024 14:18:42 -0600
-Subject: [PATCH v5 03/16] spi: dt-bindings: add trigger-source.yaml
+Date: Fri, 15 Nov 2024 14:18:43 -0600
+Subject: [PATCH v5 04/16] spi: dt-bindings: add PWM SPI offload trigger
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -78,7 +78,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241115-dlech-mainline-spi-engine-offload-2-v5-3-bea815bd5ea5@baylibre.com>
+Message-Id: <20241115-dlech-mainline-spi-engine-offload-2-v5-4-bea815bd5ea5@baylibre.com>
 References: <20241115-dlech-mainline-spi-engine-offload-2-v5-0-bea815bd5ea5@baylibre.com>
 In-Reply-To: <20241115-dlech-mainline-spi-engine-offload-2-v5-0-bea815bd5ea5@baylibre.com>
 To: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
@@ -94,68 +94,77 @@ Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
  David Lechner <dlechner@baylibre.com>
 X-Mailer: b4 0.14.1
 
-Add a new binding for SPI offload trigger sources.
+Add a new binding for using a PWM signal as a trigger for SPI offloads.
 
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
 
 v5 changes:
-* Add MAINTAINERS entry.
+* Add MAINTAINERS entry
 
-v4 changes: new patch in v4.
-
-FWIW, this is essentially identical to the leds trigger-source binding.
+v4 changes: new patch in v4
 ---
- .../devicetree/bindings/spi/trigger-source.yaml    | 28 ++++++++++++++++++++++
+ .../devicetree/bindings/spi/trigger-pwm.yaml       | 39 ++++++++++++++++++++++
  MAINTAINERS                                        |  1 +
- 2 files changed, 29 insertions(+)
+ 2 files changed, 40 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/trigger-source.yaml b/Documentation/devicetree/bindings/spi/trigger-source.yaml
+diff --git a/Documentation/devicetree/bindings/spi/trigger-pwm.yaml b/Documentation/devicetree/bindings/spi/trigger-pwm.yaml
 new file mode 100644
-index 000000000000..d64367726af2
+index 000000000000..987638aa4732
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/trigger-source.yaml
-@@ -0,0 +1,28 @@
++++ b/Documentation/devicetree/bindings/spi/trigger-pwm.yaml
+@@ -0,0 +1,39 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/spi/trigger-source.yaml#
++$id: http://devicetree.org/schemas/spi/trigger-pwm.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Trigger source providers for SPI offloads
++title: Generic SPI offload trigger using PWM
++
++description: Remaps a PWM channel as a trigger source.
 +
 +maintainers:
 +  - David Lechner <dlechner@baylibre.com>
 +
-+description:
-+  Each trigger source provider should be represented by a device tree node. It
-+  may be e.g. a SPI peripheral chip or a clock source.
++$ref: /schemas/spi/trigger-source.yaml#
 +
 +properties:
++  compatible:
++    const: trigger-pwm
++
 +  '#trigger-source-cells':
-+    description:
-+      Number of cells in a source trigger. Typically 0 for nodes of simple
-+      trigger sources. For nodes with more than one output signal, the first
-+      cell be used to specify which output signal to use. If the same signal is
-+      available on more than one pin, the second cell can be used to specify
-+      which pin to use.
-+    enum: [ 0, 1, 2 ]
++    const: 0
 +
-+additionalProperties: true
++  pwms:
++    maxItems: 1
 +
-+...
++required:
++  - compatible
++  - '#trigger-source-cells'
++  - pwms
++
++additionalProperties: false
++
++examples:
++  - |
++    trigger {
++        compatible = "trigger-pwm";
++        #trigger-source-cells = <0>;
++        pwms = <&pwm 0 1000000 0>;
++    };
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 75c8ca9a8584..91a4a7eb6194 100644
+index 91a4a7eb6194..a43532a1edde 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -22021,6 +22021,7 @@ F:	include/linux/mtd/spi-nor.h
  
  SPI OFFLOAD
  R:	David Lechner <dlechner@baylibre.com>
-+F:	Documentation/devicetree/bindings/spi/trigger-source.yaml
++F:	Documentation/devicetree/bindings/spi/trigger-pwm.yaml
+ F:	Documentation/devicetree/bindings/spi/trigger-source.yaml
  F:	drivers/spi/spi-offload.c
  F:	include/linux/spi/spi-offload.h
- K:	spi_offload
 
 -- 
 2.43.0
