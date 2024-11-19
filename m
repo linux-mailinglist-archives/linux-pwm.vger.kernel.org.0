@@ -1,208 +1,159 @@
-Return-Path: <linux-pwm+bounces-4107-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4109-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 833069D2974
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 Nov 2024 16:19:32 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9BBB9D2B88
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 Nov 2024 17:47:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4556928147E
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 Nov 2024 15:19:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F15B0B2B2A9
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 Nov 2024 16:37:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 553A11CC179;
-	Tue, 19 Nov 2024 15:19:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 394D11CF2B6;
+	Tue, 19 Nov 2024 16:37:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="1Sv3Z/zL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QRdZc9Dz"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204BA199B9
-	for <linux-pwm@vger.kernel.org>; Tue, 19 Nov 2024 15:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0118A1CC88B;
+	Tue, 19 Nov 2024 16:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732029567; cv=none; b=YZvHZLTa2GRAtWq1FzF4bO7VGwbcFBzgVq2tDc/oSlRXbI1qKYiGiz6i7rNUR2L/P8R4snHLb8IP0aPgIqOjK3fkrVu+dWuwg4SdJYL/IDViiBFo4LgjJJUG1ntoGnJQ1Ga/k+6G7Y+AVUIcxedSul8wIahM42NRWEZgne4eADU=
+	t=1732034253; cv=none; b=CeW9IH1Kfmty+M12K2hgQ2K2oE7w2evGWvUZsLm0fDYJxlYAQ4mPKbrL6Ny3FSnCJ40bRG8hzUA0I7yf2eMrU4rwMsNFZqC4Tv57H8aRYWh9LxLhv8NkcrJsNlJ0txmkrWgdpHuclzSTvEOXvnz/PRbkRJcP4+cp9l4m2kg3ZpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732029567; c=relaxed/simple;
-	bh=+4pXB+hjWBnI1XEtHlO0bqKYtUJ+g9qEvBq4N4jutHE=;
+	s=arc-20240116; t=1732034253; c=relaxed/simple;
+	bh=sNdvLbL4aOxoLXjKy6ZHtsflibffPE5ejyEc/6CBqQM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fNNltvZffw9BgtlD7NnK1QclCmJE6Y7+QZg1uwE5MLVeRdiAKqNrDITwhCxczkdy+h/YoWIUGlex6twskvXqdmhBCsj2ihP8PNnTsY1eLq6VX0Bve435yOUbSNMLIYviN8NTqW/3fhKgpz6NACVUhMMnE9ROZWCTwJHGKYHC4xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=1Sv3Z/zL; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4319399a411so9775375e9.2
-        for <linux-pwm@vger.kernel.org>; Tue, 19 Nov 2024 07:19:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1732029562; x=1732634362; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MYjRt6aAXmLduNc3M0AhX6eJNrQcUOwMqW4r+1xGqhM=;
-        b=1Sv3Z/zLiEJ5+iojb8Dg+zsgl18jN1N2UpaiMyL61yUIaj5z/2j1Vm6aLdFwabgCfH
-         jf6uZchmi0RN9Nn2xuD68fTG00o6iOmci8gPZY0d/lDPYMRZfbb8gGsoWGd/7IVxF9p+
-         0dKGg8C7OiBj7jTkC5FtUYFy90j9FoTGJT8DPDxcbwswYQTckvg82z8FR3PxgiX7L0+4
-         Sk1z/LAHi/twHM0B+q+eehOhfKG0ldurAaSUcbmqBWoF7lOqZcbdHMjQGgndNhLZ7KjS
-         NqA3pkXnWD6fDWNGf2WzY5ejqUsxWo7PWD8qHjEGU4n/4Y+QlM4mFuMxfOFJnxENMkXm
-         YLmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732029562; x=1732634362;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MYjRt6aAXmLduNc3M0AhX6eJNrQcUOwMqW4r+1xGqhM=;
-        b=Wnx10MYE5fm2urMvoNhIiqtwytug5wl2ZPuAPk/P/ko1Pv0oIIOxXhLQwHtAud13Z3
-         xNTowQxP0t4wH5re8s7UJQfbq0+TAtvzt1L/LZqDvHLQ7sNcFvyIfJt6W5TTa/5izAnS
-         hXgz07/IVUEZgF1YGJqaO9Uw5i6NrrhvGrRyW9R0tgTULFQq1qfrt2JnMTVxseFNbPcA
-         4H2tH3Uie7jifyVUsWaIcllQEnNfAmfLBZa4tWftXO8j6T7Mdk6ZDZcSVQ0y37n1kjtS
-         UlE2+WkTa6Tkpoev1FWPgGxAymRaHi+HlbenNJEuu3Np8uajfe0oz4iQX3VzsZaNzkcO
-         Fl8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXgQTiHNz+1PJ/lV1JdI6+B7/p+jFyk7qZpIZMUJHyMuYSxGCvMI9y5GKkShGRNK1WYvOrfOzeb3vQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBvMNcudx4Z9r6fZw/TWUs6HtM2/wToqrE+AdhpbhTrZeeWBAB
-	2HjWZDR3izygdsdZ1jzWruik1G3hKdF/0V8wnoOn0gSaq5FLSR7MLz327QJzz/Vyixvo+CbrxUZ
-	Q
-X-Google-Smtp-Source: AGHT+IE06JOv6iPIXo45XJ7NZ7v2VX2jdRE9SZJkOfZPKGcIoNUYJ/Eqqb17OBd17sK6rS+MKmE8PQ==
-X-Received: by 2002:a05:600c:1f0b:b0:431:44f6:566f with SMTP id 5b1f17b1804b1-432df72a4f1mr147121875e9.13.1732029562335;
-        Tue, 19 Nov 2024 07:19:22 -0800 (PST)
-Received: from localhost (p509159f1.dip0.t-ipconnect.de. [80.145.89.241])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432dab789fasm201173905e9.18.2024.11.19.07.19.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2024 07:19:21 -0800 (PST)
-Date: Tue, 19 Nov 2024 16:19:20 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: George Stark <gnstark@salutedevices.com>
-Cc: neil.armstrong@linaro.org, khilman@baylibre.com, jbrunet@baylibre.com, 
-	martin.blumenstingl@googlemail.com, linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@salutedevices.com
-Subject: Re: [PATCH v2 2/4] pwm: meson: Support constant and polarity bits
-Message-ID: <fbafp4qvf7xq7ob7pdtrps2bgk7n5azcysq4jpqhwxtxxhyt5g@kq763dnqkk7m>
-References: <20241016152553.2321992-1-gnstark@salutedevices.com>
- <20241016152553.2321992-3-gnstark@salutedevices.com>
- <w3igi2jmva6mfa7anlieyp3iiwfzhsvi3t37wwcqqtzdy42fqn@btmdsfsmpw7r>
- <f08513c8-56d6-4551-8ac6-84641c134552@salutedevices.com>
- <l5xvdndysdvtil472it6ylthcfam5jp7lh3son45mezq7dh2yk@3yj557k2o5k5>
- <ed5cdef1-aaa7-4ff3-a427-87eae4c90f18@salutedevices.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sw1ka888kP4DhJSDX1sgmVO91EfRmFuufJvkezaSIzFIYzl80hfZ8zb6BFYEfX7zV1/9ICJnNDWkyRTIzMAnuCv86/HvU6d/EUm+UrgOMgp/A6jF1/FGfxjvtgJqwS+dTvZMt9pBn1FOL/7bSLdKZWQjlhtWLz0Dud9LcVO8vE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QRdZc9Dz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4F96C4CECF;
+	Tue, 19 Nov 2024 16:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732034252;
+	bh=sNdvLbL4aOxoLXjKy6ZHtsflibffPE5ejyEc/6CBqQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QRdZc9Dzr2TU8yxwhV7GmeRRFrwpeJw7tyrGYfywrJdZPzKMD5ifZ/yBfEJOQBcc8
+	 VdOfu7KUthV+STeNtq65wmAEHjaDVOwjOGGTa36pX5LWnw0hH94lLyjByYFSOpApi/
+	 pW0rrsUQxs+fka+2IqWQg1ja7JBoEg1mYFziLiWFqLfiMGZwH015PAuqniiEj2oZbz
+	 596h8vJHbyiRDeWBHqo6HdLf9KTrvctu5gO9gtTcSdRjFwre5Vd+/uCA0E55mD9U6u
+	 Q1lxeyreOxHp5tav/WXd6WQAKKNz9eJvCbci6lGSLNyib43LglkIqsf50oeHPqWYRH
+	 J4Sn78PFubj+Q==
+Date: Tue, 19 Nov 2024 10:37:31 -0600
+From: Rob Herring <robh@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	David Jander <david@protonic.nl>,
+	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v5 04/16] spi: dt-bindings: add PWM SPI offload trigger
+Message-ID: <20241119163731.GA1769375-robh@kernel.org>
+References: <20241115-dlech-mainline-spi-engine-offload-2-v5-0-bea815bd5ea5@baylibre.com>
+ <20241115-dlech-mainline-spi-engine-offload-2-v5-4-bea815bd5ea5@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ujldv2oqf45x6kez"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ed5cdef1-aaa7-4ff3-a427-87eae4c90f18@salutedevices.com>
+In-Reply-To: <20241115-dlech-mainline-spi-engine-offload-2-v5-4-bea815bd5ea5@baylibre.com>
+
+On Fri, Nov 15, 2024 at 02:18:43PM -0600, David Lechner wrote:
+> Add a new binding for using a PWM signal as a trigger for SPI offloads.
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+> 
+> v5 changes:
+> * Add MAINTAINERS entry
+> 
+> v4 changes: new patch in v4
+> ---
+>  .../devicetree/bindings/spi/trigger-pwm.yaml       | 39 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 40 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/trigger-pwm.yaml b/Documentation/devicetree/bindings/spi/trigger-pwm.yaml
+> new file mode 100644
+> index 000000000000..987638aa4732
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/trigger-pwm.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/spi/trigger-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic SPI offload trigger using PWM
+
+Not really anything specific to SPI offload here.
+
+I think this should be moved to 
+bindings/trigger-source/trigger-pwm.yaml.
 
 
---ujldv2oqf45x6kez
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 2/4] pwm: meson: Support constant and polarity bits
-MIME-Version: 1.0
+> +
+> +description: Remaps a PWM channel as a trigger source.
+> +
+> +maintainers:
+> +  - David Lechner <dlechner@baylibre.com>
+> +
+> +$ref: /schemas/spi/trigger-source.yaml#
 
-Hello George,
+Including this doesn't really do anything. Will add more detail in its 
+patch.
 
-On Tue, Nov 19, 2024 at 03:51:34PM +0300, George Stark wrote:
-> On 11/7/24 11:41, Uwe Kleine-K=F6nig wrote:
-> > On Wed, Nov 06, 2024 at 04:54:41PM +0300, George Stark wrote:
-> > > On 11/4/24 12:32, Uwe Kleine-K=F6nig wrote:
-> > > > > @@ -68,6 +72,8 @@ static struct meson_pwm_channel_data {
-> > > > >    	u8		clk_div_shift;
-> > > > >    	u8		clk_en_shift;
-> > > > >    	u32		pwm_en_mask;
-> > > > > +	u32		const_en_mask;
-> > > > > +	u32		inv_en_mask;
-> > > > >    } meson_pwm_per_channel_data[MESON_NUM_PWMS] =3D {
-> > > > >    	{
-> > > > >    		.reg_offset	=3D REG_PWM_A,
-> > > > > @@ -75,6 +81,8 @@ static struct meson_pwm_channel_data {
-> > > > >    		.clk_div_shift	=3D MISC_A_CLK_DIV_SHIFT,
-> > > > >    		.clk_en_shift	=3D MISC_A_CLK_EN_SHIFT,
-> > > > >    		.pwm_en_mask	=3D MISC_A_EN,
-> > > > > +		.const_en_mask	=3D MISC_A_CONSTANT_EN,
-> > > > > +		.inv_en_mask	=3D MISC_A_INVERT_EN,
-> > > > >    	},
-> > > > >    	{
-> > > > >    		.reg_offset	=3D REG_PWM_B,
-> > > > > @@ -82,6 +90,8 @@ static struct meson_pwm_channel_data {
-> > > > >    		.clk_div_shift	=3D MISC_B_CLK_DIV_SHIFT,
-> > > > >    		.clk_en_shift	=3D MISC_B_CLK_EN_SHIFT,
-> > > > >    		.pwm_en_mask	=3D MISC_B_EN,
-> > > > > +		.const_en_mask	=3D MISC_B_CONSTANT_EN,
-> > > > > +		.inv_en_mask	=3D MISC_B_INVERT_EN,
-> > > > >    	}
-> > > > >    };
->=20
-> ...
->=20
-> > > > Personally I'd prefer:
-> > > >=20
-> > > > 	value &=3D ~MESON_PWM_REG_MISC_CONST_EN(pwm->hwpwm);
-> > > > 	if (meson->data->has_constant && channel->constant)
-> > > > 		value |=3D MESON_PWM_REG_MISC_CONST_EN(pwm->hwpwm);
-> > > >=20
-> > > > even though your variant only mentions the mask once. While it has =
-this
-> > > > repetition, it's clear what happens without having to know what
-> > > > meson_pwm_assign_bit() does. Maybe that's subjective?
-> > >=20
-> > > Actually I also don't like meson_pwm_assign_bit() too match and I'm
-> > > surprised there's no something like this in the kernel already.
-> > > I again objdumped versions meson_pwm_assign_bit() vs double mask repe=
-tition.
-> > > Unconditional bit clearing takes only a single instruction:
-> > >=20
-> > > // value &=3D ~channel_data->const_en_mask;
-> > > 9ac:	0a250040 	bic	w0, w2, w5
-> > >=20
-> > > So in the current series I could drop meson_pwm_assign_bit() and use:
-> > >=20
-> > > value &=3D ~channel_data->const_en_mask;
-> > > if (meson->data->has_constant && channel->constant)
-> > > 	value |=3D channel_data->const_en_mask;
-> > >=20
-> > > If it's decided now or later to drop meson_pwm_channel_data then
-> > > w\o meson_pwm_assign_bit() future patch will be line-to-line change.
-> > >=20
-> > > What you think?
-> >=20
-> > Sounds sensible.
->=20
-> While changing the patch to drop meson_pwm_assign_bit() one thing
-> concerned me on the approach:
->=20
-> value &=3D ~channel_data->const_en_mask;
-> if (meson->data->has_constant && channel->constant)
-> 	value |=3D channel_data->const_en_mask;
->=20
-> that we reset bit in the value var even if that bit is not supported on
-> the current SoC. I checked several datasheets for old SoCs and those bits
-> are marked as unused (not even reserved) and I've never seen those
-> bits set. Still I'd offer to use precise condition for changing those bit.
-> I'll send v3 let's discuss it again if you think I bother too much.
-
-Usually writing zeros to unused bits is a safe procedure. If the
-hardware we're talking to is a newer variant of the supported stuff, the
-hardware engineer did something wrong if keeping the read bits or
-writing them as zero is incompatible. So either way is fine for me.
-
-Best regards
-Uwe
-
---ujldv2oqf45x6kez
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmc8rGsACgkQj4D7WH0S
-/k5YUQgAunaABIHOeGpv6VDiLMddmRGSo4/uW0SrIyOgXPRNNIk5scQlObQuTijW
-wAVLCBr/SS9SIuZvbqo8S7ok6kT9RtcO5SWWGRbSH5CUohyzVQeeDTRPk6DbleDv
-Gb56WH4WFWiHzBpQnI49ianH/8ypmo05vHQpP5lUsO2Rnxc4uvkqrLpA3+Lf0brv
-ogVDUbMmSSxGMIwm2Kj0oH7FvDLt9aoTcDAaa7DYsgDBt86jyabBVGcnsGX/AOhM
-y5/3Z0eZd41DltgEZGO16RJ8IcEb57DaYcU1sxCewdmsW/4qTLZPVqrZd+jzx2A3
-84D2FEaM6yRQ5pNFZo8uAY30Db9L4Q==
-=lMnI
------END PGP SIGNATURE-----
-
---ujldv2oqf45x6kez--
+> +
+> +properties:
+> +  compatible:
+> +    const: trigger-pwm
+> +
+> +  '#trigger-source-cells':
+> +    const: 0
+> +
+> +  pwms:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - '#trigger-source-cells'
+> +  - pwms
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    trigger {
+> +        compatible = "trigger-pwm";
+> +        #trigger-source-cells = <0>;
+> +        pwms = <&pwm 0 1000000 0>;
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 91a4a7eb6194..a43532a1edde 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -22021,6 +22021,7 @@ F:	include/linux/mtd/spi-nor.h
+>  
+>  SPI OFFLOAD
+>  R:	David Lechner <dlechner@baylibre.com>
+> +F:	Documentation/devicetree/bindings/spi/trigger-pwm.yaml
+>  F:	Documentation/devicetree/bindings/spi/trigger-source.yaml
+>  F:	drivers/spi/spi-offload.c
+>  F:	include/linux/spi/spi-offload.h
+> 
+> -- 
+> 2.43.0
+> 
 
