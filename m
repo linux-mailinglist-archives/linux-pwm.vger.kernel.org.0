@@ -1,190 +1,124 @@
-Return-Path: <linux-pwm+bounces-4117-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4119-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 655C79D5E1A
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2024 12:33:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB23C9D626E
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2024 17:39:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8B21B2229E
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2024 11:33:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FCEF280EFA
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2024 16:39:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D27B81DDA3E;
-	Fri, 22 Nov 2024 11:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 410FB1DE3BF;
+	Fri, 22 Nov 2024 16:39:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="qIHKOly+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JXlH+ds6"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B02110A3E;
-	Fri, 22 Nov 2024 11:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF35D7E792;
+	Fri, 22 Nov 2024 16:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732275189; cv=none; b=ATR9TPpblQgZ0mv4Wz9TR0PBw0UJmeWXnC07T0BDTEutXLhU2ApARxDNLcFhviUZxFKt/5vAidWFozLV77x4gHyqZsXfxuOv3fnNJJu2AcY8lxQ7bzXH2CUvjqZyWVGN4MkaZCvCGCKTlqFgvx3K/Me0F+dZW/4SujRJ9uWgW/8=
+	t=1732293574; cv=none; b=DC3rE9Dw5BuwWUJCGfjIr9SZu63RlfxrsPAIlZ/2zB0TRTfUNPK69t0+joTyntWbhp13FWAB0ZUCkeZg5HaKclxwi/TJYMxsrUpFicLeX0x6pFf7OjBvpQ2xs7+F1cevbrci+/DIquyRBSaiU4I2SPqMKB/ngf0KHLBtbm0TgpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732275189; c=relaxed/simple;
-	bh=5+fSa8A8qCcFrjh+ml+7X18cLR161OGeZHL6oHQGkCo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QNn1u6tQajypJUa4k0ElNKBvpFdidyyYFJZo/7S7DnEicIZ2nYsixyhLCBnLL3FuSsTWMgDm4Skl5wmqR0lrsJ4Vq8H9fs311YGrQ6F3wvlrXN1ut7g0QYWG+ivdsPI9rYRxdftpFib929/1fi+vexxbDkCM3pyn09tfFb6rxYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=qIHKOly+; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AM7XIu1016463;
-	Fri, 22 Nov 2024 06:32:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=cjgm1
-	YWWHcKG7zB/59DmBjIGwBuw/9gSJ4mRUI6bPTc=; b=qIHKOly+9CMbfhbtMh580
-	6vdXZSB5DSgXdTuHdUmroVK1+oipwYH3d4xpY+F19DKA/4/jNFUXQ+bn0vxgnNlk
-	pOdxzU4BHNUHuB54PuD49pfQbuNs1inwfR3Wl/hl8vYX08Jwd4CmeDbd3HA//WgT
-	eQ5lXBpidigbVBgYSBkpKdd8O+E8WWJwO3+3HReI528Tb6n+P9qetesGLTw3DBVH
-	BR6UTtQ6Vtuxja2mNdMQGm9N72v+vW3/u3y5j2oGNlNEAiULO3fzzOqBAFVN47VF
-	KLD5yXAZxMTVMfDmw9yKRizmevczvshKCdnamlxr04J/gSIMcbXg7hj6O3MKPoxO
-	w==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 432h1kj673-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Nov 2024 06:32:53 -0500 (EST)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 4AMBWqj1044209
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 22 Nov 2024 06:32:52 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 22 Nov
- 2024 06:32:51 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 22 Nov 2024 06:32:51 -0500
-Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.168])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 4AMBWhjI011707;
-	Fri, 22 Nov 2024 06:32:48 -0500
-From: Antoniu Miclaus <antoniu.miclaus@analog.com>
-To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
-CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Subject: [PATCH 2/2] iio: frequency: adf4371: add ref doubler and div2
-Date: Fri, 22 Nov 2024 13:32:14 +0200
-Message-ID: <20241122113226.49346-2-antoniu.miclaus@analog.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241122113226.49346-1-antoniu.miclaus@analog.com>
-References: <20241122113226.49346-1-antoniu.miclaus@analog.com>
+	s=arc-20240116; t=1732293574; c=relaxed/simple;
+	bh=bVfmMZd++g9VWmMX2EizjlOyv67G/BQQFuNfEa0NLiE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lxyLvIDBWwGNTVVCmjotk45B6BevuNnRiYotr1SS3e8nMclnJYsqx0kqmKrBeHFWViuXHrdvGEiwhGPr6nTXfpMCuJ6sCil1u5SRUXAqvCu2jrM94S+9GZwWcTP//iKBmDMVe2+hp28PeZ4TFPFyG//EML41bzaaV0NK66KrFFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JXlH+ds6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1623C4CECE;
+	Fri, 22 Nov 2024 16:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732293573;
+	bh=bVfmMZd++g9VWmMX2EizjlOyv67G/BQQFuNfEa0NLiE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JXlH+ds6Bu4vcaxouVy9GHIJMQYhksn+5FEcsZbKwO1qG5QNztSK6Ejo6PzyTPdbl
+	 xPzR6GS/0CyoCC+O6m9Iq0iQl/W+6OHNKSUaxTMFB4aGA6OzTukQDHqlflA0NXysPe
+	 PAQI/8kjW+/XtNdbjEipZhEbBzuK3JoBGhZnOU3C+jWNHonND/cgmJunlqLeXnsaxT
+	 U7+onLtWXO9aMMcX3wJkkj+AmPt5zYAO3b3b0SW9M4rvHHlBs+DsBCC8erIs3gTlTJ
+	 oPI0TPO6JtfDzyFKtoMtWVESP9iQRt5PMh4J+3eHluJnyXJqyLhyAHHNQdwpwUWKWb
+	 na+zzTSqnxuKA==
+Date: Fri, 22 Nov 2024 17:39:30 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Guillaume Stols <gstols@baylibre.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org, aardelean@baylibre.com, 
+	dlechner@baylibre.com, jstephan@baylibre.com, nuno.sa@analog.com, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v5 7/8] iio: adc: ad7606: Add iio-backend support
+Message-ID: <gmv5tncy7xwgbc64na7ib42hdthojsfrusauk4hez5zmc6hh2k@4jfk74vt2gcb>
+References: <20241015-ad7606_add_iio_backend_support-v5-0-654faf1ae08c@baylibre.com>
+ <20241015-ad7606_add_iio_backend_support-v5-7-654faf1ae08c@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: HeTr84pVKyRpMuzmIc7ZHKwNy-0ul_SA
-X-Proofpoint-ORIG-GUID: HeTr84pVKyRpMuzmIc7ZHKwNy-0ul_SA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999 adultscore=0
- clxscore=1015 malwarescore=0 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411220098
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="g6qhxoz5xykc4ajk"
+Content-Disposition: inline
+In-Reply-To: <20241015-ad7606_add_iio_backend_support-v5-7-654faf1ae08c@baylibre.com>
 
-Add support for the reference doubler and the reference divide by 2
-clock.
 
-Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
----
- drivers/iio/frequency/adf4371.c | 37 +++++++++++++++++++++++++++++++--
- 1 file changed, 35 insertions(+), 2 deletions(-)
+--g6qhxoz5xykc4ajk
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 7/8] iio: adc: ad7606: Add iio-backend support
+MIME-Version: 1.0
 
-diff --git a/drivers/iio/frequency/adf4371.c b/drivers/iio/frequency/adf4371.c
-index b27088464826..02d42652dfdd 100644
---- a/drivers/iio/frequency/adf4371.c
-+++ b/drivers/iio/frequency/adf4371.c
-@@ -41,6 +41,12 @@
- #define ADF4371_MOD2WORD_MSK		GENMASK(5, 0)
- #define ADF4371_MOD2WORD(x)		FIELD_PREP(ADF4371_MOD2WORD_MSK, x)
- 
-+/* ADF4371_REG22 */
-+#define ADF4371_REF_DOUB_MASK		BIT(5)
-+#define ADF4371_REF_DOUB(x)		FIELD_PREP(ADF4371_REF_DOUB_MASK, x)
-+#define ADF4371_RDIV2_MASK		BIT(4)
-+#define ADF4371_RDIV2(x)		FIELD_PREP(ADF4371_RDIV2_MASK, x)
-+
- /* ADF4371_REG24 */
- #define ADF4371_RF_DIV_SEL_MSK		GENMASK(6, 4)
- #define ADF4371_RF_DIV_SEL(x)		FIELD_PREP(ADF4371_RF_DIV_SEL_MSK, x)
-@@ -70,6 +76,9 @@
- #define ADF4371_MAX_FREQ_PFD		250000000UL /* Hz */
- #define ADF4371_MAX_FREQ_REFIN		600000000UL /* Hz */
- 
-+#define ADF4371_MIN_CLKIN_DOUB_FREQ	10000000ULL /* Hz */
-+#define ADF4371_MAX_CLKIN_DOUB_FREQ	125000000ULL /* Hz */
-+
- /* MOD1 is a 24-bit primary modulus with fixed value of 2^25 */
- #define ADF4371_MODULUS1		33554432ULL
- /* MOD2 is the programmable, 14-bit auxiliary fractional modulus */
-@@ -175,6 +184,8 @@ struct adf4371_state {
- 	unsigned int mod2;
- 	unsigned int rf_div_sel;
- 	unsigned int ref_div_factor;
-+	bool ref_doubler_en;
-+	bool ref_div2_en;
- 	u8 buf[10] __aligned(IIO_DMA_MINALIGN);
- };
- 
-@@ -497,22 +508,44 @@ static int adf4371_setup(struct adf4371_state *st)
- 			return ret;
- 	}
- 
-+	if (device_property_read_bool(&st->spi->dev,
-+				      "adi,reference-doubler-enable"))
-+		st->ref_doubler_en = true;
-+
-+	if (device_property_read_bool(&st->spi->dev,
-+				      "adi,reference-div2-enable"))
-+		st->ref_div2_en = true;
-+
- 	/* Set address in ascending order, so the bulk_write() will work */
- 	ret = regmap_update_bits(st->regmap, ADF4371_REG(0x0),
- 				 ADF4371_ADDR_ASC_MSK | ADF4371_ADDR_ASC_R_MSK,
- 				 ADF4371_ADDR_ASC(1) | ADF4371_ADDR_ASC_R(1));
- 	if (ret < 0)
- 		return ret;
-+
-+	if (st->ref_doubler_en &&
-+	    (st->clkin_freq > ADF4371_MAX_CLKIN_DOUB_FREQ ||
-+	     st->clkin_freq < ADF4371_MIN_CLKIN_DOUB_FREQ))
-+		st->ref_doubler_en = false;
-+
-+	ret = regmap_update_bits(st->regmap,  ADF4371_REG(0x22),
-+				 ADF4371_REF_DOUB_MASK |
-+				 ADF4371_RDIV2_MASK,
-+				 ADF4371_REF_DOUB(st->ref_doubler_en) |
-+				 ADF4371_RDIV2(st->ref_div2_en));
-+	if (ret < 0)
-+		return ret;
-+
- 	/*
- 	 * Calculate and maximize PFD frequency
- 	 * fPFD = REFIN × ((1 + D)/(R × (1 + T)))
- 	 * Where D is the REFIN doubler bit, T is the reference divide by 2,
- 	 * R is the reference division factor
--	 * TODO: it is assumed D and T equal 0.
- 	 */
- 	do {
- 		st->ref_div_factor++;
--		st->fpfd = st->clkin_freq / st->ref_div_factor;
-+		st->fpfd = (st->clkin_freq * (st->ref_doubler_en ? 2 : 1)) /
-+			   (st->ref_div_factor * (st->ref_div2_en ? 2 : 1));
- 	} while (st->fpfd > ADF4371_MAX_FREQ_PFD);
- 
- 	/* Calculate Timeouts */
--- 
-2.47.0
+On Tue, Oct 15, 2024 at 01:56:20PM +0000, Guillaume Stols wrote:
+> @@ -640,6 +665,14 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+>  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+>  		*val =3D st->oversampling;
+>  		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		/*
+> +		 * TODO: return the real frequency intead of the requested one once
+> +		 * pwm_get_state_hw comes upstream.
+> +		 */
+> +		pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
+> +		*val =3D DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, cnvst_pwm_state.period);
+> +		return IIO_VAL_INT;
+>  	}
+>  	return -EINVAL;
+>  }
 
+Being late to the party as the patch is already applied:
+
+ad7606_set_sampling_freq() uses DIV_ROUND_UP_ULL to determine the period
+=66rom freq. So I guess you should a down-rounding div here to calculate
+freq from period.
+
+Having said that, pwm_get_state_hw() is in mainline and will be included
+in v6.13-rc1.
+
+Best regards
+Uwe
+
+--g6qhxoz5xykc4ajk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdAs78ACgkQj4D7WH0S
+/k5jlAgAirnhx9PpmZaNqFxVmISvdk94dasdcSLa7jDqkiXnNJ0oxpyUVc8lm0N6
+NNMqQZbz66q+mmza4KXN1Oz+TPgQqZApnnp58F6ECUpurA6vgB4anXwBqiN0v8PZ
+/zklo+JiCsfLuu3fkM9raKXBxRQh4xJm7PM7WTK15vzsfJCeMANwixBroV6qYtij
+qj2TqzB1yhXmvt7jk4Wk6saLFPB03OHxEbY1QFFOorBXvx6vatRfTaRKTRf2HT9i
+FAjJsluo4KiVaHYhHJwNebI0BiVzIeYKGcda4qTKoDabKW9Xu6Ikt/v2nOcAvuC9
+z5qCVuQ/q08owpk8L41RdCHFLS5W1g==
+=Cj6w
+-----END PGP SIGNATURE-----
+
+--g6qhxoz5xykc4ajk--
 
