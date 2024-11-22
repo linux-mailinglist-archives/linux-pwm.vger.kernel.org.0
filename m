@@ -1,90 +1,85 @@
-Return-Path: <linux-pwm+bounces-4122-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4123-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B89519D6407
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2024 19:16:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FF399D6413
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2024 19:19:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90C2F161767
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2024 18:16:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 12F4B1611A1
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2024 18:19:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4BA91DF74F;
-	Fri, 22 Nov 2024 18:16:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C2F41DF995;
+	Fri, 22 Nov 2024 18:19:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ZsdFvC5T"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="sxuc5hLi"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EE25FDA7
-	for <linux-pwm@vger.kernel.org>; Fri, 22 Nov 2024 18:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DFD1DED76
+	for <linux-pwm@vger.kernel.org>; Fri, 22 Nov 2024 18:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732299396; cv=none; b=L6y1P2+4OPL2sYONx+iXcq2NOL9nJFSM8GOdW7EeU1+6o8OJCe9Xg0VY2aCMjuhNVMyXKzvj8zJ+eQBLY/gWYqFywwhbb1bAYgItnY0eXiCtTnV1ubLUgNlF/71gl7THdy5FtC5G7C1RBt+Lz4G77fy8CSF9eYDdlVKn9tpGMCs=
+	t=1732299583; cv=none; b=JZ9SvVjRDJ8RgyphyWM5cp88iemybgdhZW/ZepMjKIbhEd5kUS+JrKTG2Poumo7ai4hBV4waU+GhCXvE0ty7IvW8wxbpxoV89qLVKB6IU5hFzgROwa51kGByhJu/Rhh5wgsXhOgYIVL3fOcXulzYdz9zXJyPlw5Hcl+zrrmBYMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732299396; c=relaxed/simple;
-	bh=aM47pbPVNtrMOQanMHQ7ktZXfApmfUGeliGraS2mMOs=;
+	s=arc-20240116; t=1732299583; c=relaxed/simple;
+	bh=Y/szpWo/ys5eOgrnr/yCWl5Q/XYjOwfcIY1LSn3QnO0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I02aGf/LAXS0y3rnHmvhJQU4/+snjO/uQqbCwxr8wEBNpFAwbzseTz/0ksIfVUm7ZPKuDNpu33yOdNaK57WCKrsp5HmPbjiaNsfmj2XP0BInXAewoHyzH36eRb5bMsnKR/akB6i0dkGsw3xIGDb8SieOps80DGy9rHzVO23NQ8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ZsdFvC5T; arc=none smtp.client-ip=209.85.128.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=kVgDv60bw2Ay8ekbuoC2It6NqInx9upDmRY/d0hU9hWXJ2TGtHIjancCAY+WkAymesuibg5npBzoOXeWCV6KPaKsJlD4EM4NbLh7zaQRHdZsrOajmZCrpv2VQMOIrlRIrmGLntGoIbfya13+mvkrdNKXEt8hW8MWpu5K6IK45/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=sxuc5hLi; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-431688d5127so19880065e9.0
-        for <linux-pwm@vger.kernel.org>; Fri, 22 Nov 2024 10:16:33 -0800 (PST)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43162cf1eaaso27962895e9.0
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Nov 2024 10:19:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1732299392; x=1732904192; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1732299579; x=1732904379; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zShOcXTAhIOrL1GD9fBhb4zbIbWmFf6wLfZDDFFuD6U=;
-        b=ZsdFvC5TwY7ulhtmW7BcIOPTfl50kDhzWc9rCDJuWSqhovxjXBkhQwjAM/ZZ+kxwnT
-         g2PeSGwvZpIYjFNxyKMP9hU7sJ1J1+0oM6tW/xddhILfj71i7NvXj/0VBmLTrVSSRivU
-         qoLXehsYwhaJdTCoJ2viM30xAgC8B8nxBHgImFnj/2SHkGqdarKB/seZWZRM8YuiqXat
-         k9/iYwiPsHq3hCu4EAgzMP+osSO9U4uu1fS+gi+kycHRry3miR4GADkAuDNbgbCEx63+
-         eZVqqBvB9Q+6YY9zVqdiJzYnf38aJ42KrTPmnnkKMcEUFhlUBS8EobZj+tXEtdJ6BcWk
-         n2Xg==
+        bh=Y/szpWo/ys5eOgrnr/yCWl5Q/XYjOwfcIY1LSn3QnO0=;
+        b=sxuc5hLizFRGzYrNpnpdQYCFmaCjPmH7/F1f47k5NNb+liw4i4SV1n7zH0GwCMqTvK
+         w5a6OPiRFHRZOBsS9qeM6SjYYgaz1FVAjPa19qKY4jfzLEkuy+4BOsDje8+9jmWJaGMt
+         pX29lw8J8R1GN7UGURV6rdnBW2F5CdU7gOuLhVXClgnfQ9XEZXLe0aHWRH3JSZfWU72U
+         K3VNyX9eCjnMpedIdvbthN+QgQ0mfJ7xoBEbaJhMCqjyzfd2aEiIE7ihxZXx9TtU/XSz
+         St6yG0fNmjOl22DHM6SOD/s5UPlvNT9Hir7SvcNO5Qbz8Di3xM1PTgBGmVS2p20OrKLi
+         tE2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732299392; x=1732904192;
+        d=1e100.net; s=20230601; t=1732299579; x=1732904379;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zShOcXTAhIOrL1GD9fBhb4zbIbWmFf6wLfZDDFFuD6U=;
-        b=SVEEUVQ5zvDIHHOXj3rWlD0CZ2xLzyabnU9wUjlENwNScX600c6MwLs9xuu3VDDyAL
-         GP/K/W5LuFu2/4X/Wj8C7hEVnTzn8ccCayRhIbg/20bTEBRC0ZCwo8mMcqY7SdK82Hao
-         Ec40o0IgyPLuMWWByjUJEot+t5X7KMndVXGXTLHC8nEvXq8bk30PfNnEWk1JXGWqk4E7
-         4HwVkxVaPvldP+Wk+hgcrgO8bEN/aZ0d6810CoPbSBZQA4Pc0tCF83kSmjn0rtQLWr/f
-         t21JiBLcJZL15Nl85pxdey6Ipx3OZ+rK/hbICvJC0L9mi8adMMCv34rDIuT5LUMsij77
-         dxUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUcEH42z7XXGjDlbs4mXIVeAyF76yyJNZ3wTa+f+mb2PPpHOLxvFyI/wlj9nsn38kPp0rUgSvckBRU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAQcHMFYIpmo9wpA0Z7vxYm4WJ5pGmJq29UYizOC+oI8kpRoeO
-	g3Bcj+seyUKSbUwZdsVwfmr5dY4jlf94J/Bie3Eva8IqxM71PrenXLypV3aenTU=
-X-Gm-Gg: ASbGncvvpPqXw20zMQsXuTZEWxJVyVitCCKRWet2J+8q/Nb4koA3E9p2p54d5PK33wP
-	BC41SeVloG06/J6BQlg3Hk1ggXAlRxlsHfd2FPkO22QKv5UXdgquqKuKzkmjsfEbcEuiphWoc8W
-	Jzyb5tBaupniQADxQUCcUp3Vm/z8kRFUH3FaK8Lm6LK6rhebzIIvwbp1eHOiLFrYatRxGta41DQ
-	rZpKxdrgjlPLQyasdwpEj2uka8WLZfqrhbovVJfOgT1lKNEgvUX6CCmFG3pj2bWvFFWD5Yf4TyX
-	/p4=
-X-Google-Smtp-Source: AGHT+IHO3jyqLCOcTS3wh4+2xhK12la2E5PqJC9zeMvnqEaUzAlAA/kD0IsAvSGpyvD3nUkmL5b/wg==
-X-Received: by 2002:a05:600c:154d:b0:431:5d4f:73b9 with SMTP id 5b1f17b1804b1-433ce4c2324mr30034465e9.26.1732299392126;
-        Fri, 22 Nov 2024 10:16:32 -0800 (PST)
+        bh=Y/szpWo/ys5eOgrnr/yCWl5Q/XYjOwfcIY1LSn3QnO0=;
+        b=i6TznPN866Szvgn/K6P71AKHIHtQgYDeitW+JcvFKgH2R7W4uDrwUqynOgvOLOm+qR
+         Y8cffTEOcWTOf+eL9uZO66nNUtgsLLhw8rBqOuwGMKbSxVZOswBGsU63dKu+yOp8rk1t
+         i5u7FOaiF6nIQrnW5fgBYuiZva7P41WrJYvUwrzwS3+EKEv4l846+RzH99dXoQA57mzJ
+         PV7Txhx55oDxrFHQ+8jvwxlmA81QYBWqeL84gxJOtmYZUkf0QXRSrULBSTiuhzwy5pWT
+         cEbT+vG6ZmCsWCkZz3zr6pUpMh2O28iq/uEVoFegGq7fh8xrPlMN5Xwud/Osc25qNXiA
+         IEAg==
+X-Gm-Message-State: AOJu0YwZw2g9d3qbZVH7e5jawHhLGb3IjXplrv4nPUSc38ncop1ENsyR
+	vk1GflttBJcLqg0gmEKPuWFeDUnr90N1nMlmjqGyxBkp95TmE1dcvZTMoxonUsA=
+X-Gm-Gg: ASbGncuE7KCeYeXEyewP2NBZPGN2IQ34il7jYEEX97feoWbRaEgOZ8+pN0A6Gxk29Zh
+	BMWVLCviBoW2B7wmOq1yncEwEPAFrSKCnDo/hJlYxqk6t4AYlnU665osTP6bsyrx5xTFrq/ACCs
+	WqkwLPvBGFQotrxL7Pil4rTOOaRWy/q57Rn9Uuy9iVVCQ7d0ukgiiZ3yT/sc7KFfu6armvUpNg/
+	BalWfCaaA4rtcaKWM8Ic/zAnKtw5e3yiWbiCrW7k09pVjCbCsHMicZs+SD+Jbcq6pCAqGbk33A+
+	VFc=
+X-Google-Smtp-Source: AGHT+IHYgqyxcn7ucR1MIiQZTgSIh6mW4ccnkdqYQzi0krIec0OTdQIPnvkbAwgUxoudmZsboq/NBw==
+X-Received: by 2002:a05:6000:1a8d:b0:382:5141:f63d with SMTP id ffacd0b85a97d-38260bda2bamr3775937f8f.53.1732299578845;
+        Fri, 22 Nov 2024 10:19:38 -0800 (PST)
 Received: from localhost (p509159f1.dip0.t-ipconnect.de. [80.145.89.241])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-433cde8c8d3sm35357205e9.31.2024.11.22.10.16.30
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3825faff9cdsm3040747f8f.28.2024.11.22.10.19.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2024 10:16:30 -0800 (PST)
-Date: Fri, 22 Nov 2024 19:16:29 +0100
+        Fri, 22 Nov 2024 10:19:37 -0800 (PST)
+Date: Fri, 22 Nov 2024 19:19:36 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Stanislav Jakubek <stano.jakubek@gmail.com>, 
-	Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pwm: sprd,ums512-pwm: convert to YAML
-Message-ID: <dbptlfuj5peehd5i63cbvdhnargexmfk6pncnnofir5wghpiwh@rtpe7cyj7g3g>
-References: <ZyH-JASRcpMXYsmH@standask-GA-A55M-S2HP>
- <ielio4ys77kgo5qsvrbbqfg6yzlit33yun4leei2giplbedsc4@5qmkwgvqe6xl>
- <84dfe382-65d8-4743-84ba-d70699b6f5e7@linux.alibaba.com>
- <jjfajijz7xkh6rh4ekmvta5rum7tod4ts2j3y7sbdkbhkcgryr@6bbxclrkyzgq>
+To: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jisheng Zhang <jszhang@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: marvell,berlin-pwm: Convert from txt
+ to yaml
+Message-ID: <nluphhnqls27ebacfskxed77lcxtvoinzd3kozjqbgxsjl23vr@rl6vbrskuoce>
+References: <20241029160837.590199-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -92,78 +87,51 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ni7e7r325tknnap5"
+	protocol="application/pgp-signature"; boundary="cwaoxzgjpu3vrxek"
 Content-Disposition: inline
-In-Reply-To: <jjfajijz7xkh6rh4ekmvta5rum7tod4ts2j3y7sbdkbhkcgryr@6bbxclrkyzgq>
+In-Reply-To: <20241029160837.590199-2-u.kleine-koenig@baylibre.com>
 
 
---ni7e7r325tknnap5
+--cwaoxzgjpu3vrxek
 Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] dt-bindings: pwm: sprd,ums512-pwm: convert to YAML
+Subject: Re: [PATCH] dt-bindings: pwm: marvell,berlin-pwm: Convert from txt
+ to yaml
 MIME-Version: 1.0
 
-On Mon, Nov 04, 2024 at 09:28:34AM +0100, Uwe Kleine-K=F6nig wrote:
-> Hello,
->=20
-> On Mon, Nov 04, 2024 at 10:52:09AM +0800, Baolin Wang wrote:
-> > On 2024/11/4 04:24, Uwe Kleine-K=F6nig wrote:
-> > > thanks for your patch, looks fine for me.
-> > >=20
-> > > On Wed, Oct 30, 2024 at 10:36:36AM +0100, Stanislav Jakubek wrote:
-> > > > +maintainers:
-> > > > +  - Orson Zhai <orsonzhai@gmail.com>
-> > > > +  - Baolin Wang <baolin.wang7@gmail.com>
-> > > > +  - Chunyan Zhang <zhang.lyra@gmail.com>
-> > >=20
-> > > An Ack from (at least one of) them would be great. I see Baolin Wang =
-in
-> >=20
-> > Sorry for late reply. Look good to me though I'm not a DT schema expert=
-=2E So
-> > Acked-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> >=20
-> > > the recipients of this mail, but with a different address. Does the
-> > > maintainer entry need updating?
-> >=20
-> > No need, I have already done the mail mapping:)
->=20
-> Having an entry in .mailmap doesn't justify adding old/wrong email
-> addresses. If your linux.alibaba.com address is the one that should be
-> used, it should be listed here. Not everyone consults .mailmap before
-> sending mail.
->=20
-> If you agree I just substitute your address while applying.
+Hello,
 
-Assuming silent agreement I applied the patch with your address updated
-to the linux.alibaba.com one.
+On Tue, Oct 29, 2024 at 05:08:36PM +0100, Uwe Kleine-K=F6nig wrote:
+> the only addition is the list of maintainers. I optimistically added
+> Jisheng Zhang and Sebastian Hesselbarth as they are the maintainers for
+> the platform containing this type of device. Please speak up if you
+> don't want to be listed.
 
-The patch now waits in
+Objection perioded terminated and applied to
 
 https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
 nexxt
 
-for the closing of the merge window. Will put it into next then and
-include it in my PR for 6.14-rc1.
+as 6.14-rc1 material.
 
 Best regards
 Uwe
 
---ni7e7r325tknnap5
+--cwaoxzgjpu3vrxek
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdAynkACgkQj4D7WH0S
-/k4ubgf/T9lngTW46evn+d4FyC5/oaYb3HlwKomgqWDmXWgNCo4j4hUZgeNjlZJ0
-peA9kJ4812Iuwx8kj2J5l5QvGiH8AB3iV4IyPg12wuVfsQE2AG8wZ/GruMH05bg7
-8/duQHFtmTJ6r5LE5oJwcu8WYQdGlFLdJWaIv5ru+jfDGLMEEFD+Pistvj8z2dcc
-jKMUBp9aJCgxHY99Q4yN0bdbKvUZUr+Sx9kt+DbrpUmAJR76rJkWVKkoVK1t29CT
-D//4VyZJV2BHb/FT0nvPwR7jRDhOkL21rFMF9/fxJdZ3uEbB2RnPeeLzC2aQsYoi
-5r9YGCu2ld5ZEKND6g9VYfqMkAMM1g==
-=fIyv
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdAyzUACgkQj4D7WH0S
+/k7gDgf/XeAncYRqGT88fPlHqsOX01CaslhpkRoAcl9yAaABozqPs5H1dix/F7lA
+5KiOcAzSuYfTdVuke7YK58uTyvLd21PuPFUyXkMEGzOzH4QdxmLdN7Qt7DG4uyxf
+Ru13E9zAr+j5C8XBzQgu2OwZqkAq9Vhxt5tzVu2DbhkA/fEyxcqzkjjLqk+7MTGJ
+LG7mIFNElJ5XQBKprhALxqG8Z6ZTMofnWvcZ6Jf5nPNFmMV48AOS872nCeNF3teb
+5juYTkOHGFt11caUGofNHuIGYYp3tQYLOx60XluY/NL6mbW+tVFC4Q1pzpm5y9Rf
+rnvA6L+T8gNItKdp/lFYYZuiXUKXHw==
+=mtGB
 -----END PGP SIGNATURE-----
 
---ni7e7r325tknnap5--
+--cwaoxzgjpu3vrxek--
 
