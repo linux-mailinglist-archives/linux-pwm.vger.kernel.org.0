@@ -1,62 +1,90 @@
-Return-Path: <linux-pwm+bounces-4121-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4122-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 538B89D63ED
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2024 19:09:27 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B89519D6407
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2024 19:16:43 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0EBD128501A
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2024 18:09:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90C2F161767
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Nov 2024 18:16:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA6A61E3DF5;
-	Fri, 22 Nov 2024 18:05:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4BA91DF74F;
+	Fri, 22 Nov 2024 18:16:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZxgAXqn"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ZsdFvC5T"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D2F1E3DCA;
-	Fri, 22 Nov 2024 18:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EE25FDA7
+	for <linux-pwm@vger.kernel.org>; Fri, 22 Nov 2024 18:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732298739; cv=none; b=Y2BJrd5BGlVC8txqsVTnEatyVuYwj6tAyDuL4qZ2F9sefsKiA0B3nD8r1DcBXN0BGZKjcatZsdoQqdeWhICVDXl2DDowzuC90qbnBu18xwlzpn5G9s+6Ai14Tdh/H3yHHTuWZcAhFDQNz9pk9fJPM7Wjp2Fgl0iSNO+9Qiudbx8=
+	t=1732299396; cv=none; b=L6y1P2+4OPL2sYONx+iXcq2NOL9nJFSM8GOdW7EeU1+6o8OJCe9Xg0VY2aCMjuhNVMyXKzvj8zJ+eQBLY/gWYqFywwhbb1bAYgItnY0eXiCtTnV1ubLUgNlF/71gl7THdy5FtC5G7C1RBt+Lz4G77fy8CSF9eYDdlVKn9tpGMCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732298739; c=relaxed/simple;
-	bh=SfJXTQziLY7a9QtdjnJrWk+h7t37B3e9l99AeaDQstw=;
+	s=arc-20240116; t=1732299396; c=relaxed/simple;
+	bh=aM47pbPVNtrMOQanMHQ7ktZXfApmfUGeliGraS2mMOs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XT0cp8lg/ZGSMjbGXA5nI0JmEHVs8EEF+ymBF00LzsArZWNpRfR/GdWDfpqqJ85whqBXNqORe8L5d0jybWvzKXDbKQJ26koSR4Fys5PEpDx4lFTHM7BUzGyylO32ujFvWN4fRk4c0Txt/pA1rYij5Od0IubItcxjy6TGINWRSow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZxgAXqn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6B1C4CED3;
-	Fri, 22 Nov 2024 18:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732298738;
-	bh=SfJXTQziLY7a9QtdjnJrWk+h7t37B3e9l99AeaDQstw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oZxgAXqnD9bSkXd6kFSytl8aJEGR8YcB5TQTUcP3E4wjnCupz165epeywTfMhk++o
-	 zaAJ7LZC1/K96QFkBwEFBE8Dofcjf/HjHowm01Z1a5oD/jDFfoZf4V4Fx93bOudNej
-	 rmuYmbOaA2T6pao99RhDE0N5DfXFW2NkFIqNOWuclHmRlQCf/Rv1NHilRNkmX+XUpK
-	 6JdRSRo2ijsnBFhzuNupRE1zhd9bh0skJ4EEa9yoWbfvfmN4o+LdpiP2TzNvKCJo5F
-	 wEQ/+Vtl1I0OCSlAbMyCjlnCLbKCD+/d2+xBfUYRY0X++fjJV4GifvB8w3o/WBmvVk
-	 xNad4HPi6s3rQ==
-Date: Fri, 22 Nov 2024 19:05:33 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mkl@pengutronix.de, 
-	mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, 
-	jdelvare@suse.com, jic23@kernel.org, lars@metafoo.de, alexandre.belloni@bootlin.com, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v1 8/9] pwm: Add Nuvoton NCT6694 PWM support
-Message-ID: <imxfhjb5h5bneql6hadxanmzshxi2ev2tosprrncrerxrhvocl@lnoi32zupqct>
-References: <20241024085922.133071-1-tmyu0@nuvoton.com>
- <20241024085922.133071-9-tmyu0@nuvoton.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=I02aGf/LAXS0y3rnHmvhJQU4/+snjO/uQqbCwxr8wEBNpFAwbzseTz/0ksIfVUm7ZPKuDNpu33yOdNaK57WCKrsp5HmPbjiaNsfmj2XP0BInXAewoHyzH36eRb5bMsnKR/akB6i0dkGsw3xIGDb8SieOps80DGy9rHzVO23NQ8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ZsdFvC5T; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-431688d5127so19880065e9.0
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Nov 2024 10:16:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1732299392; x=1732904192; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zShOcXTAhIOrL1GD9fBhb4zbIbWmFf6wLfZDDFFuD6U=;
+        b=ZsdFvC5TwY7ulhtmW7BcIOPTfl50kDhzWc9rCDJuWSqhovxjXBkhQwjAM/ZZ+kxwnT
+         g2PeSGwvZpIYjFNxyKMP9hU7sJ1J1+0oM6tW/xddhILfj71i7NvXj/0VBmLTrVSSRivU
+         qoLXehsYwhaJdTCoJ2viM30xAgC8B8nxBHgImFnj/2SHkGqdarKB/seZWZRM8YuiqXat
+         k9/iYwiPsHq3hCu4EAgzMP+osSO9U4uu1fS+gi+kycHRry3miR4GADkAuDNbgbCEx63+
+         eZVqqBvB9Q+6YY9zVqdiJzYnf38aJ42KrTPmnnkKMcEUFhlUBS8EobZj+tXEtdJ6BcWk
+         n2Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732299392; x=1732904192;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zShOcXTAhIOrL1GD9fBhb4zbIbWmFf6wLfZDDFFuD6U=;
+        b=SVEEUVQ5zvDIHHOXj3rWlD0CZ2xLzyabnU9wUjlENwNScX600c6MwLs9xuu3VDDyAL
+         GP/K/W5LuFu2/4X/Wj8C7hEVnTzn8ccCayRhIbg/20bTEBRC0ZCwo8mMcqY7SdK82Hao
+         Ec40o0IgyPLuMWWByjUJEot+t5X7KMndVXGXTLHC8nEvXq8bk30PfNnEWk1JXGWqk4E7
+         4HwVkxVaPvldP+Wk+hgcrgO8bEN/aZ0d6810CoPbSBZQA4Pc0tCF83kSmjn0rtQLWr/f
+         t21JiBLcJZL15Nl85pxdey6Ipx3OZ+rK/hbICvJC0L9mi8adMMCv34rDIuT5LUMsij77
+         dxUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcEH42z7XXGjDlbs4mXIVeAyF76yyJNZ3wTa+f+mb2PPpHOLxvFyI/wlj9nsn38kPp0rUgSvckBRU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAQcHMFYIpmo9wpA0Z7vxYm4WJ5pGmJq29UYizOC+oI8kpRoeO
+	g3Bcj+seyUKSbUwZdsVwfmr5dY4jlf94J/Bie3Eva8IqxM71PrenXLypV3aenTU=
+X-Gm-Gg: ASbGncvvpPqXw20zMQsXuTZEWxJVyVitCCKRWet2J+8q/Nb4koA3E9p2p54d5PK33wP
+	BC41SeVloG06/J6BQlg3Hk1ggXAlRxlsHfd2FPkO22QKv5UXdgquqKuKzkmjsfEbcEuiphWoc8W
+	Jzyb5tBaupniQADxQUCcUp3Vm/z8kRFUH3FaK8Lm6LK6rhebzIIvwbp1eHOiLFrYatRxGta41DQ
+	rZpKxdrgjlPLQyasdwpEj2uka8WLZfqrhbovVJfOgT1lKNEgvUX6CCmFG3pj2bWvFFWD5Yf4TyX
+	/p4=
+X-Google-Smtp-Source: AGHT+IHO3jyqLCOcTS3wh4+2xhK12la2E5PqJC9zeMvnqEaUzAlAA/kD0IsAvSGpyvD3nUkmL5b/wg==
+X-Received: by 2002:a05:600c:154d:b0:431:5d4f:73b9 with SMTP id 5b1f17b1804b1-433ce4c2324mr30034465e9.26.1732299392126;
+        Fri, 22 Nov 2024 10:16:32 -0800 (PST)
+Received: from localhost (p509159f1.dip0.t-ipconnect.de. [80.145.89.241])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-433cde8c8d3sm35357205e9.31.2024.11.22.10.16.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Nov 2024 10:16:30 -0800 (PST)
+Date: Fri, 22 Nov 2024 19:16:29 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Stanislav Jakubek <stano.jakubek@gmail.com>, 
+	Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: sprd,ums512-pwm: convert to YAML
+Message-ID: <dbptlfuj5peehd5i63cbvdhnargexmfk6pncnnofir5wghpiwh@rtpe7cyj7g3g>
+References: <ZyH-JASRcpMXYsmH@standask-GA-A55M-S2HP>
+ <ielio4ys77kgo5qsvrbbqfg6yzlit33yun4leei2giplbedsc4@5qmkwgvqe6xl>
+ <84dfe382-65d8-4743-84ba-d70699b6f5e7@linux.alibaba.com>
+ <jjfajijz7xkh6rh4ekmvta5rum7tod4ts2j3y7sbdkbhkcgryr@6bbxclrkyzgq>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -64,432 +92,78 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="iddd2vffbehamsfe"
+	protocol="application/pgp-signature"; boundary="ni7e7r325tknnap5"
 Content-Disposition: inline
-In-Reply-To: <20241024085922.133071-9-tmyu0@nuvoton.com>
+In-Reply-To: <jjfajijz7xkh6rh4ekmvta5rum7tod4ts2j3y7sbdkbhkcgryr@6bbxclrkyzgq>
 
 
---iddd2vffbehamsfe
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--ni7e7r325tknnap5
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 8/9] pwm: Add Nuvoton NCT6694 PWM support
+Subject: Re: [PATCH] dt-bindings: pwm: sprd,ums512-pwm: convert to YAML
 MIME-Version: 1.0
 
-Hello,
-
-On Thu, Oct 24, 2024 at 04:59:21PM +0800, Ming Yu wrote:
-> This driver supports PWM functionality for NCT6694 MFD device
-> based on USB interface.
+On Mon, Nov 04, 2024 at 09:28:34AM +0100, Uwe Kleine-K=F6nig wrote:
+> Hello,
 >=20
-> Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
-> ---
->  MAINTAINERS               |   1 +
->  drivers/pwm/Kconfig       |  10 ++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-nct6694.c | 245 ++++++++++++++++++++++++++++++++++++++
->  4 files changed, 257 insertions(+)
->  create mode 100644 drivers/pwm/pwm-nct6694.c
+> On Mon, Nov 04, 2024 at 10:52:09AM +0800, Baolin Wang wrote:
+> > On 2024/11/4 04:24, Uwe Kleine-K=F6nig wrote:
+> > > thanks for your patch, looks fine for me.
+> > >=20
+> > > On Wed, Oct 30, 2024 at 10:36:36AM +0100, Stanislav Jakubek wrote:
+> > > > +maintainers:
+> > > > +  - Orson Zhai <orsonzhai@gmail.com>
+> > > > +  - Baolin Wang <baolin.wang7@gmail.com>
+> > > > +  - Chunyan Zhang <zhang.lyra@gmail.com>
+> > >=20
+> > > An Ack from (at least one of) them would be great. I see Baolin Wang =
+in
+> >=20
+> > Sorry for late reply. Look good to me though I'm not a DT schema expert=
+=2E So
+> > Acked-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> >=20
+> > > the recipients of this mail, but with a different address. Does the
+> > > maintainer entry need updating?
+> >=20
+> > No need, I have already done the mail mapping:)
 >=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5c350eac187d..4d5a5eded3b9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -16444,6 +16444,7 @@ F:	drivers/iio/adc/nct6694_adc.c
->  F:	drivers/i2c/busses/i2c-nct6694.c
->  F:	drivers/mfd/nct6694.c
->  F:	drivers/net/can/nct6694_canfd.c
-> +F:	drivers/pwm/pwm-nct6694.c
->  F:	drivers/watchdog/nct6694_wdt.c
->  F:	include/linux/mfd/nct6694.h
-> =20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 0915c1e7df16..00b5eb13f99d 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -471,6 +471,16 @@ config PWM_NTXEC
->  	  controller found in certain e-book readers designed by the original
->  	  design manufacturer Netronix.
-> =20
-> +config PWM_NCT6694
-> +	tristate "Nuvoton NCT6694 PWM support"
-> +	depends on MFD_NCT6694
-> +	help
-> +	If you say yes to this option, support will be included for Nuvoton
-> +	NCT6694, a USB device to PWM controller.
-> +
-> +	This driver can also be built as a module. If so, the module
-> +	will be called pwm-nct6694.
-> +
->  config PWM_OMAP_DMTIMER
->  	tristate "OMAP Dual-Mode Timer PWM support"
->  	depends on OF
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 9081e0c0e9e0..5c5602b79402 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -42,6 +42,7 @@ obj-$(CONFIG_PWM_MICROCHIP_CORE)	+=3D pwm-microchip-cor=
-e.o
->  obj-$(CONFIG_PWM_MTK_DISP)	+=3D pwm-mtk-disp.o
->  obj-$(CONFIG_PWM_MXS)		+=3D pwm-mxs.o
->  obj-$(CONFIG_PWM_NTXEC)		+=3D pwm-ntxec.o
-> +obj-$(CONFIG_PWM_NCT6694)	+=3D pwm-nct6694.o
->  obj-$(CONFIG_PWM_OMAP_DMTIMER)	+=3D pwm-omap-dmtimer.o
->  obj-$(CONFIG_PWM_PCA9685)	+=3D pwm-pca9685.o
->  obj-$(CONFIG_PWM_PXA)		+=3D pwm-pxa.o
-> diff --git a/drivers/pwm/pwm-nct6694.c b/drivers/pwm/pwm-nct6694.c
-> new file mode 100644
-> index 000000000000..915a2ab50834
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-nct6694.c
-> @@ -0,0 +1,245 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Nuvoton NCT6694 PWM driver based on USB interface.
-> + *
-> + * Copyright (C) 2024 Nuvoton Technology Corp.
-> + */
-> +
-> +#include <linux/slab.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/pwm.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mfd/nct6694.h>
-> +
-> +#define DRVNAME "nct6694-pwm"
-> +
-> +#define NR_PWM	10
-> +#define MAX_PERIOD_NS	40000		/* PWM Maximum Frequency =3D 25kHz */
+> Having an entry in .mailmap doesn't justify adding old/wrong email
+> addresses. If your linux.alibaba.com address is the one that should be
+> used, it should be listed here. Not everyone consults .mailmap before
+> sending mail.
+>=20
+> If you agree I just substitute your address while applying.
 
-Please use a prefix for your defines, otherwise they make a more general
-impression than justified.
+Assuming silent agreement I applied the patch with your address updated
+to the linux.alibaba.com one.
 
-> +#define PERIOD_NS_CONST	10200000	/* Period_ns to Freq_reg */
+The patch now waits in
 
-What is Freq_reg?
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+nexxt
 
-> +/* Host interface */
-> +#define REQUEST_RPT_MOD			0xFF
-> +#define REQUEST_HWMON_MOD		0x00
-> +#define REQUEST_PWM_MOD			0x01
-> +
-> +/* Report Channel */
-> +#define HWMON_PWM_IDX(x)		(0x70 + (x))
-> +
-> +/* Message Channel -HWMON */
-> +/* Command 00h */
-> +#define REQUEST_HWMON_CMD0_LEN		0x40
-> +#define REQUEST_HWMON_CMD0_OFFSET	0x0000	/* OFFSET =3D SEL|CMD */
-> +#define HWMON_PWM_EN(x)			(0x06 + (x))
-> +#define HWMON_PWM_PP(x)			(0x08 + (x))
-> +#define HWMON_PWM_FREQ_IDX(x)		(0x30 + (x))
-> +
-> +/* Message Channel -FAN */
-> +/* Command 00h */
-> +#define REQUEST_PWM_CMD0_LEN		0x08
-> +#define REQUEST_PWM_CMD0_OFFSET		0x0000	/* OFFSET =3D SEL|CMD */
-> +#define PWM_CH_EN(x)			(x ? 0x00 : 0x01)
-> +/* Command 01h */
-> +#define REQUEST_PWM_CMD1_LEN		0x20
-> +#define REQUEST_PWM_CMD1_OFFSET		0x0001	/* OFFSET =3D SEL|CMD */
-> +#define PWM_MAL_EN(x)			(x ? 0x00 : 0x01)
-> +#define PWM_MAL_VAL(x)			(0x02 + (x))
-> +
-> +/*
-> + *		Frequency <-> Period
-> + * (10^9 * 255) / (25000 * Freq_reg) =3D Period_ns
-> + *		10200000 / Freq_reg  =3D Period_ns
-> + *
-> + * | Freq_reg | Freq_Hz | Period_ns |
-> + * |  1 (01h  |  98.039 |  10200000 |
-
-missing )
-
-> + * |  2 (02h) | 196.078 |   5100000 |
-> + * |  3 (03h) | 294.117 |   3400000 |
-> + * |		  ...		    |
-> + * |		  ...		    |
-> + * |		  ...		    |
-
-Better use spaces for indention here.
-
-> + * | 253 (FDh)| 24803.9 |  40316.20 |
-> + * | 254 (FEh)| 24901.9 |  40157.48 |
-> + * | 255 (FFh)|  25000  |    40000  |
-
-Is this table useful?
-
-I'd just write:
-
-	The emitted period P depends on the value F configured in
-	the freq register:
-
-	P =3D 255 s / (25000 * F)
-	  =3D 10200000 ns / F
-
-I wonder what happens if F =3D=3D 0?
-
-> + */
-> +
-> +struct nct6694_pwm_data {
-> +	struct nct6694 *nct6694;
-> +	unsigned char hwmon_cmd0_buf[REQUEST_HWMON_CMD0_LEN];
-> +	unsigned char pwm_cmd0_buf[REQUEST_PWM_CMD0_LEN];
-> +	unsigned char pwm_cmd1_buf[REQUEST_PWM_CMD1_LEN];
-
-What are these arrays? register caches?
-
-> +};
-> +
-> +static inline struct nct6694_pwm_data *to_nct6694_pwm_data(struct pwm_ch=
-ip *chip)
-> +{
-> +	return pwmchip_get_drvdata(chip);
-> +}
-> +
-> +static int nct6694_pwm_request(struct pwm_chip *chip, struct pwm_device =
-*pwm)
-> +{
-> +	struct nct6694_pwm_data *data =3D to_nct6694_pwm_data(chip);
-> +	unsigned char ch_enable =3D data->pwm_cmd0_buf[PWM_CH_EN(pwm->hwpwm / 8=
-)];
-> +	unsigned char mal_enable =3D data->pwm_cmd1_buf[PWM_MAL_EN(pwm->hwpwm /=
- 8)];
-> +	bool ch_en =3D ch_enable & BIT(pwm->hwpwm % 8);
-> +	bool mal_en =3D mal_enable & BIT(pwm->hwpwm % 8);
-
-What is "mal"?
-
-> +
-> +	if (!(ch_en && mal_en)) {
-> +		pr_err("%s: PWM(%d) is running in other mode!\n",
-> +		       __func__, pwm->hwpwm);
-> +		return -EINVAL;
-> +	}
-
-No error messages after .probe() please. dev_dbg() is fine however.
-
-> +	return 0;
-> +}
-> +
-> +static int nct6694_pwm_get_state(struct pwm_chip *chip,
-> +				 struct pwm_device *pwm,
-> +				 struct pwm_state *state)
-> +{
-> +	struct nct6694_pwm_data *data =3D to_nct6694_pwm_data(chip);
-> +	unsigned char freq_reg, duty;
-> +
-> +	/* Get pwm device initial state */
-> +	state->enabled =3D true;
-> +
-> +	freq_reg =3D data->hwmon_cmd0_buf[HWMON_PWM_FREQ_IDX(pwm->hwpwm)];
-> +	state->period =3D PERIOD_NS_CONST / freq_reg;
-
-I doubt you extensively tested your driver with PWM_DEBUG enabled. Hint:
-You should probably use DIV_ROUND_UP here.
-
-> +	duty =3D data->pwm_cmd1_buf[PWM_MAL_VAL(pwm->hwpwm)];
-> +	state->duty_cycle =3D duty * state->period / 0xFF;
-> +
-> +	return 0;
-> +}
-> +
-> +static int nct6694_pwm_apply(struct pwm_chip *chip,
-> +			     struct pwm_device *pwm,
-> +			     const struct pwm_state *state)
-> +{
-> +	struct nct6694_pwm_data *data =3D to_nct6694_pwm_data(chip);
-> +	unsigned char freq_reg, duty;
-> +	int ret;
-> +
-> +	if (state->period < MAX_PERIOD_NS)
-> +		return -EINVAL;
-> +
-> +	/* (10^9 * 255) / (25000 * Freq_reg) =3D Period_ns */
-
-This could be less irritating if the formula included units. See above.
-
-> +	freq_reg =3D (unsigned char)(PERIOD_NS_CONST / state->period);
-
-No need for the cast.
-
-If state->period is bigger than PERIOD_NS_CONST, freq_reg ends up being
-zero. That's related to the question above about F =3D=3D 0.
-
-> +	data->hwmon_cmd0_buf[HWMON_PWM_FREQ_IDX(pwm->hwpwm)] =3D freq_reg;
-> +	ret =3D nct6694_write_msg(data->nct6694, REQUEST_HWMON_MOD,
-> +				REQUEST_HWMON_CMD0_OFFSET,
-> +				REQUEST_HWMON_CMD0_LEN,
-> +				data->hwmon_cmd0_buf);
-> +	if (ret)
-> +		return -EIO;
-
-return ret;?
-
-> +
-> +	/* Duty =3D duty * 0xFF */
-
-I don't understand that.
-
-> +	duty =3D (unsigned char)(state->duty_cycle * 0xFF / state->period);
-
-Please use the actual period implemented and not state->period.
-
-> +	data->pwm_cmd1_buf[PWM_MAL_VAL(pwm->hwpwm)] =3D duty;
-> +	if (state->enabled)
-> +		data->pwm_cmd1_buf[PWM_MAL_EN(pwm->hwpwm / 8)] |=3D BIT(pwm->hwpwm  % =
-8);
-> +	else
-> +		data->pwm_cmd1_buf[PWM_MAL_EN(pwm->hwpwm / 8)] &=3D ~BIT(pwm->hwpwm  %=
- 8);
-
-s/  / /
-
-> +	ret =3D nct6694_write_msg(data->nct6694, REQUEST_PWM_MOD,
-> +				REQUEST_PWM_CMD1_OFFSET, REQUEST_PWM_CMD1_LEN,
-> +				data->pwm_cmd1_buf);
-> +	if (ret)
-> +		return -EIO;
-
-return ret;
-
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops nct6694_pwm_ops =3D {
-> +	.request =3D nct6694_pwm_request,
-> +	.apply =3D nct6694_pwm_apply,
-> +	.get_state =3D nct6694_pwm_get_state,
-> +};
-> +
-> +static int nct6694_pwm_init(struct nct6694_pwm_data *data)
-> +{
-> +	struct nct6694 *nct6694 =3D data->nct6694;
-> +	int ret;
-> +
-> +	ret =3D nct6694_read_msg(nct6694, REQUEST_HWMON_MOD,
-> +			       REQUEST_HWMON_CMD0_OFFSET,
-> +			       REQUEST_HWMON_CMD0_LEN, 0,
-> +			       REQUEST_HWMON_CMD0_LEN,
-> +			       data->hwmon_cmd0_buf);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D nct6694_read_msg(nct6694, REQUEST_PWM_MOD,
-> +			       REQUEST_PWM_CMD0_OFFSET,
-> +			       REQUEST_PWM_CMD0_LEN, 0,
-> +			       REQUEST_PWM_CMD0_LEN,
-> +			       data->pwm_cmd0_buf);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D nct6694_read_msg(nct6694, REQUEST_PWM_MOD,
-> +			       REQUEST_PWM_CMD1_OFFSET,
-> +			       REQUEST_PWM_CMD1_LEN, 0,
-> +			       REQUEST_PWM_CMD1_LEN,
-> +			       data->pwm_cmd1_buf);
-> +	return ret;
-> +}
-> +
-> +static int nct6694_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct pwm_chip *chip;
-> +	struct nct6694_pwm_data *data;
-> +	struct nct6694 *nct6694 =3D dev_get_drvdata(pdev->dev.parent);
-> +	int ret;
-> +
-> +	chip =3D devm_pwmchip_alloc(&pdev->dev, NR_PWM, sizeof(*data));
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +
-> +	data =3D to_nct6694_pwm_data(chip);
-> +
-> +	data->nct6694 =3D nct6694;
-> +	chip->ops =3D &nct6694_pwm_ops;
-> +
-> +	ret =3D nct6694_pwm_init(data);
-> +	if (ret)
-> +		return -EIO;
-
-return dev_err_probe(dev, ret, "....\n");
-
-> +	/* Register pwm device to PWM framework */
-> +	ret =3D devm_pwmchip_add(&pdev->dev, chip);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register pwm device!\n");
-> +		return ret;
-> +	}
-
-Please use dev_err_probe().
-
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver nct6694_pwm_driver =3D {
-> +	.driver =3D {
-> +		.name	=3D DRVNAME,
-
-DRVNAME is only used once (and a too generic name). Please just put the
-string here directly.
-
-> +	},
-> +	.probe		=3D nct6694_pwm_probe,
-> +};
-
-I don't like your aligning choices. Why do you intend the =3D for .probe
-but not for .driver? My preferred style is a single space before the =3D.
-While aligning the =3D is a subjective choice, a relevant downside is that
-if later a longer member should get initialized you have to realign all
-the otherwise unaffected lines to restore the alignment.
-
-> +static int __init nct6694_init(void)
-> +{
-> +	int err;
-> +
-> +	err =3D platform_driver_register(&nct6694_pwm_driver);
-> +	if (!err) {
-> +		if (err)
-
-Huh?
-
-> +			platform_driver_unregister(&nct6694_pwm_driver);
-> +	}
-> +
-> +	return err;
-> +}
-> +subsys_initcall(nct6694_init);
-
-Do you really need this to be at subsys init time?
-
-> +static void __exit nct6694_exit(void)
-> +{
-> +	platform_driver_unregister(&nct6694_pwm_driver);
-> +}
-> +module_exit(nct6694_exit);
-> +
-> +MODULE_DESCRIPTION("USB-PWM driver for NCT6694");
-> +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
-> +MODULE_LICENSE("GPL");
+for the closing of the merge window. Will put it into next then and
+include it in my PR for 6.14-rc1.
 
 Best regards
 Uwe
 
---iddd2vffbehamsfe
+--ni7e7r325tknnap5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdAx+oACgkQj4D7WH0S
-/k5qOAf/T2+rcQXdOX8t9UuEfG+QnoXIYHB5QWVAgIb3ZtY3tWpx0e3DYmkILlHt
-FFWbh4TeRluZCR6Pk4cFPCIyrWW4luAuUK493LTRoXwpBRr2XueNQRN2SIZ56Shl
-ezJzGWe8lOTYjo19jfg78jKp3JPrTXk7XqdB3uAAwfyHVo1NsqmKfeQ/x9HrbN+1
-1fe0FJCey2bVoTrOzZYPBxQNbt8yRr4cKxE/ctKyR0zHYpv2hWHXUYaWlv8bG6WY
-iK7Oh3ZlkekX2hYiE3sqbkUQlXFCVR36+UIi3h2IPc4xv9Vlwp80BOM6FNX8EGj+
-tOL+gRkzX2kxM5jyTzW5t0ewh1ZGtw==
-=bA38
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdAynkACgkQj4D7WH0S
+/k4ubgf/T9lngTW46evn+d4FyC5/oaYb3HlwKomgqWDmXWgNCo4j4hUZgeNjlZJ0
+peA9kJ4812Iuwx8kj2J5l5QvGiH8AB3iV4IyPg12wuVfsQE2AG8wZ/GruMH05bg7
+8/duQHFtmTJ6r5LE5oJwcu8WYQdGlFLdJWaIv5ru+jfDGLMEEFD+Pistvj8z2dcc
+jKMUBp9aJCgxHY99Q4yN0bdbKvUZUr+Sx9kt+DbrpUmAJR76rJkWVKkoVK1t29CT
+D//4VyZJV2BHb/FT0nvPwR7jRDhOkL21rFMF9/fxJdZ3uEbB2RnPeeLzC2aQsYoi
+5r9YGCu2ld5ZEKND6g9VYfqMkAMM1g==
+=fIyv
 -----END PGP SIGNATURE-----
 
---iddd2vffbehamsfe--
+--ni7e7r325tknnap5--
 
