@@ -1,57 +1,63 @@
-Return-Path: <linux-pwm+bounces-4128-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4129-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 248EE9D69F9
-	for <lists+linux-pwm@lfdr.de>; Sat, 23 Nov 2024 17:16:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F1D99D771D
+	for <lists+linux-pwm@lfdr.de>; Sun, 24 Nov 2024 19:06:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3682281B23
-	for <lists+linux-pwm@lfdr.de>; Sat, 23 Nov 2024 16:16:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E6981B23459
+	for <lists+linux-pwm@lfdr.de>; Sun, 24 Nov 2024 16:32:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32F3A34545;
-	Sat, 23 Nov 2024 16:16:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7906A188015;
+	Sun, 24 Nov 2024 16:32:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAmOy4k+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JEvyY+us"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EF617C2;
-	Sat, 23 Nov 2024 16:16:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411DF2500AF;
+	Sun, 24 Nov 2024 16:32:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732378616; cv=none; b=i3j9FpFlpv/DR7frxMtp92TASbsCmN0EfPSKg0Wp2eosK+xPVJ5KyhwBKZLcGagaiFU+zsUQ1PsuuZ3Yooea2fPvbu2DCEZr7LALCM2SPBMmeLOeu3uDqAmK2Ojz6HSlwqfHwRquTbodLSkinht9x0/P/vJoR1sa78tpMC8NOm0=
+	t=1732465971; cv=none; b=PoHYPUZVspo1ErZ/F7Wuf559WXvrAqt94oozOHUGkodE5/fKkPAaOQsevvU41jSVYFTCAr4cl+5/x6U5t03KvwYfcnnNRPuZ2tJfr8spbXEFU3Z4B0w0yyOTSCcEYwYVAiP6D0vWpuoUjI6FMutxrWiB/AK/ST2X8xwm8lbqx6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732378616; c=relaxed/simple;
-	bh=QrYGQca99pNSS32QFKzb/qidE/jOxXtlsHmhzCc+pDA=;
+	s=arc-20240116; t=1732465971; c=relaxed/simple;
+	bh=f6MqTaThXHiv7ctzSpq6dEgS0E7d2u5IGehjqemBuFg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LpLCHjqoZqsd21WdBkW4SVe7H9ZhQXYR3ja70b4MM3rlpWBlP6E/AJhtYlbYQabBEcXMDeRBFD9ncl6xZ6mKkZnLnL4IFJV0Ki32aE15SUCAYTCT/DPAgFuHmU6ZQZ33Y7xrIxjGjxiw6Ostiu8eTTMXUIkOi/SyWrXt/yOieOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAmOy4k+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E38C5C4CECD;
-	Sat, 23 Nov 2024 16:16:52 +0000 (UTC)
+	 MIME-Version:Content-Type; b=r2Y0bNSEe77udwLB7j9qFUwBFmSlJx01ZbHBYAf/UtpAl9CAzPYmiqPwleiHntGQZ7aodSwGbGxpy49mim2eqTa1xjExL8LZr38Gy+kSa0H4qgo6LGJIvA5IW1AoXuB7yKdwzkkUSMuzC5WqTlxzaQr0XpDY/AXQHj47nEY2bpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JEvyY+us; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7F4DC4CECC;
+	Sun, 24 Nov 2024 16:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732378615;
-	bh=QrYGQca99pNSS32QFKzb/qidE/jOxXtlsHmhzCc+pDA=;
+	s=k20201202; t=1732465970;
+	bh=f6MqTaThXHiv7ctzSpq6dEgS0E7d2u5IGehjqemBuFg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cAmOy4k++gzo23aVP32SGFjjbFY8qxcghka4n+UKd01apBrfSpYYWrlGV2qOPopI5
-	 a2uQVLHwaNZ1NwozQEmpT/JdRTf2MWoWuhoKdf10TiuV1tNohyAB8MdpjWvcgWE2hv
-	 13jH+4IrWmK1QsMQFpqe5214U3aQ+lVJ8lPofcn3h93G+iDzAh5mlZ8mTQJuO50Xe4
-	 EIaFDfqAYylepf3YRIfF7C93/gnIuTvc18C1CmGmLz18OeMfSH5/NIBVjN1YXqCZi/
-	 5hQtwQaIRW1feMUrAL36dm0yQUMEZ+2ii2Ppk9kaUk9tVXIqo2EXIf/bQvoWUmwWW8
-	 piFgO9B90vv+A==
-Date: Sat, 23 Nov 2024 16:16:50 +0000
+	b=JEvyY+us/11p4rR5ISmZ+PWPjfbyV2+x7g86iySrXAClfh8WjY1MY9lp7BBCZe091
+	 HiFC8luDJfDPX4MEG+L/9K7YbSXRmupKPn+fE8b+9c6YrR9syKdmqBY8sjdFsr751r
+	 n9XB+gXqlakEwSw9lNX8xh55QjcswhgCex0gnE6DDbZUeAmbIkI5YbG5dFFNFiWyxm
+	 dvogF+BjrwhWgYe0h2/riVPhhUxcnkd5XZ7+06+taLzGd/j1O0fLzBm0L255V31nip
+	 pgCNZllEfJnbanw7kLG9iAFYzqBNyy6t+Whl5UWzwGVco7ELjacw0jemrTj5TNbBcC
+	 of0KnvkAH6ueA==
+Date: Sun, 24 Nov 2024 16:32:41 +0000
 From: Jonathan Cameron <jic23@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH 2/2] iio: frequency: adf4371: add ref doubler and div2
-Message-ID: <20241123161650.3487d386@jic23-huawei>
-In-Reply-To: <20241122113226.49346-2-antoniu.miclaus@analog.com>
-References: <20241122113226.49346-1-antoniu.miclaus@analog.com>
-	<20241122113226.49346-2-antoniu.miclaus@analog.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, David
+ Jander <david@protonic.nl>, Martin Sperl <kernel@martin.sperl.org>,
+ linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v5 01/16] spi: add basic support for SPI offloading
+Message-ID: <20241124163241.4699161f@jic23-huawei>
+In-Reply-To: <20241115-dlech-mainline-spi-engine-offload-2-v5-1-bea815bd5ea5@baylibre.com>
+References: <20241115-dlech-mainline-spi-engine-offload-2-v5-0-bea815bd5ea5@baylibre.com>
+	<20241115-dlech-mainline-spi-engine-offload-2-v5-1-bea815bd5ea5@baylibre.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -59,113 +65,130 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 22 Nov 2024 13:32:14 +0200
-Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
+On Fri, 15 Nov 2024 14:18:40 -0600
+David Lechner <dlechner@baylibre.com> wrote:
 
-> Add support for the reference doubler and the reference divide by 2
-> clock.
-The question of 'why' these would be set in firmware remains, but
-a few trivial comments inline on the implementation.
+> Add the basic infrastructure to support SPI offload providers and
+> consumers.
+> 
+> SPI offloading is a feature that allows the SPI controller to perform
+> transfers without any CPU intervention. This is useful, e.g. for
+> high-speed data acquisition.
+> 
+> SPI controllers with offload support need to implement the get_offload
+> and put_offload callbacks and can use the devm_spi_offload_alloc() to
+> allocate offload instances.
+> 
+> SPI peripheral drivers will call devm_spi_offload_get() to get a
+> reference to the matching offload instance. This offload instance can
+> then be attached to a SPI message to request offloading that message.
+> 
+> It is expected that SPI controllers with offload support will check for
+> the offload instance in the SPI message in the ctlr->optimize_message()
+> callback and handle it accordingly.
+> 
+> CONFIG_SPI_OFFLOAD is intended to be a select-only option. Both
+> consumer and provider drivers should `select SPI_OFFLOAD` in their
+> Kconfig to ensure that the SPI core is built with offload support.
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+
+A few additional comments, but basically fine.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 
->=20
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
->  drivers/iio/frequency/adf4371.c | 37 +++++++++++++++++++++++++++++++--
->  1 file changed, 35 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/iio/frequency/adf4371.c b/drivers/iio/frequency/adf4=
-371.c
-> index b27088464826..02d42652dfdd 100644
-> --- a/drivers/iio/frequency/adf4371.c
-> +++ b/drivers/iio/frequency/adf4371.c
-> @@ -41,6 +41,12 @@
->  #define ADF4371_MOD2WORD_MSK		GENMASK(5, 0)
->  #define ADF4371_MOD2WORD(x)		FIELD_PREP(ADF4371_MOD2WORD_MSK, x)
-> =20
-> +/* ADF4371_REG22 */
-> +#define ADF4371_REF_DOUB_MASK		BIT(5)
-> +#define ADF4371_REF_DOUB(x)		FIELD_PREP(ADF4371_REF_DOUB_MASK, x)
-> +#define ADF4371_RDIV2_MASK		BIT(4)
-> +#define ADF4371_RDIV2(x)		FIELD_PREP(ADF4371_RDIV2_MASK, x)
+> diff --git a/drivers/spi/spi-offload.c b/drivers/spi/spi-offload.c
+> new file mode 100644
+> index 000000000000..5ded7aecf9fc
+> --- /dev/null
+> +++ b/drivers/spi/spi-offload.c
+
+...
+
+> +/**
+> + * devm_spi_offload_get() - Get an offload instance
+> + * @dev: Device for devm purposes
+> + * @spi: SPI device to use for the transfers
+> + * @config: Offload configuration
+> + *
+> + * Peripheral drivers call this function to get an offload instance that meets
+> + * the requirements specified in @config. If no suitable offload instance is
+> + * available, -ENODEV is returned.
+> + *
+> + * Return: Offload instance or error on failure.
+> + */
+> +struct spi_offload *devm_spi_offload_get(struct device *dev,
+> +					 struct spi_device *spi,
+> +					 const struct spi_offload_config *config)
+> +{
+> +	struct spi_controller_and_offload *resource;
+> +	int ret;
 > +
->  /* ADF4371_REG24 */
->  #define ADF4371_RF_DIV_SEL_MSK		GENMASK(6, 4)
->  #define ADF4371_RF_DIV_SEL(x)		FIELD_PREP(ADF4371_RF_DIV_SEL_MSK, x)
-> @@ -70,6 +76,9 @@
->  #define ADF4371_MAX_FREQ_PFD		250000000UL /* Hz */
->  #define ADF4371_MAX_FREQ_REFIN		600000000UL /* Hz */
-> =20
-> +#define ADF4371_MIN_CLKIN_DOUB_FREQ	10000000ULL /* Hz */
-> +#define ADF4371_MAX_CLKIN_DOUB_FREQ	125000000ULL /* Hz */
+> +	if (!spi || !config)
+> +		return ERR_PTR(-EINVAL);
 > +
->  /* MOD1 is a 24-bit primary modulus with fixed value of 2^25 */
->  #define ADF4371_MODULUS1		33554432ULL
->  /* MOD2 is the programmable, 14-bit auxiliary fractional modulus */
-> @@ -175,6 +184,8 @@ struct adf4371_state {
->  	unsigned int mod2;
->  	unsigned int rf_div_sel;
->  	unsigned int ref_div_factor;
-> +	bool ref_doubler_en;
-> +	bool ref_div2_en;
->  	u8 buf[10] __aligned(IIO_DMA_MINALIGN);
->  };
-> =20
-> @@ -497,22 +508,44 @@ static int adf4371_setup(struct adf4371_state *st)
->  			return ret;
->  	}
-> =20
-> +	if (device_property_read_bool(&st->spi->dev,
-> +				      "adi,reference-doubler-enable"))
-> +		st->ref_doubler_en =3D true;
+> +	if (!spi->controller->get_offload)
+> +		return ERR_PTR(-ENODEV);
 > +
-> +	if (device_property_read_bool(&st->spi->dev,
-> +				      "adi,reference-div2-enable"))
-> +		st->ref_div2_en =3D true;
-	st->ref_div2_en =3D device_property_read_bool(dev, "adi,reference-div2-ena=
-ble");
-Line is a bit long but more readable.
-struct device *dev =3D &st->spi->dev; needed at top of function.
-+ do the same for ref_doubler_en..
+> +	resource = kzalloc(sizeof(*resource), GFP_KERNEL);
+> +	if (!resource)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	resource->controller = spi->controller;
+> +	resource->offload = spi->controller->get_offload(spi, config);
+> +	ret = PTR_ERR_OR_ZERO(resource->offload);
+> +	if (ret) {
+Why not simply
+	if (IS_ERR(resource->offload) {
+		kfree(resource);
+		return resource->offload;
+	}
+> +		kfree(resource);
+> +		return ERR_PTR(ret);
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(dev, spi_offload_put, resource);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	return resource->offload;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_spi_offload_get);
+
+> diff --git a/include/linux/spi/spi-offload.h b/include/linux/spi/spi-offload.h
+> new file mode 100644
+> index 000000000000..81b115fc89bf
+> --- /dev/null
+> +++ b/include/linux/spi/spi-offload.h
 
 > +
->  	/* Set address in ascending order, so the bulk_write() will work */
->  	ret =3D regmap_update_bits(st->regmap, ADF4371_REG(0x0),
->  				 ADF4371_ADDR_ASC_MSK | ADF4371_ADDR_ASC_R_MSK,
->  				 ADF4371_ADDR_ASC(1) | ADF4371_ADDR_ASC_R(1));
->  	if (ret < 0)
->  		return ret;
-> +
-> +	if (st->ref_doubler_en &&
-> +	    (st->clkin_freq > ADF4371_MAX_CLKIN_DOUB_FREQ ||
-> +	     st->clkin_freq < ADF4371_MIN_CLKIN_DOUB_FREQ))
-> +		st->ref_doubler_en =3D false;
-> +
-> +	ret =3D regmap_update_bits(st->regmap,  ADF4371_REG(0x22),
-> +				 ADF4371_REF_DOUB_MASK |
-> +				 ADF4371_RDIV2_MASK,
-> +				 ADF4371_REF_DOUB(st->ref_doubler_en) |
-> +				 ADF4371_RDIV2(st->ref_div2_en));
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	/*
->  	 * Calculate and maximize PFD frequency
->  	 * fPFD =3D REFIN =C3=97 ((1 + D)/(R =C3=97 (1 + T)))
->  	 * Where D is the REFIN doubler bit, T is the reference divide by 2,
->  	 * R is the reference division factor
-> -	 * TODO: it is assumed D and T equal 0.
->  	 */
->  	do {
->  		st->ref_div_factor++;
-> -		st->fpfd =3D st->clkin_freq / st->ref_div_factor;
-> +		st->fpfd =3D (st->clkin_freq * (st->ref_doubler_en ? 2 : 1)) /
-> +			   (st->ref_div_factor * (st->ref_div2_en ? 2 : 1));
->  	} while (st->fpfd > ADF4371_MAX_FREQ_PFD);
-> =20
->  	/* Calculate Timeouts */
+> +MODULE_IMPORT_NS(SPI_OFFLOAD);
+
+This is rarely done in headers. (only pwm.h does it I think)
+I'd push it down into code that uses this.
+
+It might be worth splitting the header into a spi-offload-provider.h
+and spi-offload-consumer.h with a common spi-offload-types.h included
+by both.
+
+
+> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> index 8497f4747e24..c2b24a0909ea 100644
+> --- a/include/linux/spi/spi.h
+> +++ b/include/linux/spi/spi.h
+> @@ -31,6 +31,9 @@ struct spi_transfer;
+>  struct spi_controller_mem_ops;
+>  struct spi_controller_mem_caps;
+>  struct spi_message;
+> +struct spi_controller_offload_ops;
+
+Not used so introduce it only when needed (I guess in a later patch).
+
+
+
+
 
 
