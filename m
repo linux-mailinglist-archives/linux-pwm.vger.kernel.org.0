@@ -1,121 +1,126 @@
-Return-Path: <linux-pwm+bounces-4148-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4149-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 106469D8E06
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 Nov 2024 22:31:15 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 111D49D9ED6
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 Nov 2024 22:25:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C7CA728B025
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 Nov 2024 21:31:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 902FBB26D78
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 Nov 2024 21:25:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4641191478;
-	Mon, 25 Nov 2024 21:31:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F4101DF274;
+	Tue, 26 Nov 2024 21:25:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dt9e3SLK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U28rJGjd"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8E2185B77;
-	Mon, 25 Nov 2024 21:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943DF1BBBC9;
+	Tue, 26 Nov 2024 21:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732570268; cv=none; b=TKzxvNJQHl6Hlc67YiNn0ujZf6HXuMdHU7SyauxqknfbCkobwcR49Qm3/+xsafXxO44Ey57hcMDTzByIZPWv096Pck4kNEdg3MC6OyAOaEcltnA1B7ZBb6+02o2wLy0pIE0CrsqDycn+vIS9s4H+nInYswkUNLNs/rUkc6cFYwc=
+	t=1732656318; cv=none; b=JITbQV/nuCym5iINQboUVDzpoZSf279rlXJEt4WkWfL42ONK/siux95Kv7UnWs/YT6bsZdoQ7yD+Ti+E4K3F5AMe7NksGz3u1EjvDw1wZiWRWm1ukWLLFGv9J7R+RRlWhGtDDdAkbYG5LV3GlzZ3txmiRyPzm57wn8du314T2F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732570268; c=relaxed/simple;
-	bh=iGVTMarzxn5JVfucjRE+H4jhcqvPyiJG2UTEgJoa4VM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z+T1rwZbVABem8+ntimY2yBz2pzgfbMpzlAa2xRReLBU6sL+m79sJbLt1e88iol6mAfLGkrkOM0g9fUHzxcFx4PWq5SYXQvsohncpvGWmf1as3wqzLWXO0vnLlV2XWkl6CJ+rVAo9ak2EotX+29tfqNma3ZLMRaDt83aLLvuzkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dt9e3SLK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BACEAC4CECE;
-	Mon, 25 Nov 2024 21:31:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732570268;
-	bh=iGVTMarzxn5JVfucjRE+H4jhcqvPyiJG2UTEgJoa4VM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Dt9e3SLKzk6MEaz6xazhNJo4xqvtm2ot3hfAhi4ZH5qKady5Ylas34+cv4W5GvOPM
-	 Vghav+UA2GRXPSwqJYV7BHNWpBI8s1/AyHfl4+GOXo8BYzJMerlrWcmknidkpq8Ldm
-	 6Krp5PZ1dtGxUAkjNErE+6mOZXtYJCT+jXP9kYa4+PbM2h3zn7w6nvmmvKWDcbNpb6
-	 eUdBMEnsyDTBtAtcR8ZdkHjf4X2ixOip65JcE3F2bOmZEjtJUNDc5jXS8+GJlhY5JP
-	 rkqoD/Txa3pmfFIqTy+MWWBFDAfwwE2il66SbuE5kdL5RMhiLQqxB/h2UeOp3iK+cC
-	 upbroTs5+aetQ==
-Date: Mon, 25 Nov 2024 21:30:58 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, David
- Jander <david@protonic.nl>, Martin Sperl <kernel@martin.sperl.org>,
- linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v5 06/16] spi: add offload TX/RX streaming APIs
-Message-ID: <20241125213058.137349ed@jic23-huawei>
-In-Reply-To: <259515cc-ca36-4dcd-b884-a9f9e3c2ab2e@baylibre.com>
-References: <20241115-dlech-mainline-spi-engine-offload-2-v5-0-bea815bd5ea5@baylibre.com>
-	<20241115-dlech-mainline-spi-engine-offload-2-v5-6-bea815bd5ea5@baylibre.com>
-	<20241124165039.206dc994@jic23-huawei>
-	<259515cc-ca36-4dcd-b884-a9f9e3c2ab2e@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1732656318; c=relaxed/simple;
+	bh=xjS1sv7ZycCWokpZNmVAJ4ZyUQYgz7W7vOLsr0yLyTU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FNEfC0nTXc7wFw+BeIzMLgdDyLn0xmLRtG4qNvLe3IaRafeiqnfVowxxetWQusiqCSCB7JN6qJqR0C95u7HF874JchG6jcb3NFhpDguBWNDrPnR27gAy0jonrE0cZpAy9g31v5Gmt2Ad4btTyhV0DsrNLLTzHIbe0E8nBbGFy8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U28rJGjd; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-211fb27cc6bso60274695ad.0;
+        Tue, 26 Nov 2024 13:25:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732656316; x=1733261116; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N2TKsl83AnwP2PjSI65VRG64wOcj8ly05hFtripK2Pw=;
+        b=U28rJGjdLS2KLybAYRGXgzL/hG3PIhSNd/mWD+fstTHvtCdJcSiuZdGFf0ngA/4wcK
+         hloxYE5aZbXKVt7BzkjGR+maF5amA4W3DeqYVIokMFPxSSqgqMLosM5lHjbE6d2qWZSj
+         xSXqX2Dxg7rOvQGQFkYBu4IYtH5FLWEpQasueGJXQWRuMQ2GlQ9CPytFiF1ukWD1X8o2
+         LjoPAJE2M4XBB5DPyF3r3aXlSLYeDuYFXyj5/AtlFbSlbBa+iTe4O45kfcMR0iUY21Pz
+         F5uDcqTnzg6jTbaBNV9fQJ4yPU1OAwMVEC4ipyjd2oMFXy1OG7iknbqz+nIFYp12tVxv
+         QQ9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732656316; x=1733261116;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N2TKsl83AnwP2PjSI65VRG64wOcj8ly05hFtripK2Pw=;
+        b=v3bH60wSL2silyC3KNEd7CJ7g2+St4jliYz6QlW42lFgagbWnRbBJc4ryHEMq0MAfo
+         6/ATm3QPzvVd8C5juWD+7p/57Yt++c4xWef+8ioNgK3sVq8WejLonH8Ms4pWZDsGGFJo
+         mCW3kmcxc8VPUSXmXuZbQeNMFIoGxglf/6lqtj/oupUGvkLYK4xNfx9S8V9P10JnXedc
+         Vf7SQgcpmMh1ieQdF4GecJxgZmnztB7tbunjvXXyic8kO9S+G0LAM2TLNvebOY9baTDD
+         GpOxGtOo6PcbAlv8JYMuqwh9dKp+NZYOfEpSCnJr7Uzay81lWbnBj4KjED0AIplgb8MI
+         Ykmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlRTaphSc3vjbfUiWwESSLqvw/poXyU2vupnXpkSw7ZGxjOOkHgnQCGkjqg8D35Dj2OUAn4uePGlYv4K0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHGzpAVIrn1pXzeIzwNR1RzOSbbahrchot5O3eLW3kZ4ALGhBf
+	epzlxATomsNFOS3ybghCaGeedvdBt2EAa86bPavN36r8m44kNjo8
+X-Gm-Gg: ASbGncvHPjz8f6J/FmheuUllzeN+PzrgxO+FE8iXs8O/np1xhI7xW5uEpTsDm6GZ3YX
+	IFkcQVWpoqU43GnHeVH5so86zZ+l3w5atrU8UXmmpUepcJh2QiH1Qp5oGDfemWeoa6QIUYa2OLC
+	F7uXZxAiDXedqe4vmBxCzu0X9gvTZ8OcQF5VwmV3z6X3ShXv6VszuQQ1XLbZGXirQh/znNE3aK8
+	ajuc9fpFK0tryIAIhMAH3b/K8hTdUhjnb0T2ImlxZ265JG9MyvOjjnWvw5K9Fi7R8WUBSOTbDEh
+X-Google-Smtp-Source: AGHT+IFiE6mBthTh6/Xk493ZDQ+wpHrF+Kc29cYBJgz9mge4KCwyWFynJxSWYy/r1lnU6AgvZTV/yg==
+X-Received: by 2002:a17:902:ea0e:b0:20b:4f95:932d with SMTP id d9443c01a7336-2150108ca34mr8490985ad.3.1732656315856;
+        Tue, 26 Nov 2024 13:25:15 -0800 (PST)
+Received: from localhost.localdomain ([177.174.195.101])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2129db8ca1csm89431075ad.20.2024.11.26.13.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2024 13:25:15 -0800 (PST)
+From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+Subject: [PATCH 2/2] pwm: correct pwm->state.enabled handling to allow fops control
+Date: Tue, 26 Nov 2024 18:24:14 -0300
+Message-Id: <20241126212414.15165-1-rafael.v.volkmer@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sun, 24 Nov 2024 11:54:44 -0600
-David Lechner <dlechner@baylibre.com> wrote:
+Ensure pwm->state.enabled is consistently updated during enable and
+disable operations in ehrpwm_pwm_apply() to resolve this issue.
 
-> On 11/24/24 10:50 AM, Jonathan Cameron wrote:
-> > On Fri, 15 Nov 2024 14:18:45 -0600
-> > David Lechner <dlechner@baylibre.com> wrote:
-> >   
-> >> Most configuration of SPI offloads is handled opaquely using the offload
-> >> pointer that is passed to the various offload functions. However, there
-> >> are some offload features that need to be controlled on a per transfer
-> >> basis.
-> >>
-> >> This patch adds a flag field to struct spi_transfer to allow specifying
-> >> such features. The first feature to be added is the ability to stream
-> >> data to/from a hardware sink/source rather than using a tx or rx buffer.
-> >> Additional flags can be added in the future as needed.
-> >>
-> >> A flags field is also added to the offload struct for providers to
-> >> indicate which flags are supported. This allows for generic checking of
-> >> offload capabilities during __spi_validate() so that each offload
-> >> provider doesn't have to implement their own validation.
-> >>
-> >> As a first users of this streaming capability, getter functions are
-> >> added to get a DMA channel that is directly connected to the offload.
-> >> Peripheral drivers will use this to get a DMA channel and configure it
-> >> to suit their needs.
-> >>
-> >> Signed-off-by: David Lechner <dlechner@baylibre.com>  
-> > Some docs that need updating.  Otherwise I wonder if we should delay
-> > the _tx variants until there is a driver using them.
-> > 
-> > I'm sure you have one on the way and there is an argument that it makes
-> > sense to review rx and tx together, but still good to only add code
-> > when it's used.
-> > 
-> > Jonathan
-> >   
-> 
-> In v1 Mark commented that he expected TX along with RX. And we do
-> have a DAC driver we can probably add to the series in the next
-> revision that uses it.
-Perfect, or maybe just reference that in the description as
-'coming soon'.  I'm fine with infrastructure coming a bit before the
-user and I can always trust you to send me more drivers :)
+Previously, when attempting to interact with the ti PWM driver through
+fops, the pwm->state.enabled field was not updated correctly after
+applying enable or disable. This led to a state mismatch where the
+driver's state detection logic prevented disabling the PWM through
+fops once it had been activated.
 
-Jonathan
+Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
+---
+ drivers/pwm/pwm-tiehrpwm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index 0125e73b98df..9f939d535440 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -420,6 +420,7 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (!state->enabled) {
+ 		if (enabled)
+ 			ehrpwm_pwm_disable(chip, pwm);
++			pwm->state.enabled = false;
+ 		return 0;
+ 	}
+ 
+@@ -429,6 +430,7 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	if (!enabled)
+ 		err = ehrpwm_pwm_enable(chip, pwm);
++		pwm->state.enabled = true;
+ 
+ 	return err;
+ }
+-- 
+2.25.1
 
 
