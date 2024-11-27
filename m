@@ -1,124 +1,195 @@
-Return-Path: <linux-pwm+bounces-4150-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4151-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D64429DA43A
-	for <lists+linux-pwm@lfdr.de>; Wed, 27 Nov 2024 09:56:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D7EE9DAF3C
+	for <lists+linux-pwm@lfdr.de>; Wed, 27 Nov 2024 23:27:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 848D6165664
-	for <lists+linux-pwm@lfdr.de>; Wed, 27 Nov 2024 08:56:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A9DB165FFD
+	for <lists+linux-pwm@lfdr.de>; Wed, 27 Nov 2024 22:27:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11908189F20;
-	Wed, 27 Nov 2024 08:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 225F4193081;
+	Wed, 27 Nov 2024 22:27:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ubrbky6g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YyGJW5bf"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC427154BEA;
-	Wed, 27 Nov 2024 08:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF87145B38;
+	Wed, 27 Nov 2024 22:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732697781; cv=none; b=fkpZxvu4Fwiq8pNlj0zS1E/iQYLjKx0Oktx6OD+EpXzrUJfkqnnCJFuqvv9iRFjB6NY2sddNwdxMgSmKczLLTov4zhAWsA4RKH64s25OYP/GXaYa36A7/OOCgWGdShGN6Eo0IhwGtrE8R5CqUH65jL7yNLOKmWLXGi3OpMRohQ0=
+	t=1732746464; cv=none; b=RCnAMlcpMta0M7Qx7+JF7HI/IMpkbPVvmEmDbB8eZmDSTOZAfrCs/oATdI6sqbQqA56k+W0glQOrEOToXNMwTNvbIlPFFMrRj6Elt4b2XCOkw0O77kQWi0LvwQIVPiV+DRBUyEAukxd4ZSuuDIsA1JlTL/Az5CE8hlBI1NkkH3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732697781; c=relaxed/simple;
-	bh=emvo7WHupGcVSUysy3yVUx2hYcnGAx5mb2uwEYdRjYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Axvh/DcbQ9JmZFzgvqZOUkDbh9E7HFwE5C7jVWDHbCuVBJr918H5I+hsHbSt0hxKHbxQkt+y04BbIaWqs8RMLil8eFvd/b3VnfwZ+ohw/W+n6o1Nse02lZk2kaBzPM/T9PqSTsehAumeMcHGqKRQmMKGA/OuAKPlVKrXISLVu+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ubrbky6g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1A9C4CECC;
-	Wed, 27 Nov 2024 08:56:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732697780;
-	bh=emvo7WHupGcVSUysy3yVUx2hYcnGAx5mb2uwEYdRjYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ubrbky6glta/kawO3cY5nmNLWBdme+QgX9cdUE0RGim6c609OmrTtITJ2jlly9dpO
-	 r9Ay9BynD0LHh+590bj/fSTZMYRIt43aIQqTKXU9CtS2G0XoORU4coznARRcryBmc+
-	 FCCrvepAwRulYd0FCh8mS6zq/2grAQH/nX8/+D+ulqFSK1W3Pv3Ww3gNnYQRX4VCaX
-	 8w5Gw6v4CmTt0QQvAxeWhX1LdJtKhLSYqWnEErdnlbBr+bSmw0yL8KHVqVYdtrPVkr
-	 /iszTzHIVAxKoj3PGBrUoCAPg7GFyBpPmPliauCl8P6yXXsiLJTfQY2VzFxF3UDXci
-	 zOkCV95KqW1gQ==
-Date: Wed, 27 Nov 2024 09:56:18 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pwm: correct pwm->state.enabled handling to allow
- fops control
-Message-ID: <pujikyjijvcn3mmlayqmdkh5zyjqdrfmmz3jafxyhdhuo5ekam@ntttaqiw7iow>
-References: <20241126212414.15165-1-rafael.v.volkmer@gmail.com>
+	s=arc-20240116; t=1732746464; c=relaxed/simple;
+	bh=Td3sgkZ6+Ck5uFrMirL1lKd6UafJ+7h2HnViN+l7fG4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jlufAevLWmm+g507Pb7kyj/GUsVBm1bISvlW7IbC1urQjsq4bragerzD+Jwbi5sZrpeLItITH+2f/e2vi6eJyKXgDfAQROCX78qdIIQMMljebooLtfOqISaXpZc6MJgyens3speW4qikODWI8rlXmzGK42iKZsqp+EDSnRniL/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YyGJW5bf; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-212008b0d6eso1302895ad.3;
+        Wed, 27 Nov 2024 14:27:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732746462; x=1733351262; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5o1XnOWhQLAiIgeIp3RNKNLcKOvXKtzxAz+AeJhZsw4=;
+        b=YyGJW5bf7+nL3qMsXw04e3jnpbK0JEhT9THq54fov6RIHc9WRVvRwhMxkC1RlmuYWU
+         +YPc5P4hf4fp25zFr/Ct1v5FgrdBkzmAPYcW5XDjkzrlE5QF83aZySea5yQ+phnislpD
+         qSjoIJGgXQiw+P/suQ961M1Tx6vtyWsYGIEUisKQytZ2SBebx1OGytpqb2YzYPjeevEJ
+         FWEtpb4exjZk7coCNtt1ru/5JLtuX0upJEkOoOJaOaKy/zrpyRaEdosOtfoyhVEtAbyJ
+         CUwzFUzAMgk5apGvz6ftJ8P5+W4iP+mWprZqBDPn5KhA+RdM6Ezblpd7Ma8JoiBfVBay
+         fWUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732746462; x=1733351262;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5o1XnOWhQLAiIgeIp3RNKNLcKOvXKtzxAz+AeJhZsw4=;
+        b=k0FGiPNbYNl15Eva74BaJuiHE1mgwK1HyQstaApeyYXRHNUzwEbzvpCE1zYGvHBkOL
+         3CYRjQOxfNom06uN2uF7txNs2esB9qDTRkMX4OcalLKsCAtQa85TFUgY/xMc2WrYGW7g
+         bTWHiZ73oWaxINQ82cOa1Xoo17yAYkC5isxsoTRz4UAssguJn8DTc/uTtzcNlnGz8O52
+         LWIL9+q2gWTrsLWDijoGMA9W+a+hEawggDXFgHpcLrKSXUjDFRW52LCwas+553ShRUxP
+         wBpN1CjbLnxYWlnRjZv29zKxTlYB7OEjwanofg+TsYzFGzTs7LjK3DjmOXhUNtWaWe8a
+         X7Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzB9LCOFTT96laAq+aVFI51UIl2V0D2pnEEcBDthGC5+ndgRSrgOSExWyyo2U0i+FHLNSsm771P5Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVCfT4hSly3dDU5h5fhZsch1dfbrulfZF6T5w0nkAkSqxMwgyL
+	+Off+EekClYBP6bg0f0X8PuYQpBybLG0gOUTs5wd/wqNECCZlNXN
+X-Gm-Gg: ASbGnctCNhML3pURtEY0GRa9QVLdu9UYm8sW05D5I/KYx2THMLPMF5wWjoSsMLbus+l
+	pda3ppfAPOQJfhEIeNxJYc1onNHAqlItOSkW2ssyABXJ+gXX29B42x0YbRawY1+npXcQVnJGRSc
+	TG0DlABfufe0Xz5a5D4Z45PsIw/nrnZx+654D83CPa3eaoPbZ37R66Wirt+7JmYIT8TPBbe0SEk
+	dpOKrcNVl/EH9e0T7Rr4XtHDR2YUIgqavpUR4ussOiMB38xBlaNuaLmGEU1fbTQT20yk58=
+X-Google-Smtp-Source: AGHT+IFQgwHVWmEB7zGNoSSfoQOr6X/PLEdqwOLSCrvCFGIxDsfLQNTb/0zVJQb8NsUkUAtHMy5KTg==
+X-Received: by 2002:a17:902:ecce:b0:20b:51b0:4b22 with SMTP id d9443c01a7336-21501e6c3e6mr52968415ad.47.1732746461795;
+        Wed, 27 Nov 2024 14:27:41 -0800 (PST)
+Received: from localhost.localdomain ([177.10.10.137])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7254176119asm77763b3a.21.2024.11.27.14.27.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2024 14:27:41 -0800 (PST)
+From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+To: ukleinek@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	rafael.v.volkmer@gmail.com
+Subject: [PATCH v2] pwm: improve state handling in ehrpwm driver
+Date: Wed, 27 Nov 2024 19:26:49 -0300
+Message-Id: <20241127222649.6394-1-rafael.v.volkmer@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <pujikyjijvcn3mmlayqmdkh5zyjqdrfmmz3jafxyhdhuo5ekam@ntttaqiw7iow>
+References: <pujikyjijvcn3mmlayqmdkh5zyjqdrfmmz3jafxyhdhuo5ekam@ntttaqiw7iow>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2uhmb6pgn3e7vfqx"
-Content-Disposition: inline
-In-Reply-To: <20241126212414.15165-1-rafael.v.volkmer@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Introduce ehrpwm_is_enabled() to verify the module's enable/disable state
+by checking the AQCSFRC and AQCTLA registers, instead of relying solely
+on pwm->state.enabled. This ensures a more accurate representation of
+the ePWM state in the kernel.
 
---2uhmb6pgn3e7vfqx
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 2/2] pwm: correct pwm->state.enabled handling to allow
- fops control
-MIME-Version: 1.0
+Previously, when performing fops operations directly in kernel space
+after retrieving the platform device (pdev)—bypassing the sysfs interface—
+pwm->state.enabled could incorrectly signal transitions between active
+and inactive states, leading to inconsistent behavior.
 
-Hello,
+Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
+---
+Hello Uwe,
 
-On Tue, Nov 26, 2024 at 06:24:14PM -0300, Rafael V. Volkmer wrote:
-> Ensure pwm->state.enabled is consistently updated during enable and
-> disable operations in ehrpwm_pwm_apply() to resolve this issue.
->=20
-> Previously, when attempting to interact with the ti PWM driver through
-> fops, the pwm->state.enabled field was not updated correctly after
-> applying enable or disable. This led to a state mismatch where the
-> driver's state detection logic prevented disabling the PWM through
-> fops once it had been activated.
->=20
-> Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
-> ---
->  drivers/pwm/pwm-tiehrpwm.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-> index 0125e73b98df..9f939d535440 100644
-> --- a/drivers/pwm/pwm-tiehrpwm.c
-> +++ b/drivers/pwm/pwm-tiehrpwm.c
-> @@ -420,6 +420,7 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
->  	if (!state->enabled) {
->  		if (enabled)
->  			ehrpwm_pwm_disable(chip, pwm);
-> +			pwm->state.enabled =3D false;
+Thank you very much for the feedback.
 
-This is a layer violation (pwm->state is under control of core.c only)
-and uses irritating indention.
+I understand your concern about the kernel layer structure, so I took 
+a new approach that also fixes my problem, but this time without directly 
+manipulating `pwm->state`, but rather through a double check of the registers
+within `apply`.
 
-Please rethink!
+I hope you can see the implementation and tell me, again, what you think.
 
 Best regards
-Uwe
 
---2uhmb6pgn3e7vfqx
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v2:
+- Implemented `ehrpwm_is_enabled()` to check hardware registers instead of relying on `pwm->state.enabled`.
+- Removed direct manipulation of `pwm->state` in `ehrpwm_pwm_apply()`.
+- Addressed your feedback regarding kernel layer structure.
 
------BEGIN PGP SIGNATURE-----
+ drivers/pwm/pwm-tiehrpwm.c | 34 +++++++++++++++++++++++++++-------
+ 1 file changed, 27 insertions(+), 7 deletions(-)
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdG3q8ACgkQj4D7WH0S
-/k4dJAf/Rxe0Zo6dFRQbjp8INlPjFE6pXsoaYftak9EQ/bjyu5IKOlOXfRr1+Ye3
-xVSF63MH+FTqI+/EE4D48nGB5T22LsxO05blBVKt+Ru+7Lq8IJEDMjy3oCQ7a23q
-9NB10VehpyJIJtoMswL3YWoSBhACmkHDuJ4yaIRPRUjFRSnWiKdgZuM4Qpp2xIGe
-uRMcWBWDkxy8n/eMKuxFtXcq44Exa9OlT7EIqcQfJ8cuFkylD16PfvKKCDiq5qfK
-S5Awk1JCSzQr8EEIYcBcXVVMKtov5Yxn0hv2kf4LCIYVDFvDkr0jmXZKEyAPkSE/
-DesoyybXHE8A8isX41rM/QJ4zsfPvQ==
-=zjqn
------END PGP SIGNATURE-----
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index 9f939d535440..fdcda0ffc9db 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -387,6 +387,25 @@ static void ehrpwm_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	pm_runtime_put_sync(pwmchip_parent(chip));
+ }
+ 
++static bool ehrpwm_is_enabled(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++	bool ret;
++	u16 aqcsfrc_reg;
++	u16 aqctla_reg;
++	u8 csfa_bits;
++	
++	aqcsfrc_reg = readw(pc->mmio_base + AQCSFRC);
++	csfa_bits = (u8)(aqcsfrc_reg & AQCSFRC_CSFA_MASK);
++
++	aqctla_reg= readw(pc->mmio_base + AQCTLA);
++
++	ret = (csfa_bits != 0u) ? false :
++			(aqctla_reg == 0u) ? false : true;
++
++	return ret;
++}
++
+ static void ehrpwm_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
+@@ -404,7 +423,9 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			    const struct pwm_state *state)
+ {
+ 	int err;
+-	bool enabled = pwm->state.enabled;
++	bool enabled;
++
++	enabled = (ehrpwm_is_enabled(chip) | pwm->state.enabled);
+ 
+ 	if (state->polarity != pwm->state.polarity) {
+ 		if (enabled) {
+@@ -417,10 +438,8 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			return err;
+ 	}
+ 
+-	if (!state->enabled) {
+-		if (enabled)
+-			ehrpwm_pwm_disable(chip, pwm);
++	if ((state->enabled != enabled) && (state->enabled == false)) {
++		ehrpwm_pwm_disable(chip, pwm);
+ 		return 0;
+ 	}
+ 
+@@ -428,9 +447,10 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (err)
+ 		return err;
+ 
+-	if (!enabled)
++	if ((state->enabled != enabled) && (state->enabled == true)) {
+ 		err = ehrpwm_pwm_enable(chip, pwm);
++		return err;
++	}
+ 
+ 	return err;
+ }
+-- 
+2.25.1
 
---2uhmb6pgn3e7vfqx--
 
