@@ -1,208 +1,382 @@
-Return-Path: <linux-pwm+bounces-4156-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4157-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 239B49DC116
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Nov 2024 10:10:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DFB69DC1A7
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Nov 2024 10:50:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2547C163E68
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Nov 2024 09:10:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E0A0D161C5E
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Nov 2024 09:50:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A08E175D35;
-	Fri, 29 Nov 2024 09:10:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91577156C72;
+	Fri, 29 Nov 2024 09:50:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="oMyv2Uzl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxbMOPdy"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010054.outbound.protection.outlook.com [52.101.229.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A47C1598EE;
-	Fri, 29 Nov 2024 09:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732871409; cv=fail; b=ryyU3lYzddbJTB5mLtw6Xs7HdnMLAKyD1knJJ7+96yS9JlMi2fmW0IgMTgB29xff1V0hVYlnKDarsbU/SHRnam2aVNlLP6hur/uRKj0lUMbs6deGVzXSqAkvA806MrR/J/dEmrNJql9Z/mPNo7aYX87wT8F9Vrmxy91Lm0BghOo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732871409; c=relaxed/simple;
-	bh=I3PzPIaN713WwNKBfCzHNtP1T3XJUcmSJ/S5EhpjYTA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Or9Lt2+iew8XgQaA8Re2UlUh4zx2SPhlBhOdvInyEfS5Qtx24WpzNH/OxW+djNUfFfzetWEGV4rwtucX4AvkwSX1YJGhKG6ETx863C6dFK5B1gupyKTDt0/M/Wp3g0hSNpYbgYGJk8qCBtV+zpjWZSBuK5/86bXv6+ai1D/PSek=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=oMyv2Uzl; arc=fail smtp.client-ip=52.101.229.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=THjW3nyAOoOL1g2YMBPKa0OK0XhetaQWIcGU3ysR42jH2gF23wd9zE7HhC35UHq2ug2xHoS1iDYzsPx+gNZflzRz3y1vyeIWJdXAXsFbthwg9xAKGVsD5aCEUzdD320ZhiGS9mhrO0OO4w2NQAhNWdUPLkvyKVWKydd5+8EgMc+GXP5bRWZYbmp7FhOZh982+e0M1vKs9iUxcRdE5d77PL7i0GsDdh3nSHHbaDePas0/POfLnhHBVrKVpX5YzQpvzLxADdfXeSUr1sbOZEuJF+xMWSqH5YJPFuHi+mDQdg2HjpZXth1aMHdYXGlQ4CtAVW/W22L3XQ02Y8OyltO4Xw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wt6Ma4Dh0E1Jw1GOkxtW6COllW6mzyAT39JTFyI5hGs=;
- b=DDql/LB6ucu1m1dkm/NJHcZI5K2mPq4nnZqDZqMx8l4o2P+dgynzg4KuyMGwj2nIK4N+txEtFTU9NXFVaHaQCrzytuniQXErLZvOjm495Z66tVDEEtjZtOwhIgA2ztu4+eT0Vyiz3vZHfAgxrdvkMFJ7ha9IlKMbdAcc7PMRBn7oCor0qnIridUuiPhHroi4P0P6BdXKjvh1Fkqxyqk3zzvfnt/BwpLbHQ8zjQTdR0Z08cR5tWiAEj/h95AwO93QQuMSNtLryrUDnmhQZPjN7qazLNZl4YtJMtyPNmYRH0ECzquo91p7Ax0aV6F9h7bgdWI6LcxEWSAnQM9GXTRkCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wt6Ma4Dh0E1Jw1GOkxtW6COllW6mzyAT39JTFyI5hGs=;
- b=oMyv2UzlxVqMnWU0q8GIMphkS6zkp/swDyKiUd/Xzotz4wtfI7Ih27Sk1AURKLb6tadiDz14uSdqhpYlhQb2uCkdANPkNe45aLO1y8FvFpFba39QWx/Xf38qghSKBAvZVvW14Z1Jn7j12fRJp7JaoDPDGSsSyS3kdzUiiBnufV4=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by TYRPR01MB12286.jpnprd01.prod.outlook.com (2603:1096:405:102::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.15; Fri, 29 Nov
- 2024 09:10:02 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1%5]) with mapi id 15.20.8207.010; Fri, 29 Nov 2024
- 09:10:02 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven
-	<geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>,
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, biju.das.au
-	<biju.das.au@gmail.com>
-Subject: RE: [PATCH v22 1/4] dt-bindings: pwm: Add RZ/G2L GPT binding
-Thread-Topic: [PATCH v22 1/4] dt-bindings: pwm: Add RZ/G2L GPT binding
-Thread-Index: AQHbIV3Lpg5iNtSVhUWmW/xtiT9B0bLONOWAgAAD4QA=
-Date: Fri, 29 Nov 2024 09:10:02 +0000
-Message-ID:
- <TY3PR01MB113469F250419F13DCBB9A95D862A2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662891547D5;
+	Fri, 29 Nov 2024 09:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732873813; cv=none; b=OhOAfkaRhpXFXr4SUM4xjnrolDtBNzvOc0OzAYMyH+swkWPKoG6H9YvjfEtKUdxBGdzRuxARQwNB7pdBNleijFKnh5zwjbCkWQ7Cz4IRLwWdR2ZpxVkznUShoK56AnblAz556/EWzhzKeA6udrjVz7Ub12nyKkQ0276qYors9Jo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732873813; c=relaxed/simple;
+	bh=omHCaGD6Hu7iGJTI/ixjXVxkc/J+q6Nt9F2eRXmVQvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OsmUzkpd3ZSsYIlibjThd35sybWzjK5MN6dLIB+Bh6gMLwd37IsPWliP5lDEUUK7Xsd0AtzBI8y/n/wIY8pQAfmJ04dbNUHZORN7mxGW+vpzRi6QuH3xacw/x++4ZAtMdSuJBoPY9rZgqRywDfEFSD5kyf/A+puyvAwZe/OECQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxbMOPdy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C432C4CECF;
+	Fri, 29 Nov 2024 09:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732873812;
+	bh=omHCaGD6Hu7iGJTI/ixjXVxkc/J+q6Nt9F2eRXmVQvM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AxbMOPdynzB/ydG3jEu7rTNPDgBV7DhdEJ/Qt63RmoWnOzExZ3xgEB7i/ajqLBOyJ
+	 sYnkog+WZF1noVpj5d9h3QT2y5czHf8OYvgzzgQZYJ7ui1ucDzSnIJKKPvzQ5CThnM
+	 QU1VhjDdSdx0kiOWlPC8G/OchU1bqSc54nrLS2Wva/PCaoLl+5MG4y+x33lEJVBVeN
+	 f7Rsi/Ih43+BGpsg6B4I+wBIZK6ZUnxxh/zLCd5GbtmwY2vU7wzWuP/4GlyqyfxAqX
+	 6g11afAVVaX9yf/qLaQ5C3xAlLXoS9WoPbJVe/U3gxFmqPILE0QN/Q8X0Zg9pA9v+w
+	 r6Jfa1YdGQXqw==
+Date: Fri, 29 Nov 2024 10:50:10 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Biju Das <biju.das.au@gmail.com>
+Subject: Re: [PATCH v22 3/4] pwm: Add support for RZ/G2L GPT
+Message-ID: <slgs56imb3u6fv35bo2hl4moa77nnhrtcygi4womtuzs2mcipt@ylcvacvhsgcl>
 References: <20241018130049.138775-1-biju.das.jz@bp.renesas.com>
- <20241018130049.138775-2-biju.das.jz@bp.renesas.com>
- <7r7euw7h5fln3y5hy3zkrm4n4fafh5ww3ydxnwcpcjhbpb5vza@fleninlwsaqb>
-In-Reply-To: <7r7euw7h5fln3y5hy3zkrm4n4fafh5ww3ydxnwcpcjhbpb5vza@fleninlwsaqb>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TYRPR01MB12286:EE_
-x-ms-office365-filtering-correlation-id: e3501473-def9-427f-eeb1-08dd10559b6a
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|7416014|366016|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?acTPj6rQjRErf7d8lqXZZ21ZT+uyb692H6RI1UREYPv+aPB73LbFrsfwBH?=
- =?iso-8859-1?Q?HF5xnIWTZ4AK56AhBbEZ+61LmY7TLM4ncaqp8ogquLTRbGZx5L4fiEleJz?=
- =?iso-8859-1?Q?tDXko+xttFoGlL4dALKOSx8Ot1GB3SGd6JHUd/FkeuBYK7d1pDFfGS4IVU?=
- =?iso-8859-1?Q?n6fkq8xwr4a+Z2h3dd1DYXc+Dgn0fhAseq5MA8tD9vLrIXuE/YvC0jZrCV?=
- =?iso-8859-1?Q?u614e8yKiyJu8wYbXfF0+rhlkIa0gD9+mxiKQCO9qW7ZwsEne2peMCkpEs?=
- =?iso-8859-1?Q?Js0VxRFWTqSY+zfXV7nhKUyAnSKaTRoF/wOistKmdhnzWz96iKoAsNLhYu?=
- =?iso-8859-1?Q?QpRundrbdCcJOkMXDCPcR6dKXei/uB5OnwLtjDCnyDjh1bPEw7zJPo/pCt?=
- =?iso-8859-1?Q?/O2Qe/EmMzZL3k0ZxnQCpDdnxmvqkzFwOF3yXwB/lyXETXO2LwDrSfSRa+?=
- =?iso-8859-1?Q?99+EfyiLAFkHgwUVPIsgs6tsKihbdGqq3YJ7y4SKqxTL6G8QCncI1r7bDt?=
- =?iso-8859-1?Q?DZ4BwQzZ/3vl7d+UyK0IlnnJCa2hIZ7NGcZy0My0C1eC3KgoaaEq/Ilmle?=
- =?iso-8859-1?Q?cI+OAlyuM2umykKKB3WBavSmlQNiMhK8whwWNqnxw4DoAFRdEChONyucP/?=
- =?iso-8859-1?Q?UJMPLqgTTzW01nTBafxzv/iIn88jfxGXeooZMJ5B6a11AtIwAhPjLd56kT?=
- =?iso-8859-1?Q?JoDHQhXyolS03K4tccphQN7ZAibcOzXbHKWW3g6kJkyam1kCnZrEcB2eKP?=
- =?iso-8859-1?Q?KB5lIXLZhnv0PGHUs33gU+iJJSHnBc0016GI0IDALA3RjEqvVAympJ62On?=
- =?iso-8859-1?Q?O576CUtGrdIwGdfPHPNd7oKIEbOuC2fAqbvw7NtLmm8VPVJFp+eaBvkWEA?=
- =?iso-8859-1?Q?YN2rhQf+OB7vUzIp4IbF8bjEbyFHLHErCR8EKKLDktPWgpj+eZ9ssljo2i?=
- =?iso-8859-1?Q?QQ54wZQ/BnrzfGGR1iXVfJ7Mt5mH2HstbszylAIl7VsgwReeWF0e+EE39D?=
- =?iso-8859-1?Q?9Z9wlygrEH7caTFXndLIQl6GXXu+rim41uSPTIK7xgxunrcQkh+DSQpvng?=
- =?iso-8859-1?Q?F3snfL7NhnUlZlGzB8LaZlUhTjjB2ZPvfOh/TiiWZZnUZRgkQd6U70Az9E?=
- =?iso-8859-1?Q?xNdp325UXxfBj7utQK8Ebzh6d2rUqy/t7pkAo3Faao6MVmYn8KSa3wvJXv?=
- =?iso-8859-1?Q?aq4Nf17TWyEjRA6qV35edJ0W0Dx4W+j0gS7mHu70b2dZV8UNSSbYoQsl/I?=
- =?iso-8859-1?Q?s338J4RSx+ozsuXE7jIf6e8tcpLs6J+o2D6Dco3BdJm+ERRAdbRy1NsIwY?=
- =?iso-8859-1?Q?59b1H6NTNW94rD58ZXU98vBd5Hc+xYovNqviFEzb+vzG9Cqbyin2GTr90q?=
- =?iso-8859-1?Q?unP0S7shqWmB0/siepfml5JeLxtnPmg8qNgBMdFQa+F1KEHvbUE8n3v+FC?=
- =?iso-8859-1?Q?Hqb4TCTfpd/0tk2UC60lgFzInOgrYdQydUS95w=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?D95BHq+h1fljY7s9IQDd33pw5rNPOOLqC44/B7F6p4bGhwxnPKYS6hvhOR?=
- =?iso-8859-1?Q?ZoT3QbX4UK7Y1l/zAX2IyzWkM6IJ3PsBBbnwjlzZDj6rVgrMzUY1wSD+V/?=
- =?iso-8859-1?Q?TNscpVDNNYhwm3TL14XPCd+vE4oj/kqS/aDDT+8SetQBByPlLAepCUtfcR?=
- =?iso-8859-1?Q?KssqZjKO1DHZcSxlJc5QmagnJxpKg41y+t4b9FEa4m9CVFou0qkeuqUJMY?=
- =?iso-8859-1?Q?iaQoVmiL8CUlJaVeGBNq9Re5dy179v/h0KNPbEzxEfnMtNj+aHBr9R8+yO?=
- =?iso-8859-1?Q?LcELqav/yL1G7esAVXgXghV46Q/wLWI8mOARGd6WpvIznaolsTCAo5l872?=
- =?iso-8859-1?Q?7mnUMZ9ZrUTPMlOAnOoWS/lyJ8F7dHMk4ytZZpLMs9UUEXtQ/gzDbYc3x9?=
- =?iso-8859-1?Q?xdOUbhVYMmwXk3odvQ7SVwYFQPUO+SIQwqAiCxPisw6vxcnIX09Bmgw7zi?=
- =?iso-8859-1?Q?HGQCggU6JV3hiYmGSghqmk+H9X8aovg4QU03b3MtTxiBk6e3YqBn3HJCY5?=
- =?iso-8859-1?Q?9JYl7yMQIi+y7Z6Hjo34HgB8P0Dh3kaUVSgQjCaVIjgeyo+oc1X1pC+5dL?=
- =?iso-8859-1?Q?FKJwQA4A0wbQkndmZSVJGTZFcqgffNO9jPKNpJ12InMqUoO9J2YQOcESBq?=
- =?iso-8859-1?Q?XVUMKzPqR7y2u+nLcz1oPvPr40gDI2sl+lA12SYD02OF2yw3jdPQyFrbbG?=
- =?iso-8859-1?Q?1hR6S1lkrSeYTqnIX/na4CJltVaSYdPpsVsbXNvdZeCX6wDSXTffsKc1eK?=
- =?iso-8859-1?Q?kH9RqI6HzRtGh63yamwa/FFD1rO7uYeV6ekMUvkr4lh5JIYLK8/r7H6LOj?=
- =?iso-8859-1?Q?HX/xckRl3iCW9CX9/mBPqRFdpzZSb6+QD9b5UnneLV8W8EGmc78hx+CWS2?=
- =?iso-8859-1?Q?rNeRWp1QESQGtt39xGBQIXtQxc258pokCxRuco60M5SGZyTsIuSZmvO84e?=
- =?iso-8859-1?Q?T/P0bYexZztfUgnOJdm3PEq1IYmU23oaRX3yu1W7McuXiB/m+ofvRphFTL?=
- =?iso-8859-1?Q?wNUoZEDtIQqTBM8XY/Hnaa9yiVD1kAg3tzsHe4cREgqEeaUfyxWocrE7na?=
- =?iso-8859-1?Q?gJrf+nEoTB3wB/XH0InuWX4fxy95JFNOLgCgJBAi8iH1eOeytJPm1euJ6A?=
- =?iso-8859-1?Q?eJzyb55sOkqahOHidjDpmRsHsTJGJLRxn8SNcgqobg3Ri85untyKKNE4nn?=
- =?iso-8859-1?Q?cRuhpT5t1lPgrCqT9kOnbZKhag5mROoKofcmf+BZgRMZ1zlOx+mJwObUYU?=
- =?iso-8859-1?Q?oucrkmmZE3eJnoHx9i/tAjliRoFZdzFLLb1rFI4Zvvy3VdjJZcwaY328uM?=
- =?iso-8859-1?Q?YR91APa6YuOnLTJTRESVyHAc0PazsWY5I552D2XjdXqMMPMObdnlRASYLj?=
- =?iso-8859-1?Q?4yIYWqcMA+Errf6cRqKJsQ64keQmYPE3Eyx4sAoQ+j9b8XK2acBWhSGDRs?=
- =?iso-8859-1?Q?dmGxdD+0TM1A/kKiVmp2Slu3LIqp0TN3oHpSZFtPQ6ik6gTQlIjVRfxa40?=
- =?iso-8859-1?Q?64sy3lMRO6atVBdBxJoRllTPz6ZENbVqqnRxZ9RpeZNrb2pDbfzYmwYR3l?=
- =?iso-8859-1?Q?lKYQ1gqtmfquRiBAUdKpDagROGxyR9GAgkG7DSixMKjS+AeQRr2lYbVGSJ?=
- =?iso-8859-1?Q?6XBNkJAwGqIcXmUfRQnCWjjfpHeyb7pp2K+QCxcHq9Tj9bIyONgUCyJg?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+ <20241018130049.138775-4-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3501473-def9-427f-eeb1-08dd10559b6a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Nov 2024 09:10:02.1779
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CZCQ+WWLtJ7tynMW4dJQaGAchpoffD3KO2i89rPf6SgV6zHOwIgmMyEJk9J6sZFs+MAWtDJazewiCrYHh7IjsSHJbqwpV8JFaz73KayoAwQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYRPR01MB12286
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="q7d7t5p3kze5urnx"
+Content-Disposition: inline
+In-Reply-To: <20241018130049.138775-4-biju.das.jz@bp.renesas.com>
 
-Hi Uwe,
 
-Thanks for the feedback.
+--q7d7t5p3kze5urnx
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v22 3/4] pwm: Add support for RZ/G2L GPT
+MIME-Version: 1.0
 
-> -----Original Message-----
-> From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
-> Sent: 29 November 2024 08:51
-> To: Biju Das <biju.das.jz@bp.renesas.com>
-> Subject: Re: [PATCH v22 1/4] dt-bindings: pwm: Add RZ/G2L GPT binding
->=20
-> On Fri, Oct 18, 2024 at 02:00:42PM +0100, Biju Das wrote:
-> >  .../bindings/pwm/renesas,rzg2l-gpt.yaml       | 378 ++++++++++++++++++
-> >  1 file changed, 378 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/renesas,rzg2l=
--gpt.yaml
->=20
-> Wow, quite a big binding. An astonishing amount of irqs.
->=20
-> > [...]
-> > +  '#pwm-cells':
-> > +    const: 2
->=20
-> Please make this 3. Otherwise no objections.
+Hello,
 
-The hardware supports both polarities. Currently I have added support for n=
-ormal polarity.
-Subsequent patch will enable inverse polarity.=20
+as I already wrote in earlier revisions I find this driver complicated
+and wonder if this is because the hardware is complicated or because the
+driver adds unneeded complexity. So here come a few suggestions that
+might seem to be trivial but IMHO simplify understanding the driver.
 
-Am I missing something here? Please let me know.
+On Fri, Oct 18, 2024 at 02:00:44PM +0100, Biju Das wrote:
+> [...]
+> diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
+> new file mode 100644
+> index 000000000000..28ed39eecb93
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-rzg2l-gpt.c
+> @@ -0,0 +1,473 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Renesas RZ/G2L General PWM Timer (GPT) driver
+> + *
+> + * Copyright (C) 2024 Renesas Electronics Corporation
+> + *
+> + * Hardware manual for this IP can be found here
+> + * https://www.renesas.com/eu/en/document/mah/rzg2l-group-rzg2lc-group-users-manual-hardware-0?language=en
+> + *
+> + * Limitations:
+> + * - Counter must be stopped before modifying Mode and Prescaler.
+> + * - When PWM is disabled, the output is driven to inactive.
+> + * - While the hardware supports both polarities, the driver (for now)
+> + *   only handles normal polarity.
+> + * - General PWM Timer (GPT) has 8 HW channels for PWM operations and
+> + *   each HW channel have 2 IOs.
+> + * - Each IO is modelled as an independent PWM channel.
+> + * - When both channels are used, disabling the channel on one stops the
+> + *   other.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/limits.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/reset.h>
+> +#include <linux/time.h>
+> +#include <linux/units.h>
+> +
+> +#define RZG2L_GET_CH(a)		((a) / 2)
 
-Or
+The parameter is a hwpwm value. If you use "hwpwm" instead of "a" this
+is directly obvious.
 
-since it is optional, there is no harm in making it to 3 to take care
-of any future additions in pwm.h flags.
+> +#define RZG2L_GET_CH_OFFS(i)	(0x100 * (i))
 
-Cheers,
-Biju
+The parameter is a channel number, rename it to ch.
+
+> +#define RZG2L_GTCR(ch)		(0x2c + RZG2L_GET_CH_OFFS(ch))
+> +#define RZG2L_GTUDDTYC(ch)	(0x30 + RZG2L_GET_CH_OFFS(ch))
+> +#define RZG2L_GTIOR(ch)		(0x34 + RZG2L_GET_CH_OFFS(ch))
+> +#define RZG2L_GTBER(ch)		(0x40 + RZG2L_GET_CH_OFFS(ch))
+> +#define RZG2L_GTCNT(ch)		(0x48 + RZG2L_GET_CH_OFFS(ch))
+> +#define RZG2L_GTCCR(ch, sub_ch)	(0x4c + RZG2L_GET_CH_OFFS(ch) + 4 * (sub_ch))
+> +#define RZG2L_GTPR(ch)		(0x64 + RZG2L_GET_CH_OFFS(ch))
+> +
+> +#define RZG2L_GTCR_CST		BIT(0)
+> +#define RZG2L_GTCR_MD		GENMASK(18, 16)
+> +#define RZG2L_GTCR_TPCS		GENMASK(26, 24)
+> +
+> +#define RZG2L_GTCR_MD_SAW_WAVE_PWM_MODE	FIELD_PREP(RZG2L_GTCR_MD, 0)
+> +
+> +#define RZG2L_GTUDDTYC_UP	BIT(0)
+> +#define RZG2L_GTUDDTYC_UDF	BIT(1)
+> +#define RZG2L_GTUDDTYC_UP_COUNTING	(RZG2L_GTUDDTYC_UP | RZG2L_GTUDDTYC_UDF)
+> +
+> +#define RZG2L_GTIOR_GTIOA	GENMASK(4, 0)
+> +#define RZG2L_GTIOR_GTIOB	GENMASK(20, 16)
+> +#define RZG2L_GTIOR_GTIOx(a)	((a) ? RZG2L_GTIOR_GTIOB : RZG2L_GTIOR_GTIOA)
+
+sub_ch instead of a.
+
+> +#define RZG2L_GTIOR_OAE		BIT(8)
+> +#define RZG2L_GTIOR_OBE		BIT(24)
+> +#define RZG2L_GTIOR_OxE(a)	((a) ? RZG2L_GTIOR_OBE : RZG2L_GTIOR_OAE)
+> +
+> +#define RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE	0x1b
+> +#define RZG2L_GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH \
+> +	(RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE | RZG2L_GTIOR_OAE)
+> +#define RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH \
+> +	(FIELD_PREP(RZG2L_GTIOR_GTIOB, RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE) | RZG2L_GTIOR_OBE)
+> +
+> +#define RZG2L_GTIOR_GTIOx_OUT_HI_END_TOGGLE_CMP_MATCH(a) \
+> +	((a) ? RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH : \
+> +	 RZG2L_GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH)
+> +
+> +#define RZG2L_MAX_HW_CHANNELS	8
+> +#define RZG2L_CHANNELS_PER_IO	2
+> +#define RZG2L_MAX_PWM_CHANNELS	(RZG2L_MAX_HW_CHANNELS * RZG2L_CHANNELS_PER_IO)
+> +#define RZG2L_MAX_SCALE_FACTOR	1024
+> +#define RZG2L_MAX_TICKS ((u64)U32_MAX * RZG2L_MAX_SCALE_FACTOR)
+> +
+> +struct rzg2l_gpt_chip {
+> +	void __iomem *mmio;
+> +	struct mutex lock; /* lock to protect shared channel resources */
+
+Hmm, I nearly claimed you'd not need that lock since 1cc2e1faafb3 ("pwm:
+Add more locking") but that doesn't cover ->request(). Probably that
+should change. (i.e. no action item for you.)
+
+> +	unsigned long rate_khz;
+> +	u32 period_ticks[RZG2L_MAX_HW_CHANNELS];
+> +	u32 user_count[RZG2L_MAX_HW_CHANNELS];
+
+This tracks the count of requests per channel. So maybe call it
+channel_request_count?
+
+> +	u32 enable_count[RZG2L_MAX_HW_CHANNELS];
+
+channel_enable_count?
+
+> +};
+> [...]
+> +/* Caller holds the lock while calling rzg2l_gpt_disable() */
+> +static void rzg2l_gpt_disable(struct rzg2l_gpt_chip *rzg2l_gpt,
+> +			      struct pwm_device *pwm)
+> +{
+> +	u8 sub_ch = rzg2l_gpt_subchannel(pwm->hwpwm);
+> +	u8 ch = RZG2L_GET_CH(pwm->hwpwm);
+> +
+> +	/* Stop count, Output low on GTIOCx pin when counting stops */
+> +	rzg2l_gpt->enable_count[ch]--;
+> +
+> +	if (!rzg2l_gpt->enable_count[ch])
+> +		rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch), RZG2L_GTCR_CST, 0);
+> +
+> +	/* Disable pin output */
+> +	rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTIOR(ch), RZG2L_GTIOR_OxE(sub_ch), 0);
+> +}
+> +
+> +static u64 calculate_period_or_duty(struct rzg2l_gpt_chip *rzg2l_gpt, u32 val, u8 prescale)
+
+Missing name prefix
+
+> +{
+> [...]
+> +/* Caller holds the lock while calling rzg2l_gpt_config() */
+> +static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct rzg2l_gpt_chip *rzg2l_gpt = to_rzg2l_gpt_chip(chip);
+> +	u8 sub_ch = rzg2l_gpt_subchannel(pwm->hwpwm);
+> +	u8 ch = RZG2L_GET_CH(pwm->hwpwm);
+> +	u64 period_ticks, duty_ticks;
+> +	unsigned long pv, dc;
+> +	u8 prescale;
+> +
+> +	/* Limit period/duty cycle to max value supported by the HW */
+> +	period_ticks = mul_u64_u64_div_u64(state->period, rzg2l_gpt->rate_khz, USEC_PER_SEC);
+> +	if (period_ticks > RZG2L_MAX_TICKS)
+> +		period_ticks = RZG2L_MAX_TICKS;
+> +	/*
+> +	 * GPT counter is shared by multiple channels, so prescale and period
+
+shared by the two IOs of a single channel?
+
+> +	 * can NOT be modified when there are multiple channels in use with
+
+multiple IOs?
+
+> +	 * different settings.
+> +	 */
+> +	if (rzg2l_gpt->user_count[ch] > 1 && period_ticks < rzg2l_gpt->period_ticks[ch])
+> +		return -EBUSY;
+> +
+> +	prescale = rzg2l_gpt_calculate_prescale(rzg2l_gpt, period_ticks);
+> +	pv = rzg2l_gpt_calculate_pv_or_dc(period_ticks, prescale);
+> +
+> +	duty_ticks = mul_u64_u64_div_u64(state->duty_cycle, rzg2l_gpt->rate_khz, USEC_PER_SEC);
+> +	if (duty_ticks > RZG2L_MAX_TICKS)
+> +		duty_ticks = RZG2L_MAX_TICKS;
+> +	dc = rzg2l_gpt_calculate_pv_or_dc(duty_ticks, prescale);
+> +
+> +	/*
+> +	 * GPT counter is shared by multiple channels, we cache the period ticks
+> +	 * from the first enabled channel and use the same value for both
+> +	 * channels.
+> +	 */
+> +	rzg2l_gpt->period_ticks[ch] = period_ticks;
+
+Unless I'm missing something you might overwrite the value of the other
+IO in the same channel here.
+
+> +	/*
+> +	 * Counter must be stopped before modifying mode, prescaler, timer
+> +	 * counter and buffer enable registers. These registers are shared
+> +	 * between both channels. So allow updating these registers only for the
+
+both IOs?
+
+> +	 * first enabled channel.
+> +	 */
+> +	if (rzg2l_gpt->enable_count[ch] <= 1) {
+> +		rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch), RZG2L_GTCR_CST, 0);
+> +
+> +		/* GPT set operating mode (saw-wave up-counting) */
+> +		rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch), RZG2L_GTCR_MD,
+> +				 RZG2L_GTCR_MD_SAW_WAVE_PWM_MODE);
+> +
+> +		/* Set count direction */
+> +		rzg2l_gpt_write(rzg2l_gpt, RZG2L_GTUDDTYC(ch), RZG2L_GTUDDTYC_UP_COUNTING);
+> +
+> +		/* Select count clock */
+> +		rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch), RZG2L_GTCR_TPCS,
+> +				 FIELD_PREP(RZG2L_GTCR_TPCS, prescale));
+> +
+> +		/* Set period */
+> +		rzg2l_gpt_write(rzg2l_gpt, RZG2L_GTPR(ch), pv);
+> +	}
+> +
+> +	/* Set duty cycle */
+> +	rzg2l_gpt_write(rzg2l_gpt, RZG2L_GTCCR(ch, sub_ch), dc);
+> +
+> +	if (rzg2l_gpt->enable_count[ch] <= 1) {
+> +		/* Set initial value for counter */
+> +		rzg2l_gpt_write(rzg2l_gpt, RZG2L_GTCNT(ch), 0);
+> +
+> +		/* Set no buffer operation */
+> +		rzg2l_gpt_write(rzg2l_gpt, RZG2L_GTBER(ch), 0);
+> +
+> +		/* Restart the counter after updating the registers */
+> +		rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch),
+> +				 RZG2L_GTCR_CST, RZG2L_GTCR_CST);
+> +	}
+
+So you're not writing duty_cycle to hardware. Then you should check that
+the actual value in use is <= the intended value as you did above with
+period.
+
+> +static int rzg2l_gpt_probe(struct platform_device *pdev)
+> +{
+> [...]
+> +	rstc = devm_reset_control_get_exclusive(dev, NULL);
+> +	if (IS_ERR(rstc))
+> +		return dev_err_probe(dev, PTR_ERR(rstc), "get reset failed\n");
+> +
+> +	clk = devm_clk_get_enabled(dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return dev_err_probe(dev, PTR_ERR(clk), "cannot get clock\n");
+> +
+> +	ret = devm_clk_rate_exclusive_get(dev, clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	rate = clk_get_rate(clk);
+> +	if (!rate)
+> +		return dev_err_probe(dev, -EINVAL, "gpt clk rate is 0");
+> +
+> +	/*
+> +	 * Refuse clk rates > 1 GHz to prevent overflow later for computing
+> +	 * period and duty cycle.
+> +	 */
+> +	if (rate > NSEC_PER_SEC)
+> +		return dev_err_probe(dev, -EINVAL, "gpt clk rate is > 1GHz");
+> +
+> +	/*
+> +	 * Rate is in MHz and is always integer for peripheral clk
+> +	 * 2^32 * 2^10 (prescalar) * 10^6 (rate_khz) < 2^64
+> +	 * So make sure rate is multiple of 1000.
+> +	 */
+> +	rzg2l_gpt->rate_khz = rate / KILO;
+> +	if (rzg2l_gpt->rate_khz * KILO != rate)
+> +		return dev_err_probe(dev, -EINVAL, "rate is not multiple of 1000");
+> +
+> +	ret = reset_control_deassert(rstc);
+
+Please move reset deassertion directly after
+devm_reset_control_get_exclusive() that it can later be trivially
+converted to devm_reset_control_get_exclusive_deasserted().
+If you base the next revision on top of v6.13-rc1 you can also make use
+of it already.
+
+> +	chip->ops = &rzg2l_gpt_ops;
+> +	ret = devm_pwmchip_add(dev, chip);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
+
+nitpick: Can you make the error messages all start with a capital letter
+please?
+
+Best regards
+Uwe
+
+
+--q7d7t5p3kze5urnx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdJjk8ACgkQj4D7WH0S
+/k6oJQf+IiYwnvuuw1Zv8Er+qECgczQPVmCTaL+dGZTTJjN6irCVyZ/fDw1rrO3o
+attpTBGUgYkcES0vy+mLb3gr9i72vK8a5ffiHvS0AKs9XC4wXRoa5MLstaLGkmwf
+OvdCs3yugYDg45IywDwJnGbCAJba9uGEPqus4loRllFmbwvTxirrRWNvCGq8B4bA
+uRepL9tQbz9G3pC9aqYfTicYW9oFBKPzkjIgbuJFIEZMvjnkDe/A9NHbjub9T1cb
+h+dnx61gsWxP/DTmLTcLce/rxIn4H/cNMjJYDm6ESC4/UjpH5lRO9mAufORas7hc
+0dgiQTNZsKpohwIrbnj8exO5giZqVg==
+=0M3X
+-----END PGP SIGNATURE-----
+
+--q7d7t5p3kze5urnx--
 
