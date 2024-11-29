@@ -1,220 +1,124 @@
-Return-Path: <linux-pwm+bounces-4158-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4159-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59ADF9DC2E6
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Nov 2024 12:32:19 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71B3A164243
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 Nov 2024 11:32:03 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5741C1991B4;
-	Fri, 29 Nov 2024 11:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dL+KHex5"
-X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 057579DE98D
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Nov 2024 16:34:31 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1F9199E9D;
-	Fri, 29 Nov 2024 11:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BADDF282F24
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Nov 2024 15:34:29 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01B461474A2;
+	Fri, 29 Nov 2024 15:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="CsXBu3NV"
+X-Original-To: linux-pwm@vger.kernel.org
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F90E82D66;
+	Fri, 29 Nov 2024 15:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732879916; cv=none; b=AWxTvq+dsab8YE1BoYVZTRJBfjRUImDbJzzBRmOq6Mc99IxwNJ8SCiegKgX9Ll8mvGfuiWdu+v65owZ5Ya8A4yhYoPmGQ0o1gLWiqkjF1FmZh4k+gYDmHWfCLzUrjt4ks36tHSM/hLNtuOq3P93s4Dcp+5+nxYCrLI9fCCJensY=
+	t=1732894465; cv=none; b=UxZCmwNuHOxmE7fxQ+eooCgDNsuZHZJALQIojPmC84y3VuAAKNZQqZxtSre58g+saHiG8IMe6oyTU4eFkL+VUmwfmzMzLAG3O3OP957OoL+z4cedctJ7cOxlkknBCPmmhCx3/8x1A7aatJwOKKNqntZ6bFmleuL+nzlYc+romzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732879916; c=relaxed/simple;
-	bh=2Q69KjoKyUKQhijTfAc96BDtSwh1D4Q/pd/gQDhr2nQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N9PiIOLLUidLaWOPeXvcHL/31Si5QptGCi1RkygTD6Vc3bgs1bwwqTTAn+jHXzCmZ/T7Qg+6QQpqlSBRlOT3lhkPSaP9dD7ZZZI+hLwmgd1iw2VJ603UhFRzweMYHshjs4S9lNYMzen6i8H46OW6XS0w/iqNaZIdC4lcv93UZJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dL+KHex5; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732879914; x=1764415914;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2Q69KjoKyUKQhijTfAc96BDtSwh1D4Q/pd/gQDhr2nQ=;
-  b=dL+KHex51isiEzXzZx3nNmtmfYvSdEVwo81Xv8mQ/CRiumWRGoDAc+TP
-   GMxLkT9QhOHb9b4SuI0vmQi0sPgB3/hxHYoUjufbc4OkpJxL/ejBtLNNr
-   3xKmt+RWLeD0Ovr9Boizu9b7/TT4eZYJw/RNtSuIyQ227VIc9u3T/uimp
-   BaRd+X9rgOXshHC4ZFIV+ryu1u2WyuzFJ+Q18mtfkTSmAoAlmzmMJ3wJc
-   olemOfWn+VNc+tDlCAcThjrIPzbQ99WaaQ0rpzsPPNwp7KqodJewXQfU1
-   Eqt9aCEr+piKz1GVqQodOhwYt4cVk6brh+yYU2B4yLHMqPDc4ZIbNYK9N
-   A==;
-X-CSE-ConnectionGUID: kyIHl2hNTsezfIpdzAdctQ==
-X-CSE-MsgGUID: LN7tLvKESTOfoIlqgHI3uA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11270"; a="33267840"
-X-IronPort-AV: E=Sophos;i="6.12,195,1728975600"; 
-   d="scan'208";a="33267840"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2024 03:31:54 -0800
-X-CSE-ConnectionGUID: zLmB6YFMR4aEoVgPstZQ6w==
-X-CSE-MsgGUID: HqFn2Wi+TniN1CJupXSvgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="97508882"
-Received: from lkp-server01.sh.intel.com (HELO 5e2646291792) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 29 Nov 2024 03:31:52 -0800
-Received: from kbuild by 5e2646291792 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tGzDx-0000HP-2F;
-	Fri, 29 Nov 2024 11:31:49 +0000
-Date: Fri, 29 Nov 2024 19:30:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>, ukleinek@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, rafael.v.volkmer@gmail.com
-Subject: Re: [PATCH] pwm: tiehrpwm: ensures that state.enabled is
- synchronized during .probe()
-Message-ID: <202411291940.6T4OMy3k-lkp@intel.com>
-References: <20241129034334.27203-1-rafael.v.volkmer@gmail.com>
+	s=arc-20240116; t=1732894465; c=relaxed/simple;
+	bh=IJGxZkgoWTY7Wfw1SGyX0l4otEJwnl2iVbh8953L6i0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iDRbU/QSh/GczJyZDs7x8Q0/D4OoJXufbkKlL47Q75XpjFWGn/E4P6q9+7dYCC1nMasM3yn753Ao7c/5yr8k2oC0bwAbdgfC4CHvoo8SHeIAb1e/qN0iTmaIYM6xpsqXj60gk2sElEmywxf6Hi+1NPNZ2QdTyMpj6fE9ecwIoyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=CsXBu3NV; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4ATF3Xcm014486;
+	Fri, 29 Nov 2024 10:34:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=C4CHmsEhR6j8aMddpIlJLOsME+z
+	8+iYUlRZC9fGZI8M=; b=CsXBu3NVjr50hX/gjoaDQXU12ZdOQ6+s89wvqM2xVtd
+	7l9o71IC9cpG7Js13+/a54ocY8QMDnBQKW7JwR3HsmEXOgAvKAEbwgtnZMtW+Nua
+	lO42Pskn3qVGLX89Cg/Bf396IpifcJsR13AVnZzbkWS/0wCWing6Sv7rTtN4mXzG
+	AfPlSd5pHGELlSMB47D9Pb5oaZQ4UztDxKZpmfy4o6OSbyXl1KExmzgujjdshoxn
+	JUMD0zVVoVsmtBmHeyRjAqN21LfGVsLS1C7GRnQYFBlG+h76IU9ZOFs0NE4tsV5I
+	rZd/qJRAnRoK8cW7JkTflQFMPl/mfgc25nw4NiRRgHA==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 436716tmn2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Nov 2024 10:34:21 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 4ATFYKY4008695
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 29 Nov 2024 10:34:20 -0500
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Fri, 29 Nov 2024 10:34:20 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Fri, 29 Nov 2024 10:34:19 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 29 Nov 2024 10:34:19 -0500
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.161])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 4ATFY6dj001089;
+	Fri, 29 Nov 2024 10:34:12 -0500
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH v3 0/2] Add ADF4371 Reference Doubler and Reference Divider
+Date: Fri, 29 Nov 2024 17:33:51 +0200
+Message-ID: <20241129153356.63547-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241129034334.27203-1-rafael.v.volkmer@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: Y9hiWc3R9eLnpeqdsTtZnybOsVLY16vT
+X-Proofpoint-ORIG-GUID: Y9hiWc3R9eLnpeqdsTtZnybOsVLY16vT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=915 adultscore=0 phishscore=0 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 spamscore=0 impostorscore=0 suspectscore=0 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2411290127
 
-Hi Rafael,
+This patch series add support for for reference doubler block and reference
+divide by 2 clock block within the ADF4371.
 
-kernel test robot noticed the following build errors:
+The doubler is useful for increasing the PFD comparison frequency which will
+result in a noise performance of the system.
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.12 next-20241128]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The reference divide by 2 divides the reference signal by 2,
+resulting in a 50% duty cycle PFD frequency.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Rafael-V-Volkmer/pwm-tiehrpwm-ensures-that-state-enabled-is-synchronized-during-probe/20241129-114649
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20241129034334.27203-1-rafael.v.volkmer%40gmail.com
-patch subject: [PATCH] pwm: tiehrpwm: ensures that state.enabled is synchronized during .probe()
-config: alpha-randconfig-r053-20241129 (https://download.01.org/0day-ci/archive/20241129/202411291940.6T4OMy3k-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241129/202411291940.6T4OMy3k-lkp@intel.com/reproduce)
+Both features were requested from customers that purchased hundreds of adf4371
+parts to use in their project. They need a way to adjust these blocks either
+from userspace or devicetree.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202411291940.6T4OMy3k-lkp@intel.com/
+The patch series aims to both satisfy the customer needs and be compliant with
+the current kernel. The devicetree approach was chosen since these kind of
+features are already present in the mainline kernel for parts such as adf4350.
 
-All errors (new ones prefixed by >>):
+Antoniu Miclaus (2):
+  dt-bindings: iio: adf4371: add rdiv2 and doubler
+  iio: frequency: adf4371: add ref doubler and div2
 
-   drivers/pwm/pwm-tiehrpwm.c: In function 'ehrpwm_pwm_probe':
->> drivers/pwm/pwm-tiehrpwm.c:642:32: error: 'struct ehrpwm_pwm_chip' has no member named 'chip'
-     642 |         ehrpwm_get_hw_state(&pc->chip, &pc->chip.pwms[0], &state);
-         |                                ^~
-   drivers/pwm/pwm-tiehrpwm.c:642:43: error: 'struct ehrpwm_pwm_chip' has no member named 'chip'
-     642 |         ehrpwm_get_hw_state(&pc->chip, &pc->chip.pwms[0], &state);
-         |                                           ^~
->> drivers/pwm/pwm-tiehrpwm.c:642:60: error: 'state' undeclared (first use in this function); did you mean 'statx'?
-     642 |         ehrpwm_get_hw_state(&pc->chip, &pc->chip.pwms[0], &state);
-         |                                                            ^~~~~
-         |                                                            statx
-   drivers/pwm/pwm-tiehrpwm.c:642:60: note: each undeclared identifier is reported only once for each function it appears in
-   drivers/pwm/pwm-tiehrpwm.c:664:27: error: 'struct ehrpwm_pwm_chip' has no member named 'chip'
-     664 |         pwmchip_remove(&pc->chip);
-         |                           ^~
-
-
-vim +642 drivers/pwm/pwm-tiehrpwm.c
-
-   584	
-   585	static int ehrpwm_pwm_probe(struct platform_device *pdev)
-   586	{
-   587		struct device_node *np = pdev->dev.of_node;
-   588		struct ehrpwm_pwm_chip *pc;
-   589		struct pwm_chip *chip;
-   590		bool tbclk_enabled;
-   591		struct clk *clk;
-   592		int ret;
-   593	
-   594		chip = devm_pwmchip_alloc(&pdev->dev, NUM_PWM_CHANNEL, sizeof(*pc));
-   595		if (IS_ERR(chip))
-   596			return PTR_ERR(chip);
-   597		pc = to_ehrpwm_pwm_chip(chip);
-   598	
-   599		clk = devm_clk_get(&pdev->dev, "fck");
-   600		if (IS_ERR(clk)) {
-   601			if (of_device_is_compatible(np, "ti,am33xx-ecap")) {
-   602				dev_warn(&pdev->dev, "Binding is obsolete.\n");
-   603				clk = devm_clk_get(pdev->dev.parent, "fck");
-   604			}
-   605		}
-   606	
-   607		if (IS_ERR(clk))
-   608			return dev_err_probe(&pdev->dev, PTR_ERR(clk), "Failed to get fck\n");
-   609	
-   610		pc->clk_rate = clk_get_rate(clk);
-   611		if (!pc->clk_rate) {
-   612			dev_err(&pdev->dev, "failed to get clock rate\n");
-   613			return -EINVAL;
-   614		}
-   615	
-   616		chip->ops = &ehrpwm_pwm_ops;
-   617	
-   618		pc->mmio_base = devm_platform_ioremap_resource(pdev, 0);
-   619		if (IS_ERR(pc->mmio_base))
-   620			return PTR_ERR(pc->mmio_base);
-   621	
-   622		/* Acquire tbclk for Time Base EHRPWM submodule */
-   623		pc->tbclk = devm_clk_get(&pdev->dev, "tbclk");
-   624		if (IS_ERR(pc->tbclk))
-   625			return dev_err_probe(&pdev->dev, PTR_ERR(pc->tbclk), "Failed to get tbclk\n");
-   626	
-   627		ret = clk_prepare(pc->tbclk);
-   628		if (ret < 0) {
-   629			dev_err(&pdev->dev, "clk_prepare() failed: %d\n", ret);
-   630			return ret;
-   631		}
-   632	
-   633		ret = pwmchip_add(chip);
-   634		if (ret < 0) {
-   635			dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-   636			goto err_clk_unprepare;
-   637		}
-   638	
-   639		platform_set_drvdata(pdev, chip);
-   640		pm_runtime_enable(&pdev->dev);
-   641	
- > 642		ehrpwm_get_hw_state(&pc->chip, &pc->chip.pwms[0], &state);
-   643	
-   644		if(state.enabled == true) {
-   645			ret = clk_prepare_enable(pc->tbclk);
-   646			if (ret) {	
-   647				dev_err(&pdev->dev, "clk_prepare_enable() failed: %d\n", ret);
-   648				goto err_pwmchip_remove;
-   649			}
-   650			
-   651			tbclk_enabled = true;
-   652	
-   653			ret = pm_runtime_get_sync(&pdev->dev);
-   654			if(ret < 0) {
-   655				dev_err(&pdev->dev, "pm_runtime_get_sync() failed: %d\n", ret);
-   656				clk_disable_unprepare(pc->tbclk);
-   657				goto err_pwmchip_remove;
-   658			}
-   659		}
-   660	
-   661		return 0;
-   662	
-   663	err_pwmchip_remove:
-   664		pwmchip_remove(&pc->chip);
-   665	err_clk_unprepare:
-   666		if(tbclk_enabled)
-   667			clk_unprepare(pc->tbclk);
-   668	
-   669		return ret;
-   670	}
-   671	
+ .../bindings/iio/frequency/adf4371.yaml       | 11 ++++++
+ drivers/iio/frequency/adf4371.c               | 34 +++++++++++++++++--
+ 2 files changed, 43 insertions(+), 2 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.47.1
+
 
