@@ -1,204 +1,316 @@
-Return-Path: <linux-pwm+bounces-4153-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4154-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DE679DB68D
-	for <lists+linux-pwm@lfdr.de>; Thu, 28 Nov 2024 12:35:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB7DA9DBEEC
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Nov 2024 04:44:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96C5AB211FC
-	for <lists+linux-pwm@lfdr.de>; Thu, 28 Nov 2024 11:35:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9AFBA281FC7
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Nov 2024 03:44:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DBE41990A8;
-	Thu, 28 Nov 2024 11:35:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 776CF37160;
+	Fri, 29 Nov 2024 03:44:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="wVfK9c3O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aaykm36p"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F051197552
-	for <linux-pwm@vger.kernel.org>; Thu, 28 Nov 2024 11:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4FD33C5;
+	Fri, 29 Nov 2024 03:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732793735; cv=none; b=MNf7uJv8ydN4dIP2zuYXWIm5mI5b/AxfML6gpZOTCby06nzPbDsXbeOuSRMcI0WMKowxrYk+BlS0Or5SlJWaS/AAqyr8qKOWxbS+MJ53WSiwuIFoCXcXr5F0lYHwn3pS/70gNel2zxxAMSK/PR1CxRvORmMGrUrDOsFL+ep/I8M=
+	t=1732851879; cv=none; b=LaS7Ux+4FiMxWjOTWS165lGYMON1EyyDLoVYxchX6CjjoF8BNGzB80Fa5A3AbuYrc1Nno0sEvA71Zu+P51LIJaPkaqgru2+S9YE6DU5sMk2CbTz01Q58CIueghb65IuXJnWcnm7K6DUkCD4Cii/uDhC1Q8Tkj08wC7fC1vI98eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732793735; c=relaxed/simple;
-	bh=2Pj1fUblSP8PaDl+D0795TxgYS0kzCMPuBdo/FeKJng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a14Lq3wha6YLKStlpTM8XTncZn1GQbjyxnXgXBUEne7IkLnjvc1EjxZ6g9oI5YhOF2GodU04LB9ejIaZwzw3jjFCFkWpidlbW+WhH66Xoo+NVBwclO3Jiao4Cu50DeaSaglR8zlEX1+aEpY8sAJGR47zuHfbidbs8AZ12VOlr/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=wVfK9c3O; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-434a742481aso6301905e9.3
-        for <linux-pwm@vger.kernel.org>; Thu, 28 Nov 2024 03:35:31 -0800 (PST)
+	s=arc-20240116; t=1732851879; c=relaxed/simple;
+	bh=p/BtqpG+IVaKvX4ukjImzgdAynVxORij5dB89nsDRos=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TH2iQiX2GcSCc58VbZL/EQDLgX+PyR5zANMiQTeo1hM5PNw+4l37WlJqH+YCKklDHk17xsr6rWYrxCWgC+2g40n46KzSogd3zF8C8m3sJQ7v3AuqBXHPnQbTneDYqHQJXsQ0vruIbELnrbIy3Lh0D/N4/7Xmka0gb1q15ghvfKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aaykm36p; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-720cb6ac25aso1141883b3a.3;
+        Thu, 28 Nov 2024 19:44:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1732793730; x=1733398530; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kCOIQgnUZkO/jqB9Ex+fr3L9VJum5V2GDNk+XPGMgrg=;
-        b=wVfK9c3OwCC/Lec5h51tYXpq+yOjSQyXqpS/qm9TbOJEOR1AchhRAJUfI12/Mi+Lyt
-         7HdToVIUGfSqpSQvjJf0HI/EKi6pD/w8JYLfxGTBnmnToBwDv7UmBnPF8BqRRyybkE4n
-         QOvAsBMU9aTTRr6esWVVe+K7JKW0SgjOgHpyPuDP9OuydWFJw+tmmHEo9FWvKczpEcVy
-         zYhFVr+Ym9l4412a364kUbHVjuqHwpJHIUSKDLl0NUXWRBxAqRTfPbUtDz5ODfGY3Hlw
-         5yzXJGUkEcrWILuqdrsMBNp8e/CBLwC02cYHiJrlKA0Vcs53SyXRyZVDNBXHyvBr/seE
-         74vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732793730; x=1733398530;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1732851877; x=1733456677; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kCOIQgnUZkO/jqB9Ex+fr3L9VJum5V2GDNk+XPGMgrg=;
-        b=j1/R9xrNXlG2a9Ke3zRGV1xaVJPJkl16M8YHM/RNm7CAb/Gp5bQuGw+GHUpNmO6cQT
-         GNcU7VFiSZj5BO1Kyx0LQRi4mOBs94ce/jE2PB7EGtopDVw3wWvHADp+H+UI5wdXq3Es
-         tA+ZOqmR2NqmGtK5G1qt3I/YCQA78/68zqTFGDFPKOZWn0WQ9SqYLPCZg44Ss8KL8na7
-         K9/XDvbfcP4C2quR3KeIiTnG2/zq+SOTkGN+MjS1dUJH7tlBLC3YMAxtG1AqJ4HUyj9S
-         YLRptjWKPoNJXiVYhZY8G0h28hsihm3MZylSyLHpaR71lRXx+Mg3SMN4dmgT3XuFnXBo
-         EzGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWOHeuqiZG+3XcwUkf1eC+9bom+h8ygJ0Gi0rFuWvenRwAzU8Hj2B8Yq9GsUGHJ4OdMSXYn+b6rW+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLeLeYriaDZG6C9rG+6riAfo+YysfaVjf/brS+WM9+9NB+2s/X
-	q6dB1y1BvF1p/MEDFua+Cn4qPJ36t/mQDylWmfgh6r7i+eysKCfi2j5gNAoeH/o=
-X-Gm-Gg: ASbGncuSBEsZY0wzzEwV5JwsyeUwwZLFFcAHRC0YZcdwfQq4EbpQD1PJkKe9dzNG01Q
-	yvFf9YsoHcvgCOMBLFwDoDu+slcI6fwd2OR3RFfAgs5ZxfbHMrmWitlPNs33Occ7muKSRzC9va2
-	q3tfnbfyDg1Xq/gQ1/TBFWKtspC4RfXK1M9GSK1gDCuWlo4eG7AqubdWKVmKtg9yEGmdNv3Xo+s
-	WU58w8OURyMGpLiiJ2LxJSS8X/h5RqBo1V6XWtYlL4JmKdwQVIcQjU=
-X-Google-Smtp-Source: AGHT+IG/QGzHxGJz0klm9sFCiR3LVKh0jcQoJ6xPyeZV35wmMo8bYcQe6yA7O0WiSbRm+oZHxykDMw==
-X-Received: by 2002:a05:600c:1c81:b0:434:9936:c828 with SMTP id 5b1f17b1804b1-434a9dc3db3mr63654675e9.12.1732793730439;
-        Thu, 28 Nov 2024 03:35:30 -0800 (PST)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434aa7e5b9csm50520155e9.43.2024.11.28.03.35.29
+        bh=qw5HuiFeElq/E/1SFYYivWjOveoig4PxqHy3M5+9mTg=;
+        b=aaykm36p/+dGzg/p7k4VwxzoWLJWvYYWVFG4LDVgNjWsb7COef60dMLzm8LuqA09OY
+         B/fPlqG3JNSjHEG1wppzdmfbOyaPAFXfrXCuyxEdmgDHCwHssiZ/PnqHP2JLD768ICkm
+         H5J0Z3p91R7CyQDCS5VWVMVmYmds1GA9yG8iFovbG+p5gxPhmCL7+L2eBufZX3PV6aQa
+         SxXrmHCj+hTlmFuT+t1bod62Zt6JDyTfDQ5SuwIATZtq7lVRfkg3gMEWCn/i4AHPt44t
+         xZrevPEuiz6pC/HOicaceS1ADRInp7BAmzaF3Gl9XkfLUWcm9xr19ErOgEC91/xO6AEo
+         AFmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732851877; x=1733456677;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qw5HuiFeElq/E/1SFYYivWjOveoig4PxqHy3M5+9mTg=;
+        b=W9kptFjiA9ts6ROvpqg1em/3uccpk6FyeL6NYcyW+5OB27UlgvzlJgs/dYs3E5wtnG
+         Nwn6kbMlZ9pM7WwIOuUml57kQGDH71N5ET8GN5N6dXSw4Oc0UW5PgR73Bq2fSVzp9Iyz
+         icois2UipZrHVaRGRH6t7a7xmszgrp5LZTpAFeqyyJ6lyM5Go/bLgzEeMrj6w+qudZwS
+         oQTffuEya32ZuM+EqPmKX/AEX7//emRwinnS6sGSXkARuOOjwoFFWyBal8hf5npluelR
+         Ygq8sVQ2bj5wEXcvrdvOQWwh5mlC231sRc/YqefHm0+yIXJlYvP8hh8k0n4Yvh/Za+MH
+         wU/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUl93OkX6UO3cWJOdo8fEi7KX4D45GSi1H5nTyV2Tnwtwb63ag8MiY+jwX5dIL7r6G2jezm5TvZ8sU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9FfeZ/9PS4B70BaSSzHsuG47D6RFiN/KPBYPtbe1c8qYrHga5
+	ZxJf3l0H635BGH14Y3B2x64U/usqEV27HdcSdmy4sZeRIOYVgFse4fLl8HW+
+X-Gm-Gg: ASbGncu8MK+khO7oI5saXfuIwyvmn3kc/HKM26tp+DdHX49rNDP+I21P4io8CvuJFvX
+	uiAKmJD3bhEXdhghOVTDtAmLeo30ifTEu+7absQsnwKlnlfmbsPC2RmJ8+BtdlfXHO5/KB2g+rA
+	1oQDW8PX0e7MtbXarut/Dm4IUUHhRux99rlybPLjTc5JbnkCtgrO0WaQ0isZiUGNJO1WXcH8a47
+	pUzR5xxVxyi24QMs7c1Rz2FOkw7ZcYGGoB4KcJcfiXtiJes/8ke5Tve/7rl/emeKctV2/o=
+X-Google-Smtp-Source: AGHT+IGnEF07GDYyxw1iLOHTvzjFzaEmKJ3HpP28dlaG6gu7KLJJWTPS0pjZgVX4+JqsJjvhNDnWjA==
+X-Received: by 2002:a17:903:189:b0:212:618a:4637 with SMTP id d9443c01a7336-215010903cdmr118763515ad.14.1732851876773;
+        Thu, 28 Nov 2024 19:44:36 -0800 (PST)
+Received: from localhost.localdomain ([177.10.10.137])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21521966d45sm20719555ad.125.2024.11.28.19.44.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Nov 2024 03:35:29 -0800 (PST)
-Date: Thu, 28 Nov 2024 12:35:27 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>, 
-	linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	"open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
-	"moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, justin.chen@broadcom.com, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: brcm,bcm7038: Document the
- 'open-drain' property
-Message-ID: <7hdopmy4owoletyq274c2hzxtm7xuxaejakwlas477ax2tfzcu@yrbcxxup5krz>
-References: <20241012025603.1644451-1-florian.fainelli@broadcom.com>
- <20241012025603.1644451-2-florian.fainelli@broadcom.com>
- <20241015163200.GA1220909-robh@kernel.org>
- <252b6f39-3b06-43b7-b227-1c29c1c12bd5@gmail.com>
- <7aok7zs7whxfg3bhv7koxfxq6qhgv34b7kg3mh526z2cf7e23l@ffbsxqdqjis3>
- <c623075c-fd80-4312-90ba-4f8a3c3f56f9@broadcom.com>
+        Thu, 28 Nov 2024 19:44:36 -0800 (PST)
+From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+To: ukleinek@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	rafael.v.volkmer@gmail.com
+Subject: [PATCH] pwm: tiehrpwm: ensures that state.enabled is synchronized during .probe()
+Date: Fri, 29 Nov 2024 00:43:34 -0300
+Message-Id: <20241129034334.27203-1-rafael.v.volkmer@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <eobcrbxmtyxv4x5dkgxf2sssgjefqbhit3tsnzizdel2aqzynq@opsqlav5zh32>
+References: <eobcrbxmtyxv4x5dkgxf2sssgjefqbhit3tsnzizdel2aqzynq@opsqlav5zh32>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pdxu4r3m4vrnf4px"
-Content-Disposition: inline
-In-Reply-To: <c623075c-fd80-4312-90ba-4f8a3c3f56f9@broadcom.com>
+Content-Transfer-Encoding: 8bit
 
+Fixes potential desynchronization of state.enabled in the .probe() method by
+suggesting proper handling of hardware state initialization. Adds
+considerations for implementing .get_hw_state() to check the current state
+of the module by checking physical registers.
 
---pdxu4r3m4vrnf4px
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: brcm,bcm7038: Document the
- 'open-drain' property
-MIME-Version: 1.0
+Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
+---
 
-Hello Florian,
+Hi, Uwe!
 
-[adding Linus and linux-gpio to Cc:]
+Thanks again for the feedback!
 
-On Tue, Oct 29, 2024 at 09:03:57AM -0700, Florian Fainelli wrote:
-> On 10/29/24 03:44, Uwe Kleine-K=F6nig wrote:
-> > On Tue, Oct 15, 2024 at 10:07:10AM -0700, Florian Fainelli wrote:
-> > > On 10/15/24 09:32, Rob Herring wrote:
-> > > > Another thing to consider is for any PWM controller with more than
-> > > > 1 output, you might want this to be per output and therefore should=
- be
-> > > > a flag in the cells.
-> > >=20
-> > > Yes, that is a good point, this controller has two channels, so it se=
-ems
-> > > like increasing the #pwm-cells might be the way to go.
-> >=20
-> > So the idea is something like:
-> >=20
-> > diff --git a/include/dt-bindings/pwm/pwm.h b/include/dt-bindings/pwm/pw=
-m.h
-> > index ab9a077e3c7d..d18b006a7399 100644
-> > --- a/include/dt-bindings/pwm/pwm.h
-> > +++ b/include/dt-bindings/pwm/pwm.h
-> > @@ -11,5 +11,6 @@
-> >   #define _DT_BINDINGS_PWM_PWM_H
-> >   #define PWM_POLARITY_INVERTED			(1 << 0)
-> > +#define PWM_OUTPUT_OPEN_DRAIN			(1 << 1)
-> >   #endif
-> >=20
-> > and then add support for that to the core and drivers? There is some
-> > intersection with pinctrl (depending on hardware). I wonder if
-> > abstracting this somehow using the typical pinctrl properties would be a
-> > saner option??
->=20
-> But what if the pin is not managed by a pinctrl provider?
+I have taken your findings into consideration again and am working on 
+getting my application up and running. Regarding the points you mentioned 
+earlier about the driver, I made this small patch, using some hardware 
+validation functions I had in my possession, to check for occasionality.
 
-Then create one? If that's the PWM itself that is the pinctrl device it
-would look as follows:
+Best regards,
+Rafael V. Volkmer
 
-	pwm@f0408000 {
-		compatible =3D "brcm,bcm7038-pwm";
-		pinctrl-0 =3D <&pwm_pins>;
-		reg =3D <0xf0408000 0x28>;
-		#pwm-cells =3D <2>;
-		#pinctrl-cells =3D <0>;
-		clocks =3D <&upg_fixed>;
-	=09
-		pinctrl {
-			pwm_pins: pwm-pins {
-				pins =3D "A", "B";
-				drive-open-drain;
-			};
-		};
-	};
+ drivers/pwm/pwm-tiehrpwm.c | 162 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 161 insertions(+), 1 deletion(-)
 
-Maybe this is difficult if there is a pinctrl that configures the output
-as "PWM" and then there is that additional register in the PWM IP to
-make this pin open drain? One could just use
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index 0125e73b98df..693704406f25 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -91,6 +91,15 @@
+ #define AQCSFRC_CSFA_FRCHIGH	BIT(1)
+ #define AQCSFRC_CSFA_DISSWFRC	(BIT(1) | BIT(0))
+ 
++#define AQCTLA_CAU_MASK   (BIT(5) | BIT(4)) 
++#define AQCTLA_CAU_SHIFT  4U
++
++#define AQCTLA_CAD_MASK   (BIT(7) | BIT(6)) 
++#define AQCTLA_CAD_SHIFT  6U
++
++#define AQ_SET    0x1
++#define AQ_CLEAR  0x2
++
+ #define NUM_PWM_CHANNEL		2	/* EHRPWM channels */
+ 
+ struct ehrpwm_context {
+@@ -400,6 +409,134 @@ static void ehrpwm_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	pc->period_cycles[pwm->hwpwm] = 0;
+ }
+ 
++static bool ehrpwm_is_enabled(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++
++	bool ret;
++
++	u16 aqcsfrc_reg;
++	u8 csfa_bits;
++
++	u16 aqctla_reg;
++
++	if(chip == NULL) {
++		return -EINVAL;
++	}
++
++	aqcsfrc_reg = readw(pc->mmio_base + AQCSFRC);
++	csfa_bits = (u8)(aqcsfrc_reg & AQCSFRC_CSFA_MASK);
++	
++	aqctla_reg = readw(pc->mmio_base + AQCTLA);
++
++	ret = (csfa_bits != 0u)	 ? false :
++		  (aqctla_reg == 0u) ? false : true;
++
++	return ret;
++}
++
++static u64 ehrpwm_read_period(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++
++	u64 ret;
++
++	unsigned long tbclk_rate;
++	
++	u16 tbprd_reg;
++	u64 period_cycles;
++	u64 period_ns;
++
++	if(chip == NULL) {
++		return -EINVAL;
++	}
++
++	tbprd_reg = readw(pc->mmio_base + TBPRD);
++	tbclk_rate = clk_get_rate(pc->tbclk);
++
++	period_cycles = tbprd_reg + 1u;
++	
++	/* period_ns = (period_cycles * 1e9) / tblck_rate */
++	period_ns = DIV_ROUND_UP_ULL(period_cycles * NSEC_PER_SEC, tbclk_rate);
++	
++	ret = period_ns;
++
++	return ret;
++}
++
++static u64 ehrpwm_read_duty_cycle(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++
++	u64 ret;
++	
++	u16 cmpa_reg;
++	u64 duty_cycles;
++	u64 duty_ns;
++
++	unsigned long tbclk_rate;
++
++	if(chip == NULL) {
++		return -EINVAL;
++	}
++
++	cmpa_reg = readw(pc->mmio_base + CMPA);
++
++	tbclk_rate = clk_get_rate(pc->tbclk);
++
++	duty_cycles = cmpa_reg;
++
++	/* duty_ns = (duty_cycles * 1e9) / tblck_rate */
++	duty_ns = DIV_ROUND_UP_ULL(duty_cycles * NSEC_PER_SEC, tbclk_rate);
++
++	ret = duty_ns;
++
++	return ret;
++}
++
++static enum pwm_polarity ehrpwm_read_polarity(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++
++	enum pwm_polarity ret;
++
++	u16 aqctla_reg;
++	u8 cau_action;
++	u8 cad_action;
++
++	if(chip == NULL) {
++		return -EINVAL;
++	}
++
++	aqctla_reg	= readw(pc->mmio_base + AQCTLA);
++
++	cau_action = (aqctla_reg & AQCTLA_CAU_MASK) >> AQCTLA_CAU_SHIFT;
++	cad_action = (aqctla_reg & AQCTLA_CAD_MASK) >> AQCTLA_CAD_SHIFT;
++
++	ret = (cau_action == AQ_SET && cad_action == AQ_CLEAR) ? PWM_POLARITY_NORMAL :
++		  (cau_action == AQ_CLEAR && cad_action == AQ_SET) ? PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
++
++	return ret;
++}
++
++static int ehrpwm_get_hw_state(struct pwm_chip *chip, struct pwm_device *pwm, 
++								struct pwm_state *state)
++{
++	int ret;
++
++	if(chip == NULL || pwm == NULL || state == NULL){
++		return -EINVAL;
++	}
++
++	state->enabled = ehrpwm_is_enabled(chip);
++
++	state->period = ehrpwm_read_period(chip);
++    state->duty_cycle = ehrpwm_read_duty_cycle(chip);
++    state->polarity = ehrpwm_read_polarity(chip);
++
++	return ret;
++}
++
+ static int ehrpwm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			    const struct pwm_state *state)
+ {
+@@ -450,6 +587,7 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct ehrpwm_pwm_chip *pc;
+ 	struct pwm_chip *chip;
++	bool tbclk_enabled;
+ 	struct clk *clk;
+ 	int ret;
+ 
+@@ -501,10 +639,32 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, chip);
+ 	pm_runtime_enable(&pdev->dev);
+ 
++	ehrpwm_get_hw_state(&pc->chip, &pc->chip.pwms[0], &state);
++
++	if(state.enabled == true) {
++		ret = clk_prepare_enable(pc->tbclk);
++		if (ret) {	
++			dev_err(&pdev->dev, "clk_prepare_enable() failed: %d\n", ret);
++			goto err_pwmchip_remove;
++		}
++		
++		tbclk_enabled = true;
++
++		ret = pm_runtime_get_sync(&pdev->dev);
++		if(ret < 0) {
++			dev_err(&pdev->dev, "pm_runtime_get_sync() failed: %d\n", ret);
++			clk_disable_unprepare(pc->tbclk);
++			goto err_pwmchip_remove;
++		}
++	}
++
+ 	return 0;
+ 
++err_pwmchip_remove:
++	pwmchip_remove(&pc->chip);
+ err_clk_unprepare:
+-	clk_unprepare(pc->tbclk);
++	if(tbclk_enabled)
++		clk_unprepare(pc->tbclk);
+ 
+ 	return ret;
+ }
+-- 
+2.25.1
 
-	pinctrl-0 =3D <&pwm_pins>, <&system_pinctrl_pwm>;
-
-then. Not entirely sure this is overengineered, but the dt
-representation would be nice (IMHO). Thoughts?
-
-> I have started
-> going the route of implementing the PWM_OUTPUT_OPEN_DRAIN bit as an
-> additional specifier in the #pwm-cells, but I am not sure to what extent
-> this should be allowed to be changed at runtime.
-
-I would not expect that the open-drainness needs to change at runtime.
-
-Best regards
-Uwe
-
---pdxu4r3m4vrnf4px
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdIVXwACgkQj4D7WH0S
-/k6l6wgAgyzQfpcTmTaXfhmcQgO0kIruIbqxl2BdNvTxhqNU/I5oBRJJuMYj1SUe
-9pnH4y0xPYoJvxdl4eWLPeciRP7AUPs/Q1zNpNiPUl74qBx3AvtNZC/7qnpZyxCQ
-oRfEvy2HXuKjl55nzB6Luj/iKD6hMjoK2jB0w/zz61YAELUzm2j3i3HItQbFZ06W
-2DIrXEybGNkNmru7ii2Wy3Yg0EsOxZucprF1DwUHAoCNMW8hOX3uWm2y6gEugeoe
-vPE9Wfh2WspzKNDeNHqi/P02u+YBqzEmEd5gJCqHvgCFxr0DTJnpItxTJ0FP6kot
-LkRkktFKEOszoHombSsUnCUz8Gj99Q==
-=hSKz
------END PGP SIGNATURE-----
-
---pdxu4r3m4vrnf4px--
 
