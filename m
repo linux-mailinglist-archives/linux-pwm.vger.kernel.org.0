@@ -1,76 +1,76 @@
-Return-Path: <linux-pwm+bounces-4181-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4182-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD5639E00EF
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Dec 2024 12:51:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C1619E0383
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Dec 2024 14:32:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B12F162138
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Dec 2024 11:51:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 804A51610BE
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Dec 2024 13:32:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 871911FE457;
-	Mon,  2 Dec 2024 11:51:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D8282010E3;
+	Mon,  2 Dec 2024 13:32:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mBftX+RP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="brYUzhj5"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108061FDE0B;
-	Mon,  2 Dec 2024 11:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECCF1FF7A0;
+	Mon,  2 Dec 2024 13:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733140263; cv=none; b=PWWrmYBYo6tgkyE4cyYzqN7UH7MO7+PdRHnWwzbMVnUYiJgZtfeOVY2T7DMYw2SmNTCY6bH8NWfhYZXYxLyiV1VMSzdd3DQ68lkbV7aTWuKnl9DyHJW1Q1o7UBoQTpzW3pOjjgOfdCHBgQwJTHu1M/QML6TCXe+KmxzRp9GSxdA=
+	t=1733146349; cv=none; b=c6EplLAwHKtdjIvSuw74PSZjNn9LPMDfaY6Mxat+6m5SmbFdLMZRopdC/If+QCNmYN98+chWHFstwkslZQXMB8Tp8FiUqdLwpflpdMPyw15LMQZkz/Do0O1pCeVHhL0pkZqVpodhs3NWpLSwCOXE85X2OkJZ93vHIPK4M1igS8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733140263; c=relaxed/simple;
-	bh=6s+NoKimPKemUsivQ2UQfp09dpUvkW+1d2SOJ8lE8Ts=;
+	s=arc-20240116; t=1733146349; c=relaxed/simple;
+	bh=CDxQ76K29ySxjy69TWob7M9xTmGbQtEA07UobbD25nc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o1R/LAkKz+HX7kVE6SjtqAHn2fm4r9sv/9bw0URwZ+KF9qbyqvMpId/F0k0d7g76W7fgdHZl/NtnvrWJ2Xhd2FohvdrAS2ty9v0wHgN8fb9DJpJ2vH3DyQKheCLfJNdgJqcYE98iPG+1zMj+2x+TPMn3OCqhyFOkWRJsDEPROso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mBftX+RP; arc=none smtp.client-ip=192.198.163.11
+	 Content-Type:Content-Disposition:In-Reply-To; b=go47Ozf3zJ8bpaM7llVcU6fTu/EACvqwIDGcsqRjdFPAKTGJ5FCLXISCxOMiGqxLQ/cgxFKFfW7+4qOpZR4k1zN8yJz/SY/QZTEcb1DzmwP2zm5x5Vie/gr5Mb64ZUCsSX9JOkFm9qfVkGwi8xJErkXGD/irC0qpDfEKHjHCCTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=brYUzhj5; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733140261; x=1764676261;
+  t=1733146347; x=1764682347;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=6s+NoKimPKemUsivQ2UQfp09dpUvkW+1d2SOJ8lE8Ts=;
-  b=mBftX+RPASQON6ykWFjqdbeeRraYXXkOuC4Wg/cpFcX2yKddo1JDwbS4
-   ilFwVZmHvgd/O3R6H7PgPX9Z/pm3KDoyg9zfbqbn/FZoNTQAAX3gaWIDq
-   UUkzOZUb4SS1ddjNrCmUlSQIC567vafr/KGOySHReac4qZHCrIsSWTwzU
-   UTPoKzGHgZnQ1OQfzW4rcPNT4fny7hxHT2pVdqVrgEdOzktATb68G+E43
-   M+Kxav5Oaa9qCRIH/H9KySEAoQIgRXWqWmELmnyhgz3T1onhw7Jse5ofm
-   32sEVaYSKxCdTaKDBr038Iz2Y/SBVtXAbvvCcTeM2kBiTtrJgiWa6B2v3
-   Q==;
-X-CSE-ConnectionGUID: KA6uCkhtRPG07d0meB7+qg==
-X-CSE-MsgGUID: B7PmB1v0Sy+IkRe/FN5iJw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="43915758"
+  bh=CDxQ76K29ySxjy69TWob7M9xTmGbQtEA07UobbD25nc=;
+  b=brYUzhj5QGfPRW0bCNR+iRfZpDrVYvGj0/8DIU52y7YDIWc2QgdvV2jq
+   aYhneN5LZuyS9UknKFxVB5X8t5NeY82zbX+qQid12x99tdUbzD2HYZYGe
+   rPVDS509Uo8silQG948M0OWOj4pMEWvZpl6rZTi7I6tsHplgqT33pNrJy
+   IZLPGL3y9sR2SDJQMb+ty9lYK68ade7MlBVMzD3vjQMnMyZkp4Q68BCNN
+   J2odFxRSHa77Mity6wIWPET0l8wbUFfTH4rmLhcy/xSqdgokCJIE6aJVu
+   gt6ED8Kk+2Uq3TMkSFifhYqV4pioHsjRnNEQOGTh4NvYs/inGQbJudBrg
+   A==;
+X-CSE-ConnectionGUID: qUSqv1vBSdu5znv9C6iZvw==
+X-CSE-MsgGUID: VqhuWQFhTkqu1d08/dPD7w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="33463825"
 X-IronPort-AV: E=Sophos;i="6.12,202,1728975600"; 
-   d="scan'208";a="43915758"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 03:51:00 -0800
-X-CSE-ConnectionGUID: twTOEWXkQZG/Kp2jTLzKIg==
-X-CSE-MsgGUID: D07UsJe3T1OBrjeWggGlWg==
+   d="scan'208";a="33463825"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 05:32:26 -0800
+X-CSE-ConnectionGUID: KLNh7abMQDOTikbp6hpLrw==
+X-CSE-MsgGUID: x7hnWGAKTL+U3JJDutLRDg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="98117906"
+X-IronPort-AV: E=Sophos;i="6.12,202,1728975600"; 
+   d="scan'208";a="93006245"
 Received: from lkp-server02.sh.intel.com (HELO 36a1563c48ff) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 02 Dec 2024 03:50:58 -0800
+  by orviesa009.jf.intel.com with ESMTP; 02 Dec 2024 05:32:23 -0800
 Received: from kbuild by 36a1563c48ff with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1tI4x5-0002NM-2S;
-	Mon, 02 Dec 2024 11:50:55 +0000
-Date: Mon, 2 Dec 2024 19:50:10 +0800
+	id 1tI6XE-0002S1-1h;
+	Mon, 02 Dec 2024 13:32:20 +0000
+Date: Mon, 2 Dec 2024 21:32:14 +0800
 From: kernel test robot <lkp@intel.com>
 To: Ben Zong-You Xie <ben717@andestech.com>, linux-pwm@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, ukleinek@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	Ben Zong-You Xie <ben717@andestech.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, Ben Zong-You Xie <ben717@andestech.com>
 Subject: Re: [PATCH v2 2/2] pwm: atcpit100: add Andes PWM driver support
-Message-ID: <202412021900.oCRrT3PV-lkp@intel.com>
+Message-ID: <202412022109.FiMppwWS-lkp@intel.com>
 References: <20241202060147.1271264-3-ben717@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -96,34 +96,80 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Ben-Zong-You-Xie/dt-bindi
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
 patch link:    https://lore.kernel.org/r/20241202060147.1271264-3-ben717%40andestech.com
 patch subject: [PATCH v2 2/2] pwm: atcpit100: add Andes PWM driver support
-config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20241202/202412021900.oCRrT3PV-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241202/202412021900.oCRrT3PV-lkp@intel.com/reproduce)
+config: hexagon-allyesconfig (https://download.01.org/0day-ci/archive/20241202/202412022109.FiMppwWS-lkp@intel.com/config)
+compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 592c0fe55f6d9a811028b5f3507be91458ab2713)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241202/202412022109.FiMppwWS-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412021900.oCRrT3PV-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412022109.FiMppwWS-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
-   In file included from include/linux/jiffies.h:7,
-                    from include/linux/ktime.h:25,
-                    from include/linux/timer.h:6,
-                    from include/linux/workqueue.h:9,
-                    from include/linux/srcu.h:21,
-                    from include/linux/notifier.h:16,
-                    from include/linux/clk.h:14,
-                    from drivers/pwm/pwm-atcpit100.c:18:
-   drivers/pwm/pwm-atcpit100.c: In function 'atcpit100_pwm_config':
->> drivers/pwm/pwm-atcpit100.c:123:59: warning: integer overflow in expression of type 'long int' results in '94030336' [-Woverflow]
+   In file included from drivers/pwm/pwm-atcpit100.c:25:
+   In file included from include/linux/regmap.h:20:
+   In file included from include/linux/iopoll.h:14:
+   In file included from include/linux/io.h:14:
+   In file included from arch/hexagon/include/asm/io.h:328:
+   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     548 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+         |                                                   ^
+   In file included from drivers/pwm/pwm-atcpit100.c:25:
+   In file included from include/linux/regmap.h:20:
+   In file included from include/linux/iopoll.h:14:
+   In file included from include/linux/io.h:14:
+   In file included from arch/hexagon/include/asm/io.h:328:
+   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+         |                                                   ^
+   In file included from drivers/pwm/pwm-atcpit100.c:25:
+   In file included from include/linux/regmap.h:20:
+   In file included from include/linux/iopoll.h:14:
+   In file included from include/linux/io.h:14:
+   In file included from arch/hexagon/include/asm/io.h:328:
+   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     585 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+>> drivers/pwm/pwm-atcpit100.c:123:31: warning: overflow in expression; result is 94'030'336 with type 'long' [-Winteger-overflow]
+     122 |                         DIV64_U64_ROUND_UP(
+         |                         ~~~~~~~~~~~~~~~~~~~
      123 |                                 (ATCPIT100_CYCLE_MAX + 1) * NSEC_PER_SEC,
-         |                                                           ^
-   include/linux/math64.h:298:39: note: in definition of macro 'DIV64_U64_ROUND_UP'
+         |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+     124 |                                 rate[clk]) - 1;
+         |                                 ~~~~~~~~~~
+   include/linux/math64.h:298:32: note: expanded from macro 'DIV64_U64_ROUND_UP'
      298 |         ({ u64 _tmp = (d); div64_u64((ll) + _tmp - 1, _tmp); })
          |                                       ^~
+>> drivers/pwm/pwm-atcpit100.c:173:6: warning: variable 'ret' is uninitialized when used here [-Wuninitialized]
+     173 |         if (ret)
+         |             ^~~
+   drivers/pwm/pwm-atcpit100.c:159:9: note: initialize the variable 'ret' to silence this warning
+     159 |         int ret;
+         |                ^
+         |                 = 0
+   8 warnings generated.
 
 Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for MODVERSIONS
+   Depends on [n]: MODULES [=y] && !COMPILE_TEST [=y]
+   Selected by [y]:
+   - RANDSTRUCT_FULL [=y] && (CC_HAS_RANDSTRUCT [=y] || GCC_PLUGINS [=n]) && MODULES [=y]
    WARNING: unmet direct dependencies detected for GET_FREE_REGION
    Depends on [n]: SPARSEMEM [=n]
    Selected by [y]:
@@ -212,6 +258,33 @@ vim +123 drivers/pwm/pwm-atcpit100.c
    153				    reload_val);
    154	}
    155	
+   156	static int atcpit100_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+   157				       const struct pwm_state *state)
+   158	{
+   159		int ret;
+   160		unsigned int channel = pwm->hwpwm;
+   161	
+   162		/* ATCPIT100 PWM driver now only supports normal polarity. */
+   163		if (state->polarity != PWM_POLARITY_NORMAL)
+   164			return -EINVAL;
+   165	
+   166		if (!state->enabled) {
+   167			if (pwm->state.enabled)
+   168				return atcpit100_pwm_enable(chip, channel, false);
+   169	
+   170			return 0;
+   171		}
+   172	
+ > 173		if (ret)
+   174			return ret;
+   175	
+   176		ret = atcpit100_pwm_config(chip, channel, state);
+   177		if (ret)
+   178			return ret;
+   179	
+   180		return atcpit100_pwm_enable(chip, channel, true);
+   181	}
+   182	
 
 -- 
 0-DAY CI Kernel Test Service
