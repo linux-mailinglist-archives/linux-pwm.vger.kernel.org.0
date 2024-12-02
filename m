@@ -1,321 +1,219 @@
-Return-Path: <linux-pwm+bounces-4180-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4181-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 452CF9DFD89
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Dec 2024 10:47:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD5639E00EF
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Dec 2024 12:51:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0147B1627F2
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Dec 2024 09:47:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B12F162138
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Dec 2024 11:51:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E48C11FA249;
-	Mon,  2 Dec 2024 09:47:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 871911FE457;
+	Mon,  2 Dec 2024 11:51:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="Sizx5wWP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mBftX+RP"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0667F1F949;
-	Mon,  2 Dec 2024 09:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.135.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733132854; cv=fail; b=jENFTJW+hhubNMn+lHg1LIsL9CZnI7Lxesonu08PMX1icvNsG5A5XciLTAOJ2/Duc0vPmy8aXd7gZgOvDxmXUdvgQYNii4mou+mzlPbS4UC1Wvk0PlSy1NNlcRmEnS4DcvTE1aKO3tg29CUsHng50vnlJq4UHpyMRhCnuUWN5hc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733132854; c=relaxed/simple;
-	bh=/v6Nzi6s2XJE10/CgSZXcKO+Dca66B6HUFzX6/bjuhc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NRH6Fk5NKfw7egz/fA8x077HEuWKV6BhBNm4d0wL+Pv1j7eRAMstQVeUapDbdKxqDUxomeXIcY/+SJ0tvK2MYXE2m+kIqHde6U/hGIJeoWhz1VbuWRPpqrqy3QmUt2M7Cf6stmMJ095rGUdHWlgx2jGpwNH/Rtc6rPVvFjNfu+4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=Sizx5wWP; arc=fail smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B29OI4i026779;
-	Mon, 2 Dec 2024 04:47:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=LdaoV
-	0/2H2JpE38Ek+TrLvBdQHaxjQdlZEvaiC19a7I=; b=Sizx5wWP6lS0mcpoLLJKB
-	pwtLSN8UxQUoWtFfMPdtdiJGuh4CijJiLZmyzWILrmu6ZC7QrY0N3HnJYub7scE7
-	iZe/xolKEo0uJHXWNDUptX2WzjR+MbgWhYy4l2CXD7MXeJinUbi+pqPSqqbaX3DU
-	VnRU2jEh0TZLhkFEPj1XUneqsLo2ZZgl/Dkf8UsLQrNFqGOT4TeduGidDpjeGL9j
-	ojpX3OSk0IZjEfSiM+TNhgwAOk//u4/ThMRGevfZzPHZ42uUgCvpDQT3BvfvvNrv
-	wiPbx21f6FtFXSWBd8AVccFuBy19dmfsVzvcllK+w33f/a05baDT7ZajuA67bg+j
-	A==
-Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazlp17010003.outbound.protection.outlook.com [40.93.11.3])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4380g6f4d2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 02 Dec 2024 04:47:23 -0500 (EST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ym9k/TrD8eJ905jf3LhUln5RHnW4HrCouJQNORcBhv9sU1SEi3QR1POnUymkmn0ZmNgpF9CUDmyHFSS2SGBJrm2DZOplsWbeD72cYljDz1+JiprPYDmezYzsWwj/eZuTaTguJPloocY6sUcm9WkZkUaqfpW/vU6XlDMIW4mCEjlh7pnP4hch3FD8/wOPG6MW3KWnU18UvNxJTfFLmE6B6AdTbpHJVwKeDn4JWJHJmmJschM6b/Z7UOEtAOYXSd8oTDigm22J7q7I9+WApW/INwF28Xhi4AnOZkk8PqquW4ptxFqNDf+lTxZzwbHyo7u3AU/42U1+RK0/a46eRNmYlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LdaoV0/2H2JpE38Ek+TrLvBdQHaxjQdlZEvaiC19a7I=;
- b=X/46szweauA58JpInZnD3CvxYXX7CTzN+20FaF86i6I1aXHrdm/8PlnSf1CFQavNIu6uL9Y3Xz5mJL7+b2hRKMKSJs5ZzsZADSaI42Vd07l46zlI+ZPIozi+Z16GKaAG+q9DWKdVxzROWuztlgQko0KW1D8zuFb4AnyR58+rcOoiCFRzfQHy22725sDM97w7HhFuOlmnTRIMbQ2LSuwsyRTqVDUmouH3eJiH0tiGAFG7CJhFZ9dqaUy/6KGTFjvPUU7L+2fEyquZ12uLNXkzq2M3S6N29WEgj23j1+pnHzJhqJVXlqO5/Cw46HILO+Hxub1HxhQcxpPYCkp8T9P4nQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-Received: from CY4PR03MB3399.namprd03.prod.outlook.com (2603:10b6:910:57::13)
- by CH0PR03MB6178.namprd03.prod.outlook.com (2603:10b6:610:d1::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.18; Mon, 2 Dec
- 2024 09:47:21 +0000
-Received: from CY4PR03MB3399.namprd03.prod.outlook.com
- ([fe80::6504:9615:dbab:cc17]) by CY4PR03MB3399.namprd03.prod.outlook.com
- ([fe80::6504:9615:dbab:cc17%6]) with mapi id 15.20.8137.018; Mon, 2 Dec 2024
- 09:47:21 +0000
-From: "Miclaus, Antoniu" <Antoniu.Miclaus@analog.com>
-To: Jonathan Cameron <jic23@kernel.org>
-CC: "robh@kernel.org" <robh@kernel.org>,
-        "conor+dt@kernel.org"
-	<conor+dt@kernel.org>,
-        "linux-iio@vger.kernel.org"
-	<linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org"
-	<linux-pwm@vger.kernel.org>
-Subject: RE: [PATCH v3 1/2] dt-bindings: iio: adf4371: add rdiv2 and doubler
-Thread-Topic: [PATCH v3 1/2] dt-bindings: iio: adf4371: add rdiv2 and doubler
-Thread-Index: AQHbQnQq0niAj4s/T0yYjCevKGPL9LLQCAcAgAKv0CA=
-Date: Mon, 2 Dec 2024 09:47:21 +0000
-Message-ID:
- <CY4PR03MB3399CB671D685BA8164E0F3B9B352@CY4PR03MB3399.namprd03.prod.outlook.com>
-References: <20241129153356.63547-1-antoniu.miclaus@analog.com>
-	<20241129153356.63547-2-antoniu.miclaus@analog.com>
- <20241130163948.269289dc@jic23-huawei>
-In-Reply-To: <20241130163948.269289dc@jic23-huawei>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-dg-ref:
- =?iso-8859-2?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYW1pY2xhdX?=
- =?iso-8859-2?Q?NcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZi?=
- =?iso-8859-2?Q?ODRiYTI5ZTM1Ylxtc2dzXG1zZy02ZDJiOGQ0ZC1iMDkyLTExZWYtYWZmOC?=
- =?iso-8859-2?Q?00MTU2NDUwMDAwMzBcYW1lLXRlc3RcNmQyYjhkNGYtYjA5Mi0xMWVmLWFm?=
- =?iso-8859-2?Q?ZjgtNDE1NjQ1MDAwMDMwYm9keS50eHQiIHN6PSIzNzcwIiB0PSIxMzM3Nz?=
- =?iso-8859-2?Q?YwNjQ0MjUzMTk5NzAiIGg9Ii8vcDd6KzdlV1J5S2dhN0ZUQmp2WW9hV2F5?=
- =?iso-8859-2?Q?Yz0iIGlkPSIiIGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk?=
- =?iso-8859-2?Q?5DZ1VBQUVvQ0FBQWlYb1V2bjBUYkFVV3hPWGg4WkpSOFJiRTVlSHhrbEh3?=
- =?iso-8859-2?Q?REFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFIQUFBQURhQVFBQUFBQUFBQU?=
- =?iso-8859-2?Q?FBQUFBQUFBQUFBQUFBQUFFQUFRQUJBQUFBbWk3Sm1RQUFBQUFBQUFBQUFB?=
- =?iso-8859-2?Q?QUFBSjRBQUFCaEFHUUFhUUJmQUhNQVpRQmpBSFVBY2dCbEFGOEFjQUJ5QU?=
- =?iso-8859-2?Q?c4QWFnQmxBR01BZEFCekFGOEFaZ0JoQUd3QWN3QmxBRjhBWmdCdkFITUFh?=
- =?iso-8859-2?Q?UUIwQUdrQWRnQmxBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
- =?iso-8859-2?Q?FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?iso-8859-2?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQU?=
- =?iso-8859-2?Q?FBR0VBWkFCcEFGOEFjd0JsQUdNQWRRQnlBR1VBWHdCd0FISUFid0JxQUdV?=
- =?iso-8859-2?Q?QVl3QjBBSE1BWHdCMEFHa0FaUUJ5QURFQUFBQUFBQUFBQUFBQUFBQUFBQU?=
- =?iso-8859-2?Q?FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?iso-8859-2?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
- =?iso-8859-2?Q?FBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FBQUFBQUNlQUFBQVlRQmtB?=
- =?iso-8859-2?Q?R2tBWHdCekFHVUFZd0IxQUhJQVpRQmZBSEFBY2dCdkFHb0FaUUJqQUhRQW?=
- =?iso-8859-2?Q?N3QmZBSFFBYVFCbEFISUFNZ0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?iso-8859-2?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU?=
- =?iso-8859-2?Q?FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?iso-8859-2?Q?QUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFBPT0iLz48L21ldGE+?=
-x-dg-rorf:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CY4PR03MB3399:EE_|CH0PR03MB6178:EE_
-x-ms-office365-filtering-correlation-id: cd2c940b-0912-4f63-7c4b-08dd12b6512f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-2?Q?ShrT7YJWTfoYvGClC8IUkKBAzbGqTVt44KzrO3akvvfZxqsuHgWcqgEdn+?=
- =?iso-8859-2?Q?MkwpfzHc2rzIbeUVFfsiLAzgyfqf4WrYnf868XCqRAO1EnsoIHi+dJUKKd?=
- =?iso-8859-2?Q?9GpGMVQ/6jZ6ovgknAK/Wd4uZtDNPbqJB7E24AoHoN6HWd8MhUigDyhA6Q?=
- =?iso-8859-2?Q?Ri0Yxt2ev5moXs4Nc+f7TlKb+0oXOg00eO3AZriCjsYClDd7JedN3hvm+2?=
- =?iso-8859-2?Q?IHuflUzLbtyiscbvsL3qhZxfiS+f2/viN+2k0F7+OFascREfL5MVzYt18d?=
- =?iso-8859-2?Q?vsw+U6poMQFeS+II6REpmLhq+5h8Ck/kjJEjCXCfGSJNVyOCxvIWCMrTJm?=
- =?iso-8859-2?Q?E8WM6XGBlprlD0b9D7RmZsrrDSvg6qq+bkM3E3p1p0ioYvGfyfNKzIO1b0?=
- =?iso-8859-2?Q?ZFQ5BKEELSQZWFsjXbibaV87vdGv2m0hGM5aRoEkNlHoPzsguVqHfmPUyh?=
- =?iso-8859-2?Q?zkQ/RP10RybVgIfXJGLP1RoPLfy4KY9pmRzWk8+RJBS/xAvj69tTzlTxbM?=
- =?iso-8859-2?Q?+PolWxcmEoJVEZke3sSUXI4xXQGWV/gNV6YtB1Di0FW3fEw6DFfGiYu4Up?=
- =?iso-8859-2?Q?R9/XTWEViWFn6A6DcJY0ck8UUdxeGZaygmakWcmQ2tGyEQYcWvJptSeM0S?=
- =?iso-8859-2?Q?uvQN9/QmTWK1zzePD8RIHmwe53nvnIT6VPmrzkUEUNJT6tweiTEEXBZ1OR?=
- =?iso-8859-2?Q?gsWdNu3FQrldA1UfKxg0FXh+5rx9K2NuWjdGeFNkXC+rf994+TYoDLhAKq?=
- =?iso-8859-2?Q?u6yWYrOX7/vJghF2ECqFLSa8aJsKqsyHQ4eqYncUi7so7sp7P3rYV4Wwd8?=
- =?iso-8859-2?Q?6rzWmrWjWJWHnOpPEeT8vdy7VAi8qBFbeOmDyJVL6Q+4jkr2DSWUIE1mY/?=
- =?iso-8859-2?Q?1f6q18IQ5IPXZkzIw0RYRQGdvFm6OXzxWdoTe1SAfpzp5wWwRQiOBaWUAy?=
- =?iso-8859-2?Q?eFmo1sKb82jDu/JkBUCMgv/qyygcAeEL1dwMEw7bgn1xxOwK2+6BpKrQ4k?=
- =?iso-8859-2?Q?5ZolyG+peGl1fymmjVphF85+0s9g8GKfKwk0QMCGOygoN/MZgl9SyuVFMs?=
- =?iso-8859-2?Q?1thDz3/hfQCQwtvQcKUEsZgT4C7OnMoFq5Alr04knkldPn22oICZBSuhJf?=
- =?iso-8859-2?Q?eYxBJEpEUzEhlI0rPRnZmukw3BCpUSsAr9f+SD9rDIseUz5J6BlS9aPtj0?=
- =?iso-8859-2?Q?gI9mi8mAJiiO2l7JMqgk0gP97Ywa2YuMarG6uWY0jRNPUzarcYE3kt0QLc?=
- =?iso-8859-2?Q?K6BXfP+9IkpXnfcWyn14MLtmM6UBTonFP7ywYyN5bx95toPUM56fFWgHSy?=
- =?iso-8859-2?Q?RPWhFodzjDGoKeJqbU8gfc49q3oLk7dDeg+n/Q9J4Zdl3yncEJT5LCut1I?=
- =?iso-8859-2?Q?2c5bEQclNLmYEU9WrRv6py+4yV2DwIN1op6xX2OXdlKWWXwxk9KPlTBb3C?=
- =?iso-8859-2?Q?Eq8f3D5o3R/SfAxyWKB7Ejh00/4yG0LKjgNVcw=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR03MB3399.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?prZLCq73YL9LNjNVWxOpQBRAFdwzewF/lGKznXC4/BzyMCEAJGSuKR5Mxb?=
- =?iso-8859-2?Q?0xBIeXroDL0juRGfQg91igq4sld7ypGgHseRVVW8rKpwZe0+g1lvifOMqT?=
- =?iso-8859-2?Q?5UPyq4K0u26sJVzrPV5K7B6BA5CZFyilBbk3XGzsaG2VcJ5NmcGaLIBxuh?=
- =?iso-8859-2?Q?u27tioTenLTLACiQ0z6ZHCmNhrtYa5dUIGGwKehpJhX+vNV5dzDM323HVf?=
- =?iso-8859-2?Q?e94BQka/wWmPyDPR9HyiEXqTfTo+a+DtxfGq3AAcfn6/ZuowS+j2ecVZlr?=
- =?iso-8859-2?Q?97G8iafwWjQc25QniSPVzjgRP4+HWKMXQpARDmMlh5KhgyjC7pKEA6+agH?=
- =?iso-8859-2?Q?Yky6TUCZrA784haEHbHUi9s0+miE+gm3Jyjvf2J/kFjFH+3gc9agnfxPB9?=
- =?iso-8859-2?Q?NEA+xu4Zd/SuOAL5S/AQQMtgmWYC6MTjrLCcWIwquyHRTzZ0wCLMVjZo1Z?=
- =?iso-8859-2?Q?l5N7M3GJiOnxfuKeZNWIUGq6if/FybfnQzTFJtpKhZ6Hs6zV9EBzkVjsh0?=
- =?iso-8859-2?Q?ifOTxZ4Ss8N/SACCTnsSGE2IlYhhTeX3UtBdSOqm/fzpEq8uvfvfGgL2bh?=
- =?iso-8859-2?Q?57ZH8/fYo+WmbWWItWU56oKTHqzAq/qCxiHeqqrOqaWH9CBBgqnVR/yu6U?=
- =?iso-8859-2?Q?aHrPE8FdT1OSaSyvWS7kl48YXX1XInS4qfoDFoxbtiff46fiUXmZadOcKA?=
- =?iso-8859-2?Q?tqinERDDm6x3ssQOVnReKr8Fwk238cwPsnESlaLJkS8TDvNyBSCac8fewr?=
- =?iso-8859-2?Q?Acd0bq+RMHDp+FVBsdjjRx0npKmAhpPOsbjiRzzNYd59miwqgvMV/SvEZh?=
- =?iso-8859-2?Q?vzHINlMa+lxtxryHfzolObignyms1W7Rcj3o26sO88QCheUFt4M4lfeNOX?=
- =?iso-8859-2?Q?cITCz0k8CxuvI/o94PzNvp9fDrd2x5nWtL9T5SctU0bESgzVqqVi+wBDet?=
- =?iso-8859-2?Q?NtHIQV+yjVShHf82kWj83z9I2PqKqocIq6my/OALZnqijRg/0gie0qBszq?=
- =?iso-8859-2?Q?5lOHraL01stRIqR4QU7/Grb2a3o/rEpRdsa2vB+ePGARM2s6xLweepp0ev?=
- =?iso-8859-2?Q?09Pr2jLQ1m0z/1Vf2FstKweRiBjKmD6gC5a5eiOxjgk1xJ4CwQwTrGEzfj?=
- =?iso-8859-2?Q?eBRxxrV6sDNEs5Ar++OSRd0hwuc6ew+f2PZBzznJJVpGBvTtMgJ/FveMFo?=
- =?iso-8859-2?Q?GZJW+e4fvSb7o0Ux2KJUbx3SzIe0JT7LNiCMNPTdJ4wJA+8P5Vtyor+HhU?=
- =?iso-8859-2?Q?oltJgFxdNa4Sjy75MhSZLuUs4hXZknfeaWzYQ2KVf9PistVIChJBJ/f6q/?=
- =?iso-8859-2?Q?hYmjRYNylRsDd1M//U6p3YrASY+6+RivSDMnIiW74xQ2cAJ1/xqYIzchAp?=
- =?iso-8859-2?Q?tXN4mK/oLiXvyEwDGNtYwH1c8bFq5vbKIYxk4HVw53PptCjlCm5uXIcjX0?=
- =?iso-8859-2?Q?Bj+QDlkqVEgJ4XBwqAMxcDyBIV2wh8HyBN2Uz/LFvRR7Kl3DY+IP2GLb89?=
- =?iso-8859-2?Q?EuHkjXdT1fjrtrbfa9Ryx+PINBNsRlcgtjkmk8ttea3onA9lAU9z8bM4G8?=
- =?iso-8859-2?Q?E79EYXrwYZh/GSeNyKrGXPv4TZ8v7Pw+ADKy38BApYGIWuaMfHwXz2fiJA?=
- =?iso-8859-2?Q?JSs/NjiRj+7Gx4aUC2nsZBGh5X/f/DGRws?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108061FDE0B;
+	Mon,  2 Dec 2024 11:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733140263; cv=none; b=PWWrmYBYo6tgkyE4cyYzqN7UH7MO7+PdRHnWwzbMVnUYiJgZtfeOVY2T7DMYw2SmNTCY6bH8NWfhYZXYxLyiV1VMSzdd3DQ68lkbV7aTWuKnl9DyHJW1Q1o7UBoQTpzW3pOjjgOfdCHBgQwJTHu1M/QML6TCXe+KmxzRp9GSxdA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733140263; c=relaxed/simple;
+	bh=6s+NoKimPKemUsivQ2UQfp09dpUvkW+1d2SOJ8lE8Ts=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o1R/LAkKz+HX7kVE6SjtqAHn2fm4r9sv/9bw0URwZ+KF9qbyqvMpId/F0k0d7g76W7fgdHZl/NtnvrWJ2Xhd2FohvdrAS2ty9v0wHgN8fb9DJpJ2vH3DyQKheCLfJNdgJqcYE98iPG+1zMj+2x+TPMn3OCqhyFOkWRJsDEPROso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mBftX+RP; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733140261; x=1764676261;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6s+NoKimPKemUsivQ2UQfp09dpUvkW+1d2SOJ8lE8Ts=;
+  b=mBftX+RPASQON6ykWFjqdbeeRraYXXkOuC4Wg/cpFcX2yKddo1JDwbS4
+   ilFwVZmHvgd/O3R6H7PgPX9Z/pm3KDoyg9zfbqbn/FZoNTQAAX3gaWIDq
+   UUkzOZUb4SS1ddjNrCmUlSQIC567vafr/KGOySHReac4qZHCrIsSWTwzU
+   UTPoKzGHgZnQ1OQfzW4rcPNT4fny7hxHT2pVdqVrgEdOzktATb68G+E43
+   M+Kxav5Oaa9qCRIH/H9KySEAoQIgRXWqWmELmnyhgz3T1onhw7Jse5ofm
+   32sEVaYSKxCdTaKDBr038Iz2Y/SBVtXAbvvCcTeM2kBiTtrJgiWa6B2v3
+   Q==;
+X-CSE-ConnectionGUID: KA6uCkhtRPG07d0meB7+qg==
+X-CSE-MsgGUID: B7PmB1v0Sy+IkRe/FN5iJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11274"; a="43915758"
+X-IronPort-AV: E=Sophos;i="6.12,202,1728975600"; 
+   d="scan'208";a="43915758"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2024 03:51:00 -0800
+X-CSE-ConnectionGUID: twTOEWXkQZG/Kp2jTLzKIg==
+X-CSE-MsgGUID: D07UsJe3T1OBrjeWggGlWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="98117906"
+Received: from lkp-server02.sh.intel.com (HELO 36a1563c48ff) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 02 Dec 2024 03:50:58 -0800
+Received: from kbuild by 36a1563c48ff with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tI4x5-0002NM-2S;
+	Mon, 02 Dec 2024 11:50:55 +0000
+Date: Mon, 2 Dec 2024 19:50:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ben Zong-You Xie <ben717@andestech.com>, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, ukleinek@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org,
+	Ben Zong-You Xie <ben717@andestech.com>
+Subject: Re: [PATCH v2 2/2] pwm: atcpit100: add Andes PWM driver support
+Message-ID: <202412021900.oCRrT3PV-lkp@intel.com>
+References: <20241202060147.1271264-3-ben717@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR03MB3399.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd2c940b-0912-4f63-7c4b-08dd12b6512f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2024 09:47:21.1702
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Fi/v8q2s7Vellog+yyKPIBRztWQrvGiVrQVYCGwYug81CeAXUPhMM1hbIO3T6ljbYemLgMF43W4KlFBj5SB8mH47wKbOpGMQUcV5XxAxSaM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR03MB6178
-X-Proofpoint-GUID: sAocVfrW8RIj2qr8mnKh_Qz4JCtq6_YA
-X-Proofpoint-ORIG-GUID: sAocVfrW8RIj2qr8mnKh_Qz4JCtq6_YA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 clxscore=1015 mlxscore=0 adultscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412020086
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241202060147.1271264-3-ben717@andestech.com>
+
+Hi Ben,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on linus/master thierry-reding-pwm/for-next v6.13-rc1 next-20241128]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ben-Zong-You-Xie/dt-bindings-pwm-add-atcpit100-pwm/20241202-140437
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20241202060147.1271264-3-ben717%40andestech.com
+patch subject: [PATCH v2 2/2] pwm: atcpit100: add Andes PWM driver support
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20241202/202412021900.oCRrT3PV-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241202/202412021900.oCRrT3PV-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412021900.oCRrT3PV-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/jiffies.h:7,
+                    from include/linux/ktime.h:25,
+                    from include/linux/timer.h:6,
+                    from include/linux/workqueue.h:9,
+                    from include/linux/srcu.h:21,
+                    from include/linux/notifier.h:16,
+                    from include/linux/clk.h:14,
+                    from drivers/pwm/pwm-atcpit100.c:18:
+   drivers/pwm/pwm-atcpit100.c: In function 'atcpit100_pwm_config':
+>> drivers/pwm/pwm-atcpit100.c:123:59: warning: integer overflow in expression of type 'long int' results in '94030336' [-Woverflow]
+     123 |                                 (ATCPIT100_CYCLE_MAX + 1) * NSEC_PER_SEC,
+         |                                                           ^
+   include/linux/math64.h:298:39: note: in definition of macro 'DIV64_U64_ROUND_UP'
+     298 |         ({ u64 _tmp = (d); div64_u64((ll) + _tmp - 1, _tmp); })
+         |                                       ^~
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for GET_FREE_REGION
+   Depends on [n]: SPARSEMEM [=n]
+   Selected by [y]:
+   - RESOURCE_KUNIT_TEST [=y] && RUNTIME_TESTING_MENU [=y] && KUNIT [=y]
 
 
+vim +123 drivers/pwm/pwm-atcpit100.c
 
---
-Antoniu Micl=E3u=BA
+    76	
+    77	static int atcpit100_pwm_config(struct pwm_chip *chip, unsigned int channel,
+    78					const struct pwm_state *state)
+    79	{
+    80		int clk;
+    81		int ret;
+    82		unsigned int reload_val;
+    83		unsigned long rate[NUM_ATCPIT100_CLK];
+    84		u64 max_period;
+    85		u64 min_period;
+    86		u64 high_cycle;
+    87		u64 low_cycle;
+    88		struct atcpit100_pwm *ap = to_atcpit100_pwm(chip);
+    89		unsigned int ctrl_val = ATCPIT100_CHANNEL_CTRL_MODE_PWM;
+    90		u64 high_period = state->duty_cycle;
+    91		u64 low_period = state->period - high_period;
+    92	
+    93		rate[ATCPIT100_CLK_EXT] = clk_get_rate(ap->ext_clk);
+    94		rate[ATCPIT100_CLK_APB] = clk_get_rate(ap->apb_clk);
+    95	
+    96		/*
+    97		 * Reload register for PWM mode:
+    98		 *
+    99		 *		31 : 16    15 : 0
+   100		 *		PWM16_Hi | PWM16_Lo
+   101		 *
+   102		 * In the PWM mode, the high period is (PWM16_Hi + 1) cycles, and the
+   103		 * low period is (PWM16_Lo + 1) cycles. Since we need to write
+   104		 * "numcycles - 1" to the register, the valid range of numcycles will
+   105		 * be between 1 to 0x10000. Calculate the possible periods that satisfy
+   106		 * the above restriction:
+   107		 *
+   108		 *	Let m = 1, M = 0x10000,
+   109		 *	m <= floor(cycle) <= M
+   110		 * <=>	m <= floor(rate * period / NSEC_PER_SEC) <= M
+   111		 * <=>	m <= rate * period / NSEC_PER_SEC < M + 1
+   112		 * <=>	m * NSEC_PER_SEC / rate <= period < (M + 1) * NSEC_PER_SEC / rate
+   113		 * <=>	ceil(m * NSEC_PER_SEC / rate) <= period <= ceil((M + 1) * NSEC_PER_SEC / rate) - 1
+   114		 *
+   115		 * Since there are two clock sources for ATCPIT100, if the period is not
+   116		 * valid for the first clock source, then the second clock source will
+   117		 * be checked. Reject the request when both clock sources are not valid
+   118		 * for the settings.
+   119		 */
+   120		for (clk = ATCPIT100_CLK_EXT; clk < NUM_ATCPIT100_CLK; clk++) {
+   121			max_period =
+   122				DIV64_U64_ROUND_UP(
+ > 123					(ATCPIT100_CYCLE_MAX + 1) * NSEC_PER_SEC,
+   124					rate[clk]) - 1;
+   125			min_period =
+   126				DIV64_U64_ROUND_UP(ATCPIT100_CYCLE_MIN * NSEC_PER_SEC,
+   127						   rate[clk]);
+   128	
+   129			if (ATCPIT100_IS_VALID_PERIOD(high_period) &&
+   130			    ATCPIT100_IS_VALID_PERIOD(low_period))
+   131				break;
+   132		}
+   133	
+   134		if (clk == NUM_ATCPIT100_CLK)
+   135			return -EINVAL;
+   136	
+   137		/*
+   138		 * Once changing the clock source here, the output will be neither the
+   139		 * old one nor the new one until writing to the reload register.
+   140		 */
+   141		ctrl_val |= clk ? ATCPIT100_CHANNEL_CTRL_CLK : 0;
+   142		ret = regmap_update_bits(ap->regmap, ATCPIT100_CHANNEL_CTRL(channel),
+   143					 ATCPIT100_CHANNEL_CTRL_MASK, ctrl_val);
+   144		if (ret)
+   145			return ret;
+   146	
+   147		high_cycle = mul_u64_u64_div_u64(rate[clk], high_period, NSEC_PER_SEC);
+   148		low_cycle = mul_u64_u64_div_u64(rate[clk], low_period, NSEC_PER_SEC);
+   149		reload_val = FIELD_PREP(ATCPIT100_CHANNEL_RELOAD_HIGH, high_cycle - 1) |
+   150			     FIELD_PREP(ATCPIT100_CHANNEL_RELOAD_LOW, low_cycle - 1);
+   151	
+   152		return regmap_write(ap->regmap, ATCPIT100_CHANNEL_RELOAD(channel),
+   153				    reload_val);
+   154	}
+   155	
 
-> -----Original Message-----
-> From: Jonathan Cameron <jic23@kernel.org>
-> Sent: Saturday, November 30, 2024 6:40 PM
-> To: Miclaus, Antoniu <Antoniu.Miclaus@analog.com>
-> Cc: robh@kernel.org; conor+dt@kernel.org; linux-iio@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> pwm@vger.kernel.org
-> Subject: Re: [PATCH v3 1/2] dt-bindings: iio: adf4371: add rdiv2 and doub=
-ler
->=20
-> [External]
->=20
-> On Fri, 29 Nov 2024 17:33:52 +0200
-> Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
->=20
-> > Add support for reference doubler enable and reference divide by 2
-> > clock.
-> >
-> > Both of these blocks are optional on the frequency path within the
-> > chip and can be adjusted depending on the custom needs of the
-> > applications.
-> Thanks for the additional info!
-> >
-> > The doubler is useful for increasing the PFD comparison frequency
-> > which will result in a noise performance of the system.
->=20
-> So I'll play devil's advocate. Improved noise performance sounds
-> good. If it doesn't take me out of range of allowed frequencies, why
-> would I not turn it on?  What is it about the surrounding circuitry
-> etc that would make this a bad idea for some uses of this chip
-> but not others?
->=20
-> >
-> > The reference divide by 2 divides the reference signal by 2,
-> > resulting in a 50% duty cycle PFD frequency.
->=20
-> why would I want one of those? My 'guess' is this makes sense
-> if the reference frequency is too high after the application of
-> the scaling done by the 5 bit counter.  In effect it means the
-> division circuitry does divide by 1-31, 2-64 in steps of 2.
->=20
-> That could all be wrapped up in the existing control of the
-> frequency, and so far I'm still not seeing a strong reason why
-> it belongs in DT.
->=20
-> The 50% cycle thing is a bit of a red herring as assuming it
-> is triggered on say the rising edge of the high frequency signal
-> to toggle the divided signal, that will always be a 50% duty cycle.
->=20
-As mentioned in the cover letter this was mostly a request from
-customers that are using adf4371 on a large scale and they need
-these features to be controllable somehow by the user.
-
-Since these attributes were already validated as devicetree properties
-for adf4350 on mainline, I found this as the best approach to satisfy
-both ends.
-
-Antoniu
-> Jonathan
->=20
-> >
-> > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> > ---
-> > changes in v3:
-> >  - add explanation in commit body
-> >  .../devicetree/bindings/iio/frequency/adf4371.yaml    | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.ya=
-ml
-> b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > index 1cb2adaf66f9..ef241c38520c 100644
-> > --- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > @@ -40,6 +40,17 @@ properties:
-> >        output stage will shut down until the ADF4371/ADF4372 achieves l=
-ock
-> as
-> >        measured by the digital lock detect circuitry.
-> >
-> > +  adi,reference-doubler-enable:
-> > +    type: boolean
-> > +    description:
-> > +      If this property is present, the reference doubler block is enab=
-led.
-> > +
-> > +  adi,adi,reference-div2-enable:
-> > +    type: boolean
-> > +    description:
-> > +      If this property is present, the reference divide by 2 clock is =
-enabled.
-> > +      This feature can be used to provide a 50% duty cycle signal to t=
-he PFD.
-> > +
-> >  required:
-> >    - compatible
-> >    - reg
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
