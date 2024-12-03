@@ -1,211 +1,175 @@
-Return-Path: <linux-pwm+bounces-4207-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4209-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D2739E2403
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Dec 2024 16:45:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A0339E28E6
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Dec 2024 18:16:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D011B16CF81
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Dec 2024 15:40:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 325E116974F
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Dec 2024 17:16:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C86DF20B804;
-	Tue,  3 Dec 2024 15:34:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E5831FA251;
+	Tue,  3 Dec 2024 17:16:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="eZ4U4tRU";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="eZ4U4tRU"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NV1ep21B"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0F820B7F2;
-	Tue,  3 Dec 2024 15:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DA81F8F16
+	for <linux-pwm@vger.kernel.org>; Tue,  3 Dec 2024 17:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733240099; cv=none; b=LtsNsGvhJHeu81DybNV1Tnad3qIu185S17gjtYYMfeIrQgzLqokNR79DHho68oaMlUZb+lWlwVDODEDmeZQaPwV2CYF2wnfaUadLjEyHfsKQ5H3Jvd5/2zqZXM/yjgQL6zuVBNE6C5qTr8tmjuqNDsY/jYvS3CR50e9S54tAQJ8=
+	t=1733246196; cv=none; b=HA757rIcp5bwoIUqYbbuOkC83XdQGKAI4w4VcnBdXPGRVZw1Ah6d/uW2mKiVGRuyQOfgBZ66Env7FhuE38VbkM14vLXvSAulj0AWwdzd+sK7IYJwHjQXaMw6gDVhTByCDh1zduNMh5vZs5+7W1bbRXYAoOW4uRraSYU32f+lyUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733240099; c=relaxed/simple;
-	bh=L/QXZvHG42gthQ6VgZcE1FVgbBCT68wm3yek2sYu4mw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cmgqloiInue402+/BJHVxQP5t0EI7sL5NRa4fqage/DVyh26AaN6TKl97ZPjT0dlmrn+HEGkp2zFri/+e8Yo5AWz3H/ZvbDnt//uVq19D38t8ZdlC28HxIWRWzuVt2dtSjEABCNQBZOftMpJ3zXsa2H+pxD8rxU6B+G6ok+KLwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=eZ4U4tRU; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=eZ4U4tRU; arc=none smtp.client-ip=96.44.175.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1733240096;
-	bh=L/QXZvHG42gthQ6VgZcE1FVgbBCT68wm3yek2sYu4mw=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=eZ4U4tRU1qIWP3lhCG1NFGqdlkJwbCoeHoXmlbwbm0xojoL7yxF2OmBDrwRg5sJZD
-	 yUR1Ufh9cMTmWMSk/QfvKgX3lU1FOQtEkMYCzG5HJRGBhs9c6tkPAgFURJTLia4EJE
-	 fFgUsJsyCn7Ieybkh2Zt2C6KjPseMR4k9lZkDFPA=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id A95511286A94;
-	Tue, 03 Dec 2024 10:34:56 -0500 (EST)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id Nouo1dbPKzw4; Tue,  3 Dec 2024 10:34:56 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1733240096;
-	bh=L/QXZvHG42gthQ6VgZcE1FVgbBCT68wm3yek2sYu4mw=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=eZ4U4tRU1qIWP3lhCG1NFGqdlkJwbCoeHoXmlbwbm0xojoL7yxF2OmBDrwRg5sJZD
-	 yUR1Ufh9cMTmWMSk/QfvKgX3lU1FOQtEkMYCzG5HJRGBhs9c6tkPAgFURJTLia4EJE
-	 fFgUsJsyCn7Ieybkh2Zt2C6KjPseMR4k9lZkDFPA=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id F32C01286A7D;
-	Tue, 03 Dec 2024 10:34:50 -0500 (EST)
-Message-ID: <108c63c753f2f637a72c2e105ac138f80d4b0859.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2 00/32] driver core: Constify API device_find_child()
- and adapt for various existing usages
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Zijun Hu <zijun_hu@icloud.com>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
-	 <thomas@t-8ch.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Jean
- Delvare <jdelvare@suse.com>,  Guenter Roeck <linux@roeck-us.net>, Martin
- Tuma <martin.tuma@digiteqautomotive.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Andreas Noever <andreas.noever@gmail.com>, Michael
- Jamet <michael.jamet@intel.com>, Mika Westerberg
- <mika.westerberg@linux.intel.com>,  Yehezkel Bernat
- <YehezkelShB@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean
- <olteanv@gmail.com>,  "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Dan Williams
- <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, Dave
- Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, Takashi
- Sakamoto <o-takashi@sakamocchi.jp>, Jiri Slaby <jirislaby@kernel.org>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Srinivas Kandagatla
- <srinivas.kandagatla@linaro.org>, Lee Duncan <lduncan@suse.com>, Chris
- Leech <cleech@redhat.com>, Mike Christie <michael.christie@oracle.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>, Nilesh Javali
- <njavali@marvell.com>, Manish Rangankar <mrangankar@marvell.com>,
- GR-QLogic-Storage-Upstream@marvell.com, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, Alison
- Schofield <alison.schofield@intel.com>, Andreas Larsson
- <andreas@gaisler.com>, Stuart Yoder <stuyoder@gmail.com>, Laurentiu Tudor
- <laurentiu.tudor@nxp.com>, Jens Axboe <axboe@kernel.dk>, Sudeep Holla
- <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, Ard
- Biesheuvel <ardb@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, 
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org, 
- linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
- netdev@vger.kernel.org,  linux-pwm@vger.kernel.org, nvdimm@lists.linux.dev,
-  linux1394-devel@lists.sourceforge.net, linux-serial@vger.kernel.org, 
- linux-sound@vger.kernel.org, open-iscsi@googlegroups.com, 
- linux-scsi@vger.kernel.org, linux-cxl@vger.kernel.org, 
- sparclinux@vger.kernel.org, linux-block@vger.kernel.org, 
- arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org, 
- linux-remoteproc@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-Date: Tue, 03 Dec 2024 10:34:49 -0500
-In-Reply-To: <f5ea7e17-5550-4658-8f4c-1c51827c7627@icloud.com>
-References: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
-	 <g32cigmktmj4egkq2tof27el2yss4liccfxgebkgqvkil32mlb@e3ta4ezv7y4m>
-	 <9d34bd6f-b120-428a-837b-5a5813e14618@icloud.com>
-	 <2024120320-manual-jockey-dfd1@gregkh>
-	 <b9885785-d4d4-4c72-b425-3dc552651d7e@icloud.com>
-	 <8eb7c0c54b280b8eb72f82032ede802c001ab087.camel@HansenPartnership.com>
-	 <8fb887a0-3634-4e07-9f0d-d8d7c72ca802@t-8ch.de>
-	 <f5ea7e17-5550-4658-8f4c-1c51827c7627@icloud.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	s=arc-20240116; t=1733246196; c=relaxed/simple;
+	bh=2uNM5E79VqxO+4hWUeY8pC50c4tRPQ6CI6tgNwDKkk4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g00XxKd0ocByooAAWXIBNNG7dziJ/bDwCGoOWRsFDzGpOUEaW2MrUiPc0c8fJ/02rBluyxCnfojouz1AvRvyH9XFyQhx+478ehBymGd1YTvywLB/NlsxO6E+mSfJ55E8pzMG21VllMapsAPkrKzlcASQWX4MbQwNHFFHCyPiVN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NV1ep21B; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-385e1fcb0e1so2030607f8f.2
+        for <linux-pwm@vger.kernel.org>; Tue, 03 Dec 2024 09:16:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1733246191; x=1733850991; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h0uKqW9vvWRGO5PxCSBAB7Ojpuf7zy1ETNyv1ImS+4k=;
+        b=NV1ep21BpNacHxFMpf9WGWzWPxYqlR/ltnKnMZFNF9+uCxUo4eP947/79/Pjzqz1id
+         NH4Hk6+To5RIipxdlmRhDFt7S4lL1s+5qJ3Y9cSLIT7E62KaS2TYPTLTJKHLgjaoxAq5
+         nBTwaOuwGTFvdAR/a/o8H5l+OXJIyOVnlq39xnbmKEFA6rc5KUZ/fSY/6fDiY5E7Y0rK
+         9ETC48OmkMSerEwZElprc4UseHEAdF66HxRMLB3xn8l1HoBWuN0BzPjWgct2zIlpKZcO
+         s6lnd2t+Q09g/QPAjC2qhdfLImCgxdhFjjqV/SKbbQ0UULFxgbnDR4rfy4vRKH5hfr47
+         F8+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733246191; x=1733850991;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h0uKqW9vvWRGO5PxCSBAB7Ojpuf7zy1ETNyv1ImS+4k=;
+        b=Z/cNZxKyhISV9r4XNA9lvjVDLgTmUn998HevTFUvhY5Km8ZGv5ePAgaBhybY8bXP//
+         iubMhjbfrP+nCXVMRjHlbLNM3nLsisG0iWbe3TVdDiRMBKbKtJtFxbr6XfIw/nviFi7D
+         LjE3irP8OyA3WPbJ83EibHIiOeW+lRYOKfPtZ5KM7O9qi6j3jlypqkuMJizyXV9E5+HQ
+         xRPdOiNnXK6TZQ/V4TDPyfGkMDCAK1weEoy1yu3gHGK04qFDZHCifkNSDWSKYtttpGgm
+         bj3a/JtetObnt00C3KHIVbP5QyPgLCSaxdpONJxbQw7fSJiNzwWIFijP4QYNrR13Nu2J
+         874Q==
+X-Gm-Message-State: AOJu0YyQPXM7OCih+0eVhnWzEiaQO5gGsXSHK96qgnoGtt9qWwwGe+lb
+	ud+WMjqG1AxSEuYZq240plSVGsrGwvpD2tioqKo8cjDcRK/Rpz4l8YHh1ZGoTY1qloRiBVHz8bn
+	rKjA=
+X-Gm-Gg: ASbGncu7xteI1xTX4pP646WvFHsEIt/OfsWb1ElGalB/aJ7mElsHSVDWEoUdwUgsOUg
+	esgJnG58UleFyHj7E2tt6epmg2ZspUnHr/O7+j2eZchzrASdtobU5FQRHoK7QRyylnvZSL03Dra
+	SakyYqKm0dtd2rNGWQk4lsnUxcCwpNYIWlYfWZSNCj1Bm4GDpggalp73a9OjN72pGAfEeg2criI
+	8V+/XVYZYvz9irx8T+90dsBoS1muNhmF4rU/H2A7jVmX6h32WonaT7i7DW/koZ/7XlQjWFhQD+9
+	b81X
+X-Google-Smtp-Source: AGHT+IFw3vi5gBv/+PBzElsQLFBW8gwbgc04WQ/TBWmy09BS1Trc/+BXbDqi3tSXKRTkK7KTyJorug==
+X-Received: by 2002:a05:6000:1885:b0:382:5010:c8de with SMTP id ffacd0b85a97d-38607c164f8mr1074793f8f.46.1733246190826;
+        Tue, 03 Dec 2024 09:16:30 -0800 (PST)
+Received: from localhost (p5dc6838f.dip0.t-ipconnect.de. [93.198.131.143])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-385ccd3a56fsm15903085f8f.62.2024.12.03.09.16.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2024 09:16:30 -0800 (PST)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/2] pwm: lpss: Move namespace import into a header
+Date: Tue,  3 Dec 2024 18:16:14 +0100
+Message-ID:  <3a99048a52aeee356d01dbf7f2f06e6e0826ed78.1733245406.git.ukleinek@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1733245406.git.ukleinek@kernel.org>
+References: <cover.1733245406.git.ukleinek@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2630; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=2uNM5E79VqxO+4hWUeY8pC50c4tRPQ6CI6tgNwDKkk4=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnTzzhhbwznRnHJ5gKYcuhn7fYxxBWZBHiXgPJb cl1DuWrimGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ0884QAKCRCPgPtYfRL+ TiknB/4jRyiWRDxkq5fCwPAgnXM3JxY4Neg/HTlIp9XiCARliVwvrg3pyDItMmDKwM7dN0eSaHJ Pa+JsdGwMEykPW1V0MfxOKe2i0y+3FmXJ1mZZUwezjCAzH47bTyHuzV9XIoQcK633xy4Uyr9wCO BhBMkUae4uh4z7nL5fbaR/BX3e00eoNahJP7KzQrXM4FCf1AZWLVPirqK33/9mK0sNBR6zYGwtO DK51mkVF09gU4TS6q8j8KYL7vBMq9w+FSJRZZnyBWu7bB8vom5U2KTCKjIbqeYZ7AsPbOti7Djn C/SB6uDAg+gqqYB+zRGX3Y1xapfc3Er2UvYqai5VgfNSMSCh
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-On Tue, 2024-12-03 at 22:56 +0800, Zijun Hu wrote:
-> On 2024/12/3 22:07, Thomas Weißschuh wrote:
-> > On 2024-12-03 08:58:26-0500, James Bottomley wrote:
-> > > On Tue, 2024-12-03 at 21:02 +0800, Zijun Hu wrote:
-> > > > On 2024/12/3 20:41, Greg Kroah-Hartman wrote:
-> > > > > On Tue, Dec 03, 2024 at 08:23:45PM +0800, Zijun Hu wrote:
-> > > [...]
-> > > > > > or squash such patch series into a single patch ?
-> > > > > > 
-> > > > > > various subsystem maintainers may not like squashing way.
-> > > > > 
-> > > > > Agreed, so look into either doing it in a bisectable way if
-> > > > > at all possible.  As I don't see a full series here, I can't
-> > > > > suggest how it needs to happen :(
-> > > > > 
-> > > > 
-> > > > let me send you a full series later and discuss how to solve
-> > > > this issue.
-> > > 
-> > > It's only slightly more complex than what we normally do: modify
-> > > all instances and then change the API.  In this case you have an
-> > > additional problem because the prototype "const void *" will
-> > > cause a mismatch if a function has "void *".  The easiest way to
-> > > solve this is probably to make device_find_child a macro that
-> > > coerces its function argument to having a non const "void *" and
-> > > then passes off to the real function.  If you do that in the
-> > > first patch, then you can constify all the consumers and finally
-> > > remove the macro coercion in the last patch.
-> > 
-> > Casting function pointers like that should be detected and trapped
-> > by control flow integrity checking (KCFI).
-> > 
-> > Another possibility would be to use a macro and _Generic to
-> > dispatch to two different backing functions. See __BIN_ATTR() in
-> > include/linux/sysfs.h for an inspiration.
+Each user of the exported symbols related to the pwm-lpss driver needs
+to import the matching namespace. So this can just be done in the header
+together with the prototypes.
 
-That's way over complicated for this conversion: done properly there
-should be no need for _Generic() compile time type matching at all.
+This fixes drivers/pinctrl/intel/pinctrl-intel.c which failed to import
+that namespace before. (However this didn't hurt because the pwm-lpss
+module namespace isn't used; see the next commit.)
 
-> this way may fix building error issue but does not achieve our
-> purpose. our purpose is that there are only constified
-> device_find_child().
-> 
-> 
-> > This also enables an incremental migration.
-> 
-> change the API prototype from:
-> device_find_child(..., void *data_0, int (*match)(struct device *dev,
-> void *data));
-> 
-> to:
-> device_find_child(..., const void *data_0, int (*match)(struct device
-> *dev, const void *data));
-> 
-> For @data_0,  void * -> const void * is okay.
-> but for @match, the problem is function pointer type incompatibility.
-> 
-> there are two solutions base on discussions.
-> 
-> 1) squashing likewise Greg mentioned.
->    Do all of the "prep work" first, and then
->    do the const change at the very end, all at once.
-> 
-> 2)  as changing platform_driver's remove() prototype.
-> Commit: e70140ba0d2b ("Get rid of 'remove_new' relic from platform
-> driver struct")
-> 
->  introduce extra device_find_child_new() which is constified  -> use
-> *_new() replace ALL device_find_child() instances one by one -> 
-> remove device_find_child() -> rename *_new() to device_find_child()
-> once.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ drivers/pwm/pwm-lpss-pci.c                 | 2 --
+ drivers/pwm/pwm-lpss-platform.c            | 2 --
+ include/linux/platform_data/x86/pwm-lpss.h | 7 +++++++
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
-Why bother with the last step, which churns the entire code base again?
-Why not call the new function device_find_child_const() and simply keep
-it (it's descriptive of its function).  That way you can have a patch
-series without merging and at the end simply remove the old function.
-
-Regards,
-
-James
+diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
+index f7ece2809e6b..8615c44c1034 100644
+--- a/drivers/pwm/pwm-lpss-pci.c
++++ b/drivers/pwm/pwm-lpss-pci.c
+@@ -8,7 +8,6 @@
+  */
+ 
+ #include <linux/kernel.h>
+-#include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/pm_runtime.h>
+ 
+@@ -70,4 +69,3 @@ module_pci_driver(pwm_lpss_driver_pci);
+ 
+ MODULE_DESCRIPTION("PWM PCI driver for Intel LPSS");
+ MODULE_LICENSE("GPL v2");
+-MODULE_IMPORT_NS(PWM_LPSS);
+diff --git a/drivers/pwm/pwm-lpss-platform.c b/drivers/pwm/pwm-lpss-platform.c
+index 5130238a4567..3de1ab2cff54 100644
+--- a/drivers/pwm/pwm-lpss-platform.c
++++ b/drivers/pwm/pwm-lpss-platform.c
+@@ -9,7 +9,6 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/mod_devicetable.h>
+-#include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/property.h>
+@@ -78,5 +77,4 @@ module_platform_driver(pwm_lpss_driver_platform);
+ 
+ MODULE_DESCRIPTION("PWM platform driver for Intel LPSS");
+ MODULE_LICENSE("GPL v2");
+-MODULE_IMPORT_NS(PWM_LPSS);
+ MODULE_ALIAS("platform:pwm-lpss");
+diff --git a/include/linux/platform_data/x86/pwm-lpss.h b/include/linux/platform_data/x86/pwm-lpss.h
+index 752c06b47cc8..0a1025f6cd58 100644
+--- a/include/linux/platform_data/x86/pwm-lpss.h
++++ b/include/linux/platform_data/x86/pwm-lpss.h
+@@ -4,6 +4,7 @@
+ #ifndef __PLATFORM_DATA_X86_PWM_LPSS_H
+ #define __PLATFORM_DATA_X86_PWM_LPSS_H
+ 
++#include <linux/module.h>
+ #include <linux/types.h>
+ 
+ struct device;
+@@ -30,4 +31,10 @@ struct pwm_lpss_boardinfo {
+ struct pwm_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base,
+ 				     const struct pwm_lpss_boardinfo *info);
+ 
++/*
++ * The above function and the pwm_lpss_boardinfo variables in
++ * drivers/pwm/pwm-lpss.h are defined in the PWM_LPSS namespace.
++ */
++MODULE_IMPORT_NS(PWM_LPSS);
++
+ #endif	/* __PLATFORM_DATA_X86_PWM_LPSS_H */
+-- 
+2.45.2
 
 
