@@ -1,54 +1,53 @@
-Return-Path: <linux-pwm+bounces-4187-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4188-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F16CB9E0FFF
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Dec 2024 01:37:20 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6618A9E1004
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Dec 2024 01:37:27 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 388E8B2365F
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Dec 2024 00:37:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8D1116544A
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Dec 2024 00:37:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E959C154BE4;
-	Tue,  3 Dec 2024 00:36:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CEEE4C60B;
+	Tue,  3 Dec 2024 00:36:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="u1JlnJt5"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="D949jriR"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from pv50p00im-zteg10011501.me.com (pv50p00im-zteg10011501.me.com [17.58.6.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB8F370
-	for <linux-pwm@vger.kernel.org>; Tue,  3 Dec 2024 00:36:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E7F33CFC
+	for <linux-pwm@vger.kernel.org>; Tue,  3 Dec 2024 00:36:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733186167; cv=none; b=mNiMfb2sfRqnQ5Uluvjx5B7pfh695y8S37drMNIbE7JEF+PePMmxINBoQLuziMpoGfkJ1tAOMpyui+29oMeJpnaHakLOFRlKK0/jc7/eigtBo0ho8hj36t4oD0Oj1FdoxNBdIJEoO+Ep4KA8avVjN6qMjCh9Atee68e2/6yFg7c=
+	t=1733186186; cv=none; b=fbCqgbptf1WbSlb2TaJPru1d67RgEIEh3689i2BPy7Rq4BkGuz5VTNjH1Zg2lxYy9unlzJOR3D6MeGFihG5u1P5h+blZaCc3Xs4ZquR+c3hudF87VL8KbGhWUZKWwcNACvy84h8+Go5bEFZnxUXaLODGJaHGV7GN+1DHoWCWk6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733186167; c=relaxed/simple;
-	bh=XgwVx3M7WixZKPRC36l6Q/SYvFE46fLJpMWmOkZL+ro=;
+	s=arc-20240116; t=1733186186; c=relaxed/simple;
+	bh=Pmw7vYn6qgzOMO6/dIiRil2NNEOTXXUDIaI88Xs0kLk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jDlfzK2SGo7MnSp3QddVKiB+DinytZbP9o4mrbtZqp+znk/H7THmIz7q4jVSQZoCLz8Hg8bPFBQfmr88USHIzMnf22U/HYheCigZZxwsGbLFut77eOi+tI+fDlXETLrGQWuNvK9egIJX91Q9R38tfof6q8pXtv0Dm42FPmbybVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=u1JlnJt5; arc=none smtp.client-ip=17.58.6.42
+	 In-Reply-To:To:Cc; b=eyUuF0A/XLvcCONMR7F3Jm0UJjeSzrBVlv1pgTIU8gbt42TUsSHJUBogKhApy066kWW/WjO78Q3W+WP8Z5j1WFFF7wNzi3eyMm2Ga1nRDhC5fwOtIM83Ir9YOqGGoJOcWdtfakT0NodSW0lIjrnciifh7xi4Httnt16d0X1iL30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=D949jriR; arc=none smtp.client-ip=17.58.6.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1733186163;
-	bh=8oKTqrAKebW9WBOlzoM4TxO8uixngvvulXc2gSncQpE=;
+	s=1a1hai; t=1733186184;
+	bh=IiwvAxmsMkXtcn4MTTv7QwRfPfONTV00nftEb1rZOV4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:
 	 x-icloud-hme;
-	b=u1JlnJt5TlikeEAdxSGIdqpUn09/s5OJrSutqhAw4UQ3FUbpKVcLtcZq/tzWPFj0S
-	 2ni5MzccVAEzqLTN3RdwfISAmiwWmeIiS4kSTHOG7pnkJUCl8Ltzmb/r1WRNlRyWES
-	 dJj8uC3cfQmdAXSNDNa70S8/SnZ7MQcJak+7F6NmyWOEQQ+bYmPIrK8kX0p2eVESkt
-	 AkPLvyfKoS2LrvGv7rsGHXP9JWwaZgSAoMdL0mowmC4mEYB9IccdyQ+PpzYKumyllk
-	 Fg85uB1PM/2C0OiZlaQbjsQDPuOSbwcJcTTfWk5rY7BzUQgWUVmZGlBxXUOvbDvYVj
-	 zcNQ3TmSKjQJA==
+	b=D949jriRjnEuZv55IaXlTezpTBP0oTLN0tjcD66KylzVfRFBw5FJVnVNc4HzKEued
+	 BSRukh6XUyf33FKsfmGlDk8dN+oY2dNTKTa6nMS2l44qgvuRByVm2v6+qhEIWFg4fK
+	 lIlc8VhpxiiBHYqk5vUmEm3zlGDQJy5/RN4T55qbH6oM5KZBaViTjQ3nU2jXukxAeG
+	 YYgoVOhnfwedNrVGZHSiDwSDPpc6wWi7XfhckaneCDIJ7mJ3fhmvdw/XrDSqTeCH4i
+	 Z2tEHG5XQQnYmrEbxupyotVkgN3Wqn+jO1CSnQVck6og9N1GeAyOAmWta96i0owje9
+	 5szmAPOowFNYQ==
 Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id 26EF74A0457;
-	Tue,  3 Dec 2024 00:35:41 +0000 (UTC)
+	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id 804FE4A00B8;
+	Tue,  3 Dec 2024 00:36:03 +0000 (UTC)
 From: Zijun Hu <zijun_hu@icloud.com>
-Date: Tue, 03 Dec 2024 08:33:25 +0800
-Subject: [PATCH v2 03/32] drm/mediatek: Adapt for constified
- device_find_child()
+Date: Tue, 03 Dec 2024 08:33:26 +0800
+Subject: [PATCH v2 04/32] hwmon: Adapt for constified device_find_child()
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -57,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241203-const_dfc_done-v2-3-7436a98c497f@quicinc.com>
+Message-Id: <20241203-const_dfc_done-v2-4-7436a98c497f@quicinc.com>
 References: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
 In-Reply-To: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -114,8 +113,8 @@ Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org,
  arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org, 
  linux-remoteproc@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
 X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: r2PHi7bIcwf9ElW8aqnD_T2_M0lSLrFl
-X-Proofpoint-ORIG-GUID: r2PHi7bIcwf9ElW8aqnD_T2_M0lSLrFl
+X-Proofpoint-GUID: hnVgDw1K1lIcz6xDWLO_ZLGwCsDdmTOX
+X-Proofpoint-ORIG-GUID: hnVgDw1K1lIcz6xDWLO_ZLGwCsDdmTOX
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2024-12-02_14,2024-12-02_01,2024-11-22_01
@@ -130,26 +129,26 @@ From: Zijun Hu <quic_zijuhu@quicinc.com>
 device_find_child() has been constified to take new match function type:
 typedef int (*device_match_t)(struct device *dev, const void *data);
 
-Make mtk_drm_match() take a const pointer to adapt for the new type.
+Make hwmon_match_device() take a const pointer to adapt for the new type.
 
 Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 2 +-
+ drivers/hwmon/hwmon.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 9a8ef8558da921c75c1ab1986795bbc0a394899d..7a276c3965cd0e9147dffb28693fd9d1a1053fc7 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -359,7 +359,7 @@ static const struct of_device_id mtk_drm_of_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, mtk_drm_of_ids);
+diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
+index 49b366254529fe6c03e8af6870ebd269cdcfd70c..9325bec83ae52d6519bcbd72b2e6213cfaee0b6d 100644
+--- a/drivers/hwmon/hwmon.c
++++ b/drivers/hwmon/hwmon.c
+@@ -341,7 +341,7 @@ static int hwmon_attr_base(enum hwmon_sensor_types type)
  
--static int mtk_drm_match(struct device *dev, void *data)
-+static int mtk_drm_match(struct device *dev, const void *data)
+ static DEFINE_MUTEX(hwmon_pec_mutex);
+ 
+-static int hwmon_match_device(struct device *dev, void *data)
++static int hwmon_match_device(struct device *dev, const void *data)
  {
- 	if (!strncmp(dev_name(dev), "mediatek-drm", sizeof("mediatek-drm") - 1))
- 		return true;
+ 	return dev->class == &hwmon_class;
+ }
 
 -- 
 2.34.1
