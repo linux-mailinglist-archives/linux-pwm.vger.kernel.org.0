@@ -1,245 +1,172 @@
-Return-Path: <linux-pwm+bounces-4221-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4222-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A4759E3211
-	for <lists+linux-pwm@lfdr.de>; Wed,  4 Dec 2024 04:24:38 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1426B9E39DF
+	for <lists+linux-pwm@lfdr.de>; Wed,  4 Dec 2024 13:27:35 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4C1FAB29AEC
-	for <lists+linux-pwm@lfdr.de>; Wed,  4 Dec 2024 03:23:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 88D81163D98
+	for <lists+linux-pwm@lfdr.de>; Wed,  4 Dec 2024 12:27:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E8A314F9F7;
-	Wed,  4 Dec 2024 03:23:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CCC81BF7FC;
+	Wed,  4 Dec 2024 12:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="tEgWJyg7"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="aDx0LVkM"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011032.outbound.protection.outlook.com [52.103.67.32])
+Received: from pv50p00im-zteg10011401.me.com (pv50p00im-zteg10011401.me.com [17.58.6.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA0017BA1;
-	Wed,  4 Dec 2024 03:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733282601; cv=fail; b=l7FOBd9pcgoTQKskS/ItT678P89Ysas9zkd20m/qftGwVuwDww0eN1bDpD0Lo/MVpARQe5aeP8HDRcYwuHLwfezB0u5VAbd9SPWteX7OTPBm6N1avHuvShDBm6Y00qsta+JHOIsKOKihcjuPcA2Cbt7uoXQd/+ZJQQsMej5RrGg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733282601; c=relaxed/simple;
-	bh=aw3kKwzk90aNKJaAya5tp/LnLs9TY8OJlBs2ra/cw0Q=;
-	h=Message-ID:Date:Subject:To:References:Cc:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=PufzT7KddMWO3XSkXLdrVNhb9eIpaaDPLNwdmRBT40LsOI77QmXXzC8+DioSIIqheHmpSzvCCkyGZqA4T9xurpPY5Hn2ddo9BlozBTFAzvY9EZShoDKe1R1evaEWIzCe1tNZN1DxyTm7zh3Rx5vgzSlQzf5JBUIRNZ8EhQy+ko4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=tEgWJyg7; arc=fail smtp.client-ip=52.103.67.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qj/VesgACq2oA+Y4w44cY4KcXDb1ahimCI4i9paJh840r+F0s1hl4gOe5w1VjkkFtELvfjkjfFyXoEFgocGf9qoJk0jmhqs5pbUBcyQPAkJejZoT+dMeFr6BjQZnfGkwvGqG8z/4F//76tRksM2yGX+sbNKgKYKvZQus7vp/7uQht0guGZof08l4/GjSzbACypYscjp4OPgTiFdYrUFzyqeChkdCwjvLlBKk3MJdv6JNNu3IskpIKoPghaD6Qi/cnH8vAgF9v7PC4AJ1p2uwsh8/DrCetNFQuo+pWYABT+bpWcb8gwjiLQCcOfhUYj9PCLomZ+e8xL8QmSc6/+lbZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dEIYQkyB4Smd+P+BECZuWMz6OmOagP+INf/nQWIDIJ8=;
- b=jytept3bOjdo/OfP23oECJd6YIAXOF+mrjKZPohuF31zRsbPN17mSOq6NeBbDFp9R1Ju0havrsl8g8kqMoDoIDA75QLLl5aOe/snBo+SxW6/C48w5LLQQssYPDV4j4BYrkVLZGmVNIgGDH2njKbYwY/CZiuhkhMiCIZQNRlLcCxu46X/rx3iJznVygQ4jzRPxKif3/KcFdqZXmIMbnzyHIpNWk/pQSUfrB7wKPNptUqBxUHUAc5DVspNyxXuxMnincYqwg4jS0ppepxgiVTnkbatFB9tKZG8tJrt5buFBDDGPasET1NanMMlkGyJ4R0ckMTAEOIFOQ7HgRNMYnC+TQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dEIYQkyB4Smd+P+BECZuWMz6OmOagP+INf/nQWIDIJ8=;
- b=tEgWJyg7H9e3zdNeZYlRwaNdCge0VayOZqRu5CC/XWdKn1nha/2OcIyCNkPT308pyT5BErQoR3+FhIBj3WFLu2CTtRbN1Gr3HJGkPpGYviGX40cNvlqSwHsbStZLVfrHnluTAc6korFWML59TbwMIjMfD+BpU3Cgi+9kO/Xme6CbGH0nVKaN4H/XdOcqAbIPeWi7TtNGmRLDlmIXarMGEdS4dz1xz78KE0QZG8XNX5+BkXMqX7ZhvUzu/zg7oEYBG8uddKOegWkqosQRr4VSseRFgpIhsFfFw4fYidYjvnIUbTb9rWXOT1OLsHk1DPJcyiT7kmD0DJay2sQYhHfYYw==
-Received: from MA1PR01MB3979.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:77::15)
- by PN0PR01MB9037.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:164::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.19; Wed, 4 Dec
- 2024 03:23:12 +0000
-Received: from MA1PR01MB3979.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::8f4f:f03b:c8ca:7432]) by MA1PR01MB3979.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::8f4f:f03b:c8ca:7432%3]) with mapi id 15.20.8230.010; Wed, 4 Dec 2024
- 03:23:12 +0000
-Message-ID:
- <MA1PR01MB3979DAB77659B77873E009F7FE372@MA1PR01MB3979.INDPRD01.PROD.OUTLOOK.COM>
-Date: Wed, 4 Dec 2024 11:23:07 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/3] pwm: Add pwm driver for Sophgo SG2042
-To: ukleinek@kernel.org
-References: <cover.1733281657.git.unicorn_wang@outlook.com>
-Cc: Chen Wang <unicornxw@gmail.com>, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, inochiama@outlook.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-riscv@lists.infradead.org, chao.wei@sophgo.com,
- haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, chunzhi.lin@sophgo.com
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <cover.1733281657.git.unicorn_wang@outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2P153CA0009.APCP153.PROD.OUTLOOK.COM (2603:1096::19) To
- MA1PR01MB3979.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:77::15)
-X-Microsoft-Original-Message-ID:
- <0bace35b-2679-4017-a3b7-a54a3689bd6d@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAA51B87E0
+	for <linux-pwm@vger.kernel.org>; Wed,  4 Dec 2024 12:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733315229; cv=none; b=dQeYFRGcvGmEjc+V6qIWOsgnlqrrf4mGLEhvYDM+U/KO6kf3hSoN9JneaIWSQ1Hi+qi/JZWlQAmywAVEpLUXcs+/laZ8PBnd19qQXwNa5PfyPwHbD+86ggVCSh6PDyJy1YNgeNKQwZG078yDQrhMQsWjGPdi5wg/wkO4tNDPWX0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733315229; c=relaxed/simple;
+	bh=b3cKO8E37kdGEfPQBy2NupErjAuGZ0w9V7NN+3pjucc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ljmp1b/5+tF9ZJuHMlfBSzbs0l/qF1QxvPJ2F67j/Lga35tzO0K1Er5ORwPDqVH3yVpNGTzuOUMkxxEsSO3DJAMtGZAgyaSmVuiG+Q0LuarVkO/F+tyIuRL9cJ/gb1BxRIppJJqPYV9HDc8hijuCl5eBf9iJ1velblp4yv6RGZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=aDx0LVkM; arc=none smtp.client-ip=17.58.6.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; t=1733315226;
+	bh=tDbYa+5DWmHdZ9lmVLNA7xMZvJoZ/PCpc6Zau1xliNU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:
+	 x-icloud-hme;
+	b=aDx0LVkMUXFI75QpCfQtwEzziTl2NnjdGJ/9Nl6EjkD9AoNOPkj0pNJDmDS0yOxmo
+	 cFAXLbMOmPcOl5uunRBBrqBVYZF5ppxfVoWTl3S1fXUPYvDXVgmxgrfgiOzuzDhljR
+	 JXz5mSklSuuNIhx7A4INyoL4v8SXD0un9r9AkY3EWP5hUjq0cVMBNRe3UAI+WH+UEp
+	 aQcXPRWXKjSKZb3dQybv2/fEczrg8mOY6isUSLdmtOWnHvZ0W1/xlosR4mnRECds2h
+	 6Ay6kSNLijQWwdsoHl1pqn9BntMizpWoDbFHr5J8zkhSqKMjCSXP0KeQ2EZIN5IQ7P
+	 WHMoRxUFUJF5Q==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10011401.me.com (Postfix) with ESMTPSA id B793434BA6BD;
+	Wed,  4 Dec 2024 12:26:37 +0000 (UTC)
+Message-ID: <235ce0a9-1db1-4558-817b-6f92f22be5ab@icloud.com>
+Date: Wed, 4 Dec 2024 20:26:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA1PR01MB3979:EE_|PN0PR01MB9037:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8898a657-b16e-4a57-9721-08dd1412fb41
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|5072599009|7092599003|15080799006|19110799003|461199028|6090799003|8060799006|1602099012|440099028|10035399004|4302099013|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?b2xDaHBOaXh1eWNIWm10cS9pbVVCblNJajNIS0toNTN0aXpQMVBIVTdxMjJJ?=
- =?utf-8?B?bW5ldzJ3N2pjNG0vR3pCamNSbUx6UURvRElOTHVVMzJodjdwMy9LTjl5aTBz?=
- =?utf-8?B?blBNcjVvWHpkbTlYNHR6eFZyOVhXUUVjWHpTUWptYkdDanFwdHFiTEdJTGEw?=
- =?utf-8?B?MUJoM2h1UkJ5RStsVGV1UWdzR0h3bE1kNlpiM1ZaVTIwenJVRE9uSmI0eFRx?=
- =?utf-8?B?YmxOOVVCUjluaGEvaG9TREhnWkZkYlpyQjNnREFJY0RWbU9SdmVwL2R3UnlC?=
- =?utf-8?B?WmsrR0lycndyNHN4RDhVVjV2d0djWjU1VkF5b08yMGh2djZZMTZRNDBDZEdo?=
- =?utf-8?B?ejZUb1BZZWUxc3VrVUN2Y1p1RjdpTk9pc2RsZEx6OFArUnRhQnJIQUZ1cnRu?=
- =?utf-8?B?eTdIMTc0V3hHNHlkL2xKMTFsZEllc2oydzFGdnZ6RmdXUTc2WTZyc01ZTVpU?=
- =?utf-8?B?dzZqOTZLdTZiOGswK2pOZFpCTEJlOVN0cTUvc1pkTmJkT0JlWmFwUDJCRGht?=
- =?utf-8?B?TnRTMThDektVbENOUXJ5eTY3aW4wZ1hlekREZzdqRDV1ckFwWHlPWWo1bVEx?=
- =?utf-8?B?NDlPS3ZNU0c0N0ZWd0F2VFRtWlVEdzFINnE0eGV0bjBLMlhUckNCUTg3KzVG?=
- =?utf-8?B?RlhvOXk2bVZCbzB6QURXNWtzUHdZeEY0SW9LTkZFTnAzb0VsekliT1VKdW5Z?=
- =?utf-8?B?VFNpbW41d2xmQjFwZGNuTUJEdmcyVTVkL0hxYlZscXpIK3VNQkEvYUNMNDlE?=
- =?utf-8?B?NUVrWnlTQjFUVi90YkkydHF6aUJ5Nzlvc0tzTWtKQk9CMFdEN1lpdk1SR2ZK?=
- =?utf-8?B?YWR5YmxMdkIrMlZyamc3YzhrL245Z3lwWm43WXVzMUJ5Q2pnTjNOck02alJK?=
- =?utf-8?B?UndxZEd1eUFnYzVienhTUnBrUWdZSTFDWGVwSkd2QVo0STdPTnd5NldvcUJ3?=
- =?utf-8?B?SkhoUUZ3YUdJU2hqZFJPLzU2MnFoL0ZtUjNRdTlRR0JPVzE4Si8zakVNcmly?=
- =?utf-8?B?RzJoeStBZTEwRlhaVHZIV25nYWRlM25uMHhRamNDcS9OT1hOQ1RQbUIvVlVJ?=
- =?utf-8?B?TkdhU00zKzVRYTR5dXdZYmhZOWIwSkZWZDN4V0N6cmFOa2lnLzZGdGhtV2sw?=
- =?utf-8?B?VGl0SzhmNTdlZG1rRVFjYWRBck5kRW9MTHpvaUdETFNGQVN0SCtlcVFNUjh6?=
- =?utf-8?B?ZXZlL21qQzI4OUVFMDRJemtaaTVOVXkva01IWklPSXJaMUdFeXplOHFPMXFp?=
- =?utf-8?B?dmRhQTBKSWdocGk4a05wL1RObXYwQ3h2UHhFc2xWWFhGT1BhZDc2Q2RmYk1q?=
- =?utf-8?B?NEV2dC9vUzQyN3FGYnVxNXJ1eVJzSVdMS3l3aFpXT2U4cDJwYkxxY1o0TktB?=
- =?utf-8?B?OGNCNWU4NFQ2ODU2UWF1MUwyTFZqZUJobnBpZ3J6WFI5NVhoMzc3YmxTblZP?=
- =?utf-8?B?OURKdUwweC9nTTAvbFRwa2xkaUZiQTFqVXU1YlE2SmorcTVNcjdvWWZMYTRU?=
- =?utf-8?B?Wm84SVlPNUpwRlVHeHNvT2crTzBDbHJYUVNXVGVvZ0JwVXNjU0hWVzcxNDJv?=
- =?utf-8?B?aUR5TDZhbFhNMjFOelQvblB1NFpwaVNGVDZFNXlTbjExVVZQOGZEUUw3ZDFB?=
- =?utf-8?Q?bNy+K/SG6Jn0Tb8XskzNH7V17txBJ/K0MhfcpKDEq7HE=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Ti92bml4RXVudGFVblRSWXNmQzlpSDByNG9BL1NaR05qT3FIVmZkSGYxOXZu?=
- =?utf-8?B?SEw5QlVTaERJUFM0QnVpN0xnZVJkOXVORHE1a0JBc2RUb2JiZjk4aXZBbUor?=
- =?utf-8?B?U25rbmFuWVppREZpUFoySDVyNjUyZU1xY1dYTHAxaUJmOE5OOTY3U3Evck5q?=
- =?utf-8?B?VzBXeU1CemRXcTl0Vms3OWlQWnFDdVkzZzhWM0FLVWxqK0R5dkpSWEtBR0k0?=
- =?utf-8?B?cDdyZ00xQ1NrbkdDZzBOVkVJMVZNSXllUFJ3Q1BSSVlXWVNQWEVqNjNoUFRC?=
- =?utf-8?B?ZWdwUnNoZVBqLzNLeUtNNXRFQ2JQQUJKWDFKYkVwTUhpQy9mZEkvTmxYNEsz?=
- =?utf-8?B?VXpMbU5wOUJRcjV2TlZXVWdjOGtMa2pSYWtnRGo3elhLR3VJcHdkV01ZR0ND?=
- =?utf-8?B?VXdVZlJNUXpvbmttMEtSUVdvUjRWVXdKVHN0VzArcjkvYWFMUzFXbXo1SjdR?=
- =?utf-8?B?YlNjUjBLQVlQYUVuVDBHL3dmMEJTOFdhYTRvVkZjWjVKZGNmU255UmNBcWNH?=
- =?utf-8?B?V2tFenkxZ1J1UGNhd2VWSU1lanB6enNuTkNXUklLTDVFOG5JLzkrOEIyWmpq?=
- =?utf-8?B?OEl3TzFsRHA3bzdYZmNXMlQ2YXRkM1d4YUZMUk5kRUhCS09wam5VOTJNVG5L?=
- =?utf-8?B?TkpxVWZBbkZ2VDNqQ3cxVUQ3L2lNbzJldUh1Tm9jeFBjVEY4amgzaHpBQWlt?=
- =?utf-8?B?VFJlMUxkY1cyeUNaM2xHTjBoN2xlY2FVUEhKcmxucCtLa3VGUHpaMklYVUpK?=
- =?utf-8?B?ZEQ0Sk5BZyswMWtwc2E0cjIxdG54clNLNUNIbVpybkhxaytzS3pibXZBQTRj?=
- =?utf-8?B?WG5DRmlEbVl2dTFQOFF1aFRsZTVtRDJUU0pLQ25KdFB1NTQ4bkhZZlB6QVZY?=
- =?utf-8?B?cVVNVzRJZnhGSUtQODdwc2tuYW0rbUZsYXNKTVVDR0NwTkdET2ZjMEF6U1pL?=
- =?utf-8?B?YWJYZUhuMUZ6R0ZrVFl5VFhUVU1rRllOajg2bEZoZ3FzcExLdEFwNm8wOXQ5?=
- =?utf-8?B?ZXdPRDY1eHdFZTFMbE5GMzU2K29zb3NkczVLNUk1YWEzU1JMZ21HNnVkQldX?=
- =?utf-8?B?WmJaUUFJVGVTcjlLMzZyWEhQbWx0VVRJZmxOWG5RRzBQVzdtWEtJdDRuWXho?=
- =?utf-8?B?bTZ2NWo5NFBiSDBGMllTNUd5L0YvdWxkQXdXTnd5eXFvV2dNUnJwRU9YQWQv?=
- =?utf-8?B?QzhLcEVIeFVjRjZBcmovNU52SWJQa2dVV3ZwTHR5Vk1iUUFGNnc0YkpYTnFQ?=
- =?utf-8?B?c1JGZkhMaGFtbHpsTVhMZkYzdm1wd05GeWM4SGljVXpkVVNXZTFJSDBQSm9Q?=
- =?utf-8?B?MEZ2akhISVFqZWNsMHg3Sm5FT2MyMVRZK2VGTlJ0bGhGbDYySnNQK09hSnV2?=
- =?utf-8?B?T2RTbDlnVjFYYTBYbDVJOGlxVUJBYnhuU2lLRzFjcXM2MXg2eHhvL2xKaXY5?=
- =?utf-8?B?bkordzhmMUpzOEZMMmdkZUoyZGpGMnlJS1EvOGt5alVsbGFMQk9xY1N5Y2Mw?=
- =?utf-8?B?OXN1L25ZYWk5NnEya09HNGlIUzVXZUo4cVR4elc0c2lpVVNRVGdFK1RVSHd4?=
- =?utf-8?B?TUp0aTFMR0J1ZXJiQldSUm1BajdlenZQUUN0RmdGZ1JqWVpLdUQ5REFaNHdy?=
- =?utf-8?B?d3Q5aEIxMW1jL2V5WFNDOVFiQXlYTnFiRXl2d0ZGSk41Z0wxMG1JeW5id3NE?=
- =?utf-8?Q?keIbzQg+Ji8Nkb5q2Zsk?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8898a657-b16e-4a57-9721-08dd1412fb41
-X-MS-Exchange-CrossTenant-AuthSource: MA1PR01MB3979.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2024 03:23:11.7674
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB9037
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/32] driver core: Constify API device_find_child()
+ and adapt for various existing usages
+To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Martin Tuma <martin.tuma@digiteqautomotive.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Andreas Noever <andreas.noever@gmail.com>,
+ Michael Jamet <michael.jamet@intel.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Yehezkel Bernat <YehezkelShB@gmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+ Jiri Slaby <jirislaby@kernel.org>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+ Mike Christie <michael.christie@oracle.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Nilesh Javali <njavali@marvell.com>,
+ Manish Rangankar <mrangankar@marvell.com>,
+ GR-QLogic-Storage-Upstream@marvell.com, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Andreas Larsson <andreas@gaisler.com>, Stuart Yoder <stuyoder@gmail.com>,
+ Laurentiu Tudor <laurentiu.tudor@nxp.com>, Jens Axboe <axboe@kernel.dk>,
+ Sudeep Holla <sudeep.holla@arm.com>,
+ Cristian Marussi <cristian.marussi@arm.com>, Ard Biesheuvel
+ <ardb@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+ linux-pwm@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux1394-devel@lists.sourceforge.net, linux-serial@vger.kernel.org,
+ linux-sound@vger.kernel.org, open-iscsi@googlegroups.com,
+ linux-scsi@vger.kernel.org, linux-cxl@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
+ arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20241203-const_dfc_done-v2-0-7436a98c497f@quicinc.com>
+ <g32cigmktmj4egkq2tof27el2yss4liccfxgebkgqvkil32mlb@e3ta4ezv7y4m>
+ <9d34bd6f-b120-428a-837b-5a5813e14618@icloud.com>
+ <2024120320-manual-jockey-dfd1@gregkh>
+ <b9885785-d4d4-4c72-b425-3dc552651d7e@icloud.com>
+ <8eb7c0c54b280b8eb72f82032ede802c001ab087.camel@HansenPartnership.com>
+ <8fb887a0-3634-4e07-9f0d-d8d7c72ca802@t-8ch.de>
+ <f5ea7e17-5550-4658-8f4c-1c51827c7627@icloud.com>
+ <108c63c753f2f637a72c2e105ac138f80d4b0859.camel@HansenPartnership.com>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <108c63c753f2f637a72c2e105ac138f80d4b0859.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: Ptou9-aUclkqdkvBrep0JqLqpE5OAxzN
+X-Proofpoint-GUID: Ptou9-aUclkqdkvBrep0JqLqpE5OAxzN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-04_09,2024-12-04_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ mlxlogscore=999 suspectscore=0 malwarescore=0 bulkscore=0 mlxscore=0
+ spamscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2412040096
 
-Hi, Uwe,
+On 2024/12/3 23:34, James Bottomley wrote:
+>>> This also enables an incremental migration.
+>> change the API prototype from:
+>> device_find_child(..., void *data_0, int (*match)(struct device *dev,
+>> void *data));
+>>
+>> to:
+>> device_find_child(..., const void *data_0, int (*match)(struct device
+>> *dev, const void *data));
+>>
+>> For @data_0,  void * -> const void * is okay.
+>> but for @match, the problem is function pointer type incompatibility.
+>>
+>> there are two solutions base on discussions.
+>>
+>> 1) squashing likewise Greg mentioned.
+>>    Do all of the "prep work" first, and then
+>>    do the const change at the very end, all at once.
+>>
+>> 2)  as changing platform_driver's remove() prototype.
+>> Commit: e70140ba0d2b ("Get rid of 'remove_new' relic from platform
+>> driver struct")
+>>
+>>  introduce extra device_find_child_new() which is constified  -> use
+>> *_new() replace ALL device_find_child() instances one by one -> 
+>> remove device_find_child() -> rename *_new() to device_find_child()
+>> once.
+> Why bother with the last step, which churns the entire code base again?
 
-I just upgraded this patchset and rebased it to the latest v6.13-rc1, 
-hope you can merge it in v6.14.
+keep the good API name device_find_child().
 
-BTW, you just please handle the bindings & driver part, I will handle 
-the left DTS part.
+> Why not call the new function device_find_child_const() and simply keep
+> it (it's descriptive of its function).  That way you can have a patch
+> series without merging and at the end simply remove the old function.
 
-Thanks,
+device_find_child is a good name for the API, 'find' already means const.
 
-Chen
-
-On 2024/12/4 11:15, Chen Wang wrote:
-> From: Chen Wang <unicorn_wang@outlook.com>
->
-> Add driver for pwm controller of Sophgo SG2042 SoC.
->
-> Thanks,
-> Chen
->
-> ---
->
-> Changes in v6:
->    Nothing major changes just rebased onto v6.13-rc1 and retested.
->
-> Changes in v5:
->    The patch series is based on v6.12-rc1. You can simply review or test
->    the patches at the link [5].
->
->    Updated driver to add resets property for pwm controller node as per
->    suggestion from Inochi.
->
-> Changes in v4:
->    The patch series is based on v6.12-rc1. You can simply review or test
->    the patches at the link [4].
->
->    Updated driver to set property atomic of pwm_chip to true as per suggestion
->    from Sean.
->
-> Changes in v3:
->    The patch series is catched up with v6.12-rc1. You can simply review or test
->    the patches at the link [3].
->
->    Add patch #3 for dts part change.
->
-> Changes in v2:
->    The patch series is based on v6.11-rc6. You can simply review or test the
->    patches at the link [2].
->
->    Fixed following issues as per comments from Yixun Lan, Krzysztof Kozlowski
->    and Uwe Kleine-König, thanks.
->
->    - Some minor issues in dt-bindings.
->    - driver issues, use macros with name prefix for registers access; add
->      limitations comments; fixed potential calculation overflow problem;
->      add .get_state() callback and other miscellaneous code improvements.
->
-> Changes in v1:
->    The patch series is based on v6.11-rc6. You can simply review or test the
->    patches at the link [1].
->
-> Link: https://lore.kernel.org/linux-riscv/cover.1725536870.git.unicorn_wang@outlook.com/ [1]
-> Link: https://lore.kernel.org/linux-riscv/cover.1725931796.git.unicorn_wang@outlook.com/ [2]
-> Link: https://lore.kernel.org/linux-riscv/cover.1728355974.git.unicorn_wang@outlook.com/ [3]
-> Link: https://lore.kernel.org/linux-riscv/cover.1729037302.git.unicorn_wang@outlook.com/ [4]
-> Link: https://lore.kernel.org/linux-riscv/cover.1729843087.git.unicorn_wang@outlook.com/ [5]
-> ---
->
-> Chen Wang (3):
->    dt-bindings: pwm: sophgo: add PWM controller for SG2042
->    pwm: sophgo: add driver for Sophgo SG2042 PWM
->    riscv: sophgo: dts: add pwm controller for SG2042 SoC
->
->   .../bindings/pwm/sophgo,sg2042-pwm.yaml       |  58 ++++++
->   arch/riscv/boot/dts/sophgo/sg2042.dtsi        |   9 +
->   drivers/pwm/Kconfig                           |  10 +
->   drivers/pwm/Makefile                          |   1 +
->   drivers/pwm/pwm-sophgo-sg2042.c               | 194 ++++++++++++++++++
->   5 files changed, 272 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
->   create mode 100644 drivers/pwm/pwm-sophgo-sg2042.c
->
->
-> base-commit: 40384c840ea1944d7c5a392e8975ed088ecf0b37
 
