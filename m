@@ -1,311 +1,133 @@
-Return-Path: <linux-pwm+bounces-4243-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4244-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33D379E4C3C
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 03:27:02 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B22CF9E4D32
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 06:14:34 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D168316A318
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 02:26:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71EF528540E
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 05:14:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1C0C1714CF;
-	Thu,  5 Dec 2024 02:26:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9D24193429;
+	Thu,  5 Dec 2024 05:14:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTLYtCMA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQmwUZPP"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF23B16F0E8;
-	Thu,  5 Dec 2024 02:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C8218FC74;
+	Thu,  5 Dec 2024 05:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733365617; cv=none; b=DsGPwq4nqpUXjltTxwkwshobYllDKq/6fKxvjqocBjeS2VFNn20BHCpD5W38RJ6l8tT5tJnAHN7DQk+C7CTk3vdEDQXK4NqdbtRnGkyTaWiTtTUz905PXLozM7gVY16zlw4PVi7OJwZEV/DnDL8ThGHqxUFXpcO5Lf15SpD5R1A=
+	t=1733375670; cv=none; b=jmsTS0Ceu3BxyXx4pDKMj8J4Tq66BIh31XzGYRZ++kE9kwELPA/2YHHCr+ReGFy3JnwQ6YTf9YJ+PY2eSGSa77ru3hb/4XSIw2TBSPBgy0j2qFS99pTsDL8h//wi+PYi2oHv5cDnMwJKfl6wHRMouqJ6kkjSulTnpyY52w3YTwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733365617; c=relaxed/simple;
-	bh=/QzkaXjnNAuCXR+3SepzaczHQflhasKwMPe02hmu5sY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tzE7f1c/us6vCy79l6acVh7YgdLLIcB0rBOblVaHUFFn0y+ye38LZtqup2Ni/leNtMg557Sm9qm1QkPXqos210SsrRmQwWST1KGZo9lUKcPyO3gHQvRRIXzX9gasH73hrlzbkxmVtsiHQ8dFwt9bH3GapGd4Be1//64KPUYCGvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DTLYtCMA; arc=none smtp.client-ip=209.85.218.42
+	s=arc-20240116; t=1733375670; c=relaxed/simple;
+	bh=0v8WWRMuzt6FX0RhGjXlqLu6ssQtFHNHoGbnrfzaxIo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YWI2MZwTg46anEMKNnKNMKkoIWCVMQlhmIS+OgO7OEkcZZsNa6AYWbqej9nRVkZBy41FMy2WjTjHyv6F2564Qq3uDLm8jMq+ix8Dtnlf7p5WTJFlMBMyp7E3x9WUGc34z1NAwuWsFbuG9uKNfYT+WZFwQr+cu8nEmq7C9J4Ak4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aQmwUZPP; arc=none smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9a68480164so45514166b.3;
-        Wed, 04 Dec 2024 18:26:55 -0800 (PST)
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4667931f14bso7396591cf.2;
+        Wed, 04 Dec 2024 21:14:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733365614; x=1733970414; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z+G2qxz81+vGONqqQt+lZptdIaqKW06vhnryTC/0fsM=;
-        b=DTLYtCMA6oUhgpYUPhqr7j9O4ml0aYX2xEJTtpKK8+mCq29jEcTXpHsHWEdYJehbxD
-         zKNULlwwcdAAAjgV+OydWOAGZ2FIkzkhoKO2c0FLCESovLTzWVbk5YHesYTqwgkWFe3/
-         1sew5IaOnj9eE0tI94JMSMT3m90GFNp4iRb98e35uGcAR+Z9Uwjdb/5kLXDY8bPpR9eG
-         7Pg0oXt4ar99dnvWRJO5agU9ErW4cKXKtL/xIL4XMraVEAja6VEGsLoh2KZGXd5MqDCn
-         KYEJY3db73xtBwX4n/DQ/maGQ2ALz+G2XaoR2NblTv0zMX3OtSNAoPZ3pzCquAQ0iLWZ
-         OoVA==
+        d=gmail.com; s=20230601; t=1733375668; x=1733980468; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zqIsEszztQaofpg7Apmowpob1qU+kHY4W1kZzuvfgdE=;
+        b=aQmwUZPPNkyeMHl4N8JQs87avGSDR+QhGmIrRkUh6WckGAZhbuADJ02Sj/6bJpP2W3
+         2F4iPKMPtkEi0AuXCkl0TD2CEjuE1gQXEy00lBX6rdPPvg4cg/tP1stY38R8uRsncycg
+         q13bj1YElq3aE/dqn3AC70H8JGz4q0fAZpql2OT+W2qkkISB4YZhnfPikgT2dK3H5ylo
+         d5x4ioBPyAbVC5+R0p60ZZijrtt49Wk01l0A8zGS1CFv5CNEQQxHSS40/QFUF05v2R+6
+         la3mX6o35JJg2zQMdhy+ImGq1si51dBT9HTEAYVJQBu+VyUPNaEeZJwjcqY3QPx5+7US
+         qb7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733365614; x=1733970414;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z+G2qxz81+vGONqqQt+lZptdIaqKW06vhnryTC/0fsM=;
-        b=Mc5eriXhcY/Z2ijRP2IyXaQRQbctPkL+gHox8p/jOPYLTtjh2SDhRVzz7D/h4wl567
-         LaoMwxqBIa1mej7tSefsAlNOWqlWyftpc1Mwg/xYl7V047pkUkqWfWEHu4wEOsTUT32y
-         OfM4cyUA/DewpD3pifJkq6gJLhkUKgQqZTQgb0NRpy3og14gnc1NY/Dj1Q8EjFlAHQfR
-         shZB7hX6CKuUa8ExEopN3FLOs7Rik2g8uhtxHsNtCgRq3trLLSr9ETgFslNyPvNoQclr
-         HtE00X3VlV9FfW5gvAv7MGdlWo2UiE7IbXSh8zy+pfpo4GVMxXHBRDhLaS8Z0bGDf+F/
-         yRNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXj2UARL4yqB7xRDQNJ9uQjxTOUfRC8aLujpGTDchW1lDpo8dv9oopircoNtQva+d41t52RAah7AOh@vger.kernel.org, AJvYcCVhBcFEHqAhUeIzLEH2vTOXmTYVLiqrL6LoRtxEuBLhv4Fww8lf19J/CB6oh9SSsPl1lSJaLkSo17iy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+Zhlbfk+PmVs4JOWa8akrmEejNLnTY73JUP0ZNM20INv41A9o
-	NMYn+6smLL92lTIq7B2Uj5EMPHsTtT6QSaybZymv1JpZAXvibwwoG5jl2xBmviFiOm6a3iHIgZX
-	28w9BBjV+xNhyu1RP4B6TR39+y4k=
-X-Gm-Gg: ASbGncsnGDJLBx+O+gn8nlqVRsWiiqUmcnCM9+rDhQio2O6IFOe4tQdNYh8Ue4OhjSP
-	9mdexu5op/nhIiiGU+EF8J81zWW+C
-X-Google-Smtp-Source: AGHT+IHgex+Kl6UVVQQtVsLsCVYcCWS2z5cnjj3O2I+F+AGgCmkJQfs9Vep7iajLv/YhKzBNWVdJReI+/9oe9r7Yhqw=
-X-Received: by 2002:a17:907:7847:b0:aa6:2a5c:fee2 with SMTP id
- a640c23a62f3a-aa62a5d4b52mr10031766b.31.1733365613815; Wed, 04 Dec 2024
- 18:26:53 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733375668; x=1733980468;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zqIsEszztQaofpg7Apmowpob1qU+kHY4W1kZzuvfgdE=;
+        b=tOcxE6DyVk+4qrehaccsDABX0zpLkksmjX6H7QFIB1QwGhfA2CAWxLwUturcXW6asT
+         xS80TmRfqjk3qoQ7zFMZZ4rR04VY0rhGDQkCDnopQMqAk+6BQUNYfOz580vEbXTm+PRb
+         s8BgS1bgn/cvhTiwesiywTRwDar3TrKI4hPkoHYlyico66nSO7uiWBE/kJai78cdvSk5
+         jmEUAArHW6VdtxknOCWnpfpx93OBHiK/Ncs6hUBA94qNBHyVuefPz7kDKIuQCYCtPy36
+         /nmei32tj4+eptpZns6KUnER7Oe68MxErICLQjYxKXvA9bbxvJ0/4Fos5LTYhJx/OyjH
+         TAhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4a4m6+xwm/WspNLX6hmXo7GgxPoV5zQlgAHt9e3mAjjPsyrMzDXhdbe70NmWFJnRjh9v8HWMMDQ6vjvI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn1VjgKfjLThH5w946Nahy3HiKWVpVAbQtn7rtU4xaippcRaXh
+	XfYZyupsqCUj4V3wrNWCOaCZayvBPzIXR3WBxCcyNRjAPe+Qz7r/
+X-Gm-Gg: ASbGncsHrfwXI7ipLwI9WN31Y43sbR+TctCtQ2p2b6hT0WgK/p1MkdhUv2sIuayRCrE
+	Bzj2+7pY+DunvTKI0nzWd6q/DMan3WMEKjx4/hKKPnJs2pn0tzbP/a84y7ekczUCYpzoZ8Wx3WI
+	xlxCRGvtp9aH9/jGRJmPoO/ypHA1XHeWmP8DXlUr+ftxwJ93YdX/LGsaJyMLRbnatng9/5pJxRn
+	OAcaELeIaUYWwGFvXyk7Sw0Hr8SjqSFbf4R2xgWE+ANF+//VwbI5WTYHShJJQ==
+X-Google-Smtp-Source: AGHT+IHzGOaqKMeldKYNCc7I7mqnuoEWuHAjvkW6hiehdx/v3xwHIV4vK2uaIYyHVBgVn+HHe4JCfw==
+X-Received: by 2002:a05:622a:1992:b0:463:5bd4:59b8 with SMTP id d75a77b69052e-4670c712e88mr150275551cf.40.1733375667946;
+        Wed, 04 Dec 2024 21:14:27 -0800 (PST)
+Received: from localhost.localdomain ([128.10.127.250])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-467297c239dsm4041821cf.77.2024.12.04.21.14.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Dec 2024 21:14:26 -0800 (PST)
+From: Mingwei Zheng <zmw12306@gmail.com>
+To: fabrice.gasnier@foss.st.com,
+	ukleinek@kernel.org,
+	coquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com,
+	thierry.reding@gmail.com,
+	lee@kernel.org
+Cc: linux-pwm@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Mingwei Zheng <zmw12306@gmail.com>,
+	Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Subject: [PATCH] pwm: stm32-lp: Add check for clk_enable()
+Date: Thu,  5 Dec 2024 00:17:46 -0500
+Message-Id: <20241205051746.2465490-1-zmw12306@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1729583747.git.zhoubinbin@loongson.cn> <66bcb210478df5215e4e31e4f25c25194d6163ca.1729583747.git.zhoubinbin@loongson.cn>
- <6hqpifyfbr5ignvtvsz6p7hkje44xlvbdqwgq5t3ef64kufy3p@2tmp4ftiv42c>
-In-Reply-To: <6hqpifyfbr5ignvtvsz6p7hkje44xlvbdqwgq5t3ef64kufy3p@2tmp4ftiv42c>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 5 Dec 2024 10:26:41 +0800
-Message-ID: <CAMpQs4JZpzSbM3Ac=vXTO28vXkqEDC=8L2j9kNAHbTMX6yttrA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] pwm: Add Loongson PWM controller support
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	Sean Young <sean@mess.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Uwe:
+Add check for the return value of clk_enable() to catch the potential
+error.
 
-Thanks for your detailed reply.
+Fixes: e70a540b4e02 ("pwm: Add STM32 LPTimer PWM driver")
+Signed-off-by: Mingwei Zheng <zmw12306@gmail.com>
+Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+---
+ drivers/pwm/pwm-stm32-lp.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-On Sat, Nov 23, 2024 at 1:19=E2=80=AFAM Uwe Kleine-K=C3=B6nig <ukleinek@ker=
-nel.org> wrote:
->
-> Hello,
->
-> I now finally comne around to review your patch. Thanks for your
-> patience.
->
-> On Tue, Oct 22, 2024 at 05:04:15PM +0800, Binbin Zhou wrote:
-> > diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
-> > new file mode 100644
-> > index 000000000000..4c9b14efadc3
-> > --- /dev/null
-> > +++ b/drivers/pwm/pwm-loongson.c
-> > @@ -0,0 +1,288 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (C) 2017-2024 Loongson Technology Corporation Limited.
-> > + *
-> > + * Loongson PWM driver
-> > + *
-> > + * For Loongson's PWM IP block documentation please refer Chapter 11 o=
-f
-> > + * Reference Manual: https://loongson.github.io/LoongArch-Documentatio=
-n/Loongson-7A1000-usermanual-EN.pdf
-> > + *
-> > + * Author: Juxin Gao <gaojuxin@loongson.cn>
-> > + * Further cleanup and restructuring by:
-> > + *         Binbin Zhou <zhoubinbin@loongson.cn>
-> > + *
-> > + * Limitations:
-> > + * - The buffer register value should be written before the CTRL regis=
-ter.
->
-> This isn't an interesting point for the high level description. I'd hope
-> the driver cares for this implementation detail.
->
-> > + * - When disabled the output is driven to 0 independent of the config=
-ured
-> > + *   polarity.
-> > + */
-> > +
-> > +#include <linux/acpi.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/device.h>
-> > +#include <linux/init.h>
-> > +#include <linux/io.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pwm.h>
-> > +#include <linux/units.h>
-> > +
-> > +/* Loongson PWM registers */
-> > +#define LOONGSON_PWM_REG_DUTY                0x4 /* Low Pulse Buffer R=
-egister */
-> > +#define LOONGSON_PWM_REG_PERIOD              0x8 /* Pulse Period Buffe=
-r Register */
-> > +#define LOONGSON_PWM_REG_CTRL                0xc /* Control Register *=
-/
-> > +
-> > +/* Control register bits */
-> > +#define LOONGSON_PWM_CTRL_EN         BIT(0)  /* Counter Enable Bit */
-> > +#define LOONGSON_PWM_CTRL_OE         BIT(3)  /* Pulse Output Enable Co=
-ntrol Bit, Valid Low */
-> > +#define LOONGSON_PWM_CTRL_SINGLE     BIT(4)  /* Single Pulse Control B=
-it */
-> > +#define LOONGSON_PWM_CTRL_INTE               BIT(5)  /* Interrupt Enab=
-le Bit */
-> > +#define LOONGSON_PWM_CTRL_INT                BIT(6)  /* Interrupt Bit =
-*/
-> > +#define LOONGSON_PWM_CTRL_RST                BIT(7)  /* Counter Reset =
-Bit */
-> > +#define LOONGSON_PWM_CTRL_CAPTE              BIT(8)  /* Measurement Pu=
-lse Enable Bit */
-> > +#define LOONGSON_PWM_CTRL_INVERT     BIT(9)  /* Output flip-flop Enabl=
-e Bit */
-> > +#define LOONGSON_PWM_CTRL_DZONE              BIT(10) /* Anti-dead Zone=
- Enable Bit */
->
-> Most of these are unused. And you only ever access the CTRL register
-> using read-modify-write. So I guess the behaviour of the hardware
-> depends on how the bootloader (or boot rom) initialized these bits. I
-> would prefer if you could this more deterministic.
+diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+index 989731256f50..4abef304417d 100644
+--- a/drivers/pwm/pwm-stm32-lp.c
++++ b/drivers/pwm/pwm-stm32-lp.c
+@@ -163,12 +163,16 @@ static int stm32_pwm_lp_get_state(struct pwm_chip *chip,
+ 	unsigned long rate = clk_get_rate(priv->clk);
+ 	u32 val, presc, prd;
+ 	u64 tmp;
++	int ret;
+ 
+ 	regmap_read(priv->regmap, STM32_LPTIM_CR, &val);
+ 	state->enabled = !!FIELD_GET(STM32_LPTIM_ENABLE, val);
+ 	/* Keep PWM counter clock refcount in sync with PWM initial state */
+-	if (state->enabled)
+-		clk_enable(priv->clk);
++	if (state->enabled) {
++		ret = clk_enable(priv->clk);
++		if (ret)
++			return ret;
++	}
+ 
+ 	regmap_read(priv->regmap, STM32_LPTIM_CFGR, &val);
+ 	presc = FIELD_GET(STM32_LPTIM_PRESC, val);
+-- 
+2.34.1
 
-Emm, I would explicitly initialize the CTRL register value to 0 in probe().
->
-> > +#define LOONGSON_PWM_FREQ_STD                (50 * HZ_PER_KHZ)
->
-> Maybe it's just me, but I think the HZ_PER_KHZ doesn't add readability
-> and I would have just done:
->
->         /* default input clk frequency for the ACPI case */
->         #define LOONGSON_PWM_FREQ_DEFAULT       50000 /* Hz */
-
-OK....
->
-> > [...]
-> > +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device=
- *pwm,
-> > +                           const struct pwm_state *state)
-> > +{
-> > +     int ret;
-> > +     u64 period, duty_cycle;
-> > +     bool enabled =3D pwm->state.enabled;
-> > +
-> > +     if (!state->enabled) {
-> > +             if (enabled)
-> > +                     pwm_loongson_disable(chip, pwm);
-> > +             return 0;
-> > +     }
-> > +
-> > +     ret =3D pwm_loongson_set_polarity(chip, pwm, state->polarity);
-> > +     if (ret)
-> > +             return ret;
->
-> Is setting the polarity shadowed in hardware or does it take effect
-> immediately? If the latter please mention that the output might glitch
-> on reconfiguration in the Limitations section above.. Another
-> "opportunity" to glitch is in pwm_loongson_config() above when
-> LOONGSON_PWM_REG_DUTY is written but LOONGSON_PWM_REG_PERIOD isn't yet.
-
-The setting of the polarity is shadowed in hardware, maybe we don't
-need to worry.
->
-> > +     period =3D min(state->period, NANOHZ_PER_HZ);
-> > +     duty_cycle =3D min(state->duty_cycle, NANOHZ_PER_HZ);
->
-> period and duty_cycle are measured in nanoseconds. So NSEC_PER_SEC is
-> more natural to them than NANOHZ_PER_HZ.
-
-OK...
->
-> > +     ret =3D pwm_loongson_config(chip, pwm, duty_cycle, period);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     if (!enabled && state->enabled)
-> > +             ret =3D pwm_loongson_enable(chip, pwm);
-> > +
-> > +     return ret;
-> > +}
-> > [...]
-> > +static int pwm_loongson_probe(struct platform_device *pdev)
-> > +{
-> > +     int ret;
-> > +     struct pwm_chip *chip;
-> > +     struct pwm_loongson_ddata *ddata;
-> > +     struct device *dev =3D &pdev->dev;
-> > +
-> > +     chip =3D devm_pwmchip_alloc(dev, 1, sizeof(*ddata));
-> > +     if (IS_ERR(chip))
-> > +             return PTR_ERR(chip);
-> > +     ddata =3D to_pwm_loongson_ddata(chip);
-> > +
-> > +     ddata->base =3D devm_platform_ioremap_resource(pdev, 0);
-> > +     if (IS_ERR(ddata->base))
-> > +             return PTR_ERR(ddata->base);
-> > +
-> > +     if (!has_acpi_companion(dev)) {
-> > +             ddata->clk =3D devm_clk_get_enabled(dev, NULL);
-> > +             if (IS_ERR(ddata->clk))
-> > +                     return dev_err_probe(dev, PTR_ERR(ddata->clk),
-> > +                                          "failed to get pwm clock\n")=
-;
-> > +             ddata->clk_rate =3D clk_get_rate(ddata->clk);
->
-> I guess you rely on the clockrate to not change. So please add a call to
-> devm_clk_rate_exclusive_get().
->
-> > +     } else {
-> > +             ddata->clk_rate =3D LOONGSON_PWM_FREQ_STD;
->
-> I thought that clk_get() also works for devices described by ACPI?
->
-> Maybe something like this gives more flexibility:
->
->         ddata->clk =3D devm_clk_get_optional_enabled(dev, NULL);
->         if (IS_ERR(ddata->clk))
->                 return dev_err_probe(...);
->
->         if (ddata->clk) {
->                 ret =3D devm_clk_rate_exclusive_get(...);
->                 if (ret)
->                         return ret;
->
->                 ddata->clk_rate =3D clk_get_rate(ddata->clk);
->         } else {
->                 ddata->clk_rate =3D LOONGSON_PWM_FREQ_STD;
->         }
->
-> and it's conceptually easier given that it doesn't have to care about
-> the device being described in ACPI or dt.
->
-> Just a suggestion.
-
-OK, I will try to do it.
->
-> > +     }
-> > +
-> > +     chip->ops =3D &pwm_loongson_ops;
-> > +     chip->atomic =3D true;
-> > +     dev_set_drvdata(dev, chip);
-> > +
-> > +     ret =3D devm_pwmchip_add(dev, chip);
-> > +     if (ret < 0)
-> > +             return dev_err_probe(dev, ret, "failed to add PWM chip\n"=
-);
-> > +
-> > +     return 0;
-> > +}
---
-Thanks.
-Binbin
 
