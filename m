@@ -1,60 +1,57 @@
-Return-Path: <linux-pwm+bounces-4246-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4247-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6BF09E4FAF
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 09:28:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB9629E4FCE
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 09:34:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C56518819A2
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 08:28:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 252851694A9
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 08:34:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8161A195985;
-	Thu,  5 Dec 2024 08:28:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B43EF1CB332;
+	Thu,  5 Dec 2024 08:34:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I7AZBvh6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NOVY2eow"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5740F239195;
-	Thu,  5 Dec 2024 08:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA6B189B94;
+	Thu,  5 Dec 2024 08:34:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733387288; cv=none; b=siOWdn3FMJlJXYZP/aWkKf6u68S0EDHGRlLeuHEl/rCnUuZa2Ad0rZ4YCJMRd7PiSrajoummCk6RxNP96rAbegt1CrtnA4Q9UDmYpwzYCUt03pg+rdre3KZSteSQdz8V3IQ/U0jqpdwbwCwL0WlZc0B15NnIp0Nfq/LKHZ/+3hY=
+	t=1733387676; cv=none; b=Jihh+HnaGMcMyjIhsrp4n0qjBNjoqB7OdO7F0BrW3NESEc2uVtStqBm2p5FqCFS3Rrd6Sdh5jHpZ7NZT3jOMUY9YSJe2V+JJOjkB6iTALENmTOPzARWVzm+P+IeFNa5Izux6Cha82HwZ4WzL+GINI3v1UOwveAZIIlYwvv7oYRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733387288; c=relaxed/simple;
-	bh=NlhysIv/yM2j31hi9eBDAjWataAAJORw/hVtbxft7P0=;
+	s=arc-20240116; t=1733387676; c=relaxed/simple;
+	bh=gKCbD7Svx+y4jFvtnoFhWfAzzEJNorqOmAWV9TmCq9c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FWANdTKjq8kkVYgyE1/H2Y+yHMcl6WKn2rkq6Q8/9W/+hQIAjEY1DQkYpT8YUokp3EqQ4inogAkPhukGKTIMR6I1HO3Z6OlrQQG/N5BbS/msyC2LRN8GodKYMGyg1q3UNdIGU9rQqXdnyokB1sN9e7mcLAYGMRtzn+GnVqaXL3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I7AZBvh6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F925C4CED1;
-	Thu,  5 Dec 2024 08:28:06 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=KA2OJZvHDPd7Y1gManzvOnfTi9w5gXfjmKrkR67DYv0C/hTs7r70h4kKIfsgWBWght7m7K/cLeLgz8pYh9HRmfxyvaAgo2WmUSFn4zRbESeHB0QMWHkXapL3DNrb1yYjGey4dVp3CZh+kzFg/hwmohDP8HW9C4FyaDaR0cFeHb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NOVY2eow; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FF60C4CED1;
+	Thu,  5 Dec 2024 08:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733387287;
-	bh=NlhysIv/yM2j31hi9eBDAjWataAAJORw/hVtbxft7P0=;
+	s=k20201202; t=1733387676;
+	bh=gKCbD7Svx+y4jFvtnoFhWfAzzEJNorqOmAWV9TmCq9c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I7AZBvh6oszGph8WWvf+XiJ2Pr66W7nKqncG0hf7RAEJezGYvV/DBgCuQwtIgYVHF
-	 k5KL0rDrfTzKeYqYIJSV21FBmy1aR/wqs0XBzaMUUnSo0a4HZi3DdoiRurXsDn/4B3
-	 aCcGVWNMdWw3lZaZv2egtBpGB4fdameZGZ7iqPIyM51cxS9A0fgk7izO76r98AfprB
-	 x5XDBhGRfFW5ppvp/GqPDcKQFKuZyjcetuuLW9+UwceXtqMB6zrEyVsPkZvUUWsyQT
-	 Ub7g9VIC3bJb5SMcHOXO/EvHBVFVJuxRWqhBFApmYX+41tg+9QoFFRsaz59uXluGe0
-	 AeEqknjZ+/NRA==
-Date: Thu, 5 Dec 2024 09:28:04 +0100
+	b=NOVY2eowOfL3vNW8Xwy5XggMKNW3YYHT+8993h3w9/y8N1zctDMuY7oVKQfrb/Shm
+	 XZoSoyO7+uNHD8uaqywzHVzQdlixDFafBXjnbpSJiNKB7dJ4WF5wC/wYemnYNRPl7D
+	 30F4TCXZQPxhMIo8oO/P6rN10HxY/wFCS+nieVBBTB/MrCWCHYSIOdCv0G5aSrwMtL
+	 6cLO7bCYv6wsLJC+NDMaCd93D4AZ01fRD8MBXj3QhMlNNdK3fCbHxiZAYJQ0uLndCY
+	 TGVt4FZ1Xyh8sDS1ekD1atTSyi3kuhNvWTdcVeG0NQLTn9HuWutbzvaaQuyz6bQrbJ
+	 k6oIIa9CsKNlw==
+Date: Thu, 5 Dec 2024 09:34:32 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	"biju.das.au" <biju.das.au@gmail.com>
-Subject: Re: [PATCH v22 3/4] pwm: Add support for RZ/G2L GPT
-Message-ID: <phr4mtucfmyuhaywspzpxwqvwmklwcgsljcc5dvzbft44kengw@65axncbiotf7>
-References: <20241018130049.138775-1-biju.das.jz@bp.renesas.com>
- <20241018130049.138775-4-biju.das.jz@bp.renesas.com>
- <slgs56imb3u6fv35bo2hl4moa77nnhrtcygi4womtuzs2mcipt@ylcvacvhsgcl>
- <TY3PR01MB11346421B5C0C4A193F70C3A586372@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+To: Mingwei Zheng <zmw12306@gmail.com>
+Cc: fabrice.gasnier@foss.st.com, coquelin.stm32@gmail.com, 
+	alexandre.torgue@foss.st.com, thierry.reding@gmail.com, lee@kernel.org, 
+	linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Subject: Re: [PATCH] pwm: stm32-lp: Add check for clk_enable()
+Message-ID: <geyicxufezkbu7cdvnbgnr2qeuwrn5ubz5ent3spk5biuozxrs@gsqx2chgiiot>
+References: <20241205051746.2465490-1-zmw12306@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -62,83 +59,65 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="plapp44ynklwfcqe"
+	protocol="application/pgp-signature"; boundary="shdmdu5ypwpb65ru"
 Content-Disposition: inline
-In-Reply-To: <TY3PR01MB11346421B5C0C4A193F70C3A586372@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+In-Reply-To: <20241205051746.2465490-1-zmw12306@gmail.com>
 
 
---plapp44ynklwfcqe
+--shdmdu5ypwpb65ru
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v22 3/4] pwm: Add support for RZ/G2L GPT
+Subject: Re: [PATCH] pwm: stm32-lp: Add check for clk_enable()
 MIME-Version: 1.0
 
-Hello Biju,
+On Thu, Dec 05, 2024 at 12:17:46AM -0500, Mingwei Zheng wrote:
+> Add check for the return value of clk_enable() to catch the potential
+> error.
 
-On Wed, Dec 04, 2024 at 06:24:19PM +0000, Biju Das wrote:
-> > > +	 * different settings.
-> > > +	 */
-> > > +	if (rzg2l_gpt->user_count[ch] > 1 && period_ticks < rzg2l_gpt->peri=
-od_ticks[ch])
-> > > +		return -EBUSY;
+Is this something that you actually hit, or just a janitoral fix you
+noticed while browsing the code (or reading some checker output)?
+
+> Fixes: e70a540b4e02 ("pwm: Add STM32 LPTimer PWM driver")
+> Signed-off-by: Mingwei Zheng <zmw12306@gmail.com>
+> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+> ---
+>  drivers/pwm/pwm-stm32-lp.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 >=20
-> Do we need to allow this operation (period_ticks < rzg2l_gpt->period_tick=
-s[ch]) ?
->=20
-> For example,
->    First IO (IO_A) period/duty is in the order nsec (PWM frequency in MHz=
-) and second channel period/duty in the
-> order of microsec(PWM frequency in kHz)
->=20
-> Allowing period_ticks < rzg2l_gpt->period_ticks[ch] will lead to incorrec=
-t operations=20
-> for First IO (IO_A) as PWM frequency will be in kHz compared to MHz.
+> diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+> index 989731256f50..4abef304417d 100644
+> --- a/drivers/pwm/pwm-stm32-lp.c
+> +++ b/drivers/pwm/pwm-stm32-lp.c
+> @@ -163,12 +163,16 @@ static int stm32_pwm_lp_get_state(struct pwm_chip *=
+chip,
+>  	unsigned long rate =3D clk_get_rate(priv->clk);
+>  	u32 val, presc, prd;
+>  	u64 tmp;
+> +	int ret;
 
-Well, the policy is to pick the highest possible period not bigger than
-the requested period. So if B is asked to be set to 5ms and 5ns is the
-highest currently possible value, that's it.
+Please move this variable to the block where it's used. No need for such
+a big scope.
 
-I agree that being off by a factor of 1000 isn't nice. But if you say
-this is too much, you have to draw a line somewhere. Where should that
-be? Everything you pick is arbitrary and I'm sure there is a use case
-for every choice where it's wrong. Additionally if you are too picky --
-in the extreme case don't allow any modification >=3D 1ns -- the API
-becomes very hard to use.
-
-The only sensible way out is to allow consumers to query the result
-before actually applying a request. This is in the making and if you
-want to benefit from it, look at the waveform stuff that recently hit
-mainline. (deaba9cff8092cbb2bef4dc79a6ce296017904b1 is an example driver
-conversion, 6c5126c6406d1c31e91f5b925c621c1c785366be and
-17e40c25158f2505cbcdeda96624afcbab4af368 are the relevant core changes.)
-=20
-> According to me, we should not allow updating periods for second enabled =
-channel.
-
-Not entirely sure you mean the right thing here. If IO A operates at 5ns
-and IO B is requested to set .period =3D 5 ms, every operation that also
-changes A is out-of-bounds. So your options are only: Use the 5ns, or
-return an error. The latter is hard for consumers because it's unclear
-what to do then.
+Otherwise looks fine.
 
 Best regards
 Uwe
 
---plapp44ynklwfcqe
+--shdmdu5ypwpb65ru
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdRZBEACgkQj4D7WH0S
-/k76Wwf+PwL1QoeMXoeeOVnrVAL3DeetG37liUIlmeFUTcokRfBGQr5Lyx3sXxj9
-9r8jAowrTpBo10hC+CsJVc10HwPXECpEcgHzlMEFLZetqNWcRDuIfcAwvILnohxe
-MRu56X3B0JqADdmaqTpBhFg6wz+XodZHx4P0wceD8oubm+1+q9tMqZuL24z4A0Tu
-0CqJ0SeBy3sVtIx3WnK+YZhBJt5iCrlZ3f8QcXjQoLAbgrSbaJBBojwHvvGiJu+7
-hFgMp4CaVPyioQrINhD57H65tfVX+CCZLsW5U/vxvwehueRCfKBm1G+tDsKNDrFD
-xJ4aetG+2k1ekYcCJStngKjHsh3iOg==
-=K+zz
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdRZZUACgkQj4D7WH0S
+/k4TXwf/Wzw/hs8+EisqpH4An6STPdmc8pwIJCKQu1lwE6fQKkTYk5nYTs4JMxRx
+9JLhTTsBNGJrQ3mjJrjjOEPscREqkZoVBxdlZFEPaPpYukjgvSiYQwvPERXQNqbR
+y+Xb+CZuo5cITA51Jd3UDRIHktAIABl3Ox8GcqDhGgMq1Cje+XE24dwQ85kMyFJq
+2ncZRb7TuNhF9XtQkUmGcWXsEUq5iVlhG25UziKlX+ZhMz9MJaU5LnVOFSy9HAPb
+DTUS7vmaNGJiePZagOduLZ5Z/f7q/xMu311Xi4ylcjc59I54Ohp+VKuEnTMVzqaR
+R1M+5N2Zbe9/BZGXpnHvfs9MOLb7pg==
+=wFbu
 -----END PGP SIGNATURE-----
 
---plapp44ynklwfcqe--
+--shdmdu5ypwpb65ru--
 
