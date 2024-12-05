@@ -1,62 +1,65 @@
-Return-Path: <linux-pwm+bounces-4251-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4252-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B5889E5252
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 11:31:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 626269E5277
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 11:37:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B6D216278B
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 10:31:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 00FA9165C41
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 10:37:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA8C518FC83;
-	Thu,  5 Dec 2024 10:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8F921D7E35;
+	Thu,  5 Dec 2024 10:37:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eg1O9eM7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="guWl3kaO"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D6612E5D;
-	Thu,  5 Dec 2024 10:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387291D3566;
+	Thu,  5 Dec 2024 10:37:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733394696; cv=none; b=Gf2i5nuSfT/6aXhFJITRmlARtPekLpFtJU0XWM9q8Dj7CqFD4hvPEdf02OGfBtjSdMoqSjB8kZ+XSqFTfHMuKPo2RZRF3ANXUje4pf8IRl80bA3FVJYW6Z0UdpEggBCrc2Kj708327HAhztGtoDltTEw8GpRrFfhnmonpSE4bUQ=
+	t=1733395052; cv=none; b=ZUeEyGfyrhBpNHb6vQQyfLdJTIDJRXQUHgU6ZOBFr1vBV67tCnXM3LkPogLxrOCEt7aZ1t6PTfG+bgO3QRblaHi0e3OgW5ttH1J5v3Sfnk4qkFNgS1gRjdDqiwD+OQgWKvE4hJOwhtdT+HCXEaI7A3Saxakp882G0gnV1QbHUKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733394696; c=relaxed/simple;
-	bh=oq9RpKVHYl0Ys8ZMKbBQXEZ39gpBOwFiQ92DPNgNC00=;
+	s=arc-20240116; t=1733395052; c=relaxed/simple;
+	bh=k0Ri1gJvfMPkkmwOG5H5IkESAn8lv1SqrkOcLFEGEog=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kw2B4EIqWeDMh8vuEXaHqQOmYSfP6B57xLiE4e+yA1ZvbBt1Q3jUgwsULNt18KIpzj1fxCyokrsanRI3KoAwT/L7XfYI2J5TgqZ8NRn3HTSLEpxcuBzahEyZSVlzrPWAIm/9/ckK8nW/cM29DFVm4fd6FKhelRP76CmW2aD+deA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eg1O9eM7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A94CAC4CED1;
-	Thu,  5 Dec 2024 10:31:35 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=GhAYxoL7+WcdIHF1+5N4BwfzLBUQvE+KMxh8x9XANRk/hHxLWFRVVLZwpiPkVFJM2iPTLiRumMG7lv7zFyflgWx81gI4Se2z17zXBjawaFnHl6wbeV36pLzHYkxiuHBoHp84nP+VElKCuIRlXfgiYwvNHWqKFHID/71xyY+Ec9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=guWl3kaO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 853FDC4CED1;
+	Thu,  5 Dec 2024 10:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733394696;
-	bh=oq9RpKVHYl0Ys8ZMKbBQXEZ39gpBOwFiQ92DPNgNC00=;
+	s=k20201202; t=1733395052;
+	bh=k0Ri1gJvfMPkkmwOG5H5IkESAn8lv1SqrkOcLFEGEog=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Eg1O9eM7QFsR117u5MHHg3dyNdQV0sFe2NUqnL4OzROv6DaSlteMWvbiXwuIz70pl
-	 sc/UQyaSstJdaewUXMb0GNJ2yZJan0M8Ai3JDmJQ4ahj0+9MIKGdHG/Sx986iHlcvQ
-	 TCP6rqTH1Y5ssxvKgTVLI7XdBuU2F5lyWcuXxWNeNZrPMkASRDWmj+uWV2yotB+lqS
-	 9P310tV/P2mUc+HARW/H79K9y7ifAJrvAXGdZDAJ8R24y4woLykedCdlDWkUiZHiGO
-	 paawuBbHPXNnrbwjydBVoYUa9D1Nca3GDPBHsFM1XCvMKDt4rOzW2YpbGGaQtphp8F
-	 CFfvzBkq/CVXg==
-Date: Thu, 5 Dec 2024 11:31:33 +0100
+	b=guWl3kaOoGEK+6hAPbImxmyWGcZsuvgDfS+SvtpN9yapsfB7pqHGGfp5hVdYv+Q5w
+	 vuRJCFOEzZPcd6Zebd/3fx8AKcwYYRIt2OSrHd1J3yxUb8h1Rom0Xy/H5DqebnGf5X
+	 2dcCaDOq9qqgy/7JnLhrUhhwK5k8bnLOoFX2Tzhd9Y9CvAuLbKVQ0fdaEysiLRWUwk
+	 SYb80dJWMM3YYx1tkOF51oLUhxScy1I23lx2EE8ZPxRTsY8jpWX6xygI0m+rKvAwdl
+	 2OBp+y6LpIANTG9T4G1GK6HuX4jdFpJVpP8FmAHs6E8qRz13DpF2xkEdujO4j3Rh0T
+	 szxkvQEuQm43Q==
+Date: Thu, 5 Dec 2024 11:37:29 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	"biju.das.au" <biju.das.au@gmail.com>
-Subject: Re: [PATCH v22 3/4] pwm: Add support for RZ/G2L GPT
-Message-ID: <d6k2hggqqorw7n4ifwkquit6nyciqdweq2npznqvu2tla3ey5s@byag7bscba5c>
-References: <20241018130049.138775-1-biju.das.jz@bp.renesas.com>
- <20241018130049.138775-4-biju.das.jz@bp.renesas.com>
- <slgs56imb3u6fv35bo2hl4moa77nnhrtcygi4womtuzs2mcipt@ylcvacvhsgcl>
- <TY3PR01MB11346421B5C0C4A193F70C3A586372@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <phr4mtucfmyuhaywspzpxwqvwmklwcgsljcc5dvzbft44kengw@65axncbiotf7>
- <CAMuHMdWBb2-GGhyhubibbuSea9xVZBear3FXb11EO6gYn8r2Dw@mail.gmail.com>
+To: quic_zijuhu <quic_zijuhu@quicinc.com>
+Cc: Zijun Hu <zijun_hu@icloud.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-sound@vger.kernel.org, sparclinux@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org, 
+	linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-mediatek@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	open-iscsi@googlegroups.com, linux-usb@vger.kernel.org, linux-serial@vger.kernel.org, 
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v3 08/11] gpio: sim: Remove gpio_sim_dev_match_fwnode()
+Message-ID: <eyu7nm5hvwfqxgysnrzsvianzf7abvlovpxfo7snsxowmuuhpj@tah3gkqm5ldj>
+References: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com>
+ <20241205-const_dfc_done-v3-8-1611f1486b5a@quicinc.com>
+ <7ugfaj2h3sy77jpaadco5xtjalnten3gmvozowcle3g7zcdqs4@sqf5l47onbsi>
+ <ac42e652-4128-44ea-976e-5234360d8183@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -64,55 +67,61 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mwfhr7imz36je5i5"
+	protocol="application/pgp-signature"; boundary="ak6zeaiacfbfwyki"
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWBb2-GGhyhubibbuSea9xVZBear3FXb11EO6gYn8r2Dw@mail.gmail.com>
+In-Reply-To: <ac42e652-4128-44ea-976e-5234360d8183@quicinc.com>
 
 
---mwfhr7imz36je5i5
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
+--ak6zeaiacfbfwyki
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v22 3/4] pwm: Add support for RZ/G2L GPT
+Subject: Re: [PATCH v3 08/11] gpio: sim: Remove gpio_sim_dev_match_fwnode()
 MIME-Version: 1.0
 
-Hello Geert,
+On Thu, Dec 05, 2024 at 04:37:08PM +0800, quic_zijuhu wrote:
+> On 12/5/2024 4:10 PM, Uwe Kleine-K=F6nig wrote:
+> > On Thu, Dec 05, 2024 at 08:10:17AM +0800, Zijun Hu wrote:
+> >> From: Zijun Hu <quic_zijuhu@quicinc.com>
+> >>
+> >> gpio_sim_dev_match_fwnode() is a simple wrapper of device_match_fwnode=
+()
+> >> Remvoe the unnecessary wrapper.
 
-On Thu, Dec 05, 2024 at 09:52:28AM +0100, Geert Uytterhoeven wrote:
-> On Thu, Dec 5, 2024 at 9:28=E2=80=AFAM Uwe Kleine-K=C3=B6nig <ukleinek@ke=
-rnel.org> wrote:
-> > Well, the policy is to pick the highest possible period not bigger than
-> > the requested period. So if B is asked to be set to 5ms and 5ns is the
-> > highest currently possible value, that's it.
+Just spotted: s/Remvoe/Remove/
+
+> >> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> >> ---
+> >>  drivers/gpio/gpio-sim.c | 7 +------
+> >=20
+> > I think if you move this patch before patch #4 in your series, you only
+> > have to touch this file once.
 >=20
-> Really? So overclocking is preferred over underclocking?
+> the precondition of this change is patch #4, it will have building error
+> if moving it before #4.
+>=20
+> actually, we can only do simplifications with benefits brought by #4.
 
-It really depends on your use case if 8ms or 10 ms is better in a
-situation where 9 ms is the optimal value.
-
-Note that with the new waveform abstraction there is also a way to round
-a waveform W to the waveform W' that would actually be configured if W
-was passed to the apply function. That allows a consumer (in the future
-probably with the help of some functions provided by the pwm framework)
-to determine a request to get the smallest period >=3D 9 ms.
+Ah I see. I thought that device_match_fwnode only got the const for the
+2nd parameter in patch #4.
 
 Best regards
 Uwe
 
---mwfhr7imz36je5i5
+--ak6zeaiacfbfwyki
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdRgQMACgkQj4D7WH0S
-/k7E/Qf/QmfmrzooamMx6YI8aR38pnm8jiJfNEZhHdWrASvLOQyZ3jcdwjtVBy/B
-FpdqRSITIIkXf/drVGgvrtrdB/e0zTUqv1R8yRbQrQK33+PX7o6wI8HoxHIa0m/Z
-2dpGjNAthUDsxcNUoges0ZD+LIYvjCECWF6duCLz4/x2CsV+r2jmpolHC6stYwo+
-I5d0gqVp+ima8dvEn6O82XQo7Mt3K3GiNwT19JgeNNjjsNgF5d8u0rJxTYNAtXXS
-9gjYXlQEaql2Bz+lDSi6ZG5++9WPpWkDnAjg78jZt/LFYy/6p85fpye9S8vfEtGS
-+js+oDFN1WiMzZ2E+ABOJsRjnfR9Kg==
-=OCME
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdRgmcACgkQj4D7WH0S
+/k6zeggAlBhwMJaGpQIgAi04teyouKX4a/XAJG3tLwpz4YweEcrMm/fv0N42hp/d
+7zUKHjQRRcVM6+TSObZ6uKEFMpac+G1YG1Fze2rNPdlf5IUOCrpKqKUaziMyvEc+
+hhaccpLCXjp9gi7H7tEBDfmrR6/S3i1nnYOeDn6tYmhKVx14uA57l4Isj2h+CIax
+P5d+Gq9NQl5IXDnqiEez80oo8LFhLQQIjIeO1YQM7GrbXaqoD+CfZTGXe4/woRc5
+JjzksiJqSccUbPlwM+90bh5Oj0H2VARUaJTRcHTRANM4ZFTSfWCep0Wkg8DSw343
+fYW4rY4vIXpWKVG9LM4j7NAoluIWvQ==
+=myq/
 -----END PGP SIGNATURE-----
 
---mwfhr7imz36je5i5--
+--ak6zeaiacfbfwyki--
 
