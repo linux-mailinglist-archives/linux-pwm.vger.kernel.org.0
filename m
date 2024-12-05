@@ -1,152 +1,164 @@
-Return-Path: <linux-pwm+bounces-4258-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4259-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A483A9E5E19
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 19:15:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B1A09E60B6
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 23:40:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61EA7287B55
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 18:15:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2542C281874
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 22:40:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6184227BBB;
-	Thu,  5 Dec 2024 18:15:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E14091CEE8A;
+	Thu,  5 Dec 2024 22:39:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mo0B6B0p"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MOXeMM8O"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE7A227BAB;
-	Thu,  5 Dec 2024 18:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1001B87F5;
+	Thu,  5 Dec 2024 22:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733422503; cv=none; b=bq8vl78637oqpxqT2x/l6UqKf5QCeYO16y+ldp+PksqDIRdwSE7QkK6x68iaaBN8j5/YNnvWQrkuqxofcy4RW5mAs9RYoIPMB1PlSTkGoUrkmz9tWkDwOObbcb7ulNfBwKPE6v3YBFs+oxpyqXfzyGxqe9FwW+aP6bwA2PYGwRk=
+	t=1733438398; cv=none; b=QiWZCXGOF6zhOirEpOAJvo1uWbKfyjWi3L41pEb8YyKH6jHud5Q8zu+zweCETQBlB7MBpOR5j9V/3eAwUv304FBINN0EYiNpfdPsgv43SIrTCZNR0moIvXvcqrXrFkMiOtvocFvsdhoYtvY9bEwVA6WVPo9eLolPGg0EgSsypXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733422503; c=relaxed/simple;
-	bh=xxzkZHV8bU8zs+Js+tnRGqLeNA9OX9QiQEWbAm9heVA=;
+	s=arc-20240116; t=1733438398; c=relaxed/simple;
+	bh=bDWc4rhMgoZqDeL0AXlS3HEyZRI+NGFW7RdxbN26PwE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VyQQQWxdPzQLH0sm4FAZhyi+pCk7Ztv8BnljrRuwqSA4mPZQeogm1gmf5zdzPg3fU4+xUESyrEALBUxiUD/6ixXNvZaNZGegthSUUJaB+LuDl6xMktTvLW8A78Z6FbrcT3vzYpmvwEL0ZZHhht4Ngfn/t01dX6UC5oND1shhE/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mo0B6B0p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A206AC4CEDC;
-	Thu,  5 Dec 2024 18:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733422503;
-	bh=xxzkZHV8bU8zs+Js+tnRGqLeNA9OX9QiQEWbAm9heVA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mo0B6B0p5goBaxZc60eCkjV/pG80zcP21okgeAi69WhLmLwsFwi1ZdS6bZjWPCRos
-	 w85hukDb78kVY9f9J74R1a+EgKnBSwLWpeowwIZUjpu1ljyRuRYsUck3jK5CTkU28d
-	 RdPFsUT3b+a20lEPkfejy+PUj1jfwnI6hhVkukOygjM3GSz7dd2RDoUS3TcDuC3oip
-	 WgQXiwBKWonpHIK+UJyXTomxDm4tAvN1PkbQpBPBIWSRakxCXjtx4LWWjeh7rLE/hP
-	 Q7C99+SP3shP19HizyEZkBniAAfeRzhfz3x83zm08FJl6NdxFHa5DuHNVjjIW7e+X8
-	 liKe/5wSFyUaQ==
-Date: Thu, 5 Dec 2024 18:14:59 +0000
-From: Conor Dooley <conor@kernel.org>
-To: "Miclaus, Antoniu" <Antoniu.Miclaus@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: adf4371: add rdiv2 and doubler
-Message-ID: <20241205-tummy-snorkel-2765ce63dc3f@spud>
-References: <20241129153356.63547-1-antoniu.miclaus@analog.com>
- <20241129153356.63547-2-antoniu.miclaus@analog.com>
- <20241130163948.269289dc@jic23-huawei>
- <CY4PR03MB3399CB671D685BA8164E0F3B9B352@CY4PR03MB3399.namprd03.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FI1Au6DA+JiXtn/+GLlbm46cPPNWiyPJuNTQIl1UVqIqePrLVrkFXe5GaJRaRuO6AKOa1me2KwI1qSI+RVSSUzMMstBn3Xx7HhZSxXRURzRRYGl8reDWI1wDN1UIr8bIC7VP7lj2Bh/5ExjCk2ixdigjpNOOEbtU70R/FzjqP8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MOXeMM8O; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1733438397; x=1764974397;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bDWc4rhMgoZqDeL0AXlS3HEyZRI+NGFW7RdxbN26PwE=;
+  b=MOXeMM8OltAVUE1ZXy0v3rC4jd3oqpFeBYbp7p7K14hLFccePMA/M7Bq
+   bOrDGrK1awvIhAiBS48bHw9nDYPKoEIUYzpildvMOupUBrmKWbIHnFRCa
+   fWSZOGztOHlapz+KacZmMr1DaSoSFs2Je2HsUioQEUqvg//nY1BitDiqE
+   f9tj3jpf5alLYDOZZrwwz/23RJ/YfHMFs8ifT0x33lX1obzKCAjs3k5SK
+   dFvRDbpCjg1BppWTN9ESc9s4e6PWMYSd6H50h0ZvKlfSfIDRwRSn343no
+   KFxLDdI/BlPznvfGZJLwQj5jWIhuyqtpW+ov6qpWqpP+y7BmkY4l5oq6W
+   Q==;
+X-CSE-ConnectionGUID: 4meO4e5XR/uWcMU3EH4Y/w==
+X-CSE-MsgGUID: Y9ev3aQHRr60u6LoUFzwig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11277"; a="33660982"
+X-IronPort-AV: E=Sophos;i="6.12,211,1728975600"; 
+   d="scan'208";a="33660982"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 14:39:55 -0800
+X-CSE-ConnectionGUID: s9cK9Ag1RGqhkbjPJGPt5g==
+X-CSE-MsgGUID: +9UlsE4TSWCPuUIT6GPzKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,211,1728975600"; 
+   d="scan'208";a="99052989"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.192])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 14:39:53 -0800
+Date: Thu, 5 Dec 2024 14:39:51 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-sound@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+	linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
+	linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
+	netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+Subject: Re: [PATCH v3 04/11] driver core: Constify API device_find_child()
+ then adapt for various usages
+Message-ID: <Z1IrtwPo4Pj52fuY@aschofie-mobl2.lan>
+References: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com>
+ <20241205-const_dfc_done-v3-4-1611f1486b5a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zhbonRGPyfEtWeAZ"
-Content-Disposition: inline
-In-Reply-To: <CY4PR03MB3399CB671D685BA8164E0F3B9B352@CY4PR03MB3399.namprd03.prod.outlook.com>
-
-
---zhbonRGPyfEtWeAZ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20241205-const_dfc_done-v3-4-1611f1486b5a@quicinc.com>
 
-On Mon, Dec 02, 2024 at 09:47:21AM +0000, Miclaus, Antoniu wrote:
+On Thu, Dec 05, 2024 at 08:10:13AM +0800, Zijun Hu wrote:
+> From: Zijun Hu <quic_zijuhu@quicinc.com>
+> 
+> Constify the following API:
+> struct device *device_find_child(struct device *dev, void *data,
+> 		int (*match)(struct device *dev, void *data));
+> To :
+> struct device *device_find_child(struct device *dev, const void *data,
+>                                  device_match_t match);
+> typedef int (*device_match_t)(struct device *dev, const void *data);
+> with the following reasons:
+> 
+> - Protect caller's match data @*data which is for comparison and lookup
+>   and the API does not actually need to modify @*data.
+> 
+> - Make the API's parameters (@match)() and @data have the same type as
+>   all of other device finding APIs (bus|class|driver)_find_device().
+> 
+> - All kinds of existing device match functions can be directly taken
+>   as the API's argument, they were exported by driver core.
+> 
+> Constify the API and adapt for various existing usages by simply making
+> various match functions take 'const void *' as type of match data @data.
+> 
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> ---
+>  arch/sparc/kernel/vio.c                |  6 +++---
+>  drivers/base/core.c                    |  6 +++---
+>  drivers/block/sunvdc.c                 |  6 +++---
+>  drivers/bus/fsl-mc/dprc-driver.c       |  4 ++--
+>  drivers/cxl/core/pci.c                 |  4 ++--
+>  drivers/cxl/core/pmem.c                |  2 +-
+>  drivers/cxl/core/region.c              | 21 ++++++++++++---------
+>  drivers/firewire/core-device.c         |  4 ++--
+>  drivers/firmware/arm_scmi/bus.c        |  4 ++--
+>  drivers/firmware/efi/dev-path-parser.c |  4 ++--
+>  drivers/gpio/gpio-sim.c                |  2 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c |  2 +-
+>  drivers/hwmon/hwmon.c                  |  2 +-
+>  drivers/media/pci/mgb4/mgb4_core.c     |  4 ++--
+>  drivers/nvdimm/bus.c                   |  2 +-
+>  drivers/pwm/core.c                     |  2 +-
+>  drivers/rpmsg/rpmsg_core.c             |  4 ++--
+>  drivers/scsi/qla4xxx/ql4_os.c          |  3 ++-
+>  drivers/scsi/scsi_transport_iscsi.c    | 10 +++++-----
+>  drivers/slimbus/core.c                 |  8 ++++----
+>  drivers/thunderbolt/retimer.c          |  2 +-
+>  drivers/thunderbolt/xdomain.c          |  2 +-
+>  drivers/tty/serial/serial_core.c       |  4 ++--
+>  drivers/usb/typec/class.c              |  8 ++++----
+>  include/linux/device.h                 |  4 ++--
+>  include/scsi/scsi_transport_iscsi.h    |  4 ++--
+>  net/dsa/dsa.c                          |  2 +-
+>  tools/testing/cxl/test/cxl.c           |  2 +-
+>  28 files changed, 66 insertions(+), 62 deletions(-)
+>
 
-> > -----Original Message-----
-> > From: Jonathan Cameron <jic23@kernel.org>
-> > Sent: Saturday, November 30, 2024 6:40 PM
-> > To: Miclaus, Antoniu <Antoniu.Miclaus@analog.com>
-> > Cc: robh@kernel.org; conor+dt@kernel.org; linux-iio@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > pwm@vger.kernel.org
-> > Subject: Re: [PATCH v3 1/2] dt-bindings: iio: adf4371: add rdiv2 and do=
-ubler
-> >=20
-> > [External]
-> >=20
-> > On Fri, 29 Nov 2024 17:33:52 +0200
-> > Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
-> >=20
-> > > Add support for reference doubler enable and reference divide by 2
-> > > clock.
-> > >
-> > > Both of these blocks are optional on the frequency path within the
-> > > chip and can be adjusted depending on the custom needs of the
-> > > applications.
-> > Thanks for the additional info!
-> > >
-> > > The doubler is useful for increasing the PFD comparison frequency
-> > > which will result in a noise performance of the system.
-> >=20
-> > So I'll play devil's advocate. Improved noise performance sounds
-> > good. If it doesn't take me out of range of allowed frequencies, why
-> > would I not turn it on?  What is it about the surrounding circuitry
-> > etc that would make this a bad idea for some uses of this chip
-> > but not others?
+For these cxl and nvdimm pieces:
 
-Did I miss a response to this?
+  drivers/cxl/core/pci.c                 |  4 ++--
+  drivers/cxl/core/pmem.c                |  2 +-
+  drivers/cxl/core/region.c              | 21 ++++++++++++---------
+  drivers/nvdimm/bus.c                   |  2 +-
+  tools/testing/cxl/test/cxl.c           |  2 +-
 
-> > > The reference divide by 2 divides the reference signal by 2,
-> > > resulting in a 50% duty cycle PFD frequency.
-> >=20
-> > why would I want one of those? My 'guess' is this makes sense
-> > if the reference frequency is too high after the application of
-> > the scaling done by the 5 bit counter.  In effect it means the
-> > division circuitry does divide by 1-31, 2-64 in steps of 2.
-> >=20
-> > That could all be wrapped up in the existing control of the
-> > frequency, and so far I'm still not seeing a strong reason why
-> > it belongs in DT.
-> >=20
-> > The 50% cycle thing is a bit of a red herring as assuming it
-> > is triggered on say the rising edge of the high frequency signal
-> > to toggle the divided signal, that will always be a 50% duty cycle.
-> >=20
-> As mentioned in the cover letter this was mostly a request from
-> customers that are using adf4371 on a large scale and they need
-> these features to be controllable somehow by the user.
->=20
-> Since these attributes were already validated as devicetree properties
-> for adf4350 on mainline, I found this as the best approach to satisfy
-> both ends.
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-Probably shouldn't have allowed it then, but things were different a
-decade ago.
 
---zhbonRGPyfEtWeAZ
-Content-Type: application/pgp-signature; name="signature.asc"
+snip to end
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ1HtowAKCRB4tDGHoIJi
-0shwAP4iirJ0ArRmeKHavHbxz14PFZAFnod9h9613bjP1F8svQD/cWqXXRG/KZnF
-DML/oiTyMIdibfcqyg9ac+JD/etqfgQ=
-=rYRh
------END PGP SIGNATURE-----
-
---zhbonRGPyfEtWeAZ--
 
