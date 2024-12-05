@@ -1,52 +1,80 @@
-Return-Path: <linux-pwm+bounces-4238-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4239-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CA489E4B34
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 01:32:29 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 937271645CA
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 00:32:23 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D799182BC;
-	Thu,  5 Dec 2024 00:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="NvUB+1Qn"
-X-Original-To: linux-pwm@vger.kernel.org
-Received: from pv50p00im-tydg10011801.me.com (pv50p00im-tydg10011801.me.com [17.58.6.52])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25E009E4B61
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 01:44:49 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677A13D6B
-	for <linux-pwm@vger.kernel.org>; Thu,  5 Dec 2024 00:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.52
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D4FDE282670
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 00:44:47 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FE2B14293;
+	Thu,  5 Dec 2024 00:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CgL5lU4P"
+X-Original-To: linux-pwm@vger.kernel.org
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E90101DE
+	for <linux-pwm@vger.kernel.org>; Thu,  5 Dec 2024 00:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733358730; cv=none; b=jCB5XAK/5jEJDT0HW68Ltw9XtfGWNdo07gClgPJmu9nXq7+ZoC0Bab6GrABXnisT8qxqfBI54sCbEOQPRYi0wd+gRiJ/2z4hY8Jmk2Bj9SFd45t0iukfmFUKoIYU4/dUBtqLhuaM5QdbD+NXxfDJXJesTiFEhTv0PK6dmkQd1Cc=
+	t=1733359482; cv=none; b=HqM0Jtapb+czwl6oiuWfw6nAlPztIzKc8KHMU0U0RcLL6h2JZnKESRYzqKjL0e0zWPF5UVMDl3xGf4Yyw3MxfwJQmThpepe15HHnBEgGd+yyPvJ/mThjCcu0u5xtZ8Jdq87QA8IBHyxcyCNHjhtBNi7ig4QEpqIPE9FJytClaPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733358730; c=relaxed/simple;
-	bh=jTnaUO4D/Q7MxZQscA3/XMdfWqggPPOxxvGW/7ZeXgA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TMVr1/MJdSwhWQTCLqSIG5QDFIynE6YJiH7V6m6FH44ZRxwvDCDn/u53VskKbltDv7hI1Xh19cdwPHW3ZmzZPRcYZryF43ZAIkvq8R4amaios6lY2a/sau7eayp67seT5AHc8G5oYAVGoc4OErxUvgRkG39aI4bkuyvbx4/f2kY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=NvUB+1Qn; arc=none smtp.client-ip=17.58.6.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; t=1733358727;
-	bh=cXKPzq1F5TX5/uxkKzMSB1NXoT3FhOuw3zI5BP+SzJo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:
-	 x-icloud-hme;
-	b=NvUB+1QnWMYICgzWlemCLtbKtw0Tm9UBfjUIS4wXxNaGs9onuC2hnMzT/iYvnz07/
-	 HOJi6i+ZJu7u9TFjWv6p091BQybVr1dy2GK+s4Y1dBRyb01zFxvkpYzmKIcdYc+f+h
-	 EPlThxGXJ2V2jWHZoWnqU8CzaC/gBYpkJxrTxi6CAYmoJiqC5cfkokKhTuJPqzI01y
-	 SPAxLX9iaP6k8j/wWV+9x5JN+dMn3a4RipO7xV6ggbD4vgGWQxJbKf7T9HWef6iKb9
-	 MWAynZUufAflnI+7Qdg6sA6wGLflOnhzBW2AQHEIridePBX3xOYMQYs1ZNBMu+9K4s
-	 KuvLdIcO+3S3w==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-tydg10011801.me.com (Postfix) with ESMTPSA id 1971880021D;
-	Thu,  5 Dec 2024 00:32:00 +0000 (UTC)
-Message-ID: <18dd5368-d583-44f3-8dd4-74c669ef3bf9@icloud.com>
-Date: Thu, 5 Dec 2024 08:31:58 +0800
+	s=arc-20240116; t=1733359482; c=relaxed/simple;
+	bh=RfWODQeCQ92PKzUdEskZeQY10PlkpbDGFWN1YWWpNow=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=O5PLP6nf+b1ccuiyPzNTJ7c+QBH+jow9TXM9vnB8wvmYGNFhnKd6pE2aDsTjyhp3WcO1vNCr1gCRzwLFuSgSVTp4rfdVAhldfq/qcrW5FjpvOscy761rjrIYm9w4xgiJONQvEIWwNthWUyKsRo+mdxbLKS9qyOYu2Qr5oESXEbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CgL5lU4P; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3ea55e95d0fso130540b6e.2
+        for <linux-pwm@vger.kernel.org>; Wed, 04 Dec 2024 16:44:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1733359478; x=1733964278; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=rZU+yuC4IUNNrcZsdQdOWRd6MVYrt80tZt42Hj7Odpo=;
+        b=CgL5lU4PiFH3Zh26mHpXbCWV5ZZSDsnjORx5YEo+8k2N6k9OsjCNHSvqy1c1oONKNc
+         jKW7Gur/n4/TqbytgUX7dJ5PTLUtIzI0GLYJWJkpTevZsz9X+01/+yeZesMkmiyf+Uph
+         JXWXpQMzOabtoRCIQabrIXeT8DGG6uTJGZpLuwkFlCPzWiZb1yozEtAGg67efINQ/cUT
+         fgIokJKF9jK8SZVDw/gIffl+0TaySIYZiGHQ3gZzAhGrNOAqd5WzwdrdcY5/Gk1vlFDP
+         e+4SbMkopRQxKVNEdkfDjoWktt/hKfzNYW5LwGKnhcfG4HW0I2EU/mEXEQ+lFX9mLpMV
+         zriA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733359478; x=1733964278;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rZU+yuC4IUNNrcZsdQdOWRd6MVYrt80tZt42Hj7Odpo=;
+        b=s1eHA8fECW+XFfP/rVUuZTjyNtgYCIoMlFh+veh3KCvuymNjI6O4Ee6wYg9xsyQhPx
+         xIgfERQyseW5zsLu6vUj/ryy90K25myQVtBWS69ondR/5a0h2HgAm8ATI3zABJvZfT89
+         F8A7z5YKdlfoYdE1iVtRr/PVRvByd4B9IIrc89C70WsI5B6B2HVVn+liRrKBywtZeILQ
+         mzmARSMfGPT1mnHZJPEWKcIvDNactQoMBJ/QZR/8M0n9d1rQyxAf0fQmJsNRSxqYSiBs
+         icGBsuOmyf6D3WHJkSXPYXkckN5OJ78p7QmS9f+VYkC3Ceenu0evZxIar78raCEvDs2Q
+         Po/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXr5EV6E4SjJxSPO0oo9ggInBpv6m0e6N06//qECNG+MRdnzWJvNb80wJjZmyHCfHDbZm6NVanVkpo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypgFtHXx6J0qHJqDauYM2ogmHCfgj790QZRxXc+mZSmENyDXBt
+	Aa1is8kr1W+tnUDsI99o9G9pikFgDRlRpiFLKACOyQQtPvl2lqtVc6W5/Pj/++GoQK5fXY28fYV
+	v
+X-Gm-Gg: ASbGnctIyeVtTzBpXVR9O0De6ak/zb3FGnwBujJE/JoIlGC6+mPE9Eio++P5atlrCue
+	PsxXpU9r5O161wUuBI1Rbu+KMxVz4V1n+xDt3/PWoN+wBv4nlTlesRaNSJQ92sABTYST/3kep/h
+	WtbgAiUBPxtI0OTY0JSRL2JFdlBUrEl4wJAgmnZzNIfHxsonD2FZM+ZNGUQcPLicKkysNAwuxXY
+	HDxHRVlAQfSABlrMQnxqiF1UVRiG2io38CdvlJboa9DXrnN0UpAe8NEYjGnqcaXbvJUPGgJdpx6
+	T6z97Y67D1Y=
+X-Google-Smtp-Source: AGHT+IHaFElNJBo9YhzTZTzxYaqVWuPDKa7rUFNx4+15yLQ0Bvjs2W04jhZERCIQ6ow85bmA48lGYg==
+X-Received: by 2002:a05:6830:6516:b0:718:16c8:3c02 with SMTP id 46e09a7af769-71dad6f0756mr5814100a34.29.1733359478045;
+        Wed, 04 Dec 2024 16:44:38 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-29f56945d20sm104623fac.35.2024.12.04.16.44.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Dec 2024 16:44:36 -0800 (PST)
+Message-ID: <4795d5b2-2d6d-4d81-a57b-dc28d217aacf@baylibre.com>
+Date: Wed, 4 Dec 2024 18:44:34 -0600
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -54,70 +82,40 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/11] driver core: Constify API device_find_child()
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-sound@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
- linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
- netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com>
+Subject: Re: [PATCH v7 3/8] iio: backend: add API for oversampling
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org,
+ robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+References: <20241129153546.63584-1-antoniu.miclaus@analog.com>
+ <20241129153546.63584-4-antoniu.miclaus@analog.com>
 Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com>
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20241129153546.63584-4-antoniu.miclaus@analog.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: RvRSqKy8ZqOUE5anLWfZCokK2N1USz-Y
-X-Proofpoint-ORIG-GUID: RvRSqKy8ZqOUE5anLWfZCokK2N1USz-Y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-04_19,2024-12-04_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 mlxscore=0
- bulkscore=0 malwarescore=0 mlxlogscore=919 clxscore=1015 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2412050001
 
-On 2024/12/5 08:10, Zijun Hu wrote:
-> This patch series is to constify the following API:
+On 11/29/24 9:35 AM, Antoniu Miclaus wrote:
+> Add backend support for enabling/disabling oversampling.
+> 
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
+> changes in v7:
+>  - implement 2 callbacks
+> 	iio_backend_oversampling_enable()
+> 	iio_backend_oversampling_disable()
 
-This patch series is based on the lasted mainline commit
-Commit: feffde684ac2 ("Merge tag 'for-6.13-rc1-tag' of
-git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux")
-to avoid potential conflict as much as possible.
+I think Jonathan's suggestion from a previous review to pass the
+oversampling ratio instead of enable/disable seems like a good idea
+for making this more generic.
 
-> struct device *device_find_child(struct device *dev, void *data,
-> 		int (*match)(struct device *dev, void *data));
-> To :
-> struct device *device_find_child(struct device *dev, const void *data,
-> 				 device_match_t match);
-> typedef int (*device_match_t)(struct device *dev, const void *data);
-> 
-> Why to constify the API?
-> 
-> - Protect caller's match data @*data which is for comparison and lookup
->   and the API does not actually need to modify @*data.
-> 
-> - Make the API's parameters (@match)() and @data have the same type as
->   all of other device finding APIs (bus|class|driver)_find_device().
-> 
-> - All kinds of existing device matching functions can be directly taken
->   as the API's argument, they were exported by driver core.
-> 
-> What to do?
-> 
-> - Patches [1/11, 3/11] prepare for constifying the API.
-> 
-> - Patch 4/11 constifies the API and adapt for its various subsystem usages.
-> 
-> - Remaining do cleanup for several usages with benefits brought above.
+int iio_backend_set_oversampling_ratio(struct iio_backend *back, u32 ratio);
+
+To answer Jonathan's question [1] about why does the backend need to
+know if oversampling is enabled or not... In this case, it looks
+like it changes some timing (the conversion quiet time) on the LVDS/CMOS
+serial data lines depending on if oversampling is enabled or not.
+
+[1]: https://lore.kernel.org/linux-iio/20241123160559.56c57fc7@jic23-huawei/
 
 
