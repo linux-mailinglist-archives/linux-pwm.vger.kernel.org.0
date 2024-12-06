@@ -1,149 +1,113 @@
-Return-Path: <linux-pwm+bounces-4268-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4269-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 725B09E6712
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 06:58:52 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72FEA9E67AB
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 08:13:05 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5907D165EDF
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 05:58:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F4B5280F53
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 07:13:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0554E198E71;
-	Fri,  6 Dec 2024 05:58:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74848191F78;
+	Fri,  6 Dec 2024 07:13:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GA7koiEo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbaEyGu1"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80344198840;
-	Fri,  6 Dec 2024 05:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DED32C8B;
+	Fri,  6 Dec 2024 07:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733464729; cv=none; b=obS8cXAztf9SEXnAwYsIioV1CbaQKOQxSaUYKsmLEuY9yswQg3zQEnOYOFt3yCr6w4t3I9DZg0WyDZEbHccuVR3cvkTOZcNnhw0Vq3a0W42qBh2GdoEtwRueiQx/S8SdDKVI+HmAVX5ImvYtmS4x1rSdV6r4NFwQ6kUSEAR/j+8=
+	t=1733469181; cv=none; b=Z6ash8QJe7NGa+2KCkxV9uX1nMzk5Nti8Qcs+7EPsih+hadnzdya+IPk7wyg+QQWnh9LOlG8qCb18NW4uZ4CQvnwkMXdb4TJFZIPp+w7Uhz864qqYHjR7GRNjMBkjHNiuTENguW9CaDxvt26khJP0OclsmmOoWctIOVSPDID40Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733464729; c=relaxed/simple;
-	bh=x4S3iAhnAFj8GBNk3CQKE5jmKknNggmxCeSbl6PFhO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ezcs/MmjEOWp7bVp3YFi7a4+CNQJ6vpFyHyHHoOyTZjad7itsD7hblGPCUfMfEX1XL/SqWwh1Eqwd5uUETKhry9VurjAwz/b7KbnbPHOo+botYZXIz5dx5Q1PlLkeu6nSuumeppw4SQwPsXMkIQ0yMX7+JXx96jEOr0g0+sOK0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GA7koiEo; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2eb1433958dso1215815a91.2;
-        Thu, 05 Dec 2024 21:58:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733464728; x=1734069528; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lMffPOBou4ApM/oKbk7Jpz+gd/smlJwjIwPuRVUfC5s=;
-        b=GA7koiEokqI8MZVVCEjBy+E2Uccct1AwVw2bHtB7AAPh7fiKM82niBfjoFDJggvdDb
-         E3ysP/8o8hmiBzVYRlvXJUMR0yk4t3OYlfXIULm7KFjp7JRvk6dpAioFKe52aVMnSnL+
-         8Cm0XLhsLpP0sc8BkhGCWvYBFckLOmSePzMVu6teXJy2N1aPhmWwTBt+LAPJ1/vERVpo
-         qyBoPW+gcpmy+4yz33N3oTXi4+6OZA4D3BYv2+KZ2d4x/H8AqVvKIAtuD252RK1p1FuX
-         0828YBvEcZOOIV2b7AnrKn5F3wyOZA8usPnVkVcsP0iOB6gv5LKluaYDN/52gNvVzQy3
-         xmxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733464728; x=1734069528;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lMffPOBou4ApM/oKbk7Jpz+gd/smlJwjIwPuRVUfC5s=;
-        b=GZ+Fax35zi49u0ShXqDBdivSK4q+o/XB/Vd5k1iF+FXLMkM3e1kT/kaItVZ0yZb7oD
-         9FXANT3/TPz5pkSfi3CW1k7vGlRpbKWD/Q88pvcGLcIBf/EOJKK+st9u6iFN5ExXAInL
-         dbkV3QigFWRfbjj7RKC2VCODrT1hFeukCyeCfewFjDqsXHIghP0eCGlNbVfPxSYngj4y
-         7uf6YvG+Yo7RGyvOC3AXaIT0ysiPCrCgwejWHBUVB3COKUOKk4HwgWMoSIywzq7DowcO
-         fpiu3cj8i+7FQjtko0m+YKoNTdN1hl8l21YWwirjFeIVcheNKw58j/0oYXbnOTM2n82t
-         CxxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXW6EGORvpNcU+nRXw+z3yZ56/xjJm8mmzV/rjRfKDpab/fJ/pQWQ3SKRit2H1sj5A6WR2/uTDEMXmc@vger.kernel.org, AJvYcCXtLVElIZrr1OyUekjSz807nbi8vzyvDEn/lhbHbnWM1oY6hGkuPmFUqjotrrzycBcEtW/R/aVSG1zk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp/t899WzVJCw6krBSLF4p/D4/O6czdNgJwpZ5eAtK+8RrOFwR
-	11NWzK6T45I8PlJXI3cQz1loxa4shjO9ezo4kmuhpGguzAGqmp2B
-X-Gm-Gg: ASbGncuiR2F/WGVdLDEXwKvYD/Qw+8XRhE5NUJRe4yCakx2Hp6IHjeXsD/AyxgmrUV7
-	QGFh5LBcx0v+hZ1qCyMBBq3t3BWd/YgxvqRfNeC2se0jsQc862JLVrkZs5tZWPa9ViIZoiEln5t
-	tD+8iLjMD6fI1zs5830KQ5YeM17uR+WBZ+K5uKUcAgkK/XuzU/r7dYM43XQplTE2wX8WjxNEAsX
-	uDm3koYuY7Y8WampBffrs9o43WEKJScsKAnry+ZzMiz7hy7sv1HJdPAHF6EYhqtTpJXJ1Ai/BLS
-	738LzAJHz3HY1KFYQgCWS5wKQnI=
-X-Google-Smtp-Source: AGHT+IHPfPT9xNQNvD9xypuyp32gyiz193e3lLstgaForyQc7I6KAvgXXUi+e6BBqDK4LtBmwvD8/w==
-X-Received: by 2002:a17:90b:558e:b0:2ea:4c4f:bd20 with SMTP id 98e67ed59e1d1-2ef6ab293a0mr2793171a91.32.1733464727811;
-        Thu, 05 Dec 2024 21:58:47 -0800 (PST)
-Received: from [172.19.1.42] (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ef6ef14312sm451774a91.46.2024.12.05.21.58.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Dec 2024 21:58:47 -0800 (PST)
-Message-ID: <57648ce7-7c43-4ac5-81d9-35e8a624df22@gmail.com>
-Date: Fri, 6 Dec 2024 13:58:45 +0800
+	s=arc-20240116; t=1733469181; c=relaxed/simple;
+	bh=wqdP/q7jz5/cYPHRhOGlO8Dgz7Z7fVb1WpWpSjFHEtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dX5Vtqu4WWkdl2AQn+BzqhtIAVEpcW455JcDmI0Xs1W+S85eZKsAjVvN9/82YTxWuhS4kFedwOcgvA4gUdLDhNKahwX4hEGNHdi6vJ1Yp89N0zspxS2F+Yczmd8YrlmIOfYPASwturd+SRv408EBXeKHp3FncxmASE+H96Lrw4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbaEyGu1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FCA9C4CEDD;
+	Fri,  6 Dec 2024 07:12:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733469180;
+	bh=wqdP/q7jz5/cYPHRhOGlO8Dgz7Z7fVb1WpWpSjFHEtQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bbaEyGu11/UxJoI+wxVZKQze/GAiyViGlIHkW/LeTFayFPOP21hgFvJ9UQL16Of6n
+	 oSFi59lFAGU0zrx/RohkY08DvXuR0VVpaeGxN1xx0Tf7/qXSLG8T11zP+M57cVh+JY
+	 ITT1xrXF0oS+Za3klS9l6lxOteodrT7qa1MSYCRcee8O9F/hXUqsvoavGQ/2cjk8vF
+	 CBE6z0z04SoUUDGF0JQRrm0IllLkGhUsXYZTYSU2qh3steCGZtdFaRj89WNfpctiM2
+	 0jw2uJpI/yglEHWHuKoQiZklmUMtDU8E/yd6lHsgh7uyG/VaHstYWuHKxH/pidNskB
+	 7RzhF0hivOOyw==
+Date: Fri, 6 Dec 2024 08:12:57 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Mingwei Zheng <zmw12306@gmail.com>
+Cc: fabrice.gasnier@foss.st.com, mcoquelin.stm32@gmail.com, 
+	alexandre.torgue@foss.st.com, hierry.reding@gmail.com, lee@kernel.org, 
+	linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Subject: Re: [PATCH V2] pwm: stm32-lp: Add check for clk_enable()
+Message-ID: <cim6rnzdvhik4kdibfmglf6jiky7xccynqwazmxmnr2f5fvu3f@lvoo3drlgaua>
+References: <20241206012605.2877412-1-zmw12306@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v2 2/2] pwm: Add Nuvoton MA35D1 PWM controller
- support
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Trevor Gamblin <tgamblin@baylibre.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, ychuang3@nuvoton.com, schung@nuvoton.com,
- cwweng@nuvoton.com
-References: <20241024104309.169510-1-cwweng.linux@gmail.com>
- <20241024104309.169510-3-cwweng.linux@gmail.com>
- <5a6ad0dc-f777-4129-962f-e10a0f7d6ee1@baylibre.com>
- <fllw3dv6juj2vepsnrb4lajh2j7b42jl6rzncmvt57gfaalgiv@sypw55h54oag>
-Content-Language: en-US
-From: Chi-Wen Weng <cwweng.linux@gmail.com>
-In-Reply-To: <fllw3dv6juj2vepsnrb4lajh2j7b42jl6rzncmvt57gfaalgiv@sypw55h54oag>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Hi Uwe,
-
-Thanks for your comments.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="24swak54o7mx3jph"
+Content-Disposition: inline
+In-Reply-To: <20241206012605.2877412-1-zmw12306@gmail.com>
 
 
-On 2024/11/21 上午 06:03, Uwe Kleine-König wrote:
-> hello,
->
-> On Wed, Nov 20, 2024 at 11:49:48AM -0500, Trevor Gamblin wrote:
->> On 2024-10-24 06:43, Chi-Wen Weng wrote:
->>> +#include <linux/mod_devicetable.h>
->>> +#include <linux/module.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/pwm.h>
->>> +#include <linux/io.h>
->>> +#include <linux/clk.h>
->>> +#include <linux/math64.h>
->> These should be organized alphabetically.
->>> +
->>> +/* The following are registers for PWM controller */
->>> +#define REG_PWM_CTL0            (0x00)
->>> +#define REG_PWM_CNTEN           (0x20)
->>> +#define REG_PWM_PERIOD0         (0x30)
->>> +#define REG_PWM_CMPDAT0         (0x50)
->>> +#define REG_PWM_WGCTL0          (0xB0)
->>> +#define REG_PWM_POLCTL          (0xD4)
->>> +#define REG_PWM_POEN            (0xD8)
->> These too, I think - it will make it more readable for others.
-> Keeping the registers in address order is the usual thing to do, so
-> please keep the order of these.
->
-> Otherwise I agree to Trevor's comments. Thanks for taking the time to
-> look at this patch.
->
-> Best regards
-> Uwe
+--24swak54o7mx3jph
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH V2] pwm: stm32-lp: Add check for clk_enable()
+MIME-Version: 1.0
 
+On Thu, Dec 05, 2024 at 08:26:05PM -0500, Mingwei Zheng wrote:
+> Add check for the return value of clk_enable() to catch the potential
+> error.
+>=20
+> Fixes: e70a540b4e02 ("pwm: Add STM32 LPTimer PWM driver")
+> Signed-off-by: Mingwei Zheng <zmw12306@gmail.com>
+> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
 
-I will keep the registers in address order.
+In reply to (implicit) v1 you wrote:
+> We detected this through static analysis, instead of actually hit.
 
-Otherwise I will modify per Trevor's suggestions .
+Would be nice to mention the tool that actually found it in the commit
+log.
 
+Otherwise I'm happy with that change now.
 
-Thanks.
+Given the issue is old (the offending commit is in v4.14-rc1), I'd note
+send it as a fix before v4.14. I'd send it along however if something
+more urgent pops up.
 
-Chi-Wen Weng
+Best regards
+Uwe
 
+--24swak54o7mx3jph
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdSo/YACgkQj4D7WH0S
+/k58qQgAoaSkhGFgO/Kk52GXlgiISBHJAWIcISJ5+foNu36MAFY3eW6ti+GT0DBw
+XuYgt/Z7uV4mklpmSb0NsHU9o1Rg0wqdqPpeOydgp+nDnWRLOU7Ym5ZLGGIna4M+
+VuKtK4l3wY5wW9LXMR0YlBhNQ8LlSNIG3yGfektvc4kWLaTB1S3o3FkY3mx6PaFl
+As6hDgS2eg5rGjRaAYqiBQ0RCPVDOtH4+dgVAXC7w4LNyJo6ujdPQdaSBmq05RQi
+DDH6nEL/NVw3PSjoDcK3Q2YQ8Ch3O/XyzybATAlLlNNqN2/M1mwEK08vbeEnv5mP
+OYIkTcu2MYynEx6XzaGy1PAATeTcqw==
+=onJO
+-----END PGP SIGNATURE-----
+
+--24swak54o7mx3jph--
 
