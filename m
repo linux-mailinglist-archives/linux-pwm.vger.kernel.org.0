@@ -1,163 +1,123 @@
-Return-Path: <linux-pwm+bounces-4278-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4279-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEB6A9E73B1
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 16:23:10 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95C909E7673
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 17:53:15 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7018728B01E
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 15:23:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 79CD1161307
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 16:53:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00FA320C475;
-	Fri,  6 Dec 2024 15:22:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCC751F3D2F;
+	Fri,  6 Dec 2024 16:53:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="ZNf4rL8k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MHza94HH"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4C1207E1A;
-	Fri,  6 Dec 2024 15:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B481E206271;
+	Fri,  6 Dec 2024 16:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733498571; cv=none; b=nziH4xK4zKkOGpkWA6yoelZ1JzkNzubyp8YZEIz24DxaD9y2LrfHXKpUuHgeMxQ51dWxRWlLamcUkhoYkS6Ypkx6w27qMbUWJj1PghyGUd7MoOIpw0k5hnX/xc/rm1997nlJ+ChczR/AFATa28vexPT5p/wSSbU/bgvBIISGfWI=
+	t=1733503991; cv=none; b=AVUQcWmZpnzH02QiQML+Kjfy2pAdXOrqjGjnOUqEPvhCI+QNejUmBQtP5EoWNExPeLyTrR4b00ctx68osUoD8zIJ5vwt7K4LsaXSlr7EDjgZLVyWZbnhFBcr9oghqaU7HXLPpQ1e3UPZPs7qx5N3/7MRxaBpDYJILGzaCl2pvT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733498571; c=relaxed/simple;
-	bh=ue0zjSDUKAz6ZdL96QI8A75tVCwRwgeQqRXoZImt3JY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PU/jpFQ9mjRnlYp0sR+qx9vxioYiDz1HazUIe33gKojtRxzI3BFL9V8bc7glKQuM+MpEqUc9aE1E0b/NFigUtqK4TWkV/lwv2AcIuzj1RHYfqsEpnjOqKL1zv1wLcScmruan3zv9DXMxnpxQhFqR12GDMRTVkw5h8yO7ebdbeSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=ZNf4rL8k; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B6E3xAQ001605;
-	Fri, 6 Dec 2024 10:22:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=XgUbt
-	M5YUPS4JP50Lpqpp/hIlUxc1ohCAAG3h35M6tw=; b=ZNf4rL8khlr8zJdrKwLKV
-	KW+dMgw6GSUmznEmuzpPHShvcW2l06s/wdtteAcN96rDWalaHBjRK8jk7Y4FQDAT
-	G3cj5LCdoMQGCk1a8UBOSELPmuEdWc6VBjlCLax7PoSw+pgEH1Lk6IjnKSIT9CbT
-	jf5dL4WYvsAAkLuPFcL6n4icrHT0ckOFcRHCsrU7Nme4FwuynHKuN4HS/CJAz2LK
-	hNL1IYjedV6vKc4ewJOm0rFkNg4jzoWh/bltyzy+2EKZ4x0+C4gAmqGI9PezCJai
-	t0vIR5g/3AOL4hlNrs0iHKqAnkjtCKNeC5Lz4C+lZbitZXc+H8/AAnwCrlplEuur
-	g==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 43bbcbxym1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 06 Dec 2024 10:22:47 -0500 (EST)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 4B6FMkL9020909
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 6 Dec 2024 10:22:46 -0500
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 6 Dec 2024 10:22:46 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 6 Dec 2024 10:22:32 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 6 Dec 2024 10:22:32 -0500
-Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.187])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 4B6FMM1d025340;
-	Fri, 6 Dec 2024 10:22:29 -0500
-From: Antoniu Miclaus <antoniu.miclaus@analog.com>
-To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
-CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Subject: [PATCH 3/3] iio: frequency: adf4371: add ref doubler
-Date: Fri, 6 Dec 2024 17:22:06 +0200
-Message-ID: <20241206152207.37928-3-antoniu.miclaus@analog.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20241206152207.37928-1-antoniu.miclaus@analog.com>
-References: <20241206152207.37928-1-antoniu.miclaus@analog.com>
+	s=arc-20240116; t=1733503991; c=relaxed/simple;
+	bh=JpS/Zt5Xq9vuGvkn4jptuxcPyo4ktemXE6eY8TMimTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DKpAuAixGg9hc2puNRQ5PA3+MlCydTIU6ncRvg6G3H3W4p3Qj5sbJcpDOPjjVeK7bYGKHWrtymo9yUcnomMMoA0kGMcMqKrMHmFmeo4uFEqN2WlyMieemcEH1IvIdx5FxCieS9DbwgGkTCpkSqr9rZBSAjiinauQyj0lAVoCPno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MHza94HH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE2E6C4CED1;
+	Fri,  6 Dec 2024 16:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733503991;
+	bh=JpS/Zt5Xq9vuGvkn4jptuxcPyo4ktemXE6eY8TMimTI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MHza94HH8zx5zpl+tyZniMpGI8BVsXN6Ue6b1SnP0Q2AeEPTMtSpePIt0PNJ7ln5e
+	 Bi8fql9veu1U3/o5xq0bkxI8FinVXnn5uxim3eo/IA2y/t3LGchsLlmh7Qm2s2qrae
+	 lDtyaJUupUDJ2Oxf7PNi68ZUKN5YK26EiBhd8DAxIYdWA8aBkLlkqpIppabcDR9PpU
+	 eBZ++wepN8+6I3qTEUj3RCuJmHq8Rjr/De8FAfTMIew/3IrS15ou8lfHgZQ0EHeed9
+	 llM9rjlFP/esIVb0Ef1TSlkYCbxvsJalbYZ/0bY5ZgOsEufHV9g6xvBhPzdJmLlhYW
+	 Ni3LPwqthYfyA==
+Date: Fri, 6 Dec 2024 17:53:08 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Mingwei Zheng <zmw12306@gmail.com>
+Cc: fabrice.gasnier@foss.st.com, mcoquelin.stm32@gmail.com, 
+	alexandre.torgue@foss.st.com, hierry.reding@gmail.com, lee@kernel.org, 
+	linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Subject: Re: [PATCH V2] pwm: stm32-lp: Add check for clk_enable()
+Message-ID: <o6rh2bcxnnubhx6xem55otgequw5zrqmkretcgofohvcpbygdw@z3qagurhjyp3>
+References: <20241206012605.2877412-1-zmw12306@gmail.com>
+ <cim6rnzdvhik4kdibfmglf6jiky7xccynqwazmxmnr2f5fvu3f@lvoo3drlgaua>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: G6Vc7pkpStBiCNo0MxgSYbZ3wlgH8chi
-X-Proofpoint-ORIG-GUID: G6Vc7pkpStBiCNo0MxgSYbZ3wlgH8chi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- spamscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501
- impostorscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412060115
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lvtle2mtnfezbcjm"
+Content-Disposition: inline
+In-Reply-To: <cim6rnzdvhik4kdibfmglf6jiky7xccynqwazmxmnr2f5fvu3f@lvoo3drlgaua>
 
-Add support for the reference doubler.
 
-Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
----
- drivers/iio/frequency/adf4371.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+--lvtle2mtnfezbcjm
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH V2] pwm: stm32-lp: Add check for clk_enable()
+MIME-Version: 1.0
 
-diff --git a/drivers/iio/frequency/adf4371.c b/drivers/iio/frequency/adf4371.c
-index 55bee06fb42d..dc01f2aafb9a 100644
---- a/drivers/iio/frequency/adf4371.c
-+++ b/drivers/iio/frequency/adf4371.c
-@@ -44,6 +44,8 @@
- /* ADF4371_REG22 */
- #define ADF4371_REFIN_MODE_MASK		BIT(6)
- #define ADF4371_REFIN_MODE(x)		FIELD_PREP(ADF4371_REFIN_MODE_MASK, x)
-+#define ADF4371_REF_DOUB_MASK		BIT(5)
-+#define ADF4371_REF_DOUB(x)		FIELD_PREP(ADF4371_REF_DOUB_MASK, x)\
- 
- /* ADF4371_REG24 */
- #define ADF4371_RF_DIV_SEL_MSK		GENMASK(6, 4)
-@@ -75,6 +77,9 @@
- #define ADF4371_MAX_FREQ_REFIN		600000000UL /* Hz */
- #define ADF4371_MAX_FREQ_REFIN_SE	500000000UL /* Hz */
- 
-+#define ADF4371_MIN_CLKIN_DOUB_FREQ	10000000ULL /* Hz */
-+#define ADF4371_MAX_CLKIN_DOUB_FREQ	125000000ULL /* Hz */
-+
- /* MOD1 is a 24-bit primary modulus with fixed value of 2^25 */
- #define ADF4371_MODULUS1		33554432ULL
- /* MOD2 is the programmable, 14-bit auxiliary fractional modulus */
-@@ -480,7 +485,7 @@ static const struct iio_info adf4371_info = {
- static int adf4371_setup(struct adf4371_state *st)
- {
- 	unsigned int synth_timeout = 2, timeout = 1, vco_alc_timeout = 1;
--	unsigned int vco_band_div, tmp;
-+	unsigned int vco_band_div, tmp, ref_doubler_en = 0;
- 	bool ref_diff_en;
- 	int ret;
- 
-@@ -516,6 +521,10 @@ static int adf4371_setup(struct adf4371_state *st)
- 	    (!ref_diff_en && st->clkin_freq > ADF4371_MAX_FREQ_REFIN_SE))
- 		return -EINVAL;
- 
-+	if (st->clkin_freq < ADF4371_MAX_CLKIN_DOUB_FREQ &&
-+	    st->clkin_freq > ADF4371_MIN_CLKIN_DOUB_FREQ)
-+		ref_doubler_en = 1;
-+
- 	ret = regmap_update_bits(st->regmap,  ADF4371_REG(0x22),
- 				 ADF4371_REFIN_MODE_MASK,
- 				 ADF4371_REFIN_MODE(ref_diff_en));
-@@ -531,7 +540,8 @@ static int adf4371_setup(struct adf4371_state *st)
- 	 */
- 	do {
- 		st->ref_div_factor++;
--		st->fpfd = st->clkin_freq / st->ref_div_factor;
-+		st->fpfd = (st->clkin_freq * (1 + ref_doubler_en)) /
-+			   (st->ref_div_factor);
- 	} while (st->fpfd > ADF4371_MAX_FREQ_PFD);
- 
- 	/* Calculate Timeouts */
--- 
-2.47.1
+On Fri, Dec 06, 2024 at 08:12:57AM +0100, Uwe Kleine-K=F6nig wrote:
+> On Thu, Dec 05, 2024 at 08:26:05PM -0500, Mingwei Zheng wrote:
+> > Add check for the return value of clk_enable() to catch the potential
+> > error.
+> >=20
+> > Fixes: e70a540b4e02 ("pwm: Add STM32 LPTimer PWM driver")
+> > Signed-off-by: Mingwei Zheng <zmw12306@gmail.com>
+> > Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+>=20
+> In reply to (implicit) v1 you wrote:
+> > We detected this through static analysis, instead of actually hit.
+>=20
+> Would be nice to mention the tool that actually found it in the commit
+> log.
+>=20
+> Otherwise I'm happy with that change now.
+>=20
+> Given the issue is old (the offending commit is in v4.14-rc1), I'd note
+> send it as a fix before v4.14. I'd send it along however if something
+> more urgent pops up.
 
+I wasn't very attentive when I wrote that mail, what I meant was:
+
+Given the issue is old (the offending commit is in v4.14-rc1), I'd not
+send it as a fix before v6.13. I'd send it along however if something
+more urgent pops up.
+
+Best regards
+Uwe
+
+
+
+--lvtle2mtnfezbcjm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdTK/IACgkQj4D7WH0S
+/k42UAgAs6H2mPbme8oPwP5+Vo7po8iDZLSjx2VBZfboLqKgg60SSEgkWJDW3QRW
+JSMgjh22hbHhuXTjBDM3281KZfebAxFyiVCUoLkFX4dxsP/HBJGb1VCovMAAIdzp
+aKNyDDpyGzvbXv+rNdV8nIRLYooE0AxWuoZiQU5/54Zsg6BQOdRYOw/7NrUffYHx
+Y4cuErXghldB8y6lDG86quZffAwnAp0BFuV55mixSpcV1MKiwiPWqRmr9w605/m3
+e8V6BYUoh+IK/2hvFlcdl95pULgQjAtzaq+NNMQgBU3mT05sD5oOl6EAtvVbJEVd
+fNXPXDr9aVWZWRuTWR8pnjJFn9t/wA==
+=eYs8
+-----END PGP SIGNATURE-----
+
+--lvtle2mtnfezbcjm--
 
