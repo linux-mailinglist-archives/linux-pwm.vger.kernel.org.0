@@ -1,134 +1,136 @@
-Return-Path: <linux-pwm+bounces-4270-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4271-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00D0C9E67CF
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 08:21:11 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A344316195A
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 07:21:07 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B9CA1DD872;
-	Fri,  6 Dec 2024 07:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+wG9rcY"
-X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D0A49E695E
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 09:55:13 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990E71D63D1;
-	Fri,  6 Dec 2024 07:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D69102832BA
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 08:55:11 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E7551DF72D;
+	Fri,  6 Dec 2024 08:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akkmv6z+"
+X-Original-To: linux-pwm@vger.kernel.org
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BE01DF24B;
+	Fri,  6 Dec 2024 08:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733469664; cv=none; b=QfeDiMMWc5Bs0wkk3k2iDmPs19vJFOuy5uQQ10oBSpu8l7bjqNFQCzslVL3uoN3tB3AMQXox7aQT0Djm7ImF8noAnb/ha8N4HYiP7Xi3EndSDIc6DIHd/ei1msZ8pmds4X4iGn3wKdKZKmYD0GUwOGNEkR+LvDnRHBMhRASU7PA=
+	t=1733475310; cv=none; b=ltf6eB9pEGmin+z2r0tK1KLrnsH/EDr9VLAGQ7K7Sz1s98QzhjL6piS9KwN05g1CuAiO2TyZTS5f4K0x590WdqGtMK4Xxje7ASJkSU/jN+LZBXnR6gylEO5bTB/Zy1HwpNXvmv9temGcDJuJ+sSrM0g7Aiqe1z0r/GpN4cC7iAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733469664; c=relaxed/simple;
-	bh=eXgkPnSuV1DLMSpxicSxCmpRMc11qSId1Ps39ZgC62E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DgGs0eLziaCw/VfWhS12larD8OcwilOKczfSyb5h9dRhYsRfc0T5NRgHEbWMkf4493OE9qUZo90pxQUTG26Pw4MyydRR2weEyiRXY0jX8tUnaDB6EPNvf/kXqmEoLglnFBpZQuvUrJnhLMeLIlzwnpql6qdp6rMooeRPbcGKHWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+wG9rcY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F657C4CED1;
-	Fri,  6 Dec 2024 07:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733469664;
-	bh=eXgkPnSuV1DLMSpxicSxCmpRMc11qSId1Ps39ZgC62E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o+wG9rcYnotlrUeuc0PL7wpQWKlXXxbgXtHgvJy7YCCwHVZ9BkccRLmauWqsz+ZV/
-	 iY49BGCvaEwufLj74wUd4KOO2j4hv4jUIw8urqblrYMJBpAv6CgCbIU/8R6GyV73VK
-	 9c58t+wda7Myy5qJF2WzOXzK3/BQJ0i/AkjHXsZFMr7s3vepRv5asoxKqYToTl/hYB
-	 VNEio9U05OacRjqjaygqmLG9eUZQ17GF0aovEsH5OsM54NY9ccCb7HeNz79C2xEmMj
-	 yLXMkRkJbjJNx0ViCQboZDxE2VKg3DG3+oa6CDnctzD5D0J8giHgftdS96ghXZOqUx
-	 A94yQD2wKTalw==
-Date: Fri, 6 Dec 2024 08:21:01 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, linux-sound@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-block@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-mediatek@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	open-iscsi@googlegroups.com, linux-usb@vger.kernel.org, linux-serial@vger.kernel.org, 
-	netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-Subject: Re: [PATCH v3 04/11] driver core: Constify API device_find_child()
- then adapt for various usages
-Message-ID: <7ylfj462lf6g3ej6d2cmsxadawsmajogbimi7cl4pjemb7df4h@snr73pd7vaid>
-References: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com>
- <20241205-const_dfc_done-v3-4-1611f1486b5a@quicinc.com>
+	s=arc-20240116; t=1733475310; c=relaxed/simple;
+	bh=cGQwLBa50BqSiZXMF4ZcHqyyMkfFXBX5tddRrn+oclw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R+ZtHvyMWeWwrAUAe5uw7cKJ7o656VfiE6LtzZCLoFZ6QZpmIZSUREnHscku6qY5h3rhkued9mOU8cAraWtUvqGKxs6DoDz8mNyxZv03djVUcmYSrU7sSg2v0hp2eB3sti3FQymHrJPC9GKAd7Ugyw14YjoepdLquwcbyZLJykU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akkmv6z+; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ee67e9287fso1543813a91.0;
+        Fri, 06 Dec 2024 00:55:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733475308; x=1734080108; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qt7Z7l4IzJbSbBd7IGeNLP8mVs+vDf3JZNjAJLXbLd8=;
+        b=akkmv6z+cvO76TE85DmA5vn5H3SOoLNKAnFdY1V75RcwJxbulf1o8zaBmZnb/rOJwZ
+         MyYOw60ZWUGXeEbJ0a9bkXigd8S3/S5IxK3maK1xrNuhTZnuDa0eU12o42szOi0YwB9J
+         qCbhowFh3lmmnLEH9POsbHcMCOkks2uUEdXuRfcKTBNfTEZsEKA0IVNhU8SJB+2l0ANv
+         RTy1yakvbHEYmbN2vML88IFAIa9wSzbGIzyIZ2IpaVypFqKJBGZL2RNjIqMmOmEmx91C
+         QO/HiNyeoM+50jocSTzxFiYug5/7cmFY4fEbgZFUE+HXx02rPd7EmgkQEckPuJKLiqpF
+         3/Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733475308; x=1734080108;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qt7Z7l4IzJbSbBd7IGeNLP8mVs+vDf3JZNjAJLXbLd8=;
+        b=tRRC2rkix69OQAjv5npbECqD4642fmJhCNSWtTP3N2c6EI7WbyiR8KgYXulQC+WGLC
+         Qiog2kbi/5xnufkj3c8MAyGWY8gXlaiScpv5ypifZLj7U5HO8LinrD86Tnsvbd2Uk+am
+         EcujGz3oS6/WWJBRFfVSHiTDcX1mLZ4WsoMgVt3kX/i8lcWLVqu+jCnhcjAjISM15qWm
+         149+McspND5WVr9YPc5aUOOh9qU9sAkVz7ils9HDSr1xsI7XWh/+QnPsaCCm0feIMq9M
+         DZHMNUj0qRg4X5mgQp8YIsY5aZJvXYRjZAEfUUAbq73mrfeSne0vEfC3FzJPeeK/hb/W
+         POJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLi8hGUN+2UXID5Tz3pzvPbGppVjndW150u1RkTxNToOgetbBpNXsxW/rO3F6x3lj3BIyMHqZZ2apo@vger.kernel.org, AJvYcCVmrVJbDcMdn/QMmqwMrn80wKhuBCV68qoqZVuX/dK39InH07YZyNToNzJBh7X3/eD9AaHOF2Yye9CV@vger.kernel.org
+X-Gm-Message-State: AOJu0YyR4D4s4d16vDSMzLulT0+9po2RdfqOOeh+qwWi6p2+jRCxE3/l
+	p1fl55lFK9h6UoV52bQBjtBlLovBADuqbHmTzFhBBast9zUZqqs7
+X-Gm-Gg: ASbGncsDfXC5/aU0SPG+SqXIAmN/znD/MZUMSx4c4m5dQQBAhxSadblzMXoqt3/A0wE
+	RFzwSJ/WTes9Y1SiDBsQlckiLHHECX1VNSv0KvxL8RX0WWKM6S3rj0T1ZANu0MTdKG3KuLsmmBY
+	gXKcdAp9lH1Y+VG0JmFE01vj7y5aFRpwVub6L0V/UouZdbbmGWWQKvY59Lq4KR5EQoFb5UYpR/+
+	QEB5WCRXv95NoASeBfz9reXnnD66EJjbxJMBe6yQiSK34BCnB402xeDwdzL0es/xTuw7wzmLw1h
+	YjV0Yv7HsZeYRbRL5OQvfDC+WvSdaSOKrTxadQ==
+X-Google-Smtp-Source: AGHT+IGKo685mMivDdAq9M3LGWmjjpmIkL1RsgmqJ3QTFCAEaj1zx7+8CJggDOCSx47c/z5zEUZ+FQ==
+X-Received: by 2002:a17:90b:2d05:b0:2ee:cd83:8fe6 with SMTP id 98e67ed59e1d1-2ef6ab27390mr3012606a91.35.1733475308511;
+        Fri, 06 Dec 2024 00:55:08 -0800 (PST)
+Received: from localhost.localdomain (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ef270795d6sm4548157a91.42.2024.12.06.00.55.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2024 00:55:08 -0800 (PST)
+From: Chi-Wen Weng <cwweng.linux@gmail.com>
+To: ukleinek@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski@linaro.org,
+	conor+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	ychuang3@nuvoton.com,
+	schung@nuvoton.com,
+	cwweng@nuvoton.com,
+	Chi-Wen Weng <cwweng.linux@gmail.com>
+Subject: [PATCH v3 0/2] Add support for nuvoton ma35d1 pwm controller
+Date: Fri,  6 Dec 2024 16:54:59 +0800
+Message-Id: <20241206085501.2623772-1-cwweng.linux@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="owd7bvwanf7sxd4s"
-Content-Disposition: inline
-In-Reply-To: <20241205-const_dfc_done-v3-4-1611f1486b5a@quicinc.com>
+Content-Transfer-Encoding: 8bit
+
+This patch series adds pwm driver for the nuvoton ma35d1 ARMv8 SoC.
+It includes DT binding documentation and the ma35d1 pwm driver.
+
+v3:
+  - Update nuvoton,ma35d1-pwm.yaml
+    - Add maintainers entry
+    - Increse "#pwm-cells" to 3
+  - Update ma35d1 pwm driver
+    - Make include header and macros definitions organized alphabetically
+    - Rename macros REG_PWM_XXXX to MA35D1_REG_PWM_XXXX
+    - Add macros for register address
+
+v2 resend:
+  - Remove wrong 'Reviewed-by' tags.
+
+v2:
+  - Update nuvoton,ma35d1-pwm.yaml
+    - Fix 'maxItems' of 'reg' to 1.
+    - Remove unused label
+  - Update ma35d1 pwm driver
+    - Remove MODULE_ALIAS()
+    - Add chip->atomic = true
 
 
---owd7bvwanf7sxd4s
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 04/11] driver core: Constify API device_find_child()
- then adapt for various usages
-MIME-Version: 1.0
+Chi-Wen Weng (2):
+  Add dt-bindings for Nuvoton MA35D1 SoC PWM controller.
+  pwm: Add Nuvoton MA35D1 PWM controller support
 
-Hello,
+ .../bindings/pwm/nuvoton,ma35d1-pwm.yaml      |  45 +++++
+ drivers/pwm/Kconfig                           |   9 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-ma35d1.c                      | 179 ++++++++++++++++++
+ 4 files changed, 234 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/nuvoton,ma35d1-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-ma35d1.c
 
-On Thu, Dec 05, 2024 at 08:10:13AM +0800, Zijun Hu wrote:
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
->=20
-> Constify the following API:
-> struct device *device_find_child(struct device *dev, void *data,
-> 		int (*match)(struct device *dev, void *data));
-> To :
-> struct device *device_find_child(struct device *dev, const void *data,
->                                  device_match_t match);
-> typedef int (*device_match_t)(struct device *dev, const void *data);
-> with the following reasons:
->=20
-> - Protect caller's match data @*data which is for comparison and lookup
->   and the API does not actually need to modify @*data.
->=20
-> - Make the API's parameters (@match)() and @data have the same type as
->   all of other device finding APIs (bus|class|driver)_find_device().
->=20
-> - All kinds of existing device match functions can be directly taken
->   as the API's argument, they were exported by driver core.
->=20
-> Constify the API and adapt for various existing usages by simply making
-> various match functions take 'const void *' as type of match data @data.
+-- 
+2.25.1
 
-With the discussion that a new name would ease the conversion, maybe
-consider device_find_child_device() to also align the name (somewhat) to
-the above mentioned (bus|class|driver)_find_device()?
-
-Do you have a merge plan already? I guess this patch will go through
-Greg's driver core tree?
-
-Best regards
-Uwe
-
---owd7bvwanf7sxd4s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdSpdoACgkQj4D7WH0S
-/k4dIQf/Zne0n0ncNUTb3GbDwFv4sf3wAVH368SbrNYMV23ZdWpNl4KZPovf5L1+
-5nMlPkc2I/CBZGE2OJcZWUhHI7cZ2ZYDHBBAf/TYhsY9f0+6wXgdi2cc+bbbQpo1
-JdabxMtgPX9tQ1Rbtv6jNu1AUvx8pONwQvUe5vmIBeLFDx5+wEwm4LppEVU+x9zB
-dApq6D2VfLguHwMf8HDycoa0nd0GL3R4KIJF4+taiSmhz9q+yjewqiXD2ag3fYrF
-1IeZ6pnyXoaq0aTwLmXXhI6se14Q+IZIVQPRXVQ5i9A8kbsWN0Fj2LfXnnNWhmHl
-YR8uP+UVLcfagxTg7ascr+SuV4OlCw==
-=cpdm
------END PGP SIGNATURE-----
-
---owd7bvwanf7sxd4s--
 
