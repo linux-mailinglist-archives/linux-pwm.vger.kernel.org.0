@@ -1,149 +1,150 @@
-Return-Path: <linux-pwm+bounces-4261-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4262-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FFF59E6156
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 00:30:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC9E89E6281
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 01:51:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7037F16A40F
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Dec 2024 23:30:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4594C1631F1
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 00:51:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEBB31D5150;
-	Thu,  5 Dec 2024 23:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32A9246447;
+	Fri,  6 Dec 2024 00:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FikzC+30"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bd2zo51O"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C46184A22;
-	Thu,  5 Dec 2024 23:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4C72BB09;
+	Fri,  6 Dec 2024 00:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733441436; cv=none; b=lVMEzHdGXTXL06qGtcbW6aRJUdmjOLzNff8MZ1racwgmdoeEgpQ+/T1IjOdDZbO2RpdAhTkFjh7VxDdO1nKsSpLf8eHaNzYwrVdv4Tb/M1GkYmdiHCbMIK5KPWgswRvm5LwIp6tZGVFORPCdv0xnqKU9tzhU+4wKD/OUBD0rJew=
+	t=1733446277; cv=none; b=SkC5h6/f3V8sy77pwssuWzVmuDo2d0oBzAFyuJls57hPfhSG2ZFIOjBcSBpDuVme+ma5tJlIHF/a2WEFLqL0dI8Jts0UYxpkQJpH4+mmZ0xNzGGc6NV6LY6J43NNp24TtuIZRqaeO0DL0x1zs2f0346RR/jCygDXs6kET4zIucU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733441436; c=relaxed/simple;
-	bh=I/Bbmecpn8RogQU7kB8TZf0KJSzLC1/N7kmtot7TRMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HB3tA11pz7riu8Tb1uuAQuBp++WkYM9+IglloJ5HZcVYz06JpoRb1tdKkphj2xFIUcGveJ8Nonlem0Ba0PLSyWFC/etGKrRYbI8H/+9DqZS6eTrMQrzGrJhn0Aioex14RlSBJpJGhbAas8B3IiW5vPguqV/pUQBqw7PrMEMj2iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FikzC+30; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733441435; x=1764977435;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=I/Bbmecpn8RogQU7kB8TZf0KJSzLC1/N7kmtot7TRMo=;
-  b=FikzC+30XI/iOT68dPbfSDHYtDqlGzCwcZQrXiSb3bYr+dxGfq7A6xKX
-   KxaiRp1tf0bwojA7cF+ZMpgDzil6yhfURnBiAOuxmkxNtQMgj4RpupWnf
-   7h2hTotgTGp+TmTuFSqIXbzYULFSf4cLSVPdHec281IBG4FrQYU7U/rmD
-   kCzSnb3V11V6V7QKpJGowrKvP4vjcDL9qdyJFLN8mYUTWdWxDyeJ1zXJh
-   waL6/IjMUXdeCz6Lb4k6FBAQ9uY4+5zmfWqYlQ3/DGbUMCDD2kvOZXmJb
-   OJIMdy0BncCbBUQ3leUyvIfhjH98cAGFito+iy3NMUUCXd8rmOW5rBh+i
-   A==;
-X-CSE-ConnectionGUID: +EcI7RVmT4yfbM0C3nTsmg==
-X-CSE-MsgGUID: jhjbj5ekQpqQd+5KiQf1WQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11277"; a="37564427"
-X-IronPort-AV: E=Sophos;i="6.12,211,1728975600"; 
-   d="scan'208";a="37564427"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 15:30:34 -0800
-X-CSE-ConnectionGUID: kigTlvqHQOmnUT1IudSx6A==
-X-CSE-MsgGUID: FlGBZXefRl6sPWVdfnP/5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,211,1728975600"; 
-   d="scan'208";a="98312134"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.192])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2024 15:30:31 -0800
-Date: Thu, 5 Dec 2024 15:30:29 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-sound@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
-	linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
-	linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
-	netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-Subject: Re: [PATCH v3 01/11] libnvdimm: Simplify nd_namespace_store()
- implementation
-Message-ID: <Z1I3lSpcnIIbc7S1@aschofie-mobl2.lan>
-References: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com>
- <20241205-const_dfc_done-v3-1-1611f1486b5a@quicinc.com>
+	s=arc-20240116; t=1733446277; c=relaxed/simple;
+	bh=78rE7sFM5hMSVUktXfM1DYZzRFvqYEeXK7x5OI2RSGM=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=gIEwusqdH49wQS/ystN6FrPrCu3o/f16zzE7PLdnc9j8J63sarcIevuoe7JsCYBZVKJMz1YFmG0ED9g4jrhrHuGAis4hqETPlbziJlOd0zhn6Y9qGFsSniDESjQpFEyuRPTFJKBHoIARJY04C1ZGIYJD3IeGRoGCP90TEWTvo+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bd2zo51O; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6d882619044so11687726d6.0;
+        Thu, 05 Dec 2024 16:51:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733446274; x=1734051074; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=78rE7sFM5hMSVUktXfM1DYZzRFvqYEeXK7x5OI2RSGM=;
+        b=Bd2zo51O4YoA6ss4Xt/oj2FNumARB+wFtekUhZvPo+I/HSvgnAkDQfUmsFCD/27hOj
+         ji07Sz93vqVOdaZWt/05E5jyd5hx3eagel1lKktjgGz9u67xkdKr14G3f1sepUa24Us8
+         d+qOHYjjenw08TxmT2MkQkqjh99ew+AwqoQqm3NwHzAAfSogs2IJpO4xKenWvPxCYDAK
+         2USVT3Qq/eZuGa5nesnajCp56jEo19Ncf7WrYL0/IbYH/7fO30/Tu23GCWE2E2f1y/5B
+         huJgugZufn0PBoSt5e1Wvyw77gfs4BDUYmkRHBJ4WQn1SI9pD6WwY65K9PWPnzFsXTdK
+         tdtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733446274; x=1734051074;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=78rE7sFM5hMSVUktXfM1DYZzRFvqYEeXK7x5OI2RSGM=;
+        b=lvhMwtiTkm7Dt+BlSoKye0Q4T4gWrdODkm/ncJB9KgzVun6kAiWyCtsC1hcMf+VC7K
+         NO54GVYxmG5dX91qAj4jyiHGUzk+MV6NkXPHgkqm1GY5uH3+qA10YFyCrovDBpsLyTC6
+         CX3mOsrbRNa1t2rrxVHqKjLFxk7XoAQ+Q9BCvctatv4TVSuRsi0MxbAW+eo0+oqNnFpA
+         TCuGATFDl5jXhNbLXR+XvspJmKkvzLjvVu32p5gFY1jdy16Irp76acqh9D019VeckD0C
+         edVRb3LsgMjjXm2Kp6bbsGuTby80Q7N319oLlsgrTzY4dQtDO8+TB70exwVHeOP/XOl3
+         SxxA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLAPvR+7k2zDmm9ffITnAL4rFwvtbkXxt/P3nNvp8i1Keu09/u5TE0Xvr/78HvwqA2B9BC6aMNvNFbEsU=@vger.kernel.org, AJvYcCXQhe95Za8kUYyDmdQI1U13n5O3P2hcnhQzwkOs8Nyg05RHYy285cNYHNox7alwAQTVhq681KidD7r3@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZfPq/ai2iJ1mfOeczZC7933W5AJ+5jNYPLYqizv4A8eYLF9go
+	4oseVEc/vsxaRJjAsdJIVPxEKXljkUhktSXuqsDlVQnp8R2/ID+J
+X-Gm-Gg: ASbGnctk59A5EJC+8NjMxbYkRwcF+3XyeCbAtDH4PNERn1XsVI+sKOpTyNI4j4rXPA7
+	7QQcXxAdG/BrfTad7YaM4tDMdTbsoVpjDZSnNxIScxV8v3DyeIaETfMuxDvz/hD6nvH+qpxEKZw
+	UxTYpZVWBF/vPqdZ3J8audyzmv7JlRZHKl7r9agcWH3w44TbXr3dphyPj1CjoeDEhEQyBnNQkuY
+	8Q6DGcaC/XBq07bH27tdcGaV18hdNBTgK/q5FPvBa5XLCdB8qJdVbzEmlnID3DdjogNO0dtqWc=
+X-Google-Smtp-Source: AGHT+IF/sk9ZB235pUfB0O6hz42Upg4C3T7QSAhoiMqwmiLWKznlOnX/VWzkLXPVN06gb5l37ZaJIQ==
+X-Received: by 2002:a05:6214:ac2:b0:6d8:d240:9f26 with SMTP id 6a1803df08f44-6d8e713feb7mr22257846d6.16.1733446274340;
+        Thu, 05 Dec 2024 16:51:14 -0800 (PST)
+Received: from smtpclient.apple ([2601:803:8180:ace0:901f:f4c2:743b:7118])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d8dabfb438sm12583646d6.106.2024.12.05.16.51.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Dec 2024 16:51:13 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241205-const_dfc_done-v3-1-1611f1486b5a@quicinc.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.200.110.1.12\))
+Subject: Re: [PATCH] pwm: stm32-lp: Add check for clk_enable()
+From: Mingwei Zheng <zmw12306@gmail.com>
+In-Reply-To: <geyicxufezkbu7cdvnbgnr2qeuwrn5ubz5ent3spk5biuozxrs@gsqx2chgiiot>
+Date: Thu, 5 Dec 2024 19:51:00 -0500
+Cc: fabrice.gasnier@foss.st.com,
+ coquelin.stm32@gmail.com,
+ alexandre.torgue@foss.st.com,
+ thierry.reding@gmail.com,
+ lee@kernel.org,
+ linux-pwm@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5778D1D6-9C2B-4456-9765-213120076C62@gmail.com>
+References: <20241205051746.2465490-1-zmw12306@gmail.com>
+ <geyicxufezkbu7cdvnbgnr2qeuwrn5ubz5ent3spk5biuozxrs@gsqx2chgiiot>
+To: =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+X-Mailer: Apple Mail (2.3731.200.110.1.12)
 
-On Thu, Dec 05, 2024 at 08:10:10AM +0800, Zijun Hu wrote:
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-Hi Zihun,
 
-Similar to my comment on Patch 10/11, this commit msg can be
-explicit:
+> On Dec 5, 2024, at 3:34 AM, Uwe Kleine-K=C3=B6nig =
+<ukleinek@kernel.org> wrote:
+>=20
+> On Thu, Dec 05, 2024 at 12:17:46AM -0500, Mingwei Zheng wrote:
+>> Add check for the return value of clk_enable() to catch the potential
+>> error.
+>=20
+> Is this something that you actually hit, or just a janitoral fix you
+> noticed while browsing the code (or reading some checker output)?
 
-libnvdimm: Replace namespace_match() w device_find_child_by_name()
+We detected this through static analysis, instead of actually hit.
 
-> 
-> Simplify nd_namespace_store() implementation by  device_find_child_by_name()
-                                                  ^using 
+>=20
+>> Fixes: e70a540b4e02 ("pwm: Add STM32 LPTimer PWM driver")
+>> Signed-off-by: Mingwei Zheng <zmw12306@gmail.com>
+>> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+>> ---
+>> drivers/pwm/pwm-stm32-lp.c | 8 ++++++--
+>> 1 file changed, 6 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+>> index 989731256f50..4abef304417d 100644
+>> --- a/drivers/pwm/pwm-stm32-lp.c
+>> +++ b/drivers/pwm/pwm-stm32-lp.c
+>> @@ -163,12 +163,16 @@ static int stm32_pwm_lp_get_state(struct =
+pwm_chip *chip,
+>> unsigned long rate =3D clk_get_rate(priv->clk);
+>> u32 val, presc, prd;
+>> u64 tmp;
+>> + int ret;
+>=20
+> Please move this variable to the block where it's used. No need for =
+such
+> a big scope.
+>=20
+> Otherwise looks fine.
+>=20
+> Best regards
+> Uwe
 
-Otherwise you can add:
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Thank you! We will submit a v2 patch for you to review!
 
-> 
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> ---
->  drivers/nvdimm/claim.c | 9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/claim.c b/drivers/nvdimm/claim.c
-> index 030dbde6b0882050c90fb8db106ec15b1baef7ca..9e84ab411564f9d5e7ceb687c6491562564552e3 100644
-> --- a/drivers/nvdimm/claim.c
-> +++ b/drivers/nvdimm/claim.c
-> @@ -67,13 +67,6 @@ bool nd_attach_ndns(struct device *dev, struct nd_namespace_common *attach,
->  	return claimed;
->  }
->  
-> -static int namespace_match(struct device *dev, void *data)
-> -{
-> -	char *name = data;
-> -
-> -	return strcmp(name, dev_name(dev)) == 0;
-> -}
-> -
->  static bool is_idle(struct device *dev, struct nd_namespace_common *ndns)
->  {
->  	struct nd_region *nd_region = to_nd_region(dev->parent);
-> @@ -168,7 +161,7 @@ ssize_t nd_namespace_store(struct device *dev,
->  		goto out;
->  	}
->  
-> -	found = device_find_child(dev->parent, name, namespace_match);
-> +	found = device_find_child_by_name(dev->parent, name);
->  	if (!found) {
->  		dev_dbg(dev, "'%s' not found under %s\n", name,
->  				dev_name(dev->parent));
-> 
-> -- 
-> 2.34.1
-> 
-> 
+Best,
+Mingwei
+
 
