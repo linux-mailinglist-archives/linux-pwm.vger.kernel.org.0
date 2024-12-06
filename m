@@ -1,208 +1,118 @@
-Return-Path: <linux-pwm+bounces-4275-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4276-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA0DF9E6F8F
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 14:52:36 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C7E1188494C
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 13:52:30 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF8F7207DFE;
-	Fri,  6 Dec 2024 13:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="MSj7guEp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xDNgtnHy"
-X-Original-To: linux-pwm@vger.kernel.org
-Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13BA49E73A7
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 16:22:52 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94A22066DE;
-	Fri,  6 Dec 2024 13:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.140
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BFF2928ADA9
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Dec 2024 15:22:50 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DD7B1EC013;
+	Fri,  6 Dec 2024 15:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="Ybjvw7ZQ"
+X-Original-To: linux-pwm@vger.kernel.org
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E033E148832;
+	Fri,  6 Dec 2024 15:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733493144; cv=none; b=kb6VoE3kG/l1xrjhHQtLqz3djb+/svPwYng5Y2OJ4GzYMul0oFBNsv4Jyftq+lymRmMZXbaAygMkkzH43alovKusm/Jdt18WpuRsr3hKbGJjvyja5YJ3NU1lj272Q0OE4ARnI0udsAadi/m48JTkaaAuPEh3CATOnFyaQPWZF8U=
+	t=1733498569; cv=none; b=jXtjkQ7nK2yr/TtLhzeJtsjJATiz1eb0vcsv1fRZLyEP79ha9a4sCRNRb0PiB+Yq+UahD1HgwB8DG8/ZtBONLkWLAKDnfjJqOSXzMkVv6NEG6esi5bnbJQl0sgfGRa+iqrJxhwrfEXp+JhXLj8lXTCVR4YVhIAfHpinohjpC+aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733493144; c=relaxed/simple;
-	bh=Qg6Ce5uSEcP+55XWYkwP9vkeQ++48Pfctd6qXinl3Gc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IlmuNeRnFgnW5J1zg2XC3ao5yvtDYNznys+fiJ2wPRjdPDLXeGMvPYRpIvHXdUMz71qZWGRlZWQPIigUWD/JgvMp67SBeahMpfMF4f3y/FC/NIRZoCJeDAl0HC6yBDdcNe60/+8ONja747ZJSWVdJA1yJKfpVPd6Stks6tIh1lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=MSj7guEp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xDNgtnHy; arc=none smtp.client-ip=202.12.124.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailflow.stl.internal (Postfix) with ESMTP id 158141D40557;
-	Fri,  6 Dec 2024 08:52:19 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-07.internal (MEProxy); Fri, 06 Dec 2024 08:52:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1733493138; x=
-	1733500338; bh=F/P5NvV/oPgyLOVDdO9jbE313zKQetWBog6B0EvuLEA=; b=M
-	Sj7guEpfYyfJVeSxZkmsMh0zyS2W2XOGFWxV1S085lP0oWUiSQf+HQv4B/im8Smb
-	A/50JTK4DLLh18J9Sjqs2aNhk6S2yarJ+EHcouloSh/oqCB7hArt2q3ZuIFbkj/I
-	fFgU9Qg9R5ZGGvT47CzpDp1KUbo7nK9HO2ae1NPXsXP/wl5BchFWD0yg/JCYjsr9
-	fXIJRALKFsKvFqe71MneVTz8jaGQLkP6wUACGnoi/5zIDs6FZV9i4SCRlzylZIdL
-	JEk2HHQSDWp63JDjM2qb1hil4JrLTf5nQRDL1cyESz6dFceNZAlsmT22L0W8F1gH
-	86D9/srMF3PNNTLIIkUqQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1733493138; x=1733500338; bh=F/P5NvV/oPgyLOVDdO9jbE313zKQetWBog6
-	B0EvuLEA=; b=xDNgtnHy1tK7puhnLX5+esK/IgziPC4HzD0yPzyaPgVs8BauerX
-	5Gh9QHIIwI9c+CUD9aR7FksVyc+wiv9c8kDcmUBxhh3LvOEfxlVik7VuxrqmuwTf
-	XafAHjl0THPYXeq+RMCHSq+xyRbTf81BcpKLtm5vGNbxwyK3XhqSKKD0/eNEBIEs
-	ifGsiqyf80HwoUEiHyMx99sbVBdhIbumQXWTwZBPE4uZQkwcPkqT1sz1khwQ5fKP
-	5LvTH20FG+Z0W6OgHmIRX0xxkcJ4AsJgifC3XCJZIrNaVdO1xmRRG8EZSEdZAiGB
-	55jZB+7jQTMglESe+lwBG7aRRXR4qQbb60A==
-X-ME-Sender: <xms:kgFTZ9eRxZgsQ_HyW0NQeyBhAa8qrP-js82jZsEnrc73rIKbqI5cQg>
-    <xme:kgFTZ7NeULk2V4bgBoKUbD2I9wnDfcKDJoG1qVHeHqzZoP8DCptzP2hkGxpDbhB_u
-    HTxZFgGNz0vK71z6CA>
-X-ME-Received: <xmr:kgFTZ2h8sZq6o250A96V6I672leVJ0PaesW6z8yf8EHC8ehGiJXlNNIQaY-eGODpBFung7qO_vhuMVEX_XB2I8ZKk7sWPvGZxo8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrieelgdehiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecu
-    hfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghkrghshhhisehsrg
-    hkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeehhffhteetgfekvdeiueff
-    veevueeftdelhfejieeitedvleeftdfgfeeuudekueenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhisehsrghkrghmohgt
-    tghhihdrjhhppdhnsggprhgtphhtthhopedvjedpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtohepiihijhhunhgphhhusehitghlohhuugdrtghomhdprhgtphhtthhopehgrhgv
-    ghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehukhhlvg
-    hinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhgrmhgvshdrsghothhtohhm
-    lhgvhieshhgrnhhsvghnphgrrhhtnhgvrhhshhhiphdrtghomhdprhgtphhtthhopehthh
-    homhgrshesthdqkegthhdruggvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehv
-    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhhvughimhhmsehlihhsthhsrd
-    hlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqshhouhhnugesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehsphgrrhgtlhhinhhugiesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:kgFTZ2_UGngVtygK4_p0LKXvJr2g0v9oePYeEVcrzT0gkzTro-YK0g>
-    <xmx:kgFTZ5vx35KJMQHqHYcHa0QjhtFrNmuU_ZD5-UGD0krqFfoJC4mPyQ>
-    <xmx:kgFTZ1G9NWKiaU4m6BL1Na5OaZRNRdHCaRGEc0E-ttIN_XuEHc32wg>
-    <xmx:kgFTZwPzQVAELvWI33zBnvWj1s6ncPtql6n1UYpP22HdnXi_-3k-FA>
-    <xmx:kgFTZ4-yVlVkD3Q8ajGh0oXdOkDvMdTtHW1-CAta77ld53oKIK-nLbK0>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 6 Dec 2024 08:52:12 -0500 (EST)
-Date: Fri, 6 Dec 2024 22:52:09 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-sound@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
-	linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
-	linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
-	netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-Subject: Re: [PATCH v3 04/11] driver core: Constify API device_find_child()
- then adapt for various usages
-Message-ID: <20241206135209.GA133715@workstation.local>
-Mail-Followup-To: Zijun Hu <zijun_hu@icloud.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-sound@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
-	linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
-	linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
-	netdev@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20241205-const_dfc_done-v3-0-1611f1486b5a@quicinc.com>
- <20241205-const_dfc_done-v3-4-1611f1486b5a@quicinc.com>
+	s=arc-20240116; t=1733498569; c=relaxed/simple;
+	bh=DhbQchCub9U5elTP6juJG/8cBmU+WUrbG7WOjeZ0sEg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Rn1QHlLMOS1lx8okCmyL/KD3t7KGsiimU5y51sbCjzib1DNAry+qGEMWJFDyhO4Tb6/yNFvpLIGtNe/naQU0Yzz3Sav5cTSgTXISyO/ZEQpfmLO5yEPfkRYECjIpNiXSHX23TKvWiLWMtNyq1S4JT0kxkukRVTduns2yM32TZ7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=Ybjvw7ZQ; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B6CI5NC016048;
+	Fri, 6 Dec 2024 10:22:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=xxpIuAj3vCkmCNrV10X2ET//KfV
+	tu4n49xBopSsZDXg=; b=Ybjvw7ZQW3xW/KjULS5G9DEIsMmPetQhcAVqnjumsrl
+	fyXbkIgtOpw1rcTk1Y/y3qlcTINJ24yMbn6b2edqjLIAW7VvU+1gYVqWDUtf3Ecu
+	SKMWqEXW740zbIeJr+psRw5nA/nzI2mU6babvoPtqwHw+8UVUruKBoaGtqtFwZ5K
+	tkapRAnMyMwJ5XCl++NM7Lua+YD5a9mfHj34uXCPSn3Xr++MdGEVhvnuz9q5YI4f
+	OMuoVgN1sc8A8BztOnQOl+Wt3glH8t1me2GxtkKjGtrPFoiJhN/uCCqlhJB2aSde
+	7RFJiSRV+4jl/gHk0uD3pEOt7ShBq/uWNS2wAWQv6zw==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 43c15c8qe0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 06 Dec 2024 10:22:33 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 4B6FMWTg020888
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 6 Dec 2024 10:22:32 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 6 Dec 2024
+ 10:22:32 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 6 Dec 2024 10:22:32 -0500
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.187])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 4B6FMM1b025340;
+	Fri, 6 Dec 2024 10:22:24 -0500
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH 1/3] dt-bindings: iio: adf4371: add differential ref
+Date: Fri, 6 Dec 2024 17:22:04 +0200
+Message-ID: <20241206152207.37928-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241205-const_dfc_done-v3-4-1611f1486b5a@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: qtoTppQDTkhRj-VdQE3V7b-EW4i2m4Zw
+X-Proofpoint-GUID: qtoTppQDTkhRj-VdQE3V7b-EW4i2m4Zw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ suspectscore=0 adultscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
+ priorityscore=1501 spamscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2412060116
 
-Hi,
+Add support for differential input reference clock.
 
-On Thu, Dec 05, 2024 at 08:10:13AM +0800, Zijun Hu wrote:
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
-> 
-> Constify the following API:
-> struct device *device_find_child(struct device *dev, void *data,
-> 		int (*match)(struct device *dev, void *data));
-> To :
-> struct device *device_find_child(struct device *dev, const void *data,
->                                  device_match_t match);
-> typedef int (*device_match_t)(struct device *dev, const void *data);
-> with the following reasons:
-> 
-> - Protect caller's match data @*data which is for comparison and lookup
->   and the API does not actually need to modify @*data.
-> 
-> - Make the API's parameters (@match)() and @data have the same type as
->   all of other device finding APIs (bus|class|driver)_find_device().
-> 
-> - All kinds of existing device match functions can be directly taken
->   as the API's argument, they were exported by driver core.
-> 
-> Constify the API and adapt for various existing usages by simply making
-> various match functions take 'const void *' as type of match data @data.
-> 
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> ---
->  arch/sparc/kernel/vio.c                |  6 +++---
->  drivers/base/core.c                    |  6 +++---
->  drivers/block/sunvdc.c                 |  6 +++---
->  drivers/bus/fsl-mc/dprc-driver.c       |  4 ++--
->  drivers/cxl/core/pci.c                 |  4 ++--
->  drivers/cxl/core/pmem.c                |  2 +-
->  drivers/cxl/core/region.c              | 21 ++++++++++++---------
->  drivers/firewire/core-device.c         |  4 ++--
->  drivers/firmware/arm_scmi/bus.c        |  4 ++--
->  drivers/firmware/efi/dev-path-parser.c |  4 ++--
->  drivers/gpio/gpio-sim.c                |  2 +-
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c |  2 +-
->  drivers/hwmon/hwmon.c                  |  2 +-
->  drivers/media/pci/mgb4/mgb4_core.c     |  4 ++--
->  drivers/nvdimm/bus.c                   |  2 +-
->  drivers/pwm/core.c                     |  2 +-
->  drivers/rpmsg/rpmsg_core.c             |  4 ++--
->  drivers/scsi/qla4xxx/ql4_os.c          |  3 ++-
->  drivers/scsi/scsi_transport_iscsi.c    | 10 +++++-----
->  drivers/slimbus/core.c                 |  8 ++++----
->  drivers/thunderbolt/retimer.c          |  2 +-
->  drivers/thunderbolt/xdomain.c          |  2 +-
->  drivers/tty/serial/serial_core.c       |  4 ++--
->  drivers/usb/typec/class.c              |  8 ++++----
->  include/linux/device.h                 |  4 ++--
->  include/scsi/scsi_transport_iscsi.h    |  4 ++--
->  net/dsa/dsa.c                          |  2 +-
->  tools/testing/cxl/test/cxl.c           |  2 +-
->  28 files changed, 66 insertions(+), 62 deletions(-)
+Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+---
+ Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-For the changes in FireWire subsystem:
+diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+index 1cb2adaf66f9..dd9a592d0026 100644
+--- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
++++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+@@ -40,6 +40,11 @@ properties:
+       output stage will shut down until the ADF4371/ADF4372 achieves lock as
+       measured by the digital lock detect circuitry.
+ 
++  adi,ref-differential-enable:
++    type: boolean
++    description:
++      If this property is present, differential input reference is enabled.
++
+ required:
+   - compatible
+   - reg
+-- 
+2.47.1
 
-Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-
-
-Thanks
-
-Takashi Sakamoto
 
