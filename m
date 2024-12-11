@@ -1,79 +1,80 @@
-Return-Path: <linux-pwm+bounces-4313-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4314-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D50129ED788
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Dec 2024 21:55:03 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A45D89ED78D
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Dec 2024 21:55:11 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 25B5E283844
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Dec 2024 20:55:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFAEB18833A6
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Dec 2024 20:55:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD80D2288D4;
-	Wed, 11 Dec 2024 20:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58D8F2288F8;
+	Wed, 11 Dec 2024 20:55:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JqPs31EW"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="t4W4CT+W"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1699E225A33
-	for <linux-pwm@vger.kernel.org>; Wed, 11 Dec 2024 20:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B2E22689C
+	for <linux-pwm@vger.kernel.org>; Wed, 11 Dec 2024 20:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733950497; cv=none; b=Ox0Z1rdLsJJxNG5dLiqCagOpY/unWlYQRiwWpD/k9NiC1y3YDJI0Ip4uRTiT8He59F/xly8kO8jEvEr7V+d53GO+QIOeOPd7BAayNq1OQIfwtZLHwlIlx3vQKSw3RQ0jJ3ihdAwg6/5L5QRXTj0VohgNLNr8UnOAm236wAiCzLM=
+	t=1733950500; cv=none; b=HE8whHRwY/zdDFnnMOn7RnocDwPK6WWdDAX5OXleETZKvVcHKqYJQx+wsb1rzqttSW7ZRTAMypbORHSIg/cPQrwyl3sikKah44K5njZ6bUs9O/BiXgtNcLHeiCDPAA0EBsKxmM3rxRNZM3fw63MA7Ob+Q+0RZ1LPHYehw6/KCdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733950497; c=relaxed/simple;
-	bh=OvwiQLnYA0FC4btps/SB28eG/A2uLzi8u4tHo5Ohxic=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OAbqfE/RlBFaxLf/jxaZV/UWISC0i3zMJCYKzwdkEn2dYMqorYkeLbYVQUL4h/eWwVuUslTBICzO0bga+xS6V7eLdUVIp/xnV6bX3AEUzZkChqu8kzXC1vXZjoOuR0l3vuI5W5nWLBLMf+TDHnXMVW899CSdXf+1Y3679pZ5uTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JqPs31EW; arc=none smtp.client-ip=209.85.210.54
+	s=arc-20240116; t=1733950500; c=relaxed/simple;
+	bh=RGggUajwKcxwMBqnwmDZ76Eu+OfENqU99nf0uDpoQRo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=oHFqwNkTc5sYB1gJzu9/u7F5xzAU99hAsw5yggo85BuBCV7mY7TYZ0VgRVzlpWr7kRBF0SZGsh6okMEDXLfnn7vlghnsn3/6Gng1XbgGrdS09EsORuCb9qzEj39Q7Hxpu+a5fvhwa4x9izz2i6iNWVOdtBY6iicp/Ya3u7w185k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=t4W4CT+W; arc=none smtp.client-ip=209.85.161.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-71e22b2387cso512553a34.3
-        for <linux-pwm@vger.kernel.org>; Wed, 11 Dec 2024 12:54:54 -0800 (PST)
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5f2e370bb3aso200127eaf.0
+        for <linux-pwm@vger.kernel.org>; Wed, 11 Dec 2024 12:54:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1733950494; x=1734555294; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W6v76obBpEyhyDBRmwYte1jAQRvqqCqDiU8b8n9rTgs=;
-        b=JqPs31EWFlctSOKZmmjkJPQgXw2ga4CuwPBdtrvAEjHkf5yAnVLpLC6Tu277Tl0ZSL
-         gBf28vRo4lXjWr+kq+DDlXsY1kGIG6ntpZWjwYE1DIqKPsHviTtfyx2cpF8ZMSuzUQcV
-         fkjmBrEDFJovwaTb2lHebjmqS6DbRysSq60tiywvJjJ/4RGYEttXfzbRX6XnmFhd2hBI
-         RqLfHF48DFwe8SnOzsN0oELcgS8U6gCJ//RXlddmqtRSbF4VbYCTifrdtBxHt4lkAq33
-         mKbIl7+LAZ1+Y05XThcED6Ytk05+uEnM+qQD1Y1uPYe5IRztVbZYO6DE2vwTn2rpbdXw
-         4E3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733950494; x=1734555294;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1733950497; x=1734555297; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=W6v76obBpEyhyDBRmwYte1jAQRvqqCqDiU8b8n9rTgs=;
-        b=hqenbXtd90u4EavylUFsQ5KSqv5QVkE6zVocpzKQOXoC3R3In229vwSKw9a+871Qr0
-         ACRjr62u26XQbN/NV7UyTtdRB1/VskUmdd1cNGAnsi4WA4IweR0iwPkTcEf6A9gQBPlH
-         2kaADRIEHGCtkqlAm9FSQqym8KnppFBvFtaB6HvLM+c7iRKNKA/Z4yD5tH08pRS6TRBo
-         3imngE/L0DuEyCS3sqHeeciJBGgg/uMqcYHq7UkzllWY2L0F0/IUjm0NzusCJ0Z2XMks
-         IOGRxKJgcx35bYMZIO0Scevw1MqziL8A6jd8t6vUSkf3rgqsMBPU0Zgx08nMN+hbOqgL
-         Xtiw==
-X-Forwarded-Encrypted: i=1; AJvYcCVU6XDgUS2uWnJDtu2EuYm4BT3bl4mkxkarT0E9VhbgUQ/o9tDkhEobhMDiIdBGfid0ttGDri4y/u0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvAoOIPVyVnMcqmf8omvo3rlvpfBNXqXaEsfwmfMkL0NxsoGz/
-	6JHLXxyFrLavP8ALFtyu3DfhQ8nxLH8luEHcy2eZ4ATx1RlnjB/NVv/ce56jaog=
-X-Gm-Gg: ASbGncuXJEGjycZeoA3JSyZiGYJHZWxbS4CIjYdFv1X8/AAGHwA3Z34syOE4ggxzAd0
-	JblnUcz65PC3w9Z4LEYz2XPSpAz4Dzn09R1ElXDKHOq9YIeunPouuL9/6JHIwNHVH5oJIqp95Z+
-	KNLp/VftsdHtmiX3GXeb954rNL6sWsj0tGbUqbcehfqGmK32F6YYmuIrpQmigwHz+bqgYjKg4sZ
-	LZ95Jmn7USOchled7pDNT/xPzJ/m0nxhJE0aVueNq4QNtzYq4RAxrhH3dRYRom0KrbJcoZizkWg
-	LlbCmFMabw==
-X-Google-Smtp-Source: AGHT+IFNDEOjvNOX5bJwM+maGY3ABusKGwINCwh8iOScXEB4QUNI10mrV2AERnfTCXNrv8EfRusM7w==
-X-Received: by 2002:a05:6830:6c09:b0:71d:63fc:2ea6 with SMTP id 46e09a7af769-71e29bb5a0fmr595822a34.8.1733950493780;
-        Wed, 11 Dec 2024 12:54:53 -0800 (PST)
+        bh=4ffc3LxMkAvRH+svHl43EnhBnXUPIwZq2nOCjPB5PSI=;
+        b=t4W4CT+WaFUICIFPy9VoOBAfzBVgHz8ww/CDhMDHqjy1ZVxq8ukEjYeweTgPl5ioyg
+         lgexYO2GBpzXrzhNPZ34NGBDEuTOMFzk5eQu+bpHdurTIlBYlYTO8zM+OH7TJZbRmS4N
+         5cHBa/YvQoDYJkV8BUOrmrTLHJoLNxtlXpiUQ+Sq4sDnwWYcIF2GGK/2QHhuB0oy7baS
+         vvd624yUoRzu3prnU75f1saGZoC7NvtSh5I0iXbPZ9gQFNxpQ0kdcg0hXNPPI/JFHX10
+         F7cC6Edets41PNObY2p4y3CMMzk9SwfDowf6+Vq7nHwPmAfRdd/Bg3pJGMe9lNedrTRd
+         5DOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733950497; x=1734555297;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4ffc3LxMkAvRH+svHl43EnhBnXUPIwZq2nOCjPB5PSI=;
+        b=vq6qvwgIVxyjx1Dvsqpe09JRVWb63E5i0Z7CcMMj7I7EDlzyb7AGLOsRgLzMD8K4K0
+         FaxWm0Qvagpxwve4T0rvXTAjgCeVgjSwl9JOfLZYnFJCfL9ySn5pYnjWxUTmR3Cvt190
+         8cX5McyZ+BAV0559tDVAxiflE+6VAH0yl2I3afNZvoMgCgJlJZu2KM7NPEPOQ2OrgBo/
+         2E2aH+lizsfxWG0+a27JvAjKfeN0UJQ0geKcRKUV3Eken4N/PNlCy+ktURvSCltCn65G
+         FPadxh78MPEue3rNoosFfWRtZa+z9Ic/bKyE9d6Y59PLDJu+rHEkXZEDgLvsY6GzgnbQ
+         KcdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1f75zlOu1rOoRxBKlvp76BxkiS4VlPQZj+VybN3RS28upncKb78ZJQe/zQ6GV0X5R8mVZQTCwB3Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcURanHGg/huaSLVUQVnOD1gqFudbufEVIOjRo+Gtmydc0v9mu
+	HDI+RpJMLyDfgTN4MiHDJ2vLKW1poA8yxrWSMrTT8W29gpXgOb+CwkwSgXGPE0U=
+X-Gm-Gg: ASbGncsAa3O8cchlUOrE7LRdNe1kRXj6T6edcSvmNhvlYaAVylg+C0Su9HHb83oKiAX
+	pD+KC2fJ95zYKMlyPvQtK7Crf9yQ7xO9/2E2y5iPy7N/c9jGRpmrdkDWOM2LF5+6r7r4ipygU7b
+	uvxSIE5k6t1liTn9xhN1B8gz82YIf00oqk8/gNPhu59u6M9bqD5qMNGqtjpRcCwHbLTlASuln1d
+	7T5iL63D3gXfAFnNE3ka/ew9vApzbTooY/E8yADcbYD2IdwvhvvEgHLzUez3bgTKvUc/4C6S6H1
+	nzbhZtr30w==
+X-Google-Smtp-Source: AGHT+IG7inO0xnuwDZeUqSYTrfiBKUGM+ravvukMEKOFTzNGsJgAfy6fOUDwdyEAKDaxSFKj91kwLA==
+X-Received: by 2002:a05:6820:1989:b0:5f1:e3d1:b994 with SMTP id 006d021491bc7-5f2ef873a5emr610173eaf.0.1733950496838;
+        Wed, 11 Dec 2024 12:54:56 -0800 (PST)
 Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-71def651fb2sm1888288a34.27.2024.12.11.12.54.50
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-71def651fb2sm1888288a34.27.2024.12.11.12.54.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2024 12:54:52 -0800 (PST)
+        Wed, 11 Dec 2024 12:54:55 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
-Subject: [PATCH v6 00/17] spi: axi-spi-engine: add offload support
-Date: Wed, 11 Dec 2024 14:54:37 -0600
-Message-Id: <20241211-dlech-mainline-spi-engine-offload-2-v6-0-88ee574d5d03@baylibre.com>
+Date: Wed, 11 Dec 2024 14:54:38 -0600
+Subject: [PATCH v6 01/17] spi: add basic support for SPI offloading
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -82,14 +83,9 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAA38WWcC/5XRzWrDMAwA4FcJPs/Dkf972nuMHWRbbg1p0iVZa
- Cl997kptDB66C7GMuiTLJ3ZRGOhiW2aMxtpKVMZ+hqYt4bFHfZb4iXVmIEAJXQreOoo7vgeS9+
- Vnvh0KJz67fU65NwNmDhwzJGk9SJoDKxKh5FyOa5VPr9qvCvTPIyntegC19f/+QtwwZ0VFusRl
- dQfAU9dCSO9x2HPriUW+WAtwGusrKxVIEjplI0PT1h1Z1sB8jVWVTa7FnTwPmtsn7D6wbatfo3
- VlQ2ErtUhacK/Q7jcBj/S90/d6nybPjvgXOWSNo0lk6QJOYIB0gZisCppUORNCkYZr4RREsy6w
- HtWckZR9tmhlUI6gKRF0k6gpxCSS1Ko6BDXrIAT8drLvsybpqfjzNcPQitqd5df5Lt1YXsCAAA
- =
-X-Change-ID: 20240510-dlech-mainline-spi-engine-offload-2-afce3790b5ab
+Message-Id: <20241211-dlech-mainline-spi-engine-offload-2-v6-1-88ee574d5d03@baylibre.com>
+References: <20241211-dlech-mainline-spi-engine-offload-2-v6-0-88ee574d5d03@baylibre.com>
+In-Reply-To: <20241211-dlech-mainline-spi-engine-offload-2-v6-0-88ee574d5d03@baylibre.com>
 To: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -101,166 +97,411 @@ Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
  Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- David Lechner <dlechner@baylibre.com>, Axel Haslam <ahaslam@baylibre.com>
+ David Lechner <dlechner@baylibre.com>
 X-Mailer: b4 0.14.2
 
-Not much to say for this revision. The main changes were making the
-trigger-sources/#trigger-source-cells properties more generic,
-splitting up the spi-offload.h header into consumer/provider/types.h
-and adding a DAC driver patch to make use of the TX DMA stream API.
+Add the basic infrastructure to support SPI offload providers and
+consumers.
 
-If we think this is good enough to go in, the SPI patches should be
-applying fine since this is based on a recent linux-next. But the IIO
-patches will need some care. There are dependencies on both the
-iio/fixes-togreg and the iio/testing branches as well as a couple of
-patches that haven't been applied yet because they are waiting for other
-dependencies [1]. So best would be to let Mark pick up the SPI stuff and
-create an immutable branch and let Jonathan work out the IIO stuff.
+SPI offloading is a feature that allows the SPI controller to perform
+transfers without any CPU intervention. This is useful, e.g. for
+high-speed data acquisition.
 
-[1]: https://lore.kernel.org/all/20241124125206.1ffd6e6c@jic23-huawei/
+SPI controllers with offload support need to implement the get_offload
+and put_offload callbacks and can use the devm_spi_offload_alloc() to
+allocate offload instances.
 
----
-Changes in v6:
-- Dropped the "spi: dt-bindings: add trigger-source.yaml" patch. It was
-  reworked and merged into dt-schema in
-  https://github.com/devicetree-org/dt-schema/pull/147
-- Adjusted other dt-bindings patches to account for above change.
-- Dropped one iio patch that was already applied to iio tree.
-- Added a DAC patch to make use of the TX DMA stream API.
-- Minor fixes and improvements to other patches based on feedback.
-- Link to v5: https://lore.kernel.org/r/20241115-dlech-mainline-spi-engine-offload-2-v5-0-bea815bd5ea5@baylibre.com
+SPI peripheral drivers will call devm_spi_offload_get() to get a
+reference to the matching offload instance. This offload instance can
+then be attached to a SPI message to request offloading that message.
 
-Changes in v5:
-- Dropped pwm patch. A variant of this patch has been picked up in the
-  pwm tree.
-- Addressed review comments (see details in individual patches).
-- Added some polish, like MAINTAINERS entries and updating ADC docs.
-- Link to v4: https://lore.kernel.org/r/20241023-dlech-mainline-spi-engine-offload-2-v4-0-f8125b99f5a1@baylibre.com
+It is expected that SPI controllers with offload support will check for
+the offload instance in the SPI message in the ctlr->optimize_message()
+callback and handle it accordingly.
 
-Changes in v4:
-- Dropped #spi-offload-cells and spi-offload properties from DT bindings.
-- Made an attempt at a more generic trigger interface instead of using
-  clk framework. This also includes a new driver for a generic PWM
-  trigger.
-- Addressed IIO review comments.
-- Added new patches for iio/adc/ad4695 as 2nd user of SPI offload.
-- Link to v3: https://lore.kernel.org/r/20240722-dlech-mainline-spi-engine-offload-2-v3-0-7420e45df69b@baylibre.com
+CONFIG_SPI_OFFLOAD is intended to be a select-only option. Both
+consumer and provider drivers should `select SPI_OFFLOAD` in their
+Kconfig to ensure that the SPI core is built with offload support.
 
-Changes in v3:
-- Reworked DT bindings to have things physically connected to the SPI
-  controller be properties of the SPI controller and use more
-  conventional provider/consumer properties.
-- Added more SPI APIs for peripheral drivers to use to get auxillary
-  offload resources, like triggers.
-- Link to v2: https://lore.kernel.org/r/20240510-dlech-mainline-spi-engine-offload-2-v2-0-8707a870c435@baylibre.com
-
-Individual patches have more details on these changes and earlier revisions too.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
 
-As a recap, here is the background and end goal of this series:
+v6 changes:
+* Drop use of PTR_ERR_OR_ZERO().
+* Split header into types.h/provider.h/consumer.h.
+* Remove unused spi_controller_offload_ops forward declaration.
 
-The AXI SPI Engine is a SPI controller that has the ability to record a
-series of SPI transactions and then play them back using a hardware
-trigger. This allows operations to be performed, repeating many times,
-without any CPU intervention. This is needed for achieving high data
-rates (millions of samples per second) from ADCs and DACs that are
-connected via a SPI bus.
+v5 changes:
+* Don't include linux/property.h (moved to later patch).
+* Only allocate single offload instance instead of array.
+* Allocate *priv separately to avoid alignment issues.
+* Add put_offload() callback instead of assuming devm semantics.
+* Drop struct spi_offload::spi. It was only being used as a flag.
+* Don't get/put struct spi_offload::provider_dev.
+* Add MAINTAINERS entry for me as reviewer for anything related to
+  SPI offload.
 
-The offload hardware interface consists of a trigger input and a data
-output for the RX data. These are connected to other hardware external
-to the SPI controller.
+v4 changes:
+* SPI offload functions moved to a separate file instead of spi.c
+  (spi.c is already too long).
+* struct spi_offload and devm_spi_offload_get() are back, similar to
+  but improved over v1. This avoids having to pass the function ID
+  string to every function call and re-lookup the offload instance.
+* offload message prepare/unprepare functions are removed. Instead the
+  existing optimize/unoptimize functions should be used. Setting
+  spi_message::offload pointer is used as a flag to differentiate
+  between an offloaded message and a regular message.
 
-To record one or more transactions, commands and TX data are written
-to memories in the controller (RX buffer is not used since RX data gets
-streamed to an external sink). This sequence of transactions can then be
-played back when the trigger input is asserted.
+v3 changes:
+* Minor changes to doc comments.
+* Changed to use phandle array for spi-offloads.
+* Changed id to string to make use of spi-offload-names.
 
-This series includes core SPI support along with the first SPI
-controller (AXI SPI Engine) and SPI peripheral (AD7944 ADC) that use
-them. This enables capturing analog data at 2 million samples per
-second.
-
-The hardware setup looks like this:
-
-+-------------------------------+   +------------------+
-|                               |   |                  |
-|  SOC/FPGA                     |   |  AD7944 ADC      |
-|  +---------------------+      |   |                  |
-|  | AXI SPI Engine      |      |   |                  |
-|  |             SPI Bus ============ SPI Bus          |
-|  |                     |      |   |                  |
-|  |  +---------------+  |      |   |                  |
-|  |  | Offload 0     |  |      |   +------------------+
-|  |  |   RX DATA OUT > > > >   |
-|  |  |    TRIGGER IN < < <  v  |
-|  |  +---------------+  | ^ v  |
-|  +---------------------+ ^ v  |
-|  | AXI PWM             | ^ v  |
-|  |                 CH0 > ^ v  |
-|  +---------------------+   v  |
-|  | AXI DMA             |   v  |
-|  |                 CH0 < < <  |
-|  +---------------------+      |
-|                               |
-+-------------------------------+
-
+v2 changes:
+* This is a rework of "spi: add core support for controllers with offload
+  capabilities" from v1.
+* The spi_offload_get() function that Nuno didn't like is gone. Instead,
+  there is now a mapping callback that uses the new generic devicetree
+  binding to request resources automatically when a SPI device is probed.
+* The spi_offload_enable/disable() functions for dealing with hardware
+  triggers are deferred to a separate patch.
+* This leaves adding spi_offload_prepare/unprepare() which have been
+  reworked to be a bit more robust.
 ---
-Axel Haslam (1):
-      iio: dac: ad5791: Add offload support
+ MAINTAINERS                          |   6 ++
+ drivers/spi/Kconfig                  |   3 +
+ drivers/spi/Makefile                 |   1 +
+ drivers/spi/spi-offload.c            | 114 +++++++++++++++++++++++++++++++++++
+ include/linux/spi/offload/consumer.h |  22 +++++++
+ include/linux/spi/offload/provider.h |  19 ++++++
+ include/linux/spi/offload/types.h    |  43 +++++++++++++
+ include/linux/spi/spi.h              |  17 ++++++
+ 8 files changed, 225 insertions(+)
 
-David Lechner (16):
-      spi: add basic support for SPI offloading
-      spi: offload: add support for hardware triggers
-      dt-bindings: trigger-source: add generic PWM trigger source
-      spi: offload-trigger: add PWM trigger driver
-      spi: add offload TX/RX streaming APIs
-      spi: dt-bindings: axi-spi-engine: add SPI offload properties
-      spi: axi-spi-engine: implement offload support
-      iio: buffer-dmaengine: split requesting DMA channel from allocating buffer
-      iio: buffer-dmaengine: add devm_iio_dmaengine_buffer_setup_with_handle()
-      iio: adc: ad7944: don't use storagebits for sizing
-      iio: adc: ad7944: add support for SPI offload
-      doc: iio: ad7944: describe offload support
-      dt-bindings: iio: adc: adi,ad4695: add SPI offload properties
-      iio: adc: ad4695: Add support for SPI offload
-      doc: iio: ad4695: add SPI offload support
-      iio: dac: ad5791: sort include directives
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bf2dcd4e0261785add520b5eac747ceac523e112..9284a257607a740ab7f6fd960c2bcdc34ead7586 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22129,6 +22129,12 @@ F:	Documentation/devicetree/bindings/mtd/jedec,spi-nor.yaml
+ F:	drivers/mtd/spi-nor/
+ F:	include/linux/mtd/spi-nor.h
+ 
++SPI OFFLOAD
++R:	David Lechner <dlechner@baylibre.com>
++F:	drivers/spi/spi-offload.c
++F:	include/linux/spi/spi-offload.h
++K:	spi_offload
++
+ SPI SUBSYSTEM
+ M:	Mark Brown <broonie@kernel.org>
+ L:	linux-spi@vger.kernel.org
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index ea8a310329274bb2701e265cd152a56fb4e0f3a7..02064a4e292815ec0213e2e446b4f90ed8855a52 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -55,6 +55,9 @@ config SPI_MEM
+ 	  This extension is meant to simplify interaction with SPI memories
+ 	  by providing a high-level interface to send memory-like commands.
+ 
++config SPI_OFFLOAD
++	bool
++
+ comment "SPI Master Controller Drivers"
+ 
+ config SPI_AIROHA_SNFI
+diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+index 9db7554c1864bf9b37dcf59c16eb76f5af03a7e8..bb5fc20df21332232533c2e70c0cc230f6bcf27f 100644
+--- a/drivers/spi/Makefile
++++ b/drivers/spi/Makefile
+@@ -10,6 +10,7 @@ ccflags-$(CONFIG_SPI_DEBUG) := -DDEBUG
+ obj-$(CONFIG_SPI_MASTER)		+= spi.o
+ obj-$(CONFIG_SPI_MEM)			+= spi-mem.o
+ obj-$(CONFIG_SPI_MUX)			+= spi-mux.o
++obj-$(CONFIG_SPI_OFFLOAD)		+= spi-offload.o
+ obj-$(CONFIG_SPI_SPIDEV)		+= spidev.o
+ obj-$(CONFIG_SPI_LOOPBACK_TEST)		+= spi-loopback-test.o
+ 
+diff --git a/drivers/spi/spi-offload.c b/drivers/spi/spi-offload.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..3a40ef30debf09c6fd7b2c14526f3e5976e2b21f
+--- /dev/null
++++ b/drivers/spi/spi-offload.c
+@@ -0,0 +1,114 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2024 Analog Devices Inc.
++ * Copyright (C) 2024 BayLibre, SAS
++ */
++
++/*
++ * SPI Offloading support.
++ *
++ * Some SPI controllers support offloading of SPI transfers. Essentially, this
++ * is the ability for a SPI controller to perform SPI transfers with minimal
++ * or even no CPU intervention, e.g. via a specialized SPI controller with a
++ * hardware trigger or via a conventional SPI controller using a non-Linux MCU
++ * processor core to offload the work.
++ */
++
++#define DEFAULT_SYMBOL_NAMESPACE "SPI_OFFLOAD"
++
++#include <linux/cleanup.h>
++#include <linux/device.h>
++#include <linux/export.h>
++#include <linux/mutex.h>
++#include <linux/spi/offload/consumer.h>
++#include <linux/spi/offload/provider.h>
++#include <linux/spi/offload/types.h>
++#include <linux/spi/spi.h>
++#include <linux/types.h>
++
++struct spi_controller_and_offload {
++	struct spi_controller *controller;
++	struct spi_offload *offload;
++};
++
++/**
++ * devm_spi_offload_alloc() - Allocate offload instance
++ * @dev: Device for devm purposes and assigned to &struct spi_offload.provider_dev
++ * @priv_size: Size of private data to allocate
++ *
++ * Offload providers should use this to allocate offload instances.
++ *
++ * Return: Pointer to new offload instance or error on failure.
++ */
++struct spi_offload *devm_spi_offload_alloc(struct device *dev,
++					   size_t priv_size)
++{
++	struct spi_offload *offload;
++	void *priv;
++
++	offload = devm_kzalloc(dev, sizeof(*offload), GFP_KERNEL);
++	if (!offload)
++		return ERR_PTR(-ENOMEM);
++
++	priv = devm_kzalloc(dev, priv_size, GFP_KERNEL);
++	if (!priv)
++		return ERR_PTR(-ENOMEM);
++
++	offload->provider_dev = dev;
++	offload->priv = priv;
++
++	return offload;
++}
++EXPORT_SYMBOL_GPL(devm_spi_offload_alloc);
++
++static void spi_offload_put(void *data)
++{
++	struct spi_controller_and_offload *resource = data;
++
++	resource->controller->put_offload(resource->offload);
++	kfree(resource);
++}
++
++/**
++ * devm_spi_offload_get() - Get an offload instance
++ * @dev: Device for devm purposes
++ * @spi: SPI device to use for the transfers
++ * @config: Offload configuration
++ *
++ * Peripheral drivers call this function to get an offload instance that meets
++ * the requirements specified in @config. If no suitable offload instance is
++ * available, -ENODEV is returned.
++ *
++ * Return: Offload instance or error on failure.
++ */
++struct spi_offload *devm_spi_offload_get(struct device *dev,
++					 struct spi_device *spi,
++					 const struct spi_offload_config *config)
++{
++	struct spi_controller_and_offload *resource;
++	int ret;
++
++	if (!spi || !config)
++		return ERR_PTR(-EINVAL);
++
++	if (!spi->controller->get_offload)
++		return ERR_PTR(-ENODEV);
++
++	resource = kzalloc(sizeof(*resource), GFP_KERNEL);
++	if (!resource)
++		return ERR_PTR(-ENOMEM);
++
++	resource->controller = spi->controller;
++	resource->offload = spi->controller->get_offload(spi, config);
++	if (IS_ERR(resource->offload)) {
++		kfree(resource);
++		return resource->offload;
++	}
++
++	ret = devm_add_action_or_reset(dev, spi_offload_put, resource);
++	if (ret)
++		return ERR_PTR(ret);
++
++	return resource->offload;
++}
++EXPORT_SYMBOL_GPL(devm_spi_offload_get);
+diff --git a/include/linux/spi/offload/consumer.h b/include/linux/spi/offload/consumer.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..05543dbedf3086fb4befcd149cff3c8c70a88825
+--- /dev/null
++++ b/include/linux/spi/offload/consumer.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2024 Analog Devices Inc.
++ * Copyright (C) 2024 BayLibre, SAS
++ */
++
++#ifndef __LINUX_SPI_OFFLOAD_CONSUMER_H
++#define __LINUX_SPI_OFFLOAD_CONSUMER_H
++
++#include <linux/module.h>
++#include <linux/spi/offload/types.h>
++#include <linux/types.h>
++
++MODULE_IMPORT_NS("SPI_OFFLOAD");
++
++struct device;
++struct spi_device;
++
++struct spi_offload *devm_spi_offload_get(struct device *dev, struct spi_device *spi,
++					 const struct spi_offload_config *config);
++
++#endif /* __LINUX_SPI_OFFLOAD_CONSUMER_H */
+diff --git a/include/linux/spi/offload/provider.h b/include/linux/spi/offload/provider.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..278c4edfcdb7b1f43870ca99d2ba252bf2820576
+--- /dev/null
++++ b/include/linux/spi/offload/provider.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2024 Analog Devices Inc.
++ * Copyright (C) 2024 BayLibre, SAS
++ */
++
++#ifndef __LINUX_SPI_OFFLOAD_PROVIDER_H
++#define __LINUX_SPI_OFFLOAD_PROVIDER_H
++
++#include <linux/module.h>
++#include <linux/types.h>
++
++MODULE_IMPORT_NS("SPI_OFFLOAD");
++
++struct device;
++
++struct spi_offload *devm_spi_offload_alloc(struct device *dev, size_t priv_size);
++
++#endif /* __LINUX_SPI_OFFLOAD_PROVIDER_H */
+diff --git a/include/linux/spi/offload/types.h b/include/linux/spi/offload/types.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..a74f8d84541b10062353e81a638f05628b696394
+--- /dev/null
++++ b/include/linux/spi/offload/types.h
+@@ -0,0 +1,43 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2024 Analog Devices Inc.
++ * Copyright (C) 2024 BayLibre, SAS
++ */
++
++#ifndef __LINUX_SPI_OFFLOAD_TYPES_H
++#define __LINUX_SPI_OFFLOAD_TYPES_H
++
++#include <linux/types.h>
++
++struct device;
++
++/* Offload can be triggered by external hardware event. */
++#define SPI_OFFLOAD_CAP_TRIGGER			BIT(0)
++/* Offload can record and then play back TX data when triggered. */
++#define SPI_OFFLOAD_CAP_TX_STATIC_DATA		BIT(1)
++/* Offload can get TX data from an external stream source. */
++#define SPI_OFFLOAD_CAP_TX_STREAM_DMA		BIT(2)
++/* Offload can send RX data to an external stream sink. */
++#define SPI_OFFLOAD_CAP_RX_STREAM_DMA		BIT(3)
++
++/**
++ * struct spi_offload_config - offload configuration
++ *
++ * This is used to request an offload with specific configuration.
++ */
++struct spi_offload_config {
++	/** @capability_flags: required capabilities. See %SPI_OFFLOAD_CAP_* */
++	u32 capability_flags;
++};
++
++/**
++ * struct spi_offload - offload instance
++ */
++struct spi_offload {
++	/** @provider_dev: for get/put reference counting */
++	struct device *provider_dev;
++	/** @priv: provider driver private data */
++	void *priv;
++};
++
++#endif /* __LINUX_SPI_OFFLOAD_TYPES_H */
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 8497f4747e24d4ecd85b74f49609ac1c82c73535..98bdc8c16c20521c0a94e5f72f5e71c4f6d7d11e 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -31,6 +31,8 @@ struct spi_transfer;
+ struct spi_controller_mem_ops;
+ struct spi_controller_mem_caps;
+ struct spi_message;
++struct spi_offload;
++struct spi_offload_config;
+ 
+ /*
+  * INTERFACES between SPI master-side drivers and SPI slave protocol handlers,
+@@ -496,6 +498,10 @@ extern struct spi_device *spi_new_ancillary_device(struct spi_device *spi, u8 ch
+  * @mem_ops: optimized/dedicated operations for interactions with SPI memory.
+  *	     This field is optional and should only be implemented if the
+  *	     controller has native support for memory like operations.
++ * @get_offload: callback for controllers with offload support to get matching
++ *	offload instance. Implementations should return -ENODEV if no match is
++ *	found.
++ * @put_offload: release the offload instance acquired by @get_offload.
+  * @mem_caps: controller capabilities for the handling of memory operations.
+  * @unprepare_message: undo any work done by prepare_message().
+  * @target_abort: abort the ongoing transfer request on an SPI target controller
+@@ -740,6 +746,10 @@ struct spi_controller {
+ 	const struct spi_controller_mem_ops *mem_ops;
+ 	const struct spi_controller_mem_caps *mem_caps;
+ 
++	struct spi_offload *(*get_offload)(struct spi_device *spi,
++					   const struct spi_offload_config *config);
++	void (*put_offload)(struct spi_offload *offload);
++
+ 	/* GPIO chip select */
+ 	struct gpio_desc	**cs_gpiods;
+ 	bool			use_gpio_descriptors;
+@@ -1108,6 +1118,7 @@ struct spi_transfer {
+  * @state: for use by whichever driver currently owns the message
+  * @opt_state: for use by whichever driver currently owns the message
+  * @resources: for resource management when the SPI message is processed
++ * @offload: (optional) offload instance used by this message
+  *
+  * A @spi_message is used to execute an atomic sequence of data transfers,
+  * each represented by a struct spi_transfer.  The sequence is "atomic"
+@@ -1168,6 +1179,12 @@ struct spi_message {
+ 	 */
+ 	void			*opt_state;
+ 
++	/*
++	 * Optional offload instance used by this message. This must be set
++	 * by the peripheral driver before calling spi_optimize_message().
++	 */
++	struct spi_offload	*offload;
++
+ 	/* List of spi_res resources when the SPI message is processed */
+ 	struct list_head        resources;
+ };
 
- .../devicetree/bindings/iio/adc/adi,ad4695.yaml    |  13 +
- .../bindings/spi/adi,axi-spi-engine.yaml           |  24 ++
- .../bindings/trigger-source/pwm-trigger.yaml       |  37 ++
- Documentation/iio/ad4695.rst                       |  68 +++
- Documentation/iio/ad7944.rst                       |  24 +-
- MAINTAINERS                                        |  12 +
- drivers/iio/adc/Kconfig                            |   2 +
- drivers/iio/adc/ad4695.c                           | 445 +++++++++++++++++++-
- drivers/iio/adc/ad7944.c                           | 307 +++++++++++++-
- drivers/iio/adc/adi-axi-adc.c                      |   2 +-
- drivers/iio/buffer/industrialio-buffer-dmaengine.c | 144 +++++--
- drivers/iio/dac/Kconfig                            |   3 +
- drivers/iio/dac/ad5791.c                           | 166 +++++++-
- drivers/iio/dac/adi-axi-dac.c                      |   2 +-
- drivers/spi/Kconfig                                |  16 +
- drivers/spi/Makefile                               |   4 +
- drivers/spi/spi-axi-spi-engine.c                   | 314 +++++++++++++-
- drivers/spi/spi-offload-trigger-pwm.c              | 162 +++++++
- drivers/spi/spi-offload.c                          | 465 +++++++++++++++++++++
- drivers/spi/spi.c                                  |  10 +
- include/dt-bindings/iio/adc/adi,ad4695.h           |   7 +
- include/linux/iio/buffer-dmaengine.h               |   7 +-
- include/linux/spi/offload/consumer.h               |  39 ++
- include/linux/spi/offload/provider.h               |  47 +++
- include/linux/spi/offload/types.h                  |  99 +++++
- include/linux/spi/spi.h                            |  20 +
- 26 files changed, 2336 insertions(+), 103 deletions(-)
----
-base-commit: 8ca8e57217e8263bc6dda6b77ef6c9051c2b6241
-change-id: 20240510-dlech-mainline-spi-engine-offload-2-afce3790b5ab
-prerequisite-patch-id: 7e6d36bfc262e562cb74d524e96db64694064326
-prerequisite-patch-id: d864ef9f8a7303822d50d580a9ebbd8d304c8aa6
-
-Best regards,
 -- 
-David Lechner <dlechner@baylibre.com>
+2.43.0
 
 
