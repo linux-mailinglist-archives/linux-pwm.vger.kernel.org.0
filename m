@@ -1,79 +1,79 @@
-Return-Path: <linux-pwm+bounces-4342-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4343-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7ADEF9F19A4
-	for <lists+linux-pwm@lfdr.de>; Sat, 14 Dec 2024 00:09:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0B3C9F19AE
+	for <lists+linux-pwm@lfdr.de>; Sat, 14 Dec 2024 00:11:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C195616610E
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Dec 2024 23:09:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9367C18871F6
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Dec 2024 23:11:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33AE01B395E;
-	Fri, 13 Dec 2024 23:09:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B291194C7D;
+	Fri, 13 Dec 2024 23:11:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yBLDng+e"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YVTlMtk8"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2151B21B7
-	for <linux-pwm@vger.kernel.org>; Fri, 13 Dec 2024 23:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6161B219D
+	for <linux-pwm@vger.kernel.org>; Fri, 13 Dec 2024 23:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734131372; cv=none; b=cMPP+lmevkVpLatUxfFRCK6bqmdjQOQKBqMSkB3N6OBmyOaLejWi+Ipj7zjgX+e/5dNY9Ebemum72ZBkej1X6JlZ3ZQcZbMSHt3H2WNJCKS+Zsn8F1aGfoTojCGMsSwatWB+FZx2SFsnneYHatVq8O2bONyceWgWaJWNGQSv1wY=
+	t=1734131462; cv=none; b=qHC2qqzcmC+Rp7MoQajQkVwVGeOK0gKkFUq7agBrpiHzJsnksFWvy0rfkwv2YskIgaf/94NdVnMaAhtImBMOCd+iuGdWQ2aXrjj/GrOpfUq9yLWUb51ufX55kygqsSLUtC2mOk87XeDiWgazsGGXM2NrqJ2TLBnq2YPpzH5xo7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734131372; c=relaxed/simple;
-	bh=a66lIxSlpOjSTxBDXLm5oz67ehuFCRs4HJpp5BjgPg0=;
+	s=arc-20240116; t=1734131462; c=relaxed/simple;
+	bh=rmUX76AAhJtcbKbS/MKBhumEX3FZeF756LBDXcfM/+I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=sYigmjVjUUYEMdRnsysRT+88QuJnjHszMrPd05JQLGnQoVSDWJ6owl9UVRM85ytbg5Q16WN9ZKu9VAKLxnDI711+XXKAEkcBWwDEadoGcSTayFHi4zqTsyTD+x+jqSr7MCllBIu+xYMUnhvo3eOh208kOUrz5o2t7uUVbE/P7Pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yBLDng+e; arc=none smtp.client-ip=209.85.167.175
+	 In-Reply-To:Content-Type; b=adt5BdCanSQjvNz9KvGE1LQt81XUVBQueQPQ+dXppK4gQJDqtS/IT9zK9qD4nkLFYpiUvHJI4Ud8sdbhfKvXUpHrkdS2GRdtqEWZC2cv7WjhP+/AzoRSU91uhW3sxtWhadZVE+Q4I1eGXlnoH9iTYNo01w+ZX0B7xVxkcoo7c9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YVTlMtk8; arc=none smtp.client-ip=209.85.210.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3eb939021bfso1018085b6e.3
-        for <linux-pwm@vger.kernel.org>; Fri, 13 Dec 2024 15:09:29 -0800 (PST)
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-71e19fee3b3so1771383a34.0
+        for <linux-pwm@vger.kernel.org>; Fri, 13 Dec 2024 15:11:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1734131368; x=1734736168; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1734131460; x=1734736260; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:to:subject:user-agent:mime-version:date:message-id:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=naGXFTMazXpixOxAatrKjd6JeusIndHF4os7SSqqSwY=;
-        b=yBLDng+ewcd9pD4csewchmMn+U3PGK+ouCmHTLQ9WrfGsgyeUxf6Ex4hFgukJzrBjB
-         srUqv0UUR0UVmUv3q9G28o99Jouexm3+OFRu/EVpk6YzuilEDcbYETBme1HKHRy5rUkc
-         QURd91wtJpj0fiYPqJQdxDasGYAsojLZTZu5aDoDxFx1zo41JhW7cIKK5EIyeivdqKjK
-         zItLfvB/EYks7cm6ctPA9cI2ouqjtVWr2u2sfaFb/P5jmHA7O25Vz4T9hccKOgQBhzTm
-         94JR/ekutgRqhg4uczghCYvnOgug7ZbiqqVbXWf1ONlf9hrNbi9CAdqXh4kV5zDyUBhh
-         AMPA==
+        bh=6wCKCByuAlAaTXDYVy4N76cFvOrIazxQnE0CZ0HL/Is=;
+        b=YVTlMtk8/qddeqAYeD/4WSY4D5wB8+Vtzhp87Pwg2DeyD87QvTWYwv1uTZxAT73p+S
+         CZCXI+B9QI7p3BlrqnbjejS5APvutEbap1uB2Ql/KAmIGwCDQLAn0pBnUjXjPyl2JzOX
+         xDr/a3HJCGMe2nXvdf7+0h/OsCmZDoaUTspY73fiSE1MFWPiGcD1EjxjQ6I22094tq/P
+         fO023AOZO7JJfbe30SHUK72hNcakDBFmReObO7M2NFLMJ1/Diw/Jc3w7b47Qzu/rOghL
+         FDXFQgvBFqUyX3BkOblgZDTHMftzS5fe48sdyoYXvUPUxKIgUVN2UAD9MimTDpKkCFvz
+         pziA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734131368; x=1734736168;
+        d=1e100.net; s=20230601; t=1734131460; x=1734736260;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=naGXFTMazXpixOxAatrKjd6JeusIndHF4os7SSqqSwY=;
-        b=swxa6Mpq1sGZvV4DbQidx0RJYqnJDwnG7QNtBQ6OOHrfq7UyzYfcyKl1oKNNIyWQzF
-         g0tEYgsoPFQdDX1dF+pWphOGVNubytV8YKEA4YUZn7nToR95nulToSFGe9EgFsL0j2JO
-         pRnFiQJ94dkJogUKrzwkxQKhISjzy7Y5pyd5xVz4sHaey3nn2L9QzBhpqYo6m20x2Dll
-         1lbW6GT8r06gLQhVVwlw4Gt0igEUDnuQ48V1dX098Vn5oqjwSGv+mOdUBoK0shLB8dGE
-         8DQwHMDct/91exuBlqSg9MB89+5GOwdRq+CqkA7W0Gs7Vgn6Umszne2J9lLhHQQYmZZy
-         uxTg==
-X-Forwarded-Encrypted: i=1; AJvYcCW7HUHVW6gtzgCgLwkgLmTcn9EDjj4FzCfbGgOf8hbHHJOmTdtfrRUTbnyS1DqbH277T9NMp7xfrZg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxyLIf+cPzaWxn6Mfzn5y2Tw2k+IDPLiZchSlJ3VxxAAWSig+x
-	R6/3v2u75QSS/8jJM6O+ELYDXiy7bOKVQoU8dVvPjBDCjC9ziureajPyXeX67W8=
-X-Gm-Gg: ASbGncuAHtr33swBojHhXMKFA9VgPmK0AGFPRzSkJA9xmqrPcje9o8L7jYixK4FpMy4
-	2eEuvsg4MhXZqQpyIN1m5Qni5xjPuuU2XkUz16jMsMYfSwwbX86oCdTdEBj1Wrf+exI5oUOn0Nc
-	1y2dV+Pdwxw2XFiQOz4BUM8Z2pfdkltVy6ZxCI6IMtaM5+L5TI11d+oyVqAYkJ735ohcs3Hgh27
-	a9Q6HRby4pPZqtbPh9yx4a65fkTROy6LlTB/N36jA9IiH/Pm3t1EKeAXEH91Yjw7MxFO730/MUB
-	PnphRpDy9oeddjF+EQ==
-X-Google-Smtp-Source: AGHT+IHoJ9Ixk34ZMQqbJ1mkbnpXEc+OKf3C3bitRp9/AunmS1rwBG42IOuY5b+Pobx7K3tkl0VShw==
-X-Received: by 2002:a05:6808:2208:b0:3eb:4b4c:80d8 with SMTP id 5614622812f47-3eba65ba0admr2149752b6e.0.1734131368695;
-        Fri, 13 Dec 2024 15:09:28 -0800 (PST)
+        bh=6wCKCByuAlAaTXDYVy4N76cFvOrIazxQnE0CZ0HL/Is=;
+        b=BR6puP1elr9b0o3WRTbSaASn3d3/NckwC5/cyUTWdoowWDiIh8CsDY9cHyQfqY7msC
+         iaR2epUlKDm7ekrJ6KOfR4otFHgb5STTvwok+X0FgyzQH+KDhIGefvtFtMipoMPU21r0
+         9sw17utqjd4lcshNgRRi/3wf6BXH7Vp254VVK0Jw4oqI7/Pg9kGHzFDeFc9W2utkUR54
+         ZAb7/7E7AiESxfL7v9LigEgT/djLa62/3oAT9Va8st8CvGTk7Yv3pv5SgUk3HHIAPiTB
+         H3Pbc4BetPPKNa725UOPq/y0sC9fibI3W+EaINWyphFFH3vhZotBdBuXRK7jiZ9IcXn+
+         i8xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXlfeVlCQSc8irJsBbOK15OWIwNk3zUah7JmgwX1ksXT/qge5I1ithxzr5QCZ+NwqmHhVGwFHPDkZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1LpySmkjbjeI+RORbeCO52YVR70c01q4n6a4aY8ejGhrlJkaP
+	GEwJzaKcGrpWxvsIEWLfQPBr+9vqs6l+rWapEdNUvu0wgqleIqbz2SXV5xrEnU4=
+X-Gm-Gg: ASbGnctHEXp09Jpa5frAnwxFIxsqUvtYI3pTBQZVZDjWWry1yhUcFteTIJAnQXPbXVj
+	w/hNinD72lTGPBDwXQzr2nKLTAQSocNA8BARmYA46QbfRH5+Jim7iALP9OcGQM1Dd0OjDNY1eOL
+	8gR7SLGm3ELTQfLi71aaggaEJ8yFuvOPPjS5oX2YAPGsdxGdizUrwfSK9SPWlcP5TC71v0wK+Rs
+	DHeU1ZgVhE175bj52ahIhKBL2LB49qhfLgxB2rlyxYxmxq8SS5i8n0t7uyKN0r2tzFfzCl7FchJ
+	iKFQUPmSJ/BryCpcIQ==
+X-Google-Smtp-Source: AGHT+IF/HrkFYofu0XYPQ8FOsQdBFSwRshag+zqD1aQtDkwS7D9uEJpxpNj5EPvXNNnZAMQKCg6HNQ==
+X-Received: by 2002:a05:6808:190a:b0:3eb:3d21:9cf1 with SMTP id 5614622812f47-3eba6bc2f20mr1744768b6e.13.1734131460011;
+        Fri, 13 Dec 2024 15:11:00 -0800 (PST)
 Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-71e48308005sm139273a34.13.2024.12.13.15.09.28
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3ebb48ce912sm119808b6e.40.2024.12.13.15.10.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Dec 2024 15:09:28 -0800 (PST)
-Message-ID: <99a14b87-90f1-4450-9e73-ae672edbf3e0@baylibre.com>
-Date: Fri, 13 Dec 2024 17:09:27 -0600
+        Fri, 13 Dec 2024 15:10:58 -0800 (PST)
+Message-ID: <ac529e7c-8655-4ef1-9bc8-9081d3c365c3@baylibre.com>
+Date: Fri, 13 Dec 2024 17:10:58 -0600
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -81,25 +81,57 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/8] iio: backend: add support for data size set
+Subject: Re: [PATCH v8 3/8] iio: backend: add API for oversampling
 To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org,
  robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org
 References: <20241213164445.23195-1-antoniu.miclaus@analog.com>
- <20241213164445.23195-2-antoniu.miclaus@analog.com>
+ <20241213164445.23195-3-antoniu.miclaus@analog.com>
 Content-Language: en-US
 From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20241213164445.23195-2-antoniu.miclaus@analog.com>
+In-Reply-To: <20241213164445.23195-3-antoniu.miclaus@analog.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 12/13/24 10:44 AM, Antoniu Miclaus wrote:
-> Add backend support for setting the data size used.
-> This setting can be adjusted within the IP cores interfacing devices.
+> Add backend support for setting oversampling ratio.
 > 
 > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 > ---
+> changes in v8:
+>  - pass oversampling ratio
+>  drivers/iio/industrialio-backend.c | 15 +++++++++++++++
+>  include/linux/iio/backend.h        |  5 +++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
+> index ea184fc2c838..e56b1e96652d 100644
+> --- a/drivers/iio/industrialio-backend.c
+> +++ b/drivers/iio/industrialio-backend.c
+> @@ -681,6 +681,21 @@ int iio_backend_data_size_set(struct iio_backend *back, unsigned int size)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(iio_backend_data_size_set, IIO_BACKEND);
+>  
+> +/**
+> + * iio_backend_oversampling_ratio_set - set the oversampling ratio
+> + * @back: Backend device
+> + * @ratio: The oversampling ratio
+> + *
+> + * Return:
+> + * 0 on success, negative error number on failure.
+> + */
+> +int iio_backend_oversampling_ratio_set(struct iio_backend *back,
+> +				       unsigned int ratio)
+> +{
+> +	return iio_backend_op_call(back, oversampling_ratio_set, ratio);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(iio_backend_oversampling_ratio_set, IIO_BACKEND);
+> +
+Needs quotes on "IIO_BACKEND" here.
+
+With that...
+
 Reviewed-by: David Lechner <dlechner@baylibre.com>
 
 
