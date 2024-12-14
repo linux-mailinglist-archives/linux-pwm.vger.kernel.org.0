@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-4352-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4353-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D83B39F1F69
-	for <lists+linux-pwm@lfdr.de>; Sat, 14 Dec 2024 15:39:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 251A59F1FEF
+	for <lists+linux-pwm@lfdr.de>; Sat, 14 Dec 2024 17:56:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64B7F1884A63
-	for <lists+linux-pwm@lfdr.de>; Sat, 14 Dec 2024 14:39:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 504871666CE
+	for <lists+linux-pwm@lfdr.de>; Sat, 14 Dec 2024 16:56:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D42B2193419;
-	Sat, 14 Dec 2024 14:39:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A41621990A2;
+	Sat, 14 Dec 2024 16:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xzyftlpd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIbYotUU"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94917EC0;
-	Sat, 14 Dec 2024 14:39:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A21192B75;
+	Sat, 14 Dec 2024 16:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734187167; cv=none; b=oGt+Td50lnq0PPpAR7mfgY4xn3I7h8uZ9fnY1PaZdOCWvMm13RGxvak5gD+b/S/f+HuVqP3NS/OlQPw8jGKI9vXjAuBNjkAId5WDPQDv/gZhjSCTpPEnYVY2lZM9zBc6TNbuSVGLqnodIAqdLBZ/LXEtHBvZocDcHEMyoeikaNE=
+	t=1734195375; cv=none; b=VYFRI2pbz6ig3E8j9msyHpdOQITeppAxVWI96ZwqYxCqZAnTX9RBAuR3+eUDdLDszj9eOljS7VJQn4rAXNPZ3siWB73gj3NGuAwT8ZiZw1e/Fxowh5+O1ZjiLl70iRT/KjDIl322mQsbMUIySRMsxJo/DYcMoTZxcfX0O72KOoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734187167; c=relaxed/simple;
-	bh=9NuCdmw8KQZZ1apwFrQRi6/Fz5J/9fHH42DpX0fP+kc=;
+	s=arc-20240116; t=1734195375; c=relaxed/simple;
+	bh=078vonmjDPYa7cx+TCBvXwXah+/q/AgStB2Jmt8KH8A=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kBPtPEFvDzbRt+Ew1FmGSqA5GxoaC69hlKndHjBT51NbMxfDg4a3HN0rSERGDhyTQzwZAsGzDQKLGOjiBRcBYmFbXXCpphIZuidDNL+kQYEs+0leOMbZtmuVYh49IX4Zl3cPbaYybRDQWUIR1kERiWb+cEk/YOun4M3p2wTHtek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xzyftlpd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83D96C4CED1;
-	Sat, 14 Dec 2024 14:39:21 +0000 (UTC)
+	 MIME-Version:Content-Type; b=pG1TwR+sSYMl/g696qpwyQjnq5u9XxZdyriGeXRekjePbbNHu5PmrBoQYVrLhGoPJzbaXUbxUJDaNqAf5GFPt9+p4eRtZSg2soM8XzVhtuZSx6l/VM2GjtJKehf+ygWnb3rbt+MkhM+niwtuRsRWROt/Oy727PXUfs7RB+Paqi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIbYotUU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05EA2C4CED1;
+	Sat, 14 Dec 2024 16:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734187167;
-	bh=9NuCdmw8KQZZ1apwFrQRi6/Fz5J/9fHH42DpX0fP+kc=;
+	s=k20201202; t=1734195374;
+	bh=078vonmjDPYa7cx+TCBvXwXah+/q/AgStB2Jmt8KH8A=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Xzyftlpdi9k5Y9vAWQhzvpzAN/m7N8uC8xl7YyADcNshzHwkQ/Rz6Fk9eOl/zIW2y
-	 lUaU7jQsIxTF6hVtmJtbmmGm1ny9/P3bqdqevfXkoKY5RkCwqKf8BuEFmjUyQ3V2X+
-	 Cx7WbKNiI/JOKTIxA9GKbVRDlhkhDYkyMinuT1fKS16laWX5Rnz1R/5K85fNn4JbA4
-	 G0hqBQQXvVBYkANrKG66L/epx3F1YOdSZqkNyT6xaRsH7VQSJkYmDYiboBzVulH4qP
-	 WiqfPWObkj+TqXFN4wlCZFP8DqwivJWQo+23jU3A2qi+9nbpahuS/XOvTYo4WlDhX0
-	 2Gx7iSYxOtAqA==
-Date: Sat, 14 Dec 2024 14:39:18 +0000
+	b=MIbYotUUFwVKEf2qYSM4mnNUDHfpZfczZiPVaYwn9VuJFd0AiuWspO6XuQLgoqLMa
+	 nj1KwAAs+D/QDjW7EuP/zLNpuzTdEKdudNyMPIt9X+lJNDrXcRiHCeTUuT0zXGeHJn
+	 8g1KXwKU7KsalWrTQuWxh1N9LvHKpCHDNXKxrDSuyKyavVi6IZH16D0vBjlZU7RfIU
+	 HkDUjmQ9TMTNXvqeqzVorCh2GCoPBapV8oDY9AKynEzIrmEisa6HBW7zg7RPNCTjBP
+	 S6q6swCoq7GUB3blD9s0Gd5PPsidkf0oIkTAdzpEN0McNYpfG1stDIOtEU9y2la6k8
+	 wRdSrEGqGMKsQ==
+Date: Sat, 14 Dec 2024 16:56:02 +0000
 From: Jonathan Cameron <jic23@kernel.org>
 To: David Lechner <dlechner@baylibre.com>
 Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -53,12 +53,12 @@ Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
  linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
  linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v6 09/17] iio: buffer-dmaengine: add
- devm_iio_dmaengine_buffer_setup_with_handle()
-Message-ID: <20241214143918.6bda7e66@jic23-huawei>
-In-Reply-To: <20241211-dlech-mainline-spi-engine-offload-2-v6-9-88ee574d5d03@baylibre.com>
+Subject: Re: [PATCH v6 10/17] iio: adc: ad7944: don't use storagebits for
+ sizing
+Message-ID: <20241214165602.781da5db@jic23-huawei>
+In-Reply-To: <20241211-dlech-mainline-spi-engine-offload-2-v6-10-88ee574d5d03@baylibre.com>
 References: <20241211-dlech-mainline-spi-engine-offload-2-v6-0-88ee574d5d03@baylibre.com>
-	<20241211-dlech-mainline-spi-engine-offload-2-v6-9-88ee574d5d03@baylibre.com>
+	<20241211-dlech-mainline-spi-engine-offload-2-v6-10-88ee574d5d03@baylibre.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -69,14 +69,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 11 Dec 2024 14:54:46 -0600
+On Wed, 11 Dec 2024 14:54:47 -0600
 David Lechner <dlechner@baylibre.com> wrote:
 
-> Add a new devm_iio_dmaengine_buffer_setup_with_handle() function to
-> handle cases where the DMA channel is managed by the caller rather than
-> being requested and released by the iio_dmaengine module.
+> Replace use of storagebits with realbits for determining the number of
+> bytes needed for SPI transfers.
+> 
+> When adding SPI offload support, storagebits will no longer be
+> guaranteed to be the "best fit" for 16-bit chips so we can no longer
+> rely on storagebits being the correct size expected by the SPI
+> framework. Instead, derive the correct size from realbits since it will
+> always be correct even when SPI offloads are used.
+A more specific example with widths etc might be useful addition to this
+commit message.
+
 > 
 > Signed-off-by: David Lechner <dlechner@baylibre.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
 
