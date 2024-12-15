@@ -1,116 +1,128 @@
-Return-Path: <linux-pwm+bounces-4356-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4357-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6830E9F23BF
-	for <lists+linux-pwm@lfdr.de>; Sun, 15 Dec 2024 13:35:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DC7299F26DB
+	for <lists+linux-pwm@lfdr.de>; Sun, 15 Dec 2024 23:47:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9C93C16401B
-	for <lists+linux-pwm@lfdr.de>; Sun, 15 Dec 2024 12:35:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21420164484
+	for <lists+linux-pwm@lfdr.de>; Sun, 15 Dec 2024 22:47:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95EAF17DE36;
-	Sun, 15 Dec 2024 12:35:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D7B81D5143;
+	Sun, 15 Dec 2024 22:44:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PvGWwtJ4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOxdURlf"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5842231A89;
-	Sun, 15 Dec 2024 12:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582341D47AD;
+	Sun, 15 Dec 2024 22:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734266120; cv=none; b=Dsz78NsTvED5lQctXspV8sTf7LEpKm/YGzlcUDuFwdxbBR3suLeX02C+nzgJKTFSgDCNAsBYQiSx9udDd3ZN3fQI5DPoLdiLevt0HsaZtn2F/d0Vmz4q4Bi1xTDFeAe6a/kfjqUgaYnY1799cixONUwfCRbkeDgMISvcWAd9F3o=
+	t=1734302685; cv=none; b=QrNe7G2n4L7wKKvBaRmNvubtpXB76NcUfdG20daeQ99KizMwLPTeGNLR5/yJcIWxWSYngi7CWF/+09KHIfHM6tYUAQyneQWRahL8WpHd64hr2pLAxC9ftI2y1Eoh8FBodjqctUPKkd+cpA/CuVPiKf0HiZJ0Pr5Sc+qXx10nw20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734266120; c=relaxed/simple;
-	bh=ZL1fWrUk+ebtdOJXrTQ1Mq3uWwySJzxwsNo84//nb5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ufLRuwp/wpQD9Ri6Djsa03Pr4ja1OPdc5DLQCYJQjZfXDxCaLg9pooYxg9VHEa90QJ6two8hnj64UsUVmGNOtJ8Ezb7C3o4n76I99Ji1xp4jsIv1HpgMn6bAePOJrw4Hbamxjr2+jzFXjC4BIOkJsfW36iv4Dx8iNKrrfP08AcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PvGWwtJ4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1135CC4CECE;
-	Sun, 15 Dec 2024 12:35:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734266119;
-	bh=ZL1fWrUk+ebtdOJXrTQ1Mq3uWwySJzxwsNo84//nb5c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PvGWwtJ4kTQH+rehSn7qRElhhAGDB/6y/xE8iqV+O3MCOR60IkQQ69ROjARd6ve1r
-	 rCvFmbOs7k8j7D/Krl96PTLIHyZ2tAWIVeBj60IemJqXqeGRCH3c/LisS1QPYssXLu
-	 rMQQDkzQur/1+1hqMCNtnsZ7zWbPrVhMdG+ee3yLdVErDU9WZRHGB0ann6uULdHdAQ
-	 6DeCpEG13RhOuXMKZDnSh5laWEz8IKaqLCUOrDGBaM1O05dPFHwdp6g1OgCBez4qa2
-	 zoBetC0Mx1e7aKtjKO00ms6bzG/ZPIEYAFgAhZTpw76wyM/dIP0ox31vkgFdjaaqDL
-	 5a9Qdib11amaw==
-Date: Sun, 15 Dec 2024 12:35:12 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: iio: adf4371: add differential ref
-Message-ID: <20241215123512.1d2bbb3d@jic23-huawei>
-In-Reply-To: <20241209104201.25205-1-antoniu.miclaus@analog.com>
-References: <20241209104201.25205-1-antoniu.miclaus@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1734302685; c=relaxed/simple;
+	bh=rGF8wKJU+4QzLEOp7G8BuLkKysHRkIm5MWdmIf8RgDA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lDas7rRfQxDsyuT6r8qgDXl1HMz0ZkoiC1XR1t8qLcc6Jnadog4uun+KtKY5xXcYZW42/TJG5GjcJHtl/bQ00sfGbJpv0BbKFSVzVZC5akBCy/9dDwRZzS087plukieSXUJpSkx17hayeAVGuCHRiLT9gN81xadMTeQnXpfaeTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XOxdURlf; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a77980fe3aso11402015ab.0;
+        Sun, 15 Dec 2024 14:44:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734302682; x=1734907482; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GYZguq+bOqaLBNmT5LzVDxT3aVxG2gbJEu2POu819ug=;
+        b=XOxdURlfJatZNoQ0hLl5uutPh0oW/9QsQSpFdbn4lav0WH/Y4MBgekc2caO+XrPkoy
+         ZLF5i7YqS+kwn66kUW5W/iXUQq6eXIIqQkzT8Ou2xdjdK156sJbOUY+b6Gk4shhiIg5T
+         XA3pO/VJCrF+dbVb1XdKjdiO6wEmwyRd3F2dWF55UCATAwUrwQCrAuFJbsd3c5BSPA6V
+         tvVZk8y/VdVMoLZ0mtspbK9RNqZvoXo4DI7pzIt8TzPR1mLfrT/2Z51eqvEmczkxe9QB
+         pCmuGJv4yuZNP9KMirBNE7OKGSQPWbu/MolTSrtfDUMNTlv+d9MTY2UYyOUmepc+dhdl
+         sWKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734302682; x=1734907482;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GYZguq+bOqaLBNmT5LzVDxT3aVxG2gbJEu2POu819ug=;
+        b=EvHB/XuKePcqGHDO3+8TPJnADLkbOiOxLXTycB2CbI3rKfi3c9XNoYl4esjvH7wynt
+         ymTC4B+XWNVBgH5loZNpiZFcaw1PH2yfnkyxivpGeQk24i6j6dYVG/9pNEjC2NzkykW7
+         p+mEATi1w7Cub/zXR+FDNNgGFQPzfZpk47gSAG6GckyQqy/3yPJQQi8StfXXc/LLAsRZ
+         PDqp2+5ES+1fjWcSFyadRXGuMOXnzbrQkXAlsAwXqvw6nGoGBmuKqQ22U9Q4wwG0PtY7
+         Ng4TG3XwB7VsB1MjbE/0KdABUPTSbFHJkqy/GzlG5brbl8pYS0h7QmWjafg+jQkCZWS3
+         WuCA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6iJbl8o/R8O03gssJB5s7tFAkpJkSIHS8942X3CYFZfvb9DJaaovoKGVICQfsDxXLfShdGORsZc949ew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNs5eD23dh4ms6kLSJCvn/YeRvMuYysLSAGfDkNAhhke7TizZU
+	9HRcyVCWf6TxnqpN8rpu+V03Uq8dKylqDIO2+PupNStFenn31lM8
+X-Gm-Gg: ASbGncs0+xQCP/RJbenJGurSeR2hCRdNoV0XCLl4L1x0OTkrjhIioRsnmo2IZAU7XbL
+	1weSKGfv1nA+FAbgiY0Er5l+kZrUmyEH1VWmx7A630mZNx6kqVotDvtD50sylPexmNXqN+yfXpx
+	+FW2lUB+fd0lWav5mY5fcMt8FBH6EVeupjJMEPveZphAqvcGiDu1v8DTxZaAhYtkRFBv4hUO6Ry
+	LC5c/CGmgFXQwSJVZB4anthZiV72ARy7Z2ILvhdaBkxUdODgCXSsdzTqHopcXsI3zBQ
+X-Google-Smtp-Source: AGHT+IGePq+VdOyJwC/DP6nHlG7iOFgBuuD/YTZRBrTEMTV7bz9Y/zOVCSArMUyH99zVjxlIVgJnKw==
+X-Received: by 2002:a05:6e02:198d:b0:3a7:cf61:ded7 with SMTP id e9e14a558f8ab-3b02e0383f4mr90832675ab.10.1734302682348;
+        Sun, 15 Dec 2024 14:44:42 -0800 (PST)
+Received: from localhost.localdomain ([128.10.127.250])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3b2475af2d9sm12349775ab.14.2024.12.15.14.44.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2024 14:44:41 -0800 (PST)
+From: Mingwei Zheng <zmw12306@gmail.com>
+To: fabrice.gasnier@foss.st.com,
+	ukleinek@kernel.org,
+	mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com,
+	thierry.reding@gmail.com,
+	p.zabel@pengutronix.de
+Cc: linux-pwm@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Mingwei Zheng <zmw12306@gmail.com>,
+	Jiasheng Jiang <jiashengjiangcool@gmail.com>
+Subject: [PATCH] pwm: stm32: Add check for clk_enable()
+Date: Sun, 15 Dec 2024 17:47:52 -0500
+Message-Id: <20241215224752.220318-1-zmw12306@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 9 Dec 2024 12:41:31 +0200
-Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
+Add check for the return value of clk_enable() to catch the potential
+error.
 
-> Add support for enabling differential input reference.
-> 
-> By default the single-ended input is enabled.
-> 
-> Input frequency boundaries are change based on the mode selected
-> (single-ended/differential).
+Fixes: 19f1016ea960 ("pwm: stm32: Fix enable count for clk in .probe()")
+Signed-off-by: Mingwei Zheng <zmw12306@gmail.com>
+Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+---
+ drivers/pwm/pwm-stm32.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-
-> 
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
-> changes in v2:
->  - improve commit body.
-
-It still has the same question I raised on v1.  Why is this not
-selecting between what I think is two different clocks given they
-are wired to either one pin or two.
-
-refin, refin-diff
-
-Please add a cover letter to all series of more than 1 patch as it
-gives a place for general explanations and discussion.
-
-Thanks,
-
-Jonathan
-
-
-
->  Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> index 1cb2adaf66f9..dd9a592d0026 100644
-> --- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> @@ -40,6 +40,11 @@ properties:
->        output stage will shut down until the ADF4371/ADF4372 achieves lock as
->        measured by the digital lock detect circuitry.
->  
-> +  adi,ref-differential-enable:
-> +    type: boolean
-> +    description:
-> +      If this property is present, differential input reference is enabled.
-> +
->  required:
->    - compatible
->    - reg
+diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+index b889e64522c3..b94d186e3c0c 100644
+--- a/drivers/pwm/pwm-stm32.c
++++ b/drivers/pwm/pwm-stm32.c
+@@ -858,8 +858,11 @@ static int stm32_pwm_probe(struct platform_device *pdev)
+ 	chip->ops = &stm32pwm_ops;
+ 
+ 	/* Initialize clock refcount to number of enabled PWM channels. */
+-	for (i = 0; i < num_enabled; i++)
+-		clk_enable(priv->clk);
++	for (i = 0; i < num_enabled; i++) {
++		ret = clk_enable(priv->clk);
++		if (ret)
++			return ret;
++	}
+ 
+ 	ret = devm_pwmchip_add(dev, chip);
+ 	if (ret < 0)
+-- 
+2.34.1
 
 
