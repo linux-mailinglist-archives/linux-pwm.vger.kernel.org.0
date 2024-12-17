@@ -1,404 +1,199 @@
-Return-Path: <linux-pwm+bounces-4371-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4372-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEA309F4AC0
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Dec 2024 13:13:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A72C9F4AF5
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Dec 2024 13:31:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BDAC27A064D
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Dec 2024 12:13:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B4F61891190
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Dec 2024 12:31:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F134E1EB9E8;
-	Tue, 17 Dec 2024 12:13:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FD7D1F4288;
+	Tue, 17 Dec 2024 12:30:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZTXYirW"
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="o5S0j1I2"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011064.outbound.protection.outlook.com [40.107.74.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F314D8CE;
-	Tue, 17 Dec 2024 12:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734437629; cv=none; b=qxpwuJNYqimKrHtzEW5XR/ZwLh36/MC1Ufeu4qg9kVDW0zO2F0q1TQ4C1gLIzApowe+VgawFQYFL7mojtUTpcNdD4rZRjauF237r5iNQjjiE654QiUweI/fnN3Wie1kjMRNvEsUt5QFMr/alC2dIu1IeKnEPMRCFrbHV2glMDnY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734437629; c=relaxed/simple;
-	bh=OtPHWwYDEm1c0eAndnDwaxCRun/qZ23tLwe8SVhQaNc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AQqqrKbtjsNZyqxOnhLAzXsu4uylcBv7zcKBWbzhtT+sbQhoAzON8hQGGxHCY469jjZtiMIJIeuYuayv8znAiIfyQTMm1+aj8GmVT08O+oqn127WsSLd8msQ9bfXtr7I40csdp02ygHGSc1NnIz0TsjNKK3k+tVbETVsc2O2Pk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bZTXYirW; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a9f1c590ecdso898478466b.1;
-        Tue, 17 Dec 2024 04:13:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734437626; x=1735042426; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yjujiW/cvB722V1/D/rPQofNjp3fdkA4kH1I2dkQcmc=;
-        b=bZTXYirWkRUPA2u73E7/zjsxvTaBKuzpR2FwRQaEpj91UaB0IGXwfON4Mykaek/0c/
-         eGwU0208B2L6v1NLTQXjRm1BV4Mu/mCDrw+OS+V2N5D4hjwY7n1O90xGIEBQJRGmlho6
-         EtWL0H61ZZYJeTbD5zzOhjD1La53g8C1P0XkYtTxPRjwoB7y5k9Mfj+TLYGlY34iw3El
-         +0OY+OwOeIh4PdfYz6VJZSD1x0dwosPQQALH1CLiou//JO2Hi9TZKyBpHBvyCt8NJJyY
-         pr49dCq0IS4DdBCifFxwCBn5YChvzfAEnZp1x8WOuUIGFXuuHRNmSO7MxsYYSeTRYX1s
-         KB/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734437626; x=1735042426;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yjujiW/cvB722V1/D/rPQofNjp3fdkA4kH1I2dkQcmc=;
-        b=YFaiuB44mBHJumtI+LlVmZkG/rhFFvZ1gej2hVd8ZfHyEhKCqTNdHzkE7CNQt4jjf2
-         oUPfb0EBHB1k4WdRyGnS9i6g9ebmJwXCC/nYxVDnZcAPSLWd1FfUtxL4aL0kDMlDaBAu
-         glWg+WlQ5jGJkU8mYVeolUVRKiNgHXtUpBjRtxLhOn21aW8NYDe8yj0tPZT1rkk9xX1M
-         uadSVx9/qbcp6Kda5sH0wKtJpRmHv+wrQyLhyQY84xE2abGGd+VE9a8MYrBb9QaPcmWp
-         /o3n1UI9d24xCjheiCNmX3ynlZ2HgiWReg9zNiJUknnedFThcpFumL/J1WX3X2lW2qtB
-         NeEw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7N9BAiD1w3SXaVAsdQ1cLQ3RvDf+52yCOSkRZFo4j5omOCWWuNZky/mfsWwbEsSjUAMd0t4zRrShW9KxL@vger.kernel.org, AJvYcCVrkGLc6cWTwSlXrYqahrW5Swzde1F3AKGT2EXc57ZGaiTkXkF9zM36tmRTbXdsho6Pzc2aiYPoQrm4@vger.kernel.org, AJvYcCVt2ej0Voa96ZGrfyKkEhoyPDN/jiJ4EuUVx4eqo0PDZGj8X103NIPgd+/SXgJuWQnVv3r8rO24a3BP@vger.kernel.org, AJvYcCX+b2UIVdx5vEpqhdAyYBtEi8xeKTxMq/6NpasO2+7iWMTp8zXQBonCbvfqpzH/BUWn+rhiWdk2O2Ap@vger.kernel.org, AJvYcCXH5gaVVoG5h4guwgwZTytIaaZ2kPOh+sFbtjfCTm5UBkLJlRUAIvRhRplYQ4Dd1JKCA2qRXdxNcLZ6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7hJOJRVpoIHECaz22yyVGa/XSwhSQ/WJ40usk5Ou1M4zZ1AhW
-	URIo8VRIzE6b94lgn6SWwOLFlnL/je04/TCRarFOskku15uiJqk3
-X-Gm-Gg: ASbGncu30Wc1prRoUDe05G/cEa9h0FsxZntTsHwW/XNmg0vkzU5c4I91J6BTBK1NrcJ
-	tQ+1rIdDrVXQNrNqnPISeqM1fsF7Dndnr6LyTOKTtKagQhGWi+bC3XhmdfPGFxERhp2Vo4vmxef
-	lN5S1v1BCFAvl2oUq6eDpN+0SvAPZCuyfws70DI/YZoXIemkPCFVpdByUzVrYkVAU8lLBsQSqTL
-	10e/3TJimHPSXsD86+UOvEqdNamjcca/7IanLQRVft+pm/N3yHObMo+FZZfhId+2IZOpb/pdNel
-	/RJQxBmrhsG2ixvLQ7Yxl/bt701lTjFEOb+zqr0q6qItUagCNIN4Eebo+Dsp5ZxswBjhuXuwrqr
-	wuh8FlT73M1y6Hw==
-X-Google-Smtp-Source: AGHT+IHoPtEFMa9olCmn32dyxjmNPyn9UCOKAbIP1jXvhZ7Me2Wv9qgdM7HcD2e+RVCj39gW72KRBw==
-X-Received: by 2002:a17:907:1c0f:b0:aa6:b4b3:5925 with SMTP id a640c23a62f3a-aab77909d61mr1466654066b.14.1734437626005;
-        Tue, 17 Dec 2024 04:13:46 -0800 (PST)
-Received: from ?IPv6:2003:f6:ef10:f100:a045:a7a7:11d0:8676? (p200300f6ef10f100a045a7a711d08676.dip0.t-ipconnect.de. [2003:f6:ef10:f100:a045:a7a7:11d0:8676])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aab9638ec48sm440699266b.147.2024.12.17.04.13.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2024 04:13:45 -0800 (PST)
-Message-ID: <c54da9aa3edb841b1e3d5f2fbfd0b29e89da1184.camel@gmail.com>
-Subject: Re: [PATCH v6 17/17] iio: dac: ad5791: Add offload support
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>, 
- Jonathan Cameron
-	 <jic23@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno
- =?ISO-8859-1?Q?S=E1?=
-	 <nuno.sa@analog.com>
-Cc: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, David Jander	 <david@protonic.nl>, Martin Sperl
- <kernel@martin.sperl.org>, 	linux-spi@vger.kernel.org,
- devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, 	linux-pwm@vger.kernel.org, Axel Haslam
- <ahaslam@baylibre.com>
-Date: Tue, 17 Dec 2024 13:18:16 +0100
-In-Reply-To: <20241211-dlech-mainline-spi-engine-offload-2-v6-17-88ee574d5d03@baylibre.com>
-References: 
-	<20241211-dlech-mainline-spi-engine-offload-2-v6-0-88ee574d5d03@baylibre.com>
-	 <20241211-dlech-mainline-spi-engine-offload-2-v6-17-88ee574d5d03@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11C51F4710;
+	Tue, 17 Dec 2024 12:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734438622; cv=fail; b=hLM2vgs8R4fA2M44eZtizwnyb8qzTTHOe5hEWvk6eo9OD+6iqhY7i/oGyejL4+P/dSI46QezfFc9mbq5Me9MMtfIlcQuUPeNxF8o9nmqV/w+ZYkR26rlQxlbWEs09J/HkMQ+UPvMXp5hcA4IPG0AfU+WAmcR6z6iTr7wulGlWSY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734438622; c=relaxed/simple;
+	bh=iPEgu/pQ8hjQLqSrWyondEEDtCwhqCUR/eEli1TroEk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Vu3LAtVAnZyOLF7/al+Mp0K5cbMnHC9uBc3P+P6o2KBabl1GI8z0gBHT4R3Odcm+6CW7RPq3Cea5FkjdZGMA58G4MZa5tGYrkmHhFGI9YMcJSgmz7/adyCkKhnG2rgzZA3PRR6pM1pjwBLaSN/gBCB50a2jL9wJswMrnGIGl270=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=o5S0j1I2; arc=fail smtp.client-ip=40.107.74.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bA6udBTlTwSDpRVnW5IQWrwOrlhGgJdExkOI941nwjt+FJstTtsB5sXHBssFq/XMfzLw9fXnW8OX7BJKuePh1qfg44woEQcpNl1hUljR5pvhRrgdWomhZ5IgVlk/YZSxVAF9jDohsCZWYB8N7H2t4JUsEqL/q7RsR1IpoPWaVFdbAFRi3jGzWfgKzuChawPCNR1hi4sq1o0h3+OEOcUln0D9YEoYNbs9Ey653VPOhli0qMP/25/lGV4pTvNqlgSbn5PAzn5cNPvEJHqOEDDj9XY7ChpG2rA4+wCzCmRlq7Bow4IyDfCA5m7/lysmFT9OC3n6FzfPeSp11WAkpgM9CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SeFkLirBGRCqFnhJ4QW828fCJtwk8CGOYsGZj0y0nNU=;
+ b=NcAitPJZrAZdS5byF6mqmuFARMqK8Uu6amIn/LBKYWBrx0wLB3cSeaYiYNigVWW09ODZ8vvytacS+8McmgZdGZ1n/dcEzX4nZWh1YS56ZkkLGDQxRX15BoSmiKGJFj3lMc2rGA18Q3K+GpHpZjH1AGabGdiSoUT4UsFSgn89yxln7Mj1oyFpu7MlRoFXhzRkZtg9cpWQIe/pEPCSpKBFS9ahwVAgP0B4Q/8EARjEnlLSauHH/QNZ/ZS2EOaNUyu414CHfa4FWNM734cKC6E8SykvemR05nRH/K5QxzyKXWl67upnRywiHb4FLRyGIPG4NWPwAVgVzKa5+OMqKCjJFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SeFkLirBGRCqFnhJ4QW828fCJtwk8CGOYsGZj0y0nNU=;
+ b=o5S0j1I28L4Oi2FiBnTm0w/dMRV9ZynzECq3Xiqb0VtnwyIgxdAVsn4Bwxo2Itr1kTuBKOfInM7te3l4AqPA8lK9CTOndPlvMpFVR/e4jgVOIg8xWroYip4enX3PqVwAO+zUq9VmsQBmwcoepsBMOAnkI056jqLNxjdcruJii6Q=
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
+ by TYYPR01MB13432.jpnprd01.prod.outlook.com (2603:1096:405:1bf::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.22; Tue, 17 Dec
+ 2024 12:30:16 +0000
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1%5]) with mapi id 15.20.8251.015; Tue, 17 Dec 2024
+ 12:30:16 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>
+CC: Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven
+	<geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>,
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, biju.das.au
+	<biju.das.au@gmail.com>
+Subject: RE: [PATCH v22 3/4] pwm: Add support for RZ/G2L GPT
+Thread-Topic: [PATCH v22 3/4] pwm: Add support for RZ/G2L GPT
+Thread-Index: AQHbIV3QCLVSX2/XSk+pOZR0ZimyzrLORWwAgBx14JA=
+Date: Tue, 17 Dec 2024 12:30:16 +0000
+Message-ID:
+ <TY3PR01MB11346984731163E2E3DD7CB6186042@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+References: <20241018130049.138775-1-biju.das.jz@bp.renesas.com>
+ <20241018130049.138775-4-biju.das.jz@bp.renesas.com>
+ <slgs56imb3u6fv35bo2hl4moa77nnhrtcygi4womtuzs2mcipt@ylcvacvhsgcl>
+In-Reply-To: <slgs56imb3u6fv35bo2hl4moa77nnhrtcygi4womtuzs2mcipt@ylcvacvhsgcl>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TYYPR01MB13432:EE_
+x-ms-office365-filtering-correlation-id: eb39c5f3-2c91-4c66-70f9-08dd1e968fb6
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?XhVihmdT7jZAOxtJOMbQsN/rYxa7ykzsn90uARwducliyxd01YJCvNhlZW?=
+ =?iso-8859-1?Q?0Lh7B9Cfqm20DvNU/1wykxq+wLujBdZV21WY0mAiaAVfaOuBbT+lazZ9td?=
+ =?iso-8859-1?Q?Xtmb3zC4b4tVw2OoO6JVZIaxp9XNztSrLWJ6h26bPafKyz/4d/0mD9DPvI?=
+ =?iso-8859-1?Q?ngvT3HrDda/XNcUz1Aj/sn8St3z1wa0sbbB2ORdAy5l0Zy8P+5NLXw7HDQ?=
+ =?iso-8859-1?Q?HsHvBmoqHXFe/RgkUxB9U1VnbH42gYLIkBUPDTqhYgdGzNpajX2i1mOxLf?=
+ =?iso-8859-1?Q?9vWODts5nValYF0gFEn2sZHvB4Go4RnxIHRMIkkyPoPGURIdWXnr69U6Z4?=
+ =?iso-8859-1?Q?KNcJcH8IV/qNAY/hzmw8kqK32R5JB0CJ9QG/h0D9IS3YDANZAPL0czwWu4?=
+ =?iso-8859-1?Q?Ti4ZDVg86euXaOxfSN0UxGHJqPcvj1NIXSBXpKJBXtyT1K1Mz1LwnIa5kA?=
+ =?iso-8859-1?Q?HzH+ezSV4fqIva5LQJH1we244hS1vUu6cvNa+G1UbQJE1Vhd+EVJrDkD2z?=
+ =?iso-8859-1?Q?rF7jiDCVP1GA//OkjNx81Frch7xdVnk6MiYI7DdCSQuG862IQ8ylEdHp1E?=
+ =?iso-8859-1?Q?J7cPCNMo833kgYLWtgdPxfs4xL1h2WhNOdFm8uCuKEJNiIrp1RQE6HFW1n?=
+ =?iso-8859-1?Q?8IDfZ53x6ezETuN1ELFl803U9R7FCNwN+BKcqlD0zXQPUtBBynnwPP8ZgL?=
+ =?iso-8859-1?Q?siDaVdp01Wd23/uTlrUlCErJIYX3iH9OwK1W4rXA+/fwF09baqBe++4VWl?=
+ =?iso-8859-1?Q?xXKzyKF1q1N+s+e9zQFlJSPEqtzWpq6UaBmab8BR+DWsr5CHeShLPVtZC2?=
+ =?iso-8859-1?Q?sB6OHdB8o6+eA/DGjBCQcAu6BM8WAiZlbMITgpxY+yZZ1/en3eYSBMYT8s?=
+ =?iso-8859-1?Q?NFeWWnliH//pZfOOuOgLq+3vafE0KSuq0gWba9Q2t37oLLf0HRBpfrizy1?=
+ =?iso-8859-1?Q?g1mRfsVGKWb+ylYIeLFyYSQCXGMdt09LzTpAhmV3kSbVqeOrXqB+1jlWwY?=
+ =?iso-8859-1?Q?d2jVMcBTZDs2QhlOdF1M2peTQ2+f2AUXArFe+dlipWF93jkD38wjGUvmva?=
+ =?iso-8859-1?Q?ajkbb7KYgya6G50WE0xQLIEqtFIoiC/DKFVu27a7zinb2d9AYZ+qVsNhnj?=
+ =?iso-8859-1?Q?8taD9hmCBxukF/1RXk9QFUb47mbc0+dbT3QDubgZ6h+nHMcMsr2T8OEOOS?=
+ =?iso-8859-1?Q?gW5sHQQkBoau6rvPEJ2M7qkwiirQHli1DT05dnjh8JI1l9A1cDersHS+OO?=
+ =?iso-8859-1?Q?aSGys0cEG5aVRqUWly2FEiOuVlPRpyfh47CuDZldkrgO5dzxdbz1tZYW8g?=
+ =?iso-8859-1?Q?ojlWYXrcRJ0jgF1tSMTETdbMQrWA3hm251/HffvbgqOEBcRNVg82Q757X2?=
+ =?iso-8859-1?Q?E0aULnl2uWU+Oitl2Z7JtMouP4Mci8aytdee/B8DCL1qeKHpcJYqHCevkE?=
+ =?iso-8859-1?Q?pFf6E2KmQoggCNCWSx/86c4VNXuy2WrgStWLAaFn6MOhbbBd5zFOYD/ZaK?=
+ =?iso-8859-1?Q?QljKNVXs0InK7yGrx+BWm+?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?RUiVFPpbEP2IXYrm5Cfv5Rb9JcTg+VgdKf0JecLufwXy5d5Y0e531EYlgT?=
+ =?iso-8859-1?Q?a/xvED68xMY+15qL9syzuHm5AdOmo2qbjbDPCRMxOruYfwIJQM0DhCpkpc?=
+ =?iso-8859-1?Q?w/rWIWpB2n/DFv+c1QTIsIdA0xqqreEgo831+7UlBsvEa9nUbezE9nHw+b?=
+ =?iso-8859-1?Q?KKz/4F5Tlx2DOAhxrr+BBlaoDxjlgh4nMBRoiUjaTX8xlJbFwo6fLK12ag?=
+ =?iso-8859-1?Q?xyLWRGP/i/xhNyi0CM1yJuPWUg9x1A79YbnkULz+z7mi+7/zPjJOvZAxNt?=
+ =?iso-8859-1?Q?yjBxscdLIySSGGUYKeUAzCuaGOvIO1MZt7ME+CSEL1e3sGXmF2yfLp0hUX?=
+ =?iso-8859-1?Q?eIQ1NBquqIa39acSFYo4WctEpu8Pm7jj+mYHs/anRDgDBJLkz8hYclCdBa?=
+ =?iso-8859-1?Q?yoUVbWYN1bEqo8cEZ2w6Vu4PcAEKHuLHQpFURF26y29L1Mjv/nOmxWPADz?=
+ =?iso-8859-1?Q?7teFOln51Mowm5NNlIkYu2lOvztdUXJAgnSVWf/k1aBVLdcvxbyShceI3/?=
+ =?iso-8859-1?Q?qitnr19SjcIEMRAUffITlL1r9ovepnycotdpRyuK/j17PbALKzBf11k5rm?=
+ =?iso-8859-1?Q?HtjToqg3XsMBs8GHlYFyS8RSZpxkWkC4h/GqTKeKhOnr+KCsFQ1dsaDX6k?=
+ =?iso-8859-1?Q?jv3mmBhH50X8oSolfQsEjWal8pey9BvZusBL0F0uDNj7uSCLszmd9mSCUh?=
+ =?iso-8859-1?Q?r55FWUX7+FJk3Yx2lk0WGSr0nZ1zmehqVPXQPgUgI9p1b2pEp7mctojkh3?=
+ =?iso-8859-1?Q?zhdtaZGV7Eldfbnh8t8LWT972xOD19ZSdhiq0e7MirIyZUufce7dpf3DnK?=
+ =?iso-8859-1?Q?fhzNMDt5QZ58CuCSiP5zuIF2Mvv1nF0JEG+pX7ZtxnN9qNXZFNuknDo4Gq?=
+ =?iso-8859-1?Q?RyJMK9/uySGH9xRjYO0bkJuV7LUbINXNtzocpDqBAbTdlCOto7GBOPJ/Cb?=
+ =?iso-8859-1?Q?wfYIYwMqtekpPDfZZVPnjGRgAa2E+MmXEr0DmJNfzMlQNYW5NKyYnWJt+r?=
+ =?iso-8859-1?Q?KGdQynas6PB3O6e40Idhm2uV46KKPhC/Gk2+8ixtYILEBFS8jio4IZCv0D?=
+ =?iso-8859-1?Q?mVjVMvvmlTXeIa3ErFibI3KHwepR2QrjHvAr5gq+coRulEkCVtuN8T+fP2?=
+ =?iso-8859-1?Q?rFZxokM+cwhRycgvCvCg5j5TyeOiuVmu+0FFy9XLDy2w5gW2c9Lc8LoQvB?=
+ =?iso-8859-1?Q?Wa5A5j/OMKnUZDBoOT0Gb8V2Ktgxm3iLV6IEfdvEcA+Ayl6tOfI6kfVp9X?=
+ =?iso-8859-1?Q?F23CWDH8iiWuKkPBqvz7pqIEfd0TWFhJOHaldgkWUCCdKsfOlDuo8zt4p7?=
+ =?iso-8859-1?Q?VD6MAzU7S7xlc9mYkE2cDqwlNQAb40vECvoTuSO5WFlbyBXO/oLtf8y24u?=
+ =?iso-8859-1?Q?9Kusga1zWZTAJytwaTtV5ytP7+q8pChlEQRj8gIDeFRhhhhKF8R0gNb/Ii?=
+ =?iso-8859-1?Q?utCGLkSlkUfhCB9D4CqHfoPyhz4J47mkrd8XFq5MNj+pqQyajdB2jwEYqI?=
+ =?iso-8859-1?Q?pPyct3sHDCBrJW3F2EHLL6bfCUW6dqmVNpDB3p2MB7BY2xrQyMkgRrZDuD?=
+ =?iso-8859-1?Q?/rwewZRxjOEYvwoLAckoJvcSwHpT019mk4L1EsOHDs51TYZ0nBvatkmOF+?=
+ =?iso-8859-1?Q?DHWr6Dm9U/CjsdtCM2HXM1Bw3PEbo29neu+tASBaZa0zGcgmz0HtBSrg?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb39c5f3-2c91-4c66-70f9-08dd1e968fb6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2024 12:30:16.1142
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eR1LopzSZfC5YI/BbkEmJp6peKVMw0rFsiYCYBfkrSuVVKahawrlzNxiKumVDbOva1nUzouZSzZdHbTp6qVPBcjnsDCYWd4M1OXXNOPF2Y4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB13432
 
-On Wed, 2024-12-11 at 14:54 -0600, David Lechner wrote:
-> From: Axel Haslam <ahaslam@baylibre.com>
->=20
-> Add SPI offload support to stream TX buffers using DMA.
-> This allows loading samples to the DAC with a rate of 1 MSPS.
->=20
-> Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
+Hi Uwe,
 
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+> -----Original Message-----
+> From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
+> Sent: 29 November 2024 09:50
+> Subject: Re: [PATCH v22 3/4] pwm: Add support for RZ/G2L GPT
+>=20
+> Hello,
+>=20
+> as I already wrote in earlier revisions I find this driver complicated an=
+d wonder if this is because
+> the hardware is complicated or because the driver adds unneeded complexit=
+y. So here come a few
+> suggestions that might seem to be trivial but IMHO simplify understanding=
+ the driver.
+>=20
 
->=20
-> v6 changes: new patch in v6
-> ---
-> =C2=A0drivers/iio/dac/Kconfig=C2=A0 |=C2=A0=C2=A0 3 +
-> =C2=A0drivers/iio/dac/ad5791.c | 150
-> +++++++++++++++++++++++++++++++++++++++++++++++
-> =C2=A02 files changed, 153 insertions(+)
->=20
-> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-> index
-> 4cde34e8c8e3356aa41bcd2cba38d67d5c6f8049..f6c5cb632acbdc2432f60b163452bb0=
-c5f89
-> fa72 100644
-> --- a/drivers/iio/dac/Kconfig
-> +++ b/drivers/iio/dac/Kconfig
-> @@ -296,6 +296,9 @@ config AD5770R
-> =C2=A0config AD5791
-> =C2=A0	tristate "Analog Devices AD5760/AD5780/AD5781/AD5790/AD5791 DAC SP=
-I
-> driver"
-> =C2=A0	depends on SPI
-> +	select SPI_OFFLOAD
-> +	select IIO_BUFFER
-> +	select IIO_BUFFER_DMAENGINE
-> =C2=A0	help
-> =C2=A0	=C2=A0 Say yes here to build support for Analog Devices AD5760, AD=
-5780,
-> =C2=A0	=C2=A0 AD5781, AD5790, AD5791 High Resolution Voltage Output Digit=
-al to
-> diff --git a/drivers/iio/dac/ad5791.c b/drivers/iio/dac/ad5791.c
-> index
-> 24462cb020e19e8e2c6faa13109ac047cf423c37..a2953a9a4e5d5bc17c9c4a8281be4b4=
-1b1af
-> 5de8 100644
-> --- a/drivers/iio/dac/ad5791.c
-> +++ b/drivers/iio/dac/ad5791.c
-> @@ -15,9 +15,12 @@
-> =C2=A0#include <linux/module.h>
-> =C2=A0#include <linux/regulator/consumer.h>
-> =C2=A0#include <linux/slab.h>
-> +#include <linux/spi/offload/consumer.h>
-> =C2=A0#include <linux/spi/spi.h>
-> =C2=A0#include <linux/sysfs.h>
-> +#include <linux/units.h>
-> =C2=A0
-> +#include <linux/iio/buffer-dmaengine.h>
-> =C2=A0#include <linux/iio/dac/ad5791.h>
-> =C2=A0#include <linux/iio/iio.h>
-> =C2=A0#include <linux/iio/sysfs.h>
-> @@ -64,11 +67,13 @@
-> =C2=A0 * struct ad5791_chip_info - chip specific information
-> =C2=A0 * @name:		name of the dac chip
-> =C2=A0 * @channel:		channel specification
-> + * @channel_offload:	channel specification for offload
-> =C2=A0 * @get_lin_comp:	function pointer to the device specific function
-> =C2=A0 */
-> =C2=A0struct ad5791_chip_info {
-> =C2=A0	const char *name;
-> =C2=A0	const struct iio_chan_spec channel;
-> +	const struct iio_chan_spec channel_offload;
-> =C2=A0	int (*get_lin_comp)(unsigned int span);
-> =C2=A0};
-> =C2=A0
-> @@ -81,6 +86,11 @@ struct ad5791_chip_info {
-> =C2=A0 * @gpio_clear:		clear gpio
-> =C2=A0 * @gpio_ldac:		load dac gpio
-> =C2=A0 * @chip_info:		chip model specific constants
-> + * @offload_msg:	spi message used for offload
-> + * @offload_xfer:	spi transfer used for offload
-> + * @offload:		offload device
-> + * @offload_trigger:	offload trigger
-> + * @offload_trigger_hz:	offload sample rate
-> =C2=A0 * @vref_mv:		actual reference voltage used
-> =C2=A0 * @vref_neg_mv:	voltage of the negative supply
-> =C2=A0 * @ctrl:		control register cache
-> @@ -96,6 +106,11 @@ struct ad5791_state {
-> =C2=A0	struct gpio_desc		*gpio_clear;
-> =C2=A0	struct gpio_desc		*gpio_ldac;
-> =C2=A0	const struct ad5791_chip_info	*chip_info;
-> +	struct spi_message		offload_msg;
-> +	struct spi_transfer		offload_xfer;
-> +	struct spi_offload		*offload;
-> +	struct spi_offload_trigger	*offload_trigger;
-> +	unsigned int			offload_trigger_hz;
-> =C2=A0	unsigned short			vref_mv;
-> =C2=A0	unsigned int			vref_neg_mv;
-> =C2=A0	unsigned			ctrl;
-> @@ -232,6 +247,25 @@ static int ad5780_get_lin_comp(unsigned int span)
-> =C2=A0		return AD5780_LINCOMP_10_20;
-> =C2=A0}
-> =C2=A0
-> +static int ad5791_set_sample_freq(struct ad5791_state *st, int val)
-> +{
-> +	struct spi_offload_trigger_config config =3D {
-> +		.type =3D SPI_OFFLOAD_TRIGGER_PERIODIC,
-> +		.periodic =3D {
-> +			.frequency_hz =3D val,
-> +		},
-> +	};
-> +	int ret;
-> +
-> +	ret =3D spi_offload_trigger_validate(st->offload_trigger, &config);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->offload_trigger_hz =3D config.periodic.frequency_hz;
-> +
-> +	return 0;
-> +}
-> +
-> =C2=A0static int ad5791_read_raw(struct iio_dev *indio_dev,
-> =C2=A0			=C2=A0=C2=A0 struct iio_chan_spec const *chan,
-> =C2=A0			=C2=A0=C2=A0 int *val,
-> @@ -259,6 +293,9 @@ static int ad5791_read_raw(struct iio_dev *indio_dev,
-> =C2=A0		do_div(val64, st->vref_mv);
-> =C2=A0		*val =3D -val64;
-> =C2=A0		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		*val =3D st->offload_trigger_hz;
-> +		return IIO_VAL_INT;
-> =C2=A0	default:
-> =C2=A0		return -EINVAL;
-> =C2=A0	}
-> @@ -299,6 +336,24 @@ static const struct ad5791_chip_info _name##_chip_in=
-fo =3D
-> {		\
-> =C2=A0			},						\
-> =C2=A0			.ext_info =3D ad5791_ext_info,			\
-> =C2=A0	},								\
-> +	.channel_offload =3D {						\
-> +			.type =3D IIO_VOLTAGE,				\
-> +			.output =3D 1,					\
-> +			.indexed =3D 1,					\
-> +			.address =3D AD5791_ADDR_DAC0,			\
-> +			.channel =3D 0,					\
-> +			.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),	\
-> +			.info_mask_shared_by_type =3D BIT(IIO_CHAN_INFO_SCALE)
-> |	\
-> +				BIT(IIO_CHAN_INFO_OFFSET),		\
-> +			.info_mask_shared_by_all =3D
-> BIT(IIO_CHAN_INFO_SAMP_FREQ),\
-> +			.scan_type =3D {					\
-> +				.sign =3D 'u',				\
-> +				.realbits =3D (bits),			\
-> +				.storagebits =3D 32,			\
-> +				.shift =3D (_shift),			\
-> +			},						\
-> +			.ext_info =3D ad5791_ext_info,			\
-> +	},								\
-> =C2=A0}
-> =C2=A0
-> =C2=A0AD5791_DEFINE_CHIP_INFO(ad5760, 16, 4, ad5780_get_lin_comp);
-> @@ -322,16 +377,95 @@ static int ad5791_write_raw(struct iio_dev *indio_d=
-ev,
-> =C2=A0
-> =C2=A0		return ad5791_spi_write(st, chan->address, val);
-> =C2=A0
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		if (val < 0 || val2 < 0)
-> +			return -EINVAL;
-> +		return ad5791_set_sample_freq(st, val);
-> =C2=A0	default:
-> =C2=A0		return -EINVAL;
-> =C2=A0	}
-> =C2=A0}
-> =C2=A0
-> +static int ad5791_buffer_preenable(struct iio_dev *indio_dev)
-> +{
-> +	struct ad5791_state *st =3D iio_priv(indio_dev);
-> +	struct spi_offload_trigger_config config =3D {
-> +		.type =3D SPI_OFFLOAD_TRIGGER_PERIODIC,
-> +		.periodic =3D {
-> +			.frequency_hz =3D st->offload_trigger_hz,
-> +		},
-> +	};
-> +
-> +	if (st->pwr_down)
-> +		return -EINVAL;
-> +
-> +	return spi_offload_trigger_enable(st->offload, st->offload_trigger,
-> +					 &config);
-> +}
-> +
-> +static int ad5791_buffer_postdisable(struct iio_dev *indio_dev)
-> +{
-> +	struct ad5791_state *st =3D iio_priv(indio_dev);
-> +
-> +	spi_offload_trigger_disable(st->offload, st->offload_trigger);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct iio_buffer_setup_ops ad5791_buffer_setup_ops =3D {
-> +	.preenable =3D &ad5791_buffer_preenable,
-> +	.postdisable =3D &ad5791_buffer_postdisable,
-> +};
-> +
-> +static int ad5791_offload_setup(struct iio_dev *indio_dev)
-> +{
-> +	struct ad5791_state *st =3D iio_priv(indio_dev);
-> +	struct spi_device *spi =3D st->spi;
-> +	struct dma_chan *tx_dma;
-> +	int ret;
-> +
-> +	st->offload_trigger =3D devm_spi_offload_trigger_get(&spi->dev,
-> +		st->offload, SPI_OFFLOAD_TRIGGER_PERIODIC);
-> +	if (IS_ERR(st->offload_trigger))
-> +		return dev_err_probe(&spi->dev, PTR_ERR(st->offload_trigger),
-> +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get offload trigger\n");
-> +
-> +	ret =3D ad5791_set_sample_freq(st, 1 * MEGA);
-> +	if (ret)
-> +		return dev_err_probe(&spi->dev, ret,
-> +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to init sample rate\n");
-> +
-> +	tx_dma =3D devm_spi_offload_tx_stream_request_dma_chan(&spi->dev,
-> +							=C2=A0=C2=A0=C2=A0=C2=A0 st->offload);
-> +	if (IS_ERR(tx_dma))
-> +		return dev_err_probe(&spi->dev, PTR_ERR(tx_dma),
-> +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get offload TX DMA\n");
-> +
-> +	ret =3D devm_iio_dmaengine_buffer_setup_with_handle(&spi->dev,
-> +		indio_dev, tx_dma, IIO_BUFFER_DIRECTION_OUT);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->offload_xfer.len =3D 4;
-> +	st->offload_xfer.bits_per_word =3D 24;
-> +	st->offload_xfer.offload_flags =3D SPI_OFFLOAD_XFER_TX_STREAM;
-> +
-> +	spi_message_init_with_transfers(&st->offload_msg, &st->offload_xfer,
-> 1);
-> +	st->offload_msg.offload =3D st->offload;
-> +
-> +	return devm_spi_optimize_message(&spi->dev, st->spi, &st-
-> >offload_msg);
-> +}
-> +
-> =C2=A0static const struct iio_info ad5791_info =3D {
-> =C2=A0	.read_raw =3D &ad5791_read_raw,
-> =C2=A0	.write_raw =3D &ad5791_write_raw,
-> =C2=A0};
-> =C2=A0
-> +static const struct spi_offload_config ad5791_offload_config =3D {
-> +	.capability_flags =3D SPI_OFFLOAD_CAP_TRIGGER |
-> +			=C2=A0=C2=A0=C2=A0 SPI_OFFLOAD_CAP_TX_STREAM_DMA,
-> +};
-> +
-> =C2=A0static int ad5791_probe(struct spi_device *spi)
-> =C2=A0{
-> =C2=A0	const struct ad5791_platform_data *pdata =3D dev_get_platdata(&spi=
--
-> >dev);
-> @@ -416,6 +550,21 @@ static int ad5791_probe(struct spi_device *spi)
-> =C2=A0	indio_dev->channels =3D &st->chip_info->channel;
-> =C2=A0	indio_dev->num_channels =3D 1;
-> =C2=A0	indio_dev->name =3D st->chip_info->name;
-> +
-> +	st->offload =3D devm_spi_offload_get(&spi->dev, spi,
-> &ad5791_offload_config);
-> +	ret =3D PTR_ERR_OR_ZERO(st->offload);
-> +	if (ret && ret !=3D -ENODEV)
-> +		return dev_err_probe(&spi->dev, ret, "failed to get
-> offload\n");
-> +
-> +	if (ret !=3D -ENODEV) {
-> +		indio_dev->channels =3D &st->chip_info->channel_offload;
-> +		indio_dev->setup_ops =3D &ad5791_buffer_setup_ops;
-> +		ret =3D=C2=A0 ad5791_offload_setup(indio_dev);
-> +		if (ret)
-> +			return dev_err_probe(&spi->dev, ret,
-> +					=C2=A0=C2=A0=C2=A0=C2=A0 "fail to setup offload\n");
-> +	}
-> +
-> =C2=A0	return devm_iio_device_register(&spi->dev, indio_dev);
-> =C2=A0}
-> =C2=A0
-> @@ -452,3 +601,4 @@ module_spi_driver(ad5791_driver);
-> =C2=A0MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
-> =C2=A0MODULE_DESCRIPTION("Analog Devices AD5760/AD5780/AD5781/AD5790/AD57=
-91 DAC");
-> =C2=A0MODULE_LICENSE("GPL v2");
-> +MODULE_IMPORT_NS("IIO_DMAENGINE_BUFFER");
->=20
+As discussed, I am going with simplified version of driver with Limitation =
+section updated with
+
+* - When both channels are used, the period of both IOs in the HW channel
+*   must be same (for now).
+
+Later we can enhance the driver for handling updating period for second IO.
+I will send the next version with remaining review comments incorporated.
+
+Cheers,
+Biju
+
 
 
