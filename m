@@ -1,80 +1,80 @@
-Return-Path: <linux-pwm+bounces-4370-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4371-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F9449F4AB6
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Dec 2024 13:11:39 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEA309F4AC0
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Dec 2024 13:13:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0ACB1189103B
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Dec 2024 12:11:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BDAC27A064D
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Dec 2024 12:13:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39DB21F1309;
-	Tue, 17 Dec 2024 12:11:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F134E1EB9E8;
+	Tue, 17 Dec 2024 12:13:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVaaqhuj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZTXYirW"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7348B1F03DF;
-	Tue, 17 Dec 2024 12:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F314D8CE;
+	Tue, 17 Dec 2024 12:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734437491; cv=none; b=AyOCCAFi0cs+MsmaQfDUpg1LQIvEvNZi8yIdh5TuRMzIs25RRc4sYQBcrFsZ6w6SLpVEN8kest9vro5YTNDMaQh7OSgV8P/yj+ES2d+QFXcSkOipLKNLH01ZeMz6oI80MihhekpgGl6qenN8+UI73xedU+7ey9SuaLUbK70a1UU=
+	t=1734437629; cv=none; b=qxpwuJNYqimKrHtzEW5XR/ZwLh36/MC1Ufeu4qg9kVDW0zO2F0q1TQ4C1gLIzApowe+VgawFQYFL7mojtUTpcNdD4rZRjauF237r5iNQjjiE654QiUweI/fnN3Wie1kjMRNvEsUt5QFMr/alC2dIu1IeKnEPMRCFrbHV2glMDnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734437491; c=relaxed/simple;
-	bh=92hiuZoDJVVqkg6GS6ptwsHQDbEARb7eXo/A7Bik7VY=;
+	s=arc-20240116; t=1734437629; c=relaxed/simple;
+	bh=OtPHWwYDEm1c0eAndnDwaxCRun/qZ23tLwe8SVhQaNc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Cenl0JhG63kNaVqBYFpknbhGqhs7av7JongZFJLmS7nHOYrA3x/Ks7n1HeKtCRHpEMWHRHpIp5GWebFTooaXdHabZaZfmI/t7c+pJKBqq5UPhiNLZr+DCHK+ccSU5a0AWpbi6w6ZlVb2RaEZnK4kB46GnxjrgEZvEa4mDTo2bec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nVaaqhuj; arc=none smtp.client-ip=209.85.208.42
+	 Content-Type:MIME-Version; b=AQqqrKbtjsNZyqxOnhLAzXsu4uylcBv7zcKBWbzhtT+sbQhoAzON8hQGGxHCY469jjZtiMIJIeuYuayv8znAiIfyQTMm1+aj8GmVT08O+oqn127WsSLd8msQ9bfXtr7I40csdp02ygHGSc1NnIz0TsjNKK3k+tVbETVsc2O2Pk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bZTXYirW; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5d3ea065b79so265049a12.3;
-        Tue, 17 Dec 2024 04:11:28 -0800 (PST)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a9f1c590ecdso898478466b.1;
+        Tue, 17 Dec 2024 04:13:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734437487; x=1735042287; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1734437626; x=1735042426; darn=vger.kernel.org;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=rss0gcMEDxi1uFXZhs0hLyP66dPbA4O8zghIZurhz9U=;
-        b=nVaaqhujmB572ehC86byoDYNTsTwfNujvtUCR6MQzITVJl84a7nkk3vw7DlsI2vGjb
-         xfjxw8EDs0vPBlxTs8N9LTbM2w/lSL+f/WJO9NTCvR/HY6XPssCr0Emi9f3D3eYPzxjQ
-         XydQ2rrc6Rh8JHjcIKczeREpY2RiRKQcJYXofvOp1/Usb6uJZDRi5It2DIr5+WOun48E
-         SEATQlmdJplZRmIotx2546jlWLNB2S2/fJV+UMItkIrtXhIiNwwBR1yBVa5kUR67aNKo
-         tj6PmswUSWftmT9s7p/rt85Aev2aZ8fhySLXZpe9w1GgllwPAOnluJ/L6DUatr0W1l3D
-         cL8Q==
+        bh=yjujiW/cvB722V1/D/rPQofNjp3fdkA4kH1I2dkQcmc=;
+        b=bZTXYirWkRUPA2u73E7/zjsxvTaBKuzpR2FwRQaEpj91UaB0IGXwfON4Mykaek/0c/
+         eGwU0208B2L6v1NLTQXjRm1BV4Mu/mCDrw+OS+V2N5D4hjwY7n1O90xGIEBQJRGmlho6
+         EtWL0H61ZZYJeTbD5zzOhjD1La53g8C1P0XkYtTxPRjwoB7y5k9Mfj+TLYGlY34iw3El
+         +0OY+OwOeIh4PdfYz6VJZSD1x0dwosPQQALH1CLiou//JO2Hi9TZKyBpHBvyCt8NJJyY
+         pr49dCq0IS4DdBCifFxwCBn5YChvzfAEnZp1x8WOuUIGFXuuHRNmSO7MxsYYSeTRYX1s
+         KB/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734437487; x=1735042287;
+        d=1e100.net; s=20230601; t=1734437626; x=1735042426;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=rss0gcMEDxi1uFXZhs0hLyP66dPbA4O8zghIZurhz9U=;
-        b=dCWcs/5yiZm+TozMHaMNyGYP3eduNQKDZb0usYwzND6gCe4+6zNOcjllqqkEweq9JI
-         enWL1wEjmUYtXblcbcDoBBUUCALBQknPCexWyhnP8JvxyIm84747w2fnByhmK+YFv8dQ
-         6pGE98/GYU7iPOJdM8fxZLkHGqA5jMXVVCoYh1d3vfFPsNoV/Fgc0TrFbvXfihzl21lJ
-         rtsgqQ5lux9YEA69I6J/rAsiMLoT6ws9GEq3mEwGrnCKQxqpJdZVUN3C5javEDyM31ws
-         j0ArAz7hILc9b1v6artoSJUb0mxBu0Ob2fcmC+kW3mTnWx7cRI9wTkfWnglpYMsul4JU
-         BYhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5Jq/Ap1/v2UE1cBD9ZFPqV3XTtQDGGk2RU8G5x1BHCSExpJ1YPII2YZ7bwT68GGXqhWnvNzfE7wtL@vger.kernel.org, AJvYcCWLCLE2+8pvCQjn5l7uCa9zLRATCotarlHEj81WsgS56RMYAhLx3Fzj5D8drTo3gTHgE07ICEGUTtYh@vger.kernel.org, AJvYcCWseJZ/Vz96VP2X2C9NKNn4AU1ZV13ZFnDyGo1iWTm8DWAqfQNdoC9LfrRkDNrYlAlzYkGHypAinkVvvcg0@vger.kernel.org, AJvYcCXMYofRTuqPaLIT9tga4WBi+TIEmshjlTP5tK0gMbTCcyF+RQmUO35P2mag9memP/1G/7E39PZkbwlY@vger.kernel.org, AJvYcCXMghi3Rm8pK0K6RDBKpJxBfl40vGV/dpXV+pLDOKius0H9vrrpeoRBm4g+H8HyvLN0AvxgRIpeJAKi@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyWwRYsbbv8idk3CmQrHjUP2hM28SIXw+qXIRVlEE3N/LDAIAO
-	A2FfSGk1hZwfcnLOIxRoet44XwAzUqTkvrvf0SpmySYviIMkcJ5/
-X-Gm-Gg: ASbGncs99RUUmGG9IssuBByKG5KG4PVsgXZUQGvuN+hsWKwa97FLXSO2je+Dx5vpM1K
-	za58Imj1+0aNgGTSSIKIWIjy8dMruJb+XGFRQIgIDdmx1vP57edrV8Q849A1c3UJREx9xvHW4UX
-	CyiY79q9cR0l3oNZK4SHqXllPyjntJnkl3xfxxxB32bUXDPOT6p95lbDXlkNSRaZmND5zlhpthZ
-	NcwiCOC34N4jZuBkMX4w7URMJpCUsVydrVuVYJbaSZGHevT6++MlWbksAFqyUd76fRp5OTS4Lcw
-	B65KNsNPfvO5+zkWtaxjK0FA6imPEOEc6jC23004LMQithD6SbAfooG1p4vo2hWIdshEgUH82by
-	U8Y7DWr89J2Y6hQ==
-X-Google-Smtp-Source: AGHT+IFkpZz/013bL7nBOw87XIZBCdkZbOacL9nal3qYFLpyP8kvn9P2VuvSyXQK2N2n2g9Cy3qrmA==
-X-Received: by 2002:a17:906:7304:b0:aa6:94c0:f755 with SMTP id a640c23a62f3a-aab778c1eaemr1752086566b.1.1734437486483;
-        Tue, 17 Dec 2024 04:11:26 -0800 (PST)
+        bh=yjujiW/cvB722V1/D/rPQofNjp3fdkA4kH1I2dkQcmc=;
+        b=YFaiuB44mBHJumtI+LlVmZkG/rhFFvZ1gej2hVd8ZfHyEhKCqTNdHzkE7CNQt4jjf2
+         oUPfb0EBHB1k4WdRyGnS9i6g9ebmJwXCC/nYxVDnZcAPSLWd1FfUtxL4aL0kDMlDaBAu
+         glWg+WlQ5jGJkU8mYVeolUVRKiNgHXtUpBjRtxLhOn21aW8NYDe8yj0tPZT1rkk9xX1M
+         uadSVx9/qbcp6Kda5sH0wKtJpRmHv+wrQyLhyQY84xE2abGGd+VE9a8MYrBb9QaPcmWp
+         /o3n1UI9d24xCjheiCNmX3ynlZ2HgiWReg9zNiJUknnedFThcpFumL/J1WX3X2lW2qtB
+         NeEw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7N9BAiD1w3SXaVAsdQ1cLQ3RvDf+52yCOSkRZFo4j5omOCWWuNZky/mfsWwbEsSjUAMd0t4zRrShW9KxL@vger.kernel.org, AJvYcCVrkGLc6cWTwSlXrYqahrW5Swzde1F3AKGT2EXc57ZGaiTkXkF9zM36tmRTbXdsho6Pzc2aiYPoQrm4@vger.kernel.org, AJvYcCVt2ej0Voa96ZGrfyKkEhoyPDN/jiJ4EuUVx4eqo0PDZGj8X103NIPgd+/SXgJuWQnVv3r8rO24a3BP@vger.kernel.org, AJvYcCX+b2UIVdx5vEpqhdAyYBtEi8xeKTxMq/6NpasO2+7iWMTp8zXQBonCbvfqpzH/BUWn+rhiWdk2O2Ap@vger.kernel.org, AJvYcCXH5gaVVoG5h4guwgwZTytIaaZ2kPOh+sFbtjfCTm5UBkLJlRUAIvRhRplYQ4Dd1JKCA2qRXdxNcLZ6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7hJOJRVpoIHECaz22yyVGa/XSwhSQ/WJ40usk5Ou1M4zZ1AhW
+	URIo8VRIzE6b94lgn6SWwOLFlnL/je04/TCRarFOskku15uiJqk3
+X-Gm-Gg: ASbGncu30Wc1prRoUDe05G/cEa9h0FsxZntTsHwW/XNmg0vkzU5c4I91J6BTBK1NrcJ
+	tQ+1rIdDrVXQNrNqnPISeqM1fsF7Dndnr6LyTOKTtKagQhGWi+bC3XhmdfPGFxERhp2Vo4vmxef
+	lN5S1v1BCFAvl2oUq6eDpN+0SvAPZCuyfws70DI/YZoXIemkPCFVpdByUzVrYkVAU8lLBsQSqTL
+	10e/3TJimHPSXsD86+UOvEqdNamjcca/7IanLQRVft+pm/N3yHObMo+FZZfhId+2IZOpb/pdNel
+	/RJQxBmrhsG2ixvLQ7Yxl/bt701lTjFEOb+zqr0q6qItUagCNIN4Eebo+Dsp5ZxswBjhuXuwrqr
+	wuh8FlT73M1y6Hw==
+X-Google-Smtp-Source: AGHT+IHoPtEFMa9olCmn32dyxjmNPyn9UCOKAbIP1jXvhZ7Me2Wv9qgdM7HcD2e+RVCj39gW72KRBw==
+X-Received: by 2002:a17:907:1c0f:b0:aa6:b4b3:5925 with SMTP id a640c23a62f3a-aab77909d61mr1466654066b.14.1734437626005;
+        Tue, 17 Dec 2024 04:13:46 -0800 (PST)
 Received: from ?IPv6:2003:f6:ef10:f100:a045:a7a7:11d0:8676? (p200300f6ef10f100a045a7a711d08676.dip0.t-ipconnect.de. [2003:f6:ef10:f100:a045:a7a7:11d0:8676])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aab96359fdfsm439453166b.93.2024.12.17.04.11.25
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aab9638ec48sm440699266b.147.2024.12.17.04.13.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2024 04:11:26 -0800 (PST)
-Message-ID: <f5ff7ac7016a10824062caf3cd2eccce05e3dc82.camel@gmail.com>
-Subject: Re: [PATCH v6 16/17] iio: dac: ad5791: sort include directives
+        Tue, 17 Dec 2024 04:13:45 -0800 (PST)
+Message-ID: <c54da9aa3edb841b1e3d5f2fbfd0b29e89da1184.camel@gmail.com>
+Subject: Re: [PATCH v6 17/17] iio: dac: ad5791: Add offload support
 From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
 To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>, 
  Jonathan Cameron
@@ -87,12 +87,13 @@ Cc: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, Michael
  <lars@metafoo.de>, David Jander	 <david@protonic.nl>, Martin Sperl
  <kernel@martin.sperl.org>, 	linux-spi@vger.kernel.org,
  devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, 	linux-pwm@vger.kernel.org
-Date: Tue, 17 Dec 2024 13:15:57 +0100
-In-Reply-To: <20241211-dlech-mainline-spi-engine-offload-2-v6-16-88ee574d5d03@baylibre.com>
+ linux-iio@vger.kernel.org, 	linux-pwm@vger.kernel.org, Axel Haslam
+ <ahaslam@baylibre.com>
+Date: Tue, 17 Dec 2024 13:18:16 +0100
+In-Reply-To: <20241211-dlech-mainline-spi-engine-offload-2-v6-17-88ee574d5d03@baylibre.com>
 References: 
 	<20241211-dlech-mainline-spi-engine-offload-2-v6-0-88ee574d5d03@baylibre.com>
-	 <20241211-dlech-mainline-spi-engine-offload-2-v6-16-88ee574d5d03@baylibre.com>
+	 <20241211-dlech-mainline-spi-engine-offload-2-v6-17-88ee574d5d03@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.54.2 
@@ -104,8 +105,12 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Wed, 2024-12-11 at 14:54 -0600, David Lechner wrote:
-> Sort includes alphabetically before we add more in a later patch.
+> From: Axel Haslam <ahaslam@baylibre.com>
 >=20
+> Add SPI offload support to stream TX buffers using DMA.
+> This allows loading samples to the DAC with a rate of 1 MSPS.
+>=20
+> Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
 > Signed-off-by: David Lechner <dlechner@baylibre.com>
 > ---
 
@@ -114,46 +119,286 @@ Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 >=20
 > v6 changes: new patch in v6
 > ---
-> =C2=A0drivers/iio/dac/ad5791.c | 16 ++++++++--------
-> =C2=A01 file changed, 8 insertions(+), 8 deletions(-)
+> =C2=A0drivers/iio/dac/Kconfig=C2=A0 |=C2=A0=C2=A0 3 +
+> =C2=A0drivers/iio/dac/ad5791.c | 150
+> +++++++++++++++++++++++++++++++++++++++++++++++
+> =C2=A02 files changed, 153 insertions(+)
 >=20
+> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+> index
+> 4cde34e8c8e3356aa41bcd2cba38d67d5c6f8049..f6c5cb632acbdc2432f60b163452bb0=
+c5f89
+> fa72 100644
+> --- a/drivers/iio/dac/Kconfig
+> +++ b/drivers/iio/dac/Kconfig
+> @@ -296,6 +296,9 @@ config AD5770R
+> =C2=A0config AD5791
+> =C2=A0	tristate "Analog Devices AD5760/AD5780/AD5781/AD5790/AD5791 DAC SP=
+I
+> driver"
+> =C2=A0	depends on SPI
+> +	select SPI_OFFLOAD
+> +	select IIO_BUFFER
+> +	select IIO_BUFFER_DMAENGINE
+> =C2=A0	help
+> =C2=A0	=C2=A0 Say yes here to build support for Analog Devices AD5760, AD=
+5780,
+> =C2=A0	=C2=A0 AD5781, AD5790, AD5791 High Resolution Voltage Output Digit=
+al to
 > diff --git a/drivers/iio/dac/ad5791.c b/drivers/iio/dac/ad5791.c
 > index
-> 57374f78f6b885e1d4f2fb452ac0563b85fc222e..24462cb020e19e8e2c6faa13109ac04=
-7cf42
-> 3c37 100644
+> 24462cb020e19e8e2c6faa13109ac047cf423c37..a2953a9a4e5d5bc17c9c4a8281be4b4=
+1b1af
+> 5de8 100644
 > --- a/drivers/iio/dac/ad5791.c
 > +++ b/drivers/iio/dac/ad5791.c
-> @@ -6,21 +6,21 @@
-> =C2=A0 * Copyright 2011 Analog Devices Inc.
-> =C2=A0 */
-> =C2=A0
-> -#include <linux/interrupt.h>
-> -#include <linux/fs.h>
-> -#include <linux/device.h>
-> +#include <linux/bitops.h>
-> =C2=A0#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/fs.h>
-> +#include <linux/interrupt.h>
-> =C2=A0#include <linux/kernel.h>
-> -#include <linux/spi/spi.h>
-> +#include <linux/module.h>
-> +#include <linux/regulator/consumer.h>
+> @@ -15,9 +15,12 @@
+> =C2=A0#include <linux/module.h>
+> =C2=A0#include <linux/regulator/consumer.h>
 > =C2=A0#include <linux/slab.h>
-> +#include <linux/spi/spi.h>
+> +#include <linux/spi/offload/consumer.h>
+> =C2=A0#include <linux/spi/spi.h>
 > =C2=A0#include <linux/sysfs.h>
-> -#include <linux/regulator/consumer.h>
-> -#include <linux/module.h>
-> -#include <linux/bitops.h>
+> +#include <linux/units.h>
 > =C2=A0
-> +#include <linux/iio/dac/ad5791.h>
+> +#include <linux/iio/buffer-dmaengine.h>
+> =C2=A0#include <linux/iio/dac/ad5791.h>
 > =C2=A0#include <linux/iio/iio.h>
 > =C2=A0#include <linux/iio/sysfs.h>
-> -#include <linux/iio/dac/ad5791.h>
+> @@ -64,11 +67,13 @@
+> =C2=A0 * struct ad5791_chip_info - chip specific information
+> =C2=A0 * @name:		name of the dac chip
+> =C2=A0 * @channel:		channel specification
+> + * @channel_offload:	channel specification for offload
+> =C2=A0 * @get_lin_comp:	function pointer to the device specific function
+> =C2=A0 */
+> =C2=A0struct ad5791_chip_info {
+> =C2=A0	const char *name;
+> =C2=A0	const struct iio_chan_spec channel;
+> +	const struct iio_chan_spec channel_offload;
+> =C2=A0	int (*get_lin_comp)(unsigned int span);
+> =C2=A0};
 > =C2=A0
-> =C2=A0#define AD5791_DAC_MASK			GENMASK(19, 0)
+> @@ -81,6 +86,11 @@ struct ad5791_chip_info {
+> =C2=A0 * @gpio_clear:		clear gpio
+> =C2=A0 * @gpio_ldac:		load dac gpio
+> =C2=A0 * @chip_info:		chip model specific constants
+> + * @offload_msg:	spi message used for offload
+> + * @offload_xfer:	spi transfer used for offload
+> + * @offload:		offload device
+> + * @offload_trigger:	offload trigger
+> + * @offload_trigger_hz:	offload sample rate
+> =C2=A0 * @vref_mv:		actual reference voltage used
+> =C2=A0 * @vref_neg_mv:	voltage of the negative supply
+> =C2=A0 * @ctrl:		control register cache
+> @@ -96,6 +106,11 @@ struct ad5791_state {
+> =C2=A0	struct gpio_desc		*gpio_clear;
+> =C2=A0	struct gpio_desc		*gpio_ldac;
+> =C2=A0	const struct ad5791_chip_info	*chip_info;
+> +	struct spi_message		offload_msg;
+> +	struct spi_transfer		offload_xfer;
+> +	struct spi_offload		*offload;
+> +	struct spi_offload_trigger	*offload_trigger;
+> +	unsigned int			offload_trigger_hz;
+> =C2=A0	unsigned short			vref_mv;
+> =C2=A0	unsigned int			vref_neg_mv;
+> =C2=A0	unsigned			ctrl;
+> @@ -232,6 +247,25 @@ static int ad5780_get_lin_comp(unsigned int span)
+> =C2=A0		return AD5780_LINCOMP_10_20;
+> =C2=A0}
 > =C2=A0
+> +static int ad5791_set_sample_freq(struct ad5791_state *st, int val)
+> +{
+> +	struct spi_offload_trigger_config config =3D {
+> +		.type =3D SPI_OFFLOAD_TRIGGER_PERIODIC,
+> +		.periodic =3D {
+> +			.frequency_hz =3D val,
+> +		},
+> +	};
+> +	int ret;
+> +
+> +	ret =3D spi_offload_trigger_validate(st->offload_trigger, &config);
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->offload_trigger_hz =3D config.periodic.frequency_hz;
+> +
+> +	return 0;
+> +}
+> +
+> =C2=A0static int ad5791_read_raw(struct iio_dev *indio_dev,
+> =C2=A0			=C2=A0=C2=A0 struct iio_chan_spec const *chan,
+> =C2=A0			=C2=A0=C2=A0 int *val,
+> @@ -259,6 +293,9 @@ static int ad5791_read_raw(struct iio_dev *indio_dev,
+> =C2=A0		do_div(val64, st->vref_mv);
+> =C2=A0		*val =3D -val64;
+> =C2=A0		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		*val =3D st->offload_trigger_hz;
+> +		return IIO_VAL_INT;
+> =C2=A0	default:
+> =C2=A0		return -EINVAL;
+> =C2=A0	}
+> @@ -299,6 +336,24 @@ static const struct ad5791_chip_info _name##_chip_in=
+fo =3D
+> {		\
+> =C2=A0			},						\
+> =C2=A0			.ext_info =3D ad5791_ext_info,			\
+> =C2=A0	},								\
+> +	.channel_offload =3D {						\
+> +			.type =3D IIO_VOLTAGE,				\
+> +			.output =3D 1,					\
+> +			.indexed =3D 1,					\
+> +			.address =3D AD5791_ADDR_DAC0,			\
+> +			.channel =3D 0,					\
+> +			.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),	\
+> +			.info_mask_shared_by_type =3D BIT(IIO_CHAN_INFO_SCALE)
+> |	\
+> +				BIT(IIO_CHAN_INFO_OFFSET),		\
+> +			.info_mask_shared_by_all =3D
+> BIT(IIO_CHAN_INFO_SAMP_FREQ),\
+> +			.scan_type =3D {					\
+> +				.sign =3D 'u',				\
+> +				.realbits =3D (bits),			\
+> +				.storagebits =3D 32,			\
+> +				.shift =3D (_shift),			\
+> +			},						\
+> +			.ext_info =3D ad5791_ext_info,			\
+> +	},								\
+> =C2=A0}
+> =C2=A0
+> =C2=A0AD5791_DEFINE_CHIP_INFO(ad5760, 16, 4, ad5780_get_lin_comp);
+> @@ -322,16 +377,95 @@ static int ad5791_write_raw(struct iio_dev *indio_d=
+ev,
+> =C2=A0
+> =C2=A0		return ad5791_spi_write(st, chan->address, val);
+> =C2=A0
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		if (val < 0 || val2 < 0)
+> +			return -EINVAL;
+> +		return ad5791_set_sample_freq(st, val);
+> =C2=A0	default:
+> =C2=A0		return -EINVAL;
+> =C2=A0	}
+> =C2=A0}
+> =C2=A0
+> +static int ad5791_buffer_preenable(struct iio_dev *indio_dev)
+> +{
+> +	struct ad5791_state *st =3D iio_priv(indio_dev);
+> +	struct spi_offload_trigger_config config =3D {
+> +		.type =3D SPI_OFFLOAD_TRIGGER_PERIODIC,
+> +		.periodic =3D {
+> +			.frequency_hz =3D st->offload_trigger_hz,
+> +		},
+> +	};
+> +
+> +	if (st->pwr_down)
+> +		return -EINVAL;
+> +
+> +	return spi_offload_trigger_enable(st->offload, st->offload_trigger,
+> +					 &config);
+> +}
+> +
+> +static int ad5791_buffer_postdisable(struct iio_dev *indio_dev)
+> +{
+> +	struct ad5791_state *st =3D iio_priv(indio_dev);
+> +
+> +	spi_offload_trigger_disable(st->offload, st->offload_trigger);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iio_buffer_setup_ops ad5791_buffer_setup_ops =3D {
+> +	.preenable =3D &ad5791_buffer_preenable,
+> +	.postdisable =3D &ad5791_buffer_postdisable,
+> +};
+> +
+> +static int ad5791_offload_setup(struct iio_dev *indio_dev)
+> +{
+> +	struct ad5791_state *st =3D iio_priv(indio_dev);
+> +	struct spi_device *spi =3D st->spi;
+> +	struct dma_chan *tx_dma;
+> +	int ret;
+> +
+> +	st->offload_trigger =3D devm_spi_offload_trigger_get(&spi->dev,
+> +		st->offload, SPI_OFFLOAD_TRIGGER_PERIODIC);
+> +	if (IS_ERR(st->offload_trigger))
+> +		return dev_err_probe(&spi->dev, PTR_ERR(st->offload_trigger),
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get offload trigger\n");
+> +
+> +	ret =3D ad5791_set_sample_freq(st, 1 * MEGA);
+> +	if (ret)
+> +		return dev_err_probe(&spi->dev, ret,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to init sample rate\n");
+> +
+> +	tx_dma =3D devm_spi_offload_tx_stream_request_dma_chan(&spi->dev,
+> +							=C2=A0=C2=A0=C2=A0=C2=A0 st->offload);
+> +	if (IS_ERR(tx_dma))
+> +		return dev_err_probe(&spi->dev, PTR_ERR(tx_dma),
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get offload TX DMA\n");
+> +
+> +	ret =3D devm_iio_dmaengine_buffer_setup_with_handle(&spi->dev,
+> +		indio_dev, tx_dma, IIO_BUFFER_DIRECTION_OUT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->offload_xfer.len =3D 4;
+> +	st->offload_xfer.bits_per_word =3D 24;
+> +	st->offload_xfer.offload_flags =3D SPI_OFFLOAD_XFER_TX_STREAM;
+> +
+> +	spi_message_init_with_transfers(&st->offload_msg, &st->offload_xfer,
+> 1);
+> +	st->offload_msg.offload =3D st->offload;
+> +
+> +	return devm_spi_optimize_message(&spi->dev, st->spi, &st-
+> >offload_msg);
+> +}
+> +
+> =C2=A0static const struct iio_info ad5791_info =3D {
+> =C2=A0	.read_raw =3D &ad5791_read_raw,
+> =C2=A0	.write_raw =3D &ad5791_write_raw,
+> =C2=A0};
+> =C2=A0
+> +static const struct spi_offload_config ad5791_offload_config =3D {
+> +	.capability_flags =3D SPI_OFFLOAD_CAP_TRIGGER |
+> +			=C2=A0=C2=A0=C2=A0 SPI_OFFLOAD_CAP_TX_STREAM_DMA,
+> +};
+> +
+> =C2=A0static int ad5791_probe(struct spi_device *spi)
+> =C2=A0{
+> =C2=A0	const struct ad5791_platform_data *pdata =3D dev_get_platdata(&spi=
+-
+> >dev);
+> @@ -416,6 +550,21 @@ static int ad5791_probe(struct spi_device *spi)
+> =C2=A0	indio_dev->channels =3D &st->chip_info->channel;
+> =C2=A0	indio_dev->num_channels =3D 1;
+> =C2=A0	indio_dev->name =3D st->chip_info->name;
+> +
+> +	st->offload =3D devm_spi_offload_get(&spi->dev, spi,
+> &ad5791_offload_config);
+> +	ret =3D PTR_ERR_OR_ZERO(st->offload);
+> +	if (ret && ret !=3D -ENODEV)
+> +		return dev_err_probe(&spi->dev, ret, "failed to get
+> offload\n");
+> +
+> +	if (ret !=3D -ENODEV) {
+> +		indio_dev->channels =3D &st->chip_info->channel_offload;
+> +		indio_dev->setup_ops =3D &ad5791_buffer_setup_ops;
+> +		ret =3D=C2=A0 ad5791_offload_setup(indio_dev);
+> +		if (ret)
+> +			return dev_err_probe(&spi->dev, ret,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 "fail to setup offload\n");
+> +	}
+> +
+> =C2=A0	return devm_iio_device_register(&spi->dev, indio_dev);
+> =C2=A0}
+> =C2=A0
+> @@ -452,3 +601,4 @@ module_spi_driver(ad5791_driver);
+> =C2=A0MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
+> =C2=A0MODULE_DESCRIPTION("Analog Devices AD5760/AD5780/AD5781/AD5790/AD57=
+91 DAC");
+> =C2=A0MODULE_LICENSE("GPL v2");
+> +MODULE_IMPORT_NS("IIO_DMAENGINE_BUFFER");
 >=20
 
 
