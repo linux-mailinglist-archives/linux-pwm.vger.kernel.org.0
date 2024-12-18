@@ -1,67 +1,67 @@
-Return-Path: <linux-pwm+bounces-4390-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4386-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D26299F60DD
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Dec 2024 10:06:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB28E9F60CB
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Dec 2024 10:05:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E9161894F98
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Dec 2024 09:06:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A61791893FA8
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Dec 2024 09:05:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AB0719B5A7;
-	Wed, 18 Dec 2024 09:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34964198E75;
+	Wed, 18 Dec 2024 09:04:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="fRKpb99T"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="kw/KQ2ZD"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7266C193079;
-	Wed, 18 Dec 2024 09:05:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4224A1922C0;
+	Wed, 18 Dec 2024 09:04:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734512708; cv=none; b=pfaEknCxcldba9eOdGphwID345B/pp6+9HchcWDPlM6Ffu6ZTbGoyEgziA/OilPqHxksjXwNuNN/9UOq4OszzCM9Y8AfArCblF6AxY3ysbvTU9sY04JZCO7VV8dI3xqEJcLAnLBDZow7XBGafDHPDiwUAdMBUBT8ndaYksjtfrg=
+	t=1734512697; cv=none; b=TofBetva/tWLmJh1Xba8edOIHHIxXg1GhOoaRCAE8HKUWZ3emPzBv5jMFGuRISwgFOnRYOr0fehQ8CnAE41Y6NzRCGUAq3HtLjCGuT7vjHk+rtdGCOreNOd8m1+WMF+ZZ4IBTdGzleaJUCCpu5qP2aX07W1skXv+RypJDf7p8pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734512708; c=relaxed/simple;
-	bh=d5nAHsd/s1xZH3Olsu4EW6v0GXusZzhy//mrIHwAobI=;
+	s=arc-20240116; t=1734512697; c=relaxed/simple;
+	bh=ZCndtc5ITnM65oultK7+AD4fiCpk+fScJTEcOUC8ilc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J6l9c1/hI1L0NP5nYUcXAkqJ+VfcA/YAKDO36owQXTEcqgkJ6ARMzG8r2RIpcV5M/tuQ/9EpU8MSGh1w7iiXzKhQIbihzunEcbLb6lZzeJjA9nadBzQe4ZVaZh0VoBLh15rBQ2F/Vxg++aX0cNr7Dvqv6miEVKx59dPoZsZAVRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=fRKpb99T; arc=none smtp.client-ip=91.207.212.93
+	 MIME-Version:Content-Type; b=V5TyaVoiD+HTB+UKIe16T+yDawoWdcuH+X9ecxBQPN2fNJah/W683ZAVUs8zVQu7/DHjUN0eNK7UPTB/Nlmeo84qT6NEAIO4dWWQxcyD3jPW/CQvoV36goMZ8m15EJ4HTUR1S3rJsRppQUkHNmG1sitXj7LWiNzh83rvqYK99z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=kw/KQ2ZD; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BI7Hs46023628;
-	Wed, 18 Dec 2024 10:04:56 +0100
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BI60Nv7011765;
+	Wed, 18 Dec 2024 10:04:45 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	dMDYAqPUlLt/uQuP5vZpK9yRBbdZHFpelAHBXteQuJA=; b=fRKpb99TT+YkM2IU
-	Ttlzrhg96C9CwhZfthg6HdmpHcbRKo8GOYUP+TWaE3Uh7AhHz0Q7UYFr1/tsBwyI
-	3Pn8jPunTI2gT67FUy2pAgP9ewbEpR+DKJ9kkgz1ysc3GkD2f6BCszkzSxHgARk4
-	u43sQikxUGZ1pL/KYGAiIVYo1ixxhFSNcgdRpiHp9hG8tiy5chNChmZ4eFF0Zzmk
-	/ym3B3z7jQ4FzGUOu47XoBUh+UIW+08grmIiTTmBaqOwqpHJovp1EmK7PDbrSGxV
-	rfoAzKzgwgMZEUmtm7gsV1CyvZHUq4F59766FG+Ts9o8k+U1a9kRCQKKlKnkRajo
-	x9zcOA==
+	+lTjR8Q9lHmpjW7EdKzwYrIkx1bGZyO/7h0hMlIzi6M=; b=kw/KQ2ZDnbLJGq12
+	etXrbtvXuh1sGyFH60AMY1u0MbaBXKTHQHHgXUUNtXkAubZzx1uOPPbEs70R3M/g
+	7aiTNo5Dfx3IH5PGkjPAojvV2zE14/muTdTqnUjaN0N23oTT/rYUVKDqZ12UawsK
+	UTU5To7k54XvdWlsfXAgKwBs6aO0SHhhtGjeRDdR3APsmwx0aoGi3vZBJagLijMK
+	HK6KICFLlwlwJEFVwchD0SsHyCsxfiPrdWmR1PMySfavciaBfqsovFbloHJEe1mR
+	wt7nXyJaAri/qNyrn22OkcOeIfDouhjTL/CQqHXjae6ob2l0SFi5EbdaGvCrbzJg
+	/W30gQ==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 43kfu8a4un-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 43krrcrnkc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Dec 2024 10:04:56 +0100 (CET)
+	Wed, 18 Dec 2024 10:04:44 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3B56340073;
-	Wed, 18 Dec 2024 10:03:57 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CCB6E25FAF2;
-	Wed, 18 Dec 2024 10:02:57 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
- (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id DFD914006D;
+	Wed, 18 Dec 2024 10:03:45 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 82F2F2545E2;
+	Wed, 18 Dec 2024 10:02:58 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
+ (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Wed, 18 Dec
- 2024 10:02:57 +0100
+ 2024 10:02:58 +0100
 Received: from localhost (10.48.86.222) by SAFDAG1NODE1.st.com (10.75.90.17)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Wed, 18 Dec
- 2024 10:02:57 +0100
+ 2024 10:02:58 +0100
 From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 To: <lee@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
         <conor+dt@kernel.org>, <alexandre.torgue@foss.st.com>,
@@ -71,9 +71,9 @@ CC: <catalin.marinas@arm.com>, <will@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
         <olivier.moysan@foss.st.com>
-Subject: [PATCH 4/9] counter: stm32-timer-cnt: add support for stm32mp25
-Date: Wed, 18 Dec 2024 10:01:48 +0100
-Message-ID: <20241218090153.742869-5-fabrice.gasnier@foss.st.com>
+Subject: [PATCH 5/9] pwm: stm32: add support for stm32mp25
+Date: Wed, 18 Dec 2024 10:01:49 +0100
+Message-ID: <20241218090153.742869-6-fabrice.gasnier@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20241218090153.742869-1-fabrice.gasnier@foss.st.com>
 References: <20241218090153.742869-1-fabrice.gasnier@foss.st.com>
@@ -91,46 +91,109 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
-Add support for STM32MP25 SoC. There are new counter modes that may be
-implemented in later. Still, use newly introduced compatible to handle
-this new HW variant and avoid being blocked with existing compatible
-in SoC dtsi file. Modes supported currently still remains compatible.
-New timer 20 has encoder capability, add it to the list.
+Add support for STM32MP25 SoC. Use newly introduced compatible to handle
+new features along with registers and bits diversity.
+The MFD part of the driver fills in ipidr, so it is used to check the
+hardware configuration register, when available to gather the number
+of PWM channels and complementary outputs.
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 ---
- drivers/counter/stm32-timer-cnt.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-stm32.c | 39 +++++++++++++++++++++++++++++++++++----
+ 1 file changed, 35 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
-index e75b69476a00..3d3384cbea87 100644
---- a/drivers/counter/stm32-timer-cnt.c
-+++ b/drivers/counter/stm32-timer-cnt.c
-@@ -669,12 +669,14 @@ static void stm32_timer_cnt_detect_channels(struct device *dev,
- 	dev_dbg(dev, "has %d cc channels\n", priv->nchannels);
+diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+index 17e591f61efb..99383e09920e 100644
+--- a/drivers/pwm/pwm-stm32.c
++++ b/drivers/pwm/pwm-stm32.c
+@@ -19,6 +19,7 @@
+ #define CCMR_CHANNEL_SHIFT 8
+ #define CCMR_CHANNEL_MASK  0xFF
+ #define MAX_BREAKINPUT 2
++#define MAX_PWM_OUTPUT 4
+ 
+ struct stm32_breakinput {
+ 	u32 index;
+@@ -775,10 +776,19 @@ static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
+ 	return stm32_pwm_apply_breakinputs(priv);
  }
  
--/* encoder supported on TIM1 TIM2 TIM3 TIM4 TIM5 TIM8 */
--#define STM32_TIM_ENCODER_SUPPORTED	(BIT(0) | BIT(1) | BIT(2) | BIT(3) | BIT(4) | BIT(7))
-+/* encoder supported on TIM1 TIM2 TIM3 TIM4 TIM5 TIM8 TIM20 */
-+#define STM32_TIM_ENCODER_SUPPORTED	(BIT(0) | BIT(1) | BIT(2) | BIT(3) | BIT(4) | BIT(7) | \
-+					 BIT(19))
+-static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
++static void stm32_pwm_detect_complementary(struct stm32_pwm *priv, struct stm32_timers *ddata)
+ {
+ 	u32 ccer;
  
- static const char * const stm32_timer_trigger_compat[] = {
- 	"st,stm32-timer-trigger",
- 	"st,stm32h7-timer-trigger",
-+	"st,stm32mp25-timer-trigger",
++	if (ddata->ipidr) {
++		u32 val;
++
++		/* Simply read from HWCFGR the number of complementary outputs (MP25). */
++		regmap_read(priv->regmap, TIM_HWCFGR1, &val);
++		priv->have_complementary_output = !!FIELD_GET(TIM_HWCFGR1_NB_OF_DT, val);
++		return;
++	}
++
+ 	/*
+ 	 * If complementary bit doesn't exist writing 1 will have no
+ 	 * effect so we can detect it.
+@@ -790,11 +800,31 @@ static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
+ 	priv->have_complementary_output = (ccer != 0);
+ }
+ 
+-static unsigned int stm32_pwm_detect_channels(struct regmap *regmap,
++static unsigned int stm32_pwm_detect_channels(struct stm32_timers *ddata,
+ 					      unsigned int *num_enabled)
+ {
++	struct regmap *regmap = ddata->regmap;
+ 	u32 ccer, ccer_backup;
+ 
++	if (ddata->ipidr) {
++		unsigned int npwm = 0;
++		u32 val;
++
++		/* Simply deduce from HWCFGR the number of outputs (MP25). */
++		regmap_read(regmap, TIM_HWCFGR1, &val);
++
++		/*
++		 * Timers may have more capture/compare channels than the
++		 * actual number of PWM channel outputs (e.g. TIM_CH[1..4]).
++		 */
++		npwm = FIELD_GET(TIM_HWCFGR1_NB_OF_CC, val);
++
++		regmap_read(regmap, TIM_CCER, &ccer);
++		*num_enabled = hweight32(ccer & TIM_CCER_CCXE);
++
++		return npwm < MAX_PWM_OUTPUT ? npwm : MAX_PWM_OUTPUT;
++	}
++
+ 	/*
+ 	 * If channels enable bits don't exist writing 1 will have no
+ 	 * effect so we can detect and count them.
+@@ -820,7 +850,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
+ 	unsigned int i;
+ 	int ret;
+ 
+-	npwm = stm32_pwm_detect_channels(ddata->regmap, &num_enabled);
++	npwm = stm32_pwm_detect_channels(ddata, &num_enabled);
+ 
+ 	chip = devm_pwmchip_alloc(dev, npwm, sizeof(*priv));
+ 	if (IS_ERR(chip))
+@@ -841,7 +871,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
+ 		return dev_err_probe(dev, ret,
+ 				     "Failed to configure breakinputs\n");
+ 
+-	stm32_pwm_detect_complementary(priv);
++	stm32_pwm_detect_complementary(priv, ddata);
+ 
+ 	ret = devm_clk_rate_exclusive_get(dev, priv->clk);
+ 	if (ret)
+@@ -911,6 +941,7 @@ static DEFINE_SIMPLE_DEV_PM_OPS(stm32_pwm_pm_ops, stm32_pwm_suspend, stm32_pwm_r
+ 
+ static const struct of_device_id stm32_pwm_of_match[] = {
+ 	{ .compatible = "st,stm32-pwm",	},
++	{ .compatible = "st,stm32mp25-pwm", },
+ 	{ /* end node */ },
  };
- 
- static int stm32_timer_cnt_probe_encoder(struct device *dev,
-@@ -846,6 +848,7 @@ static SIMPLE_DEV_PM_OPS(stm32_timer_cnt_pm_ops, stm32_timer_cnt_suspend,
- 
- static const struct of_device_id stm32_timer_cnt_of_match[] = {
- 	{ .compatible = "st,stm32-timer-counter", },
-+	{ .compatible = "st,stm32mp25-timer-counter", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, stm32_timer_cnt_of_match);
+ MODULE_DEVICE_TABLE(of, stm32_pwm_of_match);
 -- 
 2.25.1
 
