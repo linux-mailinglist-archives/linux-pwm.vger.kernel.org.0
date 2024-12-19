@@ -1,120 +1,80 @@
-Return-Path: <linux-pwm+bounces-4403-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4410-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26C909F7F5A
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Dec 2024 17:22:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12DFB9F80FB
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Dec 2024 18:04:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 90DEB18808F8
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Dec 2024 16:22:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C60E188D768
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Dec 2024 17:03:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15C6C227B80;
-	Thu, 19 Dec 2024 16:21:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 477CF19D084;
+	Thu, 19 Dec 2024 17:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IYvEwIrr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OqtX2bdq"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E7A22616F;
-	Thu, 19 Dec 2024 16:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFC91993B7;
+	Thu, 19 Dec 2024 17:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734625318; cv=none; b=F2VpgwI8UOSd18JXHjNKawkdlYWKhxB6F05fmZimGZ4HeC9iUBdGdmIMjvznrTYh3EZCK6TomJWz1Db4NSekjsb/HVzYuzgkNM+Kz88IWl4zKSBtHkTok9up2rVFehQMv+x9OI9goe34qBBHSykz05uJ3X40SAdrkt07eE5D2YU=
+	t=1734627796; cv=none; b=ZoW1/vx+WkOy/4uZzlWJZejfBsRjUWQFW1QlNgvNh5Z+fvExk4dfQuOZ/jRXSoUwDpDG2JsWsdF+/22pPUx49ifK9is2H88Jj/b1JVviWZJN534RBvpmoI2LgIvVUn0dPnHeqQXrep6NoLujAm7Gc5nVyoozUw8OBgHdaCE2+Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734625318; c=relaxed/simple;
-	bh=MMa1aWrpC+Hhbb5vbJvmx5OLBFFy4Ju1nNEWOoDy1s0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kvPZPQ7VIDbW6jN1dsDl1ximME9NFZ5qHGXjukoybUCBpO4vVW22cOcCktk6LKlVHK3d0zX2N0pWFjdQGnpQ0LyeRmIVaeVspxwfDNQSoN9vo1Z1/jR/nvAvBuJggPIEXVfOqsAXonbmBZBizQXcXkBmBVO4YR0mcguMKUN8TW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IYvEwIrr; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 21D5760012;
-	Thu, 19 Dec 2024 16:21:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1734625314;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m5ZGJQUU63vFd9YFgXUTncUS1ermsqmNadQRrooj508=;
-	b=IYvEwIrr1nm8nr0nts6jaOChHC8gDWyyW8FNiEJ6EXYxNBVqwxRMLryLTC2SThG4LFjw/R
-	/PQizCekvhUcIDfCo8TZ//7H1IzV7CIy1dAzNgeuw73DEJpZ769gD8NcUFI6Ov0Q0oIkY4
-	rXxB0/TMu7S+gSJs6O5PsHKWgCfwmw3yeo1JLprCbZeRcOasBTqJ9/nf+mW0+tyZeFdUC8
-	3pJ4QhjnhjhnjJVn1UEFt356Kyg5rzA1H4U7nV0CKVt2R8mFs5XuY4ythJtvpwz7GY2lDf
-	miDtaKgWa4jZ3uPGOS9HIIRmJ8gwQGj2vwftmEp6uJKqVk1/XtfRZFHIVdnl2A==
-From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Thu, 19 Dec 2024 17:21:25 +0100
-Subject: [PATCH 8/8] MAINTAINERS: Add entry on MAX7360 driver
+	s=arc-20240116; t=1734627796; c=relaxed/simple;
+	bh=tC8RKsGa5WLB7/xBFDtRxmIHTrM2V1tWu6OnXBO6f84=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=hVteAH2hxuYuhnXZTG2jR7fzHcpbz82joXblH0/zKT749LqrMVd6D5ryYrobm4nS9zSvYvLHsxGxOgrAld6A6FMPANr48tczkeaxp/KfMiadbsKGIZ7OnyMzdwBRWjydCdtfNSvbwfBEeWPKxR9Jc7dLGXUf4Nt91Dq2R44EuB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OqtX2bdq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6721C4CECE;
+	Thu, 19 Dec 2024 17:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734627795;
+	bh=tC8RKsGa5WLB7/xBFDtRxmIHTrM2V1tWu6OnXBO6f84=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=OqtX2bdqGdruIITitsRqmUYmclt/GiafZo9h2pnCrFD6oODv8p1epgFJFLjtv+4IU
+	 PR7xEsZp5XufJzQQUg/RaCf8ntyL5P0daA3n0NALt1CtDg9A+mKpKiaeBm/oOSLVb6
+	 ilwhK+aaH96cM9QgDkpL+fp+Ib+EGvqg3kt6C2yZO2I+Pyi9OrmMt8TfnV1NyPRNxF
+	 J7XY+olQ7Eh1YQHvsaHW5G+wWYjRorjsdv+oidtzSIj4NJZiOGwx21XQrVrHphglfy
+	 tgfs6FjDmsTEet8rzPmZgj9/1Q0AXDRfw9DS5BYuYspaUg1O/KdGixrEcdSd+MKnbv
+	 51m+yxtz6bVwg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE5FC3806656;
+	Thu, 19 Dec 2024 17:03:34 +0000 (UTC)
+Subject: Re: [GIT PULL] pwm: Fix regression in pwm-stm32 driver when converting
+ to new waveform support
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <xzfckqs3o7trfrfpwzllviweimeohy4xvzy3oxnawm3mdpoe4z@vf2qqhvbgt3y>
+References: <xzfckqs3o7trfrfpwzllviweimeohy4xvzy3oxnawm3mdpoe4z@vf2qqhvbgt3y>
+X-PR-Tracked-List-Id: <linux-pwm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <xzfckqs3o7trfrfpwzllviweimeohy4xvzy3oxnawm3mdpoe4z@vf2qqhvbgt3y>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.13-rc4-fixes
+X-PR-Tracked-Commit-Id: edc19bd0e571c732cd01c8da62f904e6d2a29a48
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a0db71c7fe57bf08dcb46376237b78317c035b69
+Message-Id: <173462781334.2314669.11727352708334919397.pr-tracker-bot@kernel.org>
+Date: Thu, 19 Dec 2024 17:03:33 +0000
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241219-mdb-max7360-support-v1-8-8e8317584121@bootlin.com>
-References: <20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com>
-In-Reply-To: <20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Kamel Bouhara <kamel.bouhara@bootlin.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-pwm@vger.kernel.org, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1734625307; l=1024;
- i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=MMa1aWrpC+Hhbb5vbJvmx5OLBFFy4Ju1nNEWOoDy1s0=;
- b=gJY9TqsxOErNI5KgRO1RC6t1fWCzwGBuuTSDUM7w5JJ+7zQdNKlWEvEBaOdF6oNgYAA9/2gjA
- Z5c0nJDYA8DDVL6elxigwvZ2oULzCD8E85p8oXOcv/QiR/BhSxW8ZQH
-X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
- pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Add myself as maintainer of Maxim MAX7360 driver and device-tree bindings.
+The pull request you sent on Thu, 19 Dec 2024 11:55:22 +0100:
 
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+> https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.13-rc4-fixes
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index baf0eeb9a355..6e9b8caebb38 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14132,6 +14132,18 @@ L:	linux-iio@vger.kernel.org
- S:	Maintained
- F:	drivers/iio/temperature/max30208.c
- 
-+MAXIM MAX7360 KEYPAD LED MFD DRIVER
-+M:	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/*/max7360-*.yaml
-+F:	Documentation/devicetree/bindings/mfd/max7360.yaml
-+F:	drivers/gpio/gpio-max7360.c
-+F:	drivers/input/keyboard/max7360-keypad.c
-+F:	drivers/input/misc/max7360-rotary.c
-+F:	drivers/mfd/max7360.c
-+F:	drivers/pwm/pwm-max7360.c
-+F:	include/linux/mfd/max7360.h
-+
- MAXIM MAX77650 PMIC MFD DRIVER
- M:	Bartosz Golaszewski <brgl@bgdev.pl>
- L:	linux-kernel@vger.kernel.org
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a0db71c7fe57bf08dcb46376237b78317c035b69
+
+Thank you!
 
 -- 
-2.39.5
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
