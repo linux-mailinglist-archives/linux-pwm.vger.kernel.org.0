@@ -1,63 +1,63 @@
-Return-Path: <linux-pwm+bounces-4425-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4424-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4ECF9F8FA8
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Dec 2024 11:03:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8621E9F8FA5
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Dec 2024 11:03:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7EDFF1889814
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Dec 2024 10:03:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B3098189764E
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Dec 2024 10:03:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B05781C1F2C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6992E1C1AB4;
 	Fri, 20 Dec 2024 10:02:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="wsPKB8Is"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="1sAG1S2Z"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552361A840A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552851AA1E5;
 	Fri, 20 Dec 2024 10:02:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734688957; cv=none; b=Qh3aGKlygFtpWb3TNjEdL0IYX8A5KgLXUvQmKaiwVztiXJPCueKGGUGaOr51Y59WmDrEi3NqP85RPN4L4YR8g5/zDWz8lDMBfspq3xWTNnKSX2Ax4lCNGV+z6xWB1SnzlxE3qP0G9sbq3fvvuEn7Q1C2OEOAE/aLtQ/s9/XvHp4=
+	t=1734688957; cv=none; b=SdY+SW8vPui8Xxb5luh935pP4qV6WrRkPplvHP6K+81cvqN3E12qCI/9ylnkdUjnSItsC4Q9Hozh3WMyAACKsxTo3RW6W0bv8mlDxJr80dJZltqPOebwEoMoOXNR64EMAmK1ZdX1U+AbVWUqVOcJbpO7wmAyrKLAbRcAOqyf42w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1734688957; c=relaxed/simple;
-	bh=vuKucuHNiBZWdvLoBJ2PXzYnadT/vBiXaqrFBybaqeY=;
+	bh=nm9ueTd40fI9EYZFDvFU8T0kVOXBse7Cqud358W4VIE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BiriMdWjms+5vEhP8YwFuOXgKdDaiB+EdZhyZ1mlgfjJy/EQRBQ2guwf0++nY4Y+65HtlGvjiT/o+erlLIEcealFD3WzCL7L4yX18HSAtpfaDio2eNRNS7lnkBPy9sBrbkkLbMcR6lZVOdC8r82nqv741EHQ0V4qdTb2M5WaA78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=wsPKB8Is; arc=none smtp.client-ip=91.207.212.93
+	 MIME-Version:Content-Type; b=s9gTYZBwM+uPE9CDYF29sJ0G2IYzFrdcBJo9z0BujiWZhRANZSN/yHQjzWNpEj+CMYydSkVZ8PhnjatArVZ/KPb/tnBJ0sNeFM/xC9zar/zWAIde5v6lS57aeHVg0VoHehf5e5VCKibgEQqEoGbI6+Hg41FSutYxDd7GJHQFpEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=1sAG1S2Z; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK9vSX3021487;
-	Fri, 20 Dec 2024 11:02:04 +0100
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK9vSX4021487;
+	Fri, 20 Dec 2024 11:02:10 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	D8xaHAiUI650qyQPwQru2ZW+j7rrthJZ6/9X0gNFWL0=; b=wsPKB8Is/rtsT3oP
-	17RCPVyVGn//LDjoltk94NBNJg7tYTxQa+m3mQ0vXrox2lXLm8G8VSr+RP9tvLrr
-	EGVClCDAKDRGPnRWDHhvv6xwS7VT9NyM3wCdlO1NtfMmzCBCjGfbBuMe3qwn4+K0
-	7pC0N9jkkywQdBZTJHIJnwBnvfNCTSbqWo7Hpy/9gZ6JMQV7GTOlPLH7FTh89hkE
-	JbC9+y2Vow0QXd0EbrOHYn7DpCgGyp19bDqzs5KalWgjwa+Ssa9L2lhv97srjL6n
-	khSxXKgM5/CTDDHqxxGbl1FJhLnpyomNHa0Ou5LvIRLwbfLxyQhq29o49c/9zfaD
-	w6X/Lw==
+	N3C8rceQvNLCTnp4R4jP0Qcw1lYh/5LQgAq0XYaxj88=; b=1sAG1S2ZMyrudzfG
+	4bPaQ3vRTfBjSyw7wU5eSJhEraleciA/S+hDkOURRKSQ46a/3pmGugsqZZQ0CRWG
+	cWv7QCYTDs3/H65WQVpc+FZ7jfwYr0emIj/EF5v0MEWcm7FoR292kYlDNkHBlpkc
+	2SenonfC+1GZ4t3/WvPzRAH64PQwAaBomGTFJypFXxAqze6lQIje9dXobu8OgbcK
+	pUbs52RfEVVmKemk9+TKSughhSdgib/qb0Cc9OsUTTjbvN6D4Vy2rOjQ74Oap4Dg
+	uVOlQWcxo00tkU1svreNM86KG3LeSdE++lUfk3G+3/DEbBOnHae8cdiZkkZJ5MTi
+	T460xg==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 43n6dcr0q1-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 43n6dcr0qd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 20 Dec 2024 11:02:04 +0100 (CET)
+	Fri, 20 Dec 2024 11:02:10 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 492A84005F;
-	Fri, 20 Dec 2024 11:01:09 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8D97525F1F6;
-	Fri, 20 Dec 2024 11:00:08 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
- (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D546240052;
+	Fri, 20 Dec 2024 11:01:13 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4C08F25F500;
+	Fri, 20 Dec 2024 11:00:09 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
+ (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Fri, 20 Dec
- 2024 11:00:08 +0100
+ 2024 11:00:09 +0100
 Received: from localhost (10.48.86.222) by SAFDAG1NODE1.st.com (10.75.90.17)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Fri, 20 Dec
@@ -71,9 +71,9 @@ CC: <catalin.marinas@arm.com>, <will@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
         <olivier.moysan@foss.st.com>
-Subject: [PATCH v2 2/9] mfd: stm32-timers: add support for stm32mp25
-Date: Fri, 20 Dec 2024 10:59:20 +0100
-Message-ID: <20241220095927.1122782-3-fabrice.gasnier@foss.st.com>
+Subject: [PATCH v2 3/9] iio: trigger: stm32-timer: add support for stm32mp25
+Date: Fri, 20 Dec 2024 10:59:21 +0100
+Message-ID: <20241220095927.1122782-4-fabrice.gasnier@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20241220095927.1122782-1-fabrice.gasnier@foss.st.com>
 References: <20241220095927.1122782-1-fabrice.gasnier@foss.st.com>
@@ -91,126 +91,98 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
-Add support for STM32MP25 SoC. Use newly introduced compatible, to handle
-new features.
-Identification and hardware configuration registers allow to read the
-timer version and capabilities (counter width, number of channels...).
-So, rework the probe to avoid touching ARR register by simply read the
-counter width when available. This may avoid messing with a possibly
-running timer.
-Also add useful bit fields to stm32-timers header file.
+Add support for STM32MP25 SoC. Use newly introduced compatible to handle
+this new HW variant. Add TIM20 trigger definitions that can be used by
+the stm32 analog-to-digital converter. Use compatible data to identify
+it.
+As the counter framework is now superseding the deprecated IIO counter
+interface (IIO_COUNT), don't support it. Only register IIO trigger
+devices for ADC usage. So, make the valids_table a cfg option.
 
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 ---
- drivers/mfd/stm32-timers.c       | 32 +++++++++++++++++++++++++++++++-
- include/linux/mfd/stm32-timers.h |  9 +++++++++
- 2 files changed, 40 insertions(+), 1 deletion(-)
+ drivers/iio/trigger/stm32-timer-trigger.c     | 21 +++++++++++++++++--
+ include/linux/iio/timer/stm32-timer-trigger.h |  6 ++++++
+ 2 files changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
-index 650724e19b88..6f217c32482c 100644
---- a/drivers/mfd/stm32-timers.c
-+++ b/drivers/mfd/stm32-timers.c
-@@ -9,6 +9,7 @@
- #include <linux/module.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- #include <linux/reset.h>
+diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
+index bb60b2d7b2ec..8aaf3abf044e 100644
+--- a/drivers/iio/trigger/stm32-timer-trigger.c
++++ b/drivers/iio/trigger/stm32-timer-trigger.c
+@@ -38,6 +38,9 @@ static const void *triggers_table[][MAX_TRIGGERS] = {
+ 	{ TIM15_TRGO,},
+ 	{ TIM16_OC1,},
+ 	{ TIM17_OC1,},
++	{ }, /* timer 18 */
++	{ }, /* timer 19 */
++	{ TIM20_TRGO, TIM20_TRGO2, TIM20_OC1, TIM20_OC2, TIM20_OC3, },
+ };
  
- #define STM32_TIMERS_MAX_REGISTERS	0x3fc
-@@ -173,6 +174,32 @@ static void stm32_timers_get_arr_size(struct stm32_timers *ddata)
- 	regmap_write(ddata->regmap, TIM_ARR, arr);
- }
+ /* List the triggers accepted by each timer */
+@@ -781,7 +784,7 @@ static int stm32_timer_trigger_probe(struct platform_device *pdev)
+ 		return -EINVAL;
  
-+static int stm32_timers_probe_hwcfgr(struct device *dev, struct stm32_timers *ddata)
-+{
-+	u32 val;
-+
-+	ddata->ipidr = (uintptr_t)device_get_match_data(dev);
-+	if (!ddata->ipidr) {
-+		/* fallback to legacy method for probing counter width */
-+		stm32_timers_get_arr_size(ddata);
-+		return 0;
-+	}
-+
-+	regmap_read(ddata->regmap, TIM_IPIDR, &val);
-+	/* Sanity check on IP identification register */
-+	if (val != ddata->ipidr) {
-+		dev_err(dev, "Unexpected identification: %u\n", val);
-+		return -EINVAL;
-+	}
-+
-+	regmap_read(ddata->regmap, TIM_HWCFGR2, &val);
-+	/* Counter width in bits, max reload value is BIT(width) - 1 */
-+	ddata->max_arr = BIT(FIELD_GET(TIM_HWCFGR2_CNT_WIDTH, val)) - 1;
-+	dev_dbg(dev, "TIM width: %ld\n", FIELD_GET(TIM_HWCFGR2_CNT_WIDTH, val));
-+
-+	return 0;
-+}
-+
- static int stm32_timers_dma_probe(struct device *dev,
- 				   struct stm32_timers *ddata)
- {
-@@ -285,7 +312,9 @@ static int stm32_timers_probe(struct platform_device *pdev)
- 	if (IS_ERR(ddata->clk))
- 		return PTR_ERR(ddata->clk);
+ 	/* Create an IIO device only if we have triggers to be validated */
+-	if (*cfg->valids_table[index])
++	if (cfg->valids_table && *cfg->valids_table[index])
+ 		priv = stm32_setup_counter_device(dev);
+ 	else
+ 		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+@@ -794,7 +797,8 @@ static int stm32_timer_trigger_probe(struct platform_device *pdev)
+ 	priv->clk = ddata->clk;
+ 	priv->max_arr = ddata->max_arr;
+ 	priv->triggers = triggers_table[index];
+-	priv->valids = cfg->valids_table[index];
++	if (cfg->valids_table && *cfg->valids_table[index])
++		priv->valids = cfg->valids_table[index];
+ 	stm32_timer_detect_trgo2(priv);
+ 	mutex_init(&priv->lock);
  
--	stm32_timers_get_arr_size(ddata);
-+	ret = stm32_timers_probe_hwcfgr(dev, ddata);
-+	if (ret)
-+		return ret;
+@@ -886,6 +890,16 @@ static const struct stm32_timer_trigger_cfg stm32h7_timer_trg_cfg = {
+ 	.num_valids_table = ARRAY_SIZE(stm32h7_valids_table),
+ };
  
- 	ret = stm32_timers_irq_probe(pdev, ddata);
- 	if (ret)
-@@ -320,6 +349,7 @@ static void stm32_timers_remove(struct platform_device *pdev)
- 
- static const struct of_device_id stm32_timers_of_match[] = {
- 	{ .compatible = "st,stm32-timers", },
-+	{ .compatible = "st,stm32mp25-timers", .data = (void *)STM32MP25_TIM_IPIDR },
++static const struct stm32_timer_trigger_cfg stm32mp25_timer_trg_cfg = {
++	/*
++	 * valids_table not used: counter framework is now superseding the deprecated IIO
++	 * counter interface (IIO_COUNT), so don't support it. num_valids_table is only
++	 * kept here to register the IIO HW triggers. valids_table should be moved at some
++	 * point to the stm32-timer-cnt driver instead.
++	 */
++	.num_valids_table = ARRAY_SIZE(triggers_table),
++};
++
+ static const struct of_device_id stm32_trig_of_match[] = {
+ 	{
+ 		.compatible = "st,stm32-timer-trigger",
+@@ -893,6 +907,9 @@ static const struct of_device_id stm32_trig_of_match[] = {
+ 	}, {
+ 		.compatible = "st,stm32h7-timer-trigger",
+ 		.data = (void *)&stm32h7_timer_trg_cfg,
++	}, {
++		.compatible = "st,stm32mp25-timer-trigger",
++		.data = (void *)&stm32mp25_timer_trg_cfg,
+ 	},
  	{ /* end node */ },
  };
- MODULE_DEVICE_TABLE(of, stm32_timers_of_match);
-diff --git a/include/linux/mfd/stm32-timers.h b/include/linux/mfd/stm32-timers.h
-index f09ba598c97a..23b0cae4a9f8 100644
---- a/include/linux/mfd/stm32-timers.h
-+++ b/include/linux/mfd/stm32-timers.h
-@@ -33,6 +33,9 @@
- #define TIM_DCR		0x48			/* DMA control register			*/
- #define TIM_DMAR	0x4C			/* DMA register for transfer		*/
- #define TIM_TISEL	0x68			/* Input Selection			*/
-+#define TIM_HWCFGR2	0x3EC			/* hardware configuration 2 Reg (MP25)	*/
-+#define TIM_HWCFGR1	0x3F0			/* hardware configuration 1 Reg (MP25)	*/
-+#define TIM_IPIDR	0x3F8			/* IP identification Reg (MP25)		*/
+diff --git a/include/linux/iio/timer/stm32-timer-trigger.h b/include/linux/iio/timer/stm32-timer-trigger.h
+index 37572e4dc73a..1ee237b56183 100644
+--- a/include/linux/iio/timer/stm32-timer-trigger.h
++++ b/include/linux/iio/timer/stm32-timer-trigger.h
+@@ -72,6 +72,12 @@
  
- #define TIM_CR1_CEN		BIT(0)					/* Counter Enable				*/
- #define TIM_CR1_DIR		BIT(4)					/* Counter Direction				*/
-@@ -100,6 +103,9 @@
- #define TIM_BDTR_BKF(x)		(0xf << (16 + (x) * 4))
- #define TIM_DCR_DBA		GENMASK(4, 0)				/* DMA base addr				*/
- #define TIM_DCR_DBL		GENMASK(12, 8)				/* DMA burst len				*/
-+#define TIM_HWCFGR1_NB_OF_CC	GENMASK(3, 0)				/* Capture/compare channels			*/
-+#define TIM_HWCFGR1_NB_OF_DT	GENMASK(7, 4)				/* Complementary outputs & dead-time generators */
-+#define TIM_HWCFGR2_CNT_WIDTH	GENMASK(15, 8)				/* Counter width				*/
+ #define TIM17_OC1	"tim17_oc1"
  
- #define MAX_TIM_PSC				0xFFFF
- #define MAX_TIM_ICPSC				0x3
-@@ -113,6 +119,8 @@
- #define TIM_BDTR_BKF_MASK			0xF
- #define TIM_BDTR_BKF_SHIFT(x)			(16 + (x) * 4)
- 
-+#define STM32MP25_TIM_IPIDR	0x00120002
++#define TIM20_OC1	"tim20_oc1"
++#define TIM20_OC2	"tim20_oc2"
++#define TIM20_OC3	"tim20_oc3"
++#define TIM20_TRGO	"tim20_trgo"
++#define TIM20_TRGO2	"tim20_trgo2"
 +
- enum stm32_timers_dmas {
- 	STM32_TIMERS_DMA_CH1,
- 	STM32_TIMERS_DMA_CH2,
-@@ -151,6 +159,7 @@ struct stm32_timers_dma {
- 
- struct stm32_timers {
- 	struct clk *clk;
-+	u32 ipidr;
- 	struct regmap *regmap;
- 	u32 max_arr;
- 	struct stm32_timers_dma dma; /* Only to be used by the parent */
+ #if IS_REACHABLE(CONFIG_IIO_STM32_TIMER_TRIGGER)
+ bool is_stm32_timer_trigger(struct iio_trigger *trig);
+ #else
 -- 
 2.25.1
 
