@@ -1,124 +1,118 @@
-Return-Path: <linux-pwm+bounces-4415-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4416-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E4FA9F8BFD
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Dec 2024 06:51:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A60E9F8F6F
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Dec 2024 10:56:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2ED751895C39
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Dec 2024 05:51:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 39ED21897559
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Dec 2024 09:56:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E4013D8A4;
-	Fri, 20 Dec 2024 05:51:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 603D21BC073;
+	Fri, 20 Dec 2024 09:56:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9i5tpIg"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="VfM+/K4F"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815E1259487;
-	Fri, 20 Dec 2024 05:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1DA1AA1F4;
+	Fri, 20 Dec 2024 09:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734673877; cv=none; b=uGp0U05hUKrf/kBKw8AU/3DFzW0PPyaqkbxk60W2apIdFwZOMDLky/E9ujM8+6Nqfsl/gSVzGZtiboEteEeCElbDsz+J0NfqH4v/+LfJyB+q/Z2LQSmmMHy2VG1NrZj0OLNIu9+iSEzFgChZlDQacKrycw+nJpuAbrq+hfajwvo=
+	t=1734688602; cv=none; b=MjYxdIH+ok66xYpfvCJq+WsdcdG5ltjiURKMQA8wFFruEyRfiiar9JdKZQh3NBv4rEND/5tZwubGMVVRb0fdbLmdMc6eGHyDlXv1Yz+Rc6gfvvjM6sPP/m35mL5aa1OpqiZGA2n9U7CNHCVFdbxfz98U1arZZ/IlPZbm8fy2RKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734673877; c=relaxed/simple;
-	bh=D5aq2XDE54pHMRzTUpMhb+flRYpPDeqhjlA0GP9Pj6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i154ZXRB4Dn3FFSGfkrEw2mF/838O62MCTZcfQN9p172FwMimLdBPRN7iFI+lpnBZ5GiXIdacnXD2U4NxsXS7kLmTtq1HI69jeRo5U0i0yYYyGn6ivSesGMswj96FtMgoE+i8gFP3qaGb92C0EnuIkFgBvKPP5zYafKyNOkotX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9i5tpIg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7330FC4CECD;
-	Fri, 20 Dec 2024 05:51:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734673876;
-	bh=D5aq2XDE54pHMRzTUpMhb+flRYpPDeqhjlA0GP9Pj6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B9i5tpIgNAQggVKHqhubMnOib2gfU3vTNgIav3thcFI0zDrwKUNcfrDMkJK+NVkC+
-	 O2EBJVF6cuJkulVv75peNY78H/JPe+naudUrH6IHRE9iO18+yC4f2At5XfKuSFvdmD
-	 +jwHtixIvWGQ/yzr4LKmn8ualpP6JmbvLjSt8IuY8ra7mKyo2bisFY2Ovq77xlPl9Q
-	 NQF7Nk9Nj6rqd6tuWrLWS0KEL0yUlGw1Csn3Cs6jXOiDko68jZaXVxQ6aEA72ux7l2
-	 IY59T1j5Nir49E73ei0+CRN4on77/mAqlrcGtbkpyBpBANttwIjwsGTj1S0E3fQj+u
-	 gl8mDTPSF/7Ug==
-Date: Fri, 20 Dec 2024 06:51:12 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: mathieu.dubois-briand@bootlin.com
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	=?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 4/8] pwm: max7360: Add MAX7360 PWM support
-Message-ID: <a6gpiriu4n5c324pkl354uews5prlqsrapoxupu5liu6fd5ruc@swtw4eebk7et>
-References: <20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com>
- <20241219-mdb-max7360-support-v1-4-8e8317584121@bootlin.com>
+	s=arc-20240116; t=1734688602; c=relaxed/simple;
+	bh=h70jEkjwDWoMMWgwpubkSckWpzRGWO+REXBSil5mb8E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SPR6Jkq2HMzwUkSfFF/qy23KBHbJmfhg3zDtvadyLHkD09kbZvYZneH5mCTA+t5yUXNrv7d9cZ23DKJn5JqsWUdvLXF6Gwv4z9Y+D6CtphQWs44CqEjuHX2Q+Kl5JJ78fHJRPAwKUPn0HOf2D0/NkDJ7unVvqkGueaoNJCPrv34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=VfM+/K4F; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BK8i79w014094;
+	Fri, 20 Dec 2024 04:56:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=g9ViHUI+OVFBQSue1RmTlAEXr1i
+	ICB3gG0ilQTSt53E=; b=VfM+/K4F+VwtTrxMw+l8qrZlqrO/tl3ugmOEmhz9iiq
+	T0aUx7j410FlMDcQI0W1n3RDumjGxIhR/xFkF7wQe0d/wTgIlrOw5UcWQGuHKEm6
+	WrdBYYl5S1l49XtWWKE4M59GtU5dig+bn4FsMIJW1yNM3F/cHUmLtAgUGUvrDiCO
+	/L63RH2zvLshxN3QYdArQESc+yDO1G+6Exe2gWrgLpJdkXDL8hwYK741dE07qWqS
+	D6GWnPF7LtufhGO9F0ibq7A/iIwy849XG02drD/L2mCjswrDPVL5uc/JhaseqYU7
+	cfEvROpMQRDXZd8MwRWeZ+qCmB68OuJwXwj/W53SnAg==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 43n5b589by-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Dec 2024 04:56:37 -0500 (EST)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 4BK9uadH002452
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 20 Dec 2024 04:56:36 -0500
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Fri, 20 Dec 2024 04:56:36 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Fri, 20 Dec 2024 04:56:36 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 20 Dec 2024 04:56:36 -0500
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.133])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 4BK9uROU023622;
+	Fri, 20 Dec 2024 04:56:29 -0500
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH v3 0/3] ADF4371 refin mode and doubler support
+Date: Fri, 20 Dec 2024 11:56:12 +0200
+Message-ID: <20241220095620.4918-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="e4chtsryu42byqjg"
-Content-Disposition: inline
-In-Reply-To: <20241219-mdb-max7360-support-v1-4-8e8317584121@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: n4TAAU2UetccHrS3yXVIVWnMjQ-YukFG
+X-Proofpoint-ORIG-GUID: n4TAAU2UetccHrS3yXVIVWnMjQ-YukFG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=962 malwarescore=0 impostorscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2412200081
 
+Add support for selecting between single-ended and differential
+reference input. By default the single-ended input is enabled.
 
---e4chtsryu42byqjg
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH 4/8] pwm: max7360: Add MAX7360 PWM support
-MIME-Version: 1.0
+Input frequency boundaries are change based on the mode selected
+(single-ended/differential).
 
-Hello again,
+Add support for the reference doubler. This feature is enabled
+automatically to improve noise performance if the input frequency
+is within the accepted range.
 
-On Thu, Dec 19, 2024 at 05:21:21PM +0100, mathieu.dubois-briand@bootlin.com wrote:
-> diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
-> new file mode 100644
-> index 000000000000..b1cde3e86864
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-max7360.c
-> @@ -0,0 +1,173 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright 2024 Bootlin
-> + *
+Antoniu Miclaus (3):
+  dt-bindings: iio: adf4371: add refin mode
+  iio: frequency: adf4371: add refin mode
+  iio: frequency: adf4371: add ref doubler
 
-I forgot: Please also add a paragraph here describing the relevant
-features here in the format that several other drivers use. Such that
+ .../bindings/iio/frequency/adf4371.yaml       |  7 ++++
+ drivers/iio/frequency/adf4371.c               | 38 ++++++++++++++++++-
+ 2 files changed, 43 insertions(+), 2 deletions(-)
 
-	sed -rn '/Limitations:/,/\*\/?$/p' drivers/pwm/*.c
+-- 
+2.47.1
 
-emits it. Relevant are at least:
-
- - Only supports normal polarity
-
- - How does it behave on disable? (Constant low? Freeze at the level
-   where it just happens to be? High-Z?)
-
- - How does it behave on reconfiguration? (counter reset? Mixed output
-   possible?
-
-Best regards
-Uwe
-
---e4chtsryu42byqjg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdlBc4ACgkQj4D7WH0S
-/k4wLQf/ZF43my2VAHklfKYPgAWvnGO8I5IbtTF7p+pgr8YrZqEWjE5ifrEXbalr
-cMbBw8pEy5l4v9MG2chRsFf7T66d8EHahp79VR/oXXTmAfxkQJu+Abj/OEO0FKom
-6/cf01iw020NLDgpwKLaeYwT+0OoxJDfWoSxE0oiaObWepcff/UtZPmttQlEL8AD
-Dt/HLdH9FWntErA9EE/MGw8Dd54d0rQoMC9XtMFyLctPojHzh5JLmcDK8ogiP6WA
-Qe9dQaA4XtBSphFsuwutAb+Tbxtr+e1AAg8tWj0B5dOLvUromss1ScfBaOt2YMGd
-TGxZX6lms0IlAt/a7G/jyCntlPk+tQ==
-=ie24
------END PGP SIGNATURE-----
-
---e4chtsryu42byqjg--
 
