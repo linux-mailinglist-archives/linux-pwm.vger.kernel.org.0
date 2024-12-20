@@ -1,129 +1,76 @@
-Return-Path: <linux-pwm+bounces-4430-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4431-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 998129F907F
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Dec 2024 11:44:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 035219F91C3
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Dec 2024 13:02:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D5D2B18943FC
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Dec 2024 10:44:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D3FB4189775A
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Dec 2024 12:02:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 958661C3F06;
-	Fri, 20 Dec 2024 10:43:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 129881C462D;
+	Fri, 20 Dec 2024 12:02:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="LXQtSCOj"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="tCCKwqQY"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-m127157.xmail.ntesmail.com (mail-m127157.xmail.ntesmail.com [115.236.127.157])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB0919C56D;
-	Fri, 20 Dec 2024 10:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.236.127.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B5B1BCA19;
+	Fri, 20 Dec 2024 12:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734691437; cv=none; b=PZRUu5qXmLzX5l79DboK37HahVqH1k8xAABbgeA81aJqpeAXMRmh22JFuWdGhfYX+2lg7nGYRt3uoLuCBFFxFX/q2q0DL8n3xYsMXr9BKq5koCQQDEROKZPsiK6cLcaH3gl/Qg3vYSRBd6rx0eQrytIqlQ+OTn4TBj9/qzSRX0Q=
+	t=1734696121; cv=none; b=FtN5dek3HFpMHuclhvDLz42FLzbfS36K4N/homtH3bs3//eJuSKm2H226Jy8xOQPonYcYDfkPNsCu8eLRpOxPXEoKdQ8xF1HoL3NprOdewdsuiQtSiiUqAF9S/W3Q6CJq8iknUwtTfKmL6HNhwv4WKJ3Qm9DuqpPUXvtsCqsamY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734691437; c=relaxed/simple;
-	bh=FLotb8PO7pUbOoGoa3ZcA+IJLn2SEtUGvEV7uvVVTkk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kbln7y/CCeYJY3S9PlwwCdobmOpsBOraPpxJpouwpuGplkxgSESnNkpTn090B/kdHBqxXc2u8p+GLR8k9jPCPAcgbcXdmVGHGw60XNJkwku5wI6zdCunKuGeLKIwIWibwqrXS2c6O1FkrGFO6PM8eUS9WzTk5N0PGR9e7uX1zj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=LXQtSCOj; arc=none smtp.client-ip=115.236.127.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 656820ed;
-	Fri, 20 Dec 2024 18:38:26 +0800 (GMT+08:00)
-From: Kever Yang <kever.yang@rock-chips.com>
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Simon Xue <xxm@rock-chips.com>,
-	Lee Jones <lee@kernel.org>,
-	dri-devel@lists.freedesktop.org,
-	Zhang Rui <rui.zhang@intel.com>,
-	Elaine Zhang <zhangqing@rock-chips.com>,
-	linux-clk@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	FUKAUMI Naoki <naoki@radxa.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Andy Yan <andyshrk@163.com>,
-	Michael Riesch <michael.riesch@wolfvision.net>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-pm@vger.kernel.org,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	Jakub Kicinski <kuba@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Jamie Iles <jamie@jamieiles.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Frank Wang <frank.wang@rock-chips.com>,
-	linux-mmc@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-i2c@vger.kernel.org,
-	Simona Vetter <simona@ffwll.ch>,
-	Finley Xiao <finley.xiao@rock-chips.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-watchdog@vger.kernel.org,
-	David Wu <david.wu@rock-chips.com>,
-	Shresth Prasad <shresthprasad7@gmail.com>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	linux-iio@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	David Airlie <airlied@gmail.com>,
-	linux-phy@lists.infradead.org,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Maxime Ripard <mripard@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-pwm@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Johan Jonker <jbx6244@gmail.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-serial@vger.kernel.org,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	devicetree@vger.kernel.org,
-	Diederik de Haas <didi.debian@cknow.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Tim Lunn <tim@feathertop.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Subject: [PATCH 00/38] rockchip: Add rk3562 support
-Date: Fri, 20 Dec 2024 18:37:46 +0800
-Message-Id: <20241220103825.3509421-1-kever.yang@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1734696121; c=relaxed/simple;
+	bh=n/4fvH2nCYzWA2a1FRO2lPyOqvd6+rL9N/9IttrfmlI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X0Pre4AVIL3hRin3P8tlZq3tbCsjfxWy2o4wMxSz9NE7y4ojxEb9a67tdGTSXBHbsduaPOZ2BU2J7to1dkQoLbWOpx7JR3+hv7kY4wMB9bVCp2LSoK4zv/zd0LlC7smHnz3rjZ0TF2U1/CB1HNhLYrvXA9ddtAU/VP6MskonCdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=tCCKwqQY; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BKBG8Hv024429;
+	Fri, 20 Dec 2024 07:01:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=nZCvhBHrhJ7isF1591ZalB9oHME
+	kkxFTnVngHLyD72c=; b=tCCKwqQYbaXYqlH32fmUmsJcRQd4CyWmKR4XDwDQ2ZJ
+	dw1OOE0Dm4YGJBpuByqvj/bK+CWxwKLvuL+jJk40dYb5wAvhrQ03LvKVpt2xClbc
+	wYbm7FaqhMv/0FR24XYJSlVkQvs7RjTaYNZNoIk4XHJ9G2p6y8J7bZEbu/n8p6Mn
+	bLruVrlCakm8ggGLxGrIZ3Ctdy6laP5ZwEUginMNJMYazMvjvYQSDDNW3OeldhuV
+	NgCwo5Fl02TrdaoN3F90mtNM2w1FyqfXdP/0NW7L94tKvXeFMQ+2Aw1jBnNwkM/E
+	Ditz9OcH//zZIuUx4ph2MZ1VxrT2GQTbkkpvTXooc8w==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 43n7jdg520-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Dec 2024 07:01:55 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 4BKC1pC4060585
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 20 Dec 2024 07:01:51 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 20 Dec
+ 2024 07:01:51 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 20 Dec 2024 07:01:51 -0500
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.133])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 4BKC1fDh030363;
+	Fri, 20 Dec 2024 07:01:43 -0500
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>,
+        David Lechner
+	<dlechner@baylibre.com>
+Subject: [PATCH v9 1/8] iio: backend: add API for interface get
+Date: Fri, 20 Dec 2024 14:01:27 +0200
+Message-ID: <20241220120134.42760-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -131,139 +78,109 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQh9LT1ZJGktPSElKGk8fQxhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEtNQk
-	tVSktLVUpCWQY+
-X-HM-Tid: 0a93e3a5af4003afkunm656820ed
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nwg6Kxw6GTIRKggeThEUMR4h
-	P0gaCyxVSlVKTEhPTUJKSkpKTElJVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFOTUpJNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=LXQtSCOj5PQ5rmMQS8JUHg+aVmzux+tnR5NnlpILS50US/QWv5VBCTHDsqEiVs5WhSa9UqWxWgKBEnSg0vucKhE8FyZdsUwbc5ZsdiUz76LZqHiim02ORqBuKb413jRYfReSUFy7jfbzAaPEA5wGkuukfoQqA957T+ZIIQC0lqE=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=RUJ3VBWN4hJZF+kjNTXL1lSb1odrwauQvfHGVuJDe90=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: EKaRA_Q3lYOfvDNJqrdF1RmPzKlcnc3H
+X-Proofpoint-GUID: EKaRA_Q3lYOfvDNJqrdF1RmPzKlcnc3H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ spamscore=0 adultscore=0 mlxlogscore=999 phishscore=0 priorityscore=1501
+ clxscore=1015 mlxscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2412200100
 
+Add backend support for obtaining the interface type used.
 
-This patch set adds rk3562 SoC and its evb support.
+Reviewed-by: David Lechner <dlechner@baylibre.com>
+Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+---
+changes in v9:
+ - rebase on iio/testing and use quotes for IIO_BACKEND
+ drivers/iio/industrialio-backend.c | 24 ++++++++++++++++++++++++
+ include/linux/iio/backend.h        | 11 +++++++++++
+ 2 files changed, 35 insertions(+)
 
-The patch number is a little bit too big, some of them may need to split
-out for different maintainers, please let me know which patch need to
-split out.
-
-Test with GMAC, USB, PCIe, EMMC, SD Card.
-
-This patch set is base on the patche set for rk3576 evb1 support.
-
-
-David Wu (2):
-  ethernet: stmmac: dwmac-rk: Add gmac support for rk3562
-  ethernet: stmmac: dwmac-rk: Make the phy clock could be used for
-    external phy
-
-Finley Xiao (7):
-  clk: rockchip: add dt-binding header for rk3562
-  clk: rockchip: Add clock controller for the RK3562
-  dt-bindings: add power-domain header for RK3562 SoC
-  nvmem: rockchip-otp: Add support for rk3568-otp
-  nvmem: rockchip-otp: Add support for rk3562
-  arm64: dts: rockchip: add core dtsi for RK3562 Soc
-  arm64: dts: rockchip: Add RK3562 evb2 devicetree
-
-Frank Wang (1):
-  phy: rockchip: inno-usb2: add usb2 phy support for rk3562
-
-Jon Lin (1):
-  phy: rockchip-naneng-combo: Support rk3562
-
-Kever Yang (24):
-  dt-bindings: clock: add rk3562 cru bindings
-  dt-bindings: pinctrl: Add rk3562 pinctrl support
-  soc: rockchip: power-domain: add power domain support for rk3562
-  dt-bindings: rockchip-thermal: Support the RK3562 SoC compatible
-  dt-bindings: iio: adc: Add rockchip,rk3562-saradc string
-  dt-bindings: net: Add support for rk3562 dwmac
-  dt-bindings: nvmem: rockchip,otp: Add support for rk3562 and rk3568
-  dt-bindings: phy: rockchip: Add rk3562 naneng-combophy compatible
-  dt-bindings: phy: rockchip,inno-usb2phy: add rk3562
-  dt-bindings: PCI: dwc: rockchip: Add rk3562 support
-  dt-bindings: mmc: Add support for rk3562 eMMC
-  dt-bindings: mmc: rockchip-dw-mshc: Add rk3562 compatible string
-  dt-bindings: power: rockchip: Add bindings for rk3562
-  dt-bindings: i2c: i2c-rk3x: Add rk3562 compatible
-  dt-bindings: gpu: Add rockchip,rk3562-mali compatible
-  dt-bindings: watchdog: Add rk3562 compatible
-  dt-bindings: spi: Add rockchip,rk3562-spi compatible
-  dt-bindings: serial: snps-dw-apb-uart: Add support for rk3562
-  dt-bindings: usb: dwc3: add compatible for rk3562
-  dt-bindings: pwm: rockchip: Add rockchip,rk3562-pwm
-  dt-bindings: rockchip: pmu: Add rk3562 compatible
-  dt-bindings: soc: rockchip: Add rk3562 syscon compatibles
-  dt-bindings: arm: rockchip: Add rk3562 evb2 board
-  dt-bindings: mfd: syscon: Add rk3562 QoS register compatible
-
-Shaohan Yao (1):
-  thermal: rockchip: Support the rk3562 SoC in thermal driver
-
-Simon Xue (1):
-  iio: adc: rockchip_saradc: add rk3562
-
-Steven Liu (1):
-  pinctrl: rockchip: add rk3562 support
-
- .../devicetree/bindings/arm/rockchip.yaml     |    5 +
- .../devicetree/bindings/arm/rockchip/pmu.yaml |    2 +
- .../bindings/clock/rockchip,rk3562-cru.yaml   |   62 +
- .../bindings/gpu/arm,mali-bifrost.yaml        |    3 +-
- .../devicetree/bindings/i2c/i2c-rk3x.yaml     |    1 +
- .../bindings/iio/adc/rockchip-saradc.yaml     |    2 +
- .../devicetree/bindings/mfd/syscon.yaml       |    2 +
- .../bindings/mmc/rockchip-dw-mshc.yaml        |    1 +
- .../bindings/mmc/snps,dwcmshc-sdhci.yaml      |    9 +-
- .../bindings/net/rockchip-dwmac.yaml          |    5 +-
- .../bindings/nvmem/rockchip,otp.yaml          |   49 +-
- .../bindings/pci/rockchip-dw-pcie.yaml        |    1 +
- .../phy/phy-rockchip-naneng-combphy.yaml      |    1 +
- .../bindings/phy/rockchip,inno-usb2phy.yaml   |    3 +-
- .../bindings/pinctrl/rockchip,pinctrl.yaml    |    1 +
- .../power/rockchip,power-controller.yaml      |    1 +
- .../devicetree/bindings/pwm/pwm-rockchip.yaml |    1 +
- .../bindings/serial/snps-dw-apb-uart.yaml     |    1 +
- .../devicetree/bindings/soc/rockchip/grf.yaml |    7 +
- .../devicetree/bindings/spi/spi-rockchip.yaml |    1 +
- .../bindings/thermal/rockchip-thermal.yaml    |    1 +
- .../bindings/usb/rockchip,dwc3.yaml           |    3 +
- .../bindings/watchdog/snps,dw-wdt.yaml        |    1 +
- arch/arm64/boot/dts/rockchip/Makefile         |    1 +
- .../boot/dts/rockchip/rk3562-evb2-v10.dts     |  520 ++++
- .../boot/dts/rockchip/rk3562-pinctrl.dtsi     | 2352 +++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3562.dtsi      | 1432 ++++++++++
- drivers/clk/rockchip/Kconfig                  |    7 +
- drivers/clk/rockchip/Makefile                 |    1 +
- drivers/clk/rockchip/clk-rk3562.c             | 1111 ++++++++
- drivers/clk/rockchip/clk.h                    |   39 +
- drivers/iio/adc/rockchip_saradc.c             |   24 +-
- .../net/ethernet/stmicro/stmmac/dwmac-rk.c    |  213 +-
- drivers/nvmem/rockchip-otp.c                  |   97 +
- drivers/phy/rockchip/phy-rockchip-inno-usb2.c |   49 +
- .../rockchip/phy-rockchip-naneng-combphy.c    |  152 ++
- drivers/pinctrl/pinctrl-rockchip.c            |  199 +-
- drivers/pinctrl/pinctrl-rockchip.h            |    3 +-
- drivers/pmdomain/rockchip/pm-domains.c        |   48 +-
- drivers/thermal/rockchip_thermal.c            |  112 +-
- include/dt-bindings/clock/rk3562-cru.h        |  733 +++++
- include/dt-bindings/power/rk3562-power.h      |   35 +
- 42 files changed, 7269 insertions(+), 22 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3562-cru.yaml
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3562-evb2-v10.dts
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3562-pinctrl.dtsi
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3562.dtsi
- create mode 100644 drivers/clk/rockchip/clk-rk3562.c
- create mode 100644 include/dt-bindings/clock/rk3562-cru.h
- create mode 100644 include/dt-bindings/power/rk3562-power.h
-
+diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
+index 363281272035..8bf3d570da1b 100644
+--- a/drivers/iio/industrialio-backend.c
++++ b/drivers/iio/industrialio-backend.c
+@@ -636,6 +636,30 @@ ssize_t iio_backend_ext_info_set(struct iio_dev *indio_dev, uintptr_t private,
+ }
+ EXPORT_SYMBOL_NS_GPL(iio_backend_ext_info_set, "IIO_BACKEND");
+ 
++/**
++ * iio_backend_interface_type_get - get the interface type used.
++ * @back: Backend device
++ * @type: Interface type
++ *
++ * RETURNS:
++ * 0 on success, negative error number on failure.
++ */
++int iio_backend_interface_type_get(struct iio_backend *back,
++				   enum iio_backend_interface_type *type)
++{
++	int ret;
++
++	ret = iio_backend_op_call(back, interface_type_get, type);
++	if (ret)
++		return ret;
++
++	if (*type >= IIO_BACKEND_INTERFACE_MAX)
++		return -EINVAL;
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(iio_backend_interface_type_get, "IIO_BACKEND");
++
+ /**
+  * iio_backend_extend_chan_spec - Extend an IIO channel
+  * @back: Backend device
+diff --git a/include/linux/iio/backend.h b/include/linux/iio/backend.h
+index 10be00f3b120..a0ea6c29d7ba 100644
+--- a/include/linux/iio/backend.h
++++ b/include/linux/iio/backend.h
+@@ -70,6 +70,12 @@ enum iio_backend_sample_trigger {
+ 	IIO_BACKEND_SAMPLE_TRIGGER_MAX
+ };
+ 
++enum iio_backend_interface_type {
++	IIO_BACKEND_INTERFACE_SERIAL_LVDS,
++	IIO_BACKEND_INTERFACE_SERIAL_CMOS,
++	IIO_BACKEND_INTERFACE_MAX
++};
++
+ /**
+  * struct iio_backend_ops - operations structure for an iio_backend
+  * @enable: Enable backend.
+@@ -88,6 +94,7 @@ enum iio_backend_sample_trigger {
+  * @extend_chan_spec: Extend an IIO channel.
+  * @ext_info_set: Extended info setter.
+  * @ext_info_get: Extended info getter.
++ * @interface_type_get: Interface type.
+  * @read_raw: Read a channel attribute from a backend device
+  * @debugfs_print_chan_status: Print channel status into a buffer.
+  * @debugfs_reg_access: Read or write register value of backend.
+@@ -128,6 +135,8 @@ struct iio_backend_ops {
+ 			    const char *buf, size_t len);
+ 	int (*ext_info_get)(struct iio_backend *back, uintptr_t private,
+ 			    const struct iio_chan_spec *chan, char *buf);
++	int (*interface_type_get)(struct iio_backend *back,
++				  enum iio_backend_interface_type *type);
+ 	int (*read_raw)(struct iio_backend *back,
+ 			struct iio_chan_spec const *chan, int *val, int *val2,
+ 			long mask);
+@@ -186,6 +195,8 @@ ssize_t iio_backend_ext_info_set(struct iio_dev *indio_dev, uintptr_t private,
+ 				 const char *buf, size_t len);
+ ssize_t iio_backend_ext_info_get(struct iio_dev *indio_dev, uintptr_t private,
+ 				 const struct iio_chan_spec *chan, char *buf);
++int iio_backend_interface_type_get(struct iio_backend *back,
++				   enum iio_backend_interface_type *type);
+ int iio_backend_read_raw(struct iio_backend *back,
+ 			 struct iio_chan_spec const *chan, int *val, int *val2,
+ 			 long mask);
 -- 
-2.25.1
+2.47.1
 
 
