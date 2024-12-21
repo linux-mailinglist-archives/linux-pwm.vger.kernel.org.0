@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-4448-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4449-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C46819FA27A
-	for <lists+linux-pwm@lfdr.de>; Sat, 21 Dec 2024 21:34:35 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80CFB9FA280
+	for <lists+linux-pwm@lfdr.de>; Sat, 21 Dec 2024 21:35:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 228C5163D4C
-	for <lists+linux-pwm@lfdr.de>; Sat, 21 Dec 2024 20:34:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1D98C7A25EE
+	for <lists+linux-pwm@lfdr.de>; Sat, 21 Dec 2024 20:35:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E27161C5F27;
-	Sat, 21 Dec 2024 20:34:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B34621C5F27;
+	Sat, 21 Dec 2024 20:35:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLvAk3/S"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qmNU7mTF"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47AB1C5F06;
-	Sat, 21 Dec 2024 20:34:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72552183CBB;
+	Sat, 21 Dec 2024 20:35:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734813268; cv=none; b=grVOu/CO0vAbRhH83LJX9xWxsJ5mJ/uq0tJ72j4iZKeINbbnQVUizHJ1vEs2xe7LbSnLLNgjrZXndkMJO+Hr3SH6VCXXUgoF8veyEKJFbjpz7d6L/gMXuqAwoEgD0IwarYzbwc4hvFOi6XrB5M++UTFyW6Cpkun4fIAkwrzhhK4=
+	t=1734813330; cv=none; b=HnRA6zalrWqpjDEOR5swQv506Z5iBrSHpTRTNkSgnBDqafJa+AyxMTFtd/X6yf7gr2uqqHa5+S74o0z52QxjyDu7163IpMZJqF7KaceduTT93D9yiKje7E+AhRduCBVKyDb5d/0qa2/oG/uX12a63YmgWCk8AfF2KSaAkKbTs5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734813268; c=relaxed/simple;
-	bh=m8vLiyX2tNz+6CdcUKD+Mmd7VXLnsKgjXcaAoZ8jlyw=;
+	s=arc-20240116; t=1734813330; c=relaxed/simple;
+	bh=ekl19ucpR2Fcoz2QsVFpdIVw86xZ3nM2uWZVPMJgU6k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M0ZdbUzHv8Wx10Mqfoh7T5FRGOLD0BX1pjMo+z/UaLPLt+9tsKrA8/K2gEF6Z91U54dA5LrKSR/vujAEWiGibLM8CyBspklrpGDKuwhlmLv0yh1kwQmh8OQxwRN4nSkD3v6yTUpghif/8vjA5TQfqcuZU6PXBL+5lnyF8qUaXKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLvAk3/S; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996D6C4CECE;
-	Sat, 21 Dec 2024 20:34:20 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=HLC2fzLSyvDesGaIL7S7ewD6OSyfAgTrZkS24h8sHC7VuVs2/bCOCsF2gIkVwfPNn2GaMQjbNwMLgZJu+f89nkYTclr9XWZVL/ohib0zEDtOQOavb9r7FzV2Cx+wiZcfEt66xFSS5fX+OC4ZbrQ+Ol2cqWvgcq30gyrhKMQczqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qmNU7mTF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD4AC4CECE;
+	Sat, 21 Dec 2024 20:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734813268;
-	bh=m8vLiyX2tNz+6CdcUKD+Mmd7VXLnsKgjXcaAoZ8jlyw=;
+	s=k20201202; t=1734813329;
+	bh=ekl19ucpR2Fcoz2QsVFpdIVw86xZ3nM2uWZVPMJgU6k=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aLvAk3/Sig9s2wKapU9fwUMi1ssuKBdrhFz4nAzdAdKNdayKsSvygwfq9VUwUuDaC
-	 mEM+cwkQFi6PyCvsHYkdWxIwbeC6tIopjafbmbg2DE5hCywTlQd0L3c0AGJ1R3eHCW
-	 FBqUep5u+ttpLciqKjJGrNgTLpbuHQ4X2wAoN0L+yOernC2W5yqt6XjmmoBTsHGx9I
-	 +kGDfwobHcsnoNKjKAkLF28jbrVkJ2DbhopSO5VK5qvE0zyKO96AN4i9KjRzRVzbuo
-	 aCcUHxDm6h+zPSUuyuIW5Sz7m+3zVTP7altc01wdc53olXIwW0vvcetbGcYrRP8oQw
-	 5pVg69ScoxFlw==
-Message-ID: <58c80c2a-2532-4bc5-9c9f-52480b3af52a@kernel.org>
-Date: Sat, 21 Dec 2024 21:34:17 +0100
+	b=qmNU7mTFtc/T4SK9N3/HJnsytsAC7yoifQzQMmyabNyokhgdS03QGW4OR0dB93EUN
+	 TK+NCEBa3JYYI63ZNkZlQhUrPL9pv0mTvzkaIBt+yOVgeuLteRAm9UNOuG7rL2UKla
+	 vuAXxgUeToZuj9j/yf9Mv8jx7mJJ7Mw2pSAsZCIu3+bE+osmfXTI2zNh748DizYg7O
+	 f2LLxiQ3wKCjUBCSPpIYzCfjIqaSlAmhrGXOvKjP+qzQvtftzcdWsRRx0PRflAG+3b
+	 SdchDm5rFE5GesIA5pfK6llVQKrTjfLA6kasAPd5r/wxjdrmuE+7Y6qC5PjNacaxNU
+	 6QF2/m1FobdaA==
+Message-ID: <45f6e5e0-c145-40d9-8f0a-ffb25ecffb28@kernel.org>
+Date: Sat, 21 Dec 2024 21:35:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,13 +50,13 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/8] dt-bindings: Add MAX7360 subdevices
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Kamel Bouhara <kamel.bouhara@bootlin.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Subject: Re: [PATCH 4/8] pwm: max7360: Add MAX7360 PWM support
+To: mathieu.dubois-briand@bootlin.com, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kamel Bouhara
+ <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
  =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
@@ -64,7 +64,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  <gregory.clement@bootlin.com>,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 References: <20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com>
- <20241219-mdb-max7360-support-v1-2-8e8317584121@bootlin.com>
+ <20241219-mdb-max7360-support-v1-4-8e8317584121@bootlin.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -110,304 +110,54 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241219-mdb-max7360-support-v1-2-8e8317584121@bootlin.com>
+In-Reply-To: <20241219-mdb-max7360-support-v1-4-8e8317584121@bootlin.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 19/12/2024 17:21, Mathieu Dubois-Briand wrote:
-> ---
->  .../devicetree/bindings/gpio/max7360-gpio.yaml     | 96 ++++++++++++++++++++++
->  .../devicetree/bindings/input/max7360-keypad.yaml  | 67 +++++++++++++++
->  .../devicetree/bindings/input/max7360-rotary.yaml  | 52 ++++++++++++
->  .../devicetree/bindings/pwm/max7360-pwm.yaml       | 35 ++++++++
->  4 files changed, 250 insertions(+)
-
-
-I don't understand how this patchset was split. MFD binding cannot be
-empty and cannot be before child devices.
-
-All filenames are wrong here: use compatibles.
-
-
+On 19/12/2024 17:21, mathieu.dubois-briand@bootlin.com wrote:
+> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/max7360-gpio.yaml b/Documentation/devicetree/bindings/gpio/max7360-gpio.yaml
-> new file mode 100644
-> index 000000000000..3c006dc0380b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/max7360-gpio.yaml
-> @@ -0,0 +1,96 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/max7360-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Maxim MAX7360 GPIO controller
-> +
-> +maintainers:
-> +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-> +  - Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> +
-> +description: |
-> +  Maxim MAX7360 GPIO controller, in MAX7360 MFD
-> +  https://www.analog.com/en/products/max7360.html
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - maxim,max7360-gpio
-> +      - maxim,max7360-gpo
-
-Why? What are the differences?
-
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  ngpios:
-> +    minimum: 0
-> +    maximum: 8
-
-Why this is flexible?
-
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  interrupts:
-> +    description: The interrupt line the device is connected to.
-
-Drop
-
-> +    maxItems: 1
-> +
-> +  constant-current-disable:
-
-You always need vendor prefix.
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Bit field, each bit disables constant-current output of the
-> +                 associated GPIO.
-
-Oddly aligned.
-
-Missing constraints.
-
-> +
-> +
-> +required:
-> +  - compatible
-> +  - gpio-controller
-> +  - ngpios
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - maxim,max7360-gpio
-> +then:
-> +  required:
-> +    - interrupt-controller
-> +    - interrupts
-> +else:
-> +  properties:
-> +    interrupt-controller: false
-> +    interrupts: false
-> +    constant-current-disable: false
-> +
-> +    ngpios:
-> +      maximum: 6
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    max7360_gpo: max7360_gpo {
-
-Plaese follow DTS coding style.
-
-Keep only one, complete example.
-
-> +            compatible = "maxim,max7360-gpo";
-> +            gpio-controller;
-> +            #gpio-cells = <0x2>;
-> +            ngpios = <4>;
-
-Odd indentation. Your MFD patch had very different one.
-
-> +    };
-> +
-> +    max7360_gpio: max7360_gpio {
-> +            compatible = "maxim,max7360-gpio";
-> +
-> +            gpio-controller;
-> +            #gpio-cells = <0x2>;
-> +            ngpios = <8>;
-> +            constant-current-disable = <0x06>;
-> +
-> +            interrupt-controller;
-> +            #interrupt-cells = <0x2>;
-> +            interrupt-parent = <&gpio1>;
-> +            interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/input/max7360-keypad.yaml b/Documentation/devicetree/bindings/input/max7360-keypad.yaml
-> new file mode 100644
-> index 000000000000..8bc3c841465b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/max7360-keypad.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/input/max7360-keypad.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Maxim MAX7360 Keypad Controller
-> +
-> +maintainers:
-> +  - Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> +
-> +description: |
-> +  Maxim MAX7360 Keypad Controller, in MAX7360 MFD
-> +  https://www.analog.com/en/products/max7360.html
-> +
-> +allOf:
-> +  - $ref: matrix-keymap.yaml#
-> +  - $ref: input.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - maxim,max7360-keypad
-> +
-> +  interrupts:
-> +    description: The interrupt line the device is connected to.
+> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
+> 8 independent PWM outputs.
+> 
 
 
-Really? Each separate device has its own interrupt line? How is it
-possible if diagram here:
-https://www.analog.com/en/products/max7360.html
+...
 
-has only one interrupt?
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id max7360_pwm_of_match[] = {
+> +	{ .compatible = "maxim,max7360-pwm", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, max7360_pwm_of_match);
+> +#endif
+> +
+> +static struct platform_driver max7360_pwm_driver = {
+> +	.driver = {
+> +		.name = "max7360-pwm",
+> +		.of_match_table = of_match_ptr(max7360_pwm_of_match),
 
-Fold the binding into the parent node.
+Better to drop of_match_ptr and #ifdef earlier, so ACPI could use it.
 
-
-> +    maxItems: 1
+> +	},
+> +	.probe = max7360_pwm_probe,
+> +};
+> +module_platform_driver(max7360_pwm_driver);
 > +
-> +  debounce-delay-ms:
-> +    description: Debounce delay in ms
-> +    minimum: 9
-> +    maximum: 40
-> +    default: 9
-> +
-> +  linux,input-no-autorepeat:
-> +    description: If present, the keys will not autorepeat when pressed
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - linux,keymap
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/input/input.h>
-> +
-> +    max7360_keypad {
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+> +MODULE_DESCRIPTION("MAX7360 PWM driver");
+> +MODULE_AUTHOR("Kamel BOUHARA <kamel.bouhara@bootlin.com>");
+> +MODULE_ALIAS("platform:max7360-pwm");
 
 
-Please read and follow DTS coding style.
+You should not need MODULE_ALIAS() in normal cases. If you need it,
+usually it means your device ID table is wrong (e.g. misses either
+entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
+for incomplete ID table.
 
-> +      compatible = "maxim,max7360-keypad";
-> +
-> +      keypad,num-rows = <8>;
-> +      keypad,num-columns = <4>;
-> +
-> +      linux,keymap = <
-> +        MATRIX_KEY(0x00, 0x00, KEY_F5)
-> +        MATRIX_KEY(0x01, 0x00, KEY_F4)
-> +        MATRIX_KEY(0x02, 0x01, KEY_F6)
-> +        >;
-> +
-> +      interrupt-parent = <&gpio1>;
-> +      interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +      debounce-delay-ms = <10>;
-> +      linux,input-no-autorepeat;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/input/max7360-rotary.yaml b/Documentation/devicetree/bindings/input/max7360-rotary.yaml
-> new file mode 100644
-> index 000000000000..19afa8344249
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/max7360-rotary.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/input/max7360-rotary.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Maxim MAX7360 Rotary Encoder
-> +
-> +maintainers:
-> +  - Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> +
-> +description: |
-> +  Maxim MAX7360 Rotary Encoder, in MAX7360 MFD
-> +  https://www.analog.com/en/products/max7360.html
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - maxim,max7360-rotary
-> +
-> +  interrupts:
-> +    description: The interrupt line the device is connected to.
-> +    maxItems: 1
-> +
-> +  debounce-delay-ms:
-> +    description: Debounce delay in ms
-> +    minimum: 0
-> +    maximum: 15
-> +    default: 0
-> +
-> +  linux,axis:
-> +    description: The input subsystem axis to map to this rotary encoder.
-> +
-
-Fold into parent node.
-
-> +description: |
-> +  Maxim MAX7360 PWM controller, in MAX7360 MFD
-> +  https://www.analog.com/en/products/max7360.html
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - maxim,max7360-pwm
-> +
-> +  "#pwm-cells":
-> +    const: 2
-> +
-> +
-
-
-Fold into parent.
-
+Maybe you need it because OF table will get dropped, then it would be
+fine. But in current code it's unnecessary and copy-pasta from other
+drivers.
 
 
 Best regards,
