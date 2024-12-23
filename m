@@ -1,126 +1,125 @@
-Return-Path: <linux-pwm+bounces-4471-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4472-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3D2E9FB3B5
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 18:53:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 366089FB525
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 21:23:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A72418851FC
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 17:53:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44BFA1884ECE
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 20:23:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BEA91B87C6;
-	Mon, 23 Dec 2024 17:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="giAIkHKo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92BDC1C75F2;
+	Mon, 23 Dec 2024 20:23:49 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF138185935;
-	Mon, 23 Dec 2024 17:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1028E185935;
+	Mon, 23 Dec 2024 20:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734976394; cv=none; b=Gry0RUCJdPFKShLDzRVc+noJ5uCzo1OUK2NSJpDfj9fv6bsaXJPfppnoJGdKFZTnkTXN4bESwCLpBtrmWWXvI0E5UmRnNChWVBFSTxw4olScz+eeMlGkrCMIlqjEcXAKj8SRVT60PEXpEY3HCBGPRUg1BWHVtJeTiCIquv3bIYk=
+	t=1734985429; cv=none; b=sYix/QnUH+A46CvoRiuEMhylmiZuqgwPTF+hlQQe5nFqm9i4TXLeRexIBocJWg72+efL9I2f7BCn8D7xeLdldsk9dW33DNNIeYsT18zjzzHe4lIi9GJkOawO/6O0EnWBUKtlT4DfuQibOKKwqKtt6j7Rgq7uHkgHXTu7uWWxRcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734976394; c=relaxed/simple;
-	bh=9pt2mc+Hro4IIBg9xJYmH4WsQ2sUFDkjFv56f9JI1uk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
-	 References:In-Reply-To; b=VvmTXqdXXpahhj+CqBPHcDRRigEcjwyAXrHWEsiX+pwUC70ujD+cHeh4Vnb79zZCdBiO9neQwo43o5pAXGgFBhIksyguZhYQVROVTDireGzc1Y9k0FD2QiDonEJXJmpgOzVl7kXedWG04iiq/QtSVXcRfcscVIGbWffEA8HZ5Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=giAIkHKo; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 41C8820003;
-	Mon, 23 Dec 2024 17:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1734976383;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cjk9UW1eNK3gMr3FoXqpO4YXl9Ku7rP8HoF2YRA4Gwc=;
-	b=giAIkHKoW/gX+auGN1N7k0FYAV2QOsFWbzIcBhjlq3F6QW35otMOAKSfBZSld4rNQ9SEmz
-	8SQoVY0IG5XSxQ4I1YTPdNctu0BB/Tosy3O++ZAypbzBSuitSNhW5BY/D5Hpd9DnD4M6kl
-	kmamYKd2hG71PxiiZiiRoxc8rC0XkPUArnYc12yS1E7AghwdUAUR4/0NNKNLSoWrJUSS4E
-	Sz+Z+RTj7zjYoLieK2lGiGQ6gTlWiYqtY4gjBFzTT7HOI5wz9Nc44YAorKDtNCgz2RC/LZ
-	BkxaZVyjNnowJDbq7/jitj2YpCNMRSA1NAADrtGbrqxszJb0bNfC69d3Gpt52Q==
+	s=arc-20240116; t=1734985429; c=relaxed/simple;
+	bh=EhpspA5sajDc9hrd86Als7SI/ixPtGf9S25wwVgK7Us=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nVqykMc1gJDOxL6lVugBKlRJbtGQTVHNprYA8GCuQTsXSHzoRbjDrRJjATLITFV4oEblTvfOO5jIIx7VgLkrzLh2GurveZovKTdB6Mel7SqXi3gw7GW1Xv9DqCsD/X7RgVFgP/S/I6jTATf/Lpp1ZfFoA2SgYzJZF+QkG0IeXHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YH8Wr3bFBz6K5cM;
+	Tue, 24 Dec 2024 04:19:52 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6DB69140B3C;
+	Tue, 24 Dec 2024 04:23:43 +0800 (CST)
+Received: from localhost (10.47.75.118) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 23 Dec
+ 2024 21:23:41 +0100
+Date: Mon, 23 Dec 2024 20:23:39 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Zijun Hu <zijun_hu@icloud.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij
+	<linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, James Bottomley
+	<James.Bottomley@HansenPartnership.com>, Thomas =?ISO-8859-1?Q?Wei=DFschu?=
+ =?ISO-8859-1?Q?h?= <thomas@t-8ch.de>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-sound@vger.kernel.org>,
+	<sparclinux@vger.kernel.org>, <linux-block@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux1394-devel@lists.sourceforge.net>,
+	<arm-scmi@vger.kernel.org>, <linux-efi@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-hwmon@vger.kernel.org>,
+	<linux-media@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+	<linux-remoteproc@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+	<linux-usb@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+	<netdev@vger.kernel.org>, Zijun Hu <quic_zijuhu@quicinc.com>, "Alison
+ Schofield" <alison.schofield@intel.com>
+Subject: Re: [PATCH v4 01/11] libnvdimm: Replace namespace_match() with
+ device_find_child_by_name()
+Message-ID: <20241223202339.00004dc1@huawei.com>
+In-Reply-To: <20241211-const_dfc_done-v4-1-583cc60329df@quicinc.com>
+References: <20241211-const_dfc_done-v4-0-583cc60329df@quicinc.com>
+	<20241211-const_dfc_done-v4-1-583cc60329df@quicinc.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Dec 2024 18:53:03 +0100
-Message-Id: <D6J9SRCAVWY8.1RY8GDZHEBG3P@bootlin.com>
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Subject: Re: [PATCH v2 0/7] Add support for MAX7360
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com>
- <f5memlwoahjjvvian4hutan724msi3ojbkhdaoqvtqstnhvfqt@xkdyrpfvy2gp>
- <guxwaw4gapkak3ooy5njkcehk7r7zcfy5ibbkzvnqzwth443hj@wcqvllfixfg5>
-In-Reply-To: <guxwaw4gapkak3ooy5njkcehk7r7zcfy5ibbkzvnqzwth443hj@wcqvllfixfg5>
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon Dec 23, 2024 at 6:09 PM CET, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Mathieu,
->
-> On Mon, Dec 23, 2024 at 06:05:39PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > On Mon, Dec 23, 2024 at 05:42:32PM +0100, Mathieu Dubois-Briand wrote:
-> > > - Removing device tree subnodes for keypad, rotary encoder and pwm
-> > >   functionalities.
-> >=20
-> > How did you test the pwm? Just using sysfs? Without a node there is
-> > hardly any other usage left, because you cannot pass the pwm to e.g. a
-> > pwm-fan node. So it might be sensible to drop the nodes for keypad and
-> > rotary encoder, but I think you better keep the pwm one.
->
-> I think I was to quick here. It might just work ...
->
-> Best regards
-> Uwe
+On Wed, 11 Dec 2024 08:08:03 +0800
+Zijun Hu <zijun_hu@icloud.com> wrote:
 
-Hi Uwe,
+> From: Zijun Hu <quic_zijuhu@quicinc.com>
+> 
+> Simplify nd_namespace_store() implementation by
+> using device_find_child_by_name().
+> 
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+LGTM
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-I also had some doubt here, keeping the node might be bit more clear but
-I thought you wanted me to drop it.
-
-And yes, as you said, it does work. For reference, I test it using some
-pwm-led:
-
-pwm-leds {
-	compatible =3D "pwm-leds";
-
-	battery {
-		label =3D "battery";
-		pwms =3D <&max7360 0 2000000 0>;
-		max-brightness =3D <128>;
-		linux,default-trigger =3D "heartbeat";
-	};
-};
-
-Where &max7360 is a reference to the root node (io-expander@38 in the
-binding example).
-
-Best regards,
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> ---
+>  drivers/nvdimm/claim.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/claim.c b/drivers/nvdimm/claim.c
+> index 030dbde6b0882050c90fb8db106ec15b1baef7ca..9e84ab411564f9d5e7ceb687c6491562564552e3 100644
+> --- a/drivers/nvdimm/claim.c
+> +++ b/drivers/nvdimm/claim.c
+> @@ -67,13 +67,6 @@ bool nd_attach_ndns(struct device *dev, struct nd_namespace_common *attach,
+>  	return claimed;
+>  }
+>  
+> -static int namespace_match(struct device *dev, void *data)
+> -{
+> -	char *name = data;
+> -
+> -	return strcmp(name, dev_name(dev)) == 0;
+> -}
+> -
+>  static bool is_idle(struct device *dev, struct nd_namespace_common *ndns)
+>  {
+>  	struct nd_region *nd_region = to_nd_region(dev->parent);
+> @@ -168,7 +161,7 @@ ssize_t nd_namespace_store(struct device *dev,
+>  		goto out;
+>  	}
+>  
+> -	found = device_find_child(dev->parent, name, namespace_match);
+> +	found = device_find_child_by_name(dev->parent, name);
+>  	if (!found) {
+>  		dev_dbg(dev, "'%s' not found under %s\n", name,
+>  				dev_name(dev->parent));
+> 
 
 
