@@ -1,50 +1,50 @@
-Return-Path: <linux-pwm+bounces-4456-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4457-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 456949FB0A8
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 16:20:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8623F9FB0B5
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 16:27:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B20791607DF
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 15:20:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D002E18827EC
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 15:27:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34B4974E09;
-	Mon, 23 Dec 2024 15:20:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 044FE139587;
+	Mon, 23 Dec 2024 15:27:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CyKrfSqH"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PFxTzXP6"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929F2632;
-	Mon, 23 Dec 2024 15:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFD2EAD7;
+	Mon, 23 Dec 2024 15:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734967219; cv=none; b=ai4poc8obzM499w2FSNTHBtuX/KM3OK7Jst00w5/obYHlds6oKdvcj7quKJMAUV6sJoUa20YEMYp4d1Gzad661IZm261MEREqbVTMjq5GbnJyD9/jA2xPauiW8TzRMa2YI/TQwn5XjsKP3oPS/9RmpdFrwTpa13w9+OA0YUPu7M=
+	t=1734967623; cv=none; b=lfyrLNVOpQQPF4DZJd5UuoAI7cUuAzyhQJJUGU4fJVIfpaPrFbJs1zU11sqaumyinP6im6k7sbU7QzYjWaIq4Y+Y0xbj3vw1KTjIzCWfzAFw/1fK4AE/n3Sluvbpk4VhRR/ZJLAzzfxw/jk6uh5x2V4YGoCiSZ6iergICQYvEzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734967219; c=relaxed/simple;
-	bh=62f7MR0lvrWRvwYt+jP3G+C5AuOHr6wimnLsDb2fZ8o=;
+	s=arc-20240116; t=1734967623; c=relaxed/simple;
+	bh=1AxrEYae/8keZjZRylCLdAjkmWMXIDb85GQ0utouP50=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
-	 References:In-Reply-To; b=aDtywXHaFfiLGh+XgRodKQ+g9qFOW7Xcv4nzhJqQue6bEtdQPuehfFfLp8pBdsGucqPS5OTeVPmQHhZjOzdy+sObXhgn0qH58VbYLP1lg/xzdRMuugB3eiHH6dhlTJpVAmhzneeuXolXgKF0+j0swyqg264838ykrTuJRYauUj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CyKrfSqH; arc=none smtp.client-ip=217.70.183.193
+	 References:In-Reply-To; b=H8eLU26HID6mzR6m9jQMmFdYuQGdyc+qDYpI1eyl0XmfyA9r7d2HBeGCufQjyPKhidh6VFwTpEdZoh60liZtlc+2Rxw1pFbD3BTiwFPWo0ZGDsw2p1JPt9FrB1ketmdLGwydtomlMrgbWBwZzQ2Em2O94odMJcgO+i43QoIcewo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PFxTzXP6; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 560F824000D;
-	Mon, 23 Dec 2024 15:20:07 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 170061BF208;
+	Mon, 23 Dec 2024 15:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1734967208;
+	t=1734967612;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RRVcBhzqu08zrLHWPj0Xl/roM7wAyKWNWiZLKd4f5Jk=;
-	b=CyKrfSqHIX/0s2GehqCYWtnaBxUl6NK/R9yPpnhg4bdZrgW2qQYt8rFy8tL6tcW9FOYfUY
-	FAbjoXlgHcMgOoZXcwP6CMlJZGRIA2T3yyjObxIhhesHqL8ebeM1vJs3cgDMwF3nExxUlp
-	QqsCHEE9KIpMLjUDAgSIqBNGO6DZoynQrbTqCx+N+t+XHnnIGU51lfWirJVr7L5H27Ymz6
-	II/tx2SfyXvfM69GBqle+YlHtG4SkzTaugQZcLpXzVJblvJmysXipjqe8iKW1G+ajf5cUG
-	OBDi9vc5OypHt5jv/xB/YOwFTJz2haQ3W/nakvFFphpBN4W3E0/VRYc8NMt5ZQ==
+	bh=tx3Bs+kugCr+GdrUnC6eLJ8dWD/v6KQ1F9CB3XGzs4I=;
+	b=PFxTzXP6W4TWXsS2xW44fW08wHbSogjXdxQ7e1PWdEnd0w4gLfF/h99T/ETZcL6pR/unXI
+	UTj8UErx2lW5wbtgYLedC1ZOtS+LG4KZRpSgnSd/pjT6n3oLOGBn6zUmHf6P6n6g7K3ZQ5
+	KKo3017sSzRD/lzTjo4QfbzVXpga8AoOv4odD0StTmu+ZjPpXM0ChLyRg1Y/VUBenyA3xL
+	3B8zlvHE7YpzniBuvd9MtjtghgJ7ZOthMgyKInmxzJtXSjZoPTzeCLbGe3K+pZ9Qic+hyq
+	DGzeip5oSAOI+HYjGx+UOpfN6jRNMNUAMMfZxkAnodvgB6pl8j5j5F5B7E9Jnw==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -53,139 +53,70 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 23 Dec 2024 16:20:06 +0100
-Message-Id: <D6J6JNPPZRKM.3F9YUY9CW3L2F@bootlin.com>
-Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+Date: Mon, 23 Dec 2024 16:26:51 +0100
+Message-Id: <D6J6OTNHYWN8.1PGNZILBAGCS0@bootlin.com>
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
  <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
  <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
  <gregory.clement@bootlin.com>, "Thomas Petazzoni"
  <thomas.petazzoni@bootlin.com>
 From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Lee Jones" <lee@kernel.org>,
- "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>
-Subject: Re: [PATCH 2/8] dt-bindings: Add MAX7360 subdevices
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Subject: Re: [PATCH 4/8] pwm: max7360: Add MAX7360 PWM support
 X-Mailer: aerc 0.18.2-0-ge037c095a049
 References: <20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com>
- <20241219-mdb-max7360-support-v1-2-8e8317584121@bootlin.com>
- <58c80c2a-2532-4bc5-9c9f-52480b3af52a@kernel.org>
-In-Reply-To: <58c80c2a-2532-4bc5-9c9f-52480b3af52a@kernel.org>
+ <20241219-mdb-max7360-support-v1-4-8e8317584121@bootlin.com>
+ <dmfnpq57n3s32o33pm7wfppr5nttdvtuthe7hf32psmykotrox@mogq35gj6rjq>
+In-Reply-To: <dmfnpq57n3s32o33pm7wfppr5nttdvtuthe7hf32psmykotrox@mogq35gj6rjq>
 X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Sat Dec 21, 2024 at 9:34 PM CET, Krzysztof Kozlowski wrote:
-> On 19/12/2024 17:21, Mathieu Dubois-Briand wrote:
-> > ---
-> >  .../devicetree/bindings/gpio/max7360-gpio.yaml     | 96 ++++++++++++++=
-++++++++
-> >  .../devicetree/bindings/input/max7360-keypad.yaml  | 67 ++++++++++++++=
-+
-> >  .../devicetree/bindings/input/max7360-rotary.yaml  | 52 ++++++++++++
-> >  .../devicetree/bindings/pwm/max7360-pwm.yaml       | 35 ++++++++
-> >  4 files changed, 250 insertions(+)
+On Thu Dec 19, 2024 at 10:53 PM CET, Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
 >
->
-> I don't understand how this patchset was split. MFD binding cannot be
-> empty and cannot be before child devices.
->
-
-Ok, my bad. So I believe squashing both dt-bindings commit should fix
-this.
-
-> > diff --git a/Documentation/devicetree/bindings/gpio/max7360-gpio.yaml b=
-/Documentation/devicetree/bindings/gpio/max7360-gpio.yaml
-> > new file mode 100644
-> > index 000000000000..3c006dc0380b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/max7360-gpio.yaml
-> > @@ -0,0 +1,96 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/gpio/max7360-gpio.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> On Thu, Dec 19, 2024 at 05:21:21PM +0100, mathieu.dubois-briand@bootlin.c=
+om wrote:
+> > From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> >=20
+> > +	int ret;
 > > +
-> > +title: Maxim MAX7360 GPIO controller
+> > +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+> > +		return -EINVAL;
 > > +
-> > +maintainers:
-> > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > +  - Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> > +	max7360_pwm =3D to_max7360_pwm(chip);
+> > +	ret =3D regmap_write_bits(max7360_pwm->regmap, MAX7360_REG_GPIOCTRL,
+> > +				MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm),
+> > +				MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm));
+> > +	if (ret) {
+> > +		dev_err(&chip->dev, "failed to enable pwm-%d , error %d\n",
+> > +			pwm->hwpwm, ret);
+> > +		return ret;
+> > +	}
 > > +
-> > +description: |
-> > +  Maxim MAX7360 GPIO controller, in MAX7360 MFD
-> > +  https://www.analog.com/en/products/max7360.html
+> > +	do_div(duty_steps, MAX7360_PWM_PERIOD_NS);
 > > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - maxim,max7360-gpio
-> > +      - maxim,max7360-gpo
+> > +	ret =3D regmap_write(max7360_pwm->regmap, MAX7360_REG_PWMBASE + pwm->=
+hwpwm,
+> > +			   duty_steps >=3D 255 ? 255 : duty_steps);
+> > +	if (ret) {
+> > +		dev_err(&chip->dev,
+> > +			"failed to apply pwm duty_cycle %llu on pwm-%d, error %d\n",
+> > +			duty_steps, pwm->hwpwm, ret);
+> > +		return ret;
+> > +	}
 >
-> Why? What are the differences?
->
-
-Ok, so maybe my approach here is completely wrong. I'm not sure what
-would be the best way to describe the device here, if you have any
-suggestion I would be happy to use it. Let me try to summarize the GPIO
-setup of the chip.
-
-First we have two series of GPIOs on the chips, which I tend to think
-about as two separate "banks". Thus two separate subnodes of the max7360
-node.
-
-- On one side we have what I refer to as GPIOs, here with
-  maxim,max7360-gpio:
-  - PORT0 to PORT7 pins of the chip.
-  - Shared with PWM and rotary encoder functionalities. Functionality
-    selection can be made independently for each pin. This selection is
-    not described here. Runtime will have to ensure the same pin is not
-    used by two drivers at the same time. E.g. we cannot have at the
-    same time GPIO4 and PWM4.
-  - Supports input and interrupts.
-  - Outputs may be configured as constant current.
-  - 8 GPIOS supported, so ngpios maximum is 8. Thinking about it now, we
-    should probably also set minimum to 8, I don't see any reason to
-    have ngpios set to something less.
-
-On the other side, we have what I refer to as GPOs, here with
-maxim,max7360-gpo compatible:
-  - COL2 to COL7 pins of the chip.
-  - Shared with the keypad functionality. Selections is made by
-    partitioning the pins: first pins for keypad columns, last pins for
-    GPOs. Partition is described here by ngpios and on keypad node by
-    keypad,num-columns. Runtime will have to ensure values are coherent
-    and configure the chip accordingly.
-  - Only support outputs.
-  - No support for constant current mode.
-  - Supports 0 to 6 GPOs, so ngpios maximum is 6.
-
-> > +
-> > +  gpio-controller: true
-> > +
-> > +  "#gpio-cells":
-> > +    const: 2
-> > +
-> > +  ngpios:
-> > +    minimum: 0
-> > +    maximum: 8
->
-> Why this is flexible?
+> Huh, state->period isn't used at all. That is wrong for sure.
 >
 
-I believe this makes sense, as this keypad/gpos partition really changes
-the actual number of GPIOS. Yet we could argue that this is just runtime
-configuration. Tell me what you think about it, if you think this should
-be a fixed value, I will find a way.
+Yes this was definitely missing. Period is fixed by the chip, so I will
+make sure the requested one is valid or return -EINVAL.
 
->
-> Best regards,
-> Krzysztof
-
-Thanks a lot for your review. I am preparing a new version of this
-series that should address all of your other comments.
+Thanks a lot for your review, I am preparing a new version of this
+series that should address all your comments.
 
 --=20
 Mathieu Dubois-Briand, Bootlin
