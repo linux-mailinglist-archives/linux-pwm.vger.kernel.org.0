@@ -1,110 +1,126 @@
-Return-Path: <linux-pwm+bounces-4470-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4471-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6461D9FB37F
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 18:12:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3D2E9FB3B5
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 18:53:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B95A1884213
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 17:12:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A72418851FC
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 17:53:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2459B1B4126;
-	Mon, 23 Dec 2024 17:12:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BEA91B87C6;
+	Mon, 23 Dec 2024 17:53:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wbgmi2zp"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="giAIkHKo"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF326482ED;
-	Mon, 23 Dec 2024 17:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF138185935;
+	Mon, 23 Dec 2024 17:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734973929; cv=none; b=BVVjmhqJ5Fyo1xhs0H0QH+a+6S36UTWDRdqHvTQd3WqGva3ldx9uUIzbhaaNM3UB55LX5XPmzLvUKi/Kli7fqOcCFSF3zwEtk+g59PJdZhmnhpM2DTZ18B+1t5HqZZfG8PA78DpEkED239JDT/IcrXujn7AUxM2+/pMQ/iFK8N4=
+	t=1734976394; cv=none; b=Gry0RUCJdPFKShLDzRVc+noJ5uCzo1OUK2NSJpDfj9fv6bsaXJPfppnoJGdKFZTnkTXN4bESwCLpBtrmWWXvI0E5UmRnNChWVBFSTxw4olScz+eeMlGkrCMIlqjEcXAKj8SRVT60PEXpEY3HCBGPRUg1BWHVtJeTiCIquv3bIYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734973929; c=relaxed/simple;
-	bh=wwRttVYzYFx4SEqahRXroiq61I9r7WSdOCujIaurdms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P9/ZhFEPY8qnAg3vAX0udWVKdGnFngz5NdJa/Cgdl2RPh8xx1BDkLSWajc9GDkxlt0sNMKz+nT4qNyQ8tph5561N7EF+K2KJVRai36QvmBLg9mMhPtun5+ZfSx7Kdfvr/WFHKGt2zVIviG/RIGHGLjP/yc6k8jglLA9ILBxzeqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wbgmi2zp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 137A5C4CED3;
-	Mon, 23 Dec 2024 17:12:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734973928;
-	bh=wwRttVYzYFx4SEqahRXroiq61I9r7WSdOCujIaurdms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wbgmi2zpw801GNJt1pkzIPqYry3B2v1GR1jLuOARMC+BwZXLMYKYZGXtBS1zGpQij
-	 V6GuUjDzJmN6fRfHIxY6AWXsirje0l8KQD3VplGlSRGnkIm03zbztltkPTpxwBfpJA
-	 Q1bKZphFrzgjAh6uG1CKotmQGdo56FLIXAv/FAy3Px8wq3oJjoEMq8rQUs71A5/2+y
-	 +dlm/RFCq5+Nnp2WV+RgV291qa7IW2GpDAXCQ9fsUhKVvBlxIEK5ixhuF/LlY8kxkn
-	 RaIn0F6C6Xmodart0DVC/lVOZnDFzZFU3LkoyOCSVQ77UbFXttyH9Z8gRq/nZps+nf
-	 zAJLfWtkFpyWw==
-Date: Mon, 23 Dec 2024 18:12:05 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: William Qiu <william.qiu@starfivetech.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Hal Feng <hal.feng@starfivetech.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v16] pwm: opencores: Add PWM driver support
-Message-ID: <52j6gtyzf4uwfkxxlfschygnvuwl2l4iaf7mzbi2nbzxtmlemf@dktywu73nldg>
-References: <20241028014609.153997-1-william.qiu@starfivetech.com>
- <bfwpcffdrxqjes4atio6deltu5tgmd4ing7j4yewwp6jprqmmc@rv2x3qudlzo3>
- <ZQ0PR01MB1253A5B870FF90900A2643009F02A@ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn>
+	s=arc-20240116; t=1734976394; c=relaxed/simple;
+	bh=9pt2mc+Hro4IIBg9xJYmH4WsQ2sUFDkjFv56f9JI1uk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
+	 References:In-Reply-To; b=VvmTXqdXXpahhj+CqBPHcDRRigEcjwyAXrHWEsiX+pwUC70ujD+cHeh4Vnb79zZCdBiO9neQwo43o5pAXGgFBhIksyguZhYQVROVTDireGzc1Y9k0FD2QiDonEJXJmpgOzVl7kXedWG04iiq/QtSVXcRfcscVIGbWffEA8HZ5Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=giAIkHKo; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 41C8820003;
+	Mon, 23 Dec 2024 17:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1734976383;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cjk9UW1eNK3gMr3FoXqpO4YXl9Ku7rP8HoF2YRA4Gwc=;
+	b=giAIkHKoW/gX+auGN1N7k0FYAV2QOsFWbzIcBhjlq3F6QW35otMOAKSfBZSld4rNQ9SEmz
+	8SQoVY0IG5XSxQ4I1YTPdNctu0BB/Tosy3O++ZAypbzBSuitSNhW5BY/D5Hpd9DnD4M6kl
+	kmamYKd2hG71PxiiZiiRoxc8rC0XkPUArnYc12yS1E7AghwdUAUR4/0NNKNLSoWrJUSS4E
+	Sz+Z+RTj7zjYoLieK2lGiGQ6gTlWiYqtY4gjBFzTT7HOI5wz9Nc44YAorKDtNCgz2RC/LZ
+	BkxaZVyjNnowJDbq7/jitj2YpCNMRSA1NAADrtGbrqxszJb0bNfC69d3Gpt52Q==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dafvxmpsmlmm6kt4"
-Content-Disposition: inline
-In-Reply-To: <ZQ0PR01MB1253A5B870FF90900A2643009F02A@ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn>
-
-
---dafvxmpsmlmm6kt4
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v16] pwm: opencores: Add PWM driver support
-MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 23 Dec 2024 18:53:03 +0100
+Message-Id: <D6J9SRCAVWY8.1RY8GDZHEBG3P@bootlin.com>
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Subject: Re: [PATCH v2 0/7] Add support for MAX7360
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com>
+ <f5memlwoahjjvvian4hutan724msi3ojbkhdaoqvtqstnhvfqt@xkdyrpfvy2gp>
+ <guxwaw4gapkak3ooy5njkcehk7r7zcfy5ibbkzvnqzwth443hj@wcqvllfixfg5>
+In-Reply-To: <guxwaw4gapkak3ooy5njkcehk7r7zcfy5ibbkzvnqzwth443hj@wcqvllfixfg5>
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Hello William,
-
-On Mon, Dec 23, 2024 at 02:47:59AM +0000, William Qiu wrote:
-> > > +	duty_data =3D mul_u64_u32_div(state->duty_cycle, ddata->clk_rate,
-> > NSEC_PER_SEC);
-> > > +	if (!duty_data)
-> > > +		return -EINVAL;
-> >=20
-> > I can understand that period_data =3D=3D 0 is an error, but duty_data =
-=3D=3D 0
-> > could/should just work?!
+On Mon Dec 23, 2024 at 6:09 PM CET, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Mathieu,
 >
-> It means no need to check whether the duty is valid?=20
+> On Mon, Dec 23, 2024 at 06:05:39PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > On Mon, Dec 23, 2024 at 05:42:32PM +0100, Mathieu Dubois-Briand wrote:
+> > > - Removing device tree subnodes for keypad, rotary encoder and pwm
+> > >   functionalities.
+> >=20
+> > How did you test the pwm? Just using sysfs? Without a node there is
+> > hardly any other usage left, because you cannot pass the pwm to e.g. a
+> > pwm-fan node. So it might be sensible to drop the nodes for keypad and
+> > rotary encoder, but I think you better keep the pwm one.
+>
+> I think I was to quick here. It might just work ...
+>
+> Best regards
+> Uwe
 
-No, it means that I expect that duty_data =3D=3D 0 is a valid setting and
-most controllers support it.
+Hi Uwe,
 
-Best regards
-Uwe
+I also had some doubt here, keeping the node might be bit more clear but
+I thought you wanted me to drop it.
 
---dafvxmpsmlmm6kt4
-Content-Type: application/pgp-signature; name="signature.asc"
+And yes, as you said, it does work. For reference, I test it using some
+pwm-led:
 
------BEGIN PGP SIGNATURE-----
+pwm-leds {
+	compatible =3D "pwm-leds";
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmdpmeMACgkQj4D7WH0S
-/k4XIggAhsvY4QRMqJbvVPJrAcWHSljqDjtFCkLc3kpRiaeEAeAOUGqsbcDZukSA
-w/Ma+hfWiJc9DtP7D2g9vxf5SHh1qPqsSGn6ADjLMch/lcgdRg2gntXop3lMSKZm
-ajii77yOeiN7Bcou5dkK0LEwx/Rd7jFELlZ6VIbZ4KUklIR0QJDq348+nnHmC849
-dznvoIX/DzB7xtx+XEqGsR7EMX+H4sKSoUVWjqhsFkqw1NNgP+DplZG2uxYA3xgr
-eEnqDzlURzO7WDQCQHNupNqvAmRvkBj3UCgfQxrB7Dtn0kLW6w9d0YZ4QeVX5FqC
-XbDXDISRNnLX3DjBBBJ+JFkgmGdWRw==
-=ch0j
------END PGP SIGNATURE-----
+	battery {
+		label =3D "battery";
+		pwms =3D <&max7360 0 2000000 0>;
+		max-brightness =3D <128>;
+		linux,default-trigger =3D "heartbeat";
+	};
+};
 
---dafvxmpsmlmm6kt4--
+Where &max7360 is a reference to the root node (io-expander@38 in the
+binding example).
+
+Best regards,
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
