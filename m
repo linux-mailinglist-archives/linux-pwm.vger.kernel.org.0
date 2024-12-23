@@ -1,57 +1,57 @@
-Return-Path: <linux-pwm+bounces-4454-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4455-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5ECA29FADCB
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 12:40:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 423749FAE0C
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 13:00:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 757551883770
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 11:40:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ACAD4162F27
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Dec 2024 12:00:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FE4119D062;
-	Mon, 23 Dec 2024 11:40:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E48F1A3A95;
+	Mon, 23 Dec 2024 12:00:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W4oWJt14"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AauwYI7r"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3D6198A32;
-	Mon, 23 Dec 2024 11:40:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4340719A2B0;
+	Mon, 23 Dec 2024 12:00:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734954017; cv=none; b=d6FGMZaIWVHFwPKsegXKTHkFdvivItQkkEB0eoK/ASxvHjxx0nA35bSOaszPMlo0Up8P6T/XyhSOBxG/6H+OonOswZe3olKzYXXnCFW2CmmFj3L2DQP6seoKqAWCl3Vwa6tV0532aJM53a1tA/NZi/I4TvDjqEafVUYJUzElSDM=
+	t=1734955214; cv=none; b=CX8bbCbuIx17p1OeK14/T8bb2U3TfAQr2ODJS3LkLaU8pjzTP2NQvJTerJ4ISB3YEeLHgAk8+lDGcoFurylCvXVRk7y9Mw+f/6xAjSS1ERjdQnB1vIKzEW+D54Dgi49pjQYSPT0MW96afW6j8M5dHtGrJ/JuK5ckplAnubTC0JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734954017; c=relaxed/simple;
-	bh=V/rsj8Uig8i64mxEasJC+tWmHc0irmVmzCE867blUeo=;
+	s=arc-20240116; t=1734955214; c=relaxed/simple;
+	bh=eMBtvlonX6DFqouKQusWoFxDUDng4gku7MeD9UIBZ8Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CA34T96UBAz/qH6WyrvsNrv5d9AyRZoNkWIghu/V8EetklZ3lQGI6E/gALPbPZNq614TahA7+EFiFh/Tn05sFWkes1khXAfw9bgbRryid0IyW7/6PYhhGmuahyJM3+DJF6VCyQBacVTKMcXVkNcwMAvCbIZjh+gopZn/RmAQnUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W4oWJt14; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 724EDC4CED3;
-	Mon, 23 Dec 2024 11:40:13 +0000 (UTC)
+	 MIME-Version:Content-Type; b=rLDB+8YS60pFWOTnDqpQZKHIHa37SV82QLcbxPXhoNfNoV+TvhP9rAXw+A8OcxFgFgn5YTW3U2aMAW9qna9qj6FytSL2x3/nHRYaPNXVLT8sKmn0rE6p4e0jTnyU5SBLWyCVjOd8S6U2uOEyqAL3EfIZDEPkXXxozxQzeQ2bl+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AauwYI7r; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD743C4CED3;
+	Mon, 23 Dec 2024 12:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734954016;
-	bh=V/rsj8Uig8i64mxEasJC+tWmHc0irmVmzCE867blUeo=;
+	s=k20201202; t=1734955213;
+	bh=eMBtvlonX6DFqouKQusWoFxDUDng4gku7MeD9UIBZ8Q=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=W4oWJt14jqrfVsP8reOZf1HaCJkaKngXY8ZalP3+wShrlEpHOJ9VM3TVgHR81Rpm8
-	 5YC1HmZn73QWOfC8Ll5OjS3zjZHFTTwkqvU+41LyZZAN2X6vE/ONhE9kocQZ4GHgrw
-	 s4Qz0FeO0fvP8WuDIeIdRad5iRf0KOUbRdBmnc6EKJUa9OY2+cBrC5z6e5MnNCpkfy
-	 UgEjUS3RrL6gs7k2GZ7jmXoq8/ucf6Xb/E7vZFpqZwgGYHXZzwMgnzyDy0T84DTwSV
-	 wMIELrDOTwbio4L987dRSwHRuOlwR7+q3w0on6F43wkJdyIBYsAxuGLu+mvpeFrPbB
-	 oGVFD9lygEVBg==
-Date: Mon, 23 Dec 2024 11:40:08 +0000
+	b=AauwYI7rgHHJI3jf+lci6S7Wu+tcW6TJE5YM1FOIq4Ic/KmaoRseGUm+NZ9Lw3iWe
+	 uUgVa/SQyn/VwhOKc0Ng9+zUnMIICb/qDlKHca4iLra7XBFtvyRHnMBh97f4DbH4Zf
+	 5m+NDTJU1BXlfeV+PWSF/iYCcL4+S5/EQit/d4nTrjPJOYbXtHcflbMY8eIwn8qcY+
+	 s8wzttZk0RbCROaFe5OI9HupeZfzUjEukKTDyu17WsvexEgifAQ8ZIayU2r2RNxqkr
+	 AYXa8ah0ICKCYuKGi/Ip4reY09+bG1yK4FNp8hiLJLyeeQaoaVNXx5rsbLS0LDoPUo
+	 pWvHs2FdN4MSw==
+Date: Mon, 23 Dec 2024 12:00:05 +0000
 From: Jonathan Cameron <jic23@kernel.org>
 To: Antoniu Miclaus <antoniu.miclaus@analog.com>
 Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linux-iio@vger.kernel.org>,
  <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v9 7/8] dt-bindings: iio: adc: add ad4851
-Message-ID: <20241223114008.71e00bee@jic23-huawei>
-In-Reply-To: <20241220120134.42760-7-antoniu.miclaus@analog.com>
+ <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v9 8/8] iio: adc: ad4851: add ad485x driver
+Message-ID: <20241223120005.1bc9a208@jic23-huawei>
+In-Reply-To: <20241220120134.42760-8-antoniu.miclaus@analog.com>
 References: <20241220120134.42760-1-antoniu.miclaus@analog.com>
-	<20241220120134.42760-7-antoniu.miclaus@analog.com>
+	<20241220120134.42760-8-antoniu.miclaus@analog.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -62,191 +62,386 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Dec 2024 14:01:33 +0200
+On Fri, 20 Dec 2024 14:01:34 +0200
 Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
 
-> Add devicetree bindings for ad485x family.
+> Add support for the AD485X a fully buffered, 8-channel simultaneous
+> sampling, 16/20-bit, 1 MSPS data acquisition system (DAS) with
+> differential, wide common-mode range inputs.
 > 
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Mixed single end and differential channel devices that have per channel
-child nodes need a more complex description to avoid reg have different
-and possibly clashing meanings for the two types of channel.
+> ---
+> changes in v9:
+>  - add back diff-channels property parsing.
+>  - shrink code in one line where possible.
+>  - use struct device *dev = &st->spi->dev
+>  - split elements that are assigned from those which aren't in the places
+>    mentioned by the review.
+>  - avoid code duplication on num_channels
+>  - parse bipolar and diff-channels properties separately.
+>  - update comment on parse_channels
+>  - use devm_regulator_get_enable_optional for vrefbuf and vrefio
+>  - add devm_add_action_or_reset(&st->spi->dev, ad4851_pwm_disable, st->cnv)
+>    after the pwm is turned on.
 
-See inline.
+A few comments inline.  The one about checking for existence of voltage
+regulators is (I think) a bug. The rest more superficial stuff given
+you are going to be doing a v10.  I might otherwise have just tweaked
+some of these whilst applying.
 
 Thanks,
 
 Jonathan
 
-> ---
-> changes in v9:
->  - add back diff-channels property.
->  .../bindings/iio/adc/adi,ad4851.yaml          | 142 ++++++++++++++++++
->  1 file changed, 142 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
+
+> diff --git a/drivers/iio/adc/ad4851.c b/drivers/iio/adc/ad4851.c
 > new file mode 100644
-> index 000000000000..5911f1cfc39d
+> index 000000000000..c5525433990c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
-> @@ -0,0 +1,142 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright 2024 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4851.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD485X family
-> +
-> +maintainers:
-> +  - Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> +  - Dragos Bogdan <dragos.bogdan@analog.com>
-> +  - Antoniu Miclaus <antoniu.miclaus@analog.com>
-> +
-> +description: |
-> +  Analog Devices AD485X fully buffered, 8-channel simultaneous sampling,
-> +  16/20-bit, 1 MSPS data acquisition system (DAS) with differential, wide
-> +  common-mode range inputs.
-> +
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad4855.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad4856.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad4857.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad4858.pdf
-> +
-> +$ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad4851
-> +      - adi,ad4852
-> +      - adi,ad4853
-> +      - adi,ad4854
-> +      - adi,ad4855
-> +      - adi,ad4856
-> +      - adi,ad4857
-> +      - adi,ad4858
-> +      - adi,ad4858i
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vcc-supply: true
-> +
-> +  vee-supply: true
-> +
-> +  vdd-supply: true
-> +
-> +  vddh-supply: true
-> +
-> +  vddl-supply: true
-> +
-> +  vio-supply: true
-> +
-> +  vrefbuf-supply: true
-> +
-> +  vrefio-supply: true
-> +
-> +  pwms:
-> +    description: PWM connected to the CNV pin.
-> +    maxItems: 1
-> +
-> +  io-backends:
-> +    maxItems: 1
-> +
-> +  pd-gpios:
-> +    maxItems: 1
-> +
-> +  spi-max-frequency:
-> +    maximum: 25000000
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^channel(@[0-7])?$":
-> +    $ref: adc.yaml
-> +    type: object
-> +    description: Represents the channels which are connected to the ADC.
-> +
-> +    properties:
-> +      reg:
-> +        description: The channel number in single-ended mode.
+> +++ b/drivers/iio/adc/ad4851.c
+> @@ -0,0 +1,1290 @@
 
-And what is it in differential mode?  (usually just an index).
-Which is a problem if you have a mix.  That's why we added
-single-channel.
+...
 
-So for devices where reg isn't enough, you can use:
-reg: index of channel, not real meaning just makes them unique.
-single-channel: The channel number for single ended.
-diff-channels: The channel numbers for differential channels.
 
-> +        minimum: 0
-> +        maximum: 7
+> +static void __ad4851_get_scale(struct iio_dev *indio_dev, int scale_tbl,
+> +			       unsigned int *val, unsigned int *val2)
+> +{
+> +	const struct iio_scan_type *scan_type;
+> +	unsigned int tmp;
 > +
-> +      diff-channels: true
+> +	scan_type = iio_get_current_scan_type(indio_dev, &indio_dev->channels[0]);
+> +
+> +	tmp = ((unsigned long long)scale_tbl * MICRO) >> scan_type->realbits;
 
-Should be constraints / information on the values possible.
-I've no idea what the 8 is in your example for instance.
+u64 for the cast so we know how big it is.
+
+
+> +	*val = tmp / MICRO;
+> +	*val2 = tmp % MICRO;
+> +}
+> +
+> +static int ad4851_scale_fill(struct iio_dev *indio_dev)
+> +{
+> +	struct ad4851_state *st = iio_priv(indio_dev);
+> +	unsigned int i, val1, val2;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ad4851_scale_avail_se); i++) {
+> +		__ad4851_get_scale(indio_dev, ad4851_scale_avail_se[i], &val1, &val2);
+> +		st->scales_se[i][0] = val1;
+> +		st->scales_se[i][1] = val2;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ad4851_scale_avail_diff); i++) {
+> +		__ad4851_get_scale(indio_dev, ad4851_scale_avail_diff[i], &val1, &val2);
+> +		st->scales_diff[i][0] = val1;
+> +		st->scales_diff[i][1] = val2;
+> +	}
+> +
+> +	return 0;
+> +}
+
+
+...
+
+> +static int ad4851_get_calibscale(struct ad4851_state *st, int ch, int *val, int *val2)
+> +{
+> +	unsigned int reg_val;
+> +	int gain;
+> +	int ret;
+> +
+> +	guard(mutex)(&st->lock);
+> +
+> +	ret = regmap_read(st->regmap, AD4851_REG_CHX_GAIN_MSB(ch), &reg_val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	gain = reg_val << 8;
+> +
+> +	ret = regmap_read(st->regmap, AD4851_REG_CHX_GAIN_LSB(ch), &reg_val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	gain |= reg_val;
+> +
+> +	*val = gain;
+> +	*val2 = 32768;
+Why not use IIO_VAL_FRACTIONAL_LOG2;  Then you can make the power of 2 explicit.
 
 > +
-> +      bipolar: true
-> +
-> +    required:
-> +      - reg
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vcc-supply
-> +  - vee-supply
-> +  - vdd-supply
-> +  - vio-supply
-> +  - pwms
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        adc@0{
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            compatible = "adi,ad4858";
-> +            reg = <0>;
-> +            spi-max-frequency = <10000000>;
-> +            vcc-supply = <&vcc>;
-> +            vdd-supply = <&vdd>;
-> +            vee-supply = <&vee>;
-> +            vddh-supply = <&vddh>;
-> +            vddl-supply = <&vddl>;
-> +            vio-supply = <&vio>;
-> +            pwms = <&pwm_gen 0 0>;
-> +            io-backends = <&iio_backend>;
-> +
-> +            channel@0 {
-> +              reg = <0>;
-> +              diff-channels = <0 8>;
-> +              bipolar;
-> +            };
-> +
-> +            channel@1 {
-> +              reg = <1>;
-> +            };
-> +        };
-> +    };
-> +...
+> +	return IIO_VAL_FRACTIONAL;
+> +}
 
+...
+
+> +
+> +static int ad4851_set_calibbias(struct ad4851_state *st, int ch, int val)
+> +{
+> +	u8 buf[3] = { 0 };
+> +	int ret;
+> +
+> +	if (val < 0)
+> +		return -EINVAL;
+> +
+> +	if (st->info->resolution == 16)
+> +		put_unaligned_be16(val, buf);
+> +	else
+> +		put_unaligned_be24(val << 4, buf);
+> +
+> +	guard(mutex)(&st->lock);
+> +
+> +	ret = regmap_write(st->regmap, AD4851_REG_CHX_OFFSET_LSB(ch), buf[2]);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(st->regmap, AD4851_REG_CHX_OFFSET_MID(ch), buf[1]);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_write(st->regmap, AD4851_REG_CHX_OFFSET_MSB(ch), buf[0]);
+
+Add a comment somewhere on why this can't be a bulk read.  Otherwise someone
+will change it as it's obvious low hanging fruit for a cleanup.
+Perhaps up by the register definitions.  Obviously even better, figure out why
+and make it work as it's probably a timing of cs_change thing.
+
+> +}
+
+> +
+> +static const struct iio_scan_type ad4851_scan_type_20_0[] = {
+
+the _0 / _1 postfix isn't particularly intuitive. Maybe consider u vs b
+for unipolar vs bipolar or something along those lines?
+
+> +	[AD4851_SCAN_TYPE_NORMAL] = {
+> +		.sign = 'u',
+> +		.realbits = 20,
+> +		.storagebits = 32,
+> +	},
+> +	[AD4851_SCAN_TYPE_RESOLUTION_BOOST] = {
+> +		.sign = 'u',
+> +		.realbits = 24,
+> +		.storagebits = 32,
+> +	},
+> +};
+> +
+> +static const struct iio_scan_type ad4851_scan_type_20_1[] = {
+> +	[AD4851_SCAN_TYPE_NORMAL] = {
+> +		.sign = 's',
+> +		.realbits = 20,
+> +		.storagebits = 32,
+> +	},
+> +	[AD4851_SCAN_TYPE_RESOLUTION_BOOST] = {
+> +		.sign = 's',
+> +		.realbits = 24,
+> +		.storagebits = 32,
+> +	},
+> +};
+> +
+> +static int ad4851_get_current_scan_type(const struct iio_dev *indio_dev,
+> +					const struct iio_chan_spec *chan)
+> +{
+> +	struct ad4851_state *st = iio_priv(indio_dev);
+> +
+> +	return st->resolution_boost_enabled ? AD4851_SCAN_TYPE_RESOLUTION_BOOST
+> +					    : AD4851_SCAN_TYPE_NORMAL;
+> +}
+> +
+> +#define AD4851_IIO_CHANNEL(index, ch, diff)					\
+> +	.type = IIO_VOLTAGE,							\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_CALIBSCALE) |			\
+> +		BIT(IIO_CHAN_INFO_CALIBBIAS) |					\
+> +		BIT(IIO_CHAN_INFO_SCALE),					\
+> +	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ) |		\
+> +		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),				\
+> +	.info_mask_shared_by_all_available =					\
+> +		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),				\
+> +	.info_mask_separate_available = BIT(IIO_CHAN_INFO_SCALE),		\
+> +	.indexed = 1,								\
+> +	.differential = diff,							\
+> +	.channel = ch,								\
+> +	.channel2 = ch + (diff * 8),						\
+> +	.scan_index = index,
+> +
+> +#define AD4858_IIO_CHANNEL(index, ch, diff)					\
+> +{										\
+> +	AD4851_IIO_CHANNEL(index, ch, diff)					\
+
+Add a comment on why you don't set the scan type stuff up for just this case.
+
+> +}
+> +
+> +#define AD4857_IIO_CHANNEL(index, ch, diff)					\
+> +{										\
+> +	AD4851_IIO_CHANNEL(index, ch, diff)					\
+> +	.scan_type = {								\
+> +		.sign = diff ? 's' : 'u',					\
+> +		.realbits = 16,							\
+> +		.storagebits = 16,						\
+> +	},									\
+> +}
+> +
+> +static int ad4851_parse_channels(struct iio_dev *indio_dev,
+> +				 struct iio_chan_spec **ad4851_channels,
+> +				 const struct iio_chan_spec ad4851_chan,
+> +				 const struct iio_chan_spec ad4851_chan_diff)
+> +{
+> +	struct ad4851_state *st = iio_priv(indio_dev);
+> +	struct device *dev = &st->spi->dev;
+> +	struct iio_chan_spec *channels;
+> +	unsigned int num_channels, reg;
+> +	unsigned int index = 0;
+> +	int ret;
+> +
+> +	num_channels = device_get_child_node_count(dev);
+> +	if (num_channels > AD4851_MAX_CH_NR)
+> +		return dev_err_probe(dev, -EINVAL, "Too many channels: %u\n",
+> +				     num_channels);
+> +
+> +	channels = devm_kcalloc(dev, num_channels,
+> +				sizeof(*channels), GFP_KERNEL);
+
+This is an oddly short wrap.  Check the whole driver for places where the wrap
+can be neater.  Aim for 80 char limit except when readability is substantially
+better if you go up to 100.
+
+> +	if (!channels)
+> +		return -ENOMEM;
+> +
+> +	indio_dev->channels = channels;
+> +	indio_dev->num_channels = num_channels;
+> +
+> +	device_for_each_child_node_scoped(dev, child) {
+> +		ret = fwnode_property_read_u32(child, "reg", &reg);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					     "Missing channel number\n");
+> +		if (fwnode_property_present(child, "diff-channels")) {
+> +			*channels = ad4851_chan_diff;
+> +			channels->scan_index = index++;
+> +			channels->channel = reg;
+> +			channels->channel2 = reg + AD4851_MAX_CH_NR;
+> +
+> +		} else {
+> +			*channels = ad4851_chan;
+> +			channels->scan_index = index++;
+> +			channels->channel = reg;
+> +		}
+> +		channels++;
+> +
+> +		if (fwnode_property_present(child, "bipolar")) {
+> +			st->bipolar_ch[reg] = true;
+> +		} else {
+> +			st->bipolar_ch[reg] = false;
+> +			ret = regmap_write(st->regmap, AD4851_REG_CHX_SOFTSPAN(reg),
+> +					   AD4851_SOFTSPAN_0V_40V);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +	}
+> +
+> +	*ad4851_channels = channels;
+> +
+> +	return 0;
+> +}
+
+> +static int ad4858_parse_channels(struct iio_dev *indio_dev)
+> +{
+> +	struct ad4851_state *st = iio_priv(indio_dev);
+> +	struct device *dev = &st->spi->dev;
+> +	struct iio_chan_spec *ad4851_channels;
+> +	const struct iio_chan_spec ad4851_chan = AD4858_IIO_CHANNEL(0, 0, 0);
+> +	const struct iio_chan_spec ad4851_chan_diff = AD4858_IIO_CHANNEL(0, 0, 1);
+> +	unsigned int reg;
+> +	int ret;
+> +
+> +	ret = ad4851_parse_channels(indio_dev, &ad4851_channels, ad4851_chan, ad4851_chan_diff);
+
+Wrap this line. It's easy to keep it under 80 chars and that is still the preference
+for cases that don't hurt readability in IIO.  Check for similar lines and
+wrap them all.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	device_for_each_child_node_scoped(dev, child) {
+> +		ret = fwnode_property_read_u32(child, "reg", &reg);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					     "Missing channel number\n");
+> +		if (fwnode_property_present(child, "bipolar")) {
+> +			ad4851_channels->ext_scan_type = ad4851_scan_type_20_1;
+> +			ad4851_channels->num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_1);
+> +
+> +		} else {
+> +			ad4851_channels->ext_scan_type = ad4851_scan_type_20_0;
+> +			ad4851_channels->num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_0);
+> +		}
+> +		ad4851_channels++;
+> +	}
+> +
+> +	return 0;
+> +}
+
+> +static int ad4851_probe(struct spi_device *spi)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct device *dev = &spi->dev;
+> +	struct ad4851_state *st;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+> +	st->spi = spi;
+> +
+> +	ret = devm_mutex_init(dev, &st->lock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_regulator_bulk_get_enable(dev,
+> +					     ARRAY_SIZE(ad4851_power_supplies),
+> +					     ad4851_power_supplies);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				     "failed to get and enable supplies\n");
+> +
+> +	ret = devm_regulator_get_enable_optional(dev, "vddh");
+> +	if (ret < 0 && ret != -ENODEV)
+> +		return dev_err_probe(dev, ret, "failed to enable vddh voltage\n");
+> +
+> +	ret = devm_regulator_get_enable_optional(dev, "vddl");
+> +	if (ret < 0 && ret != -ENODEV)
+> +		return dev_err_probe(dev, ret, "failed to enable vddl voltage\n");
+> +
+> +	ret = devm_regulator_get_enable_optional(dev, "vrefbuf");
+> +	if (ret < 0 && ret != -ENODEV)
+> +		return dev_err_probe(dev, ret, "failed to enable vrefbuf voltage\n");
+> +
+> +	if (ret > 0)
+
+I'm fairly sure that call never returns a positive.  Will return 0 for success so I think this
+should be if (ret == 0)
+
+> +		st->vrefbuf_en = true;
+> +	else
+> +		st->vrefbuf_en = false;
+> +
+> +	ret = devm_regulator_get_enable_optional(dev, "vrefio");
+> +	if (ret < 0 && ret != -ENODEV)
+> +		return dev_err_probe(dev, ret, "failed to enable vrefio voltage\n");
+> +
+> +	if (ret > 0)
+
+Same here.
+
+> +		st->vrefio_en = true;
+> +	else
+> +		st->vrefio_en = false;
+> +
+...
+
+> +}
 
