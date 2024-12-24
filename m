@@ -1,195 +1,242 @@
-Return-Path: <linux-pwm+bounces-4484-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4485-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC6E09FBA8B
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Dec 2024 09:35:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95DEF9FBAD5
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Dec 2024 10:00:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C0940165BA7
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Dec 2024 08:35:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEECD18849DA
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Dec 2024 09:00:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F2CF189F56;
-	Tue, 24 Dec 2024 08:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7000B190470;
+	Tue, 24 Dec 2024 09:00:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJC+Q58M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFPUsrfC"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDEB13D503;
-	Tue, 24 Dec 2024 08:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3978C2BB15;
+	Tue, 24 Dec 2024 09:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735029307; cv=none; b=HiD96moOUhgACUw03Xg2xrPiE35c3fz8vEdXzax+6BXlpyiJlHl13ZBRR/BwdIqOkSrDZr7GKKSHS+pzVUXG0Yv20nJWRf/QdAnJ4WpYIH1dN873T8GxBx+h+CoXvePPm0E2Xod2Z7Q7Ha1zc2NyXcXQapJuxqIKvzfYAJdNyZ0=
+	t=1735030824; cv=none; b=ppc8svZNEfinL5AlpFuFjlYdHfOmp8ZnlywNwqdH8aipMfVWWUIH44CJmpUFe4JqYCAwKseUQmYRRs/TcHCYveGbTTQn4H6vouZCGl7AafrLzWqNncEFcS1nx4q9bqWxZJ83SQKWF3Oi5Jys8PMpO5PWOjqEJt5u71TvXPfZbIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735029307; c=relaxed/simple;
-	bh=LVK4FW2pIWOu8VxpMW2J0s2UCHgv4bTwZ5mPP0NHWTM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tiLOYLcmMw2tk4JaPfWdski1wtQWjBLpkg3dtxfZtLCmwHTWOFZUQx/UQVy2CVSHJ75PZG5kcRQbYv98O99eLVkkHiClwDa39X4mG3fg95EBqPownaRdhAXKV7gpvTsSSEAs+Jtf59Ncx8bPuyJuEfzul+GWJgWfKhwrQmid2Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HJC+Q58M; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e461015fbd4so3956575276.2;
-        Tue, 24 Dec 2024 00:35:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735029304; x=1735634104; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BgCVgeN0wOheXPUe0p+npMyY7H/G+TEP8YjiV9rhOnQ=;
-        b=HJC+Q58MfN1HxxWdxiPsr6zLcJCsP1Mqledf2foMdmIGJznCPTJAUEpOFAyIzxNz5C
-         sqr8sjTt5EsJgWDmHerrdNZQTimByzcnOBOE7P1nOQRlSSiRJvl5ohJvtDJSRlMVi472
-         Ys6IHw23l9JE7QAtWMrjj8Ly/0zDMzUx+OWCane1jGG6meA0SGTOilZ3FnOxXBvq2BjL
-         On/6CqwwipExon2EEYc0V8yGal648IqCPckY5+WUKN6jfybapRdm99LTmQc44di7R/2i
-         mukrul6mcVhgOqp5w0Y1Amc5wtu6YQ1MZLQ5a+ZdIWWXZf+bjNDWR9c2Vzg/FI0df+mp
-         w/jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735029304; x=1735634104;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BgCVgeN0wOheXPUe0p+npMyY7H/G+TEP8YjiV9rhOnQ=;
-        b=iwXQ4FSyo/i83v1W/ZoBHyWV0FHVTEMTZEivtwBvN1GWvNWS0CZCnj4SQSFzX6OK4i
-         heQwe3RCf2ZMzL6NiOt+8SwgLGo3vGWKvBg7SlIJk+G194SmXLDjf3BRdgD1o+yIOVCi
-         KABR3ljifzptPY6Iq6IcvVNhApcvKF7qPGizPlxhTPK1NA3jUI91YRPWCwL1Pp98smyL
-         wdAFIPrglumjHDk7GiJXp/jdVE9SFe+6OLVKORjZJkoynmKDK7/UoICFlcLU7jWkTiuY
-         FqIx4rFgbBuQeYfdXFNoxHqOOrN4oAoOzwcTDqSFSR+UFsXcvwB3Rxi+uyChJG4MX4c4
-         9KGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpLdiEHk2X5a8xe7vj7sAbho51FEroRa/lQHw1huKzmeH2zaPK4G2f+eBgxhTz9GURzTK9yKeGPUxr@vger.kernel.org, AJvYcCVRoTp/V8Gam08WAIZKhXteXZEjs1Td9RzgNw6xzW3iWxExJGKt9iOQQo5lVT5TJHofF0K/gbQPC2ry@vger.kernel.org, AJvYcCVT5XLhr4hoLIIjgW1qPhoA7I9whsWshjKSPFsTVDb8/PFf9ab9NhyIQReyPpr0JtafUgkhUDHy2Qrx7pLS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgWCg098fFrGMvEMOhiMZHkmY5m/3ZKHSyeDMB3zQzE/05A8UQ
-	k8LqAOOXl1yRAfmBWI1bIxT8qFfvHR3TjwIHF7/dcqaoPZ2JxCtZlw2hXZrkqeSko0eujXuQK9m
-	R7J8EJkwdb7wpZC0yDsp+SaJJkx8=
-X-Gm-Gg: ASbGncs7W0kL3Ghgbr011cKjDVj0hx163rKL64R4ho7INrK9i6KryFLQS0Q4oCuZyzz
-	mhFQbpbyCeMNDm46R6up0b71QfMohRydM8/BOEjTo
-X-Google-Smtp-Source: AGHT+IHi7ZkSCFx2vwI8ZF7AXi5AHBQsK++ke2rv1PF8DQ0znblHAfcvl+lWC3uBrJAstXD0hu8gA2de7Y4XVRLgaZI=
-X-Received: by 2002:a05:6902:240e:b0:e38:a081:f533 with SMTP id
- 3f1490d57ef6-e538c20dfc4mr10174313276.7.1735029304401; Tue, 24 Dec 2024
- 00:35:04 -0800 (PST)
+	s=arc-20240116; t=1735030824; c=relaxed/simple;
+	bh=iIFRZhvlUCHjcvWzeF5tljgi55EYFpAF+OSKsDDBICk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eFCwbag0SEBJBTwwfVdH/ImVyhCgsUp9GG2yXM+IGJIFSwAwPXRmZHPrnuBZejZiC36HNsNoVVj/4b5PrlfpC8/UqOgVmsmEaB7TZTcy/0byHT4n86RSuXRAglP2XR+SLZ2anKA5sabovg5hlTyDhOI9c9VZyHnTimZYX+jG2Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QFPUsrfC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9126C4CED0;
+	Tue, 24 Dec 2024 09:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735030823;
+	bh=iIFRZhvlUCHjcvWzeF5tljgi55EYFpAF+OSKsDDBICk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QFPUsrfCNbb/EuUE2bR4P/Se3TgwvsvOKwb3LzdHN80KEZ5QcTlwi+cOH4eCngI8F
+	 vcBJ8XW8kkcgAkq6qWc25fUGY/gcqT33JQ3soPtRlOeoUq0eOq8JIpAI+bhTWcJoAa
+	 kEil1r7tuKaH7bGxDN2OR9p5O/2/wVERKPJdRJjf7ia7hln1x09C1uXuMRYbzP10Fh
+	 nwWRtfkvdT5sKSRP5Z6ahyyNfAE33aPyhqcy/z6taFkxU17Q/I+zlrsFP5Jm+SXEwu
+	 fY0i9xqBHpSCHiO7YSjGcx7aECOUUW2O12D+ob947jIFaptzLj+j3/Svj4aRPFjKR+
+	 BxvbYFDn2A4Lg==
+Message-ID: <b1d541c1-296a-4b56-bea3-52e5becadf0e@kernel.org>
+Date: Tue, 24 Dec 2024 10:00:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240222081231.213406-1-nylon.chen@sifive.com>
- <20240222081231.213406-4-nylon.chen@sifive.com> <jvwgsszvs4jtcytcphsdjulzgqfqzdp4sisu236ddwsqgmvriw@ngi4ljgh5b74>
- <CAHh=Yk92=hp+kaTJWL13_jwJ5gzAAi8gbRF=Ns9=yq2trRUQEg@mail.gmail.com> <xf6ympnaljfjztptb5w5qdpuluckptozdz5a7gtuycsev32ngr@x2ovibqv6evr>
-In-Reply-To: <xf6ympnaljfjztptb5w5qdpuluckptozdz5a7gtuycsev32ngr@x2ovibqv6evr>
-From: Nylon Chen <nylon7717@gmail.com>
-Date: Tue, 24 Dec 2024 16:34:53 +0800
-Message-ID: <CAGKtFavQAZOof5QSTFCEaRJEPETm5aBqzkV4g24n3ioiBAOgDA@mail.gmail.com>
-Subject: Re: [PATCH v9 3/3] pwm: sifive: Fix the error in the idempotent test
- within the pwm_apply_state_debug function
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Nylon Chen <nylon.chen@sifive.com>, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, conor@kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com, 
-	paul.walmsley@sifive.com, aou@eecs.berkeley.edu, thierry.reding@gmail.com, 
-	vincent.chen@sifive.com, zong.li@sifive.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/8] dt-bindings: Add MAX7360 subdevices
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kamel Bouhara <kamel.bouhara@bootlin.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-pwm@vger.kernel.org, =?UTF-8?Q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com>
+ <20241219-mdb-max7360-support-v1-2-8e8317584121@bootlin.com>
+ <58c80c2a-2532-4bc5-9c9f-52480b3af52a@kernel.org>
+ <D6J6JNPPZRKM.3F9YUY9CW3L2F@bootlin.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <D6J6JNPPZRKM.3F9YUY9CW3L2F@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2024=E5=B9=
-=B44=E6=9C=8812=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=883:05=E5=AF=AB=
-=E9=81=93=EF=BC=9A
->
-> On Tue, Apr 02, 2024 at 10:01:39AM +0800, Nylon Chen wrote:
-> > Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2024=
-=E5=B9=B43=E6=9C=8819=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=882:17=E5=
-=AF=AB=E9=81=93=EF=BC=9A
-> > >
-> > > Hello,
-> > >
-> > > On Thu, Feb 22, 2024 at 04:12:31PM +0800, Nylon Chen wrote:
-> > > > Round the result to the nearest whole number. This ensures that
-> > > > real_period is always a reasonable integer that is not lower than t=
-he
-> > > > actual value.
-> > > >
-> > > > e.g.
-> > > > $ echo 110 > /sys/devices/platform/led-controller-1/leds/d12/bright=
-ness
-> > > > $ .apply is not idempotent (ena=3D1 pol=3D0 1739692/4032985) -> (en=
-a=3D1 pol=3D0 1739630/4032985)
-> > > >
-> > > > Co-developed-by: Zong Li <zong.li@sifive.com>
-> > > > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > > > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
-> > > > ---
-> > > >  drivers/pwm/pwm-sifive.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> > > > index a586cfe4191b..bebcbebacccd 100644
-> > > > --- a/drivers/pwm/pwm-sifive.c
-> > > > +++ b/drivers/pwm/pwm-sifive.c
-> > > > @@ -101,7 +101,7 @@ static void pwm_sifive_update_clock(struct pwm_=
-sifive_ddata *ddata,
-> > > >
-> > > >       /* As scale <=3D 15 the shift operation cannot overflow. */
-> > > >       num =3D (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWI=
-DTH + scale);
-> > > > -     ddata->real_period =3D div64_ul(num, rate);
-> > > > +     ddata->real_period =3D DIV_ROUND_UP_ULL(num, rate);
-> > > >       dev_dbg(ddata->chip.dev,
-> > > >               "New real_period =3D %u ns\n", ddata->real_period);
-> > > >  }
-> > Hi Uwe
-> > >
-> > > pwm_sifive_apply has a DIV64_U64_ROUND_CLOSEST(). I wonder if that ne=
-eds
-> > > adaption, too?!
-> > According to my experiments, no adjustment is necessary.
->
-> Did you enable PWM_DEBUG and tested with something like:
->
->         seq 5000 100000 | while read p; do echo p > /sys/class/pwm/pwmchi=
-pX/pwmY/period; done
->
-Hi Uwe,
-I apologize for the significant delay in responding to your query,
-I've now completed a thorough verification of the PWM_DEBUG
-functionality.
+On 23/12/2024 16:20, Mathieu Dubois-Briand wrote:
+> On Sat Dec 21, 2024 at 9:34 PM CET, Krzysztof Kozlowski wrote:
+>> On 19/12/2024 17:21, Mathieu Dubois-Briand wrote:
+>>> ---
+>>>  .../devicetree/bindings/gpio/max7360-gpio.yaml     | 96 ++++++++++++++++++++++
+>>>  .../devicetree/bindings/input/max7360-keypad.yaml  | 67 +++++++++++++++
+>>>  .../devicetree/bindings/input/max7360-rotary.yaml  | 52 ++++++++++++
+>>>  .../devicetree/bindings/pwm/max7360-pwm.yaml       | 35 ++++++++
+>>>  4 files changed, 250 insertions(+)
+>>
+>>
+>> I don't understand how this patchset was split. MFD binding cannot be
+>> empty and cannot be before child devices.
+>>
+> 
+> Ok, my bad. So I believe squashing both dt-bindings commit should fix
+> this.
+> 
+>>> diff --git a/Documentation/devicetree/bindings/gpio/max7360-gpio.yaml b/Documentation/devicetree/bindings/gpio/max7360-gpio.yaml
+>>> new file mode 100644
+>>> index 000000000000..3c006dc0380b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/gpio/max7360-gpio.yaml
+>>> @@ -0,0 +1,96 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/gpio/max7360-gpio.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Maxim MAX7360 GPIO controller
+>>> +
+>>> +maintainers:
+>>> +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
+>>> +  - Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>>> +
+>>> +description: |
+>>> +  Maxim MAX7360 GPIO controller, in MAX7360 MFD
+>>> +  https://www.analog.com/en/products/max7360.html
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - maxim,max7360-gpio
+>>> +      - maxim,max7360-gpo
+>>
+>> Why? What are the differences?
+>>
+> 
+> Ok, so maybe my approach here is completely wrong. I'm not sure what
+> would be the best way to describe the device here, if you have any
+> suggestion I would be happy to use it. Let me try to summarize the GPIO
+> setup of the chip.
+> 
+> First we have two series of GPIOs on the chips, which I tend to think
+> about as two separate "banks". Thus two separate subnodes of the max7360
+> node.
 
-The Period Testing:
-seq 5000 5000 100000 | while read p; do echo $p >
-/sys/class/pwm/pwmchip0/pwm0/period echo "Testing period: $p" done
+First, splitting MFD device into multiple children is pretty often wrong
+approach because it tries to mimic Linux driver design.
 
-The Duty Cycle Testing:
-for percent in 0 25 50 75 100; do duty=3D$((100000 * percent / 100))
-echo $duty > /sys/class/pwm/pwmchip0/pwm0/duty_cycle done
+Such split in DT makes sense if these are really separate blocks, e.g.
+separate I2C addresses, re-usable on different designs.
 
-- All period values from 5000ns to 100000ns were applied successfully
-- Various duty cycle ratios were tested without issues
-- Monitored dmesg output during tests - no kernel messages about wrong
-settings were observed
+In this case Functional Block Diagram shows separate blocks, but still
+the same I2C block. This can be one device. This can be also two devices
+if that's easier to represent in DT.
 
-Let me know if you need any additional test data or have other
-parameters you'd like me to verify.
+But in any case binding description should explain this.
 
-> and then verified that this test didn't result in kernel messages about
-> wrong settings?
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+> 
+> - On one side we have what I refer to as GPIOs, here with
+>   maxim,max7360-gpio:
+>   - PORT0 to PORT7 pins of the chip.
+>   - Shared with PWM and rotary encoder functionalities. Functionality
+>     selection can be made independently for each pin. This selection is
+>     not described here. Runtime will have to ensure the same pin is not
+>     used by two drivers at the same time. E.g. we cannot have at the
+>     same time GPIO4 and PWM4.
+>   - Supports input and interrupts.
+>   - Outputs may be configured as constant current.
+>   - 8 GPIOS supported, so ngpios maximum is 8. Thinking about it now, we
+>     should probably also set minimum to 8, I don't see any reason to
+>     have ngpios set to something less.
+> 
+> On the other side, we have what I refer to as GPOs, here with
+> maxim,max7360-gpo compatible:
+>   - COL2 to COL7 pins of the chip.
+>   - Shared with the keypad functionality. Selections is made by
+>     partitioning the pins: first pins for keypad columns, last pins for
+>     GPOs. Partition is described here by ngpios and on keypad node by
+>     keypad,num-columns. Runtime will have to ensure values are coherent
+>     and configure the chip accordingly.
+>   - Only support outputs.
+>   - No support for constant current mode.
+>   - Supports 0 to 6 GPOs, so ngpios maximum is 6.
+> 
+>>> +
+>>> +  gpio-controller: true
+>>> +
+>>> +  "#gpio-cells":
+>>> +    const: 2
+>>> +
+>>> +  ngpios:
+>>> +    minimum: 0
+>>> +    maximum: 8
+>>
+>> Why this is flexible?
+>>
+> 
+> I believe this makes sense, as this keypad/gpos partition really changes
+> the actual number of GPIOS. Yet we could argue that this is just runtime
+> configuration. Tell me what you think about it, if you think this should
+> be a fixed value, I will find a way.
 
---=20
+Depends whether this is actual runtime configuration. If you configure
+keypad in DT, then the pins go away from GPIOs (especially considering
+that board might have these pins really connected to keypad). Anyway,
+explain this briefly in binding description.
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-sifive system software  team =E9=99=B3=E4=BC=AF=E7=B6=B8
-
-Cell phone:  0989057854
-E-mail: nylon7717@gmail.com
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> 
+Best regards,
+Krzysztof
 
