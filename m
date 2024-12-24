@@ -1,160 +1,195 @@
-Return-Path: <linux-pwm+bounces-4483-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4484-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11FE19FB931
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Dec 2024 05:24:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC6E09FBA8B
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Dec 2024 09:35:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F66118826D7
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Dec 2024 04:24:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C0940165BA7
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Dec 2024 08:35:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33C7F13C9A6;
-	Tue, 24 Dec 2024 04:24:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F2CF189F56;
+	Tue, 24 Dec 2024 08:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJC+Q58M"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2097.outbound.protection.partner.outlook.cn [139.219.146.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF091392;
-	Tue, 24 Dec 2024 04:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.97
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735014260; cv=fail; b=tFaidGjipPFGOSbk852aUrTebOqZm5ZwUo8n6Qkscll8999ZzLy0VhQBqsIrJCelkdkc0DrzzxORjRlDra1Ei92PWoD1TmFowAdQVsyo4rdC0jRo8RudqONipbqsJ9v8RCAzqmWXGkKIPa9lTF0+l4+EV8KJM421xm3mkguGA4w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735014260; c=relaxed/simple;
-	bh=hDf/jVHcPSEUS3SZ/i7vZtoq5KvMR9I45F8TyhhvBwU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=szcVU0Ii346qkPeRTiXcm4JRwtkNNIiNFdiLFc/tjeLHHWLHzxHdD1MToL+4IHv5TGMsjKakAL6D6IiIPcZXnIBOrAA1l6WhHBTrLbOPegxoqRpt+S/PJWQmtYAERAG41rUcgj/TKE84QNLdbCZTzJQ/7GG4lYrIdN9Yw1Pvo3I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LotXe1K+IoZL6zC6xDm0zl3iuGtRSwFnpavzIFabIDrBywjVUoQ7q20Q7OtFTAPQ4PLEiNNN3yegaDa/Uyy1YDoFFUHAonaBhYrIrb08dbP0rY1/bf5Ib7N/hSHwPznKr3wrvZDUMnY04JUqulbGKYAje2IrYxSv/gQrqXKwp3H3EWiuvWrec+CgOcXsH0BHXjugGple2SzmiGTBTBBsIlVTSIaJp2eBr/vr60cC/RUBbOOXfmhnYH7V3QvEP0ursJFl6LoUwPzTD3ilpaSGCGKW8T58J7a0fWZ4I3dccLN+z7NYMnvvrVj4pNEPdrahEiB1W2asRSlUDYHIKMcKVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hDf/jVHcPSEUS3SZ/i7vZtoq5KvMR9I45F8TyhhvBwU=;
- b=PA9fXdI9m6rTgNU2P44HOwe/DaejvqLT/yS3W+x0MZHV4+js+3iuynWQ/daUx6rl2egk/nruOLVyUoiH8fHEn62fzxIRuGakUzYkOEezwY69hW+KGVqp5hV6cMKISXML8wPpX0HoDaqcdRtVqAzi67wGflpi1R1udVDkbgyQekeYwKxq8mOkBJe6E9nrmJIf2p8WnjSCixF/62MmP7XYH47F0SMBMzqac0HSG/LiioVsbUf0WK7WLgnQOjqqaRSn8VhLKU+wA5+LhoI1s6yZzpgZMs2qmq2eBQgUDOy/k1n+u5+IxaDsWeSDnCk5xp++PzJc7o0fpDkSPZ4g0+ejHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1b::8) by ZQ0PR01MB1174.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1b::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.21; Tue, 24 Dec
- 2024 01:53:03 +0000
-Received: from ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn
- ([fe80::6e83:b5ba:ad4b:3ad2]) by
- ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn ([fe80::6e83:b5ba:ad4b:3ad2%5])
- with mapi id 15.20.8272.013; Tue, 24 Dec 2024 01:53:03 +0000
-From: William Qiu <william.qiu@starfivetech.com>
-To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <ukleinek@kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Hal Feng
-	<hal.feng@starfivetech.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Subject: RE: [PATCH v16] pwm: opencores: Add PWM driver support
-Thread-Topic: [PATCH v16] pwm: opencores: Add PWM driver support
-Thread-Index: AQHbKNsymVbYlUSgHUKyRrqbTLJ87bLuYDMAgAUWdxCAAPMzgIAAkMTg
-Date: Tue, 24 Dec 2024 01:53:03 +0000
-Message-ID:
- <ZQ0PR01MB12530DDB9AF830296773C7AF9F03A@ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn>
-References: <20241028014609.153997-1-william.qiu@starfivetech.com>
- <bfwpcffdrxqjes4atio6deltu5tgmd4ing7j4yewwp6jprqmmc@rv2x3qudlzo3>
- <ZQ0PR01MB1253A5B870FF90900A2643009F02A@ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn>
- <52j6gtyzf4uwfkxxlfschygnvuwl2l4iaf7mzbi2nbzxtmlemf@dktywu73nldg>
-In-Reply-To: <52j6gtyzf4uwfkxxlfschygnvuwl2l4iaf7mzbi2nbzxtmlemf@dktywu73nldg>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ0PR01MB1253:EE_|ZQ0PR01MB1174:EE_
-x-ms-office365-filtering-correlation-id: 0bcae02b-4b9b-4b18-9db7-08dd23bdb435
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|41320700013|366016|38070700018;
-x-microsoft-antispam-message-info:
- nwmKfHEOZbbyhCH+c2OhZCBBLYrSdmWQWsDbEkOzkZCgzU8+T+PxP2AxKITSTjDqO8pF8JwPXjRNFMaJneR8hmBIEMTi7gEvWkARbgwY7WK9dHaqb513tzVQQMy4arAgvxZsT+bCUTnxdlMyFzgKdGBxqbXLLST2mEuSfuZBsuIbGr9zg79lj2RbCJLJz7dJt7rGXyGDiOm3IkMigt54qNpN0uknAoL++fm46ZCMmi68XDL39PzorRPPMoADlqN2C49n9cvxWoVJ5u89RX6Dc5vEecwuNvWVOOff4AKkYIyPc3NtDxCQF5mTm+20Ulo22qwF691Krulr4lBLjMa4KC+BPU0h2n35/skX7RQ2cT04ASwBUXYK61VR5NHFE50ePMBqYhxWoUtKILbEhptv9J/nbkHVas7qQ7ou7db5srvVk9+VdqDlUCfjjow2TOqXDI82+1VgFxdpXZEtgdyPddY8U0rI9jYJDEm9/k/svfknULs5yWmNxRR+er5evQ6j0bqO3MBkplMoiLHZF/E5EGeu/UYk2mJj5j7dhe1UBpDTnDex/ZEQu9N4akL0INJwEmTADMVNg9tcceGvm/dwlIC25ARLcT6GnqmSHFCT8Kc=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(41320700013)(366016)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?eEFBWXhXZCtrUER6SlRqVlQyT2RsdzJPZngvS1pSZFNJejRlbG1RT2xHTnF6?=
- =?utf-8?B?MU05RWwrZ01ONE1pYmhqblYrbkJ2c3JvOFJFcFJwUStvbnAzNGswaEl1ZzE3?=
- =?utf-8?B?NFhyN3RrUGh3WEN1SmFtZEpZZjdTUzBTTFg5cGZTc1RaWnUraTdOdVRrc1dM?=
- =?utf-8?B?RTZuVk9qSVZGZzdJaysybEN0Y3BIeTNnVmIydFJyZktMUzFaN2QxM0UyUGUy?=
- =?utf-8?B?VDB4dnd4OFR6YmJIaG9UUFhqbDdicFpNZ2tyVlhDcWE4TkhOV053TmdTZjk0?=
- =?utf-8?B?SEtiVHF2aXpTemVxdDkyczlERzFkVERqWTJjZXpUNmNVbkQvbHhmL2FDZ3h0?=
- =?utf-8?B?VXFiZEM2WW8vL01zTXJnanU2aXptK0lnTUgvbzQ2NWRNVHdlSjdJM2xjazR6?=
- =?utf-8?B?WFkzakFWbHBJUWdiaWZ1QkFQUkcxU3Jqb0pHWTVBd3Jwb2V3TytReC8wOVN3?=
- =?utf-8?B?d1FraVNiOHFHeGJMSmtHTGhLOVJMWU5WN3JTV09EY0d3TXk5UjZObFMrdGtV?=
- =?utf-8?B?OW9zQm5RVzRFQzNSR0xlYnNWcWpoaG5MMmhqamV5aXB0Vm9GbDRXMHF2UVgw?=
- =?utf-8?B?QTNXL0h4S0VZampzZWxLazlRUnM3OTdsNEdiZmZpSTJXd3ZRekEyT0NoTjZ5?=
- =?utf-8?B?OW5lR3dkU1FVYmJRYjNXN1RpSExoSGdvdWIvMzlQTUdNc0loVVFuc0twaThT?=
- =?utf-8?B?cFFLNUkxa3lGNStocGJranlIaVMvdmQ3cEtXaXVXSUFiYW5YTHErWm5IRXJE?=
- =?utf-8?B?ZHpCRGxZcXZOQlowZHJYMFhMYmo5cE8xQWY0bUhqdHNHKzJ1MVNJa3hvWGxi?=
- =?utf-8?B?RjY4RzlZMFZkUnd1RDJxanRuQlNRVFRsQk5pVEFWYlZDbEpQKzBjUHczQXNR?=
- =?utf-8?B?c2FVTXBtNk5XQWJ4OEd6MytTMUk3azhmUVo0NjMrYWFSWVVLZ0Z1Q1JsUXZD?=
- =?utf-8?B?L1B5ZjI0Z2lFT010UkZpZ2srWkxxK0ZUd01QVmxwc0VpVjB1aEpMUjdYYjhH?=
- =?utf-8?B?SVNRTDhuTW41QkpmOTQybjhPejJmMFB5Y1lUMXdUcFVuRHo1K2JkWUNWeWlP?=
- =?utf-8?B?MnMvaWN0WFFjcjBWQ2M0UzdsTTV5YXl6WjBzNCtmK1hmcTAweUZ3TlBTS2Jy?=
- =?utf-8?B?Q1c3dFRJWDVobVBvcnlyYXhIRGYraHZsNDRFOHVFQ015aTlaN0xOWTJUaHRL?=
- =?utf-8?B?b21yaFQzbktyUG9GMk1BSmgyZUhaZUxPTE90aXBZNGlHcFRPYk5lbWxJTWY5?=
- =?utf-8?B?TWQ4akNmZzdQR0F0QkxycXNqRTc4cGtkdlNDSm1lMnVlQ1YxQS9KamxObWt5?=
- =?utf-8?B?N0VzZ0VYa29oaTZiTGt0dTh6Y2dacUJuUjlFbGxybUFuL1dDYlZjWUJQaTVR?=
- =?utf-8?B?Z2FQOW1kcW5jVSs5NXFoUm84d2ZmWW42dUU0T2YvdGFMVnVIL1phajN5aHRI?=
- =?utf-8?B?Y080dGdzSnpFMFh2THRodWFmTTQwRzVCYUJHdlA5blBIbjhlZDVScTAyTDJn?=
- =?utf-8?B?VjI1K2hkVWZCcDdkcktNazVhMXA0WnBuVkMzTCtjaHFJbmFEM2dRZVVUTjJL?=
- =?utf-8?B?eXErdC9KUWtsTGJBQW1XT2ZDQ255N2NqWWdreEM2OUROb2FXUkFtM1lXdXA5?=
- =?utf-8?B?UjUrNnU1MW40Z3k1MGZ6aFUyWXdEbkZzb0ROWCtjSDdFR1FoUW5jRFJPM211?=
- =?utf-8?B?MkRCeFpITnNJT3hBbDhpOW9Tb3c2LzBTK1dieCtDbFV1OVVWZ3N1ZmVtTzR2?=
- =?utf-8?B?REt2b1MxMFhYb0x5YmdVa2xlU3l0WDYvdldTekVoZ254K2cvaDNaMUZkWERQ?=
- =?utf-8?B?d25WdFB1bEJHVFpYaXkxNm9IZ0djZUpGQWkrMGFZZTNlZERLSjVIU00xWDBW?=
- =?utf-8?B?cENWVkk4VENJVVpyMldDWU9NTmJ5YmgrdVhjdWlxNjVXOTIxbStUQ2tjOG82?=
- =?utf-8?B?dEpuK0hIS25KdTdBVDk0Y2krSkpIbVdYVDRWbUtSTmRLUXN0UkM2UE5aamhB?=
- =?utf-8?B?MkMxUTA1Z1h0bEFQU2h1cmprMzBUKzFQS1J4amRwRkRUZlJxdGo0S3ZkV3BE?=
- =?utf-8?B?dEdYbDY1QkFMMkF2QWJvZ1Flb25wTE5ROWZIblRvSHBaUDdBTnhOZzZPZnFz?=
- =?utf-8?B?dWRERmxoMG4vOHBQODZlNGh0eTl3Y2lDZTY3TkRYRUIwdlZSNy9uK0d2ZmVw?=
- =?utf-8?B?SXc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDEB13D503;
+	Tue, 24 Dec 2024 08:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735029307; cv=none; b=HiD96moOUhgACUw03Xg2xrPiE35c3fz8vEdXzax+6BXlpyiJlHl13ZBRR/BwdIqOkSrDZr7GKKSHS+pzVUXG0Yv20nJWRf/QdAnJ4WpYIH1dN873T8GxBx+h+CoXvePPm0E2Xod2Z7Q7Ha1zc2NyXcXQapJuxqIKvzfYAJdNyZ0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735029307; c=relaxed/simple;
+	bh=LVK4FW2pIWOu8VxpMW2J0s2UCHgv4bTwZ5mPP0NHWTM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tiLOYLcmMw2tk4JaPfWdski1wtQWjBLpkg3dtxfZtLCmwHTWOFZUQx/UQVy2CVSHJ75PZG5kcRQbYv98O99eLVkkHiClwDa39X4mG3fg95EBqPownaRdhAXKV7gpvTsSSEAs+Jtf59Ncx8bPuyJuEfzul+GWJgWfKhwrQmid2Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HJC+Q58M; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e461015fbd4so3956575276.2;
+        Tue, 24 Dec 2024 00:35:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735029304; x=1735634104; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BgCVgeN0wOheXPUe0p+npMyY7H/G+TEP8YjiV9rhOnQ=;
+        b=HJC+Q58MfN1HxxWdxiPsr6zLcJCsP1Mqledf2foMdmIGJznCPTJAUEpOFAyIzxNz5C
+         sqr8sjTt5EsJgWDmHerrdNZQTimByzcnOBOE7P1nOQRlSSiRJvl5ohJvtDJSRlMVi472
+         Ys6IHw23l9JE7QAtWMrjj8Ly/0zDMzUx+OWCane1jGG6meA0SGTOilZ3FnOxXBvq2BjL
+         On/6CqwwipExon2EEYc0V8yGal648IqCPckY5+WUKN6jfybapRdm99LTmQc44di7R/2i
+         mukrul6mcVhgOqp5w0Y1Amc5wtu6YQ1MZLQ5a+ZdIWWXZf+bjNDWR9c2Vzg/FI0df+mp
+         w/jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735029304; x=1735634104;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BgCVgeN0wOheXPUe0p+npMyY7H/G+TEP8YjiV9rhOnQ=;
+        b=iwXQ4FSyo/i83v1W/ZoBHyWV0FHVTEMTZEivtwBvN1GWvNWS0CZCnj4SQSFzX6OK4i
+         heQwe3RCf2ZMzL6NiOt+8SwgLGo3vGWKvBg7SlIJk+G194SmXLDjf3BRdgD1o+yIOVCi
+         KABR3ljifzptPY6Iq6IcvVNhApcvKF7qPGizPlxhTPK1NA3jUI91YRPWCwL1Pp98smyL
+         wdAFIPrglumjHDk7GiJXp/jdVE9SFe+6OLVKORjZJkoynmKDK7/UoICFlcLU7jWkTiuY
+         FqIx4rFgbBuQeYfdXFNoxHqOOrN4oAoOzwcTDqSFSR+UFsXcvwB3Rxi+uyChJG4MX4c4
+         9KGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpLdiEHk2X5a8xe7vj7sAbho51FEroRa/lQHw1huKzmeH2zaPK4G2f+eBgxhTz9GURzTK9yKeGPUxr@vger.kernel.org, AJvYcCVRoTp/V8Gam08WAIZKhXteXZEjs1Td9RzgNw6xzW3iWxExJGKt9iOQQo5lVT5TJHofF0K/gbQPC2ry@vger.kernel.org, AJvYcCVT5XLhr4hoLIIjgW1qPhoA7I9whsWshjKSPFsTVDb8/PFf9ab9NhyIQReyPpr0JtafUgkhUDHy2Qrx7pLS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgWCg098fFrGMvEMOhiMZHkmY5m/3ZKHSyeDMB3zQzE/05A8UQ
+	k8LqAOOXl1yRAfmBWI1bIxT8qFfvHR3TjwIHF7/dcqaoPZ2JxCtZlw2hXZrkqeSko0eujXuQK9m
+	R7J8EJkwdb7wpZC0yDsp+SaJJkx8=
+X-Gm-Gg: ASbGncs7W0kL3Ghgbr011cKjDVj0hx163rKL64R4ho7INrK9i6KryFLQS0Q4oCuZyzz
+	mhFQbpbyCeMNDm46R6up0b71QfMohRydM8/BOEjTo
+X-Google-Smtp-Source: AGHT+IHi7ZkSCFx2vwI8ZF7AXi5AHBQsK++ke2rv1PF8DQ0znblHAfcvl+lWC3uBrJAstXD0hu8gA2de7Y4XVRLgaZI=
+X-Received: by 2002:a05:6902:240e:b0:e38:a081:f533 with SMTP id
+ 3f1490d57ef6-e538c20dfc4mr10174313276.7.1735029304401; Tue, 24 Dec 2024
+ 00:35:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1253.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0bcae02b-4b9b-4b18-9db7-08dd23bdb435
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Dec 2024 01:53:03.5265
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BY3l/uVIfSpUCsh50ACTeQqa/rYKl4bX2spLI1027m0Xp8r7BECf0Z0BHRbT1oqgxp8JivWYZvtXajMa43R1mtnTaUKUY7fm9yevOogGEaw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1174
+References: <20240222081231.213406-1-nylon.chen@sifive.com>
+ <20240222081231.213406-4-nylon.chen@sifive.com> <jvwgsszvs4jtcytcphsdjulzgqfqzdp4sisu236ddwsqgmvriw@ngi4ljgh5b74>
+ <CAHh=Yk92=hp+kaTJWL13_jwJ5gzAAi8gbRF=Ns9=yq2trRUQEg@mail.gmail.com> <xf6ympnaljfjztptb5w5qdpuluckptozdz5a7gtuycsev32ngr@x2ovibqv6evr>
+In-Reply-To: <xf6ympnaljfjztptb5w5qdpuluckptozdz5a7gtuycsev32ngr@x2ovibqv6evr>
+From: Nylon Chen <nylon7717@gmail.com>
+Date: Tue, 24 Dec 2024 16:34:53 +0800
+Message-ID: <CAGKtFavQAZOof5QSTFCEaRJEPETm5aBqzkV4g24n3ioiBAOgDA@mail.gmail.com>
+Subject: Re: [PATCH v9 3/3] pwm: sifive: Fix the error in the idempotent test
+ within the pwm_apply_state_debug function
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Nylon Chen <nylon.chen@sifive.com>, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, conor@kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com, 
+	paul.walmsley@sifive.com, aou@eecs.berkeley.edu, thierry.reding@gmail.com, 
+	vincent.chen@sifive.com, zong.li@sifive.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBVd2UgS2xlaW5lLUvDtm5pZyA8
-dWtsZWluZWtAa2VybmVsLm9yZz4NCj4gU2VudDogMjAyNOW5tDEy5pyIMjTml6UgMToxMg0KPiBU
-bzogV2lsbGlhbSBRaXUgPHdpbGxpYW0ucWl1QHN0YXJmaXZldGVjaC5jb20+DQo+IENjOiBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wd21Admdlci5rZXJuZWwub3JnOyBIYWwg
-RmVuZw0KPiA8aGFsLmZlbmdAc3RhcmZpdmV0ZWNoLmNvbT47IFBoaWxpcHAgWmFiZWwgPHAuemFi
-ZWxAcGVuZ3V0cm9uaXguZGU+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjE2XSBwd206IG9wZW5j
-b3JlczogQWRkIFBXTSBkcml2ZXIgc3VwcG9ydA0KPiANCj4gSGVsbG8gV2lsbGlhbSwNCj4gDQo+
-IE9uIE1vbiwgRGVjIDIzLCAyMDI0IGF0IDAyOjQ3OjU5QU0gKzAwMDAsIFdpbGxpYW0gUWl1IHdy
-b3RlOg0KPiA+ID4gPiArCWR1dHlfZGF0YSA9IG11bF91NjRfdTMyX2RpdihzdGF0ZS0+ZHV0eV9j
-eWNsZSwgZGRhdGEtPmNsa19yYXRlLA0KPiA+ID4gTlNFQ19QRVJfU0VDKTsNCj4gPiA+ID4gKwlp
-ZiAoIWR1dHlfZGF0YSkNCj4gPiA+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gPg0KPiA+ID4g
-SSBjYW4gdW5kZXJzdGFuZCB0aGF0IHBlcmlvZF9kYXRhID09IDAgaXMgYW4gZXJyb3IsIGJ1dCBk
-dXR5X2RhdGEgPT0NCj4gPiA+IDAgY291bGQvc2hvdWxkIGp1c3Qgd29yaz8hDQo+ID4NCj4gPiBJ
-dCBtZWFucyBubyBuZWVkIHRvIGNoZWNrIHdoZXRoZXIgdGhlIGR1dHkgaXMgdmFsaWQ/DQo+IA0K
-PiBObywgaXQgbWVhbnMgdGhhdCBJIGV4cGVjdCB0aGF0IGR1dHlfZGF0YSA9PSAwIGlzIGEgdmFs
-aWQgc2V0dGluZyBhbmQgbW9zdA0KPiBjb250cm9sbGVycyBzdXBwb3J0IGl0Lg0KPiANCj4gQmVz
-dCByZWdhcmRzDQo+IFV3ZQ0KDQpTbyB3ZSBqdXN0IG5lZWQgdG8gY2hlY2sgZHV0eSA8IDA/DQoN
-CkJlc3QgUmVnYXJkcywNCldpbGxpYW0NCg==
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2024=E5=B9=
+=B44=E6=9C=8812=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=883:05=E5=AF=AB=
+=E9=81=93=EF=BC=9A
+>
+> On Tue, Apr 02, 2024 at 10:01:39AM +0800, Nylon Chen wrote:
+> > Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2024=
+=E5=B9=B43=E6=9C=8819=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=882:17=E5=
+=AF=AB=E9=81=93=EF=BC=9A
+> > >
+> > > Hello,
+> > >
+> > > On Thu, Feb 22, 2024 at 04:12:31PM +0800, Nylon Chen wrote:
+> > > > Round the result to the nearest whole number. This ensures that
+> > > > real_period is always a reasonable integer that is not lower than t=
+he
+> > > > actual value.
+> > > >
+> > > > e.g.
+> > > > $ echo 110 > /sys/devices/platform/led-controller-1/leds/d12/bright=
+ness
+> > > > $ .apply is not idempotent (ena=3D1 pol=3D0 1739692/4032985) -> (en=
+a=3D1 pol=3D0 1739630/4032985)
+> > > >
+> > > > Co-developed-by: Zong Li <zong.li@sifive.com>
+> > > > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > > > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+> > > > ---
+> > > >  drivers/pwm/pwm-sifive.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> > > > index a586cfe4191b..bebcbebacccd 100644
+> > > > --- a/drivers/pwm/pwm-sifive.c
+> > > > +++ b/drivers/pwm/pwm-sifive.c
+> > > > @@ -101,7 +101,7 @@ static void pwm_sifive_update_clock(struct pwm_=
+sifive_ddata *ddata,
+> > > >
+> > > >       /* As scale <=3D 15 the shift operation cannot overflow. */
+> > > >       num =3D (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWI=
+DTH + scale);
+> > > > -     ddata->real_period =3D div64_ul(num, rate);
+> > > > +     ddata->real_period =3D DIV_ROUND_UP_ULL(num, rate);
+> > > >       dev_dbg(ddata->chip.dev,
+> > > >               "New real_period =3D %u ns\n", ddata->real_period);
+> > > >  }
+> > Hi Uwe
+> > >
+> > > pwm_sifive_apply has a DIV64_U64_ROUND_CLOSEST(). I wonder if that ne=
+eds
+> > > adaption, too?!
+> > According to my experiments, no adjustment is necessary.
+>
+> Did you enable PWM_DEBUG and tested with something like:
+>
+>         seq 5000 100000 | while read p; do echo p > /sys/class/pwm/pwmchi=
+pX/pwmY/period; done
+>
+Hi Uwe,
+I apologize for the significant delay in responding to your query,
+I've now completed a thorough verification of the PWM_DEBUG
+functionality.
+
+The Period Testing:
+seq 5000 5000 100000 | while read p; do echo $p >
+/sys/class/pwm/pwmchip0/pwm0/period echo "Testing period: $p" done
+
+The Duty Cycle Testing:
+for percent in 0 25 50 75 100; do duty=3D$((100000 * percent / 100))
+echo $duty > /sys/class/pwm/pwmchip0/pwm0/duty_cycle done
+
+- All period values from 5000ns to 100000ns were applied successfully
+- Various duty cycle ratios were tested without issues
+- Monitored dmesg output during tests - no kernel messages about wrong
+settings were observed
+
+Let me know if you need any additional test data or have other
+parameters you'd like me to verify.
+
+> and then verified that this test didn't result in kernel messages about
+> wrong settings?
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
+
+--=20
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+sifive system software  team =E9=99=B3=E4=BC=AF=E7=B6=B8
+
+Cell phone:  0989057854
+E-mail: nylon7717@gmail.com
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
