@@ -1,50 +1,50 @@
-Return-Path: <linux-pwm+bounces-4517-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4515-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D92689FC4DF
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Dec 2024 11:57:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C1AE9FC4DC
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Dec 2024 11:57:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B08E91883852
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Dec 2024 10:57:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B3A6D1882FC1
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Dec 2024 10:57:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 325A519F115;
-	Wed, 25 Dec 2024 10:57:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7520C18C03E;
+	Wed, 25 Dec 2024 10:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Tw+qhIqh"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="rVTEioeG"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2CE14A099;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2811487DD;
 	Wed, 25 Dec 2024 10:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735124226; cv=none; b=O6jFkobAsH5BdRR1QT2w8l/LkOIsLz14wEg73okJE5JdvzZzLO5yngSjSPmDnQZ0sVojo9dlJUE6ZZhxla/9ekJE2MeDHNUtbZFfzq5E6Dl2znwjv4RwOmWcKqGPF9cUnFlnaRXME9PtFTgXLf8y+OifBPoqMqbW4wfd/D1Jw30=
+	t=1735124225; cv=none; b=rCIbIhMwByMv11KFeKqsTIhpoEVWqRCj7tn10BCor7KBBtFyBALYfmOjWF0PCzvA2RdRGQ19GbTcDhS2wfpRB/K7HBZZdakHMVdPVCG2s54RG/4KP4VkEEXmON++exv2zHDSj0Pf+Nz7RDGi88kbnpn+jx8nH+aVhK+t3OLVm0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735124226; c=relaxed/simple;
-	bh=J2I6q/uBOxD27e2SHqYXsFctYPzKPcHFnWRXTcZFbj0=;
+	s=arc-20240116; t=1735124225; c=relaxed/simple;
+	bh=V75VB1eXLoWsiHGmf+F4GWH3zBdYnxAxPQiGAFWJlKY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CXBRo8zyeSR6sHJ+vkp4xMc7MvUAJ2dXJGffvcPOWQeOwbMuFQTDUEG35VKvvTiChZlAYjE5YY/lwONshk0FIT3VIL47FwXgbGpo4JTp7isSi4HMFc11lKnzofKPsoiWf+zT6PqAURnmwNfAa7+oZYC00ErUf70kdj1p7jki64Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Tw+qhIqh; arc=none smtp.client-ip=45.89.224.132
+	 MIME-Version:Content-Type; b=DWn8MogsooTJg7k28OZGsTzau1w4YwXQfTF35MsvYw65bJeS9XtADqrC3m1vk4IwrgHs59VXCPckMONjQ+4RlFECuj18AayPrv6f1yfSAic/WsJbhz2rBF2cDegka4YDM026vMFQDWLAy5j5o8ygKdZx6af4yjooeZVjxnxKuFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=rVTEioeG; arc=none smtp.client-ip=45.89.224.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 6A0CF12002A;
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 939BC12002B;
 	Wed, 25 Dec 2024 13:56:52 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 6A0CF12002A
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 939BC12002B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
 	s=mail; t=1735124212;
-	bh=uNLnVR9vGF1ncRzwJjWhsdEqfpo2sCMhV9fziN1rC3U=;
+	bh=dHd86CgFN+A0zZ482ESQ0Jwc5FHNViFNXh8Giwjs8PQ=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=Tw+qhIqhtXZKVdYg+E3R4KbFilIeYTsn0Jn83YP9bKnGS7GQM6/BHzX5e64dVGSm2
-	 qUvtu43CMTcl6b3FDC/GMPpdKiWQGpAggLtStgtoLCtbLjz01xOToNJ8DZzf/VAAdI
-	 ItkXS8orYrEaYPzeq32SWCwMCsgx3+AfWfOf4NU1bTGfa6MOnGvuwtuBMp6k4SBg/P
-	 HLlGB5l/uuDqVNMJn+A1JPnMN9ZsHhSPwacGqyv/zr4/H1X9Hpm9TyomehbSNRyLup
-	 cuCDH6Q8XTiU1wGfuGzobRJRliuHiA1GY5t89IBVb0PJMmF78Pcf5YyPRtrf7gSGSV
-	 E2ICJbVVv2UhA==
+	b=rVTEioeGm71YqPhpX6WvJeRaZD0VCWAfZyZQaGLovEYa72qV64beApDHYZHMkhFKK
+	 IJDIJML4sHbedxxuVXVRroGwCy9vMV5QHL55WGmAH4ojaQgQOKFoS4tzcicpAGy6ye
+	 PaxWVKrP6u3uq/D19yvylTSz7nMwJ+mbaoSPTgXFiBKaOMQYTZylPtdK2z34p5/WSl
+	 EzsynvzUnpiQyBOJ1B3pIeae+xIpukOalEZGFfpBsZZl+gB4mmTCo43BVXEAMg/qhd
+	 7iYFBAaVFbb95tf0y07OP4AJvApJOSBbENU/uDjhampMSBj0IEr3XZX1Bz4d1CBgct
+	 MwRLigBn2rIGg==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
@@ -57,9 +57,9 @@ To: <ukleinek@kernel.org>, <neil.armstrong@linaro.org>,
 CC: <linux-pwm@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<kernel@salutedevices.com>, George Stark <gnstark@salutedevices.com>
-Subject: [PATCH 1/2] pwm: meson: Simplify meson_pwm_cnt_to_ns()
-Date: Wed, 25 Dec 2024 13:56:38 +0300
-Message-ID: <20241225105639.1787237-2-gnstark@salutedevices.com>
+Subject: [PATCH 2/2] pwm: meson: Fix computing counter register
+Date: Wed, 25 Dec 2024 13:56:39 +0300
+Message-ID: <20241225105639.1787237-3-gnstark@salutedevices.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20241225105639.1787237-1-gnstark@salutedevices.com>
 References: <20241225105639.1787237-1-gnstark@salutedevices.com>
@@ -90,69 +90,61 @@ X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/12/25 07:56:00 #26914998
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-meson_pwm_cnt_to_ns() uses clock rate got from clk_get_rate(). clk object
-is getting from driver's private data thru several steps. Since
-meson_pwm_cnt_to_ns() is called several times from a single scope it's
-easier to get clock rate once and pass it as parameter.
+High and low values in the counter register are incremented by 1
+internally unless they a zero and constant bit is supported and set.
+So decrement by 1 calculated high and low PWM periods before applying.
 
 Signed-off-by: George Stark <gnstark@salutedevices.com>
 ---
- drivers/pwm/pwm-meson.c | 22 ++++++----------------
- 1 file changed, 6 insertions(+), 16 deletions(-)
+ drivers/pwm/pwm-meson.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 806e06c2b92e..8c6bf3d49753 100644
+index 8c6bf3d49753..51839936ec89 100644
 --- a/drivers/pwm/pwm-meson.c
 +++ b/drivers/pwm/pwm-meson.c
-@@ -331,21 +331,9 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	return 0;
- }
- 
--static u64 meson_pwm_cnt_to_ns(struct pwm_chip *chip, struct pwm_device *pwm,
--			       u32 cnt)
-+static u64 meson_pwm_cnt_to_ns(unsigned long fin_freq, u32 cnt)
- {
--	struct meson_pwm *meson = to_meson_pwm(chip);
--	struct meson_pwm_channel *channel;
--	unsigned long fin_freq;
--
--	/* to_meson_pwm() can only be used after .get_state() is called */
--	channel = &meson->channels[pwm->hwpwm];
--
--	fin_freq = clk_get_rate(channel->clk);
--	if (fin_freq == 0)
--		return 0;
--
--	return div64_ul(NSEC_PER_SEC * (u64)cnt, fin_freq);
-+	return fin_freq ? div64_ul(NSEC_PER_SEC * (u64)cnt, fin_freq) : 0;
- }
- 
- static int meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-@@ -353,10 +341,12 @@ static int meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- {
+@@ -214,6 +214,15 @@ static int meson_pwm_calc(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		channel->hi = duty_cnt;
+ 		channel->lo = cnt - duty_cnt;
+ 		channel->constant = false;
++
++		/*
++		 * hi and low reg values are incremented by 1 internally
++		 * unless they are zero and constant bit is set
++		 */
++		if (channel->hi)
++			channel->hi--;
++		if (channel->lo)
++			channel->lo--;
+ 	}
+
+ 	channel->rate = fin_freq;
+@@ -342,6 +351,7 @@ static int meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
  	struct meson_pwm *meson = to_meson_pwm(chip);
  	struct meson_pwm_channel_data *channel_data;
-+	unsigned long fin_freq;
+ 	unsigned long fin_freq;
++	bool const_enabled;
  	unsigned int hi, lo;
  	u32 value;
- 
- 	channel_data = &meson_pwm_per_channel_data[pwm->hwpwm];
-+	fin_freq = clk_get_rate(meson->channels[pwm->hwpwm].clk);
- 
- 	value = readl(meson->base + REG_MISC_AB);
- 	state->enabled = value & channel_data->pwm_en_mask;
-@@ -370,8 +360,8 @@ static int meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+
+@@ -356,10 +366,16 @@ static int meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	else
+ 		state->polarity = PWM_POLARITY_NORMAL;
+
++	const_enabled = meson->data->has_constant &&
++		(value & channel_data->const_en_mask);
++
+ 	value = readl(meson->base + channel_data->reg_offset);
  	lo = FIELD_GET(PWM_LOW_MASK, value);
  	hi = FIELD_GET(PWM_HIGH_MASK, value);
- 
--	state->period = meson_pwm_cnt_to_ns(chip, pwm, lo + hi);
--	state->duty_cycle = meson_pwm_cnt_to_ns(chip, pwm, hi);
-+	state->period = meson_pwm_cnt_to_ns(fin_freq, lo + hi);
-+	state->duty_cycle = meson_pwm_cnt_to_ns(fin_freq, hi);
- 
- 	return 0;
- }
--- 
+
++	lo += (const_enabled ? !!lo : 1);
++	hi += (const_enabled ? !!hi : 1);
++
+ 	state->period = meson_pwm_cnt_to_ns(fin_freq, lo + hi);
+ 	state->duty_cycle = meson_pwm_cnt_to_ns(fin_freq, hi);
+
+--
 2.25.1
 
 
