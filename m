@@ -1,94 +1,55 @@
-Return-Path: <linux-pwm+bounces-4544-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4545-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32701A03724
-	for <lists+linux-pwm@lfdr.de>; Tue,  7 Jan 2025 05:53:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CF48A03736
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Jan 2025 06:07:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADA7C18806CF
-	for <lists+linux-pwm@lfdr.de>; Tue,  7 Jan 2025 04:53:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D2A51644F1
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Jan 2025 05:07:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79B89190692;
-	Tue,  7 Jan 2025 04:53:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2374F194C9E;
+	Tue,  7 Jan 2025 05:07:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="E4XqRubQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="laoKNB7O"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3952B18EAB
-	for <linux-pwm@vger.kernel.org>; Tue,  7 Jan 2025 04:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1E51802AB;
+	Tue,  7 Jan 2025 05:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736225581; cv=none; b=mJCPwmEhpSy7ZWI3ORpQfyuaJO8SA4wNZTTyjIuuoj/Qz+6g8Y2t2GDTKV981x4FZwPZ7g1vBZo7BTAPFQZepSbB1Y5ozhWf3OF3axJGa8MJIu9aNTGuLWbJPL8vdeXbSPVKyHtjYiAzVugv6LFoYlrEWLMKbma8OB3zKElyPqk=
+	t=1736226459; cv=none; b=nFb+MjSSEXhMUSTL/kDg2iQ5g+k67kLINw6PjyIMXZb5rTxs5PpRo3qC555JsQHLswo3WnCcI5aCwfIxigmTKKWI+M/+KwOHjkRHatQ3PE4ip0J6QNwR4X+GSq8DGb/2R1ICefVXOT0ruGRKAA/GPra9mp5gEVAeHnA7egP4c+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736225581; c=relaxed/simple;
-	bh=60IKh1YALIpE5luozTsZiDL++m1KjCGPj6msSEt8t+U=;
+	s=arc-20240116; t=1736226459; c=relaxed/simple;
+	bh=UTP2yln0R5brDwcvJQ9DLlME0HUB0TlitU6O3YCX8V8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BbYG5gNegw426EzQSwB3hm9/KcLq4hjs9NX6leErsHonf/81X4AMup97tE0a2ojYWhAjjFILs/MaE+9mCVhsplcHP/Afyl4lkaqlr5OFOErUz6K03yfZ1uUb+1QTfLIq4MQJlRWXHi3YM4d2xq61qkZC/rweumbjNnQpbqWMfjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=E4XqRubQ; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aab6fa3e20eso2479988566b.2
-        for <linux-pwm@vger.kernel.org>; Mon, 06 Jan 2025 20:52:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1736225578; x=1736830378; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=60IKh1YALIpE5luozTsZiDL++m1KjCGPj6msSEt8t+U=;
-        b=E4XqRubQxtDGrzb3Cr7MgJS6LaCTdm3ayR96Px0vWdmRjoW64IIzhMOGCMXWy2FH6s
-         VbxjSDmWLUdVA+ADSL1Krj+4u1eku7mLQS9PlLX6Me+2Bg+rEMYqAPTkdGH3pvMsLgAe
-         qXjp5DYZejGG3oFcLKBrAeIhk1/NkrRo0Qq+wCW1a81ggCSuqBkfa37T2nrzWv4bPu9W
-         I+ScuynPohh+QfJdQKbxqyQs46IpvXNtrCXItTLouyPRPFBd+5jfy8FBzwI97eGAWOMp
-         gKtShr1BbeCfSPaaA3V6YNpcPpQXsZc1thV1KUZVSycDUKC1HO4TbcChScKML4NUSmr4
-         fR6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736225578; x=1736830378;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=60IKh1YALIpE5luozTsZiDL++m1KjCGPj6msSEt8t+U=;
-        b=tb0OrSqfclDDSuf0CeICUNeh0AD7+rRO7rqDFYH6CiOF/2iIn8BCCqNyokxg6QjQLR
-         86IF8ADUSDttJF3gcVxMTpj8HUBMOym5Ywh2b8j/XTdQp+myCnF/FnZn5/0VPlFVMNMK
-         hI8ZaV2LfiDAtvmAKljhQUQEIkV3i84wYk3UfZiZ+GlvQx1/g5/mwnxIXxgWr+FMUVRB
-         1rbrzbXxKW1OYfI5B2RECX33G+p5cgLtjAtXbPOY971ut/NO/5oWNcXpRiGSwFLF1UO2
-         BtOdKnmy1eICs7rQhBX1FPZoi+cZGfPt3AwoxgKebvar2F2kbNrRkgK7KveJTMUMKjiP
-         6KAA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnVssxxxF75QL8CMbk5Q968xvoiIr4f5Lnjse83whwGs0V3uc+W05qlxRC6S6zrjpFmOSg8Flo54Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBrBKYDHrpLEz2d1jCmDVnAYsEuj5cexjAJGGIWfjL/LVY6ckV
-	mCfne/G9TENzgxuLkO9wKjjht3bNV72iJE9xygwKVPcHspoWSrI1ypc/BGfI+Pc=
-X-Gm-Gg: ASbGncvaa/4r8fltrcSPeEW7sNjpOJxltd0kFuGpZsB3EjTUJptknQkQ1QqzKUVY4gQ
-	ji1fxOoiiIM2FJQ1EfeJj9SbeCgF3CJtGm4k6yDNNdk7dTKEv6uJKOG8k+m6HbHt+UfsrU9BzBT
-	F+f5eRfzeqS17OYZmG0YE4AX/6Mf4YBqSXfwPUktke6C+PNtFaEtrU5JwcgiEZojkWDKEQG+s1X
-	aXdoHvVGbTmU1ha682DqIqHoqhcOLU80Nfs7zkMTDXKaQkZLXXmZclDb/tBwg==
-X-Google-Smtp-Source: AGHT+IExtBcC1TdRfmrYbsdlfJ/xTSCHU6F9T+AcyPoKwaobnGSIRxLtGmMNUARkLtwmvOeIpjrxLQ==
-X-Received: by 2002:a17:906:f59d:b0:aa6:9372:cac7 with SMTP id a640c23a62f3a-aac334c1628mr5915566066b.31.1736225577578;
-        Mon, 06 Jan 2025 20:52:57 -0800 (PST)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0f015b53sm2324711666b.163.2025.01.06.20.52.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2025 20:52:56 -0800 (PST)
-Date: Tue, 7 Jan 2025 05:52:54 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Nylon Chen <nylon.chen@sifive.com>
-Cc: Nylon Chen <nylon7717@gmail.com>, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	conor@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, 
-	thierry.reding@gmail.com, vincent.chen@sifive.com, zong.li@sifive.com
-Subject: Re: [PATCH v9 3/3] pwm: sifive: Fix the error in the idempotent test
- within the pwm_apply_state_debug function
-Message-ID: <c5zjujxi7wsuabdpttojkrwnvkwna56gz3gnapxskg7tdzmo2f@frvbwzguizdt>
-References: <20240222081231.213406-1-nylon.chen@sifive.com>
- <20240222081231.213406-4-nylon.chen@sifive.com>
- <jvwgsszvs4jtcytcphsdjulzgqfqzdp4sisu236ddwsqgmvriw@ngi4ljgh5b74>
- <CAHh=Yk92=hp+kaTJWL13_jwJ5gzAAi8gbRF=Ns9=yq2trRUQEg@mail.gmail.com>
- <xf6ympnaljfjztptb5w5qdpuluckptozdz5a7gtuycsev32ngr@x2ovibqv6evr>
- <CAGKtFavQAZOof5QSTFCEaRJEPETm5aBqzkV4g24n3ioiBAOgDA@mail.gmail.com>
- <p6rqpx3yrn2ib4ulmby7tbnpbg4bjyt4dt6snrmhuyw6hx6izl@lywssban54et>
- <CAHh=Yk-iFGULUQc-U-PNjx-st7d5KER3J+t54SNERVaNr++qoQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jfadDZVEm9J+NTlDh6ayYuQI9VDVdpqz+fASdNGMo66laf066Ls8C7nDywJobgQhz53DAYKU8cVQBKhjCjoF5OJvLcGjbIG4nV3MSezH9cX9X5pSR/Mexd6IUKyfA3GutpC6tBFsjjp0rdR1VWIMvXpZYkPrWU6hrPqJ+TYnPF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=laoKNB7O; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECB19C4CED6;
+	Tue,  7 Jan 2025 05:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736226458;
+	bh=UTP2yln0R5brDwcvJQ9DLlME0HUB0TlitU6O3YCX8V8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=laoKNB7OsgiZSqP93POaabeYROjQwDY0rWw3I9Zqupyc8u/U+E9YOqjft3TWmqYAR
+	 LIslPBFDk/eeRRNY2bQuMNl+96RCNfuAA1KbB4QlbyFErGgMEZYq7xvpU18pZPrp0M
+	 scXttnTsWVknhTsyAUdu2jbpOQ+OMr9KljFPeXozRBfnsx26AiAhyIK+HDpoC1bXZg
+	 +gYwInkCSK8lhnBiTL3CQramV+KH38dO0ZvDntkutzcqTL6ALNTozzezk3+r/XjMAX
+	 V+V0NYVSHcBTV/OI062/SwjEHV840kCM58mBYMrTLhvP+wxQ6ha3i/S/GUgQdjRCqr
+	 zUwvLkD2cl82g==
+Date: Tue, 7 Jan 2025 06:07:35 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Maud Spierings <maud_spierings@hotmail.com>
+Cc: william.qiu@starfivetech.com, hal.feng@starfivetech.com, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, p.zabel@pengutronix.de
+Subject: Re: [PATCH v17] pwm: opencores: Add PWM driver support
+Message-ID: <7kfpvipnkirfacy3ro3qb3cmbw5fv5dlyjh3qowc4juvmcb2jj@43zpytio2273>
+References: <20250106103540.10079-1-william.qiu@starfivetech.com>
+ <VE1P189MB1024E9669B8CFCB943D633E7E3102@VE1P189MB1024.EURP189.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -96,54 +57,88 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3m47uht7xkb3ljzb"
+	protocol="application/pgp-signature"; boundary="vz6tfkkpvjabun6q"
 Content-Disposition: inline
-In-Reply-To: <CAHh=Yk-iFGULUQc-U-PNjx-st7d5KER3J+t54SNERVaNr++qoQ@mail.gmail.com>
+In-Reply-To: <VE1P189MB1024E9669B8CFCB943D633E7E3102@VE1P189MB1024.EURP189.PROD.OUTLOOK.COM>
 
 
---3m47uht7xkb3ljzb
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--vz6tfkkpvjabun6q
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v9 3/3] pwm: sifive: Fix the error in the idempotent test
- within the pwm_apply_state_debug function
+Subject: Re: [PATCH v17] pwm: opencores: Add PWM driver support
 MIME-Version: 1.0
 
-Hello Nylon,
+Hello Maud,
 
-On Mon, Jan 06, 2025 at 05:00:32PM +0800, Nylon Chen wrote:
-> Hi Uwe, I have made the following adjustments based on your
-> requirements. Does this align with what you had in mind?
-> - period
-> seq 5000 1 15000 | while read p; do echo $p >
-> /sys/class/pwm/pwmchip0/pwm0/period echo "Testing period: $p" done
+On Mon, Jan 06, 2025 at 07:59:23PM +0100, Maud Spierings wrote:
+> Hello William,
 >=20
-> - duty cycle
-> for duty in $(seq 0 1 10000); do echo $duty >
-> /sys/class/pwm/pwmchip0/pwm0/duty_cycle echo "Testing duty cycle:
-> $duty" done
+> I've once again put the patch to the test, and it seems the oops is
+> resolved.
+>=20
+> I did notice something odd though, when controlling the backlight=A0 bl_p=
+ower
+> 0 means the backlight is on and controllable, 1 seems like off, but inste=
+ad
+> sets the screen to maximum brightness and then stops listening to any val=
+ue
+> echoed into brightness.
 
-That + doing the same test backwards (i.e. using seq 15000 -1 5000 for
-the period test and seq 10000 -1 0 for duty_cycle) should catch most
-rounding bugs.
+Note that for bl_power 0 is on and 4 is off. Still the behaviour you
+report sounds wrong. Quickly looking in the pwm_bl driver, I don't spot
+something obvious.
+
+>=20
+> The brightness is also reversed from what would be logical, so 255 is off
+> and 0 is maximum.
+>=20
+> Now the little text at the top specifies that the hardware only does
+> inverted polarity, which I guess explains this, but I don't understand it.
+
+The backlight's operation should still be fine, its usage be independent
+of the PWM's details.
+
+> I also encountered this when I got an error to start with so I had to add
+> PWM_POLARITY_INVERTED to my pwm-backlight definition.
+
+That makes me suspect the problem is on your end. If you add
+PWM_POLARITY_INVERTED the result is that the pwm_bl driver still
+configures duty_cycle=3D0 for backlight off, but you then get a constant
+high output.
+
+So with the hardware capabilities (i.e. not being able to emit a
+constant low output) I think you need to not use PWM_POLARITY_INVERTED
+and accept that completely off doesn't work (unless you have an
+additional GPIO or regulator to disable the backlight).
+
+> But I don't understand why it isn't supported. Wouldn't supporting non
+> inverted polarity be a very simple calculation? 40% negative duty cycle is
+> of course equal to 60% positive duty cycle, 20% N =3D=3D 80% P etc. I don=
+'t see
+> why the hardware would specifically have to support this.
+
+If you only care about the mean voltage level (as is the case for a
+backlight), that's right. But only then. And if the hardware cannot emit
+a constant low signal, this doesn't help you.
 
 Best regards
 Uwe
 
---3m47uht7xkb3ljzb
+--vz6tfkkpvjabun6q
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmd8syMACgkQj4D7WH0S
-/k4USQgAu73hQyBwf5XFDneH+1QmqAmiN2wEaeF4n94f4vD0QtTqb1SQ+kIDIV2y
-h331G9V73C2jt7PVtH2a+pF367sblfDWrYufCtuTXj4akJGtPEcme1PuxmMdwip5
-+OtHKLGC2Zb7N9r5VQkwok4Ijci6vUF3unjz+sQipFReZcygL+XeJ3Wd+DWMu//t
-IfbmsYkXK826rUqBBoHVJigEZsQugsR69+EHYnXu4sT2W2gkIr+SXbZOFQx1lo2r
-TVtmwJtKF7qflQS5STsyZyp1xKoAk33XPB83D3h4yz1IDIbzhKJbqqjadvgdvouK
-myVcdVQFatxC2GuFs+5M73nHcQkhGg==
-=OoYH
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmd8tpQACgkQj4D7WH0S
+/k51Agf+KZvCR5NhKAnnkB1hrUdGtM6zYAD4AH0s9iPKa1j319Vz8SWU9IX+wi0U
+8w1QT5/2PZQyNsvUwP84R5aAXyPHC1hCHPQZc1plXrwcaGwvb68TXdjL7kwBNRwl
+ps3lIJYNXv/ixKYoyZtomifVXh1ut9COAIZTW5jBMEUC0Vk+MNvbJtR+HvmW10D8
+9Np3pnIlxZb31cpRrtCe9/7aBvsHH+jyTZtfjx78ZbP7sYUfr4K5GkMCIqsggSep
+B01lIMfPMaLtDK6hO33EkYsmVSQqpojdzDTyfuqNehRjFNA3/6dPYws0r0n6aFzy
+K/JpogSYo2kOq7g4+aJXR9BllCDyPw==
+=Ig//
 -----END PGP SIGNATURE-----
 
---3m47uht7xkb3ljzb--
+--vz6tfkkpvjabun6q--
 
