@@ -1,274 +1,216 @@
-Return-Path: <linux-pwm+bounces-4565-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4566-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A6F5A07D8E
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Jan 2025 17:31:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6285CA0890F
+	for <lists+linux-pwm@lfdr.de>; Fri, 10 Jan 2025 08:38:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1CE97188C40B
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Jan 2025 16:31:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A55F163312
+	for <lists+linux-pwm@lfdr.de>; Fri, 10 Jan 2025 07:38:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36F59220688;
-	Thu,  9 Jan 2025 16:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 748CD207A35;
+	Fri, 10 Jan 2025 07:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="G1UBMas6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bh3RZ6vw"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBC5153800;
-	Thu,  9 Jan 2025 16:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673EE207A0B;
+	Fri, 10 Jan 2025 07:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736440300; cv=none; b=VUM2gqrvNNEbYfXXJsi2CKGE5r7gD3JOtG30YBJxKqmO7MpZnSNmF63ASx6fw3TvD6VhY6dTuXC4zJ8hwf1XjvlUQRSFF280mLdpWqmfveh9ZWiat9FUGvpgxSl3ujlmzUD6kkmXOhi/x8vFRDrcesnCn/AKXO/qDr4NjbAATHA=
+	t=1736494683; cv=none; b=m2n+FrYakGi3tzy4hZ2B85owKLmy0B0i9VP5JDN9+6/DzXN6oV9gycbWQ8VbBdLPK8d/9ymqJjr1cxlwYeSUCeGVh2Xg0uNvHIg3U9RE7csTbV7zOJ1yg98GoPnpoJizaZggHIAaJii/iE5fd6ZlUqqaspHpPegDPOGII4In9Qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736440300; c=relaxed/simple;
-	bh=6yNc/VvEqqd9EKFpxm3xmS2DW26GXhLersCSXGYIJPI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hPHWistwk/eH7mCZmkFhaXAhnF0vw4aWVYE1e07EaWwxXKnuxV2EwF1oLIIssu1jnDWGIcd3qP4e87WhcsFZZb8LBob5doSUUrgPiI95Tkw1BeInlhkVeGhOwULeBmJr+Wr/YgdhU7sGSGyBPMvQASwYr/NnU+4mH1DngEqJ5E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=G1UBMas6; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 509ERp9A001039;
-	Thu, 9 Jan 2025 17:31:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	tOCIMbi4zzKnCjTJpT+vOfF34I4MpmzXJcdcVQ+i7co=; b=G1UBMas6V61HEaGk
-	JVOy7evlrOf6GWE5Dq8Ui6lMA+VTOcngVpsNPFctJQbfbfqINfr4tQwd3/ahfIOL
-	hL+7NxMoYH9JjknuGvVka8hjb1StFrGf5f5THQ9pIBMteUMk8q1KvWIljYQmdPu9
-	Z6a9ng+3yX3DDW3AbM0J3J+lZfrWYVjkVhidHkdfHNJrB8Sqqpl0UNcBkUPKy8qG
-	2EUYq1KR0/kJxT8WqWs2EjSicv1+ZeyU355xsNP2hevm4Bwbca4Y+UKnVlA8Fgko
-	CMrsiRumyHCGUpuQTUmGmVlKlfX2+9g7qB7jq0SwI/8xH2bafTM1bH6MnfpkKtZ5
-	9MUN5w==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4424hpbusr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Jan 2025 17:31:06 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5FFC340047;
-	Thu,  9 Jan 2025 17:30:12 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 55061248764;
-	Thu,  9 Jan 2025 17:29:10 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
- (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Thu, 9 Jan
- 2025 17:29:10 +0100
-Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
- (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.37; Thu, 9 Jan
- 2025 17:29:09 +0100
-Message-ID: <47dd8588-5c51-44f4-8f9f-e984ae24d57b@foss.st.com>
-Date: Thu, 9 Jan 2025 17:29:08 +0100
+	s=arc-20240116; t=1736494683; c=relaxed/simple;
+	bh=xw3Eav1FLVC+hH8GZYjdh7l5t24J8TPGmfK8gy4jRCY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IxecjwIZujqeQkhQC+te93S5AZGKhuSyH9Wtw8lUVi7AuQ+TDbroQDmashxSbqgddulfU/t6q4NDwulqQImHd/lrFjqzcr2tvOyjGVoafi2himyE2JWdee+5jxyTSZP1n7qEG/BPvjXd+pGzbS0usTE6XfYbcQQf/+VJKmCox/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bh3RZ6vw; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3863703258fso1822739f8f.1;
+        Thu, 09 Jan 2025 23:38:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736494680; x=1737099480; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3BnsD2G8Y05Q7WzuLzmWJHBR7d3f0pD6hbm60eMhGJM=;
+        b=bh3RZ6vwo2O8Yn4THQfvKjCcr6CYK3EBGoe4iQ0s1w8Vd9SCpu5BzUo1twJjS85JwV
+         07jgBmhcdRixf/h0e9LrpvJ6iaW8+PPyg4DBRKuZATndEJv/FnMZTalli3wOlYUXPr4t
+         auz+UXEfyaLK5c2+0RQup2f1TB9Agl0RsKwVVaiBOoX+SwkZ2nKqssmSrmnYNxODwIsB
+         eYOhZBiHF844yygjX8SupT/LAshMuw92co5LYgGvXpEYAT6H4iQf0GK5aMERQGDNLr2x
+         zUx1mSI8J/31u87pLR1VsstD+Cp+6NtGm6JUSNEU8N9+4Y/WLa25v2kzcQAius7VYHyZ
+         BevQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736494680; x=1737099480;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3BnsD2G8Y05Q7WzuLzmWJHBR7d3f0pD6hbm60eMhGJM=;
+        b=FJoVDhFm38x9QuDRkWthMhn6N/Y6JvGSz/nvMBtuwS9FiTEasfiBaUOKUSVtcRPInR
+         Bv7Y297BMHA7WiThrXWY/HwqBm7RvjD+nPlYApRxERPN82EceG+iH5A+EzMqhnmuGgF2
+         65dbH6wPrXbzg8B04siptbDiad5ckoxyrodqzCk8nnfLUjEWEn01BvKWb5pVTgv3GDtC
+         Sq5RaQOMxI451tvXJk74YCDLKVQcDh65wkI98kxIjryNTET4lAyakslYiVabjpXjMOcy
+         op39zhNW0fANJB5EWQAJR4Gw8x4F0Iu5cAihJX8J0LxOArUj5u8m8aq7fpXjwygyH1JS
+         zC/w==
+X-Forwarded-Encrypted: i=1; AJvYcCW+jvqsIOzTkVGAZGUs9c+wDGd4XSJf73jI3owA4TOEXZSS/xuPVy89PncUDR2SKiNqOSrxnAQd+7/D+tBl@vger.kernel.org, AJvYcCW47EAhu5968RCNF7nGiuTrNKOj5aWtSrQiOXRLmsa/72FuzEwHQE3XKSFKcoNQRNwzWP9WCqcyqMBf@vger.kernel.org, AJvYcCWyEoKCf4NHF8stCco6nJdOaTpT/XztY3TyZonZpaqIu3yUe82mzuRHLNhL9zeoGbTch1QwlhGMqJuz@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqGMIV8o1thiRK19q8gNLO6CTiqqPh00DZyl0JBXqyLHwMlV0w
+	qEqAnHE+HgOcFwOflrWBW13TAF/ntcSNEvdBK/aq3nduDPMNL/qa
+X-Gm-Gg: ASbGncu4R6KP7a02QEc0WZt3YDuIgm67pleelO9O/Ob4clqw8EuhifdAsvAyo0PnoR9
+	YxQHczySEMvuMWDBLGBcnjFz9XlFPrnsWJPPeMU9GEEdkajeZJTk/9eHpvtQlHEN3yJ6OF5F+6m
+	x5NuXFipN5Ve6h54KMJ/jlH0HBXDfahXBQKstIgX9YEISte0giCS/bnOKBqnKJJr1uI0QFNYwTf
+	Yh/yFOd3ADkG6I9rDBJNhVjko5SOk7Ql0HGrv+OKsIE/lyrjJkJKbctlZCFN6I1aQ==
+X-Google-Smtp-Source: AGHT+IFa3vh/PKJmzDi+cq+5kzK8poltzLjQTCEwPiEGk550+bfpk0MVlxLPUJTmcG3TndKEQ46FeA==
+X-Received: by 2002:a5d:47c1:0:b0:385:fa30:4f87 with SMTP id ffacd0b85a97d-38a8b08c0cemr5985858f8f.0.1736494679488;
+        Thu, 09 Jan 2025 23:37:59 -0800 (PST)
+Received: from debian.fritz.box ([2a00:79c0:6a1:e700:303:6c5b:4b07:6715])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e38397csm3726478f8f.24.2025.01.09.23.37.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2025 23:37:58 -0800 (PST)
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: 
+Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v8 0/2] pwm: add support for NXPs high-side switch MC33XS2410
+Date: Fri, 10 Jan 2025 08:37:53 +0100
+Message-Id: <20250110073755.29541-1-dima.fedrau@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/9] mfd: stm32-timers: add support for stm32mp25
-To: Lee Jones <lee@kernel.org>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <alexandre.torgue@foss.st.com>, <wbg@kernel.org>, <jic23@kernel.org>,
-        <ukleinek@kernel.org>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <olivier.moysan@foss.st.com>
-References: <20241218090153.742869-1-fabrice.gasnier@foss.st.com>
- <20241218090153.742869-3-fabrice.gasnier@foss.st.com>
- <20250109104956.GD6763@google.com>
-Content-Language: en-US
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-In-Reply-To: <20250109104956.GD6763@google.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
 
-On 1/9/25 11:49, Lee Jones wrote:
-> On Wed, 18 Dec 2024, Fabrice Gasnier wrote:
-> 
->> Add support for STM32MP25 SoC. Use newly introduced compatible, to handle
->> new features.
->> Identification and hardware configuration registers allow to read the
->> timer version and capabilities (counter width, number of channels...).
->> So, rework the probe to avoid touching ARR register by simply read the
->> counter width when available. This may avoid messing with a possibly
->> running timer.
->> Also add useful bit fields to stm32-timers header file.
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
->> ---
->>  drivers/mfd/stm32-timers.c       | 32 +++++++++++++++++++++++++++++++-
->>  include/linux/mfd/stm32-timers.h |  9 +++++++++
->>  2 files changed, 40 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mfd/stm32-timers.c b/drivers/mfd/stm32-timers.c
->> index 650724e19b88..6f217c32482c 100644
->> --- a/drivers/mfd/stm32-timers.c
->> +++ b/drivers/mfd/stm32-timers.c
->> @@ -9,6 +9,7 @@
->>  #include <linux/module.h>
->>  #include <linux/of_platform.h>
->>  #include <linux/platform_device.h>
->> +#include <linux/property.h>
->>  #include <linux/reset.h>
->>  
->>  #define STM32_TIMERS_MAX_REGISTERS	0x3fc
->> @@ -173,6 +174,32 @@ static void stm32_timers_get_arr_size(struct stm32_timers *ddata)
->>  	regmap_write(ddata->regmap, TIM_ARR, arr);
->>  }
->>  
->> +static int stm32_timers_probe_hwcfgr(struct device *dev, struct stm32_timers *ddata)
->> +{
->> +	u32 val;
->> +
->> +	ddata->ipidr = (uintptr_t)device_get_match_data(dev);
-> 
-> Are you sure this cast is needed?
+The MC33XS2410 is a four channel high-side switch. Featuring advanced
+monitoring and control function, the device is operational from 3.0 V to
+60 V. The device is controlled by SPI port for configuration.
 
-Hi Lee,
+Changes in V2:
+  - fix title in devicetree binding
+  - fix commit message in devicetree binding patch
+  - remove external clock from pwms and create clocks property
+  - switch to unevaluatedProperties: false
+  - add missing properties for complete example:
+    - pwm-names
+    - pwms
+    - interrupts
+    - clocks
 
-Yes, I can see a warning pops-up without it:
+Changes in V3:
+  - Add description of the general behaviour of the device (limitations)
+  - Drop unused defines
+  - Add ranges comments for defines with parameters
+  - Drop MC33XS2410_PERIOD_MAX, MC33XS2410_PERIOD_MIN defines
+  - Drop mc33xs2410_period variable
+  - Round down when calculating period and duty cycle
+  - Use switch instead of loop when calculating frequency
+  - Removed ret variable in mc33xs2410_pwm_get_freq
+  - Handle all accesses in a single call to spi_sync_transfer
+  - Fix comments in function mc33xs2410_pwm_get_period
+  - Fix call pwm_set_relative_duty_cycle(state, ret, 255), instead
+    pwm_set_relative_duty_cycle(state, val[1] + 1, 256);
+  - Use devm_pwmchip_alloc
+  - Fix typo s/Transitition/Transition/
+  - Drop driver_data
+  - Removed patch for direct inputs from series
+  - Tested with PWM_DEBUG enabled, didn't before !
 
-drivers/mfd/stm32-timers.c:181:22: warning: assignment to ‘u32’ {aka
-‘unsigned int’} from ‘const void *’ makes integer from pointer without a
-cast [-Wint-conversion]
-  181 |         ddata->ipidr = device_get_match_data(dev);
-      |                      ^
+Changes in V4:
+  - removed include of math.h, already included in math64.h
+  - removed include of mutex.h, no mutexes are used
+  - added include of bitfield.h(FIELD_GET, FIELD_PREP), fixes errors
+    discovered by kernel test robot
+  - cast parameters in DIV_ROUND_UP to u32, fixes errors discovered by
+    kernel test robot
 
+Changes in V5:
+  - Fix comment in mc33xs2410_pwm_get_freq, selecting steps instead of
+    period
+  - Add comment in mc33xs2410_pwm_get_relative_duty_cycle that duty_cycle
+    cannot overflow and and period is not zero, guaranteed by the caller
+  - Hardware emits a low level when disabled, disable if duty_cycle = 0 is
+    requested.
+  - Fix complaints when PWM_DEBUG enabled, round-down division in
+    mc33xs2410_pwm_apply and round-up in mc33xs2410_pwm_get_state.
+  - Add comment for disabling watchdog in probe
 
-> 
->> +	if (!ddata->ipidr) {
->> +		/* fallback to legacy method for probing counter width */
-> 
-> Sentences start with uppercase chars.
+Changes in V6:
+  - Add link to manual
+  - Redefine MC33XS2410_GLB_CTRL_MODE_MASK as MC33XS2410_GLB_CTRL_MODE and
+    MC33XS2410_GLB_CTRL_NORMAL_MODE as MC33XS2410_GLB_CTRL_MODE_NORMAL
+  - Remove define MC33XS2410_MIN_PERIOD_STEP(x) as there is no need for
+    parameters and use instead MC33XS2410_MIN_PERIOD
+  - Rename function to_pwm_mc33xs2410_chip to mc33xs2410_from_chip
+  - Add comment in mc33xs2410_pwm_get_freq why count should be rounded up
+  - Fix incorrect comment in mc33xs2410_pwm_get_period
+  - Rename steps variable to doubled_steps in function
+    mc33xs2410_pwm_get_freq
+  - remove cast in mc33xs2410_pwm_set_relative_duty_cycle
+  - remove duty_cycle from if in mc33xs2410_pwm_set_relative_duty_cycle
 
-Ack
+Changes in V7:
+  - Add empty lines for defines with parameter
+  - Hardcode into:
+    - MC33XS2410_PWM_DC1 -> MC33XS2410_PWM_DC
+    - MC33XS2410_PWM_FREQ1 -> MC33XS2410_PWM_FREQ
+    - MC33XS2410_MAX_PERIOD_STEP0 -> MC33XS2410_MAX_PERIOD_STEP
+  - Rename:
+    - MC33XS2410_MIN_PERIOD -> MC33XS2410_PWM_MIN_PERIOD
+    - MC33XS2410_MAX_PERIOD_STEP -> MC33XS2410_PWM_MAX_PERIOD
+    - MC33XS2410_WR -> MC33XS2410_FRAME_IN_ADDR_WR
+    - MC33XS2410_RD_CTRL -> MC33XS2410_FRAME_IN_DATA_RD
+    - MC33XS2410_RD_DATA_MASK -> MC33XS2410_FRAME_OUT_DATA
+  - Change range for MC33XS2410_PWM_CTRL1_POL_INV
+  - Drop mask suffixes
+  - Switch to unsigned int len in mc33xs2410_write_regs and
+    mc33xs2410_read_regs
+  - Remove define MC33XS2410_WORD_LEN
+  - Use a single spi transfer in mc33xs2410_write_regs and
+    mc33xs2410_read_regs by using SPI_CS_WORD and 16 bits per word
+  - Break the line in the argument list instead of having a static in its
+    own for mc33xs2410_read_reg definition
+  - Remove u32 cast mc33xs2410_pwm_get_period
+  - Unroll mc33xs2410_pwm_get_relative_duty_cycle
+  - Unroll mc33xs2410_pwm_set_relative_duty_cycle and remove check for
+    state->enabled
+  - Remove ctrl[x] and use instead a u8 flag which indicates from which
+    registers to read
 
-> 
->> +		stm32_timers_get_arr_size(ddata);
->> +		return 0;
->> +	}
->> +
->> +	regmap_read(ddata->regmap, TIM_IPIDR, &val);
->> +	/* Sanity check on IP identification register */
-> 
-> This seems obvious, thus superfluous.
+Changes in V8:
+  - Replace x for MC33XS2410_PWM_CTRL1, MC33XS2410_PWM_CTRL3_EN,
+    MC33XS2410_PWM_FREQ and MC33XS2410_PWM_DC with chan
+  - Add bracketing for parameters in defines
+  - Replace x for MC33XS2410_PWM_MAX_PERIOD with step
+  - Add comment in mc33xs2410_pwm_apply
+  - Remove hardcoded 4 with ARRAY_SIZE(reg) in:
+    ret = mc33xs2410_read_regs(spi, reg, MC33XS2410_FRAME_IN_DATA_RD, val, 4);
+  - Remove struct mc33xs2410_pwm and save on indirection
+  - Fixed wrong bitoffset of MC33XS2410_PWM_CTRL1_POL_INV:
+    BIT((chan) + 1) instead of BIT((chan) - 1)
 
-Ack
+Dimitri Fedrau (2):
+  dt-bindings: pwm: add support for MC33XS2410
+  pwm: add support for NXPs high-side switch MC33XS2410
 
-> 
->> +	if (val != ddata->ipidr) {
->> +		dev_err(dev, "Unexpected identification: %u\n", val);
-> 
-> "Unexpected model number"?
-> "Unsupported device detected"?
+ .../bindings/pwm/nxp,mc33xs2410.yaml          | 118 ++++++
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-mc33xs2410.c                  | 378 ++++++++++++++++++
+ 4 files changed, 509 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+ create mode 100644 drivers/pwm/pwm-mc33xs2410.c
 
-Ack
+-- 
+2.39.5
 
-> 
->> +		return -EINVAL;
->> +	}
->> +
->> +	regmap_read(ddata->regmap, TIM_HWCFGR2, &val);
-> 
-> '/n' here.
-
-Ack
-
-> 
->> +	/* Counter width in bits, max reload value is BIT(width) - 1 */
->> +	ddata->max_arr = BIT(FIELD_GET(TIM_HWCFGR2_CNT_WIDTH, val)) - 1;
->> +	dev_dbg(dev, "TIM width: %ld\n", FIELD_GET(TIM_HWCFGR2_CNT_WIDTH, val));
-> 
-> How useful is this now the driver has been developed?
-
-Well... that's just debug. I'll remove it and send a V3.
-
-Thanks for reviewing,
-BR,
-Fabrice
-
-> 
->> +	return 0;
->> +}
->> +
->>  static int stm32_timers_dma_probe(struct device *dev,
->>  				   struct stm32_timers *ddata)
->>  {
->> @@ -285,7 +312,9 @@ static int stm32_timers_probe(struct platform_device *pdev)
->>  	if (IS_ERR(ddata->clk))
->>  		return PTR_ERR(ddata->clk);
->>  
->> -	stm32_timers_get_arr_size(ddata);
->> +	ret = stm32_timers_probe_hwcfgr(dev, ddata);
->> +	if (ret)
->> +		return ret;
->>  
->>  	ret = stm32_timers_irq_probe(pdev, ddata);
->>  	if (ret)
->> @@ -320,6 +349,7 @@ static void stm32_timers_remove(struct platform_device *pdev)
->>  
->>  static const struct of_device_id stm32_timers_of_match[] = {
->>  	{ .compatible = "st,stm32-timers", },
->> +	{ .compatible = "st,stm32mp25-timers", .data = (void *)STM32MP25_TIM_IPIDR },
->>  	{ /* end node */ },
->>  };
->>  MODULE_DEVICE_TABLE(of, stm32_timers_of_match);
->> diff --git a/include/linux/mfd/stm32-timers.h b/include/linux/mfd/stm32-timers.h
->> index f09ba598c97a..23b0cae4a9f8 100644
->> --- a/include/linux/mfd/stm32-timers.h
->> +++ b/include/linux/mfd/stm32-timers.h
->> @@ -33,6 +33,9 @@
->>  #define TIM_DCR		0x48			/* DMA control register			*/
->>  #define TIM_DMAR	0x4C			/* DMA register for transfer		*/
->>  #define TIM_TISEL	0x68			/* Input Selection			*/
->> +#define TIM_HWCFGR2	0x3EC			/* hardware configuration 2 Reg (MP25)	*/
->> +#define TIM_HWCFGR1	0x3F0			/* hardware configuration 1 Reg (MP25)	*/
->> +#define TIM_IPIDR	0x3F8			/* IP identification Reg (MP25)		*/
->>  
->>  #define TIM_CR1_CEN		BIT(0)					/* Counter Enable				*/
->>  #define TIM_CR1_DIR		BIT(4)					/* Counter Direction				*/
->> @@ -100,6 +103,9 @@
->>  #define TIM_BDTR_BKF(x)		(0xf << (16 + (x) * 4))
->>  #define TIM_DCR_DBA		GENMASK(4, 0)				/* DMA base addr				*/
->>  #define TIM_DCR_DBL		GENMASK(12, 8)				/* DMA burst len				*/
->> +#define TIM_HWCFGR1_NB_OF_CC	GENMASK(3, 0)				/* Capture/compare channels			*/
->> +#define TIM_HWCFGR1_NB_OF_DT	GENMASK(7, 4)				/* Complementary outputs & dead-time generators */
->> +#define TIM_HWCFGR2_CNT_WIDTH	GENMASK(15, 8)				/* Counter width				*/
->>  
->>  #define MAX_TIM_PSC				0xFFFF
->>  #define MAX_TIM_ICPSC				0x3
->> @@ -113,6 +119,8 @@
->>  #define TIM_BDTR_BKF_MASK			0xF
->>  #define TIM_BDTR_BKF_SHIFT(x)			(16 + (x) * 4)
->>  
->> +#define STM32MP25_TIM_IPIDR	0x00120002
->> +
->>  enum stm32_timers_dmas {
->>  	STM32_TIMERS_DMA_CH1,
->>  	STM32_TIMERS_DMA_CH2,
->> @@ -151,6 +159,7 @@ struct stm32_timers_dma {
->>  
->>  struct stm32_timers {
->>  	struct clk *clk;
->> +	u32 ipidr;
->>  	struct regmap *regmap;
->>  	u32 max_arr;
->>  	struct stm32_timers_dma dma; /* Only to be used by the parent */
->> -- 
->> 2.25.1
->>
-> 
 
