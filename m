@@ -1,52 +1,53 @@
-Return-Path: <linux-pwm+bounces-4595-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4596-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B58D5A0B730
-	for <lists+linux-pwm@lfdr.de>; Mon, 13 Jan 2025 13:43:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5AE7A0B734
+	for <lists+linux-pwm@lfdr.de>; Mon, 13 Jan 2025 13:43:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEA32162088
-	for <lists+linux-pwm@lfdr.de>; Mon, 13 Jan 2025 12:43:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E022D163235
+	for <lists+linux-pwm@lfdr.de>; Mon, 13 Jan 2025 12:43:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FE1C22F168;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FBCC231A37;
 	Mon, 13 Jan 2025 12:43:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IkBdRG5m"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="F3njNEED"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0F522AE41;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8C322AE7E;
 	Mon, 13 Jan 2025 12:43:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736772191; cv=none; b=MWlUJDEHCOOrDXxlpRrgmbyrTAk9GJQTKrFzslN/1l300DPnTHVnRTxQS0Uagkf+5YY7hi6R476HZW/PzNRpdM1rmCQdhTXsl6BxtKavDbNA2yuF+oZ6IY/FgROWKiv8yYZo/Oomy9iMObNmqrrpinAaC2TeNASkt1zvyaGsbjo=
+	t=1736772192; cv=none; b=J6WiKgvkm5+ct2Z5TXQkzxpQriHfxcIjCEciz8MpCFIIAIxWDvzJwgP2JwAdpGW3mc7m3p2XOG5zzhBq1UColxzxhcrI+hYhZko9noPKwOO54/LtsfWr82AM9yGKfIfxEqNkvnGFrn1igYxfRMn4+voiVAlmV856Rivp31NS/Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736772191; c=relaxed/simple;
-	bh=x5SgPW8bfo57jTlR9MQ3YN3nEDklpzcCf+voPz8Secs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=h4ufL4PcMU2wKCDS4HU0zX7BEMjCv9Z2G4PyttrCJsNLmUqUJ54wEqyjeibhtEwiyAaDwQkpynQyxfiKc/fwfpQjc5VFcVg9Lu+uOn7HrEd3pLz+3uBMfH0L3jOaJsSkUEhTOBdorttFJMGxVV3ZFmU7YvlmGCbX2GPnP4u48B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IkBdRG5m; arc=none smtp.client-ip=217.70.183.193
+	s=arc-20240116; t=1736772192; c=relaxed/simple;
+	bh=ODglhPFVnVDN8BVGkHDVoqefXYYgnyBsrHtnytIzUrU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XsXn2i+c09+E37I2WR3nNWF7y0bZFZCy9prgrBZPrjE1oAyHMqmS7PMRMVo8wwuSDZwQiZMT+31iVCl0WLQPnaC2zab4rMdBL4zQsn1UW+dIpIQ7oRVmiPCcEjNW8VQu0vBa7PUsuCoadl615xuEom79+CNkBjX+nWGOwQ8hP5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=F3njNEED; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DDE1B24000B;
-	Mon, 13 Jan 2025 12:43:05 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8C7A124000C;
+	Mon, 13 Jan 2025 12:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1736772186;
+	t=1736772187;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=iefv3ZxEy14mmBM/AkA5K3Ony2LyBSi5HCJzyxiTX0k=;
-	b=IkBdRG5mS34VAGOKBOWiZelgrFOk/9dvWawzesRoTzJoJ5OdDb97AOM2y/C1yhvGWx2Yf9
-	fklVLD82yNcujoOFAM1sC7IxK2w2Rv250bOiSLhAfHM0yZDqBoEYV+9jEiVQyLdNGVDXjx
-	DDVjR13ccXiXwmK96kCvYO6NoNqpttLkmipHr1Vf36dK0I99gFbniNGMXhNCw7DTSknbKo
-	FKVouXTMqo/ioiojkRwNNOCa86GVQK+BtkJ7hdVHzW2N6wc4fe4ITwjfZ5M4cW+g/kIsLR
-	IFeqmzj/mpti94hwAFCo0cJ6zW2yhB3hXnskTuxSIYcW6K+tR2zmBXFbRedOFw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w54nrKtmVpJfltBl3RujGp31pqn4kM3sN6PJMGjGl1Q=;
+	b=F3njNEEDVP7zwiV+YOLRH8vLlcvjcRPVG5HRKl1SwopNH6c4clNpclkyETYPgSEYmzzOPW
+	tjwH2cSF3uowbe7c23KVlfhjt1Z+eUSDfyTgX9+f1jmL0UY/Hd37d6jbVtLEwPve3Aaa48
+	xzJkRhf9jPR55NCP/uvY7V/kQbakKUauEQ+S2BGu/aoyuukgaIqHsJWwOVaIFuE54sM3DL
+	Py/fOdj6+49jK9CWBnJ6zf0CcaxkIC1KmO7gIqo62Y4wC4nl81OtCz1EuJqqZreL+yFo8U
+	ZTIA7ejx774+KMiE+wNR0mScBrRoyTCJEJkbjvj7JnjfP7dWwcUu8OFZ96ZuMA==
 From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Subject: [PATCH v3 0/7] Add support for MAX7360
-Date: Mon, 13 Jan 2025 13:42:24 +0100
-Message-Id: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
+Date: Mon, 13 Jan 2025 13:42:25 +0100
+Subject: [PATCH v3 1/7] dt-bindings: mfd: gpio: Add MAX7360
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -55,10 +56,9 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADAKhWcC/33NzQ6CMAzA8VchOzvDWj4mJ9/DeBhblSXCyIYLh
- vDuDk6aGI//pv11YYG8pcCabGGeog3WDSnwkDHdqeFO3JrUDHIoBIgT703LezXXWOU8PMfR+Yk
- DoJKairJVyNLl6Olm5129XFN3NkzOv/YnUWzT/14UPOeSJIq6lNvauXVuetjhqF3PNjHChwL4W
- 4GkYK2kAdBYkflW1nV9A6c/M7/+AAAA
+Message-Id: <20250113-mdb-max7360-support-v3-1-9519b4acb0b1@bootlin.com>
+References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
+In-Reply-To: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -74,83 +74,268 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1736772185; l=3060;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1736772185; l=6813;
  i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=x5SgPW8bfo57jTlR9MQ3YN3nEDklpzcCf+voPz8Secs=;
- b=22OGeXHrSKqh8Z+epoYqJRRN3/gOubcatAXVDgcsvS1FDRqdH9Ka5NmHticPMK7BF8RVXi65R
- 4WRJ/+VTCBNBrAPy/busS5AuPNE0ATaR+8g7Q7deHDRxtEJpxbtV6Mr
+ bh=ODglhPFVnVDN8BVGkHDVoqefXYYgnyBsrHtnytIzUrU=;
+ b=2lS3OIy428EVwKiB5/sLfwGQPUHoun7zGs+glc1ZG0cyPi4eqBZY7/dTt3KF5tVGLem6En+3n
+ aI1BlIvQ3uYC5BSTHjfI7eRExwaJJsIcPwm1WWz8oXAQfW43kCggQqJ
 X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
  pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
 X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-This series implements a set of drivers allowing to support the Maxim
-Integrated MAX7360 device.
-
-The MAX7360 is an I2C key-switch and led controller, with following
-functionalities:
-- Keypad controller for a key matrix of up to 8 rows and 8 columns.
-- Rotary encoder support, for a single rotary encoder.
-- Up to 8 PWM outputs.
-- Up to 8 GPIOs with support for interrupts and 6 GPOs.
-
-Chipset pins are shared between all functionalities, so all cannot be
-used at the same time.
+Add device tree bindings for Maxim Integrated MAX7360 device with
+support for keypad, rotary, gpios and pwm functionalities.
 
 Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 ---
-Changes in v3:
-- Fix MFD device tree binding to add gpio child nodes.
-- Fix various small issues in device tree bindings.
-- Add missing line returns in error messages.
-- Use dev_err_probe() when possible.
-- Link to v2: https://lore.kernel.org/r/20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com
+ .../bindings/gpio/maxim,max7360-gpio.yaml          |  90 +++++++++++++
+ .../devicetree/bindings/mfd/maxim,max7360.yaml     | 140 +++++++++++++++++++++
+ 2 files changed, 230 insertions(+)
 
-Changes in v2:
-- Removing device tree subnodes for keypad, rotary encoder and pwm
-  functionalities.
-- Fixed dt-bindings syntax and naming.
-- Fixed missing handling of requested period in PWM driver.
-- Cleanup of the code
-- Link to v1: https://lore.kernel.org/r/20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com
+diff --git a/Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml b/Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml
+new file mode 100644
+index 000000000000..95e9ccd455c2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml
+@@ -0,0 +1,90 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/maxim,max7360-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Maxim MAX7360 GPIO controller
++
++maintainers:
++  - Kamel Bouhara <kamel.bouhara@bootlin.com>
++  - Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
++
++description: |
++  Maxim MAX7360 GPIO controller, in MAX7360 chipset
++  https://www.analog.com/en/products/max7360.html
++
++  The device provide two series of GPIOs, referred here as GPIOs and GPOs.
++
++  PORT0 to PORT7 pins can be used as GPIOs, with support for interrupts and
++  constant-current mode. These pins will also be used by the torary encoder and
++  PWM functionalities.
++
++  COL2 to COL7 pins can be used as GPOs, there is no input capability. COL pins
++  will be partitionned, with the first pins being affected to the keypad
++  functionality and the last ones as GPOs. This partioning must be described
++  here using the ngpios property.
++
++properties:
++  compatible:
++    enum:
++      - maxim,max7360-gpio
++      - maxim,max7360-gpo
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++
++  ngpios:
++    minimum: 0
++    maximum: 8
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++  maxim,constant-current-disable:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: >
++      Bit field, each bit disables constant-current output of the associated
++      GPIO, starting from the least significant bit for the first GPIO.
++
++required:
++  - compatible
++  - gpio-controller
++  - ngpios
++
++if:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - maxim,max7360-gpio
++then:
++  required:
++    - interrupt-controller
++else:
++  properties:
++    interrupt-controller: false
++    maxim,constant-current-disable: false
++
++    ngpios:
++      maximum: 6
++
++additionalProperties: false
++
++examples:
++  - |
++    gpio {
++      compatible = "maxim,max7360-gpio";
++
++      gpio-controller;
++      #gpio-cells = <2>;
++      ngpios = <8>;
++      maxim,constant-current-disable = <0x06>;
++
++      interrupt-controller;
++      #interrupt-cells = <2>;
++    };
+diff --git a/Documentation/devicetree/bindings/mfd/maxim,max7360.yaml b/Documentation/devicetree/bindings/mfd/maxim,max7360.yaml
+new file mode 100644
+index 000000000000..7c50bab8c6d6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/maxim,max7360.yaml
+@@ -0,0 +1,140 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/maxim,max7360.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Maxim MAX7360 Keypad, Rotary encoder, PWM and GPIO controller
++
++maintainers:
++  - Kamel Bouhara <kamel.bouhara@bootlin.com>
++  - Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
++
++description: |
++  Maxim MAX7360 device, with following functions:
++    - keypad controller
++    - rotary controller
++    - GPIO and GPO controller
++    - PWM controller
++
++  https://www.analog.com/en/products/max7360.html
++
++allOf:
++  - $ref: /schemas/input/matrix-keymap.yaml#
++  - $ref: /schemas/input/input.yaml#
++
++properties:
++  compatible:
++    enum:
++      - maxim,max7360
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 2
++
++  interrupt-names:
++    items:
++      - const: inti
++      - const: intk
++
++  keypad-debounce-delay-ms:
++    description: Keypad debounce delay in ms
++    minimum: 9
++    maximum: 40
++    default: 9
++
++  autorepeat: true
++
++  rotary-debounce-delay-ms:
++    description: Rotary encoder debounce delay in ms
++    minimum: 0
++    maximum: 15
++    default: 0
++
++  linux,axis:
++    description: The input subsystem axis to map to this rotary encoder.
++
++  "#pwm-cells":
++    const: 3
++
++  gpio:
++    $ref: /schemas/gpio/maxim,max7360-gpio.yaml#
++    description: >
++      PORT0 to PORT7 general purpose input/output pins configuration.
++
++  gpo:
++    $ref: /schemas/gpio/maxim,max7360-gpio.yaml#
++    description: >
++      COL2 to COL7 general purpose output pins configuration.
++      Allows to use unused keypad columns as outputs.
++      The MAX7360 has 8 column lines and 6 of them can be used as GPOs. Value
++      of ngpios must be coherent with the value of keypad,num-columns, as their
++      sum must not exceed the number of physical lines.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - linux,keymap
++  - linux,axis
++  - "#pwm-cells"
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/input/input.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      io-expander@38 {
++        compatible = "maxim,max7360";
++        reg = <0x38>;
++
++        interrupt-parent = <&gpio1>;
++        interrupts = <23 IRQ_TYPE_LEVEL_LOW>,
++                     <24 IRQ_TYPE_LEVEL_LOW>;
++        interrupt-names = "inti", "intk";
++
++        keypad,num-rows = <8>;
++        keypad,num-columns = <4>;
++        linux,keymap = <
++          MATRIX_KEY(0x00, 0x00, KEY_F5)
++          MATRIX_KEY(0x01, 0x00, KEY_F4)
++          MATRIX_KEY(0x02, 0x01, KEY_F6)
++          >;
++        keypad-debounce-delay-ms = <10>;
++        autorepeat;
++
++        rotary-debounce-delay-ms = <2>;
++        linux,axis = <0>; /* REL_X */
++
++        #pwm-cells = <3>;
++
++        max7360_gpio: gpio {
++          compatible = "maxim,max7360-gpio";
++
++          gpio-controller;
++          #gpio-cells = <2>;
++          ngpios = <8>;
++          maxim,constant-current-disable = <0x06>;
++
++          interrupt-controller;
++          #interrupt-cells = <0x2>;
++        };
++
++        max7360_gpo: gpo {
++          compatible = "maxim,max7360-gpo";
++
++          gpio-controller;
++          #gpio-cells = <2>;
++          ngpios = <4>;
++        };
++      };
++    };
 
----
-Kamel Bouhara (2):
-      mfd: Add max7360 support
-      pwm: max7360: Add MAX7360 PWM support
-
-Mathieu Dubois-Briand (5):
-      dt-bindings: mfd: gpio: Add MAX7360
-      gpio: max7360: Add MAX7360 gpio support
-      input: keyboard: Add support for MAX7360 keypad
-      input: misc: Add support for MAX7360 rotary
-      MAINTAINERS: Add entry on MAX7360 driver
-
- .../bindings/gpio/maxim,max7360-gpio.yaml          |  90 ++++
- .../devicetree/bindings/mfd/maxim,max7360.yaml     | 140 +++++++
- MAINTAINERS                                        |  12 +
- drivers/gpio/Kconfig                               |  11 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-max7360.c                        | 454 +++++++++++++++++++++
- drivers/input/keyboard/Kconfig                     |  12 +
- drivers/input/keyboard/Makefile                    |   1 +
- drivers/input/keyboard/max7360-keypad.c            | 284 +++++++++++++
- drivers/input/misc/Kconfig                         |  11 +
- drivers/input/misc/Makefile                        |   1 +
- drivers/input/misc/max7360-rotary.c                | 183 +++++++++
- drivers/mfd/Kconfig                                |  12 +
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/max7360.c                              | 296 ++++++++++++++
- drivers/pwm/Kconfig                                |  11 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-max7360.c                          | 220 ++++++++++
- include/linux/mfd/max7360.h                        | 109 +++++
- 19 files changed, 1850 insertions(+)
----
-base-commit: 78d4f34e2115b517bcbfe7ec0d018bbbb6f9b0b8
-change-id: 20241219-mdb-max7360-support-223a8ce45ba3
-
-Best regards,
 -- 
-Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+2.39.5
 
 
