@@ -1,237 +1,294 @@
-Return-Path: <linux-pwm+bounces-4626-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4627-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13DF4A1079B
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jan 2025 14:20:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAB89A1097F
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jan 2025 15:34:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3BA3C1887DF3
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jan 2025 13:20:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 627403A3DF3
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jan 2025 14:34:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 348D5234CEA;
-	Tue, 14 Jan 2025 13:20:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91E1E14BF87;
+	Tue, 14 Jan 2025 14:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TouwAPj9"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0156E236A91;
-	Tue, 14 Jan 2025 13:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF3F146D6E
+	for <linux-pwm@vger.kernel.org>; Tue, 14 Jan 2025 14:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736860843; cv=none; b=gmJF6qLF94GTtQwOCEczVs0ocuaJT2DNeiQhricVKeilH2QiDHM6M96WMLHNfSgqrhP0HENi+BN13p+GzoT8sFt3dbKJE+7azgXO4yj+nkPseQzCxMjUbaEFC7GbWoiPxKWqLPqsYg9ZY24bJGvamK4pWC9yKUriorPiFaIulzI=
+	t=1736865253; cv=none; b=DcDAM49q5R+iLaRgXZ4XDOLuHULMSpfavpwObBS3FTVGp7sj0c5XKg66wiGek0JUVKtaEUCBSfqwFnB7Vs/891h7iK1WmRAtOdruwQ3zth6OKbYhxw9+WGKjRnJqFFaJp/n8dWfhHedKzFZLrT6ys9yFtXWlv9HxyDf6O2O0Ltg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736860843; c=relaxed/simple;
-	bh=bNkN2ZUZzkBLdC/17B2gsrYwnzBUqLEOkTEy2z01L6M=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E7pi+GU3WJVv9RnmCOTTmotpUVTEoCVNU0mgfxx5CTIb59vvCeFK+cGHyRHf6B+iJyL6Z8Or2N7sznKOAdL3JjQJoV9CRYQC9A7/rtEK7i3yj2a2O2TANJyMi/LJPs4GZat0NW9mehaMTewSSe3kI3pvtqGFbO2JJFAoTgo7JYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YXV7x4kw3z6LDKb;
-	Tue, 14 Jan 2025 21:18:53 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 54297140B38;
-	Tue, 14 Jan 2025 21:20:37 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 14 Jan
- 2025 14:20:36 +0100
-Date: Tue, 14 Jan 2025 13:20:35 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Miclaus, Antoniu" <Antoniu.Miclaus@analog.com>
-CC: David Lechner <dlechner@baylibre.com>, "jic23@kernel.org"
-	<jic23@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, "linux-iio@vger.kernel.org"
-	<linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org"
-	<linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v9 8/8] iio: adc: ad4851: add ad485x driver
-Message-ID: <20250114132035.00004abd@huawei.com>
-In-Reply-To: <CY4PR03MB3399F8E7AFA00340321BB2A69B182@CY4PR03MB3399.namprd03.prod.outlook.com>
-References: <20241220120134.42760-1-antoniu.miclaus@analog.com>
-	<20241220120134.42760-8-antoniu.miclaus@analog.com>
-	<37fcda1c-0051-4a8c-b61c-583a1b8faa1e@baylibre.com>
-	<CY4PR03MB3399F8E7AFA00340321BB2A69B182@CY4PR03MB3399.namprd03.prod.outlook.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1736865253; c=relaxed/simple;
+	bh=mRqlMMYPylerixeJFEQ1XMUDpxIrxKnYicJu/8FWdOc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TfZZnqNMm0X3sbgpbdokd8Bg1egc/rJt+tnQTsxWD8ZVu3LkRG5ifyIRU3xmzAZBGUTnPtZ4zV9sP6BG+t/A0peCGal3cGjpQTXeRG5VV4pcdIwHr3XXm1QBAhOtAgPHjz9cJ8P0hSF4w3+JRrDeFCuhEEG2AZC07bBCORcjL/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TouwAPj9; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30219437e63so60786581fa.1
+        for <linux-pwm@vger.kernel.org>; Tue, 14 Jan 2025 06:34:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736865247; x=1737470047; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u/rtgGN/QLv+j3RQVDV8iMIuyZLyBwwDReBCUrqlFI4=;
+        b=TouwAPj95aK/Edd0u3BC1eDpsIVeGkitYBdXQiL4MDPD2MKd/qt4eapzEn1CwfNetv
+         5DWj2xR0pv/BvSFR7Mkf1jFMTqX6xuZuA6EfxLLpfVIrEnybjfYcdWoXP0k4JoCNkd0G
+         j5E7R2a9pli0E+G8SrzBSC91uEAz16iYQcPYGyZJ8SCrcG+W/Pu0OhJHNCtG6h1XIluK
+         bk98fev0ngKrfmzn/Y4/LCDXhOR2/qu5QEtZWTLdYPwgIm3X2IjVZ5YAeoIW4iQc1u0f
+         iXXcngQHFySch08cE6xgoenPYt/ts7fj89a4sJP03oO0swTOpK6c0YEfF1MnRxgIgR+j
+         6gaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736865247; x=1737470047;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u/rtgGN/QLv+j3RQVDV8iMIuyZLyBwwDReBCUrqlFI4=;
+        b=vJV9rOXFgQMQ64V4fT+84vjaoGTuep17g7grDt6ElDKW7dWqdN8EMStOqXaOw6pVZS
+         LfnSdfCaJJGFS3PQKhudDP2ogThmNLXXo934DdrJcemEoScFdFEYa1Rap9jCQ/HfTmk7
+         h2Nr4YbW9WeCSPqSNBD/2jtQPFLuetlXB9ING2fPglD3KpwReTxiQCY1w6bfFjOBjILI
+         DThRxeCZmjEsGbVL8VaeRCWYz9xTc30Ujx+93Xn/dvz+HtZTDG0XHGDkVwt8dyBPq7cs
+         KEc/O5l3dZyg/oQNb7R7SZqXgnydCKUEa0LsqKHwIcOJ6r51m6RRMW/WrPbRlhhJXQD5
+         yyzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXO1hDdJSwlTBLpx1TUq/2WlhpvN6cf664191x247JHB0dbyi1PB9mlpHNonLYOCs7Flc4ok4D93DY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx248NkNUFbZhV6f6Zif8crD/7pcKYuXDbPwgH32pqHgwTocyv+
+	pNuc9koWplafnx58Z8Z4C1srru/d02ndkQns76hYYmNSQxMoZAkCWwi7RKOjd6KOycNLjQD8VoP
+	eNSHqVs8BUZwDJ9dx+M0YE34oe/rKKig0Yh6S6A==
+X-Gm-Gg: ASbGnctBtkOE0qk/PodJY5qaGRl+FVda142T5vGRm7M1n25QVcmOsRo+ouluY3gG0eQ
+	sYLbH5oYWE5gtctoRahgmuT2dfAhKrJBGphrZ
+X-Google-Smtp-Source: AGHT+IE+vz7/K0HuG0S9skrbEiWiTvx1npscF70ElA+FngUIWm7FHUa7G5bFdeVPKnq3pG6gurY1CJLKB8ScxP1gh9s=
+X-Received: by 2002:a2e:bc87:0:b0:306:162d:5fbc with SMTP id
+ 38308e7fff4ca-306162d6437mr36405911fa.15.1736865247144; Tue, 14 Jan 2025
+ 06:34:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com> <20250113-mdb-max7360-support-v3-4-9519b4acb0b1@bootlin.com>
+In-Reply-To: <20250113-mdb-max7360-support-v3-4-9519b4acb0b1@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 14 Jan 2025 15:33:55 +0100
+X-Gm-Features: AbW1kva1cgvCaAn7BBZyA6Xhlcb_6Fmn62ErjKoOSbRoy3etkC67hb02bAjCC1U
+Message-ID: <CACRpkdb5rmUK06uW3M2Lsy4Wam8JvrjmGM83cJa-V3LZwTX9dg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] gpio: max7360: Add MAX7360 gpio support
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamel Bouhara <kamel.bouhara@bootlin.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, =?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Mathieu,
 
-Hi Antoniu
+thanks for your patch!
 
-For future replies please crop to only the bits you are reply to.
-Took me a couple of goes to find the reply, so in some cases
-the important parts can be completely missed by a reader if
-the rest isn't cropped down.
+On Mon, Jan 13, 2025 at 1:43=E2=80=AFPM Mathieu Dubois-Briand
+<mathieu.dubois-briand@bootlin.com> wrote:
 
-...
+> Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
+>
+> Two sets of GPIOs are provided by the device:
+> - Up to 8 GPIOs, shared with the PWM and rotary encoder functionalities.
+>   These GPIOs also provide interrupts on input changes.
+> - Up to 6 GPOs, on unused keypad columns pins.
+>
+> Co-developed-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+(...)
+> +#include <linux/gpio/consumer.h>
 
-> > > +static int ad4851_set_oversampling_ratio(struct iio_dev *indio_dev,
-> > > +					 const struct iio_chan_spec *chan,
-> > > +					 unsigned int osr)
-> > > +{
-> > > +	struct ad4851_state *st = iio_priv(indio_dev);
-> > > +	int val, ret;
-> > > +
-> > > +	guard(mutex)(&st->lock);
-> > > +
-> > > +	if (osr == 1) {
-> > > +		ret = regmap_clear_bits(st->regmap,  
-> > AD4851_REG_OVERSAMPLE,  
-> > > +					AD4851_OS_EN_MSK);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	} else {
-> > > +		val = ad4851_osr_to_regval(osr);
-> > > +		if (val < 0)
-> > > +			return -EINVAL;
-> > > +
-> > > +		ret = regmap_update_bits(st->regmap,  
-> > AD4851_REG_OVERSAMPLE,  
-> > > +					 AD4851_OS_EN_MSK |
-> > > +					 AD4851_OS_RATIO_MSK,
-> > > +					 FIELD_PREP(AD4851_OS_EN_MSK,  
-> > 1) |  
-> > > +  
-> > FIELD_PREP(AD4851_OS_RATIO_MSK, val));  
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	}
-> > > +
-> > > +	ret = iio_backend_oversampling_ratio_set(st->back, osr);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	switch (st->info->resolution) {
-> > > +	case 20:
-> > > +		switch (osr) {
-> > > +		case 0:
-> > > +			return -EINVAL;
-> > > +		case 1:
-> > > +			val = 20;
-> > > +			break;
-> > > +		default:
-> > > +			val = 24;
-> > > +			break;
-> > > +		}
-> > > +		break;
-> > > +	case 16:
-> > > +		val = 16;
-> > > +		break;
-> > > +	default:
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	ret = iio_backend_data_size_set(st->back, val);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	if (osr == 1 || st->info->resolution == 16) {
-> > > +		ret = regmap_clear_bits(st->regmap, AD4851_REG_PACKET,
-> > > +					AD4851_PACKET_FORMAT_MASK);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +
-> > > +		st->resolution_boost_enabled = false;
-> > > +	} else {
-> > > +		ret = regmap_update_bits(st->regmap, AD4851_REG_PACKET,  
-> > 
-> > regmap_set_bits  
-> 
-> Why? Packet format is two bits wide according to the register map.
-> 
-> > > +					 AD4851_PACKET_FORMAT_MASK,
-> > > +  
-> > FIELD_PREP(AD4851_PACKET_FORMAT_MASK, 1));  
-> > > +		if (ret)
-> > > +			return ret;
-> > > +
-> > > +		st->resolution_boost_enabled = true;
-> > > +	}
-> > > +
-> > > +	if (st->osr != osr) {
-> > > +		ret = ad4851_scale_fill(indio_dev);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +
-> > > +		st->osr = osr;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-...
+Why?
 
-> > > +static int ad4851_setup(struct ad4851_state *st)
-> > > +{
-> > > +	unsigned int product_id;
-> > > +	int ret;
-> > > +
-> > > +	if (st->pd_gpio) {
-> > > +		/* To initiate a global reset, bring the PD pin high twice */
-> > > +		gpiod_set_value(st->pd_gpio, 1);
-> > > +		fsleep(1);
-> > > +		gpiod_set_value(st->pd_gpio, 0);
-> > > +		fsleep(1);
-> > > +		gpiod_set_value(st->pd_gpio, 1);
-> > > +		fsleep(1);
-> > > +		gpiod_set_value(st->pd_gpio, 0);
-> > > +		fsleep(1000);
-> > > +	} else {
-> > > +		ret = regmap_set_bits(st->regmap,  
-> > AD4851_REG_INTERFACE_CONFIG_A,  
-> > > +				      AD4851_SW_RESET);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	}
-> > > +
-> > > +	if (st->vrefbuf_en) {
-> > > +		ret = regmap_set_bits(st->regmap,  
-> > AD4851_REG_DEVICE_CTRL,  
-> > > +				      AD4851_REFBUF_PD);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	}
-> > > +
-> > > +	if (st->vrefio_en) {
-> > > +		ret = regmap_set_bits(st->regmap,  
-> > AD4851_REG_DEVICE_CTRL,  
-> > > +				      AD4851_REFSEL_PD);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	}  
-> > 
-> > PD stands for power down, so should we be powering down if not enabled?
-> > (i.e.
-> > if is missing !)  
-> We power down the internal reference if the external one is used. Not sure what is wrong here.
-> > > +
-> > > +	ret = regmap_write(st->regmap,  
-> > AD4851_REG_INTERFACE_CONFIG_B,  
-> > > +			   AD4851_SINGLE_INSTRUCTION);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	ret = regmap_write(st->regmap,  
-> > AD4851_REG_INTERFACE_CONFIG_A,  
-> > > +			   AD4851_SDO_ENABLE);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
+My most generic feedback is if you have looked at using
+select GPIO_REGMAP for this driver?
 
-Thanks,
+The regmap utility library is very helpful, look how other driver
+selecting GPIO_REGMAP gets default implementations
+from the library just git grep GPIO_REGMAP drivers/gpio/
 
-Jonathan
+> +static void max7360_gpio_set_value(struct gpio_chip *gc,
+> +                                  unsigned int pin, int state)
+> +{
+> +       struct max7360_gpio *max7360_gpio =3D gpiochip_get_data(gc);
+> +       int ret;
+> +
+> +       if (max7360_gpio->gpio_function =3D=3D MAX7360_GPIO_COL) {
+
+OK some custom stuff...
+
+> +               int off =3D MAX7360_MAX_GPIO - (gc->ngpio - pin);
+> +
+> +               ret =3D regmap_write_bits(max7360_gpio->regmap, MAX7360_R=
+EG_PORTS,
+> +                                       BIT(off), state ? BIT(off) : 0);
+
+Fairly standard.
+
+> +       } else {
+> +               ret =3D regmap_write(max7360_gpio->regmap,
+> +                                  MAX7360_REG_PWMBASE + pin, state ? 0xF=
+F : 0);
+> +       }
+
+Some custom stuff.
+
+> +static int max7360_gpio_get_value(struct gpio_chip *gc, unsigned int pin=
+)
+> +{
+> +       struct max7360_gpio *max7360_gpio =3D gpiochip_get_data(gc);
+> +       unsigned int val;
+> +       int off;
+> +       int ret;
+> +
+> +       if (max7360_gpio->gpio_function =3D=3D MAX7360_GPIO_COL) {
+> +               off =3D MAX7360_MAX_GPIO - (gc->ngpio - pin);
+> +
+> +               ret =3D regmap_read(max7360_gpio->regmap, MAX7360_REG_POR=
+TS, &val);
+> +       } else {
+> +               off =3D pin;
+> +               ret =3D regmap_read(max7360_gpio->regmap, MAX7360_REG_GPI=
+OIN, &val);
+> +       }
+> +
+> +       if (ret) {
+> +               dev_err(max7360_gpio->dev, "failed to read gpio-%d", pin)=
+;
+> +               return ret;
+> +       }
+> +
+> +       return !!(val & BIT(off));
+> +}
+
+Looks like stock template regmap-gpio.
+
+> +static int max7360_gpio_get_direction(struct gpio_chip *gc, unsigned int=
+ pin)
+> +{
+> +       struct max7360_gpio *max7360_gpio =3D gpiochip_get_data(gc);
+> +       unsigned int val;
+> +       int ret;
+> +
+> +       if (max7360_gpio->gpio_function =3D=3D MAX7360_GPIO_COL)
+> +               return GPIO_LINE_DIRECTION_OUT;
+> +
+> +       ret =3D regmap_read(max7360_gpio->regmap, MAX7360_REG_GPIOCTRL, &=
+val);
+> +       if (ret) {
+> +               dev_err(max7360_gpio->dev, "failed to read gpio-%d direct=
+ion",
+> +                       pin);
+> +               return ret;
+> +       }
+> +
+> +       if (val & BIT(pin))
+> +               return GPIO_LINE_DIRECTION_OUT;
+> +
+> +       return GPIO_LINE_DIRECTION_IN;
+> +}
+
+Dito.
+
+> +static int max7360_gpio_direction_input(struct gpio_chip *gc, unsigned i=
+nt pin)
+> +{
+> +       struct max7360_gpio *max7360_gpio =3D gpiochip_get_data(gc);
+> +       int ret;
+> +
+> +       if (max7360_gpio->gpio_function =3D=3D MAX7360_GPIO_COL)
+> +               return -EIO;
+> +
+> +       ret =3D regmap_write_bits(max7360_gpio->regmap, MAX7360_REG_GPIOC=
+TRL,
+> +                               BIT(pin), 0);
+> +       if (ret) {
+> +               dev_err(max7360_gpio->dev, "failed to set gpio-%d directi=
+on",
+> +                       pin);
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+
+Dito.
+
+> +static int max7360_gpio_direction_output(struct gpio_chip *gc, unsigned =
+int pin,
+> +                                        int state)
+> +{
+> +       struct max7360_gpio *max7360_gpio =3D gpiochip_get_data(gc);
+> +       int ret;
+> +
+> +       if (max7360_gpio->gpio_function =3D=3D MAX7360_GPIO_PORT) {
+> +               ret =3D regmap_write_bits(max7360_gpio->regmap,
+> +                                       MAX7360_REG_GPIOCTRL, BIT(pin),
+> +                                       BIT(pin));
+> +               if (ret) {
+> +                       dev_err(max7360_gpio->dev,
+> +                               "failed to set gpio-%d direction", pin);
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       max7360_gpio_set_value(gc, pin, state);
+> +
+> +       return 0;
+> +}
+
+Dito.
+
+> +static int max7360_gpio_request(struct gpio_chip *gc, unsigned int pin)
+> +{
+> +       struct max7360_gpio *max7360_gpio =3D gpiochip_get_data(gc);
+> +
+> +       /*
+> +        * GPOs on COL pins (keypad columns) can always be requested: thi=
+s
+> +        * driver has full access to them, up to the number set in chip.n=
+gpio.
+> +        * GPIOs on PORT pins are shared with the PWM and rotary encoder
+> +        * drivers: they have to be requested from the MFD driver.
+> +        */
+> +       if (max7360_gpio->gpio_function =3D=3D MAX7360_GPIO_COL)
+> +               return 0;
+> +
+> +       return max7360_port_pin_request(max7360_gpio->dev->parent, pin, t=
+rue);
+> +}
+> +
+> +static void max7360_gpio_free(struct gpio_chip *gc, unsigned int pin)
+> +{
+> +       struct max7360_gpio *max7360_gpio =3D gpiochip_get_data(gc);
+> +
+> +       if (max7360_gpio->gpio_function =3D=3D MAX7360_GPIO_COL)
+> +               return;
+> +
+> +       max7360_port_pin_request(max7360_gpio->dev->parent, pin, false);
+> +}
+
+The pin request looks a bit like a custom pin control implementation...
+
+But I think it's fine, pin control can be a bit heavy to implement on simpl=
+e
+devices, but if there is elaborate muxing and config going on, pin control
+should be used.
+
+Yours,
+Linus Walleij
 
