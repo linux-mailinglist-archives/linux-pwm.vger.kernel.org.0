@@ -1,50 +1,50 @@
-Return-Path: <linux-pwm+bounces-4624-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4625-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B66CA10746
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jan 2025 14:02:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C35AAA10788
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jan 2025 14:17:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B82171683DA
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jan 2025 13:02:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2BB9A7A1F22
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jan 2025 13:16:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 543F1236EB4;
-	Tue, 14 Jan 2025 13:02:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 931B4234CE4;
+	Tue, 14 Jan 2025 13:16:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LbPiOzlq"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="F1Gtleo3"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A26C236EB3;
-	Tue, 14 Jan 2025 13:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7AF8236A96;
+	Tue, 14 Jan 2025 13:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736859751; cv=none; b=LdpsjMKgPp8T9FC7vBQMl8qNgc9ismlbcQ4slHOcgL962wTM6okTEd8BIWQ8GHlv4YGbb02ewyTToNXM7TlYXQnxbhoUXrhD5vu6mEPS+DXUG3MImB3NQv4vm3mDWgB650wpkh1U4Y+ACxh5X0kTeKyVsRMxFCOqsQ3f25oAxGw=
+	t=1736860616; cv=none; b=nod4BPmVj3vVQdChH93oTmx1qL/Ejs1FTtrU8RWA9Qtkusk+YEoGtjBNAGeLnS/sRgTW98taSspzkWmAd3KYhpQdtoTFcq2w7np0meie7rfHXyiha9GwlGstn1TLbJzXy0vhcD01JZKouoiAKQF8qsQ0e78vBI5GuWF0o7MWcWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736859751; c=relaxed/simple;
-	bh=AA+nLKTJ9G19sEotsK0fooLH6CtrjmfqCp5x8ReVJmg=;
+	s=arc-20240116; t=1736860616; c=relaxed/simple;
+	bh=2ZVAng/Inj6jkvMDMhoSDiVL5LoO7yKWwTTyzy2aqfQ=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
-	 References:In-Reply-To; b=hc9UVrq0HC0Y2AHiYNWUXCaYMItFQfp6bgKUKLwbTGRu2jMtoGOvKLlH81nV5wjt+RH29uo61ALczphfiK1Pguy7DpmPQMCCzkiJSvtfLxPY6x1iUX9Yh6ofePzYKFp0QzZclYNAyt/vCbt+MYlKgNQqFitwxd8w0UxEyZwzghU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LbPiOzlq; arc=none smtp.client-ip=217.70.183.195
+	 References:In-Reply-To; b=LigzdXuJ4JYv3vx6m1Fo/rnSk0G7IKSzh3JInkbGeiGr8bIZRcDuvHXreBJrX0J8vobdlmmdAUbTGhbjRUlWMRiEZi9EQ17yYZdzuHzSjY6IlQklxKsVJr+3avXVbCBcvPaCWoTWGvMlE5x+cLwjTF7FE08U69YXhCGw9OT+3RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=F1Gtleo3; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2D77A60003;
-	Tue, 14 Jan 2025 13:02:19 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5188AE0004;
+	Tue, 14 Jan 2025 13:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1736859740;
+	t=1736860612;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=y4tNhYxMV5qxeGa31gl/wwt8loSJo/cJhQFWwxvcrC0=;
-	b=LbPiOzlqgfjA+x/iz0pT7pIJaygL//AWTmm6jgkrOImtC2JtWblLZqESpURvFF8DDOsCIl
-	o5SKJY6oijCEb7sYlJUkAmywKWSCGmNOjmX4MY3GRm/QYF0zjf0KCoFsRg9yUJWNyPBOZT
-	q0C9335cUddIGjpsP1iKwNkIrO7uOeDKhrI1YwtKDP3dxev9OsGk4iVzsATdy3Yqm/2BII
-	dyG1LovtYPy7L88EbpKf8sAOiBFtb/4O25ssBS2wBEcMJKj3PS9jfDjcf3mVNiYd2DzsmT
-	drK3DGIeJx99RtDfjBybNVDh/wdg2zmP5mSuYEIWbXWAYqqDKP3ERImI9niBmw==
+	bh=myZQOJI87mA4XcgDJGPsQggKBhPrWzCXJ2VO9rVft4o=;
+	b=F1Gtleo3nWyhNf+ZZkzLt7JgvzgoxTQWPQXR6g7TnyHIG7iQDolPLuwKvfiBDFM6U9YM6k
+	d6O+1X+FzE1xCiuxRP6Q+vEs4x7I6SUWGC09qWwoPMNHFFw4iprKjK7acs5oqfXnLeO16T
+	MsVjBtBrNE9Ci0BOESdrT1TIZtcLbgT7Cmt1rLVPeRmrnUmFXddMrLFNwIXNO5NnudaVt+
+	0cRHW1cRtMrSHELje697cA6f1s/U/qfLXDgjT8tNWTbjen0Rg4kMBhQmnkmj0dBPfNUc98
+	R50QCyeWatUuWJBOhQtrXh+1JTOmzqEtniBwx2qkuHpq+Ws55zo0bCJBr/WAIQ==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -53,101 +53,79 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 14 Jan 2025 14:02:18 +0100
-Message-Id: <D71TE4TEJKDF.1QRNYB2TKOMYJ@bootlin.com>
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+Date: Tue, 14 Jan 2025 14:16:51 +0100
+Message-Id: <D71TP9JS7DGP.16OEP92IB5EVY@bootlin.com>
+Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
  <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
  <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
  <gregory.clement@bootlin.com>, "Thomas Petazzoni"
  <thomas.petazzoni@bootlin.com>
 From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>
-Subject: Re: [PATCH v3 1/7] dt-bindings: mfd: gpio: Add MAX7360
+To: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>, "Lee Jones"
+ <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
+ <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>
+Subject: Re: [PATCH v3 6/7] input: misc: Add support for MAX7360 rotary
 X-Mailer: aerc 0.18.2-0-ge037c095a049
 References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
- <20250113-mdb-max7360-support-v3-1-9519b4acb0b1@bootlin.com>
- <gerivs3f3gd3a227tu3ojn6wi6l2fbtwvw4q6n4k5aaqqupyya@xojqkp6nkrkb>
-In-Reply-To: <gerivs3f3gd3a227tu3ojn6wi6l2fbtwvw4q6n4k5aaqqupyya@xojqkp6nkrkb>
+ <20250113-mdb-max7360-support-v3-6-9519b4acb0b1@bootlin.com>
+In-Reply-To: <20250113-mdb-max7360-support-v3-6-9519b4acb0b1@bootlin.com>
 X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Tue Jan 14, 2025 at 9:11 AM CET, Krzysztof Kozlowski wrote:
-> On Mon, Jan 13, 2025 at 01:42:25PM +0100, Mathieu Dubois-Briand wrote:
-> > +
-> > +  rotary-debounce-delay-ms:
-> > +    description: Rotary encoder debounce delay in ms
-> > +    minimum: 0
-> > +    maximum: 15
-> > +    default: 0
-> > +
-> > +  linux,axis:
-> > +    description: The input subsystem axis to map to this rotary encode=
-r.
+On Mon Jan 13, 2025 at 1:42 PM CET, Mathieu Dubois-Briand wrote:
+> Add driver for Maxim Integrated MAX7360 rotary encoder controller,
+> supporting a single rotary switch.
 >
-> Missing type. I guess you wanted to reference rotary encoder schema,
-> next to input and matrix-keymap?
->
+> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> ---
+...
+> +static irqreturn_t max7360_rotary_irq(int irq, void *data)
+> +{
+> +	struct max7360_rotary *max7360_rotary =3D data;
+> +	int val;
+> +	int ret;
+> +
+> +	ret =3D regmap_read(max7360_rotary->regmap, MAX7360_REG_RTR_CNT, &val);
+> +	if (ret < 0) {
+> +		dev_err(&max7360_rotary->input->dev,
+> +			"Failed to read rotary counter\n");
+> +		return IRQ_NONE;
+> +	}
+> +
+> +	if (val =3D=3D 0) {
+> +		dev_dbg(&max7360_rotary->input->dev,
+> +			"Got a spurious interrupt\n");
+> +
+> +		return IRQ_NONE;
+> +	}
+> +
+> +	input_report_rel(max7360_rotary->input, max7360_rotary->axis,
+> +			 (int8_t)val);
+> +	input_sync(max7360_rotary->input);
+> +
 
-I'm not sure I fully understood your suggestion. Do you mean adding a
-reference to rotary-encoder.yaml, at the root of the document? Like:
+I have a question about the type of events reported here.
 
-allOf:
-  - $ref: /schemas/input/matrix-keymap.yaml#
-  - $ref: /schemas/input/input.yaml#
-  - $ref: /schemas/input/rotary-encoder.yaml#
+I used rotary_encoder.c as a reference, so I'm reporting some EV_REL
+events on a given axis, such as REL_X.
 
-I did base the schema of the rotary encoder part on rotary-encoder.yaml,
-but I believe we cannot reference it directly: it adds some properties
-that do not make sense here (gpios, rotary-encoder,steps...) and also
-some of them are mandatory.
+On the other hand, I know there is an out-of-tree version of this
+driver that is instead reporting key events, such as KEY_DOWN or KEY_UP.
+I also know there are existing applications that do rely on this
+behaviour.
 
-Yet I see that I'm not referring to any type here. Also I did not
-specify the default value. Would the following be OK?
+So my question is, what is the best kind of events to report here ?
+Is there any guideline that do apply here? Should I better try to mimic
+the behaviour of the existing out-of-tree driver, or should I mimic the
+behaviour of rotary_encoder.c, so we have a similar behaviour for all
+in-kernel rotary encoder drivers?
 
-  linux,axis:
-    description: The input subsystem axis to map to the rotary encoder.
-    $ref: /schemas/types.yaml#/definitions/uint32
-    default: 0
-
-> > +      COL2 to COL7 general purpose output pins configuration.
-> > +      Allows to use unused keypad columns as outputs.
-> > +      The MAX7360 has 8 column lines and 6 of them can be used as GPOs=
-. Value
-> > +      of ngpios must be coherent with the value of keypad,num-columns,=
- as their
-> > +      sum must not exceed the number of physical lines.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - interrupt-names
-> > +  - linux,keymap
-> > +  - linux,axis
-> > +  - "#pwm-cells"
->
-> gpio and gpo nodes are optional? How would the driver behave? I assume
-> you need to define the partition between GPIOs, especially that 'ngpios'
-> are a required property in their schema.
->
-
-No, you are right. In my mind it was optional, but current driver
-implementation will complain if the gpo node is missing. I could make it
-optional in the code, but it's probably better to make it required in
-the device tree, so the hardware is correctly described.
-
-> >=20
-> > --=20
-> > 2.39.5
-> >=20
-
-I have fixed the other points listed in your mail. Thanks for your review.
-
+> +	return IRQ_HANDLED;
+> +}
+> +
 
 --=20
 Mathieu Dubois-Briand, Bootlin
