@@ -1,159 +1,123 @@
-Return-Path: <linux-pwm+bounces-4631-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4632-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7A10A1153B
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jan 2025 00:19:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4292FA11F3B
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jan 2025 11:25:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 775B43A0FC1
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jan 2025 23:19:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D88053A31FE
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jan 2025 10:24:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C12582135BC;
-	Tue, 14 Jan 2025 23:19:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC601236EC9;
+	Wed, 15 Jan 2025 10:24:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gn2EkO2c"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="VW1JPJwi"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429041C3BEB;
-	Tue, 14 Jan 2025 23:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035D11ADC64;
+	Wed, 15 Jan 2025 10:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736896757; cv=none; b=outbfDFrUJLXE3fUduk+gDWkJrKA4ymgoa3/pjv8NVHLrr3O+TBY6G3a3Yu3P8P8pyj/2Wnkmjtc3fSf5w9lemngeNTLHrBomT6uDPBYGyowsoaukF+efoPoscBGfYSQ0UWWsxL3m64PNNLh3QQQeVZf1OiceaKOiya1/KtFTtc=
+	t=1736936696; cv=none; b=k1HB5N2Q+Lf7vspNnOWGJYdFnznnEwL8/k8OjwIZxJSIuB6qigs7EhlAoFSeTWGwb1nxDnoSbj6tUAjbOi4x00DBokXZvawOM0cqJYp71Ak+d3nXxV7RveVRO/V9IUhqWPoMIdaOhVOddaDYspg8G8yy1xrM16+0PgKGfPa4keM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736896757; c=relaxed/simple;
-	bh=wCQCL7h8Rcfaq/OxBE75HxEi4RpscdUKW0u1K6btrOs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=N/Yf6i66wTRyDp4frE18ypCyUjjFb2tCjeK9LQT8+xaJjYcaVpi7VKyLEKHjyiEWTbBDy08ApiSwEEA5OvxOwGSozfQ5QmunhxG1yh4LtrtDFYePsBkIZ0INmCe2HOC1lgovzverdANxpKO8wBHvLxIc9+BKi0YnUAz2Yp0jfZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gn2EkO2c; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2166f1e589cso130233965ad.3;
-        Tue, 14 Jan 2025 15:19:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736896755; x=1737501555; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=f5eTKAbfNWbx/YU36/7otlGNMn3vJ1aSKnUDn2lnA00=;
-        b=Gn2EkO2c3XvGemt2jemmdxP/5ac2lq5PsFFtJnOC6l5O0w7Q0jaPcQWTZEqNbfkRkD
-         1OD4docNjOkv62SHi/YoRwXdv9MIxMIs+3c2KdmQjKpMKg079tjVOpO0rx3pcM63GUMI
-         vRSLOrjzCG9d5HdZ8d7ySSDG0Pzu8f5oq+UcWNNfmD64/IGKe+nKgTtmXpB6xx9rS15o
-         ulC00pWvbnkCknQmei778ZK0GlIdjxe3EHKf+hHfGbTzXKoQhmDg8+/9XkuXR72TIQjW
-         WArw80IFWIObB8MwT85olkBhmiZF3OuBVplOCIxA45PN+ypaz0gEfnY7EVzJvKHiMsIt
-         F01A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736896755; x=1737501555;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f5eTKAbfNWbx/YU36/7otlGNMn3vJ1aSKnUDn2lnA00=;
-        b=TJOVOoiWgxshuATA0qb4RMLAFIYs3gcnhavWhYnrAagQ+aKYIC20bfDWuB4WXuyUlf
-         C2MgFz46IqEWB9WYeeNd8vBeo3oBGzBRZt4DKO4aY7BDpZaZF9ZPcgSfDZO3OEalHOG6
-         zEMYQZyXNm+tqvKs0oqErivcxLPwdUeq2pgybXCrbTc3aBeMjI2nhPJrxweHZW8z51X3
-         HGvETK08NbK/b58ZNF3NAJm4L5Z96Y0lWw1F4qkKyT1ovG8TlL4e2S2q1lX+79mKMaPq
-         2nxILwoUnka+4xN20NY4PVSmhV1wQlczZQHmoi2mS+CauUrAnuWdpfHXU/IcHHyS4RAO
-         fosA==
-X-Forwarded-Encrypted: i=1; AJvYcCVoB2ouCWYlU+3V/iBManYsEgaN1wtboxUDnCDV7GUnVcNaoS5zn1TLH01RqiuH3BEF4U84n5REh3Kv@vger.kernel.org, AJvYcCWLjbfRjYfMl9YVQo+nhOB4d5kUJvYLlMGuRXDAiSvuqI3MZCHPgBhXFQzZvs9/E2DwEaE2tpN/8wng@vger.kernel.org, AJvYcCWzU3Ey9yTGZCnio33nNSWFthed2varAkSz8ZdJwEFyvC/ToUnLTjyKgtzRgJyQ0/IfG/MgsFQ6+ZYkjElj@vger.kernel.org
-X-Gm-Message-State: AOJu0YykLWrVZQfkRa3S7jU3NIa1SYs7W76zNfWmbjMAiAGL16c38kcy
-	uvufuaJgIq+sx2PD7qInIpZopt3jHvzC/Dj+M3jqPROe9y5IC25i
-X-Gm-Gg: ASbGncufRgH5N+tq4dXOMx+Cr0BdMznEFNfQd6JCm8gD8G3O6hL3YkvlusTnu2zq44q
-	hV7zQSZM9D4oIEoaxRVySbbC7s0QsKkRZRcMSkk3BoEFFM33XmARRAw4HKxDqKUhdT9XR0mSbkl
-	iioQ38ahWVxb+7M2nrbyBxrVokTVlr2KWAn+uvX7I7AV1qWISJmT4GBglYWLVj8+UoDTYB00xo4
-	pVxOjprcMWKSQvgkaGdnpVNPv9INPqahOSYd9oygEmNvFik/T9a1hJk52nwe7cfYg1L
-X-Google-Smtp-Source: AGHT+IHvhFzdOuZJhvs41X/8XrZF9xVo0QVuW5f8A1eRLQV4vZJgXFT2cldJ2dy/GO1Wh/lGLTu/Og==
-X-Received: by 2002:a17:902:f68b:b0:216:32c4:f807 with SMTP id d9443c01a7336-21a83fdea82mr421041255ad.45.1736896755413;
-        Tue, 14 Jan 2025 15:19:15 -0800 (PST)
-Received: from [10.69.47.104] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f256b4csm71720915ad.215.2025.01.14.15.19.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2025 15:19:15 -0800 (PST)
-Message-ID: <c48d6cda-8508-46f9-92b9-6621b335b565@gmail.com>
-Date: Tue, 14 Jan 2025 15:19:11 -0800
+	s=arc-20240116; t=1736936696; c=relaxed/simple;
+	bh=ASAiw8WogvTogcir3ZVRnfw4mWDAzAHB2GlgWf4sjNk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q/00Ecjz1isromPt4uZs7Oou3co6XkRwuljnR/nmkxmreIvF2wKpgRz2hhqwMHJ/F3sfPNzoK5feWtmr+WawTAcjL8GmyI5Cqn54e/9cLdE6Q3obMosCJzzhe2Ry3gP5HaLfEkI+0BSoGCKwKaOQzQWBlWvtHGysElodqAeK6X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=VW1JPJwi; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50F7sWRc014640;
+	Wed, 15 Jan 2025 04:24:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=F8fT8Kv+j/S2D4pOQn
+	UFqbh6MfyYIrUfOk0KiOX87Jc=; b=VW1JPJwireF63R+LkAf1nvgCd4OhgbgcGo
+	o9oqRq48//099FlqQg+hrWuLh26NjzJb4IumNFVQH0UApd/L8xoncuZ18dAoyk9e
+	trJGUbZqhYvD/HMldUm3uONz+tCg74wGl53NBjMxBJVqLXXTNDNdEx3+BslIHULB
+	XQn+wO1wI17r1fGEme0bWM+tIeOWC/j4etAsl2901S62Gq42kFccnhsfuAEUNiNn
+	B6tQD0hORaBy/LPaDTgEHFuhvjEuDhiZTumorTk0lhtwEWodOs8UfDBdR5OdbYsd
+	wgG+wx4ScyMZkWekMPAtIP0pp8zJnUhRxbRcwhFVeWW7m+uB2VNw==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 443px4mf9c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Jan 2025 04:24:18 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.13; Wed, 15 Jan
+ 2025 10:24:16 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.13 via Frontend Transport; Wed, 15 Jan 2025 10:24:16 +0000
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 1508882026C;
+	Wed, 15 Jan 2025 10:24:16 +0000 (UTC)
+Date: Wed, 15 Jan 2025 10:24:15 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC: Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli
+	<florian.fainelli@broadcom.com>,
+        Broadcom internal kernel review list
+	<bcm-kernel-feedback-list@broadcom.com>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "Andy
+ Shevchenko" <andy@kernel.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<ukleinek@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre Torgue" <alexandre.torgue@foss.st.com>,
+        Kuppuswamy Sathyanarayanan
+	<sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Nandor Han <nandor.han@ge.com>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v2] gpio: Use str_enable_disable-like helpers
+Message-ID: <Z4eMz06gm6DPjqsR@opensource.cirrus.com>
+References: <20250114191438.857656-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] gpio: Use str_enable_disable-like helpers
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Nandor Han <nandor.han@ge.com>, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- patches@opensource.cirrus.com
-References: <20250114191438.857656-1-krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-From: Doug Berger <opendmb@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 In-Reply-To: <20250114191438.857656-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: g_1sQD1C5vLD-t_9ffrlstl7qSLhk8gd
+X-Proofpoint-GUID: g_1sQD1C5vLD-t_9ffrlstl7qSLhk8gd
+X-Authority-Analysis: v=2.4 cv=XdhzzJ55 c=1 sm=1 tr=0 ts=67878cd2 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=kj9zAlcOel0A:10 a=VdSt8ZQiCzkA:10 a=Q-fNiiVtAAAA:8 a=KKAkSRfTAAAA:8 a=w1d2syhTAAAA:8 a=4kLLQdw-iMVuSiU5jB4A:9
+ a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22 a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-Spam-Reason: safe
 
-On 1/14/2025 11:14 AM, Krzysztof Kozlowski wrote:
+On Tue, Jan 14, 2025 at 08:14:38PM +0100, Krzysztof Kozlowski wrote:
 > Replace ternary (condition ? "enable" : "disable") syntax with helpers
 > from string_choices.h because:
 > 1. Simple function call with one argument is easier to read.  Ternary
->     operator has three arguments and with wrapping might lead to quite
->     long code.
+>    operator has three arguments and with wrapping might lead to quite
+>    long code.
 > 2. Is slightly shorter thus also easier to read.
 > 3. It brings uniformity in the text - same string.
 > 4. Allows deduping by the linker, which results in a smaller binary
->     file.
+>    file.
 > 
 > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
-> 
-> Changes in v2:
-> 1. Many more files changed.
-> ---
->   drivers/gpio/gpio-brcmstb.c     | 3 ++-
->   drivers/gpio/gpio-crystalcove.c | 3 ++-
->   drivers/gpio/gpio-grgpio.c      | 3 ++-
->   drivers/gpio/gpio-mvebu.c       | 7 ++++---
->   drivers/gpio/gpio-nomadik.c     | 3 ++-
->   drivers/gpio/gpio-stmpe.c       | 6 +++---
->   drivers/gpio/gpio-wcove.c       | 3 ++-
->   drivers/gpio/gpio-wm831x.c      | 3 ++-
->   drivers/gpio/gpio-xra1403.c     | 3 ++-
->   drivers/gpio/gpiolib.c          | 3 ++-
->   10 files changed, 23 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-> index 491b529d25f8..ca3472977431 100644
-> --- a/drivers/gpio/gpio-brcmstb.c
-> +++ b/drivers/gpio/gpio-brcmstb.c
-> @@ -9,6 +9,7 @@
->   #include <linux/irqchip/chained_irq.h>
->   #include <linux/interrupt.h>
->   #include <linux/platform_device.h>
-> +#include <linux/string_choices.h>
->   
->   enum gio_reg_index {
->   	GIO_REG_ODEN = 0,
-> @@ -224,7 +225,7 @@ static int brcmstb_gpio_priv_set_wake(struct brcmstb_gpio_priv *priv,
->   		ret = disable_irq_wake(priv->parent_wake_irq);
->   	if (ret)
->   		dev_err(&priv->pdev->dev, "failed to %s wake-up interrupt\n",
-> -				enable ? "enable" : "disable");
-> +			str_enable_disable(enable));
->   	return ret;
->   }
->   
-For gpio-brcmstb:
-Acked-by: Doug Berger <opendmb@gmail.com>
 
+For the Wolfson bits:
+
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+
+Thanks,
+Charles
 
