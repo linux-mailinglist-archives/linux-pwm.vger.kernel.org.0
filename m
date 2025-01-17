@@ -1,149 +1,222 @@
-Return-Path: <linux-pwm+bounces-4666-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4667-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7F9CA15424
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 17:22:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04189A1554F
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 18:09:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 371C51883235
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 16:22:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8AB1167189
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 17:09:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 303A519CD16;
-	Fri, 17 Jan 2025 16:22:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 028CD19F487;
+	Fri, 17 Jan 2025 17:09:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PHFTsbKw"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="OjjnFUHT"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F11C166F29;
-	Fri, 17 Jan 2025 16:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EC519E7D1
+	for <linux-pwm@vger.kernel.org>; Fri, 17 Jan 2025 17:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737130953; cv=none; b=X1HQy+qcxiingVP8570Az5EE4VItXftfAISE/GWlxyeaBCL2tR/Va93UzEe6V/WTv5F0e9j+VXzJDBiIxGWXlK6DqwtoAYc3JoElPQG1N7zqYoMGOrS+YwHRdeWjs+UzzCY8EOkERhKL3iNIDji9brJJc2w8nVEbRDrWUES/JoQ=
+	t=1737133750; cv=none; b=LiKU3rGfNqRX0DfkDiwHYJDOfQdFbdFNAWXXioEw8W70Ca4RIs/lqgTS49n2tl80bt+MnmfkwYsm2PRt7+h9d2QpkFXaZ+e8hFGM9uicJ5zp/n+h2l9WVARPsHoOpWHSDynEJsVOS+rEZDqg4goiyC29KovExil5Ik+Xjlegh0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737130953; c=relaxed/simple;
-	bh=50mwomwuxkCUC+ojeg4uORuPtD5HzzIVm4LChTczHek=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jLdB7WoKktwpZxH3Wwu8emuHD3xHv5G9xf5ak7/QyvsOKrHdUsyz33SupyVdXgQuEDx+ZyvG+3JhDsiUhPaF+eevDo/tuNIutvl0AKZ6pSy5UHfT3vJtOF5APhsvY1iSMrOQvdWxGyxoZHAw8Pej6XMDp37yjaSjgQZsV0bSkCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PHFTsbKw; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-436281c8a38so15913235e9.3;
-        Fri, 17 Jan 2025 08:22:31 -0800 (PST)
+	s=arc-20240116; t=1737133750; c=relaxed/simple;
+	bh=GQsq+F7zA1DuWpXElMWopd8uifYdKlm8EaeJLolsG1Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y5sZWkwjX5h343Wj+/XYN+nPNpval1DdlFHtYPmgiheDENXHCRmP980Y+Bad4TlPFVkBtVYhkNAcr6iY2xM2H5mh2BGdsXg4TqcR3nOacrs0S089uF4asNaZFwnZnpZ6ONrYs+MSrSlvtrut4TlKgSRURFFiX6pv7K1b2d+GTTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=OjjnFUHT; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3eb9a0a2089so1239070b6e.1
+        for <linux-pwm@vger.kernel.org>; Fri, 17 Jan 2025 09:09:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737130950; x=1737735750; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kHadK7EAQ59IUYEPtnj1ZqgvfVMVc2kKIJlw/Tkswl4=;
-        b=PHFTsbKwWPAPpodmqVRswHFsTG4YPcraorpoJC+N2gzWSpHAFz+btpyE8Rhq1ja81J
-         YQuFKXbKy5kV9/y2oumZjWtT35Exd60rC1G9YZe/kVYNsMaQ9hba+ry2ec8pMRGXuOhd
-         No9liUtsb8pJU6tNgIX23UAT/TF1lbhCubNYn0LDnCP2JLt451rBcbqWhC8Be3NmqUvW
-         guoQC1SIOt6Ld7DkAUNDU+WxlMJzGpY5pUpJrrUmA/3ajNaVD4/JK36EDztSjssWj6gx
-         zGlVFoIHH49GStSAVwGqxF58VnYc9smHxy29rqVpjtthfyZxtBALLnx70QQ5IMNWhr5b
-         1q9A==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1737133747; x=1737738547; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Pd2mM284nu/1WMfOl9weOh16uftldviBpS/+L7i4W1U=;
+        b=OjjnFUHTAg3o1YXzsp0NiYAPdtB9XWXMz0CJThgoeo3hFF8B8Z4V6b4Sposq2O2ety
+         vjU2GRxWBYC0wPD4hNHUTv3LZuKBzEVD/HCQgzM/NU4w4an+fcQr3Ftut62sf3WCMstz
+         TsGYWjQSmozrjnoUyEbor67GPpp8EneONu/v+KVL9botX0Q7EbfSJIU2N/uL2+XOSONw
+         VWgliiWsK5qWi9JSlhNCbbsvgVCN5eBewoObvxnMbiouC+EXh3hLCC/eOHuX4qYXc848
+         h7xaNqKw053clg6xvsSr8RNkK/XixmoDNpvVOYeRP4H1rHG8NeSIyfQVJpN2fsejA9P2
+         f7QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737130950; x=1737735750;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kHadK7EAQ59IUYEPtnj1ZqgvfVMVc2kKIJlw/Tkswl4=;
-        b=Hg7U5RmxqJyKRODeVSHtGKCXtf3jplJ87lCo7WthOx1ibzW8qGVmY3McCCLuyWi1uB
-         u8pyeik9Vg5fUjCRD9EAprAvVigtWh/Z7+adVtpD0h/QjkCAztfbpJsb3DQIs2aHwjHd
-         xQwKzBA2lTcxd48MTxN9XBBBOlxZFxBnr70J2t5//EL168uqJ0EdKLtNVXMFNrP3LNl4
-         0zwoQAb8Q7GKdsULcCrtvhB6vuGJaqYEnn+6Pah8EcdpeHrGXfPKpx+wqC08AMBMjoql
-         2gfJwkIpnMAQstqMTnn+e/TxzmWCQiOJtr50E9HqKXS6srejMqeqD7LGSw57+9/GbJn5
-         Xl+A==
-X-Forwarded-Encrypted: i=1; AJvYcCW4DCZZB939DSEafI7jlaHiVKqe8GgBPF4tj2BmCefKteYzi4KGLahAtqAIkwJBBTkxgHrjGjjy0RR3yuS3@vger.kernel.org, AJvYcCWJNKRmIMl7ZREunXiOnjHhCwdvVl3hPheKZmuCIKu2Creub2/mKyNaIltIgoDrH9XL4oujBVXU11Wi@vger.kernel.org, AJvYcCWl0XBOKZJAcjKe5Fy6cGyUOBu4YBpprV/n58Z3PMAsAbMc7/UKYBL+EUJgo4yoIL7gnYSqKF7Yumyg@vger.kernel.org, AJvYcCWlNCU6JO6MAeIXuoNg/RJ408h1veItYltY7sR7G1NhyE65/sn73uwpNacWXX1caLkZ5v6iUImTr4w6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHw79jto6AYurdnZT6lOt/8UrqwwqkT27Kw24pEKDCLE8Vmz/K
-	FCFFR4gn4COD8q/S8WlQJmVkb1nM1pP35u2S4KfInVSRFz0Rs9V6
-X-Gm-Gg: ASbGncs2khboUK7NHep9oz5xH0pG2Nlx3eEe+xOdcLl0jHmr8rzfLr3k6BiLuoLhax/
-	kK10ZqGq4pfimtW3PDvF+rheY0IPVw/1nYAPyX/GuoKIgwJc5al9bke+nTrkCHYF5VZyFI1PYbv
-	1i16Jjgwk+sB8ZmFB7nneNZQL/xuRiBpYo5Az9fMIS/5O32BVGzzPaatdxmFBduE6fyswrY99PU
-	hb7W09nSzlXdOyBqyqvuH0o0P8aE/EeC82ryJD38jMkd5ltd4Uoo6n1UbtJNRV1MOjNIfrB7MjR
-	2NvOR+3O5mmkFbgJDpQ1lZiS4xGa
-X-Google-Smtp-Source: AGHT+IF19g4QRqpmTkbAY0jupgeE3DaoWBuGu+3PyL+HZEHgPT308vzkgJQTqMEYlPel+869CXRopQ==
-X-Received: by 2002:a5d:5f4d:0:b0:38a:614b:8632 with SMTP id ffacd0b85a97d-38bf57a6969mr3629906f8f.39.1737130949634;
-        Fri, 17 Jan 2025 08:22:29 -0800 (PST)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf32845e8sm2903508f8f.97.2025.01.17.08.22.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2025 08:22:29 -0800 (PST)
-Message-ID: <1d629a0b3ad6236a19ac52822ce11ba574c43ec1.camel@gmail.com>
-Subject: Re: [PATCH v10 6/8] iio: adc: adi-axi-adc: add oversampling
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
-	robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org
-Date: Fri, 17 Jan 2025 16:22:30 +0000
-In-Reply-To: <20250117130702.22588-7-antoniu.miclaus@analog.com>
-References: <20250117130702.22588-1-antoniu.miclaus@analog.com>
-	 <20250117130702.22588-7-antoniu.miclaus@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+        d=1e100.net; s=20230601; t=1737133747; x=1737738547;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pd2mM284nu/1WMfOl9weOh16uftldviBpS/+L7i4W1U=;
+        b=E597qVmWKWS8BCZ7ec3WtKjseVwWMUTmR7YIHGuZH/5xpt8K6FBNMwghuR9n3RYpgQ
+         Lu+yjfSpHdFLYF8O52+fcUQTWh0pJ8EchfiPoE/paU0HTC/UR/rp/2ct0fvhESrycgeX
+         rpr343+B9k0w0if18IOHA5sm/1tsA8+mONVPh+7wEq5OVPSlqOlrwAWL30PwjKZN1kNx
+         ANIHX8vaeNdy9x790oM+DumKU5fhbmx8NTs6ZYAKS+XnqvSZ1oJgxR3pe8e/w1Vyz3wb
+         ko2UWT385xI+knMtbkFO8I3nZ80XmLmpwaYRrUtLLVCUzVg4WnZ+L3vkX7PQsVd+VVBw
+         /vng==
+X-Forwarded-Encrypted: i=1; AJvYcCUpORB/JGfP5VbxQJiZaabAkBkfhNeivmXOZwlR48yIjAoh5UspqwaX6UFQYPoGs+Rv/kkqVY8xFhM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoCbw2V7c2oWz97M0/n4ffawPLSiRAG/g2wYof9gKk/TD3qHO/
+	xYaBlne8gl6RVfPPCzzhieRb17T161pTDnBZ5f4AjXiXrZfB+tEIhTEY8R8LTSM=
+X-Gm-Gg: ASbGncs4R9v4tGZ5TuXdj8PFwCnE8NqtfBcDlp8QacykzAN4IClvrw1ucGnnrJjQ5JB
+	gx0clmuIQuXlKySgx6NxUm4KQiZNXvdnScDceSXXWVz/h5oZ/6oZrJnIVHWvH5UHOCu1Oo5Y1Dr
+	HQ3yf6BbOk23Q3KEqZaT3xVPSJK4C4vVrQm/L5SCnmloM675pjoStNxFpEwaA58VBS9d9SNbSyX
+	PKfayqBPs8v8TNuJBoM1OtNpZoa2gRzL2xz4GDdkAMLgZlAe0VvN7p+S96GTh5bCzxihyt6o1zW
+	oC/3rSo9MAVWKuoqbQ==
+X-Google-Smtp-Source: AGHT+IEPSz+mgL97otCibvYhbniO7AQ7rHqR/4jbswbIP8oUN5lgewAOdrBOIyHlAR7qfcfaHwbvmw==
+X-Received: by 2002:a05:6808:2199:b0:3eb:5c3d:35a7 with SMTP id 5614622812f47-3f19fd7b5d6mr2093866b6e.34.1737133746931;
+        Fri, 17 Jan 2025 09:09:06 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f19da6f3casm866483b6e.19.2025.01.17.09.09.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2025 09:09:05 -0800 (PST)
+Message-ID: <67dc52c4-5252-40c3-b89e-8e46e3c2df27@baylibre.com>
+Date: Fri, 17 Jan 2025 11:09:03 -0600
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 14/17] iio: adc: ad4695: Add support for SPI offload
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, Michael Hennerich <Michael.Hennerich@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>,
+ Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20250113-dlech-mainline-spi-engine-offload-2-v7-0-e0860c81caae@baylibre.com>
+ <20250113-dlech-mainline-spi-engine-offload-2-v7-14-e0860c81caae@baylibre.com>
+ <ls32gl5a7nsihmmpfabxhm6ilg7idyxdhyrhbkay6e2fiokoah@o5ujfxlsq3s3>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <ls32gl5a7nsihmmpfabxhm6ilg7idyxdhyrhbkay6e2fiokoah@o5ujfxlsq3s3>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2025-01-17 at 15:07 +0200, Antoniu Miclaus wrote:
-> Add support for enabling/disabling oversampling.
->=20
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
-> no changes in v10.
-> =C2=A0drivers/iio/adc/adi-axi-adc.c | 19 +++++++++++++++++++
-> =C2=A01 file changed, 19 insertions(+)
->=20
-> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.=
-c
-> index 3c213ca5ff8e..ce88650bbb62 100644
-> --- a/drivers/iio/adc/adi-axi-adc.c
-> +++ b/drivers/iio/adc/adi-axi-adc.c
-> @@ -46,6 +46,7 @@
-> =C2=A0#define=C2=A0=C2=A0=C2=A0 ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
-> =C2=A0
-> =C2=A0#define ADI_AXI_ADC_REG_CNTRL_3			0x004c
-> +#define=C2=A0=C2=A0 AD485X_CNTRL_3_OS_EN_MSK		BIT(2)
-> =C2=A0#define=C2=A0=C2=A0 AD485X_CNTRL_3_PACKET_FORMAT_MSK	GENMASK(1, 0)
-> =C2=A0#define=C2=A0=C2=A0 AD485X_PACKET_FORMAT_20BIT		0x0
-> =C2=A0#define=C2=A0=C2=A0 AD485X_PACKET_FORMAT_24BIT		0x1
-> @@ -357,6 +358,23 @@ static int axi_adc_data_size_set(struct iio_backend
-> *back, unsigned int size)
-> =C2=A0				=C2=A0
-> FIELD_PREP(AD485X_CNTRL_3_PACKET_FORMAT_MSK, val));
-> =C2=A0}
-> =C2=A0
-> +static int axi_adc_oversampling_ratio_set(struct iio_backend *back,
-> +					=C2=A0 unsigned int ratio)
-> +{
-> +	struct adi_axi_adc_state *st =3D iio_backend_get_priv(back);
-> +
-> +	switch (ratio) {
-> +	case 0:
-> +		return -EINVAL;
-> +	case 1:
-> +		return regmap_clear_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
-> +					 AD485X_CNTRL_3_OS_EN_MSK);
-> +	default:
-> +		return regmap_set_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
-> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AD485X_CNTRL_3_OS_EN_MSK);
-> +	}
-> +}
-> +
+On 1/17/25 9:47 AM, Angelo Dureghello wrote:
+> Hi,
+> 
+> noticed just one possible issue here, see below.
+> 
+> On 13.01.2025 15:00, David Lechner wrote:
+>> Add support for SPI offload to the ad4695 driver. SPI offload allows
+>> sampling data at the max sample rate (500kSPS or 1MSPS).
+>>
+>> This is developed and tested against the ADI example FPGA design for
+>> this family of ADCs [1].
+>>
+>> [1]: http://analogdevicesinc.github.io/hdl/projects/ad469x_fmc/index.html
+>>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+>> ---
+>>
+>> v7 changes: none
+>>
+>> v6 changes:
+>> * Fixed use of c++ style comments
+>> * Moved static const struct definition out of probe function
+>> * Changes bits_per_word to always be 19 for future oversampling
+>>   compatibility (Trevor is working on implementing oversampling support
+>>   on top of this patch, so we have high confidence this is the correct
+>>   thing to do)
+>> * Fixed wrong xfer->len
+>>
+>> v5 changes:
+>> * Register SCLK speed handling has been split out into a separate series.
+>> * Add sampling_frequency_available attribute.
+>> * Limit max allowed sampling frequency based on chip info.
+>> * Expand explanations of offload enable/disable ordering requirements.
+>> * Finish TODO to use macros for phandle arg values.
+>> * Don't use dev_info() when falling back to non-offload operation.
+>> * Update to accommodate changes in other patches in this series.
+>>
+>> v4 changes: new patch in v4
+>> ---
+>>  drivers/iio/adc/Kconfig  |   1 +
+>>  drivers/iio/adc/ad4695.c | 445 +++++++++++++++++++++++++++++++++++++++++++++--
+>>  2 files changed, 429 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>> index 995b9cacbaa964d26424346120c139858f93cdcd..ec60b64c46e187e2be18ab1f8ca9e6f4f03299f9 100644
+>> --- a/drivers/iio/adc/Kconfig
+>> +++ b/drivers/iio/adc/Kconfig
+>> @@ -52,6 +52,7 @@ config AD4695
+>>  	tristate "Analog Device AD4695 ADC Driver"
+>>  	depends on SPI
+>>  	select IIO_BUFFER
+>> +	select IIO_BUFFER_DMAENGINE
+>>  	select IIO_TRIGGERED_BUFFER
+>>  	select REGMAP
+>>  	help
+>> diff --git a/drivers/iio/adc/ad4695.c b/drivers/iio/adc/ad4695.c
+>> index 13cf01d35301be40369571e7dd2aeac1a8148d15..c8cd73d19e869f11999608f61df5724d329b4427 100644
+>> --- a/drivers/iio/adc/ad4695.c
+>> +++ b/drivers/iio/adc/ad4695.c
+>> @@ -19,14 +19,19 @@
+>>  #include <linux/device.h>
+>>  #include <linux/err.h>
+>>  #include <linux/gpio/consumer.h>
+>> +#include <linux/iio/buffer-dmaengine.h>
+>>  #include <linux/iio/buffer.h>
+>>  #include <linux/iio/iio.h>
+>>  #include <linux/iio/triggered_buffer.h>
+>>  #include <linux/iio/trigger_consumer.h>
+>>  #include <linux/minmax.h>
+>> +#include <linux/mutex.h>
+>>  #include <linux/property.h>
+>> +#include <linux/pwm.h>
+>>  #include <linux/regmap.h>
+>>  #include <linux/regulator/consumer.h>
+>> +#include <linux/spi/offload/consumer.h>
+>> +#include <linux/spi/offload/provider.h>
+>>  #include <linux/spi/spi.h>
+>>  #include <linux/units.h>
+> 
+> ...
+> 
+>> +static int ad4695_offload_trigger_request(struct spi_offload_trigger *trigger,
+>> +					  enum spi_offload_trigger_type type,
+>> +					  u64 *args, u32 nargs)
+>> +{
+>> +	struct ad4695_state *st = spi_offload_trigger_get_priv(trigger);
+>> +
+>> +	/* Should already be validated by match, but just in case. */
+>> +	if (nargs != 2)
+>> +		return -EINVAL;
+>> +
+>> +	/* DT tells us if BUSY event uses GP0 or GP3. */
+>> +	if (args[1] == AD4695_TRIGGER_PIN_GP3)
+>> +		return regmap_set_bits(st->regmap, AD4695_REG_GP_MODE,
+>> +				       AD4695_REG_GP_MODE_BUSY_GP_SEL);
+>> +
+>> +	return regmap_clear_bits(st->regmap, AD4695_REG_GPIO_CTRL,
+>> +				 AD4695_REG_GP_MODE_BUSY_GP_SEL);
+> 
+> This should probably be:
+>          
+>         return regmap_clear_bits(st->regmap, AD4695_REG_GPIO_MODE,
+>                                  AD4695_REG_GP_MODE_BUSY_GP_SEL);
+> 
 
-So whatever the ration we just set the bits? This is odd enough that deserv=
-es a
-comment IMO... (did not looked at the datasheet/wiki tbh :))
+Indeed, thanks! Hopefully we won't need a v8 and Jonathan can fix while
+applying. :-)
 
-- Nuno S=C3=A1
->=20
+>> +}
+>> +
+> 
+> Regards,
+> angelo
+> 
 
 
