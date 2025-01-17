@@ -1,228 +1,124 @@
-Return-Path: <linux-pwm+bounces-4644-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4645-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E8EFA14DBF
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 11:38:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5101BA15013
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 14:07:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8196188B56B
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 10:38:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E49B162927
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 13:07:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0F8A1FC0F5;
-	Fri, 17 Jan 2025 10:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05D661FF7A9;
+	Fri, 17 Jan 2025 13:07:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mI3SylOo"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="xZmiauDT"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638FD1F76AD;
-	Fri, 17 Jan 2025 10:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE2E1FE46E;
+	Fri, 17 Jan 2025 13:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737110313; cv=none; b=AknHxFfzG6/v3wlZp7YKalANeOCOR9WtlySczRQUx7MKsgCv9cOs4xWBHfhM/JeEPDbcembz9zLSvd/NLtOdLdMpcJMB1Lzj26KYFNgiEVAYLLfq935jCKFcSIctuUmfLPScbxSTJ2dQiZLAquRYyO2JiZZtYeKmAq95AJMghu8=
+	t=1737119240; cv=none; b=h9cxnbftj0+nY6Tl88Rw39y9x0aeoqhqKlFIWM+uxkJP0AeXQpWddTebYvEkN9GnwbK3bzW02yhVmMXVlav0FzbRv1uvFR3fmOdQ+sOnRcHnBcMZdW8cME2C4+EtYpta1s0hwHlXIrjZmdsbCVb956enwi61oKe2PhJPYs1a1kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737110313; c=relaxed/simple;
-	bh=kVtggdSW98bJORlZYnpdBDvmyfatrIrOsHKYOjQdcg0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
-	 References:In-Reply-To; b=twUp3ikmxHJEPlTRHUU11cghWqyobFbe4+GQHNN+y9c9RWK+aADuMppCDn+/SiZIhXOZYcYNiFxxPySSYBrdf5teH22537XnLNRI3KSdkZdctcOvSv2NRGX8nf3UnDPSheERzFULgDDono6/JsisikldT4l3amE77MuhN/9qL5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mI3SylOo; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DF76CFF808;
-	Fri, 17 Jan 2025 10:38:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1737110308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zjGnIYbv6jLQCj2OibAy1kloN5lKwcFpRZ7BkKxb2m4=;
-	b=mI3SylOolo/uYot+pulW1bc3DvAvLtyvq+Q0dgQut4sjdvUhJEOsPCINGrW6+deX43bgHr
-	YFyuJyOUgjtIG4lyH747+xphSOXW5nQ56EtWtCrmlwIzzWdup7mFJGvG84e65Y3PBe671Q
-	9gbj4C9OWfxeZIZdxD4V0wRaw13FCGnYBgFPs9TwmAK/Pxj6/aOJ2GVu0EnVoshNm2v+7e
-	TVwTdMzmFQx9dlY9WM6YqmcEd6gpk1eZoQucYWwoVjtMq2N/7W0JWo+rycUEm4M8i9h/9W
-	oi98hSBotDEK/7hcOznKafcVbQpryhy2+f6lz0hHZhjS99SMAnEllYHH4OLMlg==
+	s=arc-20240116; t=1737119240; c=relaxed/simple;
+	bh=3fWhu+VDXrGSx6GgQAoPWywIBLijTUoeY6GZ7HuP/is=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t9X/XqiOiMttrz1B1sFKUN6WyosiHdZozveGaYIgV03AVskcIs71KxFVb47ykx9TG99dbytn8O13n6Yj3wxIwFVh4KWto7VJopfSlxHhip5APb/mKWKw2nMgOLA8Ubw/2SPg0Rv1rtoSacNo+rzkZ3YzQevJtqqBMLDn4Y5ngi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=xZmiauDT; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50HAhRL3023572;
+	Fri, 17 Jan 2025 08:07:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=gbSm8VRS0+oSTL1nAffhGR92WQk
+	Nt2wZ2/i+N42uglM=; b=xZmiauDTcaRoVVd+bdLDpLDxAeFGEvoiVCAgKI6xStV
+	QWOSsLYdRZnIT/fv8JMGzA+UwN75g4hQ3xLRNEHXP+hy+J4lmeO1dzoiSiA/zbF2
+	Gc+vpgaGau8abezbA1ukm07Yst7++6WWRpVP17lkbUEh5J+rlL7JPFbOQjf8rvTT
+	naAk75W42NNlPtkuiDvbtArVSDj5rWnHTj8iioNpwddw+WDNNtPdTsy1H6aD5bkk
+	9AoebqK+VhHbCWhy0GoDs4+GKp1hLiSo6Zq2/lOm8dPPJmxZdX86k6ldnRMgL6Sg
+	IXAL942L+ZbRCrdu+qpdefAT+V066rISoldWQTEigFQ==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 447nq10gdt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 Jan 2025 08:07:16 -0500 (EST)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 50HD7EfL027780
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 17 Jan 2025 08:07:14 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 17 Jan
+ 2025 08:07:14 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 17 Jan 2025 08:07:14 -0500
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.159])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 50HD764i013564;
+	Fri, 17 Jan 2025 08:07:09 -0500
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH v10 0/8] Add support for AD485x DAS Family
+Date: Fri, 17 Jan 2025 15:06:54 +0200
+Message-ID: <20250117130702.22588-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 17 Jan 2025 11:38:27 +0100
-Message-Id: <D74A7MIVLFS2.HYUXZ072NCTQ@bootlin.com>
-To: "Lee Jones" <lee@kernel.org>
-Subject: Re: [PATCH v3 2/7] mfd: Add max7360 support
-Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
- <20250113-mdb-max7360-support-v3-2-9519b4acb0b1@bootlin.com>
- <20250115154252.GK6763@google.com>
-In-Reply-To: <20250115154252.GK6763@google.com>
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: 4iE18qSKZNaZHyFc9k-M5whRk-PLMI1b
+X-Proofpoint-GUID: 4iE18qSKZNaZHyFc9k-M5whRk-PLMI1b
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-17_05,2025-01-16_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=967
+ adultscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2411120000 definitions=main-2501170106
 
-On Wed Jan 15, 2025 at 4:42 PM CET, Lee Jones wrote:
-> On Mon, 13 Jan 2025, mathieu.dubois-briand@bootlin.com wrote:
->
-> > From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> >=20
-> > Add core driver to support MAX7360 i2c chip, multi function device
-> > with keypad, gpio, pwm, gpo and rotary encoder submodules.
-> >=20
-> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.c=
-om>
-> > Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com=
->
-> > ---
-...
-> > +static int max7360_set_gpos_count(struct max7360_mfd *max7360_mfd)
-> > +{
-> > +	/*
-> > +	 * Max7360 COL0 to COL7 pins can be used either as keypad columns,
-> > +	 * general purpose output or a mix of both.
-> > +	 * Get the number of pins requested by the corresponding drivers, ens=
-ure
-> > +	 * they are compatible with each others and apply the corresponding
-> > +	 * configuration.
-> > +	 */
-> > +	struct device_node *np;
-> > +	u32 gpos =3D 0;
-> > +	u32 columns =3D 0;
-> > +	unsigned int val;
-> > +	int ret;
-> > +
-> > +	np =3D of_get_compatible_child(max7360_mfd->dev->of_node, GPO_COMPATI=
-BLE);
->
-> Why don't you do all of this in the GPO driver?
->
+Add support for AD485X fully buffered, 8-channel simultaneous sampling,
+16/20-bit, 1 MSPS data acquisition system (DAS) with differential, wide
+common-mode range inputs.
 
-I first did this here, so the configuration was still done if the GPO
-driver was missing. But on a second thought, we can just set the GPO
-count to 0 here, and let the GPO driver handle all of this.
+Most of the review comments which make sense in v9 were addressed. Some of them
+might have been ommitted, especially those that are a matter of preference.
+Since we reached v10, I tried to cover everything that was pointed out until now.
 
-I will move this function to the GPO driver.
+Antoniu Miclaus (8):
+  iio: backend: add API for interface get
+  iio: backend: add support for data size set
+  iio: backend: add API for oversampling
+  iio: adc: adi-axi-adc: add interface type
+  iio: adc: adi-axi-adc: set data format
+  iio: adc: adi-axi-adc: add oversampling
+  dt-bindings: iio: adc: add ad4851
+  iio: adc: ad4851: add ad485x driver
 
-> > +	if (np) {
-> > +		ret =3D of_property_read_u32(np, "ngpios", &gpos);
-> > +		if (ret < 0) {
-> > +			dev_err(max7360_mfd->dev, "Failed to read gpos count\n");
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	ret =3D device_property_read_u32(max7360_mfd->dev,
-> > +				       "keypad,num-columns", &columns);
-> > +	if (ret < 0) {
-> > +		dev_err(max7360_mfd->dev, "Failed to read columns count\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	if (gpos > MAX7360_MAX_GPO ||
-> > +	    (gpos + columns > MAX7360_MAX_KEY_COLS)) {
-> > +		dev_err(max7360_mfd->dev,
-> > +			"Incompatible gpos and columns count (%u, %u)\n",
-> > +			gpos, columns);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/*
-> > +	 * MAX7360_REG_DEBOUNCE contains configuration both for keypad deboun=
-ce
-> > +	 * timings and gpos/keypad columns repartition. Only the later is
-> > +	 * modified here.
-> > +	 */
-> > +	val =3D FIELD_PREP(MAX7360_PORTS, gpos);
-> > +	ret =3D regmap_write_bits(max7360_mfd->regmap, MAX7360_REG_DEBOUNCE,
-> > +				MAX7360_PORTS, val);
-> > +	if (ret) {
-> > +		dev_err(max7360_mfd->dev,
-> > +			"Failed to write max7360 columns/gpos configuration");
-> > +		return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +int max7360_port_pin_request(struct device *dev, unsigned int pin, boo=
-l request)
->
-> This whole function is rough.  What are you trying to achieve?
->
+ .../bindings/iio/adc/adi,ad4851.yaml          |  153 ++
+ drivers/iio/adc/Kconfig                       |   14 +
+ drivers/iio/adc/Makefile                      |    1 +
+ drivers/iio/adc/ad4851.c                      | 1297 +++++++++++++++++
+ drivers/iio/adc/adi-axi-adc.c                 |   88 ++
+ drivers/iio/industrialio-backend.c            |   60 +
+ include/linux/iio/backend.h                   |   19 +
+ 7 files changed, 1632 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
+ create mode 100644 drivers/iio/adc/ad4851.c
 
-Some pins can be used either for PWM, rotary encoder or GPIO. The goal
-here is to allow corresponding drivers to request the pin, making sure
-only one driver use a given pin at some point.
-
-> > +{
-> > +	struct i2c_client *client;
-> > +	struct max7360_mfd *max7360_mfd;
-> > +	unsigned long flags;
-> > +	int ret =3D 0;
-> > +
-> > +	client =3D to_i2c_client(dev);
-> > +	max7360_mfd =3D i2c_get_clientdata(client);
-> > +
-> > +	spin_lock_irqsave(&request_lock, flags);
-> > +	if (request) {
-> > +		if (max7360_mfd->requested_ports & BIT(pin))
-> > +			ret =3D -EBUSY;
-> > +		else
-> > +			max7360_mfd->requested_ports |=3D BIT(pin);
-> > +	} else {
-> > +		max7360_mfd->requested_ports &=3D ~BIT(pin);
-> > +	}
-> > +	spin_unlock_irqrestore(&request_lock, flags);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(max7360_port_pin_request);
-...
-> > +static int max7360_reset(struct max7360_mfd *max7360_mfd)
-> > +{
-> > +	int err;
-> > +
-> > +	/*
-> > +	 * Set back the default values.
-> > +	 * We do not use GPIO reset function here, as it does not work reliab=
-ly.
->
-> Why?  What's wrong with it?
->
-
-I was going to update this comment to add details, but after some extra
-testing, this was wrong actually. Reset function of the chip is working
-correctly, it was just a caching issue. I will rework the whole
-function.
-
-> > +	 */
-> > +	err =3D regmap_write(max7360_mfd->regmap, MAX7360_REG_GPIODEB, 0x00);
-> > +	if (err) {
-> > +		dev_err(max7360_mfd->dev, "Failed to set configuration\n");
-> > --=20
-> > 2.39.5
-> >=20
-
-Thanks for your review. I fixed all other points listed in your mail.
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- 
+2.48.1
 
 
