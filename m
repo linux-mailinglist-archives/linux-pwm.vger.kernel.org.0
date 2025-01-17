@@ -1,75 +1,81 @@
-Return-Path: <linux-pwm+bounces-4649-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4651-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE971A15022
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 14:07:58 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A48DBA15030
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 14:08:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E08911647F2
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 13:07:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D677A3A9293
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 13:08:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DE0E20012C;
-	Fri, 17 Jan 2025 13:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AEE3202C23;
+	Fri, 17 Jan 2025 13:07:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="LdcMNyYL"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="uefdiRTh"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E101FFC55;
-	Fri, 17 Jan 2025 13:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBC1201259;
+	Fri, 17 Jan 2025 13:07:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737119250; cv=none; b=QWgiYiFvAdk3Pg1Y5v7OZT+bUJlnYafKe+AagUB4c93rmyvfRMjh3qLlUi16JVcyjxDOHR9WfdQSnesMAyMW87B2Uww2xDwNTmYI4FTiMKdGZEL6j/b4Re4saK5QaHdFtHBSUTK6oI1ZeB6nrXCc4cASbq9+RHahQpsDen+2y0E=
+	t=1737119255; cv=none; b=jB4FFeXu1HDb/o9RvLmCi/qULd4zqF9ux4ytFp2QJqOXl9ns0uLhRVlsuVRgWmK18x876ylFGt13Lv6YQYPg9rVh/5hVn7pEGL/QTY139vgtHnac+Hm3t8VWCbut5vVdWFWaDf6cRwoZpe8jN2H5XI9wuAyMrG8bZu4j1BdPQzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737119250; c=relaxed/simple;
-	bh=J9Fj64Guq4vYQwAu5jLwn607LJ8srdDo1kUsvoz7MKU=;
+	s=arc-20240116; t=1737119255; c=relaxed/simple;
+	bh=SnBMHnKnj1tC8LtVnrBULcmj8zdhdD7cwOkX2E2VlUE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IPUuQ1r1JD2fSE2GA8QO3w2C/Ex9YC9TIWjCUW/RoJimNOaxGFDYV/QFBacQZ+qNx9bnQ8G7etlXDfWi8aaUCR7FFyTSpRbCgECOQS9+CoSwLdAmIFKxIbY7oK/ySQ6MqkJvcRAx8F5rgjnl98zaKCDF+iJTSdED1YdWgDFOHIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=LdcMNyYL; arc=none smtp.client-ip=148.163.135.77
+	 MIME-Version:Content-Type; b=dRE38mmVBhINLYUXo72V3e5F/+tdm4AqWC3Kv75FtT/RATNRreNajUFMf2UaGW/bi6v4vl6fqr4Ey+s0OKZqjhl8uLhoNrIjeQf8/ywJYESpzXvzOkavVLUAu8MYHN2veQwM2a5uAlW0u5oikf3MsWVu/Rj7ixUnjj49hIIbwS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=uefdiRTh; arc=none smtp.client-ip=148.163.135.77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50HBDV96027922;
-	Fri, 17 Jan 2025 08:07:26 -0500
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50HAhRSm023560;
+	Fri, 17 Jan 2025 08:07:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=+w2lI
-	WQl+cv6QnEaoCZm3OV4luCazw8jpdxtmhyazbY=; b=LdcMNyYLlkUOiRCgh3nmW
-	T8ix16wELvduPQi6dlJoGxhsrrIdpzaU6LEhZT2Q8t8ojQ3C89/n95ZCbmwlMV/F
-	yLx/vfoCHfvkRTaGwx4FeouogcLNeWmytVOjcGHgi+zitY987t8ZhV+0xMB6m4km
-	F62p/tGqq2IzrdOxwNxdL3de8ptYyKUQ25reLalwAnMwVifx6MOw89mNkV34ZVhg
-	e1qzQCW/5h0o7Q3yW1pm6XImJR0t9ngB2fOrZVkiEK/GYp0eM+K6hxJFFDXUZOx9
-	NsUpk8ol7mC/vZ8ynWoY+Hxgcj8SfggIcrZ6vyM2f9P2EErrfvIhtg0JCG9kfXUL
-	A==
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=lsOSt
+	Yi8CQtrKS9/jJ05D1NG/T/fHO7SkRThjhBKbA4=; b=uefdiRThF007ECX0PakfD
+	w4cpYNhZW0GCzlYm5NJSdBMrtDAey0PXud7B0vFdyaF7rWddgH8Hn5kKtLtHk8/6
+	NX9IpamCqrk8KgMLxADWqOozIWiIaRaHhmkS4AF+GnOspik+COMoOlphUNkmzhad
+	wISZcj1Vkyi6pCdrLPrB30YEIEFyBOAZm168ivhb4rpxfobvKQ0QP6fM5NKoPL3A
+	TMqSgTcla60td5LPyJLlPeTSjnIu5THUkBhpYgyMuQya+mE92xvS4xpocho6rpym
+	hc7cdYmpW/2Ym5E3+4NKSV75r7jKA9LJr08hZ9etJvGIa9bOU3vZYFEqmQHT/RXE
+	g==
 Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 447j7usjbd-1
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 447nq10gf7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Jan 2025 08:07:26 -0500 (EST)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 50HD7Pnl027826
+	Fri, 17 Jan 2025 08:07:30 -0500 (EST)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 50HD7TVA027848
 	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 17 Jan 2025 08:07:25 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 17 Jan
- 2025 08:07:24 -0500
+	Fri, 17 Jan 2025 08:07:29 -0500
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Fri, 17 Jan 2025 08:07:29 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Fri, 17 Jan 2025 08:07:28 -0500
 Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
  (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 17 Jan 2025 08:07:24 -0500
+ Transport; Fri, 17 Jan 2025 08:07:28 -0500
 Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.159])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 50HD764o013564;
-	Fri, 17 Jan 2025 08:07:19 -0500
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 50HD764p013564;
+	Fri, 17 Jan 2025 08:07:20 -0500
 From: Antoniu Miclaus <antoniu.miclaus@analog.com>
 To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
         <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
-CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Subject: [PATCH v10 6/8] iio: adc: adi-axi-adc: add oversampling
-Date: Fri, 17 Jan 2025 15:07:00 +0200
-Message-ID: <20250117130702.22588-7-antoniu.miclaus@analog.com>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>,
+        Conor Dooley
+	<conor.dooley@microchip.com>
+Subject: [PATCH v10 7/8] dt-bindings: iio: adc: add ad4851
+Date: Fri, 17 Jan 2025 15:07:01 +0200
+Message-ID: <20250117130702.22588-8-antoniu.miclaus@analog.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250117130702.22588-1-antoniu.miclaus@analog.com>
 References: <20250117130702.22588-1-antoniu.miclaus@analog.com>
@@ -82,69 +88,187 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: L2ikV6L7lRuqtAY8B9Qh2FP-ttYCDOkJ
-X-Proofpoint-ORIG-GUID: L2ikV6L7lRuqtAY8B9Qh2FP-ttYCDOkJ
+X-Proofpoint-ORIG-GUID: LqX410LaeMUoz8b8qv1qnonqMgf0qfkh
+X-Proofpoint-GUID: LqX410LaeMUoz8b8qv1qnonqMgf0qfkh
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-17_05,2025-01-16_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- clxscore=1015 mlxlogscore=999 malwarescore=0 impostorscore=0 mlxscore=0
- phishscore=0 suspectscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501170106
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=999
+ adultscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2411120000 definitions=main-2501170106
 
-Add support for enabling/disabling oversampling.
+Add devicetree bindings for ad485x family.
 
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 ---
-no changes in v10.
- drivers/iio/adc/adi-axi-adc.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+changes in v10:
+ - improve channel properties description.
+ .../bindings/iio/adc/adi,ad4851.yaml          | 153 ++++++++++++++++++
+ 1 file changed, 153 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
 
-diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
-index 3c213ca5ff8e..ce88650bbb62 100644
---- a/drivers/iio/adc/adi-axi-adc.c
-+++ b/drivers/iio/adc/adi-axi-adc.c
-@@ -46,6 +46,7 @@
- #define    ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
- 
- #define ADI_AXI_ADC_REG_CNTRL_3			0x004c
-+#define   AD485X_CNTRL_3_OS_EN_MSK		BIT(2)
- #define   AD485X_CNTRL_3_PACKET_FORMAT_MSK	GENMASK(1, 0)
- #define   AD485X_PACKET_FORMAT_20BIT		0x0
- #define   AD485X_PACKET_FORMAT_24BIT		0x1
-@@ -357,6 +358,23 @@ static int axi_adc_data_size_set(struct iio_backend *back, unsigned int size)
- 				  FIELD_PREP(AD485X_CNTRL_3_PACKET_FORMAT_MSK, val));
- }
- 
-+static int axi_adc_oversampling_ratio_set(struct iio_backend *back,
-+					  unsigned int ratio)
-+{
-+	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
+new file mode 100644
+index 000000000000..c6676d91b4e6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
+@@ -0,0 +1,153 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright 2024 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad4851.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	switch (ratio) {
-+	case 0:
-+		return -EINVAL;
-+	case 1:
-+		return regmap_clear_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
-+					 AD485X_CNTRL_3_OS_EN_MSK);
-+	default:
-+		return regmap_set_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
-+				       AD485X_CNTRL_3_OS_EN_MSK);
-+	}
-+}
++title: Analog Devices AD485X family
 +
- static struct iio_buffer *axi_adc_request_buffer(struct iio_backend *back,
- 						 struct iio_dev *indio_dev)
- {
-@@ -406,6 +424,7 @@ static const struct iio_backend_ops adi_axi_adc_ops = {
- 	.chan_status = axi_adc_chan_status,
- 	.interface_type_get = axi_adc_interface_type_get,
- 	.data_size_set = axi_adc_data_size_set,
-+	.oversampling_ratio_set = axi_adc_oversampling_ratio_set,
- 	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
- 	.debugfs_print_chan_status = iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
- };
++maintainers:
++  - Sergiu Cuciurean <sergiu.cuciurean@analog.com>
++  - Dragos Bogdan <dragos.bogdan@analog.com>
++  - Antoniu Miclaus <antoniu.miclaus@analog.com>
++
++description: |
++  Analog Devices AD485X fully buffered, 8-channel simultaneous sampling,
++  16/20-bit, 1 MSPS data acquisition system (DAS) with differential, wide
++  common-mode range inputs.
++
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ad4855.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ad4856.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ad4857.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ad4858.pdf
++
++$ref: /schemas/spi/spi-peripheral-props.yaml#
++
++properties:
++  compatible:
++    enum:
++      - adi,ad4851
++      - adi,ad4852
++      - adi,ad4853
++      - adi,ad4854
++      - adi,ad4855
++      - adi,ad4856
++      - adi,ad4857
++      - adi,ad4858
++      - adi,ad4858i
++
++  reg:
++    maxItems: 1
++
++  vcc-supply: true
++
++  vee-supply: true
++
++  vdd-supply: true
++
++  vddh-supply: true
++
++  vddl-supply: true
++
++  vio-supply: true
++
++  vrefbuf-supply: true
++
++  vrefio-supply: true
++
++  pwms:
++    description: PWM connected to the CNV pin.
++    maxItems: 1
++
++  io-backends:
++    maxItems: 1
++
++  pd-gpios:
++    maxItems: 1
++
++  spi-max-frequency:
++    maximum: 25000000
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++patternProperties:
++  "^channel(@[0-7])?$":
++    $ref: adc.yaml
++    type: object
++    description: Represents the channels which are connected to the ADC.
++
++    properties:
++      reg:
++        description:
++          The channel number, as specified in the datasheet (from 0 to 7).
++        minimum: 0
++        maximum: 7
++
++      diff-channels:
++        description:
++          Each channel can be configured as a bipolar differential channel.
++          The ADC uses the same positive and negative inputs for this.
++          This property must be specified as 'reg' (or the channel number) for
++          both positive and negative inputs (i.e. diff-channels = <reg reg>).
++          Since the configuration is bipolar differential, the 'bipolar'
++          property is required.
++        items:
++          minimum: 0
++          maximum: 7
++
++      bipolar: true
++
++    required:
++      - reg
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - vcc-supply
++  - vee-supply
++  - vdd-supply
++  - vio-supply
++  - pwms
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@0{
++            #address-cells = <1>;
++            #size-cells = <0>;
++            compatible = "adi,ad4858";
++            reg = <0>;
++            spi-max-frequency = <10000000>;
++            vcc-supply = <&vcc>;
++            vdd-supply = <&vdd>;
++            vee-supply = <&vee>;
++            vddh-supply = <&vddh>;
++            vddl-supply = <&vddl>;
++            vio-supply = <&vio>;
++            pwms = <&pwm_gen 0 0>;
++            io-backends = <&iio_backend>;
++
++            channel@0 {
++              reg = <0>;
++              diff-channels = <0 0>;
++              bipolar;
++            };
++
++            channel@1 {
++              reg = <1>;
++            };
++        };
++    };
++...
 -- 
 2.48.1
 
