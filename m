@@ -1,88 +1,88 @@
-Return-Path: <linux-pwm+bounces-4665-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4666-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFB98A15414
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 17:20:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7F9CA15424
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 17:22:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CEE421630F4
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 16:20:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 371C51883235
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 16:22:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF6AB19ABB6;
-	Fri, 17 Jan 2025 16:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 303A519CD16;
+	Fri, 17 Jan 2025 16:22:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQmJH+pt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PHFTsbKw"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAFC9443;
-	Fri, 17 Jan 2025 16:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F11C166F29;
+	Fri, 17 Jan 2025 16:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737130803; cv=none; b=rnzXcKoHwdD/KT4mDY9JS97R63I0fvoRVWOZ0Q/pBxQPj00DUNP2Donc8Y4teSsr8inmT4aTjlMFISryW2fGhuv7e9vBkI430Hcs2coPAz4pEOjMIz/vEGEQfLPgXU9dmQJC80AAqJbytTaOau5TDQ7Zw0hPYg7me3t27dQEnGA=
+	t=1737130953; cv=none; b=X1HQy+qcxiingVP8570Az5EE4VItXftfAISE/GWlxyeaBCL2tR/Va93UzEe6V/WTv5F0e9j+VXzJDBiIxGWXlK6DqwtoAYc3JoElPQG1N7zqYoMGOrS+YwHRdeWjs+UzzCY8EOkERhKL3iNIDji9brJJc2w8nVEbRDrWUES/JoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737130803; c=relaxed/simple;
-	bh=D1rAN0mkYim+aAuN/sww6LeSFhULo1gUOOmNtyNhWTU=;
+	s=arc-20240116; t=1737130953; c=relaxed/simple;
+	bh=50mwomwuxkCUC+ojeg4uORuPtD5HzzIVm4LChTczHek=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tWNuE/9yJe7aj1JR8OPzLRlFn17A+rEQa/ETWW3E3Om7LS7J2o7tQDBOUm+AQKl1Te4+pfdrj6dmLsELsoQL0wwgzyjiz+kcg5x2PlNa9PIXVFsPs60MerLv77ELe+rkr7jJlU1322Hfl1W1Rl/fYxcPr/5Ul0Q7icu9r52Rv1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kQmJH+pt; arc=none smtp.client-ip=209.85.221.41
+	 Content-Type:MIME-Version; b=jLdB7WoKktwpZxH3Wwu8emuHD3xHv5G9xf5ak7/QyvsOKrHdUsyz33SupyVdXgQuEDx+ZyvG+3JhDsiUhPaF+eevDo/tuNIutvl0AKZ6pSy5UHfT3vJtOF5APhsvY1iSMrOQvdWxGyxoZHAw8Pej6XMDp37yjaSjgQZsV0bSkCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PHFTsbKw; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so1257262f8f.0;
-        Fri, 17 Jan 2025 08:20:01 -0800 (PST)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-436281c8a38so15913235e9.3;
+        Fri, 17 Jan 2025 08:22:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737130800; x=1737735600; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1737130950; x=1737735750; darn=vger.kernel.org;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jLfMBtT/nLMoQ9qsyaJyfj0flnwCsw9iLqzQ/rxcKUY=;
-        b=kQmJH+ptWQpelcst4KHkhpEGstj8IIwXBCWg696Z6G4SgH8ggvysQMEcC3POx70VuP
-         9RI7mOtjD1862tovuQf65piMs0A7fanXoqhsb9RK4OUxzcOx58tB8x3eFBbfkGdABM+z
-         BA2pv66U6KnIDoRvvxh1E+ILXTTFubIytD3B0mvTU/IeeLaWWcWkSPY70CzPznZTrUMU
-         1/Afy8nBsVTiiD5EihcFnW5EzBRWCsSdYjrZCXw9+g6hHePEefxwgq12Eosub+Jn7vbF
-         RXsnriWeX1HhAz5kEODunIgACKs1XImc/1uFFnFfFSg4Hejwd8WBjOzQ+FV94ETTGYnF
-         Zwrg==
+        bh=kHadK7EAQ59IUYEPtnj1ZqgvfVMVc2kKIJlw/Tkswl4=;
+        b=PHFTsbKwWPAPpodmqVRswHFsTG4YPcraorpoJC+N2gzWSpHAFz+btpyE8Rhq1ja81J
+         YQuFKXbKy5kV9/y2oumZjWtT35Exd60rC1G9YZe/kVYNsMaQ9hba+ry2ec8pMRGXuOhd
+         No9liUtsb8pJU6tNgIX23UAT/TF1lbhCubNYn0LDnCP2JLt451rBcbqWhC8Be3NmqUvW
+         guoQC1SIOt6Ld7DkAUNDU+WxlMJzGpY5pUpJrrUmA/3ajNaVD4/JK36EDztSjssWj6gx
+         zGlVFoIHH49GStSAVwGqxF58VnYc9smHxy29rqVpjtthfyZxtBALLnx70QQ5IMNWhr5b
+         1q9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737130800; x=1737735600;
+        d=1e100.net; s=20230601; t=1737130950; x=1737735750;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=jLfMBtT/nLMoQ9qsyaJyfj0flnwCsw9iLqzQ/rxcKUY=;
-        b=ZFAz2JKUrGutpOGeUGiUtR1gIbHKkKoio8BFfwxp+RB7PayJseqFePZnipt79WMmfO
-         Jr3yT9Rkyx3qnEVw+gmGSrpOWcOWPEiAz9skahemMI7Aph8pICMSpdiavPT3QGH1qQFa
-         aUJ4NxGWy6AXs523addbmXSlCw2+c7tvAoXZL/bTgewlrIO57tctU26rU0pBpUfZZGDh
-         Ic73owSbBJZlYuIKcYKQUvhGo1lS27IzVoZ70vrWepqJqOtMO9UU0ZChpTvy4cE5CI0j
-         kLNYomD5tMJfmAJi9dZWQmqQNswB8e8/ifu1vz23+DH3MuukQWPubaK/SbJ0lWyBGqKX
-         MP3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU6SloXrRVf6QjV1riYfcXRUEUQAqmw+0oBIrJcA7qxD15aqDpc2o3Jgc/UJ4R2J/AfmfyWAf3He6ek@vger.kernel.org, AJvYcCVeUG/9uX+WtyHXqnbhqW0akXmTs2IfAm1h5Zk7Av1gvbwln8JlJd68/w+dRXwq4zW39EeJ/rPqWV6K@vger.kernel.org, AJvYcCXN/qSDEywS0PFUWHwgIjoCbN5j17TwQ8kxNo3J+q6qQoC2LPOIyrHi9Ny/LRfBpG305iAYr1oGKA+IzIJE@vger.kernel.org, AJvYcCXaH2iHGwaA1a7rZzFmwYKuZHq0Ku3Z1R0F4hafSxJzPc71BlqEj1rUY2R66IPBzhyYlHdJEwQXDPau@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyc2J6C/WULcC8XTe7gB6BmUijFJDM5EpapAfJTFIv0FDoHIIwb
-	pepwT7irb7QSZ+5jTOLeqJc4Afs9ngCSn06gyMEEy63m7GWO+hWy
-X-Gm-Gg: ASbGncslxIUNB+7vjA2HDFD9OFMl4z14aYMreqeh3hXwOJhYvTEbl5iSS+0CnbeFSV+
-	RzFCccc8FUCt08OyVz7Ahj2uM6ODiojI9NSjimeUcOIPzZoy8egtvihzNLiy0U7At/bXxgLZnj9
-	/eDlVCIXHuN8jMvKSckTbbatvnnswsnHYhy8ZC/9k7NNYEvesPV/Q19wcx2X+bi9B6FpEpR2kQK
-	ET/hTG0oaXFK+EQBh+bNoLn1lEDDK7LX8EFfmcD7PCrYHDmQwe0HpBG9iXEqlGDpoAmqSOlAXXC
-	Y0SbhPZyObAPnn5aCXVWyAJInIkN
-X-Google-Smtp-Source: AGHT+IH5bQ/6EdsPwAt0n8RK3vofgEVjomOUWYlaDH2nvojR0fIsSijo3n5ZPic9qk1DWEfoqg2VvQ==
-X-Received: by 2002:a5d:47ac:0:b0:38b:e919:4053 with SMTP id ffacd0b85a97d-38bf57a993dmr3831145f8f.44.1737130800452;
-        Fri, 17 Jan 2025 08:20:00 -0800 (PST)
+        bh=kHadK7EAQ59IUYEPtnj1ZqgvfVMVc2kKIJlw/Tkswl4=;
+        b=Hg7U5RmxqJyKRODeVSHtGKCXtf3jplJ87lCo7WthOx1ibzW8qGVmY3McCCLuyWi1uB
+         u8pyeik9Vg5fUjCRD9EAprAvVigtWh/Z7+adVtpD0h/QjkCAztfbpJsb3DQIs2aHwjHd
+         xQwKzBA2lTcxd48MTxN9XBBBOlxZFxBnr70J2t5//EL168uqJ0EdKLtNVXMFNrP3LNl4
+         0zwoQAb8Q7GKdsULcCrtvhB6vuGJaqYEnn+6Pah8EcdpeHrGXfPKpx+wqC08AMBMjoql
+         2gfJwkIpnMAQstqMTnn+e/TxzmWCQiOJtr50E9HqKXS6srejMqeqD7LGSw57+9/GbJn5
+         Xl+A==
+X-Forwarded-Encrypted: i=1; AJvYcCW4DCZZB939DSEafI7jlaHiVKqe8GgBPF4tj2BmCefKteYzi4KGLahAtqAIkwJBBTkxgHrjGjjy0RR3yuS3@vger.kernel.org, AJvYcCWJNKRmIMl7ZREunXiOnjHhCwdvVl3hPheKZmuCIKu2Creub2/mKyNaIltIgoDrH9XL4oujBVXU11Wi@vger.kernel.org, AJvYcCWl0XBOKZJAcjKe5Fy6cGyUOBu4YBpprV/n58Z3PMAsAbMc7/UKYBL+EUJgo4yoIL7gnYSqKF7Yumyg@vger.kernel.org, AJvYcCWlNCU6JO6MAeIXuoNg/RJ408h1veItYltY7sR7G1NhyE65/sn73uwpNacWXX1caLkZ5v6iUImTr4w6@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHw79jto6AYurdnZT6lOt/8UrqwwqkT27Kw24pEKDCLE8Vmz/K
+	FCFFR4gn4COD8q/S8WlQJmVkb1nM1pP35u2S4KfInVSRFz0Rs9V6
+X-Gm-Gg: ASbGncs2khboUK7NHep9oz5xH0pG2Nlx3eEe+xOdcLl0jHmr8rzfLr3k6BiLuoLhax/
+	kK10ZqGq4pfimtW3PDvF+rheY0IPVw/1nYAPyX/GuoKIgwJc5al9bke+nTrkCHYF5VZyFI1PYbv
+	1i16Jjgwk+sB8ZmFB7nneNZQL/xuRiBpYo5Az9fMIS/5O32BVGzzPaatdxmFBduE6fyswrY99PU
+	hb7W09nSzlXdOyBqyqvuH0o0P8aE/EeC82ryJD38jMkd5ltd4Uoo6n1UbtJNRV1MOjNIfrB7MjR
+	2NvOR+3O5mmkFbgJDpQ1lZiS4xGa
+X-Google-Smtp-Source: AGHT+IF19g4QRqpmTkbAY0jupgeE3DaoWBuGu+3PyL+HZEHgPT308vzkgJQTqMEYlPel+869CXRopQ==
+X-Received: by 2002:a5d:5f4d:0:b0:38a:614b:8632 with SMTP id ffacd0b85a97d-38bf57a6969mr3629906f8f.39.1737130949634;
+        Fri, 17 Jan 2025 08:22:29 -0800 (PST)
 Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf3275562sm2932859f8f.66.2025.01.17.08.19.59
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf32845e8sm2903508f8f.97.2025.01.17.08.22.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2025 08:20:00 -0800 (PST)
-Message-ID: <87a7f003f3b53c6b8fe762dbaa542111e57538fe.camel@gmail.com>
-Subject: Re: [PATCH v10 5/8] iio: adc: adi-axi-adc: set data format
+        Fri, 17 Jan 2025 08:22:29 -0800 (PST)
+Message-ID: <1d629a0b3ad6236a19ac52822ce11ba574c43ec1.camel@gmail.com>
+Subject: Re: [PATCH v10 6/8] iio: adc: adi-axi-adc: add oversampling
 From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
 To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
 	robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-pwm@vger.kernel.org
-Date: Fri, 17 Jan 2025 16:20:00 +0000
-In-Reply-To: <20250117130702.22588-6-antoniu.miclaus@analog.com>
+Date: Fri, 17 Jan 2025 16:22:30 +0000
+In-Reply-To: <20250117130702.22588-7-antoniu.miclaus@analog.com>
 References: <20250117130702.22588-1-antoniu.miclaus@analog.com>
-	 <20250117130702.22588-6-antoniu.miclaus@analog.com>
+	 <20250117130702.22588-7-antoniu.miclaus@analog.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.54.3 
@@ -93,102 +93,57 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-01-17 at 15:06 +0200, Antoniu Miclaus wrote:
-> Add support for selecting the data format within the AXI ADC ip.
+On Fri, 2025-01-17 at 15:07 +0200, Antoniu Miclaus wrote:
+> Add support for enabling/disabling oversampling.
 >=20
 > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 > ---
-
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
-
 > no changes in v10.
-> =C2=A0drivers/iio/adc/adi-axi-adc.c | 46 ++++++++++++++++++++++++++++++++=
-+++
-> =C2=A01 file changed, 46 insertions(+)
+> =C2=A0drivers/iio/adc/adi-axi-adc.c | 19 +++++++++++++++++++
+> =C2=A01 file changed, 19 insertions(+)
 >=20
 > diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.=
 c
-> index d2e1dc63775c..3c213ca5ff8e 100644
+> index 3c213ca5ff8e..ce88650bbb62 100644
 > --- a/drivers/iio/adc/adi-axi-adc.c
 > +++ b/drivers/iio/adc/adi-axi-adc.c
-> @@ -45,6 +45,12 @@
-> =C2=A0#define ADI_AXI_ADC_REG_CTRL			0x0044
+> @@ -46,6 +46,7 @@
 > =C2=A0#define=C2=A0=C2=A0=C2=A0 ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
 > =C2=A0
-> +#define ADI_AXI_ADC_REG_CNTRL_3			0x004c
-> +#define=C2=A0=C2=A0 AD485X_CNTRL_3_PACKET_FORMAT_MSK	GENMASK(1, 0)
-> +#define=C2=A0=C2=A0 AD485X_PACKET_FORMAT_20BIT		0x0
-> +#define=C2=A0=C2=A0 AD485X_PACKET_FORMAT_24BIT		0x1
-> +#define=C2=A0=C2=A0 AD485X_PACKET_FORMAT_32BIT		0x2
-> +
-> =C2=A0#define ADI_AXI_ADC_REG_DRP_STATUS		0x0074
-> =C2=A0#define=C2=A0=C2=A0 ADI_AXI_ADC_DRP_LOCKED		BIT(17)
-> =C2=A0
-> @@ -312,6 +318,45 @@ static int axi_adc_interface_type_get(struct iio_bac=
-kend
-> *back,
-> =C2=A0	return 0;
+> =C2=A0#define ADI_AXI_ADC_REG_CNTRL_3			0x004c
+> +#define=C2=A0=C2=A0 AD485X_CNTRL_3_OS_EN_MSK		BIT(2)
+> =C2=A0#define=C2=A0=C2=A0 AD485X_CNTRL_3_PACKET_FORMAT_MSK	GENMASK(1, 0)
+> =C2=A0#define=C2=A0=C2=A0 AD485X_PACKET_FORMAT_20BIT		0x0
+> =C2=A0#define=C2=A0=C2=A0 AD485X_PACKET_FORMAT_24BIT		0x1
+> @@ -357,6 +358,23 @@ static int axi_adc_data_size_set(struct iio_backend
+> *back, unsigned int size)
+> =C2=A0				=C2=A0
+> FIELD_PREP(AD485X_CNTRL_3_PACKET_FORMAT_MSK, val));
 > =C2=A0}
 > =C2=A0
-> +static int axi_adc_data_size_set(struct iio_backend *back, unsigned int =
-size)
+> +static int axi_adc_oversampling_ratio_set(struct iio_backend *back,
+> +					=C2=A0 unsigned int ratio)
 > +{
 > +	struct adi_axi_adc_state *st =3D iio_backend_get_priv(back);
-> +	unsigned int val;
 > +
-> +	switch (size) {
-> +	/*
-> +	 * There are two different variants of the AXI AD485X IP block, a 16-
-> bit
-> +	 * and a 20-bit variant.
-> +	 * The 0x0 value (AD485X_PACKET_FORMAT_20BIT) is corresponding also
-> to
-> +	 * the 16-bit variant of the IP block.
-> +	 */
-> +	case 16:
-> +	case 20:
-> +		val =3D AD485X_PACKET_FORMAT_20BIT;
-> +		break;
-> +	case 24:
-> +		val =3D AD485X_PACKET_FORMAT_24BIT;
-> +		break;
-> +	/*
-> +	 * The 0x2 (AD485X_PACKET_FORMAT_32BIT) corresponds only to the 20-
-> bit
-> +	 * variant of the IP block. Setting this value properly is ensured by
-> +	 * the upper layers of the drivers calling the axi-adc functions.
-> +	 * Also, for 16-bit IP block, the 0x2 (AD485X_PACKET_FORMAT_32BIT)
-> +	 * value is handled as maximum size available which is 24-bit for
-> this
-> +	 * configuration.
-> +	 */
-> +	case 32:
-> +		val =3D AD485X_PACKET_FORMAT_32BIT;
-> +		break;
-> +	default:
+> +	switch (ratio) {
+> +	case 0:
 > +		return -EINVAL;
+> +	case 1:
+> +		return regmap_clear_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
+> +					 AD485X_CNTRL_3_OS_EN_MSK);
+> +	default:
+> +		return regmap_set_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AD485X_CNTRL_3_OS_EN_MSK);
 > +	}
-> +
-> +	return regmap_update_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
-> +				=C2=A0 AD485X_CNTRL_3_PACKET_FORMAT_MSK,
-> +				=C2=A0
-> FIELD_PREP(AD485X_CNTRL_3_PACKET_FORMAT_MSK, val));
 > +}
 > +
-> =C2=A0static struct iio_buffer *axi_adc_request_buffer(struct iio_backend=
- *back,
-> =C2=A0						 struct iio_dev *indio_dev)
-> =C2=A0{
-> @@ -360,6 +405,7 @@ static const struct iio_backend_ops adi_axi_adc_ops =
-=3D {
-> =C2=A0	.test_pattern_set =3D axi_adc_test_pattern_set,
-> =C2=A0	.chan_status =3D axi_adc_chan_status,
-> =C2=A0	.interface_type_get =3D axi_adc_interface_type_get,
-> +	.data_size_set =3D axi_adc_data_size_set,
-> =C2=A0	.debugfs_reg_access =3D iio_backend_debugfs_ptr(axi_adc_reg_access=
-),
-> =C2=A0	.debugfs_print_chan_status =3D
-> iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
-> =C2=A0};
+
+So whatever the ration we just set the bits? This is odd enough that deserv=
+es a
+comment IMO... (did not looked at the datasheet/wiki tbh :))
+
+- Nuno S=C3=A1
+>=20
 
 
