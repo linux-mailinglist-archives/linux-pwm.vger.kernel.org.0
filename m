@@ -1,207 +1,108 @@
-Return-Path: <linux-pwm+bounces-4668-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4669-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A6CFA155F7
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 18:50:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B492A1565F
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 19:18:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6954216870B
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 17:50:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9340E188B9A8
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Jan 2025 18:18:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49D401A23B5;
-	Fri, 17 Jan 2025 17:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C57D31A2557;
+	Fri, 17 Jan 2025 18:18:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="IcoxvDp/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MdUL0ShK"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C053197A6C
-	for <linux-pwm@vger.kernel.org>; Fri, 17 Jan 2025 17:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4BA185B72;
+	Fri, 17 Jan 2025 18:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737136229; cv=none; b=IXT0x1HNk5U0/XMFlN6StyuXueFEXthyonHYjHYbWXqoxkccXvucDxM4OfQ7hjhnpLqmN9HRCfUW8AnBe5y4FsTRGNZD0rbMTFFVnjcyOrs/M5gvT8qlvJXWny1+/oD96Yk7+WaEwES0FX39y9QYtvrywb/ozw+k/ioeli1L3yc=
+	t=1737137901; cv=none; b=oTffIcndv0mIz7CudQ6KY9U7IQCcMCrqU/aTo/hm973KBuJTgeyTNEccoo1tkJDusGefLRTnQO1/OKrIpG15yZskup1u4dUGsOF1sNEnvGW/g2aEwoFS8K3Ht6lLazkw5BnnY8QEsZqUkpCptTRngD7Nm0ZCW/4G1RJcraDIykY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737136229; c=relaxed/simple;
-	bh=+9qcZ+G6muG6oYLwzmZnKY2Ey6qVz8s2rUDziVD4AvE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=bxLgM3pEfqvH6LzKcuHVS2ZwzXx7IN7js/ji/zPzHq7tRL/CM+KXM5OJvvRLyyM3pc2ugIVaGzYeAOF36M9SFxTs702g7Y5WClcKYBZ8Tkd8EalzVkmNCKf9QM29606qKySAXej4FhoLHYHB9SB86NxBkMP4L0oZP1Sb6KQLysE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=IcoxvDp/; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3eb9ba53f90so761922b6e.1
-        for <linux-pwm@vger.kernel.org>; Fri, 17 Jan 2025 09:50:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1737136224; x=1737741024; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qNLPTBAt6DnkKOKkxEsp/OA05XLjPDskIGtlDK8C6dY=;
-        b=IcoxvDp/606Gn6R1LQcEGked9FNWZ/RE8MAPmqMbk+4GZ+fgnk7MNUQl3KpKPhzDPp
-         u/9123XH0/vPmDKYi634xCZqG1qoJzenIJ15oVRIPFTTGeAk52rQQj2FuzhKeMuMJJOa
-         fCR8K08AsA8gKp8Q7zLtmllsTj/N8bIbsc1RreezihPUkxr6nne8tFEJpKNMgFqgpF3V
-         FBlAhq/8qpVSa7GQU13+uWWog7R8lhZ/b66NYSya+CWy0wggvUij0+9rUkwmTbk0hyjp
-         z6IJjppbFTCLc/zjgDgBjFozil8tD/M/qehIlYxw5o72lhw7TYzzITG4FrMvMP2NL/Xs
-         y8YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737136224; x=1737741024;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qNLPTBAt6DnkKOKkxEsp/OA05XLjPDskIGtlDK8C6dY=;
-        b=g+7LpENFsV4JjwvAYdMeo0BlZ12AxP8HslzvTQsNmqBdcw2jdAll7Cj8gxwsHfq9oy
-         29r33DXuHsGkv7FN8sdFnCOj7TLS+U90S7bsNLnxgeuvJiC5lmRDXIA4mYmy7xMZsvrn
-         zVfrh4WAPIjRt3F9wFOE1o221gluTJHUs+W8mYYLBk37bLUxFTCDeF2FmJxEOHVOz0Qd
-         g0+YXD+NXYsu1SCb4irk6A9xGpABIMelbdbX9Rwg5K0nTTVz7Zy69c1jtnevAqaUF0Ux
-         po14O5+TKbn5MEuIujbPEkPIqJvmdfQlm73CMrcOcAxOLknr9AQR7sVq4XANHo0yQDNx
-         yr2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXD9eekeNzpdT/f6UnTZeOT+DimxElA9aQLX0o9nkjVfvYFi32/YP4Je+mAE28tStarN1LIEXou/nM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrI8cPsQHIxZlPkOXwvQKeYx2xY3nt2//5ReS7axvvqwSN7aOv
-	o7wqnAn4g1VywR82JoCx2vzs0XxHNz+ovYvnKMe+okd6FfMEylzxcp3EAuO0H9c=
-X-Gm-Gg: ASbGnctNQ6uGE/tfcESbCoPkiUukAz4KE2e6DC3VfB/5BrQX2krCqV8u9I/oBjexBx/
-	qC0ghzzL/3qruQY/aX7ChQxzgAEA4Cvdy3u1NR9HZvFqYMb+3lYzZU0dZezJ4ASUiCAswu3HjRL
-	I+DR+whF9ll5mZa96TTmL/77Wc1/Z3eDBNgnazDMrBtRpb4XATwqek28LHB7FF6y58iWdhs50m0
-	Lfen0Fu3pPA27P/tLYNGealPVpfc+dNIUCFH1QWFDydFZYvNaJ4VygPivhC0P4VgRi4wq2opxy9
-	rMtKCNq9g9i6d3HgAA==
-X-Google-Smtp-Source: AGHT+IFAE6Sn6ehxUhbxa1hhXPYtJRLeTycA+9uEO9r6sLALqgmws+wrmwT6XDj6fMYz7tvaubE3iw==
-X-Received: by 2002:a05:6808:3403:b0:3e7:bcab:8f11 with SMTP id 5614622812f47-3f19fc84c34mr2086333b6e.18.1737136224641;
-        Fri, 17 Jan 2025 09:50:24 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fa35fe0ad0sm863321eaf.31.2025.01.17.09.50.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2025 09:50:23 -0800 (PST)
-Message-ID: <c7778b8d-abaa-47b7-834b-e62c30f6b8d9@baylibre.com>
-Date: Fri, 17 Jan 2025 11:50:21 -0600
+	s=arc-20240116; t=1737137901; c=relaxed/simple;
+	bh=IkDrbW9Xz/Rj76jRBnX2g1l/gxWSPyrI6vR3EVGn+zQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oB9aKb0znhPzjYI/XhRAqiEExoQoVFlNvzUNeXwd7HRtp/qU0WmnwNObZnCNPZQ++DaFITDcanlSXmYObnmNOmk1sQIK4zJ5HioD5XiRCsX54zUfwSoWPtTt7w2n2PNwhevmoAvf26UrVoPAH/18gCN2OETB60m4mQIJUaqTd4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MdUL0ShK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32ABC4CEDD;
+	Fri, 17 Jan 2025 18:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737137901;
+	bh=IkDrbW9Xz/Rj76jRBnX2g1l/gxWSPyrI6vR3EVGn+zQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MdUL0ShKBeuRvdhL09obg5RFon7+j8JxfEBcRWSe+irS3EKpG0dWeNt+aPw+Dp7wv
+	 KA21YGkEzYeyukvt8hU9UyvZdtyXPdW/b1x/0iPWDGv+6auVaKiSYMGKcxWqs7VKY3
+	 tk/yv5JGPpQvKFHSehMLIp+615PLcbkk4QeMuVFCdSZc19TgODXgyB2CxMLfKrHZ1h
+	 Ww8Wuw9G+gS5+ZSLUwcCCvZ1nFdrG/j9InybcWU/6sNLCA5ruyVbgQSLaXTNYXfjqF
+	 AfFBOJdh961MYvF8l0Rn40FQ2AoUgtNqJd/mU3TooKYsSfCptWfBHOyyRHm4pyrVzZ
+	 2yYPQr6ciVJPg==
+Date: Fri, 17 Jan 2025 18:18:14 +0000
+From: Mark Brown <broonie@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Angelo Dureghello <adureghello@baylibre.com>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	David Jander <david@protonic.nl>,
+	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v7 14/17] iio: adc: ad4695: Add support for SPI offload
+Message-ID: <6458a3e4-594a-44bc-9593-94d115013c1d@sirena.org.uk>
+References: <20250113-dlech-mainline-spi-engine-offload-2-v7-0-e0860c81caae@baylibre.com>
+ <20250113-dlech-mainline-spi-engine-offload-2-v7-14-e0860c81caae@baylibre.com>
+ <ls32gl5a7nsihmmpfabxhm6ilg7idyxdhyrhbkay6e2fiokoah@o5ujfxlsq3s3>
+ <67dc52c4-5252-40c3-b89e-8e46e3c2df27@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 5/8] iio: adc: adi-axi-adc: set data format
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org,
- robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org
-References: <20250117130702.22588-1-antoniu.miclaus@analog.com>
- <20250117130702.22588-6-antoniu.miclaus@analog.com>
- <87a7f003f3b53c6b8fe762dbaa542111e57538fe.camel@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <87a7f003f3b53c6b8fe762dbaa542111e57538fe.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="0t/j82dteYeqOTeG"
+Content-Disposition: inline
+In-Reply-To: <67dc52c4-5252-40c3-b89e-8e46e3c2df27@baylibre.com>
+X-Cookie: Q:	Are we not men?
 
-On 1/17/25 10:20 AM, Nuno Sá wrote:
-> On Fri, 2025-01-17 at 15:06 +0200, Antoniu Miclaus wrote:
->> Add support for selecting the data format within the AXI ADC ip.
->>
->> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
->> ---
-> 
-> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
-> 
->> no changes in v10.
->>  drivers/iio/adc/adi-axi-adc.c | 46 +++++++++++++++++++++++++++++++++++
->>  1 file changed, 46 insertions(+)
->>
->> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
->> index d2e1dc63775c..3c213ca5ff8e 100644
->> --- a/drivers/iio/adc/adi-axi-adc.c
->> +++ b/drivers/iio/adc/adi-axi-adc.c
->> @@ -45,6 +45,12 @@
->>  #define ADI_AXI_ADC_REG_CTRL			0x0044
->>  #define    ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
->>  
->> +#define ADI_AXI_ADC_REG_CNTRL_3			0x004c
->> +#define   AD485X_CNTRL_3_PACKET_FORMAT_MSK	GENMASK(1, 0)
->> +#define   AD485X_PACKET_FORMAT_20BIT		0x0
->> +#define   AD485X_PACKET_FORMAT_24BIT		0x1
->> +#define   AD485X_PACKET_FORMAT_32BIT		0x2
->> +
->>  #define ADI_AXI_ADC_REG_DRP_STATUS		0x0074
->>  #define   ADI_AXI_ADC_DRP_LOCKED		BIT(17)
->>  
->> @@ -312,6 +318,45 @@ static int axi_adc_interface_type_get(struct iio_backend
->> *back,
->>  	return 0;
->>  }
->>  
->> +static int axi_adc_data_size_set(struct iio_backend *back, unsigned int size)
->> +{
->> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
->> +	unsigned int val;
->> +
->> +	switch (size) {
->> +	/*
->> +	 * There are two different variants of the AXI AD485X IP block, a 16-
->> bit
->> +	 * and a 20-bit variant.
->> +	 * The 0x0 value (AD485X_PACKET_FORMAT_20BIT) is corresponding also
->> to
->> +	 * the 16-bit variant of the IP block.
->> +	 */
->> +	case 16:
->> +	case 20:
->> +		val = AD485X_PACKET_FORMAT_20BIT;
->> +		break;
->> +	case 24:
->> +		val = AD485X_PACKET_FORMAT_24BIT;
->> +		break;
->> +	/*
->> +	 * The 0x2 (AD485X_PACKET_FORMAT_32BIT) corresponds only to the 20-
->> bit
->> +	 * variant of the IP block. Setting this value properly is ensured by
->> +	 * the upper layers of the drivers calling the axi-adc functions.
->> +	 * Also, for 16-bit IP block, the 0x2 (AD485X_PACKET_FORMAT_32BIT)
->> +	 * value is handled as maximum size available which is 24-bit for
->> this
->> +	 * configuration.
->> +	 */
->> +	case 32:
->> +		val = AD485X_PACKET_FORMAT_32BIT;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	return regmap_update_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
->> +				  AD485X_CNTRL_3_PACKET_FORMAT_MSK,
->> +				 
->> FIELD_PREP(AD485X_CNTRL_3_PACKET_FORMAT_MSK, val));
->> +}
->> +
->>  static struct iio_buffer *axi_adc_request_buffer(struct iio_backend *back,
->>  						 struct iio_dev *indio_dev)
->>  {
->> @@ -360,6 +405,7 @@ static const struct iio_backend_ops adi_axi_adc_ops = {
->>  	.test_pattern_set = axi_adc_test_pattern_set,
->>  	.chan_status = axi_adc_chan_status,
->>  	.interface_type_get = axi_adc_interface_type_get,
->> +	.data_size_set = axi_adc_data_size_set,
->>  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
->>  	.debugfs_print_chan_status =
->> iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
->>  };
-> 
-> 
 
-Since these register values are specific to the AD485X variant of the AXI ADC,
-I still feel like it would be better if we added a new compatible string like
-we did for AD355X on the AXI DAC.
+--0t/j82dteYeqOTeG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-These functions accessing the CNTRL_3 register aren't applicable to the generic
-AXI ADC IP block, but only to the AXI AD485X IP core [1]. The AXI AD7606X IP
-core [2] that we are working on also uses this same register for other purposes,
-so we will have a conflict. We are planning on adding a new AXI ADC compatible
-string for AD7606X [3], so I think we should do the same here.
+On Fri, Jan 17, 2025 at 11:09:03AM -0600, David Lechner wrote:
 
-[1]: http://analogdevicesinc.github.io/hdl/library/axi_ad485x/index.html
-[2]: http://analogdevicesinc.github.io/hdl/library/axi_ad7606x/index.html
-[3]: https://lore.kernel.org/linux-iio/20241210-ad7606_add_iio_backend_software_mode-v2-2-6619c3e50d81@baylibre.com/
+> Indeed, thanks! Hopefully we won't need a v8 and Jonathan can fix while
+> applying. :-)
 
+FWIW I need to do another proper pass through but from a quick scan and
+my review of previous versions unless anyone else raises something my
+plan is to apply the SPI bits at -rc1.
+
+--0t/j82dteYeqOTeG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmeKnuUACgkQJNaLcl1U
+h9CY/gf/U/y5XETmsc/euck9OFgyb09Z+PAf44fGbTLf8T0ZqU71zkvv1jDwGolH
+yQFKL0xZ+cGjIpCgPq1KE2K9tbiQrJzm4FoYBcvF34oNQ0XUL4aXhYf/LrDX82Df
+vMEGG8+zg1EhJianijXsJmANEcCd0s2yAeJ7AyXanIvYd0b660tVKJiprbH7cjAe
+Hfvy19d1ztyWwhmfC3dC4oCBD4mx7/UY9vCFVIRs0qiL05szjWycenV3jRtDIpbJ
+/gMMeS+xwezQTvMPBXyzOpDZhHaJjousulYKS3wARPrZNT/keY/h2fVOTWPFBDId
+IkMuJoXK5Cxi3rubqugFlOvPzmP5Nw==
+=VwEQ
+-----END PGP SIGNATURE-----
+
+--0t/j82dteYeqOTeG--
 
