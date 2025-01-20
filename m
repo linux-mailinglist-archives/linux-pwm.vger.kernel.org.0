@@ -1,153 +1,118 @@
-Return-Path: <linux-pwm+bounces-4680-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4681-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7589BA169C3
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Jan 2025 10:44:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48E4BA16BA3
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Jan 2025 12:34:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B7B13A62D8
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Jan 2025 09:44:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 908007A30A6
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Jan 2025 11:34:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 818081A8F93;
-	Mon, 20 Jan 2025 09:44:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 617311BBBD3;
+	Mon, 20 Jan 2025 11:34:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LfV0moEF"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="t0nmEBFR"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE7A191489;
-	Mon, 20 Jan 2025 09:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0CE10E9;
+	Mon, 20 Jan 2025 11:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737366286; cv=none; b=JSm5etUOXwnK2KK0pSVKjxDeLkFItWXaLwdukOVpykYznU7NMJaK2yt7JfTHocjB50I/1jxtyRaTJte3vvj4duV/byd86iDKVEaiEBi1qMFjmjZWhb8XweXDp3LkjSCxEuMQxx9K8UVDKpbyNXHa8pAmGb+X4U+h7e7VX3Y9NB4=
+	t=1737372884; cv=none; b=ZfRG/1x+1++apv/lRHY+yUQmSO+Rega5aP8LIJjuYgkv8WZacsLuNynhzr0TtLuRBREd2p4Qt428JqT8iR0uo3FrAtbBJTwDSMW4d3otveYUINPYb+YXMfdqtF0aDoyJ6HpkUgtOwkMkqnHWZYS1PNckocT904pKnCwxniYYE/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737366286; c=relaxed/simple;
-	bh=dY06NJPrc7NKbOBXttQ2Q9ra4GxFQJv2VLv098HDvEI=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hYUCve0QYskgugOOWVFyWthCIziKSvzyqxLupLCPrp7Di7QbBQAtxV+R3l3yTKJ8JasSprbX0iA8nMsBDGcXwQZcHEQYveVLwQyma2d8bJ+fML/RLh4GQtzmEzOAFgY8b6kg+Tf1ilcpvhzA/WWHAv0AxEigg8xLigGAFsEvd5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LfV0moEF; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4362f61757fso43504555e9.2;
-        Mon, 20 Jan 2025 01:44:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737366283; x=1737971083; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+k009fKRRxVFxiBuxTyjlZVVSU8LeE2j0qz2UAIvn4k=;
-        b=LfV0moEFR0OftE5RqHg02jXOe0lbp8fuwI+RXR7d0XcZ0QvTRfaTfkf+ktcO/h/Nl5
-         tsZKo3ReaGOwx2F6G8Yyy7SoN7E1lbbl1Vj/sLAkOsQ167JBj6+X5LNQIDRyN85uATjF
-         ajfNi7rz+YpWC7jkUxNYGgOucSofewscmufzgE2gNWXm21mSbRih0AdDMCfQQ2eXkkVF
-         EIKond+Qec5GCKB7C7jqM/jffZ6vn3PX8WzBVTSyPPPVXZX5mHhuj4ol7AwVOHGj3LKK
-         2QVlTZnxp3y3gRv5Nk+UwDHCIW6atZntyRo+RHggPbth83ln+nbFYHBp7Pd4QnHOl9WE
-         9/1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737366283; x=1737971083;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+k009fKRRxVFxiBuxTyjlZVVSU8LeE2j0qz2UAIvn4k=;
-        b=GKiwNZiN7OrLqFxcGQEHymDRNWMcxU424zKATlQ/YcPMxq39dWa6DU0hISTYpxHVBY
-         7IY9/JIPomo7Tc+/JeHySW0RBnxOWG/X6Gx531NMULRDaY2AcJbzzsyB0VDRIx4DALKQ
-         LVEZXxPxANgtczeVP4R6f8ae1M12/g1xL8PapAGkdCQyTG34jRVcC9/9EEeoQ3N4ii1H
-         /9IQvvpS6ix04oNGb0njbi1JqsMJwKv4nILZgLFHTuPltyyHHNIhNqIlseI7uiSw4BiI
-         JI0Dg0gODhplg2NWqe4HrWiWa4ZewyLxbUV7W3jNop1jR9ttkJBScGyQvjRI1yu0FTt9
-         wBdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuTbbsS665BPhKxrkGI9DqinluQuEWnKLZF4hT6Yl3awfkuhyC1msTXm1dl82iONGGcl/q9zvi0AYH@vger.kernel.org, AJvYcCVehxzUjx/KX8vxoAN7MIQlxxU4eKeHbaZ5A+D7ZOvS22kU8xq0VoadAW7BKpRuh6IcrQJnHWMTkOa0@vger.kernel.org, AJvYcCW84QB/bzM8EaITi5JUFtoSUKrdnnbKqZO6OmxHpSTgTStsLFC4dGhDzGSQjzNvC/CdFbJVK9CD4TnLMJri@vger.kernel.org, AJvYcCWYPgHEJyUyEfB00+/ptKNwyC8N4xaxrN93PWXclTbOv3iVuCzD89LIpkJGOonstI7kmMHN9jY/ChFj@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZuB7XTeLkCguz9BlhUYcBWhmZqj8xVM6sdyE4QhDk4lIdHYhG
-	2ExuF9bqt4uFmTfc+a9LUKA20K0B9XJfJISnuiBUOSZjiOm4+IM7UAI5C00mwlQ=
-X-Gm-Gg: ASbGncv0P5NGj4XXkqHSuv1wcXoYVWKm2tS/ymJBkknjhpHjIfRuDAddlKiCVA3hbM8
-	OBFgSA1jXuVlgwW76zyxbwK1AX4U5CRbEig6x6Modohg8423YQVjgwfaLygwuEJGBsc/wGwFbhp
-	QdbzgM6GPGiR8ViZ+MuT0D4Vph144HFB2rreZAnABfvNsajx0lVB/8AUW65zwfEzaxS3E4pebSS
-	w6LCenPs4kna46BqDvS+jj8V6gogGkbjhS9lVNaS4ZY06Bz3ozr88uhWvANFMIsTStXowiJuvG1
-	jxVo/uQf+OwCWtpN8WMEkj/DXtydy1qq+WnBUI2eCA==
-X-Google-Smtp-Source: AGHT+IGyAVa4vi5Ac8o4nfdzUyjXWDt/AbAoJ3A/0ApJz1wMgXqV3aMI05mnOhljTAiXDSzUxckelg==
-X-Received: by 2002:a7b:c3d8:0:b0:436:17e4:ad4c with SMTP id 5b1f17b1804b1-438a0d3c71fmr62629895e9.6.1737366282654;
-        Mon, 20 Jan 2025 01:44:42 -0800 (PST)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c16610a0sm124812965e9.1.2025.01.20.01.44.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2025 01:44:42 -0800 (PST)
-Message-ID: <87f3aeeb767e90dbdd7b39da20af7c3d88706002.camel@gmail.com>
-Subject: Re: [PATCH v10 8/8] iio: adc: ad4851: add ad485x driver
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Antoniu Miclaus	
- <antoniu.miclaus@analog.com>, jic23@kernel.org, robh@kernel.org, 
-	conor+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- 	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Date: Mon, 20 Jan 2025 09:44:42 +0000
-In-Reply-To: <d0253e41-3cab-4263-91b2-81682529f9a0@baylibre.com>
-References: <20250117130702.22588-1-antoniu.miclaus@analog.com>
-	 <20250117130702.22588-9-antoniu.miclaus@analog.com>
-	 <a45c60fe9fff0f517032a7e9eb3881cf340a8c1e.camel@gmail.com>
-	 <d0253e41-3cab-4263-91b2-81682529f9a0@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	s=arc-20240116; t=1737372884; c=relaxed/simple;
+	bh=camxzsoKo2e/ZC0YltPZOkNp1IRRQrDx5arqqoOnvNE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qnCj2+PKMOTTxo1pSnpreA7ys0fiuQaeO+DopobG3n6hmDOQS1T1TljYAcczlr9P09uRHNB0v6N2XqcDGl4weCwUnONnm/CiWn0Stmvl5dyS8CRpBgvVqqTCFHFjXQ79MNbtbd9x8Z4YJ6l1ZvBCKvJrejqYCWthTxJcMuH0Dks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=t0nmEBFR; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50KAZMDY010246;
+	Mon, 20 Jan 2025 06:34:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=IABJ1SIrJQC3u/qR1xfIDyRYhaW
+	fELSofNSuK/HELEU=; b=t0nmEBFRVvkijRrCNQI6TrsPusk0PHRU5A6HfTJJNoa
+	BLM9NLTjWs5BhuZ+ner58ixGEH+b7p5n6Isf17pmtZ6lwmwYX6RmijJ7wiNAvCVs
+	2ZozuK08ZNNim/pTR/g7AOHM6EILAhDMsB9dUhbNIIROj0o50GCz7Vq3/EJh8SCJ
+	z1npCgUa4UCEDr43rOzy26dyRVlu4886u2Go2V5FksiQRClG3FJe/Xs4WcMAFmgB
+	M7Kwzl1ayYKZaI+HBzLbmA6Cu0sALoMjyGwo+lFdVMs4P67BR4GY/e1qO7UHufls
+	AL+v4vyek4ibYclX35/8O76b1HcdPbJgnFYJc3fXd7g==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 449mv9g6e5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Jan 2025 06:34:27 -0500 (EST)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 50KBYQuG001537
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 20 Jan 2025 06:34:26 -0500
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 20 Jan 2025 06:34:26 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 20 Jan 2025 06:34:25 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Mon, 20 Jan 2025 06:34:25 -0500
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.159])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 50KBYEox007657;
+	Mon, 20 Jan 2025 06:34:20 -0500
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH v5 0/3] ADF4371 refin mode and doubler support
+Date: Mon, 20 Jan 2025 13:34:01 +0200
+Message-ID: <20250120113408.24395-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: dCPQIZmn4LiKxxZWsAJTzur1fvXl-kvw
+X-Proofpoint-GUID: dCPQIZmn4LiKxxZWsAJTzur1fvXl-kvw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-20_02,2025-01-20_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ bulkscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 impostorscore=0 phishscore=0 mlxlogscore=961 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501200096
 
-On Sat, 2025-01-18 at 11:37 -0600, David Lechner wrote:
-> On 1/18/25 9:10 AM, Nuno S=C3=A1 wrote:
-> > On Fri, 2025-01-17 at 15:07 +0200, Antoniu Miclaus wrote:
-> > > Add support for the AD485X a fully buffered, 8-channel simultaneous
-> > > sampling, 16/20-bit, 1 MSPS data acquisition system (DAS) with
-> > > differential, wide common-mode range inputs.
-> > >=20
-> > > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> > > ---
->=20
-> ...
->=20
-> > ...
-> >=20
-> > > +static int ad4851_read_raw(struct iio_dev *indio_dev,
-> > > +			=C2=A0=C2=A0 const struct iio_chan_spec *chan,
-> > > +			=C2=A0=C2=A0 int *val, int *val2, long info)
-> > > +{
-> > > +	struct ad4851_state *st =3D iio_priv(indio_dev);
-> > > +
-> > > +	switch (info) {
-> > > +	case IIO_CHAN_INFO_SAMP_FREQ:
-> > > +		*val =3D st->cnv_trigger_rate_hz / st->osr;
-> > > +		return IIO_VAL_FRACTIONAL;
-> > > +	case IIO_CHAN_INFO_CALIBSCALE:
-> > > +		return ad4851_get_calibscale(st, chan->channel, val,
-> > > val2);
-> > > +	case IIO_CHAN_INFO_SCALE:
-> > > +		return ad4851_get_scale(indio_dev, chan, val, val2);
-> >=20
-> > Maybe this was discussed already and I missed it but I'm a bit puzzled.
-> > Don't we
-> > still need OFFSET for differential channels? How do you express negativ=
-e
-> > voltages?
-> >=20
-> > - Nuno S=C3=A1
-> >=20
-> >=20
->=20
-> It was discussed in early revisions of the series. :-)
->=20
-> There was an OFFSET back then, but we removed it because chip uses twos
-> complement encoding for bipolar single-ended and (bipolar) differential. =
-We
-> have 's' and 'u' set in the scan_type.sign in those cases. The current
-> implementation looks correct to me in this regard.
->=20
+Add support for selecting between single-ended and differential
+reference input. By default the single-ended input is enabled.
 
-Yeah, my bad. I was also the one suggesting the OFFSET (IIRC) in internal r=
-eview
-as I assumed this was typical "straight" binary encoding. I did bothered to
-check the datasheet this time and all looks good. Sorry for the noise...
+Input frequency boundaries are change based on the mode selected
+(single-ended/differential).
 
-- Nuno S=C3=A1
+Add support for the reference doubler. This feature is enabled
+automatically to improve noise performance if the input frequency
+is within the accepted range.
+
+Antoniu Miclaus (3):
+  dt-bindings: iio: adf4371: add refin mode
+  iio: frequency: adf4371: add refin mode
+  iio: frequency: adf4371: add ref doubler
+
+ .../bindings/iio/frequency/adf4371.yaml       |  5 ++-
+ drivers/iio/frequency/adf4371.c               | 44 +++++++++++++++++--
+ 2 files changed, 43 insertions(+), 6 deletions(-)
+
+-- 
+2.48.1
+
 
