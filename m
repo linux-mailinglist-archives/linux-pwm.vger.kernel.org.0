@@ -1,134 +1,114 @@
-Return-Path: <linux-pwm+bounces-4705-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4706-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31D8EA19238
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Jan 2025 14:18:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 268B4A1944F
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Jan 2025 15:45:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B2D31626A0
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Jan 2025 13:18:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 445533AE5B5
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Jan 2025 14:44:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DC6B212D65;
-	Wed, 22 Jan 2025 13:18:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D17CC214232;
+	Wed, 22 Jan 2025 14:43:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sRGUXYyC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tMWmIjqA"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587A3212F9F
-	for <linux-pwm@vger.kernel.org>; Wed, 22 Jan 2025 13:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1ED8214205;
+	Wed, 22 Jan 2025 14:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737551897; cv=none; b=eBrh59efpCBd2HyLsvuCDgJjBfrlhgwTmWCxOtv9YBuF1PS0q1gubrztwORhFEq3QeTxiSTkYkNSkwkjUIhvL3bcTIW5EhPJOODDM0bwR89izklf0NeoGajHC3Zg6XU7jcNf6RnqkdZ8FOa/TBKnB2qVIuW0UsAaRYCkxl1F61I=
+	t=1737556988; cv=none; b=BJycw+hoDndUr201NBIW18n/9kCzDEwBUXTdwvpYN/vnt9Zqo+BD9PRfumdJijwqGs02c8om0l5FzOT8f8a1ZppsSFglPXj6YYtfyzifhykOHjm0o3RqBVbLJMrRETSdILtqSXgIUdfPvskz6mAf5d3Ug9cueJOPScf3ol1GNXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737551897; c=relaxed/simple;
-	bh=SzxuyU2yAyNtPusbcdvLjoKifFW9Afx1CHqAf8gK+RU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jqSbqa1B70reDGtEq1vlARtYCiHP1J3WVg5djxXtSiMG1/CFYBq70rMu1Z/E5OZqgmymn2qfuM41NUjI+EG65F7h2SojdM/zCzKzk50c5d2z3fIXKcCwI3ZMJBwphBqtUKsJua14+heQhoEFwvvYXH7LN+LSrzytF6X1L7qol4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sRGUXYyC; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5401c52000fso6616083e87.2
-        for <linux-pwm@vger.kernel.org>; Wed, 22 Jan 2025 05:18:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737551893; x=1738156693; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SzxuyU2yAyNtPusbcdvLjoKifFW9Afx1CHqAf8gK+RU=;
-        b=sRGUXYyCL19CANDdq/X5/U3Z44urh+2vFm9+uGUGJEIiGib59bPL3fTZuuIgTDXmEp
-         vdb8qq4PgNG36NoiRbY10w4ti5Wa6Hi8GXdc9aMWMqj7eKmSuy8YuVM1NcX8qE02JQDk
-         oyiql31jxhPo5uDjrJXgRSHeTzkd3BxEyFZ1/ybaPbXHIPfO2hkUoNRnaptFgYBcRXrO
-         otFhGUDXQjCC1dPGzID6TSpiDnD/Dot3iiK+qkZbElGc/jmn1slrzICaEZ9as1SpDCud
-         VzRPOpWe/jeXTIOia2g8ctg0Ub5pRczz+ngSE+uXbkIQJd51+O0nZ/u0JuMwAW3k/kFE
-         QH7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737551893; x=1738156693;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SzxuyU2yAyNtPusbcdvLjoKifFW9Afx1CHqAf8gK+RU=;
-        b=wVvj16ExKkart1W1nSJ07YSBwaQ4DxpGlo6SUS3m3eMf3le6NygYBPRgC0nRVp5+Mi
-         hALhhbrI4f6SVIAAKAYODYC6y2qjN47Z7J9QQ2w7HNiqX4W7w+bPaSmK+lvFoFZMiLlS
-         mTc2xtGUX2r5LO09X7TWH+xTz3985ifMV68lq7TCgfFbPIVKme7sxt9HrFULfLxuKI5t
-         WQyiTnoeSaWvEHwCV8SVKjO2FJKKnUxU/tOXe3IaxHO7sgVRjlJKgAoJwP8ZDDzHrIsu
-         WAA7sxAnFvOzZhTsxG6zCZ+zwmSqsffYIw6Rco7JM74iIQgxzj7sCr6v5hb7B+AQ/Aj/
-         mSbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUui6GXp6wamEqiOnbgs1UvWUFfEQCipHy7vgYm4dbvf6KyH3/U4/PvE3vTBT9C4D/4P7m9UDM+GUM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNOSzPNOaGkjbbUuVy4ApoR59MaffTTqrSKSMWMOzbJPrKMKlt
-	/Z922Oc/THs0oVux5KG9QXf2GDo8ii62nvZ7RF0hCQ7/agasPFdibvYlO8K8M3IvVq0XBEAXN3m
-	2RcxYu7C7aZpUG289kfg1VOG9AOL/lTMVQSiOgQ==
-X-Gm-Gg: ASbGncvJHEoWuRhfr3wIirdFGNXPFmAPD5lzOf1/EpN7LV8oDk9NxR6MhocSOEuT++c
-	fPbkvbowymYULeWuG0cEktlePiVUMIddRPx6DaKQ/ZKO5l6wwAA==
-X-Google-Smtp-Source: AGHT+IGx94jEEbs3RXLhYMJzipQpPaITuu/cDsPO6lvIB40L+SYCX7nP/SwM57IZh5M/14/A9ZfVrtIFsKzpspJZJrI=
-X-Received: by 2002:ac2:4851:0:b0:540:1b41:c75f with SMTP id
- 2adb3069b0e04-5439c247804mr7518539e87.16.1737551893267; Wed, 22 Jan 2025
- 05:18:13 -0800 (PST)
+	s=arc-20240116; t=1737556988; c=relaxed/simple;
+	bh=TVGwxVO0xo3+rnxUovKfF7pi5C/YVzpJ6q00Yo/Sl/s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=deP/PL65eFy9zWrO8h1GAFn40crgUMI71Emk1DTSHAci83/bRqgm56orXBbQw4pfumPuWdkGIZEbzuhCQtwD/KAeUtBQZDnlZoFEmXarGfLsVtE9ayCND98gg9i5t98LI2pcAtg9ValBRfehQFT1nIIDmG/NAL/O/2xEFOrHHL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tMWmIjqA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA16C4CED2;
+	Wed, 22 Jan 2025 14:43:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737556988;
+	bh=TVGwxVO0xo3+rnxUovKfF7pi5C/YVzpJ6q00Yo/Sl/s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tMWmIjqAM50kqyx9x8ezias9Q8mc9I5ZW62KDHIAAYYM+z71GPHnKqg8ZCwDW5wjm
+	 tooDO2w0wFkNE8U+HQkrStNVxlJ6ibFKkKTmtISEOQg3scY/GdaHyuvOEJVRE5bduL
+	 PU2DuSRwrIZJf+4G2GolB6nv6v+jhklLPTgMrEpbDOJXChgk0njJagZ5MyvURxh+yl
+	 aOOT7Z2DGf2AXLONvVyHyfL2BUg3TmaDPThOQyjlnpQhhiG8b6SF6llNrkZFuwlR1s
+	 Y6ajzssoW6C/9C7lCtyoY7YbBReZqzVmGkPWbCXSELcNPkVJf2blPkWzHGD8BDbxro
+	 TTjdqf0yR7zWA==
+From: Conor Dooley <conor@kernel.org>
+To: linux-pwm@vger.kernel.org
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	stable@vger.kernel.org,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] pwm: microchip-core: fix incorrect comparison with max period
+Date: Wed, 22 Jan 2025 14:42:56 +0000
+Message-ID: <20250122-pastor-fancied-0b993da2d2d2@spud>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
- <20250113-mdb-max7360-support-v3-4-9519b4acb0b1@bootlin.com>
- <CACRpkdb5rmUK06uW3M2Lsy4Wam8JvrjmGM83cJa-V3LZwTX9dg@mail.gmail.com> <D74G95A3DHG3.OD522T88GX83@bootlin.com>
-In-Reply-To: <D74G95A3DHG3.OD522T88GX83@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 22 Jan 2025 14:18:02 +0100
-X-Gm-Features: AbW1kvZa1bBVRjs7vofZvq4_6URi9UF8tFCRrRfOePL_D2lVGG2FqlUFUy0FJ3I
-Message-ID: <CACRpkdYMvx31UBpVnWGYdNUdnQLhHgn9FW+ruLXNpy82roTJwQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] gpio: max7360: Add MAX7360 gpio support
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, =?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1830; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=IP8gdxD3c/+7SedNCJbFyJgVZrvNpro1QIADMns2ttI=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOkTmd+nyzruLhHZa30qnifycQfv8dTE19Oq+iccKY+cn 7dVcMLmjlIWBjEOBlkxRZbE230tUuv/uOxw7nkLM4eVCWQIAxenAExES4Thn6pso/z0OYfEOvPO pO9eu1bU8ZCB+quqG3JMEzecaXq46ynDXxnWhObFK1U/K4eq9FnonWy745kpkHTu1xMmG77/G27 a8wIA
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-Hi Mathieu,
+From: Conor Dooley <conor.dooley@microchip.com>
 
-On Fri, Jan 17, 2025 at 4:22=E2=80=AFPM Mathieu Dubois-Briand
-<mathieu.dubois-briand@bootlin.com> wrote:
+In mchp_core_pwm_apply_locked(), if hw_period_steps is equal to its max,
+an error is reported and .apply fails. The max value is actually a
+permitted value however, and so this check can fail where multiple
+channels are enabled.
 
-> I tried to switch to GPIO_REGMAP and I really like it overall, as it
-> does simplify a lot the code. However, I identified two features that I
-> was not able to port so far: the request()/free() callbacks and the
-> interrupts.
+For example, the first channel to be configured requests a period that
+sets hw_period_steps to the maximum value, and when a second channel
+is enabled the driver reads hw_period_steps back from the hardware and
+finds it to be the maximum possible value, triggering the warning on a
+permitted value. The value to be avoided is 255 (PERIOD_STEPS_MAX + 1),
+as that will produce undesired behaviour, so test for greater than,
+rather than equal to.
 
-Thanks for looking into this!
+Fixes: 2bf7ecf7b4ff ("pwm: add microchip soft ip corePWM driver")
+CC: stable@vger.kernel.org
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+---
+CC: Conor Dooley <conor.dooley@microchip.com>
+CC: Daire McNamara <daire.mcnamara@microchip.com>
+CC: Uwe Kleine-König <ukleinek@kernel.org>
+CC: Thierry Reding <thierry.reding@gmail.com>
+CC: linux-riscv@lists.infradead.org
+CC: linux-pwm@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+---
+ drivers/pwm/pwm-microchip-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> So for the request()/free() callbacks, I cannot add them anymore, as
-> they are set on the gpio_chip structure, and this structure is hidden
-> behind the gpio_regmap structure. I could easily modify the
-> gpio_regmap_config structure and gpio_regmap_register() to allow to
-> provide these callbacks, but is this acceptable?
+diff --git a/drivers/pwm/pwm-microchip-core.c b/drivers/pwm/pwm-microchip-core.c
+index c1f2287b8e97..12821b4bbf97 100644
+--- a/drivers/pwm/pwm-microchip-core.c
++++ b/drivers/pwm/pwm-microchip-core.c
+@@ -327,7 +327,7 @@ static int mchp_core_pwm_apply_locked(struct pwm_chip *chip, struct pwm_device *
+ 		 * mchp_core_pwm_calc_period().
+ 		 * The period is locked and we cannot change this, so we abort.
+ 		 */
+-		if (hw_period_steps == MCHPCOREPWM_PERIOD_STEPS_MAX)
++		if (hw_period_steps > MCHPCOREPWM_PERIOD_STEPS_MAX)
+ 			return -EINVAL;
+ 
+ 		prescale = hw_prescale;
+-- 
+2.45.2
 
-Of course. The template is to be used for setting it up, just
-modify it if we need more from it.
-
-> On the IRQ side, before switching to GPIO_REGMAP, I was able to define
-> the IRQ configuration using the irq member of the gpio_chip structure.
-> This does create the IRQ domain for me in a quite straightforward way.
-> Again, I will not be able to do that anymore, as the gpio_chip structure
-> is hidden.
-(...)
-> I had a quick look at existing drivers using GPIO_REGMAP and providing
-> IRQ support: I believe they are all using REGMAP_IRQ. And I believe I
-> cannot use REGMAP_IRQ here,
-
-Then we need to modify GPIO_REGMAP so it's possible to pass
-in our own gpio_irq_chip, maybe another member in
-the config, simply?
-
-Yours,
-Linus Walleij
 
