@@ -1,114 +1,114 @@
-Return-Path: <linux-pwm+bounces-4706-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4707-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 268B4A1944F
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Jan 2025 15:45:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7787A1967F
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Jan 2025 17:31:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 445533AE5B5
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Jan 2025 14:44:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 38388168665
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Jan 2025 16:31:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D17CC214232;
-	Wed, 22 Jan 2025 14:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE022214234;
+	Wed, 22 Jan 2025 16:31:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tMWmIjqA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fZ+WMqJe"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1ED8214205;
-	Wed, 22 Jan 2025 14:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B61149E17;
+	Wed, 22 Jan 2025 16:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737556988; cv=none; b=BJycw+hoDndUr201NBIW18n/9kCzDEwBUXTdwvpYN/vnt9Zqo+BD9PRfumdJijwqGs02c8om0l5FzOT8f8a1ZppsSFglPXj6YYtfyzifhykOHjm0o3RqBVbLJMrRETSdILtqSXgIUdfPvskz6mAf5d3Ug9cueJOPScf3ol1GNXA=
+	t=1737563506; cv=none; b=liGuAz8/RPNWhV/DWFnCBN+nfgpc0fZQ+agRAgXSIyQjtjiDUrTX+320lQrvSMhcWcH3zGlvaOqE0CvyGM14peEfYiuRM4ktBqGq99T3+fbapuSONjXA4fHebfgBnMF8UVFXoCDK0siEhIDzm92si+NPiii3z3HQ+vhf4qu4AS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737556988; c=relaxed/simple;
-	bh=TVGwxVO0xo3+rnxUovKfF7pi5C/YVzpJ6q00Yo/Sl/s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=deP/PL65eFy9zWrO8h1GAFn40crgUMI71Emk1DTSHAci83/bRqgm56orXBbQw4pfumPuWdkGIZEbzuhCQtwD/KAeUtBQZDnlZoFEmXarGfLsVtE9ayCND98gg9i5t98LI2pcAtg9ValBRfehQFT1nIIDmG/NAL/O/2xEFOrHHL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tMWmIjqA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA16C4CED2;
-	Wed, 22 Jan 2025 14:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737556988;
-	bh=TVGwxVO0xo3+rnxUovKfF7pi5C/YVzpJ6q00Yo/Sl/s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=tMWmIjqAM50kqyx9x8ezias9Q8mc9I5ZW62KDHIAAYYM+z71GPHnKqg8ZCwDW5wjm
-	 tooDO2w0wFkNE8U+HQkrStNVxlJ6ibFKkKTmtISEOQg3scY/GdaHyuvOEJVRE5bduL
-	 PU2DuSRwrIZJf+4G2GolB6nv6v+jhklLPTgMrEpbDOJXChgk0njJagZ5MyvURxh+yl
-	 aOOT7Z2DGf2AXLONvVyHyfL2BUg3TmaDPThOQyjlnpQhhiG8b6SF6llNrkZFuwlR1s
-	 Y6ajzssoW6C/9C7lCtyoY7YbBReZqzVmGkPWbCXSELcNPkVJf2blPkWzHGD8BDbxro
-	 TTjdqf0yR7zWA==
-From: Conor Dooley <conor@kernel.org>
-To: linux-pwm@vger.kernel.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	stable@vger.kernel.org,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] pwm: microchip-core: fix incorrect comparison with max period
-Date: Wed, 22 Jan 2025 14:42:56 +0000
-Message-ID: <20250122-pastor-fancied-0b993da2d2d2@spud>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1737563506; c=relaxed/simple;
+	bh=hD1EwUAbMc4qNDNhYPerVt+3dhyGBpkdBqMncX9l12s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Aen+jr5Rsb69V60RnYQwssc3aASol5+XX9tD5KlKDTGg1FZcF0pE1f1VGKJHwcWVqEFW7bMOJk0wHNAO9pkscvUpsxZMimePARPIjGZZ4mPoWnwuOm+sv60t376KP7Fju7wl4WWn2QwEXvKuJ+Cr+265fX6H4oTX5mMSkhVnZak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fZ+WMqJe; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737563505; x=1769099505;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hD1EwUAbMc4qNDNhYPerVt+3dhyGBpkdBqMncX9l12s=;
+  b=fZ+WMqJewz0zplMA6lPMQ/TQQ3UTcW4PpMoA9u29UV3qP6HFILIpJ9sF
+   0b9pMwFdbEJf7+Hj6755CJUYXWygSkSc1Fq5TkKfiERCd0Dy53AqrPL7B
+   r5PL28VviXF6Vp7veQSHWt5GxPFojlOKybPCmbIUcawC/4KR5jcuVZ+pU
+   hy0+xXGoy77/R9FqKOI9ezWly8MTNWn4Tg7R4REzr3PbzPVz2fKXbD6j1
+   FPlvogxR8F72RnXn0KP31/flpV4N2XTJWX+B/PhGkI1S0MQlZOK2Ddycg
+   BPNZnYUHaF9OiTO/5UMhz4dXzAscfw7XyBjCToCV+tkEmpLpSM2b6zy4K
+   A==;
+X-CSE-ConnectionGUID: y5NSluC8RJqo3RDhaMx7rQ==
+X-CSE-MsgGUID: sAKCQ38FT4qLZP/+drkxvA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11323"; a="48624768"
+X-IronPort-AV: E=Sophos;i="6.13,225,1732608000"; 
+   d="scan'208";a="48624768"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 08:31:17 -0800
+X-CSE-ConnectionGUID: ehtJF203QXiqFhPDXhX3JA==
+X-CSE-MsgGUID: CX/RKrdIS+WwjkNaYuIgkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="107631389"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2025 08:31:14 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1taddG-000000048bL-3deJ;
+	Wed, 22 Jan 2025 18:31:10 +0200
+Date: Wed, 22 Jan 2025 18:31:10 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 4/7] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <Z5EdThjjifY7LkCC@smile.fi.intel.com>
+References: <20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com>
+ <20241223-mdb-max7360-support-v2-4-37a8d22c36ed@bootlin.com>
+ <Z4-7KAUhfXUSmD9I@black.fi.intel.com>
+ <D78MG8EQMSBU.2U6T5DXG2YJXI@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1830; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=IP8gdxD3c/+7SedNCJbFyJgVZrvNpro1QIADMns2ttI=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOkTmd+nyzruLhHZa30qnifycQfv8dTE19Oq+iccKY+cn 7dVcMLmjlIWBjEOBlkxRZbE230tUuv/uOxw7nkLM4eVCWQIAxenAExES4Thn6pso/z0OYfEOvPO pO9eu1bU8ZCB+quqG3JMEzecaXq46ynDXxnWhObFK1U/K4eq9FnonWy745kpkHTu1xMmG77/G27 a8wIA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D78MG8EQMSBU.2U6T5DXG2YJXI@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On Wed, Jan 22, 2025 at 02:04:35PM +0100, Mathieu Dubois-Briand wrote:
+> On Tue Jan 21, 2025 at 4:20 PM CET, Andy Shevchenko wrote:
 
-In mchp_core_pwm_apply_locked(), if hw_period_steps is equal to its max,
-an error is reported and .apply fails. The max value is actually a
-permitted value however, and so this check can fail where multiple
-channels are enabled.
+...
 
-For example, the first channel to be configured requests a period that
-sets hw_period_steps to the maximum value, and when a second channel
-is enabled the driver reads hw_period_steps back from the hardware and
-finds it to be the maximum possible value, triggering the warning on a
-permitted value. The value to be avoided is 255 (PERIOD_STEPS_MAX + 1),
-as that will produce undesired behaviour, so test for greater than,
-rather than equal to.
+> Thanks for your review. I'm not sure you have seen it, but there is a v3
+> of this series. V3 of this patch can be seen here:
+> https://lore.kernel.org/all/20250113-mdb-max7360-support-v3-4-9519b4acb0b1@bootlin.com/
 
-Fixes: 2bf7ecf7b4ff ("pwm: add microchip soft ip corePWM driver")
-CC: stable@vger.kernel.org
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
-CC: Conor Dooley <conor.dooley@microchip.com>
-CC: Daire McNamara <daire.mcnamara@microchip.com>
-CC: Uwe Kleine-König <ukleinek@kernel.org>
-CC: Thierry Reding <thierry.reding@gmail.com>
-CC: linux-riscv@lists.infradead.org
-CC: linux-pwm@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
----
- drivers/pwm/pwm-microchip-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for sharing, I will look at it later this on next week.
 
-diff --git a/drivers/pwm/pwm-microchip-core.c b/drivers/pwm/pwm-microchip-core.c
-index c1f2287b8e97..12821b4bbf97 100644
---- a/drivers/pwm/pwm-microchip-core.c
-+++ b/drivers/pwm/pwm-microchip-core.c
-@@ -327,7 +327,7 @@ static int mchp_core_pwm_apply_locked(struct pwm_chip *chip, struct pwm_device *
- 		 * mchp_core_pwm_calc_period().
- 		 * The period is locked and we cannot change this, so we abort.
- 		 */
--		if (hw_period_steps == MCHPCOREPWM_PERIOD_STEPS_MAX)
-+		if (hw_period_steps > MCHPCOREPWM_PERIOD_STEPS_MAX)
- 			return -EINVAL;
- 
- 		prescale = hw_prescale;
 -- 
-2.45.2
+With Best Regards,
+Andy Shevchenko
+
 
 
