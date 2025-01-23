@@ -1,122 +1,111 @@
-Return-Path: <linux-pwm+bounces-4719-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4720-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F26EA1A6DA
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 Jan 2025 16:16:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D655DA1A748
+	for <lists+linux-pwm@lfdr.de>; Thu, 23 Jan 2025 16:48:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67F613A276D
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 Jan 2025 15:15:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD70F1887B20
+	for <lists+linux-pwm@lfdr.de>; Thu, 23 Jan 2025 15:48:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75136211293;
-	Thu, 23 Jan 2025 15:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4IYR7U/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2F6F20F998;
+	Thu, 23 Jan 2025 15:48:23 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A9920FA9D;
-	Thu, 23 Jan 2025 15:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8EC288A2;
+	Thu, 23 Jan 2025 15:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737645361; cv=none; b=eUDT+bGdkrZQNgKzZERga6Ld5ZCY1xcN6UycghrPI9+xM2efZVAd7wkZHIKiRWK97IO3XJnLDdMXyxDnj8iEbzPXzo9r2gp6c9pcZoKlj0zm60Ji4VybSsDZQm7kOEY5O6d2QG7pNf/Qs3H/l8D9mMPKs5Ojmtpmq4pfBbOECDw=
+	t=1737647303; cv=none; b=dP+Mw/FLztkXKmYbMRltMMk8J4hIaSrPSSAJPQXQvuJksUNkZKlEo4yZMv5VOEid0QYZAuhKB0bJ5cf19xWtgNml/w+U5yjiBF7QTYaWylmgNX8EZoY+mMf+TSRQ0ykHh0d2uAvdfdDNwm7QO4BfDoXx/U7qozBSOQX+Eu1Hs0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737645361; c=relaxed/simple;
-	bh=hO/M+SZqqgKYIoTGLg+jgxAyd+xAFmjSZk4ZQKtWISQ=;
+	s=arc-20240116; t=1737647303; c=relaxed/simple;
+	bh=+ji13CHM+bL+HrFmPHAAFqi+YSsPmv1iDrR7LwxSwXM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LKSTwu/LxWMR6J4E+l0r4/CjThC1u+UqaR9gpPdevo0EhEn43wvfLglMtKXcuC96ftOlJY++bQr21dDG+zuU8j4yfVA/9rO5a7GQcsabsbiKHPuOya4r8te9hfWnlBUs1Lm8wq7MCpv3op8f3JY2P3ERHpFEQ0gyguZ5xmlCzN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4IYR7U/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39CC1C4CED3;
-	Thu, 23 Jan 2025 15:16:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737645360;
-	bh=hO/M+SZqqgKYIoTGLg+jgxAyd+xAFmjSZk4ZQKtWISQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U4IYR7U/zgYenZLCTxVYUZ3IMKNHciTZEPhw4L/gNt+aTAUX04QIojTIda7KH1+hY
-	 Sp+56BCI5LQ8bi6nBG1hveC3p5Jl5DvuOneHLPIgcsfE/ql3NzBYapPNnU/44uJNdC
-	 FOCkijyLN2WihEL62h5H+3aX3C3EUZhEe9vIePY7MGVW1Uc2jid3faEOiGioGHvP8V
-	 Bn1oj6iI/v+Telmp7f5Ib0jPR82NQDDwmw9WIpq5IFNCWKGd/URhKSiMhmEKkoKTLP
-	 DKB0KsxrRiHreHUhz+fsF/p1T6EGJc3TYbondNiqH6PSho4Gg5jShjIBbR8RYZWil1
-	 22msgHVBZXyOw==
-Date: Thu, 23 Jan 2025 16:15:57 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-pwm@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>, 
-	stable@vger.kernel.org, Daire McNamara <daire.mcnamara@microchip.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] pwm: microchip-core: fix incorrect comparison with
- max period
-Message-ID: <r3dybh3ef4lbneruiae4s5co6mkgsowwucba6niqv23tfycyza@qnklz4w5rnnr>
-References: <20250122-pastor-fancied-0b993da2d2d2@spud>
+	 Content-Type:Content-Disposition:In-Reply-To; b=uAbSYxamRoS+IjVA6tCcnfWjubGr1mtkIVvWTK0K98tEXvXODErUfuhJpTMJMH1TPumdfiiXu731/a/iclBkq0RZfr2jiTHFanbPYTqADsycEYKkGDsMNON6aPsbL3GGafSnKnvn6OW/as6Ttpk3df8MN2n8IHAOTjLnXVnMdv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-CSE-ConnectionGUID: 9alscQlJTfOtBPuj0a9Rfw==
+X-CSE-MsgGUID: wVEoy4+zTVy+dyC1JqPtBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="42079902"
+X-IronPort-AV: E=Sophos;i="6.13,228,1732608000"; 
+   d="scan'208";a="42079902"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 07:48:21 -0800
+X-CSE-ConnectionGUID: m3ehGXuVROezCrJ8OysQ2A==
+X-CSE-MsgGUID: QKBQxZqqQ8uU2M12N57ZSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,228,1732608000"; 
+   d="scan'208";a="107615840"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 07:48:20 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1tazRJ-00000004S0m-41oQ;
+	Thu, 23 Jan 2025 17:48:17 +0200
+Date: Thu, 23 Jan 2025 17:48:17 +0200
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] pinctrl: intel: Import namespace for pwm_lpss
+ function
+Message-ID: <Z5JkwTAO5NKeHnmK@smile.fi.intel.com>
+References: <20250123101110.339337-4-u.kleine-koenig@baylibre.com>
+ <20250123101110.339337-5-u.kleine-koenig@baylibre.com>
+ <CAHp75VekFNu8Jzfit5euj2pKeesGHs3DQS4hJdT==RM7MONb4g@mail.gmail.com>
+ <gw223bv34jyszlssyegvz2znb7q4zzh3lax2qgmvcx6m5lvy6l@gpuvyyhvsgf7>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="a56xps3gn2qlgwig"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250122-pastor-fancied-0b993da2d2d2@spud>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <gw223bv34jyszlssyegvz2znb7q4zzh3lax2qgmvcx6m5lvy6l@gpuvyyhvsgf7>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Thu, Jan 23, 2025 at 03:52:06PM +0100, Uwe Kleine-König wrote:
+> On Thu, Jan 23, 2025 at 01:45:17PM +0200, Andy Shevchenko wrote:
+> > On Thu, Jan 23, 2025 at 12:11 PM Uwe Kleine-König
+> > <u.kleine-koenig@baylibre.com> wrote:
+> > >
+> > > The intel pinctrl driver can provide a PWM device and for that needs to
+> > > call the function devm_pwm_lpss_probe(). That function is provided by
+> > > the pwm-lpss driver which intends to export it in the "PWM_LPSS"
+> > > namespace. To prepare fixing the pwm-lpss driver to indeed use the
+> > > "PWM_LPSS" namespace, import that namespace when used.
+
+...
+
+> > > +#if IS_REACHABLE(CONFIG_PWM_LPSS)
+> > 
+> > > +#endif
+> > 
+> > Why?
+> 
+> Because devm_pwm_lpss_probe() is only used #if
+> IS_REACHABLE(CONFIG_PWM_LPSS). Without the #if but with
+> https://lore.kernel.org/all/20250123110951.370759-2-u.kleine-koenig@baylibre.com/
+> this results in a warning (with W=1) :-)
+
+There is no such commit in the current Linux Next, so let's solve the issues
+when they come up.
+
+I'm okay to take your series via Intel pin control without that ifdeffery.
+If you don't agree on the change, we need to find the way how to avoid ugly
+ifdeffery from day 1.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---a56xps3gn2qlgwig
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1] pwm: microchip-core: fix incorrect comparison with
- max period
-MIME-Version: 1.0
-
-Hello Conor,
-
-On Wed, Jan 22, 2025 at 02:42:56PM +0000, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
->=20
-> In mchp_core_pwm_apply_locked(), if hw_period_steps is equal to its max,
-> an error is reported and .apply fails. The max value is actually a
-> permitted value however, and so this check can fail where multiple
-> channels are enabled.
->=20
-> For example, the first channel to be configured requests a period that
-> sets hw_period_steps to the maximum value, and when a second channel
-> is enabled the driver reads hw_period_steps back from the hardware and
-> finds it to be the maximum possible value, triggering the warning on a
-> permitted value. The value to be avoided is 255 (PERIOD_STEPS_MAX + 1),
-> as that will produce undesired behaviour, so test for greater than,
-> rather than equal to.
->=20
-> Fixes: 2bf7ecf7b4ff ("pwm: add microchip soft ip corePWM driver")
-> CC: stable@vger.kernel.org
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-
-Applied to
-
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/fix=
-es
-
-which I intend to send to Linus next week.
-
-Best regards
-Uwe
-
---a56xps3gn2qlgwig
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmeSXSsACgkQj4D7WH0S
-/k7MxAf9H63osdnsvlMLvftXzklq8mHrUZ0AzQydxMcDuwrFSkDpOV0V4fgOM2Op
-tQHZ7fLR74Hj2XUZpFgMTeZ8ZgsEI6ri9EcDzMQFGZTDV2qbkic2+6B9EOIwaWaX
-E5Vyri0ZoI89mm1hfPIO3Qwe+ApftvMnsAJtgsImP0JX/r0ZxAmFk+5wuBqcakR4
-bJ/kzTmuBdAdypT+yNzf8KpMtmRzdSQKKJd2qM0yE05/HMlgsjqzSmWJkwPI6H5V
-CmxmkAs1y82xZ8jaOSBwFxDNiHj5glGOb0xY/gKf3CWAEr3s6YiA3kdlDV0q6o2P
-Iv0/ROtuw/PVnWvoyweffxJYh22Cdw==
-=fEw6
------END PGP SIGNATURE-----
-
---a56xps3gn2qlgwig--
 
