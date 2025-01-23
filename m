@@ -1,166 +1,197 @@
-Return-Path: <linux-pwm+bounces-4721-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4722-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3A33A1A7D9
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 Jan 2025 17:30:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD4EAA1A8EE
+	for <lists+linux-pwm@lfdr.de>; Thu, 23 Jan 2025 18:28:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2786C166880
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 Jan 2025 16:30:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6ACE03A865B
+	for <lists+linux-pwm@lfdr.de>; Thu, 23 Jan 2025 17:27:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 380EF211464;
-	Thu, 23 Jan 2025 16:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CACCF14600F;
+	Thu, 23 Jan 2025 17:27:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NEQjiFYt"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="J83qGHwN"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C20820F98E
-	for <linux-pwm@vger.kernel.org>; Thu, 23 Jan 2025 16:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40AB12C7FD
+	for <linux-pwm@vger.kernel.org>; Thu, 23 Jan 2025 17:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737649814; cv=none; b=Wv5E9PIV9OVzwFCk6QTu7B1hgRNKCRLU36f1bjJEAt8bZGmHLWj2jPPIPmuRajAcqt9uzZrdILEtOTT5c6GXD7qR3HaOSN66aUuJxhkqZLT9fEEA/Yho+4k0WHpekNxoyNdLOhMr1JVrDPBnYkhXZEGIX0HhfqKV1DI6XgRQJfQ=
+	t=1737653245; cv=none; b=F0hAsJY9tQk+UiQhXtnrVeyfrlYYJu2qW/gZhUoetcyg2+ZtN+403c7dltlQ5VKM1HWaMThzng8jzuHf4O0k2X/7LcDdoo7t+tRrA37CwbcPzTvSPN+3i/vrXhdHlPQJ5VT0gdr4m2C8V9Du/dpyanfssakLyq/F1LyTjXoFzhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737649814; c=relaxed/simple;
-	bh=w+D3sTQQ6T3tTTUhsSZDjy6lXX7N82/wEzA5zwi2TPg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KsxRPA6TQUwJ1tp/frSjUn55XOZqWO96sLs9n4rYwOGxNVAxULMWCX+O5blWxPwxk8tes60yD2fqNceQQ6MD3IN/0bYOwvEYqZwRsdqS5+fKLx5x5DQxfGvH6uTDZSUqldj+hHzfhFKToVYtIgbpWz5og2eA1AC6ejTDqzK7nag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NEQjiFYt; arc=none smtp.client-ip=209.85.208.65
+	s=arc-20240116; t=1737653245; c=relaxed/simple;
+	bh=5VcL1KJGY48tpjWVdAmlb3DjPOdtc97/ATAxZx5gYXE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jjz42GgdZ1ah3RfvxHATjNRFAni+Ha720eYOv4u6RKS90vVlRmD9oNJL/grRHu+uMLIVpRDdmu0UW52Ja5lNTEgX2KpuRl9Ipcd3Lul8WGwU3H0GA2oQcCgAJo4fW6vHnaL8B1M/Ip/dzlVwk83EphAeWwzM9hv6ORUiltwRFb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=J83qGHwN; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-5d0ac27b412so1517432a12.1
-        for <linux-pwm@vger.kernel.org>; Thu, 23 Jan 2025 08:30:10 -0800 (PST)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab322ecd75dso246255166b.0
+        for <linux-pwm@vger.kernel.org>; Thu, 23 Jan 2025 09:27:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1737649809; x=1738254609; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w+D3sTQQ6T3tTTUhsSZDjy6lXX7N82/wEzA5zwi2TPg=;
-        b=NEQjiFYthPuOlv+V6j6tfVo2lMAeoq1fwwwiIqGXQ15KToFk9mzUyojEeWiJfCqj9u
-         Vxp0KslNzBssozrccDrT5e/3vL7oZN2FOs+WmincUG1aNeq7QRV400QgpBx13BsI3F4G
-         0spbCL9EhpNvKTGvMe2XXX1QUV75y+gLFBcKTOwrt8ogXeVKsHR1fouMxswev+r5Db/o
-         OL/jklWnB1pGNQAvs+GfeKcN1bqMlwGTzb9Ap2VqptjGSU4yQWvBBI5xW8gvBNfyfu0R
-         9T0SHJ81SB+fI6v+xh+SsP5DeFLat2t1UGYMpYjR1W3mgvXPbHoL4SgcdI0RUZnBFOA3
-         2KYw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1737653240; x=1738258040; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OW4Kcq4MU1554DBuiBZTdsTL2Qlr9Xu/MuxWp82QmXc=;
+        b=J83qGHwN/tAIY3I3Yk4nsg8777YWRg5sBEbL53VALz5QuxcyqkcL1+PiA5dHc6yzDs
+         TWn9xbpsIbMYiqq8TOiHoRHRdPszcofPe5bXjMNUMiUPYAkvzr3+U9aFMlEG6nfhMSNx
+         iahhksERYk+uscg05CbqltKhzKE+3myI/3WqT+WjzyWlb/bfrt0Zg3LpYiMPnExSbAfL
+         wwnDRcXAA8aGCfkN0bEoIZeSduMbuyOXXtAP+M/FFdTKsh6j7fkJfLD/t3Qc08p/tLbK
+         gKyCXlXvHpo2UBL4/9KVQrsCD2iyRhmGDkgl85mhNRdgV9Bo9JUx9g5Z+IluzsKpTe5O
+         3TeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737649809; x=1738254609;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w+D3sTQQ6T3tTTUhsSZDjy6lXX7N82/wEzA5zwi2TPg=;
-        b=BOSB+u8PV3i9d5DiO0zAoz2Eb/PuoTOgvypQLU7qe2ekuY7j/n10fHnfEWYwl+Ctkl
-         xERKCF25zW8zYfBkxrnpBIVFK4yz4tMd6D3DD454o27CckH50B4ZMABi0MUaRpBuaLwK
-         X3iqhQP2yGb9iaFvKmJs5Op8xmeLjn2VO3HvfOF3LWQxsKhXUtwQWsU5QMhs+PMGGG+9
-         aPRmX0yJxlFuQi3XS/vwgdwyFNUcP+FdvkgCOaSVVrySA/kHnWE7YflIQHIEd4PHEkdZ
-         8IY9k+d3NolZLUQzltwhT1CKAd2RcLpd9/2J59e3xhlcHc0fESVrSAjrVtCRh+/mi/1D
-         Psvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXdoZLTJ4GVcQbv1QznapOzTMRGSoM/4QafUe7q3p/LZzQDR72Qnmyavhinfrah4cTc4TMqpyLHRGw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAqKqVGcaGywVFiyNCle5c3MjtVg8HwolUOh+eTeyly02aE0om
-	Qk2h8hXtBetzBIJfRz7WP8balBDc02Pwjq3G5scgUt7k8UM2uAHiSZYlidLqFwM=
-X-Gm-Gg: ASbGncv+Swk+1WOzDYrwQ12sGRYPeqWZaGMLhQhUd4hKwLyruB2U/tieDc/0H2bkZxx
-	igJouxDbEYvug2grJOyZ8v7GrE/O9KbpnXnWd6M1kloGqmS5T7U2KBo/AmzXQqfaiMfFTIYryaB
-	pkyNKhd5GHQ6oED8kmTXuF8oyAB+Ke/OWyQulMEue7uSljD/DPklaiJSObPqgjQrqc/jppqHO/W
-	pbOXMhLcUPm5u8FRaCJhrDR/rATX9CYMqMQtu1ZjEqUZ1hqIjhoB19Y3fysxHPfKEXKFTBNwJ1B
-	dt5xKPU0q/rKCIv64bryAbwnQMwlYCivmSKQxeJZfDt+gco=
-X-Google-Smtp-Source: AGHT+IEVa2GD13NRi92xJNdo7NSXiZpiZwOwmMtVGmQsgkMQqgoZJEKkCHGESH4P+4rSjQIvA9iIZQ==
-X-Received: by 2002:a05:6402:2710:b0:5db:f423:19b9 with SMTP id 4fb4d7f45d1cf-5dbf4231aecmr6278512a12.16.1737649809360;
-        Thu, 23 Jan 2025 08:30:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737653240; x=1738258040;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OW4Kcq4MU1554DBuiBZTdsTL2Qlr9Xu/MuxWp82QmXc=;
+        b=M3wVyVZnYxiJ6FyuCX0jXyZ5nhGzr7+d8xgyigC354BL9ql35h2CjVVnf71/F31Yq7
+         ORhhK5Mr6+Bui23F0kx7CsMFsIsQNhh1f9AgkWi8mUf7kF9jaCl7ItHupyZMyz7/doOL
+         pzeP2o1zsaVpdZgEiRJwqnSv0O2YsgoNtrkxeyE5honelunIEWTYZ1S+778zlGW9nAXh
+         Mdc7tVOiocS9A4Y0IsY3hdLq/CJBoNqwknT5RF/gJh5zNOpFj2Ol6EDlQk6/jG3YEaW3
+         t7qkJbmAhrlPuqmBxye7Qh9HG1KglByaTIW2MgBCv7GIoXrbrXmeAWXwjRZa8zYw5XMk
+         YTvg==
+X-Gm-Message-State: AOJu0YwUXKXuOGNizcjlCqxHivLzCif/49s6qz3BOHZQuNnHT0EoqGa2
+	6O3SChTsDsylazCRwRjd9+PlI/FIbmL5PpqEts7jY0IfIY9hY3UyZdtgSlNtE2+AC2/GFILaAmU
+	WFGI=
+X-Gm-Gg: ASbGncuvegKdTPj1LoQ+VYRfkDSRg73hpgt8MmpE1rNWN4+LrXI2vIixsuELCVV1APk
+	V/3sCzVBXkjjQR72U1JsMkmIwl+48Cn0NjCWLMxpCWKuQ6xHdelOIJNa/hbXJpaTgWsbWd1UyKa
+	3i91W7NL4z3PNhca+iPY+6LsFVGMPWYhZKftRzPNsa3NRCLpA47Y8MqK5EV+RsipqWgC/QDZiaK
+	znZ0F3JCjOlAACqiVwm1w2JKszlEyTnuIDHRYEmVt4hZeV4FGWoUCMbrOw15oc9yvhg9J/+jbRN
+	G++1oFDzsZwVkbqWb+VckVdB1/kOGLPmgxG4eQYh2H3gk2A=
+X-Google-Smtp-Source: AGHT+IG+rMtYPI9i1zGELP9CcOm9R4pDZpJOWL7R/bF86HgB0WzYRRkQA427ujy0zDS/T/UeAP/jTA==
+X-Received: by 2002:a17:907:7b96:b0:ab6:36fe:4c73 with SMTP id a640c23a62f3a-ab6745c45dfmr14901666b.10.1737653239936;
+        Thu, 23 Jan 2025 09:27:19 -0800 (PST)
 Received: from localhost (p200300f65f018b0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f01:8b04::1b9])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5db73ef6c37sm10429319a12.81.2025.01.23.08.30.08
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab384c60751sm1096903666b.30.2025.01.23.09.27.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jan 2025 08:30:08 -0800 (PST)
-Date: Thu, 23 Jan 2025 17:30:07 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] pinctrl: intel: Import namespace for pwm_lpss
- function
-Message-ID: <yynjwr57jf4ytixfo2c6bojo5ib5plue7krlwzb64rxrfuqghy@u4pkkktbe7b3>
-References: <20250123101110.339337-4-u.kleine-koenig@baylibre.com>
- <20250123101110.339337-5-u.kleine-koenig@baylibre.com>
- <CAHp75VekFNu8Jzfit5euj2pKeesGHs3DQS4hJdT==RM7MONb4g@mail.gmail.com>
- <gw223bv34jyszlssyegvz2znb7q4zzh3lax2qgmvcx6m5lvy6l@gpuvyyhvsgf7>
- <Z5JkwTAO5NKeHnmK@smile.fi.intel.com>
+        Thu, 23 Jan 2025 09:27:19 -0800 (PST)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH] pwm: Ensure callbacks exist before calling them
+Date: Thu, 23 Jan 2025 18:27:07 +0100
+Message-ID: <20250123172709.391349-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="v7tgpdjpw3y6rsks"
-Content-Disposition: inline
-In-Reply-To: <Z5JkwTAO5NKeHnmK@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3226; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=5VcL1KJGY48tpjWVdAmlb3DjPOdtc97/ATAxZx5gYXE=; b=owGbwMvMwMXY3/A7olbonx/jabUkhvRJ1W+fF+8Lzbn3uFyBycctu+JRcZ+r3ZKUa7PYbyftd 1h4ly25k9GYhYGRi0FWTJHFvnFNplWVXGTn2n+XYQaxMoFMYeDiFICJ+E7nYOh+HWDcNVOk4dW6 5kaGDd90H1tJhM9/1dhUXOPoaW3+icl2gk34ltvV8w43dD8ptZSao1HEqLJ9K/Nxgc/uGbI1JS6 PMn9ZHJQ7Ux/76VSTm9lD26Orrc9q8jAZLWvfbp8xn+nMgQ+nrUWD1nkG3Gm61vi8m8Eg3vr2Jn mFz39Os2zt0eMQmqfwa+8tVuksd6VP21sSe6a0+S97pi3BqmkjMp33+a3Q6gh7MdXljBMtmQ4Yn C+7J/pxKp+Ad/URCz6L1NeFt7aqm3+0PcgUwVQ634iN0UDESEFoe2a5udSkjUeK45lu6W7luV10 hv37C/XG63vW6//Onmq/JOSw+OJ/ulNWWInEPzyRMe0mAA==
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
+If one of the waveform functions is called for a chip that only supports
+.apply(), we want that an error code is returned and not a NULL pointer
+exception.
 
---v7tgpdjpw3y6rsks
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/2] pinctrl: intel: Import namespace for pwm_lpss
- function
-MIME-Version: 1.0
+Fixes: 6c5126c6406d ("pwm: Provide new consumer API functions for waveforms")
+Cc: stable@vger.kernel.org
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+Hello,
 
-On Thu, Jan 23, 2025 at 05:48:17PM +0200, Andy Shevchenko wrote:
-> On Thu, Jan 23, 2025 at 03:52:06PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > On Thu, Jan 23, 2025 at 01:45:17PM +0200, Andy Shevchenko wrote:
-> > > On Thu, Jan 23, 2025 at 12:11=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-> > > <u.kleine-koenig@baylibre.com> wrote:
-> > > >
-> > > > The intel pinctrl driver can provide a PWM device and for that need=
-s to
-> > > > call the function devm_pwm_lpss_probe(). That function is provided =
-by
-> > > > the pwm-lpss driver which intends to export it in the "PWM_LPSS"
-> > > > namespace. To prepare fixing the pwm-lpss driver to indeed use the
-> > > > "PWM_LPSS" namespace, import that namespace when used.
->=20
-> ...
->=20
-> > > > +#if IS_REACHABLE(CONFIG_PWM_LPSS)
-> > >=20
-> > > > +#endif
-> > >=20
-> > > Why?
-> >=20
-> > Because devm_pwm_lpss_probe() is only used #if
-> > IS_REACHABLE(CONFIG_PWM_LPSS). Without the #if but with
-> > https://lore.kernel.org/all/20250123110951.370759-2-u.kleine-koenig@bay=
-libre.com/
-> > this results in a warning (with W=3D1) :-)
->=20
-> There is no such commit in the current Linux Next, so let's solve the iss=
-ues
-> when they come up.
->=20
-> I'm okay to take your series via Intel pin control without that ifdeffery.
-> If you don't agree on the change, we need to find the way how to avoid ug=
-ly
-> ifdeffery from day 1.
-
-I'm ok with dropping the #if. Should I resend or do you want to edit the
-patch? Would you take both patches then?
+assuming nobody spots a problem I will send this patch to Linus next week for
+inclusion in -rc1.
 
 Best regards
 Uwe
 
---v7tgpdjpw3y6rsks
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/pwm/core.c  | 13 +++++++++++--
+ include/linux/pwm.h | 17 +++++++++++++++++
+ 2 files changed, 28 insertions(+), 2 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 9c733877e98e..1a36ee3cab91 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -242,6 +242,9 @@ int pwm_round_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *
+ 
+ 	BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
+ 
++	if (!pwmchip_supports_waveform(chip))
++		return -EOPNOTSUPP;
++
+ 	if (!pwm_wf_valid(wf))
+ 		return -EINVAL;
+ 
+@@ -294,6 +297,9 @@ int pwm_get_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf
+ 
+ 	BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
+ 
++	if (!pwmchip_supports_waveform(chip) || !ops->read_waveform)
++		return -EOPNOTSUPP;
++
+ 	guard(pwmchip)(chip);
+ 
+ 	if (!chip->operational)
+@@ -320,6 +326,9 @@ static int __pwm_set_waveform(struct pwm_device *pwm,
+ 
+ 	BUG_ON(WFHWSIZE < ops->sizeof_wfhw);
+ 
++	if (!pwmchip_supports_waveform(chip))
++		return -EOPNOTSUPP;
++
+ 	if (!pwm_wf_valid(wf))
+ 		return -EINVAL;
+ 
+@@ -592,7 +601,7 @@ static int __pwm_apply(struct pwm_device *pwm, const struct pwm_state *state)
+ 	    state->usage_power == pwm->state.usage_power)
+ 		return 0;
+ 
+-	if (ops->write_waveform) {
++	if (pwmchip_supports_waveform(chip)) {
+ 		struct pwm_waveform wf;
+ 		char wfhw[WFHWSIZE];
+ 
+@@ -746,7 +755,7 @@ int pwm_get_state_hw(struct pwm_device *pwm, struct pwm_state *state)
+ 	if (!chip->operational)
+ 		return -ENODEV;
+ 
+-	if (ops->read_waveform) {
++	if (pwmchip_supports_waveform(chip) && ops->read_waveform) {
+ 		char wfhw[WFHWSIZE];
+ 		struct pwm_waveform wf;
+ 
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 78827f312407..b8d78009e779 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -347,6 +347,23 @@ struct pwm_chip {
+ 	struct pwm_device pwms[] __counted_by(npwm);
+ };
+ 
++/**
++ * pwmchip_supports_waveform() - checks if the given chip supports waveform callbacks
++ * @chip: The pwm_chip to test
++ *
++ * Returns true iff the pwm chip support the waveform functions like
++ * pwm_set_waveform_might_sleep() and pwm_round_waveform_might_sleep()
++ */
++static inline bool pwmchip_supports_waveform(struct pwm_chip *chip)
++{
++	/*
++	 * only check for .write_waveform(). If that is available,
++	 * .round_waveform_tohw() and .round_waveform_fromhw() asserted to be
++	 * available, too, in pwmchip_add().
++	 */
++	return chip->ops->write_waveform != NULL;
++}
++
+ static inline struct device *pwmchip_parent(const struct pwm_chip *chip)
+ {
+ 	return chip->dev.parent;
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmeSbo0ACgkQj4D7WH0S
-/k60pwf/VC4RxUsVBMUI4AyD1jPBH1hhcaiiu//PGrIbW+mlJuPSyWLOJKSJKLEQ
-SlBcUQTzN50e375UrXLG1FqwYsiAnOSODnFJaeLBSQl9lCpu7+eqXHZKdDqki1CJ
-v2hPg2Y4mi/M/j/Ai+nwUyNPm2S83AP61qRfcVg0IFpMiB6vrAg+agGG863j5agZ
-JC0/AOsPIy1ldQsBmosTlUZBgFjfvCi/nn3ap6wgNh6TVXQXrbaafxuHyygcxEZM
-nHXXqKpt/vjAav2XBTmvYwy3HAJe2/RbPmvwUdyoFSPdJUEuj1ReEWM73gKpAS9K
-W8sGYacSlJjq2aqO57dm3NvLMfMHMQ==
-=d+bW
------END PGP SIGNATURE-----
+base-commit: e8c59791ebb60790c74b2c3ab520f04a8a57219a
+prerequisite-patch-id: f5f481d393ddd1fd20a685c86cd4e93dd40d26c7
+-- 
+2.47.1
 
---v7tgpdjpw3y6rsks--
 
