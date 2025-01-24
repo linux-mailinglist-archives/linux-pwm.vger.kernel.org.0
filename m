@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-4727-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4728-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F732A1B0E8
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Jan 2025 08:28:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EE69A1B0F4
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Jan 2025 08:31:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82E953A9FFB
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Jan 2025 07:28:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C70711667A0
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Jan 2025 07:30:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C95D31DB126;
-	Fri, 24 Jan 2025 07:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4655156991;
+	Fri, 24 Jan 2025 07:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1bejKcR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FzvJ1o6h"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990DE1DAC9F;
-	Fri, 24 Jan 2025 07:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DDC13AC1;
+	Fri, 24 Jan 2025 07:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737703663; cv=none; b=MjL1w/vsLFd5pjBm1mp1FRGlvlEdalLQx7MDfP1GmBsGFvn2Zqm/h+9+3XHdfAAckK5b917j2OWXkjJeOiCWu9YobPiBZ3KdAfffifc1SQUnc3a2/rVRfoWHMpilU+FzSZ6Jti+DGQ/mwM9uOK85jGf6koEAp9VzY/n3MbMUSZU=
+	t=1737703853; cv=none; b=ROmKldbedcyUOnWzfH6fMn8cPdQ+1FimuwtymYxD3rbN5ur9j5JsmOwPBnb4psXiUp4AfgKbmz6ZD7IMBZ6KJItJKJ2jd5mclvKup6MKJaszfJZnov8qhBqWisjD1+Wnjz9n+A+ssLN0yqu+oLIyI6zHVBugemyBBurtfL1lvrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737703663; c=relaxed/simple;
-	bh=vDEKVnGexuCQ2UVa20CI2XsfZW4SjtI+9mBluQYnXH8=;
+	s=arc-20240116; t=1737703853; c=relaxed/simple;
+	bh=bxadwpVVlhkiGjDnvKB0m6GNfulai9d3PWXrRu9nZUk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NovfpcjrtfBN2quuCkkNOXAb0PqUBXPqXKDhn68cm6ugtqtY3vGyZIdCt2yrVIh5zElYi501+MkPI+H50VejY+M2szytImz7S01GBor/yybQLBTf5WFa32lT9cpx6OZ/Df4QClCkPkAl5LPptyvfWYWkJrile4de/OYcQHUSXpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1bejKcR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6355C4CED2;
-	Fri, 24 Jan 2025 07:27:39 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=N+WU0RozzriFqQXQ+0f9SEukUeqlYN+2bEnIykuFYu7k5twh2PrUNaUcQztUd5LvoUrRbXI3KEoBemqHdveJf08vneXaWwoGkvG7vmTVY3hWfR8eirKk58KrLNaB/vgwKAD8mVIT4DtI3GnSBplPIJtGoEqJg0zCyyEDrTIdEPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FzvJ1o6h; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78543C4CEE4;
+	Fri, 24 Jan 2025 07:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737703663;
-	bh=vDEKVnGexuCQ2UVa20CI2XsfZW4SjtI+9mBluQYnXH8=;
+	s=k20201202; t=1737703853;
+	bh=bxadwpVVlhkiGjDnvKB0m6GNfulai9d3PWXrRu9nZUk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=m1bejKcRoKZ/IoxwzMpGgDVAVgQG02SJKohMTqgYiQ1U5JWbdZ834jF1sdWS/8znK
-	 It8HCvX18tqYhChWKZH/5aWx+zyfkHTJW/ejzPy9u6Z9e6v2mkQDZZ1k/4bEd55LmM
-	 88PyfEmel3nBy+SACPii+eeFPRSKcX0IQ8QhGEl1de+NlPieYmSaXR0kq01n2Xlnbl
-	 C8LGI2FIDGhxfMvT6nXKWeBNKB3Z0b7FP9HkssHy11k4ktKrz9tiLDXEZWtONyAJyj
-	 kG+sdx8Naj/MidGBW5/42BrOB3RqkY3FxBORYYxazYP43f42HRkeonbH57w8Z0XDPj
-	 vzPlBpqhPVqyg==
-Message-ID: <3cdf85b6-1989-4176-a2c6-76dcbfa47e0b@kernel.org>
-Date: Fri, 24 Jan 2025 08:27:37 +0100
+	b=FzvJ1o6hhT5zZIhmrUQlpFw71sdiJna7r6mWwABPG19uBr9MEE49tKPEvm6vmN6OS
+	 Sjv+mrsIwEP0qfeCLI9KYa56ycnQpaNSjJUWUesfVfkTpocs56WddOXZ+f2ZPLqhQ+
+	 GH1Rpig2bXttM/UtkBqFETl5pz0uIzbDgzL8ET87MhtqhhQFCqreVXVc2Y4C3VwL2h
+	 B3Zr23dMGCbABiauLEI+S3OAuiV4lCZM9o3Rm3EHlSmK68uUcI3Z6EOHaTKIFo4+E+
+	 ESLYThwBLD6ORea7OLSn7H+8NFYldnHP6a7z8zp749noP6rOjMGUa8gzPhuu/vs+yr
+	 DLf0wSEmQcxBw==
+Message-ID: <5514fa03-139e-456e-b522-6a774b52eac1@kernel.org>
+Date: Fri, 24 Jan 2025 08:30:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,13 +50,13 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [v3 1/2] dt-bindings: pwm: add atcpit100
+Subject: Re: [v3 2/2] pwm: atcpit100: add Andes PWM driver support
 To: Ben Zong-You Xie <ben717@andestech.com>, linux-pwm@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org
 References: <20250123193534.874256-1-ben717@andestech.com>
- <20250123193534.874256-2-ben717@andestech.com>
+ <20250123193534.874256-3-ben717@andestech.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -102,39 +102,145 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250123193534.874256-2-ben717@andestech.com>
+In-Reply-To: <20250123193534.874256-3-ben717@andestech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 23/01/2025 20:35, Ben Zong-You Xie wrote:
-> Document devicetree bindings for Andes PWM controller.
+>  
+> +config PWM_ATCPIT100
+> +	tristate "Andes ATCPIT100 PWM support"
+> +	depends on OF && HAS_IOMEM
+> +	depends on RISCV || COMPILE_TEST
+> +	select REGMAP_MMIO
+> +	help
+> +	  Generic PWM framework driver for ATCPIT100 on Andes AE350 platform
 
 
-Please use standard email subjects, so with the PATCH keyword in the
-title. `git format-patch -vX` helps here to create proper versioned
-patches. Another useful tool is b4. Skipping the PATCH keyword makes
-filtering of emails more difficult thus making the review process less
-convenient.
+Is AE350 a type of a SoC? Looks like. "depends on RISCV" is wrong -
+there is nothing RISC-V specific here. You must depend on given
+SoC/platform.
 
-> 
-> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
-> ---
->  .../bindings/pwm/andestech,atcpit100-pwm.yaml | 51 +++++++++++++++++++
->  MAINTAINERS                                   |  5 ++
->  2 files changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/andestech,atcpit100-pwm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/andestech,atcpit100-pwm.yaml b/Documentation/devicetree/bindings/pwm/andestech,atcpit100-pwm.yaml
-> new file mode 100644
-> index 000000000000..20d099c1503f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/andestech,atcpit100-pwm.yaml
+> +
+> +	  The ATCPIT100 Programmable Interval Timer (PIT) is a set of compact
+> +	  multi-function timers, which can be used as pulse width
+> +	  modulators (PWM) as well as simple timers. ATCPIT100 supports up to 4
+> +	  PIT channels. Each PIT channel can be a simple timer or PWM, or a
+> +	  combination of timer and PWM.
+> +
+> +	  To compile this driver as a module, choose M here: the module
 
-Filename: andestech,atcpit100.yaml
 
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
+...
+
+> +static int atcpit100_pwm_get_state(struct pwm_chip *chip,
+> +				   struct pwm_device *pwm,
+> +				   struct pwm_state *state)
+> +{
+> +	int clk;
+> +	int ret;
+> +	unsigned int ctrl_val;
+> +	unsigned int reload_val;
+> +	u16 pwm_high;
+> +	u16 pwm_low;
+> +	unsigned int channel = pwm->hwpwm;
+> +	struct atcpit100_pwm *ap = to_atcpit100_pwm(chip);
+> +
+> +	ret = regmap_read(ap->regmap, ATCPIT100_CHANNEL_CTRL(channel),
+> +			  &ctrl_val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	clk = (ctrl_val & ATCPIT100_CHANNEL_CTRL_CLK) ? ATCPIT100_CLK_APB
+> +						      : ATCPIT100_CLK_EXT;
+> +	state->enabled =
+
+Don't wrap here...
+> +		regmap_test_bits(ap->regmap, ATCPIT100_CHANNEL_ENABLE,
+
+but wrap at arguments.
+
+> +				 ATCPIT100_CHANNEL_ENABLE_PWM(channel));
+> +	state->polarity = PWM_POLARITY_NORMAL;
+> +	ret = regmap_read(ap->regmap, ATCPIT100_CHANNEL_RELOAD(channel),
+> +			  &reload_val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pwm_high = FIELD_GET(ATCPIT100_CHANNEL_RELOAD_HIGH, reload_val);
+> +	pwm_low = FIELD_GET(ATCPIT100_CHANNEL_RELOAD_LOW, reload_val);
+> +	state->duty_cycle =
+> +		DIV64_U64_ROUND_UP((pwm_high + 1) * NSEC_PER_SEC,
+> +				   ap->clk_rate[clk]);
+> +	state->period =
+> +		state->duty_cycle +
+> +		DIV64_U64_ROUND_UP((pwm_low + 1) * NSEC_PER_SEC,
+> +				   ap->clk_rate[clk]);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pwm_ops atcpit_pwm_ops = {
+> +	.apply = atcpit100_pwm_apply,
+> +	.get_state = atcpit100_pwm_get_state,
+> +};
+> +
+> +static int atcpit100_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct atcpit100_pwm *ap;
+> +	struct pwm_chip *chip;
+> +	void __iomem *base;
+> +	int ret;
+> +
+> +	chip = devm_pwmchip_alloc(dev, ATCPIT100_CHANNEL_MAX, sizeof(*ap));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +
+> +	ap = to_atcpit100_pwm(chip);
+> +	base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	ap->ext_clk = devm_clk_get_enabled(dev, "ext");
+> +	ap->clk_rate[ATCPIT100_CLK_EXT] = ap->ext_clk ?
+> +					  clk_get_rate(ap->ext_clk) : 0;
+> +	ap->apb_clk = devm_clk_get_enabled(dev, "apb");
+> +	ap->clk_rate[ATCPIT100_CLK_APB] = ap->apb_clk ?
+> +					  clk_get_rate(ap->apb_clk) : 0;
+> +	if (IS_ERR(ap->ext_clk) && IS_ERR(ap->apb_clk)) {
+
+Drop {}. See Linux coding style.
+
+> +		return dev_err_probe(dev, PTR_ERR(ap->ext_clk),
+> +				     "failed to obtain any clock\n");
+> +	}
+> +
+> +	if (ap->clk_rate[ATCPIT100_CLK_EXT] > NSEC_PER_SEC ||
+> +	    ap->clk_rate[ATCPIT100_CLK_APB] > NSEC_PER_SEC)
+> +		return dev_err_probe(dev, -EINVAL, "pwm clock out of range\n");
+> +
+> +	ap->regmap = devm_regmap_init_mmio(dev, base,
+> +					   &atcpit100_pwm_regmap_config);
+> +	if (IS_ERR(ap->regmap)) {
+
+Drop {}. See Linux coding style.
+
+
+> +		return dev_err_probe(dev, PTR_ERR(ap->regmap),
+> +				     "failed to init register map\n");
+> +	}
+> +
+> +	chip->ops = &atcpit_pwm_ops;
+> +	ret = devm_pwmchip_add(dev, chip);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to add pwm chip\n");
+> +
+> +	dev_info(dev, "pwm driver probed\n");
+
+
+Drop all such "success" messages.
+
 
 Best regards,
 Krzysztof
