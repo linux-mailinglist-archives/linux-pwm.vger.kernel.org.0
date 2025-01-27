@@ -1,130 +1,128 @@
-Return-Path: <linux-pwm+bounces-4734-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4735-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 566DCA1D4CE
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Jan 2025 11:50:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B1C9FA1D4E5
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Jan 2025 11:57:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A819C3A2A51
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Jan 2025 10:50:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A0613A4EA2
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Jan 2025 10:57:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07CEE1FDA65;
-	Mon, 27 Jan 2025 10:50:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9A741FE451;
+	Mon, 27 Jan 2025 10:57:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="aqy3O5Sj"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="AyOhSgCG"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814561D540
-	for <linux-pwm@vger.kernel.org>; Mon, 27 Jan 2025 10:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208661FCD13;
+	Mon, 27 Jan 2025 10:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737975019; cv=none; b=Jeri8pdGYf/DdaPXVrLU31hbNhnVQGPds08WoMsaGd1n79ybFsNqJXOeZ/qcB1z/Np459esS77M4k/VLwyeAOT4Ywf1qInAdnnwCjauphZedXjIb+nFANmI6QAGiZ9ZYqXcb2jYem3WA75C8cDrZIWRBhwlSSCUgCu0YUbpZOPM=
+	t=1737975466; cv=none; b=bunPGLsXjGm56yl/tmik6QCl7BcndVP4L8F+4N+/ihR9IcTE+MXRUnsBVas+PQwtFjjrfdyj9gr29iPxBKGuY987dUdrCXpyK+klQo88RF6Rwqe4YQbBVAFbsd2zrfKE2zbZtoSgeDoLMau9FOBxKf0eGtkJXkw3eXZwMelxqgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737975019; c=relaxed/simple;
-	bh=91Ysoi0XSMFKk2q6OR5ur+zCw8xY07DINvs++TomGyI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y1QRRFR0RCQSyTnln4ks8VMtX3m27ZPd5TmGV2V8Ew6MNDbssKW0lG1supBQZXbL1qo93r3bHIG/mSSFoKHOF6wATKAkaiRe6itC0M2ZYA1SY0CQJG16yMo86tJffa5oNdSu5/SVg4ry3r0rGu6+96ycrvkf11CwxkJ8//6rPk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=aqy3O5Sj; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4361f65ca01so45408915e9.1
-        for <linux-pwm@vger.kernel.org>; Mon, 27 Jan 2025 02:50:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1737975013; x=1738579813; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fuVOZHrwuABxNs35BacCC496I5JiKTElWByt9dcR7l0=;
-        b=aqy3O5Sj3T5mAKqZrfeUn59Vq8jERzEGga5jJ6FpJb5yIxum5JM3NwJuJDyZuAUJAn
-         oI/wQO/VXyqCCX7UEJPoTYHxmyT+Ee1eC16JBfGWhEEXZC8t0kMERJUF+MxFmGFNUBfv
-         0sn8zniOYABkcjXJfY2haeXySJ275tPnx6NqG3tiQMiK7dHo5IFyo9IHz1G89tpeuaMq
-         0JNADRt99gSr8WibqVRA6qMxvUqevJFFJUS2/S6NsZ4vwKU9Tp4cMGoChNF/2Mlbq2DV
-         JZMeXbjNfbnMGegMlKbNnD0PVHPi1SUxYufTGFi0fEPr1SgX5VMhx5fJ/DJ7xYIUIS1I
-         14/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737975013; x=1738579813;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fuVOZHrwuABxNs35BacCC496I5JiKTElWByt9dcR7l0=;
-        b=lY5ZMpVK7bjMEMPQwsorVq5XoxjLIyXH4oVXJ2ApgvZEwpi1ErHlJ5uSfS2KueU6h7
-         aREN+oTkmY9OpVHJ77SYUElnHevw7L3GPZgFR43lmac8py54EEIgmFHtSyQXQGRRKFMR
-         3UUHFLm81Qc5TM2GQWpfhRZQxGgzJ46c94H26OgLrHhVH7DozgUYWP3HjxKuHL1g3OOF
-         gvWI7ksd9nHGPlyFO43QHAfYhnNo2NRAd0k1BugfzpQrNGuyhbOYrClqibFLCwtO9clE
-         cBeGQGOMh11shjGtCl6GkKh9Pnlj+f44fKmdqQQzagx9svNrNjqnYzZNG8lwwJLdFTNw
-         LNzg==
-X-Gm-Message-State: AOJu0Yy0xqBO4svu8IbHeV9uaS0qGlaanFH7/LPvnvzFYrvrTsXeHjLU
-	QlM9MSD+S6HnKua/K6w5XjyyjaivAoyz1eA7r4c7memrGVUqbbEt53pw+iYFLu0=
-X-Gm-Gg: ASbGncvjBoxVRa4rwB/ThHclYDw5HDGxFMBFF0Fl+hZ2Kw11ztUEYvCXMHq7AbwPfMY
-	K/jkEfBbb0P2dAEVJMotCmZUwerkvK0JDReWjJL60vcY8dnIudLHI+XQLIBFJeLfrUQPM+H20xU
-	qN2tPJqTpZWYuIcxdw6aAk+jZlE1R3MWCkDr1prqVU4YxbWDJD+Gn+X0mJ3ZCqOOxjQWpzc1rfd
-	nWdFoibZhxy5nE93Pt14AcmynqI/2Ku14Cdkr7cbbOOm1z+C0cpEDdECvThti7Xs1oQxbm53HXB
-	3EBpJzYhOw==
-X-Google-Smtp-Source: AGHT+IF8zXvRud3bxzKoETBM+MMw8ZUW8atexFFnZXnmo/DFoE45mb4c3Y2gv8eCVHkD9pzzKhfOaQ==
-X-Received: by 2002:a5d:64e4:0:b0:385:e35e:9da8 with SMTP id ffacd0b85a97d-38bf56635bemr38024984f8f.18.1737975013606;
-        Mon, 27 Jan 2025 02:50:13 -0800 (PST)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c2a17640csm11104610f8f.18.2025.01.27.02.50.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2025 02:50:13 -0800 (PST)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: linux-pwm@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH] pwm: Strengthen dependency for PWM_SIFIVE
-Date: Mon, 27 Jan 2025 11:50:01 +0100
-Message-ID: <20250127105001.587610-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1737975466; c=relaxed/simple;
+	bh=htWYpFro1ZCNNFreaW4T97HNxIoLyS5v+duavn1sjPo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NRDwlFgqnyEa6Rt3mgkVdhGjnNxmOWxlQlyS1Q/uev+HE2WkKYDOFbvDR8e0MEOm9A96kRvSbgF40fvDmFhjjSd7vduwPzu7g9wOcQu/wyDIX4s+QAAeHUYLew3Vuj90WoApBlHnCI7xrU6nkf87842O1lsjmSbK3ST3N72g90k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=AyOhSgCG; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50R9bkXf005532;
+	Mon, 27 Jan 2025 05:57:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=KsJEc5+KR1Pp94/+Og9A2jL/nrE
+	Ry40wCCw/dtKzd94=; b=AyOhSgCGCwPwJ2n5awa27BY4eS/OZABJGEDjmsy/z0u
+	lLF65fCdCuCKPhoWhgrqUcU6tUztn33VuPZd/xMlaox4HzoJiHKlMEaWYNPtfXOQ
+	MgpajoLWsxrrYD2reJ1E2HhAVOLl8LnoSWGeo9F4NH1Hf73r+RScellk+bx6LPjg
+	93QU4qMg3GBwrLbcnXXVVObUWxnFmRmJB+SS9bB0h2tlqB/4xf1T0QbNXXJoMzcd
+	1eFD/vrcvUkOWWdV0eWdABro0K49IgcrN2Icld85pzpHwRPu42Nw0VV/8vd2JdTr
+	2s/tBDaJu/V5JS+g0DmPbIhlJS73YrHeJfttEkHj3rA==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 44e2n11bg0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Jan 2025 05:57:42 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 50RAvewG001763
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 27 Jan 2025 05:57:40 -0500
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 27 Jan 2025 05:57:40 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 27 Jan 2025 05:57:40 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Mon, 27 Jan 2025 05:57:40 -0500
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.165])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 50RAvUT6018078;
+	Mon, 27 Jan 2025 05:57:32 -0500
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH v11 0/8] Add support for AD485x DAS Family
+Date: Mon, 27 Jan 2025 12:57:18 +0200
+Message-ID: <20250127105726.6314-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1190; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=91Ysoi0XSMFKk2q6OR5ur+zCw8xY07DINvs++TomGyI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnl2TaSzHKHgQt9mbyPx216MqJ/tGg/ldJNcXOf b71p9w9WQ+JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ5dk2gAKCRCPgPtYfRL+ TqfJB/9GL+EBEuPmLlcmnUYzKCnqf8cQz+4aS7SYxfMOaIme+UedPpSJx7fguUIMM0VW2rDOq3n al1kAMVFDnMYUllGsC2CeJa2w/WfH2mF/6Kd6dcr0C4sNaN61m8Nn+jrftyPArId8mJOYXdIeGm keHKok25CDntHSM2jONUNlBpoEcxtyo1bJk1QNGU/qlA2iRvs6oRfSuB08HGgkCDB4KqA2YD8be +TqBukzlpYpRYyhqplSDVPHDuG46klk+BD/KGeHaf7uiW3Gr1AFWxGPbQ6rHijmZ9Af1aKYJJrR BKRsRSPYLWcDRc7/UvlqzAcCI+nBUclPhTxb1N46Hc4nrT+m
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: 4serGn82St7lF7nGGYUzFrsy3us-zmqh
+X-Proofpoint-ORIG-GUID: 4serGn82St7lF7nGGYUzFrsy3us-zmqh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-27_04,2025-01-27_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 spamscore=0
+ bulkscore=0 suspectscore=0 mlxscore=0 clxscore=1015 mlxlogscore=961
+ phishscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501270088
 
-Back when the sifive pwm driver was added there was no symbol for sifive
-SoCs yet. Today there is ARCH_SIFIVE however. Let PWM_SIFIVE depend on
-that to ensure the driver is only build for platforms where there is a
-chance that the hardware is available.
+Add support for AD485X fully buffered, 8-channel simultaneous sampling,
+16/20-bit, 1 MSPS data acquisition system (DAS) with differential, wide
+common-mode range inputs.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
-Hello,
+Most of the review comments which make sense in v9 were addressed. Some of them
+might have been ommitted, especially those that are a matter of preference.
+Since we reached v10, I tried to cover everything that was pointed out until now.
 
-a quick grep suggests that the driver is only used on machines that include
-arch/riscv/boot/dts/sifive/fu540-c000.dtsi or
-arch/riscv/boot/dts/sifive/fu740-c000.dtsi and for these ARCH_SIFIVE is
-enabled. So I'd guess this patch is fine. Still an ack from someone who
-knows this arch better would be very welcome.
+Antoniu Miclaus (8):
+  iio: backend: add API for interface get
+  iio: backend: add support for data size set
+  iio: backend: add API for oversampling
+  iio: adc: adi-axi-adc: add interface type
+  iio: adc: adi-axi-adc: set data format
+  iio: adc: adi-axi-adc: add oversampling
+  dt-bindings: iio: adc: add ad4851
+  iio: adc: ad4851: add ad485x driver
 
-Best regards
-Uwe
+ .../bindings/iio/adc/adi,ad4851.yaml          |  153 ++
+ drivers/iio/adc/Kconfig                       |   14 +
+ drivers/iio/adc/Makefile                      |    1 +
+ drivers/iio/adc/ad4851.c                      | 1302 +++++++++++++++++
+ drivers/iio/adc/adi-axi-adc.c                 |   93 ++
+ drivers/iio/industrialio-backend.c            |   60 +
+ include/linux/iio/backend.h                   |   19 +
+ 7 files changed, 1642 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
+ create mode 100644 drivers/iio/adc/ad4851.c
 
- drivers/pwm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 0915c1e7df16..be0db73003e4 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -567,7 +567,7 @@ config PWM_SIFIVE
- 	tristate "SiFive PWM support"
- 	depends on OF
- 	depends on COMMON_CLK && HAS_IOMEM
--	depends on RISCV || COMPILE_TEST
-+	depends on ARCH_SIFIVE || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for SiFive SoCs.
- 
 -- 
-2.47.1
+2.48.1
 
 
