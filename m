@@ -1,292 +1,134 @@
-Return-Path: <linux-pwm+bounces-4756-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4757-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3C17A24A3E
-	for <lists+linux-pwm@lfdr.de>; Sat,  1 Feb 2025 17:19:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D811AA25414
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Feb 2025 09:16:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 830BF3A73EB
-	for <lists+linux-pwm@lfdr.de>; Sat,  1 Feb 2025 16:19:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B5861881EC5
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Feb 2025 08:16:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DF771C3BFC;
-	Sat,  1 Feb 2025 16:19:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F6C7214811;
+	Mon,  3 Feb 2025 08:13:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XmmPA2jQ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="i3apWOqL"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE38E2F56;
-	Sat,  1 Feb 2025 16:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4122147FC
+	for <linux-pwm@vger.kernel.org>; Mon,  3 Feb 2025 08:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738426782; cv=none; b=Wr4sAE4RiZg8iYvthyDaEa1j0ilKe8Hj2nRVYRQyOZ4mLP8CRJgVmHq4TpzZXJi4TrODJ3oc8cdQaQjDDYnzFNuhGvAn774YNRaJ2+zGLIhOJ33fYI84JSzcyxA+QmzICEk/us2TA2dtZfqbmz9TfO0+KfserPd1bzmxkoG7JJY=
+	t=1738570389; cv=none; b=aX+CFKm1+j3kAQEW2PFI2BSPtr9Jt+jxX+QiKEGE0ShAQzG4JcBZu+H6ULKAGL/19hFRWNr5b/23xcKe/o57Nk0WAMiDkhS5nIKvNdGE2XDE7UnLEr3ocwuyXv6qjJa6MQHGgsUiwvKXavk7RbaXILroGwbsAPRBLsoamik4HF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738426782; c=relaxed/simple;
-	bh=DY5NDVYk7SPwl1aCk3edxfLAY7ludyGB6iGKYhQhItQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HFlfq61QSEFUz5tcMH/78x5j8u8SF/REnqS+yvdguiN3ajddQhzUQtLSOakJcYs81H5hO6Fk2VWna/HQZuL7689V1Rcf1BTYDQKuoUpnrhwaT5v+bXXH9/LFGUEsc8Pbc8QAIjZV5irHaWRG2Ffx4Z6ZIkx6yz3b5K1+o3KrEHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XmmPA2jQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4853DC4CED3;
-	Sat,  1 Feb 2025 16:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738426781;
-	bh=DY5NDVYk7SPwl1aCk3edxfLAY7ludyGB6iGKYhQhItQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XmmPA2jQ1bhbxy+69mwiq+c4FixlOTgEGnjM9fSl1VQri3TGr5Qv5yNXYB/nxKD05
-	 /BqimMYImS6hU1koEPntpW+JqNCJxqlPioB28+ANwWtr8xxmIxq3+2GwsFLGXC7tDK
-	 CeeSfxZkqTdYhEiI0gd/nP4Sf6ktZcJnDEHyexYde5pE+R4rO8Ld0TmkyxS3wf+r6d
-	 wk861r77taUqGt/aIOQ3MUK7/51DWIH0MyJOZN0hGBTGUILxVX1cNjYML6EnlffbTH
-	 gCXtVmTmKO3lI0D0oSS1aD4DGbbc2WW5/wIHyWaY72D8/hE6ewclq5BjmkPwvcnN55
-	 ekeHthQGtoW7g==
-Date: Sat, 1 Feb 2025 16:19:32 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v11 8/8] iio: adc: ad4851: add ad485x driver
-Message-ID: <20250201161932.08417b99@jic23-huawei>
-In-Reply-To: <20250127105726.6314-9-antoniu.miclaus@analog.com>
-References: <20250127105726.6314-1-antoniu.miclaus@analog.com>
-	<20250127105726.6314-9-antoniu.miclaus@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738570389; c=relaxed/simple;
+	bh=8BzrjfzW6hMDq8JMBmAHvHJ/8jbUh41Fukiv4MAQV0g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iV265j6OrAwzw3uMyyfT1mEB8yfEc8o85obEvWPn3rRgDBeQp+KLWJjF3PfLL2aeagG7GnzibArG5RyqpX/E61Ep8Hssp6wRe5UffukORE/nVDNz2t0is0eruf3YeUxU0oTMYYyr/wA6ln9uWvDqzj4N2DDEcit3VjzYT1/qPto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=i3apWOqL; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3863c36a731so3174937f8f.1
+        for <linux-pwm@vger.kernel.org>; Mon, 03 Feb 2025 00:13:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738570385; x=1739175185; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2IIA2EevMgnUnT2y0Tcftlgxz2rZdSe6sO6t8T4gDhc=;
+        b=i3apWOqLHYC6bL1RzMegFXJE7HYUYkRMcGjbc90X9vOytR7yAWZxhKFnu6pjVbUb59
+         JdocnU8BZZbfxuyxu9WMB/QBikj2BDJjt8dhXeqKy+ztRVfLejhJiU2BnHxVHbYgE82+
+         asDluLlVVwMVUGL0daoY0HSiyJAj+LINHn43NvO0UUdiDlHfoP5DKo/2JEvmE8ymgzyr
+         Xx5OnLRx2RBbBBi1RWQyEVD93Yv9fj/qichojPCL0f/+Gru0mdEwxwx00UbTGgjJMUTr
+         bfSDXCagosr/BeMCs+R1UrWSXFztVusqTOqMqY7CfpxO26FTZ4tAQ1ubKlaSIhC0gsKF
+         yO8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738570385; x=1739175185;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2IIA2EevMgnUnT2y0Tcftlgxz2rZdSe6sO6t8T4gDhc=;
+        b=OLVZ2jgh0ratSisUC6pmcrOQwwMSCAJ7igaQlEP6KGDsGX+JbCknQ6El5yO0IZeKpU
+         xKZwbDgRrRhKAhrKlbPmNzLTvapPJVDVCZw7wIIvmKSFebAphkDPEqsEAa8xgfe/fOUp
+         wb4otMHkz3L+AQsbnrkVlNOEI1B5P6PIZ5B3v1or+YPprfCfVXMpgGV6+hLx5kUI4Mdx
+         Q2TOTtj5B9V8yc/u3SpbhQJU3/LeKKjSMvOVTb51/XqDY7eZ4x66u7S18L7qIs3Yq7jA
+         Cy9jL/EX3YBOiXZLJYCs6QBCwC8CmWaNyWDaPxE9M2m3mElnOTBX7DTLXjNEu087trjb
+         vXtA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2zY5xLy6h02/kEAg1PoD9dO3kzkTcSK5xMMvxebVmV95+pkZFsvIq/NwJhNNz0DwAEOq++DnJa0Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgUhFZG4+XQ6obor2VbstmkbPDUctAkb/dHBKF2khInJmvmfun
+	sfDnL7o6sEcOH+mn9dqv94uSIxPd1JtaS3cb/LMINmPLtniynkyZfP3Lq19C23w=
+X-Gm-Gg: ASbGncsSYIWBsmC+B65fCRmaViVIFr87ga5avAziVbif+8hfWNDOFgwpAAQg0GOisYz
+	hDqchU245xXZ/BefwG1jW0J0SpSioWXVJDHBzaGVIsAi6y3oxDVwET/4Vl5OxN5PxhrAO17Et+t
+	o6ASovtxeMq6UcL+usJIPQ1lVJ3qz5NBnIK7xTKRCoh2a0/UNFnuAEhG8eqEcgpt96aiTEzHejy
+	VlWgE2Tx+Qkp1zxog4o+0Y0XaGxtDLenYv9zEjYoWf79frzoY5dm4QqrCTX4XeAYUdw/xDOMxeE
+	Nz0zmOO2rIzYpA==
+X-Google-Smtp-Source: AGHT+IF3lNNZmS2B9T8gXfcE5kd5EuOjnSuh3iWUdY1d50Algj3kP3sHpQaRcW0lvgZf4+fEDGkUsw==
+X-Received: by 2002:a05:6000:18a9:b0:385:df6d:6fc7 with SMTP id ffacd0b85a97d-38c51b5efb4mr18533137f8f.25.1738570385202;
+        Mon, 03 Feb 2025 00:13:05 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:62d7:938e:c76:df44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c5c1b574fsm12019825f8f.70.2025.02.03.00.13.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 00:13:03 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Nandor Han <nandor.han@ge.com>,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	patches@opensource.cirrus.com,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2] gpio: Use str_enable_disable-like helpers
+Date: Mon,  3 Feb 2025 09:13:02 +0100
+Message-ID: <173857038027.20723.17081473974273068659.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250114191438.857656-1-krzysztof.kozlowski@linaro.org>
+References: <20250114191438.857656-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 27 Jan 2025 12:57:26 +0200
-Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> Add support for the AD485X a fully buffered, 8-channel simultaneous
-> sampling, 16/20-bit, 1 MSPS data acquisition system (DAS) with
-> differential, wide common-mode range inputs.
+
+On Tue, 14 Jan 2025 20:14:38 +0100, Krzysztof Kozlowski wrote:
+> Replace ternary (condition ? "enable" : "disable") syntax with helpers
+> from string_choices.h because:
+> 1. Simple function call with one argument is easier to read.  Ternary
+>    operator has three arguments and with wrapping might lead to quite
+>    long code.
+> 2. Is slightly shorter thus also easier to read.
+> 3. It brings uniformity in the text - same string.
+> 4. Allows deduping by the linker, which results in a smaller binary
+>    file.
 > 
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Nearly there, but I think an issue with the allocation of the iio_chan_spec
-array has gotten through.  In general, pass the non const data for that
-around until you are ready to commit to not changing it any more and only
-then set the pointer and number of channels in the struct iio_dev.
+> [...]
 
-Jonathan
+Applied, thanks!
 
-> diff --git a/drivers/iio/adc/ad4851.c b/drivers/iio/adc/ad4851.c
-> new file mode 100644
-> index 000000000000..a49959679e75
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad4851.c
-> @@ -0,0 +1,1302 @@
+[1/1] gpio: Use str_enable_disable-like helpers
+      commit: de454ac4fc5a117a4264e8bdf60fca58021574b1
 
-> +
-> +#define AD4851_IIO_CHANNEL							\
-> +	.type = IIO_VOLTAGE,							\
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_CALIBSCALE) |			\
-> +		BIT(IIO_CHAN_INFO_CALIBBIAS) |					\
-> +		BIT(IIO_CHAN_INFO_SCALE),					\
-> +	.info_mask_separate_available = BIT(IIO_CHAN_INFO_SCALE),		\
-> +	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ) |		\
-> +		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),				\
-> +	.info_mask_shared_by_all_available =					\
-> +		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),				\
-> +	.indexed = 1,
-Typically don't have a trailling comma here...
-> +
-> +/*
-> + * In case of AD4858_IIO_CHANNEL the scan_type is handled dynamically during the
-> + * parse_channels function.
-> + */
-> +#define AD4858_IIO_CHANNEL							\
-> +{										\
-> +	AD4851_IIO_CHANNEL							\
-> +}
-> +
-> +#define AD4857_IIO_CHANNEL							\
-> +{										\
-> +	AD4851_IIO_CHANNEL							\
-
-.. so you can have one here and it looks more like normal assignment.
-of just set this in the other channel parsing functions so that the template
-is the same for all devices.
-
-
-> +	.scan_type = {								\
-> +		.sign = 'u',							\
-> +		.realbits = 16,							\
-> +		.storagebits = 16,						\
-> +	},									\
-> +}
-> +
-> +static int ad4851_parse_channels(struct iio_dev *indio_dev,
-> +				 const struct iio_chan_spec ad4851_chan)
-> +{
-> +	struct ad4851_state *st = iio_priv(indio_dev);
-> +	struct device *dev = &st->spi->dev;
-> +	struct iio_chan_spec *channels;
-> +	unsigned int num_channels, reg;
-> +	unsigned int index = 0;
-> +	int ret;
-> +
-> +	num_channels = device_get_child_node_count(dev);
-> +	if (num_channels > AD4851_MAX_CH_NR)
-> +		return dev_err_probe(dev, -EINVAL, "Too many channels: %u\n",
-> +				     num_channels);
-> +
-> +	channels = devm_kcalloc(dev, num_channels, sizeof(*channels), GFP_KERNEL);
-> +	if (!channels)
-> +		return -ENOMEM;
-> +
-> +	indio_dev->channels = channels;
-> +	indio_dev->num_channels = num_channels;
-> +
-> +	device_for_each_child_node_scoped(dev, child) {
-> +		ret = fwnode_property_read_u32(child, "reg", &reg);
-> +		if (reg >= AD4851_MAX_CH_NR)
-> +			return dev_err_probe(dev, ret,
-> +					     "Invalid channel number\n");
-> +		if (ret)
-> +			return dev_err_probe(dev, ret,
-> +					     "Missing channel number\n");
-> +		*channels = ad4851_chan;
-> +		channels->scan_index = index++;
-> +		channels->channel = reg;
-> +
-> +		if (fwnode_property_present(child, "diff-channels")) {
-> +			channels->channel2 = reg + st->info->max_channels;
-> +			channels->differential = 1;
-> +		}
-> +
-> +		channels++;
-> +
-> +		st->bipolar_ch[reg] = fwnode_property_read_bool(child, "bipolar");
-> +
-> +		if (st->bipolar_ch[reg]) {
-> +			channels->scan_type.sign = 's';
-> +		} else {
-> +			ret = regmap_write(st->regmap, AD4851_REG_CHX_SOFTSPAN(reg),
-> +					   AD4851_SOFTSPAN_0V_40V);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad4857_parse_channels(struct iio_dev *indio_dev)
-> +{
-> +	const struct iio_chan_spec ad4851_chan = AD4857_IIO_CHANNEL;
-> +
-> +	return ad4851_parse_channels(indio_dev, ad4851_chan);
-> +}
-> +
-> +static int ad4858_parse_channels(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4851_state *st = iio_priv(indio_dev);
-> +	struct device *dev = &st->spi->dev;
-> +	struct iio_chan_spec *ad4851_channels;
-> +	const struct iio_chan_spec ad4851_chan = AD4858_IIO_CHANNEL;
-> +	int ret;
-> +
-> +	ad4851_channels = (struct iio_chan_spec *)indio_dev->channels;
-
-Casting away a const is normally a 'bad smell' but there is more
-going on here than just that.
-Who allocated this?  At this point I'm fairly sure no one did yet
-> +
-> +	ret = ad4851_parse_channels(indio_dev, ad4851_chan);
-
-It's allocated in here.
-
-Create a function with the 'functionality' of ad4851_parse_channels along
-lines of this (returns num channels if positive)
-
-static int ad4851_parse_channels_common(struct iio_dev *indio_dev,
-					const struct iio_chan_spec ad4851_chan,
-				        struct iio_chan_spec **chans)
-{
-	struct ad4851_state *st = iio_priv(indio_dev);
-	struct device *dev = &st->spi->dev;
-	struct iio_chan_spec *channels;
-	unsigned int num_channels, reg;
-	unsigned int index = 0;
-	int ret;
-
-	num_channels = device_get_child_node_count(dev);
-	if (num_channels > AD4851_MAX_CH_NR)
-		return dev_err_probe(dev, -EINVAL, "Too many channels: %u\n",
-				     num_channels);
-
-	channels = devm_kcalloc(dev, num_channels, sizeof(*channels), GFP_KERNEL);
-	if (!channels)
-		return -ENOMEM;
-
-//	indio_dev->channels = channels;
-//	indio_dev->num_channels = num_channels;
-
-	device_for_each_child_node_scoped(dev, child) {
-		ret = fwnode_property_read_u32(child, "reg", &reg);
-		if (reg >= AD4851_MAX_CH_NR)
-			return dev_err_probe(dev, ret,
-					     "Invalid channel number\n");
-		if (ret)
-			return dev_err_probe(dev, ret,
-					     "Missing channel number\n");
-		*channels = ad4851_chan;
-		channels->scan_index = index++;
-		channels->channel = reg;
-
-		if (fwnode_property_present(child, "diff-channels")) {
-			channels->channel2 = reg + st->info->max_channels;
-			channels->differential = 1;
-		}
-
-		channels++;
-
-		st->bipolar_ch[reg] = fwnode_property_read_bool(child, "bipolar");
-
-		if (st->bipolar_ch[reg]) {
-			channels->scan_type.sign = 's';
-		} else {
-			ret = regmap_write(st->regmap, AD4851_REG_CHX_SOFTSPAN(reg),
-					   AD4851_SOFTSPAN_0V_40V);
-			if (ret)
-				return ret;
-		}
-	}
-//and get back the channels + how many
-	*chans = channels;
-
-	return num_channels;
-}
-
-Then in the callers, do other stuff to chanels as necessary before finally
-assigning iio_dev->channels and iio_dev->num_channels when they are actually
-constant as we've finished filling them in.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	device_for_each_child_node_scoped(dev, child) {
-> +		ad4851_channels->has_ext_scan_type = 1;
-> +		if (fwnode_property_present(child, "bipolar")) {
-> +			ad4851_channels->ext_scan_type = ad4851_scan_type_20_b;
-> +			ad4851_channels->num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_b);
-> +
-> +		} else {
-> +			ad4851_channels->ext_scan_type = ad4851_scan_type_20_u;
-> +			ad4851_channels->num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_u);
-> +		}
-> +		ad4851_channels++;
-> +	}
-> +
-> +	return 0;
-> +}
-
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
