@@ -1,238 +1,291 @@
-Return-Path: <linux-pwm+bounces-4764-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4765-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EFFFA26709
-	for <lists+linux-pwm@lfdr.de>; Mon,  3 Feb 2025 23:43:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77A96A27AA8
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Feb 2025 19:56:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 321D83A5810
-	for <lists+linux-pwm@lfdr.de>; Mon,  3 Feb 2025 22:43:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5AF4F3A3239
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Feb 2025 18:56:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86FC3211464;
-	Mon,  3 Feb 2025 22:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74208218ABD;
+	Tue,  4 Feb 2025 18:56:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="f+6XVLDT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j9f3wKDu"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FA521147B
-	for <linux-pwm@vger.kernel.org>; Mon,  3 Feb 2025 22:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD9F218AC8;
+	Tue,  4 Feb 2025 18:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738622534; cv=none; b=rN7/GvStUYDgl6iaTPvV0Fh/1mAV3bTsZb0zV5Bszq6+KYDD9ZF0IAjJSlGeleSLVf5K1sXJDYKG3cHQQnnrMSn4s6uHgdvTsVvn6+mj/17cfQ9mbNKLTVQEvrfkQjEplj/3xzWoXWFbspLiZRJWbx7EY6p2bPLXzaKzQP5fOuY=
+	t=1738695369; cv=none; b=Co0sYVOxKdUTofTOJrsEAotoraJ8vjG6ef1J22uyBDbeJGQusmCfGSuCMDgT6HPo5qYsjPw+MuW0BQv2vL8j81Bpk+sQEHE479LWNob3eOPWwvailHL4RNQlnJXFNhawm7ShOmo4ETOeSVvW1Hnduqk1L7JONYVETVVx3LHz/oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738622534; c=relaxed/simple;
-	bh=SXY/ut4HPZGjQfV0TdHI+owQ/8IPFSL6uBL1jYm5kIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Uemp0wrRREHQkAuO0gQO+Fdps3pDOR4+zgCfAsuewHlqaJs48aDCxNXZqGpZUb/rvDIZxD8vguyaGWyASowqWtGa1Z/HjE1Y6DVsavpnkQylwmUIUGAjo2ZfqhP1YouFkscR2ZQkwvPCkNaKP8Ywoc42zGF2+p1nFMouiN7sd2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=f+6XVLDT; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3ebadbb14dcso2098570b6e.3
-        for <linux-pwm@vger.kernel.org>; Mon, 03 Feb 2025 14:42:11 -0800 (PST)
+	s=arc-20240116; t=1738695369; c=relaxed/simple;
+	bh=QeGXJi76YbZL+qgEdYz8n6FtI5h0bhyXK/wQx2mueh0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pO0rPW11y5Jcy4eIK2AnZjwzjfSYuWbkws5WueGj43chkDxKgiiMoXceB6f86Azx4JP4eajnQcSL498PMik5YFR9wq+dgpBXvX8EpiCovGv8YTFPcWYc8/nlDhkWRjF95nEqD/37D97L2HytlRjfGaXquCs+dtu5vJETddDfoEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j9f3wKDu; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2161eb95317so105970235ad.1;
+        Tue, 04 Feb 2025 10:56:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738622530; x=1739227330; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SJnIfOP7+jSlUs29FECy5//ffpMPbLe/6pSEbA38u3M=;
-        b=f+6XVLDTnechdqBluVSaw5ZSyuaeMkrWSCzOIU0YoBMQyd87gOtCjssN32aN+ldeTf
-         Pqh8ZBTqzNfmbgqz8hLrf9IbtyuDBZUxTWVY+fqhFSHs5igqV7RjkcH7Y5SfBThQ1NTt
-         SzNIzm6rbA39f7faGwOlb9dJlqlzH741aSKQE3djTpu4XuWwdeeO/UYTHQ1H+J2WM+js
-         ThAahDQZCxFRBTEMnq3hBwH0xepC+q9gT3cezWS2iVYCsDliAiqK/tP2BwYEnLqCp5y+
-         Z4GnsPhmf3k+bEox8ce/qAQWKkQ+E0UGsmCcpAGFrm5FZPiB85WjnAW9bnFJr2PiSY1h
-         VYKw==
+        d=gmail.com; s=20230601; t=1738695367; x=1739300167; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W2bGsWJVaiSr30++/0esPSuZbt+BULYNK6t+g3c3C64=;
+        b=j9f3wKDu/DS1tmrO05bl/mImaHgIgcPYL+NCocWCiDFd8S/O6RqRqeu/up8wqj6wK8
+         t9XQ/OLqmyEtt32U7C2gKBpr7FjywZn+GMPtmveB61z7kvDinfBNGPT6kTsChtNSbUD1
+         qpvWie17ENWjqvFDEAEn+4DepgAmsHZkC2u3QuB21RuhWV5FN+24luDoz0nDqeYbyIhM
+         bk/i/pST4O9Zav82SpIhMQSImUmH1i+yjjsGGcfMNUgVQhFNCxXkmyrS0T/Wv6lzVdwL
+         bavH6pIeueFGEA8T7YTAZspV+fhO18SUdzp4bcuwirPHJkcn60Z4UcFiV2dpjSbHgAsj
+         YIPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738622530; x=1739227330;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SJnIfOP7+jSlUs29FECy5//ffpMPbLe/6pSEbA38u3M=;
-        b=a/f4KTlME7zzyl1RoskUh5nlTm6FvdmculQUL9X2rA9sQGkbPwCUnjl2bLlF8Zn6YV
-         UHOCAoLtVKioIGghfHwHdtGqf67uTUg9i46dde7LmYfUI5LeFb/wZKNOxr0JCBy10YeS
-         lNmddU6j7CJhJNeu5Hn6OifKo9LHYTko/sS+D3V/JSqiQ9CJROBV6UzDlIjXiZCsuEtC
-         STuWXHlOhzaGxMaceAmcjL8TIapngArphLFyelq58c9O9IkSJlPFeLaS2LybKKVT3WL5
-         wx+1HQCY8rKmFuC1Z4AsgYRGk8cFTph8qDwD6/zVp/hIKnsckbgChKLu8H+CFwQhYW1a
-         YZww==
-X-Forwarded-Encrypted: i=1; AJvYcCUbGK5mqqqT4CTJYMXJkf7bAX8kFVqX1lpVoIwN9o+sRm9WdzdBbFpjAXGpmU/4MOcJz0uqvSwQXBA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcgBq1I+8Zd3KCoVP/Y/p+2Biiuu5ok5i3NvXLmqcR1NY3tr6M
-	yrXseG0gxDme8GbudNeMyAnfglb2vF4h3vAqEziapUBFGFQFR8Qj/b+Hw+CIg8c=
-X-Gm-Gg: ASbGnctyBRw8cOPbG4Y0HXG0yJKoJ3tXqjeSYKg8QE1rFPVHyxAyyDiGgHjTV5P/Oyl
-	z+DcqQCugNXvvQy1yjWCIHXq5mtGCnzla1pvmU9f3mo3Lw1OujBhKqFNraqgYwe5KUWcS2IIHjy
-	8qMNzWEm8ArJjEHEyuvp0En/+WzqVQ28RNViXynmpEroZlsnbGEfwSDX34hAIOx26wZW48owkiv
-	U8mrxt4C/KMeGbcP/xytCsFQPr110pBzkzTaAFKC6BYUseHgyhdysA67dzjb7CryFH9ja9FakAm
-	iRVSoGAOqsCw0ImdrOAG8amYdLVeMRCOzhqCO/zpLBONXEjai9HI
-X-Google-Smtp-Source: AGHT+IGPg3Ki4+QlI+PnxMX8N884nW9RTygynBG8qVyReXZuEsEhrg1HOrCB1+xLT/4DE7U7CBVGQQ==
-X-Received: by 2002:a05:6808:2f16:b0:3e7:df63:15bc with SMTP id 5614622812f47-3f323a184cdmr15101787b6e.12.1738622530456;
-        Mon, 03 Feb 2025 14:42:10 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f333523efcsm2731729b6e.8.2025.02.03.14.42.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 14:42:09 -0800 (PST)
-Message-ID: <c5722215-b720-49ab-9f0e-00b01eb4679d@baylibre.com>
-Date: Mon, 3 Feb 2025 16:42:08 -0600
+        d=1e100.net; s=20230601; t=1738695367; x=1739300167;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W2bGsWJVaiSr30++/0esPSuZbt+BULYNK6t+g3c3C64=;
+        b=NCuLzmWz2aCQ8coWsq3J6mjbw3I2mLkuAYKvXd7+nEyFuZKZfGGY2FcppaACyhHd9m
+         LsPSIsUWrbNslWHh79KRLEShrJID2fpS7tEA0VXKjqNWeMDnrS1kJDdLetx04noaTj4G
+         MaLHqfJrWGgK0pluiBLcmFmqja7XQwbgPQA2mjNqH+uWxRiRGY5sWWI1aRIe5W5tmOo7
+         sHtVHmkvFV4i1dkDgZdT47Nw4wr43CtwmYQO9Q7SiDjhnL1I25DwtpyqRjzpuFkBMj6m
+         bJ7gZs7WPXpfutQm/gtez+ArQ1SE4+cdDug3vVA43REJNusj6HygHN0rm21+lsKkBYBY
+         uc0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUwmu9/OlIlaRIQuvncKEQqnfylp+aObhRLAvICaRo+P2rMbf7iIQrqsPbB+bCxW7dy057B+x0F0VuIQho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB4fsMzL4OGNnvdPnFJa6ipEtGU220zQPRdI5vJMg4XUwAF+7C
+	y/nZhkjxk2OcmPTLWdxMttHXPmjkGwCP1ZO6ATVxZi45Mk87GKCbyky13yp1
+X-Gm-Gg: ASbGnct23yYRyETxdpt7ej57QGahl3S9DI+LXZhFPR6zewhqTgO9sXoIIjBn3MV56hv
+	JIwFVL0Y6TGz4BY4cvx6ilScglv0lFRzzfgXYPpWn0DTRe2PvQ/z49SOjnn4TPF+acPDpnBG6MR
+	54Z8Ro2w+LWBPgn9YAYJa3sjmZX57JojdeS+AUvxzY3fgHDniHrYvFkToBGxHKw5YFi1LIc6uqV
+	3kTLC1Mz081wxnzSEpuN7RND1XrZFBiejwU3QAjgPjesmJnUyXHJB71IWhYB56ucQ8TvsukEhYH
+	BUQzZhcyPC5mAxxtDNKdzMcqKtT67xmsoXM=
+X-Google-Smtp-Source: AGHT+IHekIIDU3hAEwReZxd5PGAerEWvLHH6zd7FCmqVXU2/ygzTXeimP1M5tLEfZhUoKO4wopLmqw==
+X-Received: by 2002:a17:903:2281:b0:21b:d2b6:ca7f with SMTP id d9443c01a7336-21dd7deefa0mr457027895ad.32.1738695366780;
+        Tue, 04 Feb 2025 10:56:06 -0800 (PST)
+Received: from localhost.localdomain ([177.10.12.41])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de330326dsm99284095ad.164.2025.02.04.10.56.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2025 10:56:06 -0800 (PST)
+From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+Subject: [PATCH] pwm: tiehrpwm: ensures that state.enabled is synchronized in .probe()
+Date: Tue,  4 Feb 2025 15:55:40 -0300
+Message-Id: <20250204185540.52233-1-rafael.v.volkmer@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 8/8] iio: adc: ad4851: add ad485x driver
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org,
- robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org
-References: <20250127105726.6314-1-antoniu.miclaus@analog.com>
- <20250127105726.6314-9-antoniu.miclaus@analog.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250127105726.6314-9-antoniu.miclaus@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/27/25 4:57 AM, Antoniu Miclaus wrote:
-> Add support for the AD485X a fully buffered, 8-channel simultaneous
-> sampling, 16/20-bit, 1 MSPS data acquisition system (DAS) with
-> differential, wide common-mode range inputs.
-> 
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
+Fixes potential desynchronization of state.enabled in the .probe()
+method by suggesting proper handling of hardware state initialization.
+Adds considerations for implementing .get_hw_state() to check the
+current state of the module by checking physical registers.
 
-I think we have the important bits sorted now (i.e. userspace-facing stuff).
-Just noticed a few minor things in the latest revision.
+Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
+---
+ drivers/pwm/pwm-tiehrpwm.c | 151 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 150 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index 0125e73b98df..5de213bc3ef5 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -91,6 +91,20 @@
+ #define AQCSFRC_CSFA_FRCHIGH	BIT(1)
+ #define AQCSFRC_CSFA_DISSWFRC	(BIT(1) | BIT(0))
+ 
++#define AQCTLA_CAU_MASK   (BIT(5) | BIT(4))
++#define AQCTLA_CAU_SHIFT  4
++#define AQCTLA_CAD_MASK   (BIT(9) | BIT(8))
++#define AQCTLA_CAD_SHIFT  8
++
++/* The ePWM hardware encodes compare actions with two bits each:
++ *   00 = Do nothing
++ *   01 = Clear
++ *   10 = Set
++ *   11 = Toggle
++ */
++#define AQ_CLEAR  1
++#define AQ_SET    2
++
+ #define NUM_PWM_CHANNEL		2	/* EHRPWM channels */
+ 
+ struct ehrpwm_context {
+@@ -353,6 +367,118 @@ static int ehrpwm_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	return 0;
+ }
+ 
++static bool ehrpwm_is_enabled(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++	bool ret;
++	u16 aqcsfrc_reg;
++	u8 csfa_bits;
++	u16 aqctla_reg;
++
++	if(chip == NULL) {
++		return -EINVAL;
++	}
++
++	aqcsfrc_reg	= readw(pc->mmio_base + AQCSFRC);
++	csfa_bits	= (u8)(aqcsfrc_reg & AQCSFRC_CSFA_MASK);
++	
++	aqctla_reg	= readw(pc->mmio_base + AQCTLA);
++
++	ret = (csfa_bits != 0u)	 ? false :
++	      (aqctla_reg == 0u) ? false : true;
++
++	return ret;
++}
++
++static u64 ehrpwm_read_period(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++	u64 ret;
++	unsigned long tbclk_rate;
++	u16 tbprd_reg;
++	u64 period_cycles;
++	u64 period_ns;
++
++	if(chip == NULL) {
++		return -EINVAL;
++	}
++
++	tbprd_reg = readw(pc->mmio_base + TBPRD);
++	tbclk_rate = clk_get_rate(pc->tbclk);
++	period_cycles = tbprd_reg + 1u;
++	
++	/* period_ns = (period_cycles * 1e9) / tblck_rate */
++	period_ns = DIV_ROUND_UP_ULL(period_cycles * NSEC_PER_SEC, tbclk_rate);
++	
++	ret = period_ns;
++	return ret;
++}
++
++static u64 ehrpwm_read_duty_cycle(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++	u64 ret;
++	u16 cmpa_reg;
++	u64 duty_cycles;
++	u64 duty_ns;
++	unsigned long tbclk_rate;
++
++	if(chip == NULL) {
++		return -EINVAL;
++	}
++
++	cmpa_reg = readw(pc->mmio_base + CMPA);
++	tbclk_rate = clk_get_rate(pc->tbclk);
++	duty_cycles = cmpa_reg;
++	duty_ns = DIV_ROUND_UP_ULL(duty_cycles * NSEC_PER_SEC, tbclk_rate);
++	ret = duty_ns;
++
++	return ret;
++}
++
++static enum pwm_polarity ehrpwm_read_polarity(struct pwm_chip *chip)
++{
++	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
++	enum pwm_polarity ret;
++	u16 aqctla_reg;
++	u8 cau_action;
++	u8 cad_action;
++
++	if(chip == NULL) {
++		return -EINVAL;
++	}
++
++	aqctla_reg	= readw(pc->mmio_base + AQCTLA);
++	cau_action = (aqctla_reg & AQCTLA_CAU_MASK) >> AQCTLA_CAU_SHIFT;
++	cad_action = (aqctla_reg & AQCTLA_CAD_MASK) >> AQCTLA_CAD_SHIFT;
++	
++	if (cau_action == AQ_SET && cad_action == AQ_CLEAR) {
++		ret = PWM_POLARITY_NORMAL;
++	}
++	else if (cau_action == AQ_CLEAR && cad_action == AQ_SET) {
++		ret = PWM_POLARITY_INVERSED;
++	}
++
++	return ret;
++}
++
++static int ehrpwm_get_hw_state(struct pwm_chip *chip, struct pwm_device *pwm, 
++								struct pwm_state *state)
++{
++	int ret;
++
++	if(chip == NULL || pwm == NULL || state == NULL){
++		return -EINVAL;
++	}
++
++	state->enabled = ehrpwm_is_enabled(chip);
++	state->period = ehrpwm_read_period(chip);
++    state->duty_cycle = ehrpwm_read_duty_cycle(chip);
++    state->polarity = ehrpwm_read_polarity(chip);
++
++	return ret;
++}
++
+ static void ehrpwm_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
+@@ -449,8 +575,10 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct ehrpwm_pwm_chip *pc;
++	struct pwm_state state;
+ 	struct pwm_chip *chip;
+ 	struct clk *clk;
++	bool tbclk_enabled;
+ 	int ret;
+ 
+ 	chip = devm_pwmchip_alloc(&pdev->dev, NUM_PWM_CHANNEL, sizeof(*pc));
+@@ -501,10 +629,31 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, chip);
+ 	pm_runtime_enable(&pdev->dev);
+ 
++	ehrpwm_get_hw_state(chip, &chip->pwms[0], &state);
++	if(state.enabled == true) {
++		ret = clk_prepare_enable(pc->tbclk);
++		if (ret) {     
++			dev_err(&pdev->dev, "clk_prepare_enable() failed: %d\n", ret);
++			goto err_pwmchip_remove;
++		}
++            
++		tbclk_enabled = true;
++		ret = pm_runtime_get_sync(&pdev->dev);
++		if(ret < 0) {
++			dev_err(&pdev->dev, "pm_runtime_get_sync() failed: %d\n", ret);
++			clk_disable_unprepare(pc->tbclk);
++ 			goto err_pwmchip_remove;
++		}
++ 	}
++
+ 	return 0;
+ 
++err_pwmchip_remove:
++	pwmchip_remove(chip);
++
+ err_clk_unprepare:
+-	clk_unprepare(pc->tbclk);
++	if(tbclk_enabled)
++		clk_unprepare(pc->tbclk);
+ 
+ 	return ret;
+ }
+-- 
+2.25.1
 
-> +static int ad4851_setup(struct ad4851_state *st)
-> +{
-> +	unsigned int product_id;
-> +	int ret;
-> +
-> +	if (st->pd_gpio) {
-> +		/* To initiate a global reset, bring the PD pin high twice */
-> +		gpiod_set_value(st->pd_gpio, 1);
-> +		fsleep(1);
-> +		gpiod_set_value(st->pd_gpio, 0);
-> +		fsleep(1);
-> +		gpiod_set_value(st->pd_gpio, 1);
-> +		fsleep(1);
-> +		gpiod_set_value(st->pd_gpio, 0);
-> +		fsleep(1000);
-> +	} else {
-> +		ret = regmap_set_bits(st->regmap, AD4851_REG_INTERFACE_CONFIG_A,
-> +				      AD4851_SW_RESET);
-> +		if (ret)
-> +			return ret;
-
-Do we also need fsleep() after software reset?
-
-> +	}
-> +
-
-...
-
-> +static int ad4851_parse_channels(struct iio_dev *indio_dev,
-> +				 const struct iio_chan_spec ad4851_chan)
-> +{
-> +	struct ad4851_state *st = iio_priv(indio_dev);
-> +	struct device *dev = &st->spi->dev;
-> +	struct iio_chan_spec *channels;
-> +	unsigned int num_channels, reg;
-> +	unsigned int index = 0;
-> +	int ret;
-> +
-> +	num_channels = device_get_child_node_count(dev);
-> +	if (num_channels > AD4851_MAX_CH_NR)
-> +		return dev_err_probe(dev, -EINVAL, "Too many channels: %u\n",
-> +				     num_channels);
-> +
-> +	channels = devm_kcalloc(dev, num_channels, sizeof(*channels), GFP_KERNEL);
-> +	if (!channels)
-> +		return -ENOMEM;
-> +
-> +	indio_dev->channels = channels;
-> +	indio_dev->num_channels = num_channels;
-> +
-> +	device_for_each_child_node_scoped(dev, child) {
-> +		ret = fwnode_property_read_u32(child, "reg", &reg);
-> +		if (reg >= AD4851_MAX_CH_NR)
-> +			return dev_err_probe(dev, ret,
-> +					     "Invalid channel number\n");
-
-Need to check ret first, otherwise reg may be unintialized.
-
-> +		if (ret)
-> +			return dev_err_probe(dev, ret,
-> +					     "Missing channel number\n");
-> +		*channels = ad4851_chan;
-> +		channels->scan_index = index++;
-> +		channels->channel = reg;
-> +
-> +		if (fwnode_property_present(child, "diff-channels")) {
-> +			channels->channel2 = reg + st->info->max_channels;
-> +			channels->differential = 1;
-> +		}
-> +
-> +		channels++;
-> +
-> +		st->bipolar_ch[reg] = fwnode_property_read_bool(child, "bipolar");
-> +
-> +		if (st->bipolar_ch[reg]) {
-> +			channels->scan_type.sign = 's';
-> +		} else {
-> +			ret = regmap_write(st->regmap, AD4851_REG_CHX_SOFTSPAN(reg),
-> +					   AD4851_SOFTSPAN_0V_40V);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad4857_parse_channels(struct iio_dev *indio_dev)
-> +{
-> +	const struct iio_chan_spec ad4851_chan = AD4857_IIO_CHANNEL;
-> +
-> +	return ad4851_parse_channels(indio_dev, ad4851_chan);
-> +}
-> +
-> +static int ad4858_parse_channels(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4851_state *st = iio_priv(indio_dev);
-> +	struct device *dev = &st->spi->dev;
-> +	struct iio_chan_spec *ad4851_channels;
-> +	const struct iio_chan_spec ad4851_chan = AD4858_IIO_CHANNEL;
-> +	int ret;
-> +
-> +	ad4851_channels = (struct iio_chan_spec *)indio_dev->channels;
-> +
-> +	ret = ad4851_parse_channels(indio_dev, ad4851_chan);
-> +	if (ret)
-> +		return ret;
-> +
-> +	device_for_each_child_node_scoped(dev, child) {
-> +		ad4851_channels->has_ext_scan_type = 1;
-> +		if (fwnode_property_present(child, "bipolar")) {
-
-fwnode_property_read_bool() 
-
-(to be consistent with same check in ad4851_parse_channels())
-
-> +			ad4851_channels->ext_scan_type = ad4851_scan_type_20_b;
-> +			ad4851_channels->num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_b);
-> +
-> +		} else {
-> +			ad4851_channels->ext_scan_type = ad4851_scan_type_20_u;
-> +			ad4851_channels->num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_u);
-> +		}
-> +		ad4851_channels++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
 
