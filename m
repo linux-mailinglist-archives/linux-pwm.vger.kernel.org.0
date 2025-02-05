@@ -1,167 +1,148 @@
-Return-Path: <linux-pwm+bounces-4772-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4773-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82EEBA28723
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 10:56:05 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25FDDA28790
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 11:10:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E3CBA3A2A42
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 09:55:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B03717A581F
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 10:07:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1B8B22ACEE;
-	Wed,  5 Feb 2025 09:55:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB80122DF8A;
+	Wed,  5 Feb 2025 10:06:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="f85GYVav"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Irtg16Tb"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923E722A4ED;
-	Wed,  5 Feb 2025 09:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABFB22B5A1;
+	Wed,  5 Feb 2025 10:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738749354; cv=none; b=KOwMYo8dPwU9lOSU9kiha4LvFUV9Ex1G4b8Pbrrqe/7OlOL+P/Eqb/KFS+NDzEsbYfwPn+2ecCzhShjGZKDsh/GABiDkrtFMBf12Y2hJUdgF8iu1MHNSkiJPF0PJTGoqIVFf8DOdnpKLJnw8AJG6MfZvu109TtVuWpmjuDSipAY=
+	t=1738749977; cv=none; b=Lp3fH3v007p01gmhzu+Xf1x10mbxSpIE37Ild665Kz83u6EtvS9U7pxJQRgwqQxx8YZcRdWkAZcH05SNjsXIa9Z77U3/VMlEPl6BtFd+V7rVxwhYdLDB70xXtvfv50pTJ7pJQRVwouGl5OogtkaxRUrROdHqA/4T60cr+QpV3UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738749354; c=relaxed/simple;
-	bh=juUmvjJB6cYN04ExXM8nyniU2O+Plp7bVycEkuK8aAI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=llkGPt0o33UaUGZRJqtXlcTmIaT+M0fEuL52DWevN77YoIooFc5FAnqw6V8PEWjBTpKa7ufQl75pnGsGZNr3uoovgjjpMc84gT7MgA/d7eX8E6Mh4nTTevyC34mA8ozGd/e7VbHCxIRMhkyLfc8YYX/9yFmkZr25/tX19GSJwhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=f85GYVav; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id 6C44C43419;
-	Wed,  5 Feb 2025 09:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738749350;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r1Q/Kgs+ZlVqX6ytI6zaw2RB7jNNEUJCoJx72kvQuBk=;
-	b=f85GYVavlQpiXP+nIwAuKxYgQlFS65E6POm8Hqwj9Fb8MRvDCMH6J7ji/3TpCY87zMnZ+j
-	1YMJG7FkuxJrezZvXB83XlJH6Ya7HiTUmZYXGSVnP5e0ZK2tHRNZA2jkvApc8oMwrbyxO5
-	x8ArXop3f0yagd3yRo1aGGbtVnTyWWGO51Xf04cFKvxjJItdzkz0g2DMWKlXWtzQlu0tIZ
-	avsxCrgFG5B1LJV5prXzf6XhwWeblwNteglHfnX7U7DByeII4zAFxOWEEl+q7bPvS1V5oy
-	+eSR/S+EBjPl/EPzGmBRm7aMlgPXjcekMTZ3NNcfpQhOzOLU5AdFy52ZrIgNlw==
-From: Herve Codina <herve.codina@bootlin.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Herve Codina <herve.codina@bootlin.com>
-Cc: linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v3 2/2] pwm: Add support for pwm nexus dt bindings
-Date: Wed,  5 Feb 2025 10:55:43 +0100
-Message-ID: <20250205095547.536083-3-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250205095547.536083-1-herve.codina@bootlin.com>
-References: <20250205095547.536083-1-herve.codina@bootlin.com>
+	s=arc-20240116; t=1738749977; c=relaxed/simple;
+	bh=9blT37ja1It8cIhR7kixRLVaycXv9QA1EF5U7E97CRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ho6AUJVfSrFQD9klBC/N6IjVB26A3U+O9hMpVTSpCdcoAJQw4XZq6CSqF7vglov8BgN0VOGFnbmL9ADFcpapXH7rKlVPjtriyjII+LJALoZvhvbQ/Gez/ddt/nkkVBJ1MHxoJrS0zfjGhwc2EEI1cqcJUQrh6nC9iDdivbpiGk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Irtg16Tb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07FB5C4CEE6;
+	Wed,  5 Feb 2025 10:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738749977;
+	bh=9blT37ja1It8cIhR7kixRLVaycXv9QA1EF5U7E97CRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Irtg16TbS6QQCIbILy3pcNRCMUzDzpvr3vV+8DhTru2TPzZf/se2KD0QWwzUuSwks
+	 vUnsJATiQuhIMSPXM67wQqGJ8vzvvFZcnOs9J+jRUXlrTpUhMPBlleXmZhVghGMJZ7
+	 +6+/KchLtz+CAiMaZlbWj8WAHFF3/u3Kl2cPbamT++o/A0gSsq3a2fJ5D+uuoOIidd
+	 GstmXsz7816VPsbghfD3jkuKgnyF428dhiEOzheitLJtMV/KKvl0biAhMgWyRvKahh
+	 645jzng7TUffgormBNR0owQGm6uJY15dqHcvmUL6XtIesGA224LxFZrUr+iPtZYj2U
+	 eeZzw8J5aAHOA==
+Date: Wed, 5 Feb 2025 11:06:14 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Chen Wang <unicornxw@gmail.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	unicorn_wang@outlook.com, inochiama@outlook.com, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	chao.wei@sophgo.com, haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, 
+	chunzhi.lin@sophgo.com, Sean Young <sean@mess.org>
+Subject: Re: [PATCH v7 2/3] pwm: sophgo: add driver for Sophgo SG2042 PWM
+Message-ID: <ivgsidvdx2ypntnlopww6fiwyuzj2sadt3znyofr54dsz3c5d4@3mr25vhwlwy3>
+References: <cover.1738737617.git.unicorn_wang@outlook.com>
+ <ae8ea1bf0bb0a09336cd8b7f627a994630524bba.1738737617.git.unicorn_wang@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfedufecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeuuddtvedthedtgfeugeeujeetueehjeffteevtdeugfffffdufedtuedvgeelfeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtrdhlohgtrghlughomhgrihhnpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtp
- hhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqphifmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="arbxzkuj76u4tbwm"
+Content-Disposition: inline
+In-Reply-To: <ae8ea1bf0bb0a09336cd8b7f627a994630524bba.1738737617.git.unicorn_wang@outlook.com>
 
-Platforms can have a standardized connector/expansion slot that exposes
-signals like PWMs to expansion boards in an SoC agnostic way.
 
-The support for nexus node [1] has been added to handle those cases in
-commit bd6f2fd5a1d5 ("of: Support parsing phandle argument lists through
-a nexus node"). This commit introduced of_parse_phandle_with_args_map()
-to handle nexus nodes in a generic way and the gpio subsystem adopted
-the support in commit c11e6f0f04db ("gpio: Support gpio nexus dt
-bindings").
+--arbxzkuj76u4tbwm
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7 2/3] pwm: sophgo: add driver for Sophgo SG2042 PWM
+MIME-Version: 1.0
 
-A nexus node allows to remap a phandle list in a consumer node through a
-connector node in a generic way. With this remapping supported, the
-consumer node needs to knwow only about the nexus node. Resources behind
-the nexus node are decoupled by the nexus node itself.
+Hello Chen,
 
-This is particularly useful when this consumer is described in a
-device-tree overlay. Indeed, to have the exact same overlay reused with
-several base systems the overlay needs to known only about the connector
-is going to be applied to without any knowledge of the SoC (or the
-component providing the resource) available in the system.
+I was tempted to apply this patch while reading throug it until nearly
+the end ...
 
-As an example, suppose 3 PWMs connected to a connector. The connector
-PWM 0 and 2 comes from the PWM 1 and 3 of the pwm-controller1. The
-connector PWM 1 comes from the PWM 4 of the pwm-controller2. An
-expansion device is connected to the connector and uses the connector
-PMW 1.
+On Wed, Feb 05, 2025 at 03:01:13PM +0800, Chen Wang wrote:
+> [...]
+> +static int pwm_sg2042_probe(struct platform_device *pdev)
+> +{
+> [...]
+> +	rst =3D devm_reset_control_get_optional_shared_deasserted(dev, NULL);
+> +	if (IS_ERR(rst))
+> +		return dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset\n");
+> +
+> +	chip->ops =3D &pwm_sg2042_ops;
+> +	chip->atomic =3D true;
+> +
+> +	ret =3D devm_pwmchip_add(dev, chip);
+> +	if (ret < 0) {
+> +		reset_control_assert(rst);
 
-Nexus node support in PWM allows the following description:
-	soc {
-		soc_pwm1: pwm-controller1 {
-			#pwm-cells = <3>;
-		};
+This is wrong (well, or unneeded). With
+devm_reset_control_get_optional_shared_deasserted() the devm cleanup
+cares for reasserting the reset.
 
-		soc_pwm2: pwm-controller2 {
-			#pwm-cells = <3>;
-		};
-	};
+> +		return dev_err_probe(dev, ret, "Failed to register PWM chip\n");
+> +	}
+> +
+> +	return 0;
+> +}
 
-	connector: connector {
-		#pwm-cells = <3>;
-		pwm-map = <0 0 0 &soc_pwm1 1 0 0>,
-			  <1 0 0 &soc_pwm2 4 0 0>,
-			  <2 0 0 &soc_pwm1 3 0 0>;
-		pwm-map-mask = <0xffffffff 0x0 0x0>;
-		pwm-map-pass-thru = <0x0 0xffffffff 0xffffffff>;
-	};
+If you want I can apply and squash the following in:
 
-	expansion_device {
-		pwms = <&connector 1 57000 0>;
-	};
+diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg204=
+2.c
+index ce8cf8af3402..ff4639d849ce 100644
+--- a/drivers/pwm/pwm-sophgo-sg2042.c
++++ b/drivers/pwm/pwm-sophgo-sg2042.c
+@@ -174,10 +174,8 @@ static int pwm_sg2042_probe(struct platform_device *pd=
+ev)
+ 	chip->atomic =3D true;
+=20
+ 	ret =3D devm_pwmchip_add(dev, chip);
+-	if (ret < 0) {
+-		reset_control_assert(rst);
++	if (ret < 0)
+ 		return dev_err_probe(dev, ret, "Failed to register PWM chip\n");
+-	}
+=20
+ 	return 0;
+ }
 
-From the expansion device point of view, the PWM requested is the PWM 1
-available at the connector regardless of the exact PWM wired to this
-connector PWM 1. Thanks to nexus node remapping described at connector
-node, this PWM is the PWM 4 of the pwm-controller2.
+ack?
 
-The nexus node remapping handling consists in handling #pwm-cells,
-pwm-map, pwm-map-mask and pwm-map-pass-thru properties. This is already
-supported by of_parse_phandle_with_args_map() thanks to its stem_name
-parameter.
+Best regards
+Uwe
 
-Add support for nexus node device-tree binding and the related remapping
-in the PWM subsystem by simply using of_parse_phandle_with_args_map()
-instead of of_parse_phandle_with_args().
+--arbxzkuj76u4tbwm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[1] https://github.com/devicetree-org/devicetree-specification/blob/v0.4/source/chapter2-devicetree-basics.rst#nexus-nodes-and-specifier-mapping
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/pwm/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmejOBQACgkQj4D7WH0S
+/k7xhAf+NrI5L589ZuQPvEDwS8Qwb4XlzoNnmEFCbOWCj0645JBLD/7WjiTYpfMg
+Kgq30Y3aooAF7lznjQC3Dhgr8AmTEVevm2Cq+zvW0kVXG0AfzN8EZTd72OYJz6xB
+Zibrt+MCzUt45EOrPwYjdndRLjo/M7N35/M24oWLhXKr7bw8DPqGFQwR0Baz/SoX
+jVW41leLuAm8skH4my6WfNcsjCkhF25vo0LQDkUBqJ8jLCxdQ0QmnfzIaDu9nMUe
+GUStrmWJIDzQDCtn6RNIQNPEYv72rjF2BtOVTRxCfD3VBKiOk9TwWA1wLtTVN6Ig
+hFHjxG2+crhEqJZBaoVZd6malV3W4A==
+=0gIf
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index ccd54c089bab..a4eedf09922d 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -1716,8 +1716,7 @@ static struct pwm_device *of_pwm_get(struct device *dev, struct device_node *np,
- 			return ERR_PTR(index);
- 	}
- 
--	err = of_parse_phandle_with_args(np, "pwms", "#pwm-cells", index,
--					 &args);
-+	err = of_parse_phandle_with_args_map(np, "pwms", "pwm", index, &args);
- 	if (err) {
- 		pr_err("%s(): can't parse \"pwms\" property\n", __func__);
- 		return ERR_PTR(err);
--- 
-2.47.1
-
+--arbxzkuj76u4tbwm--
 
