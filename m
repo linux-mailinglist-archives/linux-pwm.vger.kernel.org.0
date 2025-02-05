@@ -1,58 +1,54 @@
-Return-Path: <linux-pwm+bounces-4773-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4774-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25FDDA28790
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 11:10:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5FF1A288EE
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 12:12:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B03717A581F
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 10:07:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8FD9D1888602
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 11:12:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB80122DF8A;
-	Wed,  5 Feb 2025 10:06:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35B1C1519A3;
+	Wed,  5 Feb 2025 11:12:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Irtg16Tb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clEIarqG"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABFB22B5A1;
-	Wed,  5 Feb 2025 10:06:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C01F151995;
+	Wed,  5 Feb 2025 11:12:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738749977; cv=none; b=Lp3fH3v007p01gmhzu+Xf1x10mbxSpIE37Ild665Kz83u6EtvS9U7pxJQRgwqQxx8YZcRdWkAZcH05SNjsXIa9Z77U3/VMlEPl6BtFd+V7rVxwhYdLDB70xXtvfv50pTJ7pJQRVwouGl5OogtkaxRUrROdHqA/4T60cr+QpV3UQ=
+	t=1738753928; cv=none; b=gngbDraum/JRTpFIVQljYW7/4XuOzLx9KJLXDiAcc4grelaVv8OAxhTUGGsfWfT9h2iAGe9AvmJex5Mk46z9O/XuUCqVfQOa4ELisYzJrmWlHbTFDXmy0qqGhkyhti9z9mZEeaVYIOzc58SYMaWqB7aEdKTLRKSy46H58dLWlY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738749977; c=relaxed/simple;
-	bh=9blT37ja1It8cIhR7kixRLVaycXv9QA1EF5U7E97CRo=;
+	s=arc-20240116; t=1738753928; c=relaxed/simple;
+	bh=JKEieNUi7AK17YQlD/n8fcPUqowFYUp2ArFVbP6jf6w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ho6AUJVfSrFQD9klBC/N6IjVB26A3U+O9hMpVTSpCdcoAJQw4XZq6CSqF7vglov8BgN0VOGFnbmL9ADFcpapXH7rKlVPjtriyjII+LJALoZvhvbQ/Gez/ddt/nkkVBJ1MHxoJrS0zfjGhwc2EEI1cqcJUQrh6nC9iDdivbpiGk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Irtg16Tb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07FB5C4CEE6;
-	Wed,  5 Feb 2025 10:06:16 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=bZPPYyAv4S+lsl2RsXkL3gdLAAKOt5cSdGfFLmmWDbXm4tCJqYnLd6C5frrsemcBJDmaaXF7YM7NUT8a9HNe5p+YFhtURN0UI1sHeWThuMPiOZ8G4GmztG91VJbY0BUULKxvkB1lcUVNxVfgxOLaF4DneAWg0VSl23R/4H37EYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clEIarqG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24AE0C4CED1;
+	Wed,  5 Feb 2025 11:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738749977;
-	bh=9blT37ja1It8cIhR7kixRLVaycXv9QA1EF5U7E97CRo=;
+	s=k20201202; t=1738753927;
+	bh=JKEieNUi7AK17YQlD/n8fcPUqowFYUp2ArFVbP6jf6w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Irtg16TbS6QQCIbILy3pcNRCMUzDzpvr3vV+8DhTru2TPzZf/se2KD0QWwzUuSwks
-	 vUnsJATiQuhIMSPXM67wQqGJ8vzvvFZcnOs9J+jRUXlrTpUhMPBlleXmZhVghGMJZ7
-	 +6+/KchLtz+CAiMaZlbWj8WAHFF3/u3Kl2cPbamT++o/A0gSsq3a2fJ5D+uuoOIidd
-	 GstmXsz7816VPsbghfD3jkuKgnyF428dhiEOzheitLJtMV/KKvl0biAhMgWyRvKahh
-	 645jzng7TUffgormBNR0owQGm6uJY15dqHcvmUL6XtIesGA224LxFZrUr+iPtZYj2U
-	 eeZzw8J5aAHOA==
-Date: Wed, 5 Feb 2025 11:06:14 +0100
+	b=clEIarqGcvwgHEfI9rsO8lSW5/XGdep+850/H9ZwN8cBYhRbajiW3tSgNns5Vs0ke
+	 A21xPXhY6CcC5xAsp40nKyYrmevW4IVQR2lAq/DOkAF0Tj60sVw3vD4E7oDpu9FNUa
+	 vLdsKWIUbsk8d8sfI1HYFNR3D8RH2a4UDRts0fzMs4yGGSiO+Omg1N3saK53+ezjp6
+	 csqJWlSMqXpeF5KmFUaCn3zeAUVAGajiednUSh+xgmBOrsQYmf0CjIYjhHdFUzsWg5
+	 DooJ+mxz3upt2Zd5GUmVsmvGxj1xSbHTdhOQXIxQOPFVBcekNz7g/m1G3A88KfeDUm
+	 5G01HKNEbf7EQ==
+Date: Wed, 5 Feb 2025 12:12:04 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Chen Wang <unicornxw@gmail.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	unicorn_wang@outlook.com, inochiama@outlook.com, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	chao.wei@sophgo.com, haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, 
-	chunzhi.lin@sophgo.com, Sean Young <sean@mess.org>
-Subject: Re: [PATCH v7 2/3] pwm: sophgo: add driver for Sophgo SG2042 PWM
-Message-ID: <ivgsidvdx2ypntnlopww6fiwyuzj2sadt3znyofr54dsz3c5d4@3mr25vhwlwy3>
-References: <cover.1738737617.git.unicorn_wang@outlook.com>
- <ae8ea1bf0bb0a09336cd8b7f627a994630524bba.1738737617.git.unicorn_wang@outlook.com>
+To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: tiehrpwm: ensures that state.enabled is
+ synchronized in .probe()
+Message-ID: <yxolbwr62nfdaeobghokx32fihhh56falxpg4u7kex4is7soam@mfswlo4rbkaq>
+References: <20250204185540.52233-1-rafael.v.volkmer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -60,89 +56,329 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="arbxzkuj76u4tbwm"
+	protocol="application/pgp-signature"; boundary="5vaexsucjjw4yogh"
 Content-Disposition: inline
-In-Reply-To: <ae8ea1bf0bb0a09336cd8b7f627a994630524bba.1738737617.git.unicorn_wang@outlook.com>
+In-Reply-To: <20250204185540.52233-1-rafael.v.volkmer@gmail.com>
 
 
---arbxzkuj76u4tbwm
+--5vaexsucjjw4yogh
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v7 2/3] pwm: sophgo: add driver for Sophgo SG2042 PWM
+Subject: Re: [PATCH] pwm: tiehrpwm: ensures that state.enabled is
+ synchronized in .probe()
 MIME-Version: 1.0
 
-Hello Chen,
+Hello Rafael,
 
-I was tempted to apply this patch while reading throug it until nearly
-the end ...
+first of all: There are several issues regarding code style, checkpatch
+reports
 
-On Wed, Feb 05, 2025 at 03:01:13PM +0800, Chen Wang wrote:
-> [...]
-> +static int pwm_sg2042_probe(struct platform_device *pdev)
+	total: 20 errors, 13 warnings, 180 lines checked
+
+Please fix them all for v2 (or mention unfixed ones in the cover text,
+ideally with a reasoning). (In case you don't know:
+
+	scripts/checkpatch.pl -g @
+
+; for bonus points add --strict.)
+
+On Tue, Feb 04, 2025 at 03:55:40PM -0300, Rafael V. Volkmer wrote:
+> Fixes potential desynchronization of state.enabled in the .probe()
+> method by suggesting proper handling of hardware state initialization.
+> Adds considerations for implementing .get_hw_state() to check the
+> current state of the module by checking physical registers.
+
+I don't understand that. What is .get_hw_state()?
+
+Returning here after reading through the complete patch, I suggest
+something like:
+
+	If the hardware is already active during probe, it's not
+	asserted that the clock is enabled. So check in
+	ehrpwm_pwm_probe() if the enable bit is set and call
+	clk_enable() and pm_runtime_get_sync() if yes.
+
+> Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
+> ---
+>  drivers/pwm/pwm-tiehrpwm.c | 151 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 150 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+> index 0125e73b98df..5de213bc3ef5 100644
+> --- a/drivers/pwm/pwm-tiehrpwm.c
+> +++ b/drivers/pwm/pwm-tiehrpwm.c
+> @@ -91,6 +91,20 @@
+>  #define AQCSFRC_CSFA_FRCHIGH	BIT(1)
+>  #define AQCSFRC_CSFA_DISSWFRC	(BIT(1) | BIT(0))
+> =20
+> +#define AQCTLA_CAU_MASK   (BIT(5) | BIT(4))
+> +#define AQCTLA_CAU_SHIFT  4
+> +#define AQCTLA_CAD_MASK   (BIT(9) | BIT(8))
+> +#define AQCTLA_CAD_SHIFT  8
+
+Please use
+
+	#define AQCTLA_CAD	GENMASK(9, 8)
+
+and for the usage then instead of
+
+	cad_action =3D (aqctla_reg & AQCTLA_CAD_MASK) >> AQCTLA_CAD_SHIFT;
+
+better:
+
+	cad_action =3D FIELD_GET(AQCTLA_CAD, aqctla_reg);
+
+> +
+> +/* The ePWM hardware encodes compare actions with two bits each:
+> + *   00 =3D Do nothing
+> + *   01 =3D Clear
+> + *   10 =3D Set
+> + *   11 =3D Toggle
+> + */
+> +#define AQ_CLEAR  1
+> +#define AQ_SET    2
+> +
+>  #define NUM_PWM_CHANNEL		2	/* EHRPWM channels */
+> =20
+>  struct ehrpwm_context {
+> @@ -353,6 +367,118 @@ static int ehrpwm_pwm_enable(struct pwm_chip *chip,=
+ struct pwm_device *pwm)
+>  	return 0;
+>  }
+> =20
+> +static bool ehrpwm_is_enabled(struct pwm_chip *chip)
 > +{
-> [...]
-> +	rst =3D devm_reset_control_get_optional_shared_deasserted(dev, NULL);
-> +	if (IS_ERR(rst))
-> +		return dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset\n");
+> +	struct ehrpwm_pwm_chip *pc =3D to_ehrpwm_pwm_chip(chip);
+> +	bool ret;
+> +	u16 aqcsfrc_reg;
+> +	u8 csfa_bits;
+> +	u16 aqctla_reg;
 > +
-> +	chip->ops =3D &pwm_sg2042_ops;
-> +	chip->atomic =3D true;
+> +	if(chip =3D=3D NULL) {
+> +		return -EINVAL;
+> +	}
+
+return -EINVAL is bogus for a function returning bool. The solution is
+easy: chip is never NULL here, so please drop.=20
+
 > +
-> +	ret =3D devm_pwmchip_add(dev, chip);
-> +	if (ret < 0) {
-> +		reset_control_assert(rst);
+> +	aqcsfrc_reg	=3D readw(pc->mmio_base + AQCSFRC);
+> +	csfa_bits	=3D (u8)(aqcsfrc_reg & AQCSFRC_CSFA_MASK);
 
-This is wrong (well, or unneeded). With
-devm_reset_control_get_optional_shared_deasserted() the devm cleanup
-cares for reasserting the reset.
+Single space before =3D please.
 
-> +		return dev_err_probe(dev, ret, "Failed to register PWM chip\n");
+> +	aqctla_reg	=3D readw(pc->mmio_base + AQCTLA);
+> +
+> +	ret =3D (csfa_bits !=3D 0u)	 ? false :
+> +	      (aqctla_reg =3D=3D 0u) ? false : true;
+
+I didn't understand what these values mean, but this is unreadable. I
+prefer:
+
+	if (csfa_bits)
+		return false;
+
+	if (aqctla_reg)
+		return true;
+
+	return false;
+
+Maybe also add code comments about the semantic to the respective
+blocks.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static u64 ehrpwm_read_period(struct pwm_chip *chip)
+> +{
+> +	struct ehrpwm_pwm_chip *pc =3D to_ehrpwm_pwm_chip(chip);
+> +	u64 ret;
+> +	unsigned long tbclk_rate;
+> +	u16 tbprd_reg;
+> +	u64 period_cycles;
+> +	u64 period_ns;
+> +
+> +	if(chip =3D=3D NULL) {
+> +		return -EINVAL;
 > +	}
 > +
-> +	return 0;
+> +	tbprd_reg =3D readw(pc->mmio_base + TBPRD);
+> +	tbclk_rate =3D clk_get_rate(pc->tbclk);
+> +	period_cycles =3D tbprd_reg + 1u;
+> +=09
+> +	/* period_ns =3D (period_cycles * 1e9) / tblck_rate */
+> +	period_ns =3D DIV_ROUND_UP_ULL(period_cycles * NSEC_PER_SEC, tbclk_rate=
+);
+> +=09
+> +	ret =3D period_ns;
+> +	return ret;
+
+return period_ns;
+
+Given that ehrpwm_read_period() and ehrpwm_read_duty_cycle() are called
+directly after another, I suggest to rework the code that clk_get_rate()
+is only called once. (Maybe even put it into ehrpwm_pwm_chip.)
+
 > +}
+> +
+> +static u64 ehrpwm_read_duty_cycle(struct pwm_chip *chip)
+> +{
+> +	struct ehrpwm_pwm_chip *pc =3D to_ehrpwm_pwm_chip(chip);
+> +	u64 ret;
+> +	u16 cmpa_reg;
+> +	u64 duty_cycles;
+> +	u64 duty_ns;
+> +	unsigned long tbclk_rate;
+> +
+> +	if(chip =3D=3D NULL) {
+> +		return -EINVAL;
+> +	}
+> +
+> +	cmpa_reg =3D readw(pc->mmio_base + CMPA);
+> +	tbclk_rate =3D clk_get_rate(pc->tbclk);
+> +	duty_cycles =3D cmpa_reg;
+> +	duty_ns =3D DIV_ROUND_UP_ULL(duty_cycles * NSEC_PER_SEC, tbclk_rate);
+> +	ret =3D duty_ns;
+> +
+> +	return ret;
+> +}
+> +
+> +static enum pwm_polarity ehrpwm_read_polarity(struct pwm_chip *chip)
+> +{
+> +	struct ehrpwm_pwm_chip *pc =3D to_ehrpwm_pwm_chip(chip);
+> +	enum pwm_polarity ret;
+> +	u16 aqctla_reg;
+> +	u8 cau_action;
+> +	u8 cad_action;
+> +
+> +	if(chip =3D=3D NULL) {
+> +		return -EINVAL;
+> +	}
+> +
+> +	aqctla_reg	=3D readw(pc->mmio_base + AQCTLA);
+> +	cau_action =3D (aqctla_reg & AQCTLA_CAU_MASK) >> AQCTLA_CAU_SHIFT;
+> +	cad_action =3D (aqctla_reg & AQCTLA_CAD_MASK) >> AQCTLA_CAD_SHIFT;
+> +=09
+> +	if (cau_action =3D=3D AQ_SET && cad_action =3D=3D AQ_CLEAR) {
+> +		ret =3D PWM_POLARITY_NORMAL;
+> +	}
+> +	else if (cau_action =3D=3D AQ_CLEAR && cad_action =3D=3D AQ_SET) {
+> +		ret =3D PWM_POLARITY_INVERSED;
+> +	}
 
-If you want I can apply and squash the following in:
+I would expect the compiler to issue a warning here about ret being
+uninitialized in some situations.
 
-diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg204=
-2.c
-index ce8cf8af3402..ff4639d849ce 100644
---- a/drivers/pwm/pwm-sophgo-sg2042.c
-+++ b/drivers/pwm/pwm-sophgo-sg2042.c
-@@ -174,10 +174,8 @@ static int pwm_sg2042_probe(struct platform_device *pd=
-ev)
- 	chip->atomic =3D true;
-=20
- 	ret =3D devm_pwmchip_add(dev, chip);
--	if (ret < 0) {
--		reset_control_assert(rst);
-+	if (ret < 0)
- 		return dev_err_probe(dev, ret, "Failed to register PWM chip\n");
--	}
-=20
- 	return 0;
- }
+Not sure checkpatch points that out: } and "else" go on the same line.
 
-ack?
+> +
+> +	return ret;
+> +}
+> +
+> +static int ehrpwm_get_hw_state(struct pwm_chip *chip, struct pwm_device =
+*pwm,=20
+> +								struct pwm_state *state)
+
+The canonical name for this function is ehrpwm_pwm_get_state. And I
+would have expected an assignment to .get_state in ehrpwm_pwm_ops.
+
+> +{
+> +	int ret;
+> +
+> +	if(chip =3D=3D NULL || pwm =3D=3D NULL || state =3D=3D NULL){
+> +		return -EINVAL;
+> +	}
+> +
+> +	state->enabled =3D ehrpwm_is_enabled(chip);
+> +	state->period =3D ehrpwm_read_period(chip);
+> +    state->duty_cycle =3D ehrpwm_read_duty_cycle(chip);
+> +    state->polarity =3D ehrpwm_read_polarity(chip);
+> +
+> +	return ret;
+> +}
+> +
+>  static void ehrpwm_pwm_disable(struct pwm_chip *chip, struct pwm_device =
+*pwm)
+>  {
+>  	struct ehrpwm_pwm_chip *pc =3D to_ehrpwm_pwm_chip(chip);
+> @@ -449,8 +575,10 @@ static int ehrpwm_pwm_probe(struct platform_device *=
+pdev)
+>  {
+>  	struct device_node *np =3D pdev->dev.of_node;
+>  	struct ehrpwm_pwm_chip *pc;
+> +	struct pwm_state state;
+>  	struct pwm_chip *chip;
+>  	struct clk *clk;
+> +	bool tbclk_enabled;
+>  	int ret;
+> =20
+>  	chip =3D devm_pwmchip_alloc(&pdev->dev, NUM_PWM_CHANNEL, sizeof(*pc));
+> @@ -501,10 +629,31 @@ static int ehrpwm_pwm_probe(struct platform_device =
+*pdev)
+>  	platform_set_drvdata(pdev, chip);
+>  	pm_runtime_enable(&pdev->dev);
+> =20
+> +	ehrpwm_get_hw_state(chip, &chip->pwms[0], &state);
+> +	if(state.enabled =3D=3D true) {
+
+Given that you only use state.enabled here, maybe shorten that to
+
+	if (ehrpwm_is_enabled(...))
+
+> +		ret =3D clk_prepare_enable(pc->tbclk);
+
+While it's a good idea to enable the clock if the PWM is already running
+at probe time, this must happen before pwmchip_add().
+
+> +		if (ret) {    =20
+> +			dev_err(&pdev->dev, "clk_prepare_enable() failed: %d\n", ret);
+
+Please use dev_err_probe() here.
+
+> +			goto err_pwmchip_remove;
+> +		}
+> +           =20
+> +		tbclk_enabled =3D true;
+> +		ret =3D pm_runtime_get_sync(&pdev->dev);
+> +		if(ret < 0) {
+> +			dev_err(&pdev->dev, "pm_runtime_get_sync() failed: %d\n", ret);
+> +			clk_disable_unprepare(pc->tbclk);
+> + 			goto err_pwmchip_remove;
+> +		}
+> + 	}
+> +
+>  	return 0;
+> =20
+> +err_pwmchip_remove:
+> +	pwmchip_remove(chip);
+> +
+>  err_clk_unprepare:
+> -	clk_unprepare(pc->tbclk);
+> +	if(tbclk_enabled)
+> +		clk_unprepare(pc->tbclk);
+> =20
+>  	return ret;
+>  }
 
 Best regards
 Uwe
 
---arbxzkuj76u4tbwm
+--5vaexsucjjw4yogh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmejOBQACgkQj4D7WH0S
-/k7xhAf+NrI5L589ZuQPvEDwS8Qwb4XlzoNnmEFCbOWCj0645JBLD/7WjiTYpfMg
-Kgq30Y3aooAF7lznjQC3Dhgr8AmTEVevm2Cq+zvW0kVXG0AfzN8EZTd72OYJz6xB
-Zibrt+MCzUt45EOrPwYjdndRLjo/M7N35/M24oWLhXKr7bw8DPqGFQwR0Baz/SoX
-jVW41leLuAm8skH4my6WfNcsjCkhF25vo0LQDkUBqJ8jLCxdQ0QmnfzIaDu9nMUe
-GUStrmWJIDzQDCtn6RNIQNPEYv72rjF2BtOVTRxCfD3VBKiOk9TwWA1wLtTVN6Ig
-hFHjxG2+crhEqJZBaoVZd6malV3W4A==
-=0gIf
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmejR4IACgkQj4D7WH0S
+/k5spQgAiQ06Ai9F5Iyj2p1FUcJcpFHV3mOJ9R4483myQw+nfUQZSl5FHRfANR50
+IvyKZ8exb6VGJfOcHWOaK1SkePB0v6U3DF38ExguM7VRaZhOJR10H8LUNzCCIW59
+RSSM/pUcZJ36HI56ji6xCbmvGyzdtPcSwbf2hUEzibH9On7lF6T/t8r4zUXSva8d
+jxU1PJV4Muwh29SlfzjyOoOfyiBvHLl5vsn/ZWl3hWAvPNI2eQA/5mrxFTHz7aHB
+tL0Yxfb3kzP41VL83lms57HELqyZ8UYXVD6/IAeKwTkglip/G8TaDwdHOJ4XSO+U
+s76gRbQgNwUp7epwoObEyuDxfy8itA==
+=YHJ6
 -----END PGP SIGNATURE-----
 
---arbxzkuj76u4tbwm--
+--5vaexsucjjw4yogh--
 
