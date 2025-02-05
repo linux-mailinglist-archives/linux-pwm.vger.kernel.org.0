@@ -1,108 +1,104 @@
-Return-Path: <linux-pwm+bounces-4791-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4792-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 959D7A29946
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 19:41:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E757A299E9
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 20:14:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2DCD0167CE9
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 18:41:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2733416B020
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 19:14:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C969B1FF7CF;
-	Wed,  5 Feb 2025 18:40:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B796214A8B;
+	Wed,  5 Feb 2025 19:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWLFnhfp"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail.bugwerft.de (mail.bugwerft.de [46.23.86.59])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE79E1FF7B5
-	for <linux-pwm@vger.kernel.org>; Wed,  5 Feb 2025 18:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.23.86.59
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE268214A7F;
+	Wed,  5 Feb 2025 19:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738780809; cv=none; b=f0dnqghWEmH4fGyRxywz36dxubcdqqi2SV4iCXLdfBsh+Jjp5lW6VwdxHw51BpJDprSSdeGH7mR2/c1RI/kyV5KzHGqTON3h+9zM1sjCkcUyr7PIPWoazDaUr5HtVy5Ew5Rik0q4Mh4dXDAjbFH+WXtRh7e9o1LYWYRo4ocu+n0=
+	t=1738782791; cv=none; b=AijAGfapn4kmWdXp19GHaQviOL6yAKWSpG0fWyp0C3jYsctb0Br122OkdtfDvG47ng9YwdtbJWmFdQIldiwj+saor0dpKjvnLbPIAfJ5kj5bZjamNsZMkGCkGr9IrNve29a8aeqHdKRC/opgKX8FWT6C1IDOPrpsfWpmyneDOrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738780809; c=relaxed/simple;
-	bh=oSHF51smxJZUm5AwnRs840AbrS2oh3i8OwcnsRmsNyo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G+Nn44UnAB3sxRqNhcnDGv5E1XGrPlk55+youtTovz9JhSeYvqfNNnZP7hpQHbOpYx5oTHJ/eXRe1DRuswJQzszyYuuNGHd9AIxi3CtCxURc8q85RJw7yunALW3LfElA71GdqAuOusQg3db+7iFO6lTGC3ZqlWS+vjV6tGhzWGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zonque.org; spf=pass smtp.mailfrom=zonque.org; arc=none smtp.client-ip=46.23.86.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zonque.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zonque.org
-Received: from [192.168.100.34] (p4ff24055.dip0.t-ipconnect.de [79.242.64.85])
-	by mail.bugwerft.de (Postfix) with ESMTPSA id 39D57281C3B;
-	Wed, 05 Feb 2025 18:32:31 +0000 (UTC)
-Message-ID: <adbfeb77-592c-4b14-9a0c-1e63bf9affad@zonque.org>
-Date: Wed, 5 Feb 2025 19:32:26 +0100
+	s=arc-20240116; t=1738782791; c=relaxed/simple;
+	bh=NghvBE7ABv9eK4/grIgqAbvA6pFodr6ODz6eGUErMIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iM9ggvz25fbCPCglLvTDk2Uqwxf/1qT1lS9XQv++H1PfxqXrhPW2DAAbgo7MSrJkBMXuOFbZIyJ83mCNgzQ+rOr7k88Kg8ZmY5jgCBuk8KJQEM+FsvvEh33twDOo2y/7U7lDL9dWvRNEqBGksZqUua+oYD6gFcE+qKD8y8Ia8Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWLFnhfp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C381C4CEE4;
+	Wed,  5 Feb 2025 19:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738782790;
+	bh=NghvBE7ABv9eK4/grIgqAbvA6pFodr6ODz6eGUErMIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BWLFnhfpPK00FuS4Ef2ti+604RVGnQK2zoBDXvA9KVaXeszn2pEbzut6+GNGWMBLg
+	 CiHCBpU6tcCb6aPEmZKjj+D5bEZR2LfB664ib9s7FK6EVhCOi+uzJnxDu0VcdBCZpp
+	 /eFpTVUqYIIk/cLpLxi47weOO7/OHp4AKvNoDb3V5kJZtQ397tlOLD7PW4aQNYADSt
+	 2CM2ySrVCilvzG7DoYJCc87401R4LlS9IsI56eC90s3dRzVezOUIjsr/Ap2zwZZexN
+	 4LY3aBcMbFurEFAL1YRKHp26aOn2svcr0WUq/W+E6q0tRD+FD2FLuZi6iLQomEMwAf
+	 fp+7MSRbngK+Q==
+Date: Wed, 5 Feb 2025 19:13:05 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+	=?iso-8859-1?Q?Herv=E9?= Codina <herve.codina@bootlin.com>,
+	linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: pwm: marvell,pxa-pwm: Update to use
+ #pwm-cells = <3>
+Message-ID: <20250205-strut-atrocious-d7f9d3c42859@spud>
+References: <cover.1738777221.git.u.kleine-koenig@baylibre.com>
+ <266765abb8251bd60796a3c4270e3809bfff952e.1738777221.git.u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] pwm: pxa: Use #pwm-cells = <3>
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Haojian Zhuang <haojian.zhuang@gmail.com>,
- Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, =?UTF-8?Q?Duje_Mihanovi=C4=87?=
- <duje.mihanovic@skole.hr>
-Cc: =?UTF-8?Q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>,
- linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <cover.1738777221.git.u.kleine-koenig@baylibre.com>
-Content-Language: en-US
-From: Daniel Mack <daniel@zonque.org>
-In-Reply-To: <cover.1738777221.git.u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="F9n+89XPUb+wErgK"
+Content-Disposition: inline
+In-Reply-To: <266765abb8251bd60796a3c4270e3809bfff952e.1738777221.git.u.kleine-koenig@baylibre.com>
 
 
-On 05.02.25 18:53, Uwe Kleine-König wrote:
-> Hello,
-> 
-> this series' goal is to soften the special device-tree binding of
-> marvel,pxa-pwm devices. This is the only binding that doesn't pass the
-> line index as first parameter.
-> 
-> Here the #pwm-cells value is bumped from 1 to 3, keeping compatibility
-> with the old binding.
-> 
-> The motivation for this was that Hervé sent a patch introducing pwm
-> nexus nodes which don't work nicely with the marvel,pxa-pwm
-> particularities.
-> 
-> For merging this series (assuming device-tree and pxa maintainers agree)
-> I guess keeping the patches together makes sense because with the 2nd
-> patch applied but without the 3rd there are a few dt-checker warnings.
-> 
-> So I suggest to take it via my pwm tree as I guess drivers/pwm/core.c
-> has more potential for a conflict than arch/arm/boot/dts/intel/pxa.
-> So please send Acks and tell me if you would need an immutable branch
-> for pulling into the PXA tree.
-> 
-> Best regards
-> Uwe
-> 
-> Uwe Kleine-König (3):
->    pwm: Add upgrade path to #pwm-cells = <3> for users of
->      of_pwm_single_xlate()
->    dt-bindings: pwm: marvell,pxa-pwm: Update to use #pwm-cells = <3>
->    ARM: dts: pxa: Use #pwm-cells = <3> for marvell,pxa-pwm devices
+--F9n+89XPUb+wErgK
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For all patches in the series:
+On Wed, Feb 05, 2025 at 06:54:01PM +0100, Uwe Kleine-K=F6nig wrote:
+> The PXA PWM binding is the only one that doesn't pass the PWM line index
+> as first parameter of the parameter cells. However this can be upgraded
+> to the mandatory binding for all new PWM drivers without breaking
+> compatibility for old device trees using #pwm-cells =3D <1>.
+>=20
+> So bump #pwm-cells to 3 with the (undocumented) promise to keep the old
+> behaviour for #pwm-cells =3D <1>.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
 
-Reviewed-by: Daniel Mack <daniel@zonque.org>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-> 
->   .../devicetree/bindings/pwm/marvell,pxa-pwm.yaml |  3 +--
->   arch/arm/boot/dts/intel/pxa/pxa25x.dtsi          |  4 ++--
->   arch/arm/boot/dts/intel/pxa/pxa27x.dtsi          |  8 ++++----
->   .../dts/intel/pxa/pxa300-raumfeld-controller.dts |  2 +-
->   arch/arm/boot/dts/intel/pxa/pxa3xx.dtsi          |  8 ++++----
->   drivers/pwm/core.c                               | 16 ++++++++++++++++
->   6 files changed, 28 insertions(+), 13 deletions(-)
-> 
-> 
-> base-commit: c98e66144b7d07ee9a3ca8241123b628a8ac0288
+--F9n+89XPUb+wErgK
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6O4QQAKCRB4tDGHoIJi
+0msXAPwPsyQP1wjYdX5r8HKv6l4cxZt2BU7EGr18uD79cBCzxgEA+J0fhNFuqaU4
+SUmQ6nOgErbv3Ag9MBuUlmq/njrGZA4=
+=cJ6U
+-----END PGP SIGNATURE-----
+
+--F9n+89XPUb+wErgK--
 
