@@ -1,130 +1,159 @@
-Return-Path: <linux-pwm+bounces-4781-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4782-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBCAEA2966F
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 17:34:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4207A29735
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 18:21:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 103C53A2C7A
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 16:33:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C967B1885F7A
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 17:21:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB2418A6BA;
-	Wed,  5 Feb 2025 16:33:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D1191FF5E3;
+	Wed,  5 Feb 2025 17:19:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f8YpoFAh"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eUFdnDa6"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9358634A;
-	Wed,  5 Feb 2025 16:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7C21FF1B5;
+	Wed,  5 Feb 2025 17:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738773222; cv=none; b=Jvmh/+b8ij8dic86GDcoJGFuGsZkD72QcJbqij/UvDqPBe6sBjwJvWMlT5UPV5nDMyh1VfQ1rCZyrf/4loMsfuDYLWzYF5DrTftrAXAJAcTb/1tnDi8dgAJnsjJJ+yRneIBGKgeZJ2k+h3cfnKj7CK8ypnYvIlR8f4706eb82aI=
+	t=1738775976; cv=none; b=UdT982mrZcJh8TFGUlj4lcOWPKUYYqpeEBVV4Y0uNbHDraRZga0yuE0z66JHKSnJ7emLKxf9DpyVROcjCYO+8f9QC3ZLEXWZ46woyauZPvflJNf4ecZVLp94eyGwIpFaEzWgWP68Ks+A4LQOPgIVqImElL70WYF7AF47sA0uI7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738773222; c=relaxed/simple;
-	bh=b5FN7Zyasw9i6k/qcwNoo9FUtmrLQ8B6OivoODJIKDc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jo8BSwTjDlHi4x91iWm9G0ROf24uaAfMsOze/LIOxPCl5kRMWjpEm7cLFJaHIRSrnVS9KSNp8AMYY6+RKnWAPPNbX4ZoXZMUiFjVPY+MbQ1cyRjLg/odrliiXTc4917c2NfJKpecokfzLoOJMoZBM73RxpDaxil/0M8tWln9srg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f8YpoFAh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C22FDC4CED1;
-	Wed,  5 Feb 2025 16:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738773221;
-	bh=b5FN7Zyasw9i6k/qcwNoo9FUtmrLQ8B6OivoODJIKDc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f8YpoFAhfLezEahtdBWj0U53UKdwR0eKTTpmFc45NYdUJd4kEArGbxvC7zWh4W3EJ
-	 ipI44W0xTeEkgpdHil7mH4HwQnFgRvq/59rc1JsG76rCfk/QLSU0VbPPlYKOiw9kOu
-	 RwBRKK24eF5jwlxMK7k5kkfd0h6kCao4ozQJ891u4aTnxK/HOAiCBNZAlmq8OdcPWR
-	 ubS/SCeFpU15OTaRQmG31CeEDMG0Xl+vO61Fy0jIvAjJNO+nzE7341nSFqlNxMDDPi
-	 iJaVF3/W+nrON3KOqHpC6OBiA3uiGZdW7GEagW2vjSn9fI4PKDuLOXVJdeEij7cuXO
-	 LsMffDRf0nsBQ==
-Date: Wed, 5 Feb 2025 17:33:38 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Chen Wang <unicorn_wang@outlook.com>
-Cc: Chen Wang <unicornxw@gmail.com>, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, inochiama@outlook.com, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	chao.wei@sophgo.com, haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, 
-	chunzhi.lin@sophgo.com, Sean Young <sean@mess.org>
-Subject: Re: [PATCH v7 2/3] pwm: sophgo: add driver for Sophgo SG2042 PWM
-Message-ID: <o4j72fdw6v6aiuvgeufugzptmfpmpws26zp5bf27hdq2i6cng5@yqmdasof3ynp>
-References: <cover.1738737617.git.unicorn_wang@outlook.com>
- <ae8ea1bf0bb0a09336cd8b7f627a994630524bba.1738737617.git.unicorn_wang@outlook.com>
- <ivgsidvdx2ypntnlopww6fiwyuzj2sadt3znyofr54dsz3c5d4@3mr25vhwlwy3>
- <PNXPR01MB7488BA555BDE96E59741DBACFEF72@PNXPR01MB7488.INDPRD01.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1738775976; c=relaxed/simple;
+	bh=xEi9OzSb5y74wzAhw0gl9CcBZ4uRFA0Mf3Rt8hQK8Fc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qBwrlgrxBLMoEDlCtnqBR32502eiXW6P5PSHUW/7fZpVx2jA4bw9wkkd6kOKqR8LNsdx748p7qyqZ0i8dlB7+J8iyAw/3/ICTlPQyGXx3KSBVaFYyxGSXVzCBOU+WNtXOIth0T4MmK34g1cJw/eibKNO5pEzRFTJbQpqhoJLKBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eUFdnDa6; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9207F44174;
+	Wed,  5 Feb 2025 17:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738775972;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AJI890xtd2ohxN4K/jX7Ffk2Mr6juO+YA4vodND4z80=;
+	b=eUFdnDa6L6gVPAbeKqtNywWl8KFX6EbjGj0oC8IU2V6CaTE1Zotaj593+7TCTS2jWroCbW
+	y4+FBNOCVYhfgSY/z9QMr++CGlgvtXOQ54pS3mVCYmibxezQCY+cmH/fZmXKd2rKYs3cxH
+	t/2cU1MjjX9R7fXA0peK/v0vIHVZcIY346oinAhLn+pl07Jjl4ltYUwmg6ZL0F8H4f6n17
+	jieoYQq4uKH58lKeqoRUWDjqImVSdewAhxCAFrz5wL3099FKkfm51WYVEruk9DXdA4HJNL
+	+0MDqiGSO4zw2nZzJIHznjBt45smSb7jlfhDCQxEpnszuE/CJaVHKsHGVieKgw==
+Date: Wed, 5 Feb 2025 18:19:30 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Luca Ceresoli
+ <luca.ceresoli@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 2/2] pwm: Add support for pwm nexus dt bindings
+Message-ID: <20250205181930.3b800a13@bootlin.com>
+In-Reply-To: <6js6k6xz3vuqshq2pfwqifby4t5q54ftztxxw2rau4j23xx2y5@u5xubi6v3uil>
+References: <20250205095547.536083-1-herve.codina@bootlin.com>
+	<20250205095547.536083-3-herve.codina@bootlin.com>
+	<ejdh76c4r44gxsdi7gwed65ste3wuunki2jgavc3wsfri5yaex@jccsywdfadgp>
+	<20250205143737.1315baba@bootlin.com>
+	<6js6k6xz3vuqshq2pfwqifby4t5q54ftztxxw2rau4j23xx2y5@u5xubi6v3uil>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gcbt5fz4vt234fhk"
-Content-Disposition: inline
-In-Reply-To: <PNXPR01MB7488BA555BDE96E59741DBACFEF72@PNXPR01MB7488.INDPRD01.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgedtgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtvdefvefgiedvtedvgedvgeelhfejkeejgefgvdfguedtudeiiedtieejffduhfenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepuhhklhgvihhnvghksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdou
+ ghtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpfihmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
 
+Hi Uwe,
 
---gcbt5fz4vt234fhk
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v7 2/3] pwm: sophgo: add driver for Sophgo SG2042 PWM
-MIME-Version: 1.0
+On Wed, 5 Feb 2025 17:29:30 +0100
+Uwe Kleine-König <ukleinek@kernel.org> wrote:
 
-Hello,
+> Hello Hervé,
+> 
+> On Wed, Feb 05, 2025 at 02:37:37PM +0100, Herve Codina wrote:
+> > On Wed, 5 Feb 2025 12:38:32 +0100
+> > Uwe Kleine-König <ukleinek@kernel.org> wrote:  
+> > > Does this also work if &soc_pwm2 has #pwm-cells = <2>? Would I need just
+> > > 
+> > > 	pwm-map = <0 0 0 &soc_pwm1 1 0 0>,
+> > > 		  <1 0 0 &soc_pwm2 4 0>,
+> > > 		  <2 0 0 &soc_pwm1 3 0 0>;  
+> > 
+> > Yes, exactly.
+> >   
+> > > 
+> > > then and
+> > > 
+> > > 	pwms = <&connector 1 57000 0>;
+> > > 
+> > > would then have the same effect as
+> > > 
+> > > 	pwms = <&soc_pwm2 4 57000>  
+> > 
+> > Yes, the last 0 (or any other values) in pwms = <&connector 1 57000 0> is
+> > simply dropped in the translation (#pwm-cells = 3 in connector nexus to
+> > #pwm-cells = 2 in soc_pwm1 node).
+> > 
+> > In more generic terms, it works in translation from #pwm-cells = N to
+> > #pwm-cells = M by simply dropping the last N-M values.
+> > 
+> > Also note that even if values are dropped, you need to have them set when
+> > you point the nexus node because #pwm-cells = 3 is set in the connector
+> > node and need to be fixed and usable for all the entries in the
+> > pwm-map table.  
+> 
+> Makes sense.
+> 
+> > > and the 0 is dropped then? Could I adapt the mapping that the effect is
+> > > 
+> > > 	pwms = <&soc_pwm2 57000 0>  
+> > 
+> > In this one, I think you miss the PWM number
+> > 
+> > If I read correctly this line you ask for the PWM 57000 from the soc_pwm2
+> > controller. This doesn't make sense :)  
+> 
+> Some pwm chip devices with only a single output line use this. The first
+> paramter is the default period (which is passed in the 2nd parameter
+> normally) and the 2nd paramter are flags (normally the 3rd parameter).
+> Back then the rationale was that for such hardware, the line index is
+> zero always anyhow, and so could better be skipped.
+> 
+> Compare of_pwm_xlate_with_flags() to of_pwm_single_xlate(). pwm-pxa is
+> the single offender using the latter. Thinking about that, it's easy
+> enough to fix without breaking compatibility. I'll tackle that.
+> 
+> So for a PWM on pxa `<&soc_pwm2 57000 0>` works fine.
 
-On Wed, Feb 05, 2025 at 08:57:20PM +0800, Chen Wang wrote:
-> On 2025/2/5 18:06, Uwe Kleine-K=F6nig wrote:
-> > I was tempted to apply this patch while reading throug it until nearly
-> > the end ...
-> >=20
-> > > +		reset_control_assert(rst);
-> >=20
-> > This is wrong (well, or unneeded). With
-> > devm_reset_control_get_optional_shared_deasserted() the devm cleanup
-> > cares for reasserting the reset.
-> >=20
-> > > +		return dev_err_probe(dev, ret, "Failed to register PWM chip\n");
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> >=20
-> > If you want I can apply and squash the following in:
-> >=20
-> > [...]
-> >=20
-> > ack?
->=20
-> Ack.
+I see. In this case, a parameter shift during translation would be needed to
+skip the PWM line index in the translated arguments. This is not currently
+neither described in device-tree specicication [0] nor handled in the common
+code of_parse_phandle_with_args_map() in the kernel.
 
-Great. Pushed to=20
+This use case can appear for resources other than PWMs and IMHO it should be
+nice to have it supported.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
--next
+I think this support should proposed out of this series adding support for
+PWM nexus nodes.
 
-with the suggested fixup.
+Is it blocking for this current series ?
 
-Best regards
-Uwe
+[0] https://github.com/devicetree-org/devicetree-specification/releases/download/v0.4/devicetree-specification-v0.4.pdf
 
---gcbt5fz4vt234fhk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmejkt8ACgkQj4D7WH0S
-/k6tmwf/VsE147RXuGyKeMumDiqov5FrMqU5PIEyDnZc7Wz4rEBB71mQ7o0iiSMF
-tgfgCnylkVxBX9w9F4AliHkHFPYsQuGv6ibyrBim3M0JCI1M4AMTwpfmbSdPxYm4
-GufsQGUIGAIME0Hey4bsHiPFla+LOk02vO9Vcrba1eZDkn9cqfbhhWsOFTe31oR5
-EmQLlLt/n5w7JkCrknvMW4MuzSXRCgVgEyqVJyGEKY1ZHR8uxxhgwNTnHmH6Wjne
-/bSaEcAtxHyCAkO/vBx9LUdtpR2hbBoDH/80OmXYfWJ+uVWx854v8VBe9Xvuzb41
-x2EjvqOV1TcK7+7KZPb8C0D3I5PU8A==
-=pX1Z
------END PGP SIGNATURE-----
-
---gcbt5fz4vt234fhk--
+Best regards,
+Hervé
 
