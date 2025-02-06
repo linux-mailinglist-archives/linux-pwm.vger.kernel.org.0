@@ -1,111 +1,140 @@
-Return-Path: <linux-pwm+bounces-4793-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4794-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88474A29A37
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 20:35:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E852A29E45
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Feb 2025 02:12:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EF2A5165ADC
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Feb 2025 19:35:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3EC9167EC1
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Feb 2025 01:12:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59E0E2054F9;
-	Wed,  5 Feb 2025 19:35:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F4762561D;
+	Thu,  6 Feb 2025 01:12:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pw1dD3d7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TODfznbP"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB48155335;
-	Wed,  5 Feb 2025 19:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8403C2B9B7;
+	Thu,  6 Feb 2025 01:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738784151; cv=none; b=I6u8e8fhvD3e2ivVbuDe0xeXsf63u5WaUSPPcQild4RMiH/+6q7tJe+/3xdVPHOwzpZlpw76+IkrINnBbamFzcHxh6u+VcVx1Kuzb9BRVmc2SdEtCxDCQlPBUtvleWEyJty8dKtYNOxQuK4IAS5KKEjNrUZVJzi+L1zgzKNaw44=
+	t=1738804343; cv=none; b=BpL5UadZwW98YwZJd71MUg70KOFVNgs4rr2oYXBOpwZvPwxVBvYNEzewSJoCWXLuTMkzaKv79WiCj8YCu24MH95QvdaW7HVVA9FP8A5I1CpkhswjVZnx+QzioKnGKX62gGOm8soR2V19ORyyvTBbzzcePqLc0aZTIgcJQYUWqQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738784151; c=relaxed/simple;
-	bh=l94FF8P1w7MiX05RA/T0pW7/kmfbGvyA+LpwGszjAyI=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=cf/uDUAxMwFSzmyuWCU2vAndznkLrWNtfcS+iwspI40rVb7mZ8XwulY29edWIX/evjaCbBIcME1cN0oS4K240SrOv3TYEkdU1EtK3kYD1u7GfwwbOz94EZbMHYk2xWc4KUQQzzv3uhVD4kaB+Iae41X8gU3M9zAqsZFNKy7+2HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pw1dD3d7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CB51C4CED1;
-	Wed,  5 Feb 2025 19:35:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738784150;
-	bh=l94FF8P1w7MiX05RA/T0pW7/kmfbGvyA+LpwGszjAyI=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=pw1dD3d7zc2mhC3xcYMdVVtX4RuGi8Q7yZ9KJwmM7NNNxgehlcKJy/lhUniUr/tfa
-	 SyPp/unMH5ghf3VJvcG/4PQ9C/ZTdMezQKEIwTboFQlOo+xs72JZjmAOCb5ZBlR9Ih
-	 ANq0Uz20Aqwg8yGtXrup/P8b8BGGDcprYYMiwl5W5JE+vERN0Du6nq4n3Wh/gje5f6
-	 egDN45KaqBJ6srcCU58p4C8QXogMx1fPRVpEhpaXljP0u8j0VdcHnMMSoegpWUfTqq
-	 /Ov8udZwMclLhWBTSDkdQRkgUhsfEGA4AL0NsPYZkGBwfPCXn/ZMsQACcTsnMCbPl7
-	 oIAb9S2Wn/EDQ==
-Date: Wed, 05 Feb 2025 13:35:49 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1738804343; c=relaxed/simple;
+	bh=VGMw3fH/qQ1mZr4YkUb8xkvsHfU+9HzvwMDhqK1KZpQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lmccbbEOISycSFvKn8AvAAy+acwEM3lUgL9X9yy3is7+yXZyOkHgkib4ZQq/heTXW5HtzgLNAr78KHj1sTzgQ8SWEJnC3e9vmYTw6dAgHEZ09Ef/OTQeuxKb63tC0t8G4EOqgjvMQJMVGs2nmL+inCanUBLSt0omYD6YjurDK6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TODfznbP; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-46fa764aac2so3328471cf.1;
+        Wed, 05 Feb 2025 17:12:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738804340; x=1739409140; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5pBMT0z7Wu2vduHIjcx/FLiyYRunJu9Lrm6JuBMMAwA=;
+        b=TODfznbPb31XKfNwXUI9Y6WpAKT586HZwMfFZL+sE7H9JK0MuRCDtAIAH7LCdciMtG
+         2qO7ahsgrAZBauFaZnf2vXogsKgl+QKooH3OtIRg+UAwWx0GpBlT2nXYgsfKoImWqPCp
+         EzjBnUexbaGTLSVRtMWZrEQ6Kxb1qjjpCC1ouhMpEEaf6iFAIyqHUo59pMp4jObcnwzq
+         fuVNoCCwQtNpu1WVqCQrtdILyreYLxVYwpfox7Fv0fc5bzGK3T0u6DItn9Vj3zxf4k+2
+         rqi21KW2egYbjnoExOClqLldmgCZcJFI9tkyXJl4kmaBMqD7cwyfXB0+jHjcdW9YMTpE
+         OgMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738804340; x=1739409140;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5pBMT0z7Wu2vduHIjcx/FLiyYRunJu9Lrm6JuBMMAwA=;
+        b=svdJZvLsZvv/ykwKrlIegTomT63k30pLer9eaakPRJOXmKiJExfJY4JTFFn8t+RMWt
+         jUNb54pvimuxpnWMr+OFXIDzvwG0RKanAfhWI97gYoV8YQEgbSVp3R/G+yRMnvFYgwE4
+         zIBe1xyHKXU0wHWOaqFJSCPK+ZL4DHx2CPfiVSqwCQ7Yh+iZ1B2BWbm30iQkkW8kn/F6
+         6juVShvzQuHNBlNhqPfqchXxokk4r0cE8zNBedBlSDKKzpwOWv1Kxx3QJN0ouODrFk5f
+         gn/hGeF6Hm73y3YTGXJI1fPdvdyz6xQ07fi2XzNl+RM4ugI/VJr5WEZy8GZ2X2MFw2bC
+         z0Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCULldL6giiMqIi8ZAA4surNXTjWLaaBfCmGiHBRd29oRiEhu5HbHKRIENDi9rZXpIcJXEta5ZnVhXpU@vger.kernel.org, AJvYcCWw9+mQmiPZPMlsttZMJAilbOYVj7kvWS7qOs/E7Fkik0qnQAsBlUuIK6J56nJN1LT4px6CwiRTZd9nZC/6@vger.kernel.org, AJvYcCX4ArkXZDPEeVaSH+RyONvaVs7Ui/uY1/5U65Befs0mlQUsmiFD188IUHbZ62E2xwExGWc+XLEc62VP@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXe59iQ50BwMVYgnjCtU1bv6i/mdSmSiViHvH3hABd/9ItAUCc
+	aBCRDTAwfq4SEXCWUvtvQU1wavvNS7USsM+H4CtXRXI0rFXpaUGT
+X-Gm-Gg: ASbGncv5i+/4lkZXOjicDwIqWtOYI8MYXoOOLjI0IDTDnzkHJeRGPPe1ZfV6JPqQTYJ
+	LsyguCXar0WHonLafsiafpBcQ7+mDwxfXKfAFl51kFVUTLgUnETb4Z5o4QdK2aHHSk7Yr/D34LM
+	LjKOUM9n7EskCar8O+nwN3ooOELAo/SSa4OncMRwKktkIcqNbkNLkZ7sczdgoflMbfFyuOasF+Q
+	ciUBkDAkVQ4wZdUpbajE9U9AkM1NMwVXcKQBCPNfuZV/Noy3ULfKv+ZbFod5xqRqVo=
+X-Google-Smtp-Source: AGHT+IESyoVUGameDYJaCxkueA3j3WJ8VNCDRm28ssP4Wc7/H2APc3QV+nga2VASrKsUBbDJPJR4Cg==
+X-Received: by 2002:a05:622a:588e:b0:467:57c8:ca31 with SMTP id d75a77b69052e-470282e9725mr69180751cf.46.1738804338791;
+        Wed, 05 Feb 2025 17:12:18 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47153bec3aesm526501cf.72.2025.02.05.17.12.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 17:12:17 -0800 (PST)
+Date: Thu, 6 Feb 2025 09:10:50 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>
+Cc: Chen Wang <unicornxw@gmail.com>, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, inochiama@outlook.com, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	chao.wei@sophgo.com, haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, 
+	chunzhi.lin@sophgo.com, Sean Young <sean@mess.org>
+Subject: Re: [PATCH v7 2/3] pwm: sophgo: add driver for Sophgo SG2042 PWM
+Message-ID: <zz3uvb3qhbbqyf37s4eleqwxyuvftm277guuqkefv4kq5k2zal@kt3xjztfou2p>
+References: <cover.1738737617.git.unicorn_wang@outlook.com>
+ <ae8ea1bf0bb0a09336cd8b7f627a994630524bba.1738737617.git.unicorn_wang@outlook.com>
+ <ivgsidvdx2ypntnlopww6fiwyuzj2sadt3znyofr54dsz3c5d4@3mr25vhwlwy3>
+ <PNXPR01MB7488BA555BDE96E59741DBACFEF72@PNXPR01MB7488.INDPRD01.PROD.OUTLOOK.COM>
+ <o4j72fdw6v6aiuvgeufugzptmfpmpws26zp5bf27hdq2i6cng5@yqmdasof3ynp>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, 
- =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
- Haojian Zhuang <haojian.zhuang@gmail.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, 
- linux-pwm@vger.kernel.org, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
- Daniel Mack <daniel@zonque.org>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-In-Reply-To: <266765abb8251bd60796a3c4270e3809bfff952e.1738777221.git.u.kleine-koenig@baylibre.com>
-References: <cover.1738777221.git.u.kleine-koenig@baylibre.com>
- <266765abb8251bd60796a3c4270e3809bfff952e.1738777221.git.u.kleine-koenig@baylibre.com>
-Message-Id: <173878414916.2733923.916545149543480294.robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: pwm: marvell,pxa-pwm: Update to use
- #pwm-cells = <3>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <o4j72fdw6v6aiuvgeufugzptmfpmpws26zp5bf27hdq2i6cng5@yqmdasof3ynp>
 
-
-On Wed, 05 Feb 2025 18:54:01 +0100, Uwe Kleine-KÃ¶nig wrote:
-> The PXA PWM binding is the only one that doesn't pass the PWM line index
-> as first parameter of the parameter cells. However this can be upgraded
-> to the mandatory binding for all new PWM drivers without breaking
-> compatibility for old device trees using #pwm-cells = <1>.
+On Wed, Feb 05, 2025 at 05:33:38PM +0100, Uwe Kleine-König wrote:
+> Hello,
 > 
-> So bump #pwm-cells to 3 with the (undocumented) promise to keep the old
-> behaviour for #pwm-cells = <1>.
+> On Wed, Feb 05, 2025 at 08:57:20PM +0800, Chen Wang wrote:
+> > On 2025/2/5 18:06, Uwe Kleine-König wrote:
+> > > I was tempted to apply this patch while reading throug it until nearly
+> > > the end ...
+> > > 
+> > > > +		reset_control_assert(rst);
+> > > 
+> > > This is wrong (well, or unneeded). With
+> > > devm_reset_control_get_optional_shared_deasserted() the devm cleanup
+> > > cares for reasserting the reset.
+> > > 
+> > > > +		return dev_err_probe(dev, ret, "Failed to register PWM chip\n");
+> > > > +	}
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > 
+> > > If you want I can apply and squash the following in:
+> > > 
+> > > [...]
+> > > 
+> > > ack?
+> > 
+> > Ack.
 > 
-> Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Great. Pushed to 
+> 
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-next
+> 
+> with the suggested fixup.
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Good, I will take the dts next Monday.
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.example.dtb: pwm@40b00000: #pwm-cells: 3 was expected
-	from schema $id: http://devicetree.org/schemas/pwm/marvell,pxa-pwm.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/266765abb8251bd60796a3c4270e3809bfff952e.1738777221.git.u.kleine-koenig@baylibre.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Regards,
+Inochi
 
