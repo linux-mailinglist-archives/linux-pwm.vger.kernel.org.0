@@ -1,327 +1,341 @@
-Return-Path: <linux-pwm+bounces-4811-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4812-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38186A2BF44
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Feb 2025 10:28:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 621B7A2C1EE
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Feb 2025 12:54:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29D30188CD49
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Feb 2025 09:28:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 55F2E18845F5
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Feb 2025 11:54:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C44B81D5CE3;
-	Fri,  7 Feb 2025 09:28:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFAF91DF733;
+	Fri,  7 Feb 2025 11:53:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MVNE5J+e"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nK0JlBry"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B41E481B6;
-	Fri,  7 Feb 2025 09:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000F11DE2C5;
+	Fri,  7 Feb 2025 11:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738920528; cv=none; b=e2ejy0Q7pB4XMi5uGgjWjdaBZExUOZvmLVlVpDuw/KZ8U+nkyJ4MbMtDHt0yWQVrPlxsfeFnS4Vo3b7ja0jQ8s6lAVX/XngDMOFD0Eril3rPRK3Bj5rHfCINweVumhLOYjcyVKcbqMzdB0vY3kpV+qCpIGPwf2rmahJfH3ZxZHo=
+	t=1738929205; cv=none; b=RD7yAN4HOnWZMfEBLTT3PV67ZxtR4LN0LxkceONC5O4NiENStdrK/0zfVZr3j/MuOzU7D+VD1SE1K+RNIL74dvw3vITLvDqyjIjlaS5lZ6KwT04mt1TY69o1c9s2Jp2GFQreGQlhQlQi3aWgFYvFRh86rWsP9QYX/uqGhRUWW8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738920528; c=relaxed/simple;
-	bh=+EPF5mznJmrC7tQ1+mB5YDqe5A7S+z/bQ3hMNMfSfkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E8Cxwd4iNoSVmbf/XvfdJG0aUMGgo+VmKDv6hBLuNrSggV8t2uZ2NVdG/2tLHyMaKa3eAKiDY8qrGEN0SSjN6khlIruv6Jfo+A8oeM2ujL+9FmdLdksHON6OwzSz2ePCpZjo83AhsLpK4Zr8BZOd0WnGxvgsE2otgY7TLXitpDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MVNE5J+e; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7939EC4CED1;
-	Fri,  7 Feb 2025 09:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738920528;
-	bh=+EPF5mznJmrC7tQ1+mB5YDqe5A7S+z/bQ3hMNMfSfkI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MVNE5J+efqZnqXRx0F6IS3jYzidEto/Q1Rhob1iibFiu0QHipsrA5LFJYvZnJ6nwp
-	 oXmIsfBKfJiq00/CBlUHNGmj9gWBnn3qyOhGT3UyWijOaaeeiQ4Lf/VKFlt1OblFal
-	 qpo7g2vmzHBg4vmnmUOvAMcYXwt+sy5/O4TgC3DPMPkX4BPMQX/nnusJQed5qn1IJh
-	 Z5gc9BEz16y7Fzxdsnf1ZfZA77UE5HfWad7kZ0E9bFpYQI7RvV2dpiog/ZFEMozz/r
-	 4zEZU+LloNAJ/D9offiMDzE3635vqWJml5msUinKsTOLPXAXuvhJ45ENDYRvCaYpE2
-	 adbPBfwXjA5dw==
-Date: Fri, 7 Feb 2025 10:28:45 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Chi-Wen Weng <cwweng.linux@gmail.com>
-Cc: robh@kernel.org, krzysztof.kozlowski@linaro.org, conor+dt@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	ychuang3@nuvoton.com, schung@nuvoton.com, cwweng@nuvoton.com, 
-	Trevor Gamblin <tgamblin@baylibre.com>
-Subject: Re: [PATCH v3 2/2] pwm: Add Nuvoton MA35D1 PWM controller support
-Message-ID: <c4x3spvvlxmrfypfbl57pki2akwf4rmooufw26w5ku7rwurjw4@gwtae2pqrutk>
-References: <20241206085501.2623772-1-cwweng.linux@gmail.com>
- <20241206085501.2623772-3-cwweng.linux@gmail.com>
+	s=arc-20240116; t=1738929205; c=relaxed/simple;
+	bh=IuMV62I00q/ewVta9Tr3R2fDYIVWuaOUCNt/jxDCXG0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=GED9AcS5IwoYKd/XjPXPxw0ujxMwLprc3+wFDptT37+08+aKpW+9okPQtPh4dZZD01xPV+XLap0v0xghBnvIK/qRO0K7JzzSIhG9cmAiWswDMd0iMQ+lU8OBF5vpsAcz8XJL+41jP6wrsbQQBAZbMQ3zGNmc5AfBx9mzrD4OKRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nK0JlBry; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738929204; x=1770465204;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=IuMV62I00q/ewVta9Tr3R2fDYIVWuaOUCNt/jxDCXG0=;
+  b=nK0JlBryukN+BmGkkbmJNgdzBbYJOTkze2eWFV8QCl0a/uJqyG0/ji3e
+   ggw83YUzPa1iKDOFuaxVk3531Pp5+37QQw94NBWh5ZriYZMc3ZTn1Hy1g
+   bonupKYkCT3HUwnohyA1gnsuyYNKgPCNqRiKIeMmWJD/VsY3np9yJ2SqW
+   pu9uazgW9dkcpL8R3Zl4tsD8NY4gIs4s2I9yygnXJfEcMhmrGm2k+1FtI
+   9AdfKOQGALRrVXY9TPHrvI2uSQ5uyR1sFCA9tN+bBKRk5vBoiDAMRg4We
+   L9z4VF6dWQ7+u0HfdSWoI9iDi6gyuPh4wTtYmt1l3pS/Ah8ITE/bpHK47
+   Q==;
+X-CSE-ConnectionGUID: r55/OU8XRNeV5b0ldCaAeg==
+X-CSE-MsgGUID: GDBL6ihEQCW6h+c05lwIHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39260638"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="39260638"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 03:53:23 -0800
+X-CSE-ConnectionGUID: ola92a+JTlmI4zNzwLshaw==
+X-CSE-MsgGUID: xTo9sHQPTbiL8aqOzyp6Ng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="148722349"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 03:53:20 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 7 Feb 2025 13:53:16 +0200 (EET)
+To: Werner Sembach <wse@tuxedocomputers.com>
+cc: Hans de Goede <hdegoede@redhat.com>, ukleinek@kernel.org, 
+    jdelvare@suse.com, linux@roeck-us.net, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org, 
+    linux-hwmon@vger.kernel.org
+Subject: Re: [RFC PATCH 1/1] platform/x86/tuxedo: Implement TUXEDO TUXI ACPI
+ TFAN via hwmon
+In-Reply-To: <358c235f-14e4-43ef-bc82-9ad5d54f0976@tuxedocomputers.com>
+Message-ID: <d99bb466-f9e6-9e86-8a0c-55f51655fb6f@linux.intel.com>
+References: <20250205162109.222619-1-wse@tuxedocomputers.com> <20250205162109.222619-2-wse@tuxedocomputers.com> <dde736d4-6343-30e3-2bab-6eebbf4515e9@linux.intel.com> <358c235f-14e4-43ef-bc82-9ad5d54f0976@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mgcvn6assk5gfnns"
-Content-Disposition: inline
-In-Reply-To: <20241206085501.2623772-3-cwweng.linux@gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-1481543863-1738929196=:938"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1481543863-1738929196=:938
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Thu, 6 Feb 2025, Werner Sembach wrote:
+> Am 06.02.25 um 10:51 schrieb Ilpo J=C3=A4rvinen:
+> > On Wed, 5 Feb 2025, Werner Sembach wrote:
+> >=20
+> > > The TUXEDO Sirius 16 Gen1 & Gen2 have the custom TUXEDO Interface (TU=
+XI)
+> > > ACPI interface which currently consists of the TFAN device. This has =
+ACPI
+> > > functions to control the built in fans and monitor fan speeds and CPU=
+ and
+> > > GPU temprature.
+> > >=20
+> > > This driver implements this TFAN device via the hwmon subsystem with =
+an
+> > > added temprature check that ensure a minimum fanspeed at certain
+> > > tempratures. This allows userspace controlled, but hardware safe, cus=
+tom
+> > temperatures
+> thx for spotting
+> >=20
+> > > fan curves.
+> > >=20
+> > > Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
 
 
---mgcvn6assk5gfnns
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 2/2] pwm: Add Nuvoton MA35D1 PWM controller support
-MIME-Version: 1.0
+> > > +=09for (i =3D 0; i < driver_data->fan_count; ++i) {
+> > > +=09=09params[0] =3D i;
+> > > +=09=09tuxi_tfan_method(pdev, TUXI_TFAN_METHOD_GET_FAN_TEMPERATURE,
+> > > +=09=09=09=09 params, 1, &retval);
+> > > +=09=09temp =3D retval * 100 - 272000;
+> > > +
+> > > +=09=09for (j =3D 0; temp_levels[j].temp; ++j) {
+> > > +=09=09=09temp_low =3D j =3D=3D 0 ? -272000 : temp_levels[j-1].temp;
+> > Please add a define for 272000 magic, or do you actually want to use on=
+e
+> > of the _kelvin conversion functions in linux/units.h ?
+>=20
+> I just realized that it should be 273000.
+>=20
+> Using the conversion functions would make it more complicated because the=
+ ec
+> pretends to return to a 10th degree precision but actually only return to=
+ a
+> full degree precission.
+>=20
+> So i would need to cut of the last digit, convert and then readd it. When=
+ i do
+> it directly in the code i can just use 273000 instead of 273150 and just
+> ignore the last digits.
 
-Hello,
+Fine, but add a local define for it then with a comment about the=20
+precision compared with the generic define/conversion functions.
 
-On Fri, Dec 06, 2024 at 04:55:01PM +0800, Chi-Wen Weng wrote:
-> [...]
-> diff --git a/drivers/pwm/pwm-ma35d1.c b/drivers/pwm/pwm-ma35d1.c
-> new file mode 100644
-> index 000000000000..380f17b20a3d
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-ma35d1.c
-> @@ -0,0 +1,179 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Driver for the Nuvoton MA35D1 PWM controller
-> + *
-> + * Copyright (C) 2024 Nuvoton Corporation
-> + *               Chi-Wen Weng <cwweng@nuvoton.com>
+> > Missing spaces around - operator.
+> >=20
+> > > +=09=09=09temp_high =3D temp_levels[j].temp;
+> > > +=09=09=09if (driver_data->temp_level[i] > j)
+> > > +=09=09=09=09temp_high -=3D 2000; // hysteresis
+> > 2 * MILLIDEGREE_PER_DEGREE ?
+> >=20
+> > Use define for it so you can place HYSTERESIS into its name and forgo t=
+he
+> > comment.
+> kk
+> >=20
+> > > +
+> > > +=09=09=09if (temp >=3D temp_low && temp < temp_high)
+> > > +=09=09=09=09driver_data->temp_level[i] =3D j;
+> > > +=09=09}
+> > > +=09=09if (temp >=3D temp_high)
+> > > +=09=09=09driver_data->temp_level[i] =3D j;
+> > This loop should be in a helper I think. Naming it reasonably would als=
+o
+> > make it easier to understand what the loop does.
+> only place i use it, i could just add a comment, but i can also do it in =
+a
+> separate function.
 
-Please add some information here about the hardware. The idea is to get
-some info about the device's capabilities. Please stick to the format
-that many other drivers are using such that
+I know it's the only user but what the loop does is relatively complex,=20
+and requires a few variables, etc. Is relatively self-contained=20
+algorithmically.
 
-	sed -rn '/Limitations:/,/\*\/?$/p' drivers/pwm/pwm-ma35d1.c
+Splitting into two functions, both functions could be more focused and=20
+clear on their intent. Cleverly naming the helper function such that it=20
+explain what happens in it, can often help to avoid the need to add any=20
+comments (comments may be needed at times, but when we can avoid one=20
+there's one place less to get out-of-sync with the code, which tends to=20
+happen with comments :-)).
 
-emits the info for your driver. Things to mention are: possible glitches
-during .apply(); behaviour of the pin when the PWM is disabled (constant
-signal? High-Z?)
-
-Also a link to a reference manual would be awesome.
-
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/math64.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +
-> +/* The following are registers address offset for MA35D1 PWM controller =
-*/
-> +#define MA35D1_REG_PWM_CTL0            (0x00)
-> +#define MA35D1_REG_PWM_CNTEN           (0x20)
-> +#define MA35D1_REG_PWM_PERIOD0         (0x30)
-> +#define MA35D1_REG_PWM_CMPDAT0         (0x50)
-> +#define MA35D1_REG_PWM_WGCTL0          (0xB0)
-> +#define MA35D1_REG_PWM_POLCTL          (0xD4)
-> +#define MA35D1_REG_PWM_POEN            (0xD8)
-> +
-> +/* The following are register address of MA35D1 PWM controller */
-> +#define MA35D1_PWM_CH_REG_SIZE         4
-> +#define MA35D1_PWM_CMPDAT0_ADDR(base, ch)     ((base) + MA35D1_REG_PWM_C=
-MPDAT0 + \
-> +					       ((ch) * MA35D1_PWM_CH_REG_SIZE))
-> +#define MA35D1_PWM_CNTEN_ADDR(base)           ((base) + MA35D1_REG_PWM_C=
-NTEN)
-> +#define MA35D1_PWM_PERIOD0_ADDR(base, ch)     ((base) + MA35D1_REG_PWM_P=
-ERIOD0 + \
-> +					       ((ch) * MA35D1_PWM_CH_REG_SIZE))
-> +#define MA35D1_PWM_POEN_ADDR(base)            ((base) + MA35D1_REG_PWM_P=
-OEN)
-> +#define MA35D1_PWM_POLCTL_ADDR(base)          ((base) + MA35D1_REG_PWM_P=
-OLCTL)
-
-I would drop the base part in these defines and add them to the above
-list sorted by address.
-
-So something like:
-
-#define MA35D1_REG_PWM_CTL0		0x00
-#define MA35D1_REG_PWM_CNTEN		0x20
-#define MA35D1_REG_PWM_PERIOD(ch)	(0x30 + 4 * (ch))
-#define MA35D1_REG_PWM_CMPDAT(ch)	(0x50 + 4 * (ch))
-#define MA35D1_REG_PWM_WGCTL0		0xB0
-#define MA35D1_REG_PWM_POLCTL		0xD4
-#define MA35D1_REG_PWM_POEN		0xD8
-
-To make up for the missing base, I'd create wrappers for readl and
-writel =E0 la:
-
-	static u32 nuvoton_pwm_readl(struct nuvoton_pwm *nvtpwm, unsigned int offs=
-et);
-	static void nuvoton_pwm_writel(struct nuvoton_pwm *nvtpwm, unsigned int of=
-fset, u32 value);
-
-As you see I wouldn't use a define for 4, because IMHO that hurts
-readability. But I don't feel strong here.
+But I see Guenther was against some parts of this so please don't take my=
+=20
+style related comments as overruling his objections.
 
 
-> +#define MA35D1_PWM_MAX_COUNT           0xFFFF
-> +#define MA35D1_PWM_TOTAL_CHANNELS      6
+> > > diff --git a/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_util.c
+> > > b/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_util.c
+> > > new file mode 100644
+> > > index 0000000000000..292b739a161e7
+> > > --- /dev/null
+> > > +++ b/drivers/platform/x86/tuxedo/nbxx/acpi_tuxi_util.c
+> > > @@ -0,0 +1,58 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > > +/*
+> > > + * Copyright (C) 2024-2025 Werner Sembach wse@tuxedocomputers.com
+> > > + */
+> > > +
+> > > +#include <linux/acpi.h>
 
-s/TOTAL/NUM/
+Btw just noticed, #include at least for kcalloc/kfree is missing.
 
-> +
-> +struct nuvoton_pwm {
-> +	void __iomem *base;
-> +	u64 clkrate;
-
-clk_get_rate() returns an unsigned long value. Please stick to that for
-=2Eclkrate as there is no use to double the size of this struct on 32-bit
-platforms just to store zeros and padding.
-
-> +};
-> +
-> +static inline struct nuvoton_pwm *to_nuvoton_pwm(struct pwm_chip *chip)
-> +{
-> +	return pwmchip_get_drvdata(chip);
-> +}
-
-I slightly prefer nuvoton_pwm_from_chip() for this function's name to
-have the same function prefix for all functions here.
-
-> +
-> +static int nuvoton_pwm_apply(struct pwm_chip *chip, struct pwm_device *p=
-wm,
-> +			     const struct pwm_state *state)
-> +{
-> +	struct nuvoton_pwm *nvtpwm;
-> +	u32 ch =3D pwm->hwpwm;
-> +
-> +	nvtpwm =3D to_nuvoton_pwm(chip);
-> +	if (state->enabled) {
-> +		u64 duty_cycles, period_cycles;
-> +
-> +		/* Calculate the duty and period cycles */
-> +		duty_cycles =3D mul_u64_u64_div_u64(nvtpwm->clkrate,
-> +						  state->duty_cycle, NSEC_PER_SEC);
-> +		if (duty_cycles > MA35D1_PWM_MAX_COUNT)
-> +			duty_cycles =3D MA35D1_PWM_MAX_COUNT;
-> +
-> +		period_cycles =3D mul_u64_u64_div_u64(nvtpwm->clkrate,
-> +						    state->period, NSEC_PER_SEC);
-> +		if (period_cycles > MA35D1_PWM_MAX_COUNT)
-> +			period_cycles =3D MA35D1_PWM_MAX_COUNT;
-> +
-> +		/* Write the duty and period cycles to registers */
-> +		writel(duty_cycles, MA35D1_PWM_CMPDAT0_ADDR(nvtpwm->base, ch));
-> +		writel(period_cycles, MA35D1_PWM_PERIOD0_ADDR(nvtpwm->base, ch));
-> +		/* Enable counter */
-> +		writel(readl(MA35D1_PWM_CNTEN_ADDR(nvtpwm->base)) | BIT(ch),
-> +		       MA35D1_PWM_CNTEN_ADDR(nvtpwm->base));
-> +		/* Enable output */
-> +		writel(readl(MA35D1_PWM_POEN_ADDR(nvtpwm->base)) | BIT(ch),
-> +		       MA35D1_PWM_POEN_ADDR(nvtpwm->base));
-
-Can this result in glitches? E.g. is it possible to see a waveform with
-the old period_cycles but the new duty_cycles output? If you switch
-polarity, do you see the new settings with the wrong polarity for some
-time? Setup polarity before enabling the counter and output? Maybe only
-enable the counter when the output is enabled to be sure to emit the
-first edge with the correct timing?
-
-> +	} else {
-> +		/* Disable counter */
-> +		writel(readl(MA35D1_PWM_CNTEN_ADDR(nvtpwm->base)) & ~BIT(ch),
-> +		       MA35D1_PWM_CNTEN_ADDR(nvtpwm->base));
-> +		/* Disable output */
-> +		writel(readl(MA35D1_PWM_POEN_ADDR(nvtpwm->base)) & ~BIT(ch),
-> +		       MA35D1_PWM_POEN_ADDR(nvtpwm->base));
-
-Maybe add another wrapper for this kind of rmw operation. Also I suggest
-to introduce a name for BIT(ch) here such that this can become:
-
-	nuvoton_pwm_rmw(nvtpwm, MA35D1_REG_PWM_POEN, MA35D1_REG_PWM_POEN_EN(ch), 0=
+> > > +
+> > > +#include "acpi_tuxi_init.h"
+> > > +
+> > Remove empty line but see first what I note below.
+> kk
+> >=20
+> > > +#include "acpi_tuxi_util.h"
+> > > +
+> > > +static int __acpi_eval_intarray_in_int_out(acpi_handle handle,
+> > > +=09=09=09=09=09   acpi_string pathname,
+> > > +=09=09=09=09=09   unsigned long long *params,
+> > > +=09=09=09=09=09   u32 pcount,
+> > > +=09=09=09=09=09   unsigned long long *retval)
+> > There's only single caller of this function, so I question the need for
+> > using an utility function.
+>=20
+> It's in preparation for if the TUXI device get another subdevice besides =
+TFAN.
+>=20
+> Currently nothing is planed but i though this doesn't hurt.
+>=20
+> >=20
+> > > +{
+> > > +=09struct acpi_object_list arguments;
+> > > +=09unsigned long long data;
+> > > +=09acpi_status status;
+> > > +
+> > > +=09if (pcount > 0) {
+> > > +=09=09pr_debug("Params:\n");
+> > > +
+> > > +=09=09arguments.count =3D pcount;
+> > > +=09=09arguments.pointer =3D kcalloc(pcount,
+> > > sizeof(*arguments.pointer),
+> > > +=09=09=09=09=09    GFP_KERNEL);
+> > > +=09=09for (int i =3D 0; i < pcount; ++i) {
+> > unsigned int
+> kk
+> >=20
+> > > +=09=09=09pr_debug("%llu\n", params[i]);
+> > > +
+> > > +=09=09=09arguments.pointer[i].type =3D ACPI_TYPE_INTEGER;
+> > > +=09=09=09arguments.pointer[i].integer.value =3D params[i];
+> > > +=09=09}
+> > > +=09=09status =3D acpi_evaluate_integer(handle, pathname, &arguments,
+> > > +=09=09=09=09=09       &data);
+> > > +=09=09kfree(arguments.pointer);
+> > You can use cleanup.h to handle freeing.
+> will look into it
+>
+> > > +=09} else {
+> > > +=09=09status =3D acpi_evaluate_integer(handle, pathname, NULL, &data=
 );
+> > This call should be on the main level. You can use ?: operator for the
+> > only parameter you're changing for it between the currently diverging
+> > code paths.
+>=20
+> then the kcalloc call happens every time even if it is not required.
 
-(Assuming "EN0" is the name of the bit for channel 0 in
-MA35D1_REG_PWM_POEN.)
+No it won't, you'd allocate only if pcount > 0 (in a similar block as=20
+now):
 
-> +	}
-> +
-> +	/* Set polarity state to register */
-> +	if (state->polarity =3D=3D PWM_POLARITY_NORMAL)
-> +		writel(readl(MA35D1_PWM_POLCTL_ADDR(nvtpwm->base)) & ~BIT(ch),
-> +		       MA35D1_PWM_POLCTL_ADDR(nvtpwm->base));
-> +	else
-> +		writel(readl(MA35D1_PWM_POLCTL_ADDR(nvtpwm->base)) | BIT(ch),
-> +		       MA35D1_PWM_POLCTL_ADDR(nvtpwm->base));
+#include <linux/cleanup.h>
+#include <linux/slab.h>
+=2E..
 
-You can skip setting up period if !state->enabled.
+=09union acpi_object __free(kfree) *obj =3D NULL;
 
-> +	return 0;
-> +}
-> +
-> [...]
-> +
-> +static int nuvoton_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct pwm_chip *chip;
-> +	struct nuvoton_pwm *nvtpwm;
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	chip =3D devm_pwmchip_alloc(&pdev->dev, MA35D1_PWM_TOTAL_CHANNELS, size=
-of(*nvtpwm));
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +
-> +	nvtpwm =3D to_nuvoton_pwm(chip);
-> +
-> +	nvtpwm->base =3D devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(nvtpwm->base))
-> +		return PTR_ERR(nvtpwm->base);
-> +
-> +	clk =3D devm_clk_get_enabled(&pdev->dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(clk), "unable to get the cloc=
-k");
+=09if (pcount > 0)
+=09=09obj =3D kcalloc(...);
 
-Please start all error messages with a capital letter and end them with
-\n.
+=09=09arguments.count =3D ...;
+=09=09arguments.pointer =3D obj;
+=09=09...
+=09}
 
-devm_clk_rate_exclusive_get(&pdev->dev, clk) here please.
+=09status =3D acpi_evaluate_integer(handle, pathname,
+=09=09=09=09       pcount ? arguments : NULL, &data);
+=09if (ACPI_FAILURE(status))
+=09=09...
 
-> +
-> +	nvtpwm->clkrate =3D clk_get_rate(clk);
-> +	if (nvtpwm->clkrate > NSEC_PER_SEC)
-> +		return dev_err_probe(&pdev->dev, -EINVAL, "pwm clock out of range");
+__free() will handle kfree(obj) for you, you don't call kfree() manually.
 
-	return dev_err_probe(&pdev->dev, -EINVAL, "PWM clock out of range (%lu)\n"=
-, nvtpwm->clkrate);
+> also i don't know if ?-operator in a function call is good to read.
 
-> +
-> +	chip->ops =3D &nuvoton_pwm_ops;
-> +	chip->atomic =3D true;
-> +
-> +	ret =3D devm_pwmchip_add(&pdev->dev, chip);
-> +	if (ret < 0)
-> +		return dev_err_probe(&pdev->dev, ret, "unable to add pwm chip");
-> +
-> +	return 0;
-> +}
+It is much better than duplicating almost the same call, by using ?: it=20
+is obvious that only single parameter is being altered, whereas on split=20
+calls, the code reader has to do the compare.
 
-Best regards
-Uwe
 
---mgcvn6assk5gfnns
-Content-Type: application/pgp-signature; name="signature.asc"
+> > > + * Arg0: Fan index
+> > > + * Returns: Speed sensor value in revolutions per minute
+> > > + */
+> > > +#define TUXI_TFAN_METHOD_GET_FAN_RPM=09=09"GRPM"
+> > > +
+> > > +int tuxi_tfan_method(struct acpi_device *device, acpi_string method,
+> > > +=09=09     unsigned long long *params, u32 pcount,
+> > > +=09=09     unsigned long long *retval);
+> > > +
+> > > +#endif // __PLATFORM_X86_TUXEDO_NBXX_ACPI_TUXI_UTIL_H__
+> > >=20
+> > What is the reason for splitting this into so many files? Are there goi=
+ng
+> > to be other users of the code that is split into separate files? For th=
+e
+> > init/deinit code, surely not.
+> >=20
+> > It will be considerably harder to track call chains, etc. when the
+> > function cannot be found in the same file so you better provide a reall=
+y
+> > good reason for going so extreme with the split.
+>=20
+> Same as above: in preparation for the future if there is another TUXI
+> subdevice other then TFAN.
+>=20
+> Also to section of the hwmon logic as I might want to reuse it for other =
+odms
+> in the future albeit it would then need to get passed the acpi-write func=
+tion
+> in a dynamic way.
+>=20
+> And imho it not harder to follow over different files, there is a lot of
+> external function references anyway, so having something setup to
+> automatically jump to a function definition in a different file is alread=
+y
+> required to quickly parse the code.
 
------BEGIN PGP SIGNATURE-----
+For library type APIs, one usually doesn't read those functions. I'm=20
+talking about functions within the driver. For well-structured and=20
+well-named code, jumping all over the place not a requirement at all=20
+because the interfaces that cross file boundaries are well architected and=
+=20
+rest is self-contained and self-explanatory. I see you started to defend=20
+the suboptimal split with everybody does that argument ;-).
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmel0koACgkQj4D7WH0S
-/k6B5QgAkmPrpVBwtHRJq4G/GPLPBrDSVyo5xEcvkJ34aTw/6pfgW0tguGSbmD+5
-jjDrETkuUGwdZP0IPgNGbJJkxc+/Mit8/i5hX6+iTU/b1+63F+SUh74LEg5Ddrl+
-YTVNye+pDGmyJ+cMM26NwmLSkpLarvkZlj0XTgKZRDCnjm/dR4n8JMrFrklfv0HB
-v6aLFR2dP57ofb09zndyEHLYdqnDNt1+KaMUuZNn0gnTxhLGAvdde6ZmqrQnQYlO
-LRPfTGVp7i9i9hKpxm6d1v+RIPh455t0EO9D/Z85c5TZeA4cm1OrPkllM61femRu
-LBTcRK6jkZ7CJJFACoxQKCWAh8Kc+g==
-=KmnS
------END PGP SIGNATURE-----
+Your references to "future" sound quite vague, if there are no immediate=20
+plans for such drivers to exist, I'd just do such rearranging of code when=
+=20
+the supposed other drivers actually happens (which often is never).
 
---mgcvn6assk5gfnns--
+--=20
+ i.
+
+--8323328-1481543863-1738929196=:938--
 
