@@ -1,57 +1,57 @@
-Return-Path: <linux-pwm+bounces-4830-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4831-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10EFEA2D736
-	for <lists+linux-pwm@lfdr.de>; Sat,  8 Feb 2025 17:22:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB7D6A2D744
+	for <lists+linux-pwm@lfdr.de>; Sat,  8 Feb 2025 17:23:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18A803A7351
-	for <lists+linux-pwm@lfdr.de>; Sat,  8 Feb 2025 16:22:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1550A1888719
+	for <lists+linux-pwm@lfdr.de>; Sat,  8 Feb 2025 16:23:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AC0C1F17EF;
-	Sat,  8 Feb 2025 16:22:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A4841F30AA;
+	Sat,  8 Feb 2025 16:23:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXgGwo8x"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiXVaSFT"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A2A1F17E0;
-	Sat,  8 Feb 2025 16:22:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673F81F30A0;
+	Sat,  8 Feb 2025 16:23:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739031738; cv=none; b=MKakvaOuOOAm5xy0OgMxroAmHWz0MyvYQM4SKUbedDs7jaWBfLXJ3erA1cgVRUfwSk+LyaI/oC9k5fiwROxmFq6bLLOktxYYZsIrSiXSl1PtD+wjQKOQ/44o7o5MkAYBap/MROzdX3icGjsVn641s9LAwAuEAO6TZqtbGbKGYbE=
+	t=1739031788; cv=none; b=b/sGxWWBnlZXjsAwcN46eczkUmzUnCQEBZ1NFjA4umaw4jd/H51/J2wPJZxfi9Nz5KeotFRM4DOakPIS1rhLQIcymRNfBUSqE3eiHIxtKcmSNLf7g0qZfG9d7Sqt2gyy+Ji2nMLcnAawOf3PnrdozDY5gJZ5MObjI99iz5d/Auc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739031738; c=relaxed/simple;
-	bh=97IBzO1CWx4oZDvKx6jxFk8hLWZKDM/8QmlyBbbKBvU=;
+	s=arc-20240116; t=1739031788; c=relaxed/simple;
+	bh=Ekrz3bFy6IXUZ9DvsoaOzw9ElB1mg+eDRl5ttyj4wvk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T9T0EVGeGMV0QmRmHbxtYDBnbvfI7q/ur4zL9Sh0Bh8vpfhnbRRbsBHlrJopSoUE2Qi9oxcGQEftJIstoiC5gFkh2UXDtyUBPyU2npAp7arGkQr1Wt3PecE2LOFDSpT8sNdxN0+qDzRDQqNXE0R6SRL3V4HqJAddrz/vuE40124=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXgGwo8x; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72E4AC4CED6;
-	Sat,  8 Feb 2025 16:22:15 +0000 (UTC)
+	 MIME-Version:Content-Type; b=VF6KDtXDeXqqxPDOgjSosGlDHeXtdB7jXPntU7NBdXrjqGtjuQ6y4E+3QHO4VIVUUls9NWkwInt/kA1IC19G0x8c2Rt3aOtkHAY6u6AckQenVMccwZXS1Y+zpQ7HMHyVcWh1OKAd9U+Z+Bl2DrO1reJgeKSKOs0x4sUb7Igokmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiXVaSFT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E36EC4CED6;
+	Sat,  8 Feb 2025 16:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739031738;
-	bh=97IBzO1CWx4oZDvKx6jxFk8hLWZKDM/8QmlyBbbKBvU=;
+	s=k20201202; t=1739031788;
+	bh=Ekrz3bFy6IXUZ9DvsoaOzw9ElB1mg+eDRl5ttyj4wvk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FXgGwo8xpaF6cUoUPyxO+5wdzcN4EGvpD9tFK1VhXhm4CF/YDOKUlfttMBFw3Un1K
-	 930pz/tysCFaKs8Y/xS0gygZtI00i+lqxFTO6gwdIFq4iMi25TT6pBT27zx405wsZa
-	 7OUMOVCzK97zDxMMQeYhJLnmq3x6gz1SPPtobrptBVyYZaoY+TxLFAOwt/COB9s5zz
-	 G0MZo+rkRy1KBtcLRECHJF6hIG9hE8fbbHs09AcOaHG//EAB7yYyhEuacHxE6OuoHe
-	 x0jV/5drtrUurUG5HEqGMTmecYx0gXGY7mAxK9VB0nM14cRTUDuelzW7xKZ/qWyLvH
-	 6U5MjmjEr+yMQ==
-Date: Sat, 8 Feb 2025 16:22:09 +0000
+	b=tiXVaSFTHCd2BnGBU6J1JW3BUWB/nZzL8J14ihe+0e8b4DmYj+q6zsClqRrejU/76
+	 ZgZv201/vtwztsb/vT/2SJUSkmzPNygOMZxH3NanW9TyDsS+inukDMbK9iu7ZwhFhi
+	 2qTIalO1FO0k8PtS0p/vg5Mfh8dGl6fCbPQKCIfkqY1/qeMLOmacfCeMAn3CBiPw0C
+	 /RjO67Y3E9RtwVKt4xfviV2x3a7Ot3zcygS+nftfOkO72CMyupenLYXgXlFJkAzQ96
+	 KAMMsqURuVsBPjle7acLshajVssjjYceo4cIRDG3i4+6kB/efmxSLxJrPSj1LUvqoF
+	 6vtkdClshGEaA==
+Date: Sat, 8 Feb 2025 16:23:00 +0000
 From: Jonathan Cameron <jic23@kernel.org>
 To: Antoniu Miclaus <antoniu.miclaus@analog.com>
 Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linux-iio@vger.kernel.org>,
  <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, Nuno Sa <nuno.sa@analog.com>
-Subject: Re: [PATCH v12 6/9] iio: adc: adi-axi-adc: set data format
-Message-ID: <20250208162209.2d43bae3@jic23-huawei>
-In-Reply-To: <20250207140918.7814-7-antoniu.miclaus@analog.com>
+ <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v12 7/9] iio: adc: adi-axi-adc: add oversampling
+Message-ID: <20250208162300.1e083279@jic23-huawei>
+In-Reply-To: <20250207140918.7814-8-antoniu.miclaus@analog.com>
 References: <20250207140918.7814-1-antoniu.miclaus@analog.com>
-	<20250207140918.7814-7-antoniu.miclaus@analog.com>
+	<20250207140918.7814-8-antoniu.miclaus@analog.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -62,37 +62,70 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 7 Feb 2025 16:09:15 +0200
+On Fri, 7 Feb 2025 16:09:16 +0200
 Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
 
-> Add support for selecting the data format within the AXI ADC ip.
+> Add support for enabling/disabling oversampling.
 > 
-> Add separate complatible string for the custom AD485X IP and implement
-> the necessary changes.
-> 
-> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 > ---
-> changes in v12:
->  - add separate compatible for ad485x AXI IP core.
->  drivers/iio/adc/adi-axi-adc.c | 99 +++++++++++++++++++++++++++++++----
->  1 file changed, 90 insertions(+), 9 deletions(-)
+> no changes in v12.
+>  drivers/iio/adc/adi-axi-adc.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
 > diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
-> index d2e1dc63775c..272d82c6e887 100644
+> index 272d82c6e887..872ff51e08a7 100644
 > --- a/drivers/iio/adc/adi-axi-adc.c
 > +++ b/drivers/iio/adc/adi-axi-adc.c
-> @@ -45,6 +45,12 @@
->  #define ADI_AXI_ADC_REG_CTRL			0x0044
+> @@ -46,6 +46,7 @@
 >  #define    ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
 >  
-> +#define ADI_AXI_ADC_REG_CNTRL_3			0x004c
-> +#define   AD485X_CNTRL_3_PACKET_FORMAT_MSK	GENMASK(1, 0)
-Sorry I missed this until now, but normal IIO thing is no wild cards
-in naming (been bitten too often!)
+>  #define ADI_AXI_ADC_REG_CNTRL_3			0x004c
+> +#define   AD485X_CNTRL_3_OS_EN_MSK		BIT(2)
+>  #define   AD485X_CNTRL_3_PACKET_FORMAT_MSK	GENMASK(1, 0)
+>  #define   AD485X_PACKET_FORMAT_20BIT		0x0
+>  #define   AD485X_PACKET_FORMAT_24BIT		0x1
+> @@ -363,6 +364,28 @@ static int axi_adc_data_size_set(struct iio_backend *back, unsigned int size)
+>  				  FIELD_PREP(AD485X_CNTRL_3_PACKET_FORMAT_MSK, val));
+>  }
+>  
+> +static int axi_adc_oversampling_ratio_set(struct iio_backend *back,
 
-So I'd like to see these named after a specific part.
+Same thing David pointed out in previous patch applies here.
+axi_adc_ad4851_oversampling_ration_set() or something like that.
 
 
+> +					  unsigned int ratio)
+> +{
+> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
+> +
+> +	/* The current state of the function enables or disables the
+> +	 * oversampling in REG_CNTRL_3 register. A ratio equal to 1 implies no
+> +	 * oversampling, while a value greater than 1 implies oversampling being
+> +	 * enabled.
+> +	 */
+> +	switch (ratio) {
+> +	case 0:
+> +		return -EINVAL;
+> +	case 1:
+> +		return regmap_clear_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
+> +					 AD485X_CNTRL_3_OS_EN_MSK);
+> +	default:
+> +		return regmap_set_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
+> +				       AD485X_CNTRL_3_OS_EN_MSK);
+> +	}
+> +}
+> +
+>  static struct iio_buffer *axi_adc_request_buffer(struct iio_backend *back,
+>  						 struct iio_dev *indio_dev)
+>  {
+> @@ -428,6 +451,7 @@ static const struct iio_backend_ops adi_ad485x_ops = {
+>  	.chan_status = axi_adc_chan_status,
+>  	.interface_type_get = axi_adc_interface_type_get,
+>  	.data_size_set = axi_adc_data_size_set,
+> +	.oversampling_ratio_set = axi_adc_oversampling_ratio_set,
+>  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
+>  	.debugfs_print_chan_status = iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
+>  };
 
 
