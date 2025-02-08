@@ -1,177 +1,104 @@
-Return-Path: <linux-pwm+bounces-4828-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4829-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DC9EA2CFC2
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Feb 2025 22:38:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99B8DA2D733
+	for <lists+linux-pwm@lfdr.de>; Sat,  8 Feb 2025 17:21:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8DDEE1884074
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Feb 2025 21:38:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C80821888FC6
+	for <lists+linux-pwm@lfdr.de>; Sat,  8 Feb 2025 16:21:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25E3F188CB1;
-	Fri,  7 Feb 2025 21:34:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAC5F1F17F3;
+	Sat,  8 Feb 2025 16:21:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W3sRilJw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cRaqqr9F"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E141624F6;
-	Fri,  7 Feb 2025 21:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53C31F17E5;
+	Sat,  8 Feb 2025 16:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738964093; cv=none; b=e7gOU5GfQcpt7ktVXRxLDgFN905KGIFlAk6Pw3ZdD25cDDmhDRXufivOfKkX3pH7bBn1jTpBd65HgBgmUTfRNSlTTySeM9WrEKHtWSt5kDbIDVVbxbU+VfiGZMoHivjzlIcdgXxDGKdj9LALH4kDYl0WG7+oP2VADkT++dAp+EI=
+	t=1739031666; cv=none; b=AeaH2J442FtCKaj6lR15/03EMCUiiJ+6EmE7k4yr7+Z+emLUKf2gQIExtxL9/yNhkxtSWqf8nPdnmcksG14fu7EikMIEJ8l+kPlwT7o8QDVwr67A3fjMgfqakJRbXz82yX3HadPuq+uGzk5rO9uYqDFdQA8qP5H0O8QTskYiDrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738964093; c=relaxed/simple;
-	bh=oHqIAxLLmUR3pEzy/2FnGaRx286gjbFJrfZW4tLqDvE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L9z7HxdpdfkK4lmOYOM97IFk1+O+8gfDQhaNGgL0qzdGXTRy+ng8R1/TSffJ6z1HmenF3mDR4AaDJrrBg5I4c9OBr2r8S6y9j9A0VkoVQaT46B2sIv0oR7nVQQO/HG1MaE1uYBWox5Awh4hk+1O0/XCvseNKuiaZgOIWTilamy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W3sRilJw; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2fa40c0bab2so489227a91.0;
-        Fri, 07 Feb 2025 13:34:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738964091; x=1739568891; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hhpHUagE52EKnmKOxCiQactoQqNbzbldiRwiK/u0V2Y=;
-        b=W3sRilJwblEU8ytT4jDq58FwimtxLeZBvIviso3MsAY6Iyx8qoSE8GZwplgUoKvg/V
-         XJoqGl3FgvPWB6Rmh1TnS31OEUxlBMQlRFCTzQtChAVZdbVRiLWpiQ//9+3xdMlxH+t/
-         NlZxJaPPoVq8ByYNb30EWShwf6PZDD3RsjuqZf5KnNuEcMJ2F668S125Hn7ZRje7cZfQ
-         In5UHJcYyEhWGPuCQoC39HnIagv4I8UqifRK21vKLGJ1pZRPHE9icm84bAxUCgdIhAda
-         w1F002/8wRelEHN1UH8mATUk8HwLg9HTC9iR4mCQWoWDoxIuoGlmHueYB5rHMql8x3pJ
-         gmhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738964091; x=1739568891;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hhpHUagE52EKnmKOxCiQactoQqNbzbldiRwiK/u0V2Y=;
-        b=EZOr0UE+idsFRWWCVpC21Ljjdrkb4IMqPkMgFOh+FEeduMIWilixUW7CdZLrM6etc7
-         sFEgyJWJqYu/C8t3yqndugmLM1paPkk5BDRNUFUhjUArXc8kSNFKlNUCstHe08ezqxrp
-         iGNo3X2qzDDrz9v/+2KM+RNBtS34LFOqo9/oLk9gX70pdNFDoPoXBQLfI+RqWqei8fUs
-         jLSMHauOiN/DR4VIyq8R2CE66hREP83Ig5lLM0RNuCYeBPZuXJkAOZ4WvK/6QvFk77ya
-         fAlBfFGzCZ6TPXlZ7aY0HS1FUk/c61hcJuNJ1qw31pllV0JhMzwhEUK9gffUUXEeX+y9
-         NcHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWdL+z4wsF5EZzMnJ5MeWdqyxBV42p5rv/wbxB52q+JYJl5gBW5/DGR0mEYXToVpEOECnnhytIuC/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxq7lvzEYtlkWxCEAXjrBiyJITTOFQQmWTcvgeu1reNO3fez3xq
-	Y3K7UvmFWevxx6ii0iVXcwPVMsr5mwdLqupMRIMkmBs0WQYp7SLn
-X-Gm-Gg: ASbGncsyNc/qw4PN/IPblgyk6ltGdBT1Gfal5etx8+9h7SevYwpfotnqhJQtmPP7rKg
-	7kmkEzIqJSlrs10R/84R2Ox/zoTTwEWed9YEJQk+Kf+x6GoxAjD2TdQ5qxBqS82v4C1sxZaHEyE
-	LtOpEvS+dmWfQY6IQHCp5ygJ2kEFEiyZ8JwuJGaLTnXp+xJrIcPjIZ521n6Nw/E76s7xBJTWvIp
-	7MbosWWE/aBzwrMfI3DJnGZl924fk0er4TKPnA5wNxMlMQQe3De9YA+DJB0GJVpm4DPXSJZDkys
-	ISGQGHxdV1etJ8gozwwgk1TDvTAD1xH9KGZK
-X-Google-Smtp-Source: AGHT+IH29EBWiWhi59MN0hnX4gY7pFIziiMBMzTBvlNXyVzS0s7itND3mR8+5aMD7lXG0nEpeYPZDg==
-X-Received: by 2002:a17:90b:3e8a:b0:2ee:d797:40a4 with SMTP id 98e67ed59e1d1-2fa2406925bmr7358951a91.8.1738964090784;
-        Fri, 07 Feb 2025 13:34:50 -0800 (PST)
-Received: from localhost.localdomain ([181.192.80.27])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa442524f7sm154535a91.21.2025.02.07.13.34.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 13:34:50 -0800 (PST)
-From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-To: rafael.v.volkmer@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	ukleinek@kernel.org
-Subject: [PATCH v3 3/3] pwm: ehrpwm: ensure clock and runtime PM are enabled if hardware is active
-Date: Fri,  7 Feb 2025 18:34:24 -0300
-Message-Id: <20250207213424.1117-1-rafael.v.volkmer@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250207213234.1026-1-rafael.v.volkmer@gmail.com>
-References: <20250207213234.1026-1-rafael.v.volkmer@gmail.com>
+	s=arc-20240116; t=1739031666; c=relaxed/simple;
+	bh=YrRRjJsSGYAT3roRHOyflVMByyTnyHegjOYjRumSqgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m23YfVU6XwFBq3nGy78o4PM9rSnh1aAGPvdIdRW/TEuiI4W/hy4Ksp/szy5Rk8RWGqZBmmhEpe5kfQ91nX3ukEbeIZE6LQhnL68m2iybX1vNjSxL7mWk9BD/limiPqpR7cKMm3GEjj+MVVhCD1RBVM0gmX86mK7S0ykrxse2ii4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cRaqqr9F; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE5AC4CED6;
+	Sat,  8 Feb 2025 16:21:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739031666;
+	bh=YrRRjJsSGYAT3roRHOyflVMByyTnyHegjOYjRumSqgs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cRaqqr9FO6+Btq+1WokSFUMvKxSFbL4dOd0m1axj/fhpJ7DKQde+N9B0HMHJ4zxIl
+	 SjAnK9xniov6B8nkwlVy71yh04dI0FYFZ06fGyLa4MFXdpgHEFMaAlTbH6CCTplnqt
+	 wvkSsXZXH636l+6tRS2onwaA05iScmwwGqEWzUNner9U5eS41Nkj6+SVISNBr9RWtR
+	 CQ0Cql3dih4eGd7JyqSQUCMZojDr0eraGUJYn7l1XwHwFj+EfggLqOsiJX5xff+FnT
+	 AcMs3bWJvpY1mWL5Y5MCZTT3KqitmoBNUislq1Z9vrYNcKcqxr9Y5bDVbru+0R+waS
+	 lzdTutEjt30cw==
+Date: Sat, 8 Feb 2025 16:20:58 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linux-iio@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v12 5/9] dt-bindings: iio: adc: add ad485x axi variant
+Message-ID: <20250208162058.3b50ae20@jic23-huawei>
+In-Reply-To: <20250207140918.7814-6-antoniu.miclaus@analog.com>
+References: <20250207140918.7814-1-antoniu.miclaus@analog.com>
+	<20250207140918.7814-6-antoniu.miclaus@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-During probe, if the hardware is already active, it is not guaranteed
-that the clock is enabled. To address this, ehrpwm_pwm_probe() now
-checks whether the PWM is enabled and ensures that the necessary
-resources are initialized.
+On Fri, 7 Feb 2025 16:09:14 +0200
+Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
 
-Changes:
-- Call ehrpwm_get_state() during probe to check if the PWM is active.
-- If the PWM is enabled, call clk_prepare_enable() to ensure the clock
-is active.
-- If the clock is successfully enabled, call pm_runtime_get_sync() to
-manage power state.
-- Handle failure cases by properly disabling and unpreparing the clock.
+> Add a new compatible and related bindings for the fpga-based
+> AD485x AXI IP core, a variant of the generic AXI ADC IP.
+> 
+> The AXI AD485x IP is a very similar HDL (fpga) variant of the
+> generic AXI ADC IP, intended to control ad485x familiy.
 
-This ensures that the driver correctly handles cases where the hardware
-is already in use at the time of initialization, preventing potential
-failures due to uninitialized resources.
+Hmm. Should we name this after a specific part? Very unlikely
+the wildcard will go wrong here because of how specific this
+binding is anyway but we should perhaps stick to normal rules
+of no wild cards.
 
-Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
----
- drivers/pwm/pwm-tiehrpwm.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index 52527136c507..30beaf7d1721 100644
---- a/drivers/pwm/pwm-tiehrpwm.c
-+++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -633,8 +633,10 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	struct ehrpwm_pwm_chip *pc;
-+	struct pwm_state state;
- 	struct pwm_chip *chip;
- 	struct clk *clk;
-+	bool tbclk_enabled;
- 	int ret;
- 
- 	chip = devm_pwmchip_alloc(&pdev->dev, NUM_PWM_CHANNEL, sizeof(*pc));
-@@ -676,6 +678,18 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	ehrpwm_get_state(chip, &chip->pwms[0], &state);
-+
-+	if (state.enabled == true) {
-+		ret = clk_prepare_enable(pc->tbclk);
-+		if (ret) {
-+			dev_err_probe(&pdev->dev, ret, "clk_prepare_enable() failed");
-+			goto err_pwmchip_remove;
-+		}
-+
-+		tbclk_enabled = true;
-+	}
-+
- 	ret = pwmchip_add(chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-@@ -685,10 +699,22 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, chip);
- 	pm_runtime_enable(&pdev->dev);
- 
-+	if (state.enabled == true) {
-+		ret = pm_runtime_get_sync(&pdev->dev);
-+		if (ret < 0) {
-+			dev_err_probe(&pdev->dev, ret, "pm_runtime_get_sync() failed");
-+			clk_disable_unprepare(pc->tbclk);
-+			goto err_pwmchip_remove;
-+		}
-+	}
-+
- 	return 0;
- 
-+err_pwmchip_remove:
-+	pwmchip_remove(chip);
- err_clk_unprepare:
--	clk_unprepare(pc->tbclk);
-+	if (tbclk_enabled)
-+		clk_unprepare(pc->tbclk);
- 
- 	return ret;
- }
--- 
-2.25.1
+> 
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
+>  Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+> index e1f450b80db2..f1b470f74069 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+> @@ -19,11 +19,13 @@ description: |
+>    memory via DMA.
+>  
+>    https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
+> +  https://analogdevicesinc.github.io/hdl/library/axi_ad485x/index.html
+>  
+>  properties:
+>    compatible:
+>      enum:
+>        - adi,axi-adc-10.0.a
+> +      - adi,axi-ad485x
+>  
+>    reg:
+>      maxItems: 1
 
 
