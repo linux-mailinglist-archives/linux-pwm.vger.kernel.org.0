@@ -1,130 +1,249 @@
-Return-Path: <linux-pwm+bounces-4835-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4836-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0861A2F283
-	for <lists+linux-pwm@lfdr.de>; Mon, 10 Feb 2025 17:07:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3CAFA2F304
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Feb 2025 17:18:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57CBF1887B4A
-	for <lists+linux-pwm@lfdr.de>; Mon, 10 Feb 2025 16:07:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6A1131638F3
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Feb 2025 16:18:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AF44247DF8;
-	Mon, 10 Feb 2025 16:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55A432580DB;
+	Mon, 10 Feb 2025 16:18:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnA+7RNv"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lW9b5+py"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E841E247DC9;
-	Mon, 10 Feb 2025 16:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A08A2580CE
+	for <linux-pwm@vger.kernel.org>; Mon, 10 Feb 2025 16:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739203621; cv=none; b=N7z6ZgYRXXPARy24MZ1Tbx9z8bfo74kjeHen1HkKkvekXFSSxMI2IEI4KQTOM1g5NZmlmhCw59g9kJxnEz+Mszf/h7Jrqh+SdyPnZ0xjLZOQ7pB/FNHe3kCulQROTR3SVVLnEVV+i4CjdQ7680HFCe8sFkikeRmFNBdRObyPxTg=
+	t=1739204302; cv=none; b=kdFtRKVB0cLvFeHW4sk/0CNsC6uxCc/7eann8MDakvHevXppHnXA8GWOBk9aEjDEQDppsBXCPPu7k0jPHXEuKCmOvxnmtseYR1MeL2O3cCkj8N+m33M7O6QU0ZmyuTj03gJ4hVcDtS6jmQ/mZFKpkaIblNCVwvH65edDLjuvhDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739203621; c=relaxed/simple;
-	bh=kMzVySL+KsPyifhKYjl79ydoeIFGhKb0gqHpGEZiRg8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=V8MoIp22c34LsactqYwTfiCzntG3S/fh1ac9sDHb7OYXVibfRnnbJBt/i8Cxn7sWp7TgI5mRMAk762WQtM7k5ZRL8dKXoR5NkB0tFt85Db0dt6nO47FLiOWzOulrYLuTWOlQYBJDKEtmGN14kzLtKJpobOMOo9whd1SYnPcXGRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnA+7RNv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69884C4CEE5;
-	Mon, 10 Feb 2025 16:06:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739203620;
-	bh=kMzVySL+KsPyifhKYjl79ydoeIFGhKb0gqHpGEZiRg8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=UnA+7RNv2SqFH+w5fTdNOqktNxbt8gG1JajPB2UBwblQCu2pxM5/Ad6XD+38AkU5M
-	 gWX0tZv0mNlDEJUL6+JzAj2COee89n6d3aQrVlyYPlhk2KOVZHnlm0e7OHFbF/f20h
-	 XdLsscxK6r6IVMWL5AOhOIPOeb5701gCaDwzyGbrR0DhFoVpNrGW2gCXRGTum15hZh
-	 /vhrOTKP6YB2Cr1cjizu5TZyNeJ2ah3enHO/3J8qvJCnd90PwqjhoH7IMEwDhRVv0b
-	 GPAlYW5Du17PDvLjOMpCtJQcdn56OYffkcmO1ysWBfXZ3wN8llr12IuDA7BxpMyba5
-	 Oy761P9ZUWi2A==
-From: Mark Brown <broonie@kernel.org>
-To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- David Lechner <dlechner@baylibre.com>
-Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>, 
- Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Axel Haslam <ahaslam@baylibre.com>
-In-Reply-To: <20250113-dlech-mainline-spi-engine-offload-2-v7-0-e0860c81caae@baylibre.com>
-References: <20250113-dlech-mainline-spi-engine-offload-2-v7-0-e0860c81caae@baylibre.com>
-Subject: Re: (subset) [PATCH v7 00/17] spi: axi-spi-engine: add offload
- support
-Message-Id: <173920361716.57731.16678374643709028298.b4-ty@kernel.org>
-Date: Mon, 10 Feb 2025 16:06:57 +0000
+	s=arc-20240116; t=1739204302; c=relaxed/simple;
+	bh=besRNeHJT7xqfYb5uKHuNlYZxzWOS6Do+dRJvjqEIr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CuKUdunx57E9Q+GYDaphFkVfVYheHqJyjNbM8DyvB/lF07fQExO/E19ZN1ZsW3uD8rRpQCRvPJeqWX9EQ8MTgftpuiUQfr0Sbh/PJIYai01tkNW0eQN8zMGjGWA24ANkc+RygjrLkAC20432wAzeXO5lW3z3OnfCLT1peh2xl64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lW9b5+py; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab7cc0c1a37so143349466b.0
+        for <linux-pwm@vger.kernel.org>; Mon, 10 Feb 2025 08:18:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739204297; x=1739809097; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yg5LLUjdjjPvXo+kEmWGKdPDo5dG0M8KkYaCsN9kciQ=;
+        b=lW9b5+pyMvfH12lIjeC8I1cwPuHYyukcKFWR6qBvPNQS3K5vIeEBN7nWklHsLGWVK8
+         y1X8UEnsLqNOH4r9ZfJIYJVxh05/nwGG6V2TFypOXF2+SMBebEECYOi1cCA3MnoZQWTs
+         ooektOHYcXHdl1W4ex/E9OhWpqCDE446tTnVaASAoNSjJnBBniudXgDKQRiqyaxTmwEy
+         pAyekLGgB/qA3bA8O6YkBkDCUgVuYiIVrff6rSVgRtCXdG5+gFinlvwWDv4loftHoPZB
+         S5+z8hhxm8kKmqDCqRPFF6W3w99VdekvTvvIaa7V47CmSqg6+uUnmBwvpHMcdSUHoE75
+         Ejgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739204297; x=1739809097;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yg5LLUjdjjPvXo+kEmWGKdPDo5dG0M8KkYaCsN9kciQ=;
+        b=qtNL+htlqRLDL5usx2XniQJch/GAOVwtJRA+exz3IiwDpBjHIh6IkzqtHUQD6uNzhv
+         M8wIY45R+8Z3KzlegR6vH+L6vd299oEelotZkJG2OS8Yul0z1gALwLqBqkR90mm6s07r
+         sKHq8VeSbjsLtVp5ZL1SSKqwDDgbyT26/Up7e1uyMvR+CKGzn5ggTXXd2zjRjau5RHIG
+         oMH/qAXH0tK15FQO1udb3HhM64m/jh0/A4NP+tWjhrhHmtyC3fuby6WmDiTzTK4RYOEa
+         CXjYAcaMaGYF+hSAi3gQU4s87v/j7A+2VLi7u4oonxS3AtkNAYZF30khQf7B8OHsiiuJ
+         /42w==
+X-Forwarded-Encrypted: i=1; AJvYcCWEOBALDz3DUmaVKujo6QtHsa3Ae5+U4uOO1npw3ke1/Hmv+Z0NawrVuNPBaEcnshlJ9B4lCafI8Y0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoMaKrnTOwO+03Us0mZ+NAqIBlb1YucPl+grC1IdfRgXPOuBcH
+	V93umvyDRMvpejFkgcN3rcRXntnT0i6tUHFO3N10GkyrVGfDidsX+dYz6INXdrY=
+X-Gm-Gg: ASbGncska08IM+lYdaFvWx4T+1ZFtmi+GXJXzCPzX80we1K/cRiSGaLzmde6zrxHuaQ
+	mo7wDWhSYpvENGELb+lbWtG1cwX5MmUqpLtmn0KHnMUurLqcvUzlHGOLIglgVNub02bBtZX+kLM
+	sHg5WLzJd/0LqznaSc2cyvxD+nEli0ZR9edSUaAzTkbK6oTw2rxj3sOUcPQGlFKvd7SLFrC6oRg
+	viuh8plneQIWw+Jnw5KxtLVN9MsrsRVo74XlEimMiwRtVayMOFiyMwRPmfUOx87c5JheLMTKHLs
+	LnRDy+FBrAFnUNzTUIeou4zVUxTLR6dtf3n8g9uO3Tekar5yQz8F
+X-Google-Smtp-Source: AGHT+IEFxvSi01mPcsN5/DWt+q8dGob9WMf5sr35JDwrIqiJd2YPbauAQ6jPapa824lM0WBiNVlM9g==
+X-Received: by 2002:a17:907:1b28:b0:aac:619:e914 with SMTP id a640c23a62f3a-ab789aad2d1mr1778763366b.16.1739204297350;
+        Mon, 10 Feb 2025 08:18:17 -0800 (PST)
+Received: from dfj (host-87-8-15-130.retail.telecomitalia.it. [87.8.15.130])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7c0907e77sm253674066b.98.2025.02.10.08.18.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 08:18:16 -0800 (PST)
+Date: Mon, 10 Feb 2025 17:16:49 +0100
+From: Angelo Dureghello <adureghello@baylibre.com>
+To: "Miclaus, Antoniu" <Antoniu.Miclaus@analog.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	David Lechner <dlechner@baylibre.com>, "jic23@kernel.org" <jic23@kernel.org>, 
+	"robh@kernel.org" <robh@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, 
+	"Sa, Nuno" <Nuno.Sa@analog.com>
+Subject: Re: [PATCH v11 5/8] iio: adc: adi-axi-adc: set data format
+Message-ID: <ucxlvvrejjeagopcqdwawgcv43c4uywmkubt4a5apxlbbnbzkw@takqoc4njft7>
+References: <20250127105726.6314-1-antoniu.miclaus@analog.com>
+ <20250127105726.6314-6-antoniu.miclaus@analog.com>
+ <08d8e97d-752d-4fa7-95f0-d828ef80f7b8@baylibre.com>
+ <CY4PR03MB33993EE62F4E1B3939F213B29BF52@CY4PR03MB3399.namprd03.prod.outlook.com>
+ <20250203152517.000028ca@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203152517.000028ca@huawei.com>
 
-On Mon, 13 Jan 2025 15:00:05 -0600, David Lechner wrote:
-> We've got Reviewed-by's from all of the relevant maintainers now other
-> than SPI, so up to you Mark to say what you want to do with this.
+
+Hi Antoniu,
+
+On 03.02.2025 15:25, Jonathan Cameron wrote:
+> On Mon, 3 Feb 2025 11:02:58 +0000
+> "Miclaus, Antoniu" <Antoniu.Miclaus@analog.com> wrote:
 > 
-> If we think this is good enough to go in, the SPI patches should be
-> applying fine since this is based on a recent linux-next. But the IIO
-> patches will need some care. There are dependencies on both the
-> iio/fixes-togreg and the iio/testing branches as well as a couple of
-> patches that haven't been applied yet because they are waiting for other
-> dependencies [1]. Given the timing in the merge cycle, if Mark picks up
-> the SPI patches and they make it into 3.14, then Jonathan can pick up
-> the IIO patches after the 3.14 merge window closes. Or we can wait until
-> then for everything to go in at once.
+> >  
+> > > On 1/27/25 4:57 AM, Antoniu Miclaus wrote:  
+> > > > Add support for selecting the data format within the AXI ADC ip.
+> > > >
+> > > > Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+> > > > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> > > > ---
+> > > > no changes in v11.
+> > > >  drivers/iio/adc/adi-axi-adc.c | 46  
+> > > +++++++++++++++++++++++++++++++++++  
+> > > >  1 file changed, 46 insertions(+)
+> > > >
+> > > > diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
+> > > > index d2e1dc63775c..3c213ca5ff8e 100644
+> > > > --- a/drivers/iio/adc/adi-axi-adc.c
+> > > > +++ b/drivers/iio/adc/adi-axi-adc.c
+> > > > @@ -45,6 +45,12 @@
+> > > >  #define ADI_AXI_ADC_REG_CTRL			0x0044
+> > > >  #define    ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
+> > > >
+> > > > +#define ADI_AXI_ADC_REG_CNTRL_3			0x004c
+> > > > +#define   AD485X_CNTRL_3_PACKET_FORMAT_MSK	GENMASK(1, 0)
+> > > > +#define   AD485X_PACKET_FORMAT_20BIT		0x0
+> > > > +#define   AD485X_PACKET_FORMAT_24BIT		0x1
+> > > > +#define   AD485X_PACKET_FORMAT_32BIT		0x2
+> > > > +
+> > > >  #define ADI_AXI_ADC_REG_DRP_STATUS		0x0074
+> > > >  #define   ADI_AXI_ADC_DRP_LOCKED		BIT(17)
+> > > >
+> > > > @@ -312,6 +318,45 @@ static int axi_adc_interface_type_get(struct  
+> > > iio_backend *back,  
+> > > >  	return 0;
+> > > >  }
+> > > >
+> > > > +static int axi_adc_data_size_set(struct iio_backend *back, unsigned int size)
+> > > > +{
+> > > > +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
+> > > > +	unsigned int val;
+> > > > +
+> > > > +	switch (size) {
+> > > > +	/*
+> > > > +	 * There are two different variants of the AXI AD485X IP block, a 16-bit
+> > > > +	 * and a 20-bit variant.
+> > > > +	 * The 0x0 value (AD485X_PACKET_FORMAT_20BIT) is corresponding  
+> > > also to  
+> > > > +	 * the 16-bit variant of the IP block.
+> > > > +	 */
+> > > > +	case 16:
+> > > > +	case 20:
+> > > > +		val = AD485X_PACKET_FORMAT_20BIT;
+> > > > +		break;
+> > > > +	case 24:
+> > > > +		val = AD485X_PACKET_FORMAT_24BIT;
+> > > > +		break;
+> > > > +	/*
+> > > > +	 * The 0x2 (AD485X_PACKET_FORMAT_32BIT) corresponds only to  
+> > > the 20-bit  
+> > > > +	 * variant of the IP block. Setting this value properly is ensured by
+> > > > +	 * the upper layers of the drivers calling the axi-adc functions.
+> > > > +	 * Also, for 16-bit IP block, the 0x2  
+> > > (AD485X_PACKET_FORMAT_32BIT)  
+> > > > +	 * value is handled as maximum size available which is 24-bit for this
+> > > > +	 * configuration.
+> > > > +	 */
+> > > > +	case 32:
+> > > > +		val = AD485X_PACKET_FORMAT_32BIT;
+> > > > +		break;
+> > > > +	default:
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > > +
+> > > > +	return regmap_update_bits(st->regmap,  
+> > > ADI_AXI_ADC_REG_CNTRL_3,  
+> > > > +				  AD485X_CNTRL_3_PACKET_FORMAT_MSK,
+> > > > +  
+> > > FIELD_PREP(AD485X_CNTRL_3_PACKET_FORMAT_MSK, val));  
+> > > > +}
+> > > > +
+> > > >  static struct iio_buffer *axi_adc_request_buffer(struct iio_backend *back,
+> > > >  						 struct iio_dev *indio_dev)
+> > > >  {
+> > > > @@ -360,6 +405,7 @@ static const struct iio_backend_ops adi_axi_adc_ops  
+> > > = {  
+> > > >  	.test_pattern_set = axi_adc_test_pattern_set,
+> > > >  	.chan_status = axi_adc_chan_status,
+> > > >  	.interface_type_get = axi_adc_interface_type_get,
+> > > > +	.data_size_set = axi_adc_data_size_set,
+> > > >  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
+> > > >  	.debugfs_print_chan_status =  
+> > > iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),  
+> > > >  };  
+> > > 
+> > > Why was [1] not addressed?
+> > > 
+> > > [1]: https://urldefense.com/v3/__https://lore.kernel.org/linux-
+> > > iio/9c262f599fb9b42feac99cfb541723a0a6f50e6b.camel@gmail.com/__;!!A
+> > > 3Ni8CS0y2Y!6uVytAwWUCsEazOUTACecMQkbMuHBF95sbla50CbTUFkZkyxS
+> > > -S7jMOCczpoyKCjtAKvMOyrt0ukYwcXC_l5q60$  
+> > 
+> > Indeed it was not addressed. I remained with the impression that adding part prefix
+> > in the macro definitions was enough. I will add the compatible string support.
+> > Although I have a question in order to minimize the number of versions to be sent
+> > In the future. Should I add a separate patch for the compatible support (which
+> > will not add value independently) or should I include it in this patch which adds
+> > custom function for data format for the AD485x IP core?
 > 
-> [...]
+> Binding docs update needs to be a separate patch.
+> 
+> Also, we should probably only set axi_adc_data_size_set in iio_backend_ops for
+> that ID.  So you'll need to pick from two copies of adi_axi_adc_ops
+> which probably means two iio_backend_info structures.
+> That data_size_set callback should not be set for cases that don't use it
+> (so the generic IP if I understand this correctly).
+> 
+> Similar to that part of:
+> https://lore.kernel.org/all/20250129-wip-bl-ad7606_add_backend_sw_mode-v3-7-c3aec77c0ab7@baylibre.com/
+> 
+> Hmm. This is looking like a messy merge.
+> 
+> Angelo, Antoniu,
+> 
+> Please figure out between you an order to the series so who is going to have
+> to rebase.  If this one goes first, may be worth pulling part of
+> patch 6 from Angelo's set to introduce struct axi_adc_info with what
+> this patch needs (just the backend_info pointer and maybe version?)
+>
 
-Applied to
+i separated the info struct part in a separate patch,
+you can eventually get it from here:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+https://lore.kernel.org/linux-iio/20250210-wip-bl-ad7606_add_backend_sw_mode-v4-4-160df18b1da7@baylibre.com/T/#u
+ 
+Regards,
+angelo
 
-Thanks!
+> Thanks,
+> 
 
-[01/17] spi: add basic support for SPI offloading
-        commit: 8e02d188698851436f76038ea998b726193d1b10
-[02/17] spi: offload: add support for hardware triggers
-        commit: d7231be4b4657e5f922a4c6dc11e8dffc71fee87
-[03/17] dt-bindings: trigger-source: add generic PWM trigger source
-        commit: 83f37ba7b76ab17e029ab4127ec64ccccce64c00
-[04/17] spi: offload-trigger: add PWM trigger driver
-        commit: ebb398ae1e052c4245b7bcea679fe073111db2ce
-[05/17] spi: add offload TX/RX streaming APIs
-        commit: 700a281905f2a4ccf6f3b2d3cd6985e034b4b021
-[06/17] spi: dt-bindings: axi-spi-engine: add SPI offload properties
-        commit: e1101373df5cd7672d988bb4e9cdd5eb97003165
-[07/17] spi: axi-spi-engine: implement offload support
-        commit: 5a19e1985d014fab9892348f6175a19143cec810
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+> Jonathan
+> 
 
