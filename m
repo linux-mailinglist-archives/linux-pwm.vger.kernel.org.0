@@ -1,114 +1,142 @@
-Return-Path: <linux-pwm+bounces-4858-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4859-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9F06A3111B
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Feb 2025 17:20:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 45C99A31335
+	for <lists+linux-pwm@lfdr.de>; Tue, 11 Feb 2025 18:36:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3106E188798A
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Feb 2025 16:17:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0362318820A3
+	for <lists+linux-pwm@lfdr.de>; Tue, 11 Feb 2025 17:36:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FB561D63F9;
-	Tue, 11 Feb 2025 16:16:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C704F261571;
+	Tue, 11 Feb 2025 17:36:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1pXt6cd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQlZOWgk"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370C01EF01;
-	Tue, 11 Feb 2025 16:16:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B95626156B;
+	Tue, 11 Feb 2025 17:36:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739290578; cv=none; b=be0MC2sBSOJTC2nOU2Z8Og50ch/d5uy4dqXVFCy4xhVOgSjBxqyqt4sbgFG0jwpBB6ksj76jTbOeJ7GEoFc/Vuj/8b8wd31Q7PQGU1y7gVm17o1WUHRRIDnTAJDzsGy7QNP1Po8z5+/RbElVwlKx99g1J4/1lOXOetQKvgePc1U=
+	t=1739295397; cv=none; b=FmnMHOwiYvrrUR27OLo8G8kwk9mhTkhOBdynKgyFEhDsq1FI7ufHA4WB8Ez4NR4HGuApyc3fb26QAKvnoMTGLf5x105iYzUCss6WLmveFqedeJlTfkw89pEdMxoiUYY9Uo5Bwl55cHCh0QPJStKHSAIkVDpgx+fbo/C2zpbmNVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739290578; c=relaxed/simple;
-	bh=1apOfVZ6LTpZYFLpFXmf153RBYS1MxNBPKu94D2rOWY=;
+	s=arc-20240116; t=1739295397; c=relaxed/simple;
+	bh=Z8cAlzmQ1FTJmGopWB95RkiWwb0zduDpc5Os2YBQPZ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SOBxprtrnoqBfgR8rNfQ8vLFwFw+dfFJ1xb8p1+6DrLnjmbJqx8GXNHQUxR9Pd5xV/s7WPyP1uzZ+LlPEHdGvHQlIr/vNfohvtySOV26X+mobkMySZ4XhRYx9mfI6/+b+0tCkdscmojyRkhkUoiq9cRG+a9XLtnbSLBskgwONDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1pXt6cd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F5FC4CEE5;
-	Tue, 11 Feb 2025 16:16:16 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ExQOf91Vc2CYwkBPbSs+fdl5VrRaEcxj6FOBJEz0polK/UcHhwtOwy0L7recCUA0ItgFEF7dS+uoMKWDnEeLAoygYwm3x9sbs0SCDpXvuw/dsksa/Qyn3G20zGupol+U+QXbVk879pwhvDNaW1oVRLtOQy9kDZosllST2xjmpOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQlZOWgk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62637C4CEE5;
+	Tue, 11 Feb 2025 17:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739290576;
-	bh=1apOfVZ6LTpZYFLpFXmf153RBYS1MxNBPKu94D2rOWY=;
+	s=k20201202; t=1739295397;
+	bh=Z8cAlzmQ1FTJmGopWB95RkiWwb0zduDpc5Os2YBQPZ4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c1pXt6cd9/NtBdoxZPnnvpY/oFOXH3Jxv9rSmmrs21uhFjOpUfDWg8rbeAtZfbL+4
-	 BVxN/UZCqGGAHACVhmGiYwSrAUlQrbq6DXvlEXKCqp5q4ZRzlyJWWNp+QvXax+hq7W
-	 InRZ2k9VpICPC3EROPXxFhw5WqRpn8PAMM6h6wMUJChBz92QTpgtPF+KzTiCGqD7XN
-	 YPme+lhIb7d98mXJ6+2IT+md14M2EuXfXQLbXcJv8Q1EnCpoTvBmTGt9ta7kb/4pbL
-	 2cQGd37A46GtHtST1WcmxAfsB1eagOqEVwWkrf6xrmqsJ45LsaLED04DZ15pnkvfQl
-	 PUfSlEtM/RtMw==
-Date: Tue, 11 Feb 2025 10:16:15 -0600
-From: Rob Herring <robh@kernel.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
-	=?iso-8859-1?Q?Herv=E9?= Codina <herve.codina@bootlin.com>,
-	linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: pwm: marvell,pxa-pwm: Update to use
- #pwm-cells = <3>
-Message-ID: <20250211161615.GB354180-robh@kernel.org>
-References: <cover.1738842938.git.u.kleine-koenig@baylibre.com>
- <cb799d8a5bb284cd861785a691b8d5e329300d99.1738842938.git.u.kleine-koenig@baylibre.com>
+	b=GQlZOWgktTHln7uPuJ6cl+fwkOsl5KKL5vv8GzrWKDRF9NvEF1rGpDVEBHtMUfJcl
+	 1Uo+CpaUnz5/VMRBUQcjcuvvbPx5WOf8EnrxfIJrvHx/HrwskJKLNs8mcy0w62IvLG
+	 mPVSYxAiwj4oAXIolUPR51qCcYTkiSeN2MM/Lxh7ydk2ADb1Pfnufu8MNnyrhfwLa3
+	 ZD4lv3ZBJ8P/pDdPn0udRD0UMzIQ90YP2/cqH/wNCeYlg44u4VUUVhnk9wuGTWwgex
+	 iErRELOSktWMgQJ1iJxw2wvRdl/wopG4PE9cYXtfKMb+D2jwqbrxUQO00/JbXYxIF2
+	 lo9qC9VQoKZyg==
+Date: Tue, 11 Feb 2025 18:36:34 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v8 2/2] pwm: Add Loongson PWM controller support
+Message-ID: <vyth3k4smtsp4qvbkugi7vkhaqii3gysgjmenzhl27iy74fy6w@rleajhaork2j>
+References: <cover.1733823417.git.zhoubinbin@loongson.cn>
+ <be76165d1ab09ec41cdfd4e5fbdae1b415f516b9.1733823417.git.zhoubinbin@loongson.cn>
+ <obegtfup7f6w6erh4arubk2fkk2wrcum5frs5kbqa4uniexmr5@6uti3d3hv7np>
+ <CAMpQs4+nVSorAeR92F22T5dnzyh1h4BDR6UqrZbTSUhEyWbGyA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qdnv7nwtvr5bumy6"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cb799d8a5bb284cd861785a691b8d5e329300d99.1738842938.git.u.kleine-koenig@baylibre.com>
+In-Reply-To: <CAMpQs4+nVSorAeR92F22T5dnzyh1h4BDR6UqrZbTSUhEyWbGyA@mail.gmail.com>
 
-On Thu, Feb 06, 2025 at 01:06:26PM +0100, Uwe Kleine-König wrote:
-> The PXA PWM binding is the only one that doesn't pass the PWM line index
-> as first parameter of the parameter cells. However this can be upgraded
-> to the mandatory binding for all new PWM drivers without breaking
-> compatibility for old device trees using #pwm-cells = <1>.
-> 
-> So bump #pwm-cells to 3 with the (undocumented) promise to keep the old
-> behaviour for #pwm-cells = <1>.
 
-Why make that undocumented?
+--qdnv7nwtvr5bumy6
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 2/2] pwm: Add Loongson PWM controller support
+MIME-Version: 1.0
 
-> 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Tested-by: Duje Mihanović <duje.mihanovic@skole.hr>
-> Reviewed-by: Daniel Mack <daniel@zonque.org>
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-> index 9ee1946dc2e1..74f2d5964742 100644
-> --- a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-> @@ -25,8 +25,7 @@ properties:
->      maxItems: 1
->  
->    "#pwm-cells":
-> -    # Used for specifying the period length in nanoseconds
-> -    const: 1
-> +    const: 3
+Hello,
 
-Note that if we apply this and not the dts change, we'll add warnings.
+On Tue, Feb 11, 2025 at 02:02:03PM +0600, Binbin Zhou wrote:
+> On Tue, Feb 11, 2025 at 12:26=E2=80=AFAM Uwe Kleine-K=C3=B6nig <ukleinek@=
+kernel.org> wrote:
+> > On Tue, Dec 10, 2024 at 08:37:06PM +0800, Binbin Zhou wrote:
+> > > +static int pwm_loongson_suspend(struct device *dev)
+> > > +{
+> > > +     struct pwm_chip *chip =3D dev_get_drvdata(dev);
+> > > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip=
+);
+> > > +
+> > > +     ddata->lss.ctrl =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_=
+CTRL);
+> > > +     ddata->lss.duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_=
+DUTY);
+> > > +     ddata->lss.period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_RE=
+G_PERIOD);
+> > > +
+> > > +     clk_disable_unprepare(ddata->clk);
+> > > +
+> > > +     return 0;
+> >
+> > Is this needed assuming that before suspend the consumer stopped the
+> > PWM?
+>=20
+> Actually, I don't quite understand the problem you're pointing out. It
+> seems to me that the register and clk operations are required
+> regardless of the state of the pwm.
+> At least from the experimental results, the logic is now as expected.
+> Of course, I may be missing some critical information.
 
-You could instead do:
+When a PWM goes into suspend it's expected that its consumer already
+disabled it.
 
-oneOf:
-  - const: 1
-    deprecated: true
-  - const: 3
+Until I come around to do that properly in the core for all drivers, I
+think the right approach in a driver is:
 
+	for (i =3D 0; i < chip->npwm; ++i) {
+		if (chip->pwms[i].state.enabled)
+			return -EBUSY;
+	}
+
+and if you then know that all PWMs are disabled, maybe you don't need to
+store all the registers you did in pwm_loongson_suspend()?
+
+Best regards
+Uwe
+
+--qdnv7nwtvr5bumy6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmerip8ACgkQj4D7WH0S
+/k5c6wgAlB03Ww2DaE0f/GhgIEQK0amvkBzFmTSH1rolSm/RhX6cECAt1ysGO97P
+N8bzQvvODFcWNGcQ40B6bdwDfDE9WNKICyWjuJsKlszXQD+OvdhtlxHwVGeCAucr
+7IjcHzguUM4oyZTRemyA6+ocNV0nzf/+LCqX4pBbq11ogTdo2taWH2iZltFGCQ0B
+c/9CMmRtJ74goG4G8OMGdcoLdzZbZq792FKiNZgxPyapxoIiEtiPxHSIrKsT4wHh
+h6CVRy4B/gdSN3X9RBoMt89beGeXoLX8f8AouFeU63MwHJWFtkQffyZIwGlKkyyP
+DXsh9hp7m5V4Boamj/0v9lFXGwNi6g==
+=tLNJ
+-----END PGP SIGNATURE-----
+
+--qdnv7nwtvr5bumy6--
 
