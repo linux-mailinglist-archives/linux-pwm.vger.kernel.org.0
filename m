@@ -1,81 +1,89 @@
-Return-Path: <linux-pwm+bounces-4869-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4870-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 934A2A327CC
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Feb 2025 14:58:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BD580A329B3
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Feb 2025 16:15:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 547521624D3
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Feb 2025 13:58:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7788E164C5B
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Feb 2025 15:15:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAFCC20E6F2;
-	Wed, 12 Feb 2025 13:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1AD4213241;
+	Wed, 12 Feb 2025 15:15:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nbyeaJX5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MPkye97P"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31EE20E315;
-	Wed, 12 Feb 2025 13:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7808A20E038;
+	Wed, 12 Feb 2025 15:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739368682; cv=none; b=NzbEEXIEf15r1E20WxLglIYeehqObNxBLQYmksPU+WJLk/m585kji2Iy/LghesK+kqRJCoFgttEV5F8vq71gxBnBiYsVT8GOGJMnIwNiNdpaQnVKqRWxuoFe/NCQZLeHmJYNWAUFV0fI04MdD2ojJfsa40XWgw9bwuhzMoU8RF8=
+	t=1739373320; cv=none; b=fTTTdwcpUhKFNLzh/nseyxDIrkZK5q6qUJN41921RvWtMM8YpvZl1n5wQ3huaM6hHuE9EZD9zaKLTPRZMmxGYb+Dq9kHLMpzRnubVRzLAWShNRUf4JU0tT3znmfcjzcAiiEyOd/GRwW9FKn86w3iF5HKOYEkmcgTcgnTqdzqoOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739368682; c=relaxed/simple;
-	bh=96pdxkWjw6GsLVtvNftdKd10yxyF39mB6biRnC42Ps4=;
+	s=arc-20240116; t=1739373320; c=relaxed/simple;
+	bh=36xnraS+6CjRXGXyxx9IPLW3xTJ9QTHCIwLdimGlQi0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MVbiQ3UKoGXp8AGQSAg+69N/jE2HBPF6J2RohyJ4yskPj9UgDa6yeV8E7R678FaOQIoijgNl6oTl6xq7m6JCFCftsHlN3SxiMVa33Rmvl5m1S8M5mKYhnTpa1et8OPx5XPJjFPKYcl33MRr1CFAcFULglGGGrX0a7qA/DfXTxfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nbyeaJX5; arc=none smtp.client-ip=198.175.65.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=SpjOxHfCFq5hqT8jbMKhkEJ5HDRXLoRGz2BeLn4vRb7sI2RwbSvqYqd7h56ofSA41jdJcsocOmH4TbXZ2Nien/fWHdeHJYfaSzSkkawy39sIffmiLMgD/KLoEfcbOWTxvycLXK8DDwSN/aYuxC5kHI4RuIXcrsvVQP7KAbsM9sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MPkye97P; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739368681; x=1770904681;
+  t=1739373319; x=1770909319;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=96pdxkWjw6GsLVtvNftdKd10yxyF39mB6biRnC42Ps4=;
-  b=nbyeaJX5ch9dNu3ABwc0Co7IgMmiTqMgnit9HXNCmb7ECkDzqiXuwwht
-   S6zpV9eLcMlcSzmKDRuVDF6kLxxbatnbWqK8aB04kFWcjrhGo/NZy42k2
-   tBV+eq72F0kxYWfwPeM+/jJMg8ie+sVXoREkGVTljaQqEc2m02xQqQpzb
-   EUSwfht2W8o289ceE9C+/zO/Y0g/d2XDGpdItXRK3rARMc3Tw4aUqcubz
-   jyu9vVeWVyersFVbW9DB5fepZIJSiOZcZ8YBi7UIZiZ6nM5dFcZmjWjse
-   0bG0ZXCxPXFJDwmUW5CBoIOFSz+1JZgR2vNtcU+JAncqijHQADGdZDHl/
-   w==;
-X-CSE-ConnectionGUID: vDt1JB/NRUay7pN6os1fWQ==
-X-CSE-MsgGUID: y+JegSPrTy6nMnhPyFQWTw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40145853"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="40145853"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 05:58:00 -0800
-X-CSE-ConnectionGUID: RRVwHANLSeakNeJ9W2v9ow==
-X-CSE-MsgGUID: e1wjcWhhQPWqIcbWUmrUxQ==
+  bh=36xnraS+6CjRXGXyxx9IPLW3xTJ9QTHCIwLdimGlQi0=;
+  b=MPkye97PwPbC3QXTuif17NJuoVr4Vyw7ScO/3X2sh/YBvmltSmymMEtD
+   hCyHjF3/Yk5sSGTb2BAM3au0/TqDwfJvf+w6dbTyyQbC+xsWMfMLuvG3j
+   QlupUwRJyQpMTNbF1z06OSHtcpcMFmzrZll4qV63wtkkByc4gZlJoMIJt
+   5djCmUHQYfP8zaWoJ/C9JEHnmapI4wfc8Ddet02Kzz8zo8swZLkHixptk
+   BdWh5n6/mvPh8R1GF5DlnfPLtlHW8SjLL+ZptOgiwnoHqFufwCV1r4fxc
+   YExmobPsXaZHTp6cDC0O5imwyt9Nq/AxsjamKWlyLYWYOFzwBugDAWf/x
+   g==;
+X-CSE-ConnectionGUID: COuVtPhUT7yfw/4vq/uVIg==
+X-CSE-MsgGUID: CSsubyjKQ4SDfUiTTTFAsQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="40183840"
+X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
+   d="scan'208";a="40183840"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 07:14:54 -0800
+X-CSE-ConnectionGUID: NvtxVxtuSYmAOoy7n70nOA==
+X-CSE-MsgGUID: ZyAwoJg4Qj+b8TMPaP18dw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112686345"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 12 Feb 2025 05:57:56 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tiDFT-0015gJ-0T;
-	Wed, 12 Feb 2025 13:57:55 +0000
-Date: Wed, 12 Feb 2025 21:57:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
+X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
+   d="scan'208";a="112621912"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 07:14:49 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tiERq-0000000As7i-0VFM;
+	Wed, 12 Feb 2025 17:14:46 +0200
+Date: Wed, 12 Feb 2025 17:14:45 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Bamvor Jian Zhang <bamv2005@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Keerthy <j-keerthy@ti.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 01/14] gpiolib: make value setters have return values
-Message-ID: <202502122100.xnayNYRg-lkp@intel.com>
-References: <20250211-gpio-set-retval-v1-1-52d3d613d7d3@linaro.org>
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 4/7] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <Z6y65SnrprvnpKEa@smile.fi.intel.com>
+References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
+ <20250113-mdb-max7360-support-v3-4-9519b4acb0b1@bootlin.com>
+ <Z5eFGJspoGOINcG6@smile.fi.intel.com>
+ <D7QHGB7D0VSG.X255SDU7DFOF@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -84,48 +92,72 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250211-gpio-set-retval-v1-1-52d3d613d7d3@linaro.org>
+In-Reply-To: <D7QHGB7D0VSG.X255SDU7DFOF@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Bartosz,
+On Wed, Feb 12, 2025 at 01:57:34PM +0100, Mathieu Dubois-Briand wrote:
+> On Mon Jan 27, 2025 at 2:07 PM CET, Andy Shevchenko wrote:
+> > On Mon, Jan 13, 2025 at 01:42:28PM +0100, Mathieu Dubois-Briand wrote:
 
-kernel test robot noticed the following build errors:
+...
 
-[auto build test ERROR on df5d6180169ae06a2eac57e33b077ad6f6252440]
+> > > +	parent = to_platform_device(pdev->dev.parent);
+> >
+> > Why do you need this? Can't the fwnode be propagated to the children and then
+> > the respective APIs to be used?
+> 
+> I'm not sure to understand this correctly, what do you mean by
+> propagating the fwnode to the children?
+> 
+> Just a quick summary of the situation and what I try to do. The device
+> tree looks like this, only keeping the interesting properties:
+> 
+> io-expander@38 {
+>   ...
+>   interrupts = <23 IRQ_TYPE_LEVEL_LOW>,
+>                <24 IRQ_TYPE_LEVEL_LOW>;
+>   interrupt-names = "inti", "intk";
+> 
+>   max7360_gpio: gpio {
+>     ...
+>   };
+> 
+>   max7360_gpo: gpo {
+>     ...
+>   };
+> };
+> 
+> Our pdev fwnode points either to the "gpio" or "gpo" nodes, the one from
+> our parent device points to "io-expander@38". Here we need to get the
+> "inti" interrupt from the parent node. What would be the correct way to
+> do it?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpiolib-make-value-setters-have-return-values/20250211-201426
-base:   df5d6180169ae06a2eac57e33b077ad6f6252440
-patch link:    https://lore.kernel.org/r/20250211-gpio-set-retval-v1-1-52d3d613d7d3%40linaro.org
-patch subject: [PATCH 01/14] gpiolib: make value setters have return values
-config: sparc-randconfig-002-20250212 (https://download.01.org/0day-ci/archive/20250212/202502122100.xnayNYRg-lkp@intel.com/config)
-compiler: sparc-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250212/202502122100.xnayNYRg-lkp@intel.com/reproduce)
+Ah, I see now. This is being used only for IRQs, but don't you want to call
+actually fwnode_irq_get_byname()? It will makes the intention clearer.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502122100.xnayNYRg-lkp@intel.com/
+...
 
-All errors (new ones prefixed by >>):
+> > > +	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios)) {
+> > > +		dev_err(&pdev->dev, "Missing ngpios OF property\n");
+> > > +		return -ENODEV;
+> > > +	}
+> >
+> > This is not needed, it is already done in GPIOLIB core.
+> 
+> I believe this is still needed:
+> - For gpos, we need the gpio count to correctly set the partition
+>   between gpo and keypad columns in max7360_set_gpos_count().
 
-   drivers/leds/leds-aw200xx.c: In function 'aw200xx_disable':
->> drivers/leds/leds-aw200xx.c:382:16: error: 'return' with a value, in function returning void [-Wreturn-mismatch]
-     382 |         return gpiod_set_value_cansleep(chip->hwen, 0);
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/leds/leds-aw200xx.c:380:13: note: declared here
-     380 | static void aw200xx_disable(const struct aw200xx *const chip)
-         |             ^~~~~~~~~~~~~~~
+Shouldn't be that done somewhere in the GPIO valid mask initialisation?
 
+> - For gpios, we need the gpio count to setup the IRQs.
 
-vim +/return +382 drivers/leds/leds-aw200xx.c
-
-d882762f7950c3d Dmitry Rokosov 2023-11-25  379  
-d882762f7950c3d Dmitry Rokosov 2023-11-25  380  static void aw200xx_disable(const struct aw200xx *const chip)
-d882762f7950c3d Dmitry Rokosov 2023-11-25  381  {
-d882762f7950c3d Dmitry Rokosov 2023-11-25 @382  	return gpiod_set_value_cansleep(chip->hwen, 0);
-d882762f7950c3d Dmitry Rokosov 2023-11-25  383  }
-d882762f7950c3d Dmitry Rokosov 2023-11-25  384  
+Doesn't GPIOLIB parse the property before initializing the IRQ valid mask
+and other init callbacks?
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With Best Regards,
+Andy Shevchenko
+
+
 
