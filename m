@@ -1,144 +1,163 @@
-Return-Path: <linux-pwm+bounces-4862-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4863-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 760D9A316F4
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Feb 2025 21:56:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7240CA32048
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Feb 2025 08:51:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BF5316843C
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Feb 2025 20:56:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 148683A1857
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Feb 2025 07:51:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 396812641CB;
-	Tue, 11 Feb 2025 20:56:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4BB9204694;
+	Wed, 12 Feb 2025 07:51:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NqL4tP4i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fYC8xWpv"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093F024E4A8;
-	Tue, 11 Feb 2025 20:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA371E47B4;
+	Wed, 12 Feb 2025 07:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739307372; cv=none; b=pIbkldbgK/k0rd3VhVmsxX3sArOShpH3WFweDUGqy3Ob4jwfS+iSeV6U9W1Ap++nxNYHX8c6L6csE55YZtLyXh46AujvZ5+kSAMq39m5xajNnR+VqTIlGJs96KAvYzcx1dKLZA15giHHu5ddNNoDz1Uj7jNCddR0lNTP+tVlkgo=
+	t=1739346700; cv=none; b=tVIba9VN1FD/xB+L0QzESKC5U8HZHAe7A3XVRDs0JL5EgHno2Nb1WzOwSq+SAC5bc00nKLsATJpkyyCtDXpdzLdZwqLhrixMGhAHW/mPEUhUUkwcGqBI4buwjWNa/v0Z9pygdUybUrT/6ArjL5ZkkT9sepKpZeolEqdw9ukc8ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739307372; c=relaxed/simple;
-	bh=1kS5pRqJHQNPF4gP4Lxw9NbXHOwh+4VmYGQP1qPNoLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PJf3AgSkP9yUndhHzhoLu29cVFpDHItPoNY3ka25STd8BxOQpbZl3jOx95m4I1NrD/lydj+R0d0Kdf1EqwYNTxudYuOR24YSmf7a9lzcU6quaxo153D3JIgarozN8ftn8o+cz5KkqJqPHuujbHlwsAWeqjfxirsphapUo98ZkZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NqL4tP4i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38EABC4CEE7;
-	Tue, 11 Feb 2025 20:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739307370;
-	bh=1kS5pRqJHQNPF4gP4Lxw9NbXHOwh+4VmYGQP1qPNoLQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NqL4tP4i++KBlmQncBwrcb+Pi3NtoUsIyvPzIr2nC45U5LJaw5rDADzGUV4jqO31e
-	 UZkSN3rhnATLbx5r+/H5kISE90GQHthoJ2GB+pvf4ePK3lsfwto4+d/e+aIavTWJRr
-	 kDe2C09R0TyoIo0EJmXDrVC9zSaNn2mGewxuc5T5BCW8U6l2s20Pq6hw70w9fmgM4V
-	 bsUA9Ke8W5ffkAveEIuFWBLHJwRW5nn0tDe2YC+mGfU6uZkVs+vJSV5O8gCbOMX7I8
-	 rLpsAlSi1tOQwUl0eeNBeu9Vqk5vb7l//i1wC9T0lTTQ1lBuccMaKBdcZbW18eCs+L
-	 Sy5GYbY4xw4nA==
-Date: Tue, 11 Feb 2025 14:56:09 -0600
-From: Rob Herring <robh@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: Add support for PWM nexus node
-Message-ID: <20250211205609.GA1142491-robh@kernel.org>
-References: <20250205095547.536083-1-herve.codina@bootlin.com>
- <20250205095547.536083-2-herve.codina@bootlin.com>
+	s=arc-20240116; t=1739346700; c=relaxed/simple;
+	bh=PT4rGShEWh3DzWcWOCHpI21yltkgPZv4xIGMiqRgdQ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V3aPohMZDQgO7085R8z75TsfjEer4vgyGEi1+WlsJsQPcf3ecx6xhzwSH4YTUqspUfY5RfOLA+97pvbDGlVVqmdWzUbpLVtm0qJnmXd4fp0KEltIp4ajIcjfmiuFXHnzBW7ZB9RWqOgNsXT5lMkYPfjtjTZclGyUQLZlOQWqFXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fYC8xWpv; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5de64873d18so6795818a12.2;
+        Tue, 11 Feb 2025 23:51:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739346697; x=1739951497; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I9m4RpcHMEGyjcSsbihXpefKBea9DX/lIwf1QjZ3ahQ=;
+        b=fYC8xWpvM99pR1GEyWKijzw60uvQYl5ZObQybJwo7XYwUGNhmMv5niUZUjh6vDAO8C
+         EBV6rBNOSH3CvdqYmAbOvuCSrpVSgAqx9o0UHDIoB/UuuLmQ4AfzRj5yvzUmXrda2pXB
+         N7Wc5gGmIiecCGWAFSnOl6YNTEukltMGWN4sSnN3F5yVPvi9/cVhjmrra9wc+iUKePs+
+         tboDxFIrHjESguOiInsDhPzjsRU83aswXjRZI+AyC6S/y1BidE8ckkPv1CEu+xoiQzFM
+         rYfxuNdJTdPk1GymA6+EkqVwgWGE/AWLiHdmQctSaM6VJG3s24fuJIFkWMANpR5MJ7GV
+         DpKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739346697; x=1739951497;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I9m4RpcHMEGyjcSsbihXpefKBea9DX/lIwf1QjZ3ahQ=;
+        b=Q7OaCWkyICXYKzF1IY6TOm9587Di5kas8mmGbx31FqjR3louuuUAMFRNdhWJg+5dUW
+         YrNpOUnd161qFN7JTyfQhkAHhSSEfsAxYuJSTwIrSjsFTIq2v1wIs5Chv7qTRzWlFj2V
+         il+2IByEmTl4/3BLIg98oWQVigz/w9IoDsx38pwJSMKV8LoAt6YGxRyzYPWRWjmuU93e
+         vceuywJpHLwJ51MYsxBmv+or7KMbk89JP5/WAOWwnlRyjNjM8RT/KDEcrjEKDosOsi7G
+         otfPuBIZFafG/9BBQkocLucxr1JSz6I6Lhg+QJGg7Nw0pD0t8+zbBynDuR8tLuX4qRh7
+         ntnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1Xbi5JrHI34PGpC74lZIL7hK7auWN9iJZ48QZysQf0GXkNfDd4dQv6RChFMZXLXQerc0RhE3/lXg+@vger.kernel.org, AJvYcCWFBt8WUBkTOkTWZR3OlvWb5BTDTxKp6Z3emNGEs63q7T2QFxuZrbpuzXcvvI3zLf22+4ghj91sGvr7@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk4B/n6r0wJ84shBXyk3Y3Asx+g1FyfffWNo8NvmUfEzSZyKpu
+	vcV9tMtTudZEmnMT3D25Epjz8jLRQ1d6FFOyFH7AYReA3kJ1ajkTdgPD1mreiVz6ruw5bg1RYcv
+	1zwuy/wwGoSYMAQxyqQcOpLtpIAs=
+X-Gm-Gg: ASbGncvkYIvtdTvl6TIZPTiOS+zQNBt/+p4lSrRFlmXZ3fTc7LJ/g6HvKgFSpMaYZk/
+	VU0FITJIV3NGt1Na9he2zuNi/eDJTYscQaOGDzEICmjvyJh/sijlnCL5Sc80xLFdxdlVE3/U=
+X-Google-Smtp-Source: AGHT+IFTu3gb3HC/gTL7ZO2Hkvnwgt7SCIv2ukWCJdf5Hv2sq1C8t89CjBEo0ofNGytsdWZNMj3FBLTzqpa6ZVtjQZA=
+X-Received: by 2002:a05:6402:510f:b0:5dc:113c:46c3 with SMTP id
+ 4fb4d7f45d1cf-5deade0429dmr1666658a12.21.1739346696982; Tue, 11 Feb 2025
+ 23:51:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250205095547.536083-2-herve.codina@bootlin.com>
+References: <cover.1733823417.git.zhoubinbin@loongson.cn> <be76165d1ab09ec41cdfd4e5fbdae1b415f516b9.1733823417.git.zhoubinbin@loongson.cn>
+ <obegtfup7f6w6erh4arubk2fkk2wrcum5frs5kbqa4uniexmr5@6uti3d3hv7np>
+ <CAMpQs4+nVSorAeR92F22T5dnzyh1h4BDR6UqrZbTSUhEyWbGyA@mail.gmail.com> <vyth3k4smtsp4qvbkugi7vkhaqii3gysgjmenzhl27iy74fy6w@rleajhaork2j>
+In-Reply-To: <vyth3k4smtsp4qvbkugi7vkhaqii3gysgjmenzhl27iy74fy6w@rleajhaork2j>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Wed, 12 Feb 2025 13:51:24 +0600
+X-Gm-Features: AWEUYZndaGkxnP_eAs8RjoY9H_Ss2OZaz6eBH_mYhYyxveHw2EhylSheiy1pMgQ
+Message-ID: <CAMpQs4+r0zHsheF5qC1Jj-JMmV-J8DWicHVsx2aB91Eexfekfw@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] pwm: Add Loongson PWM controller support
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 10:55:42AM +0100, Herve Codina wrote:
-> Platforms can have a standardized connector/expansion slot that exposes
-> PWMs signals to expansion boards.
-> 
-> A nexus node [1] allows to remap a phandle list in a consumer node
-> through a connector node in a generic way. With this remapping, the
-> consumer node needs to know only about the nexus node. Resources behind
-> the nexus node are decoupled by the nexus node itself.
-> 
-> This is particularly useful when this consumer is described in a
-> device-tree overlay. Indeed, to have the exact same overlay reused with
-> several base systems the overlay needs to known only about the connector
-> is going to be applied to without any knowledge of the SoC (or the
-> component providing the resource) available in the system.
-> 
-> As an example, suppose 3 PWMs connected to a connector. The connector
-> PWM 0 and 2 comes from the PWM 1 and 3 of the pwm-controller1. The
-> connector PWM 1 comes from the PWM 4 of the pwm-controller2. An
-> expansion device is connected to the connector and uses the connector
-> PMW 1.
-> 
-> Nexus node support in PWM allows the following description:
->         soc {
->                 soc_pwm1: pwm-controller1 {
->                         #pwm-cells = <3>;
->                 };
-> 
->                 soc_pwm2: pwm-controller2 {
->                         #pwm-cells = <3>;
->                 };
->         };
-> 
->         connector: connector {
->                 #pwm-cells = <3>;
->                 pwm-map = <0 0 0 &soc_pwm1 1 0 0>,
->                           <1 0 0 &soc_pwm2 4 0 0>,
->                           <2 0 0 &soc_pwm1 3 0 0>;
->                 pwm-map-mask = <0xffffffff 0x0 0x0>;
->                 pwm-map-pass-thru = <0x0 0xffffffff 0xffffffff>;
->         };
-> 
->         expansion_device {
->                 pwms = <&connector 1 57000 0>;
->         };
-> 
-> >From the expansion device point of view, the PWM requested is the PWM 1
-> available at the connector regardless of the exact PWM wired to this
-> connector PWM 1. Thanks to nexus node remapping described at connector
-> node, this PWM is the PWM 4 of the pwm-controller2.
-> 
-> [1] https://github.com/devicetree-org/devicetree-specification/blob/v0.4/source/chapter2-devicetree-basics.rst#nexus-nodes-and-specifier-mapping
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  .../bindings/pwm/pwm-nexus-node.yaml          | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-nexus-node.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-nexus-node.yaml b/Documentation/devicetree/bindings/pwm/pwm-nexus-node.yaml
-> new file mode 100644
-> index 000000000000..55412fe50d01
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-nexus-node.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/pwm-nexus-node.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PWM Nexus node properties
-> +
-> +description:
+Hi Uwe:
 
-You need '>' on the end to preserve paragraphs. With that,
+On Tue, Feb 11, 2025 at 11:36=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@ke=
+rnel.org> wrote:
+>
+> Hello,
+>
+> On Tue, Feb 11, 2025 at 02:02:03PM +0600, Binbin Zhou wrote:
+> > On Tue, Feb 11, 2025 at 12:26=E2=80=AFAM Uwe Kleine-K=C3=B6nig <ukleine=
+k@kernel.org> wrote:
+> > > On Tue, Dec 10, 2024 at 08:37:06PM +0800, Binbin Zhou wrote:
+> > > > +static int pwm_loongson_suspend(struct device *dev)
+> > > > +{
+> > > > +     struct pwm_chip *chip =3D dev_get_drvdata(dev);
+> > > > +     struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(ch=
+ip);
+> > > > +
+> > > > +     ddata->lss.ctrl =3D pwm_loongson_readl(ddata, LOONGSON_PWM_RE=
+G_CTRL);
+> > > > +     ddata->lss.duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_RE=
+G_DUTY);
+> > > > +     ddata->lss.period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_=
+REG_PERIOD);
+> > > > +
+> > > > +     clk_disable_unprepare(ddata->clk);
+> > > > +
+> > > > +     return 0;
+> > >
+> > > Is this needed assuming that before suspend the consumer stopped the
+> > > PWM?
+> >
+> > Actually, I don't quite understand the problem you're pointing out. It
+> > seems to me that the register and clk operations are required
+> > regardless of the state of the pwm.
+> > At least from the experimental results, the logic is now as expected.
+> > Of course, I may be missing some critical information.
+>
+> When a PWM goes into suspend it's expected that its consumer already
+> disabled it.
+>
+> Until I come around to do that properly in the core for all drivers, I
+> think the right approach in a driver is:
+>
+>         for (i =3D 0; i < chip->npwm; ++i) {
+>                 if (chip->pwms[i].state.enabled)
+>                         return -EBUSY;
+>         }
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+OK, I will add the approach into pwm_loongson_suspend().
+Since our pwm is single channel, it can be changed to:
+
++       struct pwm_device *pwm =3D &chip->pwms[0];
++
++       if (pwm->state.enabled)
++               return -EBUSY;
+
+
+>
+> and if you then know that all PWMs are disabled, maybe you don't need to
+> store all the registers you did in pwm_loongson_suspend()?
+>
+> Best regards
+> Uwe
+
+
+
+--
+Thanks.
+Binbin
 
