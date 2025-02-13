@@ -1,78 +1,81 @@
-Return-Path: <linux-pwm+bounces-4874-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4875-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E24E3A33B5F
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Feb 2025 10:40:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3F7BA33B62
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Feb 2025 10:41:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2DEF53A5449
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Feb 2025 09:40:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EBE43166310
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Feb 2025 09:41:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F88C20DD52;
-	Thu, 13 Feb 2025 09:40:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4E7B20DD7A;
+	Thu, 13 Feb 2025 09:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkiEtYVe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c4mbrRrJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618DE20DD79;
-	Thu, 13 Feb 2025 09:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04D220DD5B;
+	Thu, 13 Feb 2025 09:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739439654; cv=none; b=NT4Zsx/OvRc/UyyZPXYBDj+Izer32dfIKlYgCD1f8FImCe+RsqKI33/FOdMSV4GpxvCYPNUTE6JTi3UM/NOGyLdpw5GlNvnetv7bDjwgDfosGX35wAZ14X+a/DJO/s/izWyUrWORFy2eE5s9ycwRi9t5QBIRyuEyJC4Ue9rYvJI=
+	t=1739439660; cv=none; b=P2qhe2YatEV7IBIjgabfJSlLF0R5f60ovgfcj+tUwaY+s0KR7ViCiFdqoUvvFvgYTuUfpVXRVZKfvciAVt/xraiOXvY7fpfexrH2+imgtIih24fcUt6iQ/sCERnscxeZtXB+XA9zQJ7cQcEQ3OXP/CIBR6nN06Yj7YgpkoqYyGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739439654; c=relaxed/simple;
-	bh=3Ty3TZPngzI8ImKj+JMeHI8wX24fjwqqQ9y/aUKCUXk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Tztjl6MRVB+FVYyFUGuVr/gkbv9UZeqkUg6Rdjnaqc8d1kMH7twVKw8agK5iO7AiME8eGguG1j8Gz/UKHIQTdw8mYPSESJfaCEq1LVsgUSS8r8mfZHqyfWc3CJO8zAddoNiL8XmqsFrE86BhLT06q0efFmlvkreVsnfYNIhGZ90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EkiEtYVe; arc=none smtp.client-ip=209.85.208.173
+	s=arc-20240116; t=1739439660; c=relaxed/simple;
+	bh=122zqtZiKS3kEtcfZ9feBjNttG8g45OLOdftdwpMMeA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Cpnz4Eb4uIJV4gIhRBQtqbFa6cdVTv1l4lx3YmU4S+1U4deToVCU2tL2io0JDwK2cSQN619Bw/fqfsj8yVvvXzw9ACy+RWiVtOSZwnfhZwZrOdI8cpkzx+zvlGUJgaR5Eo4H6wbxTdB8oOn/WwMPBRXG++sx2zF2o4F4m4M0ZJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c4mbrRrJ; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30761be8fa7so6798291fa.2;
-        Thu, 13 Feb 2025 01:40:52 -0800 (PST)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54504a6955aso480310e87.2;
+        Thu, 13 Feb 2025 01:40:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739439650; x=1740044450; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mjlSL/XILbi3kwKJAgYk9svt+oaypPyLoMPUzXAfvac=;
-        b=EkiEtYVenLNkaY48Yw1LquMh4AMUSfa9P27YEjP5oTNBCA4d3merll5U5/6eoMx5Ql
-         a0WtsnFHIvBD0Km9K1q951Hw+yfI3R/n3s4zd4fvKUeD/PeIvy85i+OgGu1dJWh6A0j0
-         9Puu6vm0uIt2GuoxBjymM7OQgrRHc8452DgmcUUgF/4xpbDgLlke9ki2Ua1ifTtPXLeN
-         N8+Pwits9n9e062dyl/TtLyhFtoPzAph4GOhY6bHFZXdpSDpZHY7zDxFgOt/K76JvT+h
-         thh3nSV/+zp5xcGcSp7ew1UvEKlQHoJcEP3uCLwY4IxDDJYfG095IblI5BBG8ouNITw2
-         Cc+g==
+        d=gmail.com; s=20230601; t=1739439656; x=1740044456; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vXrXivtvEQLh4adLUP4GGOdvzjuOxYfBxi9mEWJalRs=;
+        b=c4mbrRrJGHhFx19pHBMSmNDkd/GxZwGjqMbbJLfpGDymwdIIvFSkUxauPMr2aeYkUy
+         5pIQm1Ubo5j85tYPS9XOy15xMqlLjxEVVUVqM8kA4sWT7Zo7LUhyuCErdkghoc0MbNwg
+         7bZi5PiJ+mnVi5h60K5KLzFuIPTOKnyvdn2zP4Rbymp7oQbzw9lDV8o1TysvscznKLS2
+         A+Lqxx0r4fDqMqhWIxV1xylIJc4wBXTQg55oQ9MK0Cc0ZeApPx9xiYHNqbJYq4bSe8Rz
+         NCyVBuhs9wHMSQwEtVTA1DAuXgk1QUm4FSxEyaKfAuOr/VdNfPRaDrsisnHB+5hsEirN
+         pqvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739439650; x=1740044450;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mjlSL/XILbi3kwKJAgYk9svt+oaypPyLoMPUzXAfvac=;
-        b=qn1MKj7md/GXDT0D+r4nI2OcsdbvLs2m2Bv1rjvtrQftZF1s4/q5aiF3FcZbG/sNwD
-         khseq4XgNvrXQ2s27ZjMRmgqGMd8ryf3MKA/l8ZbB/YAaHT8R0UaRbeAx9PIO4JPHtzi
-         lwY6e0dgUp7ntITGkf4mcikpxb9cZKv6AqYnqVX6wFDN/mDSnOL7Wmf/5xnm234JwvC7
-         bqIDfxoE9nJSk1vJWihHyPpBv8WZwydrFkNatdNGBtneP4v7z6OTnhBtWWDX6FsvO3Bj
-         Ij3JsA42FqtuDYYISi3mOy/aUf411JbtqN7H/Pj9JUrVjgoGUpAT6+VxQzrV+UR5c0uU
-         7rzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsxI0+hHGs5MuAzDYStPM7D/aWGhK1SK6hQay7Ovd1kEtzMIszX67KT+bPssirKEffNA5HEzURUGSR@vger.kernel.org, AJvYcCWeXqS07r2rlqD0pYVOshrebdl0zi7PdM4da+zOD0+VsZ4Dr8rwNxtKwV6TrDjYiBfMr2vnOGvtnH45@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ1KZr04RoIpeHuOB5PwAP/Lg+EKdkdwq36ILlu/orCytD/f9e
-	2JoVO/zC4p8nLFgNvRnNPoC6v8Xv8G8joFURZ2K7cvE7tF4pLkeON5qoZLRmQbAq
-X-Gm-Gg: ASbGncsHjX/mUiFyDgHDJrRioV8lbMyOROgXNwgB/AVevUmit7qFf139mPoSazFjobR
-	5YLzRic1t48opdjMoXrJ8awxMIfnBREmK4D3qnfBH9AFN1PsKdv8NZopBhlE8OrbRTWs/ObFeWE
-	hBOp9OEjzl3IKmRCd8wyHxyJXu7T7s1BlYsCZdAr/pOU+d8p8t8n87vmPRJYKEhVbH8bqJF4mmm
-	FxL4cWkkPjNyWqTo0AO7k+IWk9/bjdq46qjV4LhNng6H+iSckwE9IfIgN/ZcWA9rlWo0GNbrkcg
-	Z60vC610hAluoPb4rbfoT+57iywJcuc=
-X-Google-Smtp-Source: AGHT+IHvr3T6WF3qrEPOE/ncpkXsxhpveENebSm/95rH45l46XCcOYPEGrJRKlNkH6Z2V9/FiQs2Ew==
-X-Received: by 2002:a05:6512:3e14:b0:544:1093:ee3a with SMTP id 2adb3069b0e04-545181165a8mr2484582e87.24.1739439649595;
-        Thu, 13 Feb 2025 01:40:49 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739439656; x=1740044456;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vXrXivtvEQLh4adLUP4GGOdvzjuOxYfBxi9mEWJalRs=;
+        b=VB0rf+fM1dIFQZ72tLPhqifHbx1ri40t/SgUQ5yd01X9SKKYjktE2+fHgsSIWYzBF7
+         51LIL5rFRAD3ZicUHxYSFLYGuOqQj8DSwjEHL88gFDDsEhLeQU3L53W1S3g7Mcufgu/d
+         FIuKljwaEbhz8lvhFkglYi21JnFRZgMVWsHTKJCRV3/G9Jhhe6CaIGLnpTJn6jv0JLL/
+         SYuXitoaN1hLY27BsAGV56euuY0/4uMnJmJrYqcEEyNqhOU6mT+F26tNojuwEIwXytMw
+         oN7H8vxFeHf0yMXChCmokwZ48rmEP5h0TPdPJGYojpyQV9RHOjiuOPmx5Zv+WXToI2FQ
+         4daQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoSgMVghIus1YnQcSzAR7YIRWIdYfy/eyHsVc6WHWT8eCFbFAPwCbiu8fD+Z9ipDsvSofCLTT+DkF2@vger.kernel.org, AJvYcCXTmSAx7U10l5u77rP3md2OPtQm+D9z7I3r30JkSV4FSK14SApws5g9THA/iAHtCsUErDfYkUPgEw/i@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjD97+ej1nvbCkFBNhzuDqSXNh2Y2sqMuHDULR/q7iWcjzOMoF
+	vD4v5eQ7KWlHKpA/51+MNfqcL4chtuV/cdgVl5b+i0LU/SHP2cAnl9TEgM9mhFhb
+X-Gm-Gg: ASbGnctV3pgzP41hU/r9WuJ0MuWkJRTXVSAqP/ii+WEsvSiznG3J5KNkJu+77xxY/ep
+	A/rQobF6I7UKWs18Mvpmr8lw7vuf/lDcdeu0nzXSjf+io164S7fvZdOxKiw3wjVntLl4D3U2o7l
+	s/EOhjwI6paiNdlsf0DLDQBICaRYs9H9aE8AZWoj2XpFi+cieQN28wFZ17rkNRglaXRZ86Y51jK
+	11ea7CUGYZZiZ7TjYFV1+JB5bo4n0sPYZ6ZUuLveCpnKZWvcgDMfPdpPVKBp6N02YwNclysb2VR
+	ScwAwgsWLIS2CbDo8XT07ApwrSl4UqI=
+X-Google-Smtp-Source: AGHT+IFCCGYbVQL84jr1QCXcHIWbGfBA/gZiSDbm59JZik6/Tl6V0NyLBbgRGNNv01sE2JUH4IgWTw==
+X-Received: by 2002:a05:6512:1111:b0:545:6cf:6f3e with SMTP id 2adb3069b0e04-5451dde81aemr834931e87.49.1739439656372;
+        Thu, 13 Feb 2025 01:40:56 -0800 (PST)
 Received: from localhost.localdomain ([178.176.176.188])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5451f10cae7sm119518e87.183.2025.02.13.01.40.47
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5451f10cae7sm119518e87.183.2025.02.13.01.40.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 01:40:49 -0800 (PST)
+        Thu, 13 Feb 2025 01:40:55 -0800 (PST)
 From: Aleksandr Shubin <privatesub2@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: Aleksandr Shubin <privatesub2@gmail.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
 	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -90,10 +93,12 @@ Cc: Aleksandr Shubin <privatesub2@gmail.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-sunxi@lists.linux.dev,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH v11 0/3] Add support for Allwinner PWM on D1/T113s/R329 SoCs
-Date: Thu, 13 Feb 2025 12:40:11 +0300
-Message-Id: <20250213094018.134081-1-privatesub2@gmail.com>
+Subject: [PATCH v11 1/3] dt-bindings: pwm: Add binding for Allwinner D1/T113-S3/R329 PWM controller
+Date: Thu, 13 Feb 2025 12:40:12 +0300
+Message-Id: <20250213094018.134081-2-privatesub2@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250213094018.134081-1-privatesub2@gmail.com>
+References: <20250213094018.134081-1-privatesub2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -102,59 +107,120 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v2:
- - fix dt-bindings
- - fix a remark in the driver
+Allwinner's D1, T113-S3 and R329 SoCs have a new pwm
+controller witch is different from the previous pwm-sun4i.
 
-v3:
- - fix dt-bindings
- - fix sunxi-d1s-t113.dtsi
+The D1 and T113 are identical in terms of peripherals,
+they differ only in the architecture of the CPU core, and
+even share the majority of their DT. Because of that,
+using the same compatible makes sense.
+The R329 is a different SoC though, and should have
+a different compatible string added, especially as there
+is a difference in the number of channels.
 
-v4:
- - fix a remark in the driver
+D1 and T113s SoCs have one PWM controller with 8 channels.
+R329 SoC has two PWM controllers in both power domains, one of
+them has 9 channels (CPUX one) and the other has 6 (CPUS one).
 
-v5:
- - dropped unused varibale in the driver
- - fix dt-bindings
+Add a device tree binding for them.
 
-v6:
- - add apb0 clock
-
-v7:
- - fix a remark in the driver
- - add maintainer
-
-v8:
- - fix compile driver for 6.8-rc
-
-v9:
- - fix a remark in the driver
- - fix dt-bindings
- - rename apb0 -> apb
-
-v10:
- - fix a remark in the driver
- - fix compile driver for 6.12-rc2
-
-v11:
- - fix a remark in the driver
- - fix compile driver for 6.14.0-rc2
-
-Aleksandr Shubin (3):
-  dt-bindings: pwm: Add binding for Allwinner D1/T113-S3/R329 PWM
-    controller
-  pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM support
-  riscv: dts: allwinner: d1: Add pwm node
-
- .../bindings/pwm/allwinner,sun20i-pwm.yaml    |  84 ++++
- .../boot/dts/allwinner/sunxi-d1s-t113.dtsi    |  12 +
- drivers/pwm/Kconfig                           |  10 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-sun20i.c                      | 370 ++++++++++++++++++
- 5 files changed, 477 insertions(+)
+Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 84 +++++++++++++++++++
+ 1 file changed, 84 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
- create mode 100644 drivers/pwm/pwm-sun20i.c
 
+diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+new file mode 100644
+index 000000000000..8955e203f638
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/allwinner,sun20i-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner D1, T113-S3 and R329 PWM
++
++maintainers:
++  - Aleksandr Shubin <privatesub2@gmail.com>
++  - Brandon Cheo Fusi <fusibrandon13@gmail.com>
++
++properties:
++  compatible:
++    oneOf:
++      - const: allwinner,sun20i-d1-pwm
++      - items:
++          - const: allwinner,sun50i-r329-pwm
++          - const: allwinner,sun20i-d1-pwm
++
++  reg:
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 3
++
++  clocks:
++    items:
++      - description: Bus clock
++      - description: 24 MHz oscillator
++      - description: APB clock
++
++  clock-names:
++    items:
++      - const: bus
++      - const: hosc
++      - const: apb
++
++  resets:
++    maxItems: 1
++
++  allwinner,npwms:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: The number of PWM channels configured for this instance
++    enum: [6, 9]
++
++allOf:
++  - $ref: pwm.yaml#
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: allwinner,sun50i-r329-pwm
++
++    then:
++      required:
++        - allwinner,npwms
++
++unevaluatedProperties: false
++
++required:
++  - compatible
++  - reg
++  - "#pwm-cells"
++  - clocks
++  - clock-names
++  - resets
++
++examples:
++  - |
++    #include <dt-bindings/clock/sun20i-d1-ccu.h>
++    #include <dt-bindings/reset/sun20i-d1-ccu.h>
++
++    pwm: pwm@2000c00 {
++      compatible = "allwinner,sun20i-d1-pwm";
++      reg = <0x02000c00 0x400>;
++      clocks = <&ccu CLK_BUS_PWM>, <&dcxo>, <&ccu CLK_APB0>;
++      clock-names = "bus", "hosc", "apb";
++      resets = <&ccu RST_BUS_PWM>;
++      #pwm-cells = <0x3>;
++    };
++
++...
 -- 
 2.25.1
 
