@@ -1,294 +1,154 @@
-Return-Path: <linux-pwm+bounces-4881-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4882-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9CCBA3592E
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2025 09:44:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25E4EA35A31
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2025 10:24:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 299923ADB52
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2025 08:42:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29C3E1891CF6
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2025 09:24:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1770C227B83;
-	Fri, 14 Feb 2025 08:42:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 236A923027C;
+	Fri, 14 Feb 2025 09:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="I+Swiiek"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LSx30mXp"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076C9224885;
-	Fri, 14 Feb 2025 08:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301C2139D1B
+	for <linux-pwm@vger.kernel.org>; Fri, 14 Feb 2025 09:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739522567; cv=none; b=XBgRWyz6cu4Qa9jFM0Vt67+Gab9eaJnDbyYgq8/v4baItJrWppN42h7mbWe/eYL4J3temVYO86t/fzZMnWtfFBbON5yGQMpwEF2Vq2cOasJgAWV97wfl8CRHVndnFk9s8a4uXsO3yaTEllAmbI92YIDDJ0Vr9GZscpR1jAQEOVY=
+	t=1739525064; cv=none; b=hdye5+4aMKMThdeNK5tha14tJz4hxkG5gLz1JYS2VMxwbFpwkpJ6UEmiDFNn+dOUSLBJ8D/V/9+CkQYBI3UDrKhGW9CP5JIS13vFg/mkrbiJzZwe1qrpq9t9b+hqWsyFWBXLQVudEPGIKwjW0kBFqIlZBcr+I0A8u8XMRY5fH28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739522567; c=relaxed/simple;
-	bh=YOuWlVlJF2/9JdvrDcQy0Y2zEBg9CBaU/IWtjC5i2MM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
-	 References:In-Reply-To; b=tDCcGCtgAFZPgOHyG8D8oVJadxUtSK/toUDNEw7xvTfkvOsHx44Ve1Fb+2MHWgWupfBSZN12gZHNPUZUOuRQLUVwIIr0uAPn7vUww4Z6Yq9OniUHB/CRm8zOl4puzL1S+IOEAVOayHQ9pZA9+YsATdCYCtBVLTpH3p4JDIPUhs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=I+Swiiek; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4BF844444F;
-	Fri, 14 Feb 2025 08:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739522562;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7L/XQV8UaijUO2KR/30CL5wbDGjOf9zE9dTPVuOH4pk=;
-	b=I+SwiieknndU+K/HVq7ErnKOzcepu/p2/98NciiCFqVoPuZETfbv/NMifaB06G261pGtlp
-	p1is70BhxsZE2101yPaeX8t1TQu4opl+SrfQMnfxWWxt9HhGiPhHcnj8hHPgI+gg+YnU7a
-	rGaIB7XJWv8JF8wwnUgOp+737pZ1JC2QuKseQ4EuIcFB8AloxwuH6wRCwJDJMJo5yuuCTw
-	G1lVkVr4bSmOMgvGhLWMYuluaPoboYQaJm0vx0PD87rOPCDMtL4kHQ1xpBdbDBkvAKSM67
-	0/7+gpt2R6sv2JDCHH7NdmnCxWA4lEOIHQu2nGKcZxFsPQ5TLJ1FA/wffYZQUQ==
+	s=arc-20240116; t=1739525064; c=relaxed/simple;
+	bh=Um93XztfaI6rR8E74QvPDKkoVEt+jJqd9tygLchRrMk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lY+RfpAI8ipXAO5H1b/uKanukKYfTagAXoYUJfUgmZ0SYcs/fc/KRuMcEUym5DnTdShIsf6s4W4ZSSLk5NmI8j7PvarZv94jeBGvGLnonfKgj8KgPgCvAOpKnwl/FCkw+6DzG9ox7TQbWSGGYFl9k1umiaXyi/ZMY1Zm+Bcc/NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LSx30mXp; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-545054d78edso1865480e87.1
+        for <linux-pwm@vger.kernel.org>; Fri, 14 Feb 2025 01:24:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739525060; x=1740129860; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TGkb7GkJNMEwB0Lc39gVzJe4c0GiPWxr9xdqsANunoc=;
+        b=LSx30mXpJ0nCn1iUafmAW2QkqF8XZA35WN+T4EDHo7vFEDNSFOBWJ8KbGwvMp9oTyr
+         ysJfLrUnhlWiKK8Zc9+UnMkbd1Qs6n4kQYefA0yQyeNfr20icyGjyF4Aj0iDKA89h0q1
+         uIBOlec6sjd9xvT6y66hsjO0zA5ZhR1PLlTGzKIq6JvcQLhdylu20Q5bC9rJ06BXvaeE
+         jjR90aB8uMMQLs5d5qLLSdAspSy5UhRvqqEMpLvgUWmJx9Ilwcl0+yi9cFdyGOmHzRQZ
+         v1P1BtPBmE2AG9xKqU56QeNo2lE7HF20HnDpP4kcH/EckIJwP4KLKiZzLhv/4pqCYmcw
+         1ppg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739525060; x=1740129860;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TGkb7GkJNMEwB0Lc39gVzJe4c0GiPWxr9xdqsANunoc=;
+        b=c6hjhC5aZkubwydcKk9FXYy4/nHLgIasevq6TmFxGt9Pn9kLEziYk5ZhUWPpAjqyPu
+         whj2dmLqDoeAZYdferCFCEiUHfJw6LH3D4K/BdvZ4V/iMvjxxdQ0eDhENmm03nwhLFLn
+         iv3gNUW8BOECadHCjcBPIsjzrve6AvSZQly/UhKxorLhbpUizNxlEpRInqSgkUKULBY/
+         rMoM/VmrAz9GNz1Qqg76Q4YCFvYwao9loHqMfLgTMeZ6k6Zh05hg79Fj+51MADOFUiX6
+         bXarI+Ws+eJ5bmbflo+CZxq4VgzSvdfET3TZ5usjZaYQWLEAJfCofa5NMDQQyL5fy0om
+         pFxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ/OKYBhNu10dJiLnp8q0W0CddfauLvopS28FV6Vhm6T/+LV7hAm1/VYCumoV8T8L/4B8mXpqiZP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgoDfkMlSwWgFV958HQh9/asvQDYlFDAkOK8M0HWNDMlCh8Hej
+	Y9SS1IbUFj70LJ/3j1rSrCB32Qk58wNSY3RQgqEFwFA7o8az4PlVotqWsfMlviCyDcPDycID5Q8
+	sXGEKgw+eFu13uY/4BbOtmDodH19t8SW8c7Ljhw==
+X-Gm-Gg: ASbGncsUM+En2reMFUp0AFsRDT6cd2V9rQeQQUJO8UJnjZYSHpibRKAprrGr4CaAFSL
+	y8ENp6G27Ufz3S9GU+tsUAV5zpBI7hDkSj3lIK3t8qd/qw3UZxhHlx8fa1CymKaca0wgQy3TbCb
+	3dkwUdVlQ2bxtuJuPXjYYFolpE9EY=
+X-Google-Smtp-Source: AGHT+IGUDt91AX/gfqA+esgbGZHA/UWH5PuCIt9Li3OAP+swstK0dr06ncsL7+shSHuIIQvDB3Ev8Az3rrKZfbsR34E=
+X-Received: by 2002:a05:6512:234f:b0:545:2335:6597 with SMTP id
+ 2adb3069b0e04-54523356662mr1123966e87.50.1739525059992; Fri, 14 Feb 2025
+ 01:24:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250211-gpio-set-retval-v1-1-52d3d613d7d3@linaro.org> <202502122100.xnayNYRg-lkp@intel.com>
+In-Reply-To: <202502122100.xnayNYRg-lkp@intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 14 Feb 2025 10:24:04 +0100
+X-Gm-Features: AWEUYZnytm-QCDvAabJim0UZlwAP-rQOF8SM5edVp_VVYpTnUbDflnVYBXLdH74
+Message-ID: <CAMRc=Md8ZYB7o_2bEctdaNsHfaVX0YANGWoQ_-6eZi7AfD6KDw@mail.gmail.com>
+Subject: Re: [PATCH 01/14] gpiolib: make value setters have return values
+To: kernel test robot <lkp@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Michael Walle <mwalle@kernel.org>, 
+	Bamvor Jian Zhang <bamv2005@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Keerthy <j-keerthy@ti.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 14 Feb 2025 09:42:40 +0100
-Message-Id: <D7S1A8EKR194.1L3ZLGX8V2ZT7@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v3 4/7] gpio: max7360: Add MAX7360 gpio support
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com>
- <20250113-mdb-max7360-support-v3-4-9519b4acb0b1@bootlin.com>
- <Z5eFGJspoGOINcG6@smile.fi.intel.com>
- <D7QHGB7D0VSG.X255SDU7DFOF@bootlin.com>
- <Z6y65SnrprvnpKEa@smile.fi.intel.com>
- <D7QLITNTXRUJ.3NA44E6PQMAUX@bootlin.com>
- <Z6zJljphfTuEhBTP@smile.fi.intel.com>
- <D7R9KGN6EMDM.1DCDL4P5RC23B@bootlin.com>
- <D7RD3K56C2CQ.1WGUSI809P246@bootlin.com>
- <Z65MalVYafUvR7LH@smile.fi.intel.com>
-In-Reply-To: <Z65MalVYafUvR7LH@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegledvtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffvufevhffofhgjsehtqhertdertdejnecuhfhrohhmpedfofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugdfuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptefhieehheehgeehkeeuiefgkeffvdehgeefieevgfekfedthefhtdfhheeujeefnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudejpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkohesihhnthgvlhdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdro
- hhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Thu Feb 13, 2025 at 8:47 PM CET, Andy Shevchenko wrote:
-> On Thu, Feb 13, 2025 at 02:45:31PM +0100, Mathieu Dubois-Briand wrote:
-> > On Thu Feb 13, 2025 at 11:59 AM CET, Mathieu Dubois-Briand wrote:
-> > > On Wed Feb 12, 2025 at 5:17 PM CET, Andy Shevchenko wrote:
-> > > > On Wed, Feb 12, 2025 at 05:08:56PM +0100, Mathieu Dubois-Briand wro=
-te:
-> > > > > On Wed Feb 12, 2025 at 4:14 PM CET, Andy Shevchenko wrote:
-> > > > > > On Wed, Feb 12, 2025 at 01:57:34PM +0100, Mathieu Dubois-Briand=
- wrote:
-> > > > > > > On Mon Jan 27, 2025 at 2:07 PM CET, Andy Shevchenko wrote:
-> > > > > > > > On Mon, Jan 13, 2025 at 01:42:28PM +0100, Mathieu Dubois-Br=
-iand wrote:
+On Wed, Feb 12, 2025 at 2:58=E2=80=AFPM kernel test robot <lkp@intel.com> w=
+rote:
 >
-> ...
+> Hi Bartosz,
 >
-> > > > > > > > > +	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &=
-ngpios)) {
-> > > > > > > > > +		dev_err(&pdev->dev, "Missing ngpios OF property\n");
-> > > > > > > > > +		return -ENODEV;
-> > > > > > > > > +	}
-> > > > > > > >
-> > > > > > > > This is not needed, it is already done in GPIOLIB core.
-> > > > > > >=20
-> > > > > > > I believe this is still needed:
-> > > > > > > - For gpos, we need the gpio count to correctly set the parti=
-tion
-> > > > > > >   between gpo and keypad columns in max7360_set_gpos_count().
-> > > > > >
-> > > > > > Shouldn't be that done somewhere in the GPIO valid mask initial=
-isation?
-> > > > > >
-> > > > > > > - For gpios, we need the gpio count to setup the IRQs.
-> > > > > >
-> > > > > > Doesn't GPIOLIB parse the property before initializing the IRQ =
-valid mask
-> > > > > > and other init callbacks?
-> > > > >=20
-> > > > > No, I believe I have to register the IRQ before registering the G=
-PIO, so
-> > > > > I can get the IRQ domain.
-> > > > >=20
-> > > > > Right now I have something like:
-> > > > >=20
-> > > > > irq_chip->num_irqs =3D ngpios;
-> > > > > devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev), max7360_gpi=
-o->regmap,
-> > > > > irq, flags, 0, irq_chip, &irq_chip_data);
-> > > > > gpio_config.irq_domain =3D regmap_irq_get_domain(irq_chip_data);
-> > > > > devm_gpio_regmap_register(dev, &gpio_config);
-> > > > >=20
-> > > > > Also, gpiolib will store ngpios in the gpio_chip structure, but w=
-hile
-> > > > > using gpio-regmap, this structure is masked behind the opaque
-> > > > > gpio_regmap structure. So I believe there is no easy way to retri=
-eve its
-> > > > > value.
+> kernel test robot noticed the following build errors:
 >
-> Would it be needed in your driver ->probe() after all? (See also below)
+> [auto build test ERROR on df5d6180169ae06a2eac57e33b077ad6f6252440]
 >
+> url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewsk=
+i/gpiolib-make-value-setters-have-return-values/20250211-201426
+> base:   df5d6180169ae06a2eac57e33b077ad6f6252440
+> patch link:    https://lore.kernel.org/r/20250211-gpio-set-retval-v1-1-52=
+d3d613d7d3%40linaro.org
+> patch subject: [PATCH 01/14] gpiolib: make value setters have return valu=
+es
+> config: sparc-randconfig-002-20250212 (https://download.01.org/0day-ci/ar=
+chive/20250212/202502122100.xnayNYRg-lkp@intel.com/config)
+> compiler: sparc-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20250212/202502122100.xnayNYRg-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202502122100.xnayNYRg-lkp=
+@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+>    drivers/leds/leds-aw200xx.c: In function 'aw200xx_disable':
+> >> drivers/leds/leds-aw200xx.c:382:16: error: 'return' with a value, in f=
+unction returning void [-Wreturn-mismatch]
+>      382 |         return gpiod_set_value_cansleep(chip->hwen, 0);
+>          |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    drivers/leds/leds-aw200xx.c:380:13: note: declared here
+>      380 | static void aw200xx_disable(const struct aw200xx *const chip)
+>          |             ^~~~~~~~~~~~~~~
+>
+>
+> vim +/return +382 drivers/leds/leds-aw200xx.c
+>
+> d882762f7950c3d Dmitry Rokosov 2023-11-25  379
+> d882762f7950c3d Dmitry Rokosov 2023-11-25  380  static void aw200xx_disab=
+le(const struct aw200xx *const chip)
+> d882762f7950c3d Dmitry Rokosov 2023-11-25  381  {
+> d882762f7950c3d Dmitry Rokosov 2023-11-25 @382          return gpiod_set_=
+value_cansleep(chip->hwen, 0);
+> d882762f7950c3d Dmitry Rokosov 2023-11-25  383  }
+> d882762f7950c3d Dmitry Rokosov 2023-11-25  384
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
 
-No necessarily in the probe with the changes previously described, but I
-will need it in other functions. So either I get it in the probe and
-store it, or I will need to retrieve it by other means.
+These issues will be fixed once
+https://lore.kernel.org/lkml/20250212085918.6902-1-brgl@bgdev.pl/ is
+in tree.
 
-> > > > > This part of the code changed a lot, maybe it would be easier if =
-I push
-> > > > > a new version of the series and we continue the discussion there?
-> > > >
-> > > > So, what seems need to be added is some flag to GPIO regmap configu=
-ration
-> > > > data structure and a code that is called after gpiochip_add_data() =
-in
-> > > > gpio_regmap_register() to create a domain. This will solve the abov=
-e issue
-> > > > and helps other drivers to get rid of potential duplication of
-> > > > devm_regmap_add_irq_chip_fwnode() calls.
-> > > >
-> > > > Have you researched this path?
-> > >
-> > > OK, so looking at the code, I believe it would need to:
-> > > - Add some flag in gpio_regmap_config structure, so
-> > >   gpio_regmap_register() creates a new IRQ domain.
->
-> Easy.
->
-> > > - Add a function allowing to retrieve this domain out of the gpio_reg=
-map
-> > >   structure.
->
-> Easy, as there is an API available for regmaps, so it looks like one-line=
-r.
->
-> > > - Allow to pass a domain in the regmap_irq_chip structure, so
-> > >   regmap_add_irq_chip_fwnode() use this domain instead of calling
-> > >   regmap_irq_create_domain().
->
-> You need this because of...? (Please, remind me what the obstacle is ther=
-e
-> that requires this to be done)
->
-
-OK, maybe I misunderstood you idea. Or maybe I misunderstood something
-about IRQ domains.
-
-So what I understood is, in the probe, we first call
-gpio_regmap_register(), that will create a new IRQ domain, and we call
-regmap_add_irq_chip_fwnode() in second. But this second call will again
-create an IRQ domain, so we would end-up with a second one. We have to
-prevent this second creation and make it use the one we created first.
-
-Did I miss something?
-
-> > > - Make sure this domain is still populated with the IRQ data: number =
-of
-> > >   IRQs, IRQ base but also a pointer on the regmap_irq_chip_data
-> > >   structure in .host_data. I believe this will be a bit tricky.
->
-> Hmm... But wouldn't gpio-regmap internals have all this information avail=
-able?
->
-
-I don't think so. It will not know the IRQ base nor the
-regmap_irq_chip_data as it is not created at this point.
-
-> > > - Add a function allowing to retrieve ngpio out of the
-> > >   gpio_regmap.gpio_chip structure, so it can be used for IRQ setup an=
-d
-> > >   other places of the driver.
->
-> I'm not sure where it can be needed.
->
-
-Let's discuss this on the next version, but yes, I do need to know ngpio
-in the driver.
-
-> > > I'm sorry, but I feel like this is a lot of changes to solve this poi=
-nt.
-> > > I've been thinking about it, and I can suggest a different solution.
-> > >
-> > > For gpios, I will remove the ngpios property of the device tree and u=
-se
-> > > a fixed value:
-> > > - For the today version of the chip, this is always 8.
-> > > - I a chip variant or a similar chip ever arise later with a differen=
-t
-> > >   number of gpios, the fixed value can be set according to the
-> > >   "compatible" value.
-> > > - This removes any issue with the IRQ setup.
-> > >
-> > > For gpos, we have to keep ngpios, as it depends of the implementation=
- on
-> > > the board. That means ngpios will be used:
-> > > - For the gpio chip configuration: we let gpiolib retrieve it from th=
-e
-> > >   device tree.
-> > > - In gpio-regmap reg_mask_xlate callback: I can add a function allowi=
-ng
-> > >   to retrieve it from gpio_regmap.gpio_chip, as suggested above.
-> > > - In max7360_set_gpos_count() to validate the coherency between
-> > >   requested gpios and keypad columns and set the correct configuratio=
-n
-> > >   on the chip:
-> > >   - I can also retrieve the value from gpio_regmap.gpio_chip, but tha=
-t
-> > >     means the check is made after the call to
-> > >     devm_gpio_regmap_register().
-> > >   - Or I will still need to retrieve it using device_property_read_u3=
-2()
-> > >     here.
-> > >
-> > > How do you feel about this solution?
-> >=20
-> > Actually there is an additional issue: today, relying on gpiolib to
-> > parse the "ngpios" property does not work with gpio-regmap.
-> >=20
-> > The gpiochip_get_ngpios() function in gpiolib is called in
-> > gpiochip_add_data_with_key(), but when using gpio_regmap_register(),
-> > we first ensure ngpio is set correctly before calling anything.
-> >=20
-> > Yet I believe this check can safely be removed, allowing the magic in
-> > gpiolib happen as expected.
->
-> Not really. I'm about to send a series to address this issue.
-> Please, test.
-
-I will test it today.
-
->
-> ...
->
-> P.S.
-> Maybe it's time to send a new version based on this discussion even
-> if not finished / working, so we can see the exact issues we still have
-> and target them.
-
-Sure, I will send a new version, probably today.
-
-Thanks again for your help.
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Bart
 
