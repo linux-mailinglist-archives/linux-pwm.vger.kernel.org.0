@@ -1,130 +1,179 @@
-Return-Path: <linux-pwm+bounces-4884-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4885-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5553BA35B48
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2025 11:15:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D775CA35CF4
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2025 12:52:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B81BC3AC312
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2025 10:14:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED62518919D6
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Feb 2025 11:51:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DBED257437;
-	Fri, 14 Feb 2025 10:15:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A302263C82;
+	Fri, 14 Feb 2025 11:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="B+TmeMG7"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QPic+FVV"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A61256C62
-	for <linux-pwm@vger.kernel.org>; Fri, 14 Feb 2025 10:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E292221541;
+	Fri, 14 Feb 2025 11:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739528100; cv=none; b=RtLmneok1ve0/EsGBKoCBEk5BmfphOF3XX/wxF1GLm2XF76s000UHdme2Ye+NbG7b04P39GN74/uo+TcElCYm/HAYjMRSTY5MWq8q/rn1F1ZkHUKe8SLA9vpPLvfHjS3DbGe1wYs+pw+P4+vTOMVuAlJPNBiLc8Wg46I5TR3iac=
+	t=1739533820; cv=none; b=mfcCaJhuYpYRHrTkdvJVBrRwLP2jyoy4KMjU4mqfpr0zmBGwUNi/KAVoSlcH/lmwx7QJM1cxeK3226IDHTtWSYEb4MaDqAOWW8nIYlfXIO6LWtPx4ic5zajYxOjEy2OcagwzGr+C/de0yfdQZP31IPY0BG+wXj0wTNJt4x0V3wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739528100; c=relaxed/simple;
-	bh=96IUlvA4Kab/E8aWKKJlXMsjG5KwQVnXCwIZK25zn9I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YCy37B1ajdbwC/ebdzLzLyOMbQnRIA4JXnetCuUGB4NrVZpJPMhpFVGn4nHoVFNDv4FFfbkGv06QNJrbwAPC5RkvPP5p/yXspzcKCQMXn8wvbAj5CJ1Pm+U1QEksMhBlg2xC/QLsA0D0BZX5NxCUPgd6YiY9blvUTzGAac/QYfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=B+TmeMG7; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5450475df04so1879179e87.0
-        for <linux-pwm@vger.kernel.org>; Fri, 14 Feb 2025 02:14:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1739528097; x=1740132897; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=96IUlvA4Kab/E8aWKKJlXMsjG5KwQVnXCwIZK25zn9I=;
-        b=B+TmeMG7fChE+5sf5xiiZZNZjtKynx3/vb2uM6xsOuuI4xcwSKb2M7EhOdwZ0DqBhc
-         a/lspK+dm+4XaaOwpAr38tpgV6tRkMGuUzmCMIPibqUfJekZ3Gk+fDmwD6tgsalvkl0m
-         cYzslemXfpyKPqezcPV9Ku6y6LNGyH9ZepaYOTAA1J0WHV0lh3TLOQPJwAFE4lkx6DOz
-         VkI7Ia+Z99BjX1Bs7P9Ks9xu3esMlb9wQrk9nBeyXKCf0lTNfQhKVo5JKiXzQvBUaHrB
-         jTBDd0VQVuLr6qHNgl1essykKGo9K0j2+KLHvk3Eh9qUCXOuvm5hpbFKx4BF2KaT6f9J
-         faFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739528097; x=1740132897;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=96IUlvA4Kab/E8aWKKJlXMsjG5KwQVnXCwIZK25zn9I=;
-        b=aTpYsgbCvtXss5Bvn40ldShWjLDRYmKgRQC6clg7RVLOfYmr2NALRrF0391RhuGXej
-         g+JrGtgEgrQz/oi+FURML+Ejy7vM2pLiI51roqa6N5kyX92HHkAJur6xXclYX6NKCTu7
-         vgRfr/s7OdmUTy57VUTgR84FbWumWsKjqXvhC1Mhq2h+wQGeGEiLEyy3qnF++YxbzTHJ
-         ml51WCN/fv6Qf9+V9adwBkeVDNbVTDRtdlnvJZtyEk0Ygyzdmg0oHwLbf1ibbHD+9lNV
-         MRVrHHCEQ2VgMc7vxSjeeVbCBxPvUwpVJtlIRDkFVKRYhPKtJyoHf5ngxnDHUXGknQp4
-         vJIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxdRR/4+xqALslIglfaMyWnOheRx/YGkUhOFG8We9e+8wbMgp4bdue9jthsco2S0uEbF7xJq7//70=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxsy7GrH4SWw5z1wFUM0+L9/8QEDcyrG0podo6O8XUquNE1DvPm
-	KIyrOs3+DQv8Parn9J5yYFTRVA3djonFQmZQYcPbTej49mzG474facVc1qiwPRFkTnh/KnVWsiI
-	v996FirqLy9dRNeUiz8qHr/MQUDjXTAjLe8+CQQ==
-X-Gm-Gg: ASbGncs6P86n+HChynPSgAV2FdaPT93z9A3oVmZUfXgXcutYXZLVBxpA6CGPLVawdUU
-	IkcMiZuYjPQt/FJd7Vj+AQvJJFGVYrqMT7+kRqU4ZZZlOAxOKowemH6jtAV1TClEpINyGYB8cPv
-	5YAy+7EQs3KVoNR2clXzejfbHNuFo=
-X-Google-Smtp-Source: AGHT+IGIHT58DThOkHUQCnE0Th1WDTQk4pOddXfAj+W59mKK6nphQZOjUH2rQySGLrnHMOPeaMVkwqsD4JIkTWJHbzc=
-X-Received: by 2002:a05:6512:230d:b0:545:c51:4a0f with SMTP id
- 2adb3069b0e04-545180ea93emr3217951e87.4.1739528096595; Fri, 14 Feb 2025
- 02:14:56 -0800 (PST)
+	s=arc-20240116; t=1739533820; c=relaxed/simple;
+	bh=vF7KdmZH5zqFtRD2vuQTeuspsVDvQTjB8d+Y4ciyRFo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=s87GNOKBnKoUAzVXMkZNg9sRg+HOdjhd5BgNspaflusIer6jRJStfRl+hsEJkVEHKfS1dlNVVftH6Q10x9sL+0lGX0crsbViXvEbg2sKLN7M9WrSzEqKr0pbt4bAKh6Nuo2HkbsH49dBzisplq6WjqtYsN4Rsy4+n8rVWt0O5sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QPic+FVV; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 023C2442A3;
+	Fri, 14 Feb 2025 11:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739533810;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=j07hPNU31IwHz1MTcTOgeAg+tNcqpIash75EC8z/CHk=;
+	b=QPic+FVV5piEk8dkiz7t9Mazjk+U8XvU6JhSf2TRidfE2fB/1cCvEo2e+fJDefk9U6D0Ax
+	lqUaEiG6Q3GF84hUjWMcYy+XoIm4ZXAcm73Edj3QpmpnGC+z1myy6GpMeaQPUNXC5KJswa
+	GeLIlQyfwtmmtj2Epmziohrcp4wI7WKHftB2OC4+e3ISjDUgFvzNuP4aHdUtm2eQk5Byqj
+	n4BRtbyhL6K0/FPFeAi1f+YmYqdt9tVwsb/+VOtFNeCbneR0MyiH3Pl06l2AcddF5Q3AkK
+	GYO022oO+75kPRw67OXxKZcXCBgpgcQ96O14VzRLBtR+tDRKh8kMO04AeQcOmQ==
+From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: [PATCH v4 00/10] Add support for MAX7360
+Date: Fri, 14 Feb 2025 12:49:50 +0100
+Message-Id: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250211-gpio-set-retval-v1-0-52d3d613d7d3@linaro.org> <CACRpkdYL4odi-00YDi-cFuVgw8uBncA+ZxGYnRRhuYR7eZuBWw@mail.gmail.com>
-In-Reply-To: <CACRpkdYL4odi-00YDi-cFuVgw8uBncA+ZxGYnRRhuYR7eZuBWw@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 14 Feb 2025 11:14:45 +0100
-X-Gm-Features: AWEUYZlEKbgfCg5LM4mAcnDmuKyPgH0ZcuCi6oqVDIjGsTxRu9-K5fCxAVSS7C4
-Message-ID: <CAMRc=McEgpm+rafr64N-NeOEqk9OzwaEb=7u5ZXQ6vwnQBgyTQ@mail.gmail.com>
-Subject: Re: [PATCH 00/14] gpiolib: indicate errors in value setters
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Michael Walle <mwalle@kernel.org>, Bamvor Jian Zhang <bamv2005@gmail.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Keerthy <j-keerthy@ti.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN4tr2cC/33OTQ6CMBAF4KuYrq1pZygUV97DuGhLlSZCSYsEQ
+ 7i7hcTE+Ld8k3nfzESiDc5Gst9MJNjBRefbFLLthphatRdLXZUyAQYZB17SptK0UWOBOaPx1nU
+ +9BQAlTQ2E1ohSc0u2LMbV/V4Srl2sffhvh4Z+DL97w2cMiqtRF4IuawdtPf91bU74xuyiAO8K
+ IDfFUgKFkpWAAZzW30q+FQE4/yHgkkpBS91poxm+u2XeZ4fEDIF70QBAAA=
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kamel Bouhara <kamel.bouhara@bootlin.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739533806; l=3966;
+ i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
+ bh=vF7KdmZH5zqFtRD2vuQTeuspsVDvQTjB8d+Y4ciyRFo=;
+ b=nalo6LQVrcVi6TAQQteq3ondrkR6920KTYGAX58OdoLnGbnugFDBc/qFXP9dJrIUtCmdt+8Qh
+ +1ecjLGGKGmDWHoEiGULZP77LuNhg4fP8RmK3ZTL7BItzrShPEHhoeF
+X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
+ pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegleehjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpeforghthhhivghuucffuhgsohhishdquehrihgrnhguuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdeujeelieelffeufedvgfffgfegvdehvddukeehledvkeettdelvdelfeffteevnecuffhomhgrihhnpedugedqrhgtvddrqdhlihhnkhdpkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepm
+ hgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Fri, Feb 14, 2025 at 10:56=E2=80=AFAM Linus Walleij <linus.walleij@linar=
-o.org> wrote:
->
-> On Tue, Feb 11, 2025 at 1:10=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
->
-> > The value setter callbacks (both for single and multiple lines) return
-> > void even though we have many types of controllers that can fail to set
-> > a line's value: i2c, SPI, USB, etc.
->
-> Yeah this is a remnant from the design that was done of gpiolib,
-> at the time (by David Brownell) assumed to be simple MMIO register
-> writes, so not much could go wrong there.
->
-> > This series proposes to start the process of converting the setters to
-> > returning int thus making it possible to propagate any errors to the
-> > user.
->
-> My worry is that this project will be another one that stalls at
-> 85% completion (like with the eternal descriptor rewrite project)
-> but I guess the upside outweighs the downside, and I also trust
-> your proven grittiness so:
->
+This series implements a set of drivers allowing to support the Maxim
+Integrated MAX7360 device.
 
-Unlike the descriptor API, the changes here are quite trivial. There
-are about 350 drivers that need changing but can be done relatively
-fast.
+The MAX7360 is an I2C key-switch and led controller, with following
+functionalities:
+- Keypad controller for a key matrix of up to 8 rows and 8 columns.
+- Rotary encoder support, for a single rotary encoder.
+- Up to 8 PWM outputs.
+- Up to 8 GPIOs with support for interrupts and 6 GPOs.
 
-Bart
+Chipset pins are shared between all functionalities, so all cannot be
+used at the same time.
 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> for the series +/- minor nitpicks I may send that I am sure
-> you would address anyway.
->
-> Yours,
-> Linus Walleij
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+---
+Changes in v4:
+- Modified the GPIO driver to use gpio-regmap and regmap-irq.
+- Add support for request()/free() callbacks in gpio-regmap.
+- Add support for status_is_level in regmap-irq.
+- Switched the PWM driver to waveform callbacks.
+- Various small fixes in MFD, PWM, GPIO drivers and dt bindings.
+- Rebased on v6.14-rc2.
+- Link to v3: https://lore.kernel.org/r/20250113-mdb-max7360-support-v3-0-9519b4acb0b1@bootlin.com
+
+Changes in v3:
+- Fix MFD device tree binding to add gpio child nodes.
+- Fix various small issues in device tree bindings.
+- Add missing line returns in error messages.
+- Use dev_err_probe() when possible.
+- Link to v2: https://lore.kernel.org/r/20241223-mdb-max7360-support-v2-0-37a8d22c36ed@bootlin.com
+
+Changes in v2:
+- Removing device tree subnodes for keypad, rotary encoder and pwm
+  functionalities.
+- Fixed dt-bindings syntax and naming.
+- Fixed missing handling of requested period in PWM driver.
+- Cleanup of the code
+- Link to v1: https://lore.kernel.org/r/20241219-mdb-max7360-support-v1-0-8e8317584121@bootlin.com
+
+---
+Kamel Bouhara (2):
+      mfd: Add max7360 support
+      pwm: max7360: Add MAX7360 PWM support
+
+Mathieu Dubois-Briand (8):
+      dt-bindings: mfd: gpio: Add MAX7360
+      gpio: regmap: Allow to provide request and free callbacks
+      gpio: regmap: Allow to retrieve ngpio
+      regmap: irq: Add support for chips without separate IRQ status
+      gpio: max7360: Add MAX7360 gpio support
+      input: keyboard: Add support for MAX7360 keypad
+      input: misc: Add support for MAX7360 rotary
+      MAINTAINERS: Add entry on MAX7360 driver
+
+ .../bindings/gpio/maxim,max7360-gpio.yaml          |  91 +++++++
+ .../devicetree/bindings/mfd/maxim,max7360.yaml     | 139 ++++++++++
+ MAINTAINERS                                        |  12 +
+ drivers/base/regmap/regmap-irq.c                   |  83 ++++--
+ drivers/gpio/Kconfig                               |  11 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-max7360.c                        | 253 ++++++++++++++++++
+ drivers/gpio/gpio-regmap.c                         |   8 +
+ drivers/input/keyboard/Kconfig                     |  12 +
+ drivers/input/keyboard/Makefile                    |   1 +
+ drivers/input/keyboard/max7360-keypad.c            | 282 +++++++++++++++++++++
+ drivers/input/misc/Kconfig                         |  11 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/max7360-rotary.c                | 182 +++++++++++++
+ drivers/mfd/Kconfig                                |  14 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/max7360.c                              | 218 ++++++++++++++++
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-max7360.c                          | 213 ++++++++++++++++
+ include/linux/gpio/regmap.h                        |  10 +
+ include/linux/mfd/max7360.h                        | 112 ++++++++
+ include/linux/regmap.h                             |   3 +
+ 23 files changed, 1649 insertions(+), 20 deletions(-)
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20241219-mdb-max7360-support-223a8ce45ba3
+
+Best regards,
+-- 
+Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+
 
