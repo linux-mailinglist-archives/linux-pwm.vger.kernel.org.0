@@ -1,54 +1,54 @@
-Return-Path: <linux-pwm+bounces-4925-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4926-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5D24A374E0
-	for <lists+linux-pwm@lfdr.de>; Sun, 16 Feb 2025 15:56:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 737AFA374F5
+	for <lists+linux-pwm@lfdr.de>; Sun, 16 Feb 2025 16:15:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A573616D82A
-	for <lists+linux-pwm@lfdr.de>; Sun, 16 Feb 2025 14:56:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9736E3A1337
+	for <lists+linux-pwm@lfdr.de>; Sun, 16 Feb 2025 15:15:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A98B198A06;
-	Sun, 16 Feb 2025 14:56:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7137D198831;
+	Sun, 16 Feb 2025 15:15:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jikGf2L6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPCxWs5p"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160534C70;
-	Sun, 16 Feb 2025 14:56:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB7811712;
+	Sun, 16 Feb 2025 15:15:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739717808; cv=none; b=b6McRet0hFfZ2s69tX+Q/cKiN1dsLKBzk2PjivFZFXTWrsi9qXemA5nugP+VyHYlt/O/oMElqbQTH6QA/TesNq04kUSJyvFehGc+/DjjhcMDI/XSQd283FFw3eyVR87zluQfwYuAiwFcuuYpXUhJL2CN6Dx5AAGIjyUApc4ifD8=
+	t=1739718956; cv=none; b=dui+2l/npkx9X+8+GFdvqjKLtPOCNwLhAy4kHexoE6QpQtcMkqo0+RQRXm69QCBdG6b0D8C2SFiGxvheXwfCJWmPnhIdXOahyW2AFzxO77EEfU77wG1Svhz+6apUQ6GGr1KvXbil1JNQr67xDHN39CmZRJsDFVdUbWp0cSF8pc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739717808; c=relaxed/simple;
-	bh=udOKYh63bVmyVt1N98zIrhAr/2ta25BD0RnVWl+EyNk=;
+	s=arc-20240116; t=1739718956; c=relaxed/simple;
+	bh=k4xegN9pPojCrS2cyA8cvq1EaKPhQT0kZTepVfLZKQo=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YUU4rO+8BK6tbXo35C2xrrx1rqm3M5AhdzNymCjvLXqVrJf/bsCkVNXx7af2qes7V+UM19M4VyhcJ6Us7+SriExWnWuIu6+XHgZcw1Y2SGY3YFwH2I6T2+UBoUfXpqM4zL2Qnw1T4kzdMc8O4X2NnjMrgqHI1sX84y1Q6izGNkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jikGf2L6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5878BC4CEDD;
-	Sun, 16 Feb 2025 14:56:44 +0000 (UTC)
+	 MIME-Version:Content-Type; b=oHubXnCd52qtNgQkbt5lWPKnvBOLzy4HJmr+6WhUrV8zumWsoCfqwrULzp9BbjMx2TH5V7AAjXqhCq4OE8Wdzjxre/1QKZzdk0diaZ3aX8UbyiydDN7d2nc8QZf1A3jV/LuNWIXz+5vKgsYURz8LcR+Sj+WwclvpXGjLrkRbDQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vPCxWs5p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEA99C4CEDD;
+	Sun, 16 Feb 2025 15:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739717807;
-	bh=udOKYh63bVmyVt1N98zIrhAr/2ta25BD0RnVWl+EyNk=;
+	s=k20201202; t=1739718954;
+	bh=k4xegN9pPojCrS2cyA8cvq1EaKPhQT0kZTepVfLZKQo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jikGf2L6LNE+8i3d/7niK5UDh0bGHNREER5WxEn68JESW2Rgqhc2f2Uo+55END7v1
-	 xcxqyhe6oe8Sr3nsoEzVBSncI17C5RgRtGzP9NSvBtQe6NOAE/WBryxtKTxkTjhvTs
-	 vqtd5nM94cw0dzzEz9Q0pFvSemtpFR3RQ35Pmno2RIOOe6SEnW0OFFG0zqd7fP7BLD
-	 20Mb7seH0N0O2ZAJ7gaQrhbykAgAhb9Om3+5eZY3PeqftFJC41khJ2MBiYmNgbRAX5
-	 6quFlEeb3j8znswWI8xqXpnqPuPRWxQrSwGdM9wt3jzEcQV5Tbq6+qv1bApNVXjEGR
-	 M6VxTxl2aoWnA==
-Date: Sun, 16 Feb 2025 14:56:39 +0000
+	b=vPCxWs5p2xCWOKNyLXFfY35OxxbRGLwNzHBjzi6AcrpDAaZzNYHqteVsTOOpH9i1K
+	 3lxXXmWoVZmuyLW1iaNpJjTg/irCFSjwp6D5TFVtpgXNE6OCGWbStj9caBY3nZrDZD
+	 z4VRJtbxGpHMhIljG1iKRN6QicSmGSX6bbsb0Jb3o3zuX1LLjeH2SsVM5MzSl+KfZC
+	 h9eaxRP4QzZPqZvmB8D/DG4aizWwJ1ZuCVJo3fwL7iKD/TzNag/2il57fUySS/PMZ8
+	 Xb4KEj+TBqejI9zfLlmoThd9MFAzd1AhF8i4lB5tpuJ61Qymm5bjbQhTAG5zBazzAQ
+	 cbnCVfzJrcflQ==
+Date: Sun, 16 Feb 2025 15:15:47 +0000
 From: Jonathan Cameron <jic23@kernel.org>
 To: Antoniu Miclaus <antoniu.miclaus@analog.com>
 Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linux-iio@vger.kernel.org>,
  <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
  <linux-pwm@vger.kernel.org>
 Subject: Re: [PATCH v13 5/9] dt-bindings: iio: adc: add ad485x axi variant
-Message-ID: <20250216145639.38ed6420@jic23-huawei>
+Message-ID: <20250216151547.0c3edd58@jic23-huawei>
 In-Reply-To: <20250214131955.31973-6-antoniu.miclaus@analog.com>
 References: <20250214131955.31973-1-antoniu.miclaus@analog.com>
 	<20250214131955.31973-6-antoniu.miclaus@analog.com>
@@ -72,14 +72,18 @@ Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
 > generic AXI ADC IP, intended to control ad485x familiy.
 > 
 > Although this is not preffered, the wildcard naming is used to
-
-preferred
-
-If nothing else comes up I'll fix that up whilst applying.
-
 > match the published firmware under the same name.
 > 
 > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+This needed hand applying as the ad7606 case is already in my tree.
+Also, quite a few typos in this patch description. Please make sure
+to spell check in future.
+
+I've applied this speculatively as we don't have a dt maintainer tag
+yet. 
+
+Jonathan
+
 > ---
 > changes in v13:
 >  - adjust commit body and add comment on wildcard matching the published
