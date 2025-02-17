@@ -1,126 +1,320 @@
-Return-Path: <linux-pwm+bounces-4934-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4935-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65A13A3801A
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Feb 2025 11:28:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8702CA38182
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Feb 2025 12:20:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1A2816343B
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Feb 2025 10:25:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97DF73A3F68
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Feb 2025 11:20:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F8F023CE;
-	Mon, 17 Feb 2025 10:25:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA1C3217670;
+	Mon, 17 Feb 2025 11:20:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CFBNJ1RG"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RrI/MANu"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF2818DB1C
-	for <linux-pwm@vger.kernel.org>; Mon, 17 Feb 2025 10:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B651A3A80;
+	Mon, 17 Feb 2025 11:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739787919; cv=none; b=QhBCgMk4TngnsUx6dJZULP2lmfQCykbsmoKU3BZZVkw4OSTdab0Z/g8tleVp2Gd1Ds7uyy1tm+6aM0eQmAGFuEPa8drB1jt1e84vuztMW6SSBtuld/INSfCwt1USZO0co775O3TDj2NFe+utO/RqoNgh5v8w0ftCHdFjJb7WEFs=
+	t=1739791225; cv=none; b=oMXXieNlOKirK5aWptrZIY4NGkHbthFwtbL7TfUFXol9Km6lR9vL6K4BymAYEFMWCFrit0SwmqfoYgekLh2G6fJTzztZvslL3WDhV2ru/0bL4ZwF5lCakulZOlKglAXjJ2hAYJ6utIu5zBH/r/vwFC13pmFKcsuj5/d3UZZRNmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739787919; c=relaxed/simple;
-	bh=pkV3QDLau5yOCLVjOUftd/XupwhlBueSvQ/So/2Crew=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CRfMZc5fSEBxoIc5tNLKsqCrCiRjcp0LrKgPLVUbjWYylfiLDxdKEmIIbFgzfHBGDEMsuxI5AsHuUAkhLhwLITWlcF810Fhy2kh9sKGKg19RjETGg+cnr+jnrjniG7vzY4ls/cYU+tYgZCjX5IQb6fZE+fVfeTpVzY2R8mEHmh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CFBNJ1RG; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43984e9cc90so3808815e9.1
-        for <linux-pwm@vger.kernel.org>; Mon, 17 Feb 2025 02:25:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1739787914; x=1740392714; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FokGnFYa1P4z5L9nqT3eXO4+eNPgSU0f89vdK4WReX8=;
-        b=CFBNJ1RGwmoIBPTpxjGUk/H8NMGkuMU5UcqTTC/0zf+YHxqCCkKS2ctbBuUDzEPVcz
-         XUQOIO4AJ1zoOqp8+rV1Jn7wMJGxE/++xby4ZftPP57CT1j+M6B/yq8bcm9f280hsVTE
-         JPARC4m1UNws89AR1NixDh5EZxrQ9IO2U4DxLI+/1zt2azUTG1vvfLUWo11iYdwzc5eq
-         WrdIUJT/T+9XBHsA3o20zL0Ebn4B3oJunm8f+40sxNwtAJ6RLbIfRkDrmWROcE41IVka
-         V8OyPL+8L454NSxbPUwy6MApZGW1wS/tCqSlq0fZgWLaSi03CvtSN/9aJRaO7AK946Ka
-         Ac5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739787914; x=1740392714;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FokGnFYa1P4z5L9nqT3eXO4+eNPgSU0f89vdK4WReX8=;
-        b=ZbA/6q/uuk7WnDXnH6uXxaE1mAKt15Qvq8Wnuj/2HI4DNs07HyEXW6bMQSPqc9iIaU
-         fL4iIwOekt7VbDdJrqkUXC3m9ltklrvbRDr2fnIyW4+qU294g9tnp9DNu+hl9+FB5tU+
-         wf0ZJyPDnrJPpcJpTB02QABikAisKrJEXOYcextWyoky6Ix1gA5I+u0Ce2FECfkYdZPk
-         4emHSYEW95b0RJuzUcyHMFsUBOV8+WPRFlu/VPHYKuXAFcDpDLESl9ZEw9xl/eQ0jyCn
-         1wMfET+XUFii67dGqgyK6uzKY/o2soo/pbJdfNUW7XLhgMTWMNb8VTonomgceI9X8DRI
-         yQAw==
-X-Gm-Message-State: AOJu0YxBF6usaPoUbXK5lyhqNk2HWcIJTEdAVcnbnJSlyQVRqcvKo6Gz
-	/EbExReW4VQiYR6+b8FFwKyL8+cbYKvR8Nn3mrsirZwSr7909pqxZ+X27lmbm4m4IenlmYyJ7Cq
-	F1tY=
-X-Gm-Gg: ASbGncsZ/n/xZyl27T2wK5FTlvjmbmFCaFqMKwmR+SFLgSTMvlpfiCupGHD9Kc4yzBl
-	mpcfkHxQXmu+tGqCIvR2WonqE8oUzGMuyf709nmRUHlNBIZ2hOW97EqV9/R+Qc7Cz1LA7U7QPUg
-	IyCutQ4szI4WveuiWlxWYWZk4EvA9HRRRZl64TgQ7nIDGfEPEldFGcIO8XcT5CIImGnNu/Ag+KR
-	bI5PCodSedcq/HN8vw4C4Xr9o0BZxzhCfN7F3qhCKJFBTG9K+0WPeEBP7K0b4VH6hN07wBzAvUr
-	8vl6oWgS67z/UHkr8FaJKWRYRiUQhQw1XYS/THcVxkqdpxZErixVWFpxaQ==
-X-Google-Smtp-Source: AGHT+IFbgwfFaINBoUR6Lxo6tueZODOf8RLyitK08qsHQ0MTRwrlA34mrSJU44XNJNxG3ZxRlFwwIQ==
-X-Received: by 2002:a05:600c:12d1:b0:439:81e3:43ee with SMTP id 5b1f17b1804b1-43981e3454dmr27581175e9.6.1739787914562;
-        Mon, 17 Feb 2025 02:25:14 -0800 (PST)
-Received: from localhost (p200300f65f083b0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f08:3b04::1b9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395a06d20bsm149128265e9.20.2025.02.17.02.25.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 02:25:14 -0800 (PST)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Subject: [PATCH] pwm: Check for CONFIG_PWM using IS_REACHABLE() in main header
-Date: Mon, 17 Feb 2025 11:25:02 +0100
-Message-ID: <20250217102504.687916-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1739791225; c=relaxed/simple;
+	bh=qAPIZ4GUzWGR27RHXoSxQ1XbGWnYegkvF3qD0RJrWVg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=JFB1ZpeplysIlRRZHJvCFzVFrZYuYs7GmThhKg7zQX6dqX6LyY1tyTHnw+6MbiCtJ4jsQLjWSf8+PnMXHPtmLLR9mZYql1v6ccKneNO1u89Re/7Ed32yC0wJFmMH31pUTHfrCvt4QfNodDr6IlwEd9bv4g4CqN0OEyokOrVo54A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RrI/MANu; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A14BF44292;
+	Mon, 17 Feb 2025 11:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739791214;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dTifytKq0afNIcuvxFzi/XOwR9oYhiX3X9pY3vR0uQ0=;
+	b=RrI/MANuxnGOBG0g3fyNvrBoTmfydyqihAiFrlPsBvEmLWKRB24QsGTijXCrIo/DQoKLGw
+	jUkOVkb5kV9SMT4JWI7yY6Kw9aWxq+YICf2ZxwPdls2NVN5PTjFooyosgYuIVXBRCRAqAR
+	mUBX3aSWXPcBJR11m0eufjF6w34mUyrzJkhXAjJcgJuTDnL7lfVx4ElNKIot2AJp9lB+85
+	tafABTqz5Qt8vJ44qcZFiPg2hmeM3Ziz5j7ZrotEkc/4VgNjImvQOwPkd8Bo1UZGZtXI81
+	l6yk77Zf7rHr/bBDqJFD9dZB9lbblz49KVKxGX3tF8B3gjyrdA+FIgmkYrwCqA==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1257; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=pkV3QDLau5yOCLVjOUftd/XupwhlBueSvQ/So/2Crew=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnsw6AxnKJlmU8kH0dk8ygB1joD2NdnBaj0Gr8m s8pGCumgASJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ7MOgAAKCRCPgPtYfRL+ TroYB/9qgGs7q9ogXoDRds9jSid5/mCc5Z36FetlADFR5ro8VvjtFlfWBwmrO+MCeLsE2vOfIqJ nal59/E6sxCr1poRDkbjnK5Hcy3PjlzDD2pnSLRcD/F6CDwn60MVNqe63YL4aucWdsTjdDMH9gb fDl780kbYn0COpOsF3GIDFuqb2fUikwGeEJo97svDhPSW+VUBTgF09wcyrin17Eyyklw+mdFILm 6JLG+TGpAA+2mrW3tUMayQGEbNGqGIJkr2kHhpK3rcAYddKXLH8P4jRU4Mb5pyAMAYe0UjwgDm7 WdGLlihjCLrfteYpYoNConujB3/yU8khsnaCq8u2a8zMEAEZ
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Date: Mon, 17 Feb 2025 12:20:13 +0100
+Message-Id: <D7UOIHL2WOZP.LLGRKMILNJFU@bootlin.com>
+Subject: Re: [PATCH v4 07/10] gpio: max7360: Add MAX7360 gpio support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-7-8a35c6dbb966@bootlin.com>
+ <Z69oa8_LKFxUacbj@smile.fi.intel.com>
+In-Reply-To: <Z69oa8_LKFxUacbj@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehkedviecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffuvefhvffofhgjsehtqhertdertdejnecuhfhrohhmpedfofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugdfuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheplefhhfetleegfeegfedviedtvedvvddtfedvfeegheeitdeiiefgvdeiteetlefgnecuffhomhgrihhnpegrnhgrlhhoghdrtghomhdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtohepl
+ hgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Preparing CONFIG_PWM becoming tristate the right magic to check for the
-availability of the pwm functions is using IS_REACHABLE() and not
-IS_ENABLED(). The latter gives the wrong result for built-in code with
-CONFIG_PWM=m.
+On Fri Feb 14, 2025 at 4:59 PM CET, Andy Shevchenko wrote:
+> On Fri, Feb 14, 2025 at 12:49:57PM +0100, Mathieu Dubois-Briand wrote:
+> > Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
+>
+> ...
+>
+> > +static int max7360_gpo_reg_mask_xlate(struct gpio_regmap *gpio,
+> > +				      unsigned int base, unsigned int offset,
+> > +				      unsigned int *reg, unsigned int *mask)
+> > +{
+> > +	u16 ngpios =3D gpio_regmap_get_ngpio(gpio);
+> > +
+> > +	*reg =3D base;
+> > +	*mask =3D BIT(MAX7360_MAX_KEY_COLS - (ngpios - offset));
+> > +
+> > +	return 0;
+>
+> Does this GPIO controller only capable of servicing keypads?
+> I think no, hence I'm not sure why this split is needed to be
+> here and not in the input driver.
+>
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
- include/linux/pwm.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I would say it's more a keypad controller able to support some GPIOs.
+Some of the keypad columns, if unused, can be used as output-only gpios.
+So I believe the split has its place here, because in the default
+configuration, the split is set to have 8 keypad columns and no gpio. As
+a consequence, the keypad driver can work without having to worry about
+the split; the gpio driver needs to know about it.
 
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index a2df509056ac..9ece4e5d3815 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -379,7 +379,7 @@ static inline void pwmchip_set_drvdata(struct pwm_chip *chip, void *data)
- 	dev_set_drvdata(&chip->dev, data);
- }
- 
--#if IS_ENABLED(CONFIG_PWM)
-+#if IS_REACHABLE(CONFIG_PWM)
- 
- /* PWM consumer APIs */
- int pwm_round_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf);
-@@ -661,7 +661,7 @@ struct pwm_lookup {
- 	PWM_LOOKUP_WITH_MODULE(_provider, _index, _dev_id, _con_id, _period, \
- 			       _polarity, NULL)
- 
--#if IS_ENABLED(CONFIG_PWM)
-+#if IS_REACHABLE(CONFIG_PWM)
- void pwm_add_table(struct pwm_lookup *table, size_t num);
- void pwm_remove_table(struct pwm_lookup *table, size_t num);
- #else
+To provide a bit more details, there is basically two set of pins usable
+as GPIOs.
 
-base-commit: e8af7c083520a7b9b027b2bb282464013a96047d
--- 
-2.47.1
+On one side we have what I refer to as GPIOs:
+  - PORT0 to PORT7 pins of the chip.
+  - Shared with PWM and rotary encoder functionalities. Functionality
+    selection can be made independently for each pin. We have to ensure
+    the same pin is not used by two drivers at the same time. E.g. we
+    cannot have at the same time GPIO4 and PWM4.
+  - Supports input and interrupts.
+  - Outputs may be configured as constant current.
+  - 8 GPIOS supported, so ngpios is fixed to MAX7360_MAX_GPIO.
+  - maxim,max7360-gpio compatible, gpio_function =3D=3D MAX7360_GPIO_PORT.
+
+On the other side, we have what I refer to as GPOs:
+  - COL2 to COL7 pins of the chip.
+  - Shared with the keypad functionality. Selections is made by
+    partitioning the pins: first pins for keypad columns, last pins for
+    GPOs. Partition is described by the ngpios property.
+  - Only support outputs.
+  - maxim,max7360-gpo compatible, gpio_function =3D=3D MAX7360_GPIO_COL.
+
+> Or you mean that there output only GPIO lines in HW after all?
+> Is there a link to the datasheet?
+
+A datasheet is available on https://www.analog.com/en/products/max7360.html
+
+>
+> > +}
+> > +
+> > +static int max7360_gpio_request(struct gpio_chip *gc, unsigned int pin=
+)
+> > +{
+> > +	/*
+> > +	 * GPIOs on PORT pins are shared with the PWM and rotary encoder
+> > +	 * drivers: they have to be requested from the MFD driver.
+> > +	 */
+>
+> So, this sounds to me like a pin control approach is needed here.
+> This looks like an attempt to hack it in an "easy" way.
+>
+
+Linus Walleij had a similar comment on v3, but said he thought it was
+fine here. Still, I'm open to discussion.
+
+> > +	return max7360_port_pin_request(gc->parent->parent, pin, true);
+> > +}
+> > +
+> > +static void max7360_gpio_free(struct gpio_chip *gc, unsigned int pin)
+> > +{
+> > +	max7360_port_pin_request(gc->parent->parent, pin, false);
+> > +}
+> > +
+> > +static int max7360_set_gpos_count(struct device *dev, struct regmap *r=
+egmap)
+> > +{
+> > +	/*
+> > +	 * MAX7360 COL0 to COL7 pins can be used either as keypad columns,
+> > +	 * general purpose output or a mix of both.
+> > +	 */
+> > +	unsigned int val;
+> > +	u32 columns;
+> > +	u32 ngpios;
+> > +	int ret;
+> > +
+> > +	ret =3D device_property_read_u32(dev, "ngpios", &ngpios);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "Missing ngpios OF property\n");
+>
+> Clean messages from OF, "device property" is established term.
+>
+
+Yes
+
+> > +		return ret;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Get the number of pins requested by the keypad and ensure our own =
+pin
+> > +	 * count is compatible with it.
+> > +	 */
+> > +	ret =3D device_property_read_u32(dev->parent, "keypad,num-columns", &=
+columns);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "Failed to read columns count\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	if (ngpios > MAX7360_MAX_GPO ||
+> > +	    (ngpios + columns > MAX7360_MAX_KEY_COLS)) {
+> > +		dev_err(dev, "Incompatible gpos and columns count (%u, %u)\n",
+> > +			ngpios, columns);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	/*
+> > +	 * MAX7360_REG_DEBOUNCE contains configuration both for keypad deboun=
+ce
+> > +	 * timings and gpos/keypad columns repartition. Only the later is
+> > +	 * modified here.
+> > +	 */
+> > +	val =3D FIELD_PREP(MAX7360_PORTS, ngpios);
+> > +	ret =3D regmap_write_bits(regmap, MAX7360_REG_DEBOUNCE, MAX7360_PORTS=
+, val);
+> > +	if (ret) {
+> > +		dev_err(dev, "Failed to write max7360 columns/gpos configuration");
+> > +		return ret;
+> > +	}
+>
+> Shouldn't this be configured via ->set_config() callback?
+>
+
+My understanding of the set_config() callback is that it's meant to set
+the configuration of a single line. Here the configuration applies to
+the whole chip.
+
+> > +	return 0;
+> > +}
+>
+> ...
+>
+> > +		if (irq < 0)
+> > +			return dev_err_probe(dev, irq, "Failed to get IRQ\n");
+> > +
+> > +		irq_chip =3D devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
+> > +		if (!irq_chip)
+> > +			return -ENOMEM;
+> > +
+> > +		irq_chip->name =3D dev_name(dev);
+> > +		irq_chip->status_base =3D MAX7360_REG_GPIOIN;
+> > +		irq_chip->num_regs =3D 1;
+> > +		irq_chip->num_irqs =3D MAX7360_MAX_GPIO;
+> > +		irq_chip->irqs =3D max7360_regmap_irqs;
+> > +		irq_chip->handle_mask_sync =3D max7360_handle_mask_sync;
+> > +		irq_chip->status_is_level =3D true;
+> > +		irq_chip->irq_drv_data =3D regmap;
+> > +
+> > +		for (unsigned int i =3D 0; i < MAX7360_MAX_GPIO; i++) {
+> > +			regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
+> > +					  MAX7360_PORT_CFG_INTERRUPT_EDGES,
+> > +					  MAX7360_PORT_CFG_INTERRUPT_EDGES);
+> > +		}
+> > +
+> > +		flags =3D IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED;
+> > +		ret =3D devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev), regmap=
+, irq, flags, 0,
+> > +						      irq_chip, &irq_chip_data);
+>
+> Right.
+>
+> What I mean in previous discussion is to update gpio-regmap to call this =
+from inside.
+> You need to add irq_chip pointer and irq_chip_data pointer to the regmap =
+configuration
+> and if they are set (or the first one, I dunno if this is supported by IR=
+Q chip core)
+> call this function and assign domain. This should be called after GPIO ch=
+ip is
+> added, but before IRQ domain attachment.
+>
+
+OK, I believe I got it now. I will try to work on it in the coming days.
+
+> > +
+> > +		regmap_write(regmap, MAX7360_REG_GPIOOUTM, outconf);
+> > +	}
+> > +
+> > +	/* Add gpio device. */
+> > +	gpio_config.parent =3D dev;
+> > +	gpio_config.regmap =3D regmap;
+>
+> > +	if (gpio_function =3D=3D MAX7360_GPIO_PORT) {
+> > +		gpio_config.ngpio =3D MAX7360_MAX_GPIO;
+>
+> Why this case can't be managed also via ngpios property? Maybe at the end=
+ of
+> the day you rather need to have another property to tell where the split =
+is?
+>
+> This will help a lot and removes unneeded sharing of ngpios here and ther=
+e.
+>
+> What I read from this code is like you are trying to put _two_in_one_ sem=
+antics
+> on the shoulders of "ngpios".
+>
+
+It could be managed with ngpios, just there is no specific need as we
+will always have 8 gpios here. With (gpio_function =3D=3D
+MAX7360_GPIO_PORT), there is no split and starting from this version of
+my series, there is no reuse on ngpios property.
+
+The split and reuse of ngpios is only used for GPO on keypad columns
+(gpio_function =3D=3D MAX7360_GPIO_COL).
+
+We can introduce a new property to tell where the split is, but the
+number of gpio is a direct consequence of the position of the split.
+
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
