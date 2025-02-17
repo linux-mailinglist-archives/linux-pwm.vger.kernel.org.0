@@ -1,210 +1,178 @@
-Return-Path: <linux-pwm+bounces-4938-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4939-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92BA7A38AED
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Feb 2025 18:55:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 573BEA38D09
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Feb 2025 21:09:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46971188C82C
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Feb 2025 17:55:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C154F1887E6B
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Feb 2025 20:08:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2CE4229B21;
-	Mon, 17 Feb 2025 17:55:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D320723716F;
+	Mon, 17 Feb 2025 20:08:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GCrZcwzw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SMLrfFky"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321A7D528
-	for <linux-pwm@vger.kernel.org>; Mon, 17 Feb 2025 17:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DD713AA5D;
+	Mon, 17 Feb 2025 20:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739814904; cv=none; b=eIcpi/GM/bdOUtlN0yWEiueV+wCqyJ2O6OzcZNUq+xO5OmS1qFbtqVt6pTIF34HhdxSoSL2SUS3uQ8kJUa1R1D5KEVQO3Q+JD4QXc1A2xL7laHX+p4QPxtLP+FXyFpxb3ypC26ANskEqS0UqkjpO9BwMzF8y6SIFbpr8F2MEKLc=
+	t=1739822925; cv=none; b=I651ztCk0P3wqKmxEtNeO4xwlxMs5Axn1tiJElOeZa33buyoVpZyrHBP2KtWoumBxqTpMeXVhv7XbtzPnGsqwfprWLsDM+Wmwq4ev2KAxMe0dosazGVBryaMdgo4MLbGQFm/D6QbaRJxy7+oCC50MeomJjpRv53umQkVx8j/l3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739814904; c=relaxed/simple;
-	bh=POedbc8SorXQ3iX9dnSI2rXwyNXcnUd0ggaA9x7FsWo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U1pMkcL4NNJEQTf6Wmwc2FPJgBNRNS0ALS/bFlIYAFbHEo8tcDQ5aUsr6THayWwZrRpkTtmPK+U65AD1mVE6yiiWDM8IulG9+By/ERTmD2wvfHg6qRCQgMlb6+f+352qqhzMPuZ2o02yVJIndBH8z2ZlKVFAiSBmEwjP2jOKiJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GCrZcwzw; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C676E44328;
-	Mon, 17 Feb 2025 17:54:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739814900;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=hIsMJ0YuoYMRvyxYJ1cP0EwqqnqSzX3NZXTyT1yGHBo=;
-	b=GCrZcwzw68h302NDLEdQet+EQjpmB2t7WEwh0YdVcb3EyqftJAkMNDIwsaBqDb86Xi6F37
-	44E+0Wfo+fTdhHueShQo3Oo30peFhV0JtLdzpftuqBNNi4hMDgCeGSEl0Ax7QGChGimDzN
-	i/do5hvBASw7euDQTP/dhUsQN1VjZYH4ABqrqViOmK1g63HYhUPIleMOpVk9Vfe8lEwd2q
-	f3iZk8loRlFElDvRT0/gcwSvV5UCLGKIQHhdiIE+T8g9vbniJeXqs7EJFcmR7c24spti2J
-	buU+7tTMK1ZUXGDkFBugtiYutnP5vaLWFgzS9T4KurcMpAL9dPAkXAvJS9rYmw==
-Message-ID: <519b82d4-7904-4320-93e4-efda799b545c@bootlin.com>
-Date: Mon, 17 Feb 2025 18:54:54 +0100
+	s=arc-20240116; t=1739822925; c=relaxed/simple;
+	bh=VFMG6NziVLhzXatJ1ZtCN9l/hVuOYcrvdIJmUyyZjYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VJhm8sr9W4M/Whhum6xjEkzKJqvFlnTCRiWwD0baSwgGjGYNH++Xhp9kgcAkivFVXher6JwENrLGy3RUrVoR9xbBwBYWGScOYJctnc+q/8rHgwB6CFx6bZNsQrYGJ+TCmBOk7n0uGU79RjnYch88O4dDyGVDdKCIpvT2wViYHc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SMLrfFky; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739822924; x=1771358924;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VFMG6NziVLhzXatJ1ZtCN9l/hVuOYcrvdIJmUyyZjYA=;
+  b=SMLrfFkyYkGAejn/bv90RRNqruinOo6GhY+SEY8DJBZ+WAqddB1XjF6i
+   Sw1L/6+n4biRvp/c+RNFveZnwQbC60ZHDqOhejScZqDrp17+yhFqeoeW3
+   h0HJXWxJoxzbqZgy+xHGUiA7NGUGF/YKkI/rQxzHAujzFLvEYqWgVcNbU
+   MnKUVFHC2es9N+zg3vu/h5grTZYEDXW+Ko+eZxlusaYF1uaJecUf0+jYQ
+   ql855g+t2csdO8c6Q8BYnQrfIkMDLEpLy61FkNXlKv26nGdcL2XqanTmi
+   bbeCdB2IvlsGJ3ONFL7xO3JVsIAR0q2FR2KOss3XIeAcrub+MG+VUHnR1
+   Q==;
+X-CSE-ConnectionGUID: FMendW1UQ3qI+n55Nyoomw==
+X-CSE-MsgGUID: DflpHOgaTI+PsjHPa+gIiQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="40369269"
+X-IronPort-AV: E=Sophos;i="6.13,293,1732608000"; 
+   d="scan'208";a="40369269"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 12:08:43 -0800
+X-CSE-ConnectionGUID: LDsaFI0DSXeqLi85M8zeBA==
+X-CSE-MsgGUID: NotF7x3HSBWH36vhwpW31g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="114076131"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 12:08:38 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tk7Pv-0000000CVST-09Tt;
+	Mon, 17 Feb 2025 22:08:35 +0200
+Date: Mon, 17 Feb 2025 22:08:34 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 07/10] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <Z7OXQqyPjtGgTySf@smile.fi.intel.com>
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-7-8a35c6dbb966@bootlin.com>
+ <Z69oa8_LKFxUacbj@smile.fi.intel.com>
+ <D7UOIHL2WOZP.LLGRKMILNJFU@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Check for CONFIG_PWM using
- IS_REACHABLE()
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Douglas Anderson <dianders@chromium.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org
-References: <20250217174936.758420-2-u.kleine-koenig@baylibre.com>
-Content-Language: en-US
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
- 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
-In-Reply-To: <20250217174936.758420-2-u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehledthecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeeivedtfeegtdekheethedttddtfefhhfegjeeljeejleduvdfhudegvdekheevnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrvddtngdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopehurdhklhgvihhnvgdqkhhovghnihhgsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdpr
- hgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopeguihgrnhguvghrshestghhrhhomhhiuhhmrdhorhhg
-X-GND-Sasl: louis.chauvet@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D7UOIHL2WOZP.LLGRKMILNJFU@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Mon, Feb 17, 2025 at 12:20:13PM +0100, Mathieu Dubois-Briand wrote:
+> On Fri Feb 14, 2025 at 4:59 PM CET, Andy Shevchenko wrote:
+> > On Fri, Feb 14, 2025 at 12:49:57PM +0100, Mathieu Dubois-Briand wrote:
+> > > Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
 
+...
 
-Le 17/02/2025 à 18:49, Uwe Kleine-König a écrit :
-> Currently CONFIG_PWM is a bool but I intend to change it to tristate. If
-> CONFIG_PWM=m in the configuration, the cpp symbol CONFIG_PWM isn't
-> defined and so the PWM code paths in the ti-sn65dsi86 driver are not
-> used.
+> > > +static int max7360_gpo_reg_mask_xlate(struct gpio_regmap *gpio,
+> > > +				      unsigned int base, unsigned int offset,
+> > > +				      unsigned int *reg, unsigned int *mask)
+> > > +{
+> > > +	u16 ngpios = gpio_regmap_get_ngpio(gpio);
+> > > +
+> > > +	*reg = base;
+> > > +	*mask = BIT(MAX7360_MAX_KEY_COLS - (ngpios - offset));
+> > > +
+> > > +	return 0;
+> >
+> > Does this GPIO controller only capable of servicing keypads?
+> > I think no, hence I'm not sure why this split is needed to be
+> > here and not in the input driver.
 > 
-> The correct way to check for CONFIG_PWM is using IS_REACHABLE which does
-> the right thing for all cases
-> CONFIG_DRM_TI_SN65DSI86 ∈ { y, m } x CONFIG_PWM ∈ { y, m, n }.
+> I would say it's more a keypad controller able to support some GPIOs.
+> Some of the keypad columns, if unused, can be used as output-only gpios.
+> So I believe the split has its place here, because in the default
+> configuration, the split is set to have 8 keypad columns and no gpio. As
+> a consequence, the keypad driver can work without having to worry about
+> the split; the gpio driver needs to know about it.
 > 
-> There is no change until CONFIG_PWM actually becomes tristate.
+> To provide a bit more details, there is basically two set of pins usable
+> as GPIOs.
 > 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+> On one side we have what I refer to as GPIOs:
+>   - PORT0 to PORT7 pins of the chip.
+>   - Shared with PWM and rotary encoder functionalities. Functionality
+>     selection can be made independently for each pin. We have to ensure
+>     the same pin is not used by two drivers at the same time. E.g. we
+>     cannot have at the same time GPIO4 and PWM4.
+>   - Supports input and interrupts.
+>   - Outputs may be configured as constant current.
+>   - 8 GPIOS supported, so ngpios is fixed to MAX7360_MAX_GPIO.
+>   - maxim,max7360-gpio compatible, gpio_function == MAX7360_GPIO_PORT.
+> 
+> On the other side, we have what I refer to as GPOs:
+>   - COL2 to COL7 pins of the chip.
+>   - Shared with the keypad functionality. Selections is made by
+>     partitioning the pins: first pins for keypad columns, last pins for
+>     GPOs. Partition is described by the ngpios property.
+>   - Only support outputs.
+>   - maxim,max7360-gpo compatible, gpio_function == MAX7360_GPIO_COL.
+> 
+> > Or you mean that there output only GPIO lines in HW after all?
+> > Is there a link to the datasheet?
+> 
+> A datasheet is available on https://www.analog.com/en/products/max7360.html
 
-Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+Thank you for this good elaboration!
+I will check on the datasheet later on, having one week off.
 
-Thanks,
-Louis Chauvet
+But what I have read above sounds to me like the following:
 
-> ---
-> Hello,
-> 
-> even without the change to make CONFIG_PWM tristate using IS_REACHABLE()
-> is the more idiomatic way to check for CONFIG_PWM.
-> 
-> Note that IS_ENABLED() is wrong in the case CONFIG_DRM_TI_SN65DSI86=y +
-> CONFIG_PWM=m.
-> 
-> Best regards
-> Uwe
-> 
->   drivers/gpu/drm/bridge/ti-sn65dsi86.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index e4d9006b59f1..c84976db9ba5 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -196,7 +196,7 @@ struct ti_sn65dsi86 {
->   	struct gpio_chip		gchip;
->   	DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
->   #endif
-> -#if defined(CONFIG_PWM)
-> +#if IS_REACHABLE(CONFIG_PWM)
->   	struct pwm_chip			*pchip;
->   	bool				pwm_enabled;
->   	atomic_t			pwm_pin_busy;
-> @@ -1361,7 +1361,7 @@ static struct auxiliary_driver ti_sn_bridge_driver = {
->   /* -----------------------------------------------------------------------------
->    * PWM Controller
->    */
-> -#if defined(CONFIG_PWM)
-> +#if IS_REACHABLE(CONFIG_PWM)
->   static int ti_sn_pwm_pin_request(struct ti_sn65dsi86 *pdata)
->   {
->   	return atomic_xchg(&pdata->pwm_pin_busy, 1) ? -EBUSY : 0;
-> @@ -1955,7 +1955,7 @@ static int ti_sn65dsi86_probe(struct i2c_client *client)
->   			return ret;
->   	}
->   
-> -	if (IS_ENABLED(CONFIG_PWM)) {
-> +	if (IS_REACHABLE(CONFIG_PWM)) {
->   		ret = ti_sn65dsi86_add_aux_device(pdata, &pdata->pwm_aux, "pwm");
->   		if (ret)
->   			return ret;
-> 
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+1) the PORT0-PORT7 should be just a regular pin control with the respective
+function being provided (see pinctrl-cy8c95x0.c as an example);
+
+2) the COL2 COL7 case can be modeled as a simplest GPIO (GPO) driver with
+reserved lines property (this will set valid mask and let GPIOLIB to refuse any
+use of the keypad connected pins.
+
+So, with this approach the entire handling becomes less hackish and quite
+straightforward!
+
 
 -- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+With Best Regards,
+Andy Shevchenko
+
 
 
