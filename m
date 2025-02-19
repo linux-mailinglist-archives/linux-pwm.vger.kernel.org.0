@@ -1,108 +1,86 @@
-Return-Path: <linux-pwm+bounces-4942-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4943-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94592A3A310
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Feb 2025 17:42:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48E32A3CCBD
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Feb 2025 23:55:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6DD4D167A81
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Feb 2025 16:42:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3381189896A
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Feb 2025 22:55:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13E2026F443;
-	Tue, 18 Feb 2025 16:42:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ED6925B691;
+	Wed, 19 Feb 2025 22:54:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ECSIvAUw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CQpr6j3T"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E416126E658
-	for <linux-pwm@vger.kernel.org>; Tue, 18 Feb 2025 16:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2125825B674;
+	Wed, 19 Feb 2025 22:54:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739896944; cv=none; b=IKhx8TqPE6uJkF9F3EdChWVlkpVJHcMnUpC3rRsTfVYEDzdGSEfIzgdZtklLR+TETBLIbuj9qgVU9zx1qIicyKpBNyjqt2WoDWIUcsf2zO1piqele3ChUdStB8brZWHenPpiXVKgZAmxlFq1wNa72d5c6h6viNkrx9iNEka+zkw=
+	t=1740005691; cv=none; b=jumy27e6btE6uxI9UCR0ilaerTfGe0v2YBL/Mxm4NTtrFzAkrPLKe7mtxr9+5EZ1K5JpECMG5DdtOEqBCbUPVdPILJFa3J+Avj1QFuqHr0UsFSOSx/CHMtvSzDhIUXm0a05dWQfWCSfBljIe1YLJ24kapHvsdS8M8aDXDEyAHNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739896944; c=relaxed/simple;
-	bh=0UR7ZnzNvjz0SEvJtLSwadQ9oZvEotljrbUsdRRYjzw=;
+	s=arc-20240116; t=1740005691; c=relaxed/simple;
+	bh=DH4hbs5EerBNAJz2J89fIqkhJwMcOqyn2uGY2e8uQmw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MxvrxGU6hJaiuO4qDZDJ3/E4E2Gb1wYfrqqy7muh7rtB8mxjourtRw9/hah6v3NCIFw3RoRa+p2Sh9qgZsoRi1qucu6YGbq7yDU+b24Vw3Urb12k5TAWRmofSKR44sCYGUbkp2RYh6se3Z7MriHWNBv6x0RH2WeyLJfFkTM6v5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ECSIvAUw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C283C4CEE7;
-	Tue, 18 Feb 2025 16:42:20 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=L3tdCYuf+9lByp6Qy27ENlas3i91roSWpBlK4N43JeNK5ZTQifYC2dwypEzMwLia+44dgFBqca3+xZSNVRysuCzaPKwpLBNU8J8YrbSU4SpQ9MT752AVusaJa0jh2IlA1EnbP7sk6qO4KyoHcnfuENGniNNvYpRq7/L46dXFCI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CQpr6j3T; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA164C4CED1;
+	Wed, 19 Feb 2025 22:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739896942;
-	bh=0UR7ZnzNvjz0SEvJtLSwadQ9oZvEotljrbUsdRRYjzw=;
+	s=k20201202; t=1740005691;
+	bh=DH4hbs5EerBNAJz2J89fIqkhJwMcOqyn2uGY2e8uQmw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ECSIvAUwLDlMHiFskaPKGIwKt/429M4ZYwyuDx2aiwDstX5IZjB4vpk3zjscOEv2v
-	 zqQYU/atnf7Fd9N5SfudJl1bsrT5MQ9XM/iCEmBegFOpQUOOAL47ZFDU6smP/i+KGg
-	 tlKvYJ91MpGDw6oFvaagm56nBqSzHwgVzrPdIeBCoCbmonyIEg+Xv8UsnXWt3rBcKi
-	 xnfPYQo2jtltHS795hs0XBB/hbNrKg5Zf33dw/aA/U0wd+eHV95SRWIkih0zBBwAsG
-	 QVQEBklMdE43+0gZoAKuDRRdkZhfwAXWFqDlVps7bWU80yhszD/nkFtqGQ/RruXOtb
-	 YjXoRDBz8Nrfg==
-Date: Tue, 18 Feb 2025 16:42:18 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] pwm: Strengthen dependency for PWM_SIFIVE
-Message-ID: <20250218-only-banshee-035249898ef8@spud>
-References: <20250127105001.587610-2-u.kleine-koenig@baylibre.com>
- <ts5ze4fosj2vg6pokjfqx3tjernjug646kihiqikxfrhk7tzbl@whgq4nuhni4r>
+	b=CQpr6j3Tp6tnVuvGFrQvbYy5hPtdLQMcWArX742TesOPv0KWfA/gA185MREQaS92f
+	 ajMn2Di2ssaP2WEwdPww7TmHrwH+ZYhw1LL58qmi3pbzRgu7WI9+rWKE9CR0p6HTdr
+	 5+gNTFF7pe2PiXUMyoACNp60IBXAQJGa+8zCoSAoq1UpL8w0HW9UbcSSlKBVhq1D3j
+	 4KOP+kLAlOxT4+V9lvQhqtgmpaU/EBVtYh1hABjJl8omrJxNjxW/1hl76rr19Dk4k2
+	 0HzPz1nJWioFv93Coo1RpHNpsp0Dv9/wuIQ5Sse9biYYLKX4U3b3MScrURvKrMnRnb
+	 bYi1PU6zA4RbA==
+Date: Wed, 19 Feb 2025 16:54:49 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+	jic23@kernel.org, devicetree@vger.kernel.org,
+	linux-pwm@vger.kernel.org, conor+dt@kernel.org
+Subject: Re: [PATCH v13 5/9] dt-bindings: iio: adc: add ad485x axi variant
+Message-ID: <174000568921.3121156.5629879811490736248.robh@kernel.org>
+References: <20250214131955.31973-1-antoniu.miclaus@analog.com>
+ <20250214131955.31973-6-antoniu.miclaus@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aHbrkrX7hwaxkCfs"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ts5ze4fosj2vg6pokjfqx3tjernjug646kihiqikxfrhk7tzbl@whgq4nuhni4r>
+In-Reply-To: <20250214131955.31973-6-antoniu.miclaus@analog.com>
 
 
---aHbrkrX7hwaxkCfs
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 14 Feb 2025 15:19:51 +0200, Antoniu Miclaus wrote:
+> Add a new compatible and related bindigns for the fpga-based
+> AD485x AXI IP core, a variant of the generic AXI ADC IP.
+> 
+> The AXI AD485x IP is a very similar HDL (fpga) variant of the
+> generic AXI ADC IP, intended to control ad485x familiy.
+> 
+> Although this is not preffered, the wildcard naming is used to
+> match the published firmware under the same name.
+> 
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
+> changes in v13:
+>  - adjust commit body and add comment on wildcard matching the published
+>    firmware.
+>  Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-On Sat, Feb 15, 2025 at 03:48:43PM +0100, Uwe Kleine-K=F6nig wrote:
-> Hello,
->=20
-> On Mon, Jan 27, 2025 at 11:50:01AM +0100, Uwe Kleine-K=F6nig wrote:
-> > Back when the sifive pwm driver was added there was no symbol for sifive
-> > SoCs yet. Today there is ARCH_SIFIVE however. Let PWM_SIFIVE depend on
-> > that to ensure the driver is only build for platforms where there is a
-> > chance that the hardware is available.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
-> > ---
-> > a quick grep suggests that the driver is only used on machines that inc=
-lude
-> > arch/riscv/boot/dts/sifive/fu540-c000.dtsi or
-> > arch/riscv/boot/dts/sifive/fu740-c000.dtsi and for these ARCH_SIFIVE is
-> > enabled. So I'd guess this patch is fine. Still an ack from someone who
-> > knows this arch better would be very welcome.
->=20
-> Applied now without further feedback to
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/f=
-or-next
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-Bit late, but ye I think that's fair.
-
---aHbrkrX7hwaxkCfs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ7S4agAKCRB4tDGHoIJi
-0qPYAP4madBzzucHdVUiWEvKgNT8uI7WckM0qzO7+ApHjfyW3gD/b55C8F0Ask/h
-7xT/eb9iS5DtWcglDhOYNi1ldp5YPw4=
-=jb5M
------END PGP SIGNATURE-----
-
---aHbrkrX7hwaxkCfs--
 
