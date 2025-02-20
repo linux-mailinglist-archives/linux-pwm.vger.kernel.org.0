@@ -1,177 +1,119 @@
-Return-Path: <linux-pwm+bounces-4961-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4962-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E4A7A3D6D5
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Feb 2025 11:35:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FE2AA3E11A
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Feb 2025 17:43:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC0D13B0D42
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Feb 2025 10:31:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8E3EF1885208
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Feb 2025 16:42:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4346A1F1302;
-	Thu, 20 Feb 2025 10:31:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C642B20B81B;
+	Thu, 20 Feb 2025 16:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MYdaRJGZ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AD71EE7C6;
-	Thu, 20 Feb 2025 10:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F142080CE;
+	Thu, 20 Feb 2025 16:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740047519; cv=none; b=P71DJb4zuuc6akjegZk53SqnX8mzZbHthJMFh6XmeUtsxvjb3GkP4H3KFeGdf64gW/ODhNs3LmiH+IAhkPFgVovTs1dCqxcPR5aMnVDxZ4+l83oY2O0QLDVNLkNW5Quma+D1iyz5ywMxwyEXjfupp9YFPcIg5D3GIvpSvkn8BO8=
+	t=1740069764; cv=none; b=MrzYym6OPxqhNei0ESvzXXJo370NC/sY+V5N1FcdLtVLJPMerauVoBDRgW72ezb0MtXjN9+SKfIwESw/x6DXspkhPA1tqXp9wBBbsnZpce31gBhdxvDYRQq/Nevru+OOHxA3SFuKPt2bMJNFwKwW7MDs8HlBdPMpLKoVx0WMLCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740047519; c=relaxed/simple;
-	bh=EoE8bMHv7xu0prvb8E0epB/K/6l0shvsMw5QSn1M2s4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D8BPmiZJO3S1rOon0zYt1JRfAsvkONRUbeIJN9QyyLOyh4wFT+5q7DSDUNPB/wr5MyG2Iu6vn4WoYOyRJXOq1OhqdjvyO/PHEOd2SsEFC0s2fFgBhpgNYNqqGA9dmRDuj0bPfdDS7k+61YXc8rQ8/szdWHXAaXIQAydq/3aLF3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66793C4CED1;
-	Thu, 20 Feb 2025 10:31:52 +0000 (UTC)
-Message-ID: <6dc1e10e-9c40-4da3-b0e0-72bdc9daa827@xs4all.nl>
-Date: Thu, 20 Feb 2025 11:31:50 +0100
+	s=arc-20240116; t=1740069764; c=relaxed/simple;
+	bh=Spb5DN7Z957auhFhK10W01ysEwluGPWuq85ZNm+0g8Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uRaJWnwcmyNtXb6pYulYcoQASv7lOWt6gCaA1xy8QVIv3uTqbZZ6nyY8pPtH/+H3Mc4yXqDkGvMUVn3idgRd7M6wFZYdpZSzaA2c7aKabLpJJ5UeSlzskqKii4iMFeXGr73S8Z8HgCnzVJ54G5JFkN3yUlgsFPfNmaPDB2avoOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MYdaRJGZ; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38f286b5281so626584f8f.1;
+        Thu, 20 Feb 2025 08:42:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740069760; x=1740674560; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Spb5DN7Z957auhFhK10W01ysEwluGPWuq85ZNm+0g8Q=;
+        b=MYdaRJGZsSkBYFyIv1K9n8TID32TOZf/g4ZBhc2NIFwK/8mzXERgeVIDegV7fLU+Jc
+         /X82C92mmO0sVJn+EigA3emwOJ6V90oYRNvb3LznOvqTsKRAca0gRaPMp2m3PZPysTUE
+         HFwwUSMx8g3aYgHMaCbIQrdPgPvMqp9E8A6/8jnqM9PK/NCtP2CnJ1oI3Xf3hqBso6iv
+         3HwxJiNls9HlVvZaumUX8EE9lp3U4fL/VakaUMCADorLvr1zV7FXdrFLUzT/j+Sd8PVe
+         51p/bfB3FNHqdiEJwa3xn8cX8z2EE8PWHb63hpy8TImISaSMIXuDt9pjK0STf8UWsh1w
+         3hXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740069760; x=1740674560;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Spb5DN7Z957auhFhK10W01ysEwluGPWuq85ZNm+0g8Q=;
+        b=j/F6tyPPO5fe/qtDARAmzYXSz85ZOaRTglO8rcnIvD6v6nBXjrRGlSZYFzjDT+2Jjb
+         dEY4s6ru/oF+oUZrFbrFmsbd4ti6kgjvh8S27T28GNi9gGC7jRlJrv4jooPJVqvVr4XF
+         Zw7jdVB1hp3102cCfkXtqNQ4OifGdMtxcoNDOyxfWUz3LPljIbJjWoza7WxqZLfc8Qwm
+         mj5QJAfiURI/TsvCkQr0Wx2ZODrmDm94482s2d6npbSB7Xhb1BQ4RcE/9XjRwfoHFHEJ
+         TnYldnPyFtx+kwArZsUMahZ5qeJ43LvHvsynO4cdEjIeQ1L6B0SPpiGig8Vmck0TwIYR
+         5J1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUg/f69nx39ABXT3O5kZPCfz0uFAptKsBq8QSKV5rl1u5bTY7T50NCFgW+0iwMa5b57W6yPOkUfBya7@vger.kernel.org, AJvYcCXtGyrGbEjloscMeX8oXZER9V3uDiAEeR0v2Xe0s0+TTCqXYF1koGc9ydyshFPGBgbAFmak87K5YI4q@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLhjBMzfK40C2AwkYh0bEosbnP1WvcJw+u0ASw89qb8Igtnozb
+	K4qmxhFxcBoNmCewqMeazgjFVXgrwEkIFt99Zuo1BRcoZF/ix6u8Uxq91ZafBHc=
+X-Gm-Gg: ASbGncs7PuRidNAphBIzowtip7BhKs2TzXe1nzzktKFZ6ErWTLAdIiJakskfy/R81on
+	KhdoZtXE0Y8niZEV1YZDZfgcLi7KqGAEYGdPOfs/R7FannrsMoTT1gNShixfnmV7OCfg4IpnAxX
+	TQAdmNyiDJjXMPFwR1dlLz6XSt/ynfZUkbnPlY6pFUSG+P66By+ttDFilYtB2gMjmbkD6HmSi0b
+	y8rPHyACIeIrEeXaFcpr2oa75Y6Y2NBBEAbfD0c2pO4xFQbtsIqgTyzaOLherSi+zActVDOPxri
+	ClPfVM7fnWSYaz865VtSri1Cb81MUWmh1oFTJhVMIQH3Gy0CFhHp2wf96NBQ2+5roWU=
+X-Google-Smtp-Source: AGHT+IHKAPnHG28kS2PXP8ZMEI3ZDWU7Yq8EPs8z2/DhkZ5Cc4K6VvdHC46lFrkP+dx+zXRT0tV7pg==
+X-Received: by 2002:a05:6000:4025:b0:38f:4176:7c25 with SMTP id ffacd0b85a97d-38f41768063mr14903972f8f.2.1740069760495;
+        Thu, 20 Feb 2025 08:42:40 -0800 (PST)
+Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5c29sm21139863f8f.72.2025.02.20.08.42.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 08:42:40 -0800 (PST)
+From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: linux-kernel@vger.kernel.org, Aleksandr Shubin <privatesub2@gmail.com>
+Cc: Aleksandr Shubin <privatesub2@gmail.com>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Samuel Holland <samuel@sholland.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Cheo Fusi <fusibrandon13@gmail.com>,
+ linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v11 3/3] riscv: dts: allwinner: d1: Add pwm node
+Date: Thu, 20 Feb 2025 17:42:38 +0100
+Message-ID: <3688166.hdfAi7Kttb@jernej-laptop>
+In-Reply-To: <20250213094018.134081-4-privatesub2@gmail.com>
+References:
+ <20250213094018.134081-1-privatesub2@gmail.com>
+ <20250213094018.134081-4-privatesub2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 04/12] driver core: Constify API device_find_child()
- and adapt for various usages
-To: Zijun Hu <zijun_hu@icloud.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-sound@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux1394-devel@lists.sourceforge.net, arm-scmi@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-gpio@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-serial@vger.kernel.org, netdev@vger.kernel.org,
- Zijun Hu <quic_zijuhu@quicinc.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Takashi Sakamoto <o-takashi@sakamocchi.jp>
-References: <20241224-const_dfc_done-v5-0-6623037414d4@quicinc.com>
- <20241224-const_dfc_done-v5-4-6623037414d4@quicinc.com>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <20241224-const_dfc_done-v5-4-6623037414d4@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On 24/12/2024 14:05, Zijun Hu wrote:
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
-> 
-> Constify the following API:
-> struct device *device_find_child(struct device *dev, void *data,
-> 		int (*match)(struct device *dev, void *data));
-> To :
-> struct device *device_find_child(struct device *dev, const void *data,
->                                  device_match_t match);
-> typedef int (*device_match_t)(struct device *dev, const void *data);
-> with the following reasons:
-> 
-> - Protect caller's match data @*data which is for comparison and lookup
->   and the API does not actually need to modify @*data.
-> 
-> - Make the API's parameters (@match)() and @data have the same type as
->   all of other device finding APIs (bus|class|driver)_find_device().
-> 
-> - All kinds of existing device match functions can be directly taken
->   as the API's argument, they were exported by driver core.
-> 
-> Constify the API and adapt for various existing usages.
-> 
-> BTW, various subsystem changes are squashed into this commit to meet
-> 'git bisect' requirement, and this commit has the minimal and simplest
-> changes to complement squashing shortcoming, and that may bring extra
-> code improvement.
-> 
-> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-> Acked-by: Uwe Kleine-König <ukleinek@kernel.org> # for drivers/pwm
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Dne =C4=8Detrtek, 13. februar 2025 ob 10:40:14 Srednjeevropski standardni =
+=C4=8Das je Aleksandr Shubin napisal(a):
+> D1 and T113s contain a pwm controller with 8 channels.
+> This controller is supported by the sun20i-pwm driver.
+>=20
+> Add a device tree node for it.
+>=20
+> Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
 
-<snip>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-> diff --git a/drivers/media/pci/mgb4/mgb4_core.c b/drivers/media/pci/mgb4/mgb4_core.c
-> index bc63dc81bcae0d20924174be74b93a2139d5879f..697d50bedfe285d74c702efde61e510df87c1229 100644
-> --- a/drivers/media/pci/mgb4/mgb4_core.c
-> +++ b/drivers/media/pci/mgb4/mgb4_core.c
-> @@ -123,7 +123,7 @@ static const struct hwmon_chip_info temp_chip_info = {
->  };
->  #endif
->  
-> -static int match_i2c_adap(struct device *dev, void *data)
-> +static int match_i2c_adap(struct device *dev, const void *data)
->  {
->  	return i2c_verify_adapter(dev) ? 1 : 0;
->  }
-> @@ -139,7 +139,7 @@ static struct i2c_adapter *get_i2c_adap(struct platform_device *pdev)
->  	return dev ? to_i2c_adapter(dev) : NULL;
->  }
->  
-> -static int match_spi_adap(struct device *dev, void *data)
-> +static int match_spi_adap(struct device *dev, const void *data)
->  {
->  	return to_spi_device(dev) ? 1 : 0;
->  }
+Best regards,
+Jernej
 
-Reviewed-by: Hans Verkuil <hverkuil@xs4all.nl>
 
-Regards,
-
-	Hans
 
