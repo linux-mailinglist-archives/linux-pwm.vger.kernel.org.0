@@ -1,219 +1,128 @@
-Return-Path: <linux-pwm+bounces-4967-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4969-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B0A4A3F355
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 Feb 2025 12:50:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 327B5A42AE4
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Feb 2025 19:16:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D08993B7C7B
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 Feb 2025 11:50:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9BB36177223
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Feb 2025 18:15:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 746B0209F23;
-	Fri, 21 Feb 2025 11:50:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E55852661BA;
+	Mon, 24 Feb 2025 18:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="btR5qn/J"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="hZxP1mkO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B207F209681;
-	Fri, 21 Feb 2025 11:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21245265CDD;
+	Mon, 24 Feb 2025 18:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740138623; cv=none; b=Cmay3QM8yeaXRad378hWkK0LHqQC1MWcLcFXY1WarCqKJjL9lWHKlUQ1fB4BtTESZuXBPZ86PREQo+OpoFB+epE2miYgoP685MGCOwCYvv0oo0BAcVanLind6lDtiTOym7bKliGOaqgmPTht+IWDNaB6K8CsWPhbNvakCS55tH4=
+	t=1740420842; cv=none; b=l92Y+TlPVw+iGrnaq5Jyt6bFaLY47Idmj/Xz3nmFcazxXKsFDRruyuCkvtmvESo0bPAx8Pjiqzs3UL25e9G5CJrfazlYDJjPu9wcQM3CFAYQbu/OU9vh5zkiwsPH8JmMYejvD7nVKar/NS3l1RjMg4a9zyoMi7/kKZE05iupptY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740138623; c=relaxed/simple;
-	bh=Ax1HLOrCM4FuTAt8HYk3+RIVVxX7+VlgLIn7Jnlyv68=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=m/MxzqzqKmSyamxvxoz45+1yi+WavmqwzUcRzX6kYgUjj3uqCigt/x7PK1HW5rtbBJ0qESjxZqxNlqQqGf3FrYoZ+ja5puc829l7SMI83IH9C3UUBUqI/iwJekLzbi3fDYzTGNYJngugPVvt7cQnMBWyUNS8B0gc0Ov/Id3+FLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=btR5qn/J; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
-Received: from [192.168.42.116] (pd9e59d4d.dip0.t-ipconnect.de [217.229.157.77])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id EF6BC2FC0182;
-	Fri, 21 Feb 2025 12:50:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1740138617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ntN7Ken4o08cAX1i2z6UfMc3CME1b/XumOkdtvbq90M=;
-	b=btR5qn/JQZ2iM9Z6Qbqzm/UmO/OMIde4ej5pERpuC3eETwAT8pHKMz6AUIKnWCToZlZAU+
-	/X5twyqGS+nefMFbZx2YpTS3yzfB7Rtmjzup7pjS6YSnwLw+pZ6TEGzSM6OPzbRIVitOpm
-	R9lA9Lc+l3h/gWNXJ5X+Ac/+G521zdY=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <cde97a29-bfe6-4dba-a059-b6df91814e6c@tuxedocomputers.com>
-Date: Fri, 21 Feb 2025 12:50:16 +0100
+	s=arc-20240116; t=1740420842; c=relaxed/simple;
+	bh=ArKolMzeETjUwmKW4te7NXG/s9X7oIkM4cETyiPZUQk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LabYs3x90+pkwT7XiKzb6K4wrMrAKe2tuwx3OSgu09ZXvWm4kGOTTi2sVcNKQAS1sL2EZyyZ5f5s1mKSev6h08srYpZFSPfTHWATmffSQeAfypue8zDxJA1wxG2r9H4fJmm4fKA7JJOS49TBCxhRjsGHTHhFM5hHteEXFLjFgko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=hZxP1mkO; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OEnHnD025112;
+	Mon, 24 Feb 2025 19:13:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=caTOVoBOyF0MRwCSZLjQta
+	/N2cLC0otSKq3vfvnJa1k=; b=hZxP1mkOfRngm5RL60oLFe+P5QXMX3xTexdEVl
+	r2x+eIpTbr7WghKVqnotLaXzBtP6Rwc0rK2iaYAzfTPvP/1N2WjcCvTxOKxYiY7G
+	XkHVYMbIj5x8BRGk4Vx3RFTNHG0geClTz3Nwtbt8CWV5BuMxEQN9/Nv8Ae07hbEQ
+	bgVCLpfVaZC/MAQT8ofiOJ4hdIY8UdeT9pT8F/uOoYja0yCiSU4rrSZCLleGdNLj
+	2RMUTlYrTbogHnZlDnzp6RNWXKFkxIyh8Qf08PY7THwYRdpW7pHUWfMTCCsDMqDu
+	ofjozVhCqDtpQYr6YLbNy1l5kzi1u5kq687RXGSbjaH6HSIg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44y6bh0hwq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Feb 2025 19:13:50 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8D8B440046;
+	Mon, 24 Feb 2025 19:12:25 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C9221544742;
+	Mon, 24 Feb 2025 19:02:29 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
+ (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
+ 2025 19:02:29 +0100
+Received: from localhost (10.252.23.75) by SAFDAG1NODE1.st.com (10.75.90.17)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
+ 2025 19:02:29 +0100
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+To: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <wbg@kernel.org>, <jic23@kernel.org>, <daniel.lezcano@linaro.org>,
+        <tglx@linutronix.de>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>
+Subject: [PATCH 0/8] Add STM32MP25 LPTIM support: MFD, PWM, IIO, counter, clocksource
+Date: Mon, 24 Feb 2025 19:01:42 +0100
+Message-ID: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/1] platform/x86/tuxedo: Implement TUXEDO TUXI ACPI
- TFAN via hwmon
-From: Werner Sembach <wse@tuxedocomputers.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, ukleinek@kernel.org,
- jdelvare@suse.com, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-hwmon@vger.kernel.org
-References: <20250205162109.222619-1-wse@tuxedocomputers.com>
- <20250205162109.222619-2-wse@tuxedocomputers.com>
- <767538f2-d79e-44e4-a671-4be56a3cfe44@roeck-us.net>
- <fce7929b-87e7-4c9a-8a54-ab678c5dc6b4@tuxedocomputers.com>
- <8f0a9bd6-52dd-442f-b0fd-73cf7028d9f0@roeck-us.net>
- <b32284b7-ddc8-4fb5-82f8-20199b0dec5a@tuxedocomputers.com>
-Content-Language: en-US
-In-Reply-To: <b32284b7-ddc8-4fb5-82f8-20199b0dec5a@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-24_09,2025-02-24_02,2024-11-22_01
 
-Hi,
+This series adds support for STM32MP25 to MFD PWM, IIO, counter and
+clocksource low-power timer (LPTIM) drivers.
+This new variant is managed by using a new DT compatible string.
+It comes with a slightly updated register set, some new features and new
+interconnect signals inside the SoC.
+Same feature list as on STM32MP1x is supported currently.
+The device tree files add all instances in stm32mp251 dtsi file.
 
-Am 06.02.25 um 23:55 schrieb Werner Sembach:
->
-> Am 06.02.25 um 19:57 schrieb Guenter Roeck:
->> On Thu, Feb 06, 2025 at 10:28:01AM +0100, Werner Sembach wrote:
->>
->> [ ... ]
->>
->>>>> +        temp = retval * 100 - 272000;
->>>>> +
->>>>> +        for (j = 0; temp_levels[j].temp; ++j) {
->>>>> +            temp_low = j == 0 ? -272000 : temp_levels[j-1].temp;
->>>>> +            temp_high = temp_levels[j].temp;
->>>>> +            if (driver_data->temp_level[i] > j)
->>>>> +                temp_high -= 2000; // hysteresis
->>>>> +
->>>>> +            if (temp >= temp_low && temp < temp_high)
->>>>> +                driver_data->temp_level[i] = j;
->>>>> +        }
->>>>> +        if (temp >= temp_high)
->>>>> +            driver_data->temp_level[i] = j;
->>>>> +
->>>>> +        temp_level = driver_data->temp_level[i];
->>>>> +        min_speed = temp_level == 0 ?
->>>>> +            0 : temp_levels[temp_level-1].min_speed;
->>>>> +        curr_speed = driver_data->curr_speed[i];
->>>>> +        want_speed = driver_data->want_speed[i];
->>>>> +
->>>>> +        if (want_speed < min_speed) {
->>>>> +            if (curr_speed < min_speed)
->>>>> +                write_speed(dev, i, min_speed);
->>>>> +        } else if (curr_speed != want_speed)
->>>>> +            write_speed(dev, i, want_speed);
->>>>> +    }
->>>>> +
->>>>> +    schedule_delayed_work(&driver_data->work, TUXI_SAFEGUARD_PERIOD);
->>>>> +}
->>>> This is not expected functionality of a hardware monitoring driver.
->>>> Hardware monmitoring drivers should not replicate userspace or
->>>> thermal subsystem functionality.
->>>>
->>>> This would be unacceptable in drivers/hwmon/.
->>> Problem is: The thermal subsystem doesn't do this either as far as I can tell.
->>>
->>> See this: 
->>> https://lore.kernel.org/all/453e0df5-416b-476e-9629-c40534ecfb72@tuxedocomputers.com/
->>> and this: 
->>> https://lore.kernel.org/all/41483e2b-361b-4b84-88a7-24fc1eaae745@tuxedocomputers.com/
->>> thread.
->>>
->>> The short version is: The Thermal subsystem always allows userspace to
->>> select the "userspace" governor which has no way for the kernel to enforce a
->>> minimum speed.
->>>
->> You can specify thermal parameters / limits using devicetree. Also, drivers
->> can always enforce value ranges.
->
-> Sorry for my noob question: What do you mean with devicetree in x86 context?
->
-> I only want to enforce a value range at a certain temperature, if the device 
-> is cool, the fan can be turned off for example.
-Gentle bump
->
->>
->>> As far as I can tell the Thermal subsystem would require a new governor for
->>> the behavior i want to archive and more importantly, a way to restrict which
->>> governors userspace can select.
->>>
->>> As to why I don't want grant userspace full control: The firmware is
->>> perfectly fine with accepting potentially mainboard frying settings (as
->>> mentioned in the cover letter) and the lowest level I can write code for is
->>> the kernel driver. So that's the location I need to prevent this.
->>>
->> It is ok for the kernel to accept and enforce _limits_ (such as lower and upper
->> ranges for temperatures) when they are written. That is not what the code here
->> does.
->
-> It conditionally enforces a minimum fanspeed.
->
-> So is the problem that hwmon drivers are only allowed to enforce unconditional 
-> limits?
-Here too.
->
->>
->>> Also hwmon is not purely a hardware monitoring, it also allows writing
->>> fanspeeds. Or did I miss something and this shouldn't actually be used?
->>>
->> If doesn't actively control fan speeds, though. It just tells the firmware what
->> the limits or target values are.
-> What is the difference if it tells the firmware a target fanspeed, which can 
-> be ignored by it, or a driver a target fanspeed, which can be ignored by it?
+Fabrice Gasnier (6):
+  dt-bindings: mfd: stm32-lptimer: add support for stm32mp25
+  mfd: stm32-lptimer: add support for stm32mp25
+  pwm: stm32-lp: add support for stm32mp25
+  counter: stm32-lptimer-cnt: add support for stm32mp25
+  arm64: defconfig: enable STM32 LP timers drivers
+  arm64: dts: st: add low-power timer nodes on stm32mp251
 
-Here too.
+Olivier Moysan (1):
+  iio: trigger: stm32-lptimer: add support for stm32mp25
 
-Best regards,
+Patrick Delaunay (1):
+  clocksource: stm32-lptimer: add stm32mp25 support
 
-Werner Sembach
+ .../bindings/mfd/st,stm32-lptimer.yaml        |  23 +-
+ arch/arm64/boot/dts/st/stm32mp251.dtsi        | 177 ++++++++++++++
+ arch/arm64/configs/defconfig                  |   5 +
+ drivers/clocksource/timer-stm32-lp.c          |   1 +
+ drivers/counter/stm32-lptimer-cnt.c           |   1 +
+ drivers/iio/trigger/stm32-lptimer-trigger.c   | 109 +++++++--
+ drivers/mfd/stm32-lptimer.c                   |  30 ++-
+ drivers/pwm/pwm-stm32-lp.c                    | 220 +++++++++++++++---
+ include/linux/iio/timer/stm32-lptim-trigger.h |   9 +
+ include/linux/mfd/stm32-lptimer.h             |  32 ++-
+ 10 files changed, 554 insertions(+), 53 deletions(-)
 
->>
->>>> Personally I think this is way too complicated. It would make much more sense
->>>> to assume a reasonable maximum (say, 16) and use fixed size arrays to access
->>>> the data. The is_visible function can then simply return 0 for larger channel
->>>> values if the total number of fans is less than the ones configured in the
->>>> channel information.
->>> Didn't know it was possible to filter extra entries out completely with the
->>> is_visible function, thanks for the tip.
->>>> Also, as already mentioned, there is no range check of fan_count. This will
->>>> cause some oddities if the system ever claims to have 256+ fans.
->>> Will not happen, but i guess a singular additional if in the init doesn't
->>> hurt, i can add it.
->> You are making the assumption that the firmware always provides correct
->> values.
->>
->> I fully agree that repeated range checks for in-kernel API functions are
->> useless. However, values should still be checked when a value enters
->> the kernel, either via userspace or via hardware, even more so if that value
->> is used to determine, like here, the amount of memory allocated. Or, worse,
->> if the value is reported as 32-bit value and written into an 8-byte variable.
-> ok
->>
->>>>> +    *hwmdev = devm_hwmon_device_register_with_info(&pdev->dev,
->>>>> +                               "tuxedo_nbxx_acpi_tuxi",
->>>>> +                               driver_data, &hwminfo,
->>>>> +                               NULL);
->>>>> +    if (PTR_ERR_OR_ZERO(*hwmdev))
->>>>> +        return PTR_ERR_OR_ZERO(*hwmdev);
->>>>> +
->>>> Why not just return hwmdev ?
->>> because if hwmon is NULL it is still an error, i have to look again at what
->>> actually is returned by PTR_ERR_OR_ZERO on zero.
->> That seems a bit philosophical. The caller would have to check for
->> PTR_ERR_OR_ZERO() instead of checking for < 0.
->>
->> On a side note, the code now returns 0 if devm_hwmon_device_register_with_info()
->> returned NULL.  devm_hwmon_device_register_with_info() never returns NULL,
->> so that doesn't make a difference in practice, but, still, this should
->> at least use PTR_ERR().
-> ok
->>
->> Guenter
+-- 
+2.25.1
+
 
