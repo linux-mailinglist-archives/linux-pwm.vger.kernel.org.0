@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-4980-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4981-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAFA4A43EB1
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 13:04:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A095DA43ECA
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 13:08:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4AD2E3B0A5B
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 12:00:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95F35425613
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 12:02:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85D51267B1A;
-	Tue, 25 Feb 2025 12:00:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B521267B9C;
+	Tue, 25 Feb 2025 12:02:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCgI0O+A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXUECgvx"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5263A1FC7ED;
-	Tue, 25 Feb 2025 12:00:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED402264A99;
+	Tue, 25 Feb 2025 12:02:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740484818; cv=none; b=XOXXrdYI8Qm/Q4PS7ybSOf5utdiYdOe6/BA7iaVVaRzSbIVxMoLWEoU8v1B32By4yCHauBiRl3a8D3jEj5EohJrQ3A/e4usYQZqiPJU0soT/PGkGr5wsg09GBY2Tp1v1eqj3V+D+bnC+Rq504jgQf+gyh7cVzXQ6ev1dHV07fQc=
+	t=1740484929; cv=none; b=UX6rhGSHwArtuqLWF866T4Hg7qJQ7SEpY5MQujFXPjVb9wDDR5kx3IPF9PXAcWLFZFe5/6rXRCw2PJCt1Nll9NS1VqiDOZZ//6Ew45UGgTYHzMxnCUwQMZOO2wkd+RC4TYH1GTJsmPtA5w0Aqq31QqqhSw6/QEpUSZQuVnmA8oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740484818; c=relaxed/simple;
-	bh=zK/7OWHlisi7f+Mu3OhLXwcUr3ILVz4O5JpSU16Ic/w=;
+	s=arc-20240116; t=1740484929; c=relaxed/simple;
+	bh=yORW2iO3qKiXB1CP0vLEWVQzUX4QPYnSqxUO9k6Ec6I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tHeI1SjhunOf/xyqORIYXB8JSK4+59Y2ojd25NUixWzXdYwooWK3RMDn2b5dVKvwdI0DRMAxLlym2exCY3lD3PEux+ufiEevQuFm06Prwe/nMw+VtGpUywLt0oUkX1X8nHqq8H4aaVVYmBQpgEzlN9JAKOHsUA1R26xPPdyPb9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCgI0O+A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11974C4CEDD;
-	Tue, 25 Feb 2025 12:00:16 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=lZUybiDavztsdVP7gVT2pHZ+pKW3fqRRyIsuZG4A9p8L2hgAP83sksJTQwvzEaKTacl1IFosiQw+n7GzF57kEmw130PsC4GUchQ3hhXsfDGSGzDDcRBZCgLCEuUTxN0jGDePqR58Wu/irVwEfuamGQBc4M1Ft1gnA/eoXvENG9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXUECgvx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB7AEC4CEDD;
+	Tue, 25 Feb 2025 12:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740484817;
-	bh=zK/7OWHlisi7f+Mu3OhLXwcUr3ILVz4O5JpSU16Ic/w=;
+	s=k20201202; t=1740484928;
+	bh=yORW2iO3qKiXB1CP0vLEWVQzUX4QPYnSqxUO9k6Ec6I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oCgI0O+AW1ufry6XCxhLZnBkO/EIRWBB9+fpXUvOoB2Og05FcNmNF6XsmNZAITIJZ
-	 IthKvYlg4qNweF2PF4+CEB5YnBgjJS/x0WrBc09DkHfeuwtV8piSExb4CuzuAhqA6s
-	 BlqEbi3dTM4B/0g8F8qqM/UoXp9cjyDDJCyctexQV3P0AUlDQAo59UcJiR1LA92GUE
-	 isP9t1+26z50TFacj3QTYLD95vbEp3OrQbf6qiIIUvyM6tIb2rqWCJa5yRFZuSNQgg
-	 MYJpM8DrGg7spkhykh3AhAZXDbslZ3csNxTKimUk/GCojokiG9ifHBIm3B8FJ6YynK
-	 DnG0GCOY4d4gg==
-Date: Tue, 25 Feb 2025 13:00:14 +0100
+	b=cXUECgvxZ6dw2v3p6USt0hLALQJ/AnxoJFTYEWdQ26slxWBaxwNePPXCtZpAiY2qh
+	 P0t5gPSdiCs8UNzxjyApcIsaAAblvRZBCf3cJOJMUwbk+Eis69qwl4qesj2Rd4IOA2
+	 IDc8FIu4Fd4att6obvi5HD/pmKcFQotVywGSswv9uf1fOTXCdDieWjYjXhJDV4lcdH
+	 UgMSQyuLx8LtrM42QAAx8hoZeTKd2wCzXkR8Ns/+Q/GfCmLyE0wcnMCxDLrFN+bX2z
+	 8RQ4CBU7yru+Y1gXp7fKzLsvmGF5a40eDcHxbjU6gvhz5JfTnKql1lDqNkHFq+VR3h
+	 Tp9oIM1f6veuw==
+Date: Tue, 25 Feb 2025 13:02:05 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 Cc: lee@kernel.org, ukleinek@kernel.org, alexandre.torgue@foss.st.com, 
@@ -51,12 +51,11 @@ Cc: lee@kernel.org, ukleinek@kernel.org, alexandre.torgue@foss.st.com,
 	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
 	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, 
 	olivier.moysan@foss.st.com
-Subject: Re: [PATCH 7/8] arm64: defconfig: enable STM32 LP timers drivers
-Message-ID: <20250225-vague-tuscan-shark-ebec44@krzk-bin>
+Subject: Re: [PATCH 1/8] dt-bindings: mfd: stm32-lptimer: add support for
+ stm32mp25
+Message-ID: <20250225-outgoing-scorpion-of-music-be0bea@krzk-bin>
 References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
- <20250224180150.3689638-8-fabrice.gasnier@foss.st.com>
- <f76a3a6c-795e-4fc8-905f-4655115ea99d@kernel.org>
- <696ac9eb-f223-4993-b288-b6c3e07f4ed7@foss.st.com>
+ <20250224180150.3689638-2-fabrice.gasnier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -65,31 +64,32 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <696ac9eb-f223-4993-b288-b6c3e07f4ed7@foss.st.com>
+In-Reply-To: <20250224180150.3689638-2-fabrice.gasnier@foss.st.com>
 
-On Tue, Feb 25, 2025 at 09:43:58AM +0100, Fabrice Gasnier wrote:
-> On 2/25/25 08:48, Krzysztof Kozlowski wrote:
-> > On 24/02/2025 19:01, Fabrice Gasnier wrote:
-> >> Enable the STM32 timer drivers: MFD, counter, PWM and trigger as modules.
-> >> Clocksource is a bool, hence set to y. These drivers can be used on
-> >> STM32MP25.
-> > 
-> > 
-> > Which upstream board? If you do not have upstream board, the defconfig
-> > is pointless for us. It's not defconfig for your downstream forks.
-> 
-> Hi Krzysztof,
-> 
-> It's going to be used on stm32mp257f-dk and stm32mp257f-ev1 boards.
+On Mon, Feb 24, 2025 at 07:01:43PM +0100, Fabrice Gasnier wrote:
+>    pwm:
+>      type: object
+>      additionalProperties: false
+>  
+>      properties:
+>        compatible:
+> -        const: st,stm32-pwm-lp
+> +        enum:
+> +          - st,stm32-pwm-lp
+> +          - st,stm32mp25-pwm-lp
+>  
+>        "#pwm-cells":
+>          const: 3
+> @@ -69,7 +76,9 @@ properties:
+>  
+>      properties:
+>        compatible:
+> -        const: st,stm32-lptimer-counter
+> +        enum:
+> +          - st,stm32-lptimer-counter
+> +          - st,stm32mp25-lptimer-counter
 
-The defconfig commit should mention which upstream products use it.
-
-> I can add the relevant DT for the(se) board(s) in next revision.
-
-Does this mean there are no upstream users of this? Then this defconfig
-change is no-op. We do not add enable things in defconfig just because
-there is some downstream/fork using something. Defconfig is for our
-(upstream) boards.
+Driver changes suggest many of these are compatible. Why isn't this expressed?
 
 Best regards,
 Krzysztof
