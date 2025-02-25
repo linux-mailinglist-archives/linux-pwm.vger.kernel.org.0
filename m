@@ -1,140 +1,136 @@
-Return-Path: <linux-pwm+bounces-4988-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4989-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04E68A4460C
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 17:29:45 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08F74A44C28
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 21:14:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B318B8642FC
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 16:23:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DD6E37A64C6
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 20:12:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84025192D77;
-	Tue, 25 Feb 2025 16:23:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8632B213236;
+	Tue, 25 Feb 2025 20:12:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="VAucme6b"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qA/yQo2D"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F0C18DB2C;
-	Tue, 25 Feb 2025 16:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57299212D9D;
+	Tue, 25 Feb 2025 20:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740500620; cv=none; b=k7ykf04GdYHAUlIuLkQ6NXMhrV49m6dqjsCboRcl38vydwBbgaNJrjyR4tATVQDF31/R1xVpLvkcjADg7IwU6VmCFpvwxC9sPW7UkKP7fCX6KpPnRK2IhKGGaIeOMiuzDOyOjituTeEjtSpsQTP1tldCXQWbpVOIm34NeQc7ISY=
+	t=1740514357; cv=none; b=luRtl1d2A2rVsXM4UNANx2A/NIpCeA3nDmiCVff6By7PmgQRfxEMFHoSPCUBA5tFGI+iojNdCZVcYpe6axolz5VIPI47JvuX6PWkDPra0CNdDW1PA9VxWr2Evx+uQpMWDVZCulmoSQm5kwV8D+REsiDQy2LwnaQfrHw1tkRPLwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740500620; c=relaxed/simple;
-	bh=5araWQ0s2WBnyVth0FZ5AloNSO2WyifLLBTHMeBvnYw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SbcEtviJdCgzca2m+y7crtq3Zm05B+bM1SF3BoK4TwvX+OL+jahy81WDgeynzH2WRmijtz/Y9JbToN/+PWxNMgJWH7R86ADZbHYNpZK6iF/x5YMF7vkZDyyT2JAVrVoE6fby9PbM5tiS3F14mTv5TFltgnfgouroPfpJOb3jFw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=VAucme6b; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PF69IC022886;
-	Tue, 25 Feb 2025 17:23:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	PXz/daQoPl9vRa9N4mM+seFELokRLIOzCneeJp1maXM=; b=VAucme6bAbNWdggq
-	b0PvGfNYPnsbc2ydRLnri3S16Bo1Fx9tWERsEoZ49Fd+yVHacE22cDmcv8tUCtRd
-	AxXho4yG7VSaMv84JB5yspb3Pf+ErNOL7hMkA20VnqEwGtHf5Xq6Wz5oFM/UhO8Z
-	iCCNX27M6wR83ph58WaV54kbx5cFN4aIC7EG350RuuGX9ksPpAoRISe2R4CBbOlx
-	GJzs66XcVVsuvOn9pnlKrKms4FLsy3r7tIWhYh0UloJqermZbkGZ2ExwJyEH3jCy
-	jPOf5nOPUjlYZMEtKTFziwd/BDXkyMhbpfK8H7TI7U/BIzfbzK2HAHU4Imgz6j4F
-	NucuTg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4512sp4kbf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 17:23:27 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0290540074;
-	Tue, 25 Feb 2025 17:22:19 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EBEE141878C;
-	Tue, 25 Feb 2025 15:58:48 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
- (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Feb
- 2025 15:58:48 +0100
-Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
- (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Feb
- 2025 15:58:47 +0100
-Message-ID: <4ffc3fe3-78ab-43b2-b0d5-8f9cb545f9c5@foss.st.com>
-Date: Tue, 25 Feb 2025 15:58:47 +0100
+	s=arc-20240116; t=1740514357; c=relaxed/simple;
+	bh=yTCj5mHCtdBx8pk+52dg55Yg5D96C+PxN6w8CQznwjM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=gJBsdT2g3+zVzew3Tf39gsq/8dDy3epRsVz/eU6ZEczwi32Y8Xva2GKdM9QQxX6MrRkQ3x4/t3WdAGlVFlL6Rzh1Q7mWZO6jNB/g0gGSfqWvlVqqWIDeMwqV11N5t4sN0srdaH6qWbm6K/+knuhEQKfqb/QX8WJi9udhrvdmWYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qA/yQo2D; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 941DFC4CEDD;
+	Tue, 25 Feb 2025 20:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740514356;
+	bh=yTCj5mHCtdBx8pk+52dg55Yg5D96C+PxN6w8CQznwjM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=qA/yQo2Dj7sATmTqu+FxRMZ65j9/jCkahdI62i/V40ioGuSi2VPnHu+ozuj0hCykM
+	 7SwJsjXxnFwy5gAEVVto5RF/S13qmg4gmUdYBgf6i+zc8r0IROTfT+VESyZEPDRs4H
+	 UxNacRkez6vE1G0S562m0LjxY9fD5f/Qub7y8BpjbWIkVKPsdJlRHbcAXQfPCJ4xLH
+	 DQyQUfZ+U1hwVn5ZH6fcdjIQJJ7uOc1hu6AAK1njsVkcmXuyu5F1ItA39HdEWxd/qN
+	 7p1JfHl5t6QAegMK+0wFDo2wggGt9kTyPga4LZqk3/r281/fkY6jUdkoUe6vqE6OGZ
+	 cdwFm+tgF71yQ==
+Date: Tue, 25 Feb 2025 14:12:34 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] counter: stm32-lptimer-cnt: add support for stm32mp25
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <wbg@kernel.org>, <jic23@kernel.org>, <daniel.lezcano@linaro.org>,
-        <tglx@linutronix.de>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <olivier.moysan@foss.st.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: will@kernel.org, jic23@kernel.org, lee@kernel.org, ukleinek@kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ tglx@linutronix.de, catalin.marinas@arm.com, daniel.lezcano@linaro.org, 
+ linux-iio@vger.kernel.org, wbg@kernel.org, devicetree@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, conor+dt@kernel.org, 
+ alexandre.torgue@foss.st.com, krzk+dt@kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, olivier.moysan@foss.st.com
+To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+In-Reply-To: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
 References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
- <20250224180150.3689638-7-fabrice.gasnier@foss.st.com>
- <20250225-pelican-of-pleasurable-might-e9a7e8@krzk-bin>
-Content-Language: en-US
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-In-Reply-To: <20250225-pelican-of-pleasurable-might-e9a7e8@krzk-bin>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_05,2025-02-25_03,2024-11-22_01
+Message-Id: <174051415125.2971414.5163158019956863310.robh@kernel.org>
+Subject: Re: [PATCH 0/8] Add STM32MP25 LPTIM support: MFD, PWM, IIO,
+ counter, clocksource
 
-On 2/25/25 13:02, Krzysztof Kozlowski wrote:
-> On Mon, Feb 24, 2025 at 07:01:48PM +0100, Fabrice Gasnier wrote:
->> Add support for STM32MP25 SoC. Use newly introduced compatible to handle
->> this new HW variant, even if no major change is expected on the counter
->> driver.
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
->> ---
->>  drivers/counter/stm32-lptimer-cnt.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/counter/stm32-lptimer-cnt.c b/drivers/counter/stm32-lptimer-cnt.c
->> index b249c8647639..a5dce017c37b 100644
->> --- a/drivers/counter/stm32-lptimer-cnt.c
->> +++ b/drivers/counter/stm32-lptimer-cnt.c
->> @@ -508,6 +508,7 @@ static SIMPLE_DEV_PM_OPS(stm32_lptim_cnt_pm_ops, stm32_lptim_cnt_suspend,
->>  
->>  static const struct of_device_id stm32_lptim_cnt_of_match[] = {
->>  	{ .compatible = "st,stm32-lptimer-counter", },
->> +	{ .compatible = "st,stm32mp25-lptimer-counter", },
+
+On Mon, 24 Feb 2025 19:01:42 +0100, Fabrice Gasnier wrote:
+> This series adds support for STM32MP25 to MFD PWM, IIO, counter and
+> clocksource low-power timer (LPTIM) drivers.
+> This new variant is managed by using a new DT compatible string.
+> It comes with a slightly updated register set, some new features and new
+> interconnect signals inside the SoC.
+> Same feature list as on STM32MP1x is supported currently.
+> The device tree files add all instances in stm32mp251 dtsi file.
 > 
-> So fully compatible? Why this change then?
-
-Hi Krzysztof,
-
-I should have mentioned it in the commit message:
-
-Currently, same feature list as on STM32MP1x is supported.
-New capture input stage is now available in the hardware. It's not added
-yet to the driver.
-
-The Low Power Timer (LPTIM) hardware isn't fully backward compatible,
-hence add a new compatible to properly support it.
-
-Best regards,
-Fabrice
-
+> Fabrice Gasnier (6):
+>   dt-bindings: mfd: stm32-lptimer: add support for stm32mp25
+>   mfd: stm32-lptimer: add support for stm32mp25
+>   pwm: stm32-lp: add support for stm32mp25
+>   counter: stm32-lptimer-cnt: add support for stm32mp25
+>   arm64: defconfig: enable STM32 LP timers drivers
+>   arm64: dts: st: add low-power timer nodes on stm32mp251
 > 
-> Best regards,
-> Krzysztof
+> Olivier Moysan (1):
+>   iio: trigger: stm32-lptimer: add support for stm32mp25
 > 
+> Patrick Delaunay (1):
+>   clocksource: stm32-lptimer: add stm32mp25 support
+> 
+>  .../bindings/mfd/st,stm32-lptimer.yaml        |  23 +-
+>  arch/arm64/boot/dts/st/stm32mp251.dtsi        | 177 ++++++++++++++
+>  arch/arm64/configs/defconfig                  |   5 +
+>  drivers/clocksource/timer-stm32-lp.c          |   1 +
+>  drivers/counter/stm32-lptimer-cnt.c           |   1 +
+>  drivers/iio/trigger/stm32-lptimer-trigger.c   | 109 +++++++--
+>  drivers/mfd/stm32-lptimer.c                   |  30 ++-
+>  drivers/pwm/pwm-stm32-lp.c                    | 220 +++++++++++++++---
+>  include/linux/iio/timer/stm32-lptim-trigger.h |   9 +
+>  include/linux/mfd/stm32-lptimer.h             |  32 ++-
+>  10 files changed, 554 insertions(+), 53 deletions(-)
+> 
+> --
+> 2.25.1
+> 
+> 
+> 
+
+
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/st/' for 20250224180150.3689638-1-fabrice.gasnier@foss.st.com:
+
+arch/arm64/boot/dts/st/stm32mp257f-ev1.dtb: timer@46060000: trigger@3:reg:0:0: 3 is greater than the maximum of 2
+	from schema $id: http://devicetree.org/schemas/mfd/st,stm32-lptimer.yaml#
+arch/arm64/boot/dts/st/stm32mp257f-ev1.dtb: timer@46070000: trigger@4:reg:0:0: 4 is greater than the maximum of 2
+	from schema $id: http://devicetree.org/schemas/mfd/st,stm32-lptimer.yaml#
+
+
+
+
+
 
