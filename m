@@ -1,147 +1,126 @@
-Return-Path: <linux-pwm+bounces-4977-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4978-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 206EBA431D7
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 01:26:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15A0FA4366A
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 08:49:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11457176946
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 00:26:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11BC1178436
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 07:49:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 240131862;
-	Tue, 25 Feb 2025 00:26:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5444125A320;
+	Tue, 25 Feb 2025 07:48:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QTFkfUfg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9gyG2n+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308295672
-	for <linux-pwm@vger.kernel.org>; Tue, 25 Feb 2025 00:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207421DB15B;
+	Tue, 25 Feb 2025 07:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740443204; cv=none; b=PYDxz1PMHS1V/w7fW9oP0bdY10QuwPA2Y/JltiOvse3lz3h2q8xHG4DQQHeGeZ3/CufC6WX9bKe4MVxDBzmn0AXTd6XQPUx92tIEm9q36ZywXv9340zf9Uwnx6FxErPHWnnT332jpeuNL8QorDLL/5ELgeRbvGnytIlV8zLu0DQ=
+	t=1740469736; cv=none; b=tM1EagzkLeP1MPT1O8N3V4kj9CvORh7//COJQSChjlyejM6O0B+vhKps0MbNOPEIBsYwdO0UJWlL0GKlJojL6ail5JoPUCcpppqVMA5FKELOxq3IrTrBiJV0OeXGpiTgoayM63bREjz2h/Ee/IstefmnFGhT83RRq29Ch4v7Xwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740443204; c=relaxed/simple;
-	bh=mMBnj8wAn9tmIcP4sfb5TDnm+di1BZsgRnF82TUYO14=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nDDEBypmXsQCJu2StqNtdt7/gtL0KNP0IMXrawB1yztLXvvYFZFUHU1nV9q6E6bjnS55eQUqnzgS5TYE3iS3T96ut+NESuYs5XUKpRCZ5Q8+IOqcz0AjqZWNIb76iuK4YmbZI0lW1OijyQTiIYxAixuLcydy1f9MuoPvsTuD66Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QTFkfUfg; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5462a2b9dedso6007884e87.1
-        for <linux-pwm@vger.kernel.org>; Mon, 24 Feb 2025 16:26:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740443198; x=1741047998; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MonBVftq71LB80zSOFj1KpiAwzenwGE0PbED6OoLK8c=;
-        b=QTFkfUfgCu8ZIn9tvKRwtWRf4Ck7/8SIA3u822V9j2U91SQUooD2Gw4Exxc/87UpgP
-         tUzPh0u7pY2aLXPHcIHWU4+ytbKIxoKIUng+YkrMEeu7g40eZKiyEx4kJLf5mxadgCDz
-         pATdhnoB+lSPwp+KGIwViNhoxmQp+g7d3wfqw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740443198; x=1741047998;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MonBVftq71LB80zSOFj1KpiAwzenwGE0PbED6OoLK8c=;
-        b=arcRpK1toqIIAv/5Yj1ppz32bTOwIvkAYR2G6cu8Alt+hRYUj+Hmon/B+EWzRgLQ4O
-         LleMvG/eYp+/ZrzM4J0u5HKP8JNNAfh0K/1GDN1aPgrYsUjvMf4G89U5xsOYalAjtd15
-         P6RpWCpDxwI/Ucxp1+xDkFugUrFDP7U2VNE51KDWgU0GMvFkHY+lc9wSwACf4pomb8o/
-         3hYZqZ5XZLqivQf5chkVKzDPyabJ9GtMb9jOb3uvLVc/f0A77ua1dWJfKIEmiiCROoXF
-         tc/Y13TbZFcCErw0eAcups2eYbjypEFt+CB9oNdCyjFgKT7AMUzdHQPNFg5UAPZ0AB/3
-         IZlw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCqlUoikRI7fUbQVmFcQZ0rkIoqzpgf0Us5RM9qxYMnazYE6Zl1ooAnaIohTOolDpZXedtwj7utVk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBMR1a/tkz+tJZggMCF74Cj+kgUzmSbnuJ8UPYJKRsa4yYjNcX
-	yWNY4dDFW1OCLJ7aj5OpCNd3lJkUYbTNRtIVrUgPRsR9G4tw1C17fJzVBISmZCMLv9tdxmLhc3A
-	rCg==
-X-Gm-Gg: ASbGncs8De0aCVr3lL0YQGmGltn63uwfpycNlSQMUm/AWI1MiZ4SYMsgTqwo+d6xy8K
-	kPFF7toTH4D7feUyGabYH+VSYc+JAm7arNok6koiDYn/6XKZDS8WvviZ/h1KFj/vjMiTWalYrDB
-	rqa05aVJ1Ltqh/mouDL7e9+8qRLJ+aRH6Bvgckhe43pp1yiFQrvqhHqxnPH3I78Pg68ArWbDxRq
-	8928RC3GZZvndKKj+hMQ0FYVkPfPop6QybQwUJyaQDiN1pfIRnqzH+Nq657LVpsDXW/g7WUNF1F
-	kFLSY67R9II0SLkK2VOyfGXkw1lnED5NG/5MDv1N0zxKI/79WK+cnk/4uvjw+mYbFqH9nw==
-X-Google-Smtp-Source: AGHT+IEfT/cZfKBtvaww3Se+aUlZIADiyvxkpxX9PqeVcuKPzRE1pFiFBq/+5zN2ya6/HEBRX32QKg==
-X-Received: by 2002:a05:6512:12ce:b0:545:109b:a9d4 with SMTP id 2adb3069b0e04-548392713a4mr6839287e87.43.1740443197896;
-        Mon, 24 Feb 2025 16:26:37 -0800 (PST)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514f4d88sm36752e87.192.2025.02.24.16.26.36
-        for <linux-pwm@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 16:26:36 -0800 (PST)
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-3061513d353so52677331fa.2
-        for <linux-pwm@vger.kernel.org>; Mon, 24 Feb 2025 16:26:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXasLcfvj8hOhowvSRG38p64vs5KAKiZV7MF0MemjIW4AXKyOTlRHthCn8YSanm5X/YITSfyfBRUVU=@vger.kernel.org
-X-Received: by 2002:a05:6512:2214:b0:545:23bb:23f4 with SMTP id
- 2adb3069b0e04-54839129a5amr5535877e87.8.1740443196300; Mon, 24 Feb 2025
- 16:26:36 -0800 (PST)
+	s=arc-20240116; t=1740469736; c=relaxed/simple;
+	bh=/ncftbb9PfkRY5I1SEo5KWByGpqMh87THSvXX1b1/Ms=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U/4yFpb/Xta9ou1NNik8sHIiRkVJdTz+b4KeRlx03pSGx/jpN5FAOgGPawpyW5yRb8pWfrNXP0Jwx6EmQfWq8KD2ceofVxXiboG51MPU3Y1/+qbB2uB424e5Gp+Sr8WqpEIfwrM926bcXa/p+u7uc2a/j/n2hadTjqXTBlpyrtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9gyG2n+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67958C4CEDD;
+	Tue, 25 Feb 2025 07:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740469735;
+	bh=/ncftbb9PfkRY5I1SEo5KWByGpqMh87THSvXX1b1/Ms=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=R9gyG2n+2ROXnP/X14vbm0q8n+lZHTumKXJ+xYnR3rnd6Kki+WFokVrVDe/VHevZz
+	 524z+obxKDc9qExkVKSXDHccqC6g6NT7TIaJ1dtxwswccxcoRtdqXSwc3WQArKBjrv
+	 vmGvBgOhNjnQsLziIrMi1gtmnKy/rNC1HrnD7HDhy8YMYoEOevt4wGpmZJD0Yae5N+
+	 HREYavAgE4QRHSFMsONHOHl0JCWzx7Iq+25ur3DrmFw5lVb8K+dh6NXYQkMNgEjjMk
+	 e9gN2yAD5xAGNxwhKj4TFhq22nJNoVq5MPx+8Rjk/DzBI3WhXkMXXsCD6+vxoOUwDJ
+	 0sjMYMZgATXsw==
+Message-ID: <f76a3a6c-795e-4fc8-905f-4655115ea99d@kernel.org>
+Date: Tue, 25 Feb 2025 08:48:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217174936.758420-2-u.kleine-koenig@baylibre.com>
-In-Reply-To: <20250217174936.758420-2-u.kleine-koenig@baylibre.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 24 Feb 2025 16:26:24 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XhS6kaYm2FbdOcqeFTHJN=H5B3QBa2yHc-tk-E=2TJ6A@mail.gmail.com>
-X-Gm-Features: AWEUYZl2Mhiqo6raYNMP-1ZeB3LqAFThBdttHbacGYJMZcSHZ-EkeSwClwp4YDk
-Message-ID: <CAD=FV=XhS6kaYm2FbdOcqeFTHJN=H5B3QBa2yHc-tk-E=2TJ6A@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: Check for CONFIG_PWM using IS_REACHABLE()
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/8] arm64: defconfig: enable STM32 LP timers drivers
+To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, lee@kernel.org,
+ ukleinek@kernel.org, alexandre.torgue@foss.st.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, wbg@kernel.org, jic23@kernel.org,
+ daniel.lezcano@linaro.org, tglx@linutronix.de
+Cc: catalin.marinas@arm.com, will@kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
+ olivier.moysan@foss.st.com
+References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
+ <20250224180150.3689638-8-fabrice.gasnier@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250224180150.3689638-8-fabrice.gasnier@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 24/02/2025 19:01, Fabrice Gasnier wrote:
+> Enable the STM32 timer drivers: MFD, counter, PWM and trigger as modules.
+> Clocksource is a bool, hence set to y. These drivers can be used on
+> STM32MP25.
 
-On Mon, Feb 17, 2025 at 9:49=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@baylibre.com> wrote:
->
-> Currently CONFIG_PWM is a bool but I intend to change it to tristate. If
-> CONFIG_PWM=3Dm in the configuration, the cpp symbol CONFIG_PWM isn't
-> defined and so the PWM code paths in the ti-sn65dsi86 driver are not
-> used.
->
-> The correct way to check for CONFIG_PWM is using IS_REACHABLE which does
-> the right thing for all cases
-> CONFIG_DRM_TI_SN65DSI86 =E2=88=88 { y, m } x CONFIG_PWM =E2=88=88 { y, m,=
- n }.
->
-> There is no change until CONFIG_PWM actually becomes tristate.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
-> ---
-> Hello,
->
-> even without the change to make CONFIG_PWM tristate using IS_REACHABLE()
-> is the more idiomatic way to check for CONFIG_PWM.
->
-> Note that IS_ENABLED() is wrong in the case CONFIG_DRM_TI_SN65DSI86=3Dy +
-> CONFIG_PWM=3Dm.
->
-> Best regards
-> Uwe
->
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Which upstream board? If you do not have upstream board, the defconfig
+is pointless for us. It's not defconfig for your downstream forks.
 
-This has already been on the lists for a while and nothing here is
-controversial, so pushed to drm-misc-next:
 
-[1/1] drm/bridge: ti-sn65dsi86: Check for CONFIG_PWM using IS_REACHABLE()
-      commit: ed531feda7852de0aa702fbe3d23a0f743ccc77b
-
--Doug
+Best regards,
+Krzysztof
 
