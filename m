@@ -1,48 +1,69 @@
-Return-Path: <linux-pwm+bounces-4978-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4979-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15A0FA4366A
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 08:49:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5C0EA43807
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 09:47:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11BC1178436
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 07:49:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66DC3189A37D
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Feb 2025 08:48:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5444125A320;
-	Tue, 25 Feb 2025 07:48:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2451F25D537;
+	Tue, 25 Feb 2025 08:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9gyG2n+"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="CodEsv4e"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207421DB15B;
-	Tue, 25 Feb 2025 07:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4454813A88A;
+	Tue, 25 Feb 2025 08:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740469736; cv=none; b=tM1EagzkLeP1MPT1O8N3V4kj9CvORh7//COJQSChjlyejM6O0B+vhKps0MbNOPEIBsYwdO0UJWlL0GKlJojL6ail5JoPUCcpppqVMA5FKELOxq3IrTrBiJV0OeXGpiTgoayM63bREjz2h/Ee/IstefmnFGhT83RRq29Ch4v7Xwc=
+	t=1740473265; cv=none; b=NBuvON05QEdyxFKKcBqYP58e3rRNFmLCXspRokXI9ilstWT2np+9fzF9bWEY1lFVdEl51uF6NF5kFlmlrq+ews0y8xOQMIghKt6r9yKaZgL65PyMYhwzzd4ts4/14YVtSwNq6mhWd61iBpxr4Z0z1m0t06Nkc76nYeJmRX5sC2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740469736; c=relaxed/simple;
-	bh=/ncftbb9PfkRY5I1SEo5KWByGpqMh87THSvXX1b1/Ms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U/4yFpb/Xta9ou1NNik8sHIiRkVJdTz+b4KeRlx03pSGx/jpN5FAOgGPawpyW5yRb8pWfrNXP0Jwx6EmQfWq8KD2ceofVxXiboG51MPU3Y1/+qbB2uB424e5Gp+Sr8WqpEIfwrM926bcXa/p+u7uc2a/j/n2hadTjqXTBlpyrtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9gyG2n+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67958C4CEDD;
-	Tue, 25 Feb 2025 07:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740469735;
-	bh=/ncftbb9PfkRY5I1SEo5KWByGpqMh87THSvXX1b1/Ms=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=R9gyG2n+2ROXnP/X14vbm0q8n+lZHTumKXJ+xYnR3rnd6Kki+WFokVrVDe/VHevZz
-	 524z+obxKDc9qExkVKSXDHccqC6g6NT7TIaJ1dtxwswccxcoRtdqXSwc3WQArKBjrv
-	 vmGvBgOhNjnQsLziIrMi1gtmnKy/rNC1HrnD7HDhy8YMYoEOevt4wGpmZJD0Yae5N+
-	 HREYavAgE4QRHSFMsONHOHl0JCWzx7Iq+25ur3DrmFw5lVb8K+dh6NXYQkMNgEjjMk
-	 e9gN2yAD5xAGNxwhKj4TFhq22nJNoVq5MPx+8Rjk/DzBI3WhXkMXXsCD6+vxoOUwDJ
-	 0sjMYMZgATXsw==
-Message-ID: <f76a3a6c-795e-4fc8-905f-4655115ea99d@kernel.org>
-Date: Tue, 25 Feb 2025 08:48:48 +0100
+	s=arc-20240116; t=1740473265; c=relaxed/simple;
+	bh=IvrsNh1PoziXp5gsBXRLYUYz8EOp7rsmJMbgVpDub9I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cjOOe4bI4Bro4X9e91ahGp+WuHRQP5CG8iJ2mohMFRfmrdZMVj+UtypXgJNGlDkkbjrjpu2uYXazBanC8kcyfLGTML2YcVHq3Sm8nxTnBuOfZ3rdLm4kZVYhxTKOCaUXvmdQw66h1Z1SWeG+Y1Adjy03qRyTzyHWKv0ExM852p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=CodEsv4e; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P7LgQ0003966;
+	Tue, 25 Feb 2025 09:47:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	yHiS+n00ibzlP5REtMR+ddXLiK9OUJ+uzaby4EVh4iM=; b=CodEsv4eyIfFhzYg
+	ppgKu4xEWudziYqyzc6o4+V04zZ9hb2GoY5E3k8+YGSgW1XJh4FYciD1d8ZTfiB1
+	HWrAGQMacZjm+JsMIxqVuGatBAr2dcKZh+XQD16NZ3RPJRG6Qin5KHOOZaqZc1y7
+	cd0zu6WUaGwEWMk+odatGnvR8FpWKwz6Oj2/vqJeDGwNBnkVGW9MKjSIFwqfzxt/
+	Uo9uXsTDYMxnokHSXiSJiJC2NAaTWEejQ80wuuH9aNdb+RA+1+BXe7qyATYn9TnU
+	Wa/4Eyy8BsE0EaqNfsPMErBymX6znxmfg1a7MonpedGO+L73X9L0y5RHG5cQLVo3
+	Z6P34A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4512sphr2p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 09:47:26 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 380F040044;
+	Tue, 25 Feb 2025 09:46:16 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8B9C9430105;
+	Tue, 25 Feb 2025 09:44:00 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
+ (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Feb
+ 2025 09:44:00 +0100
+Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
+ (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Feb
+ 2025 09:43:59 +0100
+Message-ID: <696ac9eb-f223-4993-b288-b6c3e07f4ed7@foss.st.com>
+Date: Tue, 25 Feb 2025 09:43:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -51,76 +72,50 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 7/8] arm64: defconfig: enable STM32 LP timers drivers
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, lee@kernel.org,
- ukleinek@kernel.org, alexandre.torgue@foss.st.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, wbg@kernel.org, jic23@kernel.org,
- daniel.lezcano@linaro.org, tglx@linutronix.de
-Cc: catalin.marinas@arm.com, will@kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
- olivier.moysan@foss.st.com
+To: Krzysztof Kozlowski <krzk@kernel.org>, <lee@kernel.org>,
+        <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <wbg@kernel.org>, <jic23@kernel.org>, <daniel.lezcano@linaro.org>,
+        <tglx@linutronix.de>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>
 References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
  <20250224180150.3689638-8-fabrice.gasnier@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <f76a3a6c-795e-4fc8-905f-4655115ea99d@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250224180150.3689638-8-fabrice.gasnier@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+In-Reply-To: <f76a3a6c-795e-4fc8-905f-4655115ea99d@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_03,2025-02-24_02,2024-11-22_01
 
-On 24/02/2025 19:01, Fabrice Gasnier wrote:
-> Enable the STM32 timer drivers: MFD, counter, PWM and trigger as modules.
-> Clocksource is a bool, hence set to y. These drivers can be used on
-> STM32MP25.
+On 2/25/25 08:48, Krzysztof Kozlowski wrote:
+> On 24/02/2025 19:01, Fabrice Gasnier wrote:
+>> Enable the STM32 timer drivers: MFD, counter, PWM and trigger as modules.
+>> Clocksource is a bool, hence set to y. These drivers can be used on
+>> STM32MP25.
+> 
+> 
+> Which upstream board? If you do not have upstream board, the defconfig
+> is pointless for us. It's not defconfig for your downstream forks.
 
+Hi Krzysztof,
 
-Which upstream board? If you do not have upstream board, the defconfig
-is pointless for us. It's not defconfig for your downstream forks.
-
+It's going to be used on stm32mp257f-dk and stm32mp257f-ev1 boards.
+I can add the relevant DT for the(se) board(s) in next revision.
 
 Best regards,
-Krzysztof
+Fabrice
+
+> 
+> 
+> Best regards,
+> Krzysztof
 
