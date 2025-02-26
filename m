@@ -1,71 +1,71 @@
-Return-Path: <linux-pwm+bounces-5007-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5006-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A7B8A46CAC
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Feb 2025 21:45:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19542A46CA6
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Feb 2025 21:44:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 312637A324C
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Feb 2025 20:44:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1DE8316E1D9
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Feb 2025 20:44:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3832238142;
-	Wed, 26 Feb 2025 20:44:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A8D5238146;
+	Wed, 26 Feb 2025 20:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6jTbVLko"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="T5jWUNLP"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFB42248B4;
-	Wed, 26 Feb 2025 20:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BECB2248B4;
+	Wed, 26 Feb 2025 20:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740602697; cv=none; b=F/K33yNc2/Yrryghf+TamcDAZt4pJcXiiAOJq34ANXRZOAqdFLjd4OA2EajMEcmCrzRpgizYy9vkmUHtYMmG5vFJeU8TVd/IEoHwtJRo9vamKtlP9D5wj1HtDQ0bHiyct96NMoxOV2XlGucz1jejXSshA+5YkpZHf1Oe1Lco828=
+	t=1740602654; cv=none; b=MmveOZ0RuDgArrUGisNJBKDU5aOsO9DlpzpHduY+vFx54q9qobAfl5itEtf4LJQwn2haJexu5uT9oxePCH2I+IyxQ9lC8m29vxf1lg31IMEADkw/dM8pGj5jImMFxlG1YYMRn8BPCZeuslapD/Bmg9Tl3Rnd/dTLbPUwAsIqOyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740602697; c=relaxed/simple;
-	bh=4Bd/ysuMv3oiTg+/PUT+0ertYPOrzIu4H0CiC2mZ1MI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=CaTh+HkBF1xr64UKZEkwPJJqcVqpmAeY9SViJQOra6+cxJMflQR2Kd+bMgazLYZMbeBHvXXbV3BhfvWxfAdqjWn1zvG+S/90cAi4PrrUmn7KFKNhOHV9Fof8dV8eWiu7xZXcNBV67wNCwgpJj+n602NAztlO21jmulbXiiWCAxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=6jTbVLko; arc=none smtp.client-ip=91.207.212.93
+	s=arc-20240116; t=1740602654; c=relaxed/simple;
+	bh=oBZ0KKT3UUusD2Td66n5qHAldXEO/TqJIfPFxFe0Ltw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=IsH1Fxy8hpVtBK150j8tMBjefw2GtpbAGLfYZxTPKwuagzwogZd44SgFTe48SBco9RugZBd14pFJvshd6Em9SjnXEc33xJC3NAmGpmlomWwzaT7uFG9wTRlHsYRZmdHGY1t/3o5sddoPSBKaqEWIW6CIsUqpYbBErOQ/5krpVIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=T5jWUNLP; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QG2v7O015427;
-	Wed, 26 Feb 2025 21:43:40 +0100
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QJm0Bh012384;
+	Wed, 26 Feb 2025 21:43:59 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	soQ5BkZDufwYMdgMJdG7Zd6+UrF3nw3Qs6ixs6vY/CM=; b=6jTbVLkocKgNzD6j
-	Y/2AYcivvlHsnAgchC1i19FlTLWjy2/Dl/Dyx+v5WaESHovbd3tpxosNSRjjv6FC
-	zbcDphxZ+h0rc5bJoAAXPFgjoA9PpK7823zFRc/4/jKZ9nknFWX8rEYmmdHexX/7
-	bmUN9BmFoVtFIpAAPMKmY0q+CVneVa7zsksQfphYbUf/KppXC0YQ2hx/My1Buby6
-	HPsOOmfkMvhpAPGEBhyju4qcL1aPWoROj07o6guNinEP2MPtp8dB+8MbWuZTMXWQ
-	KDVrdwQ4+xgiyWoNCccx7fxkUXKKMe7HeCev2w/MBb2eNy3JeGzOHxBJuuO+COPN
-	sppSaw==
+	dV2n3+CLnbeCuZtQ8iB/PugFIDY5N/D9dFFtC0TMj4s=; b=T5jWUNLPIgzUEWCO
+	YsFZP+CS4VMpbQ/xEFui0SEFnCAKNbGI5QmWXBBkQ+ZyxKd+J4h0xxNIV7Gl1o7T
+	fcDnzMkrWCJlwfxc4lmtKKgMS5GF3MNzYxMsR5pY4rXev0anmqlz1fv9iTLMt7Vx
+	TDjypI7+ml3QH9ddILkqT1ZrzZBI8Li0fvYWNy4ElqHvfrXPFWO9U2luOHnK8aTG
+	iOqp2P5EQQburyIRHp3sEfmpsK1S7Ys57FN4nyJLkOqrGGEwc3kpyy1d6u7vj+X0
+	gAOZRUq8HMaqAIPQZhUogRgcbBqmOr0ziPiycE2AInccwaZWouaGfqPVw8ZRwS6q
+	r/QS6A==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451psuekdg-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451psv6unw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 21:43:39 +0100 (CET)
+	Wed, 26 Feb 2025 21:43:59 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 04D6E4008B;
-	Wed, 26 Feb 2025 21:42:20 +0100 (CET)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8444C4004F;
+	Wed, 26 Feb 2025 21:42:40 +0100 (CET)
 Received: by euls16034.sgp.st.com (STMicroelectronics, from userid 89)
-	id 744C145206A; Wed, 26 Feb 2025 19:14:03 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E4EC05332BB;
-	Wed, 26 Feb 2025 19:14:03 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
- (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
+	id 61EB44EECF2; Wed, 26 Feb 2025 19:14:28 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2078A41E191;
+	Wed, 26 Feb 2025 19:14:28 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
+ (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 19:14:03 +0100
+ 2025 19:14:27 +0100
 Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
  (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 19:14:02 +0100
-Message-ID: <157348a3-9b22-4196-b4b1-ee8fcc46a84d@foss.st.com>
-Date: Wed, 26 Feb 2025 19:14:02 +0100
+ 2025 19:14:27 +0100
+Message-ID: <c38324ea-0cf2-49f0-8d3c-2cd0ffd958b2@foss.st.com>
+Date: Wed, 26 Feb 2025 19:14:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -73,8 +73,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/8] clocksource: stm32-lptimer: add stm32mp25 support
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Subject: Re: [PATCH 5/8] pwm: stm32-lp: add support for stm32mp25
 To: Krzysztof Kozlowski <krzk@kernel.org>
 CC: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
         <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
@@ -86,77 +85,67 @@ CC: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
         <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
         <olivier.moysan@foss.st.com>
 References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
- <20250224180150.3689638-5-fabrice.gasnier@foss.st.com>
- <20250225-purring-herring-of-reputation-1aed2f@krzk-bin>
- <2df7bdd9-5072-4a9a-b142-1e1e3f20130c@foss.st.com>
+ <20250224180150.3689638-6-fabrice.gasnier@foss.st.com>
+ <20250225-psychedelic-iguana-of-education-d5fff7@krzk-bin>
+ <e309c016-4dcb-49e3-945e-54ddadfbddb8@foss.st.com>
+ <e15754dd-5f4e-424d-a3a9-308dae814708@kernel.org>
 Content-Language: en-US
-In-Reply-To: <2df7bdd9-5072-4a9a-b142-1e1e3f20130c@foss.st.com>
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+In-Reply-To: <e15754dd-5f4e-424d-a3a9-308dae814708@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
  (10.75.90.17)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-26_06,2025-02-26_01,2024-11-22_01
 
-On 2/25/25 15:57, Fabrice Gasnier wrote:
-> On 2/25/25 13:02, Krzysztof Kozlowski wrote:
->> On Mon, Feb 24, 2025 at 07:01:46PM +0100, Fabrice Gasnier wrote:
->>> From: Patrick Delaunay <patrick.delaunay@foss.st.com>
->>>
->>> Add the support of the new compatible for STM32MP25 SoC in driver, as
->>> described in Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
->>> and used in arch/arm64/boot/dts/st/stm32mp251.dtsi.
->>>
->>> Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
->>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
->>> ---
->>>  drivers/clocksource/timer-stm32-lp.c | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/clocksource/timer-stm32-lp.c b/drivers/clocksource/timer-stm32-lp.c
->>> index a4c95161cb22..db055348e2cc 100644
->>> --- a/drivers/clocksource/timer-stm32-lp.c
->>> +++ b/drivers/clocksource/timer-stm32-lp.c
->>> @@ -197,6 +197,7 @@ static int stm32_clkevent_lp_probe(struct platform_device *pdev)
->>>  
->>>  static const struct of_device_id stm32_clkevent_lp_of_match[] = {
->>>  	{ .compatible = "st,stm32-lptimer-timer", },
->>> +	{ .compatible = "st,stm32mp25-lptimer-timer", },
->>>  	{},
+On 2/26/25 08:54, Krzysztof Kozlowski wrote:
+> On 25/02/2025 15:58, Fabrice Gasnier wrote:
 >>
->> Same question.
+>>
+>> On 2/25/25 13:04, Krzysztof Kozlowski wrote:
+>>> On Mon, Feb 24, 2025 at 07:01:47PM +0100, Fabrice Gasnier wrote:
+>>>>  	}
+>>>>  
+>>>>  	return pinctrl_pm_select_sleep_state(dev);
+>>>> @@ -246,6 +413,7 @@ static DEFINE_SIMPLE_DEV_PM_OPS(stm32_pwm_lp_pm_ops, stm32_pwm_lp_suspend,
+>>>>  
+>>>>  static const struct of_device_id stm32_pwm_lp_of_match[] = {
+>>>>  	{ .compatible = "st,stm32-pwm-lp", },
+>>>> +	{ .compatible = "st,stm32mp25-pwm-lp", },
+>>>
+>>> No driver data suggests device is backwards compatible. Commit msg
+>>> suggests not, so that's confusing.
+>>
+>>
+>> The LPTimer PWM driver takes benefit of the MFD parent driver to feed in
+>> data, e.g. 'num_cc_chans'. Number of channels is now variable, on
 > 
-> Oops, I just figured out I have missed a change to this driver, to
-> enable interrupts, in order to comply with the LPTimer spec, starting
-> with STM32MP25.
+> This means this ID table is useless. You do the matching via parent
+> device, so stop growing the table and call it deprecated or something.
 > 
-> E.g. with earlier STM32MP13, STM32MP15 or even STM32H7:
-> * The LPTIM_IER register must only be modified when the LPTIM is
-> disabled (ENABLE bit reset to ‘0’)
+>> STM32MP25 (e.g. not a single channel). But it can't be hard-coded as
+>> compatible data. (there's only 1 channel on earlier LP Timer hardware
+>> revision).
+>>
+>> The hardware controller is a bit different, hence the new compatible
 > 
-> On STM32MP25:
-> * The LPTIMx_DIER register must only be modified when the LPTIM is
-> enabled (ENABLE bit set to 1)
-> 
-> I'll add this as compatible data in next revision.
+> If it works with old compatible, it's an easy proof that it is
+> compatible, so please counter argument that with something specific.
 
-This is specific behavior, to the new revision of the LPTimer hardware.
-It can be read from revision/identification registers. So this new
-compatible can be dropped.
-
-I'll remove "st,stm32mp25-lptimer-timer" compatible string in next revision.
+Ack, I'll drop the "st,stm32mp25-pwm-lp" compatible, as match through
+the parent device is achieved here.
+Alternatively, reading directly the hardware configuration register
+could be used to retrieve the 'num_cc_chans'.
 
 Thanks for reviewing,
-BR,
+Best regards,
 Fabrice
-
+> What is different that driver cannot work with new device using old
+> interface or old features?
+> 
 > 
 > Best regards,
-> Fabrice
-> 
->>
->> Best regards,
->> Krzysztof
->>
+> Krzysztof
 
