@@ -1,154 +1,230 @@
-Return-Path: <linux-pwm+bounces-4993-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4994-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFB2CA4575B
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Feb 2025 08:59:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A38AA459DB
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Feb 2025 10:20:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE1073AC4A0
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Feb 2025 07:58:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B3700189CBA0
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Feb 2025 09:20:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 523FE1E1DE7;
-	Wed, 26 Feb 2025 07:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3438322423B;
+	Wed, 26 Feb 2025 09:20:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ce6nZdwn"
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="k3Jq1p2G"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010058.outbound.protection.outlook.com [52.101.228.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245451E1DE1;
-	Wed, 26 Feb 2025 07:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740556451; cv=none; b=g9UuBlH3PHutYy6ouUmjx9n3f9SkP4bxzGPbN/8TQSqH2JT64JZi7U+KdK9lsjsAuS6ZPuCZ+mOkt/HiJWvD7X2Rhcvxd/yz19PT36OTWY2TqgHNjcqxoGRKUkqdLxNiK4Dp8k9LaQ9UdJjcDQCg4HuEaiiEoH5CGybLVAU6dj0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740556451; c=relaxed/simple;
-	bh=92ToKjMng5UJUg3byfnfnCY3Q+fzsJoKi/ZAArA68TU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bmh7383RgnChYWLeHGA21F6Lw5zzhbU1XTI9Pr1HUvkeSaFCYVjD9tYCLYBAV3HJMkSjG6W7fJrWqf3JU7qdqaOlPIIZ89CEck+W6Gr4Pl0XcH8SZCIiiIudxcfvsYDRREh6/FgBdAY/T584YDkC09Ug7bIg0ELwZcIXBFWnkNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ce6nZdwn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CE84C4CED6;
-	Wed, 26 Feb 2025 07:54:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740556450;
-	bh=92ToKjMng5UJUg3byfnfnCY3Q+fzsJoKi/ZAArA68TU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ce6nZdwnF5HOI22QJhzYb5t8RwkQjtWsnao+FKm1SpQOChhAwFCdysaLhkPDn04Cv
-	 NLqqqCVkdQ4hXH/0C8lupYVVQwdw74TRcto1HT22ydBm6UPA0aHHuiW3FCDrfBQiWj
-	 YQTGu9w88jPqL5CC4ixAE41VGoRyTl8y/CUrrQMGB8G3VQN9BcaRzFbZJFCXw60UKx
-	 T5X+8mD8ZR3+2UMmMa+BzJi5fp1TtWDewmKuZzXpJ7XiZhlbrlCi5Hl57n6l+O/Hir
-	 /uD02db9EF+GZeXCdMQq1cmLZbL3oO4UHX082Akmi0g/thcbG2F68JUnBk6h+UkHSJ
-	 jFIOpzoK8m2WA==
-Message-ID: <e15754dd-5f4e-424d-a3a9-308dae814708@kernel.org>
-Date: Wed, 26 Feb 2025 08:54:03 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DAC1E5B85;
+	Wed, 26 Feb 2025 09:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740561646; cv=fail; b=iVinheGi9FZfb/fGnzzNrsvsWH2mEpf5qtoKyvlShvjqgscPjDY7nPJnjF/45hYcXD36UsJEHz/9iaeldnoXwWTWq6/bRL8TM+2r6I2lZqurhCMPUBT5tG3shj7kF8C79KWjr2Y63JCaLIs76Xzw1t27AqCyebaaAHmcqb3LkC0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740561646; c=relaxed/simple;
+	bh=S+OG4woGnAi3pcvSc/pbpFBksslNf+AaLpiYiWwIMlk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PYhAR1k3284ZXW/9WdUBTyBCghfDR7RJG+Ih6G/B9SdbfQ24v9AJkXsVIbyvXVCEsuWU9O7/S6vl9aphUyeDts4+C9g9f6lk0MFMiEM0P7r7f5Tc6T0keX7/2YKPZdU+w/RQP9IMbbMZGjn0+xTjcHri6CbMXWqynb3CzOT1c2g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=k3Jq1p2G; arc=fail smtp.client-ip=52.101.228.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kV6ztxqb78xdawJIStLuez3cWYnSkw0nVaFNxUzygOSXdn9uC2sXqkfHWhfT2s30KkXgL788x+GU6KZHRljSlp4nBIXwCAvtzwCqQfhXcTvtufhMWTXmTAKmIuK7MKMzYli2826dwydK4wQWymwEHHvY65XWcxuoQvDfkv6KNbI3KtddiIorZ/WYMsRLpAzmaIO3KSoXCQMkxTuH6i4J6IsFIb9cO9lbhGn1dVF3JqWD4rRKs4de8L1JNuKq8QgstYzek5wKYvzt80eUgseflu+Hc/6lI2crD3WPIVuZY6dcDGq5B112tj5LfkEGkpJk4OF/WLPHxfAd95LL3UbWSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IxZUk1cpPyh9fyT9o0PVQ2hF06z8oJv3C0OYBLhu1g0=;
+ b=BDy/neChmLFAJmGHNw56dO3w2kXotgv+SRYeGFmWGXguGoaL7FgOQEJMBBFZcI4/LOheBqK7nLprg8ugfDf7IS0gf3UhveRcS/RXYFpwT2nSon3v6IkxAZbDyv9ccoOUlHsxHj9elZYWK3AJTXArrExR98RFzysQ1OxClgv7+kLGgHrTuFfypMLYx1/UHD/4w5aP4o6ui4eo9Q1qWblJmZnJlGUV/NcK7SEuwEHadUyiHdk8Zmttyekp0cZ+VtPJvp+2v5tSoCfy+sbYWMZ4U5R3US2WKubsv8JsdY1xP9YlRqGqz2lC2fb0S23Jri2PNXnHcjew36Y+4tI26oabAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IxZUk1cpPyh9fyT9o0PVQ2hF06z8oJv3C0OYBLhu1g0=;
+ b=k3Jq1p2Gvsdsi+GkN3n0W3jGUSELAatzO9FC421TSnA6BgZM2YlAP4Ou4kn3LXSwFxya505bSutgXBTLRZ6z7bdiOvX5xFxHzThD9gh1PV8IUGxIMzqRW0mIfLP5z1ikEYmwgTP2cU7IYnzA9AqHFEYgMeXFTwIB4yB1T5H19RU=
+Received: from TYCPR01MB11332.jpnprd01.prod.outlook.com (2603:1096:400:3c0::7)
+ by OS3PR01MB7407.jpnprd01.prod.outlook.com (2603:1096:604:14a::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Wed, 26 Feb
+ 2025 09:20:40 +0000
+Received: from TYCPR01MB11332.jpnprd01.prod.outlook.com
+ ([fe80::7497:30af:3081:1479]) by TYCPR01MB11332.jpnprd01.prod.outlook.com
+ ([fe80::7497:30af:3081:1479%7]) with mapi id 15.20.8466.016; Wed, 26 Feb 2025
+ 09:20:40 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>
+CC: kernel test robot <lkp@intel.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+	"oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>,
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Prabhakar
+ Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v23 3/4] pwm: Add support for RZ/G2L GPT
+Thread-Topic: [PATCH v23 3/4] pwm: Add support for RZ/G2L GPT
+Thread-Index:
+ AQHbUIfEye5JKGoBg0O4godryy/UCLLsKj8AgCDikqCAAUJZAIAAAFoggEOPvgCAB91nAA==
+Date: Wed, 26 Feb 2025 09:20:40 +0000
+Message-ID:
+ <TYCPR01MB11332CCA52D52AA982BCDBFA486C22@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+References: <20241217132921.169640-4-biju.das.jz@bp.renesas.com>
+ <202412182358.9wma1UUE-lkp@intel.com>
+ <TY3PR01MB11346CC402843A628226F5C6186122@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <b7woae7iquvuzs4vcollns7qcyand4ginrbjqs75bnsiockrjc@c4pyody6zdcr>
+ <TY3PR01MB1134690173EBB583582DE8E3386132@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <hb7agtiqcuotiie646a2nzwg2cfwmahtgzzexxsf4tqu3rztf6@qqq2a7qkazh5>
+In-Reply-To: <hb7agtiqcuotiie646a2nzwg2cfwmahtgzzexxsf4tqu3rztf6@qqq2a7qkazh5>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCPR01MB11332:EE_|OS3PR01MB7407:EE_
+x-ms-office365-filtering-correlation-id: 71ef120d-6fce-401c-9e95-08dd5646d663
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?g6oxEk1anjkMWEscXX+PT0y4OguHGLgNisReQfOKz8xQQJRIcF1MkOw4vv?=
+ =?iso-8859-1?Q?RZVEAUyulxN+vRYWHi/Gi+Q3AQsUfwOPK9WFlq8uuIgx0fIyHlkh2vgHvp?=
+ =?iso-8859-1?Q?HHAJheUpIx9h4XSYA3P6DWhmEBAm9W8rQT8jnp7U+CiFAy3yMaXC708Ruz?=
+ =?iso-8859-1?Q?I/5CvDNl/Bp/GdhW04/5FEwSwDIy6Vv/YVGmMbD5ojA//wl2Ez6K9Bw9VR?=
+ =?iso-8859-1?Q?6zctwnuMtYWKvx0kfl1FtjI5MWQxX6Cqjg6qoL8FyShxEOTT8Pb0fjT4BI?=
+ =?iso-8859-1?Q?RWNWgopqKIGGN/Lrj9fJoK2JVuiArBO/U4ySDkewuD++2uMC3mF1awCFLt?=
+ =?iso-8859-1?Q?Jl2J4MrsqDTmtXVwQcJwoDWosKsB8y/GukYeVjZ/YNoX5rG7LiNA2GquxK?=
+ =?iso-8859-1?Q?vt7ceNfDH0BIW5NbWVmdXoMzVqVIKng9bOGRu8xwPACgOXHP6bGgOVZPpc?=
+ =?iso-8859-1?Q?+NhTAp2kA57D7s4ONLvXRHNRAmXwidYVn+JKXDKhNj2WesXtVUnhj/S+t9?=
+ =?iso-8859-1?Q?zOdL9UU/uJ1OPBWTCu6nfIhZW0Gf3xRAUVkOlcjChhH9x2T/ySKnRLraan?=
+ =?iso-8859-1?Q?BWPYgzOMotUw7eo/IX4NtMOIcb60kKXwIHyPqAsvX3AxAUrsQVhr/orgsy?=
+ =?iso-8859-1?Q?S5iA745d0zV/la054I2kpfA3bgNkFxcx+cKqcNWNMBJljS0GdVulMgXbBQ?=
+ =?iso-8859-1?Q?bQjR915aF7L4IxlcOlaPm+50aMv4t4KDm0FRdmXAulyFHETbFgS/fGQofP?=
+ =?iso-8859-1?Q?ebstMk513+H1tiZ8SzpF4NF/iiehhIxNaU6GWGiBruYkQnHgRs4BGZtYqZ?=
+ =?iso-8859-1?Q?o7mzh0eXhq2TD9xzm6bypvkTyY0chlPKCe86GXkV4r17wdVZlBHIuoNski?=
+ =?iso-8859-1?Q?nEjDif9/N0Y6ESKw/0ExwHHgG5w+VIPBYqCWJaSNATHevXSlk/bAunocBj?=
+ =?iso-8859-1?Q?74ZpBl+4VW3oddT5mmX88fj9KpwiAN1gxv8Hw2a96OCJf2op9B/bZYaGiN?=
+ =?iso-8859-1?Q?qKzdD9M057xUVtRhA3GcCU6w+/N+lPGKefhUVie8nGTxMFIbNP7rcAikSb?=
+ =?iso-8859-1?Q?b81lq4YEA3N5ugxT51ys9925hNZ1NBZIOC8EBYIxJfsSUwVD9WEutNFTbl?=
+ =?iso-8859-1?Q?733unvnSC7vLEHLXaKgUFxRViJVSBx2IeSOrMwbO/LiXohalXYgT3fLaqQ?=
+ =?iso-8859-1?Q?dL1f+YcDhpL+EfSmXLm+YkmJvyl1gob4CCG+J9Bf3X8smra1r5SrsKbBIb?=
+ =?iso-8859-1?Q?dWoKaCQNzfuVOYJBXTIGYhayCTx9b2tIDxVsqZvA1UaE+IDoPPvfDxCf09?=
+ =?iso-8859-1?Q?XE2Cy757ItUHZlS0ueTLRxpzMVJxmddO9ESUSK1RgkEosqNObRZDvOI1cw?=
+ =?iso-8859-1?Q?k4GQeQH2usQN5dQjrLcvJrUKqyreSOkFQIDSwHmOCNQShMScKQCK1xj+4G?=
+ =?iso-8859-1?Q?Ea7GqgRMtMSPknhezWtymz/m0lQkdEn1SDyAZ5E/Q1Jzxl6Q/9F3EMixl/?=
+ =?iso-8859-1?Q?EduX2VDO3+bpLVVJcFJBYj?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11332.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?SYhmx1gKiqvHLFeEzzgBDqVRBLX/qTPrgwHYY08tzoltuxzaayMdiauoDf?=
+ =?iso-8859-1?Q?CuAvMAQfVuxHDIp0KCpTTeU9yPIs/Vbw/l8rzl/kWScQ2GeWbrbp6fIVHD?=
+ =?iso-8859-1?Q?9T90mPDcmtoZw1ibbWD7ZB5J3oLLNM0SWXbUM1zOuzB1yOMoRBRB0YiUFe?=
+ =?iso-8859-1?Q?hyleAJa0Eo4kp1lNPxAbNZyJF1MeBvRV1T28yiUdIrytEqB1brBTucwKL0?=
+ =?iso-8859-1?Q?Z1cQu3ySadsyP7WuY3cU0NhXLJczrqXvNYF2047CSLAyF7hsM07spgyAUg?=
+ =?iso-8859-1?Q?P14WpF5wqyWKmxnkES1phHsHIUMoiIDrPYqmfEPLOAqNWWc4w0caHgz4S3?=
+ =?iso-8859-1?Q?mw6ojrFYlJwCbc0VSYGWBblMThx3Ch75rY2jiWh9FMabzDYkxWl+b+DBVV?=
+ =?iso-8859-1?Q?yEkXrSkYUxLJmQQ/FbrMysMNO2S/VHfcJOnXPI2Q48zX3EJ5TMINzZdHFx?=
+ =?iso-8859-1?Q?zBrydimZyyisuBtubVoSSbN4UXslw16GTzXkigsNU8xBqY8RfrJp0I0XSf?=
+ =?iso-8859-1?Q?/zB4C6Bzt08YEvKxy7y9UZDDYmFFLH1KeOHK/LLSwuM9wJCew6nTKc0ITT?=
+ =?iso-8859-1?Q?RCFGl9P34lZJ52uIK50kyxdeWNCdsFIjhWe7jgacaqVKBCoZwU6IU2vAbm?=
+ =?iso-8859-1?Q?la3jUCICjOPgOYd35t3VnpAaZRFh5q3Cw5m74CEj9hkOfheuOaQ/MkGo3i?=
+ =?iso-8859-1?Q?gic0AD7tHna0UJWIRPr0uZg+ZKmgTbePBqiiqrEPMER5q7NPK9bVl/E45V?=
+ =?iso-8859-1?Q?X6aSMhHq1+gKCXWLy52quinp99ZTjRTaTGQn6tcMSYmQ5f84NcJjkUJAwC?=
+ =?iso-8859-1?Q?pAcMTClBdF+3q1ziZ9JY7oxrcv7IvdcuHxvGDzPQPTh2ZVEn5E2FsXijtl?=
+ =?iso-8859-1?Q?IN8EkbIj5Gkv66OcRCfeyamXg4+im5VBBfEJSu4d1pYiCLa7YR28bseOQa?=
+ =?iso-8859-1?Q?YgVICdaZxdpNmo0dQlmz/j2uwDsS1g3zOdvpOvFILSrXDdyTbIdpGdeZjh?=
+ =?iso-8859-1?Q?aEMfS7IV0torZ4YEtacCpm1NxSHw+1D8kGD2K0qfcN7dVZjM7T1iHgqrrt?=
+ =?iso-8859-1?Q?vmK2eFoR8VoqRReL6DpshB6aNHlcmJ4J26jlGZZaW7ej+9MhtcYD6Uvg9K?=
+ =?iso-8859-1?Q?SiHj6ZVGXBNIseBVPz1LU+Gmqbf2giOWO7nrH5QoH8jlEZgoHVwF0LVzS/?=
+ =?iso-8859-1?Q?6+f4V3Oy9lBUlSAYi4jR4JB4Wzfg7GcCoK4z05r8JVSbkwRJaW6OSXKe3u?=
+ =?iso-8859-1?Q?ElVdvDZXc/OvhCY0GDPW4wVt5mIFg3lubVvskJ4xYOiMLfes/y8a8nLpe1?=
+ =?iso-8859-1?Q?iEpRPtj0du77moMfYDC85TLQXT2jsRZhvHn0QONoPTcDEOrG6Gs2UtdfqM?=
+ =?iso-8859-1?Q?qkKVdNIqTRtJFRjOVXKfNtd8k8Pgf+RMwsvxFLkIFrGz+vTChlTbtNUXSM?=
+ =?iso-8859-1?Q?+niAFaD9E2DcmKgdcPUIsPsZxHjTxFgyNQEdj0PJ/WgAi+bIM/iV/n/dTB?=
+ =?iso-8859-1?Q?7EJvih1F/d09O2euuDWEti15wgYK9YqbJVL3JBO7cpxF2uWRnSvwOkB3ja?=
+ =?iso-8859-1?Q?LUQtz6OPpVfqu9i3a8XcpL4UVPsPQEh1t+7blfMXaSo94qSZYR0vM1oQZQ?=
+ =?iso-8859-1?Q?j6GdxkDFeZKz7Om3br9rw10k1BOpqhgqD5Wo38twQqNmXZHNWgSAldYg?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] pwm: stm32-lp: add support for stm32mp25
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc: lee@kernel.org, ukleinek@kernel.org, alexandre.torgue@foss.st.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, wbg@kernel.org,
- jic23@kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de,
- catalin.marinas@arm.com, will@kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
- olivier.moysan@foss.st.com
-References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
- <20250224180150.3689638-6-fabrice.gasnier@foss.st.com>
- <20250225-psychedelic-iguana-of-education-d5fff7@krzk-bin>
- <e309c016-4dcb-49e3-945e-54ddadfbddb8@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <e309c016-4dcb-49e3-945e-54ddadfbddb8@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB11332.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71ef120d-6fce-401c-9e95-08dd5646d663
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2025 09:20:40.0965
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5OuO+73a/whfHL+akTxECjuqlLJPzJQg522jEqJfSag4pakUPDHklgiomhEIOO3a4f2BS+2FtygG2r9NNbJodRbTmh5RjSfpE0LyxDF8uok=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB7407
 
-On 25/02/2025 15:58, Fabrice Gasnier wrote:
-> 
-> 
-> On 2/25/25 13:04, Krzysztof Kozlowski wrote:
->> On Mon, Feb 24, 2025 at 07:01:47PM +0100, Fabrice Gasnier wrote:
->>>  	}
->>>  
->>>  	return pinctrl_pm_select_sleep_state(dev);
->>> @@ -246,6 +413,7 @@ static DEFINE_SIMPLE_DEV_PM_OPS(stm32_pwm_lp_pm_ops, stm32_pwm_lp_suspend,
->>>  
->>>  static const struct of_device_id stm32_pwm_lp_of_match[] = {
->>>  	{ .compatible = "st,stm32-pwm-lp", },
->>> +	{ .compatible = "st,stm32mp25-pwm-lp", },
->>
->> No driver data suggests device is backwards compatible. Commit msg
->> suggests not, so that's confusing.
-> 
-> 
-> The LPTimer PWM driver takes benefit of the MFD parent driver to feed in
-> data, e.g. 'num_cc_chans'. Number of channels is now variable, on
+Hi Uwe,
 
-This means this ID table is useless. You do the matching via parent
-device, so stop growing the table and call it deprecated or something.
+Thanks for the feedback.
 
-> STM32MP25 (e.g. not a single channel). But it can't be hard-coded as
-> compatible data. (there's only 1 channel on earlier LP Timer hardware
-> revision).
-> 
-> The hardware controller is a bit different, hence the new compatible
+> -----Original Message-----
+> From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
+> Sent: 21 February 2025 09:08
+> Subject: Re: [PATCH v23 3/4] pwm: Add support for RZ/G2L GPT
+>=20
+> Hello Biju,
+>=20
+> On Thu, Jan 09, 2025 at 09:32:58AM +0000, Biju Das wrote:
+> > > On Wed, Jan 08, 2025 at 02:13:09PM +0000, Biju Das wrote:
+> > > > Please let me know, if there is any feedback for this patch series
+> > > > or any new API to be adapted in next kernel version which
+> > > > simplifies the code, So that I can send next
+> > > version.
+> > >
+> > > I didn't look, but if you're ambitious you can convert your driver to=
+ the waveform callbacks.
+> >
+> > Is it ok, after the acceptance of initial version, will switch to
+> > waveform callbacks to enable the users of GPT(Reason: lot of customers =
+are using GPT for backlight
+> for LCD panels)?
+> >
+> > Please let me know.
+>=20
+> I'd still accept your driver with the legacy callbacks, mostly because yo=
+ur effort is already that old
+> (which I consider my fault mostly).
 
-If it works with old compatible, it's an easy proof that it is
-compatible, so please counter argument that with something specific.
-What is different that driver cannot work with new device using old
-interface or old features?
+OK.=20
 
+>=20
+> > Is there any documentation available for waveform callback? What
+> > scenarios we can use Waveform callbacks compared to traditional one?
+>=20
+> There is no nice documentation available yet. The improvements include:
+>=20
+>  - arbitrary offsets for the duty cycle, so the active phase doesn't
+>    need to be at the start or the end of a period any more
+>  - consumers can query the result of a configuration request (before and
+>    also after the request was issued).
+>=20
+> Both are of little importance if your focus is mostly backlights.
 
-Best regards,
-Krzysztof
+Mostly RZ/G2L GPT users are backlights. So, from RZ/G2L usecase point, lega=
+cy
+callback is sufficient.
+
+Later, I will switch to waveform callbacks, for complex GPT usecase support=
+ for next
+SoCs(eg: RZ/G3E).
+
+Cheers,
+Biju
 
