@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-4991-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-4992-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2132FA45702
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Feb 2025 08:50:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9463A4574A
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Feb 2025 08:57:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2FFA1897840
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Feb 2025 07:50:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B2AE16A8AC
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Feb 2025 07:57:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 504F926F45E;
-	Wed, 26 Feb 2025 07:49:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E02E4271267;
+	Wed, 26 Feb 2025 07:51:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q9UdPKmC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlndDT8r"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2060A26F443;
-	Wed, 26 Feb 2025 07:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82859271263;
+	Wed, 26 Feb 2025 07:51:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740556186; cv=none; b=WRu5UmFURzbxKBOmLyMVVB3wgbB7z64GFuc9unNaQhVnnrIEE/JCc3hVsWieEhEePvOVSE7+NChmOROXF6dzMu23/oXujD4wCdaaN/9u8nf08kMIPHQrXUwSjo8btxznANN9C2jQ5uFEp50dggZ3Yj3jC004/PzUnTDMFK6P/rY=
+	t=1740556287; cv=none; b=qdvhvyLCSemyBdrq61HWZkJgNZIe1S5aJQfeMJgJ1lsD4EFdhfg7O6d5qTB1phCUKG9sui2Pcj12BXiIhKsk4S3HWFDhkUPXx6+7Usz2POs3IyVZg5hY/e91OHB8jZhF8aRTdKgOWF/LWgxGiM3zKf7z1N/W/SWIGKo1UaXAIc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740556186; c=relaxed/simple;
-	bh=uCdI2UsWlcFy8fTHJqUUUV32JgbPg3zTDIP1SgS/OEs=;
+	s=arc-20240116; t=1740556287; c=relaxed/simple;
+	bh=9eFHXpGsf3ECjgV3E67TSiU05/e2Y8rXQci+VACk4XY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mKNPEc+A5PEhRDAXc3raS/BCrjGeS2Kxyci+ivmw3IR34jMdj3Z0TrpidiEGIuQrUo6XKszUMQeDoV5h/Uzhwz4qc0LBFjdYroFpvcedsZ6lj5af7n1sQutYjCKmTG2gVXjiyOI08s5saiXHaauRiAjgCPQv8ig3+oBTFzQO92E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q9UdPKmC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A726C4CED6;
-	Wed, 26 Feb 2025 07:49:38 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=NfG/qplJL1lRao1AEl7GfU+fdWMcLp3vW5cZ+LRzuMqLgSNgXqFUWwTGssQduw/0To8p7apcnn452TwxJJx41uiTR4VcdMjvzBTS2c7XMP8sqdS5Rua5HmdzqH5kjSsj3eyTRSnBknVfZpDTKTRITysxwUp+RvADfyUF71HaPMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlndDT8r; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07280C4CEE2;
+	Wed, 26 Feb 2025 07:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740556184;
-	bh=uCdI2UsWlcFy8fTHJqUUUV32JgbPg3zTDIP1SgS/OEs=;
+	s=k20201202; t=1740556287;
+	bh=9eFHXpGsf3ECjgV3E67TSiU05/e2Y8rXQci+VACk4XY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=q9UdPKmChEoDGVsxMpCoa+eWVBARu/cco2J+eMzALEGG++aZ5H/205d2hEmEaI5NZ
-	 1qOO+a/Rjt8mT1PnYPaaZliVlGnN+yqp3xe3kvSJszoKIdQqy8UvLYarHqgYdXXg4u
-	 +MFcuZP3ZGHvtVUhnstYEHnjIfkv8wK7pGz23KIfMMVER0mQCt8Anu4ZDe7+0uPTUQ
-	 sKQTOMkSnJDzQh8pSSHbLIaXNPtT3Gf189JgLZG7sfz5SNBKEYgidP8eJsJtBCWf1k
-	 QSP7+yiLEse5Od4PAA5x923hSNHRBzomuzMGO1mbLb0n28O2sUBCSLB/+k1H5I0iuV
-	 BHoKqVapGyGtQ==
-Message-ID: <b9b3844e-bdd5-4f50-aa10-8bf97751c566@kernel.org>
-Date: Wed, 26 Feb 2025 08:49:37 +0100
+	b=WlndDT8raEr4NnEzyhjKw9QpCmbUwYWGO60bPAtCHgbIIGRCOC5v095KILS2MqmgV
+	 Wu+tLLUHnZfeMzPnnEHduboaYP8tSAfZUNMMQmFzIr1525nsoN/lJ2u6/SWIhAwV2y
+	 FiEnK24nL8TAoWijHNI4/RDEeL4GVQkZjDM3VqEaP9o3hMeauMz7akBEydItfN0Xav
+	 aIIfIuD9exIcWIhTZlAGkMN14MJEacXCHmV49b17nskRmgfe4nYGbVqQ/gjt+7z8Wy
+	 CjVrTMbSENOprnPHAl+guVQ0Yz4de79CQuOUf4eiP1Ls0YAzjklhEe1hd0qRLUXDEw
+	 ZRc2oNA5Bkc+A==
+Message-ID: <8b42f0ad-2993-43b8-9055-6d74dc3bafbe@kernel.org>
+Date: Wed, 26 Feb 2025 08:51:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] counter: stm32-lptimer-cnt: add support for stm32mp25
+Subject: Re: [PATCH 1/8] dt-bindings: mfd: stm32-lptimer: add support for
+ stm32mp25
 To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 Cc: lee@kernel.org, ukleinek@kernel.org, alexandre.torgue@foss.st.com,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, wbg@kernel.org,
@@ -61,9 +62,9 @@ Cc: lee@kernel.org, ukleinek@kernel.org, alexandre.torgue@foss.st.com,
  linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
  olivier.moysan@foss.st.com
 References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
- <20250224180150.3689638-7-fabrice.gasnier@foss.st.com>
- <20250225-pelican-of-pleasurable-might-e9a7e8@krzk-bin>
- <4ffc3fe3-78ab-43b2-b0d5-8f9cb545f9c5@foss.st.com>
+ <20250224180150.3689638-2-fabrice.gasnier@foss.st.com>
+ <20250225-outgoing-scorpion-of-music-be0bea@krzk-bin>
+ <acabacb8-8ea1-4b16-a562-8ffba64fdd36@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,49 +110,56 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <4ffc3fe3-78ab-43b2-b0d5-8f9cb545f9c5@foss.st.com>
+In-Reply-To: <acabacb8-8ea1-4b16-a562-8ffba64fdd36@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 25/02/2025 15:58, Fabrice Gasnier wrote:
+On 25/02/2025 15:57, Fabrice Gasnier wrote:
 > On 2/25/25 13:02, Krzysztof Kozlowski wrote:
->> On Mon, Feb 24, 2025 at 07:01:48PM +0100, Fabrice Gasnier wrote:
->>> Add support for STM32MP25 SoC. Use newly introduced compatible to handle
->>> this new HW variant, even if no major change is expected on the counter
->>> driver.
->>>
->>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
->>> ---
->>>  drivers/counter/stm32-lptimer-cnt.c | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/counter/stm32-lptimer-cnt.c b/drivers/counter/stm32-lptimer-cnt.c
->>> index b249c8647639..a5dce017c37b 100644
->>> --- a/drivers/counter/stm32-lptimer-cnt.c
->>> +++ b/drivers/counter/stm32-lptimer-cnt.c
->>> @@ -508,6 +508,7 @@ static SIMPLE_DEV_PM_OPS(stm32_lptim_cnt_pm_ops, stm32_lptim_cnt_suspend,
+>> On Mon, Feb 24, 2025 at 07:01:43PM +0100, Fabrice Gasnier wrote:
+>>>    pwm:
+>>>      type: object
+>>>      additionalProperties: false
 >>>  
->>>  static const struct of_device_id stm32_lptim_cnt_of_match[] = {
->>>  	{ .compatible = "st,stm32-lptimer-counter", },
->>> +	{ .compatible = "st,stm32mp25-lptimer-counter", },
+>>>      properties:
+>>>        compatible:
+>>> -        const: st,stm32-pwm-lp
+>>> +        enum:
+>>> +          - st,stm32-pwm-lp
+>>> +          - st,stm32mp25-pwm-lp
+>>>  
+>>>        "#pwm-cells":
+>>>          const: 3
+>>> @@ -69,7 +76,9 @@ properties:
+>>>  
+>>>      properties:
+>>>        compatible:
+>>> -        const: st,stm32-lptimer-counter
+>>> +        enum:
+>>> +          - st,stm32-lptimer-counter
+>>> +          - st,stm32mp25-lptimer-counter
 >>
->> So fully compatible? Why this change then?
+>> Driver changes suggest many of these are compatible. Why isn't this expressed?
 > 
 > Hi Krzysztof,
 > 
-> I should have mentioned it in the commit message:
+> The Low Power Timer (LPTIM) hardware isn't fully backward compatible.
 > 
-> Currently, same feature list as on STM32MP1x is supported.
-> New capture input stage is now available in the hardware. It's not added
-> yet to the driver.
+> At driver level, as indicated in the cover-letter, same feature list as
+> on STM32MP1x is supported currently. This is probably what makes it look
+> like it's compatible, but it's not fully compatible.
 
-Which is the exact meaning of compatible. Express it properly in
-bindings and driver.
+I don't understand. Same feature list is supported means fully
+compatible, but you say not fully compatible. You are aware that
+compatible means not the same?
 
 > 
-> The Low Power Timer (LPTIM) hardware isn't fully backward compatible,
+> The hardware controller is a bit different. Some registers/bits has been
+> revisited among other things. This is the purpose for these new compatibles.
 
-How so? How can it work then with above ID table?
+We do not discuss new compatibles. We discuss lack of compatibility. If
+registers/bits are changed, how existing driver can work with same ID table?
+
 
 
 Best regards,
