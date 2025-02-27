@@ -1,178 +1,200 @@
-Return-Path: <linux-pwm+bounces-5009-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5010-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C826A4734C
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Feb 2025 04:06:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57F23A47BFD
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Feb 2025 12:23:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1C85188A50A
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Feb 2025 03:07:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 352EF7A8F2D
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Feb 2025 11:19:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE110158A13;
-	Thu, 27 Feb 2025 03:06:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4616E22A1E9;
+	Thu, 27 Feb 2025 11:19:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKOIEVIt"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="BdEckSY+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m19731117.qiye.163.com (mail-m19731117.qiye.163.com [220.197.31.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992AD78F4B;
-	Thu, 27 Feb 2025 03:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC5F226CF0;
+	Thu, 27 Feb 2025 11:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740625610; cv=none; b=MkiinrEm1pqpcrPr86++ankLy4DDE/vQuiTBgeModuKicKDcDgUR2oNmMtOe2XhOMF/ahitXOqG54GGsT8WnfuF/0FsVbAeYZkjisHwI9IGEorrxnT6v4AI6VlmRt/F3uxPvlQN/gqaHDdSbCRLbVXUEWiarf8nWy+VgrEGluGY=
+	t=1740655174; cv=none; b=AFWcyYgLEdxxfzmstqHPH2//mAYDVAJL204cGlbmMa2YkRf3Lx27JKJYmzY7XMKqlXghbUwfQFqih+T965O/bNcaIyUzekro4mBncoywb9vY1vlm9CF3hzN+mLQQWBYqi3eC5xVRLCqLSNiyzLG+9AffmhWD+OQiZo6pAOpvepw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740625610; c=relaxed/simple;
-	bh=q2ghoz1pWJEIqwjf30Ucg7t93D2Nrvj2VISWKXWFeS0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LnBq0gbal68FlEyyf1Ekz44rz/T/L23WHcm5GUpBqJwVTvgky6mLXn8KWWdQTCmDGovM8bOOEu+WTiziGLjsvs8hwTA2AGJGJB7KVVV1IHWixb1bOAbk4joO76Cn71GpPx1QszfnlEsusXQarhlDvtr1huIDfrY0l8I/m5RBptw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKOIEVIt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC92BC4CED6;
-	Thu, 27 Feb 2025 03:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740625610;
-	bh=q2ghoz1pWJEIqwjf30Ucg7t93D2Nrvj2VISWKXWFeS0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XKOIEVItYrAj/NHvNuhYHb1TLQ0uWUr6Cfms8KX4vn/wJBClj/nY8frxgb/Uc4f9F
-	 eBPOTrxKFeK0bhW86VnrG78WQXS614b953FFfZEnwXD+vynPLg2MdMKDLDhqrNw9Lb
-	 gL87zVRHdia/yyl5wGrhI4dcgu4aux5HeF/km2dVwo8F0fh6Jou02XLsO503f3ZTuf
-	 MgZxMB+pYdH+zLZFVQtJsf3WE31XgskWhHJ6J7114z31SqyGdDmyhdrwZ5nSxJ5NVM
-	 8je6WFfjt3CYVTVckaoBkvxKLMHK+6crHGpgiRVQOMYs9GTnyvw9bhltXv66apH9XT
-	 xXxJC0D5wudzQ==
-Received: by venus (Postfix, from userid 1000)
-	id ADF6718066B; Thu, 27 Feb 2025 04:06:47 +0100 (CET)
-Date: Thu, 27 Feb 2025 04:06:47 +0100
-From: Sebastian Reichel <sre@kernel.org>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Abel Vesa <abel.vesa@linaro.org>, Lee Jones <lee@kernel.org>, 
-	Daniel Thompson <danielt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Johan Hovold <johan@kernel.org>, linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] backlight: pwm_bl: Read back PWM period from provider
-Message-ID: <cmjyaveolhjtfhqbjpc6ghh7g2f5jmeyavoms5lqup6dyidngl@ljvxgoyw57md>
-References: <20250226-pwm-bl-read-back-period-from-hw-v1-1-ccd1df656b23@linaro.org>
- <xltamao27utfrsax2pc6mh5tthanmrqszz4k7gyw3knqkm24xp@4tydmhfh6g4j>
+	s=arc-20240116; t=1740655174; c=relaxed/simple;
+	bh=njLAWRYh1HOdc7IeCl25keQ7tod9gpxqm84iUIxyHLc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=AL3jqHIsQKT2ShqKsMfWOXYqL1a8mDHvruakLHv19CZwGNlR7VxKLZtbuAsXwVljeav6yUZSo3gfYDW7XVCp9ya6ZTL3b57RKgcHbFj7oIbUrh9+ZC2or5fg+cPY0L9dZ3L6LpDCUScnzdSSBXXi80i755/FHxu+TgxqHGZcPXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=BdEckSY+; arc=none smtp.client-ip=220.197.31.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id c65f97bb;
+	Thu, 27 Feb 2025 19:19:17 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Simon Xue <xxm@rock-chips.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	linux-usb@vger.kernel.org,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Jamie Iles <jamie@jamieiles.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Johan Jonker <jbx6244@gmail.com>,
+	David Airlie <airlied@gmail.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-i2c@vger.kernel.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Elaine Zhang <zhangqing@rock-chips.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Finley Xiao <finley.xiao@rock-chips.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	linux-pwm@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-serial@vger.kernel.org,
+	Michael Riesch <michael.riesch@wolfvision.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	ulf.hansson@linaro.org,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	devicetree@vger.kernel.org,
+	Diederik de Haas <didi.debian@cknow.org>,
+	linux-watchdog@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Shresth Prasad <shresthprasad7@gmail.com>,
+	Tim Lunn <tim@feathertop.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Subject: [PATCH v3 00/15] rockchip: Add rk3562 SoC and evb support
+Date: Thu, 27 Feb 2025 19:18:58 +0800
+Message-Id: <20250227111913.2344207-1-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="a5rbsad7opocfj4r"
-Content-Disposition: inline
-In-Reply-To: <xltamao27utfrsax2pc6mh5tthanmrqszz4k7gyw3knqkm24xp@4tydmhfh6g4j>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGR1PTlZMGkxLSB9PSx1JGEtWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpKQk
+	1VSktLVUpCWQY+
+X-HM-Tid: 0a954721e05903afkunmc65f97bb
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NVE6Fjo6FzIUDQ00OEwOHgEc
+	HTRPCgFVSlVKTE9LTU5OSk1LQkNPVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFISE5NNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=BdEckSY+wUbbiwIXz/tXIGngsjrJJtvnCGpRhJcumqcHi5a1XPphTYrKpF94mYf7sCVfc6bQU1p5Cmc1EaBUKYWwF0mwJiQPRXlVKuIn9V8U6IxtcGYA6jHfymHzjLQcqsPMufF1tOa4OESA6cy9nsLx1fDpDccQcBS3fazdRyg=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=N8gEIfVArZNEctX9d5QVCtuV3cHJHJINt6Qku/Lq5OM=;
+	h=date:mime-version:subject:message-id:from;
 
 
---a5rbsad7opocfj4r
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH RFC] backlight: pwm_bl: Read back PWM period from provider
-MIME-Version: 1.0
+This patch set adds rk3562 SoC and its evb support.
 
-Hi,
+I have split out patches need driver change for different subsystem.
+And all the modules with dt-binding document update in this patch set
+do not need any driver change. I put them together to make it clear we
+have a new SoC and board to use the new compatible. Please pick up the
+patch for your subsystem, or please let me know if the patch has to
+send separate.
 
-On Wed, Feb 26, 2025 at 05:34:50PM +0100, Uwe Kleine-K=F6nig wrote:
-> On Wed, Feb 26, 2025 at 05:31:08PM +0200, Abel Vesa wrote:
-> > The current implementation assumes that the PWM provider will be able to
-> > meet the requested period, but that is not always the case. Some PWM
-> > providers have limited HW configuration capabilities and can only
-> > provide a period that is somewhat close to the requested one. This
-> > simply means that the duty cycle requested might either be above the
-> > PWM's maximum value or the 100% duty cycle is never reached.
->=20
-> If you request a state with 100% relative duty cycle you should get 100%
-> unless the hardware cannot do that. Which PWM hardware are you using?
-> Which requests are you actually doing that don't match your expectation?
+Test with GMAC, USB, PCIe, EMMC, SD Card.
 
-drivers/leds/rgb/leds-qcom-lpg.c (which probably should at least get
-a MAINTAINERS entry to have you CC'd considering all the PWM bits in
-it). See the following discussion (I point you to my message in the
-middle of a thread, which has a summary and probably is a good
-starting point):
+This patch set is base on the patch set for rk3576 evb1 support.
 
-https://lore.kernel.org/all/vc7irlp7nuy5yvkxwb5m7wy7j7jzgpg73zmajbmq2zjcd67=
-pd2@cz2dcracta6w/
-
-Greetings,
-
--- Sebastian
-
-> > This could be easily fixed if the pwm_apply*() API family would allow
-> > overriding the period within the PWM state that's used for providing the
-> > duty cycle. But that is currently not the case.
->=20
-> I don't understand what you mean here.
->=20
-> > So easiest fix here is to read back the period from the PWM provider via
-> > the provider's ->get_state() op, if implemented, which should provide t=
-he
-> > best matched period. Do this on probe after the first ->pwm_apply() op =
-has
-> > been done, which will allow the provider to determine the best match
-> > period based on available configuration knobs. From there on, the
-> > backlight will use the best matched period, since the driver's internal
-> > PWM state is now synced up with the one from provider.
-> > [...]
-> > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight=
-/pwm_bl.c
-> > index 237d3d3f3bb1a6d713c5f6ec3198af772bf1268c..71a3e9cd8844095e85c01b1=
-94d7466978f1ca78e 100644
-> > --- a/drivers/video/backlight/pwm_bl.c
-> > +++ b/drivers/video/backlight/pwm_bl.c
-> > @@ -525,6 +525,17 @@ static int pwm_backlight_probe(struct platform_dev=
-ice *pdev)
-> >  		goto err_alloc;
-> >  	}
-> > =20
-> > +	/*
-> > +	 * The actual period might differ from the requested one due to HW
-> > +	 * limitations, so sync up the period with one determined by the
-> > +	 * provider driver.
-> > +	 */
-> > +	ret =3D pwm_get_state_hw(pb->pwm, &pb->pwm->state);
->=20
-> As a consumer you're not supposed to write to &pb->pwm->state. That's a
-> layer violation. Please call pwm_get_state_hw() with a struct pwm_state
-> that you own and save the relevant parts in your driver data.
->=20
-> > +	if (ret && ret !=3D -EOPNOTSUPP) {
-> > +		dev_err(&pdev->dev, "failed to get PWM HW state");
-> > +		goto err_alloc;
-> > +	}
-> > +
-> >  	memset(&props, 0, sizeof(struct backlight_properties));
-> > =20
-> >  	if (data->levels) {
->=20
-> Best regards
-> Uwe
+V2:
+https://lore.kernel.org/linux-rockchip/b4df8a73-58a2-4765-a9e4-3513cb2bc720@rock-chips.com/T/
 
 
+Changes in v3:
+- Rebase the change base on rk3576 pcie patches
+- Updae to fix dt_binding_check fail
+- update commit msg
+- Collect review tag
+- Update the commit message,
+- remove the change for clock maxItems
+- Collect reveiw tag
+- Collect review tag
+- Update the commit message
+- Update commit message and add per device schema for clock name change
+- Update the commit message and collect the Acked-by tag.
+- Collect the Acked-by tag
+- remove i2c/serial/spi alias
+- add soc node
 
---a5rbsad7opocfj4r
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v2:
+- Update in sort order
+- remove grf in cru
+- Update some properties order
 
------BEGIN PGP SIGNATURE-----
+Finley Xiao (2):
+  arm64: dts: rockchip: add core dtsi for RK3562 Soc
+  arm64: dts: rockchip: Add RK3562 evb2 devicetree
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAme/1sMACgkQ2O7X88g7
-+pp2axAAjUk/lD0Uk4ltqhBQwfAEUqmFf1DoyH07Pzeqgx00DfAcBr2cL/Nae/by
-vz0CXq2TrsiJG9tYNV/YzQfTq21f6xNhg+HYVqRnw4M6N5NEubL3FFxDUG7aug5r
-vJsbi/ZMqRla7FtyH6fVC2r51AZqI1/+BdB1zuN5k8TB8t7NHWe6gSTcxTL++TfS
-EzOrvlAwTyFJkGCbLw5laeXQ7OdZCdPF0ASms+r6p4FTASs0351udCRSy6wWSvg5
-oRrY8U59bkjRB9r8/0LiT6k3eQkvhlNpknYqwdDAZc4DK/X9Pg2ssHBDKjOxJNyP
-fymMw/yRJ/yGBMlzcdRJhmEZUc6ruDWmAi6GaNOCndslanwZUDge+dalgtyYa6HQ
-JzIDINQM4r4hDnNXSrAL/JIXNUpbldjJzR4gbz9rmDcFyf7MovcBOY/FspXHSxZA
-L6D/DEF1HeMVl/qIJJGDQvJ35hUcGE9C6oFA+pEz0IxDyi1kUmYPVdZNmJ9nriYM
-k9OZmU/C8Mqch9E0cQFceRbE+/U0PyZZ2Mafv2Aju99OqV9vplUCDHyNqu82tdZW
-IXRvpWgf5qk5SzXLS8TkNyfkDGofP4JN6SbT/te1gCRHOi1oOs05kYjtb4xpCB51
-MMjrboCZedmzGwmsM3Evbw+e0W04zIwNiEeDBUElo20hdw9Idjw=
-=dIdK
------END PGP SIGNATURE-----
+Kever Yang (13):
+  dt-bindings: PCI: dwc: rockchip: Add rk3562 support
+  dt-bindings: mmc: Add support for rk3562 eMMC
+  dt-bindings: mmc: rockchip-dw-mshc: Add support for rk3562
+  dt-bindings: i2c: i2c-rk3x: Add rk3562 support
+  dt-bindings: gpu: Add rockchip,rk3562-mali compatible
+  dt-bindings: watchdog: Add rk3562 compatible
+  dt-bindings: spi: Add rk3562 support
+  dt-bindings: serial: snps-dw-apb-uart: Add support for rk3562
+  dt-bindings: usb: dwc3: Add support for rk3562
+  dt-bindings: pwm: rockchip: Add rockchip,rk3562-pwm
+  dt-bindings: rockchip: pmu: Add rk3562 compatible
+  dt-bindings: soc: rockchip: Add rk3562 syscon compatibles
+  dt-bindings: arm: rockchip: Add rk3562 evb2 board
 
---a5rbsad7opocfj4r--
+ .../devicetree/bindings/arm/rockchip.yaml     |    5 +
+ .../devicetree/bindings/arm/rockchip/pmu.yaml |    2 +
+ .../bindings/gpu/arm,mali-bifrost.yaml        |    1 +
+ .../devicetree/bindings/i2c/i2c-rk3x.yaml     |    1 +
+ .../bindings/mmc/rockchip-dw-mshc.yaml        |    1 +
+ .../bindings/mmc/snps,dwcmshc-sdhci.yaml      |    4 +-
+ .../bindings/pci/rockchip-dw-pcie.yaml        |    9 +-
+ .../devicetree/bindings/pwm/pwm-rockchip.yaml |    1 +
+ .../bindings/serial/snps-dw-apb-uart.yaml     |    1 +
+ .../devicetree/bindings/soc/rockchip/grf.yaml |    7 +
+ .../devicetree/bindings/spi/spi-rockchip.yaml |    1 +
+ .../bindings/usb/rockchip,dwc3.yaml           |   19 +
+ .../bindings/watchdog/snps,dw-wdt.yaml        |    1 +
+ arch/arm64/boot/dts/rockchip/Makefile         |    1 +
+ .../boot/dts/rockchip/rk3562-evb2-v10.dts     |  520 ++++
+ .../boot/dts/rockchip/rk3562-pinctrl.dtsi     | 2352 +++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3562.dtsi      | 1374 ++++++++++
+ 17 files changed, 4297 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3562-evb2-v10.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3562-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3562.dtsi
+
+-- 
+2.25.1
+
 
