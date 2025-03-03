@@ -1,81 +1,80 @@
-Return-Path: <linux-pwm+bounces-5032-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5033-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C68A4A4BF79
-	for <lists+linux-pwm@lfdr.de>; Mon,  3 Mar 2025 12:55:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3ECB4A4C197
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Mar 2025 14:19:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 722891889C35
-	for <lists+linux-pwm@lfdr.de>; Mon,  3 Mar 2025 11:54:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC9233A911E
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Mar 2025 13:18:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4B9A20E014;
-	Mon,  3 Mar 2025 11:53:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89673212F9A;
+	Mon,  3 Mar 2025 13:18:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GR2fYYdF"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GOaFLujZ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A7020DD65
-	for <linux-pwm@vger.kernel.org>; Mon,  3 Mar 2025 11:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F371FF619
+	for <linux-pwm@vger.kernel.org>; Mon,  3 Mar 2025 13:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741002798; cv=none; b=DrFG/a//i2HYlUAKP4e8SnIoMry8TaDmNcNugSf2TPCBo3iXVdKdyqgc2b+LWwHSo1Ha0OIbygvGHgHskhjt34LbgbfvAgEWxzR46CAy34aDJWkHWW9ni0/NICwpPKVGgh4HvJIk6+P0KUvYwsujtFo43eKshShCl9nmaii47dY=
+	t=1741007924; cv=none; b=Pi+CJ8ttON9QFUBNugVdIXMtcXeNbOKhng+0EqZmx21Ln6ld8WMVrytNfHP6wpRR9dMhbSVlc1JV2MPpr2JpeH7pebt/2yWHtd7427MvZGB+uU//RvWkQSzwQCIlD+hEGHy6pV+1GSlnaXF2WgrerOfS1p6pILbUxua8hAY+2cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741002798; c=relaxed/simple;
-	bh=p7hkdHG3Uk3MNaKmI5KRSyrO6nMtHV/TriUgNA5ZLkc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SOjxeXL1tlEwl/dBKdBOrcKc2Qlo6eOOG35Pb1zeqeiVIb5YULhk7UiLDat+qT5a1Fkbz+Xn9ivwby1UtJlsA2NGuEdRTggubloQjhGAXmKCuv2FnFt98crtGQiXcrh/2XeNQkyxdJLib01vP0RTtoqndkoBA4/3ibmtqv8oWxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GR2fYYdF; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e539ea490dso1543713a12.0
-        for <linux-pwm@vger.kernel.org>; Mon, 03 Mar 2025 03:53:15 -0800 (PST)
+	s=arc-20240116; t=1741007924; c=relaxed/simple;
+	bh=FTj6xoyS39LnNrJXGLhXAeRS3nQ1U42Zly5B+pL7Yio=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oSiunhuZLwZtAdo54yq0OCOB7MwY2kS6qUp2SuCRzuR/J4CQPu7M2NNy5ZC+UZAu7/CjFibb9ohEyp+UDY8zRkiHAZbGj4y7Y64dQpyYK2Dq5cwZ+ibOkWlhuszFQGadXOjeeGJ6EKCU2Htuu+tJTY7y6UT6zObu9qPR8BdbrRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GOaFLujZ; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4394a823036so42280195e9.0
+        for <linux-pwm@vger.kernel.org>; Mon, 03 Mar 2025 05:18:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741002794; x=1741607594; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=egcF/0fSfpEIM9jKlb06PQtyWEHsWxmve3UKG8E7nkQ=;
-        b=GR2fYYdFVQ8cWKiQEgcWR3zWYB6YYoUR0uCifv6xlrL7rMy0cGHfd8b4lnEOqMWMbS
-         WzyDYhsT8FcKRADZhvh4Kx5dhKHdG0MMBC1nRbtaszCG1+Br/RseS6NNqSsaGDsiNKnB
-         IzC4oGZTSwPsjBTmP/84paPJXyQVTUu8DMWq5TLMWtxFPwa2iGzGt27VoBt3f6f68vsD
-         B+VWl4l8LsXxQMdlXmvdaJOgr9Hcn99BpmkJ67gqi8ybWdRPBi0CtsyJNmqsAdZ1NgPs
-         IT77d7PPXQTZxdNQYSX0iI1VCohQMlcKO7Bpz5w8Rmy7PwjxC2VLIy7bZIhgAStisJe6
-         eiUw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741007918; x=1741612718; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yy1JVRlXR6nmaQaZdHV5up9VNNk75+ZYeI4CrMOgdUU=;
+        b=GOaFLujZHGXooYlEWWQz5AjEHgwejfTVVRQM5UGhXJVQ4yQ0ho3zhacYPYYLamJfMp
+         h1o1C/UsqQm6J4LLSPtnZXbkFyOL9nZmLhoEcWDPHnQtVobu3N2PnIXtuAX0pLalYShi
+         CH8Q80o/d2E5J3Lp8qILRRk9tXRBgoTHMJYg0fpbW7sToelzDnXYGlbaTBGT10DKtViR
+         6+EIQ11BXIvgDSayItZ5VrOsor4ciHuAhqzi0CK3McNcfY4CbHrQP4mE7ABMP4f4krSP
+         Eo72eLuzKkUBC4/HHWHNszGsoywymba0lOhamtJM2NUrGI9WesorQGPx+Sf4NHmrXlO5
+         GZhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741002794; x=1741607594;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=egcF/0fSfpEIM9jKlb06PQtyWEHsWxmve3UKG8E7nkQ=;
-        b=QgsDh8rNzjfEkyzkj1iIqkYaiW0FNM/cMmMTbSMmCA+foc8pfQvZkfqjeuI/i1633s
-         NbxAh+orwxg29MeuT+yZfJ8IhowjmTeZg+K4sr8tkgH5oquClUV+75sMmgAhzzNT5QZU
-         lvKz+jIspbjgXPvsb5alnKvBo8ehJZ7JsAAL3HJtTUr7rSUIkGNX/0kotU9tcNg6zrgD
-         WpRGuKeTeQ2AKqoXPd8Kn5HKNZ0fQqgqFlyoh5bxIW66WZeU1dsF0SE3R/hjC7PtbtZm
-         Bm9AwyE53sIcDhi57EnWXo2o8t9oNIiRAQ1AW2CMxpDwXtbmmWghMe62aV1thIoEX40R
-         cv6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWBhvYknvmd+hezlmZScSfgERM385jUxXOLoZyzLOEJeysElS7XmoC/NCnHLAgMPn9rzIjKxxCzmqQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqZfcoA3XDD4zuNHUTcU1NHYTcJSDoLSfGt4BjRtsXRZfVHs87
-	PrqF90jiL6hUtnjT7CoGx6ZGnmwCh0jQRpiGIoQRbEuebAwv41k2+5PG/lK9T40=
-X-Gm-Gg: ASbGnctowG/GZdO/4T//GI3euMqsLdCC6K0D6jL/U1/y9bbsrFdzcdO+AS1HyqUDDVj
-	L7YE29Du+TFftP0N6JKrwYnVtF/fiHkBY/7yoCzWc3C0rO2fT8zn+g8SlhJSOsn2YIihEEfYegk
-	aGabV/hWOFa+wCKNYwNY2C4ejXzCF2eLmFKzdQSMEBlwwkId5EuQgow/oq9fRCW0+Vv+dyaQexa
-	AUYArlxyj3tl86UAhXNv6ONlq9Odo7LnOkKDTDmnWgE3QhD/fn5UDzSRJqYwoibvNzLR5+vmTNW
-	5/KwJyww85E7wrKLaRekhjmyrlkJg5t0SLLiVPzUjDQ=
-X-Google-Smtp-Source: AGHT+IEn2yl+zGSi0lGbr7GuumDLDA2KQKipUpCk7GYI/B361NHJGLE4LlExFZMYijY48JcoBPBUsg==
-X-Received: by 2002:a05:6402:350e:b0:5e4:92ca:34d0 with SMTP id 4fb4d7f45d1cf-5e4d6b4bb17mr36004144a12.20.1741002793949;
-        Mon, 03 Mar 2025 03:53:13 -0800 (PST)
-Received: from [127.0.1.1] ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac1de83fa49sm86833866b.158.2025.03.03.03.53.12
+        d=1e100.net; s=20230601; t=1741007918; x=1741612718;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yy1JVRlXR6nmaQaZdHV5up9VNNk75+ZYeI4CrMOgdUU=;
+        b=J/GBNItQL3HNMnica7GZ541YLb6phQU8iDxQ7GAhCMOSZ1suuPmT+P2vHlEkkZ6qWN
+         ouFaJkLTkqsdHQ4nAa/4bXq8o5zXo3k4D32v3TAL54RWSxfCl6obhdxYf/YpfZ2jd226
+         VvhPVtfn5PWy8dYRGsH00oPEK6riKvF/32DGUQzfTbjihBfYF8GsPrHVPwQwaIFSXWLI
+         8lN9u6l/dxAam5lHNa9QPiAX8Dn38Pwkx+d07DVJK7Njpg3+N0fPEtLiOQ5TY8GpsfGN
+         DiNTllsmuQke83SCQNnJR18QXKWSVajKP7Pk1JHFMbKY7EhQ1KV6MWhBUWavbv8SXWjU
+         BwKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVy2iZCiV+XUczl00e8xGvawBtAF3k4U1Fn8uhS/VVWAIraHeno/XP0iEW3BU5gDm8gSN5SSyMOLwk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzApSBbn6QNcCUTYK7YFeEymQZhqZk/RikXVp5IeBivDKoNM2OR
+	Z3vG98eTM1VgX3PY7Wb0aUw8vNHozhsn1vS37wHH7kMpxnNSNu/MTIu/unW5ctU=
+X-Gm-Gg: ASbGncslwVvwPAVqtSvLeFRh8FIJdtiEwMlGvL96zpf4Q0HdxTmV4OCtPODCjCdC85K
+	4LeXIALvr1Mc9qBBqopzkmIQfkhD8JwMlr5wfNsBXM4TruEjQXPQ04qiVgPWUMKCb9t7CSZhE/y
+	XQsTtFaeLb3NOjOs15CDvfXSFsKvSG0NPlibyklC1OCUOzyL6tBVVipsJEulKoY87b6gAodXJCl
+	GYQRbXSz+BDdW9qdk/cuDoidsTNZ+QS1xe2HxxjfDBawTiIhP0BCOOZ4x7xAbY+KY0fSJUaaChw
+	dd4ZDmaXLm7jwcN86oSiQIM+EX9qOLNmJhPrCg==
+X-Google-Smtp-Source: AGHT+IEYSoFbgh9Yo6fzCpbmc4OD7ixVh8/Qc+gBT9GOh1lnAk3c6PmzNiyXxz2KhEi+3a6qb7fiqw==
+X-Received: by 2002:a05:600c:44d6:b0:43b:c0fa:f9cd with SMTP id 5b1f17b1804b1-43bc0fb007dmr31862825e9.7.1741007917860;
+        Mon, 03 Mar 2025 05:18:37 -0800 (PST)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:664a:9e92:6aa8:6007])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba538b9fsm194821915e9.17.2025.03.03.05.18.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 03:53:13 -0800 (PST)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Mon, 03 Mar 2025 13:52:52 +0200
-Subject: [PATCH v3 3/3] leds: rgb: leds-qcom-lpg: Fix calculation of best
- period Hi-Res PWMs
+        Mon, 03 Mar 2025 05:18:37 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 00/15] gpio: convert more drivers to using the new value
+ setters
+Date: Mon, 03 Mar 2025 14:18:25 +0100
+Message-Id: <20250303-gpiochip-set-conversion-v1-0-1d5cceeebf8b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -84,87 +83,84 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-leds-qcom-lpg-fix-max-pwm-on-hi-res-v3-3-62703c0ab76a@linaro.org>
-References: <20250303-leds-qcom-lpg-fix-max-pwm-on-hi-res-v3-0-62703c0ab76a@linaro.org>
-In-Reply-To: <20250303-leds-qcom-lpg-fix-max-pwm-on-hi-res-v3-0-62703c0ab76a@linaro.org>
-To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
- Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
-Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Kamal Wadhwa <quic_kamalw@quicinc.com>, 
- Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Johan Hovold <johan@kernel.org>, 
- Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
- linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Abel Vesa <abel.vesa@linaro.org>, stable@vger.kernel.org
-X-Mailer: b4 0.15-dev-dedf8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2125; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=p7hkdHG3Uk3MNaKmI5KRSyrO6nMtHV/TriUgNA5ZLkc=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBnxZgiyqHWf1haD9iRgMsk0Qyq6WO/KweHfvpfz
- xnu5vHbyv6JAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZ8WYIgAKCRAbX0TJAJUV
- VjQJD/wP9bczE8rW6CvDOvpJ+sOXg5GTtEI66RM3uKAPtmvc8+Soxy7rJchtalzl21sjnm5MoUH
- cgTwF1YrC/eq8jUEMozsg95EO2PBAa/H364bFDQN0a/EvUrjliKxytPRJu88qNZU8BRE3xfgm9+
- vvu7mnVg1HVnyp0BWberU7hwOHL8uUXe1XcIuGLS1J+g4Ug3ZPHRip+Cpw1BKYZJrHeGZDOKx+f
- bct27pyLFk7z0JKMCkxByvQf3RdPpFYYUZC9rROEOosJxf/ce/f3gbreCqwj4WoYpzt+vOHBIMV
- rMZ6dfk2/UUHUudnH/5YHpS2kVo+8e3776TxDMPs6xJYuimIA1aKocK+XsrGMADCgXoMktCLBES
- Z1kNaBOLHjbPYKzNU6DLgtReKI86/z6yhfoTbKNgxw3xMegwo+FAaQhPYyGIJi+GcsbZKoq0HsV
- fjk87QUBjx+dA12MVWLQzRRVdMDwaNLVXm4sx6t4bX4uTUIKV8mlU3NmhCb05uZzcrry55L/0hR
- oUw8xUAuJq8CVsiKCRiFdA4W2EXBNwaBsj8EIAKxxHykqf0G/B6VngjiIh9fOaFgt93FWlRmiV7
- 2wE1ixoR7eYwPKszb5nKJcf1uWtQIXU8uzsWQqWJRDVh8X/BnPWMhm9rtgztO2oRxQf8cW0Carq
- SaUVL5zmGZTrO5Q==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+X-B4-Tracking: v=1; b=H4sIACGsxWcC/x3MTQqAIBBA4avErBuwTPu5SrQom2w2KhoRRHfPW
+ r7F925IFJkSDMUNkU5O7F2OqizA7LOzhLzmhlrUSkgh0Qb2ZueAiQ403p0UP4Ot1NuiVdP1rYK
+ sQ6SNr/88Ts/zAth7bp9pAAAA
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Michael Hennerich <michael.hennerich@analog.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mun Yew Tham <mun.yew.tham@intel.com>, Joel Stanley <joel@jms.id.au>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, patches@opensource.cirrus.com, 
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2063;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=FTj6xoyS39LnNrJXGLhXAeRS3nQ1U42Zly5B+pL7Yio=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnxawlRSaTKbF/S2ubujlU+T5mOtA2wT+5FfqLz
+ f0O24SM9OuJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ8WsJQAKCRARpy6gFHHX
+ ckWGD/9u+ceNcDwkzEAzs9WbMfq5vXhzHtIGaKqnxBBxx8KhWYFPKP7Se3MIVRL9v0JnhQ87GKy
+ HDgBiwVyHynXsOKVlQw0APVr2LPRIaJaggMbPEmN6tfFWYJFXsseLQH6tF86XmqyVRZFj6c3Ony
+ a2Ji8lD8KdpKO/hTUEHaEk1Y7QRzZR3e8sgS3FMq9xzd5GWdbGNLbVCi3bIcPaowv+oqGTsktY8
+ IxJz2cM8pV89YbZvcWD4mJlhwti/GUcqKMlzqaiaGYSviLcYsgCdCp7UsOjsNZa9+BRiFp6+u2G
+ HEc+at4+FRdvN14vwP083vAkOasL2iFM66uCpowT/QcpOV7uFMZsOYtaq9yzbx78N6FWFdahWYh
+ 9JwMY5WrPG9p4eUzMdEsDKKQN6u8tgZk1LUGg/uq3c4jH4NXUarz+uzydzMFxqXfRi/AoL9g+60
+ VUkNIpSaLu1JefQwXm4VOq72a8rl9Ko95MHqVnuwKQJFNCyOieV5D07Lg6VTQwq3189BSB8faoi
+ zlWMU1AEuEHIsLPV5ccoXeZEXD+S2JuM4av48cV6RU4YuT+xCqSPmjnhzwnl4JOxdJ7CFu72AsK
+ SoU70k9bxmFIe9uGlfJiCdi28nlSkLv3bW09urYrHNMjhGHjTXNTOdEJ32yXwu8R2VpkIqc9rs2
+ 0+3p2O8qDdv/SiQ==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-When determining the actual best period by looping through all
-possible PWM configs, the resolution currently used is based on
-bit shift value which is off-by-one above the possible maximum
-PWM value allowed.
+New variants of set() and set_multiple() callbacks allow drivers to
+indicate failures back to callers. Convert more GPIO drivers to using
+them as the old ones are now deprecated.
 
-So subtract one from the resolution before determining the best
-period so that the maximum duty cycle requested by the PWM user
-won't result in a value above the maximum allowed.
+This series also contains some additional refactoring to the affected
+drivers wherever it makes the conversion easier.
 
-Cc: stable@vger.kernel.org    # 6.4
-Fixes: b00d2ed37617 ("leds: rgb: leds-qcom-lpg: Add support for high resolution PWM")
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+To: 
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/leds/rgb/leds-qcom-lpg.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Bartosz Golaszewski (15):
+      gpio: 74x164: use new line value setter callbacks
+      gpio: adnp: use lock guards for the I2C lock
+      gpio: adnp: use devm_mutex_init()
+      gpio: adnp: use new line value setter callbacks
+      gpio: adp5520: use new line value setter callbacks
+      gpio: adp5585: use new line value setter callbacks
+      gpio: altera-a10sr: use new line value setter callbacks
+      gpio: altera: use new line value setter callbacks
+      gpio: amd8111: use new line value setter callbacks
+      gpio: amd-fch: use new line value setter callbacks
+      gpio: arizona: use new line value setter callbacks
+      gpio: aspeed: use lock guards
+      gpio: aspeed: use new line value setter callbacks
+      gpio: aspeed-sgpio: use lock guards
+      gpio: aspeed-sgpio: use new line value setter callbacks
 
-diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
-index 0b6310184988c299d82ee7181982c03d306407a4..4f2a178e3d265a2cc88e651d3e2ca6ae3dfac2e2 100644
---- a/drivers/leds/rgb/leds-qcom-lpg.c
-+++ b/drivers/leds/rgb/leds-qcom-lpg.c
-@@ -462,7 +462,7 @@ static int lpg_calc_freq(struct lpg_channel *chan, uint64_t period)
- 		max_res = LPG_RESOLUTION_9BIT;
- 	}
- 
--	min_period = div64_u64((u64)NSEC_PER_SEC * (1 << pwm_resolution_arr[0]),
-+	min_period = div64_u64((u64)NSEC_PER_SEC * ((1 << pwm_resolution_arr[0]) - 1),
- 			       clk_rate_arr[clk_len - 1]);
- 	if (period <= min_period)
- 		return -EINVAL;
-@@ -483,7 +483,7 @@ static int lpg_calc_freq(struct lpg_channel *chan, uint64_t period)
- 	 */
- 
- 	for (i = 0; i < pwm_resolution_count; i++) {
--		resolution = 1 << pwm_resolution_arr[i];
-+		resolution = (1 << pwm_resolution_arr[i]) - 1;
- 		for (clk_sel = 1; clk_sel < clk_len; clk_sel++) {
- 			u64 numerator = period * clk_rate_arr[clk_sel];
- 
-@@ -1292,7 +1292,7 @@ static int lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 		if (ret)
- 			return ret;
- 
--		state->period = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * (1 << resolution) *
-+		state->period = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * ((1 << resolution) - 1) *
- 						 pre_div * (1 << m), refclk);
- 		state->duty_cycle = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * pwm_value * pre_div * (1 << m), refclk);
- 	} else {
+ drivers/gpio/gpio-74x164.c       |  16 ++---
+ drivers/gpio/gpio-adnp.c         | 136 +++++++++++++++++----------------------
+ drivers/gpio/gpio-adp5520.c      |  12 ++--
+ drivers/gpio/gpio-adp5585.c      |  10 +--
+ drivers/gpio/gpio-altera-a10sr.c |  14 ++--
+ drivers/gpio/gpio-altera.c       |   6 +-
+ drivers/gpio/gpio-amd-fch.c      |   7 +-
+ drivers/gpio/gpio-amd8111.c      |   6 +-
+ drivers/gpio/gpio-arizona.c      |   9 +--
+ drivers/gpio/gpio-aspeed-sgpio.c |  82 +++++++++--------------
+ drivers/gpio/gpio-aspeed.c       | 108 ++++++++++++-------------------
+ 11 files changed, 177 insertions(+), 229 deletions(-)
+---
+base-commit: 9778568dede2166c7bd124d473f9ec365f782935
+change-id: 20250303-gpiochip-set-conversion-736fb6548975
 
+Best regards,
 -- 
-2.34.1
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
