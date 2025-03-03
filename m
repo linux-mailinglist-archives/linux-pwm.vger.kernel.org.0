@@ -1,183 +1,165 @@
-Return-Path: <linux-pwm+bounces-5028-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5029-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD2A1A4BF0E
-	for <lists+linux-pwm@lfdr.de>; Mon,  3 Mar 2025 12:41:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A108A4BF67
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Mar 2025 12:54:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C20337A9092
-	for <lists+linux-pwm@lfdr.de>; Mon,  3 Mar 2025 11:40:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 389BC165A1F
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Mar 2025 11:53:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF4862010FD;
-	Mon,  3 Mar 2025 11:40:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49DF520CCDB;
+	Mon,  3 Mar 2025 11:53:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="qphRwrCN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UshAcp70"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp15.bhosted.nl (smtp15.bhosted.nl [94.124.121.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F4A20102C
-	for <linux-pwm@vger.kernel.org>; Mon,  3 Mar 2025 11:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF82120C02F
+	for <linux-pwm@vger.kernel.org>; Mon,  3 Mar 2025 11:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741002038; cv=none; b=bYOtZPo2u7nb3wAE5SQxL7Qk0H2JSmnoqT2RddgrilwoKrgN455v6grUXSj9d62Y+4VyEb8/OyKIDJ0VE2Zm5vxKnpUbtYY57Xr69A+RZ3/HXROYx/kcJxgQv9vigH0jBCgeEQ18N5zGBDpvlW9GfTvyKIhf7U8O02xipH2fqmc=
+	t=1741002794; cv=none; b=OpcPckMPSpmD7WrXjN4ji8lDirEClgQHhOBUaeFlediyfzQpV26xPtbI6x6NWjBlB9SCdd/zicVYp1rO1Y/WPNXDO1KGpDDbiF++AjjkQM7eIdc03AD1JAbp0EntuhjpeZ7igXBM9Ik5oWWuRSR9cpIKUIb5+SdbEW6tQ6gFPH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741002038; c=relaxed/simple;
-	bh=xjKhMtLA9tK9j8SX+seT9UK5BSImtLHPUuXRUCeDyBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MmitAUsLIkT0waeAO6DyCAJ5gGd+KxPGJqWpA0m5s4pda2AjCNML361aLM3PtuTLZkwA1WaoSAwalcgPvbonlNfjCs0D/qsUAKk1naW+EgDv9eA8OWAvT1m2GJjRsaR/gkwhH15Ca83j/aR7YuVpc4bJG4uTSG+BNvk+qyTbUak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=qphRwrCN; arc=none smtp.client-ip=94.124.121.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
+	s=arc-20240116; t=1741002794; c=relaxed/simple;
+	bh=weuzDKCsQiMr3iqm68yFLz1cNSwdbqWoaxOIGm3Qv1Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=K2yFmthWCIurf08UfJTiA9UqdyrkBWApTnhrmdCYhu3w+Bzb9CpFYq2h1PLV7UEcT8c0Pt0ex+ybLmUXz5ukwK3rmyoVPtYkFmQGNwTbLA/9Hq75F9lAZ8NU7kSrcNOmopXVWRKm6EMdLE86w5pT/AkYK6gV516hb7C7YMZ6bEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UshAcp70; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-abf48293ad0so349097466b.0
+        for <linux-pwm@vger.kernel.org>; Mon, 03 Mar 2025 03:53:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=protonic.nl; s=202111;
-	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
-	 message-id:subject:cc:to:from:date:from;
-	bh=W7xQaIM8KUgQYXUjWEz/yyKUU3dOwVVtoiKveZse1LQ=;
-	b=qphRwrCNarcdXMc+8nT9gMvUDncjj28vFRItzfiNE/jdOd2yOkJll/C0YqOI+M2Lv7xxVV69I4kDC
-	 EabyatzTV4QIi2a/uhHtenSOQTvgnl5afF0HzFmvDBTlBx3REPp83KwvYQxLaqXi/7tk4a3czrMRSI
-	 xgOPVkiNuzqBXgPhGvTeLVEAHDwWVaCBb56qs9Zz5cVnGinA1MkMCkialX23Gp8qC6Mdum9rxl4KCu
-	 3VMeU0juaMaLuz2lcY4aa2AjD6nutiVQVBifdXvBV3CXO1CKO+e2ypMhFdH54HYn4n/U6bDSNx7C9U
-	 Zxl8AX8zA0VD+Ja7BOpB/LKmPsgqzqQ==
-X-MSG-ID: 51c43871-f824-11ef-a39b-00505681446f
-Date: Mon, 3 Mar 2025 12:40:34 +0100
-From: David Jander <david@protonic.nl>
-To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-doc@vger.kernel.org, Nuno Sa <nuno.sa@analog.com>, Jonathan Cameron
- <jic23@kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>,
- linux-pwm@vger.kernel.org
-Subject: Re: [RFC PATCH 7/7] dt-bindings: motion: Add motion-simple-pwm
- bindings
-Message-ID: <20250303124034.726ba698@erd003.prtnl>
-In-Reply-To: <tm57fsmijq4t4y4dpmtss63ekzpm5oefir5tz4aioxq5dx4or6@lgoqjpxc3axh>
-References: <20250227162823.3585810-1-david@protonic.nl>
-	<20250227162823.3585810-8-david@protonic.nl>
-	<20250228-wonderful-python-of-resistance-d5b662@krzk-bin>
-	<20250228102201.590b4be6@erd003.prtnl>
-	<9a1d75a2-66c0-46b6-91a1-4922b892dfb1@kernel.org>
-	<20250228110931.7bdae7fd@erd003.prtnl>
-	<tm57fsmijq4t4y4dpmtss63ekzpm5oefir5tz4aioxq5dx4or6@lgoqjpxc3axh>
-Organization: Protonic Holland
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+        d=linaro.org; s=google; t=1741002789; x=1741607589; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yFk+AUCXrKYMFB3jOa4VTmIBB7qGuqY5Tz3fdWlt8X8=;
+        b=UshAcp70bwLfueH9nQU4muj4dZfypc+TVIiBCwvARiyGQTMstAhK+bg5aQm6zCbylC
+         3VRUuzd26k3HJG+y4pInEjxD/RFGMM46J93wdtQB3n43RfCDy5/qgv/+t/yZTfe1WpOA
+         oU/nXM/Mu5N2GSeexZIUpMbl8gs1L8ZAVBhwb+5g+HgcbeaUuNzwqpflt7T8iSKTlzNY
+         DCx5xQp6Ii/vHUz54glYaOS9nN/ODF/lPZzfWQZVUs3j7C6+744DQxEOS4YKrF7gacxp
+         6vWZupHktV74iEzh4NBlHRY2lC/PB5HbwCpKAjrH2yMyujbps4qAnTOTgQJ/AjgnVT7t
+         wW5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741002789; x=1741607589;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yFk+AUCXrKYMFB3jOa4VTmIBB7qGuqY5Tz3fdWlt8X8=;
+        b=quVnDqfX9BsvBm6V/aUqf0RlFOAmSw8G6eOh10DlwVm3ksTa+P2yYEO2Qs5bYtKdV9
+         0GZTWEZ7TmzZYybFypGV2Fu69QWchCr8ftYIvQF6aM+u99YbSA38pUEy6ckp9IW7ZDEt
+         mW8BrI/LUPZxn2ZZKgtN/b4sZRLKGAJA3AAnD6vu/puYQ+I1PAK4P7HCX/V4bFeUwqWc
+         4zG7pI4qoLVwknfYRt0I+QXWFcpZOFsbIqTzzwHkfoD0dc6qARovk+P6imx68jGefKGp
+         QpKpX/XjEGXrRjDb6N93dc6MXqay3QlUT69cnpon3qgrWylL1OFfodZ6XnvvHqu3sspC
+         YHcA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKNjzEDbFxtSHnSbBjiMGusaZ20W1mbpS1OjBaAgDxfRTRbj74o/taa2EzAp7zxrou3UnJ1GrB3qU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYD4SaWsAv4X6enhIpI+vluMJgVoF7tfTpx0BPnuDFatLWedf3
+	EFEJQprzV19JiQlAWcJxPhxrsGdkzO3KZN31/2zl0dR6bT3uMVT8d0uNecz6fPg=
+X-Gm-Gg: ASbGncsP0g35p69ELtbPyMWyQFfqw33J931PApo3SQOgl89VZlHYp25/ygZSONO+6Ab
+	uSEEVQ8x9d0XsTW/bHibFVM/obF/9RzhSCECT3eBrhCjsuf9pTE61yOTsb6/sI5oupuF6cDdqTr
+	3nVhMbuQSZLDyif5Fys7EzawH5ZSyFxBmEslgM9txFoG1ap6HN0CRfhYJIIztIWkmnroG6hRXdt
+	corvSZqpTJ0CmbiBQfOfUMRGvjXdJ1MJUaZTw2SL1Tes46h3GB5Z5ULwQ+HIGOFcBRf/jdCzz05
+	2/9yYTlUJ0cVV4LUd0ojzQ8ZRlUUI3Nt+jaE598Evc4=
+X-Google-Smtp-Source: AGHT+IFEhX0K2m/xxoCepy05vSD+L8QdDqMDgYEprV1OF5Vyr84x+ua4osWWJ20v8KKeG7laOTv8/Q==
+X-Received: by 2002:a17:906:a389:b0:abf:486a:5e0e with SMTP id a640c23a62f3a-abf486a6354mr945646866b.22.1741002789119;
+        Mon, 03 Mar 2025 03:53:09 -0800 (PST)
+Received: from [127.0.1.1] ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac1de83fa49sm86833866b.158.2025.03.03.03.53.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 03:53:08 -0800 (PST)
+From: Abel Vesa <abel.vesa@linaro.org>
+Subject: [PATCH v3 0/3] leds: rgb: leds-qcom-lpg: PWM fixes
+Date: Mon, 03 Mar 2025 13:52:49 +0200
+Message-Id: <20250303-leds-qcom-lpg-fix-max-pwm-on-hi-res-v3-0-62703c0ab76a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABKYxWcC/5WNQQ6CMBBFr0Jm7Zi2BoquvIdhUWGESaCtU4MYw
+ t2t3MDl+/l5b4VEwpTgUqwgNHPi4DOcDgW0g/M9IXeZwShTKmMUjtQlfLZhwjH2+OAFJ7dgfE8
+ YPA6MQglVZam2tXH2fIdsikL5uFduTeaB0yvIZ4/O+rf+5581anS60tRWVpErryN7J+EYpIdm2
+ 7Yv84jMGNcAAAA=
+X-Change-ID: 20250220-leds-qcom-lpg-fix-max-pwm-on-hi-res-067e8782a79b
+To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Kamal Wadhwa <quic_kamalw@quicinc.com>, 
+ Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Johan Hovold <johan@kernel.org>, 
+ Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
+ linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Abel Vesa <abel.vesa@linaro.org>, stable@vger.kernel.org
+X-Mailer: b4 0.15-dev-dedf8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1832; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=weuzDKCsQiMr3iqm68yFLz1cNSwdbqWoaxOIGm3Qv1Q=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBnxZgYd2y1ePd7e26DC8gF6jUr1+KlcJIjfd8Rr
+ zgdzdceoH+JAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZ8WYGAAKCRAbX0TJAJUV
+ VkIJD/0Q409NWJSNEHd+fCoQUYi0dSBHe3lxpE/IltreHBhmQv0actfrY25E4+jsyQgnRmejHuL
+ xXae9PGPduXBbUH6+311xQazz/EcbttQuBeKA6FAjMW7hPohIzKojja4+D45PAzsOEq19tGjDca
+ V/hep0WSJLaQfQ3CidSpene/fo3civL7WpPhfvZcWy9EnGLwBiczgy6hp8ox7BvBqENxEYu1znc
+ Tjc096J++kZLATDklZ3oCwfiV++d/uJ4ZPGnW1jGGYgquNWNNTp//joJ7ZcbosTZsIZTZi8Co60
+ QzxLrla/Ivm1+gqj1dw2djEY5zcBPQwltu7aEnl8ko488C6TgcQtc0TS8QeJhA/1A/Rz0NAnYCh
+ eTWS5a0tMeUJfIbjN46F2Nyua1OpZP/d1pwSNj/jwHfamKaf2odzjwKV2C4Rf/3ksuucDdDwYmu
+ Q2migLWKqqrbmwLq09xAFlYwXMDb2EoL34zT7lLpKUEYXmZFxR8E3i/JWpgxswPn1eP0rT+as8k
+ LxSqfhNfbudOJwoAU/GCpNCnd5rw7tdkAejXR1bqqSu4XQ8XuYb3kiaakvdq+JwJ1+l1mpcShOd
+ ROxTRZmNbPv31Mg64AQsmaOl0jSUjMrlfSf3hilAlAX2GGU1WkSRILclJP1GSekX5C7Me/AjEpS
+ OF1KY1ALG6rJnzw==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
+The PWM allow configuring the PWM resolution from 8 bits PWM
+values up to 15 bits values, for the Hi-Res PWMs, and then either
+6-bit or 9-bit for the normal PWMs. The current implementation loops
+through all possible resolutions (PWM sizes), for the PWM subtype, on top
+of the already existing process of determining the prediv, exponent and
+refclk.
 
-Dear Uwe,
+The first and second issues are related to capping the computed PWM
+value.
 
-Thanks for chiming in!
+The third issue is that it uses the wrong maximum possible PWM
+value for determining the best matched period.
 
-On Fri, 28 Feb 2025 16:18:05 +0100
-Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org> wrote:
+Fix all of them.
 
-> Hey David,
->=20
-> On Fri, Feb 28, 2025 at 11:09:31AM +0100, David Jander wrote:
-> > On Fri, 28 Feb 2025 10:37:48 +0100
-> > Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >  =20
-> > > On 28/02/2025 10:22, David Jander wrote: =20
-> > > >    =20
-> > > >>> +
-> > > >>> +  motion,pwm-inverted:
-> > > >>> +    $ref: /schemas/types.yaml#/definitions/flag     =20
-> > > >>
-> > > >> And PWM flag does not work?   =20
-> > > >=20
-> > > > I have seen PWM controllers that don't seem to support the
-> > > > PWM_POLARITY_INVERTED flag and those where it just doesn't work. Sh=
-ould all   =20
-> > >=20
-> > >=20
-> > > Shouldn't the controllers be fixed? Or let's rephrase the question: w=
-hy
-> > > only this PWM consumer needs this property and none of others need it=
-? =20
-> >=20
-> > CCing Uwe Kleine-Koenig and linux-pwm mailing list.
-> >=20
-> > I know that at least in kernel 6.11 the pwm-stm32.c PWM driver doesn't
-> > properly invert the PWM signal when specifying PWM_POLARITY_INVERTED. I=
- agree
-> > this is a probably bug that needs fixing if still present in 6.14-rc. B=
-esides
-> > that, if linux-pwm agrees that every single PWM driver _must_ properly =
-support
-> > this flag, I will drop this consumer flag an start fixing broken PWM dr=
-ivers
-> > that I encounter. I agree that it makes more sense this way, but I want=
-ed to
-> > be sure. =20
->=20
-> Some hardwares cannot support PWM_POLARITY_INVERTED. Affected drivers
-> include:
->=20
-> 	pwm-adp5585
-> 	pwm-ntxec
-> 	pwm-raspberrypi-poe
-> 	pwm-rz-mtu3 (software limitation only)
-> 	pwm-sunplus
-> 	pwm-twl-led (not completely sure, that one is strange)
->=20
-> . ISTR that there is a driver that does only support inverted polarity,
-> but I don't find it. For an overview I recommend reading through the
-> output of:
->=20
-> 	for f in drivers/pwm/pwm-*; do
-> 		echo $f;
-> 		sed -rn '/Limitations:/,/\*\/?$/p' $f;
-> 		echo;
-> 	done | less
->=20
-> . (Note not all drivers have commentary in the right format to unveil
-> their limitations.)
->=20
-> For most use-cases you can just do
->=20
-> 	.duty_cycle =3D .period - .duty_cycle
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+---
+Changes in v3:
+- Added a new patch that fixes the normal PWMs, since they now support
+  6-bit resolution as well. Added it as first patch.
+- Re-worded the second patch. Included Bjorn's suggestion and R-b tag.
+- Link to v2: https://lore.kernel.org/r/20250226-leds-qcom-lpg-fix-max-pwm-on-hi-res-v2-0-7af5ef5d220b@linaro.org
 
-Yes, that is exactly what the relevant code in motion/simple-pwm.c does when
-the "pwm-inverted" flag is present in the DT node.
+Changes in v2:
+- Re-worded the commit to drop the details that are not important
+  w.r.t. what the patch is fixing.
+- Added another patch which fixes the resolution used for determining
+  best matched period and PWM config.
+- Link to v1: https://lore.kernel.org/r/20250220-leds-qcom-lpg-fix-max-pwm-on-hi-res-v1-1-a161ec670ea5@linaro.org
 
-> instead of inverting polarity, but there is no abstraction in the PWM
-> bindings for that and also no helpers in the PWM framework. The problem
-> is more or less ignored, so if you have a device with
->=20
-> 	pwms =3D <&pwm0 0 PWM_POLARITY_INVERTED>;
->=20
-> and the PWM chip in question doesn't support that, the pwm API functions
-> will fail. So the system designer better makes sure that the PWM
-> hardware can cope with the needed polarity.
+---
+Abel Vesa (3):
+      leds: rgb: leds-qcom-lpg: Fix pwm resolution max for normal PWMs
+      leds: rgb: leds-qcom-lpg: Fix pwm resolution max for Hi-Res PWMs
+      leds: rgb: leds-qcom-lpg: Fix calculation of best period Hi-Res PWMs
 
-Thanks for clarifying this!
-
-@Krzysztof, do you think that given this situation it is acceptable to incl=
-ude
-the "pwm-inverted" flag in the dt-schema of the simple PWM motor driver?
-
-The need for an inverted PWM signal is something very common in the case of
-H-bridge motor drivers, where the PWM signal represents the actual logical
-output level of each of the two halves of the bridge. Often the high-side
-switches are used as the free-wheel position, so that 100% duty-cycle on bo=
-th
-channels is actually standstill, while 0% duty-cycle on one channel is full
-speed in either direction. This isn't always the case though, hence the
-importance for this to be able to be selected.
+ drivers/leds/rgb/leds-qcom-lpg.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+---
+base-commit: cd3215bbcb9d4321def93fea6cfad4d5b42b9d1d
+change-id: 20250220-leds-qcom-lpg-fix-max-pwm-on-hi-res-067e8782a79b
 
 Best regards,
+-- 
+Abel Vesa <abel.vesa@linaro.org>
 
---=20
-David Jander
 
