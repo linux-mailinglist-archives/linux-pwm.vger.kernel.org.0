@@ -1,127 +1,129 @@
-Return-Path: <linux-pwm+bounces-5079-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5090-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD3ADA4EB97
-	for <lists+linux-pwm@lfdr.de>; Tue,  4 Mar 2025 19:29:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DAF8A4EBB2
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Mar 2025 19:32:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2209F8A49E6
-	for <lists+linux-pwm@lfdr.de>; Tue,  4 Mar 2025 17:39:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A7DF1881DF4
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Mar 2025 18:28:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACD8A26138F;
-	Tue,  4 Mar 2025 17:13:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8CD725A334;
+	Tue,  4 Mar 2025 18:18:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NbLTLPSf"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cYAWsUbR"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from beeline3.cc.itu.edu.tr (beeline3.cc.itu.edu.tr [160.75.25.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CAE01DAC92
-	for <linux-pwm@vger.kernel.org>; Tue,  4 Mar 2025 17:13:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945092512C9
+	for <linux-pwm@vger.kernel.org>; Tue,  4 Mar 2025 18:18:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=160.75.25.117
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108431; cv=pass; b=ShkPHvfcDpEl3O6fH1hAte+3KNSiquO5yK5AwOGj3YGAwT9hU3Jf/YkAzL8tBkp7Wy8OZJgvsJch55PmPUohdCirTMLy0lyzopAm1qEevuuPNutHiN/uKM0N0871IhF3Ip4PvcguJfR7+wONszmRTSgpWCs0EG9C8XSeZWw1y4U=
+	t=1741112305; cv=pass; b=RMYJuZy1k4ZG8V+JlFbRwuQIFuWHrLVJ0163hMM53iA1I2cPISwTXP7m/9SvKTguX8PS5CyvIfedWfzSwlvPqsEYqefaNQbeTuYGOBx/I0yrfUioVNxsrpLqDzUoO+oL4zRzc+LKRhqJc40PlOE/Z24CW5v0w/OBVS3vzDZWHVw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741108431; c=relaxed/simple;
-	bh=vlo1sOpINhYxlANjGKB2TZCc7AQtX8YGKke1Q97h0SI=;
+	s=arc-20240116; t=1741112305; c=relaxed/simple;
+	bh=gJCT2x0MTbORYrOB0+eP20IuPL7gfsLN+SSPmgQiy48=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JF5yNUuR6QP9iSH5SI9Fc6b4XP38h2w0FoiIlO1LbeSMTQmua7lHBxPSaD5XvLl2WbQiTJZpzUDM6yqVwBqw1acbW2YyYoXtiEKKGvweubU5BFwNFxTE6URWDi8qh/mTVIbIB62h+5WRdTzPcxQc2K9GIwIpXVLCZFOgxeO1QyA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NbLTLPSf; arc=none smtp.client-ip=209.85.128.51; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; arc=pass smtp.client-ip=160.75.25.117
+	 In-Reply-To:To:Cc; b=eIS3wSmeKH5B5zrqlcGD7jrSWgy9aX7KxLdxNa5XdA0X6Ra0Z5cjYVhG6RXqnbIwvnOdm2mLN1eyUN2M3NkcrpWofl/qqOntQAFjNTBWYzX4xJ3q3/rPRTZEwQPcDLCRvM1MwPqrM9BJKYuw1rN6aQ4GnVUiQ8yP8KOcXpEars0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cYAWsUbR; arc=none smtp.client-ip=209.85.128.46; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; arc=pass smtp.client-ip=160.75.25.117
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
 Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id DCF8C40D1F47
-	for <linux-pwm@vger.kernel.org>; Tue,  4 Mar 2025 20:13:47 +0300 (+03)
+	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id 031FA40D1F5E
+	for <linux-pwm@vger.kernel.org>; Tue,  4 Mar 2025 21:18:22 +0300 (+03)
 X-Envelope-From: <root@cc.itu.edu.tr>
+Authentication-Results: lesvatest1.cc.itu.edu.tr;
+	dkim=pass (2048-bit key, unprotected) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=cYAWsUbR
 Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
-	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6gkC46jtzG2fr
-	for <linux-pwm@vger.kernel.org>; Tue,  4 Mar 2025 19:14:43 +0300 (+03)
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6h764rm8zG3cL
+	for <linux-pwm@vger.kernel.org>; Tue,  4 Mar 2025 19:32:50 +0300 (+03)
 Received: by le1 (Postfix, from userid 0)
-	id D4E6042720; Tue,  4 Mar 2025 19:14:32 +0300 (+03)
+	id 2077F427BA; Tue,  4 Mar 2025 19:32:40 +0300 (+03)
 Authentication-Results: lesva1.cc.itu.edu.tr;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NbLTLPSf
-X-Envelope-From: <linux-kernel+bounces-541795-bozkiru=itu.edu.tr@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cYAWsUbR
+X-Envelope-From: <linux-kernel+bounces-541797-bozkiru=itu.edu.tr@vger.kernel.org>
 Authentication-Results: lesva2.cc.itu.edu.tr;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NbLTLPSf
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cYAWsUbR
 Received: from fgw1.itu.edu.tr (fgw1.itu.edu.tr [160.75.25.103])
-	by le2 (Postfix) with ESMTP id BF22441FB4
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 16:23:10 +0300 (+03)
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by fgw1.itu.edu.tr (Postfix) with SMTP id 8CE3A305F789
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 16:23:10 +0300 (+03)
+	by le2 (Postfix) with ESMTP id DBB21421DE
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 16:23:17 +0300 (+03)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by fgw1.itu.edu.tr (Postfix) with SMTP id 7376A3064C07
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 16:23:17 +0300 (+03)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D18318979A6
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:22:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E1CB13AC751
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:22:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2464C21638A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C704D214A70;
 	Mon,  3 Mar 2025 13:19:00 +0000 (UTC)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1016214A70
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDECE21505C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741007934; cv=none; b=fj5CeuD1CAgGmefzefE1V6xBsmIgawe/caqCaO9fAJ9OVkp22SsjECHyFPF2g+DsNpTtG0BucqyPGeowp6UU/VnUuK9+K2p9C1LEeAYccVjrhJlP6cVU8x8U5GUvXJyzL8D9Bl2b07mBl41xVQuLPLG6vaFqQDpddMcsgzRMz5M=
+	t=1741007936; cv=none; b=CYA63XO6qNGyKE7O4+EjJ5L/zh17LVPO3M/Y+6EX8R/wenBcQEhTr5Jp30wipRlaQ5OTdbebWREQsD8GP00uKn3wbrmYlO2EaBz1YqSSUKBxb5vRJagDK1Wge8gMC6WIT2B+iyyYsNqec0tFmNzioUlADM5ZFvt20VyV/0VrRIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741007934; c=relaxed/simple;
-	bh=vlo1sOpINhYxlANjGKB2TZCc7AQtX8YGKke1Q97h0SI=;
+	s=arc-20240116; t=1741007936; c=relaxed/simple;
+	bh=gJCT2x0MTbORYrOB0+eP20IuPL7gfsLN+SSPmgQiy48=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HbmF3oKq6P+C/ApUoWBLPyd3/6uJO9aNQe7GSTzkMHTF35ENILSm3D54Poseio7PCMwQEWxGkBUbN/ZBXbjxFrDVuHBjXm5TpcavoQp1WK1JCPxX3VNxPoAk87DHmWnYOXrQHe6f9FABUm+cy9sJo/wbPsdNqR/8clVWAAB7050=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NbLTLPSf; arc=none smtp.client-ip=209.85.128.51
+	 In-Reply-To:To:Cc; b=fO9X21E549I/5dOAp1VFAg85d0W0/6gfGWY5D+nXpT07JYdQK6289SI9fcLpM5EoSDqIFA50Kj6cD/37FTlcizvR2RTa/wfBoHaScX4v5O83Qf5ww6gzi0YeIKDihrISMf86jwUD6QkCLqeF076q93u1sBKc0LFjn8fz2J3gkT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cYAWsUbR; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43bbb440520so11702655e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 05:18:52 -0800 (PST)
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43bbd711eedso9766295e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 05:18:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741007931; x=1741612731; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741007933; x=1741612733; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=lfos9Syg08SqOn+//RWYzG2n1+EfVqjsyXohmBPCw+w=;
-        b=NbLTLPSfsZw69VITbK91w98F7jLMKxNfPwJ4DPzT4Old3sMPOSPCztmr5KZ5R4+9No
-         9MOkrBbyOkLWQQLBT938GX6x70o9XouCO25ew7nbLA1iY3Z/ISLvNYcSRw/55xXalAaN
-         8IDM4pPS3pQb4NaWPRP0SW6mmbzGU+JcyX6Xy1EkFAZqaZATm1LpgIMZV/e9Qm9M5ODS
-         PvxjUBviaUjFO3yYA39z2QzlAPz6Eo0/v6ViNVZQ2FQVt7RslQiNK+lM766KvjqlN3gG
-         UYeqpvsLzaFITEZUXXjnNMcsPGxTS3fwaOu+43dnQJpf6o9vlrvlWUfvqBirrVLl5vGs
-         Lg8g==
+        bh=9Mna2g5kGAQGbITypIOAf332guWttEFjYKfE+wICzl8=;
+        b=cYAWsUbRJv5Eo4BFu6NUWQjUiXEnOqSFNt/ZkN/pDyEMoLtq5sX5NiyQXdIjAWukBE
+         eFM57fCCrIov/Jcm9TrzvXUH6IbTipsxgWECxyBMIDNoMhzWUU/fveiEOn09cZFWQ/Rv
+         IipgyM5TxnYLiOtKGz7HE5JulJH8Bb5xUy/d8LX7nTicikw9HtYMibi1s7W4i3rKNgGT
+         xRP3KwmdwN72Sb3dlFUX6yUonsdRUby91zG9V1XjVjcDsprjxhlsopARD/GHh4aNdmvj
+         pAukKJguecMZBc0RBGY1EAYoiKKVihaDm+UdvWBM1SVPyCLZBT8uKutySK4OgLn0ROjg
+         /6wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741007931; x=1741612731;
+        d=1e100.net; s=20230601; t=1741007933; x=1741612733;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lfos9Syg08SqOn+//RWYzG2n1+EfVqjsyXohmBPCw+w=;
-        b=BNcCOYyL4o7Uz4+8BnGNFqinv8SIcuaUkHe3RP9kD4+qFr8Dt6Gfe1DmMq7T1nZCpy
-         yooCA2R/igQ+g59xVGsLtdvDNbBYmEyRtV2bDxOHHBbdxnEiKAomdRE8XWC6R+leouY1
-         bcqb8P9tCiAvTyqgfG76Z7nCvg+z9vRdD4U5zJA1BVCXeTAmmj6RkqX1Uv85o+fxOpEr
-         enAr7hlvEDXa7h1C1MR5rd7w2Q9MI+KHURT1SRyWSEM/BZfV1/9XdOjq0OHMfjFHDuFi
-         UqUjTkfIZhJol30VHsuZCCT9w52HtV2cS8kkz8tJ/a9cDQlcHS3KBnZ3q88eqEOZljUZ
-         NklQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+z1UfC9hOtRK1nsJXGsT1W/fGz+jIF6pGo4yjah825UF1M0JKojn/wXpa99HMwIZi3Ewtpnv2f223f/Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPMZ4uyM+c1375FCrrOgUSrq8IjXLERwYaZ3UVr37Cae1v3AxS
-	zPyV6oi/HbU6mbpa3F/CIUJFgUDL6U+kCGVwnZtpgx+Gbr38yieEQlYwAh7OLv8=
-X-Gm-Gg: ASbGncvejNFj42CILpiNzBgGDRYXx6p65TsPWSLZLgNYmEl534WyfDEtbLQqVu/Lfct
-	Hu8fRM1fBkC9p/Ff9jO2uKxyLThRMYQLy6oTlZnoeTDh7ljQWOrCxCfx4pJxcSbRuUVtp6+KtoA
-	6lTW3oD3aS3dg/5dVtFAv5Wlr9yn4A41WU4gTbzSbYTyazNBdh1qy87PLuI+ZvhjITQDegoHklP
-	XHL4FjY6GIkJOfE6JN891u/AnLa8A945LpMF66o+72IEtXf2ZU50MUuk99xOolw/Yq5LLZbbk/j
-	M93Kg1GVQKZ2XDlsKiCKTB4juGx1W1IRbd+1Bw==
-X-Google-Smtp-Source: AGHT+IHXK2frQu5mm5st7OG50mDUgW+ZqOAgaKWtdnfNsGdx2IIR5+MeX+T68WRmGU9N2Zhz+vD07w==
-X-Received: by 2002:a05:600c:45cc:b0:439:9ee1:86bf with SMTP id 5b1f17b1804b1-43ba7c9b8e2mr134577995e9.7.1741007931114;
-        Mon, 03 Mar 2025 05:18:51 -0800 (PST)
+        bh=9Mna2g5kGAQGbITypIOAf332guWttEFjYKfE+wICzl8=;
+        b=iV0D5e/h4O/LuACaH3aKJbNRgfHNpHluxnjjqSU2N76Ruz6XCZE+ehTAvcWysw5rMr
+         M7K5uQEwBLduh3SILfBKsA9UFe2/yZsQdfVGt33lCbXgK0rbqtKa018yVrV76od5oK53
+         99c7WPW7xALa+z0VRv2hps1CQv9qCpMyCEGjj35Ho3QSD1nL96lB4DT9VzaIJsfTrbMf
+         ZofrhGGNZt8pM/Ired9uDKhUxdVnJcSY8vnYe8Cfa0OlihBuk8P7dm0QeR8n05shvpDe
+         N9AIl5Dcqw1ndOnPLng1TTICgQYTBqcCDJbzL8u1WRdh7kzY9ZLEIpv0tKLc2YXN4G+0
+         Inpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwATv/Lg0AEaMCyzskw3x2IcU+LjQyPSFLC0Ojf5yRo0/+CD7xWkF5OPEDdV0iYw3SwF+a0Lb3x2702h8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHzU/l7NsBYaCFm5cnncgNAgzuHjA/Hdgj8CtGNGNHB/NtvXdY
+	Fy4Z0G+s4eemzAjvIX1NyP31UvFCV5nZMeC/8hrOhpEuZrdZq/Mj3gAuq+O05eU=
+X-Gm-Gg: ASbGncvo1tsd8fg78WgZo5JtJXQdQGVwwiPh3JJcUQhr+f45Yn0vKTacE8Da7Ve4IyG
+	R8sfdT6CtIDQn/uku1V3zPfaD3KMtrN8dJPzwjcfXCel3HxH3TQrZX6bmAf6UiXcHRQUZgEB0Kl
+	4WO1OlUGT/SNzLjNmyPLXjPkGEUPRVRKH83gXqjWd4eKQpe6n3sxmrj3bsm11TBeR3t5n2oZVP1
+	mYhFMeJTG7VE8DbtMzrNPgJZQAfPVEigvMVEpyt1bWgK/vsWYk2g7If8DfUhUjJkIuzqgtiIEe8
+	WGScdamBzxJrhoLDBDB3EwvVD10mlXt75iSm6Q==
+X-Google-Smtp-Source: AGHT+IFY22PCA1a2+aN5bDi5iCcPupeWgrWRYBU3OAd6qR1uqfM8OPw60ciFVK/sAA1n6Y60dhPpwQ==
+X-Received: by 2002:a05:600c:1392:b0:439:88bb:d002 with SMTP id 5b1f17b1804b1-43ba6727b57mr103602005e9.23.1741007933166;
+        Mon, 03 Mar 2025 05:18:53 -0800 (PST)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:664a:9e92:6aa8:6007])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba538b9fsm194821915e9.17.2025.03.03.05.18.50
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba538b9fsm194821915e9.17.2025.03.03.05.18.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 05:18:50 -0800 (PST)
+        Mon, 03 Mar 2025 05:18:52 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 03 Mar 2025 14:18:37 +0100
-Subject: [PATCH 12/15] gpio: aspeed: use lock guards
+Date: Mon, 03 Mar 2025 14:18:39 +0100
+Subject: [PATCH 14/15] gpio: aspeed-sgpio: use lock guards
 Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -131,7 +133,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-gpiochip-set-conversion-v1-12-1d5cceeebf8b@linaro.org>
+Message-Id: <20250303-gpiochip-set-conversion-v1-14-1d5cceeebf8b@linaro.org>
 References: <20250303-gpiochip-set-conversion-v1-0-1d5cceeebf8b@linaro.org>
 In-Reply-To: <20250303-gpiochip-set-conversion-v1-0-1d5cceeebf8b@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -145,28 +147,28 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10512;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5780;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=6Biyqx/oPiy1u29C0+kNxd6YeuL0GXYE5IHU8R6GPkQ=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnxawre/nLb8HZ9vCTWG9HgoFrpXBkyMmO3uPg+
- DkbCvt+1bmJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ8WsKwAKCRARpy6gFHHX
- ct7sD/9yKqknbydRuHgo09mRDQLljVd2RW0HD61Q3y+e/L/B6cyQnjzZKT5uGJ+v6h4lgQv+iXU
- ka+2zeotaUUZDupvz+c5QV5Z7LA8/PWAP3O7uVp9pdDlIJ9GsdOQg9KbFeQZsTOfhMKXfQTt6PY
- z0o7Fa+2lJh1TS+J24HnpMcUWXqI1Nu1N3tBj9XiBcJspKwP0iDeP3a2KjMUw3cNX+EPK7a47J3
- Snyjbs5wm8baI0fqmEyKL4pt1rZZ5mWecGL4VVpLMLZiCBTrIa+LgvxNGHkL+gKevzXYUnoYKR3
- tZKeMyE69KAyE/ZOB1tvR5UmGrw7vjpuPJMpcG4eAIIJswazrvDydIqT4M43TPIevqtqhgQg/YE
- 6vp6cHKqSigeHfJcLF+msUCUvTtjmSKGBGp0LupdS+uPASKA/O/cfZx4v5tIeG2nPSnQZZl6tqR
- SIJHEXkhxoclh99WGXVu0GM2vsR9nl22pgPSYkKIwUzKV2epGnm+RVZZYhddELQ3fVhplnYWUnK
- s6bz7bNOSah0XlLT3p4hQp5s/jkOPlPszWSIJcnxeh5Q05zwmcgbdo4MF2vZBX0iaeCd4y+NI9X
- c6vgDAzA8oJ1o3lkJ5HWlhwdW/fj54pLrh+XXHSZ+a05AcdBd1vi1UyJ5kHAKf8jITmDJdjkq45
- NxSkq37b/jMxB8Q==
+ bh=0qXZl4P6oay9QYtQck71x8HYJPy63jgVqg/jPZp1JP8=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnxawsJBgL9NLW7b7FCtj23bKQ2kGRMqw9cfP5j
+ kWw5bq4/RWJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ8WsLAAKCRARpy6gFHHX
+ cjEGD/9I/yPodJyzCvoLyTdAs9s5HAxWXV840R+OGBpnA+oBXEY0FEbNiwC/ZRm6SNhGJrpxwfM
+ 0Cw6Nxab1aIHNmI/IkLcksuG5r8U++V+RfblyWmsofiye6Cjmi2k1JY8NHPqGNfxGHSCi05c6hr
+ +o0YH0h4Pkb/XCzt7Xrp9gQxm14ttMk9AnxYSEj8KT53aCRaiacOJeAueSocxP/0plWhJWnLBlE
+ udhOpcnmP2QDd3bu2veRGB05Tb3mO8juN5L0ClWpZH7vfWmJ4tGxo6CLQ/BJCbctfAzExS6R+8Z
+ wrisMCfrjV1zNfFfgvEC9iQXHEXeprwQA+LPKEdM8uUK7wsSIaNYRhgCH2zKOv3tfd84zaa04xA
+ VHJ6Si4eURMZ5f5J26a+xy6d9LHe7hM6r4zG/yOurvpFt5+UdpPnB7K9tC0AtobOSf1nYMXu/Sx
+ xSgB2mwmYmf3UgO0RE9yimPFnwaA4+Q6rMb2bSyqnKDIC9RbqCYCdO0fqjgz0zaWogldF2563Pc
+ rqMkKNXgx38lLXc1hXAjdiEn5FsrcnratZRfM72ETy/jHE1TjvODlvn4UVeKvQg1+yYmrtuOnZ5
+ D9tcdNqZ961mLhWwMoF//HwFYaND3V9NpBfENgdDRuf/cQg9XmRLHJDhqH0uqZ+Ah5XIdxt1iBe
+ e56xOZfdkwuJ96Q==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
-X-ITU-Libra-ESVA-ID: 4Z6gkC46jtzG2fr
+X-ITU-Libra-ESVA-ID: 4Z6h764rm8zG3cL
 X-ITU-Libra-ESVA: No virus found
 X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
-X-ITU-Libra-ESVA-Watermark: 1741713089.26996@5AWL6L3h/YuNYOU+/MknNg
+X-ITU-Libra-ESVA-Watermark: 1741716979.51247@fSi3+CGPtyWUyTewzA6bbQ
 X-ITU-MailScanner-SpamCheck: not spam
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
@@ -176,351 +178,198 @@ spinlock.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpio-aspeed.c | 101 +++++++++++++++++----------------------------
- 1 file changed, 38 insertions(+), 63 deletions(-)
+ drivers/gpio/gpio-aspeed-sgpio.c | 76 +++++++++++++++-------------------------
+ 1 file changed, 29 insertions(+), 47 deletions(-)
 
-diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index 40c1bd80f8b0..e2535aad1026 100644
---- a/drivers/gpio/gpio-aspeed.c
-+++ b/drivers/gpio/gpio-aspeed.c
-@@ -5,6 +5,7 @@
-  * Joel Stanley <joel@jms.id.au>
+diff --git a/drivers/gpio/gpio-aspeed-sgpio.c b/drivers/gpio/gpio-aspeed-sgpio.c
+index 34eb26298e32..5ce86de22563 100644
+--- a/drivers/gpio/gpio-aspeed-sgpio.c
++++ b/drivers/gpio/gpio-aspeed-sgpio.c
+@@ -6,6 +6,7 @@
   */
  
+ #include <linux/bitfield.h>
 +#include <linux/cleanup.h>
  #include <linux/clk.h>
- #include <linux/gpio/aspeed.h>
  #include <linux/gpio/driver.h>
-@@ -427,37 +428,33 @@ static void aspeed_gpio_set(struct gpio_chip *gc, unsigned int offset,
- 			    int val)
+ #include <linux/hashtable.h>
+@@ -170,17 +171,14 @@ static int aspeed_sgpio_get(struct gpio_chip *gc, unsigned int offset)
  {
- 	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
+ 	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
+ 	const struct aspeed_sgpio_bank *bank = to_bank(offset);
 -	unsigned long flags;
- 	bool copro = false;
+ 	enum aspeed_sgpio_reg reg;
+ 	int rc = 0;
+ 
+-	raw_spin_lock_irqsave(&gpio->lock, flags);
++	guard(raw_spinlock_irqsave)(&gpio->lock);
+ 
+ 	reg = aspeed_sgpio_is_input(offset) ? reg_val : reg_rdata;
+ 	rc = !!(ioread32(bank_reg(gpio, bank, reg)) & GPIO_BIT(offset));
+ 
+-	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+-
+ 	return rc;
+ }
+ 
+@@ -214,13 +212,10 @@ static int sgpio_set_value(struct gpio_chip *gc, unsigned int offset, int val)
+ static void aspeed_sgpio_set(struct gpio_chip *gc, unsigned int offset, int val)
+ {
+ 	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
+-	unsigned long flags;
+ 
+-	raw_spin_lock_irqsave(&gpio->lock, flags);
++	guard(raw_spinlock_irqsave)(&gpio->lock);
+ 
+ 	sgpio_set_value(gc, offset, val);
+-
+-	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ }
+ 
+ static int aspeed_sgpio_dir_in(struct gpio_chip *gc, unsigned int offset)
+@@ -231,15 +226,14 @@ static int aspeed_sgpio_dir_in(struct gpio_chip *gc, unsigned int offset)
+ static int aspeed_sgpio_dir_out(struct gpio_chip *gc, unsigned int offset, int val)
+ {
+ 	struct aspeed_sgpio *gpio = gpiochip_get_data(gc);
+-	unsigned long flags;
+ 	int rc;
+ 
+ 	/* No special action is required for setting the direction; we'll
+ 	 * error-out in sgpio_set_value if this isn't an output GPIO */
  
 -	raw_spin_lock_irqsave(&gpio->lock, flags);
 +	guard(raw_spinlock_irqsave)(&gpio->lock);
 +
- 	copro = aspeed_gpio_copro_request(gpio, offset);
- 
- 	__aspeed_gpio_set(gc, offset, val);
- 
- 	if (copro)
- 		aspeed_gpio_copro_release(gpio, offset);
+ 	rc = sgpio_set_value(gc, offset, val);
 -	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 
+ 	return rc;
  }
- 
- static int aspeed_gpio_dir_in(struct gpio_chip *gc, unsigned int offset)
+@@ -269,7 +263,6 @@ static void aspeed_sgpio_irq_ack(struct irq_data *d)
  {
- 	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
+ 	const struct aspeed_sgpio_bank *bank;
+ 	struct aspeed_sgpio *gpio;
 -	unsigned long flags;
- 	bool copro = false;
+ 	void __iomem *status_addr;
+ 	int offset;
+ 	u32 bit;
+@@ -278,18 +271,15 @@ static void aspeed_sgpio_irq_ack(struct irq_data *d)
  
- 	if (!have_input(gpio, offset))
- 		return -ENOTSUPP;
+ 	status_addr = bank_reg(gpio, bank, reg_irq_status);
  
 -	raw_spin_lock_irqsave(&gpio->lock, flags);
 +	guard(raw_spinlock_irqsave)(&gpio->lock);
  
- 	copro = aspeed_gpio_copro_request(gpio, offset);
- 	gpio->config->llops->reg_bit_set(gpio, offset, reg_dir, 0);
- 	if (copro)
- 		aspeed_gpio_copro_release(gpio, offset);
- 
--	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 	iowrite32(bit, status_addr);
 -
- 	return 0;
- }
- 
-@@ -465,13 +462,12 @@ static int aspeed_gpio_dir_out(struct gpio_chip *gc,
- 			       unsigned int offset, int val)
- {
- 	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
--	unsigned long flags;
- 	bool copro = false;
- 
- 	if (!have_output(gpio, offset))
- 		return -ENOTSUPP;
- 
--	raw_spin_lock_irqsave(&gpio->lock, flags);
-+	guard(raw_spinlock_irqsave)(&gpio->lock);
- 
- 	copro = aspeed_gpio_copro_request(gpio, offset);
- 	__aspeed_gpio_set(gc, offset, val);
-@@ -479,7 +475,6 @@ static int aspeed_gpio_dir_out(struct gpio_chip *gc,
- 
- 	if (copro)
- 		aspeed_gpio_copro_release(gpio, offset);
--	raw_spin_unlock_irqrestore(&gpio->lock, flags);
- 
- 	return 0;
- }
-@@ -487,7 +482,6 @@ static int aspeed_gpio_dir_out(struct gpio_chip *gc,
- static int aspeed_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
- {
- 	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
--	unsigned long flags;
- 	u32 val;
- 
- 	if (!have_input(gpio, offset))
-@@ -496,12 +490,10 @@ static int aspeed_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
- 	if (!have_output(gpio, offset))
- 		return GPIO_LINE_DIRECTION_IN;
- 
--	raw_spin_lock_irqsave(&gpio->lock, flags);
-+	guard(raw_spinlock_irqsave)(&gpio->lock);
- 
- 	val = gpio->config->llops->reg_bit_get(gpio, offset, reg_dir);
- 
--	raw_spin_unlock_irqrestore(&gpio->lock, flags);
--
- 	return val ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
- }
- 
-@@ -527,7 +519,6 @@ static inline int irqd_to_aspeed_gpio_data(struct irq_data *d,
- static void aspeed_gpio_irq_ack(struct irq_data *d)
- {
- 	struct aspeed_gpio *gpio;
--	unsigned long flags;
- 	int rc, offset;
- 	bool copro = false;
- 
-@@ -535,20 +526,19 @@ static void aspeed_gpio_irq_ack(struct irq_data *d)
- 	if (rc)
- 		return;
- 
--	raw_spin_lock_irqsave(&gpio->lock, flags);
-+	guard(raw_spinlock_irqsave)(&gpio->lock);
-+
- 	copro = aspeed_gpio_copro_request(gpio, offset);
- 
- 	gpio->config->llops->reg_bit_set(gpio, offset, reg_irq_status, 1);
- 
- 	if (copro)
- 		aspeed_gpio_copro_release(gpio, offset);
 -	raw_spin_unlock_irqrestore(&gpio->lock, flags);
  }
  
- static void aspeed_gpio_irq_set_mask(struct irq_data *d, bool set)
+ static void aspeed_sgpio_irq_set_mask(struct irq_data *d, bool set)
  {
- 	struct aspeed_gpio *gpio;
+ 	const struct aspeed_sgpio_bank *bank;
+ 	struct aspeed_sgpio *gpio;
 -	unsigned long flags;
- 	int rc, offset;
- 	bool copro = false;
- 
-@@ -560,14 +550,14 @@ static void aspeed_gpio_irq_set_mask(struct irq_data *d, bool set)
+ 	u32 reg, bit;
+ 	void __iomem *addr;
+ 	int offset;
+@@ -301,17 +291,15 @@ static void aspeed_sgpio_irq_set_mask(struct irq_data *d, bool set)
  	if (set)
  		gpiochip_enable_irq(&gpio->chip, irqd_to_hwirq(d));
  
 -	raw_spin_lock_irqsave(&gpio->lock, flags);
-+	guard(raw_spinlock_irqsave)(&gpio->lock);
-+
- 	copro = aspeed_gpio_copro_request(gpio, offset);
++	scoped_guard(raw_spinlock_irqsave, &gpio->lock) {
++		reg = ioread32(addr);
++		if (set)
++			reg |= bit;
++		else
++			reg &= ~bit;
  
- 	gpio->config->llops->reg_bit_set(gpio, offset, reg_irq_enable, set);
- 
- 	if (copro)
- 		aspeed_gpio_copro_release(gpio, offset);
+-	reg = ioread32(addr);
+-	if (set)
+-		reg |= bit;
+-	else
+-		reg &= ~bit;
+-
+-	iowrite32(reg, addr);
+-
 -	raw_spin_unlock_irqrestore(&gpio->lock, flags);
++		iowrite32(reg, addr);
++	}
  
  	/* Masking the IRQ */
  	if (!set)
-@@ -591,7 +581,6 @@ static int aspeed_gpio_set_type(struct irq_data *d, unsigned int type)
- 	u32 type2 = 0;
+@@ -339,7 +327,6 @@ static int aspeed_sgpio_set_type(struct irq_data *d, unsigned int type)
+ 	const struct aspeed_sgpio_bank *bank;
  	irq_flow_handler_t handler;
- 	struct aspeed_gpio *gpio;
+ 	struct aspeed_sgpio *gpio;
 -	unsigned long flags;
- 	int rc, offset;
- 	bool copro = false;
+ 	void __iomem *addr;
+ 	int offset;
  
-@@ -620,16 +609,19 @@ static int aspeed_gpio_set_type(struct irq_data *d, unsigned int type)
+@@ -366,24 +353,22 @@ static int aspeed_sgpio_set_type(struct irq_data *d, unsigned int type)
  		return -EINVAL;
  	}
  
 -	raw_spin_lock_irqsave(&gpio->lock, flags);
--	copro = aspeed_gpio_copro_request(gpio, offset);
 +	scoped_guard(raw_spinlock_irqsave, &gpio->lock) {
-+		copro = aspeed_gpio_copro_request(gpio, offset);
++		addr = bank_reg(gpio, bank, reg_irq_type0);
++		reg = ioread32(addr);
++		reg = (reg & ~bit) | type0;
++		iowrite32(reg, addr);
  
--	gpio->config->llops->reg_bit_set(gpio, offset, reg_irq_type0, type0);
--	gpio->config->llops->reg_bit_set(gpio, offset, reg_irq_type1, type1);
--	gpio->config->llops->reg_bit_set(gpio, offset, reg_irq_type2, type2);
-+		gpio->config->llops->reg_bit_set(gpio, offset, reg_irq_type0,
-+						 type0);
-+		gpio->config->llops->reg_bit_set(gpio, offset, reg_irq_type1,
-+						 type1);
-+		gpio->config->llops->reg_bit_set(gpio, offset, reg_irq_type2,
-+						 type2);
+-	addr = bank_reg(gpio, bank, reg_irq_type0);
+-	reg = ioread32(addr);
+-	reg = (reg & ~bit) | type0;
+-	iowrite32(reg, addr);
++		addr = bank_reg(gpio, bank, reg_irq_type1);
++		reg = ioread32(addr);
++		reg = (reg & ~bit) | type1;
++		iowrite32(reg, addr);
  
--	if (copro)
--		aspeed_gpio_copro_release(gpio, offset);
+-	addr = bank_reg(gpio, bank, reg_irq_type1);
+-	reg = ioread32(addr);
+-	reg = (reg & ~bit) | type1;
+-	iowrite32(reg, addr);
+-
+-	addr = bank_reg(gpio, bank, reg_irq_type2);
+-	reg = ioread32(addr);
+-	reg = (reg & ~bit) | type2;
+-	iowrite32(reg, addr);
+-
 -	raw_spin_unlock_irqrestore(&gpio->lock, flags);
-+		if (copro)
-+			aspeed_gpio_copro_release(gpio, offset);
++		addr = bank_reg(gpio, bank, reg_irq_type2);
++		reg = ioread32(addr);
++		reg = (reg & ~bit) | type2;
++		iowrite32(reg, addr);
 +	}
  
  	irq_set_handler_locked(d, handler);
  
-@@ -686,17 +678,16 @@ static int aspeed_gpio_reset_tolerance(struct gpio_chip *chip,
+@@ -487,13 +472,12 @@ static int aspeed_sgpio_reset_tolerance(struct gpio_chip *chip,
  					unsigned int offset, bool enable)
  {
- 	struct aspeed_gpio *gpio = gpiochip_get_data(chip);
+ 	struct aspeed_sgpio *gpio = gpiochip_get_data(chip);
 -	unsigned long flags;
- 	bool copro = false;
+ 	void __iomem *reg;
+ 	u32 val;
+ 
+ 	reg = bank_reg(gpio, to_bank(offset), reg_tolerance);
  
 -	raw_spin_lock_irqsave(&gpio->lock, flags);
 +	guard(raw_spinlock_irqsave)(&gpio->lock);
-+
- 	copro = aspeed_gpio_copro_request(gpio, offset);
  
- 	gpio->config->llops->reg_bit_set(gpio, offset, reg_tolerance, enable);
+ 	val = readl(reg);
  
- 	if (copro)
- 		aspeed_gpio_copro_release(gpio, offset);
+@@ -504,8 +488,6 @@ static int aspeed_sgpio_reset_tolerance(struct gpio_chip *chip,
+ 
+ 	writel(val, reg);
+ 
 -	raw_spin_unlock_irqrestore(&gpio->lock, flags);
- 
+-
  	return 0;
  }
-@@ -798,7 +789,6 @@ static int enable_debounce(struct gpio_chip *chip, unsigned int offset,
- {
- 	struct aspeed_gpio *gpio = gpiochip_get_data(chip);
- 	u32 requested_cycles;
--	unsigned long flags;
- 	int rc;
- 	int i;
  
-@@ -812,12 +802,12 @@ static int enable_debounce(struct gpio_chip *chip, unsigned int offset,
- 		return rc;
- 	}
- 
--	raw_spin_lock_irqsave(&gpio->lock, flags);
-+	guard(raw_spinlock_irqsave)(&gpio->lock);
- 
- 	if (timer_allocation_registered(gpio, offset)) {
- 		rc = unregister_allocated_timer(gpio, offset);
- 		if (rc < 0)
--			goto out;
-+			return rc;
- 	}
- 
- 	/* Try to find a timer already configured for the debounce period */
-@@ -855,7 +845,7 @@ static int enable_debounce(struct gpio_chip *chip, unsigned int offset,
- 			 * consistency.
- 			 */
- 			configure_timer(gpio, offset, 0);
--			goto out;
-+			return rc;
- 		}
- 
- 		i = j;
-@@ -863,34 +853,26 @@ static int enable_debounce(struct gpio_chip *chip, unsigned int offset,
- 		iowrite32(requested_cycles, gpio->base + gpio->config->debounce_timers_array[i]);
- 	}
- 
--	if (WARN(i == 0, "Cannot register index of disabled timer\n")) {
--		rc = -EINVAL;
--		goto out;
--	}
-+	if (WARN(i == 0, "Cannot register index of disabled timer\n"))
-+		return -EINVAL;
- 
- 	register_allocated_timer(gpio, offset, i);
- 	configure_timer(gpio, offset, i);
- 
--out:
--	raw_spin_unlock_irqrestore(&gpio->lock, flags);
--
- 	return rc;
- }
- 
- static int disable_debounce(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct aspeed_gpio *gpio = gpiochip_get_data(chip);
--	unsigned long flags;
- 	int rc;
- 
--	raw_spin_lock_irqsave(&gpio->lock, flags);
-+	guard(raw_spinlock_irqsave)(&gpio->lock);
- 
- 	rc = unregister_allocated_timer(gpio, offset);
- 	if (!rc)
- 		configure_timer(gpio, offset, 0);
- 
--	raw_spin_unlock_irqrestore(&gpio->lock, flags);
--
- 	return rc;
- }
- 
-@@ -961,7 +943,6 @@ int aspeed_gpio_copro_grab_gpio(struct gpio_desc *desc,
- 	struct aspeed_gpio *gpio = gpiochip_get_data(chip);
- 	int rc = 0, bindex, offset = gpio_chip_hwgpio(desc);
- 	const struct aspeed_gpio_bank *bank = to_bank(offset);
--	unsigned long flags;
- 
- 	if (!aspeed_gpio_support_copro(gpio))
- 		return -EOPNOTSUPP;
-@@ -974,13 +955,12 @@ int aspeed_gpio_copro_grab_gpio(struct gpio_desc *desc,
- 		return -EINVAL;
- 	bindex = offset >> 3;
- 
--	raw_spin_lock_irqsave(&gpio->lock, flags);
-+	guard(raw_spinlock_irqsave)(&gpio->lock);
- 
- 	/* Sanity check, this shouldn't happen */
--	if (gpio->cf_copro_bankmap[bindex] == 0xff) {
--		rc = -EIO;
--		goto bail;
--	}
-+	if (gpio->cf_copro_bankmap[bindex] == 0xff)
-+		return -EIO;
-+
- 	gpio->cf_copro_bankmap[bindex]++;
- 
- 	/* Switch command source */
-@@ -994,8 +974,6 @@ int aspeed_gpio_copro_grab_gpio(struct gpio_desc *desc,
- 		*dreg_offset = bank->rdata_reg;
- 	if (bit)
- 		*bit = GPIO_OFFSET(offset);
-- bail:
--	raw_spin_unlock_irqrestore(&gpio->lock, flags);
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(aspeed_gpio_copro_grab_gpio);
-@@ -1009,7 +987,6 @@ int aspeed_gpio_copro_release_gpio(struct gpio_desc *desc)
- 	struct gpio_chip *chip = gpiod_to_chip(desc);
- 	struct aspeed_gpio *gpio = gpiochip_get_data(chip);
- 	int rc = 0, bindex, offset = gpio_chip_hwgpio(desc);
--	unsigned long flags;
- 
- 	if (!aspeed_gpio_support_copro(gpio))
- 		return -EOPNOTSUPP;
-@@ -1021,21 +998,19 @@ int aspeed_gpio_copro_release_gpio(struct gpio_desc *desc)
- 		return -EINVAL;
- 	bindex = offset >> 3;
- 
--	raw_spin_lock_irqsave(&gpio->lock, flags);
-+	guard(raw_spinlock_irqsave)(&gpio->lock);
- 
- 	/* Sanity check, this shouldn't happen */
--	if (gpio->cf_copro_bankmap[bindex] == 0) {
--		rc = -EIO;
--		goto bail;
--	}
-+	if (gpio->cf_copro_bankmap[bindex] == 0)
-+		return -EIO;
-+
- 	gpio->cf_copro_bankmap[bindex]--;
- 
- 	/* Switch command source */
- 	if (gpio->cf_copro_bankmap[bindex] == 0)
- 		aspeed_gpio_change_cmd_source(gpio, offset,
- 					      GPIO_CMDSRC_ARM);
-- bail:
--	raw_spin_unlock_irqrestore(&gpio->lock, flags);
-+
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(aspeed_gpio_copro_release_gpio);
 
 -- 
 2.45.2
