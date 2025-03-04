@@ -1,63 +1,63 @@
-Return-Path: <linux-pwm+bounces-5081-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5087-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 844A5A4EC66
-	for <lists+linux-pwm@lfdr.de>; Tue,  4 Mar 2025 19:50:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 39284A4EB3B
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Mar 2025 19:22:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 222E08A4480
-	for <lists+linux-pwm@lfdr.de>; Tue,  4 Mar 2025 18:00:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 75A6E8A7FA4
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Mar 2025 18:01:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64A1529AB18;
-	Tue,  4 Mar 2025 17:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02E0729CB57;
+	Tue,  4 Mar 2025 17:40:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ciaWwtKr"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="XIPjo5X+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D7E299B2D;
-	Tue,  4 Mar 2025 17:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C8A290BA9;
+	Tue,  4 Mar 2025 17:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741110037; cv=none; b=hwvrlY2UIChpJ9F5OjVQbyz1UasfxmhgV3nvF6GptuMKyy5lljfpo5Iw2XcQEGr4CFL7KUE6gEcXzSPkPcU2ig8b9kWQNhue6FYcy+pJHpeDgffp5w2bo9CGauBf6nO4ELDPYxuoaT7mr9if5pk8+sbXTWnJFeobdsXR27lfAG8=
+	t=1741110052; cv=none; b=bFk94EwtgpC8L8XLn8zc135nnd1TCvO+Cydt4APnl+jibA6WVJ2/VmmRSHxk2Nb2updANOJK9zzTeoimuIrPjk7bsobMKXqj351YTSIGDThTY6/W+8NjBw/22ZUyDY+4AwPPwO3rpUNU4hueN0BHg4xEoJGlTuTGq3uPPKVE8ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741110037; c=relaxed/simple;
-	bh=9FU/7m3L6w46a3y3tZQoZf0uV5nbJVVfFNXKFyOuXOs=;
+	s=arc-20240116; t=1741110052; c=relaxed/simple;
+	bh=1SGEnF4/9TakbDkU2bjvjWnbZwqNoZ3b+Nm0Y4ux24E=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=loOoMHaCAJLtKzyXY6UTpHKjmPYKuCFQWa8hmbU2AUFXAKcx83ZHregqgMTykgarhCrQ1NwTu9WZBKoDA4sibW49cdfLv1obkKqd0eOD/S8k5WaUfc0Sp1f58KOKBAegrNFX/dHmuM6WBIogfez6+SzlMEzoieIeCrJ8OCo/kiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ciaWwtKr; arc=none smtp.client-ip=185.132.182.106
+	 MIME-Version:Content-Type; b=u8M6DtFzFY7m/n4Xakq3Tr6LRPpukS/1qC2L2DZWsMvofGahprUeG7ZJegTzZng79Lxx9GpEPBsbNmH8AogUcROWQYwwPLx4qKnxI+fk+HEA3f4AlstD8jrOLNLVySfE6KOYz1AMevNGE44MJRZMdD+qLgnPJcc4Bc8KfzaSQPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=XIPjo5X+; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524FmvcA027790;
-	Tue, 4 Mar 2025 18:40:00 +0100
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524FZIka004190;
+	Tue, 4 Mar 2025 18:40:21 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	HPWXN7XU6ij/VILhA4L2prDYWt4HSSzxWCxw+iSrXQ4=; b=ciaWwtKrwneppsvy
-	zsVpYRBHP59MOu5LloMTD7vh+ij+6BcxWhXqOaeNRVk+1M5onSLbmpnT4y/CSpuW
-	dNjH9RZoPm6Ey6HtKpbERnCkjZ12PAHDGp0GsragIXxqxDqk7mKu+wAI0srv7klP
-	vyodYxGDnm9xY8VU7jOgoJ3yzxIuDJcWJa8XyhrRsL+1AxPzE4BnSQ/FCnrFLNxO
-	u+Q+tl0ZAW+7o78k6TGIkXOtH7R42zH4atBJB3xMfi9E3ihSIVAZ6NZvN5MjfoSP
-	ykqlUhKMXiN6JfTZufWtgkadJDu/W/EIFcuyDvecPAqeio3fTk6+HKctknyVoC8i
-	i4VMkw==
+	Bf4Jif3iTwu6xhT/icuxJcCkmXcEX9OzuYCH60IJsfg=; b=XIPjo5X+kTybQYZX
+	NnxsQiYByN7cIR+YzoKs/Fnhbw/IDEWhcb05P0H1csSjzWLOpj3etEq22uAurJR1
+	/aMhpCQD+L5+zy6RFfbCFfIKdUhFUgu131iA2OL+OwQnV+pWiTiG5GzJTwnjwe5C
+	wo9MyFrPpFaKN8vbKkHLYotaEl+A3P9bhsMfr/Uxxj0dxVUmw619Psw7E09/7dQL
+	UvYo73jzNm87zOkE/sU6RyI1SddrM8K3t01i47ma92LLrN917MpyCOYjc35pj1ua
+	er8bRkpKbfNIMFab8Ye5xxuLJGBO39v7/NETbbu+nnm4I/fz1RnUfkj69VxDo9ZI
+	JzvSOw==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 454cp8fgcb-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 454e2sf0qv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 18:40:00 +0100 (CET)
+	Tue, 04 Mar 2025 18:40:20 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 391A6400A8;
-	Tue,  4 Mar 2025 18:38:45 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 11C15594FBC;
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A788C400C2;
+	Tue,  4 Mar 2025 18:39:11 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DEAED5952AF;
 	Tue,  4 Mar 2025 18:32:51 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
- (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
+ (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Mar
- 2025 18:32:50 +0100
+ 2025 18:32:51 +0100
 Received: from localhost (10.252.16.143) by SAFDAG1NODE1.st.com (10.75.90.17)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Mar
@@ -71,9 +71,9 @@ CC: <catalin.marinas@arm.com>, <will@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
         <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>
-Subject: [PATCH v2 6/8] arm64: defconfig: enable STM32 LP timer clockevent driver
-Date: Tue, 4 Mar 2025 18:32:27 +0100
-Message-ID: <20250304173229.3215445-7-fabrice.gasnier@foss.st.com>
+Subject: [PATCH v2 7/8] arm64: dts: st: add low-power timer nodes on stm32mp251
+Date: Tue, 4 Mar 2025 18:32:28 +0100
+Message-ID: <20250304173229.3215445-8-fabrice.gasnier@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250304173229.3215445-1-fabrice.gasnier@foss.st.com>
 References: <20250304173229.3215445-1-fabrice.gasnier@foss.st.com>
@@ -91,38 +91,215 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-04_07,2025-03-03_04,2024-11-22_01
 
-Enable the STM32 LP timer MFD core and clockevent drivers used on
-STM32MP257F-EV1 board, for PSCI OSI.
+Add low-power timer (LPTimer) support on STM32MP25 SoC.
+The full feature set is implemented in LPTIM1/2/3/4. LPTIM5 supports a
+smaller set of features (no capture/compare) channel. Still, LPTIM5 can
+be used as single PWM, counter, trigger or timer.
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 ---
-Changes in v2:
-- dropped unused IIO trigger, PWM and counter driver unused on upstream
-board currently, as advised by Krzysztof
+Changes in V2:
+- Adopt two compatibles: newly introduced "st,stm32mp25-..." compatible,
+  and fallback "st,stm32-...".
 ---
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 177 +++++++++++++++++++++++++
+ 1 file changed, 177 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 1f25423de383..b29b2350ae27 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -775,6 +775,7 @@ CONFIG_MFD_TI_LP873X=m
- CONFIG_MFD_TPS65219=y
- CONFIG_MFD_TPS6594_I2C=m
- CONFIG_MFD_ROHM_BD718XX=y
-+CONFIG_MFD_STM32_LPTIMER=m
- CONFIG_MFD_WCD934X=m
- CONFIG_MFD_KHADAS_MCU=m
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
-@@ -1401,6 +1402,7 @@ CONFIG_CLK_RENESAS_VBATTB=m
- CONFIG_HWSPINLOCK=y
- CONFIG_HWSPINLOCK_QCOM=y
- CONFIG_TEGRA186_TIMER=y
-+CONFIG_CLKSRC_STM32_LP=y
- CONFIG_RENESAS_OSTM=y
- CONFIG_ARM_MHU=y
- CONFIG_IMX_MBOX=y
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index f3c6cdfd7008..505176276e72 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -238,6 +238,78 @@ rifsc: bus@42080000 {
+ 			#access-controller-cells = <1>;
+ 			ranges;
+ 
++			lptimer1: timer@40090000 {
++				compatible = "st,stm32mp25-lptimer", "st,stm32-lptimer";
++				reg = <0x40090000 0x400>;
++				interrupts-extended = <&exti1 47 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&rcc CK_KER_LPTIM1>;
++				clock-names = "mux";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				access-controllers = <&rifsc 17>;
++				power-domains = <&RET_PD>;
++				wakeup-source;
++				status = "disabled";
++
++				counter {
++					compatible = "st,stm32mp25-lptimer-counter", "st,stm32-lptimer-counter";
++					status = "disabled";
++				};
++
++				pwm {
++					compatible = "st,stm32mp25-pwm-lp", "st,stm32-pwm-lp";
++					#pwm-cells = <3>;
++					status = "disabled";
++				};
++
++				timer {
++					compatible = "st,stm32mp25-lptimer-timer", "st,stm32-lptimer-timer";
++					status = "disabled";
++				};
++
++				trigger@0 {
++					compatible = "st,stm32mp25-lptimer-trigger", "st,stm32-lptimer-trigger";
++					reg = <0>;
++					status = "disabled";
++				};
++			};
++
++			lptimer2: timer@400a0000 {
++				compatible = "st,stm32mp25-lptimer", "st,stm32-lptimer";
++				reg = <0x400a0000 0x400>;
++				interrupts-extended = <&exti1 48 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&rcc CK_KER_LPTIM2>;
++				clock-names = "mux";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				access-controllers = <&rifsc 18>;
++				power-domains = <&RET_PD>;
++				wakeup-source;
++				status = "disabled";
++
++				counter {
++					compatible = "st,stm32mp25-lptimer-counter", "st,stm32-lptimer-counter";
++					status = "disabled";
++				};
++
++				pwm {
++					compatible = "st,stm32mp25-pwm-lp", "st,stm32-pwm-lp";
++					#pwm-cells = <3>;
++					status = "disabled";
++				};
++
++				timer {
++					compatible = "st,stm32mp25-lptimer-timer", "st,stm32-lptimer-timer";
++					status = "disabled";
++				};
++
++				trigger@1 {
++					compatible = "st,stm32mp25-lptimer-trigger", "st,stm32-lptimer-trigger";
++					reg = <1>;
++					status = "disabled";
++				};
++			};
++
+ 			i2s2: audio-controller@400b0000 {
+ 				compatible = "st,stm32mp25-i2s";
+ 				reg = <0x400b0000 0x400>;
+@@ -799,6 +871,111 @@ i2c8: i2c@46040000 {
+ 				status = "disabled";
+ 			};
+ 
++			lptimer3: timer@46050000 {
++				compatible = "st,stm32mp25-lptimer", "st,stm32-lptimer";
++				reg = <0x46050000 0x400>;
++				interrupts-extended = <&exti2 29 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&rcc CK_KER_LPTIM3>;
++				clock-names = "mux";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				access-controllers = <&rifsc 19>;
++				wakeup-source;
++				status = "disabled";
++
++				counter {
++					compatible = "st,stm32mp25-lptimer-counter", "st,stm32-lptimer-counter";
++					status = "disabled";
++				};
++
++				pwm {
++					compatible = "st,stm32mp25-pwm-lp", "st,stm32-pwm-lp";
++					#pwm-cells = <3>;
++					status = "disabled";
++				};
++
++				timer {
++					compatible = "st,stm32mp25-lptimer-timer", "st,stm32-lptimer-timer";
++					status = "disabled";
++				};
++
++				trigger@2 {
++					compatible = "st,stm32mp25-lptimer-trigger", "st,stm32-lptimer-trigger";
++					reg = <2>;
++					status = "disabled";
++				};
++			};
++
++			lptimer4: timer@46060000 {
++				compatible = "st,stm32mp25-lptimer", "st,stm32-lptimer";
++				reg = <0x46060000 0x400>;
++				interrupts-extended = <&exti2 30 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&rcc CK_KER_LPTIM4>;
++				clock-names = "mux";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				access-controllers = <&rifsc 20>;
++				wakeup-source;
++				status = "disabled";
++
++				counter {
++					compatible = "st,stm32mp25-lptimer-counter", "st,stm32-lptimer-counter";
++					status = "disabled";
++				};
++
++				pwm {
++					compatible = "st,stm32mp25-pwm-lp", "st,stm32-pwm-lp";
++					#pwm-cells = <3>;
++					status = "disabled";
++				};
++
++				timer {
++					compatible = "st,stm32mp25-lptimer-timer", "st,stm32-lptimer-timer";
++					status = "disabled";
++				};
++
++				trigger@3 {
++					compatible = "st,stm32mp25-lptimer-trigger", "st,stm32-lptimer-trigger";
++					reg = <3>;
++					status = "disabled";
++				};
++			};
++
++			lptimer5: timer@46070000 {
++				compatible = "st,stm32mp25-lptimer", "st,stm32-lptimer";
++				reg = <0x46070000 0x400>;
++				interrupts-extended = <&exti2 31 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&rcc CK_KER_LPTIM5>;
++				clock-names = "mux";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				access-controllers = <&rifsc 21>;
++				wakeup-source;
++				status = "disabled";
++
++				counter {
++					compatible = "st,stm32mp25-lptimer-counter", "st,stm32-lptimer-counter";
++					status = "disabled";
++				};
++
++				pwm {
++					compatible = "st,stm32mp25-pwm-lp", "st,stm32-pwm-lp";
++					#pwm-cells = <3>;
++					status = "disabled";
++				};
++
++				timer {
++					compatible = "st,stm32mp25-lptimer-timer", "st,stm32-lptimer-timer";
++					status = "disabled";
++				};
++
++				trigger@4 {
++					compatible = "st,stm32mp25-lptimer-trigger", "st,stm32-lptimer-trigger";
++					reg = <4>;
++					status = "disabled";
++				};
++			};
++
+ 			csi: csi@48020000 {
+ 				compatible = "st,stm32mp25-csi";
+ 				reg = <0x48020000 0x2000>;
 -- 
 2.25.1
 
