@@ -1,252 +1,215 @@
-Return-Path: <linux-pwm+bounces-5062-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5063-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F22AEA4D775
-	for <lists+linux-pwm@lfdr.de>; Tue,  4 Mar 2025 10:09:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E8E67A4D781
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Mar 2025 10:09:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BBC43AB156
-	for <lists+linux-pwm@lfdr.de>; Tue,  4 Mar 2025 09:08:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F32553AED05
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Mar 2025 09:09:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1171D1FF1B7;
-	Tue,  4 Mar 2025 09:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6A021FCD03;
+	Tue,  4 Mar 2025 09:08:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PH22NjZs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C5YWoQqx"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD6E1FF1B2
-	for <linux-pwm@vger.kernel.org>; Tue,  4 Mar 2025 09:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996D51FBE8F;
+	Tue,  4 Mar 2025 09:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741078948; cv=none; b=nJ040RWn9Bcg9vslgWxroKTfXlQMO338KMgs9+nyj3OI7EAFK8v4p3XwliBIv0/tVts20cEUYOfRtToLhOuhMjVlwKU4so0zW7JGZwXK9enSLdj0sZABA+j/dRJHXdzZLen9+OpUvCsE4vXgTixt0cVKx8mJyJ0nm9ayMzSrAZg=
+	t=1741079302; cv=none; b=g1oQALgx/Wyp2B+RB2qWR4tE9r42gKkozON85TVc5GMPooq763BUjKdD/ZyHkuK5qOFjvHnpOXKJ9mbyvyxSHCfYRBtTxqHgnslpOTu35i7z7hkYk/OENXHTLPM8ZhoKuUd0bhZ3dg2ee93B8k7QwBaeZ9unVCl2rpqC8LIue0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741078948; c=relaxed/simple;
-	bh=QXF17IR28nkhTtqi+FHFKr/fCmzJnqgNwQQgg3meDNs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IxeNDZLPJUKXIjQmM2hMTQXXdRFAYasPnweTJX3AjXE6gUftmDSnHeYaPWvJT/E9uQrm1Hp5eWdK++/oyJqLQmBdCaoyuiQJI3Xn2VuWFFUjxgj2QDP1n0iCc+MX22ddc/Z2Gr76dz+glEFBFGF+1Of5aw5IWJDRLTuDuw5ecbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=PH22NjZs; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-8671d8a9c3eso4303325241.3
-        for <linux-pwm@vger.kernel.org>; Tue, 04 Mar 2025 01:02:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1741078945; x=1741683745; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kHhfxt/F9VYJEMZWHBt7TIGLZbK9Gj/o15ch1mv6/fM=;
-        b=PH22NjZs+MXc9xPCgd2NurOjCwl7Lj9yx8D8HTQylYJt906xtqrZBakrrDudIBrU+j
-         X0HPVwWakvDqQHhhTQ8lq4kUD74pbtjCmGrpTcvoFEx+ue1x/7nYlT3Tvts7LiCNJ0kk
-         vs+8iq0muE/TG59w5wRJCqZI2CU3FYgFtLKYQKUd8tjvOMMYdHPcmy1D4GPEg9UIoIfA
-         6EGSza4GrXSyJznNb78ZFfV4bSQWK76oqSHtKMazoyi9Uy/ol+kJrSoruLTUnAs32ON5
-         90Mt4YMASShJZtrQdwObcU4wzbOjdinXjws3zKD0AFhHJAG5NuE+XDpKSAKJwFHLQEGg
-         iztg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741078945; x=1741683745;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kHhfxt/F9VYJEMZWHBt7TIGLZbK9Gj/o15ch1mv6/fM=;
-        b=QOU+trSK++EJZ3Wb6ROVNi7jf57cp3/fItORTujkpuECjo83xVEaNU3yHAR5qEPmoL
-         KJKRBPK5ckBMNgY6OfPpxOW9AE1IRbBhkZzENNvx9+eE4/OBqwS3M6kJbUeIDSuBd7vE
-         FxZiOBsfW6CrlRwwjOMShbGJdO/q73Jajue0UYxFzY0+O7iXAqP/WeipmlUIg+s/IxV5
-         1b7CR99FmItoWRVyM3gKlPogtsDsY2nWnYtAJQnmmbFNLOb+p27O6iS8g6QcDFz+6/gM
-         ih/4MKAvBRbKdT0K6g9jPgOuUFTcfx9RU8C12WMtaM01AHiYF+305EA7Go0icsfWynm6
-         dbBg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0CB4tKvXaX6Cb9n0uOMB5hyrnYGu7a2QF4nD/U8hlhR2CgTO3r+JMj05QtVPZEG/QWtTuTNeJgeM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyz2X56HJhIX/k3zhPeb8WRFxWAHNAdbcxOlyQzUpOgB64MKYen
-	DGbZ1nzYPMcMOE5HipOvLksPad558Tu/1HRdaUYh7F1wnO4FoMx9ysI4R/FyrMHZSFUIW3x4t9p
-	nbFpk8rLsMtmX9RCuSjfm0b2AXY7Z2aesoA0YO2xOxj44g5X6QUk=
-X-Gm-Gg: ASbGnctx8DyKpfHIjmuMXxZBb/thIK6G9dUmHjvIGiRnErVwHVU/5Yn0/GR1Kv17JqX
-	Z8S50KUDQ19JqvADiADAwa1Uk4M3MVqb/tFev4NQ4pSN4AFW7ET1cT4qAzx4W2vsNnKl3h5l+au
-	XsfMhQqoMu0so2YuTNnweJ77eYWEBn
-X-Google-Smtp-Source: AGHT+IE+NGonMa9x6tx3hTAC6JJ2acGmU95KDumJyPPEYsvv1984PUWQmP4MK//XiwgrQPqZuV+47KFn1mDTkh4WWnY=
-X-Received: by 2002:a05:6102:3f4a:b0:4c0:3349:cc4 with SMTP id
- ada2fe7eead31-4c0448efd2emr11486700137.3.1741078944773; Tue, 04 Mar 2025
- 01:02:24 -0800 (PST)
+	s=arc-20240116; t=1741079302; c=relaxed/simple;
+	bh=GXuRz06hDfIRTVBK7Y7J5u3Fy/4jNuBeBSyafYInY64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b/cZzi8OqTe4B9IAJukfVM6gzu6jtX1b65QCnwH4oVyB0LRBGfDzt5Y9mK/9srSp6HZUg9BEeOXetQs2QXURq8e8GKe88EVcRdaFeA+o7rebW5Sk1IlMTXYmIpbAb+U6OP9L+tyFzuLsNKphLhH5W0GCNV+FuQ/iiO0G14+L0yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C5YWoQqx; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741079301; x=1772615301;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GXuRz06hDfIRTVBK7Y7J5u3Fy/4jNuBeBSyafYInY64=;
+  b=C5YWoQqxrFlXBnJEqCviSGlZtU8sxMyRIAW943RjN6TT4Bi21kWkOoq+
+   AUEvs/KInq6bXX5ztwZpcNd8KE4QTpT2r2SAhUtiXcgziNnoQw58KBVZt
+   QZOAxmtwCGtrVetQKwwGQG7epPV9V4a+7ee+YMRP+fuCJqqO2FcMr4QVq
+   dPJq3kFf0bJ9rPzsyRKoj9IaM2H+9a1ZtMlRS8mYTtYOtgdthKrrF8OEZ
+   kA3eAi1Yxf96TABpxbzniUcw0/BiqmQWvZ7nCfCdyhXr3ktREU8hWxIhi
+   whQWkf8boBjYSuUUSpA1rcIZjjRx9Vq7PwEd3KwgG/2I3lkY2K050TRtT
+   Q==;
+X-CSE-ConnectionGUID: Mpr7xC91TPevwqb2m+Q6sw==
+X-CSE-MsgGUID: e4DmfpB+R/majPQjySI6hg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="53391440"
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="53391440"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 01:08:20 -0800
+X-CSE-ConnectionGUID: WsdSvD8kQSqq8xlLa15QJg==
+X-CSE-MsgGUID: wBNumz0fSaSG5Y1WNX0q2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="119230033"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 04 Mar 2025 01:08:16 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tpOG5-000JWI-26;
+	Tue, 04 Mar 2025 09:08:13 +0000
+Date: Tue, 4 Mar 2025 17:07:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mun Yew Tham <mun.yew.tham@intel.com>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, patches@opensource.cirrus.com,
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Subject: Re: [PATCH 02/15] gpio: adnp: use lock guards for the I2C lock
+Message-ID: <202503041612.G8O0Bdrg-lkp@intel.com>
+References: <20250303-gpiochip-set-conversion-v1-2-1d5cceeebf8b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241224093902.1632627-1-nylon.chen@sifive.com>
- <zqkx7cx5nalslfmxeoxdnsjbvrvzajrjybsmsyeyc65a64sntr@gpc5qp6aoyp7>
- <CAHh=Yk-_0rKB=FG6Voif2MDjtRxzUA5vXDP2J-o5=8ru1ewt0w@mail.gmail.com>
- <CAHh=Yk-TosOmwEughfK9mMx-=DgzWK5H_bf6H641SGh1ue8BrA@mail.gmail.com>
- <zneb3qwgf52zitcbq4wz76shnmhwfkabbsts3sussjpc5s5tsz@uneaxdfp4m2f>
- <CAHh=Yk_oTdURhkna_saF6mrA9gDY=+v_j5NoY_7jTDLuZ=EXtg@mail.gmail.com>
- <7bcnckef23w6g47ll5l3bktygedrcfvr7fk3qjuq2swtoffhec@zs4w4tuh6qvm>
- <5robb7ipl346daf3lqaqnsi3fcgj3wzmch5dqit2dczdyeknmv@dqft77bhwryg> <CAHh=Yk-p69ppWWspEzzznhDnuk3i6dRGKzUaqZCwg_uAxB3FVA@mail.gmail.com>
-In-Reply-To: <CAHh=Yk-p69ppWWspEzzznhDnuk3i6dRGKzUaqZCwg_uAxB3FVA@mail.gmail.com>
-From: Nylon Chen <nylon.chen@sifive.com>
-Date: Tue, 4 Mar 2025 17:02:13 +0800
-X-Gm-Features: AQ5f1Jp7DGsp1Vyy94pQwTGcyJhhurEJDZS278bFkBXavKP5rDxyvxdNjmgaOc0
-Message-ID: <CAHh=Yk8kC1+D4dPQ7iAtn1WSPSk+OU6vwEyGF9VZAS5o5gPHmA@mail.gmail.com>
-Subject: Re: [PATCH v10 0/3] Change PWM-controlled LED pin active mode and algorithm
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303-gpiochip-set-conversion-v1-2-1d5cceeebf8b@linaro.org>
 
-Nylon Chen <nylon.chen@sifive.com> =E6=96=BC 2025=E5=B9=B41=E6=9C=8823=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=888:20=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> =E6=96=BC 2025=E5=B9=
-=B41=E6=9C=8822=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=887:44=E5=AF=AB=
-=E9=81=93=EF=BC=9A
-> >
-> > Hello Nylon,
-> >
-> > I took another look in the driver and found another problem:
-> Hi Uwe, Thank you for the information.
->
-> I'll need some time to verify and understand these details, as well as
-> conduct the relevant tests
-> >
-> > On Tue, Jan 21, 2025 at 07:12:10PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Tue, Jan 21, 2025 at 04:47:46PM +0800, Nylon Chen wrote:
-> > > > Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> =E6=96=BC 2025=
-=E5=B9=B41=E6=9C=8821=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=883:47=E5=
-=AF=AB=E9=81=93=EF=BC=9A
-> > > > >
-> > > > > Hello,
-> > > > >
-> > > > > On Sun, Jan 19, 2025 at 03:03:16PM +0800, Nylon Chen wrote:
-> > > > > > I ran some basic tests by changing the period and duty cycle in=
- both
-> > > > > > decreasing and increasing sequences (see the script below).
-> > > > >
-> > > > > What is clk_get_rate(ddata->clk) for you?
-> > > > 130 MHz
-> > >
-> > > OK, so the possible period lengths are
-> > >
-> > >       (1 << (16 + scale)) / (130 MHz)
-> > >
-> > > for scale in [0, .. 15], right? That's
-> > >
-> > >       2^scale * 504123.07692307694 ns
-> > >
-> > > So testing period in the range between 5000 ns and 15000 ns isn't
-> > > sensible? Did I get something wrong? If the above is right, switching
-> > > between period=3D1008246 ns and 1008247 ns is likely to trigger a
-> > > warning.
-> >
-> > The possible periods are of the form
-> >
-> >         2^scale * A
-> >
-> > where A is constant and only depends on the input clock rate. scale
-> > ranges over [0, ... 15]. (If I got it right in my last mail, we have A =
-=3D
-> > 504123.07692307694 ns.)
-> >
-> > If you request say:
-> >
-> >         .period =3D 3.9 * A
-> >         .duty_cycle =3D 1.9 * A
-> >
-> > the period actually emitted by the PWM will be 2 * A. But to calculate
-> > frac the originally requested period (i.e. 3.9 * A) is used. So frac
-> > becomes 31927 resulting in .duty_cycle being ~0.974 A. A better value
-> > would be frac =3D 62259 which results in .duty_cycle =E2=89=85 1.9 * A.
-> > (Depending on A the values for frac might be off by one due to rounding
-> > differences.)
-> >
-> > So I would expect that PWM_DEBUG is angry with you if you go from
-> >
-> >         .period =3D 2 * A
-> >         .duty_cycle =3D 1.9 * A
-> >
-> > to
-> >
-> >         .period =3D 3.9 * A
-> >         .duty_cycle =3D 1.9 * A
-> >
-> > .
-> >
-> > Best regards
-> > Uwe
+Hi Bartosz,
 
-Hi Uwe, Based on your suggestions, I conducted relevant tests and
-corrected algorithm errors.
+kernel test robot noticed the following build warnings:
 
-According to this test program, I can make the system generate related
-error messages on v10's patchset.
+[auto build test WARNING on 9778568dede2166c7bd124d473f9ec365f782935]
 
-e.g.
-[ 75.043652] pwm-sifive 10021000.pwm: .apply is supposed to round down
-duty_cycle (requested: 360/504000, applied: 361/504124)
-[ 75.055042] pwm-sifive 10021000.pwm: .apply is supposed to round down
-period (requested: 504000, applied: 504124)
+url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-74x164-use-new-line-value-setter-callbacks/20250303-212738
+base:   9778568dede2166c7bd124d473f9ec365f782935
+patch link:    https://lore.kernel.org/r/20250303-gpiochip-set-conversion-v1-2-1d5cceeebf8b%40linaro.org
+patch subject: [PATCH 02/15] gpio: adnp: use lock guards for the I2C lock
+config: x86_64-buildonly-randconfig-001-20250304 (https://download.01.org/0day-ci/archive/20250304/202503041612.G8O0Bdrg-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250304/202503041612.G8O0Bdrg-lkp@intel.com/reproduce)
 
-PWMCHIP=3D1
-PWMCHANNEL=3D0
-PERIOD=3D504000
-STEP=3D1
-MAX_DUTY=3D504000
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503041612.G8O0Bdrg-lkp@intel.com/
 
-echo 0 > /sys/class/pwm/pwmchip${PWMCHIP}/export
+All warnings (new ones prefixed by >>):
 
-echo $PERIOD > /sys/class/pwm/pwmchip${PWMCHIP}/pwm${PWMCHANNEL}/period
-echo "Set period to $PERIOD ns (scale=3D0 region)"
-
-COUNT=3D$((MAX_DUTY / STEP))
-echo "Testing duty-cycle from 0 to $MAX_DUTY in step of $STEP..."
-echo "Total steps (forward): $((COUNT+1))"
+>> drivers/gpio/gpio-adnp.c:241:8: warning: variable 'isr' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+     241 |                         if (err < 0)
+         |                             ^~~~~~~
+   drivers/gpio/gpio-adnp.c:265:14: note: uninitialized use occurs here
+     265 |                 pending &= isr & ier;
+         |                            ^~~
+   drivers/gpio/gpio-adnp.c:241:4: note: remove the 'if' if its condition is always false
+     241 |                         if (err < 0)
+         |                         ^~~~~~~~~~~~
+     242 |                                 continue;
+         |                                 ~~~~~~~~
+   drivers/gpio/gpio-adnp.c:235:25: note: initialize the variable 'isr' to silence this warning
+     235 |                 u8 changed, level, isr, ier;
+         |                                       ^
+         |                                        = '\0'
+>> drivers/gpio/gpio-adnp.c:245:8: warning: variable 'ier' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+     245 |                         if (err < 0)
+         |                             ^~~~~~~
+   drivers/gpio/gpio-adnp.c:265:20: note: uninitialized use occurs here
+     265 |                 pending &= isr & ier;
+         |                                  ^~~
+   drivers/gpio/gpio-adnp.c:245:4: note: remove the 'if' if its condition is always false
+     245 |                         if (err < 0)
+         |                         ^~~~~~~~~~~~
+     246 |                                 continue;
+         |                                 ~~~~~~~~
+   drivers/gpio/gpio-adnp.c:241:8: warning: variable 'ier' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+     241 |                         if (err < 0)
+         |                             ^~~~~~~
+   drivers/gpio/gpio-adnp.c:265:20: note: uninitialized use occurs here
+     265 |                 pending &= isr & ier;
+         |                                  ^~~
+   drivers/gpio/gpio-adnp.c:241:4: note: remove the 'if' if its condition is always false
+     241 |                         if (err < 0)
+         |                         ^~~~~~~~~~~~
+     242 |                                 continue;
+         |                                 ~~~~~~~~
+   drivers/gpio/gpio-adnp.c:235:30: note: initialize the variable 'ier' to silence this warning
+     235 |                 u8 changed, level, isr, ier;
+         |                                            ^
+         |                                             = '\0'
+   3 warnings generated.
 
 
-CURRENT=3D0
-while [ $CURRENT -le $MAX_DUTY ]; do
-    echo $CURRENT > /sys/class/pwm/pwmchip${PWMCHIP}/pwm${PWMCHANNEL}/duty_=
-cycle
-    CURRENT=3D$((CURRENT + STEP))
-done
+vim +241 drivers/gpio/gpio-adnp.c
 
-echo "Now do a backward test from $MAX_DUTY down to 0 in step of $STEP..."
-echo "Total steps (backward): $((COUNT+1))"
+   225	
+   226	static irqreturn_t adnp_irq(int irq, void *data)
+   227	{
+   228		struct adnp *adnp = data;
+   229		unsigned int num_regs, i;
+   230	
+   231		num_regs = 1 << adnp->reg_shift;
+   232	
+   233		for (i = 0; i < num_regs; i++) {
+   234			unsigned int base = i << adnp->reg_shift, bit;
+   235			u8 changed, level, isr, ier;
+   236			unsigned long pending;
+   237			int err;
+   238	
+   239			scoped_guard(mutex, &adnp->i2c_lock) {
+   240				err = adnp_read(adnp, GPIO_PLR(adnp) + i, &level);
+ > 241				if (err < 0)
+   242					continue;
+   243	
+   244				err = adnp_read(adnp, GPIO_ISR(adnp) + i, &isr);
+ > 245				if (err < 0)
+   246					continue;
+   247	
+   248				err = adnp_read(adnp, GPIO_IER(adnp) + i, &ier);
+   249				if (err < 0)
+   250					continue;
+   251			}
+   252	
+   253			/* determine pins that changed levels */
+   254			changed = level ^ adnp->irq_level[i];
+   255	
+   256			/* compute edge-triggered interrupts */
+   257			pending = changed & ((adnp->irq_fall[i] & ~level) |
+   258					     (adnp->irq_rise[i] & level));
+   259	
+   260			/* add in level-triggered interrupts */
+   261			pending |= (adnp->irq_high[i] & level) |
+   262				   (adnp->irq_low[i] & ~level);
+   263	
+   264			/* mask out non-pending and disabled interrupts */
+   265			pending &= isr & ier;
+   266	
+   267			for_each_set_bit(bit, &pending, 8) {
+   268				unsigned int child_irq;
+   269				child_irq = irq_find_mapping(adnp->gpio.irq.domain,
+   270							     base + bit);
+   271				handle_nested_irq(child_irq);
+   272			}
+   273		}
+   274	
+   275		return IRQ_HANDLED;
+   276	}
+   277	
 
-
-CURRENT=3D$MAX_DUTY
-while [ $CURRENT -ge 0 ]; do
-    echo $CURRENT > /sys/class/pwm/pwmchip${PWMCHIP}/pwm${PWMCHANNEL}/duty_=
-cycle
-    CURRENT=3D$((CURRENT - STEP))
-done
-
-
-echo 0 > /sys/class/pwm/pwmchip${PWMCHIP}/pwm${PWMCHANNEL}/enable
-echo ${PWMCHANNEL} > /sys/class/pwm/pwmchip${PWMCHIP}/unexport
-
-echo "Done!"
-
-Based on your previous suggestions, I have made the following related
-modifications, and now I'm able to fix the relevant errors.
-
-But I want to make sure my understanding aligns with your suggestions,
-so I'd like to discuss with you first before sending the patch.
-
-- In .apply, use "round down" for calculations to ensure the value
-doesn't exceed what the user requested. (Never set a duty cycle higher
-than what the user requested.)
-pwm_sifive_apply() {
-    - frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
-    +frac =3D num / state->period;
-}
-- When converting hardware values back to duty_cycle in .get_state,
-use "round up" to compensate for the errors introduced by .apply.()
-pwm_sifive_get_state() {
-    - state->duty_cycle =3D (u64)duty * ddata->real_period >> PWM_SIFIVE_CM=
-PWIDTH;
-    + state->duty_cycle =3D DIV_ROUND_UP_ULL((u64)duty *
-ddata->real_period, (1U << PWM_SIFIVE_CMPWIDTH));
-}
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
