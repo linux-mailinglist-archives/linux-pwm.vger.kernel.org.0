@@ -1,172 +1,270 @@
-Return-Path: <linux-pwm+bounces-5105-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5106-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D519AA5001F
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Mar 2025 14:16:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E8D7A50209
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Mar 2025 15:33:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3DEB8172597
-	for <lists+linux-pwm@lfdr.de>; Wed,  5 Mar 2025 13:12:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8EBD3ADA52
+	for <lists+linux-pwm@lfdr.de>; Wed,  5 Mar 2025 14:32:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 155D324EF86;
-	Wed,  5 Mar 2025 13:09:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43B54223701;
+	Wed,  5 Mar 2025 14:32:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J6qelFjx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="arCxSNTe"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96D724EF6A
-	for <linux-pwm@vger.kernel.org>; Wed,  5 Mar 2025 13:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDBF1624D2
+	for <linux-pwm@vger.kernel.org>; Wed,  5 Mar 2025 14:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741180171; cv=none; b=nmlPrhk1LVTUESjXVswZsTY9zCBnWF3ybXFMpNeiL9E2kaIPDztvX/nKL4LWI44RJnHoXWZgRdI5HxNMwAV/5hbCzA893I79KVa5iAMt99zTUzacSkqEU0nezjrWVBQ9g9hiOnI0NNjCPnfthk5lJg5+inswUnwB3qzMzG+27qM=
+	t=1741185176; cv=none; b=uKc8Vwo3IawWnQM6tVhxoqPdVL3kOoT/S1I2FkALqqnaRo2nNUcG3CFebbFXzYriRKx8ahC5SUBHXRwvvrF7/jxnUSNkGXJNTXc7OXPglxQwSLAoSC9uVDPB1jJoELtaVhWTe7SwA90eLf+PU9uavDfuYZLJ1vdAipueugJpfEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741180171; c=relaxed/simple;
-	bh=1lfv18zXpdxY8kZVpZlVeAwNtS8AmywOofVeGqzeOEg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aiMwUebUO5HpmbfK6meJAAMYw1oQ+gDRP3OhrOOZ4zMsm9a8XCegFy/bL0CA4B7+YZovMz7WnTskBnu3y/WRz87cY6mP4KGDPzBLhWyffFOlmnw0xu9UfbjLB6U+FQ1PoIsfEcB019SolQeXs5dfpOhWCqwCaKVGkU81ZvbVWhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J6qelFjx; arc=none smtp.client-ip=209.85.208.54
+	s=arc-20240116; t=1741185176; c=relaxed/simple;
+	bh=sd7TPE/d3JgGRw6PG/R3kWQGpab/KpIkkHlXD/668nE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BAZdQ35cwK4Zhi8iX6OUS+nd0UpVkOIUVGgz5ypwshHaRrrFrSCxN0Px1WIMh3/ChcMcIemNql86PjOuDIdFgOpFsaX0vjkvqXeYG21ffbSbaZIbysOWCNn2cxpm8HIg5+vgc/NcRF04KNvOwQzwe1KAI2jQnDzbmknZkhFL0xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=arCxSNTe; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so1818761a12.0
-        for <linux-pwm@vger.kernel.org>; Wed, 05 Mar 2025 05:09:28 -0800 (PST)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e0573a84fcso9255920a12.2
+        for <linux-pwm@vger.kernel.org>; Wed, 05 Mar 2025 06:32:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741180167; x=1741784967; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YcO45S/il2qWOt5c4ZNer6B5gyqfJVMeCB4pzlqBXPc=;
-        b=J6qelFjx1/6gyYUNzM75bbEBjUA/ag0WrIF01NMXVXQ4nhz0PDh2Ezb4IVbjRSg3je
-         GqSwJV8Jblym9JAE2YQn/zI+ROWpB7chOQOTKBcBHZOp0xOUOaDDz2amxVREPTy48o1m
-         FcEKyWVd/O7bO/9pudoJXL9eUV6DzE0zy+c46vWR3t37+m4/EEe3RncNsjrZvA6ksOtQ
-         ohXKNSWj+uyaJYZhZ3iwG3GIeU5tjo2jcMup/CqyJu/jLOzEtf2W1vEwUWkO5Pq6h23o
-         eYvkne6wwZ2nLEOaix27w+9amghpJQ+opm8+Y/wJJmDe1mRkTp5H3yiEwZx2Tv2vvFdO
-         t67Q==
+        d=linaro.org; s=google; t=1741185172; x=1741789972; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=CbWU81zQtv408Xqq4RqPzIYJc74nIIr6NJj34yo9wfw=;
+        b=arCxSNTe3W+Kgu9w/bqqy+dJm+V6uWh1CVBtXzrxY84maKnobw5cHO1XjkVTgiunYe
+         D4kmiLRv0Jv6tOttdCBxrwM30b5BfGWbmxoQ6T88XuU5bwHhycIeCMEImi4SmUvGjrN8
+         VyksZb4wixwYcU8aZbaWb8HuRLG+9vfDC/SR0BuXjFnLl3PHKIxgI3uSbQ8GkW8uchYl
+         7Nr2N07rY6zkutHbZoByBxKiWSgRtN7sKzEHe8VFREcF+H0b1rjdu71gSsER62OBq9dM
+         C+XNUZQxN5rG7kJJnAQXqoW+fLLfOGWTKo/1H3oMYt5KfpcV7aM0G0qnxR8GkievofW9
+         qY1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741180167; x=1741784967;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YcO45S/il2qWOt5c4ZNer6B5gyqfJVMeCB4pzlqBXPc=;
-        b=w/wk2YyO9ZtqzxjwuT9w47Nnm4K6lldLNOp19njAHPezEe/kFd1nWsCOArJE5BWjg/
-         I7RGqFHuyJqpWMN1bZgqMDidXWOtshso38ctsiL7e06YkFmb0Hk7E8P7g914s9XHy1Km
-         kYRhCZ7yKu+t8kOUHSlZFk7f3A4JA/l/v+YSU2VgrEU3v2ucFNEmTH/4SauJnzhdmc4E
-         zVOz3v2zk0MKW6RxI0rGgzLe3zTJ9y/NedgYuQAd/DSvkbEuFz9uWBMrz80EY+fJi9Ea
-         m0jaUifi7Ka7EBT6iJOQkYNhgX0xEs+CR7h+ziwXk1vXD2rL0zC/360+9pZimJzyh720
-         uB0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUQf2w06vGezcvBIu+3IJORQE668+uO6ilALkSBS3ezzbKvxzdCae5LUqhugHBBKKMq2RPzICzieuo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHb3COtnlpXWf7ZQ/ntZ78ElaGA1fFqktbRzD8xGMCu/ibLVhA
-	+c6mPzULFZLdgfWFL/0vA9Sjhk5ZEUrUj7OZSS/6uUle7tyGoHpXjxdJkCaRrBA=
-X-Gm-Gg: ASbGnctci2sIOKbMD0skYvsEQQzakmeEz0bqosQZhHJCC+nCPezcBmcUgTMr5tbGUMD
-	VEwwjdatMjCDujh84/9Ahrlk1lzfXl28EhS6llE4Naa2A3MuI9k1jctZSI7TgIo1d3n4842mTVC
-	n6bntrHMJJkRz8tuyjJt6QJSopp1mf9ImUaRAr3oyBKtuekGUu1McrqqMClokHM7j8DwHLMi4RP
-	SvbY8OyV03HmcXZ90DzQPPr0BFmY4MLjC7isuIOzziCiI+hRkGguq+X20hZu8N7njEn9xW7y1G6
-	snL9B0IEfxL/RjUKAxnvFbzj8/Fjhtm+kazz7LmriWc=
-X-Google-Smtp-Source: AGHT+IEhPlA8syse6BxS6MwO/8ykIl7YX3VsOgc47tKf3pBFQkbkyjyaD9GvZYQWYZb90PvcAHhpFA==
-X-Received: by 2002:a05:6402:1cc1:b0:5e4:95fc:d748 with SMTP id 4fb4d7f45d1cf-5e584e2916bmr6857202a12.5.1741180166877;
-        Wed, 05 Mar 2025 05:09:26 -0800 (PST)
-Received: from [127.0.1.1] ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3b4aa5dsm9627341a12.14.2025.03.05.05.09.25
+        d=1e100.net; s=20230601; t=1741185172; x=1741789972;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CbWU81zQtv408Xqq4RqPzIYJc74nIIr6NJj34yo9wfw=;
+        b=Z1bHLhJtLljMeumoQEpv+82JssdtxIhcv6bA1QTjK8I5j6hPfh5i8QmTjDiHN+QbPb
+         rHP/qIRmHFHBaDttxf/CXmg93kv4U8fOP1aaQanQwhw94i19FolyuOg61AwWR4ou722L
+         2UcGxg5r5EJQHFKgwoLusqCMaDuFhLh/I3Dt+LFkDGtGXKozUZb2LrwN+gru1j326v+A
+         O4IwH37BqDTlP4uwD0fMaB6dX4j6M28C77000RLywGbiRVhophmpncaVGRkPC93Sa89H
+         R19Ba6DiU0PzxURorthbVn8m8NhOLsjh9wgFFYZPf6LABkuJyJxvp5n0rwhAd00/Afw1
+         +cew==
+X-Forwarded-Encrypted: i=1; AJvYcCXXS7S1TamzTKQI66Ro1zYLn6kTsCTYA8apLkS8LhqyADhldihNlglJTF/yGcNZbs3w5q3T8A2eSUs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwVaZg9/1ol8qPCkfMB+3ELxbyb1lioJgjuJly6jw/VuxpADk7
+	QnVfgFU+cHw4QHAoAe/szPWAmNU24haa8M88aAO+X6YbAXYPhugct/0Tej3QJYY=
+X-Gm-Gg: ASbGncstDTe3CPJgEo6Q/QAAjkJ0YjzoS7oBVr0NZNTKqjydN1L1wigRZv8dDTerE15
+	hjSxOZ923SIXbqnaQjyr3XQfoTVtrUHrbux3YOqf4Hs4TJjttGLZQWeBty1Fq7Hh1rQOVFUrCFH
+	5+AUDmyP6RuS5kKk9lF0oOo1qteUJIG1aCkW2d+VBQVpxbT7KfUgfhhull3qTdW4kdEwwiNVcug
+	ibhDGJx7kj6zZKSHqAM4maUcpDhG5pdqkCM/dyYt7oWYaWPBtsKfynum5H0CddVXDyMUsUbd0dr
+	TTuAcUCHAyrJRqezW3aQOuykmSyYRkS6HEIH9HwIQg==
+X-Google-Smtp-Source: AGHT+IHAqoBQT9Hk+U5fDiJxTYejm1CM0gFhnnswNHn6T8yBkT5kBmmJaaPOzv4fJvwsqsNj1NB98g==
+X-Received: by 2002:a05:6402:1ece:b0:5e4:d75a:573e with SMTP id 4fb4d7f45d1cf-5e59f4f8e28mr3246228a12.32.1741185171960;
+        Wed, 05 Mar 2025 06:32:51 -0800 (PST)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c43a6f2bsm9723207a12.75.2025.03.05.06.32.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 05:09:26 -0800 (PST)
+        Wed, 05 Mar 2025 06:32:50 -0800 (PST)
+Date: Wed, 5 Mar 2025 16:32:47 +0200
 From: Abel Vesa <abel.vesa@linaro.org>
-Date: Wed, 05 Mar 2025 15:09:06 +0200
-Subject: [PATCH v4 3/3] leds: rgb: leds-qcom-lpg: Fix calculation of best
- period Hi-Res PWMs
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>,
+	Kamal Wadhwa <quic_kamalw@quicinc.com>,
+	Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Johan Hovold <johan@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+	Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
+ period instead
+Message-ID: <Z8hgj11p+TY1546x@linaro.org>
+References: <20250303-leds-qcom-lpg-compute-pwm-value-using-period-v1-1-833e729e3da2@linaro.org>
+ <ylnkjxnukss7askv7ip5htrb4tyjzhpw7jim2se6rloleq5h6w@ngk7lbk26hxj>
+ <Z8bGHV4PIkY4te6V@linaro.org>
+ <5uk75v3cpy2hymdgjyvqdwyda34t2pn7jqyupyvhmqgo3wlxkl@uim4lth7lipa>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250305-leds-qcom-lpg-fix-max-pwm-on-hi-res-v4-3-bfe124a53a9f@linaro.org>
-References: <20250305-leds-qcom-lpg-fix-max-pwm-on-hi-res-v4-0-bfe124a53a9f@linaro.org>
-In-Reply-To: <20250305-leds-qcom-lpg-fix-max-pwm-on-hi-res-v4-0-bfe124a53a9f@linaro.org>
-To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
- Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
-Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Kamal Wadhwa <quic_kamalw@quicinc.com>, 
- Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Johan Hovold <johan@kernel.org>, 
- Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
- linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Abel Vesa <abel.vesa@linaro.org>, stable@vger.kernel.org
-X-Mailer: b4 0.15-dev-dedf8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2202; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=1lfv18zXpdxY8kZVpZlVeAwNtS8AmywOofVeGqzeOEg=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBnyEz9GvsrtuEyjaHc+0jk69pgJbYcU3phTRWaq
- N4oAF9qzWaJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZ8hM/QAKCRAbX0TJAJUV
- VjNUEACcTE751zA3mWoqblM1OJYA48Kzok/TAGKeHouxbv4Rf/LdSP6eB3zkjNKKYLEgpRVsAUy
- LTIjXRTmTe3u/TPrdbuzR/8ZuSNoXW7GaPx18Hrgh5cfEhNZQY+FFVscVY7ie6xW9hXZeHGqGpl
- Aw7ZXNAvfnTdpwsxFn5ZaWQI2kgUal+z/exISqrPcbOhSYMzogouj1/nt4ZBYlPPfj49kxUYHVZ
- Z8PPvFXEAp7aWEXSAlffvZecuxHzJtc3IYlb1mNIR9xby3aRYi7b+Xb+GzA3dzcNfA9+h0Jcdfl
- KKQozdo11qANexEqJWTptXvTDyrjEg9IOHYXF5L8D/9iG7VNEC/Vt2iN2eks+Uwqn8PGWvSqNhQ
- DyemuYEMKCFdvQp77Fe0rNXttGzmZwqnMlJFizok/LrZFsS7eg9TTEYtgNBLTA/BM5mj1JEWWYr
- UFMUiOaBY0V1MfYkxs4Ay1ijK6+pRhtfVQk5XyrE1sy/FaRffUBxXvE7dM0nLBkyEg89a0ofk+t
- DB93pHIlBa4epkOPSKHFK4HGJOcyqvLEQQcTiLnPDy5d4xgtZKy33gSZHuKta77Wkj/4cMprSOJ
- +LCAPcWFOn6BHP/+1DPV+az+Uh5Fpyc6xaTIR7pfT0LQU1JtjjaZ8xUateBxVCRZ9PULctU/s8h
- xuX/yP4eD8HoatQ==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5uk75v3cpy2hymdgjyvqdwyda34t2pn7jqyupyvhmqgo3wlxkl@uim4lth7lipa>
 
-When determining the actual best period by looping through all
-possible PWM configs, the resolution currently used is based on
-bit shift value which is off-by-one above the possible maximum
-PWM value allowed.
+On 25-03-04 16:38:57, Uwe Kleine-König wrote:
+> On Tue, Mar 04, 2025 at 11:21:33AM +0200, Abel Vesa wrote:
+> > On 25-03-04 07:24:32, Uwe Kleine-König wrote:
+> > > Hello Abel,
+> > > 
+> > > On Mon, Mar 03, 2025 at 06:14:36PM +0200, Abel Vesa wrote:
+> > > > Currently, the implementation computes the best matched period based
+> > > > on the requested one, by looping through all possible register
+> > > > configurations. The best matched period is below the requested period.
+> > > 
+> > > The best matched period *isn't above* the requested one. An exact match
+> > > is fine.
+> > > 
+> > 
+> > Yep, that's better. Will re-word.
+> > 
+> > > > This means the PWM consumer could request duty cycle values between
+> > > > the best matched period and the requested period, which with the current
+> > > > implementation for computing the PWM value, it will result in values out
+> > > > of range with respect to the selected resolution.
+> > > 
+> > > I still don't understand what you mean with resolution here.
+> > 
+> > Resolution in this context means the number of bits the PWM value
+> > (register value) is represented in. Currently, the driver supporst two PWM
+> > HW subtypes: normal and Hi-Res. Normal ones recently got support for changing
+> > the resolution between 6 bits or 9 bits. The high resolution ones support
+> > anything between 8 bits and 15 bits.
+> > 
+> > > 
+> > > I guess you spend some time understanding the workings of the driver and
+> > > you also have an example request that results in a hardware
+> > > configuration you don't like. Please share the latter to a) support your
+> > > case and b) make it easier for your reviewers to judge if your change is
+> > > indeed an improvement.
+> > 
+> > Sure, will bring up the 5ms period scenario again.
+> > 
+> > When the consumer requests a period of 5ms, the closest the HW can do in
+> > this case is actually 4.26ms. Since the PWM API will continue to ask for
+> > duty cycle values based on the 5ms period, for any duty cycle value
+> > between 4.26ms and 5ms, the resulting PWM value will be above 255, which
+> > has been selected as best resolution for the 4.26ms best matched period.
+> > 
+> > For example, when 5ms duty cycle value is requested, it will result in a
+> > PWM value of 300, which overflows the 255 selected resolution.
+> 
+> this is the bug you have to fix then. The PWM value (that defines the
+> duty cycle) has to be calculated based on .period = 4.26 ms and capped
+> at 255. So assuming that 0 yields a duty cycle of 0 ms and 255 yields
+> 4.26 ms, a request for .duty_cycle = 4; + .period = 5 should result in an
+> actual .duty_cycle = 239 / 255 * 4.26 ms = 3.992705882352941 ms;
+> + .period = 4.26 ms.
 
-So subtract one from the resolution before determining the best
-period so that the maximum duty cycle requested by the PWM user
-won't result in a value above the maximum allowed by the selected
-resolution.
+OK then. The patchset that fixes this according to your suggestion is
+already on the list (re-spun):
 
-Cc: stable@vger.kernel.org    # 6.4
-Fixes: b00d2ed37617 ("leds: rgb: leds-qcom-lpg: Add support for high resolution PWM")
-Reviewed-by: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
- drivers/leds/rgb/leds-qcom-lpg.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+https://lore.kernel.org/all/20250305-leds-qcom-lpg-fix-max-pwm-on-hi-res-v4-0-bfe124a53a9f@linaro.org/
 
-diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
-index 0b6310184988c299d82ee7181982c03d306407a4..4f2a178e3d265a2cc88e651d3e2ca6ae3dfac2e2 100644
---- a/drivers/leds/rgb/leds-qcom-lpg.c
-+++ b/drivers/leds/rgb/leds-qcom-lpg.c
-@@ -462,7 +462,7 @@ static int lpg_calc_freq(struct lpg_channel *chan, uint64_t period)
- 		max_res = LPG_RESOLUTION_9BIT;
- 	}
- 
--	min_period = div64_u64((u64)NSEC_PER_SEC * (1 << pwm_resolution_arr[0]),
-+	min_period = div64_u64((u64)NSEC_PER_SEC * ((1 << pwm_resolution_arr[0]) - 1),
- 			       clk_rate_arr[clk_len - 1]);
- 	if (period <= min_period)
- 		return -EINVAL;
-@@ -483,7 +483,7 @@ static int lpg_calc_freq(struct lpg_channel *chan, uint64_t period)
- 	 */
- 
- 	for (i = 0; i < pwm_resolution_count; i++) {
--		resolution = 1 << pwm_resolution_arr[i];
-+		resolution = (1 << pwm_resolution_arr[i]) - 1;
- 		for (clk_sel = 1; clk_sel < clk_len; clk_sel++) {
- 			u64 numerator = period * clk_rate_arr[clk_sel];
- 
-@@ -1292,7 +1292,7 @@ static int lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 		if (ret)
- 			return ret;
- 
--		state->period = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * (1 << resolution) *
-+		state->period = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * ((1 << resolution) - 1) *
- 						 pre_div * (1 << m), refclk);
- 		state->duty_cycle = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * pwm_value * pre_div * (1 << m), refclk);
- 	} else {
+> 
+> > > > So change the way the PWM value is determined as a ratio between the
+> > > > requested period and duty cycle, mapped on the resolution interval.
+> > > 
+> > > Is the intention here that (for the picked period) a duty_cycle is
+> > > selected that approximates the requested relative duty_cycle (i.e.
+> > > .duty_cycle / .period)?
+> > 
+> > Yes, that exactly what the intention is.
+> > 
+> > > If it's that: Nack. This might be the right thing for your use case, but
+> > > it's wrong for others, it complicates the driver because you have spend
+> > > more effort in the calculation and (from my POV even worse) the driver's
+> > > behaviour deviates from the usual one for pwm drivers. I admit there are
+> > > some other lowlevel pwm drivers that are not aligned to the procedure I
+> > > described that should be used to determine the register settings for a
+> > > given request. But I target a common behaviour of all pwm drivers
+> > > because that is the only way the pwm API functions can make a promise to
+> > > its consumers about the resulting behaviour. Reaching this is difficult,
+> > > because some consumers might depend on the "broken" behaviour of a given
+> > > lowlevel driver (and also because analysing a driver to check and fix
+> > > its behaviour is an effort). But "fixing" a driver to deviate from the
+> > > declared right behaviour is wrong and includes all downsides that make
+> > > me hesitate to align the old drivers to the common policy.
+> > 
+> > OK, fair enough. But I still don't get what you expect from the provider
+> > that can't give the exact requested period. Do you expect the consumer
+> > to request a period, then provider compute a best matched one, which in
+> > our case is pretty far, and then still give exact duty cycle values ?
+> > 
+> > Like: request 5ms period, get 4.26ms instead, then request 4ms duty
+> > cycle and get exact 4ms duty cycle when measured, instead of a
+> > proportional value to the best matched period?
+> 
+> Yes.
+>  
+> > If so, then what happens when consumer asks for 5ms duty cycle?
+> > Everything above the 4.26ms will just represent 100% duty cycle.
+> 
+> Yes.
 
--- 
-2.34.1
+I still think this is wrong.
 
+I do agree with the exact value. I advocated for it on the other
+thread.
+
+But the fact that the API allows requests with values above what the
+provider can do is wrong.
+
+In this specific case, we are talking about top 15% that it just
+thrown away. But it becomes even worse for others.
+
+> 
+> > > The policy to pick a hardware setting is a compromise between consumer
+> > > needs and what is straight forward to implement for (most) hardware
+> > > drivers. Please stick to that. If you want more flexibility and
+> > > precision in your consumer, please consider converting the pwm driver to
+> > > the waveform API.
+> > 
+> > That means the pwm_bl driver will have to switch to waveform API, IIUC.
+> 
+> Yes, if the pwm_bl driver cares about that precision it has to switch.
+> 
+> While the waveform API isn't expressive enough, just use 4260000 as
+> period in the pwm_bl device, or ignore the missing precision.
+> 
+> > That might break other providers for the pwm_bl consumer, wouldn't it?
+> 
+> Given that the consumer side of the waveform API only works with drivers
+> that are converted: maybe. You could fall-back to the legacy API.
+
+Based on the provider's best matched period? Hm.
+
+>  
+> > > > [...]
+> > > > ---
+> > > > base-commit: 0067a4b21c9ab441bbe6bf3635b3ddd21f6ca7c3
+> > > 
+> > > My git repo doesn't know that commit. Given that you said your patch
+> > > bases on that other series, this isn't surprising. Please use a publicly
+> > > available commit as base parameter, otherwise you (and I) don't benefit
+> > > from the armada of build bots because they just silently fail to test in
+> > > this case.
+> > 
+> > Well, this is a pretty common practice. When the patch relies on other
+> > patches that haven't been merged yet, but are still on the list, you
+> > can't really base it on a publicly available commit.
+> > 
+> > And the fixes patchset that this is based on is needed for this to work.
+> > 
+> > So I really don't get how this can be done differently.
+> 
+> You can still use --base=$newestpubliccommit and git-format-patch will
+> at least give a chance to the build bots by emitting patch-ids for all
+> the commits between the public base and the start of your patch series.
+
+Got it. I use b4 for most patches nowadays. I'll try to make use of it's
+--edit-deps and see where that lands.
+
+> 
+> Best regards
+> Uwe
+
+Thanks,
+Abel
 
