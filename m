@@ -1,198 +1,331 @@
-Return-Path: <linux-pwm+bounces-5112-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5113-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F05CAA5526A
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Mar 2025 18:09:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 217AEA559D7
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Mar 2025 23:34:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5525016BE7D
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Mar 2025 17:09:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 52F0318961CE
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Mar 2025 22:34:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEF8D25A637;
-	Thu,  6 Mar 2025 17:09:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1F7E27C853;
+	Thu,  6 Mar 2025 22:34:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="fd1tddVz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bXpdDUed"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011066.outbound.protection.outlook.com [52.101.70.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27E025A2D1;
-	Thu,  6 Mar 2025 17:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741280943; cv=fail; b=oaujAoez+gpYokqTYGx7t4N3uCYwvCEwlcBrHjAz1Fe6XmZMDJtL9yW0iFKToh+eVX/st3lv8+tqiVqX4/YSdwboZQWOiqQxVY8AUzNi8+mNRWVTpvKFy3T42/vg0TDWnn7K6v85pEdGP0v/o+3H0MN1pu1ldBYOxO/N4Zb58V8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741280943; c=relaxed/simple;
-	bh=3dcaabYW3YZFr4PLR4tsAt2eT5XbVYC7j9UgDNSu/rE=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=lJeZpVNP9hgdaoR1W4gj+UfnNVhPe5kyW9F4UZjzVTBUU24HeOg807DaNCZFpYOP85gbZkyOQOdzuQLKAGDU1rzWt7HRk451lfuIUYGu5hdbqdzJEQzTFiIFidcYd8KJZT/njhmfEFKcwVchIfZUddZLkdXJ9ry04X+a+Fle6QA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=fd1tddVz; arc=fail smtp.client-ip=52.101.70.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ya/1EuoLs1QfxP1RTcEghwMzj0oXQV0Ru2RvCiaCVyVWD0cNvCh3iKawRp0rslQXEyO92mJD3JsExEZBBO0YJgF+X4I2skcP8Ve96MZVhiIp0GPJmKkpcHe/2hSX9Fq0RYHcR4jMZuOkiFVRuSGtwnZKW27oqd5V2P3yiIuyUV7c8zI32vf2DTI8yr4mjY/GenSHV1ZWLC+xy3+WXqJymL/FPzPjfJ+cIztYYFVFJDx1/WZIAauoXjgxA7JQoAJsYrksKdxBUBp6KmoD1p8CQCQszkskZyIp6bMjLegV6de671R3p3Cgp132ZCGuwkxhFSentpqEdiplda7rdOHbKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S8r463Ph4XMAxEo7yNWLnGIKZmih9dHIfDuT1XPFT6A=;
- b=JF6/G8rB/JHjy5tS4lnGS/WbbsK4+bi//c7wPNUbgV7xPFd2UYOK7qadnHH//xdqS3ER5XowSxLBRcIAvm1YSTwkYA1A76QCr38JgVucUfEwsoodjgT7DQ2MstL6389f4SZMsQKXORX6t1b2IFVCfRFc5AXhOwBHXpjmw+BO7H5BtPHRS3DaU/KL6rm/xji0qb3o5Cdxm1p/PhH4olBcdXliQYMvaykQ8DlvFj//DSKKqfcnj3ZWxze9eD1JHdycJ539fFp+yOcyi8GoXHxjty8FpTBnJR5jOFId/zI95aUUZAWnTLA+Mx3oC85bKLnZug6jESnps3P4DQaIRPCiTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S8r463Ph4XMAxEo7yNWLnGIKZmih9dHIfDuT1XPFT6A=;
- b=fd1tddVzEd80yFHo2sOKiRsR4Qg2PJY5sE2CwOUDJjj6nopFp7fXdHTXQoUdxxqdOzs7bpc4sl2AYRnn7ITklpz7FCNB8/CSuh65UaZMSCHHdzIFY91GAHnLNv01CBQx6+L0sP0JJcgEue+FL+uKMiP9FWCluratKF9dGyGO4IzLhN6wnafdnIzVF6YsrVhY7ao5rUqnF6SK6P0mviqo570ljjrbnxpZ0mTX0vjzvPE8LOOcHq5H1hYCAHEWKoSU6DoRXLZnz2k9aFqKn0U0fWIee5bbm2aE6tLBZAlmX68mOMb2g3kjNq+6wAoyQW9CqAe6iBmLWvObD9uAc9vPXA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU2PR04MB9179.eurprd04.prod.outlook.com (2603:10a6:10:2f6::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
- 2025 17:08:59 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
- 17:08:59 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	imx@lists.linux.dev (open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH] dt-bindings: pwm: imx: Add i.MX93, i.MX94 and i.MX95 support
-Date: Thu,  6 Mar 2025 12:08:45 -0500
-Message-Id: <20250306170845.240555-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0191.namprd13.prod.outlook.com
- (2603:10b6:a03:2c3::16) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C231F4185;
+	Thu,  6 Mar 2025 22:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741300448; cv=none; b=QzvUuBsraGUo4ONYqQ+CfCNF78z33hdnTDrYpzmN7i9rDYMVaq/BtI/SxW/nuS+nuzElwj25IZs+pmWtSoQMpR37OssAzt7jsVBGSFH9Fk7bKUlus8+ztHC+2Ew31hfIOF5RkY/qsBKXCL0SHviUjVmdG90BdYACsxsO0niT2ek=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741300448; c=relaxed/simple;
+	bh=CXCKeZkp6dZsmf/hiWK30FF5AgD2Ai6Q0+7StDdRcMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cg7oWiV//jDtNbxL7aEcBZ62wdoIznG2XjVO44ncKOTfztFJlfi2bYyRmfjN2AM9+P54MNRXG6d58aH3SrXGe4kjqeqMRbP548rrE8CtKOoiDgvu/lVY35xgUps0HwYe5sevN9Y/bnVBHuNm2CI/W/oU+xsejNVsN2KH+fLaxr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bXpdDUed; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E7C4C4CEE0;
+	Thu,  6 Mar 2025 22:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741300447;
+	bh=CXCKeZkp6dZsmf/hiWK30FF5AgD2Ai6Q0+7StDdRcMY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bXpdDUedTk+W+Me0w8gH+5QKskkivlz9zFAWKMHGDU/4f4zoCpwAzcx73uMcOYxjC
+	 gS5r+t1IlVxZ+KFqVW0qEmproX4Kwwh4KvKh1sw3TyGupseCn4Z7uRx9TlxIW4wupb
+	 w6eia0vtwQoOWQU4SywH+efsg3khqKYHJ2213ATsQa9q3UFE3NvwwSKzZaUSxGYPnt
+	 SDC59ggUXSqxYnf3gGdB7Lq1jy5IunpcUXVXNTxOAiyOIwsyYUdZEO1KyTOIt/R+/1
+	 7btsw9s3/SMVG33gFxfmO0euvst7prNjh38A3lDgae35FGd4UnMRxG/YWmNXkOasfC
+	 8TqbjXVw8zkow==
+Date: Thu, 6 Mar 2025 23:34:04 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: neil.armstrong@linaro.org
+Cc: Abel Vesa <abel.vesa@linaro.org>, Lee Jones <lee@kernel.org>, 
+	Pavel Machek <pavel@kernel.org>, Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>, 
+	Kamal Wadhwa <quic_kamalw@quicinc.com>, Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Johan Hovold <johan@kernel.org>, Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
+	linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
+ period instead
+Message-ID: <6abeyzvb6iyqd2z3phemoesk3c7n7ye5ybcpe6wtlepl3jhimu@g74ptgnq5wkv>
+References: <20250303-leds-qcom-lpg-compute-pwm-value-using-period-v1-1-833e729e3da2@linaro.org>
+ <ylnkjxnukss7askv7ip5htrb4tyjzhpw7jim2se6rloleq5h6w@ngk7lbk26hxj>
+ <Z8bGHV4PIkY4te6V@linaro.org>
+ <5uk75v3cpy2hymdgjyvqdwyda34t2pn7jqyupyvhmqgo3wlxkl@uim4lth7lipa>
+ <Z8hgj11p+TY1546x@linaro.org>
+ <997d4cf8-5256-4413-8059-569451962a83@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU2PR04MB9179:EE_
-X-MS-Office365-Filtering-Correlation-Id: 54c4d63a-b4ee-4c37-4a4b-08dd5cd19601
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|52116014|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Xm7p7K3HXTQq3Z1wOWNqpyXLt4ZAB3RukInJA1QlZ83xHBcwVQ7xpmPsyDsC?=
- =?us-ascii?Q?JwSlXaX/IcJX8UogOIK1J94OthUMsU1dKHIDz9oF/OBTqK2JwppjMIK6ApLo?=
- =?us-ascii?Q?UCFSu8K0o8mpqfpSN2s4NIw1I/OT76/o+T8cvfERZzej4zrytyrgaz2albEh?=
- =?us-ascii?Q?OtX7dUrHTmNfA67ySN0Ic4SoJflKZRlQLXB8onC4L5rbFOgvihPwHUMX9gkm?=
- =?us-ascii?Q?eUyHvFirZ4XQYZRcHsqExr36T1zafr48Sew/s2E8YTv3kZDllSYXYaZHO6ac?=
- =?us-ascii?Q?i6ghpIeeQSnukVdiq3pg9vP85wb18Nmo+ByqSOcW/LxqGHshjPyTOQJwiLeW?=
- =?us-ascii?Q?65b17a55p7Q1S2ON5KIKqKpdNJ2DPfK+jP79aJrq3Vj4EXc0BevNSjzunz5z?=
- =?us-ascii?Q?N5mqTtHx9O/U5t3beLch+w9TPYAlNCAyGwyp32AbgB34FRRIGUD2FdyHo1gb?=
- =?us-ascii?Q?7SSSXZv8w3abTzXdqBJTVpE0aSPu6EzjuPvG/P6dhMBAEYZDDkJo5RU43bfR?=
- =?us-ascii?Q?ZwbbaebBx9s78M6Islj+l5Eea1stx43XMe9aSlRwHreZas+nrVrMEXhgj6YZ?=
- =?us-ascii?Q?lh+ajCN+L1/ClBEr3R/rVSQJyTYzxt2gU9kLPyJtvWHJwEzecKb3NM9ZGop2?=
- =?us-ascii?Q?Z4C1zy/G+D33YKv+bStdUzo3LlW8T6j/VP3vzDNbluU2huNBSSN58JFanHeO?=
- =?us-ascii?Q?g5GGi/MQefvpT9wt4Xmszgb2kuT7wootW1viZyk1JsRH/wHOTNPle59AXmg7?=
- =?us-ascii?Q?+fX/qXW16Njx1llFXoY5pOtKfyeFIVGXckDK9XN3a0I2ZKR79dy/JvuUIY8m?=
- =?us-ascii?Q?awSVizDsMwKtylN4sF4UGl7Ci+cbNfTKz8vbrwDwDGcWBHJDAJBCbxHYPJje?=
- =?us-ascii?Q?RrpQVazyglq9FYM6MRO/zx3CEZJj9im69Mnd5BDkz/0xJtBeOxKjVOuvZfsR?=
- =?us-ascii?Q?41PD9JmB7hzJmSt/ZYeaGaI1pbq61E6XtuQjqAaBxymkRxd6yQnLzAQ6AuiT?=
- =?us-ascii?Q?tlxlmYMSZs5QFhP6+M1OfjPoBXLWU7m78cwL6SOaw78ChjzieU3EKIod4IV3?=
- =?us-ascii?Q?lqEZ9JrLDGgC/t5vwJbeEMzxRYqubSu0c7R0TeXAVO57qIIzC5gJMQ13jdvh?=
- =?us-ascii?Q?0sM/zU6NXTuqRdzIEW9wGyFavqY78Z4TuWxqZnuIJrBPD+fvmQry7FH2qi8I?=
- =?us-ascii?Q?9GmvL4V0NFpgRFPv9t4CplIieqNeha9GAal1MrA+uBOY2S4VVa5Z/063Q7BF?=
- =?us-ascii?Q?Y7kZIe7YrXublngjoLBTq5uc5vJTK814otqiCkcUod4hYYEjb0J/AgW0VSOT?=
- =?us-ascii?Q?SeqOZS5S4NmxPe8LUUmqKQJdNlJ0U1jZ9NrUGhURCCm43apxnbOC0KuzzNlG?=
- =?us-ascii?Q?y8LLyuZKKVuSCwgd/5XMpQGSGFCDzWdtSoWzmmIlJHTs8jy3WpnCyhh//GLZ?=
- =?us-ascii?Q?+3Bq03CirT4hEtSXIpCL97XB1uLWaAMI+C83mjAf+i29UhgL8P40qw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(52116014)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?wkvd5iqeUaXJ9jGjSCwVeUd3Uu+P1/tI+YD5H5PIDWnO9/oNDmM3sfOfkBze?=
- =?us-ascii?Q?9eGDjjFUhJ46xnw2xhVPhCqa62kiAie4PxV11ifyTbsUZ5P/hPYNf87SzZS6?=
- =?us-ascii?Q?7nJ51peKTP4ASHIGVXyOMbG33XdwpNfHOq97itTdSaTMQ5B00IzMiDefFE3v?=
- =?us-ascii?Q?lXJeEqK2LrAxkm/t5D4/ssilz42YZJ7kjnrwOeHTWngpBvS+Y/w8SrLmMwwW?=
- =?us-ascii?Q?XZVpzvSJAaswTYlDhVF8U8j1RHtSvs2y+9AYWQPnGYUjeSdfuApD/0E221Hx?=
- =?us-ascii?Q?n3g0XvGxgzemeLWLWfpuOsfVIbG7Lnnf4NTvtNymLMPU/iOHaSynbanVFj90?=
- =?us-ascii?Q?r1qp41mGowiBe2bXyK2/fQ77f775L5jozsMcBQUDs3cL8YgHCw+tAvNQaNKw?=
- =?us-ascii?Q?JQLy5I/7gQ9BjDnQFHXFaYNfA9vfJhn75OKAmDAk9yz0pnJQDIZhYhwhk28B?=
- =?us-ascii?Q?VJQ0wQYedKBmFED9tRNIn4Y3yEDoJ4q3SuAlKM0al1TJKVnWMTwtiCh7gMbu?=
- =?us-ascii?Q?9dWq6VtucvCjZRT6yeYuXFQGaJqUvYyspU4tyKCJm3+JUEx2hLUxOw93wzST?=
- =?us-ascii?Q?/Jv3fFhm659sTMSnxyoz/Ifjel30YfeMeH8ZFBhg/C5QlLxA+KP5DmxjPtmk?=
- =?us-ascii?Q?tA4+fL5YrPy2hUPIO74+x1SDIkTxfIs0UQnU2G6PXX+Xg1D7qgoem1NuJyT5?=
- =?us-ascii?Q?UeBNQpCGY+mrTY2bPy+1H+Fy1NfCNWXz/Un0MF4+iIurPht8vS+p3i3nBMDY?=
- =?us-ascii?Q?VWUNu5MjSi6GzeycfkPXpykZI+NO+HtIGQ9YODFjpheqKTKk1Vmo9sj4o3Qg?=
- =?us-ascii?Q?n7l0IkUQAX6k8Ig0aipxN4VEP0/e7ZzAZz8vDLxZJKVPlaC1b70dzEt0Y2NR?=
- =?us-ascii?Q?qZLDvATSXhZUKjXh1bKavMihu5Qkz4sw8NNDbVIjEiVyNjL1skQPFJLN8ZAN?=
- =?us-ascii?Q?c0ZgE/h0dns5H2PEhA751n367K7noVhaa7A3MxvwBW6LnGaIZyG1FhdBqDjh?=
- =?us-ascii?Q?Z6mugv8Sx594OX6cd29r7ONs7HwGrvmsbgAcjF4mMpXTKl4xxish0kqW5xqN?=
- =?us-ascii?Q?+PUfExD/Z6/lkZFD6FubOSNWXoUbXBjkpNKlVK3Uk+RnAde0wYha9ZbnJ49c?=
- =?us-ascii?Q?6yOyUJ8ouUKmtwFVAXlWu/+pX29kXv5KrhtWfT3Ay0TcrDgrKkk4j+vuTOzV?=
- =?us-ascii?Q?mCXlPw+TdENZJfUBtwAl9We8awFc6WbZyWanh3ANgsNQ8Kh9cYI/QCgegJnt?=
- =?us-ascii?Q?CzXzsrkPX9MKDW8lnC5Xm2gOtoCB87oz7IrsPjvvw6rhq8c6FueFTdNWOpoz?=
- =?us-ascii?Q?07TZTaW2TlX/UJZs9bFpGSVMsTJYMnRhgPNZ52wN9Y+JiT/+XHY1VsxZcFtV?=
- =?us-ascii?Q?fk7C0KYx0HLAnFafiqnGwRC41GpFNkg4QfLGsDWX01Q3PqI+zEKjPxYMzxr9?=
- =?us-ascii?Q?YkxQzyTgpwGPEsRaqarU+s3m83OJXbLsO9aIo0z3EIz0xfUfurnqQX9HHP5I?=
- =?us-ascii?Q?kPg9F33Zl2TKNRQDzBkRuUrytniug7OFCmotK5RzK43KKqubGp6Pjs02OlkZ?=
- =?us-ascii?Q?5g7Bmv/oKAFvN4Fmsosv8UxmWoVkOJGC4FJVWcrq?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54c4d63a-b4ee-4c37-4a4b-08dd5cd19601
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 17:08:59.4003
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zvnOm7DZvRJu9wi+xh0sg1sObLBlZAssk8quvz8kZdaDFANikYhAemweoGFeXu+uwiqdhPI0K13jhB8OtBbHrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB9179
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="a7hxg7ecmf44lnyx"
+Content-Disposition: inline
+In-Reply-To: <997d4cf8-5256-4413-8059-569451962a83@linaro.org>
 
-Add compatible string "fsl,imx93-pwm", "fsl,imx94-pwm" and "fsl,imx95-pwm",
-which is backward compatible with i.MX7ULP. Set it to fall back to
-"fsl,imx7ulp-pwm".
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- .../devicetree/bindings/pwm/imx-tpm-pwm.yaml          | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+--a7hxg7ecmf44lnyx
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
+ period instead
+MIME-Version: 1.0
 
-diff --git a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml
-index ac0a35bf8648c..d5a9340ff9209 100644
---- a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml
-@@ -23,8 +23,15 @@ properties:
-     const: 3
- 
-   compatible:
--    enum:
--      - fsl,imx7ulp-pwm
-+    oneOf:
-+      - enum:
-+          - fsl,imx7ulp-pwm
-+      - items:
-+          - enum:
-+              - fsl,imx93-pwm
-+              - fsl,imx94-pwm
-+              - fsl,imx95-pwm
-+          - const: fsl,imx7ulp-pwm
- 
-   reg:
-     maxItems: 1
--- 
-2.34.1
+Hello Neil,
 
+On Wed, Mar 05, 2025 at 03:42:56PM +0100, neil.armstrong@linaro.org wrote:
+> On 05/03/2025 15:32, Abel Vesa wrote:
+> > On 25-03-04 16:38:57, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Tue, Mar 04, 2025 at 11:21:33AM +0200, Abel Vesa wrote:
+> > > > On 25-03-04 07:24:32, Uwe Kleine-K=C3=B6nig wrote:
+> > > > > I guess you spend some time understanding the workings of the dri=
+ver and
+> > > > > you also have an example request that results in a hardware
+> > > > > configuration you don't like. Please share the latter to a) suppo=
+rt your
+> > > > > case and b) make it easier for your reviewers to judge if your ch=
+ange is
+> > > > > indeed an improvement.
+> > > >=20
+> > > > Sure, will bring up the 5ms period scenario again.
+> > > >=20
+> > > > When the consumer requests a period of 5ms, the closest the HW can =
+do in
+> > > > this case is actually 4.26ms. Since the PWM API will continue to as=
+k for
+> > > > duty cycle values based on the 5ms period, for any duty cycle value
+> > > > between 4.26ms and 5ms, the resulting PWM value will be above 255, =
+which
+> > > > has been selected as best resolution for the 4.26ms best matched pe=
+riod.
+> > > >=20
+> > > > For example, when 5ms duty cycle value is requested, it will result=
+ in a
+> > > > PWM value of 300, which overflows the 255 selected resolution.
+> > >=20
+> > > this is the bug you have to fix then. The PWM value (that defines the
+> > > duty cycle) has to be calculated based on .period =3D 4.26 ms and cap=
+ped
+> > > at 255. So assuming that 0 yields a duty cycle of 0 ms and 255 yields
+> > > 4.26 ms, a request for .duty_cycle =3D 4; + .period =3D 5 should resu=
+lt in an
+> > > actual .duty_cycle =3D 239 / 255 * 4.26 ms =3D 3.992705882352941 ms;
+> > > + .period =3D 4.26 ms.
+> >=20
+> > OK then. The patchset that fixes this according to your suggestion is
+> > already on the list (re-spun):
+> >=20
+> > https://lore.kernel.org/all/20250305-leds-qcom-lpg-fix-max-pwm-on-hi-re=
+s-v4-0-bfe124a53a9f@linaro.org/
+
+Yeah, I thought so. It's in my review queue.
+
+> > > > > > So change the way the PWM value is determined as a ratio betwee=
+n the
+> > > > > > requested period and duty cycle, mapped on the resolution inter=
+val.
+> > > > >=20
+> > > > > Is the intention here that (for the picked period) a duty_cycle is
+> > > > > selected that approximates the requested relative duty_cycle (i.e.
+> > > > > .duty_cycle / .period)?
+> > > >=20
+> > > > Yes, that exactly what the intention is.
+> > > >=20
+> > > > > If it's that: Nack. This might be the right thing for your use ca=
+se, but
+> > > > > it's wrong for others, it complicates the driver because you have=
+ spend
+> > > > > more effort in the calculation and (from my POV even worse) the d=
+river's
+> > > > > behaviour deviates from the usual one for pwm drivers. I admit th=
+ere are
+> > > > > some other lowlevel pwm drivers that are not aligned to the proce=
+dure I
+> > > > > described that should be used to determine the register settings =
+for a
+> > > > > given request. But I target a common behaviour of all pwm drivers
+> > > > > because that is the only way the pwm API functions can make a pro=
+mise to
+> > > > > its consumers about the resulting behaviour. Reaching this is dif=
+ficult,
+> > > > > because some consumers might depend on the "broken" behaviour of =
+a given
+> > > > > lowlevel driver (and also because analysing a driver to check and=
+ fix
+> > > > > its behaviour is an effort). But "fixing" a driver to deviate fro=
+m the
+> > > > > declared right behaviour is wrong and includes all downsides that=
+ make
+> > > > > me hesitate to align the old drivers to the common policy.
+> > > >=20
+> > > > OK, fair enough. But I still don't get what you expect from the pro=
+vider
+> > > > that can't give the exact requested period. Do you expect the consu=
+mer
+> > > > to request a period, then provider compute a best matched one, whic=
+h in
+> > > > our case is pretty far, and then still give exact duty cycle values=
+ ?
+> > > >=20
+> > > > Like: request 5ms period, get 4.26ms instead, then request 4ms duty
+> > > > cycle and get exact 4ms duty cycle when measured, instead of a
+> > > > proportional value to the best matched period?
+> > >=20
+> > > Yes.
+> > > > If so, then what happens when consumer asks for 5ms duty cycle?
+> > > > Everything above the 4.26ms will just represent 100% duty cycle.
+> > >=20
+> > > Yes.
+> >=20
+> > I still think this is wrong.
+
+Well, if you asked for .period =3D 5ms and .duty_cycle =3D 5ms you even
+asked for a 100% relative duty cycle. So while I agree that you don't
+usually get exactly what you requested, this is a bad example to rant
+about.
+
+> I also think this is very wrong, duty_cycle is a factor of the period,
+> so if the HW gives a lower period, the term Pulse Width Modulation implies
+> the ratio between the "duty_cycle" and the period is important,
+> not the exact duration of the components of the modulation.
+
+In Linux .duty_cycle was expressed in ns and not relative to period.
+Apart from that being a historic choice that is hard to change, IMHO
+this is a sane choice because in the kernel we have to stick to integer
+math and then if you want to express a relative duty_cycle you probably
+have to pick a divisor D such that .rel_duty_cycle =3D n represents a
+relative duty_cycle of n / D. What to pick for D? 100 to get percent as
+unit? Something bigger to increase precision? A power of two to match
+usual hardwares but make it less intuitive for humans? Also note that
+for some hardwares the "natural" divisor is 255.
+=20
+> So is this a defect of the PWM API ? why would the API insist on
+> having an exact duty_cycle and a random period ?
+
+The way to determine the actual hardware dependent settings for a
+requested pair of duty_cycle and period is IMHO straight forward, so
+duty_cycle selection isn't more exact than the one for period and period
+isn't more random than the one for duty_cycle. It can also happen the
+other way round that your request results in an near exact match for
+period and a big deviation for duty_cycle. So judging the defects of the
+PWM API from just one example is short-sighted.
+
+But still I hear you and the rules were defined as they are as a
+trade-off between consumer needs, needed complexity in lowlevel
+drivers and what most drivers already did at that time.
+
+Regarding consumer needs: I agree that most consumers care about the
+relative duty_cycle. But there are exceptions. I remember a motor where
+the absolute length of the duty_cycle defines the rotation speed and the
+period was more or less irrelevant. While here the point mostly goes to
+"keep relative duty_cycle", it's still a "you cannot please everyone"
+situation.
+
+Regarding complexity: A simple PWM typically has a fixed clock input and
+there is a register to define the period as a number of clock cycles.
+Then there are essentially two subtypes:
+
+ a) the duty_cycle register uses the same time base as the period
+    register; and
+ b) the duty_cycle register unit is relative to the period length.
+
+Let's assume a clock input rate of 32768 Hz, so one cycle tick is
+q :=3D 1 / (32768 Hz) =E2=89=85 0.030517578125 ms. So the typical PWM of ty=
+pe a)
+has a 16 bit register for period and another one for duty_cycle. I think
+it's quite obvious that the chosen policy is very simple to implement
+for such a device, so I won't go into that further. Considering the
+"keep relative duty_cycle + round down" policy instead and a
+request .period =3D 5ms and .duty_cycle =3D 3ms. The best match for .period
+is 163q =E2=89=85 4.974365234375 ms. Then to calculate the duty_cycle you h=
+ave
+do determine: 163q * 3 / 5 =3D 97q =E2=89=85 2.960205078125 ms giving an ac=
+tual
+relative duty_cycle of 0.5950920245398773. This is quite a good fit.
+Using the "use the absolute values" policy we end up with duty_cycle =3D
+98q =E2=89=85 2.99072265625 (and the same period) which gives a relative
+duty_cycle of 0.6012269938650306. The result is somewhat similar (with
+0.6012269938650306 being a slightly better result as
+0.5950920245398773?), but the calculation needed for the "use the
+absolute values" is a bit simpler. In summary we can say that it's
+quite natural to round down both values in the "use the absolute values"
+case independent of your preferred policy, while rounding down in
+combination with the "keep relative duty_cycle" policy is tends to be
+worse because the duty_cycle register value is rounding down the result
+of a calculation that has a rounded value as input, so precision
+suffers. If your reflex now is to not always round down but sometimes(?)
+round up, please consider maintenance effort: This must be reviewed and
+it must be explained to driver authors. So that's not a good idea.
+
+Now let's consider a PWM of type b) with the same input clock freq. To
+be able to define the duty cycle in time units relative to the period,
+the period can be a multiple of 256q and the .duty_cycle register is an
+8 bit one. 256q is already above 5 ms, so to get a fairer comparison
+let's assume a request of .period =3D 1280 ms and .duty_cycle =3D 768 ms
+(which is the above request just scaled by 256). So period ends up being
+163 * 256q =3D 1273.4375 ms. With the "use the absolute values" policy we
+end up with .duty_cycle =3D 163 * 154q =E2=89=85 766.05224609375 ms giving =
+an
+relative duty_cycle of 0.6015625 and with the "keep relative duty_cycle"
+policy you end up with .duty_cycle =3D 163 * 153q =E2=89=85 761.07788085937=
+5 ms
+and a relative duty_cycle of 0.59765625. In summary for b) there is
+again not much difference in the resulting configurations and complexity
+is again similar with a slight advantage for "keep relative duty_cycle".
+
+Without having done a complete survey back when I decided about the
+policy to pick my impression was that PWMs of type a) were more common.
+Also in my impression back then the difference in complexity between the
+two policies to chose among is smaller for type b) than for type a)
+which gives another slight advantage to "use the absolute values".
+
+Also looking at the drivers back then, "use the absolute values" policy
+was the more common one. Additionally I didn't like the fact that for
+the "keep relative duty_cycle" policy you have to base the calculation
+of duty_cycle on rounded values.
+So overall this made me pick the "use the absolute values" policy. And
+please believe me when I say this wasn't a whim of the moment decision
+but I invested quite some thought.
+
+The example you gave is somewhat a corner case because the requested and
+the actual period quite a lot---as you noticed yourself---and can be
+worked around by picking a better value for .period as I wrote in my
+previous mail. And no matter which policy you pick, depending on the use
+case for your consumer you will be able to find such degenerated
+examples.
+
+Having said all that (and hoping that this made it better understandable
+why we're where we are), there is an effort to improve here and to give
+consumers a better control over what they get. (But for the needs of a
+backlight this is probably overkill, so I refer again to the suggestion
+to pick a period that better matches the hardware.)
+
+Best regards
+Uwe
+
+--a7hxg7ecmf44lnyx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfKIs4ACgkQj4D7WH0S
+/k5G3Qf+LfPLUXjSugs3vSShRzDqiuv/8qLb3jpHnqA1pJg8wJixQ3MOVFSlWP/n
+jyJbGRMO8C5fyz7EaBhhSw+HByEmhIku6zoVgVdnJzY6FHkl+ekWmxfgFflmVTEI
+8OEf3TcAlVR1VsIGrj1YDorfGnjyAjhBC676mGoGxxlIEFcDzBZxqrSdeF28851n
+t4gxDYoWU756+7AWBKqeQmsaK5CU9bQNj1ssayaw02oEUDwBUd7qTcogm3Iy8/uy
+t752QOOkuZnaugmBf6viquQ6gf8sfVJ3CeSsaukLIO9uSSGTxiibOM4OloQcq2qo
+f49rq9XZc3ymvBsUZa+NcLTQz61n9Q==
+=T6yp
+-----END PGP SIGNATURE-----
+
+--a7hxg7ecmf44lnyx--
 
