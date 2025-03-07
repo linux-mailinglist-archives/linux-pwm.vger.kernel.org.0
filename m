@@ -1,36 +1,37 @@
-Return-Path: <linux-pwm+bounces-5118-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5119-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BB2FA56758
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Mar 2025 13:00:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C71DCA5675B
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Mar 2025 13:00:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65D2A165D20
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Mar 2025 12:00:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D03C166BDC
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Mar 2025 12:00:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B68A218AD3;
-	Fri,  7 Mar 2025 12:00:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C7F4218EB3;
+	Fri,  7 Mar 2025 12:00:18 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FE32185BB;
-	Fri,  7 Mar 2025 12:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF64218AB3;
+	Fri,  7 Mar 2025 12:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741348816; cv=none; b=YeYxLd6fCEaRVFgx3NSjSHhwXkxPHpzDb93A8I5T35CsCpp2YTaQY4jU/caREpBHNBzKUww8ys7r6TFFHkFocm0biTBMQbIF2ysAeH/C7jJhVH6R89fUlfeeXF0psSNYyvjZiDwozpe1yuayAFVOkaY0uzoYxCo1dbcnO1SvFb0=
+	t=1741348818; cv=none; b=uW8y/aFkXt7XUh8d7NN9knnGiJBwRR6m0+RgFLKC6wUQl+3fArC4b0SURaRZjrqAzwkrxhBHX+sWC0es5UURxfiQIUlxbFPuZvT/6ss5sxuouLW8LYni+bpdzGgFw9MtjDobg6t/iJS3+iQHQjGHS3rE+3CZ7CrsJ2hcc+qj7HM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741348816; c=relaxed/simple;
-	bh=Yl+gnLHKsStNxura2iA2FY94M6LLfEdskCnzr7t6lDA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mRQaI9O1f6Eg4uRf91uPIOGeBrjBeKTRvML22TMMWjQKWyc+wRfcefi57Vb9s21ZDZDoMVX+5GR5QowOM2XW12ff2RktiR02jcKJ10xuG78y/58tuFz3or4pI9XhvPCOFaRTT/ehQMxDOn4UAxztTJeN5ucj3mu0X1RLj1kzSqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.197
+	s=arc-20240116; t=1741348818; c=relaxed/simple;
+	bh=QeznOLZPuG4HaG/33inuJgJ8M1VGDyWuvBRu+0i9dEc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=a28AzOQBU1AVjogLJ9m4wPu77m2bHoJdPZB7KeUC2nsKA9a9WioBdiskOmw5PXbIx3qelWfAlVaAB1CFRhabUKrx5oEVLymw41rYBVkAeJYp/JeSxKjPSuvqKxZJH1i1GaxTMa6cPfLethpLRsBsr8RlsQ/hS9Zd5qM5dyYhBXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
 Received: from amadeus-Vostro-3710.lan (unknown [119.122.215.89])
-	by smtp.qiye.163.com (Hmail) with ESMTP id d5c9f2d0;
-	Fri, 7 Mar 2025 20:00:08 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id d5c9f2d5;
+	Fri, 7 Mar 2025 20:00:10 +0800 (GMT+08:00)
 From: Chukun Pan <amadeus@jmu.edu.cn>
 To: Heiko Stuebner <heiko@sntech.de>
 Cc: Rob Herring <robh@kernel.org>,
@@ -45,10 +46,12 @@ Cc: Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
 	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: [PATCH 0/2] arm64: dts: rockchip: Add pwm nodes for RK3528
-Date: Fri,  7 Mar 2025 20:00:02 +0800
-Message-Id: <20250307120004.959980-1-amadeus@jmu.edu.cn>
+Subject: [PATCH 1/2] dt-bindings: pwm: rockchip: Add rockchip,rk3528-pwm
+Date: Fri,  7 Mar 2025 20:00:03 +0800
+Message-Id: <20250307120004.959980-2-amadeus@jmu.edu.cn>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250307120004.959980-1-amadeus@jmu.edu.cn>
+References: <20250307120004.959980-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -57,53 +60,35 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDHh4ZVh5CGUkYGB8eQk0YHlYeHw5VEwETFhoSFy
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCH0xIVhoZQhoeSx1LGElCTFYeHw5VEwETFhoSFy
 	QUDg9ZV1kYEgtZQVlKSkJVSklJVUlKTlVDQllXWRYaDxIVHRRZQVlPS0hVSktISk5MTlVKS0tVSk
 	JLS1kG
-X-HM-Tid: 0a95707a26a903a2kunmd5c9f2d0
+X-HM-Tid: 0a95707a2fba03a2kunmd5c9f2d5
 X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NS46Qxw4QjJJNjU*SjNICEsh
-	ISEaC0NVSlVKTE9KSE9DQ0tCSkxDVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
-	QlVKSUlVSUpOVUNCWVdZCAFZQUpLTUo3Bg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mjo6MDo6CzJLIjUQFT0YCEIx
+	EjBPCSxVSlVKTE9KSE9DQ0pKT0hJVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
+	QlVKSUlVSUpOVUNCWVdZCAFZQUNJQzcG
 
-Add pwm nodes for RK3528. Most rk3528 boards use pwm-regulator to
-supply to CPU, add node to enable them. The PWM core on RK3528 is
-the same as RK3328, but the driver doesn't support interrupts yet.
+Document pwm compatible for rk3528 which is fallback compatible
+of rk3328-pwm group.
 
-Unlike other SoCs, pinctrl-names need to be in "active" state,
-I'm not sure about this, but otherwise the pwm-regulator will
-not work properly.
-
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
 ---
-vdd_arm: regulator-vdd-arm {
-	compatible = "pwm-regulator";
-	pwms = <&pwm1 0 5000 1>;
-	pwm-supply = <&vcc5v0_sys>;
-	regulator-name = "vdd_arm";
-	regulator-min-microvolt = <746000>;
-	regulator-max-microvolt = <1201000>;
-	regulator-always-on;
-	regulator-boot-on;
-	regulator-settling-time-up-us = <250>;
-};
+ Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-&cpu0 {
-	cpu-supply = <&vdd_arm>;
-};
-
-&pwm1 {
-	status = "okay";
-};
----
-
-Chukun Pan (2):
-  dt-bindings: pwm: rockchip: Add rockchip,rk3528-pwm
-  arm64: dts: rockchip: Add pwm nodes for RK3528
-
- .../devicetree/bindings/pwm/pwm-rockchip.yaml |  1 +
- arch/arm64/boot/dts/rockchip/rk3528.dtsi      | 88 +++++++++++++++++++
- 2 files changed, 89 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
+index e4e1976c542d..c8cdfb723336 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
++++ b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
+@@ -30,6 +30,7 @@ properties:
+           - enum:
+               - rockchip,px30-pwm
+               - rockchip,rk3308-pwm
++              - rockchip,rk3528-pwm
+               - rockchip,rk3562-pwm
+               - rockchip,rk3568-pwm
+               - rockchip,rk3588-pwm
 -- 
 2.25.1
 
