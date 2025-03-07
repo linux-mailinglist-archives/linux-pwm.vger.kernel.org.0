@@ -1,61 +1,65 @@
-Return-Path: <linux-pwm+bounces-5122-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5123-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E24F3A56C3B
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Mar 2025 16:35:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79841A56CD8
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Mar 2025 16:59:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DF1227A3819
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Mar 2025 15:34:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C38B1889265
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Mar 2025 15:59:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2993B21D01B;
-	Fri,  7 Mar 2025 15:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3546B221709;
+	Fri,  7 Mar 2025 15:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YfsqKkHU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lfm1QjW0"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0001121D002;
-	Fri,  7 Mar 2025 15:35:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042FF194C78;
+	Fri,  7 Mar 2025 15:58:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741361730; cv=none; b=DZXjjl9ZZmxSimEihUHEzjR4d2qszQiDLaNcXMyXRNUyq0/Zt/LhqoA5SI7kwIz4jhNuwCT7S6AunhFER+8p8kJ7/dm/XpBWCTq1VZvETjZBuF5BeJ/5DgjJSFPxN2UoObsRq7X3k1sDvrGwIQaFZzU0w9+OX94JyupMNe6QUcs=
+	t=1741363098; cv=none; b=FNXYCoPO92ahn4XSZetM8LTxH6zGTWHAXJS5DXh+2mVKPThHPOfwH7izspHl4VR2ym6oTeVko68cqUjTW2FmYba2es95Vl50BvnE0Dga8OUkUuBR5GTYSKsq8O3PnY2GUhT7R3WZMrXy2tYo2YYNWi+Td+lYtfdpSmjw/40vsJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741361730; c=relaxed/simple;
-	bh=+NBaiXMA7TB4yM9FUBKC0Vpf3PO8/vw0zeJ97JH5BWk=;
+	s=arc-20240116; t=1741363098; c=relaxed/simple;
+	bh=DbOJCP64/Zf1wfRed5mRMA7gHSuE9mWdYEEM8LkNjNc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UlviDtqt3JA/vjaOY6xkDb5+8yWDG+5MTyKZ/m+meIV4r9MXQIYMNRnwTUQHuywt7S6ydEi92fOWVfaaj5CHKKZ5AlxGFA15K0pGGKyJFNQRgDFV5+ck3l1Lc44QIENHbsMe5HaaBiK6A+LjVN1yFSETB1iAp+UP+mDpNQXpyG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YfsqKkHU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11B39C4CED1;
-	Fri,  7 Mar 2025 15:35:26 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=tTlTVxN3k+32FwNqaQZIoXKrUnYlLiR+7JHTnJ0EX3FQnP97qqd5eMNAzCkt4B1dC20nwr7eUkGumlb4x2iKT/2/+fadvlt2yeo2kgFe/R7C96KHzTh41La/rHA1UaE1MRitCUt9MXoUCYKZZaPSvgSGfB3EpXusLUUm3TAWTSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lfm1QjW0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F5BDC4CED1;
+	Fri,  7 Mar 2025 15:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741361729;
-	bh=+NBaiXMA7TB4yM9FUBKC0Vpf3PO8/vw0zeJ97JH5BWk=;
+	s=k20201202; t=1741363097;
+	bh=DbOJCP64/Zf1wfRed5mRMA7gHSuE9mWdYEEM8LkNjNc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YfsqKkHUjw9IIklBMftnuGiGHxcFvD4TS/2lzMv1w+m/F+mfT2YacH0ItyIeOhy1j
-	 ttKrUIYShf6jDDT0/2Gn6TZAxKgDS3b8rDJM5HQJ5Qjdv1vpwAewV11QbmQNtQ3Ziq
-	 m/wvq5J+qcXpWKyQumRts24nj7rvj90H9be4HdZoP3GgXWOvvJKRW60zsUqG3vewk4
-	 rtfGxEFN++FcbXk3EU8Ib3Ks8nKFgncADKPYJUJYsZxa2Ky1+TLCtAeYzYPucfCWZo
-	 AFYS3+2qgLOk5tBqBEH5tzvVfNQyhGvb8+w9a815//7j8oXcOcmpWA+PDIkq42gPRQ
-	 NFY/riNN7NoJQ==
-Date: Fri, 7 Mar 2025 15:35:24 +0000
+	b=lfm1QjW0+Yj40viKDxMa/eaI1kIybtAHMSB9BuuhaavCDsQS+lTcgvkY6LsfGIaM8
+	 ycoYHNpzCe4tQgpyS93zEEpX2Ujp4Xc9G/udOdZmUMhBcqGYTdWuQ70Q33xRghPYIt
+	 oB6U/ZoAW3oRVKmCSsey8mMo9Jy0ZEBBt560tzIIqLoQaQ4wPBQ8hSOKxp/FovR89E
+	 1TAdPTWiB8WL5uXYfeO8EU26V5IdurFTlb/TQb5Cx7VcAMN/wAxD8xDeWowH4kUsIE
+	 fa119vcwUufZu7wvBPeShILRoz29j2dhEDA+HId+rG/RzP1/wKVrgwYcq+Lzb4mHOd
+	 Tzvje4zwr6hmw==
+Date: Fri, 7 Mar 2025 15:58:12 +0000
 From: Conor Dooley <conor@kernel.org>
-To: Chukun Pan <amadeus@jmu.edu.cn>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Jonas Karlman <jonas@kwiboo.se>, Yao Zi <ziyao@disroot.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: rockchip: Add rockchip,rk3528-pwm
-Message-ID: <20250307-paddle-zoology-89858b29061d@spud>
-References: <20250307120004.959980-1-amadeus@jmu.edu.cn>
- <20250307120004.959980-2-amadeus@jmu.edu.cn>
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: pwm: imx: Add i.MX93, i.MX94 and i.MX95
+ support
+Message-ID: <20250307-scion-comprised-03e8ea95abed@spud>
+References: <20250306170845.240555-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -63,55 +67,67 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="/Afd+EhsTE5IatMg"
+	protocol="application/pgp-signature"; boundary="lEFFTIemAybPsts5"
 Content-Disposition: inline
-In-Reply-To: <20250307120004.959980-2-amadeus@jmu.edu.cn>
+In-Reply-To: <20250306170845.240555-1-Frank.Li@nxp.com>
 
 
---/Afd+EhsTE5IatMg
+--lEFFTIemAybPsts5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 07, 2025 at 08:00:03PM +0800, Chukun Pan wrote:
-> Document pwm compatible for rk3528 which is fallback compatible
-> of rk3328-pwm group.
->=20
-> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+On Thu, Mar 06, 2025 at 12:08:45PM -0500, Frank Li wrote:
+> Add compatible string "fsl,imx93-pwm", "fsl,imx94-pwm" and "fsl,imx95-pwm=
+",
+> which is backward compatible with i.MX7ULP. Set it to fall back to
+> "fsl,imx7ulp-pwm".
 
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 1 +
->  1 file changed, 1 insertion(+)
 >=20
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml b/Do=
-cumentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-> index e4e1976c542d..c8cdfb723336 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-> @@ -30,6 +30,7 @@ properties:
->            - enum:
->                - rockchip,px30-pwm
->                - rockchip,rk3308-pwm
-> +              - rockchip,rk3528-pwm
->                - rockchip,rk3562-pwm
->                - rockchip,rk3568-pwm
->                - rockchip,rk3588-pwm
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../devicetree/bindings/pwm/imx-tpm-pwm.yaml          | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml b/Doc=
+umentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml
+> index ac0a35bf8648c..d5a9340ff9209 100644
+> --- a/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/imx-tpm-pwm.yaml
+> @@ -23,8 +23,15 @@ properties:
+>      const: 3
+> =20
+>    compatible:
+> -    enum:
+> -      - fsl,imx7ulp-pwm
+> +    oneOf:
+> +      - enum:
+> +          - fsl,imx7ulp-pwm
+> +      - items:
+> +          - enum:
+> +              - fsl,imx93-pwm
+> +              - fsl,imx94-pwm
+> +              - fsl,imx95-pwm
+> +          - const: fsl,imx7ulp-pwm
+> =20
+>    reg:
+>      maxItems: 1
 > --=20
-> 2.25.1
+> 2.34.1
 >=20
 
---/Afd+EhsTE5IatMg
+--lEFFTIemAybPsts5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ8sSPAAKCRB4tDGHoIJi
-0m/eAP9rX1JDmngdihmkL/YjmxTR+sVxZMPjO2SZ0tmi4POUjQEAq56oMRBUG7s1
-0HAle8NRwAy5t4/NvjvcQoi/XxOk7Ak=
-=gUgZ
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ8sXlAAKCRB4tDGHoIJi
+0vOkAQDWqdqeelxxD0R357bSU/Q1uJv1tmCMs6Lf/ewtxmAb2AD9HplVxYRL9SjA
+/DlA2PnHJvXCFTiqK98yaz/Qb8OR3wo=
+=lBWI
 -----END PGP SIGNATURE-----
 
---/Afd+EhsTE5IatMg--
+--lEFFTIemAybPsts5--
 
