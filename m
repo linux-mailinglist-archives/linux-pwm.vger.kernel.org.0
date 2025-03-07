@@ -1,123 +1,204 @@
-Return-Path: <linux-pwm+bounces-5116-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5117-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A6E8A56167
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Mar 2025 08:04:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D86AA56189
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Mar 2025 08:08:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 602D818898EE
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Mar 2025 07:04:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66D547A8B63
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Mar 2025 07:07:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5182A19F13F;
-	Fri,  7 Mar 2025 07:04:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 810511A316A;
+	Fri,  7 Mar 2025 07:07:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NBpNOax/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7thCYSY"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9175D193409
-	for <linux-pwm@vger.kernel.org>; Fri,  7 Mar 2025 07:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51146176FB0;
+	Fri,  7 Mar 2025 07:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741331040; cv=none; b=mr4VJ/2yaKKTmD4L8nJvb0T75QMbcXUWCFEaH5P5eTK8wZ3fE++ZFuu6utk394qPN/PXsVDPkHrAOpe02aSVaYT09TBqWl23gXE5WNJcvKXg81E3leaGJAl3mTgaOhyiBTm7OkDhBym17RKK12IrbbiPMcotJ/7ZHYeL0MNbIu8=
+	t=1741331271; cv=none; b=cdEc0dq39xeULdk7NehuIV9lAWUhzXMO6jb3ApFCjgU04hJiBb7zVgns8zbMBW79DD3vYPRDkdB7PClSayWwlzeYbNrcjA7UMrUUQHDGi74UU4LsdH04Mzaz/QPs4g+76Fycga3ZSyHB6qOTIfK/SV3cHf1PQiqaQXW234ZL+Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741331040; c=relaxed/simple;
-	bh=8nAP95098N8VvC8hTlm0/7kaa5VzZNLWpFxVGQC8zIY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OdnbvJCdZc7f38WWl/QW41mRjKtEzPqq7M2ruV3uultfj2hZ1IR5EL9us7fD3keSqx6WwujGpmwS6HerRwuQ62WEYmbfDBl1t4/GSBBEPvh5kB0U2s1ExMFUCPNVf3I6kINY31AjH8pUpsGEHqsUwdXECuJdmOczpCsDpX3E/EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NBpNOax/; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5497e7bf2e0so1665620e87.3
-        for <linux-pwm@vger.kernel.org>; Thu, 06 Mar 2025 23:03:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741331037; x=1741935837; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d8LoLRLGkxYV0alNGYR4F1xsTkZ1FzcA8kkUjGyENl4=;
-        b=NBpNOax/CZHtsObwQ+j9vkhKb73k8QXBUXREtiC78ss0qZSbHFhODQIDFK8TpN4Gb7
-         SDzBNR9toP7ylsS5y1BJBldZcrbQu84d7HK8HoMUOJsT9j8yBZOaiNEoXRruv4cxAkOb
-         Jni4ggK+sBXSovS2MnKggxUT0w79wHRVl77bewo8rL9BDP0sWFphrRxVEdrHHkeic+ml
-         tAWYAS9JZPfe9g0ta1Ta0kwdfxZcnrHCu5scbsc8E6YPfR8iZ9920SgU34vS/ywgYPjW
-         bubUv7rD3HcK6UbBDyaU1RJJ4svI3zPMFfra3cy6x1jAD3g9ty8nyLrdyiDdzqgxx1A4
-         dg2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741331037; x=1741935837;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d8LoLRLGkxYV0alNGYR4F1xsTkZ1FzcA8kkUjGyENl4=;
-        b=pbPYuV3URmgDwNJkYAY0fSzMHVzEhy8QGMsFnD28oDgqtu4zdGqJ4rxNWSLTDtRB6K
-         7uOKunjpmsffvcFOHD5dl62uSEXpAtSIJcslYz1JEzLwC2Y+gols4DJyMxaGYaOXWhRy
-         +7oWdRa0p+djYqFBeCmHMakhKr2fJRNs2EYxk2jXTBYEmrR19mwz/lf1qL0AHahp48b+
-         jgWEB4Ec9YZ2MYNZPeqqjxQzIFRvrXdhvEoX043u2KT2LAWQ02FfrIlJZgt3lEA3oswk
-         43RZJSyz9LWe78fIWATZyE/HGqimczVgHkUGLzMp0ebGZ2rypZqTS4PWBLaP6rUQ/cKe
-         2MWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7/p75nqoUSFEjtc4reOFJb13iFWcMgiXvTeO98OR1Kls4Q0Dp++6FsjHVpOBE9oAD0AXrECRu+OU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJj3++dg+rG91guTfrfy0N6U72AQdIurRXiV6g04xPWTQ5qZrv
-	hunE42AVnw7cDVbZ01rmrwxSuHvCu08LIkZXK7sU91r9rbZOVW01BOjfgzqxTbShUK+BaZnRDa/
-	WpWITQWnv7lsCh4ZcIQN4XouMwlvHRekxG1ZGYA==
-X-Gm-Gg: ASbGncvPV/AOpeppmOefqdkPTK05GpmOahap+nSoeRs0nCXLHzrVBNetPGE0EYdF4f9
-	JrrubzPhJzO/hEGBL+Tj3pVNG2dDe4U+0EzuvNf2NTtJUlIrEmMLS+xTmCCNln+blcXHdZw502G
-	mH3jyFlYaX1ql+4EYn/qdNp7FkRtAbbJBZZJzMSGnx7w3EOdLHyVR1CWPa
-X-Google-Smtp-Source: AGHT+IGLPbU3KJLosa62LrFtSyjSM1FYRo5hnluiTpHzUxw8rr6zT37TRHuDWK6vB1cV68vxHCUY1m2s2IV4pZHIHLY=
-X-Received: by 2002:a05:6512:281b:b0:545:2f0d:8836 with SMTP id
- 2adb3069b0e04-54990eaae1amr630800e87.40.1741331036524; Thu, 06 Mar 2025
- 23:03:56 -0800 (PST)
+	s=arc-20240116; t=1741331271; c=relaxed/simple;
+	bh=D3+I8NtgZHk+c+g1uw4s/Sws2OMet4ZwPvmAAst1MOM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WZjCKheOri65+NyniZkNd86JEV4ZljNOvAIQV4xFytaVKfuLocwFIqEcNREYDhQqiw2U0mio7XkFqxTrfm9YKxn/PYa8X2SJCjLaqrlzVy6d5jgz01zTE9n0vwpfbpwHq9uFn4gQ37on1JhUhuuKn6aNOkqLUJXIKqvVBIKAuPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7thCYSY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D542EC4CED1;
+	Fri,  7 Mar 2025 07:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741331270;
+	bh=D3+I8NtgZHk+c+g1uw4s/Sws2OMet4ZwPvmAAst1MOM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=B7thCYSY7nL82ijvKVo26E5THhX8AFCM9E0KW79xc8bzIViD4dcBKNVoav8+yS7bC
+	 Nj0otdIV3HCn1IMMyuLbmTaLTsSTjZH+XRS6cR1XOBzqwMQbCr7X2oh2SFSAZZtVak
+	 Ck0sNJzaOKv3IxLT8qOoqwyjRL/amijnrpsPdeq6XROWWmaTjG2aRqPcsP9a0Z/2o0
+	 8WM17bHikPnxRHQLw7pdQA9OJ1tm0bmLgRGD15sDD337UzvsoWQVIi+MKSik6nweqs
+	 T5i4RZ9ez8GJuiDD1XYEJCZ0Syw140+oy5o0SmU+7sJRUnCmeYCnKqt4N1FqH5QSAE
+	 DRTAai1xyoeEg==
+Message-ID: <2bcd2718-9ae5-4475-86a3-93fce973d047@kernel.org>
+Date: Fri, 7 Mar 2025 08:07:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
- <20250220-gpio-set-retval-v2-1-bc4cfd38dae3@linaro.org> <174130146134.987559.8662566490718210141.b4-ty@kernel.org>
-In-Reply-To: <174130146134.987559.8662566490718210141.b4-ty@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 7 Mar 2025 08:03:45 +0100
-X-Gm-Features: AQ5f1JrsRCTzGeQkxb8NcRBJre4S54OYANop1Qs9itP8zmv8yOQ5lBl5rfQBlgo
-Message-ID: <CAMRc=MdQcxtXMUCt00=JbGY47cMMWcW8=r3-ZrMKjQkViqnxvA@mail.gmail.com>
-Subject: Re: (subset) [PATCH v2 01/15] leds: aw200xx: don't use return with
- gpiod_set_value() variants
-To: Lee Jones <lee@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Michael Walle <mwalle@kernel.org>, 
-	Bamvor Jian Zhang <bamv2005@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Keerthy <j-keerthy@ti.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Pavel Machek <pavel@kernel.org>, 
-	linux-leds@vger.kernel.org, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
+ period instead
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Abel Vesa <abel.vesa@linaro.org>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>,
+ Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>,
+ Kamal Wadhwa <quic_kamalw@quicinc.com>,
+ Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Johan Hovold <johan@kernel.org>,
+ Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250303-leds-qcom-lpg-compute-pwm-value-using-period-v1-1-833e729e3da2@linaro.org>
+ <ylnkjxnukss7askv7ip5htrb4tyjzhpw7jim2se6rloleq5h6w@ngk7lbk26hxj>
+ <dbfb17df-90e2-4a7c-9921-9dff5e9382f4@kernel.org>
+ <ovnmhbzwwimil3opuv6e2ayyntlx7upxfkzm5qdfskx2x7hl7x@wmtul33ttow5>
+ <bdca9e9f-7e0d-4ca7-8e8b-f27ea8bb3b54@kernel.org>
+ <fnxx2tduww5m3ljs3g5po23ucr4qfytzipgspcf2udkusg7ys6@semr224oy56d>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <fnxx2tduww5m3ljs3g5po23ucr4qfytzipgspcf2udkusg7ys6@semr224oy56d>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 6, 2025 at 11:51=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
->
-> On Thu, 20 Feb 2025 10:56:58 +0100, Bartosz Golaszewski wrote:
-> > While gpiod_set_value() currently returns void, it will soon be convert=
-ed
-> > to return an integer instead. Don't do `return gpiod_set...`.
-> >
-> >
->
-> Applied, thanks!
->
-> [01/15] leds: aw200xx: don't use return with gpiod_set_value() variants
->         commit: 5d5e2a6f15a6c5e0c431c1388fd90e14b448da1e
->
+On 07/03/2025 00:33, Uwe Kleine-König wrote:
+> Hello Krzysztof,
+> 
+> On Tue, Mar 04, 2025 at 05:30:40PM +0100, Krzysztof Kozlowski wrote:
+>> On 04/03/2025 17:03, Uwe Kleine-König wrote:
+>>> On Tue, Mar 04, 2025 at 10:53:53AM +0100, Krzysztof Kozlowski wrote:
+>>>> On 04/03/2025 07:24, Uwe Kleine-KÃ¶nig wrote:
+>>>>>> [...]
+>>>>>> ---
+>>>>>> base-commit: 0067a4b21c9ab441bbe6bf3635b3ddd21f6ca7c3
+>>>>>
+>>>>> My git repo doesn't know that commit. Given that you said your patch
+>>>>> bases on that other series, this isn't surprising. Please use a publicly
+>>>>> available commit as base parameter, otherwise you (and I) don't benefit
+>>>>> from the armada of build bots because they just silently fail to test in
+>>>>
+>>>> As you can easily see in the signature, this patchset was generated by
+>>>> b4 and such tag was added automatically. No point in stripping it even
+>>>> if it is not useful (life, happens).
+>>>
+>>> My request was not about stripping it, but making it useful. I don't
+>>> know the b4 patch sending side, but git send-email has the capability to
+>>> make it more useful in this scenario. I didn't check, but
+>>> `b4 --edit-deps` which Abel mentioned sounds about right.
+>>>
+>>> The relevant documentation for the git side is the paragraph "BASE TREE
+>>> INFORMATION" in git-format-patch(1).
+>>
+>> Useful how? The dependency is on the lists, so there is no base-commit
+>> you would know.
+> 
+> Have you tried to understand the part of the manpage I pointed out? It
+> seems to me "base-commit" has different semantics for us and only mine
+> is aligned to git's (and consequently b4's) meaning.
+> The correct base commit would have been
+> cd3215bbcb9d4321def93fea6cfad4d5b42b9d1d.
+> 
+>> And regardless of edit-deps, that base-commit tag is standard from b4,
+>> so what do you expect from all submitters even if this was not RFC?
+> 
+> I don't understand this question. I expect from submitters to pick a
+> publicly known commit as base no matter if the series is an RFC or who's
+> standard this is.
+> 
+>> Always base on known commit?
+> 
+> Yes please. The manpage isn't explicit about that but the above
+> referenced commit has:
+> 
+>     The base tree info consists of the "base commit", which is a well-known
+>     commit that is part of the stable part of the project history everybody
+>     else works off of, and zero or more "prerequisite patches", which are
+>     well-known patches in flight that is not yet part of the "base commit"
+>     that need to be applied on top of "base commit" in topological order
+>     before the patches can be applied.
+> 
+>> But for most of the cases this is
+>> irrelevant. I can have intermediate commit between linux-next tip and my
+>> patch, thus base-commit will be bogus for you, but it does not matter
+>> for the patch - it's based on linux-next.
+> 
+> I agree, linux-next is the base. So the respective tip of linux-next is
+> the right thing to pass to git format-patch --base (independent of if
+> it's called directly or through b4). Ideally you also drop the
+> irrelevant intermediate patches to make the build bots test exactly the
+> changes you suggest with your series. I would expect that this is the
+> tree you actually tested, so it shouldn't be a big hurdle.
+> 
+> So summarizing we have: Iff you use --base with a non-public commit, it's
 
-Hi Lee!
+Which is easily visible that it was not the case here. No human used
+format-patch thus no human used --base.
 
-Can you please drop it from your tree? You acked v1 of this patch
-after I had already sent v2 (this patch remained unchanged) folded
-into a respin of the bigger GPIO series that had triggered build bots
-to point this issue out in the first place. I picked the entire series
-up and this commit is already in next as
-129fdfe25ac513018d5fe85b0c493025193ef19f.
+> useless and irrelevant. I fully agree. Our conclusion is different
+> though. You accept it's useless (and even request from me that I do the
+> same), and I asked the submitter to use --base as intended to make the
+> resulting information usable.
 
-Thanks,
-Bartosz
+Because you expect additional steps for users of b4 and pointing in
+review standard use of b4 is extremely nitpicking.
+
+Best regards,
+Krzysztof
 
