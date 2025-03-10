@@ -1,122 +1,113 @@
-Return-Path: <linux-pwm+bounces-5128-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5129-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 646FCA5873B
-	for <lists+linux-pwm@lfdr.de>; Sun,  9 Mar 2025 19:29:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51E19A59ABA
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Mar 2025 17:15:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1C69169CC5
-	for <lists+linux-pwm@lfdr.de>; Sun,  9 Mar 2025 18:29:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90B5C165F63
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Mar 2025 16:15:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A79D1F584B;
-	Sun,  9 Mar 2025 18:29:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7651322F3A3;
+	Mon, 10 Mar 2025 16:15:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="mr+uXN/N"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tZtVwSzT"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7141EF398
-	for <linux-pwm@vger.kernel.org>; Sun,  9 Mar 2025 18:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345F61BCA1B;
+	Mon, 10 Mar 2025 16:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741544943; cv=none; b=eBNrGcVKnpCasokDJJVKCpwdynEI22wXRu5oU7mXiClJYA+287OQEp/cPb9akr2Jhgf7qbQT7n5pqNG8lVN/X9tiCVPmS8HFEM+w1EwxvJhVbu6rEm00NMCxhctwy73U9tK+3qoeWUL4rhfeJHwX7jJiakWnRokdli2GcYCgg64=
+	t=1741623309; cv=none; b=lmd9SAXfRKo4MT3VCx1suHsUjfjAD4OCYCArPkU+Vj9canB/oz8qRLbIhJcudInJXxcbspLWI9eyqHeND6Bh8cmkW1D4NcfmorxeVSP/+APfAxQjYxjyXSOKw2pC23gbr47yAiDy8ypqJ40HDRnXhqyLuSwtqggVa4SJeC3a6SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741544943; c=relaxed/simple;
-	bh=V6VtDQBYKLqd9XRufOK64IhkH5kbe+3gHvLZ+QsaZGg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bon7SdUrVMpRWZ5cB++2K14nl/jhRXbrTdXKKXnOpVj0bbwbaF4OMfh2nPYi/XNp7ca+kBeYJO5wUnp8JgM8jSClcYQt2gnamCzPS+SUBdqiHJeRRD7H7iEaVoBW6o0IoJrN8aB3fCA6L3m04IyHn/AoUevCtBmeGIlNeEN0lNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=mr+uXN/N; arc=none smtp.client-ip=121.127.44.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1741544939;
- bh=ZQ1QJVIjdnw4XDWOL1lHnoPAQJsZWuneqxKAGVSgKA0=;
- b=mr+uXN/NRZEHKLoJMbrPxlkXUIAflAWn3vT7u6/qoPQuVGwRgBUTgsrZNkA6NtPIYGfyaUcGb
- 6nZ8jyqxrLFkPfc1NkK1vFVZUcKY2aEDJaYVs9fiEKuk9cQqlHJ5ZuWfLiZ5xWWQJ/NO36tb/yo
- pEn23YFAZmW0p5LVZ38IkKhejuf52nYxyTdXzpQ6abaOAIxKYjDUZruO6JLqETUNqDEAPC/fPp3
- 6yNzQKHCyOseuxtCxg6E1B2Neox7mryEMyfPyvsmzp5O4cZJ8jojP6fTHT9cZrbrw9ANIMrPEZ/
- oOLNSjSC5Kau/X1TpG6XkLk/B1WRjjI15kbpwACY2wTQ==
-X-Forward-Email-ID: 67cddde98d04fc44bbac493b
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.59
-X-Forward-Email-Version: 0.4.40
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <8172efa9-2f67-4b98-9988-88b533028431@kwiboo.se>
-Date: Sun, 9 Mar 2025 19:28:53 +0100
+	s=arc-20240116; t=1741623309; c=relaxed/simple;
+	bh=GfKQEI3/w/jPPIgwJ2M+qaN1oQ83UFtd+Kj8kr4X1wc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q8HBcylXxilJApjMzg+mdQsRRb7b/qHZJRzZ5JICjsbsFWjtpkYQ6WBUnFeu+JtMMuJlyygIxafmMV1eJF91eJGIDmNaDHEghSQeCLkhUmM9iIc+nNsLcVrGTSeFsh6kzyTiZNXuwnlcsAtmhajzHUUYkYE0z+/GGfEID8eDPc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tZtVwSzT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16AADC4CEE5;
+	Mon, 10 Mar 2025 16:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741623308;
+	bh=GfKQEI3/w/jPPIgwJ2M+qaN1oQ83UFtd+Kj8kr4X1wc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tZtVwSzTRBzyJCQJsgC/9YF3adZtv1HOhVsNHISyy+2qM3dqTvytdY5OEnYOnf5jN
+	 jhBVs1x1D5sdE1QGLM2BCl3h8wYf8az/tSrUdM9MNja+1tICm4lhwXVIMo9mhOon6o
+	 Vc7D4JvNnc3Zh3+Yi70hmimYOw4wXfHoPWWpaNeXaAbpB/8tHCuc+sUa3tYelrvH82
+	 ieA1G7LtJkk/MjAvBmb0BjWHuG0bvMYofLWBqk/z0Erp/ALAJRIo+hf9TSmoXlIw+R
+	 OmvUeMdCo918OHYOIEdpdODmHvwzK44oUR+pT0rYfoE4bbDi4IIpUC6X+l0NTAHvSY
+	 cLDTmSgqbpRoQ==
+Date: Mon, 10 Mar 2025 17:15:05 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	"open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>, 
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: pwm: imx: Add i.MX93, i.MX94 and i.MX95
+ support
+Message-ID: <jwge3lqlx7t6j4gmag4ghu6vtzatg54i3x3tl75k5upvedakdy@entc6jjcqh47>
+References: <20250306170845.240555-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add pwm nodes for RK3528
-To: Chukun Pan <amadeus@jmu.edu.cn>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Yao Zi <ziyao@disroot.org>,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pwm@vger.kernel.org
-References: <20250307120004.959980-1-amadeus@jmu.edu.cn>
- <20250307120004.959980-3-amadeus@jmu.edu.cn>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20250307120004.959980-3-amadeus@jmu.edu.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lm2fsqm2yujhiixb"
+Content-Disposition: inline
+In-Reply-To: <20250306170845.240555-1-Frank.Li@nxp.com>
 
-Hi Chukun,
 
-On 2025-03-07 13:00, Chukun Pan wrote:
-> Add pwm nodes for RK3528. The PWM core on RK3528 is the same as
-> RK3328, but the driver does not support interrupts yet.
-> 
-> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 88 ++++++++++++++++++++++++
->  1 file changed, 88 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> index b1713ed4d7e2..ab1ac3273611 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> @@ -264,6 +264,94 @@ uart7: serial@ffa28000 {
->  			status = "disabled";
->  		};
->  
-> +		pwm0: pwm@ffa90000 {
-> +			compatible = "rockchip,rk3528-pwm", "rockchip,rk3328-pwm";
+--lm2fsqm2yujhiixb
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] dt-bindings: pwm: imx: Add i.MX93, i.MX94 and i.MX95
+ support
+MIME-Version: 1.0
 
-nitpick: This could be split in two lines to match similar >80 chars
-long lines in this file:
+Hello Frank,
 
-			compatible = "rockchip,rk3528-pwm",
-				     "rockchip,rk3328-pwm";
+On Thu, Mar 06, 2025 at 12:08:45PM -0500, Frank Li wrote:
+> Add compatible string "fsl,imx93-pwm", "fsl,imx94-pwm" and "fsl,imx95-pwm=
+",
+> which is backward compatible with i.MX7ULP. Set it to fall back to
+> "fsl,imx7ulp-pwm".
+>=20
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-And similar for the remaining pwmX.
+Applied to
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+with Conor's ack.
 
-Regards,
-Jonas
+Thanks
+Uwe
 
-> +			reg = <0x0 0xffa90000 0x0 0x10>;
-> +			clocks = <&cru CLK_PWM0>, <&cru PCLK_PWM0>;
-> +			clock-names = "pwm", "pclk";
-> +			pinctrl-0 = <&pwm0m0_pins>;
-> +			pinctrl-names = "active";
-> +			#pwm-cells = <3>;
-> +			status = "disabled";
-> +		};
-> +
+--lm2fsqm2yujhiixb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[snip]
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfPEAEACgkQj4D7WH0S
+/k5/Qgf9EmSnszwO5HAMyp/zt++qVoJo500Z8MtKSb4CtHeppS12p6xcfklZDMBN
++mgSdfHdaV6D0CvILircndu4GLxRLWuEk08FgqYoSsqeUoNLoIDaWtDFakdWPTX6
+thzWQhg4TSGbDVXDzuHSMw4Eg8SeXmIm8ffQ46mfcuGtSUpB2P30WKq9WwOg1Wa7
+VO4BLXv0JvpPFSBH2TBt12qmedffPELK7Hd11LPmbsHSARUGmYsemF2ejtWrG05O
+hWs5WsPq08UmeKb/LDyDagFpFo+a41Ih62G4PRn3Vooqx+zEGSKo7/YcNCOhmqSp
+vEGzTENSpDyBnW1egQuY7k7GIPsdTA==
+=xC4L
+-----END PGP SIGNATURE-----
+
+--lm2fsqm2yujhiixb--
 
