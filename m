@@ -1,67 +1,62 @@
-Return-Path: <linux-pwm+bounces-5172-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5173-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A162CA5F9F0
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 16:31:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86961A5FC3F
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 17:42:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABE2119C4040
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 15:31:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC4C53AD31C
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 16:41:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55B7326A0DF;
-	Thu, 13 Mar 2025 15:29:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8360926A1A3;
+	Thu, 13 Mar 2025 16:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="smpKKLRw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUBDOc9w"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A90026A0D0;
-	Thu, 13 Mar 2025 15:29:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509D42698B9;
+	Thu, 13 Mar 2025 16:40:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741879767; cv=none; b=t52dB/Yuvp1PaziCY+dhJ1N93Bz1N7hNHKKek7PUzPcAHs+q4m5yfZmZRvAZevZnNq4VagpmaTuIZ6jXj8e0KFPLkR0Ufv+RWn2vHvpSgf4icCeodd8D9bGKRFPNYnxBDC6eXZGfm3xmN7bpkdJz3yFKN/uuiSmVuJlrOq79Zk4=
+	t=1741884015; cv=none; b=XNSishg505WVpi5eE6xNBVjS15INArzd9RKzlvfsJzD+p5WSpjl85r5xdcJnb/SDlDvFyzqLOrfySmBqf77+k2d8vk+KaRWBJTjN+oFaPfilf5PadpDQ+mMHjfbBkop5/AB2w0whBx1/7NytkmLUqmB3whRpzU9o1AU/CRWT4Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741879767; c=relaxed/simple;
-	bh=z1F/N+uyen+sKYPadxbDvEvh55FfdtiKufmg7gfJL8g=;
+	s=arc-20240116; t=1741884015; c=relaxed/simple;
+	bh=p8AVcBEQ4JH4wcFU3EvZQIw+okBDu/uodFFvEyHDmr0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tppDc4vvED6+eQgTPDfmvLhFVpY5Zy9DN701rS1HWxem0ivc+eV7S9EXlXmMZtj3Duqd1wn0Kfh6KTS9LzhLja1+IAWuUGtcjs1KR3orE/H5ZA0XKmKQn84sEyQmSuJs06/lr2z0+f+NmWKIW0WxpSv9yYlP42w6E+WAzB67rMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=smpKKLRw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7179C4CEDD;
-	Thu, 13 Mar 2025 15:29:23 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=bX56mM2sZS/1xYofO0BZvfrhF1m7cRzrOv6Xf72j1Wf2XED/k3yJo30UCk8EDhl30uGd9gfJ/YtAZO22NT3SpQdslPv1g5QTb17r5xWDbDfBsgVJ2wleH2u+TBYy7q9eJ+/ZAMjiI0VCYMNXzSUpkhdZfY6kx+dCzM6eCEa6nOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUBDOc9w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 124B1C4CEDD;
+	Thu, 13 Mar 2025 16:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741879766;
-	bh=z1F/N+uyen+sKYPadxbDvEvh55FfdtiKufmg7gfJL8g=;
+	s=k20201202; t=1741884014;
+	bh=p8AVcBEQ4JH4wcFU3EvZQIw+okBDu/uodFFvEyHDmr0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=smpKKLRwdX+gAfBcRd2DR093HqdYCRagRFXKRMiEUQhQQW6yEfyq0+zNf21V/HcOF
-	 QoZ15W3A/eGWCWrseJNV8gFs6rLyRzSSlhFgtLszBMmaI6uMbJ0oF2jIfpADOLmPyG
-	 2XlJK8Z7zeVjkZex0RSJ9owzaoqSWysX7sjj/PJ+z0QJ3R6CR+45xkGS0khu0jo5he
-	 y7vUe5Md/b9+aaL6nw0Ybq8N22z+NmDDc0k+S+RUTyrp7brnEdQquCVsJcUdsnZty9
-	 ouJJ+cHesTccyWAYSUNnavpORIBS/MRGFZ2Bbfm714dgtkSckdY6ITmn0BIU1PSwCn
-	 7PdOUts+as7+g==
-Date: Thu, 13 Mar 2025 15:29:21 +0000
+	b=gUBDOc9w3N3QjozeGeQIILT8Mbe5q45yfDahRhGlWKbXa6cAbkX28apn5101mzy0q
+	 r71b8K0QrswxlVM5UG8sxjOtJficURk0jRjeStTWrQAhljkS3N/XvAkSp3G7BRRDq/
+	 jEfUNBcPn6VkQtJRHV2qR0sVlTt5RQcALX5skRPgStcridDEVUtZ/yRLq/L7zoOjR+
+	 nu5W9LqomCOD6KOvsgQkcVhAb/5Q30CknG/rSnlFTV+go2RSYFjLNHbzp8kZaub6VS
+	 HKRgHske4Yf60+FjEutO8HFykny5ohBDeyE/ExZDr83PIdcqsrK+PWsgOds4njbUY1
+	 PWqLQw+Gk8mMw==
+Date: Thu, 13 Mar 2025 16:40:08 +0000
 From: Lee Jones <lee@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Bamvor Jian Zhang <bamv2005@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Keerthy <j-keerthy@ti.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Pavel Machek <pavel@kernel.org>, linux-leds@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: Re: (subset) [PATCH v2 01/15] leds: aw200xx: don't use return with
- gpiod_set_value() variants
-Message-ID: <20250313152921.GB3645863@google.com>
-References: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
- <20250220-gpio-set-retval-v2-1-bc4cfd38dae3@linaro.org>
- <174130146134.987559.8662566490718210141.b4-ty@kernel.org>
- <CAMRc=MdQcxtXMUCt00=JbGY47cMMWcW8=r3-ZrMKjQkViqnxvA@mail.gmail.com>
+To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Cc: ukleinek@kernel.org, alexandre.torgue@foss.st.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, jic23@kernel.org,
+	daniel.lezcano@linaro.org, tglx@linutronix.de,
+	catalin.marinas@arm.com, will@kernel.org,
+	devicetree@vger.kernel.org, wbg@kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	olivier.moysan@foss.st.com
+Subject: Re: [PATCH v3 2/8] mfd: stm32-lptimer: add support for stm32mp25
+Message-ID: <20250313164008.GC3645863@google.com>
+References: <20250305094935.595667-1-fabrice.gasnier@foss.st.com>
+ <20250305094935.595667-3-fabrice.gasnier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -71,34 +66,38 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdQcxtXMUCt00=JbGY47cMMWcW8=r3-ZrMKjQkViqnxvA@mail.gmail.com>
+In-Reply-To: <20250305094935.595667-3-fabrice.gasnier@foss.st.com>
 
-On Fri, 07 Mar 2025, Bartosz Golaszewski wrote:
+On Wed, 05 Mar 2025, Fabrice Gasnier wrote:
 
-> On Thu, Mar 6, 2025 at 11:51 PM Lee Jones <lee@kernel.org> wrote:
-> >
-> > On Thu, 20 Feb 2025 10:56:58 +0100, Bartosz Golaszewski wrote:
-> > > While gpiod_set_value() currently returns void, it will soon be converted
-> > > to return an integer instead. Don't do `return gpiod_set...`.
-> > >
-> > >
-> >
-> > Applied, thanks!
-> >
-> > [01/15] leds: aw200xx: don't use return with gpiod_set_value() variants
-> >         commit: 5d5e2a6f15a6c5e0c431c1388fd90e14b448da1e
-> >
+> Add support for STM32MP25 SoC.
+> A new hardware configuration register (HWCFGR2) has been added, to gather
+> number of capture/compare channels, autonomous mode and input capture
+> capability. The full feature set is implemented in LPTIM1/2/3/4. LPTIM5
+> supports a smaller set of features. This can now be read from HWCFGR
+> registers.
 > 
-> Hi Lee!
+> Add new registers to the stm32-lptimer.h: CCMR1, CCR2, HWCFGR1/2 and VERR.
+> Update the stm32_lptimer data struct so signal the number of
+> capture/compare channels to the child devices.
+> Also Remove some unused bit masks (CMPOK_ARROK / CMPOKCF_ARROKCF).
 > 
-> Can you please drop it from your tree? You acked v1 of this patch
-> after I had already sent v2 (this patch remained unchanged) folded
-> into a respin of the bigger GPIO series that had triggered build bots
-> to point this issue out in the first place. I picked the entire series
-> up and this commit is already in next as
-> 129fdfe25ac513018d5fe85b0c493025193ef19f.
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+> ---
+> Changes in V2:
+> - rely on fallback compatible as no specific .data is associated to the
+>   driver. Compatibility is added by reading hardware configuration
+>   registers.
+> - read version register, to be used by clockevent child driver
+> - rename register/bits definitions
+> ---
+>  drivers/mfd/stm32-lptimer.c       | 33 ++++++++++++++++++++++++++++-
 
-Unapplied, thanks.
+Looks okay.
+
+>  include/linux/mfd/stm32-lptimer.h | 35 ++++++++++++++++++++++++++++---
+
+Assumingly this patch is not independent of the others?
 
 -- 
 Lee Jones [李琼斯]
