@@ -1,145 +1,252 @@
-Return-Path: <linux-pwm+bounces-5177-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5178-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFA4AA5FD18
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 18:09:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 15244A60325
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 22:03:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24295170D60
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 17:09:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F568173E4D
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 21:03:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDDAA26988E;
-	Thu, 13 Mar 2025 17:09:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DCC51F4717;
+	Thu, 13 Mar 2025 21:03:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="B4CqnQjr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJ9RsEmp"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90AB13AA2F;
-	Thu, 13 Mar 2025 17:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F252945948;
+	Thu, 13 Mar 2025 21:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741885789; cv=none; b=u1cbId0h0F+NOBX2TxcB8vQGwouTz+ACJYRb+EyP6e4sEm2XDO1bvoEIoINIUG0Vz94Fj7ZH2KNrwCBEL5dx3XsfN1TlR3cgh/x5AjdTyLn7IuoagnrPn/gomQNFNj5x5lvbgm/EEMeRvdTSDAQSRbxm7GqSSWPw8lARLM/hR58=
+	t=1741899813; cv=none; b=ZtFPev2252PkrKyXLfLNNja9XsBGOe+bINklevPHwlLQ4A9X+0SwVsRL+T68vNnX8KKuFKgKvfeHhezYSIpijjm6OGfHUgzwANhU/87+bSaJ7wbiyaPc+1QBlRexFFElyxcYDVTjaTmuHothTmIqMTAg1mXOk0YUCMVTN1ETveA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741885789; c=relaxed/simple;
-	bh=tu+hrOb5T8ZjFtDOYK4B51yn76Cxq1wcFPtSB9zCbHw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TIQ7z06o/fxs5Fdnmadt+ornXe1ClF53G4V/tCk13z+M+d5+JD5zuEV3eM/jVkryvhiQwyxWKc5LwC/IvRow2ydovjDMyu17t0cDjHTL4IeCxTxiW2leZ9qUeFdWgHDf1lyfQw99bBXOvW2HIrMIE3oFdlzwoul/jb82Ss459Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=B4CqnQjr; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52DGD7D6003932;
-	Thu, 13 Mar 2025 18:09:36 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	/UACylWACYq+MaYXZcL2+yGVsndWAy/wz/DmvGJrXiA=; b=B4CqnQjrifjsld/Y
-	DaUYXKtWR6i45Ame6DKDoXrNii3EePe8ZddE1Ysiu37Upj0VTc+sEY+4E38WsO4X
-	KJz/PxvRy8AKzWj+egbTF8nZjfWRfcrPS7Kk3O5iJOkgk7x4EPp72BGZ+I+G7A4d
-	HQrZqxTbLhFKQY/GZBfqYYo0uF3VksBpXuALvM5SzIEsXsKaOGi/yoZkKTZsrUmq
-	7nBaB+hbMpnAn2LPUpupn+V3qwG505VaUB/cHqRsmuW/jnjOnbpkM2nOk/vDv8QJ
-	WOXT8xErxt7gNcXWCT1P+ia3f3yUzaAQw4TwcRWv+koTDEBsp4NFZu4BUghZPADQ
-	ggjDsg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45c2pf07mp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Mar 2025 18:09:36 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1780B4004D;
-	Thu, 13 Mar 2025 18:08:27 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B3E4E589337;
-	Thu, 13 Mar 2025 18:07:18 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
- (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 13 Mar
- 2025 18:07:18 +0100
-Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
- (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 13 Mar
- 2025 18:07:17 +0100
-Message-ID: <c1cb926f-33b0-4433-b54d-954451ed32a8@foss.st.com>
-Date: Thu, 13 Mar 2025 18:07:16 +0100
+	s=arc-20240116; t=1741899813; c=relaxed/simple;
+	bh=FMKfqv6jRr1fYhjht5XVCh7cRsPq1e2AMVhPlkaHSLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d1/1XZAjGFJr5aP+pF3n3P9FEarp3VntsLpaof2vxiIPTm7eJ3kQwNJgPS4nrdRr/DVDoJgTGWRVdzbOvVBed4+XMSWhb8L48VmkNPb2o7bO4GLaYCxnfxkLdbSro7yQdHOSxFVkdYJZHXM1eS+wwtcaHRm6/oaT+ylq6SLklqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJ9RsEmp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4E80C4CEDD;
+	Thu, 13 Mar 2025 21:03:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741899810;
+	bh=FMKfqv6jRr1fYhjht5XVCh7cRsPq1e2AMVhPlkaHSLM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aJ9RsEmp+F4rW4SSK+hS9s9FtOwkooxWCR8/i4oRD7XqDdTV0RMispdtOSNpRDrAw
+	 30FKwvR4bAQagYjbkE8n04WPJszMweTJDQabrL4rZbGS4JK2t0aWKaB+gVk8rF6hBR
+	 DPQvCGH5LdU7uw//IqdBYwab9jv3aL/OWv90NDuLqwQY8ufoyhcmv2MekOL0Fl1jCo
+	 o1PqB+6AWO5KvH/YJfkMjyaayUcAEBqZ0tmdEFxS0IzI3mAY5s7N8yVYvggmSX+eb1
+	 u7gZID03OU4jF+lQLJf0aaI/OrKCk/iOjIZ0/pdW/CZC9LlcUdKGg8slxlvhc655m3
+	 1h8Je48uMSPCQ==
+Date: Thu, 13 Mar 2025 22:03:27 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: mathieu.dubois-briand@bootlin.com, 
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamel Bouhara <kamel.bouhara@bootlin.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Walle <mwalle@kernel.org>, 
+	Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
+	=?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 03/10] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <e7epeegrp6cz27s63gnqe7b6me7h3rn5d6mo7mbd6rwgnwyys6@j7f6cy4uy3wq>
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-3-8a35c6dbb966@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/8] mfd: stm32-lptimer: add support for stm32mp25
-To: Lee Jones <lee@kernel.org>
-CC: <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <jic23@kernel.org>,
-        <daniel.lezcano@linaro.org>, <tglx@linutronix.de>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <devicetree@vger.kernel.org>, <wbg@kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <olivier.moysan@foss.st.com>
-References: <20250305094935.595667-1-fabrice.gasnier@foss.st.com>
- <20250305094935.595667-3-fabrice.gasnier@foss.st.com>
- <20250313164008.GC3645863@google.com>
-Content-Language: en-US
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-In-Reply-To: <20250313164008.GC3645863@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-13_08,2025-03-11_02,2024-11-22_01
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rbw3oslor4q675uu"
+Content-Disposition: inline
+In-Reply-To: <20250214-mdb-max7360-support-v4-3-8a35c6dbb966@bootlin.com>
 
 
+--rbw3oslor4q675uu
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v4 03/10] pwm: max7360: Add MAX7360 PWM support
+MIME-Version: 1.0
 
-On 3/13/25 17:40, Lee Jones wrote:
-> On Wed, 05 Mar 2025, Fabrice Gasnier wrote:
-> 
->> Add support for STM32MP25 SoC.
->> A new hardware configuration register (HWCFGR2) has been added, to gather
->> number of capture/compare channels, autonomous mode and input capture
->> capability. The full feature set is implemented in LPTIM1/2/3/4. LPTIM5
->> supports a smaller set of features. This can now be read from HWCFGR
->> registers.
->>
->> Add new registers to the stm32-lptimer.h: CCMR1, CCR2, HWCFGR1/2 and VERR.
->> Update the stm32_lptimer data struct so signal the number of
->> capture/compare channels to the child devices.
->> Also Remove some unused bit masks (CMPOK_ARROK / CMPOKCF_ARROKCF).
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
->> ---
->> Changes in V2:
->> - rely on fallback compatible as no specific .data is associated to the
->>   driver. Compatibility is added by reading hardware configuration
->>   registers.
->> - read version register, to be used by clockevent child driver
->> - rename register/bits definitions
->> ---
->>  drivers/mfd/stm32-lptimer.c       | 33 ++++++++++++++++++++++++++++-
-> 
-> Looks okay.
+Hello Mathieu,
 
-Hi Lee,
+On Fri, Feb 14, 2025 at 12:49:53PM +0100, mathieu.dubois-briand@bootlin.com wrote:
+> diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
+> new file mode 100644
+> index 000000000000..f1257c20add2
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-max7360.c
+> @@ -0,0 +1,213 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright 2024 Bootlin
+> + *
+> + * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
+> + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> + *
+> + * Limitations:
+> + * - Only supports normal polarity.
+> + * - The period is fixed to 2 ms.
+> + * - Only the duty cycle can be changed, new values are applied at the beginning
+> + *   of the next cycle.
+> + * - When disabled, the output is put in Hi-Z.
+> + */
+> +#include <linux/err.h>
+> +#include <linux/math.h>
+> +#include <linux/mfd/max7360.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +
+> +#define MAX7360_NUM_PWMS			8
+> +#define MAX7360_PWM_MAX_RES			255
+> +#define MAX7360_PWM_PERIOD_NS			2000000 /* 500 Hz */
+> +#define MAX7360_PWM_COMMON_PWN			BIT(5)
+> +#define MAX7360_PWM_CTRL_ENABLE(n)		BIT(n)
+> +#define MAX7360_PWM_PORT(n)			BIT(n)
+> +
+> +struct max7360_pwm {
+> +	struct device *parent;
+> +	struct regmap *regmap;
+> +};
+> +
+> +struct max7360_pwm_waveform {
+> +	u8 duty_steps;
+> +};
+> +
+> +static inline struct max7360_pwm *max7360_pwm_from_chip(struct pwm_chip *chip)
+> +{
+> +	return pwmchip_get_drvdata(chip);
+> +}
+> +
+> +static int max7360_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct max7360_pwm *max7360_pwm;
+> +	int ret;
+> +
+> +	max7360_pwm = max7360_pwm_from_chip(chip);
+> +	ret = max7360_port_pin_request(max7360_pwm->parent, pwm->hwpwm, true);
+> +	if (ret) {
+> +		dev_warn(&chip->dev, "failed to request pwm-%d\n", pwm->hwpwm);
 
-Thanks for reviewing,
+Please drop this warning, just returning ret here is fine. (The rule of
+thumb is: Emit runtime messages only in probe, not during usage.)
 
-> 
->>  include/linux/mfd/stm32-lptimer.h | 35 ++++++++++++++++++++++++++++---
-> 
-> Assumingly this patch is not independent of the others?
+> +		return ret;
+> +	}
+> +
+> +	ret = regmap_write_bits(max7360_pwm->regmap,
+> +				MAX7360_REG_PWMCFG(pwm->hwpwm),
+> +				MAX7360_PWM_COMMON_PWN,
+> +				0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_write_bits(max7360_pwm->regmap, MAX7360_REG_PORTS,
+> +				 MAX7360_PWM_PORT(pwm->hwpwm),
+> +				 MAX7360_PWM_PORT(pwm->hwpwm));
+> +}
+> +
+> +static void max7360_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct max7360_pwm *max7360_pwm;
+> +
+> +	max7360_pwm = max7360_pwm_from_chip(chip);
+> +	max7360_port_pin_request(max7360_pwm->parent, pwm->hwpwm, false);
 
-Please hold on, I'll submit a V4, with some additional bit definition
-for the clocksource driver (see my last reply to Daniel).
+Would be nice if pinmuxing would be abstracted as a pinctrl driver. Not
+sure how much effort that is. Maybe Linus has an idea?
 
-Best Regards,
-Fabrice
+> +}
+> +
+> [...]
+> +
+> +static int max7360_pwm_write_waveform(struct pwm_chip *chip,
+> +				      struct pwm_device *pwm,
+> +				      const void *_wfhw)
+> +{
+> +	const struct max7360_pwm_waveform *wfhw = _wfhw;
+> +	struct max7360_pwm *max7360_pwm;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	max7360_pwm = max7360_pwm_from_chip(chip);
+> +
+> +	val = (wfhw->duty_steps == 0) ? 0 : MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm);
 
-> 
+Does not setting MAX7360_PWM_CTRL_ENABLE result in the pin going to
+Hi-Z? If yes: That's wrong. You're only supposed to do that if
+period_length_ns = 0 was requested. If no: This needs a comment why
+duty_steps = 0 is special here.
+
+> +	ret = regmap_write_bits(max7360_pwm->regmap, MAX7360_REG_GPIOCTRL,
+> +				MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm), val);
+> +
+> +	if (!ret && wfhw->duty_steps != 0) {
+> +		ret = regmap_write(max7360_pwm->regmap, MAX7360_REG_PWM(pwm->hwpwm),
+> +				   wfhw->duty_steps);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int max7360_pwm_read_waveform(struct pwm_chip *chip,
+> +				     struct pwm_device *pwm,
+> +				     void *_wfhw)
+> +{
+> +	struct max7360_pwm_waveform *wfhw = _wfhw;
+> +	struct max7360_pwm *max7360_pwm;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	max7360_pwm = max7360_pwm_from_chip(chip);
+> +
+> +	ret = regmap_read(max7360_pwm->regmap, MAX7360_REG_GPIOCTRL, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val & MAX7360_PWM_CTRL_ENABLE(pwm->hwpwm)) {
+> +		ret = regmap_read(max7360_pwm->regmap, MAX7360_REG_PWM(pwm->hwpwm),
+> +				  &val);
+> +		val = wfhw->duty_steps;
+
+wfhw->duty_steps = val;
+
+> +	} else {
+> +		wfhw->duty_steps = 0;
+> +	}
+> +
+> +	return ret;
+> +}
+
+Best regards
+Uwe
+
+--rbw3oslor4q675uu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfTSBwACgkQj4D7WH0S
+/k6Q6gf/XjsQoHf9RBzxgyUlezFotMDPpH1zwZOGLGbyQ1EN58ltZOo2a44SokYF
+R7TtXX47mBqKHhdlCgShc8153LM8sBwcDS+9HqaaHS/rR+5URMszklQSdAIh+nqW
+bZHXKmLGWNrHvdLZlb0NFK+fKNs+AJmABFVrYH0dLXRc5OPlD4/GrrtGFXbkPjha
+1KWUVnceG6eZn+WsgYRN8ki+Gv4AwpxyvCovuKHpur3e2dXpF0rXBeMKRLSDX2Ox
+Hi6YnfKxukcqf6JRljStl29d1xOBrMy6FZpcMEYBnMCAM9pVYLFFo+Wbnki2qt1O
+890RD9gfXgLYaeC7AlejZxp1dkkarg==
+=NVYJ
+-----END PGP SIGNATURE-----
+
+--rbw3oslor4q675uu--
 
