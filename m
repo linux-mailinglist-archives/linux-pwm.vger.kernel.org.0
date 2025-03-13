@@ -1,130 +1,151 @@
-Return-Path: <linux-pwm+bounces-5144-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5145-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC6F3A5ECF2
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 08:25:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 678D1A5ED02
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 08:29:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A4633BC9CC
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 07:24:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D28083B302F
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 07:29:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0411C1FF1D5;
-	Thu, 13 Mar 2025 07:22:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 947D81FBE9C;
+	Thu, 13 Mar 2025 07:29:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZZIQ0Zf"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="sItV4KYE"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86D01FF1C8;
-	Thu, 13 Mar 2025 07:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66937225A50
+	for <linux-pwm@vger.kernel.org>; Thu, 13 Mar 2025 07:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741850576; cv=none; b=r5XviWtap9hY0rv/GimEB3/Y+FJYGorKn+63AO2FVg5QDYx+mVhHZIVUM4BSBC68onxovcDAA6f48NjNXkcIWqm3RSMjsZaMQIzKw2cFXLUN9deMf1N0Pc2hyKRyJyaukhMRQIhFG64pXuwrDaazfod6vBomq4sBXNUWOGz/Xpo=
+	t=1741850954; cv=none; b=bQedmw5to8RDGMEz1sdO4qlcmizPBZIoDk+t9E6OMmBl4oTktbIcb44HMdS/yrJgZMOMQh9+8DJ+vwmesSG/uw7z0CdrPP/D3HofP0vNaWqaYqXv26yvw4qzZSyR+jcwfVSowfLIi4wSaSzyTMTFRnTpf4D7e5l+GnBMBdpxZLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741850576; c=relaxed/simple;
-	bh=aFeZ0mb9JxHxNrB2IY5dAI8W9F+KCqBlNLKvYHsoUrk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MmWXsKLkQNgM5cWGmnT6V7MhRxbMtnfyg2C0+ShnzDPWHxihsULwF9bFDxOU4bziC7u8p2/1hUd+OburF3vYHFs5UlmpMv/MpiPwZKKwoHK7EyabB93o/YeAjwPva8VmLkuEE5qYfh4FHPt2qYKvxx8mLkh22gQId5hDEuYCYbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZZIQ0Zf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 989D6C4CEDD;
-	Thu, 13 Mar 2025 07:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741850576;
-	bh=aFeZ0mb9JxHxNrB2IY5dAI8W9F+KCqBlNLKvYHsoUrk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BZZIQ0Zf+Wn/FHwFCF0brh5DPmkCHW1BS1cd1iNC0PhnojOpCR/hvAjs0T6TxsxIO
-	 iYSZC7Udi+50z/MBOeevkqK7QJp4VeX+v3NUceNdYMHz33m13zbCIeMq2qaKOqyqwG
-	 wDmbuyZTBgLUcuwr/H628jKCmOxqY6hbVEoYz2NCKWpYsqaEunNpOro4cnoMnE11iB
-	 jwEM+kVFyyPhZ1nKZVDURvDd23e+APOdGjr/9AEwv8r1i96E94z2dIgxgFgCeJ47SK
-	 jqpDIoc2pPRFxF/6LAys8KcKhhtbUfPTDjUnCx0+sD73qovvh5eXxlwXL+EiQqYXwq
-	 lHyfdJQqgS0NQ==
-Date: Thu, 13 Mar 2025 08:22:53 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Purva Yeshi <purvayeshi550@gmail.com>, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, piotr.wojtaszczyk@timesys.com, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: pwm: Convert lpc32xx-pwm.txt to YAML
-Message-ID: <b2nlqt3gp4sk7cax722n7t7xonnrjzi6amsfrhylxmurctytiy@yqp7qpttyc5h>
-References: <20250312122750.6391-1-purvayeshi550@gmail.com>
- <57ae63a2-544b-4241-a54d-8fa9917c1e44@mleia.com>
- <yvljnqnlka3ecw2n3hw2zgfszlldvbww3k7gq72dczmf6jwzfo@4vqnygxuzvk5>
- <5b62671c-719a-44f2-b28e-878159859a01@mleia.com>
+	s=arc-20240116; t=1741850954; c=relaxed/simple;
+	bh=9XJDzXpcqDahrmEtMCepuwbokqP/XCh8iGzQvE20SGw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qkNBQ+X37KFXSlpHaeT+WCB+NtckFvtoih3oD+pBZ+xcwoCS8tZC+jL1dCSLz68suguwDCRZow+YsJAUQQMX0O3K7or9MHUT0OzU18msI8NDzhP6mRGMjOKZgHKBAyDtgucxBin/4tkZLE5TrbvmdryNiSedZncTfN47gebuy4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=sItV4KYE; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaec61d0f65so123201066b.1
+        for <linux-pwm@vger.kernel.org>; Thu, 13 Mar 2025 00:29:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1741850949; x=1742455749; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oj/2xNP3XsLA+mFSI6C+3+yBjVuExNmdlPFs4R0LtPs=;
+        b=sItV4KYEJRr4ueWIqt8ey7sRKnIFZ90973kUbqRsKG2TroYdKuXI8aRunLdtjr0GyX
+         bg9mngsR4pi0Pl4DCarn9BGliIyxU4ARX4aeqLfP1Z9Bu0FxBrXkgF2/4VHi2njBbNZy
+         ZaBvt4rCS0S1BTjk7o+p/FatOQEPJEW8ChSpxfpFCBsYNLST1FglXc0+ECodiwKkUmRW
+         StAN+ilLjBlWov2JZACdccdPDUj2XNEVsvDZTESkXzE2dHXXTAiBqWjeoY7rsuIRQkvO
+         dNC7i6MubPV/EuamrEcb+3OuFESYTmjgVUIdzCG/4nSEafItpx6q3wA9AWefsVvxUzYu
+         /tZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741850949; x=1742455749;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oj/2xNP3XsLA+mFSI6C+3+yBjVuExNmdlPFs4R0LtPs=;
+        b=k1rSNHTNgC8Z1NMBw8atnyMmmrHxPmzm1YoHDi490uuFqd66G3cVbTjvYHa611R7fY
+         ePXWw2IVCe3+hJN3sesFYh0h9sAx5r49JkN0jU58EAOWfDcZpXg9fDWpdgVk1DLEc9Nj
+         us5sMgkHOQJDb0fpG1eAWIqlx+SkgyTZM0dOIcUr4KybMOVRIc/AbYzocXnQ1f5NfquI
+         BNjM+qSE8W3Woa8p4II+w4TmpyTz5bD5f794NEvJ7m07oD/9KdubKtr9FDJvfH+PUd0n
+         L2zPdoUbYUNPJUQx5mbT8Tggg5S4pVnw0a7cA42d9CZxqxEWB2XwhbzzoHxj4QwKdeT+
+         ggJw==
+X-Gm-Message-State: AOJu0Yy6nYh+N90IUwAlYCNSKnLKgmnD8P2zmZFVeKKOIQ4Srd0XteEr
+	GOvTDeh3WZxqFpjwa8gk4+UBeS3wjMUOVzLW4J68PKTw9s4xcG1BQyT7cE8oj/h651VRqIxAY3G
+	j
+X-Gm-Gg: ASbGncuPylNWjO2z84JJab8To8EoBaVQUzB92pMLAGLhzcQV8SQj6lddGDhZvHIKzMA
+	Bbz5m/4YFWQcP8nho9nbYMNPPHYWcarBH9a8+WsK8mTSnQOnyUCfM0tq/l8J8hALQTmEOZ6Il4U
+	S9nhExAQqnISjv46vIPWUzPRD5bNEXpOXIPqQ0+hLaTtWHgz8LejJpXFyapnt8cP1ChSd0HB8i/
+	LQUP45i3cUxKJXGhM9YtiRfQHD7FU6rC8IW3Ws+h8d2gWdm++vg+f4ETE3KL444Z8H6xKAJMXXa
+	1vOQlHfRVro5iIPLVBZTUP29zrYswjx7srU9gokG7SzHHdx18A==
+X-Google-Smtp-Source: AGHT+IEm8lZfTX/ZIpt5wG/58WKd8PP6DN8BLzuXrxps9KKYpCX1DVeQNdLrPxqaF7hTgLQ7/eDw4Q==
+X-Received: by 2002:a17:907:9494:b0:abf:6f87:670e with SMTP id a640c23a62f3a-ac25262f1d5mr2869633566b.22.1741850948576;
+        Thu, 13 Mar 2025 00:29:08 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3149d0b71sm47259066b.96.2025.03.13.00.29.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 00:29:08 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Subject: [PATCH] pwm: pxa: Improve using dev_err_probe()
+Date: Thu, 13 Mar 2025 08:28:55 +0100
+Message-ID: <20250313072855.3360076-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fbj5kzio535yua6p"
-Content-Disposition: inline
-In-Reply-To: <5b62671c-719a-44f2-b28e-878159859a01@mleia.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1926; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=9XJDzXpcqDahrmEtMCepuwbokqP/XCh8iGzQvE20SGw=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBn0ok4a4lK7Htr+Nsx7I0wyJu5L7BBAIWQfQsmm IAbrGinhiyJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ9KJOAAKCRCPgPtYfRL+ Tp7SB/93ibkDNJql2fwT7cAXY1KO55ycJN23MH6g0WxOVHp+uEoPzQ1xO+Rw5fUZnLGqu0lA57J sPjuUS25j8qDa3zt7TDUV1TMxQzhnm4z+vnDXRXOnt/PQJsOlomFX55zRvsi3b/7TXORuaIzJ/g a13Mbbf9orHz0nE3bTl8NRZw/DELvZojtTnUQmLi/8Qrpeh1ocKCFyDfpChbOI8uHMiF9xGOlHs qQgXBFoT+EpwsTcGfAulyMSQqj/B3YP1suZHhzB8vkR/jqk+v1nPm9tI894dEpgfFkHBdAUA/3c HssK28dgxKqjHoituHHb7qjDuLkBw62ihCEjNLZ3s3oJCHhG
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
+Add a message to the error path of devm_clk_get() and simplify the error
+path of devm_pwmchip_add() while improving the error message en passant.
 
---fbj5kzio535yua6p
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] dt-bindings: pwm: Convert lpc32xx-pwm.txt to YAML
-MIME-Version: 1.0
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ drivers/pwm/pwm-pxa.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-Hello Vladimir,
+diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
+index 430bd6a709e9..8a4a3d2df30d 100644
+--- a/drivers/pwm/pwm-pxa.c
++++ b/drivers/pwm/pwm-pxa.c
+@@ -160,24 +160,24 @@ static int pwm_probe(struct platform_device *pdev)
+ 	const struct platform_device_id *id = platform_get_device_id(pdev);
+ 	struct pwm_chip *chip;
+ 	struct pxa_pwm_chip *pc;
++	struct device *dev = &pdev->dev;
+ 	int ret = 0;
+ 
+ 	if (IS_ENABLED(CONFIG_OF) && id == NULL)
+-		id = of_device_get_match_data(&pdev->dev);
++		id = of_device_get_match_data(dev);
+ 
+ 	if (id == NULL)
+ 		return -EINVAL;
+ 
+-	chip = devm_pwmchip_alloc(&pdev->dev,
+-				  (id->driver_data & HAS_SECONDARY_PWM) ? 2 : 1,
++	chip = devm_pwmchip_alloc(dev, (id->driver_data & HAS_SECONDARY_PWM) ? 2 : 1,
+ 				  sizeof(*pc));
+ 	if (IS_ERR(chip))
+ 		return PTR_ERR(chip);
+ 	pc = to_pxa_pwm_chip(chip);
+ 
+-	pc->clk = devm_clk_get(&pdev->dev, NULL);
++	pc->clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(pc->clk))
+-		return PTR_ERR(pc->clk);
++		return dev_err_probe(dev, PTR_ERR(pc->clk), "Failed to get clock\n");
+ 
+ 	chip->ops = &pxa_pwm_ops;
+ 
+@@ -188,11 +188,9 @@ static int pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pc->mmio_base))
+ 		return PTR_ERR(pc->mmio_base);
+ 
+-	ret = devm_pwmchip_add(&pdev->dev, chip);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
+-		return ret;
+-	}
++	ret = devm_pwmchip_add(dev, chip);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "pwmchip_add() failed\n");
+ 
+ 	return 0;
+ }
 
-On Thu, Mar 13, 2025 at 05:37:44AM +0200, Vladimir Zapolskiy wrote:
-> On 3/13/25 00:56, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> >=20
-> > On Wed, Mar 12, 2025 at 07:59:21PM +0200, Vladimir Zapolskiy wrote:
-> > > > +  "#pwm-cells":
-> > > > +    const: 3
-> > >=20
-> > > It shall be 1.
-> >=20
-> > No, 3 is the right choice.
-> >=20
->=20
-> could you please elaborate?
->=20
-> I find that here the only configurable parameter is PWM period, so it
-> should be sufficient to have one cell only like in marvell,pxa-pwm.yaml
-> or google,cros-ec-pwm.yaml.
+base-commit: 6df320abbb40654085d7258de33d78481e93ac8d
+-- 
+2.47.1
 
-These two bindings are special snow-flakes and the only drivers that
-have #pwm-cells =3D <1>. Most other bindings use 3 and since commit
-895fe4537cc8 ("pwm: Add upgrade path to #pwm-cells =3D <3> for users of
-of_pwm_single_xlate()") (which was created for the pxa driver) the pxa
-driver also supports 3 cells. The cros-ec driver even has comment about
-that being ugly.=20
-
-I intend to convert all bindings to use 3 soon.
-
-While that isn't necessary for each individual piece of hardware to
-provide 3 values, having a uniform binding for PWMs provides a nice user
-experience and also simplifies matters with nexus nodes (see
-e71e46a6f19c ("pwm: Add support for pwm nexus dt bindings")).
-
-Best regards
-Uwe
-
---fbj5kzio535yua6p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfSh8oACgkQj4D7WH0S
-/k4vDgf/ehubFXBJkC/7G707LTPd9SMCRiU7yo8xzDN/MgRlnqjDQxNaFFrE8xN5
-7MIZqJNGy4dCdHGnGsbN6Nk7bpY/gNm/vXJhQepGVo2gBnpNyHrHVHoDsTNVz/Ka
-61FazZfuGm6K6sHgwu1RploF6vajrJUYnxf4/+fRJWjLYWbwquaVC0sRrM1k7BXM
-97aF6PQYAGMxDLQI4j5CS5Bmn3k4MtOgbgXu2GaPyIIkLP7f9AWy4ZQDmOR96MxN
-10z2K223iXO02U8fyRVWwSbu5ya0KZ/q8IANcX/LEmh1gAuaJg56TFQCEDkxkuX4
-6RESqFawU5aKcNqipOGIYitK3rzR3g==
-=5IFd
------END PGP SIGNATURE-----
-
---fbj5kzio535yua6p--
 
