@@ -1,48 +1,56 @@
-Return-Path: <linux-pwm+bounces-5148-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5149-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7399BA5F1D1
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 12:04:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A81EA5F3B3
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 13:04:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D9F123AED61
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 11:04:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B311918913E1
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Mar 2025 12:04:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EF51265CB3;
-	Thu, 13 Mar 2025 11:04:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 672861FAC51;
+	Thu, 13 Mar 2025 12:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ci6GSYdK"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="vpCyCZ4k"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614E21EE028;
-	Thu, 13 Mar 2025 11:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D52266B5C
+	for <linux-pwm@vger.kernel.org>; Thu, 13 Mar 2025 12:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741863867; cv=none; b=gfNBVnwyYtMZO3o4uZhDMn8qoXNbojvmRqzrdcdIytfW49diM95J2VoNZIKxbidM1GxczXxrce5Yawr3Sq0vzP9tlCrfKgJUFHbJrYmW6dmrpIo5XJcYhmZS+rUg1DZcSQBipUkpLK7tfSfPPvG2FLkDHVY0niN9J5radjhdoS8=
+	t=1741867396; cv=none; b=IzrkSPo49xNWRvKJY8l66jpCnDzOq5p/WG7S5hAjxjFGpGpMJeBUmg/MCHY24lwWVLNQJrTZ3K8IPXfPGPdpSpq4IIaYBo1UM/dSbrxVvO+VO6fHt3iuBAJhJu6P99a/AUwGZhq3C26jtsCNCEjpMKW1i9BHyeFh9JwOQNStN/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741863867; c=relaxed/simple;
-	bh=Dn/c8VmE1oX2i+/300L2/hJI+Z2XWSLaocWxzcn61Gw=;
+	s=arc-20240116; t=1741867396; c=relaxed/simple;
+	bh=bZNNGOED+1l8XZ/zYpoer0VQ2XGh/RdyKEnP1jUgGFc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gfkdgd5GR395aVgPBkIBBSQmD3RWREh/XwIxWokKkAMbGBC7rpISWYgWgOdJasi3tgOrzGzSgQcB2bShtryCMwS4Q/xRRzMouMt12Vz8+wVIIlc0XMJGU85GPv2bTWq/AEjHecd49p1Xy8pn+jPHvDhlFereDAUMnxK4wsitnR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ci6GSYdK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F6FBC4CEDD;
-	Thu, 13 Mar 2025 11:04:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741863866;
-	bh=Dn/c8VmE1oX2i+/300L2/hJI+Z2XWSLaocWxzcn61Gw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ci6GSYdKWJdTyQ9RwXufcNrSfq0vW8tkOcPFSj7UKJONuuRctzOX0gokzV0KKPibe
-	 kbSdeeJhHPg33ApW8ItWRnG8CFryui4MS/B9Xd5TxdJpbEqkwQcbhVB8UIZdAppLA4
-	 rEWi5fkCWxKxwOHYxsF1S+rGVVmGz0mVW8GVfkriIZXMzBLF8h2uQMIn0rU9AUbOW1
-	 DUz9l/ztlC3HPJfc+GR1MeUtukeIhZxShB+CSq2rBWtrCQsPbavJDQ0fSKQUG5rrWk
-	 eIKWZK0txQPiAV7ORv3AQPzOaasmpxg1C7skkAtB8sKTCde8PSxk4YbVLrko1aWtt8
-	 YAnZtZQkzdHxA==
-Message-ID: <b2f6a357-a468-4526-a1b6-69ab2c643b2c@kernel.org>
-Date: Thu, 13 Mar 2025 12:04:20 +0100
+	 In-Reply-To:Content-Type; b=VkdB8dNOpXLCgrIsyJJqIPRytcU6dsi/mpPIr8RW8AMx4qso76gWMrehr5bes4kqqTi4c05zuLzAJWR0TMmZvgeFj5uoVmLPx1xBIBHXdEV8IZqazTX8gTLhvokY1s535fAcZSk2IKDeA/44fye1PaL/IHTKAWij8sHX9BhHcd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=vpCyCZ4k; arc=none smtp.client-ip=121.127.44.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1741867393;
+ bh=bZAbj6+NmXSfWd9Y3ZYRj3CY/kM/CunfChIIkSXsoRg=;
+ b=vpCyCZ4khpNqoDvqJU9TMENoRt+h8k/WjOOPJFrgrXSasDIKUaHDmGYBDQz3IYnBHpd9100Km
+ /f0Cn43B4d1zOPMk9v+lghttUOgFaqw2kUbq1+ZmxuJppsEu/EXPS5uv3XZCtIbuj/VSLJfORDQ
+ nZiUP8FRRx52Z3zr6lQ1wasdy5qkxnt+QKKzKCgmw9NjgK1JRJ/S5Q2m5oWlE5Uqxemn3PP4elt
+ 5Ni/iCWmnoCH60jg4rDkfAWEg1sHKodzQ+suYuJjlP2MvR/hnhSd9rCZnGwZusDzmVIfpTzZZ9y
+ 5ZqHbYgjO4xtw5anN2b79xgQZb7mDePo2Qw3tJ5uctzA==
+X-Forward-Email-ID: 67d2c97dc524b8270342b1d9
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 121.127.44.73
+X-Forward-Email-Version: 0.4.40
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <22d849c3-8a0d-4704-b69c-8019c7f70ca7@kwiboo.se>
+Date: Thu, 13 Mar 2025 13:03:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,94 +58,65 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: pwm: Convert lpc32xx-pwm.txt to YAML
-To: Purva Yeshi <purvayeshi550@gmail.com>, ukleinek@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vz@mleia.com,
- piotr.wojtaszczyk@timesys.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250312122750.6391-1-purvayeshi550@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 0/2] arm64: dts: rockchip: Add pwm nodes for RK3528
+To: Chukun Pan <amadeus@jmu.edu.cn>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, heiko@sntech.de,
+ krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-rockchip@lists.infradead.org
+References: <60065c0b-4597-4976-b74b-172556c4e156@kwiboo.se>
+ <20250313090109.1910997-1-amadeus@jmu.edu.cn>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250312122750.6391-1-purvayeshi550@gmail.com>
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20250313090109.1910997-1-amadeus@jmu.edu.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/03/2025 13:27, Purva Yeshi wrote:
-> Convert the existing `lpc32xx-pwm.txt` bindings documentation into a
-> YAML schema (`nxp,lpc3220-pwm.yaml`).
+Hi,
+
+On 2025-03-13 10:01, Chukun Pan wrote:
+> Hi,
 > 
-> Set `"#pwm-cells"` to `const: 3` for expected PWM cell properties.
+>> I have not seen any issue with PWM using the merged patch having
+>> pinctrl-names=default.
+>>
+>> Please see my Linux tree [1] and U-Boot tree [2], those are little ahead
+>> of what has been posted on ML, e.g. it has working USB2.0 host, CPU opp,
+>> Hantro VPU, GPU + opp, arm and logic pwm regulators for E20C, ROCK 2A/2F
+>> and Sige1.
+>>
+>> Please see my Linux tree [1] and U-Boot tree [2], those are little ahead
+>> of what has been posted on ML, e.g. it has working USB2.0 host, CPU opp,
+>> Hantro VPU, GPU + opp, arm and logic pwm regulators for E20C, ROCK 2A/2F
+>> and Sige1.
+>> ...
+>> [1] https://github.com/Kwiboo/linux-rockchip/commits/next-20250311-rk3528/
+>> [2] https://source.denx.de/u-boot/contributors/kwiboo/u-boot/-/commits/rk3528
 > 
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> ---
+> I tested your kernel device tree on E20C earlier today and still have
+> the same issue. But if I replace u-boot with the link [2] you provided,
+> it will work fine. For reference, I was using v2025.01 plus this series
+> of patches [3]. So it looks like u-boot does something and kernel doesn't?
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Interesting, good that it works with the updated U-Boot. Main change
+compared to v1 is that it now use clock/reset id and DT closer to what
+has been merged in mainline Linux. It also has DT params to help
+initialize the two pwm regulators used by these boards.
 
+I will try with the old v1 U-Boot series and see if I can replicated
+your issue.
 
----
+Regards,
+Jonas
 
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
+> 
+> [3] https://lore.kernel.org/u-boot/20250123224844.3104592-1-jonas@kwiboo.se/
+> 
+> Thanks,
+> Chukun
+> 
+> --
+> 2.25.1
+> 
 
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
-
-Full context and explanation:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-</form letter>
-
-Best regards,
-Krzysztof
 
