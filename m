@@ -1,67 +1,67 @@
-Return-Path: <linux-pwm+bounces-5197-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5198-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1BB6A61804
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Mar 2025 18:36:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A787A61808
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Mar 2025 18:36:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 345D51895811
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Mar 2025 17:36:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D08F1B62FB1
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Mar 2025 17:36:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC853205AB5;
-	Fri, 14 Mar 2025 17:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B49AF205E0D;
+	Fri, 14 Mar 2025 17:34:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="WGU9xbYa"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="RXR41HGI"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2E6204C1E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A35E204C1F;
 	Fri, 14 Mar 2025 17:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741973688; cv=none; b=LR34FnBxKanQJsJ9zhErNbeQCecs6DlqI4pu8GHL21FYtmuGoHEYugsbN4QyWQgR9j+yapEOPs+eWuSarKOtmEZmJQAdeD+lMnzwNu+v1R6sldiHU+yJbi95VlEf+MRXXqhXkG80vsGUGBbxk1JXGVJL1AVfSzZEMecZh4XptHA=
+	t=1741973689; cv=none; b=BIOl7klgfjhPc+VEFQEaNpq8LquM257nA2Xj4q/fG/K6gHvGt42dcO/fNHwByVEep5Xnd+L7FXxwhrqCetv9un10+c4cT0bHhHtmJlAESLtjN3pTMNeaICCuV5NqKmjtJp51ZJkIuJBaqOqjE9q4M5XqEbLMgjzf3sPQJf+4Qps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741973688; c=relaxed/simple;
-	bh=U5MMQFHxw78UV6NeufGa5RtZZATSDj5zBCoLHzxmYcs=;
+	s=arc-20240116; t=1741973689; c=relaxed/simple;
+	bh=5smBgsmhlFXVPAMELup/d2eBnYKdmHwOUDgUP0bXgRs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ajAyzFd1I4VT2tXEs0m2g9Er30spf+IEQzVrD3WA60gd3NJe7zG2rvMNpt+IQLUvsvyH4nrdI8gXjjjbout9MF6V9lXL8GiBzUCX7IZIMriatHD2tl/rGZf1uacMEy0CH4EWD26iHC5s6qb3j0bnswPK3t1rWJoz/VdDxyRghJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=WGU9xbYa; arc=none smtp.client-ip=185.132.182.106
+	 MIME-Version:Content-Type; b=H71Jnxy7ZKNij6ft+u+nApOVWRGOQ0LOpcz30T2F2CC9D6JMXbv8U5rKnX1ywqEpJaAuoXRv3JpVKtAt0HwW6ZSXhv6mUFq5q/S6fMadP1r+4hZj17mblotQOGngYaUiNhT9NpW6TMxJavzkHmuEe9scZWM1tJIRxDJkpDoX8fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=RXR41HGI; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52EEjmbX003926;
-	Fri, 14 Mar 2025 18:34:13 +0100
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52EF9COC003789;
+	Fri, 14 Mar 2025 18:34:30 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	Fxe+1BqeMw88KkIco0sHqplA8QMWdxh1ONHDTZ6Mzls=; b=WGU9xbYaKLNEOuGL
-	y0U8qc7X8WjIIQDLmGl5di9XXmw9rMg2BSdHa6jsBVAJR2H1Tgb9ewnYBgtC1ie/
-	xYVpFaQOSTX0O6u3NB6RqAaMwRV8Mf3FTC6MKv5tWQWitYMJASY5RsfMV6LAOBQZ
-	6gjzIcNgtz9ixvX1BaEM2y1y6+ViAf7kTOtd18PWiiP4G9nEI8ftlhjVJJRCjkzm
-	fijz7x1utZp5CD4GrUxKDRIVR8e0ghSOkfTpNOnsKcQGX0+4A379iLTL6s/yXEo8
-	O/X7eI4JFC4T8SqRNpBdGLTtUXpU5KZwJObbivmu2HU9/dw3jeAsScWI+jCE5/TG
-	IyPHfg==
+	gezTHsVlAbOOGNmXRsSZoPC1L0mktoTM+MvlRK4ol90=; b=RXR41HGIO3F/xr6H
+	rRaV8lX2yPYPdkOeuNbonUw5ZjAUyoRi9Lw9H+Bi843eaXBo+2jcBXCLqNHhW6Gx
+	edIZgTjtCV2O+EfU6ehlc6yNOquQFV84AItFDVxa/04Z0FTlkmIRsP0fIlANX295
+	I8cAiLXgqHdKw0iiXdPX8vYxMbf2dV7ZQOyMjlRsiQFrRQ7b/kTRYj/jLX3+s+fM
+	3llPObQIWOesiZFQUkQtu/mUqMm/lASx0TXtE9Ay4PIq4nWC4OYru6SMpF6vngsV
+	95VDAGPwGIjL5cqI68SPRPvT+ZdWosZAhCqWD52FCDrMp/0hPAAbuI2f/UjimxZM
+	aRNmZg==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45c2pf5ee2-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45c2pf5eet-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Mar 2025 18:34:13 +0100 (CET)
+	Fri, 14 Mar 2025 18:34:29 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4560540062;
-	Fri, 14 Mar 2025 18:33:04 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 94AAF6D8E74;
-	Fri, 14 Mar 2025 18:15:05 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
- (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5061840068;
+	Fri, 14 Mar 2025 18:33:05 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6BABE6D07BA;
+	Fri, 14 Mar 2025 18:15:06 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
+ (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 14 Mar
- 2025 18:15:05 +0100
+ 2025 18:15:06 +0100
 Received: from localhost (10.252.1.141) by SAFDAG1NODE1.st.com (10.75.90.17)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 14 Mar
- 2025 18:15:05 +0100
+ 2025 18:15:06 +0100
 From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 To: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <jic23@kernel.org>,
@@ -72,9 +72,9 @@ CC: <robh@kernel.org>, <catalin.marinas@arm.com>, <will@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
         <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>
-Subject: [PATCH v4 2/8] mfd: stm32-lptimer: add support for stm32mp25
-Date: Fri, 14 Mar 2025 18:14:45 +0100
-Message-ID: <20250314171451.3497789-3-fabrice.gasnier@foss.st.com>
+Subject: [PATCH v4 3/8] iio: trigger: stm32-lptimer: add support for stm32mp25
+Date: Fri, 14 Mar 2025 18:14:46 +0100
+Message-ID: <20250314171451.3497789-4-fabrice.gasnier@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250314171451.3497789-1-fabrice.gasnier@foss.st.com>
 References: <20250314171451.3497789-1-fabrice.gasnier@foss.st.com>
@@ -92,167 +92,163 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-14_06,2025-03-14_01,2024-11-22_01
 
-Add support for STM32MP25 SoC.
-A new hardware configuration register (HWCFGR2) has been added, to gather
-number of capture/compare channels, autonomous mode and input capture
-capability. The full feature set is implemented in LPTIM1/2/3/4. LPTIM5
-supports a smaller set of features. This can now be read from HWCFGR
-registers.
+From: Olivier Moysan <olivier.moysan@foss.st.com>
 
-Add new registers to the stm32-lptimer.h: CCMR1, CCR2, HWCFGR1/2 and VERR.
-Update the stm32_lptimer data struct so signal the number of
-capture/compare channels to the child devices.
-Also Remove some unused bit masks (CMPOK_ARROK / CMPOKCF_ARROKCF).
+Add support for STM32MP25 SoC. Use newly introduced compatible to handle
+this new HW variant. Add new trigger definitions that can be used by the
+stm32 analog-to-digital converter. Use compatible data to identify them.
 
+Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 ---
-Changes in V4:
-- Add DIEROK, ARROK status flags, and their clear flags.
-Changes in V2:
-- rely on fallback compatible as no specific .data is associated to the
-  driver. Compatibility is added by reading hardware configuration
-  registers.
-- read version register, to be used by clockevent child driver
-- rename register/bits definitions
+Changes in v4:
+- Jonathan's comment: simplify infrastructure by keeping
+  devm_iio_trigger_register. Don't need to cast compatible data.
 ---
- drivers/mfd/stm32-lptimer.c       | 33 ++++++++++++++++++++++++++-
- include/linux/mfd/stm32-lptimer.h | 37 ++++++++++++++++++++++++++++---
- 2 files changed, 66 insertions(+), 4 deletions(-)
+ drivers/iio/trigger/stm32-lptimer-trigger.c   | 75 ++++++++++++++-----
+ include/linux/iio/timer/stm32-lptim-trigger.h |  9 +++
+ 2 files changed, 67 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/mfd/stm32-lptimer.c b/drivers/mfd/stm32-lptimer.c
-index b2704a9809c7..09073dbc9c80 100644
---- a/drivers/mfd/stm32-lptimer.c
-+++ b/drivers/mfd/stm32-lptimer.c
-@@ -6,6 +6,7 @@
-  * Inspired by Benjamin Gaignard's stm32-timers driver
-  */
+diff --git a/drivers/iio/trigger/stm32-lptimer-trigger.c b/drivers/iio/trigger/stm32-lptimer-trigger.c
+index f1e18913236a..3dcc8d2fe093 100644
+--- a/drivers/iio/trigger/stm32-lptimer-trigger.c
++++ b/drivers/iio/trigger/stm32-lptimer-trigger.c
+@@ -16,16 +16,43 @@
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
  
-+#include <linux/bitfield.h>
- #include <linux/mfd/stm32-lptimer.h>
- #include <linux/module.h>
- #include <linux/of_platform.h>
-@@ -49,6 +50,36 @@ static int stm32_lptimer_detect_encoder(struct stm32_lptimer *ddata)
- 	return 0;
- }
- 
-+static int stm32_lptimer_detect_hwcfgr(struct stm32_lptimer *ddata)
-+{
-+	u32 val;
-+	int ret;
+-/* List Low-Power Timer triggers */
+-static const char * const stm32_lptim_triggers[] = {
+-	LPTIM1_OUT,
+-	LPTIM2_OUT,
+-	LPTIM3_OUT,
++/* Maximum triggers + one trailing null entry to indicate the end of array */
++#define MAX_TRIGGERS 3
 +
-+	ret = regmap_read(ddata->regmap, STM32_LPTIM_VERR, &ddata->version);
-+	if (ret)
-+		return ret;
++struct stm32_lptim_cfg {
++	const char * const (*triggers)[MAX_TRIGGERS];
++	unsigned int nb_triggers;
++};
 +
-+	/* Try to guess parameters from HWCFGR: e.g. encoder mode (STM32MP15) */
-+	ret = regmap_read(ddata->regmap, STM32_LPTIM_HWCFGR1, &val);
-+	if (ret)
-+		return ret;
++/* List Low-Power Timer triggers for H7, MP13, MP15 */
++static const char * const stm32_lptim_triggers[][MAX_TRIGGERS] = {
++	{ LPTIM1_OUT,},
++	{ LPTIM2_OUT,},
++	{ LPTIM3_OUT,},
++};
 +
-+	/* Fallback to legacy init if HWCFGR isn't present */
-+	if (!val)
-+		return stm32_lptimer_detect_encoder(ddata);
++/* List Low-Power Timer triggers for STM32MP25 */
++static const char * const stm32mp25_lptim_triggers[][MAX_TRIGGERS] = {
++	{ LPTIM1_CH1, LPTIM1_CH2, },
++	{ LPTIM2_CH1, LPTIM2_CH2, },
++	{ LPTIM3_CH1,},
++	{ LPTIM4_CH1,},
++	{ LPTIM5_OUT,},
++};
 +
-+	ddata->has_encoder = FIELD_GET(STM32_LPTIM_HWCFGR1_ENCODER, val);
++static const struct stm32_lptim_cfg stm32mp15_lptim_cfg = {
++	.triggers = stm32_lptim_triggers,
++	.nb_triggers = ARRAY_SIZE(stm32_lptim_triggers),
++};
 +
-+	ret = regmap_read(ddata->regmap, STM32_LPTIM_HWCFGR2, &val);
-+	if (ret)
-+		return ret;
-+
-+	/* Number of capture/compare channels */
-+	ddata->num_cc_chans = FIELD_GET(STM32_LPTIM_HWCFGR2_CHAN_NUM, val);
-+
-+	return 0;
-+}
-+
- static int stm32_lptimer_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -73,7 +104,7 @@ static int stm32_lptimer_probe(struct platform_device *pdev)
- 	if (IS_ERR(ddata->clk))
- 		return PTR_ERR(ddata->clk);
- 
--	ret = stm32_lptimer_detect_encoder(ddata);
-+	ret = stm32_lptimer_detect_hwcfgr(ddata);
- 	if (ret)
- 		return ret;
- 
-diff --git a/include/linux/mfd/stm32-lptimer.h b/include/linux/mfd/stm32-lptimer.h
-index 06d3f11dc3c9..a592c8dc716d 100644
---- a/include/linux/mfd/stm32-lptimer.h
-+++ b/include/linux/mfd/stm32-lptimer.h
-@@ -17,20 +17,30 @@
- #define STM32_LPTIM_IER		0x08	/* Interrupt Enable Reg      */
- #define STM32_LPTIM_CFGR	0x0C	/* Configuration Reg         */
- #define STM32_LPTIM_CR		0x10	/* Control Reg               */
--#define STM32_LPTIM_CMP		0x14	/* Compare Reg               */
-+#define STM32_LPTIM_CMP		0x14	/* Compare Reg (MP25 CCR1)   */
- #define STM32_LPTIM_ARR		0x18	/* Autoreload Reg            */
- #define STM32_LPTIM_CNT		0x1C	/* Counter Reg               */
-+#define STM32_LPTIM_CCMR1	0x2C	/* Capture/Compare Mode MP25 */
-+#define STM32_LPTIM_CCR2	0x34	/* Compare Reg2 MP25         */
-+
-+#define STM32_LPTIM_HWCFGR2	0x3EC	/* Hardware configuration register 2 - MP25 */
-+#define STM32_LPTIM_HWCFGR1	0x3F0	/* Hardware configuration register 1 - MP15 */
-+#define STM32_LPTIM_VERR	0x3F4	/* Version identification register - MP15 */
- 
- /* STM32_LPTIM_ISR - bit fields */
-+#define STM32_LPTIM_DIEROK_ARROK	(BIT(24) | BIT(4)) /* MP25 */
-+#define STM32_LPTIM_CMP2_ARROK		(BIT(19) | BIT(4))
- #define STM32_LPTIM_CMPOK_ARROK		GENMASK(4, 3)
- #define STM32_LPTIM_ARROK		BIT(4)
- #define STM32_LPTIM_CMPOK		BIT(3)
- 
- /* STM32_LPTIM_ICR - bit fields */
--#define STM32_LPTIM_ARRMCF		BIT(1)
-+#define STM32_LPTIM_DIEROKCF_ARROKCF	(BIT(24) | BIT(4)) /* MP25 */
-+#define STM32_LPTIM_CMP2OKCF_ARROKCF	(BIT(19) | BIT(4))
- #define STM32_LPTIM_CMPOKCF_ARROKCF	GENMASK(4, 3)
-+#define STM32_LPTIM_ARRMCF		BIT(1)
- 
--/* STM32_LPTIM_IER - bit flieds */
-+/* STM32_LPTIM_IER - bit fields */
- #define STM32_LPTIM_ARRMIE	BIT(1)
- 
- /* STM32_LPTIM_CR - bit fields */
-@@ -53,16 +63,37 @@
- /* STM32_LPTIM_ARR */
- #define STM32_LPTIM_MAX_ARR	0xFFFF
- 
-+/* STM32_LPTIM_CCMR1 */
-+#define STM32_LPTIM_CC2P	GENMASK(19, 18)
-+#define STM32_LPTIM_CC2E	BIT(17)
-+#define STM32_LPTIM_CC2SEL	BIT(16)
-+#define STM32_LPTIM_CC1P	GENMASK(3, 2)
-+#define STM32_LPTIM_CC1E	BIT(1)
-+#define STM32_LPTIM_CC1SEL	BIT(0)
-+
-+/* STM32_LPTIM_HWCFGR1 */
-+#define STM32_LPTIM_HWCFGR1_ENCODER	BIT(16)
-+
-+/* STM32_LPTIM_HWCFGR2 */
-+#define STM32_LPTIM_HWCFGR2_CHAN_NUM	GENMASK(3, 0)
-+
-+/* STM32_LPTIM_VERR */
-+#define STM32_LPTIM_VERR_23	0x23	/* STM32MP25 */
-+
- /**
-  * struct stm32_lptimer - STM32 Low-Power Timer data assigned by parent device
-  * @clk: clock reference for this instance
-  * @regmap: register map reference for this instance
-  * @has_encoder: indicates this Low-Power Timer supports encoder mode
-+ * @num_cc_chans: indicates the number of capture/compare channels
-+ * @version: indicates the major and minor revision of the controller
-  */
- struct stm32_lptimer {
- 	struct clk *clk;
- 	struct regmap *regmap;
- 	bool has_encoder;
-+	unsigned int num_cc_chans;
-+	u32 version;
++static const struct stm32_lptim_cfg stm32mp25_lptim_cfg = {
++	.triggers = stm32mp25_lptim_triggers,
++	.nb_triggers = ARRAY_SIZE(stm32mp25_lptim_triggers),
  };
  
- #endif
+ struct stm32_lptim_trigger {
+ 	struct device *dev;
+-	const char *trg;
++	const char * const *triggers;
+ };
+ 
+ static int stm32_lptim_validate_device(struct iio_trigger *trig,
+@@ -56,22 +83,33 @@ EXPORT_SYMBOL(is_stm32_lptim_trigger);
+ 
+ static int stm32_lptim_setup_trig(struct stm32_lptim_trigger *priv)
+ {
+-	struct iio_trigger *trig;
++	const char * const *cur = priv->triggers;
++	int ret;
+ 
+-	trig = devm_iio_trigger_alloc(priv->dev, "%s", priv->trg);
+-	if  (!trig)
+-		return -ENOMEM;
++	while (cur && *cur) {
++		struct iio_trigger *trig;
+ 
+-	trig->dev.parent = priv->dev->parent;
+-	trig->ops = &stm32_lptim_trigger_ops;
+-	iio_trigger_set_drvdata(trig, priv);
++		trig = devm_iio_trigger_alloc(priv->dev, "%s", *cur);
++		if  (!trig)
++			return -ENOMEM;
+ 
+-	return devm_iio_trigger_register(priv->dev, trig);
++		trig->dev.parent = priv->dev->parent;
++		trig->ops = &stm32_lptim_trigger_ops;
++		iio_trigger_set_drvdata(trig, priv);
++
++		ret = devm_iio_trigger_register(priv->dev, trig);
++		if (ret)
++			return ret;
++		cur++;
++	}
++
++	return 0;
+ }
+ 
+ static int stm32_lptim_trigger_probe(struct platform_device *pdev)
+ {
+ 	struct stm32_lptim_trigger *priv;
++	struct stm32_lptim_cfg const *lptim_cfg;
+ 	u32 index;
+ 
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+@@ -81,17 +119,20 @@ static int stm32_lptim_trigger_probe(struct platform_device *pdev)
+ 	if (device_property_read_u32(&pdev->dev, "reg", &index))
+ 		return -EINVAL;
+ 
+-	if (index >= ARRAY_SIZE(stm32_lptim_triggers))
++	lptim_cfg = device_get_match_data(&pdev->dev);
++
++	if (index >= lptim_cfg->nb_triggers)
+ 		return -EINVAL;
+ 
+ 	priv->dev = &pdev->dev;
+-	priv->trg = stm32_lptim_triggers[index];
++	priv->triggers = lptim_cfg->triggers[index];
+ 
+ 	return stm32_lptim_setup_trig(priv);
+ }
+ 
+ static const struct of_device_id stm32_lptim_trig_of_match[] = {
+-	{ .compatible = "st,stm32-lptimer-trigger", },
++	{ .compatible = "st,stm32-lptimer-trigger", .data = &stm32mp15_lptim_cfg },
++	{ .compatible = "st,stm32mp25-lptimer-trigger", .data = &stm32mp25_lptim_cfg},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, stm32_lptim_trig_of_match);
+diff --git a/include/linux/iio/timer/stm32-lptim-trigger.h b/include/linux/iio/timer/stm32-lptim-trigger.h
+index a34dcf6a6001..ce3cf0addb2e 100644
+--- a/include/linux/iio/timer/stm32-lptim-trigger.h
++++ b/include/linux/iio/timer/stm32-lptim-trigger.h
+@@ -14,6 +14,15 @@
+ #define LPTIM1_OUT	"lptim1_out"
+ #define LPTIM2_OUT	"lptim2_out"
+ #define LPTIM3_OUT	"lptim3_out"
++#define LPTIM4_OUT	"lptim4_out"
++#define LPTIM5_OUT	"lptim5_out"
++
++#define LPTIM1_CH1	"lptim1_ch1"
++#define LPTIM1_CH2	"lptim1_ch2"
++#define LPTIM2_CH1	"lptim2_ch1"
++#define LPTIM2_CH2	"lptim2_ch2"
++#define LPTIM3_CH1	"lptim3_ch1"
++#define LPTIM4_CH1	"lptim4_ch1"
+ 
+ #if IS_REACHABLE(CONFIG_IIO_STM32_LPTIMER_TRIGGER)
+ bool is_stm32_lptim_trigger(struct iio_trigger *trig);
 -- 
 2.25.1
 
