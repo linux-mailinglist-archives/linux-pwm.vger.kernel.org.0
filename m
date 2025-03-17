@@ -1,112 +1,150 @@
-Return-Path: <linux-pwm+bounces-5204-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5205-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47E82A64A97
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Mar 2025 11:44:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE539A651D6
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Mar 2025 14:52:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B44A1883589
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Mar 2025 10:42:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 53056173AC2
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Mar 2025 13:52:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C9642236FD;
-	Mon, 17 Mar 2025 10:41:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A879A23F422;
+	Mon, 17 Mar 2025 13:51:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P43g9F1h"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="E/NFBWzO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A4F19F40A;
-	Mon, 17 Mar 2025 10:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DAE23F277;
+	Mon, 17 Mar 2025 13:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742208119; cv=none; b=ZsihMNV0nj1x4q1Revi0PZSFGJ6ZEKEpeQjnq7WyvaDumabUz8melBE/ZWLYRT+BSVsVGjPfIoZS7XurGBAopKc7t7JBMdegFyRyoGTPyEhQYY4DKyHnTtKiZBLFYEI6d3n5Sm9Dmb0cEWiTJ58PYpImkV5zVTNZKlof1IdOCN0=
+	t=1742219502; cv=none; b=YoveTpzkIHgt0pzCdCovsx9RAk92vQFXspkxvYZhxjSj9mtvuy1gyJMDnd6FVJpR8vvrUuXctCT80J8zU3bqvHqQlxVedlBElhMsz0k/Wb9wH19GU26hMNKajZs/K+oKBkgVwxhnOoPXd1ii5USX7gDESByo7MsW6g7cLtmMijA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742208119; c=relaxed/simple;
-	bh=S+bZrXRRNuLrRLZQZmTxgx9Qoh5vMQnkLn0jPOAmkiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ea3z1V6WrCYd967Z7ZYD6W/3d3Is4v66zDIhIj7OCDRYip6PCOKJ+7Z5/wDaajDV87YFtlnOlOme7zGFQ4VN/2xtaI/M5zKLE8y1k7zC/rtcbwpb0HUKzV1k8IE6cF3QojVO2+uBpeMxxSUdgtZZqdKGzNvbFBTdNq3yWxTReIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P43g9F1h; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB8B3C4CEE3;
-	Mon, 17 Mar 2025 10:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742208118;
-	bh=S+bZrXRRNuLrRLZQZmTxgx9Qoh5vMQnkLn0jPOAmkiA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P43g9F1hhHqEa4tOz/U0oniq0b1kcSvTV3H/SdC3tsl9GwtDNMA2d9+q4Ct1mw5PC
-	 iieDGr5wMMUOxCNVvfFxHaL/q7hhCnO0JW8bELKkQkYkIimLelgEVpz7XRzGMGqLYD
-	 m4+aKNkpFS7bEniSNqjYifP0q2D3+J2YBTxvhBjK9xfhIoKDTrXkJZ2nNPYkvnfJ0J
-	 bPuiGH0RCveLmpNSA5z1lL+cB1Oyzx2btW+qPXbeW/eNIHx9yxvGKbl7epNgnXDuEv
-	 tORcIBR5c3oNZ5664Ga8KShH9AxslzKbRKim+FiM1Z0tvb4PtWDv7PIMTtxFdb72KD
-	 dD5JKl9xkB9wg==
-Date: Mon, 17 Mar 2025 11:41:53 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, linux-gpio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, 
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH 05/18] dt-bindings: mfd: adp5585: document adp5589 I/O
- expander
-Message-ID: <20250317-noisy-handsome-worm-b5c3f0@krzk-bin>
-References: <20250313-dev-adp5589-fw-v1-0-20e80d4bd4ea@analog.com>
- <20250313-dev-adp5589-fw-v1-5-20e80d4bd4ea@analog.com>
- <20250314-outstanding-futuristic-cat-5d8240@krzk-bin>
- <c59477b2a94cbd10bc530809fbcdc0f2d1b79d07.camel@gmail.com>
- <f1ccbdc1-3f47-46a8-bcc2-ca6135882392@kernel.org>
- <ae74d31e8b3874da91ec5c2c9a20274358073266.camel@gmail.com>
+	s=arc-20240116; t=1742219502; c=relaxed/simple;
+	bh=6tXJmTOt9OvwD8ihnhNqIpB4znJb/dP1SVDxN15PS74=;
+	h=Content-Type:Date:Message-Id:Cc:From:To:Subject:Mime-Version:
+	 References:In-Reply-To; b=bcBe/gAtHOl5vBrm+vcB+6yk6MmQqMA/wWFct9zZ++x1dOKo4EoUewkTObJVO3sa3VyV1hpsbbgQZCqzMLC71yRC0ovOe67M+2sJPT4Q6EiYUn3yBvLOHLy4XUVjZuUeyYyDA0vw5PMROEyCdkGqe0yvX2Wb7iwCCfEVrwiX5T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=E/NFBWzO; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DB8272058A;
+	Mon, 17 Mar 2025 13:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742219492;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1NtgX5jhncJhxgIK5qQ5c2DwATuhUFn7mLC9sGWQROE=;
+	b=E/NFBWzO3FHEBo7S/3dO98+JMqDNe/1qg+t5woNWhbfaghH3VMCjyHrUA7GTJV9tRLimnv
+	BuLsyy+l9/4x9wSl1bSz7Niu88SAABfKR3Yng2iRswM6ixflGqoyZcC9XNESQ1oX+JCEYd
+	FADlidkLQez+Q5ZNqSQcQQIbRIjlHw3U+Cbn2uIvOCANgfxKRiQrLpSu/lXdYdtE5WTa6b
+	T7UCV6HBdO267bibsLhOULgnm5r0WKvKd3cfEgBizGQoNp1n45/9bh3G91GHaMBBBv60Ao
+	DoPKoNz84I5Mx3H6CYWmiVl1QRd9+wnquYTBFWoNWG1k1SgVwPeXInflFoqPgw==
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 17 Mar 2025 14:51:30 +0100
+Message-Id: <D8IL9KSYUQZK.MB94IIL9FUL1@bootlin.com>
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, "Michael Walle" <mwalle@kernel.org>, "Mark
+ Brown" <broonie@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Danilo Krummrich" <dakr@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ <andriy.shevchenko@intel.com>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Linus Walleij"
+ <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 03/10] pwm: max7360: Add MAX7360 PWM support
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ae74d31e8b3874da91ec5c2c9a20274358073266.camel@gmail.com>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
+ <20250214-mdb-max7360-support-v4-3-8a35c6dbb966@bootlin.com>
+ <e7epeegrp6cz27s63gnqe7b6me7h3rn5d6mo7mbd6rwgnwyys6@j7f6cy4uy3wq>
+In-Reply-To: <e7epeegrp6cz27s63gnqe7b6me7h3rn5d6mo7mbd6rwgnwyys6@j7f6cy4uy3wq>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeelieejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegtfffkvefhvffuggfgofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelfeetjeetffegkeeukeehvdegleeklefggfdtieduvdfgkeeggefhfeekffefhfenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrr
+ hhordhorhhgpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Mon, Mar 17, 2025 at 09:30:37AM +0000, Nuno S=C3=A1 wrote:
-> Now, I have:
->=20
-> - if:
->       properties:
->         compatible:
->           contains:
->             const: adi,adp5585-01
->     then:
->       properties:
->         gpio-reserved-ranges: false
->     else:
->       if:
->         properties:
->           compatible:
->             contains:
->               enum:
->                 - adi,adp5585-00
->                 - adi,adp5585-02
->                 - adi,adp5585-03
->                 - adi,adp5585-04
->       then:
->         properties:
->           gpio-reserved-ranges:
->             maxItems: 1
->             items:
->               items:
->                 - const: 5
->                 - const: 1
+On Thu Mar 13, 2025 at 10:03 PM CET, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Mathieu,
+>
+> On Fri, Feb 14, 2025 at 12:49:53PM +0100, mathieu.dubois-briand@bootlin.c=
+om wrote:
+> > diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
+> > new file mode 100644
+> > index 000000000000..f1257c20add2
+> ...
+> > +
+> > +static void max7360_pwm_free(struct pwm_chip *chip, struct pwm_device =
+*pwm)
+> > +{
+> > +	struct max7360_pwm *max7360_pwm;
+> > +
+> > +	max7360_pwm =3D max7360_pwm_from_chip(chip);
+> > +	max7360_port_pin_request(max7360_pwm->parent, pwm->hwpwm, false);
+>
+> Would be nice if pinmuxing would be abstracted as a pinctrl driver. Not
+> sure how much effort that is. Maybe Linus has an idea?
+>
 
-Yes, you are right. The diff context confused me, so I thought these are
-different.
+Yes, I got some similar comments previously and I've been working on it:
+the next version will gain a pinctrl driver.
 
-It's fine.
+> > +}
+> > +
+> > [...]
+> > +
+> > +static int max7360_pwm_write_waveform(struct pwm_chip *chip,
+> > +				      struct pwm_device *pwm,
+> > +				      const void *_wfhw)
+> > +{
+> > +	const struct max7360_pwm_waveform *wfhw =3D _wfhw;
+> > +	struct max7360_pwm *max7360_pwm;
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	max7360_pwm =3D max7360_pwm_from_chip(chip);
+> > +
+> > +	val =3D (wfhw->duty_steps =3D=3D 0) ? 0 : MAX7360_PWM_CTRL_ENABLE(pwm=
+->hwpwm);
+>
+> Does not setting MAX7360_PWM_CTRL_ENABLE result in the pin going to
+> Hi-Z? If yes: That's wrong. You're only supposed to do that if
+> period_length_ns =3D 0 was requested. If no: This needs a comment why
+> duty_steps =3D 0 is special here.
+>
 
-Best regards,
-Krzysztof
+Ok, I confirm this does set the pin in Hi-Z, I'm fixing it.
+
+...
+
+>
+> Best regards
+> Uwe
+
+Thanks for your review.
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
