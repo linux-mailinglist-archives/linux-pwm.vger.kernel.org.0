@@ -1,143 +1,218 @@
-Return-Path: <linux-pwm+bounces-5209-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5210-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7947A65748
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Mar 2025 17:06:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF519A65796
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Mar 2025 17:11:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD0791896102
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Mar 2025 15:59:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 696051787C7
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Mar 2025 16:08:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25030199FA4;
-	Mon, 17 Mar 2025 15:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8443319048F;
+	Mon, 17 Mar 2025 16:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kr2X+Sv0"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B50176FB0;
-	Mon, 17 Mar 2025 15:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2F51CFBC;
+	Mon, 17 Mar 2025 16:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742226994; cv=none; b=eBkqdeNzdYKcxVKoPaxkXrFAB3xq7mPVhMuP4IKjBn4XZMRK+3JRXp+DFSKvY7AL2vvzUjwkipnBrj240/B1YPp4T2WDA/ZCQ73XS9CqC6hO6Jhtdf5aS7v562JSR82FZ7L/MtMv3X+cU4NNXyFOMUm9g31/Lu6+NEMOKc7hZ0c=
+	t=1742227706; cv=none; b=AVA6u9TTVxdoIXXZvzaD+ylIaX7QYgIIlpLAM2NKVau801A+9FZHH1Cv0iO2mFquHGmRsp6iuaNYDpF54PWdN3Prc4GuHa699+6SXZmjT07s+vswlfhA6Y12zwEbM041/fxwctUkXFf1OOwROzCLUe9zKjKYM3bxbyjDwrkNPP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742226994; c=relaxed/simple;
-	bh=JTYbqx6bfQKuupaoVPJmTVygzfWnX4u/I/x3TxxTXO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DkcpZJzqOLuyDOX+QOAYNkKu0/9QnTZoRpIyX2g1TqZ++PHMfjnGKqR6tCl2T65il8KDJrRFgN+sKtJg5BZkK/z+NHxETJT2c6PLyXxjHsCgnhesrIWxhXTXBS5eOhmheLdC4KhA5FbG0HJCMENFaPKEJcAsf7FT4yOCoDDh2Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: CzZovjXbRCaiOiPHFuTf1w==
-X-CSE-MsgGUID: xrWuP8IQTP2PF4Bar1Ld2g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="47102973"
-X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="47102973"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 08:56:32 -0700
-X-CSE-ConnectionGUID: EA25EyGGQmuYBW7eHEHuYg==
-X-CSE-MsgGUID: FN4NgrbwT2KvtC80qpTwdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
-   d="scan'208";a="122157561"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 08:56:27 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1tuCpE-00000003LsH-1IHs;
-	Mon, 17 Mar 2025 17:56:24 +0200
-Date: Mon, 17 Mar 2025 17:56:24 +0200
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 07/10] gpio: max7360: Add MAX7360 gpio support
-Message-ID: <Z9hGKCdR7NHqfRmC@smile.fi.intel.com>
-References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
- <20250214-mdb-max7360-support-v4-7-8a35c6dbb966@bootlin.com>
- <Z69oa8_LKFxUacbj@smile.fi.intel.com>
- <D8FAX4E29LZK.3VUK90WB04MV2@bootlin.com>
- <Z9PlYSZDviGOCV7X@surfacebook.localdomain>
- <D8ILQ4NT6977.50SD8DM8FIBF@bootlin.com>
+	s=arc-20240116; t=1742227706; c=relaxed/simple;
+	bh=Sy1paDPH/ZLvD7USmysYgAJLpxitg/4Ltm6CfZWKWZA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=B0R63jajzyzeefvtEF9pMdYx1Pmf4PzjMKo1Qf9xm9uIV/tqAxABB552s80JabPyc4iLq7meRKjVJ0k75UljbBG8zJKsliBca2V7MG1kFfcoMlyBnh5fWoUa5tODtXscHbuS3yMu+zzwsRQr93Kz9DjB7CyVH71B0O8H5AOTc5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kr2X+Sv0; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39104c1cbbdso2637463f8f.3;
+        Mon, 17 Mar 2025 09:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742227703; x=1742832503; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Sy1paDPH/ZLvD7USmysYgAJLpxitg/4Ltm6CfZWKWZA=;
+        b=Kr2X+Sv0cI/LtgPns3fgXitzeMf85IF5F1yQGXymerjyHhIDgS7xB48kF9NPA/Sd/t
+         V9we34rSm89uCzlGVPuJgJzmbR0hOBnni7sp6VgJNPCMrz5tqB/bz01O5P7MftymZoV/
+         XqUemzYVT2ngbjbpixLMS2s0nXPKMb/VwWV/JLRHb5w8iENUxn96bF2CvI33NIf0PsTa
+         VI1R9/oBaKI7Mo9UYrD1Ug85Efx2VFbMMQrdeC4AfHwHwH1acfXB2Ox3VzuTjMJad7zz
+         yDwy+DjTVTAwFrU8Qg1q1X9iBT/yVW2MxJKQz4Xshu3RtVA3gft5WLC3Es2SEwB0KqTE
+         AYAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742227703; x=1742832503;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Sy1paDPH/ZLvD7USmysYgAJLpxitg/4Ltm6CfZWKWZA=;
+        b=uZy0It+YG6APBewj9BThWclVFoaTrXg5MaKz4LqShNB81lTjkGYrLzmYgmX5kaRyZy
+         tdKKbOxdhqWq6fD2hkVAawX8PpumzKhsVZQts25ae0cYW042JKyDIvt6x5DL250QYcJb
+         6ZvYcbvesdzsBRR34zZXJypAN9SsthT5xil2TrcZphnQz+XJ/biERK8fOPpfJj5EAJLh
+         ibyAQX0hnQvQfbhPnFxQflyIQpz3uWtSoTG+Cwr9lF+n7wCJTnpL4aFaIKS7qlVNSEkc
+         hGMq9yGnnW5nxZnwZXJT+XGFPN/HMlgTSmUK8gIAUuF9MQw8gxcHVs3YcJocZ37I7kvw
+         Kp9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV3nIQBFAE5E0dalAIksM7vk4rmQr0CanwjaE+KksE3kQfBjOftpQsyC5fzF+QKl4zUlprLta3Jnilz@vger.kernel.org, AJvYcCVTgGvMKJIBM71jjAnMu++vNtISnQrfcT3DXgmlK0LFYAAa2wK9nI14STInDYpPVQC15hkm+ErfVOSsYjo=@vger.kernel.org, AJvYcCWmvsQqPEmcI8abSRbd9ls7qAIAtZV4TS1wP3sBfxy31sESNTOMP+ARkDb57sFHC/LjN9xPiZboihLZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEVblVd7xYmQ+Hq/9ocGmO9M2juOA2uv9wHKEA+/bH19BZ3eEA
+	10fbdbqkexFFri6pNWScRrfyJVd9WadnOjQru6soPKoPilLbO7i9
+X-Gm-Gg: ASbGnctne/Ej4zQd0GBBjtILiM9r2fw80ZYNI8/vwgrhgKZ3CtK3K82nDqLI8ou10f5
+	8+n2oQDfSqKl5g4xXcBBETpTo9f1ol4KLlHiJHWdvxMKNuCc93vekvieDSj+PsHxmpb6SL3jvqR
+	M1EqARIf8FwSf8IvRLdpWA0x3cyGGcBcl+LegxRVjA2yTO7Dx1NkgCd8iS9mLB67aK8p8cSOohQ
+	c+b6KBGXvGjZxvYbIsKZXRLjDo070BQhwIOf4lWacHS2TGnmlb1I110xAuF1rbqSu66EQ/ialWt
+	PBySo9eRe+gq1Yetk9Z/Xg/VKzJZ1STx9THkouxBZUI+KmeO00oBNMNVYv6Sm1OUhHiMcroyr9G
+	uKMZ2DfU7fKvqdH/V
+X-Google-Smtp-Source: AGHT+IF5kBt+cfFLKGH1h+7sG1GEVWIyfTsCNr/+EWGcTD3V+Hk+Pj2le0uKRNYUiYA+hnwFtB3p3Q==
+X-Received: by 2002:a5d:6c61:0:b0:391:2954:de27 with SMTP id ffacd0b85a97d-3971f511653mr13364631f8f.45.1742227702620;
+        Mon, 17 Mar 2025 09:08:22 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c83b748bsm15631243f8f.39.2025.03.17.09.08.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 09:08:22 -0700 (PDT)
+Message-ID: <f6b32aa2dc60d14eae2afa7be3754c3f23c431b1.camel@gmail.com>
+Subject: Re: [PATCH 09/18] dt-bindings: mfd: adp5585: add properties for
+ input events
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Rob Herring <robh@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?=
+	 <nuno.sa@analog.com>
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Lee Jones
+ <lee@kernel.org>,  Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=	
+ <ukleinek@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Laurent Pinchart	 <laurent.pinchart@ideasonboard.com>, Liu Ying
+ <victor.liu@nxp.com>
+Date: Mon, 17 Mar 2025 16:08:28 +0000
+In-Reply-To: <20250317155300.GA4188705-robh@kernel.org>
+References: <20250313-dev-adp5589-fw-v1-0-20e80d4bd4ea@analog.com>
+	 <20250313-dev-adp5589-fw-v1-9-20e80d4bd4ea@analog.com>
+	 <20250317155300.GA4188705-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D8ILQ4NT6977.50SD8DM8FIBF@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Mar 17, 2025 at 03:13:07PM +0100, Mathieu Dubois-Briand wrote:
-> On Fri Mar 14, 2025 at 9:14 AM CET, Andy Shevchenko wrote:
-> > Thu, Mar 13, 2025 at 06:07:03PM +0100, Mathieu Dubois-Briand kirjoitti:
-> > > On Fri Feb 14, 2025 at 4:59 PM CET, Andy Shevchenko wrote:
-> > > > On Fri, Feb 14, 2025 at 12:49:57PM +0100, Mathieu Dubois-Briand wrote:
+On Mon, 2025-03-17 at 10:53 -0500, Rob Herring wrote:
+> On Thu, Mar 13, 2025 at 02:19:26PM +0000, Nuno S=C3=A1 wrote:
+> > Add properties related to input events. These devices can act as
+> > keyboards and can support events either via a keymap Matrix or through
+> > GPIs. Note that the device needs to be an interrupt controller for GPIs
+> > based events.
+> >=20
+> > We specifically need a property specifying the pins used by the keymap
+> > matrix since these devices have no requirement for rows and columns to =
+be
+> > contiguous without holes which is enforced by the standard input
+> > properties.
+> >=20
+> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > ---
+> > =C2=A0.../devicetree/bindings/mfd/adi,adp5585.yaml=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 188
+> > ++++++++++++++++++++-
+> > =C2=A01 file changed, 187 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+> > b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+> > index
+> > 87256a37b5f4b6a019f581b164c276d8805d2e52..e976c9240df79afae1d0949e6ac91=
+d477b
+> > faceef 100644
+> > --- a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+> > +++ b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+> > @@ -49,6 +49,85 @@ properties:
+> > =C2=A0=C2=A0 "#pwm-cells":
+> > =C2=A0=C2=A0=C2=A0=C2=A0 const: 3
+> > =C2=A0
+> > +=C2=A0 interrupt-controller: true
+> > +
+> > +=C2=A0 '#interrupt-cells':
+> > +=C2=A0=C2=A0=C2=A0 const: 2
+> > +
+> > +=C2=A0 adi,keypad-pins:
+> > +=C2=A0=C2=A0=C2=A0 description: Specifies the pins used for the keypad=
+ matrix.
+> > +=C2=A0=C2=A0=C2=A0 $ref: /schemas/types.yaml#/definitions/uint32-array
+>=20
+> I would would assume there's a minimum of 3 pins (unless someone wants=
+=20
+> to implement 1 key with 2 pins) and a maximum number of pins the chip=20
+> supports. And what about constraints on the values of each entry?
+>=20
 
-...
+Yeah, I have the minimum as 2 pins. I define those constrains bellow in the
+allOf. I though I could have a default in here and then later overwrite it =
+but
+that was not working when validating different combinations of values.
 
-> > > > > +	/*
-> > > > > +	 * MAX7360_REG_DEBOUNCE contains configuration both for keypad debounce
-> > > > > +	 * timings and gpos/keypad columns repartition. Only the later is
-> > > > > +	 * modified here.
-> > > > > +	 */
-> > > > > +	val = FIELD_PREP(MAX7360_PORTS, ngpios);
-> > > > > +	ret = regmap_write_bits(regmap, MAX7360_REG_DEBOUNCE, MAX7360_PORTS, val);
-> > > > > +	if (ret) {
-> > > > > +		dev_err(dev, "Failed to write max7360 columns/gpos configuration");
-> > > > > +		return ret;
-> > > > > +	}
-> > > >
-> > > > Shouldn't this be configured via ->set_config() callback?
-> > > 
-> > > I believe this comment has been a bit outdated by our discussion on
-> > > using GPIO valid mask, but I believe we could not use the ->set_config()
-> > > callback here: this callback is made to configure a single pin while the
-> > > gpos/keypad columns repartition is global.
-> >
-> > Yeah, we have similar desing in Intel Bay Trail (see pinctrl-baytrail.c) and it
-> > requires some software driven heuristics on how individual setting may affect
-> > the global one. But the Q here is is the debounce affects only keypad? Then it
-> > should be configured via keypad matrix driver. Btw, have you checked
-> > drivers/input/keyboard/matrix_keypad.c? Is there anything that can be useful
-> > here?
-> >
-> 
-> Hum, maybe the comment is not clear enough? Not sure, but please tell
-> me.
+> > +
+> > +=C2=A0 adi,key-poll-ms:
+> > +=C2=A0=C2=A0=C2=A0 description: Configure time between consecutive sca=
+n cycles.
+> > +=C2=A0=C2=A0=C2=A0 enum: [10, 20, 30, 40]
+> > +=C2=A0=C2=A0=C2=A0 default: 10
+>=20
+> Use the common property "poll-interval".
 
-I see it now, yes, the comment seems point too much attention on the register
-(and hence its name) then content.
+ack
 
-I would start this comment with something like:
-"Configure which GPIOs will be used for keypad."
+>=20
+> > +
+> > +=C2=A0 adi,unlock-keys:
+> > +=C2=A0=C2=A0=C2=A0 description:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Specifies a maximum of 2 keys that can =
+be used to unlock the keypad.
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 If this property is set, the keyboard w=
+ill be locked and only
+> > unlocked
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 after these keys are pressed. The value=
+ 127 serves as a wildcard
+> > which
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 means any key can be used for unlocking=
+.
+> > +=C2=A0=C2=A0=C2=A0 $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +=C2=A0=C2=A0=C2=A0 minItems: 1
+> > +=C2=A0=C2=A0=C2=A0 maxItems: 2
+> > +=C2=A0=C2=A0=C2=A0 items:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 anyOf:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - minimum: 1
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 maximum: 88
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - minimum: 97
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 maximum: 115
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - const: 127
+> > +
+> > +=C2=A0 adi,unlock-trigger-sec:
+> > +=C2=A0=C2=A0=C2=A0 description:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Defines the time in which the second un=
+lock event must occur after
+> > the
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 first unlock event has occurred.
+> > +=C2=A0=C2=A0=C2=A0 maximum: 7
+> > +=C2=A0=C2=A0=C2=A0 default: 0
+> > +
+> > +=C2=A0 adi,reset1-keys:
+> > +=C2=A0=C2=A0=C2=A0 description:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Defines the trigger events (key presses=
+) that can generate reset
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 conditions one the reset1 block.
+>=20
+> Are these in raw key values or keymap values?
+>=20
 
-> So yes, this register is named "debounce" but controls two different
-> things:
-> - The keypad debounce: we do not touch it here.
-> - The partition between keypad columns and gpos. This is the value we do
->   modify here.
+These are the events number as defined in the datasheet. So, yes, raw value=
+s.
 
--- 
-With Best Regards,
-Andy Shevchenko
+- Nuno S=C3=A1
 
-
+>=20
 
