@@ -1,124 +1,142 @@
-Return-Path: <linux-pwm+bounces-5231-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5232-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 157B6A679B6
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Mar 2025 17:37:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 258F6A679DF
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Mar 2025 17:43:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF1903AEEC9
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Mar 2025 16:31:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B402189C1BA
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Mar 2025 16:40:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 042A120E6F6;
-	Tue, 18 Mar 2025 16:31:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AB9C211479;
+	Tue, 18 Mar 2025 16:39:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ovt7yvZp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HpnOgXAl"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE041A2567;
-	Tue, 18 Mar 2025 16:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B692101B7;
+	Tue, 18 Mar 2025 16:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742315509; cv=none; b=ebTwvfHrBE6TRKjr5elQKx6RuUpMhezwqfX5J5uF+E9J/pW680WJ9YFngs6bSPwJAVsIxaHlBcDBU8RC6Fgt8MPZCiREiKw3FWDeYgmnptfCT9bUafZxOA0N1Rod8LOprhZUF1Dg1KpBZzQG01pGkbJIi8eL2zoV/x0cJIiyPNk=
+	t=1742315995; cv=none; b=k/s6xpRuJggTaHQt1Xhwp0lVW/qshUpLQvq0pqVXfFQDYsAtJo3GrK7WoQvb3+YoXOngA/zg/ZNva6htW0ccrdvtA25wSUthD38YkvKNL8Bt+B2ebYp/IgGZWn9jWnPGJ97Rgky4QZedAsNGFUQatFNk9ssDVFW/AuwDYjLJ6Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742315509; c=relaxed/simple;
-	bh=lYF0uNKy5hSX2n2Y0s9Y6GZGno5OJdtw+hEgTadHNVc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=KEow5tGeAtEgeI8StIx7Q3UM4a/MsLX4UETSlOcUZ4JWYZC2O/XiGhspKV/hdb8kOwpXWDn7JbxEl+uzkRb3zbhnoXBqXULZv8sLHFSY14S3Udlr7qytmrM8/afuslHNnmzKUm4NLk6kswC5Y5eobwzPq078JElPEC1QjuOY8SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ovt7yvZp; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6BA5F441A7;
-	Tue, 18 Mar 2025 16:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742315502;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OxwdPq+0w4lzQU1YvxN7G4CPCE7PE516l9RTO3tt8eg=;
-	b=ovt7yvZpxUSVeEF+sv0JZGD2daZ0iG2rS/n+tnM2susDCa8vU7sjRJwfP1leMVQC0jTlAZ
-	84e4wTksMS+mv6tGRXUJSYA93plrdYbMRas9MtIfTkku2/+ljX5RLVugz9xiZSDOdSaLQ3
-	+3K3PLTVlHiPuf0TcHj7ZODthvskcJ8OwdW3W+xE31qUHvoUdSf6yJ79TTlila53n3nkWt
-	1mP5nGVlsmP/i/bZtQB0b1vTTF+/JIBkYqiIb96wK2gZMhAn/vpaG9wy9/hgJXjVQiYW8s
-	ga4K4mR9MQ2aoS43mQOEdOQrxL2CttG1X7Q/jGaw6TbyaYmhgbFoKzrtfrJPsw==
+	s=arc-20240116; t=1742315995; c=relaxed/simple;
+	bh=VBS24GEiuWv3o6ErdxY76MarUEHIpjVzLn7Bm6leIdE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TE29zWJnHI73lIcqXEst5q7iJwhfer/Dj9laaslX1tLEJbpiLWU6n3mqa6uogzcdzBIqPtNNE2NStzIY1YZus2e742KPicUOBS5yykFV6Ia+vBG2ktFcc5Ty/ZzYO9Bjch+91Zjrsitd6sM5ooifgcfunyfvRC2G1RttbCT0ucA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HpnOgXAl; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742315994; x=1773851994;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VBS24GEiuWv3o6ErdxY76MarUEHIpjVzLn7Bm6leIdE=;
+  b=HpnOgXAlReGxGHq+GLvVCTF6ZgqhT+Ry4C3XdNZPU9UOeA7wnQpLFHVC
+   +W/F/tVELUeYjKUMiIgtgEtX6wy1m7FHxjIimlbJ52N7lL8lQlUA1FS6M
+   9c5cm+lFFySooUeca8zT6ZymGpfAE31OGodVU/QhP4ePJgSsZdPov6ABI
+   N0Gfc87VZ/c2dS/nkbj3JxrRaFCHMZ9Gr0g/ZCX47qx8yLfHF201THV9C
+   kiRBxd8K5e5Xs8cvOcAr4QRJdGLlVHwBUxoj/uTBP+3gIfuUXpOt1n5gX
+   mUOxIDpzrYxOfxWrsDxPYwoPW5LdgLiUvxe6XB92paX8R+Y2PBoEnD9ZQ
+   Q==;
+X-CSE-ConnectionGUID: cfCdkMqWQl+maJy5cah6mA==
+X-CSE-MsgGUID: Z/zkE/jrQtyrkNneHJaN/g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="68820653"
+X-IronPort-AV: E=Sophos;i="6.14,257,1736841600"; 
+   d="scan'208";a="68820653"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 09:39:53 -0700
+X-CSE-ConnectionGUID: rTvP+T45TuKt6rDL1T9nmg==
+X-CSE-MsgGUID: tToL+xKtRnKQMfa/S4I/XQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,257,1736841600"; 
+   d="scan'208";a="122142935"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 09:39:48 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tuZyi-00000003gIk-3XBn;
+	Tue, 18 Mar 2025 18:39:44 +0200
+Date: Tue, 18 Mar 2025 18:39:44 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 05/11] regmap: irq: Add support for chips without
+ separate IRQ status
+Message-ID: <Z9mh0ENc1kDFrJlQ@smile.fi.intel.com>
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-5-fb20baf97da0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 18 Mar 2025 17:31:40 +0100
-Message-Id: <D8JJAQZ3SY5R.1XI12I6O8SRZB@bootlin.com>
-Subject: Re: [PATCH v4 01/10] dt-bindings: mfd: gpio: Add MAX7360
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250214-mdb-max7360-support-v4-0-8a35c6dbb966@bootlin.com>
- <20250214-mdb-max7360-support-v4-1-8a35c6dbb966@bootlin.com>
- <20250216-lavender-goose-of-variation-6b5efb@krzk-bin>
-In-Reply-To: <20250216-lavender-goose-of-variation-6b5efb@krzk-bin>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedvleefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhefhhfelhfekjeeugedtudelueetffejfffhkeeivedvveelgfetfeelveetvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtohepkhhriihksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdro
- hhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318-mdb-max7360-support-v5-5-fb20baf97da0@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Sun Feb 16, 2025 at 1:58 PM CET, Krzysztof Kozlowski wrote:
-> On Fri, Feb 14, 2025 at 12:49:51PM +0100, Mathieu Dubois-Briand wrote:
-> > Add device tree bindings for Maxim Integrated MAX7360 device with
-> > support for keypad, rotary, gpios and pwm functionalities.
-> >=20
-> > Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com=
->
-> > ---
-> >  .../bindings/gpio/maxim,max7360-gpio.yaml          |  91 +++++++++++++=
-+
-> >  .../devicetree/bindings/mfd/maxim,max7360.yaml     | 139 +++++++++++++=
-++++++++
-> >  2 files changed, 230 insertions(+)
->
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->
-> Best regards,
-> Krzysztof
+On Tue, Mar 18, 2025 at 05:26:21PM +0100, Mathieu Dubois-Briand wrote:
+> Some GPIO chips allow to rise an IRQ on GPIO level changes but do not
+> provide an IRQ status for each separate line: only the current gpio
+> level can be retrieved.
+> 
+> Add support for these chips, emulating IRQ status by comparing GPIO
+> levels with the levels during the previous interrupt.
 
-Thanks for the tag!
 
-I've chosen not to include it so far in my newest series, as I have a
-few changes that do impact device tree bindings:
-- The ngpios property was removed from the GPIO bindings.
-- Bindings for the pinctrl support were added.
+Some nit-picks below, but either way
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-New version is available here:
-https://lore.kernel.org/all/20250318-mdb-max7360-support-v5-1-fb20baf97da0@=
-bootlin.com/
+...
 
-Best regards,
-Mathieu
+>  			default:
+>  				BUG();
+> -				goto exit;
+> +				return ret;
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Hmm... BUG() implies unreachable, perhaps just a precursor patch to drop this
+goto completely?
+
+...
+
+> +	/* Store current levels */
+> +	if (chip->status_is_level) {
+> +		ret = read_irq_data(d);
+> +		if (ret < 0)
+> +			goto err_alloc;
+> +
+> +		memcpy(d->prev_status_buf, d->status_buf,
+> +		       d->chip->num_regs * sizeof(d->prev_status_buf[0]));
+
+Perhaps array_size()?
+
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
