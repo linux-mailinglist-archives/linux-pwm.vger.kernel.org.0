@@ -1,68 +1,68 @@
-Return-Path: <linux-pwm+bounces-5242-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5243-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C10FA68C1F
-	for <lists+linux-pwm@lfdr.de>; Wed, 19 Mar 2025 12:50:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 303F4A68C4C
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Mar 2025 13:03:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F46D3AD912
-	for <lists+linux-pwm@lfdr.de>; Wed, 19 Mar 2025 11:50:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5CD77189BBB2
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Mar 2025 12:03:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3B4253F27;
-	Wed, 19 Mar 2025 11:50:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E318A255229;
+	Wed, 19 Mar 2025 12:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gIyfWQAT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YzLoQbXx"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B3920ADE9;
-	Wed, 19 Mar 2025 11:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9336208993;
+	Wed, 19 Mar 2025 12:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742385043; cv=none; b=XeLJgXTPmzec4BOLzsDACMssIrXwGCNm6NpWXcA9tR+rERnaFUkkr3eYj/rHPDcoGcFDAD0LHDrs7LtkYAOLttAZPKs/lc4Q+pboDsac9WfwL6U70eS8ilnL5vaE55w7qHRK2BzN/XIskCkCLJEtK71drnbTifDx2bcbA9fcGkQ=
+	t=1742385783; cv=none; b=lis1ur1NRydNgAeEjuwApdXAqMSf25zOkkUwwbi3WAQCfRJKLeyDIIjUgRNSKR+e+K+kJCy1JNNrD1qSsgBA93eAuMfBJkp8n6JVTJBYzqx0mvpoy9aygWzrsGCvYgJvq6EwGJiM4ztRJupzFb8zWJSaQv+089gXEC5q/01WkNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742385043; c=relaxed/simple;
-	bh=OXvh+w7fFY4vwM4Wq0pk104cY1REpD3+vWmC1raHsk0=;
+	s=arc-20240116; t=1742385783; c=relaxed/simple;
+	bh=Lyg+JvU44nV7dr6VtqgEkvsFIxAtalvdEDoWyTj0yGo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oTuOh28wSg6wdasj7GaSSP4WtzT7s512/Wd7k3fGqalX4ZZ9FQmNndHLCeLtbD7yDD5HxXd7oHcwvCnTd8ZaUsPQYVvBUUNVOKIFbaWVmcZ7s53//9v11EJznEOlDmKdNySt8Tu352kNaR4TjKYT8ffynXrB0XnhNrVTJb1Q7PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gIyfWQAT; arc=none smtp.client-ip=192.198.163.16
+	 Content-Type:Content-Disposition:In-Reply-To; b=HMo6Ro+opt7taWZuYNvhSXw8WYgTHZwSyOf37twCcOEuT9kofNMVAwFnmCCb+K6wpufJ43Cl8lzFMCGkCuZtDFBCUCet5ejgbLtVQzOFuGYABCCi+twbD6jZjOanj8Y3LBYhS/wmoxK890KgF8BEWIVJcSDaLyzyALDMisLcXXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YzLoQbXx; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742385041; x=1773921041;
+  t=1742385782; x=1773921782;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=OXvh+w7fFY4vwM4Wq0pk104cY1REpD3+vWmC1raHsk0=;
-  b=gIyfWQATIcI8iUyQSzuKkOKlZGOL3grhFUPQEIFWCs4HGq2k/UGEn062
-   Ajjlzzhd83P+tGsM1ZkLncBDaaG1BJCMII5HyIYz3Z5t9ThwqUihh/+ud
-   IR1Lm0/VUIj8RTVytc4xhd6cZ1B9Lzpp0Y2o9TJT8In7cKPohFI1Bccol
-   K03MstU5hj452mxfupaM7/8wtMR010PjLpxILEzQL2LZbp2DgYYO6808+
-   O+c9dylpmaM8xYBJsWgG3dvJGbxmQGki2fHGPQb+05wEMrAtCYL/c4wKJ
-   lzex0pGINyMMuWr24xRyO5PJgmJIVT+Z9p+TyN8UFLfKPp9c0tp05Tef0
+  bh=Lyg+JvU44nV7dr6VtqgEkvsFIxAtalvdEDoWyTj0yGo=;
+  b=YzLoQbXx0Ohl+ZayB0Wg9QTAU9VRWZq81oW32aSEKdDQYdz2uda127J4
+   3JExdaHW4ZSO4b1GVOv+koz7Q1mYvV3j0es3R8NXoB2RjpxjGsu2edGz2
+   KvAudTdXSjkkDeOomAggMYrL5/7G5BgH35fJ1I9EdIBEppuWmfpJ8Ct3O
+   ICTjRmPQk4oFgLaIIyjmF3JceVyiEonfUfnM+PxytU4EsUtr6zrB7ykrU
+   0XvtpUlkjXPdKt9TnETKtt4h/qlQyI37fRMIftLtD4HfXyUr6Ao9Eo2y9
+   L9SopsUjNzBEI8a7fyMEF/v0UW/diLXRrzb/2KkkYloqOhAb3Rfpto03u
    Q==;
-X-CSE-ConnectionGUID: RboImdTXQm6BDk8r6AooUA==
-X-CSE-MsgGUID: cwXysiZBTEeMKssW24PfEA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="31149401"
+X-CSE-ConnectionGUID: rQG7zEnaTYKWqtJBqOTCOA==
+X-CSE-MsgGUID: iD21vHuYT3GwZgB2/m1Zsg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="43671919"
 X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="31149401"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 04:50:40 -0700
-X-CSE-ConnectionGUID: TqdOJaupQtuj3AxPrKAx/g==
-X-CSE-MsgGUID: zN1iUCS1Q7qzRrLu3z8VPQ==
+   d="scan'208";a="43671919"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 05:03:02 -0700
+X-CSE-ConnectionGUID: E3XqgjQmQjSbMfpxp+ueSQ==
+X-CSE-MsgGUID: COxBXaxpS8GUACUBOKEoyQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="145775614"
+   d="scan'208";a="122767054"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 04:50:36 -0700
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 05:02:56 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
 	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1turwO-00000003uIh-3rIg;
-	Wed, 19 Mar 2025 13:50:32 +0200
-Date: Wed, 19 Mar 2025 13:50:32 +0200
+	id 1tus8L-00000003uR3-3oGn;
+	Wed, 19 Mar 2025 14:02:53 +0200
+Date: Wed, 19 Mar 2025 14:02:53 +0200
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -81,10 +81,10 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
 	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
 	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 08/11] gpio: max7360: Add MAX7360 gpio support
-Message-ID: <Z9qviF1VeSYNvcPJ@smile.fi.intel.com>
+Subject: Re: [PATCH v5 09/11] input: keyboard: Add support for MAX7360 keypad
+Message-ID: <Z9qybcY7VyQBvZMv@smile.fi.intel.com>
 References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-8-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-9-fb20baf97da0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -93,86 +93,67 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250318-mdb-max7360-support-v5-8-fb20baf97da0@bootlin.com>
+In-Reply-To: <20250318-mdb-max7360-support-v5-9-fb20baf97da0@bootlin.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Mar 18, 2025 at 05:26:24PM +0100, Mathieu Dubois-Briand wrote:
-> Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
-> 
-> Two sets of GPIOs are provided by the device:
-> - Up to 8 GPIOs, shared with the PWM and rotary encoder functionalities.
->   These GPIOs also provide interrupts on input changes.
-> - Up to 6 GPOs, on unused keypad columns pins.
+On Tue, Mar 18, 2025 at 05:26:25PM +0100, Mathieu Dubois-Briand wrote:
+> Add driver for Maxim Integrated MAX7360 keypad controller, providing
+> support for up to 64 keys, with a matrix of 8 columns and 8 rows.
+
+...
+
+> +	help
+> +	  If you say yes here you get support for the keypad controller on the
+> +	  Maxim MAX7360 I/O Expander.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called max7360_keypad.
+
+One paragraph is wrapped way too late or too early, can you make them approx.
+the same in terms of a line width?
 
 ...
 
 + bitfield.h
-
-> +#include <linux/bitmap.h>
-
++ bitops.h
++ dev_printk.h
++ device/devres.h
 + err.h
 
-> +#include <linux/gpio/driver.h>
-> +#include <linux/gpio/regmap.h>
 > +#include <linux/init.h>
+> +#include <linux/input.h>
+> +#include <linux/input/matrix_keypad.h>
 > +#include <linux/interrupt.h>
 > +#include <linux/mfd/max7360.h>
 
 + mod_devicetable.h
 
 > +#include <linux/module.h>
-> +#include <linux/platform_device.h>
 > +#include <linux/property.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_wakeirq.h>
 > +#include <linux/regmap.h>
+
 > +#include <linux/slab.h>
 
-> +static int max7360_get_available_gpos(struct device *dev, unsigned int *available_gpios)
-> +{
-> +	u32 columns;
-> +	int ret;
-> +
-> +	ret = device_property_read_u32(dev->parent, "keypad,num-columns", &columns);
-> +	if (ret < 0) {
+IS it used? I think it's device/devres.h that covers it.
 
-' < 0' is redundant,
-
-> +		dev_err(dev, "Failed to read columns count\n");
-> +		return ret;
-> +	}
-> +
-> +	*available_gpios = min(MAX7360_MAX_GPO, MAX7360_MAX_KEY_COLS - columns);
-> +
-> +	return 0;
-> +}
 
 ...
 
-> +static int max7360_set_gpos_count(struct device *dev, struct regmap *regmap)
+> +static int max7360_keypad_open(struct input_dev *pdev)
 > +{
-> +	/*
-> +	 * MAX7360 COL0 to COL7 pins can be used either as keypad columns,
-> +	 * general purpose output or a mix of both.
-> +	 * By default, all pins are used as keypad, here we update this
-> +	 * configuration to allow to use some of them as GPIOs.
-> +	 */
-> +	unsigned int available_gpios;
-> +	unsigned int val;
+> +	struct max7360_keypad *max7360_keypad = input_get_drvdata(pdev);
 > +	int ret;
 > +
-> +	ret = max7360_get_available_gpos(dev, &available_gpios);
-> +	if (ret)
-> +		return ret;
-> +
 > +	/*
-> +	 * Configure which GPIOs will be used for keypad.
-> +	 * MAX7360_REG_DEBOUNCE contains configuration both for keypad debounce
-> +	 * timings and gpos/keypad columns repartition. Only the later is
-> +	 * modified here.
+> +	 * Somebody is using the device: get out of sleep.
 > +	 */
-> +	val = FIELD_PREP(MAX7360_PORTS, available_gpios);
-> +	ret = regmap_write_bits(regmap, MAX7360_REG_DEBOUNCE, MAX7360_PORTS, val);
+> +	ret = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_CONFIG,
+> +				MAX7360_CFG_SLEEP, MAX7360_CFG_SLEEP);
 > +	if (ret) {
-> +		dev_err(dev, "Failed to write max7360 columns/gpos configuration");
+> +		dev_err(&max7360_keypad->input->dev,
+> +			"Failed to write max7360 configuration\n");
 
 > +		return ret;
 > +	}
@@ -189,176 +170,170 @@ Just
 
 ...
 
-> +static int max7360_gpio_reg_mask_xlate(struct gpio_regmap *gpio,
-> +				       unsigned int base, unsigned int offset,
-> +				       unsigned int *reg, unsigned int *mask)
-> +{
-> +	if (base == MAX7360_REG_PWMBASE) {
-> +		/*
-> +		 * GPIO output is using PWM duty cycle registers: one register
-> +		 * per line, with value being either 0 or 255.
-> +		 */
-> +		*reg = base + offset;
-> +		*mask = 0xFF;
+> +	/*
+> +	 * Nobody is using the device anymore: go to sleep.
+> +	 */
 
-GENMASK() ?
+The comment message can take only a line.
 
-> +	} else {
-> +		*reg = base;
-> +		*mask = BIT(offset);
-> +	}
-> +
-> +	return 0;
+> +	ret = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_CONFIG, MAX7360_CFG_SLEEP, 0);
+> +	if (ret)
+> +		dev_err(&max7360_keypad->input->dev,
+> +			"Failed to write max7360 configuration\n");
 > +}
 
 ...
 
-> +static int max7360_handle_mask_sync(const int index,
-> +				    const unsigned int mask_buf_def,
-> +				    const unsigned int mask_buf,
-> +				    void *const irq_drv_data)
+> +static int max7360_keypad_parse_dt(struct platform_device *pdev,
+
+s/dt/fw
+
+> +				   struct max7360_keypad *max7360_keypad,
+> +				   bool *autorepeat)
 > +{
-> +	struct regmap *regmap = irq_drv_data;
-> +	unsigned int val;
-> +
-> +	for (unsigned int i = 0; i < MAX7360_MAX_GPIO; ++i) {
-> +		val = (mask_buf & BIT(i)) ? MAX7360_PORT_CFG_INTERRUPT_MASK : 0;
-> +		regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
-> +				  MAX7360_PORT_CFG_INTERRUPT_MASK, val);
 
-Wondering if regmap_assign_bits() can be used here.
+	struct device *dev = &pdev>dev;
 
-But in any case, no error checks? It seems you do elsewhere, but this driver...
+but why not supply struct device to begin with? How is the platform part used here?
 
-> +	}
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int max7360_gpio_probe(struct platform_device *pdev)
-> +{
-> +	struct regmap_irq_chip *irq_chip;
-> +	struct gpio_regmap_config gpio_config = { };
-> +	struct device *dev = &pdev->dev;
-> +	unsigned long gpio_function;
-> +	struct regmap *regmap;
-> +	unsigned int outconf;
 > +	int ret;
 > +
-> +	regmap = dev_get_regmap(dev->parent, NULL);
-> +	if (!regmap)
-> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
+> +	ret = matrix_keypad_parse_properties(pdev->dev.parent, &max7360_keypad->rows,
+> +					     &max7360_keypad->cols);
+> +	if (ret)
+> +		return ret;
 > +
-> +	gpio_function = (uintptr_t)device_get_match_data(dev);
+> +	if (!max7360_keypad->rows || !max7360_keypad->cols ||
+> +	    max7360_keypad->rows > MAX7360_MAX_KEY_ROWS ||
+> +	    max7360_keypad->cols > MAX7360_MAX_KEY_COLS) {
 
-> +
+See also below comment.
 
-Redundant blank line.
-
-> +	if (gpio_function == MAX7360_GPIO_PORT &&
-> +	    (device_property_read_bool(dev, "interrupt-controller"))) {
-
-Unneeded parentheses.
-
-> +		/*
-> +		 * Port GPIOs with interrupt-controller property: add IRQ
-> +		 * controller.
-> +		 */
-> +		gpio_config.regmap_irq_flags = IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED;
-
-But why is this being overridden? The DT or another firmware description has to
-provide the correct settings, no?
-
-> +		gpio_config.regmap_irq_irqno = fwnode_irq_get_byname(dev_fwnode(dev->parent),
-> +								     "inti");
-
-Better split is
-
-		gpio_config.regmap_irq_irqno =
-			fwnode_irq_get_byname(dev_fwnode(dev->parent), "inti");
-
-You also can use the same trick elsewhere in the similar cases.
-
-> +		if (gpio_config.regmap_irq_irqno < 0)
-> +			return dev_err_probe(dev, gpio_config.regmap_irq_irqno,
-> +					     "Failed to get IRQ\n");
-> +
-> +		irq_chip = devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
-> +		gpio_config.regmap_irq_chip = irq_chip;
-> +		if (!irq_chip)
-> +			return -ENOMEM;
-> +
-> +		irq_chip->name = dev_name(dev);
-> +		irq_chip->status_base = MAX7360_REG_GPIOIN;
-> +		irq_chip->num_regs = 1;
-> +		irq_chip->num_irqs = MAX7360_MAX_GPIO;
-> +		irq_chip->irqs = max7360_regmap_irqs;
-> +		irq_chip->handle_mask_sync = max7360_handle_mask_sync;
-> +		irq_chip->status_is_level = true;
-
-I would group this with status_base above. Easier to read and I think they are
-kinda related.
-
-> +		irq_chip->irq_drv_data = regmap;
-> +
-> +		for (unsigned int i = 0; i < MAX7360_MAX_GPIO; i++) {
-> +			regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
-> +					  MAX7360_PORT_CFG_INTERRUPT_EDGES,
-> +					  MAX7360_PORT_CFG_INTERRUPT_EDGES);
-
-No error checks?
-
-> +		}
-
+> +		dev_err(&pdev->dev,
+> +			"Invalid number of columns or rows (%ux%u)\n",
+> +			max7360_keypad->cols, max7360_keypad->rows);
+> +		return -EINVAL;
 > +	}
 > +
+> +	*autorepeat = device_property_read_bool(pdev->dev.parent, "autorepeat");
+> +
+> +	max7360_keypad->debounce_ms = MAX7360_DEBOUNCE_MIN;
+> +	ret = device_property_read_u32(pdev->dev.parent, "keypad-debounce-delay-ms",
+> +				       &max7360_keypad->debounce_ms);
+> +	if (ret == -EINVAL) {
+> +		dev_info(&pdev->dev, "Using default keypad-debounce-delay-ms: %u\n",
+> +			 max7360_keypad->debounce_ms);
+> +	} else if (ret < 0) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to read keypad-debounce-delay-ms property\n");
+> +		return ret;
 
-Probably a comment why it's not 'else if' here?
+> +	} else if (max7360_keypad->debounce_ms < MAX7360_DEBOUNCE_MIN ||
 
-> +	if (gpio_function == MAX7360_GPIO_PORT) {
-> +		/*
-> +		 * Port GPIOs: set output mode configuration (constant-current or not).
-> +		 * This property is optional.
-> +		 */
-> +		outconf = 0;
-> +		ret = device_property_read_u32(dev, "maxim,constant-current-disable", &outconf);
+Redundant 'else'.
 
-> +		if (ret && (ret != -EINVAL))
-> +			return dev_err_probe(dev, ret, "Failed to read %s device property\n",
-> +					     "maxim,constant-current-disable");
+> +		   max7360_keypad->debounce_ms > MAX7360_DEBOUNCE_MAX) {
 
-This part is fragile, error codes are not _so_ stable inside the kernel,
-and this may add an unneeded churn in case of pedantic cleanup.
+Maybe in_range()? But up to you, it takes start:len and not start:end.
 
-Personally I would drop any messages and avoid failing the probe as to me it
-does not sound like a critical issue.
-
-> +		regmap_write(regmap, MAX7360_REG_GPIOOUTM, outconf);
+> +		dev_err(&pdev->dev,
+> +			"Invalid keypad-debounce-delay-ms: %u, should be between %u and %u.\n",
+> +			max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN, MAX7360_DEBOUNCE_MAX);
+> +		return -EINVAL;
 > +	}
 > +
-> +	/* Add gpio device. */
-> +	gpio_config.parent = dev;
-> +	gpio_config.regmap = regmap;
-> +	if (gpio_function == MAX7360_GPIO_PORT) {
-> +		gpio_config.ngpio = MAX7360_MAX_GPIO;
-> +		gpio_config.reg_dat_base = GPIO_REGMAP_ADDR(MAX7360_REG_GPIOIN);
-> +		gpio_config.reg_set_base = GPIO_REGMAP_ADDR(MAX7360_REG_PWMBASE);
-> +		gpio_config.reg_dir_out_base = GPIO_REGMAP_ADDR(MAX7360_REG_GPIOCTRL);
-> +		gpio_config.ngpio_per_reg = MAX7360_MAX_GPIO;
-> +		gpio_config.reg_mask_xlate = max7360_gpio_reg_mask_xlate;
-> +	} else {
-> +		ret = max7360_set_gpos_count(dev, regmap);
-> +		if (ret)
-> +			return dev_err_probe(dev, ret, "Failed to set GPOS pin count\n");
+> +	return 0;
+> +}
+
+...
+
+> +static int max7360_keypad_probe(struct platform_device *pdev)
+> +{
+> +	struct max7360_keypad *max7360_keypad;
+
+	struct device *dev = &pdev>dev;
+
+> +	struct input_dev *input;
+> +	bool autorepeat;
+> +	int ret;
+> +	int irq;
+
+> +	if (!pdev->dev.parent)
+> +		return dev_err_probe(&pdev->dev, -ENODEV, "No parent device\n");
+
+Just do like in the rest, i.e. local variable for regmap and its validness will
+be the one that indicates the wrong enumeration path.
+
+> +	irq = platform_get_irq_byname(to_platform_device(pdev->dev.parent), "intk");
+> +	if (irq < 0)
+> +		return irq;
 > +
-> +		gpio_config.reg_set_base = GPIO_REGMAP_ADDR(MAX7360_REG_PORTS);
-> +		gpio_config.ngpio = MAX7360_MAX_KEY_COLS;
-> +		gpio_config.init_valid_mask = max7360_gpo_init_valid_mask;
-> +	}
+> +	max7360_keypad = devm_kzalloc(&pdev->dev, sizeof(*max7360_keypad), GFP_KERNEL);
+> +	if (!max7360_keypad)
+> +		return -ENOMEM;
 > +
-> +	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
+> +	max7360_keypad->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!max7360_keypad->regmap)
+> +		return dev_err_probe(&pdev->dev, -ENODEV, "Could not get parent regmap\n");
+> +
+> +	ret = max7360_keypad_parse_dt(pdev, max7360_keypad, &autorepeat);
+> +	if (ret)
+> +		return ret;
+> +
+> +	input = devm_input_allocate_device(pdev->dev.parent);
+> +	if (!input)
+> +		return -ENOMEM;
+> +
+> +	max7360_keypad->input = input;
+> +
+> +	input->id.bustype = BUS_I2C;
+> +	input->name = pdev->name;
+> +	input->open = max7360_keypad_open;
+> +	input->close = max7360_keypad_close;
+> +
+> +	ret = matrix_keypad_build_keymap(NULL, NULL, MAX7360_MAX_KEY_ROWS, MAX7360_MAX_KEY_COLS,
+> +					 max7360_keypad->keycodes, input);
+> +	if (ret)
+
+> +		return dev_err_probe(&pdev->dev, ret,
+> +				     "Failed to build keymap\n");
+
+One line.
+
+> +
+> +	input_set_capability(input, EV_MSC, MSC_SCAN);
+> +	if (autorepeat)
+> +		__set_bit(EV_REP, input->evbit);
+> +
+> +	input_set_drvdata(input, max7360_keypad);
+> +
+> +	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, max7360_keypad_irq,
+> +					IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+
+What's wrong with the interrupt flags provided by firmware description?
+
+> +					"max7360-keypad", max7360_keypad);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "Failed to register interrupt\n");
+> +
+> +	ret = input_register_device(input);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "Could not register input device\n");
+
+> +	platform_set_drvdata(pdev, max7360_keypad);
+
+Is it used?
+
+> +	ret = max7360_keypad_hw_init(max7360_keypad);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "Failed to initialize max7360 keypad\n");
+> +
+> +	device_init_wakeup(&pdev->dev, true);
+> +	ret = dev_pm_set_wake_irq(&pdev->dev, irq);
+> +	if (ret)
+> +		dev_warn(&pdev->dev, "Failed to set up wakeup irq: %d\n", ret);
+> +
+> +	return 0;
 > +}
 
 -- 
