@@ -1,130 +1,145 @@
-Return-Path: <linux-pwm+bounces-5254-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5255-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35704A69E3D
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Mar 2025 03:26:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 885D0A6A0C6
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Mar 2025 08:50:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98CB2189EA56
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Mar 2025 02:26:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5BB42176D6A
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Mar 2025 07:50:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD6541C173C;
-	Thu, 20 Mar 2025 02:26:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 802CC207A06;
+	Thu, 20 Mar 2025 07:50:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H7u3UbIY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lDmxdIKD"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BA91E98FC;
-	Thu, 20 Mar 2025 02:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC17204F85;
+	Thu, 20 Mar 2025 07:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742437582; cv=none; b=PGPVCrlP65uL7OxL4bnY+YL0oo+k057OfHSJxssUYuScKhOacOHGXgaA7hU7mToYpYMJ4G49tIqKk3Ov/rqvzHdbpLeZikZKzVpSZqKMOwpRSzBWuocW0Yz/paxEcBAROkAZQP1V2JKgCToMJKE0cJz3C1lhKOyvQZ9Ky0ak+kg=
+	t=1742457004; cv=none; b=BfuD3DmkQL9RRMeewP0rSkxYuiddiSkaRKRoTmDUWDG0yvnc9zBWMqJnyV/KlR8SrZVarz9Rv/aDwI1DJstwVJ8fg5jb+IjZnRR3uIFI22Iln2hOpOMOgmBu71MpOO8k6rOWZJ8QsWAP6q2bapI8cW/WiASszDLQuvNq8mGC7+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742437582; c=relaxed/simple;
-	bh=291HTSj4fCLUSrxd6oGcWY8dOfOz8/d+lx/A+WebZc0=;
+	s=arc-20240116; t=1742457004; c=relaxed/simple;
+	bh=5HaHlb3LdE5BLe3N6Wb1gvDWqG3ehdRcH7l+nIy3zx8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jhmDk02ZeUs/1EfpR5KQa0W+3HZntcGCC2KQ9BzVfRMKWWOK1r794RLGWl3t4bETTNiaeU+KNC0Ht2eKOrY2qnHsHSnuBcKVGFhobF6YRVkZU6YQn3dZbo5yj+xP4yg1ERdlwHI1Vug2T9JCl9Sxca3vA7DIzPAHi8k6bhD/E1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H7u3UbIY; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742437581; x=1773973581;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=291HTSj4fCLUSrxd6oGcWY8dOfOz8/d+lx/A+WebZc0=;
-  b=H7u3UbIYyRVKflPJct5l7/4T19frxGMi15/ZMpeefuoOeVO4lpumzy4A
-   d/phdLpk40kyILZA4JF6VgjEbagaXW196Zx1X8xOQiedlh71qIwsI4wFb
-   QLYNLHppcExdCKsKUVNWEhacvOiwkR+pmNmVovz8sa/Kj+1afZHHgLwom
-   z0760gaZy7XjE7KiiMZKC839hjkKNazLdjQnKF2LV32toaf+IvLdLS3a0
-   TjuucwDYwVQNILQDMBVcY2Cu0+XRlXVWO4quypdgntIYMMi7WNSBEjjSb
-   suJSsipn0hzJxCNXUtRH5IL0r7MJhPI0h8ErLdmSZxrqIySr0kaaow9tc
-   w==;
-X-CSE-ConnectionGUID: TM/wO+W7Q8uMnUk8thqmpQ==
-X-CSE-MsgGUID: sWYVrA2mQne8qotXCmJUWQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="31234046"
-X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
-   d="scan'208";a="31234046"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 19:26:20 -0700
-X-CSE-ConnectionGUID: WQ1ooowkQ3Otx7abhDKtlw==
-X-CSE-MsgGUID: lazrnhHSRHew6gtn2nXdWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
-   d="scan'208";a="128129700"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa005.jf.intel.com with ESMTP; 19 Mar 2025 19:26:14 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tv5bn-00007r-1J;
-	Thu, 20 Mar 2025 02:26:11 +0000
-Date: Thu, 20 Mar 2025 10:25:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: mathieu.dubois-briand@bootlin.com, Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	andriy.shevchenko@intel.com,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=BjCE2ordkQ+uUVsh0mqtNp0FH8/ox3a0nFfa3GsIk/zk42AYGKIJBbudbEsJF7zk8ECzj1HirtlyXRwLlj6rpneMqtaUe5abz9wZhU+QF3zc77ghpx/wDOdlcRUkO/lVaVn7+LQOWUVSwRBfZ25TPUJkYUqPbldujMEZ6ta1bAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lDmxdIKD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C58CC4CEDD;
+	Thu, 20 Mar 2025 07:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742457004;
+	bh=5HaHlb3LdE5BLe3N6Wb1gvDWqG3ehdRcH7l+nIy3zx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lDmxdIKD6oIAzIPEFVVhiYrsavGtsRLKkRyi7uissXoXY2JMuKPGcQBV6/FIqKJNN
+	 ORMeruO9kQQPPLlmL50LtR1oCTGJiQlFTZhs2ZeFeCuEpFUxdFQXmmRCTSK0cWliSI
+	 MWwEx8ZRr6nVNC5MouJLCq1uwYmu7oUNbPXtkVcwxrwvHsmUk9YCj3pUC8zgWKotm3
+	 Zw4AC0oKWQJob/qGsSpVIOlMY97LK0qQGbg19K7rQKnsWbH+WAfcGkEZDdbjHCRZ2f
+	 DC3QLXuOcb2sHJujPTbyS23JZpTy7yHEPHBmTVCTjQkvZqN6vgOk/n4B1o/4k2INom
+	 eSgl9rViiHPfQ==
+Date: Thu, 20 Mar 2025 08:50:00 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	mathieu.dubois-briand@bootlin.com
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	=?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
-Message-ID: <202503201022.7smCPVZj-lkp@intel.com>
-References: <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
+Message-ID: <hinocg3itjqizbmzgaxv6cfnhtus6wbykouiy6pa27cxnjjuuk@l5ppwh7md6ul>
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
+ <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kfurgyfqcymyt52d"
 Content-Disposition: inline
-In-Reply-To: <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
+In-Reply-To: <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
 
-Hi,
 
-kernel test robot noticed the following build warnings:
+--kfurgyfqcymyt52d
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
+MIME-Version: 1.0
 
-[auto build test WARNING on a64dcfb451e254085a7daee5fe51bf22959d52d3]
+On Wed, Mar 19, 2025 at 01:18:50PM +0200, Andy Shevchenko wrote:
+> On Tue, Mar 18, 2025 at 05:26:20PM +0100, mathieu.dubois-briand@bootlin.c=
+om wrote:
+> > +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
+> > +					   struct pwm_device *pwm,
+> > +					   const struct pwm_waveform *wf,
+> > +					   void *_wfhw)
+>=20
+> I would expect other way around, i.e. naming with leading underscore(s) t=
+o be
+> private / local. Ditto for all similar cases.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mathieu-Dubois-Briand/dt-bindings-mfd-gpio-Add-MAX7360/20250319-003750
-base:   a64dcfb451e254085a7daee5fe51bf22959d52d3
-patch link:    https://lore.kernel.org/r/20250318-mdb-max7360-support-v5-4-fb20baf97da0%40bootlin.com
-patch subject: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
-config: nios2-kismet-CONFIG_PINCTRL_MAX7360-CONFIG_PWM_MAX7360-0-0 (https://download.01.org/0day-ci/archive/20250320/202503201022.7smCPVZj-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250320/202503201022.7smCPVZj-lkp@intel.com/reproduce)
+I guess that one of the other waveform drivers is the source of that. I
+chose to name the void pointer with the underscore because I consider
+that the strange one that has the void* type for technical reasons.
+That's obviously subjective, but I'm happy with that choice.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503201022.7smCPVZj-lkp@intel.com/
+> > +static int max7360_pwm_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev =3D &pdev->dev;
+> > +	struct pwm_chip *chip;
+> > +	struct regmap *regmap;
+> > +	int ret;
+> > +
+> > +	if (!dev->parent)
+> > +		return dev_err_probe(dev, -ENODEV, "no parent device\n");
+>=20
+> Why? Code most likely will fail on the regmap retrieval. Just do that fir=
+st.
+>=20
+> > +	chip =3D devm_pwmchip_alloc(dev->parent, MAX7360_NUM_PWMS, 0);
+>=20
+> This is quite worrying. The devm_ to parent makes a lot of assumptions th=
+at may
+> not be realised. If you really need this, it has to have a very good comm=
+ent
+> explaining why and object lifetimes.
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for PINCTRL_MAX7360 when selected by PWM_MAX7360
-   WARNING: unmet direct dependencies detected for PINCTRL_MAX7360
-     Depends on [n]: PINCTRL [=n] && MFD_MAX7360 [=y]
-     Selected by [y]:
-     - PWM_MAX7360 [=y] && PWM [=y] && MFD_MAX7360 [=y]
+Pretty sure this is broken. This results for example in the device link
+being created on the parent. So if the pwm devices goes away a consumer
+might not notice (at least in the usual way). I guess this was done to
+ensure that #pwm-cells is parsed from the right dt node? If so, that
+needs a different adaption. That will probably involve calling
+device_set_of_node_from_dev().
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards
+Uwe
+
+--kfurgyfqcymyt52d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfbyKYACgkQj4D7WH0S
+/k7SWgf/dyLm21zpgsxSkf/1BAmivq9bOQ2nUPl3FWsik+NtKVmzdlk1AFAoqgyN
+5dbrTDXRFgrSsdvgMXLu9YIROWv7Auf4dqevkB2MplneL4PoUaZlLerqP5DAGtZ/
+1Kh0N/XbcwUG+tLqYVF0Qy31biUuKYqWlLhttZkAjCwBenc6gLGOKp+8HxRzJRQ/
+ZJgVgL09M3ZI9xU0mFtUoMIcuvbHl0ydcEMa95to8R7L923FKgKZdXCF1181yv8O
+kfG/RQFBryfg/PvsTorRfPaCt29yrAa9njCy7sQsGzsZaGEb2YZlaEcs2OFsik2l
+deVtif5NH/HD3szq2pMLvWSyTNf9Bg==
+=mUp7
+-----END PGP SIGNATURE-----
+
+--kfurgyfqcymyt52d--
 
