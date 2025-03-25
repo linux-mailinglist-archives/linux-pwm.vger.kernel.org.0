@@ -1,50 +1,50 @@
-Return-Path: <linux-pwm+bounces-5275-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5276-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26916A70426
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Mar 2025 15:47:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B0F9A7045B
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Mar 2025 15:57:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E8F513AE20A
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Mar 2025 14:46:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A7B13A945E
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Mar 2025 14:57:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E43ED25A352;
-	Tue, 25 Mar 2025 14:46:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08B6725A652;
+	Tue, 25 Mar 2025 14:57:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JaaoyTvB"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CTzPC1gG"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86838258CF5;
-	Tue, 25 Mar 2025 14:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E1627456;
+	Tue, 25 Mar 2025 14:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742913990; cv=none; b=DPAwStwOniu6N+v9c9dvsII2oEkucBnPJcLBbBSRxUMlyn5j1uy61TUEBHB3CZdybQmQKtpB7l+ysS+own1SR6t8HJFLLddwGdOdzb4QJ2YSDW+wqnyE3+sfQhpHe2X77VC4D5zdnFv5UqYKo0Jnc+Zn5q3zD+gbnjXOvfHspQg=
+	t=1742914627; cv=none; b=RcWvhEoFme07KPir2x+cNj/4oqUmmNfmjdgYQdZHxelMFLf8ReKobVlTKHiL4RLmdF3MuXUpgH25/AsQBkVINs7ui58Pw7QeRvzKHqLwp6MkEk40CpjhfpXU7PJ8tL6llLaXXsvTVsm9LrdYK5QQPLxlBGSBgVd951HfDeVYpK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742913990; c=relaxed/simple;
-	bh=Wmu1jzHMguKR/j6+GdBi+IvxyFpZLNBWJYNpcPE9oZ4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
-	 References:In-Reply-To; b=CBVctDP7M59IkNhEXZk/nPwSHBd117XodGb/e0a5LHhi9qTIPu6YrN0HlwErSp7AMI03xqzWi+p5z80qHDdos4+jvsDCHvAGLIPuj7odHHBOlpHvrZQ5IE6/oZAgTZIMGI///3HtdTPH1qaE/xWxqUBUqkAcl86a2/r8iiZCfvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JaaoyTvB; arc=none smtp.client-ip=217.70.183.194
+	s=arc-20240116; t=1742914627; c=relaxed/simple;
+	bh=RYqHjWw3KTpaby0u6OwaBZc7ufnS+zuGBANKdwMFpf4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=FEQwdj67ZLe/o2WFhQGihAaTqppVD+KFf1S0js3BWNvOTyl/SZoykmAzNaqxslB6QzMXSuu0/92DNk0YQW7R7eB5d8Y1ajGBiSJKTwRoVrjH75Bjp7xG3k0LK2qJJeee6zmTTlzrgRKz83tcWuvxvEJnEjCRMrtGL505p1ekuP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CTzPC1gG; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9666742D46;
-	Tue, 25 Mar 2025 14:46:20 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0172D2047D;
+	Tue, 25 Mar 2025 14:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742913981;
+	t=1742914623;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hWoSyhuzGUD2BKO/up57XBRng0PtovCBvjlBXl3Nn3g=;
-	b=JaaoyTvB3kRgI6AtDrGYSPzTm1Ztlp0v8sV+BSQNNPpZQAJ37uEMl+aq46HAVLPaZJp/GP
-	amHzGxsfLaUbP2NQUuWFgxeFrk2FMZhWqUfCz1XuvtrbeZBXER7IjgNSvkbAVzuVGjYXta
-	odLAZPKSmYmctJMbSfcCEQGuo+Brfe9VT0AYrhpcVCVoztOSIRgdPWrn4tUwwSQOYAHr8C
-	9IgIeCjtz2NsvJoGjt5nEF8oBfIUBJvm8kigOSthauCf1fgB9fUErtwZZBKd/35RXYIl2K
-	0gHnGak3WlVjQ70ed27JuL+IT4RnChAt5an7f2AbzYUoYXFCdG2k7GUHH5kB9w==
+	bh=MBZ1CEC0QSASEo3c9ilc08bpvWeK9tdZuZ0/dmDvxvo=;
+	b=CTzPC1gG1AcpU3Wp/Ap7na1XuvEWAIpIK6mF+neWSzfzTXp4iAIUOckj8vJzz/fx63Ek5n
+	QeobZgh5fGmjoCDSjULN2or9wbUH3VEX+j0cUUV/7pOUgaZMbohWVzSi9wxbSk+muJ+YFz
+	h4Xi5fYctiSsjW9QYZFVScarprkW0MkT1oFkXIe2mqvAb2cphiDLOYzMLVjnAWsBX72c+o
+	+C/x1Jy/yt9dA80LnyyMPoy8L/ka+JPz+4w/cjq4gwzPWbrmNIusORtacSh3P4LibJg1as
+	VnlKeFUuR1soGL8rBQPfY78CQXZOrwjrJHfiHTTumWuuLOeE9K0ALiuITVrz0g==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -53,8 +53,10 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 25 Mar 2025 15:46:20 +0100
-Message-Id: <D8PFFWYR3ASD.YEZIXPNVZS4I@bootlin.com>
+Date: Tue, 25 Mar 2025 15:57:01 +0100
+Message-Id: <D8PFO3LSGWQD.38SX4PSHQ84W2@bootlin.com>
+Subject: Re: [PATCH v5 09/11] input: keyboard: Add support for MAX7360
+ keypad
 Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
  "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
  <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
@@ -71,50 +73,59 @@ Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
  <thomas.petazzoni@bootlin.com>
 From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
 To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v5 08/11] gpio: max7360: Add MAX7360 gpio support
 X-Mailer: aerc 0.18.2-0-ge037c095a049
 References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-8-fb20baf97da0@bootlin.com>
- <Z9qviF1VeSYNvcPJ@smile.fi.intel.com>
-In-Reply-To: <Z9qviF1VeSYNvcPJ@smile.fi.intel.com>
+ <20250318-mdb-max7360-support-v5-9-fb20baf97da0@bootlin.com>
+ <Z9qybcY7VyQBvZMv@smile.fi.intel.com>
+In-Reply-To: <Z9qybcY7VyQBvZMv@smile.fi.intel.com>
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvleefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefhvffuofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeftedvgfegteehjeejtdefgffhteevvddtvdejleeghfefuefgledtteduvdetkeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvleegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
  dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
 X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Wed Mar 19, 2025 at 12:50 PM CET, Andy Shevchenko wrote:
-> On Tue, Mar 18, 2025 at 05:26:24PM +0100, Mathieu Dubois-Briand wrote:
-> > Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
-> >=20
-> > Two sets of GPIOs are provided by the device:
-> > - Up to 8 GPIOs, shared with the PWM and rotary encoder functionalities=
-.
-> >   These GPIOs also provide interrupts on input changes.
-> > - Up to 6 GPOs, on unused keypad columns pins.
+On Wed Mar 19, 2025 at 1:02 PM CET, Andy Shevchenko wrote:
+> On Tue, Mar 18, 2025 at 05:26:25PM +0100, Mathieu Dubois-Briand wrote:
+> > Add driver for Maxim Integrated MAX7360 keypad controller, providing
+> > support for up to 64 keys, with a matrix of 8 columns and 8 rows.
 >
 > ...
 >
-> > +		/*
-> > +		 * Port GPIOs with interrupt-controller property: add IRQ
-> > +		 * controller.
-> > +		 */
-> > +		gpio_config.regmap_irq_flags =3D IRQF_TRIGGER_LOW | IRQF_ONESHOT | I=
-RQF_SHARED;
+> > +	help
+> > +	  If you say yes here you get support for the keypad controller on th=
+e
+> > +	  Maxim MAX7360 I/O Expander.
+> > +
+> > +	  To compile this driver as a module, choose M here: the
+> > +	  module will be called max7360_keypad.
 >
-> But why is this being overridden? The DT or another firmware description =
-has to
-> provide the correct settings, no?
+> One paragraph is wrapped way too late or too early, can you make them app=
+rox.
+> the same in terms of a line width?
 >
 
-Ok, thinking about it, yes, IRQF_TRIGGER_LOW shoud come from firmware
-description. But IRQF_ONESHOT and IRQF_SHARED should still come from
-here, no?
+Thanks. I had a look at all other Kconfigs, I believe they are all fixed
+now.
 
+> > +
+> > +	input_set_capability(input, EV_MSC, MSC_SCAN);
+> > +	if (autorepeat)
+> > +		__set_bit(EV_REP, input->evbit);
+> > +
+> > +	input_set_drvdata(input, max7360_keypad);
+> > +
+> > +	ret =3D devm_request_threaded_irq(&pdev->dev, irq, NULL, max7360_keyp=
+ad_irq,
+> > +					IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+>
+> What's wrong with the interrupt flags provided by firmware description?
+>
 
-I'm OK with all other points.
+So same question as for the GPIO driver: IRQF_TRIGGER_LOW from the
+firmware, but IRQF_ONESHOT from the driver? Or should everything come
+from the firmware?
 
-Thanks for your review!
+Thanks again for your review.
 Mathieu
 
 --=20
