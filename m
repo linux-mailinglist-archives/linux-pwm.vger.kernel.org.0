@@ -1,195 +1,199 @@
-Return-Path: <linux-pwm+bounces-5288-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5289-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A87CA715FF
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Mar 2025 12:45:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB58DA71954
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Mar 2025 15:50:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C6933B62FE
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Mar 2025 11:44:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D143817C493
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Mar 2025 14:46:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADCAF1DDC12;
-	Wed, 26 Mar 2025 11:45:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D8011F30D1;
+	Wed, 26 Mar 2025 14:44:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxcEXp+q"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CKi9cPvQ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845B01DDC2C;
-	Wed, 26 Mar 2025 11:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7D51DF74B;
+	Wed, 26 Mar 2025 14:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742989504; cv=none; b=BseEasOa5g+fZVDl/ehPFfhwNmOfolQXJQGh/WK/4nInFNQcPfqHWYvBKnAcUWY8ds4RnBedChZmGnK6+z8Tq9bMSlnENOS1ePGhLbwvSHkMrCJEUR3GxR9JMfv8o3qdLPEBCeY2wumVdTgWFuYqXV2vmBTnk5dLkcJ2J/VhV7M=
+	t=1743000274; cv=none; b=jDsGQSJB+kU8nzCewMgrKsInlLVqUxpq7GUYovww2Ejj8eN2BxCcIZ87VLoZ/ZjZa0CxRqs4H0ud3PQE5JbsbIMj4unWA/9U3BdpUw4doFIzP48Ev3Vxw5/UbuV6Z54I2HUAIRuiY18GC/6CqxoASaLX2IZOAr6+H4yukP3zDuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742989504; c=relaxed/simple;
-	bh=IDlQ1pxue6ivR6VV71fMEuxnvU0Ny+O/VjCAHOK8J34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eoncoC8ZlNYGQj5Fq9XgO5d1yJkVVZEFmUd4b4AlUDjdCDyY5ASR8hSlqiVRlbmZD7YGCp6hsWOrpTZavBJ/vX44DriRwDCKztJA9DlyyJsBQvEDRmx/6LqOljbU0wm+VnjHfZBdEDrCBxQC++i8v6Dkyl/s9NSUxqhvFVayJDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxcEXp+q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F968C4CEE2;
-	Wed, 26 Mar 2025 11:45:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742989504;
-	bh=IDlQ1pxue6ivR6VV71fMEuxnvU0Ny+O/VjCAHOK8J34=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DxcEXp+qKRnTXEJt95LjmCsudiz/X07xCwCivfrS/7yo+ugNyNUczt1FtN5uCzsD3
-	 d9Av49Lyf2wwszBnfhqUofGj/PYZk8YEiIzLH3bho+dV2xGvqf1KHfKuNIoXe0UJr2
-	 CctRAwo5Haq8kVdPhxQqyop+9M9xrYSuEEqktSHOg9E33FbUZCrNnhG/sJ3nV4CqVd
-	 oaY29Y1FmOnZN5SCd6dYWb20PQnJZWLfwiYpgcVaI/12ZB+FaWgqrCDB59zee0LIiJ
-	 wMYnnkiefPcHWA5tIbYxUJOBzsD5YFxLOyiSrUkjS7SND2ZdhWY1F4z5rf/7QKMAnx
-	 d2a6Q7JkGivmw==
-Date: Wed, 26 Mar 2025 12:45:01 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] pwm: ehrpwm: ensure clock and runtime PM are
- enabled if hardware is active
-Message-ID: <lhqi2eqfj5eyc67yriezvwwiyusenyohvqzbfrwjkjfjvxxb7a@xwvhrgmer4a7>
-References: <20250207213234.1026-1-rafael.v.volkmer@gmail.com>
- <20250207213424.1117-1-rafael.v.volkmer@gmail.com>
+	s=arc-20240116; t=1743000274; c=relaxed/simple;
+	bh=MRFbHFYyoyMaTfUFcp1d9FWNu6nUYKgM6cyNPev6wac=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=jl8/YPOKpdNzJyl51AK80IYAi4eAr2Mi9Kp11aQxdM/z7YPEoiwYaM+c4eyFDDSMoUkT4TP8SCF3Yd4eOsV6a6Cs7rzE0FjfcUyGkAC89o5JUuMscBOQTnby+C/ENaYfxZjaSZCHdCDqafDbgc3spLr97kt+6TsKBeV8AWNLMwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CKi9cPvQ; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CB964441AD;
+	Wed, 26 Mar 2025 14:44:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743000269;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y0lbkNHAn2CaamDzuCJgBrXafC1b0VIzMu7nshNJuMY=;
+	b=CKi9cPvQk6lyHYxyEVClQbnylCgh5fl8DfDVmLtPRv3GqxMfN8pQdPyEg8N7L7CCHlsgV6
+	bikMtmCOeeqX171M/0wWMabEMOuUId8HmJUexDwrQfdryTgAF8HogfEnVY7zdg6A1/p7v5
+	eeMgocO6zOYbvF9flBDbokxB85kcYR09ujdCipaUv8F+nHvUWyMU1ixFj3c5QWVwBiGFsz
+	jaBTYyGjk2TsczvRZVMiyw/nJ0TpJMps2zY9kuwSUPuFVhg5R3Fl2HEtwZ6rLkwlhcdAyY
+	RjcdrCDkKVEWNOGpv1CuBW3f+lNmtxJqyufpSQWyDqLrAPq6gf/aeODRpPD7Ig==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ttpxce4gkzgjb3i3"
-Content-Disposition: inline
-In-Reply-To: <20250207213424.1117-1-rafael.v.volkmer@gmail.com>
-
-
---ttpxce4gkzgjb3i3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 3/3] pwm: ehrpwm: ensure clock and runtime PM are
- enabled if hardware is active
-MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 26 Mar 2025 15:44:28 +0100
+Message-Id: <D8QA116WPNUE.11VKIHSG9N0OZ@bootlin.com>
+Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
+Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Lee Jones"
+ <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
+ <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, "Michael Walle" <mwalle@kernel.org>, "Mark
+ Brown" <broonie@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Danilo Krummrich" <dakr@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
+ <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
+ <hinocg3itjqizbmzgaxv6cfnhtus6wbykouiy6pa27cxnjjuuk@l5ppwh7md6ul>
+ <Z9vydaUguJiVaHtU@smile.fi.intel.com>
+ <D8PF958QL5AK.2JIE4F1N1NI0F@bootlin.com>
+ <Z-LSHoYA1enEOeHC@smile.fi.intel.com>
+In-Reply-To: <Z-LSHoYA1enEOeHC@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieehkedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmegrieeimeefudektdemtgdtsggvmegslegrkeemvgehledvmeeirgeffhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemrgeiieemfedukedtmegttdgsvgemsgelrgekmegvheelvdemiegrfehfpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtohepuhhklhgvihhnvghksehkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhg
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Hello Rafael,
+On Tue Mar 25, 2025 at 4:56 PM CET, Andy Shevchenko wrote:
+> On Tue, Mar 25, 2025 at 03:37:29PM +0100, Mathieu Dubois-Briand wrote:
+> > On Thu Mar 20, 2025 at 11:48 AM CET, Andy Shevchenko wrote:
+> > > On Thu, Mar 20, 2025 at 08:50:00AM +0100, Uwe Kleine-K=C3=B6nig wrote=
+:
+> > > > On Wed, Mar 19, 2025 at 01:18:50PM +0200, Andy Shevchenko wrote:
+> > > > > On Tue, Mar 18, 2025 at 05:26:20PM +0100, mathieu.dubois-briand@b=
+ootlin.com wrote:
+>
+> ...
+>
+> > > > > > +	chip =3D devm_pwmchip_alloc(dev->parent, MAX7360_NUM_PWMS, 0)=
+;
+> > > > >=20
+> > > > > This is quite worrying. The devm_ to parent makes a lot of assump=
+tions that may
+> > > > > not be realised. If you really need this, it has to have a very g=
+ood comment
+> > > > > explaining why and object lifetimes.
+> > > >=20
+> > > > Pretty sure this is broken. This results for example in the device =
+link
+> > > > being created on the parent. So if the pwm devices goes away a cons=
+umer
+> > > > might not notice (at least in the usual way). I guess this was done=
+ to
+> > > > ensure that #pwm-cells is parsed from the right dt node? If so, tha=
+t
+> > > > needs a different adaption. That will probably involve calling
+> > > > device_set_of_node_from_dev().
+> > >
+> > > It's an MFD based driver, and MFD core cares about propagating fwnode=
+ by
+> > > default. I believe it should just work if we drop that '->parent' par=
+t.
+> >=20
+> > Are you sure about that?
+>
+> Yes and no. If your DT looks like (pseudo code as I don't know
+> DTS syntax by heart):
+>
+> 	device: {
+> 		parent-property =3D value;
+> 		child0:
+> 			...
+> 		child1:
+> 			...
+> 	}
+>
+> the parent-property value is automatically accessible via fwnode API,
+> but I don't know what will happen to the cases when each of the children
+> has its own compatible string. This might be your case, but again,
+> I'm not an expert in DT.
+>
 
-On Fri, Feb 07, 2025 at 06:34:24PM -0300, Rafael V. Volkmer wrote:
-> During probe, if the hardware is already active, it is not guaranteed
-> that the clock is enabled. To address this, ehrpwm_pwm_probe() now
-> checks whether the PWM is enabled and ensures that the necessary
-> resources are initialized.
->=20
-> Changes:
-> - Call ehrpwm_get_state() during probe to check if the PWM is active.
-> - If the PWM is enabled, call clk_prepare_enable() to ensure the clock
-> is active.
-> - If the clock is successfully enabled, call pm_runtime_get_sync() to
-> manage power state.
-> - Handle failure cases by properly disabling and unpreparing the clock.
+On my side:
+- Some MFD child do have a child node in the device tree, with an
+  associated compatible value. No problem for these, they do get correct
+  of_node/fwnode values pointing on the child device tree node.
+- Some MFD child do not have any node in the device tree, and for these,
+  they have to use properties from the parent (MFD) device tree node.
+  And here we do have some problems.
 
-This is too detailed, just drop the changes list.
+> > On my side it does not work if I just drop the '->parent', this is why =
+I
+> > ended whit this (bad) pattern.
+>
+> > Now it does work if I do call device_set_of_node_from_dev() manually,
+>
+> AFAICT, this is wrong API to be called in the children. Are you talking a=
+bout
+> parent code?
+>
 
-> This ensures that the driver correctly handles cases where the hardware
-> is already in use at the time of initialization, preventing potential
-> failures due to uninitialized resources.
->=20
-> Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
-> ---
->  drivers/pwm/pwm-tiehrpwm.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-> index 52527136c507..30beaf7d1721 100644
-> --- a/drivers/pwm/pwm-tiehrpwm.c
-> +++ b/drivers/pwm/pwm-tiehrpwm.c
-> @@ -633,8 +633,10 @@ static int ehrpwm_pwm_probe(struct platform_device *=
-pdev)
->  {
->  	struct device_node *np =3D pdev->dev.of_node;
->  	struct ehrpwm_pwm_chip *pc;
-> +	struct pwm_state state;
->  	struct pwm_chip *chip;
->  	struct clk *clk;
-> +	bool tbclk_enabled;
->  	int ret;
-> =20
->  	chip =3D devm_pwmchip_alloc(&pdev->dev, NUM_PWM_CHANNEL, sizeof(*pc));
-> @@ -676,6 +678,18 @@ static int ehrpwm_pwm_probe(struct platform_device *=
-pdev)
->  		return ret;
->  	}
-> =20
-> +	ehrpwm_get_state(chip, &chip->pwms[0], &state);
+I believe I cannot do it in the parent code, as I would need to do it
+after the call to devm_mfd_add_devices(), and so it might happen after
+the probe. I still tried to see how it behaved, and it looks like PWM
+core really did not expect to get an of_node assigned to the device
+after adding the PWM device.
 
-ehrpwm_get_state() does some things that are not needed here given that
-you only evaluate state.enabled. I suggest to just read the one (or
-two?) registers you need to determine if the PWM is on.
+So either I can do something in MFD core or in sub devices probe(), or I
+need to come with a different way to do things.
 
-> +	if (state.enabled =3D=3D true) {
-> +		ret =3D clk_prepare_enable(pc->tbclk);
+> > so it's definitely better. But I believe the MFD core is not propagatin=
+g
+> > OF data, and I did not find where it would do that in the code. Yet it
+> > does something like this for ACPI in mfd_acpi_add_device(). Or maybe we
+> > do something bad in our MFD driver?
+>
+> ...or MFD needs something to have... Dunno.
 
-pc->tbclk is already prepared, so clk_enable() should be enough. After
-all this should match what ehrpwm_pwm_enable() does.
+I have something working with a very simple change in mfd-core.c, but
+I'm really not confident it won't break anything else. I wish I could
+get some insights from an MFD expert.
 
-> +		if (ret) {
-> +			dev_err_probe(&pdev->dev, ret, "clk_prepare_enable() failed");
-> +			goto err_pwmchip_remove;
-> +		}
-> +
-> +		tbclk_enabled =3D true;
-> +	}
-> +
->  	ret =3D pwmchip_add(chip);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-> @@ -685,10 +699,22 @@ static int ehrpwm_pwm_probe(struct platform_device =
-*pdev)
->  	platform_set_drvdata(pdev, chip);
->  	pm_runtime_enable(&pdev->dev);
-> =20
-> +	if (state.enabled =3D=3D true) {
-> +		ret =3D pm_runtime_get_sync(&pdev->dev);
-> +		if (ret < 0) {
-> +			dev_err_probe(&pdev->dev, ret, "pm_runtime_get_sync() failed");
-> +			clk_disable_unprepare(pc->tbclk);
-> +			goto err_pwmchip_remove;
-> +		}
+@@ -210,6 +210,8 @@ static int mfd_add_device(struct device *parent, int id=
+,
+                if (!pdev->dev.of_node)
+                        pr_warn("%s: Failed to locate of_node [id: %d]\n",
+                                cell->name, platform_id);
++       } else if (IS_ENABLED(CONFIG_OF) && parent->of_node) {
++               device_set_of_node_from_dev(&pdev->dev, parent);
+        }
 
-It feels a bit strange to do this here. I think technically it's fine
-here, but doing pm_runtime_get_sync() before pwmchip_add() would make
-that a bit clearer.
 
-> +	}
-> +
->  	return 0;
-> =20
-> +err_pwmchip_remove:
-> +	pwmchip_remove(chip);
->  err_clk_unprepare:
-> -	clk_unprepare(pc->tbclk);
-> +	if (tbclk_enabled)
-> +		clk_unprepare(pc->tbclk);
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-I think this is wrong an keeping the unconditional clk_unprepare() is
-right. Might be easier to convert the driver to use
-devm_clk_get_enabled().
-
-Best regards
-Uwe
-
---ttpxce4gkzgjb3i3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfj6LsACgkQj4D7WH0S
-/k6QfwgAlGnueFvwoFNQOQPepk1zo9DerzX7xNnwYpc2tDjtAAyiaG2NoL8FWBAy
-HtzE5a2fY5GebeD6O1cLPd4GWkIvLBjhVGmAZN29yyGoeUVvTydet8QXEARSAa5V
-wNotfZAs4Jvod0IhIFAUD0PTQDOSrTu+Tyvg8ranSM26H9EDU7RdascBp8oeDGcA
-7EZZqO62jSMYSeFLuYbhwQkAQgDe4Zr2gdGenV+RI01E33OYEZzIPlm3mFMxrPFx
-1bQHbk0MzLIlQBIrPE+vf3RXp++lFkufwJgJ7Oue7Q4dR/I4nIriyy/iLU33t+wd
-iPJOpkODSWGwFDAgtoLQVq1S3SxVhA==
-=C9jI
------END PGP SIGNATURE-----
-
---ttpxce4gkzgjb3i3--
 
