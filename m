@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-5303-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5304-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8667DA74DEF
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Mar 2025 16:37:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48895A74E2B
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Mar 2025 16:56:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78EA3188B211
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Mar 2025 15:37:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EC1F1890C01
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Mar 2025 15:56:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B53A31531E3;
-	Fri, 28 Mar 2025 15:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 661911D6DA9;
+	Fri, 28 Mar 2025 15:56:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VH7hJnjp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEQxsreR"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86295DF58;
-	Fri, 28 Mar 2025 15:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392451B4257;
+	Fri, 28 Mar 2025 15:56:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743176247; cv=none; b=Nz/pGEDWfGh/tYMiwGco0W8MUwEqqWFBs3YYaq2+xA9HPVIwz2ANka/BlfKyYif/8ySeJ6Q7tMosL6enuAK0TElwqNHoBG5v1KfEOKSjSOOmZwqGqY+t5qbRaxkLg2jMZT5GWkDbPlKuNM5UIGP2UFSDQNoIHrSI+/3Dbplvc/c=
+	t=1743177371; cv=none; b=US907SRDwf3cYZnOiWHGARZRd/I/kTfCKfIC0+rXVqifhOciP83+8IST1deAUNMYeFpjf6L0oh9Kn50H/ZahfUqeIPli4ucYMoXMppt3eZvkaOSiazgHdp/Nbn+89k/te4dLovYx+aNzsHuwgejRFtXZbiEFTiE1MiodkLVXiDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743176247; c=relaxed/simple;
-	bh=o4MexGeb/LCpfw+0KdNpOfw/qNqhCqQrnnNXSCVaV98=;
+	s=arc-20240116; t=1743177371; c=relaxed/simple;
+	bh=uPBY5mtiiUGVSgn35z27L0z9pDPMwFjJGtg+FgFgDf8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TVgA1tjosK05j9oMq2M3uRQSeMYNsr8lkuubVRgjDySWBmstk2BiDOO4rvuIJAE0BHuPCdJQDSupzlcXOFLk7CnRwdtxyYKEVvyzMPhTS06oAprnwaMRKWyCmisvCBR4NB/gX5GktReI6igibgvc55LXA9xzVoE0I47c03QwfcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VH7hJnjp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 405D7C4CEE4;
-	Fri, 28 Mar 2025 15:37:26 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=VEWR6cS5J2i+juheMfSqLSGP39tCG5J0kAapwHBIkL/vSYzl7ArAAIWe01sJu8ko1rhpyVWFX84VEAtJRpV022TLZgLPnjbs+zNTktrWcHbplNPMhoy7JPBH0rtrdqk21k4z32nF/Neepzqjezb15CJTRSUCNJ2WEbgQcaRLh10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEQxsreR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A05DC4CEE4;
+	Fri, 28 Mar 2025 15:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743176246;
-	bh=o4MexGeb/LCpfw+0KdNpOfw/qNqhCqQrnnNXSCVaV98=;
+	s=k20201202; t=1743177371;
+	bh=uPBY5mtiiUGVSgn35z27L0z9pDPMwFjJGtg+FgFgDf8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VH7hJnjpc3CNEE9iiPG3U/eaOHN+lNXoNYntt6CUo1/7mPU0rqaGMOvBRmGMYS8oj
-	 QKMV22W0DsOjScMWSADUY/8ZEJynt0XR/2g2DHWzPyNc3OUwuWv45rDyFwYBPHWFDv
-	 Rq1Q9mRAY/2Uzh50OsbCwOs9sCAPyjZdnZ+3+oGd+LDf2t/Nrp+1Oh42G4GP5SqFIH
-	 0HbgEAvtMjiMOO6jLhh3sJCpOFICL/aw+pC9C/D2TBsin/ucRGMSF0t+q0CbNIiBQG
-	 5G+iqdgboI8btzYV8dTFrVCQZDTeLnbWUQYTh4Ymrqx7xdcn9sqwUeCKBApi8Q5OZ6
-	 rXz9EdLtagH6Q==
-Date: Fri, 28 Mar 2025 16:37:23 +0100
+	b=oEQxsreR8BjRZbTDqOMxolNCUeFglnjKq1Xq9xgs6OTaCLjvDYs2patG0BOtyJkh/
+	 5GzfxS/wMUvFmM01SeOt+l+UYav3caV8xuMj9qbzB/K83BDsHiUAL49L38PjtxObw8
+	 cuJc4mm4qDoi2Ux7w89jKp61GuyxOwI/PqnhzyWBTaCrm0MvDN0x3GRCuZdAQXyzz4
+	 1+TwDHjCziEwHhzKe6pWSwlIaPHzEVht/fyMspt7Y6nFQ7iPK26TIHhIsIsjCkEfuz
+	 WOzRBLgUD+JrrayI5KQR60M4QYkUP6ulerPpAHCrlssLRLqxst4E3r3YEi97xe+P6D
+	 G1DeAfgzE+NLQ==
+Date: Fri, 28 Mar 2025 16:56:08 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
 To: Binbin Zhou <zhoubinbin@loongson.cn>
 Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, 
@@ -49,11 +49,11 @@ Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
 	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v9 1/2] dt-bindings: pwm: Add Loongson PWM controller
-Message-ID: <bfbni6q322ag7r3pzgcflec4dhx4luvrdqerzkoslfuczhdnb3@xxwdodl25v64>
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v9 2/2] pwm: Add Loongson PWM controller support
+Message-ID: <pepegljg5ua2ytozj7wamrzncsrb44i3gtcyk4bouh4rrnla34@4keshxpy5dqo>
 References: <cover.1739784071.git.zhoubinbin@loongson.cn>
- <d6be5236ab4ff5b5fde78004c38d8bced42f2ba2.1739784071.git.zhoubinbin@loongson.cn>
+ <60d549be4dc099fbbd18d2539969c0329c794f2e.1739784071.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -61,132 +61,144 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="j57y2bovoac6vyqv"
+	protocol="application/pgp-signature"; boundary="jo3irdqiccjlkr46"
 Content-Disposition: inline
-In-Reply-To: <d6be5236ab4ff5b5fde78004c38d8bced42f2ba2.1739784071.git.zhoubinbin@loongson.cn>
+In-Reply-To: <60d549be4dc099fbbd18d2539969c0329c794f2e.1739784071.git.zhoubinbin@loongson.cn>
 
 
---j57y2bovoac6vyqv
+--jo3irdqiccjlkr46
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v9 1/2] dt-bindings: pwm: Add Loongson PWM controller
+Subject: Re: [PATCH v9 2/2] pwm: Add Loongson PWM controller support
 MIME-Version: 1.0
 
-On Mon, Feb 17, 2025 at 05:30:24PM +0800, Binbin Zhou wrote:
-> Add Loongson PWM controller binding with DT schema format using
-> json-schema.
->=20
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+Hello,
 
-nitpick: Please put your S-o-b last.
+I found a few minor things and hope we're done in the next iteration.
 
-> ---
->  .../bindings/pwm/loongson,ls7a-pwm.yaml       | 66 +++++++++++++++++++
->  MAINTAINERS                                   |  6 ++
->  2 files changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-p=
-wm.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml=
- b/Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
-> new file mode 100644
-> index 000000000000..46814773e0cc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm.yaml
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/loongson,ls7a-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson PWM Controller
-> +
-> +maintainers:
-> +  - Binbin Zhou <zhoubinbin@loongson.cn>
-> +
-> +description:
-> +  The Loongson PWM has one pulse width output signal and one pulse input
-> +  signal to be measured.
-> +  It can be found on Loongson-2K series cpus and Loongson LS7A bridge ch=
-ips.
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: loongson,ls7a-pwm
-> +      - items:
-> +          - enum:
-> +              - loongson,ls2k0500-pwm
-> +              - loongson,ls2k1000-pwm
-> +              - loongson,ls2k2000-pwm
-> +          - const: loongson,ls7a-pwm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  '#pwm-cells':
-> +    description:
-> +      The first cell must have a value of 0, which specifies the PWM out=
-put signal;
-> +      The second cell is the period in nanoseconds;
-> +      The third cell flag supported by this binding is PWM_POLARITY_INVE=
-RTED.
-> +    const: 3
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/clock/loongson,ls2k-clk.h>
-> +    pwm@1fe22000 {
+On Mon, Feb 17, 2025 at 05:30:25PM +0800, Binbin Zhou wrote:
+> + * Limitations:
+> + * - If both DUTY and PERIOD are set to 0, the output is a constant low signal.
+> + * - When disabled the output is driven to 0 independent of the configured
+> + *   polarity.
 
-Another nitpick: I would have added another \n between the includes and
-the dt node.
+Does the hardware complete the currently running period when changing
+settings or disabling? (No need to answer here, put the answer into the
+comment.)
 
-Looking at the output of `git grep -A1 \#include
-Documentation/devicetree/bindings/pwm/` this isn't consistent, but the
-empty line is the more usual approach.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/clk.h>
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/units.h>
+> +
+> +/* Loongson PWM registers */
+> +#define LOONGSON_PWM_REG_DUTY		0x4 /* Low Pulse Buffer Register */
+> +#define LOONGSON_PWM_REG_PERIOD		0x8 /* Pulse Period Buffer Register */
+> +#define LOONGSON_PWM_REG_CTRL		0xc /* Control Register */
+> +
+> +/* Control register bits */
+> +#define LOONGSON_PWM_CTRL_EN		BIT(0)  /* Counter Enable Bit */
+> +#define LOONGSON_PWM_CTRL_OE		BIT(3)  /* Pulse Output Enable Control Bit, Valid Low */
+> +#define LOONGSON_PWM_CTRL_SINGLE	BIT(4)  /* Single Pulse Control Bit */
+> +#define LOONGSON_PWM_CTRL_INTE		BIT(5)  /* Interrupt Enable Bit */
+> +#define LOONGSON_PWM_CTRL_INT		BIT(6)  /* Interrupt Bit */
+> +#define LOONGSON_PWM_CTRL_RST		BIT(7)  /* Counter Reset Bit */
+> +#define LOONGSON_PWM_CTRL_CAPTE		BIT(8)  /* Measurement Pulse Enable Bit */
+> +#define LOONGSON_PWM_CTRL_INVERT	BIT(9)  /* Output flip-flop Enable Bit */
+> +#define LOONGSON_PWM_CTRL_DZONE		BIT(10) /* Anti-dead Zone Enable Bit */
 
-I'll look into the 2nd patch and if these two nitpicks are the only
-concerns left, I'll fixup accordingly unless you object.
+I really like it when the register name is a prefix of the register
+field definitions. So maybe add _REG to the latter?
+
+> +/* default input clk frequency for the ACPI case */
+> +#define LOONGSON_PWM_FREQ_DEFAULT	50000 /* Hz */
+> +
+> +struct pwm_loongson_ddata {
+> +	struct clk *clk;
+> +	void __iomem *base;
+> +	u64 clk_rate;
+> +};
+> +
+> +static inline struct pwm_loongson_ddata *to_pwm_loongson_ddata(struct pwm_chip *chip)
+
+I didn't try to compile the driver, but given that you call
+to_pwm_loongson_ddata() several times in .apply() it might be worth to
+mark this function as __pure.
+
+> +{
+> +	return pwmchip_get_drvdata(chip);
+> +}
+> +
+> [...]
+> +static int pwm_loongson_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			      const struct pwm_state *state)
+> +{
+> +	int ret;
+> +	u64 period, duty_cycle;
+> +	bool enabled = pwm->state.enabled;
+> +
+> +	if (!state->enabled) {
+> +		if (enabled)
+> +			pwm_loongson_disable(chip, pwm);
+> +		return 0;
+> +	}
+> +
+> +	ret = pwm_loongson_set_polarity(chip, pwm, state->polarity);
+> +	if (ret)
+> +		return ret;
+> +
+> +	period = min(state->period, NSEC_PER_SEC);
+> +	duty_cycle = min(state->duty_cycle, NSEC_PER_SEC);
+
+Why is this done? My guess is this is to guarantee that
+
+	mul_u64_u64_div_u64(period_ns, ddata->clk_rate, NSEC_PER_SEC)
+
+results in a value that fits into an u32, but that only works if
+ddata->clk_rate <= U32_MAX.
+
+The approach that other drivers handle that is asserting in probe that
+ddata->clk_rate <= NSEC_PER_SEC and then in .apply() do:
+
+	period = mul_u64_u64_div_u64(period_ns, ddata->clk_rate, NSEC_PER_SEC);
+	if (period > U32_MAX)
+		period = U32_MAX;
+
+> +	ret = pwm_loongson_config(chip, pwm, duty_cycle, period);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!enabled && state->enabled)
+> +		ret = pwm_loongson_enable(chip, pwm);
+> +
+> +	return ret;
+> +}
 
 Best regards
 Uwe
 
---j57y2bovoac6vyqv
+--jo3irdqiccjlkr46
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfmwjEACgkQj4D7WH0S
-/k63cggAnyX1KlC2wwh7YaLfvZN82jX3GLsU6rw3NXPWLBhPEy5OMxSn2Mx6jHLB
-onFUx2IVzLonJcxH+Bb6egH6nqZAThnvVXt4lthGTr4Fitco+GPK/EkX5Srvy/k7
-WE7JfIITs+crTgIpu0Hs2syIAjzRvLQspiHXxVj8wOFvGUs2BIx+nC2XiDcREa1b
-8dm6i20kxfeDVlPNpUknPxJVX/lWjD3koXecNhYShzvYeOgGc7lJ2JtklT3jnCFt
-sCnHvLyqgFRthLbbe4IkOHinnYuIvM+THqSAxptWzEaKQDjpl5+7iW3nO0cG3gb/
-8QqAXpoxqMNseH2se8PY+hUyZ5UJlg==
-=Lp1W
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfmxpUACgkQj4D7WH0S
+/k79tgf/QyIr23cSUBMyrpKxGsaTQHFflpsg+AdEwz2ZcGI3Y8y28kGksMSociWM
+dz8ztMr8rHYpuVs6OPco18AZvKwemuf4QJSBThv44/gKGyQrj31oOhMVnMU6QNQq
+Y4TX9CwAjd3j/kt+M+rAoyJjsXwUI2qpSG1G2m40E6KCTb9QsGGFHJWeUwmyBk8q
+dRmS1FP94XHEm5fNjhNpQwK3OOtBsrSfmd8hgXOu5gDVNHGySirPj8/p6kO93D1h
+eiiTRlNqZb12rSsCRxySnY385U6KC8bHQngG6TiqCiBGuI/ZU/pd8oEb8Jt8B3gb
+JNZwTfAEL0braGn8fnyncgc3/yb0iA==
+=tVd6
 -----END PGP SIGNATURE-----
 
---j57y2bovoac6vyqv--
+--jo3irdqiccjlkr46--
 
