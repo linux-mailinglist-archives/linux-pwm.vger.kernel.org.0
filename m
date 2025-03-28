@@ -1,159 +1,177 @@
-Return-Path: <linux-pwm+bounces-5301-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5302-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E812A74837
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Mar 2025 11:27:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 74E9AA749D8
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Mar 2025 13:35:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B08B416D5CD
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Mar 2025 10:27:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09E2F171B2B
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Mar 2025 12:35:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E327218E81;
-	Fri, 28 Mar 2025 10:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D13423214;
+	Fri, 28 Mar 2025 12:35:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="umW9MFd0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FNFq2f+k"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C8821516E
-	for <linux-pwm@vger.kernel.org>; Fri, 28 Mar 2025 10:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75A410FD;
+	Fri, 28 Mar 2025 12:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743157658; cv=none; b=H2IquIndHbbFwMbywB9DhM/92OKJnptIBxa1SBJyByEkq8RLTuYVbc5pTHCTaG8J4QqbyHX6Aso8ZhEdAZgxs3CkvXS/zoD16TLOszVjdP4U7naGOtTaFMSkhXL2FDEICK9nCtgm05r5+nCGbstT2h2JyhIDMiAgiGS/c3Md5QA=
+	t=1743165351; cv=none; b=Xv4gQ51A/VTrxZGD67gz3CwrEpHSJ+TX1J5Dy8I0x/7E2i1vHrCKq0vtHQBib8ZhS46dO+8JSyANqVxix7C2gqsgT7PvQDqHwYmfHGlQoXqupBjk7FSD1cekRJQxXc2QJj8CMbwTIjyezXSMblhn5/jWX5fsaWcGwbmf+mVjJC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743157658; c=relaxed/simple;
-	bh=i7mKZzkMcZp9ZJNbdNTwSjYL8EgM/QpuemcpfsUTFPY=;
+	s=arc-20240116; t=1743165351; c=relaxed/simple;
+	bh=kkYelAsLE09zWGPafoFLVzLQ6mWjrr5Yv4raVwT1e4w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lyEmhzFUds4xYjddei8PVsUBbCpuaBNPBhRndq5/LEWwwrNdtfd8CL6mi/iXreJ1dOu+44D99zkXA0fRSuOHKP0kFiwcG0KvooI8kgF+tr/vIzVAZ29PesyMQR6ln09UFVjLYoxyVOlKwDgscI42jY6+eDeCjqB8X+lwrNAOZ7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=umW9MFd0; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4394036c0efso12928375e9.2
-        for <linux-pwm@vger.kernel.org>; Fri, 28 Mar 2025 03:27:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743157654; x=1743762454; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Eax7YxGwWpnNu4N9Cuk0JD950DXdwRHhk8wiSiixGbg=;
-        b=umW9MFd0krK7a+hul5ik+iolir9Sw1NcDEW3w7a9PXLJaWJQWd+PZoEm+a/vdKVsaF
-         cislUlDX5ZaJ08+ov+HAjhyvijx4XPpCMGG/Xj0DVzWgmqlyV0AgsFUk4HBzbzz2+2wx
-         X95KJs4+aOC7XHailEqaA2ol1knWdDi7Ccj/CswHCsgLJzR8gdLhDqVI/H51Fmboqtl8
-         CeSvyIC5wTa0R7ZrVkx5rUkMICW2TKZDPfZI7smrUYPFuFFOOgWgXRCu2crmxLOXmTbt
-         m55gAxqIKquyUYqQwmhHHceQq1bO063B4t0E/DP6b0HqZka+zg1iCBXNV/fNIw6hSte8
-         JMAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743157654; x=1743762454;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Eax7YxGwWpnNu4N9Cuk0JD950DXdwRHhk8wiSiixGbg=;
-        b=w9Sy8SiRT9T7wXTSJcRYbnDzdXvs+rkvpg07zjD1tGvgra0TBUobJSN47etreuBRAu
-         YbcLK5VYXAn5CGbx4dQxPbEmYXfKxUK2fxzQkYNLX0GLlWUXS4sUsPIWmhTqIDaqQW1j
-         sOtWbHF0lZFuwhltdVh627z2mRhwk8rHq9eegSwA+JwBVSKsrnH9vggbNetErCPBI2bA
-         c7zit1U8UdQLL7C0i29H+g+GtN5kzErJb6xq+LYlHCqf7oybjwLRC8yW+AwemHYaPGR3
-         sFe2YkuxSSLn7MZW2xFDVuGfyc7yiz1w1Pft79vt3tz5EQW7g51aV1PuLy8oaDNy0mZg
-         brlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWC6yPzK8EyElAWHitvH21UGts//d8S0vRUSqtNrESVvnvTnjuMZAXVmIo+/QeB+4NtdGIaXCbEQ+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymDbmIMUsAEyvH01vZiM++UQvSSghVBSwM3SLE96kpdmQ36nDA
-	OWp4vKfveaoA+Qlq3EiBl9xMOfXaqTBC/xGxAubBpmMpVs4wK/SmsIAg6/MG6Ec=
-X-Gm-Gg: ASbGnctUpQlaIPLm+E9yJfmEJ5ufNgdXa66DRvbob3yqiXgUIEJi5a96GRoAr8IW4Jj
-	1VGpcRR9779hwQCt+g0iHQufnWOlubbXyHSxNcFEXqMkHupOKqWuHnJmWHB9Y98ysGtFAZ73UFZ
-	co1gmm4XrkfwE6vSAtkw+OeDskL7583gYjDZ0+XSvv7hGJylti1IdMylsraMfTLygGQnqCNKB/9
-	EHqDcYBQAgKBcUIACW1gTDxA939JJ3GW34JZH331F9JbSUgwQpGgx9psWN8H7CoaFA9dpyDxDWb
-	wZKYRZlyShSwvO53dgEMSBlMKkWfW2gjEEuvyNLJKHm4WfZWhCIWLHZgnE58WOvQb90P9SJ6wD8
-	1fFzfQcRWH5A=
-X-Google-Smtp-Source: AGHT+IEKgI3nQYHCH8DidEWqf2UoGJFR4wRiYpFWDfNslXOnE0ABJu9zI68fN3BS8uzY8lwCUjes4A==
-X-Received: by 2002:a05:6000:4284:b0:391:3aab:a7d0 with SMTP id ffacd0b85a97d-39ad1749aa3mr6077097f8f.19.1743157653814;
-        Fri, 28 Mar 2025 03:27:33 -0700 (PDT)
-Received: from localhost (p200300f65f14610400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f14:6104::1b9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6588d0sm2148585f8f.7.2025.03.28.03.27.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 03:27:33 -0700 (PDT)
-Date: Fri, 28 Mar 2025 11:27:31 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Nylon Chen <nylon.chen@sifive.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v10 0/3] Change PWM-controlled LED pin active mode and
- algorithm
-Message-ID: <ktmanz3mufxvme3gspm46p7vyjxsmzfxckqxg2e5a2mbqc5pxe@uc56iqoryuzr>
-References: <20241224093902.1632627-1-nylon.chen@sifive.com>
- <zqkx7cx5nalslfmxeoxdnsjbvrvzajrjybsmsyeyc65a64sntr@gpc5qp6aoyp7>
- <CAHh=Yk_j1ZnJ+=XQ_geN1sXMaye=P4jk-vduwj0-1soM7d+wQw@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=cIP6Z7Ty6/tRdGGF7qDTzaK2YTULbg7SzJBk5FHHCaSulyaZ5hYBrpbER6WC+qK6ZXnD9NCv+y1a7JakCGm3Dq0inBNlyeXSZp9/I8PAHxDCFqHBhsTnnvHjTBT6QSh0rgvzDFw84a1N1lPod/ydH19I9eD/l8Hom+ejk0bdaHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FNFq2f+k; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743165351; x=1774701351;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kkYelAsLE09zWGPafoFLVzLQ6mWjrr5Yv4raVwT1e4w=;
+  b=FNFq2f+k1jdb5HrJnFV/3FkXx0WbrEt0GD9qjZRRp9BLIbBJRLh4icX9
+   eU6y8TA79q0DiwyVI4aRIc8kou5/sbF8d1fL/I5WDz8K3gAvp+igVcQri
+   AQfXAQ1UC5na7ByhgjteS1zBdo9vzUxdiyDqffbTxv6WpJDLwOiubz0Mj
+   8PFkVzX9L+FGvhCsEILKCtJn6ZQp2gdmiwxc2fcGQ2kcGNIqsvqvy4v/d
+   LlQRll4xE9yiWUiHdUlmJEdpsgZbKk0EJSqZyQDe614OExjlWzhiQh7LB
+   PG8TlCtHQwQkn7Lp21eZKF83d61KYA1gv8lJNLnBMwlSIpA7GXrdhtm7W
+   w==;
+X-CSE-ConnectionGUID: APqkOAVFStKn8qCFmX0Nig==
+X-CSE-MsgGUID: aSEdZufRSVyg0JM0PEILwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44688454"
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="44688454"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 05:35:50 -0700
+X-CSE-ConnectionGUID: yX5I6lH4TxmyN5fRoWAAPA==
+X-CSE-MsgGUID: MCHoUNYmRgW0SGW/R988RA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="130488530"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 05:35:44 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1ty8w0-00000006jqO-3YOp;
+	Fri, 28 Mar 2025 14:35:40 +0200
+Date: Fri, 28 Mar 2025 14:35:40 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <Z-aXnHig0HgVOLK2@smile.fi.intel.com>
+References: <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
+ <hinocg3itjqizbmzgaxv6cfnhtus6wbykouiy6pa27cxnjjuuk@l5ppwh7md6ul>
+ <Z9vydaUguJiVaHtU@smile.fi.intel.com>
+ <D8PF958QL5AK.2JIE4F1N1NI0F@bootlin.com>
+ <Z-LSHoYA1enEOeHC@smile.fi.intel.com>
+ <D8QA116WPNUE.11VKIHSG9N0OZ@bootlin.com>
+ <Z-Qh8yBMaCMhv_Ny@smile.fi.intel.com>
+ <D8R4B2PKIWSU.2LWTN50YP7SMX@bootlin.com>
+ <Z-WQAC8Fc90C1Ax6@smile.fi.intel.com>
+ <D8RQYJXP0KMK.3L8A8YVZKID89@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="c2otz6rwcboba37k"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHh=Yk_j1ZnJ+=XQ_geN1sXMaye=P4jk-vduwj0-1soM7d+wQw@mail.gmail.com>
+In-Reply-To: <D8RQYJXP0KMK.3L8A8YVZKID89@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Fri, Mar 28, 2025 at 09:13:12AM +0100, Mathieu Dubois-Briand wrote:
+> On Thu Mar 27, 2025 at 6:50 PM CET, Andy Shevchenko wrote:
+> > On Thu, Mar 27, 2025 at 03:28:08PM +0100, Mathieu Dubois-Briand wrote:
+> > > On Wed Mar 26, 2025 at 4:49 PM CET, Andy Shevchenko wrote:
 
---c2otz6rwcboba37k
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v10 0/3] Change PWM-controlled LED pin active mode and
- algorithm
-MIME-Version: 1.0
+...
 
-On Fri, Mar 28, 2025 at 05:41:37PM +0800, Nylon Chen wrote:
->  * (T) period.
-> > > The `frac` variable is pulse "inactive" time so we need to invert it.
+> > > > The use of this API is inappropriate here AFAICT. It drops the parent refcount
+> > > > and on the second call to it you will have a warning from refcount library.
+> > > >
+> > > > It should be as simple as device_set_node().
+> > > >
+> > > > >         }
+> > > >
+> > > > With that, the conditional becomes
+> > > >
+> > > > 	} else if (is_of_node(fwnode)) {
+> > > > 		device_set_node(&pdev->dev, fwnode);
+> > > > 	}
+> > > >
+> > > > where fwnode is something like
+> > > >
+> > > > 	struct fwnode_handle *fwnode = dev_fwnode(parent);
+> > > 
+> > > I tried to use device_set_node(), but then I got some other issue: as we
+> > > now have several devices with the same firmware node, they all share the
+> > > same properties. In particular, if we do use pinctrl- properties to
+> > > apply some pinmmuxing, all devices will try to apply this pinmuxing and
+> > > of course all but one will fail.
+> > > 
+> > > And this makes me think again about the whole thing, maybe copying the
+> > > fwnode or of_node from the parent is not the way to go.
+> > > 
+> > > So today we rely on the parent node for four drivers:
+> > > - keypad and rotary, just to ease a bit the parsing of some properties,
+> > >   such as the keymap with matrix_keypad_build_keymap(). I can easily do
+> > >   it another way.
+> > > - PWM and pinctrl drivers, are a bit more complicated, as in both case
+> > >   the device tree node associated with the device is used internally. In
+> > >   one case to find the correct PWM device for PWM clients listed in the
+> > >   device tree, in the other case to find the pinctrl device when
+> > >   applying pinctrl described in the device tree.
+> > > 
+> > > So maybe I have to find a better way for have this association. One way
+> > > would be to modify the device tree bindings to add a PWM and a pinctrl
+> > > node, with their own compatible, so they are associated to the
+> > > corresponding device. But maybe there is a better way to do it.
 > >
-> > I'm trying to understand that. You're saying that the PWMCMP register
-> > holds the inactive time. Looking at the logic diagram (Figure 29) of
-> > "SiFive FU740-C000 Manual v1p6" that is because pwms is feed into the
-> > comparator after going through that XNOR where the lower input is always
-> > 0 (as pwmcmpXcenter is always 0) and so effectively counts backwards,
-> > right?
-> > In that case the sentence "The output of each comparator is high
-> > whenever the value of pwms is greater than or equal to the corresponding
-> > pwmcmpX." from the description of the Compare Registers is wrong.
-> >
-> Hi Uwe, I've contacted the spec's author, and he is willing to correct
-> the spec-related error.
->=20
-> Based on your suggestions, I think we have two approaches
-> 1. First add comments explaining where the spec and implementation
-> don't match, then after the spec is corrected, submit another patch to
-> remove the comments
-> 2. No need to add this error explanation part, because the spec will
-> be corrected later.
->=20
-> I don't have a preference, so I wanted to check with you - do you lean
-> more toward option 1 or option 2
+> > Okay, so the main question now, why do the device share their properties
+> > to begin with? It can be done via fwnode graph or similar APIs (in case
+> > it is _really_ needed).
+> 
+> I wouldn't say the properties are shared: we have a single node in the
+> device tree as this is just one device. But as we create several
+> (software) devices in the MFD driver, we now have several devices linked
+> with a single device tree node.
+> 
+> One solution would be to create more subnodes in the device tree, one
+> for pinctrl and one for PWM, but this feels a bit like describing our
+> software implementation in the device tree instead of describing the
+> hardware.
 
-I would go for 1, mentioning the version of the broken documenatation
-and the expectation that this will be fixed in later revisions. So there
-is no confusion when the documenatation is fixed but the comments not
-removed yet.
+I see. From my point of view the above is the correct approach, but
+you need to ask DT experts, I'm not one of them.
 
-Best regards
-Uwe
+-- 
+With Best Regards,
+Andy Shevchenko
 
---c2otz6rwcboba37k
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfmeZEACgkQj4D7WH0S
-/k44egf+LuxtxM7lTyagceD7gOIIrg8b15gWwsEr7jfLegP4q6GIa2Y25I+zqTqA
-AdjCfRboH1x1fp8tD2TIsb/fE4lZa0ywNQSCr3UVyW3CUSrjGCDxB0NuqxI5oaGb
-8mP+9Doa3A4UgYviPaeBxrK5pN5yPOJwigwyPzADtwMi/u18bn38sRDlGmRfQAbp
-AzzpywbZHJIhcBXCDM6j5bhsQD0jWiQM7/YBkHF1Ftiwx87wNmcOJGR8o9C0LKDG
-xfad+UWIz0nVJiGXxnFyeG6+quS7uUglSv0mvtLseWlh7pQ17MLVQkmnRILaESYy
-Ginzw97MvNyFjEns8lQWRr/yidY+rQ==
-=uVv6
------END PGP SIGNATURE-----
-
---c2otz6rwcboba37k--
 
