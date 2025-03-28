@@ -1,157 +1,159 @@
-Return-Path: <linux-pwm+bounces-5300-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5301-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9D85A7467D
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Mar 2025 10:42:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E812A74837
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Mar 2025 11:27:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 76B1F7A6009
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Mar 2025 09:40:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B08B416D5CD
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Mar 2025 10:27:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 521EC214A8D;
-	Fri, 28 Mar 2025 09:41:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E327218E81;
+	Fri, 28 Mar 2025 10:27:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Nren2MQn"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="umW9MFd0"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515782153CC
-	for <linux-pwm@vger.kernel.org>; Fri, 28 Mar 2025 09:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C8821516E
+	for <linux-pwm@vger.kernel.org>; Fri, 28 Mar 2025 10:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743154914; cv=none; b=AD7TZH0mdn0msP8tMtMsn9v38jjBwNT3iNilqHe3hQyLSF+V8e/bNaVWuuKPJ10MOR9vWTpPLlp2nYCAv9myq5UVmTto/ELCniZmr1nDWzQEV53Pgp5Bkdq9t7uW6DOTS/0E/baB5TSNilAIh0KSHrkPwStnTnENpUl/miq4AVw=
+	t=1743157658; cv=none; b=H2IquIndHbbFwMbywB9DhM/92OKJnptIBxa1SBJyByEkq8RLTuYVbc5pTHCTaG8J4QqbyHX6Aso8ZhEdAZgxs3CkvXS/zoD16TLOszVjdP4U7naGOtTaFMSkhXL2FDEICK9nCtgm05r5+nCGbstT2h2JyhIDMiAgiGS/c3Md5QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743154914; c=relaxed/simple;
-	bh=Zun5s4aXGl/09PaE0IgNxFi9M4KhwUChifZd44o3m8Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lB8NFDTA8MJ136vOY0vgji1l8ZTHXC0a0fHNQ+OKKGdTnH4VpwnYjSxjnbnyGylfv+t0ctQAxH3gWelajn0V+UwUcACxC8ZHXvEGzd0++RufP9LPNqelWa27XVaokYFvkBcyYK3wKOmzy4/d0fznJnA6VJCfPtU+5817ff8tm64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Nren2MQn; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86dc3482b3dso3078029241.0
-        for <linux-pwm@vger.kernel.org>; Fri, 28 Mar 2025 02:41:51 -0700 (PDT)
+	s=arc-20240116; t=1743157658; c=relaxed/simple;
+	bh=i7mKZzkMcZp9ZJNbdNTwSjYL8EgM/QpuemcpfsUTFPY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lyEmhzFUds4xYjddei8PVsUBbCpuaBNPBhRndq5/LEWwwrNdtfd8CL6mi/iXreJ1dOu+44D99zkXA0fRSuOHKP0kFiwcG0KvooI8kgF+tr/vIzVAZ29PesyMQR6ln09UFVjLYoxyVOlKwDgscI42jY6+eDeCjqB8X+lwrNAOZ7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=umW9MFd0; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4394036c0efso12928375e9.2
+        for <linux-pwm@vger.kernel.org>; Fri, 28 Mar 2025 03:27:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1743154909; x=1743759709; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M1b0hX/zsu3e/MFK5kXhrakxPDVZLxz0+s0CCuIkG+I=;
-        b=Nren2MQntzUBLwhRf0HZGBWJKRUerlocQmOPALoBnJebxRqRjkKTlKT4cTNWivvsM2
-         XEiRQCjr9k/FhMk8HIuQ9zXjhnfcUPsUzECR3ucE6i2ZWXZA/s+r84ZK0QQqFfyDKNDf
-         Dgsk9b5wMLIDvP9yg8qGXmyrAcRzRYL6os9rlZOufdzW4P9tVFhACxAqnpMrp8c8vF6+
-         gNMjJAyPcD3gXwsvMsYaDkhafxHDCp4TSe6BsaPFcvv6SHwX2vpIjfV/0kwIqwI11h76
-         IjErwa1+GaTi1x3b+iqct7N3RUU46v1zUCoV1UPbdJLFRxK5G+TVJCZ/jei9KvhVeSDO
-         cung==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743157654; x=1743762454; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Eax7YxGwWpnNu4N9Cuk0JD950DXdwRHhk8wiSiixGbg=;
+        b=umW9MFd0krK7a+hul5ik+iolir9Sw1NcDEW3w7a9PXLJaWJQWd+PZoEm+a/vdKVsaF
+         cislUlDX5ZaJ08+ov+HAjhyvijx4XPpCMGG/Xj0DVzWgmqlyV0AgsFUk4HBzbzz2+2wx
+         X95KJs4+aOC7XHailEqaA2ol1knWdDi7Ccj/CswHCsgLJzR8gdLhDqVI/H51Fmboqtl8
+         CeSvyIC5wTa0R7ZrVkx5rUkMICW2TKZDPfZI7smrUYPFuFFOOgWgXRCu2crmxLOXmTbt
+         m55gAxqIKquyUYqQwmhHHceQq1bO063B4t0E/DP6b0HqZka+zg1iCBXNV/fNIw6hSte8
+         JMAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743154909; x=1743759709;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M1b0hX/zsu3e/MFK5kXhrakxPDVZLxz0+s0CCuIkG+I=;
-        b=rXAkN5lXJvIRfjPcr/1LkVfU3sQVwufk4+NxvlHyJPFW8etbxzSBiN0OZkB54m76kI
-         JZL8tK1dkN/zV/RysfGWGiMUAo+YXX7ymGFB+0tdPsUPTFspmECpQ6mBOzmDjCYDFien
-         D3apM8gc/BDHsRODUM43aCLninrNdCyGgFK1z5lZ1nVYNxNGYb3/bM/dSie7u5VKAPqx
-         qWCC9ZRhR5af/HGCxV9rP34Hws42zC2AywmhSQBnbXlKwenPFhCeFv+bTbq9gYxhfHZi
-         QJTNRHlS7d+AP4qC+j+UV2VmeWDg4n4usEyvnUEhHCJt9v1AMT/gbP0IiPwz5EyQRA2b
-         FgJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcU2jxup6x5OiM7aiFbUNi07N/RUoK5eHbgTYiMJ+HDCK7P68NER6kSjqQtFv2QDwJtZxUoanKZVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjZhlm+WHnU1QhZOCFIfqupCt8CODH/gbDfy+qhcZeCG/0XLPQ
-	E0CAwm0DHsFW8CVNv6aamgJnFbdp1tmEFSyn4NcDgfqkbXT4qmmU/V/mkepPVyzorSwiKb4+NXD
-	cInpHl1WgKRUt90ExyCBgfzmqyD3XjQkRvSdkJA==
-X-Gm-Gg: ASbGncuayQ4bjOhAZMNlFC34WI3Zb+s+3vjuRBQy4I2XdQ0N/FXvriQ4OFMx42OgLN/
-	EhpsR7VYnhlX7kThhUcaAWNCVtw6g1bOfMSe2b8RsAyK3BAdLw8yAeWOE7O3iwjlwzN3SB3n/PZ
-	kZ0Qr+9IyarYmTduAh8le1sDLDCD6y
-X-Google-Smtp-Source: AGHT+IHAfA7U5ABlgiwkdwG5YFKYhP7zz3TIEVTOcbnJ0BCTQpH0ybwGPzt5hi7ByZc+Ofz77emzNeHplbMnGuIyChc=
-X-Received: by 2002:a05:6102:a90:b0:4c3:878:6a62 with SMTP id
- ada2fe7eead31-4c6c2816727mr954406137.8.1743154908552; Fri, 28 Mar 2025
- 02:41:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743157654; x=1743762454;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Eax7YxGwWpnNu4N9Cuk0JD950DXdwRHhk8wiSiixGbg=;
+        b=w9Sy8SiRT9T7wXTSJcRYbnDzdXvs+rkvpg07zjD1tGvgra0TBUobJSN47etreuBRAu
+         YbcLK5VYXAn5CGbx4dQxPbEmYXfKxUK2fxzQkYNLX0GLlWUXS4sUsPIWmhTqIDaqQW1j
+         sOtWbHF0lZFuwhltdVh627z2mRhwk8rHq9eegSwA+JwBVSKsrnH9vggbNetErCPBI2bA
+         c7zit1U8UdQLL7C0i29H+g+GtN5kzErJb6xq+LYlHCqf7oybjwLRC8yW+AwemHYaPGR3
+         sFe2YkuxSSLn7MZW2xFDVuGfyc7yiz1w1Pft79vt3tz5EQW7g51aV1PuLy8oaDNy0mZg
+         brlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWC6yPzK8EyElAWHitvH21UGts//d8S0vRUSqtNrESVvnvTnjuMZAXVmIo+/QeB+4NtdGIaXCbEQ+Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymDbmIMUsAEyvH01vZiM++UQvSSghVBSwM3SLE96kpdmQ36nDA
+	OWp4vKfveaoA+Qlq3EiBl9xMOfXaqTBC/xGxAubBpmMpVs4wK/SmsIAg6/MG6Ec=
+X-Gm-Gg: ASbGnctUpQlaIPLm+E9yJfmEJ5ufNgdXa66DRvbob3yqiXgUIEJi5a96GRoAr8IW4Jj
+	1VGpcRR9779hwQCt+g0iHQufnWOlubbXyHSxNcFEXqMkHupOKqWuHnJmWHB9Y98ysGtFAZ73UFZ
+	co1gmm4XrkfwE6vSAtkw+OeDskL7583gYjDZ0+XSvv7hGJylti1IdMylsraMfTLygGQnqCNKB/9
+	EHqDcYBQAgKBcUIACW1gTDxA939JJ3GW34JZH331F9JbSUgwQpGgx9psWN8H7CoaFA9dpyDxDWb
+	wZKYRZlyShSwvO53dgEMSBlMKkWfW2gjEEuvyNLJKHm4WfZWhCIWLHZgnE58WOvQb90P9SJ6wD8
+	1fFzfQcRWH5A=
+X-Google-Smtp-Source: AGHT+IEKgI3nQYHCH8DidEWqf2UoGJFR4wRiYpFWDfNslXOnE0ABJu9zI68fN3BS8uzY8lwCUjes4A==
+X-Received: by 2002:a05:6000:4284:b0:391:3aab:a7d0 with SMTP id ffacd0b85a97d-39ad1749aa3mr6077097f8f.19.1743157653814;
+        Fri, 28 Mar 2025 03:27:33 -0700 (PDT)
+Received: from localhost (p200300f65f14610400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f14:6104::1b9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b6588d0sm2148585f8f.7.2025.03.28.03.27.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 03:27:33 -0700 (PDT)
+Date: Fri, 28 Mar 2025 11:27:31 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Nylon Chen <nylon.chen@sifive.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v10 0/3] Change PWM-controlled LED pin active mode and
+ algorithm
+Message-ID: <ktmanz3mufxvme3gspm46p7vyjxsmzfxckqxg2e5a2mbqc5pxe@uc56iqoryuzr>
+References: <20241224093902.1632627-1-nylon.chen@sifive.com>
+ <zqkx7cx5nalslfmxeoxdnsjbvrvzajrjybsmsyeyc65a64sntr@gpc5qp6aoyp7>
+ <CAHh=Yk_j1ZnJ+=XQ_geN1sXMaye=P4jk-vduwj0-1soM7d+wQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241224093902.1632627-1-nylon.chen@sifive.com> <zqkx7cx5nalslfmxeoxdnsjbvrvzajrjybsmsyeyc65a64sntr@gpc5qp6aoyp7>
-In-Reply-To: <zqkx7cx5nalslfmxeoxdnsjbvrvzajrjybsmsyeyc65a64sntr@gpc5qp6aoyp7>
-From: Nylon Chen <nylon.chen@sifive.com>
-Date: Fri, 28 Mar 2025 17:41:37 +0800
-X-Gm-Features: AQ5f1JrdaQFUJm63vOfH9GWXIi95vV8JEVeEsIoDHq3ca33AIZRvXLmLu0ehrcM
-Message-ID: <CAHh=Yk_j1ZnJ+=XQ_geN1sXMaye=P4jk-vduwj0-1soM7d+wQw@mail.gmail.com>
-Subject: Re: [PATCH v10 0/3] Change PWM-controlled LED pin active mode and algorithm
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="c2otz6rwcboba37k"
+Content-Disposition: inline
+In-Reply-To: <CAHh=Yk_j1ZnJ+=XQ_geN1sXMaye=P4jk-vduwj0-1soM7d+wQw@mail.gmail.com>
+
+
+--c2otz6rwcboba37k
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v10 0/3] Change PWM-controlled LED pin active mode and
+ algorithm
+MIME-Version: 1.0
 
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> =E6=96=BC 2024=E5=B9=
-=B412=E6=9C=8827=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:20=E5=AF=
-=AB=E9=81=93=EF=BC=9A
->
-> Hello Nylon,
->
-> On Tue, Dec 24, 2024 at 05:38:58PM +0800, Nylon Chen wrote:
-> > According to the circuit diagram of User LEDs - RGB described in the
-> > manual hifive-unleashed-a00.pdf[0] and hifive-unmatched-schematics-v3.p=
-df[1].
+On Fri, Mar 28, 2025 at 05:41:37PM +0800, Nylon Chen wrote:
+>  * (T) period.
+> > > The `frac` variable is pulse "inactive" time so we need to invert it.
 > >
-> > The behavior of PWM is acitve-high.
+> > I'm trying to understand that. You're saying that the PWMCMP register
+> > holds the inactive time. Looking at the logic diagram (Figure 29) of
+> > "SiFive FU740-C000 Manual v1p6" that is because pwms is feed into the
+> > comparator after going through that XNOR where the lower input is always
+> > 0 (as pwmcmpXcenter is always 0) and so effectively counts backwards,
+> > right?
+> > In that case the sentence "The output of each comparator is high
+> > whenever the value of pwms is greater than or equal to the corresponding
+> > pwmcmpX." from the description of the Compare Registers is wrong.
 > >
-> > According to the descriptionof PWM for pwmcmp in SiFive FU740-C000 Manu=
-al[2].
-> >
-> > The pwm algorithm is (PW) pulse active time  =3D (D) duty * (T) period.
-> > The `frac` variable is pulse "inactive" time so we need to invert it.
->
-> I'm trying to understand that. You're saying that the PWMCMP register
-> holds the inactive time. Looking at the logic diagram (Figure 29) of
-> "SiFive FU740-C000 Manual v1p6" that is because pwms is feed into the
-> comparator after going through that XNOR where the lower input is always
-> 0 (as pwmcmpXcenter is always 0) and so effectively counts backwards,
-> right?
-> In that case the sentence "The output of each comparator is high
-> whenever the value of pwms is greater than or equal to the corresponding
-> pwmcmpX." from the description of the Compare Registers is wrong.
->
-Hi Uwe, I've contacted the spec's author, and he is willing to correct
-the spec-related error.
+> Hi Uwe, I've contacted the spec's author, and he is willing to correct
+> the spec-related error.
+>=20
+> Based on your suggestions, I think we have two approaches
+> 1. First add comments explaining where the spec and implementation
+> don't match, then after the spec is corrected, submit another patch to
+> remove the comments
+> 2. No need to add this error explanation part, because the spec will
+> be corrected later.
+>=20
+> I don't have a preference, so I wanted to check with you - do you lean
+> more toward option 1 or option 2
 
-Based on your suggestions, I think we have two approaches
-1. First add comments explaining where the spec and implementation
-don't match, then after the spec is corrected, submit another patch to
-remove the comments
-2. No need to add this error explanation part, because the spec will
-be corrected later.
+I would go for 1, mentioning the version of the broken documenatation
+and the expectation that this will be fixed in later revisions. So there
+is no confusion when the documenatation is fixed but the comments not
+removed yet.
 
-I don't have a preference, so I wanted to check with you - do you lean
-more toward option 1 or option 2
-> With that assumption there are a few issues with the second patch:
->
->  - The Limitations paragraph still says "The hardware cannot generate a
->    100% duty cycle."
->  - If pwm_sifive_apply() is called with state->duty_cycle =3D 0 the PWMCM=
-P
->    register becomes (1U << PWM_SIFIVE_CMPWIDTH) - 1 which results in a
->    wave form that is active for 1 clock tick each period. That's bogus.
->    If duty_cycle =3D 0 is requested, either make sure the output is
->    inactive the whole time, or return an error.
->  - With the above error in the official documentation, I'd like to have
->    a code comment that explains the mismatch such that a future reader
->    of the code has a chance to understand the situation without in
->    detail review of the manual and the driver.
->
-> Orthogonal to your patches, I wonder about
->
->         frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
->
-> . Round-closest is usually wrong in an .apply() callback. I didn't do
-> the detailed math, but I think you need to round up here.
->
-> Best regards
-> Uwe
+Best regards
+Uwe
+
+--c2otz6rwcboba37k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfmeZEACgkQj4D7WH0S
+/k44egf+LuxtxM7lTyagceD7gOIIrg8b15gWwsEr7jfLegP4q6GIa2Y25I+zqTqA
+AdjCfRboH1x1fp8tD2TIsb/fE4lZa0ywNQSCr3UVyW3CUSrjGCDxB0NuqxI5oaGb
+8mP+9Doa3A4UgYviPaeBxrK5pN5yPOJwigwyPzADtwMi/u18bn38sRDlGmRfQAbp
+AzzpywbZHJIhcBXCDM6j5bhsQD0jWiQM7/YBkHF1Ftiwx87wNmcOJGR8o9C0LKDG
+xfad+UWIz0nVJiGXxnFyeG6+quS7uUglSv0mvtLseWlh7pQ17MLVQkmnRILaESYy
+Ginzw97MvNyFjEns8lQWRr/yidY+rQ==
+=uVv6
+-----END PGP SIGNATURE-----
+
+--c2otz6rwcboba37k--
 
