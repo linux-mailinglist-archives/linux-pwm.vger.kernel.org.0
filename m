@@ -1,46 +1,89 @@
-Return-Path: <linux-pwm+bounces-5314-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5316-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60429A778CE
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Apr 2025 12:29:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5192A778D2
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Apr 2025 12:29:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66A973AAEA5
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Apr 2025 10:29:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6159216A37E
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Apr 2025 10:29:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECFF81E9B00;
-	Tue,  1 Apr 2025 10:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6B7A1E0E0B;
+	Tue,  1 Apr 2025 10:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="y8uISR1E"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D1C1E0E0B
-	for <linux-pwm@vger.kernel.org>; Tue,  1 Apr 2025 10:29:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E8D1F0E50
+	for <linux-pwm@vger.kernel.org>; Tue,  1 Apr 2025 10:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743503364; cv=none; b=YaxonPILpm/5Yci7TFKs+bhC0f+2uLGdsL+GISdNCD9bimQWBfbACO8hHVBbsHFp5xQyfLhXFiwBcaI4+bykM3hT0EbCASk9Nr4MMQm8eNpFSKdh7Om36qTo1rZ6gCeoNDTJfTgw6BXSvCrjGHiQyisIqOeYYuJo+Uo46Maqc1U=
+	t=1743503369; cv=none; b=UFqTMsk/HRTO+AdSxSOVU3j6HnguXVV9mtBP6Q2u0Rs7fD7htvPP7lCiMteBsKapVGe1m7senDG4DVWyRL0Wrl6UzR1FuHrD9qiAONcTUeFFI6v+8nsD2KWgofmhKnEXKhW+2jHJOFMn4Z/jScN+9CnqfCagSpzf87HF1EE4Kao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743503364; c=relaxed/simple;
-	bh=/t6obRtFVamo8daBzkjO6dUfMjQD34FAwAw7iHsB5p8=;
+	s=arc-20240116; t=1743503369; c=relaxed/simple;
+	bh=raD5nCVvGk3g4nqb+utI3fnRuRhZ5Dr24B1s+P7zKqE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EGDIgkLeHkd0EybikPAYejJfxR6/o+sv9yRqlTIGs9eUUjeaVEpXb+Q8pxHujcdnHmFuUm0f4L8QCbjtBXUhk6yaneRy/tnfrmFP+rnyVLcNFaq10mJJW5kBacec2QReRmMensATqU9+UsvWdf/0wQ5QRC8v9adSRpXQLzxVMYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 098EAC4CEE8;
-	Tue,  1 Apr 2025 10:29:23 +0000 (UTC)
+	 MIME-Version:Content-Type; b=YvPBQMElijtiOj5vU1V4a6h7CzkBb8MasK+KPLjwuOs3PXQEoNWX70IvSsm12tJlwLYVL6diqV2IGhwAwq15JoiZD/tUz00Dmny4FH8sQk5QiMWVOxO0ZAAD+4K8lF3khmVxHqF4CAkRvFRseVXogDuz9aP5rjBM+fT8MUSymMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=y8uISR1E; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c1efc457bso824465f8f.2
+        for <linux-pwm@vger.kernel.org>; Tue, 01 Apr 2025 03:29:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743503366; x=1744108166; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nx+t7dS458WglT02dhLawv3+vNQb4ORGCFYodRrEmuE=;
+        b=y8uISR1E6OtZxBZ7IcVZKPyCztg9f1F3rgSV7R2/5sjgqxHIdoJ3LFVN+vOftYGDCZ
+         TogmZ4vHJo5MdF6EV0JYx8J/ClHl7hp8lj7SZ7h64wUr+jnJmJuNzm5CPi1E/HDZ9ZZK
+         lN/h1hY7fgJmWdp0ThZAcUIZfitYg/OMxXa5k5xtIj8tJvWnKxuBTHG47OJ3aqgzSKEu
+         5BQM8CkoPdaQlXY0lD+3xk2jfGKzoryenmXu81SRZtluqejBn1IesuYXFbTtLaQmASI3
+         G5RGmNM8VQyVdPr5AUMaqiBYmWEb905Vc1uPZykGjU6xKC1+yGb0bd45spQRlqvGQDzF
+         OeVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743503366; x=1744108166;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nx+t7dS458WglT02dhLawv3+vNQb4ORGCFYodRrEmuE=;
+        b=UV/KT253E+e9mgfZSKQ5cbPQXerVZG3cyZRiWM+PSgm0F1h7jF6zI9spvQmtH69o9l
+         cXeGLI9LbbCzy29kplopZF13LyZpEr5wk5YE9c+ISvylwLO65eYCIVLIe01RTAanT303
+         4rd541Kcdts36sChcjd99r3g7RYeSjFuO5FrRvpvEpcI8P3u92K/21dHMdmO7JFF8yMY
+         bNvSrE/J7qccYMm9AIhhrClnb2Fstnxjhx+69APUAlbL1sbux+ADXpXwy256SUUkimyW
+         WQBibJybXxGy5+V8nm7necaAod+pectl0s+NYKCZr0Z0xqgsCzaONNzkSa80u2D/DDBS
+         kxfA==
+X-Forwarded-Encrypted: i=1; AJvYcCW548tU+t4rCWpqn9TXD0P2pKssOK2b/ku01YeG6hQJywd7ACawKiD+hE8TrvaJPA6Jjek2UUiqdMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx4ALNfjQ7Dvm8sQM0sDP/TFGB/u8NEZ1pwDSyds25XpeirTfJ
+	9qAjnO6mIL4C4f03DdQVy3/GoSkamTcxiZ1a7vjxG8laMlR08NTZNUHZPHZLrjWdUU6f6od6rqe
+	9
+X-Gm-Gg: ASbGncuNrG9GTGs1DtKuacvoMYUYaycO53B6Eu4DAkqOJGA2zXPEe4GDt0QKNQfSXMQ
+	tffzgVpz1yidPpJHiMVIv4TVfRfyZ8pkQv/D8S1H6X65JcYPX07iKA9cQPFnyeUi42g3Ve9OE/P
+	NWXujy7IM6MIprpMoa/TpQgggqf3YhuMsKQVX9BR45cWhjbiJxM+OA5fb7BnwgLo8db2GE3iQFi
+	H9ORsAxid7CUc+OeqBpS1G+IdcNfjwiMk5LkUgyFEW8i5aNuCJNLMa36L10dvwWl1vTKnWDE/M6
+	XzvN5nrKCB1yJu9qeSi0ScEY6joWUMGj4I2KFEfcvISA0xV6s5rS0KDjB1VfPczTDIQBE3WGscy
+	8FN+/n4MqlfCNcUggXzg8XA==
+X-Google-Smtp-Source: AGHT+IHNCeNtYlrxCPJQq3pSlv5yBxYcqbKoetqHiGqtUs6dXEfQgEOWN5bAXvUXs6ny7ElY+yJ12w==
+X-Received: by 2002:a05:6000:4387:b0:39c:2678:302b with SMTP id ffacd0b85a97d-39c26783030mr979117f8f.45.1743503365953;
+        Tue, 01 Apr 2025 03:29:25 -0700 (PDT)
+Received: from localhost (p200300f65f14610400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f14:6104::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c0b79e0a3sm13885606f8f.71.2025.04.01.03.29.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 03:29:25 -0700 (PDT)
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	John Crispin <john@phrozen.org>,
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Simon Horman <horms+renesas@verge.net.au>,
 	Thierry Reding <thierry.reding@gmail.com>
 Cc: Ingo Molnar <mingo@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
 	linux-pwm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/3] pwm: mediatek: Prevent divide-by-zero in pwm_mediatek_config()
-Date: Tue,  1 Apr 2025 12:28:59 +0200
-Message-ID:  <9e78a0796acba3435553ed7db1c7965dcffa6215.1743501688.git.u.kleine-koenig@baylibre.com>
+	Josh Poimboeuf <jpoimboe@kernel.org>
+Subject: [PATCH 2/3] pwm: rcar: Improve register calculation
+Date: Tue,  1 Apr 2025 12:29:00 +0200
+Message-ID:  <ab3dac794b2216cc1cc56d65c93dd164f8bd461b.1743501688.git.u.kleine-koenig@baylibre.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <cover.1743501688.git.u.kleine-koenig@baylibre.com>
 References: <cover.1743501688.git.u.kleine-koenig@baylibre.com>
@@ -51,69 +94,70 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2160; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=JMgQzUTJoig5ETPeVtsMb4NN/zcNu8J+hWAXWzGaoAA=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBn67/tJsvKleO7aIXPu4rFG6eq/4n71gXwAUEjo noLJES5ToOJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ+u/7QAKCRCPgPtYfRL+ TpKSCACl4E2BSZGgDXNnVYRUVexNWf/pzLfzsOsHEsC6on4hlKTQcylbLwpqPnfagMeus5mvR3D jJqX3V7Ym2fUjlKwQljG+jNHCz+rjvn771hutv6tLm/GQgUAxaRE/YXoZMfKKHSdgkg/sWpY1IS BrCVIpH9WgCqIgVTafaibYdINF1feP6c5yRyn+sW1Xgcy4RruZN3AI0qV7ntHeQZy7HKSeDvKOV ATdmR5KvK86+17wBwWU/L1lYGmeXDo1y0OM4j8pgqSWKig5i1P1NUn6N7p0F8rqz6lVvl9tBaJX ldQuwb+cQeog9gUWuKSYpyYCk1bdI+o/hG6bZkybkXbc9nN0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2351; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=raD5nCVvGk3g4nqb+utI3fnRuRhZ5Dr24B1s+P7zKqE=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBn67/wHcybj4ht5H0d2Iuh8RCKOyAe0U8DxfqVJ xrBlWN2b3qJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ+u/8AAKCRCPgPtYfRL+ Th5+B/wMpeK1IolZk0dLkSvc7Jvy3qaIyGxiJzB7ygT5pwAaGrUh+XwWLbqf2cooOQq3bkZU9Th l8F3jZ35LIht6eMZnQOt3gQ0dQNiKF/vVO3rDcu4sH0hoBKPMqnq6gquWNwm9P7nJzdWVupemnE CB2dMddd6nwb0lDUlmE78B72m6Qrl7K3kZ4ToRkLG6IHj18z9s/A5AoHeq+wZkWbCuVkMJlZu3t VRznHa5n4aueMEFAiJHc0Zm3F8w9t5yTCzr2rI6QeSPHJS160jVQSceht1S9gC33ZWMUa5x7UzN P+wukKm+wTQXSkxnZQW6RC9NOOUvSwjD5alLht8o197fNxDJ
 X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+There were several issues in the function rcar_pwm_set_counter():
 
-With CONFIG_COMPILE_TEST && !CONFIG_HAVE_CLK, pwm_mediatek_config() has a
-divide-by-zero in the following line:
+ - The u64 values period_ns and duty_ns were cast to int on function
+   call which might loose bits on 32 bit architectures.
+   Fix: Make parameters to rcar_pwm_set_counter() u64
+ - The algorithm divided by the result of a division which looses
+   precision.
+   Fix: Make use of mul_u64_u64_div_u64()
+ - The calculated values were just masked to fit the respective register
+   fields which again might loose bits.
+   Fix: Explicitly check for overlow
 
-	do_div(resolution, clk_get_rate(pc->clk_pwms[pwm->hwpwm]));
+Implement the respective fixes.
 
-due to the fact that the !CONFIG_HAVE_CLK version of clk_get_rate()
-returns zero.
-
-This is presumably just a theoretical problem: COMPILE_TEST overrides
-the dependency on RALINK which would select COMMON_CLK.  Regardless it's
-a good idea to check for the error explicitly to avoid divide-by-zero.
-
-Fixes the following warning:
-
-  drivers/pwm/pwm-mediatek.o: warning: objtool: .text: unexpected end of section
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Link: https://lore.kernel.org/r/fb56444939325cc173e752ba199abd7aeae3bf12.1742852847.git.jpoimboe@kernel.org
-[ukleinek: s/CONFIG_CLK/CONFIG_HAVE_CLK/]
-Fixes: caf065f8fd58 ("pwm: Add MediaTek PWM support")
+Fixes: ed6c1476bf7f ("pwm: Add support for R-Car PWM Timer")
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
 ---
- drivers/pwm/pwm-mediatek.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-rcar.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index 01dfa0fab80a..7eaab5831499 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -121,21 +121,25 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
- 	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
- 	    reg_thres = PWMTHRES;
-+	unsigned long clk_rate;
- 	u64 resolution;
- 	int ret;
+diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
+index 2261789cc27d..19e5d0b849a6 100644
+--- a/drivers/pwm/pwm-rcar.c
++++ b/drivers/pwm/pwm-rcar.c
+@@ -102,23 +102,24 @@ static void rcar_pwm_set_clock_control(struct rcar_pwm_chip *rp,
+ 	rcar_pwm_write(rp, value, RCAR_PWMCR);
+ }
  
- 	ret = pwm_mediatek_clk_enable(chip, pwm);
--
- 	if (ret < 0)
- 		return ret;
+-static int rcar_pwm_set_counter(struct rcar_pwm_chip *rp, int div, int duty_ns,
+-				int period_ns)
++static int rcar_pwm_set_counter(struct rcar_pwm_chip *rp, int div, u64 duty_ns,
++				u64 period_ns)
+ {
+-	unsigned long long one_cycle, tmp;	/* 0.01 nanoseconds */
++	unsigned long long tmp;
+ 	unsigned long clk_rate = clk_get_rate(rp->clk);
+ 	u32 cyc, ph;
  
-+	clk_rate = clk_get_rate(pc->clk_pwms[pwm->hwpwm]);
-+	if (!clk_rate)
-+		return -EINVAL;
-+
- 	/* Make sure we use the bus clock and not the 26MHz clock */
- 	if (pc->soc->has_ck_26m_sel)
- 		writel(0, pc->regs + PWM_CK_26M_SEL);
+-	one_cycle = NSEC_PER_SEC * 100ULL << div;
+-	do_div(one_cycle, clk_rate);
++	/* div <= 24 == RCAR_PWM_MAX_DIVISION, so the shift doesn't overflow. */
++	tmp = mul_u64_u64_div_u64(period_ns, clk_rate, (u64)NSEC_PER_SEC << div);
++	if (tmp > FIELD_MAX(RCAR_PWMCNT_CYC0_MASK))
++		tmp = FIELD_MAX(RCAR_PWMCNT_CYC0_MASK);
  
- 	/* Using resolution in picosecond gets accuracy higher */
- 	resolution = (u64)NSEC_PER_SEC * 1000;
--	do_div(resolution, clk_get_rate(pc->clk_pwms[pwm->hwpwm]));
-+	do_div(resolution, clk_rate);
+-	tmp = period_ns * 100ULL;
+-	do_div(tmp, one_cycle);
+-	cyc = (tmp << RCAR_PWMCNT_CYC0_SHIFT) & RCAR_PWMCNT_CYC0_MASK;
++	cyc = FIELD_PREP(RCAR_PWMCNT_CYC0_MASK, tmp);
  
- 	cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000, resolution);
- 	while (cnt_period > 8191) {
+-	tmp = duty_ns * 100ULL;
+-	do_div(tmp, one_cycle);
+-	ph = tmp & RCAR_PWMCNT_PH0_MASK;
++	tmp = mul_u64_u64_div_u64(duty_ns, clk_rate, (u64)NSEC_PER_SEC << div);
++	if (tmp > FIELD_MAX(RCAR_PWMCNT_PH0_MASK))
++		tmp = FIELD_MAX(RCAR_PWMCNT_PH0_MASK);
++	ph = FIELD_PREP(RCAR_PWMCNT_PH0_MASK, tmp);
+ 
+ 	/* Avoid prohibited setting */
+ 	if (cyc == 0 || ph == 0)
 -- 
 2.47.2
 
