@@ -1,80 +1,48 @@
-Return-Path: <linux-pwm+bounces-5318-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5319-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D1BDA78189
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Apr 2025 19:33:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9995AA78829
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Apr 2025 08:33:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 634273ADC9E
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Apr 2025 17:32:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 45D9616C82E
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Apr 2025 06:33:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2383E20CCE9;
-	Tue,  1 Apr 2025 17:32:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCB41231C87;
+	Wed,  2 Apr 2025 06:33:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hdYLByVb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZ+j+Zs/"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C437FBA2;
-	Tue,  1 Apr 2025 17:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFB5367;
+	Wed,  2 Apr 2025 06:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743528771; cv=none; b=pxNnZFni8zqo2rIZJ2g3aOAC5MyLFmoigha9lZ7h/0ZyYldXm+SWks6DOjZFuD55oIUKSVxXgtcCbBZhEAc/zf7diy+E6Z7FTTOcWUMUQpYIkCGqW0yLj7OyPCO0RGFK6XuSOeWlnHZeJ2HZKTAFqBEGiJ2B59glmmOeoiiTQQ8=
+	t=1743575607; cv=none; b=uwMQR8ripOjB5hcxvcg5CaeOvd3JlaX7oD8n8rOufeDWdP0ltBcQPR7okNJPrTRNKURVINExsaAK3ooehZay7AqMHYAUKDa+JD0MJra14XAmdp2V11FM/Rr+y7KLAzM8JSH/S2DuTVlVigZgXbn2RSX2mWv9mJM/tUxkw289jpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743528771; c=relaxed/simple;
-	bh=4HBehSn3B+g3auftMF4wZeyzN5E7LdH11EcjSe1YyUc=;
+	s=arc-20240116; t=1743575607; c=relaxed/simple;
+	bh=w3SQw3BJy18mxt0qmYQYLJKYPzATzH2nToVDQfCVmCo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aGD6Iuc6s5R4/yLd3WQGZS3kblcGH2Ox8E/y75q0pskH4Cw93mB89pJsZKOyOcdrigZwbQDd7zjfi/j/TVZ0J9GfKgxRIfPmgyackSfnuUziSzq2IUTrXx+Xi2NEiehxc12Wg8pa4dL3XKyOUKgfi5+FGsQWQNIxyVc7v/oVvcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hdYLByVb; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223fb0f619dso110693005ad.1;
-        Tue, 01 Apr 2025 10:32:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743528769; x=1744133569; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V8RVUmA+m1kGChPMpcQ+PaepE65DTzRvMV0W66iG5TU=;
-        b=hdYLByVbyiwr1Tab3hzdM7nFQRUSAI8/YZbj8KJKDeqHE181AobBA7D9c4A5iVNApr
-         TPlRuPKvV6qi9c1oAuOnCBYQdPomUW4agn5qUnONL+xtLo9ToU5BgVjjhVu5ARD4apQY
-         2YFPJRE+b7PFcPFjKCZGhH0NIkX2CGwVRxaVDpyWFwf6W3gBV1QkXp6uclovMozxWV68
-         LhkPKNxfrAMrLcJPF77wkorTBqO7eis7YuokQZAjfTIpT63SPVBZ8TA62n/kZijAmzFM
-         3NcXEVhjKAHMgWya+Za8gSPaQ9DaBmFmWx9z2V0OxJYx4uhVXuOUyqaezVEBJXWZjVgt
-         f9dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743528769; x=1744133569;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V8RVUmA+m1kGChPMpcQ+PaepE65DTzRvMV0W66iG5TU=;
-        b=lpHC+sPhbYHl2+RvHl6ylBf3+5DlVsYQdINj0jA2oe4P/3VMwGadRIvwk0pLQoNXR9
-         zx+hVwMa09jKQn/JBdi9tXycG3tZLjiOUISETDMTUOWidMDi+4XhbW+Ovtecw/2NhOBb
-         MTGcPyeluHcPQFgP+fSfUVa/vM5ocgeF6mP+rmhsxA5KKveWv6iR8OzJzKcwgw11Irb7
-         sKpaFBLdTCd+7BJ9U8lVKX8HeZd27mMX9ZuidhvYGKtwVbN1ha8r7HDq+dk9fw7mfvz1
-         qhCakzHgtCQc9Bu4ftSg7oVrWyTf2+Oef+1saFKxpdtr4U9kSF7hl0ffCaUvrzlAsNPK
-         kzfw==
-X-Forwarded-Encrypted: i=1; AJvYcCU35M3TPuhrEXFAcIjl67ux/GKStPoO/Z5WWAVbQpiJXEaeVd7TdwrSchncjvJ0SfdgnPgc1MBRD64L@vger.kernel.org, AJvYcCWNhoLkqcs2hq8ejCrk9x4aqWxqkyj64cLUBjcqg+l0RTl0h8f2zq7ku5CP011rptP0fvNCNariJA7k8V2F@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVPEX65vl8HvRNfLAahlH76X1Mcehs6QZquMMJyIgU9COORK3g
-	/od7Ubzjc2JNqP5a6qrD9evZTAys6203KDOFn+qLSCRq+HUX0+uV
-X-Gm-Gg: ASbGnct9hJnsyIc09IvEnP2+2HIhf5iLWMsLwiH0YU4TiUbcgwHctDZ215EMFHI3tmT
-	9+bI6piVCQoOudz9wzN6H0gHOMqHHJGZvVFSXbUc0UZ9XpYIMcdBmdxlyvy6d2XURw4Bs3mBnCM
-	eEM1QCN1ClmBShlg23198eUNQBlcJxmVAdW/gBWRYTigtFpN5YFkjtgUL9Yr4rSr/bEmlqkNeRq
-	+FeZF8NQkZzxNuqkBYrCPAdvYVeJrN0lvIMMoAHqGx9nGz/DMf06d04MTKQKI2EdPXJOyiLs6/m
-	b1Mkj2wjjznutPBT/Vqg/zx3yP94BBnenbmEAqU4rsJnCjb9+N4gtrRMQ9rZKPqhDJ12bQXXGzw
-	8M7bAF8KyJ1p7SmYej7+VvhpfkNGzDFuptXw=
-X-Google-Smtp-Source: AGHT+IH95w/LAWi9XB3yjcdglXPFnSGj8XWtvL857JlmhI7fKhJECGlgQFhZrN0iisUbnhGnnnDRUg==
-X-Received: by 2002:a17:903:11c8:b0:224:24d3:60f4 with SMTP id d9443c01a7336-2295be6601bmr58932595ad.15.1743528768618;
-        Tue, 01 Apr 2025 10:32:48 -0700 (PDT)
-Received: from ?IPV6:2409:4080:109b:c762:5821:556c:83c9:d1d7? ([2409:4080:109b:c762:5821:556c:83c9:d1d7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73971068576sm9187137b3a.119.2025.04.01.10.32.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 10:32:48 -0700 (PDT)
-Message-ID: <61b1e302-98ad-4dda-8c03-18315d432512@gmail.com>
-Date: Tue, 1 Apr 2025 23:02:41 +0530
+	 In-Reply-To:Content-Type; b=XGqXv3ifLt04QazcuhTK/tE3ZrKFLwbjyuh0XSDB6IZwqnEFCySPJ8Wzk4EsAcfov/Kqn9Do6JObG/dOKo6PW8VS3LIQjaSE+nCoEC3IuwaWXqC2raHNuaAoYB1V41rMmToRYnL57CkKtdojM8LJ0n1E2epx5znwKWPAnnSDnUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZ+j+Zs/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7973C4CEDD;
+	Wed,  2 Apr 2025 06:33:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743575607;
+	bh=w3SQw3BJy18mxt0qmYQYLJKYPzATzH2nToVDQfCVmCo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LZ+j+Zs/ZEZJjHmfYuT9bzcyXuLMY+2fHMU79+H81sZRq+Jt96psBwNwu6oZWrVM2
+	 jF8mk6L8KtcF1Kfw/TSmUeTe9hiCo5EbGCgMx5pUtZHo5YBodtUqtpHBTRosn+cJGH
+	 t2ll712S5nIFNGLapOfp9pb2CcTmoHZz+62kpLDatz8VyfFAqegeg5PrnB5x0P+iyr
+	 mToO8EvCiCd8JD+yZWrOdxza+7r8CqTkeSxnDtRjgDUYgkOLFZ2qk6kg9ORjh/r3//
+	 6XGUil9MiJ0PymvT475ttbPVOknylyDahn8ueQpCQx6NHL12YxFK60mnDGQQWeDUH1
+	 LRV9rFJoKxQrQ==
+Message-ID: <023b7e98-58ef-4752-9ef4-6fe699188b2f@kernel.org>
+Date: Wed, 2 Apr 2025 08:33:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -83,62 +51,110 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] dt-bindings: pwm: Convert lpc32xx-pwm.txt to YAML
-To: Krzysztof Kozlowski <krzk@kernel.org>, ukleinek@kernel.org,
+To: Purva Yeshi <purvayeshi550@gmail.com>, ukleinek@kernel.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vz@mleia.com,
  piotr.wojtaszczyk@timesys.com
 Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20250312122750.6391-1-purvayeshi550@gmail.com>
  <b2f6a357-a468-4526-a1b6-69ab2c643b2c@kernel.org>
+ <61b1e302-98ad-4dda-8c03-18315d432512@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <b2f6a357-a468-4526-a1b6-69ab2c643b2c@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <61b1e302-98ad-4dda-8c03-18315d432512@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 13/03/25 16:34, Krzysztof Kozlowski wrote:
-> On 12/03/2025 13:27, Purva Yeshi wrote:
->> Convert the existing `lpc32xx-pwm.txt` bindings documentation into a
->> YAML schema (`nxp,lpc3220-pwm.yaml`).
+On 01/04/2025 19:32, Purva Yeshi wrote:
+> On 13/03/25 16:34, Krzysztof Kozlowski wrote:
+>> On 12/03/2025 13:27, Purva Yeshi wrote:
+>>> Convert the existing `lpc32xx-pwm.txt` bindings documentation into a
+>>> YAML schema (`nxp,lpc3220-pwm.yaml`).
+>>>
+>>> Set `"#pwm-cells"` to `const: 3` for expected PWM cell properties.
+>>>
+>>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>>> ---
 >>
->> Set `"#pwm-cells"` to `const: 3` for expected PWM cell properties.
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 >>
->> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>>
 >> ---
+>>
+>> <form letter>
+>> This is an automated instruction, just in case, because many review tags
+>> are being ignored. If you know the process, you can skip it (please do
+>> not feel offended by me posting it here - no bad intentions intended).
+>> If you do not know the process, here is a short explanation:
+>>
+>> Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+>> of patchset, under or above your Signed-off-by tag, unless patch changed
+>> significantly (e.g. new properties added to the DT bindings). Tag is
+>> "received", when provided in a message replied to you on the mailing
+>> list. Tools like b4 can help here. However, there's no need to repost
+>> patches *only* to add the tags. The upstream maintainer will do that for
+>> tags received on the version they apply.
+>>
+>> Full context and explanation:
+>> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+>> </form letter>
+>>
+>> Best regards,
+>> Krzysztof
 > 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Hello!
 > 
-> 
-> ---
-> 
-> <form letter>
-> This is an automated instruction, just in case, because many review tags
-> are being ignored. If you know the process, you can skip it (please do
-> not feel offended by me posting it here - no bad intentions intended).
-> If you do not know the process, here is a short explanation:
-> 
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-> of patchset, under or above your Signed-off-by tag, unless patch changed
-> significantly (e.g. new properties added to the DT bindings). Tag is
-> "received", when provided in a message replied to you on the mailing
-> list. Tools like b4 can help here. However, there's no need to repost
-> patches *only* to add the tags. The upstream maintainer will do that for
-> tags received on the version they apply.
-> 
-> Full context and explanation:
-> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-> </form letter>
-> 
-> Best regards,
-> Krzysztof
+> I wanted to follow up on the patch I submitted. I was wondering if you
+> had a chance to review it and if there are any comments or feedback.
 
-Hello!
+And what did you quote? What's there? Did you read it before replying?
 
-I wanted to follow up on the patch I submitted. I was wondering if you
-had a chance to review it and if there are any comments or feedback.
+Please avoid pinging during the merge window.
 
-Thank you for your time and consideration. I look forward to your response.
 
 Best regards,
-Purva Yeshi
+Krzysztof
 
