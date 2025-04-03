@@ -1,101 +1,90 @@
-Return-Path: <linux-pwm+bounces-5323-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5324-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8365DA7A171
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Apr 2025 12:55:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F0D5A7A3A2
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Apr 2025 15:25:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F5871883A68
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Apr 2025 10:55:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26D8C3B7D33
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Apr 2025 13:24:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EE6824BBE8;
-	Thu,  3 Apr 2025 10:55:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 952C324E4AA;
+	Thu,  3 Apr 2025 13:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVlx2qjj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LKfYbp5A"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3F824A07E
-	for <linux-pwm@vger.kernel.org>; Thu,  3 Apr 2025 10:55:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D089D529;
+	Thu,  3 Apr 2025 13:24:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743677723; cv=none; b=kHPSjlSvFvhXTS+vwQRVSBt4yzw/TyClUnW3Dsxqd39GmVld1+GJT80oTcMp2MZMnUh4O0FJVSVtAbHd2j2RMaKXJxmtFodayHiCYAsZ0d4uVPcDtd9dwQMgAUQvgO2xCqDIOcf6XBQiPpXtu+RrrEM5tobVRMMNGO+yG8nnRc8=
+	t=1743686652; cv=none; b=czZpwSHMBfhuhg+uyn2dlxybvapbUfod+comfLkEDVLohPk8xBetbcQDcO9vQvQrakmqF5vcIJ6HGNvJCnOZFoMLMo2UU1iosOJp/43Iw3Pca30gV9hQLgIAysOAMBFpjJJMR+VKgIS8DuIOO/HrE60IKXEjRvbM4AkdPUjyx1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743677723; c=relaxed/simple;
-	bh=J961k0sMsjx0DtTlxe6SYPRL0vJtzjSjQ1nYBHnlDeI=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nP0Ysbxlrfk2myPDA/dKzrO6wEvlc6snlxlha575fsIpvgMXxLUhzq8c/9FNwXSuTHaynl5zhiJ4QBYwuFdfBL6sBF8bSi+Wc4LW2ENRQxZExeoxLqrA63zaO7nqSqqEdrmMRbq14rYh7g20VmRepyGdCjzsO8OLV7XvrEjEIrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVlx2qjj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D895C4CEE3
-	for <linux-pwm@vger.kernel.org>; Thu,  3 Apr 2025 10:55:22 +0000 (UTC)
+	s=arc-20240116; t=1743686652; c=relaxed/simple;
+	bh=ljhJUxaQ+kRthX1ACKvZsuHQzUEf3+7S5pIFKkgnHnE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SG30uYVDTSJGrR9aTI3rdx/MXioZ7qokrhvR1sh6ogChze5rJoRJSUWIDnADVJPTRMehtzcepVn/VKDM1ftCc8CT813KvwAZfVUz8F7nVsN9Vl7YmJm9vQ0vCWzC1toF1mxLv1BhptFyfAhIk7ImbiUnkPkI4Ii4v+2mIUknp9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LKfYbp5A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD94EC4CEE3;
+	Thu,  3 Apr 2025 13:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743677722;
-	bh=J961k0sMsjx0DtTlxe6SYPRL0vJtzjSjQ1nYBHnlDeI=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=cVlx2qjj/otkh2QTfpNqMKxKFLsTXnreJiZlVlxahp4Kjv1DCvY0wY6tgJtfTp/sC
-	 ZY8D/AJbN4TBPKTnGWUIon3UGmxL+W4BnqO2pEu4mzwKqmbKn7Y/knpuo4XsPH6H2g
-	 24F1aZYlpw+ii2tKnWEtADoLmIzTbp6SRzjUEzKGdinOJPp1HLxqNLiHwwkd19hl+N
-	 pP6+GetAQkVmB1OEB1nVGmLNBvLi9VuANHFUjN83I6vpiC/i2tjoVyGH66dRFjvK/P
-	 HKIQ7ir+I0TM4GyfwROAvt0IgQwRs6B0mK6/p9xQL6onWaogmj8tpNIfo72INSAjR5
-	 hXlRdlx110l2w==
-Date: Thu, 3 Apr 2025 12:55:20 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] pwm: pxa: Improve using dev_err_probe()
-Message-ID: <dgwhfusojj7opafpglt5wmzf7x6uibcxjj3ibtmkvcwyfhuayw@klxz2lhpcysc>
-References: <20250313072855.3360076-2-u.kleine-koenig@baylibre.com>
+	s=k20201202; t=1743686651;
+	bh=ljhJUxaQ+kRthX1ACKvZsuHQzUEf3+7S5pIFKkgnHnE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LKfYbp5AZ7EEVDgrvfuXX+w3fOODvz7Ffzh2f0err8ea8+Geq0MeR3IkYy2ZR5JR6
+	 yCVrFFJhk0dkbQwzo1K3UkjrYPpdDa5j27HC7WdQOElbbZMv6zeOqRysBLOiGc+3ne
+	 PEcFs4b4kM/huNg6WQQqDRyfo7DPPdWJ6EgwKpDw4Ffzww231flE3QyEMXiSOXpUJk
+	 k0rdBJvKn6kRlHGFgiG/LGsTSC1+S1fKD+UKc93zjJcn9wOk6avb3iBY8+06ks73MK
+	 6QGHqU1eE09Sg0miPGQ02fs3zZyOBiT6eaTq7pwvnLwkePBkF4qc6FClLxOYyO9v7i
+	 w167tc6Wn376A==
+From: Arnd Bergmann <arnd@kernel.org>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] pwm: rcar: include linux/bitfield.h
+Date: Thu,  3 Apr 2025 15:23:59 +0200
+Message-Id: <20250403132406.81003-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4bfeetsmii4af4mf"
-Content-Disposition: inline
-In-Reply-To: <20250313072855.3360076-2-u.kleine-koenig@baylibre.com>
+Content-Transfer-Encoding: 8bit
 
+From: Arnd Bergmann <arnd@arndb.de>
 
---4bfeetsmii4af4mf
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: pxa: Improve using dev_err_probe()
-MIME-Version: 1.0
+The use of FIELD_MAX() breaks in some configurations because of
+a missing header:
 
-Hello,
+drivers/pwm/pwm-rcar.c:114:12: error: call to undeclared function 'FIELD_MAX'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+  114 |         if (tmp > FIELD_MAX(RCAR_PWMCNT_CYC0_MASK))
+      |                   ^
 
-On Thu, Mar 13, 2025 at 08:28:55AM +0100, Uwe Kleine-K=F6nig wrote:
-> Add a message to the error path of devm_clk_get() and simplify the error
-> path of devm_pwmchip_add() while improving the error message en passant.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+Fixes: edd549f4956b ("pwm: rcar: Improve register calculation")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/pwm/pwm-rcar.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Applied as v6.16 material to
+diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
+index 19e5d0b849a6..578dbdd2d5a7 100644
+--- a/drivers/pwm/pwm-rcar.c
++++ b/drivers/pwm/pwm-rcar.c
+@@ -8,6 +8,7 @@
+  * - The hardware cannot generate a 0% duty cycle.
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+-- 
+2.39.5
 
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-nexxt
-
-Best regards
-Uwe
-
---4bfeetsmii4af4mf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfuaRQACgkQj4D7WH0S
-/k56ngf9EY+TBqv9Nl11QjfRYiLBn+nU3bER46OJCpiNjmH7EB6EOSxlKynkOOgS
-qxvePG4HdTHUZwuz+xPbZiFxzHOYyKrqkkSOEc69Umf7u3x/UDyF2af1mrNvQap0
-zTvFfKpmHNg0krUWBKpeLiR2yefUzgTqTRJDU20UAC7nsd/Q57hLRvIPNmYXKMyj
-m3YaAdySs9yNbo5bwUX0TQ/lkvsOSE6XBIuYP5rkRrf6p1l7y64XgRrydHRAj0pV
-dzBstN73ddV52NOz3YTosFk2dmOTpq/hMd9ce4ERYsBcHQrHeH2fc4sa5+U2vIR+
-LGvMyUZQYEO9j+sPwAAHgSG4V1CEYw==
-=fnOO
------END PGP SIGNATURE-----
-
---4bfeetsmii4af4mf--
 
