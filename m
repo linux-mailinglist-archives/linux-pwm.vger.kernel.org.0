@@ -1,80 +1,80 @@
-Return-Path: <linux-pwm+bounces-5335-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5336-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25871A7C3F4
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Apr 2025 21:39:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 207EEA7C4B0
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Apr 2025 22:11:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96614189F725
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Apr 2025 19:39:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B68643BFCCE
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Apr 2025 20:05:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D792B21D3ED;
-	Fri,  4 Apr 2025 19:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B719256C72;
+	Fri,  4 Apr 2025 19:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hgsx9n2/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEXeT+q2"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA511E1DE9;
-	Fri,  4 Apr 2025 19:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0933256C6D;
+	Fri,  4 Apr 2025 19:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743795548; cv=none; b=It3sMTa8pME0vkVCQ1jdPlppMka3HCFAvX2hNV/YVQS4WNBl+i/KAnphSEOazUGSMUIe7d1d0ObMNiKqGzz1N5s8h14ooYJu+WT+WpD8Zdr9HwrWc12ifHhyGyRuTuSEg43BaSzTyytFMESGDVONU7PqJUyMGez6Hcc0wRR8tjs=
+	t=1743795785; cv=none; b=g5xgEPhiDZHprkfiGBWLnCsIGcvcwF0IRjUCBFzI7oJTZ+HxQ+s/5dKu+Cr4957qJPiHE8eD4obnqdXINqNZ79M99BxZkrslAhAnJR6lC48FqEtC+AOOobmBbWl1DQbelZduZVFyTuOKiqC9dOp0uj+44/qQmTdlZkJ0OIGfg1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743795548; c=relaxed/simple;
-	bh=VpfAjJAGyn2iFrsTDI2qa/oAK+7uNraImYwiQTOK1X4=;
+	s=arc-20240116; t=1743795785; c=relaxed/simple;
+	bh=xjRClgk0ru5HG2bIkVaucZvG6Qpe+4PE/utI54oaEgk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=feV7EVtlYsQJVxXJZ0T1QfriqfC0cmRUzq7cMjVoUR2Vkgq0Peo7c4nx2OSUamaMZQ0pCao+GrAwIVy5KO9r11P5fWmcpQT3t3HU/dj9anJ5GcXAL9uHzjSIfwV5jV0SkUpk0joFFsWNnhOBdw4DSnfOCJ+qy33eLSkOYGbdxLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hgsx9n2/; arc=none smtp.client-ip=209.85.214.179
+	 In-Reply-To:Content-Type; b=UPr9mWA56x6AufNLQOju/Lr6MaLks7YaDMb6LzE2pbRsD+OuzyDYgZROfWDHEpW15ObBCY5Bqr4qzKwuDrc0x/o8K7XAJOT5VbXzXkz8HvMz8n5KpsCx+fIeqv2LRKLr0MBpAYIdASLYpYKJ5LmF7F0MV70g2HyFV28qtA74wYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MEXeT+q2; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22580c9ee0aso28234295ad.2;
-        Fri, 04 Apr 2025 12:39:06 -0700 (PDT)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22403cbb47fso26170385ad.0;
+        Fri, 04 Apr 2025 12:43:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743795546; x=1744400346; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743795783; x=1744400583; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=NQGNgVHxDhs7mBk3RqbeX6683p63yLHOISx5dQxLR50=;
-        b=Hgsx9n2/C17rlqum5/A4dc6mhszR+2cT+f4YbN93mqI/EhoE9043xB5QedBmxdJFFG
-         jMIqcLhWHk3q0xwti9aC1WRsjX98Ju6LC1gi1gEoxXyaOnVaLa/kEnDHogD/MuB5T532
-         NigoFE7VCAGRN3m1PH8q5yTFUeDF9ovT+ox6S9Ln4x31z9OskoOnKFvvbUu4TljnPiqv
-         ZuxNkd7/Xt7gWoqP72fGQrYfmiMlS38RujDr9dNoujcsrDztFnFQyGS32RVuxLpAMHpO
-         LZk8W8ktJgur1JLxaHYesMNqiW4ZGSu+y+mlPppbLfkxqQXTXoGERIM2SAJ5cJNuRRwF
-         pH2g==
+        bh=aCdihjYQTCflyJxm6dwPDa7f9mrC1RNKPnkAQB9Cuvo=;
+        b=MEXeT+q2YrSdSAErSjL6AimNp3RbMgaQJHOul0TGkTAyqsbrjkQHS9vC6LvvveZrAv
+         c1jIyQRlYzkFEx8Or2HSRTPEOwXEZsQMUisvaBPX3EpfV655N0idvCGrvtqxGnPZ3tNY
+         SO7KdNJSsCFryUlE+xE2T1GbibyHnVTew/OEMHspkTLLpYfONZ4xz5lVDnBG1/Cz4sHW
+         j9g87Z25KjH1ie5/IW5s0GcvAIQIMNP/FaUTWMpypWOrC5TBK6qjzipEVhlvljb4fchx
+         5lHrq36teg6qjgfUJbA1OTPs1JRHWZpi4/gK1NR4R9OgSMBtOUurtd96WWP66lDA7fPH
+         HoSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743795546; x=1744400346;
+        d=1e100.net; s=20230601; t=1743795783; x=1744400583;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NQGNgVHxDhs7mBk3RqbeX6683p63yLHOISx5dQxLR50=;
-        b=ORUNrFChe6OF+PbWktXV69fQiovjNYjIRQ93IzABNR1zofGCkhvFc96CHpMSnpuA4I
-         uDEaTngE5ig16GY2d5jJLyNzAndDJ7QNrRj7SzsN1HqSC7g0WQOMuf4OB0WGb+0Cjk+4
-         eUrvMn0kS9MdQ5Rm1PLS+4NXmFn260oJr7KlECsKXVEZqmxuAPUIw8UgP6tM/lRkzIaQ
-         GyhlNRGtQFufTgwmbIrbcZ8yE9hr00wJOH4rUsN1og/wrejpGhr9r9tUVH9CEQueVL+S
-         IDrtZRk4xpVXCWX2aRtUrDPplsmENCEQ1SwlK2JxkJtWX3MFKP+CiWzkvJl1Yw015WHj
-         tS9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVHRlUbvoPhiQFs4bm0f42lM0w3zoMiE5vWw8/tk6SkjcO0n1u4c3vW9Br5fGKszm8W24hYWcVsbnlJzPKv@vger.kernel.org, AJvYcCXJErSbt4d889Os9T9zs0EQ5zmng1zaHXG/bOrBQNIFLfwNty2ti6MdKl+yqq5xRZAIBf4fnsoy//tR@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQY+CN5C5b6BIr4dVqyxKgHdR277p9ZwKyUgJQeBW1L/awCeLz
-	jLAq3WoQOP121af6UnWFBuJMDIRkWtdkOo+6vCOjirbcX6R/wVZr
-X-Gm-Gg: ASbGncs3Sis8aVhlYqgIqRzkzBwWSD3GCDBJ+2jibC/kmTwSv4qoHPbeFV0fSlNvsvr
-	Zapxle6G1hvEpkZn5ujMgazqxyRllNAFC6YwhdV06wKZwJBLt8BYdvnMiMKhOpoHPVCPnntr6I7
-	/amm+rn97OWVaW2pZJcfEivkFGJIxWgVf9XWTvux8dRGVb7hRMcG+ky4PdOPcZmudEBgn2sOVWt
-	/iJ45/DMdPQez28sFhoXKs56BvkufQBKLDQA8fanSSxOfrC9iLMXmrYKhq/BhzPojgR00yIV+5P
-	gOMET4ObLLtKjNBdsTOhWEklfWkKWxw0eQoddE43OWQ8RN8IyRychvwXaFrXsgSyTpglUOgPyLV
-	DoVIxiXR0wVjHHTs707S5M5hV
-X-Google-Smtp-Source: AGHT+IFe4mjpRg7zowmOKrRZGt9tbXvtfVX38ovvOh6lKYhx4xIePXLNWeuaoRutkTmWr1rWPnCrtw==
-X-Received: by 2002:a17:902:d4c7:b0:220:ec62:7dc8 with SMTP id d9443c01a7336-22a8a85a18dmr57542845ad.2.1743795546267;
-        Fri, 04 Apr 2025 12:39:06 -0700 (PDT)
+        bh=aCdihjYQTCflyJxm6dwPDa7f9mrC1RNKPnkAQB9Cuvo=;
+        b=ANkTr8PlaM+Bh9lKdcvLcRZQ2UYo6+RDl/thi+0p+soK6Z1lPfJnb6z8UmozmNS0JY
+         0fflDJ96wClAqTPMUuWosqdXReIvb0ceEJeZ6XrXxyjoXiZXi3xo1b7l7kD6aI1C9OJW
+         j+T0F5jXQ6j/G8tHRPdme7L1E7GY/awuNUNTai4iXsqNQb9YIRcNUuCHI69YzTv7HxYR
+         4ZHMwNWnKW3biBB7GkcZIQYkQjDYdJk3Rn/WVG7gt19sJGtlHC5Th8weSr2KTTp0WoIE
+         dIAdUsweYxf2JKsg6EJp/c30jMXjhEfrlt9nfqEGp7cRLase3U449JRBQvJxp1hbFSEL
+         ypIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYDYYhSRWsW5V1XtDhuNWlToYWALBSONMz7CKdGEzx6DrjRDKFQD4AX9EJFVN2ZiHrapzu0SMs9AHE@vger.kernel.org, AJvYcCWtgc5UExuTgjww+U8h70MIu6JakOdl4CAgZj+yaGVsjyGzkeYamDwyYjmbBM7y2WiT+VA5vl/CKLKo5NTL@vger.kernel.org, AJvYcCXExxJcIySipaN0U1R13/B1wj/L+G5TzDDLWgJE5GLQos+D8cXWcZ6DIbB00RnDTQpMcGJUdvmydBhs@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7Uvi3r7Jg5P+lVmf8WXZqPrhyOkp9/TJw1rxwzbCovIJkmoQ0
+	jok5MHhdC46svATV1eMUpt7vYhWo1s4mmf0c581j+AB/OsYgW7oOSmX2qrrn
+X-Gm-Gg: ASbGnctAhAL6ikhozniO2w/7yMyfy2TF8vwq8ltrLqA+xaP36XE0pu7FB6HyFYcwtSX
+	NhO/GZ5pcCgHGOQYgf8Ya+FiDJ6ebJF422+t2YMJTHrjF0nyhNRdVWTXZXokjgvoRU+h0XR4Bf0
+	IhtCzkOY0TrG644UrJA43r0fBokguVgIsDzFZZRRVDLcA70OdyddStV1/cbcqn3rSMv1yNgOdQn
+	V5L2xXMewONxfIrVzk5gAuU3RIH6hywo/PeuIZvYCV0aZ7AvsldrKG6dwEeatltk6bEP9o2iVsN
+	071V78roDgWe3xDk9W7vtWN3LROuEFKe/jgST6C8wmZPWaXBnsl8as+kB2VqkR81+V5G4exjqrH
+	4PJmbL43/VNfw5NXw9mCesBlI
+X-Google-Smtp-Source: AGHT+IGmSZQUmzN4kMPir1/3DwusZurNYkOuuU+RMXFG9BLfGYFc6j2Dj8c8UT3R/eHzPGq0z3D8Xw==
+X-Received: by 2002:a17:903:3baf:b0:215:b9a6:5cb9 with SMTP id d9443c01a7336-22a8a85a244mr65443215ad.5.1743795782746;
+        Fri, 04 Apr 2025 12:43:02 -0700 (PDT)
 Received: from ?IPV6:2409:4080:1197:5c59:9640:d38a:951e:d202? ([2409:4080:1197:5c59:9640:d38a:951e:d202])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e242sm36279755ad.164.2025.04.04.12.39.01
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e1b4sm36482985ad.181.2025.04.04.12.42.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 12:39:05 -0700 (PDT)
-Message-ID: <b493166b-5d1b-4228-82a0-ee7efcdd03e6@gmail.com>
-Date: Sat, 5 Apr 2025 01:08:59 +0530
+        Fri, 04 Apr 2025 12:43:02 -0700 (PDT)
+Message-ID: <299e033b-05d6-4d85-8d01-2d7d0167432f@gmail.com>
+Date: Sat, 5 Apr 2025 01:12:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -83,74 +83,106 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] dt-bindings: pwm: Convert lpc32xx-pwm.txt to YAML
-To: Krzysztof Kozlowski <krzk@kernel.org>, ukleinek@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vz@mleia.com,
- piotr.wojtaszczyk@timesys.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vz@mleia.com,
+ piotr.wojtaszczyk@timesys.com, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
 References: <20250312122750.6391-1-purvayeshi550@gmail.com>
- <b2f6a357-a468-4526-a1b6-69ab2c643b2c@kernel.org>
- <61b1e302-98ad-4dda-8c03-18315d432512@gmail.com>
- <023b7e98-58ef-4752-9ef4-6fe699188b2f@kernel.org>
+ <76ovkshf4dr6egh72uiigsugdqsin6zwy3skksldhhh2goer6x@gsp3qkhqdtev>
 Content-Language: en-US
 From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <023b7e98-58ef-4752-9ef4-6fe699188b2f@kernel.org>
+In-Reply-To: <76ovkshf4dr6egh72uiigsugdqsin6zwy3skksldhhh2goer6x@gsp3qkhqdtev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 02/04/25 12:03, Krzysztof Kozlowski wrote:
-> On 01/04/2025 19:32, Purva Yeshi wrote:
->> On 13/03/25 16:34, Krzysztof Kozlowski wrote:
->>> On 12/03/2025 13:27, Purva Yeshi wrote:
->>>> Convert the existing `lpc32xx-pwm.txt` bindings documentation into a
->>>> YAML schema (`nxp,lpc3220-pwm.yaml`).
->>>>
->>>> Set `"#pwm-cells"` to `const: 3` for expected PWM cell properties.
->>>>
->>>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
->>>> ---
->>>
->>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>
->>>
->>> ---
->>>
->>> <form letter>
->>> This is an automated instruction, just in case, because many review tags
->>> are being ignored. If you know the process, you can skip it (please do
->>> not feel offended by me posting it here - no bad intentions intended).
->>> If you do not know the process, here is a short explanation:
->>>
->>> Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
->>> of patchset, under or above your Signed-off-by tag, unless patch changed
->>> significantly (e.g. new properties added to the DT bindings). Tag is
->>> "received", when provided in a message replied to you on the mailing
->>> list. Tools like b4 can help here. However, there's no need to repost
->>> patches *only* to add the tags. The upstream maintainer will do that for
->>> tags received on the version they apply.
->>>
->>> Full context and explanation:
->>> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
->>> </form letter>
->>>
->>> Best regards,
->>> Krzysztof
+On 03/04/25 16:11, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Wed, Mar 12, 2025 at 05:57:50PM +0530, Purva Yeshi wrote:
+>> Convert the existing `lpc32xx-pwm.txt` bindings documentation into a
+>> YAML schema (`nxp,lpc3220-pwm.yaml`).
 >>
->> Hello!
+>> Set `"#pwm-cells"` to `const: 3` for expected PWM cell properties.
 >>
->> I wanted to follow up on the patch I submitted. I was wondering if you
->> had a chance to review it and if there are any comments or feedback.
+>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
 > 
-> And what did you quote? What's there? Did you read it before replying?
+> I suggest the following commit log:
 > 
-> Please avoid pinging during the merge window.
+>      dt-bindings: pwm: Convert lpc32xx-pwm.txt to yaml format
 > 
+>      Convert the existing plain text binding documentation for
+>      nxp,lpc3220-pwm devices to a YAML schema.
 > 
-> Best regards,
-> Krzysztof
+>      The value #pwm-cells wasn't specified before, set it to 3 to match the
+>      usual value for PWMs.
+> 
 
-Hello Krzysztof,
+Hello,
 
-Apologies for the unnecessary follow-up. I’ll avoid pinging during the 
-merge window.
+Thank you for the suggestion. I'll update the commit log accordingly in 
+the next revision.
+
+>> diff --git a/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
+>> new file mode 100644
+>> index 000000000..432a5e9d4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
+>> @@ -0,0 +1,38 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pwm/nxp,lpc3220-pwm.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: LPC32XX PWM controller
+>> +
+>> +maintainers:
+>> +  - Vladimir Zapolskiy <vz@mleia.com>
+>> +  - Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+>> +
+>> +allOf:
+>> +  - $ref: pwm.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: nxp,lpc3220-pwm
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  "#pwm-cells":
+>> +    const: 3
+> 
+> The PWMs defined in arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi also have a
+> clocks property and in the driver it's not optional. Can you please add
+> it (here, in the list of required properties and the commit log)?
+
+Thank you for the review. I’ll add the clocks property, update the list 
+of required properties, and adjust the commit log accordingly in the 
+next revision.
+
+> 
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    pwm@4005c000 {
+>> +        compatible = "nxp,lpc3220-pwm";
+>> +        reg = <0x4005c000 0x4>;
+>> +        #pwm-cells = <3>;
+>> +    };
+> 
+> Best regards
+> Uwe
+
+Best regards,
+Purva Yeshi
+
+
+
 
