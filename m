@@ -1,132 +1,115 @@
-Return-Path: <linux-pwm+bounces-5347-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5348-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3F7EA7D39D
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Apr 2025 07:38:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18E82A7D5DD
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Apr 2025 09:30:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D2963AAC3F
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Apr 2025 05:38:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 79F3C1894314
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Apr 2025 07:27:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0399A22424E;
-	Mon,  7 Apr 2025 05:38:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FEED2356AA;
+	Mon,  7 Apr 2025 07:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwRK/2Zh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKpfrJH3"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F472236F3;
-	Mon,  7 Apr 2025 05:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEAC22DF9A;
+	Mon,  7 Apr 2025 07:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744004326; cv=none; b=hYK/7w/OBAfJ1XVz+UWmK+81LrUB5T+xlbhv9R53WQTP5Obdw6pns7JAGRAxzx3aznRLIKu5NIjy3AyPIJ8BUL4frpkfqutmQMURERMcUT/kSm3O8OB/STpdvJJDrAhO6Y1DOJGBXKHhRcXGMmyR9R+nKzOUS8/kdwy787w8EHc=
+	t=1744010518; cv=none; b=rmzPdUIs6a4l77gEsnbBiSeq7cPoBIvFb3OamPZwzNZD+kFaR+jWjT3EiSxnifkGX5Nickih5K2YUBBv0TV64k/KyRpHhJJEJNwoG6jHTj2UIzSvd9VMpUKsc67Pw1YW79/pMib5/vZ2Ktph/bwQZX3OhfzYIhGi4E9EyzbUXQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744004326; c=relaxed/simple;
-	bh=hvves4toXk2gLEBXAQSEPuGfDWPqF2N/IQRJ3Mjnmv4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iOqUcYHLwjV1v22qE1ag97lfDE1mw3Ns3RnizdqN0fCg0ibij/XfBxFdEAcqtHafdk/QRtAcoMoqW/k+6i6OmbreKlWqr6C9+IOZFunDhlIbHvkIF4Wbcii/gEk9h3tkLUdUY/3Uq4bzQTfzcFZLWvZiBAxp+pFIlBsUXUrjTRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LwRK/2Zh; arc=none smtp.client-ip=209.85.216.48
+	s=arc-20240116; t=1744010518; c=relaxed/simple;
+	bh=lq/B1uM+ZdZwRZ6B00/5OflkTp2/rdXR/2K2PuehMkU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jReAFc7gsYZ/bqiAQ5ZAHLcfRxqFe10BY+tVy8PjaKhd2tY7DzenImXZagWMjnX84ex/v9FaPT1px3GvjdiGnb5FjuTGbVamhqJlwG+4G+hlbAZ1NVJSF+Wwzxrhbmc+ioG+6Ic0+AT6n5w1R7gMkiJMKFdNF8Kp++JlnGboKoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TKpfrJH3; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-306b602d2ffso1275352a91.0;
-        Sun, 06 Apr 2025 22:38:45 -0700 (PDT)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-739525d4e12so3355111b3a.3;
+        Mon, 07 Apr 2025 00:21:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744004325; x=1744609125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=axcpWb0CiJMv6x26lX8+ffH+IwdPQ6J2ls63frRS//w=;
-        b=LwRK/2ZhxEzfs9QBMPB0p4+PXyGWXBCjA5I/jNnK0kR56wF7ZNtFcx6FDDl5fxjlOi
-         jnutT7h9iNcZdg8APXlo/JHufaht16RejJImMHI8N6zyFk8aJm9ZIB96j9Nyr8vXp6Sh
-         QgkptlunC+yMT7CESyfz38Y2wrZwf9hW4eFvENXQ7ZmBhgwoqfnGnL4k7gz045/O2wQf
-         pNVYdEWy2nxZP+JKbq6uKd/dfYQE/vK+N5e/o/Kt24FX0uJkBKDvaN0om4Aa8e5d1VOg
-         xfLR9chmhJTsvqrXoxktLK3p5QUvaYzGoUy+tKzrnwhwhy2YfYc0ohNPdQMo3MDgxHEy
-         sRCQ==
+        d=gmail.com; s=20230601; t=1744010516; x=1744615316; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/dP9TEDefRiCfKDK6dCXsCuGcFPJWg2jzI0nw7IpyNo=;
+        b=TKpfrJH3WymlWQcBN3anrZLU7ant6M3E7dxMQWgV4O1VfwiswDMjWVKJHEqUU52rOf
+         Hue82SLsLuFnHSxK2VtoHo6JY6PqTQ9XE885aEMM23g/iysetR9pgcyk3lvBvVa25Y42
+         R1PQ1jXC/Qxjn0ll3Dn58cgXCJPf2adIcWbUNSMeibdMuYlqT+8SiFIBayV6uvm5uiSo
+         VIXHNoMDbZeWJZ2vHXkeVTAw1ZZgougifwFnqqnHslJ8qFInZah+UmT3BrdmKllWqIwg
+         b6DsWcBE3LXCYwyskblIGJd+jStj+38wqpHGYKAJzHS9anWFxjT9oa072Sd4DL1Sjswl
+         mp0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744004325; x=1744609125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=axcpWb0CiJMv6x26lX8+ffH+IwdPQ6J2ls63frRS//w=;
-        b=SeZXRinqFERs47tfeFVJxDgU7u1ceHSsTk5O0/6gB4/O7Z1b2ijUG0YkkFJwbhAahc
-         DDh954O5cF37iPNmhBonndKDAQ/G9ju2z6XyhYE7b5fGLKUlvGwSoOPwX1CVjOCzeFfY
-         Tcbbj5UECLw/fMkwYuqLIzalL7dMrEOjE2MQWOuWUgsQ3XiZfKvm9fLApXq20vzwkDvy
-         y2SS6Ues/5AJWcV0Y6MPTj5ypOvt/2i3Bdwrs1KfD8Vtv+c49u5qQ/qUvGqYxN6IqkI3
-         g3NsqyXdx8i8HaST0iM5gBy3N0fmsprdDae5LeLNgchMhMpBHQUCsFuTxzNhh13pvJHm
-         8nCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBEaUd5qH8VjLf1kYmIdIo7ENSZk+FuF//0TsiXbCU4I1iJ7I9AsDDRkHsvGnxzU4l+MMwbudLNbSohA/z@vger.kernel.org, AJvYcCUEs3QJscwJKb+6gY28ZzTeRxlLMljDKBNwxSaLL6MqOhxzWA2VVBr2h1LR2ztgmLWKQYoqBXlUHQoH@vger.kernel.org, AJvYcCWceAbQFHJdxAvqbHV4wqHltOo3hUqRCFSKcT4XAekrwQeLJCPLF+e1KPo6RnZF3/AFvniTpIbxveL7@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLGnvJan+0DfYT0b8/fsrYpRy36OiLv9OjuaAd3eoVRTmw/kDl
-	qYauTBf0l3n8kSGCQ+6M0AUUCffk9fM1jIx7JII2P/ZM3nK1wuMCVsedBlg81WxRNB3j+18BTlx
-	fQC/yint0c5gUFpHgKDINmHuhVEs=
-X-Gm-Gg: ASbGncupVzhRfZ94rKunqyKvao70+YHs8k4iruFhqBIso9AohP8aCvHZxxX8opKU4Om
-	UJoHVpSpW3EGcHWxHPWyQNQ3fcMPWDd6SsUw00+vlAOw9ZpFe3UojkF683gtFt2bFP4uTMMWrqJ
-	txs6pRW+Ft0S36FwQPslGGt4C9/HBuU5gnsos=
-X-Google-Smtp-Source: AGHT+IGndqGRW8avHxtl3qnm0RlH6ICqsq3r3bvO1qI0RAfBt8JObOMkl82WtVLXKzSMEnJm4hSuODChzuGE5fFuW3Y=
-X-Received: by 2002:a17:90b:4ec8:b0:2ff:6608:78e2 with SMTP id
- 98e67ed59e1d1-306af746455mr12866112a91.16.1744004324069; Sun, 06 Apr 2025
- 22:38:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744010516; x=1744615316;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/dP9TEDefRiCfKDK6dCXsCuGcFPJWg2jzI0nw7IpyNo=;
+        b=oSmCpkdNWlMeKbzidfn+38A5lJ1cqjz2zsyCQaYovD7hWLHc8ShLvbLd9YWR7wIQR/
+         PfIRnsaS8nW/UgLq5HwwHg+oDPKdSYkwdcyCLgkgwn8/jkRHhPrwkSwHE72Uf5rb2R2Y
+         BwmvI/pEboUTWJuWg8D2okjXJ2uToZvLeJTQdd4iGmE4YSIGTup+XUB/nmSY3QDrVeQp
+         oT8KHHtBQWadkd+m3/CknIBzsA7HpZB/JUj2O1vZ3EHRU1GyNoG2JMJy6L6IluVN+THU
+         pSJCpACehEgN1/ADarumirxugZy+hqzEp0Qs6im4JUTjm4YsiGGrCqWOL7XohAd+cLIk
+         PGUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWW+KF3Cw8/oolnSOwbHYGFjS+AVPM+vJge6zk1f1sgv9ya3u16Eu3NROslwYx71Z8rAsEOSRC7S30kPGfu@vger.kernel.org, AJvYcCXYYt2ZQvdTSh8xjwy5DFvRr4iuAh5Y10o/wYHmOwk67NGXg4eE+Tf62yNvj2PENn7ptxEIBJ4aIJ7g@vger.kernel.org, AJvYcCXdrPkc+pPdiTIJfCrpRABGKDv0bySbZxbB9VahvkWxo60lFoN6DwPIfI/nU9Y1zs4cHCM1IxTCJKbv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDDQQLd/8tj8FX7brMCCdh3KnfuoUOfZmW7C0w4jWo4Na8+hHy
+	geJx4D3eYqEiFi/7a3+FbetGnN9dOJrppcSafDRrN/vflWKu1pWw
+X-Gm-Gg: ASbGnctOBXeRq+nO/mPKTzM153e9uJnc8OwhJ+T8z+uFVFExKNXhih0/cpxXOhazouC
+	L7CJpsVNbF54NjqAZqJ3U19rmgF9nbH+yrxzfqwMg3lukebWvTESVTjMxAFVskH4wREWIiYVcxq
+	ACs0/f42le2hQjmwrKVTEWHkQiqdH6b2m0AGeEiK1YFtV63EigZHiXBCzDOw4gEfrfc64gc4im8
+	fW58aTyKvc3Wkqu0FgW9YgPCmKjSV+nHn0QxaGfV4cBMVAsdEJEAhGMdhwF5/V4GZEhVgoStn11
+	xMHunEJzrnUZZ1mMrUNtNc2AH5Q1FQ==
+X-Google-Smtp-Source: AGHT+IFQxRWIvC5wkqCh6heDsDs6qCBCvJgy83QuVa7jiqs/EDCg6zs/0W+VCWvbxeuO/25zv5oksg==
+X-Received: by 2002:a05:6a00:2381:b0:736:5753:12f7 with SMTP id d2e1a72fcca58-739e48cf381mr17596430b3a.3.1744010516171;
+        Mon, 07 Apr 2025 00:21:56 -0700 (PDT)
+Received: from cu.. ([199.182.234.55])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97ee60dsm7787598b3a.40.2025.04.07.00.21.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 00:21:55 -0700 (PDT)
+From: Longbin Li <looong.bin@gmail.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>
+Cc: Longbin Li <looong.bin@gmail.com>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH 0/2] riscv: pwm: sophgo: add pwm support for SG2044
+Date: Mon,  7 Apr 2025 15:20:37 +0800
+Message-ID: <20250407072056.8629-1-looong.bin@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240501083242.773305-1-qiujingbao.dlmu@gmail.com>
- <20240501083242.773305-3-qiujingbao.dlmu@gmail.com> <k6jbdbhkgwthxwutty6l4q75wds2nilb3chrv7n4ccycnzllw4@yubxfh5ciahr>
- <D8Z4GLQZGKKS.37TDZ7QBN4V4N@bootlin.com>
-In-Reply-To: <D8Z4GLQZGKKS.37TDZ7QBN4V4N@bootlin.com>
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Date: Mon, 7 Apr 2025 13:38:33 +0800
-X-Gm-Features: ATxdqUHIt5xrCNGwJLh7UoP-kFxlH9HUctmkFVMByLT_ziJVw0ZWkg8cIzGt-ig
-Message-ID: <CAJRtX8S0Zg7-Rba6ziaAoBi-2Bs3N0NfpguF40T16yObaxCZiQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
-To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, unicorn_wang@outlook.com, 
-	dlan@gentoo.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 6, 2025 at 8:16=E2=80=AFAM Thomas Bonnefille
-<thomas.bonnefille@bootlin.com> wrote:
->
-> Hello,
->
-> On Sat Jun 1, 2024 at 1:53 PM CEST, Uwe Kleine-K=C3=B6nig wrote:
-> > On Wed, May 01, 2024 at 04:32:42PM +0800, Jingbao Qiu wrote:
-> >> [...]
-> >> +    if ((state & BIT(pwm->hwpwm)) && enable)
-> >> +            regmap_update_bits(priv->map, PWM_CV1800_OE,
-> >> +                               PWM_CV1800_OE_MASK(pwm->hwpwm),
-> >> +                               PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-> >
-> > This looks strange. If BIT(hwpwm) is already set, set it again?!
-> > Also if you used the caching implemented in regmap, you don't need to
-> > make this conditional.
-> >
->
-> I was testing the series and noticed indeed an issue in this driver at
-> those lines. If PWM_CV1800_OE isn't set by something else than the
-> kernel it will never be set and so, there will never be a PWM outputted.
->
-> Using :
->     if (!(state & BIT(pwm->hwpwm)) && enable)
-> Solved the issue but as Uwe said you can probably rely on regmap caching
-> to avoid this condition.
->
-> >
-> > ...
-> >
->
-> Do you plan on sending a new iteration some day ? I may have some time
-> to continue the upstreaming process if you need to.
->
-I am so happy you can continue finish this patch.
+This patch adds PWM controller support for four independent
+PWM channel outputs.
 
-Best regards
-Jingbao Qiu
+ghost (2):
+  dt-bindings: pwm: sophgo: add pwm controller for SG2044
+  pwm: sophgo: add driver for SG2044
+
+ .../bindings/pwm/sophgo,sg2042-pwm.yaml       |   4 +-
+ drivers/pwm/pwm-sophgo-sg2042.c               | 162 +++++++++++++++---
+ 2 files changed, 141 insertions(+), 25 deletions(-)
+
+--
+2.48.1
 
