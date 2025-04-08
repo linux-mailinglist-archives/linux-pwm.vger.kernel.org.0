@@ -1,167 +1,129 @@
-Return-Path: <linux-pwm+bounces-5373-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5374-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E72E5A7F64E
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Apr 2025 09:32:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A629A7F719
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Apr 2025 09:54:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 687D67A4891
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Apr 2025 07:31:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3EC1F1891342
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Apr 2025 07:55:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25B032638A9;
-	Tue,  8 Apr 2025 07:31:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 485A925F996;
+	Tue,  8 Apr 2025 07:54:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="WHuEO0vi"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M3xXo6sy"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA84263F47
-	for <linux-pwm@vger.kernel.org>; Tue,  8 Apr 2025 07:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A41219A9D;
+	Tue,  8 Apr 2025 07:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097516; cv=none; b=cVktaK+ZeipwGGG3nMW+/5Ca1CcQAyxx+IH8bbuRRXuhjzIzmeJUU/tnRRyi6kSFTmI3lp3mEb68ix3hruxmQNld+OyNR2u5EgKPG9msnEDKpPHWQB9hE+ZGB1zTulIRv+GEBz54nf3gw9oPsJ74+pabiXN6d959VonUlr4nEDY=
+	t=1744098885; cv=none; b=gSUXpc3No8D/Zza+rjK/YGd/1MZ3cJST0HChU4+doz2LduGE3zwoCMzk9TiAvENvdUb/TAyXww+/9uIHVFdm0lptvb6dXat6xGDG4cZH3ly0POxP+dmOGUHVMpmnn237yXtihXRC26DGvIiwSxriTILxp1hwlh6lFFbJqRSIejU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097516; c=relaxed/simple;
-	bh=FUbTRighwa5eieYU38YRchMwR46Y0TXpyhzds2/dP/I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Yql4QO9bOLTN3t3yDHdoSON+igJJsvnxQcqoA4Etl8FWhyw4XGIMKqoz3YU8KQyZ1XX2ciqG7qB/kZ3OfLgweoClRzoATez8tGvAy0Adgr+JiXQbfgmnLtxt0uFW5qGZay7wT0UAZZy9jmst7iU+sXo//QdDq56K6DpWnx5vahM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=WHuEO0vi; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf257158fso36288305e9.2
-        for <linux-pwm@vger.kernel.org>; Tue, 08 Apr 2025 00:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744097513; x=1744702313; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6BtbHqsMhUos67G6Oxw8ZXZLpL8UlKP9+lIMwAqXx4A=;
-        b=WHuEO0vi43eHm/RWEOpLb35RowTgAKYK3Tp96gi+aLgsPb4fbfwqwyTZHk5oucC5yf
-         jdNWsShbw4eX75qhK6pK6vG6Sc7J9/Dmsg2Law+jFt0tZGpLACmKWzXcLdQD4x745q9Y
-         gefZOiJE196ljyJQoyk8fJUl+NDkQFApYHl7rpVwjZHcfw9+KJehe3YYW1xFk1PM8n0z
-         1LQM3gHDZX0E4Rjo06D7pLQ5mLTwhUrBMQXfI5MQR/WIYtt9SIEkjRBUoBxjE5+tzQjR
-         Oj5b3eJEG7tu/+VF79zN4Qhm7C3UauwJxNqoN4WIi7EFtCpAwKx95EqcH2gg3TmO859A
-         zUlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744097513; x=1744702313;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6BtbHqsMhUos67G6Oxw8ZXZLpL8UlKP9+lIMwAqXx4A=;
-        b=VUKib60U+eM41lj4j9ipB+co48nNRHnKJJzjO1+ijZGwm6sYeLr5vHHuq6oGjd5mhp
-         xYwlheVoAUt+DgcZtt1xZnj+wMZKvqzLWsaRws5plHWLmkMNEa1XPPPYVVa1bN2UON9S
-         SYGj7UDDFlEXGxnL1Mrk1h4884dImkAP/F9r9DgfRJmrOd8PPXgnA8gcNq8uf44F1BBV
-         lHCeOYFwrg+qtGnpIqZQgV1sXKXwoqjOfuRLZky1RpkfFaTw6tQajFVB5tTIkfBYonTj
-         8CyR1Fb/a9Pm+ssT43IfUIKjsSTDQ3TaHVolkPmgNQeBImkwoPZZWZpmHkegVdG3KwJa
-         UrIw==
-X-Gm-Message-State: AOJu0YwLKG11geqif/QtriJPlWOvYwSUwk9XmaEn9KvH1fyIBCkV/J08
-	j3E1kvDEsAMMvui7sw1ZyL0qdZT/H3LbKEuDVvZvxLakL0gXg3ANtfmI/J7q0PM=
-X-Gm-Gg: ASbGncs+pANWSvHSFmqmDyffR5B707dJB0Oam+TVY+POEkiasFA3x2Hpkoy5QsMnCbQ
-	z/QJXurUtdXQHMiVdGojAMwp5reVheBijtdIUA1kePm7L74aOnbMd/prOz3/aVBaE596J3dlMnm
-	cmAwG5XqBK5EEC4Ezyk6f1KHZvADJdTh/Ely+ptW6r9vl0smhzXicGZtPN3rfp024x+n9m/R2kL
-	HQYMEuX3SbhQk4LqqJFdRQjXqZoMUCdpRspK/uJDIyccY0LILuS0QhvB6RTbQBhZ/3rtSnxV2N8
-	X/jkebZ88bZ7eVwlGNhdFkX92jY6zYvBo9y4jw==
-X-Google-Smtp-Source: AGHT+IE+Xxom6NOhosQq0m8djhtf9SwUOVEwposQh1srQRR6dan0KmkkmgYrxGpxn0xF2WRjmrUqSw==
-X-Received: by 2002:a05:600c:b8c:b0:43d:4e9:27ff with SMTP id 5b1f17b1804b1-43f09261197mr36027095e9.7.1744097512693;
-        Tue, 08 Apr 2025 00:31:52 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226be7sm13846370f8f.89.2025.04.08.00.31.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 00:31:51 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 08 Apr 2025 09:31:46 +0200
-Subject: [PATCH] pwm: pca9685: use new GPIO line value setter callbacks
+	s=arc-20240116; t=1744098885; c=relaxed/simple;
+	bh=xxetUDTZlqHK0fEp7Vi6b/HN4t5K5gsdbrTM3CzIMZc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=SK5WXiWCB2eXWz0RHnBZx4fZ0ALxka3zv0uGiTMgbMXSYn/Tvo3ZNETcxYDsJXEy3oCHhEZDRX/yGFrXsW7T+Wp+nLzox157aNxnlVRczNGNdObpoHxIjJ+vOvBIWVVszZy8+3HLwW6Yedz4hKsV4JwfdU1/mrDf+A//pLQ12N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M3xXo6sy; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A30B420483;
+	Tue,  8 Apr 2025 07:54:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744098875;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JKsaa5Qw6MpBCcMH9HOs47mW1tDXG/PfpB5X4FVgPbw=;
+	b=M3xXo6sykhWw+N7TXiXB1g6Hcor8ZMEk7uaESpU493qpZPI9Eg9SHzDy7EE0z5uGqY3/qW
+	CZy+juqPIIl8RcI/C9xJClXuX3lz1HMgbJXpN1fIDd2ISJdc77ek3rhHgSdZVBIpQoTXM8
+	lFFC5t8zBs1piZNyDhqwaOK/xI3zsJULaVlSKpcWEM/+4QQmbiPdN4EYFC1VE1etA2bLW7
+	TDp2fFPL1rmSR3gtwP54pbspGaoacRHRKje1HZtlAOxKXv+OGZrzUUrRcjXeuyLEvKxvjO
+	forGNMl3mo/lNByht2d9qsT+7aULp2h+/a7lEyZ2SFGunVTen1DALXBUmgWNyA==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-gpiochip-set-rv-pwm-v1-1-61e5c3358a74@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAOHQ9GcC/x3MQQ5AMBBA0avIrE1SRaWuIha005oFmlaQiLtrL
- N/i/wcSRaYEffFApJMT71tGVRZglmnzhGyzQQrZiloq9IF3s3DARAfGE8O1ItWzbrTtpFYOchk
- iOb7/6zC+7wei4oJAZQAAAA==
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1992;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=1U8Gmj+3lvIlR8YGdhnk51HbgumUU7NfSqTqb+zvZ/o=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9NDjW+d7FBwyeFzKIyJR2a6Z8Gc6Y60t0jDGZ
- /WgrTFfIxuJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TQ4wAKCRARpy6gFHHX
- ckkPD/9y497qWEAtRXgBzMVqqT3uDVMKf3CMYude1aFE44ClsHYEYEWcRLXgzvOOOM4KyzStQFy
- HanKEHM+uSdXPs82ipC0Kiz+f4HXP1KuMdpNNIvYufMU2RzE7U2w/wCAQ+b/x4QCFfHo0rvYroI
- XwrbdJAmIx2+DmAvS0JRrejn4yaOAE2zUsW47/tNotpwAJhhh/vJ5md4D+AbAaJ0fPiQLMqmFVq
- rtDJf5sE4/BffloxGLmOpMHNqfv97a89Cy6cy1TMlEfo67QAK2Qx/cqmD/LwFSGXgBSLvPh9T+T
- KN1ZnVup0UTT46XsOAdaGvbqA8pg4ddFedXOmLNt2q1UmspB8G2rt4IQ3cyuUugiOGWkAHYYWgc
- 4zvfeso1bKKV2HpXd1NIgf0wMyir7k26qXJuKicJiKWY88hSP7uFLeBSvuTA+nrmraemlDVgGzx
- X/1Izx0qBxGZT5HzW9zKz0SpwXic2BQQ5nvaICnOG2Gpzd7Rcw4e2fJIrvFqXuCkz70GZ1G5LRS
- 8zes4tYb2/Jx7HwbBRq0DW4nA1IYd7ywvXx0rUgl9ZOkSPjSqyNnKP6/g5TPDFjPE22MOpNGlrL
- 9C15eNYBk8V8e0ToggORnHjL3a1tXnMlYir//YSSuvdcPBBec5iYZfWvlRvmtdIoTNCs77b73Zk
- JCb6zElp8Q2puhQ==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 08 Apr 2025 09:54:27 +0200
+Message-Id: <D913G6I023M1.NLMLJDZ1PYSA@bootlin.com>
+To: "Inochi Amaoto" <inochiama@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, "Jingbao Qiu" <qiujingbao.dlmu@gmail.com>
+Cc: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+ <unicorn_wang@outlook.com>, <dlan@gentoo.org>, <linux-pwm@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 2/2] pwm: sophgo: add pwm support for Sophgo CV1800
+ SoC
+From: "Thomas Bonnefille" <thomas.bonnefille@bootlin.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20240501083242.773305-1-qiujingbao.dlmu@gmail.com>
+ <20240501083242.773305-3-qiujingbao.dlmu@gmail.com>
+ <k6jbdbhkgwthxwutty6l4q75wds2nilb3chrv7n4ccycnzllw4@yubxfh5ciahr>
+ <D8Z4GLQZGKKS.37TDZ7QBN4V4N@bootlin.com>
+ <j74t2zqvoslo5fgmea4kp434tafgchkncytofj65zbbt7ivcqy@auboc3pkdiz3>
+In-Reply-To: <j74t2zqvoslo5fgmea4kp434tafgchkncytofj65zbbt7ivcqy@auboc3pkdiz3>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddvheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvfevuffhofhfjgesthhqredtredtjeenucfhrhhomhepfdfvhhhomhgrshcuuehonhhnvghfihhllhgvfdcuoehthhhomhgrshdrsghonhhnvghfihhllhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetuedvlefhtedujeevtdffgeevjeetuedvudehtefhgfeuteefhefguddtfedtteenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehthhhomhgrshdrsghonhhnvghfihhllhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehinhhotghhihgrmhgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuhhklhgvihhnvghksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehqihhujhhinhhgsggrohdrughlmhhusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrg
+ hdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuhhnihgtohhrnhgpfigrnhhgsehouhhtlhhoohhkrdgtohhmpdhrtghpthhtohepughlrghnsehgvghnthhoohdrohhrgh
+X-GND-Sasl: thomas.bonnefille@bootlin.com
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon Apr 7, 2025 at 9:21 AM CEST, Inochi Amaoto wrote:
+> On Sun, Apr 06, 2025 at 02:16:41AM +0200, Thomas Bonnefille wrote:
+>> Hello,
+>>=20
+>> On Sat Jun 1, 2024 at 1:53 PM CEST, Uwe Kleine-K=C3=B6nig wrote:
+>> > On Wed, May 01, 2024 at 04:32:42PM +0800, Jingbao Qiu wrote:
+>> >> [...]
+>> >> +	if ((state & BIT(pwm->hwpwm)) && enable)
+>> >> +		regmap_update_bits(priv->map, PWM_CV1800_OE,
+>> >> +				   PWM_CV1800_OE_MASK(pwm->hwpwm),
+>> >> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
+>> >
+>> > This looks strange. If BIT(hwpwm) is already set, set it again?!
+>> > Also if you used the caching implemented in regmap, you don't need to
+>> > make this conditional.
+>> >
+>>=20
+>> I was testing the series and noticed indeed an issue in this driver at
+>> those lines. If PWM_CV1800_OE isn't set by something else than the
+>> kernel it will never be set and so, there will never be a PWM outputted.
+>>=20
+>> Using :
+>>     if (!(state & BIT(pwm->hwpwm)) && enable)
+>> Solved the issue but as Uwe said you can probably rely on regmap caching
+>> to avoid this condition.
+>>=20
+>> >
+>> > ...
+>> >=20
+>>=20
+>> Do you plan on sending a new iteration some day ? I may have some time
+>> to continue the upstreaming process if you need to.
+>>=20
+>> Thank you for this series !
+>> Thomas
+>
+> I suggest checking existing spi-sg2044-nor driver, which may reduce your
+> work for upstreaming.
+>
+> Regards,
+> Inochi
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+Hello Inochi,
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
-values") added new line setter callbacks to struct gpio_chip. They allow
-to indicate failures to callers. We're in the process of converting all
-GPIO controllers to using them before removing the old ones.
----
- drivers/pwm/pwm-pca9685.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Thank you very much, however even after reading it I can't see the link
+between the SPI NOR controller driver of the SG2044 and the PWM driver
+for the CV18XX series ?
 
-diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index 5162f3991644..eb03ccd5b688 100644
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -263,12 +263,14 @@ static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
- 	return pca9685_pwm_get_duty(chip, offset) != 0;
- }
- 
--static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
--				 int value)
-+static int pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
-+				int value)
- {
- 	struct pwm_chip *chip = gpiochip_get_data(gpio);
- 
- 	pca9685_pwm_set_duty(chip, offset, value ? PCA9685_COUNTER_RANGE : 0);
-+
-+	return 0;
- }
- 
- static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
-@@ -321,7 +323,7 @@ static int pca9685_pwm_gpio_probe(struct pwm_chip *chip)
- 	pca->gpio.direction_input = pca9685_pwm_gpio_direction_input;
- 	pca->gpio.direction_output = pca9685_pwm_gpio_direction_output;
- 	pca->gpio.get = pca9685_pwm_gpio_get;
--	pca->gpio.set = pca9685_pwm_gpio_set;
-+	pca->gpio.set_rv = pca9685_pwm_gpio_set;
- 	pca->gpio.base = -1;
- 	pca->gpio.ngpio = PCA9685_MAXCHAN;
- 	pca->gpio.can_sleep = true;
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250326-gpiochip-set-rv-pwm-e3b949d7296f
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
+Regards,
+Thomas
 
