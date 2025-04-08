@@ -1,102 +1,167 @@
-Return-Path: <linux-pwm+bounces-5372-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5373-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E30AFA7F63B
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Apr 2025 09:29:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E72E5A7F64E
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Apr 2025 09:32:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 354B83ABF20
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Apr 2025 07:29:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 687D67A4891
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Apr 2025 07:31:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1C932620C4;
-	Tue,  8 Apr 2025 07:29:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25B032638A9;
+	Tue,  8 Apr 2025 07:31:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dYMqVzz7"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="WHuEO0vi"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9160310E0;
-	Tue,  8 Apr 2025 07:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA84263F47
+	for <linux-pwm@vger.kernel.org>; Tue,  8 Apr 2025 07:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097358; cv=none; b=pmthMnFJF4azMjzW5/192DE4GWBG3kh7na9JfoZTXAXRPDWMmSTrAY6Zzy7X0bql444oyVXHFS0LTVg3AOv1vGEA4bEf8FWhdD0m9hc2KXQZhCeLjcxOx0UqpBlPGLskgKLPAoPc4L5dmlS0jhM71bxXdTybGKufI4eJUU158sg=
+	t=1744097516; cv=none; b=cVktaK+ZeipwGGG3nMW+/5Ca1CcQAyxx+IH8bbuRRXuhjzIzmeJUU/tnRRyi6kSFTmI3lp3mEb68ix3hruxmQNld+OyNR2u5EgKPG9msnEDKpPHWQB9hE+ZGB1zTulIRv+GEBz54nf3gw9oPsJ74+pabiXN6d959VonUlr4nEDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097358; c=relaxed/simple;
-	bh=5KWxthNPPcDTO+MOo+gfSsFp9HUzpKoAl7or2dZMyhw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TpNpXotqoqM0mLdmUgqhT0Ea4UVC7wApnVnkEH4NuNtpGsOTvBbMPPugbV9h7N889tk+aicJwJDqJKraIC3wRLVlOZanoOLYqAUhwltdO7DaWm2ZgGh9yAuyqZDysN7u2wFP75Gw8aAOIi1o998TIAr0KROedg1VeJ2ivK7C9l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dYMqVzz7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78BD1C4CEE9;
-	Tue,  8 Apr 2025 07:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744097355;
-	bh=5KWxthNPPcDTO+MOo+gfSsFp9HUzpKoAl7or2dZMyhw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dYMqVzz7xyhpqKDxDzAU99VUUh8JRVqi05tFNXeewA7pHGyOQmSl7pjydY6VJcfOJ
-	 FfdHQvrCW4hD7CjL4IoqeFUu2ITH8xiANd4mGByWbYjJRcbwTAGQkKwIC9LE4WQbyu
-	 IXnVuHsNQ/tZrWwc9Pad0tBxcGJ4S2NU6QKAbQI4xOD+cQR6i+lM2+MtuMvx+ViI1H
-	 zIswq6+KCo6bAGEOVt0p9EpUNA1A+enSt+Mko1Z5NjvElccg5iT5S3LzpDnK5J7deB
-	 daBbmvkaC+QwM9Y5Lrk7Y5+LIw/9lPEDObh7BSj9w3iYTLilnVNjRp9IdZqwCvv43K
-	 l3q3jcY+yxjdQ==
-Date: Tue, 8 Apr 2025 09:29:12 +0200
-From: =?utf-8?Q?=22Uwe_Kleine-K=C3=B6nig=22?= <ukleinek@kernel.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Conor Dooley <conor+dt@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
-	Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: timer: renesas,tpu: remove DoC
-Message-ID: <72v3ymskrew3kvi2uzjoq2gewp7wnade75tjl4bfp7sw35h2ne@rfc5mygrgb2y>
-References: <877c3vnq0k.wl-kuninori.morimoto.gx@renesas.com>
+	s=arc-20240116; t=1744097516; c=relaxed/simple;
+	bh=FUbTRighwa5eieYU38YRchMwR46Y0TXpyhzds2/dP/I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Yql4QO9bOLTN3t3yDHdoSON+igJJsvnxQcqoA4Etl8FWhyw4XGIMKqoz3YU8KQyZ1XX2ciqG7qB/kZ3OfLgweoClRzoATez8tGvAy0Adgr+JiXQbfgmnLtxt0uFW5qGZay7wT0UAZZy9jmst7iU+sXo//QdDq56K6DpWnx5vahM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=WHuEO0vi; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf257158fso36288305e9.2
+        for <linux-pwm@vger.kernel.org>; Tue, 08 Apr 2025 00:31:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744097513; x=1744702313; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6BtbHqsMhUos67G6Oxw8ZXZLpL8UlKP9+lIMwAqXx4A=;
+        b=WHuEO0vi43eHm/RWEOpLb35RowTgAKYK3Tp96gi+aLgsPb4fbfwqwyTZHk5oucC5yf
+         jdNWsShbw4eX75qhK6pK6vG6Sc7J9/Dmsg2Law+jFt0tZGpLACmKWzXcLdQD4x745q9Y
+         gefZOiJE196ljyJQoyk8fJUl+NDkQFApYHl7rpVwjZHcfw9+KJehe3YYW1xFk1PM8n0z
+         1LQM3gHDZX0E4Rjo06D7pLQ5mLTwhUrBMQXfI5MQR/WIYtt9SIEkjRBUoBxjE5+tzQjR
+         Oj5b3eJEG7tu/+VF79zN4Qhm7C3UauwJxNqoN4WIi7EFtCpAwKx95EqcH2gg3TmO859A
+         zUlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744097513; x=1744702313;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6BtbHqsMhUos67G6Oxw8ZXZLpL8UlKP9+lIMwAqXx4A=;
+        b=VUKib60U+eM41lj4j9ipB+co48nNRHnKJJzjO1+ijZGwm6sYeLr5vHHuq6oGjd5mhp
+         xYwlheVoAUt+DgcZtt1xZnj+wMZKvqzLWsaRws5plHWLmkMNEa1XPPPYVVa1bN2UON9S
+         SYGj7UDDFlEXGxnL1Mrk1h4884dImkAP/F9r9DgfRJmrOd8PPXgnA8gcNq8uf44F1BBV
+         lHCeOYFwrg+qtGnpIqZQgV1sXKXwoqjOfuRLZky1RpkfFaTw6tQajFVB5tTIkfBYonTj
+         8CyR1Fb/a9Pm+ssT43IfUIKjsSTDQ3TaHVolkPmgNQeBImkwoPZZWZpmHkegVdG3KwJa
+         UrIw==
+X-Gm-Message-State: AOJu0YwLKG11geqif/QtriJPlWOvYwSUwk9XmaEn9KvH1fyIBCkV/J08
+	j3E1kvDEsAMMvui7sw1ZyL0qdZT/H3LbKEuDVvZvxLakL0gXg3ANtfmI/J7q0PM=
+X-Gm-Gg: ASbGncs+pANWSvHSFmqmDyffR5B707dJB0Oam+TVY+POEkiasFA3x2Hpkoy5QsMnCbQ
+	z/QJXurUtdXQHMiVdGojAMwp5reVheBijtdIUA1kePm7L74aOnbMd/prOz3/aVBaE596J3dlMnm
+	cmAwG5XqBK5EEC4Ezyk6f1KHZvADJdTh/Ely+ptW6r9vl0smhzXicGZtPN3rfp024x+n9m/R2kL
+	HQYMEuX3SbhQk4LqqJFdRQjXqZoMUCdpRspK/uJDIyccY0LILuS0QhvB6RTbQBhZ/3rtSnxV2N8
+	X/jkebZ88bZ7eVwlGNhdFkX92jY6zYvBo9y4jw==
+X-Google-Smtp-Source: AGHT+IE+Xxom6NOhosQq0m8djhtf9SwUOVEwposQh1srQRR6dan0KmkkmgYrxGpxn0xF2WRjmrUqSw==
+X-Received: by 2002:a05:600c:b8c:b0:43d:4e9:27ff with SMTP id 5b1f17b1804b1-43f09261197mr36027095e9.7.1744097512693;
+        Tue, 08 Apr 2025 00:31:52 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226be7sm13846370f8f.89.2025.04.08.00.31.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 00:31:51 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 08 Apr 2025 09:31:46 +0200
+Subject: [PATCH] pwm: pca9685: use new GPIO line value setter callbacks
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vfexy5i6yj7er6zv"
-Content-Disposition: inline
-In-Reply-To: <877c3vnq0k.wl-kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-gpiochip-set-rv-pwm-v1-1-61e5c3358a74@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAOHQ9GcC/x3MQQ5AMBBA0avIrE1SRaWuIha005oFmlaQiLtrL
+ N/i/wcSRaYEffFApJMT71tGVRZglmnzhGyzQQrZiloq9IF3s3DARAfGE8O1ItWzbrTtpFYOchk
+ iOb7/6zC+7wei4oJAZQAAAA==
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1992;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=1U8Gmj+3lvIlR8YGdhnk51HbgumUU7NfSqTqb+zvZ/o=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9NDjW+d7FBwyeFzKIyJR2a6Z8Gc6Y60t0jDGZ
+ /WgrTFfIxuJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TQ4wAKCRARpy6gFHHX
+ ckkPD/9y497qWEAtRXgBzMVqqT3uDVMKf3CMYude1aFE44ClsHYEYEWcRLXgzvOOOM4KyzStQFy
+ HanKEHM+uSdXPs82ipC0Kiz+f4HXP1KuMdpNNIvYufMU2RzE7U2w/wCAQ+b/x4QCFfHo0rvYroI
+ XwrbdJAmIx2+DmAvS0JRrejn4yaOAE2zUsW47/tNotpwAJhhh/vJ5md4D+AbAaJ0fPiQLMqmFVq
+ rtDJf5sE4/BffloxGLmOpMHNqfv97a89Cy6cy1TMlEfo67QAK2Qx/cqmD/LwFSGXgBSLvPh9T+T
+ KN1ZnVup0UTT46XsOAdaGvbqA8pg4ddFedXOmLNt2q1UmspB8G2rt4IQ3cyuUugiOGWkAHYYWgc
+ 4zvfeso1bKKV2HpXd1NIgf0wMyir7k26qXJuKicJiKWY88hSP7uFLeBSvuTA+nrmraemlDVgGzx
+ X/1Izx0qBxGZT5HzW9zKz0SpwXic2BQQ5nvaICnOG2Gpzd7Rcw4e2fJIrvFqXuCkz70GZ1G5LRS
+ 8zes4tYb2/Jx7HwbBRq0DW4nA1IYd7ywvXx0rUgl9ZOkSPjSqyNnKP6/g5TPDFjPE22MOpNGlrL
+ 9C15eNYBk8V8e0ToggORnHjL3a1tXnMlYir//YSSuvdcPBBec5iYZfWvlRvmtdIoTNCs77b73Zk
+ JCb6zElp8Q2puhQ==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---vfexy5i6yj7er6zv
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH] dt-bindings: timer: renesas,tpu: remove DoC
-MIME-Version: 1.0
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
 
-Hello,
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+values") added new line setter callbacks to struct gpio_chip. They allow
+to indicate failures to callers. We're in the process of converting all
+GPIO controllers to using them before removing the old ones.
+---
+ drivers/pwm/pwm-pca9685.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-what is "DoC" in the Subject?
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index 5162f3991644..eb03ccd5b688 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -263,12 +263,14 @@ static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
+ 	return pca9685_pwm_get_duty(chip, offset) != 0;
+ }
+ 
+-static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
+-				 int value)
++static int pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
++				int value)
+ {
+ 	struct pwm_chip *chip = gpiochip_get_data(gpio);
+ 
+ 	pca9685_pwm_set_duty(chip, offset, value ? PCA9685_COUNTER_RANGE : 0);
++
++	return 0;
+ }
+ 
+ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+@@ -321,7 +323,7 @@ static int pca9685_pwm_gpio_probe(struct pwm_chip *chip)
+ 	pca->gpio.direction_input = pca9685_pwm_gpio_direction_input;
+ 	pca->gpio.direction_output = pca9685_pwm_gpio_direction_output;
+ 	pca->gpio.get = pca9685_pwm_gpio_get;
+-	pca->gpio.set = pca9685_pwm_gpio_set;
++	pca->gpio.set_rv = pca9685_pwm_gpio_set;
+ 	pca->gpio.base = -1;
+ 	pca->gpio.ngpio = PCA9685_MAXCHAN;
+ 	pca->gpio.can_sleep = true;
 
-On Tue, Apr 08, 2025 at 06:09:15AM +0000, Kuninori Morimoto wrote:
-> commit 1c4b5ecb7ea1 ("remove the h8300 architecture") removes Renesas TPU
-> timer driver. Let's remove its Doc.
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250326-gpiochip-set-rv-pwm-e3b949d7296f
 
-s/Doc/binding documentation/ ?
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Best regards
-Uwe
-
---vfexy5i6yj7er6zv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf00EYACgkQj4D7WH0S
-/k7cLwf/fXisWT5vgttCLvvHZpLyax2898y2iXRY0F9310TLJmUbbOsQj2GdRiV+
-XWUqXZnbySRoFy9UFQVqRm9rxUT5cjuQMmd2Vt8Y1bJklwRknLbtw649eFStq1zI
-qq9CWymTez95H2G8GvfOzhJoqvNbO2X7070CivGjx1F/VVRPsJOHG4rQVP6LMk52
-PaUb+LI2BKHJelXDkcPrz9ZccMdgi8Kj25lfc5FMjQIScYG9MfFmDN6MWNsvmpI6
-wyv39GFIrtN1dHPWl8Tp0VwZ5N/C0uItw13RCDcDOPs1eYvYmDvTUtGhsO+xh8nv
-fd0tfzgFRSZmjzY8HnNGiCOkuEsfmg==
-=cnQY
------END PGP SIGNATURE-----
-
---vfexy5i6yj7er6zv--
 
