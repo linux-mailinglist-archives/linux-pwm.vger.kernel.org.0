@@ -1,77 +1,77 @@
-Return-Path: <linux-pwm+bounces-5431-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5432-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D38D6A83045
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Apr 2025 21:18:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3ACEEA832E4
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Apr 2025 22:58:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 49280189E669
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Apr 2025 19:18:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2684A880374
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Apr 2025 20:58:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CF2B1E4110;
-	Wed,  9 Apr 2025 19:18:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA724213E90;
+	Wed,  9 Apr 2025 20:58:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mr7qMi/M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwyy8DdU"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B857A1BC073;
-	Wed,  9 Apr 2025 19:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAA81E5018;
+	Wed,  9 Apr 2025 20:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226283; cv=none; b=nnrsJ/lfEdGHSXUMZ8SchtPkhWAbMltZm/90+oavaxqKjAlixit599as2hLgg91dtlVmFwEq/BRzbjLKqwCzFHw7ITXpKbvvtXj6ZKKUt1AfjxZcn9G5yfrLf/bUwn+0W2jxncusxSSiNS6gp0kWTP9QwJ0aYge86wKDSuklRmA=
+	t=1744232302; cv=none; b=lOs3m1FFP9K1C7FUPfeCtRRHyTRwSD8X4Zc8XRwSJ8x3vrbCmRUqEYORzx+s05i16fNadTyctC93nXBpz6u3HC1GhcWIjuZsDrXI/MzhweQ80A7MlyfKxbbcg8A8o8KD1Y9IuH3zfd1bMeIHLhMUIBk0ceBgUr69kJlVe3FGB70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226283; c=relaxed/simple;
-	bh=n0MHnrgNObzTRjdLX0L/5mn6PIokeufmSE0xOH7vcyo=;
+	s=arc-20240116; t=1744232302; c=relaxed/simple;
+	bh=6ec0alS8XiULM/vgWxWgwfHpG7Je0oApq0VdXu9F0v4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JWIlBQC/BexYQtwLrTuTCAXcC67jakVO2dyLUQy1Xp31tISFHlRutNNCxZX1xbaPTGs/+cZghJMVNVqGM1jaJp2GG9Q9VzhWrSNaPa5kP1Bl05XdgoqG8W4ddmub6E/kLg2/i5yo4UktDC9Kz3jLQ4PGUGxuDQbBybqzhLak9/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mr7qMi/M; arc=none smtp.client-ip=209.85.214.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=iN0ZWi7qTMQSzlh0yu/4cX42feD/wZzLZnOwfAIg1/LeuvlrJM632V8rJ/LRTGI7krlHUwuhWbbVS4j+CpLqLZmlVyO40WDYgCD/VLTqONUSNaYvNuf2LSfMWTjk35qeOy8GrtMx2e7bOblNe6gkYBgKorVZm5Kog6jJSIn5k8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mwyy8DdU; arc=none smtp.client-ip=209.85.215.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-223fb0f619dso69165ad.1;
-        Wed, 09 Apr 2025 12:18:01 -0700 (PDT)
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b03bc416962so35332a12.0;
+        Wed, 09 Apr 2025 13:58:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744226281; x=1744831081; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744232300; x=1744837100; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HHQD0iOlFuQkVDhwcExHTtZwTrYRkg2cZu77K8SIYig=;
-        b=mr7qMi/MYdXEkSiz8cSRWJYTAVXZWdwK4FngFaRBizA/qJiuCTxruAElF1T/drqEC2
-         s3CeOB1XZ15DQO6ZT0trQUIX/+QjRtG3bFC9K80i7bpDQMistsNb7FwUl34iSMAhp6Ck
-         ASfjH/pzyjShG1HzbKX2qhpWEhgOy/+CbRGwAtLP+Pbx6gUfK9vD65BD/FQ0cAvrtvAI
-         kd7CvrOM7pTwULSYDssqnSKozm18K8JXXkS4rZe0sTDnP+A+B7LHbYGh2rdzQQSr6ssN
-         ZLPkFE9hLWa42ajIxJbJBOXlY7BSk+YdvUgT+OuGVbcPOX/Xca2UTt1JFEdVviLZgNnt
-         Yq0g==
+        bh=0anQ+IpqWVzDF/uK9u1Pq2W1Y/RyglC7ZuUoWh/6VYc=;
+        b=mwyy8DdUym2PNXB10h67fTadWN5VgDr4mhCoJJNNZ4s5FflNklIzbw95RZVFVSMhLt
+         2MLBQMgaXWjVbCpzlxI7aCrbdJjL4bAghLqCN7q+w9F7iGNM4mz135O0mPwDUpoN1v4b
+         qrfGockCdOiGVXfQLxryNGGuCAmvYvKRHWIPIg1BNsxaxefNdS5tx/M5eAKfakiWWXp7
+         qrfOSU3+1d/nCKIkRyeilRS7irC8XN0p/dpfg3i6+YFQ1tdLOc8QIeaG9hIUq6WYlZ1j
+         rZOLZvmfYE9/ZZXiyqgvsHL9f09rHhM6MxIYquZYayZfUDFpVYzljjv2yxZ/CVCM1v9B
+         cIjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744226281; x=1744831081;
+        d=1e100.net; s=20230601; t=1744232300; x=1744837100;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HHQD0iOlFuQkVDhwcExHTtZwTrYRkg2cZu77K8SIYig=;
-        b=QLh/K7mO8nbj4cbJiSUVArr39h1tFFlyPX45rNFY3vkkXgimf7KB8z/BzWbwXouPIV
-         3ZAK0EbVIf2PnoxMlkgv0DIrQmtXf5QWueKF5eZHMjRsvia583iZmP7dhni57TpWNv+A
-         DCVKuSiE8Ok4j6Zoq52sjPPkIHKTdjsA1hk79sukc9GYdVlb2TJ9ORiamguSyJO//UEY
-         VofoFhjmaJ7DvPF4VZUYAEFrwywTnXJqrRXdjMUDgL+PyX8GaKGbVVlRCUZAIBzS2xRb
-         aooJbQ04O4plYtzQrNhkGd1czfoLFFfuLZoY+0YiA0DMVpQ6RT9zECw86ABELK0dvvZy
-         Ei4w==
-X-Forwarded-Encrypted: i=1; AJvYcCU6FoTyUn3nPmn1OreHcjSFXptpqWz6eivkZZhI/Xay9Oiwej/06HuNC1KG/V4qbcryT+xvyLpTQWNev4xc@vger.kernel.org, AJvYcCVA1KEKA80rG6Y1WCL5uMBCfLx7d9+9nLr07E2+5ms+1sOxUYTae0O1DrdskIK4lNSH9fTXhpw8zeSi@vger.kernel.org, AJvYcCVhxtPOxWxTEcbb/o4Nso+ApKPUo7Kp/mHlbTxA9GU68Bzio35yuLfGeq1jqOoMxMoo01Pojvgp/mR5@vger.kernel.org, AJvYcCWJ5ve0M1AO9UAcszVAv96BPYbRag6iDcvoyeiLUkhufYbzSL3SPxXDhTdXeSOsFXyocwsfIB8othbKRR0=@vger.kernel.org, AJvYcCXxc0l3t0Z87D2wkfteaMLjkS5blwjFLGQNPIa5+OpxIonfqM6SeKgDHGK2qxb0J0PjlJmFi/dv+fQzPQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRHjyopcEf0iSyMDXPKXdix0VpPHbcqZHs9Lg+BeQH1ko2FZLI
-	nOqnIlPi1f5QDs6Pdr/4B53r2BiOPaDAXMD4glNRvK+uhSJ94TjG
-X-Gm-Gg: ASbGncu3pxtQ5VY+8xXQjWPOk8ZLQ/HKHFcfJC5313XIb3PbzGvuklngwdCiSArWLGw
-	pkV5VzNIPFaj7p2XC/GYHozNEYXpv++1FfeJofZJBcyRNA1nDPAS+uIk45OH05QvfWiNQu39PM3
-	BcXUn3jGMAZbMyHvUREi5XQeWRrreglZlXryRA7Drwr8xIrTSc5TpxKeUUc6iRF3CWtoKMJn/Ln
-	2BRa2NWEtINsuN/JPi2DufCB0m9AGSTWvnrWBjVrRHvHavyQzyVq+nRhszkzPqQg3mVTMT8ysqA
-	5HowdXBTNUnk7tpDTKK3g15kfXmVwYpfIz/W0FkicQ==
-X-Google-Smtp-Source: AGHT+IFwBTfAW024TNIPQDCEFzUgxaaGpyzh2C3mW7SRmH4lEb0zb5qo7j6yydOgEn+rBQXJppUNnA==
-X-Received: by 2002:a17:903:440b:b0:224:1935:fb91 with SMTP id d9443c01a7336-22b2edf6293mr1071095ad.27.1744226280948;
-        Wed, 09 Apr 2025 12:18:00 -0700 (PDT)
+        bh=0anQ+IpqWVzDF/uK9u1Pq2W1Y/RyglC7ZuUoWh/6VYc=;
+        b=nGYhDfEnsky7RKNmTwyFkB/21rLXy1PTg5jUG8xDPr80bSjue+2keOFa1n70bNLQhZ
+         vOTBdAMtnQqncPH4L0++xt4E9z46+OL387OInED5Sf8JvHOOlOqicTORFgI7RONM2zuj
+         dB3xVINDqd1AffmkEzf31C7hAlmR+MIxZuZcb+evgfXMwHa2XF3Lsdp6Kf9S0hltRuEr
+         bUHtuj9WZDh7b84hORDvCOS0Pgan+NJy/Qk8S3yKu6SesrUS12wybDF/q8/KFv3IZETf
+         LWMx3cnWxs0IVZEDSSPFWerpyt5aZBEnOJbTyyuOKxsjzdyEt/W3DKtqYaQHLnL2RVZf
+         mAFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCYhxoe5EHqHp2WZoI9vkMk32pmFll3aBPMCMV2IPKfuUsc2MWIDcJinUQo8bvmbs21wfmeQUyGz92Jw==@vger.kernel.org, AJvYcCVWD36u5hxYWPSTC8aDqblTveZR/QmkjnCgko8XEsIP7ej1Np4kQm7R6lwLgtnWN8DN8XMWRY2MuEfEnn+G@vger.kernel.org, AJvYcCVzaUIRo6+8u3dHBuoCvfpmohqE+jP71bMHj2r7vWJL376iYIp2Tdmv5BYWxTmwOPEmQoquGMzh3irA@vger.kernel.org, AJvYcCWEBAYghVCr/gZCdahZlwcV1s4ghAHxmwjXYt7w6uyJgGH2xrfOKlnrcBQAqqTBI4URslzf1pWngoczXZA=@vger.kernel.org, AJvYcCX3PXCEjeIUDZ2Ag/GVKb4S7mjlHeXAjnLb6bdbRzUByHLk/q7GasPBIm1KPV/vGv5J93Fz1bSaq3d8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzqwrDNodHemZHSabqWdPiSq59WgiKTQ717fxMPe6I8m1vm3+f
+	0HXLlbDqoxSC7VsDotjXx3g3EvD9gR2MUDL92idJwb5tLJpFm/yE
+X-Gm-Gg: ASbGncvvdOqd3BHZcnXBoGPIpSW2T9V57FSAe/aoMXujNUp4K8nJIsVBWFizN4R8FFG
+	XXL5/5S1+7uYSXvAoro+YRdK8RncqkUWEPR+JVxOQsZ+zaaUm8uIMAZtftnBVLXXCFtD5z6mr/d
+	33zAMh3CoAdYmB8/TD81/57ojol37M57Tt9Bm7FAN43BqvVaxFg39fhCL6rS3eouAVxb2+OHMSG
+	S656+l8jqhEwCvzFxBVehmSPLG0bev1W1/q4+0UWlvNsp/xH9YFZD4FnrfmaQhDBrBucQ/Ii8fy
+	uYxKxHMk2Q1LgMYIe4tOH0ITfAIhrc1MQzykqv+W+g==
+X-Google-Smtp-Source: AGHT+IFpzhH7we9mCqBfCUsctssS5nONXoCjPZ/7FgmxJonyD7BwRkw3BofxA9xAGU2028ValekKbA==
+X-Received: by 2002:a17:90b:4a81:b0:2ff:6fc3:79c4 with SMTP id 98e67ed59e1d1-3072ba14733mr497341a91.27.1744232300372;
+        Wed, 09 Apr 2025 13:58:20 -0700 (PDT)
 Received: from google.com ([2620:15c:9d:2:cff4:8871:54bb:4c97])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e386d2sm1777469b3a.98.2025.04.09.12.17.59
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df08f63bsm1990940a91.24.2025.04.09.13.58.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 12:18:00 -0700 (PDT)
-Date: Wed, 9 Apr 2025 12:17:57 -0700
+        Wed, 09 Apr 2025 13:58:19 -0700 (PDT)
+Date: Wed, 9 Apr 2025 13:58:16 -0700
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -84,10 +84,10 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
 	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
 	andriy.shevchenko@intel.com, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v6 11/12] input: misc: Add support for MAX7360 rotary
-Message-ID: <qszbvz7xr4jhpqnae7mqmnqfv6qzppxjpmbavdknhdnjausqtt@rbjjgc2ozbmq>
+Subject: Re: [PATCH v6 01/12] dt-bindings: mfd: gpio: Add MAX7360
+Message-ID: <triuq2rqofk4psfauemu6uikizvphnqg7om5x4b6sjc3tjg2a4@5fvv5l4kollo>
 References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-11-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -96,36 +96,44 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409-mdb-max7360-support-v6-11-7a2535876e39@bootlin.com>
+In-Reply-To: <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
 
 Hi Mathieu,
 
-On Wed, Apr 09, 2025 at 04:55:58PM +0200, Mathieu Dubois-Briand wrote:
-> Add driver for Maxim Integrated MAX7360 rotary encoder controller,
-> supporting a single rotary switch.
-
-Largely same comments as for the keypad driver: use "int error" for erro
-variable, selection of the device for logging. Also:
-
+On Wed, Apr 09, 2025 at 04:55:48PM +0200, Mathieu Dubois-Briand wrote:
+> Add device tree bindings for Maxim Integrated MAX7360 device with
+> support for keypad, rotary, gpios and pwm functionalities.
+> 
 > +
-> +	input = devm_input_allocate_device(dev);
-> +	if (!input)
-> +		return -ENOMEM;
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
 > +
-> +	max7360_rotary->input = input;
+> +      io-expander@38 {
+> +        compatible = "maxim,max7360";
+> +        reg = <0x38>;
 > +
-> +	input->id.bustype = BUS_I2C;
-> +	input->name = pdev->name;
-> +	input->dev.parent = dev;
-
-No need to be setting/overriding this, devm_input_allocate_device()
-already sets this up.
-
+> +        interrupt-parent = <&gpio1>;
+> +        interrupts = <23 IRQ_TYPE_LEVEL_LOW>,
+> +                     <24 IRQ_TYPE_LEVEL_LOW>;
+> +        interrupt-names = "inti", "intk";
 > +
-> +	input_set_capability(input, EV_REL, max7360_rotary->axis);
+> +        keypad,num-rows = <8>;
+> +        keypad,num-columns = <4>;
+> +        linux,keymap = <
+> +          MATRIX_KEY(0x00, 0x00, KEY_F5)
+> +          MATRIX_KEY(0x01, 0x00, KEY_F4)
+> +          MATRIX_KEY(0x02, 0x01, KEY_F6)
+> +          >;
+> +        keypad-debounce-delay-ms = <10>;
+> +        autorepeat;
+> +
+> +        rotary-debounce-delay-ms = <2>;
+> +        linux,axis = <0>; /* REL_X */
 
-The event type should come from the DT data I believe. Could we use at
-least parts of the regular rotary encoding bindings?
+Probably this has been already discussed, but shouldn't keyboard and
+rotary encoder be represented as sub-nodes here, similar to how GPIO
+block is represented?
 
 Thanks.
 
