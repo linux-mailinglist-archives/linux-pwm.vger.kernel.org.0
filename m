@@ -1,258 +1,190 @@
-Return-Path: <linux-pwm+bounces-5433-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5434-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9669A8357B
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Apr 2025 03:13:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 137B7A83BAD
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Apr 2025 09:52:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 947AB3BD7E8
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Apr 2025 01:11:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C9B23BCAA7
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Apr 2025 07:47:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 010F58633A;
-	Thu, 10 Apr 2025 01:11:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69FF11EFF8D;
+	Thu, 10 Apr 2025 07:47:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="EnC4LaR1"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="FkUvhHY4"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010042.outbound.protection.outlook.com [52.101.229.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CAE1519B9;
-	Thu, 10 Apr 2025 01:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744247466; cv=fail; b=WFaQJWu9bsu+ScWx4YNyhv0wX3lT9Hg8amF6mSHAlUiS/U8RTq1lYkJIlRi/ZpKwlGIo6/GbgGbt6O/idb4R/zX8vtCCwlyKvmNFKmba1wF1x4DLRIzQfFGPS6pGzGaxdkhCOTybDmeNs9xkZ8PaViip5s3VFoCP0Re+eiI2YmA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744247466; c=relaxed/simple;
-	bh=6XoDT+QQ8LQfBXy3qQnkZJBmAJE0eYPrIUz++Ntjbe4=;
-	h=Message-ID:From:To:Subject:Content-Type:Date:MIME-Version; b=StZwQtWtb7XvZpYSOfmrMhBpL8zX3VyDI3cTrMFm7Rwy2vphW5VWE70X7JCFaN7S24/aAX3YYHaP2wPpyPnjPke6avEbVTllBKbqWEQRT4q2bVBV7HB88wdXXcpHM3+6gCx985kk1L4sb/mK1ohKgrHyrLwlp7NAgOKaUbmL8zg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=EnC4LaR1; arc=fail smtp.client-ip=52.101.229.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QMgGIJoUFR7dfBKBH+LgUbs0vX5ab5/R8oMhSnEUFiJmCA6TprMUSd/Y09ZU3t1kdvRIX1H5XzXlBy0EuUloN0R9p7k4gsI7wlpDEoGNVBx3gLccpyxmohLGsd7nJ7HzXGyvx6rMAW1AC0OOPKC4QEuNXEjzCCnHyFDk8e+PG5TkwAIxOUvO4xulMLojbLkxFxtv7YlvsqQGkK46xHMSCwjm0GpT93kXkdnZMceUbE0xw1Vr/kwCACbEJ+AiNKTt5tqa2DcI6nd6ozoRp58mvoCz4N2TyyX0/XTJuIOky3PE9H5kByhW8Yi2x+E9376h5NdOebdW5c/O7BuqDTdAVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NKVS1GhfnF1I1t0R1uy+weWIyysB0ywzH+XyIaLtm2Y=;
- b=EF7OQIPaVw4cGvHEISFD9/MJn81uAoSJN6GGwtWl0dSbT6vY5jEmSyNY0BREcSvQFhnCy7H8SSCXGtU2BPQRJ/Cx2UdsEyZwlsQt3mZ+tbpw4+9lvvv8ORNLVIBRkumvNo8FiMXFHXsO/yYGvXZVE9wNqkdXZ7cBFxH1zardKfGWXhcIN3JFpnlfTUqbICdQts6b5r5MXARaTARSRi4T2aiFTWZoe+yCanJxeDFLHVW8/H0hyqWslsWg3BjCTaWW/h0F11ErIgn+fGlko0Owvi/4Azl5UoHE6/bAG3QufDtTjbQvyzjxDY2KlDsKWflv+uBUpHXcG5HfKEMxO7WK5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NKVS1GhfnF1I1t0R1uy+weWIyysB0ywzH+XyIaLtm2Y=;
- b=EnC4LaR1C3yRqF0k9oNtKmhjexT9H0eN9IYjS6lZNZJzhrJ7RUDd3rMoRhieOUP7qQMY7iI44CZqc2xXFE/BJ8ah06EQJxel/njBB/pcB2k6d9+bIyDTFnYtVKuhofKutFgNM6NjrJlk5tibGEaaxOfHVHw+hkZkBIt5e/wbq94=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
- (2603:1096:400:3a9::11) by OS0PR01MB6018.jpnprd01.prod.outlook.com
- (2603:1096:604:cf::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Thu, 10 Apr
- 2025 01:10:48 +0000
-Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
- ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
- ([fe80::c568:1028:2fd1:6e11%5]) with mapi id 15.20.8606.033; Thu, 10 Apr 2025
- 01:10:48 +0000
-Message-ID: <87semglt2g.wl-kuninori.morimoto.gx@renesas.com>
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-To: =?ISO-8859-1?Q?=22Uwe_Kleine-K=F6nig=22?= <ukleinek@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Laurent Pinchart
- <laurent.pinchart+renesas@ideasonboard.com>, Rob Herring <robh@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: timer: renesas,tpu: remove binding documentation
-User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
-Content-Type: text/plain; charset=US-ASCII
-Date: Thu, 10 Apr 2025 01:10:48 +0000
-X-ClientProxiedBy: TYCP286CA0282.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:3c9::9) To TYCPR01MB10914.jpnprd01.prod.outlook.com
- (2603:1096:400:3a9::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E65C1C5F10
+	for <linux-pwm@vger.kernel.org>; Thu, 10 Apr 2025 07:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744271259; cv=none; b=Clqcn3UNk8KcFylqAgUpJ89yARwifjo02tQW4vbTL35VSZzbgHIuf0jTZr/AFNBxr9Pzv74148LVF87pTKOBxjtXZeJrm/MSsfR0jrETDM58THtvo/YCltJ2UBWmyTHplBHJpyjmcfUBtIx4CXFXj9Hl9W79YYkEvHr9N+s9yXw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744271259; c=relaxed/simple;
+	bh=/X5sejRkDjU798GSYBk8O75ln0uJBCKO7ZpUKofQRsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fXFV0VqwgbZIpyovXYO1b68eNNtEopk/VCkT5Z5jGwBM4IGAPiHHT/V8/P3JoJY39uAK7bXIZ/IJJbVGyE+OkVOHpgTuM1ONuRpzgWtmtDY171cNbHNjud8/XBo2qZd/ShmISg08y5eXkn1C2pMuBSCydWJWeAOm8H3gjMrAeCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=FkUvhHY4; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so10924165e9.1
+        for <linux-pwm@vger.kernel.org>; Thu, 10 Apr 2025 00:47:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744271253; x=1744876053; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GN4ftbVcUrpHv9pyw2kRDHI+xH+v2r8X52a4yZNFBI0=;
+        b=FkUvhHY4h6dZ/8DXtssVGY+flOXrhX8P5WvU0CjSWk0//TkRWanjl4unfHfXPzW33w
+         l7WstHo6iwKpBOop3mAID5hMk69XN9EYkBP61ZpcDk6XhEhVyjAxIL5PFR7ycp/cx+qm
+         cUiUEL83lmn6rT68tEIB5zrVi4U0Mte3v2+VaklU3bsgUpRODr5Sy9rShQ9yUweM6u8X
+         J2x+3clz1Gjh9cA8nvS8R0dKiOJ+5T/gFCQ92kgFF6DEOynY2WccBR86A1V9aZ1peSWi
+         Dz9L9gt1omUJVlbr3viiHPYOehfkQbXGS4XMk1zrEN53aWr2WOOfoNLX4ZqGVvR16omL
+         bFuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744271253; x=1744876053;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GN4ftbVcUrpHv9pyw2kRDHI+xH+v2r8X52a4yZNFBI0=;
+        b=FI5nceuCZWiM4sj6Zvdv97OkAtdx5cVIAbaOp09mO/5A1RsJj8r7Uk1rSJMKEjCZCZ
+         dw6TcqyzDl6b9fLNBbdis8tm9t2ROc5YFqHFMWI8P95ZBQoG24c8Eru/2cwaEf5w0ByR
+         1yYdEnbmzqKcBEAEFs1z0e0GZn6EpwU19dHDeUp2kacnsF8Ftwmd/Vt7O1aD+4uRzx8f
+         4TwIWzNcKoRA5VrUUWEZPrjVmgid5yUb+sRNLqNRDIb9W5fBmRM/gAyQgzCC680VQhAu
+         V3ZxLb+hbkyE2m+zNEjDJe3qIlAnDaB/wvvH8svmVgY1usfmzWfK+HMjdjmiBFH8DBuS
+         LUDw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUcE9KGGcaV8Z5rvE03+ucb7CKb1xOdwW/o5Lz5xRkvXFbmGZoqGYeHCYnIK/brghAToX+BZFt8Qs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjJrG8xjCu1kc6H8pxnhYOD/Yr8gqWkPtilo26VBRf5Dp370/q
+	uOcN3m4KpmvwS0RFYiQeHds2rv4d6N0MN2Qn4fJIzyNpZw0KzFUo4IDB+oCSzqc=
+X-Gm-Gg: ASbGnctxmZg4sbBKvo3nGTCiW9rp9dA7LPYwbEyObD8Qa5R6o2Ytk4/COzEv7knVrBO
+	xnFgHwONS593A3MLQUH9My4bEbVKhO/jG6jV7Q7+SZ7b7C4ZNSN5XynWQcTgxOwLDyL6XITOy4K
+	NHJFugAo/owgNm3vVnfrO45vum7mft63mdh932OYuANyHJgQMu1wXud7dhc0euMQRukefyPc+Vp
+	5ES4/4fcYThMYKEusKf+tNZphiq/N9WJ/kqodiGRhEG3YLZuL91GBGAy9iHNrjqlLz4zOSV8cBO
+	jF/bK8dI0C4tTftF2pfmp9zGrNxkgb7OOJl9twAlFXXXmqtbj7ykmLrNlc46qrQxURDifbOCWJs
+	D1SP61vc=
+X-Google-Smtp-Source: AGHT+IEX9hmoF0X9ZqiGVv61djZa30qp2FUBmoKbmDJPiGNvb8KXFFjv8qI0Wlyys1P8zymueqsWRQ==
+X-Received: by 2002:a05:6000:1448:b0:391:bc8:564a with SMTP id ffacd0b85a97d-39d8f4c937fmr1341269f8f.22.1744271253178;
+        Thu, 10 Apr 2025 00:47:33 -0700 (PDT)
+Received: from localhost (p200300f65f14610400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f14:6104::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43f233a2c46sm41822965e9.13.2025.04.10.00.47.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 00:47:32 -0700 (PDT)
+Date: Thu, 10 Apr 2025 09:47:31 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, linux-pwm@vger.kernel.org
+Subject: Re: [bug report] pwm: Add Loongson PWM controller support
+Message-ID: <bg4zper5r7aj7tae4qo34f6hzrjwrrmyjfqmv6gwy6mrj6hvgx@6vubp6v3yitr>
+References: <44f3c764-8b65-49a9-b3ad-797e9fbb96f5@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|OS0PR01MB6018:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84fbf44c-c2b0-4fe3-baab-08dd77cc873e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|52116014|7416014|366016|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?bvXtWl4YCYGDE2HbN+ghZePszokW8q5fHNmp3qP3m+6kmKXuk/3LJC8jS7oi?=
- =?us-ascii?Q?ov2PxTOsra/9zUZlfDWg3mJqbbVS4BiUv4qZNr7qPG61jNrjBOsxw7NAjqJf?=
- =?us-ascii?Q?PXkgsy7gU/Jq3Skr91OSGzdNPWeuV01lXJqp+G/qBhdvhKyLGhKtJLNfYUQZ?=
- =?us-ascii?Q?JbeAyg9i7jBm7aRM1JUfNk4QwUgKfZN16agNJMClYnyfouNIFjR0pnGUF5pl?=
- =?us-ascii?Q?X4JWzaVQPMAVZ7jaXWmPsIMIvQHipuVj5slHzmIzlbMaxDr2SF34S4zmu/cY?=
- =?us-ascii?Q?Z3ZnrPyG8mnkCgGxE1D+EogRw0cAKhSEb2Cn6CsG8EMnf87tQ9ILDStapcZi?=
- =?us-ascii?Q?O6tcP29jyr07LsNyPoqN5pcOT33nY6E7G97eIO2y2gaxoTQVkfvUhgM8rgPG?=
- =?us-ascii?Q?0XqJ+4aKrWVj4kyEVHbr3s2cMJBj8IvtRBJvyWxfurBlMYY2GpI2QffMYzi0?=
- =?us-ascii?Q?Si3Occ1goU6wyYXgYKIMtkMD833lG7+cSB2FFnkiVr0DwEPuAUXecFaN5OTT?=
- =?us-ascii?Q?enpKOrf6NsnsJNnwofE6jDVYPlGg550fVrQCcQrJk7JvcZi+loJTWvS7eBR8?=
- =?us-ascii?Q?mfHzH4PTQGYOp0kRF/Ir1QUUk/7S4Qzyy3BsqZgAcMStybQxAkdPtWfpUNab?=
- =?us-ascii?Q?lDtpcWf1jqGrAO9wL9Byk+iSH0hq8KchmFVxhOK2qjQjS6iYnL/OpJ7+zPhh?=
- =?us-ascii?Q?bY/lTlemjasPVZ2zyMzCyC1TOh3Z5MLYKciRN2qXyV80FO3MtMyvdMy9ukOk?=
- =?us-ascii?Q?WEO463vmYlsXHXW2SKEDAaeoUdc9AXofvO0xYTi/9LmaU5YW77i5eMwQ1Fov?=
- =?us-ascii?Q?8b7xKqZhJA46+eHU79z20flSwX4y5QoBaZaQzy1e2T5s1kdOtlQpOyd1CErU?=
- =?us-ascii?Q?mutimPzcn4jMxjgwZzMKaXEj+4SEb6hsH3Lnyb1G6IpR5mOaa6FWA3t2E91k?=
- =?us-ascii?Q?2nWw7BP6RvMAl3u5/8qtRQYrMPNbXL6eNDbjymEUn50tWJnvOFvPGgXQ9kNS?=
- =?us-ascii?Q?kebVKGVjdh0BPrLTw+f+XCeMNLKI1CWoRo70phkcx+8wUM4hNcAvPDsG/sf0?=
- =?us-ascii?Q?vAAKShUaqMiGldE3rHILzHcqeULtAz98U+IjA+TedC/FMIRrv4hc8lS5esDG?=
- =?us-ascii?Q?szLsEUqme1vpzWjXvEInnZG4BY3ghQj8/pIM0bN67XFomHYZs2jpF9fUbe10?=
- =?us-ascii?Q?EEn/iQdBdj/WRvdcT8mxNNGbZzZIr923n+VncYtLWKszDl7cl1o+t84LbRpw?=
- =?us-ascii?Q?FdcXMjL8RAnGHgW3JBkLIA4AYyBrvAF0+KXdQEYmVNfwk/L0+aLJ1J/F6YXy?=
- =?us-ascii?Q?N0snD9nftuF0xfvlWIwaTbSngNwuZMoVgnS2IVZSvLPcJ4UbV1b7zx097G3e?=
- =?us-ascii?Q?a5JkIDvjZc3nUDK2GYN0Rd8y1QFCshePv5Baiebux/CdAI547VS8TjCGvxMO?=
- =?us-ascii?Q?SPvxqFlKymjPrj+VlMKFjHZx2Nk7FzoT?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(7416014)(366016)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?D04hqy49PwiYEv/Mbii+UrwMDuH3Vd7lcpbNEtW7Si+RoRUjWBgsZl9IEqGD?=
- =?us-ascii?Q?XBLfEREfCsnWh9eZeva+Wbh83O4wiEh0lRuXXKLqQxmLtb/CcTL1Cy3oPV/K?=
- =?us-ascii?Q?VXlIsixI9jCqjAejGIB8b2NxefDmPEOV4SYk+CkDHTnWq07IUeyqgtso2WAe?=
- =?us-ascii?Q?zL5UgIwrbDfvBjfJAwWLbXyZ2scfNii70fGWS5LKdO4voxLy5K8zE1zFQA/P?=
- =?us-ascii?Q?VqcaYnTWZsk0Uw8vumHfUe5NOj3nczRsxOwqffvXBCGzzaQD0ErsCxpDKk7L?=
- =?us-ascii?Q?HA09ChHs7iVUatx5w7S1VLhGe3qFmlINqxHLx5TZhgW6c7oNooyY62A9hkCk?=
- =?us-ascii?Q?mus0wvHvOu7Gfth4GVdxkOP5ZS0OlYvl1LjAyLam8IzVmvsbpYuuWAH3GHKL?=
- =?us-ascii?Q?0qQMXwoiyC7JHwrOawxPDlsmMVLFCyJYK9mLjJLOeg3tKgTk1sYEPfcq3M3W?=
- =?us-ascii?Q?ONBwp4BncCBQr7O/pX68+ZqQhIKLgy8TL2KzUMOGTC7GGE7ZTDEcqlUfL2jm?=
- =?us-ascii?Q?U0pOhlW0sAPoaV5V31ofWRPt8mV9GRbLEcOtKXgC4vNh5VJtY1ww0CcQg2eV?=
- =?us-ascii?Q?CPXXiD7Rk9QTHnTiyPPUWNiMXHB5sxAVEFIQGPwg9K6lmt6qRsZM1xe/8Gw+?=
- =?us-ascii?Q?Hgho+FsIdxvLPcy7X2jP9TBKz5EQHOhOGxFDGjWTGCR/5iPB4Ne+WHW4VJmp?=
- =?us-ascii?Q?fHxx9fsvdwCsWnd4jE7OIZlX1bCJ7ngftHFOJvfJ8GXgqZGxc0zE67uSKCE9?=
- =?us-ascii?Q?hr5r1+YiCeq1yWrB/xxS5i6YAQzCRHnR/6D4uhkrYpfj7DaBqWimJaDt3QcN?=
- =?us-ascii?Q?dAxKLRKqdX/dlu05BMILoOX+UOI/GYnt8YpjDkqEwx6rQiTCMD4h/tZKTT7M?=
- =?us-ascii?Q?C7E98r4wfaZgp3oRlsITg2KiUhf5oBF7vz0UMCts1ILAQANpYb1mEcofFdQm?=
- =?us-ascii?Q?7usK510XBPqZOV961dzWU0hmh3205gfcA+GAPmeodc9CQ6HLqYXLky5ENq/A?=
- =?us-ascii?Q?z8iDF+KMZWpVagW8T70zC20qjDD4Wxz4zuB5Xa3qA1pDRmxVbgY+lw5Br0vM?=
- =?us-ascii?Q?VS9Vk1/LKdcFiMn3iak3avO0toe+9N+gDXjXOfQPHrAlfypCV4f+PWimFmyt?=
- =?us-ascii?Q?rWGlxZ1dO2tV4LblO9yDirBxMg75Etqem9uTFuMftMbcG2XKeNUSiSFMBEzq?=
- =?us-ascii?Q?KdKB6pdOBWQNDieysb6155I2skW+BsV1IzBoSZlZkR1usOBWkwlJn2XbicUV?=
- =?us-ascii?Q?XUbw+epB+vpKxl1fQ+/k3kAK/OQmuPoJGWo9C5+g0c4C1vwcx5RcwB+lzcge?=
- =?us-ascii?Q?wvuXXmgN9mhUxd+UqG6yfPDzJ+HLKMvJVC9qnqGU3SLXN2seQ+Da/51P8c2/?=
- =?us-ascii?Q?kqHVGNWX66DXlT+LMqBmPv3iGRHV3vhyEg497xF8b/MLIlwGXCR3WDf0R5VM?=
- =?us-ascii?Q?q2XAWu+19sNtfHr/XUwBhxH4+fu3/8Atfu1vl6u/dmZdhAM19bI93QfF/RNh?=
- =?us-ascii?Q?kaopW4IzIckKfBftP2LonI7S6uSeS47yi0zeOvY19S3mb1QMsXM9biymmq2T?=
- =?us-ascii?Q?PdUTk9qdl7q210C8VclM8kQbDQdWbXWiG7nSfeF6GfknkMYBpFwfjh9pwXvh?=
- =?us-ascii?Q?5p37Yld7F9Yx8vbv3KoVe6Q=3D?=
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84fbf44c-c2b0-4fe3-baab-08dd77cc873e
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 01:10:48.5037
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bt45Z6p30Yn1vU+2RmJSgaxe5fL03J515NY3FGaWJ5RXMUhuP8kcZcy8VZzgF9JPn/QBdddTLkXZ0iIVnA6LhgSdm26a/GtHjXV6z53nYwkGjqE8hES5h1Q/5jqYUJ/y
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS0PR01MB6018
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ivv6txtuegarob6v"
+Content-Disposition: inline
+In-Reply-To: <44f3c764-8b65-49a9-b3ad-797e9fbb96f5@stanley.mountain>
 
-commit 1c4b5ecb7ea1 ("remove the h8300 architecture") removes Renesas TPU
-timer driver. Let's remove its binding documentation.
 
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v1 -> v2
-	- add Geert's Reviewed-by
-	- tidyup git-log ("DoC" -> "binding documentation")
+--ivv6txtuegarob6v
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [bug report] pwm: Add Loongson PWM controller support
+MIME-Version: 1.0
 
- .../bindings/pwm/renesas,tpu-pwm.yaml         |  9 ---
- .../bindings/timer/renesas,tpu.yaml           | 56 -------------------
- 2 files changed, 65 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/renesas,tpu.yaml
+Hello,
 
-diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-index a4dfa09344dd..f85ee5d20ccb 100644
---- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-@@ -9,15 +9,6 @@ title: Renesas R-Car Timer Pulse Unit PWM Controller
- maintainers:
-   - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
- 
--select:
--  properties:
--    compatible:
--      contains:
--        const: renesas,tpu
--  required:
--    - compatible
--    - '#pwm-cells'
--
- properties:
-   compatible:
-     items:
-diff --git a/Documentation/devicetree/bindings/timer/renesas,tpu.yaml b/Documentation/devicetree/bindings/timer/renesas,tpu.yaml
-deleted file mode 100644
-index 7a473b302775..000000000000
---- a/Documentation/devicetree/bindings/timer/renesas,tpu.yaml
-+++ /dev/null
-@@ -1,56 +0,0 @@
--# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
--%YAML 1.2
-----
--$id: http://devicetree.org/schemas/timer/renesas,tpu.yaml#
--$schema: http://devicetree.org/meta-schemas/core.yaml#
--
--title: Renesas H8/300 Timer Pulse Unit
--
--maintainers:
--  - Yoshinori Sato <ysato@users.sourceforge.jp>
--
--description:
--  The TPU is a 16bit timer/counter with configurable clock inputs and
--  programmable compare match.
--  This implementation supports only cascade mode.
--
--select:
--  properties:
--    compatible:
--      contains:
--        const: renesas,tpu
--    '#pwm-cells': false
--  required:
--    - compatible
--
--properties:
--  compatible:
--    const: renesas,tpu
--
--  reg:
--    items:
--      - description: First channel
--      - description: Second channel
--
--  clocks:
--    maxItems: 1
--
--  clock-names:
--    const: fck
--
--required:
--  - compatible
--  - reg
--  - clocks
--  - clock-names
--
--additionalProperties: false
--
--examples:
--  - |
--    tpu: tpu@ffffe0 {
--        compatible = "renesas,tpu";
--        reg = <0xffffe0 16>, <0xfffff0 12>;
--        clocks = <&pclk>;
--        clock-names = "fck";
--    };
--- 
-2.43.0
+On Wed, Apr 09, 2025 at 01:59:59PM +0300, Dan Carpenter wrote:
+> Commit 322fc380cea1 ("pwm: Add Loongson PWM controller support") from
+> Mar 31, 2025 (linux-next), leads to the following Smatch static
+> checker warning:
+>=20
+> drivers/pwm/pwm-loongson.c:126 pwm_loongson_config() warn: impossible con=
+dition '(duty > (~0)) =3D> (0-u32max > u32max)'
+> drivers/pwm/pwm-loongson.c:131 pwm_loongson_config() warn: impossible con=
+dition '(period > (~0)) =3D> (0-u32max > u32max)'
+>=20
+> drivers/pwm/pwm-loongson.c
+>     118 static int pwm_loongson_config(struct pwm_chip *chip, struct pwm_=
+device *pwm,
+>     119                                u64 duty_ns, u64 period_ns)
+>     120 {
+>     121         u32 duty, period;
+>                 ^^^^^^^^^^^^^^^^^
+>=20
+>     122         struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddat=
+a(chip);
+>     123=20
+>     124         /* duty =3D duty_ns * ddata->clk_rate / NSEC_PER_SEC */
+>     125         duty =3D mul_u64_u64_div_u64(duty_ns, ddata->clk_rate, NS=
+EC_PER_SEC);
+> --> 126         if (duty > U32_MAX)
+>     127                 duty =3D U32_MAX;
+>                 ^^^^^^^^^^^^^^^^^^^^^^
+>=20
+>     128=20
+>     129         /* period =3D period_ns * ddata->clk_rate / NSEC_PER_SEC =
+*/
+>     130         period =3D mul_u64_u64_div_u64(period_ns, ddata->clk_rate=
+, NSEC_PER_SEC);
+>     131         if (period > U32_MAX)
+>     132                 period =3D U32_MAX;
+>=20
+> These limits are unnecessary and potentially confusing.
 
+The intention to check for an overflow however is correct. Something
+like
+
+diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
+index 412c67739ef9..ba8a072defc8 100644
+--- a/drivers/pwm/pwm-loongson.c
++++ b/drivers/pwm/pwm-loongson.c
+@@ -122,14 +122,10 @@ static int pwm_loongson_config(struct pwm_chip *chip,=
+ struct pwm_device *pwm,
+ 	struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+=20
+ 	/* duty =3D duty_ns * ddata->clk_rate / NSEC_PER_SEC */
+-	duty =3D mul_u64_u64_div_u64(duty_ns, ddata->clk_rate, NSEC_PER_SEC);
+-	if (duty > U32_MAX)
+-		duty =3D U32_MAX;
++	duty =3D min_t(u64, mul_u64_u64_div_u64(duty_ns, ddata->clk_rate, NSEC_PE=
+R_SEC), U32_MAX);
+=20
+ 	/* period =3D period_ns * ddata->clk_rate / NSEC_PER_SEC */
+-	period =3D mul_u64_u64_div_u64(period_ns, ddata->clk_rate, NSEC_PER_SEC);
+-	if (period > U32_MAX)
+-		period =3D U32_MAX;
++	period =3D min_t(u64, mul_u64_u64_div_u64(period_ns, ddata->clk_rate, NSE=
+C_PER_SEC), U32_MAX);
+=20
+ 	pwm_loongson_writel(ddata, duty, LOONGSON_PWM_REG_DUTY);
+ 	pwm_loongson_writel(ddata, period, LOONGSON_PWM_REG_PERIOD);
+
+should make Smatch happy.
+
+Best regards
+Uwe
+
+--ivv6txtuegarob6v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf3d5AACgkQj4D7WH0S
+/k7jGAf/dgV0Hoj9PxUyTccraXuL+RAzwLsPMpu7ZWeEqDBZ6AaOJeyp4X0F2VHH
+Wx4gkKEWPc4Bjf/GKOMm0zA/U67ol64OGvCp4Ew1SXX58J9SLYiCB2gmuFT7mVEC
+n/YlyKhuzkuY01IQlGjYz+Do5+Z9onyNK8lPaaC4uOYFeqgd+bH52xDopmAsUlFU
+li3zP4OVB/xTZPoXBvZ1Nldz9v5HsXJCkB2WhYyDdtYA1zivDWomqrdDQCQxZRJ/
+CrTPjcxLs30rzXN1oumuRddmdqxmIiqnNU3MQrsLuilj5j9Gz65EtbpNMBvkaEF3
+fqoBzvFgNWojI9r+HfD04ukW8okIPg==
+=+NEN
+-----END PGP SIGNATURE-----
+
+--ivv6txtuegarob6v--
 
