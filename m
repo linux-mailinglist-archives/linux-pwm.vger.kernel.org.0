@@ -1,50 +1,50 @@
-Return-Path: <linux-pwm+bounces-5444-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5445-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 378E5A841BA
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Apr 2025 13:29:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEDDBA841D5
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Apr 2025 13:36:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E0E88A6B8D
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Apr 2025 11:29:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C37771B82DDC
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Apr 2025 11:36:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18291281530;
-	Thu, 10 Apr 2025 11:29:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EEE928368E;
+	Thu, 10 Apr 2025 11:36:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="c3Dq2l3r"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="opHvIk1+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898C21D89FD;
-	Thu, 10 Apr 2025 11:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809F41DF991;
+	Thu, 10 Apr 2025 11:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744284587; cv=none; b=RoCPKguPi3AcTIQlNlpzZ6buzL+ifm92jOJM75Q2rJ7T4n6H8E9Ou1IANVyVbIt/yke547H6UY5eYMmLFClH3lEytsbijU8WnVHnzzq+cYVN/LNJMOT/FFG+wYEtao/MVbHYci4NPocTknxl6vVazOa00wbEHK2WO+qsWdyci6k=
+	t=1744285002; cv=none; b=VHuYJHCnjUOh81bHK7I2K++rSY/ZLgsMLSiONcdgplwlOOnEnw+0szNKfDdRbji/X50HncuPOQHPQikDKwbdwwgMALPGkfNgQgl589KLrLZXgvXAsoEve8pHHwCPo/KKCKUan1xpFFruanOWhkedeTwpDGZD88g0xBNeUOHzXn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744284587; c=relaxed/simple;
-	bh=HZES9pXg4cmaTiSlbNcW6mQ3TVO6SVmHNL0ZJvT71B8=;
+	s=arc-20240116; t=1744285002; c=relaxed/simple;
+	bh=eHb/z5NaMzfi8/yCbXSBDQBs4OP5wqvRmitFyoJYM0I=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=rQ4aomPXz0KW6OT9nIhZ73fHqpWRe+DNB848J+XLx+e+OGL78VRLPuvGAbwSxznOgqS97GE0O63rBAJVvwkPG0jPJ1wrZJKdfIP29t6hccXZoSejd8LFNk8KwvstMQl2tiIqwVaIoU+1ZvQ2RXE4LI2jMvg8xVaZ4XhQ4cUjz5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=c3Dq2l3r; arc=none smtp.client-ip=217.70.183.193
+	 References:In-Reply-To; b=abHbqxEmJE5E4fR1aidIPra/fpaVkBXf5ues306DJ31wjaal2cBzOuB6CeR0d9xBuUQQ6gvUrLtLKZNHfa387VwT3ruSiUtTKWpiM2caCAIdgu80BJrTyfwrY/aowT3nurxtndaDlFW4ucsx5e16Gp5dil5wOJUL5lY6z1TBswM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=opHvIk1+; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 946C842E7E;
-	Thu, 10 Apr 2025 11:29:35 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0827F44317;
+	Thu, 10 Apr 2025 11:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744284576;
+	t=1744284992;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WPYbX6fgpQKH4gxTLPqiuRTln0p2CLo5Xpglajm7yQ4=;
-	b=c3Dq2l3rV3r4VCBO5MdlBSCaimsTsADpHW1jyVn1NurkDOUKRhbehdmhwyZmJmn0wyBOBs
-	BnEeLFYXW9fFdHbyovxfw/W7BJy4zAQujjXSitqCDb7RhQ2eU60RT9Suu4NzTxQbxCgq8g
-	0gWIZs3CeuAra2uQ3m/UPqnLAIrix/S68CqhLJcYvt38/DNP32hWAyRMHqH3wNdFhTtCRJ
-	azb88G7zUS2fmB+F3S2WKsQdMy9W4kvmjDGnCD0tgwr9pdfnGRAnKtk/ggK+16f7dsCT1E
-	aJU9K2zkXzL03y4UllN74cgTARb3lp/Y+GSrklq2fLL801lTg2tgHbdohHYrfg==
+	bh=SAuMrXd/Y4l0cy73R/YgMicuHRMArAQfIUMm8p2VFyk=;
+	b=opHvIk1+I05a7jvRdR/BdA1TVdtQN2MR8i5/67/6iika7wbO9a/DFnEbrlCYT7UULIsOhf
+	MgqqjLr4EXD94+qff35JyFvj6ABvRF7wgb0omj7uzXDG8B/8sihwloa5p8mgK5TKqNOOcX
+	l+Hbw9xsx3ZCE5b0pWzm9uFWp6YlyAeRqRaTx0+woFpjpXnTOf+zZmB+8bxmaRd4w/hU7t
+	sLKuT+GOJORnZLZYZzgqyDuI3pXqP+l8vt6P7injqa4bEtmTozdM7FBsfCNq2uVusBTANG
+	R3cCdBQlCuQLSDAKbGn5OocsXCkfAkg9RZUBeYOX+AcIN+MTxchBGpe+qgp1xA==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -53,10 +53,9 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 10 Apr 2025 13:29:35 +0200
-Message-Id: <D92X9ZK07SIK.124N9HG8W7QEI@bootlin.com>
-Subject: Re: [PATCH v6 10/12] input: keyboard: Add support for MAX7360
- keypad
+Date: Thu, 10 Apr 2025 13:36:30 +0200
+Message-Id: <D92XFAGJRKJR.2MTADDABV7OMK@bootlin.com>
+Subject: Re: [PATCH v6 11/12] input: misc: Add support for MAX7360 rotary
 Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
  "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
  <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
@@ -74,122 +73,56 @@ From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
 To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
 X-Mailer: aerc 0.19.0-0-gadd9e15e475d
 References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-10-7a2535876e39@bootlin.com>
- <chhnkepvlbiv6xvgh5zso526xsp4zk7tgzsqzoqe7b5jmvdyrw@afio6lmx55zv>
-In-Reply-To: <chhnkepvlbiv6xvgh5zso526xsp4zk7tgzsqzoqe7b5jmvdyrw@afio6lmx55zv>
+ <20250409-mdb-max7360-support-v6-11-7a2535876e39@bootlin.com>
+ <qszbvz7xr4jhpqnae7mqmnqfv6qzppxjpmbavdknhdnjausqtt@rbjjgc2ozbmq>
+In-Reply-To: <qszbvz7xr4jhpqnae7mqmnqfv6qzppxjpmbavdknhdnjausqtt@rbjjgc2ozbmq>
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekjeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhor
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekkeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhor
  hhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
 X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Wed Apr 9, 2025 at 8:40 PM CEST, Dmitry Torokhov wrote:
+On Wed Apr 9, 2025 at 9:17 PM CEST, Dmitry Torokhov wrote:
 > Hi Mathieu,
 >
-> On Wed, Apr 09, 2025 at 04:55:57PM +0200, Mathieu Dubois-Briand wrote:
-> ...
->> +static irqreturn_t max7360_keypad_irq(int irq, void *data)
->> +{
->> +	struct max7360_keypad *max7360_keypad =3D data;
->> +	unsigned int val;
->> +	unsigned int row, col;
->> +	unsigned int release;
->> +	unsigned int code;
->> +	int ret;
+> On Wed, Apr 09, 2025 at 04:55:58PM +0200, Mathieu Dubois-Briand wrote:
+>> Add driver for Maxim Integrated MAX7360 rotary encoder controller,
+>> supporting a single rotary switch.
 >
-> int error;
+> Largely same comments as for the keypad driver: use "int error" for erro
+> variable, selection of the device for logging. Also:
 >
 
-Ok using error on all similar cases.
+OK
 
 >> +
->> +	do {
->> +		ret =3D regmap_read(max7360_keypad->regmap, MAX7360_REG_KEYFIFO, &val=
-);
->> +		if (ret) {
->> +			dev_err(&max7360_keypad->input->dev, "Failed to read max7360 FIFO");
->
-> This will return name pf the input device, whereas logging name of the
-> platform device (representing the hardware device) would be much more
-> interesting. You can either use max7360_keypad->input->dev.parent, or,
-> better yet, add *dev pointer to struct max7360_keypad.
->
-
-Makes sense, thanks.
-
-> ...
->
->> +static int max7360_keypad_build_keymap(struct max7360_keypad *max7360_k=
-eypad)
->> +{
->> +	struct input_dev *input_dev =3D max7360_keypad->input;
->> +	struct device *dev =3D input_dev->dev.parent->parent;
->> +	struct matrix_keymap_data keymap_data;
->> +	const char *propname =3D "linux,keymap";
->> +	unsigned int max_keys;
->> +	int size;
->> +	int ret;
->> +
->> +	size =3D device_property_count_u32(dev, propname);
->> +	if (size <=3D 0) {
->> +		dev_err(dev, "missing or malformed property %s: %d\n", propname, size=
-);
->> +		return size < 0 ? size : -EINVAL;
->> +	}
->> +
->> +	max_keys =3D max7360_keypad->cols * max7360_keypad->rows;
->> +	if (size > max_keys) {
->> +		dev_err(dev, "%s size overflow (%d vs max %u)\n", propname, size, max=
-_keys);
->> +		return -EINVAL;
->> +	}
->> +
->> +	u32 *keys __free(kfree) =3D kmalloc_array(size, sizeof(*keys), GFP_KER=
-NEL);
->> +	if (!keys)
+>> +	input =3D devm_input_allocate_device(dev);
+>> +	if (!input)
 >> +		return -ENOMEM;
 >> +
->> +	ret =3D device_property_read_u32_array(dev, propname, keys, size);
->> +	if (ret) {
->> +		dev_err(dev, "failed to read %s property: %d\n", propname, ret);
->> +		return ret;
->> +	}
+>> +	max7360_rotary->input =3D input;
 >> +
->> +	keymap_data.keymap =3D keys;
->> +	keymap_data.keymap_size =3D size;
->> +	ret =3D matrix_keypad_build_keymap(&keymap_data, NULL, max7360_keypad-=
->rows, max7360_keypad->cols,
->> +					 max7360_keypad->keycodes, max7360_keypad->input);
+>> +	input->id.bustype =3D BUS_I2C;
+>> +	input->name =3D pdev->name;
+>> +	input->dev.parent =3D dev;
 >
-> What if it fails? Error handling please.
-
-Yes, forgot to return ret just below. Not adding logs as in most cases
-matrix_keypad_build_keymap() will already print some logs. OK with that?
-
->
-> Also, it looks like you are repeating what matrix_keypad_build_keymap()
-> is already doing. If you pass NULL as keymap data, won't it do the right
-> thing?
+> No need to be setting/overriding this, devm_input_allocate_device()
+> already sets this up.
 >
 
-No, because matrix_keypad_parse_keymap() is using input_dev->dev.parent
-and this device will not have any associated device tree node. It should
-use input_dev->dev.parent->parent to get correct values.
+Ok, thanks!
 
-There is a discussion ongoing about using device_set_of_node_from_dev(),
-so the MFD child device reuse the node of the parent. But I tried to
-avoid using it here, as I was able to come with another solution.
-Discussion is in the thread of the pinctrl driver (patch #3).
+>> +
+>> +	input_set_capability(input, EV_REL, max7360_rotary->axis);
+>
+> The event type should come from the DT data I believe. Could we use at
+> least parts of the regular rotary encoding bindings?
 
-Another solution would be to modify matrix_keypad_parse_keymap(),
-allowing to pass a custom device. But again, I tried to avoid doing this
-modification just for my own need.
+Ok, I should be able to add "rotary-encoder,relative-axis" property, as
+for rotary_encoder.c.
 
-> ...
 >
 > Thanks.
-
-Ok with all other comments.
 
 Thanks for your review.
 Mathieu
