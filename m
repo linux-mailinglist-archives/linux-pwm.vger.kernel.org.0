@@ -1,138 +1,147 @@
-Return-Path: <linux-pwm+bounces-5456-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5457-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 030ECA85EAD
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Apr 2025 15:22:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45B9EA85FFC
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Apr 2025 16:07:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8EF2017A47D
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Apr 2025 13:19:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 785483AD677
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Apr 2025 14:05:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2C0118D65E;
-	Fri, 11 Apr 2025 13:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="07hwH+bv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D1B81F180E;
+	Fri, 11 Apr 2025 14:05:19 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2703A13635E
-	for <linux-pwm@vger.kernel.org>; Fri, 11 Apr 2025 13:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59148635A;
+	Fri, 11 Apr 2025 14:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744377412; cv=none; b=rZ3Wz36jOVFwGMcSxViknRG8UGaHVBf64V2S8pMj+6JB7PXlOfTIXx7WfncuQ815z4H0LdB9cKulDfmSH6W6/lD0+VXzA5+qoabE7v3ly0ACNSf+UMmhj9C8cis5rTC4jR+GL5oKsmldfKnz/i5beUC3Xn3sieayvlwRkw6fD9c=
+	t=1744380319; cv=none; b=Thj4Rw6KBLIc/sNoxUYfDfpMOiRCPX1pbSu0N+hJLq+gNRqFtW3VHQOf7E98n+03071h7ke0vquV6Kdx/WLTZBbSLJtA+mgmFbp3SX3GoEmAMFJdsV0AsgNtRVJ6HMAbwMeLtT3yMLWQCRsbADcO11gwxP/Ts5HmzP6CuzNGtQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744377412; c=relaxed/simple;
-	bh=3q6LzsDwiE+yVVac9evuQozKO150MG55tmEaBUnFpq8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MwmMMo/C0Qb6PNIP9KNqrMFfjhgduDQgYS83tedtGtMMH7ycMAMwgBltL/5XflgtUXwXb4tWdj9GWHsE5y8f3/PvDb4YuLKNOTurcsADvphVpkTY9RAhiLj5hwzEpn45u/7NfCi1c/x0Hx7IMHOrU2QsqCgZnPm61l12+bYXCqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=07hwH+bv; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-227aaa82fafso15909845ad.2
-        for <linux-pwm@vger.kernel.org>; Fri, 11 Apr 2025 06:16:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744377410; x=1744982210; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8UqYwabiGCbW0lFM+J6bILwkNakAnqe4wz5kWFQbMVg=;
-        b=07hwH+bvvpQ+98Tv/g2XwiE/ZR1TXJsbuhS5fgEIj6zK8JiTOEvGZWB+DZUX7ewvqL
-         84GRMIclHqZyc8UKll2c2rZxp0aqMhi38kMIFmiRpptS3s13KXyiDW7nQFT5xCR7lJE4
-         ogANPTWxk8slDLbIhUUcoFYyYF7+u3MLpPRrn3LvpvC0mFb3FFdgJs2gLmuovMuUPaWe
-         Bv3OgllDX8bMWHjmfSCfdEX8zTFBPgghBybALJt/n6v/Rs7iHnswNlJZ855PAjBNVVJq
-         w3VrIoyUnfXF5uNr1X81X027cDy19b77oZBNgCLrddswxbHhZHbC83dBk62tGlJB3/Zo
-         T6xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744377410; x=1744982210;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8UqYwabiGCbW0lFM+J6bILwkNakAnqe4wz5kWFQbMVg=;
-        b=He2YNVSB3Txgp6qqLGqb+lpxmwr360lNtmUoJH82HDEhKEnkPHRQnDlhsoM1kKQyro
-         vNadouUcyh2G8hK8OjBEXQn5viN8ByKMV3R2dSNpbDMeP/+VerFdBfRhjQFGZJkFhe/x
-         7ypoplSbg/zIBm+SDxnuy1PymQKztfhdB74RN0RGywMKxdH2kY++ND5l3Hf9XPQ69lrU
-         ugqOfoW/TzJfH3+dsQnl0rdoZKYhLX92CDDvf9f9gXjifcg7pXiT1FiB7W8pc8PaxgGh
-         FJLVTUbmxF3hoIC/8oA+EYTzDuk6tmioVA8DCgB9FxupQieCycAqHj2RPed1oOvJGZyD
-         cvsw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnGbFTCbijArTIxwbKRgZ393fgSxBAvrLGuBS6RPEXK740uC0R/mOvgsRgjjc6c0OSJBGfq9ZE5qY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjPySdaTd7FWzD3yQ94DJkMi1i2XVl6/gWuRAyTWL8vEVVKQDV
-	gN3aoCN781O0PKwi0OX2ZXF7Je8pIq5/M+m/w5vO/aOpvRoVmwHl8f/OQMFIhRw=
-X-Gm-Gg: ASbGncu0KcENk4dVDyPnFB20T1Z16rST00xuGSelF458Ogltky+YE+sSnuyjztt0LrP
-	PTsESRXefE3oZKYlSIuPDcRPpKVkV1USIixlqmZmkVCts82lk0VCJNOztuu+nWfq5QhCNwWeEes
-	Yh1B/rKenpaZh94p5s7uzmrw4+88SK31/LSUsFk6alY60dOKR0C3zhBEGB38+x6QWYtmt6dzWHS
-	gghkcz5s/xRd5hTAn3azOnKduz3RN6Lx1Y0v2OjmfI7Qq4ocGFRfD7gupEg68IFRezlEIjARz6b
-	Wig8ihQ/heJgHld23oG5CJN2r8U6mD0=
-X-Google-Smtp-Source: AGHT+IECvokSxW4TE1t/6GjH2KzEiHk/fDfcTN3ty6UKV6n7k5pcSeZTqv5IfUu12KUb+He4PBCOnQ==
-X-Received: by 2002:a17:902:e545:b0:224:1157:6d26 with SMTP id d9443c01a7336-22bea49616dmr42095625ad.4.1744377410365;
-        Fri, 11 Apr 2025 06:16:50 -0700 (PDT)
-Received: from localhost.localdomain ([2a12:a305:4::308a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c95cc6sm48245005ad.122.2025.04.11.06.16.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 06:16:49 -0700 (PDT)
-From: Guodong Xu <guodong@riscstar.com>
-To: ukleinek@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	dlan@gentoo.org,
-	p.zabel@pengutronix.de,
-	drew@pdp7.com,
-	inochiama@gmail.com,
-	geert+renesas@glider.be,
-	heylenay@4d2.org,
-	tglx@linutronix.de,
-	hal.feng@starfivetech.com,
-	unicorn_wang@outlook.com,
-	duje.mihanovic@skole.hr
-Cc: elder@riscstar.com,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev
-Subject: [PATCH 9/9] riscv: defconfig: Enable PWM support for SpacemiT K1 SoC
-Date: Fri, 11 Apr 2025 21:14:23 +0800
-Message-ID: <20250411131423.3802611-10-guodong@riscstar.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250411131423.3802611-1-guodong@riscstar.com>
+	s=arc-20240116; t=1744380319; c=relaxed/simple;
+	bh=WWH7pjgLhq7CdCx4NdmHmV8ilE+5LHo+30ZTrkElue8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=npFI8Iz0BXhC0r7sQ7EE3JEv/mdMJxXdOAARitJrZ/bzovwTZlOy7LJwlPnCznNKC7cd5/JcUd+Rmc/H0nPX2dJKK2QL4EughQxEkKxqbF8JMC1bg80+FGSk3ow1uOS9RXxqsdIdpvvaFkiyPcWVYcSvQ6oGbnXr6gTmEy5+BJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.27.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 901F03433FD;
+	Fri, 11 Apr 2025 14:05:15 +0000 (UTC)
+Date: Fri, 11 Apr 2025 14:05:10 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Guodong Xu <guodong@riscstar.com>
+Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de,
+	drew@pdp7.com, inochiama@gmail.com, geert+renesas@glider.be,
+	heylenay@4d2.org, tglx@linutronix.de, hal.feng@starfivetech.com,
+	unicorn_wang@outlook.com, duje.mihanovic@skole.hr,
+	elder@riscstar.com, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH 7/9] riscv: dts: spacemit: Add PWM14 backlight support
+ for BPI-F3
+Message-ID: <20250411140510-GYA22364@gentoo>
 References: <20250411131423.3802611-1-guodong@riscstar.com>
+ <20250411131423.3802611-8-guodong@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411131423.3802611-8-guodong@riscstar.com>
 
-Enable CONFIG_PWM and CONFIG_PWM_PXA in the defconfig
-to support the PWM controller used on the SpacemiT K1 SoC.
 
-Signed-off-by: Guodong Xu <guodong@riscstar.com>
----
- arch/riscv/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+On 21:14 Fri 11 Apr     , Guodong Xu wrote:
+> Add a PWM-based backlight node for the Banana Pi BPI-F3 board,
+> using PWM14. The backlight is defined as a 'pwm-backlight' device with
+> brightness levels and a default brightness setting. PWM14 is assigned
+> a period length of 2000 nanoseconds.
+> 
+> This configuration was used to verify PWM driver changes, with PWM14
+> tested and its waveform confirmed as correct.
+> 
+> The node status is set to "disabled", and should be enabled when the
+> display driver is ready.
+> 
+.. see comments below
+> Signed-off-by: Guodong Xu <guodong@riscstar.com>
+> ---
+>  .../boot/dts/spacemit/k1-bananapi-f3.dts      | 32 +++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> index 816ef1bc358e..d04b57ddeb46 100644
+> --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> @@ -28,6 +28,32 @@ led1 {
+>  			default-state = "on";
+>  		};
+>  	};
+> +
+> +	pwm_bl: lcd_backlight {
+> +		compatible = "pwm-backlight";
+> +
+> +		pwms = <&pwm14 2000>;
+> +		brightness-levels = <
+> +			0   40  40  40  40  40  40  40  40  40  40  40  40  40  40  40
+> +			40  40  40  40  40  40  40  40  40  40  40  40  40  40  40  40
+> +			40  40  40  40  40  40  40  40  40  41  42  43  44  45  46  47
+> +			48  49  50  51  52  53  54  55  56  57  58  59  60  61  62  63
+> +			64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79
+> +			80  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95
+> +			96  97  98  99  100 101 102 103 104 105 106 107 108 109 110 111
+> +			112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
+> +			128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143
+> +			144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159
+> +			160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175
+> +			176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
+> +			192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207
+> +			208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223
+> +			224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239
+> +			240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255
+> +		>;
+> +		default-brightness-level = <100>;
+> +		status = "disabled";
+I'm confused, has DT in board file with disabled status doesn't make sense?
+it doesn't really useful for placeholder, even worse that functionality may not
+verified, so I'd suggest sending along with display driver while at it..
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 4888529df1d8..9bd972867e0a 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -259,6 +259,8 @@ CONFIG_RPMSG_CTRL=y
- CONFIG_RPMSG_VIRTIO=y
- CONFIG_PM_DEVFREQ=y
- CONFIG_IIO=y
-+CONFIG_PWM=y
-+CONFIG_PWM_PXA=y
- CONFIG_THEAD_C900_ACLINT_SSWI=y
- CONFIG_PHY_SUN4I_USB=m
- CONFIG_PHY_STARFIVE_JH7110_DPHY_RX=m
+> +	};
+>  };
+>  
+>  &uart0 {
+> @@ -35,3 +61,9 @@ &uart0 {
+>  	pinctrl-0 = <&uart0_2_cfg>;
+>  	status = "okay";
+>  };
+> +
+> +&pwm14 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pwm14_1_cfg>;
+..
+> +	status = "disabled";
+ditto
+
+> +};
+> -- 
+> 2.43.0
+> 
+
 -- 
-2.43.0
-
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
 
