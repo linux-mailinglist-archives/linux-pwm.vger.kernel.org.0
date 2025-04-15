@@ -1,124 +1,141 @@
-Return-Path: <linux-pwm+bounces-5485-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5486-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 685FDA89992
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 12:13:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18754A89C5A
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 13:30:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11DFC3B2820
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 10:12:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C0693A35FD
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 11:28:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3410A1F3BBC;
-	Tue, 15 Apr 2025 10:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1132C291170;
+	Tue, 15 Apr 2025 11:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HeGPgQ8o"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6EB1F181F;
-	Tue, 15 Apr 2025 10:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3974729B77F;
+	Tue, 15 Apr 2025 11:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744711983; cv=none; b=C/7TgAZyqf88vytjOSoLvmQGycvPUYNl2ATunYJqAVbg0fejX59NrgtHY5cSJ+5vxqgshCvvVLNhK/aFX6wn8locAGAZLQwXVz+fgnB3q8/GzImmMSdBD4P+zn+4VmIAvEBY6s9v+OAEYVL7/9jvUqmLRPhReTlqRVKkrgBCXuc=
+	t=1744716248; cv=none; b=QflVahoMdoEpFOZScLlFIfLUC8L92DbMlo9bkJ6akDB3/E+80LDGYSM/vexyNtoMxfA9/1UtQ/qALLvUj6HDyshzWsZQcGKjwr33Z+UFCBocpPs1Jt0NPfNcvpUE8fLJMe26Ah4DATbs5JoLY3RCXKhaivC4lhqBiKi4CvqDQW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744711983; c=relaxed/simple;
-	bh=cdpDLy1vtRwmaEa5Kx8WJ0+d1f8Ie+MQo5C6d4zf2GQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PrfaVBaQex3XCqMi9ETlNGBnmhmLRPPaQnMDpCyS7BsmCS5vFlHIChxUosHswwyiZGG1q6av+AIV5HccDehZQMSjTiEnEh5Vitl+24mwenSNaGziCh0by/k10dPmZouzx21XcijZOHSambEOc7CPvEALpo9UsnI2pEfROV7wGSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.27.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 7E184342FEB;
-	Tue, 15 Apr 2025 10:13:00 +0000 (UTC)
-Date: Tue, 15 Apr 2025 10:12:49 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Guodong Xu <guodong@riscstar.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Conor Dooley <conor@kernel.org>,
-	ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, drew@pdp7.com,
-	inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org,
-	tglx@linutronix.de, hal.feng@starfivetech.com,
-	unicorn_wang@outlook.com, duje.mihanovic@skole.hr,
-	elder@riscstar.com, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH 1/9] dt-bindings: pwm: marvell,pxa: add optional property
- resets
-Message-ID: <20250415101249-GYA30674@gentoo>
-References: <20250411131423.3802611-1-guodong@riscstar.com>
- <20250411131423.3802611-2-guodong@riscstar.com>
- <20250411-confider-spinster-35f23040d188@spud>
- <89b6142bacecd4a7742341b88dc1e28c4454527a.camel@pengutronix.de>
- <CAH1PCMZnJDcYKJR35WirQT95hte0NWvGBe4fjDuyZEgagvunAA@mail.gmail.com>
+	s=arc-20240116; t=1744716248; c=relaxed/simple;
+	bh=QukepWGkmiY8zzaTK1fbsDNX7XQXCUloyqOgRjHkJpw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=ZUpW7S1g1vC0psi61zlM0eJOHhZQMoxn8VD8gZLjVp6lYnXGz9+Sgnwpokdvb57p0H+gY2anO4EpB/4YSUxjjUnFENI9d2KBOUht0kTugwqyr8LxeXiSfgQY21cUt7YBSsTQjpsFCmyNu+Q7YXwPsnsH7l7skvDeQT8AuoCUmlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HeGPgQ8o; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 354374396A;
+	Tue, 15 Apr 2025 11:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744716243;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TxIOFEfqRfalUhnO+3adQ/Ty52ZIx6maGadY9jlzhgA=;
+	b=HeGPgQ8o46y1Vexb6QEfjHrHBgrp7c6Xd4Kep0LYNXFmKMbUUmMr7A/bMKPewc0MEUvF+T
+	X6NzqkGsg/I92lYZF0FBU7eMlhqFicO+QbSnBePTOvT0Veow0FCVEmbtpGD75XcWCc1IyE
+	ht/4mGWFR0XWRAxSYJCNC7uy2YWEf5sWSGkjiSsVzRpqdIfOipBKRQU4hkQsiy8i7u0Pn+
+	YoArr6lSPO3j44euWUTahsAlxJUltpkiskrp1ROTDOvGz8BkelUOALZadFOZmdhXGOqw25
+	813LAAqqgLHRtW+0BH6y0SmAGX3hqqa4d/Jl+anIpDbPiD+ss7CdudcRC2elHQ==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH1PCMZnJDcYKJR35WirQT95hte0NWvGBe4fjDuyZEgagvunAA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 15 Apr 2025 13:24:01 +0200
+Message-Id: <D976AGJAXE3S.1AUQ47D8Q28SG@bootlin.com>
+Subject: Re: [PATCH v6 01/12] dt-bindings: mfd: gpio: Add MAX7360
+Cc: "Linus Walleij" <linus.walleij@linaro.org>, "Lee Jones"
+ <lee@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ <andriy.shevchenko@intel.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Kamel Bouhara"
+ <kamel.bouhara@bootlin.com>, <linux-kernel@vger.kernel.org>, "Michael
+ Walle" <mwalle@kernel.org>, <linux-pwm@vger.kernel.org>, "Bartosz
+ Golaszewski" <brgl@bgdev.pl>, "Danilo Krummrich" <dakr@kernel.org>, "Mark
+ Brown" <broonie@kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, <linux-gpio@vger.kernel.org>,
+ <linux-input@vger.kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ <devicetree@vger.kernel.org>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
+ <174438751337.3319673.5204335405880872375.robh@kernel.org>
+In-Reply-To: <174438751337.3319673.5204335405880872375.robh@kernel.org>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeffeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhor
+ hhgpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtohepuhhklhgvihhnvghksehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Hi Philipp,
+On Fri Apr 11, 2025 at 6:05 PM CEST, Rob Herring (Arm) wrote:
+>
+> On Wed, 09 Apr 2025 16:55:48 +0200, Mathieu Dubois-Briand wrote:
+>> Add device tree bindings for Maxim Integrated MAX7360 device with
+>> support for keypad, rotary, gpios and pwm functionalities.
+>>=20
+>> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>> ---
+>>  .../bindings/gpio/maxim,max7360-gpio.yaml          |  83 ++++++++++
+>>  .../devicetree/bindings/mfd/maxim,max7360.yaml     | 171 ++++++++++++++=
++++++++
+>>  2 files changed, 254 insertions(+)
+>>=20
+>
+> With the typos fixed,
+>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-On 17:54 Tue 15 Apr     , Guodong Xu wrote:
-> On Tue, Apr 15, 2025 at 4:53 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> >
-> > On Fr, 2025-04-11 at 17:44 +0100, Conor Dooley wrote:
-> > > On Fri, Apr 11, 2025 at 09:14:15PM +0800, Guodong Xu wrote:
-> > > > Add an optional resets property for the Marvell PWM PXA binding.
-> > > >
-> > > > Signed-off-by: Guodong Xu <guodong@riscstar.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml | 3 +++
-> > > >  1 file changed, 3 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-> > > > index 9ee1946dc2e1..9640d4b627c2 100644
-> > > > --- a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-> > > > +++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-> > > > @@ -31,6 +31,9 @@ properties:
-> > > >    clocks:
-> > > >      maxItems: 1
-> > > >
-> > > > +  resets:
-> > > > +    maxItems: 1
-> > >
-> > > Do any of the currently supported devices use a reset? If not, then add
-> > > this in tandem with the new compatible and only allow it there please.
-> >
-> > Also, if spacemit,k1-pwm can not work without the reset being
-> > deasserted, mark it as required.
+Thanks for the tag!
 
-If I inerpret correctly, only reset requires explicitly being de-asserted,
-need to mark as required? that's being said, if reset comes out as de-asserted
- by default after power reset, then not necessary?
-(in other cases, some device block is in asserted state by default)
+As a quick note, I believe the bindings will be slightly modified in
+next version, to address requests on the rotary encoder driver:
 
-thanks
-> >
-> 
-> Thank you Philipp. spacemit,k1-pwm can not work without the reset.
-> I will add that in the next version.
-> 
-> -Guodong
-> 
-> > The driver can still use reset_control_get_optional.
-> >
-> > regards
-> > Philipp
+--- c/Documentation/devicetree/bindings/mfd/maxim,max7360.yaml
++++ w/Documentation/devicetree/bindings/mfd/maxim,max7360.yaml
+@@ -54,6 +54,17 @@ properties:
+   linux,axis:
+     $ref: /schemas/input/rotary-encoder.yaml#/properties/linux,axis
 
--- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
++  rotary-encoder,relative-axis:
++    $ref: /schemas/input/rotary-encoder.yaml#/properties/rotary-encoder,re=
+lative-axis
++    description:
++      Register a relative axis rather than an absolute one.
++
++  rotary-encoder,steps:
++    $ref: /schemas/input/rotary-encoder.yaml#/properties/rotary-encoder,st=
+eps
++
++  rotary-encoder,rollover:
++    $ref: /schemas/input/rotary-encoder.yaml#/properties/rotary-encoder,ro=
+llover
++
+   "#pwm-cells":
+     const: 3
+
+
+Best regards,
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
