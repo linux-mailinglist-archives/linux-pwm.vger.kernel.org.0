@@ -1,120 +1,138 @@
-Return-Path: <linux-pwm+bounces-5483-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5484-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99575A89795
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 11:12:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E67A9A898ED
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 11:57:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AA59516F8CA
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 09:12:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0B7CD16D8D1
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 09:57:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E88B1C84BD;
-	Tue, 15 Apr 2025 09:12:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D44C228B502;
+	Tue, 15 Apr 2025 09:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcOqwLtm"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="NvdEg70P"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3968633F
-	for <linux-pwm@vger.kernel.org>; Tue, 15 Apr 2025 09:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5185A28DF11
+	for <linux-pwm@vger.kernel.org>; Tue, 15 Apr 2025 09:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744708343; cv=none; b=Ag8VPBmsmnE782aF6Smz5mNtqlYXHDCI2VUolkcCxLz3ZTEK3sxQQDQkeGm5UIjPxsJIPEtmZb19i0wCQVT5qNfcQ0ujrKQ92i1eEmLiCXB/sIlafnAVQXm6BHRzw6xerU/0oeFeDchhA7/x4i+RCs9QlD1aYVoM1+/zpHmiAhM=
+	t=1744710909; cv=none; b=ZpJirrCLkOvxvcoqn92VEHWXvABo0fgz70PRmFzsVX6FIaUIgkM5plm6dcuoQoKPBSw2fVOMLEFk8BjG2lv8Xw27o1mRv1EUQhUFltvUBd52ZGDeh/2Tzkt1WRWSnWDyoDPilddw9aJhF9EVTEHgMvlisAQ7remvJdHop73a5p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744708343; c=relaxed/simple;
-	bh=4+cRdY/LRgMqQlUiZ/eaaXhks1nc7k5wYTZjPihB8bc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qSRf6aZtlWBHBJ1wKHarJDuaYFxsvD3Ft3PNEIeoHiHUbjeOL8zwcxc4PFuu/IohsEDyEWmLGdrLYIwcs9Be4moQL4o4udIwAA4wHPhKTXGIK1VfeLHGFLxHghWXK6C5+vfY21lVXS7B3211nzR7D7RDq9NdpgTJlh6AHqPWzr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcOqwLtm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B158C4CEDD;
-	Tue, 15 Apr 2025 09:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744708342;
-	bh=4+cRdY/LRgMqQlUiZ/eaaXhks1nc7k5wYTZjPihB8bc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tcOqwLtmhzqUhvvWVZngzJxPU72UYZmbQ+o4S0sFkhxHqOYVb4QIECBUTM5eXKp9P
-	 P3X1PRLQ4qTX/78w7lAC5frgd6NLcKpahT8OzoLCyRu7P1Dd4xRfjaCx3v+ZVFxubG
-	 ZLXQBhqBaWJRPlvwB5BNAclBLWuZjLUh+JCInQZ6UeiZtEf+qC1SM4ope24tUR+5Ox
-	 Kg3ou6lQ+CbZf7gyq79wljG24ep8+qr/E0S8eWot6wOI8eT3WhRW7rkWScFDLyTXU6
-	 4xqfx04LBp6klzrEzTjvezN2s7QItCfah8ZSS+iNohBvRkKp78CT+SFBhKOPYqdooi
-	 Y07rCcrdNr1SA==
-Date: Tue, 15 Apr 2025 11:12:19 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] pwm: loongson: Fix u32 overflow in waveform calculation
-Message-ID: <63vagloqo44d4cuchym74japb6z6ui72o7oaz2wdjc4qdgpno2@4j54mhumertx>
-References: <20250412122124.1636152-2-u.kleine-koenig@baylibre.com>
+	s=arc-20240116; t=1744710909; c=relaxed/simple;
+	bh=L0R8xGjLChjgStq7fgUrJ09AFQFLRTNk5cUsHXiRm/c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pivlbaqtMe6P2/IdLvNADXXbKQTwa8ZEEBb/BOMsTs6XQDcokMLqQX54GBdr2BQYhZWCagGhsVFN+qNxULIPz/H4oosgJJ2JTvLXuvDyB3LudaDnbRZN4KpXdxTRlxfRzXo4Z8rtdtbaCuJqkknmPii3Oj+kNkA2IHjU3palAMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=NvdEg70P; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so952322966b.3
+        for <linux-pwm@vger.kernel.org>; Tue, 15 Apr 2025 02:55:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744710904; x=1745315704; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Sd6Yg3rC21jnGehy22uUVz7lDVf6VWqh6Q2Fhe7kCA=;
+        b=NvdEg70PipU0O6XlqoRNzzBLAKA/q2ZenLdVSng2WxCmNNZCqRt8rmlFTkPLytc9Kc
+         c0P0xV93/XSYTZjwAwPiWT/QB26WxQquxSDzBnu0sHt2Oic5vZ9PU2upeFDmrDOdpYPI
+         G2J7fLW6oUQpjpdwvs57PxqFUkln7KlajAUJ96N89Uo2IHAPuguzF+jElnOFiM7/r8sY
+         8wP3aCr0KMvvj5B9dMMy6rMYc68T2cArgoW4rSCYhmiiOmaOfUOh8PKQl2tj2zQXIF+k
+         vU8iWHtgiUBS+ol+MIjFesX3nNEGQRegXTQdX81/njwlCL4qH5VjXTAOy9v+vSFZEv0D
+         3LRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744710904; x=1745315704;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Sd6Yg3rC21jnGehy22uUVz7lDVf6VWqh6Q2Fhe7kCA=;
+        b=EZMvwNmlK68qEX1sJPFRM6Gz1uBUhVouXI36viYWQ/rnQvE4jG/ne4K/6yWS9FsBn4
+         cPPyHmy9adoWhrTGEcVyCj1SNx7ssNHcmWOU5DdCxHQ6lpfDaQLcuiFaS6Jr9eTj7VwB
+         vO0ZzdTiqGy4xw3+Qg7AvCDLjIL6O7AI9faggDyQnCQrPTU2Z7lS2X0rkVOyeCMDJxta
+         8ZP0dtx/wap3Pu+1tni6t3P7NUQBSD6QXlsMhsASA91su1/z3HHDCMbCq65UbjHaHuOD
+         f8iw32hS3SrrWnSbm5rJfbivoIiTGBcPydKypP6FoLy+0HJ2Hag8PZiYjWn+OVPYYFal
+         CKRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKBVcOAwYEqGBwfholmzucKfGxnOgcPj+GGrwwp3stdWb5iIm+MHXDYa6UFpgFi28PmqhyQrGlc6Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzTo0SbjtX5rBeq2Kx16JR5rNYFtLQ2+rekLjwHa0dU1zV6BUd
+	a/XLrfbukQh1w8YnvfMatU97YaPrGN8kY7ZPj02pbZabos2EqCxJummNqRPsZVm+b2SC3cwE6PY
+	QPlRXq1nR5LoMh95I5GxTDJJTYT7EOC1kgTqdFA==
+X-Gm-Gg: ASbGncvdzrY2r5HTLritQws0szZ4F4EVSLrvMp5+2d1eJX2ezFWu9pQjjm+O1fAUAXK
+	gWnWIh9WbxL3mUmM6uhe8ovXNobYVqqokIP4OSlg04ARH9+bsMjiC2uMtjWpslU9g68cSVp5NpL
+	cBdNznRZIyMYx0PLou4KPktCwhqg==
+X-Google-Smtp-Source: AGHT+IHAU8wJfJDF4eNSdv0Zm5P/kiq6Yogbh7eiqNmQ6osroOUsaiP2v1/BjbNJSKe15J8jBc9YnfV5U+5wxjTv07U=
+X-Received: by 2002:a17:906:7154:b0:aca:dd0c:cfc8 with SMTP id
+ a640c23a62f3a-acadd0cd3bamr1109850866b.10.1744710904488; Tue, 15 Apr 2025
+ 02:55:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ukjrsdsbmwgktt6r"
-Content-Disposition: inline
-In-Reply-To: <20250412122124.1636152-2-u.kleine-koenig@baylibre.com>
-
-
---ukjrsdsbmwgktt6r
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
+References: <20250411131423.3802611-1-guodong@riscstar.com>
+ <20250411131423.3802611-2-guodong@riscstar.com> <20250411-confider-spinster-35f23040d188@spud>
+ <89b6142bacecd4a7742341b88dc1e28c4454527a.camel@pengutronix.de>
+In-Reply-To: <89b6142bacecd4a7742341b88dc1e28c4454527a.camel@pengutronix.de>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Tue, 15 Apr 2025 17:54:52 +0800
+X-Gm-Features: ATxdqUGYHln9nntZsdf9jj-vYb0_3U3ad99wI0oBwmwTA_WUeFe5BkvwdaXHs0w
+Message-ID: <CAH1PCMZnJDcYKJR35WirQT95hte0NWvGBe4fjDuyZEgagvunAA@mail.gmail.com>
+Subject: Re: [PATCH 1/9] dt-bindings: pwm: marvell,pxa: add optional property resets
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Conor Dooley <conor@kernel.org>, ukleinek@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, dlan@gentoo.org, 
+	drew@pdp7.com, inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org, 
+	tglx@linutronix.de, hal.feng@starfivetech.com, unicorn_wang@outlook.com, 
+	duje.mihanovic@skole.hr, elder@riscstar.com, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: loongson: Fix u32 overflow in waveform calculation
-MIME-Version: 1.0
 
-Hello Binbin,
+On Tue, Apr 15, 2025 at 4:53=E2=80=AFPM Philipp Zabel <p.zabel@pengutronix.=
+de> wrote:
+>
+> On Fr, 2025-04-11 at 17:44 +0100, Conor Dooley wrote:
+> > On Fri, Apr 11, 2025 at 09:14:15PM +0800, Guodong Xu wrote:
+> > > Add an optional resets property for the Marvell PWM PXA binding.
+> > >
+> > > Signed-off-by: Guodong Xu <guodong@riscstar.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.ya=
+ml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+> > > index 9ee1946dc2e1..9640d4b627c2 100644
+> > > --- a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+> > > +++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+> > > @@ -31,6 +31,9 @@ properties:
+> > >    clocks:
+> > >      maxItems: 1
+> > >
+> > > +  resets:
+> > > +    maxItems: 1
+> >
+> > Do any of the currently supported devices use a reset? If not, then add
+> > this in tandem with the new compatible and only allow it there please.
+>
+> Also, if spacemit,k1-pwm can not work without the reset being
+> deasserted, mark it as required.
+>
 
-On Sat, Apr 12, 2025 at 02:21:24PM +0200, Uwe Kleine-K=F6nig wrote:
-> mul_u64_u64_div_u64() returns an u64 that might be bigger than U32_MAX.
-> To properly handle this case it must not be directly assigned to an u32
-> value.
->=20
-> Use a wider type for duty and period to make the idiom:
->=20
-> 	duty =3D mul_u64_u64_div_u64(...)
-> 	if (duty > U32_MAX)
-> 		duty =3D U32_MAX;
->=20
-> actually work as intended.
->=20
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Link: https://lore.kernel.org/r/44f3c764-8b65-49a9-b3ad-797e9fbb96f5@stan=
-ley.mountain
-> Fixes: 322fc380cea1 ("pwm: Add Loongson PWM controller support")
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+Thank you Philipp. spacemit,k1-pwm can not work without the reset.
+I will add that in the next version.
 
-I would have expected some feedback on such a bug report and patch from
-someone who was just added to the MAINTAINERS file claiming to maintain
-this driver.
+-Guodong
 
-I applied this patch now to
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
-and still accept review tags for it.
-
-Best regards
-Uwe
-
---ukjrsdsbmwgktt6r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf+IuYACgkQj4D7WH0S
-/k71hwgAq+bckTpmh83sypQqAZT6W9PY2eaHTGO7hawu9xGccq0oOEgTgC8mZ1hn
-cuMA2kJJFmmYbUKwhx7zWmPLZMlJ/rE9kI8lFnAlykS3ryy2vLcxSaK65Tknb3KJ
-FUQwEeUP19PhpzCwmUqmmAu3ZAgywvaR9A+8W3PLfGbVS/uGnpmch/KxXwCl9/Wq
-BRPk+JU9NT0DQaa3fYJwOvtuc2+dkWF2FLij8rTDorYyw5j6eiPsdVBJwuY5g+nS
-3hSsSe8VlyNwJVHfZJo2QVuA+napNa2FXYrxowj2p9UKt7if3TmvEuSuvyli5pjk
-HAbNCjrMlljwIBuTxJsUAc09xggl1A==
-=nmw7
------END PGP SIGNATURE-----
-
---ukjrsdsbmwgktt6r--
+> The driver can still use reset_control_get_optional.
+>
+> regards
+> Philipp
 
