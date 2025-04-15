@@ -1,52 +1,52 @@
-Return-Path: <linux-pwm+bounces-5506-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5507-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 945B5A8A1D3
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 16:50:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C253AA8A1CC
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 16:50:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 48AF13BA369
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 14:49:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21FEB441E50
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 14:50:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A17229E071;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19D0629E07C;
 	Tue, 15 Apr 2025 14:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VrUCvg+M"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjF9XOWz"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC43529E04D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7EF929B76D;
 	Tue, 15 Apr 2025 14:49:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744728560; cv=none; b=tc3EIHoAYMM6895VOy2KyBPx9Wkw9yMJcs167woy6E64RFVDXI6p9G6QGtzk/caOb1XKwVrXHpYxqRV3WHbqC/M+azl4e6VeJMgDMtn0bclGwJK7N3exYL5SG3z3yAbFNUXcWff/xxb6foixPmUumpetCvRFE++rrfEjlPQLLpg=
+	t=1744728561; cv=none; b=QlzWrnNWj576ORUgHnJ42oi+FAJQfS6ZkbkA6z27N8Q4sVnplbINB4qQJcUdhleNl17TuTjHPFhhcy5UeekUV61ZibASFm3FktOo7NzYtP1cISjcvRBkqX7baGjRaP4XeBeaBmVHR7GeChEEtp9eUmYRjKx17EyA10zTIGHohLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744728560; c=relaxed/simple;
-	bh=7bLy2yqLgJL02Ifgj+oyaQLN7+gNm0nPbHLQa+MDOpg=;
+	s=arc-20240116; t=1744728561; c=relaxed/simple;
+	bh=crsEGvz1m8k2FjNEc+Qy8b+aWznTQrDr7Qb+3QKD4yU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MLdEW3h/nvaJPYGiaFg5mXj0eAlpeJmG152+c08UUshZnQvX/KTWJ+vPj8hvvtsRtFOaY1WedJQI2t29eLShpPe5mKQZ1S3ZL7E+hL9inv+9ak3IZ/5Xl3ezNNlz0jINsiH7KvDRjn4O0DLUTCSlPTjdWSrrD5BBoqvvljXio44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VrUCvg+M; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 175E7C2BCB4;
+	 In-Reply-To:To:Cc; b=bBj071R6avOoZm8wm6xBDZmuZq2vMigORE1aat8xJOcxRUGTQFX+tPsQWOwpODaEh5edoZ7W+XDKtOrFS6ZAZaf3VrQHlrxewFIUSDlSJoXKeO/VfK1rPg2wKfulKWA5Vth2fWoK58dT6D9VXvK9rKFV1JHjHw8FTE2TBB2IR6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjF9XOWz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2DCA7C4CEEC;
 	Tue, 15 Apr 2025 14:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744728560;
-	bh=7bLy2yqLgJL02Ifgj+oyaQLN7+gNm0nPbHLQa+MDOpg=;
+	bh=crsEGvz1m8k2FjNEc+Qy8b+aWznTQrDr7Qb+3QKD4yU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=VrUCvg+MA3usMUIeemzU0rNo8QICIhHbGcEO4r+xdOcNR6Me0QXGOPJs+uuPX7X2C
-	 Ag7zMUzxqcZSL4bk1D/P3u6hoHJqaHshEW85XniIgbE3/rKdmmCy6VlU+Uv3qYwuBw
-	 h4YrMpeVuviE0HEULMj8Hv16WokDE4jEowPkzk9BWZZrz9zoWB4s+Z8tuBlZjnHHZL
-	 4yh8urpbdB3i2aMShpsK92k/+tLU5dx9C0E8iy5B22dtoYnaZKyzG7oGWcbVSskK9C
-	 woig3sG5mysIQDYzbWtTs0zLKfrkdtwGn4tqA6gCPIljFJWqYisYhAf0VE0N6nDCU1
-	 GgFEdlsXRyqZw==
+	b=hjF9XOWz87zZMMTNp+OZjZpCipzINW54y244H2Gh6gP++GblJDkZ2FWWzoeF5nu5P
+	 hFvGZy8qCKoKBw/s2eWawNDRrW3cL5o15ZLUA8oRYlfSkdJB6ygEyNGVKQCLYTlLbz
+	 k2SdYs0rfeG8dHlmSw0iCI2i2/C8utRz7M7jQmfbiWHcWkKUacdDnq/5mXymaPkjAc
+	 fR7R4SHX4qPqt0ea/d1EHxt8bB13AICl8yhDLurz+1anp4L9J3+GQUnCVlaCQWguGs
+	 4d/Jpu1nsf+FaJi6Gv1fpstKwI99C+DNh2oDDwTUskfeValco2m0btbYRFN5WxuLAQ
+	 neUMLELSGgeJg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAF9C369AB;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC13C369C1;
 	Tue, 15 Apr 2025 14:49:20 +0000 (UTC)
 From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Tue, 15 Apr 2025 15:49:31 +0100
-Subject: [PATCH v2 15/17] dt-bindings: mfd: adp5585: document reset gpio
+Date: Tue, 15 Apr 2025 15:49:32 +0100
+Subject: [PATCH v2 16/17] mfd: adp5585: add support for a reset pin
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250415-dev-adp5589-fw-v2-15-3a799c3ed812@analog.com>
+Message-Id: <20250415-dev-adp5589-fw-v2-16-3a799c3ed812@analog.com>
 References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
 In-Reply-To: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
 To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
@@ -68,14 +68,13 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
  Bartosz Golaszewski <brgl@bgdev.pl>, 
  Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
  Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Liu Ying <victor.liu@nxp.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ Liu Ying <victor.liu@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744728560; l=1110;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744728560; l=1359;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=EJgyFwH5Kj7vzTKA7DA+Bt8uPJfr6RlwqI4q0KXHGGM=;
- b=ui9o5aTwMMpNGflun9l0v0qdasSNMiL+e4YhBBTNP/WYkYMKks+dvdYy7+WOIgvtxgAPX4hzl
- qm/4MqaIx2CDHcQDTO+UeG1662mxjt02TRQ5Y1EaDr68LHU8O5e8mnp
+ bh=YXvB+ZSL0gZ4TQpg4/Gr7rz9RArZE2EGcmubpPAGy0c=;
+ b=c7XdjNLWoVohdo+K7gcTPaJ5dYtAo7/Xwwh8fOzY6qtAOuLhu1jL12IQfKPYutOaaCRnsXoTA
+ UoNtNj6O6TeBfW9lIip3xC+GP1YwGhi1nvj91grKr5LKet32SFr2rcd
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
@@ -85,37 +84,51 @@ Reply-To: nuno.sa@analog.com
 
 From: Nuno Sá <nuno.sa@analog.com>
 
-Add a reset gpio property. Note that for the adp5585-01 models, the
-reset pin is used as the additional ROW5 which means there's no reset.
+Make sure to perform an Hardware reset during probe  if the pin is given
+in FW.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
- Documentation/devicetree/bindings/mfd/adi,adp5585.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/mfd/adp5585.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-index b7c36e2d4bfc4e75c856a0b8b9c842627bf3b1b2..218d6d6399d02adf678acff67b4ee246d833d209 100644
---- a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-+++ b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-@@ -39,6 +39,9 @@ properties:
+diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
+index 667cc5bd0745f64eec60837ec3c00057af0cddeb..2af110fb28054c8ad6709a9a42cb21919be433e7 100644
+--- a/drivers/mfd/adp5585.c
++++ b/drivers/mfd/adp5585.c
+@@ -12,6 +12,7 @@
+ #include <linux/device.h>
+ #include <linux/err.h>
+ #include <linux/i2c.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/mfd/adp5585.h>
+ #include <linux/mfd/core.h>
+ #include <linux/minmax.h>
+@@ -833,6 +834,7 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
+ {
+ 	const struct adp5585_info *info;
+ 	struct adp5585_dev *adp5585;
++	struct gpio_desc *gpio;
+ 	unsigned int id;
+ 	int ret;
  
-   vdd-supply: true
+@@ -854,6 +856,16 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
+ 	if (ret)
+ 		return ret;
  
-+  reset-gpios:
-+    maxItems: 1
++	gpio = devm_gpiod_get_optional(&i2c->dev, "reset", GPIOD_OUT_HIGH);
++	if (IS_ERR(gpio))
++		return PTR_ERR(gpio);
 +
-   gpio-controller: true
- 
-   '#gpio-cells':
-@@ -166,6 +169,7 @@ allOf:
-         adi,unlock-keys: false
-         adi,unlock-trigger-sec: false
-         gpio-reserved-ranges: false
-+        reset-gpios: false
-         adi,keypad-pins:
-           minItems: 2
-           maxItems: 11
++	if (gpio) {
++		fsleep(30);
++		gpiod_set_value_cansleep(gpio, 0);
++		fsleep(60);
++	}
++
+ 	adp5585->regmap = devm_regmap_init_i2c(i2c, info->regmap_config);
+ 	if (IS_ERR(adp5585->regmap))
+ 		return dev_err_probe(&i2c->dev, PTR_ERR(adp5585->regmap),
 
 -- 
 2.49.0
