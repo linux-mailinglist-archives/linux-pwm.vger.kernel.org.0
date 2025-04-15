@@ -1,53 +1,52 @@
-Return-Path: <linux-pwm+bounces-5497-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5496-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79971A8A1A2
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 16:49:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ECC50A8A19E
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 16:49:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD6D8189AB39
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 14:50:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C487189834A
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 14:49:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FDC829B784;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A8F41B0434;
 	Tue, 15 Apr 2025 14:49:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="knTRAHNe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QAbsZi83"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C3C29B76B;
-	Tue, 15 Apr 2025 14:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF4329A3F5;
+	Tue, 15 Apr 2025 14:49:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744728560; cv=none; b=sbPys9MM5IDQT4Q6pH93eGGv/Deo19zIADkD5Oz2Xs9/2UoQ6IvFVeADPhcNtzardJZWmdWRKXc2GLvdKF/o4IiHjLpOojLIYRFNn8swZgBxihG3tKuIMYs+DeG9VTZqKjWS0Fb58j6P1Y1M4nZNgZZPXnyvIMqsYKm+GZfMTag=
+	t=1744728560; cv=none; b=spTMGpPJJeGwushkpVO/ZMxEakdFfXxTLfeoFp6zPMEceqHaNZnu/xjSKeX147rU6qwdlZYr+NLTdyOBOZazNkrdCobcPtX2YdDAmyM4DTcHYy4nCcoW/Dya2MwDseJbCkRda9QpJ5PxDYmtXBWcqEAjRa/O63/HRTNpwKUDQk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744728560; c=relaxed/simple;
-	bh=rLn0yCnCMtxYmTQlgKBvmj60HZfLQgZ4sobAUNp/SKs=;
+	bh=aX3HKxax0rDQuzBwQS2kA1m0kqAKWpT+7stjcWNqwwA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VHjpA5hECZ6Qf+Bm9keZkl7pla0lqwYH9T+YGyOT8bUWNE4qf6Lma4Arm79aH9syFi/DPd5ObXY8x92mSk9J6UARyzm/dLWJUF/e9yitPWiCxOSCD84rGA6Oa8l1oTTeQFfAYEjZjazniffPMEyCmgSJl3C7h9qDsEjLSFo4K8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=knTRAHNe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8FBA8C4CEF9;
+	 In-Reply-To:To:Cc; b=hFzsmJcQNyV5EUNdF9O17B41iSUtgZsZfaueTctOnAf5Wgu9H3qIpI9GrpaVuxzpJDWMJN+9YIXhAfIIFapD6g1FtsHTKs5240rxSDuSZ8Esk0pq1DHkHJp9njVnVFRuCGOJY7+RUgAGeiTT2JXsCo21YCOH926XvLolss6gzZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QAbsZi83; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9CEC0C4CEFD;
 	Tue, 15 Apr 2025 14:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744728559;
-	bh=rLn0yCnCMtxYmTQlgKBvmj60HZfLQgZ4sobAUNp/SKs=;
+	bh=aX3HKxax0rDQuzBwQS2kA1m0kqAKWpT+7stjcWNqwwA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=knTRAHNeBESEs4jntpiRg7xgQni1uw0KA4pUcUIv5LD0Hau6xNh5pvM1Vozg6/kRN
-	 Eg7+2kN2q4Mex9kjaxgayvVhsRZtICaFhniZ17cV42dT8e0bClPJk2KjtIYJ8/uPGg
-	 xmxxpI49RBCS4r9yVpELrsn3DfEygr/93W9S9A1YpgvyVwjqMLF6bC8Y+V7Apcle+C
-	 fARdTxJcOqOocHoIp+YKonhO5SFMBSeghOlU+Z7er1PRw4VZ3JquogjN0LhPLE81Ra
-	 u9e48Xc+3xJ1EFGAdjpcQ5LMSEJtdWZEjdnuBr+ESFYQ3qT1JBwG/RB45sNoFPfK7n
-	 sqXdfylyiZK/w==
+	b=QAbsZi83PjLUtAuT9YQSxfufdFzqFGes1GgInG5KGKbknT7j4DAaEfI2ovsyIvAlh
+	 a7Noy8Y/X6O+6X/AB05rqJorObHtrreWtNoU6YpSyCsCuF+SZBm1ToByUGBTaWRdD0
+	 BAX746MlYWneAtKXUonRsteID8xnr3CAzIZEbHvSFT5BpNVou71dk7rihPYM5zVfhr
+	 2w0RlhwqQt2u7TbWN9jMnfiTTLSMdP/t3SoynmHvTQctc8sAfqczPtWPBcWhi3Xfvj
+	 1TugBOCsUNkjaqwkd3GxiK9hQpWdy16p1sLkcSZwePrfCq53H+YuCrtktfnCzr3Xke
+	 PpLVJN1Q2Xdjg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86578C369BD;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94046C369AB;
 	Tue, 15 Apr 2025 14:49:19 +0000 (UTC)
 From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Tue, 15 Apr 2025 15:49:23 +0100
-Subject: [PATCH v2 07/17] gpio: adp5585: add support for the ad5589
- expander
+Date: Tue, 15 Apr 2025 15:49:24 +0100
+Subject: [PATCH v2 08/17] pwm: adp5585: add support for adp5589
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250415-dev-adp5589-fw-v2-7-3a799c3ed812@analog.com>
+Message-Id: <20250415-dev-adp5589-fw-v2-8-3a799c3ed812@analog.com>
 References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
 In-Reply-To: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
 To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
@@ -71,11 +70,11 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
  Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
  Liu Ying <victor.liu@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744728560; l=9249;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744728560; l=5649;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=dhOobqAdoEg5vowYXwvlopJTrVq+rE29macO+WfMrlo=;
- b=NPdwKzFXvw/wJ77ViAHccMl95xnzYbI9UR22fP4x8t3W8gwAn/YYLtjK2i5angpN366ChzJli
- XHVYYhung9XAEeyXRhqTtb7qGHAb5GGzE2ObAQp3tgvpagZz0moBRsV
+ bh=XXiVMRa1mYBek6BNDpSfXlVquvY07WVqc50czzWOcDs=;
+ b=fqDVEcLir4lIUZwCgchrDVSU1ImftPDEuLxkVR0ns2Gqv00HfSApnwbwWmIw1xM6BFpJ6VTH6
+ P8xhr5jGvQPAJG4F0OFeP6KagAXEdZR/0a94U0MnII4vU0Nj5DOdjmt
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
@@ -85,265 +84,165 @@ Reply-To: nuno.sa@analog.com
 
 From: Nuno Sá <nuno.sa@analog.com>
 
-Support the adp5589 I/O expander which supports up to 19 pins. We need
-to add a chip_info based struct since accessing register "banks"
-and "bits" differs between devices.
+Add support for the adp5589 I/O expander. From a PWM point of view it is
+pretty similar to adp5585. Main difference is the address
+of registers meaningful for configuring the PWM.
 
-Also some register addresses are different.
-
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
- drivers/gpio/gpio-adp5585.c | 121 ++++++++++++++++++++++++++++++++------------
- 1 file changed, 88 insertions(+), 33 deletions(-)
+ drivers/pwm/pwm-adp5585.c | 51 ++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 35 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/gpio/gpio-adp5585.c b/drivers/gpio/gpio-adp5585.c
-index d5c0f1b267c82a5002b50cbb7a108166439e4785..d8f8d5513d7f6a9acf5bdecccacc89c4615ce237 100644
---- a/drivers/gpio/gpio-adp5585.c
-+++ b/drivers/gpio/gpio-adp5585.c
-@@ -4,6 +4,7 @@
-  *
-  * Copyright 2022 NXP
-  * Copyright 2024 Ideas on Board Oy
-+ * Copyright 2025 Analog Devices, Inc.
-  */
+diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
+index c8821035b7c1412a55a642e6e8a46b66e693a5af..cc8ac8f9e5669b4ffca06d4117a29f030393f48f 100644
+--- a/drivers/pwm/pwm-adp5585.c
++++ b/drivers/pwm/pwm-adp5585.c
+@@ -32,21 +32,30 @@
+ #define ADP5585_PWM_MIN_PERIOD_NS	(2ULL * NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
+ #define ADP5585_PWM_MAX_PERIOD_NS	(2ULL * 0xffff * NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
  
- #include <linux/device.h>
-@@ -14,21 +15,49 @@
- #include <linux/regmap.h>
- #include <linux/types.h>
- 
--#define ADP5585_GPIO_MAX	11
-+struct adp5585_gpio_chip {
-+	unsigned int max_gpio;
-+	int (*bank)(unsigned int off);
-+	int (*bit)(unsigned int off);
-+	bool has_bias_hole;
-+};
- 
- struct adp5585_gpio_dev {
- 	struct gpio_chip gpio_chip;
-+	const struct adp5585_gpio_chip *info;
- 	struct regmap *regmap;
++struct adp5585_pwm {
 +	const struct adp5585_regs *regs;
- };
- 
-+static int adp5585_gpio_bank(unsigned int off)
-+{
-+	return ADP5585_BANK(off);
-+}
++	struct regmap *regmap;
++};
 +
-+static int adp5585_gpio_bit(unsigned int off)
-+{
-+	return ADP5585_BIT(off);
-+}
-+
-+static int adp5589_gpio_bank(unsigned int off)
-+{
-+	return ADP5589_BANK(off);
-+}
-+
-+static int adp5589_gpio_bit(unsigned int off)
-+{
-+	return ADP5589_BIT(off);
-+}
-+
- static int adp5585_gpio_get_direction(struct gpio_chip *chip, unsigned int off)
+ static int pwm_adp5585_request(struct pwm_chip *chip, struct pwm_device *pwm)
  {
- 	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
--	unsigned int bank = ADP5585_BANK(off);
--	unsigned int bit = ADP5585_BIT(off);
-+	const struct adp5585_regs *regs = adp5585_gpio->regs;
-+	unsigned int bank = adp5585_gpio->info->bank(off);
-+	unsigned int bit = adp5585_gpio->info->bit(off);
- 	unsigned int val;
+-	struct regmap *regmap = pwmchip_get_drvdata(chip);
++	struct adp5585_pwm *adp5585_pwm = pwmchip_get_drvdata(chip);
++	const struct adp5585_regs *regs = adp5585_pwm->regs;
++	struct regmap *regmap = adp5585_pwm->regmap;
  
--	regmap_read(adp5585_gpio->regmap, ADP5585_GPIO_DIRECTION_A + bank, &val);
-+	regmap_read(adp5585_gpio->regmap, regs->gpio_dir_a + bank, &val);
- 
- 	return val & bit ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
- }
-@@ -36,35 +65,37 @@ static int adp5585_gpio_get_direction(struct gpio_chip *chip, unsigned int off)
- static int adp5585_gpio_direction_input(struct gpio_chip *chip, unsigned int off)
- {
- 	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
--	unsigned int bank = ADP5585_BANK(off);
--	unsigned int bit = ADP5585_BIT(off);
-+	const struct adp5585_regs *regs = adp5585_gpio->regs;
-+	unsigned int bank = adp5585_gpio->info->bank(off);
-+	unsigned int bit = adp5585_gpio->info->bit(off);
- 
--	return regmap_clear_bits(adp5585_gpio->regmap,
--				 ADP5585_GPIO_DIRECTION_A + bank, bit);
-+	return regmap_clear_bits(adp5585_gpio->regmap, regs->gpio_dir_a + bank,
-+				 bit);
+ 	/* Configure the R3 pin as PWM output. */
+-	return regmap_update_bits(regmap, ADP5585_PIN_CONFIG_C,
++	return regmap_update_bits(regmap, regs->ext_cfg,
+ 				  ADP5585_R3_EXTEND_CFG_MASK,
+ 				  ADP5585_R3_EXTEND_CFG_PWM_OUT);
  }
  
- static int adp5585_gpio_direction_output(struct gpio_chip *chip, unsigned int off, int val)
+ static void pwm_adp5585_free(struct pwm_chip *chip, struct pwm_device *pwm)
  {
- 	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
--	unsigned int bank = ADP5585_BANK(off);
--	unsigned int bit = ADP5585_BIT(off);
-+	const struct adp5585_regs *regs = adp5585_gpio->regs;
-+	unsigned int bank = adp5585_gpio->info->bank(off);
-+	unsigned int bit = adp5585_gpio->info->bit(off);
+-	struct regmap *regmap = pwmchip_get_drvdata(chip);
++	struct adp5585_pwm *adp5585_pwm = pwmchip_get_drvdata(chip);
++	const struct adp5585_regs *regs = adp5585_pwm->regs;
++	struct regmap *regmap = adp5585_pwm->regmap;
+ 
+-	regmap_update_bits(regmap, ADP5585_PIN_CONFIG_C,
++	regmap_update_bits(regmap, regs->ext_cfg,
+ 			   ADP5585_R3_EXTEND_CFG_MASK,
+ 			   ADP5585_R3_EXTEND_CFG_GPIO4);
+ }
+@@ -55,14 +64,16 @@ static int pwm_adp5585_apply(struct pwm_chip *chip,
+ 			     struct pwm_device *pwm,
+ 			     const struct pwm_state *state)
+ {
+-	struct regmap *regmap = pwmchip_get_drvdata(chip);
++	struct adp5585_pwm *adp5585_pwm = pwmchip_get_drvdata(chip);
++	const struct adp5585_regs *regs = adp5585_pwm->regs;
++	struct regmap *regmap = adp5585_pwm->regmap;
+ 	u64 period, duty_cycle;
+ 	u32 on, off;
+ 	__le16 val;
  	int ret;
  
--	ret = regmap_update_bits(adp5585_gpio->regmap,
--				 ADP5585_GPO_DATA_OUT_A + bank, bit,
--				 val ? bit : 0);
-+	ret = regmap_update_bits(adp5585_gpio->regmap, regs->gpo_data_a + bank,
-+				 bit, val ? bit : 0);
+ 	if (!state->enabled) {
+-		regmap_clear_bits(regmap, ADP5585_PWM_CFG, ADP5585_PWM_EN);
++		regmap_clear_bits(regmap, regs->pwm_cfg, ADP5585_PWM_EN);
+ 		return 0;
+ 	}
+ 
+@@ -83,41 +94,43 @@ static int pwm_adp5585_apply(struct pwm_chip *chip,
+ 	off = div_u64(period, NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ) - on;
+ 
+ 	val = cpu_to_le16(off);
+-	ret = regmap_bulk_write(regmap, ADP5585_PWM_OFFT_LOW, &val, 2);
++	ret = regmap_bulk_write(regmap, regs->pwm_offt_low, &val, 2);
  	if (ret)
  		return ret;
  
--	return regmap_set_bits(adp5585_gpio->regmap,
--			       ADP5585_GPIO_DIRECTION_A + bank, bit);
-+	return regmap_set_bits(adp5585_gpio->regmap, regs->gpio_dir_a + bank,
-+			       bit);
+ 	val = cpu_to_le16(on);
+-	ret = regmap_bulk_write(regmap, ADP5585_PWM_ONT_LOW, &val, 2);
++	ret = regmap_bulk_write(regmap, regs->pwm_ont_low, &val, 2);
+ 	if (ret)
+ 		return ret;
+ 
+ 	/* Enable PWM in continuous mode and no external AND'ing. */
+-	ret = regmap_update_bits(regmap, ADP5585_PWM_CFG,
++	ret = regmap_update_bits(regmap, regs->pwm_cfg,
+ 				 ADP5585_PWM_IN_AND | ADP5585_PWM_MODE |
+ 				 ADP5585_PWM_EN, ADP5585_PWM_EN);
+ 	if (ret)
+ 		return ret;
+ 
+-	return regmap_set_bits(regmap, ADP5585_PWM_CFG, ADP5585_PWM_EN);
++	return regmap_set_bits(regmap, regs->pwm_cfg, ADP5585_PWM_EN);
  }
  
- static int adp5585_gpio_get_value(struct gpio_chip *chip, unsigned int off)
+ static int pwm_adp5585_get_state(struct pwm_chip *chip,
+ 				 struct pwm_device *pwm,
+ 				 struct pwm_state *state)
  {
- 	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
--	unsigned int bank = ADP5585_BANK(off);
--	unsigned int bit = ADP5585_BIT(off);
-+	const struct adp5585_regs *regs = adp5585_gpio->regs;
-+	unsigned int bank = adp5585_gpio->info->bank(off);
-+	unsigned int bit = adp5585_gpio->info->bit(off);
- 	unsigned int reg;
+-	struct regmap *regmap = pwmchip_get_drvdata(chip);
++	struct adp5585_pwm *adp5585_pwm = pwmchip_get_drvdata(chip);
++	const struct adp5585_regs *regs = adp5585_pwm->regs;
++	struct regmap *regmap = adp5585_pwm->regmap;
+ 	unsigned int on, off;
  	unsigned int val;
+ 	__le16 on_off;
+ 	int ret;
  
-@@ -79,8 +110,8 @@ static int adp5585_gpio_get_value(struct gpio_chip *chip, unsigned int off)
- 	 * .direction_input(), .direction_output() or .set() operations racing
- 	 * with this.
- 	 */
--	regmap_read(adp5585_gpio->regmap, ADP5585_GPIO_DIRECTION_A + bank, &val);
--	reg = val & bit ? ADP5585_GPO_DATA_OUT_A : ADP5585_GPI_STATUS_A;
-+	regmap_read(adp5585_gpio->regmap, regs->gpio_dir_a + bank, &val);
-+	reg = val & bit ? regs->gpo_data_a : regs->gpi_stat_a;
- 	regmap_read(adp5585_gpio->regmap, reg + bank, &val);
+-	ret = regmap_bulk_read(regmap, ADP5585_PWM_OFFT_LOW, &on_off, 2);
++	ret = regmap_bulk_read(regmap, regs->pwm_offt_low, &on_off, 2);
+ 	if (ret)
+ 		return ret;
+ 	off = le16_to_cpu(on_off);
  
- 	return !!(val & bit);
-@@ -90,17 +121,19 @@ static int adp5585_gpio_set_value(struct gpio_chip *chip, unsigned int off,
- 				  int val)
+-	ret = regmap_bulk_read(regmap, ADP5585_PWM_ONT_LOW, &on_off, 2);
++	ret = regmap_bulk_read(regmap, regs->pwm_ont_low, &on_off, 2);
+ 	if (ret)
+ 		return ret;
+ 	on = le16_to_cpu(on_off);
+@@ -127,7 +140,7 @@ static int pwm_adp5585_get_state(struct pwm_chip *chip,
+ 
+ 	state->polarity = PWM_POLARITY_NORMAL;
+ 
+-	regmap_read(regmap, ADP5585_PWM_CFG, &val);
++	regmap_read(regmap, regs->pwm_cfg, &val);
+ 	state->enabled = !!(val & ADP5585_PWM_EN);
+ 
+ 	return 0;
+@@ -144,16 +157,21 @@ static int adp5585_pwm_probe(struct platform_device *pdev)
  {
- 	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
--	unsigned int bank = ADP5585_BANK(off);
--	unsigned int bit = ADP5585_BIT(off);
-+	const struct adp5585_regs *regs = adp5585_gpio->regs;
-+	unsigned int bank = adp5585_gpio->info->bank(off);
-+	unsigned int bit = adp5585_gpio->info->bit(off);
- 
--	return regmap_update_bits(adp5585_gpio->regmap,
--				  ADP5585_GPO_DATA_OUT_A + bank,
-+	return regmap_update_bits(adp5585_gpio->regmap, regs->gpo_data_a + bank,
- 				  bit, val ? bit : 0);
- }
- 
- static int adp5585_gpio_set_bias(struct adp5585_gpio_dev *adp5585_gpio,
- 				 unsigned int off, unsigned int bias)
- {
-+	const struct adp5585_gpio_chip *info = adp5585_gpio->info;
-+	const struct adp5585_regs *regs = adp5585_gpio->regs;
- 	unsigned int bit, reg, mask, val;
- 
- 	/*
-@@ -108,8 +141,10 @@ static int adp5585_gpio_set_bias(struct adp5585_gpio_dev *adp5585_gpio,
- 	 * consecutive registers ADP5585_RPULL_CONFIG_*, with a hole of 4 bits
- 	 * after R5.
- 	 */
--	bit = off * 2 + (off > 5 ? 4 : 0);
--	reg = ADP5585_RPULL_CONFIG_A + bit / 8;
-+	bit = off * 2;
-+	if (info->has_bias_hole)
-+		bit += (off > 5 ? 4 : 0);
-+	reg = regs->rpull_cfg_a + bit / 8;
- 	mask = ADP5585_Rx_PULL_CFG_MASK << (bit % 8);
- 	val = bias << (bit % 8);
- 
-@@ -119,22 +154,24 @@ static int adp5585_gpio_set_bias(struct adp5585_gpio_dev *adp5585_gpio,
- static int adp5585_gpio_set_drive(struct adp5585_gpio_dev *adp5585_gpio,
- 				  unsigned int off, enum pin_config_param drive)
- {
--	unsigned int bank = ADP5585_BANK(off);
--	unsigned int bit = ADP5585_BIT(off);
-+	const struct adp5585_regs *regs = adp5585_gpio->regs;
-+	unsigned int bank = adp5585_gpio->info->bank(off);
-+	unsigned int bit = adp5585_gpio->info->bit(off);
- 
- 	return regmap_update_bits(adp5585_gpio->regmap,
--				  ADP5585_GPO_OUT_MODE_A + bank, bit,
-+				  regs->gpo_out_a + bank, bit,
- 				  drive == PIN_CONFIG_DRIVE_OPEN_DRAIN ? bit : 0);
- }
- 
- static int adp5585_gpio_set_debounce(struct adp5585_gpio_dev *adp5585_gpio,
- 				     unsigned int off, unsigned int debounce)
- {
--	unsigned int bank = ADP5585_BANK(off);
--	unsigned int bit = ADP5585_BIT(off);
-+	const struct adp5585_regs *regs = adp5585_gpio->regs;
-+	unsigned int bank = adp5585_gpio->info->bank(off);
-+	unsigned int bit = adp5585_gpio->info->bit(off);
- 
- 	return regmap_update_bits(adp5585_gpio->regmap,
--				  ADP5585_DEBOUNCE_DIS_A + bank, bit,
-+				  regs->debounce_dis_a + bank, bit,
- 				  debounce ? 0 : bit);
- }
- 
-@@ -175,6 +212,7 @@ static int adp5585_gpio_set_config(struct gpio_chip *chip, unsigned int off,
- static int adp5585_gpio_probe(struct platform_device *pdev)
- {
- 	struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
-+	const struct platform_device_id *id = platform_get_device_id(pdev);
- 	struct adp5585_gpio_dev *adp5585_gpio;
  	struct device *dev = &pdev->dev;
- 	struct gpio_chip *gc;
-@@ -185,6 +223,11 @@ static int adp5585_gpio_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+ 	struct adp5585_dev *adp5585 = dev_get_drvdata(dev->parent);
++	struct adp5585_pwm *adp5585_pwm;
+ 	struct pwm_chip *chip;
+ 	int ret;
  
- 	adp5585_gpio->regmap = adp5585->regmap;
-+	adp5585_gpio->regs = adp5585->info->regs;
+-	chip = devm_pwmchip_alloc(dev, ADP5585_PWM_CHAN_NUM, 0);
++	chip = devm_pwmchip_alloc(dev, ADP5585_PWM_CHAN_NUM,
++				  sizeof(*adp5585_pwm));
+ 	if (IS_ERR(chip))
+ 		return PTR_ERR(chip);
+ 
++	adp5585_pwm = pwmchip_get_drvdata(chip);
++	adp5585_pwm->regmap = adp5585->regmap;
++	adp5585_pwm->regs = adp5585->info->regs;
 +
-+	adp5585_gpio->info = (const struct adp5585_gpio_chip *)id->driver_data;
-+	if (!adp5585_gpio->info)
-+		return -ENODEV;
- 
  	device_set_of_node_from_dev(dev, dev->parent);
  
-@@ -199,7 +242,7 @@ static int adp5585_gpio_probe(struct platform_device *pdev)
- 	gc->can_sleep = true;
+-	pwmchip_set_drvdata(chip, adp5585->regmap);
+ 	chip->ops = &adp5585_pwm_ops;
  
- 	gc->base = -1;
--	gc->ngpio = ADP5585_GPIO_MAX;
-+	gc->ngpio = adp5585->info->max_cols + adp5585->info->max_rows;
- 	gc->label = pdev->name;
- 	gc->owner = THIS_MODULE;
+ 	ret = devm_pwmchip_add(dev, chip);
+@@ -165,6 +183,7 @@ static int adp5585_pwm_probe(struct platform_device *pdev)
  
-@@ -211,8 +254,20 @@ static int adp5585_gpio_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct adp5585_gpio_chip adp5585_gpio_chip_info = {
-+	.bank = adp5585_gpio_bank,
-+	.bit = adp5585_gpio_bit,
-+	.has_bias_hole = true,
-+};
-+
-+static const struct adp5585_gpio_chip adp5589_gpio_chip_info = {
-+	.bank = adp5589_gpio_bank,
-+	.bit = adp5589_gpio_bit,
-+};
-+
- static const struct platform_device_id adp5585_gpio_id_table[] = {
--	{ "adp5585-gpio" },
-+	{ "adp5585-gpio", (kernel_ulong_t)&adp5585_gpio_chip_info },
-+	{ "adp5589-gpio", (kernel_ulong_t)&adp5589_gpio_chip_info },
+ static const struct platform_device_id adp5585_pwm_id_table[] = {
+ 	{ "adp5585-pwm" },
++	{ "adp5589-pwm" },
  	{ /* Sentinel */ }
  };
- MODULE_DEVICE_TABLE(platform, adp5585_gpio_id_table);
+ MODULE_DEVICE_TABLE(platform, adp5585_pwm_id_table);
 
 -- 
 2.49.0
