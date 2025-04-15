@@ -1,40 +1,80 @@
-Return-Path: <linux-pwm+bounces-5487-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5488-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17803A89D2F
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 14:10:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47813A89D32
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 14:11:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 289871788AC
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 12:10:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2CD4317A56D
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 12:11:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A404292915;
-	Tue, 15 Apr 2025 12:10:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E3752951C5;
+	Tue, 15 Apr 2025 12:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="foF0AWta"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 459DD274647
-	for <linux-pwm@vger.kernel.org>; Tue, 15 Apr 2025 12:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C8B294A1D
+	for <linux-pwm@vger.kernel.org>; Tue, 15 Apr 2025 12:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719044; cv=none; b=i70uwyRzP1qXp0+8PEsHF/cmN1cxcPkiO8lnmC5O96QVcRsWWWokCDzG6Z2QG9KwNiaDgnCXrEhWDuHZI1YWiOXq13h6bOjcGQya7rSJvbUvGg3Lja1f4YusX2bnAqcJq4MO1L4Av0NEj/XYB8FAq+LPfyHW4xLb3ov61aTMbkc=
+	t=1744719071; cv=none; b=BCNZmc1l7HbxcqPhowhLEBursqvGxkDx/Jy/2EebIjU5S+S8X2Su+AvCnkvnp0XUMQYq3s65VfL3p20FyBghzvYSCvJiv4eE2OVZ3GUrOx7nz2DZ5XamSHCdQweMORcFOC0fNGWum5/YyLq2YeQqx8T9oiHpZJUXYJL99J4pFIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719044; c=relaxed/simple;
-	bh=lnRqSs+UA/TqSvD99hUx2xkZw5R4kLOXslEB7rHxfBU=;
+	s=arc-20240116; t=1744719071; c=relaxed/simple;
+	bh=eIVl937PhzBBGlKlkh8kLTfnaLkiCL+to/VPTSqs/hM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FyXJ9B8GAh54NMedFdKGt8pCZEZvA3cbIYyxnECxWaTGbn9IxirxYmmQQ7cR0iBKGLqsl0571ki7aBwy/t9FBgueWHH4rEFlUPnU17Ej0OCce7S6HGIoajo6Ag3nU0IEX+YxzjcCwMkclvsy2XODDARjpVsOvTX1WpUyd7c6dUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.238])
-	by gateway (Coremail) with SMTP id _____8AxCGq6TP5nYwS+AA--.53031S3;
-	Tue, 15 Apr 2025 20:10:34 +0800 (CST)
-Received: from [127.0.0.1] (unknown [223.64.68.238])
-	by front1 (Coremail) with SMTP id qMiowMDxfRuyTP5n2CaDAA--.2270S2;
-	Tue, 15 Apr 2025 20:10:30 +0800 (CST)
-Message-ID: <ad19c0a0-2179-4299-9f65-77163716a733@loongson.cn>
-Date: Tue, 15 Apr 2025 20:10:25 +0800
+	 In-Reply-To:Content-Type; b=n7h6GCRicqfEhhbYpXvtNsmvcIl72eWpLGrXfywDFI6NK8NRhggLMuovBnXHK/FuJsen+vEhyK9FlHeHz+vE41N0mJsmdbXongQyjj3rD1Ia6GNWzRo8/XspipxBRk8wobrGoiKR9vYJ99NFbnVADPL1YBtl8N35du3UwpqU+w0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=foF0AWta; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d589ed2b47so16976835ab.2
+        for <linux-pwm@vger.kernel.org>; Tue, 15 Apr 2025 05:11:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744719068; x=1745323868; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CmptmweS7lJ6GHE2wFUYE+JWDVLKYqz8ucpeUP/DcRA=;
+        b=foF0AWta9tfFoYvlXwPRsYlzEtFiE1wAxYRLdrIaOocqk0X9rmsolngwB6B1WzUH4n
+         CEou3ewTgItZZLBxlELUecQzKEfb1cQZJx4JyLpjbZC+9Ete6y9RAP0HKgORUTKY3Wzq
+         4B0gb+tQSIc6Q6WW/DD/G8y8q2DPHOgzo5BHVnN/KWC5WvECkI0n3C0C1HTyGsE2QXRj
+         FN0D+IFkdDBbu/YRXRwgKNyTguQHeegIu8G14BgZIQutRh0aACULqJK7gNU0CeUMHIFI
+         mEQNkRNRCLzx90smS29OwN5//BQLQsofCHqlJ7TgIkk6ieR+1zJjo4NAJ0MiRwlJbF/M
+         twsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744719068; x=1745323868;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CmptmweS7lJ6GHE2wFUYE+JWDVLKYqz8ucpeUP/DcRA=;
+        b=NJT6gkuHn+w20miLc4bqlU/FGOJaUjdoFPEl045tOsYGREVVhlJOvP8uaUtBvxMDFT
+         2tYi8EBxk/2oM8hZ/kwXSVrEPsTky6Q+vhueqNrduhYRiXsC8fwgQv4wAwcCrqvNTJHX
+         1WmlWRs5K54ngSgvkmEmH1R4tpQEHAe61MAUXCMOYVIu6dzxNXYwzmXtW0DiWKzwr04S
+         uamkO2/D7qKFICuKI0bRCGRs2MLSH1z8aGIn1yUEgcY03JsJI/MhJMytRwGGXvKK3eCZ
+         e7Kqvyqg+JOZ/aPjg9HJJoeOCvkRKNssr4QegYv4mhTbwYFCjvP38VOOYWAVYwRR5VTa
+         JnVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTOZHHjecDOVkauQE2Q8fUK+03kcFz5U95vKbdgR//uqzRsQb243ZZPihCwXX5z04MYwkaVNUOxzU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS5wmegIbnBYn4D7/eTXcbRADtVdAWtxUNiVZmJ1UAhP91kBIM
+	V/UxOZnHqb5m8sAMuKl4GdkEPowYicD6Lp1qOty6GPU0cLtFqyYwMFP/7fffFys=
+X-Gm-Gg: ASbGncuREoKTkQPsJIQCAJw7QGMGNBMFrsZZNQUAPQqwcIhHySEMbOJZfCVA/iOFV1G
+	gD/n0zdkJb3fgrc6sd3Z1n9264IyLC25k4mjXy6rVMDtV2mMeMPjTgchiDcL7N/nbzpvPqO+DLj
+	6WXS3anBjA1rm8fFHJVGy7Vywy4IRsIfrXjPqqMGve2pPkIjU6BX/lzF0tG0SyGW7wEqXGZbWuv
+	cZe7ApM8yF6u0c0J+MFd9K9SylZA8lVuYNGxPrI50D305GgxQ2fxNrZsSiUAq/QvbtezO2n4Mln
+	v1qSAShPbYExjaUXphZ2185YZRA2lzb0ps1pjayYqw+F/cmzgpDISxkjctFsGTil6XUo/tSRWuM
+	XWuEL
+X-Google-Smtp-Source: AGHT+IHJ1Ly5q6h/cItnEzYwsEqY15X2cujDF4x9G+IO1L2NReprTYetKPX12tqvaoe5ju58AuPTaw==
+X-Received: by 2002:a05:6e02:441c:10b0:3d8:975:b808 with SMTP id e9e14a558f8ab-3d80975bb69mr22117655ab.5.1744719067875;
+        Tue, 15 Apr 2025 05:11:07 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d7dba66fcbsm33384565ab.9.2025.04.15.05.11.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 05:11:07 -0700 (PDT)
+Message-ID: <0bbd2842-72bc-47a7-832a-fc8833163e32@riscstar.com>
+Date: Tue, 15 Apr 2025 07:11:05 -0500
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -42,88 +82,87 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pwm: loongson: Fix u32 overflow in waveform calculation
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Juxin Gao <gaojuxin@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Dan Carpenter <dan.carpenter@linaro.org>, linux-pwm@vger.kernel.org
-References: <20250412122124.1636152-2-u.kleine-koenig@baylibre.com>
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-In-Reply-To: <20250412122124.1636152-2-u.kleine-koenig@baylibre.com>
+Subject: Re: [PATCH 1/9] dt-bindings: pwm: marvell,pxa: add optional property
+ resets
+To: Yixun Lan <dlan@gentoo.org>, Guodong Xu <guodong@riscstar.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Conor Dooley <conor@kernel.org>,
+ ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr, drew@pdp7.com, inochiama@gmail.com,
+ geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de,
+ hal.feng@starfivetech.com, unicorn_wang@outlook.com,
+ duje.mihanovic@skole.hr, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+References: <20250411131423.3802611-1-guodong@riscstar.com>
+ <20250411131423.3802611-2-guodong@riscstar.com>
+ <20250411-confider-spinster-35f23040d188@spud>
+ <89b6142bacecd4a7742341b88dc1e28c4454527a.camel@pengutronix.de>
+ <CAH1PCMZnJDcYKJR35WirQT95hte0NWvGBe4fjDuyZEgagvunAA@mail.gmail.com>
+ <20250415101249-GYA30674@gentoo>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <20250415101249-GYA30674@gentoo>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxfRuyTP5n2CaDAA--.2270S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WFWDuFyrZr4UtF4ktrWDAwc_yoW8ZFWrpF
-	WUCw1Uur4rArW7Aa4DJF9avF13ZayrXFy3Ja95G34UCasIgwnrZr18KF9rGa47ury8GF1I
-	qrWF9F15Aa1DXFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrw
-	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-	14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxK
-	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
-	0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8vApUUUUUU==
 
-Hi Uwe:
+On 4/15/25 5:12 AM, Yixun Lan wrote:
+> Hi Philipp,
+> 
+> On 17:54 Tue 15 Apr     , Guodong Xu wrote:
+>> On Tue, Apr 15, 2025 at 4:53 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>>>
+>>> On Fr, 2025-04-11 at 17:44 +0100, Conor Dooley wrote:
+>>>> On Fri, Apr 11, 2025 at 09:14:15PM +0800, Guodong Xu wrote:
+>>>>> Add an optional resets property for the Marvell PWM PXA binding.
+>>>>>
+>>>>> Signed-off-by: Guodong Xu <guodong@riscstar.com>
+>>>>> ---
+>>>>>   Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml | 3 +++
+>>>>>   1 file changed, 3 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+>>>>> index 9ee1946dc2e1..9640d4b627c2 100644
+>>>>> --- a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+>>>>> @@ -31,6 +31,9 @@ properties:
+>>>>>     clocks:
+>>>>>       maxItems: 1
+>>>>>
+>>>>> +  resets:
+>>>>> +    maxItems: 1
+>>>>
+>>>> Do any of the currently supported devices use a reset? If not, then add
+>>>> this in tandem with the new compatible and only allow it there please.
+>>>
+>>> Also, if spacemit,k1-pwm can not work without the reset being
+>>> deasserted, mark it as required.
+> 
+> If I inerpret correctly, only reset requires explicitly being de-asserted,
+> need to mark as required? that's being said, if reset comes out as de-asserted
+>   by default after power reset, then not necessary?
+> (in other cases, some device block is in asserted state by default)
 
-I'm very sorry for the late reply, I've been delayed for the past few 
-days due to personal reasons.
-I will be more aware of this in the future.
+We can often benefit from the state that the boot loader has left
+things in, but I think it's better not to assume it if possible.
+I suppose it might not be required though.
 
-Also, heartfelt thanks to you and Dan for the patch.
+Anyway, the reset line is available to use; why not require it?
 
-On 2025/4/12 20:21, Uwe Kleine-König wrote:
-> mul_u64_u64_div_u64() returns an u64 that might be bigger than U32_MAX.
-> To properly handle this case it must not be directly assigned to an u32
-> value.
->
-> Use a wider type for duty and period to make the idiom:
->
-> 	duty = mul_u64_u64_div_u64(...)
-> 	if (duty > U32_MAX)
-> 		duty = U32_MAX;
->
-> actually work as intended.
->
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Link: https://lore.kernel.org/r/44f3c764-8b65-49a9-b3ad-797e9fbb96f5@stanley.mountain
-> Fixes: 322fc380cea1 ("pwm: Add Loongson PWM controller support")
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
-Reviewed-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
-> Hello,
->
-> this is the approach that Dan suggested in reply to my suggested fix. This has
-> the advantage to not involve a very long line. I didn't check but I'd expect that the compiler produces comparable results for both approaches and so they are more or less equivalent after compilation.
->
-> Best regards
-> Uwe
->
->   drivers/pwm/pwm-loongson.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
-> index 412c67739ef9..6392c4e34136 100644
-> --- a/drivers/pwm/pwm-loongson.c
-> +++ b/drivers/pwm/pwm-loongson.c
-> @@ -118,7 +118,7 @@ static int pwm_loongson_enable(struct pwm_chip *chip, struct pwm_device *pwm)
->   static int pwm_loongson_config(struct pwm_chip *chip, struct pwm_device *pwm,
->   			       u64 duty_ns, u64 period_ns)
->   {
-> -	u32 duty, period;
-> +	u64 duty, period;
->   	struct pwm_loongson_ddata *ddata = to_pwm_loongson_ddata(chip);
->   
->   	/* duty = duty_ns * ddata->clk_rate / NSEC_PER_SEC */
->
-> base-commit: 957062f2ba4790c495de606ecf8bc7398c0c710f
-Thanks.
-Binbin
+					-Alex
+
+> thanks
+>>>
+>>
+>> Thank you Philipp. spacemit,k1-pwm can not work without the reset.
+>> I will add that in the next version.
+>>
+>> -Guodong
+>>
+>>> The driver can still use reset_control_get_optional.
+>>>
+>>> regards
+>>> Philipp
+> 
 
 
