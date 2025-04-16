@@ -1,113 +1,117 @@
-Return-Path: <linux-pwm+bounces-5510-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5511-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91939A8AB2B
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Apr 2025 00:16:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B871A8AF98
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Apr 2025 07:18:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF1D01903763
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Apr 2025 22:16:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5075A17F48B
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Apr 2025 05:18:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67BD628469C;
-	Tue, 15 Apr 2025 22:15:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E25D9227EB2;
+	Wed, 16 Apr 2025 05:18:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xgJo06PG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T4YsDyhl"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC2427A108
-	for <linux-pwm@vger.kernel.org>; Tue, 15 Apr 2025 22:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBAA2DFA2D;
+	Wed, 16 Apr 2025 05:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744755346; cv=none; b=ib+Rcf/Vpjd5dc5EmcFFvRW/0GWjpoKSC7VPuLDuOaLl89UFD3T1d79RO7QHo0ADbUhsuC57+qMtrfrYZLP1UNi19PfIxXFRcNpW9/ooR7Uw1HpRJyKXVgtxIAPNC96PiPZqxl4SgWbsS0pqPbNyl/2KYT3wsdS+WDzovc502tQ=
+	t=1744780711; cv=none; b=QibJql9VlA8attYgvVIsKBZGxMO8+v/A38dnWC2AzS6/vV8dOPbLtmhvSrhbTJbqg2qzyu7gsYqS6T/zN0AiYidPAkiZxEH0hq8fa3I10Rgw9BLmGHfN9QRRG8UwjyqvLxaVO9dw6JVNEmOZZ4g+GSEhvcn4hboB5xd5Iem5kp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744755346; c=relaxed/simple;
-	bh=3IDLTt/ybfWS/Yh/QoGmWJI4cRQW9Qqw72xuwSQQoz4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CapWVNPgPyqHlpwFOS3//1WFl7cqfO7/AW+8SADEXih8NQgTdnX4QbR2Dq6XPii2r6WgWf5UapbczvT7b3BzjFIKRTUkrFaidc2RIJd3yEyM3VO9cHHR7jVcjzu5NfDks62Rd9W6wYvvQTymAzIq4bzpVU83YsCa4TCoAuaZIYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xgJo06PG; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so51506001fa.2
-        for <linux-pwm@vger.kernel.org>; Tue, 15 Apr 2025 15:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744755341; x=1745360141; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3IDLTt/ybfWS/Yh/QoGmWJI4cRQW9Qqw72xuwSQQoz4=;
-        b=xgJo06PGDjE/C/mqIWjOtCx+0tQ4IRb+or3O9QwH22qaijmjDXXgIC+KJLlZRXFUTV
-         lIRVucqzW0Cdj4mB8TpzbuWFH7NFlOuf8czjP9eTEUKRIqdfYOItvy8N02+wlzXiw+f3
-         Lzqpx+0Sz6A6GfVcnWcAK3hlAWh5IQNnA9sFbkCqTkqpi2y/eBs9p3lLjlwf9d7dsFKm
-         TH5v2wnS3qbIlHqTAE5c8JEOySBTjuzL0TqfzJ0DJ4gX4PIrs6EROu0+X59Ewl0tr2CY
-         WMwnFWHcNGhgAvfl0MLUvqriC80GW8TRApplSAHMMoux5wSMY2X6Q/4or2NOXe3nsP92
-         J3vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744755341; x=1745360141;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3IDLTt/ybfWS/Yh/QoGmWJI4cRQW9Qqw72xuwSQQoz4=;
-        b=jvD94oGOB3O0jeHawIhaxoTvNyBn/pdthaCAILs1NWYd524wwuag+MateHPe2iteig
-         WVAsrQvhh6drGixPkiea+U3ZQao6l+w8kDU5tlbkuX+ctqwT33Bktbf8j+3wPNuxr79Q
-         YFuFWSmRNGi5oqUEvpNocOksFY3mCnuTxTuxUrzqUXFz8px3Pwgpugc7hVPZryFzOfEG
-         VZVLpAUl/F6XWizTOyOQnH12bqOPZP6L7goSuTmmRRlTzKgIUix20/pbzF9hwUXUKGQI
-         AZuJkHM3fbPVGhBpQflKYD0R+xdt28f0UbitWzCBS0IkPwDXDCXcujyaHJ2oba6mct46
-         DndA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZjINZ9ri3gsrHTn6pFHg2kky2WRhtAEn4uJeaUzXPtj6q3dAgisqfBCWkVxbuNdr6unHE88ncSCo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnvK6AjSymlmPGQza3nWlB61lOhTlxZgNhHscuLSRCS5jdyrrZ
-	ZUW8ebzJ3fZOKWxT6AvdNHe1KLDskJkH/ndQ8SfOOOdicZAv24lORQpi65Mt22rTapPVxmIZRwY
-	FUERWU/4uvmbBVLT/Le45e64gPI12qhLxi/G7mw==
-X-Gm-Gg: ASbGnctWVZjy6jVU4R3+vV6/PzF4ZbpTBW3M5KDUKodjHq0d5J5cGrw1tRm0m4XB8Nw
-	mS3EcExTFhGXaZRkvIZb0Dh9u75xIAKESRZadCsjfwR6751uaUXGCJpXYXYRPHpNNE3X1PN05mJ
-	1RMF85J4UQRLOoyOM7GxTFEQ==
-X-Google-Smtp-Source: AGHT+IGz291D+ba2B23NSZhprn8muxlxhfCK8P3qwCVwnjg64DejVDMET1qWa0V8mNtq0S/w6O4IvzOXyFabUdyweWA=
-X-Received: by 2002:a2e:bcce:0:b0:30b:bce7:80da with SMTP id
- 38308e7fff4ca-3107c2a5e07mr1935241fa.9.1744755341129; Tue, 15 Apr 2025
- 15:15:41 -0700 (PDT)
+	s=arc-20240116; t=1744780711; c=relaxed/simple;
+	bh=CmNtU/Ng9a+Jh4xKHpsC8mx2FxYmD+EiYZC+QuZh9+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lqAZiP/DX+SY5+/LWrZX9I8VKraoDb+pbyuXR/ZPxjq2dpch6NEgokil3q7zv0y2TIerAYWuXAPpnsXsoWa5hsn7G8MQSBKjD/hVperNKAe3vJYu63OkQIHQoWFDo2ObE4RsrhexKViDl5rvcYlHG6AsteZlo24K89xcY9T/D9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T4YsDyhl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63A5DC4CEEC;
+	Wed, 16 Apr 2025 05:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744780711;
+	bh=CmNtU/Ng9a+Jh4xKHpsC8mx2FxYmD+EiYZC+QuZh9+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T4YsDyhl2RK//iQoGDJ4oxeuQ2oGCVN46wS8ndM2H1q8BTeAJYZse3I3Hpeb6+MNu
+	 PqY6HWPYLsznjFBt6m8JzrR/fXLChkABbOeyyF9rGB6uco9jqrCgPgnGAGePFdDDfH
+	 2ly5/wQBDFv785hDObgMrmIc59qEosIpIkxaACm3mgk6ZnAo/yI9Y9O2VnT4Z30ZTU
+	 vfQO4X/IPfT+u5J11+3LXI283MB3NthqovTArwv6n/Ohmz6DU2T6BfuQTpv4J8GFW3
+	 rV4VppRCG/NS8cr68X0Kp8MDwEI6Y2ZaNvlqjBQwSFwnGvxC+v7LZsHIScZHcg+T5l
+	 W1z+KsnM770wA==
+Date: Wed, 16 Apr 2025 07:18:27 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Alex Elder <elder@riscstar.com>, Guodong Xu <guodong@riscstar.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Conor Dooley <conor@kernel.org>, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, drew@pdp7.com, 
+	inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, 
+	hal.feng@starfivetech.com, unicorn_wang@outlook.com, duje.mihanovic@skole.hr, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH 1/9] dt-bindings: pwm: marvell,pxa: add optional property
+ resets
+Message-ID: <hogqotzzpzcow2xjrwh34qcuiu7ooc2qnvlhuvexzvqkrcsfop@mhz26t5vu35p>
+References: <20250411131423.3802611-1-guodong@riscstar.com>
+ <20250411131423.3802611-2-guodong@riscstar.com>
+ <20250411-confider-spinster-35f23040d188@spud>
+ <89b6142bacecd4a7742341b88dc1e28c4454527a.camel@pengutronix.de>
+ <CAH1PCMZnJDcYKJR35WirQT95hte0NWvGBe4fjDuyZEgagvunAA@mail.gmail.com>
+ <20250415101249-GYA30674@gentoo>
+ <0bbd2842-72bc-47a7-832a-fc8833163e32@riscstar.com>
+ <20250415122807-GYA30943@gentoo>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com> <20250409-mdb-max7360-support-v6-8-7a2535876e39@bootlin.com>
-In-Reply-To: <20250409-mdb-max7360-support-v6-8-7a2535876e39@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 16 Apr 2025 00:15:30 +0200
-X-Gm-Features: ATxdqUHsUTdiuzHDBft1cRFTLonjrdMquqGFbjXe9OBWsOq1Lj_ycSHfvYfu6WU
-Message-ID: <CACRpkdbN15ZTeeN2Gj24RC8cB=s8ZqeyOtz9fkPSS1fTgwRKhA@mail.gmail.com>
-Subject: Re: [PATCH v6 08/12] gpio: regmap: Allow to provide init_valid_mask callback
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
-	=?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="drktpjdibffse2jk"
+Content-Disposition: inline
+In-Reply-To: <20250415122807-GYA30943@gentoo>
 
-On Wed, Apr 9, 2025 at 4:56=E2=80=AFPM Mathieu Dubois-Briand
-<mathieu.dubois-briand@bootlin.com> wrote:
 
-> Allows to populate the gpio_regmap_config structure with
-> init_valid_mask() callback to set on the final gpio_chip structure.
->
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> Reviewed-by: Michael Walle <mwalle@kernel.org>
+--drktpjdibffse2jk
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH 1/9] dt-bindings: pwm: marvell,pxa: add optional property
+ resets
+MIME-Version: 1.0
 
-Makes perfect sense!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Hello,
 
-Yours,
-Linus Walleij
+On Tue, Apr 15, 2025 at 12:28:07PM +0000, Yixun Lan wrote:
+> maybe there are cases that users don't want to issue a reset..
+> so, want to make it optional.. I can think one example that,
+> display controller is up and working from bootloader to linux,
+> reset it will got a flicker picture..
+
+Agreed. You can just deassert the reset at probe time. That shouldn't
+interfere with a PWM that is already producing an output.
+
+> GPG Key ID AABEFD55
+
+If you advertise your OpenPGP certificate, I recommend using the long
+id. See for example https://keys.openpgp.org/search?q=AABEFD55.
+
+--drktpjdibffse2jk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf/PaEACgkQj4D7WH0S
+/k6ooQf/d4DhhdyM4QPOcTmcUpZ8HOxH7CFCD701mRLpmOlq1dz3/Mtz5tO4wLL2
+nvfA4N7zRagUW8grFQIpENy3IFx5DP3Rdg5PtVELqlqPrOW+NqTTJGslRBeIAoQ3
+0rybTAJEutOM0DPeL7Ay6iGy78VV/Qosh7dhFUWmzxeF1IBHry2tm+euAw5wKOzP
+PNPY/S0CfuOhb2G1ivYYVTBV3fsgYT5G+VfTJyR9/Gkf7F9yKMbX0LRYcG1LM8Ox
+0ilgkvwEu9kt2Au+q6PivMLURHJ28CtG1Fl+Qn50PZm0witW6kFfQqSA3WN4z6rz
+ueBYfIz0tcqYQIjClrgXnesRcLI+KA==
+=8FCS
+-----END PGP SIGNATURE-----
+
+--drktpjdibffse2jk--
 
