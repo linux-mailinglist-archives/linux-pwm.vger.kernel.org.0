@@ -1,265 +1,140 @@
-Return-Path: <linux-pwm+bounces-5530-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5531-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5004FA8B657
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Apr 2025 12:03:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15879A8B7B9
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Apr 2025 13:33:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A04EC18979FE
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Apr 2025 10:03:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2C89716AB4B
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Apr 2025 11:33:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A0DF229B1E;
-	Wed, 16 Apr 2025 10:03:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A84C233703;
+	Wed, 16 Apr 2025 11:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9TNB2uK"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="bs9F0h32"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289CD237700;
-	Wed, 16 Apr 2025 10:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72FA221F0D
+	for <linux-pwm@vger.kernel.org>; Wed, 16 Apr 2025 11:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744797797; cv=none; b=hA+ZUCw4hmjO8PFynY15PlYrAZQ1YqCyML8BraxmxuGabx7xtEfWr9lwodOv/8NHvhmvQZGWwZAosvuKx/NbJ5Gme3z08AX9wN0yXNoNGoQCLu4csXCOecdCTVb5S6c6gQhHkUzm/Mg7HTxYxcc3XyPbvJaTIO0GhMYJwCTLkfU=
+	t=1744803227; cv=none; b=RJT5E1xvcbFb6fN/gkRtu6br7mB8+u+yX+pCPHaPcR6www+qANovtqHN/j0QM+kCs1ID6Ulx7bA8Y/gagRlwZA3rR1m9jrqOl9sScU6ZwRdGb2pESgmUNlzMfBZe0ZCF3AKYH8y/ABfGlczvFNwl1m4eeG1zyM0zTvJFs+3ZeHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744797797; c=relaxed/simple;
-	bh=du+Galkv30CIPUFNR3vxX3iDlkIQSfHZgKLgdwXSMYk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ccIXlwgxlc6hf6B8rQL7f5O8ttifOiwSuaTOENW1GjQjyCavuVFzZFcad5P1pwGy8Q4JcRXIo0V6r/wZiLoQ7Z53u2OzyYyr6Lf7w/FKvqZ7M43GcUo+E6GxSgmUS3Mu6+N7orWNzHBeLDctGIFmuH3duU3gC4wlIjRDGOmnnak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W9TNB2uK; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so44707075e9.0;
-        Wed, 16 Apr 2025 03:03:14 -0700 (PDT)
+	s=arc-20240116; t=1744803227; c=relaxed/simple;
+	bh=9c/9l7Gx6pO3uJ6uw/xSQ8RpmhZ+3ORIT5sR3A/UcG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jVzdXH6bZ4NXjcazY/TpZb5+GwnCz9HuRdwY9LRwpgrK8q+AyPabOQyMPh3KBXUzmjONcn7wZXZK0dps50mS6DWkCNCozddp6DbGNlWTe+ivMVYRIjn/V0NkaKDdQ3G5C8U6QLr43l6z0dmzUWq9r21w8AuFouzysX5zphKmAZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=bs9F0h32; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-85b41281b50so191759439f.3
+        for <linux-pwm@vger.kernel.org>; Wed, 16 Apr 2025 04:33:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744797793; x=1745402593; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=du+Galkv30CIPUFNR3vxX3iDlkIQSfHZgKLgdwXSMYk=;
-        b=W9TNB2uKyRU80ky74V2bxvP5xGQolIz9Ir9khF/2zE/u+yzPLnMJrlWRhBw0hG5KzG
-         X6oQAJ/bck9zId+Ugf2i72iltt4IDYhTtsjDYSrHLFaJy/0ofZPWvb/rZfP19hIsJ5t/
-         IEQCj8x/nfeqj6D9Ik1LVbJoVu8dtOqkdD13nttdPp7fbaekzENAqurYMyM2+eAWHYfO
-         rVniVQ4YQxZCrFgsafCYqSwxBVY+6owCqcZf+1dzOs6Fx8cty20dzBXf8XAQTVrf9uvl
-         xhLwPef6lumFlDtl3p4CGX7nC5h9hfJIqTvi6M7OXqMeCyunpbUFUV3Tov4528tOaZ+D
-         dX9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744797793; x=1745402593;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744803225; x=1745408025; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=du+Galkv30CIPUFNR3vxX3iDlkIQSfHZgKLgdwXSMYk=;
-        b=nF9l4+NEBGWL0aHzwvWviN2bkPqeZ7B10IkXIQ63NwdBY7oXGN4AXKW/Xfe7AUwtyD
-         djcyI2szWY5sIX1lVhkhmAqDPf/Z4QROZa7xTz9lY2ZxTiHnwy6uUoJsNszZ01osFc/B
-         0dRqQqnKPtNe0yyQSGxOz9/33fRtIV3IokUXENA0AAaNWjLw+OOUTLsQmdMkudSpCXP4
-         5Qxy5Hk6kBpDqWg7XvbLptVPGjZ+/Rpk8d1oz7u7f0mfh/3SkaybsG9gFVFmO1YS3/UQ
-         9D5S7UjeBt3ihz5N0uSfHtoZuYlH8n9ZVdsAskIJN22fnCHPsPbs5M7xSIk/j3YOuOZ9
-         Y/+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWQK/Cgf9l47MT7tEbGxH1UXUNqHh1ofaR5dlR3XmhQ7jgu24VZ0r9Savr4gA3Gh8SJw8vdpcm9cqEADQ==@vger.kernel.org, AJvYcCWuG+4lUnbt0oK32msSmLvRgIe2EimwDa8V/dEZ7aNu2UR1nQ3mefxc/7hsTCcD+HrZIKSmzWrWk+6R@vger.kernel.org, AJvYcCXt2Kun+YKqft2SEI0jSCFeMhIaLqBtLYXGxq3y08BW1f5mRfQh4mHd+3GkZhxgS1GPSb2k5o3xn3Tc@vger.kernel.org, AJvYcCXuY0WzNZFMnJ9W8TJofxXmRkn6zsmRePOCP9pjhKcZpPlbunRBsRxtq4imsXj+5dQAzSMNsuHXxvbLO/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvF4JLiLMedO5DAa2ErfZlT50YjiVTzW5Ichfo/qljEDmkQDgt
-	NTtSg1uINMzYt1mSaBN9OpYGoxjCr95TeprGuWhXqkm8d/l7jJeBg4Vztf2nGDeGaA==
-X-Gm-Gg: ASbGnctwD8TjqNoN8JckqyVn0gqjze/lRnGDwDZ+swpae9xMIUo+JHESNHHrYRJA2R4
-	KLlVJq/Q63pvzHjeM0fcUA/s0eSOkA2huk2BmPyTq+fhvUvESFBIb5YY8Q/GiAB9idcd0awFrra
-	GW/JClDc11qfX1241yRc8fqQQyBK+PtHJOYh3O0WOC5P8JvReOk04q8ZLqy0IjIPTJPTJCaKFLs
-	WYc7PEP0jD8/COSAR26l7WGt3WY1IhJSlVtmW0KSdsVyUGP4/ACFO64OYD0INlxLbfhHaIb17ux
-	YZFK3LPgUoVw3WeKgUvQ/QJI39vR0VMwgvz0wlI0xEOrg5X9mRs1ziJKI+Todevagp59O++Xpby
-	NHaysxY4RQOrsPVWSg2qUJ8g=
-X-Google-Smtp-Source: AGHT+IFd9LRvyIpsRChPTnY6Jq4uL69mgcVg+rRc/FuNlmiVUqIX1JKAXFvvJqfu6/mgFo1Dta7Hlw==
-X-Received: by 2002:a05:600c:1f13:b0:43d:a90:9f1 with SMTP id 5b1f17b1804b1-4405d5fcd76mr10280315e9.6.1744797792965;
-        Wed, 16 Apr 2025 03:03:12 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4c82d6sm16702835e9.8.2025.04.16.03.03.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 03:03:12 -0700 (PDT)
-Message-ID: <79bacbf0fd1056e6d7435970a3f111138fcb180e.camel@gmail.com>
-Subject: Re: [PATCH v2 00/17] mfd: adp5585: support keymap events and drop
- legacy Input driver
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Liu Ying <victor.liu@nxp.com>, nuno.sa@analog.com, 
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?=	 <ukleinek@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry
- Torokhov <dmitry.torokhov@gmail.com>, Laurent Pinchart	
- <laurent.pinchart@ideasonboard.com>, Krzysztof Kozlowski	
- <krzysztof.kozlowski@linaro.org>
-Date: Wed, 16 Apr 2025 11:03:14 +0100
-In-Reply-To: <3efb68e2-7091-47e1-81a2-39930da5a427@nxp.com>
-References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
-	 <3efb68e2-7091-47e1-81a2-39930da5a427@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+        bh=WUKLRPozuEL+beG7gwcwBgRjJD70PGCGuYuOaYbRFSU=;
+        b=bs9F0h32CMSmh3SFyyBUr/5h2uuGG76tIN3nQbNemp8RAI0B3IcaSedzMp+/PVLAvB
+         qwNmbd1mQnvG1eKB+ywt/2mNtZrZQMh4wgYy+B8fn13qE6DunD+d8C0fKQdj+uHsDjBc
+         zfXfl6T85ELyAD044CBesSv7HH1fDetX12eIrVdwWVCvqXuYS/DdzQ/mAiybPww9LYS+
+         nN2dybVYuEa4Zz0FFrQmtcMO201tw6gKvm1MBk3S2LWYxLXbGpF4GAI7G7uIQMeaP+GV
+         XFVpz7TdpsQ71LWdZGzxinIg5NE8D3oZ6vPbMlgMWFX0S4bHqA+Crdvtd74PJuZ6Mg9U
+         aGGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744803225; x=1745408025;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WUKLRPozuEL+beG7gwcwBgRjJD70PGCGuYuOaYbRFSU=;
+        b=da7IZPUG0BHYVm8e7cyK6J3Ww/RZ5AukRsEEf1o0L/oWhh/8IMS+Sv2sdRf4vTrkej
+         /j7lduWpGcaZNDWtKdqWbPH22MLBIPDNbIHxYZjPb+zTI4mSmjK7/ukeuX4Rut5u26zu
+         v6m/ANe67wT+LzRuUeH/VsX7SaxYGpo4K0eReBQZN8D3Xz7Zi8x2dpfK6HJzCd7EEk83
+         0O9oEtk5z8I+WWYS8oETTNBM+NuJMZjsZheYu3Oacof+wk5X460K0Dzwn1YuansMtnXH
+         GbjQmN71MoTD/lqbp7xTF5TElENSlDBjzP7V3xJBtPz3E5f9gQ51W4wxe1eJSPjtBgFp
+         0b+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX02sNQIvDJro6cfIzUYX0kV7e6f1eVVaO3pGdEeLLWfz/D4Cf3rDZ1M5ptZHldygrdAI+ebntolz4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxw3SiSHj+J7V9bZvfaFVE9eQ6K6ylI+3ZzRJXPs5BL5bH3TBWr
+	dbJnES/k7NAwHQ7SlaDJbdl9ZdE1gedw3ilEz+GJcXiHVsNSfFUAvSBkVjITQK8=
+X-Gm-Gg: ASbGncsCUxcW+3r1SDB+Qc4qAuqcYaeQ2C2aE7fuUYTa9yPworJlKI6kxboPsMTbWo0
+	E3CT+ggdzMUsQmri28Kqb4nAKqIoHx3NyR3MsAtCtS0pNgqsviGh6W//OOSRL0ybMSzfqVOzMiq
+	eO9RT48Nrhu79NDMUn+aSf+yhqelhTvR3EfIivmh+1byQgluN7fLE2i1qDOXeu4SI/JL9Sv6nur
+	UlWy907PIboNSbrCIWola7R2WwmYahTEhh1akTLhfBopsLb4KxP53gHXlTyT6YiQUez65Zcs7eT
+	28CiJ+V0OxE/nauQUP8y7FJlRCmON70Nsij+IDEWkz4FIcDLV/+Zk9/jT/CIVFmsOKnjvk8ymqN
+	hAm/J
+X-Google-Smtp-Source: AGHT+IGUlzNooKv6H53Lv+4jj0Zw67S54d15RSAIPzhmPstWQkhOlgh0PpMBph3Z+r1w+yJha2JiPw==
+X-Received: by 2002:a05:6e02:1fe4:b0:3d6:ca61:5f67 with SMTP id e9e14a558f8ab-3d815b5e5bcmr11964315ab.14.1744803224840;
+        Wed, 16 Apr 2025 04:33:44 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e02105sm3566624173.90.2025.04.16.04.33.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 04:33:44 -0700 (PDT)
+Message-ID: <3dfc300f-081c-4824-97c3-842f72d2a7d3@riscstar.com>
+Date: Wed, 16 Apr 2025 06:33:42 -0500
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/9] dt-bindings: pwm: marvell,pxa: add optional property
+ resets
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Yixun Lan <dlan@gentoo.org>
+Cc: Guodong Xu <guodong@riscstar.com>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Conor Dooley <conor@kernel.org>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, drew@pdp7.com,
+ inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org,
+ tglx@linutronix.de, hal.feng@starfivetech.com, unicorn_wang@outlook.com,
+ duje.mihanovic@skole.hr, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+References: <20250411131423.3802611-1-guodong@riscstar.com>
+ <20250411131423.3802611-2-guodong@riscstar.com>
+ <20250411-confider-spinster-35f23040d188@spud>
+ <89b6142bacecd4a7742341b88dc1e28c4454527a.camel@pengutronix.de>
+ <CAH1PCMZnJDcYKJR35WirQT95hte0NWvGBe4fjDuyZEgagvunAA@mail.gmail.com>
+ <20250415101249-GYA30674@gentoo>
+ <0bbd2842-72bc-47a7-832a-fc8833163e32@riscstar.com>
+ <20250415122807-GYA30943@gentoo>
+ <hogqotzzpzcow2xjrwh34qcuiu7ooc2qnvlhuvexzvqkrcsfop@mhz26t5vu35p>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <hogqotzzpzcow2xjrwh34qcuiu7ooc2qnvlhuvexzvqkrcsfop@mhz26t5vu35p>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2025-04-16 at 17:02 +0800, Liu Ying wrote:
-> On 04/15/2025, Nuno S=C3=A1 via B4 Relay wrote:
-> > The adp5585 MFD driver was introduced in 6.11 adding support for gpio
-> > and PWM. However, the gpio part of it was already supported as part of
-> > the keyboard driver:
-> >=20
-> > https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/input/keyboar=
-d/adp5589-keys.c#L532
-> >=20
-> > On top of that it also overlapped with my refactoring of the above driv=
-er
-> > [1]
-> > to drop usage of platform data and use FW properties instead.
-> >=20
-> > Now, it actually makes sense for this device to be supported under MFD
-> > and since the "legacy" input device depends on platform data that is no=
-t
-> > defined anywhere the plan in this series is to add support for the
-> > keyboard and adp5589 devices as part of the MFD driver. Once the MFD
-> > driver supports all that's supported in the Input one, we drop it...
-> >=20
-> > For DT Maintainers:
-> >=20
-> > The compatible for adp5589 is part of trivial devices. To me, it makes
-> > sense to remove it in the patch where we drop the driver but doing so
-> > would result in a warning when adding the same compatible for the MFD
-> > bindings. Hence, I remove it in that patch. Is that ok?
-> >=20
-> > Uwe:
-> >=20
-> > In my eval board, I could see that reading the GPIO value (when
-> > configured as input) does not work when OSC_EN is not set. Therefore,
-> > commit ("pwm: adp5585: don't control OSC_EN in the pwm driver") could
-> > very well have a Fixes tag. However I'm not 100% sure it's a real issue
-> > or something special to my eval board.
-> >=20
-> > It would be nice if Laurent or Liu could test the PWM bits or even
-> > check that the above is also an issue for their platform.
->=20
-> With this v2 patch series, PWM backlight(controlled by ADP5585 pin R3) st=
-ill
-> works for my i.MX93 11x11 EVK.=C2=A0 Without this v2 patch series, if I c=
-hange PWM
-> backlight to GPIO backlight(keep using pin R3), the GPIO backlight bright=
-ness
-> can be set to 0 or 1, meaning I can see the backlight is off or on.=C2=A0=
- So, it
-> appears that GPIO output still works when OSC_EN is zero(I dumped GENERAL=
-_CFG
-> register @0x3b as 0x00), though I didn't test GPIO input.
->=20
+On 4/16/25 12:18 AM, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Tue, Apr 15, 2025 at 12:28:07PM +0000, Yixun Lan wrote:
+>> maybe there are cases that users don't want to issue a reset..
+>> so, want to make it optional.. I can think one example that,
+>> display controller is up and working from bootloader to linux,
+>> reset it will got a flicker picture..
+> 
+> Agreed. You can just deassert the reset at probe time. That shouldn't
+> interfere with a PWM that is already producing an output.
 
-Yeah, the input case seems to be the problematic one... Anyways, thanks for
-testing and confirm that PWM is not broken by this series.
+I think you're saying reset can be a required property, to be
+harmlessly deasserted at probe time?  Yixun was suggesting it
+should not be required, because it might already be deasserted.
 
-- Nuno S=C3=A1
+Anyway, I don't feel strongly either way.  Maybe the DTS
+maintainers can recommend what to do.
 
-> >=20
-> > [1]:
-> > https://lore.kernel.org/linux-input/d1395bd61ce58b3734121bca4e09605a3e9=
-97af3.camel@gmail.com/
-> >=20
-> > BTW the series is based on linux-next/master
-> >=20
-> > ---
-> > Changes in v2:
-> > - Patch 5:
-> > =C2=A0=C2=A0 * Do not nest if:then:else::if:then.
-> > - Patch 6:
-> > =C2=A0=C2=A0 * Make use of the adp5585 info variables and adp5589 volat=
-ile regs.
-> > - Patch 9:
-> > =C2=A0=C2=A0 * Use standard "poll-interval" property (and move it befor=
-e vendor
-> > =C2=A0=C2=A0=C2=A0=C2=A0 properties).
-> > - Patch 10:
-> > =C2=A0=C2=A0 * Make sure to include bitfield.h.
-> >=20
-> > - Link to v1:
-> > https://lore.kernel.org/r/20250313-dev-adp5589-fw-v1-0-20e80d4bd4ea@ana=
-log.com
-> >=20
-> > ---
-> > Nuno S=C3=A1 (17):
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dt-bindings: mfd: adp5585: ease on the r=
-equired properties
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mfd: adp5585: enable oscilator during pr=
-obe
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pwm: adp5585: don't control OSC_EN in th=
-e pwm driver
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mfd: adp5585: make use of MFD_CELL_NAME(=
-)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dt-bindings: mfd: adp5585: document adp5=
-589 I/O expander
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mfd: adp5585: add support for adp5589
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gpio: adp5585: add support for the ad558=
-9 expander
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pwm: adp5585: add support for adp5589
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dt-bindings: mfd: adp5585: add propertie=
-s for input events
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mfd: adp5585: add support for key events
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gpio: adp5585: support gpi events
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Input: adp5585: Add Analog Devices ADP55=
-85/89 support
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Input: adp5589: remove the driver
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mfd: adp5585: support getting vdd regula=
-tor
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dt-bindings: mfd: adp5585: document rese=
-t gpio
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mfd: adp5585: add support for a reset pi=
-n
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pwm: adp5585: make sure to include mod_d=
-evicetable.h
-> >=20
-> > =C2=A0.../devicetree/bindings/mfd/adi,adp5585.yaml=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 240 ++++-
-> > =C2=A0.../devicetree/bindings/trivial-devices.yaml=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 2 -
-> > =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 1 +
-> > =C2=A0drivers/gpio/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=
-=C2=A0 1 +
-> > =C2=A0drivers/gpio/gpio-adp5585.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 299 +++++-
-> > =C2=A0drivers/input/keyboard/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 |=C2=A0=C2=A0 21 +-
-> > =C2=A0drivers/input/keyboard/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |=C2=A0=C2=A0=C2=A0 2 +-
-> > =C2=A0drivers/input/keyboard/adp5585-keys.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 221 ++++
-> > =C2=A0drivers/input/keyboard/adp5589-keys.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 1066 ----------------=
--
-> > ---
-> > =C2=A0drivers/mfd/adp5585.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 808 +++++=
-+++++++++-
-> > =C2=A0drivers/pwm/pwm-adp5585.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 57 +-
-> > =C2=A0include/linux/mfd/adp5585.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 153 ++-
-> > =C2=A012 files changed, 1709 insertions(+), 1162 deletions(-)
-> > ---
-> > base-commit: 5b37f7bfff3b1582c34be8fb23968b226db71ebd
-> > change-id: 20250311-dev-adp5589-fw-e04cfd945286
-> > --
-> >=20
-> > Thanks!
-> > - Nuno S=C3=A1
-> >=20
-> >=20
+					-Alex
+
+> 
+>> GPG Key ID AABEFD55
+> 
+> If you advertise your OpenPGP certificate, I recommend using the long
+> id. See for example https://keys.openpgp.org/search?q=AABEFD55.
+
 
