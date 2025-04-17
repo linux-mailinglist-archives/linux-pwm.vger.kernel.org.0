@@ -1,183 +1,186 @@
-Return-Path: <linux-pwm+bounces-5551-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5552-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D00DFA9141B
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Apr 2025 08:34:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B44DA9143C
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Apr 2025 08:42:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 41B245A015E
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Apr 2025 06:34:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E03595A1E65
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Apr 2025 06:41:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F23331EA7D8;
-	Thu, 17 Apr 2025 06:34:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AEB62063EE;
+	Thu, 17 Apr 2025 06:42:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTRcxvr2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="OdOtCuUM"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D01E3208;
-	Thu, 17 Apr 2025 06:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA2BA94A
+	for <linux-pwm@vger.kernel.org>; Thu, 17 Apr 2025 06:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744871683; cv=none; b=OugaM39KTdz369HcDnEmK7eTDYSsSacGhVUofSKZWI9Lb/NpaelVaX4+dPkOiQaQ5EUE/jL2UceAiATKVMkWiq/AijURLXXvnDBdStSXmDZZEfkhO3lChjCEU0e9sJ+xUTNAqXkrqULivVY49RWeXBAz4AsbQGAUVMKjKVKasu4=
+	t=1744872124; cv=none; b=FHE/dX5+VDj3ZQQJt4pMlhsm0HzH8nY0+9SA04vYvgzf75zawIEmfqQQwxAYT7Tyztj0FcPY3GxaA6KXwqErgMDT7pXzlwiT2m8Z60IVsxw8E8Pn0j39pukvGAy/REYeqvRLBhw1HWD8v8mvJN8xjb6Y8uHgdo9ixd7e427PHl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744871683; c=relaxed/simple;
-	bh=VbjRr/Jft/Twem3Xcaq9JpF8u/T3o8QiM7CQBIL5NvU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bzspp66B+1N795uZqfharn9h7cKK4vrw6wciZ0xfIxWtutYKBAEdZMPWOyPDZHtQAxPwTVklXW0QCaIJYuw4e6xEBTR7W4cqD2Q0T707AA2wgh53yWAadxuv2CvqwEeYUmQXkh9uhTFO4aVuP4Mt7HxZM3MpKn44GHKKWezltWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cTRcxvr2; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-476f4e9cf92so2902811cf.3;
-        Wed, 16 Apr 2025 23:34:41 -0700 (PDT)
+	s=arc-20240116; t=1744872124; c=relaxed/simple;
+	bh=yaD0o/MpljrBAEdWES6QdpQZ4K0dI6XiiBkGI8DT78w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nepN4CcrjEpBDDeTrK+sLiDJ98Rw2jSuaPiXXXfpgCh2b400kh8xhlPQ0VFQ7ElcjIyBqLs9vEblKE43FRjBlUjEoyxarLU0ghcHyYue0gDcElwbXyczmp2YjofACXj333cdEGp14IA6HxFneeqaAtv63yC0Fn1XEB+avQ8qNE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=OdOtCuUM; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so260930f8f.0
+        for <linux-pwm@vger.kernel.org>; Wed, 16 Apr 2025 23:42:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744871681; x=1745476481; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=djrKksg0US7wjpYKbjxhKXGkwEFNIq44MXbCORg+NoM=;
-        b=cTRcxvr27+XeFGtOlCZpqEUiGIwDfrmMJQJegMcaJVUQqgnylrA65AZW9Kd9RnfFqa
-         rOv5Ru05NtEtkNh0VWYKGd5fzrgA9Qz0ZxYN7dQBHJkHihGKXwcwAYgwxzP1IT7J2M51
-         bZIrubMhYcOx8XehelNZrHlJ7D+CJMvNzTksoE1dVNSWBGZusCXzDQvj0r9cmQ08fzfy
-         fsU7yyeJkWJmdHKNEbNBaFtlb0o2Wahf2nE0YZ3rBUuxs1Pn0holPzyirWIeOScOGUW/
-         MSd4Z1bYmKdfc80CKG0v8hvIr6fK22sa5/8etcPFaeMY1mkx/XHhy2w9ZUjgMNK2NOiV
-         nlrg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744872119; x=1745476919; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eein+VHADvsikPAdoVCtfDd2FF1ntTUl8Rt/ykT+erM=;
+        b=OdOtCuUMJfGy4mEIcZmFEUSKclsXdDfbF6uEuEt4FpFlTU8tcg4FfkZ6xYi2gX6lhg
+         +K+UuX5z+VnupaVbUY5BxvYk33vmKYs5H9GaJRF+woJOYFUHOkxaNKm0Xq5ked8EMkPV
+         aFEMUipUSx2C+SpszFg/x27MouGy9xGR0wcdXwfR9dZPvNH2DR8ODLEuMD3c3uUNRGpD
+         icRV137RUrEmzE5OV9RHWeNcv08Gg0QDb16W7hlB/m5oT5gNmoq+46qGJbWn3VauiVsd
+         D63dTqGDlGhrm9Wf8ggCIZJDQ9VBVK/Kb75LXTWGOA+1GQrINj02JxhxU8XYxUjZ+QZS
+         JqtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744871681; x=1745476481;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=djrKksg0US7wjpYKbjxhKXGkwEFNIq44MXbCORg+NoM=;
-        b=HTS/Xetr0hihz+HHfPJrJLNBXM2L5q04rwrfMnS9FmrLVZsjlt1G6+lSp5RgPTQK2u
-         Nc6rWIocnef+w2cgw0zseRWYjVmV0EbEzWBjcopwWoszzBn1l3qKSdkVFnXCzpYU7PxO
-         /4ytj8IXvy1bsK/msRpaZ9NEd7/UwLFcE6XIjqG11c3LckQbYThUyzGE7rc3rkIGilU8
-         ZZxm6VfDJCKD2FYJtIdVTiA9Y3fqNREttpeiYVavGQAH5k7bJEmoSOncCkpPV7GH78oo
-         G21+2QEJf0b1+XOdWpZwhNSSgHFpmimf30I0JdoBP+cU05eP8EH8WBoV7DhUwLhF30RV
-         L+7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUhONewchUl8UWqT3A7Qcn5iHcGx57JYAn5jkwbNELgR9bEOXaAczdCFQaw5u+4LY07yWIdUAviZzKu@vger.kernel.org, AJvYcCVAiOlh+j7iaLpi7wrltBK+G5wXcF1joZs5MYHa7P7Bmx3wlKzVi/9NU4tvS66992sHaMHT8A83jgHv@vger.kernel.org, AJvYcCVIQJsZs5IqDCGOCkBorgxgB2PHPLNjLoAjdx5+uKOgnGE73q5d1ZM8neTRVsJsgzbTd0AIRJP5MT9v@vger.kernel.org, AJvYcCVbiz3VIjtD8NoGsob25hG/7KdI7J7vpmLX4vjL0Lc0TzM5UXIlzBUOJB/U8+MRKkPur4tdAcYD9J8IzbKX@vger.kernel.org, AJvYcCWFONkqdoQ5Jec6c+YzRdpo2MA8e1Zr8KqhcmqD3sNGVkg5pV8DtYMEalcK3/htfv7lecrRLoNn@vger.kernel.org, AJvYcCWkeKVfe5DCeo0PlMdsl9DvtXW7QkIrNIquwMheb6pochXVpnp7OyICSssIgpiMt1xJzBxtBmNOCmg8@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywb+FrhdHH9Vv40ksB0ZMlQqAZZi0P+CCKLghGzW6ujQ4pSjz/0
-	/OJuXWd2tLYqitbA/0kjeU1sv4tyVl/dkEOTHyyUK9EIofs2G1NUYACRtinIR6iqxNP4XXajb7W
-	MDO4k5b9RRLW7NqWjryt6b1N0JTc=
-X-Gm-Gg: ASbGnctsA56zVjsvFRodFdLns6gPf0XUc+ybqCVX+mphd2M0Fj3WPhn5j4nJZelaj71
-	FNeXdI0C2thItau10QJ3B4xn9nkhF1BOv+Jv8pH0f2OIIdu7bMzBdZrV7hGw014npUYi9IFwTQs
-	ITCNZcMKGS6XoMiS5v23jN9dtz/RVydqf4zE9beAoWAmeBMah7Yah1I1A=
-X-Google-Smtp-Source: AGHT+IHgsGgJmwmxEKpnhc3KaUBpTUWHrt6Vox1Gn3UnUAAe0PK/gYXRZtPTbixswh+oM9dFXyzr2ky1IWWsAGRzgTE=
-X-Received: by 2002:a05:622a:1984:b0:476:9b40:c2cd with SMTP id
- d75a77b69052e-47ad8166f80mr66686231cf.47.1744871681175; Wed, 16 Apr 2025
- 23:34:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744872119; x=1745476919;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eein+VHADvsikPAdoVCtfDd2FF1ntTUl8Rt/ykT+erM=;
+        b=ktskd1rveyIADZ5bEWNs2tKK6OThvNT5ZRZfMe8RvY3VTQ3nF8DWVW5UXySGUBAr6B
+         l5GN76270IwhLT/7e5Ms0NcwKCpyesEJtGyP0J9k1v/6R/DNq7Xi+F9/qHj+yxhtmNKr
+         2HLVGMGXG2WWFSk3NPzQUvJZS4frFjF3c0gBm1PSor5dHRAivOYXJDusSfhZL0DgT4yx
+         mlDY0RnXki1lsF6k3UJgjyXT5VmdfYqbZJ8flnyNWnbP6RuN1MBj4z525W7pGMdXTQ59
+         yT3Rlrw6oVB0JlHjXq1jqa1cpdpkgFro6caqGfbeynzu/NDghydxoK5FNqi4XTPF0m8H
+         f66A==
+X-Gm-Message-State: AOJu0YwUwKLUCXnVqfUV2RyThO+qv+lSnaqaMy8kjEhwKXEc7BAvU5f8
+	/cL41UzAv1nMryL6fi7O6s9KW4KmwSQrjRdye/0CjKAhTbw4A8f3I/hpHPHF7ac=
+X-Gm-Gg: ASbGncvxaZE+S/A4Ax+ATEDa+/fEmkgZQ95ePhPaGRMIkjS6H4zlhLDyUzE5fv/bzAM
+	aZUmSmMKCwapb9tjTKbB96asiqNJXFcqJ49HV0xA2zQHuuP70TwsAIsQ6tYtrhMWDfxxTvcmKl1
+	4x7PlrQ+lgDF3zgmCSWaSm0RuF3TqgLPAKsSVkLQxuyGlx7iWSAOST5ktsXx516DqBcP9kRKlUq
+	0GC2a5nAYTHoIxBc/i2a+uF966SRFcQzskk3aiaiPx6QpTLN6ZKDAmB6OO1n58T9qT4yUXsmDil
+	WpewQdSRYX+bDDGr9aj3v1BE88qCaJGMbQIAotCm6myPmeYAtw2Y/SkHxYSFXJMtYcBubHKPzfc
+	tuZwhsYA=
+X-Google-Smtp-Source: AGHT+IFJ0pZYptu4DVUIO71f1H12GuK7CCEW5DL1wtqm6TS2q2pKQQSbrZ1BBYTaYvxv2udBZzesLQ==
+X-Received: by 2002:a5d:5849:0:b0:39c:1257:dba9 with SMTP id ffacd0b85a97d-39ee5baea43mr3966148f8f.57.1744872118879;
+        Wed, 16 Apr 2025 23:41:58 -0700 (PDT)
+Received: from localhost (p200300f65f13aa0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:aa04::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eae96e912sm19370710f8f.31.2025.04.16.23.41.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 23:41:58 -0700 (PDT)
+Date: Thu, 17 Apr 2025 08:41:57 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, Kent Gibson <warthog618@gmail.com>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7] pwm: Add support for pwmchip devices for faster and
+ easier userspace access
+Message-ID: <twtne72vhwnwwyvld6ipwk6ilszgncgfqtbb53ldfl2hhvns7v@f6vmuburt47q>
+References: <20250416094316.2494767-2-u.kleine-koenig@baylibre.com>
+ <147fa354-e1fe-46ec-9c47-59794f37bfb7@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
- <20250416-wmt-updates-v1-6-f9af689cdfc2@gmail.com> <20250416201606.GE3811555-robh@kernel.org>
-In-Reply-To: <20250416201606.GE3811555-robh@kernel.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Thu, 17 Apr 2025 10:34:36 +0400
-X-Gm-Features: ATxdqUEmV2dRyfh29pPC1NXM6TzAsbkslAEtgKdCvmLjQOkkOfZg9YZfF61iss4
-Message-ID: <CABjd4YxKe0cb9qwS-ZHxuYmq3exD8TUPrY-9ZLsT5tCEdvPzWQ@mail.gmail.com>
-Subject: Re: [PATCH 06/13] dt-bindings: timer: via,vt8500-timer: Convert to YAML
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zgofz546aqvg5vxb"
+Content-Disposition: inline
+In-Reply-To: <147fa354-e1fe-46ec-9c47-59794f37bfb7@baylibre.com>
+
+
+--zgofz546aqvg5vxb
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7] pwm: Add support for pwmchip devices for faster and
+ easier userspace access
+MIME-Version: 1.0
 
-On Thu, Apr 17, 2025 at 12:16=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
-e:
->
-> On Wed, Apr 16, 2025 at 12:21:31PM +0400, Alexey Charkov wrote:
-> > Rewrite the textual description for the VIA/WonderMedia timer
-> > as YAML schema.
-> >
-> > The IP can generate up to four interrupts from four respective match
-> > registers, so reflect that in the schema.
-> >
-> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > ---
-> >  .../devicetree/bindings/timer/via,vt8500-timer.txt | 15 ---------
-> >  .../bindings/timer/via,vt8500-timer.yaml           | 36 ++++++++++++++=
-++++++++
-> >  MAINTAINERS                                        |  1 +
-> >  3 files changed, 37 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/timer/via,vt8500-timer.t=
-xt b/Documentation/devicetree/bindings/timer/via,vt8500-timer.txt
-> > deleted file mode 100644
-> > index 901c73f0d8ef05fb54d517b807d04f80eef2e736..00000000000000000000000=
-00000000000000000
-> > --- a/Documentation/devicetree/bindings/timer/via,vt8500-timer.txt
-> > +++ /dev/null
-> > @@ -1,15 +0,0 @@
-> > -VIA/Wondermedia VT8500 Timer
-> > ------------------------------------------------------
-> > -
-> > -Required properties:
-> > -- compatible : "via,vt8500-timer"
-> > -- reg : Should contain 1 register ranges(address and length)
-> > -- interrupts : interrupt for the timer
-> > -
-> > -Example:
-> > -
-> > -     timer@d8130100 {
-> > -             compatible =3D "via,vt8500-timer";
-> > -             reg =3D <0xd8130100 0x28>;
-> > -             interrupts =3D <36>;
-> > -     };
-> > diff --git a/Documentation/devicetree/bindings/timer/via,vt8500-timer.y=
-aml b/Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..7d9dc93b708823de9594d20=
-ef6b7e0367c5a36f1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/timer/via,vt8500-timer.yaml
-> > @@ -0,0 +1,36 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/timer/via,vt8500-timer.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: VIA/Wondermedia VT8500 Timer
-> > +
-> > +maintainers:
-> > +  - Alexey Charkov <alchark@gmail.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: via,vt8500-timer
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    minItems: 1
-> > +    maxItems: 4
->
-> Need to define what each entry is.
+Hello David,
 
-Will do, thanks.
+On Wed, Apr 16, 2025 at 11:29:50AM -0500, David Lechner wrote:
+> the passed wf according to hardware constraints. All parameters are
+> > + * rounded down to the next possible value, unless there is no such va=
+lue, then
+> > + * values are rounded up. Note that zero isn't considered for rounding=
+ down
+> > + * period_length_ns.
+> > + */
+> > +#define PWM_IOCTL_ROUNDWF	_IOWR(0x75, 3, struct pwmchip_waveform)
+>=20
+> Should this return 1 if exact could not be met to match the other functio=
+ns?
 
-These are OS Timer Channel 0~3 Match, respectively. The hardware has a
-single 32-bit counter running at 3 MHz and four match registers, each
-of which is associated with a dedicated match interrupt, and the first
-of which can also serve as the system watchdog (if watchdog function
-is enabled, it will reset the system upon match instead of triggering
-its respective interrupt).
+Currently only PWM_IOCTL_SETEXACTWF has that semantic. Adding that
+information to PWM_IOCTL_SETROUNDEDWF has to involve calling
+=2Eread_waveform + .round_waveform_fromhw which makes it a bit more
+expensive, maybe for little gain.
 
-Best regards,
-Alexey
+> > +/* Get the currently implemented waveform */
+> > +#define PWM_IOCTL_GETWF		_IOWR(0x75, 4, struct pwmchip_waveform)
+> > +
+> > +/* Like PWM_IOCTL_ROUNDWF + PWM_IOCTL_SETEXACTWF in one go. */
+> > +#define PWM_IOCTL_SETROUNDEDWF	_IOW(0x75, 5, struct pwmchip_waveform)
+> > +
+> > +/*
+> > + * Program the PWM to emit exactly the passed waveform, subject only t=
+o rounding
+> > + * down each value less than 1 ns. Returns 0 on success, 1 if the wave=
+form
+> > + * cannot be implemented exactly, or other negative error codes.
+>=20
+> It doesn't make sense to me that PWM_IOCTL_SETEXACTWF could return 1 mean=
+ing
+> that the exact request could not be met. Isn't that the point of
+> PWM_IOCTL_SETEXACTWF?
+
+Yes it is. Returning 1 is an error indicator and then the HW state isn't
+modified.
+
+> To either do exactly as requested (with 1 ns precision)
+> or return negative error code without changing the output state?
+
+Returning 1 was my conclusion of our discussion that -EINVAL and -ERANGE
+are both bad. The former because there could be other reasons for
+-EINVAL during hw register writing and -ERANGE (also) because the
+semantic doesn't fit nicely.
+
+So I gave up finding a -ESOMETHING that has both the right semantic and
+could be returned without being confused with a different problem during
+hardware access. Inventing a new error code seems wrong to me, so only
+the positive number range is left.
+
+> It seems like only PWM_IOCTL_SETROUNDEDWF should be able to return 1. My =
+natural
+> expectation is that negative error would mean that the hardware output wa=
+s not
+> modified and non-negative value means that hardware output was modified.
+
+I'm also not entirely happy with the semantics, but still I have no idea
+for an improvement.
+
+Best regards
+Uwe
+
+--zgofz546aqvg5vxb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgAorIACgkQj4D7WH0S
+/k7nBwgAm/us9BA2PUkKA2MhpxD+658r51N+iBy1O2cmpJ3mISA/LmAT2PuNXYU7
+l0LzbVLFngwJLBcb7UrKaUxFAtmpkIE4eQDy0lDZC7xPZsT4QhoHOB1/fDAZQdAY
+mVUyiYM0+7EZAnmR9jrDTTGk62cbNtEHI5ykaaJNbnMmMRAiyF3k4lv7RO8VCQLW
+ozIlL/6ATjVTFKUa5UzBqiLaXqppUyWoyzg2Cz6Hyn05dTRYT06nJE9CxGihk7dS
+dNPfDd3rfaaw3CUfYbic8c1ZC1Er6yg/yyzbUPj+pKcK/Pkm+SxsBzf8Ugzcp4ks
+lsr4R0OrlLwdGTQu90qdNBQ/pJVnPQ==
+=OSru
+-----END PGP SIGNATURE-----
+
+--zgofz546aqvg5vxb--
 
