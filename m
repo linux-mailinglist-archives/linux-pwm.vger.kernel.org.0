@@ -1,243 +1,262 @@
-Return-Path: <linux-pwm+bounces-5560-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5561-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78825A92682
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Apr 2025 20:14:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 84455A926CD
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Apr 2025 20:16:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A51C188B474
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Apr 2025 18:14:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19989189453E
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Apr 2025 18:16:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACB992566ED;
-	Thu, 17 Apr 2025 18:13:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E137F8462;
+	Thu, 17 Apr 2025 18:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J2+ypom3"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gmA9bYwh"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0542561A2;
-	Thu, 17 Apr 2025 18:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B65224BBFD
+	for <linux-pwm@vger.kernel.org>; Thu, 17 Apr 2025 18:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744913634; cv=none; b=BMZB0fNXoJmHN68VmBGeOgv+CU2ti1NWYy6Q6W8Oc05hPMLWDG2lk5L+25tL4+qPReRo+mPzclU5JNTwo6NT3apDaNIocJTI8asEuPsYFc9wGyQAvPTazYAI+0KD9mBH3MDGeGsKnaikEi9IThPON/cC+LY10EdVOAYsjwnMAhk=
+	t=1744913786; cv=none; b=iN35ZBjEi3H/wIYhliS6Fy0GGvfRJcTUTaFhJnfACAjd2yoyzlmNoIzI7dcRP9BEyFJ+VCNyvk2AgO/EjT4oy50w5ajYnQFgJdzCRn5co/bXpzlkbXIg1tLoVeOARgOqdKPocZU0ec4zrgx5hDR+iybN6eLMLYNj8ntcQ8SfvK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744913634; c=relaxed/simple;
-	bh=jhQcOuzugiusV1wCkewmVx873muTFqglAedGjPVY23w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tGLyzrJMRtVVId+tUM0tAPBgwDNz+rdmEQ/kLOwtOZpXeIZMiAHB2hag2cNcmLMTsA2Li795ipPHmp/1EsCXcmKSZTw8aAhofW51S3+QmzQ1r5OnqwYJSA3sVEQ60Amr28BRomfbYbfqENsyhciUnpKa7L1ZCkc6rnTWoxrtiDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J2+ypom3; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744913632; x=1776449632;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jhQcOuzugiusV1wCkewmVx873muTFqglAedGjPVY23w=;
-  b=J2+ypom3ybiab0tmxYnB4lG08kK+Sls0tZXWPEKIzA/pXXQjp5gFeWRG
-   3htAxfFt3Ql2uWW+7xjPgYeE0iE69HVOaW8EtHM+167pXwvMlbJc55dGO
-   J4HE5x1b+WGCsLgLD6++joEb1yg3NHkMf9eG5c+FSNNK/15H3ot+vV/h1
-   35OVMKVPUBwKLqjjvrspVIEGb6rQnNdD6vwX8BgFzl3QakrvLld/j9pUc
-   3m9NEu5NT4MHufqZ6WaQkOmWa7DCdqDczfRyQPHEHKkLe6saM2SnLmjw1
-   tRzlCF/Fu3DIal0g7XSvvDp3XWU9TY1Z+OzQ37SunEmb43agqed87ODGp
-   A==;
-X-CSE-ConnectionGUID: CwItz0+WRhiMj6vKMFjDjQ==
-X-CSE-MsgGUID: j5ERu+XMSha7JZ0j/Kax6g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11406"; a="57516499"
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="57516499"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 11:13:52 -0700
-X-CSE-ConnectionGUID: 8G43IVxDQH25aqgxxkbV7w==
-X-CSE-MsgGUID: QzEElvMvQuGTYcHTJLzjrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,219,1739865600"; 
-   d="scan'208";a="130843461"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2025 11:13:47 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1u5Tk7-0000000DHFe-3Nus;
-	Thu, 17 Apr 2025 21:13:43 +0300
-Date: Thu, 17 Apr 2025 21:13:43 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v6 09/12] gpio: max7360: Add MAX7360 gpio support
-Message-ID: <aAFE18Yn5rtnuooc@smile.fi.intel.com>
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-9-7a2535876e39@bootlin.com>
+	s=arc-20240116; t=1744913786; c=relaxed/simple;
+	bh=jXPgA34u1lNSA7bi3gNWWVNOyhX2LV4sCHT6HZSTmT8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FMAKbQeDiCqk1tnY+SFo+CEKBXjsck5rDnzQj5faHEU6TP3jiZH+QyXamwWy79b+MyEjfpeZscDjHlMnOYm/2f+IIHu4jTAwj0bYgIysHVPJ9iqmoWKj79n4GUOSYEhbqr4+g0fFTCqUiVi3BJXVpYa/6vQ6J2W76d1L+csWoX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gmA9bYwh; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso1733734a12.0
+        for <linux-pwm@vger.kernel.org>; Thu, 17 Apr 2025 11:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744913781; x=1745518581; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0JR72QzUITGmZ1eN8BgBmaLIcpaMnqlf8+OiLb+WQXw=;
+        b=gmA9bYwhX4jsCgrzrjr0D2teHdKnqStrNi8CJtEYS6vuhXB2yEhfD1sFzB1h/K1kDI
+         OmD9qVKBLcr4LhKSd+ZityFi99Pm5t6N/M+/4pQc7zEU+0xkvHgoviZAjKx+/yq2a8zv
+         k620/CdNdSgXuvo2bBs+wW0HeDAqPcmS3Sg0o0no2qfH5E6nOumHi7no8+bVW3Bqqts2
+         GIqXkhgGOUJg86uMEQKf3sd8n7c/dpPigyoVxMWLAu6idgdWfxBdC0iLLE77zt6D+5mT
+         UQx+AhG9Gzof2KfsvxXFL5SfSXdOuQ+fUk30dbGUty4T+XrwpUtWirJuaPkmF62BmaXm
+         4Ctg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744913781; x=1745518581;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0JR72QzUITGmZ1eN8BgBmaLIcpaMnqlf8+OiLb+WQXw=;
+        b=c4iRUWHMalPrk5EIpmubOFYw7K1MP8sFCgs0DxcskFDvPOJnfYHGLpUIx+2hpZduxB
+         2QLccyv0FPafGk1cNCNSKKoCx1RDRjVUi/mgph9JDezVbWuPlHENjLjWQy7HsxvZMv/N
+         0rQxnFAZ6jjqd50WaTS6fYWGG6fqJ/G/quZDljKNUMP/0FyknMCaHU8whPff4xnnCac3
+         sBliEfDZg4MEGEdWaITqe5lff2dT1juN6XUWihsBWk6vYnxgV5ywhUajcpDCRORWDAzh
+         VR4hKbYLF3CTLlBVZrHoBs9pJUwu+9iBWgedAnWsuvOcUwlY0+9COR36QlV3JKgq+6+0
+         Pm+g==
+X-Gm-Message-State: AOJu0YzUdbV2aYpAd5bTTHd2/VTWOFXqiaztY6t5cIFikgSmhWQroQn0
+	O35KgmexMtRXd9MQyINp7InIiBZpRKM1Dl8IWn6DyG+Kh/k6jyCeZVN1mNRwRtA=
+X-Gm-Gg: ASbGncsBRslff1DLdu4bmMeSS/ibdxTSMJ8ikxcCtHiKyXpGqsAsbIO4rX8MAT3iukf
+	iNgMHk9G8x6aSfqXW5WBEbGnheHLQpiF6Aq5huWl1XLhQDmLRk6MTGXP6XN8mxiB7lPGmNUe7DO
+	dkgtBZomcj/vYECfpQydRZaY99MPpsfNksGfRCzaX8ptIJsAWDmOa08iu877mfrWD3xtndaKdhF
+	AakY6Du7WRAP1swnACPr+AO8s5Iqcf3YhMPEnv6i8iXDU0AjQsp2rDHx8XlahLcxw7BsyJJSibC
+	YZvU02YqGImhl4g0gigTLP418R9/rvb0pAkccSXUweLDvg==
+X-Google-Smtp-Source: AGHT+IHlYeYhG6D/L5VXgVTeHR6fho6DQgzHvC8kg63I/TWXJGygxa9MOIz50mmV/UzPSs7obTPp5w==
+X-Received: by 2002:a17:907:6e87:b0:aca:d861:877b with SMTP id a640c23a62f3a-acb42ba1438mr610635066b.49.1744913781206;
+        Thu, 17 Apr 2025 11:16:21 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-acb6ec103a0sm25765466b.12.2025.04.17.11.16.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 11:16:20 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-pwm@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v2] pwm: Fix various formatting issues in kernel-doc
+Date: Thu, 17 Apr 2025 20:16:11 +0200
+Message-ID: <20250417181611.2693599-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409-mdb-max7360-support-v6-9-7a2535876e39@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6887; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=jXPgA34u1lNSA7bi3gNWWVNOyhX2LV4sCHT6HZSTmT8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBoAUVr1oiIuwsIiDv/3Q6DobtJ8PKnWlf+mh9mp eT8YmEh2bqJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaAFFawAKCRCPgPtYfRL+ ThgGB/9/yk+rVcCQUl/5gQWMn4sWHPU1oIPLGuPABA786Oo0E6K2o+AffyoTfk8hF/6j2jZRXEo pCJZKlijFWbp5nbXHxqZdywY4e8Zd5qVzAPju+WDDsGK55bdoMQ/tkvvVUFh2kB1Te57c1NqKiv TKnUJZxJH3IB37B30hsR0KgaAXFRDMxivNpcaCVpWP1UvSqysjfrubKiHltxa3KHgh3x2a4UTzb u2A4INqSDOvtQ3w3UgpQOTqZXYL94qsMkqwfF9L51YAmoTS21rFEImwn985WbHqM/1DH0NAIqgA CA4JddOwbqIuPn7XcIbi5wmqGmq1NjNz34Gr7UmfwNhVq8gC
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 09, 2025 at 04:55:56PM +0200, Mathieu Dubois-Briand wrote:
-> Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
+Add Return and (where interesting) Context sections, fix some formatting
+and drop documenting the internal function __pwm_apply().
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+Hello Jonathan,
+
+On Thu, Apr 17, 2025 at 07:24:15AM -0600, Jonathan Corbet wrote:
+> > --- a/drivers/pwm/core.c
+> > +++ b/drivers/pwm/core.c
+> > @@ -222,8 +222,10 @@ static int __pwm_write_waveform(struct pwm_chip *chip, struct pwm_device *pwm, c
+> >   * Note however that the world doesn't stop turning when you call it, so when
+> >   * doing
+> >   *
+> > - *         pwm_round_waveform_might_sleep(mypwm, &wf);
+> > - *         pwm_set_waveform_might_sleep(mypwm, &wf, true);
+> > + * .. code-block:: C
+> > + *
+> > + *   pwm_round_waveform_might_sleep(mypwm, &wf);
+> > + *   pwm_set_waveform_might_sleep(mypwm, &wf, true);
 > 
-> Two sets of GPIOs are provided by the device:
-> - Up to 8 GPIOs, shared with the PWM and rotary encoder functionalities.
->   These GPIOs also provide interrupts on input changes.
-> - Up to 6 GPOs, on unused keypad columns pins.
+> Here I would just use an ordinary literal block rather than embedding
+> Sphinx directives into the comment like that:
+> 
+>  * Note however that the world doesn't stop turning when you call it, so when
+>  * doing::
+>  *
+>  *    pwm_round_waveform_might_sleep(mypwm, &wf);
+>  *    pwm_set_waveform_might_sleep(mypwm, &wf, true);
 
-...
+Oh, that looks identically in the rendered output (though I didn't
+compare pixel by pixel :-) and looks much better in the ASCII
+representation. Adapted accordingly in this v2.
 
-> +#include <linux/bitfield.h>
-> +#include <linux/bitmap.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/gpio/regmap.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/max7360.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/regmap.h>
+Thanks for your input
+Uwe
 
-> +#include <linux/slab.h>
+ drivers/pwm/core.c  | 30 +++++++++++++++++++++---------
+ include/linux/pwm.h |  8 +++++---
+ 2 files changed, 26 insertions(+), 12 deletions(-)
 
-I don't think you use this header directly.
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 079964961bd8..1f41c7a8cf1e 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -220,10 +220,10 @@ static int __pwm_write_waveform(struct pwm_chip *chip, struct pwm_device *pwm, c
+  * pwm_set_waveform_might_sleep now.
+  *
+  * Note however that the world doesn't stop turning when you call it, so when
+- * doing
++ * doing::
+  *
+- * 	pwm_round_waveform_might_sleep(mypwm, &wf);
+- * 	pwm_set_waveform_might_sleep(mypwm, &wf, true);
++ *   pwm_round_waveform_might_sleep(mypwm, &wf);
++ *   pwm_set_waveform_might_sleep(mypwm, &wf, true);
+  *
+  * the latter might fail, e.g. because an input clock changed its rate between
+  * these two calls and the waveform determined by
+@@ -233,8 +233,9 @@ static int __pwm_write_waveform(struct pwm_chip *chip, struct pwm_device *pwm, c
+  * value (in the order period_length_ns, duty_length_ns and then
+  * duty_offset_ns). Only if this isn't possible, a value might grow.
+  *
+- * Returns 0 on success, 1 if at least one value had to be rounded up or a
++ * Returns: 0 on success, 1 if at least one value had to be rounded up or a
+  * negative errno.
++ * Context: May sleep.
+  */
+ int pwm_round_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf)
+ {
+@@ -291,6 +292,9 @@ EXPORT_SYMBOL_GPL(pwm_round_waveform_might_sleep);
+  *
+  * Stores the current configuration of the PWM in @wf. Note this is the
+  * equivalent of pwm_get_state_hw() (and not pwm_get_state()) for pwm_waveform.
++ *
++ * Returns: 0 on success or a negative errno
++ * Context: May sleep.
+  */
+ int pwm_get_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf)
+ {
+@@ -406,6 +410,10 @@ static int __pwm_set_waveform(struct pwm_device *pwm,
+  * Note that even with exact = true, some rounding by less than 1 is
+  * possible/needed. In the above example requesting .period_length_ns = 94 and
+  * exact = true, you get the hardware configured with period = 93.5 ns.
++ *
++ * Returns: 0 on succes, 1 if was rounded up (if !@exact) or no perfect match was
++ * possible (if @exact), or a negative errno
++ * Context: May sleep.
+  */
+ int pwm_set_waveform_might_sleep(struct pwm_device *pwm,
+ 				 const struct pwm_waveform *wf, bool exact)
+@@ -565,11 +573,6 @@ static bool pwm_state_valid(const struct pwm_state *state)
+ 	return true;
+ }
+ 
+-/**
+- * __pwm_apply() - atomically apply a new state to a PWM device
+- * @pwm: PWM device
+- * @state: new state to apply
+- */
+ static int __pwm_apply(struct pwm_device *pwm, const struct pwm_state *state)
+ {
+ 	struct pwm_chip *chip;
+@@ -678,6 +681,9 @@ static int __pwm_apply(struct pwm_device *pwm, const struct pwm_state *state)
+  * Cannot be used in atomic context.
+  * @pwm: PWM device
+  * @state: new state to apply
++ *
++ * Returns: 0 on success, or a negative errno
++ * Context: May sleep.
+  */
+ int pwm_apply_might_sleep(struct pwm_device *pwm, const struct pwm_state *state)
+ {
+@@ -719,6 +725,9 @@ EXPORT_SYMBOL_GPL(pwm_apply_might_sleep);
+  * Not all PWM devices support this function, check with pwm_might_sleep().
+  * @pwm: PWM device
+  * @state: new state to apply
++ *
++ * Returns: 0 on success, or a negative errno
++ * Context: Any
+  */
+ int pwm_apply_atomic(struct pwm_device *pwm, const struct pwm_state *state)
+ {
+@@ -792,6 +801,9 @@ EXPORT_SYMBOL_GPL(pwm_get_state_hw);
+  * This function will adjust the PWM config to the PWM arguments provided
+  * by the DT or PWM lookup table. This is particularly useful to adapt
+  * the bootloader config to the Linux one.
++ *
++ * Returns: 0 on success or a negative error code on failure.
++ * Context: May sleep.
+  */
+ int pwm_adjust_config(struct pwm_device *pwm)
+ {
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index bf0469b2201d..63a17d2b4ec8 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -218,6 +218,8 @@ static inline void pwm_init_state(const struct pwm_device *pwm,
+  *
+  * pwm_get_state(pwm, &state);
+  * duty = pwm_get_relative_duty_cycle(&state, 100);
++ *
++ * Returns: rounded relative duty cycle multiplied by @scale
+  */
+ static inline unsigned int
+ pwm_get_relative_duty_cycle(const struct pwm_state *state, unsigned int scale)
+@@ -244,8 +246,8 @@ pwm_get_relative_duty_cycle(const struct pwm_state *state, unsigned int scale)
+  * pwm_set_relative_duty_cycle(&state, 50, 100);
+  * pwm_apply_might_sleep(pwm, &state);
+  *
+- * This functions returns -EINVAL if @duty_cycle and/or @scale are
+- * inconsistent (@scale == 0 or @duty_cycle > @scale).
++ * Returns: 0 on success or ``-EINVAL`` if @duty_cycle and/or @scale are
++ * inconsistent (@scale == 0 or @duty_cycle > @scale)
+  */
+ static inline int
+ pwm_set_relative_duty_cycle(struct pwm_state *state, unsigned int duty_cycle,
+@@ -351,7 +353,7 @@ struct pwm_chip {
+  * pwmchip_supports_waveform() - checks if the given chip supports waveform callbacks
+  * @chip: The pwm_chip to test
+  *
+- * Returns true iff the pwm chip support the waveform functions like
++ * Returns: true iff the pwm chip support the waveform functions like
+  * pwm_set_waveform_might_sleep() and pwm_round_waveform_might_sleep()
+  */
+ static inline bool pwmchip_supports_waveform(struct pwm_chip *chip)
 
-...
-
-> +static int max7360_gpio_probe(struct platform_device *pdev)
-> +{
-> +	struct regmap_irq_chip *irq_chip;
-> +	struct gpio_regmap_config gpio_config = { };
-> +	struct device *dev = &pdev->dev;
-> +	unsigned long gpio_function;
-> +	struct regmap *regmap;
-> +	unsigned int outconf;
-> +	int ret;
-> +
-> +	regmap = dev_get_regmap(dev->parent, NULL);
-> +	if (!regmap)
-> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
-
-> +	gpio_function = (uintptr_t)device_get_match_data(dev);
-
-Somebody pointed me out the Linus' rant on uintptr_t, so he prefers not to see
-this in the entire kernel. He suggested to use (unsigned long), but ideally one
-should operate with the info structures instead.
-
-...
-
-> +	if (gpio_function == MAX7360_GPIO_PORT) {
-> +		if (device_property_read_bool(dev, "interrupt-controller")) {
-> +			/*
-> +			 * Port GPIOs with interrupt-controller property: add IRQ
-> +			 * controller.
-> +			 */
-> +			gpio_config.regmap_irq_flags = IRQF_ONESHOT | IRQF_SHARED;
-> +			gpio_config.regmap_irq_irqno =
-> +				fwnode_irq_get_byname(dev_fwnode(dev->parent), "inti");
-> +			if (gpio_config.regmap_irq_irqno < 0)
-> +				return dev_err_probe(dev, gpio_config.regmap_irq_irqno,
-> +						     "Failed to get IRQ\n");
-> +
-> +			irq_chip = devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
-> +			gpio_config.regmap_irq_chip = irq_chip;
-> +			if (!irq_chip)
-> +				return -ENOMEM;
-> +
-> +			irq_chip->name = dev_name(dev);
-> +			irq_chip->status_base = MAX7360_REG_GPIOIN;
-> +			irq_chip->status_is_level = true;
-> +			irq_chip->num_regs = 1;
-> +			irq_chip->num_irqs = MAX7360_MAX_GPIO;
-> +			irq_chip->irqs = max7360_regmap_irqs;
-> +			irq_chip->handle_mask_sync = max7360_handle_mask_sync;
-> +			irq_chip->irq_drv_data = regmap;
-> +
-> +			for (unsigned int i = 0; i < MAX7360_MAX_GPIO; i++) {
-> +				ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
-> +							MAX7360_PORT_CFG_INTERRUPT_EDGES,
-> +							MAX7360_PORT_CFG_INTERRUPT_EDGES);
-> +				if (ret)
-> +					return dev_err_probe(dev, ret,
-> +							     "Failed to enable interrupts\n");
-> +			}
-> +		}
-> +
-> +		/*
-> +		 * Port GPIOs: set output mode configuration (constant-current or not).
-> +		 * This property is optional.
-> +		 */
-> +		outconf = 0;
-> +		ret = device_property_read_u32(dev, "maxim,constant-current-disable", &outconf);
-> +		if (!ret) {
-> +			ret = regmap_write(regmap, MAX7360_REG_GPIOOUTM, outconf);
-> +			if (ret)
-> +				return dev_err_probe(dev, ret,
-> +						     "Failed to set constant-current configuration\n");
-> +		}
-
-This will look better as if-else:
-
-		ret = device_property_read_u32(dev, "maxim,constant-current-disable", &outconf);
-		if (ret) {
-			outconf = 0;
-		} else {
-			ret = regmap_write(regmap, MAX7360_REG_GPIOOUTM, outconf);
-			if (ret)
-				return dev_err_probe(dev, ret,
-						     "Failed to set constant-current configuration\n");
-		}
-
-> +	}
-> +
-> +	/* Add gpio device. */
-> +	gpio_config.parent = dev;
-> +	gpio_config.regmap = regmap;
-> +	if (gpio_function == MAX7360_GPIO_PORT) {
-> +		gpio_config.ngpio = MAX7360_MAX_GPIO;
-> +		gpio_config.reg_dat_base = GPIO_REGMAP_ADDR(MAX7360_REG_GPIOIN);
-> +		gpio_config.reg_set_base = GPIO_REGMAP_ADDR(MAX7360_REG_PWMBASE);
-> +		gpio_config.reg_dir_out_base = GPIO_REGMAP_ADDR(MAX7360_REG_GPIOCTRL);
-> +		gpio_config.ngpio_per_reg = MAX7360_MAX_GPIO;
-> +		gpio_config.reg_mask_xlate = max7360_gpio_reg_mask_xlate;
-> +	} else {
-> +		ret = max7360_set_gpos_count(dev, regmap);
-> +		if (ret)
-> +			return dev_err_probe(dev, ret, "Failed to set GPOS pin count\n");
-> +
-> +		gpio_config.reg_set_base = GPIO_REGMAP_ADDR(MAX7360_REG_PORTS);
-> +		gpio_config.ngpio = MAX7360_MAX_KEY_COLS;
-> +		gpio_config.init_valid_mask = max7360_gpo_init_valid_mask;
-> +	}
-> +
-> +	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
-> +}
-
+base-commit: 061f087f5d0bcae9f43ae0101121fcaa999d2809
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.47.2
 
 
