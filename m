@@ -1,117 +1,124 @@
-Return-Path: <linux-pwm+bounces-5558-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5559-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26D60A91C90
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Apr 2025 14:41:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D998A91DD8
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Apr 2025 15:25:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BF775A656B
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Apr 2025 12:41:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD8F019E6BCD
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Apr 2025 13:25:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92257242923;
-	Thu, 17 Apr 2025 12:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86E8823FC55;
+	Thu, 17 Apr 2025 13:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="g42nueKz"
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="qPpsNwVa"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D098E3770B
-	for <linux-pwm@vger.kernel.org>; Thu, 17 Apr 2025 12:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A712322A7F1;
+	Thu, 17 Apr 2025 13:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744893711; cv=none; b=PSJxVU3tgw4lu0ZEYsu56VufKP5LRDY9vGyZaW2ijtP/d3ogFxgufnjQdJZ3rPFrxel4cxJXRAHtIrhfzogTSCuZrlPRG5xN4G9CD4Y3/WXppjgqtQamuTSrh8ZMPAuIeR2rXWDhDxhdIJpzv/RMMOAjUShVOpSXBwbmMZVa7gg=
+	t=1744896264; cv=none; b=LSBP2Zo4DoZk0Otyu459ycDlvQ85fWDcmxQ6/A4L4IM1VWaztWSusWP8bjTFoNTFqXGpPAsxPZJ6dp1A7qJ97WhohaRBKJ5NTwu85cOHQV2jFzfOH1yp1CxRJfjbIRa2BVZY070oWcBGyESHb/pEBz4gf3Rj2B8Qtk1B1QrRiGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744893711; c=relaxed/simple;
-	bh=nQIIrU067YTPjOc8LmZh4/vPjF2wg8asBmSLf3GZb2Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kvee42ma+MzCZxI/qYnl1MJ0lSfnusSPfo1AbhY7VloeKgwlPhVoP6sQqXwW5q2qyUhdBJmja/52o1Bqa3ckhIiW0LRosH1M/OnhYPWOjXzOrnSWDti4CwUGQyLZGfexeRcaoUZ/QVj4z+6mQiRFL+fZ0csARGBMVqnQ1kJQzsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=g42nueKz; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54c090fc7adso815369e87.2
-        for <linux-pwm@vger.kernel.org>; Thu, 17 Apr 2025 05:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744893708; x=1745498508; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lZ5lyKYfN+K0uYV9se5bx7j4N0g/Y1mbf+XUFGCcm+I=;
-        b=g42nueKzZ04eVy6vvZmlMsoemoK8Hj/WzbiclabKX+DVq23/NEUMdXtZ9Td/5lkqy8
-         RSA+kXAClrcSFInJCXyLPz44r8/WmmaW5eT0MU3682gv2zhITYNPgmkSwnC2GDQ/QCWf
-         lf/EJyozmkFYDa0gyInvRi7wSzVHXll+UUOWKO+QZ1nl4vtFLfwm9b4/CCpMP+wvUfJ5
-         qtupkr6jGWpGDBePjwPsKOL5NzXrbgUeQYgZUiylvrtN9MS/0oB7UxP/2FqYrhSZuI8I
-         Yeo6tWuzs0nne1XOHSBEqFQpjthZlh7ZLPfKOs+qVaVxfW2LsbLnV1qUR/zdk5mrBNHG
-         6VrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744893708; x=1745498508;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lZ5lyKYfN+K0uYV9se5bx7j4N0g/Y1mbf+XUFGCcm+I=;
-        b=rEF21LnlkEuF9l5Km9cj4yoiqr3Q76mLRnQPFRi4EKbpb5D9THC7w9LwfoO4SKFF44
-         /mXpwDPFfv9DQ5BhJbTZPAvWe2do5Ul6AF+/joqEZpC++ARquZnPiG8P6OcWoPviGVVF
-         W9ablT7L+eFpJpJNpM0O49VKy4Kxal5tfdegDqSHU5P0LHTYjpgCrF5izyObhUhvJ7x4
-         UBk6hSIuaNKybsI+wO4obhdb4IWqOX8dbMub89sTI1cl9pGIwUePGQ5JSb6jGsNSfIhl
-         DWsWenYbUALkWUzTRqDMrfTNwBy9Jz8JnU4zDaeArl0l99fr/5xtnzwQ/mgsE3MXiyQg
-         N0jA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCYsqHZBWRDhVbCEgRTcJY4KJZ5X6CrM7h81FpyT9bXRrUNlpz5q86n3xkhNoYR4tErff3ukkxBr8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz7f8ZGUDO+Xd7X8TFNMxoH63zkSXUSqGjZhX2ml5N3hH5v0r5
-	7STGpIZtyljxCzQIPsdn5Hu+4U1KCv2fHeoMtJlT0wJ1QeOu9D9YaEm5KK2N++MNA3QMGJjGA0R
-	xfDLxx5zP82UJcJkySABvFgx9omJ/rYElFUpeiQ==
-X-Gm-Gg: ASbGncvJAGlGseAxQqOw4ojlR44po5GMtBm5VlA8tWtaSihMpuPpPkYmEOPdeuPNUjl
-	Qjrwkhuo5+FACcfcJbWlUVe9e8Dsp06Vt0Y0GnhXiPyb2lpPMWuZS/ML8FD3hvUEPcQngAu9elo
-	FzLut4LlCgzYTb1vgk4wtYHDP8Ozz9XFckokMMS1X7K6/EOIgn5wDJgps=
-X-Google-Smtp-Source: AGHT+IGCeVLIonXAZLoZuX26dLN3o/5NzBTerYwwXcLsLxVnsPGKrq48ijHC2fwB40UH+JZf3EjGuDJ2/FAZWXTNCFQ=
-X-Received: by 2002:a05:6512:3d0d:b0:545:1082:91a1 with SMTP id
- 2adb3069b0e04-54d64a7b6f0mr1692690e87.7.1744893707675; Thu, 17 Apr 2025
- 05:41:47 -0700 (PDT)
+	s=arc-20240116; t=1744896264; c=relaxed/simple;
+	bh=3C0z3bqQphJ/rneK3taoWu7dxwuwy273SojRPNw7Mik=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=R50uoPZ1/RjANZy9QBlRCwbrpW+X1/I5jzslPOMdBWUG8lO9ijzpG4cwxH/FDjEQdMTekUlM7pk5Ggq5gFVFVYvAVJeEYqBmYDr1vCmvKG9gOScM2RTCMw6HFVf/7ENpDiAbtfM2nKsxH8SKD4W+1qr6iiy5/ASlpbRA8hENgN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=qPpsNwVa; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 7025041062
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1744896256; bh=9yhRUByZUvTPPxNd7Jt2Y3FeXqk3lHI/pOhzKqMczvI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=qPpsNwVaDHm4uTuAjs27umd7qRVoYlFxIGVw5G8tBJtHshsZfZXN2dfbOjICoh03C
+	 lWJ6XzlpYWGYHcSd7ABu8CQrGRxGjVXIiTa3RjNilQ4Thz2HsJzo3QHwDAuaHz2sfw
+	 mddYKpEk5quHKmIVakTOHM96mAZRaQ5KIuE3gnsHq/iq/V+SNiPFRldmgnD8komrQv
+	 IF3v8Tbx4JmrqXfONSF8eXGtErz/ayMt6b+BOKys5WKTDtkgCgI5HRlAS6RMdlbbxe
+	 LeTryIT202uWTXF/RENSGzWPEYebkwlAkCGm6eEy/oW50I6i7bvSsAohjBGPAjWBR9
+	 QD1X6GUdXj4Pg==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 7025041062;
+	Thu, 17 Apr 2025 13:24:16 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] pwm: Fix various formatting issues in kernel-doc
+In-Reply-To: <20250417092535.2669166-2-u.kleine-koenig@baylibre.com>
+References: <20250417092535.2669166-2-u.kleine-koenig@baylibre.com>
+Date: Thu, 17 Apr 2025 07:24:15 -0600
+Message-ID: <87cyda6hvk.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com> <20250409-mdb-max7360-support-v6-9-7a2535876e39@bootlin.com>
-In-Reply-To: <20250409-mdb-max7360-support-v6-9-7a2535876e39@bootlin.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 17 Apr 2025 14:41:36 +0200
-X-Gm-Features: ATxdqUHVnRgKXXdU0felXL5SR5G-r5Je-4YU4gveufkl7eBQ6Hnf24ePYuscRak
-Message-ID: <CAMRc=MdKswkm2jzok6Uw3cG6uDkVq+CMXbJgP3fRY+jHo+rPkQ@mail.gmail.com>
-Subject: Re: [PATCH v6 09/12] gpio: max7360: Add MAX7360 gpio support
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
-	=?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 9, 2025 at 4:56=E2=80=AFPM Mathieu Dubois-Briand
-<mathieu.dubois-briand@bootlin.com> wrote:
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> writes:
+
+> Add Return and (where interesting) Context sections, fix some formatting
+> and drop documenting the internal function __pwm_apply().
 >
-> Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
->
-> Two sets of GPIOs are provided by the device:
-> - Up to 8 GPIOs, shared with the PWM and rotary encoder functionalities.
->   These GPIOs also provide interrupts on input changes.
-> - Up to 6 GPOs, on unused keypad columns pins.
->
-> Co-developed-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
 > ---
+> Hello Jonathan,
+>
+> while looking into the warning that Stephen reported in
+> https://lore.kernel.org/linux-next/20250417162700.728e14e5@canb.auug.org.=
+au,
+> I found a few more issues fixed here.
+>
+> I intend to merge this via my pwm tree, but getting a confirmation (or cr=
+itic)
+> from someone who knows kernel-doc better than me would be great.
 
-Looks good to me.
+Seems generally fine, but ...
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Best regards
+> Uwe
+>
+>  drivers/pwm/core.c  | 30 ++++++++++++++++++++++--------
+>  include/linux/pwm.h |  8 +++++---
+>  2 files changed, 27 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index 079964961bd8..447077776bce 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -222,8 +222,10 @@ static int __pwm_write_waveform(struct pwm_chip *chi=
+p, struct pwm_device *pwm, c
+>   * Note however that the world doesn't stop turning when you call it, so=
+ when
+>   * doing
+>   *
+> - * 	pwm_round_waveform_might_sleep(mypwm, &wf);
+> - * 	pwm_set_waveform_might_sleep(mypwm, &wf, true);
+> + * .. code-block:: C
+> + *
+> + *   pwm_round_waveform_might_sleep(mypwm, &wf);
+> + *   pwm_set_waveform_might_sleep(mypwm, &wf, true);
+
+Here I would just use an ordinary literal block rather than embedding
+Sphinx directives into the comment like that:
+
+ * Note however that the world doesn't stop turning when you call it, so wh=
+en
+ * doing::
+ *
+ * 	pwm_round_waveform_might_sleep(mypwm, &wf);
+ * 	pwm_set_waveform_might_sleep(mypwm, &wf, true);
+
+Thanks,
+
+jon
 
