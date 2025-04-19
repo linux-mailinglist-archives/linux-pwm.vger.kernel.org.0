@@ -1,127 +1,146 @@
-Return-Path: <linux-pwm+bounces-5580-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5581-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6477EA9411A
-	for <lists+linux-pwm@lfdr.de>; Sat, 19 Apr 2025 04:46:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5BADA94222
+	for <lists+linux-pwm@lfdr.de>; Sat, 19 Apr 2025 09:36:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE5B519E7E23
-	for <lists+linux-pwm@lfdr.de>; Sat, 19 Apr 2025 02:46:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC00E443135
+	for <lists+linux-pwm@lfdr.de>; Sat, 19 Apr 2025 07:36:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 827B94207A;
-	Sat, 19 Apr 2025 02:46:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27E461991CB;
+	Sat, 19 Apr 2025 07:36:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQDIwF49"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFwuv4XI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE616136E;
-	Sat, 19 Apr 2025 02:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5D013C695;
+	Sat, 19 Apr 2025 07:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745030769; cv=none; b=Lcb1gjXrll8sRrb+m8Zxd5rpLtbC3bHch/cVKDlQOZJBFueynZnmpOrShGPfEHreKyCaDyAVVPSc+VD3gOn8yY8FcHvtRJQ92DhVWli92jnA2KUJUH6MvQvABtcLG/HiHEjmUXI4630AMJaVp9MgRrDY/q9hVofvA1GnQLn8tgI=
+	t=1745048172; cv=none; b=o2jFmEFJYcbrWVxNChqhifYltlNgNtDndllQW5afYCxc7/M9uxldF6fbzdsgCLdDblNMNXcUWBF1j/Ft9pgCocXB6eAQbEUJoxGLq42NsLQyHb9P64x7xrwzlN9v5jKu4NlQQhQEM0UtL28nU3Q0NZz5Exh+SqwdtQB4s3Wp7G8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745030769; c=relaxed/simple;
-	bh=gvuJrMLOdmnOm91Siq3JvFcU14VhzFH5Pwm0vWjpAZI=;
+	s=arc-20240116; t=1745048172; c=relaxed/simple;
+	bh=YBK6y7m3vZOAQqF+Bkk1DHbXXrlb3AtVna7xej1bwYg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XPOwVveHeZDAos98PFYiXcoRKkZptdegbrRd4gPYsQD9In9mpZ+kj8z7AJF9qiA0AfNSw0m0H/K3QqUAjI+tAD8G9eRoKdo+mPA6eOXwadd/vz/42cqYJTeU0vuWTJ9BYESGliyoOLm1/y8FI/0AOq8CRpH6Dq+CVhdBWKpJrTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iQDIwF49; arc=none smtp.client-ip=209.85.214.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=IVsrYI8xcfrQrLF+zADCz1WwJzBu199/gwrrfUrCDEIUG1F0qF1soq9hlFrkgAdvEqf59IPeSV0+h2nR6MQTCLLDy2No7nwWQERfBQjiOhGESoPHgHpYQuH6bBC9RRp5D7P7mgDOsDRsXgTUyVo8fhzPy2eQhHjgrS2GNTaSBR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NFwuv4XI; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22c33677183so28443175ad.2;
-        Fri, 18 Apr 2025 19:46:03 -0700 (PDT)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2254e0b4b79so37066255ad.2;
+        Sat, 19 Apr 2025 00:36:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745030763; x=1745635563; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/RzwzU/RPEWQh1ASxLVOsS98O+e47MbzqLttT3KONSA=;
-        b=iQDIwF49ejoP3fhhfPHweQMlhdD/+65SDsrJmOyyWUkDkp8qvscR49e5hCE6xgEH82
-         XJ8Crie90vpqrpTj4g9LPERMtKkXxdy2gOeUo9lJYPDPG0n+0a53v+Kfw3xUazLaeFL4
-         2d6Zse/6ATy5RHJeGemwUsM+jBI8hmq9Pmrl7nBkvI9uk01rVb8/DOhHgbvgftpbEkpm
-         RymQuCH+48Eu+29YztV1jWh2rw+lH61AagKoIVwB6hkQoaV38aqwKY0PJrqKzXrQo4xq
-         Nfx8KrLR5D1/RVRcO5O50jNFrpD71/Ym3dTCUoHu5rJ5cAFviwQv/19UqPwc9ldq2Scz
-         cd0Q==
+        d=gmail.com; s=20230601; t=1745048170; x=1745652970; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VbNMv8EcDVNc7S53ITN7O5grQN0Xg+vZe4s9ox5YAkY=;
+        b=NFwuv4XI87LQ6/dNV0mPUwQ5yWK3EEddZbIjmm3JHIWwzlR1SAFFzLrXYpg95Hlapf
+         h09gW3LHZnwHka6y/0wOhP78z2h462cxSoz1g54DfBDRIyzLuSsGLha6mF9QfRcctZUO
+         NCpdipNPk+dc13LhCGkjlIRZXuNSvylifpplYssrcBacHLpf5Q2fJOrmTMJBFO3IrkSi
+         xNpZiga08iyccOTUeCMxpR8w8Ndcp8OL7ZoWYuVfRg/KEPT54v+mu7vJWajRPzpwJuKp
+         owlVXWsrBP9RliCI6MiO7mCWI3OTUkpvevMFh7s7LxKg3j+cCNC2oIYsIOeNCzMSLcGE
+         qROA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745030763; x=1745635563;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/RzwzU/RPEWQh1ASxLVOsS98O+e47MbzqLttT3KONSA=;
-        b=H82AIyre1hsy+lgaghQZC+t90DnYyebVgnHevXElM0efpa4yF0kBzWccX1O3DTBEEr
-         Xn0/jrsGteOMpM+B2tlKhvLAuLE80LwWhvYM93FXe9BN0p1/8h6AjYs2bdmdEHfIxtkj
-         fM8Sp4TkdVvAXxMOTQqDm8amyOPVptUCi9L5Vq6n6Tuy4x7Ecei0mtgCi5F6F1j39Y7R
-         LMdGxMgv3DFmt1oPaT3Um2QVHIoKOspwavKW8LXTVi/LRcbFe7V4EkNvFztyERA9toI1
-         1+qeXuxlpI3nYBfYN9g6VWe+XNF/afFYZxj+5KmVrgB7EWHrRLDgcU/cIfzt1Kp8pIYc
-         x9wg==
-X-Forwarded-Encrypted: i=1; AJvYcCVYSv0yiuWCF0IFhOC/y4GWYoPeWhWzm2yJ7mjHCqod+eXI/ueFQwoOtQxks0p6VOiHOyidt6LfCLEl@vger.kernel.org, AJvYcCWJv+CVAogMVxCK1iQzg7x1/iWGZ/XsqAXcCbJdQKl/Ztv5qiaVs8FcqUDjO3x67gRhSoqITi/pfNn7cF0=@vger.kernel.org, AJvYcCWLMhd2rCVYfcKX4eNtciUc0ikTLh1oNUiMbErvzzGdqtZifmjM+WpVmRarSP09x3urdeimdrulcshI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+WaCyCYwwa7LGBCUAddOdngQsvN4zIscsGiWBThg10uY05kWi
-	QZFAYOWOHd8CZ+Ykx895xJMOTlRnacOLVk1IAfS22xrJCZBSX8IO
-X-Gm-Gg: ASbGncv4k9OmY1Rxjg354wf2b53vCrcwGnIl/xrVOxHGcbeZ3qY+fWwXbS4GZEmjPhQ
-	uA6W/98DzU+8+1Bo1+TehUUYSVbmXQUJJmWAfq76zUdHlGG/VO+owKl61iGayPTON5icM1OVm0J
-	VE3G5OVUy/SJAmbbICegoQXCVuyEXS9dIeRYnElqg3eCrEkOGkYZnUygK+vyOrhijY8w71kNN4l
-	/CEV+wCgIrGJ0SlMrqTKL14quLBdZq6Q97eL3cdwHG9wy3UAspOTfzNCEg10sq1ZSfQXzweABFH
-	a7kuHRSrsnCQPqhTf1AHKEZ5XcBSpOzKzK2LnVftJg==
-X-Google-Smtp-Source: AGHT+IELLIfeh/WcHCnTSkEtDW6ClN6QTw3XxGVttzwpusfdY55BW4MXr2PLJVWbJ9rYaZ517CtvaQ==
-X-Received: by 2002:a17:902:cf0e:b0:223:5241:f5ca with SMTP id d9443c01a7336-22c5359b672mr57491585ad.20.1745030763015;
-        Fri, 18 Apr 2025 19:46:03 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:eaea:89f0:c84d:941a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087dee864dsm2012343a91.6.2025.04.18.19.46.01
+        d=1e100.net; s=20230601; t=1745048170; x=1745652970;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VbNMv8EcDVNc7S53ITN7O5grQN0Xg+vZe4s9ox5YAkY=;
+        b=alULv3Mk9FY2G8i29t1svcstbb+bpMxtbvFwX31tujrl41GhnH04UW8cg1pe00efTm
+         sH7sYpKkBguMuhQI2i2KVmSB+9DF7790/Rrri0+cpkPMW6Abs3tD2WrUgVuUufmKvOYj
+         EkMngvLJ26sfE8ZKwiR0Ybfe769b4rv1PzdcjQw+RR7BOEoL4pKfOIl0NUQS9l+9yCgl
+         1vQB+E/X0EYdAQw1DMlQVVwTJBOxpkgiS3w++ThICKtlCUPkSI9paYpbF3AvcfUc7gbi
+         pLcftDNWZaHypICEycjxvqVm51p05yS783fcE8+OVlU1eRqBdnpWTzzNlLVBH63DBvcD
+         vQtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQVWSwlrZ+ryn1+mpzdc5USVYKnp98BRKg6IVaJAHb6tfWOShxTWKPXO2jC/JtDTvocJW8kjJrQeh4@vger.kernel.org, AJvYcCWlMdrA90NK9edXKqCqJJquh9SGbFpUl8+UAXXracnvwkfIQANizFciMY7HAUAd4UMF4SWM0r6clK0F@vger.kernel.org, AJvYcCWxgF0b3NzegfzcfVES8FnoycwDJ+NK+tIeTEitmioYlR1HMcX0w4b4N7Jq7XqQZVdjNdRebQYyMb8FAhzY@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPdSdgBVmAjCRWbMzH4qqmxDUF4J88heMCvvGU8dBq6F+pc4n5
+	5bjJUm2KlMCfIxpjGdmeKW0QLHZ6KIgl9MWvhhIBfWq4vb157pWW
+X-Gm-Gg: ASbGncug7n2X0iweRXbgBD8l0MBrMiLvfL867bBtILiUAuEnVDr4fx27t0Xk2HikjLc
+	guIcA4Sr8dAs1p8z0CDfKeH+lm21qkc4m6TYBCYZihXGoSythm3iwvdYuSKfy6gkbxd8aZdOwQQ
+	IJ0Ze7IaoZGBuwwLGuXpb461NqGFfFnUWMUZiC5nTSxnGKYx5qKMLMW9rlZKoV9UxM9pKS5DbO5
+	wtgeLrZh9CzISYjIcFccXmyGtQzUppwwHyovYqcswkEWb8Yzs/MMI7V+aCMNNbHrnx8DTTmnpTi
+	fpG/FVwJ+3LOf9aXSqwIn68EJrm3CBUNcpq8H8/o/A==
+X-Google-Smtp-Source: AGHT+IE8gk3khKs6q2QV88hzoLFK8V9guTrvMWRFQ6JyDLTYcHlv4zmRal3/vUFMXM/1CNJJOpJ0+w==
+X-Received: by 2002:a17:902:e549:b0:224:376:7a21 with SMTP id d9443c01a7336-22c536076f3mr77627655ad.42.1745048169844;
+        Sat, 19 Apr 2025 00:36:09 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22c50ed0f7asm27997115ad.169.2025.04.19.00.36.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 19:46:02 -0700 (PDT)
-Date: Fri, 18 Apr 2025 19:45:59 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+        Sat, 19 Apr 2025 00:36:09 -0700 (PDT)
+Date: Sat, 19 Apr 2025 15:36:05 +0800
+From: Longbin Li <looong.bin@gmail.com>
+To: Chen Wang <unicorn_wang@outlook.com>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH v2 13/17] Input: adp5589: remove the driver
-Message-ID: <uaasqxltp5o6owr2avd5x2okukvl3qgq7nuvajb56oiocwn5jm@eyoqvhlmday3>
-References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
- <20250415-dev-adp5589-fw-v2-13-3a799c3ed812@analog.com>
+	Conor Dooley <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] pwm: sophgo: add driver for SG2044
+Message-ID: <pat3f5nc57uo6p7vwmlrky6ezxhtn3qldmx3falmc4hv5beyyj@r2jfmuxtx5pi>
+References: <20250418022948.22853-1-looong.bin@gmail.com>
+ <20250418022948.22853-4-looong.bin@gmail.com>
+ <MA0P287MB2262E14F6F9758646320F7CBFEBE2@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250415-dev-adp5589-fw-v2-13-3a799c3ed812@analog.com>
+In-Reply-To: <MA0P287MB2262E14F6F9758646320F7CBFEBE2@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
 
-On Tue, Apr 15, 2025 at 03:49:29PM +0100, Nuno Sá via B4 Relay wrote:
-> From: Nuno Sá <nuno.sa@analog.com>
+On Sat, Apr 19, 2025 at 09:24:23AM +0800, Chen Wang wrote:
 > 
-> The adp5589 support is based on legacy platform data and there's no
-> upstream pataform using this device.
-> Moreover, recently, with
+> On 2025/4/18 10:29, Longbin Li wrote:
+> > Add PWM controller for SG2044 on base of SG2042.
+> > 
+> > Signed-off-by: Longbin Li <looong.bin@gmail.com>
+> > ---
+> >   drivers/pwm/pwm-sophgo-sg2042.c | 89 ++++++++++++++++++++++++++++++++-
+> >   1 file changed, 87 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg2042.c
+> > index 23a83843ba53..26147ec596c9 100644
+> > --- a/drivers/pwm/pwm-sophgo-sg2042.c
+> > +++ b/drivers/pwm/pwm-sophgo-sg2042.c
+> > @@ -13,6 +13,9 @@
+> >    *   the running period.
+> >    * - When PERIOD and HLPERIOD is set to 0, the PWM wave output will
+> >    *   be stopped and the output is pulled to high.
+> > + * - SG2044 support polarity while SG2042 does not. When PWMSTART is
+> > + *   false, POLARITY being NORMAL will make output being low,
+> > + *   POLARITY being INVERSED will make output being high.
+> >    * See the datasheet [1] for more details.
+> >    * [1]:https://github.com/sophgo/sophgo-doc/tree/main/SG2042/TRM
+> >    */
+> > @@ -26,6 +29,10 @@
+> >   #include <linux/pwm.h>
+> >   #include <linux/reset.h>
+> > 
+> > +#define SG2044_REG_POLARITY		0x40
+> > +#define SG2044_REG_PWMSTART		0x44
+> > +#define SG2044_REG_PWM_OE		0xD0
 > 
-> commit
-> 480a8ad683d7 ("mfd: adp5585: Add Analog Devices ADP5585 core support")
+> SG2044_REG_xxx, the prefix looks inconsistent with
+> SG2042_PWM_HLPERIOD/SG2042_PWM_PERIOD. Can it be unified?
 > 
-> we overlapped support for the adp5585 device (gpiochip part of it) but
-> since it actually makes sense for the device to be supported under MFD, we
-> can complement it and add the keymap support for it (properly based on FW
-> properties). And that is what
+> The others look fine.
 > 
-> commit
-> 04840c5363a6 ("Input: adp5585: Add Analog Devices ADP5585/89 support")
+> Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
 > 
-> is doing.
+> [......]
 > 
-> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> 
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+I will rename it to unify, thanks.
 
-Thanks.
-
--- 
-Dmitry
+Best regards,
+Longbin Li
 
