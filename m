@@ -1,280 +1,170 @@
-Return-Path: <linux-pwm+bounces-5588-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5589-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B61ABA946C1
-	for <lists+linux-pwm@lfdr.de>; Sun, 20 Apr 2025 07:18:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 364EDA946E2
+	for <lists+linux-pwm@lfdr.de>; Sun, 20 Apr 2025 09:04:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5ABAA1893379
-	for <lists+linux-pwm@lfdr.de>; Sun, 20 Apr 2025 05:18:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4F83E174DBA
+	for <lists+linux-pwm@lfdr.de>; Sun, 20 Apr 2025 07:04:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB0E119ADBF;
-	Sun, 20 Apr 2025 05:18:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 082A61BD9F0;
+	Sun, 20 Apr 2025 07:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EPsoiXAJ"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="dyHewTCW"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361B218A6CF;
-	Sun, 20 Apr 2025 05:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9402AE86
+	for <linux-pwm@vger.kernel.org>; Sun, 20 Apr 2025 07:04:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745126287; cv=none; b=JU7vJHAcGiDLLlPbyfIGExt9u8lJ21gCLhDRiGlRhpbpEavMkuwd/rqZ6C8NoXBUHxVtXEx7b5TpCC+5kr60y9QgJ2nw0i+UfCL8iloopwAW4Dha+eyYw+LBzyC4OoJ3zZmJe2nxU53xaQxXgtxMBHBBOkOm6QYOUUfYAz2Y1R8=
+	t=1745132664; cv=none; b=G5Mptapp0isabI1Go7nBcJTuYr2yba3hWMiLPN5UJae0LvjL/0qz2jmg1iU8vH1O8qN2Y8ODxpJ83HotM5baIPLf7bD2FSm2apnLxmG6GFO+tfvqi0GHHCM1SfcooJ32Sszrja9lS9FmXK0ajHwwj4T5WGfuAvq1k9IjjbEunnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745126287; c=relaxed/simple;
-	bh=eb5MS92w01Wn4bIj5DxBtSQ/xzcRrFMjXnejgx6Ul88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WlSKz4/XJs3ht4yOXU/P83vXa4xAq3HrTdB9SvSbGpCwAVZurYCdAJPYUH2GQpNOWSyWa2SpnTTbwrT09m1XlIaypBt9HDteN6TKkKNpLLkFNDwVPzT0pq9UgjF6mS+6obUNfDwq4v07qrkSqRt+730WbzeaR8/Obtff78OM2Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EPsoiXAJ; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745126286; x=1776662286;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eb5MS92w01Wn4bIj5DxBtSQ/xzcRrFMjXnejgx6Ul88=;
-  b=EPsoiXAJjiUkXDDCpV/BFZlgQPT09pWN60ItAGpLoUp9SUHdbo7pTIwF
-   +PeZk6wDyvTTJAiJT4hPbC+CBGWQhLonDlZT2qnr15wN4sDMeVuMwE+nH
-   Mn3Jc7SRmCKDkJWRlUsGaRN8Ni5uFP5NHN/1ZrNmJT2c0DnRoDcYsfJy2
-   OJF6zNqcuDM2a9ThKkASHZi0hTD0z/vdLKcqfukxMcGLEZ8oOwYv/XS1L
-   Evm1ALzwTsC1tpJptj1y3Gx5biYJWfloMqNXnYaVQ/Veia1ULB1jgwjT5
-   RM4hhpnoM6v9titHi9XFyZzls4EP1K5dKTA1e/HYQPYuldQqhTI7bmKDB
-   w==;
-X-CSE-ConnectionGUID: J00K3TGkQ0mbFe8pNZDAEQ==
-X-CSE-MsgGUID: OfxvqO17Rt+cSB+HIc4aGQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46587382"
-X-IronPort-AV: E=Sophos;i="6.15,225,1739865600"; 
-   d="scan'208";a="46587382"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 22:18:05 -0700
-X-CSE-ConnectionGUID: G7CwwnahTrOaK9IDptIeQg==
-X-CSE-MsgGUID: Lu5gSQxHTzSmdGRy7OT2Ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,225,1739865600"; 
-   d="scan'208";a="136298994"
-Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 19 Apr 2025 22:18:03 -0700
-Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u6N44-0004RX-0r;
-	Sun, 20 Apr 2025 05:18:00 +0000
-Date: Sun, 20 Apr 2025 13:17:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	ukleinek@kernel.org
-Subject: Re: [PATCH v2 1/1] pwm: tiehrpwm: ensures that state.enabled is
- synchronized in .probe()
-Message-ID: <202504201347.OiWigSUq-lkp@intel.com>
-References: <20250206031852.64853-1-rafael.v.volkmer@gmail.com>
+	s=arc-20240116; t=1745132664; c=relaxed/simple;
+	bh=hn7YA7XmCyOpYGIUjgJ8uMsi3N8R4QuPxrjMUjRQFKQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HmvlC44liNWgNQWcebWfJI00gZw/SQ9oL6qC631laaiwRm8ddVcqPJPxd944LddjUx8Vite63XhuYTZJVXSO+ATGDZN5+KVEl53QH3S7Rri0rVeODVW1y0jw4HQS6lMHdiq3nUcfIKf3WGYIr+X0wsud43VYJG7yR0ONjmishaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=dyHewTCW; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736c277331eso3654603b3a.1
+        for <linux-pwm@vger.kernel.org>; Sun, 20 Apr 2025 00:04:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1745132662; x=1745737462; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aLrawCtHSQaSge3rP8I64g0W6VpqwKb/nSX+gldLJv4=;
+        b=dyHewTCWmKHwB7zJbrX5zZixFiGLQQ62XkcZu4tRDEqToH2t0vB41BDO/00Zjc7nnz
+         BTQhneIeIdJKQy2jzSDYAN3iDpQ2UzsuFT/35hKmhnOj/+RhmK7U3OtyRV7BC0YZMKZn
+         MClaDOvjj4UvYl/NOXb90n6vTZZBvNK1OAR6QAg0GdxhdqutwMFk9fSg/5wNm37dfP11
+         ua3R3X7UhqfISrM4v4fFU+Q4+GVH1B9m0yEnnIhxLGMN9ZW9zf2R/wh9g+vcm5Blt7SI
+         Gtf+8T8Icnv1HHNbaq+mr14jZSAL//Y81C2IktBYpeQtRRDsVypwJPQVQzt0aDeMbHPn
+         q9sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745132662; x=1745737462;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aLrawCtHSQaSge3rP8I64g0W6VpqwKb/nSX+gldLJv4=;
+        b=Klnan5OF/BuEynbvjz97S77vYeTU7/T0TxzL7MHszWCRKmPb5d3YxntV0b7i2R4+Nn
+         y2wzIbHXkEQKmxWiKTPzpFDZKhl7V1OCCV6+ZlPapYnHXYZeU//zEBfWD8rnz3mLwFur
+         KB2dvV52BUK6TBL0Aa9ePnP+ss7q11jW5wzQGAiKOmXfh/KHVN986G+jKEOYZQXImWd+
+         F4i7+3RRnGwTPsP2qz1FdQ8QAC65aQMi4h2MUqMNMwC50nl+0Ysz0LaM0wMIFu960a6e
+         EgmbtVhpZzG1iZlTerpIWV2bOJeRD3AVxJSR0BgBIR7sDxmqTqkgHQBQqAO8sV+ABjvj
+         u57A==
+X-Forwarded-Encrypted: i=1; AJvYcCXYQvphs/SnCaP5VM7alKSOcMb05XLYBfoSSglTu2OhWYH+fS3EqO7+jlwdwKYG0rslU2WwARbQPSY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQTK4uylHG6LcLtBWlYrl6Di8VJvRHnx0uvvL9sGBtzXVi2fsK
+	mkmkQxJn8zaz5SZXanSDIuoF9mg8MXu60djnLkg9PNn9xs+LD2LNgtZ4VMZ1A6M=
+X-Gm-Gg: ASbGnctABzWkzKXMFTClLlMXM5d2NZR7aAlouRUdDwVOfsBSJ9r5gjEN0JYpbGpfN5H
+	fwx2YuO8IVUg9hMg9hBWaDWufe9q4pKqenPO0FtXxCtEiKAzczh1oG3NkFnIZAtvnvbAjrrw2qw
+	qWMczhrauR6n6elN7hDyWkiP/DD7xNonMyD04HC22D7J2idWggo5I0lGEUzNxNeV9Skext8tkTv
+	virGZ67LORDyB5juaIv9shEcoS27v0ZjRNOpXseIC1+hhjTOz8SM6qL/iR/iU1ofSovBBjJ+iDf
+	6DZuFZBSX//aCw7kOL4+jBgCUa5nFQ==
+X-Google-Smtp-Source: AGHT+IGsw49Y1EZHbpB/CU2efSGqgI49mepGyjPNnwH7IpvujjQyW84NHrrsk0hDbuCp/nEw8aQw0Q==
+X-Received: by 2002:a05:6a20:d705:b0:1f3:1ba1:266a with SMTP id adf61e73a8af0-203cc4ae6ddmr10558452637.0.1745132662405;
+        Sun, 20 Apr 2025 00:04:22 -0700 (PDT)
+Received: from localhost.localdomain ([2a11:3:200::40b3])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db12743afsm3742626a12.16.2025.04.20.00.04.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Apr 2025 00:04:21 -0700 (PDT)
+From: Guodong Xu <guodong@riscstar.com>
+To: ukleinek@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	dlan@gentoo.org,
+	p.zabel@pengutronix.de,
+	drew@pdp7.com,
+	inochiama@gmail.com,
+	geert+renesas@glider.be,
+	heylenay@4d2.org,
+	tglx@linutronix.de,
+	hal.feng@starfivetech.com,
+	unicorn_wang@outlook.com,
+	duje.mihanovic@skole.hr
+Cc: elder@riscstar.com,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev,
+	guodong@riscstar.com
+Subject: [PATCH v2 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
+Date: Sun, 20 Apr 2025 15:02:45 +0800
+Message-ID: <20250420070251.378950-1-guodong@riscstar.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206031852.64853-1-rafael.v.volkmer@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Rafael,
+This patchset adds support for the SpacemiT K1 SoC in the PWM_PXA driver
+and updates related device tree bindings. The changes enable PWM
+functionality on the K1 platform through driver enhancements,
+configuration updates, and device tree additions.
 
-kernel test robot noticed the following build warnings:
+Functionality has been verified on the Banana Pi BPI-F3 board using PWM14,
+configured as a pwm-backlight. Per community feedback, the actual
+pwm-backlight node is not included in this patchset but can be found in
+patch 7 of the v1 series.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.15-rc2 next-20250417]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This patchset is based on the following dependencies:
+1. Clock controller driver, posted by Heylen Chu (v8), with
+   most of it has been accepted:
+https://lore.kernel.org/all/20250416135406.16284-1-heylenay@4d2.org/
+2. Reset controller driver, posted by Alex Elder (v5):
+https://lore.kernel.org/all/20250418145401.2603648-1-elder@riscstar.com/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Rafael-V-Volkmer/pwm-tiehrpwm-ensures-that-state-enabled-is-synchronized-in-probe/20250420-075200
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250206031852.64853-1-rafael.v.volkmer%40gmail.com
-patch subject: [PATCH v2 1/1] pwm: tiehrpwm: ensures that state.enabled is synchronized in .probe()
-config: um-randconfig-002-20250420 (https://download.01.org/0day-ci/archive/20250420/202504201347.OiWigSUq-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250420/202504201347.OiWigSUq-lkp@intel.com/reproduce)
+Major differences between v2 and v1:
+ - Dropped the addition of spacemit,k1-pwm as a compatible string in the
+   PWM_PXA driver; instead, it now falls back to marvell,pxa910-pwm.
+ - Removed pinctrl settings for all PWM nodes (pwm0-pwm14); only the
+   pwm14_1 configuration is included in this version.
+ - Changed PWM_PXA from built-in to a loadable module (=m) in the
+   riscv defconfig.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504201347.OiWigSUq-lkp@intel.com/
+V2 consists of the following patches:
+Patch 1: Add spacemit,k1-pwm compatible string (with fallback to
+           marvell,pxa910-pwm) and support optional resets property.
+Patch 2: Add reset controller support to the PWM_PXA driver.
+Patch 3: Add device tree nodes for all 20 PWM instances on K1.
+Patch 4: Add pinctrl settings for PWM14.
+Patch 5: Add ARCH_SPACEMIT dependency to the PWM_PXA Kconfig entry.
+Patch 6: Enable PWM and PWM_PXA in riscv defconfig for SpacemiT K1.
 
-All warnings (new ones prefixed by >>):
+Best regards,
+Guodong Xu
 
-   In file included from drivers/pwm/pwm-tiehrpwm.c:11:
-   In file included from include/linux/io.h:12:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:549:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     549 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:567:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     567 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/pwm/pwm-tiehrpwm.c:11:
-   In file included from include/linux/io.h:12:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:585:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/pwm/pwm-tiehrpwm.c:11:
-   In file included from include/linux/io.h:12:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:601:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     601 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:616:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     616 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:631:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     631 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:724:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     724 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:737:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     737 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:750:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     750 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:764:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     764 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:778:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     778 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:792:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     792 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
->> drivers/pwm/pwm-tiehrpwm.c:675:7: warning: variable 'tbclk_enabled' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-     675 |                 if (ret) {
-         |                     ^~~
-   drivers/pwm/pwm-tiehrpwm.c:706:6: note: uninitialized use occurs here
-     706 |         if (tbclk_enabled)
-         |             ^~~~~~~~~~~~~
-   drivers/pwm/pwm-tiehrpwm.c:675:3: note: remove the 'if' if its condition is always false
-     675 |                 if (ret) {
-         |                 ^~~~~~~~~~
-     676 |                         dev_err_probe(&pdev->dev, ret, "clk_prepare_enable() failed");
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     677 |                         goto err_pwmchip_remove;
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~
-     678 |                 }
-         |                 ~
-   drivers/pwm/pwm-tiehrpwm.c:629:20: note: initialize the variable 'tbclk_enabled' to silence this warning
-     629 |         bool tbclk_enabled;
-         |                           ^
-         |                            = 0
-   13 warnings generated.
+v1:
+https://lore.kernel.org/all/20250411131423.3802611-1-guodong@riscstar.com/
 
+Guodong Xu (6):
+  dt-bindings: pwm: marvell,pxa-pwm: Add SpacemiT K1 PWM support
+  pwm: pxa: add optional reset control
+  riscv: dts: spacemit: add PWM support for K1 SoC
+  riscv: dts: spacemit: add pwm14_1 pinctrl setting
+  pwm: Kconfig: add depends on ARCH_SPACEMIT to PWM_PXA
+  riscv: defconfig: Enable PWM support for SpacemiT K1 SoC
 
-vim +675 drivers/pwm/pwm-tiehrpwm.c
-
-   621	
-   622	static int ehrpwm_pwm_probe(struct platform_device *pdev)
-   623	{
-   624		struct device_node *np = pdev->dev.of_node;
-   625		struct ehrpwm_pwm_chip *pc;
-   626		struct pwm_state state;
-   627		struct pwm_chip *chip;
-   628		struct clk *clk;
-   629		bool tbclk_enabled;
-   630		int ret;
-   631	
-   632		chip = devm_pwmchip_alloc(&pdev->dev, NUM_PWM_CHANNEL, sizeof(*pc));
-   633		if (IS_ERR(chip))
-   634			return PTR_ERR(chip);
-   635		pc = to_ehrpwm_pwm_chip(chip);
-   636	
-   637		clk = devm_clk_get(&pdev->dev, "fck");
-   638		if (IS_ERR(clk)) {
-   639			if (of_device_is_compatible(np, "ti,am33xx-ecap")) {
-   640				dev_warn(&pdev->dev, "Binding is obsolete.\n");
-   641				clk = devm_clk_get(pdev->dev.parent, "fck");
-   642			}
-   643		}
-   644	
-   645		if (IS_ERR(clk))
-   646			return dev_err_probe(&pdev->dev, PTR_ERR(clk), "Failed to get fck\n");
-   647	
-   648		pc->clk_rate = clk_get_rate(clk);
-   649		if (!pc->clk_rate) {
-   650			dev_err(&pdev->dev, "failed to get clock rate\n");
-   651			return -EINVAL;
-   652		}
-   653	
-   654		chip->ops = &ehrpwm_pwm_ops;
-   655	
-   656		pc->mmio_base = devm_platform_ioremap_resource(pdev, 0);
-   657		if (IS_ERR(pc->mmio_base))
-   658			return PTR_ERR(pc->mmio_base);
-   659	
-   660		/* Acquire tbclk for Time Base EHRPWM submodule */
-   661		pc->tbclk = devm_clk_get(&pdev->dev, "tbclk");
-   662		if (IS_ERR(pc->tbclk))
-   663			return dev_err_probe(&pdev->dev, PTR_ERR(pc->tbclk), "Failed to get tbclk\n");
-   664	
-   665		ret = clk_prepare(pc->tbclk);
-   666		if (ret < 0) {
-   667			dev_err(&pdev->dev, "clk_prepare() failed: %d\n", ret);
-   668			return ret;
-   669		}
-   670	
-   671		ehrpwm_get_state(chip, &chip->pwms[0], &state);
-   672	
-   673		if (state.enabled == true) {
-   674			ret = clk_prepare_enable(pc->tbclk);
- > 675			if (ret) {
-   676				dev_err_probe(&pdev->dev, ret, "clk_prepare_enable() failed");
-   677				goto err_pwmchip_remove;
-   678			}
-   679	
-   680			tbclk_enabled = true;
-   681		}
-   682	
-   683		ret = pwmchip_add(chip);
-   684		if (ret < 0) {
-   685			dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-   686			goto err_clk_unprepare;
-   687		}
-   688	
-   689		platform_set_drvdata(pdev, chip);
-   690		pm_runtime_enable(&pdev->dev);
-   691	
-   692		if (state.enabled == true) {
-   693			ret = pm_runtime_get_sync(&pdev->dev);
-   694			if (ret < 0) {
-   695				dev_err_probe(&pdev->dev, ret, "pm_runtime_get_sync() failed");
-   696				clk_disable_unprepare(pc->tbclk);
-   697				goto err_pwmchip_remove;
-   698			}
-   699		}
-   700	
-   701		return 0;
-   702	
-   703	err_pwmchip_remove:
-   704		pwmchip_remove(chip);
-   705	err_clk_unprepare:
-   706		if (tbclk_enabled)
-   707			clk_unprepare(pc->tbclk);
-   708	
-   709		return ret;
-   710	}
-   711	
+ .../bindings/pwm/marvell,pxa-pwm.yaml         |  17 +-
+ arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi  |   7 +
+ arch/riscv/boot/dts/spacemit/k1.dtsi          | 180 ++++++++++++++++++
+ arch/riscv/configs/defconfig                  |   2 +
+ drivers/pwm/Kconfig                           |   2 +-
+ drivers/pwm/pwm-pxa.c                         |  14 +-
+ 6 files changed, 212 insertions(+), 10 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
 
