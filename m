@@ -1,131 +1,130 @@
-Return-Path: <linux-pwm+bounces-5586-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5587-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75EA6A9455E
-	for <lists+linux-pwm@lfdr.de>; Sat, 19 Apr 2025 22:01:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C36A1A94677
+	for <lists+linux-pwm@lfdr.de>; Sun, 20 Apr 2025 04:21:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 805BE3B6A8C
-	for <lists+linux-pwm@lfdr.de>; Sat, 19 Apr 2025 20:01:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 053721765BD
+	for <lists+linux-pwm@lfdr.de>; Sun, 20 Apr 2025 02:21:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6FD1191F7F;
-	Sat, 19 Apr 2025 20:01:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D2356F30F;
+	Sun, 20 Apr 2025 02:21:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZPpUGVK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BwESSD6l"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E5A172BD5;
-	Sat, 19 Apr 2025 20:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF9635946;
+	Sun, 20 Apr 2025 02:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745092888; cv=none; b=ByU1qeN1G12ktju8W9gOzoOi3LeV2mNKUVkhe6rBKY5+yFeo3zbzNkYEgmbJ7P1JjGRNELa9a88d1q9if9RauOuTNJyDYIsz6hR5smNpiBu35dV0d62EC0MQzGdJEVo5RlZkr2+P+FibX4SC8N0nSvwMAolqQojg3YmTMr60JyI=
+	t=1745115709; cv=none; b=Cwnq4Q+lDCYrAeuIZCzrKYU9dJn/cg9Ea9FuKVjyOacb6uPNsA4CAL6R/pzpu4b5IpmQgNSaBNSCMZMxkQ4MOen7rHq+A4hOmE/b/XhxidraYpek+WQn3SHHF977iRu3JTXojFbTUp8JnjIrzN4wLZiLZQu9uUc3ZvybTYE1bHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745092888; c=relaxed/simple;
-	bh=P7tKjMmYvpQSt19eVgoXK1B4GJT2SFBF4f5fjdv6Abs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iS0+3xzmpEsteaJK07SaM6YjfLpT7C+MoB2qw09TYmtcewLV0ZJ+9Rvdt0skTpXCnXnD6GIgHI8PD54ZuUNSKSwCzt/w1rgFcRd/qSzxezDdn7zT5GOd+D0QBE17KPBaflICcE4gxVw3bsO54nmhlqZtFAmr+7e3gXtWHovSQjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HZPpUGVK; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7369ce5d323so2283165b3a.1;
-        Sat, 19 Apr 2025 13:01:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745092886; x=1745697686; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=78bfCOlyaAzjSSC4kz49Ccuuh1pGQY6kRFiTtIDnJb8=;
-        b=HZPpUGVKT/Sfel7fmJ0dLZjTYUEA3UbR5Fc9t4XHGr2A/dHcBLIlXBx3jFkpA9eAZI
-         C9JIdsNRfBR6msv9KuBOFuFDlqnp3Ac+kh6KtrcchGt8/XtJO/39WeSRCbha4dqg46jD
-         GPyWLmRKAenZ/4htdB2C9d1eOJmygd4GIVYXDNa4vjwZoVL5DW4d2IRWmMmNz1F6VLNN
-         uON44zNp/uETZsrxrXZQw+L6SP0ZhL4R3lILRtwyh2hO3Djcb2atRtWA+ZuK21TH0AcX
-         ojYzGFX/Zan1BMlyazlA29/y7SLZY+Esi1orG/k3CMEbPTkPlzZG+qCoEVwIp/Z0DP5x
-         dEnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745092886; x=1745697686;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=78bfCOlyaAzjSSC4kz49Ccuuh1pGQY6kRFiTtIDnJb8=;
-        b=pbIBmJPkjT16v/rhCgLW1e3bvcTwYPHwvFJ9fFa6fxdkTM0VlzSUwatoTsOzZuKEj2
-         XHquL3sAYijiNe0rnkrMyp1utwF+Hv9sb+oX79gLXGu5H9D7jGO9oFO8haKxRriUvI+u
-         nlkQklZ7LD7f6pCYC0EKhmRi7p56A2IppHUAGYFqHvuV2T1XnbAKqqYb0sA7IM06B4SM
-         7Sis2+46dWKikau3uwO+QVWGmeRfISas1+tuZaXkcKoyCl8CzIUprTsVaBoeeIGRSu7k
-         KIrY5qGeM2608uXTI+c551FqHxTqrAaNGjmApgL0ejU1Ut8fv8QraZDa0nMKNpJLePtU
-         0jSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcBd8NbtQn0ZxQI1ANaH1wSKuUXnjV5uN2lO2M9A6mo1tzoer5ADO9b39CBICGC+MflZVhgyu1khY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0vm7Ui/6TyP90GHMM1u8Exd/o38ifR9TBAm9nrbdl9str/cdY
-	VsYKu1usFQr1Emfxr/Uze0xmAqGfUPBq0h0A8Q5JAnKFB6DIY0x7
-X-Gm-Gg: ASbGncuP3Ara+WjsI9WoVo+wMwKTqtWhM81zNzGmBmT++c/cuIhyuIOS8bRVk1hmvzB
-	ecegVefrRuPZRojm0rQHP0sctJ1z2yfXW1m/37st5uX+IhyoQS3Zo1dEYWRj8hLELw5xMXfceBk
-	VmsE01uS6KdRqPh9afk+YNZeYOUG9ckizzJyBPPw4U+d5GL//GzKrysZT/KlAmnPRvCU8EsCDTL
-	1JxMKUTwahIp/73DKc0hY2sgKQNnLBxSW0cUce0AtrFGHME5grXUhxAMgYaRlOJHCYxEOrbN4h0
-	NktK5MuDi5Wq87L1TUUmH4OQk7EVTHJtvcZ4d6atbug0SPU3ONdHU3pdMz6klPX+RWRvCv4=
-X-Google-Smtp-Source: AGHT+IHHU3SG+U7iWICQGUwnRv6OZNIxtm1vAVch1HaAzoMdI8hi6JU7nF5iLgmeQesqOUWhTh/7fA==
-X-Received: by 2002:a05:6a00:3d02:b0:736:4e0a:7e82 with SMTP id d2e1a72fcca58-73dc1480119mr8028833b3a.10.1745092886146;
-        Sat, 19 Apr 2025 13:01:26 -0700 (PDT)
-Received: from localhost.localdomain ([177.10.12.81])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaaba76sm3778426b3a.143.2025.04.19.13.01.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 13:01:25 -0700 (PDT)
-From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-To: rafael.v.volkmer@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	ukleinek@kernel.org
-Subject: [PATCH v4 4/4] pwm: tiehrpwm: drop unnecessary parentheses and fix spacing
-Date: Sat, 19 Apr 2025 17:01:00 -0300
-Message-Id: <20250419200100.79140-1-rafael.v.volkmer@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250419195830.79053-1-rafael.v.volkmer@gmail.com>
-References: <20250419195830.79053-1-rafael.v.volkmer@gmail.com>
+	s=arc-20240116; t=1745115709; c=relaxed/simple;
+	bh=S2qG97NYouj37jOehp9hrQYtd5QhRNH6vXMDLSxVO1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jhmyznBD8YXvfSEUISqO/jchvMVXmMOgrXeRzypz50A4z0SS8dHYL6aucFgTvSMYmXQ3nhhjFzc9QeVkxTAmvEmYVc9PRHeTI+J4wrv9mA+j0fQIVr97paPSDi6pFoMe7wwLuYAzDuhAbalhe7XAFH11a3WAtJVGaJws9R13sCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BwESSD6l; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745115708; x=1776651708;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=S2qG97NYouj37jOehp9hrQYtd5QhRNH6vXMDLSxVO1A=;
+  b=BwESSD6lXSXLET6k/8X7qu5IalMDbJgOvC1L98oeI7ly02F4Yj2RbCFJ
+   cLBg7y9O25z4oWXJtHci8bMlN66KXNT5U2VzNaPif2NkiWRLQz1zhyY/W
+   cJXONPutqZ2Md9yvwf1PX7WexYGc6gAUaKoWqhMIs3COLuBWbYm/viNbd
+   cV5b/f7EamwtFhpyRSIBbAse7O8soUU6ale/gBzsLST5+bXZu/iHhCDmI
+   poxLR5NEZGO5dJ3tnqo/GbCHwc9M5OmMsP1nyKp8QqZT8o2qSOqAhP6AD
+   zvvzmor/ZFr/q0PjoDI5dEjGLrwqc7+hTyW/XDgTu3FDCUrbJPfESsP6A
+   g==;
+X-CSE-ConnectionGUID: qZg8dISxREqH6ikJEHnDIQ==
+X-CSE-MsgGUID: YMadNgLWRzG847AgjMCmGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46583973"
+X-IronPort-AV: E=Sophos;i="6.15,225,1739865600"; 
+   d="scan'208";a="46583973"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 19:21:47 -0700
+X-CSE-ConnectionGUID: BCen5bskTb+oZo+xMNn8YA==
+X-CSE-MsgGUID: tgU5JMTuRCaq9U4zInUKDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,225,1739865600"; 
+   d="scan'208";a="168621082"
+Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 19 Apr 2025 19:21:45 -0700
+Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u6KJT-0004Kz-06;
+	Sun, 20 Apr 2025 02:21:43 +0000
+Date: Sun, 20 Apr 2025 10:21:11 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, ukleinek@kernel.org
+Subject: Re: [PATCH v2 1/1] pwm: tiehrpwm: ensures that state.enabled is
+ synchronized in .probe()
+Message-ID: <202504201050.o3m04RP6-lkp@intel.com>
+References: <20250206031852.64853-1-rafael.v.volkmer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206031852.64853-1-rafael.v.volkmer@gmail.com>
 
-The comparison in pwm-tiehrpwm.c triggered “UNNECESSARY_PARENTHESES” and
-“PARENTHESIS_ALIGNMENT” when wrapping the second clause in extra parens.
-This removes superfluous parentheses, aligns continued lines under the ‘if’,
-and ensures operators are properly spaced.
+Hi Rafael,
 
-Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
----
- drivers/pwm/pwm-tiehrpwm.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index 23530d53e177..73c3dd57a50b 100644
---- a/drivers/pwm/pwm-tiehrpwm.c
-+++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -285,8 +285,7 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * same period register for multiple channels.
- 	 */
- 	for (i = 0; i < NUM_PWM_CHANNEL; i++) {
--		if (pc->period_cycles[i] &&
--				(pc->period_cycles[i] != period_cycles)) {
-+		if (pc->period_cycles[i] && pc->period_cycles[i] != period_cycles) {
- 			/*
- 			 * Allow channel to reconfigure period if no other
- 			 * channels being configured.
-@@ -304,7 +303,7 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	pc->period_cycles[pwm->hwpwm] = period_cycles;
- 
- 	/* Configure clock prescaler to support Low frequency PWM wave */
--	if (set_prescale_div(period_cycles/PERIOD_MAX, &ps_divval,
-+	if (set_prescale_div(period_cycles / PERIOD_MAX, &ps_divval,
- 			     &tb_divval)) {
- 		dev_err(pwmchip_parent(chip), "Unsupported values\n");
- 		return -EINVAL;
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.15-rc2 next-20250417]
+[cannot apply to thierry-reding-pwm/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Rafael-V-Volkmer/pwm-tiehrpwm-ensures-that-state-enabled-is-synchronized-in-probe/20250420-075200
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250206031852.64853-1-rafael.v.volkmer%40gmail.com
+patch subject: [PATCH v2 1/1] pwm: tiehrpwm: ensures that state.enabled is synchronized in .probe()
+config: arc-randconfig-001-20250420 (https://download.01.org/0day-ci/archive/20250420/202504201050.o3m04RP6-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250420/202504201050.o3m04RP6-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504201050.o3m04RP6-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pwm/pwm-tiehrpwm.c:105: warning: expecting prototype for The ePWM hardware encodes compare actions with two bits each(). Prototype was for AQ_CLEAR() instead
+
+
+vim +105 drivers/pwm/pwm-tiehrpwm.c
+
+    97	
+    98	/**
+    99	 * The ePWM hardware encodes compare actions with two bits each:
+   100	 *   00 = Do nothing
+   101	 *   01 = Clear
+   102	 *   10 = Set
+   103	 *   11 = Toggle
+   104	 */
+ > 105	#define AQ_CLEAR  1
+   106	#define AQ_SET    2
+   107	
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
