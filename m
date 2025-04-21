@@ -1,172 +1,180 @@
-Return-Path: <linux-pwm+bounces-5613-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5617-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF8F5A94EF3
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 11:45:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BBA6A94F23
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 12:08:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5B9C16F397
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 09:45:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A6D13AA78E
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 10:08:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2940258CC1;
-	Mon, 21 Apr 2025 09:45:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7B5F25FA0F;
+	Mon, 21 Apr 2025 10:08:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="l8Fz2Uem"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cYU84Q0e"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E68025A2A5
-	for <linux-pwm@vger.kernel.org>; Mon, 21 Apr 2025 09:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9DA13B2A4;
+	Mon, 21 Apr 2025 10:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745228701; cv=none; b=J3By5AOVUTlx9YGCTzySmxDlxO+ae7eMxOFHkPcU41aFflEHWIwmABL7RDh+Q6QPg2hhYYHab0Ga2wfVaCPZReXRISEjZzSgBEZ39woa++lLdglT6UicNWvO2oCpjz15vF9gNLzx+pRUuyCl3aK+m+cu0ojpPwfzdXS5RkE0qMg=
+	t=1745230125; cv=none; b=cksZAO7n2VnDCH7bViztWc1J/4FFc4OXqQ70vCs6WmKD36zkq/AR4SlkU/Wwrw/pX1GHL7TiGM2o6yC3xy2RUFckMDjhQxjKfa3lyUNkLiULt9cRl0b4r2UGd5lf+cJTZiDII3BKBCKT0dSyIZHoXyRAuDCgfwV8k6PVsceR0Ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745228701; c=relaxed/simple;
-	bh=r5RfvvulzxFSJLlZqt290Ox/VLbLHPLFtE3S4Q/eFF0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c8Mc3MGQazVcPkszWqrneGdEHsUWvFk+lDAbFMOsW68ILgH0rpI4t7rgFN6rgQXtu9lpCqRAt1UupgWIwlOl5DwigIGPWXrNlfIHx9u7Xzu6pYyWRO/tgRfY1UGjDiLpC1x3cynW89Xtz5CNsr/YVIX44hCIxD1ICcWJWyKANCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=l8Fz2Uem; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso3016383b3a.2
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Apr 2025 02:44:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1745228699; x=1745833499; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9oomD+rheO8hWgzZWTPQh42T2jzzNJl6ps7gCFAZrzo=;
-        b=l8Fz2UemKb7dUbfYNQ+ZTpPaIaUs9C2xO5cB9NibsuXq67vDKcrB6OeKm24UC6UwRA
-         nxQ9m94jOhcrmKXSNxpcor9+WWdTfNMVt5tMl7MHnTOpl0A+qhCLsVbkhz24Rv5tVEOf
-         z/ZieyfbBai8UEVspMuxuyIWfFintRcvRvc/b6AypV2WdGS3hqaaHFQLECPcJsmEoq/q
-         ynjfp9EpEvZ9jOapztEBiPcPe/VbfpbVOMzM4tUnUHAyBCp96vLBRGT+SOYq7caN7ngx
-         TRYfFHZdRPn0XDZx908ioRKucFwUpwGFhONAy2zQme4hdlKbpxqrRZfsftUTUvm8P6X4
-         3/XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745228699; x=1745833499;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9oomD+rheO8hWgzZWTPQh42T2jzzNJl6ps7gCFAZrzo=;
-        b=W8OgN29Jrsk3q562nnUtJ/v7it0i3BPPuu+jSje4jcodmSnZWdVr9r8FjNaUdiERe3
-         MRn1PfZ+UAfN/8V8SbsLoNLcRsen3vasWJaR7DNoGKkyMA7FZlH0qr8IZQGU5UJzKOV9
-         0Gm6PgCfvgcKmzDOnhDdxdOLBa5jZx2Asr6NU3kVjLoIS3PEVLuDEQf+uSdOLb49i5Si
-         gxOm6MqZBDJl6ZLu4GNAqoFAfDwGHZdMXHe+6Jsam/CY37pm15z/K7dAfuKaew1vn4J7
-         scsAujL93Tvf4aPPvvrgPgQy5kaVE6HcLra8vb/aMmgDg7Pjs2TCZy/FGNw+QpRw2fal
-         DTRg==
-X-Forwarded-Encrypted: i=1; AJvYcCWkCBDnIvshcwNb51Qf/mXK3iYjSK6ATGeSRjk4dJk0UPnIxoxtBydHHtPAQuDM09KpmYgfOBTDck8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlEiYq2cFwf3VMNdoUgK5YlpK4sGfZSdF4+uAnVxOpr+f25/r8
-	rwKbjA3ysJJBuwLFSIEKXhGk0ABQT+02GUyekTJ4O/dpwqWYp13ut7VgAz7EirQ=
-X-Gm-Gg: ASbGnctfcb2/r6O/Wl1JG+I72f0+hU4V445r3QvPFaL0Q2Wuho93wtjAqneDH/FgaYP
-	MTgvG0r2wJgHZ3jvb779WVGDqOlB4RDdbb0dbduwNZBP74Q+TAoK7v1f5k9GAARMAkqIL6f0sPw
-	8rA1LtHaWx2ahS9pEMBxm0re62TYPwOYIiGktKM0W3CUI6T15pIiZ0tk3OfRWWbYeHECEeqthLZ
-	n+cUGcIVlH7LzrUdgeO6TZvnpzTzjWCeg2Q3NP1xIU4gmoYUy0z/808bIKb6XWAv7wfmCUK/xfh
-	AoyZhlI/qSjBNb5RE+ImNzCmVYQDIsBkCQ+gvNynvBTCRdMlfvD35YAC1HolXjQPYtg60KmH4ax
-	nfw==
-X-Google-Smtp-Source: AGHT+IG3700mpvecN8OGtblvyO5T1EjDBNVZFMQ7/RSZwGoTrQaT76dyL6hRUY7pUUMOaUwerM2e1g==
-X-Received: by 2002:a05:6a00:80d:b0:736:6ecd:8e34 with SMTP id d2e1a72fcca58-73dc1582843mr12640767b3a.18.1745228699199;
-        Mon, 21 Apr 2025 02:44:59 -0700 (PDT)
-Received: from hsinchu36-syssw02.internal.sifive.com ([210.176.154.34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaacf32sm6371965b3a.142.2025.04.21.02.44.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 02:44:58 -0700 (PDT)
-From: Nylon Chen <nylon.chen@sifive.com>
-To: Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
+	s=arc-20240116; t=1745230125; c=relaxed/simple;
+	bh=6pGa6Cbc38hPIdqm8esZILVQjx4bJAqWDNuqbaBlbgQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Efv+GYX+PMENwY+mHiC/qIwpbVo7KYa62hHuaEWu51UIBJnOdpfyMWeF0S75bBG5mV/K44Vgvs9KKxqwAFXRJA5PIBD1YBXS7oOx4qzKBfDZEKmYzbZhKZDPmpq3/Or+Uk4p/9vLTz5HHaUKO+17IcJD0+pcVjn7+oJtAW1+joI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=cYU84Q0e; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5053056D;
+	Mon, 21 Apr 2025 12:06:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745229995;
+	bh=6pGa6Cbc38hPIdqm8esZILVQjx4bJAqWDNuqbaBlbgQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cYU84Q0eBMEvMoSewxFDvBtXngQWR1BDp2CGHSpB5qW41R10xCX58tuts6oDvb7wt
+	 2or2Qc7ywNnmG+wr0f4XtT4D4aS/dwfBCewiAEKMYjmBBzM21p00QdC/mASyaIZSuf
+	 jATWy5lleQwdBVw7Qsj7Mvpjfj4gGjM0P481QjA8=
+Date: Mon, 21 Apr 2025 13:08:40 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Nylon Chen <nylon.chen@sifive.com>,
-	Zong Li <zong.li@sifive.com>
-Subject: [PATCH v11 5/5] pwm: sifive: clarify inverted compare logic in comments
-Date: Mon, 21 Apr 2025 17:55:21 +0800
-Message-Id: <20250421095521.1500427-6-nylon.chen@sifive.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250421095521.1500427-1-nylon.chen@sifive.com>
-References: <20250421095521.1500427-1-nylon.chen@sifive.com>
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Liu Ying <victor.liu@nxp.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2 00/17] mfd: adp5585: support keymap events and drop
+ legacy Input driver
+Message-ID: <20250421100840.GO29968@pendragon.ideasonboard.com>
+References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
+ <20250415155607.GI9439@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250415155607.GI9439@pendragon.ideasonboard.com>
 
-The FU740‑C000 manual says “pwms ≥ pwmcmpX -> HIGH”, but in Figure 29 pwmcmpXcenter
-is forced to 0 via an XOR, so hardware actually outputs HIGH when pwms < pwmcmpX.
-Thus pwmcmp holds the off‑period count, and the driver must invert it
-to expose a normal active‑high interface.
+Hi Nuno,
 
-Co-developed-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
----
- drivers/pwm/pwm-sifive.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+On Tue, Apr 15, 2025 at 06:56:09PM +0300, Laurent Pinchart wrote:
+> On Tue, Apr 15, 2025 at 03:49:16PM +0100, Nuno Sá via B4 Relay wrote:
+> > The adp5585 MFD driver was introduced in 6.11 adding support for gpio
+> > and PWM. However, the gpio part of it was already supported as part of
+> > the keyboard driver:
+> > 
+> > https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/input/keyboard/adp5589-keys.c#L532
+> > 
+> > On top of that it also overlapped with my refactoring of the above driver [1]
+> > to drop usage of platform data and use FW properties instead.
+> > 
+> > Now, it actually makes sense for this device to be supported under MFD
+> > and since the "legacy" input device depends on platform data that is not
+> > defined anywhere the plan in this series is to add support for the
+> > keyboard and adp5589 devices as part of the MFD driver. Once the MFD
+> > driver supports all that's supported in the Input one, we drop it...
+> > 
+> > For DT Maintainers:
+> > 
+> > The compatible for adp5589 is part of trivial devices. To me, it makes
+> > sense to remove it in the patch where we drop the driver but doing so
+> > would result in a warning when adding the same compatible for the MFD
+> > bindings. Hence, I remove it in that patch. Is that ok?
+> > 
+> > Uwe:
+> > 
+> > In my eval board, I could see that reading the GPIO value (when
+> > configured as input) does not work when OSC_EN is not set. Therefore,
 
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index 1404c383461d..fd1660e16a4c 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -4,11 +4,28 @@
-  * For SiFive's PWM IP block documentation please refer Chapter 14 of
-  * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-  *
-+ * PWM output inversion: According to the SiFive Reference manual
-+ * the output of each comparator is high whenever the value of pwms is
-+ * greater than or equal to the corresponding pwmcmpX[Reference Manual].
-+ *
-+ * Figure 29 in the same manual shows that the pwmcmpXcenter bit is
-+ * hard‑tied to 0 (XNOR), which effectively inverts the comparison so that
-+ * the output goes HIGH when  `pwms < pwmcmpX`.
-+ *
-+ * In other words, each pwmcmp register actually defines the **inactive**
-+ * (low) period of the pulse, not the active time exactly opposite to what
-+ * the documentation text implies.
-+ *
-+ * To compensate, this driver always **inverts** the duty value when reading
-+ * or writing pwmcmp registers , so that users interact with a conventional
-+ * **active‑high** PWM interface.
-+ *
-+ *
-  * Limitations:
-  * - When changing both duty cycle and period, we cannot prevent in
-  *   software that the output might produce a period with mixed
-  *   settings (new period length and old duty cycle).
-- * - The hardware cannot generate a 100% duty cycle.
-+ * - The hardware cannot generate a 0% duty cycle.
-  * - The hardware generates only inverted output.
-  */
- #include <linux/clk.h>
-@@ -113,6 +130,8 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	u32 duty, val, inactive;
- 
- 	inactive = readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-+	/* PWM hardware uses 'inactive' counts in pwmcmp, so invert to get actual duty.
-+	 * Here, 'inactive' is the low time and we compute duty as max_count - inactive. */
- 	duty = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - inactive;
- 
- 	state->enabled = duty > 0;
-@@ -160,6 +179,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	frac = num / state->period;
- 	/* The hardware cannot generate a 0% duty cycle */
- 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-+	/* pwmcmp register must be loaded with the inactive - time count (invert the duty) */
- 	inactive = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
- 
- 	mutex_lock(&ddata->lock);
+How did you test that, through the GPI_STATUS_x register ?
+
+> > commit ("pwm: adp5585: don't control OSC_EN in the pwm driver") could
+> > very well have a Fixes tag. However I'm not 100% sure it's a real issue
+> > or something special to my eval board.
+> > 
+> > It would be nice if Laurent or Liu could test the PWM bits or even
+> > check that the above is also an issue for their platform.
+> 
+> I'll give it a try, but it will need to wait until next week.
+
+I can't easily test GPI or PWM with my hardware setup at the moment :-(.
+I can however confirm that this series doesn't break GPO support for my
+use case.
+
+> > [1]: https://lore.kernel.org/linux-input/d1395bd61ce58b3734121bca4e09605a3e997af3.camel@gmail.com/
+> > 
+> > BTW the series is based on linux-next/master
+> > 
+> > ---
+> > Changes in v2:
+> > - Patch 5:
+> >    * Do not nest if:then:else::if:then.
+> > - Patch 6:
+> >    * Make use of the adp5585 info variables and adp5589 volatile regs.
+> > - Patch 9:
+> >    * Use standard "poll-interval" property (and move it before vendor
+> >      properties).
+> > - Patch 10:
+> >    * Make sure to include bitfield.h.
+> > 
+> > - Link to v1: https://lore.kernel.org/r/20250313-dev-adp5589-fw-v1-0-20e80d4bd4ea@analog.com
+> > 
+> > ---
+> > Nuno Sá (17):
+> >       dt-bindings: mfd: adp5585: ease on the required properties
+> >       mfd: adp5585: enable oscilator during probe
+> >       pwm: adp5585: don't control OSC_EN in the pwm driver
+> >       mfd: adp5585: make use of MFD_CELL_NAME()
+> >       dt-bindings: mfd: adp5585: document adp5589 I/O expander
+> >       mfd: adp5585: add support for adp5589
+> >       gpio: adp5585: add support for the ad5589 expander
+> >       pwm: adp5585: add support for adp5589
+> >       dt-bindings: mfd: adp5585: add properties for input events
+> >       mfd: adp5585: add support for key events
+> >       gpio: adp5585: support gpi events
+> >       Input: adp5585: Add Analog Devices ADP5585/89 support
+> >       Input: adp5589: remove the driver
+> >       mfd: adp5585: support getting vdd regulator
+> >       dt-bindings: mfd: adp5585: document reset gpio
+> >       mfd: adp5585: add support for a reset pin
+> >       pwm: adp5585: make sure to include mod_devicetable.h
+> > 
+> >  .../devicetree/bindings/mfd/adi,adp5585.yaml       |  240 ++++-
+> >  .../devicetree/bindings/trivial-devices.yaml       |    2 -
+> >  MAINTAINERS                                        |    1 +
+> >  drivers/gpio/Kconfig                               |    1 +
+> >  drivers/gpio/gpio-adp5585.c                        |  299 +++++-
+> >  drivers/input/keyboard/Kconfig                     |   21 +-
+> >  drivers/input/keyboard/Makefile                    |    2 +-
+> >  drivers/input/keyboard/adp5585-keys.c              |  221 ++++
+> >  drivers/input/keyboard/adp5589-keys.c              | 1066 --------------------
+> >  drivers/mfd/adp5585.c                              |  808 ++++++++++++++-
+> >  drivers/pwm/pwm-adp5585.c                          |   57 +-
+> >  include/linux/mfd/adp5585.h                        |  153 ++-
+> >  12 files changed, 1709 insertions(+), 1162 deletions(-)
+> > ---
+> > base-commit: 5b37f7bfff3b1582c34be8fb23968b226db71ebd
+> > change-id: 20250311-dev-adp5589-fw-e04cfd945286
+> > --
+
 -- 
-2.34.1
+Regards,
 
+Laurent Pinchart
 
