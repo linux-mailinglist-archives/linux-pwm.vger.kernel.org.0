@@ -1,91 +1,81 @@
-Return-Path: <linux-pwm+bounces-5632-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5633-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0A6BA9565E
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 20:59:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDC2DA9581C
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 23:39:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20791162493
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 18:59:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 89D007A5BE9
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 21:38:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F91F1E5B9B;
-	Mon, 21 Apr 2025 18:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C437620F065;
+	Mon, 21 Apr 2025 21:39:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dgqHsREg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CunwQe10"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACF141C69;
-	Mon, 21 Apr 2025 18:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E3E149DE8;
+	Mon, 21 Apr 2025 21:39:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745261977; cv=none; b=vCQ+v1mJpsBlqj0hrzlmYTnROoEs9Bagc8h9Ag6znwrxK/rUf2IqEvBI7wCRYoMvriM+R4+32FM4kLsB2A9QqxDkT46dP7CdMo8mIWBP3Y1Ctt4rFeveYWKoWS6yZO/6YtYWMuVfrXfh76dSRLheWFwIBRbd/Cx5V7TxTLEMBMc=
+	t=1745271575; cv=none; b=tcRcqwN5virCCYHR+fEMc61JWNApBkG5WHTsSl7Q3cG8f32F2A/7+1Z6qB8InaUL7URemYfB/PA7SviDXUrGYYlK+UYEk5dFZhylVAK093oWRNiKsf1t27sSIkReIfYmynnG+aqQyaHBLmweeeh2sNlJ1fWBAduNfoDUTbxsLuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745261977; c=relaxed/simple;
-	bh=CFk6Z7FZXx37yf9mMuNjTrwa2SXeuJ5JCnJbDuFR+iw=;
+	s=arc-20240116; t=1745271575; c=relaxed/simple;
+	bh=6oOfiEbDXZjld4J1a2eZRwXMdYXVf8MHpZBJgMbf+tY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ehtundBvOkh0dKBWzP713ddLTGR9t3eNPfgc5JW8jJ0ldmgyuVCEtUI+YKtWeSzuy/elE5uQQAqkwuVFz2Og38y4JXYgz0zfD6NIkA+/HZeQh6PkzjJBjvExdESh+sC4pX9qARWn0CC0GDab2dDS3r4k7NA6HEvatqg3h6T8p+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dgqHsREg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 731CEC4CEE4;
-	Mon, 21 Apr 2025 18:59:36 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=hiMlqz/q+5+8J6w6fe+CPkAzHzjtMhm2g11RcF0YAiXndsvMtWxbKgXIvG6960EsMZvus61kQgim1oelMgS1lB2UoTSHacJX0Km1dLMluQLmKcjLuZztxM9xp21BeBdNAjdP0lHE4pW6Z/UtWLvE/FeCncHQNT5RTwV7EC8IIiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CunwQe10; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E01C4CEE4;
+	Mon, 21 Apr 2025 21:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745261976;
-	bh=CFk6Z7FZXx37yf9mMuNjTrwa2SXeuJ5JCnJbDuFR+iw=;
+	s=k20201202; t=1745271575;
+	bh=6oOfiEbDXZjld4J1a2eZRwXMdYXVf8MHpZBJgMbf+tY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dgqHsREgj0KUR7iOxrjGoGSOOXZlSb+0sjtSyrDwRZpMjRNwxYw4qkxadYy2rCHfY
-	 KyKvKWPjNF9loFfFrr8yZn2jluAFRYmCZj6tBiNGJOcO7qClxyS0ht1Evq5c1moSOh
-	 hYNaYTHwxXSMRG8TdOSNZ377WMUo7PD9bCY+fV63Na11LxvztEm1Ih+DXysNFa+wjE
-	 Q9ilSjDsB23+DjJy3kllnaN5k7YO4YjT2iV8N3V1fMoluc/AWiYjMiCZwYTkkzs+ha
-	 KSOWNj+UYRF6r0R+DJcjvXn1xGSRd2P7kUTu+nqNWiI8xHYzoQW7A5/+iDAxSjMPLF
-	 zgaH67HBgGC3Q==
-Date: Mon, 21 Apr 2025 13:59:34 -0500
+	b=CunwQe10diTQj7Kcsc6C1CwB8Xy8oJvuzynsA78ZhRpwLBXJ9aIAUSd98DazZIPth
+	 eDlAoM1267TU0nkzPjSf3vqTvrDBwHxWxw/BY67nP0OCKTsLizQfmSLioFenT7O6E5
+	 a43WAEOFqaZ6MmV0xO58uXeel2v4J2hSyIcqAEJBtrGAKjdQShZRFhTZ7x6lQon/rD
+	 tCgZ15ggXKX3P7IsofHhj1hwRCvg8OKbket/d9jq/Cfpcb88/neFGNf3LZWG4EDQJV
+	 /xFAsNBPucisnejtJnhpJAvE4rrdW1VetBy71+jircRcsz+Y52HH9AgXsumJ8I3425
+	 +IT5znrvENNww==
+Date: Mon, 21 Apr 2025 16:39:33 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>
-Cc: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
-	linux-input@vger.kernel.org,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Liu Ying <victor.liu@nxp.com>, Conor Dooley <conor+dt@kernel.org>,
-	linux-pwm@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	devicetree@vger.kernel.org,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 05/17] dt-bindings: mfd: adp5585: document adp5589 I/O
- expander
-Message-ID: <174526197404.2623384.13566679975477936352.robh@kernel.org>
-References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
- <20250415-dev-adp5589-fw-v2-5-3a799c3ed812@analog.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: conor+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
+	ukleinek@kernel.org, linux-pwm@vger.kernel.org,
+	jitao.shi@mediatek.com, linux-kernel@vger.kernel.org,
+	kernel@collabora.com, devicetree@vger.kernel.org,
+	krzk+dt@kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: mediatek,pwm-disp: Add compatible for
+ MT6893
+Message-ID: <174527157255.2974366.16207591192162778004.robh@kernel.org>
+References: <20250416120253.147977-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250415-dev-adp5589-fw-v2-5-3a799c3ed812@analog.com>
+In-Reply-To: <20250416120253.147977-1-angelogioacchino.delregno@collabora.com>
 
 
-On Tue, 15 Apr 2025 15:49:21 +0100, Nuno Sá wrote:
-> The ADP5589 is a 19 I/O port expander with built-in keypad matrix decoder,
-> programmable logic, reset generator, and PWM generator.
+On Wed, 16 Apr 2025 14:02:53 +0200, AngeloGioacchino Del Regno wrote:
+> Add a compatible string for the Display Controller PWM IP found in
+> the MediaTek Dimensity 1200 (MT6893) SoC, which is compatible with
+> the one found in MT8183.
 > 
-> We can't really have adp5589 devices fallback to adp5585 (which have
-> less pins) because there are some significant differences in the register
-> map.
-> 
-> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 > ---
->  .../devicetree/bindings/mfd/adi,adp5585.yaml       | 47 +++++++++++++++++-----
->  .../devicetree/bindings/trivial-devices.yaml       |  2 -
->  2 files changed, 38 insertions(+), 11 deletions(-)
+>  Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
 
