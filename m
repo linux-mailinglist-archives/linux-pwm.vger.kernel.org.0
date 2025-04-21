@@ -1,81 +1,80 @@
-Return-Path: <linux-pwm+bounces-5618-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5619-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9B14A9509A
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 14:12:41 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80E5BA9509E
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 14:14:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 99B257A83E1
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 12:11:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 33FC37A4DE5
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 12:13:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D365B26461D;
-	Mon, 21 Apr 2025 12:12:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39DB826461D;
+	Mon, 21 Apr 2025 12:14:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3yMmlZp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UN4Q3lvt"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1A6264616;
-	Mon, 21 Apr 2025 12:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6503F63D;
+	Mon, 21 Apr 2025 12:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745237554; cv=none; b=g5Bm6WEu+OdCJ8TqbDw27o7FBJ2rvXT/LgfZdpsoHiXkF9fWrRuRpoD6fH+eqmmyaxZyb/aps+deC4QLocqQzWQ4AoFixLJEhR8YWriN0qn7nw1UQq3F6mPyFUNVeKbjXe75xz+Fe6ER8F2n22UXmsmvRXPxHlStMiCFlWwbZ0A=
+	t=1745237669; cv=none; b=fqousghoX4HqYRkmc4Z04tNheN2fPGQh41XZpF10SSTNiOgYXm4ix4uQ/vDG0+hjUHFPVPf3QXEtj1G9r2S5Sal+vDe+kPTHQv9tRngrhXkKXhVD0IdMIVoh4VTsmTUzGlaTmWWtpE+OIJlSu6tUhX8F28AOmRe5+tF1uvseVCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745237554; c=relaxed/simple;
-	bh=oz/EesnG7lVuzRX2BWQPzMarpKSzZV5VD/odYRnEHS8=;
+	s=arc-20240116; t=1745237669; c=relaxed/simple;
+	bh=C+4nDR37PBplHiy243pObI+HZmUlHSj82kpnexy6gC0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Jqoghfru2UAJck71q0qI+aOHnOAhQbFkQDFqq7XHybh+wjX8D909HbkVRfB8fLrrakNpzqfhN6CnqpS0BbOKEQlWDYKqiXBHuyOgDAI9j0H4Ip7P+s/SHPTFcI8yVNn3wGdkTrPyNuQg8Oj0aRIa7LZxHfd5ncU9bohInVDy/o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q3yMmlZp; arc=none smtp.client-ip=209.85.221.49
+	 Content-Type:MIME-Version; b=n3Cdb3XI33vWgIhwJl9H4KrUbggIQjbOg+hM+ZF7XkH/9leV62LldKnWOpJUxfJ7kHc2gmA0tipbPm29bjQEY7yw/C+FWs9yTvtibU3gmKNMLqRRRLdowGyc5GxtcOpVRPXb3syZCwDgy4g4yKTEzO0WAB1m1bcCJ6eQstdtXFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UN4Q3lvt; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c266c1389so2844340f8f.1;
-        Mon, 21 Apr 2025 05:12:32 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso38414065e9.2;
+        Mon, 21 Apr 2025 05:14:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745237551; x=1745842351; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745237666; x=1745842466; darn=vger.kernel.org;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=oz/EesnG7lVuzRX2BWQPzMarpKSzZV5VD/odYRnEHS8=;
-        b=Q3yMmlZp+vaEPNHk8yUFUOM0d6f+eTxLmnm7E2qdGJy5T0fOEd9zN1Thvuj0u5/bK7
-         R6fpZMUD8Aa8GvCbSge9vDqA5L+0VN/TuRV6n/fzQExaQWCb4656gUzbe+IDDXQ35Jym
-         NJtsXrkdWR7GHFBPUXasJJqvrZwQuIb5zTQKUqycU6LHprTgnUJPkIJpzBtmj7Y+snwR
-         QQp1CCt1SY6nDnehin/Aq+HJDymvMQFzhZ1jR7PGPZadN1A9rtv8y7W4KwNvUB6zVmWn
-         obqM+KmkRyrBEN86pDZVkCK1/EZq0UOzgfVfaI14w/wvgddYHdXDKGPa5rCr1jxcr3Vp
-         VJKw==
+        bh=td7Otdot6XjvGZ7Fvxee48NNbQBtzlOar+C+8YoNcyM=;
+        b=UN4Q3lvta0fH17wpmLfpXnXmDvWyeTKyxbFdXbI61hFX4dE0MTqDNFYgxpR8bRwmoP
+         HxjbPFqCpJF9vCJQwU8dfRsxc2C3aFj4jDxyp3xWqXM/dkN/IvFA2s9O2EtUcegJyTgv
+         x7Hbi2sFkBdB2aw31HqxhWQAJGyQ3gWibU5OsGJ8nsjBmLw7M6rohd9Ipu16epVhnY1r
+         +/r97x4EUCaVlF/TFYDHgXNW/Kf2Gt7fayzZ7cs811InLvlHiOBQTX+mmrqhUGXR3Hlj
+         0s9CTeOziq6mMQCEahI6X3HKRxElW77hrNOGrpg3HXa906xpBLPQp+VJM5awBNwDM3SP
+         vfig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745237551; x=1745842351;
+        d=1e100.net; s=20230601; t=1745237666; x=1745842466;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=oz/EesnG7lVuzRX2BWQPzMarpKSzZV5VD/odYRnEHS8=;
-        b=bLlFk4tBXydV9zuGO7RBtQsfOsUOn/SpU7RahPrrrWOExZ798ukPKwYSww0Rpj3Dni
-         4mqLIc2zyNxnH7YerzufCianedJh0B5ljjW8HmlSEMDdYhlR8zs0DW8qsT2jM8qPiuzk
-         6ARXT3fxuDzN5bO5uz9UlNAKlhPKsgfEeOOjYd+WlQKarZKXwrYYiz3q+r+AkYlQqAHn
-         fnRPNEOkyqzDyiGOcc+NDkPCxq40jTuby5fyDKkNooq/lDXeCYFuNM4rc782upifSDLU
-         t5LjSDhVtdZBsmbX8P2A5Cz/HqTM17upo8bKYkYSfEsPa5uNvciftd/evpbGgFWlOh/x
-         oR0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUbEeg5/zwBaLPoJlL2bKO7C4xk9iizE66mA6NGkb6wG1cVEAyJavqfu+CHkcsXTgA/YH5sVxJWJ6wq@vger.kernel.org, AJvYcCVqWAq0hxsqccoLzwCTCncPuoHVS54H/dTpiynkELtqKk9zA3xM9Vn3YZ3Y+EgolezKkxnxRacGnGQh1wc=@vger.kernel.org, AJvYcCWcD0d/skasYVmkZ2S4FUxt9OYH09wWIbv3HES0+8j5zEes2i6QPBsmkkQPFGhyFB+PPQD0v+CQO3e7@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpxX3LCkErMijyAQ1CZsmo91g3PMgnVIcuhGEQBmgsGWXPlGLE
-	jf4kESv/XclJhJccINY46NWa1QrvTWjpieOkOi/49xfFIRPBzZdq
-X-Gm-Gg: ASbGncvvwFINvlm30O5fMdKbW0J2r7ylOPHkYQPw1Aj3RRE0l/42CeJU88Awc686ipA
-	0ZU498owJV8fu6xAuo12zodbsgLPbPFH+idE4TIG0T5e45jeg/qUEW+t5WFPRpImS4junLLjtz5
-	lmSiQ0/hjPGdiHZUd2Va6wPwnvbiltZvZkz9+B8cBGyzR7apEzEvAbzVv/nrhhOIgx5eiH6efyi
-	OlwgmYjnydeZBNPLqCpOcSidegOl27uPVTkb6vzrCsph6/932A1dwZf9wnMpEXdDVGLYWVwX7iP
-	LlBzraGUCbeBqDkyEQP+EWENgCGMqKHHxSBkP6wHCaYyKmqiro3+sPcMUaNRlkybFAn4ALqHiNU
-	W5cXadcwU+5Nb
-X-Google-Smtp-Source: AGHT+IHyhxaVLgEe8TVcRlm+QjhQUpNKRGjTCVXiwtMyuS+p57fKxMIGwjD3lg0Z0Ac7KwH7kDcABA==
-X-Received: by 2002:a05:6000:290b:b0:391:4999:778b with SMTP id ffacd0b85a97d-39efba5b7a9mr9261398f8f.28.1745237550982;
-        Mon, 21 Apr 2025 05:12:30 -0700 (PDT)
+        bh=td7Otdot6XjvGZ7Fvxee48NNbQBtzlOar+C+8YoNcyM=;
+        b=rIFCgpAvbXJiME3SRbjur9FB6yt7nim1nmWXorBb3rRCLgd2cs9+HueWxF4qGfsQJG
+         OeOxdm7XG4FLABah1ZwyVjhSa+MkEVgC4UscQJGcdGNq24LskBvWim+v3mj1pvHLEumx
+         njwfIU7eOe4GQjf12L9keW7mQcx43V07/9E5b1uyD3n+VKH+/pP87ow0qTg/ygn+B3cL
+         D7foACqL87erAfza9fhZldiUMUTYUwruNKQJJRL2Ow64EPa1k6pRfd3bpq7F85XXVcKy
+         tdB42P7P9Nt9qGSwZsUe7wCmBHSbiouLHOTerbssmyXo4Yszz0+kb+pds8sKiHVqmq2H
+         /KEg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpw+Pq2FN6fl/noFgptc7EuH7Gwbc35BdVkfTbdiGGLK48tkuHKsWVrxEumQSkXOl70K22yLnTwjKv@vger.kernel.org, AJvYcCWsc63xgXz0yqKdDg4pcydGmQkU08LMYs6EX5YPxD53te9uUHrepzgQsZGE24Iy959J2Ki5hHNQMwlpbwY=@vger.kernel.org, AJvYcCX40eU82rx3PwSSpGo6WPbT75j3dQmQMrCpR+R0P6Sme/XhECE2+O1vJMpuZ+lwbZhk9TFh+4E1KKqC@vger.kernel.org
+X-Gm-Message-State: AOJu0YySFqCnPSOo2oNfm935Sg7o6daEN+5pknCMwHJGMPjp89/yG2PC
+	XyXJo69827Os1lOBQzEM1JLP50fX5jQh3JTZglTi7FOSje7yKyn6
+X-Gm-Gg: ASbGncuongZk7azb1HIv3pZYdNB2OrkV09wdVlbTlt/sZJ93uBu/DC2olrvopp1y441
+	3dYjmSlOGynZYRVFIKha5wC3JqLrskEe79se6PnB/ZIL/hSNvI9FXHhkG7LknixW0iZA5Qg7XbQ
+	O3ihj2drSqNJTCVKvZemzW40Ef/eUWl42FFwS279HwfnRqxtvhL9kC2QAh6ag5D9O5N177n811D
+	6UU+H59CYoRk1ueDR7TxfADrUo4TeF2NzIwex0sAyHr6yh77fxTyxCucqeLDAnHRj0tfXywJ8mt
+	K5PItZc8Ne8rt2+waxqgaJO0E9JqPF5nzY6UajN2B1ZgDq9fWrT2zbhO5ttF6iBbbaqr72UiUbM
+	XeJ83sdOmOvGP
+X-Google-Smtp-Source: AGHT+IGKTTGWaHLscW+1KvK2MACnOQGtSPCDDDiEvtoDwRyPDxK1sGOVnp/lBTJoQL4402Wbwr6IQA==
+X-Received: by 2002:a05:600c:3b0f:b0:440:6a5f:c308 with SMTP id 5b1f17b1804b1-4406ab96a58mr90348535e9.13.1745237665633;
+        Mon, 21 Apr 2025 05:14:25 -0700 (PDT)
 Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43d07csm11898439f8f.58.2025.04.21.05.12.29
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5d6f86sm130943695e9.35.2025.04.21.05.14.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 05:12:30 -0700 (PDT)
-Message-ID: <66dd1d165df00d271491a6a5d2a8beaa25f7aec6.camel@gmail.com>
-Subject: Re: [PATCH v2 01/17] dt-bindings: mfd: adp5585: ease on the
- required properties
+        Mon, 21 Apr 2025 05:14:25 -0700 (PDT)
+Message-ID: <aadec5eae6645e3e9c2f8f09dcf842510515122f.camel@gmail.com>
+Subject: Re: [PATCH v2 02/17] mfd: adp5585: enable oscilator during probe
 From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, nuno.sa@analog.com
 Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
@@ -85,11 +84,11 @@ Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
  =?ISO-8859-1?Q?Kleine-K=F6nig?=	 <ukleinek@kernel.org>, Linus Walleij
  <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry
  Torokhov <dmitry.torokhov@gmail.com>, Liu Ying <victor.liu@nxp.com>
-Date: Mon, 21 Apr 2025 13:12:33 +0100
-In-Reply-To: <20250421085605.GA29968@pendragon.ideasonboard.com>
+Date: Mon, 21 Apr 2025 13:14:28 +0100
+In-Reply-To: <20250421085758.GB29968@pendragon.ideasonboard.com>
 References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
-	 <20250415-dev-adp5589-fw-v2-1-3a799c3ed812@analog.com>
-	 <20250421085605.GA29968@pendragon.ideasonboard.com>
+	 <20250415-dev-adp5589-fw-v2-2-3a799c3ed812@analog.com>
+	 <20250421085758.GB29968@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.0 
@@ -100,62 +99,76 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-04-21 at 11:56 +0300, Laurent Pinchart wrote:
+On Mon, 2025-04-21 at 11:57 +0300, Laurent Pinchart wrote:
 > Hi Nuno,
 >=20
 > Thank you for the patch.
 >=20
-> On Tue, Apr 15, 2025 at 03:49:17PM +0100, Nuno S=C3=A1 via B4 Relay wrote=
+> On Tue, Apr 15, 2025 at 03:49:18PM +0100, Nuno S=C3=A1 via B4 Relay wrote=
 :
 > > From: Nuno S=C3=A1 <nuno.sa@analog.com>
 > >=20
-> > It is not mandatory to use all the capabilities of the device. One can
-> > very well only use it as a gpio controller without the PWM support. Thi=
-s
-> > will be even more evident when support for the matrix keymap is added.
-> > Hence drop the requirements for PWM and GPIO.
+> > Make sure to enable the oscillator in the top device. This will allow t=
+o
+> > not control this in the child PWM device as that would not work with
+> > future support for keyboard matrix where the oscillator needs to be
+> > always enabled (and so cannot be disabled by disabling PWM).
 >=20
-> This seems to make sense.
->=20
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->=20
-> I however expected changes in this series to *not* register MFD cells
-> for the devices not enabled in DT. Could you do so in v3, on top of this
-> patch ?
+> Setting this bit unconditionally increases power consumption. It should
+> only be set when needed.
 
-Makes sense... In theory, I would go with MFD_CELL_OF() but that would need=
- (I
-guess) bindings for all the devices and since PWM and GPIO were not introdu=
-ced
-with that...
-
-Anyways, I'll look into some "mandatory" property for each of the supported
-cells and use that as deciding point.
+Well, not sure if the effort for that pays off... The only usecase were it =
+would
+make sense to do that would be for PWM. For the other devices (and assuming=
+ I'm
+right with the GPI case) we need this always set.
 
 - Nuno S=C3=A1
 
 >=20
 > > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 > > ---
-> > =C2=A0Documentation/devicetree/bindings/mfd/adi,adp5585.yaml | 3 ---
-> > =C2=A01 file changed, 3 deletions(-)
+> > =C2=A0drivers/mfd/adp5585.c | 16 ++++++++++++++++
+> > =C2=A01 file changed, 16 insertions(+)
 > >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-> > b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+> > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
 > > index
-> > ee2272f754a339569c793102928ddd13249f8fee..e30e22f964f78519b2ec207e9415e=
-4897d
-> > b5c702 100644
-> > --- a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-> > +++ b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-> > @@ -52,9 +52,6 @@ patternProperties:
-> > =C2=A0required:
-> > =C2=A0=C2=A0 - compatible
-> > =C2=A0=C2=A0 - reg
-> > -=C2=A0 - gpio-controller
-> > -=C2=A0 - "#gpio-cells"
-> > -=C2=A0 - "#pwm-cells"
+> > 160e0b38106a6d78f7d4b7c866cb603d96ea673e..f17b5f2474cac6a403556694066f4=
+38288
+> > 264a49 100644
+> > --- a/drivers/mfd/adp5585.c
+> > +++ b/drivers/mfd/adp5585.c
+> > @@ -110,6 +110,13 @@ static const struct regmap_config
+> > adp5585_regmap_configs[] =3D {
+> > =C2=A0	},
+> > =C2=A0};
 > > =C2=A0
-> > =C2=A0allOf:
-> > =C2=A0=C2=A0 - if:
+> > +static void adp5585_osc_disable(void *data)
+> > +{
+> > +	const struct adp5585_dev *adp5585 =3D data;
+> > +
+> > +	regmap_write(adp5585->regmap, ADP5585_GENERAL_CFG, 0);
+> > +}
+> > +
+> > =C2=A0static int adp5585_i2c_probe(struct i2c_client *i2c)
+> > =C2=A0{
+> > =C2=A0	const struct regmap_config *regmap_config;
+> > @@ -138,6 +145,15 @@ static int adp5585_i2c_probe(struct i2c_client *i2=
+c)
+> > =C2=A0		return dev_err_probe(&i2c->dev, -ENODEV,
+> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid device ID 0x%02x\n", id);
+> > =C2=A0
+> > +	ret =3D regmap_set_bits(adp5585->regmap, ADP5585_GENERAL_CFG,
+> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ADP5585_OSC_EN);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret =3D devm_add_action_or_reset(&i2c->dev, adp5585_osc_disable,
+> > adp5585);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > =C2=A0	ret =3D devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+> > =C2=A0				=C2=A0=C2=A0 adp5585_devs, ARRAY_SIZE(adp5585_devs),
+> > =C2=A0				=C2=A0=C2=A0 NULL, 0, NULL);
 
