@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-5598-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5599-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BEFFA94E58
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 10:58:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 075E5A94E64
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 11:03:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3AE1B7A263B
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 08:57:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F361317142C
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 09:03:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6BC2213E91;
-	Mon, 21 Apr 2025 08:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A2FE20FAA8;
+	Mon, 21 Apr 2025 09:03:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="M9L9yFUQ"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kjGbTkvO"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E2F213E76;
-	Mon, 21 Apr 2025 08:58:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3AB1D7984;
+	Mon, 21 Apr 2025 09:03:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745225883; cv=none; b=bOAPjpj/eObkj++vev0d0wW1bIalxiL4BUzq+ascXNsS7V4iPJX9i3Cvhtb9cYCM7ShzkuR22EifHeI4O58t0pU+OfqpVvzfOExZsWe9TvDnuvoQuvNd2w8vUpfsyKmqfMqyHs//jQsDTLrT4PWsxMqmQnht+2Zuvvlgrhgld+I=
+	t=1745226214; cv=none; b=dFdCXw8drrrDrZHDD3tLkfwq16UZVmJYvqV//NBivOBe62cdqU6kgWnXRXp8v/GKz4K+cVpL1H3G4FliRwClG3jwr37rAFPvEC+sTaoT4zCaP6NZ5+xnCklpjbNxCS3e7zXwIjQuERMxvuM/ev6o/HBKLIUK22vgZvUfU21sfpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745225883; c=relaxed/simple;
-	bh=ygmT0Sf9GDX0U2wfYZWPkoxotvaF2Ip6k93c0ynToVk=;
+	s=arc-20240116; t=1745226214; c=relaxed/simple;
+	bh=sPeoqzzUgFTEvHPCa7H3p5g1By1IUdg+KjN37r8+SP0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uCp0Ex4p14ZFejxDobW2wPBBV3g3TIyeJ6Bhc8/m2jMUmf3Dqg4SZcBIDwoY4OG6uFwMyPKfXbEHFhXIvxhD0ANST3+TyHiyMa9T+wT9iQTsu5av1g079CsHwJoP8UnzCw/gNdz8bn7rmv6jMlNUVgTS5xJfL397CjRWtv0hQkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=M9L9yFUQ; arc=none smtp.client-ip=213.167.242.64
+	 Content-Type:Content-Disposition:In-Reply-To; b=rfD6D2PY0YP28pTTk4pbcEuR1OKg66sffuAO2R5eJSZ1oqbiDMooL53ygGxRMMTqudEg3D6x7XH8MNBeKRs+MUh+naylYt7O5N2W98TmmmeK162wvwDeC6d46VjzxkP5f2aCmB3IwS3ZvrCfrNyzplC23z/6UF8+SjDEbPfAjyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=kjGbTkvO; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7230C56D;
-	Mon, 21 Apr 2025 10:55:53 +0200 (CEST)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5FE5656D;
+	Mon, 21 Apr 2025 11:01:23 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745225753;
-	bh=ygmT0Sf9GDX0U2wfYZWPkoxotvaF2Ip6k93c0ynToVk=;
+	s=mail; t=1745226083;
+	bh=sPeoqzzUgFTEvHPCa7H3p5g1By1IUdg+KjN37r8+SP0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M9L9yFUQ0Ols/UiXPmFX2+DZoHYy1+CKYqqyz+NjEaZIhIeF2Ou6zL35ioBjvd3+n
-	 VawJrLQju8+QrZQLHft/VC+J4H8tarcixuerq2wwlpUSMqmoCnE5HUsYmOkg04GIK6
-	 rb1Ky0iWkvd8K68E34kMWUEoJHK2bOMGUbSN4sLk=
-Date: Mon, 21 Apr 2025 11:57:58 +0300
+	b=kjGbTkvOotVrqrg7pRAeoDcSFs2DNriDtgQiXOgtDz309ZqUJZYUCuVifbIE68FSR
+	 rmxBptW4rHq1PlLcRSSiHWRh6QehTMxfYGg13xQ0E+8GONeR8RydIAhp4tvsEUdk8x
+	 UJAp1ivUC1lA9EKtbc8dVA5USJQ6KGzGfY5R0Zz8=
+Date: Mon, 21 Apr 2025 12:03:28 +0300
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To: nuno.sa@analog.com
 Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
@@ -54,10 +54,10 @@ Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH v2 02/17] mfd: adp5585: enable oscilator during probe
-Message-ID: <20250421085758.GB29968@pendragon.ideasonboard.com>
+Subject: Re: [PATCH v2 04/17] mfd: adp5585: make use of MFD_CELL_NAME()
+Message-ID: <20250421090328.GC29968@pendragon.ideasonboard.com>
 References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
- <20250415-dev-adp5589-fw-v2-2-3a799c3ed812@analog.com>
+ <20250415-dev-adp5589-fw-v2-4-3a799c3ed812@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -67,62 +67,46 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250415-dev-adp5589-fw-v2-2-3a799c3ed812@analog.com>
+In-Reply-To: <20250415-dev-adp5589-fw-v2-4-3a799c3ed812@analog.com>
 
-Hi Nuno,
-
-Thank you for the patch.
-
-On Tue, Apr 15, 2025 at 03:49:18PM +0100, Nuno Sá via B4 Relay wrote:
+On Tue, Apr 15, 2025 at 03:49:20PM +0100, Nuno Sá via B4 Relay wrote:
 > From: Nuno Sá <nuno.sa@analog.com>
 > 
-> Make sure to enable the oscillator in the top device. This will allow to
-> not control this in the child PWM device as that would not work with
-> future support for keyboard matrix where the oscillator needs to be
-> always enabled (and so cannot be disabled by disabling PWM).
-
-Setting this bit unconditionally increases power consumption. It should
-only be set when needed.
-
+> Use the helper macro. No functional change intended...
+> 
 > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > ---
->  drivers/mfd/adp5585.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  drivers/mfd/adp5585.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-> index 160e0b38106a6d78f7d4b7c866cb603d96ea673e..f17b5f2474cac6a403556694066f438288264a49 100644
+> index f17b5f2474cac6a403556694066f438288264a49..fafe3ad93ea196e1eb8e79fecba58f36f12167eb 100644
 > --- a/drivers/mfd/adp5585.c
 > +++ b/drivers/mfd/adp5585.c
-> @@ -110,6 +110,13 @@ static const struct regmap_config adp5585_regmap_configs[] = {
->  	},
+> @@ -4,6 +4,7 @@
+>   *
+>   * Copyright 2022 NXP
+>   * Copyright 2024 Ideas on Board Oy
+> + * Copyright 2025 Analog Devices Inc.
+>   */
+>  
+>  #include <linux/array_size.h>
+> @@ -18,8 +19,10 @@
+>  #include <linux/types.h>
+>  
+>  static const struct mfd_cell adp5585_devs[] = {
+> -	{ .name = "adp5585-gpio", },
+> -	{ .name = "adp5585-pwm", },
+> +	MFD_CELL_NAME("adp5585-keys"),
+> +	MFD_CELL_NAME("adp5585-gpio"),
+> +	MFD_CELL_NAME("adp5585-pwm"),
+> +
 >  };
 >  
-> +static void adp5585_osc_disable(void *data)
-> +{
-> +	const struct adp5585_dev *adp5585 = data;
-> +
-> +	regmap_write(adp5585->regmap, ADP5585_GENERAL_CFG, 0);
-> +}
-> +
->  static int adp5585_i2c_probe(struct i2c_client *i2c)
->  {
->  	const struct regmap_config *regmap_config;
-> @@ -138,6 +145,15 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
->  		return dev_err_probe(&i2c->dev, -ENODEV,
->  				     "Invalid device ID 0x%02x\n", id);
->  
-> +	ret = regmap_set_bits(adp5585->regmap, ADP5585_GENERAL_CFG,
-> +			      ADP5585_OSC_EN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = devm_add_action_or_reset(&i2c->dev, adp5585_osc_disable, adp5585);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
->  				   adp5585_devs, ARRAY_SIZE(adp5585_devs),
->  				   NULL, 0, NULL);
+>  static const struct regmap_range adp5585_volatile_ranges[] = {
 
 -- 
 Regards,
