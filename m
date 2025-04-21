@@ -1,80 +1,81 @@
-Return-Path: <linux-pwm+bounces-5620-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5621-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F69BA950C4
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 14:21:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 027AEA950CB
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 14:22:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE2603B2FB2
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 12:20:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B48EE1889055
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Apr 2025 12:22:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D769E264638;
-	Mon, 21 Apr 2025 12:21:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26A52264636;
+	Mon, 21 Apr 2025 12:22:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOQbM8Xk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lijlAaUy"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2C313212A;
-	Mon, 21 Apr 2025 12:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA5B25D8EE;
+	Mon, 21 Apr 2025 12:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745238070; cv=none; b=n/TBgOXqTGM8NV6fSxT96W6c2mQg4D8WxbjKduNzRi9WKb2uJcSBzrgeEPKUgfdnGYRhADRsICiDF+MtOIjaYScJmCaiDCOmzKShP/Qcn3DqfnuMCCCEexLFaHX8qzArmjm84TUFzESYFm/ZXt+Ez6mMbsOJMDNWROzhcSkmOAI=
+	t=1745238147; cv=none; b=tZzdO8PZnzD2RJAHdl8RaHBK51GyRZC2EiLcClZGgpqfudfEWFnxlUL7kmzYYdKtAMSjls/VAcbjhXSv1c585K93Y886O4J1Euf7yUeSaHAhZ7yK+doc+ELAu9qPY1jbGcUK2Z6Mm/0sRp4OsZq+P4kxqHs9Sy+thvyR8tOHlMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745238070; c=relaxed/simple;
-	bh=FOeXhkkVgbW9taSLiMsmkyXlWH9oHpVRMuwNxquXCWw=;
+	s=arc-20240116; t=1745238147; c=relaxed/simple;
+	bh=PFt3nJNAK8U/gXFCq3I7roT//pRw7/VOmEfMsWonZCw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NG+YVwX5hlwxtp0BpFS6+5pAv2vwoR2dfA12kjeQkW1DdIPiifyA2SGzxcGyyGGXwkDO7BYgoh0rDZDty17cQYyusaBHD1xD0Vqx94TIZFQHOk96X4OJfKFlHUHnhb5MKyTQwnzUFkUrqxb0dl4mbZynaHoMAJFSWj9QK0CISuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OOQbM8Xk; arc=none smtp.client-ip=209.85.221.45
+	 Content-Type:MIME-Version; b=tWi5vrnSCjCu7vVyzM3wrfVxaAuQ6ofP0KepJNEWPnH6WNWynBWgsOdNj3TZMNMiFkwbTMh4/vUNUON+5um7PlcOv1bS3BTe+SmYKgjWiPca9a55winO+exThmkgnj3T6pHehspeZU6D2IxM7gXdlAGv7PAor7qHbISmELHKBUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lijlAaUy; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so4158376f8f.1;
-        Mon, 21 Apr 2025 05:21:08 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so19135475e9.1;
+        Mon, 21 Apr 2025 05:22:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745238067; x=1745842867; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745238143; x=1745842943; darn=vger.kernel.org;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=I305Krk8QG350ocyLsdwoASX0Z32CoLXWq9VyLahcUo=;
-        b=OOQbM8XkuXONZ82a2wEn5m6O2Hx/PbTpx2Zrx/yqHpyXMYcGUkJ+/d7HJ6N8bScfCn
-         JWnB/QX9XAMCibU7cvqLNRzlKWpvG88E623bMsL0ESREZ70XXRpHm5j4pvdHz0QQNAaV
-         uaF1LAYSd2eaICZtPQyoND6NzrM0ZTr/nVEpTmxdjaDXLXAcHz0VjzEsyH5wUfT2tyzb
-         Fa0VoU1+5ty5Rs8TNN8ygKicmIDDd2AZn4g3dkIB9yQRXNv9Ft9YVYiZRpinhnGN23yc
-         WlsI+ng6jhVzl9BRU6mwhEVzxm3yJBN5dzNQ21edHKuJT8bsYWjWjNYS+3fTDSm7E8x6
-         +Eqw==
+        bh=h7wdPw6oEf/Je541KmTzwPRxWgw9ZbYGUOjQ/nCZ+Mw=;
+        b=lijlAaUyFCNmKkgGjiCmytZjF6zenf8d0wQzLUGdk4Q4ckB9kT7BZRhOCz6qCeTT5/
+         u3nuQHYyaFOj+fYoddq70ctHnPBxDlRFsxcWN49LjIhGQ9X9a3HjM28TnQ+rG+mHFbyz
+         DvrCNziDFh9iwMNaJE5PdPSMqjG5NLJi0vFIIAH4uUAYAyMRXMAbjacC5peu96xrnAJ9
+         /D0j8m+3yh5vfyamsVUAs1AnZRoM5O92dL0EzOn36l0pEI6peIDeRAHV+rMvKYEc0Zy/
+         hUoKvohyqn3qLjtL+/kvwCcVqiCRwxfCB2aBn5GFtSG0CfZ/pfot2/DhUinXkJh6GfOT
+         bCPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745238067; x=1745842867;
+        d=1e100.net; s=20230601; t=1745238143; x=1745842943;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=I305Krk8QG350ocyLsdwoASX0Z32CoLXWq9VyLahcUo=;
-        b=ZOjOwacFSUAohhV0W3cfGzFhqQAbxZ7FzksSYsyzVRm9MphW43T0FkVgK3c1lFh8d9
-         JIu4uspLfd3qzhIzP/h7E5IzmcUVc4JBQB6OxR9UiXKikD9FFb+F6gPr0SDr4IY2Qrbq
-         TZHnpbXCO9XGZrK1Zs83k1ioDLxYVfcGJu4/UbCqsWDWiARuwnRlcJ+/6evIDZVT474s
-         ZGLHjApm8GXe+ZjKyQU4a27i5pkeG1h/vylXXnsvhQXMlr/Vm6sdStMxrzT1in5R5trP
-         j55ObCI8ks7sYGt+ruzKGArTYJp4BX7UMW6M+GH8VcTwjIGA7XGC+08X8IgTcj+LdTR8
-         ypTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDKtQsuXSUrhLxJKQ81o86FeOJqd1eavne0kOV0kwiNngAGw1qRFxz61b/RPK0MlPLhAXiQ2JKfBLl@vger.kernel.org, AJvYcCVDz+fasciU38XoaUuYL5cyrfk9WZ9Yy70PymPKkb8N34xwLPjXUscAQ8L3UszNZ5U37OluWK2KBVtmijU=@vger.kernel.org, AJvYcCWZWqpD7j3hxqmsMp62eDVwojird+ct4gnEQQHg3NYUi5jqnqEZ39a2yHpd3WDVGfxMNyCzdISyWodB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJN6Qhw6vcvMRs8tuuMCMW7dLYpbGMsAyyJtg4B80BqGuJvMpK
-	bx5kqozLFiBcmWE7uyzY3l+rayfWCZbyNBpVSWfehtH1f92VOwot
-X-Gm-Gg: ASbGncv9p5vAhxutn56+0jU+8BHh8/gP/gX7dXFHc7ZwCuYC1YSspeHsgQjNYonfmZw
-	GplRi/xYzecR064EvPVxu0Sa81IfIKTUTi/sE5xLn7JQ/wBr33efUOMSr9KB+rGdi15H5QrXIQz
-	ZUrWoHB6hSNbwNgvmfqqBLH+XpMbKFtF6Bm0CTaC9tDjORVvF0XF2sFZQi4tmHi28zxJvxARNWg
-	ovhE+YV4XUo46mUHMKQ3dyz1foMqcmLsvo0DBcHo+zZBuHxc+5tHO2DDClfmOVsBAIeq32Ryprq
-	XD1VfFuv90mw8kFVLN1kcg+c9RLPvqM1iz1JiKVmxiZ3+5VQioo6Hpvg77mucyyW8Dw+pDEx9m8
-	7bsbUVmdA15fN
-X-Google-Smtp-Source: AGHT+IESwOPHjM8O1YZ5lCX8ZyGWZCiNwtt+nEmXof5SDgHSfOI/0OBlD9OJSniVhnkb3pF+82Xsmw==
-X-Received: by 2002:a05:6000:2903:b0:39c:30d9:3b5c with SMTP id ffacd0b85a97d-39efbad53f0mr9081654f8f.39.1745238066620;
-        Mon, 21 Apr 2025 05:21:06 -0700 (PDT)
+        bh=h7wdPw6oEf/Je541KmTzwPRxWgw9ZbYGUOjQ/nCZ+Mw=;
+        b=uf3BgjwxPp0dmTrD3JvtVpkPox9wYdkQbdXSPL4hANqm+Z7ajyluza8c6iaGa/5TAz
+         5iAt4T3g7t84cKZ7RN6cKlczFOTgKDNkvM8XwQxOXLoAXN3O6n64EsfwC2e0roQz84xr
+         tO1R8lzk4n/1m6j0OAfuBsOXe/i9uckAClKLeo+aXau/hL4BS/e5uut8tiEa1zrFioQD
+         EzHoCqk0l1FMI4XqGeO4QpCehraTSJKmRtgY+TjWU/2kenpO/IeJTEBHYI8R1gwZ5evs
+         jnLMiuhfSbhEZlJTFDeHDwoSZ5/p47aSJRZxdY7XytgNgYa5PV1l9w2kBlvFt6VC9Hq9
+         VS4A==
+X-Forwarded-Encrypted: i=1; AJvYcCV63ybMsdynU5gRtpcoY7LahAEVgKk6MNlazdEw3P6U46EeBhFb6OVJSNgJrbwd4M+LSbLbcSM8XZIxjlY=@vger.kernel.org, AJvYcCVQXRVQS5gPBUVogvQQVaRvaFC5+zg2CqmobHhntfiJgmZJJP1g22JPLtu7Vu5yTlK5g8qNzB3KI9L9@vger.kernel.org, AJvYcCXh32h/8ewckBix524FUP5bFmhQFDPWHJ9X4Xw4SJ7TXox/qSUqfi6qDh8HuMYtAbT1Ix8Eue5Lk/Do@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYfFJYnXIAb3hDkiRtSaNx6y3tqzFnwDzzoLloJawgOUGFFeZu
+	cmi+gbjwQr03H7Rlxza8piGkHTOrdL7GqtRfq96+Cw0XPhZ5i+ow
+X-Gm-Gg: ASbGncswmZvYF7XTVsfhfJxyuoLpQgdPlqUaYU+Wsf9kvEhi5ZmgXB95bN0lVZKZwbx
+	5yDCJAVxqmth8JrlsF95ZUhDO0qm4H1uPVtLdIacTILXrmTT/VJIPnj1iHNLDdC08gS3l9a92Jy
+	1rlB7WhuAnRuuLGIoo5rcmtqIKom39oFiG239IrjTR9gU/k8hXwboF40rBoiVLOB3V6JaldA3GL
+	1SuYs1Xiqi0+3Ku3rlgRBK31YcDpymEcMqe1C47Z+7GCqnYe/8IXHB/hoyM9avebRII0eaQ0lVg
+	fd1LMXoBIiT26QTARe42lc/5gzO/O45U8L6TWL0wskh4q1sFRDTt8DEhd7lo07wDTv04pvOb1d9
+	iB6Q5C7oV2/SP
+X-Google-Smtp-Source: AGHT+IEOgF4q9KSi8axfLY/hqMbVgLQmcXoaXHWhVcf2FdWqaOvTtd7bjfYH9Xw5QCxJ3xs1SFU3TA==
+X-Received: by 2002:a05:600c:548e:b0:43d:a90:9f1 with SMTP id 5b1f17b1804b1-4406ab67708mr84381195e9.6.1745238143000;
+        Mon, 21 Apr 2025 05:22:23 -0700 (PDT)
 Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d6dfe2esm133591175e9.34.2025.04.21.05.21.04
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5a9e43sm132286845e9.5.2025.04.21.05.22.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 05:21:05 -0700 (PDT)
-Message-ID: <36b161e08547dc2d5abd36340c596e2147d82ce7.camel@gmail.com>
-Subject: Re: [PATCH v2 06/17] mfd: adp5585: add support for adp5589
+        Mon, 21 Apr 2025 05:22:22 -0700 (PDT)
+Message-ID: <f478582f9d5af6b3ab55d6f84a6342bcf90f8707.camel@gmail.com>
+Subject: Re: [PATCH v2 07/17] gpio: adp5585: add support for the ad5589
+ expander
 From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, nuno.sa@analog.com
 Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
@@ -84,11 +85,11 @@ Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
  =?ISO-8859-1?Q?Kleine-K=F6nig?=	 <ukleinek@kernel.org>, Linus Walleij
  <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry
  Torokhov <dmitry.torokhov@gmail.com>, Liu Ying <victor.liu@nxp.com>
-Date: Mon, 21 Apr 2025 13:21:08 +0100
-In-Reply-To: <20250421091559.GE29968@pendragon.ideasonboard.com>
+Date: Mon, 21 Apr 2025 13:22:25 +0100
+In-Reply-To: <20250421092351.GF29968@pendragon.ideasonboard.com>
 References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
-	 <20250415-dev-adp5589-fw-v2-6-3a799c3ed812@analog.com>
-	 <20250421091559.GE29968@pendragon.ideasonboard.com>
+	 <20250415-dev-adp5589-fw-v2-7-3a799c3ed812@analog.com>
+	 <20250421092351.GF29968@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.56.0 
@@ -99,469 +100,333 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-04-21 at 12:15 +0300, Laurent Pinchart wrote:
+On Mon, 2025-04-21 at 12:23 +0300, Laurent Pinchart wrote:
 > Hi Nuno,
 >=20
 > Thank you for the patch.
 >=20
-> On Tue, Apr 15, 2025 at 03:49:22PM +0100, Nuno S=C3=A1 via B4 Relay wrote=
+> On Tue, Apr 15, 2025 at 03:49:23PM +0100, Nuno S=C3=A1 via B4 Relay wrote=
 :
 > > From: Nuno S=C3=A1 <nuno.sa@analog.com>
 > >=20
-> > The ADP5589 is a 19 I/O port expander with built-in keypad matrix decod=
-er,
-> > programmable logic, reset generator, and PWM generator.
+> > Support the adp5589 I/O expander which supports up to 19 pins. We need
+> > to add a chip_info based struct since accessing register "banks"
+> > and "bits" differs between devices.
 > >=20
-> > This patch adds the foundation to add support for the adp5589 gpio and =
-pwm
-> > drivers. Most importantly, we need to differentiate between some
-> > registers addresses. It also hints to future keymap support.
+> > Also some register addresses are different.
 >=20
-> Please split this in two patches, one that reworks the driver to support
-> different register addresses, and one that adds adp5589 support.
+> Same comment as for 06/17, splitting the patch in two will make it
+> easier to review.
 >=20
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
 > > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 > > ---
-> > =C2=A0drivers/mfd/adp5585.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 223
-> > +++++++++++++++++++++++++++++++++++++++++---
-> > =C2=A0include/linux/mfd/adp5585.h |=C2=A0 57 ++++++++++-
-> > =C2=A02 files changed, 268 insertions(+), 12 deletions(-)
+> > =C2=A0drivers/gpio/gpio-adp5585.c | 121 +++++++++++++++++++++++++++++++=
++---------
+> > ---
+> > =C2=A01 file changed, 88 insertions(+), 33 deletions(-)
 > >=20
-> > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
+> > diff --git a/drivers/gpio/gpio-adp5585.c b/drivers/gpio/gpio-adp5585.c
 > > index
-> > fafe3ad93ea196e1eb8e79fecba58f36f12167eb..c3586c0d6aa2e7e7d946679934106=
-10be7
-> > fc3672 100644
-> > --- a/drivers/mfd/adp5585.c
-> > +++ b/drivers/mfd/adp5585.c
-> > @@ -25,6 +25,13 @@ static const struct mfd_cell adp5585_devs[] =3D {
+> > d5c0f1b267c82a5002b50cbb7a108166439e4785..d8f8d5513d7f6a9acf5bdecccacc8=
+9c461
+> > 5ce237 100644
+> > --- a/drivers/gpio/gpio-adp5585.c
+> > +++ b/drivers/gpio/gpio-adp5585.c
+> > @@ -4,6 +4,7 @@
+> > =C2=A0 *
+> > =C2=A0 * Copyright 2022 NXP
+> > =C2=A0 * Copyright 2024 Ideas on Board Oy
+> > + * Copyright 2025 Analog Devices, Inc.
+> > =C2=A0 */
 > > =C2=A0
+> > =C2=A0#include <linux/device.h>
+> > @@ -14,21 +15,49 @@
+> > =C2=A0#include <linux/regmap.h>
+> > =C2=A0#include <linux/types.h>
+> > =C2=A0
+> > -#define ADP5585_GPIO_MAX	11
+> > +struct adp5585_gpio_chip {
+> > +	unsigned int max_gpio;
+> > +	int (*bank)(unsigned int off);
+> > +	int (*bit)(unsigned int off);
+> > +	bool has_bias_hole;
+> > +};
+> > =C2=A0
+> > =C2=A0struct adp5585_gpio_dev {
+> > =C2=A0	struct gpio_chip gpio_chip;
+> > +	const struct adp5585_gpio_chip *info;
+> > =C2=A0	struct regmap *regmap;
+> > +	const struct adp5585_regs *regs;
 > > =C2=A0};
 > > =C2=A0
-> > +static const struct mfd_cell adp5589_devs[] =3D {
-> > +	MFD_CELL_NAME("adp5589-keys"),
-> > +	MFD_CELL_NAME("adp5589-gpio"),
-> > +	MFD_CELL_NAME("adp5589-pwm"),
-> > +
-> > +};
-> > +
-> > =C2=A0static const struct regmap_range adp5585_volatile_ranges[] =3D {
-> > =C2=A0	regmap_reg_range(ADP5585_ID, ADP5585_GPI_STATUS_B),
-> > =C2=A0};
-> > @@ -34,6 +41,15 @@ static const struct regmap_access_table
-> > adp5585_volatile_regs =3D {
-> > =C2=A0	.n_yes_ranges =3D ARRAY_SIZE(adp5585_volatile_ranges),
-> > =C2=A0};
-> > =C2=A0
-> > +static const struct regmap_range adp5589_volatile_ranges[] =3D {
-> > +	regmap_reg_range(ADP5585_ID, ADP5589_GPI_STATUS_C),
-> > +};
-> > +
-> > +static const struct regmap_access_table adp5589_volatile_regs =3D {
-> > +	.yes_ranges =3D adp5589_volatile_ranges,
-> > +	.n_yes_ranges =3D ARRAY_SIZE(adp5589_volatile_ranges),
-> > +};
-> > +
-> > =C2=A0/*
-> > =C2=A0 * Chip variants differ in the default configuration of pull-up a=
-nd pull-
-> > down
-> > =C2=A0 * resistors, and therefore have different default register value=
-s:
-> > @@ -77,10 +93,52 @@ static const u8
-> > adp5585_regmap_defaults_04[ADP5585_MAX_REG + 1] =3D {
-> > =C2=A0	/* 0x38 */ 0x00, 0x00, 0x00, 0x00, 0x00,
-> > =C2=A0};
-> > =C2=A0
-> > +static const u8 adp5589_regmap_defaults_00[ADP5589_MAX_REG + 1] =3D {
-> > +	/* 0x00 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x08 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x10 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x18 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x20 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x28 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x30 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x38 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x40 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x48 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +};
-> > +
-> > +static const u8 adp5589_regmap_defaults_01[ADP5589_MAX_REG + 1] =3D {
-> > +	/* 0x00 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x08 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x10 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x18 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x20 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x28 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x30 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x38 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00,
-> > +	/* 0x40 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x48 */ 0x00, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00,
-> > +};
-> > +
-> > +static const u8 adp5589_regmap_defaults_02[ADP5589_MAX_REG + 1] =3D {
-> > +	/* 0x00 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x08 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x10 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x18 */ 0x00, 0x41, 0x01, 0x00, 0x11, 0x04, 0x00, 0x00,
-> > +	/* 0x20 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x28 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x30 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x38 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x40 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +	/* 0x48 */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +};
-> > +
-> > =C2=A0enum adp5585_regmap_type {
-> > =C2=A0	ADP5585_REGMAP_00,
-> > =C2=A0	ADP5585_REGMAP_02,
-> > =C2=A0	ADP5585_REGMAP_04,
-> > +	ADP5589_REGMAP_00,
-> > +	ADP5589_REGMAP_01,
-> > +	ADP5589_REGMAP_02,
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0static const struct regmap_config adp5585_regmap_configs[] =3D {
-> > @@ -111,6 +169,131 @@ static const struct regmap_config
-> > adp5585_regmap_configs[] =3D {
-> > =C2=A0		.reg_defaults_raw =3D adp5585_regmap_defaults_04,
-> > =C2=A0		.num_reg_defaults_raw =3D sizeof(adp5585_regmap_defaults_04),
-> > =C2=A0	},
-> > +	[ADP5589_REGMAP_00] =3D {
-> > +		.reg_bits =3D 8,
-> > +		.val_bits =3D 8,
-> > +		.max_register =3D ADP5589_MAX_REG,
-> > +		.volatile_table =3D &adp5589_volatile_regs,
-> > +		.cache_type =3D REGCACHE_MAPLE,
-> > +		.reg_defaults_raw =3D adp5589_regmap_defaults_00,
-> > +		.num_reg_defaults_raw =3D sizeof(adp5589_regmap_defaults_00),
-> > +	},
-> > +	[ADP5589_REGMAP_01] =3D {
-> > +		.reg_bits =3D 8,
-> > +		.val_bits =3D 8,
-> > +		.max_register =3D ADP5589_MAX_REG,
-> > +		.volatile_table =3D &adp5589_volatile_regs,
-> > +		.cache_type =3D REGCACHE_MAPLE,
-> > +		.reg_defaults_raw =3D adp5589_regmap_defaults_01,
-> > +		.num_reg_defaults_raw =3D sizeof(adp5589_regmap_defaults_01),
-> > +	},
-> > +	[ADP5589_REGMAP_02] =3D {
-> > +		.reg_bits =3D 8,
-> > +		.val_bits =3D 8,
-> > +		.max_register =3D ADP5589_MAX_REG,
-> > +		.volatile_table =3D &adp5589_volatile_regs,
-> > +		.cache_type =3D REGCACHE_MAPLE,
-> > +		.reg_defaults_raw =3D adp5589_regmap_defaults_02,
-> > +		.num_reg_defaults_raw =3D sizeof(adp5589_regmap_defaults_02),
-> > +	},
-> > +};
-> > +
-> > +static const struct adp5585_regs adp5585_regs =3D {
-> > +	.debounce_dis_a =3D ADP5585_DEBOUNCE_DIS_A,
-> > +	.rpull_cfg_a =3D ADP5585_RPULL_CONFIG_A,
-> > +	.gpo_data_a =3D ADP5585_GPO_DATA_OUT_A,
-> > +	.gpo_out_a =3D ADP5585_GPO_OUT_MODE_A,
-> > +	.gpio_dir_a =3D ADP5585_GPIO_DIRECTION_A,
-> > +	.gpi_stat_a =3D ADP5585_GPI_STATUS_A,
-> > +	.pwm_cfg =3D ADP5585_PWM_CFG,
-> > +	.pwm_offt_low =3D ADP5585_PWM_OFFT_LOW,
-> > +	.pwm_ont_low =3D ADP5585_PWM_ONT_LOW,
-> > +	.gen_cfg =3D ADP5585_GENERAL_CFG,
-> > +	.ext_cfg =3D ADP5585_PIN_CONFIG_C,
-> > +};
+> > +static int adp5585_gpio_bank(unsigned int off)
+> > +{
+> > +	return ADP5585_BANK(off);
 >=20
-> Why does this need to be stored in this driver, and not in the drivers
-> for the gpio and pwm cells ? If the kernel is compiled without e.g. the
-> adp5585-pwm driver, we shouldn't waste memory here by adding data that
-> only the adp5585-pwm driver needs.
->=20
+> While at it, let's move the ADP558[59]_{BANK,BIT} macros to this file,
+> and name them ADP558[59]_GPIO_{BANK_BIT}.
 
-I don't really think the memory we would save to be that relevant but I can
-better separate things. I guess i went like this because there's some share=
-d
-variables that will have to be in the top level structs and I did not wante=
-d to
-have a "global" and "local" regs thingy...
+Sure...
 
-- Nuno S=C3=A1
-
-> > +
-> > +static const struct adp5585_regs adp5589_regs =3D {
-> > +	.debounce_dis_a =3D ADP5589_DEBOUNCE_DIS_A,
-> > +	.rpull_cfg_a =3D ADP5589_RPULL_CONFIG_A,
-> > +	.gpo_data_a =3D ADP5589_GPO_DATA_OUT_A,
-> > +	.gpo_out_a =3D ADP5589_GPO_OUT_MODE_A,
-> > +	.gpio_dir_a =3D ADP5589_GPIO_DIRECTION_A,
-> > +	.gpi_stat_a =3D ADP5589_GPI_STATUS_A,
-> > +	.pwm_cfg =3D ADP5589_PWM_CFG,
-> > +	.pwm_offt_low =3D ADP5589_PWM_OFFT_LOW,
-> > +	.pwm_ont_low =3D ADP5589_PWM_ONT_LOW,
-> > +	.gen_cfg =3D ADP5589_GENERAL_CFG,
-> > +	.ext_cfg =3D ADP5589_PIN_CONFIG_D,
-> > +};
-> > +
-> > +static const struct adp5585_info adp5585_info =3D {
-> > +	.adp5585_devs =3D adp5585_devs,
-> > +	.regmap_config =3D &adp5585_regmap_configs[ADP5585_REGMAP_00],
-> > +	.n_devs =3D ARRAY_SIZE(adp5585_devs),
-> > +	.id =3D ADP5585_MAN_ID_VALUE,
-> > +	.regs =3D &adp5585_regs,
-> > +	.max_rows =3D ADP5585_MAX_ROW_NUM,
-> > +	.max_cols =3D ADP5585_MAX_COL_NUM,
 >=20
-> Same here, the max_rows and max_cols fields don't seem to belong to this
-> driver.
->=20
-> > +};
+> > +}
 > > +
-> > +static const struct adp5585_info adp5585_01_info =3D {
-> > +	.adp5585_devs =3D adp5585_devs,
-> > +	.regmap_config =3D &adp5585_regmap_configs[ADP5585_REGMAP_00],
-> > +	.n_devs =3D ARRAY_SIZE(adp5585_devs),
-> > +	.id =3D ADP5585_MAN_ID_VALUE,
-> > +	.regs =3D &adp5585_regs,
-> > +	.max_rows =3D ADP5585_MAX_ROW_NUM,
-> > +	.max_cols =3D ADP5585_MAX_COL_NUM,
-> > +};
+> > +static int adp5585_gpio_bit(unsigned int off)
+> > +{
+> > +	return ADP5585_BIT(off);
+> > +}
 > > +
-> > +static const struct adp5585_info adp5585_02_info =3D {
-> > +	.adp5585_devs =3D adp5585_devs,
-> > +	.regmap_config =3D &adp5585_regmap_configs[ADP5585_REGMAP_02],
-> > +	.n_devs =3D ARRAY_SIZE(adp5585_devs),
-> > +	.id =3D ADP5585_MAN_ID_VALUE,
-> > +	.regs =3D &adp5585_regs,
-> > +	.max_rows =3D ADP5585_MAX_ROW_NUM,
-> > +	.max_cols =3D ADP5585_MAX_COL_NUM,
-> > +};
+> > +static int adp5589_gpio_bank(unsigned int off)
+> > +{
+> > +	return ADP5589_BANK(off);
+> > +}
 > > +
-> > +static const struct adp5585_info adp5585_04_info =3D {
-> > +	.adp5585_devs =3D adp5585_devs,
-> > +	.regmap_config =3D &adp5585_regmap_configs[ADP5585_REGMAP_04],
-> > +	.n_devs =3D ARRAY_SIZE(adp5585_devs),
-> > +	.id =3D ADP5585_MAN_ID_VALUE,
-> > +	.regs =3D &adp5585_regs,
-> > +	.max_rows =3D ADP5585_MAX_ROW_NUM,
-> > +	.max_cols =3D ADP5585_MAX_COL_NUM,
-> > +};
+> > +static int adp5589_gpio_bit(unsigned int off)
+> > +{
+> > +	return ADP5589_BIT(off);
+> > +}
 > > +
-> > +static const struct adp5585_info adp5589_info =3D {
-> > +	.adp5585_devs =3D adp5589_devs,
-> > +	.regmap_config =3D &adp5585_regmap_configs[ADP5589_REGMAP_00],
-> > +	.n_devs =3D ARRAY_SIZE(adp5589_devs),
-> > +	.id =3D ADP5589_MAN_ID_VALUE,
-> > +	.regs =3D &adp5589_regs,
-> > +	.max_rows =3D ADP5589_MAX_ROW_NUM,
-> > +	.max_cols =3D ADP5589_MAX_COL_NUM,
-> > +};
-> > +
-> > +static const struct adp5585_info adp5589_01_info =3D {
-> > +	.adp5585_devs =3D adp5589_devs,
-> > +	.regmap_config =3D &adp5585_regmap_configs[ADP5589_REGMAP_01],
-> > +	.n_devs =3D ARRAY_SIZE(adp5589_devs),
-> > +	.id =3D ADP5589_MAN_ID_VALUE,
-> > +	.regs =3D &adp5589_regs,
-> > +	.max_rows =3D ADP5589_MAX_ROW_NUM,
-> > +	.max_cols =3D ADP5589_MAX_COL_NUM,
-> > +};
-> > +
-> > +static const struct adp5585_info adp5589_02_info =3D {
-> > +	.adp5585_devs =3D adp5589_devs,
-> > +	.regmap_config =3D &adp5585_regmap_configs[ADP5589_REGMAP_02],
-> > +	.n_devs =3D ARRAY_SIZE(adp5589_devs),
-> > +	.id =3D ADP5589_MAN_ID_VALUE,
-> > +	.regs =3D &adp5589_regs,
-> > +	.max_rows =3D ADP5589_MAX_ROW_NUM,
-> > +	.max_cols =3D ADP5589_MAX_COL_NUM,
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0static void adp5585_osc_disable(void *data)
-> > @@ -122,7 +305,7 @@ static void adp5585_osc_disable(void *data)
-> > =C2=A0
-> > =C2=A0static int adp5585_i2c_probe(struct i2c_client *i2c)
+> > =C2=A0static int adp5585_gpio_get_direction(struct gpio_chip *chip, uns=
+igned int
+> > off)
 > > =C2=A0{
-> > -	const struct regmap_config *regmap_config;
-> > +	const struct adp5585_info *info;
-> > =C2=A0	struct adp5585_dev *adp5585;
-> > =C2=A0	unsigned int id;
+> > =C2=A0	struct adp5585_gpio_dev *adp5585_gpio =3D gpiochip_get_data(chip=
+);
+> > -	unsigned int bank =3D ADP5585_BANK(off);
+> > -	unsigned int bit =3D ADP5585_BIT(off);
+> > +	const struct adp5585_regs *regs =3D adp5585_gpio->regs;
+> > +	unsigned int bank =3D adp5585_gpio->info->bank(off);
+> > +	unsigned int bit =3D adp5585_gpio->info->bit(off);
+> > =C2=A0	unsigned int val;
+> > =C2=A0
+> > -	regmap_read(adp5585_gpio->regmap, ADP5585_GPIO_DIRECTION_A + bank,
+> > &val);
+> > +	regmap_read(adp5585_gpio->regmap, regs->gpio_dir_a + bank, &val);
+> > =C2=A0
+> > =C2=A0	return val & bit ? GPIO_LINE_DIRECTION_OUT :
+> > GPIO_LINE_DIRECTION_IN;
+> > =C2=A0}
+> > @@ -36,35 +65,37 @@ static int adp5585_gpio_get_direction(struct gpio_c=
+hip
+> > *chip, unsigned int off)
+> > =C2=A0static int adp5585_gpio_direction_input(struct gpio_chip *chip, u=
+nsigned
+> > int off)
+> > =C2=A0{
+> > =C2=A0	struct adp5585_gpio_dev *adp5585_gpio =3D gpiochip_get_data(chip=
+);
+> > -	unsigned int bank =3D ADP5585_BANK(off);
+> > -	unsigned int bit =3D ADP5585_BIT(off);
+> > +	const struct adp5585_regs *regs =3D adp5585_gpio->regs;
+> > +	unsigned int bank =3D adp5585_gpio->info->bank(off);
+> > +	unsigned int bit =3D adp5585_gpio->info->bit(off);
+> > =C2=A0
+> > -	return regmap_clear_bits(adp5585_gpio->regmap,
+> > -				 ADP5585_GPIO_DIRECTION_A + bank, bit);
+> > +	return regmap_clear_bits(adp5585_gpio->regmap, regs->gpio_dir_a +
+> > bank,
+> > +				 bit);
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static int adp5585_gpio_direction_output(struct gpio_chip *chip, =
+unsigned
+> > int off, int val)
+> > =C2=A0{
+> > =C2=A0	struct adp5585_gpio_dev *adp5585_gpio =3D gpiochip_get_data(chip=
+);
+> > -	unsigned int bank =3D ADP5585_BANK(off);
+> > -	unsigned int bit =3D ADP5585_BIT(off);
+> > +	const struct adp5585_regs *regs =3D adp5585_gpio->regs;
+> > +	unsigned int bank =3D adp5585_gpio->info->bank(off);
+> > +	unsigned int bit =3D adp5585_gpio->info->bit(off);
 > > =C2=A0	int ret;
-> > @@ -133,8 +316,13 @@ static int adp5585_i2c_probe(struct i2c_client *i2=
-c)
 > > =C2=A0
-> > =C2=A0	i2c_set_clientdata(i2c, adp5585);
-> > =C2=A0
-> > -	regmap_config =3D i2c_get_match_data(i2c);
-> > -	adp5585->regmap =3D devm_regmap_init_i2c(i2c, regmap_config);
-> > +	info =3D i2c_get_match_data(i2c);
-> > +	if (!info)
-> > +		return -ENODEV;
->=20
-> Can this happen ?
->=20
-> > +
-> > +	adp5585->info =3D info;
->=20
-> Drop the local info variable and assign the value to adp5585->info
-> directly.
->=20
-> > +
-> > +	adp5585->regmap =3D devm_regmap_init_i2c(i2c, info->regmap_config);
-> > =C2=A0	if (IS_ERR(adp5585->regmap))
-> > =C2=A0		return dev_err_probe(&i2c->dev, PTR_ERR(adp5585->regmap),
-> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to initialize register
-> > map\n");
-> > @@ -144,7 +332,8 @@ static int adp5585_i2c_probe(struct i2c_client *i2c=
-)
-> > =C2=A0		return dev_err_probe(&i2c->dev, ret,
-> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to read device ID\n");
-> > =C2=A0
-> > -	if ((id & ADP5585_MAN_ID_MASK) !=3D ADP5585_MAN_ID_VALUE)
-> > +	id &=3D ADP5585_MAN_ID_MASK;
-> > +	if (id !=3D adp5585->info->id)
-> > =C2=A0		return dev_err_probe(&i2c->dev, -ENODEV,
-> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid device ID 0x%02x\n", id);
-> > =C2=A0
-> > @@ -158,8 +347,8 @@ static int adp5585_i2c_probe(struct i2c_client *i2c=
-)
+> > -	ret =3D regmap_update_bits(adp5585_gpio->regmap,
+> > -				 ADP5585_GPO_DATA_OUT_A + bank, bit,
+> > -				 val ? bit : 0);
+> > +	ret =3D regmap_update_bits(adp5585_gpio->regmap, regs->gpo_data_a +
+> > bank,
+> > +				 bit, val ? bit : 0);
+> > =C2=A0	if (ret)
 > > =C2=A0		return ret;
 > > =C2=A0
-> > =C2=A0	ret =3D devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
-> > -				=C2=A0=C2=A0 adp5585_devs, ARRAY_SIZE(adp5585_devs),
-> > -				=C2=A0=C2=A0 NULL, 0, NULL);
-> > +				=C2=A0=C2=A0 adp5585->info->adp5585_devs,
-> > +				=C2=A0=C2=A0 adp5585->info->n_devs, NULL, 0, NULL);
-> > =C2=A0	if (ret)
-> > =C2=A0		return dev_err_probe(&i2c->dev, ret,
-> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to add child devices\n");
-> > @@ -191,19 +380,31 @@ static DEFINE_SIMPLE_DEV_PM_OPS(adp5585_pm,
-> > adp5585_suspend, adp5585_resume);
-> > =C2=A0static const struct of_device_id adp5585_of_match[] =3D {
-> > =C2=A0	{
-> > =C2=A0		.compatible =3D "adi,adp5585-00",
-> > -		.data =3D &adp5585_regmap_configs[ADP5585_REGMAP_00],
-> > +		.data =3D &adp5585_info,
-> > =C2=A0	}, {
-> > =C2=A0		.compatible =3D "adi,adp5585-01",
-> > -		.data =3D &adp5585_regmap_configs[ADP5585_REGMAP_00],
-> > +		.data =3D &adp5585_01_info,
-> > =C2=A0	}, {
-> > =C2=A0		.compatible =3D "adi,adp5585-02",
-> > -		.data =3D &adp5585_regmap_configs[ADP5585_REGMAP_02],
-> > +		.data =3D &adp5585_02_info,
-> > =C2=A0	}, {
-> > =C2=A0		.compatible =3D "adi,adp5585-03",
-> > -		.data =3D &adp5585_regmap_configs[ADP5585_REGMAP_00],
-> > +		.data =3D &adp5585_info,
-> > =C2=A0	}, {
-> > =C2=A0		.compatible =3D "adi,adp5585-04",
-> > -		.data =3D &adp5585_regmap_configs[ADP5585_REGMAP_04],
-> > +		.data =3D &adp5585_04_info,
-> > +	}, {
-> > +		.compatible =3D "adi,adp5589-00",
-> > +		.data =3D &adp5589_info,
-> > +	}, {
-> > +		.compatible =3D "adi,adp5589-01",
-> > +		.data =3D &adp5589_01_info,
-> > +	}, {
-> > +		.compatible =3D "adi,adp5589-02",
-> > +		.data =3D &adp5589_02_info,
-> > +	}, {
-> > +		.compatible =3D "adi,adp5589",
-> > +		.data =3D &adp5589_info,
-> > =C2=A0	},
-> > =C2=A0	{ /* sentinel */ }
-> > =C2=A0};
-> > diff --git a/include/linux/mfd/adp5585.h b/include/linux/mfd/adp5585.h
-> > index
-> > 016033cd68e46757aca86d21dd37025fd354b801..dffe1449de01dacf8fe78cf0e87d1=
-f176d
-> > 11f620 100644
-> > --- a/include/linux/mfd/adp5585.h
-> > +++ b/include/linux/mfd/adp5585.h
-> > @@ -104,9 +104,11 @@
-> > =C2=A0#define		ADP5585_INT_CFG			BIT(1)
-> > =C2=A0#define		ADP5585_RST_CFG			BIT(0)
-> > =C2=A0#define ADP5585_INT_EN			0x3c
-> > -
-> > =C2=A0#define ADP5585_MAX_REG			ADP5585_INT_EN
+> > -	return regmap_set_bits(adp5585_gpio->regmap,
+> > -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ADP5585_GPIO_DIRECTION_A + ban=
+k, bit);
+> > +	return regmap_set_bits(adp5585_gpio->regmap, regs->gpio_dir_a +
+> > bank,
+> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bit);
+> > =C2=A0}
 > > =C2=A0
-> > +#define ADP5585_MAX_ROW_NUM		6
-> > +#define ADP5585_MAX_COL_NUM		5
-> > +
-> > =C2=A0/*
-> > =C2=A0 * Bank 0 covers pins "GPIO 1/R0" to "GPIO 6/R5", numbered 0 to 5=
- by the
-> > =C2=A0 * driver, and bank 1 covers pins "GPIO 7/C0" to "GPIO 11/C4", nu=
-mbered 6
-> > to
-> > @@ -117,10 +119,63 @@
-> > =C2=A0#define ADP5585_BANK(n)			((n) >=3D 6 ? 1 : 0)
-> > =C2=A0#define ADP5585_BIT(n)			((n) >=3D 6 ? BIT((n) - 6) : BIT(n))
+> > =C2=A0static int adp5585_gpio_get_value(struct gpio_chip *chip, unsigne=
+d int off)
+> > =C2=A0{
+> > =C2=A0	struct adp5585_gpio_dev *adp5585_gpio =3D gpiochip_get_data(chip=
+);
+> > -	unsigned int bank =3D ADP5585_BANK(off);
+> > -	unsigned int bit =3D ADP5585_BIT(off);
+> > +	const struct adp5585_regs *regs =3D adp5585_gpio->regs;
+> > +	unsigned int bank =3D adp5585_gpio->info->bank(off);
+> > +	unsigned int bit =3D adp5585_gpio->info->bit(off);
+> > =C2=A0	unsigned int reg;
+> > =C2=A0	unsigned int val;
 > > =C2=A0
-> > +/* ADP5589 */
-> > +#define		ADP5589_MAN_ID_VALUE		0x10
-> > +#define ADP5589_GPI_STATUS_A		0x16
-> > +#define ADP5589_GPI_STATUS_C		0x18
-> > +#define ADP5589_RPULL_CONFIG_A		0x19
-> > +#define ADP5589_DEBOUNCE_DIS_A		0x27
-> > +#define ADP5589_GPO_DATA_OUT_A		0x2a
-> > +#define ADP5589_GPO_OUT_MODE_A		0x2d
-> > +#define	ADP5589_GPIO_DIRECTION_A	0x30
->=20
-> Indentation looks wrong.
->=20
-> > +#define ADP5589_PWM_OFFT_LOW		0x3e
-> > +#define ADP5589_PWM_ONT_LOW		0x40
-> > +#define ADP5589_PWM_CFG			0x42
-> > +#define ADP5589_PIN_CONFIG_D		0x4C
-> > +#define ADP5589_GENERAL_CFG		0x4d
-> > +#define ADP5589_INT_EN			0x4e
-> > +#define ADP5589_MAX_REG			ADP5589_INT_EN
+> > @@ -79,8 +110,8 @@ static int adp5585_gpio_get_value(struct gpio_chip *=
+chip,
+> > unsigned int off)
+> > =C2=A0	 * .direction_input(), .direction_output() or .set() operations
+> > racing
+> > =C2=A0	 * with this.
+> > =C2=A0	 */
+> > -	regmap_read(adp5585_gpio->regmap, ADP5585_GPIO_DIRECTION_A + bank,
+> > &val);
+> > -	reg =3D val & bit ? ADP5585_GPO_DATA_OUT_A : ADP5585_GPI_STATUS_A;
+> > +	regmap_read(adp5585_gpio->regmap, regs->gpio_dir_a + bank, &val);
+> > +	reg =3D val & bit ? regs->gpo_data_a : regs->gpi_stat_a;
+> > =C2=A0	regmap_read(adp5585_gpio->regmap, reg + bank, &val);
+> > =C2=A0
+> > =C2=A0	return !!(val & bit);
+> > @@ -90,17 +121,19 @@ static int adp5585_gpio_set_value(struct gpio_chip
+> > *chip, unsigned int off,
+> > =C2=A0				=C2=A0 int val)
+> > =C2=A0{
+> > =C2=A0	struct adp5585_gpio_dev *adp5585_gpio =3D gpiochip_get_data(chip=
+);
+> > -	unsigned int bank =3D ADP5585_BANK(off);
+> > -	unsigned int bit =3D ADP5585_BIT(off);
+> > +	const struct adp5585_regs *regs =3D adp5585_gpio->regs;
+> > +	unsigned int bank =3D adp5585_gpio->info->bank(off);
+> > +	unsigned int bit =3D adp5585_gpio->info->bit(off);
+> > =C2=A0
+> > -	return regmap_update_bits(adp5585_gpio->regmap,
+> > -				=C2=A0 ADP5585_GPO_DATA_OUT_A + bank,
+> > +	return regmap_update_bits(adp5585_gpio->regmap, regs->gpo_data_a +
+> > bank,
+> > =C2=A0				=C2=A0 bit, val ? bit : 0);
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static int adp5585_gpio_set_bias(struct adp5585_gpio_dev *adp5585=
+_gpio,
+> > =C2=A0				 unsigned int off, unsigned int bias)
+> > =C2=A0{
+> > +	const struct adp5585_gpio_chip *info =3D adp5585_gpio->info;
+> > +	const struct adp5585_regs *regs =3D adp5585_gpio->regs;
+> > =C2=A0	unsigned int bit, reg, mask, val;
+> > =C2=A0
+> > =C2=A0	/*
+> > @@ -108,8 +141,10 @@ static int adp5585_gpio_set_bias(struct
+> > adp5585_gpio_dev *adp5585_gpio,
+> > =C2=A0	 * consecutive registers ADP5585_RPULL_CONFIG_*, with a hole of =
+4
+> > bits
+> > =C2=A0	 * after R5.
+> > =C2=A0	 */
+> > -	bit =3D off * 2 + (off > 5 ? 4 : 0);
+> > -	reg =3D ADP5585_RPULL_CONFIG_A + bit / 8;
+> > +	bit =3D off * 2;
+> > +	if (info->has_bias_hole)
+> > +		bit +=3D (off > 5 ? 4 : 0);
+> > +	reg =3D regs->rpull_cfg_a + bit / 8;
+> > =C2=A0	mask =3D ADP5585_Rx_PULL_CFG_MASK << (bit % 8);
+> > =C2=A0	val =3D bias << (bit % 8);
+> > =C2=A0
+> > @@ -119,22 +154,24 @@ static int adp5585_gpio_set_bias(struct
+> > adp5585_gpio_dev *adp5585_gpio,
+> > =C2=A0static int adp5585_gpio_set_drive(struct adp5585_gpio_dev *adp558=
+5_gpio,
+> > =C2=A0				=C2=A0 unsigned int off, enum pin_config_param
+> > drive)
+> > =C2=A0{
+> > -	unsigned int bank =3D ADP5585_BANK(off);
+> > -	unsigned int bit =3D ADP5585_BIT(off);
+> > +	const struct adp5585_regs *regs =3D adp5585_gpio->regs;
+> > +	unsigned int bank =3D adp5585_gpio->info->bank(off);
+> > +	unsigned int bit =3D adp5585_gpio->info->bit(off);
+> > =C2=A0
+> > =C2=A0	return regmap_update_bits(adp5585_gpio->regmap,
+> > -				=C2=A0 ADP5585_GPO_OUT_MODE_A + bank, bit,
+> > +				=C2=A0 regs->gpo_out_a + bank, bit,
+> > =C2=A0				=C2=A0 drive =3D=3D PIN_CONFIG_DRIVE_OPEN_DRAIN ?
+> > bit : 0);
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static int adp5585_gpio_set_debounce(struct adp5585_gpio_dev *adp=
+5585_gpio,
+> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int off, unsigned int
+> > debounce)
+> > =C2=A0{
+> > -	unsigned int bank =3D ADP5585_BANK(off);
+> > -	unsigned int bit =3D ADP5585_BIT(off);
+> > +	const struct adp5585_regs *regs =3D adp5585_gpio->regs;
+> > +	unsigned int bank =3D adp5585_gpio->info->bank(off);
+> > +	unsigned int bit =3D adp5585_gpio->info->bit(off);
+> > =C2=A0
+> > =C2=A0	return regmap_update_bits(adp5585_gpio->regmap,
+> > -				=C2=A0 ADP5585_DEBOUNCE_DIS_A + bank, bit,
+> > +				=C2=A0 regs->debounce_dis_a + bank, bit,
+> > =C2=A0				=C2=A0 debounce ? 0 : bit);
+> > =C2=A0}
+> > =C2=A0
+> > @@ -175,6 +212,7 @@ static int adp5585_gpio_set_config(struct gpio_chip
+> > *chip, unsigned int off,
+> > =C2=A0static int adp5585_gpio_probe(struct platform_device *pdev)
+> > =C2=A0{
+> > =C2=A0	struct adp5585_dev *adp5585 =3D dev_get_drvdata(pdev->dev.parent=
+);
+> > +	const struct platform_device_id *id =3D platform_get_device_id(pdev);
+> > =C2=A0	struct adp5585_gpio_dev *adp5585_gpio;
+> > =C2=A0	struct device *dev =3D &pdev->dev;
+> > =C2=A0	struct gpio_chip *gc;
+> > @@ -185,6 +223,11 @@ static int adp5585_gpio_probe(struct platform_devi=
+ce
+> > *pdev)
+> > =C2=A0		return -ENOMEM;
+> > =C2=A0
+> > =C2=A0	adp5585_gpio->regmap =3D adp5585->regmap;
+> > +	adp5585_gpio->regs =3D adp5585->info->regs;
 > > +
-> > +#define ADP5589_MAX_ROW_NUM		8
-> > +#define ADP5589_MAX_COL_NUM		11
-> > +
-> > +/*
-> > + * Bank 0 covers pins "GPIO 1/R0" to "GPIO 8/R7", numbered 0 to 7 by t=
-he
-> > + * driver, bank 1 covers pins "GPIO 9/C0" to "GPIO 16/C7", numbered 8 =
-to
-> > + * 15 and bank 3 covers pins "GPIO 17/C8" to "GPIO 19/C10", numbered 1=
-6 to
-> > 18.
-> > + */
-> > +#define ADP5589_BANK(n)			((n) >> 3)
-> > +#define ADP5589_BIT(n)			BIT((n) & 0x7)
-> > +
-> > +struct adp5585_regs {
-> > +	unsigned int debounce_dis_a;
-> > +	unsigned int rpull_cfg_a;
-> > +	unsigned int gpo_data_a;
-> > +	unsigned int gpo_out_a;
-> > +	unsigned int gpio_dir_a;
-> > +	unsigned int gpi_stat_a;
-> > +	unsigned int pwm_cfg;
-> > +	unsigned int pwm_offt_low;
-> > +	unsigned int pwm_ont_low;
-> > +	unsigned int gen_cfg;
-> > +	unsigned int ext_cfg;
+> > +	adp5585_gpio->info =3D (const struct adp5585_gpio_chip *)id-
+> > >driver_data;
+> > +	if (!adp5585_gpio->info)
+> > +		return -ENODEV;
+> > =C2=A0
+> > =C2=A0	device_set_of_node_from_dev(dev, dev->parent);
+> > =C2=A0
+> > @@ -199,7 +242,7 @@ static int adp5585_gpio_probe(struct platform_devic=
+e
+> > *pdev)
+> > =C2=A0	gc->can_sleep =3D true;
+> > =C2=A0
+> > =C2=A0	gc->base =3D -1;
+> > -	gc->ngpio =3D ADP5585_GPIO_MAX;
+> > +	gc->ngpio =3D adp5585->info->max_cols + adp5585->info->max_rows;
+> > =C2=A0	gc->label =3D pdev->name;
+> > =C2=A0	gc->owner =3D THIS_MODULE;
+> > =C2=A0
+> > @@ -211,8 +254,20 @@ static int adp5585_gpio_probe(struct platform_devi=
+ce
+> > *pdev)
+> > =C2=A0	return 0;
+> > =C2=A0}
+> > =C2=A0
+> > +static const struct adp5585_gpio_chip adp5585_gpio_chip_info =3D {
+> > +	.bank =3D adp5585_gpio_bank,
+> > +	.bit =3D adp5585_gpio_bit,
+> > +	.has_bias_hole =3D true,
 > > +};
 > > +
-> > +struct adp5585_info {
-> > +	const struct mfd_cell *adp5585_devs;
-> > +	const struct regmap_config *regmap_config;
-> > +	const struct adp5585_regs *regs;
-> > +	unsigned int n_devs;
-> > +	unsigned int id;
-> > +	u8 max_rows;
-> > +	u8 max_cols;
+> > +static const struct adp5585_gpio_chip adp5589_gpio_chip_info =3D {
+> > +	.bank =3D adp5589_gpio_bank,
+> > +	.bit =3D adp5589_gpio_bit,
 > > +};
 > > +
-> > =C2=A0struct regmap;
-> > =C2=A0
-> > =C2=A0struct adp5585_dev {
-> > =C2=A0	struct regmap *regmap;
-> > +	const struct adp5585_info *info;
+> > =C2=A0static const struct platform_device_id adp5585_gpio_id_table[] =
+=3D {
+> > -	{ "adp5585-gpio" },
+> > +	{ "adp5585-gpio", (kernel_ulong_t)&adp5585_gpio_chip_info },
+> > +	{ "adp5589-gpio", (kernel_ulong_t)&adp5589_gpio_chip_info },
+> > =C2=A0	{ /* Sentinel */ }
 > > =C2=A0};
-> > =C2=A0
-> > =C2=A0#endif
+> > =C2=A0MODULE_DEVICE_TABLE(platform, adp5585_gpio_id_table);
 
