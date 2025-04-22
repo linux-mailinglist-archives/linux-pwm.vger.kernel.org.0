@@ -1,72 +1,88 @@
-Return-Path: <linux-pwm+bounces-5659-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5660-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9391A972D5
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Apr 2025 18:33:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E6C9A9737D
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Apr 2025 19:21:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23FD717B980
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Apr 2025 16:33:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 07F5E3B6494
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Apr 2025 17:21:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA723293453;
-	Tue, 22 Apr 2025 16:33:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE3562980A1;
+	Tue, 22 Apr 2025 17:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSaCr4nu"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617A7212FBF;
-	Tue, 22 Apr 2025 16:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE4527D762;
+	Tue, 22 Apr 2025 17:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745339598; cv=none; b=HRxYdLMj2bsr6joisTG1kiiqZmK02EXtVpyMP2oHHJVnIh439jd8HJFRoveBeUQOREq5r6/S6aiJONXxoUT8j7izunkQxoF978/Zz9aYkRI0qGy1pQX+Z0pJetKSJkSWAhbX7gvkntxyxxZfup9hKUf/SfbPUZaQXZXKlQvMwJ8=
+	t=1745342476; cv=none; b=rPyNtG3Tdv5GUqH33w8mK6jIz3+t9lNmmWDVSbqN0mWj9lQJMGVNS/MiaoxUZ7zH/Gzle9j0xftKjsHEe0fad2KTUvg/TG79zb8zuAMJUbdkOgeJ6XxxVuWWbs8J7FTmFrUPFZe3rAnnk57WWG2zy8OaY9FLzJkyq4mjGFA5L1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745339598; c=relaxed/simple;
-	bh=u3cF0Mo2Bw7M6p+sQNOBt/FD6MnbO0aHMW6uX/ggRZc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r1mYy6WKRaUT1R97gJnSzlWtneSTNAfuMK/KwSC+fnZprveWeZS55lu2dhrUVHQg2c8nrMDqdwyguKNSTpluo1SaWdFphcLnaXAbjbA39RPwqI7jozbh+2abFI9r3u90qeI6Yd3Mp94cjjBlKfGebwiXtdEYbK5pWW2O41jn1U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: S6XiziiiRE6uJwMNE1MRZA==
-X-CSE-MsgGUID: KQSyVCMxSjeH1DhRi2FNHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="57891793"
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="57891793"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 09:33:15 -0700
-X-CSE-ConnectionGUID: mBNZD8b+RbCVT77eR7nR1Q==
-X-CSE-MsgGUID: i8TJH0pzQMi8aU97TPvvpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="137042752"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 09:33:11 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u7GYV-0000000EmPT-3CM5;
-	Tue, 22 Apr 2025 19:33:07 +0300
-Date: Tue, 22 Apr 2025 19:33:07 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Jorge Marques <jorge.marques@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] iio: adc: add support for ad4052
-Message-ID: <aAfEw-2D4tjLJtAN@smile.fi.intel.com>
-References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
- <20250422-iio-driver-ad4052-v2-5-638af47e9eb3@analog.com>
+	s=arc-20240116; t=1745342476; c=relaxed/simple;
+	bh=xBljsyW2pLfyoSfR2luUNqc9SBQLJKv/8H69YDtulVQ=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MS5j5vBm68cBH7zMU9u0hfqia1TZ6WC4I8lJ4LeHBoftZ2j3xREu6UhyyXfIwOvf7lwIQfv1tMoG/8o+GSuyyLzrVR7xk/O0pm0ZBTB1i8+PFLknD9ekesPGyGZGjDZnK2NBGrTJxsBG6Pll1C5/xe+DCB7fuCslVLhaOECMtPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bSaCr4nu; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3913d129c1aso88426f8f.0;
+        Tue, 22 Apr 2025 10:21:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745342471; x=1745947271; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=FsG0mPxLUfaDIhN1q9GxmXvqvMFBKGnbmfGwqQuufTk=;
+        b=bSaCr4nu5ORHHokb3IgMTNun/VONkEihPYT8HQM7uo4DlRWks5flX+gwzq7KuccuTZ
+         IpvQzS9gdw3o22tKkA9rkI4KmYukTQYf/nLzB71pUQAg4GgA1PYsjOLqVjAdhm6tWYWw
+         YQSTL3zAIn2Oh08V60bQQNQgAle01qOh/+HCZK9VYPDVYtLBmyfL36nPO+NBP/v9gw7e
+         yGVsuN5PrUgLgB5GentgNxONgAyLnltXvdKINBuL5eZzhzT+gUn5X5MIp/n28lM7Lx19
+         8LNYIczxvbh+u+wtaBSXpSCWk1EzcnXcpwdBUWmzZyEChuAVQgsTmHfHQiHBuwdfVoG3
+         fscw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745342471; x=1745947271;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FsG0mPxLUfaDIhN1q9GxmXvqvMFBKGnbmfGwqQuufTk=;
+        b=GbkG/jwEs5w3JL8bJ5aVZ3TQfPAYyHPEK//Y92xChUC3S2f8HY6u4xs9wk6NDqv36U
+         qSUztiqDtZ2Re54mZSubGnHsB8w92OE8EhTC6X8/njKEgQjY2GuIuBlxwu0csC362BvQ
+         B4ZGFW9oQ9Tqqh/WiaHHN8IG2Y9H4Diuy2Ib6nYKbRMeWUlLBIqZwikE78Ty84Hni++b
+         cigOpALJCH8Scd5UtmO9Kb37+sH2Sw/Yl7xhmzNxHAQ5g4/iXaHKKWyJQpoepGiMIYgL
+         qlXmxPHeC3RjYYAL11zMP1UklR0E0ySP78vIN44qVFbqrgsOiEQpAPAprjRDBPvOLTWP
+         wjFw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1YSoGQcWtRf+sJRn2YoR9HZxf91cdjRh0yAO0GJAjkznOYxxpLQ0ooq2A2vwcowBkyUgz6tZKxN2s@vger.kernel.org, AJvYcCV5i5EugEmAa7e2AKl6QLQ081EmmTOhQtY3P+eNCtYjOq4IHbjIE8BWQ+4FgcTaLvWDN9iUddv3zPWgyFQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+mFuq5VF/PcyHT5jyrIlzGfuaT5d5sx0tfAlI2akhymBGgB0g
+	aA7nflTtiBQUZNquqNcYvqveJXC7qsC3Dz7Bsa2dT2qORoz2EOSPTJcq/Q==
+X-Gm-Gg: ASbGncvv/4MHukCO/fd6ASSDfl4Q3x2VL4hKl8q5dFmdYmCnp2OvrzPHOWPyj/xAsQi
+	qKRuvsIC+LeDnTsepvMwMa8Aec8evyOv7ZjeuPe5VkesAdg3xNk1RXcHBy84V1oE56XAszqlCX7
+	EAtJH1gEvsb9dZO1OAe0PiZfQvPMRiYB4Da8FKbhQz0TN1ATY6D1o634gWcK6BaAcpwlCWF53fN
+	1QM0av6hxvTvtYZSZNCGYHcNDU+R+fbFVPnm8joUX4d4f7YxaUhJzSOXka7LtjI2gsB6UO5Axzj
+	WDIU6F2Fw64qGhRSR9jVOx3Ukhcey7JHevX27mpPA263pIlPdMGngBoCxG+FOn8N+oNKS5Spgjy
+	gTipXnnpFUzKh
+X-Google-Smtp-Source: AGHT+IGkg7pu6Oa23jrxcHxX//x0hoa4eWq6MzDk5I6ZxLzS1Z9s4big7zOt+gBnfwlc4f0tzhdmmw==
+X-Received: by 2002:a5d:64a3:0:b0:38f:4ffd:c757 with SMTP id ffacd0b85a97d-39efbd59e96mr14354506f8f.2.1745342470321;
+        Tue, 22 Apr 2025 10:21:10 -0700 (PDT)
+Received: from Ansuel-XPS. (host-95-249-95-100.retail.telecomitalia.it. [95.249.95.100])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa493145sm15764354f8f.71.2025.04.22.10.21.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 10:21:09 -0700 (PDT)
+Message-ID: <6807d005.050a0220.180f68.6e70@mx.google.com>
+X-Google-Original-Message-ID: <aAfQA5vrpAkb_lnY@Ansuel-XPS.>
+Date: Tue, 22 Apr 2025 19:21:07 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Cc: Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v12] pwm: airoha: Add support for EN7581 SoC
+References: <20250407173559.29600-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -75,859 +91,679 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250422-iio-driver-ad4052-v2-5-638af47e9eb3@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250407173559.29600-1-ansuelsmth@gmail.com>
 
-On Tue, Apr 22, 2025 at 01:34:50PM +0200, Jorge Marques wrote:
-> The AD4052/AD4058/AD4050/AD4056 are versatile, 16-bit/12-bit,
-> successive approximation register (SAR) analog-to-digital converter (ADC)
-> that enables low-power, high-density data acquisition solutions without
-> sacrificing precision.
-> This ADC offers a unique balance of performance and power efficiency,
-> plus innovative features for seamlessly switching between high-resolution
-> and low-power modes tailored to the immediate needs of the system.
-> The AD4052/AD4058/AD4050/AD4056 are ideal for battery-powered,
-> compact data acquisition and edge sensing applications.
-
-...
-
-+ array_size.h
-
+On Mon, Apr 07, 2025 at 07:35:53PM +0200, Christian Marangi wrote:
+> From: Benjamin Larsson <benjamin.larsson@genexis.eu>
+> 
+> Introduce driver for PWM module available on EN7581 SoC.
+> 
+> Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> Co-developed-by: Christian Marangi <ansuelsmth@gmail.com>
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+> Changes v12:
+> - Make shift function more readable
+> - Use unsigned int where possible
+> - Better comment some SIPO strangeness
+> - Move SIPO init after flash map config
+> - Retrun real values in get_state instead of the
+>   one saved in bucket
+> - Improve period_ns parsing so we can better share generators
+> 
+> Changes v11:
+> - Fix wrong calculation of period and duty
+> - Use AIROHA_PWM prefix for each define
+> - Drop set/get special define in favour of BITS and GENMASK
+> - Correctly use dev_err_probe
+> - Init bucket with initial values
+> - Rework define to make use of FIELD_PREP and FIELD_GET
+> 
+> Changes in v10:
+> - repost just patch 6/6 (pwm driver) since patches {1/6-5/6} have been
+>   already applied in linux-pinctrl tree
+> - pwm: introduce AIROHA_PWM_FIELD_GET and AIROHA_PWM_FIELD_SET macros to
+>   get/set field with non-const mask
+> - pwm: simplify airoha_pwm_get_generator() to report unused generator
+>   and remove double lookup
+> - pwm: remove device_node pointer in airoha_pwm struct since this is
+>   write-only field
+> - pwm: cosmetics
+> - Link to v9: https://lore.kernel.org/r/20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org
+> 
+> Changes in v9:
+> - pwm: remove unused properties
+> - Link to v8: https://lore.kernel.org/r/20241018-en7581-pinctrl-v8-0-b676b966a1d1@kernel.org
+> 
+> Changes in v8:
+> - pwm: add missing properties documentation
+> - Link to v7: https://lore.kernel.org/r/20241016-en7581-pinctrl-v7-0-4ff611f263a7@kernel.org
+> 
+> Changes in v7:
+> - pinctrl: cosmetics
+> - pinctrl: fix compilation warning
+> - Link to v6: https://lore.kernel.org/r/20241013-en7581-pinctrl-v6-0-2048e2d099c2@kernel.org
+> 
+> Changes in v6:
+> - pwm: rely on regmap APIs
+> - pwm: introduce compatible string
+> - pinctrl: introduce compatible string
+> - remove airoha-mfd driver
+> - add airoha,en7581-pinctrl binding
+> - add airoha,en7581-pwm binding
+> - update airoha,en7581-gpio-sysctl binding
+> - Link to v5: https://lore.kernel.org/r/20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org
+> 
+> Changes in v5:
+> - use spin_lock in airoha_pinctrl_rmw instead of a mutex since it can run
+>   in interrupt context
+> - remove unused includes in pinctrl driver
+> - since the irq_chip is immutable, allocate the gpio_irq_chip struct
+>   statically in pinctrl driver
+> - rely on regmap APIs in pinctrl driver but keep the spin_lock local to the
+>   driver
+> - rely on guard/guard_scope APIs in pinctrl driver
+> - improve naming convention pinctrl driver
+> - introduce airoha_pinconf_set_pin_value utility routine
+> - Link to v4: https://lore.kernel.org/r/20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org
+> 
+> Changes in v4:
+> - add 'Limitation' description in pwm driver
+> - fix comments in pwm driver
+> - rely on mfd->base __iomem pointer in pwm driver, modify register
+>   offsets according to it and get rid of sgpio_cfg, flash_cfg and
+>   cycle_cfg pointers
+> - simplify register utility routines in pwm driver
+> - use 'generator' instead of 'waveform' suffix for pwm routines
+> - fix possible overflow calculating duty cycle in pwm driver
+> - do not modify pwm state in free callback in pwm driver
+> - cap the maximum period in pwm driver
+> - do not allow inverse polarity in pwm driver
+> - do not set of_xlate callback in the pwm driver and allow the stack to
+>   do it
+> - fix MAINTAINERS file for airoha pinctrl driver
+> - fix undefined reference to __ffsdi2 in pinctrl driver
+> - simplify airoha,en7581-gpio-sysctl.yam binding
+> - Link to v3: https://lore.kernel.org/r/20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org
+> 
+> Changes in v3:
+> - introduce airoha-mfd driver
+> - add pwm driver to the same series
+> - model pinctrl and pwm drivers as childs of a parent mfd driver.
+> - access chip-scu memory region in pinctrl driver via syscon
+> - introduce a single airoha,en7581-gpio-sysctl.yaml binding and get rid
+>   of dedicated bindings for pinctrl and pwm
+> - add airoha,en7581-chip-scu.yaml binding do the series
+> - Link to v2: https://lore.kernel.org/r/20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org
+> 
+> Changes in v2:
+> - Fix compilation errors
+> - Collapse some register mappings for gpio and irq controllers
+> - update dt-bindings according to new register mapping
+> - fix some dt-bindings errors
+> - Link to v1: https://lore.kernel.org/all/cover.1723392444.git.lorenzo@kernel.org/
+> 
+>  drivers/pwm/Kconfig      |  11 +
+>  drivers/pwm/Makefile     |   1 +
+>  drivers/pwm/pwm-airoha.c | 506 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 518 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-airoha.c
+> 
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 63beb0010e3e..e939187784c0 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -54,6 +54,17 @@ config PWM_ADP5585
+>  	  This option enables support for the PWM function found in the Analog
+>  	  Devices ADP5585.
+>  
+> +config PWM_AIROHA
+> +	tristate "Airoha PWM support"
+> +	depends on ARCH_AIROHA || COMPILE_TEST
+> +	depends on OF
+> +	select REGMAP_MMIO
+> +	help
+> +	  Generic PWM framework driver for Airoha SoC.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-airoha.
+> +
+>  config PWM_APPLE
+>  	tristate "Apple SoC PWM support"
+>  	depends on ARCH_APPLE || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 539e0def3f82..97c1c79bbc54 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -2,6 +2,7 @@
+>  obj-$(CONFIG_PWM)		+= core.o
+>  obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
+>  obj-$(CONFIG_PWM_ADP5585)	+= pwm-adp5585.o
+> +obj-$(CONFIG_PWM_AIROHA)	+= pwm-airoha.o
+>  obj-$(CONFIG_PWM_APPLE)		+= pwm-apple.o
+>  obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
+>  obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+= pwm-atmel-hlcdc.o
+> diff --git a/drivers/pwm/pwm-airoha.c b/drivers/pwm/pwm-airoha.c
+> new file mode 100644
+> index 000000000000..05dd34656c23
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-airoha.c
+> @@ -0,0 +1,506 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2022 Markus Gothe <markus.gothe@genexis.eu>
+> + *
+> + *  Limitations:
+> + *  - Only 8 concurrent waveform generators are available for 8 combinations of
+> + *    duty_cycle and period. Waveform generators are shared between 16 GPIO
+> + *    pins and 17 SIPO GPIO pins.
+> + *  - Supports only normal polarity.
+> + *  - On configuration the currently running period is completed.
+> + *  - Minimum supported period is 4ms
+> + *  - Maximum supported period is 1s
+> + */
+> +
 > +#include <linux/bitfield.h>
-
-+ bitops.h
-+ completion.h
-
-> +#include <linux/delay.h>
-
-+ dev_printk.h
-+ err.h
-
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/buffer-dmaengine.h>
-> +#include <linux/iio/events.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/interrupt.h>
-
-+ jiffies.h
-+ math.h
-
-> +#include <linux/pm_runtime.h>
-
-+ property.h
-
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
 > +#include <linux/pwm.h>
+> +#include <linux/gpio.h>
+> +#include <linux/bitops.h>
 > +#include <linux/regmap.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/spi/offload/consumer.h>
-> +#include <linux/spi/offload/provider.h>
-
-+ string.h
-+ types.h
-
-+ asm/byteorder.h
-
-...
-
-> +#define AD4052_FS(g)		((&ad4052_conversion_freqs[AD4052_FS_OFFSET(g)]))
-
-Why double parentheses? What does this mean?
-
-...
-
-> +#define AD4052_FS_LEN(g)	(ARRAY_SIZE(ad4052_conversion_freqs) - (AD4052_FS_OFFSET(g)))
-
-Too many parentheses.
-
-...
-
-> +static const struct iio_event_spec ad4052_events[] = {
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_EITHER,
-> +		.mask_shared_by_all = BIT(IIO_EV_INFO_ENABLE)
-
-Leave trailing comma.
-
-> +	},
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_RISING,
-> +		.mask_shared_by_all = BIT(IIO_EV_INFO_VALUE) |
-> +				      BIT(IIO_EV_INFO_HYSTERESIS)
-
-Ditto.
-
-> +	},
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_shared_by_all = BIT(IIO_EV_INFO_VALUE) |
-> +				      BIT(IIO_EV_INFO_HYSTERESIS)
-
-Ditto.
-
+> +#include <asm/div64.h>
+> +
+> +#define AIROHA_PWM_REG_SGPIO_LED_DATA		0x0024
+> +#define AIROHA_PWM_SGPIO_LED_DATA_SHIFT_FLAG	BIT(31)
+> +#define AIROHA_PWM_SGPIO_LED_DATA_DATA		GENMASK(16, 0)
+> +
+> +#define AIROHA_PWM_REG_SGPIO_CLK_DIVR		0x0028
+> +#define AIROHA_PWM_SGPIO_CLK_DIVR		GENMASK(1, 0)
+> +
+> +#define AIROHA_PWM_REG_SGPIO_CLK_DLY		0x002c
+> +
+> +#define AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG	0x0030
+> +#define AIROHA_PWM_SERIAL_GPIO_FLASH_MODE	BIT(1)
+> +#define AIROHA_PWM_SERIAL_GPIO_MODE_74HC164	BIT(0)
+> +
+> +#define AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(_n)	(0x003c + (4 * (_n)))
+> +#define AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(_n) (16 * (_n))
+> +#define AIROHA_PWM_GPIO_FLASH_PRD_LOW		GENMASK(15, 8)
+> +#define AIROHA_PWM_GPIO_FLASH_PRD_HIGH		GENMASK(7, 0)
+> +
+> +#define AIROHA_PWM_REG_GPIO_FLASH_MAP(_n)	(0x004c + (4 * (_n)))
+> +#define AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(_n) (4 * (_n))
+> +#define AIROHA_PWM_GPIO_FLASH_EN		BIT(3)
+> +#define AIROHA_PWM_GPIO_FLASH_SET_ID		GENMASK(2, 0)
+> +
+> +/* Register map is equal to GPIO flash map */
+> +#define AIROHA_PWM_REG_SIPO_FLASH_MAP(_n)	(0x0054 + (4 * (_n)))
+> +
+> +#define AIROHA_PWM_REG_CYCLE_CFG_VALUE(_n)	(0x0098 + (4 * (_n)))
+> +#define AIROHA_PWM_REG_CYCLE_CFG_SHIFT(_n)	(8 * (_n))
+> +#define AIROHA_PWM_WAVE_GEN_CYCLE		GENMASK(7, 0)
+> +
+> +/* GPIO/SIPO flash map handles 8 pins in one register */
+> +#define AIROHA_PWM_PINS_PER_FLASH_MAP		8
+> +/* Cycle cfg handles 4 generators in one register */
+> +#define AIROHA_PWM_BUCKET_PER_CYCLE_CFG		4
+> +/* Flash producer handles 2 generators in one register */
+> +#define AIROHA_PWM_BUCKET_PER_FLASH_PROD	2
+> +
+> +#define AIROHA_PWM_NUM_BUCKETS			8
+> +/*
+> + * The first 16 GPIO pins, GPIO0-GPIO15, are mapped into 16 PWM channels, 0-15.
+> + * The SIPO GPIO pins are 17 pins which are mapped into 17 PWM channels, 16-32.
+> + * However, we've only got 8 concurrent waveform generators and can therefore
+> + * only use up to 8 different combinations of duty cycle and period at a time.
+> + */
+> +#define AIROHA_PWM_NUM_GPIO			16
+> +#define AIROHA_PWM_NUM_SIPO			17
+> +#define AIROHA_PWM_MAX_CHANNELS			(AIROHA_PWM_NUM_GPIO + AIROHA_PWM_NUM_SIPO)
+> +
+> +struct airoha_pwm_bucket {
+> +	/* Bitmask of PWM channels using this bucket */
+> +	u64 used;
+> +	u64 period_ns;
+> +	u64 duty_ns;
+> +};
+> +
+> +struct airoha_pwm {
+> +	struct regmap *regmap;
+> +
+> +	u64 initialized;
+> +
+> +	struct airoha_pwm_bucket buckets[AIROHA_PWM_NUM_BUCKETS];
+> +
+> +	/* Cache bucket used by each pwm channel */
+> +	u8 channel_bucket[AIROHA_PWM_MAX_CHANNELS];
+> +};
+> +
+> +/* The PWM hardware supports periods between 4 ms and 1 s */
+> +#define AIROHA_PWM_PERIOD_TICK_NS	(4 * NSEC_PER_MSEC)
+> +#define AIROHA_PWM_PERIOD_MAX_NS	(1 * NSEC_PER_SEC)
+> +/* It is represented internally as 1/250 s between 1 and 250. Unit is ticks. */
+> +#define AIROHA_PWM_PERIOD_MIN		1
+> +#define AIROHA_PWM_PERIOD_MAX		250
+> +/* Duty cycle is relative with 255 corresponding to 100% */
+> +#define AIROHA_PWM_DUTY_FULL		255
+> +
+> +static void airoha_pwm_get_flash_map_addr_and_shift(unsigned int hwpwm,
+> +						    u32 *addr, u32 *shift)
+> +{
+> +	unsigned int offset, hwpwm_bit;
+> +
+> +	if (hwpwm >= AIROHA_PWM_NUM_GPIO) {
+> +		unsigned int sipohwpwm = hwpwm - AIROHA_PWM_NUM_GPIO;
+> +
+> +		offset = sipohwpwm / AIROHA_PWM_PINS_PER_FLASH_MAP;
+> +		hwpwm_bit = sipohwpwm % AIROHA_PWM_PINS_PER_FLASH_MAP;
+> +
+> +		/* One FLASH_MAP register handles 8 pins */
+> +		*shift = AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(hwpwm_bit);
+> +		*addr = AIROHA_PWM_REG_SIPO_FLASH_MAP(offset);
+> +	} else {
+> +		offset = hwpwm / AIROHA_PWM_PINS_PER_FLASH_MAP;
+> +		hwpwm_bit = hwpwm % AIROHA_PWM_PINS_PER_FLASH_MAP;
+> +
+> +		/* One FLASH_MAP register handles 8 pins */
+> +		*shift = AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(hwpwm_bit);
+> +		*addr = AIROHA_PWM_REG_GPIO_FLASH_MAP(offset);
 > +	}
-> +};
-
-...
-
-> +static const char *const ad4052_conversion_freqs[] = {
-> +	"2000000", "1000000", "300000", "100000", "33300",
-> +	"10000", "3000", "500", "333", "250", "200",
-> +	"166", "140", "124", "111",
-
-Better to format with equal amount of members per line (usually power-of-two)
-with a comment.
-
-	"2000000", "1000000", "300000", "100000",	/*  0 -  3 */
-	"33300", "10000", "3000", "500",		/*  4 -  7 */
-	"333", "250", "200", "166",			/*  8 - 11 */
-	"140", "124", "111",				/* 12 - 15 */
-
-And why these are string literals?
-
-> +};
-
-...
-
-> +static ssize_t ad4052_events_frequency_show(struct device *dev,
-> +					    struct device_attribute *attr,
-> +					    char *buf)
-> +{
-> +	struct ad4052_state *st = iio_priv(dev_to_iio_dev(dev));
-> +
-> +	return sprintf(buf, "%s\n", ad4052_conversion_freqs[st->events_frequency]);
-
-You should use sysfs_emit() from sysfs.h.
-
 > +}
-
-...
-
-> +static ssize_t ad4052_events_frequency_available_show(struct device *dev,
-> +						      struct device_attribute *attr,
-> +						      char *buf)
+> +
+> +static void airoha_pwm_get_ticks_from_ns(u64 period_ns, u32 *period_tick,
+> +					 u64 duty_ns, u32 *duty_tick)
 > +{
-> +	struct ad4052_state *st = iio_priv(dev_to_iio_dev(dev));
-> +	int len = 0;
+> +	u64 tmp_duty_tick;
 > +
-> +	for (u8 i = AD4052_FS_OFFSET(st->grade);
-> +	     i < AD4052_FS_LEN(st->grade); i++)
-> +		len += sprintf(buf + len, "%s ", ad4052_conversion_freqs[i]);
+> +	*period_tick = div_u64(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
 > +
-> +	return sprintf(buf + len, "\n") + len;
-
-sysfs_emit_at(). Use of sprintf() is quite wrong here even if don't care about
-sysfs_emit*() APIs.
-
+> +	tmp_duty_tick = mul_u64_u64_div_u64(duty_ns, AIROHA_PWM_DUTY_FULL,
+> +					    period_ns);
+> +	if (tmp_duty_tick > AIROHA_PWM_DUTY_FULL)
+> +		tmp_duty_tick = AIROHA_PWM_DUTY_FULL;
+> +	*duty_tick = tmp_duty_tick;
 > +}
-
-> +static IIO_DEVICE_ATTR(sampling_frequency, 0644,
-> +		       ad4052_events_frequency_show,
-> +		       ad4052_events_frequency_store, 0);
 > +
-> +static IIO_DEVICE_ATTR(sampling_frequency_available, 0444,
-> +		       ad4052_events_frequency_available_show,
-> +		       NULL, 0);
-
-Please, move each of them closer to the callback. Also, why not
-IIO_DEVICE_ATTR_RO() to begin with?
-
-...
-
-> +static struct attribute *ad4052_event_attributes[] = {
-> +	&iio_dev_attr_sampling_frequency.dev_attr.attr,
-> +	&iio_dev_attr_sampling_frequency_available.dev_attr.attr,
-> +	NULL,
-
-No comma in terminator entry.
-
-> +};
-
-...
-
-> +static void ad4052_update_xfer_raw(struct iio_dev *indio_dev,
-> +				   struct iio_chan_spec const *chan)
+> +static void airoha_pwm_get_bucket(struct airoha_pwm *pc, int bucket,
+> +				  u64 *period_ns, u64 *duty_ns)
 > +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	const struct iio_scan_type *scan_type;
-> +	struct spi_transfer *xfer = &st->xfer;
+> +	u32 period_tick, duty_tick;
+> +	unsigned int offset;
+> +	u32 shift, val;
 > +
-> +	scan_type = iio_get_current_scan_type(indio_dev, chan);
-
+> +	offset = bucket / AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
+> +	shift = bucket % AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
+> +	shift = AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
 > +
-
-Unneeded blank line.
-
-> +	if (IS_ERR(scan_type))
+> +	regmap_read(pc->regmap, AIROHA_PWM_REG_CYCLE_CFG_VALUE(offset), &val);
+> +
+> +	period_tick = FIELD_GET(AIROHA_PWM_WAVE_GEN_CYCLE, val >> shift);
+> +	*period_ns = period_tick * AIROHA_PWM_PERIOD_TICK_NS;
+> +
+> +	offset = bucket / AIROHA_PWM_BUCKET_PER_FLASH_PROD;
+> +	shift = bucket % AIROHA_PWM_BUCKET_PER_FLASH_PROD;
+> +	shift = AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
+> +
+> +	regmap_read(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
+> +		    &val);
+> +
+> +	duty_tick = FIELD_GET(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, val >> shift);
+> +	*duty_ns = DIV_U64_ROUND_UP(duty_tick * *period_ns, AIROHA_PWM_DUTY_FULL);
+> +}
+> +
+> +static int airoha_pwm_get_generator(struct airoha_pwm *pc, u64 duty_ns,
+> +				    u64 period_ns)
+> +{
+> +	int i, unused = -1;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pc->buckets); i++) {
+> +		struct airoha_pwm_bucket *bucket = &pc->buckets[i];
+> +		u32 duty_tick, duty_tick_bucket;
+> +		u32 period_tick;
+> +
+> +		/* If found, save an unused bucket to return it later */
+> +		if (!bucket->used && unused == -1) {
+> +			unused = i;
+> +			continue;
+> +		}
+> +
+> +		if (duty_ns == bucket->duty_ns &&
+> +		    period_ns == bucket->period_ns)
+> +			return i;
+> +
+> +		/*
+> +		 * Unlike duty cycle zero, which can be handled by
+> +		 * disabling PWM, a generator is needed for full duty
+> +		 * cycle but it can be reused regardless of period
+> +		 */
+> +		airoha_pwm_get_ticks_from_ns(period_ns, &period_tick,
+> +					     duty_ns, &duty_tick);
+> +		airoha_pwm_get_ticks_from_ns(bucket->period_ns, &period_tick,
+> +					     bucket->duty_ns, &duty_tick_bucket);
+> +		if (duty_tick == AIROHA_PWM_DUTY_FULL &&
+> +		    duty_tick == duty_tick_bucket)
+> +			return i;
+> +	}
+> +
+> +	return unused;
+> +}
+> +
+> +static void airoha_pwm_release_bucket_config(struct airoha_pwm *pc,
+> +					     unsigned int hwpwm)
+> +{
+> +	int bucket;
+> +
+> +	/* Nothing to clear, PWM channel never used */
+> +	if (!(pc->initialized & BIT_ULL(hwpwm)))
 > +		return;
 > +
-> +	xfer->bits_per_word = scan_type->realbits;
-> +	xfer->len = BITS_TO_BYTES(scan_type->storagebits);
+> +	bucket = pc->channel_bucket[hwpwm];
+> +	pc->buckets[bucket].used &= ~BIT_ULL(hwpwm);
 > +}
 > +
-> +static int ad4052_update_xfer_offload(struct iio_dev *indio_dev,
-> +				      struct iio_chan_spec const *chan)
+> +static int airoha_pwm_consume_generator(struct airoha_pwm *pc,
+> +					u64 duty_ns, u64 period_ns,
+> +					unsigned int hwpwm)
 > +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	const struct iio_scan_type *scan_type;
-> +	struct spi_transfer *xfer = &st->xfer;
+> +	int bucket;
 > +
-> +	scan_type = iio_get_current_scan_type(indio_dev, chan);
+> +	/*
+> +	 * Search for a bucket that already satisfy duty and period
+> +	 * or an unused one.
+> +	 * If not found, -1 is returned.
+> +	 */
+> +	bucket = airoha_pwm_get_generator(pc, duty_ns, period_ns);
+> +	if (bucket < 0)
+> +		return bucket;
 > +
-
-Ditto.
-
-> +	if (IS_ERR(scan_type))
-> +		return PTR_ERR(scan_type);
+> +	airoha_pwm_release_bucket_config(pc, hwpwm);
+> +	pc->buckets[bucket].used |= BIT_ULL(hwpwm);
+> +	pc->buckets[bucket].period_ns = period_ns;
+> +	pc->buckets[bucket].duty_ns = duty_ns;
 > +
-> +	xfer = &st->offload_xfer;
-> +	xfer->bits_per_word = scan_type->realbits;
-> +	xfer->len = BITS_TO_BYTES(scan_type->storagebits);
-> +
-> +	spi_message_init_with_transfers(&st->offload_msg, &st->offload_xfer, 1);
-> +	st->offload_msg.offload = st->offload;
-> +
-> +	return spi_optimize_message(st->spi, &st->offload_msg);
+> +	return bucket;
 > +}
-
-...
-
-> +static int ad4052_set_oversampling_ratio(struct iio_dev *indio_dev,
-> +					 const struct iio_chan_spec *chan,
-> +					 unsigned int val)
+> +
+> +static int airoha_pwm_sipo_init(struct airoha_pwm *pc)
 > +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	int ret;
+> +	u32 val;
 > +
-> +	if ((val) < 1 || (val) > BIT(st->chip->max_avg + 1))
-
-Too many parentheses.
-
-> +		return -EINVAL;
+> +	if (!(pc->initialized >> AIROHA_PWM_NUM_GPIO))
+> +		return 0;
 > +
-> +	/* 1 disables oversampling */
-> +	if (val == 1) {
-> +		st->mode = AD4052_SAMPLE_MODE;
-> +	} else {
-> +		val = ilog2(val);
-> +		st->mode = AD4052_BURST_AVERAGING_MODE;
-> +		ret = regmap_write(st->regmap, AD4052_REG_AVG_CONFIG, val - 1);
-> +		if (ret)
-> +			return ret;
-> +	}
+> +	regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
+> +			  AIROHA_PWM_SERIAL_GPIO_MODE_74HC164);
 > +
-> +	ad4052_update_xfer_raw(indio_dev, chan);
+> +	/* Configure shift register timings, use 32x divisor */
+> +	regmap_write(pc->regmap, AIROHA_PWM_REG_SGPIO_CLK_DIVR,
+> +		     FIELD_PREP(AIROHA_PWM_SGPIO_CLK_DIVR, 0x3));
+> +
+> +	/*
+> +	 * The actual delay is clock + 1.
+> +	 * Notice that clock delay should not be greater
+> +	 * than (divisor / 2) - 1.
+> +	 * Set to 0 by default. (aka 1)
+> +	 */
+> +	regmap_write(pc->regmap, AIROHA_PWM_REG_SGPIO_CLK_DLY, 0x0);
+> +
+> +	/*
+> +	 * It it necessary to after muxing explicitly shift out all
+> +	 * zeroes to initialize the shift register before enabling PWM
+> +	 * mode because in PWM mode SIPO will not start shifting until
+> +	 * it needs to output a non-zero value (bit 31 of led_data
+> +	 * indicates shifting in progress and it must return to zero
+> +	 * before led_data can be written or PWM mode can be set)
+> +	 */
+> +	if (regmap_read_poll_timeout(pc->regmap, AIROHA_PWM_REG_SGPIO_LED_DATA, val,
+> +				     !(val & AIROHA_PWM_SGPIO_LED_DATA_SHIFT_FLAG),
+> +				     10, 200 * USEC_PER_MSEC))
+> +		return -ETIMEDOUT;
+> +
+> +	regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SGPIO_LED_DATA,
+> +			  AIROHA_PWM_SGPIO_LED_DATA_DATA);
+> +	if (regmap_read_poll_timeout(pc->regmap, AIROHA_PWM_REG_SGPIO_LED_DATA, val,
+> +				     !(val & AIROHA_PWM_SGPIO_LED_DATA_SHIFT_FLAG),
+> +				     10, 200 * USEC_PER_MSEC))
+> +		return -ETIMEDOUT;
+> +
+> +	/* Set SIPO in PWM mode */
+> +	regmap_set_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
+> +			AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
 > +
 > +	return 0;
 > +}
-
-...
-
-> +static int ad4052_get_oversampling_ratio(struct ad4052_state *st,
-> +					 unsigned int *val)
-> +{
-> +	int ret;
 > +
-> +	if (st->mode == AD4052_SAMPLE_MODE) {
-> +		*val = 1;
+> +static void airoha_pwm_calc_bucket_config(struct airoha_pwm *pc, int bucket,
+> +					  u64 duty_ns, u64 period_ns)
+> +{
+> +	u32 period_tick, duty_tick;
+> +	u32 mask, shift, val;
+> +	u64 offset;
+> +
+> +	airoha_pwm_get_ticks_from_ns(period_ns, &period_tick,
+> +				     duty_ns, &duty_tick);
+> +
+> +	offset = bucket;
+> +	shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
+> +	shift = AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
+> +
+> +	/* Configure frequency divisor */
+> +	mask = AIROHA_PWM_WAVE_GEN_CYCLE << shift;
+> +	val = FIELD_PREP(AIROHA_PWM_WAVE_GEN_CYCLE, period_tick) << shift;
+> +	regmap_update_bits(pc->regmap, AIROHA_PWM_REG_CYCLE_CFG_VALUE(offset), mask, val);
+> +
+> +	offset = bucket;
+> +	shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+> +	shift = AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
+> +
+> +	/* Configure duty cycle */
+> +	mask = AIROHA_PWM_GPIO_FLASH_PRD_HIGH << shift;
+> +	val = FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, duty_tick) << shift;
+> +	regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
+> +			   mask, val);
+> +
+> +	mask = AIROHA_PWM_GPIO_FLASH_PRD_LOW << shift;
+> +	val = FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_LOW,
+> +			 AIROHA_PWM_DUTY_FULL - duty_tick) << shift;
+> +	regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
+> +			   mask, val);
+> +}
+> +
+> +static void airoha_pwm_config_flash_map(struct airoha_pwm *pc,
+> +					unsigned int hwpwm, int index)
+> +{
+> +	unsigned int addr;
+> +	u32 shift;
+> +
+> +	airoha_pwm_get_flash_map_addr_and_shift(hwpwm, &addr, &shift);
+> +
+> +	/* index -1 means disable PWM channel */
+> +	if (index < 0) {
+> +		/*
+> +		 * If we need to disable the PWM, we just put low the
+> +		 * GPIO. No need to setup buckets.
+> +		 */
+> +		regmap_clear_bits(pc->regmap, addr,
+> +				  AIROHA_PWM_GPIO_FLASH_EN << shift);
+> +		return;
+> +	}
+> +
+> +	regmap_update_bits(pc->regmap, addr,
+> +			   AIROHA_PWM_GPIO_FLASH_SET_ID << shift,
+> +			   FIELD_PREP(AIROHA_PWM_GPIO_FLASH_SET_ID, index) << shift);
+> +	regmap_set_bits(pc->regmap, addr, AIROHA_PWM_GPIO_FLASH_EN << shift);
+> +}
+> +
+> +static int airoha_pwm_config(struct airoha_pwm *pc, struct pwm_device *pwm,
+> +			     u64 duty_ns, u64 period_ns)
+> +{
+> +	unsigned int hwpwm = pwm->hwpwm;
+> +	int bucket;
+> +
+> +	bucket = airoha_pwm_consume_generator(pc, duty_ns, period_ns,
+> +					      hwpwm);
+> +	if (bucket < 0)
+> +		return -EBUSY;
+> +
+> +	airoha_pwm_calc_bucket_config(pc, bucket, duty_ns, period_ns);
+> +	airoha_pwm_config_flash_map(pc, hwpwm, bucket);
+> +
+> +	pc->initialized |= BIT_ULL(hwpwm);
+> +	pc->channel_bucket[hwpwm] = bucket;
+> +
+> +	/*
+> +	 * SIPO are special GPIO attached to a shift register chip. The handling
+> +	 * of this chip is internal to the SoC that takes care of applying the
+> +	 * values based on the flash map. To apply a new flash map, it's needed
+> +	 * to trigger a refresh on the shift register chip.
+> +	 * If we are configuring a SIPO, always reinit the shift register chip
+> +	 * to make sure the correct flash map is applied.
+> +	 * We skip reconfiguring the shift register if we related hwpwm
+> +	 * is disabled (as it doesn't need to be mapped).
+> +	 */
+> +	if (!(pc->initialized & BIT_ULL(hwpwm)) && hwpwm >= AIROHA_PWM_NUM_GPIO)
+> +		airoha_pwm_sipo_init(pc);
+> +
+> +	return 0;
+> +}
+> +
+> +static void airoha_pwm_disable(struct airoha_pwm *pc, struct pwm_device *pwm)
+> +{
+> +	/* Disable PWM and release the bucket */
+> +	airoha_pwm_config_flash_map(pc, pwm->hwpwm, -1);
+> +	airoha_pwm_release_bucket_config(pc, pwm->hwpwm);
+> +
+> +	pc->initialized &= ~BIT_ULL(pwm->hwpwm);
+> +
+> +	/* If no SIPO is used, disable the shift register chip */
+> +	if (!(pc->initialized >> AIROHA_PWM_NUM_GPIO))
+> +		regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
+> +				  AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
+> +}
+> +
+> +static int airoha_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct airoha_pwm *pc = pwmchip_get_drvdata(chip);
+> +	u64 period_ns;
+> +
+> +	/* Only normal polarity is supported */
+> +	if (state->polarity == PWM_POLARITY_INVERSED)
+> +		return -EINVAL;
+> +
+> +	if (!state->enabled) {
+> +		airoha_pwm_disable(pc, pwm);
 > +		return 0;
 > +	}
 > +
-> +	ret = regmap_read(st->regmap, AD4052_REG_AVG_CONFIG, val);
-> +	if (ret)
-> +		return ret;
+> +	/*
+> +	 * Period goes at 4ns step, normalize it to check if we can
+> +	 * share a generator.
+> +	 */
+> +	period_ns = rounddown(state->period, AIROHA_PWM_PERIOD_TICK_NS);
 > +
-> +	*val = BIT(*val + 1);
-
-Please, introduce a local variable and use it. This one looks bad because it
-will write into output knowing when it's an error case.
-
-> +	return 0;
-> +}
-
-...
-
-> +static int ad4052_set_sampling_freq(struct ad4052_state *st, unsigned int freq)
-> +{
-> +	struct pwm_state pwm_st;
+> +	/* Clamp period to MAX supported value */
+> +	if (period_ns > AIROHA_PWM_PERIOD_MAX_NS)
+> +		period_ns = AIROHA_PWM_PERIOD_MAX_NS;
 > +
-> +	if (freq <= 0 || freq > AD4052_MAX_RATE(st->grade))
-
-in_range() from minmax.h?
-
+> +	if (period_ns < AIROHA_PWM_PERIOD_TICK_NS)
 > +		return -EINVAL;
 > +
-> +	pwm_get_state(st->cnv_pwm, &pwm_st);
-> +	pwm_st.period = DIV_ROUND_UP_ULL(NSEC_PER_SEC, freq);
-> +	return pwm_apply_might_sleep(st->cnv_pwm, &pwm_st);
+> +	return airoha_pwm_config(pc, pwm, state->duty_cycle, period_ns);
 > +}
-
-...
-
-> +static int ad4052_soft_reset(struct ad4052_state *st)
-> +{
-> +	int ret;
 > +
-> +	memset(st->buf_reset_pattern, 0xFF, sizeof(st->buf_reset_pattern));
-> +	for (int i = 0; i < 3; i++)
-> +		st->buf_reset_pattern[6 * (i + 1) - 1] = 0xFE;
-
-Only three times and simple oneliner, can we unroll the loop and show
-the indices explicitly? It will help a lot in understanding what the actual
-pattern is.
-
-> +	ret = spi_write(st->spi, st->buf_reset_pattern,
-> +			sizeof(st->buf_reset_pattern));
+> +static int airoha_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> +				struct pwm_state *state)
+> +{
+> +	struct airoha_pwm *pc = pwmchip_get_drvdata(chip);
+> +	int ret, hwpwm = pwm->hwpwm;
+> +	u32 addr, shift, val;
+> +	u8 bucket;
+> +
+> +	airoha_pwm_get_flash_map_addr_and_shift(hwpwm, &addr, &shift);
+> +
+> +	ret = regmap_read(pc->regmap, addr, &val);
 > +	if (ret)
 > +		return ret;
 > +
-> +	/* Wait AD4052 reset delay */
-> +	fsleep(5000);
+> +	state->enabled = FIELD_GET(AIROHA_PWM_GPIO_FLASH_EN, val >> shift);
+> +	if (!state->enabled)
+> +		return 0;
+> +
+> +	state->polarity = PWM_POLARITY_NORMAL;
+> +
+> +	bucket = FIELD_GET(AIROHA_PWM_GPIO_FLASH_SET_ID, val >> shift);
+> +	airoha_pwm_get_bucket(pc, bucket, &state->period,
+> +			      &state->duty_cycle);
 > +
 > +	return 0;
 > +}
-
-...
-
-> +static int ad4052_setup(struct iio_dev *indio_dev,
-> +			struct iio_chan_spec const *chan)
+> +
+> +static const struct pwm_ops airoha_pwm_ops = {
+> +	.apply = airoha_pwm_apply,
+> +	.get_state = airoha_pwm_get_state,
+> +};
+> +
+> +static int airoha_pwm_probe(struct platform_device *pdev)
 > +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	const struct iio_scan_type *scan_type;
-> +
-> +	scan_type = iio_get_current_scan_type(indio_dev, chan);
-
-> +
-
-Unneeded blank line.
-
-> +	if (IS_ERR(scan_type))
-> +		return PTR_ERR(scan_type);
-> +
-> +	u8 val = FIELD_PREP(AD4052_GP_CONF_MODE_MSK_0, AD4052_GP_INTR) |
-> +		 FIELD_PREP(AD4052_GP_CONF_MODE_MSK_1, AD4052_GP_DRDY);
+> +	struct device *dev = &pdev->dev;
+> +	struct airoha_pwm *pc;
+> +	struct pwm_chip *chip;
 > +	int ret;
 > +
-> +	ret = regmap_update_bits(st->regmap, AD4052_REG_GP_CONF,
-> +				 AD4052_GP_CONF_MODE_MSK_1 | AD4052_GP_CONF_MODE_MSK_0,
-> +				 val);
+> +	chip = devm_pwmchip_alloc(dev, AIROHA_PWM_MAX_CHANNELS, sizeof(*pc));
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +
+> +	chip->ops = &airoha_pwm_ops;
+> +	pc = pwmchip_get_drvdata(chip);
+> +
+> +	pc->regmap = device_node_to_regmap(dev->parent->of_node);
+> +	if (IS_ERR(pc->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(pc->regmap), "Failed to get PWM regmap\n");
+> +
+> +	ret = devm_pwmchip_add(&pdev->dev, chip);
 > +	if (ret)
-> +		return ret;
+> +		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
 > +
-> +	val = FIELD_PREP(AD4052_INTR_CONF_EN_MSK_0, (AD4052_INTR_EN_EITHER)) |
-> +	      FIELD_PREP(AD4052_INTR_CONF_EN_MSK_1, (AD4052_INTR_EN_NEITHER));
-> +
-> +	ret = regmap_update_bits(st->regmap, AD4052_REG_INTR_CONF,
-> +				 AD4052_INTR_CONF_EN_MSK_0 | AD4052_INTR_CONF_EN_MSK_1,
-> +				 val);
-> +	if (ret)
-> +		return ret;
-
-> +	val = 0;
-> +	if (scan_type->sign == 's')
-> +		val |= AD4052_ADC_MODES_DATA_FORMAT;
-> +
-> +	st->data_format = val;
-
-Why not simply:
-
-	if (scan_type->sign == 's')
-		st->data_format = val | AD4052_ADC_MODES_DATA_FORMAT;
-	else
-		st->data_format = 0;
-
-?
-
-> +	if (st->grade == AD4052_500KSPS) {
-> +		ret = regmap_write(st->regmap, AD4052_REG_TIMER_CONFIG,
-> +				   FIELD_PREP(AD4052_TIMER_CONFIG_FS_MASK,
-> +					      AD4052_TIMER_CONFIG_300KSPS));
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return regmap_write(st->regmap, AD4052_REG_ADC_MODES, val);
-> +}
-
-...
-
-> +static int ad4052_request_irq(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	struct device *dev = &st->spi->dev;
-
-> +	int ret = 0;
-
-Why an assignment?
-
-> +	ret = fwnode_irq_get_byname(dev_fwnode(&st->spi->dev), "gp0");
-> +	if (ret <= 0)
-> +		return ret ? ret : -EINVAL;
-> +
-> +	ret = devm_request_threaded_irq(dev, ret, NULL,
-> +					ad4052_irq_handler_thresh,
-> +					IRQF_ONESHOT, indio_dev->name,
-> +					indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = fwnode_irq_get_byname(dev_fwnode(&st->spi->dev), "gp1");
-> +	if (ret <= 0)
-
-Ahy comparison to 0?
-
-> +		return ret ? ret : -EINVAL;
-
-This is not needed in such a form. Please, read the above API's doc and act
-accordingly.
-
-> +	st->gp1_irq = ret;
-> +	return devm_request_threaded_irq(dev, ret, NULL,
-> +					 ad4052_irq_handler_drdy,
-> +					 IRQF_ONESHOT, indio_dev->name,
-> +					 st);
-> +}
-
-...
-
-> +static int __ad4052_read_chan_raw(struct ad4052_state *st, int *val)
-> +{
-> +	struct spi_device *spi = st->spi;
-> +	int ret;
-
-> +	struct spi_transfer t_cnv = {
-> +		.len = 0
-
-Missing comma, but...
-
-> +	};
-
-This all is not needed, just make it
-
-	struct spi_transfer t_cnv = {};
-
-> +	reinit_completion(&st->completion);
-> +
-> +	if (st->cnv_gp) {
-> +		gpiod_set_value_cansleep(st->cnv_gp, 1);
-
-No delay?
-
-> +		gpiod_set_value_cansleep(st->cnv_gp, 0);
-> +	} else {
-> +		ret = spi_sync_transfer(spi, &t_cnv, 1);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	/*
-> +	 * Single sample read should be used only for oversampling and
-> +	 * sampling frequency pairs that take less than 1 sec.
-> +	 */
-> +	ret = wait_for_completion_timeout(&st->completion,
-> +					  msecs_to_jiffies(1000));
-
-Where msec_to_jiffies() is defined?
-
-> +	if (!ret)
-> +		return -ETIMEDOUT;
-> +
-> +	ret = spi_sync_transfer(spi, &st->xfer, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (st->xfer.len == 2) {
-> +		*val = be16_to_cpu(st->d16);
-> +		if (st->data_format & AD4052_ADC_MODES_DATA_FORMAT)
-> +			*val = sign_extend32(*val, 15);
-
-Where sign_extend32() is defined?
-
-> +	} else {
-> +		*val = be32_to_cpu(st->d32);
-> +		if (st->data_format & AD4052_ADC_MODES_DATA_FORMAT)
-> +			*val = sign_extend32(*val, 23);
-> +	}
-> +
-> +	return ret;
-> +}
-
-...
-
-> +static int ad4052_read_raw(struct iio_dev *indio_dev,
-> +			   struct iio_chan_spec const *chan,
-> +			   int *val, int *val2, long mask)
-> +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	struct pwm_state pwm_st;
-> +	int ret;
-> +
-> +	if (!iio_device_claim_direct(indio_dev))
-> +		return -EBUSY;
-> +
-> +	if (st->wait_event) {
-
-> +		iio_device_release_direct(indio_dev);
-> +		return -EBUSY;
-
-Inconsistent approach, use the same goto.
-
-> +	}
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = ad4052_read_chan_raw(indio_dev, val);
-> +		if (ret)
-> +			goto out_release;
-> +		ret = IIO_VAL_INT;
-> +		break;
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		ret = ad4052_get_oversampling_ratio(st, val);
-> +		if (ret)
-> +			goto out_release;
-> +		ret = IIO_VAL_INT;
-> +		break;
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		ret = pwm_get_state_hw(st->cnv_pwm, &pwm_st);
-> +		if (ret)
-> +			goto out_release;
-> +
-> +		if (!pwm_st.enabled)
-> +			pwm_get_state(st->cnv_pwm, &pwm_st);
-> +
-> +		*val = DIV_ROUND_UP_ULL(NSEC_PER_SEC, pwm_st.period);
-> +
-> +		ret = IIO_VAL_INT;
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +	}
-> +
-> +out_release:
-> +	iio_device_release_direct(indio_dev);
-> +	return ret;
-
-You may have a great deal of reducing or at least making this readable if split
-to two, one is claim_direct wrapped.
-
+> +	return 0;
 > +}
 > +
-> +static int ad4052_write_raw(struct iio_dev *indio_dev,
-> +			    struct iio_chan_spec const *chan, int val,
-> +			    int val2, long info)
-
-Ditto for the above function. At least try and see the result. I believe that
-it might even shrink number of LoCs.
-
-...
-
-> +static int ad4052_monitor_mode_disable(struct ad4052_state *st)
-> +{
-> +	int ret;
+> +static const struct of_device_id airoha_pwm_of_match[] = {
+> +	{ .compatible = "airoha,en7581-pwm" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, airoha_pwm_of_match);
 > +
-> +	pm_runtime_mark_last_busy(&st->spi->dev);
-> +	pm_runtime_put_autosuspend(&st->spi->dev);
+> +static struct platform_driver airoha_pwm_driver = {
+> +	.driver = {
+> +		.name = "pwm-airoha",
+> +		.of_match_table = airoha_pwm_of_match,
+> +	},
+> +	.probe = airoha_pwm_probe,
+> +};
+> +module_platform_driver(airoha_pwm_driver);
 > +
-> +	ret = ad4052_exit_command(st);
+> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo@kernel.org>");
+> +MODULE_AUTHOR("Markus Gothe <markus.gothe@genexis.eu>");
+> +MODULE_AUTHOR("Benjamin Larsson <benjamin.larsson@genexis.eu>");
+> +MODULE_DESCRIPTION("Airoha EN7581 PWM driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.48.1
+> 
 
-> +
-
-Unneeded blank line.
-
-> +	if (ret)
-> +		pm_runtime_resume_and_get(&st->spi->dev);
-> +
-> +	return ret;
-> +}
-
-...
-
-> +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	u8 reg, size = 1;
-
-Make size assignment explicit in each case, it will help a lot for both:
-maintaining in long term and reading the code.
-
-> +	int ret;
-> +
-> +	if (!iio_device_claim_direct(indio_dev))
-> +		return -EBUSY;
-> +
-> +	if (st->wait_event) {
-> +		iio_device_release_direct(indio_dev);
-> +		return -EBUSY;
-> +	}
-> +
-> +	switch (info) {
-> +	case IIO_EV_INFO_VALUE:
-> +		if (dir == IIO_EV_DIR_RISING)
-> +			reg = AD4052_REG_MAX_LIMIT;
-> +		else
-> +			reg = AD4052_REG_MIN_LIMIT;
-> +		size = 2;
-> +		break;
-> +	case IIO_EV_INFO_HYSTERESIS:
-> +		if (dir == IIO_EV_DIR_RISING)
-> +			reg = AD4052_REG_MAX_HYST;
-> +		else
-> +			reg = AD4052_REG_MIN_HYST;
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		goto out_release;
-> +	}
-> +
-> +	ret = regmap_bulk_read(st->regmap, reg, &st->d32, size);
-> +	if (ret)
-> +		goto out_release;
-> +
-> +	if (reg == AD4052_REG_MAX_LIMIT || reg == AD4052_REG_MIN_LIMIT) {
-> +		*val = be16_to_cpu(st->d16);
-> +		if (st->data_format & AD4052_ADC_MODES_DATA_FORMAT)
-> +			*val = sign_extend32(*val, 11);
-
-Better pattern is to use local variable and assign if and only if the function
-returns success.
-
-> +	} else {
-> +		*val = be32_to_cpu(st->d32);
-> +	}
-> +
-> +out_release:
-> +	iio_device_release_direct(indio_dev);
-> +	return ret ? ret : IIO_VAL_INT;
-
-Again, try with a wrapper.
-
-> +}
-
-...
-
-> +static int ad4052_write_event_value(struct iio_dev *indio_dev,
-> +				    const struct iio_chan_spec *chan,
-> +				    enum iio_event_type type,
-> +				    enum iio_event_direction dir,
-> +				    enum iio_event_info info, int val,
-> +				    int val2)
-
-Same comments as per previous one.
-
-> +static int ad4052_buffer_predisable(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	pwm_disable(st->cnv_pwm);
-> +
-> +	spi_offload_trigger_disable(st->offload, st->offload_trigger);
-> +	spi_unoptimize_message(&st->offload_msg);
-> +	enable_irq(st->gp1_irq);
-> +
-> +	ret = ad4052_exit_command(st);
-
-You leave IRQ enabled even in error case, is it on purpose?
-
-> +	pm_runtime_mark_last_busy(&st->spi->dev);
-> +	pm_runtime_put_autosuspend(&st->spi->dev);
-> +
-> +	return ret;
-> +}
-
-...
-
-> +static int ad4052_request_offload(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	struct device *dev = &st->spi->dev;
-> +	struct dma_chan *rx_dma;
-> +	struct spi_offload_trigger_info trigger_info = {
-> +		.fwnode = dev_fwnode(dev),
-> +		.ops = &ad4052_offload_trigger_ops,
-> +		.priv = st,
-> +	};
-> +	struct pwm_state pwm_st;
-> +	int ret;
-> +
-> +	indio_dev->setup_ops = &ad4052_buffer_setup_ops;
-> +
-> +	ret = devm_spi_offload_trigger_register(dev, &trigger_info);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +				     "failed to register offload trigger\n");
-
-One line?
-
-> +	st->offload_trigger = devm_spi_offload_trigger_get(dev, st->offload,
-> +							   SPI_OFFLOAD_TRIGGER_DATA_READY);
-> +	if (IS_ERR(st->offload_trigger))
-> +		return PTR_ERR(st->offload_trigger);
-> +
-> +	st->cnv_pwm = devm_pwm_get(dev, NULL);
-> +	if (IS_ERR(st->cnv_pwm))
-> +		return dev_err_probe(dev, PTR_ERR(st->cnv_pwm),
-> +				     "failed to get CNV PWM\n");
-
-Can be one line (you already have above 91 character long line).
-
-> +	pwm_init_state(st->cnv_pwm, &pwm_st);
-> +
-> +	pwm_st.enabled = false;
-> +	pwm_st.duty_cycle = AD4052_T_CNVH_NS * 2;
-
-> +	pwm_st.period = DIV_ROUND_UP_ULL(NSEC_PER_SEC,
-> +					 AD4052_MAX_RATE(st->grade));
-
-It can be one line (83 characters).
-
-
-> +	ret = pwm_apply_might_sleep(st->cnv_pwm, &pwm_st);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to apply CNV PWM\n");
-> +
-> +	ret = devm_add_action_or_reset(dev, ad4052_pwm_disable, st->cnv_pwm);
-> +	if (ret)
-> +		return ret;
-> +
-> +	rx_dma = devm_spi_offload_rx_stream_request_dma_chan(dev, st->offload);
-> +	if (IS_ERR(rx_dma))
-> +		return PTR_ERR(rx_dma);
-> +
-> +	return devm_iio_dmaengine_buffer_setup_with_handle(dev, indio_dev, rx_dma,
-> +							   IIO_BUFFER_DIRECTION_IN);
-> +}
-
-...
-
-> +static int ad4052_probe(struct spi_device *spi)
-> +{
-> +	const struct ad4052_chip_info *chip;
-> +	struct device *dev = &spi->dev;
-> +	struct iio_dev *indio_dev;
-> +	struct ad4052_state *st;
-
-> +	int ret = 0;
-
-What is this for?
-
-> +	chip = spi_get_device_match_data(spi);
-> +	if (!chip)
-> +		return dev_err_probe(dev, -ENODEV,
-> +				     "Could not find chip info data\n");
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	st = iio_priv(indio_dev);
-> +	st->spi = spi;
-> +	spi_set_drvdata(spi, st);
-> +	init_completion(&st->completion);
-> +
-> +	st->regmap = devm_regmap_init_spi(spi, &ad4052_regmap_config);
-> +	if (IS_ERR(st->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(st->regmap),
-> +				     "Failed to initialize regmap\n");
-> +
-> +	st->mode = AD4052_SAMPLE_MODE;
-> +	st->wait_event = false;
-> +	st->chip = chip;
-> +	st->grade = chip->prod_id <= 0x75 ? AD4052_2MSPS : AD4052_500KSPS;
-> +	st->oversampling_frequency = AD4052_FS_OFFSET(st->grade);
-> +	st->events_frequency = AD4052_FS_OFFSET(st->grade);
-> +
-> +	st->cnv_gp = devm_gpiod_get_optional(dev, "cnv", GPIOD_OUT_LOW);
-> +	if (IS_ERR(st->cnv_gp))
-> +		return dev_err_probe(dev, PTR_ERR(st->cnv_gp),
-> +				     "Failed to get cnv gpio\n");
-> +
-> +	indio_dev->modes = INDIO_BUFFER_HARDWARE | INDIO_DIRECT_MODE;
-> +	indio_dev->num_channels = 1;
-> +	indio_dev->info = &ad4052_info;
-> +	indio_dev->name = chip->name;
-> +
-> +	st->offload = devm_spi_offload_get(dev, spi, &ad4052_offload_config);
-> +	if (IS_ERR(st->offload))
-> +		return PTR_ERR(st->offload);
-
-> +	if (ret && ret != -ENODEV)
-> +		return dev_err_probe(dev, ret, "Failed to get offload\n");
-
-Huh?! Leftover?
-
-> +	if (ret == -ENODEV) {
-> +		st->offload_trigger = NULL;
-> +		indio_dev->channels = chip->channels;
-
-How this is not a dead code, please?
-
-> +	} else {
-> +		indio_dev->channels = chip->offload_channels;
-> +		ret = ad4052_request_offload(indio_dev);
-> +		if (ret)
-> +			return dev_err_probe(dev, ret,
-> +					     "Failed to configure offload\n");
-> +	}
-> +
-> +	st->xfer.rx_buf = &st->d32;
-> +
-> +	ret = ad4052_soft_reset(st);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "AD4052 failed to soft reset\n");
-> +
-> +	ret = ad4052_check_ids(st);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +				     "AD4052 fields assertions failed\n");
-> +
-> +	ret = ad4052_setup(indio_dev, indio_dev->channels);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(st->regmap, AD4052_REG_DEVICE_STATUS,
-> +			   AD4052_DEVICE_STATUS_DEVICE_RESET);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ad4052_request_irq(indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ad4052_update_xfer_raw(indio_dev, indio_dev->channels);
-> +
-> +	pm_runtime_set_active(dev);
-> +	ret = devm_pm_runtime_enable(dev);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +				     "Failed to enable pm_runtime\n");
-> +
-> +	pm_runtime_set_autosuspend_delay(dev, 1000);
-> +	pm_runtime_use_autosuspend(dev);
-> +
-> +	return devm_iio_device_register(dev, indio_dev);
-> +}
-
-...
-
-> +static int ad4052_runtime_resume(struct device *dev)
-> +{
-> +	struct ad4052_state *st = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = regmap_write(st->regmap, AD4052_REG_DEVICE_CONFIG,
-> +			   FIELD_PREP(AD4052_DEVICE_CONFIG_POWER_MODE_MSK, 0));
-> +	return ret;
-
-Redundant local variable.
-
-> +}
+Any news for this?
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+	Ansuel
 
