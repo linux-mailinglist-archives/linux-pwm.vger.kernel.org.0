@@ -1,168 +1,190 @@
-Return-Path: <linux-pwm+bounces-5642-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5643-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30F1EA960AC
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Apr 2025 10:13:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 690FFA962FB
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Apr 2025 10:53:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A781179B02
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Apr 2025 08:13:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E7CB419E250E
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Apr 2025 08:47:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64C872512FC;
-	Tue, 22 Apr 2025 08:12:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6131525A357;
+	Tue, 22 Apr 2025 08:41:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HlkX56DV"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="WBEUvY0h"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A2623A995;
-	Tue, 22 Apr 2025 08:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8306C2571D6
+	for <linux-pwm@vger.kernel.org>; Tue, 22 Apr 2025 08:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745309534; cv=none; b=bjH5FVKHuKSmtA911hYjHUjw1tRcnkyIlCvInTzceR1x0Aetke6f1/epmIP8No+puBDD+3iwR9uLcWYOsoezy3S+OmiQCj9nu38VOgdUxo8lDHajGdiR5Hyb/FwJsSaqhBoE9G6S9nbmdzPBxVD6ojHdO90s7crwGPc4slIUhJs=
+	t=1745311310; cv=none; b=qoDdttgCiYKVobTOExHJJodBgNbofVc/hVN+aLPJLtnK+EYLPW5Eic2QIXTqrPGhE3t8y4z2QR9rMLAVW9sKNui8i9LFVP38q8ORyZW2O1Uw7x7pfYADhkMPqkwRlUywSkXg21hvH8Gpvb7dlSCdOu2/TS1nqCnO8aBBrNyUMVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745309534; c=relaxed/simple;
-	bh=o+B7DdcdLb05OfWKQ1SLmlisRPFRM/Y/beB3LDCwcbw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sLmSg7Ase/4ccU7v6iV6JY0y6Eni0AKqo7+BbHBTiZOTGOko/lIJ3Gutt4mctr/kmNC33PYGCMb6FYbBX1udioltOCvySayPACloPjx7TOXvgjl7eftFsyqCHEh2JZpdT5N/6g9Wvo1/Ovol4fW3h/Dg+NvsoMYca10p+ZsfHPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HlkX56DV; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c1ee0fd43so4374841f8f.0;
-        Tue, 22 Apr 2025 01:12:12 -0700 (PDT)
+	s=arc-20240116; t=1745311310; c=relaxed/simple;
+	bh=rU2tl9SCzAOgbil25IGKZ40RSY+N21sqdQ5DgV7O1wc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lc/+m1bJ61pDXNi+/UuL8h0oAVm5DyQQhEknuw6+BISgzYhxr3yKx/jre7pNCVckTp/pi3/zp4xieoP6mMURSCuU/ZI37Lomr61/DCsjbIRqz9FwD1khDlUHgo8c+yIMnG+2CGvLfOQpP3ZXEcV+8JlYTy0Ai+Rr4sqrd+dUOvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=WBEUvY0h; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22c3407a87aso72077785ad.3
+        for <linux-pwm@vger.kernel.org>; Tue, 22 Apr 2025 01:41:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745309531; x=1745914331; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=K9Pqd0JSg3R3Rl01mQeS60ptj7Wfk7YCDGdP4JNmo6A=;
-        b=HlkX56DVfMJUKJqgWisnSk/o8thED3aXlFFghYngIBQlOc7BzlRS7oxLA+71HVgO27
-         4JFA78uo0mIOSQdAuVBdO2vDoT8oCN+nbr/ECLiTwz3RQpJutRsf8MhcBUF6IbvWjC1R
-         PU3X1RznU9uU7qMIBRhGz7ym7EdFfvzvL5fInpe4NGcVsgp2A28/HHkOThSgfByAR4/E
-         u2/TuE/MO4hC3QKp6J9+vIYDYXYeFqZA/p56v0bJ1B7YIr+4iBZbgrvVG9QPPpnmUbVu
-         9p5HZzupnWcx8Uc3gX+GigJMJ2yzUoUboAOePnNWIVvvA+mmmoe88dxgXHG5doVxY9g+
-         wqTw==
+        d=sifive.com; s=google; t=1745311307; x=1745916107; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nGVHUzQ7HsHW4QPhu/ISOoKLCvthpJGLbl2UU7uWwpM=;
+        b=WBEUvY0h7+HjcQx8vQnyk4KkUQK0MU3MMrxqEvo3641nkhxh9p6+1KeDOa+p1eKB1K
+         4CKsIYito5QxcLjVintEEkLWcytxFdHuWzAo4/5dGq6yWoyuBYcpWN0cQBswtMrXI1pS
+         Hi30R1Dn6o3T2lhzM4bz7+beHDbrvbgQvzz04ctK5h034xfAq0TcQqxQLV87l+yD9VD0
+         7opa9uIOr03COIprPIlxA8bDVHKM2/aldF5pZpK0u4+1IkQKy38qF1DtqLlLYRO0leDC
+         kgPXhSQ07YbtW4WtXPVjpLTQN7D3DdqCNb+E1abHCV5uRCWXM70y5qDHNSjwo4hxYv+9
+         zKVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745309531; x=1745914331;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K9Pqd0JSg3R3Rl01mQeS60ptj7Wfk7YCDGdP4JNmo6A=;
-        b=FiEd9gbtiKG99kAWM7Ea6iTE0YMdT805omoyPT56IluVOChDFD2hW7Ucv2RV3oCH1q
-         i6KG2UQB4a1/qhAIc6P17nfgm59adANh6oDb7UV2YnosiMhO5rV6LdNUcze5s3wsGi3j
-         /GYf+4PZDoZCr4w0hufvZEitT+f7KvlmiKI9M3sCNJJTHQ0c643cC3rDiRSDvxYjhwqM
-         U/0L+D0/jsUtxgWH0qU+0ClKLXG0FWgp39pJMtRttgRB6C33wKQ3g0DSimeiJLn0zGED
-         IbKayRPfvTO0cpCvdbXcyPKezoa0J17YJXH8j749HyCvFfy/XI80QeBzlPOygXbWQz5j
-         /2gQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8wadAYbdCT4WlpGGzDwcDiHl6HUxlt3TgzSJmM0/bhPVLUgHfJWq1bc6/3bCnzNyIADtg/MG1jfSJRQ==@vger.kernel.org, AJvYcCUyANcITJvJteYMNUF3xK8Poa9k0iL1ONPxBq9XpDZmoPY+Rne5NRyqdLY92gsutFGZ1yudPLR0wb2Z@vger.kernel.org, AJvYcCW+Zfr+tejQ9I7Rs7Hgss6qA2NvnV5c1jz0Xmr5rWmKYcBx4tL8OabrG3Jye6C/0KzAluTsrwVu7E4cutM=@vger.kernel.org, AJvYcCX3KvTlIIl3vo08XzP5RL3cMs4J221thBoUFM0CBnTWjTWHXVMpwqPBvtKTVTv/7p/QpgjNyiZbnKfX@vger.kernel.org
-X-Gm-Message-State: AOJu0YytWBzb/oPBzyylFMbm8HGWshcAurtbfhLQiWuWHUaieSvnKVBu
-	z0fIrCcuXdsL7vbECCs0t13QjXqS6pLaWyo85s+sLMKQPOem7rdJ
-X-Gm-Gg: ASbGncuIf2Nl98i6aXMPTK3Hz0MMeg6dJr7aGX0mJKKeDEmcRSkDIuFVcszIr4uhnme
-	JFjxFfPonSk/I/SJDTtATb+MJ/uPpEm6ycTWh3fg3B5ayBL1JqQt0p6XyyLbRbkua04D9VsxDPH
-	J24hRqkTYb+vsGYDjg9BLZ96tUc9h1ssh1x5X4ijrMLE8Bpi+vkqkArpZOi0Net7LCPdNDal+HB
-	6mO6tXA8zOzLnfnHQ2Wiv4eZ+dKrZrd3mWVdedz8yFVLu3osxfqZaXdkvRKd61+nGa/YvOdloY3
-	SsF2EfwdnPIgq0G4g9UYMmpvk9wpNEsxZXKwBO2PS/YzNGaJzmAaVe3yiVxCTuU2yObwL0iheJ2
-	CYC7C3l3Z8e0S
-X-Google-Smtp-Source: AGHT+IGJAhEWq5tlxAZXl4C6CEztLTvqQ2FPHJA9DjgMTsfu+hDE1w1zinbdPhB9uqP2oll3Q8Q0Kg==
-X-Received: by 2002:a05:6000:18a8:b0:391:3915:cffb with SMTP id ffacd0b85a97d-39efbadf01fmr11000991f8f.43.1745309530758;
-        Tue, 22 Apr 2025 01:12:10 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d6db117sm163051775e9.26.2025.04.22.01.12.09
+        d=1e100.net; s=20230601; t=1745311307; x=1745916107;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nGVHUzQ7HsHW4QPhu/ISOoKLCvthpJGLbl2UU7uWwpM=;
+        b=thzEDhfy6Et8ClgosI+lkxrZhhmYbS84dfOTKlbThjthLDPeonb80VEclUinyqmFON
+         Y88KwRCYrSVAMCZeeJUUoMiv20meudzXi/0pBc7DwEGA1xst0MwFwqPBgjS3Ja1akGVC
+         0XgwEqtM66RPWx5dZmVpT19IK8E08oGQB0ShiwaRenNvtQMVIm4RZlrF6r8yifi3XsyY
+         mI3mSUApqsB4nm9d4E3T4u8xOekOZZJ6DSn5LkbHWtrXcP+La9YbJk3iBH73MAu1cUVA
+         ONDUVqiN05HiFyOTxTu+sJTmjVjKILEJeYFDngAwr/P6UdzhLnUd3XXFEo5+gGv+cVEl
+         cdnw==
+X-Forwarded-Encrypted: i=1; AJvYcCX4lcSUfq1KyCnax3Lk4bPR0HiSWgepPVt7LiaR0gXAviGuuj5TF6W59g1PcJ0UmXGFCdGtb+GTdGA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyI18a4/seWdJuZzIS5fmsxKKYpdn/4fLvGcx5WzIZvVB/mF0fM
+	YeXMXKueiOse0san9AjT2lZEsGduHe0kq/+5U0ELzRzOhZy00VMdu071m1vvXL8=
+X-Gm-Gg: ASbGncszEgutVqSzLjazxT0l16mygv5sr8uhDT3Qnl/t8RdvfrLAD3RjSDTTUV/FUnk
+	J+pNenoO1/OhpCJvtbAYTPjW8wON6Yx/5fjW+eZ2eDI1wuuaGbdmI+d609U0OjcWHBHDNezx4OV
+	IYHYpCdPgIf2kwByHB/yuRowEfxT7SHoZMtOey4KD2XiqSyZts097RLH429B/DUXxP86gcQZNrQ
+	WmixnnD3SBVzgVW+AYdJvUgX/55L3Oy/YGPh+De8mqF3mz0yWxDlll6t6I/ggm990y4w0htTcm/
+	SyesmIHpBD7iZXwQLIgV/xNU8agNSlaZD4IXgjPWqwk5cAnApIrTCoPSo+RJgR3IT7sF+nEE8tt
+	c6A==
+X-Google-Smtp-Source: AGHT+IEPYWCuq8ruBT0tEw0x1V09UvVpIABZBC9119Nj8u+ntZXYEwKEy+rCGtoMMmbWNOj8GNY4og==
+X-Received: by 2002:a17:902:e5c6:b0:224:f12:3734 with SMTP id d9443c01a7336-22c535adfb7mr204374005ad.30.1745311306710;
+        Tue, 22 Apr 2025 01:41:46 -0700 (PDT)
+Received: from hsinchu36-syssw02.internal.sifive.com ([210.176.154.34])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf90d7f7sm8038343b3a.82.2025.04.22.01.41.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 01:12:10 -0700 (PDT)
-Message-ID: <aeebf7ddc3bcbb9697ed50565dd1b7ee3eb93479.camel@gmail.com>
-Subject: Re: [PATCH v2 14/17] mfd: adp5585: support getting vdd regulator
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: nuno.sa@analog.com, linux-gpio@vger.kernel.org,
- linux-pwm@vger.kernel.org, 	devicetree@vger.kernel.org,
- linux-input@vger.kernel.org, Lee Jones <lee@kernel.org>,  Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,  Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=	
- <ukleinek@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Liu Ying <victor.liu@nxp.com>
-Date: Tue, 22 Apr 2025 09:12:13 +0100
-In-Reply-To: <20250421220958.GW17813@pendragon.ideasonboard.com>
-References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
-	 <20250415-dev-adp5589-fw-v2-14-3a799c3ed812@analog.com>
-	 <20250421094801.GM29968@pendragon.ideasonboard.com>
-	 <dd63c35315c2e8252b1451fd44423c0c79e5be45.camel@gmail.com>
-	 <20250421220958.GW17813@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+        Tue, 22 Apr 2025 01:41:46 -0700 (PDT)
+From: Nylon Chen <nylon.chen@sifive.com>
+To: Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	Nylon Chen <nylon.chen@sifive.com>
+Subject: [PATCH v12 0/5] Change PWM-controlled LED pin active mode and algorithm
+Date: Tue, 22 Apr 2025 16:53:07 +0800
+Message-Id: <20250422085312.812877-1-nylon.chen@sifive.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2025-04-22 at 01:09 +0300, Laurent Pinchart wrote:
-> Hi Nuno,
->=20
-> On Mon, Apr 21, 2025 at 01:38:47PM +0100, Nuno S=C3=A1 wrote:
-> > On Mon, 2025-04-21 at 12:48 +0300, Laurent Pinchart wrote:
-> > > On Tue, Apr 15, 2025 at 03:49:30PM +0100, Nuno S=C3=A1 via B4 Relay w=
-rote:
-> > > > From: Nuno S=C3=A1 <nuno.sa@analog.com>
-> > > >=20
-> > > > Make sure we get and enable the VDD supply (if available).
-> > >=20
-> > > Can the regulator be enabled only when needed ?
-> > >=20
-> >=20
-> > Hmm, I guess we could do that for the case where only the PWM device is
-> > "enabled". That said, I don't think the extra complexity for that reall=
-y
-> > pays
-> > off...
->=20
-> Or when no GPIO is requested, or when the input device for the keypad is
-> not open ? Then can be handled with power optimization for OSC_EN on top
-> of this series.
->=20
+According to the circuit diagram of User LEDs - RGB described in the
+manual hifive-unleashed-a00.pdf[0] and hifive-unmatched-schematics-v3.pdf[1].
 
-I guess it can go sideways with enabling/disabling OSC_EN, yes...
+The behavior of PWM is acitve-high.
 
+According to the descriptionof PWM for pwmcmp in SiFive FU740-C000 Manual[2].
 
-> > > > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> > > > ---
-> > > > =C2=A0drivers/mfd/adp5585.c | 5 +++++
-> > > > =C2=A01 file changed, 5 insertions(+)
-> > > >=20
-> > > > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-> > > > index
-> > > > c1d51d50dca6c9367d4a1b98a4f8bbec12dbf90b..667cc5bd0745f64eec60837ec=
-3c000
-> > > > 57af
-> > > > 0cddeb 100644
-> > > > --- a/drivers/mfd/adp5585.c
-> > > > +++ b/drivers/mfd/adp5585.c
-> > > > @@ -18,6 +18,7 @@
-> > > > =C2=A0#include <linux/mod_devicetable.h>
-> > > > =C2=A0#include <linux/module.h>
-> > > > =C2=A0#include <linux/regmap.h>
-> > > > +#include <linux/regulator/consumer.h>
-> > > > =C2=A0#include <linux/types.h>
-> > > > =C2=A0
-> > > > =C2=A0static const struct mfd_cell adp5585_devs[] =3D {
-> > > > @@ -849,6 +850,10 @@ static int adp5585_i2c_probe(struct i2c_client
-> > > > *i2c)
-> > > > =C2=A0	adp5585->dev =3D &i2c->dev;
-> > > > =C2=A0	adp5585->irq =3D i2c->irq;
-> > > > =C2=A0
-> > > > +	ret =3D devm_regulator_get_enable(&i2c->dev, "vdd");
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > =C2=A0	adp5585->regmap =3D devm_regmap_init_i2c(i2c, info-
-> > > > >regmap_config);
-> > > > =C2=A0	if (IS_ERR(adp5585->regmap))
-> > > > =C2=A0		return dev_err_probe(&i2c->dev, PTR_ERR(adp5585-
-> > > > >regmap),
+The pwm algorithm is (PW) pulse active time  = (D) duty * (T) period.
+The `frac` variable is pulse "inactive" time so we need to invert it.
+
+So this patchset removes active-low in DTS and adds reverse logic to the driver.
+
+Links:
+- [0]: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8453f8698_hifive-unleashed-a00-schematics-1.pdf
+- [1]: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68ce76f4192_hifive-unmatched-schematics-v3.pdf
+- [2]: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed8b16acba_fu740-c000-manual-v1p6.pdf
+
+Updated patches: 1
+New patches: 0
+Unchanged patches: 4
+
+Changed in v12:
+ - Replace division with do_div() to fix __udivdi3 modpost error.
+
+Changed in v11:
+ - Fix rounding consistency in apply() and get_state()
+ - Add code comments to help clarify Reference Manual errors.
+
+Changed in v10:
+ - Add 'inactive' variable in apply() to match pwm_sifive_get_state()
+   style
+ - Update comment about hardware limitation - it cannot generate 0% duty
+   cycle rather than 100% duty cycle
+
+Changed in v9:
+ - Fix commit message to adhere to 75 columns rule.
+ - Update commit message's subject.
+ - Add a variable for inactive logic.
+
+Changed in v8:
+ - Fix Signed-off-by and Co-developed-by typo.
+
+Changed in v7:
+ - Remove active-low strings from hifive-unleashed-a00.dts file.
+
+Changed in v6:
+ - Separate the idempotent test bug fixes into a new patch.
+ - Move the reversing the duty before the line checking
+   state->enabled.
+ - Fix the algorithm and change it to take the minimum value first and
+   then reverse it.
+
+Changed in v5:
+ - Add the updates to the PWM algorithm based on version 2 back in.
+ - Replace div64_ul with DIV_ROUND_UP_ULL to correct the error in the
+   period value of the idempotent test in pwm_apply_state_debug.
+
+Changed in v4:
+ - Remove previous updates to the PWM algorithm.
+
+Changed in v3:
+ - Convert the reference link to standard link.
+ - Move the inverted function before taking the minimum value.
+ - Change polarity check condition(high and low).
+ - Pick the biggest period length possible that is not bigger than the
+   requested period.
+
+Changed in v2:
+ - Convert the reference link to standard link.
+ - Fix typo: s/sifive unmatched:/sifive: unmatched:/.
+ - Remove active-low from hifive-unleashed-a00.dts.
+ - Include this reference link in the dts and pwm commit messages.
+
+Nylon Chen (5):
+  riscv: dts: sifive: unleashed/unmatched: Remove PWM controlled LED's
+    active-low properties
+  pwm: sifive: change the PWM algorithm
+  pwm: sifive: Fix the error in the idempotent test within the
+    pwm_apply_state_debug function
+  pwm: sifive: Fix rounding issues in apply and get_state functions
+  pwm: sifive: clarify inverted compare logic in comments
+
+ .../boot/dts/sifive/hifive-unleashed-a00.dts  | 12 ++---
+ .../boot/dts/sifive/hifive-unmatched-a00.dts  | 12 ++---
+ drivers/pwm/pwm-sifive.c                      | 47 ++++++++++++++-----
+ 3 files changed, 43 insertions(+), 28 deletions(-)
+
+-- 
+2.34.1
+
 
