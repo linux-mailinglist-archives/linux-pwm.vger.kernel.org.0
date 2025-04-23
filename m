@@ -1,173 +1,130 @@
-Return-Path: <linux-pwm+bounces-5668-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5669-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDF21A9844F
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Apr 2025 10:55:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0E25A98589
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Apr 2025 11:31:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA8151B62518
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Apr 2025 08:55:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 847431B657AD
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Apr 2025 09:31:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE36621FF56;
-	Wed, 23 Apr 2025 08:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15E072566DF;
+	Wed, 23 Apr 2025 09:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JQ6dxKwv"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="w3ty2l1e"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E21B223DE6
-	for <linux-pwm@vger.kernel.org>; Wed, 23 Apr 2025 08:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3481E1F30A9
+	for <linux-pwm@vger.kernel.org>; Wed, 23 Apr 2025 09:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745398419; cv=none; b=b91yh3Mrh/wSR5zJSpYucNaEmzk6oDOMWyBPKGlu9Xv1LVCYVFYCSTigh+3G57fkfIgVADz4qDKmpz5daxk8SvXV8fm2zUjuqRuMY5dgaz6qMHWR6VrzdM3E8VhJfenfSsKl2hYlY9bkTFqpg8enBUZsnHYnlta2xFVmz2LTJWc=
+	t=1745400653; cv=none; b=XRlaBH1vhclO1VMwLPrh0Llffroq8GqjeE6798znpyk+ASm8e1LJ7H8dbYD2r+0M1xmDnyXeI2gHCD+VdNfLnY9tIHs1XS5Zz/Tr0n8w0ybQRe3VBd/W4bPaXt+BP+JUA9e/jR5ql4NfA8jbFMJN+H1Y/+/aM6G5nyKR0cIOw4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745398419; c=relaxed/simple;
-	bh=hUNBaFmuryLSiqonZBkXEQtsg15gF7AsUoqNj03E6vE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dYu/pOHRWeO2xYNvqFIvw0d49/SmXpNORhIVLMEIbZ3ngmvR0904e8kWK1S5Ip6+lmlvVs995I3LXsomfKiPhPXeAzTwOB630+jY3fnulvmKjlyTO8MmRzLC7ee9FS6kTiinwHJ9yE6/UPaCdCHy8Z4aV4/I0C/V2Dkrw2vaK4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=JQ6dxKwv; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso5741669b3a.2
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Apr 2025 01:53:37 -0700 (PDT)
+	s=arc-20240116; t=1745400653; c=relaxed/simple;
+	bh=zc2MpuZxPkZe2TmeryHW7kMkIaIoao0VsaUCv0wGt0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F4Q4TTHhihiCj5xUzyafbT2QcU2vVBD/a7hrPbFjlZo9Onz1UsUQHWX13Po+e35qfNkPLAuatLRllDTHEprB+uSZvp66bGX9+wfwobyvdobj1nznkxo7J6wUY0X4QMHlsYuA0J5jQaezMh511Ss63le4hrbxGNSouzKJtMMsTbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=w3ty2l1e; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d0618746bso46853165e9.2
+        for <linux-pwm@vger.kernel.org>; Wed, 23 Apr 2025 02:30:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1745398417; x=1746003217; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LngBqhidQc5hV1qBfQLiTbBvW0cuTKWWOhZLN1xZqc8=;
-        b=JQ6dxKwvOwkmyAiLmgHwQFoMfPAnPLetBUM1FV/32jWM7AEqN5hfxuptGmUpzw/Hqb
-         uLKcelV36tXW51+sA8QPfqbyB9wwHi2b+8ZYQHT6EiDfL2qCaRv2FBtTpD9fa2whAKiR
-         4h0g2djK4S0IpMk+tElEdp5N/7u1fFS7FW47qWdcUHv3AYSKyxhbYjqNB6rfktSpZ2fO
-         EAI+Ig3e2CG2pLHRyvMQLQXIn1NTmnrIa/vv0WbktmW7aMEUtl9zDEdizdSFE/uMGaem
-         aVkrqCDy5o4jKJcy1Cy/ATvGIFyUm9cWyhMITXpnCoVlArqQW8jXw1EplAYCx3CzSuGL
-         1krA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745400647; x=1746005447; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zc2MpuZxPkZe2TmeryHW7kMkIaIoao0VsaUCv0wGt0Y=;
+        b=w3ty2l1eCTaxcf1SRcZW8b1fKDc+2Y34kqEDnWT/ktV/egVYu/88/pLxkdK/xqgVMd
+         UdbvsLgjL9QbKWTM5eoM94DMS94BhIciVJ3rw6XOhuQN/BaejshvB2BEPYsuwoNA32Z8
+         qUetHSrvAq3RmjGPcpqVmLbENf/1XCPF7mzSXZKb1YPIBd2l5qL4lcaUuMa4cR//dCq7
+         1eR4Jq5zhBLKJvskr7SLBUT7AuVZ/4ldx6nrXvVR9smj9+R+KuNuNP7FRezSf1jjosYI
+         uP6bn9XF0nzF45KSS3j4jHemLDwFmbdM3p9TrylZTRCcd/ofDMFuh0h2s3Yc/XLUH3av
+         Zc9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745398417; x=1746003217;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LngBqhidQc5hV1qBfQLiTbBvW0cuTKWWOhZLN1xZqc8=;
-        b=BcqcHYn0IEc1iEFxyWHxnTo8ryB7t3zUncssJavK1cVMCYQ7KwmmzfZxE5bJ57iGcM
-         oV4/2Zk/HOELA3UFvP5W9Qo/L3T1xPdJApQT8C8u+PjDMse6Wv2zN93OnsyzCNqA92zH
-         M1NQjX6PrPsjrkYqX/d4vH4IA8Eat2QRYH/WDsnk+RIjcMX9yEdgOdhy8mDjIsJqhzNK
-         UV1NkufBtHAhsuXPvDl6ga0C2GkO6+xDaW2R1PIcZYHYm6hWT0XcXWwSAxDF9sONu9B4
-         60kxyfMz5cCgmvtPmx1EDbJ/YwZAU3D6MrYSoftl/VA8UPSAViMjKulAiV7af18dFWbK
-         AG0w==
-X-Forwarded-Encrypted: i=1; AJvYcCW/wTwadVPaSpAGGcPe/DbDjUwfIjBnsPKaDNSCA9Xp1/oQ2buoXwWFjRBiQJ05UAACz/N58CwErlI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuV5gpTCS5AQS0fhGOsJwQLBZ1rKr8ZugQaKDJJQBwJ94KtLmW
-	5Y2tgAAj+55RnTYTXKJCVacNQ/La37WiWLA1SkyMdR7HwALTKIQPRXcqWHaAoig=
-X-Gm-Gg: ASbGncs70sV6y5Z3GMgJ8Ty18TAOjfY5yNVq4Gyn8/GhYJI7B+IAbAsPjXXimxnBs57
-	NaRMJ8O23HYLsBeT+8+KlbycuRuSWqcXcppqQQSMLFHzTh2TabDfRisrBcpZTQaGBAFqjRlSbJa
-	QmxXwCKvXMvK3Z7/o6hAV0BXi1vNg07k3uLffzHps+/ZdAqwqLbTKz5WzVLrC6Oz7yz/Tm1GB3F
-	+XWcUdxwvkPHmqW985Yom4FhvxVFjhQJeMuHsD5d/TcWBQwmInZ5t5T+T2xpTrzkgdCf4D9+Akp
-	zojSki0FnP8P8asm0VA4tCHuZU9XcDkRKJSzDXZhaZCb25VEaEYgSQY4vFTv6eeFzVpnJk/c8/Q
-	0kw==
-X-Google-Smtp-Source: AGHT+IH4EncUbMMGGTtovqXpM8KAlC3PBKqbv9V/w3rD+eU+bA8Nfqf+e+yTH9MYeA3b8C72khucXg==
-X-Received: by 2002:a17:90b:51d1:b0:2ff:6788:cc67 with SMTP id 98e67ed59e1d1-3087bbbb5damr22248851a91.34.1745398417053;
-        Wed, 23 Apr 2025 01:53:37 -0700 (PDT)
-Received: from hsinchu36-syssw02.internal.sifive.com ([210.176.154.34])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309dfa5f880sm1047611a91.38.2025.04.23.01.53.34
+        d=1e100.net; s=20230601; t=1745400647; x=1746005447;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zc2MpuZxPkZe2TmeryHW7kMkIaIoao0VsaUCv0wGt0Y=;
+        b=Tz3fbeOx4k52uQNeAb4eGCjBZNRlV4njaipILi2c2hn8LfwG7Grk0ki16Grz1Uj6Hi
+         yrzE/abkCW34lNsUw2Vsao6moRopwAUDHVQABfWZi5yndVlnSrTo/i2dPcZv3+RFLQYR
+         mqjX0isPfJrv8vJHMr4zR9eO3vKPRi8fS0+Mi5nBGVZsRL/GpEECm6/1S9MCWg1aNcak
+         XKsJNUPI+i6uLQOxuKBP9BfFy+wwnroTBhhvZBgS79iU8HVGMDEJAstoRGyeICukpxmM
+         kDB/yc4FbV4hSjrO5B+kt48510x7xmCeez3Q1uRAzoxtlXGxPhVOEx4MID32iPkXyR1f
+         4fxA==
+X-Gm-Message-State: AOJu0YxQTfiJtNswWu5iVLP/22SnGrF0LzSHC+T45K7PbkE7ClN49kI4
+	beY1Ogwik2xrZy/YyCCllubKPrndYCq3cg6pAd6yH1kUuWxKBI3cVI7p9aTwufY=
+X-Gm-Gg: ASbGncvBpCQtm4/h2KhhcCcrpZKyN5hhZO/7cyNF48hZloLjOqjXs9CgWzy53WamCrF
+	0b1ajslWk5g5Xg3HVgQZAXV2/AsIW0kriFYvivxgtpPH9e3wwnz1ZBD534jeKyrev852VTezaHh
+	3shD3pdXyxFZcn16SwyxojTooZDNFxuy0OQrMiuBIvpk8vIqr2gfMuCKln1Fryt+s+ZOWdwCm+L
+	uikvh1XoG6jLBLUd+rcbTuXAPhFb0Nj55hdqb5W4aulcfyHeUb1747WG0EcEf85Y924D4YrVBMS
+	Tf2Bf0C1h+M2osBlZKo2R1o6r06eHlynOj1tjnDwP4njIYv7/gT9V3ILJrJKGRgTiDhN76dMbDy
+	pFL7Nt9s=
+X-Google-Smtp-Source: AGHT+IGYIRlaO8pPs6VOM1lbH32BnRzuDrN5uMW+rN4dGUiqnfcKg1oyd237URbM2+ibr1QQs7FIDw==
+X-Received: by 2002:a05:600c:4e8f:b0:43d:47e:3205 with SMTP id 5b1f17b1804b1-4406ab99521mr154772095e9.11.1745400647431;
+        Wed, 23 Apr 2025 02:30:47 -0700 (PDT)
+Received: from localhost (p200300f65f00780800000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f00:7808::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-44092b0a4b5sm19262045e9.0.2025.04.23.02.30.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 01:53:36 -0700 (PDT)
-From: Nylon Chen <nylon.chen@sifive.com>
-To: Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Nylon Chen <nylon.chen@sifive.com>,
-	Zong Li <zong.li@sifive.com>
-Subject: [PATCH v13 5/5] pwm: sifive: clarify inverted compare logic in comments
-Date: Wed, 23 Apr 2025 17:04:46 +0800
-Message-Id: <20250423090446.294846-6-nylon.chen@sifive.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250423090446.294846-1-nylon.chen@sifive.com>
-References: <20250423090446.294846-1-nylon.chen@sifive.com>
+        Wed, 23 Apr 2025 02:30:46 -0700 (PDT)
+Date: Wed, 23 Apr 2025 11:30:44 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-pwm@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2] pwm: Fix various formatting issues in kernel-doc
+Message-ID: <sctvatvjz2wf73nunz6lrp6z52qw26bkbeb5yeq5yfz5vwpv5i@gfaxoo67dcr2>
+References: <20250417181611.2693599-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="264cylunhiihawgp"
+Content-Disposition: inline
+In-Reply-To: <20250417181611.2693599-2-u.kleine-koenig@baylibre.com>
 
-The reference manual says "pwms >= pwmcmpX -> HIGH", but in Figure 29 pwmcmpXcenter
-is forced to 0 via an XOR, so hardware actually outputs HIGH when pwms < pwmcmpX.
-Thus pwmcmp holds the off-period count, and the driver must invert it
-to expose a normal active-high interface.
 
-Co-developed-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
----
- drivers/pwm/pwm-sifive.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+--264cylunhiihawgp
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] pwm: Fix various formatting issues in kernel-doc
+MIME-Version: 1.0
 
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index 4cf3e715fd84..84a7f79589df 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -4,11 +4,28 @@
-  * For SiFive's PWM IP block documentation please refer Chapter 14 of
-  * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-  *
-+ * PWM output inversion: According to the SiFive Reference manual
-+ * the output of each comparator is high whenever the value of pwms is
-+ * greater than or equal to the corresponding pwmcmpX[Reference Manual].
-+ *
-+ * Figure 29 in the same manual shows that the pwmcmpXcenter bit is
-+ * hard-tied to 0 (XNOR), which effectively inverts the comparison so that
-+ * the output goes HIGH when  `pwms < pwmcmpX`.
-+ *
-+ * In other words, each pwmcmp register actually defines the **inactive**
-+ * (low) period of the pulse, not the active time exactly opposite to what
-+ * the documentation text implies.
-+ *
-+ * To compensate, this driver always **inverts** the duty value when reading
-+ * or writing pwmcmp registers , so that users interact with a conventional
-+ * **active-high** PWM interface.
-+ *
-+ *
-  * Limitations:
-  * - When changing both duty cycle and period, we cannot prevent in
-  *   software that the output might produce a period with mixed
-  *   settings (new period length and old duty cycle).
-- * - The hardware cannot generate a 100% duty cycle.
-+ * - The hardware cannot generate a 0% duty cycle.
-  * - The hardware generates only inverted output.
-  */
- #include <linux/clk.h>
-@@ -113,6 +130,10 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	u32 duty, val, inactive;
- 
- 	inactive = readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-+	/*
-+	 * PWM hardware uses 'inactive' counts in pwmcmp, so invert to get actual duty.
-+	 * Here, 'inactive' is the low time and we compute duty as max_count - inactive.
-+	 */
- 	duty = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - inactive;
- 
- 	state->enabled = duty > 0;
-@@ -161,6 +182,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	do_div(frac, state->period);
- 	/* The hardware cannot generate a 0% duty cycle */
- 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-+	/* pwmcmp register must be loaded with the inactive(invert the duty) */
- 	inactive = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
- 
- 	mutex_lock(&ddata->lock);
--- 
-2.34.1
+Hello,
 
+On Thu, Apr 17, 2025 at 08:16:11PM +0200, Uwe Kleine-K=F6nig wrote:
+> Add Return and (where interesting) Context sections, fix some formatting
+> and drop documenting the internal function __pwm_apply().
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+
+Applied to
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+
+Uwe
+
+--264cylunhiihawgp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgIs0EACgkQj4D7WH0S
+/k4omggAkZzdVzAoG/HbIWHoh9BD931ApKqoWmJNziXZWSpOiYDPgzZvtfRcYzsy
+TWbnv6sqRQExDd611KHQWsgRttwGqTLGRggkz91PbxE0l8Hlyx1Bva8GY6fC0NSx
+Q3Jl9O81y54ydQEUM2cxmxJS8xOjCxEoWA0d9698fPDN/aDEdcHmDupqCN0KSjOi
++hX1VMkV11byKq3WbdM3uUhz9BdbFNTq5DXyAeNn5Hg6dO0MdX/vb1A+IP8M0T+n
+ahuctCxXpWp26zio3ZwXxEZ5iWOx+FmH50ScSMEcOlDnfIxSaxgH0a3sIzcqvIHn
+M8GpwlkX6vQcWzY5awzdGT7n6kOj8A==
+=dB7L
+-----END PGP SIGNATURE-----
+
+--264cylunhiihawgp--
 
