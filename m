@@ -1,769 +1,395 @@
-Return-Path: <linux-pwm+bounces-5660-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5661-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E6C9A9737D
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Apr 2025 19:21:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D622A97C27
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Apr 2025 03:35:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 07F5E3B6494
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Apr 2025 17:21:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 43B1A189EB6F
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Apr 2025 01:35:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE3562980A1;
-	Tue, 22 Apr 2025 17:21:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D64E26156F;
+	Wed, 23 Apr 2025 01:35:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSaCr4nu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I5Bjlf2O"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE4527D762;
-	Tue, 22 Apr 2025 17:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B2A28EC;
+	Wed, 23 Apr 2025 01:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745342476; cv=none; b=rPyNtG3Tdv5GUqH33w8mK6jIz3+t9lNmmWDVSbqN0mWj9lQJMGVNS/MiaoxUZ7zH/Gzle9j0xftKjsHEe0fad2KTUvg/TG79zb8zuAMJUbdkOgeJ6XxxVuWWbs8J7FTmFrUPFZe3rAnnk57WWG2zy8OaY9FLzJkyq4mjGFA5L1Q=
+	t=1745372136; cv=none; b=PyWxLcvVsAVly0bF4wHqcLa2QVza0dVgJGNUHks8glFS2KhggV1paCP3PupBH5ujbp+YeDgOHbYF5PEi8pr98GEWr0+4dO85BqP4PJGxRzBtXPuvWsijcy5J1yuRn+4Rw1qz923nSruyn72hEgXbe+hQ3YMNLsnhIbs0MeAYfBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745342476; c=relaxed/simple;
-	bh=xBljsyW2pLfyoSfR2luUNqc9SBQLJKv/8H69YDtulVQ=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MS5j5vBm68cBH7zMU9u0hfqia1TZ6WC4I8lJ4LeHBoftZ2j3xREu6UhyyXfIwOvf7lwIQfv1tMoG/8o+GSuyyLzrVR7xk/O0pm0ZBTB1i8+PFLknD9ekesPGyGZGjDZnK2NBGrTJxsBG6Pll1C5/xe+DCB7fuCslVLhaOECMtPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bSaCr4nu; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3913d129c1aso88426f8f.0;
-        Tue, 22 Apr 2025 10:21:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745342471; x=1745947271; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=FsG0mPxLUfaDIhN1q9GxmXvqvMFBKGnbmfGwqQuufTk=;
-        b=bSaCr4nu5ORHHokb3IgMTNun/VONkEihPYT8HQM7uo4DlRWks5flX+gwzq7KuccuTZ
-         IpvQzS9gdw3o22tKkA9rkI4KmYukTQYf/nLzB71pUQAg4GgA1PYsjOLqVjAdhm6tWYWw
-         YQSTL3zAIn2Oh08V60bQQNQgAle01qOh/+HCZK9VYPDVYtLBmyfL36nPO+NBP/v9gw7e
-         yGVsuN5PrUgLgB5GentgNxONgAyLnltXvdKINBuL5eZzhzT+gUn5X5MIp/n28lM7Lx19
-         8LNYIczxvbh+u+wtaBSXpSCWk1EzcnXcpwdBUWmzZyEChuAVQgsTmHfHQiHBuwdfVoG3
-         fscw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745342471; x=1745947271;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FsG0mPxLUfaDIhN1q9GxmXvqvMFBKGnbmfGwqQuufTk=;
-        b=GbkG/jwEs5w3JL8bJ5aVZ3TQfPAYyHPEK//Y92xChUC3S2f8HY6u4xs9wk6NDqv36U
-         qSUztiqDtZ2Re54mZSubGnHsB8w92OE8EhTC6X8/njKEgQjY2GuIuBlxwu0csC362BvQ
-         B4ZGFW9oQ9Tqqh/WiaHHN8IG2Y9H4Diuy2Ib6nYKbRMeWUlLBIqZwikE78Ty84Hni++b
-         cigOpALJCH8Scd5UtmO9Kb37+sH2Sw/Yl7xhmzNxHAQ5g4/iXaHKKWyJQpoepGiMIYgL
-         qlXmxPHeC3RjYYAL11zMP1UklR0E0ySP78vIN44qVFbqrgsOiEQpAPAprjRDBPvOLTWP
-         wjFw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1YSoGQcWtRf+sJRn2YoR9HZxf91cdjRh0yAO0GJAjkznOYxxpLQ0ooq2A2vwcowBkyUgz6tZKxN2s@vger.kernel.org, AJvYcCV5i5EugEmAa7e2AKl6QLQ081EmmTOhQtY3P+eNCtYjOq4IHbjIE8BWQ+4FgcTaLvWDN9iUddv3zPWgyFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+mFuq5VF/PcyHT5jyrIlzGfuaT5d5sx0tfAlI2akhymBGgB0g
-	aA7nflTtiBQUZNquqNcYvqveJXC7qsC3Dz7Bsa2dT2qORoz2EOSPTJcq/Q==
-X-Gm-Gg: ASbGncvv/4MHukCO/fd6ASSDfl4Q3x2VL4hKl8q5dFmdYmCnp2OvrzPHOWPyj/xAsQi
-	qKRuvsIC+LeDnTsepvMwMa8Aec8evyOv7ZjeuPe5VkesAdg3xNk1RXcHBy84V1oE56XAszqlCX7
-	EAtJH1gEvsb9dZO1OAe0PiZfQvPMRiYB4Da8FKbhQz0TN1ATY6D1o634gWcK6BaAcpwlCWF53fN
-	1QM0av6hxvTvtYZSZNCGYHcNDU+R+fbFVPnm8joUX4d4f7YxaUhJzSOXka7LtjI2gsB6UO5Axzj
-	WDIU6F2Fw64qGhRSR9jVOx3Ukhcey7JHevX27mpPA263pIlPdMGngBoCxG+FOn8N+oNKS5Spgjy
-	gTipXnnpFUzKh
-X-Google-Smtp-Source: AGHT+IGkg7pu6Oa23jrxcHxX//x0hoa4eWq6MzDk5I6ZxLzS1Z9s4big7zOt+gBnfwlc4f0tzhdmmw==
-X-Received: by 2002:a5d:64a3:0:b0:38f:4ffd:c757 with SMTP id ffacd0b85a97d-39efbd59e96mr14354506f8f.2.1745342470321;
-        Tue, 22 Apr 2025 10:21:10 -0700 (PDT)
-Received: from Ansuel-XPS. (host-95-249-95-100.retail.telecomitalia.it. [95.249.95.100])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa493145sm15764354f8f.71.2025.04.22.10.21.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 10:21:09 -0700 (PDT)
-Message-ID: <6807d005.050a0220.180f68.6e70@mx.google.com>
-X-Google-Original-Message-ID: <aAfQA5vrpAkb_lnY@Ansuel-XPS.>
-Date: Tue, 22 Apr 2025 19:21:07 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Cc: Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v12] pwm: airoha: Add support for EN7581 SoC
-References: <20250407173559.29600-1-ansuelsmth@gmail.com>
+	s=arc-20240116; t=1745372136; c=relaxed/simple;
+	bh=9/n6IciSqOC+Gn+eOBz9G3ToQgAQ+J3ZCJVNcEkC+m8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uyzAVFMEoflcW5mh1xcS8XSky4m5f7McF/eaWvH9TO2UfN/mtl+0nb36Mp5zFzndAKlJDDDUKknnrfPxbb9+RKFBo0MsyfWFFnzInBP4QxIG5KVx6wP8JTK7SzyTyv1118B2zA9szVm9HFx65ZpTi+AngBp2mLAMok1XGpEC+GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I5Bjlf2O; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745372133; x=1776908133;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=9/n6IciSqOC+Gn+eOBz9G3ToQgAQ+J3ZCJVNcEkC+m8=;
+  b=I5Bjlf2OpYWciHJ5EgpfQpQr4nol7evtoSkM3K0PQU7tcRVcR/cgMa3w
+   9J0YyZ/14cgj+t82+Zh3hy5bW+qOeQnRS3w3/WiIN63fKyr0bzm7BKadt
+   lNCLR90aAvB17R66vMVwEIknV8L/rt9o/skH8LLU7RI9CyAnXEwROPtWE
+   oJzy194WttQ0i4GarVDG9GgBbPjaj2S/GcCISDkLn6tzQS5WHCIwluA4n
+   e+oLyogB7KHHUXnIGqNeFDB4rS6SNqmPt2b87IVca1BEaMzm3RDwUF2U0
+   AXYIGbq5lhggtiI70ZjOsLuyE/FMY6h8tQXOxlChk25zDyBA1Sp2xTA6l
+   Q==;
+X-CSE-ConnectionGUID: A4w32LJPSjuPXSHX51it4Q==
+X-CSE-MsgGUID: K2s7dkviT7OX7E0GgMczTA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="64360779"
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="64360779"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 18:35:33 -0700
+X-CSE-ConnectionGUID: 16dZC9jgQUWV+pRc7hvJ5A==
+X-CSE-MsgGUID: /guOLHrLQzSj+azQgbLZbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="132023795"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 22 Apr 2025 18:35:28 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u7P1K-0001Sl-0X;
+	Wed, 23 Apr 2025 01:35:26 +0000
+Date: Wed, 23 Apr 2025 09:34:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nylon Chen <nylon.chen@sifive.com>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, Nylon Chen <nylon.chen@sifive.com>,
+	Zong Li <zong.li@sifive.com>
+Subject: Re: [PATCH v12 4/5] pwm: sifive: Fix rounding issues in apply and
+ get_state functions
+Message-ID: <202504230904.kXJdvywR-lkp@intel.com>
+References: <20250422085312.812877-5-nylon.chen@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250407173559.29600-1-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250422085312.812877-5-nylon.chen@sifive.com>
 
-On Mon, Apr 07, 2025 at 07:35:53PM +0200, Christian Marangi wrote:
-> From: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> 
-> Introduce driver for PWM module available on EN7581 SoC.
-> 
-> Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> Co-developed-by: Christian Marangi <ansuelsmth@gmail.com>
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
-> Changes v12:
-> - Make shift function more readable
-> - Use unsigned int where possible
-> - Better comment some SIPO strangeness
-> - Move SIPO init after flash map config
-> - Retrun real values in get_state instead of the
->   one saved in bucket
-> - Improve period_ns parsing so we can better share generators
-> 
-> Changes v11:
-> - Fix wrong calculation of period and duty
-> - Use AIROHA_PWM prefix for each define
-> - Drop set/get special define in favour of BITS and GENMASK
-> - Correctly use dev_err_probe
-> - Init bucket with initial values
-> - Rework define to make use of FIELD_PREP and FIELD_GET
-> 
-> Changes in v10:
-> - repost just patch 6/6 (pwm driver) since patches {1/6-5/6} have been
->   already applied in linux-pinctrl tree
-> - pwm: introduce AIROHA_PWM_FIELD_GET and AIROHA_PWM_FIELD_SET macros to
->   get/set field with non-const mask
-> - pwm: simplify airoha_pwm_get_generator() to report unused generator
->   and remove double lookup
-> - pwm: remove device_node pointer in airoha_pwm struct since this is
->   write-only field
-> - pwm: cosmetics
-> - Link to v9: https://lore.kernel.org/r/20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org
-> 
-> Changes in v9:
-> - pwm: remove unused properties
-> - Link to v8: https://lore.kernel.org/r/20241018-en7581-pinctrl-v8-0-b676b966a1d1@kernel.org
-> 
-> Changes in v8:
-> - pwm: add missing properties documentation
-> - Link to v7: https://lore.kernel.org/r/20241016-en7581-pinctrl-v7-0-4ff611f263a7@kernel.org
-> 
-> Changes in v7:
-> - pinctrl: cosmetics
-> - pinctrl: fix compilation warning
-> - Link to v6: https://lore.kernel.org/r/20241013-en7581-pinctrl-v6-0-2048e2d099c2@kernel.org
-> 
-> Changes in v6:
-> - pwm: rely on regmap APIs
-> - pwm: introduce compatible string
-> - pinctrl: introduce compatible string
-> - remove airoha-mfd driver
-> - add airoha,en7581-pinctrl binding
-> - add airoha,en7581-pwm binding
-> - update airoha,en7581-gpio-sysctl binding
-> - Link to v5: https://lore.kernel.org/r/20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org
-> 
-> Changes in v5:
-> - use spin_lock in airoha_pinctrl_rmw instead of a mutex since it can run
->   in interrupt context
-> - remove unused includes in pinctrl driver
-> - since the irq_chip is immutable, allocate the gpio_irq_chip struct
->   statically in pinctrl driver
-> - rely on regmap APIs in pinctrl driver but keep the spin_lock local to the
->   driver
-> - rely on guard/guard_scope APIs in pinctrl driver
-> - improve naming convention pinctrl driver
-> - introduce airoha_pinconf_set_pin_value utility routine
-> - Link to v4: https://lore.kernel.org/r/20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org
-> 
-> Changes in v4:
-> - add 'Limitation' description in pwm driver
-> - fix comments in pwm driver
-> - rely on mfd->base __iomem pointer in pwm driver, modify register
->   offsets according to it and get rid of sgpio_cfg, flash_cfg and
->   cycle_cfg pointers
-> - simplify register utility routines in pwm driver
-> - use 'generator' instead of 'waveform' suffix for pwm routines
-> - fix possible overflow calculating duty cycle in pwm driver
-> - do not modify pwm state in free callback in pwm driver
-> - cap the maximum period in pwm driver
-> - do not allow inverse polarity in pwm driver
-> - do not set of_xlate callback in the pwm driver and allow the stack to
->   do it
-> - fix MAINTAINERS file for airoha pinctrl driver
-> - fix undefined reference to __ffsdi2 in pinctrl driver
-> - simplify airoha,en7581-gpio-sysctl.yam binding
-> - Link to v3: https://lore.kernel.org/r/20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org
-> 
-> Changes in v3:
-> - introduce airoha-mfd driver
-> - add pwm driver to the same series
-> - model pinctrl and pwm drivers as childs of a parent mfd driver.
-> - access chip-scu memory region in pinctrl driver via syscon
-> - introduce a single airoha,en7581-gpio-sysctl.yaml binding and get rid
->   of dedicated bindings for pinctrl and pwm
-> - add airoha,en7581-chip-scu.yaml binding do the series
-> - Link to v2: https://lore.kernel.org/r/20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org
-> 
-> Changes in v2:
-> - Fix compilation errors
-> - Collapse some register mappings for gpio and irq controllers
-> - update dt-bindings according to new register mapping
-> - fix some dt-bindings errors
-> - Link to v1: https://lore.kernel.org/all/cover.1723392444.git.lorenzo@kernel.org/
-> 
->  drivers/pwm/Kconfig      |  11 +
->  drivers/pwm/Makefile     |   1 +
->  drivers/pwm/pwm-airoha.c | 506 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 518 insertions(+)
->  create mode 100644 drivers/pwm/pwm-airoha.c
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 63beb0010e3e..e939187784c0 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -54,6 +54,17 @@ config PWM_ADP5585
->  	  This option enables support for the PWM function found in the Analog
->  	  Devices ADP5585.
->  
-> +config PWM_AIROHA
-> +	tristate "Airoha PWM support"
-> +	depends on ARCH_AIROHA || COMPILE_TEST
-> +	depends on OF
-> +	select REGMAP_MMIO
-> +	help
-> +	  Generic PWM framework driver for Airoha SoC.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-airoha.
-> +
->  config PWM_APPLE
->  	tristate "Apple SoC PWM support"
->  	depends on ARCH_APPLE || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 539e0def3f82..97c1c79bbc54 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -2,6 +2,7 @@
->  obj-$(CONFIG_PWM)		+= core.o
->  obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
->  obj-$(CONFIG_PWM_ADP5585)	+= pwm-adp5585.o
-> +obj-$(CONFIG_PWM_AIROHA)	+= pwm-airoha.o
->  obj-$(CONFIG_PWM_APPLE)		+= pwm-apple.o
->  obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
->  obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+= pwm-atmel-hlcdc.o
-> diff --git a/drivers/pwm/pwm-airoha.c b/drivers/pwm/pwm-airoha.c
-> new file mode 100644
-> index 000000000000..05dd34656c23
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-airoha.c
-> @@ -0,0 +1,506 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2022 Markus Gothe <markus.gothe@genexis.eu>
-> + *
-> + *  Limitations:
-> + *  - Only 8 concurrent waveform generators are available for 8 combinations of
-> + *    duty_cycle and period. Waveform generators are shared between 16 GPIO
-> + *    pins and 17 SIPO GPIO pins.
-> + *  - Supports only normal polarity.
-> + *  - On configuration the currently running period is completed.
-> + *  - Minimum supported period is 4ms
-> + *  - Maximum supported period is 1s
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/gpio.h>
-> +#include <linux/bitops.h>
-> +#include <linux/regmap.h>
-> +#include <asm/div64.h>
-> +
-> +#define AIROHA_PWM_REG_SGPIO_LED_DATA		0x0024
-> +#define AIROHA_PWM_SGPIO_LED_DATA_SHIFT_FLAG	BIT(31)
-> +#define AIROHA_PWM_SGPIO_LED_DATA_DATA		GENMASK(16, 0)
-> +
-> +#define AIROHA_PWM_REG_SGPIO_CLK_DIVR		0x0028
-> +#define AIROHA_PWM_SGPIO_CLK_DIVR		GENMASK(1, 0)
-> +
-> +#define AIROHA_PWM_REG_SGPIO_CLK_DLY		0x002c
-> +
-> +#define AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG	0x0030
-> +#define AIROHA_PWM_SERIAL_GPIO_FLASH_MODE	BIT(1)
-> +#define AIROHA_PWM_SERIAL_GPIO_MODE_74HC164	BIT(0)
-> +
-> +#define AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(_n)	(0x003c + (4 * (_n)))
-> +#define AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(_n) (16 * (_n))
-> +#define AIROHA_PWM_GPIO_FLASH_PRD_LOW		GENMASK(15, 8)
-> +#define AIROHA_PWM_GPIO_FLASH_PRD_HIGH		GENMASK(7, 0)
-> +
-> +#define AIROHA_PWM_REG_GPIO_FLASH_MAP(_n)	(0x004c + (4 * (_n)))
-> +#define AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(_n) (4 * (_n))
-> +#define AIROHA_PWM_GPIO_FLASH_EN		BIT(3)
-> +#define AIROHA_PWM_GPIO_FLASH_SET_ID		GENMASK(2, 0)
-> +
-> +/* Register map is equal to GPIO flash map */
-> +#define AIROHA_PWM_REG_SIPO_FLASH_MAP(_n)	(0x0054 + (4 * (_n)))
-> +
-> +#define AIROHA_PWM_REG_CYCLE_CFG_VALUE(_n)	(0x0098 + (4 * (_n)))
-> +#define AIROHA_PWM_REG_CYCLE_CFG_SHIFT(_n)	(8 * (_n))
-> +#define AIROHA_PWM_WAVE_GEN_CYCLE		GENMASK(7, 0)
-> +
-> +/* GPIO/SIPO flash map handles 8 pins in one register */
-> +#define AIROHA_PWM_PINS_PER_FLASH_MAP		8
-> +/* Cycle cfg handles 4 generators in one register */
-> +#define AIROHA_PWM_BUCKET_PER_CYCLE_CFG		4
-> +/* Flash producer handles 2 generators in one register */
-> +#define AIROHA_PWM_BUCKET_PER_FLASH_PROD	2
-> +
-> +#define AIROHA_PWM_NUM_BUCKETS			8
-> +/*
-> + * The first 16 GPIO pins, GPIO0-GPIO15, are mapped into 16 PWM channels, 0-15.
-> + * The SIPO GPIO pins are 17 pins which are mapped into 17 PWM channels, 16-32.
-> + * However, we've only got 8 concurrent waveform generators and can therefore
-> + * only use up to 8 different combinations of duty cycle and period at a time.
-> + */
-> +#define AIROHA_PWM_NUM_GPIO			16
-> +#define AIROHA_PWM_NUM_SIPO			17
-> +#define AIROHA_PWM_MAX_CHANNELS			(AIROHA_PWM_NUM_GPIO + AIROHA_PWM_NUM_SIPO)
-> +
-> +struct airoha_pwm_bucket {
-> +	/* Bitmask of PWM channels using this bucket */
-> +	u64 used;
-> +	u64 period_ns;
-> +	u64 duty_ns;
-> +};
-> +
-> +struct airoha_pwm {
-> +	struct regmap *regmap;
-> +
-> +	u64 initialized;
-> +
-> +	struct airoha_pwm_bucket buckets[AIROHA_PWM_NUM_BUCKETS];
-> +
-> +	/* Cache bucket used by each pwm channel */
-> +	u8 channel_bucket[AIROHA_PWM_MAX_CHANNELS];
-> +};
-> +
-> +/* The PWM hardware supports periods between 4 ms and 1 s */
-> +#define AIROHA_PWM_PERIOD_TICK_NS	(4 * NSEC_PER_MSEC)
-> +#define AIROHA_PWM_PERIOD_MAX_NS	(1 * NSEC_PER_SEC)
-> +/* It is represented internally as 1/250 s between 1 and 250. Unit is ticks. */
-> +#define AIROHA_PWM_PERIOD_MIN		1
-> +#define AIROHA_PWM_PERIOD_MAX		250
-> +/* Duty cycle is relative with 255 corresponding to 100% */
-> +#define AIROHA_PWM_DUTY_FULL		255
-> +
-> +static void airoha_pwm_get_flash_map_addr_and_shift(unsigned int hwpwm,
-> +						    u32 *addr, u32 *shift)
-> +{
-> +	unsigned int offset, hwpwm_bit;
-> +
-> +	if (hwpwm >= AIROHA_PWM_NUM_GPIO) {
-> +		unsigned int sipohwpwm = hwpwm - AIROHA_PWM_NUM_GPIO;
-> +
-> +		offset = sipohwpwm / AIROHA_PWM_PINS_PER_FLASH_MAP;
-> +		hwpwm_bit = sipohwpwm % AIROHA_PWM_PINS_PER_FLASH_MAP;
-> +
-> +		/* One FLASH_MAP register handles 8 pins */
-> +		*shift = AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(hwpwm_bit);
-> +		*addr = AIROHA_PWM_REG_SIPO_FLASH_MAP(offset);
-> +	} else {
-> +		offset = hwpwm / AIROHA_PWM_PINS_PER_FLASH_MAP;
-> +		hwpwm_bit = hwpwm % AIROHA_PWM_PINS_PER_FLASH_MAP;
-> +
-> +		/* One FLASH_MAP register handles 8 pins */
-> +		*shift = AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(hwpwm_bit);
-> +		*addr = AIROHA_PWM_REG_GPIO_FLASH_MAP(offset);
-> +	}
-> +}
-> +
-> +static void airoha_pwm_get_ticks_from_ns(u64 period_ns, u32 *period_tick,
-> +					 u64 duty_ns, u32 *duty_tick)
-> +{
-> +	u64 tmp_duty_tick;
-> +
-> +	*period_tick = div_u64(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
-> +
-> +	tmp_duty_tick = mul_u64_u64_div_u64(duty_ns, AIROHA_PWM_DUTY_FULL,
-> +					    period_ns);
-> +	if (tmp_duty_tick > AIROHA_PWM_DUTY_FULL)
-> +		tmp_duty_tick = AIROHA_PWM_DUTY_FULL;
-> +	*duty_tick = tmp_duty_tick;
-> +}
-> +
-> +static void airoha_pwm_get_bucket(struct airoha_pwm *pc, int bucket,
-> +				  u64 *period_ns, u64 *duty_ns)
-> +{
-> +	u32 period_tick, duty_tick;
-> +	unsigned int offset;
-> +	u32 shift, val;
-> +
-> +	offset = bucket / AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
-> +	shift = bucket % AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
-> +	shift = AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
-> +
-> +	regmap_read(pc->regmap, AIROHA_PWM_REG_CYCLE_CFG_VALUE(offset), &val);
-> +
-> +	period_tick = FIELD_GET(AIROHA_PWM_WAVE_GEN_CYCLE, val >> shift);
-> +	*period_ns = period_tick * AIROHA_PWM_PERIOD_TICK_NS;
-> +
-> +	offset = bucket / AIROHA_PWM_BUCKET_PER_FLASH_PROD;
-> +	shift = bucket % AIROHA_PWM_BUCKET_PER_FLASH_PROD;
-> +	shift = AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
-> +
-> +	regmap_read(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
-> +		    &val);
-> +
-> +	duty_tick = FIELD_GET(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, val >> shift);
-> +	*duty_ns = DIV_U64_ROUND_UP(duty_tick * *period_ns, AIROHA_PWM_DUTY_FULL);
-> +}
-> +
-> +static int airoha_pwm_get_generator(struct airoha_pwm *pc, u64 duty_ns,
-> +				    u64 period_ns)
-> +{
-> +	int i, unused = -1;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pc->buckets); i++) {
-> +		struct airoha_pwm_bucket *bucket = &pc->buckets[i];
-> +		u32 duty_tick, duty_tick_bucket;
-> +		u32 period_tick;
-> +
-> +		/* If found, save an unused bucket to return it later */
-> +		if (!bucket->used && unused == -1) {
-> +			unused = i;
-> +			continue;
-> +		}
-> +
-> +		if (duty_ns == bucket->duty_ns &&
-> +		    period_ns == bucket->period_ns)
-> +			return i;
-> +
-> +		/*
-> +		 * Unlike duty cycle zero, which can be handled by
-> +		 * disabling PWM, a generator is needed for full duty
-> +		 * cycle but it can be reused regardless of period
-> +		 */
-> +		airoha_pwm_get_ticks_from_ns(period_ns, &period_tick,
-> +					     duty_ns, &duty_tick);
-> +		airoha_pwm_get_ticks_from_ns(bucket->period_ns, &period_tick,
-> +					     bucket->duty_ns, &duty_tick_bucket);
-> +		if (duty_tick == AIROHA_PWM_DUTY_FULL &&
-> +		    duty_tick == duty_tick_bucket)
-> +			return i;
-> +	}
-> +
-> +	return unused;
-> +}
-> +
-> +static void airoha_pwm_release_bucket_config(struct airoha_pwm *pc,
-> +					     unsigned int hwpwm)
-> +{
-> +	int bucket;
-> +
-> +	/* Nothing to clear, PWM channel never used */
-> +	if (!(pc->initialized & BIT_ULL(hwpwm)))
-> +		return;
-> +
-> +	bucket = pc->channel_bucket[hwpwm];
-> +	pc->buckets[bucket].used &= ~BIT_ULL(hwpwm);
-> +}
-> +
-> +static int airoha_pwm_consume_generator(struct airoha_pwm *pc,
-> +					u64 duty_ns, u64 period_ns,
-> +					unsigned int hwpwm)
-> +{
-> +	int bucket;
-> +
-> +	/*
-> +	 * Search for a bucket that already satisfy duty and period
-> +	 * or an unused one.
-> +	 * If not found, -1 is returned.
-> +	 */
-> +	bucket = airoha_pwm_get_generator(pc, duty_ns, period_ns);
-> +	if (bucket < 0)
-> +		return bucket;
-> +
-> +	airoha_pwm_release_bucket_config(pc, hwpwm);
-> +	pc->buckets[bucket].used |= BIT_ULL(hwpwm);
-> +	pc->buckets[bucket].period_ns = period_ns;
-> +	pc->buckets[bucket].duty_ns = duty_ns;
-> +
-> +	return bucket;
-> +}
-> +
-> +static int airoha_pwm_sipo_init(struct airoha_pwm *pc)
-> +{
-> +	u32 val;
-> +
-> +	if (!(pc->initialized >> AIROHA_PWM_NUM_GPIO))
-> +		return 0;
-> +
-> +	regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
-> +			  AIROHA_PWM_SERIAL_GPIO_MODE_74HC164);
-> +
-> +	/* Configure shift register timings, use 32x divisor */
-> +	regmap_write(pc->regmap, AIROHA_PWM_REG_SGPIO_CLK_DIVR,
-> +		     FIELD_PREP(AIROHA_PWM_SGPIO_CLK_DIVR, 0x3));
-> +
-> +	/*
-> +	 * The actual delay is clock + 1.
-> +	 * Notice that clock delay should not be greater
-> +	 * than (divisor / 2) - 1.
-> +	 * Set to 0 by default. (aka 1)
-> +	 */
-> +	regmap_write(pc->regmap, AIROHA_PWM_REG_SGPIO_CLK_DLY, 0x0);
-> +
-> +	/*
-> +	 * It it necessary to after muxing explicitly shift out all
-> +	 * zeroes to initialize the shift register before enabling PWM
-> +	 * mode because in PWM mode SIPO will not start shifting until
-> +	 * it needs to output a non-zero value (bit 31 of led_data
-> +	 * indicates shifting in progress and it must return to zero
-> +	 * before led_data can be written or PWM mode can be set)
-> +	 */
-> +	if (regmap_read_poll_timeout(pc->regmap, AIROHA_PWM_REG_SGPIO_LED_DATA, val,
-> +				     !(val & AIROHA_PWM_SGPIO_LED_DATA_SHIFT_FLAG),
-> +				     10, 200 * USEC_PER_MSEC))
-> +		return -ETIMEDOUT;
-> +
-> +	regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SGPIO_LED_DATA,
-> +			  AIROHA_PWM_SGPIO_LED_DATA_DATA);
-> +	if (regmap_read_poll_timeout(pc->regmap, AIROHA_PWM_REG_SGPIO_LED_DATA, val,
-> +				     !(val & AIROHA_PWM_SGPIO_LED_DATA_SHIFT_FLAG),
-> +				     10, 200 * USEC_PER_MSEC))
-> +		return -ETIMEDOUT;
-> +
-> +	/* Set SIPO in PWM mode */
-> +	regmap_set_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
-> +			AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
-> +
-> +	return 0;
-> +}
-> +
-> +static void airoha_pwm_calc_bucket_config(struct airoha_pwm *pc, int bucket,
-> +					  u64 duty_ns, u64 period_ns)
-> +{
-> +	u32 period_tick, duty_tick;
-> +	u32 mask, shift, val;
-> +	u64 offset;
-> +
-> +	airoha_pwm_get_ticks_from_ns(period_ns, &period_tick,
-> +				     duty_ns, &duty_tick);
-> +
-> +	offset = bucket;
-> +	shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
-> +	shift = AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
-> +
-> +	/* Configure frequency divisor */
-> +	mask = AIROHA_PWM_WAVE_GEN_CYCLE << shift;
-> +	val = FIELD_PREP(AIROHA_PWM_WAVE_GEN_CYCLE, period_tick) << shift;
-> +	regmap_update_bits(pc->regmap, AIROHA_PWM_REG_CYCLE_CFG_VALUE(offset), mask, val);
-> +
-> +	offset = bucket;
-> +	shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
-> +	shift = AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
-> +
-> +	/* Configure duty cycle */
-> +	mask = AIROHA_PWM_GPIO_FLASH_PRD_HIGH << shift;
-> +	val = FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, duty_tick) << shift;
-> +	regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
-> +			   mask, val);
-> +
-> +	mask = AIROHA_PWM_GPIO_FLASH_PRD_LOW << shift;
-> +	val = FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_LOW,
-> +			 AIROHA_PWM_DUTY_FULL - duty_tick) << shift;
-> +	regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
-> +			   mask, val);
-> +}
-> +
-> +static void airoha_pwm_config_flash_map(struct airoha_pwm *pc,
-> +					unsigned int hwpwm, int index)
-> +{
-> +	unsigned int addr;
-> +	u32 shift;
-> +
-> +	airoha_pwm_get_flash_map_addr_and_shift(hwpwm, &addr, &shift);
-> +
-> +	/* index -1 means disable PWM channel */
-> +	if (index < 0) {
-> +		/*
-> +		 * If we need to disable the PWM, we just put low the
-> +		 * GPIO. No need to setup buckets.
-> +		 */
-> +		regmap_clear_bits(pc->regmap, addr,
-> +				  AIROHA_PWM_GPIO_FLASH_EN << shift);
-> +		return;
-> +	}
-> +
-> +	regmap_update_bits(pc->regmap, addr,
-> +			   AIROHA_PWM_GPIO_FLASH_SET_ID << shift,
-> +			   FIELD_PREP(AIROHA_PWM_GPIO_FLASH_SET_ID, index) << shift);
-> +	regmap_set_bits(pc->regmap, addr, AIROHA_PWM_GPIO_FLASH_EN << shift);
-> +}
-> +
-> +static int airoha_pwm_config(struct airoha_pwm *pc, struct pwm_device *pwm,
-> +			     u64 duty_ns, u64 period_ns)
-> +{
-> +	unsigned int hwpwm = pwm->hwpwm;
-> +	int bucket;
-> +
-> +	bucket = airoha_pwm_consume_generator(pc, duty_ns, period_ns,
-> +					      hwpwm);
-> +	if (bucket < 0)
-> +		return -EBUSY;
-> +
-> +	airoha_pwm_calc_bucket_config(pc, bucket, duty_ns, period_ns);
-> +	airoha_pwm_config_flash_map(pc, hwpwm, bucket);
-> +
-> +	pc->initialized |= BIT_ULL(hwpwm);
-> +	pc->channel_bucket[hwpwm] = bucket;
-> +
-> +	/*
-> +	 * SIPO are special GPIO attached to a shift register chip. The handling
-> +	 * of this chip is internal to the SoC that takes care of applying the
-> +	 * values based on the flash map. To apply a new flash map, it's needed
-> +	 * to trigger a refresh on the shift register chip.
-> +	 * If we are configuring a SIPO, always reinit the shift register chip
-> +	 * to make sure the correct flash map is applied.
-> +	 * We skip reconfiguring the shift register if we related hwpwm
-> +	 * is disabled (as it doesn't need to be mapped).
-> +	 */
-> +	if (!(pc->initialized & BIT_ULL(hwpwm)) && hwpwm >= AIROHA_PWM_NUM_GPIO)
-> +		airoha_pwm_sipo_init(pc);
-> +
-> +	return 0;
-> +}
-> +
-> +static void airoha_pwm_disable(struct airoha_pwm *pc, struct pwm_device *pwm)
-> +{
-> +	/* Disable PWM and release the bucket */
-> +	airoha_pwm_config_flash_map(pc, pwm->hwpwm, -1);
-> +	airoha_pwm_release_bucket_config(pc, pwm->hwpwm);
-> +
-> +	pc->initialized &= ~BIT_ULL(pwm->hwpwm);
-> +
-> +	/* If no SIPO is used, disable the shift register chip */
-> +	if (!(pc->initialized >> AIROHA_PWM_NUM_GPIO))
-> +		regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
-> +				  AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
-> +}
-> +
-> +static int airoha_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			    const struct pwm_state *state)
-> +{
-> +	struct airoha_pwm *pc = pwmchip_get_drvdata(chip);
-> +	u64 period_ns;
-> +
-> +	/* Only normal polarity is supported */
-> +	if (state->polarity == PWM_POLARITY_INVERSED)
-> +		return -EINVAL;
-> +
-> +	if (!state->enabled) {
-> +		airoha_pwm_disable(pc, pwm);
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * Period goes at 4ns step, normalize it to check if we can
-> +	 * share a generator.
-> +	 */
-> +	period_ns = rounddown(state->period, AIROHA_PWM_PERIOD_TICK_NS);
-> +
-> +	/* Clamp period to MAX supported value */
-> +	if (period_ns > AIROHA_PWM_PERIOD_MAX_NS)
-> +		period_ns = AIROHA_PWM_PERIOD_MAX_NS;
-> +
-> +	if (period_ns < AIROHA_PWM_PERIOD_TICK_NS)
-> +		return -EINVAL;
-> +
-> +	return airoha_pwm_config(pc, pwm, state->duty_cycle, period_ns);
-> +}
-> +
-> +static int airoha_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				struct pwm_state *state)
-> +{
-> +	struct airoha_pwm *pc = pwmchip_get_drvdata(chip);
-> +	int ret, hwpwm = pwm->hwpwm;
-> +	u32 addr, shift, val;
-> +	u8 bucket;
-> +
-> +	airoha_pwm_get_flash_map_addr_and_shift(hwpwm, &addr, &shift);
-> +
-> +	ret = regmap_read(pc->regmap, addr, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	state->enabled = FIELD_GET(AIROHA_PWM_GPIO_FLASH_EN, val >> shift);
-> +	if (!state->enabled)
-> +		return 0;
-> +
-> +	state->polarity = PWM_POLARITY_NORMAL;
-> +
-> +	bucket = FIELD_GET(AIROHA_PWM_GPIO_FLASH_SET_ID, val >> shift);
-> +	airoha_pwm_get_bucket(pc, bucket, &state->period,
-> +			      &state->duty_cycle);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops airoha_pwm_ops = {
-> +	.apply = airoha_pwm_apply,
-> +	.get_state = airoha_pwm_get_state,
-> +};
-> +
-> +static int airoha_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct airoha_pwm *pc;
-> +	struct pwm_chip *chip;
-> +	int ret;
-> +
-> +	chip = devm_pwmchip_alloc(dev, AIROHA_PWM_MAX_CHANNELS, sizeof(*pc));
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +
-> +	chip->ops = &airoha_pwm_ops;
-> +	pc = pwmchip_get_drvdata(chip);
-> +
-> +	pc->regmap = device_node_to_regmap(dev->parent->of_node);
-> +	if (IS_ERR(pc->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(pc->regmap), "Failed to get PWM regmap\n");
-> +
-> +	ret = devm_pwmchip_add(&pdev->dev, chip);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id airoha_pwm_of_match[] = {
-> +	{ .compatible = "airoha,en7581-pwm" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, airoha_pwm_of_match);
-> +
-> +static struct platform_driver airoha_pwm_driver = {
-> +	.driver = {
-> +		.name = "pwm-airoha",
-> +		.of_match_table = airoha_pwm_of_match,
-> +	},
-> +	.probe = airoha_pwm_probe,
-> +};
-> +module_platform_driver(airoha_pwm_driver);
-> +
-> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo@kernel.org>");
-> +MODULE_AUTHOR("Markus Gothe <markus.gothe@genexis.eu>");
-> +MODULE_AUTHOR("Benjamin Larsson <benjamin.larsson@genexis.eu>");
-> +MODULE_DESCRIPTION("Airoha EN7581 PWM driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.48.1
-> 
+Hi Nylon,
 
-Any news for this?
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on linus/master v6.15-rc3 next-20250422]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Nylon-Chen/riscv-dts-sifive-unleashed-unmatched-Remove-PWM-controlled-LED-s-active-low-properties/20250422-165644
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250422085312.812877-5-nylon.chen%40sifive.com
+patch subject: [PATCH v12 4/5] pwm: sifive: Fix rounding issues in apply and get_state functions
+config: csky-randconfig-001-20250423 (https://download.01.org/0day-ci/archive/20250423/202504230904.kXJdvywR-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 13.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250423/202504230904.kXJdvywR-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504230904.kXJdvywR-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   drivers/pwm/pwm-sifive.c: In function 'pwm_sifive_apply':
+>> drivers/pwm/pwm-sifive.c:351:26: error: unterminated argument list invoking macro "do_div"
+     351 | MODULE_LICENSE("GPL v2");
+         |                          ^
+>> drivers/pwm/pwm-sifive.c:161:9: error: 'do_div' undeclared (first use in this function)
+     161 |         do_div(frac, state->period;
+         |         ^~~~~~
+   drivers/pwm/pwm-sifive.c:161:9: note: each undeclared identifier is reported only once for each function it appears in
+>> drivers/pwm/pwm-sifive.c:161:15: error: expected ';' at end of input
+     161 |         do_div(frac, state->period;
+         |               ^
+         |               ;
+   ......
+>> drivers/pwm/pwm-sifive.c:161:9: error: expected declaration or statement at end of input
+     161 |         do_div(frac, state->period;
+         |         ^~~~~~
+>> drivers/pwm/pwm-sifive.c:141:19: warning: unused variable 'inactive' [-Wunused-variable]
+     141 |         u32 frac, inactive;
+         |                   ^~~~~~~~
+>> drivers/pwm/pwm-sifive.c:141:13: warning: variable 'frac' set but not used [-Wunused-but-set-variable]
+     141 |         u32 frac, inactive;
+         |             ^~~~
+>> drivers/pwm/pwm-sifive.c:140:13: warning: unused variable 'ret' [-Wunused-variable]
+     140 |         int ret = 0;
+         |             ^~~
+>> drivers/pwm/pwm-sifive.c:139:14: warning: variable 'enabled' set but not used [-Wunused-but-set-variable]
+     139 |         bool enabled;
+         |              ^~~~~~~
+>> drivers/pwm/pwm-sifive.c:135:34: warning: unused variable 'ddata' [-Wunused-variable]
+     135 |         struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
+         |                                  ^~~~~
+   drivers/pwm/pwm-sifive.c: At top level:
+>> drivers/pwm/pwm-sifive.c:132:12: warning: 'pwm_sifive_apply' defined but not used [-Wunused-function]
+     132 | static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+         |            ^~~~~~~~~~~~~~~~
+>> drivers/pwm/pwm-sifive.c:109:12: warning: 'pwm_sifive_get_state' defined but not used [-Wunused-function]
+     109 | static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+         |            ^~~~~~~~~~~~~~~~~~~~
+>> drivers/pwm/pwm-sifive.c:81:13: warning: 'pwm_sifive_update_clock' defined but not used [-Wunused-function]
+      81 | static void pwm_sifive_update_clock(struct pwm_sifive_ddata *ddata,
+         |             ^~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/pwm/pwm-sifive.c:71:13: warning: 'pwm_sifive_free' defined but not used [-Wunused-function]
+      71 | static void pwm_sifive_free(struct pwm_chip *chip, struct pwm_device *pwm)
+         |             ^~~~~~~~~~~~~~~
+>> drivers/pwm/pwm-sifive.c:60:12: warning: 'pwm_sifive_request' defined but not used [-Wunused-function]
+      60 | static int pwm_sifive_request(struct pwm_chip *chip, struct pwm_device *pwm)
+         |            ^~~~~~~~~~~~~~~~~~
+
+
+vim +/do_div +351 drivers/pwm/pwm-sifive.c
+
+9e37a53eb05114b Yash Shah            2019-06-11  131  
+9e37a53eb05114b Yash Shah            2019-06-11  132  static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+71523d1812aca61 Uwe Kleine-König     2019-08-24  133  			    const struct pwm_state *state)
+9e37a53eb05114b Yash Shah            2019-06-11  134  {
+9e37a53eb05114b Yash Shah            2019-06-11  135  	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
+9e37a53eb05114b Yash Shah            2019-06-11  136  	struct pwm_state cur_state;
+9e37a53eb05114b Yash Shah            2019-06-11  137  	unsigned int duty_cycle;
+9e37a53eb05114b Yash Shah            2019-06-11  138  	unsigned long long num;
+9e37a53eb05114b Yash Shah            2019-06-11  139  	bool enabled;
+9e37a53eb05114b Yash Shah            2019-06-11  140  	int ret = 0;
+5bb4f54a7d6753d Nylon Chen           2025-04-22  141  	u32 frac, inactive;
+9e37a53eb05114b Yash Shah            2019-06-11  142  
+5bb4f54a7d6753d Nylon Chen           2025-04-22  143  	if (state->polarity != PWM_POLARITY_NORMAL)
+9e37a53eb05114b Yash Shah            2019-06-11  144  		return -EINVAL;
+9e37a53eb05114b Yash Shah            2019-06-11  145  
+9e37a53eb05114b Yash Shah            2019-06-11  146  	cur_state = pwm->state;
+9e37a53eb05114b Yash Shah            2019-06-11  147  	enabled = cur_state.enabled;
+9e37a53eb05114b Yash Shah            2019-06-11  148  
+9e37a53eb05114b Yash Shah            2019-06-11  149  	duty_cycle = state->duty_cycle;
+9e37a53eb05114b Yash Shah            2019-06-11  150  	if (!state->enabled)
+9e37a53eb05114b Yash Shah            2019-06-11  151  		duty_cycle = 0;
+9e37a53eb05114b Yash Shah            2019-06-11  152  
+9e37a53eb05114b Yash Shah            2019-06-11  153  	/*
+9e37a53eb05114b Yash Shah            2019-06-11  154  	 * The problem of output producing mixed setting as mentioned at top,
+9e37a53eb05114b Yash Shah            2019-06-11  155  	 * occurs here. To minimize the window for this problem, we are
+9e37a53eb05114b Yash Shah            2019-06-11  156  	 * calculating the register values first and then writing them
+9e37a53eb05114b Yash Shah            2019-06-11  157  	 * consecutively
+9e37a53eb05114b Yash Shah            2019-06-11  158  	 */
+9e37a53eb05114b Yash Shah            2019-06-11  159  	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
+357da405567b634 Nylon Chen           2025-04-22  160  	frac = num;
+357da405567b634 Nylon Chen           2025-04-22 @161  	do_div(frac, state->period;
+5bb4f54a7d6753d Nylon Chen           2025-04-22  162  	/* The hardware cannot generate a 0% duty cycle */
+9e37a53eb05114b Yash Shah            2019-06-11  163  	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+5bb4f54a7d6753d Nylon Chen           2025-04-22  164  	inactive = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
+9e37a53eb05114b Yash Shah            2019-06-11  165  
+0f02f491b786143 Uwe Kleine-König     2022-07-21  166  	mutex_lock(&ddata->lock);
+9e37a53eb05114b Yash Shah            2019-06-11  167  	if (state->period != ddata->approx_period) {
+334c7b13d38321e Emil Renner Berthing 2022-11-09  168  		/*
+334c7b13d38321e Emil Renner Berthing 2022-11-09  169  		 * Don't let a 2nd user change the period underneath the 1st user.
+334c7b13d38321e Emil Renner Berthing 2022-11-09  170  		 * However if ddate->approx_period == 0 this is the first time we set
+334c7b13d38321e Emil Renner Berthing 2022-11-09  171  		 * any period, so let whoever gets here first set the period so other
+334c7b13d38321e Emil Renner Berthing 2022-11-09  172  		 * users who agree on the period won't fail.
+334c7b13d38321e Emil Renner Berthing 2022-11-09  173  		 */
+334c7b13d38321e Emil Renner Berthing 2022-11-09  174  		if (ddata->user_count != 1 && ddata->approx_period) {
+0f02f491b786143 Uwe Kleine-König     2022-07-21  175  			mutex_unlock(&ddata->lock);
+3586b02663f098a Uwe Kleine-König     2022-07-21  176  			return -EBUSY;
+9e37a53eb05114b Yash Shah            2019-06-11  177  		}
+9e37a53eb05114b Yash Shah            2019-06-11  178  		ddata->approx_period = state->period;
+9e37a53eb05114b Yash Shah            2019-06-11  179  		pwm_sifive_update_clock(ddata, clk_get_rate(ddata->clk));
+9e37a53eb05114b Yash Shah            2019-06-11  180  	}
+0f02f491b786143 Uwe Kleine-König     2022-07-21  181  	mutex_unlock(&ddata->lock);
+9e37a53eb05114b Yash Shah            2019-06-11  182  
+1695b421e1b587c Uwe Kleine-König     2022-07-21  183  	/*
+1695b421e1b587c Uwe Kleine-König     2022-07-21  184  	 * If the PWM is enabled the clk is already on. So only enable it
+1695b421e1b587c Uwe Kleine-König     2022-07-21  185  	 * conditionally to have it on exactly once afterwards independent of
+1695b421e1b587c Uwe Kleine-König     2022-07-21  186  	 * the PWM state.
+1695b421e1b587c Uwe Kleine-König     2022-07-21  187  	 */
+1695b421e1b587c Uwe Kleine-König     2022-07-21  188  	if (!enabled) {
+3586b02663f098a Uwe Kleine-König     2022-07-21  189  		ret = clk_enable(ddata->clk);
+3586b02663f098a Uwe Kleine-König     2022-07-21  190  		if (ret) {
+c4f4af7d792c74d Uwe Kleine-König     2024-02-14  191  			dev_err(pwmchip_parent(chip), "Enable clk failed\n");
+3586b02663f098a Uwe Kleine-König     2022-07-21  192  			return ret;
+3586b02663f098a Uwe Kleine-König     2022-07-21  193  		}
+1695b421e1b587c Uwe Kleine-König     2022-07-21  194  	}
+3586b02663f098a Uwe Kleine-König     2022-07-21  195  
+5bb4f54a7d6753d Nylon Chen           2025-04-22  196  	writel(inactive, ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
+9e37a53eb05114b Yash Shah            2019-06-11  197  
+1695b421e1b587c Uwe Kleine-König     2022-07-21  198  	if (!state->enabled)
+61180f68ad5b905 Uwe Kleine-König     2022-07-21  199  		clk_disable(ddata->clk);
+9e37a53eb05114b Yash Shah            2019-06-11  200  
+3586b02663f098a Uwe Kleine-König     2022-07-21  201  	return 0;
+9e37a53eb05114b Yash Shah            2019-06-11  202  }
+9e37a53eb05114b Yash Shah            2019-06-11  203  
+9e37a53eb05114b Yash Shah            2019-06-11  204  static const struct pwm_ops pwm_sifive_ops = {
+9e37a53eb05114b Yash Shah            2019-06-11  205  	.request = pwm_sifive_request,
+9e37a53eb05114b Yash Shah            2019-06-11  206  	.free = pwm_sifive_free,
+9e37a53eb05114b Yash Shah            2019-06-11  207  	.get_state = pwm_sifive_get_state,
+9e37a53eb05114b Yash Shah            2019-06-11  208  	.apply = pwm_sifive_apply,
+9e37a53eb05114b Yash Shah            2019-06-11  209  };
+9e37a53eb05114b Yash Shah            2019-06-11  210  
+9e37a53eb05114b Yash Shah            2019-06-11  211  static int pwm_sifive_clock_notifier(struct notifier_block *nb,
+9e37a53eb05114b Yash Shah            2019-06-11  212  				     unsigned long event, void *data)
+9e37a53eb05114b Yash Shah            2019-06-11  213  {
+9e37a53eb05114b Yash Shah            2019-06-11  214  	struct clk_notifier_data *ndata = data;
+9e37a53eb05114b Yash Shah            2019-06-11  215  	struct pwm_sifive_ddata *ddata =
+9e37a53eb05114b Yash Shah            2019-06-11  216  		container_of(nb, struct pwm_sifive_ddata, notifier);
+9e37a53eb05114b Yash Shah            2019-06-11  217  
+45558b3abb87eeb Uwe Kleine-König     2022-12-02  218  	if (event == POST_RATE_CHANGE) {
+45558b3abb87eeb Uwe Kleine-König     2022-12-02  219  		mutex_lock(&ddata->lock);
+9e37a53eb05114b Yash Shah            2019-06-11  220  		pwm_sifive_update_clock(ddata, ndata->new_rate);
+45558b3abb87eeb Uwe Kleine-König     2022-12-02  221  		mutex_unlock(&ddata->lock);
+45558b3abb87eeb Uwe Kleine-König     2022-12-02  222  	}
+9e37a53eb05114b Yash Shah            2019-06-11  223  
+9e37a53eb05114b Yash Shah            2019-06-11  224  	return NOTIFY_OK;
+9e37a53eb05114b Yash Shah            2019-06-11  225  }
+9e37a53eb05114b Yash Shah            2019-06-11  226  
+9e37a53eb05114b Yash Shah            2019-06-11  227  static int pwm_sifive_probe(struct platform_device *pdev)
+9e37a53eb05114b Yash Shah            2019-06-11  228  {
+9e37a53eb05114b Yash Shah            2019-06-11  229  	struct device *dev = &pdev->dev;
+9e37a53eb05114b Yash Shah            2019-06-11  230  	struct pwm_sifive_ddata *ddata;
+9e37a53eb05114b Yash Shah            2019-06-11  231  	struct pwm_chip *chip;
+9e37a53eb05114b Yash Shah            2019-06-11  232  	int ret;
+ace41d7564e655c Uwe Kleine-König     2022-07-21  233  	u32 val;
+ace41d7564e655c Uwe Kleine-König     2022-07-21  234  	unsigned int enabled_pwms = 0, enabled_clks = 1;
+9e37a53eb05114b Yash Shah            2019-06-11  235  
+554d9acae42b3ee Uwe Kleine-König     2024-02-14  236  	chip = devm_pwmchip_alloc(dev, 4, sizeof(*ddata));
+554d9acae42b3ee Uwe Kleine-König     2024-02-14  237  	if (IS_ERR(chip))
+554d9acae42b3ee Uwe Kleine-König     2024-02-14  238  		return PTR_ERR(chip);
+9e37a53eb05114b Yash Shah            2019-06-11  239  
+554d9acae42b3ee Uwe Kleine-König     2024-02-14  240  	ddata = pwm_sifive_chip_to_ddata(chip);
+554d9acae42b3ee Uwe Kleine-König     2024-02-14  241  	ddata->parent = dev;
+9e37a53eb05114b Yash Shah            2019-06-11  242  	mutex_init(&ddata->lock);
+9e37a53eb05114b Yash Shah            2019-06-11  243  	chip->ops = &pwm_sifive_ops;
+9e37a53eb05114b Yash Shah            2019-06-11  244  
+96cfceba3967198 Yangtao Li           2019-12-29  245  	ddata->regs = devm_platform_ioremap_resource(pdev, 0);
+f6abac0379b8368 Ding Xiang           2019-07-18  246  	if (IS_ERR(ddata->regs))
+9e37a53eb05114b Yash Shah            2019-06-11  247  		return PTR_ERR(ddata->regs);
+9e37a53eb05114b Yash Shah            2019-06-11  248  
+55e644b840baf7a Uwe Kleine-König     2023-04-18  249  	ddata->clk = devm_clk_get_prepared(dev, NULL);
+5530fcaf9ca30b8 Krzysztof Kozlowski  2020-08-26  250  	if (IS_ERR(ddata->clk))
+5530fcaf9ca30b8 Krzysztof Kozlowski  2020-08-26  251  		return dev_err_probe(dev, PTR_ERR(ddata->clk),
+5530fcaf9ca30b8 Krzysztof Kozlowski  2020-08-26  252  				     "Unable to find controller clock\n");
+9e37a53eb05114b Yash Shah            2019-06-11  253  
+55e644b840baf7a Uwe Kleine-König     2023-04-18  254  	ret = clk_enable(ddata->clk);
+9e37a53eb05114b Yash Shah            2019-06-11  255  	if (ret) {
+9e37a53eb05114b Yash Shah            2019-06-11  256  		dev_err(dev, "failed to enable clock for pwm: %d\n", ret);
+9e37a53eb05114b Yash Shah            2019-06-11  257  		return ret;
+9e37a53eb05114b Yash Shah            2019-06-11  258  	}
+9e37a53eb05114b Yash Shah            2019-06-11  259  
+ace41d7564e655c Uwe Kleine-König     2022-07-21  260  	val = readl(ddata->regs + PWM_SIFIVE_PWMCFG);
+ace41d7564e655c Uwe Kleine-König     2022-07-21  261  	if (val & PWM_SIFIVE_PWMCFG_EN_ALWAYS) {
+ace41d7564e655c Uwe Kleine-König     2022-07-21  262  		unsigned int i;
+ace41d7564e655c Uwe Kleine-König     2022-07-21  263  
+ace41d7564e655c Uwe Kleine-König     2022-07-21  264  		for (i = 0; i < chip->npwm; ++i) {
+ace41d7564e655c Uwe Kleine-König     2022-07-21  265  			val = readl(ddata->regs + PWM_SIFIVE_PWMCMP(i));
+ace41d7564e655c Uwe Kleine-König     2022-07-21  266  			if (val > 0)
+ace41d7564e655c Uwe Kleine-König     2022-07-21  267  				++enabled_pwms;
+ace41d7564e655c Uwe Kleine-König     2022-07-21  268  		}
+ace41d7564e655c Uwe Kleine-König     2022-07-21  269  	}
+ace41d7564e655c Uwe Kleine-König     2022-07-21  270  
+ace41d7564e655c Uwe Kleine-König     2022-07-21  271  	/* The clk should be on once for each running PWM. */
+ace41d7564e655c Uwe Kleine-König     2022-07-21  272  	if (enabled_pwms) {
+ace41d7564e655c Uwe Kleine-König     2022-07-21  273  		while (enabled_clks < enabled_pwms) {
+ace41d7564e655c Uwe Kleine-König     2022-07-21  274  			/* This is not expected to fail as the clk is already on */
+ace41d7564e655c Uwe Kleine-König     2022-07-21  275  			ret = clk_enable(ddata->clk);
+ace41d7564e655c Uwe Kleine-König     2022-07-21  276  			if (unlikely(ret)) {
+ace41d7564e655c Uwe Kleine-König     2022-07-21  277  				dev_err_probe(dev, ret, "Failed to enable clk\n");
+ace41d7564e655c Uwe Kleine-König     2022-07-21  278  				goto disable_clk;
+ace41d7564e655c Uwe Kleine-König     2022-07-21  279  			}
+ace41d7564e655c Uwe Kleine-König     2022-07-21  280  			++enabled_clks;
+ace41d7564e655c Uwe Kleine-König     2022-07-21  281  		}
+ace41d7564e655c Uwe Kleine-König     2022-07-21  282  	} else {
+ace41d7564e655c Uwe Kleine-König     2022-07-21  283  		clk_disable(ddata->clk);
+ace41d7564e655c Uwe Kleine-König     2022-07-21  284  		enabled_clks = 0;
+ace41d7564e655c Uwe Kleine-König     2022-07-21  285  	}
+ace41d7564e655c Uwe Kleine-König     2022-07-21  286  
+9e37a53eb05114b Yash Shah            2019-06-11  287  	/* Watch for changes to underlying clock frequency */
+9e37a53eb05114b Yash Shah            2019-06-11  288  	ddata->notifier.notifier_call = pwm_sifive_clock_notifier;
+9e37a53eb05114b Yash Shah            2019-06-11  289  	ret = clk_notifier_register(ddata->clk, &ddata->notifier);
+9e37a53eb05114b Yash Shah            2019-06-11  290  	if (ret) {
+9e37a53eb05114b Yash Shah            2019-06-11  291  		dev_err(dev, "failed to register clock notifier: %d\n", ret);
+9e37a53eb05114b Yash Shah            2019-06-11  292  		goto disable_clk;
+9e37a53eb05114b Yash Shah            2019-06-11  293  	}
+9e37a53eb05114b Yash Shah            2019-06-11  294  
+9e37a53eb05114b Yash Shah            2019-06-11  295  	ret = pwmchip_add(chip);
+9e37a53eb05114b Yash Shah            2019-06-11  296  	if (ret < 0) {
+9e37a53eb05114b Yash Shah            2019-06-11  297  		dev_err(dev, "cannot register PWM: %d\n", ret);
+9e37a53eb05114b Yash Shah            2019-06-11  298  		goto unregister_clk;
+9e37a53eb05114b Yash Shah            2019-06-11  299  	}
+9e37a53eb05114b Yash Shah            2019-06-11  300  
+bb472da2148f39b Uwe Kleine-König     2024-02-14  301  	platform_set_drvdata(pdev, chip);
+9e37a53eb05114b Yash Shah            2019-06-11  302  	dev_dbg(dev, "SiFive PWM chip registered %d PWMs\n", chip->npwm);
+9e37a53eb05114b Yash Shah            2019-06-11  303  
+9e37a53eb05114b Yash Shah            2019-06-11  304  	return 0;
+9e37a53eb05114b Yash Shah            2019-06-11  305  
+9e37a53eb05114b Yash Shah            2019-06-11  306  unregister_clk:
+9e37a53eb05114b Yash Shah            2019-06-11  307  	clk_notifier_unregister(ddata->clk, &ddata->notifier);
+9e37a53eb05114b Yash Shah            2019-06-11  308  disable_clk:
+ace41d7564e655c Uwe Kleine-König     2022-07-21  309  	while (enabled_clks) {
+ace41d7564e655c Uwe Kleine-König     2022-07-21  310  		clk_disable(ddata->clk);
+ace41d7564e655c Uwe Kleine-König     2022-07-21  311  		--enabled_clks;
+ace41d7564e655c Uwe Kleine-König     2022-07-21  312  	}
+9e37a53eb05114b Yash Shah            2019-06-11  313  
+9e37a53eb05114b Yash Shah            2019-06-11  314  	return ret;
+9e37a53eb05114b Yash Shah            2019-06-11  315  }
+9e37a53eb05114b Yash Shah            2019-06-11  316  
+533d29471b3c940 Uwe Kleine-König     2023-03-03  317  static void pwm_sifive_remove(struct platform_device *dev)
+9e37a53eb05114b Yash Shah            2019-06-11  318  {
+bb472da2148f39b Uwe Kleine-König     2024-02-14  319  	struct pwm_chip *chip = platform_get_drvdata(dev);
+bb472da2148f39b Uwe Kleine-König     2024-02-14  320  	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
+9e37a53eb05114b Yash Shah            2019-06-11  321  	struct pwm_device *pwm;
+ceb2c2842f3664d Uwe Kleine-König     2021-07-07  322  	int ch;
+9e37a53eb05114b Yash Shah            2019-06-11  323  
+bb472da2148f39b Uwe Kleine-König     2024-02-14  324  	pwmchip_remove(chip);
+2375e964d541bb0 Uwe Kleine-König     2022-07-21  325  	clk_notifier_unregister(ddata->clk, &ddata->notifier);
+2375e964d541bb0 Uwe Kleine-König     2022-07-21  326  
+bb472da2148f39b Uwe Kleine-König     2024-02-14  327  	for (ch = 0; ch < chip->npwm; ch++) {
+bb472da2148f39b Uwe Kleine-König     2024-02-14  328  		pwm = &chip->pwms[ch];
+ace41d7564e655c Uwe Kleine-König     2022-07-21  329  		if (pwm->state.enabled)
+9e37a53eb05114b Yash Shah            2019-06-11  330  			clk_disable(ddata->clk);
+ace41d7564e655c Uwe Kleine-König     2022-07-21  331  	}
+9e37a53eb05114b Yash Shah            2019-06-11  332  }
+9e37a53eb05114b Yash Shah            2019-06-11  333  
+9e37a53eb05114b Yash Shah            2019-06-11  334  static const struct of_device_id pwm_sifive_of_match[] = {
+9e37a53eb05114b Yash Shah            2019-06-11  335  	{ .compatible = "sifive,pwm0" },
+9e37a53eb05114b Yash Shah            2019-06-11  336  	{},
+9e37a53eb05114b Yash Shah            2019-06-11  337  };
+9e37a53eb05114b Yash Shah            2019-06-11  338  MODULE_DEVICE_TABLE(of, pwm_sifive_of_match);
+9e37a53eb05114b Yash Shah            2019-06-11  339  
+9e37a53eb05114b Yash Shah            2019-06-11  340  static struct platform_driver pwm_sifive_driver = {
+9e37a53eb05114b Yash Shah            2019-06-11  341  	.probe = pwm_sifive_probe,
+8db7fdffaaf6cc9 Uwe Kleine-König     2024-09-09  342  	.remove = pwm_sifive_remove,
+9e37a53eb05114b Yash Shah            2019-06-11  343  	.driver = {
+9e37a53eb05114b Yash Shah            2019-06-11  344  		.name = "pwm-sifive",
+9e37a53eb05114b Yash Shah            2019-06-11  345  		.of_match_table = pwm_sifive_of_match,
+9e37a53eb05114b Yash Shah            2019-06-11  346  	},
+9e37a53eb05114b Yash Shah            2019-06-11  347  };
+9e37a53eb05114b Yash Shah            2019-06-11  348  module_platform_driver(pwm_sifive_driver);
+9e37a53eb05114b Yash Shah            2019-06-11  349  
+9e37a53eb05114b Yash Shah            2019-06-11  350  MODULE_DESCRIPTION("SiFive PWM driver");
+9e37a53eb05114b Yash Shah            2019-06-11 @351  MODULE_LICENSE("GPL v2");
 
 -- 
-	Ansuel
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
