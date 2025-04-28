@@ -1,53 +1,53 @@
-Return-Path: <linux-pwm+bounces-5743-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5746-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EABCA9F001
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Apr 2025 13:58:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F5BFA9F011
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Apr 2025 13:59:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DDDC3ACE22
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Apr 2025 11:58:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 545B65A0753
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Apr 2025 11:58:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C0132686A9;
-	Mon, 28 Apr 2025 11:57:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C87D269AFA;
+	Mon, 28 Apr 2025 11:57:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UVEx7Cfm"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="G9e3eZN4"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8FC1CD213;
-	Mon, 28 Apr 2025 11:57:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD45267B1A;
+	Mon, 28 Apr 2025 11:57:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745841471; cv=none; b=tZS0erqdP1Kbbwp10MEmBCtbos3VoEIK1S4YulPz24Lzh4fJLo0A7D0bjqwYEftbCwCVj/zGii6sauo1QikMRa1vjD23mUguyH5vQe6hVxcgGjy1jaZQ0lSw5dUPiuTls208mmb5p8X+Q5SD9tBBffFMcFdyap9a1g/rbP5ZrGs=
+	t=1745841473; cv=none; b=SWQmJ02GI5PiU9h7+6LbAG3/2DTMh2733KKosXwmV2sQw+QTTf+FFHfuc35s+8rrFgPj/Kgitlph6kNsEHkw58o5Cljj/DbQIT50eVI7QKAi4/3ox3F/snkUQ4ulg9a8BQT+Vtoi06tVfrhYgyGvRNU9wt0PezD7FSNL/wd59CU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745841471; c=relaxed/simple;
-	bh=HD55kveJW1t0BxKHz4Ojum7iT8TYrloBzPETnE9aaCU=;
+	s=arc-20240116; t=1745841473; c=relaxed/simple;
+	bh=mQUpH+6Qnsxq2oHK30Wb1QxCYXN904EVl5L5IsgZECs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dkFDL1KaJgI0UyraA6mqDAMLrZoD3V+T7oPuHPLbuCoxcN06P/eocIq0gw2lVD54323AkwOJVvCLqF2MFjkVHoV7CdLEAqwaedELpO2KE22YnWYID1Gn73nmvvTym0x7N/LtdYrjj+vb9nOUqfxsyWt4niJtgacsY108dqJA6ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UVEx7Cfm; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:To:Cc; b=BodaZcgEK4jrHccdh5Q46eDDRmB0mtCFqD4RpuPvu0Xg8vcvVBTbdDadIX+an0a9+pr6aesLMRSHGv1hUHEYVVwlQhr+HvS8177KmxNA8zJF9fAGnByoDE/oto14TfKGMAIwCCBRM869EHsYO+CmpGSdDU65UZEUn+zju55AcRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=G9e3eZN4; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C7B7543A1A;
-	Mon, 28 Apr 2025 11:57:45 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BF6EC43A19;
+	Mon, 28 Apr 2025 11:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745841466;
+	t=1745841467;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xahwFNkhXkATYSPoXd3ZuEFajeVbF9RH37gecLJXZeg=;
-	b=UVEx7Cfmc4ns29tM7NKbZXPirJnKhnIQssxcRSa2mq1U0pbszOKcC6vD6/waA9+uuAcwiy
-	SEYA86eM0TY2oXyBcBI+aVSqHwEcIv+zYYgcWCl4VO5DAGXsnyddHbAVih6b+zaUuSeEoQ
-	rO+mhkbucBqNrrqMG8sRheuM91EXS6+lCfmq4QSDMJvjWZxl6AS+WIv0+xI4tAUYucDVTv
-	AKCoR80gP5N/03BODz3qESj1fwEczUfWaH0e8aFMKffd82/io/h2DUaOqk0nKcnHa67WgY
-	TlQbJkpn5p2dw+f8XWlGHzVTjl5adAH15ZTt61sodxd3ED+ONBPE7xoBzjhfAg==
+	bh=9aJuG4HGOOGM3EAzUKcqkHxwSO2ib7SuPNPu3VNEBII=;
+	b=G9e3eZN4nUAjz1wCpaDtFwEOmNSIwQ2z1zplQPR4YIiyfKhV6QJzcpkh4kIx1SqqJszM0o
+	ioIEIw51sMz1RDiJkyZiQPXMOgV1toOnFwzTCzKk1SyM/4D1p2gaAgz1yyr17hr0oM06Fm
+	pJzqcssreAphkgN/TCQV9ioWM1rxUV9tNJfy+x9JZ2R0X4zGTKu/qsbAYTXBw1EIOFWFYx
+	PHgpvN3C3qGqmp7Ybdx7U2851rk0pdA2PPSQ8BlIDygMzUEhsCXdqZ1mT2R7iBFzghdqW1
+	Te6YnG1BgxXCQKd2wBcDeDjLkWJaF0teUtBcXKskE+RZTEjzoGK29Jnhros9Sw==
 From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Mon, 28 Apr 2025 13:57:27 +0200
-Subject: [PATCH v7 09/11] input: keyboard: Add support for MAX7360 keypad
+Date: Mon, 28 Apr 2025 13:57:28 +0200
+Subject: [PATCH v7 10/11] input: misc: Add support for MAX7360 rotary
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250428-mdb-max7360-support-v7-9-4e0608d0a7ff@bootlin.com>
+Message-Id: <20250428-mdb-max7360-support-v7-10-4e0608d0a7ff@bootlin.com>
 References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
 In-Reply-To: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -77,11 +77,11 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745841456; l=11377;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745841456; l=7711;
  i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=HD55kveJW1t0BxKHz4Ojum7iT8TYrloBzPETnE9aaCU=;
- b=zJ4pbK2F5MnFM+ES3TA14BR9XSNF6vrfykHsyzdOQZVuhSM5cAimNqlIow38lTNVWjNfNEI1d
- J2LgMH1Jp0lBrv7wwsbZgPkIUliATJ3mmSZYV1BCjsqe3rBMxVh8XHI
+ bh=mQUpH+6Qnsxq2oHK30Wb1QxCYXN904EVl5L5IsgZECs=;
+ b=AXtc8TGFuMfg1ZJZUWtA6u81EUnMynv3p90Odfc+BuWwvyjJjbdUJTM4ATk12/IZtGw4qaBtK
+ YGfG32yQQy9DJRlklPMsE6v6sgAZeD+EE6XhehtuPrgT5eqaFz7yMvs
 X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
  pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
 X-GND-State: clean
@@ -90,57 +90,55 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtkeelucetufdoteggode
  hgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepughmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrgh
 X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Add driver for Maxim Integrated MAX7360 keypad controller, providing
-support for up to 64 keys, with a matrix of 8 columns and 8 rows.
+Add driver for Maxim Integrated MAX7360 rotary encoder controller,
+supporting a single rotary switch.
 
 Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 ---
- drivers/input/keyboard/Kconfig          |  12 ++
- drivers/input/keyboard/Makefile         |   1 +
- drivers/input/keyboard/max7360-keypad.c | 302 ++++++++++++++++++++++++++++++++
- 3 files changed, 315 insertions(+)
+ drivers/input/misc/Kconfig          |  10 ++
+ drivers/input/misc/Makefile         |   1 +
+ drivers/input/misc/max7360-rotary.c | 198 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 209 insertions(+)
 
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index 721ab69e84ac..93b5cccf6892 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -421,6 +421,18 @@ config KEYBOARD_MAX7359
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called max7359_keypad.
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index f5496ca0c0d2..0bc9d121c984 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -230,6 +230,16 @@ config INPUT_M68K_BEEP
+ 	tristate "M68k Beeper support"
+ 	depends on M68K
  
-+config KEYBOARD_MAX7360
-+	tristate "Maxim MAX7360 Key Switch Controller"
-+	select INPUT_MATRIXKMAP
-+	depends on I2C
++config INPUT_MAX7360_ROTARY
++	tristate "Maxim MAX7360 Rotary Encoder"
 +	depends on MFD_MAX7360
 +	help
-+	  If you say yes here you get support for the keypad controller on the
++	  If you say yes here you get support for the rotary encoder on the
 +	  Maxim MAX7360 I/O Expander.
 +
 +	  To compile this driver as a module, choose M here: the module will be
-+	  called max7360_keypad.
++	  called max7360_rotary.
 +
- config KEYBOARD_MPR121
- 	tristate "Freescale MPR121 Touchkey"
- 	depends on I2C
-diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-index 1e0721c30709..b49d32d4003d 100644
---- a/drivers/input/keyboard/Makefile
-+++ b/drivers/input/keyboard/Makefile
-@@ -42,6 +42,7 @@ obj-$(CONFIG_KEYBOARD_LPC32XX)		+= lpc32xx-keys.o
- obj-$(CONFIG_KEYBOARD_MAPLE)		+= maple_keyb.o
- obj-$(CONFIG_KEYBOARD_MATRIX)		+= matrix_keypad.o
- obj-$(CONFIG_KEYBOARD_MAX7359)		+= max7359_keypad.o
-+obj-$(CONFIG_KEYBOARD_MAX7360)		+= max7360-keypad.o
- obj-$(CONFIG_KEYBOARD_MPR121)		+= mpr121_touchkey.o
- obj-$(CONFIG_KEYBOARD_MT6779)		+= mt6779-keypad.o
- obj-$(CONFIG_KEYBOARD_MTK_PMIC) 	+= mtk-pmic-keys.o
-diff --git a/drivers/input/keyboard/max7360-keypad.c b/drivers/input/keyboard/max7360-keypad.c
+ config INPUT_MAX77650_ONKEY
+ 	tristate "Maxim MAX77650 ONKEY support"
+ 	depends on MFD_MAX77650
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index 6d91804d0a6f..c454fba3a3ae 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -51,6 +51,7 @@ obj-$(CONFIG_INPUT_IQS7222)		+= iqs7222.o
+ obj-$(CONFIG_INPUT_KEYSPAN_REMOTE)	+= keyspan_remote.o
+ obj-$(CONFIG_INPUT_KXTJ9)		+= kxtj9.o
+ obj-$(CONFIG_INPUT_M68K_BEEP)		+= m68kspkr.o
++obj-$(CONFIG_INPUT_MAX7360_ROTARY)	+= max7360-rotary.o
+ obj-$(CONFIG_INPUT_MAX77650_ONKEY)	+= max77650-onkey.o
+ obj-$(CONFIG_INPUT_MAX77693_HAPTIC)	+= max77693-haptic.o
+ obj-$(CONFIG_INPUT_MAX8925_ONKEY)	+= max8925_onkey.o
+diff --git a/drivers/input/misc/max7360-rotary.c b/drivers/input/misc/max7360-rotary.c
 new file mode 100644
-index 000000000000..0cf6f9cd5f7f
+index 000000000000..d547ed222a2f
 --- /dev/null
-+++ b/drivers/input/keyboard/max7360-keypad.c
-@@ -0,0 +1,302 @@
++++ b/drivers/input/misc/max7360-rotary.c
+@@ -0,0 +1,198 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright 2025 Bootlin
@@ -149,264 +147,160 @@ index 000000000000..0cf6f9cd5f7f
 + */
 +
 +#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/dev_printk.h>
 +#include <linux/device/devres.h>
-+#include <linux/err.h>
++#include <linux/dev_printk.h>
 +#include <linux/init.h>
 +#include <linux/input.h>
-+#include <linux/input/matrix_keypad.h>
 +#include <linux/interrupt.h>
 +#include <linux/mfd/max7360.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/minmax.h>
-+#include <linux/module.h>
 +#include <linux/property.h>
 +#include <linux/platform_device.h>
 +#include <linux/pm_wakeirq.h>
 +#include <linux/regmap.h>
++#include <linux/types.h>
 +
-+struct max7360_keypad {
++#define MAX7360_ROTARY_DEFAULT_STEPS 24
++
++struct max7360_rotary {
 +	struct input_dev *input;
-+	unsigned int rows;
-+	unsigned int cols;
 +	unsigned int debounce_ms;
-+	int irq;
 +	struct regmap *regmap;
-+	unsigned short keycodes[MAX7360_MAX_KEY_ROWS * MAX7360_MAX_KEY_COLS];
++
++	u32 steps;
++	u32 axis;
++	bool relative_axis;
++	bool rollover;
++
++	unsigned int pos;
 +};
 +
-+static irqreturn_t max7360_keypad_irq(int irq, void *data)
++static void max7360_rotaty_report_event(struct max7360_rotary *max7360_rotary, int steps)
 +{
-+	struct max7360_keypad *max7360_keypad = data;
-+	struct device *dev = max7360_keypad->input->dev.parent;
-+	unsigned int val;
-+	unsigned int row, col;
-+	unsigned int release;
-+	unsigned int code;
-+	int error;
++	if (max7360_rotary->relative_axis) {
++		input_report_rel(max7360_rotary->input, max7360_rotary->axis, steps);
++	} else {
++		unsigned int pos = max7360_rotary->pos;
 +
-+	do {
-+		error = regmap_read(max7360_keypad->regmap, MAX7360_REG_KEYFIFO, &val);
-+		if (error) {
-+			dev_err(dev, "Failed to read max7360 FIFO");
-+			return IRQ_NONE;
++		if (steps < 0) {
++			/* turning counter-clockwise */
++			if (max7360_rotary->rollover)
++				pos += max7360_rotary->steps + steps;
++			else
++				pos = max(0, (int)pos + steps);
++		} else {
++			/* turning clockwise */
++			if (max7360_rotary->rollover)
++				pos += steps;
++			else
++				pos = min(max7360_rotary->steps, pos + steps);
 +		}
 +
-+		/* FIFO overflow: ignore it and get next event. */
-+		if (val == MAX7360_FIFO_OVERFLOW)
-+			dev_warn(dev, "max7360 FIFO overflow");
-+	} while (val == MAX7360_FIFO_OVERFLOW);
++		if (max7360_rotary->rollover)
++			pos %= max7360_rotary->steps;
 +
-+	if (val == MAX7360_FIFO_EMPTY) {
-+		dev_dbg(dev, "Got a spurious interrupt");
++		max7360_rotary->pos = pos;
++		input_report_abs(max7360_rotary->input, max7360_rotary->axis, max7360_rotary->pos);
++	}
++
++	input_sync(max7360_rotary->input);
++}
++
++static irqreturn_t max7360_rotary_irq(int irq, void *data)
++{
++	struct max7360_rotary *max7360_rotary = data;
++	struct device *dev = max7360_rotary->input->dev.parent;
++	unsigned int val;
++	int error;
++
++	error = regmap_read(max7360_rotary->regmap, MAX7360_REG_RTR_CNT, &val);
++	if (error < 0) {
++		dev_err(dev, "Failed to read rotary counter\n");
++		return IRQ_NONE;
++	}
++
++	if (val == 0) {
++		dev_dbg(dev, "Got a spurious interrupt\n");
 +
 +		return IRQ_NONE;
 +	}
 +
-+	row = FIELD_GET(MAX7360_FIFO_ROW, val);
-+	col = FIELD_GET(MAX7360_FIFO_COL, val);
-+	release = val & MAX7360_FIFO_RELEASE;
-+
-+	code = MATRIX_SCAN_CODE(row, col, MAX7360_ROW_SHIFT);
-+
-+	dev_dbg(dev, "key[%d:%d] %s\n", row, col, release ? "release" : "press");
-+
-+	input_event(max7360_keypad->input, EV_MSC, MSC_SCAN, code);
-+	input_report_key(max7360_keypad->input, max7360_keypad->keycodes[code], !release);
-+	input_sync(max7360_keypad->input);
++	max7360_rotaty_report_event(max7360_rotary, sign_extend32(val, 7));
 +
 +	return IRQ_HANDLED;
 +}
 +
-+static int max7360_keypad_open(struct input_dev *pdev)
++static int max7360_rotary_hw_init(struct max7360_rotary *max7360_rotary)
 +{
-+	struct max7360_keypad *max7360_keypad = input_get_drvdata(pdev);
-+	struct device *dev = max7360_keypad->input->dev.parent;
++	struct device *dev = max7360_rotary->input->dev.parent;
++	int val;
 +	int error;
 +
-+	/* Somebody is using the device: get out of sleep. */
-+	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_CONFIG,
-+				  MAX7360_CFG_SLEEP, MAX7360_CFG_SLEEP);
-+	if (error) {
-+		dev_err(dev, "Failed to write max7360 configuration: %d\n", error);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+
-+static void max7360_keypad_close(struct input_dev *pdev)
-+{
-+	struct max7360_keypad *max7360_keypad = input_get_drvdata(pdev);
-+	struct device *dev = max7360_keypad->input->dev.parent;
-+	int error;
-+
-+	/* Nobody is using the device anymore: go to sleep. */
-+	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_CONFIG, MAX7360_CFG_SLEEP, 0);
++	val = FIELD_PREP(MAX7360_ROT_DEBOUNCE, max7360_rotary->debounce_ms) |
++		FIELD_PREP(MAX7360_ROT_INTCNT, 1) | MAX7360_ROT_INTCNT_DLY;
++	error = regmap_write(max7360_rotary->regmap, MAX7360_REG_RTRCFG, val);
 +	if (error)
-+		dev_err(dev, "Failed to write max7360 configuration: %d\n", error);
-+}
-+
-+static int max7360_keypad_hw_init(struct max7360_keypad *max7360_keypad)
-+{
-+	struct device *dev = max7360_keypad->input->dev.parent;
-+	unsigned int val;
-+	int error;
-+
-+	val = max7360_keypad->debounce_ms - MAX7360_DEBOUNCE_MIN;
-+	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_DEBOUNCE,
-+				  MAX7360_DEBOUNCE,
-+				  FIELD_PREP(MAX7360_DEBOUNCE, val));
-+	if (error)
-+		return dev_err_probe(dev, error,
-+				     "Failed to write max7360 debounce configuration\n");
-+
-+	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_INTERRUPT,
-+				  MAX7360_INTERRUPT_TIME_MASK,
-+				  FIELD_PREP(MAX7360_INTERRUPT_TIME_MASK, 1));
-+	if (error)
-+		return dev_err_probe(dev, error,
-+				     "Failed to write max7360 keypad interrupt configuration\n");
-+
-+	return 0;
-+}
-+
-+static int max7360_keypad_build_keymap(struct max7360_keypad *max7360_keypad)
-+{
-+	struct input_dev *input_dev = max7360_keypad->input;
-+	struct device *dev = input_dev->dev.parent->parent;
-+	struct matrix_keymap_data keymap_data;
-+	const char *propname = "linux,keymap";
-+	unsigned int max_keys;
-+	int error;
-+	int size;
-+
-+	size = device_property_count_u32(dev, propname);
-+	if (size <= 0) {
-+		dev_err(dev, "missing or malformed property %s: %d\n", propname, size);
-+		return size < 0 ? size : -EINVAL;
-+	}
-+
-+	max_keys = max7360_keypad->cols * max7360_keypad->rows;
-+	if (size > max_keys) {
-+		dev_err(dev, "%s size overflow (%d vs max %u)\n", propname, size, max_keys);
-+		return -EINVAL;
-+	}
-+
-+	u32 *keys __free(kfree) = kmalloc_array(size, sizeof(*keys), GFP_KERNEL);
-+	if (!keys)
-+		return -ENOMEM;
-+
-+	error = device_property_read_u32_array(dev, propname, keys, size);
-+	if (error) {
-+		dev_err(dev, "failed to read %s property: %d\n", propname, error);
-+		return error;
-+	}
-+
-+	keymap_data.keymap = keys;
-+	keymap_data.keymap_size = size;
-+	error = matrix_keypad_build_keymap(&keymap_data, NULL,
-+					   max7360_keypad->rows, max7360_keypad->cols,
-+					   max7360_keypad->keycodes, max7360_keypad->input);
++		dev_err(dev, "Failed to set max7360 rotary encoder configuration\n");
 +
 +	return error;
 +}
 +
-+static int max7360_keypad_parse_fw(struct device *dev,
-+				   struct max7360_keypad *max7360_keypad,
-+				   bool *autorepeat)
++static int max7360_rotary_probe(struct platform_device *pdev)
 +{
-+	int error;
-+
-+	error = matrix_keypad_parse_properties(dev->parent, &max7360_keypad->rows,
-+					       &max7360_keypad->cols);
-+	if (error)
-+		return error;
-+
-+	if (!max7360_keypad->rows || !max7360_keypad->cols ||
-+	    max7360_keypad->rows > MAX7360_MAX_KEY_ROWS ||
-+	    max7360_keypad->cols > MAX7360_MAX_KEY_COLS) {
-+		dev_err(dev, "Invalid number of columns or rows (%ux%u)\n",
-+			max7360_keypad->cols, max7360_keypad->rows);
-+		return -EINVAL;
-+	}
-+
-+	*autorepeat = device_property_read_bool(dev->parent, "autorepeat");
-+
-+	max7360_keypad->debounce_ms = MAX7360_DEBOUNCE_MIN;
-+	error = device_property_read_u32(dev->parent, "keypad-debounce-delay-ms",
-+					 &max7360_keypad->debounce_ms);
-+	if (error == -EINVAL) {
-+		dev_info(dev, "Using default keypad-debounce-delay-ms: %u\n",
-+			 max7360_keypad->debounce_ms);
-+	} else if (error < 0) {
-+		dev_err(dev, "Failed to read keypad-debounce-delay-ms property\n");
-+		return error;
-+	}
-+
-+	if (!in_range(max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN,
-+		      MAX7360_DEBOUNCE_MAX - MAX7360_DEBOUNCE_MIN)) {
-+		dev_err(dev, "Invalid keypad-debounce-delay-ms: %u, should be between %u and %u.\n",
-+			max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN, MAX7360_DEBOUNCE_MAX);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int max7360_keypad_probe(struct platform_device *pdev)
-+{
-+	struct max7360_keypad *max7360_keypad;
++	struct max7360_rotary *max7360_rotary;
 +	struct device *dev = &pdev->dev;
 +	struct input_dev *input;
 +	struct regmap *regmap;
-+	bool autorepeat;
-+	int error;
 +	int irq;
++	int error;
 +
 +	regmap = dev_get_regmap(dev->parent, NULL);
 +	if (!regmap)
-+		return dev_err_probe(dev, -ENODEV, "Could not get parent regmap\n");
++		dev_err_probe(dev, -ENODEV, "Could not get parent regmap\n");
 +
-+	irq = fwnode_irq_get_byname(dev_fwnode(dev->parent), "intk");
++	irq = fwnode_irq_get_byname(dev_fwnode(dev->parent), "inti");
 +	if (irq < 0)
 +		return dev_err_probe(dev, irq, "Failed to get IRQ\n");
 +
-+	max7360_keypad = devm_kzalloc(dev, sizeof(*max7360_keypad), GFP_KERNEL);
-+	if (!max7360_keypad)
++	max7360_rotary = devm_kzalloc(dev, sizeof(*max7360_rotary), GFP_KERNEL);
++	if (!max7360_rotary)
 +		return -ENOMEM;
 +
-+	max7360_keypad->regmap = regmap;
++	max7360_rotary->regmap = regmap;
 +
-+	error = max7360_keypad_parse_fw(dev, max7360_keypad, &autorepeat);
++	device_property_read_u32(dev->parent, "linux,axis", &max7360_rotary->axis);
++	max7360_rotary->rollover = device_property_read_bool(dev->parent,
++							     "rotary-encoder,rollover");
++	max7360_rotary->relative_axis =
++		device_property_read_bool(dev->parent, "rotary-encoder,relative-axis");
++
++	error = device_property_read_u32(dev->parent, "rotary-encoder,steps",
++					 &max7360_rotary->steps);
 +	if (error)
-+		return error;
++		max7360_rotary->steps = MAX7360_ROTARY_DEFAULT_STEPS;
++
++	device_property_read_u32(dev->parent, "rotary-debounce-delay-ms",
++				 &max7360_rotary->debounce_ms);
++	if (max7360_rotary->debounce_ms > MAX7360_ROT_DEBOUNCE_MAX)
++		return dev_err_probe(dev, -EINVAL, "Invalid debounce timing: %u\n",
++				     max7360_rotary->debounce_ms);
 +
 +	input = devm_input_allocate_device(dev);
 +	if (!input)
 +		return -ENOMEM;
 +
-+	max7360_keypad->input = input;
++	max7360_rotary->input = input;
 +
 +	input->id.bustype = BUS_I2C;
 +	input->name = pdev->name;
-+	input->open = max7360_keypad_open;
-+	input->close = max7360_keypad_close;
 +
-+	error = max7360_keypad_build_keymap(max7360_keypad);
-+	if (error)
-+		return dev_err_probe(dev, error, "Failed to build keymap\n");
++	if (max7360_rotary->relative_axis)
++		input_set_capability(input, EV_REL, max7360_rotary->axis);
++	else
++		input_set_abs_params(input, max7360_rotary->axis, 0, max7360_rotary->steps, 0, 1);
 +
-+	input_set_capability(input, EV_MSC, MSC_SCAN);
-+	if (autorepeat)
-+		__set_bit(EV_REP, input->evbit);
-+
-+	input_set_drvdata(input, max7360_keypad);
-+
-+	error = devm_request_threaded_irq(dev, irq, NULL, max7360_keypad_irq,
-+					  IRQF_ONESHOT,
-+					  "max7360-keypad", max7360_keypad);
++	error = devm_request_threaded_irq(dev, irq, NULL, max7360_rotary_irq,
++					  IRQF_ONESHOT | IRQF_SHARED,
++					  "max7360-rotary", max7360_rotary);
 +	if (error)
 +		return dev_err_probe(dev, error, "Failed to register interrupt\n");
 +
@@ -414,9 +308,9 @@ index 000000000000..0cf6f9cd5f7f
 +	if (error)
 +		return dev_err_probe(dev, error, "Could not register input device\n");
 +
-+	error = max7360_keypad_hw_init(max7360_keypad);
++	error = max7360_rotary_hw_init(max7360_rotary);
 +	if (error)
-+		return dev_err_probe(dev, error, "Failed to initialize max7360 keypad\n");
++		return dev_err_probe(dev, error, "Failed to initialize max7360 rotary\n");
 +
 +	device_init_wakeup(dev, true);
 +	error = dev_pm_set_wake_irq(dev, irq);
@@ -426,21 +320,21 @@ index 000000000000..0cf6f9cd5f7f
 +	return 0;
 +}
 +
-+static void max7360_keypad_remove(struct platform_device *pdev)
++static void max7360_rotary_remove(struct platform_device *pdev)
 +{
 +	dev_pm_clear_wake_irq(&pdev->dev);
 +}
 +
-+static struct platform_driver max7360_keypad_driver = {
++static struct platform_driver max7360_rotary_driver = {
 +	.driver = {
-+		.name	= "max7360-keypad",
++		.name	= "max7360-rotary",
 +	},
-+	.probe		= max7360_keypad_probe,
-+	.remove		= max7360_keypad_remove,
++	.probe		= max7360_rotary_probe,
++	.remove		= max7360_rotary_remove,
 +};
-+module_platform_driver(max7360_keypad_driver);
++module_platform_driver(max7360_rotary_driver);
 +
-+MODULE_DESCRIPTION("MAX7360 Keypad driver");
++MODULE_DESCRIPTION("MAX7360 Rotary driver");
 +MODULE_AUTHOR("Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>");
 +MODULE_LICENSE("GPL");
 
