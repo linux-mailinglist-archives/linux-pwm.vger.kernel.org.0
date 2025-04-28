@@ -1,128 +1,161 @@
-Return-Path: <linux-pwm+bounces-5745-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5748-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E3DAA9F008
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Apr 2025 13:59:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6714FA9F146
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Apr 2025 14:47:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29A651649B1
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Apr 2025 11:59:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B55D716452C
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Apr 2025 12:47:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0540326981B;
-	Mon, 28 Apr 2025 11:57:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C5101C3314;
+	Mon, 28 Apr 2025 12:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RdQAQH0H"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="m5IuVScB"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE54267B1D;
-	Mon, 28 Apr 2025 11:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239CDF9D9
+	for <linux-pwm@vger.kernel.org>; Mon, 28 Apr 2025 12:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745841472; cv=none; b=HlKzcIsKwFgB7ZVpgfJBwZ23+8IJABmpDs91QpNAUmvWA+aCmlL0v2mCRhI4ER+6H7U94KYNyVrniNX8kZ3uP+4vnm+84NxzA7kU9sr1ZuiLqTtBRU5q6BzOiM2NdgvU4JSoD9a+LYFW4vamPLBUzv7vqZ3KW+qp2gHnJNQsdVU=
+	t=1745844426; cv=none; b=mOCtn+/CuYY+MsYT0kSDUZIFqoEsPgnHGcYLDJOsBXhmgUrN6yxYu2bAV+rIqzMRinD1n1TijpKXYUZsthyrqT8PZuD7jlHFOwwELJ4ZHFkqmRgFaXowlwbYSmQ0oDP+JjdvCPGYt2s/zpqutwDrnm7/uy1rkzOBNFftYXVORA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745841472; c=relaxed/simple;
-	bh=I2IGpxO4NgZXl0L9/MiKk9oiYXyeKXn3CCspfz4IRaE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EcpqYDAG03FNrrk788lao+/NEavjEG6UlEHGxAmuyfU9s97uEnM8ms85BSnH0pWNB01PoOOSlnbv/9nsr7rPiUBQJGWu3YlqUWOdKp4uf4MQ3iTNXah4Jiao4K5p7wl+g2WKtA1zSriWntQqAgiu2HVEEbIpFnGCoBobTxB8Ipg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RdQAQH0H; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B10CA43A1C;
-	Mon, 28 Apr 2025 11:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745841468;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sjYgqfQk6Hv0GvUwtR8/B8fufceEeOL7XN50xFEMFlY=;
-	b=RdQAQH0H9gmiKbVIR8b4mta0+7NFOBBJdAsLaCby5C1o0/KJaMGq2183yJx8NRhRZE0nuk
-	APWzR3+UOaUXE03tgUpcKxSrOvOOMWiEEQdInUCjEoJlM/JAj7VqJymaxcKboeAkoXkiuw
-	1mVl6+f0RWzlO2yuqUAkldN3JG5eh1bhbZHrZrB11xcHuiAXf8bwsy5kqEK4IqOP0QBpOe
-	DTXhzd+Wv/mPNp9Sp2y8pK829py6FLzAiA4Un3EsN2WM+TkBDDxvGCVWk7NejOG0QpsCbs
-	2pDrsgGxLB1IEvoAGM5ZKqiXHw2bA7qgircEcigAOsVDZ/RHTgam25nTw8BxaA==
-From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Mon, 28 Apr 2025 13:57:29 +0200
-Subject: [PATCH v7 11/11] MAINTAINERS: Add entry on MAX7360 driver
+	s=arc-20240116; t=1745844426; c=relaxed/simple;
+	bh=shKL21xOdXscttpIoQ70VuZ/18DPNvHC/sw5ErEbgtQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ptxOyvwfqVWpBBTlxHA65TAMZbwNvE+m4KSzoPlupJTV7byian0LGQ//EMyBO+woHM45rRSDhuGpOdjB96EnHodTYPQcJ2PWrXD8X39wkfO1ijRz31gW14ViZLg1by298zFpOXmnt2qV8E96/k0pV3rPJry0So61AUfjo8i9vyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=m5IuVScB; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso787912466b.1
+        for <linux-pwm@vger.kernel.org>; Mon, 28 Apr 2025 05:47:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1745844422; x=1746449222; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OoDbPOw1p4YqIw8f4N+AkxYNr205WVYeWbe3sl8vltk=;
+        b=m5IuVScBHK2urRNPaWJurSVvS4eRt0r04iIhJhY5p87r8BW8XT7Cfr2bhNuC9uz37j
+         jzxax/n7avQGJEBQG9zPq7BA4Ypmk4xjFkRDDJaGPORuT5ys6G52WMK5D4xkO5ygH9MO
+         aUlXPxhaUiafua7YU79+HR8wDgBdi+tQy2zR2RtgvQ+V2vMOFifttMlxTjHeOHOFaHaw
+         wqeHwA9bFnrpwfTrQz4ruYTNkeuLaZ6i41PUYWXB+F890Sk91SolUkQRjsptTmX5jyRA
+         r0vFnQ0PnSU5vqOB5syF7wml3b6sGQ9tXSi85mf/QQ/fWpQSMimrOZd2CDBU0SxLPH71
+         4FvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745844422; x=1746449222;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OoDbPOw1p4YqIw8f4N+AkxYNr205WVYeWbe3sl8vltk=;
+        b=wRLHayZ19hxMKqWdFTYuYxqSBzu55tCghmH3JlGNistI0LlSLTLAMorc5NGd5TBaOE
+         jk2W1GUk9Xg7/8lYPeLzmqdvtYo2wgjRLjo6XjgPDxwPMnwEKDGHzr4wm7Z0z/ELUwLk
+         gYwTX0j0tcMivd4qnI4QqDDmOaJVfci5HIdNCMvGpON9eyM/91shVmBiOBa08ixSXPcs
+         SI261+fRlaD5N5+/ugtIp0UjlYOs2djnus8L2POASO2U4mWXIabQdVNK8Lh1AMrHe8zb
+         tH2hh5+airwJBnyusMuNsqdsQTyGd8cF3lfjRTK1PI+uc7NQdxsk748oTOU70hmCTwFL
+         bhYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKaAB6MUhkBA138oZGnFHrny+bEYBTAQGcYBcKsFURzZx+WFbNmwYDT43+zrDZd0rcgV4Mxr+fdlE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzse/b6YlavVLgqwdWM2fBar1RwkM60O1XnpPZbAkI7ee/oXDhe
+	zq49C7StyAzwBPTnR/A8VwBpQ3fSH+LunBG0LhM18bklgNDb6r8Vj7V+2KxZ5CYNYe/Wl04QBw0
+	UkrhKhkdfaoqbapQIuHQH3VggHotACszyTyDUOQ==
+X-Gm-Gg: ASbGnctFvVrV6ySkw7A0Gf/C3+k7XL3Sz3K8vOl8V0MQIKNuLmemBnvmRt4egJEkkkO
+	jz/Rs/IlWFmhmDVry5ChKzZ2za6a1z77jzliHKHlJqn8sJfFJa1Gdg3ISzbq23xBmwAQo4QACgC
+	Zgv56vmhff4YN2JnnBXTZcG4gOP8bt6lE9HA==
+X-Google-Smtp-Source: AGHT+IGk5TDZtIZeyBrVJJpzccoOP1uFny6dcETQUFtcD2er4S/mHnZ1uSMgcYFWUm241dVvRYAz/RFBf7vixx+9hnA=
+X-Received: by 2002:a17:907:1b0b:b0:ac7:4d45:f13e with SMTP id
+ a640c23a62f3a-ace710a0eacmr1048006166b.13.1745844422192; Mon, 28 Apr 2025
+ 05:47:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250428-mdb-max7360-support-v7-11-4e0608d0a7ff@bootlin.com>
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
-In-Reply-To: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Kamel Bouhara <kamel.bouhara@bootlin.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745841456; l=1082;
- i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=I2IGpxO4NgZXl0L9/MiKk9oiYXyeKXn3CCspfz4IRaE=;
- b=yllQ9Rpln2gM7JVCLhlqoA6n3/eX7A0a2MKjXnPySIpV3LtOFOKUhcwYums55rbwCgRFtI91q
- 9l4UtnzF1JPDQS2XVR3kyyHY7M/62H9dka3S9yeCDohWLgq7sqYEYIc
-X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
- pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddviedtkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedthfegtedvvdehjeeiheehheeuteejleektdefheehgfefgeelhfetgedttdfhteenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgepfeenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrk
- hgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepughmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrgh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+References: <20250420070251.378950-1-guodong@riscstar.com> <20250420070251.378950-4-guodong@riscstar.com>
+ <kftfye2zn2ogyvuv7diuyrv5qkp43csbpkcqfcms2xp5lsuubm@z2kocdzkb7qk>
+In-Reply-To: <kftfye2zn2ogyvuv7diuyrv5qkp43csbpkcqfcms2xp5lsuubm@z2kocdzkb7qk>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Mon, 28 Apr 2025 20:46:50 +0800
+X-Gm-Features: ATxdqUH6-_RHeS-1gOEkcXcvrWC9i9ud1F8bZVmjThNvU434y3rwyRGiOnAAjoM
+Message-ID: <CAH1PCMZC5xrX07rd5bo+06zJoJDiAH3UNHqH5catwEALNJL2dQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] riscv: dts: spacemit: add PWM support for K1 SoC
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, dlan@gentoo.org, p.zabel@pengutronix.de, drew@pdp7.com, 
+	inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org, 
+	tglx@linutronix.de, hal.feng@starfivetech.com, unicorn_wang@outlook.com, 
+	duje.mihanovic@skole.hr, elder@riscstar.com, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add myself as maintainer of Maxim MAX7360 driver and device-tree bindings.
+On Thu, Apr 24, 2025 at 4:18=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@ker=
+nel.org> wrote:
+>
+> Hello,
+>
+> On Sun, Apr 20, 2025 at 03:02:48PM +0800, Guodong Xu wrote:
+> > diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts=
+/spacemit/k1.dtsi
+> > index c0cc4b99c935..e7dba623e877 100644
+> > --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
+> > +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> > @@ -556,5 +556,185 @@ sec_uart1: serial@f0612000 {
+> >                       reg-io-width =3D <4>;
+> >                       status =3D "reserved"; /* for TEE usage */
+> >               };
+> > +
+> > +             pwm0: pwm@d401a000 {
+> > +                     compatible =3D "spacemit,k1-pwm", "marvell,pxa910=
+-pwm";
+> > +                     reg =3D <0x0 0xd401a000 0x0 0x10>;
+> > +                     #pwm-cells =3D <1>;
+>
+> I want to make all pwms use #pwm-cells =3D <3> in the long run. Can you
 
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
----
- MAINTAINERS | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Sure. I can do this.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3cbf9ac0d83f..e08d531494e4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14576,6 +14576,19 @@ L:	linux-iio@vger.kernel.org
- S:	Maintained
- F:	drivers/iio/temperature/max30208.c
- 
-+MAXIM MAX7360 KEYPAD LED MFD DRIVER
-+M:	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml
-+F:	Documentation/devicetree/bindings/mfd/maxim,max7360.yaml
-+F:	drivers/gpio/gpio-max7360.c
-+F:	drivers/input/keyboard/max7360-keypad.c
-+F:	drivers/input/misc/max7360-rotary.c
-+F:	drivers/mfd/max7360.c
-+F:	drivers/pinctrl/pinctrl-max7360.c
-+F:	drivers/pwm/pwm-max7360.c
-+F:	include/linux/mfd/max7360.h
-+
- MAXIM MAX77650 PMIC MFD DRIVER
- M:	Bartosz Golaszewski <brgl@bgdev.pl>
- L:	linux-kernel@vger.kernel.org
+> please use that for the new binding? (Of course this needs adaption in
+> the binding doc, the code should already be prepared for that.)
+>
 
--- 
-2.39.5
+I got what you mean. The code change for that is already integrated into
+v6.15-rc1.
+Commit 895fe4537cc8 ("pwm: Add upgrade path to #pwm-cells =3D <3> for users=
+ of
+of_pwm_single_xlate()")
 
+Now, if I change this #pwm-cells from <1> to <3>, without the dt-binding do=
+c
+changes, I would expect to see warnings (" #pwm-cells: 1 was expected") dur=
+ing
+  make dtbs_check W=3D3
+
+Any suggestions when the dt-binding changes will be merged?
+or I can add your patch as a dependency.
+https://lore.kernel.org/all/cb799d8a5bb284cd861785a691b8d5e329300d99.173884=
+2938.git.u.kleine-koenig@baylibre.com/
+
+> > +                     clocks =3D <&syscon_apbc CLK_PWM0>;
+> > +                     resets =3D <&syscon_apbc RESET_PWM0>;
+> > +                     status =3D "disabled";
+> > +             };
+>
+> The error that the build bot reports happens (I think) because CLK_PWM0
+> isn't known.
+>
+
+Yes, thanks for checking. This patchset depends on the clk and reset.
+I will add them as prerequisite.
+
+-Guodong
+
+
+> Best regards
+> Uwe
 
