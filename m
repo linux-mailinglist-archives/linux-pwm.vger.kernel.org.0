@@ -1,77 +1,78 @@
-Return-Path: <linux-pwm+bounces-5767-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5768-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94A7CAA0DC3
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Apr 2025 15:48:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B3053AA0DCA
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Apr 2025 15:49:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F13121A880F2
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Apr 2025 13:48:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B5A81B601D4
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Apr 2025 13:49:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D3622D323C;
-	Tue, 29 Apr 2025 13:47:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AEBF2C2593;
+	Tue, 29 Apr 2025 13:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPjjcb5n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PT1solDx"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA1F2D29AD;
-	Tue, 29 Apr 2025 13:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AF1258CE9;
+	Tue, 29 Apr 2025 13:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745934458; cv=none; b=O+OBKLy0C8SPK1rK5Rbwjrorb4Xb4wbFF4BgIwdNmvlNxFraA2bqLAbXP8/Q7djlLe4Ce4MRc1Fnj7K9FM8OXnVQvPwejObSbMT8QG3vhuqY/b2/nTn49oFa2N6aIgXkCfhDSUTgCLbA01UYw6mxb/JnTZHLkyPW7n3lWexwJUk=
+	t=1745934531; cv=none; b=fQslkrp4KSTTGm1JXtzqCO+Ra00k1xJCjvb3JGOx3uTNc5IXvM163QvksefGVIu2LnqLRA1QXMpk7qdEx5ewKmBYXsnwk0WCRq5eOqBWdTrauEcF6wjAT1IOKdzXVPc34LwRchjzCKPL9NglOYO927qXYilNbdt75pKhtZX+MWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745934458; c=relaxed/simple;
-	bh=DjzHEUhss7O4w8xX58jtGF/4zzUbQ8mr8m5sP2MwNWY=;
+	s=arc-20240116; t=1745934531; c=relaxed/simple;
+	bh=RL4pBm1cegtTnNFmla69qaRvYU/AIYfVr2iGuyY0c5c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r4heCHbr9bTYtDNITw1i3QH42Whn2IYd/loBHy0BdI6dgbXqAEUUQIqJ+rIsEjuLqXcID0CB3qNMyYTQFJOQPi8d5IX5hkyTTmlD2SFFtQR6dkFfpaNi9I+4Xv46I6t28rgImK7h5/oIQmyybZ1TYPWJrZwOY0cUrOi04Q2WzuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MPjjcb5n; arc=none smtp.client-ip=209.85.218.51
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vw4/67Lq12hwpRY4taK2BekhYHNxboqKK+6xEHBugR/B3qS1QVunf4dDXCn4A2KXe92N5RxL7ePQ4nzfyh8zcWUS9WEEZNoJJ0JIj+i3IBJH75gaR2Bfwq4GqP00WNVBr2LQe/JIrjursOWZ5O+fChD8oZfh5j/FoKRqXnheTiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PT1solDx; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acbb85ce788so1174968566b.3;
-        Tue, 29 Apr 2025 06:47:36 -0700 (PDT)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso1019482766b.3;
+        Tue, 29 Apr 2025 06:48:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745934454; x=1746539254; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HaTZWkSikhbMzTJTGFDBFHGc5K2hyAh3EtvsyFFLBQY=;
-        b=MPjjcb5nz/phaZpZxbBaYDBfvBnNJ63keoI+FimAf47y9livMwmlHDz2YP68piLTSh
-         onlvH7lhv4ivqxs/aXz4HtkFqxRwGjtVb9MAICzvzyYM/XjR3Ufact/8devWmeAqnlxE
-         xwnjp4zsnBr19aZ2jwS0iJrqqQhss2j0TQU91Yu86h/4cSmp3WSc3AWa/5/yJMHyVBTB
-         FPhfYj0eRzX44mkVBiLQEyBVvqfHsQ/pa/Xb3Kx6qd7dT4F0jmOyaQ4hK6zlYZ9o5KWU
-         FnIzx6/AnLNCU+doW3cG1kpto0HAyIBYF0PqeVNpkCiePlpAFMrWp4/igpm86nPTAALl
-         uN+A==
+        d=gmail.com; s=20230601; t=1745934527; x=1746539327; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=f5d+tJOcKTV65cbkHDncvGvsDNRLN8qU/T6XEqI3xig=;
+        b=PT1solDxWuxWEhUuejblU+2igH/d+LdtSUeZ8cbfXX4xspiKkAfwf8K8jtu14TRb0w
+         9GKH4YO1ApsXRTnJ0up5mRtccSzrAvCcUF5WW31JjB2Etx1ty6ajCTfWeDi0cWnKzydF
+         0TDyL8HpmjZ+Z7l1clLthqXDwspkfLy3zI3HqSY3ag7cTrAUe0GsOt6XPQktVYdB3Z/4
+         +fda+BTXjDFasCSkghU5UHc94G/9rAE1vPycEJzelUAXivF8FB4MU9c3gBgcOmZNSW3E
+         cEwDqO0HosUvdWSAdaaBuJ/Xb1jFkfpO3FV3KU3DWpdzLuRjRNzrksu2splj58vP2pDe
+         JTRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745934454; x=1746539254;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HaTZWkSikhbMzTJTGFDBFHGc5K2hyAh3EtvsyFFLBQY=;
-        b=PHKhrLXxIMS+HfPhkK4ugFKK3RaoRw7J+L29SuKCxpHwqFwEywmc5fwSLV+3RCbqah
-         zcKSf3HI5qdDuLECSD6ZBprLXGRx6LLUrGLXlz3U1PEwuAn1eYoTU9jLHjMmkSaZrDgC
-         2JoI/c4E5FpQectoUeDxV5VoYZOVXCuI6ZraH1YNW6+lzC9OhPp1kBAROlO7A3KAdm7N
-         oRRmcDzaGqb4DFJUr7/Jd/jLE31HFSRh/UXHvIzYcQpixEMj2Hys6JRr5yije/TQT9Br
-         lRochJ5R6BApISrPlPge8uU9RwAm/ITej/4sIKELfZwysn1UQvY/rzzC8EtHrRSSMhxe
-         LEGA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfG8aU32bE0PJP0O8ldxvDcgwidFddJqLjww1vxaJs10NVcOu7il9TK3kewI3V0ZF+r2/xLEjdCVld@vger.kernel.org, AJvYcCWWzujkhMk4rINXfcSlik4vdH4yU9fkBxTTF/jM7oLU78y4RRvlU1gBnUekxFzp9UrYprkSQ8l/fdh/Awnl@vger.kernel.org, AJvYcCX/+ATSgcX+4GnmWSVTruK9qS5xWcHVTot+aTk0u2jewm6emB+swZAcPbf5reYq9cjzlvkT5p1FMbbk@vger.kernel.org, AJvYcCX1aDwKHKsNdPOoKgALN3ilRezUwPzMKE28D4ZEKALWQN+ugknbBmGoBiuxDLnSoCnUe7E9JTDtqV9A@vger.kernel.org, AJvYcCXbBt0NAzV/e7COOeu8nqxcZsaFS2DwCNZhkGg0F9g6SdJrijgoe1Rv+KvwepHGb3FRCXPuMLIB8BFa@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrB9TH+LojeMRe8LrYHyyxHO17p4R2h41eQSQ81KmgkN4DCj5e
-	JPGGOeerkHu/QT2bN3qYFNegocW9Q9Hotzl+36pLzzH3VwH7HZ5D
-X-Gm-Gg: ASbGncsBbYLYNR/iAXxyMGLWDy+zYDC758st3UFfFdZe/ETA0uBEMCOsqLegugVMlxp
-	mDfHK934iB3axU6lxlw4ovXhaXL/S1LEfhA7X0tQlnjuxQTxD+kttAE08Oxj6lhDH9YajGcGEOW
-	dibJllRwqpT66BtXsgujlG4BFIxlZaDbR7V+pb0cRPWSHA0qy0bs7H5b1H+DlDukBLC8FiiVwN0
-	UwJq0ANG4B1m+gATEwJSCk77pZAS3N+6SxUGTwFRdThmXC6L+XAjy+waQ6iEdcwbmsay4AdZNv/
-	Kl/JnDEOsBaRc3tnGodsnrG3CoXtzMqo6CxbDNylH2N89pTxCJenA5yN8zpMRPPYUnY=
-X-Google-Smtp-Source: AGHT+IHewjMQ0MZiNJB4DgK8tvKn2XGZDPn4MYHgyVOxmK6G/0S4ZlgFqHAA9mb76xCeTR/leX0CMw==
-X-Received: by 2002:a17:907:6089:b0:ac3:8516:9cf2 with SMTP id a640c23a62f3a-acec87bb143mr338540466b.55.1745934454357;
-        Tue, 29 Apr 2025 06:47:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745934527; x=1746539327;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f5d+tJOcKTV65cbkHDncvGvsDNRLN8qU/T6XEqI3xig=;
+        b=s0GroTiH6efS5FBWPJ8QvJNbURd9lxfZP1NAZC2pA9JxdrX0+vyxU0Zu4n2LzdzYCI
+         CtyrqsOe2t0WZkZrENMdyYpJYBh9HgC8Cknjq8fLN9BHI1FZE4lOIzZi+T9/JpdLqOH9
+         gSkY8on3CzLNlNB+osQQuKE2I9/2+yu0hzOSf0KMcluJd8J/MiZoo1j8IylmtL1CL7nP
+         JfJX+7Tja0JdbIFhAP7D9V9eNGRp5k2rlhTtwLWSJr17xiDNVowLVYYyq3B0YL3HQjvd
+         fO+5pn4EVOfc63zCf7NzlQrbGfxDJ76YxJMfwgg2mQR9cPVaBwXqqe61igsh8W1M/gl8
+         KRmw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/WE2JgaN1ZiluM6C6RRvMU7JGVMLLeHUyaIl0S6M4CFpUX5E0ajjaqdBOJ98o4SIeepYr+aHGM9Uv@vger.kernel.org, AJvYcCU3m6CK26A+CuCt/2z2c8MrNqcYlGhJcmVxbFsnNg10yKcf9HhPOmmCvD0UBOivazl1yRJyvHroTX3J@vger.kernel.org, AJvYcCWUKaC3WECweSfPinq1geADuxxofs+PDBuMi/9aapVSsnrTDj7Kv1v0U8HcWVbzUq7XQQwOLRt97nj48Dy3@vger.kernel.org, AJvYcCX45NxJovP40swSXYsOgB3oUh1Xrb5mOAjO0l3MI2pmoVlyQDpQEzJfkBG0TKlgpArNwlquLANp6SG4@vger.kernel.org, AJvYcCXwRlX4pGDVw2/vCqyUovqUHzxscJATO3k6op04NZKLQIrJEgM61XoS0SKQKLE8qKYU41UBCxCT+9uz@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuO1z0OtXAE+KmuT+PTPBSNI4+MkEPnJ+DZnLCPOOiiY2oDLp7
+	r7+T6Dv/VUqzr5yK7daEk+gKIYRmzTBR4IyNlXr5L3eyJ/ugYEUY
+X-Gm-Gg: ASbGncucuHOutrHFeEDHNwVZS9RSvmoSu+LGxleX9eb0QaDxAW0pKMZMG7BLB/8CpDI
+	JlYgG00DX8uzW2mzFiGO2Rjqs0ErUXajK+zIAruLciSRsOYw7dTGo9mb5C9EZJl67/sTv5WHHjl
+	q74ZfPZmNiOainc0yUTitZ7AzzjMkwNp9JBtvoy/Qbw/JF8rsDKb9XWd/LpXi8ZlpEIxOCeP0FK
+	2ZLe6U9R9Scd/QEJ/I4D+gtjQLk6jggIF6LKtpkHzo2GhCBTVVZiuSovoEMLc2a9FL7eIjs0Ck6
+	oTGVwqK11bgzC+r4NQ46y9GUAvvXK6yLJN94l4/RdJxcRqNfpje793HFJHWzyVEHZtM=
+X-Google-Smtp-Source: AGHT+IGWrvcV5MoXl3qJayEPUV4KEP+Ys/J4TRcHQJCcgqCYxPh6x1+zE67NPgsrTLAIwVVWO2T3gg==
+X-Received: by 2002:a17:907:da6:b0:acb:5ae1:f6c5 with SMTP id a640c23a62f3a-acec692d1f3mr290424066b.3.1745934527135;
+        Tue, 29 Apr 2025 06:48:47 -0700 (PDT)
 Received: from HYB-DlYm71t3hSl.ad.analog.com ([2a02:3033:26c:ba50:9d5c:4d3e:be76:7564])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acecfa384b5sm77159066b.0.2025.04.29.06.47.32
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41bbdesm800591366b.11.2025.04.29.06.48.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 06:47:34 -0700 (PDT)
-Date: Tue, 29 Apr 2025 15:47:31 +0200
+        Tue, 29 Apr 2025 06:48:46 -0700 (PDT)
+Date: Tue, 29 Apr 2025 15:48:43 +0200
 From: Jorge Marques <gastmaier@gmail.com>
 To: David Lechner <dlechner@baylibre.com>
 Cc: Jorge Marques <jorge.marques@analog.com>, 
@@ -82,91 +83,160 @@ Cc: Jorge Marques <jorge.marques@analog.com>,
 	Andy Shevchenko <andy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
 	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] Documentation: ABI: add oversampling frequency in
- sysfs-bus-iio
-Message-ID: <3w7y2e4yfkf6ujr2mpsxcammdrb77rdybxi3ikpfoguvwsnipn@j2v45uldkw5t>
+Subject: Re: [PATCH v2 3/5] dt-bindings: iio: adc: Add adi,ad4052
+Message-ID: <hvexchm2ozsto5s2o6n5j2z3odrkbcamgmg67umd4aehwzmgie@dvtx6anioasq>
 References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
- <20250422-iio-driver-ad4052-v2-1-638af47e9eb3@analog.com>
- <143ffe9b-b32e-41ea-b5c7-855c680b48d4@baylibre.com>
+ <20250422-iio-driver-ad4052-v2-3-638af47e9eb3@analog.com>
+ <88a326e7-3910-4e02-b4ba-7afe06402871@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <143ffe9b-b32e-41ea-b5c7-855c680b48d4@baylibre.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <88a326e7-3910-4e02-b4ba-7afe06402871@baylibre.com>
 
-Hi David,
+Hi David, 
 
-On Fri, Apr 25, 2025 at 04:16:20PM -0500, David Lechner wrote:
+I didn't went through your's and Jonathan's ad4052.c review yet,
+but for the trigger-source-cells I need to dig deeper and make
+considerable changes to the driver, as well as hardware tests.
+My idea was to have a less customizable driver, but I get that it is
+more interesting to make it user-definable.
+
+On Fri, Apr 25, 2025 at 05:50:58PM -0500, David Lechner wrote:
 > On 4/22/25 6:34 AM, Jorge Marques wrote:
+> > Add dt-bindings for AD4052 family, devices AD4050/AD4052/AD4056/AD4058,
+> > low-power with monitor capabilities SAR ADCs.
+> > Each variant of the family differs in speed and resolution, resulting
+> > in different scan types and spi word sizes, that are matched by the
+> > compatible with the chip_info.
+> > The device contains one input (cnv) and two outputs (gp0, gp1).
 > 
-> ...
-> 
-> > Devices with this feature are max1363, ad7606, ad799x, and ad4052.
-> > The max1363 driver included the events/sampling_frequency in
-> > commit 168c9d95a940 ("iio:adc:max1363 move from staging.")
-> > and ad799x in
-> > commit ba1d79613df3 ("staging:iio:ad799x: Use event spec for threshold
-> > hysteresis")
-> > but went undocumented so far.
-> 
-> It looks like this part was copied from a different commit and isn't related
-> to this one.
-> 
+> Don't need line breaks after every period.
 
-You are right, this is from the other already applied patch, I will remove.
+Ack.
 
+> 
 > > 
 > > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
 > > ---
-> >  Documentation/ABI/testing/sysfs-bus-iio | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> > index 33c09c4ac60a4feec82308461643134f5ba84b66..129061befb21b82a51142a01a94d96fcf1b60072 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-iio
-> > +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> > @@ -139,6 +139,23 @@ Contact:	linux-iio@vger.kernel.org
-> >  Description:
-> >  		Hardware dependent values supported by the oversampling filter.
-> >  
-> > +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency
-> > +KernelVersion:	6.15
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Some devices have internal clocks for oversampling.
-> > +		Sets the resulting frequency in Hz to trigger a conversion used by
-> > +		the oversampling filter.
-> > +		If the device has a fixed internal clock or is computed based on
-> > +		the sampling frequency parameter, the parameter is read only.
 > 
-> Don't need a newline after every period.
+> ...
+> 
+> > +  interrupts:
+> > +    items:
+> > +      - description: Signal coming from the GP0 pin (threshold).
+> > +      - description: Signal coming from the GP1 pin (data ready).
+> > +
+> > +  interrupt-names:
+> > +    items:
+> > +      - const: gp0
+> > +      - const: gp1
+> > +
+> > +  gpio-controller: true
+> > +
+> > +  "#gpio-cells":
+> > +    const: 2
+> > +    description: |
+> > +      The first cell is the GPn number: 0 to 1.
+> > +      The second cell takes standard GPIO flags.
+> > +
+> > +  cnv-gpios:
+> > +    description: The Convert Input (CNV). If omitted, CNV is tied to SPI CS.
+> > +    maxItems: 1
+> > +
+> 
+> Assuming the diagram at [1] is correct, for SPI offload use, we are missing:
+> 
+>   #trigger-source-cells:
+>     const: 2
+>     description: |
+>       Output pins used as trigger source.
+> 
+>       Cell 0 defines which pin:
+>       * 0 = GP0
+>       * 1 = GP1
+> 
+>       Cell 1 defines the event:
+>       * 0 = Data ready
+>       * 1 = Min threshold
+>       * 2 = Max threshold
+>       * 3 = Either threshold
+>       * 4 = Device ready
+>       * 5 = Device enable
+>       * 6 = Chop control
+> 
+> Bonus points for adding a header with macros for the arbitrary event values.
+
+In the sense of describing the device and not what the driver does, I
+believe the proper mapping would be:
+
+  Cell 1 defines the event:
+  * 0 = Disabled
+  * 1 = Data ready
+  * 2 = Min threshold
+  * 3 = Max threshold
+  * 4 = Either threshold
+  * 5 = CHOP control
+  * 6 = Device enable
+  * 7 = Device ready (only GP1)
+
+I will investigate further this.
+
+> 
+> And we are missing:
+> 
+>   pwms:
+>     maxItems: 1
+>     description: PWM connected to the CNV pin.
+> 
+> [1]: https://analogdevicesinc.github.io/hdl/projects/ad4052_ardz/index.html
+> 
+> > +  spi-max-frequency:
+> > +    maximum: 62500000
+> 
+> Datasheet Table 5. SPI Timing—ADC Modes, VIO ≥ 3.0 V says period can be 12 ns.
+> 
+> So that would make max frequency 83333333.
 
 Ack.
 
 > 
+> ...
+> 
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
 > > +
-> > +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency_available
-> > +KernelVersion:	6.15
-> > +Contact:	linux-iio@vger.kernel.org
-> > +Description:
-> > +		Hardware dependent values supported by the oversampling
-> > +		frequency.
-> 
-> 		oversampling_frequency attribute.
-> 
-
-Ack.
-
+> > +    spi {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
 > > +
-> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_raw
-> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_raw
-> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_raw
-> > 
+> > +        adc@0 {
+> > +            compatible = "adi,ad4052";
+> > +            reg = <0>;
+> > +            vdd-supply = <&adc_vdd>;
+> > +            vio-supply = <&adc_vio>;
+> > +            spi-max-frequency = <25000000>;
+> > +
+> > +            interrupt-parent = <&gpio>;
+> > +            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
+> > +                         <0 1 IRQ_TYPE_EDGE_FALLING>;
+> > +            interrupt-names = "gp0", "gp1";
+> > +            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+> > +        };
+> > +    };
 > 
+> Could be nice to have a 2nd example showing SPI offload usage.
+> .
+
+Will add.
+
 
 Regards,
 Jorge
