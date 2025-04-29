@@ -1,78 +1,78 @@
-Return-Path: <linux-pwm+bounces-5752-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5753-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAD8FAA0633
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Apr 2025 10:51:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 763C8AA0640
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Apr 2025 10:52:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F2A4A3B2D15
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Apr 2025 08:51:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0BEC841621
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Apr 2025 08:51:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A67DC2820DD;
-	Tue, 29 Apr 2025 08:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D77C229C33B;
+	Tue, 29 Apr 2025 08:51:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="GpPfLIzu"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="FVgfckb3"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15DC3A8C1
-	for <linux-pwm@vger.kernel.org>; Tue, 29 Apr 2025 08:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA9E28A1F3
+	for <linux-pwm@vger.kernel.org>; Tue, 29 Apr 2025 08:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745916684; cv=none; b=WvOlVIzficI6CZCeiZIfMhfur34JrYZ1ozSce6RHOby90lUTnHTFhrrGPVx9lt7G5AUjPBnXy/GAukpmMclkM5Np7qeFiucSxCapDard/TJSFhNjgxn2T5YoQ3Bs8kUMYikVVrXM/qgAL8RSAuOSBfFXhbJVLD44usPHYiNcO7g=
+	t=1745916698; cv=none; b=RSaveOAWU0tEbOiHjesoFt8uiQNItuJOiluRnysll40PTNDST6JN0OK6ceK5rqmf05OBW327L60Bs8jAXf05VZ+bcidl1G1unMKYMQN55/p4t0Y29LnB/R9g7H3cRemJbIJXZ8GvnyyvR27FQy+Hy1LpzBQ/iC1V6VG4AjcyNAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745916684; c=relaxed/simple;
-	bh=nxp0t+VHyDDz8Zh9ljfkEOJVql6306/CDvJb8L/acNo=;
+	s=arc-20240116; t=1745916698; c=relaxed/simple;
+	bh=ZLqnNRXBAVw2yotWdLMWiDrIuKC3zLz8bFoRIWISSAE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XqQfu5S4MPVnaTuiJh7svdu+MX+XELPydFsS9QyJlm/mWbpoSogixupHt6Uz5jCUsl0H2znI6ZgU8EFp+Qp1C34zQYjczvCRVJr0EzzM9m6kSMKpN2o1ssTDimyLa5AOtE0ZDrwEtj+9TDyte66tx6KSkyNQWLmxG4p0jX7cjqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=GpPfLIzu; arc=none smtp.client-ip=209.85.215.177
+	 MIME-Version; b=R4ZzY1Shx3n7wBjXsuHHofpxinGRs27ZurASOSSF1Vqg/fHFJUNasgzzk93QkRgLUGETGaFFMdJ+qZapgjMFyVGb1zV+/GBpHqptjcvh5Mk+fthWw/rxO+aOpR/KQsttz7Dlhpgh44CHVr8E5WTh/acqqeox/ZcxOw6Fp9cDA7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=FVgfckb3; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-af589091049so4241435a12.1
-        for <linux-pwm@vger.kernel.org>; Tue, 29 Apr 2025 01:51:22 -0700 (PDT)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22c33e4fdb8so60657725ad.2
+        for <linux-pwm@vger.kernel.org>; Tue, 29 Apr 2025 01:51:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1745916682; x=1746521482; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1745916695; x=1746521495; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PHJACfgxHpPYnkt6IQy+Z0WabgJ033p5WN25OiCcmgQ=;
-        b=GpPfLIzuHNN2jUoUTtIsXSgwNSD4T+ctLgfop5vqp7Ia9KqghxxZpnIvkPf12+9v9+
-         6vV0/0cQ6A0aR1v95Yf2wjOiyF8x9tF6a6rf21kDZgDoNi6KnXs1V8POCUnXLSjpTCYD
-         4dsMVWNMNCqIjwfGyZazO5cxfAEjvKjg9nSPt+8gNG12TuIZKjdus31pxKaxWUoviYg5
-         bmGGdcqft1GAs+JT/MsDAj/4wjWQHLtwupqt3iXt3RCLSsOoNRmn6TYEG1DJnnVoDX9J
-         0uVEycD2+OaMLe2Ywpj5weH5cW7/TlyWlhAom8t6el4K+1QzXTSVikWZ6pOXk8FE/DDe
-         opJQ==
+        bh=Jf1MyA5jv2WhmjchTZbgQeXneBCKmWDUyNLFyQlB0MY=;
+        b=FVgfckb3G4qRocEXzpi9VY9rR44o4E6MDwkZS0FuKU68mKed9zDU5TCGT88EHyacpM
+         mMz1EjDMimL6S2+/YBfllzipMX/YYp/wIcReav4D5kdFlE33D3x6hJzsyG+8r6rlzGKE
+         YyrPmR1JTLR5P4pogZ5FAgsMZiAe/X1NjKgIdB2UYX3fpJvZWq5lb/thQKfHLVeZ35zB
+         RM7ZMlOsjX/DQjgaFiwzuBCBObICU9IOLnr03SY+JRPNEGmWlCDzWTo1xZmnVwiDqirG
+         YpmADvZyq7v7x3F351NzMJbd51cS+l6o7mn6bQUJ1cL6DpnHXB8FKVCIW5QvqwkoaEnq
+         8AUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745916682; x=1746521482;
+        d=1e100.net; s=20230601; t=1745916695; x=1746521495;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PHJACfgxHpPYnkt6IQy+Z0WabgJ033p5WN25OiCcmgQ=;
-        b=JplJoWBo4KYTy55x0a4y3101m6ZjFmRCxy4Nbtpa6vXjHp3MfTK+ybHdmYslCfC2H7
-         IuNpINVXsVm4sINjORVBtR68owkkK6Waph/d1xytzC3MaplC559JE0zkqPsXyFpB+iO3
-         /24ZLcQdvta4phwdJcnvp3qtnExa8LLf0fI7KruB7OYP5dnbF2CyS6EXJovAc6ZHlTyD
-         kn3DI4ttd7fzHWrUlIlC/Q2kAaEQV4S9noPKRNF7wg0nCOPEyav3NHfs6Ec9GdfYVKLz
-         D01bDTWDRCSRA+w/425Vv05Xgaoxn8vj+zwt5urIvIgW29vPOIL0HWYUwKenb5bGmA4u
-         +NBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpuPrsRjbtY/OkI1x7esRDrM+xIT/1kvPSeI46AhNoAYPeU2zmbCZ1kjtn6tMOpqJWNfr4f+eWiGQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOk6IcMapKC3BbhfzH113H3SFtki7v10VlhxJmA6wPne5HQx7d
-	8Gwm1XwDgYTK4EBfC6976Hb+PN19gV3vcfzo1X4F68pI2ePjbxAkqRj59r8nJbM=
-X-Gm-Gg: ASbGnct+5Db0x8Sdsjfewii/HBW4Soh2N1Vjcj27Q6mCYC7fF3M98/HC02Q6Z+2nftK
-	UgMJKT865j7AChuMOVa+hGDiVt/RtQv6TGKXvXT7uQskHpNEUBEoMtuDzE9R/6NMEEk1G//Zi0p
-	2qYAwAR+rM/p21IY6yCyfAR1L0Q9FUKT8KoUrhtehxLOjJt7zkEJFpMnSucGMs7rMI96D3hzVX+
-	D3L/VJ2cMhoHbllEuMVWOT8Vi2edoOJ+1yQR8VWpjL39psfwM1vD0jk0h6kZXtrCmZp26iJWDJh
-	1BTND6EaO/nDcA7jvX9d0+O48qXeT/HrZ/Lcv2FW52eu683TGgHZ+8VyzpXWhuXDNAU+XCisGSC
-	y5mvH4vvsh39QxCk=
-X-Google-Smtp-Source: AGHT+IFZEuQ6sdfjCY7tfFhs7M5WchmJ8YCpC4/JeiDTSPbAo3pUkubrMOUkP8IaSDenvQAkORYC5A==
-X-Received: by 2002:a05:6a20:12cc:b0:1f5:9961:c44 with SMTP id adf61e73a8af0-20955d042b0mr2744549637.3.1745916682223;
-        Tue, 29 Apr 2025 01:51:22 -0700 (PDT)
+        bh=Jf1MyA5jv2WhmjchTZbgQeXneBCKmWDUyNLFyQlB0MY=;
+        b=Ix5gZbZp+bprRciJJb5drOmbww8iXX1DDhkCuMq47ywJdDeXG+tBbm6tep78XhDKeg
+         rs33M5F0ZhQ1Di33mJrQ6NfUDwdsq2HOu74UwYR1vDEvv7z3TEF6quykqkhOXnLqQt6A
+         osVLv9CilgP0YoxH72k6Ai04+CRTr7s2L+QKRLsmCYTNTlQN47lfOL//CTD+xucMxZTb
+         e9ulizHYQUH36iYYi9PXEbef7KJyDytBBo2SoD/kx8CvAgYjFGULkQdujD9T5BZZi0ZW
+         IHeEP83h6VHaXmVBuSfStuX4GG8yDBe/7KGT/2OxuNckWCVNluMPhIplRRSLhjboaZbs
+         V5fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0exI6yPoRYZu13JYptTPl2OTPWYpAsFnNSNziWRDN3lzFH5/ntpZPDzVEU/27zcbFmXzv2k8w5AM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPN2J4IHbvVkKMKGosGcMplkuVK0ecs7F3jvSK8XXqmmP/nhjO
+	Lq9KWavKSyu8nMy+waqJB4/01fwDzUArd3LV1JjuNb8e7xd1Kdbl/InppfTCZ+s=
+X-Gm-Gg: ASbGnctcONoU0KyrNfXEWbbammf6vI/uWNgYTaIdvii6cqmZ2wkmpHmaw9NnD7OeMCT
+	LP3adRndyqkib4ETHfJAzs7Av4y8rEc3+wZa6RzXczpwQk4YrztGOSk1rLxIksI6eBkHMGticOs
+	xVKw8lp719nAWDYXPWLVE1mLF6caJGlJcHIMOBh1l3Sgh1QL9cRmKgvi7xsP+4NxnlLBhUyS5z3
+	hf2EysaFlnQamlLKJTvtxPZaHmZmTs+8lLZPpBnixMwfSW+gUcm2Mbr2+d+QkaXxKfjy/Bhk1da
+	nGwXrOuG0EVICcBKDm3/7waeEKcJG2vlTwAm5dS5KHW3zIyZ/+OCg3VVEX3vt/Wz/SaxHcjJKhx
+	U50D4cQ9+G6RNjPY=
+X-Google-Smtp-Source: AGHT+IF/YTb11QJo7KHbzLovwGKhpZslh/Bu4+pqk61lazM/ExJSKXK7osXi8PFQQCc7TGaXhCoayw==
+X-Received: by 2002:a17:902:cf07:b0:224:23ab:b88b with SMTP id d9443c01a7336-22de5eca712mr35763465ad.8.1745916695179;
+        Tue, 29 Apr 2025 01:51:35 -0700 (PDT)
 Received: from localhost.localdomain (210-61-187-174.hinet-ip.hinet.net. [210.61.187.174])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f8597e0bsm8550119a12.44.2025.04.29.01.51.13
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f8597e0bsm8550119a12.44.2025.04.29.01.51.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 01:51:21 -0700 (PDT)
+        Tue, 29 Apr 2025 01:51:34 -0700 (PDT)
 From: Guodong Xu <guodong@riscstar.com>
 To: ukleinek@kernel.org,
 	robh@kernel.org,
@@ -100,9 +100,9 @@ Cc: elder@riscstar.com,
 	linux-riscv@lists.infradead.org,
 	spacemit@lists.linux.dev,
 	guodong@riscstar.com
-Subject: [PATCH v3 1/6] dt-bindings: pwm: marvell,pxa-pwm: Add SpacemiT K1 PWM support
-Date: Tue, 29 Apr 2025 16:50:43 +0800
-Message-ID: <20250429085048.1310409-2-guodong@riscstar.com>
+Subject: [PATCH v3 2/6] pwm: pxa: add optional reset control
+Date: Tue, 29 Apr 2025 16:50:44 +0800
+Message-ID: <20250429085048.1310409-3-guodong@riscstar.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250429085048.1310409-1-guodong@riscstar.com>
 References: <20250429085048.1310409-1-guodong@riscstar.com>
@@ -114,102 +114,53 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The SpacemiT K1 SoC reuses the Marvell PXA910-compatible PWM controller
-with one notable difference: the addition of a resets property. To make
-the device tree pass schema validation (make dtbs_check W=3), this patch
-updates the binding to accept spacemit,k1-pwm as a compatible string, when
-used in conjunction with the fallback marvell,pxa910-pwm.
+Support optional reset control for the PWM PXA driver.
 
-Support for the optional resets property is also added, as it is required
-by the K1 integration but was not present in the original Marvell bindings.
+During the probe, it acquires the reset controller using
+devm_reset_control_get_optional_exclusive_deasserted() to get and deassert
+the reset controller to enable the PWM channel.
 
-Since the PWM reset line may be deasserted during the early bootloader
-stage, making the resets property optional avoids potential
-double-deassertion, which could otherwise cause flickering on displays
-that use PWM for backlight control.
-
-Additionally, this patch adjusts the required value of the #pwm-cells
-property for the new compatible string:
-- For "spacemit,k1-pwm", #pwm-cells must be set to 3.
-- For existing Marvell compatibles, #pwm-cells remains 1.
-
-Background of #pwm-cells change is by an ongoing community discussion
-about increasing the #pwm-cells value from 1 to 3 for all Marvell PXA PWM
-devices. These devices are currently the only ones whose bindings do not
-pass the line index as the first argument. See [1] for further details.
-
-[1] https://lore.kernel.org/all/cover.1738842938.git.u.kleine-koenig@baylibre.com/
-
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org> # v2
 Signed-off-by: Guodong Xu <guodong@riscstar.com>
 ---
-v3: When compatible string contains "spacemit,k1-pwm", #pwm-cells must be 3
-    Added Reviewed-by: Rob Herring (Arm) <robh@kernel.org> # v2
-v2: Accept spacemit,k1-pwm as a compatible string, when used in conjunction
-    with the fallback marvell,pxa910-pwm
+v3: Dropped the addition of a reset_control field to the struct pxa_pwm_chip
+    Using a local variable for reset in pwm_probe() instead
+v2: No change
 
- .../bindings/pwm/marvell,pxa-pwm.yaml         | 35 +++++++++++++++----
- 1 file changed, 28 insertions(+), 7 deletions(-)
+ drivers/pwm/pwm-pxa.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-index 9ee1946dc2e1..8df327e52810 100644
---- a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-@@ -11,26 +11,47 @@ maintainers:
+diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
+index 430bd6a709e9..f6a862531601 100644
+--- a/drivers/pwm/pwm-pxa.c
++++ b/drivers/pwm/pwm-pxa.c
+@@ -25,6 +25,7 @@
+ #include <linux/io.h>
+ #include <linux/pwm.h>
+ #include <linux/of.h>
++#include <linux/reset.h>
  
- allOf:
-   - $ref: pwm.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: spacemit,k1-pwm
-+    then:
-+      properties:
-+        "#pwm-cells":
-+          const: 3
-+    else:
-+      properties:
-+        "#pwm-cells":
-+          const: 1
-+          description: |
-+            Used for specifying the period length in nanoseconds.
+ #include <asm/div64.h>
  
- properties:
-   compatible:
--    enum:
--      - marvell,pxa250-pwm
--      - marvell,pxa270-pwm
--      - marvell,pxa168-pwm
--      - marvell,pxa910-pwm
-+    oneOf:
-+      - enum:
-+          - marvell,pxa250-pwm
-+          - marvell,pxa270-pwm
-+          - marvell,pxa168-pwm
-+          - marvell,pxa910-pwm
-+      - items:
-+          - const: spacemit,k1-pwm
-+          - const: marvell,pxa910-pwm
+@@ -160,6 +161,7 @@ static int pwm_probe(struct platform_device *pdev)
+ 	const struct platform_device_id *id = platform_get_device_id(pdev);
+ 	struct pwm_chip *chip;
+ 	struct pxa_pwm_chip *pc;
++	struct reset_control *rst;
+ 	int ret = 0;
  
-   reg:
-     # Length should be 0x10
-     maxItems: 1
+ 	if (IS_ENABLED(CONFIG_OF) && id == NULL)
+@@ -179,6 +181,11 @@ static int pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pc->clk))
+ 		return PTR_ERR(pc->clk);
  
-   "#pwm-cells":
--    # Used for specifying the period length in nanoseconds
--    const: 1
-+    description: Number of cells in a pwm specifier.
- 
-   clocks:
-     maxItems: 1
- 
-+  resets:
-+    maxItems: 1
++	rst = devm_reset_control_get_optional_exclusive_deasserted(&pdev->dev,
++								   NULL);
++	if (IS_ERR(rst))
++		return PTR_ERR(rst);
 +
- required:
-   - compatible
-   - reg
+ 	chip->ops = &pxa_pwm_ops;
+ 
+ 	if (IS_ENABLED(CONFIG_OF))
 -- 
 2.43.0
 
