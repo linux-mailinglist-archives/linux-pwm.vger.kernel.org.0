@@ -1,93 +1,93 @@
-Return-Path: <linux-pwm+bounces-5766-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5767-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 892FAAA0DB6
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Apr 2025 15:47:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 94A7CAA0DC3
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Apr 2025 15:48:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA6F71A86348
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Apr 2025 13:47:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F13121A880F2
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Apr 2025 13:48:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E98482C108C;
-	Tue, 29 Apr 2025 13:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D3622D323C;
+	Tue, 29 Apr 2025 13:47:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3rOBk7p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPjjcb5n"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCBC130A54;
-	Tue, 29 Apr 2025 13:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA1F2D29AD;
+	Tue, 29 Apr 2025 13:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745934432; cv=none; b=K6e4ykV681kfi4v4CF2Y7PPiGnKVTm/WeWRkXNDK8P9T/4ISeny7Km4m+5qefzFyc4i/z5bFJEJyW33p38rlRkNHcOolBD3ow9RLOKnru0nmtau14yTDgCYwQSTsvllX+CwHVWrxd21SaPXDNEzVJP9Ba8jt9l4Cvl5MEVMEsug=
+	t=1745934458; cv=none; b=O+OBKLy0C8SPK1rK5Rbwjrorb4Xb4wbFF4BgIwdNmvlNxFraA2bqLAbXP8/Q7djlLe4Ce4MRc1Fnj7K9FM8OXnVQvPwejObSbMT8QG3vhuqY/b2/nTn49oFa2N6aIgXkCfhDSUTgCLbA01UYw6mxb/JnTZHLkyPW7n3lWexwJUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745934432; c=relaxed/simple;
-	bh=b9HRJbXHVqg9fyqM/LuA/aGw1XEM/SvavfXDmB/s9qg=;
+	s=arc-20240116; t=1745934458; c=relaxed/simple;
+	bh=DjzHEUhss7O4w8xX58jtGF/4zzUbQ8mr8m5sP2MwNWY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BWGCGwfOYRlJH2QjpBJP8COj0jni4dmc9evxdv3N5D87L20Lke/SbTcXHeaGnURGVo5TPdEazRDkzm3W2II8N/OsR+8161/GN67WFlRST5ZQ9ieucw2IEMqfvF5cgSRWKrBYVT5bpzkZ8S62HZDrYcWdh3x3jUnTohoKlsX1/7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l3rOBk7p; arc=none smtp.client-ip=209.85.218.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=r4heCHbr9bTYtDNITw1i3QH42Whn2IYd/loBHy0BdI6dgbXqAEUUQIqJ+rIsEjuLqXcID0CB3qNMyYTQFJOQPi8d5IX5hkyTTmlD2SFFtQR6dkFfpaNi9I+4Xv46I6t28rgImK7h5/oIQmyybZ1TYPWJrZwOY0cUrOi04Q2WzuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MPjjcb5n; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-acae7e7587dso889085466b.2;
-        Tue, 29 Apr 2025 06:47:10 -0700 (PDT)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acbb85ce788so1174968566b.3;
+        Tue, 29 Apr 2025 06:47:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745934429; x=1746539229; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745934454; x=1746539254; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rCJ2y+IzV97uI1iWhvjpnjuLzl5mRMft1CF8GMaXK5I=;
-        b=l3rOBk7pXgn/v713yeQ54mhy4HGMHv9hrZa0JWIUSQKaedtnvFzCFdPBgPgpdbF3SM
-         Yu9VXJ4jXXG1aF8FNq/P69FyrHwtC438qqnisWfGy76Bxs6F8tsRr7I8DlIqSp+6Btem
-         9FJTzbcvGl7uVMp4iWzflow094Trx4EzaHg7ofD6p9OGSgu94veIOthODDzYIixCRyu7
-         ryggqVsoOp55NBimqo/cXvEUzH48xdQRizHTjp4l5fMHopR+5fQLMYSccYjaz7DJ9jjq
-         Ndn7oNZIQorJyiKmqxWgE5mlvinTFdI63SH0WepcSRTCZjR0m9XOi+XHuQTSE6z4Y/b3
-         taoA==
+        bh=HaTZWkSikhbMzTJTGFDBFHGc5K2hyAh3EtvsyFFLBQY=;
+        b=MPjjcb5nz/phaZpZxbBaYDBfvBnNJ63keoI+FimAf47y9livMwmlHDz2YP68piLTSh
+         onlvH7lhv4ivqxs/aXz4HtkFqxRwGjtVb9MAICzvzyYM/XjR3Ufact/8devWmeAqnlxE
+         xwnjp4zsnBr19aZ2jwS0iJrqqQhss2j0TQU91Yu86h/4cSmp3WSc3AWa/5/yJMHyVBTB
+         FPhfYj0eRzX44mkVBiLQEyBVvqfHsQ/pa/Xb3Kx6qd7dT4F0jmOyaQ4hK6zlYZ9o5KWU
+         FnIzx6/AnLNCU+doW3cG1kpto0HAyIBYF0PqeVNpkCiePlpAFMrWp4/igpm86nPTAALl
+         uN+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745934429; x=1746539229;
+        d=1e100.net; s=20230601; t=1745934454; x=1746539254;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rCJ2y+IzV97uI1iWhvjpnjuLzl5mRMft1CF8GMaXK5I=;
-        b=iI8giSB8RP9clhf1IEKIA5pJggNPXlPDYdqDMP5tJc/Zjc/sIVzDy4j/+6zdUgJVnI
-         Pi825ABrtapWogj2A/6GtVB7syXFBlWkkTV0ANMa5a60tBfKsuGQYJoxjVQHciGte6zn
-         e93O6RjWZZLXA2YqWruvIvDfi0/ECF5wDoULgYtRPHZj12FosYY/YMISgP60CHaeK/e1
-         wBIBN2MORImLGgsfmAlpPF1QsM55+ubApBYl9aIz9Kv/nGzqoy7gAPE/SdwNjpDmbLRS
-         7mCdrAv80iyJYh9eKl5vpHy66DXrVfU1fmdhmnAiDoePZbVei2CDV7ARINPv6Crc9JfI
-         nLNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVI5dn6sN+3JaXSuTWS8xOZq7HsI5imPi4YJvCAcSkcTV0gdyMXd0oWvfMDTC7KC4DKhLcQ3kxIvP4D@vger.kernel.org, AJvYcCVntQpQXtiLKE++67Htnwy8sKH1LtphJb1TJaT+BB8Gaa4QxYiw5HESYcDiYEji6QY3VTJX1wdBrMSy@vger.kernel.org, AJvYcCW8luXyRUgMhmMfB74+1NzqDsU6g+j/B9cm+DpxD8BAe9kAtrCw67Sy+H8ZtcvJswlRaTgCoaer4HfOutpH@vger.kernel.org, AJvYcCX2H2ZIM8BSlUQGLDGI7GBU7HHH3pXl+OQMI5d+8jTxXF0BuwIuru1za7c9YyMiAQ3tYz+FUZiQKXka@vger.kernel.org, AJvYcCXJ0Ldxlyaih+74PmKZQDFGBdVPGLQZSEv/Vw/gF0Hz2azHFD3uhecgq3QDMYCeE5kHUGdsWbpHmq76@vger.kernel.org
-X-Gm-Message-State: AOJu0YyldgoX+oOv6gD6laJcyQpaVkxDpfcC1a6hTwWnuzXvD/U4lS/0
-	AAmb3BVQCEEET+IBE6H7FiJsylzmjBva3OBPshC6r1R5Q3o4gBMY
-X-Gm-Gg: ASbGncu8JrL2JGXFFLHxZy8B05T3s+57k7BJ5jFWELrZx0BDq4eLdiOb+B4+e/sB9Ws
-	TGJuSXrs5DBcGG1GAAfd8m82x8LEZrThTr18FSYddjY1B6psCR/FcowBQbE2/TRsKkqfOyVk5eb
-	NiWgnK+4tOClIXwOvo0mesM6oAmYVcnCAUMIrlg2FC0QnRNAGb+X12wDAV6cFWzh+n+53Z6kR/8
-	205KMbRYh/Hfdddb8bFRn7RMlJTG/VhbDQoNGg9+5iAlVz3/AhkxftY7wymY/7cqRVetSJx3mJ+
-	X4/FeykuqmllgEb+fbrEIr+W+6xLH7yaCrhIEYOPoCDTMktE9Dc7A3+pngx49JEDVDs=
-X-Google-Smtp-Source: AGHT+IHw4QwSUbJu5FO5FlEpnmeGm++bjQVOauZeSS/SbI2JGiaYCiVzqACbtNyNlRVSpQYsOLnm/g==
-X-Received: by 2002:a17:907:6e8a:b0:aca:b45a:7c86 with SMTP id a640c23a62f3a-acec4b41481mr360717866b.1.1745934429100;
-        Tue, 29 Apr 2025 06:47:09 -0700 (PDT)
+        bh=HaTZWkSikhbMzTJTGFDBFHGc5K2hyAh3EtvsyFFLBQY=;
+        b=PHKhrLXxIMS+HfPhkK4ugFKK3RaoRw7J+L29SuKCxpHwqFwEywmc5fwSLV+3RCbqah
+         zcKSf3HI5qdDuLECSD6ZBprLXGRx6LLUrGLXlz3U1PEwuAn1eYoTU9jLHjMmkSaZrDgC
+         2JoI/c4E5FpQectoUeDxV5VoYZOVXCuI6ZraH1YNW6+lzC9OhPp1kBAROlO7A3KAdm7N
+         oRRmcDzaGqb4DFJUr7/Jd/jLE31HFSRh/UXHvIzYcQpixEMj2Hys6JRr5yije/TQT9Br
+         lRochJ5R6BApISrPlPge8uU9RwAm/ITej/4sIKELfZwysn1UQvY/rzzC8EtHrRSSMhxe
+         LEGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVfG8aU32bE0PJP0O8ldxvDcgwidFddJqLjww1vxaJs10NVcOu7il9TK3kewI3V0ZF+r2/xLEjdCVld@vger.kernel.org, AJvYcCWWzujkhMk4rINXfcSlik4vdH4yU9fkBxTTF/jM7oLU78y4RRvlU1gBnUekxFzp9UrYprkSQ8l/fdh/Awnl@vger.kernel.org, AJvYcCX/+ATSgcX+4GnmWSVTruK9qS5xWcHVTot+aTk0u2jewm6emB+swZAcPbf5reYq9cjzlvkT5p1FMbbk@vger.kernel.org, AJvYcCX1aDwKHKsNdPOoKgALN3ilRezUwPzMKE28D4ZEKALWQN+ugknbBmGoBiuxDLnSoCnUe7E9JTDtqV9A@vger.kernel.org, AJvYcCXbBt0NAzV/e7COOeu8nqxcZsaFS2DwCNZhkGg0F9g6SdJrijgoe1Rv+KvwepHGb3FRCXPuMLIB8BFa@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrB9TH+LojeMRe8LrYHyyxHO17p4R2h41eQSQ81KmgkN4DCj5e
+	JPGGOeerkHu/QT2bN3qYFNegocW9Q9Hotzl+36pLzzH3VwH7HZ5D
+X-Gm-Gg: ASbGncsBbYLYNR/iAXxyMGLWDy+zYDC758st3UFfFdZe/ETA0uBEMCOsqLegugVMlxp
+	mDfHK934iB3axU6lxlw4ovXhaXL/S1LEfhA7X0tQlnjuxQTxD+kttAE08Oxj6lhDH9YajGcGEOW
+	dibJllRwqpT66BtXsgujlG4BFIxlZaDbR7V+pb0cRPWSHA0qy0bs7H5b1H+DlDukBLC8FiiVwN0
+	UwJq0ANG4B1m+gATEwJSCk77pZAS3N+6SxUGTwFRdThmXC6L+XAjy+waQ6iEdcwbmsay4AdZNv/
+	Kl/JnDEOsBaRc3tnGodsnrG3CoXtzMqo6CxbDNylH2N89pTxCJenA5yN8zpMRPPYUnY=
+X-Google-Smtp-Source: AGHT+IHewjMQ0MZiNJB4DgK8tvKn2XGZDPn4MYHgyVOxmK6G/0S4ZlgFqHAA9mb76xCeTR/leX0CMw==
+X-Received: by 2002:a17:907:6089:b0:ac3:8516:9cf2 with SMTP id a640c23a62f3a-acec87bb143mr338540466b.55.1745934454357;
+        Tue, 29 Apr 2025 06:47:34 -0700 (PDT)
 Received: from HYB-DlYm71t3hSl.ad.analog.com ([2a02:3033:26c:ba50:9d5c:4d3e:be76:7564])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ed64fc5sm779707666b.129.2025.04.29.06.47.07
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acecfa384b5sm77159066b.0.2025.04.29.06.47.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 06:47:08 -0700 (PDT)
-Date: Tue, 29 Apr 2025 15:47:05 +0200
+        Tue, 29 Apr 2025 06:47:34 -0700 (PDT)
+Date: Tue, 29 Apr 2025 15:47:31 +0200
 From: Jorge Marques <gastmaier@gmail.com>
-To: Andy Shevchenko <andy@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
 Cc: Jorge Marques <jorge.marques@analog.com>, 
 	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
 	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
 	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
 Subject: Re: [PATCH v2 1/5] Documentation: ABI: add oversampling frequency in
  sysfs-bus-iio
-Message-ID: <c3i7g273lgvx7rpihzq6r7exxxnglbwrqwfryyz6ciqo52tszf@cvi7pz4bmkvq>
+Message-ID: <3w7y2e4yfkf6ujr2mpsxcammdrb77rdybxi3ikpfoguvwsnipn@j2v45uldkw5t>
 References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
  <20250422-iio-driver-ad4052-v2-1-638af47e9eb3@analog.com>
- <aAe6u6NhAsgjaL5_@smile.fi.intel.com>
+ <143ffe9b-b32e-41ea-b5c7-855c680b48d4@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -96,36 +96,15 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAe6u6NhAsgjaL5_@smile.fi.intel.com>
+In-Reply-To: <143ffe9b-b32e-41ea-b5c7-855c680b48d4@baylibre.com>
 
+Hi David,
 
-Hi Andy,
-
-I agree with your suggestion, and in this case the appropriate kernel
-version is 3.10.
-
-On Tue, Apr 22, 2025 at 06:50:19PM +0300, Andy Shevchenko wrote:
-> On Tue, Apr 22, 2025 at 01:34:46PM +0200, Jorge Marques wrote:
-> > Some devices have an internal clock used to space out the conversion
-> > trigger for the oversampling filter,
-> > Consider an ADC with conversion and data ready pins topology:
-> > 
-> >   Sampling trigger |       |       |       |       |
-> >   ADC conversion   ++++    ++++    ++++    ++++    ++++
-> >   ADC data ready      *       *       *       *       *
-> > 
-> > With the oversampling frequency, conversions are spaced:
-> > 
-> >   Sampling trigger |       |       |       |       |
-> >   ADC conversion   + + + + + + + + + + + + + + + + + + + +
-> >   ADC data ready         *       *       *       *       *
-> > 
-> > In some devices and ranges, this internal clock can be used to evenly
-> > space the conversions between the sampling edge.
-> > In other devices the oversampling frequency is fixed or is computed
-> > based on the sampling frequency parameter, and the parameter is
-> > read only.
-> > 
+On Fri, Apr 25, 2025 at 04:16:20PM -0500, David Lechner wrote:
+> On 4/22/25 6:34 AM, Jorge Marques wrote:
+> 
+> ...
+> 
 > > Devices with this feature are max1363, ad7606, ad799x, and ad4052.
 > > The max1363 driver included the events/sampling_frequency in
 > > commit 168c9d95a940 ("iio:adc:max1363 move from staging.")
@@ -134,15 +113,28 @@ On Tue, Apr 22, 2025 at 06:50:19PM +0300, Andy Shevchenko wrote:
 > > hysteresis")
 > > but went undocumented so far.
 > 
-> So, it was no documentation for the nodes this change describes, right?
+> It looks like this part was copied from a different commit and isn't related
+> to this one.
 > 
-> ...
-> 
+
+You are right, this is from the other already applied patch, I will remove.
+
+> > 
+> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-iio | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> > index 33c09c4ac60a4feec82308461643134f5ba84b66..129061befb21b82a51142a01a94d96fcf1b60072 100644
+> > --- a/Documentation/ABI/testing/sysfs-bus-iio
+> > +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> > @@ -139,6 +139,23 @@ Contact:	linux-iio@vger.kernel.org
+> >  Description:
+> >  		Hardware dependent values supported by the oversampling filter.
+> >  
 > > +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency
 > > +KernelVersion:	6.15
-> 
-> Then why don't you put the real version of the first release that has it?
-> 
 > > +Contact:	linux-iio@vger.kernel.org
 > > +Description:
 > > +		Some devices have internal clocks for oversampling.
@@ -150,22 +142,32 @@ On Tue, Apr 22, 2025 at 06:50:19PM +0300, Andy Shevchenko wrote:
 > > +		the oversampling filter.
 > > +		If the device has a fixed internal clock or is computed based on
 > > +		the sampling frequency parameter, the parameter is read only.
+> 
+> Don't need a newline after every period.
+
+Ack.
+
+> 
 > > +
 > > +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency_available
 > > +KernelVersion:	6.15
-> 
-> Ditto.
-> 
 > > +Contact:	linux-iio@vger.kernel.org
 > > +Description:
 > > +		Hardware dependent values supported by the oversampling
 > > +		frequency.
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> 		oversampling_frequency attribute.
 > 
 
-Best regards,
+Ack.
+
+> > +
+> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_raw
+> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_raw
+> >  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_raw
+> > 
+> 
+
+Regards,
 Jorge
 
