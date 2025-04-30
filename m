@@ -1,85 +1,60 @@
-Return-Path: <linux-pwm+bounces-5788-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5789-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAFC7AA4A92
-	for <lists+linux-pwm@lfdr.de>; Wed, 30 Apr 2025 14:04:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22F46AA4B0E
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Apr 2025 14:25:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A4CD3BDE25
-	for <lists+linux-pwm@lfdr.de>; Wed, 30 Apr 2025 12:04:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B66E71BC3286
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Apr 2025 12:25:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F28B124728A;
-	Wed, 30 Apr 2025 12:04:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0D0D25B1EE;
+	Wed, 30 Apr 2025 12:25:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YqZc4dGS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hEYXF3HH"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A101A7E107
-	for <linux-pwm@vger.kernel.org>; Wed, 30 Apr 2025 12:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADB325B1EB;
+	Wed, 30 Apr 2025 12:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746014686; cv=none; b=qJXbbwcJ7nlQ4LttirG25aM7Cx1BI2KG8H7bgzjNouuTHqXla9yHIpccQgcbfrwmZjIk3dMCLg2ZsFj+st66HcjpHxSAIonZOa/2UvJ4E8YRf1gMWvaX5suPpJYYVc8xPw7P7/9Y7+Ogy2qcl8nBq63eRi8s2zRph55Q6nnY6/s=
+	t=1746015903; cv=none; b=OxwlZxI44ofdLgv32Z72FnRE6fciLw5EPyLbbnH85WLwN9OveUkuH1PWyyIPdaPn8XEDoAMLqetwYxpNs1A7pzudGMfXGfQsTg7ISSVABtzivqSgJC2UxPOS+pNfSbuauBPdiV9EqjPaj8k40RjnKZPeROaZ3edtFvTk90hjNqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746014686; c=relaxed/simple;
-	bh=G+5FibWWWLvg7K1gCq7/ZEbzCv/dW8PKVC/LnlsXxO8=;
+	s=arc-20240116; t=1746015903; c=relaxed/simple;
+	bh=zYcXsPEfolrkTF/EjgW5Q6PjxiTC+RAO6eFXhCXjLJ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oI1kgghXLQ3rOWYB5zxaHMBjY7gs0t/M9/AwCevk+q2HaqxhGuCaWr0gIkcUv9Fwa/bZwWacRzsrVcjyXoSbztUGnFem1BLq9jGXsuB3NTdvQrf29mV2CYUNo/HjGL1m5XTkQS3GXMs4DJaCxTsTk/wi0PI2kFwHdXcufDnaJYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YqZc4dGS; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c14016868so7723438f8f.1
-        for <linux-pwm@vger.kernel.org>; Wed, 30 Apr 2025 05:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746014683; x=1746619483; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G+5FibWWWLvg7K1gCq7/ZEbzCv/dW8PKVC/LnlsXxO8=;
-        b=YqZc4dGS9JJgicN7LUwJ+HOvDnQlEuN4fYj3vIXp3VefP+jYaWIpJWijMiC3e9xs+E
-         zy7EcmUSCKSr2+0jl4UbswxesvLHQMllLruXcOmeY4rz8cbhobj6nIPe7fj69tgnjVWi
-         axp31JY41LE0uNJwZSBsUL79c0wsRr6bQXSEjSEeJA5Er2EuVh5kYTfCVjnZbnDfjyDE
-         FPRJBPHPWnlr9VrVlS7x0ZDqkDl8JOd2wn4dXJovfTe3s8VbXOanf+NcmBGEw/WYADs1
-         Uwpw8MVmSsbJGn98M1GuJQWffK37898z58OA6/D24LCax2TkDMA3BlfEC7RnFEfEJIH6
-         1w7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746014683; x=1746619483;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G+5FibWWWLvg7K1gCq7/ZEbzCv/dW8PKVC/LnlsXxO8=;
-        b=k1OgpgPK0UmV1D2jBp8pfWB5H5H2qWOe2XVvTNf6vbR/cpze3y54I/HYuVxcxEQZIf
-         6xA/crJmwD13EfHxaqZVGWlfEfs8rWvou9Nzpq1a/BrJEs085qdEBJ3Om++lzzokvh6u
-         eCaIYsa446AxLlmDv09N+Zd0X58/ts7c1Ig5G2DIKJ7W9wE6DjCnbb6AL83rPzR8zuRq
-         M9rD/heGAUvp2RUG4lpaLRPkvIe7WH+LX3a2NVIvaoV+/nAPloY1iQept/Jjbykqj/XB
-         OBfX5kxiEcs41p6MZrPfTXSFYRUk7Pdws1XFDDKtck5whyfdlcS+aaqBEzTHfxXHRNKJ
-         0Bwg==
-X-Gm-Message-State: AOJu0Yz01jYGvPsqfn2ETHcEG27yET1FN13YVaZzucXiXFXdNJNEA7CJ
-	vHZ3L+37IQYqWZddCqMV3L680zxeZxWJ4JfuoUXGn4/Oc9JBfNUQ+Ir/ml/qKZ8PAgE05uPqAUx
-	0
-X-Gm-Gg: ASbGnctIePQrMkkviOEeg9y+4Lz6PKrb4TWepUd1xKmutdLtuYwK1tDCiVj0QwWzElQ
-	hyuyJLvHRyDgsjEw2xIb1YYmXUFOEUyekSupQIt32grrzmfzx7sA83A3SgDVFcwuHy+4dhEiudZ
-	BMTbbak6PHve2hi2DZGQXFBXQerF/fTBkULihFOoMlPnpnk54hYtZqW80oJY5QP+fUFaSPzH88B
-	ltS4WX4guut0U9/stGMC4LGae22IqXMmSUJYtv89UwBpQH4q0uzFsGA5s34Hkc8g7K9MguP9DL7
-	EHuoKDz69V3Co4usNS6GIPIIlqBbE19gSjpQ9pcu4RSviLH2XRPs7fOUlo4GBa+1IDpjP7Q5Kes
-	o6WP8dJvgryihx+IfLA==
-X-Google-Smtp-Source: AGHT+IGd3vdiUTiLVBgnDR5dqhZhw5L0hduc6PSmeXt0yr8SkjJ5vxlE0r/PJfRQd5VE73nzXn2pcA==
-X-Received: by 2002:a05:6000:2510:b0:39c:12ce:6a0 with SMTP id ffacd0b85a97d-3a08f764e8cmr2752357f8f.21.1746014682794;
-        Wed, 30 Apr 2025 05:04:42 -0700 (PDT)
-Received: from localhost (p200300f65f00780800000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f00:7808::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a073e4684csm16797700f8f.76.2025.04.30.05.04.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 05:04:41 -0700 (PDT)
-Date: Wed, 30 Apr 2025 14:04:38 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: David Lechner <dlechner@baylibre.com>, 
-	Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/4] pwm: userspace support
-Message-ID: <suxk5xq2qcr47ltpi37ynh4hov5ppyptwg3q2zpqqbsegz7m6k@r4yrog3uzgby>
-References: <cover.1746010245.git.u.kleine-koenig@baylibre.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kGj6tXnC7+nWZvl33gEIytnJplfkpqOLd0uJhw20Vz6U0uI9Mg5yjpEbfUO2I0Fl1NKWK2jMr/2BbL2vCNikwvAMd9KbeiPy61oNZ2lOryCyWOKSQQvTy7l02cfNiXm9M2LFRrUIygFegXo8lfB1jy1GeIxYzJ0trdAx6f/AeDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hEYXF3HH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F518C4CEE9;
+	Wed, 30 Apr 2025 12:25:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746015903;
+	bh=zYcXsPEfolrkTF/EjgW5Q6PjxiTC+RAO6eFXhCXjLJ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hEYXF3HHx4Jjp5gmOoqEvysofVXezNK88qkWvDIFPH6iGtr78U+uwk3PDqTWsMvqV
+	 HJ4wWYgoc0umg94St/LeVHjIvwcvAbkLpi36JkeCwJyrt0qysgNaTRyzZ9T5qt+qT2
+	 UAQngA49z+Y1a6FqojpCVKVODIQaYLCzKC0MQa0UEPYmm+0Rkvivk1iriyyyRIFnsM
+	 l74kdRZc5ZCMyR7/ousHEQyGImR5tlZPkS574e7wRWMe2YPoNBix81j0YeZ1SxZXk4
+	 l9jp2LgdM3ZVLMhh9hehViB3OHHX9wGbuavDA+AIzUQbWFJRtajCTgWusWThcMo2ET
+	 Ck+qcj7MPpgeQ==
+Date: Wed, 30 Apr 2025 14:25:00 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Daniel Thompson <danielt@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Johan Hovold <johan@kernel.org>, linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] backlight: pwm_bl: Read back PWM period from provider
+Message-ID: <eexaex3ped44yszqaiedh23hjsivddmpjtij2pjciayt2z2o3l@bd4jlol6nvuq>
+References: <20250226-pwm-bl-read-back-period-from-hw-v1-1-ccd1df656b23@linaro.org>
+ <xltamao27utfrsax2pc6mh5tthanmrqszz4k7gyw3knqkm24xp@4tydmhfh6g4j>
+ <cmjyaveolhjtfhqbjpc6ghh7g2f5jmeyavoms5lqup6dyidngl@ljvxgoyw57md>
+ <Z9lFg98srzYivGoI@aspen.lan>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -87,45 +62,94 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="p7s4k6i3ogher2ir"
+	protocol="application/pgp-signature"; boundary="354souy6or7rgjzd"
 Content-Disposition: inline
-In-Reply-To: <cover.1746010245.git.u.kleine-koenig@baylibre.com>
+In-Reply-To: <Z9lFg98srzYivGoI@aspen.lan>
 
 
---p7s4k6i3ogher2ir
+--354souy6or7rgjzd
 Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v7 0/4] pwm: userspace support
+Subject: Re: [PATCH RFC] backlight: pwm_bl: Read back PWM period from provider
 MIME-Version: 1.0
 
-On Wed, Apr 30, 2025 at 01:55:57PM +0200, Uwe Kleine-K=F6nig wrote:
-> after the feedback I got from David on v7[1] and some internal
-> discussion here comes a new version of the patch.
+Hello Daniel,
 
-So given that v7 was the previous revision of this patch set this should
-have been v8. :-\
+On Tue, Mar 18, 2025 at 10:05:55AM +0000, Daniel Thompson wrote:
+> On Thu, Feb 27, 2025 at 04:06:47AM +0100, Sebastian Reichel wrote:
+> > On Wed, Feb 26, 2025 at 05:34:50PM +0100, Uwe Kleine-K=F6nig wrote:
+> > > On Wed, Feb 26, 2025 at 05:31:08PM +0200, Abel Vesa wrote:
+> > > > The current implementation assumes that the PWM provider will be ab=
+le to
+> > > > meet the requested period, but that is not always the case. Some PWM
+> > > > providers have limited HW configuration capabilities and can only
+> > > > provide a period that is somewhat close to the requested one. This
+> > > > simply means that the duty cycle requested might either be above the
+> > > > PWM's maximum value or the 100% duty cycle is never reached.
+> > >
+> > > If you request a state with 100% relative duty cycle you should get 1=
+00%
+> > > unless the hardware cannot do that. Which PWM hardware are you using?
+> > > Which requests are you actually doing that don't match your expectati=
+on?
+> >
+> > drivers/leds/rgb/leds-qcom-lpg.c (which probably should at least get
+> > a MAINTAINERS entry to have you CC'd considering all the PWM bits in
+> > it). See the following discussion (I point you to my message in the
+> > middle of a thread, which has a summary and probably is a good
+> > starting point):
+> >
+> > https://lore.kernel.org/all/vc7irlp7nuy5yvkxwb5m7wy7j7jzgpg73zmajbmq2zj=
+cd67pd2@cz2dcracta6w/
+>=20
+> I had a quick glance at this thread.
+>=20
+> It sounded to me like the PWM driver was scaling the requested period
+> to match h/ware capability but then neglected to scale the requested
+> duty cycle accordingly.
 
-I hope all the annoyance that results from that fat-fingering is on my
-side only. Sorry.
+Well, I'd not call the period adaption "scaling", it just gets fitted to
+the hardware capabilities. The same happens for duty_cycle, it's just
+that the absolute duty_cycle value is reduced to the next value that is
+possible to implement. Obviously that modifies the ratio between
+duty_cycle and period (requested vs. implemented), but you cannot
+prevent that anyhow and it makes handling easier for the lowlevel driver
+with less corner cases. And whatever policy is chosen to be the right
+one, it becomes ridiculous in the corner cases, so picking the simplest
+to implement is the sane option in my eyes.
+
+> That means the qcomm PWM driver programming a
+> fractional value into the hardware that was not being anywhere close
+> to duty_cycle / period.
+>=20
+> So the recommendation was to fix the PWM driver rather than have
+> pwm_bl.c work around it?
+
+No, the lowlevel driver is fine.
+
+With the new-style driver callbacks it becomes possible to query the
+hardware capabilities enough to implement a helper that determines the
+actually implementable waveform that is best for your use-case, whatever
+"best" means here.
 
 Best regards
 Uwe
 
---p7s4k6i3ogher2ir
+--354souy6or7rgjzd
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgSEdQACgkQj4D7WH0S
-/k6sMAf8DX1WYTAxw7X5OV77oIWpx/9jKPfbrbgkR3iu2ak/bjGZ0oJLf67jjl5B
-pUTToSA88nqW3gvlSGnlnipvncX+lPFDSq4jmj8+tAQR9KAvSwG0bLcZVW24q9M4
-Z6SY2xzmI7yCZto9qRpZQASSaly+ZTUd5iRfZmLTkZVLv8dvP1+/hAncjT3shr+l
-WaRqg+KWbO/VB8I3D/e6XLm/77+mWx2Qe8ne9vKkzElR2MhrnJtgX3HGtfo8Skn+
-fsUSXMiRu2dh1rRPxl81qcjT4hLHagLB6jAfp/Qf7czTfcn5zjZPnaczbuEXSwMd
-S/ILPPAnLYdpiGvEB6a1d5bEdgOjOg==
-=L/3N
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgSFpkACgkQj4D7WH0S
+/k5w4wgArhgbgew7qw0lAMKfRIaQrUs3HhB6o4qTL/cx0/JHMbYlixpsFiFJohJv
+ThcgFesVLDRe5gbSnkc2yopRKeyq5uyFPdZOJmmmteBRL4LDB+ZSc2QlnVV/QoBA
+O3BQxlH+wpiq00lEo4riwa4qraK87cZgBtkyf+w6GfNDhfCv8qNlDkqoXs66b83Y
+iAvGmxYEFn1Rj9U9EDbPLpc5BqVVunxkoYi7h51FrUnw3p1LtbGSgSJhPIeZTdT8
+MSzV9xQj8Kht9JW2LMuVbwduJpexoRjnx9kImFxw7NqBc6Nv5MRcKRkZJsrLVrO6
+9OSpwGNx0aWGrwQX4V8Abfkm1D3tbQ==
+=Laha
 -----END PGP SIGNATURE-----
 
---p7s4k6i3ogher2ir--
+--354souy6or7rgjzd--
 
