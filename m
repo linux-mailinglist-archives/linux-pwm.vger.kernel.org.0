@@ -1,70 +1,70 @@
-Return-Path: <linux-pwm+bounces-5803-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5804-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B0D2AA6F55
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 May 2025 12:19:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 869EFAA6F71
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 May 2025 12:22:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6E201BC2B2D
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 May 2025 10:19:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E442518909D9
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 May 2025 10:21:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC5E23AE83;
-	Fri,  2 May 2025 10:19:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C43A23C8B3;
+	Fri,  2 May 2025 10:21:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RM/i6iQ8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lWBYPJSH"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57E71DB546;
-	Fri,  2 May 2025 10:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E6D22D78B;
+	Fri,  2 May 2025 10:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746181156; cv=none; b=RR4FjsjoYLN/8J1BHDjzN/DuWHYZDjS6UTOycn2Y1wJWb5vwSN9ZylASMvTug48ppxIRct9dfBPV/U2loQg28LKbaezdOs46tVtCuOgZHj7F8ODPzUIeN5kcUOEp7TPUMDN6rCokCP4fEY+/FB4Aae1XIuX871Z4hp/3soNnc6k=
+	t=1746181269; cv=none; b=NKvM4R+ZXX08S7jwBed8HUGWUZIFBnNIfFPcIZ6NfLdYkPkpO62o+V3d/iPaFrWNhvBBMQmUizs/sBO7LGDPS8zmGy+dwQmxRKoLltnjzPvLykn/KkAkAMYC53iGZ8MrBNxsRu2yda+rNsWaq/kohE+xY8+f/ce6S4SktXmgMJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746181156; c=relaxed/simple;
-	bh=R633Na5R4s5yhCwdwY1f1baIFFBHLB81YaoEibp5XiA=;
+	s=arc-20240116; t=1746181269; c=relaxed/simple;
+	bh=JftlqU+X1lkwtpcPees9ulcIeQsp44gXVHuV8u7PKL0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AAI2OctIcSUdy3vdF6QVlYGwrByLUSk2cFv4CwNDpY4Ut1AfW4OPnHuv6aBsy+8tugi9JMLmXCLbgLR68pDlI3Q8H1l1KoOF/rPYp8KiZaN5lcVW8GYSXs+oWVfEQcSoqWFqht8RcoijDoYI6yXD9qwQPsW9Ejm8EcuFt3K9Oos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RM/i6iQ8; arc=none smtp.client-ip=198.175.65.10
+	 Content-Type:Content-Disposition:In-Reply-To; b=X8fg95xmeioFkMc1TV5dTWIMHlZlN22ye8WS2unSii8SuAqsmnDomPvzSIRtdy+MQBvr09FoUQwS0ILyL+ceR8CGW5+HKWjP/mO+WN1fo9+zwbpa2XbJn2GKfdDMBBsY5zWCYa/qCP4+qkqgDmcHLLc6YdYlxLgLUVNssbvUKSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lWBYPJSH; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746181155; x=1777717155;
+  t=1746181265; x=1777717265;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=R633Na5R4s5yhCwdwY1f1baIFFBHLB81YaoEibp5XiA=;
-  b=RM/i6iQ8+buRn2eMKkRk8rW0ZngqT7KqBH4N0nNVFhhybq9Faaf1X7DL
-   jVWlEGZmjPWdP2q9YLHZj5B3RhzeHnISBeqq3jDt1xy5HRtnY/xJYXDhQ
-   Gx7ShZhueqRbN39gQGXrWvJSZPeFkCUefLUep9Uw2XzQ9Ds3oD5CVPYFn
-   y8esRdAM3hfTVbVJlVPmXzPy4kxo1DVA1vmN/xQV1psdXKSO5rMMyjm01
-   oYR48CHEAtDSMG81BsaFFlKj2QrATEj94aErRWr3uTXV/lF6/PwEggSxZ
-   pjBYJcV+2hbFHB+offVSAjFCCBhLCRTvmKVYwrta1PAJegOH6gfZhvnP0
-   A==;
-X-CSE-ConnectionGUID: qHMe44IiQOObguc8JpyHDw==
-X-CSE-MsgGUID: V0kQep/GQq+fO4ijEWjv3Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="65271825"
+  bh=JftlqU+X1lkwtpcPees9ulcIeQsp44gXVHuV8u7PKL0=;
+  b=lWBYPJSHxueXg/OgeiwznW15rL0nhvYYH1YbeF60xLCWzgS51fx8LU6Z
+   ThASKFXwRH9+ftgJtNVJvGVJSXIHyiNOeqTFFtSuy2k+nWfPBBvu+oStW
+   mHNcSHurf4RPaEOF49D1QhEOByVBxtHMdlUNVkH7VX/wjaij8jJVslxac
+   PvKlG6g25iLOJORlhu6cMOjRYZunqGyK7gGElSX0gYY/2/H0+Xbwsak0G
+   jgs1ZPjS+AxGdbNNzfQKU36UlhAW3k21oPLme10aBXwbZBXLHwRyZjptl
+   fqpb/N/Asj24r7XNfuvw2HSI9eUkkc8wpGQfmuQp0OJjl/0yDW/rJ4yO0
+   w==;
+X-CSE-ConnectionGUID: ReKdfsSiRReMWOW68hkimg==
+X-CSE-MsgGUID: hhovnK/URFqA3IEvw5v9MA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="58070328"
 X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="65271825"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:19:14 -0700
-X-CSE-ConnectionGUID: QJy49UihQwmmaA9ja7uM4g==
-X-CSE-MsgGUID: JMI4AkmhTz6pZCy9N8NdHQ==
+   d="scan'208";a="58070328"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:21:04 -0700
+X-CSE-ConnectionGUID: PpwB+9+XTYuiwk99hDx5xA==
+X-CSE-MsgGUID: zrachVmQSCGLJGMNoFuVXw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="139787684"
+   d="scan'208";a="134526072"
 Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:19:09 -0700
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:20:58 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uAnU2-000000029q3-0MJH;
-	Fri, 02 May 2025 13:19:06 +0300
-Date: Fri, 2 May 2025 13:19:05 +0300
+	id 1uAnVn-000000029rV-2nXd;
+	Fri, 02 May 2025 13:20:55 +0300
+Date: Fri, 2 May 2025 13:20:55 +0300
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: mathieu.dubois-briand@bootlin.com
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
@@ -81,10 +81,11 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
 	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
 	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 04/11] pwm: max7360: Add MAX7360 PWM support
-Message-ID: <aBScGRN-1C81gtC5@smile.fi.intel.com>
+Subject: Re: [PATCH v7 06/11] gpio: regmap: Allow to allocate regmap-irq
+ device
+Message-ID: <aBSch6c8xYN88lrH@smile.fi.intel.com>
 References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-4-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-6-4e0608d0a7ff@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -93,118 +94,28 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250428-mdb-max7360-support-v7-4-4e0608d0a7ff@bootlin.com>
+In-Reply-To: <20250428-mdb-max7360-support-v7-6-4e0608d0a7ff@bootlin.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Apr 28, 2025 at 01:57:22PM +0200, mathieu.dubois-briand@bootlin.com wrote:
-> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> 
-> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
-> 8 independent PWM outputs.
+On Mon, Apr 28, 2025 at 01:57:24PM +0200, Mathieu Dubois-Briand wrote:
+> GPIO controller often have support for IRQ: allow to easily allocate
+> both gpio-regmap and regmap-irq in one operation.
 
 ...
 
-> +static int max7360_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +	struct regmap *regmap;
-> +	int ret;
+> -#include <linux/array_size.h>
 
-> +	regmap = pwmchip_get_drvdata(chip);
+Stray change?
 
-Just unify this assignment with the definition. Will save you 1 LoC.
-
-> +	ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(pwm->hwpwm),
-> +				MAX7360_PORT_CFG_COMMON_PWM, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_write_bits(regmap, MAX7360_REG_PORTS, BIT(pwm->hwpwm), BIT(pwm->hwpwm));
-> +}
-
-...
-
-> +static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_device *pwm,
-> +					     const void *_wfhw, struct pwm_waveform *wf)
-> +{
-> +	const struct max7360_pwm_waveform *wfhw = _wfhw;
-> +
-> +	wf->period_length_ns = wfhw->enabled ? MAX7360_PWM_PERIOD_NS : 0;
-> +	wf->duty_offset_ns = 0;
-> +	wf->duty_length_ns = DIV64_U64_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERIOD_NS,
-
-Does the numerator have already 64-bit type? Otherwise (u)int*(u)int will be
-just an (u)int.
-
-> +						MAX7360_PWM_MAX_RES);
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int max7360_pwm_read_waveform(struct pwm_chip *chip,
-> +				     struct pwm_device *pwm,
-> +				     void *_wfhw)
-> +{
-> +	struct max7360_pwm_waveform *wfhw = _wfhw;
-> +	struct regmap *regmap;
-> +	unsigned int val;
-> +	int ret;
-
-> +	regmap = pwmchip_get_drvdata(chip);
-> +
-
-Save 2 LoCs.
-
-> +	ret = regmap_read(regmap, MAX7360_REG_GPIOCTRL, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val & BIT(pwm->hwpwm)) {
-> +		wfhw->enabled = true;
-> +		ret = regmap_read(regmap, MAX7360_REG_PWM(pwm->hwpwm), &val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		wfhw->duty_steps = val;
-> +	} else {
-> +		wfhw->enabled = false;
-> +		wfhw->duty_steps = 0;
-> +	}
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int max7360_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct pwm_chip *chip;
-> +	struct regmap *regmap;
-> +	int ret;
-> +
-> +	regmap = dev_get_regmap(dev->parent, NULL);
-> +	if (!regmap)
-> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
-
-> +	device_set_of_node_from_dev(dev, dev->parent);
-
-Probably same comment as per pin control driver case?
-
-> +	chip = devm_pwmchip_alloc(dev, MAX7360_NUM_PWMS, 0);
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +	chip->ops = &max7360_pwm_ops;
-
-> +	pwmchip_set_drvdata(chip, regmap);
-
-> +	ret = devm_pwmchip_add(dev, chip);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
-> +
-> +	return 0;
-> +}
+>  #include <linux/device.h>
+>  #include <linux/export.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+>  #include <linux/irqdomain.h>
+> +#include <linux/overflow.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/regmap.h>
+>  #include <linux/slab.h>
 
 -- 
 With Best Regards,
