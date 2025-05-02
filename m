@@ -1,153 +1,153 @@
-Return-Path: <linux-pwm+bounces-5799-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5800-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9BAAAA6C88
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 May 2025 10:31:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA36CAA6DC9
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 May 2025 11:13:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 640A63A0805
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 May 2025 08:30:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5CD99167F84
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 May 2025 09:13:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF44422A4F2;
-	Fri,  2 May 2025 08:31:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21990227E98;
+	Fri,  2 May 2025 09:13:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fu9i7b//"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JGQfuY18"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE77A1FDA6D;
-	Fri,  2 May 2025 08:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A8E1E0DDC;
+	Fri,  2 May 2025 09:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746174661; cv=none; b=ng47eWSAuRL5aFySWDtUDFhENnzcy/csa4MXDxXLK2+KRBvoWFl0Qm7CMTWDYaiPpX1lD6vl9fkSVb51TwDOxO81hqzTkSKBCKWDFiBZOZxpbRwAfuwZK65S2kq79cR/V7PBLikkmmM67uN+5HE6zy2XZ5q+fVv0PViP9Vc0x10=
+	t=1746177192; cv=none; b=QxwcU8TU4Tp9DDmZmx+/1LAcC1X9OvHFh0da7ELleL4E1OxRi/eASr8pcZSL+Xd9+SmRo9lnW/DV57YVjY0GpeMu7/Nnqadwa2fFMpGpf6ERfbIBGdWpybCy1eFdT9YspQX//SCtfMU3O1Y0hiWERojHkBkzzimhUsSJGyrgNcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746174661; c=relaxed/simple;
-	bh=y99cWh1qDmMqrQMp2BU2xOYKTolCUcplKtnNhwXq0+0=;
+	s=arc-20240116; t=1746177192; c=relaxed/simple;
+	bh=k4K0SLDj35wju6CxDxtCOmwkGr1oR0IoArKcJ2bBLY8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LcvQWCwNPlYfIu1PdvZLzrMqUxD9VsfG5QkwJi6C3ykLRB2PRkcy0zTddR++6iroieP/p+wCaZRY6U19IvRM36rBNT5tuqHrNxyiz03/S3xVbhVGfR9nhqsw3wkfqtAjg07ra/MfIi4jlAis1DnDrIf8VGaY0A5khVjDIQGSyro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fu9i7b//; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AB5CC4CEE4;
-	Fri,  2 May 2025 08:30:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746174661;
-	bh=y99cWh1qDmMqrQMp2BU2xOYKTolCUcplKtnNhwXq0+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fu9i7b//WchSHCjmeccyZz64THiNUNRQLSuP+sbxeoXXEd6a779TqU5lFvJtPsU7o
-	 Hf0uJ9VCGELJ0kkKF2VPP/+9wW9SXc2eC06oWnbZEWNG1twLeVC6f0NZdnfn8sVIB/
-	 EWfqHSJ2YGbGMnuIvw/0WEeJdznOc8QpLh4SgqrjYMepRMR/3vAfAyZdegtDAsP+J3
-	 1cvd6UsO7On+EgFoUGw8M5i8iG5DQdTbnCn8oCYOUdB1ATeXBgaHBixnEktMy85Apc
-	 uiS6/XqXSVrY6d+ipX3wRuXydD2pBJdX2cjOo8YchuK77/9luHWiZRjmmSNhV0iJbt
-	 k1A8EeHJTJsKw==
-Date: Fri, 2 May 2025 09:30:55 +0100
-From: Lee Jones <lee@kernel.org>
-To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Rob Herring <robh@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=QoZ0ntqgoIfSmEVCBsKX+z1pjv3Lbfl3YLuD0ZnizVFcFVYs7XxVUgEvjP5ipGJV+aHLaoP81Kxk9EtMikOWLKWG23c9LEfAyRvReaF9x5kJhLXDa9mpvaNJmJB3Fii4L+YaRvG/dUqSkaksJWawWwepW3zwAly5DFM2vuEfHWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JGQfuY18; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746177190; x=1777713190;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=k4K0SLDj35wju6CxDxtCOmwkGr1oR0IoArKcJ2bBLY8=;
+  b=JGQfuY181SRFMSwz0QgeGvq+MApjpZt/FRlkZSNa6m/4dU6oj0JQp+ny
+   8JI3Foy2hMN2ppcscIMi5p2TP9ZBTycO4uJklonXyAa1ESsr/aFDZw3kD
+   t4zrfI12WYaY0cBjlr2PhKP1TXQBDgA7KMNnYHGCnO24APd0I6UikAMex
+   r4MVc876DWWRg+dHhQG7QRUH6fQqoztTu/kx8uudu96JG8sCM8J9Z7u+y
+   czWaQ/LfAcmB+PTNretnnfn3SJAMWRv4N9mRVqz+IL5hB309mX5cZOcqY
+   RyGJdZ0q5Wj4VesSNF+6Q4ocwj+kKskRMhjmOsDbPoSBXkGDK3d+K/88s
+   A==;
+X-CSE-ConnectionGUID: on03tkPZQ3C58zDNCTV/EA==
+X-CSE-MsgGUID: nY4Z/9AhRt2pGvpA5OBkRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47868105"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="47868105"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:13:09 -0700
+X-CSE-ConnectionGUID: yNL+bGqwT66ian8WSyMpIQ==
+X-CSE-MsgGUID: axpGhANiQoW7paWcjs0CXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="134898278"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:13:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uAmS4-000000028s7-3v1u;
+	Fri, 02 May 2025 12:13:00 +0300
+Date: Fri, 2 May 2025 12:13:00 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Lee Jones <lee@kernel.org>
+Cc: mathieu.dubois-briand@bootlin.com, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Liu Ying <victor.liu@nxp.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v2 00/17] mfd: adp5585: support keymap events and drop
- legacy Input driver
-Message-ID: <20250502083055.GG3865826@google.com>
-References: <20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com>
- <174610080338.3792828.16902042195346769114.b4-ty@kernel.org>
- <20250501140958.GB6838@pendragon.ideasonboard.com>
- <20250502071336.GA3865826@google.com>
- <d78a923a7da54292f98746c71ff84160a5c42963.camel@gmail.com>
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v7 02/11] mfd: Add max7360 support
+Message-ID: <aBSMnNQiCbTTH_4a@smile.fi.intel.com>
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-2-4e0608d0a7ff@bootlin.com>
+ <20250501125943.GN1567507@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d78a923a7da54292f98746c71ff84160a5c42963.camel@gmail.com>
+In-Reply-To: <20250501125943.GN1567507@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, 02 May 2025, Nuno Sá wrote:
+On Thu, May 01, 2025 at 01:59:43PM +0100, Lee Jones wrote:
+> On Mon, 28 Apr 2025, mathieu.dubois-briand@bootlin.com wrote:
+> > 
+> > Add core driver to support MAX7360 i2c chip, multi function device
+> > with keypad, GPIO, PWM, GPO and rotary encoder submodules.
 
-> On Fri, 2025-05-02 at 08:13 +0100, Lee Jones wrote:
-> > On Thu, 01 May 2025, Laurent Pinchart wrote:
-> > 
-> > > Hi Lee,
-> > > 
-> > > On Thu, May 01, 2025 at 01:00:03PM +0100, Lee Jones wrote:
-> > > > On Tue, 15 Apr 2025 15:49:16 +0100, Nuno Sá wrote:
-> > > > > The adp5585 MFD driver was introduced in 6.11 adding support for gpio
-> > > > > and PWM. However, the gpio part of it was already supported as part of
-> > > > > the keyboard driver:
-> > > > > 
-> > > > > https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/input/keyboard/adp5589-keys.c#L532
-> > > > > 
-> > > > > On top of that it also overlapped with my refactoring of the above
-> > > > > driver [1]
-> > > > > to drop usage of platform data and use FW properties instead.
-> > > > > 
-> > > > > [...]
-> > > > 
-> > > > Applied, thanks!
-> > > > 
-> > > > [01/17] dt-bindings: mfd: adp5585: ease on the required properties
-> > > >         commit: 3a2ea3e9f369bdae939bcccff67a77a6281dca74
-> > > > [02/17] mfd: adp5585: enable oscilator during probe
-> > > >         commit: 7353f196fd73b79e30ff750d93caf096ed660e1b
-> > > > [03/17] pwm: adp5585: don't control OSC_EN in the pwm driver
-> > > >         commit: 7c7e9f08a1a9bf16b6c1942c2e0cb919da855970
-> > > > [04/17] mfd: adp5585: make use of MFD_CELL_NAME()
-> > > >         commit: e72e9148d017535b39500d0aad624d0a0fcd2ce7
-> > > > [05/17] dt-bindings: mfd: adp5585: document adp5589 I/O expander
-> > > >         commit: 6da01b9d833c5efbce7c2e30dde276e0d29105f8
-> > > > [06/17] mfd: adp5585: add support for adp5589
-> > > >         commit: 382dc0327b8a9ee03c901df9b85134c68917becc
-> > > > [07/17] gpio: adp5585: add support for the ad5589 expander
-> > > >         commit: cff3cef09595001140bd29aedf33fc84998bf77c
-> > > > [08/17] pwm: adp5585: add support for adp5589
-> > > >         commit: 333b66fd3edfe18db4dc16041328a89144b73067
-> > > > [09/17] dt-bindings: mfd: adp5585: add properties for input events
-> > > >         commit: 7bdb41d7a85e1c6244da57d4dcc491df962ff3fb
-> > > > [10/17] mfd: adp5585: add support for key events
-> > > >         commit: 8814ac45c75fcce55896bc376a97b56f392925c3
-> > > > [11/17] gpio: adp5585: support gpi events
-> > > >         commit: 8f3d9b44c5c5ada312d0ef71ec0181011854a95b
-> > > > [12/17] Input: adp5585: Add Analog Devices ADP5585/89 support
-> > > >         commit: a53fc67a1e21a8507821263946b1d65687b0284f
-> > > > [13/17] Input: adp5589: remove the driver
-> > > >         commit: 216c99cf1002a42f896b54fab09823e8ba46b218
-> > > > [14/17] mfd: adp5585: support getting vdd regulator
-> > > >         commit: 63a8717f744d51ea0c8228e09db4233d48f2f9ba
-> > > > [15/17] dt-bindings: mfd: adp5585: document reset gpio
-> > > >         commit: 49c887f0547bc14eb50ba20e1c8acb7255af3b86
-> > > > [16/17] mfd: adp5585: add support for a reset pin
-> > > >         commit: 01c328823459456fb99469cc37f270f70d41fd2a
-> > > > [17/17] pwm: adp5585: make sure to include mod_devicetable.h
-> > > >         (no commit info)
-> > > 
-> > > I'm a bit surprised, didn't you ask for changes, calling for a v3 ?
-> > 
-> > Yes, sorry.  My fault.  Tooling error.  Please disregard.
+...
+
+> > +static int max7360_probe(struct i2c_client *client)
+> > +{
+> > +	struct device *dev = &client->dev;
+> > +	struct regmap *regmap;
+> > +	int ret;
+> > +
+> > +	regmap = devm_regmap_init_i2c(client, &max7360_regmap_config);
+> > +	if (IS_ERR(regmap))
+> > +		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to initialise regmap\n");
 > 
-> I was wondering the same...
+> dev_err_ptr_probe()
 
-Found out what happened.
+Hmm... This one to return an error pointer casted to the needed type. I think
+the given code is correct as is.
 
-I applied them all to grep for the spelling issue reported by Colin.
-However, I hit return (sending the thank-yous) instead of Ctrl+c (to
-cancel them).
+> > +	ret = max7360_reset(regmap);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "Failed to reset device\n");
+> > +
+> > +	/* Get the device out of shutdown mode. */
+> > +	ret = regmap_write_bits(regmap, MAX7360_REG_GPIOCFG,
+> > +				MAX7360_GPIO_CFG_GPIO_EN,
+> > +				MAX7360_GPIO_CFG_GPIO_EN);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "Failed to enable GPIO and PWM module\n");
+> > +
+> > +	ret = max7360_mask_irqs(regmap);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "Could not mask interrupts\n");
+> > +
+> > +	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
+> > +				   max7360_cells, ARRAY_SIZE(max7360_cells),
+> > +				   NULL, 0, NULL);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "Failed to register child devices\n");
+> > +
+> > +	return 0;
+> > +}
 
-Apologies for the confusion.
 
 -- 
-Lee Jones [李琼斯]
+With Best Regards,
+Andy Shevchenko
+
+
 
