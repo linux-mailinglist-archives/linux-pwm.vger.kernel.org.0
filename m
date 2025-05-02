@@ -1,138 +1,123 @@
-Return-Path: <linux-pwm+bounces-5809-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5811-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C006AA71E9
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 May 2025 14:32:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51C8CAA72CC
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 May 2025 15:04:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E519E4C6987
-	for <lists+linux-pwm@lfdr.de>; Fri,  2 May 2025 12:31:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0A7587A770D
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 May 2025 13:02:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F905252284;
-	Fri,  2 May 2025 12:31:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6CD4246761;
+	Fri,  2 May 2025 13:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TlzZp1/0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bCofNX/M"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48D722D4C5;
-	Fri,  2 May 2025 12:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8F542049;
+	Fri,  2 May 2025 13:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746189080; cv=none; b=oXnzORw4kvLnxIqx1VBm12fb0P0Wc1DhH1TJ6Myu2TIGZqUav7W6HXYqENlOF1jck1ulNuh4DA/SO/tezIFrroreMXOZTqwqwV0kPssVpP4JnFYnE9Nz9WZ1mAaufCL52fOXGYcYnCa9bVii0B3cEwzmTWAyApJlFYWva1CxMyQ=
+	t=1746191042; cv=none; b=PtHDIpVagF0Bw/ctV1yyW9HsD7bI9xxD88iruJ0W3BbnkuZF/iCo8Cz1CuhMwqHtpXiPd64dkDlAQe0j9HLMlORbmuyawmcqoTvGmorMdgeHwGkuG0AdUNdeZBpwlcRlz2bcyjd1bBT8af90uYVyBtgX8+HMwxcAuI04IpCZD94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746189080; c=relaxed/simple;
-	bh=3G3CkBJ5xwmbD1aL2pXi9Vq8HxzS0MbLhvQFlo4eHDE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=Rc1HVAL6IroCGRLJ9ahgrVnecv2mYBvaTNAdYIA7qlNnN4IIZjfeWDwk69bMBPrqDfnKr3HR8zJKn9UwpnQ23Tan8l20OaR1ftPKBOzZHRTpSxXQiFiwC782jlsFKgIYc0TzGsszlS7PMVm1lvZVpJqyNmDa/XBl49kNzH+QdAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TlzZp1/0; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CF4C843B02;
-	Fri,  2 May 2025 12:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746189075;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IVc5PbC2k1qdzHpLeknU2G3KgAO+5ptclccnAPwMI+M=;
-	b=TlzZp1/0oKau46rbcImJXUoZfqTMdboxJb9zF5I+oT4MBM3UKybI43+7j3nTPbAC5Yp1mY
-	29LSG9vQ9szDDM4I0Z6OnEc8/UVUIZu8q7weO0ntfpvOXV9V8+t1W+fI/CvinnTDMPoy5D
-	L9LrATS0cs67BQ8+ByFdZD92EyDAX9WHhOr/s4ZPoMqan5z5GSQa/J4aBf3FCwmEKcrxBr
-	p8QzSm1wQtK9kbA3OTc7Vk0px3qUla+7M5oZ9RcvWVpvfdnOxZ528ejZjI4wvN2AspDwFq
-	fgCnH60HzO9LiKxoVy45e0ihTN6UwwnBzCP01UQGx1biZO9nAXGpdE/UDexZ+w==
+	s=arc-20240116; t=1746191042; c=relaxed/simple;
+	bh=QatY+WDFSaAt6uRhjr00UcB5/OkX54c4KsiiSBMzf0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VFC7nhc02EfqvL7bw4X4T5So9yCqRh/4ZYNfK7wQpFqM6v5VFMonsJC1ASXiHY2wkvzEB/uIbl5kgesfR8blDh2MsZ9wsdWiwD5lhHSYYZiiFHsZIhwaZHKyAzVSTXmpH9WsWUm5LH3qji9PvbV78Pdccxh8Fla2OG5jLsvQzEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bCofNX/M; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746191041; x=1777727041;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QatY+WDFSaAt6uRhjr00UcB5/OkX54c4KsiiSBMzf0A=;
+  b=bCofNX/M9Rdt6E4Y2wPl2LIqwwZlzFHgWtOWuUQ2b8JH9T/MiQmrk83x
+   4kcCkDc/PVqbFzdzZumQ33mUdFDzb+9YOn9/zfRatUuGez3DKrraTFtE5
+   pTwrdOC6WwqiS2QpQyB1wOGkWk1KxzLhEg9znUkJxf+D5g2PLAFo/VONP
+   3D66m4W4Dd820CAA27XDMQ6SwcbdykCt7II/NTBvxRaNirzrY+HtLaTE7
+   MlQXQfwm297q99XC+Pq/XUP7dsmenV//iLd5mMfwJ29LSdUI0d5Yb8EB8
+   p5hYL73VnrZS5ZQ6olQtpvL1ZGluwQ8zlIPuc7LmLJENt1bMrv3j6EOFS
+   A==;
+X-CSE-ConnectionGUID: QN8nh0/vRZmYXvgfdIcEHQ==
+X-CSE-MsgGUID: 5R+2udtSSd+Yv+t9Y8TtPQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="58861565"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="58861565"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:04:00 -0700
+X-CSE-ConnectionGUID: d31mDcEsT8GAa+ZYKQFeew==
+X-CSE-MsgGUID: aPtqETHXT6288IEgLhtryA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="139776859"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:03:55 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uAq3U-00000002Cgi-28Xc;
+	Fri, 02 May 2025 16:03:52 +0300
+Date: Fri, 2 May 2025 16:03:52 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v7 08/11] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <aBTCuIBxGI3M_pSE@smile.fi.intel.com>
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-8-4e0608d0a7ff@bootlin.com>
+ <aBSg2qwNhPqJJRxK@smile.fi.intel.com>
+ <D9LOD5X8NXF2.2GWBU2IAZESH7@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 02 May 2025 14:31:13 +0200
-Message-Id: <D9LOD5X8NXF2.2GWBU2IAZESH7@bootlin.com>
-Subject: Re: [PATCH v7 08/11] gpio: max7360: Add MAX7360 gpio support
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Bartosz Golaszewski"
- <bartosz.golaszewski@linaro.org>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-8-4e0608d0a7ff@bootlin.com>
- <aBSg2qwNhPqJJRxK@smile.fi.intel.com>
-In-Reply-To: <aBSg2qwNhPqJJRxK@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvgeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
- dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D9LOD5X8NXF2.2GWBU2IAZESH7@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri May 2, 2025 at 12:39 PM CEST, Andy Shevchenko wrote:
-> On Mon, Apr 28, 2025 at 01:57:26PM +0200, Mathieu Dubois-Briand wrote:
->> +static int max7360_gpio_probe(struct platform_device *pdev)
->> +{
->> +	const struct max7360_gpio_plat_data *plat_data;
->> +	struct gpio_regmap_config gpio_config =3D { };
->> +	struct regmap_irq_chip *irq_chip;
->> +	struct device *dev =3D &pdev->dev;
->> +	struct regmap *regmap;
->> +	unsigned int outconf;
->> +	int ret;
->> +
->> +	regmap =3D dev_get_regmap(dev->parent, NULL);
->> +	if (!regmap)
->> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
->> +
->> +	plat_data =3D device_get_match_data(dev);
->> +	if (plat_data->function =3D=3D MAX7360_GPIO_PORT) {
->> +		if (device_property_read_bool(dev, "interrupt-controller")) {
->> +			/*
->> +			 * Port GPIOs with interrupt-controller property: add IRQ
->> +			 * controller.
->> +			 */
->> +			gpio_config.regmap_irq_flags =3D IRQF_ONESHOT | IRQF_SHARED;
->> +			gpio_config.regmap_irq_line =3D
->> +				fwnode_irq_get_byname(dev_fwnode(dev->parent), "inti");
->> +			if (gpio_config.regmap_irq_line < 0)
->> +				return dev_err_probe(dev, gpio_config.regmap_irq_line,
->> +						     "Failed to get IRQ\n");
->
->> +			irq_chip =3D devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
->
-> Can this be made static const instead?
->
+On Fri, May 02, 2025 at 02:31:13PM +0200, Mathieu Dubois-Briand wrote:
+> On Fri May 2, 2025 at 12:39 PM CEST, Andy Shevchenko wrote:
+> > On Mon, Apr 28, 2025 at 01:57:26PM +0200, Mathieu Dubois-Briand wrote:
 
-Sorry, I don't think we can. We do have a few data that will vary:
-->name, but above all ->irq_drv_data, as it will point on the regmap of
-the specific device.
+...
 
-> ...
+> >> +			irq_chip = devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
+> >
+> > Can this be made static const instead?
+> 
+> Sorry, I don't think we can. We do have a few data that will vary:
+> ->name, but above all ->irq_drv_data, as it will point on the regmap of
+> the specific device.
 
-OK with all other comments.
+I see, perhaps a (oneline) comment?
 
-Thanks for your review.
-Mathieu
+-- 
+With Best Regards,
+Andy Shevchenko
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
 
 
