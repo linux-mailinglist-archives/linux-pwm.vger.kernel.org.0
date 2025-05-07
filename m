@@ -1,119 +1,253 @@
-Return-Path: <linux-pwm+bounces-5837-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5838-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03ACCAAC464
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 May 2025 14:41:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 20623AAD36C
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 May 2025 04:40:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A133B3A8ABC
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 May 2025 12:40:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 30A439852AE
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 May 2025 02:40:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 307B927F198;
-	Tue,  6 May 2025 12:41:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6684219D084;
+	Wed,  7 May 2025 02:40:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QKSOfD4B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AraOZxcW"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8669D27A478;
-	Tue,  6 May 2025 12:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F67D1E884;
+	Wed,  7 May 2025 02:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746535270; cv=none; b=qVDacWzz2gCOFNLSoyM4ruEDw24kAySX4pJCm7SmkrNVdeQqvxNh66KGVA5IibmOxBbnBMzR7sttGQpJNAuD/vz7lp0BCmG3SnG19HshXkzBgllMLiPBBuaZFMkMq7167L3SY6e2fxlGe04oyLc79oWlFd9N2j1SfxSFvLgBwA4=
+	t=1746585644; cv=none; b=Y5tU/vibV6dHCUI2lRG16lLm9wCf5qiin0Mo/WLTNBB8PAAup5Rr74+5vowJphIRQaMH1Ugxm0u9715YdFnjdRjud+0VVxX9wsZecCgouqlq8rE54UFNNERoQ2jst7xmbzHmUt5QSdFL5CW+IZq6PS+2iA/7vo9+jbeX60y03h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746535270; c=relaxed/simple;
-	bh=fKAjeUu7aJ2cAoUuZNbRM4pTCnVbVDOkQZPM/+G+pdE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
-	 References:In-Reply-To; b=XluRxXYjiGJmxKmFQCpM4vgtWyqK/Qo8N+KqH972pH85zthIco1zv+BUjAssbgw8O95JJKpA6UNFtatUc5vq0ETZqOBIsokq09VZBRhKhsATiR8QjaXWpvhos+tzy5HRgxAbgS188VorUmHU7JKoApUMHMr4gPiaBae7LBZdA2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QKSOfD4B; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AD73B43B04;
-	Tue,  6 May 2025 12:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746535264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0sqKVcBEt6pQmMwRIYYIzEuUV/01lrMK0Zw8BI9CN/k=;
-	b=QKSOfD4BfheMezgztCkjPf4/2L/rXlXNBI6VznfgOptD6RjikLqYOqRBLdlu4UdwlUw+uA
-	YQWgQh5Mb8hGO8Qlod4DrEOyTSzUmPPk7YATMA7PvL/Yg9n/RCE01u/1vCdFqx4Yhx3VHl
-	8PLnIt645r6+EF3G2mGcERTp89/Mq0vKccIh09vNzcC12JQTNKh1fN4ZgXTUvMdqYfqS8n
-	+ILvwpmYyLZxipsa8SADLUYEPNZBqBZa6gaIRLBCik/BSZjvfxvvaeGA91PFBUIDsKoyRi
-	d/7uHyDA76WT2xZ524HjSpFIDI1uTldbpg2zGODJ03l3qv3Pu1lWtA3D61Q0Rw==
+	s=arc-20240116; t=1746585644; c=relaxed/simple;
+	bh=vX2Sybd9nMIeRRLXHlUE1/EciwbFwJqaadiN/zlroEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AWzOQDIYk/hZBCUQiGN/dgA0E9nMNzhX0DIux34TO99Pm8PwP0RLvQ1KD9uYgJsTMi39HjXoxQlHmXjEtM4NQJg1YwnNCL6RmEPLChTRj3BTpfKG1iPjxwbHEIzbsZ9v5OcOjTrdAibBUdbr9NL7OfDcEz9jePuC6sMDqA+wREw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AraOZxcW; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746585643; x=1778121643;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=vX2Sybd9nMIeRRLXHlUE1/EciwbFwJqaadiN/zlroEc=;
+  b=AraOZxcWpDHXxM4XxkfnMQOlPr3o4Y209MZrLCOuq4Q8W4zcbJyMjdfu
+   hoRTm/L2taMimybhKQzboFlVbThMWiAS6Xz5b2ExXr46LkQ0OGQTf/21X
+   ZTcvjXaSefstGYzIoxL/dQm2LFZjIj4xlool2Ebag1MHBuqit71BqDGW7
+   n4JIm8RpPSlGOUJhu/dFYvt9ws7QLoJxFJwx5Ic67jH4VLp70ZF7PgxBB
+   AOW8Etg5orXCVwLwOO687itNWan3Fi7OKAVdA/Dl+QdDmR1qNXb2TQokR
+   B7RxdPCOQp27Ub/ibJ7BsUBZ/kyQeYathd5NfpDldgRW76uRP2PKxlhv9
+   Q==;
+X-CSE-ConnectionGUID: cL1NKU/1TSOGS/iMgxpP/g==
+X-CSE-MsgGUID: 8F0SfwA+SamoyvtXukzIDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="59279744"
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="59279744"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 19:40:39 -0700
+X-CSE-ConnectionGUID: WToWiXUKRsCixUbf6ZG9SA==
+X-CSE-MsgGUID: ugdGx6viS4q54g2OqEmvKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="136332970"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa010.fm.intel.com with ESMTP; 06 May 2025 19:40:34 -0700
+Date: Wed, 7 May 2025 10:35:21 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Nuno =?utf-8?B?U8Oh?= via B4 Relay <devnull+nuno.sa.analog.com@kernel.org>,
+	nuno.sa@analog.com, linux-clk@vger.kernel.org,
+	linux-fpga@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+	Stephen Boyd <sboyd@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	Vinod Koul <vkoul@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Mark Brown <broonie@kernel.org>,
+	Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v4 3/7] include: linux: move adi-axi-common.h out of fpga
+Message-ID: <aBrG6cVNwvar8fAz@yilunxu-OptiPlex-7050>
+References: <20250505-dev-axi-clkgen-limits-v4-0-3ad5124e19e1@analog.com>
+ <20250505-dev-axi-clkgen-limits-v4-3-3ad5124e19e1@analog.com>
+ <20250505193001.1183e7cc@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 06 May 2025 14:41:03 +0200
-Message-Id: <D9P32VIGJX5V.1VV0F5MZ17QDW@bootlin.com>
-To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Andy Shevchenko"
- <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v7 09/11] input: keyboard: Add support for MAX7360
- keypad
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-9-4e0608d0a7ff@bootlin.com>
- <aBSii0rHox72GM5Y@smile.fi.intel.com>
- <aggrss4doko5scdlmyzdsujkifryzuzqdnpkh6sd33rg5ibqmm@aiikzv732rkq>
-In-Reply-To: <aggrss4doko5scdlmyzdsujkifryzuzqdnpkh6sd33rg5ibqmm@aiikzv732rkq>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeegtdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvffuvefhofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeethfeiheehheegheekueeigfekffdvheegfeeivefgkeeftdehhfdthfehueejfeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrihihrdhshhgvvhgth
- hgvnhhkohesihhnthgvlhdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhg
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250505193001.1183e7cc@jic23-huawei>
 
-On Tue May 6, 2025 at 7:14 AM CEST, Dmitry Torokhov wrote:
-> On Fri, May 02, 2025 at 01:46:35PM +0300, Andy Shevchenko wrote:
->> On Mon, Apr 28, 2025 at 01:57:27PM +0200, Mathieu Dubois-Briand wrote:
->> > +	error =3D matrix_keypad_build_keymap(&keymap_data, NULL,
->> > +					   max7360_keypad->rows, max7360_keypad->cols,
->> > +					   max7360_keypad->keycodes, max7360_keypad->input);
->> > +
->> > +	return error;
->>=20
->> 	return matrix_...(...);
->
-> Because that function has multiple failure points please
->
-> 	if (error)
-> 		return error; // or return dev_err_probe()
->
-> 	return 0;
->
-> Thanks.
+On Mon, May 05, 2025 at 07:30:01PM +0100, Jonathan Cameron wrote:
+> On Mon, 05 May 2025 17:41:34 +0100
+> Nuno Sá via B4 Relay <devnull+nuno.sa.analog.com@kernel.org> wrote:
+> 
+> > From: Nuno Sá <nuno.sa@analog.com>
+> > 
+> > The adi-axi-common.h header has some common defines used in various ADI
+> > IPs. However they are not specific for any fpga manager so it's
+> > questionable for the header to live under include/linux/fpga. Hence
+> > let's just move one directory up and update all users.
+> > 
+> > Suggested-by: Xu Yilun <yilun.xu@linux.intel.com>
+> > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> 
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # for IIO
 
+Acked-by: Xu Yilun <yilun.xu@intel.com>
 
-Noted, I will change this.
-
-Thanks for your review.
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+> 
+> > ---
+> >  drivers/clk/clk-axi-clkgen.c              | 2 ++
+> >  drivers/dma/dma-axi-dmac.c                | 2 +-
+> >  drivers/hwmon/axi-fan-control.c           | 2 +-
+> >  drivers/iio/adc/adi-axi-adc.c             | 3 +--
+> >  drivers/iio/dac/adi-axi-dac.c             | 2 +-
+> >  drivers/pwm/pwm-axi-pwmgen.c              | 2 +-
+> >  drivers/spi/spi-axi-spi-engine.c          | 2 +-
+> >  include/linux/{fpga => }/adi-axi-common.h | 0
+> >  8 files changed, 8 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/clk/clk-axi-clkgen.c b/drivers/clk/clk-axi-clkgen.c
+> > index 2a95f9b220234a1245024a821c50e1eb9c104ac9..31915f8f5565f2ef5d17c0b4a0c91a648005b3e6 100644
+> > --- a/drivers/clk/clk-axi-clkgen.c
+> > +++ b/drivers/clk/clk-axi-clkgen.c
+> > @@ -16,6 +16,8 @@
+> >  #include <linux/mod_devicetable.h>
+> >  #include <linux/err.h>
+> >  
+> > +#include <linux/adi-axi-common.h>
+> > +
+> >  #define AXI_CLKGEN_V2_REG_RESET		0x40
+> >  #define AXI_CLKGEN_V2_REG_CLKSEL	0x44
+> >  #define AXI_CLKGEN_V2_REG_DRP_CNTRL	0x70
+> > diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+> > index 36943b0c6d603cbe38606b0d7bde02535f529a9a..5b06b0dc67ee12017c165bf815fb7c0e1bf5abd8 100644
+> > --- a/drivers/dma/dma-axi-dmac.c
+> > +++ b/drivers/dma/dma-axi-dmac.c
+> > @@ -6,6 +6,7 @@
+> >   *  Author: Lars-Peter Clausen <lars@metafoo.de>
+> >   */
+> >  
+> > +#include <linux/adi-axi-common.h>
+> >  #include <linux/bitfield.h>
+> >  #include <linux/clk.h>
+> >  #include <linux/device.h>
+> > @@ -22,7 +23,6 @@
+> >  #include <linux/platform_device.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/slab.h>
+> > -#include <linux/fpga/adi-axi-common.h>
+> >  
+> >  #include <dt-bindings/dma/axi-dmac.h>
+> >  
+> > diff --git a/drivers/hwmon/axi-fan-control.c b/drivers/hwmon/axi-fan-control.c
+> > index 35c862eb158b0909dac64c2e9f51f0f9f0e8bf72..b7bb325c3ad966ed2a93be4dfbf4e20661568509 100644
+> > --- a/drivers/hwmon/axi-fan-control.c
+> > +++ b/drivers/hwmon/axi-fan-control.c
+> > @@ -4,9 +4,9 @@
+> >   *
+> >   * Copyright 2019 Analog Devices Inc.
+> >   */
+> > +#include <linux/adi-axi-common.h>
+> >  #include <linux/bits.h>
+> >  #include <linux/clk.h>
+> > -#include <linux/fpga/adi-axi-common.h>
+> >  #include <linux/hwmon.h>
+> >  #include <linux/hwmon-sysfs.h>
+> >  #include <linux/interrupt.h>
+> > diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
+> > index c7357601f0f869e57636f00bb1e26c059c3ab15c..87fa18f1ec96782556bdfad08bedb5e7549fb93d 100644
+> > --- a/drivers/iio/adc/adi-axi-adc.c
+> > +++ b/drivers/iio/adc/adi-axi-adc.c
+> > @@ -6,6 +6,7 @@
+> >   * Copyright 2012-2020 Analog Devices Inc.
+> >   */
+> >  
+> > +#include <linux/adi-axi-common.h>
+> >  #include <linux/bitfield.h>
+> >  #include <linux/cleanup.h>
+> >  #include <linux/clk.h>
+> > @@ -20,8 +21,6 @@
+> >  #include <linux/regmap.h>
+> >  #include <linux/slab.h>
+> >  
+> > -#include <linux/fpga/adi-axi-common.h>
+> > -
+> >  #include <linux/iio/backend.h>
+> >  #include <linux/iio/buffer-dmaengine.h>
+> >  #include <linux/iio/buffer.h>
+> > diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.c
+> > index b143f7ed6847277aeb49094627d90e5d95eed71c..581a2fe55a7fb35f1a03f96f3a0e95421d1583e7 100644
+> > --- a/drivers/iio/dac/adi-axi-dac.c
+> > +++ b/drivers/iio/dac/adi-axi-dac.c
+> > @@ -5,6 +5,7 @@
+> >   *
+> >   * Copyright 2016-2024 Analog Devices Inc.
+> >   */
+> > +#include <linux/adi-axi-common.h>
+> >  #include <linux/bitfield.h>
+> >  #include <linux/bits.h>
+> >  #include <linux/cleanup.h>
+> > @@ -23,7 +24,6 @@
+> >  #include <linux/regmap.h>
+> >  #include <linux/units.h>
+> >  
+> > -#include <linux/fpga/adi-axi-common.h>
+> >  #include <linux/iio/backend.h>
+> >  #include <linux/iio/buffer-dmaengine.h>
+> >  #include <linux/iio/buffer.h>
+> > diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+> > index 4259a0db9ff45808eecae28680473292d165d1f6..e720191e74558d15f1b04fa18cf2984299f88809 100644
+> > --- a/drivers/pwm/pwm-axi-pwmgen.c
+> > +++ b/drivers/pwm/pwm-axi-pwmgen.c
+> > @@ -18,10 +18,10 @@
+> >   * - Supports normal polarity. Does not support changing polarity.
+> >   * - On disable, the PWM output becomes low (inactive).
+> >   */
+> > +#include <linux/adi-axi-common.h>
+> >  #include <linux/bits.h>
+> >  #include <linux/clk.h>
+> >  #include <linux/err.h>
+> > -#include <linux/fpga/adi-axi-common.h>
+> >  #include <linux/io.h>
+> >  #include <linux/minmax.h>
+> >  #include <linux/module.h>
+> > diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
+> > index 7c252126b33ea83fe6a6e80c6cb87499243069f5..d498132f1ff6adf20639bf4a21f1687903934bec 100644
+> > --- a/drivers/spi/spi-axi-spi-engine.c
+> > +++ b/drivers/spi/spi-axi-spi-engine.c
+> > @@ -5,9 +5,9 @@
+> >   *  Author: Lars-Peter Clausen <lars@metafoo.de>
+> >   */
+> >  
+> > +#include <linux/adi-axi-common.h>
+> >  #include <linux/clk.h>
+> >  #include <linux/completion.h>
+> > -#include <linux/fpga/adi-axi-common.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/io.h>
+> >  #include <linux/of.h>
+> > diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/adi-axi-common.h
+> > similarity index 100%
+> > rename from include/linux/fpga/adi-axi-common.h
+> > rename to include/linux/adi-axi-common.h
+> > 
+> 
 
