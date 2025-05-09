@@ -1,165 +1,158 @@
-Return-Path: <linux-pwm+bounces-5871-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5875-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E706AB0F69
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 May 2025 11:43:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D78B7AB0FA3
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 May 2025 11:54:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 811C97B7991
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 May 2025 09:41:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C00716E6E8
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 May 2025 09:54:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48CC828D8E7;
-	Fri,  9 May 2025 09:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E62852676FE;
+	Fri,  9 May 2025 09:53:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="f0cHU1Fq"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DR9hnALO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FDA28DEEC
-	for <linux-pwm@vger.kernel.org>; Fri,  9 May 2025 09:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D834269AEE;
+	Fri,  9 May 2025 09:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746783721; cv=none; b=LEdQN9kwgTaNXlFLSu6/KIY3kBH4OTZdDDb1hmzSq+nhiP8vybKYj9v35QWcM1M38I1StvbJdfy3s2FlEO2TzcTAfbFydX+Qc1RDi7023LPzNtgDNQw/CcYQaR7X4ARce9iRR5E/0Ait6YEyOCaRDfozX1/6UvOrIK/Bj4uB8FI=
+	t=1746784439; cv=none; b=tfq/XAE2jNPGGhtgSOzg7WYJ+o4GVlj05gggl57X46l3lYIzysSCQoMXUIHdfr5HOdiOEtHYRHtI0RGUnQgMsIZS4j8ER0xib6SV5wtP3uHMgj3iQMUu1Jn3PWrVptikosVWY/xilwLOn5nB8JSsyHtsoAE3hnnTlsNi77tCQ1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746783721; c=relaxed/simple;
-	bh=to9iLI09IuUpk5B76wu/vxa60Ry89kvmQ/y3CQWanPs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mdmu1RRTlOxqhVZUh87lsij1GTOi5BsaArwa88hRhom/rukzcuj7SZsGWsmOX/ab+HFnIBRu8FUSl5rNn8B006RxcEYg9Klir4qcHrPTQxI7kGgKT2P7sniCkoPom7owiBU4giFLvtKC4fJfeSPrH/KY9aSY0kG/Dt+dSgljbjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=f0cHU1Fq; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7411f65811cso1443820b3a.1
-        for <linux-pwm@vger.kernel.org>; Fri, 09 May 2025 02:41:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1746783718; x=1747388518; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=db3r56u6WbxunAQsqmv+qz1Bx6fNV6R3VtqVTo1N8lM=;
-        b=f0cHU1FqsQM77D6YjCqt1Q7VxDzwAtqjLwRwNFDP3SyCh9VLzkZSCnV9RSGKH/eqzt
-         nMfeazoI2Ryi8htOswiNeps7mLoY1eIS2q1yG8eQMjXQJwhvuRVuXg9eH+eFeXcV8MAu
-         e2iAq0GZb/hgqAfSb3/gseSrneanO8q7VZ43cCz0qRhtnUEf0Xdg1S4OjLgnJIXAd0h3
-         Gzvuv+G0+oi+LhMJbc/K3kpA7+dytJs9+F/9bE5Cnn7ZiL44bY3HXl9bS4BVG3fDnM9H
-         xj3b71GR0vFxbQTpbkuumJDTk/Tmuj55ZrAXWld7+B3Fsbfc3+Hus3EUyU4/SHSsBlcy
-         NA5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746783718; x=1747388518;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=db3r56u6WbxunAQsqmv+qz1Bx6fNV6R3VtqVTo1N8lM=;
-        b=YJa57ofCo0CdHqz0Wb80cb+K7DcIUFBl97Ve0KV8HEOQvtgYEmu7u2WGFBTBhVC9m4
-         c7GGUKfEHYqGHRSSxVUsoUlaZRbpyNUSfRaxyqn11ITjUfU+H8SBLNCKh0RsrCTAdKJ4
-         jpVsJdtpQn8gWnNu9zKahG6V3y1t62ZUOcQoNZ8Aw40EYp8y5dnthg+iixi0epEq89NX
-         VXsEE9IRoXn5+mlRm3SIeEXkUzCRI/tL78yB8Mp+yV3+OeHlccEzZOar2xRP37Rdt+fg
-         49FZvWP+GyqszK1vMGNC11ZIphCvYPATEC9OeChRyS+iyaD7h77kTmojNr1ekNDH5hsB
-         Br4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUwn/hzRu/vXcEMD/AN+DsB7wLtW4bT3JoraldGB6PsZkhs6TZPSV4sgBiooJOp2S4dTvjnoctKCyE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPuzAHVgWfwofCGie+PlFDN3FDjY32a08/e3AAm3dsW4zYkGsH
-	yasoa7+DdWWRHuLH9VU+AWuTfFA6P+jgkp3E9vehZZXMeJopjg/mbzn6Zl4XNsc=
-X-Gm-Gg: ASbGncu+nqMRCoxWYCF8HPj2V5Z1QPI1KpMvV0TK7Z7ghXbkaPQoNoEBqYj7/wA2bw9
-	vF0e5HlKVQEpwuAa82+kZebBWFal5huTvhn2DUuFDqnXLHbsYjaVjE5Tq1dcv6N9TW/QOJGcVwf
-	c7b2kESwXJWvM5ETtHmLn+2VhnMF5BEuynnPOUdfA0NhYtVLjbmeTdabbPBtJkKODfg+Q9riYfr
-	8hTifiA6ya9gqDNGFG2uGCu01PqUlPD2pUCNbHIg2Hm/sVKSZUb08sKyKjb1cNWt1uH6HXSn2KP
-	oV1mODQCIqWGoJRDr4iiifWwPWZDLNbif/cXkQlicWKLNgZKjaZlDSCkPQBL4w6kyTOC/5pIXIO
-	DJA==
-X-Google-Smtp-Source: AGHT+IH5OUjlU44wPTcS9YvNdweW8Hmi+ylHBcWO0ZjkJN+zsQnLZEzF4So5FHTc3N4rkAEKt0P6Pg==
-X-Received: by 2002:a17:902:e744:b0:22d:b240:34c9 with SMTP id d9443c01a7336-22fc91a9093mr48509735ad.53.1746783717970;
-        Fri, 09 May 2025 02:41:57 -0700 (PDT)
-Received: from hsinchu36-syssw02.internal.sifive.com ([210.176.154.34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271c38sm13271035ad.119.2025.05.09.02.41.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 02:41:57 -0700 (PDT)
-From: Nylon Chen <nylon.chen@sifive.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: conor@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	samuel.holland@sifive.com,
-	Nylon Chen <nylon.chen@sifive.com>,
-	Zong Li <zong.li@sifive.com>
-Subject: [PATCH v14 5/5] pwm: sifive: clarify inverted compare logic in comments
-Date: Fri,  9 May 2025 17:52:34 +0800
-Message-Id: <20250509095234.643890-6-nylon.chen@sifive.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250509095234.643890-1-nylon.chen@sifive.com>
-References: <20250509095234.643890-1-nylon.chen@sifive.com>
+	s=arc-20240116; t=1746784439; c=relaxed/simple;
+	bh=s7L62xg5AhYSBPqLtZLS+/N9HboWD+nvR4XXTw7AV18=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
+	 References:In-Reply-To; b=Rbh4BF0x2qroDJfF22hMfT8ZAX/nARV0C98ycSzxSYLNnef/VQt+9vDitE5UVdG22A4JZkSj7ofp05ov/KHn6sIksxeMUJT8ayyF+v3p7PlsYYSLISyqoajgWl8UlbIlJisS1XwfCC3tF0EWKspZPmG05LYfymbKg2Cgpp+kWQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DR9hnALO; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F3A254326B;
+	Fri,  9 May 2025 09:53:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746784429;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j50PEjeqXZDrUMeEGIxCAVR6d8U98GtS3zwEHA1HFcA=;
+	b=DR9hnALO9LwAG80j5ak+KWuJL/BSYM/nVDB7jUqtHVPXRlg6wf3SP1iiMpagJlg7ZwMiwm
+	4s3x8MdeuW4bGnbEZAiLxBn4EvsYd3ITVtxj9OtCsOs60J2YVadl7PAn+kQ4cPHcEI3XAF
+	Ax/8N6v4zRq3Ub+GnhLkab5eiDtlw6N+4jiO5bBmhlXYDhTO+xS4DHlkkmEk+2aecekCa6
+	YsOG/YhhJp5kzHX8F0H5bpK1B21//3xGJy/Hklngy50/m1uFaGYfNNRKpTYAZPm6K2LyjB
+	+ynrBQNg0fgPwUe6qaNjkQGeVGQMbbjXAdIkX8dsd5AUjQo8QuGTCOBSA7B1OQ==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 09 May 2025 11:53:47 +0200
+Message-Id: <D9RJEFYN039A.UGCG0K6AAPLH@bootlin.com>
+Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>, "Lee Jones"
+ <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
+ <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
+ <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>
+Subject: Re: [PATCH v8 02/11] mfd: Add max7360 support
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
+ <20250509-mdb-max7360-support-v8-2-bbe486f6bcb7@bootlin.com>
+ <69f72478-7102-4cfd-98d7-a93dcfe5a1a0@wanadoo.fr>
+In-Reply-To: <69f72478-7102-4cfd-98d7-a93dcfe5a1a0@wanadoo.fr>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvfeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefhvffuofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeftedvgfegteehjeejtdefgffhteevvddtvdejleeghfefuefgledtteduvdetkeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopegthhhrihhsthhophhhvgdrjhgrihhllhgvthesfigrnhgrughoohdrfhhrpdhrtghpthhtoheplhgvvgeskhgvrhhnv
+ ghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-The reference manual says "pwms >= pwmcmpX -> HIGH", but in Figure 29 pwmcmpXcenter
-is forced to 0 via an XOR, so hardware actually outputs HIGH when pwms < pwmcmpX.
-Thus pwmcmp holds the off-period count, and the driver must invert it
-to expose a normal active-high interface.
+On Fri May 9, 2025 at 11:29 AM CEST, Christophe JAILLET wrote:
+> Le 09/05/2025 =C3=A0 11:14, mathieu.dubois-briand@bootlin.com a =C3=A9cri=
+t=C2=A0:
+>> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>>=20
+>> Add core driver to support MAX7360 i2c chip, multi function device
+>> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
+>>=20
+>> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>> Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.co=
+m>
+>> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>> ---
+>
+> Hi,
+>
+> ...
+>
+>> +static int max7360_mask_irqs(struct regmap *regmap)
+>> +{
+>> +	struct device *dev =3D regmap_get_device(regmap);
+>> +	unsigned int val;
+>> +	int ret;
+>> +
+>> +	/*
+>> +	 * GPIO/PWM interrupts are not masked on reset: as the MAX7360 "INTI"
+>> +	 * interrupt line is shared between GPIOs and rotary encoder, this cou=
+ld
+>> +	 * result in repeated spurious interrupts on the rotary encoder driver
+>> +	 * if the GPIO driver is not loaded. Mask them now to avoid this
+>> +	 * situation.
+>> +	 */
+>> +	for (unsigned int i =3D 0; i < MAX7360_PORT_PWM_COUNT; i++) {
+>> +		ret =3D regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
+>> +					MAX7360_PORT_CFG_INTERRUPT_MASK,
+>> +					MAX7360_PORT_CFG_INTERRUPT_MASK);
+>> +		if (ret)
+>> +			return dev_err_probe(dev, ret,
+>> +					     "Failed to write MAX7360 port configuration");
+>
+> Nitpick: Missing \n
+>
+>> +	}
+>> +
+>> +	/* Read GPIO in register, to ACK any pending IRQ. */
+>> +	ret =3D regmap_read(regmap, MAX7360_REG_GPIOIN, &val);
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret, "Failed to read GPIO values: %d\n", re=
+t);
+>
+> Nitpick: ret is not needed in the error message.
+>
+>> +
+>> +	return 0;
+>> +}
+>
+> ...
+>
+> CJ
 
-Co-developed-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
----
- drivers/pwm/pwm-sifive.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+Hi Christophe,
 
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index 70cf644cde4a..4a07315b0744 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -4,11 +4,28 @@
-  * For SiFive's PWM IP block documentation please refer Chapter 14 of
-  * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-  *
-+ * PWM output inversion: According to the SiFive Reference manual
-+ * the output of each comparator is high whenever the value of pwms is
-+ * greater than or equal to the corresponding pwmcmpX[Reference Manual].
-+ *
-+ * Figure 29 in the same manual shows that the pwmcmpXcenter bit is
-+ * hard-tied to 0 (XNOR), which effectively inverts the comparison so that
-+ * the output goes HIGH when  `pwms < pwmcmpX`.
-+ *
-+ * In other words, each pwmcmp register actually defines the **inactive**
-+ * (low) period of the pulse, not the active time exactly opposite to what
-+ * the documentation text implies.
-+ *
-+ * To compensate, this driver always **inverts** the duty value when reading
-+ * or writing pwmcmp registers , so that users interact with a conventional
-+ * **active-high** PWM interface.
-+ *
-+ *
-  * Limitations:
-  * - When changing both duty cycle and period, we cannot prevent in
-  *   software that the output might produce a period with mixed
-  *   settings (new period length and old duty cycle).
-- * - The hardware cannot generate a 100% duty cycle.
-+ * - The hardware cannot generate a 0% duty cycle.
-  * - The hardware generates only inverted output.
-  */
- #include <linux/clk.h>
-@@ -113,6 +130,10 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	u32 duty, val, inactive;
- 
- 	inactive = readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-+	/*
-+	 * PWM hardware uses 'inactive' counts in pwmcmp, so invert to get actual duty.
-+	 * Here, 'inactive' is the low time and we compute duty as max_count - inactive.
-+	 */
- 	duty = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - inactive;
- 
- 	state->enabled = duty > 0;
--- 
-2.34.1
+Thanks, I'm fixing the two messages.
+
+Thanks for your review.
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
