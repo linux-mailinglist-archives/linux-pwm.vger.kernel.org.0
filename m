@@ -1,428 +1,198 @@
-Return-Path: <linux-pwm+bounces-5874-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5866-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FA2EAB0F8F
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 May 2025 11:48:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25B90AB0F57
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 May 2025 11:41:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A88251BA6AA9
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 May 2025 09:48:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F76B1B68258
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 May 2025 09:41:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F93E28DEF8;
-	Fri,  9 May 2025 09:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90DEB28C868;
+	Fri,  9 May 2025 09:41:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="H2vOUS0u"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="fzsRbbWB"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FB028D840;
-	Fri,  9 May 2025 09:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D638F289E3F
+	for <linux-pwm@vger.kernel.org>; Fri,  9 May 2025 09:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746784101; cv=none; b=awdgjRCRsUbpSSehDb/nts5Hd9pi+PGm/RNp3rStwG4fJ/RTtDWgBR4cBSJFERdpjxj3O0Bs6q9FL9+9zsyQRByM8sDRhcirMzvwqjVLkFEcL0zGRwh4sxORkpHyeAKl2VAUTemPAG7P8ghC5V+d8tqs0Xqd1yzX8MdXtmN4FFI=
+	t=1746783691; cv=none; b=n6ktZffEGK9nMAC2ygTjsEn+ZDAhfGbYKES1C3RNgOGCFiO8f+ryIVlnTvegZKYAAKownCuz00MczvoxoUnOa+FAp+6zS1oE6yTNXuYrUm2CDDlD5S1EF0XT4prpYdDuT+s44kAeE6Bp+UHF/cAUVgfsgdHgDSuiEQZUS3PgxsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746784101; c=relaxed/simple;
-	bh=XRzZnkx/rCvLH5gjjBlFfgJ1Y4g/7gPdDVjJMpFxq84=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T2PN4/HSCUSgO5ucLvzpuaGDAeVlRFkze+p0nAIirAdzYEWZFOnaxQCale4rAbsJyD6ChTD9YzaypQ2LrS8HCgZByLFuta8Zdw1/6Ihx1kJVCRHMuOUM54Tbh6bwzNHREzR3Gn6PPMzDk9FGVxjyFUqt0hVVjCLm2NngZMXROcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=H2vOUS0u; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 19B7943AEF;
-	Fri,  9 May 2025 09:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746784090;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XO5jmDfTQYOtrhnjFDYRyo0QIM7Jb/EP6v2mQntXvlE=;
-	b=H2vOUS0u6y8QzUUcxUh1MHsuIldx5h01+PChLWPErrZ/HImhI1ppOKKfV1Wek8TzyecGvD
-	dgxKViNGdzIpnmUzHB3YA9O5nejy2fOErEYo8JeLjS50kX2Ku+RtqbOXM3Y93fmEviU3t2
-	jtLM8YC4oPyAOex56G5AjkTq9j+6ZE5qCofeypmcVDAttEJ0t+sU2y/V7Uq1RWfWpQXoiV
-	2guPj5cGtooBuzYH2PMyT4TN1BuC79vWkINsm5QXBkbnpR2lUwYk2PYF0eQkxW8RSjlzmI
-	Ijh+pu4QhachqURAufiFp6Jzl6lVsZGVVBderIYCS+TpwflpyXqBq5Zo4v6gRQ==
-From: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Date: Fri, 09 May 2025 11:45:44 +0200
-Subject: [PATCH v8 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+	s=arc-20240116; t=1746783691; c=relaxed/simple;
+	bh=/vWV4VzOd8ZFhgbykkxak6+ylyvoqGZrkRbjE+xOVUo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=asSOh2rVIVbNlXIZ/clyUyRhlyUfLJcXoq+MAB9VGHn1OxKtnX711bUTP7NEOPUoK1Enj3FdAYHWgQrbTqFZfxsqUEn6F19udgq6yr+4Z0NIggJbEzAkw09ZR87LHHlyowJrzaptdBdIZCBkON4akLoCnEeu+mQmA+od/4HAwyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=fzsRbbWB; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso1981770b3a.2
+        for <linux-pwm@vger.kernel.org>; Fri, 09 May 2025 02:41:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1746783689; x=1747388489; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0rfbYYFv5okSJ9FP6KBkPZgXmzWmufmKqi5XTuFZ00I=;
+        b=fzsRbbWBTTMAqz+R5jSTFVrwbvqQJ6B1naHCG0XK4G4UGEd7GKOX9z5WDRqctt79ZB
+         wl7TE8WTFA+9NGTHc9ezRk5E2ggEmTlksXb5xYqyFQ2Dna9tviqtPX6itbSZJeiA7efN
+         qTaKi1JZyn6mGhGNC0dDG7xZaDlB72p9jGg+pAKlNIdjG6XzwFHZ/3dM7lKj4FfjertQ
+         EVVFvGXiM3SOJLkzFBxv6As8vIRYS/y+0mUeNcbmE4tHGeZR6CEOMxL8JbRYsI3YnxBJ
+         moL2gv1NKP+4y+7ROPg7Pm7uqvNM2JCfviL+WjUdu6PquZtrmxO25CDX/JWICtJ5x1hL
+         5DWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746783689; x=1747388489;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0rfbYYFv5okSJ9FP6KBkPZgXmzWmufmKqi5XTuFZ00I=;
+        b=OelR07fO9n9+lRzt9eQkSJpctjc2WljB66UytEYihdl8pH52xsz/HRA3ZT+8jHq+o4
+         6xXz3f9dCt0vySmAuME3n/hOtOyIde5sfpemRsMx3n6zWopZT3sZDO6dP85omNR32G7C
+         6LF4VwrKoE1eAWiml1/jFO4uXAZZ/39LThTWgFoDBr8shotYQet/LCjnX6LzZUI0TB22
+         CvPUGBv69qPfxCSzSfOS8OF39jEuGsocEgIRerIj3u2QmgnUzgt6nfDP1PO8qQ56xnn4
+         trg/nKK9Uxa18UGIfwCp3/7O8l6qWB9L7EfWWrMGpKQuyT1c4wePAhyJPzaJHxFONDUc
+         MfzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpAcOukKANR3qS2i4W0An6iTwfbVWYwNMDI2Uo34ZSRb+0mHnvyq7DIpOpUKP03RXe+vQEFIn+fa4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEMWS0dBxx1Otu5CE6BFsj0drj0nPcPYns5GDGGs58k4vtvHRH
+	yK8c1IeheMGCvS0WjVqyugjuhr2EPkVuVqBb/Tw6UnVHrQ1gp/nqsrQpzMdTWF8=
+X-Gm-Gg: ASbGnctp4PF7H3pIlo+KO5DzaiBIqGKkYWHJ6Hfnd+adgLfn4b1doFqdHNQmYz/Ny1H
+	J4stuHMkqbQjTEP9BYf8XSSLHhjMWO+NZ/J0MEe5iwzKjHpq2gkOCk2KHmQ/Vef0D5ZpUC/BbFH
+	OQhzoLIdprvV4xgFl2/VI8hinHKcBR86E9ykJt6AQVhBq8q7d62HjCZWySPDwtM/+y4hG+rNfsJ
+	X8Y6k+cMvuE+54KeLWwgr2ZP2a9/7M1/ITsGM8GS2arCtRA4tgudYbloshEYSfRCWDBdFKd/xHP
+	QcHPPPiuO3FOK/VuKEFQdHL0HgNtIrigGqv1+VXBu8MFfnqOrQoMlXTDEwiZxgrdmKvmLNhhMVs
+	+Ww==
+X-Google-Smtp-Source: AGHT+IGkkhlM5M+6Ld7nKmAFjVYH2kcGrb2uQx7YXLfMGH1JYPzi/20s2F/+C1+ZB+VEtlEdwAiPyA==
+X-Received: by 2002:a17:902:e84d:b0:223:653e:eb09 with SMTP id d9443c01a7336-22fc8b10842mr38716365ad.7.1746783689060;
+        Fri, 09 May 2025 02:41:29 -0700 (PDT)
+Received: from hsinchu36-syssw02.internal.sifive.com ([210.176.154.34])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271c38sm13271035ad.119.2025.05.09.02.41.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 May 2025 02:41:28 -0700 (PDT)
+From: Nylon Chen <nylon.chen@sifive.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: conor@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	samuel.holland@sifive.com,
+	Nylon Chen <nylon.chen@sifive.com>
+Subject: [PATCH v14 0/5] Change PWM-controlled LED pin active mode and algorithm
+Date: Fri,  9 May 2025 17:52:29 +0800
+Message-Id: <20250509095234.643890-1-nylon.chen@sifive.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250509-pwm_sophgo-v8-2-cfaebeb8ee17@bootlin.com>
-References: <20250509-pwm_sophgo-v8-0-cfaebeb8ee17@bootlin.com>
-In-Reply-To: <20250509-pwm_sophgo-v8-0-cfaebeb8ee17@bootlin.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
- Inochi Amaoto <inochiama@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- =?utf-8?q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>, 
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
- sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Jingbao Qiu <qiujingbao.dlmu@gmail.com>, 
- Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledvfedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsuceuohhnnhgvfhhilhhlvgcuoehthhhomhgrshdrsghonhhnvghfihhllhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekfffhteefueeutdekieelueeuvdeuvdejgedtveefffdvvdffgfeufffguddvhfenucfkphepvdgrtddumegtsgdugeemkeeflegtmeejtgdttdemrgegugejmeefvgelvgemvgekfedtmegsfegvtgenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeekfeeltgemjegttddtmegrgegujeemfegvlegvmegvkeeftdemsgefvggtpdhhvghloheplgduledvrdduieekrddurddufegnpdhmrghilhhfrhhomhepthhhohhmrghsrdgsohhnnhgvfhhilhhlvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhnohgthhhirghmrgesghhmrghilhdrtghom
- hdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrsghonhhnvghfihhllhgvsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehqihhujhhinhhgsggrohdrughlmhhusehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: thomas.bonnefille@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+According to the circuit diagram of User LEDs - RGB described in the
+manual hifive-unleashed-a00.pdf[0] and hifive-unmatched-schematics-v3.pdf[1].
 
-Implement the PWM driver for CV1800.
+The behavior of PWM is acitve-high.
 
-Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
----
- drivers/pwm/Kconfig      |  10 ++
- drivers/pwm/Makefile     |   1 +
- drivers/pwm/pwm-cv1800.c | 294 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 305 insertions(+)
+According to the descriptionof PWM for pwmcmp in SiFive FU740-C000 Manual[2].
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 4731d5b90d7edcc61138e4a5bf7e98906953ece4..d0a3d9c4f625820ac2e6cf81bae11527124c68a2 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -202,6 +202,16 @@ config PWM_CROS_EC
- 	  PWM driver for exposing a PWM attached to the ChromeOS Embedded
- 	  Controller.
- 
-+config PWM_CV1800
-+	tristate "Sophgo CV1800 PWM driver"
-+	depends on ARCH_SOPHGO || COMPILE_TEST
-+	help
-+	  Generic PWM framework driver for the Sophgo CV1800 series
-+	  SoCs.
-+
-+	  To compile this driver as a module, build the dependencies
-+	  as modules, this will be called pwm-cv1800.
-+
- config PWM_DWC_CORE
- 	tristate
- 	depends on HAS_IOMEM
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 539e0def3f82fcb866ab83a0346a15f7efdd7127..20c49abde6082dc9b0dc0fa3eb68a0b57bceeeb1 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_PWM_CLK)		+= pwm-clk.o
- obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
- obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
- obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
-+obj-$(CONFIG_PWM_CV1800)	+= pwm-cv1800.o
- obj-$(CONFIG_PWM_DWC_CORE)	+= pwm-dwc-core.o
- obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
- obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
-diff --git a/drivers/pwm/pwm-cv1800.c b/drivers/pwm/pwm-cv1800.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..d5ba6f6e7e167789d1b3785ae3d262d954e2295d
---- /dev/null
-+++ b/drivers/pwm/pwm-cv1800.c
-@@ -0,0 +1,294 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Sophgo CV1800 PWM driver
-+ * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-+ *
-+ * Limitations:
-+ * - The hardware emits the inactive level when disabled.
-+ * - This pwm device supports dynamic loading of PWM parameters. When PWMSTART
-+ *   is written from 0 to 1, the register value (HLPERIODn, PERIODn) will be
-+ *   temporarily stored inside the PWM. If you want to dynamically change the
-+ *   waveform during PWM output, after writing the new value to HLPERIODn and
-+ *   PERIODn, write 1 and then 0 to PWMUPDATE[n] to make the new value effective.
-+ * - Supports output frequency ranging from input_clock_rate/(2^30-1) to input_clock_rate/2.
-+ * - By setting HLPERIODn to 0, can produce 100% duty cycle.
-+ * - This hardware could support inverted polarity. By default, the value of the
-+ *   POLARITY register is 0x0. This means that HLPERIOD represents the number
-+ *   of low level beats.
-+ * - This hardware supports input mode and output mode, implemented through the
-+ *   Output-Enable/OE register. However, this driver has not yet implemented
-+ *   capture callback.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+
-+#define PWM_CV1800_POLARITY         0x40
-+#define PWM_CV1800_START            0x44
-+#define PWM_CV1800_DONE             0x48
-+#define PWM_CV1800_UPDATE           0x4c
-+#define PWM_CV1800_OE               0xd0
-+
-+#define PWM_CV1800_HLPERIOD(n)      (0x00 + ((n) * 0x08))
-+#define PWM_CV1800_PERIOD(n)        (0x04 + ((n) * 0x08))
-+
-+#define PWM_CV1800_UPDATE_MASK(n)   BIT(n)
-+#define PWM_CV1800_OE_MASK(n)       BIT(n)
-+#define PWM_CV1800_START_MASK(n)    BIT(n)
-+#define PWM_CV1800_POLARITY_MASK(n) BIT(n)
-+
-+#define PWM_CV1800_MAXPERIOD        0x3fffffff
-+#define PWM_CV1800_MINPERIOD        2
-+#define PWM_CV1800_CHANNELS         4
-+#define PWM_CV1800_PERIOD_RESET     BIT(1)
-+#define PWM_CV1800_HLPERIOD_RESET   BIT(0)
-+#define PWM_CV1800_REG_ENABLE(n)    BIT(n)
-+
-+struct cv1800_pwm {
-+	struct regmap *map;
-+	struct clk *clk;
-+	unsigned long clk_rate;
-+};
-+
-+static inline struct cv1800_pwm *to_cv1800_pwm_dev(struct pwm_chip *chip)
-+{
-+	return pwmchip_get_drvdata(chip);
-+}
-+
-+static const struct regmap_config cv1800_pwm_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.cache_type = REGCACHE_RBTREE,
-+	.reg_stride = 4,
-+};
-+
-+static int cv1800_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
-+			     bool enable)
-+{
-+	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-+	u32 pwm_enabled;
-+
-+	regmap_read(priv->map, PWM_CV1800_START, &pwm_enabled);
-+	pwm_enabled &= PWM_CV1800_START_MASK(pwm->hwpwm);
-+
-+	/*
-+	 * If the parameters are changed during runtime, Register needs
-+	 * to be updated to take effect.
-+	 */
-+
-+	if (!enable) {
-+		if (pwm_enabled)
-+			regmap_clear_bits(priv->map, PWM_CV1800_START, BIT(pwm->hwpwm));
-+		return 0;
-+	} else if (pwm_enabled) {
-+		/*
-+		 * Updating the PWM parameters dynamically requires to send a pulse on the
-+		 * PWMUPDATE register's nth bit, the value is updated only once a zero has been
-+		 * written back to this nth bit
-+		 */
-+		regmap_set_bits(priv->map, PWM_CV1800_UPDATE, BIT(pwm->hwpwm));
-+		regmap_clear_bits(priv->map, PWM_CV1800_UPDATE, BIT(pwm->hwpwm));
-+	} else {
-+		regmap_set_bits(priv->map, PWM_CV1800_START, BIT(pwm->hwpwm));
-+	}
-+
-+	/* check and set OE/Output-Enable mode */
-+	regmap_set_bits(priv->map, PWM_CV1800_OE, BIT(pwm->hwpwm));
-+
-+	return 0;
-+}
-+
-+static void cv1800_pwm_set_polarity(struct pwm_chip *chip,
-+				    struct pwm_device *pwm,
-+				    enum pwm_polarity polarity)
-+{
-+	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-+	u32 config_polarity = 0;
-+
-+	if (pwm->state.enabled)
-+		cv1800_pwm_enable(chip, pwm, false);
-+
-+	if (polarity == PWM_POLARITY_NORMAL)
-+		config_polarity = PWM_CV1800_POLARITY_MASK(pwm->hwpwm);
-+
-+	regmap_update_bits(priv->map, PWM_CV1800_POLARITY,
-+			   PWM_CV1800_POLARITY_MASK(pwm->hwpwm),
-+			   config_polarity);
-+}
-+
-+static int cv1800_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    const struct pwm_state *state)
-+{
-+	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-+	u32 period_ticks, hlperiod_ticks;
-+	u64 ticks;
-+
-+	/*
-+	 * This hardware use PERIOD and HLPERIOD registers to represent PWM waves.
-+	 *
-+	 * The meaning of PERIOD is how many clock cycles (from the clock source)
-+	 * are used to represent PWM waves.
-+	 * PERIOD = rate(MHz) / target(MHz)
-+	 * PERIOD = period(ns) * rate(Hz) / NSEC_PER_SEC
-+	 */
-+	ticks = mul_u64_u64_div_u64(state->period, priv->clk_rate,
-+				    NSEC_PER_SEC);
-+	if (ticks < PWM_CV1800_MINPERIOD)
-+		return -EINVAL;
-+
-+	if (ticks > PWM_CV1800_MAXPERIOD)
-+		ticks = PWM_CV1800_MAXPERIOD;
-+	period_ticks = (u32)ticks;
-+
-+	/*
-+	 * The HLPERIOD register value represents the duration of the active portion
-+	 * of the PWM signal, which matches the polarity of the duty cycle.
-+	 * HLPERIOD = rate(MHz) / duty(MHz)
-+	 * HLPERIOD = duty(ns) * rate(Hz) / NSEC_PER_SEC
-+	 */
-+	ticks = mul_u64_u64_div_u64(state->duty_cycle, priv->clk_rate,
-+				    NSEC_PER_SEC);
-+	if (ticks > period_ticks)
-+		ticks = period_ticks;
-+	hlperiod_ticks = (u32)ticks;
-+
-+	if (state->polarity != pwm->state.polarity)
-+		cv1800_pwm_set_polarity(chip, pwm, state->polarity);
-+
-+	regmap_write(priv->map, PWM_CV1800_PERIOD(pwm->hwpwm), period_ticks);
-+	regmap_write(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), hlperiod_ticks);
-+
-+	cv1800_pwm_enable(chip, pwm, state->enabled);
-+
-+	return 0;
-+}
-+
-+static int cv1800_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				struct pwm_state *state)
-+{
-+	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
-+	u32 period_val, hlperiod_val;
-+	u64 period_ns = 0, duty_ns = 0;
-+	u32 enable = 0, polarity = 0;
-+
-+	regmap_read(priv->map, PWM_CV1800_PERIOD(pwm->hwpwm), &period_val);
-+	regmap_read(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), &hlperiod_val);
-+
-+	if (period_val != PWM_CV1800_PERIOD_RESET ||
-+	    hlperiod_val != PWM_CV1800_HLPERIOD_RESET) {
-+		period_ns = DIV_ROUND_UP_ULL(period_val * NSEC_PER_SEC,
-+					     priv->clk_rate);
-+		duty_ns = DIV_ROUND_UP_ULL(hlperiod_val * NSEC_PER_SEC,
-+					   priv->clk_rate);
-+
-+		regmap_read(priv->map, PWM_CV1800_START, &enable);
-+		enable &= PWM_CV1800_START_MASK(pwm->hwpwm);
-+
-+		regmap_read(priv->map, PWM_CV1800_POLARITY, &polarity);
-+		polarity &= PWM_CV1800_POLARITY_MASK(pwm->hwpwm);
-+	}
-+
-+	state->period = period_ns;
-+	state->duty_cycle = duty_ns;
-+	state->enabled = enable;
-+
-+	/*
-+	 * To ensure that duty and hlperiod represent the same polarity
-+	 * the following mapping needs to be completed.
-+	 *
-+	 * |----------|------------|------------|-----------|
-+	 * |  Linux   |  register  |    duty    | register  |
-+	 * | polarity |  polarity  |            | hlperiod  |
-+	 * |----------|------------|------------|-----------|
-+	 * |    1     |      0     | low level  | low level |
-+	 * |----------|------------|------------|-----------|
-+	 * |    0     |      1     | high level | high level|
-+	 * |----------|------------|------------|-----------|
-+	 */
-+	state->polarity = polarity ? PWM_POLARITY_NORMAL :
-+					   PWM_POLARITY_INVERSED;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops cv1800_pwm_ops = {
-+	.apply = cv1800_pwm_apply,
-+	.get_state = cv1800_pwm_get_state,
-+};
-+
-+static int cv1800_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cv1800_pwm *priv;
-+	struct pwm_chip *chip;
-+	void __iomem *base;
-+	int ret;
-+
-+	chip = devm_pwmchip_alloc(dev, 4, sizeof(*priv));
-+	if (!chip)
-+		return PTR_ERR(chip);
-+	priv = to_cv1800_pwm_dev(chip);
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	priv->map = devm_regmap_init_mmio(&pdev->dev, base,
-+					  &cv1800_pwm_regmap_config);
-+	if (IS_ERR(priv->map))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(priv->map),
-+				     "Couldn't create PWM regmap\n");
-+
-+	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
-+				     "clk not found\n");
-+
-+	ret = devm_clk_rate_exclusive_get(dev, priv->clk);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "failed to get exclusive rate\n");
-+
-+	priv->clk_rate = clk_get_rate(priv->clk);
-+	if (!priv->clk_rate)
-+		return dev_err_probe(&pdev->dev, -EINVAL,
-+				     "Invalid clock rate: %lu\n",
-+				     priv->clk_rate);
-+	else if (priv->clk_rate > NSEC_PER_SEC)
-+		return dev_err_probe(&pdev->dev, -EINVAL,
-+				     "Clock rate too high: %lu\n",
-+				     priv->clk_rate);
-+	 ;
-+
-+	chip->ops = &cv1800_pwm_ops;
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cv1800_pwm_dt_ids[] = {
-+	{ .compatible = "sophgo,cv1800-pwm" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cv1800_pwm_dt_ids);
-+
-+static struct platform_driver cv1800_pwm_driver = {
-+	.probe = cv1800_pwm_probe,
-+	.driver	= {
-+		.name = "cv1800-pwm",
-+		.of_match_table = cv1800_pwm_dt_ids,
-+	},
-+};
-+module_platform_driver(cv1800_pwm_driver);
-+
-+MODULE_AUTHOR("Jingbao Qiu");
-+MODULE_DESCRIPTION("Sophgo cv1800 PWM Driver");
-+MODULE_LICENSE("GPL");
+The pwm algorithm is (PW) pulse active time  = (D) duty * (T) period.
+The `frac` variable is pulse "inactive" time so we need to invert it.
+
+So this patchset removes active-low in DTS and adds reverse logic to the driver.
+
+Links:
+- [0]: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8453f8698_hifive-unleashed-a00-schematics-1.pdf
+- [1]: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68ce76f4192_hifive-unmatched-schematics-v3.pdf
+- [2]: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed8b16acba_fu740-c000-manual-v1p6.pdf
+
+Updated patches: 1
+New patches: 0
+Unchanged patches: 4
+
+Changed in v14:
+ - Change `frac` from `u32` to `u64` and cast the constant in `min()` to
+   `u64`  so that `do_div(frac, state->period)` no longer triggers type-mismatch
+
+Changed in v13:
+ - Fix syntax error: Added missing closing parenthesis in do_div()
+   function call.
+
+Changed in v12:
+ - Replace division with do_div() to fix __udivdi3 modpost error.
+
+Changed in v11:
+ - Fix rounding consistency in apply() and get_state()
+ - Add code comments to help clarify Reference Manual errors.
+
+Changed in v10:
+ - Add 'inactive' variable in apply() to match pwm_sifive_get_state()
+   style
+ - Update comment about hardware limitation - it cannot generate 0% duty
+   cycle rather than 100% duty cycle
+
+Changed in v9:
+ - Fix commit message to adhere to 75 columns rule.
+ - Update commit message's subject.
+ - Add a variable for inactive logic.
+
+Changed in v8:
+ - Fix Signed-off-by and Co-developed-by typo.
+
+Changed in v7:
+ - Remove active-low strings from hifive-unleashed-a00.dts file.
+
+Changed in v6:
+ - Separate the idempotent test bug fixes into a new patch.
+ - Move the reversing the duty before the line checking
+   state->enabled.
+ - Fix the algorithm and change it to take the minimum value first and
+   then reverse it.
+
+Changed in v5:
+ - Add the updates to the PWM algorithm based on version 2 back in.
+ - Replace div64_ul with DIV_ROUND_UP_ULL to correct the error in the
+   period value of the idempotent test in pwm_apply_state_debug.
+
+Changed in v4:
+ - Remove previous updates to the PWM algorithm.
+
+Changed in v3:
+ - Convert the reference link to standard link.
+ - Move the inverted function before taking the minimum value.
+ - Change polarity check condition(high and low).
+ - Pick the biggest period length possible that is not bigger than the
+   requested period.
+
+Changed in v2:
+ - Convert the reference link to standard link.
+ - Fix typo: s/sifive unmatched:/sifive: unmatched:/.
+ - Remove active-low from hifive-unleashed-a00.dts.
+ - Include this reference link in the dts and pwm commit messages.
+
+Nylon Chen (5):
+  riscv: dts: sifive: unleashed/unmatched: Remove PWM controlled LED's
+    active-low properties
+  pwm: sifive: change the PWM algorithm
+  pwm: sifive: Fix the error in the idempotent test within the
+    pwm_apply_state_debug function
+  pwm: sifive: Fix rounding issues in apply and get_state functions
+  pwm: sifive: clarify inverted compare logic in comments
+
+ .../boot/dts/sifive/hifive-unleashed-a00.dts  | 12 ++---
+ .../boot/dts/sifive/hifive-unmatched-a00.dts  | 12 ++---
+ drivers/pwm/pwm-sifive.c                      | 52 ++++++++++++++-----
+ 3 files changed, 47 insertions(+), 29 deletions(-)
 
 -- 
-2.49.0
+2.34.1
 
 
