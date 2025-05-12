@@ -1,51 +1,53 @@
-Return-Path: <linux-pwm+bounces-5895-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5896-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5420CAB35E1
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 13:26:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D60AAB372C
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 14:39:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7146F7A93BC
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 11:25:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1AD61886695
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 12:39:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF9C428D857;
-	Mon, 12 May 2025 11:26:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 187A929372B;
+	Mon, 12 May 2025 12:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3OSac1P"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRi0Mj/A"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920ED25C802;
-	Mon, 12 May 2025 11:26:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD07D610D;
+	Mon, 12 May 2025 12:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747049171; cv=none; b=k/oUNEUMIq2eF9p9qh+vAnc4OdtTnSampSxviLMfk6cgNsAlY5wy3FWiUlnTIX/xWX6esuSYRBuGIaJUy+G8iutxpDlmqCVq/wb1AclXeo49LymBhWEh3CQKqY4L7M/+fxkL/nHETVO9woetFF73tJAdUOryn8sN+CY760Mn47c=
+	t=1747053539; cv=none; b=J1PIBoYczzbs5ZUidjok8mLZt1c++YfOz1SPXNRc54H8R4Stke79D3JNhPAdjBIVgXvkHE3lOpn1BG98QyHkmSeEfRxqN3cJbo3Vkk9SNWFe7pIholPv7hD7qbuTUrJh21eaTRz29JBtW8VZA3ijE0Eq1O6CWWh9D3SIe0PP4vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747049171; c=relaxed/simple;
-	bh=0bANmR03SRjRmDVHY+CDLs/PzBOw4ovvu4Q4PJhMhVM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=X/q/FTh4sPG+c3JsMR+i9TLfQ3Mou0J1FVEbkaShkq25SUjED04rnRxii3zM/h/2Yq/g/c4sPhXK/9MtEoF6KBxSZ5XQu76d4uK3ESXDiSTy1p9LL3BFi6ifd88S//zb5hLf08hMsF55hZU0ySVePupvuQ/Vt8hkP0cm6zZxhQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3OSac1P; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E80D8C4CEEE;
-	Mon, 12 May 2025 11:26:10 +0000 (UTC)
+	s=arc-20240116; t=1747053539; c=relaxed/simple;
+	bh=NqT3bibK3Jvi4NAqycwo7bNrt+NCy+HAVXsUduhU2QE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hfckXFbLHk8Hm1Q+Wp+BsudIL1VrK3JL9C563LyU7ggBd9DuCJEAaO+nQvppMhAzt2A2mWIScg5RPjvbpzQnVPh4EZ8/39BhL0JrycK4hJXP3iiVQNl6VDGY8L3xGFENaiD8GAbJtGtkETIQ2XPj+Ap2aG//SHNY+m1KH3azXNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRi0Mj/A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5A3E0C4CEE7;
+	Mon, 12 May 2025 12:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747049170;
-	bh=0bANmR03SRjRmDVHY+CDLs/PzBOw4ovvu4Q4PJhMhVM=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=S3OSac1Penj0r0wTbr2LXDGYypR7yPeIoSXxUjrHaG3q9EqNM8MCJ6sKeVtlona1N
-	 5oSzzvtQI04Xjv4E58K6YKKhMcjMynlwZlmJCovhO+CvljTR5cAwQ4iJLEq0CapZ/D
-	 m9SmONV+t0tVtjg7l6iXi1iWBwNXOE8uZ9VfqK1aNcwt+l3XXmkMKJ9iirC5fq/3WH
-	 iw+fZgNEDN+Ecc5+OL0buDh9KBLXC+HFIjRQduPKL3MNu88DiR9F/164QCCtw3MWX7
-	 NvpqzgGx5qFBriYgf/ImQWJ64fdapqAoKcWzf6aDSswI//nC/Abjly5XqhdcamtWLf
-	 N/A4WpDXMus3Q==
+	s=k20201202; t=1747053538;
+	bh=NqT3bibK3Jvi4NAqycwo7bNrt+NCy+HAVXsUduhU2QE=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=RRi0Mj/AIUzwoec+hbMvz57SPHm63KsWx0k1Bt4eFDn5KpUWj40qpVw+G4ycTKoJt
+	 dHn0FQKmFP3LmUczZO0kVX/emUHt02Dui9G0k9mMB9H5kRkUewOBuWie8uXWMUZ9cq
+	 zAjH04YoDZiYY7TPTDANDlgvgBuvpL6b8yx1IJ/VAl0d9qyuDN1Ot4UcVNNt0WWG/Y
+	 iaDBe5HcKA7jLSZBGPaJAvWVu5NxxTgRHYqTDLd5+qKfOpI+KC2wrdnqmXnFxC2u03
+	 frtv18JG1roXm86O97hfgufbe/wwyAz6/TizQ6SiFNIjWdzJ86eotrDq4ZoR456dDi
+	 jJ+DQ4+ReWlNA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A0AC3ABC3;
-	Mon, 12 May 2025 11:26:10 +0000 (UTC)
-From: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>
-Date: Mon, 12 May 2025 13:26:01 +0200
-Subject: [PATCH] pwm: mc33xs2410: add support for temperature sensors
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A82EC3ABC3;
+	Mon, 12 May 2025 12:38:58 +0000 (UTC)
+From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
+Subject: [PATCH v3 00/22] mfd: adp5585: support keymap events and drop
+ legacy Input driver
+Date: Mon, 12 May 2025 13:38:52 +0100
+Message-Id: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -53,284 +55,161 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250512-mc33xs2410-hwmon-v1-1-addba77c78f9@liebherr.com>
-X-B4-Tracking: v=1; b=H4sIAMjaIWgC/x3MQQqAIBBA0avIrBMmTaKuEi3ExpyFFgoVhHdPW
- r7F/y8UykwFZvFCposLH6mh7wS4YNNOkrdmUKgMGhxldFo/RQ09ynDHI0lrvJ/Ik0M00LIzk+f
- nXy5rrR+eta+vYgAAAA==
-X-Change-ID: 20250507-mc33xs2410-hwmon-a5ff9efec005
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hwmon@vger.kernel.org, Dimitri Fedrau <dima.fedrau@gmail.com>, 
- Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAN3rIWgC/2XMSwrCMBSF4a3IHRvJUxNH7kMcxOS2DWhTEolK6
+ d5NCyLq8Bz4vxEypoAZ9qsREpaQQ+zrEOsVuM72LZLg6wZOuaKCMeKxEOsHpbQhzZ0gla7xRiq
+ ut1CjIWETHgt4PNXdhXyL6bn4hc3vmxK/VGGEEk5RUy/PXqI92N5eYrtx8QqzVfinl0z99bz2w
+ u6McQK9Zvyrn6bpBZhdk7vtAAAA
+X-Change-ID: 20250311-dev-adp5589-fw-e04cfd945286
+To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-input@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Liu Ying <victor.liu@nxp.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747049170; l=7237;
- i=dimitri.fedrau@liebherr.com; s=20241202; h=from:subject:message-id;
- bh=WO+KJq5SeJ/zVZpna3KQEugGGpzJUOSQsd2wSDTN6nU=;
- b=oq98zzKrURO5ToJ22Y1C1vQz/akr+yJc8i8yqSV1I1JET7tw2k7Yn5x2FJd4wKwvXDL/7/d/R
- 1yRnb7u0frMCnZyaiaKKk/APWs6k68Y2NXbfpjkFJfPpw+5t59MBvUX
-X-Developer-Key: i=dimitri.fedrau@liebherr.com; a=ed25519;
- pk=rT653x09JSQvotxIqQl4/XiI4AOiBZrdOGvxDUbb5m8=
-X-Endpoint-Received: by B4 Relay for dimitri.fedrau@liebherr.com/20241202
- with auth_id=290
-X-Original-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Reply-To: dimitri.fedrau@liebherr.com
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747053537; l=5336;
+ i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
+ bh=NqT3bibK3Jvi4NAqycwo7bNrt+NCy+HAVXsUduhU2QE=;
+ b=EFLo6ZIgTAM5O8iofw+ajksRi/O1Lv5AWVLMBQWA4uFzJOSyo7ELbf+OH49Gh9U66zTj6jxfd
+ DAPGQTxQtFRAQifU5otPopYWjE9713nXZZE/NtubtDTu+TqXrKHz4No
+X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
+ pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
+X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
+ auth_id=100
+X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
+Reply-To: nuno.sa@analog.com
 
-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Hi all,
 
-The MC33XS2410 provides temperature sensors for the central die temperature
-and the four outputs. Additionally a common temperature warning threshold
-can be configured for the outputs. Add hwmon support for the sensors.
+Here it goes v3. There was some major refactoring in this version due to
+Lee's and Laurent's feedback. There are some splits (and some explicit
+requests) resulting in new patches being added. The biggest change is the
+effort in trying to minimize the usage of specific child device bits in
+the top level device (mainly stuff related to the keymap). I think now
+it's fairly self contained and the only thing that we really need to
+handle in the top device are the unlock and reset events as those can be
+supported through both the input and gpio devices (via gpio_keys). This
+results in a bit of more runtime complexity but well, that's life...
 
-Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
----
- drivers/pwm/Kconfig          |   1 +
- drivers/pwm/pwm-mc33xs2410.c | 176 ++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 176 insertions(+), 1 deletion(-)
+Another change is Lee's suggestion of making use of templates (for
+regmap and chip specific data) and fill things up at probe.
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 6faa8b2ec0a4844f667a84335f30bde44d52378e..0deaf8447f4302e7cfd3b4cb35c7d46ef19e006c 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -425,6 +425,7 @@ config PWM_LPSS_PLATFORM
- 
- config PWM_MC33XS2410
- 	tristate "MC33XS2410 PWM support"
-+	depends on HWMON || HWMON=n
- 	depends on OF
- 	depends on SPI
- 	help
-diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
-index a1ac3445ccdb4709d92e0075d424a8abc1416eee..c3302b58b3acb60e5985c1c14746c380271eb6d6 100644
---- a/drivers/pwm/pwm-mc33xs2410.c
-+++ b/drivers/pwm/pwm-mc33xs2410.c
-@@ -21,6 +21,7 @@
- #include <linux/bitfield.h>
- #include <linux/delay.h>
- #include <linux/err.h>
-+#include <linux/hwmon.h>
- #include <linux/math64.h>
- #include <linux/minmax.h>
- #include <linux/module.h>
-@@ -29,6 +30,8 @@
- 
- #include <linux/spi/spi.h>
- 
-+/* ctrl registers */
-+
- #define MC33XS2410_GLB_CTRL			0x00
- #define MC33XS2410_GLB_CTRL_MODE		GENMASK(7, 6)
- #define MC33XS2410_GLB_CTRL_MODE_NORMAL		FIELD_PREP(MC33XS2410_GLB_CTRL_MODE, 1)
-@@ -51,6 +54,21 @@
- 
- #define MC33XS2410_WDT				0x14
- 
-+#define MC33XS2410_TEMP_WT			0x29
-+#define MC33XS2410_TEMP_WT_MASK			GENMASK(7, 0)
-+
-+/* diag registers */
-+
-+/* chan in { 1 ... 4 } */
-+#define MC33XS2410_OUT_STA(chan)		(0x02 + (chan) - 1)
-+#define MC33XS2410_OUT_STA_OTW			BIT(8)
-+
-+#define MC33XS2410_TS_TEMP_DIE			0x26
-+#define MC33XS2410_TS_TEMP_MASK			GENMASK(9, 0)
-+
-+/* chan in { 1 ... 4 } */
-+#define MC33XS2410_TS_TEMP(chan)		(0x2f + (chan) - 1)
-+
- #define MC33XS2410_PWM_MIN_PERIOD		488282
- /* step in { 0 ... 3 } */
- #define MC33XS2410_PWM_MAX_PERIOD(step)		(2000000000 >> (2 * (step)))
-@@ -125,6 +143,11 @@ static int mc33xs2410_read_reg_ctrl(struct spi_device *spi, u8 reg, u16 *val)
- 	return mc33xs2410_read_reg(spi, reg, val, MC33XS2410_FRAME_IN_DATA_RD);
- }
- 
-+static int mc33xs2410_read_reg_diag(struct spi_device *spi, u8 reg, u16 *val)
-+{
-+	return mc33xs2410_read_reg(spi, reg, val, 0);
-+}
-+
- static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val)
- {
- 	u16 tmp;
-@@ -140,6 +163,157 @@ static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val
- 	return mc33xs2410_write_reg(spi, reg, tmp);
- }
- 
-+#if IS_ENABLED(CONFIG_HWMON)
-+static const struct hwmon_channel_info * const mc33xs2410_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_LABEL | HWMON_T_INPUT,
-+			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_ALARM,
-+			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_ALARM,
-+			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_ALARM,
-+			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_ALARM),
-+	NULL,
-+};
-+
-+static umode_t mc33xs2410_hwmon_is_visible(const void *data,
-+					   enum hwmon_sensor_types type,
-+					   u32 attr, int channel)
-+{
-+	switch (attr) {
-+	case hwmon_temp_input:
-+	case hwmon_temp_alarm:
-+	case hwmon_temp_label:
-+		return 0444;
-+	case hwmon_temp_max:
-+		return 0644;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static int mc33xs2410_hwmon_read_out_status(struct spi_device *spi,
-+					    int channel, u16 *val)
-+{
-+	int ret;
-+
-+	ret = mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Bits latches high */
-+	return mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
-+}
-+
-+static int mc33xs2410_hwmon_read(struct device *dev,
-+				 enum hwmon_sensor_types type,
-+				 u32 attr, int channel, long *val)
-+{
-+	struct spi_device *spi = dev_get_drvdata(dev);
-+	u16 reg_val;
-+	int ret;
-+	u8 reg;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		reg = (channel == 0) ? MC33XS2410_TS_TEMP_DIE :
-+				       MC33XS2410_TS_TEMP(channel);
-+		ret = mc33xs2410_read_reg_diag(spi, reg, &reg_val);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* LSB is 0.25 degree celsius */
-+		*val = FIELD_GET(MC33XS2410_TS_TEMP_MASK, reg_val) * 250 - 40000;
-+		return 0;
-+	case hwmon_temp_alarm:
-+		ret = mc33xs2410_hwmon_read_out_status(spi, channel, &reg_val);
-+		if (ret < 0)
-+			return ret;
-+
-+		*val = FIELD_GET(MC33XS2410_OUT_STA_OTW, reg_val);
-+		return 0;
-+	case hwmon_temp_max:
-+		ret = mc33xs2410_read_reg_ctrl(spi, MC33XS2410_TEMP_WT, &reg_val);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* LSB is 1 degree celsius */
-+		*val = FIELD_GET(MC33XS2410_TEMP_WT_MASK, reg_val) * 1000 - 40000;
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int mc33xs2410_hwmon_write(struct device *dev,
-+				  enum hwmon_sensor_types type, u32 attr,
-+				  int channel, long val)
-+{
-+	struct spi_device *spi = dev_get_drvdata(dev);
-+
-+	switch (attr) {
-+	case hwmon_temp_max:
-+		val = clamp_val(val, -40000, 215000);
-+
-+		/* LSB is 1 degree celsius */
-+		val = (val / 1000) + 40;
-+		return mc33xs2410_modify_reg(spi, MC33XS2410_TEMP_WT,
-+					     MC33XS2410_TEMP_WT_MASK, val);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static const char *const mc33xs2410_temp_label[] = {
-+	"Central die temperature",
-+	"Channel 1 temperature",
-+	"Channel 2 temperature",
-+	"Channel 3 temperature",
-+	"Channel 4 temperature",
-+};
-+
-+static int mc33xs2410_read_string(struct device *dev,
-+				  enum hwmon_sensor_types type,
-+				  u32 attr, int channel, const char **str)
-+{
-+	*str = mc33xs2410_temp_label[channel];
-+
-+	return 0;
-+}
-+
-+static const struct hwmon_ops mc33xs2410_hwmon_hwmon_ops = {
-+	.is_visible = mc33xs2410_hwmon_is_visible,
-+	.read = mc33xs2410_hwmon_read,
-+	.read_string = mc33xs2410_read_string,
-+	.write = mc33xs2410_hwmon_write,
-+};
-+
-+static const struct hwmon_chip_info mc33xs2410_hwmon_chip_info = {
-+	.ops = &mc33xs2410_hwmon_hwmon_ops,
-+	.info = mc33xs2410_hwmon_info,
-+};
-+
-+static int mc33xs2410_hwmon_probe(struct spi_device *spi)
-+{
-+	struct device *dev = &spi->dev;
-+	struct device *hwmon;
-+
-+	hwmon = devm_hwmon_device_register_with_info(dev, NULL, spi,
-+						     &mc33xs2410_hwmon_chip_info,
-+						     NULL);
-+
-+	return PTR_ERR_OR_ZERO(hwmon);
-+}
-+
-+#else
-+static int mc33xs2410_hwmon_probe(struct spi_device *spi)
-+{
-+	return 0;
-+}
-+#endif
-+
- static u8 mc33xs2410_pwm_get_freq(u64 period)
- {
- 	u8 step, count;
-@@ -361,7 +535,7 @@ static int mc33xs2410_probe(struct spi_device *spi)
- 	if (ret < 0)
- 		return dev_err_probe(dev, ret, "Failed to add pwm chip\n");
- 
--	return 0;
-+	return mc33xs2410_hwmon_probe(spi);
- }
- 
- static const struct spi_device_id mc33xs2410_spi_id[] = {
+I also refactored a bit the event handling so it's more generic now.
+There were lot's of changes so odds are that I might have forgotten some
+feedback and so, my apologies in advance :).
+
+I also dropped the tags in:
+
+patch 16/22 ("gpio: adp5585: support gpi events") as it has some
+significant changes (replacing .init_valid_masks() with .request() and
+.free())
+
+Thanks!
+- Nuno Sá
 
 ---
-base-commit: 7395eb13e3a85067de3e083d3781630ea303c0c4
-change-id: 20250507-mc33xs2410-hwmon-a5ff9efec005
+Changes in v3:
+- Patch 2:
+ * New patch (only add devices given in DT).
+- Patch 5:
+ * Don't include adp5585-keys (still not present at this point).
+- Patch 6:
+ * Alphabetical order for compatibles.
+- Patch 7:
+ * New patch. Refactor regmap_config and fill variant differences at probe.
+- Patch 8:
+ * Rework according to changes introduced in patch 7;
+ * Drop the regs struct in this patch. 
+- Patch 9:
+ * New patch. Add a per chip register structure. 
+- Patch 10:
+ * Moved the per variant gpio register into the gpio driver;
+ * Moved ADP558[59]_GPIO_{BANK_BIT} into the gpio driver;
+ * Moved ADP5589_GPIO_MAX and dropped the max_{col|row}.
+- Patch 11:
+ * Moved the per variant pwm register into the pwm driver (hence adding a chip_info struct.
+- Patch 12:
+ * Renamed the -keys suffix in the unlock/reset to events as that's the code we give in dt.
+- Patch 13:
+ * New patch (add event handling in a more generic way).
+- Patch 14:
+ * Support reset and unlock events in a separate patch;
+ * Reworked how these events are validated.
+- Patch 15:
+ * Add support for input devices in it's own patch;
+ * Add a bitmap for marking pins busy so there's no overlaps between
+   the input and gpio devices. 
+- Patch 16:
+ * Drop .init_valid_mask() and use .free() and .request() for checking
+   pin availability;
+ * Drop max_gpios variables as that info is now available from the top
+   device;
+ * Adapt events handling to the new code.
+- Patch 17:
+ * Moved DT pin parsing into the input driver;
+ * Validate reset/unlock events that are generated by the keymap;
+ * Use error instead of ret;
+ * Drop call to input_set_drvdata();
+ * Adapt events handling to the new code.
+- Patch 20:
+ * Add a comment on the reset sleep time.
 
-Best regards,
--- 
-Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+- Link to v2: https://lore.kernel.org/r/20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com
+- Link to v1: https://lore.kernel.org/r/20250313-dev-adp5589-fw-v1-0-20e80d4bd4ea@analog.com
+
+---
+Nuno Sá (22):
+      dt-bindings: mfd: adp5585: ease on the required properties
+      mfd: adp5585: only add devices given in FW
+      mfd: adp5585: enable oscilator during probe
+      pwm: adp5585: don't control OSC_EN in the pwm driver
+      mfd: adp5585: make use of MFD_CELL_NAME()
+      dt-bindings: mfd: adp5585: document adp5589 I/O expander
+      mfd: adp5585: refactor how regmap defaults are handled
+      mfd: adp5585: add support for adp5589
+      mfd: adp5585: add a per chip reg struture
+      gpio: adp5585: add support for the adp5589 expander
+      pwm: adp5585: add support for adp5589
+      dt-bindings: mfd: adp5585: add properties for input events
+      mfd: adp5585: add support for event handling
+      mfd: adp5585: support reset and unlock events
+      mfd: adp5585: add support for input devices
+      gpio: adp5585: support gpi events
+      Input: adp5585: Add Analog Devices ADP5585/89 support
+      Input: adp5589: remove the driver
+      mfd: adp5585: support getting vdd regulator
+      dt-bindings: mfd: adp5585: document reset gpio
+      mfd: adp5585: add support for a reset pin
+      pwm: adp5585: make sure to include mod_devicetable.h
+
+ .../devicetree/bindings/mfd/adi,adp5585.yaml       |  240 ++++-
+ .../devicetree/bindings/trivial-devices.yaml       |    2 -
+ MAINTAINERS                                        |    1 +
+ drivers/gpio/Kconfig                               |    1 +
+ drivers/gpio/gpio-adp5585.c                        |  348 ++++++-
+ drivers/input/keyboard/Kconfig                     |   21 +-
+ drivers/input/keyboard/Makefile                    |    2 +-
+ drivers/input/keyboard/adp5585-keys.c              |  356 +++++++
+ drivers/input/keyboard/adp5589-keys.c              | 1066 --------------------
+ drivers/mfd/adp5585.c                              |  794 ++++++++++++++-
+ drivers/pwm/pwm-adp5585.c                          |   79 +-
+ include/linux/mfd/adp5585.h                        |  148 ++-
+ 12 files changed, 1852 insertions(+), 1206 deletions(-)
+---
+base-commit: 407f60a151df3c44397e5afc0111eb9b026c38d3
+change-id: 20250311-dev-adp5589-fw-e04cfd945286
+--
+
+Thanks!
+- Nuno Sá
 
 
 
