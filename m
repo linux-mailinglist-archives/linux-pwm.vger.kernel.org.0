@@ -1,118 +1,158 @@
-Return-Path: <linux-pwm+bounces-5932-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5933-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F36C3AB3BE5
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 17:22:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B9881AB3E19
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 18:53:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97F7316A860
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 15:22:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C0F316C285
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 16:53:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8314C22A7EB;
-	Mon, 12 May 2025 15:22:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FAC123BCEC;
+	Mon, 12 May 2025 16:52:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mbVsRsCz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YcSvvMLH"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A34F23AE96
-	for <linux-pwm@vger.kernel.org>; Mon, 12 May 2025 15:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95F82528FC;
+	Mon, 12 May 2025 16:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747063347; cv=none; b=VjWrkEcsFYW/owe8oHf5rXkTDm5Q1ZfZBHejPBqSq48rkFuxKccWaI/GryOg6ZgZ/fw79F5oxb1ZzTPvobULa+6baTUDptt4cyFNjhdPe6jc5xro+sqNWi0Y94FBfVW5Cbw6xH6yAXBgz4FVbaQuJotam80ZwAv0/uu7IIsEzLE=
+	t=1747068778; cv=none; b=bOmRM3tDIFMFC3nRPuVnak6SF71D+11t6cWu1cqAUGPpzYHqbuiltuHTMq9N6oU7b7LxZ1CDTN0MQJC2/g4BAcW5fQkJWf2AHC2JMIPDfDNw+LNV0I3tow+6JXeF4ur0nfg80+ProFopKi1+A6js6cxmJuOtPRYVEHkXwe8ExBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747063347; c=relaxed/simple;
-	bh=Q44I9l9A6bvt+4X1Jm8yKDlsTfz7OTm9T4HQgSxLV9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UByMV/dfI6CojIKPbuatDOFV4aUhBGdP+G7TdMGbKYD3tCMBPDdb24SqwIWiOa2/r6unPiBhKyun8S6IqsrzwxZrvYLqVLoCYwfP3EIw7v2rpoAfdqLhSrGDTuv5LgwHcjXxSqMR1AJXxB0TANydjK1JV1X8UdADWyNHGjcdjg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mbVsRsCz; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-72b0626c785so4130275a34.2
-        for <linux-pwm@vger.kernel.org>; Mon, 12 May 2025 08:22:23 -0700 (PDT)
+	s=arc-20240116; t=1747068778; c=relaxed/simple;
+	bh=VA2k1DyRjqhjpTuXEVQSbyPFByM8zKA5P42D98FPHm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LyKKTo8nGX5//a07CQS9IIO2B3fvZms5WD5oLqwfKUDs08aiz4oYqB5V+8Bildw4D81F7Oq1ZD+gH8kjA43zg5I3YhoEeKCV7MTcEy1EvB0/jwUKFM7DG6Tl/6ew6OqX8ZV5mv2FwyF+alLd9wq0bf5OHvPDcqCKfatlQFsjjLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YcSvvMLH; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so34034595e9.0;
+        Mon, 12 May 2025 09:52:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747063343; x=1747668143; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ehw97cZ7zSM30yNLRgq/QkB3dg1EfknESH7kBGZVvBE=;
-        b=mbVsRsCzWPlROmO/4sbHdF+vsB/XjMas/p6KKCm61e2jARKKO21QzJNUOHNAE90eik
-         cCUoHIuC68AuPvQCfisee/2dQPSwuvLuYeZyxyvzFSiUU13na2aUvSbhpTcgLGE67yvu
-         hzYeel2U5bdLbqAdpdHInuzxUUXA805ybrC4sZjgchOY7joGVEsxUGuLeXV8/VUK9+Jr
-         n5DTrrNw75QgBuMdrSMoMXYb0HMWVIrIOMrsRtqYEWDkuoeY6olKjcRgIt7HyUQTAyRG
-         GIdxbxfD8Xlql016VfKTPzCG+avLge9HR8Tt/OHLsIFlJY7/lqUkNR7Yd+2SGeBZxqk7
-         HGVw==
+        d=gmail.com; s=20230601; t=1747068775; x=1747673575; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bZNWFRrUSg91wrgDi7MuQDR/3MURApHPgoEnszpvjls=;
+        b=YcSvvMLHlc7Uaut/WqyXmuTaJmnye7LT1BK6qjl/KxB8HKu292oE52a9cTcaHGIA7R
+         aYhOLOorKuB+dRBPWW8OjYwDE3ITpNZfBjYB2XM6Sr71AXv31uqJAeKH9xJQt1W9n4Zu
+         xO6MnSrGEdNPr1/ZNJ80xNvVOyYfaSg7J+8GiEcmxWbJM907FH3eReuk8ICeOeQVBamQ
+         Q1M67f7h/EtMzp4Rx95cjWIE9eoyYRxtBvBb5EjD46eJPvTFv10xbPiFEsWP9beK5NOO
+         Cp3rW2jhES083qkDWWWvsUbN+Ph4yh3grunRiuiS8Gb4Xn4E2scVYENd33cgGoJzt/+8
+         SAng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747063343; x=1747668143;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ehw97cZ7zSM30yNLRgq/QkB3dg1EfknESH7kBGZVvBE=;
-        b=L3EF8BkR+kBhiWx6gy1v3CxsUK6UCLkH0QobTSjfn8W6ZXszeco6JV7sA0stsF/R3e
-         aW4qYKqQvnCoTN8xQK88l2sCyHks62GBx64LLlpD1Ub0hHCHw9ItW9gvgGVLiVrugoWI
-         frF7iifDtIK5OIxHwVXlpgRtKM1yo1O3T2ngeW6iXImd9h1SpFn8EAlQDTCA082gasrm
-         gg1zIoIyaz6Gs8Lz9LN5FfnZFg0hsigRAIarSPFlyqaHkq3mehYp/7/7AG2J/vujqCk5
-         9qhZXl7MrtIbwAI8yE3AwP6ggeprRVKxE2kZtWV+Nh9HrZ1lNyzuFgzFWwkFMmI/HQrG
-         f4dA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnlzRtOyGWBBo5WxorYswcnPboVuyJNIQGWdLvfZjx3MTOGAHuf7oO9jh3Z/9Bk6hvs607LzU/YBA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTO1krjo29Qs68HJDcc+SyOlhw8N355U5TjplqNcF3wNhQvdod
-	qK8IBnYzAah67e42kPGMmsAAvdXS5KrkY847e0DZcU9F7q1Zv7fdkIoXJJ5J2fE=
-X-Gm-Gg: ASbGncswAvodDmMwuky/Uk/iu2NxpYNR/h84IOruVWOfWV+KeCTE6UFaGdIGsfWndyN
-	ecUyfasWvtxpRXDQmUkfdRLMgbefODf/QHnweBMitHZvBV4AzvpMJRhbFFZmidGn/AT2Tt2R1Ju
-	we00r9xFSQwF7YrsCb6uBuwugo7HJGpyrwKAUVz8XcV0dyl3E6ONusAwfIWs/imM/ea5OTF5SKc
-	z9jzkA9IpIstAYw1QRsg4yWg8YcPfrY5+uyqWVHYk5jIb0Ljfxup2rJ6SJECzuYZ4zttxFrRkdy
-	yqvC50hxLCZkey1zi50e4xj6OJVFQb0ccCoicQdFQD7ECDMJ9UDj3fPE/bbiMxK49dUUUyf2xtC
-	8kAZbP+gvSMCb4zkPidhOkG4GejLNtZ9XNl722YA=
-X-Google-Smtp-Source: AGHT+IFg8Sgjr8yxeNG/IhUScUIAVa1OFc7m7FxlwqSYuIM0xhwp6QZ1req1LRFjA6ZAnmsIbAxIvg==
-X-Received: by 2002:a05:6830:648b:b0:72a:47ec:12da with SMTP id 46e09a7af769-732269d6a12mr9682527a34.10.1747063343145;
-        Mon, 12 May 2025 08:22:23 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:fd2e:ffda:4c42:b314? ([2600:8803:e7e4:1d00:fd2e:ffda:4c42:b314])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732264d78fbsm1584954a34.32.2025.05.12.08.22.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 08:22:22 -0700 (PDT)
-Message-ID: <a810d8ff-535c-4d6c-bec3-8a275bcbe483@baylibre.com>
-Date: Mon, 12 May 2025 10:22:21 -0500
+        d=1e100.net; s=20230601; t=1747068775; x=1747673575;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bZNWFRrUSg91wrgDi7MuQDR/3MURApHPgoEnszpvjls=;
+        b=T+0A8q+j4kOeebQnqNLUq31cQzNVzvehup5JvPDFgbtDoryceOTNtGpvsamde4VhIr
+         YEiNOJ8YygQnXvKuk+463q/KHIacaqv+pX69nnIGCErwHlHQBIa5eJHRRuzrvxn2X7ma
+         Gz+h4uod1NUw9gN3iuauS0Krgvrts3NI7oZ33xMLrf4MnbTtv9iQLCV7HA+frdVzP+Tc
+         g74cwp84hEog01v0lYEXTCXzqfG0STgRopR9SsrVM6o0/lzN9f8Dv59W23FAob+EnBgU
+         TDInG9jxkDapYUcS+jMSyIhDAqQXwn9/1UaAWFAdRZzqjmjiMjmmGjXNHNP5Ru+0zTzz
+         hhRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVyxTWQG+StKBRqvsm1NW056L1O8BIAlulQDhKoBW6rvPENjFDnKuRoMDI03MM9JfgEa8Uv8SPIaeQV2Rh3@vger.kernel.org, AJvYcCW3fSGhUX3BReo1RalQwu2frXdKUnmPf5KykAySJznBQ76aT/oOsPPJwV2YBHG9ss+iswuChFMRVqYk@vger.kernel.org, AJvYcCWjnngQuV+wGeuU76TjN+TIpiNLiFZIMVeKjfv3EGD4FJe0gCp0yqtGf2rHPVtiznee7Df51oNu2+kX4Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqSscuI6eF8R8tD8+fOnBchF2wSmjKn2T6B08JxOLy3Qekdoxn
+	K9a1ZjFGnGeO+NaFR+x32wbkWw1d3vZtgWabnVcFxM6E/hdOC7dG
+X-Gm-Gg: ASbGncstHA7AtebGfNJoGHGip+qlV8QXKrEEy8FTqchN/TfRUUdd77Uqpd++3Niulf8
+	/PYYrqVIQogrx45odPmRY24TXvKq6u3DP6uEpcmxAc5bsFWTBxmUTqxgdtOVHLY3vFhNf17k77U
+	9cAq8MDFz5Jeq/Gtl6Wv4BJpS/fMJTjdEHsuixYGCG0es7nlsiXG5DksAtTVjpB69FsPhmenkEZ
+	GtVf0SXDbrUPRrg+Zf1ZM9J7uh0i5YRIhhBMbLM4nwI22X12rEpiGkDY/ksFgiA4ETJRlPnCXgY
+	tOARG6kSnBncxNMelHcQJdMmZ6PtzQx+j4HLiq1KnKCHNIoCtA==
+X-Google-Smtp-Source: AGHT+IFgWc2wCu7S/9RbJZkXPhP5XtjOV9ZJ33dg5BwNo4gnN8tIOEohMbw4lQklsVP/+z33huQ1EA==
+X-Received: by 2002:a05:600c:528a:b0:43d:abd:ad0e with SMTP id 5b1f17b1804b1-442d6d6b6ecmr121896135e9.18.1747068774592;
+        Mon, 12 May 2025 09:52:54 -0700 (PDT)
+Received: from legfed1 ([2a00:79c0:632:2600:22ea:3d6a:5919:85f8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f194sm176749815e9.10.2025.05.12.09.52.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 09:52:54 -0700 (PDT)
+Date: Mon, 12 May 2025 18:52:52 +0200
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: dimitri.fedrau@liebherr.com,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Jean Delvare <jdelvare@suse.com>, linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH] pwm: mc33xs2410: add support for temperature sensors
+Message-ID: <20250512165252.GA11091@legfed1>
+References: <20250512-mc33xs2410-hwmon-v1-1-addba77c78f9@liebherr.com>
+ <1bd48694-9760-4e6b-9138-4651d42ff032@roeck-us.net>
+ <20250512133114.GA6440@legfed1>
+ <a7a71408-c01d-4e0c-bd44-73ffbd79f716@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/7] clk: clk-axi-clkgen: improvements and some fixes
-To: nuno.sa@analog.com, linux-clk@vger.kernel.org,
- linux-fpga@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org
-Cc: Stephen Boyd <sboyd@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Moritz Fischer
- <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
- Tom Rix <trix@redhat.com>, Vinod Koul <vkoul@kernel.org>,
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Trevor Gamblin <tgamblin@baylibre.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>,
- Xu Yilun <yilun.xu@linux.intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250512-dev-axi-clkgen-limits-v5-0-a86b9a368e05@analog.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250512-dev-axi-clkgen-limits-v5-0-a86b9a368e05@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a7a71408-c01d-4e0c-bd44-73ffbd79f716@roeck-us.net>
 
-On 5/12/25 9:46 AM, Nuno Sá via B4 Relay wrote:
-> This series starts with a small fix and then a bunch of small
-> improvements. The main change though is to allow detecting of
-> struct axi_clkgen_limits during probe().
+Am Mon, May 12, 2025 at 06:53:21AM -0700 schrieb Guenter Roeck:
+> On 5/12/25 06:31, Dimitri Fedrau wrote:
+> > Hi Guenter,
+> > 
+> > Am Mon, May 12, 2025 at 06:04:33AM -0700 schrieb Guenter Roeck:
+> > > On 5/12/25 04:26, Dimitri Fedrau via B4 Relay wrote:
+> > > > From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> > > > 
+> > > > The MC33XS2410 provides temperature sensors for the central die temperature
+> > > > and the four outputs. Additionally a common temperature warning threshold
+> > > > can be configured for the outputs. Add hwmon support for the sensors.
+> > > > 
+> > > > Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> > > > ---
+> > > 
+> > > > +
+> > > > +static int mc33xs2410_hwmon_read_out_status(struct spi_device *spi,
+> > > > +					    int channel, u16 *val)
+> > > > +{
+> > > > +	int ret;
+> > > > +
+> > > > +	ret = mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
+> > > > +	if (ret < 0)
+> > > > +		return ret;
+> > > > +
+> > > > +	/* Bits latches high */
+> > > > +	return mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
+> > > 
+> > > Is that double read of the same register needed ? If so, you'll probably
+> > > need a lock to prevent it from being executed from multiple threads at the
+> > > same time.
+> > > 
+> > > The comment "Bit latches high" doesn't really mean anything to me and doesn't
+> > > explain why the register needs to be read twice.
+> > > 
+> > > 
+> > 
+> > All bits of the output status registers are latched high. In case there
+> > was overtemperature detected, the bit stays set until read once and cleared
+> > afterwards. So I need a second read to get the "realtime" status.
+> > Otherwise I might end up returning an false positive overtemperature
+> > warning. I don't think a lock is really necessary, since I'm only
+> > interested in the "realtime" status but not if there was a warning in
+> > the past. What do you think ?
+> > 
 > 
-> ---
-How we added the linux/adi-axi-common.h include to the clk-axi-clkgen
-driver could have been tidier, but not strictly worth a v6 just for that.
+> Hardware monitoring is _expected_ to report the last latched status and clear
+> it afterwards, to ensure that historic alarms are reported at least once.
+> This isn't about "false positive", it is about "report at least once if
+> possible".
+>
+Didn't know that, thanks for the explanation.
 
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+> Given that, the second read is unnecessary from hwmon ABI perspective. If you
+> don't want to do that, you should explicitly document that latched (historic)
+> over-temperature alarms are not reported.
+> 
+I would stick to hwmon ABI, just didn't know better.
+
+Best regards,
+Dimitri Fedrau
 
