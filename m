@@ -1,52 +1,53 @@
-Return-Path: <linux-pwm+bounces-5898-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5900-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A433AB3734
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 14:39:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7ACD4AB373D
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 14:39:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8EECE1686E9
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 12:39:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B4EF188C5D1
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 12:39:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ABAD293757;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 423C2293B6A;
 	Mon, 12 May 2025 12:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DO7I+AHK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R74obJ26"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD154268FEF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049BC4A08;
 	Mon, 12 May 2025 12:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747053539; cv=none; b=snE7jILY89YAl7DEt1UMlGBvPQkJZmKzbE05kRLLjT/WdpgBxCnW6idXKrTUzwKFGszd8UXvfaK3hs50dARkvKoZ4uTQfwHQHczwlJeM+Cso6eOKYguDCutNvFRa7w7H/aoIxj5NGDlg1V9DQPJcjk4+Zu45hTzkbRofMq7EkpU=
+	t=1747053539; cv=none; b=pwEVyGxZvlCXmutPTALrrhXq5JX3adHLUx7isKyDhhjxZr1yyRJxrpD3HO6D8ynCtcbsRKkiZMJvqQEmj/OUEQsKnFBis7oFJwQCIte93VXRrj6njUold55X/8OKw/FTVX6eGXJxB4Ziov3peZ5ywhvZyRXfdxTKlqOqyxFek7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747053539; c=relaxed/simple;
-	bh=cuvafvFaZO541iA/E3CfTdzj7W1Wn4e4p01axUPK54E=;
+	bh=HgcAr0PBB4Py95fVn5f8uWZI71qwh+M5gpX5UYPwIpU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=R6GzP2lWtQ9RQo2jpp6hlwbJ1+DtvUL2FwUYoJLfWz96Igpa6u+UPlfoY709u8uUCiYHUK6smynAIvgIfpUCY30devew1RYWB49xX+yqivfaFtgvnpoXZNMePz4r0Io14YIDnbnSf9xg5hPLP2Bubks95N3/yXNAIOTO2js1XDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DO7I+AHK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 81D52C4CEF2;
+	 In-Reply-To:To:Cc; b=a8l72AEaA4VKz6ecvAXYoMD9DEuSgx48EGWMuDeV4PnVR8WxcqoqWK5r2yMpsOs7zFYYdqcUOj43B78oflTVH1USSVdR/DQj0WjXhN0J+uUz3NQ3YeEHtctmnqn6JoSwz+NSWtBllDLkvczTPBnFHCLmI+b5tEiSWG0TS1VN4Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R74obJ26; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 93831C4CEF3;
 	Mon, 12 May 2025 12:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747053538;
-	bh=cuvafvFaZO541iA/E3CfTdzj7W1Wn4e4p01axUPK54E=;
+	bh=HgcAr0PBB4Py95fVn5f8uWZI71qwh+M5gpX5UYPwIpU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=DO7I+AHK3XrJvyPH7sR2pB8mu/r29MWxbmxitp6lMRN4NVXPpXl9RuJ7nMtmsA+3y
-	 v/RJsljkwiPpM8kLFq8vOqc4RDrAFkI+V6vU6oqWRT3HC7zjiFF4i70h0nP1IZOvNv
-	 Ru3O+UcrpxUHjjRb41YjJcOrLOfto9ZbqtWxWTnPnPaD9kMJpvoAGII+pRnHNyjgOP
-	 WdEGe039zss7k9fPnQRfTJOCpq0g0so+6vXkLO7W2Iouw7hQwY9Cyt4RvUUAXLMujD
-	 EATzToIIZYMqPkegol68z7PDm0YjRjPLlAUunkh86ddgptEmg6C+sVwtDkHhGS1zgr
-	 ByEdPlkzs5hLQ==
+	b=R74obJ261MRq9zWlq1K0pwUdOZh0vh3HYDSSki6oPCq6eyvrLvxI+iraqWJdWVgvw
+	 Ttn1sgqwWUCZKGolREStAPASK60d8r600ALKwfj0HxsuG+S8YQ9wpIWcsRqOjKMihc
+	 eddEZN4G4oMXUpW1KQe0NNVOy+OxoWb7uISSl4h6tCw/pmTkTp3geBCNFUzGBakKYT
+	 +LWjYSDZA95Ispv3pvVp+iq0J2589cdatVziK89/i3l94XlZ28psU4JKql6/VJEagd
+	 71ioEHm4ATZeR3x6UhoxGgp1EQS2/D7dQHE5oLUtJWyX9i/uWCk/Xf2q7b/8bf4Wzj
+	 Wy2fHx3FjC4tw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787E1C3ABC3;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A958C3ABCD;
 	Mon, 12 May 2025 12:38:58 +0000 (UTC)
 From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Mon, 12 May 2025 13:38:55 +0100
-Subject: [PATCH v3 03/22] mfd: adp5585: enable oscilator during probe
+Date: Mon, 12 May 2025 13:38:56 +0100
+Subject: [PATCH v3 04/22] pwm: adp5585: don't control OSC_EN in the pwm
+ driver
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250512-dev-adp5589-fw-v3-3-092b14b79a88@analog.com>
+Message-Id: <20250512-dev-adp5589-fw-v3-4-092b14b79a88@analog.com>
 References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
 In-Reply-To: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
 To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
@@ -70,11 +71,11 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
  Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
  Liu Ying <victor.liu@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747053537; l=1487;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747053537; l=1401;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=mybnMMBTKtLDHzpuhMVeYjCasyTrQngKx8uZaX1S1OY=;
- b=2T4/8jY8H8wXOk32QQvO0IaORXzzoiC4QcU2KmLV2MbIq+S1jtfschlqwpauc955xpbQUArt/
- UIhvlcc8vI/A+DQfDKYS/w/kfvsraZXNnKrR0gqG9RuNTnbnAD2NFAp
+ bh=MVCU5kPBNDbHxIfJmLO114QSq4N3ZehCh55N9NFh/nk=;
+ b=e73+7UDtEa7JsEUNcmfk1BRIjDHf6yGm16rJN160lpWBPTe8cbC5EmIUXAOygYuJ4jQMBXgYb
+ 2tLS2W6N1HNAUQENyO4MmnmlaPJMW2bH/882aMDPefzBZunwyRk3ZPi
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
@@ -84,50 +85,44 @@ Reply-To: nuno.sa@analog.com
 
 From: Nuno Sá <nuno.sa@analog.com>
 
-Make sure to enable the oscillator in the top device. This will allow to
-not control this in the child PWM device as that would not work with
-future support for keyboard matrix where the oscillator needs to be
-always enabled (and so cannot be disabled by disabling PWM).
+The adp5585 is a Multi Function Device that can also be a gpio
+controller and as it turns out, when OSC_EN is not set, we can't
+reliably read the gpio value when it's configured as input. Hence,
+OSC_EN will be set during probe by the parent device (and cleared on
+unbind).
+
+Moreover, we'll add support for the keymap matrix (input device) which
+definitely needs OSC_EN to be set and so, we cannot afford that disabling
+the PWM output also breaks the keymap events generation.
 
 Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
- drivers/mfd/adp5585.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/pwm/pwm-adp5585.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-index 02f9e8c1c6a1d8b9516c060e0024d69886e9fb7a..d693b1ead05128e02f671ca465f9c72cab3b3395 100644
---- a/drivers/mfd/adp5585.c
-+++ b/drivers/mfd/adp5585.c
-@@ -143,6 +143,13 @@ static int adp5585_parse_fw(struct device *dev, struct adp5585_dev *adp5585,
- 	return rc;
+diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
+index 40472ac5db6410a33e4f790fe8e6c23b517502be..c8821035b7c1412a55a642e6e8a46b66e693a5af 100644
+--- a/drivers/pwm/pwm-adp5585.c
++++ b/drivers/pwm/pwm-adp5585.c
+@@ -62,7 +62,6 @@ static int pwm_adp5585_apply(struct pwm_chip *chip,
+ 	int ret;
+ 
+ 	if (!state->enabled) {
+-		regmap_clear_bits(regmap, ADP5585_GENERAL_CFG, ADP5585_OSC_EN);
+ 		regmap_clear_bits(regmap, ADP5585_PWM_CFG, ADP5585_PWM_EN);
+ 		return 0;
+ 	}
+@@ -100,10 +99,6 @@ static int pwm_adp5585_apply(struct pwm_chip *chip,
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = regmap_set_bits(regmap, ADP5585_GENERAL_CFG, ADP5585_OSC_EN);
+-	if (ret)
+-		return ret;
+-
+ 	return regmap_set_bits(regmap, ADP5585_PWM_CFG, ADP5585_PWM_EN);
  }
  
-+static void adp5585_osc_disable(void *data)
-+{
-+	const struct adp5585_dev *adp5585 = data;
-+
-+	regmap_write(adp5585->regmap, ADP5585_GENERAL_CFG, 0);
-+}
-+
- static int adp5585_i2c_probe(struct i2c_client *i2c)
- {
- 	const struct regmap_config *regmap_config;
-@@ -176,6 +183,15 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
- 	if (n_devs < 0)
- 		return n_devs;
- 
-+	ret = regmap_set_bits(adp5585->regmap, ADP5585_GENERAL_CFG,
-+			      ADP5585_OSC_EN);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(&i2c->dev, adp5585_osc_disable, adp5585);
-+	if (ret)
-+		return ret;
-+
- 	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
- 				   devs, n_devs, NULL, 0, NULL);
- 	if (ret)
 
 -- 
 2.49.0
