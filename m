@@ -1,154 +1,336 @@
-Return-Path: <linux-pwm+bounces-5894-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5895-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B102AB3309
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 11:22:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5420CAB35E1
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 13:26:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD8F917BA21
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 09:22:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7146F7A93BC
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 11:25:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43E2225D8F9;
-	Mon, 12 May 2025 09:21:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF9C428D857;
+	Mon, 12 May 2025 11:26:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DQiymcGQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3OSac1P"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0537A25C80B;
-	Mon, 12 May 2025 09:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920ED25C802;
+	Mon, 12 May 2025 11:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747041698; cv=none; b=mQxgbBUk6vdilLWiT9K5RdiyelNtzy6AMj0fXywXZqK7IYwhTBRXg5gREFQaVgDJrfkvNRQM0QmiuVYUtyOk/K8BOgkxj4aCnbB6eM5XJigLl8J8UDP8/VxBclMgDslpBCWKhK94MCMSJDGQCpTUHwJkRh3vd0HfS9lXP+P2nsc=
+	t=1747049171; cv=none; b=k/oUNEUMIq2eF9p9qh+vAnc4OdtTnSampSxviLMfk6cgNsAlY5wy3FWiUlnTIX/xWX6esuSYRBuGIaJUy+G8iutxpDlmqCVq/wb1AclXeo49LymBhWEh3CQKqY4L7M/+fxkL/nHETVO9woetFF73tJAdUOryn8sN+CY760Mn47c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747041698; c=relaxed/simple;
-	bh=YmCAbwyOKKCOtWmhkRLBy829s5QkGxOr0MC+PNYO3U0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tpp5hBHsT7OGtxjiOC8EBQ3545hOX1RclxL3JIuL+EtgdJBcD8UUOLBcJ8Aff1enzq9JuBD3IRQyARvSD51r+BxjJbhgPNOdKUtf+LOR4WM2eyt+v6Db1M9siSBtxc7HajpwwBAQjeJR6j6617wnKNPeJbWnM9bt9xGZfXG7jIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DQiymcGQ; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747041696; x=1778577696;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YmCAbwyOKKCOtWmhkRLBy829s5QkGxOr0MC+PNYO3U0=;
-  b=DQiymcGQWCa0IxCvHPvu1YVBjlbUVS6Bc/iNPq2bk+XjZvv+1bHdNTta
-   ACdTR+po0A4BwTUyHeriWWnjDCedPRdEjExvttpWWd024nQ17BcV6AQRn
-   zdcVRMJQmcBCZPjRm9/oFI4FRcGTqBMnpe2hdJMQbP/agsetyIPjm//sZ
-   V0UvUchwCNhm6eQ29t+yIGPmD1hvyBF8cfIPbvOMrZG++DiFAZ0gIVkGC
-   NHy2RbhwWt1hGudbMz35glFZxgQZKugSp1tPp67qp1lKwU6Jg3uk5DEj8
-   53K8YbSgc356v2uMuJdKA8OP8gdySMCYjrnDUzprPosXjvJiIkuTxZZjK
-   Q==;
-X-CSE-ConnectionGUID: mNm96ilSQQqwEyzPGSjWeA==
-X-CSE-MsgGUID: 8LvY2hPyTAeF9dPHAqONwA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11430"; a="48947672"
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="48947672"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:21:35 -0700
-X-CSE-ConnectionGUID: /YbdnLXlRBeGXuDj1xlBgQ==
-X-CSE-MsgGUID: DwVgNY1YSkOB3zIE/HlX0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,281,1739865600"; 
-   d="scan'208";a="142076489"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2025 02:21:30 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uEPLj-00000000sE1-1BwI;
-	Mon, 12 May 2025 12:21:27 +0300
-Date: Mon, 12 May 2025 12:21:27 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: mathieu.dubois-briand@bootlin.com
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v8 02/11] mfd: Add max7360 support
-Message-ID: <aCG9lyaCGchBsqLE@smile.fi.intel.com>
-References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
- <20250509-mdb-max7360-support-v8-2-bbe486f6bcb7@bootlin.com>
+	s=arc-20240116; t=1747049171; c=relaxed/simple;
+	bh=0bANmR03SRjRmDVHY+CDLs/PzBOw4ovvu4Q4PJhMhVM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=X/q/FTh4sPG+c3JsMR+i9TLfQ3Mou0J1FVEbkaShkq25SUjED04rnRxii3zM/h/2Yq/g/c4sPhXK/9MtEoF6KBxSZ5XQu76d4uK3ESXDiSTy1p9LL3BFi6ifd88S//zb5hLf08hMsF55hZU0ySVePupvuQ/Vt8hkP0cm6zZxhQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3OSac1P; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E80D8C4CEEE;
+	Mon, 12 May 2025 11:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747049170;
+	bh=0bANmR03SRjRmDVHY+CDLs/PzBOw4ovvu4Q4PJhMhVM=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=S3OSac1Penj0r0wTbr2LXDGYypR7yPeIoSXxUjrHaG3q9EqNM8MCJ6sKeVtlona1N
+	 5oSzzvtQI04Xjv4E58K6YKKhMcjMynlwZlmJCovhO+CvljTR5cAwQ4iJLEq0CapZ/D
+	 m9SmONV+t0tVtjg7l6iXi1iWBwNXOE8uZ9VfqK1aNcwt+l3XXmkMKJ9iirC5fq/3WH
+	 iw+fZgNEDN+Ecc5+OL0buDh9KBLXC+HFIjRQduPKL3MNu88DiR9F/164QCCtw3MWX7
+	 NvpqzgGx5qFBriYgf/ImQWJ64fdapqAoKcWzf6aDSswI//nC/Abjly5XqhdcamtWLf
+	 N/A4WpDXMus3Q==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A0AC3ABC3;
+	Mon, 12 May 2025 11:26:10 +0000 (UTC)
+From: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>
+Date: Mon, 12 May 2025 13:26:01 +0200
+Subject: [PATCH] pwm: mc33xs2410: add support for temperature sensors
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509-mdb-max7360-support-v8-2-bbe486f6bcb7@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250512-mc33xs2410-hwmon-v1-1-addba77c78f9@liebherr.com>
+X-B4-Tracking: v=1; b=H4sIAMjaIWgC/x3MQQqAIBBA0avIrBMmTaKuEi3ExpyFFgoVhHdPW
+ r7F/y8UykwFZvFCposLH6mh7wS4YNNOkrdmUKgMGhxldFo/RQ09ynDHI0lrvJ/Ik0M00LIzk+f
+ nXy5rrR+eta+vYgAAAA==
+X-Change-ID: 20250507-mc33xs2410-hwmon-a5ff9efec005
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hwmon@vger.kernel.org, Dimitri Fedrau <dima.fedrau@gmail.com>, 
+ Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747049170; l=7237;
+ i=dimitri.fedrau@liebherr.com; s=20241202; h=from:subject:message-id;
+ bh=WO+KJq5SeJ/zVZpna3KQEugGGpzJUOSQsd2wSDTN6nU=;
+ b=oq98zzKrURO5ToJ22Y1C1vQz/akr+yJc8i8yqSV1I1JET7tw2k7Yn5x2FJd4wKwvXDL/7/d/R
+ 1yRnb7u0frMCnZyaiaKKk/APWs6k68Y2NXbfpjkFJfPpw+5t59MBvUX
+X-Developer-Key: i=dimitri.fedrau@liebherr.com; a=ed25519;
+ pk=rT653x09JSQvotxIqQl4/XiI4AOiBZrdOGvxDUbb5m8=
+X-Endpoint-Received: by B4 Relay for dimitri.fedrau@liebherr.com/20241202
+ with auth_id=290
+X-Original-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Reply-To: dimitri.fedrau@liebherr.com
 
-On Fri, May 09, 2025 at 11:14:36AM +0200, mathieu.dubois-briand@bootlin.com wrote:
-> 
-> Add core driver to support MAX7360 i2c chip, multi function device
-> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
+From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 
-...
+The MC33XS2410 provides temperature sensors for the central die temperature
+and the four outputs. Additionally a common temperature warning threshold
+can be configured for the outputs. Add hwmon support for the sensors.
 
-> + * Author: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+---
+ drivers/pwm/Kconfig          |   1 +
+ drivers/pwm/pwm-mc33xs2410.c | 176 ++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 176 insertions(+), 1 deletion(-)
 
- * Authors:
-	 Person A <...>
-	 Person B <...>
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 6faa8b2ec0a4844f667a84335f30bde44d52378e..0deaf8447f4302e7cfd3b4cb35c7d46ef19e006c 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -425,6 +425,7 @@ config PWM_LPSS_PLATFORM
+ 
+ config PWM_MC33XS2410
+ 	tristate "MC33XS2410 PWM support"
++	depends on HWMON || HWMON=n
+ 	depends on OF
+ 	depends on SPI
+ 	help
+diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
+index a1ac3445ccdb4709d92e0075d424a8abc1416eee..c3302b58b3acb60e5985c1c14746c380271eb6d6 100644
+--- a/drivers/pwm/pwm-mc33xs2410.c
++++ b/drivers/pwm/pwm-mc33xs2410.c
+@@ -21,6 +21,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/delay.h>
+ #include <linux/err.h>
++#include <linux/hwmon.h>
+ #include <linux/math64.h>
+ #include <linux/minmax.h>
+ #include <linux/module.h>
+@@ -29,6 +30,8 @@
+ 
+ #include <linux/spi/spi.h>
+ 
++/* ctrl registers */
++
+ #define MC33XS2410_GLB_CTRL			0x00
+ #define MC33XS2410_GLB_CTRL_MODE		GENMASK(7, 6)
+ #define MC33XS2410_GLB_CTRL_MODE_NORMAL		FIELD_PREP(MC33XS2410_GLB_CTRL_MODE, 1)
+@@ -51,6 +54,21 @@
+ 
+ #define MC33XS2410_WDT				0x14
+ 
++#define MC33XS2410_TEMP_WT			0x29
++#define MC33XS2410_TEMP_WT_MASK			GENMASK(7, 0)
++
++/* diag registers */
++
++/* chan in { 1 ... 4 } */
++#define MC33XS2410_OUT_STA(chan)		(0x02 + (chan) - 1)
++#define MC33XS2410_OUT_STA_OTW			BIT(8)
++
++#define MC33XS2410_TS_TEMP_DIE			0x26
++#define MC33XS2410_TS_TEMP_MASK			GENMASK(9, 0)
++
++/* chan in { 1 ... 4 } */
++#define MC33XS2410_TS_TEMP(chan)		(0x2f + (chan) - 1)
++
+ #define MC33XS2410_PWM_MIN_PERIOD		488282
+ /* step in { 0 ... 3 } */
+ #define MC33XS2410_PWM_MAX_PERIOD(step)		(2000000000 >> (2 * (step)))
+@@ -125,6 +143,11 @@ static int mc33xs2410_read_reg_ctrl(struct spi_device *spi, u8 reg, u16 *val)
+ 	return mc33xs2410_read_reg(spi, reg, val, MC33XS2410_FRAME_IN_DATA_RD);
+ }
+ 
++static int mc33xs2410_read_reg_diag(struct spi_device *spi, u8 reg, u16 *val)
++{
++	return mc33xs2410_read_reg(spi, reg, val, 0);
++}
++
+ static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val)
+ {
+ 	u16 tmp;
+@@ -140,6 +163,157 @@ static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val
+ 	return mc33xs2410_write_reg(spi, reg, tmp);
+ }
+ 
++#if IS_ENABLED(CONFIG_HWMON)
++static const struct hwmon_channel_info * const mc33xs2410_hwmon_info[] = {
++	HWMON_CHANNEL_INFO(temp,
++			   HWMON_T_LABEL | HWMON_T_INPUT,
++			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
++			   HWMON_T_ALARM,
++			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
++			   HWMON_T_ALARM,
++			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
++			   HWMON_T_ALARM,
++			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
++			   HWMON_T_ALARM),
++	NULL,
++};
++
++static umode_t mc33xs2410_hwmon_is_visible(const void *data,
++					   enum hwmon_sensor_types type,
++					   u32 attr, int channel)
++{
++	switch (attr) {
++	case hwmon_temp_input:
++	case hwmon_temp_alarm:
++	case hwmon_temp_label:
++		return 0444;
++	case hwmon_temp_max:
++		return 0644;
++	default:
++		return 0;
++	}
++}
++
++static int mc33xs2410_hwmon_read_out_status(struct spi_device *spi,
++					    int channel, u16 *val)
++{
++	int ret;
++
++	ret = mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
++	if (ret < 0)
++		return ret;
++
++	/* Bits latches high */
++	return mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel), val);
++}
++
++static int mc33xs2410_hwmon_read(struct device *dev,
++				 enum hwmon_sensor_types type,
++				 u32 attr, int channel, long *val)
++{
++	struct spi_device *spi = dev_get_drvdata(dev);
++	u16 reg_val;
++	int ret;
++	u8 reg;
++
++	switch (attr) {
++	case hwmon_temp_input:
++		reg = (channel == 0) ? MC33XS2410_TS_TEMP_DIE :
++				       MC33XS2410_TS_TEMP(channel);
++		ret = mc33xs2410_read_reg_diag(spi, reg, &reg_val);
++		if (ret < 0)
++			return ret;
++
++		/* LSB is 0.25 degree celsius */
++		*val = FIELD_GET(MC33XS2410_TS_TEMP_MASK, reg_val) * 250 - 40000;
++		return 0;
++	case hwmon_temp_alarm:
++		ret = mc33xs2410_hwmon_read_out_status(spi, channel, &reg_val);
++		if (ret < 0)
++			return ret;
++
++		*val = FIELD_GET(MC33XS2410_OUT_STA_OTW, reg_val);
++		return 0;
++	case hwmon_temp_max:
++		ret = mc33xs2410_read_reg_ctrl(spi, MC33XS2410_TEMP_WT, &reg_val);
++		if (ret < 0)
++			return ret;
++
++		/* LSB is 1 degree celsius */
++		*val = FIELD_GET(MC33XS2410_TEMP_WT_MASK, reg_val) * 1000 - 40000;
++		return 0;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static int mc33xs2410_hwmon_write(struct device *dev,
++				  enum hwmon_sensor_types type, u32 attr,
++				  int channel, long val)
++{
++	struct spi_device *spi = dev_get_drvdata(dev);
++
++	switch (attr) {
++	case hwmon_temp_max:
++		val = clamp_val(val, -40000, 215000);
++
++		/* LSB is 1 degree celsius */
++		val = (val / 1000) + 40;
++		return mc33xs2410_modify_reg(spi, MC33XS2410_TEMP_WT,
++					     MC33XS2410_TEMP_WT_MASK, val);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static const char *const mc33xs2410_temp_label[] = {
++	"Central die temperature",
++	"Channel 1 temperature",
++	"Channel 2 temperature",
++	"Channel 3 temperature",
++	"Channel 4 temperature",
++};
++
++static int mc33xs2410_read_string(struct device *dev,
++				  enum hwmon_sensor_types type,
++				  u32 attr, int channel, const char **str)
++{
++	*str = mc33xs2410_temp_label[channel];
++
++	return 0;
++}
++
++static const struct hwmon_ops mc33xs2410_hwmon_hwmon_ops = {
++	.is_visible = mc33xs2410_hwmon_is_visible,
++	.read = mc33xs2410_hwmon_read,
++	.read_string = mc33xs2410_read_string,
++	.write = mc33xs2410_hwmon_write,
++};
++
++static const struct hwmon_chip_info mc33xs2410_hwmon_chip_info = {
++	.ops = &mc33xs2410_hwmon_hwmon_ops,
++	.info = mc33xs2410_hwmon_info,
++};
++
++static int mc33xs2410_hwmon_probe(struct spi_device *spi)
++{
++	struct device *dev = &spi->dev;
++	struct device *hwmon;
++
++	hwmon = devm_hwmon_device_register_with_info(dev, NULL, spi,
++						     &mc33xs2410_hwmon_chip_info,
++						     NULL);
++
++	return PTR_ERR_OR_ZERO(hwmon);
++}
++
++#else
++static int mc33xs2410_hwmon_probe(struct spi_device *spi)
++{
++	return 0;
++}
++#endif
++
+ static u8 mc33xs2410_pwm_get_freq(u64 period)
+ {
+ 	u8 step, count;
+@@ -361,7 +535,7 @@ static int mc33xs2410_probe(struct spi_device *spi)
+ 	if (ret < 0)
+ 		return dev_err_probe(dev, ret, "Failed to add pwm chip\n");
+ 
+-	return 0;
++	return mc33xs2410_hwmon_probe(spi);
+ }
+ 
+ static const struct spi_device_id mc33xs2410_spi_id[] = {
 
-?
+---
+base-commit: 7395eb13e3a85067de3e083d3781630ea303c0c4
+change-id: 20250507-mc33xs2410-hwmon-a5ff9efec005
 
-...
-
-> +	for (unsigned int i = 0; i < MAX7360_PORT_PWM_COUNT; i++) {
-> +		ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
-> +					MAX7360_PORT_CFG_INTERRUPT_MASK,
-> +					MAX7360_PORT_CFG_INTERRUPT_MASK);
-> +		if (ret)
-> +			return dev_err_probe(dev, ret,
-> +					     "Failed to write MAX7360 port configuration");
-
-I think I already pointed out the missing '\n'.
-
-> +	}
-
-...
-
-> +	/* Read GPIO in register, to ACK any pending IRQ. */
-> +	ret = regmap_read(regmap, MAX7360_REG_GPIOIN, &val);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to read GPIO values: %d\n", ret);
-
-Double ret in the message. Check all of the usages of dev_err_probe() in your code.
-
-> +	return 0;
-
-...
-
-> +#define MAX7360_REG_GPIO_LAST		0x5F
-
-> +#define MAX7360_FIFO_EMPTY		0x3f
-> +#define MAX7360_FIFO_OVERFLOW		0x7f
-
-Please, be consistent in style of the values.
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
+Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 
 
 
