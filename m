@@ -1,53 +1,52 @@
-Return-Path: <linux-pwm+bounces-5900-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5905-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7ACD4AB373D
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 14:39:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6957AB3750
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 14:39:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B4EF188C5D1
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 12:39:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C301716B98D
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 12:39:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 423C2293B6A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F189294A1F;
 	Mon, 12 May 2025 12:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R74obJ26"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1vgwn4T"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049BC4A08;
-	Mon, 12 May 2025 12:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED612949EA;
+	Mon, 12 May 2025 12:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747053539; cv=none; b=pwEVyGxZvlCXmutPTALrrhXq5JX3adHLUx7isKyDhhjxZr1yyRJxrpD3HO6D8ynCtcbsRKkiZMJvqQEmj/OUEQsKnFBis7oFJwQCIte93VXRrj6njUold55X/8OKw/FTVX6eGXJxB4Ziov3peZ5ywhvZyRXfdxTKlqOqyxFek7Q=
+	t=1747053539; cv=none; b=NrFuqkNnpF9ojXvkqG2Uck70G9GwfcTX/gPTJeQ7eo+lILcX3qfYFQYNQfBCRP4PPrZKUXy6L4qzZZASCOa2DW1SLH6YRfKVHpoo0XH9WxLPPVkNaXZskLC3u8OfBHGi6SyFDMgVc7axa8WeCSWuw2YW+AvIy8NX3F+1viTvvZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747053539; c=relaxed/simple;
-	bh=HgcAr0PBB4Py95fVn5f8uWZI71qwh+M5gpX5UYPwIpU=;
+	bh=bEBviV3hv1OvFeMK9McYkJU59fHVaEaxJ4SplLt/zLA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=a8l72AEaA4VKz6ecvAXYoMD9DEuSgx48EGWMuDeV4PnVR8WxcqoqWK5r2yMpsOs7zFYYdqcUOj43B78oflTVH1USSVdR/DQj0WjXhN0J+uUz3NQ3YeEHtctmnqn6JoSwz+NSWtBllDLkvczTPBnFHCLmI+b5tEiSWG0TS1VN4Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R74obJ26; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 93831C4CEF3;
+	 In-Reply-To:To:Cc; b=NTECl40Jb3O6EcFns7eME1O8dd2GmgYpLlI1iO9f0Tlga9OjQrLsdSB6hjuL4roeJUIdgY0uRsPRSB5ZFatd0cwTzcJX4hTBY40+2ovgNCfx6lfxf0NwQPN97Y5SyY+YLxsOx3u+h/i0AxDHK1nvkzJndEwl6DG0puoa5y267dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1vgwn4T; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A6FE3C4CEF6;
 	Mon, 12 May 2025 12:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747053538;
-	bh=HgcAr0PBB4Py95fVn5f8uWZI71qwh+M5gpX5UYPwIpU=;
+	bh=bEBviV3hv1OvFeMK9McYkJU59fHVaEaxJ4SplLt/zLA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=R74obJ261MRq9zWlq1K0pwUdOZh0vh3HYDSSki6oPCq6eyvrLvxI+iraqWJdWVgvw
-	 Ttn1sgqwWUCZKGolREStAPASK60d8r600ALKwfj0HxsuG+S8YQ9wpIWcsRqOjKMihc
-	 eddEZN4G4oMXUpW1KQe0NNVOy+OxoWb7uISSl4h6tCw/pmTkTp3geBCNFUzGBakKYT
-	 +LWjYSDZA95Ispv3pvVp+iq0J2589cdatVziK89/i3l94XlZ28psU4JKql6/VJEagd
-	 71ioEHm4ATZeR3x6UhoxGgp1EQS2/D7dQHE5oLUtJWyX9i/uWCk/Xf2q7b/8bf4Wzj
-	 Wy2fHx3FjC4tw==
+	b=H1vgwn4ThequWLnt/Q5P/qAREhAffbuwpBMb9Lhatxauh2TeqqZXNt3671XgYbStb
+	 D4e+m84WE7fo3D6iaqiNH818vdniMoYYLrv87E9HudK9yIXsB21BnFgajOs89gcmnN
+	 Wo0HuB2FKY0qLb6ImnG74PKiToNtlII1B9mDMdk2RDKXk+D9bd6VOKXQk8ZWh8I8gU
+	 pSM7qMpfgofC/EayBLji6iAjSj/hAxSgsJVpY/lR/0QTglE4xzhSk5upBOvwj5VCRB
+	 hmEanG6L6sgVDOV9VENbZnLGByMzD6AxetnPFOPhpjI30ExqXhqbyvNHHQBxCR64PF
+	 REOw8s3z3VZMg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A958C3ABCD;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B10EC3ABD4;
 	Mon, 12 May 2025 12:38:58 +0000 (UTC)
 From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Mon, 12 May 2025 13:38:56 +0100
-Subject: [PATCH v3 04/22] pwm: adp5585: don't control OSC_EN in the pwm
- driver
+Date: Mon, 12 May 2025 13:38:57 +0100
+Subject: [PATCH v3 05/22] mfd: adp5585: make use of MFD_CELL_NAME()
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250512-dev-adp5589-fw-v3-4-092b14b79a88@analog.com>
+Message-Id: <20250512-dev-adp5589-fw-v3-5-092b14b79a88@analog.com>
 References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
 In-Reply-To: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
 To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
@@ -71,11 +70,11 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
  Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
  Liu Ying <victor.liu@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747053537; l=1401;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747053537; l=959;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=MVCU5kPBNDbHxIfJmLO114QSq4N3ZehCh55N9NFh/nk=;
- b=e73+7UDtEa7JsEUNcmfk1BRIjDHf6yGm16rJN160lpWBPTe8cbC5EmIUXAOygYuJ4jQMBXgYb
- 2tLS2W6N1HNAUQENyO4MmnmlaPJMW2bH/882aMDPefzBZunwyRk3ZPi
+ bh=GWe9/8fAPCSEa4r1+q+yyPZLpcny3SV+deYSV6vKdE4=;
+ b=QABy5J25tL3+O63YdaeXjUs7OiAkhU6Z4P3uZF5Apc0joI69NNMzCxgFJU5vfPrGV1AR/WDml
+ b3ofi3uBhNtDhYrTJu64F5txzIZZ2J3wSmDqxfRddAoy8QErZrmoKwI
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
@@ -85,44 +84,37 @@ Reply-To: nuno.sa@analog.com
 
 From: Nuno Sá <nuno.sa@analog.com>
 
-The adp5585 is a Multi Function Device that can also be a gpio
-controller and as it turns out, when OSC_EN is not set, we can't
-reliably read the gpio value when it's configured as input. Hence,
-OSC_EN will be set during probe by the parent device (and cleared on
-unbind).
+Use the helper macro. No functional change intended...
 
-Moreover, we'll add support for the keymap matrix (input device) which
-definitely needs OSC_EN to be set and so, we cannot afford that disabling
-the PWM output also breaks the keymap events generation.
-
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
- drivers/pwm/pwm-adp5585.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/mfd/adp5585.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
-index 40472ac5db6410a33e4f790fe8e6c23b517502be..c8821035b7c1412a55a642e6e8a46b66e693a5af 100644
---- a/drivers/pwm/pwm-adp5585.c
-+++ b/drivers/pwm/pwm-adp5585.c
-@@ -62,7 +62,6 @@ static int pwm_adp5585_apply(struct pwm_chip *chip,
- 	int ret;
+diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
+index d693b1ead05128e02f671ca465f9c72cab3b3395..19d4a0ab1bb4c261e82559630624059529765fbd 100644
+--- a/drivers/mfd/adp5585.c
++++ b/drivers/mfd/adp5585.c
+@@ -4,6 +4,7 @@
+  *
+  * Copyright 2022 NXP
+  * Copyright 2024 Ideas on Board Oy
++ * Copyright 2025 Analog Devices Inc.
+  */
  
- 	if (!state->enabled) {
--		regmap_clear_bits(regmap, ADP5585_GENERAL_CFG, ADP5585_OSC_EN);
- 		regmap_clear_bits(regmap, ADP5585_PWM_CFG, ADP5585_PWM_EN);
- 		return 0;
- 	}
-@@ -100,10 +99,6 @@ static int pwm_adp5585_apply(struct pwm_chip *chip,
- 	if (ret)
- 		return ret;
+ #include <linux/array_size.h>
+@@ -24,8 +25,8 @@ enum {
+ };
  
--	ret = regmap_set_bits(regmap, ADP5585_GENERAL_CFG, ADP5585_OSC_EN);
--	if (ret)
--		return ret;
--
- 	return regmap_set_bits(regmap, ADP5585_PWM_CFG, ADP5585_PWM_EN);
- }
+ static const struct mfd_cell adp5585_devs[ADP5585_DEV_MAX] = {
+-	{ .name = "adp5585-gpio", },
+-	{ .name = "adp5585-pwm", },
++	MFD_CELL_NAME("adp5585-gpio"),
++	MFD_CELL_NAME("adp5585-pwm"),
+ };
  
+ static const struct regmap_range adp5585_volatile_ranges[] = {
 
 -- 
 2.49.0
