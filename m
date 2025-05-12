@@ -1,52 +1,53 @@
-Return-Path: <linux-pwm+bounces-5911-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5916-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6761AAB3787
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 14:40:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E614BAB3786
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 14:40:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1623E7A3545
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 12:38:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CE1797A64F8
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 12:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 011D529551A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 308E62957B6;
 	Mon, 12 May 2025 12:39:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwyodQl0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPPA9veU"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0142951A1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4382951A2;
 	Mon, 12 May 2025 12:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747053539; cv=none; b=FBinQiOc7EccT8aHKn1q33e+L+BUXLtsiVZ0UX4afUT3q2mrzUmcWtcIgcZOHzMT7WRZIkybFgu8jqYl8KvPuz43/ncrsHiPpBUXuCD88tXYG34Vb2+TTwp7iFfwklsZ7hOA/10kXRLHYx4cn8gLUVMGUKtTTDa9pQls9uwkcbY=
+	t=1747053539; cv=none; b=GG0dXK1wh7gAjkN8dl/lBXDFWzfygr9XB7ezIKFgxLqTebTJHdI5c6eq3YO83nmS0MCA1dRStxTBNl9gY0ko7TE+csFCBD+wLr8HD9LcZNjcigXbEEywt8EdVMjELGrQeovJifAhvAvtGoUwscqCbgcUnlRRWh6VT8Y9CcYViZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747053539; c=relaxed/simple;
-	bh=DYrU61RdZhGwlbgaaPjdQ95zATYrcHgAI3gDXfzS4S4=;
+	bh=LKEDFoS+JLZawtcLeCMckQn0o8t5tB7dS8sNJwOupTg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jZM5q+ClDKpmKI7umEOiSwQK5nYx2wYtbg+F+X/zdyvvnj4JCLdpNuwyAlImWPovqhDvIFNn7idR2LaN9xR2YBLL4bHZ0UgBfcPInb7ft2sbJwW9huGu/5s4NUnrDYJVPwRt0TshZEkAKAldi+8azk3MoIiDuVWEm+QZHI4AfBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwyodQl0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5527AC4AF4D;
+	 In-Reply-To:To:Cc; b=ATSQcBxCtPvh+p6Wen5grAmRBbmEbnxPlK+aXMumIWri8pCSuE+WCsR+YAfJKS/ffbYFSDnMNjjQpyNTac+4bu+fUosbeoXlIdHf9pfAGGYUqM/ay0TsbtlGy1nG+N6hKZwiGqmnfqjqAAc/4RvSOPe5XCqrE4+9NyA5D7eNfY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XPPA9veU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5E6DFC4CEFD;
 	Mon, 12 May 2025 12:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747053539;
-	bh=DYrU61RdZhGwlbgaaPjdQ95zATYrcHgAI3gDXfzS4S4=;
+	bh=LKEDFoS+JLZawtcLeCMckQn0o8t5tB7dS8sNJwOupTg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=mwyodQl0HQQr3e/ELtR2XFGfY/pmrK2mMseLPRE1z1mONn/h3QW5FGqhY1p5oD7xk
-	 BHPSVaVZSAN53t7kZKpiTynSiBx87zs5DIuh+cYQxow3HkfRrVu4IAwAmkJ8mr/D9V
-	 7t+DIfJvxury1DkYtaszQdmKnTICMZfTN3WORAcUcD7ZPODGO+TVMDk4/jCR6R5zRJ
-	 a3/aBXZYqdxgyUySr7HMmSNH4FfS37ShzM0AXYSRS6pbKnfNdt+T1wgP+3EB30MvMa
-	 PxltwhQuVfhmAgv7CsC8vLQbXMUIYXNOx2yOCW5xvgkzcg8K5QBd2JZ2GAsWV83Akh
-	 oAzdJ3Ento/TQ==
+	b=XPPA9veUtjjGflS22JdJ3l9riRtEdIOq+XR3xKpFI6uNoBaoRBFXeY9ZQY2Itr2pE
+	 Z1qI6VYXuDUO4b0C2CCmGTcO7qjbWi0PrOZh0Il6KPqs9GUBfg1QtdZq21uCR9qm2+
+	 rxdYIa56aFkDiia2rdbLSkt7o1l1Lt9Y52SsryFVe7d2rjxjm9UHsUlFXWE0+cp/OB
+	 XCSSpZTx7sGCpCSUIPTqhkCPC+HzexZrcEoCCBi5b86B9KWs2/JfGrzOhJ2Nw9pdIB
+	 QBDG9GNlGjgnIHId8t+/Z3J79pDkvWfSp+vW4NIwT6o0RVkW4y23YCj8rao13fskbF
+	 z0eKEEjhRjC3w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F95C3ABD7;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5451FC3ABCD;
 	Mon, 12 May 2025 12:38:59 +0000 (UTC)
 From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Mon, 12 May 2025 13:39:08 +0100
-Subject: [PATCH v3 16/22] gpio: adp5585: support gpi events
+Date: Mon, 12 May 2025 13:39:09 +0100
+Subject: [PATCH v3 17/22] Input: adp5585: Add Analog Devices ADP5585/89
+ support
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250512-dev-adp5589-fw-v3-16-092b14b79a88@analog.com>
+Message-Id: <20250512-dev-adp5589-fw-v3-17-092b14b79a88@analog.com>
 References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
 In-Reply-To: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
 To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
@@ -68,14 +69,13 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
  Bartosz Golaszewski <brgl@bgdev.pl>, 
  Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
  Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Liu Ying <victor.liu@nxp.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ Liu Ying <victor.liu@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747053537; l=10351;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747053537; l=13126;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=UfJ/QHtRHge0c0E99x+02SfGt2SUDADcJP2e64mEtQA=;
- b=FH8Qf6J9wzsrCVA95V+mVbf5PL0DrH/p8Rv12LtG7CEcnXzQt1DyN/cGuZN22wLI5hfVFn0no
- CUkGWqG/le4BGnDJ7jn8OOwHzjMhor29SjxEfSHmWIF0tHblpJiT740
+ bh=3ocgwSr9uCbjUhLkksV8uSlTygk6isRgnMjC3VjMdtY=;
+ b=ISGZ8ICuGZ132d83T/XOClF8fe/jfLN5GwJ6639DzzVZxN2fmC0Oo0ao2SkU0esZW41I8bVOF
+ s054PpxftQCAowhmQm9X7i6ly8uR96M6WhBjHJvXO49VvBTi70AUa6v
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
@@ -85,318 +85,429 @@ Reply-To: nuno.sa@analog.com
 
 From: Nuno Sá <nuno.sa@analog.com>
 
-Add support for adding GPIs to the event FIFO. This is done by adding
-irq_chip support. Like this, one can use the input gpio_keys driver as a
-"frontend" device and input handler.
+The ADP5585 is a 10/11 input/output port expander with a built in keypad
+matrix decoder, programmable logic, reset generator, and PWM generator.
+This driver supports the keyboard function using the platform device
+registered by the core MFD driver.
 
-As part of this change, we now implement .request() and .free() as we can't
-blindly consume all available pins as GPIOs (example: some pins can be
-used for forming a keymap matrix).
+The ADP5589 has 19 pins and also features an unlock function.
 
-Also note that the number of pins can now be obtained from the parent,
-top level device. Hence the 'max_gpio' variable can be removed.
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
- drivers/gpio/Kconfig        |   1 +
- drivers/gpio/gpio-adp5585.c | 205 +++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 202 insertions(+), 4 deletions(-)
+ MAINTAINERS                           |   1 +
+ drivers/input/keyboard/Kconfig        |  11 ++
+ drivers/input/keyboard/Makefile       |   1 +
+ drivers/input/keyboard/adp5585-keys.c | 356 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 369 insertions(+)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 9ae806f45e19c1494d156b7f04b1882be68d3e3f..0b85d07ccb0b8a41f33fd3d930eb74f70787355d 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1259,6 +1259,7 @@ config GPIO_ADP5520
- config GPIO_ADP5585
- 	tristate "GPIO Support for ADP5585"
- 	depends on MFD_ADP5585
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  This option enables support for the GPIO function found in the Analog
- 	  Devices ADP5585.
-diff --git a/drivers/gpio/gpio-adp5585.c b/drivers/gpio/gpio-adp5585.c
-index cdf107742579cb44d73cc030646358ba5a23fd97..cd0ddddae7db1f4634680b412b8fcbfa295e87eb 100644
---- a/drivers/gpio/gpio-adp5585.c
-+++ b/drivers/gpio/gpio-adp5585.c
-@@ -7,10 +7,13 @@
-  * Copyright 2025 Analog Devices, Inc.
-  */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0737dcb2e41119426f1d8fbaec829cc90ed0bf64..18838ba19e5edbbe352a470c4e177c6d24136d83 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -550,6 +550,7 @@ L:	linux-pwm@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/*/adi,adp5585*.yaml
+ F:	drivers/gpio/gpio-adp5585.c
++F:	drivers/input/keyboard/adp5585-keys.c
+ F:	drivers/mfd/adp5585.c
+ F:	drivers/pwm/pwm-adp5585.c
+ F:	include/linux/mfd/adp5585.h
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index 721ab69e84ac6586f4f19102890a15ca3fcf1910..322da0957067db77c7f66ab26a181d39c2c1d513 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -37,6 +37,17 @@ config KEYBOARD_ADP5520
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called adp5520-keys.
  
++config KEYBOARD_ADP5585
++	tristate "ADP5585 and similar  I2C QWERTY Keypad and IO Expanders"
++	depends on MFD_ADP5585
++	select INPUT_MATRIXKMAP
++	help
++	  This option enables support for the KEYMAP function found in the Analog
++	  Devices ADP5585 and similar devices.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called adp5585-keys.
++
+ config KEYBOARD_ADP5588
+ 	tristate "ADP5588/87 I2C QWERTY Keypad and IO Expander"
+ 	depends on I2C
+diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+index 1e0721c3070968a6339a42f65a95af48364f6897..f00ec003a59aa28577ae164c0539cc5aff9579fc 100644
+--- a/drivers/input/keyboard/Makefile
++++ b/drivers/input/keyboard/Makefile
+@@ -7,6 +7,7 @@
+ 
+ obj-$(CONFIG_KEYBOARD_ADC)		+= adc-keys.o
+ obj-$(CONFIG_KEYBOARD_ADP5520)		+= adp5520-keys.o
++obj-$(CONFIG_KEYBOARD_ADP5585)		+= adp5585-keys.o
+ obj-$(CONFIG_KEYBOARD_ADP5588)		+= adp5588-keys.o
+ obj-$(CONFIG_KEYBOARD_ADP5589)		+= adp5589-keys.o
+ obj-$(CONFIG_KEYBOARD_AMIGA)		+= amikbd.o
+diff --git a/drivers/input/keyboard/adp5585-keys.c b/drivers/input/keyboard/adp5585-keys.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..54e8fefcfab8942507245aa27931ccaf8d195b8e
+--- /dev/null
++++ b/drivers/input/keyboard/adp5585-keys.c
+@@ -0,0 +1,356 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Analog Devices ADP5585 Keys driver
++ *
++ * Copyright (C) 2025 Analog Devices, Inc.
++ */
++
 +#include <linux/bitmap.h>
-+#include <linux/bitops.h>
- #include <linux/device.h>
- #include <linux/gpio/driver.h>
- #include <linux/mfd/adp5585.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/types.h>
-@@ -36,20 +39,29 @@
- struct adp5585_gpio_chip {
- 	int (*bank)(unsigned int off);
- 	int (*bit)(unsigned int off);
--	unsigned int max_gpio;
- 	unsigned int debounce_dis_a;
- 	unsigned int rpull_cfg_a;
- 	unsigned int gpo_data_a;
- 	unsigned int gpo_out_a;
- 	unsigned int gpio_dir_a;
- 	unsigned int gpi_stat_a;
-+	unsigned int gpi_int_lvl_a;
-+	unsigned int gpi_ev_a;
-+	unsigned int gpi_ev_min;
-+	unsigned int gpi_ev_max;
- 	bool has_bias_hole;
- };
- 
- struct adp5585_gpio_dev {
- 	struct gpio_chip gpio_chip;
-+	struct adp5585_ev_handler ev_handler;
- 	const struct adp5585_gpio_chip *info;
- 	struct regmap *regmap;
-+	unsigned long irq_mask;
-+	unsigned long irq_en;
-+	unsigned long irq_active_high;
-+	/* used for irqchip bus locking */
-+	struct mutex bus_lock;
- };
- 
- static int adp5585_gpio_bank(unsigned int off)
-@@ -224,12 +236,163 @@ static int adp5585_gpio_set_config(struct gpio_chip *chip, unsigned int off,
- 	};
- }
- 
-+static int adp5585_gpio_request(struct gpio_chip *chip, unsigned int off)
-+{
-+	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
-+	const struct adp5585_gpio_chip *info = adp5585_gpio->info;
-+	struct device *dev = chip->parent;
-+	struct adp5585_dev *adp5585 = dev_get_drvdata(dev->parent);
-+	const struct adp5585_regs *regs = adp5585->info->regs;
-+	int ret;
++#include <linux/device.h>
++#include <linux/find.h>
++#include <linux/input.h>
++#include <linux/input/matrix_keypad.h>
++#include <linux/mfd/adp5585.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/regmap.h>
++#include <linux/types.h>
 +
-+	ret = test_and_set_bit(off, adp5585->pin_usage);
-+	if (ret)
-+		return -EBUSY;
++/* As needed for the matrix parsing code */
++#define ADP5589_MAX_KEYMAPSIZE		123
 +
-+	/* make sure it's configured for GPIO */
-+	return regmap_clear_bits(adp5585_gpio->regmap,
-+				 regs->pin_cfg_a + info->bank(off),
-+				 info->bit(off));
-+}
-+
-+static void adp5585_gpio_free(struct gpio_chip *chip, unsigned int off)
-+{
-+	struct device *dev = chip->parent;
-+	struct adp5585_dev *adp5585 = dev_get_drvdata(dev->parent);
-+
-+	clear_bit(off, adp5585->pin_usage);
-+}
-+
-+static int adp5585_gpio_key_event(struct device *dev, unsigned int key,
-+				  unsigned int key_press)
-+{
-+	struct adp5585_gpio_dev *adp5585_gpio = dev_get_drvdata(dev);
-+	unsigned int irq, irq_type;
-+	struct irq_data *irqd;
-+	bool active_high;
-+	unsigned int off;
-+
-+	/* make sure the event is for me */
-+	if (key < adp5585_gpio->info->gpi_ev_min || key > adp5585_gpio->info->gpi_ev_max)
-+		return -EINVAL;
-+
-+	off = key - adp5585_gpio->info->gpi_ev_min;
-+	active_high = test_bit(off, &adp5585_gpio->irq_active_high);
-+
-+	irq = irq_find_mapping(adp5585_gpio->gpio_chip.irq.domain, off);
-+	if (!irq)
-+		return 0;
-+
-+	irqd = irq_get_irq_data(irq);
-+	if (!irqd) {
-+		dev_err(dev, "Could not get irq(%u) data\n", irq);
-+		return 0;
-+	}
-+
-+	dev_dbg_ratelimited(dev, "gpio-keys event(%u) press=%u, a_high=%u\n",
-+			    off, key_press, active_high);
-+
-+	if (!active_high)
-+		key_press = !key_press;
-+
-+	irq_type = irqd_get_trigger_type(irqd);
-+
-+	if ((irq_type & IRQ_TYPE_EDGE_RISING && key_press) ||
-+	    (irq_type & IRQ_TYPE_EDGE_FALLING && !key_press))
-+		handle_nested_irq(irq);
-+
-+	return 0;
-+}
-+
-+static void adp5585_irq_bus_lock(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(gc);
-+
-+	mutex_lock(&adp5585_gpio->bus_lock);
-+}
-+
-+static void adp5585_irq_bus_sync_unlock(struct irq_data *d)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-+	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
-+	const struct adp5585_gpio_chip *info = adp5585_gpio->info;
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+	bool active_high = test_bit(hwirq, &adp5585_gpio->irq_active_high);
-+	bool enabled = test_bit(hwirq, &adp5585_gpio->irq_en);
-+	bool masked = test_bit(hwirq, &adp5585_gpio->irq_mask);
-+	unsigned int bank = adp5585_gpio->info->bank(hwirq);
-+	unsigned int bit = adp5585_gpio->info->bit(hwirq);
-+
-+	if (masked && !enabled)
-+		goto out_unlock;
-+	if (!masked && enabled)
-+		goto out_unlock;
-+
-+	regmap_update_bits(adp5585_gpio->regmap, info->gpi_int_lvl_a + bank, bit,
-+			   active_high ? bit : 0);
-+	regmap_update_bits(adp5585_gpio->regmap, info->gpi_ev_a + bank, bit,
-+			   masked ? 0 : bit);
-+	assign_bit(hwirq, &adp5585_gpio->irq_en, !masked);
-+
-+out_unlock:
-+	mutex_unlock(&adp5585_gpio->bus_lock);
-+}
-+
-+static void adp5585_irq_mask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+
-+	__set_bit(hwirq, &adp5585_gpio->irq_mask);
-+	gpiochip_disable_irq(gc, hwirq);
-+}
-+
-+static void adp5585_irq_unmask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+
-+	gpiochip_enable_irq(gc, hwirq);
-+	__clear_bit(hwirq, &adp5585_gpio->irq_mask);
-+}
-+
-+static int adp5585_irq_set_type(struct irq_data *d, unsigned int type)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+
-+	if (!(type & IRQ_TYPE_EDGE_BOTH))
-+		return -EINVAL;
-+
-+	assign_bit(hwirq, &adp5585_gpio->irq_active_high,
-+		   type == IRQ_TYPE_EDGE_RISING);
-+
-+	irq_set_handler_locked(d, handle_edge_irq);
-+	return 0;
-+}
-+
-+static const struct irq_chip adp5585_irq_chip = {
-+	.name = "adp5585",
-+	.irq_mask = adp5585_irq_mask,
-+	.irq_unmask = adp5585_irq_unmask,
-+	.irq_bus_lock = adp5585_irq_bus_lock,
-+	.irq_bus_sync_unlock = adp5585_irq_bus_sync_unlock,
-+	.irq_set_type = adp5585_irq_set_type,
-+	.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
++struct adp5585_kpad_chip {
++	u8 key_ev_min;
++	u8 key_ev_max;
++	u8 max_rows;
++	u8 max_cols;
 +};
 +
- static int adp5585_gpio_probe(struct platform_device *pdev)
- {
- 	struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
- 	const struct platform_device_id *id = platform_get_device_id(pdev);
- 	struct adp5585_gpio_dev *adp5585_gpio;
- 	struct device *dev = &pdev->dev;
-+	struct gpio_irq_chip *girq;
- 	struct gpio_chip *gc;
- 	int ret;
- 
-@@ -253,13 +416,41 @@ static int adp5585_gpio_probe(struct platform_device *pdev)
- 	gc->get = adp5585_gpio_get_value;
- 	gc->set_rv = adp5585_gpio_set_value;
- 	gc->set_config = adp5585_gpio_set_config;
-+	gc->request = adp5585_gpio_request;
-+	gc->free = adp5585_gpio_free;
- 	gc->can_sleep = true;
- 
- 	gc->base = -1;
--	gc->ngpio = adp5585_gpio->info->max_gpio;
-+	gc->ngpio = adp5585->info->n_pins;
- 	gc->label = pdev->name;
- 	gc->owner = THIS_MODULE;
- 
-+	if (device_property_present(dev->parent, "interrupt-controller")) {
-+		if (!adp5585->irq)
-+			return dev_err_probe(dev, -EINVAL,
-+					     "Unable to serve as interrupt controller without IRQ\n");
++struct adp5585_kpad {
++	const struct adp5585_kpad_chip *info;
++	struct adp5585_ev_handler ev_handler;
++	struct input_dev *input;
++	unsigned short keycode[ADP5589_MAX_KEYMAPSIZE];
++	struct device *dev;
++	unsigned long keypad;
++	int row_shift;
++};
 +
-+		girq = &adp5585_gpio->gpio_chip.irq;
-+		gpio_irq_chip_set_chip(girq, &adp5585_irq_chip);
-+		girq->handler = handle_bad_irq;
-+		girq->threaded = true;
++static int adp5585_keys_validate_events(const struct adp5585_kpad *kpad,
++					const u32 *events, u32 n_events)
++{
++	unsigned int ev;
++	u32 row, col;
 +
-+		adp5585_gpio->ev_handler.dev = dev;
-+		adp5585_gpio->ev_handler.handler = adp5585_gpio_key_event;
-+		platform_set_drvdata(pdev, adp5585_gpio);
++	for (ev = 0; ev < n_events; ev++) {
++		if (events[ev] < kpad->info->key_ev_min ||
++		    events[ev] > kpad->info->key_ev_max)
++			continue;
 +
-+		ret = devm_adp5585_ev_handler_add(adp5585,
-+						  &adp5585_gpio->ev_handler);
-+		if (ret)
-+			return ret;
++		/*
++		 * if the event is to be generated by the keymap, we need to make
++		 * sure that the pins are part of it!
++		 */
++		row = (events[ev] - 1) / kpad->info->max_cols;
++		col = (events[ev] - 1) % kpad->info->max_cols;
++
++		if (test_bit(row, &kpad->keypad) &&
++		    test_bit(col + kpad->info->max_rows, &kpad->keypad))
++			continue;
++
++		return dev_err_probe(kpad->dev, -EINVAL,
++				     "Invalid unlock/reset event(%u) not used in the keypad\n",
++				     events[ev]);
 +	}
 +
-+	/* everything masked by default */
-+	adp5585_gpio->irq_mask = ~0UL;
++	return 0;
++}
 +
-+	ret = devm_mutex_init(dev, &adp5585_gpio->bus_lock);
-+	if (ret)
-+		return ret;
- 	ret = devm_gpiochip_add_data(dev, &adp5585_gpio->gpio_chip,
- 				     adp5585_gpio);
- 	if (ret)
-@@ -277,8 +468,11 @@ static const struct adp5585_gpio_chip adp5585_gpio_chip_info = {
- 	.gpo_out_a = ADP5585_GPO_OUT_MODE_A,
- 	.gpio_dir_a = ADP5585_GPIO_DIRECTION_A,
- 	.gpi_stat_a = ADP5585_GPI_STATUS_A,
--	.max_gpio = ADP5585_PIN_MAX,
- 	.has_bias_hole = true,
-+	.gpi_ev_min = ADP5585_GPI_EVENT_START,
-+	.gpi_ev_max = ADP5585_GPI_EVENT_END,
-+	.gpi_int_lvl_a = ADP5585_GPI_INT_LEVEL_A,
-+	.gpi_ev_a = ADP5585_GPI_EVENT_EN_A,
- };
- 
- static const struct adp5585_gpio_chip adp5589_gpio_chip_info = {
-@@ -290,7 +484,10 @@ static const struct adp5585_gpio_chip adp5589_gpio_chip_info = {
- 	.gpo_out_a = ADP5589_GPO_OUT_MODE_A,
- 	.gpio_dir_a = ADP5589_GPIO_DIRECTION_A,
- 	.gpi_stat_a = ADP5589_GPI_STATUS_A,
--	.max_gpio = ADP5589_PIN_MAX,
-+	.gpi_ev_min = ADP5589_GPI_EVENT_START,
-+	.gpi_ev_max = ADP5589_GPI_EVENT_END,
-+	.gpi_int_lvl_a = ADP5589_GPI_INT_LEVEL_A,
-+	.gpi_ev_a = ADP5589_GPI_EVENT_EN_A,
- };
- 
- static const struct platform_device_id adp5585_gpio_id_table[] = {
++static int adp5585_keys_check_special_events(const struct adp5585_dev *adp5585,
++					     const struct adp5585_kpad *kpad)
++{
++	int error;
++
++	error = adp5585_keys_validate_events(kpad, adp5585->unlock_keys,
++					     adp5585->nkeys_unlock);
++	if (error)
++		return error;
++
++	error = adp5585_keys_validate_events(kpad, adp5585->reset1_keys,
++					     adp5585->nkeys_reset1);
++	if (error)
++		return error;
++
++	return adp5585_keys_validate_events(kpad, adp5585->reset2_keys,
++					    adp5585->nkeys_reset2);
++}
++
++static void adp5585_keys_pins_free(void *data)
++{
++	struct adp5585_kpad *kpad = data;
++	struct adp5585_dev *adp5585 = dev_get_drvdata(kpad->dev->parent);
++	unsigned int pin;
++
++	for_each_set_bit(pin, &kpad->keypad, adp5585->info->n_pins)
++		clear_bit(pin, adp5585->pin_usage);
++}
++
++static int adp5585_keys_parse_fw(const struct adp5585_dev *adp5585,
++				 struct adp5585_kpad *kpad)
++{
++	struct device *dev = kpad->dev;
++	u32 cols = 0, rows = 0, pin;
++	int error, n_pins;
++
++	/*
++	 * We do not check for errors (or no value) since the input device is
++	 * only added if this property is present in the first place.
++	 */
++	n_pins = device_property_count_u32(dev, "adi,keypad-pins");
++	if (n_pins > adp5585->info->n_pins)
++		return dev_err_probe(dev, -EINVAL,
++				     "Too many keypad pins (%d) defined (max=%d)\n",
++				     n_pins, adp5585->info->n_pins);
++
++	unsigned int *keypad_pins __free(kfree) = kcalloc(n_pins, sizeof(*keypad_pins),
++							  GFP_KERNEL);
++	if (!keypad_pins)
++		return -ENOMEM;
++
++	error = device_property_read_u32_array(dev, "adi,keypad-pins",
++					       keypad_pins, n_pins);
++	if (error)
++		return error;
++
++	for (pin = 0; pin < n_pins; pin++) {
++		if (keypad_pins[pin] >= adp5585->info->n_pins) {
++			error = dev_err_probe(dev, -EINVAL,
++					      "Invalid keypad pin(%u) defined\n",
++					      keypad_pins[pin]);
++			goto out_free_map;
++		}
++
++		if (test_and_set_bit(keypad_pins[pin], adp5585->pin_usage)) {
++			error = dev_err_probe(dev, -EBUSY,
++					      "Keypad pin(%u) already used\n",
++					      keypad_pins[pin]);
++			goto out_free_map;
++		}
++
++		__set_bit(keypad_pins[pin], &kpad->keypad);
++	}
++
++	error = devm_add_action_or_reset(dev, adp5585_keys_pins_free, kpad);
++	if (error)
++		return error;
++
++	/*
++	 * Note that given that we get a mask (and the HW allows it), we
++	 * can have holes in our keypad (eg: row0, row1 and row7 enabled).
++	 * However, for the matrix parsing functions we need to pass the
++	 * number of rows/cols as the maximum row/col used plus 1. This
++	 * pretty much means we will also have holes in our SW keypad.
++	 */
++
++	rows = find_last_bit(&kpad->keypad, kpad->info->max_rows) + 1;
++	if (rows == kpad->info->max_rows + 1)
++		return dev_err_probe(dev, -EINVAL,
++				     "Now rows defined in the keypad!\n");
++
++	cols = find_last_bit(&kpad->keypad, kpad->info->max_cols + kpad->info->max_rows);
++	if (cols < kpad->info->max_rows)
++		return dev_err_probe(dev, -EINVAL,
++				     "No columns defined in the keypad!\n");
++
++	cols = cols + 1 - kpad->info->max_rows;
++
++	error = matrix_keypad_build_keymap(NULL, NULL, rows, cols,
++					   kpad->keycode, kpad->input);
++	if (error)
++		return error;
++
++	kpad->row_shift = get_count_order(cols);
++
++	if (device_property_read_bool(kpad->dev, "autorepeat"))
++		__set_bit(EV_REP, kpad->input->evbit);
++
++	return adp5585_keys_check_special_events(adp5585, kpad);
++
++out_free_map:
++	adp5585_keys_pins_free(kpad);
++	return error;
++}
++
++static int adp5585_keys_setup(const struct adp5585_dev *adp5585,
++			      struct adp5585_kpad *kpad)
++{
++	unsigned long keys_bits, start = 0, nbits = kpad->info->max_rows;
++	const struct adp5585_regs *regs = adp5585->info->regs;
++	unsigned int i = 0, max_cols = kpad->info->max_cols;
++	int error;
++
++	/*
++	 * Take care as the below assumes max_rows is always less or equal than
++	 * 8 which is true for the supported devices. If we happen to add
++	 * another device we need to make sure this still holds true. Although
++	 * adding a new device is very unlikely.
++	 */
++	do {
++		keys_bits = bitmap_read(&kpad->keypad, start, nbits);
++		if (keys_bits) {
++			error = regmap_write(adp5585->regmap, regs->pin_cfg_a + i,
++					     keys_bits);
++			if (error)
++				return error;
++		}
++
++		start += nbits;
++		if (max_cols > 8) {
++			nbits = 8;
++			max_cols -= nbits;
++		} else {
++			nbits = max_cols;
++		}
++
++		i++;
++	} while (start < kpad->info->max_rows + kpad->info->max_cols);
++
++	return 0;
++}
++
++static int adp5585_keys_ev_handle(struct device *dev, unsigned int key,
++				  unsigned int key_press)
++{
++	struct adp5585_kpad *kpad = dev_get_drvdata(dev);
++	unsigned int row, col, code;
++
++	/* make sure the event is for us */
++	if (key < kpad->info->key_ev_min || key > kpad->info->key_ev_max)
++		return -EINVAL;
++
++	/*
++	 * Unlikely but lets be on the safe side! We do not return any error
++	 * because the event was indeed for us but with some weird value. So,
++	 * we still want the caller know that the right handler was called.
++	 */
++	if (!key)
++		return 0;
++
++	row = (key - 1) / (kpad->info->max_cols);
++	col = (key - 1) % (kpad->info->max_cols);
++	code = MATRIX_SCAN_CODE(row, col, kpad->row_shift);
++
++	dev_dbg_ratelimited(kpad->dev, "report key(%d) r(%d) c(%d) code(%d)\n",
++			    key, row, col, kpad->keycode[code]);
++
++	input_report_key(kpad->input, kpad->keycode[code], key_press);
++	input_sync(kpad->input);
++
++	return 0;
++}
++
++static int adp5585_keys_probe(struct platform_device *pdev)
++{
++	const struct platform_device_id *id = platform_get_device_id(pdev);
++	struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
++	struct device *dev = &pdev->dev;
++	struct adp5585_kpad *kpad;
++	unsigned int revid;
++	const char *phys;
++	int error;
++
++	kpad = devm_kzalloc(dev, sizeof(*kpad), GFP_KERNEL);
++	if (!kpad)
++		return -ENOMEM;
++
++	if (!adp5585->irq)
++		return dev_err_probe(dev, -EINVAL,
++				     "IRQ is mandatory for the keypad\n");
++
++	kpad->dev = dev;
++
++	kpad->input = devm_input_allocate_device(dev);
++	if (!kpad->input)
++		return -ENOMEM;
++
++	kpad->info = (const struct adp5585_kpad_chip *)id->driver_data;
++	if (!kpad->info)
++		return -ENODEV;
++
++	error = regmap_read(adp5585->regmap, ADP5585_ID, &revid);
++	if (error)
++		return dev_err_probe(dev, error, "Failed to read device ID\n");
++
++	phys = devm_kasprintf(dev, GFP_KERNEL, "%s/input0", pdev->name);
++	if (!phys)
++		return -ENOMEM;
++
++	kpad->input->name = pdev->name;
++	kpad->input->phys = phys;
++
++	kpad->input->id.bustype = BUS_I2C;
++	kpad->input->id.vendor = 0x0001;
++	kpad->input->id.product = 0x0001;
++	kpad->input->id.version = revid & ADP5585_REV_ID_MASK;
++
++	device_set_of_node_from_dev(dev, dev->parent);
++
++	error = adp5585_keys_parse_fw(adp5585, kpad);
++	if (error)
++		return error;
++
++	error = adp5585_keys_setup(adp5585, kpad);
++	if (error)
++		return error;
++
++	platform_set_drvdata(pdev, kpad);
++	kpad->ev_handler.dev = dev;
++	kpad->ev_handler.handler = adp5585_keys_ev_handle;
++
++	error = devm_adp5585_ev_handler_add(adp5585, &kpad->ev_handler);
++	if (error)
++		return error;
++
++	error = input_register_device(kpad->input);
++	if (error)
++		return dev_err_probe(dev, error,
++				     "Failed to register input device\n");
++
++	return 0;
++}
++
++static const struct adp5585_kpad_chip adp5585_kpad_chip_info = {
++	.max_rows = 6,
++	.max_cols = 5,
++	.key_ev_min = ADP5585_ROW5_KEY_EVENT_START,
++	.key_ev_max = ADP5585_ROW5_KEY_EVENT_END,
++};
++
++static const struct adp5585_kpad_chip adp5589_kpad_chip_info = {
++	.max_rows = 8,
++	.max_cols = 11,
++	.key_ev_min = ADP5589_KEY_EVENT_START,
++	.key_ev_max = ADP5589_KEY_EVENT_END,
++};
++
++static const struct platform_device_id adp5585_keys_id_table[] = {
++	{ "adp5585-keys", (kernel_ulong_t)&adp5585_kpad_chip_info },
++	{ "adp5589-keys", (kernel_ulong_t)&adp5589_kpad_chip_info },
++	{ }
++};
++MODULE_DEVICE_TABLE(platform, adp5585_keys_id_table);
++
++static struct platform_driver adp5585_keys_driver = {
++	.driver	= {
++		.name = "adp5585-keys",
++	},
++	.probe = adp5585_keys_probe,
++	.id_table = adp5585_keys_id_table,
++};
++module_platform_driver(adp5585_keys_driver);
++
++MODULE_AUTHOR("Nuno Sá <nuno.sa@analog.com>");
++MODULE_DESCRIPTION("ADP5585 Keys Driver");
++MODULE_LICENSE("GPL");
 
 -- 
 2.49.0
