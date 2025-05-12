@@ -1,797 +1,177 @@
-Return-Path: <linux-pwm+bounces-5882-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5883-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02155AB1FFA
-	for <lists+linux-pwm@lfdr.de>; Sat, 10 May 2025 00:38:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D19F5AB2C7C
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 02:00:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 82288B22794
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 May 2025 22:36:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38B841890722
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 May 2025 00:00:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F02B126280A;
-	Fri,  9 May 2025 22:37:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06E0F2D7BF;
+	Mon, 12 May 2025 00:00:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cLYvhzLn"
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="O+9KV36q"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010064.outbound.protection.outlook.com [52.101.229.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3878A263F3A;
-	Fri,  9 May 2025 22:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746830255; cv=none; b=kullzWnLHpp9vL98Sn1jsOOsutOjwnyhxXe7MPEERyiRzzBx0hNvA4Hzzdoy1MxzrhQMf6PPe3fbxpDrRTpABtxrQYenSX/t7lz+FSTwPQ7KZiHQuT2jABZLqjqxoAZ5wDo7gAMJ8cKQcrEdgS9fz/H+HyF5fukHDQZ8Ewunvaw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746830255; c=relaxed/simple;
-	bh=Jor5+H8NpjjwGnd8cyiZjgGvf8q0mnsmd/61pXih8y8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I0AlFo1h3Ienw+/4wWo8Q8dXzV6DenRjIIaKtGYxIvurOTv8Y1Bl9B8HyrIqzrxZ3QrWt4iabQhluoo0dEYK2FI2jgmtYSG8hGVpasMUptbtr9BKDSrl6N8Qzeaa7PVf09n7QFuNKnCmM4syiZhRejk9oLCS9A43kWJQ95A6Tto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cLYvhzLn; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-442ccf0e1b3so27957975e9.3;
-        Fri, 09 May 2025 15:37:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746830251; x=1747435051; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xe4TgcoQ2baYjsY0YQyJwCvFNOBNMR+6XupAg7NRM7c=;
-        b=cLYvhzLnhQvCRHpk/pzMDB4p6fc4MsROCbPGdiDeYF+Mk7Jc2xGK4GaHW0UPr+0IFc
-         2Z8F5nojaO+GBflFdWWA8sOyQWcDUiAE4d3PQW7FaFHAKKTwTbwpozevyzS7Pog64xbf
-         0SomrMLFKuZe7PqXw8GOxBYPNCiVWAtC9HaOjwesq5lQkXcAN7tYoohpmLlnlRFwqQav
-         iWtoDxTd7A9Oy9CQonMOcv8pAb2QtKn1XvS2DxZoLiCLMCXJyjEz+sr3Fn8onufeDbdw
-         cPPmlpV6fUx3MhMmlmcSq4W2J374INvqR+rQHopFBfuN0jSXisqgB0/CWWIB3zCs0vwJ
-         mKeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746830251; x=1747435051;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xe4TgcoQ2baYjsY0YQyJwCvFNOBNMR+6XupAg7NRM7c=;
-        b=xJGQlZ91IVUFRDcBae+yGM969ZW7z6AYpNiddG+gZ4bck4lFKSdKCgnnKxc3LzZapD
-         BmNwl4bTyU/fkSMQc52YOBpi5r2F2BkKLtigvfrxG8eIE52CN16o5NTuAIAv0qbtNnmH
-         9etsE8Z7A9X3uMLKWjTtrnpqf+FpN8JFJgtelCRH7Mrwr3Wjh2Ma7AZRp6sYLze78RT7
-         Xkil+2444ZBsReWCwoBoECcUpLN1rIr3aHbXNfEoMV13NTcYLdePozCO95CDtjeT02hJ
-         QC+0rcjpXeTjsRQJUOhEDdDAaTlmKhtpoDhbVGAiBs/jUWEMzkVYlXG8/hsA4lQgHa0K
-         uUAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWf1RGs+w0lX3DMdDrLBIOtUBgSsvNa+NJ666q4smtzBHUqRXWpYrLJDnqrix3YKKMKljY/qdNV4CK1@vger.kernel.org, AJvYcCX/4w5CPEwLY9clYrclGmau39vqRFVLgMooUQSh7Y4oWubu9cXexdSS1a1Jnf67PbJS2foVvF++Q2+YIik=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yws3q7dcMaYPtIf0BQFp2gik8ma26YWDi+jGRAE8hlfZMJzwVQA
-	Wi2ghcHlNx+iRw7gJhuUONdMHVMTaKSUu5parwETXd3SpkpZM6iGCddHSg==
-X-Gm-Gg: ASbGncsZkkly5eTrMPdZ7V+h94UdJ6pEHV3SnoEfjRMcSJyQCwMqnWsYbGgOdOJeLkA
-	9yBrPE0zUKk+Rk+UUkaxapWvWIZkXS2AFEX6Ma6vVbZxS4y4dRzuzHRDMyqzSG/dRuwOEgrmZE6
-	zKuJYGDkypaW6lairAgr/HQrzlGNnkCUEmNfFhmbAXxq0DZxNN7RjUfPQTI3zULq8nZqrgo9CB3
-	wpppCU3R4Y10BvkvXeWOfdlPx6S+GmlmIFoi+RmCx8fTdDmohwyVpi8YJLj2QfVeq4Drx3d65Ps
-	dp8JZaeMEKy8EjVEnPddMhWikkD0p4ZMQIBqVQlCigumKwOtqsJBffsXKXVqZ5TK3BJeMpYhcJv
-	4dwoRdnT/REGWOqLTgVPdX/0eXYIWHMg=
-X-Google-Smtp-Source: AGHT+IHmjDjNIYEHnth5NCx5wrrIbkbM3RMMnbWatuG8GVu9OwllnPsaxtMQP7b5RfWrTufASTi5bg==
-X-Received: by 2002:a05:600c:3e8c:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-442d6dde961mr48955315e9.30.1746830250985;
-        Fri, 09 May 2025 15:37:30 -0700 (PDT)
-Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442cd3b7f18sm88777745e9.40.2025.05.09.15.37.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 May 2025 15:37:30 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Cc: Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH v13] pwm: airoha: Add support for EN7581 SoC
-Date: Sat, 10 May 2025 00:36:52 +0200
-Message-ID: <20250509223653.8800-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EC7125D6;
+	Mon, 12 May 2025 00:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747008039; cv=fail; b=DxOca+fL0nf7TZTCQ+R4gcUclt7surZ/903+c67jXVhBGWS+FwS43l7SfSnDUngqMUE0NhwDBCgvoXySAte4Wv/0aC0fSAjgLjh4vCd6z1Xu6nh5+z9+9o/NyaILG/WH2+9CIXjOMprpabABKrmWnnAH2hdvouCnuS8SOImeI7E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747008039; c=relaxed/simple;
+	bh=YZPQ5Odumok4hLTAdYPJith/mv/jA7Tg2vwxumcwBQ4=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=Cjx/agsdBaRgYlBAMLtcnDa89/i/Nu7fxZDhP8noY+wfAe5I2CiPjm6jrj2UwUxHqQxneQQm6o9H3c1/MUkZIcY8Zxxw1krh0wkBDmXecBLp/VR6AIFnmYJT4X9DuIZMHGFjDOt9B4FPuTIgsxev3eWp3scd+OZgCTFvU+5oYqI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=O+9KV36q; arc=fail smtp.client-ip=52.101.229.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SHc8RrF82kkSaA8UUQ0Jx3IjjMQS0Y60C6EHOcZHjC55ukPYBwdy7QGWWapgI82UIscfnUgFsSTNBNpbCItLoa5Qkoe/HJcv1Kt+Gkm+9indopFkL7zpuHW2bG6UvOKD2GcShH0rxSA3kZfO9TomRRgZCYbEtWE5fabY+0q377Q5eSLc3axM0irNoNsuTAfMl1MBQpAV/biU5iG6b6FadF9RBkoLYTjrmmCD9+a+sChYJ7Zf5fGTBe3wYaF6rFvgzDevkafhhhgPKM7uqSRX39ly78cPJas42+Knw4ZEPkWi+xvBQidlnVsPqDUlDQxy0I2X5RJpDOz0UVKr8Jw8lg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YZPQ5Odumok4hLTAdYPJith/mv/jA7Tg2vwxumcwBQ4=;
+ b=EKFRaTnCnHvJFx0B64n7UWIL0flV2yVXE9yssnMHZZgOTOq535VPwlBs1k/EK+LmuGts0UAveTLGsRhKdWEykhkvKxzG7g59Q53b02YAfPZ9+QH3nhL2Ce7V+jzlsUrN5n5IyY39/pP51DKR3aymC81kBFGBZV0mjkHS1kKN7NRSY08lOKpxXdagX/VurJm+HHGAIZQpRtVgJlTYUd0jHLhJ81IVJnjz+qf/9s8tymO+Tu86SiIC2SXDfKcPVFx+DYveSrcJlKy91IQlC46SLGlVhixU07c+lxblnCZKsVS+u8dtP9l5VIq5pO80PEO0l9FDmPiXF49S0/3bUCSj4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YZPQ5Odumok4hLTAdYPJith/mv/jA7Tg2vwxumcwBQ4=;
+ b=O+9KV36qXHiktioH7b/+WVBvncRbR7iw5j6Rj0SHMJnTOMeDHx7L8jDe8J2zpjofq6ISSTtsKgQ1IEmfHjDDnb5TKAUHOuHfiHhgvUeiafAHYTm/d8/btv9/+tsqSK+uDH0vIcLISmoKfg13cUbjsiB/l6eIxewoItiJwCxzWgc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11) by OS7PR01MB13738.jpnprd01.prod.outlook.com
+ (2603:1096:604:35a::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.26; Mon, 12 May
+ 2025 00:00:32 +0000
+Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
+ ([fe80::c568:1028:2fd1:6e11%5]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 00:00:32 +0000
+Message-ID: <87wmamy9y8.wl-kuninori.morimoto.gx@renesas.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Russell King <linux@armlinux.org.uk>,
+	Will Deacon <will@kernel.org>,
+	linux-pwm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2] pwm: tidyup PWM menu for Renesas
+In-Reply-To: <7vsimju2qa5oa7bnvkqhopmx7dmto5luxz6jjugdwiifa6nhyp@sz7gff3egqps>
+References: <87r00ypt81.wl-kuninori.morimoto.gx@renesas.com>
+	<7vsimju2qa5oa7bnvkqhopmx7dmto5luxz6jjugdwiifa6nhyp@sz7gff3egqps>
+User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
+Content-Type: text/plain; charset=US-ASCII
+Date: Mon, 12 May 2025 00:00:32 +0000
+X-ClientProxiedBy: TYCPR01CA0135.jpnprd01.prod.outlook.com
+ (2603:1096:400:26d::15) To TYCPR01MB10914.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a9::11)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|OS7PR01MB13738:EE_
+X-MS-Office365-Filtering-Correlation-Id: e286f690-d0e5-4dc0-c885-08dd90e80374
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?xfXrnRzJGf+IWQq5qKP4uCH1yjNAK9HUnDgHAFxw2+OOyIi6CqOGurJa/nbU?=
+ =?us-ascii?Q?RBuNSniQWecfkt1zEOZ/RLB6lBWtstt7+KHhl0ca1vUiXIR8AQdXyBTggrMB?=
+ =?us-ascii?Q?nx4odpczDZHkTCvcZwqXN0fxImG0lHYniWaF6qK5VJxn2/XzmABmUChAOYxu?=
+ =?us-ascii?Q?YutUEaediJAOWsf2LX5Js6mFeKxLVFnPiWD512QrrisIEprQYk8JBnrHpU6J?=
+ =?us-ascii?Q?dgErPAvk5iIGumapirMmPr+Hj2OETFbY9XOvbS6hH7JZ/xLDiR8vqS624d6q?=
+ =?us-ascii?Q?Ax8NIZreDxFvNHKs1i9iwNyX1hnzccR609yBzvd2aVnJdjq/ECHx1OkicKZc?=
+ =?us-ascii?Q?rGsV7SLR7Kdec9wVLH7/ODJv9NI/yq5qkruKaBpet+JC5tOFrwEo5n/rKkso?=
+ =?us-ascii?Q?7ITOID9GcX92uMfqX09bD0d7wNECCG6uyQH3DiHsiHym7ZyDn8OvDxz6uMyd?=
+ =?us-ascii?Q?dpc+nnBO86gRkWxg2QqQgcnn+7ujV5eMIAbvVh7d7HgPKOircPI3jppkeH6p?=
+ =?us-ascii?Q?If2J17bK7vVYUuhm1K4cKeHlcl+pcsL//3cvc1PwHyYklm5v/uktdPLTX8sl?=
+ =?us-ascii?Q?64d9l+upY0fDTAr3mFTIrhLsj6znCzH8av2n5XUErPlE+pDQjjTPgutx7IXg?=
+ =?us-ascii?Q?clfLLGqv+8SWHgrXQYBQDTuHvnSlaQklIlLyhnWjYvw2Q+ntnO3SC2yToDy2?=
+ =?us-ascii?Q?1UUmvE/Ms/T0tlBE5jTF1M6oi9wTo3p9hFdVjdHnabVcczZVh5HiH7UjxU+A?=
+ =?us-ascii?Q?rDUDeG6072AlXp7Wu2BVgjyW6DOWeTt4Zvag6L/VQNWsm1IFc2ltZZuXjiEr?=
+ =?us-ascii?Q?5Ncz4JGsD5mO7AWgXW2xsH3zwXJZkflIXf0ObEB9CkHp+giGe9qh/YgUSyaB?=
+ =?us-ascii?Q?V1EkOWlXHUr4r0zv8j9HrtCif3DxGGS/aeTR5xV1+BbVcDI9cl+JLoHZ4l1q?=
+ =?us-ascii?Q?3DDrwusN47j+Nf7EBWUaSm3yVAYTXDKRYkId5oyC9crWRsD8DGlp0kh3fPrk?=
+ =?us-ascii?Q?+R0gvV4SUGzmvs+bmjIaFOeyJETJhMJkOsZ0Q7cgRhRnMLMYNAmvQrJayTzW?=
+ =?us-ascii?Q?iHZJFmmDX9jYKQiQ+peTNsIFy3qJwQx+7VboEWoVqzCuwO2K0K8WMfdhCIMm?=
+ =?us-ascii?Q?iWDwIbqYjfUT/+DlRH/4GZYfjqccv/fouNriNNIGehC/ekCqz2hy1VUaYALO?=
+ =?us-ascii?Q?1hX6QDIfiAtUY+5+rtCoESbYCp+EG+Lacv+Uuj6umMw8J+Sd8nn2o2+K4pWJ?=
+ =?us-ascii?Q?wuySMfkp2nxFYBri7Tam6rMMFjbMQAVkNDSN86SCMsdXLs38Jz+nfCWT9aXc?=
+ =?us-ascii?Q?diwA+KVgVmtm+I3cbPGmk8YLto3owVHzE4ofq3vtaZ3dZMVGfUXoGmGpOepl?=
+ =?us-ascii?Q?DV8TpoTl4mM+7vw0ZC8+Bd8NESVcu6tqpW/R3KDaDqnccrJ767UCiuWReT9f?=
+ =?us-ascii?Q?kVe1GhhB/GQm2+e+E8RNxpPa2BQmNGv3j5PlKQdE99b1ObWnBkcJng=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?dZ+0JJm3E6mrPAGQFk7WA9KbsyRW14FW+pc4zoqwhPvamGm0HSb2gPqVPBfT?=
+ =?us-ascii?Q?MlY05c/OsuspYYEQcFPWH+7jKNSro4z9vdsEJConxGLscLngCpgejHW5TZWm?=
+ =?us-ascii?Q?EEig+L1p21adp525XFwBCUKuDi78tnHn0AWdxlz5fumTNe1BdUeNlCfep9yc?=
+ =?us-ascii?Q?3GmydbZxJF7USic/PtU48xSJeNFFFtFoem3F6j3UElxXLqKb+QlJiSEojUvO?=
+ =?us-ascii?Q?2yrkgBo4ZhX05nbK7q+Gzd1+ytFrjJJdd9v0PZiHAVSuj+jEu5j2MfifI1Be?=
+ =?us-ascii?Q?kA9tkTOKqP9USpK2pSPzHpo3aevnZdfp+kEMpvwukoWGzUTlBH/hnZsb+rMx?=
+ =?us-ascii?Q?cTPyYDnf5uV7QA7vt6OE4QihDPUD0MnuRqiMdyqXCyyECCU/B6K/YfKEBjb/?=
+ =?us-ascii?Q?BVaQeXXm7fd/cFmOliSd50OU4oVGnN3d5jpN/+sywsdnORXBRUzfyQEtW4bV?=
+ =?us-ascii?Q?nHV2/bYu0VSIzIC9TbuDiE5kTfMnUfYivS38ZNiswAElmlhgXQJeGg4ujXWc?=
+ =?us-ascii?Q?EATMF/5ztgr9dm+7los4CGnAjXirk38GeDZ7sPrV5Asv9kuIL4PspiN6dijT?=
+ =?us-ascii?Q?wtS1AmwGa+L4I+TQ2OQAHc6ssLc1y2tcHw5jgaH4k0qxi52rS+ZLCr1A9TYJ?=
+ =?us-ascii?Q?Q8x4y+pY77AJc6cSIX2pg9WIS2IjM+LSYVut/7bZbdzp5DjEmImDXPbAgBzi?=
+ =?us-ascii?Q?eV9UCdfvJCO2FB7by6pa0GBr0ISf4F5xyTsjTuxcJ0C0hMl2DGv3bk7f8MoQ?=
+ =?us-ascii?Q?tUXg77BHKiuwBMsAmwIicb/wHKdSLb+kQROjICy37ZFY+K9/F3AAxZIXozra?=
+ =?us-ascii?Q?f3knbQL41a8jX+YzDAMiIAMmE2qfe8FFGDvx5JNau2almVA5I6jyRmcMqg+x?=
+ =?us-ascii?Q?LZrdcXKlkNPWv2b5dDfJjrsxNxhg3bGkTlD0TMY/dzxMNFPm6Q3k1XyMDeBh?=
+ =?us-ascii?Q?FHKakhVbgghAoZ0UkgXXPPHTbMgmleKisX7l7UP/BiDjp8kh558I1B+N5Uos?=
+ =?us-ascii?Q?iEQjW11kCKzlKH8LJOO7TgsxK5Agb8FmrQSg/nbAHjfFjpxuvqfItvKw0eOQ?=
+ =?us-ascii?Q?8Db2Swl9RdJb+kTlvhVxI8pf1AB9Wnu5eEAAW/3H/AQ/a053EpSuyYfY54Lt?=
+ =?us-ascii?Q?HdkX/wflBrTD4h3fDG5fUXKdgMvCMiD+J8HFeUVi4jR0oh5IP0jug0I8bQ8a?=
+ =?us-ascii?Q?tLea3/wCVz2O5Qcg4eOJf0cKsunax3scbZ8oDkrPNQz/xY8NGtjLHYBgjEpV?=
+ =?us-ascii?Q?TS3y8tBQRu/zwuu6E/cVKx8EaZYvGtsyBC8IC8Asvf7S94+ZaDMgD/a5oXe8?=
+ =?us-ascii?Q?xdWeAqrmzPEVf//GzUV6QIrTEPGsjsOuH3A5AwxC9CexLlqq8WE91cscpXqG?=
+ =?us-ascii?Q?3KQa7RT3cCOow8Z+BRVtQ+gRtg3dTFe2NdpGon52cP59K9mdNl7/4RyX675z?=
+ =?us-ascii?Q?tAuHYG352IrfkQLJHlUtc8JNAdy0FuKcDVejSmyOaRdaiZLzyVuStmZSkWq/?=
+ =?us-ascii?Q?iKOtob/e9vp1DH00dvOvgLeUwj/bejEcI2C3o9uUSaErfAA02P7KtX1clXnM?=
+ =?us-ascii?Q?AXP0Lu+vFvUGCLycXpQuGTuKg0wKY5JDF/Fm9xilWqhApYTQp1wUb1Omo/Oo?=
+ =?us-ascii?Q?oEVuK54c1H8L/I64TEWIAtE=3D?=
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e286f690-d0e5-4dc0-c885-08dd90e80374
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 00:00:32.3198
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OL99lfTEUYDtPgNC/lwN6j1wq4mP34l9tvauVWIC3kAl8jI0bNdNQoLc2aZxsBQsdQ8GcgP/P8tOtPRmGUrafShujnJIZ8C6BSOcrRuinWGbnJMuNOSUz0sasgD8uSni
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB13738
 
-From: Benjamin Larsson <benjamin.larsson@genexis.eu>
 
-Introduce driver for PWM module available on EN7581 SoC.
+Hi Uwe
 
-Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Co-developed-by: Christian Marangi <ansuelsmth@gmail.com>
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> I like this change much better, just one comment below:
+(snip)
+> PWM_RENESAS_RZ_MTU3 sorts before PWM_RENESAS_TPU.
+
+Oops, indeed.
+Will fix in v3
+
+Thank you for your help !!
+
+Best regards
 ---
-Changes v13:
-- Reorder include
-- Split ticks_from_ns function
-- Add additional comments for shift register chip clock
-- Address suggested minor optimization (Uwe)
-
-Changes v12:
-- Make shift function more readable
-- Use unsigned int where possible
-- Better comment some SIPO strangeness
-- Move SIPO init after flash map config
-- Retrun real values in get_state instead of the
-  one saved in bucket
-- Improve period_ns parsing so we can better share generators
-
-Changes v11:
-- Fix wrong calculation of period and duty
-- Use AIROHA_PWM prefix for each define
-- Drop set/get special define in favour of BITS and GENMASK
-- Correctly use dev_err_probe
-- Init bucket with initial values
-- Rework define to make use of FIELD_PREP and FIELD_GET
-
-Changes in v10:
-- repost just patch 6/6 (pwm driver) since patches {1/6-5/6} have been
-  already applied in linux-pinctrl tree
-- pwm: introduce AIROHA_PWM_FIELD_GET and AIROHA_PWM_FIELD_SET macros to
-  get/set field with non-const mask
-- pwm: simplify airoha_pwm_get_generator() to report unused generator
-  and remove double lookup
-- pwm: remove device_node pointer in airoha_pwm struct since this is
-  write-only field
-- pwm: cosmetics
-- Link to v9: https://lore.kernel.org/r/20241023-en7581-pinctrl-v9-0-afb0cbcab0ec@kernel.org
-
-Changes in v9:
-- pwm: remove unused properties
-- Link to v8: https://lore.kernel.org/r/20241018-en7581-pinctrl-v8-0-b676b966a1d1@kernel.org
-
-Changes in v8:
-- pwm: add missing properties documentation
-- Link to v7: https://lore.kernel.org/r/20241016-en7581-pinctrl-v7-0-4ff611f263a7@kernel.org
-
-Changes in v7:
-- pinctrl: cosmetics
-- pinctrl: fix compilation warning
-- Link to v6: https://lore.kernel.org/r/20241013-en7581-pinctrl-v6-0-2048e2d099c2@kernel.org
-
-Changes in v6:
-- pwm: rely on regmap APIs
-- pwm: introduce compatible string
-- pinctrl: introduce compatible string
-- remove airoha-mfd driver
-- add airoha,en7581-pinctrl binding
-- add airoha,en7581-pwm binding
-- update airoha,en7581-gpio-sysctl binding
-- Link to v5: https://lore.kernel.org/r/20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org
-
-Changes in v5:
-- use spin_lock in airoha_pinctrl_rmw instead of a mutex since it can run
-  in interrupt context
-- remove unused includes in pinctrl driver
-- since the irq_chip is immutable, allocate the gpio_irq_chip struct
-  statically in pinctrl driver
-- rely on regmap APIs in pinctrl driver but keep the spin_lock local to the
-  driver
-- rely on guard/guard_scope APIs in pinctrl driver
-- improve naming convention pinctrl driver
-- introduce airoha_pinconf_set_pin_value utility routine
-- Link to v4: https://lore.kernel.org/r/20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org
-
-Changes in v4:
-- add 'Limitation' description in pwm driver
-- fix comments in pwm driver
-- rely on mfd->base __iomem pointer in pwm driver, modify register
-  offsets according to it and get rid of sgpio_cfg, flash_cfg and
-  cycle_cfg pointers
-- simplify register utility routines in pwm driver
-- use 'generator' instead of 'waveform' suffix for pwm routines
-- fix possible overflow calculating duty cycle in pwm driver
-- do not modify pwm state in free callback in pwm driver
-- cap the maximum period in pwm driver
-- do not allow inverse polarity in pwm driver
-- do not set of_xlate callback in the pwm driver and allow the stack to
-  do it
-- fix MAINTAINERS file for airoha pinctrl driver
-- fix undefined reference to __ffsdi2 in pinctrl driver
-- simplify airoha,en7581-gpio-sysctl.yam binding
-- Link to v3: https://lore.kernel.org/r/20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org
-
-Changes in v3:
-- introduce airoha-mfd driver
-- add pwm driver to the same series
-- model pinctrl and pwm drivers as childs of a parent mfd driver.
-- access chip-scu memory region in pinctrl driver via syscon
-- introduce a single airoha,en7581-gpio-sysctl.yaml binding and get rid
-  of dedicated bindings for pinctrl and pwm
-- add airoha,en7581-chip-scu.yaml binding do the series
-- Link to v2: https://lore.kernel.org/r/20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org
-
-Changes in v2:
-- Fix compilation errors
-- Collapse some register mappings for gpio and irq controllers
-- update dt-bindings according to new register mapping
-- fix some dt-bindings errors
-- Link to v1: https://lore.kernel.org/all/cover.1723392444.git.lorenzo@kernel.org/
-
- drivers/pwm/Kconfig      |  11 +
- drivers/pwm/Makefile     |   1 +
- drivers/pwm/pwm-airoha.c | 536 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 548 insertions(+)
- create mode 100644 drivers/pwm/pwm-airoha.c
-
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index c866ed388da9..113ca01f319f 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -54,6 +54,17 @@ config PWM_ADP5585
- 	  This option enables support for the PWM function found in the Analog
- 	  Devices ADP5585.
- 
-+config PWM_AIROHA
-+	tristate "Airoha PWM support"
-+	depends on ARCH_AIROHA || COMPILE_TEST
-+	depends on OF
-+	select REGMAP_MMIO
-+	help
-+	  Generic PWM framework driver for Airoha SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-airoha.
-+
- config PWM_APPLE
- 	tristate "Apple SoC PWM support"
- 	depends on ARCH_APPLE || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 5c782af8f49b..cd3e6de2e44a 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_PWM)		+= core.o
- obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
- obj-$(CONFIG_PWM_ADP5585)	+= pwm-adp5585.o
-+obj-$(CONFIG_PWM_AIROHA)	+= pwm-airoha.o
- obj-$(CONFIG_PWM_APPLE)		+= pwm-apple.o
- obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
- obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+= pwm-atmel-hlcdc.o
-diff --git a/drivers/pwm/pwm-airoha.c b/drivers/pwm/pwm-airoha.c
-new file mode 100644
-index 000000000000..eaf946a53c81
---- /dev/null
-+++ b/drivers/pwm/pwm-airoha.c
-@@ -0,0 +1,536 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2022 Markus Gothe <markus.gothe@genexis.eu>
-+ *
-+ *  Limitations:
-+ *  - Only 8 concurrent waveform generators are available for 8 combinations of
-+ *    duty_cycle and period. Waveform generators are shared between 16 GPIO
-+ *    pins and 17 SIPO GPIO pins.
-+ *  - Supports only normal polarity.
-+ *  - On configuration the currently running period is completed.
-+ *  - Minimum supported period is 4ms
-+ *  - Maximum supported period is 1s
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/err.h>
-+#include <linux/gpio.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/math64.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+
-+#define AIROHA_PWM_REG_SGPIO_LED_DATA		0x0024
-+#define AIROHA_PWM_SGPIO_LED_DATA_SHIFT_FLAG	BIT(31)
-+#define AIROHA_PWM_SGPIO_LED_DATA_DATA		GENMASK(16, 0)
-+
-+#define AIROHA_PWM_REG_SGPIO_CLK_DIVR		0x0028
-+#define AIROHA_PWM_SGPIO_CLK_DIVR		GENMASK(1, 0)
-+#define AIROHA_PWM_SGPIO_CLK_DIVR_32		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0x3)
-+#define AIROHA_PWM_SGPIO_CLK_DIVR_16		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0x2)
-+#define AIROHA_PWM_SGPIO_CLK_DIVR_8		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0x1)
-+#define AIROHA_PWM_SGPIO_CLK_DIVR_4		FIELD_PREP_CONST(AIROHA_PWM_SGPIO_CLK_DIVR, 0x0)
-+
-+#define AIROHA_PWM_REG_SGPIO_CLK_DLY		0x002c
-+
-+#define AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG	0x0030
-+#define AIROHA_PWM_SERIAL_GPIO_FLASH_MODE	BIT(1)
-+#define AIROHA_PWM_SERIAL_GPIO_MODE_74HC164	BIT(0)
-+
-+#define AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(_n)	(0x003c + (4 * (_n)))
-+#define AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(_n) (16 * (_n))
-+#define AIROHA_PWM_GPIO_FLASH_PRD_LOW		GENMASK(15, 8)
-+#define AIROHA_PWM_GPIO_FLASH_PRD_HIGH		GENMASK(7, 0)
-+
-+#define AIROHA_PWM_REG_GPIO_FLASH_MAP(_n)	(0x004c + (4 * (_n)))
-+#define AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(_n) (4 * (_n))
-+#define AIROHA_PWM_GPIO_FLASH_EN		BIT(3)
-+#define AIROHA_PWM_GPIO_FLASH_SET_ID		GENMASK(2, 0)
-+
-+/* Register map is equal to GPIO flash map */
-+#define AIROHA_PWM_REG_SIPO_FLASH_MAP(_n)	(0x0054 + (4 * (_n)))
-+
-+#define AIROHA_PWM_REG_CYCLE_CFG_VALUE(_n)	(0x0098 + (4 * (_n)))
-+#define AIROHA_PWM_REG_CYCLE_CFG_SHIFT(_n)	(8 * (_n))
-+#define AIROHA_PWM_WAVE_GEN_CYCLE		GENMASK(7, 0)
-+
-+/* GPIO/SIPO flash map handles 8 pins in one register */
-+#define AIROHA_PWM_PINS_PER_FLASH_MAP		8
-+/* Cycle cfg handles 4 generators in one register */
-+#define AIROHA_PWM_BUCKET_PER_CYCLE_CFG		4
-+/* Flash producer handles 2 generators in one register */
-+#define AIROHA_PWM_BUCKET_PER_FLASH_PROD	2
-+
-+#define AIROHA_PWM_NUM_BUCKETS			8
-+/*
-+ * The first 16 GPIO pins, GPIO0-GPIO15, are mapped into 16 PWM channels, 0-15.
-+ * The SIPO GPIO pins are 17 pins which are mapped into 17 PWM channels, 16-32.
-+ * However, we've only got 8 concurrent waveform generators and can therefore
-+ * only use up to 8 different combinations of duty cycle and period at a time.
-+ */
-+#define AIROHA_PWM_NUM_GPIO			16
-+#define AIROHA_PWM_NUM_SIPO			17
-+#define AIROHA_PWM_MAX_CHANNELS			(AIROHA_PWM_NUM_GPIO + AIROHA_PWM_NUM_SIPO)
-+
-+struct airoha_pwm_bucket {
-+	/* Bitmask of PWM channels using this bucket */
-+	u64 used;
-+	u64 period_ns;
-+	u64 duty_ns;
-+};
-+
-+struct airoha_pwm {
-+	struct regmap *regmap;
-+
-+	u64 initialized;
-+
-+	struct airoha_pwm_bucket buckets[AIROHA_PWM_NUM_BUCKETS];
-+
-+	/* Cache bucket used by each pwm channel */
-+	u8 channel_bucket[AIROHA_PWM_MAX_CHANNELS];
-+};
-+
-+/* The PWM hardware supports periods between 4 ms and 1 s */
-+#define AIROHA_PWM_PERIOD_TICK_NS	(4 * NSEC_PER_MSEC)
-+#define AIROHA_PWM_PERIOD_MAX_NS	(1 * NSEC_PER_SEC)
-+/* It is represented internally as 1/250 s between 1 and 250. Unit is ticks. */
-+#define AIROHA_PWM_PERIOD_MIN		1
-+#define AIROHA_PWM_PERIOD_MAX		250
-+/* Duty cycle is relative with 255 corresponding to 100% */
-+#define AIROHA_PWM_DUTY_FULL		255
-+
-+static void airoha_pwm_get_flash_map_addr_and_shift(unsigned int hwpwm,
-+						    u32 *addr, u32 *shift)
-+{
-+	unsigned int offset, hwpwm_bit;
-+
-+	if (hwpwm >= AIROHA_PWM_NUM_GPIO) {
-+		unsigned int sipohwpwm = hwpwm - AIROHA_PWM_NUM_GPIO;
-+
-+		offset = sipohwpwm / AIROHA_PWM_PINS_PER_FLASH_MAP;
-+		hwpwm_bit = sipohwpwm % AIROHA_PWM_PINS_PER_FLASH_MAP;
-+
-+		/* One FLASH_MAP register handles 8 pins */
-+		*shift = AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(hwpwm_bit);
-+		*addr = AIROHA_PWM_REG_SIPO_FLASH_MAP(offset);
-+	} else {
-+		offset = hwpwm / AIROHA_PWM_PINS_PER_FLASH_MAP;
-+		hwpwm_bit = hwpwm % AIROHA_PWM_PINS_PER_FLASH_MAP;
-+
-+		/* One FLASH_MAP register handles 8 pins */
-+		*shift = AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(hwpwm_bit);
-+		*addr = AIROHA_PWM_REG_GPIO_FLASH_MAP(offset);
-+	}
-+}
-+
-+static u32 airoha_pwm_get_period_ticks_from_ns(u64 period_ns)
-+{
-+	return div_u64(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
-+}
-+
-+static u32 airoha_pwm_get_duty_ticks_from_ns(u64 period_ns, u64 duty_ns)
-+{
-+	return mul_u64_u64_div_u64(duty_ns, AIROHA_PWM_DUTY_FULL,
-+				   period_ns);
-+}
-+
-+static void airoha_pwm_get_bucket(struct airoha_pwm *pc, int bucket,
-+				  u64 *period_ns, u64 *duty_ns)
-+{
-+	u32 period_tick, duty_tick;
-+	unsigned int offset;
-+	u32 shift, val;
-+
-+	offset = bucket / AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
-+	shift = bucket % AIROHA_PWM_BUCKET_PER_CYCLE_CFG;
-+	shift = AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
-+
-+	regmap_read(pc->regmap, AIROHA_PWM_REG_CYCLE_CFG_VALUE(offset), &val);
-+
-+	period_tick = FIELD_GET(AIROHA_PWM_WAVE_GEN_CYCLE, val >> shift);
-+	*period_ns = period_tick * AIROHA_PWM_PERIOD_TICK_NS;
-+
-+	offset = bucket / AIROHA_PWM_BUCKET_PER_FLASH_PROD;
-+	shift = bucket % AIROHA_PWM_BUCKET_PER_FLASH_PROD;
-+	shift = AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
-+
-+	regmap_read(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
-+		    &val);
-+
-+	duty_tick = FIELD_GET(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, val >> shift);
-+	/*
-+	 * Overflow can't occur in multiplication as duty_tick is just 8 bit
-+	 * and period_ns is clamped to AIROHA_PWM_PERIOD_MAX_NS and fit in a
-+	 * u64.
-+	 */
-+	*duty_ns = DIV_U64_ROUND_UP(duty_tick * *period_ns, AIROHA_PWM_DUTY_FULL);
-+}
-+
-+static int airoha_pwm_get_generator(struct airoha_pwm *pc, u64 duty_ns,
-+				    u64 period_ns)
-+{
-+	int i, best = -ENOENT, unused = -ENOENT;
-+
-+	for (i = 0; i < ARRAY_SIZE(pc->buckets); i++) {
-+		struct airoha_pwm_bucket *bucket = &pc->buckets[i];
-+		u32 duty_ticks, duty_ticks_bucket;
-+
-+		/* If found, save an unused bucket to return it later */
-+		if (!bucket->used && unused == -ENOENT) {
-+			unused = i;
-+			continue;
-+		}
-+
-+		if (duty_ns == bucket->duty_ns) {
-+			/* We found a matching bucket */
-+			if (period_ns == bucket->period_ns)
-+				return i;
-+
-+			/*
-+			 * Save a bucket for later that is not bigger than the
-+			 * requested period_ns (to be used if we don't have
-+			 * any unused bucket)
-+			 */
-+			if (bucket->period_ns <= period_ns)
-+				best = i;
-+		}
-+
-+		/*
-+		 * Unlike duty cycle zero, which can be handled by
-+		 * disabling PWM, a generator is needed for full duty
-+		 * cycle but it can be reused regardless of period
-+		 */
-+		duty_ticks = airoha_pwm_get_duty_ticks_from_ns(period_ns, duty_ns);
-+		duty_ticks_bucket = airoha_pwm_get_duty_ticks_from_ns(bucket->period_ns,
-+								      bucket->duty_ns);
-+		if (duty_ticks == AIROHA_PWM_DUTY_FULL &&
-+		    duty_ticks_bucket == AIROHA_PWM_DUTY_FULL)
-+			return i;
-+	}
-+
-+	/* With no unused bucket, return the best one found (if ever) */
-+	return unused == -ENOENT ? best : unused;
-+}
-+
-+static void airoha_pwm_release_bucket_config(struct airoha_pwm *pc,
-+					     unsigned int hwpwm)
-+{
-+	int bucket;
-+
-+	/* Nothing to clear, PWM channel never used */
-+	if (!(pc->initialized & BIT_ULL(hwpwm)))
-+		return;
-+
-+	bucket = pc->channel_bucket[hwpwm];
-+	pc->buckets[bucket].used &= ~BIT_ULL(hwpwm);
-+}
-+
-+static int airoha_pwm_consume_generator(struct airoha_pwm *pc,
-+					u64 duty_ns, u64 period_ns,
-+					unsigned int hwpwm)
-+{
-+	int bucket;
-+
-+	/*
-+	 * Search for a bucket that already satisfy duty and period
-+	 * or an unused one.
-+	 * If not found, -ENOENT is returned.
-+	 */
-+	bucket = airoha_pwm_get_generator(pc, duty_ns, period_ns);
-+	if (bucket < 0)
-+		return bucket;
-+
-+	airoha_pwm_release_bucket_config(pc, hwpwm);
-+	pc->buckets[bucket].used |= BIT_ULL(hwpwm);
-+	pc->buckets[bucket].period_ns = period_ns;
-+	pc->buckets[bucket].duty_ns = duty_ns;
-+
-+	return bucket;
-+}
-+
-+static int airoha_pwm_sipo_init(struct airoha_pwm *pc)
-+{
-+	u32 val;
-+
-+	if (!(pc->initialized >> AIROHA_PWM_NUM_GPIO))
-+		return 0;
-+
-+	regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
-+			  AIROHA_PWM_SERIAL_GPIO_MODE_74HC164);
-+
-+	/* Configure shift register chip clock timings, use 32x divisor */
-+	regmap_write(pc->regmap, AIROHA_PWM_REG_SGPIO_CLK_DIVR,
-+		     AIROHA_PWM_SGPIO_CLK_DIVR_32);
-+
-+	/*
-+	 * Configure the shift register chip clock delay. This needs
-+	 * to be configured based on the chip characteristics when the SoC
-+	 * apply the shift register configuration.
-+	 * This doesn't affect actual PWM operation and is only specific to
-+	 * the shift register chip.
-+	 *
-+	 * For 74HC164 we set it to 0.
-+	 *
-+	 * For reference, the actual delay applied is the internal clock
-+	 * feed to the SGPIO chip + 1.
-+	 *
-+	 * From documentation is specified that clock delay should not be
-+	 * greater than (AIROHA_PWM_REG_SGPIO_CLK_DIVR / 2) - 1.
-+	 */
-+	regmap_write(pc->regmap, AIROHA_PWM_REG_SGPIO_CLK_DLY, 0x0);
-+
-+	/*
-+	 * It is necessary to explicitly shift out all zeros after muxing
-+	 * to initialize the shift register before enabling PWM
-+	 * mode because in PWM mode SIPO will not start shifting until
-+	 * it needs to output a non-zero value (bit 31 of led_data
-+	 * indicates shifting in progress and it must return to zero
-+	 * before led_data can be written or PWM mode can be set)
-+	 */
-+	if (regmap_read_poll_timeout(pc->regmap, AIROHA_PWM_REG_SGPIO_LED_DATA, val,
-+				     !(val & AIROHA_PWM_SGPIO_LED_DATA_SHIFT_FLAG),
-+				     10, 200 * USEC_PER_MSEC))
-+		return -ETIMEDOUT;
-+
-+	regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SGPIO_LED_DATA,
-+			  AIROHA_PWM_SGPIO_LED_DATA_DATA);
-+	if (regmap_read_poll_timeout(pc->regmap, AIROHA_PWM_REG_SGPIO_LED_DATA, val,
-+				     !(val & AIROHA_PWM_SGPIO_LED_DATA_SHIFT_FLAG),
-+				     10, 200 * USEC_PER_MSEC))
-+		return -ETIMEDOUT;
-+
-+	/* Set SIPO in PWM mode */
-+	regmap_set_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
-+			AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
-+
-+	return 0;
-+}
-+
-+static void airoha_pwm_calc_bucket_config(struct airoha_pwm *pc, int bucket,
-+					  u64 duty_ns, u64 period_ns)
-+{
-+	u32 period_ticks, duty_ticks;
-+	u32 mask, shift, val;
-+	u64 offset;
-+
-+	period_ticks = airoha_pwm_get_period_ticks_from_ns(period_ns);
-+	duty_ticks = airoha_pwm_get_duty_ticks_from_ns(period_ns, duty_ns);
-+
-+	offset = bucket;
-+	shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
-+	shift = AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
-+
-+	/* Configure frequency divisor */
-+	mask = AIROHA_PWM_WAVE_GEN_CYCLE << shift;
-+	val = FIELD_PREP(AIROHA_PWM_WAVE_GEN_CYCLE, period_ticks) << shift;
-+	regmap_update_bits(pc->regmap, AIROHA_PWM_REG_CYCLE_CFG_VALUE(offset), mask, val);
-+
-+	offset = bucket;
-+	shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
-+	shift = AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
-+
-+	/* Configure duty cycle */
-+	mask = AIROHA_PWM_GPIO_FLASH_PRD_HIGH << shift;
-+	val = FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, duty_ticks) << shift;
-+	regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
-+			   mask, val);
-+
-+	mask = AIROHA_PWM_GPIO_FLASH_PRD_LOW << shift;
-+	val = FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_LOW,
-+			 AIROHA_PWM_DUTY_FULL - duty_ticks) << shift;
-+	regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD_SET(offset),
-+			   mask, val);
-+}
-+
-+static void airoha_pwm_config_flash_map(struct airoha_pwm *pc,
-+					unsigned int hwpwm, int index)
-+{
-+	unsigned int addr;
-+	u32 shift;
-+
-+	airoha_pwm_get_flash_map_addr_and_shift(hwpwm, &addr, &shift);
-+
-+	/* index -1 means disable PWM channel */
-+	if (index < 0) {
-+		/*
-+		 * If we need to disable the PWM, we just put low the
-+		 * GPIO. No need to setup buckets.
-+		 */
-+		regmap_clear_bits(pc->regmap, addr,
-+				  AIROHA_PWM_GPIO_FLASH_EN << shift);
-+		return;
-+	}
-+
-+	regmap_update_bits(pc->regmap, addr,
-+			   AIROHA_PWM_GPIO_FLASH_SET_ID << shift,
-+			   FIELD_PREP(AIROHA_PWM_GPIO_FLASH_SET_ID, index) << shift);
-+	regmap_set_bits(pc->regmap, addr, AIROHA_PWM_GPIO_FLASH_EN << shift);
-+}
-+
-+static int airoha_pwm_config(struct airoha_pwm *pc, struct pwm_device *pwm,
-+			     u64 duty_ns, u64 period_ns)
-+{
-+	unsigned int hwpwm = pwm->hwpwm;
-+	int bucket;
-+
-+	bucket = airoha_pwm_consume_generator(pc, duty_ns, period_ns,
-+					      hwpwm);
-+	if (bucket < 0)
-+		return -EBUSY;
-+
-+	airoha_pwm_calc_bucket_config(pc, bucket, duty_ns, period_ns);
-+	airoha_pwm_config_flash_map(pc, hwpwm, bucket);
-+
-+	pc->initialized |= BIT_ULL(hwpwm);
-+	pc->channel_bucket[hwpwm] = bucket;
-+
-+	/*
-+	 * SIPO are special GPIO attached to a shift register chip. The handling
-+	 * of this chip is internal to the SoC that takes care of applying the
-+	 * values based on the flash map. To apply a new flash map, it's needed
-+	 * to trigger a refresh on the shift register chip.
-+	 * If we are configuring a SIPO, always reinit the shift register chip
-+	 * to make sure the correct flash map is applied.
-+	 * We skip reconfiguring the shift register if we related hwpwm
-+	 * is disabled (as it doesn't need to be mapped).
-+	 */
-+	if (!(pc->initialized & BIT_ULL(hwpwm)) && hwpwm >= AIROHA_PWM_NUM_GPIO)
-+		airoha_pwm_sipo_init(pc);
-+
-+	return 0;
-+}
-+
-+static void airoha_pwm_disable(struct airoha_pwm *pc, struct pwm_device *pwm)
-+{
-+	/* Disable PWM and release the bucket */
-+	airoha_pwm_config_flash_map(pc, pwm->hwpwm, -1);
-+	airoha_pwm_release_bucket_config(pc, pwm->hwpwm);
-+
-+	pc->initialized &= ~BIT_ULL(pwm->hwpwm);
-+
-+	/* If no SIPO is used, disable the shift register chip */
-+	if (!(pc->initialized >> AIROHA_PWM_NUM_GPIO))
-+		regmap_clear_bits(pc->regmap, AIROHA_PWM_REG_SIPO_FLASH_MODE_CFG,
-+				  AIROHA_PWM_SERIAL_GPIO_FLASH_MODE);
-+}
-+
-+static int airoha_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    const struct pwm_state *state)
-+{
-+	struct airoha_pwm *pc = pwmchip_get_drvdata(chip);
-+	u64 duty_ns = state->duty_cycle;
-+	u64 period_ns = state->period;
-+
-+	/* Only normal polarity is supported */
-+	if (state->polarity == PWM_POLARITY_INVERSED)
-+		return -EINVAL;
-+
-+	if (!state->enabled) {
-+		airoha_pwm_disable(pc, pwm);
-+		return 0;
-+	}
-+
-+	/* Exit early if period is less than minimum supported */
-+	if (period_ns < AIROHA_PWM_PERIOD_TICK_NS)
-+		return -EINVAL;
-+
-+	/*
-+	 * Period goes at 4ns step, normalize it to check if we can
-+	 * share a generator.
-+	 */
-+	period_ns = rounddown(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
-+
-+	/* Clamp period to MAX supported value */
-+	if (period_ns > AIROHA_PWM_PERIOD_MAX_NS) {
-+		period_ns = AIROHA_PWM_PERIOD_MAX_NS;
-+
-+		if (duty_ns > period_ns)
-+			duty_ns = period_ns;
-+	}
-+
-+	return airoha_pwm_config(pc, pwm, duty_ns, period_ns);
-+}
-+
-+static int airoha_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				struct pwm_state *state)
-+{
-+	struct airoha_pwm *pc = pwmchip_get_drvdata(chip);
-+	int ret, hwpwm = pwm->hwpwm;
-+	u32 addr, shift, val;
-+	u8 bucket;
-+
-+	airoha_pwm_get_flash_map_addr_and_shift(hwpwm, &addr, &shift);
-+
-+	ret = regmap_read(pc->regmap, addr, &val);
-+	if (ret)
-+		return ret;
-+
-+	state->enabled = FIELD_GET(AIROHA_PWM_GPIO_FLASH_EN, val >> shift);
-+	if (!state->enabled)
-+		return 0;
-+
-+	state->polarity = PWM_POLARITY_NORMAL;
-+
-+	bucket = FIELD_GET(AIROHA_PWM_GPIO_FLASH_SET_ID, val >> shift);
-+	airoha_pwm_get_bucket(pc, bucket, &state->period,
-+			      &state->duty_cycle);
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops airoha_pwm_ops = {
-+	.apply = airoha_pwm_apply,
-+	.get_state = airoha_pwm_get_state,
-+};
-+
-+static int airoha_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct airoha_pwm *pc;
-+	struct pwm_chip *chip;
-+	int ret;
-+
-+	chip = devm_pwmchip_alloc(dev, AIROHA_PWM_MAX_CHANNELS, sizeof(*pc));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+
-+	chip->ops = &airoha_pwm_ops;
-+	pc = pwmchip_get_drvdata(chip);
-+
-+	pc->regmap = device_node_to_regmap(dev->parent->of_node);
-+	if (IS_ERR(pc->regmap))
-+		return dev_err_probe(dev, PTR_ERR(pc->regmap), "Failed to get PWM regmap\n");
-+
-+	ret = devm_pwmchip_add(&pdev->dev, chip);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id airoha_pwm_of_match[] = {
-+	{ .compatible = "airoha,en7581-pwm" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, airoha_pwm_of_match);
-+
-+static struct platform_driver airoha_pwm_driver = {
-+	.driver = {
-+		.name = "pwm-airoha",
-+		.of_match_table = airoha_pwm_of_match,
-+	},
-+	.probe = airoha_pwm_probe,
-+};
-+module_platform_driver(airoha_pwm_driver);
-+
-+MODULE_AUTHOR("Lorenzo Bianconi <lorenzo@kernel.org>");
-+MODULE_AUTHOR("Markus Gothe <markus.gothe@genexis.eu>");
-+MODULE_AUTHOR("Benjamin Larsson <benjamin.larsson@genexis.eu>");
-+MODULE_DESCRIPTION("Airoha EN7581 PWM driver");
-+MODULE_LICENSE("GPL");
--- 
-2.48.1
-
+Kuninori Morimoto
 
