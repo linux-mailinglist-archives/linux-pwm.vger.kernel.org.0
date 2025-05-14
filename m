@@ -1,230 +1,149 @@
-Return-Path: <linux-pwm+bounces-5983-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5984-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 610C0AB6796
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 May 2025 11:33:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B38D6AB6844
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 May 2025 11:59:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 47B147AF4C4
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 May 2025 09:31:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 659F91888261
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 May 2025 09:59:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFF8522A1E4;
-	Wed, 14 May 2025 09:32:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1454D25DD01;
+	Wed, 14 May 2025 09:59:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="yov7gtOg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1ZgMsxn"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81C321518F;
-	Wed, 14 May 2025 09:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD77C13E41A;
+	Wed, 14 May 2025 09:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747215177; cv=none; b=NN1Xt83ltGnGwTo6wAKMCVWcIdKsFFzweqOHwYn737a8lUOdGPMulfuLCn5DLUoP2DDHNW5tV3/5+t1pY9ppwJ+42P9LqfTqZOVk0WbilhZsO0BJTdMo+JcEOBKUAbSXp/M5PCUQuTDQQtNHhor8iKm2SyYfo8gBMt85B2RF49Y=
+	t=1747216780; cv=none; b=uiSaW/jsdMB+x4EugaQ3K2sI7JRqlItfGihAqH9CKpog0THDV7IrONlnlylaQX4jyhuj/dq/I9qFwnYvwH3ov6ZTtfykWffpkvWBYWtM+Y35tKuONDAzNLgjG6G7/hMsP47feFxa4DZRY3ZDmOFhEMThDx32hlWWBDy2ZEU/ZH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747215177; c=relaxed/simple;
-	bh=yoH0wqf8NQizEGdbPCU1LSKztQZYM6ZBokkY0cFNRVk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hMAM5gxWJVkQliCR/EgJFQV9jPqbxLDf4YDk3Rh+OJ2sgs88qVYwVZZYLIoZZUwnvHmSI1DxHmpi46r0JjnZMtgUN4tLPj1n6xFzkVM6jafDCwEPOpxFwgTh0465Z4hSu+2ISoRkK9RMCULJrCbkQFp3F8MjgM3UMDAmOl5W20E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=yov7gtOg; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E7vvBU024075;
-	Wed, 14 May 2025 11:32:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	TNCvFcvWwltndRrRe0jUv88V8Pga/agvOTssJvAUPj0=; b=yov7gtOgC6HysJ3s
-	NeUP3A11E0TVcJ1EkNxohtbr9VRJYKNWEhGF/kI+Z46TQ+hqDJkk05OybEZzrvOK
-	WMEcNzjJu/07dZmnQGhjPkX5egGPMCWkgWc3rPk8WA8CehMptQw3nDUoCiI4vB/7
-	/JaJ2mZCXm0Ne4GvkLHvCBfVJAjivs5aonSaOO0G5uTwKH7NbeV5FbbrCKRu+P57
-	AOsMMiAKEHjtR1GVcNesoJSzj2dvifAM7nWNcfgO2IChTrmzpV0BmLCfof0/kj77
-	lkGesp4pPC6bWevkZZcIcXNY7+gaKo0iZtfStAwoF/nf17phWUzViLffTC9XA970
-	lhW0Cw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46mbdx2u2t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 11:32:43 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A909F40055;
-	Wed, 14 May 2025 11:31:44 +0200 (CEST)
-Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9006DB4E912;
-	Wed, 14 May 2025 11:30:28 +0200 (CEST)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
- (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
- 2025 11:30:28 +0200
-Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
- (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
- 2025 11:30:27 +0200
-Message-ID: <4b641513-ff2e-43ab-8074-ba6b521875e2@foss.st.com>
-Date: Wed, 14 May 2025 11:30:26 +0200
+	s=arc-20240116; t=1747216780; c=relaxed/simple;
+	bh=BIvliVdYqXYrImtlDwKxLO6W8rVjN3lVoNpwHJ7DmqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jfWj/fCEkIASJKGAugykXMsvkx9y56beOmBuMobx7KbRrk3+yKWo49/dUq4J72InmZNVmxwAYcbmWXXFOAaE/AUcap+UN4+AUGRPFhl4dnB4iG9fbej3EyY7c5qHyIEVEsvxVrja0D/mYiNBWi3QTAWBsb0hOA/2AjfRWEw1iaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1ZgMsxn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C0E4C4CEE9;
+	Wed, 14 May 2025 09:59:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747216779;
+	bh=BIvliVdYqXYrImtlDwKxLO6W8rVjN3lVoNpwHJ7DmqE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O1ZgMsxntfuQjd/h0unBrYQzcBKcUtoZTyNYAlmMYABq7mggbRuFNxpn9cAuJ6eDk
+	 0Z8XvWh06F7bYvpiZwiclrBuU8j/kYGkd6FpebniW4vlRWP7vflhc0jS+0li+X1D55
+	 N1L/QACKMuDc2pwJXUq8VNiM3M2ugqKzbWPVq1IIwCvakFQTbLHcJctn/pfLuR3ZW+
+	 JOkyjtI/bRtsKS0x0AdnKXUQrtSUeFaeKQ5Qn+eJez4y8yC4grPLdUyTwK8KAtoSsF
+	 A+r2Dl0BkVNvO/eI5Tc0yoN9/SB0KVF+6VRjlHN+akhG8PVIsjIekmlRQWWQNHh+Uj
+	 U/O/LV2oEVORw==
+Date: Wed, 14 May 2025 11:59:35 +0200
+From: Mark Brown <broonie@kernel.org>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	andriy.shevchenko@intel.com,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v8 05/11] regmap: irq: Add support for chips without
+ separate IRQ status
+Message-ID: <aCRph9Qo7BbtTjIR@finisterre.sirena.org.uk>
+References: <20250509-mdb-max7360-support-v8-0-bbe486f6bcb7@bootlin.com>
+ <20250509-mdb-max7360-support-v8-5-bbe486f6bcb7@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/8] pwm: stm32: add support for stm32mp25
-To: <ukleinek@kernel.org>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <wbg@kernel.org>, <jic23@kernel.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <olivier.moysan@foss.st.com>, <lee@kernel.org>,
-        <alexandre.torgue@foss.st.com>
-References: <20250110091922.980627-1-fabrice.gasnier@foss.st.com>
- <20250110091922.980627-5-fabrice.gasnier@foss.st.com>
-Content-Language: en-US
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-In-Reply-To: <20250110091922.980627-5-fabrice.gasnier@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Z3tfCnzQ5p+24U/H"
+Content-Disposition: inline
+In-Reply-To: <20250509-mdb-max7360-support-v8-5-bbe486f6bcb7@bootlin.com>
+X-Cookie: Well begun is half done.
 
-On 1/10/25 10:19, Fabrice Gasnier wrote:
-> Add support for STM32MP25 SoC. Use newly introduced compatible to handle
-> new features along with registers and bits diversity.
-> The MFD part of the driver fills in ipidr, so it is used to check the
-> hardware configuration register, when available to gather the number
-> of PWM channels and complementary outputs.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-> ---
-> Changes in v2:
-> Address Uwe review comments:
-> - Make MAX_PWM_OUTPUT definition less generic: STM32_PWM_MAX_OUTPUT
-> - No need to initialize 'npwm'
-> - refactor code, for *num_enabled to use same code path
-> ---
->  drivers/pwm/pwm-stm32.c | 42 ++++++++++++++++++++++++++++++++++-------
->  1 file changed, 35 insertions(+), 7 deletions(-)
 
-Hi Uwe,
+--Z3tfCnzQ5p+24U/H
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think this patch still miss some reviews.
-The first patches of this series have been merged.
+On Fri, May 09, 2025 at 11:14:39AM +0200, Mathieu Dubois-Briand wrote:
+> Some GPIO chips allow to rise an IRQ on GPIO level changes but do not
+> provide an IRQ status for each separate line: only the current gpio
+> level can be retrieved.
 
-Is it ok for you to merge, or shall I resend separately ?
+This doesn't build in a wide range of configurations (none at all
+AFAICT):
 
-Please advise,
-BR,
-Fabrice
+/build/stage/linux/drivers/base/regmap/regmap-irq.c: In function =E2=80=98r=
+egmap_add_irq
+_chip_fwnode=E2=80=99:
+/build/stage/linux/drivers/base/regmap/regmap-irq.c:914:88: error: macro "a=
+rray_
+size" requires 2 arguments, but only 1 given
+  914 |                 memcpy(d->prev_status_buf, d->status_buf, array_siz=
+e(d->
+prev_status_buf));
+      |                                                                    =
+    =20
+               ^
+In file included from /build/stage/linux/include/linux/string.h:13,
+                 from /build/stage/linux/include/linux/bitmap.h:13,
+                 from /build/stage/linux/include/linux/cpumask.h:12,
+                 from /build/stage/linux/include/linux/smp.h:13,
+                 from /build/stage/linux/include/linux/lockdep.h:14,
+                 from /build/stage/linux/include/linux/spinlock.h:63,
+                 from /build/stage/linux/include/linux/sched.h:2213,
+                 from /build/stage/linux/include/linux/ratelimit.h:6,
+                 from /build/stage/linux/include/linux/dev_printk.h:16,
+                 from /build/stage/linux/include/linux/device.h:15,
+                 from /build/stage/linux/drivers/base/regmap/regmap-irq.c:1=
+0:
+/build/stage/linux/include/linux/overflow.h:327:9: note: macro "array_size"=
+ defined here
+  327 | #define array_size(a, b)        size_mul(a, b)
+      |         ^~~~~~~~~~
+/build/stage/linux/drivers/base/regmap/regmap-irq.c:914:59: error: =E2=80=
+=98array_size=E2=80=99 undeclared (first use in this function)
+  914 |                 memcpy(d->prev_status_buf, d->status_buf, array_siz=
+e(d->prev_status_buf));
+      |                                                           ^~~~~~~~~~
+/build/stage/linux/drivers/base/regmap/regmap-irq.c:914:59: note: each unde=
+clared identifier is reported only once for each function it appears in
 
-> 
-> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> index 17e591f61efb..b9aadc473280 100644
-> --- a/drivers/pwm/pwm-stm32.c
-> +++ b/drivers/pwm/pwm-stm32.c
-> @@ -19,6 +19,7 @@
->  #define CCMR_CHANNEL_SHIFT 8
->  #define CCMR_CHANNEL_MASK  0xFF
->  #define MAX_BREAKINPUT 2
-> +#define STM32_MAX_PWM_OUTPUT 4
->  
->  struct stm32_breakinput {
->  	u32 index;
-> @@ -775,10 +776,19 @@ static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
->  	return stm32_pwm_apply_breakinputs(priv);
->  }
->  
-> -static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
-> +static void stm32_pwm_detect_complementary(struct stm32_pwm *priv, struct stm32_timers *ddata)
->  {
->  	u32 ccer;
->  
-> +	if (ddata->ipidr) {
-> +		u32 val;
-> +
-> +		/* Simply read from HWCFGR the number of complementary outputs (MP25). */
-> +		regmap_read(priv->regmap, TIM_HWCFGR1, &val);
-> +		priv->have_complementary_output = !!FIELD_GET(TIM_HWCFGR1_NB_OF_DT, val);
-> +		return;
-> +	}
-> +
->  	/*
->  	 * If complementary bit doesn't exist writing 1 will have no
->  	 * effect so we can detect it.
-> @@ -790,22 +800,39 @@ static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
->  	priv->have_complementary_output = (ccer != 0);
->  }
->  
-> -static unsigned int stm32_pwm_detect_channels(struct regmap *regmap,
-> +static unsigned int stm32_pwm_detect_channels(struct stm32_timers *ddata,
->  					      unsigned int *num_enabled)
->  {
-> +	struct regmap *regmap = ddata->regmap;
->  	u32 ccer, ccer_backup;
->  
-> +	regmap_read(regmap, TIM_CCER, &ccer_backup);
-> +	*num_enabled = hweight32(ccer_backup & TIM_CCER_CCXE);
-> +
-> +	if (ddata->ipidr) {
-> +		u32 hwcfgr;
-> +		unsigned int npwm;
-> +
-> +		/* Deduce from HWCFGR the number of outputs (MP25). */
-> +		regmap_read(regmap, TIM_HWCFGR1, &hwcfgr);
-> +
-> +		/*
-> +		 * Timers may have more capture/compare channels than the
-> +		 * actual number of PWM channel outputs (e.g. TIM_CH[1..4]).
-> +		 */
-> +		npwm = FIELD_GET(TIM_HWCFGR1_NB_OF_CC, hwcfgr);
-> +
-> +		return npwm < STM32_MAX_PWM_OUTPUT ? npwm : STM32_MAX_PWM_OUTPUT;
-> +	}
-> +
->  	/*
->  	 * If channels enable bits don't exist writing 1 will have no
->  	 * effect so we can detect and count them.
->  	 */
-> -	regmap_read(regmap, TIM_CCER, &ccer_backup);
->  	regmap_set_bits(regmap, TIM_CCER, TIM_CCER_CCXE);
->  	regmap_read(regmap, TIM_CCER, &ccer);
->  	regmap_write(regmap, TIM_CCER, ccer_backup);
->  
-> -	*num_enabled = hweight32(ccer_backup & TIM_CCER_CCXE);
-> -
->  	return hweight32(ccer & TIM_CCER_CCXE);
->  }
->  
-> @@ -820,7 +847,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
->  	unsigned int i;
->  	int ret;
->  
-> -	npwm = stm32_pwm_detect_channels(ddata->regmap, &num_enabled);
-> +	npwm = stm32_pwm_detect_channels(ddata, &num_enabled);
->  
->  	chip = devm_pwmchip_alloc(dev, npwm, sizeof(*priv));
->  	if (IS_ERR(chip))
-> @@ -841,7 +868,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
->  		return dev_err_probe(dev, ret,
->  				     "Failed to configure breakinputs\n");
->  
-> -	stm32_pwm_detect_complementary(priv);
-> +	stm32_pwm_detect_complementary(priv, ddata);
->  
->  	ret = devm_clk_rate_exclusive_get(dev, priv->clk);
->  	if (ret)
-> @@ -911,6 +938,7 @@ static DEFINE_SIMPLE_DEV_PM_OPS(stm32_pwm_pm_ops, stm32_pwm_suspend, stm32_pwm_r
->  
->  static const struct of_device_id stm32_pwm_of_match[] = {
->  	{ .compatible = "st,stm32-pwm",	},
-> +	{ .compatible = "st,stm32mp25-pwm", },
->  	{ /* end node */ },
->  };
->  MODULE_DEVICE_TABLE(of, stm32_pwm_of_match);
+
+--Z3tfCnzQ5p+24U/H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgkaYYACgkQJNaLcl1U
+h9D5cAf+JhYoPK5A9iw0gYMdc9xLOUPvzCDacN5d5KvUrO4WUo6ZpEumlPwyI5kX
+700vdHFINWEJgKwy1UTRj70pXgkPkVUDDDZ4Y2hZZloQEgl10N+mm/hUZLxNlNRS
+N6idzTanOzTogg/bVYiNuMylxLNewGi93QqK7oplFA5eaRVbgFd5y1VJsECAEyfo
+TNqEmn+isUKmP0uC3NWbADZek2IOZ5wqt7WBVPPvF3zdNaLelFCiMw+N7Zm8xI1r
+S9UOfg4eKan6E2SVhwyr5Aemj+gpEhFgpJEVRUpOXZOGIymWcf2oFqbvDFs1YuLg
+n02uX8JFzuLgwFezUggjRZsJVJxw1A==
+=Mu44
+-----END PGP SIGNATURE-----
+
+--Z3tfCnzQ5p+24U/H--
 
