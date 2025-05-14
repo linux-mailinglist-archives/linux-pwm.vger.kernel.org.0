@@ -1,195 +1,151 @@
-Return-Path: <linux-pwm+bounces-5981-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5982-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7BE5AB665E
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 May 2025 10:47:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01F90AB6790
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 May 2025 11:33:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 370C63A30EE
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 May 2025 08:46:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B09DB1895617
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 May 2025 09:33:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D4AE2063F0;
-	Wed, 14 May 2025 08:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11BA62253FB;
+	Wed, 14 May 2025 09:32:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQ0E9RTM"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="REUcSlsD"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092F9111BF;
-	Wed, 14 May 2025 08:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DA41FF60E;
+	Wed, 14 May 2025 09:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747212395; cv=none; b=Yj6mDkyVVfgy3bqVf1Fu/0KOmPkBezobJ9+FELViyz5wQp67I/SeBSVddVOrGCZVB0M/KP98TNx7UwOkfAITo7uMnKAvDIEXoKxqqs6yQnxZ0iHwPbu+TYCbhfqnHyOCt0rvXci20AUSyXI4JSOwFc/3nIedeAMa6+/0s1olE84=
+	t=1747215177; cv=none; b=B/AzAwtyvEzo2WlFwhS1fTTzbSA2FPbV4sZ3la2LkWXPIlOMO/iGAxBsnzEfS8Y9v/YWugkzWbTkwoQuivhjGJZfzGjBuWyO9DDTiLL1HcBSGeVZTzzylJTksj4n2xLUHEVodFdqaInccD7geGZ9cw9NtzFvKvOpHC1ch7Lnz/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747212395; c=relaxed/simple;
-	bh=+FziuHAd3n+I7YzGXttveC9sX9cxjUEO7hqQ2K7xh6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HFKyuPMr9WDnbS6V54q1d+6i8xd+VY6FFwwjrvGP0opxFO1PuYxF01DrKhVQOQoNYLPt3sjsMA1qGcV6TnGzz6tXxjcIteEF4L7JnCcbMW4JPZmYei3MLP+eZWm2ZgbCJ/BAtFxFgNQP8+pbIaKY2PaXfMMFJSIXmmLomeGao6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQ0E9RTM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA81FC4CEEB;
-	Wed, 14 May 2025 08:46:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747212394;
-	bh=+FziuHAd3n+I7YzGXttveC9sX9cxjUEO7hqQ2K7xh6s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hQ0E9RTMWUqk5d5e/4qiiue+BJfRjNpcInfzsR8YzeX7h+vGqameVZTtOHTvc8piR
-	 t+IFQG2n/+RT2UBlPfLsOyUVLIlGsKW2F8D3NeQ8fXeGv/fhZQoMYdipDv8sTR1Kda
-	 /4XQQGN5V44SOaQL8EYepNEaKN2Q2KBB/3jaw8F45XTJY/TiKEcrFTZt3zo9cF8IRZ
-	 ObU65ZgbDxe2LQjdkhf2C//jG4CClaTnzgBjWT0kQjvtOB6hLgrBQ+EWieBEZBiMFS
-	 vfonrKfHk4PUTzF3hjBAks85kJAvgFActy0W/ELO5Qn4AYy69j4glK8KpTOnhTzPWF
-	 9DiiahBh25iTw==
-Date: Wed, 14 May 2025 09:46:28 +0100
-From: Lee Jones <lee@kernel.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Nuno =?iso-8859-1?Q?S=E1?= via B4 Relay <devnull+nuno.sa.analog.com@kernel.org>,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH v3 14/22] mfd: adp5585: support reset and unlock events
-Message-ID: <20250514084628.GZ2936510@google.com>
-References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
- <20250512-dev-adp5589-fw-v3-14-092b14b79a88@analog.com>
- <20250513162246.GV2936510@google.com>
- <20250514083541.GG23592@pendragon.ideasonboard.com>
+	s=arc-20240116; t=1747215177; c=relaxed/simple;
+	bh=wgcDSzjE3z4wvyTjp53d7JEM1bigTEH6sNQEmXZAFnM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=PTrbzeO50wlqRmTXimeqTBpo+lQ5B9ayho5l9+2f8AU5qhLfhLkgNGN5/Tvvveoe6TeFJiVHXHnIOlz3oza0CVrOWJjcYOI3SCLRYY7dvFEnqYAwPYHgtaNDpePfR/OMD1o5XH/ea0IBqoONnwRqs8AjvP5/8gIUPC7jX3ble4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=REUcSlsD; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E7vt3p023085;
+	Wed, 14 May 2025 11:32:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	apPuGix0U1l8NbuF2RfEV7srsEyy+YpkXLnEoKgNuME=; b=REUcSlsDCyI8Hyf1
+	Dx5Y5boK9tw1Of6eJxcNtODLpy/xFNDPh/YLxIBUnW7KGAKOruHD7IUgQSjI4S7i
+	CBVc0zCDej1aWz31I9mo/NeQ3/eVjsNJnJ1iIdKHCnSfvbxIOxrPrvIzfrYt/P2e
+	nrrwse+lwg2bwLxhLn4qU7Z0sWttRjd/lJ671EWcDAWey286hEKr27RTU384YVMo
+	UIt+RNh+MkahVlKYt0jc4HsIZo+pHIJ/JalIXzCu1wfGqvKSgPFFsaGTFY6qpuyU
+	Fd3/Ro2LO3nrED4ScbRf0eonPqPp5JZH4xxm0YkeMbEH5nS9yulK0pv3kI7MDrJs
+	WrLA3w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46mbdxtwvq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 11:32:41 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A901540054;
+	Wed, 14 May 2025 11:31:44 +0200 (CEST)
+Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EC64DB4C73F;
+	Wed, 14 May 2025 11:30:15 +0200 (CEST)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
+ (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
+ 2025 11:30:15 +0200
+Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
+ (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 14 May
+ 2025 11:30:14 +0200
+Message-ID: <5268ec60-ae2e-425e-a4af-a55cb0c3a1f9@foss.st.com>
+Date: Wed, 14 May 2025 11:30:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250514083541.GG23592@pendragon.ideasonboard.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/8] counter: stm32-timer-cnt: add support for
+ stm32mp25
+To: <jic23@kernel.org>, <wbg@kernel.org>
+CC: <alexandre.torgue@foss.st.com>, <lee@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>, <ukleinek@kernel.org>
+References: <20250110091922.980627-1-fabrice.gasnier@foss.st.com>
+ <20250110091922.980627-4-fabrice.gasnier@foss.st.com>
+Content-Language: en-US
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+In-Reply-To: <20250110091922.980627-4-fabrice.gasnier@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
 
-On Wed, 14 May 2025, Laurent Pinchart wrote:
-
-> On Tue, May 13, 2025 at 05:22:46PM +0100, Lee Jones wrote:
-> > On Mon, 12 May 2025, Nuno Sá via B4 Relay wrote:
-> > 
-> > > From: Nuno Sá <nuno.sa@analog.com>
-> > > 
-> > > The ADP558x family of devices can be programmed to respond to some
-> > > especial events, In case of the unlock events, one can lock the keypad
-> > > and use KEYS or GPIs events to unlock it. For the reset events, one can
-> > > again use a combinations of GPIs/KEYs in order to generate an event that
-> > > will trigger the device to generate an output reset pulse.
-> > > 
-> > > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> > > ---
-> > >  drivers/mfd/adp5585.c       | 279 ++++++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/mfd/adp5585.h |  41 +++++++
-> > >  2 files changed, 320 insertions(+)
-> > > 
-> > > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-> > > index 5851ad30e7323bbb891878167d0786bc60ef5d90..b1227a390fe2f932ba8060b0d722f53f45ec3b4b 100644
-> > > --- a/drivers/mfd/adp5585.c
-> > > +++ b/drivers/mfd/adp5585.c
-> > > @@ -157,6 +157,9 @@ static const struct adp5585_regs adp5585_regs = {
-> > >  	.int_en = ADP5585_INT_EN,
-> > >  	.gen_cfg = ADP5585_GENERAL_CFG,
-> > >  	.poll_ptime_cfg = ADP5585_POLL_PTIME_CFG,
-> > > +	.reset_cfg = ADP5585_RESET_CFG,
-> > > +	.reset1_event_a = ADP5585_RESET1_EVENT_A,
-> > > +	.reset2_event_a = ADP5585_RESET2_EVENT_A,
-> > >  };
-> > >  
-> > >  static const struct adp5585_regs adp5589_regs = {
-> > > @@ -164,8 +167,52 @@ static const struct adp5585_regs adp5589_regs = {
-> > >  	.int_en = ADP5589_INT_EN,
-> > >  	.gen_cfg = ADP5589_GENERAL_CFG,
-> > >  	.poll_ptime_cfg = ADP5589_POLL_PTIME_CFG,
-> > > +	.reset_cfg = ADP5589_RESET_CFG,
-> > > +	.reset1_event_a = ADP5589_RESET1_EVENT_A,
-> > > +	.reset2_event_a = ADP5589_RESET2_EVENT_A,
-> > >  };
-> > >  
-> > > +static int adp5585_validate_event(const struct adp5585_dev *adp5585,
-> > > +				  unsigned int ev, bool has_pin5)
-> > 
-> > has_pin5 (which doesn't actually mean much to me) is passed around a lot
-> > and is only used in one place, as far as I can see.  You also have 'dev'
-> > available here, so why not drop it everywhere and call
-> > 
-> >    if (!device_property_present(dev, "gpio-reserved-ranges"))
-> > 
-> > ... here instead?
+On 1/10/25 10:19, Fabrice Gasnier wrote:
+> Add support for STM32MP25 SoC. There are new counter modes that may be
+> implemented in later. Still, use newly introduced compatible to handle
+> this new HW variant and avoid being blocked with existing compatible
+> in SoC dtsi file. Modes supported currently still remains compatible.
+> New timer 20 has encoder capability, add it to the list.
 > 
-> The information can be stored in struct adp5585_dev. I wouldn't call
-> device_property_present() here, as that's costly.
+> Acked-by: William Breathitt Gray <wbg@kernel.org>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+> ---
+>  drivers/counter/stm32-timer-cnt.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 
-Does this function get called a lot?
+Hi,
 
-Storing in the device data is also good.
+The first patches of this series have been merged.
 
-> > > +{
-> > > +	if (has_pin5) {
-> > > +		if (ev >= ADP5585_ROW5_KEY_EVENT_START && ev <= ADP5585_ROW5_KEY_EVENT_END)
-> > > +			return 0;
-> > > +		if (ev >= ADP5585_GPI_EVENT_START && ev <= ADP5585_GPI_EVENT_END)
-> > > +			return 0;
-> > > +
-> > > +		return dev_err_probe(adp5585->dev, -EINVAL,
-> > > +				     "Invalid unlock/reset event(%u) for this device\n", ev);
-> > > +	}
-> > > +
-> > > +	if (ev >= ADP5585_KEY_EVENT_START && ev <= ADP5585_KEY_EVENT_END)
-> > > +		return 0;
-> > > +	if (ev >= ADP5585_GPI_EVENT_START && ev <= ADP5585_GPI_EVENT_END) {
-> > > +		/* if it's GPI5 */
-> > > +		if (ev == (ADP5585_GPI_EVENT_START + 5))
-> > > +			return dev_err_probe(adp5585->dev, -EINVAL,
-> > > +					     "Invalid unlock/reset event(%u). R5 not available\n",
-> > > +					     ev);
-> > > +		return 0;
-> > > +	}
-> > > +
-> > > +	return dev_err_probe(adp5585->dev, -EINVAL,
-> > > +			     "Invalid unlock/reset event(%u) for this device\n", ev);
-> > > +}
-> > > +
-> > > +static int adp5589_validate_event(const struct adp5585_dev *adp5585,
-> > > +				  unsigned int ev, bool has_pin5)
-> > > +{
-> > > +	if (ev >= ADP5589_KEY_EVENT_START && ev <= ADP5589_KEY_EVENT_END)
-> > > +		return 0;
-> > > +	if (ev >= ADP5589_GPI_EVENT_START && ev <= ADP5589_GPI_EVENT_END)
-> > > +		return 0;
-> > > +
-> > > +	return dev_err_probe(adp5585->dev, -EINVAL,
-> > > +			     "Invalid unlock/reset event(%u) for this device\n",
-> > > +			     ev);
-> > > +}
-> > > +
-> > >  static int adp5585_fill_chip_configs(struct adp5585_dev *adp5585,
-> > >  				     struct i2c_client *i2c,
-> > >  				     struct regmap_config *regmap_config)
-> > > @@ -180,10 +227,13 @@ static int adp5585_fill_chip_configs(struct adp5585_dev *adp5585,
-> > >  	case ADP5585_MAN_ID_VALUE:
-> > >  		*regmap_config = adp5585_regmap_config_template;
-> > >  		info->regs = &adp5585_regs;
-> > > +		info->validate_event = adp5585_validate_event;
-> > 
-> > I'd take an extra if() / switch() over a driver-level pointer to a function.
+I'm not sure who shall pick this one ? (I think there's no dependency).
+Or do I need to resend it separately ?
+
+Please advise,
+BR,
+Fabrice
+
 > 
-> Funny how we have different tastes for this kind of things, I find the
-> function pointer more readable :-)
-
-Contributors have tried to do "interesting" things with function
-pointers in MFD in the past.  To the point were I now have a general
-aversion to them.  I think they're great for things like subsystem-level
-Ops, but beyond that, things _can_ get messy, fast.
-
--- 
-Lee Jones [李琼斯]
+> diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
+> index e75b69476a00..3d3384cbea87 100644
+> --- a/drivers/counter/stm32-timer-cnt.c
+> +++ b/drivers/counter/stm32-timer-cnt.c
+> @@ -669,12 +669,14 @@ static void stm32_timer_cnt_detect_channels(struct device *dev,
+>  	dev_dbg(dev, "has %d cc channels\n", priv->nchannels);
+>  }
+>  
+> -/* encoder supported on TIM1 TIM2 TIM3 TIM4 TIM5 TIM8 */
+> -#define STM32_TIM_ENCODER_SUPPORTED	(BIT(0) | BIT(1) | BIT(2) | BIT(3) | BIT(4) | BIT(7))
+> +/* encoder supported on TIM1 TIM2 TIM3 TIM4 TIM5 TIM8 TIM20 */
+> +#define STM32_TIM_ENCODER_SUPPORTED	(BIT(0) | BIT(1) | BIT(2) | BIT(3) | BIT(4) | BIT(7) | \
+> +					 BIT(19))
+>  
+>  static const char * const stm32_timer_trigger_compat[] = {
+>  	"st,stm32-timer-trigger",
+>  	"st,stm32h7-timer-trigger",
+> +	"st,stm32mp25-timer-trigger",
+>  };
+>  
+>  static int stm32_timer_cnt_probe_encoder(struct device *dev,
+> @@ -846,6 +848,7 @@ static SIMPLE_DEV_PM_OPS(stm32_timer_cnt_pm_ops, stm32_timer_cnt_suspend,
+>  
+>  static const struct of_device_id stm32_timer_cnt_of_match[] = {
+>  	{ .compatible = "st,stm32-timer-counter", },
+> +	{ .compatible = "st,stm32mp25-timer-counter", },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, stm32_timer_cnt_of_match);
 
