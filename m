@@ -1,144 +1,330 @@
-Return-Path: <linux-pwm+bounces-5998-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5999-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AE99AB83AF
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 12:21:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D617AB8697
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 14:41:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21A1A3AB7C9
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 10:21:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16C86188FAA9
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 12:41:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A952320CCE4;
-	Thu, 15 May 2025 10:21:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D977D298CD2;
+	Thu, 15 May 2025 12:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DZpJ006A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRSDH6hs"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6941AAE13
-	for <linux-pwm@vger.kernel.org>; Thu, 15 May 2025 10:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E1C1FAC54;
+	Thu, 15 May 2025 12:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747304513; cv=none; b=O/rLX32usKLQtsfeNSjvgO0PVxSWRgcBO44Iax5fwFgnfTNShCKTpjyW/Hz4NhyeADtIPPPOaSj4tEcLjFwW21cxmb2+B5pyqPO+cYnXDiq/4xxX4ytKArTm17bVzLZLWlWYBooI+NE7RgDYSyB7PKT9eeBljcqdDAcXCbqkIR8=
+	t=1747312860; cv=none; b=A8ZUsfDbkOEgLT6uKDV2HMaGRPN/oXfnMgGI1iTKaeiC4Q6E2EeBHxsytqpgdLbqdMPg42SSDWVrhA9K9PXB+O2b4vEbxIgRDn0LrrZz/ptZjOh0HtFWAsqOz768aYv3DBBmQWJBc13VmmKu5+W+up4UkqAutvqZF5OVDEaQTXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747304513; c=relaxed/simple;
-	bh=bV6M6sJSIQWEF64EibOYqxanrwW8fbar0AUm++ui+qQ=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KwPHP5WioXXRMVfqPxDYR0YrmJipZcumxBsd5q5rojw2cFm7mgjlu6D1HOCMl6Mk57+cVSWYT5ZCO+GNaKnBkUl3d6T1yMEqBpG4HENBg0mLNHiCqI6xTGWEkxUFFO2O8UVfoyhNO9ldiRg3N69davdVkSrUfo1bJmEpe1dBGzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DZpJ006A; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a0b933f214so458898f8f.0
-        for <linux-pwm@vger.kernel.org>; Thu, 15 May 2025 03:21:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747304508; x=1747909308; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qqvI5/m2v3NyavdcL6vD6HNxrSJKAAsLr4G5Ti5Lg1k=;
-        b=DZpJ006A9XnCDsIEujqAihbGiUcNSUXO0s20pLkDKQK3zwJeDIWhs1mJH22kiC1uYq
-         fBSsBPqwnw9b/rTG6o4B0/oAKi1W/hhLTqzS3D1HIBsW3Fhxe42LNN1FzbUIk5jB5d1u
-         K0SJy1nCL1l8Yb6nm85eKSs61RTEWo4iqoFbsBzOqt0VPB2Vzasa3A1Cgkhz8vntuLX9
-         YvlaaRcd15TAU38o4L+yOaONyVQ4uHeYGjsduT1287aWFBrqks4Ow/VquIc3nDAeDVXz
-         mYYuwj++RQKKHIV4h01Q+jARCBdWbK7gNfY5goTdq0NFtkFvVxBOgw38U0WlEuPexDBn
-         GrhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747304508; x=1747909308;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qqvI5/m2v3NyavdcL6vD6HNxrSJKAAsLr4G5Ti5Lg1k=;
-        b=GOFX9k5LtyO+T0OPJOSaHmuXyODBW4I0NjA+5bTg8fZbV6KOOkGpw1eoVR8DoOiUiM
-         kPierUE9/j91WAXMiDnmXTP+8YCR3dQBhYxD3cJYEncuqtAbFHDby2kOXBk04uPOlWeo
-         CpRiVxiBL5eqNXIplBEonk+yBE/eD0VDD5sFGkpkDitmRAP4n6fvuoVVs1m/Ioki9Ac0
-         zMkpgBHm7GqxPjO2P0JB3FG0F+jDoy35cm3eoxpk9QpM2dp94dvUl3M+geaCUKXpBfFo
-         DGkUJ0pIKw5BIvaZJpAVLqqte24OQTKIu4XRSvYUsm+D6y3eKOdun07kuFngPYw8rF45
-         L66Q==
-X-Gm-Message-State: AOJu0YyysjDS2n5i01wJGxTFdk+XWTGqUg4XN60C5DpN2/3Igs1YDizw
-	/Nnda2WEvUBKL59a1L9pzpXbJlXQeN7gm5+E2g+3/TgF4VZ5QJcpK6qQGOnamYNkSabT1SvevCw
-	r
-X-Gm-Gg: ASbGnct3r36RgekJ0yAl3pNJSWlBVwZwVxHWdLDw/KpaKX+TiP7qCwBORkXxtVA2Q/2
-	QyWkE0PdaUuHr/X+yeVjhDBvKojyRp0e5q+FZ4jsW/JFj5f7mpC5ZrsK/CYjpAZcZGmeWvZACfF
-	LqQ/Np+GbDuUVw7sabTS0msldfQt82Usk58MhNhr8VdmYoNmNBd7CHLMiCg7w4KGUEhRkBKTzgd
-	C66laz4KJLCluDJKTdrSV4uL55rAtA5RUKNOryiNB2be1KEP8hUeSFNPb+hVPyAJAzqItBjOlnt
-	vveySrRo9hfnCdpnSJeca1r761ZanNebXWJ51RpCah8RbEGEOrJI8M9bYC0p5qH9djQ5yezMpca
-	R7mRDw6w0NEio4/RySA==
-X-Google-Smtp-Source: AGHT+IFaSjCtUnW6I+Yha59MDmlrs35LAjgtPcor70e1Lt0Rhk2bVAM28JK2+BddH77SSxuVIcdPCg==
-X-Received: by 2002:a05:6000:2408:b0:39c:30f9:339c with SMTP id ffacd0b85a97d-3a3496c1fa7mr5664026f8f.28.1747304507662;
-        Thu, 15 May 2025 03:21:47 -0700 (PDT)
-Received: from localhost (p200300f65f00780800000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f00:7808::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f5a4c5f6sm22153062f8f.86.2025.05.15.03.21.46
-        for <linux-pwm@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 03:21:47 -0700 (PDT)
-Date: Thu, 15 May 2025 12:21:45 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Subject: libpwm 1.0-rc1
-Message-ID: <ifd4m654m4ephqdwsxcu32a7igcfz3d36ex5btwghqa2muiahl@mpqkd4coyfcg>
+	s=arc-20240116; t=1747312860; c=relaxed/simple;
+	bh=RecGXQhiOqbDDpm2sQZZw+q5gZOttaBUd0mcukO8v5E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MZthhtqrI1gN8nCnVhQpF2nsCqw8NZCqM1IVNejVAYEUWqA8VQ/WRTO4vBH5TBg46Z7UWHiuTL8keXeRvYb/a4TcVJgyMbfl5DQfCGfTVchs16pOIBey/dH1C83l0NZd1Omf6Mx2vWkArwJUN8VqoHoxdKEX6q2XbTiIZrLlYQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YRSDH6hs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 26B75C4CEEB;
+	Thu, 15 May 2025 12:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747312860;
+	bh=RecGXQhiOqbDDpm2sQZZw+q5gZOttaBUd0mcukO8v5E=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=YRSDH6hsJt2MB9LHRH2BhNyk/xDBatftzGAuhdMZsMUQauwcpQQmFjqD8GjynbT2L
+	 hGqYUWJFILwfOy3jimgneyynfXoY/FdHCQWhqOUn8/CXB30PuYGDhXFAbRCNzUgkk+
+	 dkBN7mlslSZ+OnlWsCb/3Qg9J1DJu36P5TS9RkSW5uYcTkFA0TvpBEYxWveRHEXWMz
+	 hpGO8RUNVKyKR5cqSReA20JeRyaLNuzXQwYNhtket9qzxAmQ1le5FESyIxFmncl2Tn
+	 fyAH7A1EiDn4GEDJFUwdQYygGNytWBTVQ0ZlKrAOQ5nz8N+6yq6Rh8WfxRHM7qmTsD
+	 UJT2CFbt4YXig==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C01FC2D0CD;
+	Thu, 15 May 2025 12:41:00 +0000 (UTC)
+From: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>
+Date: Thu, 15 May 2025 14:40:54 +0200
+Subject: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="74ro3ayvtr66ikkv"
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
+X-B4-Tracking: v=1; b=H4sIANXgJWgC/2WNwQ7CIBAFf6XZsxigEqwn/8P0QGGRTaQ0YGpN0
+ 38XG28eZ5I3b4WCmbDApVkh40yF0lhBHhqwwYx3ZOQqg+RSccU1i7ZtlyJPgrPwimlkRnnfoUf
+ LuYI6mzJ6Wvbkra8cqDxTfu8Ps/jaX0zI/9gsmGDGucFobfXZd9cH4RAw56NNEfpt2z52aYhYs
+ wAAAA==
+X-Change-ID: 20250507-mc33xs2410-hwmon-a5ff9efec005
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hwmon@vger.kernel.org, Dimitri Fedrau <dima.fedrau@gmail.com>, 
+ Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747312859; l=7130;
+ i=dimitri.fedrau@liebherr.com; s=20241202; h=from:subject:message-id;
+ bh=gA7zDwXiWTd8xg0+Xj9LCJz286VbanRc/qAT/ceC6j8=;
+ b=jpXZejTJ7h9giZQBIT2GK8g/rUbED3gfWmU7XG48Ly0erh7RzibKfhlbRLKw1csn1ye4BSLC9
+ 5kMAxJ1Y/wKCgULVNY/Ym/7uwgbNEqd2nXpCzFXWiqcuhwrVeEJPh17
+X-Developer-Key: i=dimitri.fedrau@liebherr.com; a=ed25519;
+ pk=rT653x09JSQvotxIqQl4/XiI4AOiBZrdOGvxDUbb5m8=
+X-Endpoint-Received: by B4 Relay for dimitri.fedrau@liebherr.com/20241202
+ with auth_id=290
+X-Original-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Reply-To: dimitri.fedrau@liebherr.com
+
+From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+
+The MC33XS2410 provides temperature sensors for the central die temperature
+and the four outputs. Additionally a common temperature warning threshold
+can be configured for the outputs. Add hwmon support for the sensors.
+
+Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+---
+Changes in v2:
+- Remove helper mc33xs2410_hwmon_read_out_status and report the last
+  latched status.
+- Link to v1: https://lore.kernel.org/r/20250512-mc33xs2410-hwmon-v1-1-addba77c78f9@liebherr.com
+---
+ drivers/pwm/Kconfig          |   1 +
+ drivers/pwm/pwm-mc33xs2410.c | 164 ++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 164 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 6faa8b2ec0a4844f667a84335f30bde44d52378e..0deaf8447f4302e7cfd3b4cb35c7d46ef19e006c 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -425,6 +425,7 @@ config PWM_LPSS_PLATFORM
+ 
+ config PWM_MC33XS2410
+ 	tristate "MC33XS2410 PWM support"
++	depends on HWMON || HWMON=n
+ 	depends on OF
+ 	depends on SPI
+ 	help
+diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
+index a1ac3445ccdb4709d92e0075d424a8abc1416eee..c1b99b1143141242ce99782162ae05536dd88163 100644
+--- a/drivers/pwm/pwm-mc33xs2410.c
++++ b/drivers/pwm/pwm-mc33xs2410.c
+@@ -21,6 +21,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/delay.h>
+ #include <linux/err.h>
++#include <linux/hwmon.h>
+ #include <linux/math64.h>
+ #include <linux/minmax.h>
+ #include <linux/module.h>
+@@ -29,6 +30,8 @@
+ 
+ #include <linux/spi/spi.h>
+ 
++/* ctrl registers */
++
+ #define MC33XS2410_GLB_CTRL			0x00
+ #define MC33XS2410_GLB_CTRL_MODE		GENMASK(7, 6)
+ #define MC33XS2410_GLB_CTRL_MODE_NORMAL		FIELD_PREP(MC33XS2410_GLB_CTRL_MODE, 1)
+@@ -51,6 +54,21 @@
+ 
+ #define MC33XS2410_WDT				0x14
+ 
++#define MC33XS2410_TEMP_WT			0x29
++#define MC33XS2410_TEMP_WT_MASK			GENMASK(7, 0)
++
++/* diag registers */
++
++/* chan in { 1 ... 4 } */
++#define MC33XS2410_OUT_STA(chan)		(0x02 + (chan) - 1)
++#define MC33XS2410_OUT_STA_OTW			BIT(8)
++
++#define MC33XS2410_TS_TEMP_DIE			0x26
++#define MC33XS2410_TS_TEMP_MASK			GENMASK(9, 0)
++
++/* chan in { 1 ... 4 } */
++#define MC33XS2410_TS_TEMP(chan)		(0x2f + (chan) - 1)
++
+ #define MC33XS2410_PWM_MIN_PERIOD		488282
+ /* step in { 0 ... 3 } */
+ #define MC33XS2410_PWM_MAX_PERIOD(step)		(2000000000 >> (2 * (step)))
+@@ -125,6 +143,11 @@ static int mc33xs2410_read_reg_ctrl(struct spi_device *spi, u8 reg, u16 *val)
+ 	return mc33xs2410_read_reg(spi, reg, val, MC33XS2410_FRAME_IN_DATA_RD);
+ }
+ 
++static int mc33xs2410_read_reg_diag(struct spi_device *spi, u8 reg, u16 *val)
++{
++	return mc33xs2410_read_reg(spi, reg, val, 0);
++}
++
+ static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val)
+ {
+ 	u16 tmp;
+@@ -140,6 +163,145 @@ static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val
+ 	return mc33xs2410_write_reg(spi, reg, tmp);
+ }
+ 
++#if IS_ENABLED(CONFIG_HWMON)
++static const struct hwmon_channel_info * const mc33xs2410_hwmon_info[] = {
++	HWMON_CHANNEL_INFO(temp,
++			   HWMON_T_LABEL | HWMON_T_INPUT,
++			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
++			   HWMON_T_ALARM,
++			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
++			   HWMON_T_ALARM,
++			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
++			   HWMON_T_ALARM,
++			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
++			   HWMON_T_ALARM),
++	NULL,
++};
++
++static umode_t mc33xs2410_hwmon_is_visible(const void *data,
++					   enum hwmon_sensor_types type,
++					   u32 attr, int channel)
++{
++	switch (attr) {
++	case hwmon_temp_input:
++	case hwmon_temp_alarm:
++	case hwmon_temp_label:
++		return 0444;
++	case hwmon_temp_max:
++		return 0644;
++	default:
++		return 0;
++	}
++}
++
++static int mc33xs2410_hwmon_read(struct device *dev,
++				 enum hwmon_sensor_types type,
++				 u32 attr, int channel, long *val)
++{
++	struct spi_device *spi = dev_get_drvdata(dev);
++	u16 reg_val;
++	int ret;
++	u8 reg;
++
++	switch (attr) {
++	case hwmon_temp_input:
++		reg = (channel == 0) ? MC33XS2410_TS_TEMP_DIE :
++				       MC33XS2410_TS_TEMP(channel);
++		ret = mc33xs2410_read_reg_diag(spi, reg, &reg_val);
++		if (ret < 0)
++			return ret;
++
++		/* LSB is 0.25 degree celsius */
++		*val = FIELD_GET(MC33XS2410_TS_TEMP_MASK, reg_val) * 250 - 40000;
++		return 0;
++	case hwmon_temp_alarm:
++		ret = mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel),
++					       &reg_val);
++		if (ret < 0)
++			return ret;
++
++		*val = FIELD_GET(MC33XS2410_OUT_STA_OTW, reg_val);
++		return 0;
++	case hwmon_temp_max:
++		ret = mc33xs2410_read_reg_ctrl(spi, MC33XS2410_TEMP_WT, &reg_val);
++		if (ret < 0)
++			return ret;
++
++		/* LSB is 1 degree celsius */
++		*val = FIELD_GET(MC33XS2410_TEMP_WT_MASK, reg_val) * 1000 - 40000;
++		return 0;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static int mc33xs2410_hwmon_write(struct device *dev,
++				  enum hwmon_sensor_types type, u32 attr,
++				  int channel, long val)
++{
++	struct spi_device *spi = dev_get_drvdata(dev);
++
++	switch (attr) {
++	case hwmon_temp_max:
++		val = clamp_val(val, -40000, 215000);
++
++		/* LSB is 1 degree celsius */
++		val = (val / 1000) + 40;
++		return mc33xs2410_modify_reg(spi, MC33XS2410_TEMP_WT,
++					     MC33XS2410_TEMP_WT_MASK, val);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static const char *const mc33xs2410_temp_label[] = {
++	"Central die temperature",
++	"Channel 1 temperature",
++	"Channel 2 temperature",
++	"Channel 3 temperature",
++	"Channel 4 temperature",
++};
++
++static int mc33xs2410_read_string(struct device *dev,
++				  enum hwmon_sensor_types type,
++				  u32 attr, int channel, const char **str)
++{
++	*str = mc33xs2410_temp_label[channel];
++
++	return 0;
++}
++
++static const struct hwmon_ops mc33xs2410_hwmon_hwmon_ops = {
++	.is_visible = mc33xs2410_hwmon_is_visible,
++	.read = mc33xs2410_hwmon_read,
++	.read_string = mc33xs2410_read_string,
++	.write = mc33xs2410_hwmon_write,
++};
++
++static const struct hwmon_chip_info mc33xs2410_hwmon_chip_info = {
++	.ops = &mc33xs2410_hwmon_hwmon_ops,
++	.info = mc33xs2410_hwmon_info,
++};
++
++static int mc33xs2410_hwmon_probe(struct spi_device *spi)
++{
++	struct device *dev = &spi->dev;
++	struct device *hwmon;
++
++	hwmon = devm_hwmon_device_register_with_info(dev, NULL, spi,
++						     &mc33xs2410_hwmon_chip_info,
++						     NULL);
++
++	return PTR_ERR_OR_ZERO(hwmon);
++}
++
++#else
++static int mc33xs2410_hwmon_probe(struct spi_device *spi)
++{
++	return 0;
++}
++#endif
++
+ static u8 mc33xs2410_pwm_get_freq(u64 period)
+ {
+ 	u8 step, count;
+@@ -361,7 +523,7 @@ static int mc33xs2410_probe(struct spi_device *spi)
+ 	if (ret < 0)
+ 		return dev_err_probe(dev, ret, "Failed to add pwm chip\n");
+ 
+-	return 0;
++	return mc33xs2410_hwmon_probe(spi);
+ }
+ 
+ static const struct spi_device_id mc33xs2410_spi_id[] = {
+
+---
+base-commit: 7395eb13e3a85067de3e083d3781630ea303c0c4
+change-id: 20250507-mc33xs2410-hwmon-a5ff9efec005
+
+Best regards,
+-- 
+Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 
 
---74ro3ayvtr66ikkv
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: libpwm 1.0-rc1
-MIME-Version: 1.0
-
-Hello,
-
-now that the kernel side parts for the pwm character devices are
-considered done and the API set in stone, I tagged libpwm that
-implements the userspace parts of it as 1.0-rc1.
-
-Find it at
-
-	https://mirrors.edge.kernel.org/pub/linux/kernel/people/ukleinek/libpwm/
-
-or
-
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/libpwm.git/tag/?h=v1.0-rc1
-
-(both signed by my PGP key).
-
-The tools included there are nice to test PWM driver implementations and
-I recommend it to everyone who is working on PWM drivers.
-
-The pwm character device support in libpwm depends on headers that are
-currently only provided by the kernel, so you need kernel headers
-installed that include this support when compiling libpwm with chardev
-support. I intend to make this a bit smoother for the 1.0
-release.
-
-Happy to get feedback, preferably in the form of patches here on the
-list :-)
-
-Best regards
-Uwe
-
---74ro3ayvtr66ikkv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmglwDYACgkQj4D7WH0S
-/k7DsAgArFgchgeW16d/ZmjeJqcj448s811L/TxvH/q3X67/XsQNQNMrrW1SSpRv
-Fb9Piwt+QUlxALOTgmTEvv+o2aTuGGo2nEh2WY/5VCCGQ9pwAfEerq8R4PESel0Y
-UiBgBuZ8t3WAtlZtTryyAlD9ARONt91ADyLAqm2txwxKpER/0c3YzxF5lAjyXaXW
-FRj+xP58IrI7o88psockr19qptgy+BhSn4YiH6dCmq9tEdp6/+4WwUp6OvxaGit3
-RsHXcG95apvCfTsnXur3F+9td1LmJ7OtUpgDMKkIP3iZSphS2HoXuzSftf5FDaSn
-0fbfcE6CDtNT0TDZ1CKQMoBWpcaNkg==
-=2be1
------END PGP SIGNATURE-----
-
---74ro3ayvtr66ikkv--
 
