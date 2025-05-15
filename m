@@ -1,99 +1,128 @@
-Return-Path: <linux-pwm+bounces-5989-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5990-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AA36AB7A88
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 02:22:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B4C3AB7D73
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 07:58:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B8E11B63DFC
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 00:22:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF0351793FF
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 05:58:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92F4BF9EC;
-	Thu, 15 May 2025 00:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="giLgSzaB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 297FA29551F;
+	Thu, 15 May 2025 05:58:56 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594A333E1;
-	Thu, 15 May 2025 00:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2529D10E5;
+	Thu, 15 May 2025 05:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747268515; cv=none; b=XWv0EoKmgWrvcUW4tLSZQRC14RUDbRPwb567mFmK+xIJeDVAtFvC7MtIXB2lgMDNLzMCHbkFRV8lJYuPrjGO/OGC3pi5sC8fpCcqRnio8EsYG1ANhi9vmbP2JW/E2+RkcPEDMqqMfyI59sNmKOpQVxyE2ay8jCO7PDrMbk4FZ4E=
+	t=1747288736; cv=none; b=SYgN8YMwux5217Ipr25hfAHGVWSvfVhvC3xFLcmdol+Gi3gcDHfO4MzQ4tYnd6daiGWE/YqwOkAbpUcQdX2o5dmqfmMOiy9qugzaWt3qb7JXoY/gQ7OQUY/XGrzN3Obpv7H2bEtHKusgfu813sjAJ9SjqGbQH7VzHse2/P9ETuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747268515; c=relaxed/simple;
-	bh=iZxb2jBSDnEKEW1l8qaYvCVJkwZAk7SAXLmlCJt7lxE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iwdv8wj5gjZsQ8yAXdMV33Xltrjwec94lvxEvIUdFjHlsjAScxjaXCD/+js5yzbLLzZ7EFkAtNTvntxfH0NBfZ40i8Ul7YuO1Mx4OC0bgX4i8GGHfGmPVmZN4sf+BXok39r6yc72c2e24sUiycyVT4o8hdvdhWDrgQcbYXB57No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=giLgSzaB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7D6AC4CEE3;
-	Thu, 15 May 2025 00:21:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747268514;
-	bh=iZxb2jBSDnEKEW1l8qaYvCVJkwZAk7SAXLmlCJt7lxE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=giLgSzaBsrTSQmdRgRpUok5qVyhLCBeiG1y7Q+F9QOxdTyOHZSGu3wBBs5jdwmRQd
-	 Y/dEjgXDvwC9CKdCgvIwpnWGjd2lySS6TaDlfUZoknEMD5nBADd8fMm0OWh/9GZMr3
-	 iGncaotXhTW+6uDLr/woGh7OgWk4uDrKRUhY7gkhOW+51suO/j2DAR9hjm1wOXubmb
-	 DcC4Mb7wl/hrkhz9FTBcg0+CEFl022ZyX3G92G1cCXSJP6LiIGb80NkfAkeFbwUK4a
-	 yjHIb1AAzbqy+v/TYQ308zyorknRpWQqpR5F6WVe5/Ap3cOvld6RUk3efsGxU5fBdD
-	 BNpRuEqQCkY8Q==
-From: William Breathitt Gray <wbg@kernel.org>
-To: lee@kernel.org,
-	ukleinek@kernel.org,
-	alexandre.torgue@foss.st.com,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	jic23@kernel.org,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	olivier.moysan@foss.st.com
-Subject: Re: (subset) [PATCH v3 3/8] counter: stm32-timer-cnt: add support for stm32mp25
-Date: Thu, 15 May 2025 09:21:44 +0900
-Message-ID: <174726846872.375413.17945727550032496363.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250110091922.980627-4-fabrice.gasnier@foss.st.com>
-References: <20250110091922.980627-1-fabrice.gasnier@foss.st.com> <20250110091922.980627-4-fabrice.gasnier@foss.st.com>
+	s=arc-20240116; t=1747288736; c=relaxed/simple;
+	bh=V3eA9XmMTbZSsgEE/1E8iRYnMQ2agVh2/AN9D1gUdno=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BtFnE6alrQADVcLH8cSNq6/JaBs0FRl+i0XctOzm+7Z2rtGvNaw/K8wa2Bgp0mm4KnVEI3qQViaNn6N9vDDXtyLcKwHTCIXoOnidm4j+hX8dR0Y66+lQNT0PkjLfGq4rOjHEWMqD2zguYAuXynMDVp/jftKx/Rxix5PuCBI56dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4def04c0ac1so1160533137.1;
+        Wed, 14 May 2025 22:58:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747288732; x=1747893532;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ynqfndKFpHSGZheFlong6+Dub97owEZbrmGU/IXCCmg=;
+        b=jyB4Z5GsqJdUaH4S/csLJxsS/n0dP9sARQ4bXBWG8ltjRBtU2FoxQYsV+zlYwCC9ef
+         TZzLa2eyN3XvOIItdSrFY1dHL5M7t0Sfe65iKNK3z48V7frVR1x2m8XAf9bx9S5lu8ea
+         SJwmYuNSaYZ1lzj8PoI0jn32ij0ql4aW7brdWMkawRdQ8xlUXzHAN6VVytPCLenhbZZ5
+         wBkv6ylS3T13FuuSLxvKZQL5CQw4ylbBKZbih8F5PNpZDJQFDrLt97TrmIdqH4FF3G6m
+         GTSUpijbJBOwlg2hp8JzfTGlvZDife/o3MWl0ouCato7ILBRw3IEDR5u7tGxO10CgDe7
+         ULDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVt0vXe96iCn9JPZHf9Kciau1/yx4Af3IF1Q/nqioHgw6UoQzkL55nIlAihorGeUE/BOiRjMpYzUVhEzGiavB/g/VA=@vger.kernel.org, AJvYcCWsCBmS5QRPapWzvwfuGrD3eo9rrvU/HEb2CFLJ5WkjfOP2g604nfoDX8Wj8u5c5skwsxYCg3pLWCE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHH4PxRH3HGgmAAhwu1+QjntaKa87EpKMEurNslYd1bbtzepNu
+	fCMaTeHFW/hmDKZcPEy+SJC3TGY4wbR857/BGYyEYy1OGgoGgNLD0MIEmQHlHfWt
+X-Gm-Gg: ASbGnctR8z01LyZssqXwNe2YQqZ9IDkYu/BYnAq2clbGZTUtG8+EO09LIGcwJdk5HR+
+	FARMVMFk5k5YJkNL6RuwlkToXCF+aShsyyM6ARp2PXuN2AcNIcHBxczj4dpH7tf+ymaolvhrHzE
+	HVVyBOUvV71R7DaP1uA7m8Wmx3HKPh1Zm+APcG4HihBl1uxWe2VqsHqs/5wNDToRjKrASmnLowo
+	vpRspWzrCMETqSZ8UfsPV3Slf2/td2UmEL8u+JX7zHDgMWhyLYYwgskYtEmq/+Xbf16AR9NV351
+	lW7kHlyCey+drVI8nJvOB+p27dwhCCTP6I0r2HcWgaCDsVKoXkzKT9bVrScQCl565h8VqJ8tZkf
+	djqnd7AUk8UhT/PjoQw==
+X-Google-Smtp-Source: AGHT+IEucrHdyp4mGfnkqcIfHektHkrwev8sOJk7dCE5Y0wi+gEgsXRvfQ4VATmo2CIKEu3ultt0YA==
+X-Received: by 2002:a67:e916:0:b0:4df:9aed:3114 with SMTP id ada2fe7eead31-4df9aed3425mr137453137.8.1747288732446;
+        Wed, 14 May 2025 22:58:52 -0700 (PDT)
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4deb203f7c5sm9574683137.30.2025.05.14.22.58.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 22:58:52 -0700 (PDT)
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-52c82c67992so443845e0c.0;
+        Wed, 14 May 2025 22:58:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUh3I/UOAYgn7+0D8DEGiL7kzRc03mzs8NoRkA590MFpORErctolrwpNj63AOj5DNb+BJCkKS17AC8=@vger.kernel.org, AJvYcCV7+152mbFCH5M6PYEzzkRUFalZKtEq5G5dnBZWG6u207MdJ1CNkk5sQSI4A1x7mOU1365eNo2mHDKOa6NUISUm+MQ=@vger.kernel.org
+X-Received: by 2002:ac5:ce87:0:b0:527:b804:ff78 with SMTP id
+ 71dfb90a1353d-52da902fc0emr1752780e0c.1.1747288731856; Wed, 14 May 2025
+ 22:58:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=630; i=wbg@kernel.org; h=from:subject:message-id; bh=OdGDVpoycRi9OLgJVrxFO0kSREUlcdbL9tUWTQlQjY0=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDBmqxk0rK0SetGYe2/NbVNbk7vGd194rcnVfNZvmKK+fq uxzofRMRykLgxgXg6yYIkuv+dm7Dy6pavx4MX8bzBxWJpAhDFycAjCRrT2MDDMPdm3oZe7d43yL P/HuJlNRHv4LndeCOZdZimyW5v6+4gAjw4K73xwSPxzacXX6f0v3gChdga36XCHf71mdSLv1dbV /LDcA
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
-Content-Transfer-Encoding: 8bit
+References: <877c2mxrrr.wl-kuninori.morimoto.gx@renesas.com>
+ <62gkja5ysv47yos2hcurluudxwvl54uv4ih7pjnmnjrzuik6cs@a5oxhyyy6vsm>
+ <CAMuHMdUvR8rp2PaFLsyQ6ZWLqw7OskP-ZwVjRC=AARhK8g-iYQ@mail.gmail.com>
+ <wytdfpewvcesc6racyrpa4cya7wku6dc65edz7oma7penqrqqq@2g54gyprttxt> <87y0uyu7i1.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87y0uyu7i1.wl-kuninori.morimoto.gx@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 15 May 2025 07:58:40 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWSN70bhVOkmL9ms0S2N+N+scyPzxCPxoxttXKsUGa8Zw@mail.gmail.com>
+X-Gm-Features: AX0GCFtt5HCXCf1i_3AMLVZ3ScdMqxV1e5Ong-QCWYi3LoLUiE_Cix4INYizIA0
+Message-ID: <CAMuHMdWSN70bhVOkmL9ms0S2N+N+scyPzxCPxoxttXKsUGa8Zw@mail.gmail.com>
+Subject: Re: [PATCH v4] pwm: tidyup PWM menu for Renesas
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Russell King <linux@armlinux.org.uk>, 
+	Will Deacon <will@kernel.org>, linux-pwm@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Morimoto-san,
 
-On Fri, 10 Jan 2025 10:19:17 +0100, Fabrice Gasnier wrote:
-> Add support for STM32MP25 SoC. There are new counter modes that may be
-> implemented in later. Still, use newly introduced compatible to handle
-> this new HW variant and avoid being blocked with existing compatible
-> in SoC dtsi file. Modes supported currently still remains compatible.
-> New timer 20 has encoder capability, add it to the list.
-> 
-> 
-> [...]
+On Thu, 15 May 2025 at 00:56, Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> > > However, renaming config symbols always comes with its own set of
+> > > pains: users must notice and adapt when updating their own configs,
+> > > and I do have to manage the non-upstream renesas_defconfig, too.
+> > > What about dropping the rename part? The symbols that currently lack
+> > > a RENESAS-prefix do have fairly unique family prefixes.
+> (snip)
+> > I agreed with Geert off-list that merging
+> > renesas-arm-defconfig-for-v6.16-tag2 into the pwm tree and apply the
+> > patch is fine for him.
+>
+> It seems the patch was applied (?)
+>
+> If so, I have a plan to post patch for renesas_defconfig to update
+> symbols. I'm thinking I will post it after next merge window,
+> but please let me know if I can post it immediately.
 
-Applied, thanks!
+You can send it now, but I cannot apply it before the Kconfig
+changes are upstream.  I do have to update renesas_defconfig in next
+renesas-drivers release anyway, as usual (cfr. the top 3 commits in
+renesas-drivers), so I can take it there.
+Thanks!
 
-[3/8] counter: stm32-timer-cnt: add support for stm32mp25
-      commit: ace2cd11a27231efcb8a116a597edab2eef34957
+Gr{oetje,eeting}s,
 
-Best regards,
+                        Geert
+
 -- 
-William Breathitt Gray <wbg@kernel.org>
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
