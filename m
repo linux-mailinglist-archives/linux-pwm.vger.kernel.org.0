@@ -1,79 +1,79 @@
-Return-Path: <linux-pwm+bounces-5994-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5995-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3811AB7E5F
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 08:56:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 041CEAB7E92
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 09:14:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36A2A16C410
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 06:55:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 121033B9EEE
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 07:14:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA5FE29710C;
-	Thu, 15 May 2025 06:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66A7A280A57;
+	Thu, 15 May 2025 07:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkqbPcNk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1oxaD2D"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DD1296FAA;
-	Thu, 15 May 2025 06:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2909A2797BB;
+	Thu, 15 May 2025 07:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747292150; cv=none; b=vAmZdAVA/TcetGFk1nn0XOUBGvntcYoqQmUezppBlV369iPjudzL7ZWANv2rzIZ09KsFOY3MBNVk6xY6KYEtcZXV5mVLP7oeFYnHQqN+Y3O21toABkTN6XxzoGFOW1YRm2qr65LH2Yma7NC8T9KAl+5M8QP4CFft0a1QOXYzYXU=
+	t=1747293265; cv=none; b=T533wjQiqk/U+u+4kAwRvMcpKZwS+8qujQX1m3LVraROLg8j0BMO6qRBeS75pxjxJUj1zbH+Emlc6PkVJj4zk84DHVao27pRhBNftce0r3yiGTQ7+5MSmga+lnuuBqDTwTMlRqVKXT0eCocP3ccWFjoB78Hcd7rwZHRBkZvt5XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747292150; c=relaxed/simple;
-	bh=OxtCEiTFLroCwGKUQ9wuZooAQivnhgOO4/hfYSRyqNc=;
+	s=arc-20240116; t=1747293265; c=relaxed/simple;
+	bh=o/ecv9yXIKZlFDqFrsLArJP2qQJ3aZihxXztamxxomI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SumRBgOIMgdHEtRqzcrSIH7gofPuKObGgD1RHAuHnUjfi/mMqAvHkD1uT50ArcT+rT2HkvbGGGomXxGgwWDBrXak7jYGMQ/5dzGclY8oY257Ifyk2HiCtHBq9y3GGEPtDGfGwfMvUV6AOBE9L3t3XGais1RiQOsD8d0GO3heMVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dkqbPcNk; arc=none smtp.client-ip=209.85.128.43
+	 Content-Type:MIME-Version; b=cuIPin/4iXZ++MHtHVeVPavBKFsXZTlMpI4rSM0B0O61lGJya6FPo3y+5lF0aUypHQn3BNUprnQ5xiG/U9ZSeQr4jPWhGDPyLlwM2VUevCp5NtO7yIAkjoJDSvb7gQJjkeYizwB9vnI3wmRyIFu8rK7B8gkY+JwRIpcmmQ+c+hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h1oxaD2D; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so3984135e9.3;
-        Wed, 14 May 2025 23:55:48 -0700 (PDT)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so6263435e9.3;
+        Thu, 15 May 2025 00:14:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747292147; x=1747896947; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747293260; x=1747898060; darn=vger.kernel.org;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=cVkXk5cShxK3mBWEp13zXTIeJG2QsohW7slvRIBVi/w=;
-        b=dkqbPcNkF5Fs/B4Uan4jAZ9gU5RI4WnZgB0Ls7URfO9aX3fLE3iSOMfPpBv+kPj/cg
-         Dnkkv17BjD+SHt4mODwisuIfBx5zK0sBoWpfCkHT/xmdLDAnL11j7Ri5YZrGYOSaJDbf
-         CXjC2ILW3rvtoFohYNNKiDsYBvR/n3NGxxknDIpPnpFLz35E7kiFq2Hpaxcj6xWvQmrr
-         V+d2ue0h/sLLgWx3p3+TmsrnOI7sjXhi/pPtEo+5RD1DN4aSCxAt8VQw0Hr9jm2oT6hN
-         C7O1U2L33aKv6DjV1XRD0YfVLRso9osrOlj14Bxb9bREOeI2+PHRfSdYPWIQJoqkFt/7
-         6TWg==
+        bh=KD8cS6cgzj5Uiq1H5FJM1CE0gy4jEfoCs/JvaXo6r+k=;
+        b=h1oxaD2DPjuDohXkt08c0hWeU0BC3msgv9P+nO9H5XxKzkqghn3ccPCgMyQea2aoBg
+         RIX9VklMXw0LpNvldlEiEnCSAHfmqqkhbxJswWkXS8ZiZZe5SVAoGd+7bvC2lKvGBZJD
+         sjztYx9f4iFU++BJL2EbljwBAyOaQZ+drGVnniDJooW/gZUbdjtmUT+aXPZ/MnXhmTDR
+         oM3nRrC8vPv4Uuh2PMI9lHIKYbpca1L2j5AeqpYjjlcIfju80x2AcTkkLtrOjCfGMSn9
+         RSHsYHUQm8ocdV9rZGzCUBx0FOlHMQ1KJ21EuPU8c9+ufkMxtE6rQLNIoWH4WWZ8q+02
+         Ux7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747292147; x=1747896947;
+        d=1e100.net; s=20230601; t=1747293260; x=1747898060;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cVkXk5cShxK3mBWEp13zXTIeJG2QsohW7slvRIBVi/w=;
-        b=Birxp5m81mWj/bm4HSHAYHoiNp66RKw/1wgFVLCLysaZaf2GzefdDp7j4SomYr9Trz
-         ZdRko5a9aWDDQ0NA89d97tiHwiOKiL+dzxShEVGScIuSFqZV4BenvlLj44j+53LUV5Lk
-         Ms2BYCnptf60zhGMX4uxWck9cFm/cKOkir+FQLDu0FF427Sa+scRMp5jwel9HWW7m0qy
-         MmNYMWY9pEnxLZExFfHFwIcvNw1jRJhVWdJgmX8u9h8wD6WGm8cIIjZYxmuSu96IKnFk
-         uEOSwQX8yBlMfW5/FcYU9/Mkq/aBnVxAkFwhXK3zRA4GvrIJtnKMYRgc1CdVrpjS+HNn
-         bM7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCULTUIfQJlxVeIlOV1u2kOlF7mMxaEGW9XFAz3S6SO4UdZvguBAk7Dr7wHUIK1PR52jmtZjHSWRtJhq@vger.kernel.org, AJvYcCWcRlHnn9fsweP4F5qT2XwCqOVIjP2/PaB3f0ARBkf7oCmM4wyNn5jptoNBRYiD9vKgoIGLyawb5UPy@vger.kernel.org, AJvYcCXbCk4fjMmUNV3egXYXwcsRueZktYwUN4VrPyTSfTSbZGhxD+lWk5KhUubUoU/OF0gwCLrSP5q6o+PMdQc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywa+lqMvetkkGDdI4qnv+HO1Ba7UeZog9M7hzDY/bEQ/9R09onl
-	J6B3O9mlFQsuvwTrsRfdXNSDN0PwuXPPYeINTstv1aOTZRgkA1Xv
-X-Gm-Gg: ASbGncvLdz5ZjZppRhFwRs5siyg9/7w8aJFdgJmK3dVhKUHjg97+3n7dh/2SaFWAbcL
-	qOaFyxoWNlCmhNiBagIOrGmYYf/6a8ZZ837n7pQMadnuj/lysSz9Z+AfssBg9jtyK5q0l+FQjKZ
-	QSG03WdT17YhGxupYkO68D5q8ciFwC80irk0nDRlksC4pbfJWchSCqFt//2gq9Qct4CvU4Q3Cyn
-	ETdzZDEe84reMmsovDSU6znbmyaUYnF3WW69bMpzPWoOl73hNSuZFOCRaOOF/G0XD9Lf5/bXZJo
-	6ahJWbOCkWhi3fzvi3ryfXvtaRSOkWos2zd3LnPXVE+6LJdeW9yW4cwZRsq2ax1/PkfHWkeHnhV
-	6lO2TfD2r8XsVoyaEvtnMpGbZmA==
-X-Google-Smtp-Source: AGHT+IG+kTumC1iax6Gg457z/qxoPw+7dhVn6iUqvaeqmwmqNSHy+iDPJATbhvnoCrY35H5eUCmHfw==
-X-Received: by 2002:a05:600c:154a:b0:442:d9f2:c6ef with SMTP id 5b1f17b1804b1-442f96e5234mr9079815e9.2.1747292146386;
-        Wed, 14 May 2025 23:55:46 -0700 (PDT)
+        bh=KD8cS6cgzj5Uiq1H5FJM1CE0gy4jEfoCs/JvaXo6r+k=;
+        b=KrCypPer9U/jAVLTUykJNdhLaNZ33YPPl2UNFHsVv9qxI31c5eU3u/g5rotV7HroaL
+         EshfPGweXyRbwWffCMJlJ1/M1cb10enYQ3XVVJ7bDlqgXdR9qPvgA3OgRy7t59u28nwM
+         y+kAqE7+ih2E4L82W0eA8kWP7ZKGcoKpLdEv1fl/ET7SL2Uo2AculxqMu91zPiN3V7HC
+         cqlOo7hvDHi5zJLWDuZZGwQrKtWycQb5qV4RYnn9j60PnmE+b/hf8pKx2S5t6JVUBTHD
+         T3kc/vAh+cPdqsT2MCmdFVeYGgLhrxLKKEh9O7qrcfLfDU1J/UEdcyU7rHoNBQlJYcyT
+         lbvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmWj4Q2QgGxxv2bHCoJUJ7m9WVvbpXxSSefMsoSRW3vpLSeirtiXGlpAmdJD8SJcDu+3qtSDhPPqz2@vger.kernel.org, AJvYcCX2C6cfWirgdR9xSucqkhq4tZFQ5bt0IceurVw7FS2QNXRbwZscP2buLDh3Mp6m4jI/zNrE9abAQ/p4@vger.kernel.org, AJvYcCXyB8C3eXeFhhEilenjf6s4YbyLBcSIdParga1bLO1ayhDphTa/foTuT5zOZ4EYa6ARnXZT8vw1iseDWBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJh3B4DZOAMxEv791eUoYGFh3q14fn8kBQ+HdhhtJXFg1n/EY1
+	S+P3Jp2Q8UHUJlukutS4VCJUbnCgkAPDJ4xvkh58rAZzgI7fDtaP
+X-Gm-Gg: ASbGncsE2TMUY0XqJo4x5o6GJTb7IsaVVj46hkiuaLzsmrGf/h6S8vEmIxYN6oooFY8
+	emlCwzC3qWUgNlAyzc2ms0tv3zCclpIzFIvuxnRl4U4K6lEOWQKo23cYpbmnCnWEDsTl2Myu1ww
+	qOuJw382xykTvjeYjmAtIVgwvuRLfqqIxAL8oiRLgU3qu+a9I36RlCN5HSb7a1EOx+h+aK1okJc
+	OyjI5EAVy99296PHtAHkzzfrFMzxo2BwDZVSwExkQ6qzBP5A4NgyY8SKUJ/j+st4pc1KG/bHL/c
+	qAXPG9wNULLPBHURsCMThzSmQx5LFu7RWidNjBjE6iLuvJTjpEg2n8LAfeZNnZZabJuCeczUYpE
+	Z6H2nZTfD5oqEkV4KDk05x0dk9Q==
+X-Google-Smtp-Source: AGHT+IGn1IPdtVB1lBv/1nov3WjqcuSR8LVs0rfZoL9s5KeW8wcX4ImAqjh4I5NXGTnCcyqGwbQndw==
+X-Received: by 2002:a05:600c:1e02:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-442f970a8dcmr8938885e9.22.1747293260107;
+        Thu, 15 May 2025 00:14:20 -0700 (PDT)
 Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f395096csm56084485e9.18.2025.05.14.23.55.45
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2fc4sm22119816f8f.56.2025.05.15.00.14.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 23:55:45 -0700 (PDT)
-Message-ID: <54a945a5dcc510107ca58326456513f189f3d23d.camel@gmail.com>
+        Thu, 15 May 2025 00:14:19 -0700 (PDT)
+Message-ID: <332b3f951b91f56acbeae9b01bb89f108f8838e6.camel@gmail.com>
 Subject: Re: [PATCH v3 13/22] mfd: adp5585: add support for event handling
 From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
 To: Lee Jones <lee@kernel.org>, nuno.sa@analog.com
@@ -85,7 +85,7 @@ Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
  Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
  Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying
  <victor.liu@nxp.com>
-Date: Thu, 15 May 2025 06:56:11 +0100
+Date: Thu, 15 May 2025 07:14:45 +0100
 In-Reply-To: <20250513155920.GQ2936510@google.com>
 References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
 	 <20250512-dev-adp5589-fw-v3-13-092b14b79a88@analog.com>
@@ -183,11 +183,6 @@ ruct
 > 	ev_poll_time =3D prop_val / 10 - 1;
 > 	if (ev_poll_time > 3 || ev_poll_time < 0)
 > 		return dev_err_probe();
-
-Yes. In this enum FW parsing stuff I tend to like this switch() so it's eas=
-ier to
-reason about the allowed values. No strong feelings though...
-
 >=20
 > > +
 > > =C2=A0	*devs =3D devm_kcalloc(dev, has_pwm + has_gpio, sizeof(struct mf=
@@ -234,11 +229,6 @@ e,
 Q
 > context sooner as well.
 >=20
-
-I'll have to check it but not sure there's anything simple enough. I'm not =
-too
-convinced with the workqueue and deferring the handling to a worker.
-
 > > +			if (!ret)
 > > +				/* handled! */
 >=20
@@ -279,9 +269,6 @@ convinced with the workqueue and deferring the handling to a worker.
 > > +	adp5585_report_events(adp5585, ev_cnt);
 >=20
 > You don't want to propagate any errors?
-
-We should return irqreturn_t anyways... That's why I ignore it.
-
 >=20
 > > +out_irq:
 > > +	regmap_write(adp5585->regmap, ADP5585_INT_STATUS, status);
@@ -297,9 +284,6 @@ We should return irqreturn_t anyways... That's why I ignore it.
 > The final version of this function needs some nice commentary to explain
 > what each step is doing.=C2=A0 May as well start now.
 >=20
-
-ack
-
 > > +	for (i =3D 0; i < ADP5585_EV_MAX; i++) {
 > > +		ret =3D regmap_read(adp5585->regmap, ADP5585_FIFO_1 + i,
 > > &reg_val);
@@ -361,11 +345,6 @@ irq,
 >=20
 > What does reading status values then writing them right back do?
 >=20
-
-That's how we clear outstanding interrupts. I do have the comment but I can=
- be more
-explicit :)
-
 > Commentary throughout please.
 >=20
 > > +	ret =3D regmap_write(adp5585->regmap, regs->int_en,
@@ -523,12 +502,11 @@ fb4e1b6c28
 ur
 > goal without them?
 
-I'll see but nothing that comes from the top of my head. You really have an=
- aversion
-to function pointers =3D)
+Actually, it was fast. I think the notifier API will do fine here. I guess =
+that would
+make you happier?
 
-- Nuno S=C3=A1
-
+- Nuno S=C3=A1=20
 >=20
 > > +};
 > > +
