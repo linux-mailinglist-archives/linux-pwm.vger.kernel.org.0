@@ -1,128 +1,180 @@
-Return-Path: <linux-pwm+bounces-5990-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-5992-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B4C3AB7D73
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 07:58:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55AC7AB7E24
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 08:39:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF0351793FF
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 05:58:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66BAB863C6F
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 May 2025 06:38:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 297FA29551F;
-	Thu, 15 May 2025 05:58:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5DFA296718;
+	Thu, 15 May 2025 06:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yxeo0jJY"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2529D10E5;
-	Thu, 15 May 2025 05:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F200C8F6B;
+	Thu, 15 May 2025 06:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747288736; cv=none; b=SYgN8YMwux5217Ipr25hfAHGVWSvfVhvC3xFLcmdol+Gi3gcDHfO4MzQ4tYnd6daiGWE/YqwOkAbpUcQdX2o5dmqfmMOiy9qugzaWt3qb7JXoY/gQ7OQUY/XGrzN3Obpv7H2bEtHKusgfu813sjAJ9SjqGbQH7VzHse2/P9ETuQ=
+	t=1747291134; cv=none; b=hSCRKn6UqeD7/cdxYIbJbi4TMHwlHo4NU3nRvXt+3T8ROXevp9Os5zcDLyHFdChwSjOGoYLqT2o1xHQJ5KK80Y5EhtFPI+DdPYgzuNkB5CaBtlaNGe1VI0eQn8H7L3Vjc3Cf9JRH2Yn6g3kKa8qZrmNMLmHeXDyDC+ItfFbXSiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747288736; c=relaxed/simple;
-	bh=V3eA9XmMTbZSsgEE/1E8iRYnMQ2agVh2/AN9D1gUdno=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BtFnE6alrQADVcLH8cSNq6/JaBs0FRl+i0XctOzm+7Z2rtGvNaw/K8wa2Bgp0mm4KnVEI3qQViaNn6N9vDDXtyLcKwHTCIXoOnidm4j+hX8dR0Y66+lQNT0PkjLfGq4rOjHEWMqD2zguYAuXynMDVp/jftKx/Rxix5PuCBI56dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1747291134; c=relaxed/simple;
+	bh=81HXXtpdh0x9wmGq+Qh7O5YbqBpBeDgwgelvH4LWm5I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=F3lsRUEwTt00nsxr7hddmB5SDBl3iXhQnn2+k5jubz+Cpjv9TxPzD57pFmR4Pd0sRN7GmVD79k+60IGpsqWgCG/JPNey41nbHcpmR0oQ74wc/KeUxj661aMv/LDTR/ZkYrorJ2NdaiZdVP3fB486w7zbO6M3NBRagn1sN9Vn/Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yxeo0jJY; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4def04c0ac1so1160533137.1;
-        Wed, 14 May 2025 22:58:53 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cf257158fso3588645e9.2;
+        Wed, 14 May 2025 23:38:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747291131; x=1747895931; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=90SP8Nc35kt+f9GTxzMXrMDJFOzVX8MGultL3ZhzdUk=;
+        b=Yxeo0jJYREnb9OmfQ267m5RO8rS4JtJm4wIqc96s8bwi0ZS2oesAMigC/APFX26Avp
+         ebTYOBLXdV5HCf4cyXumBRhYCLFWjSCsMw6sPDT183mc0ZgWfB1beoUj7Vha3WKjjSxr
+         CST/j3mLD8f1GnjcF3S+iN93gZiPIJYnSRt7B6MUZHa4GnWNQdJNcWwZ1D6h4u6UiLk6
+         J6ImEbNq5umwEVtDMrdhBJPKfhjK6XqAf3zTdcE8s4HLe+F06pa9OPexDA/F9OoV7gg4
+         2V9STg+/Ucv+ddfQRwwl2muB3bZLW9VRzEgABnIJbn49leLg13rTAoKtllHoz39GuZJ/
+         vCcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747288732; x=1747893532;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ynqfndKFpHSGZheFlong6+Dub97owEZbrmGU/IXCCmg=;
-        b=jyB4Z5GsqJdUaH4S/csLJxsS/n0dP9sARQ4bXBWG8ltjRBtU2FoxQYsV+zlYwCC9ef
-         TZzLa2eyN3XvOIItdSrFY1dHL5M7t0Sfe65iKNK3z48V7frVR1x2m8XAf9bx9S5lu8ea
-         SJwmYuNSaYZ1lzj8PoI0jn32ij0ql4aW7brdWMkawRdQ8xlUXzHAN6VVytPCLenhbZZ5
-         wBkv6ylS3T13FuuSLxvKZQL5CQw4ylbBKZbih8F5PNpZDJQFDrLt97TrmIdqH4FF3G6m
-         GTSUpijbJBOwlg2hp8JzfTGlvZDife/o3MWl0ouCato7ILBRw3IEDR5u7tGxO10CgDe7
-         ULDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVt0vXe96iCn9JPZHf9Kciau1/yx4Af3IF1Q/nqioHgw6UoQzkL55nIlAihorGeUE/BOiRjMpYzUVhEzGiavB/g/VA=@vger.kernel.org, AJvYcCWsCBmS5QRPapWzvwfuGrD3eo9rrvU/HEb2CFLJ5WkjfOP2g604nfoDX8Wj8u5c5skwsxYCg3pLWCE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHH4PxRH3HGgmAAhwu1+QjntaKa87EpKMEurNslYd1bbtzepNu
-	fCMaTeHFW/hmDKZcPEy+SJC3TGY4wbR857/BGYyEYy1OGgoGgNLD0MIEmQHlHfWt
-X-Gm-Gg: ASbGnctR8z01LyZssqXwNe2YQqZ9IDkYu/BYnAq2clbGZTUtG8+EO09LIGcwJdk5HR+
-	FARMVMFk5k5YJkNL6RuwlkToXCF+aShsyyM6ARp2PXuN2AcNIcHBxczj4dpH7tf+ymaolvhrHzE
-	HVVyBOUvV71R7DaP1uA7m8Wmx3HKPh1Zm+APcG4HihBl1uxWe2VqsHqs/5wNDToRjKrASmnLowo
-	vpRspWzrCMETqSZ8UfsPV3Slf2/td2UmEL8u+JX7zHDgMWhyLYYwgskYtEmq/+Xbf16AR9NV351
-	lW7kHlyCey+drVI8nJvOB+p27dwhCCTP6I0r2HcWgaCDsVKoXkzKT9bVrScQCl565h8VqJ8tZkf
-	djqnd7AUk8UhT/PjoQw==
-X-Google-Smtp-Source: AGHT+IEucrHdyp4mGfnkqcIfHektHkrwev8sOJk7dCE5Y0wi+gEgsXRvfQ4VATmo2CIKEu3ultt0YA==
-X-Received: by 2002:a67:e916:0:b0:4df:9aed:3114 with SMTP id ada2fe7eead31-4df9aed3425mr137453137.8.1747288732446;
-        Wed, 14 May 2025 22:58:52 -0700 (PDT)
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4deb203f7c5sm9574683137.30.2025.05.14.22.58.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 22:58:52 -0700 (PDT)
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-52c82c67992so443845e0c.0;
-        Wed, 14 May 2025 22:58:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUh3I/UOAYgn7+0D8DEGiL7kzRc03mzs8NoRkA590MFpORErctolrwpNj63AOj5DNb+BJCkKS17AC8=@vger.kernel.org, AJvYcCV7+152mbFCH5M6PYEzzkRUFalZKtEq5G5dnBZWG6u207MdJ1CNkk5sQSI4A1x7mOU1365eNo2mHDKOa6NUISUm+MQ=@vger.kernel.org
-X-Received: by 2002:ac5:ce87:0:b0:527:b804:ff78 with SMTP id
- 71dfb90a1353d-52da902fc0emr1752780e0c.1.1747288731856; Wed, 14 May 2025
- 22:58:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747291131; x=1747895931;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=90SP8Nc35kt+f9GTxzMXrMDJFOzVX8MGultL3ZhzdUk=;
+        b=Y4+dwAGGnMiFRDcF/pxpWwrODgYWRJVOBxhfTXaYrAJggjAIjungUodYUY1jHnmSMx
+         X2RngDttPHns99Mn8SF0R5Qez5qXAr8N3EWcsAfMTw8BZfIWeHFz6d/iiYWALALQKoak
+         Jhrjv6RLiFawbI1GsvF66zU9GNX2mFZPT9ysRXqwv7bZKH/21GeFbSi7Yl9eGcJ42Ze/
+         I3fO2OgRNQJYRxQX+J7CE3UKzM2o6xO4AWUgN1GX3/xPvt8DngccMniyDQtHbtEY9Cy3
+         qePka7cVKo7ub5IVxWt7AN3Uhqh+/Nato5I/G3BnJV9dW14BwZk4H408FR6SZVnM0My3
+         Jotw==
+X-Forwarded-Encrypted: i=1; AJvYcCUd23XQbL5TPdtzgLFSDGiY8kyxrTdYLiXDVb0B98pjiDMBWvy6jVnPNCa1GgqtvYfnSLM2QpV26RclAsU=@vger.kernel.org, AJvYcCWhMJXNIYIfo4a5IoSj0Q3KEWTsvGivRrLI2BIVk92PLMkv7geXn5OEt/9u5wWjDL40wvAFX/Dt2ZIb@vger.kernel.org, AJvYcCXNrsw3HWwkTDkMig2dutYHZRWef06WuaoaD152FtBgEpo8OyM3JnJ6q5gz9EoIDJetThsE7Y9xAfuf@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOGT39BKv50W02wWtDMpB+rTqvUI/GaNs4bd07YklEUw08axrd
+	esPaF6emSQGyjvDtJdBof6kw98v3dbgHXxy+gDbrvXExZrKu3Oez
+X-Gm-Gg: ASbGncv+QnepTbxbyd0qDK+l+Est25BC4iwo03BJDqly1LA3kt8ic/ZP5z38xj8dkK0
+	l5ZB8CedSk6Pm0JUo5VAk30FFJKjALOArruDhIchHymfuMm9IAhoMDhHnjwAqdPIJvoeMVAaoNp
+	QvPzHRKp2n2AgHLvBevIMbI+oF5zQQAEUupJPdtlQP7aNZJNU1EZ1dMvgbmFS4fRAo/eoY6h8T1
+	k8lGJHQ9Nb+qWFw7AHN31RvqAdx/724gUDaEZKO1bWPUHZIMpdu9jR++RtMuW49JAh4womFiv3T
+	4KsqO011BHqezzvkY2z79eVRG/hG+6ISr0aa86qEoDEOHby5qPFIZcsZRUdv1SiouskhNfS485p
+	wzLKHH27b3sfuEKnKLktZGPQfHz17AjKM9Qe+
+X-Google-Smtp-Source: AGHT+IGcwg+ICVaEU98yQFZFmC/DzqCku2fq7x3AZ4pgS45BayMcvXFNkL/7KWdlJ8WWq/jQuosd3A==
+X-Received: by 2002:a05:600c:190c:b0:43d:7588:667b with SMTP id 5b1f17b1804b1-442f96e70a2mr12525205e9.10.1747291130967;
+        Wed, 14 May 2025 23:38:50 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4cc44sm21356467f8f.85.2025.05.14.23.38.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 23:38:50 -0700 (PDT)
+Message-ID: <d1079bc2b0ef55a0ae674d7a11f1eaa18ba9caa8.camel@gmail.com>
+Subject: Re: [PATCH v3 21/22] mfd: adp5585: add support for a reset pin
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Lee Jones <lee@kernel.org>, nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-input@vger.kernel.org, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
+ <ukleinek@kernel.org>,  Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying
+ <victor.liu@nxp.com>
+Date: Thu, 15 May 2025 06:39:15 +0100
+In-Reply-To: <20250513162622.GW2936510@google.com>
+References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
+	 <20250512-dev-adp5589-fw-v3-21-092b14b79a88@analog.com>
+	 <20250513162622.GW2936510@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <877c2mxrrr.wl-kuninori.morimoto.gx@renesas.com>
- <62gkja5ysv47yos2hcurluudxwvl54uv4ih7pjnmnjrzuik6cs@a5oxhyyy6vsm>
- <CAMuHMdUvR8rp2PaFLsyQ6ZWLqw7OskP-ZwVjRC=AARhK8g-iYQ@mail.gmail.com>
- <wytdfpewvcesc6racyrpa4cya7wku6dc65edz7oma7penqrqqq@2g54gyprttxt> <87y0uyu7i1.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87y0uyu7i1.wl-kuninori.morimoto.gx@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 15 May 2025 07:58:40 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWSN70bhVOkmL9ms0S2N+N+scyPzxCPxoxttXKsUGa8Zw@mail.gmail.com>
-X-Gm-Features: AX0GCFtt5HCXCf1i_3AMLVZ3ScdMqxV1e5Ong-QCWYi3LoLUiE_Cix4INYizIA0
-Message-ID: <CAMuHMdWSN70bhVOkmL9ms0S2N+N+scyPzxCPxoxttXKsUGa8Zw@mail.gmail.com>
-Subject: Re: [PATCH v4] pwm: tidyup PWM menu for Renesas
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Russell King <linux@armlinux.org.uk>, 
-	Will Deacon <will@kernel.org>, linux-pwm@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
 
-Hi Morimoto-san,
+On Tue, 2025-05-13 at 17:26 +0100, Lee Jones wrote:
+> On Mon, 12 May 2025, Nuno S=C3=A1 via B4 Relay wrote:
+>=20
+> > From: Nuno S=C3=A1 <nuno.sa@analog.com>
+> >=20
+> > Make sure to perform an Hardware reset during probe=C2=A0 if the pin is=
+ given
+> > in FW.
+> >=20
+> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > ---
+> > =C2=A0drivers/mfd/adp5585.c | 16 ++++++++++++++++
+> > =C2=A01 file changed, 16 insertions(+)
+> >=20
+> > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
+> > index
+> > 88401668f30e06ac201175470eeaf6216f3121d9..0fbe1f7f2582408b2e1b99f629182=
+ceebce73fd
+> > 7 100644
+> > --- a/drivers/mfd/adp5585.c
+> > +++ b/drivers/mfd/adp5585.c
+> > @@ -11,6 +11,7 @@
+> > =C2=A0#include <linux/device.h>
+> > =C2=A0#include <linux/err.h>
+> > =C2=A0#include <linux/i2c.h>
+> > +#include <linux/gpio/consumer.h>
+> > =C2=A0#include <linux/mfd/adp5585.h>
+> > =C2=A0#include <linux/mfd/core.h>
+> > =C2=A0#include <linux/mod_devicetable.h>
+> > @@ -712,6 +713,7 @@ static int adp5585_i2c_probe(struct i2c_client *i2c=
+)
+> > =C2=A0{
+> > =C2=A0	struct regmap_config regmap_config;
+> > =C2=A0	struct adp5585_dev *adp5585;
+> > +	struct gpio_desc *gpio;
+> > =C2=A0	struct mfd_cell *devs;
+> > =C2=A0	unsigned int id;
+> > =C2=A0	int ret, n_devs;
+> > @@ -730,6 +732,20 @@ static int adp5585_i2c_probe(struct i2c_client *i2=
+c)
+> > =C2=A0	if (ret)
+> > =C2=A0		return ret;
+> > =C2=A0
+> > +	gpio =3D devm_gpiod_get_optional(&i2c->dev, "reset", GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(gpio))
+> > +		return PTR_ERR(gpio);
+> > +
+> > +	/*
+> > +	 * Note the timings are not documented anywhere in the DS. They are j=
+ust
+>=20
+> It's okay, you can say "datasheet". :)
+>=20
+> > +	 * reasonable values that work...
+>=20
+> What does "..." mean in this context?
 
-On Thu, 15 May 2025 at 00:56, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
-> > > However, renaming config symbols always comes with its own set of
-> > > pains: users must notice and adapt when updating their own configs,
-> > > and I do have to manage the non-upstream renesas_defconfig, too.
-> > > What about dropping the rename part? The symbols that currently lack
-> > > a RENESAS-prefix do have fairly unique family prefixes.
-> (snip)
-> > I agreed with Geert off-list that merging
-> > renesas-arm-defconfig-for-v6.16-tag2 into the pwm tree and apply the
-> > patch is fine for him.
->
-> It seems the patch was applied (?)
->
-> If so, I have a plan to post patch for renesas_defconfig to update
-> symbols. I'm thinking I will post it after next merge window,
-> but please let me know if I can post it immediately.
+Nothing :). Just an annoying habit I have. It comes automatically
 
-You can send it now, but I cannot apply it before the Kconfig
-changes are upstream.  I do have to update renesas_defconfig in next
-renesas-drivers release anyway, as usual (cfr. the top 3 commits in
-renesas-drivers), so I can take it there.
-Thanks!
+>=20
+> > +	 */
+> > +	if (gpio) {
+> > +		fsleep(30);
+> > +		gpiod_set_value_cansleep(gpio, 0);
+> > +		fsleep(60);
+> > +	}
+> > +
+> > =C2=A0	adp5585->regmap =3D devm_regmap_init_i2c(i2c, &regmap_config);
+> > =C2=A0	if (IS_ERR(adp5585->regmap))
+> > =C2=A0		return dev_err_probe(&i2c->dev, PTR_ERR(adp5585->regmap),
+> >=20
+> > --=20
+> > 2.49.0
+> >=20
+> >=20
+>=20
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 
