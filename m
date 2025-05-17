@@ -1,83 +1,84 @@
-Return-Path: <linux-pwm+bounces-6006-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6007-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24DE0ABAAD3
-	for <lists+linux-pwm@lfdr.de>; Sat, 17 May 2025 17:10:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A858ABAAD4
+	for <lists+linux-pwm@lfdr.de>; Sat, 17 May 2025 17:11:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 221867A8744
-	for <lists+linux-pwm@lfdr.de>; Sat, 17 May 2025 15:08:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 32E591B60695
+	for <lists+linux-pwm@lfdr.de>; Sat, 17 May 2025 15:11:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 184D313B58D;
-	Sat, 17 May 2025 15:10:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B17620127B;
+	Sat, 17 May 2025 15:11:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="u4yJIkmY"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JmWYLM61"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130AB202F8E
-	for <linux-pwm@vger.kernel.org>; Sat, 17 May 2025 15:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1608F4B1E40
+	for <linux-pwm@vger.kernel.org>; Sat, 17 May 2025 15:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747494602; cv=none; b=BeeLALvVlI9o7FgxLOeqvKDaOiW/tRx8TkE9H9WWwagALGVa+8uuMBz0anTSu6wFBFiRq1qpr9wz9flGve/4j7iYfCfAsZMp20xiqpQmHOVWqPgeD8H3VE1vfb8Mk6Vd1zKJjZF4NuZLFgHLOFpk/951mJ6iuDyQbb7Oe4/jbAc=
+	t=1747494663; cv=none; b=lznxJxjbOJ1t5oSGA28Jw51Jy3fKAH7dy+IZupoA0sM45PZ/bnbqz2HN08ecqEHTHObnH6JMNZPQkMUkTl5+/oIRQkMl/XdxNs2dByf0W5p8dlyjF0+XBuCy5POWLqNTo/u0GTQ6buQBpfg2CJt4CJENkWh3D5up381RN7TybuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747494602; c=relaxed/simple;
-	bh=/YB6nBU2koYwIVjJsNe7CtOo8eFh3bzrCYrwIZg6YK8=;
+	s=arc-20240116; t=1747494663; c=relaxed/simple;
+	bh=cosh0zzWHd5H/nIAOnZLFmAAo4F4UNq0R25tBLRsQso=;
 	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Si7bBSX4ivo+L7NVxgiyzYq92ExxHT9H5nLFCicEX7JolkAQvCy/Kc0HOdGS62jPbmJ0f+CTahvqAkvlfSC7hfwzFDmLACPb1EJ/3lmKWxGXUh+BK5lrmGHr87i+8Y2EZtWG1PN3vYao4ATSWN/AYQq8UEp4LpC3bA+aG8J9JGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=u4yJIkmY; arc=none smtp.client-ip=209.85.218.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=uL12Pq5kPg7JNTfNRDaXYMNRlM8clit105T/EzO8OeXCOeOmxmniThuS4eGbPW90EcC2PHc/VoMrEoQRi+ypJRiyrruSNsATnD+ddUz4mDw3IQHAiePMohL7UZZ6Ao5Ar0qKCHANbq44KwA3AiVvzK4VlVcRmDU64CLhehkPVBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JmWYLM61; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad216a5a59cso433591966b.3
-        for <linux-pwm@vger.kernel.org>; Sat, 17 May 2025 08:09:57 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5fbda5a8561so4472577a12.2
+        for <linux-pwm@vger.kernel.org>; Sat, 17 May 2025 08:10:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747494596; x=1748099396; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747494658; x=1748099458; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/YB6nBU2koYwIVjJsNe7CtOo8eFh3bzrCYrwIZg6YK8=;
-        b=u4yJIkmYd9UfYuikTm36ZtKiutvn779SVPGkMfqA947eysWNz68UGjsy+cVfj+glQ0
-         CTRUOlxWTdVU/rb0gbxzo/Ip20ZGT6QiVh13OGNvvnF8sXhuZQJuF62VuaiDDU8IvJll
-         Ym2Zxk4/oJekc5ekrGAJW/0OSUPQy97bh1W6D1gni9SVIqLy4xbuVFGylUMPClwGiKeB
-         wzXrzZFe/kEJtFsRUvzw20PFuvsaNIneLuny9kjKGRF4jyCIEwojGznqW2wZmmefEmJj
-         qDJgsVHOdL4Bq+gG0zt6+uoL8izVuE8agqKb9soPLRzQFmY0YgYFoc6IdN4iaVIBu5Gu
-         ewcg==
+        bh=cosh0zzWHd5H/nIAOnZLFmAAo4F4UNq0R25tBLRsQso=;
+        b=JmWYLM61fiiKLzGdT0ntKgBrjZQzeoIjKqM2qLISkb9xFf9AZX815TG2YbqJIJbumu
+         LVpuftX9yJDiLBLbkg3v1InHq3JkHh4ti5rqRd9pHbqmmVkVghvrPqaJh1NL8g7TW2mG
+         exz57DeL1YzVxlT8DOj62cTXVWovFsw4sOEUaPnu8vd9BnLwF7qyJsfkXFGIVrpaK44U
+         omD7QkvYpmb6Z75HB+thDF1KbW6Rggy9kEsIBgZdkRYQnFQ3OsI1HjrgJRCRGkAMz9Ou
+         88Dnmh26CO3ZeIYbByQiU/nxV8yNdbPE6d/lJp8fXUXG3pi8tUCbsSgiv+OhSxZFjaK6
+         roLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747494596; x=1748099396;
+        d=1e100.net; s=20230601; t=1747494658; x=1748099458;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/YB6nBU2koYwIVjJsNe7CtOo8eFh3bzrCYrwIZg6YK8=;
-        b=HU7N5qKqbN55X6KLGRMdan8uv6DAclsBgsxOLnSIQbZbzEL+1f1RjF6COUs+uH3yJ7
-         /rR79ewVzIGC0nkNEGKSEH6kIkAC8RluBei05nu7ZQBf99x97ziQq9dYGPFlwSmUQO3w
-         jB+i4jIa3gcnYDYhvHqWsLellexCPPrxTO3Tq0kK2aTDXLIW/GEB580xjWlixFaUrDwh
-         x76cVf8cXbuWRn6kIw2kV/aCc7HFx72B83cBAM3b0twhIUIzTIyEWbdLYhuH4o4yUsnM
-         zgrTQxIZuwMmX9jjPzaj5Sj9uElvW8vfzNfsQz8TTRldQ/WTis3o1ZnyvXhkgRt2tfPB
-         C5zg==
-X-Gm-Message-State: AOJu0YzRNTHM6EDLrpsAoVB1WoyDAAmR5yshmSKs2uuqfcdMIgoVNF34
-	y+WDEFvwF2DuVCl7OGtUZt/pPOx2EjF5eP7cf8YopoK6AlwSUA6pTGJumGsz8fBmO6YguZzgPLs
-	vHTXF
-X-Gm-Gg: ASbGnct19XTZfuGFmrWphxqYXavCQXGsXXM6nt+eSLGKEPO9SUwdH9/+agNo7INJVPZ
-	ukuRQ2xHJZFQFXhIkrvgqyMyN1R8NVxOjuPJj8ucC8zq/rOybyPjGSypuaoJyhZYDzXe26uHx2O
-	beJfiEFJoAyr5S9MSsQc9SZBFcwaOe5rarDLWxbzT0Crrda+VM4rRDpXZbrDuCmdxvaOs0fvbAP
-	sRuvZOtjE7n96YvfljiLRkQ+nsUR1i+P4VfeUPpytgxiuj+SwcVajQlzphIIlg7TKoEgYq+6+tM
-	xRqK4OYpE59Pjiiu6vzApoU3AtTGuv8MHH5f+K1FclxiDsVWQcL2VNJo
-X-Google-Smtp-Source: AGHT+IEPDot7oilxImzc3f7JFrIXbXecfw8DeNGhHo4Ao/eczO0Wh3Cjwm/z2X0AvdZ6gxBNKLjmBw==
-X-Received: by 2002:a17:906:6a19:b0:ace:9d35:6987 with SMTP id a640c23a62f3a-ad52d441f89mr643002466b.3.1747494596014;
-        Sat, 17 May 2025 08:09:56 -0700 (PDT)
+        bh=cosh0zzWHd5H/nIAOnZLFmAAo4F4UNq0R25tBLRsQso=;
+        b=aOKQFGynNzTem/L3U67pY6x01CpmzcJKZ8raTCMnKIVfULENFpLuAUBNaKt9NYVsag
+         IO0w8bSd62Jo3KxT1ZgMnGzL7cjchA20YAIvj9A0HBGByotcQKgKFAGlCUJaFJHNV2Yu
+         N3hkjNh9jxhVfP03w+uwTSKpiadFGN8aqk1qoxoWtToYE9ORqusUAgZVLSntqOL7O0z0
+         CU2BBLJOcLj5ojmYsTLWlqq/1zUcnYLUXeIKpojMLsp8QJ0sOdAAyRbHV1PSDvu7K0Go
+         bds+rFAtvxSBQGShjvxKTR4vjsAMqpc7YgK/P1Jd45Re3etkRqOrY44cWp2BOH6yU1Os
+         IVUA==
+X-Gm-Message-State: AOJu0YygM+RVcTSXZVlAObbj23r0lqjMwt2IQ+2aao9SXgBpp23nTiyY
+	L16OX8C3qv73v7u8kD4j2lc09eeYgnZbcxby5XHjawQO9mhSn1Nueb69GfcdZVcZOIsLqxI3Acj
+	2x3px
+X-Gm-Gg: ASbGncvQ6aYwv5OkU6S5GTbgrjNsiGpEhwbJ/gg9s9xGDOgCZPMZkuEHZgdyfPpYMCE
+	5TrWtJqKWhmCkRUixZFiwABQGlHU3BBpF1EhHFYflm1WO/KG5jHwsdM7W/qIV9QZjqYJZl4CMyM
+	/Zah8K0qu7+lY7YJKT+o7nmiDrH7Na+LBHl0lTiwHS1ZIp0uvlma64jlYW7Bgx7BkDHKgujGe1H
+	S4c2bQlSBxxWII79dZgOVH36GjYVheM/EyM+FQtl2kBuM0eDAVlKMQCTUTp7virOG8eAYR/hVFD
+	xbErFb0jQstnZW+OpBflTL7Ibk+lJyffz8xaL542thdhbZoesUQGuGEy
+X-Google-Smtp-Source: AGHT+IG2lTTBFROh4j36aLnwCqBo1AGmXlieamJTl03KoMk7faAlxLdn6KUfDmiwkrHS7QehmTt38w==
+X-Received: by 2002:a05:6402:2343:b0:5f6:c4ed:e24e with SMTP id 4fb4d7f45d1cf-60090110e2emr7528846a12.27.1747494658062;
+        Sat, 17 May 2025 08:10:58 -0700 (PDT)
 Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ad52d49886esm310695866b.144.2025.05.17.08.09.55
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-6016d193ebdsm2476247a12.57.2025.05.17.08.10.57
         for <linux-pwm@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 May 2025 08:09:55 -0700 (PDT)
-Date: Sat, 17 May 2025 17:09:53 +0200
+        Sat, 17 May 2025 08:10:57 -0700 (PDT)
+Date: Sat, 17 May 2025 17:10:56 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 To: linux-pwm@vger.kernel.org
-Subject: Re: [PATCH libpwm] sysfs: Complete cleanup in close callback
-Message-ID: <d43ud4caxnkmq3ubgl2dphvg2c7jpqaba7662phhhucwrnlnls@b47akgwckkyk>
-References: <20250516191536.1353824-1-u.kleine-koenig@baylibre.com>
+Subject: Re: [PATCH libpwm] cdev: Make backend compilable without
+ <linux/pwm.h>
+Message-ID: <zdl2ymgvqxp7ghbo2yutn7en7qyz6lk2ijqpqiy527q5qhvh7w@vsbcqazqazdr>
+References: <20250516191855.1354125-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -85,46 +86,47 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="sfluf6adckco5qhi"
+	protocol="application/pgp-signature"; boundary="vydsc4rudbj56jm5"
 Content-Disposition: inline
-In-Reply-To: <20250516191536.1353824-1-u.kleine-koenig@baylibre.com>
+In-Reply-To: <20250516191855.1354125-2-u.kleine-koenig@baylibre.com>
 
 
---sfluf6adckco5qhi
+--vydsc4rudbj56jm5
 Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH libpwm] sysfs: Complete cleanup in close callback
+Subject: Re: [PATCH libpwm] cdev: Make backend compilable without
+ <linux/pwm.h>
 MIME-Version: 1.0
 
-Hello,
-
-On Fri, May 16, 2025 at 09:15:36PM +0200, Uwe Kleine-K=F6nig wrote:
-> Unexport used PWMs and close all open file descriptors.
+On Fri, May 16, 2025 at 09:18:56PM +0200, Uwe Kleine-K=F6nig wrote:
+> That uapi header is quite new and so hardly any system provides it yet.
+> So add a local copy and fall back to that to make character device
+> support included unconditional.
 >=20
 > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
 
-I don't expect review feedback, so I went ahead and pushed it out to
+Also applied to
 https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/libpwm.git main
 =2E
 
 Best regards
 Uwe
 
---sfluf6adckco5qhi
+--vydsc4rudbj56jm5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgopr4ACgkQj4D7WH0S
-/k4SBwf9Fzp6yKx3ya7rh1RVMHkAwJXcUrD/ppYRY9m2QCRexpD78sa1HQsmZ19B
-nV4Bq+72mnX3sOreoDTXzytVFKX7KU7R8k/TVDT3htE3B0GZaeE2LKtzbVWmKDYB
-WatHMaPZMc9WBFlvMf6My91fCnft0wTHo0B3Ict0dLSqHts1yvGxobzOI0zYdTtE
-p2CtbVvC9svBntMzWQOu+o7R8MaJqEAv3BqMAH3FhDF1EuhU4IS6v0PqD3rjPHPc
-BomdHixeb/Fu4RWbsFOCsXXH4BGpOwYk1g7U0bHpXNo+Qug6fllLay9Xe+FySNLQ
-YfQZYg7wI2aJMczlwXXUfhVzQsgnsw==
-=bEOK
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgopv0ACgkQj4D7WH0S
+/k6nSwgAj+kC/rLlpZ2Zinatm7JxikSdbUX5nPqhob8uzb9m3JUqN7cV2WPIuR4B
+De78qoboQvS9X1KgenV/v5FK09sF57uMxRRYKH1kVN01GX62h+z2vYslvo0Dhp2z
+7Y82Q5t1LYHrs9JLOJhvpNNSLDoWhwkeZUHkQB7SzR5MlU3bFHEDY3m0xHtknFT/
+l2btCzBhYYe8OZWezTBHFIbJtshh5/UkjbcA7nututAv+7UETAZnJeXzKm+5PqIB
+lHde5VTb1PBPekdLGIqgkJE+jawGA2MG5pzefjQRX5Bnc9Hq6970vl8zWiL9Opmt
++oGz6vaCxobOLcpL+MAQVsuDocdl/w==
+=kVD2
 -----END PGP SIGNATURE-----
 
---sfluf6adckco5qhi--
+--vydsc4rudbj56jm5--
 
