@@ -1,132 +1,104 @@
-Return-Path: <linux-pwm+bounces-6007-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6008-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A858ABAAD4
-	for <lists+linux-pwm@lfdr.de>; Sat, 17 May 2025 17:11:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5F69ABB646
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 May 2025 09:36:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 32E591B60695
-	for <lists+linux-pwm@lfdr.de>; Sat, 17 May 2025 15:11:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65850167944
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 May 2025 07:36:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B17620127B;
-	Sat, 17 May 2025 15:11:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AC14267B15;
+	Mon, 19 May 2025 07:36:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JmWYLM61"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nSBfSPEK"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1608F4B1E40
-	for <linux-pwm@vger.kernel.org>; Sat, 17 May 2025 15:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2722B2673AA;
+	Mon, 19 May 2025 07:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747494663; cv=none; b=lznxJxjbOJ1t5oSGA28Jw51Jy3fKAH7dy+IZupoA0sM45PZ/bnbqz2HN08ecqEHTHObnH6JMNZPQkMUkTl5+/oIRQkMl/XdxNs2dByf0W5p8dlyjF0+XBuCy5POWLqNTo/u0GTQ6buQBpfg2CJt4CJENkWh3D5up381RN7TybuI=
+	t=1747640160; cv=none; b=OI7+Rv04Rw1x55wjHaGVJ18jgaqrVgX2NzF5D92qK7KkfKxY+IGeOonQ9XMJs5JA9Am7jCVbLHOJNBTS4CtAbE8vX2OVItyJHb1CWzg2L6lwGSbwSAv7KHwu7ezfhiV2v2YXh0XaWEqxNy9VxAelLa1g9nY6elJ/j8hvYq2Nwq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747494663; c=relaxed/simple;
-	bh=cosh0zzWHd5H/nIAOnZLFmAAo4F4UNq0R25tBLRsQso=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uL12Pq5kPg7JNTfNRDaXYMNRlM8clit105T/EzO8OeXCOeOmxmniThuS4eGbPW90EcC2PHc/VoMrEoQRi+ypJRiyrruSNsATnD+ddUz4mDw3IQHAiePMohL7UZZ6Ao5Ar0qKCHANbq44KwA3AiVvzK4VlVcRmDU64CLhehkPVBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JmWYLM61; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5fbda5a8561so4472577a12.2
-        for <linux-pwm@vger.kernel.org>; Sat, 17 May 2025 08:10:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747494658; x=1748099458; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cosh0zzWHd5H/nIAOnZLFmAAo4F4UNq0R25tBLRsQso=;
-        b=JmWYLM61fiiKLzGdT0ntKgBrjZQzeoIjKqM2qLISkb9xFf9AZX815TG2YbqJIJbumu
-         LVpuftX9yJDiLBLbkg3v1InHq3JkHh4ti5rqRd9pHbqmmVkVghvrPqaJh1NL8g7TW2mG
-         exz57DeL1YzVxlT8DOj62cTXVWovFsw4sOEUaPnu8vd9BnLwF7qyJsfkXFGIVrpaK44U
-         omD7QkvYpmb6Z75HB+thDF1KbW6Rggy9kEsIBgZdkRYQnFQ3OsI1HjrgJRCRGkAMz9Ou
-         88Dnmh26CO3ZeIYbByQiU/nxV8yNdbPE6d/lJp8fXUXG3pi8tUCbsSgiv+OhSxZFjaK6
-         roLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747494658; x=1748099458;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cosh0zzWHd5H/nIAOnZLFmAAo4F4UNq0R25tBLRsQso=;
-        b=aOKQFGynNzTem/L3U67pY6x01CpmzcJKZ8raTCMnKIVfULENFpLuAUBNaKt9NYVsag
-         IO0w8bSd62Jo3KxT1ZgMnGzL7cjchA20YAIvj9A0HBGByotcQKgKFAGlCUJaFJHNV2Yu
-         N3hkjNh9jxhVfP03w+uwTSKpiadFGN8aqk1qoxoWtToYE9ORqusUAgZVLSntqOL7O0z0
-         CU2BBLJOcLj5ojmYsTLWlqq/1zUcnYLUXeIKpojMLsp8QJ0sOdAAyRbHV1PSDvu7K0Go
-         bds+rFAtvxSBQGShjvxKTR4vjsAMqpc7YgK/P1Jd45Re3etkRqOrY44cWp2BOH6yU1Os
-         IVUA==
-X-Gm-Message-State: AOJu0YygM+RVcTSXZVlAObbj23r0lqjMwt2IQ+2aao9SXgBpp23nTiyY
-	L16OX8C3qv73v7u8kD4j2lc09eeYgnZbcxby5XHjawQO9mhSn1Nueb69GfcdZVcZOIsLqxI3Acj
-	2x3px
-X-Gm-Gg: ASbGncvQ6aYwv5OkU6S5GTbgrjNsiGpEhwbJ/gg9s9xGDOgCZPMZkuEHZgdyfPpYMCE
-	5TrWtJqKWhmCkRUixZFiwABQGlHU3BBpF1EhHFYflm1WO/KG5jHwsdM7W/qIV9QZjqYJZl4CMyM
-	/Zah8K0qu7+lY7YJKT+o7nmiDrH7Na+LBHl0lTiwHS1ZIp0uvlma64jlYW7Bgx7BkDHKgujGe1H
-	S4c2bQlSBxxWII79dZgOVH36GjYVheM/EyM+FQtl2kBuM0eDAVlKMQCTUTp7virOG8eAYR/hVFD
-	xbErFb0jQstnZW+OpBflTL7Ibk+lJyffz8xaL542thdhbZoesUQGuGEy
-X-Google-Smtp-Source: AGHT+IG2lTTBFROh4j36aLnwCqBo1AGmXlieamJTl03KoMk7faAlxLdn6KUfDmiwkrHS7QehmTt38w==
-X-Received: by 2002:a05:6402:2343:b0:5f6:c4ed:e24e with SMTP id 4fb4d7f45d1cf-60090110e2emr7528846a12.27.1747494658062;
-        Sat, 17 May 2025 08:10:58 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-6016d193ebdsm2476247a12.57.2025.05.17.08.10.57
-        for <linux-pwm@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 May 2025 08:10:57 -0700 (PDT)
-Date: Sat, 17 May 2025 17:10:56 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Subject: Re: [PATCH libpwm] cdev: Make backend compilable without
- <linux/pwm.h>
-Message-ID: <zdl2ymgvqxp7ghbo2yutn7en7qyz6lk2ijqpqiy527q5qhvh7w@vsbcqazqazdr>
-References: <20250516191855.1354125-2-u.kleine-koenig@baylibre.com>
+	s=arc-20240116; t=1747640160; c=relaxed/simple;
+	bh=zVO3+aXmayvngbyw4PYPDuKbl+yyblwK0y0qXrmeAvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VVAiw1+yFMNcoO0sDqU0LmuzxOQA6LHWe3OVx6EplYhG0Sn+z/WLLAwkyMlNwMuomuvwvFV+KcikiBe8aJ9ofjHmzk9Ys02ZU4l7bPDNHsBPSTXDAiOtYmrvZDpChndHYwmERayXrE0YWybpY9ZU3U8BL2BNSyrHo7YS8l3ddyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSBfSPEK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 246D8C4CEE4;
+	Mon, 19 May 2025 07:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747640159;
+	bh=zVO3+aXmayvngbyw4PYPDuKbl+yyblwK0y0qXrmeAvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nSBfSPEKXsp/UlGw7oh6zxljPJhursDcFHV+SVB7eJixi2czxaPjMaAWCj8fR+g4o
+	 wrHAs+OAquHVincN9MFKT5NIJksr8FZfvlJ/VYIJT3gOnzscxwi+qNgCx6esb2DVSK
+	 yqt8NBb0L6+ISLqLcM414LnjsMRJFT3BwMa6RqEVtlDCun7+h8ndXvGhkb8//8QhXm
+	 flNeM0oUQcX2TWnyv55TRJ9lv7n5mMb9JTN5COoBbcz1K7WbS/mqw0R8B/2JNq4BpX
+	 KKzemZfAQPADmqX2YG9QT1gE781xOJIWt6p96zlvlcEKhgFnneo89LaJomzVsZoFtU
+	 EvU8U3PVSEpPw==
+Date: Mon, 19 May 2025 08:35:53 +0100
+From: Lee Jones <lee@kernel.org>
+To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Cc: daniel.lezcano@linaro.org, alexandre.torgue@foss.st.com,
+	tglx@linutronix.de, ukleinek@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, jic23@kernel.org, robh@kernel.org,
+	catalin.marinas@arm.com, will@kernel.org,
+	devicetree@vger.kernel.org, wbg@kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	olivier.moysan@foss.st.com
+Subject: [GIT PULL] Immutable branch between MFD, Clocksource and PWM due for
+ the v6.16 merge window
+Message-ID: <20250519073553.GH2936510@google.com>
+References: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vydsc4rudbj56jm5"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250516191855.1354125-2-u.kleine-koenig@baylibre.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
 
+Enjoy!
 
---vydsc4rudbj56jm5
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH libpwm] cdev: Make backend compilable without
- <linux/pwm.h>
-MIME-Version: 1.0
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-On Fri, May 16, 2025 at 09:18:56PM +0200, Uwe Kleine-K=F6nig wrote:
-> That uapi header is quite new and so hardly any system provides it yet.
-> So add a local copy and fall back to that to make character device
-> support included unconditional.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-Also applied to
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/libpwm.git main
-=2E
+are available in the Git repository at:
 
-Best regards
-Uwe
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-clocksource-pwm-v6.16
 
---vydsc4rudbj56jm5
-Content-Type: application/pgp-signature; name="signature.asc"
+for you to fetch changes up to 3f51b232c1da8e59eb562f1d81533334827a4799:
 
------BEGIN PGP SIGNATURE-----
+  pwm: stm32-lp: Add support for stm32mp25 (2025-05-13 11:13:56 +0100)
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgopv0ACgkQj4D7WH0S
-/k6nSwgAj+kC/rLlpZ2Zinatm7JxikSdbUX5nPqhob8uzb9m3JUqN7cV2WPIuR4B
-De78qoboQvS9X1KgenV/v5FK09sF57uMxRRYKH1kVN01GX62h+z2vYslvo0Dhp2z
-7Y82Q5t1LYHrs9JLOJhvpNNSLDoWhwkeZUHkQB7SzR5MlU3bFHEDY3m0xHtknFT/
-l2btCzBhYYe8OZWezTBHFIbJtshh5/UkjbcA7nututAv+7UETAZnJeXzKm+5PqIB
-lHde5VTb1PBPekdLGIqgkJE+jawGA2MG5pzefjQRX5Bnc9Hq6970vl8zWiL9Opmt
-+oGz6vaCxobOLcpL+MAQVsuDocdl/w==
-=kVD2
------END PGP SIGNATURE-----
+----------------------------------------------------------------
+Immutable branch between MFD, Clocksource and PWM due for the v6.16 merge window
 
---vydsc4rudbj56jm5--
+----------------------------------------------------------------
+Fabrice Gasnier (4):
+      dt-bindings: mfd: stm32-lptimer: Add support for stm32mp25
+      mfd: stm32-lptimer: Add support for stm32mp25
+      clocksource/drivers/stm32-lptimer: Add support for stm32mp25
+      pwm: stm32-lp: Add support for stm32mp25
+
+ .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  |  40 +++-
+ drivers/clocksource/timer-stm32-lp.c               |  61 +++++-
+ drivers/mfd/stm32-lptimer.c                        |  33 +++-
+ drivers/pwm/pwm-stm32-lp.c                         | 219 ++++++++++++++++++---
+ include/linux/mfd/stm32-lptimer.h                  |  37 +++-
+ 5 files changed, 350 insertions(+), 40 deletions(-)
+
+-- 
+Lee Jones [李琼斯]
 
