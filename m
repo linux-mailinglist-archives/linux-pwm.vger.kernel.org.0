@@ -1,111 +1,173 @@
-Return-Path: <linux-pwm+bounces-6028-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6029-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B625ABC584
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 May 2025 19:23:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F0B3ABCADB
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 May 2025 00:29:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4CBEC4A2A0A
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 May 2025 17:23:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 592651757FA
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 May 2025 22:29:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D631E286D48;
-	Mon, 19 May 2025 17:23:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D0D21CA10;
+	Mon, 19 May 2025 22:29:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nC9nWKQv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJVqLA8B"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9ADC265CA2;
-	Mon, 19 May 2025 17:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE78E1DE887;
+	Mon, 19 May 2025 22:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747675383; cv=none; b=BWZ/yRADOYfU/DuWS7ZUtKVVQHc28cjpTefuGhyP8Ou+vhphtiC2/nSvqJIhBr/W86a26xlsU95rWZA8vHgSRCLK4jdyaga6lpPsC2rNSy/v33Z6U4Yp/2PJ1gOX6ShtPbN58cCJycIWwkUm9Ga4rNrblJD4FhO6mRy3PpS7y9Y=
+	t=1747693758; cv=none; b=DJIY21JqV6WUfOuTGIFfNnmoCqVW4QjL4hX7JbLw6TUKrWWadd1rIbTgxNm2VHFFvgf7ZWPGVVuFjXZlI05p5YViVIuxkLEMrdaKqm8yAcWuMK2Skuw3UizX2+P76ff8rf9PRODMp8+tIMVzGl1tXe5KZ7Ydt7Ysz5XV69w/pyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747675383; c=relaxed/simple;
-	bh=ob+T55wxX5wUfQYIT/wfSG8mNacxWK+R4QP7tPmMQXo=;
+	s=arc-20240116; t=1747693758; c=relaxed/simple;
+	bh=vdhot2bogrAAVmaP4EuykHJI5W0v/2hfiO1ojSRA+vU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qhQkbbmTgXwF2b9GBh7C7xwJIksvp5FD60tzVZpkGz+sNUZbxDBAaxJ7AX6RoVK+XCR2VWtL/oqCghbiNa+dDtcKfZVLA7vU8XIiXuHC8rvcVI9DVr/5+4VLIbt2znKPSWpRIDD1352aZKf9fxAConeT+I28YJBjugSWTQda2bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nC9nWKQv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 261ACC4CEE9;
-	Mon, 19 May 2025 17:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747675383;
-	bh=ob+T55wxX5wUfQYIT/wfSG8mNacxWK+R4QP7tPmMQXo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nC9nWKQvQqAGY0CZigDIKu+VYTrOQqIQ/0tg4pmjrsOEcb3tZCtIxIDwUCzoU0Cdd
-	 fqCwemjfkeJSoF17X0Zb4TXkNLGFzoEbyS7dS+atkKh+Z52Mu32XXe27rm3UY1pevz
-	 73nu5JplmVmU80qEOZDNR32Z2gtVBctSOJvyhD5clvpjoHccVcIu6Vs0DHtgZPPfgA
-	 D7V65qbkqAh4XG27/S+HbQnKjq8jlJkggFvg3a3p0/7OQqnyqCJTDqbflm+Y7p2NDo
-	 QRCVzErRhQ2z/U+v6l45xh5RIeZC+PuQNlPKOazO/Mh21JsoXoyWBVKDA+EMIYL3pA
-	 9w3v39LxH1utw==
-Date: Mon, 19 May 2025 19:23:01 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Conor Dooley <conor+dt@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
-	Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: timer: renesas,tpu: remove binding
- documentation
-Message-ID: <2pcyqik46iko7gfrmqyz7v4nbnyktpo7u7zwuffydpvoqyrw6k@5sndkwmeutub>
-References: <87semglt2g.wl-kuninori.morimoto.gx@renesas.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ggz3zpMLU7DzV8D4NFuDIfExzp8KKCY1vi0gWXpdxfp3syCX2PRrwXzgJmVi8GAtMttUmXN/F6HNXzmf2ojBu9lAUpkEvfc/AYFh8i9YsgQhasO4DX8hk1ra/kyK9pEY/aEkTbLvn5qiWhv6pqeaUZy9gPdFKrM6oiLtN68xhoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJVqLA8B; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2327aa24b25so2114225ad.3;
+        Mon, 19 May 2025 15:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747693756; x=1748298556; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gVfdNVHigfGlLdYVfYQUg3Ao+EVb/XXfYA5VQaT7/Mc=;
+        b=RJVqLA8BFgczdE60GJj+Bp/qJ+MwAfGC/uojPWdJ3PN5Ak/DfXHillcbySxXGQhsY3
+         qrPHSEunhSQrUUdEt6ClC0Phef2rXNZkBRNYPGaOSNrvemo0rqWs3I5HTg9CQvKboTbr
+         2PE/33A/ZaA3BX6CSOBIF7T9iKwblzk83Nl8McHe/xtPYHKCOHseZVxjCxlWqSfvS1Fy
+         ucO7dGSEHMiBTsryP86QU9Izq50ScvYnumkYnecX7By5IaGh1Y8i2X2/+03BcH+T/e82
+         1lRxkJU3jiurOshRQX3rnKPTZUQCphFSQN2/vLx7PVBOm0CaYTlRTTLSl7vvo6Faszes
+         /oBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747693756; x=1748298556;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gVfdNVHigfGlLdYVfYQUg3Ao+EVb/XXfYA5VQaT7/Mc=;
+        b=uQBW2r1ft/2cPvx1h9FgkuKrwa/MIxWyX2YM6IidLY10u5ZDd73NKfJPBx+0Qm6VuX
+         945ovc6hlQTWO4djpjN8yLR5Me50Je3r3sHQvEIU31axpE7twUhqd35vzAz9zPM/eqwW
+         GIyHAaH44nfHR4m0xIo4HswWu7JEWzLMJH3Gtw1vrnmL25eaat1N0ozBlnVJmHF/BZgU
+         DhT/aUVF8f12b4A5qqT5FHyK4wp8lJZtwkY4JcaaxTRQ0bKI15idrlAOT3veUAUFOSOS
+         JJXl0YyX6X6WNbzFQiDfK2nDTUmrdyjcqtq2KPy5M3f/18WugpoE70AYgR2bFPW8EkzI
+         9jow==
+X-Forwarded-Encrypted: i=1; AJvYcCU30JnysQdmSTENIJ1byochIzkOM3ZMey59rmILuJiX4n3qG7GYOLV3Y2O2WyImm0dxEd/ENH30yiCV0FQ=@vger.kernel.org, AJvYcCWdsg+XlfrlRteFWXQG+fPSACpT05OSczbREMPiRpvsAwixlJ46fO909jBvBkzTB0FjHyDaNZTjzNkq@vger.kernel.org, AJvYcCXuBWVnEIRl3mQiBWGxi0jUaPFSg73CrFaEBe90JUTmcoApinaps1WpjXqQjjNLPT1K1KZGdLG/Y1e1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6Jlp+WyK5VwkZxf2Vywd9AJGq9h2e6fS87+0AXWB9gKd5/DQi
+	syKoWYi+ki1ZfNCk2XOEE3HdYljJkrJt3qpgFarzWURjk52uRVX6ZL7g
+X-Gm-Gg: ASbGncuRiCaiM02dUwEjFCxxnvlFj+hOaP/FqtrrdtEyVMKQizjJ58uSJ2up/upndIp
+	JIyklR/mDP9UNO9JBL31rXi3TQkyD8R2kgFNEBxfAgbU3gmdd4zZnvkhRZUpQA5HvmoXvRymy/m
+	2U7/7lCwn42uRHSmrsXBa67KeRDZaovjBkw/jt/5tegn5i5UfKtk0eqvlajROgqTuXdOH9xr1Q8
+	EAChIEOegobmMMd79WwFw3Ik1OSs8kuuK8FAkbVSKXgWpTIa+psAXSqRNfMwUg8zn23IkIeEL7s
+	sy+ivZ9X4ts4vH2YIqM1BEtsarU5hT9yNAC8O2m5zbJmZ1D0Yg==
+X-Google-Smtp-Source: AGHT+IExzxC1Rn8Seuzhbs42BUoT/DfFEqGl+OeWDv86sR+KOtPhL6fBwEtIP4ZkCi/7WCr7mYVlTA==
+X-Received: by 2002:a17:903:19c4:b0:220:e655:d77 with SMTP id d9443c01a7336-231d452d0e3mr210299435ad.36.1747693755940;
+        Mon, 19 May 2025 15:29:15 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:e134:a6aa:27:6156])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97db8sm65049265ad.110.2025.05.19.15.29.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 15:29:15 -0700 (PDT)
+Date: Mon, 19 May 2025 15:29:12 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>
+Subject: Re: [PATCH v3 17/22] Input: adp5585: Add Analog Devices ADP5585/89
+ support
+Message-ID: <gdhn57zkmt5fyq33qsvdbpq3k7ofzycm24ligd3hw2cwdqkn5y@z4sk2arp6ssn>
+References: <20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com>
+ <20250512-dev-adp5589-fw-v3-17-092b14b79a88@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="e37qavuhtggha2pl"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <87semglt2g.wl-kuninori.morimoto.gx@renesas.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250512-dev-adp5589-fw-v3-17-092b14b79a88@analog.com>
 
+Hi Nuno,
 
---e37qavuhtggha2pl
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] dt-bindings: timer: renesas,tpu: remove binding
- documentation
-MIME-Version: 1.0
+On Mon, May 12, 2025 at 01:39:09PM +0100, Nuno Sá via B4 Relay wrote:
+> +
+> +	for (pin = 0; pin < n_pins; pin++) {
+> +		if (keypad_pins[pin] >= adp5585->info->n_pins) {
+> +			error = dev_err_probe(dev, -EINVAL,
+> +					      "Invalid keypad pin(%u) defined\n",
+> +					      keypad_pins[pin]);
+> +			goto out_free_map;
+> +		}
+> +
+> +		if (test_and_set_bit(keypad_pins[pin], adp5585->pin_usage)) {
+> +			error = dev_err_probe(dev, -EBUSY,
+> +					      "Keypad pin(%u) already used\n",
+> +					      keypad_pins[pin]);
+> +			goto out_free_map;
 
-Hello,
+This jump looked confusing, together with devm, etc. I wonder, can you
+move call to devm_add_action_or_reset() before the loop? It looks like
+it should handle completely unpopulated pin map just fine... 
 
-On Thu, Apr 10, 2025 at 01:10:48AM +0000, Kuninori Morimoto wrote:
-> commit 1c4b5ecb7ea1 ("remove the h8300 architecture") removes Renesas TPU
-> timer driver. Let's remove its binding documentation.
->=20
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> +		}
+> +
+> +		__set_bit(keypad_pins[pin], &kpad->keypad);
+> +	}
+> +
+> +	error = devm_add_action_or_reset(dev, adp5585_keys_pins_free, kpad);
+> +	if (error)
+> +		return error;
+> +
+> +	/*
+> +	 * Note that given that we get a mask (and the HW allows it), we
+> +	 * can have holes in our keypad (eg: row0, row1 and row7 enabled).
+> +	 * However, for the matrix parsing functions we need to pass the
+> +	 * number of rows/cols as the maximum row/col used plus 1. This
+> +	 * pretty much means we will also have holes in our SW keypad.
+> +	 */
+> +
+> +	rows = find_last_bit(&kpad->keypad, kpad->info->max_rows) + 1;
+> +	if (rows == kpad->info->max_rows + 1)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "Now rows defined in the keypad!\n");
+> +
+> +	cols = find_last_bit(&kpad->keypad, kpad->info->max_cols + kpad->info->max_rows);
+> +	if (cols < kpad->info->max_rows)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "No columns defined in the keypad!\n");
+> +
+> +	cols = cols + 1 - kpad->info->max_rows;
+> +
+> +	error = matrix_keypad_build_keymap(NULL, NULL, rows, cols,
+> +					   kpad->keycode, kpad->input);
+> +	if (error)
+> +		return error;
+> +
+> +	kpad->row_shift = get_count_order(cols);
+> +
+> +	if (device_property_read_bool(kpad->dev, "autorepeat"))
+> +		__set_bit(EV_REP, kpad->input->evbit);
+> +
+> +	return adp5585_keys_check_special_events(adp5585, kpad);
 
-Applied to
+	error = adp5585_keys_check_special_events(...);
+	if (error)
+		return error;
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
--next
+	return 0;
 
-=2E
+Thanks.
 
-Thanks
-Uwe
-
---e37qavuhtggha2pl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgraPAACgkQj4D7WH0S
-/k6qGwf/T8WbpOWCxnhenBbVyQ1V5ioc1B59ilAXhj8wIS96MBjpcfT0heU/AE8r
-V+6l+6Z6AAZkz+ULyYfh5LwU5O0uZKjZpAG0hBf0d+kqIjMYkXSTYJIF2LaHOR9z
-1ELPScxfFfzTBbmCQ6gY813t5riPapaTNOBzP8aIKfDP/sLVw4PHEf5d/T/hdNMU
-UjCxAwNneACKPerKG8N0ZR/2shQyum2CWK1Zijqh+4+Nsas82nDORwd+xQ7bMk4C
-GtyNh10Npvh7IVI4BiHnyzeKLVqh1Ex9pgvdmdpVaUC5milCPuqJ0tSY7zFN5uRh
-ZeIyBvNLNlsgTpIbqAPOOoZE13T3Rw==
-=8UWA
------END PGP SIGNATURE-----
-
---e37qavuhtggha2pl--
+-- 
+Dmitry
 
