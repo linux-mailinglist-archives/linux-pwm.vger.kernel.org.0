@@ -1,80 +1,80 @@
-Return-Path: <linux-pwm+bounces-6062-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6063-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9699FABF5CB
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 May 2025 15:15:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A25FABF5DF
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 May 2025 15:19:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 87C8C7B28E6
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 May 2025 13:13:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E3EB4E2E60
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 May 2025 13:20:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6978F13212A;
-	Wed, 21 May 2025 13:15:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CE73267B1F;
+	Wed, 21 May 2025 13:19:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="3DDII2Jh"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uNQGANQn"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F5225D1FA
-	for <linux-pwm@vger.kernel.org>; Wed, 21 May 2025 13:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE50A263F47
+	for <linux-pwm@vger.kernel.org>; Wed, 21 May 2025 13:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833306; cv=none; b=lgaieIEambyDshjKafkelW0QI9da/KoRJg1EcJrHGqZ8t3AXVH0Qr4YP2mCccjw4Qtf6AnT04RUKb58l4lRTveG5pr3Brkf+25KGRIRwIJJzGajRWzgVtqQKxLRxO1bcImr4kvLlOQqi2ufGTd/a4dNC3AoQEPOc48aZ8eu0MtU=
+	t=1747833597; cv=none; b=ZcNpjHIGYT5WSWmesXfilfJgSVRhfFZ+DuZhiWLHgybuc1zxM3cmadj6C7kAtJZBfCDMi3aJkmxbogAyjaBYV6jiUnHP0BJ2MiLMOcnO8FhSSONSBvi7EWGiGNZCFpKu/an0yq1BbjkFn/yG5RVH1hzIcPUZB+SVMFiiH9ylCxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833306; c=relaxed/simple;
-	bh=46yPBjwciFLMMrocvFjPrOjdH2xTypHeoYSJWaK7AEo=;
+	s=arc-20240116; t=1747833597; c=relaxed/simple;
+	bh=zxb4XuRb5OL7RbkFWFx6WphiL7nedhvIK2jhu21lh1E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wy0m0FDBVPp7TIFzHV2SSJKggxbiqpWi94G70JugJlqTiay6yBO+3U9E/jf23sRZI5cjlxYj3xCEUa7s+7o+H2I+iRfrq/8cor+BYXbWOuNNXsn3yrvkpbIcoOFqktQIf7Hf3XQNVFuIaulxNI4KG37W8wGAvYHW9pGU+psC7NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=3DDII2Jh; arc=none smtp.client-ip=209.85.167.181
+	 In-Reply-To:Content-Type; b=rhemizBRX2SPp2yChUeZ8M8EmriTv15C6siXPbCbqPikIM9IXfFz+wK83BlA9Ita/Dn+gjYCuiHD4cEyjTEe3rBW6tjYfbgTjgY4Gm+Rc/vWG/OdJTYrfWvTN2pnBCZkA6oU2/LIX0or+B+fHuRtvLMFSaP3hXEEBCYa+SySC6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uNQGANQn; arc=none smtp.client-ip=209.85.161.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3fa6c54cc1aso4632324b6e.1
-        for <linux-pwm@vger.kernel.org>; Wed, 21 May 2025 06:15:02 -0700 (PDT)
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-605fda00c30so3713313eaf.1
+        for <linux-pwm@vger.kernel.org>; Wed, 21 May 2025 06:19:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747833302; x=1748438102; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747833595; x=1748438395; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MwkvT86/Zl2sJvdjDReDj53Dg8oPYnn4x0+k4uOFFvU=;
-        b=3DDII2JhqXNaHu1nBvD8hlqePN1zYoZCfw8DQgXEGSFPXPAWQ4qnZJ9SGwTLyBbff8
-         oXZjuVT4nrN1WPQCHbfukdc7wo+CH5ibioasKoRjeUzRxwhbRT8fselvaadKHIe2s1wa
-         Sx2g3BeF3/JPFMOs+rLv2yv3qpCgyZaDWBAfgsq7KLCsPJDZXBv9F6zHPWrPFkSUwhzg
-         vY93Rg+p+m7W9lZoZrqZw4QxFOxivMp8334Tz4BmHFY5BIOR1BpYIjpoOt7pJzZFWKCl
-         D6rDFxPhV4UZYtbj+hfdnr6ViW2YFBI4YSnGpUD5YlhwZ56JWxjhQPqlmPwt8r5q7fk8
-         xgnw==
+        bh=vqHAwKXGDB470rizfijZUWFboiXZOZHB3mYiVWRIm+0=;
+        b=uNQGANQn+VcDbM9bqffpTG/ZuvCWHNtmKHJ8PdQ4CXUf1++5OoJ6C4ce1a0RRZHgZw
+         URkZ+y1nud19ploFIgfyTh+52NsP/YKRS7rKpTF7AiEqG0YBRSBfZ2H5QRWZgPCREfrN
+         6925zM+OSo9zLJ2dz1ZLm9ReFhxDorM55vw75nBdDMi/RW+Zmgs/D4ogaXVZUoXYZsf3
+         NkIRiR/r5FKmNLXOKVRXL2rmtHMwjQqi7B4HuUftB1xxYTvbBEE2ic7Iv8kweIQEPxHl
+         Q2J8lf/w7azDV6v45/cEo2/oqRaGIg12FJi3hgJYQPqh/yqyj6/Cet/+XZUygoqe+7fo
+         51Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747833302; x=1748438102;
+        d=1e100.net; s=20230601; t=1747833595; x=1748438395;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MwkvT86/Zl2sJvdjDReDj53Dg8oPYnn4x0+k4uOFFvU=;
-        b=dVTJ18gUE37ZdRu7wYU+fzBGEzzWg4KIFD3oN44lVqkL3m+8+8w3H9T4JpmQmh5eL+
-         v1Lisv9YLgqaAb43CIzopUwlzbAftJ1pR0iSsL640o5TIwjjKTdpiVAk9oTeFQWR+51M
-         UIs6NCkK+1YSpkdiGep8zzDktg1b4dG4tsb1XnzUG7Ifm6NoiQBfMkgBwj1Dz6WW2z/o
-         M6xv6mjziDfTVL6iPWeNg3NbuNIp07y7322alVoZexVa23ys+8pRbjUCGKCEfg+bCOe1
-         +fyTzl7SsZnRSaSnJqkwFNe5anmrdPvOklkrOkd6imOV8Rzcs0nCQpcQuK0GWO1D7nKm
-         MyEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuU2fT9hA1ZKB2djzoGIv9R2JBjWKsf09MHplRVD68G66SmCJbUJvImqn1FmCAwTH4einaus2uQpk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5753pCLFIZkjdmXCrsKYSK6QO7SpY/YdkQmhopv7EI1nHA387
-	Gk1KdMmHY6HwlTgiBIEMkJWy9GM51rVILMK3aJf+wIh4M17GY3tiC1V4uC9vTSrSRIE=
-X-Gm-Gg: ASbGncsHW4OXIQ0uECT4/r7LaFgJMa1jHA39H0eHPJjhNzXs/ON7kavtHjGCumQG7qB
-	2KaVGPkfO3xWYXyzYCSD03stWq2PdUulm05hMNSl5CJrEQgiSZ3IUh6UQOBvze736uIivLABxjF
-	04Z7aGNlszjoqxHG2U/v09XMc4q7pjkuIEeUifw5JQphY8zWXQE/mck+4blkp1nBey3f04KDlgR
-	x4A8BxsPO5NZzw1hWJ95m54FhZ0XaAGLI7kBJ4bDVP5SuhXgAGtoTVsgVH2DOAX03VvQmxgz9Qj
-	GVIX7dsZcO6e8HLWMCgqGWwN8a0So/qoZZ6UsLMzIEzJ1D3uj5NhalltfE63695+k9284oYYDCa
-	ygVqNl5t0zb1msFBN6maGC4bDVA==
-X-Google-Smtp-Source: AGHT+IHzdgJCdBOe5f51v9BfhJeduP2MKryKFQE+tj3FZojFtyNm/Wv+bOouQTctgWKdWzwI//4zpw==
-X-Received: by 2002:a05:6808:1b8e:b0:403:3660:412f with SMTP id 5614622812f47-404d87fe42cmr14605026b6e.25.1747833302026;
-        Wed, 21 May 2025 06:15:02 -0700 (PDT)
+        bh=vqHAwKXGDB470rizfijZUWFboiXZOZHB3mYiVWRIm+0=;
+        b=jlUSGbjfQ6UgLgvJDwwtXE67Of4W7hJ/T8kvYWwzeyL88b68SdIv8UtXwmES6vgxIn
+         S41Xt0c0TODh/hqTTUbGjwVO1AdoU4cSvqnmD9cQzlvTncf9p5UP90LaFcKHoXYkplNh
+         c6UF/oTGxm4QBH3Uw/UX2NxRbetOcyloU4svs3Jw7XZ3JsY4X/2Vj6Jqj1Aj+2QCa3ht
+         6HkI/evCR+uIyM6RezwbRIdZvivAghGiSiAI/QuHfOpNEc7CTLOfuYWv/0sCCw83Zizp
+         DPA+iQRxZqJt4nBkGkLJE7pigw6dvttJfiyhHQwZK/D6HUgYRI7DVSNiaGsubEMz1Wqc
+         hiPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdF6jvgnksbodDKfr8wRVcdX2CbkU9ykx30qL3SStQZrFW2lSyRiJkfuwF4Z0msHnCaumTLfIgK9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwX/C7v4x2Og3hvK/abJX/1/lMXzFv5XhosgbOQC0v3IeTaYn54
+	a7JFTL3dH3qz6HZK8EZGW1+oVAcBxl8dkXWnz5mwjImGO1yKDwmlF1nlos/iPNhrBU0=
+X-Gm-Gg: ASbGnctBsjmhGBMJMxdykM4Nw+8zoU1hWFh3ATE1laxmtCfb76Jl4TY6qhOOkC+B2Ve
+	QcO9uUb4l976jlmgx08f2JuU4nk0zth7+dHThASAaDCknK4Kl8Qad/wq1+crZLCfU1eONUyqzn6
+	5H3cKnvMZ58J6ecukH6z895OPEAnJUZYYYkPZD4YWCEoTrVgjwO7Rq5gLiqxkhZ6aBy+zd5qRJq
+	TX1EwNVy8RVZ/mBP1KKhUBp570oNB6/z1GUchULTfHmpLsRxNaotndHgi2nea1PE6+EM7x6/Dbr
+	8OJgBWg1TdWzTZvVInpOrvlxofjxoMF47rXwkaHKggdhejkUXAB186TkhvVpAb6xB4WZgJVdgOA
+	NxBZOEwxyYj+JFEyi4LaDUqwQkQ==
+X-Google-Smtp-Source: AGHT+IFlO2y1ouZt315gbUk3Y6YIYIDNy5KFOP0whnds4skxAXxnCCpG1q9rhgZvtK70Het4S+QSwQ==
+X-Received: by 2002:a05:6820:1806:b0:606:5531:d903 with SMTP id 006d021491bc7-609f36b742bmr12050006eaf.2.1747833594667;
+        Wed, 21 May 2025 06:19:54 -0700 (PDT)
 Received: from ?IPV6:2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff? ([2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-404d98cbbfesm2137735b6e.41.2025.05.21.06.14.59
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60a03f5bcbasm1675485eaf.19.2025.05.21.06.19.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 06:15:01 -0700 (PDT)
-Message-ID: <be02b9cd-803c-4aae-9420-ff3bf445efc1@baylibre.com>
-Date: Wed, 21 May 2025 08:14:59 -0500
+        Wed, 21 May 2025 06:19:53 -0700 (PDT)
+Message-ID: <0dd1a97e-ff7c-4d09-b18e-5df9944488c6@baylibre.com>
+Date: Wed, 21 May 2025 08:19:51 -0500
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -82,126 +82,117 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dt-bindings: pwm: adi,axi-pwmgen: add external clock
-To: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 3/3] pwm: axi-pwmgen: add support for external clock
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
 Cc: Michael Hennerich <michael.hennerich@analog.com>,
  =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
+ Trevor Gamblin <tgamblin@baylibre.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
- <20250520-pwm-axi-pwmgen-add-external-clock-v1-2-6cd63cc001c8@baylibre.com>
- <20250521-tidy-heron-of-genius-4dc9a1@kuoka>
+ <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
+ <zdltaexty6pzbqesoluuyluygyt6w7nq7r2wccmtfktppwuw3e@qb36fsu3jq4k>
 Content-Language: en-US
 From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250521-tidy-heron-of-genius-4dc9a1@kuoka>
+In-Reply-To: <zdltaexty6pzbqesoluuyluygyt6w7nq7r2wccmtfktppwuw3e@qb36fsu3jq4k>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/21/25 5:09 AM, Krzysztof Kozlowski wrote:
-> On Tue, May 20, 2025 at 04:00:45PM GMT, David Lechner wrote:
->> Add external clock to the schema.
+On 5/21/25 4:22 AM, Uwe Kleine-König wrote:
+> On Tue, May 20, 2025 at 04:00:46PM -0500, David Lechner wrote:
+>> Add support for external clock to the AXI PWM generator driver.
 >>
->> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
->> the use of an external clock for the PWM output separate from the AXI
->> clock that runs the peripheral.
->>
->> In these cases, we should specify both clocks in the device tree. The
->> intention here is that if you specify both clocks, then you include the
->> clock-names property and if you don't have an external clock, then you
->> omit the clock-names property.
->>
->> There can't be more than one allOf: in the top level of the schema, so
->> it is stolen from $ref since it isn't needed there and used for the
->> more typical case of the if statement (even though technically it isn't
->> needed there either at this time).
+>> In most cases, there is a separate external clock that drives the PWM
+>> output separate from the peripheral clock. This allows enabling both
+>> clocks.
 >>
 >> Signed-off-by: David Lechner <dlechner@baylibre.com>
 >> ---
->>  .../devicetree/bindings/pwm/adi,axi-pwmgen.yaml    | 26 ++++++++++++++++++----
->>  1 file changed, 22 insertions(+), 4 deletions(-)
+>>  drivers/pwm/pwm-axi-pwmgen.c | 23 ++++++++++++++++++++---
+>>  1 file changed, 20 insertions(+), 3 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
->> index bc44381692054f647a160a6573dae4cff2ee3f31..90f702a5cd80bd7d62e2436b2eed44314ab4fd53 100644
->> --- a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
->> +++ b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
->> @@ -16,8 +16,7 @@ description:
+>> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+>> index 4337c8f5acf055fc87dc134f2a70b99b0cb5ede6..67992a7561ec0440b1c1fa327f844a0602872771 100644
+>> --- a/drivers/pwm/pwm-axi-pwmgen.c
+>> +++ b/drivers/pwm/pwm-axi-pwmgen.c
+>> @@ -280,9 +280,26 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
+>>  	ddata = pwmchip_get_drvdata(chip);
+>>  	ddata->regmap = regmap;
 >>  
->>    https://analogdevicesinc.github.io/hdl/library/axi_pwm_gen/index.html
->>  
->> -allOf:
->> -  - $ref: pwm.yaml#
->> +$ref: pwm.yaml#
->>  
->>  properties:
->>    compatible:
->> @@ -30,7 +29,13 @@ properties:
->>      const: 3
->>  
->>    clocks:
->> -    maxItems: 1
->> +    minItems: 1
->> +    maxItems: 2
+>> -	clk = devm_clk_get_enabled(dev, NULL);
+>> -	if (IS_ERR(clk))
+>> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
+>> +	/* When clock-names is present, there is a separate ext clock. */
+>> +	if (device_property_present(dev, "clock-names")) {
+>> +		struct clk *axi_clk;
 >> +
->> +  clock-names:
->> +    items:
->> +      - const: axi
->> +      - const: ext
->>  
->>  required:
->>    - reg
->> @@ -38,11 +43,24 @@ required:
->>  
->>  unevaluatedProperties: false
->>  
->> +allOf:
->> +  - if:
->> +      required: [clock-names]
-> 
-> 
-> No, don't do that. If you want clock-names, just add them for both
-> cases. Otherwise, just describe items in clocks and no need for
-> clock-names.
-
-Would it be OK then to make clock-names required and just let the
-driver still handle one clocks, no clock-names for backwards compatibility?
-
-> 
-> 
-> 
->> +    then:
->> +      properties:
->> +        clocks:
->> +          minItems: 2
->> +    else:
->> +      properties:
->> +        clocks:
->> +          maxItems: 1
+>> +		axi_clk = devm_clk_get_enabled(dev, "axi");
+>> +		if (IS_ERR(axi_clk))
+>> +			return dev_err_probe(dev, PTR_ERR(axi_clk),
+>> +					     "failed to get axi clock\n");
 >> +
->>  examples:
->>    - |
->>      pwm@44b00000 {
->>          compatible = "adi,axi-pwmgen-2.00.a";
->>          reg = <0x44b00000 0x1000>;
->> -        clocks = <&spi_clk>;
->> +        clocks = <&fpga_clk>, <&spi_clk>;
+>> +		clk = devm_clk_get_enabled(dev, "ext");
+>> +		if (IS_ERR(clk))
+>> +			return dev_err_probe(dev, PTR_ERR(clk),
+>> +					     "failed to get ext clock\n");
+>> +	} else {
+>> +		/* Otherwise, a single clock does everything. */
+>> +		clk = devm_clk_get_enabled(dev, NULL);
+>> +		if (IS_ERR(clk))
+>> +			return dev_err_probe(dev, PTR_ERR(clk),
+>> +					     "failed to get clock\n");
+>> +	}
 > 
-> What was the clock[0] before? Axi, right, so SPI_CLK. Now FPGA is the
-> AXI_CLK? This feels like clock order reversed.
+> Can you achieve the same effect with the (IMHO slightly nicer but
+> hand-crafted) following patch:
+> 
+>  	ddata = pwmchip_get_drvdata(chip);
+>  	ddata->regmap = regmap;
+>  
+> -	clk = devm_clk_get_enabled(dev, NULL);
+> -	if (IS_ERR(clk))
+> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
+> +	axi_clk = devm_clk_get_enabled(dev, "axi");
+> +	if (IS_ERR(axi_clk))
+> +		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get axi clock\n");
+> 
+> +	clk = devm_clk_get_enabled_optional(dev, "ext");
+> +	if (IS_ERR(clk))
+> +		return dev_err_probe(dev, PTR_ERR(clk), "failed to get ext clock\n");
+> +	}
 
-The problem being fixed here is that since there was only one clock in
-the binding, existing .dts files have either have the spi_clock or
-the FPGA/AXI clock. So the one clock could be either and there are
-existing .dtbs out in the world with both cases.
+The trouble with this is that it would not work with existing .dtbs
+that don't have clock-names set. I think it would need to be more like this:
 
-But we could consider reversing this so that if someone uses the new
-bindings with an old kernel, then it would still work.
+
+	axi_clk = devm_clk_get_enabled(dev, NULL);
+	if (IS_ERR(axi_clk))
+		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get axi clock\n");
+
+	clk = devm_clk_get_enabled_optional(dev, "ext");
+	if (IS_ERR(clk))
+		return dev_err_probe(dev, PTR_ERR(clk), "failed to get ext clock\n");
+
+	if (!clk)
+		clk = axi_clk
+
 
 > 
-> Best regards,
-> Krzysztof
+>  	ret = devm_clk_rate_exclusive_get(dev, clk);
+>  	if (ret)
 > 
+> with the only side effect that for machines with a single clk we get
+> axi_clk == clk and it's enabled twice.
+> 
+> Another upside is that
+> 
+> 	clock-names = "axi";
+> 	clocks = <...>;
+> 
+> still works.
+> 
+> Best regards
+> Uwe
 
 
