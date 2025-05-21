@@ -1,48 +1,48 @@
-Return-Path: <linux-pwm+bounces-6065-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6066-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A96F0ABF60F
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 May 2025 15:28:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1B17ABF618
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 May 2025 15:30:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 069D03A3EF2
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 May 2025 13:28:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CDB733A4B2A
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 May 2025 13:30:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33EE727815B;
-	Wed, 21 May 2025 13:28:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA64D143C69;
+	Wed, 21 May 2025 13:30:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BU1DDpcZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8aP/npv"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CB623C51E;
-	Wed, 21 May 2025 13:28:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B55838F80;
+	Wed, 21 May 2025 13:30:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747834125; cv=none; b=HRBj20t1oN+oa0/KO2+8LztvGA570QeNr5PYciXanx/c63X/vdHfEs6Wiwb+3hJzquvVmImJgVWfKno7z5f7JRTPDEB8titBONn6LsF75VB+3VPYcWY2OhL16tO+R2L8MPWqEiu0gSY7GelSxYFui3ygOS4hmPyNuC6E5c0GAag=
+	t=1747834255; cv=none; b=hDiSOOk7mF3yAbrxv/zZudH0M0cNiILes2DBlIOQ6clmHFT3RNcOOuDCWZJWh8U4Yx9KLh+V4gJHK4/Hf1rOTxsgxopt8xNV/n9dFt8Mv63TI0IzzhsU6JgORegbq0nlpsUALrTiD/TUxNevKSbbHqWRX4pZLijShF9bo+STrA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747834125; c=relaxed/simple;
-	bh=bJ89VqRXyIKcA7dmHXxP3puOM3fMxjcRRauLe32PJ9k=;
+	s=arc-20240116; t=1747834255; c=relaxed/simple;
+	bh=FbftMvFzXBf+sBlRHMUppUqDkvlQbcnS3dG1NEYpdxE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iyy0Gney81ypw7pGy9uBZxHjw5TiYTxKAfQkVuvxgW/6J6oFSYwSe41UgEpGWEWh/Ai/H796CL0vJEiyBt5kmD5ZozYnvwRqSR/lV7Ez0eh12ThwP0kk/UWjTSzK6/JWT8LZAs29CnOdM5zVj2fYA1gZ2JvLk8GWh3NhCCX3ADM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BU1DDpcZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D439AC4CEE4;
-	Wed, 21 May 2025 13:28:40 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=rpbH4eJykIa2ZTJMkaJpRdiB3PcGzfnaFXzgcDkiPlDMtSxusMiVqE+nYuf/+UeJxKQPiz3R51BUBjgKr3LKQMSQrFG5+xOd5jn3W3v6oX0Z+T1eMUcABhEYORck0L/tHQnIkw2G9ynb3jEG+FwhM67SwSEVAMbJG5dJTNKJ5iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8aP/npv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F868C4CEE4;
+	Wed, 21 May 2025 13:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747834123;
-	bh=bJ89VqRXyIKcA7dmHXxP3puOM3fMxjcRRauLe32PJ9k=;
+	s=k20201202; t=1747834255;
+	bh=FbftMvFzXBf+sBlRHMUppUqDkvlQbcnS3dG1NEYpdxE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BU1DDpcZV1QLIMxJ/w+9FxYCBWcON4QN3j0lfb7MBePKWGU8Aqt2yHfYBBD7PDMce
-	 vV13dBkyYBviRiwW3kMV6gSRSKPMhO5F/Zu54KnoBodaYIZ0Vc3I5phEpqQNd9sl0l
-	 rGAUwREyOR2b9l5dYAGLs8abnd9+b4n9DVhUxR/dpbi03gnZDqKLoWRGyVlx983GZA
-	 dq/TpCgvJmfnBs3hxUZmMSrlsZV6/ZfDElCyblA+ptl7UnTHitG+U4Wh/7GjoCwcj7
-	 8laqffoDSR+Ki/T4ib8mwzf0E3Ma7KTQfErqxYBHcwyMbeuGlUnH5f42zwYzIJ4RWp
-	 yI9XdSaCgjKHg==
-Message-ID: <499207c7-aa40-470c-801f-a8154a253276@kernel.org>
-Date: Wed, 21 May 2025 15:28:38 +0200
+	b=G8aP/npvm651s6qpzUgatkERAVuimNo5EZyl+sPW/pLYwNl9E3B/ZFVmk4lhc4OmS
+	 scM5zQ9uYZCxDqI+crmbSP8FaACKqA6gYYn/60q6vnHnJEXs9t5hU+XzCToysw9rkk
+	 U91M4Xq+GgR2SKfiyGYqttR9xqtP4FerzZ0Q44xKAUie3ziIY69llrTj4huuRjJ3Xr
+	 ygvDp2U1T9Z/WPtXeVtnU+5PtRdBWH8dBgX7rSlIyP+x7cqySOpR7JGPfYdyBxa7bM
+	 Kl7kj/Quwph9EAFOdBCJH1wjZI5uxDQeYbX43UkM85OA27jnzAiPe//pukxU9YML07
+	 vzthoMfjuFFAw==
+Message-ID: <17a9ee62-8185-4833-acfc-1639fd17efc5@kernel.org>
+Date: Wed, 21 May 2025 15:30:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dt-bindings: pwm: adi,axi-pwmgen: add external clock
+Subject: Re: [PATCH 3/3] pwm: axi-pwmgen: add support for external clock
 To: David Lechner <dlechner@baylibre.com>
 Cc: Michael Hennerich <michael.hennerich@analog.com>,
  =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
@@ -60,9 +60,9 @@ Cc: Michael Hennerich <michael.hennerich@analog.com>,
  Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
- <20250520-pwm-axi-pwmgen-add-external-clock-v1-2-6cd63cc001c8@baylibre.com>
- <20250521-tidy-heron-of-genius-4dc9a1@kuoka>
- <be02b9cd-803c-4aae-9420-ff3bf445efc1@baylibre.com>
+ <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
+ <20250521-nostalgic-pretty-hedgehog-d08a77@kuoka>
+ <dc9c370c-e1e7-4ef9-8738-e6ac8887ee61@baylibre.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,124 +108,47 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <be02b9cd-803c-4aae-9420-ff3bf445efc1@baylibre.com>
+In-Reply-To: <dc9c370c-e1e7-4ef9-8738-e6ac8887ee61@baylibre.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 21/05/2025 15:14, David Lechner wrote:
-> On 5/21/25 5:09 AM, Krzysztof Kozlowski wrote:
->> On Tue, May 20, 2025 at 04:00:45PM GMT, David Lechner wrote:
->>> Add external clock to the schema.
+On 21/05/2025 15:23, David Lechner wrote:
+> On 5/21/25 5:10 AM, Krzysztof Kozlowski wrote:
+>> On Tue, May 20, 2025 at 04:00:46PM GMT, David Lechner wrote:
+>>> Add support for external clock to the AXI PWM generator driver.
 >>>
->>> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
->>> the use of an external clock for the PWM output separate from the AXI
->>> clock that runs the peripheral.
->>>
->>> In these cases, we should specify both clocks in the device tree. The
->>> intention here is that if you specify both clocks, then you include the
->>> clock-names property and if you don't have an external clock, then you
->>> omit the clock-names property.
->>>
->>> There can't be more than one allOf: in the top level of the schema, so
->>> it is stolen from $ref since it isn't needed there and used for the
->>> more typical case of the if statement (even though technically it isn't
->>> needed there either at this time).
+>>> In most cases, there is a separate external clock that drives the PWM
+>>> output separate from the peripheral clock. This allows enabling both
+>>> clocks.
 >>>
 >>> Signed-off-by: David Lechner <dlechner@baylibre.com>
 >>> ---
->>>  .../devicetree/bindings/pwm/adi,axi-pwmgen.yaml    | 26 ++++++++++++++++++----
->>>  1 file changed, 22 insertions(+), 4 deletions(-)
+>>>  drivers/pwm/pwm-axi-pwmgen.c | 23 ++++++++++++++++++++---
+>>>  1 file changed, 20 insertions(+), 3 deletions(-)
 >>>
->>> diff --git a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
->>> index bc44381692054f647a160a6573dae4cff2ee3f31..90f702a5cd80bd7d62e2436b2eed44314ab4fd53 100644
->>> --- a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
->>> +++ b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
->>> @@ -16,8 +16,7 @@ description:
+>>> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+>>> index 4337c8f5acf055fc87dc134f2a70b99b0cb5ede6..67992a7561ec0440b1c1fa327f844a0602872771 100644
+>>> --- a/drivers/pwm/pwm-axi-pwmgen.c
+>>> +++ b/drivers/pwm/pwm-axi-pwmgen.c
+>>> @@ -280,9 +280,26 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
+>>>  	ddata = pwmchip_get_drvdata(chip);
+>>>  	ddata->regmap = regmap;
 >>>  
->>>    https://analogdevicesinc.github.io/hdl/library/axi_pwm_gen/index.html
->>>  
->>> -allOf:
->>> -  - $ref: pwm.yaml#
->>> +$ref: pwm.yaml#
->>>  
->>>  properties:
->>>    compatible:
->>> @@ -30,7 +29,13 @@ properties:
->>>      const: 3
->>>  
->>>    clocks:
->>> -    maxItems: 1
->>> +    minItems: 1
->>> +    maxItems: 2
->>> +
->>> +  clock-names:
->>> +    items:
->>> +      - const: axi
->>> +      - const: ext
->>>  
->>>  required:
->>>    - reg
->>> @@ -38,11 +43,24 @@ required:
->>>  
->>>  unevaluatedProperties: false
->>>  
->>> +allOf:
->>> +  - if:
->>> +      required: [clock-names]
+>>> -	clk = devm_clk_get_enabled(dev, NULL);
+>>> -	if (IS_ERR(clk))
+>>> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
+>>> +	/* When clock-names is present, there is a separate ext clock. */
+>>> +	if (device_property_present(dev, "clock-names")) {
 >>
->>
->> No, don't do that. If you want clock-names, just add them for both
->> cases. Otherwise, just describe items in clocks and no need for
->> clock-names.
+>> No. List is ordered, you do not need such dance at all.
 > 
-> Would it be OK then to make clock-names required and just let the
-> driver still handle one clocks, no clock-names for backwards compatibility?
+> I should have added more to the comment here. This is also needed for
+> backwards compatibility where only what should be the "ext" clock is
+> given as clocks = <&spi_clk>; and the AXI clock was missing.
 
-So just don't make it required.
-
-> 
->>
->>
->>
->>> +    then:
->>> +      properties:
->>> +        clocks:
->>> +          minItems: 2
->>> +    else:
->>> +      properties:
->>> +        clocks:
->>> +          maxItems: 1
->>> +
->>>  examples:
->>>    - |
->>>      pwm@44b00000 {
->>>          compatible = "adi,axi-pwmgen-2.00.a";
->>>          reg = <0x44b00000 0x1000>;
->>> -        clocks = <&spi_clk>;
->>> +        clocks = <&fpga_clk>, <&spi_clk>;
->>
->> What was the clock[0] before? Axi, right, so SPI_CLK. Now FPGA is the
->> AXI_CLK? This feels like clock order reversed.
-> 
-> The problem being fixed here is that since there was only one clock in
-> the binding, existing .dts files have either have the spi_clock or
-> the FPGA/AXI clock. So the one clock could be either and there are
-> existing .dtbs out in the world with both cases.
-
-No problem like that was explained in commit msg. Nevertheless driver
-assumed the first clock is the SPI, didn't it? So that's your ABI, even
-if binding was not conclusive here.
-
-
-> 
-> But we could consider reversing this so that if someone uses the new
-> bindings with an old kernel, then it would still work.
-
-You cannot use new bindings with old kernel. How would that work? Put
-YAML file there? Nothing would change.
-
-Binding is supposed to be complete for exactly this reason. You cannot
-change it afterwards without breaking users.
+I do not see this needed at all. That's already handled by old code. You
+only need to take new optional, second clock - axi clk. You take it by
+index.
 
 Best regards,
 Krzysztof
