@@ -1,52 +1,53 @@
-Return-Path: <linux-pwm+bounces-6041-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6046-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AD21ABF559
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 May 2025 15:04:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6680ABF529
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 May 2025 15:03:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28B103A5846
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 May 2025 13:02:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 483B74A1CA4
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 May 2025 13:03:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E46E226560D;
-	Wed, 21 May 2025 13:03:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B97427057E;
+	Wed, 21 May 2025 13:03:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VK+iVQ+B"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7Da6SZM"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A202AE90;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE7A26E176;
 	Wed, 21 May 2025 13:03:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747832588; cv=none; b=RfNXbpQ6cNoL5w5o+z9d9rosNSdKQhMFOrqNIZiVOTokYAfKhX3B7uHBDJoZ7AUd1DnFRc2+nj5fttzib++KyGOL2A90+BQG+Fh41TKAulj1+Jt8zdbm28cnkgkZGzO5QiInFNgIbMkaqutD1R0mn5G/TeNuYBfb3bvRIjqqYws=
+	t=1747832589; cv=none; b=YvXd4PO6kZyH0mSwRIAjVVCA634co3nByBEWxZXuUcSFzxldoE6AAkS/mYbU+wtmJLSjYkj8wbe7fyNegLSvHFS2crlLhNnmhClQw7A3ND3QGdytQK2LvGKLFTTgHBHAb+KuJtZmaVIpk9rtAe3vwCwMSe5CW1H6jkhHM2UIuA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747832588; c=relaxed/simple;
-	bh=GBi36R9hW0zw2IkpPUS+VIpfCR1bDRxMW6EOkIPpIRE=;
+	s=arc-20240116; t=1747832589; c=relaxed/simple;
+	bh=OJ6TowkARp/Doi6+qnVBRc8J1B7tkneZYbYsIN03Ohw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dPcIq4EOEml3FseG9d4LJ2Zm4JhBLkx2DIaBZe4wPmGW43CnlG0RmfIHfs//Gg1D+QE9iV5hKU5YDv+A/0w0h/3X+GrRkD6K2y5EPqmbSdx8l+5Iu1JohofUY/KozVWLi616/mOGxT7Pxnat2A7XcIfWWlyWoemuwgrOcgHWGr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VK+iVQ+B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 533ACC4CEF4;
+	 In-Reply-To:To:Cc; b=AjXovYWPkmHGMDCR5Ny/7zrGQVOLJWFFZxUBOC0byighFc+Oz9B/+xPapzOmUHlLS2CE6vGMr69ck9MVahjw0BcCK/VJ5M2JQIFmVTsD83KElNBLaSiRWfKqlq9Bmm288bosrtGECNPqVRMJ94FMZof/vbMGoxURMvOpLN+/fCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7Da6SZM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5F1C4C4AF10;
 	Wed, 21 May 2025 13:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747832588;
-	bh=GBi36R9hW0zw2IkpPUS+VIpfCR1bDRxMW6EOkIPpIRE=;
+	bh=OJ6TowkARp/Doi6+qnVBRc8J1B7tkneZYbYsIN03Ohw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=VK+iVQ+BARGs4fUC6x5sAVWfYKaStqU6IU5+KQD1DuNt3t6KIdx7qqSBby7kmW0Rc
-	 hu2ncNDqiNlqFl3LLrCc/i0ZuCiptVaZUH8wkM/4njydq02cMMtBEFyr8KVXuRs2xQ
-	 dTdyYvRBgGJVdSATiJtvgbcsFJBInRWCvKFz/MRhBT2HqQhfUlvnGNWutqeDACzeYj
-	 fOWPiAev8uEVvB5JaM7vH8wQ7BKRC6Fn+AGxyuemBjZdrbS7Ht/dn5eBy1gJu2bNXV
-	 Hay6SIWyKAXaLZ27s8mcRRpD0PYBubedfcwWo7thxkzSennDHtLwG+TlYXkKx8JexD
-	 Y4FwtV5xlIJvQ==
+	b=C7Da6SZM+HBRwaXN0/0D6MWrxvJbfV0S13CDlL6tHtKuE+lHCIaS3TTiWlWedAb+K
+	 kDQwwGvDZov00iXYbeztpnNdcmOGSY+u3gpmKc8Yj+dnahSrqho3d+IUkZlJ6ETkF6
+	 dgIKwhhUfHZgpycN4wqjAvzoV0cIgd2UbPqCMj3LS7GqFrxzH41sAcmqZr6oMUUHoH
+	 awUdpaGtQhfY7vBjUSrecqWussLwUp+luW/5QKXy4ndMzzRgZDDGw7RZ4vGmDSe82z
+	 17raatK/HdARJZ/LLAmQRqqfn7VwFGQ3XEw8ZgWyj601Z18eU+DWfzeZJYNTMVjm3T
+	 /IusZRORgMD3g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7CBC3ABC9;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579A5C54ED0;
 	Wed, 21 May 2025 13:03:08 +0000 (UTC)
 From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Wed, 21 May 2025 14:02:54 +0100
-Subject: [PATCH v4 04/20] mfd: adp5585: make use of MFD_CELL_NAME()
+Date: Wed, 21 May 2025 14:02:55 +0100
+Subject: [PATCH v4 05/20] dt-bindings: mfd: adp5585: document adp5589 I/O
+ expander
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250521-dev-adp5589-fw-v4-4-f2c988d7a7a0@analog.com>
+Message-Id: <20250521-dev-adp5589-fw-v4-5-f2c988d7a7a0@analog.com>
 References: <20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com>
 In-Reply-To: <20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com>
 To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
@@ -70,11 +71,11 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
  Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
  Liu Ying <victor.liu@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747832588; l=959;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747832588; l=3683;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=lWJD4WSbbbXIDQFlsGUw2j1/tWcmQ+L/pW1P3Qzf3s8=;
- b=tqGyHpFbEEb9Uo/27+9LFnSapZV5D01DxD02izZ0O4nhV/HenPk3GHL8uiSotuzWyWNqCTQhH
- XzCBGm/25K4CZwMfrr37amYMxIEuxvXvXuUE+g8rLR3NAJqCdxpWr15
+ bh=beLTP9GDditX9ha6QitAuUXi6px8/CxhIbNd+KVg+k4=;
+ b=2mx6YXatMzIAJh93smWYJw1i1vS6ceczIbcmQOr8WGawqp49kgWJCCdmYC5sFpYw+4qra46md
+ cRDQN8VopbuDEtmLkSQF0fIkEivMyYk/hU2zRTOIIEMfuh7wSY02396
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
@@ -84,37 +85,106 @@ Reply-To: nuno.sa@analog.com
 
 From: Nuno Sá <nuno.sa@analog.com>
 
-Use the helper macro. No functional change intended...
+The ADP5589 is a 19 I/O port expander with built-in keypad matrix decoder,
+programmable logic, reset generator, and PWM generator.
 
+We can't really have adp5589 devices fallback to adp5585 (which have
+less pins) because there are some significant differences in the register
+map.
+
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
- drivers/mfd/adp5585.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/mfd/adi,adp5585.yaml       | 47 +++++++++++++++++-----
+ .../devicetree/bindings/trivial-devices.yaml       |  2 -
+ 2 files changed, 38 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-index f3b74f7d6040413d066eb6dbaecfa3d5e6ee06bd..179dc284833ae8f39eefc6787dd2c7158dfd3ad7 100644
---- a/drivers/mfd/adp5585.c
-+++ b/drivers/mfd/adp5585.c
-@@ -4,6 +4,7 @@
-  *
-  * Copyright 2022 NXP
-  * Copyright 2024 Ideas on Board Oy
-+ * Copyright 2025 Analog Devices Inc.
-  */
+diff --git a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+index e30e22f964f78519b2ec207e9415e4897db5c702..9471af28419d820424745315ffb2129f7dd37581 100644
+--- a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
++++ b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+@@ -15,14 +15,21 @@ description:
  
- #include <linux/array_size.h>
-@@ -24,8 +25,8 @@ enum {
- };
+ properties:
+   compatible:
+-    items:
+-      - enum:
+-          - adi,adp5585-00  # Default
+-          - adi,adp5585-01  # 11 GPIOs
+-          - adi,adp5585-02  # No pull-up resistors by default on special pins
+-          - adi,adp5585-03  # Alternate I2C address
+-          - adi,adp5585-04  # Pull-down resistors on all pins by default
+-      - const: adi,adp5585
++    oneOf:
++      - items:
++          - enum:
++              - adi,adp5585-00  # Default
++              - adi,adp5585-01  # 11 GPIOs
++              - adi,adp5585-02  # No pull-up resistors by default on special pins
++              - adi,adp5585-03  # Alternate I2C address
++              - adi,adp5585-04  # Pull-down resistors on all pins by default
++          - const: adi,adp5585
++      - items:
++          - enum:
++              - adi,adp5589-00  # Default
++              - adi,adp5589-01  # R4 defaulted to RESET1 output
++              - adi,adp5589-02  # Pull-down resistors by default on special pins
++          - const: adi,adp5589
  
- static const struct mfd_cell adp5585_devs[ADP5585_DEV_MAX] = {
--	{ .name = "adp5585-gpio", },
--	{ .name = "adp5585-pwm", },
-+	MFD_CELL_NAME("adp5585-gpio"),
-+	MFD_CELL_NAME("adp5585-pwm"),
- };
+   reg:
+     maxItems: 1
+@@ -62,7 +69,17 @@ allOf:
+     then:
+       properties:
+         gpio-reserved-ranges: false
+-    else:
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - adi,adp5585-00
++              - adi,adp5585-02
++              - adi,adp5585-03
++              - adi,adp5585-04
++    then:
+       properties:
+         gpio-reserved-ranges:
+           maxItems: 1
+@@ -71,6 +88,18 @@ allOf:
+               - const: 5
+               - const: 1
  
- static const struct regmap_range adp5585_volatile_ranges[] = {
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - adi,adp5589-00
++              - adi,adp5589-01
++              - adi,adp5589-02
++    then:
++      properties:
++        gpio-reserved-ranges: false
++
+ additionalProperties: false
+ 
+ examples:
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 8da408107e55483affedb7e697eb79e8c8902ed9..208fe4242672d9da66799c2742a9381938737232 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -39,8 +39,6 @@ properties:
+           - ad,adm9240
+             # AD5110 - Nonvolatile Digital Potentiometer
+           - adi,ad5110
+-            # Analog Devices ADP5589 Keypad Decoder and I/O Expansion
+-          - adi,adp5589
+             # Analog Devices LT7182S Dual Channel 6A, 20V PolyPhase Step-Down Silent Switcher
+           - adi,lt7182s
+             # AMS iAQ-Core VOC Sensor
 
 -- 
 2.49.0
