@@ -1,120 +1,130 @@
-Return-Path: <linux-pwm+bounces-6097-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6098-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6333DAC106D
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 May 2025 17:55:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8D0EAC10FB
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 May 2025 18:28:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DCAEC7B24CF
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 May 2025 15:54:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 03FE03B5A66
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 May 2025 16:27:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B993129A302;
-	Thu, 22 May 2025 15:55:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A511228CB7;
+	Thu, 22 May 2025 16:28:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NNEYEF5l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxC29PAs"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D394299AB1;
-	Thu, 22 May 2025 15:55:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104BE13C8EA;
+	Thu, 22 May 2025 16:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747929305; cv=none; b=TkrSuhkZgWE43hlbMkEEvAb9UXL6l0hE2HXOWj6uCSRcR9dpN/YGAtj/QJgHtmxMwz7qHVFaP1AjlaZYybHPIkSBRhXvmYJp6HScuCtswKHW+E6726rH9xAo2lUqx17r9zx8cSiValHrMtkz6N1rxuXZBmv8w0f7rEz385pid1U=
+	t=1747931283; cv=none; b=IjnpJxmo8sgKyIBdFx1fjOy36o6lcqabXzVLRNKQ0Q5VIely8gq3dVi6B4ZIRDI3YkS0cht6HdqfWd6MTmpc7O/wUnA7b54xauu5fyrOLjdwTAK1ukvyrTlIiJDkHQwxm7OVNUz8WghiXe4miXk8YhXGvoHODBH2yTZlFd53V+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747929305; c=relaxed/simple;
-	bh=w4FvX9d4kuB0EmgIeEKnSG+0zM1T1LUnOAhWnXqMSto=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=VxgBdwN3NJ43WRH/JcMfHSd8kTQhlOtBpN3RqhLHEJV2jrRXIQm6pvEgJTsMlAacCw7uo7XOwFNQD3275CQwbWHpgf/fqjTa215SKBmRu8gRW66UofXQewX+tm9LR6FUWSbDsH/5gZdeXwGZoEM2UftZ3G38GOQtnQlR1+cY72w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NNEYEF5l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD8DBC4CEE4;
-	Thu, 22 May 2025 15:55:00 +0000 (UTC)
+	s=arc-20240116; t=1747931283; c=relaxed/simple;
+	bh=Oo7katdjAPrApiDFIg790a/KcGz4l2Mds8fE4FckuV8=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=aOQTeGGRPRznZVTGFMpGo3p5PdunImbiFmVuYOwKwuOwstDuelUKTdICIBd4UYxzocVlSm3X6Y07XgkQhr4LS9jMYKAD5gIYwD5N+1MLtUNqD6V1mmv92v5ceKCyB88vgNhFR7ZheA6JG1ozFK0P8YhJOBc64SfhEOspYW+bvPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxC29PAs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 490CEC4CEF7;
+	Thu, 22 May 2025 16:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747929305;
-	bh=w4FvX9d4kuB0EmgIeEKnSG+0zM1T1LUnOAhWnXqMSto=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=NNEYEF5lIOfuU+qPv6qLE+wWLg2p1scuyfhRtSFfffI1SuesbhsknyMuQBIMJHt5P
-	 /cwXDcTUmmgwlDrYW6/724DBpwdp8zuiI1/aEynn5OvG7buyq0fHjcij92XaNWs+rt
-	 7Qdmbn/jT3Zx1xkasjC5HqxHGFcbu3zlYm5Iv9nXKIm4+OmQriV5pX6EcXfxkwDPDe
-	 lXv4XOrqkiqX5snIBd4g3LoUn6e8VuD+nEaWoDhE9oXJCpMOgjDMRfj5dhiQdyugUO
-	 fssD0ahHZ0TmVeuiBEZ8juoquutLnjFDVnRL06YafH0PzKbtTD79VKZmNup0o4+3VY
-	 d10hPvHI6oVuQ==
-From: Mark Brown <broonie@kernel.org>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Kamel Bouhara <kamel.bouhara@bootlin.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Walle <mwalle@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-In-Reply-To: <20250522-mdb-max7360-support-v9-0-74fc03517e41@bootlin.com>
-References: <20250522-mdb-max7360-support-v9-0-74fc03517e41@bootlin.com>
-Subject: Re: (subset) [PATCH v9 00/11] Add support for MAX7360
-Message-Id: <174792930043.117740.5415129838999345044.b4-ty@kernel.org>
-Date: Thu, 22 May 2025 16:55:00 +0100
+	s=k20201202; t=1747931282;
+	bh=Oo7katdjAPrApiDFIg790a/KcGz4l2Mds8fE4FckuV8=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=CxC29PAs+c3XS6Oxq47coqmerR9OpS6uOjJeBKKliXtMm8/JN48qZAYyZXQq6+kPJ
+	 ym/96qY9dGvJiis1WclAIXcutRsoofW6mbl34ge6a0gBYjgLW8nlMJo6133x2XX9+f
+	 lUrg7iJFp3L6HCsE1A3dmgh7oAgJoWPjXU4hqR+KKnLZdGyd0V/S0uVSAe9UE5AsoH
+	 AaI3WC917CEnmWxe/+vazeaO0+1nbA+ONxri0DSMjMPsIuGtmlIqqDIou1dayKARq9
+	 hB7tlYjgXImV3wG4oX9KKsXR7MKNeFVf1mKiFqk/yqrF1JU79KfniLLGoolrDiZYTU
+	 HbMlZe9+KcMcw==
+Date: Thu, 22 May 2025 11:28:00 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, devicetree@vger.kernel.org, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Trevor Gamblin <tgamblin@baylibre.com>, 
+ linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Hennerich <michael.hennerich@analog.com>
+To: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250522-pwm-axi-pwmgen-add-external-clock-v2-2-086ea9e6ecf0@baylibre.com>
+References: <20250522-pwm-axi-pwmgen-add-external-clock-v2-0-086ea9e6ecf0@baylibre.com>
+ <20250522-pwm-axi-pwmgen-add-external-clock-v2-2-086ea9e6ecf0@baylibre.com>
+Message-Id: <174793127939.2927580.11316141266712516597.robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: pwm: adi,axi-pwmgen: fix clocks
 
-On Thu, 22 May 2025 14:06:15 +0200, Mathieu Dubois-Briand wrote:
-> This series implements a set of drivers allowing to support the Maxim
-> Integrated MAX7360 device.
+
+On Thu, 22 May 2025 09:49:40 -0500, David Lechner wrote:
+> Fix a shortcoming in the bindings that doesn't allow for a separate
+> external clock.
 > 
-> The MAX7360 is an I2C key-switch and led controller, with following
-> functionalities:
-> - Keypad controller for a key matrix of up to 8 rows and 8 columns.
-> - Rotary encoder support, for a single rotary encoder.
-> - Up to 8 PWM outputs.
-> - Up to 8 GPIOs with support for interrupts and 6 GPOs.
+> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
+> the use of an external clock for the PWM output separate from the AXI
+> clock that runs the peripheral.
 > 
-> [...]
+> This was missed in the original bindings and so users were writing dts
+> files where the one and only clock specified would be the external
+> clock, if there was one, incorrectly missing the separate AXI clock.
+> 
+> The correct bindings are that the AXI clock is always required and the
+> external clock is optional (must be given only when HDL compile option
+> ASYNC_CLK_EN=1).
+> 
+> Fixes: 1edf2c2a2841 ("dt-bindings: pwm: Add AXI PWM generator")
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
 
-Applied to
+My bot found errors running 'make dt_binding_check' on your patch:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml:40:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
 
-Thanks!
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml: properties:clock-names:enum: 'oneOf' conditional failed, one must be fixed:
+	{'const': 'axi'} is not of type 'integer'
+	{'const': 'axi'} is not of type 'string'
+	{'items': [{'const': 'axi'}, {'const': 'ext'}]} is not of type 'integer'
+	{'items': [{'const': 'axi'}, {'const': 'ext'}]} is not of type 'string'
+	hint: "enum" must be an array of either integers or strings
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml: properties:clock-names:enum:0: {'const': 'axi'} is not of type 'string'
+	from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml: properties:clock-names:enum:1: {'items': [{'const': 'axi'}, {'const': 'ext'}]} is not of type 'string'
+	from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.example.dtb: pwm@44b00000 (adi,axi-pwmgen-2.00.a): clock-names: ['axi', 'ext'] is not one of [{'const': 'axi'}, {'items': [{'const': 'axi'}, {'const': 'ext'}]}]
+	from schema $id: http://devicetree.org/schemas/pwm/adi,axi-pwmgen.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.example.dtb: pwm@44b00000 (adi,axi-pwmgen-2.00.a): Unevaluated properties are not allowed ('clock-names' was unexpected)
+	from schema $id: http://devicetree.org/schemas/pwm/adi,axi-pwmgen.yaml#
 
-[05/11] regmap: irq: Add support for chips without separate IRQ status
-        commit: 1c12fbdf40e17df2efc24bf2009a0c3bfa75bfa7
+doc reference errors (make refcheckdocs):
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250522-pwm-axi-pwmgen-add-external-clock-v2-2-086ea9e6ecf0@baylibre.com
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+pip3 install dtschema --upgrade
 
-Thanks,
-Mark
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
 
