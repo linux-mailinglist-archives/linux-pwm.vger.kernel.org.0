@@ -1,167 +1,120 @@
-Return-Path: <linux-pwm+bounces-6096-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6097-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA502AC0FCB
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 May 2025 17:19:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6333DAC106D
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 May 2025 17:55:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 765DF16A25D
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 May 2025 15:19:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DCAEC7B24CF
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 May 2025 15:54:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75BD52980D8;
-	Thu, 22 May 2025 15:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B993129A302;
+	Thu, 22 May 2025 15:55:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTg5BNhU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NNEYEF5l"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AAB2980CF;
-	Thu, 22 May 2025 15:19:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D394299AB1;
+	Thu, 22 May 2025 15:55:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747927193; cv=none; b=GuaPpkmvu3p6a/TUB7wgJ1+T2nXyWdrcJqUZ5Kui856ENb3JaV/tcUMNJQ/beADfY+9kt7KTrzEo1iOFNYZis6YR3CUdzLQLnwmMTryq1Ep3l6MQhdtMwuc4OA8w5gXui7WlCW4dptuFx+L381kleyvnebYkhc88//m+D8z+hg8=
+	t=1747929305; cv=none; b=TkrSuhkZgWE43hlbMkEEvAb9UXL6l0hE2HXOWj6uCSRcR9dpN/YGAtj/QJgHtmxMwz7qHVFaP1AjlaZYybHPIkSBRhXvmYJp6HScuCtswKHW+E6726rH9xAo2lUqx17r9zx8cSiValHrMtkz6N1rxuXZBmv8w0f7rEz385pid1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747927193; c=relaxed/simple;
-	bh=i/Js2zX68Eh3W7lgqs/TTe1lrc9T8F5QtriTzSirtG0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fExNiPD8Ft45GKco7ln5Y3D6r8wmF28tO4eQZkk5P4j3CpIP9ZpO/F+vIQChc8l7Ou6b7fxbMz02gQkJv1HGdbj5sA1n5QfK7ln+CgHLe6unVQ4gp47MND2EO+fFOjAdz6i1nXBXVkhWl2lADioLl2iwihn3jfYD5tflad2ONcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTg5BNhU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21E11C4CEE4;
-	Thu, 22 May 2025 15:19:49 +0000 (UTC)
+	s=arc-20240116; t=1747929305; c=relaxed/simple;
+	bh=w4FvX9d4kuB0EmgIeEKnSG+0zM1T1LUnOAhWnXqMSto=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=VxgBdwN3NJ43WRH/JcMfHSd8kTQhlOtBpN3RqhLHEJV2jrRXIQm6pvEgJTsMlAacCw7uo7XOwFNQD3275CQwbWHpgf/fqjTa215SKBmRu8gRW66UofXQewX+tm9LR6FUWSbDsH/5gZdeXwGZoEM2UftZ3G38GOQtnQlR1+cY72w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NNEYEF5l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD8DBC4CEE4;
+	Thu, 22 May 2025 15:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747927192;
-	bh=i/Js2zX68Eh3W7lgqs/TTe1lrc9T8F5QtriTzSirtG0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pTg5BNhUAoee/xVitjxTjED/pewWLkBcqEfv3UrU7AE+0Vypb4uTWXUb6QP7J27wy
-	 aBrw3MG/LcF6k1DC8wEsCP8MA1Dk1jKj/ZjXxSW51Ieqa4Q1IjQfbRWct30uIM5NMr
-	 P3opyo5kculIdphJU8RjY7+UJQx7S8tRM/W+o8n1BluvWTS5BuF91aVNg3IYCtIoCz
-	 6zxVNbzrZOGwADbF5RG3qYurpxFx3ONXmzzt4LhwTpDvdW8T8088Bt+N0D2ZFFcv+z
-	 crQoboux33gGvJqH7RsctVCBk0khmYdISxkpwUK0IS8oYfsxmx0Gv0rwOcgGvEV5D7
-	 B7eUfSbV8yv2g==
-Message-ID: <b538701d-cfb1-4e86-994b-0a8f394e8335@kernel.org>
-Date: Thu, 22 May 2025 17:19:48 +0200
+	s=k20201202; t=1747929305;
+	bh=w4FvX9d4kuB0EmgIeEKnSG+0zM1T1LUnOAhWnXqMSto=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=NNEYEF5lIOfuU+qPv6qLE+wWLg2p1scuyfhRtSFfffI1SuesbhsknyMuQBIMJHt5P
+	 /cwXDcTUmmgwlDrYW6/724DBpwdp8zuiI1/aEynn5OvG7buyq0fHjcij92XaNWs+rt
+	 7Qdmbn/jT3Zx1xkasjC5HqxHGFcbu3zlYm5Iv9nXKIm4+OmQriV5pX6EcXfxkwDPDe
+	 lXv4XOrqkiqX5snIBd4g3LoUn6e8VuD+nEaWoDhE9oXJCpMOgjDMRfj5dhiQdyugUO
+	 fssD0ahHZ0TmVeuiBEZ8juoquutLnjFDVnRL06YafH0PzKbtTD79VKZmNup0o4+3VY
+	 d10hPvHI6oVuQ==
+From: Mark Brown <broonie@kernel.org>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kamel Bouhara <kamel.bouhara@bootlin.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Michael Walle <mwalle@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+In-Reply-To: <20250522-mdb-max7360-support-v9-0-74fc03517e41@bootlin.com>
+References: <20250522-mdb-max7360-support-v9-0-74fc03517e41@bootlin.com>
+Subject: Re: (subset) [PATCH v9 00/11] Add support for MAX7360
+Message-Id: <174792930043.117740.5415129838999345044.b4-ty@kernel.org>
+Date: Thu, 22 May 2025 16:55:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] dt-bindings: pwm: adi,axi-pwmgen: fix clocks
-To: David Lechner <dlechner@baylibre.com>,
- Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250522-pwm-axi-pwmgen-add-external-clock-v2-0-086ea9e6ecf0@baylibre.com>
- <20250522-pwm-axi-pwmgen-add-external-clock-v2-2-086ea9e6ecf0@baylibre.com>
- <4ed39a7f-bfca-4095-98ea-56b3c183b8f1@kernel.org>
- <a364f588-03aa-4fac-a35e-d1cf201e924f@baylibre.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <a364f588-03aa-4fac-a35e-d1cf201e924f@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On 22/05/2025 17:17, David Lechner wrote:
-> On 5/22/25 10:00 AM, Krzysztof Kozlowski wrote:
->> On 22/05/2025 16:49, David Lechner wrote:
->>> Fix a shortcoming in the bindings that doesn't allow for a separate
->>> external clock.
->>>
->>> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
->>> the use of an external clock for the PWM output separate from the AXI
->>> clock that runs the peripheral.
->>>
->>> This was missed in the original bindings and so users were writing dts
->>> files where the one and only clock specified would be the external
->>> clock, if there was one, incorrectly missing the separate AXI clock.
->>>
->>> The correct bindings are that the AXI clock is always required and the
->>> external clock is optional (must be given only when HDL compile option
->>> ASYNC_CLK_EN=1).
->>>
->>> Fixes: 1edf2c2a2841 ("dt-bindings: pwm: Add AXI PWM generator")
->>> Signed-off-by: David Lechner <dlechner@baylibre.com>
->>> ---
->>>  Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml | 14 ++++++++++++--
->>>  1 file changed, 12 insertions(+), 2 deletions(-)
->>
->> Please test your patches. This does not pass build (binding_check). :/
->>
+On Thu, 22 May 2025 14:06:15 +0200, Mathieu Dubois-Briand wrote:
+> This series implements a set of drivers allowing to support the Maxim
+> Integrated MAX7360 device.
 > 
-> Oh no, I knew I was forgetting something. :-(
+> The MAX7360 is an I2C key-switch and led controller, with following
+> functionalities:
+> - Keypad controller for a key matrix of up to 8 rows and 8 columns.
+> - Rotary encoder support, for a single rotary encoder.
+> - Up to 8 PWM outputs.
+> - Up to 8 GPIOs with support for interrupts and 6 GPOs.
 > 
-> Maybe time to see about building this into b4 prep --check so it won't
-> be so easy to forget.
-> 
-> The correct will be:
-> 
-> 
->   clock-names:
->     oneOf:
->       - const: axi
->       - items:
->           - const: axi
->           - const: ext
+> [...]
 
+Applied to
 
-Then just
-minItems: 1
-items:
-  - foo
-  - bar
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
 
-Best regards,
-Krzysztof
+Thanks!
+
+[05/11] regmap: irq: Add support for chips without separate IRQ status
+        commit: 1c12fbdf40e17df2efc24bf2009a0c3bfa75bfa7
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
 
