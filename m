@@ -1,194 +1,184 @@
-Return-Path: <linux-pwm+bounces-6099-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6100-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABF80AC14CF
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 May 2025 21:28:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B992AC1F59
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 May 2025 11:09:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 78BE87A4FCE
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 May 2025 19:26:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE6CA1C01C5C
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 May 2025 09:09:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC16A288C05;
-	Thu, 22 May 2025 19:27:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2019224AF7;
+	Fri, 23 May 2025 09:09:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="gkUZUsht"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fxd9gY/8"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01EF2036FA;
-	Thu, 22 May 2025 19:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747942043; cv=pass; b=aiJ7O04yc8RWENkFVkn/79QdF1KG/Q+52wQb8uqymiJOV4aulKe1Ylq3VN4T8j8AGPBMEral75y+JxkabRVOca3aLDcNXhAO5JBKdwCjx7nHVb+0xAE61RL4aGuwIIJmWInZMJU3IBmRYMJZw5mE+oHu2TJAugjm4DG6498Wetw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747942043; c=relaxed/simple;
-	bh=uTYOQyPePK9NBePWjUBS1H0sCndAGXIoJvcnIbmQ8v0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Q1hSdDmIWDshuBJLNllsm22n2qkRsi6ERLLRkLgyUM6AbbSg71F0WNO3xa2UYKT3D9/dL7nwyucJxBfv6zBOgraj7BdsElxRIQEzI2ESEMYO08Ti7Ld5yiRKQhw5cICdckbRVUJYhM9gvMWO8q+MjOvMx1tC3ATCGjLkjGCyxV0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=gkUZUsht; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1747942021; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=l4Gg25EeLEA1PB0GOBF6OIyIQVjdmVFp92feHIxrVdW7lbgBKQzvzjxRTAvneGeZegExkv94EiRdssvKiZdSiaphcdTLf6ekcKhvW6wHiOKpYiLNum4TqhbnnOc39zhfs1weTC6+MzO1VRoU1W1l6ua5tPai6DsypM7NqfOI8WQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747942021; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=AJzBv5LvwO9EFRe8OVUlb9OM9yAWwvged+nVh5RBniI=; 
-	b=FvEiYz+Zk3Zx8Wjzj2Wj30/OkSKlahTbUJxZa7YzPE5u1YUvZiMCZXOc4Jc36LFnDLX/C8J1SwYBX9f9FrkmnAHgiMQ823Ot/b/OKoCTdH7fTi5leQIeyhBLFgMTLqEOXUDrUHUOEFDVm9uRBZxH0G4xo64R+noNyFkEnKDvgA0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747942021;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
-	bh=AJzBv5LvwO9EFRe8OVUlb9OM9yAWwvged+nVh5RBniI=;
-	b=gkUZUsht3DMKagUvyLNTwgLMsMMFHBh/eQHXKLF4AUveD1CrnwbuiGvyWIVw+4C/
-	8zHMhEY9HMsCU49eeIjTjCDxF/aQ/7+68Q5Hr5+Y7Zk9gKi0T3gjcecgswUmQBM0kNQ
-	EG2yk6IUwci2sucS8fKh6Bh/1cmhNpnjwzJAxxNk=
-Received: by mx.zohomail.com with SMTPS id 1747942019407306.2477470606051;
-	Thu, 22 May 2025 12:26:59 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Thu, 22 May 2025 21:26:44 +0200
-Subject: [PATCH] pwm: rockchip: round period/duty down on apply, up on get
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE229224244;
+	Fri, 23 May 2025 09:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747991364; cv=none; b=axpZRYHobf707nHQ28uEkx/ffHD0F0gXSJ05mZaSg9kbESAx13lqXd08Yh8iCCp0QZIS+v/yQEuE6MGqb8i+AbWawU8XhujHFC8F6qw2SdzQbzcAqIqJxypgiBJmhIg0EZLUk9jmkfI947EZ5H327nJcO2AVdWefYizR7Z0K9P8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747991364; c=relaxed/simple;
+	bh=lW7WtQ2vlF2Wd82UclrK1JSl9S2LF9/UCtgR3hlKKjw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aUdNoEPHYNYRh0cM8hwxn1HZh9YzxUFgaobauuC2/fW/F34zn46mDt5Kb6FPV96ZnflHn080VWXbdwd18klWW/F5s0ghIr1SfuKkld6nwHiHcupmmwQLQFwa2W6Qfs5CpWm8QU3r/hjZbytGdGMKw1yvj8wfEDZxcE69G67lYLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fxd9gY/8; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so98771445e9.3;
+        Fri, 23 May 2025 02:09:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747991361; x=1748596161; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+AP8LZoG25l93LAAiXUjrH09qdNvVnby2FpvyeZp92o=;
+        b=Fxd9gY/8X6UAY/66g6ho8St1+KFQG0NY3a6AuI2kfpRD/2nAtj60RSGjZ3fYBMQKL/
+         W6zPJbE3/EtOvgRwbz17nLSQdorqllxYzgG6CRAwX/Xu7zg4LPjHP0KDs7csFOCd7/5H
+         MHv5iOkI3aL5WgLQTBsOtZJLzBlPoGYrsK6aun5NNT/zORQ7adTdnVIKBvsHGYQWgAwT
+         Rxj/7J+CIAsdFMq82LNaD1RPnF1PhW0IXs3ovdjNu9HLVTZlJSCRyf/gesKjqWL2FSSs
+         63epKGNJpdMwjI7/kCXB8hCzMz5HJ7StriCVA/h4JbeOftwl1SU9WyfB76zc3EKaNvQU
+         lslg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747991361; x=1748596161;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+AP8LZoG25l93LAAiXUjrH09qdNvVnby2FpvyeZp92o=;
+        b=fj2SZTFi802vf/dSKX3MEZ0TJIOHt2uRZkp+l/9MI6gHXYJ5wQTTHVUWEykM/PJZA7
+         ODMHweNJbJ1dXcbo3Hsd4hygcFrLg9e0ANtACIWt78x9JG62tisoIcJevy153ZloHcm/
+         LZ4zccH5pFG7NX9HYLVXXVlXNTjm8C6NBgzjbb5IMJ2hC6sjAsi7pnk+C6vL8ZV7tF7c
+         HpIcgUJyyjNepHfE5KgYXscpTxpy4ZS74M2PnA0kADbLG2A5024JbKtF47l3km4vH61b
+         QpxccJ5CRiIFtimw3gJil22ArJswSiiY2I/fzgJsbb3n/Lc94kp3YYn1jBsSW1T1MeOg
+         DhuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNwmxV0fiCy2MCA/9ADLYLqpYngVEzDTr4LHburzi8blQQ7CH9txaSJilrMEqB3IuoEM4Gs6lC/JK2PpuT@vger.kernel.org, AJvYcCXq6bgiOUzQgPxGHkpWjXfbDElrEhAq2W75c7fRFNg1MEI5LbEaBB4atbrGG1yFU1Ftljwka+MKN7XD@vger.kernel.org
+X-Gm-Message-State: AOJu0YwolIBWbcc2omTb0KCNPnexkmHG2RSaNwwBiGG0M+ixRw6Oa1Ep
+	SjyeLGqKZKcuKjNzF951FnLhvvccyeUnZ13P2jqrjvkXupdtsUhzdXsVClQInL6/
+X-Gm-Gg: ASbGncuFULAdygbtHks3X5l7pBg1V73o1FWxs20bX+UJMSXEow8BtHPliqT0eAMWMAP
+	NFn+NHgO4rforjlzz2t6buNYHGY/K4pKbEPrW7nH36ks/4bhqK4XG3xJeUJ2Bj93IG05AybgvRj
+	CRjILP+e+wUvof+oNm2ghczRQHGAatZ4Idl6a9vEY4tN+yle6EkXxC6kWeV2A5h5gAKAafLfQHc
+	e/WyCog6jqe63G8BJhffCfp2k0MUOsSODJYQWQ677XgL5y9mmKf5GQsDVkhf0TrE/8z2joBxe0A
+	LevqNkBAmx4jgXqY1IOARXkpJFfSyQbcZNmpFPRbfTMJDjZuWRUxHzQ=
+X-Google-Smtp-Source: AGHT+IFlCbanJtgwwqNJsZ4IcpUy1GJzGJ+c40q3HPEhx/L+0W/eUlETwtP4KjCbM/5ysYMU9EAwAg==
+X-Received: by 2002:a05:600c:890b:b0:442:ffaa:6681 with SMTP id 5b1f17b1804b1-442ffaa6b6fmr178704095e9.28.1747991360643;
+        Fri, 23 May 2025 02:09:20 -0700 (PDT)
+Received: from [100.73.1.233] ([185.128.9.48])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f381465fsm133670215e9.29.2025.05.23.02.09.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 02:09:20 -0700 (PDT)
+Message-ID: <92107be5d4085f934c725d31177aae00b971984d.camel@gmail.com>
+Subject: Re: [PATCH v2 3/3] pwm: axi-pwmgen: fix missing separate external
+ clock
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Michael Hennerich	
+ <michael.hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
+ <nuno.sa@analog.com>,  Trevor Gamblin <tgamblin@baylibre.com>, Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, Rob Herring	
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
+ <conor+dt@kernel.org>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 23 May 2025 10:09:22 +0100
+In-Reply-To: <20250522-pwm-axi-pwmgen-add-external-clock-v2-3-086ea9e6ecf0@baylibre.com>
+References: 
+	<20250522-pwm-axi-pwmgen-add-external-clock-v2-0-086ea9e6ecf0@baylibre.com>
+	 <20250522-pwm-axi-pwmgen-add-external-clock-v2-3-086ea9e6ecf0@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250522-rockchip-pwm-rounding-fix-v1-1-b516ad76a25a@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAHN6L2gC/zWNywqDMBBFf0Vm3YGYYlF/pbhI41SHkkeTaAXx3
- ztUujwH7j07ZEpMGfpqh0QrZw5eoL5UYGfjJ0IehUEr3ahGa0zBvuzMEePHCSx+ZD/hkzfsWnO
- 9KdspamuQfUwk+vd9H05O9F4kUU4JD5MJbXCOS1952gr+MzAcxxejJ93onAAAAA==
-X-Change-ID: 20250522-rockchip-pwm-rounding-fix-98a360c90e81
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, 
- Boris Brezillon <bbrezillon@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>
-Cc: kernel@collabora.com, linux-pwm@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
 
-With CONFIG_PWM_DEBUG=y, the rockchip PWM driver produces warnings like
-this:
+On Thu, 2025-05-22 at 09:49 -0500, David Lechner wrote:
+> Add proper support for external clock to the AXI PWM generator driver.
+>=20
+> In most cases, the HDL for this IP block is compiled with the default
+> ASYNC_CLK_EN=3D1. With this option, there is a separate external clock
+> that drives the PWM output separate from the peripheral clock. So the
+> driver should be enabling the "axi" clock to power the peripheral and
+> the "ext" clock to drive the PWM output.
+>=20
+> When ASYNC_CLK_EN=3D0, the "axi" clock is also used to drive the PWM
+> output and there is no "ext" clock.
+>=20
+> Previously, if there was a separate external clock, users had to specify
+> only the external clock and (incorrectly) omit the AXI clock in order
+> to get the correct operating frequency for the PWM output.
+>=20
+> The devicetree bindings are updated to fix this shortcoming and this
+> patch changes the driver to match the new bindings. To preserve
+> compatibility with any existing dtbs that specify only one clock, we
+> don't require the clock name on the first clock.
+>=20
+> Fixes: 41814fe5c782 ("pwm: Add driver for AXI PWM generator")
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
 
-  rockchip-pwm fd8b0010.pwm: .apply is supposed to round down
-  duty_cycle (requested: 23529/50000, applied: 23542/50000)
+Acked-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-This is because the driver chooses ROUND_CLOSEST for idempotency
-reasons. However, it's possible to keep idempotency while always
-rounding down in .apply.
-
-Do this by making get_state always round up, and making apply always
-round down. This is done with u64 maths, and setting both period and
-duty to U32_MAX (the biggest the hardware can support) if they would
-exceed their 32 bits confines.
-
-Fixes: 12f9ce4a5198 ("pwm: rockchip: Fix period and duty cycle approximation")
-Fixes: 1ebb74cf3537 ("pwm: rockchip: Add support for hardware readout")
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
-This fix may need some careful testing from others before definitely
-being applied and backported. While I did test it myself of course,
-making sure to try a combination of periods and duty cycles, I really
-don't want to accidentally undo someone else's fix.
-
-Some of the u64 math is a bit overkill, but I don't want to assume
-prescalers will never get larger than 4, which is where we start needing
-the 64-bit prescaled NSECS_PER_SEC value. clk_rate could also
-comfortably fit within u32 for any expected clock rate, but unsigned
-long can fit more depending on architecture, even if nobody is running
-the PWM hardware at 4.294967296 GHz.
----
- drivers/pwm/pwm-rockchip.c | 31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-index c5f50e5eaf41ac7539f59fa03f427eee6263ca90..983c7354becddd1d322a0b9c2947e0a4603c52dd 100644
---- a/drivers/pwm/pwm-rockchip.c
-+++ b/drivers/pwm/pwm-rockchip.c
-@@ -8,6 +8,8 @@
- 
- #include <linux/clk.h>
- #include <linux/io.h>
-+#include <linux/limits.h>
-+#include <linux/math64.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-@@ -61,6 +63,7 @@ static int rockchip_pwm_get_state(struct pwm_chip *chip,
- 				  struct pwm_state *state)
- {
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
-+	u64 prescaled_ns = (u64)pc->data->prescaler * NSEC_PER_SEC;
- 	u32 enable_conf = pc->data->enable_conf;
- 	unsigned long clk_rate;
- 	u64 tmp;
-@@ -78,12 +81,12 @@ static int rockchip_pwm_get_state(struct pwm_chip *chip,
- 	clk_rate = clk_get_rate(pc->clk);
- 
- 	tmp = readl_relaxed(pc->base + pc->data->regs.period);
--	tmp *= pc->data->prescaler * NSEC_PER_SEC;
--	state->period = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
-+	tmp *= prescaled_ns;
-+	state->period = DIV_U64_ROUND_UP(tmp, clk_rate);
- 
- 	tmp = readl_relaxed(pc->base + pc->data->regs.duty);
--	tmp *= pc->data->prescaler * NSEC_PER_SEC;
--	state->duty_cycle =  DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
-+	tmp *= prescaled_ns;
-+	state->duty_cycle =  DIV_U64_ROUND_UP(tmp, clk_rate);
- 
- 	val = readl_relaxed(pc->base + pc->data->regs.ctrl);
- 	state->enabled = (val & enable_conf) == enable_conf;
-@@ -103,8 +106,9 @@ static void rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 			       const struct pwm_state *state)
- {
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
--	unsigned long period, duty;
--	u64 clk_rate, div;
-+	u64 prescaled_ns = (u64)pc->data->prescaler * NSEC_PER_SEC;
-+	u64 clk_rate, tmp;
-+	u32 period, duty;
- 	u32 ctrl;
- 
- 	clk_rate = clk_get_rate(pc->clk);
-@@ -114,12 +118,15 @@ static void rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * bits, every possible input period can be obtained using the
- 	 * default prescaler value for all practical clock rate values.
- 	 */
--	div = clk_rate * state->period;
--	period = DIV_ROUND_CLOSEST_ULL(div,
--				       pc->data->prescaler * NSEC_PER_SEC);
--
--	div = clk_rate * state->duty_cycle;
--	duty = DIV_ROUND_CLOSEST_ULL(div, pc->data->prescaler * NSEC_PER_SEC);
-+	tmp = mul_u64_u64_div_u64(clk_rate, state->period, prescaled_ns);
-+	if (tmp > U32_MAX)
-+		tmp = U32_MAX;
-+	period = tmp;
-+
-+	tmp = mul_u64_u64_div_u64(clk_rate, state->duty_cycle, prescaled_ns);
-+	if (tmp > U32_MAX)
-+		tmp = U32_MAX;
-+	duty = tmp;
- 
- 	/*
- 	 * Lock the period and duty of previous configuration, then
-
----
-base-commit: 6add743d2854d744c3037235b87c1c9d164fd132
-change-id: 20250522-rockchip-pwm-rounding-fix-98a360c90e81
-
-Best regards,
--- 
-Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-
+> =C2=A0drivers/pwm/pwm-axi-pwmgen.c | 23 ++++++++++++++++++++---
+> =C2=A01 file changed, 20 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+> index
+> 4337c8f5acf055fc87dc134f2a70b99b0cb5ede6..60dcd354237316bced2d951b7f0b116=
+c8291
+> bb0d 100644
+> --- a/drivers/pwm/pwm-axi-pwmgen.c
+> +++ b/drivers/pwm/pwm-axi-pwmgen.c
+> @@ -257,7 +257,7 @@ static int axi_pwmgen_probe(struct platform_device *p=
+dev)
+> =C2=A0	struct regmap *regmap;
+> =C2=A0	struct pwm_chip *chip;
+> =C2=A0	struct axi_pwmgen_ddata *ddata;
+> -	struct clk *clk;
+> +	struct clk *axi_clk, *clk;
+> =C2=A0	void __iomem *io_base;
+> =C2=A0	int ret;
+> =C2=A0
+> @@ -280,9 +280,26 @@ static int axi_pwmgen_probe(struct platform_device *=
+pdev)
+> =C2=A0	ddata =3D pwmchip_get_drvdata(chip);
+> =C2=A0	ddata->regmap =3D regmap;
+> =C2=A0
+> -	clk =3D devm_clk_get_enabled(dev, NULL);
+> +	/*
+> +	 * Using NULL here instead of "axi" for backwards compatibility.
+> There
+> +	 * are some dtbs that don't give clock-names and have the "ext" clock
+> +	 * as the one and only clock (due to mistake in the original
+> bindings).
+> +	 */
+> +	axi_clk =3D devm_clk_get_enabled(dev, NULL);
+> +	if (IS_ERR(axi_clk))
+> +		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get
+> axi clock\n");
+> +
+> +	clk =3D devm_clk_get_optional_enabled(dev, "ext");
+> =C2=A0	if (IS_ERR(clk))
+> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get
+> clock\n");
+> +		return dev_err_probe(dev, PTR_ERR(clk), "failed to get ext
+> clock\n");
+> +
+> +	/*
+> +	 * If there is no "ext" clock, it means the HDL was compiled with
+> +	 * ASYNC_CLK_EN=3D0. In this case, the AXI clock is also used for the
+> +	 * PWM output clock.
+> +	 */
+> +	if (!clk)
+> +		clk =3D axi_clk;
+> =C2=A0
+> =C2=A0	ret =3D devm_clk_rate_exclusive_get(dev, clk);
+> =C2=A0	if (ret)
 
