@@ -1,265 +1,228 @@
-Return-Path: <linux-pwm+bounces-6104-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6105-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1408AC25D7
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 May 2025 17:03:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 42665AC2601
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 May 2025 17:07:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7847A444D6
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 May 2025 15:03:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F29993BA045
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 May 2025 15:07:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 733672957A8;
-	Fri, 23 May 2025 15:03:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44845293755;
+	Fri, 23 May 2025 15:07:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nBCi/yQa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I61bMbL/"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F21324676D;
-	Fri, 23 May 2025 15:03:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592D029375A;
+	Fri, 23 May 2025 15:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748012625; cv=none; b=cmh7iHODEyDn1ObH7f5xyv9QWkGLLt+sppfFbKbPjwLNggRxepYfXoi/EMoKtCz120H+YmAqQGbsm6IrnGEZVL3GYZ1wEW5YAGNBoYmkbIw0NlFSg1Z/bXWL122cnSM4SD2ep+KAu3MQfXqt2ZEcSJPGaCkvvSQwWtR2NsYclwI=
+	t=1748012847; cv=none; b=jIIyB+UVPcxC7WmsCVoy+muPpiCyoGr35A1I1oG4tIKXD+pro6kqZ0rf9yfbKR0+AGBmSVHMhN+qRrcuMTD1U/YTnnuA3Rj4oVCwIRfW4/xkyhseWwe7GaQASzUbZA7GmX6CXqeczVsfR19GLoQa5ezVQSnEJp3u2Z7p/rqYOvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748012625; c=relaxed/simple;
-	bh=MJw+KKgK2pxJgECMpjog2FK6z1mMHZQ5Mt7f2ORl5lU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h++pTaMPDyYuB/EwbVY1tjhYT+tVYgKV5y3n5Qc4puq1otAhf9YF4Cm1VkHjmumFexpXb1obrl1KqWFXkqshMtrJOyLhZebo4AGmoTLFrs1vstjdHDoErFMiTIfi2R/QnBKtavhRmDIN6YP5LeFo8xWSOKBDEZuaNlNX9WfNH6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nBCi/yQa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01B97C4CEE9;
-	Fri, 23 May 2025 15:03:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748012623;
-	bh=MJw+KKgK2pxJgECMpjog2FK6z1mMHZQ5Mt7f2ORl5lU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nBCi/yQaJFOyvRTwhdox7UOolU+OfVf0zS0Gt70Dy/aadivHhsqkLqX5jQHs+Kj/k
-	 fe9cQPOsxfBOWtWIXyXMbbm4taMF+EHKAznXxLcNqePj0ThTHUJDuzZcD60oaW0FRl
-	 3EoGNM5c9jBpwwvWRfarbOIDXuwtbUUARwE1CPGELFXgL6UulyTQ7HQ0lN+e2cfVVq
-	 5CPg6P4F2cEl+bG50bAUHocxIubNcnRNztxEjsJeJHx9Xj4Us9rA7XB4LR8fBhea5Q
-	 tD847a8yf+Q6yDvNCgEpgyvG2EWWTAZQS38mKGMIY5XBDii4k8GRfUxE1J6Ixahs0b
-	 FIkH5xwCcz8Sw==
-Date: Fri, 23 May 2025 16:03:38 +0100
-From: Lee Jones <lee@kernel.org>
-To: nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH v4 06/20] mfd: adp5585: refactor how regmap defaults are
- handled
-Message-ID: <20250523150338.GH1378991@google.com>
+	s=arc-20240116; t=1748012847; c=relaxed/simple;
+	bh=jqszsB0dQ94aeoJh4mKxtu13hgZ8bpZGyzFqySA/C0s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OxMLEw12DoPtUwlUEN2SsgP136sHmU+PPmR+gcm0Reyhd5VWlOeDq+O2FB/GFw0/lJo34jOTBZzQcrBBlvVsTbkdfUpC1pwhxXA0Id38R0vFQEFycT7rVSAFNRCazvFOHfEHyiKxPJ12iQVl+2mpr36lxc6ro/w8aAnn5muU2pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I61bMbL/; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a37a243388so34187f8f.1;
+        Fri, 23 May 2025 08:07:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748012843; x=1748617643; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VNfuFi4zqbWwugyGJ6n/SsGAygzTg13IwPmCN0ZOeDc=;
+        b=I61bMbL/Jqe40mQXpZLMLALD3rOPAF/Y+mEWD3W7GIQTXXC0lVl51mV6JTZgZqXRrW
+         LXqwISMuRXtTH51zRtMg9mUbxE1XY/Q9gXcg4FjYq/e12n147KjEVFSWMp3ZHc3rMuSC
+         SAWkCzTfz5ioY+9ZcF5HsVxztXIQ4SlMnBzaqp0yYrn0uhlfVTpd5RXeS9RHgytJFmeY
+         j6zOr6Wq+yns+VR+Bnry3Bmy0NZHLPI8X5bjunqqD33MhkT5G0DdGyTjmWYmoovfI2V4
+         2PBJDIq8lEClpcfACnU1IQrIUoLazQsmw3hg+sIKhnK35P/nthoejgsoJuO35AwWnOFv
+         h3jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748012843; x=1748617643;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VNfuFi4zqbWwugyGJ6n/SsGAygzTg13IwPmCN0ZOeDc=;
+        b=feRC8nF4iGmUZoIZnIBVw5XmKNOK+AVRcvDfH3DD4/GGaMRWB2y2p9qO2fHtEDUM6d
+         Ph+7x5eToVBcim7PtwPidzuzdCeR+xRjUWF3HAOJvj4A8H5wwjQm2F9xpiAOiJjeCU8G
+         GMgtwShFIbqAmzjZK+dDiAh+/mINMJ+2iLBFMGkNap2BS7KPEjhhlZeM1IiBeovw5PS3
+         KpO4ZiGZHipth6tJV7YHFuSieppVHYWRf7W0Fk+fkpI21OMmrn/J2QqueMlWQEEzbq4r
+         ZmspEqTPDn5ByZlCVdXWkZnTnSTAB0GtYa0Ldb1/LQBybXiJLedmsM4K/KkJcvcRZfUw
+         yNIA==
+X-Forwarded-Encrypted: i=1; AJvYcCURC3mLAfCmauflqVzwK1VF87gUTHe8BufDiXZKa83buTLYboD/An0kwR/O55pKV3KK/QhPcYfdm9AF@vger.kernel.org, AJvYcCVRDc1rOCYI1oR7K93Ju/yp/yoflFCDO0RgNNm1NEbdJ2yAXypcGUZmPlq7t8qNIdbrSWw55rvC1aCj@vger.kernel.org, AJvYcCWZnPPpA7MpSnFT6tvhxak713sQEN1JYNLeVX8XTRSbYAGbxsrdpsQYGSXuueI1pESWzfSUqKDrSd6U8Ys=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU844r1kH7HufiBHJ9uV4znC1an4i6p9B6FMm8iRO/TWzsxENv
+	ApFRs8wu5vHbo7PQbb9WL5vHstkLduUGtW5leZ05ZG0Qmz5BydtynqXa
+X-Gm-Gg: ASbGncv+W/kAtKuYznQBUKjEPbQRB843kMSIqkgw7DEaIBTlSNVxHVlSthrQUMBPXuj
+	vAstCQz2jXfhn5q1MOa6QOwUjjki7M1AmrRjCUxMQG2WMstJXkV6zDY2PLsW2C1nQAQrD5iEpbG
+	fh0Evp9Y8uxwV6rRV2dTZUJ0gCXAglnlAnleAtwNOX7CIG0Iwqigp8pMKjBCwOkcaDedmuS2yAG
+	spUQQXFMJhV8p5YlrRF8N4N9tTazBzT+/zAl5eQsKXo2y4n4+h3hWJQRpeG4ncMSiU14SqZLfkA
+	0UxcNCnU2iuJEcZ0/KWq+QkJj4JBPDi8gMI8KUopiw0JX16rDaHmihsHSA==
+X-Google-Smtp-Source: AGHT+IHcvfBQBSZkDo0RIGtxJr4lvpBVGnJGZH2VnC9UV3NY3Axi3+/XZkTfykhnwq8e0opFQvVcKg==
+X-Received: by 2002:a05:6000:2083:b0:3a4:c95f:c1ca with SMTP id ffacd0b85a97d-3a4c95fc3damr288705f8f.50.1748012843050;
+        Fri, 23 May 2025 08:07:23 -0700 (PDT)
+Received: from [100.73.1.233] ([91.205.230.213])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005ae3918esm12044030a12.68.2025.05.23.08.07.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 08:07:22 -0700 (PDT)
+Message-ID: <196e5106d37121b394d0d70d34abeb33940c1de1.camel@gmail.com>
+Subject: Re: [PATCH v4 02/20] mfd: adp5585: only add devices given in FW
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Lee Jones <lee@kernel.org>, nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Rob Herring	
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
+ <conor+dt@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
+ <ukleinek@kernel.org>,  Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov	 <dmitry.torokhov@gmail.com>,
+ Laurent Pinchart	 <laurent.pinchart@ideasonboard.com>, Liu Ying
+ <victor.liu@nxp.com>
+Date: Fri, 23 May 2025 16:07:24 +0100
+In-Reply-To: <20250523145144.GF1378991@google.com>
 References: <20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com>
- <20250521-dev-adp5589-fw-v4-6-f2c988d7a7a0@analog.com>
+	 <20250521-dev-adp5589-fw-v4-2-f2c988d7a7a0@analog.com>
+	 <20250523145144.GF1378991@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250521-dev-adp5589-fw-v4-6-f2c988d7a7a0@analog.com>
 
-On Wed, 21 May 2025, Nuno Sá via B4 Relay wrote:
+On Fri, 2025-05-23 at 15:51 +0100, Lee Jones wrote:
+> On Wed, 21 May 2025, Nuno S=C3=A1 via B4 Relay wrote:
+>=20
+> > From: Nuno S=C3=A1 <nuno.sa@analog.com>
+> >=20
+> > Not all devices (features) of the adp5585 device are mandatory to be
+> > used in all platforms. Hence, check what's given in FW and dynamically
+> > create the mfd_cell array to be given to devm_mfd_add_devices().
+> >=20
+> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > ---
+> > =C2=A0drivers/mfd/adp5585.c | 48 ++++++++++++++++++++++++++++++++++++++=
++---------
+> > =C2=A01 file changed, 39 insertions(+), 9 deletions(-)
+> >=20
+> > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
+> > index
+> > 160e0b38106a6d78f7d4b7c866cb603d96ea673e..806867c56d6fb4ef1f461af26a424=
+a3a05
+> > f46575 100644
+> > --- a/drivers/mfd/adp5585.c
+> > +++ b/drivers/mfd/adp5585.c
+> > @@ -17,7 +17,13 @@
+> > =C2=A0#include <linux/regmap.h>
+> > =C2=A0#include <linux/types.h>
+> > =C2=A0
+> > -static const struct mfd_cell adp5585_devs[] =3D {
+> > +enum {
+> > +	ADP5585_DEV_GPIO,
+> > +	ADP5585_DEV_PWM,
+> > +	ADP5585_DEV_MAX
+> > +};
+> > +
+> > +static const struct mfd_cell adp5585_devs[ADP5585_DEV_MAX] =3D {
+> > =C2=A0	{ .name =3D "adp5585-gpio", },
+> > =C2=A0	{ .name =3D "adp5585-pwm", },
+> > =C2=A0};
+> > @@ -110,6 +116,37 @@ static const struct regmap_config
+> > adp5585_regmap_configs[] =3D {
+> > =C2=A0	},
+> > =C2=A0};
+> > =C2=A0
+> > +static void adp5585_remove_devices(void *dev)
+> > +{
+> > +	mfd_remove_devices(dev);
+> > +}
+> > +
+> > +static int adp5585_add_devices(struct device *dev)
+> > +{
+> > +	int ret;
+> > +
+> > +	if (device_property_present(dev, "#pwm-cells")) {
+> > +		ret =3D mfd_add_devices(dev, PLATFORM_DEVID_AUTO,
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &adp5585_devs[ADP5585_DEV_PWM], 1,
+> > NULL, 0, NULL);
+> > +		if (ret)
+> > +			return dev_err_probe(dev, ret, "Failed to add pwm
+> > device\n");
+>=20
+> PWM is an acronym, it should be capitalised.
+>=20
+> > +	}
+> > +
+> > +	if (device_property_present(dev, "#gpio-cells")) {
+> > +		ret =3D mfd_add_devices(dev, PLATFORM_DEVID_AUTO,
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &adp5585_devs[ADP5585_DEV_GPIO], 1,
+> > NULL, 0, NULL);
+> > +		if (ret) {
+> > +			ret =3D dev_err_probe(dev, ret, "Failed to add gpio
+> > device\n");
+>=20
+> Same with GPIO.
+>=20
+> > +			goto out_error;
+> > +		}
+> > +	}
+> > +
+> > +	return devm_add_action_or_reset(dev, adp5585_remove_devices, dev);
+>=20
+> We have 2 of these now.
+>=20
+> Why do we need lots of unbinding functions?
+>=20
+> What's wrong .remove() or devm_*()?
 
-> From: Nuno Sá <nuno.sa@analog.com>
-> 
-> The only thing changing between variants is the regmap default
-> registers. Hence, instead of having a regmap condig for every variant
+I do mention in the cover why I did not used devm_mfd_add_devices(). We wou=
+ld be
+adding an action per device and mfd_remove_devices() removes all of them in=
+ one
+call. Not that is an issue (I believe subsequent calls with be kind of no-o=
+ps)
+but this way felt more correct.
 
-Spellcheck.
+- Nuno S=C3=A1
 
-> (duplicating lots of fields), add a chip info type of structure with a
-> regmap id to identify which defaults to use and populate regmap_config
-
-"ID"
-
-> at runtime given a template plus the id. Also note that between
-> variants, the defaults can be the same which means the chip info
-> structure can be used in more than one compatible.
-> 
-> This will also make it simpler adding new chips with more variants.
-> 
-> Also note that the chip info structures are deliberately not const as
-> they will also contain lots of members that are the same between the
-> different devices variants and so we will fill those at runtime.
-> 
-> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> ---
->  drivers/mfd/adp5585.c       | 74 +++++++++++++++++++++------------------------
->  include/linux/mfd/adp5585.h | 10 ++++++
->  2 files changed, 44 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-> index 179dc284833ae8f39eefc6787dd2c7158dfd3ad7..672f3468bda5be6af85a5982c3626053b4cb59bf 100644
-> --- a/drivers/mfd/adp5585.c
-> +++ b/drivers/mfd/adp5585.c
-> @@ -81,42 +81,31 @@ static const u8 adp5585_regmap_defaults_04[ADP5585_MAX_REG + 1] = {
->  	/* 0x38 */ 0x00, 0x00, 0x00, 0x00, 0x00,
->  };
->  
-> -enum adp5585_regmap_type {
-> -	ADP5585_REGMAP_00,
-> -	ADP5585_REGMAP_02,
-> -	ADP5585_REGMAP_04,
-> +/* -1 since the enum starts at 1 for error checking in i2c_get_match_data()*/
-
-Space before the '*'.
-
-> +static const u8 *adp5585_regmap_defaults[ADP5585_MAX - 1] = {
-> +	[ADP5585_00 - 1] = adp5585_regmap_defaults_00,
-> +	[ADP5585_01 - 1] = adp5585_regmap_defaults_00,
-> +	[ADP5585_02 - 1] = adp5585_regmap_defaults_02,
-> +	[ADP5585_03 - 1] = adp5585_regmap_defaults_00,
-> +	[ADP5585_04 - 1] = adp5585_regmap_defaults_04,
-
-Just leave the first entry blank.  No need for all he gymnastics.
-
->  };
->  
-> -static const struct regmap_config adp5585_regmap_configs[] = {
-> -	[ADP5585_REGMAP_00] = {
-> -		.reg_bits = 8,
-> -		.val_bits = 8,
-> -		.max_register = ADP5585_MAX_REG,
-> -		.volatile_table = &adp5585_volatile_regs,
-> -		.cache_type = REGCACHE_MAPLE,
-> -		.reg_defaults_raw = adp5585_regmap_defaults_00,
-> -		.num_reg_defaults_raw = sizeof(adp5585_regmap_defaults_00),
-> -	},
-> -	[ADP5585_REGMAP_02] = {
-> -		.reg_bits = 8,
-> -		.val_bits = 8,
-> -		.max_register = ADP5585_MAX_REG,
-> -		.volatile_table = &adp5585_volatile_regs,
-> -		.cache_type = REGCACHE_MAPLE,
-> -		.reg_defaults_raw = adp5585_regmap_defaults_02,
-> -		.num_reg_defaults_raw = sizeof(adp5585_regmap_defaults_02),
-> -	},
-> -	[ADP5585_REGMAP_04] = {
-> -		.reg_bits = 8,
-> -		.val_bits = 8,
-> -		.max_register = ADP5585_MAX_REG,
-> -		.volatile_table = &adp5585_volatile_regs,
-> -		.cache_type = REGCACHE_MAPLE,
-> -		.reg_defaults_raw = adp5585_regmap_defaults_04,
-> -		.num_reg_defaults_raw = sizeof(adp5585_regmap_defaults_04),
-> -	},
-> +static const struct regmap_config adp5585_regmap_config_template = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.max_register = ADP5585_MAX_REG,
-> +	.volatile_table = &adp5585_volatile_regs,
-> +	.cache_type = REGCACHE_MAPLE,
-> +	.num_reg_defaults_raw = ADP5585_MAX_REG + 1,
->  };
->  
-> +static void adp5585_fill_regmap_config(const struct adp5585_dev *adp5585,
-> +				       struct regmap_config *regmap_config)
-> +{
-> +	*regmap_config = adp5585_regmap_config_template;
-
-Return struct regmap_config * instead.
-
-> +	regmap_config->reg_defaults_raw = adp5585_regmap_defaults[adp5585->variant - 1];
-
-Does this really warrant a separate function?
-
-> +}
-> +
->  static void adp5585_remove_devices(void *dev)
->  {
->  	mfd_remove_devices(dev);
-> @@ -157,7 +146,7 @@ static void adp5585_osc_disable(void *data)
->  
->  static int adp5585_i2c_probe(struct i2c_client *i2c)
->  {
-> -	const struct regmap_config *regmap_config;
-> +	struct regmap_config regmap_config;
->  	struct adp5585_dev *adp5585;
->  	unsigned int id;
->  	int ret;
-> @@ -168,8 +157,13 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
->  
->  	i2c_set_clientdata(i2c, adp5585);
->  
-> -	regmap_config = i2c_get_match_data(i2c);
-> -	adp5585->regmap = devm_regmap_init_i2c(i2c, regmap_config);
-> +	adp5585->variant = (enum adp5585_variant)(uintptr_t)i2c_get_match_data(i2c);
-> +	if (!adp5585->variant)
-> +		return -ENODEV;
-> +
-> +	adp5585_fill_regmap_config(adp5585, &regmap_config);
-> +
-> +	adp5585->regmap = devm_regmap_init_i2c(i2c, &regmap_config);
->  	if (IS_ERR(adp5585->regmap))
->  		return dev_err_probe(&i2c->dev, PTR_ERR(adp5585->regmap),
->  				     "Failed to initialize register map\n");
-> @@ -226,19 +220,19 @@ static DEFINE_SIMPLE_DEV_PM_OPS(adp5585_pm, adp5585_suspend, adp5585_resume);
->  static const struct of_device_id adp5585_of_match[] = {
->  	{
->  		.compatible = "adi,adp5585-00",
-> -		.data = &adp5585_regmap_configs[ADP5585_REGMAP_00],
-> +		.data = (void *)ADP5585_00,
->  	}, {
->  		.compatible = "adi,adp5585-01",
-> -		.data = &adp5585_regmap_configs[ADP5585_REGMAP_00],
-> +		.data = (void *)ADP5585_01,
->  	}, {
->  		.compatible = "adi,adp5585-02",
-> -		.data = &adp5585_regmap_configs[ADP5585_REGMAP_02],
-> +		.data = (void *)ADP5585_02,
->  	}, {
->  		.compatible = "adi,adp5585-03",
-> -		.data = &adp5585_regmap_configs[ADP5585_REGMAP_00],
-> +		.data = (void *)ADP5585_03,
->  	}, {
->  		.compatible = "adi,adp5585-04",
-> -		.data = &adp5585_regmap_configs[ADP5585_REGMAP_04],
-> +		.data = (void *)ADP5585_04,
->  	},
->  	{ /* sentinel */ }
->  };
-> diff --git a/include/linux/mfd/adp5585.h b/include/linux/mfd/adp5585.h
-> index 016033cd68e46757aca86d21dd37025fd354b801..2813b20e638b6e73ef198e43af07ef29ff25f273 100644
-> --- a/include/linux/mfd/adp5585.h
-> +++ b/include/linux/mfd/adp5585.h
-> @@ -119,8 +119,18 @@
->  
->  struct regmap;
->  
-> +enum adp5585_variant {
-> +	ADP5585_00 = 1,
-> +	ADP5585_01,
-> +	ADP5585_02,
-> +	ADP5585_03,
-> +	ADP5585_04,
-> +	ADP5585_MAX
-> +};
-> +
->  struct adp5585_dev {
->  	struct regmap *regmap;
-> +	enum adp5585_variant variant;
->  };
->  
->  #endif
-> 
-> -- 
-> 2.49.0
-> 
-> 
-
--- 
-Lee Jones [李琼斯]
+>=20
+> > +out_error:
+> > +	mfd_remove_devices(dev);
+> > +	return ret;
+> > +}
+> > +
+> > =C2=A0static int adp5585_i2c_probe(struct i2c_client *i2c)
+> > =C2=A0{
+> > =C2=A0	const struct regmap_config *regmap_config;
+> > @@ -138,14 +175,7 @@ static int adp5585_i2c_probe(struct i2c_client *i2=
+c)
+> > =C2=A0		return dev_err_probe(&i2c->dev, -ENODEV,
+> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid device ID 0x%02x\n", id);
+> > =C2=A0
+> > -	ret =3D devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+> > -				=C2=A0=C2=A0 adp5585_devs, ARRAY_SIZE(adp5585_devs),
+> > -				=C2=A0=C2=A0 NULL, 0, NULL);
+> > -	if (ret)
+> > -		return dev_err_probe(&i2c->dev, ret,
+> > -				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to add child devices\n");
+> > -
+> > -	return 0;
+> > +	return adp5585_add_devices(&i2c->dev);
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static int adp5585_suspend(struct device *dev)
+> >=20
+> > --=20
+> > 2.49.0
+> >=20
+> >=20
 
