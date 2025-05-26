@@ -1,157 +1,130 @@
-Return-Path: <linux-pwm+bounces-6127-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6128-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 584D6AC3F03
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 May 2025 14:03:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B06FDAC40E3
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 May 2025 16:02:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1297E3B4240
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 May 2025 12:03:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 382241606B6
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 May 2025 14:02:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03E5F1FBCAF;
-	Mon, 26 May 2025 12:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D0D3202C3E;
+	Mon, 26 May 2025 14:02:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bM8bhV4z"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LncjDDat"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5ED1BC5C;
-	Mon, 26 May 2025 12:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924731DDC08
+	for <linux-pwm@vger.kernel.org>; Mon, 26 May 2025 14:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748260998; cv=none; b=ntZ5A7+Z5DuZ+x2xmyofKhmogVoPfKN1FC0pt3yzQDHYXvtTe08cjWYBvQNNlKGgeYZ+XdwHeEdKcXlijcKp6n0ytBWBV14FOLqaJ95M1hSe1Q6r2JZLPoQSVb3KE5B+yqmef9HYPdU0RAR0eiAvbXt9AmHzTQikawxGgh/YeQY=
+	t=1748268153; cv=none; b=kSAXk65ZBf4YVlLZYnw7VlAgJCsUGGOZXdHQK1G285QcswHHSPr9Iw1OTbNOt/bZIEB/llWIGL+i1hbhSMWuQbR5RcQspB+3huEFCwm+6/fvitiamP24q2akympOs7HhzYtS+TSPDuFhrbXMaiPGweG8vnDB0Fp+wR/37ZRPcb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748260998; c=relaxed/simple;
-	bh=7RcKKcyw/mz1JEdzFQBQPEG8HmMMGUkhsGa4P9iWHbk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=EHFAw3GkzTX83M3qO368Qp2iNHVHRB9NbDmVGzcKjcRLfra3F7gAc1SzolBBPmmeC7//sfhCsjXdBNcRa+V8HwWdUEN35NiS3F3HQIPmPKue/c7BvQHkuYWYwmNhqeufO4ulnFoSMhy08e4EQrCsF/uMwReirT8wmIaIEjPYDlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bM8bhV4z; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1942F43B29;
-	Mon, 26 May 2025 12:03:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748260994;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zxMH5k+dYKIilp2PKuzRPktv59J5PhIs3BBDtjszt0o=;
-	b=bM8bhV4zj/W2OP6qfF9wkW4EcChAuml0Pbcmn56RpgKhJrhogQK20f443bC4+ZMVr8yigP
-	WoilBnTSYNUQIk5pWtir7Jpd5TIOqEfk2j5dutyxhoppi4XzXiCnsKGaNwzaYxzFKsY+jP
-	qseUip5kW54H/5G10A3mVWaNgr7tsRgDcvumQjKbQfN2+BQ9aHnKdVXydK+coAvYLNyYf4
-	Q9pjo/qe5pIzBsniojLrnxkGpoR3MC8y89GI/K4elRnN5kLWlsW1m8Vanvdh4YyoBmNvfw
-	oOA72ORaBD89bYWOZryRc54hcWTsAhNiijZlrn1Drx2ZjuaKgwZVvgGfqLiTtA==
+	s=arc-20240116; t=1748268153; c=relaxed/simple;
+	bh=1FPYTLYFolCPqa4UiErcCX9Vk38FXUDWIxtP75x1kQ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=igM11tcWpOeFNvQhVPU8NJUXqElq2QbkRkijOae4tJkSjvDQOV6eMfbVtnGQCErxQ5PDy9h5OdICOToxq974bZUkmm87nDo5VBcych/NBYLxoz6Ru/a6xcKYbR75p1wSMgfnXKGtkTnXgOFQfaQ2sYNzllY2h6w6/7twm5SXhxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=LncjDDat; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250526140229euoutp017cf01ff5d3cbffe7679f8617428cce5e~DGJ6ZaH2q0720707207euoutp01j
+	for <linux-pwm@vger.kernel.org>; Mon, 26 May 2025 14:02:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250526140229euoutp017cf01ff5d3cbffe7679f8617428cce5e~DGJ6ZaH2q0720707207euoutp01j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1748268149;
+	bh=X9hidhnbjeXr79/7hjWdiP66/YfJFrDGrP9fti1zI8k=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=LncjDDatBDAFyd8dSMOXhSUWNzHT/wRYhIls3esbaJZnr9ufGHCuIeBUqXlzPNEAn
+	 3yRKkT6HOjdP0cSwXC6CW+HiLrwjwQ3sgaPFtLfKxXVvJTiPOmoItgIt/Ep0dyYhTH
+	 +zvLkck0VJPtip1ZELVDgfYh7qfus1bqVVLUqPUk=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250526140229eucas1p29ab92fba79975fb3f6f5d3f9831f9da6~DGJ5v-bu92582525825eucas1p2e;
+	Mon, 26 May 2025 14:02:29 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250526140227eusmtip1fc55917f132ab805ce6dd5cdab5f4fe9~DGJ4sSGgu1355013550eusmtip1C;
+	Mon, 26 May 2025 14:02:27 +0000 (GMT)
+Message-ID: <fec3e2d8-592a-4474-9a15-3a196829c9f6@samsung.com>
+Date: Mon, 26 May 2025 16:02:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 26 May 2025 14:03:12 +0200
-Message-Id: <DA62SSMI7C52.V2QD509S95QW@bootlin.com>
-Subject: Re: [PATCH v9 06/11] gpio: regmap: Allow to allocate regmap-irq
- device
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
- <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
- <andriy.shevchenko@intel.com>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250522-mdb-max7360-support-v9-0-74fc03517e41@bootlin.com>
- <20250522-mdb-max7360-support-v9-6-74fc03517e41@bootlin.com>
- <CAMRc=MeT+b5dBOWyf6-BpTjk70nwVhLOpCY-JHNizBo5H1-AnQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MeT+b5dBOWyf6-BpTjk70nwVhLOpCY-JHNizBo5H1-AnQ@mail.gmail.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddujeegjeculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffuvefhvffofhgjsehtqhertdertdejnecuhfhrohhmpedfofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugdfuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkefhkeeifeethfejteevfeduheduvddvuedvvddugfffhfevkefftefhuefftddunecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemvgdtrgemrgeiieemfedukedtmegttdgsvgemsgelrgekmegvheelvdemiegrfehfnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmegrieeimeefudektdemtgdtsggvmegslegrkeemvgehledvmeeirgeffhdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdpr
- hgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepughmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomh
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 1/6] rust: Add basic PWM abstractions
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin
+	<benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
+	Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
+	Krummrich <dakr@kernel.org>, Drew Fustini <drew@pdp7.com>, Guo Ren
+	<guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+	Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+	Ghiti <alex@ghiti.fr>, Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <enxctdseecqz765nmd24vziiaksmyhltqfwycdszmfq3s7orjm@lnpc7czuluis>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250526140229eucas1p29ab92fba79975fb3f6f5d3f9831f9da6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250524211520eucas1p1378fbab27f4b1ae8808706c074fa217c
+X-EPHeader: CA
+X-CMS-RootMailID: 20250524211520eucas1p1378fbab27f4b1ae8808706c074fa217c
+References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
+	<CGME20250524211520eucas1p1378fbab27f4b1ae8808706c074fa217c@eucas1p1.samsung.com>
+	<20250524-rust-next-pwm-working-fan-for-sending-v1-1-bdd2d5094ff7@samsung.com>
+	<enxctdseecqz765nmd24vziiaksmyhltqfwycdszmfq3s7orjm@lnpc7czuluis>
 
-On Thu May 22, 2025 at 3:01 PM CEST, Bartosz Golaszewski wrote:
-> On Thu, May 22, 2025 at 2:06=E2=80=AFPM Mathieu Dubois-Briand
-> <mathieu.dubois-briand@bootlin.com> wrote:
->>
->> GPIO controller often have support for IRQ: allow to easily allocate
->> both gpio-regmap and regmap-irq in one operation.
->>
->> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
->> ---
->>  drivers/gpio/gpio-regmap.c  | 21 +++++++++++++++++++--
->>  include/linux/gpio/regmap.h | 11 +++++++++++
->>  2 files changed, 30 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
->> index 87c4225784cf..9cbbbaf82609 100644
->> --- a/drivers/gpio/gpio-regmap.c
->> +++ b/drivers/gpio/gpio-regmap.c
->> @@ -215,6 +215,7 @@ EXPORT_SYMBOL_GPL(gpio_regmap_get_drvdata);
->>   */
->>  struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_confi=
-g *config)
->>  {
->> +       struct irq_domain *irq_domain;
->>         struct gpio_regmap *gpio;
->>         struct gpio_chip *chip;
->>         int ret;
->> @@ -295,8 +296,24 @@ struct gpio_regmap *gpio_regmap_register(const stru=
-ct gpio_regmap_config *config
->>         if (ret < 0)
->>                 goto err_free_gpio;
->>
->> -       if (config->irq_domain) {
->> -               ret =3D gpiochip_irqchip_add_domain(chip, config->irq_do=
-main);
->> +#ifdef CONFIG_REGMAP_IRQ
->> +       if (config->regmap_irq_chip) {
->> +               struct regmap_irq_chip_data *irq_chip_data;
->> +
->> +               ret =3D devm_regmap_add_irq_chip_fwnode(config->parent, =
-dev_fwnode(config->parent),
->> +                                                     config->regmap, co=
-nfig->regmap_irq_line,
->> +                                                     config->regmap_irq=
-_flags, 0,
->> +                                                     config->regmap_irq=
-_chip, &irq_chip_data);
->
-> I don't think using devres here is a good idea. There's no guarantee
-> that gpio_regmap_register() will be called on device attach so you
-> must not make the release of the resource depend on an associated
-> detach which may never happen. Please use the non-managed variant
-> here.
 
-Right, I will make sure to use
-regmap_add_irq_chip_fwnode()/regmap_del_irq_chip() here.
 
-I should be able to send a new version in the coming days.
+On 5/26/25 09:53, Uwe Kleine-König wrote:
+> Hello Michal,
+> 
+> On Sat, May 24, 2025 at 11:14:55PM +0200, Michal Wilczynski wrote:
+>> Introduce initial Rust abstractions for the Linux PWM subsystem. These
+>> abstractions provide safe wrappers around the core C data structures and
+>> functions, enabling the development of PWM chip drivers in Rust.
+> 
+> Oh wow, thanks for rustifying PWM. That might be my chance to actually
+> learn Rust.
+> 
+> I don't know when I will find the time to look into that in detail but
+> one thing I'd like to have for Rust support is that the drivers use the
+> new abstraction (i.e. .round_waveform_tohw() + .round_waveform_fromhw()
+> + .read_waveform() + .write_waveform()) instead of the older .apply()
+> callback.
 
->
-> Bart
->
+Hi Uwe,
 
-Thanks for your review.
-Mathieu
+Thanks for the valuable feedback. You're right, building on the newer
+waveform abstractions is a correct approach.
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+I'll rework the patches to use .round_waveform_tohw(),
+.round_waveform_fromhw(), .read_waveform(), and .write_waveform() as you
+suggested, instead of the .apply() callback.
 
+I appreciate you steering me in the right direction.
+
+> 
+> Best regards
+> Uwe
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
 
