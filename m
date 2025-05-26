@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-6129-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6130-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0881FAC41F0
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 May 2025 16:59:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3ECC2AC4215
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 May 2025 17:06:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAF0B1775E7
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 May 2025 14:59:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 001F6164C19
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 May 2025 15:06:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FC1520F06A;
-	Mon, 26 May 2025 14:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8AFD20E717;
+	Mon, 26 May 2025 15:06:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3MFvLKG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="njDP9GB1"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E37E433AC;
-	Mon, 26 May 2025 14:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896181FFC4F;
+	Mon, 26 May 2025 15:06:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748271577; cv=none; b=HNdP44JbOBJIDjpd/AK/CwkRJoZZwz/asHOQM9Rs/iKMU3h4r4CViOfYeXFdWeX7XpJbGDRzZIF2ketQYsQuhiA+5PHzzvX6SC0jB5xtzzi7EtS2cizq5sqJaXJRxkGYAE2EDegDh3ZZ3tTAHd7At6p3oAdw0WxC+vSf0QHQaf8=
+	t=1748271988; cv=none; b=WdNoAlczO4Z+FTGUPhmq6CKMVqutcRprWdxQW+O0bvyhRhis96qC/YnBEdXL9ixR714znGJeAEU5t0IHuWpVJ+W189Lrr7Csa6vzmkimIg74bSd6CWiIw+qDp/vt5ZN6vTOlzI1ZOoP2ZBUTsZG3gc2ZdkCiyjB5S3yF3B7NC2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748271577; c=relaxed/simple;
-	bh=E8SaAUgrX/X3dekablDtQmiUY499qEqCSuaUoBIMc4A=;
+	s=arc-20240116; t=1748271988; c=relaxed/simple;
+	bh=VDehJEu3mvVGGIZYejoQjoQjPFUQLfXRf+ay1uKxd7U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YV12vJrDYUAf/atC0QV3kpxbYLN9rcAkr8bSkLgl+4RZbzgDcxhnsSa1WiF80bhvmd64BuAXGHB0uLHj9n05rDEivddVCmB/CVS6rS6vRWe262HUBKoG3WLRWCPkiqzpwrMhczAIJ55qt48nqd+UwbRwpTNMuwkr9XYIA9K4z5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3MFvLKG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AC43C4CEE7;
-	Mon, 26 May 2025 14:59:36 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mq29cmm3PB8tjUR5UOT7Q/O8yrCLZn3QR0C4tDW+bqwpulx2KwC4X9p9wrr+RFYnOYwDh+SM5YomAaL9WLyCNe0sHGEUecmBFfuE6CHIshW+M4MdUZYC7YnVIgGDIRIfAd055XJRiorSuvr7nsgv2hJ5OjnS9eccoX6Fr0x6kBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=njDP9GB1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C197C4CEE7;
+	Mon, 26 May 2025 15:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748271576;
-	bh=E8SaAUgrX/X3dekablDtQmiUY499qEqCSuaUoBIMc4A=;
+	s=k20201202; t=1748271988;
+	bh=VDehJEu3mvVGGIZYejoQjoQjPFUQLfXRf+ay1uKxd7U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z3MFvLKGV43p1eBMXVMy4czAhTXOz2ctCEOeVW2WnXnaTrpA/Q1ifkqOkKuCR9hQU
-	 w00FPOZ4osYXe03owq6G0dRPSqmrd+XAffAauMuPgLkHKhjNh/TzUMuaEQtX+Yk9yi
-	 9dGrirNlbBxKgDHBOMh/4zG7zPPuwz5zs/cq3k6PnLWIdwQRVDf/nqc48pHxJ9Qrff
-	 7S5ntnrO8nuYuwOH6YCsowbLnRqQ30cWeOe3ZcmA58WVEqYvce1wnJhgpXEDYlK5TY
-	 n6jC2/MwptaZ/AuiJLH76ugtEGlu6fAYbiWlst+dFQ+vSIpvU/4XBHRg8nB9dCbfHE
-	 +wYm/DVOMNFlA==
-Date: Mon, 26 May 2025 16:59:34 +0200
+	b=njDP9GB1lVt4FpDlHEIy110BDtD4oTMrJnJxIIAsDW8TjajQhmIt8IoiQ+DVE4CFo
+	 KWjoVM9tTx3IVTsNqE4IQg3cwGx/Ism/9+rfNB5NGFbZBgtt5ZExvQfqigX/N2DObV
+	 xsqnB9NBDWKtYHTlXJ2nC/aUMMKm8bNbcq5jZNvWCl3VExjHadajbOr0w1QjyZ4Tb6
+	 GX6EdXL2j0ITEJx4xqSgtEDVP4jQxegr4uSk1YXxOjicaq4Sk4L4hJezlKDjVEa99s
+	 Y1YEZiLNULUBcfG7eRjErctBHKzkGZqwXyLT6a+swGaOF4bckjaVRVk4HLGHzJE0LW
+	 cOVupe/Ia8WeQ==
+Date: Mon, 26 May 2025 17:06:25 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
 To: Longbin Li <looong.bin@gmail.com>
 Cc: Rob Herring <robh@kernel.org>, 
@@ -51,10 +51,10 @@ Cc: Rob Herring <robh@kernel.org>,
 	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-pwm@vger.kernel.org, 
 	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
 	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 2/3] pwm: sophgo: reorganize the code structure
-Message-ID: <l57yh42pb7cfbnk5z4zo473vb5pac6t4hnpg36m3iph3og4wom@kmd35myokcgp>
+Subject: Re: [PATCH v4 3/3] pwm: sophgo: add driver for SG2044
+Message-ID: <jo4ustzbkswmeive5s4tepwhzeoeswa4knfihkzh6eylujeid4@dj2a2nzp2a5v>
 References: <20250428013501.6354-1-looong.bin@gmail.com>
- <20250428013501.6354-3-looong.bin@gmail.com>
+ <20250428013501.6354-4-looong.bin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -62,147 +62,183 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="y6wrgiquygeci5im"
+	protocol="application/pgp-signature"; boundary="viwcriticwpgs6cr"
 Content-Disposition: inline
-In-Reply-To: <20250428013501.6354-3-looong.bin@gmail.com>
+In-Reply-To: <20250428013501.6354-4-looong.bin@gmail.com>
 
 
---y6wrgiquygeci5im
+--viwcriticwpgs6cr
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 2/3] pwm: sophgo: reorganize the code structure
+Subject: Re: [PATCH v4 3/3] pwm: sophgo: add driver for SG2044
 MIME-Version: 1.0
 
-Hello,
-
-On Mon, Apr 28, 2025 at 09:34:49AM +0800, Longbin Li wrote:
-> As the driver logic can be used in both SG2042 and SG2044, it
-> will be better to reorganize the code structure.
+On Mon, Apr 28, 2025 at 09:34:50AM +0800, Longbin Li wrote:
+> Add PWM controller for SG2044 on base of SG2042.
 >=20
 > Signed-off-by: Longbin Li <looong.bin@gmail.com>
 > Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
 > ---
->  drivers/pwm/pwm-sophgo-sg2042.c | 62 +++++++++++++++++++--------------
->  1 file changed, 35 insertions(+), 27 deletions(-)
+>  drivers/pwm/pwm-sophgo-sg2042.c | 89 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 87 insertions(+), 2 deletions(-)
 >=20
 > diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg2=
 042.c
-> index ff4639d849ce..23a83843ba53 100644
+> index 23a83843ba53..5bb92c910540 100644
 > --- a/drivers/pwm/pwm-sophgo-sg2042.c
 > +++ b/drivers/pwm/pwm-sophgo-sg2042.c
-> @@ -26,18 +26,6 @@
+> @@ -13,6 +13,9 @@
+>   *   the running period.
+>   * - When PERIOD and HLPERIOD is set to 0, the PWM wave output will
+>   *   be stopped and the output is pulled to high.
+> + * - SG2044 support polarity while SG2042 does not. When PWMSTART is
+> + *   false, POLARITY being NORMAL will make output being low,
+> + *   POLARITY being INVERSED will make output being high.
+
+Without detailed knowledge about the hardware this isn't understandable.
+What is PWMSTART? I think this can just read:
+
+	SG2044 supports both polarities, SG2042 only normal polarity.
+
+The rest is an implementation detail.
+
+>   * See the datasheet [1] for more details.
+>   * [1]:https://github.com/sophgo/sophgo-doc/tree/main/SG2042/TRM
+
+This only describes SG2042, right? Can you please add a link for the new
+variant?
+
+>   */
+> @@ -26,6 +29,10 @@
 >  #include <linux/pwm.h>
 >  #include <linux/reset.h>
 >=20
-> -/*
-> - * Offset RegisterName
-> - * 0x0000 HLPERIOD0
-> - * 0x0004 PERIOD0
-> - * 0x0008 HLPERIOD1
-> - * 0x000C PERIOD1
-> - * 0x0010 HLPERIOD2
-> - * 0x0014 PERIOD2
-> - * 0x0018 HLPERIOD3
-> - * 0x001C PERIOD3
-> - * Four groups and every group is composed of HLPERIOD & PERIOD
-> - */
-
-This seems to be still correct? Why remove it then?
-
+> +#define SG2044_PWM_POLARITY		0x40
+> +#define SG2044_PWM_PWMSTART		0x44
+> +#define SG2044_PWM_OE			0xd0
+> +
 >  #define SG2042_PWM_HLPERIOD(chan) ((chan) * 8 + 0)
 >  #define SG2042_PWM_PERIOD(chan) ((chan) * 8 + 4)
 >=20
-> @@ -53,6 +41,10 @@ struct sg2042_pwm_ddata {
->  	unsigned long clk_rate_hz;
->  };
+> @@ -72,8 +79,8 @@ static void pwm_set_dutycycle(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+>  	period_ticks =3D min(mul_u64_u64_div_u64(ddata->clk_rate_hz, state->per=
+iod, NSEC_PER_SEC), U32_MAX);
+>  	hlperiod_ticks =3D min(mul_u64_u64_div_u64(ddata->clk_rate_hz, state->d=
+uty_cycle, NSEC_PER_SEC), U32_MAX);
 >=20
-> +struct sg2042_chip_data {
-> +	const struct pwm_ops ops;
-> +};
-> +
->  /*
->   * period_ticks: PERIOD
->   * hlperiod_ticks: HLPERIOD
-> @@ -66,21 +58,13 @@ static void pwm_sg2042_config(struct sg2042_pwm_ddata=
- *ddata, unsigned int chan,
->  	writel(hlperiod_ticks, base + SG2042_PWM_HLPERIOD(chan));
+> -	dev_dbg(pwmchip_parent(chip), "chan[%u]: PERIOD=3D%u, HLPERIOD=3D%u\n",
+> -		pwm->hwpwm, period_ticks, hlperiod_ticks);
+> +	dev_dbg(pwmchip_parent(chip), "chan[%u]: ENABLE=3D%u, PERIOD=3D%u, HLPE=
+RIOD=3D%u, POLARITY=3D%u\n",
+> +		pwm->hwpwm, state->enabled, period_ticks, hlperiod_ticks, state->polar=
+ity);
+>=20
+>  	pwm_sg2042_config(ddata, pwm->hwpwm, period_ticks, hlperiod_ticks);
 >  }
->=20
-> -static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> -			    const struct pwm_state *state)
-> +static void pwm_set_dutycycle(struct pwm_chip *chip, struct pwm_device *=
-pwm,
-
-This is not a global pwm API function, so please stick to the pwm_sg2042
-prefix.
-
-> +			      const struct pwm_state *state)
->  {
->  	struct sg2042_pwm_ddata *ddata =3D pwmchip_get_drvdata(chip);
->  	u32 hlperiod_ticks;
->  	u32 period_ticks;
->=20
-> -	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
-> -		return -EINVAL;
-> -
-> -	if (!state->enabled) {
-> -		pwm_sg2042_config(ddata, pwm->hwpwm, 0, 0);
-> -		return 0;
-> -	}
-> -
->  	/*
->  	 * Duration of High level (duty_cycle) =3D HLPERIOD x Period_of_input_c=
-lk
->  	 * Duration of One Cycle (period) =3D PERIOD x Period_of_input_clk
-> [...]
-> @@ -123,13 +123,16 @@ static int pwm_sg2042_get_state(struct pwm_chip *ch=
-ip, struct pwm_device *pwm,
+> @@ -123,6 +130,74 @@ static int pwm_sg2042_get_state(struct pwm_chip *chi=
+p, struct pwm_device *pwm,
 >  	return 0;
 >  }
 >=20
-> -static const struct pwm_ops pwm_sg2042_ops =3D {
-> -	.apply =3D pwm_sg2042_apply,
-> -	.get_state =3D pwm_sg2042_get_state,
-> +static const struct sg2042_chip_data sg2042_chip_data =3D {
-> +	.ops =3D {
-> +		.apply =3D pwm_sg2042_apply,
-> +		.get_state =3D pwm_sg2042_get_state,
-> +	}
->  };
->=20
->  static const struct of_device_id sg2042_pwm_ids[] =3D {
-> -	{ .compatible =3D "sophgo,sg2042-pwm" },
-> +	{ .compatible =3D "sophgo,sg2042-pwm",
-> +	  .data =3D &sg2042_chip_data },
+> +static void pwm_sg2044_set_start(struct sg2042_pwm_ddata *ddata, struct =
+pwm_device *pwm,
+> +				 bool enabled)
+> +{
+> +	u32 pwm_value;
+> +
+> +	pwm_value =3D readl(ddata->base + SG2044_PWM_PWMSTART);
 
-I would have expected that checkpatch doesn't like that. At least I
-don't. Please make this
+Please use a variable name that matches the register this is used for.
 
-	{
-		.compatible =3D ...;
-		.data =3D ...;
-	},
+> +	if (enabled)
+> +		pwm_value |=3D BIT(pwm->hwpwm);
+> +	else
+> +		pwm_value &=3D ~BIT(pwm->hwpwm);
+> +
+> +	writel(pwm_value, ddata->base + SG2044_PWM_PWMSTART);
+> +}
+> +
+> +static void pwm_sg2044_set_outputdir(struct sg2042_pwm_ddata *ddata, str=
+uct pwm_device *pwm,
+> +				     bool enabled)
+> +{
+> +	u32 pwm_value;
+> +
+> +	pwm_value =3D readl(ddata->base + SG2044_PWM_OE);
+> +
+> +	if (enabled)
+> +		pwm_value |=3D BIT(pwm->hwpwm);
+> +	else
+> +		pwm_value &=3D ~BIT(pwm->hwpwm);
+> +
+> +	writel(pwm_value, ddata->base + SG2044_PWM_OE);
+> +}
+> +
+> +static void pwm_sg2044_set_polarity(struct sg2042_pwm_ddata *ddata, stru=
+ct pwm_device *pwm,
+> +				    const struct pwm_state *state)
+> +{
+> +	u32 pwm_value;
+> +
+> +	pwm_value =3D readl(ddata->base + SG2044_PWM_POLARITY);
+> +
+> +	if (state->polarity =3D=3D PWM_POLARITY_NORMAL)
+> +		pwm_value &=3D ~BIT(pwm->hwpwm);
+> +	else
+> +		pwm_value |=3D BIT(pwm->hwpwm);
+> +
+> +	writel(pwm_value, ddata->base + SG2044_PWM_POLARITY);
+> +}
+> +
+> +static int pwm_sg2044_apply(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct sg2042_pwm_ddata *ddata =3D pwmchip_get_drvdata(chip);
+> +
+> +	pwm_sg2044_set_polarity(ddata, pwm, state);
+> +
+> +	pwm_set_dutycycle(chip, pwm, state);
+> +
+> +	/*
+> +	 * re-enable PWMSTART to refresh the register period
+> +	 */
+> +	pwm_sg2044_set_start(ddata, pwm, false);
 
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
+I don't understand the effect of the START register.=20
 
---y6wrgiquygeci5im
+> +	if (!state->enabled)
+> +		return 0;
+> +
+> +	pwm_sg2044_set_outputdir(ddata, pwm, true);
+> +	pwm_sg2044_set_start(ddata, pwm, true);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct sg2042_chip_data sg2042_chip_data =3D {
+>  	.ops =3D {
+>  		.apply =3D pwm_sg2042_apply,
+
+Best regards
+Uwe
+
+--viwcriticwpgs6cr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg0gdMACgkQj4D7WH0S
-/k4J4Qf8CHX9dIGtIPbLOS9813DI9uLk4w5rJKuXFCntm61HNC7eEe0RbGwRynoZ
-A8E3zWI+tt4ZUmLp3nTHtrXTa3DBSG7FLpHXWCB7GogJcfcJ3NMgkqA9jJf6gjDY
-ogojTOXZ8Uti38J4uXeupkpybGA/ulpdAMaDlF8gx3l8NiVzg4Eycn7yV2Z0UBhB
-L1+TUXRyGKV6PZ0aKCZzVAGhBUGY3C09T5jF7xFL0ap500i5mRYeK2R+HU8ZJ8fi
-Nel1QgRdVXOxIZt+/zYOQB7021f9AqTwns1oxxTN24CXN6TzsDY4dTBlnPCG5uqt
-RA6ku7ja1Ot/ELHxpUYuQBSMEg+8Cg==
-=dnJY
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg0g24ACgkQj4D7WH0S
+/k7dIggAo+YTusAZB1ob16Tw3EM+pCp99BlXFNjlZ41rn20Fd9JAUzE0qSfA9eOV
+ZYyEmuv+7p5Simy9BqbKtJw0qgiklqBuO104ab41OS9+xSI/+G9HvED9W2u88MrX
+qyaWrqXvKF4f3PxU9f6oJggIhnAz8BJp2ZEDQfRUGb+Abyf/Kz6YYddcnIH/tA9w
+5VQW/aYwMakE60kq1qe1iZs5k+WjGNbOyjfZwbsZ8wPBPm24opp3FFrCnozjbN6v
+OsyCmyup0ZesIod/tYzjekCP9Czl4RiffGUVpJjDI1LIfrf/3NpQZMiR7uDUvcrN
+R84G2/lOOCvPFcINYZST/0Y0ezK8bA==
+=s+7h
 -----END PGP SIGNATURE-----
 
---y6wrgiquygeci5im--
+--viwcriticwpgs6cr--
 
