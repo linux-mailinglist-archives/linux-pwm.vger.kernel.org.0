@@ -1,130 +1,208 @@
-Return-Path: <linux-pwm+bounces-6128-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6129-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B06FDAC40E3
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 May 2025 16:02:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0881FAC41F0
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 May 2025 16:59:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 382241606B6
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 May 2025 14:02:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAF0B1775E7
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 May 2025 14:59:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D0D3202C3E;
-	Mon, 26 May 2025 14:02:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FC1520F06A;
+	Mon, 26 May 2025 14:59:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LncjDDat"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3MFvLKG"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924731DDC08
-	for <linux-pwm@vger.kernel.org>; Mon, 26 May 2025 14:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E37E433AC;
+	Mon, 26 May 2025 14:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748268153; cv=none; b=kSAXk65ZBf4YVlLZYnw7VlAgJCsUGGOZXdHQK1G285QcswHHSPr9Iw1OTbNOt/bZIEB/llWIGL+i1hbhSMWuQbR5RcQspB+3huEFCwm+6/fvitiamP24q2akympOs7HhzYtS+TSPDuFhrbXMaiPGweG8vnDB0Fp+wR/37ZRPcb0=
+	t=1748271577; cv=none; b=HNdP44JbOBJIDjpd/AK/CwkRJoZZwz/asHOQM9Rs/iKMU3h4r4CViOfYeXFdWeX7XpJbGDRzZIF2ketQYsQuhiA+5PHzzvX6SC0jB5xtzzi7EtS2cizq5sqJaXJRxkGYAE2EDegDh3ZZ3tTAHd7At6p3oAdw0WxC+vSf0QHQaf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748268153; c=relaxed/simple;
-	bh=1FPYTLYFolCPqa4UiErcCX9Vk38FXUDWIxtP75x1kQ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=igM11tcWpOeFNvQhVPU8NJUXqElq2QbkRkijOae4tJkSjvDQOV6eMfbVtnGQCErxQ5PDy9h5OdICOToxq974bZUkmm87nDo5VBcych/NBYLxoz6Ru/a6xcKYbR75p1wSMgfnXKGtkTnXgOFQfaQ2sYNzllY2h6w6/7twm5SXhxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=LncjDDat; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250526140229euoutp017cf01ff5d3cbffe7679f8617428cce5e~DGJ6ZaH2q0720707207euoutp01j
-	for <linux-pwm@vger.kernel.org>; Mon, 26 May 2025 14:02:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250526140229euoutp017cf01ff5d3cbffe7679f8617428cce5e~DGJ6ZaH2q0720707207euoutp01j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748268149;
-	bh=X9hidhnbjeXr79/7hjWdiP66/YfJFrDGrP9fti1zI8k=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=LncjDDatBDAFyd8dSMOXhSUWNzHT/wRYhIls3esbaJZnr9ufGHCuIeBUqXlzPNEAn
-	 3yRKkT6HOjdP0cSwXC6CW+HiLrwjwQ3sgaPFtLfKxXVvJTiPOmoItgIt/Ep0dyYhTH
-	 +zvLkck0VJPtip1ZELVDgfYh7qfus1bqVVLUqPUk=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250526140229eucas1p29ab92fba79975fb3f6f5d3f9831f9da6~DGJ5v-bu92582525825eucas1p2e;
-	Mon, 26 May 2025 14:02:29 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250526140227eusmtip1fc55917f132ab805ce6dd5cdab5f4fe9~DGJ4sSGgu1355013550eusmtip1C;
-	Mon, 26 May 2025 14:02:27 +0000 (GMT)
-Message-ID: <fec3e2d8-592a-4474-9a15-3a196829c9f6@samsung.com>
-Date: Mon, 26 May 2025 16:02:27 +0200
+	s=arc-20240116; t=1748271577; c=relaxed/simple;
+	bh=E8SaAUgrX/X3dekablDtQmiUY499qEqCSuaUoBIMc4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YV12vJrDYUAf/atC0QV3kpxbYLN9rcAkr8bSkLgl+4RZbzgDcxhnsSa1WiF80bhvmd64BuAXGHB0uLHj9n05rDEivddVCmB/CVS6rS6vRWe262HUBKoG3WLRWCPkiqzpwrMhczAIJ55qt48nqd+UwbRwpTNMuwkr9XYIA9K4z5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3MFvLKG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AC43C4CEE7;
+	Mon, 26 May 2025 14:59:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748271576;
+	bh=E8SaAUgrX/X3dekablDtQmiUY499qEqCSuaUoBIMc4A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z3MFvLKGV43p1eBMXVMy4czAhTXOz2ctCEOeVW2WnXnaTrpA/Q1ifkqOkKuCR9hQU
+	 w00FPOZ4osYXe03owq6G0dRPSqmrd+XAffAauMuPgLkHKhjNh/TzUMuaEQtX+Yk9yi
+	 9dGrirNlbBxKgDHBOMh/4zG7zPPuwz5zs/cq3k6PnLWIdwQRVDf/nqc48pHxJ9Qrff
+	 7S5ntnrO8nuYuwOH6YCsowbLnRqQ30cWeOe3ZcmA58WVEqYvce1wnJhgpXEDYlK5TY
+	 n6jC2/MwptaZ/AuiJLH76ugtEGlu6fAYbiWlst+dFQ+vSIpvU/4XBHRg8nB9dCbfHE
+	 +wYm/DVOMNFlA==
+Date: Mon, 26 May 2025 16:59:34 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Longbin Li <looong.bin@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 2/3] pwm: sophgo: reorganize the code structure
+Message-ID: <l57yh42pb7cfbnk5z4zo473vb5pac6t4hnpg36m3iph3og4wom@kmd35myokcgp>
+References: <20250428013501.6354-1-looong.bin@gmail.com>
+ <20250428013501.6354-3-looong.bin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 1/6] rust: Add basic PWM abstractions
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin
-	<benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
-	Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
-	Krummrich <dakr@kernel.org>, Drew Fustini <drew@pdp7.com>, Guo Ren
-	<guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
-	Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
-	Ghiti <alex@ghiti.fr>, Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <enxctdseecqz765nmd24vziiaksmyhltqfwycdszmfq3s7orjm@lnpc7czuluis>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250526140229eucas1p29ab92fba79975fb3f6f5d3f9831f9da6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250524211520eucas1p1378fbab27f4b1ae8808706c074fa217c
-X-EPHeader: CA
-X-CMS-RootMailID: 20250524211520eucas1p1378fbab27f4b1ae8808706c074fa217c
-References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
-	<CGME20250524211520eucas1p1378fbab27f4b1ae8808706c074fa217c@eucas1p1.samsung.com>
-	<20250524-rust-next-pwm-working-fan-for-sending-v1-1-bdd2d5094ff7@samsung.com>
-	<enxctdseecqz765nmd24vziiaksmyhltqfwycdszmfq3s7orjm@lnpc7czuluis>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="y6wrgiquygeci5im"
+Content-Disposition: inline
+In-Reply-To: <20250428013501.6354-3-looong.bin@gmail.com>
 
 
+--y6wrgiquygeci5im
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 2/3] pwm: sophgo: reorganize the code structure
+MIME-Version: 1.0
 
-On 5/26/25 09:53, Uwe Kleine-König wrote:
-> Hello Michal,
-> 
-> On Sat, May 24, 2025 at 11:14:55PM +0200, Michal Wilczynski wrote:
->> Introduce initial Rust abstractions for the Linux PWM subsystem. These
->> abstractions provide safe wrappers around the core C data structures and
->> functions, enabling the development of PWM chip drivers in Rust.
-> 
-> Oh wow, thanks for rustifying PWM. That might be my chance to actually
-> learn Rust.
-> 
-> I don't know when I will find the time to look into that in detail but
-> one thing I'd like to have for Rust support is that the drivers use the
-> new abstraction (i.e. .round_waveform_tohw() + .round_waveform_fromhw()
-> + .read_waveform() + .write_waveform()) instead of the older .apply()
-> callback.
+Hello,
 
-Hi Uwe,
+On Mon, Apr 28, 2025 at 09:34:49AM +0800, Longbin Li wrote:
+> As the driver logic can be used in both SG2042 and SG2044, it
+> will be better to reorganize the code structure.
+>=20
+> Signed-off-by: Longbin Li <looong.bin@gmail.com>
+> Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+> ---
+>  drivers/pwm/pwm-sophgo-sg2042.c | 62 +++++++++++++++++++--------------
+>  1 file changed, 35 insertions(+), 27 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg2=
+042.c
+> index ff4639d849ce..23a83843ba53 100644
+> --- a/drivers/pwm/pwm-sophgo-sg2042.c
+> +++ b/drivers/pwm/pwm-sophgo-sg2042.c
+> @@ -26,18 +26,6 @@
+>  #include <linux/pwm.h>
+>  #include <linux/reset.h>
+>=20
+> -/*
+> - * Offset RegisterName
+> - * 0x0000 HLPERIOD0
+> - * 0x0004 PERIOD0
+> - * 0x0008 HLPERIOD1
+> - * 0x000C PERIOD1
+> - * 0x0010 HLPERIOD2
+> - * 0x0014 PERIOD2
+> - * 0x0018 HLPERIOD3
+> - * 0x001C PERIOD3
+> - * Four groups and every group is composed of HLPERIOD & PERIOD
+> - */
 
-Thanks for the valuable feedback. You're right, building on the newer
-waveform abstractions is a correct approach.
+This seems to be still correct? Why remove it then?
 
-I'll rework the patches to use .round_waveform_tohw(),
-.round_waveform_fromhw(), .read_waveform(), and .write_waveform() as you
-suggested, instead of the .apply() callback.
+>  #define SG2042_PWM_HLPERIOD(chan) ((chan) * 8 + 0)
+>  #define SG2042_PWM_PERIOD(chan) ((chan) * 8 + 4)
+>=20
+> @@ -53,6 +41,10 @@ struct sg2042_pwm_ddata {
+>  	unsigned long clk_rate_hz;
+>  };
+>=20
+> +struct sg2042_chip_data {
+> +	const struct pwm_ops ops;
+> +};
+> +
+>  /*
+>   * period_ticks: PERIOD
+>   * hlperiod_ticks: HLPERIOD
+> @@ -66,21 +58,13 @@ static void pwm_sg2042_config(struct sg2042_pwm_ddata=
+ *ddata, unsigned int chan,
+>  	writel(hlperiod_ticks, base + SG2042_PWM_HLPERIOD(chan));
+>  }
+>=20
+> -static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> -			    const struct pwm_state *state)
+> +static void pwm_set_dutycycle(struct pwm_chip *chip, struct pwm_device *=
+pwm,
 
-I appreciate you steering me in the right direction.
+This is not a global pwm API function, so please stick to the pwm_sg2042
+prefix.
 
-> 
-> Best regards
-> Uwe
+> +			      const struct pwm_state *state)
+>  {
+>  	struct sg2042_pwm_ddata *ddata =3D pwmchip_get_drvdata(chip);
+>  	u32 hlperiod_ticks;
+>  	u32 period_ticks;
+>=20
+> -	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
+> -		return -EINVAL;
+> -
+> -	if (!state->enabled) {
+> -		pwm_sg2042_config(ddata, pwm->hwpwm, 0, 0);
+> -		return 0;
+> -	}
+> -
+>  	/*
+>  	 * Duration of High level (duty_cycle) =3D HLPERIOD x Period_of_input_c=
+lk
+>  	 * Duration of One Cycle (period) =3D PERIOD x Period_of_input_clk
+> [...]
+> @@ -123,13 +123,16 @@ static int pwm_sg2042_get_state(struct pwm_chip *ch=
+ip, struct pwm_device *pwm,
+>  	return 0;
+>  }
+>=20
+> -static const struct pwm_ops pwm_sg2042_ops =3D {
+> -	.apply =3D pwm_sg2042_apply,
+> -	.get_state =3D pwm_sg2042_get_state,
+> +static const struct sg2042_chip_data sg2042_chip_data =3D {
+> +	.ops =3D {
+> +		.apply =3D pwm_sg2042_apply,
+> +		.get_state =3D pwm_sg2042_get_state,
+> +	}
+>  };
+>=20
+>  static const struct of_device_id sg2042_pwm_ids[] =3D {
+> -	{ .compatible =3D "sophgo,sg2042-pwm" },
+> +	{ .compatible =3D "sophgo,sg2042-pwm",
+> +	  .data =3D &sg2042_chip_data },
 
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+I would have expected that checkpatch doesn't like that. At least I
+don't. Please make this
+
+	{
+		.compatible =3D ...;
+		.data =3D ...;
+	},
+
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
+
+--y6wrgiquygeci5im
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg0gdMACgkQj4D7WH0S
+/k4J4Qf8CHX9dIGtIPbLOS9813DI9uLk4w5rJKuXFCntm61HNC7eEe0RbGwRynoZ
+A8E3zWI+tt4ZUmLp3nTHtrXTa3DBSG7FLpHXWCB7GogJcfcJ3NMgkqA9jJf6gjDY
+ogojTOXZ8Uti38J4uXeupkpybGA/ulpdAMaDlF8gx3l8NiVzg4Eycn7yV2Z0UBhB
+L1+TUXRyGKV6PZ0aKCZzVAGhBUGY3C09T5jF7xFL0ap500i5mRYeK2R+HU8ZJ8fi
+Nel1QgRdVXOxIZt+/zYOQB7021f9AqTwns1oxxTN24CXN6TzsDY4dTBlnPCG5uqt
+RA6ku7ja1Ot/ELHxpUYuQBSMEg+8Cg==
+=dnJY
+-----END PGP SIGNATURE-----
+
+--y6wrgiquygeci5im--
 
