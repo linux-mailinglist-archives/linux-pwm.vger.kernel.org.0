@@ -1,153 +1,116 @@
-Return-Path: <linux-pwm+bounces-6143-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6144-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96D54AC4AC5
-	for <lists+linux-pwm@lfdr.de>; Tue, 27 May 2025 10:54:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A66B4AC4B00
+	for <lists+linux-pwm@lfdr.de>; Tue, 27 May 2025 11:03:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 41BCE3BBD69
-	for <lists+linux-pwm@lfdr.de>; Tue, 27 May 2025 08:54:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5750C7A3122
+	for <lists+linux-pwm@lfdr.de>; Tue, 27 May 2025 09:02:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92D7C23FC42;
-	Tue, 27 May 2025 08:54:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23DD724A069;
+	Tue, 27 May 2025 09:03:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JfWEZ/Dw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qsr3+FxZ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7775917A2F8
-	for <linux-pwm@vger.kernel.org>; Tue, 27 May 2025 08:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54D7F50F;
+	Tue, 27 May 2025 09:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748336095; cv=none; b=aphZWhGFaNWqDKnTW1eiSmP15/BUyqWqC8n/aONumza1pxVPWW08+xEMFNJ6PWoYxVNox0xAT9bTUX8nYQblyCN/zkw2lQGp76gpl7Nnn5sv+Hm6uFbaSQDX3psDsyPYcQ5MmR4IASjKFzHJ/pfGc2AF2ku4cjoHOCDEmgEXCzQ=
+	t=1748336607; cv=none; b=a8B15eCc2j08cP7zJq44Mch4dwSFOkVnCv4RevKeDtQQqHWPHSAuytFNUfjKqRjshmVDla7ZaM6uiEyZuSPXVkdS6k4+aJBgUdz3nkJUrSN3Jsv7Fk05D6MYMfCsNarSoQIP9OsEdohqKcLKKVR8SbfImjvIZdvXDM5rmAMmVlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748336095; c=relaxed/simple;
-	bh=FDhUkvstbN2kfBz+VcptLoIi6UpV5Y68pHLLt3pGpUU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=emoh1aZGxI3fzFDh/hEXJx5ZBFXvMMIDhiqHq6dP+sFLpIdFE/1oghk2FPiK2GqvS1jl2pX3aShjWhBy/7Vinc/NCuj2aLArLtDsjnRfkIBtFxLnCJFDW604BI59x3nL1UVRDKq/Q11sU+iMX08ieiKGQfDroypkBbaxj+iSg/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JfWEZ/Dw; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250527085445euoutp019402fc3ad4284557d20c0c039e474558~DVmgrIoly0349203492euoutp01C
-	for <linux-pwm@vger.kernel.org>; Tue, 27 May 2025 08:54:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250527085445euoutp019402fc3ad4284557d20c0c039e474558~DVmgrIoly0349203492euoutp01C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748336085;
-	bh=YNWmGS5CMUNgwusCiMiRXuZnmCjMkDyxd0GsI2VazJQ=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=JfWEZ/DwFr/HpuY6L8CtkXw78pLFB92zehs/NA+Kg5p014u2tgYsbhxhiEFKym5OP
-	 eIIweHXnQNBY8TCPT9AI85m99e/LXnt228fF4roIkCyAsUQhvyuGCapDUBhugriBYW
-	 BSN7ACs2nsOWCy7UpB52cwLXqD8nAO5fy/mIgpMk=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250527085445eucas1p214ecce3d8b8769c58f3eab2b0b73df93~DVmgGT1os0889508895eucas1p28;
-	Tue, 27 May 2025 08:54:45 +0000 (GMT)
-Received: from [106.210.136.40] (unknown [106.210.136.40]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250527085444eusmtip1bab9c1b6732e4f053faaa518fb79ee9b~DVmfOH2Pq0318603186eusmtip1l;
-	Tue, 27 May 2025 08:54:44 +0000 (GMT)
-Message-ID: <0dc42c81-a082-4fce-a447-32995b75f1c9@samsung.com>
-Date: Tue, 27 May 2025 10:54:42 +0200
+	s=arc-20240116; t=1748336607; c=relaxed/simple;
+	bh=CepjyP+8Q0P8lM7xYgC7fRcPO5/D444YGpDm/oPFMSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GvEzRuIR6WqypzJDV3yG3DYLMD1cZqmZZTMYgwpxEMNb23D6G9Kf2f4cV4xLQjFT8+WbCMRH4w50LXNueziPjvuJMzfsCC+OXgo+OZtMd4z3R2bmc5AW86QuEQrANtkxd8shQZyPUAW58AQPcxpzHa9nMgycWLEsCIi0JCEfw1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qsr3+FxZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAD77C4CEE9;
+	Tue, 27 May 2025 09:03:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748336606;
+	bh=CepjyP+8Q0P8lM7xYgC7fRcPO5/D444YGpDm/oPFMSc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qsr3+FxZDJEeNzjVpWICNvLCrY2dAQ6fM+iHHjwd1LIfkdiIacQV2KvO7a0ud7U0c
+	 jUi8nOf1811mTewLQB1jrm4TbfRivKocjf91TNEBbmpv9nH7zAYFnTnrMT2KYQ0x6W
+	 brNuYokQS0qR6oF38Y+sfENS3vY5ppIGfsjfK9kfEXQg3ue9KlbfHhRBhx9bRAsDFq
+	 dvqPzC3It9Es2eUYtcOuuKoD5VvbtbuWfVdUtJfSR5nov2OjhuDwbEd80uIVjCShn/
+	 x4WkaUsCQtiOza4xi4S9+dieTwxB9ofpwIfXbdNakLQplD6zxHKqp3GnYqIpyx9Cqg
+	 xY+MiDA26ekiA==
+Date: Tue, 27 May 2025 11:03:23 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Guodong Xu <guodong@riscstar.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
+	dlan@gentoo.org, p.zabel@pengutronix.de, drew@pdp7.com, inochiama@gmail.com, 
+	geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, hal.feng@starfivetech.com, 
+	unicorn_wang@outlook.com, duje.mihanovic@skole.hr, heikki.krogerus@linux.intel.com, 
+	elder@riscstar.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
+Message-ID: <e2erhnhqfeeb5b74x5aspowgdiqdnywmfswl7vhgr7wt3pacns@j2lbkcnjl7ne>
+References: <20250429085048.1310409-1-guodong@riscstar.com>
+ <lgjntm2v4qtp3uwccriodxdefdc4vqydzl4dmula4avhws4zfi@xevkgzfuhyhl>
+ <CAH1PCMZBBmDibwSLUAhDAyjAORgpS+D-U5_kfLJkbZ2r=XpFDA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 5/6] riscv: dts: thead: Add PVT node
-To: Drew Fustini <drew@pdp7.com>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Miguel Ojeda
-	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
-	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin
-	<benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
-	Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
-	Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
-Content-Language: pl
-From: "Michal Wilczynski/Kernel (PLT) /SRPOL/Engineer/Samsung Electronics"
-	<m.wilczynski@samsung.com>
-In-Reply-To: <aDVxDJi0KkWXiPCK@x1>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250527085445eucas1p214ecce3d8b8769c58f3eab2b0b73df93
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01
-X-EPHeader: CA
-X-CMS-RootMailID: 20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01
-References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
-	<CGME20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01@eucas1p2.samsung.com>
-	<20250524-rust-next-pwm-working-fan-for-sending-v1-5-bdd2d5094ff7@samsung.com>
-	<aDVxDJi0KkWXiPCK@x1>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="26g7v56eogwogiqd"
+Content-Disposition: inline
+In-Reply-To: <CAH1PCMZBBmDibwSLUAhDAyjAORgpS+D-U5_kfLJkbZ2r=XpFDA@mail.gmail.com>
 
 
-W dniu 27.05.2025 o 10:00, Drew Fustini pisze:
-> On Sat, May 24, 2025 at 11:14:59PM +0200, Michal Wilczynski wrote:
->> Add PVT DT node for thermal sensor.
->>
->> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
->> ---
->>   arch/riscv/boot/dts/thead/th1520.dtsi | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
->> index f24e12d7259fabcfbdc2dfa966d759db06684ab4..faf5c3aaf209b24cd99ddc377a88e08a8cce24fe 100644
->> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
->> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
->> @@ -648,6 +648,17 @@ padctrl_aosys: pinctrl@fffff4a000 {
->>   			thead,pad-group = <1>;
->>   		};
->>   
->> +		pvt: pvt@fffff4e000 {
->> +			compatible = "moortec,mr75203";
->> +			reg = <0xff 0xfff4e000 0x0 0x80>,
->> +			      <0xff 0xfff4e080 0x0 0x100>,
->> +			      <0xff 0xfff4e180 0x0 0x680>,
->> +			      <0xff 0xfff4e800 0x0 0x600>;
->> +			reg-names = "common", "ts", "pd", "vm";
->> +			clocks = <&aonsys_clk>;
->> +			#thermal-sensor-cells = <1>;
->> +		};
->> +
->>   		gpio@fffff52000 {
->>   			compatible = "snps,dw-apb-gpio";
->>   			reg = <0xff 0xfff52000 0x0 0x1000>;
->>
->> -- 
->> 2.34.1
->>
-> I found that on my lpi4a that boot while hang after applying this patch.
-> I think that it is related to clocks as boot finished okay when using
-> clk_ignore_unused on the kernel cmdline. Do you happen have that in your
-> kernel cmdline?
+--26g7v56eogwogiqd
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
+MIME-Version: 1.0
 
-Right I had that option enabled, that's why I've missed this. Thanks for
+Hello Guodong,
 
-letting me know ! I'll remove this option for future testing.
+On Tue, May 27, 2025 at 10:41:20AM +0800, Guodong Xu wrote:
+> You're right that patches 1, 2, and 5 do not depend on that reset series
+> and can be applied independently.
+>=20
+> > [...]
+>=20
+> Yeah. And I confirm that they can be applied without the reset
+> dependencies.
 
->
-> I need to investigate further to understand which clocks are causing the
-> problem.
+Thanks for the confirmation, pushed as is to
 
+	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
+-nexxt
 
-No problem I can look into that as well, most likely towards the end
+(i.e. as material for the 6.17-rc1 merge window as the PWM PR for
+6.16-rc1 is already sent).
 
-of the week as I'm travelling and don't have access to the board.
+Best regards
+Uwe
 
+--26g7v56eogwogiqd
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
-> Thanks,
-> Drew
->
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg1f9cACgkQj4D7WH0S
+/k6Dhgf/X9WuY7qFhMFlefMe19qBwAufGzkajhCdv+bnqB05R5v/Jt+kVwQmhzec
+6mBTGEvmeuNhKUA+kXqLyiTEs36yUqVI6LScD9LHe6QzBQaCmMqYelh8SgcfZ4iO
+kubD1Zz0uZdhiqzajOI7+z+foBW6rZ7qgNYuOlvjPaNP2YCUYRNd8ypUGCYVn9Zr
+mwZvDCDrnH2G+4Cchw+4quN/mGHULoyJawC9djxSfLhWPg72AxLlABSovzvIC+hh
+b/uI5FRi/EIzcate4L1hKTVHF9rFIipT3gUv9sFbINCtAUKLhvZ/MlBVLeGWGiiK
+40qWRrtpvZ859pNH+jYQzAHk2rmYYQ==
+=GMeA
+-----END PGP SIGNATURE-----
+
+--26g7v56eogwogiqd--
 
