@@ -1,77 +1,77 @@
-Return-Path: <linux-pwm+bounces-6162-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6163-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B41C4AC66C9
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 May 2025 12:12:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26D5DAC66CF
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 May 2025 12:12:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 750904A268D
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 May 2025 10:12:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A0AB1BC6C27
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 May 2025 10:12:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B62427979C;
-	Wed, 28 May 2025 10:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07D7627A46F;
+	Wed, 28 May 2025 10:12:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gScjPPHt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eB0Yhs9+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843A7212D7D;
-	Wed, 28 May 2025 10:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F33C27991C;
+	Wed, 28 May 2025 10:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748427141; cv=none; b=duD6RzjMM5fI69Ob8Xp/JMu6L7TaEoy+FGlajPfV6QLp9TfAWgOY5cCncLtlvRyyzyKyPfkGogVc0yCn+PEicYzXJEbBOKjm8DUfyVbGnYipAsfyqYZgnsm2klEcNivgsWatf2fneuCiQF8ccw9GAuSgfV2FENbLfJ/5pyBFCwc=
+	t=1748427145; cv=none; b=Zuc1RFtHNKlzhKpoyziwvYN9l+kh2ar/EyB43CWtUcp3IfYBtwsaQrE1lR6TSwDwoQAS76cezFmh2T6ae0wlnlFqGk0Ffui/vrIrHIT4cXIc1nVdEwW4APHEEbRAPOKNQabVVvn7+O0/sN+YlzSHkgHViIJz7wXjujbKaqUELwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748427141; c=relaxed/simple;
-	bh=3fmT8a4w2c2UFK2NC819rGC2QieFNea0UjuWO8kZ5NQ=;
+	s=arc-20240116; t=1748427145; c=relaxed/simple;
+	bh=xr9G46dj58Ks9R2hFHMEyGZQjQDhmexVHbnzDbFEwVM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E27SKtJJw6PVYCd9dkd8vKpXj4paP7Il1elbzrwkP/vAvnTQDEBP8mUGkzw3heNaRTSimDqhjqu9GnNAlnUidSYIAJ7fWQMJfX7LiRL79ydXP+HqEWr9RUwR8dFqwBx3g8je/8ebKnp9FN9gfGalTHYQX/jLJFkgqg8qU82IY/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gScjPPHt; arc=none smtp.client-ip=209.85.219.42
+	 MIME-Version; b=si+iRYvZh3LcDLzem/zkSZXIduyStW9ZfmqQkVrbfnpbIzf9N9UftoyX4ZbMGBNThx035ahMrAjEe7Kt8XknRPpAExjcX+O3759y4EryEZKtNEeK4Mpede8W4AwOrMly8k+Q78mtXle3oK1XFIVWddqPdzd2KoS4pPYvi7x/bc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eB0Yhs9+; arc=none smtp.client-ip=209.85.167.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6fab467aacdso14507086d6.2;
-        Wed, 28 May 2025 03:12:17 -0700 (PDT)
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3fa6c54cc1aso2523582b6e.1;
+        Wed, 28 May 2025 03:12:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748427136; x=1749031936; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748427143; x=1749031943; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zZIuoUuOKk0C9c3zdfmp4xS8a8OdfkLmfezVI5NFdqE=;
-        b=gScjPPHtrGqoyFYLau/Hi7HEXTpkRr+PMnzW8HDV0qanp+EysurOk3ZYEMf8JRJn8Z
-         ScOo0UionNjl/r7JjzrV9zluiK3Eb66+eqy43rBmnHMOu29nZV3iwFx/fM6dzGUItERj
-         XxJbmX3XXUGjBcIHx5fzY6gMj3Phk2r7eAGjl0h9+dpl7bBAuChP/lCjQ5+fs8tvMMCV
-         /3dZa45ROXIXPWXzw9Djg0aK8Wz7IPZ3iniDVMcRzcUwOhVH7dntmrDdSxZvptpSB3Gi
-         cd+Js7EWKG6QSGAyVQdVzbiWjGGv0X6RVhyxa48d77XPkvkDN3nAY2coxEZ7vpVC2oCx
-         GKUw==
+        bh=M9UzaJZDvKRNmn4BJ2b4hvJbdoSm7qg3xJXdaBQvCs4=;
+        b=eB0Yhs9+42K8/KhZI0GQuQ6GGIPkDAwu47Us7KskuAqyijbrQF/VBdZsDI9SMC3hA1
+         ruipRu+qHVQ7gwEuxywCbHaLtZxaPA7eJb1uLNL5u9Otr2GMjmH8Z4U8Apj20iKt0jmw
+         1HLeN/BlIzqqgST/mtna+nU4hHEAzLlWorvhH4iM+oAMB9n1e0IUUwqPhAT15KM9IGz3
+         8NnP528ZCmBrj0vCo9TC+FFs/8zs42PghD6lpS3SZssyy0vCZPK9eDl7InTSxZLKy8OZ
+         FJo24RVncIf6FyQCEH1QvDshy9GiLwBu64GAsQQdGkZ9hwPqkCxdfSY09pjaQK3Bv1GW
+         fCkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748427136; x=1749031936;
+        d=1e100.net; s=20230601; t=1748427143; x=1749031943;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zZIuoUuOKk0C9c3zdfmp4xS8a8OdfkLmfezVI5NFdqE=;
-        b=o2KK67z/w6yuxVG4Eawev3QGSFpPFwdsUZeZaV/QKPLBVtYocGbvEVIw1bcKNyl8Kx
-         oerWftag+LOvi2JwcCvzxUf/5sZ1TMOLndXYzM3n+bCqkIMR0lnf0rWNZTZ5HiKcV9ha
-         sx7/WMegTAvSjM1d23ODYq6hY6jJVF8Pr2Y+tVoFXHhCmKogcdGFQAplcEWvflGBwZO4
-         sdis2j1apATNSSarwR+++1jy4RuTy9ZGF+2S8YYzI8A70lJ/EDDPFsvEyvREQtMlcSTb
-         j/zjVc0A/HhYYO+A79MSbt2evrAGTG+hKODQO6asgwO4AQk4wI0FeFjhR1Pl/KKPsA98
-         Gjlw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZddciO7GE8V7vNmn1tKCvUFH4scVsNX5mVeR7etQzqrupfrlGyoRxHvo8VwMG1DEB1QhuYWWz1/dyNqPZ@vger.kernel.org, AJvYcCXfHx16Ey8TpwM94Z45fwEhZi7pE24vxGn3pPU0nrH9bM/h6PPq+FoCi4Y1e/amsRM49CY0gNAg4jtv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyDYdGVpoHL4lYQJqy8YtgUvurQwFoULaHN3pvv7SlpcLNfsi9
-	NO96aZH9LxmCxatjcrdLuIX95vez7Q5sfWMGXBvsK81dm3wxuFtvx5tvWpfruQ==
-X-Gm-Gg: ASbGncvCfnb42TyUUHTwEpcc4RXJlkwI2x2Kf5vdIq6/PhL5stNm1/iLp7AHJFPwbIJ
-	9FP27c1lBmja7X50OL/rds9clj1bew3fj6sBQy1RtqvDx4VtUQ0BgeBptE86guEiHxEbuWQ9KZ0
-	Cn1+gO5AjIGXRh6pi82DxE2KCEaW2iKnqz7gtn2ABkWnvY6oCbnEqglHylTpoqk75RQeEGPDN9a
-	Gy1OpaaVmHo0GOXe85aNuUHztTuwmowbd3gV7lj5ou2igHgE7+2P/w6+qc2Ik+dwTlUc1Tes6Rw
-	trVGiYuDaCJRCvG4568H454CaZTZjjj/RIKTDnSSlqqcdQ==
-X-Google-Smtp-Source: AGHT+IFWPOwlvnziJrU1SXRbxNHI5NCoM7BJbMrItu4d5oRPG+SLE6qRrjKuSLB0YMT8eQPS4/wi0g==
-X-Received: by 2002:a17:903:2403:b0:234:8a16:d62b with SMTP id d9443c01a7336-2348a16d6damr97040175ad.12.1748427125955;
-        Wed, 28 May 2025 03:12:05 -0700 (PDT)
+        bh=M9UzaJZDvKRNmn4BJ2b4hvJbdoSm7qg3xJXdaBQvCs4=;
+        b=fws0ndU5p0lRsQCQFOb169xw0j2hhrFJxOt+LqTLVR2a8j9mAsLd0QkmmfDPhmv9VI
+         7Xf69vO5QMsBLXrIf1fcbgWqQoizNX4N8L3iyPv3nS82ycmDNQVc4lQoTiVmKikWED1i
+         SETQTfK/MI9oHbXGuRHrjWHhfRFSJA19YrLmtOloKOc8RALunwig/wmJw2BBrNA3ESY4
+         1YOBc59eC/qdRb5Pwb0/klqK86mhBfw+qPaIg2BqggW4Sx/TDMNk23ZuD8f6EZ91Ns2H
+         vWyn4mf9aqJ2yJVbWeeCeQbg1AKAPr0yscFxfZKPtyTVg8lI5DwI4WWnCbXYvqgfwmXb
+         AArA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyyjoyya485HzwONcK0JWV89VEsDjCK05Qp9UkZAG7vRBkt34KRO/Ztq5qN+7QnCQ8eo9Tnsoe5kTg+C+l@vger.kernel.org, AJvYcCVTmZsIMwYM9ATa40hVMxRZ1KvfQ1PnmHFCRi0MSjQtVuYf5ryc7o7zBUhRG6hIjOJP0nEJNLIl20ks@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcnRo1GoyFiKfCHvtGDBB0/EB7S9aY6zsUmf+MtIfvsKEZ5w6+
+	KWiKNmEeHViZ/PrK5fkh2YhlS9ufgA4SZEruFly53nJcPbcMkYYNxpnkfb9SnA==
+X-Gm-Gg: ASbGncvysRn5jTx3rNR1I7G9/1BBm4vqrMFcU54owRWT3PkhUns2kTB94+mJWyTYhl6
+	eqBhpRJ6yGv3rxTFgG/BmSGjF5TzvX1Bre0l8PwPIt6dnEVR5ZwPpPIRq3An8zqCt7bquXkzqcm
+	KMtH0DBjntAa/hOCaZk24xeeSiUdVPZ0ChfrRY/HUbhXYwOsw6z0JqhTKoOWCZpRJeJ+erkgxSA
+	S6r02v2w/NTwRbAvbj5r8ptEyFWwDVWT6POv1L54UrvVBIqeKR5LlorTm6g7CZwHglz0eJ9eQ29
+	/jI+xJCINL5MMWQ7VgIKdj3GYYemA3qN4oX+v2UQ7N3+VQ==
+X-Google-Smtp-Source: AGHT+IEjHqDXErb8LHY+YXueka86+j+atlpa5otAATrNzDLyo6C+uNeLDmOMpvofRqGSXrlPBv+XBQ==
+X-Received: by 2002:a17:902:f544:b0:220:c164:6ee1 with SMTP id d9443c01a7336-23414feac2bmr246739315ad.32.1748427132449;
+        Wed, 28 May 2025 03:12:12 -0700 (PDT)
 Received: from cu.. ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d358f118sm8453595ad.138.2025.05.28.03.12.00
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d358f118sm8453595ad.138.2025.05.28.03.12.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 03:12:05 -0700 (PDT)
+        Wed, 28 May 2025 03:12:12 -0700 (PDT)
 From: Longbin Li <looong.bin@gmail.com>
 To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -89,9 +89,9 @@ Cc: linux-pwm@vger.kernel.org,
 	sophgo@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH v5 2/3] pwm: sophgo: reorganize the code structure
-Date: Wed, 28 May 2025 18:11:37 +0800
-Message-ID: <20250528101139.28702-3-looong.bin@gmail.com>
+Subject: [PATCH v5 3/3] pwm: sophgo: add driver for SG2044
+Date: Wed, 28 May 2025 18:11:38 +0800
+Message-ID: <20250528101139.28702-4-looong.bin@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250528101139.28702-1-looong.bin@gmail.com>
 References: <20250528101139.28702-1-looong.bin@gmail.com>
@@ -103,128 +103,154 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As the driver logic can be used in both SG2042 and SG2044, it
-will be better to reorganize the code structure.
+Add PWM controller for SG2044 on base of SG2042.
 
 Signed-off-by: Longbin Li <looong.bin@gmail.com>
 Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
 Tested-by: Chen Wang <unicorn_wang@outlook.com>
 ---
- drivers/pwm/pwm-sophgo-sg2042.c | 52 +++++++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 15 deletions(-)
+ drivers/pwm/pwm-sophgo-sg2042.c | 89 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 87 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg2042.c
-index ff4639d849ce..da1c75b9c8f5 100644
+index da1c75b9c8f5..d71d2a66b722 100644
 --- a/drivers/pwm/pwm-sophgo-sg2042.c
 +++ b/drivers/pwm/pwm-sophgo-sg2042.c
-@@ -53,6 +53,10 @@ struct sg2042_pwm_ddata {
- 	unsigned long clk_rate_hz;
- };
+@@ -13,6 +13,7 @@
+  *   the running period.
+  * - When PERIOD and HLPERIOD is set to 0, the PWM wave output will
+  *   be stopped and the output is pulled to high.
++ * - SG2044 supports both polarities, SG2042 only normal polarity.
+  * See the datasheet [1] for more details.
+  * [1]:https://github.com/sophgo/sophgo-doc/tree/main/SG2042/TRM
+  */
+@@ -41,6 +42,10 @@
+ #define SG2042_PWM_HLPERIOD(chan) ((chan) * 8 + 0)
+ #define SG2042_PWM_PERIOD(chan) ((chan) * 8 + 4)
 
-+struct sg2042_chip_data {
-+	const struct pwm_ops ops;
-+};
++#define SG2044_PWM_POLARITY		0x40
++#define SG2044_PWM_PWMSTART		0x44
++#define SG2044_PWM_OE			0xd0
 +
- /*
-  * period_ticks: PERIOD
-  * hlperiod_ticks: HLPERIOD
-@@ -66,21 +70,13 @@ static void pwm_sg2042_config(struct sg2042_pwm_ddata *ddata, unsigned int chan,
- 	writel(hlperiod_ticks, base + SG2042_PWM_HLPERIOD(chan));
- }
+ #define SG2042_PWM_CHANNELNUM	4
 
--static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pwm,
--			    const struct pwm_state *state)
-+static void pwm_sg2042_set_dutycycle(struct pwm_chip *chip, struct pwm_device *pwm,
-+				     const struct pwm_state *state)
- {
- 	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
- 	u32 hlperiod_ticks;
- 	u32 period_ticks;
+ /**
+@@ -84,8 +89,8 @@ static void pwm_sg2042_set_dutycycle(struct pwm_chip *chip, struct pwm_device *p
+ 	period_ticks = min(mul_u64_u64_div_u64(ddata->clk_rate_hz, state->period, NSEC_PER_SEC), U32_MAX);
+ 	hlperiod_ticks = min(mul_u64_u64_div_u64(ddata->clk_rate_hz, state->duty_cycle, NSEC_PER_SEC), U32_MAX);
 
--	if (state->polarity == PWM_POLARITY_INVERSED)
--		return -EINVAL;
--
--	if (!state->enabled) {
--		pwm_sg2042_config(ddata, pwm->hwpwm, 0, 0);
--		return 0;
--	}
--
- 	/*
- 	 * Duration of High level (duty_cycle) = HLPERIOD x Period_of_input_clk
- 	 * Duration of One Cycle (period) = PERIOD x Period_of_input_clk
-@@ -92,6 +88,22 @@ static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		pwm->hwpwm, period_ticks, hlperiod_ticks);
+-	dev_dbg(pwmchip_parent(chip), "chan[%u]: PERIOD=%u, HLPERIOD=%u\n",
+-		pwm->hwpwm, period_ticks, hlperiod_ticks);
++	dev_dbg(pwmchip_parent(chip), "chan[%u]: ENABLE=%u, PERIOD=%u, HLPERIOD=%u, POLARITY=%u\n",
++		pwm->hwpwm, state->enabled, period_ticks, hlperiod_ticks, state->polarity);
 
  	pwm_sg2042_config(ddata, pwm->hwpwm, period_ticks, hlperiod_ticks);
+ }
+@@ -135,6 +140,74 @@ static int pwm_sg2042_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return 0;
+ }
+
++static void pwm_sg2044_set_outputen(struct sg2042_pwm_ddata *ddata, struct pwm_device *pwm,
++				    bool enabled)
++{
++	u32 pwmstart;
++
++	pwmstart = readl(ddata->base + SG2044_PWM_PWMSTART);
++
++	if (enabled)
++		pwmstart |= BIT(pwm->hwpwm);
++	else
++		pwmstart &= ~BIT(pwm->hwpwm);
++
++	writel(pwmstart, ddata->base + SG2044_PWM_PWMSTART);
 +}
 +
-+static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++static void pwm_sg2044_set_outputdir(struct sg2042_pwm_ddata *ddata, struct pwm_device *pwm,
++				     bool enabled)
++{
++	u32 pwm_oe;
++
++	pwm_oe = readl(ddata->base + SG2044_PWM_OE);
++
++	if (enabled)
++		pwm_oe |= BIT(pwm->hwpwm);
++	else
++		pwm_oe &= ~BIT(pwm->hwpwm);
++
++	writel(pwm_oe, ddata->base + SG2044_PWM_OE);
++}
++
++static void pwm_sg2044_set_polarity(struct sg2042_pwm_ddata *ddata, struct pwm_device *pwm,
++				    const struct pwm_state *state)
++{
++	u32 pwm_polarity;
++
++	pwm_polarity = readl(ddata->base + SG2044_PWM_POLARITY);
++
++	if (state->polarity == PWM_POLARITY_NORMAL)
++		pwm_polarity &= ~BIT(pwm->hwpwm);
++	else
++		pwm_polarity |= BIT(pwm->hwpwm);
++
++	writel(pwm_polarity, ddata->base + SG2044_PWM_POLARITY);
++}
++
++static int pwm_sg2044_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 +			    const struct pwm_state *state)
 +{
 +	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
 +
-+	if (state->polarity == PWM_POLARITY_INVERSED)
-+		return -EINVAL;
-+
-+	if (!state->enabled) {
-+		pwm_sg2042_config(ddata, pwm->hwpwm, 0, 0);
-+		return 0;
-+	}
++	pwm_sg2044_set_polarity(ddata, pwm, state);
 +
 +	pwm_sg2042_set_dutycycle(chip, pwm, state);
-
- 	return 0;
- }
-@@ -123,13 +135,18 @@ static int pwm_sg2042_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	return 0;
- }
-
--static const struct pwm_ops pwm_sg2042_ops = {
--	.apply = pwm_sg2042_apply,
--	.get_state = pwm_sg2042_get_state,
-+static const struct sg2042_chip_data sg2042_chip_data = {
-+	.ops = {
-+		.apply = pwm_sg2042_apply,
-+		.get_state = pwm_sg2042_get_state,
-+	}
++
++	/*
++	 * re-enable PWMSTART to refresh the register period
++	 */
++	 pwm_sg2044_set_outputen(ddata, pwm, false);
++
++	if (!state->enabled)
++		return 0;
++
++	pwm_sg2044_set_outputdir(ddata, pwm, true);
++	pwm_sg2044_set_outputen(ddata, pwm, true);
++
++	return 0;
++}
++
+ static const struct sg2042_chip_data sg2042_chip_data = {
+ 	.ops = {
+ 		.apply = pwm_sg2042_apply,
+@@ -142,11 +215,22 @@ static const struct sg2042_chip_data sg2042_chip_data = {
+ 	}
  };
 
++static const struct sg2042_chip_data sg2044_chip_data = {
++	.ops = {
++		.apply = pwm_sg2044_apply,
++		.get_state = pwm_sg2042_get_state,
++	}
++};
++
  static const struct of_device_id sg2042_pwm_ids[] = {
--	{ .compatible = "sophgo,sg2042-pwm" },
+ 	{
+ 		.compatible = "sophgo,sg2042-pwm",
+ 		.data = &sg2042_chip_data
+ 	},
 +	{
-+		.compatible = "sophgo,sg2042-pwm",
-+		.data = &sg2042_chip_data
++		.compatible = "sophgo,sg2044-pwm",
++		.data = &sg2044_chip_data
 +	},
  	{ }
  };
  MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
-@@ -137,12 +154,17 @@ MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
- static int pwm_sg2042_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	const struct sg2042_chip_data *chip_data;
- 	struct sg2042_pwm_ddata *ddata;
- 	struct reset_control *rst;
- 	struct pwm_chip *chip;
- 	struct clk *clk;
- 	int ret;
+@@ -212,5 +296,6 @@ static struct platform_driver pwm_sg2042_driver = {
+ module_platform_driver(pwm_sg2042_driver);
 
-+	chip_data = device_get_match_data(dev);
-+	if (!chip_data)
-+		return -ENODEV;
-+
- 	chip = devm_pwmchip_alloc(dev, SG2042_PWM_CHANNELNUM, sizeof(*ddata));
- 	if (IS_ERR(chip))
- 		return PTR_ERR(chip);
-@@ -170,7 +192,7 @@ static int pwm_sg2042_probe(struct platform_device *pdev)
- 	if (IS_ERR(rst))
- 		return dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset\n");
-
--	chip->ops = &pwm_sg2042_ops;
-+	chip->ops = &chip_data->ops;
- 	chip->atomic = true;
-
- 	ret = devm_pwmchip_add(dev, chip);
+ MODULE_AUTHOR("Chen Wang");
++MODULE_AUTHOR("Longbin Li <looong.bin@gmail.com>");
+ MODULE_DESCRIPTION("Sophgo SG2042 PWM driver");
+ MODULE_LICENSE("GPL");
 --
 2.49.0
 
