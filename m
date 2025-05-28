@@ -1,130 +1,149 @@
-Return-Path: <linux-pwm+bounces-6159-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6160-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5756DAC633F
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 May 2025 09:43:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95C04AC66C3
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 May 2025 12:11:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BD6197A1EE3
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 May 2025 07:42:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20EC83B5B14
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 May 2025 10:11:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82BD924502D;
-	Wed, 28 May 2025 07:43:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A1202797A1;
+	Wed, 28 May 2025 10:11:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jXtHtHR8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTg85LV5"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9631367;
-	Wed, 28 May 2025 07:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C4927932B;
+	Wed, 28 May 2025 10:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748418233; cv=none; b=JwsAS3A3i0x7rr5zRFBHrrH57/kESQc4MB3QBvzjcYmwbiIX83W9NYNML+2YcvPch0Ro8yEI6k/09cH8yFLA/qfupQrC6L66e1+aGT5F2HusVUGIzWwkZs+btqtyKTlDUyGQ3x3DO7IUmFMl2swZFcNG3VwzQzal2445KhcqaAc=
+	t=1748427113; cv=none; b=vC6nsf3smVWshTzMnxp1FBJLpt3+wZbYpDn4jd9I3BruOD8MXwURzlv1auvpk6o0QhiZNESf6+4NbYe2fDTzBzTsK28HOA4VaoNyfS7GohhFosT8XS6qqWaaWoNwQUBU72WLZ/sFdvM51E/eXuBN5FzL5+lTgbWn1+ob5mAQU38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748418233; c=relaxed/simple;
-	bh=UDTXmWoYv9/xyJqEAsScTL5vAx1ZZeaAczWfwT05les=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bvB20nsGBgw9FPMkqrGFa+HgzTCoGVFXHHdD+YulkHP9XisN1BSVEj8kH90IKCCrjk22G3ABMi+BlZXTmX+pYKzINUAlGVKwvdc6mCLs3vs6LqtkaiZ0QsbW7Az9wlpBr4Fu6z2mxq4QmYoHWLLp9NOoWKMQu0ct++WfmV/1lLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jXtHtHR8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A39CC4CEE7;
-	Wed, 28 May 2025 07:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748418232;
-	bh=UDTXmWoYv9/xyJqEAsScTL5vAx1ZZeaAczWfwT05les=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jXtHtHR8IRSjqMfFlBbzEm/QcuoeHsg2WKHcAHv301klgRgl0C+q85BHx7sVM35uM
-	 StgVp4Bh87ZwxrbJpRJx6YP8JpwLiviEW2Rw3BJZo35X7pjAYeE2TYWgk9ytUovO2x
-	 iEgCsFEyR5eM/koJYtXhoc/khCR4pGbL4M5L2KPs0M+b/N7HIgc79epnpTd2dje/qo
-	 JH6G0ENMXeSWvM3YeEZSEtV3RqL0cvNbHnur+yovMhzPaEbra6MyEnZ9RAdcY1PNPj
-	 hE+krx+7lqGKkLmcdgfC7El1BPRnVanW9I3CLKzryptPIKo9DABwoSJjRaCSJwVUoL
-	 HVzSwvfll6MNw==
-Message-ID: <a14be34c-de2a-4bea-9282-1fac7780b9a4@kernel.org>
-Date: Wed, 28 May 2025 09:43:48 +0200
+	s=arc-20240116; t=1748427113; c=relaxed/simple;
+	bh=jQm/Idqdz/CKRY7nuelIqDNot1qzY4oj6ANAyNVprKQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W1tyYbbEoktQIuPoisPUzkSd7vAmkPQ1gCVozOlznotlG15X1EPlQOpLBrC5G06822iHlm9oRP7oJyH3u5Vk3bKfluC2ngVoIrucYdBM/KqfR3fbXGFY1gl0HRLQEbf+rQanvRZ2Hecheiu0euVGM7WwfT5MUHa7HfxIfmV+wIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aTg85LV5; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22e16234307so6666465ad.0;
+        Wed, 28 May 2025 03:11:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748427111; x=1749031911; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=u1/Vt2mp73cleoni8AtXiYI0r+BUVH7GhRhyE5d0M3E=;
+        b=aTg85LV5XonIN79ZDYiW6eNmJotr+PeHx4/uNCcc3mdfghtSmfTG5kQwvvcgpwMFDd
+         XPyff3ZQCnVmbAwA5vS7AnZww8m1gfFVaK0tsdfMNB9/jWeY7wDBuo/e6qeVWXJ9i7Yq
+         K9Z2wUK9JcM1OJfP8TUEQ20NluMJYslfNmXzIukpfMvzKlDiWLvBh1WyMZtMQs7Av5Z6
+         lVbt8e4+zEE93ZnHt59ZR+buq4rXA1B0lUNMHAC/uMSnHYkTt6WKjKqjsJ7rhaNmDaw1
+         x8hT9Lu8c1iuJviIWXaHwnkXMFQXB6eR8PzEFcuHMdw4CK7RxZ4HEdQc/IGj303gMHGs
+         mFqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748427111; x=1749031911;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u1/Vt2mp73cleoni8AtXiYI0r+BUVH7GhRhyE5d0M3E=;
+        b=MPxSwZpNQFNCTPLKkOPclhF4uOCTaww2VpwiEpytq6Bi6PJ0yOeXuIcSqGyiQRD2P9
+         FAZ2lctxtSwHxxirF/QMo1Yx3Ty4gk/+p7JfD7fEGuxy8AaC2HzuE63+FQTJBaY4hT5J
+         TlU11QvVrynSPzCefAwV+Rz14x3SPhSJi+RvseRBBKkRznN6HRZxMYtR6CT3mI7pjdOm
+         Oorwmc4nTFV6sGkP6pEppPdZkGVaSGrPoo44SoMlVdGhz0rn/kUl/N5vXUd2OABZoz+R
+         JsTZxnKwOWmAfR03b1gOjOYWaeyxCZUXFzj+h/gJHu02+DlTeD4Du05vZtTz71MXgJfe
+         3IrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVrcKmCLEtB/WpW4RvAKmRgbvX/s7IS6RY1GPU9XUYNFaSMuFytBUVUXMz7oXyh5Hg/gg8iGsfRFesxMrCd@vger.kernel.org, AJvYcCXp4R+95Fey2A54t7u0KS2e9ZTBhaIfUeDMQduZoD65kBvByNiP8G5UEiAZ4KjtIqFWJtcLS6IJ3Mpa@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVGmU5vT6eZusH8Z5AAddabUdGgOkJfpRKGEvlkb10w/notxI+
+	XXFRvQs4PjQ+dQFejlwtp9wXuAL7ULEGzZP4SHVOiwPihV0TDxKmdF+ZKsE89g==
+X-Gm-Gg: ASbGncvCrz5JHaozvP/3azWIZi2C7ZflyRbdW0nSbPlXH2liSGJGpHGJkdNk7JP4JM+
+	+Wn4aF6mjydGSzNVNPlxrXg6zh36U3S3kbPm32I3/5EowLnvs575oG8MkLxwnzg4vE8j7B7K0b4
+	RAFhJBgoPZFNMaXnlmqCcnLiaAtLw/p6rVyXEXXMybK7QbW2WS068KtNmprjEf4I/RPo21BUcfI
+	/vdA6HiTporgOrMZbHwcPhCfS7CkMTehfG2dcAyrZjwbK6Bdi5AplK/3//LJeCL5wHmfwBLZK5V
+	0hWnpkyi4YcP3sPm7ngW7AVj4UGdXCqLd4UKgzFA6ttPJHu6/9QMNwOI
+X-Google-Smtp-Source: AGHT+IFZgXlqFr/nZJIbvYhr8VBnFB2u+fgWRkPoYOa2czSx/AkDylcuc63qHSavCUSvhb5c85NwtQ==
+X-Received: by 2002:a17:902:f693:b0:234:325:500b with SMTP id d9443c01a7336-234b74f4119mr68932215ad.22.1748427111266;
+        Wed, 28 May 2025 03:11:51 -0700 (PDT)
+Received: from cu.. ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d358f118sm8453595ad.138.2025.05.28.03.11.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 03:11:50 -0700 (PDT)
+From: Longbin Li <looong.bin@gmail.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Longbin Li <looong.bin@gmail.com>
+Cc: linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v5 0/3] riscv: pwm: sophgo: add pwm support for SG2044
+Date: Wed, 28 May 2025 18:11:35 +0800
+Message-ID: <20250528101139.28702-1-looong.bin@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: timer: xlnx,xps-timer: Make PWM in example
- usable
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sean Anderson <sean.anderson@seco.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250527171504.346696-2-u.kleine-koenig@baylibre.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250527171504.346696-2-u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 27/05/2025 19:15, Uwe Kleine-König wrote:
-> With #pwm-cells = <0> no usable reference to that PWM can be created.
-> Even though a xlnx,xps-timer device only provides a single PWM line, Linux
-> would fail to determine the right (pwmchip, pwmnumber) combination.
-> 
-> Fix the example to use the recommended value 3 for #pwm-cells.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-And what about the binding itself? It allows any arbitrary value.
-Setting it to const=3 would not break the ABI, as long as driver does
-not care.
+This patch adds PWM controller support for four independent
+PWM channel outputs.
 
-Best regards,
-Krzysztof
+---
+
+Changes in v5:
+
+  - Rename function and variables for clarity.
+  - Modify code style.
+
+Changes in v4:
+  You can simply review or test the patches at the link [4].
+
+  - add tags for mail.
+
+Changes in v3:
+  You can simply review or test the patches at the link [3].
+
+  - Rename macro definitions to unify naming.
+  - Modify code style.
+
+Changes in v2:
+  You can simply review or test the patches at the link [2].
+
+  - Modify variable naming and code logic.
+  - update "MODULE_AUTHOR".
+
+Changes in v1:
+  You can simply review or test the patches at the link [1].
+
+Link: https://lore.kernel.org/linux-riscv/20250407072056.8629-1-looong.bin@gmail.com/ [1]
+Link: https://lore.kernel.org/linux-riscv/20250418022948.22853-1-looong.bin@gmail.com/ [2]
+Link: https://lore.kernel.org/linux-riscv/20250424012335.6246-1-looong.bin@gmail.com/ [3]
+Link: https://lore.kernel.org/linux-riscv/20250428013501.6354-1-looong.bin@gmail.com/ [4]
+---
+
+Longbin Li (3):
+  pwm: sophgo: reorganize the code structure
+  pwm: sophgo: add driver for SG2044
+  dt-bindings: pwm: sophgo: add pwm controller for SG2044
+
+ .../bindings/pwm/sophgo,sg2042-pwm.yaml       |   4 +-
+ drivers/pwm/pwm-sophgo-sg2042.c               | 141 +++++++++++++++---
+ 2 files changed, 127 insertions(+), 18 deletions(-)
+
+--
+2.49.0
 
