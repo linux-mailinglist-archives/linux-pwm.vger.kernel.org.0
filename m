@@ -1,153 +1,173 @@
-Return-Path: <linux-pwm+bounces-6180-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6181-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6565AC8B41
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 May 2025 11:43:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21F96AC8B68
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 May 2025 11:48:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2FC8A4E5AF5
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 May 2025 09:43:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E2C831BA13F0
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 May 2025 09:48:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC263220F4B;
-	Fri, 30 May 2025 09:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3B2521B199;
+	Fri, 30 May 2025 09:48:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inxk4Yp8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCRyxzoL"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA27021D5BE;
-	Fri, 30 May 2025 09:38:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEA61DA5F;
+	Fri, 30 May 2025 09:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597912; cv=none; b=tVWu17GHlKlmpDj7En4aEekW76bYWAN6pooFhDE2ZvDoil94KSsUYPhw+e1KQ9wM9NACHylMJ82eFctnz4gX7AVecSeVvgY8mAe22mCGnKrUS2kcfwyNOuwOe2qPBXnRRKSrAkiUBV+AQ1MVaUpYLGXtQ8ukwLM/kBbEOpQFejU=
+	t=1748598512; cv=none; b=tVE8VTINKrKan37XYFU5Ay9iD6cJ+bAocRA0OuX/diPERng8vtp+gJ+NHmlp3vd4WOGZGrTgK4dpbnztIwl0nWWQPV/MjgTWmaqhnkHAxib9eNJjSWjMbj0BhbhpaaActcU4z5RQrrIJjk0qYp9ZP2jubDQlea4qfn/6NygS/og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597912; c=relaxed/simple;
-	bh=ICSGQ0Zax6RfiU1eNFI15hxlnpkjaqK5BGkuN+umx5U=;
+	s=arc-20240116; t=1748598512; c=relaxed/simple;
+	bh=YudCrucAx1p31d0Wm18PRjT20S5RtbDxkt+4OGkxwE8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gRsH+xDKixXLZ0tlL7p36OM/vsDJUfB7StBh36e/qOgamJPeYOeFFT7JFOm9GeS/XuHOWOQZhmjaIihaeVSlo+HVpv9DsgkCl4Uowzw1BAoB8ngbItmQjE4hKwmG2zzRrl++KyEWFbWYEXZj7zo/sZhfWsldz1LUklwSBxOiNQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inxk4Yp8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C537CC4CEE9;
-	Fri, 30 May 2025 09:38:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748597912;
-	bh=ICSGQ0Zax6RfiU1eNFI15hxlnpkjaqK5BGkuN+umx5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=inxk4Yp8xtNFcmPalhY09ck1qo1uYRCOcIWDRzIjZrLR7sPqhhXwCHPFDqMHLJd9g
-	 sHZFVXK6FD1UizbfB6DLmzqePp11GrU+bAvzTM2yyDUq4QFT+Mmn1w1ZCzuMd3Z++r
-	 2rfN38whXYJrJfbDDPu65/kN4bHjMqPADKnsMQtO+wyQwtLzyKI5dwaU3yVgl+CY6c
-	 mwSjpaGlZA383yCa/07eaFq5rD2szRfYhwQl84F4vK2iGD8hYyW2MfktL8fRWru7Gh
-	 0Cd2BNMrPJjHKZ+QZivVRi85ri4A4dqVmlF2ll/8UBkqvHhrhjueT0WLFbZE49Ec2S
-	 It9sSic/aD+Tg==
-Date: Fri, 30 May 2025 11:38:29 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: "jdelvare@suse.com" <jdelvare@suse.com>, 
-	"linux@roeck-us.net" <linux@roeck-us.net>, "robh@kernel.org" <robh@kernel.org>, 
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-Message-ID: <dirkbdd5oeofjhy5pk6jiaixbuhmuq7axewhrd7bdghc3dp5x6@ok2uhywwz5ls>
-References: <20240722221737.3407958-1-chris.packham@alliedtelesis.co.nz>
- <20240722221737.3407958-2-chris.packham@alliedtelesis.co.nz>
- <jzxu6mcbxf5zwyirnb2jjpm2i7sln3v5mz3gyhc5xhpqexicvb@atrcjvh7wuh5>
- <bc99a27e-74ec-45a0-b77c-48f993269586@alliedtelesis.co.nz>
- <jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3rlhiernunjdodu@tgxghvfef4tl>
- <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
+	 Content-Type:Content-Disposition:In-Reply-To; b=U24RiEfMTdup9TyayD6SJfBiy57obuaerEwbAzmFExiLztbxqqxJD0AMIWljvJn2RfTJUOiHkvR4fR5O4TC65PT16FObPZY3Qb0Psnq0HeuLdrRz4QMyoVo0t4SROjmrNtpt1XIV7oXQnpKfQ1SXyyUOyRbwFtp6vVgZSsXqMZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jCRyxzoL; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-234e48b736aso23355695ad.3;
+        Fri, 30 May 2025 02:48:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748598510; x=1749203310; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ookjxClzf4cQCEvAmXl0RF2BomztovFb9LfDcMb8UFA=;
+        b=jCRyxzoLtVUvGvPoQeimce1dbXHpdBli7vuqY0ejqNyTlH3XDuElwF4Vvj2SzRr0Xp
+         2Rmth6j77BGhHcBCYhhAD6Dm28zAUmB5alXbYjLcMglt8iPwtT7HdmB0cqTH8uFfoFT8
+         cICoVd05BH6vhljYxygmAUt4Svn+F/DuYg9qEfUYUZdfsGilLlIcGMYMeS7uJGg2Go5u
+         4LPpPJZ4wg30LmQ/cAK6w7Ldd7w4YiRpIZzvU/gqpC1xaIP63m3tpC7UjhIenrl566TM
+         WAU5RvG7Zszu2xZzifzQlzI2O3ESskzr+C8l1A4R9icxysfPHIqYHZ4OuT20LgC+SYs7
+         i0Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748598510; x=1749203310;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ookjxClzf4cQCEvAmXl0RF2BomztovFb9LfDcMb8UFA=;
+        b=anwym11AaEKPQ+RX4f73VihMX3wMBNSSheaHymdw0jqAevS7MOwl0IBP6wP6ajSD4W
+         QiunSpdwZYbigUzNSteR9vnuz4tIg0DBWK2v6gDzn+sc+7oeOOjnBAKgrFZcIeKz+XK6
+         JJhu/4D+nbL+c+o7c7h/CikghcAITwk22AOG4EdXBoougNRfmbW5B1Ayf+sYboHJxszy
+         AtpSa46UF6dU0mJBQPT8czYQO/D09eiHqgqx0Hb8IQQSBT/blTvRdyEj9j8++kGq6XDq
+         3/XUcX6cPOdNV4PQX+lWfA6S18khnELPCHyPDSDnJTx/ULL3GhPvFg8cn6e69Bex3mn7
+         JX9g==
+X-Forwarded-Encrypted: i=1; AJvYcCU5iUfig8l5zgW0NxspgqBTIpQbr/30OAr/5+jVmU7lz6iov30UmE6J8N/2UdzYSivmOzVdYLWg0UZD@vger.kernel.org, AJvYcCW9MXmx9gVbkh3zHKb+dqfHOsSJiKEVOrvBowPHxQUMWfSSLAZ0xk64wy2LCYdfVC/l1nbJvaLrfYAFsVpj@vger.kernel.org, AJvYcCXimutrj3Oe0OJvjezn9tbdBWl7Pykj+df0LUK6Q3i8srZeOfB4QGQsLiiDNyjiR+ALqG2NCn9a3XUL@vger.kernel.org
+X-Gm-Message-State: AOJu0YztMNz3/S0JJp12jZ0PR9W9twSpRXJT/g2cicYQMx51lMCLDLBx
+	1r2c1gIpQK4GIwF0wjeakE75/YT+dFi5cZRsxukyAeVvzzmFmgiCXQ6W
+X-Gm-Gg: ASbGncvzk5vy4DActPhuP/4ag2jCNr62qkFkh1Ocfiq0bzHebmkqolF91wsvhG29xHb
+	tAMKU37YbXXERm4/5Jrhj8d7lwEIPwwfYRrRbmaATCZ+WvRa/lmihnkzCdG84y4UgWe5Q2lR+Y5
+	bWEgN0UI/iYQlalzE88k3Ba2KVQbVZ3aIB9P4VespjNLD6OBMK09qQE0Lup0brA5dToFTcMSc88
+	Ct0K1zGsVB4C1TZj4JPjaxyD7ckd6tm6gUj+7HqR40CGWnyIVmSciGMWXn6dQO2oJ+5zNNCf3M+
+	wNy+cDk41SFEfKmIevfHlcywvoQH006YZfegtaw4kmNRLMtoFM5R
+X-Google-Smtp-Source: AGHT+IF9sCFOftJujauKnIRomaigvG8t61Ftfb7NDiYEGkXgDAJ4CTIfsKr0q6wuZJOiHiCtJPc22g==
+X-Received: by 2002:a17:902:c952:b0:235:779:edfe with SMTP id d9443c01a7336-23529a11512mr38942725ad.43.1748598510306;
+        Fri, 30 May 2025 02:48:30 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23506bc8483sm24863795ad.1.2025.05.30.02.48.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 02:48:29 -0700 (PDT)
+Date: Fri, 30 May 2025 17:48:27 +0800
+From: Longbin Li <looong.bin@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v5 3/3] pwm: sophgo: add driver for SG2044
+Message-ID: <oo3pevzuyhrsf7t2ja7mxytaxhnthfar73iwvqxgawr5gjiudf@hbevzjog7akj>
+References: <20250528101139.28702-1-looong.bin@gmail.com>
+ <20250528101139.28702-4-looong.bin@gmail.com>
+ <azf5lzfkegr6wt3mratxra2mlfah45dc3comtkjbrbdzf4x5xc@tlzxp7oqtcfl>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="iwycug4hm3mtqr5n"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <azf5lzfkegr6wt3mratxra2mlfah45dc3comtkjbrbdzf4x5xc@tlzxp7oqtcfl>
 
+On Fri, May 30, 2025 at 09:50:25AM +0200, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Wed, May 28, 2025 at 06:11:38PM +0800, Longbin Li wrote:
+> > Add PWM controller for SG2044 on base of SG2042.
+> > 
+> > Signed-off-by: Longbin Li <looong.bin@gmail.com>
+> > Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+> > Tested-by: Chen Wang <unicorn_wang@outlook.com>
+> 
+> Nitpick: Make your S-o-b line the last line. This way you document that
+> it was you who added the tags for Chen Wang.
+>
 
---iwycug4hm3mtqr5n
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-MIME-Version: 1.0
+Thank for remind.
+ 
+> > [...]
+> > +static int pwm_sg2044_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > +			    const struct pwm_state *state)
+> > +{
+> > +	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
+> > +
+> > +	pwm_sg2044_set_polarity(ddata, pwm, state);
+> > +
+> > +	pwm_sg2042_set_dutycycle(chip, pwm, state);
+> > +
+> > +	/*
+> > +	 * re-enable PWMSTART to refresh the register period
+> > +	 */
+> > +	 pwm_sg2044_set_outputen(ddata, pwm, false);
+> 
+> I'm astonished that checkpatch doesn't spot the wrong indention here.
+> 
 
-Hello Chris,
+I re-ran the checkpatch but no error. Maybe there is something wrong
+in checkpatch.
 
-On Wed, May 28, 2025 at 09:18:37PM +0000, Chris Packham wrote:
-> On 28/05/2025 18:10, Uwe Kleine-K=F6nig wrote:
-> > If I understand correctly you need the default value for duty to
-> > statically setup (or only initialize?) a fan, right?
->=20
-> Correct.
->=20
-> > I'm not sure I like
-> > extending #pwm-cells for a default duty value. Thinking about that a
-> > while I'd prefer a binding that looks more like the clock configuration
-> > stuff because actually having the period and flags as part of the
-> > reference to the PWM to be used is also a bit strange. So I imagine
-> > something like:
-> >
-> > 	mypwm: pwm {
-> > 		compatible =3D "...."
-> > 		#pwm-cells =3D <1>;
-> > 	};
-> >
-> > 	fan {
-> > 		compatible =3D "pwm-fan";
-> > 		pwms =3D <&mypwm 1>;
-> > 		assigned-pwms =3D <&mypwm>;
-> > 		assigned-pwm-default-period-lengths-ns =3D <40000>;
-> > 		assigned-pwm-default-flags =3D <PWM_POLARITY_INVERTED>;
-> > 	};
-> >
-> > Then specifying a period (or later a duty cycle length) would be
-> > optional and could be provided iff the device needs that for operation.
->=20
-> The frequency and flags were already part of the standard #pwm-cells=20
-> which I think is why I was encouraged to use them.
+> > +
+> > +	if (!state->enabled)
+> > +		return 0;
+> > +
+> > +	pwm_sg2044_set_outputdir(ddata, pwm, true);
+> > +	pwm_sg2044_set_outputen(ddata, pwm, true);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static const struct sg2042_chip_data sg2042_chip_data = {
+> >  	.ops = {
+> >  		.apply = pwm_sg2042_apply,
+> > @@ -142,11 +215,22 @@ static const struct sg2042_chip_data sg2042_chip_data = {
+> >  	}
+> >  };
+> > 
+> > +static const struct sg2042_chip_data sg2044_chip_data = {
+> > +	.ops = {
+> > +		.apply = pwm_sg2044_apply,
+> > +		.get_state = pwm_sg2042_get_state,
+> > +	}
+> 
+> Missing , after }.
+> 
+> If you're ok, I'll pick up this version and fixup the two code changes
+> and the order of the tags in the commit log.
+> 
+> Best regards
+> Uwe
 
-Yeah, that part is fine. This might not be the long-term future, but
-today that's the norm.
+Thanks, it's ok to go.
 
-> I was also trying to get something that would work as an ACPI overlay
-> which turned out to be really hard.
-
-I don't know enough about ACPI to be helpful with this quest.
-
-> > My mail was just me being frustrated about another special case that I'd
-> > have to handle if I go into that direction. I should have been more
-> > attentive to that development before it entered the mainline.
->=20
-> I'd be happy to deprecate the 4 cell thing and replace it with 3 cell +=
-=20
-> vendor property for the default period if that helps.
-
-I wonder how other similar devices determine the default duty cycle.
-Isn't the norm to make the fan rotate at max speed and then when
-userspace takes over it's speeded down?
-
-Best regards
-Uwe
-
---iwycug4hm3mtqr5n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg5fJIACgkQj4D7WH0S
-/k7Q/QgAhpRbbtxTmdd1TU+JKciJM1ubiQ6suwb+RqEXC/4zfLvLc7QwkWAm16v3
-MMCqJxvwSwXVWPxPoaaFEU9k4S9YHi5ggLfT4/1Bde79ynsdCFHbL6zfaH3Fq3gH
-m15Q2/Z9yPQ2z3tWe0b2PskubMtRGXpzWsEk3M2SwTb09J421hWW8qFxV//OqMf+
-PM8qkChq3fe9ZZgkHzNepPYfmJEl6uhs1mEN7FinZi6ZHqxRSF2L92celgIcmYWK
-6VqNq8381esfPA9OeA2oLFEuz2sQv5DtDE2PVsSea8iGggRFrYbGMC/oYTBLwjBp
-1WTJLq7hrYJSTtyNu1HKGvIDfj+Gew==
-=y7cT
------END PGP SIGNATURE-----
-
---iwycug4hm3mtqr5n--
+Best regards,
+Longbin
 
