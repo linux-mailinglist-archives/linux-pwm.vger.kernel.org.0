@@ -1,60 +1,62 @@
-Return-Path: <linux-pwm+bounces-6179-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6180-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7859AC8967
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 May 2025 09:50:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6565AC8B41
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 May 2025 11:43:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AFA847A81A6
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 May 2025 07:49:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2FC8A4E5AF5
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 May 2025 09:43:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B949213252;
-	Fri, 30 May 2025 07:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC263220F4B;
+	Fri, 30 May 2025 09:38:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XtVKjHMv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inxk4Yp8"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2D32AE6F;
-	Fri, 30 May 2025 07:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA27021D5BE;
+	Fri, 30 May 2025 09:38:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748591428; cv=none; b=p43wsagDwPzzP/nnzlpHHWcxeDkwvzPbcjIaeRwG25p79C3HF9XUArpbfHtsL6q7h5dHS/XbTl5qwTsB9UNkxg61kPXmJS6dSb8tsYFuZ+45be5Sjfv3K+gpM8tPf6NsRHVyAAnYRfP5W9O8ksI2xZcD/Om7fNGYRKLshlDRgcI=
+	t=1748597912; cv=none; b=tVWu17GHlKlmpDj7En4aEekW76bYWAN6pooFhDE2ZvDoil94KSsUYPhw+e1KQ9wM9NACHylMJ82eFctnz4gX7AVecSeVvgY8mAe22mCGnKrUS2kcfwyNOuwOe2qPBXnRRKSrAkiUBV+AQ1MVaUpYLGXtQ8ukwLM/kBbEOpQFejU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748591428; c=relaxed/simple;
-	bh=R/xRZCH14sMPQAqiO3CcAxy1OeVARVf6uPlM2WeOh40=;
+	s=arc-20240116; t=1748597912; c=relaxed/simple;
+	bh=ICSGQ0Zax6RfiU1eNFI15hxlnpkjaqK5BGkuN+umx5U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AuiHuj4pi89SYR2Geq7F2NWLxAl1B9G5TuiQsXV23R1QV8W+Z15K060kl9PH787XqaQf7nO/KCJsSYzITBEbeDbNd7zJ8mGimbLnXP3bu84vICdksR/L5ZGtN/iJ39FiiCo/Pn4buaSvJZ1SkBDRtAnHeCK7lkg86JRLNxxEFv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XtVKjHMv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADBCBC4CEE9;
-	Fri, 30 May 2025 07:50:27 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=gRsH+xDKixXLZ0tlL7p36OM/vsDJUfB7StBh36e/qOgamJPeYOeFFT7JFOm9GeS/XuHOWOQZhmjaIihaeVSlo+HVpv9DsgkCl4Uowzw1BAoB8ngbItmQjE4hKwmG2zzRrl++KyEWFbWYEXZj7zo/sZhfWsldz1LUklwSBxOiNQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inxk4Yp8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C537CC4CEE9;
+	Fri, 30 May 2025 09:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748591428;
-	bh=R/xRZCH14sMPQAqiO3CcAxy1OeVARVf6uPlM2WeOh40=;
+	s=k20201202; t=1748597912;
+	bh=ICSGQ0Zax6RfiU1eNFI15hxlnpkjaqK5BGkuN+umx5U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XtVKjHMvVjeZipMH2I69ghfgUOEMm0PtMSWpQ1BlDghOBjTmu6w5V/KDYw4wKb8fA
-	 eMm4pGiksMyCd+Bzxnkbv/TZRxD0NMPQWUDbH9V4ihh3EtbbPRtKJQiziMFSFL9vZO
-	 JjMpX7ob2hTwv1htsjnoWhFd9G3GNEWxPpuku9BnCZXP7vZbcWSsdobvKMB4CeFkOy
-	 pkZF8hOgXadFTwF1XFfdcS3oTFBXAQ1pjTpiKh+bIgSwj5Mw/tGf3HvEBqv99dm8Af
-	 YpJcPU68lNkyt9dqmwhYSP9MVZkz+E5QrbLC0NK6AEftuFamYhZlydWTUyKxCbQdNb
-	 V87xroUjne0dg==
-Date: Fri, 30 May 2025 09:50:25 +0200
+	b=inxk4Yp8xtNFcmPalhY09ck1qo1uYRCOcIWDRzIjZrLR7sPqhhXwCHPFDqMHLJd9g
+	 sHZFVXK6FD1UizbfB6DLmzqePp11GrU+bAvzTM2yyDUq4QFT+Mmn1w1ZCzuMd3Z++r
+	 2rfN38whXYJrJfbDDPu65/kN4bHjMqPADKnsMQtO+wyQwtLzyKI5dwaU3yVgl+CY6c
+	 mwSjpaGlZA383yCa/07eaFq5rD2szRfYhwQl84F4vK2iGD8hYyW2MfktL8fRWru7Gh
+	 0Cd2BNMrPJjHKZ+QZivVRi85ri4A4dqVmlF2ll/8UBkqvHhrhjueT0WLFbZE49Ec2S
+	 It9sSic/aD+Tg==
+Date: Fri, 30 May 2025 11:38:29 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Longbin Li <looong.bin@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v5 3/3] pwm: sophgo: add driver for SG2044
-Message-ID: <azf5lzfkegr6wt3mratxra2mlfah45dc3comtkjbrbdzf4x5xc@tlzxp7oqtcfl>
-References: <20250528101139.28702-1-looong.bin@gmail.com>
- <20250528101139.28702-4-looong.bin@gmail.com>
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc: "jdelvare@suse.com" <jdelvare@suse.com>, 
+	"linux@roeck-us.net" <linux@roeck-us.net>, "robh@kernel.org" <robh@kernel.org>, 
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
+Message-ID: <dirkbdd5oeofjhy5pk6jiaixbuhmuq7axewhrd7bdghc3dp5x6@ok2uhywwz5ls>
+References: <20240722221737.3407958-1-chris.packham@alliedtelesis.co.nz>
+ <20240722221737.3407958-2-chris.packham@alliedtelesis.co.nz>
+ <jzxu6mcbxf5zwyirnb2jjpm2i7sln3v5mz3gyhc5xhpqexicvb@atrcjvh7wuh5>
+ <bc99a27e-74ec-45a0-b77c-48f993269586@alliedtelesis.co.nz>
+ <jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3rlhiernunjdodu@tgxghvfef4tl>
+ <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -62,94 +64,90 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ekb2tmeniacut2mz"
+	protocol="application/pgp-signature"; boundary="iwycug4hm3mtqr5n"
 Content-Disposition: inline
-In-Reply-To: <20250528101139.28702-4-looong.bin@gmail.com>
+In-Reply-To: <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
 
 
---ekb2tmeniacut2mz
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--iwycug4hm3mtqr5n
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 3/3] pwm: sophgo: add driver for SG2044
+Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
 MIME-Version: 1.0
 
-Hello,
+Hello Chris,
 
-On Wed, May 28, 2025 at 06:11:38PM +0800, Longbin Li wrote:
-> Add PWM controller for SG2044 on base of SG2042.
+On Wed, May 28, 2025 at 09:18:37PM +0000, Chris Packham wrote:
+> On 28/05/2025 18:10, Uwe Kleine-K=F6nig wrote:
+> > If I understand correctly you need the default value for duty to
+> > statically setup (or only initialize?) a fan, right?
 >=20
-> Signed-off-by: Longbin Li <looong.bin@gmail.com>
-> Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
-> Tested-by: Chen Wang <unicorn_wang@outlook.com>
-
-Nitpick: Make your S-o-b line the last line. This way you document that
-it was you who added the tags for Chen Wang.
-
-> [...]
-> +static int pwm_sg2044_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> +			    const struct pwm_state *state)
-> +{
-> +	struct sg2042_pwm_ddata *ddata =3D pwmchip_get_drvdata(chip);
-> +
-> +	pwm_sg2044_set_polarity(ddata, pwm, state);
-> +
-> +	pwm_sg2042_set_dutycycle(chip, pwm, state);
-> +
-> +	/*
-> +	 * re-enable PWMSTART to refresh the register period
-> +	 */
-> +	 pwm_sg2044_set_outputen(ddata, pwm, false);
-
-I'm astonished that checkpatch doesn't spot the wrong indention here.
-
-> +
-> +	if (!state->enabled)
-> +		return 0;
-> +
-> +	pwm_sg2044_set_outputdir(ddata, pwm, true);
-> +	pwm_sg2044_set_outputen(ddata, pwm, true);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct sg2042_chip_data sg2042_chip_data =3D {
->  	.ops =3D {
->  		.apply =3D pwm_sg2042_apply,
-> @@ -142,11 +215,22 @@ static const struct sg2042_chip_data sg2042_chip_da=
-ta =3D {
->  	}
->  };
+> Correct.
 >=20
-> +static const struct sg2042_chip_data sg2044_chip_data =3D {
-> +	.ops =3D {
-> +		.apply =3D pwm_sg2044_apply,
-> +		.get_state =3D pwm_sg2042_get_state,
-> +	}
+> > I'm not sure I like
+> > extending #pwm-cells for a default duty value. Thinking about that a
+> > while I'd prefer a binding that looks more like the clock configuration
+> > stuff because actually having the period and flags as part of the
+> > reference to the PWM to be used is also a bit strange. So I imagine
+> > something like:
+> >
+> > 	mypwm: pwm {
+> > 		compatible =3D "...."
+> > 		#pwm-cells =3D <1>;
+> > 	};
+> >
+> > 	fan {
+> > 		compatible =3D "pwm-fan";
+> > 		pwms =3D <&mypwm 1>;
+> > 		assigned-pwms =3D <&mypwm>;
+> > 		assigned-pwm-default-period-lengths-ns =3D <40000>;
+> > 		assigned-pwm-default-flags =3D <PWM_POLARITY_INVERTED>;
+> > 	};
+> >
+> > Then specifying a period (or later a duty cycle length) would be
+> > optional and could be provided iff the device needs that for operation.
+>=20
+> The frequency and flags were already part of the standard #pwm-cells=20
+> which I think is why I was encouraged to use them.
 
-Missing , after }.
+Yeah, that part is fine. This might not be the long-term future, but
+today that's the norm.
 
-If you're ok, I'll pick up this version and fixup the two code changes
-and the order of the tags in the commit log.
+> I was also trying to get something that would work as an ACPI overlay
+> which turned out to be really hard.
+
+I don't know enough about ACPI to be helpful with this quest.
+
+> > My mail was just me being frustrated about another special case that I'd
+> > have to handle if I go into that direction. I should have been more
+> > attentive to that development before it entered the mainline.
+>=20
+> I'd be happy to deprecate the 4 cell thing and replace it with 3 cell +=
+=20
+> vendor property for the default period if that helps.
+
+I wonder how other similar devices determine the default duty cycle.
+Isn't the norm to make the fan rotate at max speed and then when
+userspace takes over it's speeded down?
 
 Best regards
 Uwe
 
---ekb2tmeniacut2mz
+--iwycug4hm3mtqr5n
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg5Yz4ACgkQj4D7WH0S
-/k6d8gf9EA6hIB2KVuUHwQKu4wMvhPhW35TEI1CVTR9L04YSgFP6CudQ407fy/Aa
-IYUnsov4TI+hKOpz0/Tb05+czeAgWU6wBoi2OSBEAB3nszVZ2xQq1PcYd2l/xtHg
-ifvgWm9LWghQRH4lwb9VvHyxowfKejMZpVTeysRB6B4mcTKOUt4VFLX6mktCdHFc
-pUedFaagWDocC+OuToPxA1f9havIw9hu56PBVJUFmq3RZ9m02QBjRs2PkOTVcMJQ
-ydtu4p+MtY+s7qYAsxBqEZlrM/CCrrRFeoBmRF22OhWOOzzNOIqcJZ19BC1uowum
-YglxYBkxgm8pY8XGGJkIkAVa3rktDw==
-=oO4S
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg5fJIACgkQj4D7WH0S
+/k7Q/QgAhpRbbtxTmdd1TU+JKciJM1ubiQ6suwb+RqEXC/4zfLvLc7QwkWAm16v3
+MMCqJxvwSwXVWPxPoaaFEU9k4S9YHi5ggLfT4/1Bde79ynsdCFHbL6zfaH3Fq3gH
+m15Q2/Z9yPQ2z3tWe0b2PskubMtRGXpzWsEk3M2SwTb09J421hWW8qFxV//OqMf+
+PM8qkChq3fe9ZZgkHzNepPYfmJEl6uhs1mEN7FinZi6ZHqxRSF2L92celgIcmYWK
+6VqNq8381esfPA9OeA2oLFEuz2sQv5DtDE2PVsSea8iGggRFrYbGMC/oYTBLwjBp
+1WTJLq7hrYJSTtyNu1HKGvIDfj+Gew==
+=y7cT
 -----END PGP SIGNATURE-----
 
---ekb2tmeniacut2mz--
+--iwycug4hm3mtqr5n--
 
