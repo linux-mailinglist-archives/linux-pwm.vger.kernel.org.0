@@ -1,68 +1,68 @@
-Return-Path: <linux-pwm+bounces-6196-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6197-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30B39AC9552
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 May 2025 19:55:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B859CAC955B
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 May 2025 19:58:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D2D11897A32
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 May 2025 17:55:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0BE89E1C3C
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 May 2025 17:57:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BABBB2620C4;
-	Fri, 30 May 2025 17:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD082263F3C;
+	Fri, 30 May 2025 17:58:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IAoAB/yo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YiCBF5PO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB8623E35B;
-	Fri, 30 May 2025 17:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E863225CC57;
+	Fri, 30 May 2025 17:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748627727; cv=none; b=dTFFD5haLdpcFuCeLmskP8Tg9YL/hhd8L0y1YGzKlMRrpp2Rew2ubdgY1X+NGhpZXggQMguZh1qFkmToP3IgMJZ8Q6I2KfuAlhxsK+UeIUnzC7ZjLZGIPTSsIgddVy1AOAP8DcNjq33Lwr76m2ygG+qTcT1EiLyGEuXAzQSpgfw=
+	t=1748627889; cv=none; b=Zs3x+c3oV1Ix2mRLkHyCghV1FPVv5V9TtC6UlWuTS1yR9SrJsBo1LOh+c1/6CMf41XvuHcgE7vkos5i4WLFFRGjHyG3pozdgY39nGDohL8zlJxOy+uxr0hIdtQmWF5ZYJE/NeZYDuyn1WinvKHxbFkrpuHpWImfIMUHIOdkEvpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748627727; c=relaxed/simple;
-	bh=ZSmFHBwhFGzgKE51DBXBeP8jyHst6UlJH9/neaURwa8=;
+	s=arc-20240116; t=1748627889; c=relaxed/simple;
+	bh=3e/q5bHal7ziK2T31WoYJwIxhl30izAQYAHeNT4dv7w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ojv/uP5q/P1Llz6ZQJDpabjgaRi4q6glhOkYnfM1d+RryHi45P67BySmyGounfBiaN158OdNEXkDIvsIQOnHD17PeRsejgmRRXnKqsf83+MRFKIzMb/cUHG7FlPSX/tlL7sWah5fF00R5ot4Qedrzxl6O4AVX9iSEFq2ORnGRVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IAoAB/yo; arc=none smtp.client-ip=198.175.65.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=D8eqiIQZPwIwnZUp6sfTz6h/zNkjqZx7X+mjGVOg6D8PSAXYlhZqXIZwcazPCBGWLEYJCkny3LK+W4dRUIVfz4oTaH2BO2BNvD1qWOLNyhJKWUQ1alS3GW7PlWsR4MIihVjdu06lzmnRFRB6ueMhdwD0ODFV4CSAar5dvv7dU9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YiCBF5PO; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748627726; x=1780163726;
+  t=1748627888; x=1780163888;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=ZSmFHBwhFGzgKE51DBXBeP8jyHst6UlJH9/neaURwa8=;
-  b=IAoAB/yoP4Eiia0bS6/ZTyXirQvzL8nHiAvCkA2vByq1P4A6zEiAPFru
-   InmFmokCGZ1iBiYcxZLqgyhGQtiyu/zxB/A6L/veIdPgjBAmZ9pYRH+ID
-   xsilGfRdeKJaWoJ98AS4tOeZnpuZivOoiGO1qXnV5JiHLmR4S5TiipjKb
-   fEO4iMAkIN7ZubOsuRV2aoTkBaG297YpXnxcqlKQ8aKoCTPYs5I0Uoh0n
-   yue2dXA2PjkOshRLn8nNdZG3ZRpv4woa7LlIGDCgSHk+uORHcOT5EmEin
-   OPvhrcdVs73ITtosOPMsmbOlXy2coamx4xeil4mFoJyVcqUJdo+nVdj4p
-   g==;
-X-CSE-ConnectionGUID: 7DDJOM5QQ5ijiB1nj3GfRg==
-X-CSE-MsgGUID: tkidEDKWQve8OiO7luFxWw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="73259211"
+  bh=3e/q5bHal7ziK2T31WoYJwIxhl30izAQYAHeNT4dv7w=;
+  b=YiCBF5POkhwQmJHPDTKAIEns4OH02i5ECXsHCrwBVsi7I/UEA4qKE42B
+   7e7zlvN+xgSL4z+9lbDVU5/kmHJCTAcqUGE4bGp17YnBo5kM3q7IFsH0N
+   1gV1GsaeFkZjRxBUcYTOe0tQ/Pr/GkcJQcsp/oesGj15QVjaLP9ZAZOgs
+   xEsod18dcqFdg6HjWuYrCRT8KBphGFyUL6Wxdkt5MDgK/2+7c1Q4JCKuj
+   eRsymjVizB5RceQh0uDZaYWAPRo3+vvF4VWk9G2VCOj+s8fRA6aZdxX1O
+   VKIQd3cOSKnD1WBxlSJgwknBrXUBQIpchu0u7ibtcVDdXDw3lX+d1FXy+
+   Q==;
+X-CSE-ConnectionGUID: 3669O4boQJ2Ly+CJ11nSCw==
+X-CSE-MsgGUID: hxXv0lj6TS2lkUhLVbClGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="49849007"
 X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="73259211"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:55:25 -0700
-X-CSE-ConnectionGUID: 5KdW+ZeYR3Kf/KTr2z0UcA==
-X-CSE-MsgGUID: SrlmHzGNQOugwsmwJqrvAg==
+   d="scan'208";a="49849007"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:58:07 -0700
+X-CSE-ConnectionGUID: eG7db9YHRQetSGIo/h+duQ==
+X-CSE-MsgGUID: WoPmY/5QRRi9neB6cm1ebw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="148726373"
+   d="scan'208";a="143970644"
 Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:55:20 -0700
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:58:03 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uL3wr-000000024ej-1SEu;
-	Fri, 30 May 2025 20:55:17 +0300
-Date: Fri, 30 May 2025 20:55:17 +0300
+	id 1uL3zT-000000024h3-1tYn;
+	Fri, 30 May 2025 20:57:59 +0300
+Date: Fri, 30 May 2025 20:57:59 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: mathieu.dubois-briand@bootlin.com
 Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -81,10 +81,10 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
 	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
 	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v10 02/11] mfd: Add max7360 support
-Message-ID: <aDnxBUDOYLQYiVaP@smile.fi.intel.com>
+Subject: Re: [PATCH v10 04/11] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <aDnxp8czNi_1NsI7@smile.fi.intel.com>
 References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
- <20250530-mdb-max7360-support-v10-2-ce3b9e60a588@bootlin.com>
+ <20250530-mdb-max7360-support-v10-4-ce3b9e60a588@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -93,16 +93,17 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250530-mdb-max7360-support-v10-2-ce3b9e60a588@bootlin.com>
+In-Reply-To: <20250530-mdb-max7360-support-v10-4-ce3b9e60a588@bootlin.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, May 30, 2025 at 12:00:10PM +0200, mathieu.dubois-briand@bootlin.com wrote:
-> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+On Fri, May 30, 2025 at 12:00:12PM +0200, mathieu.dubois-briand@bootlin.com wrote:
 > 
-> Add core driver to support MAX7360 i2c chip, multi function device
-> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
+> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
+> 8 independent PWM outputs.
 
-LGTM,
+I don't like that OF node propagation, but I have no alternative to propose
+right now.
+
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
