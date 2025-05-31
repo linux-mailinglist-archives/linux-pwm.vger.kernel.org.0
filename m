@@ -1,34 +1,34 @@
-Return-Path: <linux-pwm+bounces-6201-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6202-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75FA0AC9B27
-	for <lists+linux-pwm@lfdr.de>; Sat, 31 May 2025 15:27:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FFA8AC9CF0
+	for <lists+linux-pwm@lfdr.de>; Sat, 31 May 2025 23:48:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AE59189E531
-	for <lists+linux-pwm@lfdr.de>; Sat, 31 May 2025 13:27:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A9DC3189CDDB
+	for <lists+linux-pwm@lfdr.de>; Sat, 31 May 2025 21:49:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 885B123C514;
-	Sat, 31 May 2025 13:27:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECC0E1D95B3;
+	Sat, 31 May 2025 21:48:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Mu8596DQ"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="S/veJHBk"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D93101F2;
-	Sat, 31 May 2025 13:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D279C1ACE0C;
+	Sat, 31 May 2025 21:48:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748698021; cv=none; b=AUcAerOuOFUBlWhaUOt5J3bvmECnlHMthJXMSCrsdZQZBgjKVlAbfbF5K886bymFHu6hYCLdmbIqfOEky6E4XgUUiYWXQ5NVe+zBlqRl8I2rUNJN0qMDzOMzNE5ZfCrEKrv4J4avWJJlCYxYcxBZ18p4AjEQJt7GpC4bLigYrI4=
+	t=1748728122; cv=none; b=orv2GTHXDICSB/zhEQEI17r+xj5Ks9RUWpJTeEaRAYiwB6fxr12b1ab/RHIfxWg94YPBfzJN+VpI0/g6tA5BFiDtRp1TSTkQEbWsU6EwHrhhAKow6cGp97HisjPEmEGDiiRDTVrG365/9OV1r9Dfv35LzJ6rb3CqMESTGY0Vk9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748698021; c=relaxed/simple;
-	bh=/wIF/TryaTRf16TItuBGroDgD3DysoPOltvJzZR8kfw=;
+	s=arc-20240116; t=1748728122; c=relaxed/simple;
+	bh=dr5WfIFnDvxt8uCn0X7Wh0AAlu8MV4VHpUff1slIYog=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=okBZ+WXLBGFMM9L/NzNj9VYuPJ0u9OVMrX4EywnQtRnwMtX9eTH9qwZ71psCg0yutiudc7oEcoUDXe6CMOZ0rVHWXWr2xUjmmXKPN5nmj6qTldh3Rwv64qgty1O67BvmxHBQ6W+tAEmxJPROTpib39j3TNj9vUKGrmvP9Njwa8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Mu8596DQ; arc=none smtp.client-ip=185.11.138.130
+	 MIME-Version:Content-Type; b=iFYxdfu8MXiWLpJDLIEkngqXcB6ntMvbb9yZCy3jnaFee+TEgy8PRqx0QSGBcP2kMslR8Tdu3X6Ro5HlXBkOeffFywegjm75wlLmasc/EmPd0tz5ZRpRYjUnWq91WG2dCm18zOucUjBxPfqRCS9wcbf2t8B5Mc6amwZ7l+hQpBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=S/veJHBk; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
@@ -36,17 +36,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=71D51htRSeJGCuuHOHD8b943bYQGqpFoTtzqn/JTPCw=; b=Mu8596DQ4iCe89ntwpBhl75Pbp
-	UheiA2gyCWpuQhWw8b+IX+5gbOtCZswwY5Xe8KuS/I4A48P8o/P4mEZISgII/se1hHD6R6IxbsHgV
-	e9BdNKzWi7CpVokSVpeCfkBjrnSPDGRB/w9vroZHTQbQTBZTG2TED1T6hwk/euJVOmfb9G2A3dkYv
-	uSne6voiWy5YpvDLrxPwEFPmEIOiCkm6LGZve9/GjbZVivXqmDjkBl01K6nf7Zzdkggh8En1GCF6l
-	NmZKWsqO4E8i1MUsHSf784QwDDMlnFzqg6z+X53hre+VK2rG5jaDs0E/fzbuter6WUOugo8zwX+Yk
-	Ql/UoCMA==;
+	bh=7u2qauzFTP/rcfL2a+zDfaRZel9Pi3gl/2pshUKS3Yk=; b=S/veJHBk4K4AhMATBTSQloGQ/s
+	SExGYxn3vLkx2Q5mkmsp0Kv0K+HTFKscAq30eVlszyNmHjpIMlxe/wFsDhlRhxi/yl2bItdRpd/c3
+	YP4DoEl8pZojG29DsB8iQbYu6yCJ0Id9+IuvCdPqOIV/cAMqalAKqDw6vmBtKD/L0UKJVIeHaLKg1
+	S1cNU9BLdN+/Nw1QA81Z2eyTzfCHis7/U5yc1Vh/VPMWkmL45r+AKeIdy/7b3dTX39inxEWjBsoMT
+	9Ij0k2rb6NW1oewrgOJadOIq1GjyOWNqT9uiD5ORDZ/YR9vh5FDP+HssP53zQGw5j8slLg9mO45xs
+	RNYOc6kg==;
 Received: from i53875a3e.versanet.de ([83.135.90.62] helo=diego.localnet)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1uLMEd-0002yn-Tg; Sat, 31 May 2025 15:26:51 +0200
+	id 1uLU46-0001IH-Ji; Sat, 31 May 2025 23:48:30 +0200
 From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
@@ -62,15 +62,13 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  Jonas Karlman <jonas@kwiboo.se>,
  Detlev Casanova <detlev.casanova@collabora.com>,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Subject:
- Re: [PATCH 3/7] soc: rockchip: add utils header for things shared across
- drivers
-Date: Sat, 31 May 2025 15:26:50 +0200
-Message-ID: <1895349.atdPhlSkOF@diego>
-In-Reply-To: <20250408-rk3576-pwm-v1-3-a49286c2ca8e@collabora.com>
+Subject: Re: [PATCH 4/7] soc: rockchip: add mfpwm driver
+Date: Sat, 31 May 2025 23:48:29 +0200
+Message-ID: <2188729.OBFZWjSADL@diego>
+In-Reply-To: <20250408-rk3576-pwm-v1-4-a49286c2ca8e@collabora.com>
 References:
  <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
- <20250408-rk3576-pwm-v1-3-a49286c2ca8e@collabora.com>
+ <20250408-rk3576-pwm-v1-4-a49286c2ca8e@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -80,180 +78,80 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-Hi,
-
-Am Dienstag, 8. April 2025, 14:32:15 Mitteleurop=C3=A4ische Sommerzeit schr=
+Am Dienstag, 8. April 2025, 14:32:16 Mitteleurop=C3=A4ische Sommerzeit schr=
 ieb Nicolas Frattaroli:
-> Rockchip hardware has some functionality that is shared across many
-> hardware IPs, and therefore many drivers for them.
+> With the Rockchip RK3576, the PWM IP used by Rockchip has changed
+> substantially. Looking at both the downstream pwm-rockchip driver as
+> well as the mainline pwm-rockchip driver made it clear that with all its
+> additional features and its differences from previous IP revisions, it
+> is best supported in a new driver.
 >=20
-> Most notably is "HIWORD_UPDATE", a macro with slightly different
-> semantics replicated across many a rockchip driver. It currently can be
-> found defined in 19 files, of which 18 are Rockchip drivers.
+> This brings us to the question as to what such a new driver should be.
+> To me, it soon became clear that it should actually be several new
+> drivers, most prominently when Uwe Kleine-K=C3=B6nig let me know that I
+> should not implement the pwm subsystem's capture callback, but instead
+> write a counter driver for this functionality.
 >=20
-> Instead of continuing this tradition with yet another version of it in
-> my new drivers, add a rockchip soc header for utility macros and such.
-> In this header, we define a new set of macros: REG_UPDATE_WE and its
-> little brother REG_UPDATE_BIT_WE. These are purposefully named something
-> other than "HIWORD_UPDATE", to reduce the likelihood of macro
-> redefinitions and also reduce the potential to mislead any adopter into
-> thinking this HIWORD_UPDATE is just like their HIWORD_UPDATE.
+> Combined with the other as-of-yet unimplemented functionality of this
+> new IP, it became apparent that it needs to be spread across several
+> subsystems.
 >=20
-> Old drivers can be moved over to the new macros over the next while if
-> their maintainers think it makes sense for them, which it probably does.
+> For this reason, we add a new platform bus based driver, called mfpwm
+> (short for "Multi-function PWM"). This "parent" driver makes sure that
+> only one device function driver is using the device at a time, and is in
+> charge of registering the platform bus devices for the individual device
+> functions offered by the device.
+>=20
+> An acquire/release pattern is used to guarantee that device function
+> drivers don't step on each other's toes.
 >=20
 > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-when you're doing these fancy nice new macros, I think they might want to
-be even more centrally located for _everyone_ :-) .
+actually trying to compile this, led me to
+
+aarch64-linux-gnu-ld: drivers/soc/rockchip/mfpwm.o: in function `mfpwm_reg_=
+read':
+/home/devel/hstuebner/00_git-repos/linux-rockchip/_build-arm64/../include/s=
+oc/rockchip/mfpwm.h:423: multiple definition of `mfpwm_reg_read'; drivers/p=
+wm/pwm-rockchip-v4.o:/home/devel/hstuebner/00_git-repos/linux-rockchip/_bui=
+ld-arm64/../include/soc/rockchip/mfpwm.h:423: first defined here
+aarch64-linux-gnu-ld: drivers/soc/rockchip/mfpwm.o: in function `mfpwm_reg_=
+write':
+/home/devel/hstuebner/00_git-repos/linux-rockchip/_build-arm64/../include/s=
+oc/rockchip/mfpwm.h:428: multiple definition of `mfpwm_reg_write'; drivers/=
+pwm/pwm-rockchip-v4.o:/home/devel/hstuebner/00_git-repos/linux-rockchip/_bu=
+ild-arm64/../include/soc/rockchip/mfpwm.h:428: first defined here
+make[3]: *** [../scripts/Makefile.vmlinux_o:72: vmlinux.o] Fehler 1
 
 
-Because while true, Rockchip seems to be the biggest user of hiword-mask-
-registers, they're not the only one.
+during the linking stage - with the driver as builtin
 
-Just simply grepping for HIWORD in kernel drivers revealed
-=2D Sunplus sp7021 clock and reset drivers [0]
-=2D a number of hisilicon clock drivers [1]
-=2D some other clock drivers
 
-and as the naming is not really standarized, I guess there will be more
-of the same thing under different names in other places.
+> +inline u32 mfpwm_reg_read(void __iomem *base, u32 reg)
+> +{
+> +	return readl(base + reg);
+> +}
+> +
+> +inline void mfpwm_reg_write(void __iomem *base, u32 reg, u32 val)
+> +{
+> +	writel(val, base + reg);
+> +}
 
-Similarly, we already have a FIELD_PREP_HIWORD in [2], so all in all
-I think all of this wants to move in with the other bitfield stuff like
-=46IELD_PREP.
+making that a "static inline ..." solves that.
+
+
+On a more general note, what is the differentiation to an MFD here?
+
+Like you can already bind dt-nodes to MFD subdevices, and can implement
+the exclusivity API thing on top of a general mfd device, to make sure only
+one mfd-cell gets activated at one time.
+
+Other than that, this looks like it reimplements MFDs?
+
+Also handing around a regmap might be nicer, compared to readl/writel.
 
 
 Heiko
-
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/clk/clk-sp7021.c#n42
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/reset/reset-sunplus.c
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/clk/hisilicon/clk-hi3620.c
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/clk/hisilicon/clk-hi3660.c
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/clk/hisilicon/clk-hi3670.c
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/clk/hisilicon/clk-hi6220.c
-[2] https://elixir.bootlin.com/linux/v6.15/source/drivers/phy/rockchip/phy-=
-rockchip-samsung-dcphy.c#L23
-
-> ---
->  include/soc/rockchip/utils.h | 76 ++++++++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 76 insertions(+)
->=20
-> diff --git a/include/soc/rockchip/utils.h b/include/soc/rockchip/utils.h
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..3349069e75ff51ebd7a22089a=
-f796feafd227ffb
-> --- /dev/null
-> +++ b/include/soc/rockchip/utils.h
-> @@ -0,0 +1,76 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Copyright (c) 2025 Collabora Ltd.
-> + *
-> + * Utility types, inline functions, and macros that are used across seve=
-ral
-> + * Rockchip-specific drivers.
-> + *
-> + * Authors:
-> + *     Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> + */
-> +
-> +#ifndef __SOC_ROCKCHIP_UTILS_H__
-> +#define __SOC_ROCKCHIP_UTILS_H__
-> +
-> +#include <linux/bits.h>
-> +#include <linux/build_bug.h>
-> +#include <linux/limits.h>
-> +
-> +/*
-> + * Incoming macro basilisks, stare directly at them at your own peril.
-> + * As a gentle reminder to help with code comprehension: BUILD_BUG_ON_ZE=
-RO
-> + * is confusingly named; it's a version of BUILD_BUG_ON that evaluates t=
-o zero
-> + * if it does not trigger, i.e. the assertion within the macro still che=
-cks
-> + * for a truthy value, not zero.
-> + */
-> +
-> +/**
-> + * REG_UPDATE_WE - generate a register write value with a write-enable m=
-ask
-> + * @_val: unshifted value we wish to update between @_low and @_high
-> + * @_low: index of the low bit of the bit range we want to update
-> + * @_high: index of the high bit of the bit range we want to update
-> + *
-> + * This macro statically generates a value consisting of @_val shifted t=
-o the
-> + * left by @_low, and a write-enable mask in the upper 16 bits of the va=
-lue
-> + * that sets bit ``i << 16`` to ``1`` if bit ``i`` is within the @_low t=
-o @_high
-> + * range. Only up to bit (@_high - @_low) of @_val is used for safety, i=
-=2Ee.
-> + * trying to write a value that doesn't fit in the specified range will =
-simply
-> + * truncate it.
-> + *
-> + * This is useful for some hardware, like some of Rockchip's registers, =
-where
-> + * a 32-bit width register is divided into a value low half, and a write=
- enable
-> + * high half. Bits in the low half are only update if the corresponding =
-bit in
-> + * the high half is ``1``, allowing for lock-free atomic updates of a re=
-gister.
-> + *
-> + * This macro replaces the venerable ``HIWORD_UPDATE``, which is copied =
-and
-> + * pasted in slightly different forms across many different Rockchip dri=
-vers.
-> + * Before switching drivers to use it, familiarise yourself with the sem=
-antics
-> + * of your specific ``HIWORD_UPDATE`` compared to this function-like mac=
-ro's
-> + * semantics.
-> + *
-> + * Return: the value, shifted into place, with the required write-enable=
- bits
-> + */
-> +#define REG_UPDATE_WE(_val, _low, _high) ( \
-> +	BUILD_BUG_ON_ZERO(const_true((_low) > (_high))) + \
-> +	BUILD_BUG_ON_ZERO(const_true((_high) > 15)) + \
-> +	BUILD_BUG_ON_ZERO(const_true((_low) < 0)) + \
-> +	BUILD_BUG_ON_ZERO(const_true((u64) (_val) > U16_MAX)) + \
-> +	((_val & GENMASK((_high) - (_low), 0)) << (_low) | \
-> +	(GENMASK((_high), (_low)) << 16)))
-> +
-> +/**
-> + * REG_UPDATE_BIT_WE - update a bit with a write-enable mask
-> + * @__val: new value of the bit, either ``0`` 0r ``1``
-> + * @__bit: bit index to modify, 0 <=3D @__bit < 16.
-> + *
-> + * This is like REG_UPDATE_WE() but only modifies a single bit, thereby =
-making
-> + * invocation easier by avoiding having to pass a repeated value.
-> + *
-> + * Return: a value with bit @__bit set to @__val and @__bit << 16 set to=
- ``1``
-> + */
-> +#define REG_UPDATE_BIT_WE(__val, __bit) ( \
-> +	BUILD_BUG_ON_ZERO(const_true((__val) > 1)) + \
-> +	BUILD_BUG_ON_ZERO(const_true((__val) < 0)) + \
-> +	REG_UPDATE_WE((__val), (__bit), (__bit)))
-> +
-> +#endif /* __SOC_ROCKCHIP_UTILS_H__ */
->=20
->=20
-
 
 
 
