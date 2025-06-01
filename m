@@ -1,158 +1,157 @@
-Return-Path: <linux-pwm+bounces-6202-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6203-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FFA8AC9CF0
-	for <lists+linux-pwm@lfdr.de>; Sat, 31 May 2025 23:48:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 35B57AC9E17
+	for <lists+linux-pwm@lfdr.de>; Sun,  1 Jun 2025 09:51:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A9DC3189CDDB
-	for <lists+linux-pwm@lfdr.de>; Sat, 31 May 2025 21:49:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 535871896B96
+	for <lists+linux-pwm@lfdr.de>; Sun,  1 Jun 2025 07:51:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECC0E1D95B3;
-	Sat, 31 May 2025 21:48:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2803F19F48D;
+	Sun,  1 Jun 2025 07:51:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="S/veJHBk"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UGCFgDVR"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D279C1ACE0C;
-	Sat, 31 May 2025 21:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B248D19DF5B
+	for <linux-pwm@vger.kernel.org>; Sun,  1 Jun 2025 07:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748728122; cv=none; b=orv2GTHXDICSB/zhEQEI17r+xj5Ks9RUWpJTeEaRAYiwB6fxr12b1ab/RHIfxWg94YPBfzJN+VpI0/g6tA5BFiDtRp1TSTkQEbWsU6EwHrhhAKow6cGp97HisjPEmEGDiiRDTVrG365/9OV1r9Dfv35LzJ6rb3CqMESTGY0Vk9o=
+	t=1748764265; cv=none; b=etE3b3M9mFrWLanZNYZ57NgHuoKOQfcLtwclh2UCUtAeaenoyDQJRfMzTIV39FfhRhDllqCh/IDqqTXkV8b8c/t4X6SoMQvQUf6OYMFj5+XExOGixeBIQdqk9OoWkSmYImwnBQm4evXR1lLJStRewQp+9o71j2y0x6AaUMGGSMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748728122; c=relaxed/simple;
-	bh=dr5WfIFnDvxt8uCn0X7Wh0AAlu8MV4VHpUff1slIYog=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iFYxdfu8MXiWLpJDLIEkngqXcB6ntMvbb9yZCy3jnaFee+TEgy8PRqx0QSGBcP2kMslR8Tdu3X6Ro5HlXBkOeffFywegjm75wlLmasc/EmPd0tz5ZRpRYjUnWq91WG2dCm18zOucUjBxPfqRCS9wcbf2t8B5Mc6amwZ7l+hQpBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=S/veJHBk; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=7u2qauzFTP/rcfL2a+zDfaRZel9Pi3gl/2pshUKS3Yk=; b=S/veJHBk4K4AhMATBTSQloGQ/s
-	SExGYxn3vLkx2Q5mkmsp0Kv0K+HTFKscAq30eVlszyNmHjpIMlxe/wFsDhlRhxi/yl2bItdRpd/c3
-	YP4DoEl8pZojG29DsB8iQbYu6yCJ0Id9+IuvCdPqOIV/cAMqalAKqDw6vmBtKD/L0UKJVIeHaLKg1
-	S1cNU9BLdN+/Nw1QA81Z2eyTzfCHis7/U5yc1Vh/VPMWkmL45r+AKeIdy/7b3dTX39inxEWjBsoMT
-	9Ij0k2rb6NW1oewrgOJadOIq1GjyOWNqT9uiD5ORDZ/YR9vh5FDP+HssP53zQGw5j8slLg9mO45xs
-	RNYOc6kg==;
-Received: from i53875a3e.versanet.de ([83.135.90.62] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uLU46-0001IH-Ji; Sat, 31 May 2025 23:48:30 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- William Breathitt Gray <wbg@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Kever Yang <kever.yang@rock-chips.com>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-iio@vger.kernel.org, kernel@collabora.com,
- Jonas Karlman <jonas@kwiboo.se>,
- Detlev Casanova <detlev.casanova@collabora.com>,
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Subject: Re: [PATCH 4/7] soc: rockchip: add mfpwm driver
-Date: Sat, 31 May 2025 23:48:29 +0200
-Message-ID: <2188729.OBFZWjSADL@diego>
-In-Reply-To: <20250408-rk3576-pwm-v1-4-a49286c2ca8e@collabora.com>
-References:
- <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
- <20250408-rk3576-pwm-v1-4-a49286c2ca8e@collabora.com>
+	s=arc-20240116; t=1748764265; c=relaxed/simple;
+	bh=5+6yz3aoyJHNsZavcO9AiQGNcAcAlecdhe/eFl9wu9w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=asLQ45q6Igu/D/iyQJz7dPnijsyRo64/4VnvZSwgiZ4HWlt1AQ6RHTWf1kE8FoiqSxccDAGMaDc4dnQcsIX09St/YiFHsWJPJAmSsKfH3kARStyFIIO6ShUKkKpTvi3vYm89TN9Mg58TaLHfymBFASQfj7C/DHBVlHrbc8WWrAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=UGCFgDVR; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250601075055euoutp012dec52c8ac0667ba62f9b9b0fd753ce8~E29MhhoVf2651426514euoutp01m
+	for <linux-pwm@vger.kernel.org>; Sun,  1 Jun 2025 07:50:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250601075055euoutp012dec52c8ac0667ba62f9b9b0fd753ce8~E29MhhoVf2651426514euoutp01m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1748764255;
+	bh=hqMY6JBjFHLi1UGuQGIN1VxhuxOXkbW6BShlkS0Hdbw=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=UGCFgDVRJfMsNd/HFXPrc3FxhgoON0esubBU904ELGdFgoc5nag30aAx/Zq6I6Anq
+	 wU81Hq0tIJkAqltlzi08+tzT/6bx9zT4Xg5krOQ6NwdpjEagLv6hDb7i0fNyU8I7Bo
+	 aJU1ON/FyAqKxKsp6hdOAPnSeEr8mfb6diXcIBC0=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250601075053eucas1p1a6f3d7c11210b61ea1d0c62f7f52cabd~E29LH_2j60784107841eucas1p1m;
+	Sun,  1 Jun 2025 07:50:53 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250601075052eusmtip272f1587c5683112656d6389dcaa6908e~E29KC_7vN1949419494eusmtip2B;
+	Sun,  1 Jun 2025 07:50:52 +0000 (GMT)
+Message-ID: <61eecafb-8ad1-4306-88cb-a032eefb2e48@samsung.com>
+Date: Sun, 1 Jun 2025 09:50:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 5/6] riscv: dts: thead: Add PVT node
+To: Drew Fustini <drew@pdp7.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Miguel Ojeda
+	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
+	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin
+	<benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
+	Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
+	Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
+	<m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <aDVxDJi0KkWXiPCK@x1>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250601075053eucas1p1a6f3d7c11210b61ea1d0c62f7f52cabd
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-
-Am Dienstag, 8. April 2025, 14:32:16 Mitteleurop=C3=A4ische Sommerzeit schr=
-ieb Nicolas Frattaroli:
-> With the Rockchip RK3576, the PWM IP used by Rockchip has changed
-> substantially. Looking at both the downstream pwm-rockchip driver as
-> well as the mainline pwm-rockchip driver made it clear that with all its
-> additional features and its differences from previous IP revisions, it
-> is best supported in a new driver.
->=20
-> This brings us to the question as to what such a new driver should be.
-> To me, it soon became clear that it should actually be several new
-> drivers, most prominently when Uwe Kleine-K=C3=B6nig let me know that I
-> should not implement the pwm subsystem's capture callback, but instead
-> write a counter driver for this functionality.
->=20
-> Combined with the other as-of-yet unimplemented functionality of this
-> new IP, it became apparent that it needs to be spread across several
-> subsystems.
->=20
-> For this reason, we add a new platform bus based driver, called mfpwm
-> (short for "Multi-function PWM"). This "parent" driver makes sure that
-> only one device function driver is using the device at a time, and is in
-> charge of registering the platform bus devices for the individual device
-> functions offered by the device.
->=20
-> An acquire/release pattern is used to guarantee that device function
-> drivers don't step on each other's toes.
->=20
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-
-actually trying to compile this, led me to
-
-aarch64-linux-gnu-ld: drivers/soc/rockchip/mfpwm.o: in function `mfpwm_reg_=
-read':
-/home/devel/hstuebner/00_git-repos/linux-rockchip/_build-arm64/../include/s=
-oc/rockchip/mfpwm.h:423: multiple definition of `mfpwm_reg_read'; drivers/p=
-wm/pwm-rockchip-v4.o:/home/devel/hstuebner/00_git-repos/linux-rockchip/_bui=
-ld-arm64/../include/soc/rockchip/mfpwm.h:423: first defined here
-aarch64-linux-gnu-ld: drivers/soc/rockchip/mfpwm.o: in function `mfpwm_reg_=
-write':
-/home/devel/hstuebner/00_git-repos/linux-rockchip/_build-arm64/../include/s=
-oc/rockchip/mfpwm.h:428: multiple definition of `mfpwm_reg_write'; drivers/=
-pwm/pwm-rockchip-v4.o:/home/devel/hstuebner/00_git-repos/linux-rockchip/_bu=
-ild-arm64/../include/soc/rockchip/mfpwm.h:428: first defined here
-make[3]: *** [../scripts/Makefile.vmlinux_o:72: vmlinux.o] Fehler 1
-
-
-during the linking stage - with the driver as builtin
-
-
-> +inline u32 mfpwm_reg_read(void __iomem *base, u32 reg)
-> +{
-> +	return readl(base + reg);
-> +}
-> +
-> +inline void mfpwm_reg_write(void __iomem *base, u32 reg, u32 val)
-> +{
-> +	writel(val, base + reg);
-> +}
-
-making that a "static inline ..." solves that.
-
-
-On a more general note, what is the differentiation to an MFD here?
-
-Like you can already bind dt-nodes to MFD subdevices, and can implement
-the exclusivity API thing on top of a general mfd device, to make sure only
-one mfd-cell gets activated at one time.
-
-Other than that, this looks like it reimplements MFDs?
-
-Also handing around a regmap might be nicer, compared to readl/writel.
-
-
-Heiko
+X-RootMTR: 20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01
+X-EPHeader: CA
+X-CMS-RootMailID: 20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01
+References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
+	<CGME20250524211525eucas1p244963b69e0531c95a9052e4a7a1d1e01@eucas1p2.samsung.com>
+	<20250524-rust-next-pwm-working-fan-for-sending-v1-5-bdd2d5094ff7@samsung.com>
+	<aDVxDJi0KkWXiPCK@x1>
 
 
 
+On 5/27/25 10:00, Drew Fustini wrote:
+> On Sat, May 24, 2025 at 11:14:59PM +0200, Michal Wilczynski wrote:
+>> Add PVT DT node for thermal sensor.
+>>
+>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>> ---
+>>  arch/riscv/boot/dts/thead/th1520.dtsi | 11 +++++++++++
+>>  1 file changed, 11 insertions(+)
+>>
+>> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
+>> index f24e12d7259fabcfbdc2dfa966d759db06684ab4..faf5c3aaf209b24cd99ddc377a88e08a8cce24fe 100644
+>> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
+>> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+>> @@ -648,6 +648,17 @@ padctrl_aosys: pinctrl@fffff4a000 {
+>>  			thead,pad-group = <1>;
+>>  		};
+>>  
+>> +		pvt: pvt@fffff4e000 {
+>> +			compatible = "moortec,mr75203";
+>> +			reg = <0xff 0xfff4e000 0x0 0x80>,
+>> +			      <0xff 0xfff4e080 0x0 0x100>,
+>> +			      <0xff 0xfff4e180 0x0 0x680>,
+>> +			      <0xff 0xfff4e800 0x0 0x600>;
+>> +			reg-names = "common", "ts", "pd", "vm";
+>> +			clocks = <&aonsys_clk>;
+>> +			#thermal-sensor-cells = <1>;
+>> +		};
+>> +
+>>  		gpio@fffff52000 {
+>>  			compatible = "snps,dw-apb-gpio";
+>>  			reg = <0xff 0xfff52000 0x0 0x1000>;
+>>
+>> -- 
+>> 2.34.1
+>>
+> 
+> I found that on my lpi4a that boot while hang after applying this patch.
+> I think that it is related to clocks as boot finished okay when using
+> clk_ignore_unused on the kernel cmdline. Do you happen have that in your
+> kernel cmdline?
+> 
+> I need to investigate further to understand which clocks are causing the
+> problem.
+> 
+> Thanks,
+> Drew
+> 
+
+Thanks for your earlier message. I've investigated, and you were right
+about the clocks – the specific one causing the hang is CLK_CPU2AON_X2H.
+
+This appears to be an AHB bus clock required for CPU access to the AON
+domain. My proposed solution is to make the pvt node a child of a new
+parent bus node in the Device Tree. This new "AON bus" node would then
+explicitly request and manage CLK_CPU2AON_X2H, ensuring it's enabled
+when its children are accessed.
+
+What are your thoughts on this approach?
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
 
