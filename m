@@ -1,60 +1,59 @@
-Return-Path: <linux-pwm+bounces-6221-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6222-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FCDCACB982
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 18:21:16 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C62FACB97E
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 18:21:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CAA55189AF01
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 16:21:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4B667ABDE5
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 16:19:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB219224B0C;
-	Mon,  2 Jun 2025 16:20:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19572226D0E;
+	Mon,  2 Jun 2025 16:20:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="jluxEtLT"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="Q73iPwH7"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C8A22257E;
-	Mon,  2 Jun 2025 16:20:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBEB226CE6;
+	Mon,  2 Jun 2025 16:20:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748881227; cv=pass; b=lqTYMG++XzLjFwHyKjNxA4Qd39L6p56mo9+g5J03e77973JAYvnNu5IwolrC+gyZWRPxO8FVrteVjofUfVCqq7py/sLf1ioRaeNt5RhmtNqIn6myBUS10NRu847DVVgP4LnC3IgaubAIs+9p7IqBM6gsfrQAUT8emfFHIML6EkU=
+	t=1748881229; cv=pass; b=GWqVm2MKSE5k5hU3APaZ7/EysGQWkmWE8ztL1zTiTEaki5yXDF0HDWNzRfbPKbf578IJhACPkEXS+fF7EaFJMBeHjCLPcvYxQISoNPLh0ecBuyHfTDJgtKLSBPLFEBOIasEyxBu++KjACSsy5bFclo4dzj/X7upa4CUW4FBitdk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748881227; c=relaxed/simple;
-	bh=sHqT8y+JWpePcMn7FKTJjSmF3qP9aDTX0TsQDS5haeA=;
+	s=arc-20240116; t=1748881229; c=relaxed/simple;
+	bh=rWgPyOuKZhg6c+KCFVBJYp5I58SudiSBJrH+Fn3JS1Q=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JkA12oYWKNJgXCInQcu8ItR9i+lLq1Bp1k0rVZskt5KoFIsuSygtaYQuKcPgDn/EtxxHui/i+6AorpWK5ksfyswwzMojDI2nDWTdkDFW8L3RhufFskJ59Baup3Ijl3UszuFpVCYHJh+IqqBQ8XLxisvCP4G8C5OoZV9QGoppPK4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=jluxEtLT; arc=pass smtp.client-ip=136.143.188.112
+	 In-Reply-To:To:Cc; b=P/66+5ehiIKDB/jdebNF9CsXogV0rAVuIPrInSsJmAhiUdWDbIDL2Fd3fRmL3bdms1f3CiTl3cgo1ubR2qm5wKdHIDbP6au+No/6H0YcNdWFgL4HAbYGUB4u3X7ZFEOs8w6H+VdGDGjsgTPy3DaMCT1ccLEig+u4mHDdTNXNWdY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=Q73iPwH7; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1748881192; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1748881198; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=AkptTGEgE31egFhb+f/Uj95/Nt6wZrMBp+i7QgXWA8+AZEWtkMJB0W3uElJugAXzHVH6s2cW745b1NXRfwjaLfI52LojjEo2Qip3KFntk/ICfofL0XZsNu/NZ5FIXHdPpELXHle4p1ZHpei0XBh5lpOzF2XSKB4Oy0yWoCa/QI8=
+	b=PhNStYgLBPwpGKNbTZ0cGpXa2D1URHrfuCs/M96x3wUVSuOCMvTru7SuWHP0G2EQUGiT/6rJM0HgQTOU9ocAqEIk4XHvOlN9LfsYvtibQwWBimk/08HKdF2FSylUcIHGUbNPO+pdjKMK3JLvI5Ro3FhJjXzLIxeE6FNCLrL03vE=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1748881192; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=thPWNUjDhq74INOVmaKiFAm4Ay3tl0e1gLSGBjUtuCA=; 
-	b=j2lKIaKtyEDUhTafuB1qmTqLvB279lG6bw88aUxQU93DdGeE5T9Bvvcu1J7GBRnbMdDhZYQaub+0Wu0zW0dTQnqczfXW1hBk5/SsM3/kxPPiJ3bfSzvQEbCD+nLXatZgeCOUaFHQd+VPApOmTSMval+IkNH5H/GRddXADfS/wKE=
+	t=1748881198; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=qn6hkZ4dvueWK2yUfqDn0Lxg117xtWyawVMPwvD0KTI=; 
+	b=ehrp0EKSMyO9N+xF9mngVANcUXtfFXb/CaSh6FvBIcEodfi4rEbFEZrV/Q/KqFlENE5ddewUbOHwpzWq0inqloKp6odgj+OJoZfOOy8xlJuijInt+VH0O4vzQk1zyghEvVrDXaBNpF/EyOYB83fkkz5sRuWb9OQpVAWeaVxRZ6M=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748881192;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748881198;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=thPWNUjDhq74INOVmaKiFAm4Ay3tl0e1gLSGBjUtuCA=;
-	b=jluxEtLTEOZgDWrHx8tE7+HvcyzXF4jXsWSxPMHRRlZxiu56w9l4tXvhzqxN5jFV
-	iZrVh1Xwn0SJe6BwaCDWZUyeUJUC8iIj4Uw308rsu03Le1Q4ZHc0g7j2pd/E9DXMgIT
-	E3alHbGpkOUfmVYz8U/+Hvg9rsJ2nEPT4u5O8Gmw=
-Received: by mx.zohomail.com with SMTPS id 1748881189490850.5349919679828;
-	Mon, 2 Jun 2025 09:19:49 -0700 (PDT)
+	bh=qn6hkZ4dvueWK2yUfqDn0Lxg117xtWyawVMPwvD0KTI=;
+	b=Q73iPwH765q3Dckn8PEFgSbkM8DKWlkT+WEWPvVE2BWhgMJWHYvrnuArk5Ml5bik
+	QxBPwOUQuDq7LczRoS05dEdLfro4L+xrFuQbtxdqqCqqCfneuE/P8v+Vg5lXnh+yihd
+	w/zJYrNCkrCOtcC6YeZoQ0sFW9QxWWW2p+CwFdfU=
+Received: by mx.zohomail.com with SMTPS id 174888119584653.46102599234996;
+	Mon, 2 Jun 2025 09:19:55 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Mon, 02 Jun 2025 18:19:13 +0200
-Subject: [PATCH v2 2/7] dt-bindings: pwm: Add a new binding for
- rockchip,rk3576-pwm
+Date: Mon, 02 Jun 2025 18:19:14 +0200
+Subject: [PATCH v2 3/7] bitfield: introduce HI16_WE bitfield prep macros
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -63,7 +62,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250602-rk3576-pwm-v2-2-a6434b0ce60c@collabora.com>
+Message-Id: <20250602-rk3576-pwm-v2-3-a6434b0ce60c@collabora.com>
 References: <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
 In-Reply-To: <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -86,127 +85,102 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
-The Rockchip RK3576 SoC has a newer PWM controller IP revision than
-previous Rockchip SoCs. This IP, called "PWMv4" by Rockchip, introduces
-several new features, and consequently differs in its bindings.
+Hardware of various vendors, but very notably Rockchip, often uses
+32-bit registers where the upper 16-bit half of the register is a
+write-enable mask for the lower half.
 
-Instead of expanding the ever-growing rockchip-pwm binding that already
-has an if-condition, add an entirely new binding to handle this.
+This type of hardware setup allows for more granular concurrent register
+write access.
 
-There are two additional clocks, "osc" and "rc". These are available for
-every PWM instance, and the PWM hardware can switch between the "pwm",
-"osc" and "rc" clock at runtime.
+Over the years, many drivers have hand-rolled their own version of this
+macro, usually without any checks, often called something like
+HIWORD_UPDATE or FIELD_PREP_HIWORD, commonly with slightly different
+semantics between them.
 
-The PWM controller also comes with an interrupt now. This interrupt is
-used to signal various conditions.
+Clearly there is a demand for such a macro, and thus the demand should
+be satisfied in a common header file.
+
+Add two macros: FIELD_PREP_HI16_WE, and FIELD_PREP_HI16_WE_CONST. The
+latter is a version that can be used in initializers, like
+FIELD_PREP_CONST. The macro names are chosen to explicitly reference the
+assumed half-register width, and its function, while not clashing with
+any potential other macros that drivers may already have implemented
+themselves.
+
+Future drivers should use these macros instead of handrolling their own,
+and old drivers can be ported to the new macros as time and opportunity
+allows.
 
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- .../bindings/pwm/rockchip,rk3576-pwm.yaml          | 77 ++++++++++++++++++++++
- MAINTAINERS                                        |  7 ++
- 2 files changed, 84 insertions(+)
+ include/linux/bitfield.h | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/rockchip,rk3576-pwm.yaml b/Documentation/devicetree/bindings/pwm/rockchip,rk3576-pwm.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..48d5055c8b069fff431c62e67bda11f2e086c9a0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/rockchip,rk3576-pwm.yaml
-@@ -0,0 +1,77 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/rockchip,rk3576-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip PWMv4 controller
-+
-+maintainers:
-+  - Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-+
-+description: |
-+  The Rockchip PWMv4 controller is a PWM controller found on several Rockchip
-+  SoCs, such as the RK3576.
-+
-+  It supports both generating and capturing PWM signals.
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: rockchip,rk3576-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Used to derive the PWM signal.
-+      - description: Used as the APB bus clock.
-+      - description: Used as an alternative to derive the PWM signal.
-+      - description: Used as another alternative to derive the PWM signal.
-+
-+  clock-names:
-+    items:
-+      - const: pwm
-+      - const: pclk
-+      - const: osc
-+      - const: rc
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    const: 3
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rockchip,rk3576-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pwm@2add0000 {
-+            compatible = "rockchip,rk3576-pwm";
-+            reg = <0x0 0x2add0000 0x0 0x1000>;
-+            clocks = <&cru CLK_PWM1>, <&cru PCLK_PWM1>, <&cru CLK_OSC_PWM1>,
-+                     <&cru CLK_RC_PWM1>;
-+            clock-names = "pwm", "pclk", "osc", "rc";
-+            interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+            #pwm-cells = <3>;
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2f13e1602ae68d808b2e8a4711d3c6d40bf5f752..ed5cf56b3ebf9e3153cb9171908a1d36c246197d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21418,6 +21418,13 @@ F:	Documentation/userspace-api/media/v4l/metafmt-rkisp1.rst
- F:	drivers/media/platform/rockchip/rkisp1
- F:	include/uapi/linux/rkisp1-config.h
+diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+index 6d9a53db54b66c0833973c880444bd289d9667b1..2b3e7cb90ccb5d48f510104f61443b06748bb7eb 100644
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -8,6 +8,7 @@
+ #define _LINUX_BITFIELD_H
  
-+ROCKCHIP MFPWM
-+M:	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-+L:	linux-rockchip@lists.infradead.org
-+L:	linux-pwm@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pwm/rockchip,rk3576-pwm.yaml
+ #include <linux/build_bug.h>
++#include <linux/limits.h>
+ #include <linux/typecheck.h>
+ #include <asm/byteorder.h>
+ 
+@@ -142,6 +143,52 @@
+ 		(((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))	\
+ 	)
+ 
++/**
++ * FIELD_PREP_HI16_WE() - prepare a bitfield element with a write-enable mask
++ * @_mask: shifted mask defining the field's length and position
++ * @_val:  value to put in the field
++ *
++ * FIELD_PREP_HI16_WE() masks and shifts up the value, as well as bitwise ORs
++ * the result with the mask shifted up by 16.
++ *
++ * This is useful for a common design of hardware registers where the upper
++ * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
++ * register, a bit in the lower half is only updated if the corresponding bit
++ * in the upper half is high.
++ */
++#define FIELD_PREP_HI16_WE(_mask, _val)					\
++	({								\
++		__BF_FIELD_CHECK(_mask, ((u16) 0U), _val,		\
++				 "FIELD_PREP_HI16_WE: ");		\
++		((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask) |	\
++		((_mask) << 16);					\
++	})
 +
- ROCKCHIP RK3568 RANDOM NUMBER GENERATOR SUPPORT
- M:	Daniel Golle <daniel@makrotopia.org>
- M:	Aurelien Jarno <aurelien@aurel32.net>
++/**
++ * FIELD_PREP_HI16_WE_CONST() - prepare a constant bitfield element with a
++ *                              write-enable mask
++ * @_mask: shifted mask defining the field's length and position
++ * @_val:  value to put in the field
++ *
++ * FIELD_PREP_HI16_WE_CONST() masks and shifts up the value, as well as bitwise
++ * ORs the result with the mask shifted up by 16.
++ *
++ * This is useful for a common design of hardware registers where the upper
++ * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
++ * register, a bit in the lower half is only updated if the corresponding bit
++ * in the upper half is high.
++ *
++ * Unlike FIELD_PREP_HI16_WE(), this is a constant expression and can therefore
++ * be used in initializers. Error checking is less comfortable for this
++ * version, and non-constant masks cannot be used.
++ */
++#define FIELD_PREP_HI16_WE_CONST(_mask, _val)				 \
++	(								 \
++		FIELD_PREP_CONST(_mask, _val) |				 \
++		(BUILD_BUG_ON_ZERO(const_true((u64) (_mask) > U16_MAX)) + \
++		 ((_mask) << 16))					 \
++	)
++
+ /**
+  * FIELD_GET() - extract a bitfield element
+  * @_mask: shifted mask defining the field's length and position
 
 -- 
 2.49.0
