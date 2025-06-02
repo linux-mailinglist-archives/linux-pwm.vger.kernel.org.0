@@ -1,127 +1,161 @@
-Return-Path: <linux-pwm+bounces-6216-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6217-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4540AACB660
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 17:17:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA321ACB7A5
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 17:30:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E131D1946DAB
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 15:08:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D41916CFC2
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 15:21:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CF3D22D7B0;
-	Mon,  2 Jun 2025 15:00:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 902DB226CE6;
+	Mon,  2 Jun 2025 15:17:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAMw036N"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uQqnRoC8"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C400822D7A6;
-	Mon,  2 Jun 2025 15:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C712226863
+	for <linux-pwm@vger.kernel.org>; Mon,  2 Jun 2025 15:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748876448; cv=none; b=MrzgMbEnHznHT4a4vrtP1oV0RiY0bVbdsqEiJ51ZtGU67QbvHZi4ls1Jg0kaUCvuibccSl3LE25cXYWIbQrE5TqRXbsG7KWmyqGyyRpaEC+It7AwHJsL1+UP6AnDMk2YYeRa8cChfGIJjk9KliIeE9E4pRGK52GT2gANwp9zq1c=
+	t=1748877443; cv=none; b=UXfaR7ng6AUpX/cMoP6lHhuhOMcklQb+gtARjogc3v7ZP9aTm7fhgRezJRYAoTXkpHXjORijqELcovIpEAMFlCVwjQ6tdRQcwGP+i/iWL1eFVYuj+7/nZgbWgcKWHLdk/CFKKkcfesVSrCR75q2lH4e3KEWSJzPkGSS4imqHelM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748876448; c=relaxed/simple;
-	bh=TJE7d1QlO4KBY8QKjhz1Z13bvzRugIPW9bJZv5Tkl1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iu0Ovqkuf5t1CkdoaalO1WogWj/5oQp1CSmlgMnxPU/QZQjaMpL3GMdKpAlqMJRU92uJbnbWc+1XTmryVJJxn0GoCwt5By57vanS1dzzt3frGmfneEiw2cCpU6kD0zg2zTnm89ZuxTvbFIY57UGFHzoXDrQAqvKhEyqgqKGgiTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eAMw036N; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-23035b3edf1so40206185ad.3;
-        Mon, 02 Jun 2025 08:00:46 -0700 (PDT)
+	s=arc-20240116; t=1748877443; c=relaxed/simple;
+	bh=6PeBJSTna6lX3rGrf4lCGvp5OKDfktdRcJOfJVLf5WA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lcQb7byc9UCI7Am8drUrFoe7+tHDkvZV7VDSO1R5aHQ2u/EJDK/I8HOOacsnEINQTm6P2FyKkBTe3hID031UDeot2Twqt6nnV5PCAKqLAF/iBSkhu+4pgwe054+1eGNeoz9jP+WDCfvPeYVUlPxzz8S7W+QY6PifmbnL292vCFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uQqnRoC8; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2db9e29d3bcso1890423fac.1
+        for <linux-pwm@vger.kernel.org>; Mon, 02 Jun 2025 08:17:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748876446; x=1749481246; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TJE7d1QlO4KBY8QKjhz1Z13bvzRugIPW9bJZv5Tkl1E=;
-        b=eAMw036NMayOLOX0b1/f8FAqyH8q2iiPV3KmxwcQlQmMuab2c9VOzdbbhnE/h9Iq6u
-         cLsm/l11OtbkoUInPsJPNwOOyQ2zPMLRq81D25S+YKs0vWjJipadM6XpJmuQm8G7OWJ1
-         1mXmkpFsgjSoQcRBSIHcxp/lEX1WgsiMIr0YQNPug8WAHTalCOasbJI7rDHWYq80wdED
-         lydUAOr2WUPHuQ7hQuj3WR7EUeHLTX5kwrI6vbEAjCTZDSqGng3IJav5ZBwoZCMNgC2e
-         X8NxdnwlFQn/9RoFU/srATdpa2Qb459SO2xY1YUOEQ6N5ETPJ7ElDEfRnh3s+7VREtUC
-         bt/w==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748877440; x=1749482240; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/FLsGzoXOAagEvr3iBgspYfHnJfzfNsAWbJHVPi43wg=;
+        b=uQqnRoC8bVrAJ7GFrYX0xzTIwaXDpPLPMjgilPOwjvArRDhEbMTgS1k4xHvtQ7SSMd
+         G9qoY5vjSo3/Gxq81aBGy+Xk1TWeaenwWzArmqCTl79zmPpzFWgPgY8wywSOUqqGBf3l
+         lqSEFYtXKeE/4IKWuMfjlcvRqgdJ4dHT3915o0KvFTno0SnYWPl6ekdBn4ZuoWPF9wpZ
+         U2Dji7zezOajUxoct4hiSze9Titte6XhsSSQf2U8f71uGPjuhgQxu5FVSRnZXpvV5y3n
+         FuADPKRHrzhvwqO00MQE0sF+wGUUvxNTiPXn2BTKapnFVA5L4m98/c4RH12SXJV/iDR8
+         sRdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748876446; x=1749481246;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TJE7d1QlO4KBY8QKjhz1Z13bvzRugIPW9bJZv5Tkl1E=;
-        b=VCG6lWjtOioVUrN9KaXuap+w+pi6aGQKmk30DO+o3Nh9jyXIj5Ml8GxZ5U9OLx940K
-         48BUy+VXhEz9/Oq0+QW3KZAppsEqcvF+WDfNU8oMSTUNUKRI0qYm7GqRkjLPWj5Ij6Fz
-         Wwb3MukFlkZftuMIZypt+k85guA2CE9YFQqhlrwj0ohaSjVqA4GzR2wETU8lKKghtjq6
-         6Z4nnq1UATmnWM2zx39NDZpTiG86NqdyYj7vvXmoc9qRg+TL71Nt/OrVKLB16VcTCHpC
-         hPnbewAGub+Obt9Uca4osNSIjt69zAHhT+ya4yJ3Ae7jzm4SXi4WtvyypEaQKsU8WDJ5
-         owgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW3oZvNIcU0WB+l3LuLcVVbtE1up12ZJJuOPb9ylYO2GWB4L/JoEKf5Gf9WzrJLd1KV2rZ9mxY3GlM1@vger.kernel.org, AJvYcCXIrZk7QeYJGxfNa0Lk0Ufc1bwJvyBPTGCYsKeKEHN14znOTTRf8L8wbPF80LKX1E4s1O62YSHAHrpA@vger.kernel.org, AJvYcCXOJl88TdbKVwzqiBVDRBaVZ1IqX/sDYUZM3ghGBgLeGcEMzL78sVW1Hh77H1b1ve5CoKY2JfqYIp2ZkqWE@vger.kernel.org, AJvYcCXbDH7yRzXSCPjh108TaYCxAq+WnKxNNUFLgzJZmz5NXp7e71fYaODRkKsm90Xx3YPJ6MN+2mrU2lHZhqI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGOygeaEpZUHb4fuqNBe0BBIpUZTTagTRcIMcZ0K6HsWfh96sV
-	YIKCZ0iKmDDQUGrgAbMN1MHWOVxqioKmy/g9uUZ8WoToZMuXYub8f99emYaZ6KcQ
-X-Gm-Gg: ASbGncsXvg/Ddf1UzQx9Vgzvgf6uD/4fhxK9x3RAeGMrJs5yIn00r4NvHJKtYDRUVL/
-	RV72+pRx7n2RrBEDyBx5SBHAHvGtjU0OdyGhlXV3KsKV6/CcVnyCtAarfrUoh4uJIHyU2zBPVT2
-	ab8AoHykzDUqhO8cksfnVIJYOluAH7V2JilHKFdRiOJNBm8zr2kHehW/gp/uV3q/KBdn7CrKupT
-	VGMwyTKj60uNsbWibHfS5z0RO6fY6SvhKkXk8Oog+Yk1wIi0cMlqffP6bV/9++/DVo5Ua9+dw2G
-	30Ban8EI8Rqn+oEm7OoZftJ2kfJd1Ks1giKdlIroqsnRQY/GHlLLNO43tqQUDCHY
-X-Google-Smtp-Source: AGHT+IHpexqrF/VnpGWBxjuy4tOcCzXxSM6H9cBd3Svx6k9p1fO3U8u3WCyCIWub1yUao++AS5zgeQ==
-X-Received: by 2002:a17:902:d4cc:b0:234:ea6:c77a with SMTP id d9443c01a7336-23529a17fe4mr213356195ad.38.1748876445456;
-        Mon, 02 Jun 2025 08:00:45 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd974asm71896755ad.97.2025.06.02.08.00.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 08:00:44 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 2 Jun 2025 08:00:43 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	"jdelvare@suse.com" <jdelvare@suse.com>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-Message-ID: <c316130c-9b64-4510-b2a2-d2aa45ee3734@roeck-us.net>
-References: <20240722221737.3407958-1-chris.packham@alliedtelesis.co.nz>
- <20240722221737.3407958-2-chris.packham@alliedtelesis.co.nz>
- <jzxu6mcbxf5zwyirnb2jjpm2i7sln3v5mz3gyhc5xhpqexicvb@atrcjvh7wuh5>
- <bc99a27e-74ec-45a0-b77c-48f993269586@alliedtelesis.co.nz>
- <jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3rlhiernunjdodu@tgxghvfef4tl>
- <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
+        d=1e100.net; s=20230601; t=1748877440; x=1749482240;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/FLsGzoXOAagEvr3iBgspYfHnJfzfNsAWbJHVPi43wg=;
+        b=FcrySSUmM4h68Ht99fh2ZsO+j+2Mv5mc6f/g3VDv94EQATLeMyBFYxZFNJpkHIHzcC
+         zvx7b1HLuoeIjveUIM37Hz0xjrf23muwGl3xi1ON6NoMboMEuHbBF2+l964XIooWP8Xn
+         7WsW+98BAVWGSLyffs07WosQnMhLUgj8BKcIhsLX0OPKPqx1beTyigkLSxDcU+CHqrhW
+         T8t1Q3GOdMa8Wgl/CnbWuxvsfEIjucLAB2Zfb5xcLlXSGW+RVW444Dd4EOWxm8Y6oojk
+         ywM4by47abKGhHj+Svf3vzJgwS/+qlBXJBGPWyLJqklaaHQOOTgLoMoawUY5VOzFCTSz
+         kIKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVGKAZODLkey7euTxBqRicx47KZ9HJ9GSl81sgIR8KzmkNckdvn0Mcu8PCvDTYGpIzJpSrmw1+iOR4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyZtcVxUFNU1XPzET/tOgFBPYrqs2oeVxZ9m3ud62KN9VmeAtj
+	G2E+pn+lDpx9QZw+082K4clQADV+eDg3VhrmzzRlODlFO8NuavJiJslaJ0f+OJ92rhM=
+X-Gm-Gg: ASbGncuv3XATOckSE5W/zWqJvjSxBrsVVIuddHClGT5+bTtQmyyaZ6u0odcIIAsRIDz
+	fLlhPM4schOX+W9lMJNprPBGuc6BiWIXYQoaQPgCcmaF9AH0WIEnuMxu7AZNX9xO69Vmdb3T7OI
+	6qtbQ1xv+Ny2OuYtKQWCCOqwLWK1W2kfhKw5p7k9/kTau2s+dN/fR09ryp9pSNdgYQzFwq+KQIQ
+	0e4RJKflBtbFtTyEy/N935fvBT+vc1cYxNYmzfqBpk9Z9Wd8VwJ7O6r9SO6pnHKO0wH60g9aWOT
+	RaYaHFVXp50h248gIu422fzS54TTdlqU0cRXpBf64paUH09h45Fz7jhS45V8/DDxkeQHBvkI7mA
+	wKPFGVjAH7qGb40y23LfuP/9F74bwtH4v3/aPwd/6wWQfosPx9g==
+X-Google-Smtp-Source: AGHT+IFJw1a45g7SyLmMPrQb2Epc56Sa07pw4E8vlKLf+JG+t/AybNRoowveYczNrGBWjBjxY3fQ3g==
+X-Received: by 2002:a05:6870:5493:b0:2d6:af0:8d8e with SMTP id 586e51a60fabf-2e92115fb6fmr8227470fac.2.1748877440482;
+        Mon, 02 Jun 2025 08:17:20 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:74f4:5886:86e1:3bcf? ([2600:8803:e7e4:1d00:74f4:5886:86e1:3bcf])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e90681c6ffsm1783595fac.29.2025.06.02.08.17.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Jun 2025 08:17:20 -0700 (PDT)
+Message-ID: <a6f62963-5776-47e4-bdac-78e921a6e476@baylibre.com>
+Date: Mon, 2 Jun 2025 10:17:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] dt-bindings: iio: adc: Add adi,ad4052
+To: Jorge Marques <gastmaier@gmail.com>
+Cc: Jorge Marques <jorge.marques@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
+ <20250422-iio-driver-ad4052-v2-3-638af47e9eb3@analog.com>
+ <88a326e7-3910-4e02-b4ba-7afe06402871@baylibre.com>
+ <hvexchm2ozsto5s2o6n5j2z3odrkbcamgmg67umd4aehwzmgie@dvtx6anioasq>
+ <1b0e9003-7322-46fa-b2ba-518a142616dc@baylibre.com>
+ <vchomz3iazgdmotcs3jskrugi2qmdxyo74t4ruo2fsc7cjwtqb@7rtdmdkxobvg>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <vchomz3iazgdmotcs3jskrugi2qmdxyo74t4ruo2fsc7cjwtqb@7rtdmdkxobvg>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 09:18:37PM +0000, Chris Packham wrote:
-> >> As I mentioned at the time the adt7475 is not currently pwm_chip so I
-> >> need the ad-hoc parsing in that driver. I'd be happy to take you
-> >> prototype patch for pwm/core.c and polish it although I don't really
-> >> have a good way of testing it.
-> > It's more the deviation of the default binding for PWMs that I don't
-> > like than the ad-hoc parsing. Ideally the adt7475 would provide a
-> > pwmchip (as the binding suggests) and the fan would be formalized as a
+On 6/2/25 4:17 AM, Jorge Marques wrote:
+> On Tue, Apr 29, 2025 at 10:45:20AM -0500, David Lechner wrote:
+>> On 4/29/25 8:48 AM, Jorge Marques wrote:
+>>> Hi David, 
+>>>
+>>> I didn't went through your's and Jonathan's ad4052.c review yet,
+>>> but for the trigger-source-cells I need to dig deeper and make
+>>> considerable changes to the driver, as well as hardware tests.
+>>> My idea was to have a less customizable driver, but I get that it is
+>>> more interesting to make it user-definable.
+>>
+>> We don't need to make the driver support all possibilities, but the devicetree
+>> needs to be as complete as possible since it can't be as easily changed in the
+>> future.
+>>
+> 
+> Ack.
+> 
+> I see that the node goes in the spi controller (the parent). To use the
+> same information in the driver I need to look-up the parent node, then
+> the node. I don't plan to do that in the version of the driver, just an
+> observation.
+> 
+> There is something else I want to discuss on the dt-bindings actually.
+> According to the schema, the spi-max-frequency is:
+> 
+>   > Maximum SPI clocking speed of the device in Hz.
+> 
+> The ad4052 has 2 maximum speeds: Configuration mode (lower) and ADC Mode
+> (higher, depends on VIO). The solution I came up, to not require a
+> custom regmap spi bus, is to have spi-max-frequency bound the
+> Configuration mode speed,
 
-We are not going to force each fan controller driver to register as pwm chip
-just because it provides a pwm value to control the fans - even more so since
-this gets really ugly if the chip can be programmed to either provide a voltage
-output or a pwm value to control fan speed. Maybe the next requirement is that
-fan controllers supporting voltage output to control fan speeds are supposed
-to register themselves as regulators. I really don't want to go there.
+The purpose of spi-max-frequency in the devicetree is that sometimes
+the wiring of a complete system makes the effective max frequency
+lower than what is allowed by the datasheet. So this really needs
+to be the absolute highest frequency allowed.
 
-Those are _not_ pwm controllers. They are special-purpose fan controllers.
-Forcing them into the pwm framework from devicetree perspective is bad enough,
-but forcing them to register as pwm controllers is a step too far.
+> and have ADC Mode set by VIO regulator
+> voltage, through spi_transfer.speed_hz. At the end of the day, both are
+> bounded by the spi controller maximum speed.
 
-Guenter
+If spi_transfer.speed_hz > spi-max-frequency, then the core SPI code
+uses spi-max-frequency. So I don't think this would actually work.
+
+> 
+> My concern is that having ADC mode speed higher than spi-max-frequency
+> may be counter-intuitive, still, it allows to achieve the max data sheet
+> speed considering VIO voltage with the lowest code boilerplate.
+> 
+> Let me know if I can proceed this way before submitting V3.
+
 
