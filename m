@@ -1,64 +1,60 @@
-Return-Path: <linux-pwm+bounces-6213-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6214-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8EEFACADDC
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 14:16:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD1BEACAEBB
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 15:14:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 930523A5D0E
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 12:16:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85DBD3A3402
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 13:14:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24BDF1E376E;
-	Mon,  2 Jun 2025 12:16:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B48D21C176;
+	Mon,  2 Jun 2025 13:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="O39AVe9T"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Zltz4DYE"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6D41C32;
-	Mon,  2 Jun 2025 12:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748866606; cv=pass; b=cawz5ZaqLiV3hQsupi75B6LkYYztETAUrApPSH8dUr6bKAzfbpZ02uwwz+i4Bq2VkRPRrOWHbdG5CKd+Ff/1NLI06Uvpch2D7PBJloHymiI1gd3/ChyOesGjZrxqSIHvuTQ+hTlQhCdFB8KdQW9bg+JCxkxTOemn/NJYsxTjfeY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748866606; c=relaxed/simple;
-	bh=spiz+6jbQPJUaIKTN+CGRiXzusNZXCuqtp/xZHVjtfE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA2520371E;
+	Mon,  2 Jun 2025 13:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748870080; cv=none; b=CVcE4UQHaO9ek9E3mKIaJ5Y3c5NXIE0N/Uqvaek3dhw1g+gyqslDBZpIYbgYaLlU4yKX9BwdVWSk0Cifx4cdYVgDV+Wbx/BfDYZaisdHtZM/RKkB8yAgtLEryvVF+rcA6T2e68RcJOsXKAePwDrOFUiZz4O1Yk5f20iVR8yZp0s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748870080; c=relaxed/simple;
+	bh=TTwL/BKTMRfWSpnqfREP0hMXmoloFSrx+yYMDC7F1Z4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A7eNMzINlrvwtLrxSX9k4+IY8kyzJEYUEq1S8/FCFNs7zlnpC5oo3noYz4jpe9k3LvpyU/oYjFuU9uu5xck7SK936ZMjZpGxtxBuL2bVAw7dJ6V9CNX481tNYnlUNoBxHFZ1yMR4S3PF1AMfnX4zKMu5Td6mKNCIHIvrkE76Ous=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=O39AVe9T; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1748866555; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Vze/kjONo0AB70e1wZ0QkC2ynBo7Zq0uf545gqPwLvISGOTvuXAzUA+ZQUkgT/yabPY4SAI2wwfEWd++Pw3ju8eduO8POg4kuAyjrjtBUPFe1VIXQ8CPEs6/uW48a5pNQRRtUDuzPd49Pq89mcCcI+He1MfMlB0Ae4mruy/63t4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1748866555; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=+Aed1G3zEdiAE6/euJzRcaSWP5Y0mYDbnxPBMhKta6o=; 
-	b=Iw8ItoI0JX6aQ7esTRNbGbiSqiY+ajT7E3BJrKp1tp4mWqzgrycY7i4VNskyjzLnX6K4u6E59RojQDqqL8WpN3cLmJNGRiLl1gHrZnTGn6eQP0ldwqgtMogpDTDMFSXhgOH1r9GUfwXsAAstygtb/1rooxcO3R0AsBzW1FynCsM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748866555;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=+Aed1G3zEdiAE6/euJzRcaSWP5Y0mYDbnxPBMhKta6o=;
-	b=O39AVe9TKwe84UGQR/XEuzyNvSLxFaej5EFC98AH5IcrJ9mhLCJkAz3qaYrbCR9o
-	Noy0MVDMzoyJCuqqYeai7k8gxbeP26nKRLSelY36aQlr373aHsEfUJelARxQdb4wGdR
-	nqdhZxkeKZF7d+Wr9EUcC0NT9lkWqv/EleeL9MEE=
-Received: by mx.zohomail.com with SMTPS id 1748866552562746.0707424997689;
-	Mon, 2 Jun 2025 05:15:52 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+	 MIME-Version:Content-Type; b=q/hcrdVD27zfBU/7OgkT/8d869GVkDrf7BPJMr7QVhwNUUrpLu7DUow8w3dTl2nIcpOETa3b17lsbKSYQfXfu7mVmi603ltDYjQblQrQsdLtMVwrNDBv+vXN3mEU+LdPPB5RdeNEamAbU6zVlmrBDPV2T9ar2FPdpP+ljW5AM34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Zltz4DYE; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=Th1bsXYbOdZNBdF4HpkqWzJZdFEbTYJpHy2+yVwfjLk=; b=Zltz4DYEAJKKQbIDz9XRJRi/AJ
+	59wjiN/h8OXZGaXQGB0452s2iFnI1zU+IPY1w8k5EKp4u81L8YgToJme/4Y7pK4jA7yez7TWCegkN
+	OQGc6sZvsIGtymAkACMrMnE+3y/Vp/fxEgFVrLGadY4xXOxOmQoQjzfqn8Jw08rbA0Dys9bFKdTiw
+	G2mLBp2M1MzNsCfMVOOIWHQmWJHz3hU0XprPlfMM2WzxPYznBwsqZaI8KwuAnwKZ6jyx/ju6Onc+R
+	+P9cVvuKJ90OZhDAIq7vBruure411VR6UT/1AJtSwfuDuniO2L7l0hC3GCGZge3bprxpiH4EYriKg
+	Pip1Md9A==;
+Received: from i53875a2b.versanet.de ([83.135.90.43] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uM4zc-00038Y-5g; Mon, 02 Jun 2025 15:14:20 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
  Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
  William Breathitt Gray <wbg@kernel.org>,
  Sebastian Reichel <sebastian.reichel@collabora.com>,
  Kever Yang <kever.yang@rock-chips.com>,
- Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
@@ -66,13 +62,12 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  Jonas Karlman <jonas@kwiboo.se>,
  Detlev Casanova <detlev.casanova@collabora.com>
 Subject: Re: [PATCH 4/7] soc: rockchip: add mfpwm driver
-Date: Mon, 02 Jun 2025 14:15:45 +0200
-Message-ID: <13790724.uLZWGnKmhe@workhorse>
-In-Reply-To: <2188729.OBFZWjSADL@diego>
+Date: Mon, 02 Jun 2025 15:14:19 +0200
+Message-ID: <1970051.6tgchFWduM@diego>
+In-Reply-To: <13790724.uLZWGnKmhe@workhorse>
 References:
  <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
- <20250408-rk3576-pwm-v1-4-a49286c2ca8e@collabora.com>
- <2188729.OBFZWjSADL@diego>
+ <2188729.OBFZWjSADL@diego> <13790724.uLZWGnKmhe@workhorse>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -82,155 +77,108 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-On Saturday, 31 May 2025 23:48:29 Central European Summer Time Heiko St=C3=
-=BCbner wrote:
-> Am Dienstag, 8. April 2025, 14:32:16 Mitteleurop=C3=A4ische Sommerzeit sc=
-hrieb Nicolas Frattaroli:
-> > With the Rockchip RK3576, the PWM IP used by Rockchip has changed
-> > substantially. Looking at both the downstream pwm-rockchip driver as
-> > well as the mainline pwm-rockchip driver made it clear that with all its
-> > additional features and its differences from previous IP revisions, it
-> > is best supported in a new driver.
+Am Montag, 2. Juni 2025, 14:15:45 Mitteleurop=C3=A4ische Sommerzeit schrieb=
+ Nicolas Frattaroli:
+> On Saturday, 31 May 2025 23:48:29 Central European Summer Time Heiko St=
+=C3=BCbner wrote:
+> > Am Dienstag, 8. April 2025, 14:32:16 Mitteleurop=C3=A4ische Sommerzeit =
+schrieb Nicolas Frattaroli:
+
+> > On a more general note, what is the differentiation to an MFD here?
 > >=20
-> > This brings us to the question as to what such a new driver should be.
-> > To me, it soon became clear that it should actually be several new
-> > drivers, most prominently when Uwe Kleine-K=C3=B6nig let me know that I
-> > should not implement the pwm subsystem's capture callback, but instead
-> > write a counter driver for this functionality.
+> > Like you can already bind dt-nodes to MFD subdevices, and can implement
+> > the exclusivity API thing on top of a general mfd device, to make sure =
+only
+> > one mfd-cell gets activated at one time.
 > >=20
-> > Combined with the other as-of-yet unimplemented functionality of this
-> > new IP, it became apparent that it needs to be spread across several
-> > subsystems.
-> >=20
-> > For this reason, we add a new platform bus based driver, called mfpwm
-> > (short for "Multi-function PWM"). This "parent" driver makes sure that
-> > only one device function driver is using the device at a time, and is in
-> > charge of registering the platform bus devices for the individual device
-> > functions offered by the device.
-> >=20
-> > An acquire/release pattern is used to guarantee that device function
-> > drivers don't step on each other's toes.
-> >=20
-> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > Other than that, this looks like it reimplements MFDs?
 >=20
-> actually trying to compile this, led me to
+> What initially made me not make this an MFD was Uwe Kleine-K=C3=B6nig exp=
+ressing
+> some doubts, which lead me to alternatives like the auxiliary bus. Readin=
+g the
+> auxiliary bus docs I found:
 >=20
-> aarch64-linux-gnu-ld: drivers/soc/rockchip/mfpwm.o: in function `mfpwm_re=
-g_read':
-> /home/devel/hstuebner/00_git-repos/linux-rockchip/_build-arm64/../include=
-/soc/rockchip/mfpwm.h:423: multiple definition of `mfpwm_reg_read'; drivers=
-/pwm/pwm-rockchip-v4.o:/home/devel/hstuebner/00_git-repos/linux-rockchip/_b=
-uild-arm64/../include/soc/rockchip/mfpwm.h:423: first defined here
-> aarch64-linux-gnu-ld: drivers/soc/rockchip/mfpwm.o: in function `mfpwm_re=
-g_write':
-> /home/devel/hstuebner/00_git-repos/linux-rockchip/_build-arm64/../include=
-/soc/rockchip/mfpwm.h:428: multiple definition of `mfpwm_reg_write'; driver=
-s/pwm/pwm-rockchip-v4.o:/home/devel/hstuebner/00_git-repos/linux-rockchip/_=
-build-arm64/../include/soc/rockchip/mfpwm.h:428: first defined here
-> make[3]: *** [../scripts/Makefile.vmlinux_o:72: vmlinux.o] Fehler 1
->=20
->=20
-> during the linking stage - with the driver as builtin
->=20
->=20
-> > +inline u32 mfpwm_reg_read(void __iomem *base, u32 reg)
-> > +{
-> > +	return readl(base + reg);
-> > +}
-> > +
-> > +inline void mfpwm_reg_write(void __iomem *base, u32 reg, u32 val)
-> > +{
-> > +	writel(val, base + reg);
-> > +}
->=20
-> making that a "static inline ..." solves that.
+>   A key requirement for utilizing the auxiliary bus is that there is no
+>   dependency on a physical bus, device, register accesses or regmap suppo=
+rt.
+>   These individual devices split from the core cannot live on the platform
+>   bus as they are not physical devices that are controlled by DT/ACPI. The
+>   same argument applies for not using MFD in this scenario as MFD relies =
+on
+>   individual function devices being physical devices.
 
-Ack, will change
+Interestingly the 5 year old LWN article seems to have been overtaken by
+real-world usage ;-) .
 
->=20
->=20
-> On a more general note, what is the differentiation to an MFD here?
->=20
-> Like you can already bind dt-nodes to MFD subdevices, and can implement
-> the exclusivity API thing on top of a general mfd device, to make sure on=
-ly
-> one mfd-cell gets activated at one time.
->=20
-> Other than that, this looks like it reimplements MFDs?
+I see pinctrl/pinctrl-ep93xx.c using regmaps (and thus registers), similarly
+in gpu/drm/bridge/ti-sn65dsi86.c and a number more.
 
-What initially made me not make this an MFD was Uwe Kleine-K=C3=B6nig expre=
-ssing
-some doubts, which lead me to alternatives like the auxiliary bus. Reading =
-the
-auxiliary bus docs I found:
 
-  A key requirement for utilizing the auxiliary bus is that there is no
-  dependency on a physical bus, device, register accesses or regmap support.
-  These individual devices split from the core cannot live on the platform
-  bus as they are not physical devices that are controlled by DT/ACPI. The
-  same argument applies for not using MFD in this scenario as MFD relies on
-  individual function devices being physical devices.
+> Additionally, LWN[1] about the auxiliary bus, which I've read up on durin=
+g my
+> ill-fated journey into that version of the driver, also goes further into=
+ why
+> MFD is sometimes a bad fit:
 
-Additionally, LWN[1] about the auxiliary bus, which I've read up on during =
-my
-ill-fated journey into that version of the driver, also goes further into w=
-hy
-MFD is sometimes a bad fit:
+[...] LWN excerpt [...]
 
-  Linux already includes a number of drivers for multi-function devices. One
-  of the ways to support them is the Multi-Function Devices (MFD) subsystem.
-  It handles independent devices "glued" together into one hardware block
-  which may contain some shared resources. MFD allows access to device
-  registers either directly, or using a common bus. In this second case, it
-  conveniently multiplexes accesses on Inter-Integrated Circuit (I2C) or
-  Serial Peripheral Interface (SPI) buses. As the MFD sub-devices are
-  separate, MFD drivers do not share a common state.
+> The individual function devices may be all pointing at the same physical
+> device here, but they're not distinct parts of the device. However, there
+> still *is* a physical device, which convinced me that auxiliary bus wasn't
+> the right one either, and the idea for just using the platform bus came
+> during a work meeting. If someone with experience on aux bus vs platform =
+bus
+> (what this uses) vs MFD, then feel free to chime in. Unfortunately, as is=
+ the
+> norm, I can't seem to find much in terms of MFD documentation. Needing to=
+ know
+> what type of exclusion they guarantee and what type of abstractions they =
+bring
+> with them that would make them more useful than my solution would need so=
+me
+> justification in more than just an auto-generated header listing.
 
-  The devices Ertman addresses do not fit well into the MFD model. Devices
-  using the auxiliary bus provide subsets of the capabilities of a single
-  hardware device. They do not expose separate register sets for each
-  function; thus they cannot be described by devicetrees or discovered by
-  ACPI. Their drivers need to share access to the hardware. Events concerni=
-ng
-  all sub-functionalities (like power management) need to be properly handl=
-ed
-  by all drivers.
+I think MFD itself does not provide any exclusivity - aka allowing definiti=
+ons
+that combinations of sub-devices cannot be used at the same time.
 
-The individual function devices may be all pointing at the same physical
-device here, but they're not distinct parts of the device. However, there
-still *is* a physical device, which convinced me that auxiliary bus wasn't
-the right one either, and the idea for just using the platform bus came
-during a work meeting. If someone with experience on aux bus vs platform bus
-(what this uses) vs MFD, then feel free to chime in. Unfortunately, as is t=
-he
-norm, I can't seem to find much in terms of MFD documentation. Needing to k=
-now
-what type of exclusion they guarantee and what type of abstractions they br=
-ing
-with them that would make them more useful than my solution would need some
-justification in more than just an auto-generated header listing.
+But as I see it right now, you have sort of a mfd-device in there, creating
+all the sub-devices and then the aquire/release logic on top making sure
+only one device is ever active at the same time.
 
-I am very inclined to start pretending things that aren't documented do
-not actually exist in the kernel, because it's very annoying to have to
-constantly deal with this.
+Right now I really don't see (prone to code-blindness though) why the
+aquire/release logic could not live in a mfd-device.
 
->=20
-> Also handing around a regmap might be nicer, compared to readl/writel.
 
-Strong disagree, adding error handling around every single register read
-and write, and needing to always read into a variable rather than getting
-the read value as a return value, made the drivers a lot uglier in a
-previous iteration of this.
+> I am very inclined to start pretending things that aren't documented do
+> not actually exist in the kernel, because it's very annoying to have to
+> constantly deal with this.
 
->=20
->=20
-> Heiko
->=20
+Sadly the "ostrich method" won't work ;-)
 
-Kind regards,
-Nicolas Frattaroli
+So as a way forward, I'd suggest you posting your v2, so that all the
+current review comments get addressed and amending the
+cover-letter with the aux-bux / mfd discussion thing (ideally in a
+somewhat highlighed block so that people skimming along will notice)
+and include the relevant people:
 
-[1]: https://lwn.net/Articles/840416/
+=2D for aux-bux get_maintainer.pl says:
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> (maintainer:AUXILIARY BUS D=
+RIVER)
+Dave Ertman <david.m.ertman@intel.com> (reviewer:AUXILIARY BUS DRIVER)
+Ira Weiny <ira.weiny@intel.com> (reviewer:AUXILIARY BUS DRIVER)
+Leon Romanovsky <leon@kernel.org> (reviewer:AUXILIARY BUS DRIVER)
+
+=2D and for MFD it's of course Lee:
+Lee Jones <lee@kernel.org> (maintainer:MULTIFUNCTION DEVICES (MFD))
+
+
+Heiko
+
+
+> [1]: https://lwn.net/Articles/840416/
+
 
 
 
