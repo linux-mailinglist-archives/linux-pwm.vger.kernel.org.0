@@ -1,255 +1,145 @@
-Return-Path: <linux-pwm+bounces-6231-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6232-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3EF4ACBC1B
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 22:02:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12079ACBC7D
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 22:53:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A2693A46D3
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 20:02:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C6D1174E75
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Jun 2025 20:53:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10B031A08AB;
-	Mon,  2 Jun 2025 20:02:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68D7822538F;
+	Mon,  2 Jun 2025 20:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9x2Yae/"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="hyUgOkOn"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4EF1805A;
-	Mon,  2 Jun 2025 20:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F46A2C327E
+	for <linux-pwm@vger.kernel.org>; Mon,  2 Jun 2025 20:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748894544; cv=none; b=DlQMNvi1UCEbF9Jmp2jTI1rGVH52JF3GBPmwnesM+A7domtflPg0rRbdr2TQHVSh6jSK3Lj2rZrgRVQ0Vls0q/ap3URsfsc3OHr0SXileY59VdrRo2QdMpicyE6h28lcOtVfScf7+Dg4zBXfAeiysit+9ObUlv1+O5nkm0DdxHA=
+	t=1748897587; cv=none; b=BMaev60nhqv+XeJoferzyXghPvITsZat88NHmm7VGox49L7QM8Z0srt0aIpmcxB/MKq3BaDYqIKTMgpsnQMhIm5bsd8uvurc4d8+MvZQLBo9n+9WpOmvbBP5h661pO8S96/WJVo229uJoD54WKMZzIX6brVWuP/4e9tWR3dFCnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748894544; c=relaxed/simple;
-	bh=CD+VpRlEBvPbMBCcmd9UPdT+OYRLgtVadV0dAoUnCbU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XDo1v9HVh+QEDS1rv/NsZkedXwGov4jSrYlQA+1shZjfoL0x91NKrW6YGnMi1RShBU1QO7DsoCi6/6IRHEfk6PqqYto7iEwM2jTLRo3ZB0EuZpvloiC/Ncv6KoDOkydDNMd4bjfK+L1Vl7z0oiDpsRyvuX34903AW57/HccBLJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A9x2Yae/; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso3680739b3a.2;
-        Mon, 02 Jun 2025 13:02:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748894542; x=1749499342; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jU63ySDIkl618RCkVJvCdpB1ntaX6bwZnYArDPbZsgY=;
-        b=A9x2Yae/g7ntgs0j4VsYoYAYv3rOe9tmIk8YHSs3kHA+KyhEksRc35Z9TerB3PO3Bh
-         I91U8BGk+f1mHD+9373SRv5EHXlFWpCCe7iJDuf6Vs/M/dldTPEP12cgWwMO66B5M0ds
-         SWU1D6t1K3H8IMYpVZErLbhVgeZeG3bjWEA0zikrj7KVzCkFR7DvgRRYLiRkNn/xhoT1
-         luCLol9hB38t58NUWv6U8XkI4rHrhS4Hf+jfrHVPScD0anOFIVBkYoxOzqQjDRJ/oAcO
-         SX8yXx9oA39FxfowU0wxKobfD1Ij4a1ADB7w78mFjtEZ0yfj8yFrA9CLFDRH/H+onCbu
-         U73Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748894542; x=1749499342;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jU63ySDIkl618RCkVJvCdpB1ntaX6bwZnYArDPbZsgY=;
-        b=ib4WaMarYGEA3DrBthIqBfLz9DkQrFGX4VzWl/Q/gfmoTplGQUec69pobzjrLziB2K
-         ZklpX9UXrnEc0a33NAzjWUBkhwcu+tveOluIWjtBQjOn00spcNYAYfB0JDvjykNBmM/v
-         Ht6L4kecBt6CYe15M65fQhkO0ZIQgkmE94CzDZ4jEYYA6Gr6CmMvLvGZA/l5PkDO2BiY
-         QrXpujlaHVmd4scEuEKrSERA1n1fXhoX47ba/1Q07KC3LM+TiFGq5ZBzdvKKIACNEVzY
-         qTkQh6llc2v9+zzXJmsKQHVZKYFONNgbCnQS5Lt4xYQnWtDaQiGh0hfGPitWhig3A4y+
-         d6tw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgovfI/KcbdiEHD85yf3PrrMVMvcsLrXHwuGn7V2YW6gziK2sBiD2ZGW7UK/wqqi7JYMOyKMFuYxDk@vger.kernel.org, AJvYcCUxtAPjE3jFRka3dFsCfa2iMjU5Gh6eYPb+kcQuxUsEz+E6pJAxc5Z+Bq3TkD6+Q///PgEKOMySsxgzHQ==@vger.kernel.org, AJvYcCWnJJ6McVqNRSEshZEiH+WnLasq4dp7GI57A6Cm44UfuTXAbaly9F+rACwZCcMrrKHTjh2PHyJSAmqB@vger.kernel.org, AJvYcCWs/P/f7eZ2oqp5EtTAkQWbeCltgfgRBhaQkPjgIGvoZ/iKO9Y9AGea6ruleKuOBkEUtOiXWJbPEI210XeG@vger.kernel.org, AJvYcCXQFXMXATTm1blzYSue20C8H+oDYwmRAvnJL/PAO0SB9pp6V7BhKab5vN04f3igvZo4fO5qg4N5VjPA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8TX5ptZTv0xWVoJBM13PLGvU2paKnnwZNpfqWZeaTOmW2DJ4S
-	4lJr2MUMChZ+CdhS1GE2Vv30hpV1eKoilp97PB2uiE67QDlgmeFMos/Z
-X-Gm-Gg: ASbGncuSImwrAcfDJVd4X8h1vqxKC4z0V44t+hxxmRy1wQMls3comcpJ2sgVSOGtBod
-	9zZCGV2QkjpNw9iwrLUuJrrDN6NXKIcOoLKQpkDfRvQbZgw7WOeAghS+IM2UiNppe7D6tCqfAah
-	NoW/HeA0o3xYm4xGwSYVSTubhMAfyRG1Y3I5qTpeBLN/4pwRnKIyoOURmpeaMNMl6TowsZ5lzRi
-	5FIp1rK40QKu3wrGLty1Id9uuI7KrFb86W39zGeoFYR7yobI6MQIHzNIItpDphIZiBnXvrRTzQJ
-	185aMceAZKrIETk7PPZR7VVRi770DKsss/Yu5eNZR/XM4esLtltVKK0cgQsrZA==
-X-Google-Smtp-Source: AGHT+IHiKEZikH+lsGl+d9vzWR5H5Ojhm2iixpRZnhUz2v7NVH3lkWkzU4DjA/Dyx6fG350q0SLnpA==
-X-Received: by 2002:a05:6300:189:b0:1f5:7710:fd18 with SMTP id adf61e73a8af0-21adff7da26mr17104549637.17.1748894542390;
-        Mon, 02 Jun 2025 13:02:22 -0700 (PDT)
-Received: from localhost ([216.228.127.129])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affafaebsm8042682b3a.87.2025.06.02.13.02.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jun 2025 13:02:21 -0700 (PDT)
-Date: Mon, 2 Jun 2025 16:02:19 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	William Breathitt Gray <wbg@kernel.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
-	Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org,
-	kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
-	Detlev Casanova <detlev.casanova@collabora.com>
-Subject: Re: [PATCH v2 3/7] bitfield: introduce HI16_WE bitfield prep macros
-Message-ID: <aD4DSz3vs41yMQSv@yury>
-References: <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
- <20250602-rk3576-pwm-v2-3-a6434b0ce60c@collabora.com>
+	s=arc-20240116; t=1748897587; c=relaxed/simple;
+	bh=spJPdv3SxMsR+kVYLWWmXtxQIJc58Pfgt5/9zrFEoTo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=RnFDJUCHTXJb7LkrxrXYU7uZcpTAIYrX5IA+13mmPjMplsEtycJ0g7hpC0SSuWM8RN/psDOpzKTX8OQyM9+WHXA7uiqGwTdazNRXqY//x/aXU0+WkXNNg2+rB0dZOl5SJmbprCb2EkL9fs8FWqko7prOk4eLudVIm5PxM1S43H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=hyUgOkOn; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id E2F442C0372;
+	Tue,  3 Jun 2025 08:52:56 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1748897576;
+	bh=spJPdv3SxMsR+kVYLWWmXtxQIJc58Pfgt5/9zrFEoTo=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=hyUgOkOn5X3zkLYIOc4lJM4rsgU+CiZVcowX0r/xKpRVFlnGThYOEcTQvZ36P/XU3
+	 phT7OjkavcFumvUe9T2hZjuWv8gzgKgElF8IhzPLPb7gYc6BV6WUUklrq3Rvnz3p7m
+	 hIZ8YLnG0qxQKv20l0fn90FSSDvguCXqAXJY7xDlS2OQXur6I5AMfpJ9TjMlT2MQa2
+	 UeFnFzDhri6UtDJUKWOKZXf5woajtqWwesTBTsjYm83EELfb9zYA9bn2PxYRvnyTWb
+	 mdSFVb0i5aIIDu0DKT5XjBrINLsyqUCynCVeutQmjxwQr03VmWKVqgYBH0oTz419aH
+	 WWNBoBHPGotCw==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B683e0f280001>; Tue, 03 Jun 2025 08:52:56 +1200
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 3 Jun 2025 08:52:56 +1200
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1544.014; Tue, 3 Jun 2025 08:52:56 +1200
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To: =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <ukleinek@kernel.org>
+CC: "jdelvare@suse.com" <jdelvare@suse.com>, "linux@roeck-us.net"
+	<linux@roeck-us.net>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "linux-hwmon@vger.kernel.org"
+	<linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org"
+	<linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
+Thread-Topic: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm
+ properties
+Thread-Index: AQHa3IT3bvX/iipZGkiPmVYc9wkwxrPnwi+AgABGbYCAAKO4gIAA/Z6AgAJhDICABXNvAA==
+Date: Mon, 2 Jun 2025 20:52:56 +0000
+Message-ID: <d538cd42-f8b3-43cb-897d-d60c3af57300@alliedtelesis.co.nz>
+References: <20240722221737.3407958-1-chris.packham@alliedtelesis.co.nz>
+ <20240722221737.3407958-2-chris.packham@alliedtelesis.co.nz>
+ <jzxu6mcbxf5zwyirnb2jjpm2i7sln3v5mz3gyhc5xhpqexicvb@atrcjvh7wuh5>
+ <bc99a27e-74ec-45a0-b77c-48f993269586@alliedtelesis.co.nz>
+ <jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3rlhiernunjdodu@tgxghvfef4tl>
+ <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
+ <dirkbdd5oeofjhy5pk6jiaixbuhmuq7axewhrd7bdghc3dp5x6@ok2uhywwz5ls>
+In-Reply-To: <dirkbdd5oeofjhy5pk6jiaixbuhmuq7axewhrd7bdghc3dp5x6@ok2uhywwz5ls>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E1E01981D71D9249981DD4F9B1F88EF9@alliedtelesis.co.nz>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602-rk3576-pwm-v2-3-a6434b0ce60c@collabora.com>
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=KqPu2nWN c=1 sm=1 tr=0 ts=683e0f28 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=Nz_DCE0GXln2RDVxwVYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 
-On Mon, Jun 02, 2025 at 06:19:14PM +0200, Nicolas Frattaroli wrote:
-> Hardware of various vendors, but very notably Rockchip, often uses
-> 32-bit registers where the upper 16-bit half of the register is a
-> write-enable mask for the lower half.
-
-Can you list them all explicitly please? I grepped myself for the
-'HIGHWORD_UPDATE' and 'FIELD_PREP_HIGWORD', and found just 4 or 5 in
-addition to the rockchip.
- 
-> This type of hardware setup allows for more granular concurrent register
-> write access.
-> 
-> Over the years, many drivers have hand-rolled their own version of this
-> macro, usually without any checks, often called something like
-> HIWORD_UPDATE or FIELD_PREP_HIWORD, commonly with slightly different
-> semantics between them.
-> 
-> Clearly there is a demand for such a macro, and thus the demand should
-> be satisfied in a common header file.
-
-I agree. Nice catch.
-
-> Add two macros: FIELD_PREP_HI16_WE, and FIELD_PREP_HI16_WE_CONST. The
-> latter is a version that can be used in initializers, like
-> FIELD_PREP_CONST.
-
-I'm not sure that the name you've chosen reflects the intention. If
-you just give me the name without any background, I'd bet it updates
-the HI16 part of presumably 32-bit field. The 'WE' part here is most
-likely excessive because at this level of abstraction you can't
-guarantee that 'write-enable mask' is the only purpose for the macro.
-
-> The macro names are chosen to explicitly reference the
-> assumed half-register width, and its function, while not clashing with
-> any potential other macros that drivers may already have implemented
-> themselves.
->
-> Future drivers should use these macros instead of handrolling their own,
-> and old drivers can be ported to the new macros as time and opportunity
-> allows.
-
-This is a wrong way to go. Once you introduce a macro that replaces
-functionality of few other arch or driver macros, you should consolidate
-them all in the same series. Otherwise, it will be just another flavor
-of the same, but now living in a core header. 
-
-Can you please prepare a series that introduces the new macro and
-wires all arch duplications to it?
- 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
->  include/linux/bitfield.h | 47 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
-> 
-> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-> index 6d9a53db54b66c0833973c880444bd289d9667b1..2b3e7cb90ccb5d48f510104f61443b06748bb7eb 100644
-> --- a/include/linux/bitfield.h
-> +++ b/include/linux/bitfield.h
-> @@ -8,6 +8,7 @@
->  #define _LINUX_BITFIELD_H
->  
->  #include <linux/build_bug.h>
-> +#include <linux/limits.h>
->  #include <linux/typecheck.h>
->  #include <asm/byteorder.h>
->  
-> @@ -142,6 +143,52 @@
->  		(((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask))	\
->  	)
->  
-> +/**
-> + * FIELD_PREP_HI16_WE() - prepare a bitfield element with a write-enable mask
-> + * @_mask: shifted mask defining the field's length and position
-> + * @_val:  value to put in the field
-> + *
-> + * FIELD_PREP_HI16_WE() masks and shifts up the value, as well as bitwise ORs
-> + * the result with the mask shifted up by 16.
-> + *
-> + * This is useful for a common design of hardware registers where the upper
-> + * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
-> + * register, a bit in the lower half is only updated if the corresponding bit
-> + * in the upper half is high.
-> + */
-> +#define FIELD_PREP_HI16_WE(_mask, _val)					\
-> +	({								\
-> +		__BF_FIELD_CHECK(_mask, ((u16) 0U), _val,		\
-> +				 "FIELD_PREP_HI16_WE: ");		\
-> +		((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask) |	\
-> +		((_mask) << 16);					\
-> +	})
-
-This pretty much is a duplication of the FIELD_PREP(), isn't? Why don't
-you borrow the approach from drivers/clk/clk-sp7021.c:
-
-	/* HIWORD_MASK FIELD_PREP */
-	#define HWM_FIELD_PREP(mask, value)             \
-	({                                              \
-	        u64 _m = mask;                          \
-	        (_m << 16) | FIELD_PREP(_m, value);     \
-	})
-
-If you do so, the existing FIELD_PREP() will do all the work without
-copy-pasting. The only questionI have  to the above macro is why '_m'
-is u64? Seemingly, it should be u32?
-
-Regarding the name... I can't invent a good one as well, so the best
-thing I can suggest is not to invent something that can mislead. The
-HWM_FIELD_PREP() is not bad because it tells almost nothing and
-encourages one to refer to the documentation. If you want something
-self-explaining, maybe MASK_HI_FIELD_LO_PREP_U16(), or something? 
-
-Thanks,
-Yury
-
-> +
-> +/**
-> + * FIELD_PREP_HI16_WE_CONST() - prepare a constant bitfield element with a
-> + *                              write-enable mask
-> + * @_mask: shifted mask defining the field's length and position
-> + * @_val:  value to put in the field
-> + *
-> + * FIELD_PREP_HI16_WE_CONST() masks and shifts up the value, as well as bitwise
-> + * ORs the result with the mask shifted up by 16.
-> + *
-> + * This is useful for a common design of hardware registers where the upper
-> + * 16-bit half of a 32-bit register is used as a write-enable mask. In such a
-> + * register, a bit in the lower half is only updated if the corresponding bit
-> + * in the upper half is high.
-> + *
-> + * Unlike FIELD_PREP_HI16_WE(), this is a constant expression and can therefore
-> + * be used in initializers. Error checking is less comfortable for this
-> + * version, and non-constant masks cannot be used.
-> + */
-> +#define FIELD_PREP_HI16_WE_CONST(_mask, _val)				 \
-> +	(								 \
-> +		FIELD_PREP_CONST(_mask, _val) |				 \
-> +		(BUILD_BUG_ON_ZERO(const_true((u64) (_mask) > U16_MAX)) + \
-> +		 ((_mask) << 16))					 \
-> +	)
-> +
->  /**
->   * FIELD_GET() - extract a bitfield element
->   * @_mask: shifted mask defining the field's length and position
-> 
-> -- 
-> 2.49.0
+DQpPbiAzMC8wNS8yMDI1IDIxOjM4LCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90ZToNCj4gSGVsbG8g
+Q2hyaXMsDQo+DQo+IE9uIFdlZCwgTWF5IDI4LCAyMDI1IGF0IDA5OjE4OjM3UE0gKzAwMDAsIENo
+cmlzIFBhY2toYW0gd3JvdGU6DQo+PiBPbiAyOC8wNS8yMDI1IDE4OjEwLCBVd2UgS2xlaW5lLUvD
+tm5pZyB3cm90ZToNCj4+PiBJZiBJIHVuZGVyc3RhbmQgY29ycmVjdGx5IHlvdSBuZWVkIHRoZSBk
+ZWZhdWx0IHZhbHVlIGZvciBkdXR5IHRvDQo+Pj4gc3RhdGljYWxseSBzZXR1cCAob3Igb25seSBp
+bml0aWFsaXplPykgYSBmYW4sIHJpZ2h0Pw0KPj4gQ29ycmVjdC4NCj4+DQo+Pj4gSSdtIG5vdCBz
+dXJlIEkgbGlrZQ0KPj4+IGV4dGVuZGluZyAjcHdtLWNlbGxzIGZvciBhIGRlZmF1bHQgZHV0eSB2
+YWx1ZS4gVGhpbmtpbmcgYWJvdXQgdGhhdCBhDQo+Pj4gd2hpbGUgSSdkIHByZWZlciBhIGJpbmRp
+bmcgdGhhdCBsb29rcyBtb3JlIGxpa2UgdGhlIGNsb2NrIGNvbmZpZ3VyYXRpb24NCj4+PiBzdHVm
+ZiBiZWNhdXNlIGFjdHVhbGx5IGhhdmluZyB0aGUgcGVyaW9kIGFuZCBmbGFncyBhcyBwYXJ0IG9m
+IHRoZQ0KPj4+IHJlZmVyZW5jZSB0byB0aGUgUFdNIHRvIGJlIHVzZWQgaXMgYWxzbyBhIGJpdCBz
+dHJhbmdlLiBTbyBJIGltYWdpbmUNCj4+PiBzb21ldGhpbmcgbGlrZToNCj4+Pg0KPj4+IAlteXB3
+bTogcHdtIHsNCj4+PiAJCWNvbXBhdGlibGUgPSAiLi4uLiINCj4+PiAJCSNwd20tY2VsbHMgPSA8
+MT47DQo+Pj4gCX07DQo+Pj4NCj4+PiAJZmFuIHsNCj4+PiAJCWNvbXBhdGlibGUgPSAicHdtLWZh
+biI7DQo+Pj4gCQlwd21zID0gPCZteXB3bSAxPjsNCj4+PiAJCWFzc2lnbmVkLXB3bXMgPSA8Jm15
+cHdtPjsNCj4+PiAJCWFzc2lnbmVkLXB3bS1kZWZhdWx0LXBlcmlvZC1sZW5ndGhzLW5zID0gPDQw
+MDAwPjsNCj4+PiAJCWFzc2lnbmVkLXB3bS1kZWZhdWx0LWZsYWdzID0gPFBXTV9QT0xBUklUWV9J
+TlZFUlRFRD47DQo+Pj4gCX07DQo+Pj4NCj4+PiBUaGVuIHNwZWNpZnlpbmcgYSBwZXJpb2QgKG9y
+IGxhdGVyIGEgZHV0eSBjeWNsZSBsZW5ndGgpIHdvdWxkIGJlDQo+Pj4gb3B0aW9uYWwgYW5kIGNv
+dWxkIGJlIHByb3ZpZGVkIGlmZiB0aGUgZGV2aWNlIG5lZWRzIHRoYXQgZm9yIG9wZXJhdGlvbi4N
+Cj4+IFRoZSBmcmVxdWVuY3kgYW5kIGZsYWdzIHdlcmUgYWxyZWFkeSBwYXJ0IG9mIHRoZSBzdGFu
+ZGFyZCAjcHdtLWNlbGxzDQo+PiB3aGljaCBJIHRoaW5rIGlzIHdoeSBJIHdhcyBlbmNvdXJhZ2Vk
+IHRvIHVzZSB0aGVtLg0KPiBZZWFoLCB0aGF0IHBhcnQgaXMgZmluZS4gVGhpcyBtaWdodCBub3Qg
+YmUgdGhlIGxvbmctdGVybSBmdXR1cmUsIGJ1dA0KPiB0b2RheSB0aGF0J3MgdGhlIG5vcm0uDQo+
+DQo+PiBJIHdhcyBhbHNvIHRyeWluZyB0byBnZXQgc29tZXRoaW5nIHRoYXQgd291bGQgd29yayBh
+cyBhbiBBQ1BJIG92ZXJsYXkNCj4+IHdoaWNoIHR1cm5lZCBvdXQgdG8gYmUgcmVhbGx5IGhhcmQu
+DQo+IEkgZG9uJ3Qga25vdyBlbm91Z2ggYWJvdXQgQUNQSSB0byBiZSBoZWxwZnVsIHdpdGggdGhp
+cyBxdWVzdC4NCj4NCj4+PiBNeSBtYWlsIHdhcyBqdXN0IG1lIGJlaW5nIGZydXN0cmF0ZWQgYWJv
+dXQgYW5vdGhlciBzcGVjaWFsIGNhc2UgdGhhdCBJJ2QNCj4+PiBoYXZlIHRvIGhhbmRsZSBpZiBJ
+IGdvIGludG8gdGhhdCBkaXJlY3Rpb24uIEkgc2hvdWxkIGhhdmUgYmVlbiBtb3JlDQo+Pj4gYXR0
+ZW50aXZlIHRvIHRoYXQgZGV2ZWxvcG1lbnQgYmVmb3JlIGl0IGVudGVyZWQgdGhlIG1haW5saW5l
+Lg0KPj4gSSdkIGJlIGhhcHB5IHRvIGRlcHJlY2F0ZSB0aGUgNCBjZWxsIHRoaW5nIGFuZCByZXBs
+YWNlIGl0IHdpdGggMyBjZWxsICsNCj4+IHZlbmRvciBwcm9wZXJ0eSBmb3IgdGhlIGRlZmF1bHQg
+cGVyaW9kIGlmIHRoYXQgaGVscHMuDQo+IEkgd29uZGVyIGhvdyBvdGhlciBzaW1pbGFyIGRldmlj
+ZXMgZGV0ZXJtaW5lIHRoZSBkZWZhdWx0IGR1dHkgY3ljbGUuDQo+IElzbid0IHRoZSBub3JtIHRv
+IG1ha2UgdGhlIGZhbiByb3RhdGUgYXQgbWF4IHNwZWVkIGFuZCB0aGVuIHdoZW4NCj4gdXNlcnNw
+YWNlIHRha2VzIG92ZXIgaXQncyBzcGVlZGVkIGRvd24/DQoNClllcyB0aGF0IGlzIHRoZSBub3Jt
+YWwgKGFuZCBzZW5zaWJsZSB0aGluZyBkbyB0bykuIEJ1dCBvY2Nhc2lvbmFsbHkgDQpoYXJkd2Fy
+ZSBkZXNpZ25lcnMgbGlrZSB0byB1c2UgaW5jcmVkaWJseSBvdmVyIHNwZWMnZMKgIGZhbnMgdGhh
+dCBhcmUgDQpqdXN0IHJpZGljdWxvdXNseSBub2lzeS4gT24gc29tZSBwcm9kdWN0cyBJJ3ZlIHdv
+cmtlZCBvbiB3ZSBhZGRlZCBiYXNpYyANCmZhbiBjb250cm9sIHRvIHUtYm9vdCBzbyB3ZSBjb3Vs
+ZCBzaWxlbmNlIHRoZSBmYW5zIGVhcmx5IGluIHRoZSBib290LiBJIA0KYWxzbyBnYXRoZXIgdGhh
+dCBpbiB0aGUgUEMgd29ybGQgdGhlIGZhbiBjb250cm9sIGlzIG9mdGVuIGRvbmUgDQpleHRlcm5h
+bGx5IHRvIHRoZSBPUy4gSW4gdGhlIHNwZWNpZmljIGNhc2Ugd2VyZSBJIG5lZWRlZCB0aGlzIA0K
+ZnVuY3Rpb25hbGl0eSBpdCB3YXMgYW4gZW1iZWRkZWQgeDg2XzY0IHNvIEkgaGFkIG5laXRoZXIg
+VS1Cb290IG5vciBhIEJNQy4NCg0K
 
