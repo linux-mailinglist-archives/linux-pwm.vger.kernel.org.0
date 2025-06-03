@@ -1,256 +1,237 @@
-Return-Path: <linux-pwm+bounces-6240-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6241-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8364ACC7C1
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Jun 2025 15:27:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6756BACCB22
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Jun 2025 18:21:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B49C1747CA
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Jun 2025 13:27:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BDDA7188F3BA
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Jun 2025 16:21:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FECE231A51;
-	Tue,  3 Jun 2025 13:27:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AE9823E226;
+	Tue,  3 Jun 2025 16:21:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="fOZPGoWq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipuklz+i"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FDF230D1E
-	for <linux-pwm@vger.kernel.org>; Tue,  3 Jun 2025 13:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37F7227E80;
+	Tue,  3 Jun 2025 16:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748957248; cv=none; b=aghgU9WoWpbxiMfwrF1Cnpri+uMk9PzdcbHpBxcGLiJeAXaSkynG14KTEq6UBDDWW3KtJISOlf0OiDb/+Tpck7OVnSg+vaUOW+IbJm6n/iehliaCfkP0qbrgCeL92BGRK8nTCmNqA7bv8x5yauOYrSVnB8wsNTzFmkyaS2stxUY=
+	t=1748967692; cv=none; b=mA7F6OLEYESlAzQXWMJsXhS7QA2H41SKXbIf+H8fEMP/suJpWuWq9nXO6f3kkeTTnr+X49MGibCUn9Gc0rbRtsP1oyVvtkXabneeabFi//ykhfsuXCkbPjB4Z3UsX1jkIeaV2slX/DgCERlJh44op/bqUSLVXRDLYsdp8xEoa7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748957248; c=relaxed/simple;
-	bh=Q7lOCrXXTUcctEEqD89lwjdgZQTT45XkhavsJH1ojUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OjIsIAdnPzqGbEBUWcT7ARpRTyaJ+NUGMBsJKb6THtYIS1Sktjj9Y7lfYb1UbPdH/8f85CQLHjaUQ/c7pR0vu3DUEsR7Ld9wlAW0WqAVwO1x20PakRp8E8XQMfhGIuakuQ5XbvqpFiSHxp6tqVLp/WJPaelX8hw27x0rvTzJBxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=fOZPGoWq; arc=none smtp.client-ip=209.85.160.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2e3e58edab5so2142072fac.3
-        for <linux-pwm@vger.kernel.org>; Tue, 03 Jun 2025 06:27:26 -0700 (PDT)
+	s=arc-20240116; t=1748967692; c=relaxed/simple;
+	bh=Fzge4z9mpLiTPnWpZY1S7wfWo2iY5QTX5em6d3V24+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IDBBtFqJDkjbHz4I9VopCCQmhS7B6xIkOUBJ91Etdu6E3NR3w1qJqTyPjES9JFKYNGSFBghEpVEvlsFzeT1nEPLRn2nK1u7UCwGhqBgVZdDT0c/5NpUigOlo7+QUcGfHvyDRwxJwI1nea0sIi8/wEad090B4mMzfaDzj51zBP20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipuklz+i; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2301ac32320so54608855ad.1;
+        Tue, 03 Jun 2025 09:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748957245; x=1749562045; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uzG5/6FfYNA5sX3NTsG/Wy+wkRCs94Vw4PYEh9eg6hA=;
-        b=fOZPGoWq4qGBLqEejDpUtbN9VrCaWw7VDlC75lWIE8Sz5W39bAOAR2XMky4Z+xkdQg
-         AGmS4TZJ4mq4nswv3qiRyYUqes+yRBduhrnVOos/0jNpq9beBuVqZssO7tFOOSY5K76i
-         8dfxhYevl9KpEjH43umT/uHoGgCC9jBipjLH5IysXhnGYfwlu8tOrSHZ6G6mdScsZzd3
-         Fk9Qhyu7TtU20kOn4z7unbavYiyUeIeJMBWZo2UiK1/sitxljbeFSKkGPJd/veDzNJPu
-         8XDn/Qatlt3elwyAy5WL+c1WSp7CbYLbBl7L6M0lxSws4hsIIrnBZx05NlabdWfwhGIQ
-         NIaA==
+        d=gmail.com; s=20230601; t=1748967690; x=1749572490; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TyM97ZqplBFeYxTzqGSXBQxiPc6c/u7cZVlPywBv4fY=;
+        b=ipuklz+irOElCFfrOSiEokVthMvpZZt0FN84il3erzQpzHug3jMULUFWG467V804NW
+         Y3q2OY5TR5Eu21957iuuv8UebvleI3gwpQqZ8ekFRX9Cx7go8qwI9CHLXHV1c6jf9T+N
+         2l5y150uKklByu+czFfkJaC7SFB/3F2slUQL57dsA8jAmZydj2mGJgUutJeK9W3SejXR
+         Zpo6KVGCatL4ece6ZK4ZJXvo3MMsI1LHB+17+ilmuXbC3RoLQT4Dz2dblIS0J94YMSc/
+         WM1PPi/xPVXjRCRxnfFs0YSPieNp5XDgLwyCx33uEjf7GBJ8y8s4vj1qQJSt3s5Rl7iu
+         2Uyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748957245; x=1749562045;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uzG5/6FfYNA5sX3NTsG/Wy+wkRCs94Vw4PYEh9eg6hA=;
-        b=B6bYmoGpUQ4eTlZyF7gvBjIr1jPDdrAZoszBXDIYDpFgC/za08qnXAqhLkVAx9GuCQ
-         tJ95Dtp8rTn20FwLkmpO+l9hqdpPRGRD/UpIHefm1iaUToHyzffjGuFYt3a1ov7bPHxr
-         kQ25YKaHi5yQ2KgAs0KN6J3Gt8uve+tjuc/HxHPZGH+T6mxSmbrN0WGuZDaGi2PW4v5X
-         7BcCHwIj+jfDaHBiZSEamuN+MYj8mG4rV/Ee+OTezud4uBJbSP8XzSke4UYsIUsv6a0Y
-         qhf9PgrK0wNzpg7PBKpXRWEIS7TTIx0q8Zp+xZT9NZn+uS3oFReDv+BES49bhz6DNOMR
-         +zxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVT7xc3XR70jiJB0Fp5zCayWlseXSv0JEJq7MmQSasxEerQJi52frMJWnueZqDPZSEMFS39klAjpHc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcIElUjI9a4FDh3jzg6dlV4lxe3sZIT/Og+BUMnGF5g/bCWDoN
-	+9dAKT6HheH7zhE3xLgHUkAXGouizAFUvdE9JZclfxnplfyh9WKRHw+IuC7L5OHl5qA=
-X-Gm-Gg: ASbGncupwRbtAkoNVg+KXLaN9yliSk+b9xOMaHfxc0ehmnXJKctiqPr+cRAwCwErWuO
-	xs3Z+ilpwoMssTAPxEtS1OpS47GJN6WATbmDrFZbvf4icVY4qYR3pLkyAgK6hL325m6lzYy6+sr
-	+vt6zlTraHNwx3cjryR/zhJtCLEJs2+X+8L+cQMLZ4Z9OZ7mhjQjadISwd1Bw6BrdZoh2vmP/dp
-	+173t/+H047fk3TKo/n7evaNDUDLmaLQQSqrrndj3x3w6LO18I3PPOhFoNBeWV568gyXE8OlRKh
-	Ka1a8AlpDfQgGrHSF253dDFvRyuTZ8xQrzBhDPR5qwKyfAQSG74K2QuhBEQvW7zdglzLRPqs4j/
-	jDklaGcZWrwKqOFEzEWE1UX4HTA==
-X-Google-Smtp-Source: AGHT+IHR/oHIMtB0y186dpEHP2nRW08u7roI6RQa16TTsA0Xefsv43qM8XH/KFxicsxXV1pI4ADRhg==
-X-Received: by 2002:a05:6870:ebc6:b0:29e:766d:e969 with SMTP id 586e51a60fabf-2e92a1623ecmr9541391fac.10.1748957245083;
-        Tue, 03 Jun 2025 06:27:25 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:e835:af77:41c:3a1f? ([2600:8803:e7e4:1d00:e835:af77:41c:3a1f])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e906b7f8f7sm2222601fac.38.2025.06.03.06.27.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jun 2025 06:27:24 -0700 (PDT)
-Message-ID: <4f09fa4e-704f-4a2b-abc3-e8f275d0e7bf@baylibre.com>
-Date: Tue, 3 Jun 2025 08:27:22 -0500
+        d=1e100.net; s=20230601; t=1748967690; x=1749572490;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TyM97ZqplBFeYxTzqGSXBQxiPc6c/u7cZVlPywBv4fY=;
+        b=c3oJi6imU6luvIXzVmCYr3EU7R4FuvGrf20PRrk6Jjmi+3swEvM22c5tdVRP5MwzYp
+         x838R0F25D8CE1avuC0SvAfNrlZQJDM0voqEYWjz2ScRVz7hmmNB8tU+CU69t4ZkG6T7
+         QIQJinMYdp8MkCrRPnHFaoMV6wg/H6FmezRt2DkIZSilRJWaV8RiU7ULkdO9TrB/UTrQ
+         YDQCdt4hHF1DaW/vEzdLQuSwFQRE4spv5sSrIYvWtF/srdYFLvjHy7xtU/rhI4EOtTW4
+         kk4NdzJpVHIoa6xrIQToE7fWCLDePWqM+WHYJao8KeTEQXiPcvZcJXV0RH1ccfFevVKh
+         wTjA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7hojAYy1+Az4LJT2E4aa3nRcTUvaeRBfD/C2K49D4QDj9Qu0hyQ3wXLMVsT/NEPorqIr5Fkn1mtwJnQ==@vger.kernel.org, AJvYcCVRy4PNjy2eyxh72oze/S7JpUeSjzgpTUQocryj0r7hQNfII26pFXvzB0BUdo7R0901EEtQIQNFicP7@vger.kernel.org, AJvYcCVq6e0B/FjT4MeFiA/fngWmBV5dTGbwlQga6QpUuAkTYOZb6n0ROHke37iPmv3ayCjRKXNMkRszJXI/@vger.kernel.org, AJvYcCWt+WlsexkJ/XmLLqaovzOPJcwnLhrySNjBtt7xRUBYGRFiKkU9lYPjMR+j3u3nQuInWFmRIxxUrG43@vger.kernel.org, AJvYcCXk4gYk5S0NtAIAbmvSfk5+bnNvtnNnoSwqVomAXzGJt1kvT8EYuk9S7drTAtjhitXJVRcZQWhE21ukq2PA@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOeycLmDT6G8M+JyZeFodal71lm5SsZO/jIjN5o/m8N1cXJI1s
+	ZSuOKLX1CR+Xj++M+OSCTxU/MucMViwvQUC6UflFl3sHkzrUn+5UjTq+
+X-Gm-Gg: ASbGnctyQchtM1ZgZrRskHXwIJFHLGnfxyREeOY+HeuK2FxA6qMphxDLrBX/oEjeBov
+	5XL1amKmrVITOGCv0QwVt3navtauqMvsNUJhSe37Fqa3YiKK2wXXptYOgIQDtWsqbQ1doJcY+Pu
+	PwUXqnnqMqo4U/B6/fkB1LFj06MsO8/DftEY9XgdCDDVzcHtj66qmxGADdY415Xry0r08ZJOizv
+	g+UeRg3Tl/rFG3adEQJD1NAwBi0wHuLrmvccWFziIK6MaC4CxhqZifMS1zvj3KsQFEPJAvyId2E
+	IRWuUNGB1oIdB9Xe61wnRkrZRuuDbQvsIcGinyo1iLxUno7TKvw=
+X-Google-Smtp-Source: AGHT+IHL/yQEZQ8M/N4GhQRHikLMeXiY0d5QIcz0Hymi30PtwkzByDtwLbrV2LTGw1hKZHdR4DW3Cg==
+X-Received: by 2002:a17:902:ec84:b0:234:9fed:ccb7 with SMTP id d9443c01a7336-23529904f37mr258003925ad.33.1748967689830;
+        Tue, 03 Jun 2025 09:21:29 -0700 (PDT)
+Received: from localhost ([216.228.127.128])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd3513sm90018585ad.108.2025.06.03.09.21.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jun 2025 09:21:29 -0700 (PDT)
+Date: Tue, 3 Jun 2025 12:21:27 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	William Breathitt Gray <wbg@kernel.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org,
+	kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
+	Detlev Casanova <detlev.casanova@collabora.com>
+Subject: Re: [PATCH v2 3/7] bitfield: introduce HI16_WE bitfield prep macros
+Message-ID: <aD8hB-qJ4Qm6IFuS@yury>
+References: <20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com>
+ <20250602-rk3576-pwm-v2-3-a6434b0ce60c@collabora.com>
+ <aD4DSz3vs41yMQSv@yury>
+ <2525788.jE0xQCEvom@workhorse>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] dt-bindings: iio: adc: Add adi,ad4052
-To: Jorge Marques <gastmaier@gmail.com>
-Cc: Jorge Marques <jorge.marques@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
- <20250422-iio-driver-ad4052-v2-3-638af47e9eb3@analog.com>
- <88a326e7-3910-4e02-b4ba-7afe06402871@baylibre.com>
- <hvexchm2ozsto5s2o6n5j2z3odrkbcamgmg67umd4aehwzmgie@dvtx6anioasq>
- <1b0e9003-7322-46fa-b2ba-518a142616dc@baylibre.com>
- <vchomz3iazgdmotcs3jskrugi2qmdxyo74t4ruo2fsc7cjwtqb@7rtdmdkxobvg>
- <a6f62963-5776-47e4-bdac-78e921a6e476@baylibre.com>
- <a6cguahvrbqjv2wtisvgg2wvm2tj3awmn7omo6ebfpts6v546o@4xzpj353vlsx>
- <fca1e8c7-2c1c-4244-a109-f674940d6030@baylibre.com>
- <65m4itn5xp3ytc7hvpskuk4kmu54wznk4m2odt7d5a5k35vy26@ekjxegpjy5wq>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <65m4itn5xp3ytc7hvpskuk4kmu54wznk4m2odt7d5a5k35vy26@ekjxegpjy5wq>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2525788.jE0xQCEvom@workhorse>
 
-On 6/3/25 2:29 AM, Jorge Marques wrote:
-> On Mon, Jun 02, 2025 at 12:23:40PM -0500, David Lechner wrote:
->> On 6/2/25 11:32 AM, Jorge Marques wrote:
->>> Hi David,
->>>
->>> On Mon, Jun 02, 2025 at 10:17:18AM -0500, David Lechner wrote:
->>>> On 6/2/25 4:17 AM, Jorge Marques wrote:
->>>>> On Tue, Apr 29, 2025 at 10:45:20AM -0500, David Lechner wrote:
->>>>>> On 4/29/25 8:48 AM, Jorge Marques wrote:
->>>>>>> Hi David, 
->>>>>>>
->>>>>>> I didn't went through your's and Jonathan's ad4052.c review yet,
->>>>>>> but for the trigger-source-cells I need to dig deeper and make
->>>>>>> considerable changes to the driver, as well as hardware tests.
->>>>>>> My idea was to have a less customizable driver, but I get that it is
->>>>>>> more interesting to make it user-definable.
->>>>>>
->>>>>> We don't need to make the driver support all possibilities, but the devicetree
->>>>>> needs to be as complete as possible since it can't be as easily changed in the
->>>>>> future.
->>>>>>
->>>>>
->>>>> Ack.
->>>>>
->>>>> I see that the node goes in the spi controller (the parent). To use the
->>>>> same information in the driver I need to look-up the parent node, then
->>>>> the node. I don't plan to do that in the version of the driver, just an
->>>>> observation.
->>>>>
->>>>> There is something else I want to discuss on the dt-bindings actually.
->>>>> According to the schema, the spi-max-frequency is:
->>>>>
->>>>>   > Maximum SPI clocking speed of the device in Hz.
->>>>>
->>>>> The ad4052 has 2 maximum speeds: Configuration mode (lower) and ADC Mode
->>>>> (higher, depends on VIO). The solution I came up, to not require a
->>>>> custom regmap spi bus, is to have spi-max-frequency bound the
->>>>> Configuration mode speed,
->>>>
->>>> The purpose of spi-max-frequency in the devicetree is that sometimes
->>>> the wiring of a complete system makes the effective max frequency
->>>> lower than what is allowed by the datasheet. So this really needs
->>>> to be the absolute highest frequency allowed.
->>>>
->>>>> and have ADC Mode set by VIO regulator
->>>>> voltage, through spi_transfer.speed_hz. At the end of the day, both are
->>>>> bounded by the spi controller maximum speed.
->>>>
->>>> If spi_transfer.speed_hz > spi-max-frequency, then the core SPI code
->>>> uses spi-max-frequency. So I don't think this would actually work.
->>>>
->>> Ok, so that's something that may be worth some attention.
->>>
->>> At spi/spi.c#2472
->>> 	if (!of_property_read_u32(nc, "spi-max-frequency", &value))
->>> 		spi->max_speed_hz = value;
->>>
->>> At spi/spi.c#4090
->>> 	if (!xfer->speed_hz)
->>> 		xfer->speed_hz = spi->max_speed_hz;
->>>
->>> So, speed_hz is max-spi-frequency only if xfer->speed_hz is 0 and
->>> not bounded by it.
->>
->> Ah, OK, my memory was wrong. It is only bound by the controller max
->> speed, not the device max speed.
->>
->> 	if (ctlr->max_speed_hz && xfer->speed_hz > ctlr->max_speed_hz)
->> 		xfer->speed_hz = ctlr->max_speed_hz;
->>
->> It does seem odd that it would allow setting an individual xfer
->> speed higher than than the given device max speed. I suppose we
->> could submit a patch adding that check to the SPI core code and
->> see what Mark has to say.
->>
+On Tue, Jun 03, 2025 at 02:55:40PM +0200, Nicolas Frattaroli wrote:
+> On Monday, 2 June 2025 22:02:19 Central European Summer Time Yury Norov wrote:
+> > On Mon, Jun 02, 2025 at 06:19:14PM +0200, Nicolas Frattaroli wrote:
+> > > Hardware of various vendors, but very notably Rockchip, often uses
+> > > 32-bit registers where the upper 16-bit half of the register is a
+> > > write-enable mask for the lower half.
+> > 
+> > Can you list them all explicitly please? I grepped myself for the
+> > 'HIGHWORD_UPDATE' and 'FIELD_PREP_HIGWORD', and found just 4 or 5 in
+> > addition to the rockchip.
 > 
-> Agreed, the patch itself would be simple:
+> Most of the ones Heiko brought up[1] just appear to be the clock stuff,
+> I'm only aware of the drivers/mmc/host/sdhci-of-arasan.c one outside of
+> Rockchip. For a complete listing I'd have to do a semantic search with
+> e.g. Coccinelle, which I've never used before and would need to wrap
+> my head around first. grep is a bad fit for catching them all as some
+> macros are split across lines, or reverse the operators of the OR.
+> Weggli[2] is another possibility but it's abandoned and undocumented, and
+> I've ran into its limitations before fairly quickly.
+
+Going Coccinelle way is fine, but I think it's an endless route. :)
+
+What I meant is: you caught this HIWORD_UPDATE() duplication, and it's
+great. When people copy-paste a macro implementation and even a name,
+their intention is clear: they need this functionality, but the core
+headers lack it, so: I'll make another small copy in my small driver,
+and nobody cares.
+
+I think your consolidation should at first target the above users.
+
+Those having different names or substantially different implementation,
+may also be a target. But they are:
+ 1. Obviously a minority in terms of LOCs, and
+ 2. More likely have their reasons to have custom flavors of the same.
+
+...
+
+> > Can you please prepare a series that introduces the new macro and
+> > wires all arch duplications to it?
 > 
->  	if (!xfer->speed_hz || xfer->speed_hz > spi->max_speed_hz)
->  		xfer->speed_hz = spi->max_speed_hz;
+> Okay, I will do that after I learn Coccinelle. Though I suspect the reason
+> why I'm the first person to address this is because it's much easier to
+> hide duplicated macros away in drivers than go the long route of fixing up
+> every single other user. I'm not too miffed about it though, it's cleanup
+> of technical debt that's long overdue.
+ 
+I just fired 
+
+        $ git grep "define HIWORD"
+
+and found 27 matches. The relevant 'hiwords' have the following
+semantics:
+
+ - HIWORD_UPDATE(val, mask, shift)
+ - HIWORD_UPDATE(val, mask)
+ - HIWORD_UPDATE(mask, val)
+ - HIWORD_UPDATE(v, h, l)
+ - HIWORD_UPDATE_BIT(val)
+ - HIWORD_DISABLE_BIT(val)
+
+Most of them don't bother doing any static checks at all.
+
+If you will just consolidate the above, and wire those drivers
+to generic version with all that checks - it would be a decent
+consolidation by any measure.
+
+Something like this:
+
+diff --git a/drivers/devfreq/event/rockchip-dfi.c b/drivers/devfreq/event/rockchip-dfi.c
+index 0470d7c175f4..d5e74d555a3d 100644
+--- a/drivers/devfreq/event/rockchip-dfi.c
++++ b/drivers/devfreq/event/rockchip-dfi.c
+@@ -30,7 +30,7 @@
+
+ #define DMC_MAX_CHANNELS       4
+
+-#define HIWORD_UPDATE(val, mask)       ((val) | (mask) << 16)
++#define HIWORD_UPDATE(val, mask)       HWORD_UPDATE(mask, val)
+
+ /* DDRMON_CTRL */
+ #define DDRMON_CTRL    0x04
+
+...
+
+> > Regarding the name... I can't invent a good one as well, so the best
+> > thing I can suggest is not to invent something that can mislead. The
+> > HWM_FIELD_PREP() is not bad because it tells almost nothing and
+> > encourages one to refer to the documentation. If you want something
+> > self-explaining, maybe MASK_HI_FIELD_LO_PREP_U16(), or something?
 > 
-> But I wonder how many drivers rely on this behaviour
-
-Only one way to find out. Try it. :-)
-
->>>
->>> Then at spi-axi-spi-engine.c:
->>>
->>> 	static int spi_engine_precompile_message(struct spi_message *msg)
->>> 	{
->>>   		clk_div = DIV_ROUND_UP(max_hz, xfer->speed_hz);
->>> 		xfer->effective_speed_hz = max_hz / min(clk_div, 256U);
->>> 	}
->>>
->>> Where max_hz is set only by the IP spi_clk. If at the driver I set
->>> xfer.speed_hz, it won't be bounded by max-spi-frequency.
->>>
->>> The only that seems to bound as described is the layer for flash memory
->>> at spi-mem.c@spi_mem_adjust_op_freq.
->>>
->>> For the adc driver, I will then consider your behavioral description and
->>> create a custom regmap bus to limit set the reg access speed (fixed),
->>> and keep adc mode speed set by VIO. And consider spi-max-frequency can
->>> further reduce both speeds.
->>> (or should instead be handled at the driver like spi-mem.c ?)
->>
->> It would be more work, but if it is common enough, we could generalize this
->> in the core code. For example add a spi-register-max-frequency binding (or
->> even a more general spi-max-freqency-map to map operations to max frequencies).
->> Then we could bake it into the regmap_spi code to handle this property
->> and not have to make a separate bus.
->>
->> FWIW, there are also some SPI TFT displays that use a different frequency
->> for register access compared to framebuffer data that could potentially
->> use this too. Right now, these just have a hard-coded register access
->> frequency of e.g. 10 MHz.
->>
+> This seems a bit unwieldy, at 25 characters. "FIELD32_HIMASK_LOPREP"
+> (or FIELD16, depending on which end of the cornet to eat) would be 21
+> characters but I'm also not in love with it.
 > 
-> I implemented the custom regmap bus for this series.
+> I think the name should include the following parts:
+> 1. it's a field
+> 2. the field is halved into two halves of 16 bits
+> 3. the mask is copied into the upper 16 bits
 
-Good plan.
-
-> With a `spi-max-frequency-map`, the regmap bus can be removed.
-> I don't want to include this regmap spi patch to this series.
-> As I see it, struct regmap_but first need to be extended to add
-> a max_speed, e.g.
->   
->    @max_speed: Max transfer speed that can be used on the bus.
+Or just keep the HIWORD_UPDATE name as it already has over 300 users.
+If it's commented well, and has an implementation based on FIELD_PREP,
+I don't think users will struggle to understand what is actually
+happening there.
+ 
+> Since we're on the subject of bit widths, I have a somewhat sacrilegious
+> point to raise: should this be a function-like macro at all, as opposed
+> to a static __pure inline function? It's not generic with regards to the
+> data types, as we're always assuming a u16 value and mask input and a
+> u32 output. The __pure inline definition should let the compiler treat it
+> essentially similar to what the pre-processor expanded macro does, which
+> is as not a function call at all but a bunch of code to constant fold away
+> if possible. What we get in return is type checking and less awful syntax.
+> Then we could call it something like `himask_field_prep_u32`, which is
+> also 21 characters but the ambiguity of whether the u32 refers to the mask
+> or the whole register width is cleared up by the types of the function
+> arguments.
 > 
-> regmap_spi.c would then look for the devicetree node to fill the value
-> and on regmap_write/read fill speed_hz.
-> In this case, it could be called "register-frequency" or
-> "regmap-frequency"
-> If instead it is up to spi.c to read the devicetree node, then a way to
-> differentiate "regular" transfers from "regmap" transfers would be
-> necessary.
-> 
-> About submitting v3, should I submit only up-to the base driver, or can
-> I submit also the add offload support and add event support commits?
+> The const version of the macro may still need to remain though because I'm
+> not sure C11 can do that for us. With C23 maybe there's a way with
+> constexpr but I've never used it before.
 
-I wouldn't add anything new at this point. Being able to spread out
-the review a bit will lead to better reviews.
+Inline function will disable parameters compile checks, and will be
+too diverged from _CONST counterpart.
 
+Thanks,
+Yury
 
