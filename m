@@ -1,551 +1,289 @@
-Return-Path: <linux-pwm+bounces-6289-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6290-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86225AD4C2C
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jun 2025 08:59:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49083AD50A6
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jun 2025 11:55:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 947497A5BC3
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jun 2025 06:57:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06C471886D59
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jun 2025 09:55:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94FB022CBE3;
-	Wed, 11 Jun 2025 06:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KvAxdRGG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9801B25EF9F;
+	Wed, 11 Jun 2025 09:55:25 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F836213E61;
-	Wed, 11 Jun 2025 06:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C942725E448;
+	Wed, 11 Jun 2025 09:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749625140; cv=none; b=SI63yWbkQmFKjb9MFThk1TU56NZxuvNjLSW7JHlh8MtKr0lJumQHRtRD2RcC+KN68LvBlnayH9Ayn57zP0ariyFswAbqrKdBnBCzX92T1MyzlnNAGeN+PO6ZMC2/KF0P7YWHoFT7SD0wF9rrwZrRLAJKhWTa7qyheipTHN5SgZM=
+	t=1749635725; cv=none; b=KoQb5nJJZkfVRnQMQlyQpUECq4cQsc6Z9mvdzqoo3TBvrEof8+uHU6+TSQbrNDhikgMX+tX0P382eBbByw7pM+bQX2lhwyMZjOTmEh5NudattbWMPQrUZyspOVsOSFf4CYCGUPViNqbdP5WUMUXHwwF3AawCoa2AnFee9vK0N7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749625140; c=relaxed/simple;
-	bh=sJDBY2Xw6Hliqp3t48rqVOdO6+RsGFDMbRDbDObTC3w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z58mOC/KSNqr9jup00oTI+aBIC7X2z4RRIn02Y9zBjU/2UhOFp/PNb7HM1nQYgCHSyxR1dWw6UXbZHMzwQXudfZgcLhVosRD1M/Q3YOnstiC2JNju8oCtDVkwrY2T7OMij3cT4D1R6ZUCr4Dn3E2LiotKSSHmIssPneDSeAsLx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KvAxdRGG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B218C4CEEE;
-	Wed, 11 Jun 2025 06:58:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749625139;
-	bh=sJDBY2Xw6Hliqp3t48rqVOdO6+RsGFDMbRDbDObTC3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KvAxdRGGN2NTTKtKNMyR7p6xwM6iutE4YqnfVWBo4GzSU9wnaz/OLfpc9ht79WIkq
-	 XelBGspDDBQiSAMpKRyG8bAooEhHM/Qz9YGXhGzE91Edme4HCCnGF1mpWFHizhwI8k
-	 Pc5QGRSVShWZRofrMXoPNJ0os4nOSEQurgv6Mxsksfbb25igay7vLSFU35YM/sDY90
-	 AcIk/DIHcA7pRGiczr3hKT8ZtPTDBH4M7JlaO0YPWjjzxdzu9S3phTqDmrRlh/U+4N
-	 X2n3UyY8ON2V66gZlOpdtEgcx7piz901vuabKzcTGrYZNPmH+BOK2Wv2MpAfznzxCQ
-	 Bc+JUwZGmGDLw==
-Date: Wed, 11 Jun 2025 08:58:57 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
-	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] pwm: Add Rust driver for T-HEAD TH1520 SoC
-Message-ID: <jbm3qvowi5vskhnjyqlp3xek36gzzqjt35m66eayxi6lmi525t@iefevopxjl53>
-References: <20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com>
- <CGME20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d@eucas1p1.samsung.com>
- <20250610-rust-next-pwm-working-fan-for-sending-v2-2-753e2955f110@samsung.com>
+	s=arc-20240116; t=1749635725; c=relaxed/simple;
+	bh=caoqhIO74fEue9jwSECt2E/CRId7nrzha3/CFRitmz0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N/mJKrpNAilkSn/QfeYxaJMFVnx0HVIlv/OXfYex7MzxUClsLU48J6kyaoSHj9VAJjIeGJf7iV3Myam7BJageSLoN3Yi/AzQbIYMpVxnQ7YEzdmp0Htmm/WrU2zvB+1HQ8M+SOzGioZtFiogYyVDu1i1RrrwP4uH3CnVJXuATrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-87ecd70679cso2374233241.0;
+        Wed, 11 Jun 2025 02:55:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749635721; x=1750240521;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KU9XIo3pE6yrQp415HLbJ5RslRTOsLxW1sCDEyQ/CuQ=;
+        b=GtLSM4p2PoQdRROLDfS9Up9ZE3JWl89YHsjrctf2pu/lMsCmOi/5laV8llck666XwR
+         GxhLJ0vDOYN6de9Atv4IoPUIBsLipi/H3gidvWoDH67l4bUMJeStw981RHuNXBRFw2ED
+         5c5tColR8UzTvn0Mki1+2R43njHEzgpQ7EVZr6PbtrK4+GdK+NFwPid9CSTtS/MORXPn
+         rCeWRcXyUrhBvRC/cXHaJCUu4WnjaC1yB1ih3JCDVznrQrqL1MK6O92NtuHq/5R+XTwT
+         Y/8fTEVu03rKahMznD6O6wxXXzyW2tLJISfb4jGVccR16G8B8HYelkgahQG9jUb1/EjL
+         V/Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCVBQ/cKO24poOMUhei6yvcYwr+nwFN02phA24C6FlGCMMZoakaDEsr+DXhzkviP5WXVxOYHtmYy8UNu@vger.kernel.org, AJvYcCVQo6CmP5AprAYBC7OwnGH8UyiQnIAMgtbUO7ncXhPR9AiB4ZzXxwWS7vtfqJDl0BPR2hU7+8UbvQ1s@vger.kernel.org, AJvYcCXFN7G/Zdafaq0bX0oeSZ2NnhKtpK3TytSBM/ins8+XHZaks+oFsjpfhdMKCVhrHMulvmWcf64jkSbTn4HW5s6hAmQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoYVZTiI/s/zDuP3lWTXAmlHZjmtbCGyFQf87qY6uchNRQDUa+
+	ElbFMalfpT3cVf/290QLmdsl6UXZSYyLq7tyBx4af4AsmnutMY/HG5kWL6TV0m3q
+X-Gm-Gg: ASbGncvKA64Tr5JPjY5+WN9VRo+t13ScOR2/9rG08XjvRWd2tcVJ9PsPPO3zXq4Cm21
+	7pu8vfwi+ouPuiaaLsY9xOocNsaYAn94kXDZKRXoDEzEs7dqYHeuYLpcksxzMtKrmWl2G3Dq91+
+	IkPXEO4kvExz+o42Eq1fsXSBtcTFauIcF4Biywj9cyDrbepAl+yRuIHIPiKlZmrEmM4+X+D7gHx
+	JjYhtaOtjOEiPyWYwwB3cDnDxFRPxCuH9jT+C684rsuxbbvc3GJHB80aEopXpMigT/y5t7+UFgw
+	HNTQmVFGuZNXyDfYAyxsuyL4Ng490laUCIoVf0mQMxTk1PPzi9hubGUZ61MwaEAFFaVmiVY+NcS
+	wsHbZRYWa6oBfwbp8bBgcMhbb
+X-Google-Smtp-Source: AGHT+IGSZoZFcs2OSP/xyyvFkVCD3HhxtLYmmx4IzoPZP0vNnT0ZNT3UySzSQ172eapa4QsQFXIxew==
+X-Received: by 2002:a05:6102:4409:b0:4e5:fe5e:2be4 with SMTP id ada2fe7eead31-4e7baf7ca1bmr1992007137.22.1749635721172;
+        Wed, 11 Jun 2025 02:55:21 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87eeaf3b7c6sm2433146241.21.2025.06.11.02.55.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 02:55:20 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-87ecd70679cso2374216241.0;
+        Wed, 11 Jun 2025 02:55:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVqQWyRQchjWQpr8870Cyg27AytCuCYijeeq+qtzntlS54e3fonmdasEfnlbi1Ksx0A0G5VX3T3Qjr9l6naBRA7FD0=@vger.kernel.org, AJvYcCWxFXjapN1RMT9U62UdqENimJyMBtW1EUnj3ircUNnvfSeayygwvyvmRi20QhXSCIh67ee/6DnNq161@vger.kernel.org, AJvYcCWykPF061eBtqjMXla/cee1IjsfSdr/xxFhNiZawfyFCtu0vN5ewK9dK9pieu2PRTFC3NWShWLd3+yO@vger.kernel.org
+X-Received: by 2002:a05:6102:c52:b0:4db:e01:f2db with SMTP id
+ ada2fe7eead31-4e7bac51164mr2305941137.0.1749635720444; Wed, 11 Jun 2025
+ 02:55:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bmffslcvo3pn5qxg"
-Content-Disposition: inline
-In-Reply-To: <20250610-rust-next-pwm-working-fan-for-sending-v2-2-753e2955f110@samsung.com>
+References: <20250609000748.1665219-1-marek.vasut+renesas@mailbox.org> <20250609000748.1665219-2-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250609000748.1665219-2-marek.vasut+renesas@mailbox.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 11 Jun 2025 11:55:08 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXwPHvuGdWYFEhOHeT9J67igd6kWNpRgUAbhAGVMKPMcw@mail.gmail.com>
+X-Gm-Features: AX0GCFsGW1Nt-ZuPkSAbdZllHwaYUgTYpVvtkmvsxqCyNzTWo3jjsyTMzzglaiU
+Message-ID: <CAMuHMdXwPHvuGdWYFEhOHeT9J67igd6kWNpRgUAbhAGVMKPMcw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] regulator: rpi-panel-v2: Add regulator for 7"
+ Raspberry Pi 720x1280
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-arm-kernel@lists.infradead.org, 
+	Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
+	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Linux PWM List <linux-pwm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+CC pwm
 
---bmffslcvo3pn5qxg
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 2/7] pwm: Add Rust driver for T-HEAD TH1520 SoC
-MIME-Version: 1.0
-
-Hello,
-
-On Tue, Jun 10, 2025 at 02:52:50PM +0200, Michal Wilczynski wrote:
-> Introduce a PWM driver for the T-HEAD TH1520 SoC, written in Rust and
-> utilizing the safe PWM abstractions from the preceding commit.
->=20
-> The driver implements the pwm::PwmOps trait using the modern waveform
-> API (round_waveform_tohw, write_waveform, etc.) to support configuration
-> of period, duty cycle, and polarity for the TH1520's PWM channels.
->=20
-> Resource management is handled using idiomatic Rust patterns. The PWM
-> chip object is allocated via pwm::Chip::new and its registration with
-> the PWM core is managed by the pwm::Registration RAII guard. This
-> ensures pwmchip_remove is always called when the driver unbinds,
-> preventing resource leaks. Device managed resources are used for the
-> MMIO region, and the clock lifecycle is correctly managed in the
-> driver's private data Drop implementation.
->=20
-> The driver's core logic is written entirely in safe Rust, with no unsafe
-> blocks.
->=20
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+On Wed, 11 Jun 2025 at 10:19, Marek Vasut
+<marek.vasut+renesas@mailbox.org> wrote:
+> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+>
+> Add regulator for the 7" Raspberry Pi 720x1280 DSI panel based on ili9881.
+> This is the Raspberry Pi DSI Panel V2. The newer Raspberry Pi 5" and 7"
+> panels have a slightly different register map to the original one. Add a
+> new driver for this "regulator" chip, this time by exposing two GPIOs and
+> one PWM controller, both of which can be consumed by panel driver and
+> pwm-backlight respectively.
+>
+> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 > ---
->  MAINTAINERS               |   1 +
->  drivers/pwm/Kconfig       |  10 ++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm_th1520.rs | 287 ++++++++++++++++++++++++++++++++++++++++=
-++++++
->  4 files changed, 299 insertions(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5589c0d2253bcb04e78d7b89ef6ef0ed41121d77..966ce515c8bfefdff1975bb71=
-6a267435ec0feae 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -21319,6 +21319,7 @@ F:	drivers/mailbox/mailbox-th1520.c
->  F:	drivers/net/ethernet/stmicro/stmmac/dwmac-thead.c
->  F:	drivers/pinctrl/pinctrl-th1520.c
->  F:	drivers/pmdomain/thead/
-> +F:	drivers/pwm/pwm_th1520.rs
->  F:	drivers/reset/reset-th1520.c
->  F:	include/dt-bindings/clock/thead,th1520-clk-ap.h
->  F:	include/dt-bindings/power/thead,th1520-power.h
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 03c5a100a03e2acdccf8a46b9c70b736b630bd3a..be05658a568cb9156ef623caf=
-54ff1aaba898d01 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -719,6 +719,16 @@ config PWM_TEGRA
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-tegra.
-> =20
-> +config PWM_TH1520_RUST
-
-Is "_RUST" relevant here? I'd drop that.
-
-> +	tristate "TH1520 PWM support (Rust)"
-
-Also while having drivers is rust is a great step forward, it's not
-relevant to the user selecting support for the TH1520 device.
-
-> +	depends on RUST_PWM_ABSTRACTIONS
-> +	help
-> +	  This option enables the driver for the PWM controller found on the
-> +	  T-HEAD TH1520 SoC. This driver is written in Rust.
+> Loosely based on:
+> https://github.com/raspberrypi/linux 3c07b87e877e ("regulator: Add a regulator for the new LCD panels")]
+> https://github.com/raspberrypi/linux 68c59b9e6275 ("regulator: rpi_panel_v2: Add remove and shutdown hooks")]
+> ---
+> Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> Cc: Florian Fainelli <florian.fainelli@broadcom.com>
+> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-rpi-kernel@lists.infradead.org
+> ---
+>  drivers/regulator/Kconfig                  |  10 ++
+>  drivers/regulator/Makefile                 |   1 +
+>  drivers/regulator/rpi-panel-v2-regulator.c | 114 +++++++++++++++++++++
+>  3 files changed, 125 insertions(+)
+>  create mode 100644 drivers/regulator/rpi-panel-v2-regulator.c
+>
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index 6d8988387da4..21ad6d938e4d 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -1153,6 +1153,16 @@ config REGULATOR_RASPBERRYPI_TOUCHSCREEN_ATTINY
+>           touchscreen unit. The regulator is used to enable power to the
+>           TC358762, display and to control backlight.
+>
+> +config REGULATOR_RASPBERRYPI_TOUCHSCREEN_V2
+> +       tristate "Raspberry Pi 7-inch touchscreen panel V2 regulator"
+> +       depends on I2C
+> +       select GPIO_REGMAP
+> +       select REGMAP_I2C
+> +       help
+> +         This driver supports regulator on the V2 Raspberry Pi touchscreen
+> +         unit. The regulator is used to enable power to the display and to
+> +         control backlight PWM.
 > +
-> +	  To compile this driver as a module, choose M here; the module
-> +	  will be called pwm-th1520. If you are unsure, say N.
-> +
->  config PWM_TIECAP
->  	tristate "ECAP PWM support"
->  	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARC=
-H_K3 || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 96160f4257fcb0e0951581af0090615c0edf5260..d41b1940df903ba2036d8e3ed=
-93efcd66834b7ab 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -73,3 +73,4 @@ obj-$(CONFIG_PWM_TWL_LED)	+=3D pwm-twl-led.o
->  obj-$(CONFIG_PWM_VISCONTI)	+=3D pwm-visconti.o
->  obj-$(CONFIG_PWM_VT8500)	+=3D pwm-vt8500.o
->  obj-$(CONFIG_PWM_XILINX)	+=3D pwm-xilinx.o
-> +obj-$(CONFIG_PWM_TH1520_RUST)	+=3D pwm_th1520.o
-
-Alphabetic ordering please
-
-> diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
+>  config REGULATOR_RC5T583
+>         tristate "RICOH RC5T583 Power regulators"
+>         depends on MFD_RC5T583
+> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+> index c0bc7a0f4e67..be98b29d6675 100644
+> --- a/drivers/regulator/Makefile
+> +++ b/drivers/regulator/Makefile
+> @@ -136,6 +136,7 @@ obj-$(CONFIG_REGULATOR_PBIAS) += pbias-regulator.o
+>  obj-$(CONFIG_REGULATOR_PCAP) += pcap-regulator.o
+>  obj-$(CONFIG_REGULATOR_RAA215300) += raa215300.o
+>  obj-$(CONFIG_REGULATOR_RASPBERRYPI_TOUCHSCREEN_ATTINY)  += rpi-panel-attiny-regulator.o
+> +obj-$(CONFIG_REGULATOR_RASPBERRYPI_TOUCHSCREEN_V2)  += rpi-panel-v2-regulator.o
+>  obj-$(CONFIG_REGULATOR_RC5T583)  += rc5t583-regulator.o
+>  obj-$(CONFIG_REGULATOR_RK808)   += rk808-regulator.o
+>  obj-$(CONFIG_REGULATOR_RN5T618) += rn5t618-regulator.o
+> diff --git a/drivers/regulator/rpi-panel-v2-regulator.c b/drivers/regulator/rpi-panel-v2-regulator.c
 > new file mode 100644
-> index 0000000000000000000000000000000000000000..9e43474f5123b51c49035d712=
-19303a606c20a5a
+> index 000000000000..b77383584a3a
 > --- /dev/null
-> +++ b/drivers/pwm/pwm_th1520.rs
-> @@ -0,0 +1,287 @@
+> +++ b/drivers/regulator/rpi-panel-v2-regulator.c
+> @@ -0,0 +1,114 @@
 > +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2025 Samsung Electronics Co., Ltd.
-> +// Author: Michal Wilczynski <m.wilczynski@samsung.com>
+> +/*
+> + * Copyright (C) 2022 Raspberry Pi Ltd.
+> + * Copyright (C) 2025 Marek Vasut
+> + */
 > +
-> +//! Rust T-HEAD TH1520 PWM driver
-
-A short paragraph describing the hardware limitations of that driver
-here would be nice. While you probably cannot stick to the exact format
-used in newer C drivers such that
-
-	sed -rn '/Limitations:/,/\*\/?$/p' drivers/pwm/*.c
-
-emits the info for your driver, I'd appreciate you sticking to mostly
-this format.
-
-> +use core::ops::Deref;
-> +use kernel::{
-> +    c_str,
-> +    clk::Clk,
-> +    device::{Bound, Core, Device},
-> +    devres,
-> +    error::{code::*, Result},
-> +    io::mem::IoMem,
-> +    math::KernelMathExt,
-> +    of, platform,
-> +    prelude::*,
-> +    pwm, time,
+> +#include <linux/err.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/gpio/regmap.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +
+> +/* I2C registers of the microcontroller. */
+> +#define REG_ID         0x01
+> +#define REG_POWERON    0x02
+> +#define REG_PWM                0x03
+> +
+> +/* Bits for poweron register */
+> +#define LCD_RESET_BIT  BIT(0)
+> +#define CTP_RESET_BIT  BIT(1)
+> +
+> +/* Bits for the PWM register */
+> +#define PWM_BL_ENABLE  BIT(7)
+> +#define PWM_BL_MASK    GENMASK(4, 0)
+> +
+> +/* Treat LCD_RESET and CTP_RESET as GPIOs */
+> +#define NUM_GPIO       2
+> +
+> +static const struct regmap_config rpi_panel_regmap_config = {
+> +       .reg_bits = 8,
+> +       .val_bits = 8,
+> +       .max_register = REG_PWM,
+> +       .can_sleep = true,
 > +};
 > +
-> +const MAX_PWM_NUM: u32 =3D 6;
+> +static int rpi_panel_v2_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +                                 const struct pwm_state *state)
+> +{
+> +       struct regmap *regmap = pwmchip_get_drvdata(chip);
+> +       unsigned int duty;
 > +
-> +// Register offsets
-> +const fn th1520_pwm_chn_base(n: u32) -> usize {
-> +    (n * 0x20) as usize
-> +}
-
-empty line here between these functions?
-
-> +const fn th1520_pwm_ctrl(n: u32) -> usize {
-> +    th1520_pwm_chn_base(n)
-> +}
-> +const fn th1520_pwm_per(n: u32) -> usize {
-> +    th1520_pwm_chn_base(n) + 0x08
-> +}
-> +const fn th1520_pwm_fp(n: u32) -> usize {
-> +    th1520_pwm_chn_base(n) + 0x0c
+> +       if (state->polarity != PWM_POLARITY_NORMAL)
+> +               return -EINVAL;
+> +
+> +       if (!state->enabled)
+> +               return regmap_write(regmap, REG_PWM, 0);
+> +
+> +       duty = pwm_get_relative_duty_cycle(state, PWM_BL_MASK);
+> +       return regmap_write(regmap, REG_PWM, duty | PWM_BL_ENABLE);
 > +}
 > +
-> +// Control register bits
-> +const PWM_START: u32 =3D 1 << 0;
-> +const PWM_CFG_UPDATE: u32 =3D 1 << 2;
-> +const PWM_CONTINUOUS_MODE: u32 =3D 1 << 5;
-> +const PWM_FPOUT: u32 =3D 1 << 8;
+> +static const struct pwm_ops rpi_panel_v2_pwm_ops = {
+> +       .apply = rpi_panel_v2_pwm_apply,
+> +};
 > +
-> +const TH1520_PWM_REG_SIZE: usize =3D 0xB0;
+> +/*
+> + * I2C driver interface functions
+> + */
+> +static int rpi_panel_v2_i2c_probe(struct i2c_client *i2c)
+> +{
+> +       struct gpio_regmap_config gconfig = {
+> +               .ngpio          = NUM_GPIO,
+> +               .ngpio_per_reg  = NUM_GPIO,
+> +               .parent         = &i2c->dev,
+> +               .reg_set_base   = REG_POWERON,
+> +       };
+> +       struct regmap *regmap;
+> +       struct pwm_chip *pc;
+> +       int ret;
 > +
-> +/// Hardware-specific waveform representation for TH1520.
-
-Some comments use 2 and other 3 slashes. Does this have any semantic?
-
-> +#[derive(Copy, Clone, Debug, Default)]
-> +struct Th1520WfHw {
-> +    period_cycles: u32,
-> +    duty_cycles: u32,
-> +    ctrl_val: u32,
-> +    enabled: bool,
+> +       pc = devm_pwmchip_alloc(&i2c->dev, 1, 0);
+> +       if (IS_ERR(pc))
+> +               return PTR_ERR(pc);
+> +
+> +       pc->ops = &rpi_panel_v2_pwm_ops;
+> +
+> +       regmap = devm_regmap_init_i2c(i2c, &rpi_panel_regmap_config);
+> +       if (IS_ERR(regmap))
+> +               return dev_err_probe(&i2c->dev, PTR_ERR(regmap), "Failed to allocate regmap\n");
+> +
+> +       pwmchip_set_drvdata(pc, regmap);
+> +
+> +       regmap_write(regmap, REG_POWERON, 0);
+> +
+> +       gconfig.regmap = regmap;
+> +       ret = PTR_ERR_OR_ZERO(devm_gpio_regmap_register(&i2c->dev, &gconfig));
+> +       if (ret)
+> +               return dev_err_probe(&i2c->dev, ret, "Failed to create gpiochip\n");
+> +
+> +       return devm_pwmchip_add(&i2c->dev, pc);
 > +}
 > +
-> +/// The driver's private data struct. It holds all necessary devres-mana=
-ged resources.
-> +struct Th1520PwmDriverData {
-> +    iomem: devres::Devres<IoMem<TH1520_PWM_REG_SIZE>>,
-> +    clk: Clk,
-> +}
+> +static const struct of_device_id rpi_panel_v2_dt_ids[] = {
+> +       { .compatible = "raspberrypi,touchscreen-panel-regulator-v2" },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, rpi_panel_v2_dt_ids);
 > +
-> +impl pwm::PwmOps for Th1520PwmDriverData {
-> +    type WfHw =3D Th1520WfHw;
+> +static struct i2c_driver rpi_panel_v2_regulator_driver = {
+> +       .driver = {
+> +               .name = "rpi_touchscreen_v2",
+> +               .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +               .of_match_table = of_match_ptr(rpi_panel_v2_dt_ids),
+> +       },
+> +       .probe = rpi_panel_v2_i2c_probe,
+> +};
 > +
-> +    fn get_state(
-> +        chip: &mut pwm::Chip,
-> +        pwm: &mut pwm::Device,
-> +        state: &mut pwm::State,
-> +        parent_dev: &Device<Bound>,
-> +    ) -> Result {
-
-Huh, if you do the newstyle stuff, .get_state() is wrong. It's either
-=2Eround_waveform_tohw() + .round_waveform_fromhw() + .read_waveform() +
-=2Ewrite_waveform() or .apply() + .get_state(), but don't mix these.
-
-> +        let data: &Self =3D chip.drvdata().ok_or(EINVAL)?;
-> +        let hwpwm =3D pwm.hwpwm();
-> +        let iomem_guard =3D data.iomem.access(parent_dev)?;
-> +        let iomap =3D iomem_guard.deref();
-> +        let ctrl =3D iomap.read32(th1520_pwm_ctrl(hwpwm));
-> +        let period_cycles =3D iomap.read32(th1520_pwm_per(hwpwm));
-> +        let duty_cycles =3D iomap.read32(th1520_pwm_fp(hwpwm));
+> +module_i2c_driver(rpi_panel_v2_regulator_driver);
 > +
-> +        state.set_enabled(duty_cycles !=3D 0);
-> +
-> +        let rate_hz =3D data.clk.rate().as_hz();
-> +        let period_ns =3D (period_cycles as u64)
-> +            .mul_div(time::NSEC_PER_SEC as u64, rate_hz as u64)
-> +            .unwrap_or(0);
-
-What does .unwrap_or(0) do? You need to round up in this mul_div
-operation.
-
-> +        state.set_period(period_ns);
-> +
-> +        let duty_ns =3D (duty_cycles as u64)
-> +            .mul_div(time::NSEC_PER_SEC as u64, rate_hz as u64)
-> +            .unwrap_or(0);
-> +        state.set_duty_cycle(duty_ns);
-> +
-> +        if (ctrl & PWM_FPOUT) !=3D 0 {
-> +            state.set_polarity(pwm::Polarity::Normal);
-> +        } else {
-> +            state.set_polarity(pwm::Polarity::Inversed);
-> +        }
-> +
-> +        Ok(())
-> +    }
-> +
-> +    fn round_waveform_tohw(
-> +        chip: &mut pwm::Chip,
-> +        pwm: &mut pwm::Device,
-> +        wf: &pwm::Waveform,
-> +    ) -> Result<(i32, Self::WfHw)> {
-> +        let data: &Self =3D chip.drvdata().ok_or(EINVAL)?;
-> +        let hwpwm =3D pwm.hwpwm();
-> +
-> +        if wf.duty_offset_ns !=3D 0 {
-> +            dev_err!(chip.device(), "PWM-{}: Duty offset not supported\n=
-", hwpwm);
-
-That's wrong, pick the biggest offset value that is possible to
-implement and not bigger than the requested value.
-Your hardware can do inversed polarity, so offset is either 0 or
-period-duty.
-
-> +            return Err(ENOTSUPP);
-> +        }
-> +
-> +        if wf.period_length_ns =3D=3D 0 {
-> +            return Ok((
-> +                0,
-> +                Th1520WfHw {
-> +                    enabled: false,
-> +                    ..Default::default()
-> +                },
-> +            ));
-> +        }
-> +
-> +        let rate_hz =3D data.clk.rate().as_hz();
-> +
-> +        let period_cycles =3D wf
-> +            .period_length_ns
-> +            .mul_div(rate_hz as u64, time::NSEC_PER_SEC as u64)
-> +            .ok_or(EINVAL)?;
-
-If period_length_ns is BIG, pick the biggest possible period_cycles
-value, not EINVAL.
-
-> +        if period_cycles > u32::MAX as u64 {
-> +            dev_err!(
-> +                chip.device(),
-> +                "PWM-{}: Calculated period {} cycles is out of range\n",
-> +                hwpwm,
-> +                period_cycles
-> +            );
-> +            return Err(EINVAL);
-> +        }
-
-ditto.
-
-> +        let duty_cycles =3D wf
-> +            .duty_length_ns
-> +            .mul_div(rate_hz as u64, time::NSEC_PER_SEC as u64)
-> +            .ok_or(EINVAL)?;
-> +        if duty_cycles > period_cycles {
-
-You can assume this won't happen.
-
-> +            dev_err!(
-> +                chip.device(),
-> +                "PWM-{}: Duty {}ns > period {}ns\n",
-> +                hwpwm,
-> +                wf.duty_length_ns,
-> +                wf.period_length_ns
-> +            );
-> +            return Err(EINVAL);
-> +        }
-> +
-> +        let mut ctrl_val =3D PWM_CONTINUOUS_MODE;
-> +        if pwm.state().polarity() =3D=3D pwm::Polarity::Normal {
-> +            ctrl_val |=3D PWM_FPOUT;
-
-What is pwm.state()? If that's similar to pwm->state in C this is
-irrelevant here. It describes the current state, not the new request.
-
-> +        }
-> +
-> +        let wfhw =3D Th1520WfHw {
-> +            period_cycles: period_cycles as u32,
-> +            duty_cycles: duty_cycles as u32,
-> +            ctrl_val,
-> +            enabled: true,
-> +        };
-> +
-> +        dev_dbg!(
-> +            chip.device(),
-> +            "wfhw -- Period: {}, Duty: {}, Ctrl: 0x{:x}\n",
-> +            wfhw.period_cycles,
-> +            wfhw.duty_cycles,
-> +            wfhw.ctrl_val
-> +        );
-
-This would be much more helpful if it also contained the values from wf.
-
-> +        Ok((0, wfhw))
-> +    }
-> +
-> +    fn write_waveform(
-> +        chip: &mut pwm::Chip,
-> +        pwm: &mut pwm::Device,
-> +        wfhw: &Self::WfHw,
-> +        parent_dev: &Device<Bound>,
-> +    ) -> Result {
-> +        let data: &Self =3D chip.drvdata().ok_or(EINVAL)?;
-> +        let hwpwm =3D pwm.hwpwm();
-> +        let iomem_guard =3D data.iomem.access(parent_dev)?;
-> +        let iomap =3D iomem_guard.deref();
-> +        let was_enabled =3D pwm.state().enabled();
-> +
-> +        if !wfhw.enabled {
-> +            if was_enabled {
-> +                let mut ctrl =3D iomap.read32(th1520_pwm_ctrl(hwpwm));
-
-Do you need that read? Isn't is clear what the value is?
-
-> +                ctrl &=3D !PWM_CFG_UPDATE;
-> +
-> +                iomap.write32(ctrl, th1520_pwm_ctrl(hwpwm));
-> +                iomap.write32(0, th1520_pwm_fp(hwpwm));
-> +                iomap.write32(ctrl | PWM_CFG_UPDATE, th1520_pwm_ctrl(hwp=
-wm));
-> +            }
-> +            return Ok(());
-> +        }
-> +
-> +        let ctrl =3D wfhw.ctrl_val & !PWM_CFG_UPDATE;
-
-wfhw.ctrl_val never has PWM_CFG_UPDATE set.
-
-> +        iomap.write32(ctrl, th1520_pwm_ctrl(hwpwm));
-> +        iomap.write32(wfhw.period_cycles, th1520_pwm_per(hwpwm));
-> +        iomap.write32(wfhw.duty_cycles, th1520_pwm_fp(hwpwm));
-> +        iomap.write32(wfhw.ctrl_val | PWM_CFG_UPDATE, th1520_pwm_ctrl(hw=
-pwm));
-> +
-> +        if !was_enabled {
-> +            iomap.write32(wfhw.ctrl_val | PWM_START, th1520_pwm_ctrl(hwp=
-wm));
-
-Can this be combined with the above write?
-
-> +        }
-> +
-> +        Ok(())
-> +    }
-> +}
-> +
-> +impl Drop for Th1520PwmDriverData {
-> +    fn drop(&mut self) {
-> +        self.clk.disable_unprepare();
-> +    }
-> +}
-> +
-> +static TH1520_PWM_OPS: pwm::PwmOpsVTable =3D pwm::create_pwm_ops::<Th152=
-0PwmDriverData>();
-> +
-> +struct Th1520PwmPlatformDriver {
-> +    _registration: pwm::Registration,
-> +}
-> +
-> +kernel::of_device_table!(
-> +    OF_TABLE,
-> +    MODULE_OF_TABLE,
-> +    <Th1520PwmPlatformDriver as platform::Driver>::IdInfo,
-> +    [(of::DeviceId::new(c_str!("thead,th1520-pwm")), ())]
-> +);
-> +
-> +impl platform::Driver for Th1520PwmPlatformDriver {
-> +    type IdInfo =3D ();
-> +    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> =3D Some(&OF_TA=
-BLE);
-> +
-> +    fn probe(
-> +        pdev: &platform::Device<Core>,
-> +        _id_info: Option<&Self::IdInfo>,
-> +    ) -> Result<Pin<KBox<Self>>> {
-> +        let dev =3D pdev.as_ref();
-> +        let resource =3D pdev.resource(0).ok_or(ENODEV)?;
-> +        let iomem =3D pdev.ioremap_resource_sized::<TH1520_PWM_REG_SIZE>=
-(resource)?;
-> +        let clk =3D Clk::get(pdev.as_ref(), None)?;
-> +
-> +        clk.prepare_enable()?;
-
-We don't have clk_rate_get_exclusive() yet, right? Then please add a
-comment here that this needs to be added here when it became available.
-
-> +
-> +        let rate_hz =3D clk.rate().as_hz();
-> +        if rate_hz =3D=3D 0 {
-> +            dev_err!(dev, "Clock rate is zero\n");
-> +            return Err(EINVAL);
-> +        }
-> +
-> +        if rate_hz > time::NSEC_PER_SEC as usize {
-> +            dev_err!(
-> +                dev,
-> +                "Clock rate {} Hz is too high, not supported.\n",
-> +                rate_hz
-> +            );
-> +            return Err(ERANGE);
-> +        }
-> +
-> +        let chip =3D pwm::Chip::new(dev, MAX_PWM_NUM, 0)?;
-> +
-> +        let drvdata =3D KBox::new(Th1520PwmDriverData { iomem, clk }, GF=
-P_KERNEL)?;
-> +        chip.set_drvdata(drvdata);
-> +
-> +        let registration =3D pwm::Registration::new(chip, &TH1520_PWM_OP=
-S)?;
-> +
-> +        Ok(KBox::new(
-> +            Th1520PwmPlatformDriver {
-> +                _registration: registration,
-> +            },
-> +            GFP_KERNEL,
-> +        )?
-> +        .into())
-> +    }
-> +}
-> +
-> +kernel::module_platform_driver! {
-> +    type: Th1520PwmPlatformDriver,
-> +    name: "pwm-th1520",
-> +    author: "Michal Wilczynski <m.wilczynski@samsung.com>",
-> +    description: "T-HEAD TH1520 PWM driver",
-> +    license: "GPL v2",
-> +}
-
-Best regards
-Uwe
-
---bmffslcvo3pn5qxg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhJKS4ACgkQj4D7WH0S
-/k58GggAlQhEWU5R75sFx/+BaRlgKiPO6z3G3YaIH0yDrVITXEkDtm3JsL9FKLTp
-QTZMtIeDpvxnf7EwyRl+yJXNKnBdsPFTlL2rkmfD/i+hYqiiedXUz7hLamS2BSNq
-rcqJ1wTfZ+u6t7DQyN2CtjAf8I0mFpjYBiFBrspJpqMTac8vgXpW/Vb1WQ6Fna8b
-8lxY03sFNLN39urDVfK7VhpduYR8kklrwG5mc5jdaLJK6h4kMaY39xm5s6VhDseF
-7rLA0p0CzP2pGxciHfmHN2liUyjGuLEokwdTPBRArHXkur3OcIDa13i09bEoIUHx
-RkfG1phdXWwFJ8MGezox3G08lEaSCg==
-=TuPQ
------END PGP SIGNATURE-----
-
---bmffslcvo3pn5qxg--
+> +MODULE_AUTHOR("Dave Stevenson <dave.stevenson@raspberrypi.com>");
+> +MODULE_DESCRIPTION("Regulator device driver for Raspberry Pi 7-inch V2 touchscreen");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.47.2
 
