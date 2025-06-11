@@ -1,128 +1,139 @@
-Return-Path: <linux-pwm+bounces-6303-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6304-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82112AD5CBD
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jun 2025 18:55:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FCDDAD5CCC
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jun 2025 19:03:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 518D17AD7A3
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jun 2025 16:54:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB7843A70B6
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jun 2025 17:02:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6818A20F078;
-	Wed, 11 Jun 2025 16:55:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3C3D205519;
+	Wed, 11 Jun 2025 17:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ax2uLJxY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G68faQTa"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D183220C47A;
-	Wed, 11 Jun 2025 16:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8EB5D8F0;
+	Wed, 11 Jun 2025 17:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749660931; cv=none; b=mQl+Mw7pNQJ3DOeKYykuP9vsPqJ6Bz4aAYqCEmDoQBHD1BQSdZ4Gsd/KNpR1zw64fSfub9RxsTKymbt8YIYqNO1QjCdbSbH3iionopYfOdQsc8Qm4kwYkbJeUREluIkBb8KOCo2Aptj865yHR+wB+RuyYj8j2omi4qXZlLBGZOM=
+	t=1749661383; cv=none; b=T0MFSWnkI412JSXiE4B4oMu8f8ChZvVjZxhbzkXbiZ7oQaGbeoKTBtCVR6+Fzf0a/vE3++yHT0n6U0I5NHuznLSts3lOOW2+ZiPCyRP6X3Pxh4H8bA+V+Ya7t/3h35AFUeuocc8jaO32U68DMAoRPvzO4elkz+/jnRmApdCxbnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749660931; c=relaxed/simple;
-	bh=KyNFKemnRNzyt/7LqR30HwimFe7KXWQY+EiWh5tmzaI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D9+PHVmv0nWs/SInC6xJbw5TlhHksoiztcWVCbpEJlxFbkEpoKlInrBpQ6LKrOtSPxGmg1PO3K+DD33cu+R3y8qqmS3JNE7IQ7mDZIG1lMOjGbpktb0rqgGYv8X3QOOhSTQEIbzvZGmI2QGTfeTMSYWrrN49Aj43X+TF1SgteHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ax2uLJxY; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-31306794b30so13681a91.2;
-        Wed, 11 Jun 2025 09:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749660929; x=1750265729; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KyNFKemnRNzyt/7LqR30HwimFe7KXWQY+EiWh5tmzaI=;
-        b=ax2uLJxYAzt3Xjjj45zhdd1k6hVad+uIXzoXOd4oaS/Wj+oRBdMKvHcZhiQamAWm1Y
-         JBhyNrv4diEF57pyX+CmM+ax7i4JeT5aQVtQ03dpdpDOitxT/apLYXnmtulOpeg8Hb+V
-         2PZWla/msdl0E6CRfk11xSit25l5hV0Hk0bLzIBCtnBDI7nNR27qaI1cAS084tENZ7LV
-         12TzxJrUwz9TIDFMmJtEpviQ0+H/dZPzAcDGfx9g0wKvb1BiX0j13GcwQrbY3OYocsbD
-         UT3uV08DJ+daDoaE92+VCh1mAO2f60HFKwhmqsvybYhQOR991vnlrnrOiNyBjUGS3qn3
-         Z9NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749660929; x=1750265729;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KyNFKemnRNzyt/7LqR30HwimFe7KXWQY+EiWh5tmzaI=;
-        b=aoQEIOZih06cb2wiG451/dgMVi2pDIVSSICE7r+wl71+atzPjCWppefsjzqBqqkD7G
-         MK/dZ12DjVa6sfE8i/6alN0sgaZskUeqvcO0tuPjWgKdfC12xe+n4+X7HEupfwrLPPU6
-         JllUsSpjDZZNikDDSXK6vV1WJWi0Ch1kxNMOavzlfRGwTS8qXC7HTmd46g8qRFpnbpCP
-         LZUrIQ8AubzmhmdF5s9kJsDQqdmawgbLnudDlvR5LgqCn/+XrsjXOtY30Vlkx70tQe6d
-         thGPYbZ7SVc3yS8uyALx70eEvrGdkGGGyG6kPFC7efa1Jpp/Y8QxOTiBU2HPsa8I0xZd
-         qsLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXD03ifCHIo+n3O7YAdAPmDjQQEaB3NpI+avZ3uA4J5/Pf/oGunsk4vQ9Teaw41mEbO/iSnjKLPX+C@vger.kernel.org, AJvYcCVSyDt9w7vVrRTreCfcoV3Iv7VxMA6PISVkkOhIZNh1oGjiEkjwhCDmZsdSLNYR61jLGLy/ur7UwwOm@vger.kernel.org, AJvYcCVZkHgKSj5vyi0EurTOxVWoJ2L4Rj86NpzNChiNqfzHlmAC7uT5YNnQlbuTVwZkqiWtrhGDfw9QaRsz@vger.kernel.org, AJvYcCX9JgSUXQhKG12I86l6yikpEENDdE0qRbKGzbyIjChyzvln2+BfxGHWuT7n1U67LJB8colagOFE9Qfgjhhu@vger.kernel.org, AJvYcCXRthceYES5Z4TzhsLhsvfA0vatEQLE580smTvFJ2QL81AZCCMBFNNg21x0239NGh2dwlSKFV8HVhCqvcbTrF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe3/UOr7OGcdKgsStV1OfTGxrQrN4hDC6HpjvhE0FszdSOzezf
-	+z/b7yAP/R2TLj6e/+TYk60LJ3qi/4l6RdR7DqSnu73CTF+2ON5K/4CKbK2dX0k3TZPkToj0FOf
-	Nk8Ylf79qj2nobDsjBLVVlo7Ud3PiY4s=
-X-Gm-Gg: ASbGncsHKpW92O2HI1mVEv0Y0MV6MK+ljAIxfTOIxZOcBtsOxEINuCrkInpE0VA+6u7
-	kX7RF/CaWIZOl+7w47q2Mms1ki0HJR83RehpHftQbO4ObHo1eYEXXNqYh2tjYFRiG3TH8W7alXk
-	2KYIo4bMyBztgaThUEx6ICclgv4hWDFcPA1nnbb4fns4c=
-X-Google-Smtp-Source: AGHT+IE8o2IorCuFcUqW3Dxq8LkFc4fMvAMKwf+dTmyr9FxnqdwSW1OMco+JDmkRZVwCnFY7SBpojWZ8MSza5Nch4Qw=
-X-Received: by 2002:a17:90b:1dcb:b0:311:a314:c2c9 with SMTP id
- 98e67ed59e1d1-313af0f9611mr2302611a91.1.1749660929073; Wed, 11 Jun 2025
- 09:55:29 -0700 (PDT)
+	s=arc-20240116; t=1749661383; c=relaxed/simple;
+	bh=G0KSz/s71VLYdbW5iDsJv1tB/CxVMgpLlLEVm+oxZo0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MtkbUvlNNLWAZ1KE5ANhbPnSsP2gcpupxLD0eIYHWg1Es041L9Ddy/HWPXZDbL+rpesq7Bx2a9z+53Z/knpT4Dj6eC8RPxebgHj7dl3CugCd3BWnBMrQPQAkYWE/+yfiGwcrRoO1SOCec5vpTU7GampdR7pMhAbt7OxUuuxeGtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G68faQTa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20889C4CEEA;
+	Wed, 11 Jun 2025 17:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749661383;
+	bh=G0KSz/s71VLYdbW5iDsJv1tB/CxVMgpLlLEVm+oxZo0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=G68faQTaAJPR3mXFzLQ1rT2HAVnsgMdkgBjJAyyMW6lpqhsJtie4+kEw4sgvFvfux
+	 qjeUT8gUsuAjUAKc+HvlqbKAtSZMjeb2dyUSHhHHkTeNUCAuPOSQsRp6LRZDqH5w0O
+	 7Qd1D861TWmBtQe+1KzVf10/L3/PSFpg2a0IR3Zl1ywgNXmQ/b1Q4MdIHRaoNq1niN
+	 Jn62Rhi8zaNj7WzJtbRk9tIrtSqGEdifX1nkpgqyoXKvvdRmIdMx+sPf38P7uRgHFM
+	 wCJyp86dutK8TZAWSDFSvBjqq2ASiHLPyZkGoAboc+61a/PjpPoPcjeMPOoK6MJA3l
+	 hGnLI0eL98nHw==
+Date: Wed, 11 Jun 2025 18:02:52 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jorge Marques <jorge.marques@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>,
+ Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
+ <ukleinek@kernel.org>, <linux-iio@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v3 1/8] Documentation: ABI: add oversampling frequency
+ in sysfs-bus-iio
+Message-ID: <20250611180252.76f1fe7f@jic23-huawei>
+In-Reply-To: <20250610-iio-driver-ad4052-v3-1-cf1e44c516d4@analog.com>
+References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
+	<20250610-iio-driver-ad4052-v3-1-cf1e44c516d4@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250610125330eucas1p2a573627ca8f124fe11e725c2d75bdcc9@eucas1p2.samsung.com>
- <20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com>
- <aEifXZnLxKd2wa0w@x1> <6ca6016e-3b17-48a0-ad8d-bb05317aa100@samsung.com>
-In-Reply-To: <6ca6016e-3b17-48a0-ad8d-bb05317aa100@samsung.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 11 Jun 2025 18:55:15 +0200
-X-Gm-Features: AX0GCFtO16UWgR7wAnoHoWp6WjbNacZo98Lk-lDtKNRkXYeSnMBe-Yw1GCMYPlU
-Message-ID: <CANiq72=88Aa-Fe0b6XiSfsOq0mM3jUw_e+DxpRRQdrdtWFJHsA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] Rust Abstractions for PWM subsystem with TH1520
- PWM driver
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Drew Fustini <drew@pdp7.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 5:14=E2=80=AFPM Michal Wilczynski
-<m.wilczynski@samsung.com> wrote:
->
-> The kernel config option that is different on my setup is:
-> CONFIG_RUST_BUILD_ASSERT_ALLOW=3Dy
+On Tue, 10 Jun 2025 09:34:34 +0200
+Jorge Marques <jorge.marques@analog.com> wrote:
 
-Yeah, code must work with `CONFIG_RUST_BUILD_ASSERT_ALLOW=3Dn` -- the
-config is an escape hatch just in case a user toolchain cannot build
-the code for some reason.
+Trivial: 
+In the patch title use the actual file name of the new ABI.
 
-In other words, if a `build_assert!` is triggered, then that is a bug
-(likely in new callers misusing an API, but it could also be in the
-callees, of course).
+add oversampling_frequency in sysfs-bus-iio
 
-We may eventually remove it, or perhaps invert its meaning so that
-`allmodconfig` doesn't enable it, which is how I guess you ended up
-with it, right?
 
-I hope that helps.
+> Some devices have an internal clock used to space out the conversion
+> trigger for the oversampling filter, Consider an ADC with conversion and
+> data ready pins topology:
+> 
+>   Sampling trigger |       |       |       |       |
+>   ADC conversion   ++++    ++++    ++++    ++++    ++++
+>   ADC data ready      *       *       *       *       *
+> 
+> With the oversampling frequency, conversions are spaced:
+> 
+>   Sampling trigger |       |       |       |       |
+>   ADC conversion   + + + + + + + + + + + + + + + + + + + +
+>   ADC data ready         *       *       *       *       *
+> 
+> In some devices and ranges, this internal clock can be used to evenly
+> space the conversions between the sampling edge. In other devices the
+> oversampling frequency is fixed or is computed based on the sampling
+> frequency parameter, and the parameter is read only.
+> 
+> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index ef52c427a015cf47bb9847782e13afbee01e9f31..e60367255be89a9acc827ec1a749b729735f60e6 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -139,6 +139,23 @@ Contact:	linux-iio@vger.kernel.org
+>  Description:
+>  		Hardware dependent values supported by the oversampling filter.
+>  
+> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency
+> +KernelVersion:	6.17
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Some devices have internal clocks for oversampling.
 
-Cheers,
-Miguel
+Wrapping on each sentence is unusual. David pointed this out in v2.
+Wrap at 80 chars as a single paragraph.
+
+> +		Sets the resulting frequency in Hz to trigger a conversion used by
+> +		the oversampling filter.
+> +		If the device has a fixed internal clock or is computed based on
+> +		the sampling frequency parameter, the parameter is read only.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency_available
+> +KernelVersion:	6.17
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Hardware dependent values supported by the oversampling
+> +		frequency.
+> +
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_raw
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_raw
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_raw
+> 
+
 
