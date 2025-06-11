@@ -1,57 +1,57 @@
-Return-Path: <linux-pwm+bounces-6306-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6307-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46CB9AD5F85
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jun 2025 21:54:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C657AD5FCA
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jun 2025 22:05:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB6393AA204
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jun 2025 19:52:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7D5C97AE329
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jun 2025 20:04:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9F4C2BF3C7;
-	Wed, 11 Jun 2025 19:52:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 923692BE7CB;
+	Wed, 11 Jun 2025 20:05:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E1cjzmy4"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="I1pel4rI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C4A2BF3DB
-	for <linux-pwm@vger.kernel.org>; Wed, 11 Jun 2025 19:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C364F2BDC2F
+	for <linux-pwm@vger.kernel.org>; Wed, 11 Jun 2025 20:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749671541; cv=none; b=NCer9togQCdWuERndfQNrWHjHhxpM5pRJ11IbFG654SRWgYgs9ozGikVmNzUBwsSpjpsuUbz+eq3jndu+TEMxooyOvtbRcNHGi7LC1DhAiKVEFRLCPPZPxxfkYqGSGexjuevee904lAOrBOnc5vr8yT0+iPfPN8CNOE4AOTkuas=
+	t=1749672302; cv=none; b=RpxgjWzvvKkEO6uoE6PGsj2LYOzlC6aPyZRSKNM6YhCtZeOwhOCNzDxgGIs0WjxhO4OZZfhpqJ05x9A/RepJxCZr06XjsII4exvp1EQ2xix4LStSH8dbyQu56pHVkfhO6p4EfDnEzwFkCNoZYK6oG4jgdsPbq8QWUcEfO9BWIRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749671541; c=relaxed/simple;
-	bh=gPdZNS7zqyfqRlU4AnvLySBd/OnSMFRbn0C2zaKDgtw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=hRrK/68Gk1WXLQEwROejnA+h3oNzF/Xd59GmH5UTI/EnwspXYa7rApr6KijTzRGrjSj0dGNcKjDp0WlEEMhxwvTypcg8lJwqsbhPQCwiUaLT7HI77AJ5PdOrhKS6i3DN1eq/aNENkLCzn0OWTJKYjmXU8sIQh9uMcLlKrbmdP3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=E1cjzmy4; arc=none smtp.client-ip=210.118.77.11
+	s=arc-20240116; t=1749672302; c=relaxed/simple;
+	bh=KkD83oGDN5V2xjgblgtZtLiEjiUOXh0uLIPuxFjSsNw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:In-Reply-To:
+	 Content-Type:References; b=Zvow0PWLVcfXwoEFyZ2y9T+wYjW/Xsic4Nozd5pEkQkRMqaMj/ye5u0R9dkUTYrxeL5T3Ih6HejSNWQE32z8nOcbXlLp6v2PGCXLZ2lksQ9/LwZHMhzMWbTBVTCLsoxelHF8qC8A1YoNymTWYXl6SwIwWmVqZV2y/bT7PD0GjUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=I1pel4rI; arc=none smtp.client-ip=210.118.77.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250611195211euoutp01116468a592d940a59ad41414d188a103~IFPzt9j8m1804918049euoutp010
-	for <linux-pwm@vger.kernel.org>; Wed, 11 Jun 2025 19:52:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250611195211euoutp01116468a592d940a59ad41414d188a103~IFPzt9j8m1804918049euoutp010
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250611200457euoutp023ca326f616291dbb3520f695c4d1c6bf~IFa8n7ENm2496724967euoutp02a
+	for <linux-pwm@vger.kernel.org>; Wed, 11 Jun 2025 20:04:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250611200457euoutp023ca326f616291dbb3520f695c4d1c6bf~IFa8n7ENm2496724967euoutp02a
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749671531;
-	bh=FKuVesrjQ3DAr8qJkC2vW06vldKHX3RTeAPn2ghttkM=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=E1cjzmy4M9qxy0PzT60WeCxmaENqsQQWtPqjSAJdaA1AZI6C+8SPwPaMmAVi8LcxJ
-	 CXTrFUd2yRaFFRHh+LxQDu75S0qtyU4aTAqBYL8lh0Ou/Yco7nMP4tQ2zvod3Od3Yp
-	 3NqeP/sFlyCS4auN/bFUJSLTeeQyUoZZPavT8Ips=
+	s=mail20170921; t=1749672297;
+	bh=cjuN08/OedHJyvdAQ29mFz/GidQKE8qV07cU/lFpBwQ=;
+	h=Date:From:Subject:To:Cc:In-Reply-To:References:From;
+	b=I1pel4rIj0GyAIM66WxpYLwzQMtKRfhpRHq55eGLgNndi8XpOPCo6YGGxDbG6Ac5c
+	 7BLfgL3dnzh2/NQhGf1XjGO+lZqW3GF9abj2E8bKnKVXCJmCjHy9gUh/k2dCamWA1j
+	 eM3VQ6wM/UQcKE/a9j5/yt5+RWpkQD5XN6mKw7es=
 Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
 	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250611195210eucas1p1dc03d0fd6ed56dfe945ed76dd84a0b8f~IFPyKLp6v1619216192eucas1p1U;
-	Wed, 11 Jun 2025 19:52:10 +0000 (GMT)
+	20250611200456eucas1p1a0247e1649337c210dea018dc9b788ef~IFa71xPLe1191611916eucas1p1r;
+	Wed, 11 Jun 2025 20:04:56 +0000 (GMT)
 Received: from [192.168.1.44] (unknown [106.210.136.40]) by
 	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250611195208eusmtip20c62b5d4122a774435d30e41d75dc736~IFPw9No942693226932eusmtip2w;
-	Wed, 11 Jun 2025 19:52:08 +0000 (GMT)
-Message-ID: <1cc861b3-35d5-4ce1-b53b-4e6ae9d14be5@samsung.com>
-Date: Wed, 11 Jun 2025 21:52:08 +0200
+	20250611200454eusmtip21707c5173d2b613ff4c106149f6f34f8~IFa6ad5w20740807408eusmtip2z;
+	Wed, 11 Jun 2025 20:04:54 +0000 (GMT)
+Message-ID: <1d9bba9e-0f30-4039-812e-60b160271e6b@samsung.com>
+Date: Wed, 11 Jun 2025 22:04:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -59,6 +59,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+From: Michal Wilczynski <m.wilczynski@samsung.com>
 Subject: Re: [PATCH v2 2/7] pwm: Add Rust driver for T-HEAD TH1520 SoC
 To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
@@ -77,10 +78,9 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
 	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
 In-Reply-To: <jbm3qvowi5vskhnjyqlp3xek36gzzqjt35m66eayxi6lmi525t@iefevopxjl53>
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250611195210eucas1p1dc03d0fd6ed56dfe945ed76dd84a0b8f
+X-CMS-MailID: 20250611200456eucas1p1a0247e1649337c210dea018dc9b788ef
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-RootMTR: 20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d
@@ -309,7 +309,7 @@ next version and rely solely on the waveform operations.
 
 The .unwrap_or(0) is to handle the case where the mul_div helper returns
 None, which can happen if the divisor (rate_hz) is zero. In that case,
-the period  becomes 0. The mul_diver helper is introduced in this commit
+the period  becomes 0. The mul_div helper is introduced in this commit
 [1].
 
 [1] - https://lore.kernel.org/all/20250609-math-rust-v1-v1-1-285fac00031f@samsung.com/
