@@ -1,273 +1,285 @@
-Return-Path: <linux-pwm+bounces-6323-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6324-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C17E2AD7539
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Jun 2025 17:07:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 627EBAD757D
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Jun 2025 17:17:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB6FD18816F3
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Jun 2025 15:04:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 304017ABEBA
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Jun 2025 15:15:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC86A273D7E;
-	Thu, 12 Jun 2025 15:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3F4229827D;
+	Thu, 12 Jun 2025 15:17:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="wKtI/wGf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HqfvEvcO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87EAB24A07A
-	for <linux-pwm@vger.kernel.org>; Thu, 12 Jun 2025 15:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D041BC2A;
+	Thu, 12 Jun 2025 15:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749740623; cv=none; b=Tq3fZPa4yo2bO6gkebGqOLKZegx02RqpyzJ24rhNg8eM1ve+UPToLDVUW508/FN968RlJAXWpF5ZSyYZ5T7IjlZaCa5dXWPPpm5weERj4x8Ruhom/sQqoZTBNIIyUBoYlfw/0ZzgWynEoWcsc8oGhILROWZr6jwdbmQ/qYVmtUg=
+	t=1749741424; cv=none; b=PMuCKim+UJjsJQhimQEMcAPqWfUYoUSlgtaK4Tf6URTvpWt28PzOIp8l5coM6L4Y6ydxeBHetgYCeY9WfMiPg2gfibTOxvOzUMLwVO9YwWfR9+siYdyS8nuvIN7L7yvU9jcg4Avp+b+kkKI603/HSWd3x7F/wYVhCUazu0s5GA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749740623; c=relaxed/simple;
-	bh=HT0OPOWngJLYGraue4dv+E8G+K+QgCbixj7ubRpcOTA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZJsuIShyha2b44fiG3J6xt2aNloARkdLQM1lxRjQnyTZZMpy5yWhbQnlxJoGCEgPnMa8+o51JJGVz40Sk01mvMQmlkeBGZ0LPG6LJ2zjouKNCPCuaAnuCLkFKtZiSmUjGXv9EAjVNLbP9Dl6HDYqZFmrGeXynW/6IjiVRca4P2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=wKtI/wGf; arc=none smtp.client-ip=209.85.161.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-60634f82d1aso329562eaf.3
-        for <linux-pwm@vger.kernel.org>; Thu, 12 Jun 2025 08:03:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749740621; x=1750345421; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/CWX5K7cUh5q7+ZKZX3fft9+sBWTbcloK0NCvH6AyF8=;
-        b=wKtI/wGfQ4n1DeeG2Z00cUSVW7upOwHN9Z3esgRFY1ny6kibGIw5gKGZJbzgMZWLQH
-         riAasdI3mbxtIeWAtbjKqgCcKfXe5wGeKftX6dXSOl6bQdrmS2MnvdM/DiyGmZAV2+yX
-         buXG/A2DCBR5qqL3Sh1auh4VARG3Mr3ehtX3WcjCq0Sdd0PXa8NXagJTeNmfao/RmEC2
-         mZEYnwml946pUTI+3X5ZwGZUdbYRPQ08yNuBZHyXtdVQUNG0Q3q2A+AVN5OYInU+BzIe
-         aPLfdHFrlRFaOvgS2cWLQ++MiY2KPWYjfHt6LvMb84GhZKXhTO7PB2/flkXP3W2fHdno
-         Hc2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749740621; x=1750345421;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/CWX5K7cUh5q7+ZKZX3fft9+sBWTbcloK0NCvH6AyF8=;
-        b=RewDi5jbeZIwgWQuBo9vLmwqDs93eFZ+R0osPukWZOTzzU15bzNa4hRTfF03yckDlf
-         7DpwEzeVbY5g6A3QtZTZqWXnlveffU7PTF1LDw1vzWVD5NUFUG8GeJJQE8/NjFi9BPoD
-         p7pRBYvRh2orrUHI0DGHRGnplrgYyFAt1j4VI2vTVCY6trlwOltn3ki/CSWXZMIXlg2L
-         pC3H5eiD4Fj5spGv1OgE92/HRuR0Jg8UA7PxXwOe4KKhUiP3CjJGuie1/cUzICO3xj3U
-         r8mXWSY0R9PGTn+9PR3E323a/pJOVIFIekvjVYdXey56Gkrw7oxvpa0ZYUjyYPoSg9Ey
-         AP4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXSsI3MNNaZkZqK6r69gKVFt/9fCmii+aV8Z9UoRIntHHqiaezN2XF7hfmcJuEBQW0sZGBMHCHwRSg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiD9BxfJCnILMWJ7u9Idb2H2G7NcEe9NT6V3XxjZcEhjGBZl37
-	iwKjHvRSIB5MqNKEJtqoY6FX0k5RNEiY8iGzzCwhrTk8BWOCyAsmLJ4sqOyGjree7XU=
-X-Gm-Gg: ASbGncs//blb0k65rYUS7krGMqOjhCOeqppKml7euxQNJewhx020muyaAVSoVb6Ew2y
-	hrp4+cXATee7fm2lYgLiZZsVPc4JgSdXTTg6rxl2LZiPh0Z98+H2ORUzWuiyAjPI+lr0xK0o7BP
-	truXriXEu2On1su70uu+YKf7FKPvSieOhfkVNdYKIGgqD3SZ6TI/wl7aLr+tAHJdYCqU8yqOjN7
-	MoU9kjlJI6pH1hQDSxKFpQcaLQDoNURlW0946wj3NbnwHYmMo177vNylI06sv3PzSSeNqz1qE00
-	yve2DUy2n10J/aXP5grrrn6DRjCeGKeR/W722SOKUcqSwlFLh0uaCDpgdxKZvJvQuggmvlLXYcP
-	xHji3YePmxe4tVzpN6dmebXU2qZPCaF6+4P7UX8E=
-X-Google-Smtp-Source: AGHT+IHPsllSyEnOVWrSdTMtSNh/JbEncApgsNcq4KhwIS/LyDsZLEXq3MJMsM7IZl//e0XvwhL3zw==
-X-Received: by 2002:a05:6820:216:b0:610:fbf2:bd7d with SMTP id 006d021491bc7-610fbf2c05emr2541424eaf.6.1749740620626;
-        Thu, 12 Jun 2025 08:03:40 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:4753:719f:673f:547c? ([2600:8803:e7e4:1d00:4753:719f:673f:547c])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-610fd4fbe3asm207044eaf.28.2025.06.12.08.03.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 08:03:39 -0700 (PDT)
-Message-ID: <ef0d4038-b665-4ef0-9e7b-7ad2ce154c50@baylibre.com>
-Date: Thu, 12 Jun 2025 10:03:37 -0500
+	s=arc-20240116; t=1749741424; c=relaxed/simple;
+	bh=Dvj5LFY5RO3EHClSFerz0zlL/OIN8SVF52drVXU9e9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LB5dHlqkQlibQx2Nw/ObJakxcXOrVrchoxyA5NJULxUzShQDVry8lZsfDgRtexWE4feGBBOKHAOea2+iracTFw/36ktgsgywjyNMNrAbTwplP6OKykeWeSqYvj4eIo225tQZBlfoboiBA3eloAmqSBv7rFrCzfK4rctKMgFtj/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HqfvEvcO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85C25C4CEEA;
+	Thu, 12 Jun 2025 15:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749741424;
+	bh=Dvj5LFY5RO3EHClSFerz0zlL/OIN8SVF52drVXU9e9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HqfvEvcOZFoBdJFrNxY0X9fH/8dRKiYJmEf4AZYQlaCdHh0YIJgKqRJV+aKhgRqH9
+	 wNepx0Bw2y/OGLaUW5aLcBFAibY+WZdw3V0TCx8CCOYhQQV7+R07o2Xg5MLnUao7Fi
+	 uwy+JtVN4hDL6AtNARIO7wF0B3dR74m8eLd00jIXSFxUz8wyQML7uoAnFGBo9vD4lM
+	 hNWOoYHRheBLwp4Iqs3oyRzGr3kBBaqm/6Sl6FQVdmY8MwlkVvmdRXPfge3k8HX585
+	 N8fV266awqDLEfJjqHweDzXs78MMGnCiWymwcM3zKGdtAvb8qLWlbGc1qDLfroCozf
+	 5PppsL8oMZVDA==
+Date: Thu, 12 Jun 2025 16:16:58 +0100
+From: Lee Jones <lee@kernel.org>
+To: nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Liu Ying <victor.liu@nxp.com>
+Subject: Re: [PATCH v4 14/20] mfd: adp5585: add support for input devices
+Message-ID: <20250612151658.GL381401@google.com>
+References: <20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com>
+ <20250521-dev-adp5589-fw-v4-14-f2c988d7a7a0@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/8] dt-bindings: iio: adc: Add adi,ad4052
-To: Jorge Marques <gastmaier@gmail.com>, Jonathan Cameron <jic23@kernel.org>
-Cc: Jorge Marques <jorge.marques@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
- <20250610-iio-driver-ad4052-v3-2-cf1e44c516d4@analog.com>
- <20250611181818.14d147c7@jic23-huawei>
- <xqkr3rq6ikuiz5wcbxmto4gp7wnccmmogklf2ux2edauotufim@pcuhddxdzjxi>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <xqkr3rq6ikuiz5wcbxmto4gp7wnccmmogklf2ux2edauotufim@pcuhddxdzjxi>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250521-dev-adp5589-fw-v4-14-f2c988d7a7a0@analog.com>
 
-On 6/12/25 5:11 AM, Jorge Marques wrote:
-> On Wed, Jun 11, 2025 at 06:18:18PM +0100, Jonathan Cameron wrote:
->> On Tue, 10 Jun 2025 09:34:35 +0200
->> Jorge Marques <jorge.marques@analog.com> wrote:
->>
+On Wed, 21 May 2025, Nuno Sá via B4 Relay wrote:
 
-...
-
->>> +  trigger-sources:
->>> +    minItems: 1
->>> +    maxItems: 2
->>> +    description:
->>> +      Describes the output pin and event associated.
-
-trigger-sources would be an input pin connected to an external trigger.
-For example, the CNV pin could be connected to a trigger-source
-provider to trigger a conversion. But there aren't any other digital
-inputs, so I don't know what the 2nd source would be here.
-
-As an example, see [1]. We could potentially use the same gpio
-trigger-source for the conversion pin here. There is already
-a similar binding for pwm triggers, so we could drop the separate
-pwms binding as well an just have a single trigger-sources
-property for the CNV pin that works for both gpio and pwm.
-
-[1]: https://lore.kernel.org/linux-iio/cover.1749569957.git.Jonathan.Santos@analog.com/
-
->>> +
->>> +  "#trigger-source-cells":
->>> +    const: 2
->>> +    description: |
->>> +      Output pins used as trigger source.
->>> +
->>> +      Cell 0 defines the event:
->>> +      * 0 = Data ready
->>> +      * 1 = Min threshold
->>> +      * 2 = Max threshold
->>> +      * 3 = Either threshold
->>> +      * 4 = CHOP control
->>> +      * 5 = Device enable
->>> +      * 6 = Device ready (only GP1)
->>
->> Hmm. I'm a bit dubious on why 'what the offload trigger is'
->> is a DT thing?  Is that because the IP needs to comprehend
->> this?  I guess only data ready is actually supported in
->> practice? 
+> From: Nuno Sá <nuno.sa@analog.com>
 > 
-> A trigger can be connected to trigger something other than a spi
-> offload, it is in the DT because it describes how the device is
-> connected. When using spi offload, the trigger-source at the spi handle
-> describes which gpio and event is routed to the offload trigger input.
-> At the ADC node, trigger-source-cells describe the source gpio and event
-> for the device driver.
+> The ADP558x family supports a built in keypad matrix decoder which can
+> be added as an Input device. In order to both support the Input and the
+> GPIO device, we need to create a bitmap of the supported pins and track
+> their usage since they can either be used as GPIOs (GPIs) or as part of
+> the keymap.
 > 
-> In practice, in this series, one gpio is Data ready, triggering offload
-> when buffer enabled, and raw reads, when disabled. And the other is
-> Either threshold, propagated as an IIO event. Fancy logic can be added
-> to the driver in future patches to allow other combinations.
+> We also need to mark special pins busy in case some features are being
+> used (ex: pwm or reset events).
 > 
-> It is also worth to mention that the trigger-source is duplicated for
-> each node that uses it, as seen in the second dts example:
+> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+> ---
+>  drivers/mfd/adp5585.c       | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/mfd/adp5585.h |  9 +++++++++
+>  2 files changed, 42 insertions(+)
 > 
->    &adc AD4052_TRIGGER_EVENT_DATA_READY AD4052_TRIGGER_PIN_GP1
+> diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
+> index 6737d622a7ed9f280c439399f3709ca8162dee01..122e2c95385f8d5cbd7839db78dda77ad7ba4ae4 100644
+> --- a/drivers/mfd/adp5585.c
+> +++ b/drivers/mfd/adp5585.c
+> @@ -22,17 +22,20 @@
+>  enum {
+>  	ADP5585_DEV_GPIO,
+>  	ADP5585_DEV_PWM,
+> +	ADP5585_DEV_INPUT,
+>  	ADP5585_DEV_MAX
+>  };
+>  
+>  static const struct mfd_cell adp5585_devs[ADP5585_DEV_MAX] = {
+>  	MFD_CELL_NAME("adp5585-gpio"),
+>  	MFD_CELL_NAME("adp5585-pwm"),
+> +	MFD_CELL_NAME("adp5585-keys"),
+>  };
+>  
+>  static const struct mfd_cell adp5589_devs[] = {
+>  	MFD_CELL_NAME("adp5589-gpio"),
+>  	MFD_CELL_NAME("adp5589-pwm"),
+> +	MFD_CELL_NAME("adp5589-keys"),
+>  };
+>  
+>  static const struct regmap_range adp5585_volatile_ranges[] = {
+> @@ -173,6 +176,7 @@ static const struct adp5585_regs adp5585_regs = {
+>  	.reset_cfg = ADP5585_RESET_CFG,
+>  	.reset1_event_a = ADP5585_RESET1_EVENT_A,
+>  	.reset2_event_a = ADP5585_RESET2_EVENT_A,
+> +	.pin_cfg_a = ADP5585_PIN_CONFIG_A,
+>  };
+>  
+>  static const struct adp5585_regs adp5589_regs = {
+> @@ -183,6 +187,7 @@ static const struct adp5585_regs adp5589_regs = {
+>  	.reset_cfg = ADP5589_RESET_CFG,
+>  	.reset1_event_a = ADP5589_RESET1_EVENT_A,
+>  	.reset2_event_a = ADP5589_RESET2_EVENT_A,
+> +	.pin_cfg_a = ADP5589_PIN_CONFIG_A,
+>  };
+>  
+>  static int adp5585_validate_event(const struct adp5585_dev *adp5585, unsigned int ev)
+> @@ -236,6 +241,8 @@ static int adp5585_fill_variant_config(struct adp5585_dev *adp5585,
+>  		*regmap_config = adp5585_regmap_config_template;
+>  		adp5585->id = ADP5585_MAN_ID_VALUE;
+>  		adp5585->regs = &adp5585_regs;
+> +		adp5585->n_pins = ADP5585_PIN_MAX;
+> +		adp5585->reset2_out = ADP5585_RESET2_OUT;
+>  		if (adp5585->variant == ADP5585_01)
+>  			adp5585->has_pin6 = true;
+>  		break;
+> @@ -247,6 +254,8 @@ static int adp5585_fill_variant_config(struct adp5585_dev *adp5585,
+>  		adp5585->regs = &adp5589_regs;
+>  		adp5585->has_unlock = true;
+>  		adp5585->has_pin6 = true;
+> +		adp5585->n_pins = ADP5589_PIN_MAX;
+> +		adp5585->reset2_out = ADP5589_RESET2_OUT;
+>  		break;
+>  	default:
+>  		return -ENODEV;
+> @@ -434,6 +443,8 @@ static int adp5585_add_devices(const struct adp5585_dev *adp5585)
+>  		cells = adp5589_devs;
+>  
+>  	if (device_property_present(adp5585->dev, "#pwm-cells")) {
+> +		/* Make sure the PWM output pin is not used by the GPIO or INPUT  devices */
+
+Nit: Remove the double space.
+
+> +		__set_bit(ADP5585_PWM_OUT, adp5585->pin_usage);
+>  		ret = mfd_add_devices(adp5585->dev, PLATFORM_DEVID_AUTO,
+>  				      &cells[ADP5585_DEV_PWM], 1, NULL, 0, NULL);
+>  		if (ret)
+> @@ -449,6 +460,15 @@ static int adp5585_add_devices(const struct adp5585_dev *adp5585)
+>  		}
+>  	}
+>  
+> +	if (device_property_present(adp5585->dev, "adi,keypad-pins")) {
+> +		ret = mfd_add_devices(adp5585->dev, PLATFORM_DEVID_AUTO,
+> +				      &cells[ADP5585_DEV_INPUT], 1, NULL, 0, NULL);
+> +		if (ret) {
+> +			ret = dev_err_probe(adp5585->dev, ret, "Failed to add input device\n");
+> +			goto out_error;
+> +		}
+> +	}
+> +
+>  	return devm_add_action_or_reset(adp5585->dev, adp5585_remove_devices, adp5585->dev);
+>  out_error:
+>  	mfd_remove_devices(adp5585->dev);
+> @@ -518,6 +538,10 @@ static int adp5585_setup(struct adp5585_dev *adp5585)
+>  	unsigned int reg_val, i;
+>  	int ret;
+>  
+> +	/* if pin_6 (ROW5/GPI6) is not available, make sure to mark it as "busy" */
+
+Same thing about comments (I'll not mention it again).
+
+> +	if (!adp5585->has_pin6)
+> +		__set_bit(5, adp5585->pin_usage);
+
+Please define all magic numbers.
+
+> +
+>  	/* Configure the device with reset and unlock events */
+>  	for (i = 0; i < adp5585->nkeys_unlock; i++) {
+>  		ret = regmap_write(adp5585->regmap, ADP5589_UNLOCK1 + i,
+> @@ -542,6 +566,9 @@ static int adp5585_setup(struct adp5585_dev *adp5585)
+>  				   adp5585->reset1_keys[i] | ADP5585_RESET_EV_PRESS);
+>  		if (ret)
+>  			return ret;
+> +
+> +		/* mark that pin as not usable for the input and gpio devices */
+
+Input or INPUT and GPIO.
+
+> +		__set_bit(ADP5585_RESET1_OUT, adp5585->pin_usage);
+>  	}
+>  
+>  	for (i = 0; i < adp5585->nkeys_reset2; i++) {
+> @@ -549,6 +576,8 @@ static int adp5585_setup(struct adp5585_dev *adp5585)
+>  				   adp5585->reset2_keys[i] | ADP5585_RESET_EV_PRESS);
+>  		if (ret)
+>  			return ret;
+> +
+> +		__set_bit(adp5585->reset2_out, adp5585->pin_usage);
+>  	}
+>  
+>  	if (adp5585->nkeys_reset1 || adp5585->nkeys_reset2) {
+> @@ -703,6 +732,10 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
+>  		return dev_err_probe(&i2c->dev, -ENODEV,
+>  				     "Invalid device ID 0x%02x\n", id);
+>  
+> +	adp5585->pin_usage = devm_bitmap_zalloc(&i2c->dev, adp5585->n_pins, GFP_KERNEL);
+> +	if (!adp5585->pin_usage)
+> +		return -ENOMEM;
+> +
+>  	ret = adp5585_parse_fw(adp5585);
+>  	if (ret)
+>  		return ret;
+> diff --git a/include/linux/mfd/adp5585.h b/include/linux/mfd/adp5585.h
+> index 5a1de5ae4bb144ed49a03a4e9e93eb614abe9fa3..5aa042a30c6e9eb2736fb5ab91b505324168d7b5 100644
+> --- a/include/linux/mfd/adp5585.h
+> +++ b/include/linux/mfd/adp5585.h
+> @@ -126,6 +126,9 @@
+>  #define ADP5585_GPI_EVENT_END		47
+>  #define ADP5585_ROW5_KEY_EVENT_START	1
+>  #define ADP5585_ROW5_KEY_EVENT_END	30
+> +#define ADP5585_PWM_OUT			3
+> +#define ADP5585_RESET1_OUT		4
+> +#define ADP5585_RESET2_OUT		9
+>  
+>  /* ADP5589 */
+>  #define		ADP5589_MAN_ID_VALUE		0x10
+> @@ -154,6 +157,7 @@
+>  #define ADP5589_PWM_ONT_LOW		0x40
+>  #define ADP5589_PWM_CFG			0x42
+>  #define ADP5589_POLL_PTIME_CFG		0x48
+> +#define ADP5589_PIN_CONFIG_A		0x49
+>  #define ADP5589_PIN_CONFIG_D		0x4C
+>  #define ADP5589_GENERAL_CFG		0x4d
+>  #define ADP5589_INT_EN			0x4e
+> @@ -164,6 +168,7 @@
+>  #define ADP5589_KEY_EVENT_END		88
+>  #define ADP5589_GPI_EVENT_START		97
+>  #define ADP5589_GPI_EVENT_END		115
+> +#define ADP5589_RESET2_OUT		12
+>  
+>  struct regmap;
+>  
+> @@ -187,6 +192,7 @@ struct adp5585_regs {
+>  	unsigned int reset_cfg;
+>  	unsigned int reset1_event_a;
+>  	unsigned int reset2_event_a;
+> +	unsigned int pin_cfg_a;
+>  };
+>  
+>  struct adp5585_dev {
+> @@ -194,6 +200,9 @@ struct adp5585_dev {
+>  	struct regmap *regmap;
+>  	struct device *dev;
+>  	struct blocking_notifier_head event_notifier;
+> +	unsigned long *pin_usage;
+> +	unsigned int n_pins;
+> +	unsigned int reset2_out;
+>  	enum adp5585_variant variant;
+>  	unsigned int id;
+>  	bool has_unlock;
 > 
-> Is repeated on both adc and spi node.
-
-That sounds wrong. This would only make sense if an output of the
-ADC was wired back to itself. 
-
+> -- 
+> 2.49.0
 > 
-> One last thing, on the driver, for v3, I should handle -ENOENT:
 > 
->   ret = of_parse_phandle_with_args(np, "trigger-sources",
->   				   "#trigger-source-cells", i,
->   				   &trigger_sources);
->   if (ret)
->   	return ret == -ENOENT ? 0 : ret;
-> 
-> To assert only when present, since the nodes are not required.
-> Or, in the driver,
-> require AD4052_TRIGGER_PIN_GP0 if irq_get_byname finds gp0, and
-> require AD4052_TRIGGER_PIN_GP1 if irq_get_byname finds gp1?
-> (I would go with the first option).
->>
 
-,,,
-
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/gpio/gpio.h>
->>> +    #include <dt-bindings/interrupt-controller/irq.h>
->>> +    #include <dt-bindings/iio/adc/adi,ad4052.h>
->>> +
->>> +    spi {
->>> +        #address-cells = <1>;
->>> +        #size-cells = <0>;
->>> +
->>> +        adc@0 {
->>> +            compatible = "adi,ad4052";
->>> +            reg = <0>;
->>> +            vdd-supply = <&vdd>;
->>> +            vio-supply = <&vio>;
->>> +            ref-supply = <&ref>;
->>> +            spi-max-frequency = <83333333>;
->>> +
->>> +            #trigger-source-cells = <2>;
->>> +            trigger-sources = <&adc AD4052_TRIGGER_EVENT_EITHER_THRESH
->>> +                                    AD4052_TRIGGER_PIN_GP0
->>> +                               &adc AD4052_TRIGGER_EVENT_DATA_READY
->>> +                                    AD4052_TRIGGER_PIN_GP1>;
-
-This doesn't make sense for the reason given above. These outputs
-aren't wired back to inputs on the ADC. They are wired to interrupts
-on the MCU, which is already described below.
-
->>> +            interrupt-parent = <&gpio>;
->>> +            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
->>> +                         <0 1 IRQ_TYPE_EDGE_FALLING>;
->>> +            interrupt-names = "gp0", "gp1";
->>> +            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
->>> +        };
->>> +    };
->>> +  - |
->>> +    #include <dt-bindings/gpio/gpio.h>
->>> +    #include <dt-bindings/interrupt-controller/irq.h>
->>> +    #include <dt-bindings/iio/adc/adi,ad4052.h>
->>> +
->>> +    rx_dma {
->>> +            #dma-cells = <1>;
->>> +    };
->>> +
->>> +    spi {
->>> +        #address-cells = <1>;
->>> +        #size-cells = <0>;
->>> +
->>> +        dmas = <&rx_dma 0>;
->>> +        dma-names = "offload0-rx";
-
-The dmas aren't related to the ADC, so can be left out of the example.
-
->>> +        trigger-sources = <&adc AD4052_TRIGGER_EVENT_DATA_READY
->>> +                                AD4052_TRIGGER_PIN_GP1>;
->>> +
->>> +        adc@0 {
->>> +            compatible = "adi,ad4052";
->>> +            reg = <0>;
->>> +            vdd-supply = <&vdd>;
->>> +            vio-supply = <&vio>;
->>> +            spi-max-frequency = <83333333>;
->>> +            pwms = <&adc_trigger 0 10000 0>;
->>> +
->>> +            #trigger-source-cells = <2>;
->>> +            trigger-sources = <&adc AD4052_TRIGGER_EVENT_EITHER_THRESH
->>> +                                    AD4052_TRIGGER_PIN_GP0
->>> +                               &adc AD4052_TRIGGER_EVENT_DATA_READY
->>> +                                    AD4052_TRIGGER_PIN_GP1>;
-
-Same as above - the GP pins aren't wired back to the ADC itself.
-
->>> +            interrupt-parent = <&gpio>;
->>> +            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
->>> +                         <0 1 IRQ_TYPE_EDGE_FALLING>;
->>> +            interrupt-names = "gp0", "gp1";
->>> +            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
->>> +        };
->>> +    };
+-- 
+Lee Jones [李琼斯]
 
