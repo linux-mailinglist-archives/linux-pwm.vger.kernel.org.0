@@ -1,174 +1,141 @@
-Return-Path: <linux-pwm+bounces-6341-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6342-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AC58AD8D18
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Jun 2025 15:28:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DE8AAD8DB7
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Jun 2025 15:51:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BAA23B6015
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Jun 2025 13:27:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E39AE18978BC
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Jun 2025 13:49:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD51A154425;
-	Fri, 13 Jun 2025 13:27:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BA5318DB24;
+	Fri, 13 Jun 2025 13:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjESkBta"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="e9zj3Qmw"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8450C81AC8;
-	Fri, 13 Jun 2025 13:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A322F22;
+	Fri, 13 Jun 2025 13:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749821270; cv=none; b=Q+WIR4vrJQDRl8+zTXhcYJrmA745N4Q48oVbjnls9PTlcrUgcC7QXQLoZstk9uIjrlPsyOy47CO5eQRptBDC11Rw2n6NQjPKZl8oShzIuRzxG/AcD+fEC5EvwLIPpWVECnHzZ4NNwLd4/vzITdwQjmvxIkfBrN9NecFeqjNls4I=
+	t=1749822465; cv=none; b=F87LLpWNHlpW8h2PoRptRODsv8tWMERTcQDrhl7KtNxRCHOBmkNQ1o+lnQQwBX0Q5oHCp1CHJFamj4nVXpe5op20cIV3MDmrkzAthPWzVsRJx9dH28/eIhYlHxwTnVRaB4HjfzZewOjDZ5n9CkGXzMdNnGEKigMYWTrOeActSm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749821270; c=relaxed/simple;
-	bh=DY8uts1htTtx0EFiOf0sUz+/p/sC1qG+ocedfneNWpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Umw6wZO1EVlBiYKtRz9Y+CJCfuTPS8HKUxMHIebnuGacbIJ9j5l44/5n2EkAqHFPt3/E8n11rilzzH2CAsWL2xv5wH5oJ6vjkSUu2bPvqVtOvarZgaghXcLPdjRmbBQmhzo1UQSILgAbcFAAXxK4q+ZsfibOT2HG3lYYfuhVDXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjESkBta; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD44C4CEE3;
-	Fri, 13 Jun 2025 13:27:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749821270;
-	bh=DY8uts1htTtx0EFiOf0sUz+/p/sC1qG+ocedfneNWpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gjESkBtaKhdtVnEZzE4WJ7zBsSS6BYjoqUvGSdL5xARYWGJ31976Q5y0zQ0ioCgJR
-	 7SfqBpzWhOfX4DdOeRjLVFzDHHAAa7NtoZk4ioVtHy5yrXp0SI0dOvAZHP9rdKBXXE
-	 gAoAfwiSFOo9togDPIz6Kcony7MTFH1IY548iLg5/bVTVlJ9GhIKCfTiZYXk4tH0oy
-	 KSOpNcO9gkhRR+/uNTgbKCd1haFrt+R/ycLobQ3yCKWcr4mMl9AyiM4GHsgVQ59rlH
-	 hv2nEZ2Wj9swtW6WXXH9G5SHNKPCMzXUjzK5Jv7118Bm7Z0dJrdTM4hAA0IDDKY2K0
-	 rTvv4xRyC96Lg==
-Date: Fri, 13 Jun 2025 14:27:44 +0100
-From: Lee Jones <lee@kernel.org>
-To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-Cc: nuno.sa@analog.com, linux-gpio@vger.kernel.org,
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-input@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH v4 13/20] mfd: adp5585: support reset and unlock events
-Message-ID: <20250613132744.GT381401@google.com>
-References: <20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com>
- <20250521-dev-adp5589-fw-v4-13-f2c988d7a7a0@analog.com>
- <20250612145542.GK381401@google.com>
- <1fafdee7c86efdb4aebe3b1c4391f48807aa0aef.camel@gmail.com>
- <20250613130757.GQ381401@google.com>
- <4afcac4b89465e8e058332bac0dd2efe1f4ee934.camel@gmail.com>
+	s=arc-20240116; t=1749822465; c=relaxed/simple;
+	bh=EvV/AQFNGYn1BkbnZYKoWbAWoLrbH5/uURZIOWrOb9k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GLAFs6+3D6htgA8U3d47fyx1DRigzH4xwdFhBbsnUlgYcteRqX6Hp17wrJUCukLAA+EKacL/x9sPHGCi9DNpL5VpTmzgOpKUsGCYO7c7OJmbmfqbXvqswZ45W7FUq/rxoUty1tvLVzYhzRqb8N0kLJH300QYdx6wlI9oEg43mbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=e9zj3Qmw; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55DB7mUP030978;
+	Fri, 13 Jun 2025 15:47:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	Ei9n0mlSS+RGTUs8J62IILpUrlBM4z2gov+FvU4IE2M=; b=e9zj3QmwZlRjxEsa
+	fHopqr4SFaF+DVyvbsh6ITrsy/VLyJfB/NPjT41IAjlqgnu4EyQqZ3Iqg4g1JUr1
+	mu2E7lrj/oolb6LwgSgR/fHxGB95CYTStre9MZP4ae93ZjiaXLZw4zC2VkY/rRCr
+	kW/nDiLYqdaEhu3vruKyVxvSvp1ppHtBs41ExJxJMvJRUIcnsGRaOpwJcltTaqIc
+	cRSzwr2VR3hW2I+U4+qTUKqDIneClB8VVZOZw4VWsJbkwORPLXSw7P4HXtEOpCSP
+	YCZlb1U3rJaJcBOHfLuFtcxCQWoOT5pgLRq9fBh5DEHRHRfvVGs/3IPPkwHJy6WI
+	mhJttA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474cs364mg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 13 Jun 2025 15:47:30 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2B8B04005A;
+	Fri, 13 Jun 2025 15:46:31 +0200 (CEST)
+Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F05F2AE5D11;
+	Fri, 13 Jun 2025 15:44:59 +0200 (CEST)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
+ (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 13 Jun
+ 2025 15:44:59 +0200
+Received: from [10.252.9.77] (10.252.9.77) by SAFDAG1NODE1.st.com
+ (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 13 Jun
+ 2025 15:44:58 +0200
+Message-ID: <c3208fec-53ac-46eb-907f-cc5b7a18b188@foss.st.com>
+Date: Fri, 13 Jun 2025 15:44:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/8] pwm: stm32: add support for stm32mp25
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <wbg@kernel.org>, <jic23@kernel.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>, <lee@kernel.org>,
+        <alexandre.torgue@foss.st.com>
+References: <20250110091922.980627-1-fabrice.gasnier@foss.st.com>
+ <20250110091922.980627-5-fabrice.gasnier@foss.st.com>
+ <4b641513-ff2e-43ab-8074-ba6b521875e2@foss.st.com>
+ <5ui74qlssllgn4h34by5jcpi5g6rknziclcsh4w27tjvznynsv@lcjtjxn6rovl>
+Content-Language: en-US
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+In-Reply-To: <5ui74qlssllgn4h34by5jcpi5g6rknziclcsh4w27tjvznynsv@lcjtjxn6rovl>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4afcac4b89465e8e058332bac0dd2efe1f4ee934.camel@gmail.com>
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-13_01,2025-06-12_02,2025-03-28_01
 
-On Fri, 13 Jun 2025, Nuno Sá wrote:
-
-> On Fri, 2025-06-13 at 14:07 +0100, Lee Jones wrote:
-> > On Fri, 13 Jun 2025, Nuno Sá wrote:
-> > 
-> > > On Thu, 2025-06-12 at 15:55 +0100, Lee Jones wrote:
-> > > > On Wed, 21 May 2025, Nuno Sá via B4 Relay wrote:
-> > > > 
-> > > > > From: Nuno Sá <nuno.sa@analog.com>
-> > > > > 
-> > > > > The ADP558x family of devices can be programmed to respond to some
-> > > > > especial events, In case of the unlock events, one can lock the keypad
-> > > > > and use KEYS or GPIs events to unlock it. For the reset events, one can
-> > > > > again use a combinations of GPIs/KEYs in order to generate an event that
-> > > > > will trigger the device to generate an output reset pulse.
-> > > > > 
-> > > > > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> > > > > ---
-> > > > >  drivers/mfd/adp5585.c       | 270
-> > > > > +++++++++++++++++++++++++++++++++++++++++++-
-> > > > >  include/linux/mfd/adp5585.h |  39 +++++++
-> > > > >  2 files changed, 308 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-> > > > > index
-> > > > > dcc09c898dd7990b39e21cb2324fa66ae171a802..6737d622a7ed9f280c439399f3709c
-> > > > > a816
-> > > > > 2dee01 100644
-> > > > > --- a/drivers/mfd/adp5585.c
-> > > > > +++ b/drivers/mfd/adp5585.c
-> > > > > @@ -170,6 +170,9 @@ static const struct adp5585_regs adp5585_regs = {
-> > > > >  	.int_en = ADP5585_INT_EN,
-> > > > >  	.gen_cfg = ADP5585_GENERAL_CFG,
-> > > > >  	.poll_ptime_cfg = ADP5585_POLL_PTIME_CFG,
-> > > > > +	.reset_cfg = ADP5585_RESET_CFG,
-> > > > > +	.reset1_event_a = ADP5585_RESET1_EVENT_A,
-> > > > > +	.reset2_event_a = ADP5585_RESET2_EVENT_A,
-> > > > >  };
-> > > > >  
-> > > > >  static const struct adp5585_regs adp5589_regs = {
-> > > > > @@ -177,8 +180,50 @@ static const struct adp5585_regs adp5589_regs = {
-> > > > >  	.int_en = ADP5589_INT_EN,
-> > > > >  	.gen_cfg = ADP5589_GENERAL_CFG,
-> > > > >  	.poll_ptime_cfg = ADP5589_POLL_PTIME_CFG,
-> > > > > +	.reset_cfg = ADP5589_RESET_CFG,
-> > > > > +	.reset1_event_a = ADP5589_RESET1_EVENT_A,
-> > > > > +	.reset2_event_a = ADP5589_RESET2_EVENT_A,
-> > > > >  };
-> > > > >  
-> > > > > +static int adp5585_validate_event(const struct adp5585_dev *adp5585,
-> > > > > unsigned int ev)
-> > > > > +{
-> > > > > +	if (adp5585->has_pin6) {
-> > > > > +		if (ev >= ADP5585_ROW5_KEY_EVENT_START && ev <=
-> > > > > ADP5585_ROW5_KEY_EVENT_END)
-> > > > > +			return 0;
-> > > > > +		if (ev >= ADP5585_GPI_EVENT_START && ev <=
-> > > > > ADP5585_GPI_EVENT_END)
-> > > > > +			return 0;
-> > > > > +
-> > > > > +		return dev_err_probe(adp5585->dev, -EINVAL,
-> > > > > +				     "Invalid unlock/reset event(%u)
-> > > > > for
-> > > > > this device\n", ev);
-> > > > > +	}
-> > > > > +
-> > > > > +	if (ev >= ADP5585_KEY_EVENT_START && ev <=
-> > > > > ADP5585_KEY_EVENT_END)
-> > > > > +		return 0;
-> > > > > +	if (ev >= ADP5585_GPI_EVENT_START && ev <=
-> > > > > ADP5585_GPI_EVENT_END) {
-> > > > > +		/* if it's GPI6 */
-> > > > 
-> > > > You have to tell us why this is a problem.
-> > > > 
-> > > > Nit: Comments should start with an upper case char.
-> > > 
-> > > The error message kind of states the problem :). But I'll put it in the
-> > > comment.
-> > 
-> > I don't think it does.  Remember, people reading this do not know the
-> > H/W as well as you do.  How is GPI6 even related to R5?
+On 5/15/25 11:24, Uwe Kleine-König wrote:
+> Hello Fabrice,
 > 
-> Yeah, you might be right. GPI6 is the same pin as R5. In a variation of the chip
-> we have this extra pin (though the datasheet refers to it as R5) that can either
-> be used as part of the keypad or a GPIO. In the other variants, it's a reset
-> pin.
+> On Wed, May 14, 2025 at 11:30:26AM +0200, Fabrice Gasnier wrote:
+>> On 1/10/25 10:19, Fabrice Gasnier wrote:
+>>> Add support for STM32MP25 SoC. Use newly introduced compatible to handle
+>>> new features along with registers and bits diversity.
+>>> The MFD part of the driver fills in ipidr, so it is used to check the
+>>> hardware configuration register, when available to gather the number
+>>> of PWM channels and complementary outputs.
+>>>
+>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+>>> ---
+>>> Changes in v2:
+>>> Address Uwe review comments:
+>>> - Make MAX_PWM_OUTPUT definition less generic: STM32_PWM_MAX_OUTPUT
+>>> - No need to initialize 'npwm'
+>>> - refactor code, for *num_enabled to use same code path
+>>> ---
+>>>  drivers/pwm/pwm-stm32.c | 42 ++++++++++++++++++++++++++++++++++-------
+>>>  1 file changed, 35 insertions(+), 7 deletions(-)
+>>
+>> Hi Uwe,
+>>
+>> I think this patch still miss some reviews.
+>> The first patches of this series have been merged.
+>>
+>> Is it ok for you to merge, or shall I resend separately ?
 > 
-> The check is making sure we're not trying to configure an unlock/reset event on
-> a pin that do not exist. But I get your point, for me it's clear that R5 ==
-> GPI6. Me not being consistent in the comments/messages won't help anyone reading
-> the code.
+> I have it still on my radar, no need to resend. I just have to find the
+> time to look into it in more detail.
 
-You nailed it!  Thanks for understanding.
+Hello Uwe,
 
--- 
-Lee Jones [李琼斯]
+Gentle reminder, I hope you may find some time to review this patch ?
+
+Best Regards,
+Fabrice
+
+> 
+> Best regards
+> Uwe
 
