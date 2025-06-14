@@ -1,199 +1,180 @@
-Return-Path: <linux-pwm+bounces-6350-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6354-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83E35AD9C32
-	for <lists+linux-pwm@lfdr.de>; Sat, 14 Jun 2025 12:40:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3BE6AD9D94
+	for <lists+linux-pwm@lfdr.de>; Sat, 14 Jun 2025 16:37:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CEA6D3B59EA
-	for <lists+linux-pwm@lfdr.de>; Sat, 14 Jun 2025 10:40:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 60D7817941A
+	for <lists+linux-pwm@lfdr.de>; Sat, 14 Jun 2025 14:37:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA1981F4C90;
-	Sat, 14 Jun 2025 10:40:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E1122E2EE9;
+	Sat, 14 Jun 2025 14:37:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOy/+W7L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQGMWqsp"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20D424B26;
-	Sat, 14 Jun 2025 10:40:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE422DECB1;
+	Sat, 14 Jun 2025 14:37:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749897622; cv=none; b=cRZjIrd9Nqqr37AlGQHUCwy04xBRjXxPGpBZ917Tyzhr4Hv9vCZYAYr2znApY3X8TNTE9KpbUPVP8sn/4Oaa5m4DlScEcWThOLFPm7qCoGL1aNuMxtG5Jl2tasT898086lmchO9wdaaePgvN1nv7LnTNT1mY6zUf/ZlRnBgZ7O8=
+	t=1749911830; cv=none; b=jDUF2Ej7U+te0mex//LAu03Kf3EpLdXNfs0qzvJqimeVa09exXPzwNGRptvtK+6PZOo2ALQTQ50xKMA4VB7ZGFdO2t92LoLls309Ky7LaEsh0Je07NYhtYZ/3kAETjgXm8IlMSvh0vCFXjDtyRTHRJMBeWlRxOhz8xFGRJgJwnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749897622; c=relaxed/simple;
-	bh=uDww505S1HGbYr8sg72vql83/0dLbcLju2A9OcLXSfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tRN7g19WNxGW494wfmy2veJTysvtDeej69ItGF/HjV2MFNexq1qCwgx8P7bOCRiqcIi3sDbplAgBRw55zcMdE55nRAEfEF2L5VcYT53TVhEsdNogQwOkWTiOaqK8heurFXIc2yJDlja59aoK01Bano3I2cNvudjLRlVwzfdwWSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOy/+W7L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D778C4CEEB;
-	Sat, 14 Jun 2025 10:40:18 +0000 (UTC)
+	s=arc-20240116; t=1749911830; c=relaxed/simple;
+	bh=HpQ+IOBHeSPQkLLUSRUG0Nf5j2qaZir3u+Hl3A3IsNw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hhVDIjWWS/s4qdLIb3lxQWo1UstDIKct/g6RHyIdNgazcUF7Ue1OGGhK5tz3IP5YUsbXnYOQAJ/n5GKV9sJIPnkJHW0vte8ItDzWEpQgr4vHpYVRkfH99mhszBOFs7vdUjtKYmanEPIybsTE3niU3vyJmLgsxONjm2GCntkxi+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQGMWqsp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4729AC4CEEB;
+	Sat, 14 Jun 2025 14:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749897622;
-	bh=uDww505S1HGbYr8sg72vql83/0dLbcLju2A9OcLXSfY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fOy/+W7Lk1Zmhv101PWXOVaffopiTrgESvkWklOS0Urn4UIv5nnOpgKX5VbpK+kfd
-	 sHYWqWirBVYuNDnameHOnPltYduoCQnjgwgrZysgqdF2/eNz06kUSzqroWQoVmq1Xi
-	 Z4YJNvNWSQ3TaDGH46DYBLNelKkRaBbv826NgMosEkETL26c8VryOStPtM9rHDAQ5x
-	 Pnm6jR8UtE33lOPQ1Ri830Xpq1oa6kAbbkFdK0paspOKqV62PmoHwRlHnTSekmYyeW
-	 S7Jbv2pPXUf6EtdA6YhCFqME3jFdB3plOQTHqo8qpu6UWu1FlcSWsZnCP9nf1b3YJO
-	 dqqayOOeFcL6w==
-Date: Sat, 14 Jun 2025 11:40:14 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jorge Marques <gastmaier@gmail.com>, Jorge Marques
- <jorge.marques@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 8/8] iio: adc: Add events support to ad4052
-Message-ID: <20250614114014.6af31254@jic23-huawei>
-In-Reply-To: <20250614112544.12e6bb30@jic23-huawei>
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
-	<20250610-iio-driver-ad4052-v3-8-cf1e44c516d4@analog.com>
-	<afc85a4b-1535-406d-ad14-143049267b98@baylibre.com>
-	<gvigk6helnl3yeouy636dgvay7tqux7lnxns3256fivzz4l3er@7ts7fz7vitff>
-	<fa403d19-13c5-4845-9364-58eea1b62e61@baylibre.com>
-	<20250614112544.12e6bb30@jic23-huawei>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1749911830;
+	bh=HpQ+IOBHeSPQkLLUSRUG0Nf5j2qaZir3u+Hl3A3IsNw=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=uQGMWqsp59ntf2w1H0jYSMzXkjzC7MgGomjzv3pEdP8OvgKUeKXzIp0+IBjkbJCHv
+	 R4INZbZMK4HhUJ4vyt5M92+QYtKUD3DBeSbznh4VBOum+WZh1CgG/cRUSFvoh4XXep
+	 THgG7id8GnAhu/ktHmoqG6n2345nwyqTRTyHtMnZ1A9eh+Q8X7XpfSsj6sZMqk6WZV
+	 Kbw3h+REjL9fJAl7msgckNHEeLeiKxxiBeYSPqkzTfRc82c/U5CE6xEMPYwqe+PLkR
+	 jNdYg4OBZ9OsRY+ATF+M9a0zZO2OTWwPNecxddJRAwzzq6zKwASs4RuvYcL7ahHI1P
+	 eYUaeNn0KG4tA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3318EC71153;
+	Sat, 14 Jun 2025 14:37:10 +0000 (UTC)
+From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
+Subject: [PATCH v5 00/20] mfd: adp5585: support keymap events and drop
+ legacy Input driver
+Date: Sat, 14 Jun 2025 15:35:51 +0100
+Message-Id: <20250614-dev-adp5589-fw-v5-0-7e9d84906268@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAMeITWgC/2XQTQ7CIBCG4asY1mJgAAuuvIdxMYWpkmhrWoMa0
+ 7tLmxh/WH6TPO9inmygPtLANosn6ynFIXZtHma5YP6I7YF4DHkzEGCEkpIHShzDxRjreHPjJLR
+ vgtMG7JpldOmpifc5uNvnfYzDtesfcz/J6fpOqf9UklxwEGRF0HXQhFts8dQdVr47s6mV4OO1N
+ IWH7BVWznlFwUoovPp4I6HwKnvhoJa6rhxaW3j95aF4RdLZN+CdtaHCCsWPH8fxBVDAMBZtAQA
+ A
+X-Change-ID: 20250311-dev-adp5589-fw-e04cfd945286
+To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-input@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Liu Ying <victor.liu@nxp.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749911835; l=3573;
+ i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
+ bh=HpQ+IOBHeSPQkLLUSRUG0Nf5j2qaZir3u+Hl3A3IsNw=;
+ b=ArtXRoO+FuNVNZqfpl2+TCQ9EL+05vwIiPyFP6UolfWbeck0+iU9jRWBvSQUWBcWMGsimkCX1
+ vRJRENsYoM/C/HCJ62K6frCjaP1puvEpKAleEPCVZDFycxYkWHQs9oe
+X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
+ pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
+X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
+ auth_id=100
+X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
+Reply-To: nuno.sa@analog.com
 
-On Sat, 14 Jun 2025 11:25:44 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+Hi all,
 
-> On Fri, 13 Jun 2025 11:03:24 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
-> 
-> > On 6/13/25 5:02 AM, Jorge Marques wrote:  
-> > > Hi David,
-> > > On Thu, Jun 12, 2025 at 02:38:45PM -0500, David Lechner wrote:    
-> > >> On 6/10/25 2:34 AM, Jorge Marques wrote:    
-> > >>> The AD4052 family supports autonomous monitoring readings for threshold
-> > >>> crossings. Add support for catching the GPIO interrupt and expose as an IIO
-> > >>> event. The device allows to set either, rising and falling directions. Only
-> > >>> either threshold crossing is implemented.
-> > >>>
-> > >>> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> > >>> ---    
-> > >>
-> > >> ...
-> > >>    
-> > >>> +
-> > >>> +static ssize_t ad4052_events_frequency_store(struct device *dev,
-> > >>> +					     struct device_attribute *attr,
-> > >>> +					     const char *buf,
-> > >>> +					     size_t len)
-> > >>> +{
-> > >>> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> > >>> +	struct ad4052_state *st = iio_priv(indio_dev);
-> > >>> +	int ret;
-> > >>> +
-> > >>> +	if (!iio_device_claim_direct(indio_dev))
-> > >>> +		return -EBUSY;
-> > >>> +	if (st->wait_event) {
-> > >>> +		ret = -EBUSY;
-> > >>> +		goto out_release;
-> > >>> +	}    
-> > >>
-> > >> I'm wondering if we should instead have some kind of iio_device_claim_monitor_mode()
-> > >> so that we don't have to implement this manually everywhere. If monitor mode was
-> > >> claimed, then iio_device_claim_direct() and iio_device_claim_buffer_mode() would
-> > >> both return -EBUSY. If buffer mode was claimed, iio_device_claim_monitor_mode()
-> > >> would fail. If direct mode was claimed, iio_device_claim_monitor_mode() would wait.
-> > >>    
-> > > I don't think this would scale with other vendors and devices, it is a    
-> > 
-> > Why not? I've seen lots of devices that have some sort of monitor mode
-> > where they are internally continuously comparing measurements to something
-> > and only signal an interrupt when some condition is met.  
-> 
-> There are lots that support such a monitor, but I think far fewer were direct
-> accesses don't work at the same time.  The max1363 comes to mind but in that
-> case it is possible to do both monitor and direct reads it is just that the
-> data format changes and I think we never bothered implementing the handling
-> for that combination.
-> 
-> I wouldn't mind such helpers if there are at least a couple of users.
-> 
-I got this wrong.  Key here is not direct access and monitor, but rather
-monitor and buffering (which is the odd format case on the max1363 etc).
+Here it goes v4. Main changes is to drop chip info based struct and
+directly use an enum in the FW .data pointer, use the notifier API for
+dispatching events and multiple calls to mfd_add_devices().
 
-Anyhow, conclusion that helpers are fine is the same.
+Regarding the last point, I think I could have used multiple calls to
+devm_mfd_add_devices() and avoid those gotos in adp5585_add_devices()
+but I do not feel that would have been "correct".
 
-I would try to minimise what doesn't work when monitor mode is enabled though
-(as commented in review of this patch).
+Thanks!
+- Nuno Sá
 
-We also have to cover the internal cases where buffer mode is claimed but
-there isn't (IIRC) a call to that particular claim function as we don't
-want to end up holding the lock - same will be true for monitor mode - there
-is a difference between temporary fixing of state where locks are fine
-and the mode running for a long period in which we don't hold the lock.
+---
+Changes in v5:
+- Patch 2:
+  * Use the existing devm_mfd_add_devices().
+- Patch 3:
+  * Remove TODO comment.
+- Patch 4:
+  * Mention in the commit message the Copyright update.
+- Patch 6:
+  * Return a struct regmap_config pointer in
+    adp5585_fill_regmap_config();
+  * Just leave a blank entry in the adp5585_regmap_defaults array.
+- Patch 13:
+  * Improve comments for pin6 (row5) validation;
+  * Don't use magic numbers;
+  * Drop some odd line breaks;
+  * Initialize vartiable when declaring.
+- Patch 14:
+  * Drop double spaces;
+  * Don't use magic numbers;
+  * Improve some comments.
+- Patch 16:
+  * Fix missing semicolon.
+- Patch 20:
+  * DS -> datasheet. 
 
-> >   
-> > > limitation of ADI:ADC:SPI requiring to enter configuration mode to read    
-> > 
-> > I don't see how it could be a limitiation exclusive to this combination of
-> > vendor, sensor type and bus type.
-> >   
-> > > registers. A deep dive into the other drivers that use IIO Events is
-> > > needed.    
-> > >>> +    
-> > 
-> > ...
-> >   
-> > >>> +
-> > >>> +static int ad4052_monitor_mode_disable(struct ad4052_state *st)
-> > >>> +{
-> > >>> +	int ret;
-> > >>> +
-> > >>> +	pm_runtime_mark_last_busy(&st->spi->dev);
-> > >>> +	pm_runtime_put_autosuspend(&st->spi->dev);
-> > >>> +
-> > >>> +	ret = ad4052_exit_command(st);
-> > >>> +	if (ret)
-> > >>> +		return ret;
-> > >>> +	return regmap_write(st->regmap, AD4052_REG_DEVICE_STATUS,
-> > >>> +			    AD4052_REG_DEVICE_STATUS_MAX_FLAG |
-> > >>> +			    AD4052_REG_DEVICE_STATUS_MIN_FLAG);
-> > >>> +}
-> > >>> +    
-> > >>
-> > >> It seems like we need to make sure monitor mode is disabled when the
-> > >> driver is removed. Otherwise we could end up with unbalanced calls to
-> > >> the pm_runtime stuff and leave the chip running.
-> > >>
-> > >>    
-> > > When monitor mode is enabled, pm is already disabled (won't enter low
-> > > power). I expect the pm to handle the clean-up properly since devm is
-> > > used.
-> > > The .remove() I suggest is reg access to:
-> > > 
-> > > * Put in configuration mode, if not.
-> > > * Put on low power mode, if not.
-> > >     
-> > I was just thinking something like:
-> > 
-> > 	if (st->wait_event)
-> > 		ad4052_monitor_mode_disable(st);
-> > 
-> > Also might need to use devm_add_action_or_reset() instead of .remove
-> > to get correct ordering.  
-> 
-> 
+- Link to v4: https://lore.kernel.org/r/20250521-dev-adp5589-fw-v4-0-f2c988d7a7a0@analog.com
+- Link to v3: https://lore.kernel.org/r/20250512-dev-adp5589-fw-v3-0-092b14b79a88@analog.com
+- Link to v2: https://lore.kernel.org/r/20250415-dev-adp5589-fw-v2-0-3a799c3ed812@analog.com
+- Link to v1: https://lore.kernel.org/r/20250313-dev-adp5589-fw-v1-0-20e80d4bd4ea@analog.com
+
+---
+Nuno Sá (20):
+      dt-bindings: mfd: adp5585: ease on the required properties
+      mfd: adp5585: only add devices given in FW
+      mfd: adp5585: enable oscilator during probe
+      mfd: adp5585: make use of MFD_CELL_NAME()
+      dt-bindings: mfd: adp5585: document adp5589 I/O expander
+      mfd: adp5585: refactor how regmap defaults are handled
+      mfd: adp5585: add support for adp5589
+      mfd: adp5585: add a per chip reg struture
+      gpio: adp5585: add support for the adp5589 expander
+      pwm: adp5585: add support for adp5589
+      dt-bindings: mfd: adp5585: add properties for input events
+      mfd: adp5585: add support for event handling
+      mfd: adp5585: support reset and unlock events
+      mfd: adp5585: add support for input devices
+      gpio: adp5585: support gpi events
+      Input: adp5585: Add Analog Devices ADP5585/89 support
+      Input: adp5589: remove the driver
+      mfd: adp5585: support getting vdd regulator
+      dt-bindings: mfd: adp5585: document reset gpio
+      mfd: adp5585: add support for a reset pin
+
+ .../devicetree/bindings/mfd/adi,adp5585.yaml       |  240 ++++-
+ .../devicetree/bindings/trivial-devices.yaml       |    2 -
+ MAINTAINERS                                        |    1 +
+ drivers/gpio/Kconfig                               |    1 +
+ drivers/gpio/gpio-adp5585.c                        |  364 ++++++-
+ drivers/input/keyboard/Kconfig                     |   21 +-
+ drivers/input/keyboard/Makefile                    |    2 +-
+ drivers/input/keyboard/adp5585-keys.c              |  371 +++++++
+ drivers/input/keyboard/adp5589-keys.c              | 1066 --------------------
+ drivers/mfd/adp5585.c                              |  743 +++++++++++++-
+ drivers/pwm/pwm-adp5585.c                          |   78 +-
+ include/linux/mfd/adp5585.h                        |  118 ++-
+ 12 files changed, 1799 insertions(+), 1208 deletions(-)
+---
+base-commit: 407f60a151df3c44397e5afc0111eb9b026c38d3
+change-id: 20250311-dev-adp5589-fw-e04cfd945286
+--
+
+Thanks!
+- Nuno Sá
+
 
 
