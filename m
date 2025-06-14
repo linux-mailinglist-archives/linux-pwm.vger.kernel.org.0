@@ -1,63 +1,70 @@
-Return-Path: <linux-pwm+bounces-6345-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6346-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B141CAD9BFA
-	for <lists+linux-pwm@lfdr.de>; Sat, 14 Jun 2025 12:08:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8B2EAD9C05
+	for <lists+linux-pwm@lfdr.de>; Sat, 14 Jun 2025 12:15:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D22483BBB13
-	for <lists+linux-pwm@lfdr.de>; Sat, 14 Jun 2025 10:08:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CC36B7A6164
+	for <lists+linux-pwm@lfdr.de>; Sat, 14 Jun 2025 10:13:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FA751D5146;
-	Sat, 14 Jun 2025 10:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F13DD23498E;
+	Sat, 14 Jun 2025 10:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+/mslCZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czfn4TiI"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BF73FFD;
-	Sat, 14 Jun 2025 10:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B531C1E7648;
+	Sat, 14 Jun 2025 10:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749895702; cv=none; b=Get3d2aZPMPtNyJ9OQNrsmEFH/sIvgicv1oa8GV+t8tH8QeGBB0k3O/1YyPWubfWNpD7zGqK1M6P7Nt2tfTfNvmRohnYkMkO/Miwt2Us/kLk65KIWhoOwlSc4DlQ5Aj/VKEQo2HodRSbWUJiQnfN1/zsodf5XMLBJG7VXT7ImPA=
+	t=1749896104; cv=none; b=aLMZMz6ZzAX0HIKBMRiZHAafBibsBndGD12DxfQAyY9uoPKg7rlmKZvJJbVcaNqQ4kAOzAPqKg8Tq4YSfOtTTo464jvJtuyR0+nIMXdbl0ZqZt35WlToPKHZPKo30cZABo3rbuCxzFgAtXVcGw8854ms+amC1WxXhODA6XJQ+gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749895702; c=relaxed/simple;
-	bh=LYUOXEwhIzg7MROvHrJQMLI06S8gu89x+0gLB8Lf6xk=;
+	s=arc-20240116; t=1749896104; c=relaxed/simple;
+	bh=GHTvmES2P7gY68VtoLjCEKKwS3lD28L0xNpH8WBRu4M=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aeC4upETJ0ps+9ZTdItdmjx1Ya4mD+27O+v0fQWfNnZFv4m/5mDIHthvyfNwVpycBPvKxN0JpBjeHlAhcXFB1Yaajo/BYu9eYQAqjCLbhN9Hg9Q73Hkb5f8VaPDB6JTX6GAaXzFycGIdD0CcETM/hxjW33aYEOelIvBVmui2Tpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+/mslCZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29800C4CEEB;
-	Sat, 14 Jun 2025 10:08:16 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ON+ppAMnPp9QFIJFmCl52JjGE0Y6PrFsY554qhtyMyODABlSSi7Aak6QMaDEgjBEEMWjAKoFmEr8c0tNRze/09bAzPU4lTI9ouUukFE0H9u7boExE9sWczuzkKEb5NEviNJM5bro5XaUP3MWjOe3RTJmRr1vsxM0zsLQGwFOBuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czfn4TiI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F91AC4CEEB;
+	Sat, 14 Jun 2025 10:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749895701;
-	bh=LYUOXEwhIzg7MROvHrJQMLI06S8gu89x+0gLB8Lf6xk=;
+	s=k20201202; t=1749896104;
+	bh=GHTvmES2P7gY68VtoLjCEKKwS3lD28L0xNpH8WBRu4M=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=d+/mslCZ1XbCeipCJ3vAS/hAOdDogRWH+NmJSzuwH8sujHMb12Uu4FoFS9ovGlasm
-	 aVGAuntT0L+hKRpP6Pd+iPq+xZIA9L0tz7BcY8B5x6cL83y8W1BBCKLPupChwmUQCl
-	 +DZV79oTheErAo9EqRTDE+dBtn/KLBW+kEBipj9MRBMTk0JI6MpRnFPdscAPD+uQe7
-	 JC3+gKsWFWDbF4JsZlby4d4Tqhv2w/+HjpMrQW0qEwEPhZpHcTKDPDTAqjbI65Un4D
-	 p/56oLEQ4MzXKMKAlLMK6tz6hCy9p1vna5onFEyM2GP4Utg5x4S31WtbE6EnSqvHyJ
-	 w0GvM1l9a2zmA==
-Date: Sat, 14 Jun 2025 11:08:12 +0100
+	b=czfn4TiIjdN2/g8LC8p6UzlpBRZ5VwNkn3WBEa+Eoja6+lvGw+fJ4TANNMxwDktXy
+	 SoBdqwokvBQyRnXqza2Goxal/s9rjuPnfLcSYOJ3oan+urEpsQcv6h1CTptEeo/dHy
+	 aj+qJ4pwZveRqMxQ99WsNaPnfFYnqAQMerhxpXcKT3ngs/pmmyrIu0L+/7xH0+ffWY
+	 yV1rn7ppHZnxrlvYI0vUD2I+I7tCcXym2jz8CGGw9nkYzgM1w/sFOV419XljDWkzim
+	 EYnORK9uBVdZBOpqwDT+6YxczWQJHIgDcCrMc/Z4iZAikOlXd2c98+k/GMJ2hJTjzQ
+	 r6zaAlK0N0NCQ==
+Date: Sat, 14 Jun 2025 11:14:54 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: Jorge Marques <jorge.marques@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>,
- Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, "Andy Shevchenko"
- <andy@kernel.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <ukleinek@kernel.org>, <linux-iio@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v3 4/8] iio: adc: Add support for ad4052
-Message-ID: <20250614110812.39af2c41@jic23-huawei>
-In-Reply-To: <20250610-iio-driver-ad4052-v3-4-cf1e44c516d4@analog.com>
+To: Jorge Marques <gastmaier@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Jorge Marques
+ <jorge.marques@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 2/8] dt-bindings: iio: adc: Add adi,ad4052
+Message-ID: <20250614111454.25741044@jic23-huawei>
+In-Reply-To: <5lr5sqwtj52dy5n73ti2jszbybx5dpww33jceehdqehklr2hbm@zxickou2odcb>
 References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
-	<20250610-iio-driver-ad4052-v3-4-cf1e44c516d4@analog.com>
+	<20250610-iio-driver-ad4052-v3-2-cf1e44c516d4@analog.com>
+	<20250611181818.14d147c7@jic23-huawei>
+	<xqkr3rq6ikuiz5wcbxmto4gp7wnccmmogklf2ux2edauotufim@pcuhddxdzjxi>
+	<ef0d4038-b665-4ef0-9e7b-7ad2ce154c50@baylibre.com>
+	<zd4fvyjbfurgsp3rpslo2ubpxzxn7bh5b2vh5j4j7outxdrcd7@firxlr6bfkic>
+	<5130be5d-b769-41aa-af2f-b1e16a91e569@baylibre.com>
+	<5lr5sqwtj52dy5n73ti2jszbybx5dpww33jceehdqehklr2hbm@zxickou2odcb>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -68,482 +75,330 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 10 Jun 2025 09:34:37 +0200
-Jorge Marques <jorge.marques@analog.com> wrote:
+On Fri, 13 Jun 2025 13:17:46 +0200
+Jorge Marques <gastmaier@gmail.com> wrote:
 
-> The AD4052/AD4058/AD4050/AD4056 are versatile, 16-bit/12-bit, successive
-> approximation register (SAR) analog-to-digital converter (ADC) that
-> enables low-power, high-density data acquisition solutions without
-> sacrificing precision. This ADC offers a unique balance of performance
-> and power efficiency, plus innovative features for seamlessly switching
-> between high-resolution and low-power modes tailored to the immediate
-> needs of the system. The AD4052/AD4058/AD4050/AD4056 are ideal for
-> battery-powered, compact data acquisition and edge sensing applications.
+> Hi David,
+> On Thu, Jun 12, 2025 at 03:20:40PM -0500, David Lechner wrote:
+> > On 6/12/25 2:42 PM, Jorge Marques wrote:  
+> > > Hi David,
+> > > 
+> > > thank you for chiming in
+> > > 
+> > > On Thu, Jun 12, 2025 at 10:03:37AM -0500, David Lechner wrote:  
+> > >> On 6/12/25 5:11 AM, Jorge Marques wrote:  
+> > >>> On Wed, Jun 11, 2025 at 06:18:18PM +0100, Jonathan Cameron wrote:  
+> > >>>> On Tue, 10 Jun 2025 09:34:35 +0200
+> > >>>> Jorge Marques <jorge.marques@analog.com> wrote:
+> > >>>>  
+> > >>
+> > >> ...
+> > >>  
+> > >>>>> +  trigger-sources:
+> > >>>>> +    minItems: 1
+> > >>>>> +    maxItems: 2
+> > >>>>> +    description:
+> > >>>>> +      Describes the output pin and event associated.  
+> > >>
+> > >> trigger-sources would be an input pin connected to an external trigger.
+> > >> For example, the CNV pin could be connected to a trigger-source
+> > >> provider to trigger a conversion. But there aren't any other digital
+> > >> inputs, so I don't know what the 2nd source would be here.
+> > >>
+> > >> As an example, see [1]. We could potentially use the same gpio
+> > >> trigger-source for the conversion pin here. There is already
+> > >> a similar binding for pwm triggers, so we could drop the separate
+> > >> pwms binding as well an just have a single trigger-sources
+> > >> property for the CNV pin that works for both gpio and pwm.
+> > >>
+> > >> [1]: https://lore.kernel.org/linux-iio/cover.1749569957.git.Jonathan.Santos@analog.com/
+> > >>  
+> > > 
+> > > Quick summary to familiarize myself with this part and driver.
+> > > 
+> > > On ad7768-1:
+> > > ad7768-1.SYNC_OUT is a digital output, ad7768-1.SYNC_IN input, and
+> > > ad7768-1.GPIO3 (START) configured as input. ad7768-1.GPIO[0..3] are
+> > > configurable GPIO, GPIO3 as START, or in PIN control mode, the input
+> > > GPIO[3:0] sets the power mode and modulator freq (MODEx).
+> > > 
+> > > On that thread:
+> > > https://lore.kernel.org/linux-iio/8abca580f43cb31d7088d07a7414b5f7efe91ead.1749569957.git.Jonathan.Santos@analog.com/
+> > > exposes GPIO[0..3] through gpio_chip if gpio-controller in dt.
+> > > 
+> > > https://lore.kernel.org/linux-iio/713fd786010c75858700efaec8bb285274e7057e.1749569957.git.Jonathan.Santos@analog.com/
+> > > trigger-sources-cells: the cell define the type of signal but *not* its
+> > > origin, because {DRDY, SYNC_OUT, GPIO3(START)} are dedicated pins, *so
+> > > there is no need to do so*.
+> > >   
+> > >>>>> +
+> > >>>>> +  "#trigger-source-cells":
+> > >>>>> +    const: 2
+> > >>>>> +    description: |
+> > >>>>> +      Output pins used as trigger source.
+> > >>>>> +
+> > >>>>> +      Cell 0 defines the event:
+> > >>>>> +      * 0 = Data ready
+> > >>>>> +      * 1 = Min threshold
+> > >>>>> +      * 2 = Max threshold
+> > >>>>> +      * 3 = Either threshold
+> > >>>>> +      * 4 = CHOP control
+> > >>>>> +      * 5 = Device enable
+> > >>>>> +      * 6 = Device ready (only GP1)  
+> > >>>>
+> > >>>> Hmm. I'm a bit dubious on why 'what the offload trigger is'
+> > >>>> is a DT thing?  Is that because the IP needs to comprehend
+> > >>>> this?  I guess only data ready is actually supported in
+> > >>>> practice?   
+> > >>>
+> > >>> A trigger can be connected to trigger something other than a spi
+> > >>> offload, it is in the DT because it describes how the device is
+> > >>> connected. When using spi offload, the trigger-source at the spi handle
+> > >>> describes which gpio and event is routed to the offload trigger input.
+> > >>> At the ADC node, trigger-source-cells describe the source gpio and event
+> > >>> for the device driver.
+> > >>>
+> > >>> In practice, in this series, one gpio is Data ready, triggering offload
+> > >>> when buffer enabled, and raw reads, when disabled. And the other is
+> > >>> Either threshold, propagated as an IIO event. Fancy logic can be added
+> > >>> to the driver in future patches to allow other combinations.
+> > >>>
+> > >>> It is also worth to mention that the trigger-source is duplicated for
+> > >>> each node that uses it, as seen in the second dts example:
+> > >>>
+> > >>>    &adc AD4052_TRIGGER_EVENT_DATA_READY AD4052_TRIGGER_PIN_GP1
+> > >>>
+> > >>> Is repeated on both adc and spi node.  
+> > >>
+> > >> That sounds wrong. This would only make sense if an output of the
+> > >> ADC was wired back to itself. 
+> > >>  
+> > > 
+> > > The issue is the lack of way of describing to the driver the function of
+> > > each gpio, when configurable. Perhaps it is better to use
+> > > trigger-source-cells to only describe the topology at that node
+> > > receiving the trigger, e.g.
+> > > 
+> > >   trigger-sources = <&adc AD4052_TRIGGER_PIN_GP0>;
+> > > 
+> > > Below I continue the discussion.  
+> > >>>
+> > >>> One last thing, on the driver, for v3, I should handle -ENOENT:
+> > >>>
+> > >>>   ret = of_parse_phandle_with_args(np, "trigger-sources",
+> > >>>   				   "#trigger-source-cells", i,
+> > >>>   				   &trigger_sources);
+> > >>>   if (ret)
+> > >>>   	return ret == -ENOENT ? 0 : ret;
+> > >>>
+> > >>> To assert only when present, since the nodes are not required.
+> > >>> Or, in the driver,
+> > >>> require AD4052_TRIGGER_PIN_GP0 if irq_get_byname finds gp0, and
+> > >>> require AD4052_TRIGGER_PIN_GP1 if irq_get_byname finds gp1?
+> > >>> (I would go with the first option).  
+> > >>>>  
+> > >>
+> > >> ,,,
+> > >>  
+> > >>>>> +examples:
+> > >>>>> +  - |
+> > >>>>> +    #include <dt-bindings/gpio/gpio.h>
+> > >>>>> +    #include <dt-bindings/interrupt-controller/irq.h>
+> > >>>>> +    #include <dt-bindings/iio/adc/adi,ad4052.h>
+> > >>>>> +
+> > >>>>> +    spi {
+> > >>>>> +        #address-cells = <1>;
+> > >>>>> +        #size-cells = <0>;
+> > >>>>> +
+> > >>>>> +        adc@0 {
+> > >>>>> +            compatible = "adi,ad4052";
+> > >>>>> +            reg = <0>;
+> > >>>>> +            vdd-supply = <&vdd>;
+> > >>>>> +            vio-supply = <&vio>;
+> > >>>>> +            ref-supply = <&ref>;
+> > >>>>> +            spi-max-frequency = <83333333>;
+> > >>>>> +
+> > >>>>> +            #trigger-source-cells = <2>;
+> > >>>>> +            trigger-sources = <&adc AD4052_TRIGGER_EVENT_EITHER_THRESH
+> > >>>>> +                                    AD4052_TRIGGER_PIN_GP0
+> > >>>>> +                               &adc AD4052_TRIGGER_EVENT_DATA_READY
+> > >>>>> +                                    AD4052_TRIGGER_PIN_GP1>;  
+> > >>
+> > >> This doesn't make sense for the reason given above. These outputs
+> > >> aren't wired back to inputs on the ADC. They are wired to interrupts
+> > >> on the MCU, which is already described below.
+> > >>  
+> > > Below.  
+> > >>>>> +            interrupt-parent = <&gpio>;
+> > >>>>> +            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
+> > >>>>> +                         <0 1 IRQ_TYPE_EDGE_FALLING>;
+> > >>>>> +            interrupt-names = "gp0", "gp1";
+> > >>>>> +            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+> > >>>>> +        };
+> > >>>>> +    };
+> > >>>>> +  - |
+> > >>>>> +    #include <dt-bindings/gpio/gpio.h>
+> > >>>>> +    #include <dt-bindings/interrupt-controller/irq.h>
+> > >>>>> +    #include <dt-bindings/iio/adc/adi,ad4052.h>
+> > >>>>> +
+> > >>>>> +    rx_dma {
+> > >>>>> +            #dma-cells = <1>;
+> > >>>>> +    };
+> > >>>>> +
+> > >>>>> +    spi {
+> > >>>>> +        #address-cells = <1>;
+> > >>>>> +        #size-cells = <0>;
+> > >>>>> +
+> > >>>>> +        dmas = <&rx_dma 0>;
+> > >>>>> +        dma-names = "offload0-rx";  
+> > >>
+> > >> The dmas aren't related to the ADC, so can be left out of the example.
+> > >>  
+> > > Ack.  
+> > >>>>> +        trigger-sources = <&adc AD4052_TRIGGER_EVENT_DATA_READY
+> > >>>>> +                                AD4052_TRIGGER_PIN_GP1>;
+> > >>>>> +
+> > >>>>> +        adc@0 {
+> > >>>>> +            compatible = "adi,ad4052";
+> > >>>>> +            reg = <0>;
+> > >>>>> +            vdd-supply = <&vdd>;
+> > >>>>> +            vio-supply = <&vio>;
+> > >>>>> +            spi-max-frequency = <83333333>;
+> > >>>>> +            pwms = <&adc_trigger 0 10000 0>;
+> > >>>>> +
+> > >>>>> +            #trigger-source-cells = <2>;
+> > >>>>> +            trigger-sources = <&adc AD4052_TRIGGER_EVENT_EITHER_THRESH
+> > >>>>> +                                    AD4052_TRIGGER_PIN_GP0
+> > >>>>> +                               &adc AD4052_TRIGGER_EVENT_DATA_READY
+> > >>>>> +                                    AD4052_TRIGGER_PIN_GP1>;  
+> > >>
+> > >> Same as above - the GP pins aren't wired back to the ADC itself.
+> > >>  
+> > >>>>> +            interrupt-parent = <&gpio>;
+> > >>>>> +            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
+> > >>>>> +                         <0 1 IRQ_TYPE_EDGE_FALLING>;
+> > >>>>> +            interrupt-names = "gp0", "gp1";
+> > >>>>> +            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+> > >>>>> +        };
+> > >>>>> +    };  
+> > > 
+> > > Considering the discussion above. As is, in this series GP0 is event
+> > > Either threshold and GP1 Data ready. A future series would aim to make
+> > > it truly configurable.
+> > > 
+> > > For this series then, do we then drop the second cell of trigger cell
+> > > and do not provide a way of describing the function of each gpio? e.g.  
+> > 
+> > The bindings can't be changed later, so no, don't drop the 2nd cell
+> > if we are going to add it back later.
+> > 
+> > But considering Jonathan's feedback, I am now questioning if we need
+> > the 2nd cell at all. The way trigger-source consumers work currently
+> > is that they request a trigger of a certain generic type, like "data
+> > ready". So this information could be used to determine what function
+> > needs to be assigned to the pin without having to define that in the
+> > devicetree.
+> >   
+> Useful for assertion. It is odd to be used for requesting of a certain
+> type (gpio role) instead of telling how things are wired.
+> > > 
+> > >   - |
+> > >     #include <dt-bindings/gpio/gpio.h>
+> > >     #include <dt-bindings/interrupt-controller/irq.h>
+> > >     #include <dt-bindings/iio/adc/adi,ad4052.h>
+> > >   
+> > >     rx_dma {
+> > >             #dma-cells = <1>;
+> > >     };
+> > >   
+> > >     spi {
+> > >         #address-cells = <1>;
+> > >         #size-cells = <0>;
+> > >   
+> > >         trigger-sources = <&adc AD4052_TRIGGER_PIN_GP0>;
+> > >   
+> > >         adc@0 {
+> > >             compatible = "adi,ad4052";
+> > >             reg = <0>;
+> > >             vdd-supply = <&vdd>;
+> > >             vio-supply = <&vio>;
+> > >             spi-max-frequency = <83333333>;
+> > >             pwms = <&adc_trigger 0 10000 0>;
+> > >   
+> > >             // --- Other thought ------
+> > >             //adi,gpio-role = <AD4052_TRIGGER_EVENT_EITHER_THRESH
+> > >             //                 AD4052_TRIGGER_EVENT_DATA_READY>;
+> > >             // ------------------------
+> > >             interrupt-parent =  <&gpio>;
+> > >             interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
+> > >                          <0 1 IRQ_TYPE_EDGE_FALLING>;
+> > >             interrupt-names = "gp0", "gp1";
+> > >             cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+> > >         };
+> > >     };
+> > > 
+> > > Other thought is to add an "adi,gpio-role" property to define gpio
+> > > function (as commented in the example above, matched with index of
+> > > interrupts-names). If no interrupt-name.gp0 but trigger-source.GP0,
+> > > assume role Data ready (no irq for raw read, only buffer offload).
+> > > 
+> > > What is your opinion on this?  
+> > 
+> > 
+> > Usually, we just have the devicetree describe how things are wired up.
+> > Then the driver looks at how things are wired up and decides how to
+> > best make use of the available resources. I.e. in the driver add some
+> > variables in the driver state struct that keeps track of the function
+> > assigned to each GP pin and use that to make decisions.
+> > 
+> > In the driver, we would want to make sure to handle triggers first
+> > since those are less flexible (so set up SPI offload first). This
+> > would cause one of the GP pins to be assigned to the /RDY function.
+> > It doesn't matter which one.
+> >   
+> I will default drdy_gp to g0, until offload request overwrites it,
+> either gp0 or gp1.
+> > Then later, parse the interrupts property. If we see that one of
+> > the GP pins is already assigned to /RDY, then we know we have to
+> > use that pin for the /RDY interrupt as well. If both pins are still
+> > available, then an arbitrary one can be assigned for /RDY.  
+> based on drdy_gp, set that gp as drdy, and the remaining is threshold
+> either. the interrupt is optional, but setup device gp regardless, since
+> the irq may be consumed by other device.
+> > 
+> > Then if there is still an unused GP pin left that is actually
+> > wired up to an interrupt, that can be used for the events interrupt.
+> > 
+> > Or we could even consider to have everything on one pin since the
+> > /RDY signal would never be needed at the same time as events as long
+> > as the events are only ever used in monitor mode.
+> >  
 > 
-> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-Hi Jorge,
+> The threshold event occurs on the rising edge, the data ready on the
+> falling edge (it is actually BUSY). Mixing both has a lot of nuances
+> involved.
 
-Various minor comments inline.
+Ok. Mixing them might not make sense - but overall the decision on what
+to do with any line that is just wired device to host interrupt is
+a driver problem.   If it's also wired to another device (including
+offload engine) and that requires a specific setting (e.g. data ready)
+then that is fair enough to have in DT.
+
+I think that's roughly where this discussion ended up but just wanted
+to confirm that.
 
 Jonathan
 
-> diff --git a/drivers/iio/adc/ad4052.c b/drivers/iio/adc/ad4052.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..842f5972a1c58701addf5243e7b87da9c26c773f
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad4052.c
-> @@ -0,0 +1,1083 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Analog Devices AD4052 SPI ADC driver
-> + *
-> + * Copyright 2025 Analog Devices Inc.
-> + */
-> +#include <linux/array_size.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/bitops.h>
-> +#include <linux/completion.h>
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/math.h>
-> +#include <linux/minmax.h>
+> > If we find that there is some case though where the driver really
+> > can't figure out what to do with the available information, then
+> > we could probably justify adding a property like you suggested.
+> > It seems like we could possibly do without it at this point though.  
+> 
+> With the proposed above, I don't need the cell 0 of trigger-sources. But
+> I will keep for assertion since we are inferring
+> has?trigger-sources-> -then-> drdy.
+> 
+> Best regards,
+> Jorge
 
-whilst I've asked you to drop the of specific code, the
-absences of an appropriate header here makes me thing you
-should take another look at these.  
-
-> +#include <linux/pm_runtime.h>
-> +#include <linux/property.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/string.h>
-> +#include <linux/types.h>
-> +#include <linux/units.h>
-> +#include <linux/unaligned.h>
-> +#include <dt-bindings/iio/adc/adi,ad4052.h>
-
-
-> +
-> +struct ad4052_chip_info {
-> +	const struct iio_chan_spec channels[1];
-
-As below. If it's always one drop the array.
-
-> +	const char *name;
-> +	u16 prod_id;
-> +	u8 max_avg;
-> +	u8 grade;
-> +};
-
-> +};
-> +
-> +struct ad4052_state {
-> +	const struct ad4052_bus_ops *ops;
-> +	const struct ad4052_chip_info *chip;
-> +	enum ad4052_operation_mode mode;
-> +	struct spi_device *spi;
-> +	struct pwm_device *cnv_pwm;
-> +	struct pwm_state pwm_st;
-> +	struct spi_transfer xfer;
-> +	struct gpio_desc *cnv_gp;
-> +	struct completion completion;
-> +	struct regmap *regmap;
-> +	u16 oversampling_frequency;
-> +	int gp1_irq;
-> +	int vio_uv;
-> +	int vref_uv;
-> +	u8 reg_tx[3];
-
-These look to also be used in spi transactions?  As such don't the
-need to be IIO_DMA_MINALIGN?   Fine to have all these with just one
-marking but it needs to be on the first one used in this fashion and you need
-to be sure that they are all protected by an appropriate lock.
-SYSFS access can race and the bus lock isn't sufficient as it only protects
-the actual bus, not the buffers passed.  Also don't rely on core locking
-(i.e. claim direct etc) because whether they prevent multiple users is an
-implementation detail of the core and shouldn't be relied on by users.
-They are only guaranteed to hold the buffer / direct state.
-
-> +	u8 reg_rx[3];
-> +	u8 raw[4] __aligned(IIO_DMA_MINALIGN);
-> +	u8 buf_reset_pattern[18];
-> +};
-
-
-> +
-> +#define AD4052_CHAN(bits, grade) {							\
-> +	.type = IIO_VOLTAGE,								\
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_RAW) |				\
-> +				    BIT(IIO_CHAN_INFO_SCALE) |				\
-> +				    BIT(IIO_CHAN_INFO_CALIBSCALE) |			\
-> +				    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),		\
-> +	.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
-> +	.indexed = 1,									\
-> +	.channel = 0,									\
-> +	.has_ext_scan_type = 1,								\
-> +	.ext_scan_type = ad4052_scan_type_##bits##_s,					\
-> +	.num_ext_scan_type = ARRAY_SIZE(ad4052_scan_type_##bits##_s),			\
-> +	.ext_info = grade##_ext_info,							\
-> +}
-> +
-> +#define AD4052_OFFLOAD_CHAN(bits, grade) {						\
-
-Not used in this patch I think.  Push it to the later one.
-
-> +	.type = IIO_VOLTAGE,								\
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_RAW) |				\
-> +				    BIT(IIO_CHAN_INFO_SCALE) |				\
-> +				    BIT(IIO_CHAN_INFO_CALIBSCALE) |			\
-> +				    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |		\
-> +				    BIT(IIO_CHAN_INFO_SAMP_FREQ),			\
-> +	.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
-> +	.indexed = 1,									\
-> +	.channel = 0,									\
-> +	.has_ext_scan_type = 1,								\
-> +	.ext_scan_type = ad4052_scan_type_##bits##_s,					\
-> +	.num_ext_scan_type = ARRAY_SIZE(ad4052_scan_type_##bits##_s),			\
-> +	.ext_info = grade##_ext_info,							\
-> +}
-> +
-> +static const struct ad4052_chip_info ad4050_chip_info = {
-> +	.name = "ad4050",
-> +	.channels = { AD4052_CHAN(12, AD4052_2MSPS) },
-
-Are we ever going to have more than 1?  Maybe just use channel and drop the array part.
-
-> +	.prod_id = 0x70,
-> +	.max_avg = AD4050_MAX_AVG,
-> +	.grade = AD4052_2MSPS,
-> +};
-> +
-> +static const struct ad4052_chip_info ad4052_chip_info = {
-> +	.name = "ad4052",
-> +	.channels = { AD4052_CHAN(16, AD4052_2MSPS) },
-> +	.prod_id = 0x72,
-> +	.max_avg = AD4052_MAX_AVG,
-> +	.grade = AD4052_2MSPS,
-> +};
-> +
-> +static const struct ad4052_chip_info ad4056_chip_info = {
-> +	.name = "ad4056",
-> +	.channels = { AD4052_CHAN(12, AD4052_500KSPS) },
-> +	.prod_id = 0x76,
-> +	.max_avg = AD4050_MAX_AVG,
-> +	.grade = AD4052_500KSPS,
-> +};
-> +
-> +static const struct ad4052_chip_info ad4058_chip_info = {
-> +	.name = "ad4058",
-> +	.channels = { AD4052_CHAN(16, AD4052_500KSPS) },
-> +	.prod_id = 0x78,
-> +	.max_avg = AD4052_MAX_AVG,
-> +	.grade = AD4052_500KSPS,
-> +};
-> +
-> +static int ad4052_update_xfer_raw(struct iio_dev *indio_dev,
-> +				   struct iio_chan_spec const *chan)
-> +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	const struct iio_scan_type *scan_type;
-> +	struct spi_transfer *xfer = &st->xfer;
-> +
-> +	scan_type = iio_get_current_scan_type(indio_dev, chan);
-> +	if (IS_ERR(scan_type))
-> +		return PTR_ERR(scan_type);
-> +
-> +	xfer->rx_buf = st->raw;
-> +	xfer->bits_per_word = scan_type->realbits;
-> +	xfer->len = scan_type->realbits == 24 ? 4 : 2;
-
-This is a little odd. I'm not sure what happens with len not dividing
-into a whole number of bits per word chunks.
-Maybe a comment?
-
-> +	xfer->speed_hz = AD4052_SPI_MAX_ADC_XFER_SPEED(st->vio_uv);
-> +
-> +	return 0;
-> +}
-
-
-> +static int ad4052_exit_command(struct ad4052_state *st)
-> +{
-> +	struct spi_device *spi = st->spi;
-> +	const u8 val = 0xA8;
-> +
-> +	return spi_write(spi, &val, 1);
-
-Even a one byte spi_write() requires a DMA safe buffer.
-Feel free to use spi_write_then_read() with zero size read as that doesn't
-need dma safety.
-
-> +}
-
-> +static int ad4052_set_sampling_freq(struct ad4052_state *st, unsigned int freq)
-> +{
-> +	const u32 start = 1;
-
-Only used in the check so why the local variable? Maybe this makes sense in
-later patches in which case fine to leave it here.
-
-> +
-> +	if (!in_range(freq, start, AD4052_MAX_RATE(st->chip->grade)))
-> +		return -EINVAL;
-> +
-> +	st->pwm_st.period = DIV_ROUND_UP_ULL(NSEC_PER_SEC, freq);
-> +	return pwm_apply_might_sleep(st->cnv_pwm, &st->pwm_st);
-> +}
-
-
-> +static int ad4052_setup(struct iio_dev *indio_dev, struct iio_chan_spec const *chan,
-> +			const bool *ref_sel)
-> +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	const struct iio_scan_type *scan_type;
-> +	int ret;
-> +
-> +	scan_type = iio_get_current_scan_type(indio_dev, chan);
-> +	if (IS_ERR(scan_type))
-> +		return PTR_ERR(scan_type);
-> +
-> +	u8 val = FIELD_PREP(AD4052_REG_GP_CONF_MODE_MSK_0, AD4052_GP_INTR) |
-
-Declarations still at the top (unless doing cleanup.h stuff)
-
-> +		 FIELD_PREP(AD4052_REG_GP_CONF_MODE_MSK_1, AD4052_GP_DRDY);
-> +
-> +	ret = regmap_update_bits(st->regmap, AD4052_REG_GP_CONF,
-> +				 AD4052_REG_GP_CONF_MODE_MSK_1 | AD4052_REG_GP_CONF_MODE_MSK_0,
-> +				 val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val = FIELD_PREP(AD4052_REG_INTR_CONF_EN_MSK_0, (AD4052_INTR_EN_EITHER)) |
-> +	      FIELD_PREP(AD4052_REG_INTR_CONF_EN_MSK_1, (AD4052_INTR_EN_NEITHER));
-
-Excess brackets. Also why set this here to write it many lines later?
-
-> +
-> +	if (st->chip->grade == AD4052_500KSPS) {
-> +		ret = regmap_write(st->regmap, AD4052_REG_TIMER_CONFIG,
-> +				   FIELD_PREP(AD4052_REG_TIMER_CONFIG_FS_MASK,
-> +					      AD4052_REG_TIMER_CONFIG_300KSPS));
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = regmap_update_bits(st->regmap, AD4052_REG_ADC_MODES,
-> +				 AD4052_REG_ADC_CONFIG_REF_EN_MSK,
-> +				 FIELD_PREP(AD4052_REG_ADC_CONFIG_REF_EN_MSK,
-> +					    *ref_sel));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(st->regmap, AD4052_REG_DEVICE_STATUS,
-> +			   AD4052_REG_DEVICE_STATUS_DEVICE_RESET);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_update_bits(st->regmap, AD4052_REG_INTR_CONF,
-> +				  AD4052_REG_INTR_CONF_EN_MSK_0 | AD4052_REG_INTR_CONF_EN_MSK_1,
-> +				  val);
-> +}
-
-
-
-> +static int __ad4052_read_chan_raw(struct ad4052_state *st, int *val)
-> +{
-> +	struct spi_device *spi = st->spi;
-> +	struct spi_transfer t_cnv = {};
-> +	int ret;
-> +
-> +	reinit_completion(&st->completion);
-> +
-> +	if (st->cnv_gp) {
-> +		gpiod_set_value_cansleep(st->cnv_gp, 1);
-> +		gpiod_set_value_cansleep(st->cnv_gp, 0);
-> +	} else {
-> +		ret = spi_sync_transfer(spi, &t_cnv, 1);
-
-Add a comment for this.   I can't immediately spot documentation on what
-a content free transfer actually does.  I assume pulses the chip select?
-is that true for all SPI controllers?
-
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	/*
-> +	 * Single sample read should be used only for oversampling and
-> +	 * sampling frequency pairs that take less than 1 sec.
-> +	 */
-> +	if (st->gp1_irq) {
-> +		ret = wait_for_completion_timeout(&st->completion,
-> +						  msecs_to_jiffies(1000));
-> +		if (!ret)
-> +			return -ETIMEDOUT;
-> +	}
-> +
-> +	ret = spi_sync_transfer(spi, &st->xfer, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (st->xfer.len == 2)
-> +		*val = sign_extend32(*(u16 *)(st->raw), 15);
-> +	else
-> +		*val = sign_extend32(*(u32 *)(st->raw), 23);
-> +
-> +	return ret;
-> +}
-
-> +
-> +static int ad4052_read_raw(struct iio_dev *indio_dev,
-> +			   struct iio_chan_spec const *chan, int *val,
-> +			   int *val2, long info)
-> +{
-> +	int ret;
-> +
-> +	if (info ==  IIO_CHAN_INFO_SAMP_FREQ)
-> +		return ad4052_get_samp_freq(indio_dev, chan, val, val2);
-> +	else if (info == IIO_CHAN_INFO_SCALE)
-
-if (info == IIO_CHAN_INFO_SCALE) as you returned in the if above.
-
-
-Or just make it a switch statement with default: covering the rest
-of the cases.
-
-> +		return ad4052_get_chan_scale(indio_dev, chan, val, val2);
-> +
-> +	if (!iio_device_claim_direct(indio_dev))
-> +		return -EBUSY;
-> +
-> +	ret = ad4052_read_raw_dispatch(indio_dev, chan, val, val2, info);
-> +	iio_device_release_direct(indio_dev);
-> +	return ret ? ret : IIO_VAL_INT;
-> +}
-
-> +
-> +static int ad4052_debugfs_reg_access(struct iio_dev *indio_dev, unsigned int reg,
-> +				     unsigned int writeval, unsigned int *readval)
-> +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	if (!iio_device_claim_direct(indio_dev))
-
-For these guards in the debugfs callback, please add a comment on why they
-are needed.   We've had a lot of questions about these recently and I'd
-like it to be clear to people when they should cut and paste these and when
-not.
-
-> +		return -EBUSY;
-> +
-> +	if (readval)
-> +		ret = regmap_read(st->regmap, reg, readval);
-> +	else
-> +		ret = regmap_write(st->regmap, reg, writeval);
-> +	iio_device_release_direct(indio_dev);
-> +	return ret;
-> +}
-
-> +static int __ad4052_validate_trigger_sources(struct of_phandle_args *trigger_sources)
-> +{
-> +	switch (trigger_sources->args[1]) {
-> +	case AD4052_TRIGGER_PIN_GP1:
-> +		return trigger_sources->args[0] == AD4052_TRIGGER_EVENT_DATA_READY ?
-> +		       0 : -EINVAL;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int ad4052_validate_trigger_sources(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4052_state *st = iio_priv(indio_dev);
-> +	struct of_phandle_args trigger_sources;
-> +	struct device_node *np;
-> +	int ret;
-> +
-> +	np = st->spi->dev.of_node;
-> +	ret = of_parse_phandle_with_args(np, "trigger-sources",
-> +					 "#trigger-source-cells", 0,
-> +					 &trigger_sources);
-
-Can we use fwnode_property_get_reference_args() here?
-Ideally we don't use of specific code in drivers.
-
-TWith that use dev_fnwode() to get the more generic representation.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = __ad4052_validate_trigger_sources(&trigger_sources);
-> +	of_node_put(trigger_sources.np);
-> +	return ret;
-> +}
-> +
-> +static int ad4052_regulators_get(struct ad4052_state *st, bool *ref_sel)
-> +{
-> +	struct device *dev = &st->spi->dev;
-> +	int uv;
-> +
-> +	st->vio_uv = devm_regulator_get_enable_read_voltage(dev, "vio");
-> +	if (st->vio_uv < 0)
-> +		return dev_err_probe(dev, st->vio_uv,
-> +				     "Failed to enable and read vio voltage\n");
-> +
-> +	uv = devm_regulator_get_enable_read_voltage(dev, "vdd");
-> +	if (uv < 0)
-> +		return dev_err_probe(dev, uv,
-> +				     "Failed to enable vdd regulator\n");
-> +
-> +	st->vref_uv = devm_regulator_get_enable_read_voltage(dev, "ref");
-> +	*ref_sel = st->vref_uv == -ENODEV;
-> +	if (st->vref_uv == -ENODEV)
-> +		st->vref_uv = uv;
-
-We probably don't care but we could support only enabling vdd if we aren't
-using it's voltage.  That would allow a fake regulator if a board didn't
-supply it (as always on).  Bit of an odd corner case though to rely on a stub
-for that one but require the other regulators. Hence this is more of a comment
-than a reason to change anything!
-
-> +	else if (st->vref_uv < 0)
-> +		return dev_err_probe(dev, st->vref_uv,
-> +				     "Failed to enable and read ref voltage\n");
-> +	return 0;
-> +}
-
-
-> +
-> +static int ad4052_runtime_resume(struct device *dev)
-> +{
-> +	struct ad4052_state *st = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = regmap_clear_bits(st->regmap, AD4052_REG_DEVICE_CONFIG,
-> +				AD4052_REG_DEVICE_CONFIG_POWER_MODE_MSK);
-> +
-> +	fsleep(4000);
-I doesn't hugely matter as we don't expect an error, but normal approx
-assumption of a regmap call failing is that we have lost comms with the chip
-and in that case we just error out fast.  
-
-	if (ret)
-		return ret;
-
-	fsleep(4000);
-
-	return 0;
-
-would reflect that handling.
-
-> +	return ret;
-> +}
 
