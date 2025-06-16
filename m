@@ -1,116 +1,163 @@
-Return-Path: <linux-pwm+bounces-6375-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6376-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 101CEADA9FE
-	for <lists+linux-pwm@lfdr.de>; Mon, 16 Jun 2025 09:58:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20163ADB101
+	for <lists+linux-pwm@lfdr.de>; Mon, 16 Jun 2025 15:03:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 245037A9055
-	for <lists+linux-pwm@lfdr.de>; Mon, 16 Jun 2025 07:56:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7240516F048
+	for <lists+linux-pwm@lfdr.de>; Mon, 16 Jun 2025 13:03:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7123C2139CE;
-	Mon, 16 Jun 2025 07:57:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C9D427FB10;
+	Mon, 16 Jun 2025 13:03:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nL6W6Pmx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qbCdWXIC"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F57211A11
-	for <linux-pwm@vger.kernel.org>; Mon, 16 Jun 2025 07:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E340F27380B;
+	Mon, 16 Jun 2025 13:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750060644; cv=none; b=LJvBkg64gv0V+n4IYv6ZyFIcIdoTzch7tbt6j4dA+mEW6/nHctqsF4nVD1vlp+YDcnYFYsGE8P/I0ff+QQNEcFUcRTD11Dh04SeBZ9qZpT/yKPu9GxlPfywfq1FS3w0FVvAjkDNiWfgif6QoJASNi2XfpCk05xBEhUtQb7F90mQ=
+	t=1750079020; cv=none; b=IZc5+LefEk9O98+X+VdmdvbNcl8/Sb4MpNsvQhl+QdACyuSu4EpDxTmP1Q6c+KY1Sz7AouWzTYMcnINcDuuGCyd4AIFlzL1Tr6l3NSsm0ffKwx+m4YkqrIYnyTgV5T2HLZGAwySXHjXqyc1Ok2Ns3q+67IzdbxCr9hg6Le6ccgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750060644; c=relaxed/simple;
-	bh=4qED4T83HWdfDSMzb8LueFEqsVDN+ECnEL/SM5YaoGc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u8sbyE9kuDZ5HlKxTL3sjRKC/aXEOiJbOIw318TRpQSe/gLw2+qN72AXAjqaE7FE3x6I79G73TDIp+pV8frgAzzJ0ljCw+1goZH55Gn8tQyy3iKJSOPszBvBf6yMwdKc92AYLGVC5Z0Qp0LUMmn36XTc9ZeVkn0LNKhSzisC2fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nL6W6Pmx; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-551ed563740so4514054e87.2
-        for <linux-pwm@vger.kernel.org>; Mon, 16 Jun 2025 00:57:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750060640; x=1750665440; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4qED4T83HWdfDSMzb8LueFEqsVDN+ECnEL/SM5YaoGc=;
-        b=nL6W6Pmx0UGEsfqFI+kXxnr6mRuBKYS0d+hDVoZMoAQ64MboSCgLwDmjyPIZ3WaT6d
-         hhIWgYBqz8JRlskb7Y1dNaOsinm3h/17Eqn7nNVOTEtPzDOXuwRW/y9MU3ScmjP8PcnQ
-         RnFNg5ya8O5zBZJuZpas5hLMBIiNKvpUiWwa+6UP4ebwTEqow7HJBhER7nP63VbclX4d
-         pWwYf12jcqDl3pJvfbLERvVDo2AcxKEmcR3jtwkRscHtD1yqj+CX+8Flct37B2BjyvsB
-         6Xf9c9HiF2HmXvXirqbNW3XMjRuOW/rDr6Gg7Q7bobZPgQYI9QXN0IkGgmm4y13n8FYS
-         Fxww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750060640; x=1750665440;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4qED4T83HWdfDSMzb8LueFEqsVDN+ECnEL/SM5YaoGc=;
-        b=GO6JRWtN1rdmeJ/1T4SAW1eb7BPnubkfZo/Y2AURQKQCvFV8xsJfFiZxgjEvjj3Wjm
-         GlqJShXfgd9j23SEjORcznb/CluQ30Mia42IkRRgRZ4QDSPex/aAYSJbP9VH7BuuEo94
-         6TfSMurhgdOynM6MdqHA7L6UZfYDuFwOaFdCoPUO2HwjHJ2/QqjeNfK598g4BRHoMVPB
-         3iixAGjDXX2u1GE/KNfwTgDUUsSOaAlggAKO5uLlw/OtlhhUCTU82sj07R9ZvFy8x4KP
-         tRTj8UiFJpYumQmyYVvJXrmRVebn7iGBuZ7vfYTCMwE6DPrqe39CuHO/pArOHTMUe5M1
-         bFJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmFzLp4bc2a0VwqoYQrE8ceYxnd0XQDVC4xFqyHuD7vfU8fm95cc597qze7qZTlRulmiptVdFGhdI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgS/BIcK1GIUc7BvZePwAa1eYYHdBQKVPvCGiH52XnulwDHFmc
-	ukYKFxAm6Kt0Ndfsx9xU+o5RktkjxEwv7lIZUjxGaDhqA74ZmQgmHS7VVhwQ3gswGsUEiuIzv8u
-	U42X0IWc74glT3JNhrslOLi1WIPoLxFNLLgG9nym/yQ==
-X-Gm-Gg: ASbGncsftCPj9rFKzOjcEd2KSVELVkF6WjanxpTgqwkfXXcW1//r284YL4s1qJWHlV0
-	KiVL7Fl0FywbO9/cEQY8owUSrZ69EYJVxIy67my0wOgWqd0DowLlx/htQtsf+dBacVO7lpCSfgc
-	EqdcF+E5CGYL4Oja1Io8t9+gweY3J6vtNhxbfu/9BWrDqwsBuY5co6TWw2CIz+r3iuSfHHsHEOx
-	kg=
-X-Google-Smtp-Source: AGHT+IHQCUIA9uPY+4qB8NZMyiqQEyfKQbMdGIfmGIEOyX5zJueD1rzkM7PM47GrOY2V7WgbqKjEnCfmQcLchc4ZWKk=
-X-Received: by 2002:a05:6512:33ca:b0:553:aadd:1987 with SMTP id
- 2adb3069b0e04-553b6f0b19fmr1694038e87.30.1750060640532; Mon, 16 Jun 2025
- 00:57:20 -0700 (PDT)
+	s=arc-20240116; t=1750079020; c=relaxed/simple;
+	bh=a7j27RQuAyvZnCvRGb4L4XPkG2jx93P21IQMnptuauU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8fZgzS2y1snqE33S8iZ/wJNLkG/ACpALbIz8HutQqxXBc7vRF7jeNWUI6TUxnEOkQdCvw5D8Fw+WAzVlI1UQr9pXuu1HN2I5+JWjPAWupoPbU2ihB4P0UgKaji22/Vn5WC/HNkMMRiljfgD8Ehw1FEfqmrFPHGDvVEyiYk+o/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qbCdWXIC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD64CC4CEEA;
+	Mon, 16 Jun 2025 13:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750079019;
+	bh=a7j27RQuAyvZnCvRGb4L4XPkG2jx93P21IQMnptuauU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qbCdWXICAoHbASkv2kppLcyRQQ6+aYqV7jEI2SspphRpmjFSXmRaAHbscPyOf27+p
+	 vib9dZYkbzP1B0oxXG4d3QbJkXWHo6aMXpOzbqRLfgG+BFVbh1goeHmihfmGw0cXan
+	 z+HD8WKupg2opOlUu+S+re67Q/s2Jv5tmCCHhxj70dvkKuzN4Py5VzF7j5/g710Vjh
+	 s7F4pove0fhUsgVqtZ17TrOJ+RtSr0qlblAQgTBNvRQDXiX97VrbgPOON2z+Po5zby
+	 Fnk29kIHu6BhwrRI6Gvk4YUturpgSMUOhORTkRTY0Oi+0axDDOveKR3/KPVKiObNzB
+	 YZERVv/rLzA5g==
+Date: Mon, 16 Jun 2025 15:03:36 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, 
+	Brian Norris <briannorris@chromium.org>, Boris Brezillon <bbrezillon@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, kernel@collabora.com, linux-pwm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: rockchip: round period/duty down on apply, up on get
+Message-ID: <nf5bpi3sv5rrlvjg7q2ehyck6brmm3bzmzw4zclirwtiy7vrjp@yzsiao7krnt7>
+References: <20250522-rockchip-pwm-rounding-fix-v1-1-b516ad76a25a@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250614-dev-adp5589-fw-v5-0-7e9d84906268@analog.com> <20250614-dev-adp5589-fw-v5-9-7e9d84906268@analog.com>
-In-Reply-To: <20250614-dev-adp5589-fw-v5-9-7e9d84906268@analog.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 16 Jun 2025 09:57:07 +0200
-X-Gm-Features: AX0GCFv6fter9mSjZCkrODp9lT43obOce09GneXfk4BW3yTfqtGiYH6ixmhIx-4
-Message-ID: <CAMRc=Md45jxZUJUnv+O2UK-J0mzmwV4gKuECYYgzWX50wW-HKQ@mail.gmail.com>
-Subject: Re: [PATCH v5 09/20] gpio: adp5585: add support for the adp5589 expander
-To: nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org, 
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t53uq6jf7edocakw"
+Content-Disposition: inline
+In-Reply-To: <20250522-rockchip-pwm-rounding-fix-v1-1-b516ad76a25a@collabora.com>
+
+
+--t53uq6jf7edocakw
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pwm: rockchip: round period/duty down on apply, up on get
+MIME-Version: 1.0
 
-On Sat, Jun 14, 2025 at 4:37=E2=80=AFPM Nuno S=C3=A1 via B4 Relay
-<devnull+nuno.sa.analog.com@kernel.org> wrote:
->
-> From: Nuno S=C3=A1 <nuno.sa@analog.com>
->
-> Support the adp5589 I/O expander which supports up to 19 pins. We need
-> to add a chip_info based struct since accessing register "banks"
-> and "bits" differs between devices.
->
-> Also some register addresses are different.
->
-> While at it move ADP558X_GPIO_MAX defines to the main header file and
-> rename them. That information will be needed by the top level device in
-> a following change.
->
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Hello Nico,
+
+On Thu, May 22, 2025 at 09:26:44PM +0200, Nicolas Frattaroli wrote:
+> With CONFIG_PWM_DEBUG=3Dy, the rockchip PWM driver produces warnings like
+> this:
+>=20
+>   rockchip-pwm fd8b0010.pwm: .apply is supposed to round down
+>   duty_cycle (requested: 23529/50000, applied: 23542/50000)
+>=20
+> This is because the driver chooses ROUND_CLOSEST for idempotency
+> reasons. However, it's possible to keep idempotency while always
+> rounding down in .apply.
+
+Note that rounding nearest is difficult for idempotency. Consider a PWM
+can implement the following period lengths:
+
+	20.61, 21.4, 22.19
+
+First if you use round-nearest you cannot set 21.4 because if you
+request 21 you get 20.61 and if you request 22 you get 22.19. So if the
+hardware still runs at 21.4, obviously apply =E2=9A=AC get_state cannot be
+idempotent. If you round down in apply and up in get_state (or
+vice-versa) you get idempotency. So using ROUND_CLOSEST for idempotency
+is based on a wrong intuition.
+
+> Do this by making get_state always round up, and making apply always
+> round down. This is done with u64 maths, and setting both period and
+> duty to U32_MAX (the biggest the hardware can support) if they would
+> exceed their 32 bits confines.
+>=20
+> Fixes: 12f9ce4a5198 ("pwm: rockchip: Fix period and duty cycle approximat=
+ion")
+> Fixes: 1ebb74cf3537 ("pwm: rockchip: Add support for hardware readout")
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 > ---
+> This fix may need some careful testing from others before definitely
+> being applied and backported. While I did test it myself of course,
+> making sure to try a combination of periods and duty cycles, I really
+> don't want to accidentally undo someone else's fix.
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+I like it apart from a small nitpick, see below. I think the danger of
+breaking something is small and I tend to apply your patch.
+
+> Some of the u64 math is a bit overkill, but I don't want to assume
+> prescalers will never get larger than 4, which is where we start needing
+> the 64-bit prescaled NSECS_PER_SEC value. clk_rate could also
+> comfortably fit within u32 for any expected clock rate, but unsigned
+> long can fit more depending on architecture, even if nobody is running
+> the PWM hardware at 4.294967296 GHz.
+> ---
+> [...]
+> @@ -103,8 +106,9 @@ static void rockchip_pwm_config(struct pwm_chip *chip=
+, struct pwm_device *pwm,
+>  			       const struct pwm_state *state)
+>  {
+>  	struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
+> -	unsigned long period, duty;
+> -	u64 clk_rate, div;
+> +	u64 prescaled_ns =3D (u64)pc->data->prescaler * NSEC_PER_SEC;
+> +	u64 clk_rate, tmp;
+> +	u32 period, duty;
+
+These hold the period and duty in ticks, so I'd call them period_ticks
+and duty_ticks respectively.
+
+>  	u32 ctrl;
+> =20
+>  	clk_rate =3D clk_get_rate(pc->clk);
+> @@ -114,12 +118,15 @@ static void rockchip_pwm_config(struct pwm_chip *ch=
+ip, struct pwm_device *pwm,
+
+Best regards
+Uwe
+
+--t53uq6jf7edocakw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhQFiUACgkQj4D7WH0S
+/k6RIggAsLLr/RA5R0kZBQiL6qGYpa0dMKd4CntzFu4LMeuLZsSWcXFKnP5RdvO0
+2ysAsVZCJLejyUxDn9VjSDFwpSgw4LoP/hnKbGguh9h/zGozMq/A1E0dYPXqSfPD
+BePTzoZkw7qfzHVMrvR/dY2wTIOuzQHiBSi02eSiO0ye1CfuDIJ0CUQfT86SQ5ju
+VpBfoU63QPjF+o6Ewp/ewIomFgw3J+xytch2HT15kJcrwRibobH2j6ZyDriMt3jh
+ak0utCjLsxnJLXTlGTb0Z/DROUMXnHsCrSutyDFcAa057c0/zas+cwS+PErlW53s
+RdAGcmvcBnvbX+vNuqTSO5f11T0zfQ==
+=ljjR
+-----END PGP SIGNATURE-----
+
+--t53uq6jf7edocakw--
 
