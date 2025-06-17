@@ -1,77 +1,81 @@
-Return-Path: <linux-pwm+bounces-6389-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6390-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC099ADBE21
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jun 2025 02:29:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BF69ADBE23
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jun 2025 02:29:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DA47716ABBF
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jun 2025 00:29:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A8F6169DCF
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jun 2025 00:29:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAFD814E2E2;
-	Tue, 17 Jun 2025 00:29:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1F601547C0;
+	Tue, 17 Jun 2025 00:29:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="egH4I9Lr";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="SrKEc3Jh"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Y0rJF2W+";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="X/7yzYa5"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A94A1494DB;
-	Tue, 17 Jun 2025 00:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A5B1482E8;
+	Tue, 17 Jun 2025 00:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750120159; cv=none; b=JvVp8mkHpcBePRC0OU52hy5Hv9H0SHfP8EDfRQRM4O/EQ5VsZqTkQrxAqCun+gK+04E04CRIQ92IdyNOaudMYpsPcADXrUml8djF3Sv3kkkw08zKza+3k3wqzhXs/crbSR7xoZkrMSaSpoFzfb5da3t8oBArLWL/ZptO4zCPLWU=
+	t=1750120160; cv=none; b=bm/HlC9DowSgKdxCJJnYiBsg/QFfORLt0BZu1XAF0qetzAN2KhR1/i6lNwq62VJZdrcLc91Zmh9eQyQZiiAqele9ZpdoDjPRGQpNnlrg1eAUUeiHGsHOBBnGupKtr+dg6Ov5z0cPHKVu6iiZ5uPkazBoev93YYsCzKUvaoEEPTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750120159; c=relaxed/simple;
-	bh=cUsHRhDhRUZkpg9kblm/H1MwHaKU2gn9eRp/9HCmzj8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=vAiynRdAMJsPyyeD1XccCW2x7rksR+7x8MVn/ZPZff0rGkMY88l1NMlfag4FijlMd3jactaj/sPdjytVWqzCkyDFF8OmkUg4Y8zkxqG/gmyMoPx5adYfOcOO35yGh9urTPfMNTO0Gd0x0PRCToUtY/mi2c7nPPB2HyilfsYmHpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=egH4I9Lr; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=SrKEc3Jh; arc=none smtp.client-ip=80.241.56.151
+	s=arc-20240116; t=1750120160; c=relaxed/simple;
+	bh=uzaGkd5MnD0nh+2mjG+UCXhgd0fDuj4sTMkiSU4FBkA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hV5LkTn0GcCs0D6mmFz64SBxyIBO4JrPByLBX4A8vzV0Jx4nikyxyQnSlOgjPusxzO174MJ3SOPlG/f63x2btcnmOIeLTjz+0Lz//nIb3P7xXK0ot7+/nLY1XvYOrNbudSrRAyt+C99jOU+zcy0Co3+EZmVejshDEH8GU0NJmGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Y0rJF2W+; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=X/7yzYa5; arc=none smtp.client-ip=80.241.56.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bLnmr0lm3z9sWS;
-	Tue, 17 Jun 2025 02:29:16 +0200 (CEST)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bLnms1Lf8z9sW9;
+	Tue, 17 Jun 2025 02:29:17 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750120156;
+	t=1750120157;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=l6AfJ6q2l1xTQkzXIphq9dVeNUU5URa1obSC0K+F/1Q=;
-	b=egH4I9Lrws7W9HnzlZ8YD/F4bBVZPZzOwM9FUudB+cdqd88R+oMyjaBxqGAqu8P6OCMorF
-	B5jaOYEQLJbuahq51bQXHanOMIyuOQ1oDzV4b/goVai4QD/0aW31bxvQS4XxKvR5KQVavi
-	qLhbSoR6Sq1pPsb7QiMiPq+GDFUtmkCRGF6dxbelKcDgC1000Fw81KilMNaXq0+LyWcFDY
-	7t8GW6ITkbJ1abHaKtOiNrxxdgV28P+x3cGZp9ANIyQdyset0iGv9N8k1TdZ35yeIypfsk
-	P6a/McpnoGOFbOTmiWhlNNV/GcMv2+3PTFiFSjdGOWkz6VqPoWR5m/B5yZzk5Q==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tfjKBuILh+lGyoeENWT9EbuJIIX/Qfrx6E5cHWxChUQ=;
+	b=Y0rJF2W+2z6fEu6UzqcBj8xiz0LHWW9v1fe46Iu8M34bnA+pzcZcgMgvO0OMtL8mdegP6L
+	xdHAXdC9648bybUDxljDXH2J5unzSI11BSoJdfW6vNxv/2ASBlnnLv0HjSPa4A+TBgQ0SL
+	ScKM3eHPO9/8Ijep60R8lJQZfhEQ22/1x5nimATyXMucIz1FiZ0OaiG7dJ2QcA7StkYQni
+	3TDreag9HN7Ou92KI1WkqRnjYeasWmVHJy8jaazCJdGDxpfcUY3s5eYEZ8QxpfjeNLHNKk
+	ehaFrCqklsp95sXvsmAztLpcO8O94TX52Q5YAWG5HU8kj+fYuvDzTaEvhgiwPw==
 From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750120153;
+	t=1750120155;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=l6AfJ6q2l1xTQkzXIphq9dVeNUU5URa1obSC0K+F/1Q=;
-	b=SrKEc3Jhm9UDjZ6YjBoxDwK6HunGhgR7BhgIXWO2GQXFX8Q5l2lKdK2zDlyXBUqOUokccQ
-	wcn+EPvYWGvpQjeUQ6Cy+Uz/N7HSePs0iN7KWPwEjcaRJsdYnOBhHsLZMD3Qh+LTcHg/e9
-	fv98ouHcM1eCLkDm6CyCjn889N1AngK/kSRSEayK/UI1zsBv8rHHHEHKOTkr7MRptoRAXU
-	YQ2kgFkGbiUwSCXP9C0TG3SmwcdVwB819wXHxqKyVW4+kEcRUkAsftc2LpAiUWHWDapg2c
-	MbUR4RptIfVtdiCO80ALSDg/tLNot3f3JUHB8EnzhvGvjT32T8jqQknkfK8ZaQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tfjKBuILh+lGyoeENWT9EbuJIIX/Qfrx6E5cHWxChUQ=;
+	b=X/7yzYa53gAraScr+CbYTcVDubAjp+nU4yDkCRLQDaj7lxShaNGC/WKrIbdU2oERHvTNT0
+	weyxL3j+wIKk2iam7MdlPDd39nnQtPNsXIAWbcBKyAhYIkRxpCzD3loxXVJhhX30gMokH5
+	LxdE8KCgRurR92EYGgmTU0N1j0JIeelhCcpqWwcZgotWSDPCVMvKjyTN2bhhd0T7/wvTQI
+	VrIy285FvusIgw/e3fkxHznUIDyYoRNXvsrr9vn9W40CB40nteSqU/2etsjzMtup1n7MJF
+	qUNg0cBKCkbAOHHD83jJ1dLvLcoNi0h5sI9Sow+pewGxx38zSszaK2SvZ01W7Q==
 To: linux-pwm@vger.kernel.org
 Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
 	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Document Argon40
-Date: Tue, 17 Jun 2025 02:28:00 +0200
-Message-ID: <20250617002852.606409-1-marek.vasut+renesas@mailbox.org>
+Subject: [PATCH v2 2/3] dt-bindings: pwm: argon40,fan-hat: Document Argon40 Fan HAT
+Date: Tue, 17 Jun 2025 02:28:01 +0200
+Message-ID: <20250617002852.606409-2-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250617002852.606409-1-marek.vasut+renesas@mailbox.org>
+References: <20250617002852.606409-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -80,13 +84,12 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: k7woxbp5xtxa88iw9uoyjfedoro9bsjg
-X-MBO-RS-ID: d3a3f91d5b60f889dc3
+X-MBO-RS-META: 77q3wiaytdynszqds1oa6n5enotjsp46
+X-MBO-RS-ID: e864ad3c274dbe6be95
 
-Argon 40 Technologies Limited is a SBC expansion board vendor.
-Document the prefix. For details see https://argon40.com .
+Document trivial PWM on Argon40 Fan HAT, which is a RaspberryPi
+blower fan hat which can be controlled over I2C.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 ---
 Cc: "Uwe Kleine-König" <ukleinek@kernel.org>
@@ -97,24 +100,65 @@ Cc: devicetree@vger.kernel.org
 Cc: linux-pwm@vger.kernel.org
 Cc: linux-renesas-soc@vger.kernel.org
 ---
-V2: Add AB from Conor
+V2: Implement dedicated binding document
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/pwm/argon40,fan-hat.yaml         | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/argon40,fan-hat.yaml
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 3f23f6f93b62..27e2ad136931 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -149,6 +149,8 @@ patternProperties:
-     description: Arctic Sand
-   "^arcx,.*":
-     description: arcx Inc. / Archronix Inc.
-+  "^argon40,.*":
-+    description: Argon 40 Technologies Limited
-   "^ariaboard,.*":
-     description: Shanghai Novotech Co., Ltd. (Ariaboard)
-   "^aries,.*":
+diff --git a/Documentation/devicetree/bindings/pwm/argon40,fan-hat.yaml b/Documentation/devicetree/bindings/pwm/argon40,fan-hat.yaml
+new file mode 100644
+index 000000000000..2725eee5328c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/argon40,fan-hat.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/argon40,fan-hat.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Argon40 Fan HAT PWM controller
++
++maintainers:
++  - Marek Vasut <marek.vasut+renesas@mailbox.org>
++
++description: |
++  The trivial PWM on Argon40 Fan HAT, which is a RaspberryPi blower fan
++  hat which can be controlled over I2C, generates a fixed duty cycle PWM
++  signal with configurable period to control the fan speed.
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    const: argon40,fan-hat
++
++  reg:
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 2
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      pwm@1a {
++        compatible = "argon40,fan-hat";
++        reg = <0x1a>;
++        #pwm-cells = <2>;
++      };
++    };
 -- 
 2.47.2
 
