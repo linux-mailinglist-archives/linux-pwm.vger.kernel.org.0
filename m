@@ -1,120 +1,247 @@
-Return-Path: <linux-pwm+bounces-6403-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6404-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84266ADCE46
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jun 2025 15:53:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89D5CADCEA9
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jun 2025 16:04:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6E843B4DB5
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jun 2025 13:49:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3217C1898FA4
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jun 2025 14:02:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4E3F2E6D33;
-	Tue, 17 Jun 2025 13:48:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5441916DEB3;
+	Tue, 17 Jun 2025 14:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="YR1APQXH";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="EEFy69h/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LK6FAhu5"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D982E266C;
-	Tue, 17 Jun 2025 13:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F188482FF;
+	Tue, 17 Jun 2025 14:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750168107; cv=none; b=C72kFLkZsyrchbNZaV8sn/wogI80mXzHw+wxCA70K7z3f+TIW1EQ0A34X21vI7e1r2ag6PHTZwbk0gm4epFpn3v7X0zWp2FsGwN91qjKxgJ/ubChCiVE0qG4Bc2x3mvx+iCLB068lJcjpMOtczi0RC2fUa1dOxqvK2PGeukvmRQ=
+	t=1750168946; cv=none; b=bAcSA7cHo7BtVkOD1GcG8yDlZiM9JSu5xXTqno9TjxAV9WIublYJIM3AKdALGlL+ldT1WugCp0bq8B3uX0jmi2Ths7N4lAP1gc4a7K4JNrJ7G1+xIZ1MbKrJ0fFGcZ5Zx5a77KB9X4Q3VpHXD1cu4TRtEszScMG1HSxCZ8X9WYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750168107; c=relaxed/simple;
-	bh=wiws6Qaja8X1qNEjGaJBYuW6EgiAvsI/Llg/tKoPxRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D6BYIriRhKWoRPXjfYPcO8HJ+zemceTfRyBZrN+PdAlhq3zyjgqctmQpGhpg/kEa1nknFe+jjIcPsNi5KFDvBYNbwy4gPNIj67yuoL3KHh1/tHrAXvMnryP9kSbtxI8l+TCxsufeqe6muMsFZJr9RiVwGlzsToSCjoRUtJk+3o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=YR1APQXH; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=EEFy69h/; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bM7Vp10B5z9sxK;
-	Tue, 17 Jun 2025 15:48:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750168098;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=28480iRiD2DiK7+l0ougqeAbzPAdy3FYtcPpLg+iQ/U=;
-	b=YR1APQXHSPoA87bVSe7176AQmJZCTx7e67nH1o1+Ki0kzO5o0L8ncV/DgrT+CTH7mDLbjq
-	cDumIEOjyIFRp7LXN+XbRTbFlZ0i8yAeOoaEbwO41I3hLgodq/VIQfYe/8dHG55q0+QsSV
-	rm+kSgijL4w6ncnxfEX1aTtnJx/Ec8hCA+cJzpebXylsEklCzeqFczE7uAsnD+vUGUKM4N
-	JUhE9i5pkEQE8Hf5CGs9dVZqjIbOCF7LchlrcxKJmrjuh5fvZuJFgNtz2WkETz5zHt4fh5
-	+rUk4ddGqxuszLPfcsNDp6wWz+ueRFgACUDi1P9g/q9RrMapkkzm9WneRWZZxQ==
-Message-ID: <2e152214-5f2d-451c-8659-941184cd8fdd@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750168095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=28480iRiD2DiK7+l0ougqeAbzPAdy3FYtcPpLg+iQ/U=;
-	b=EEFy69h/jzJcT2LqxSCOrB8TwmP7kXnW8vH+5pyOWSPwHSrJd8lSvVuedifRv6QpFPR7xK
-	bUpfVThL6kixuqxZHz7mQfOmoSx5DasMxZZhPuu2r2pGVZzC8YYPOfVcvs2yQ7+zsdvjFd
-	MM9f98Z3RE1EXZDGWNd/nvFBwZkLi9WNuyI/kyY4jNXaVKAgsyhzdm/UraN6eYCybfypqj
-	zgSPxNA8T5QP3092xtkUyq6QAxUd39uZZ54sPngPdLgD+7btlMYYFr39TXaQi93R+FrKXK
-	Thco+PsRpgHQEg10F7EnD+REmFdOBXhjwOWWsi2DOG97u14ks9xXZDBEojDLFg==
-Date: Tue, 17 Jun 2025 15:48:13 +0200
+	s=arc-20240116; t=1750168946; c=relaxed/simple;
+	bh=IDX1O24AQ0fDZmg1ZPj5AQ8cxPkyCVGdTnsRhraCqI4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s2V03Ex23TEmmlkVjOdZlZ0O/huu8beZI94c7Llx8un5YAl5OqdtJuBk860kqMtK/a6VJj0x4l0M0+sBZK5MHnNgkMCP6z8HyAE1li33GhPEarVdWewz02q3bJV7RMwuKjCOb05I/YHb9qVoZQLQxekAJ0SsjEV1WdYhOwQwXAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LK6FAhu5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AD75C4CEF0;
+	Tue, 17 Jun 2025 14:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750168945;
+	bh=IDX1O24AQ0fDZmg1ZPj5AQ8cxPkyCVGdTnsRhraCqI4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LK6FAhu5ZIAiinLdF1hK6FzwBJNcznjlQDAhJ6n/e0Oakxc2TRRZSvg74pmqZKlvi
+	 ZojcdOtJTnLg4sEvm0oraVwDgq3UQ4LujOoA0Yp0ps/V7uc9dYpQ4og4olKK6XoVK2
+	 4mtkf0zz6Z/XjB5v8x+Kg1QB6D25bu/o1+vpa+ZLqmabh5Q/INhJOv0hNs/Oqu+LCe
+	 q7cAWd2Lz+T4Uk62NFEM2/QPp7B0DG0TLoVWhkf+Z8qUsmPTko0Xt2KXljYtjOx6wb
+	 rQY1+oakjC2wlGcY5JExwVgTP9TISF+I5wiBUR1X/+o4zvkcz/wVt6hxIrOea4q50V
+	 w34f7FluotYXQ==
+Date: Tue, 17 Jun 2025 16:02:22 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-pwm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] pwm: argon-fan-hat: Add Argon40 Fan HAT support
+Message-ID: <fhns5fnckokwsb572kge6tmqaaoholzvgncdctj7vskigytvmu@3uirsrszul36>
+References: <20250617092037.37229-1-marek.vasut+renesas@mailbox.org>
+ <20250617092037.37229-3-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 2/3] dt-bindings: pwm: argon40,fan-hat: Document
- Argon40 Fan HAT
-To: Rob Herring <robh@kernel.org>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-pwm@vger.kernel.org, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org
-References: <20250617092037.37229-1-marek.vasut+renesas@mailbox.org>
- <20250617092037.37229-2-marek.vasut+renesas@mailbox.org>
- <20250617133744.GA1888765-robh@kernel.org>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <20250617133744.GA1888765-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: 19ud1dzt3j9i63whngikdsipgjbabbii
-X-MBO-RS-ID: 7de417b6fb1811c835b
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t62wktukis6g36v3"
+Content-Disposition: inline
+In-Reply-To: <20250617092037.37229-3-marek.vasut+renesas@mailbox.org>
 
-On 6/17/25 3:37 PM, Rob Herring wrote:
 
-[...]
+--t62wktukis6g36v3
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v3 3/3] pwm: argon-fan-hat: Add Argon40 Fan HAT support
+MIME-Version: 1.0
 
->> +++ b/Documentation/devicetree/bindings/pwm/argon40,fan-hat.yaml
->> @@ -0,0 +1,48 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pwm/argon40,fan-hat.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Argon40 Fan HAT PWM controller
->> +
->> +maintainers:
->> +  - Marek Vasut <marek.vasut+renesas@mailbox.org>
->> +
->> +description: |
-> 
-> Don't need '|'.
+Hello Marek,
 
-Fixed in V4 ...
+On Tue, Jun 17, 2025 at 11:19:36AM +0200, Marek Vasut wrote:
+> diff --git a/drivers/pwm/pwm-argon-fan-hat.c b/drivers/pwm/pwm-argon-fan-hat.c
+> new file mode 100644
+> index 000000000000..58b94ad4d9bc
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-argon-fan-hat.c
+> @@ -0,0 +1,122 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2025 Marek Vasut
+> + *
+> + * Limitations:
+> + * - no support for offset/polarity
+> + * - fixed 30 kHz period
+> + *
+> + * Argon Fan HAT https://argon40.com/products/argon-fan-hat
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/pwm.h>
+> +
+> +#define ARGON40_FAN_HAT_PERIOD_NS	33333	/* ~30 kHz */
+> +
+> +static int argon_fan_hat_round_waveform_tohw(struct pwm_chip *chip,
+> +					     struct pwm_device *pwm,
+> +					     const struct pwm_waveform *wf,
+> +					     void *_wfhw)
+> +{
+> +	u8 *wfhw = _wfhw;
+> +
+> +	*wfhw = DIV_ROUND_CLOSEST_ULL(wf->duty_length_ns * 100, wf->period_length_ns);
 
->> +      pwm@1a {
->> +        compatible = "argon40,fan-hat";
->> +        reg = <0x1a>;
->> +        #pwm-cells = <2>;
-... and also this one, detected by the bot, thanks.
+Oh, I thought I already pointed this out to be wrong in reply to v2, but
+it seems I didn't :-\ Ah, I did that for your other PWM patch
+https://lore.kernel.org/all/jgafc7te2zotqwvetudo6c4o4nit6zi3yp4ecg4gka53hrypk5@7ypb5asrc2ct/.
+
+I see you have concerns there, I'll address these in that thread.
+
+> +	return 0;
+> +}
+> +
+> +static int argon_fan_hat_round_waveform_fromhw(struct pwm_chip *chip,
+> +					       struct pwm_device *pwm,
+> +					       const void *_wfhw,
+> +					       struct pwm_waveform *wf)
+> +{
+> +	const u8 *wfhw = _wfhw;
+> +
+> +	wf->period_length_ns = ARGON40_FAN_HAT_PERIOD_NS;
+> +	wf->duty_length_ns = DIV64_U64_ROUND_UP(wf->period_length_ns * *wfhw, 100);
+> +	wf->duty_offset_ns = 0;
+> +
+> +	return 0;
+> +}
+> +
+> +static int argon_fan_hat_write(struct i2c_client *i2c, const u8 wfhw)
+> +{
+> +	u8 tx[2] = { 0x80, wfhw };
+
+The vendor "driver" has `ADDR_ARGONONEREG_DUTYCYCLE=0x80`, maybe put that
+into a define, too?
+
+> +	struct i2c_msg msg = {
+> +		.addr = i2c->addr,
+> +		.len = 2,
+> +		.buf = tx,
+> +	};
+> +
+> +	return (i2c_transfer(i2c->adapter, &msg, 1) == 1) ? 0 : -EINVAL;
+
+The vendor driver uses smbus stuff. I suggest to use
+i2c_smbus_write_byte_data() here, too.
+
+I also found that the vendor driver reads the duty-cycle register (using
+i2c_smbus_read_byte_data()). Strange that this stops the fan.
+
+> +}
+> +
+> +static int argon_fan_hat_write_waveform(struct pwm_chip *chip,
+> +					struct pwm_device *pwm,
+> +					const void *_wfhw)
+> +{
+> +	struct i2c_client *i2c = pwmchip_get_drvdata(chip);
+> +	const u8 *wfhw = _wfhw;
+> +
+> +	return argon_fan_hat_write(i2c, *wfhw);
+> +}
+> +
+> +static const struct pwm_ops argon_fan_hat_pwm_ops = {
+> +	.sizeof_wfhw		= sizeof(u8),
+> +	.round_waveform_fromhw	= argon_fan_hat_round_waveform_fromhw,
+> +	.round_waveform_tohw	= argon_fan_hat_round_waveform_tohw,
+> +	.write_waveform		= argon_fan_hat_write_waveform,
+
+Please don't align the =, use a single space only.
+
+> +	/*
+> +	 * The controller does not provide any way to read info back,
+> +	 * reading from the controller stops the fan, therefore there
+> +	 * is no .read_waveform here.
+> +	 */
+> +};
+> +
+> +static int argon_fan_hat_i2c_probe(struct i2c_client *i2c)
+> +{
+> +	struct pwm_chip *pc = devm_pwmchip_alloc(&i2c->dev, 1, 0);
+
+Can you please rename "pc" to "chip"? "pc" is usually used for the
+driver data struct.
+
+> +	int ret;
+> +
+> +	if (IS_ERR(pc))
+> +		return PTR_ERR(pc);
+> +
+> +	pc->ops = &argon_fan_hat_pwm_ops;
+> +	pwmchip_set_drvdata(pc, i2c);
+> +
+> +	ret = devm_pwmchip_add(&i2c->dev, pc);
+> +	if (ret)
+> +		return dev_err_probe(&i2c->dev, ret, "Could not add PWM chip\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static void argon_fan_hat_i2c_shutdown(struct i2c_client *i2c)
+> +{
+> +	argon_fan_hat_write(i2c, 100);
+> +}
+
+Isn't that something that the fan driver should cope for? PWM drivers
+usually do nothing on shutdown.
+
+> +static const struct of_device_id argon_fan_hat_dt_ids[] = {
+> +	{ .compatible = "argon40,fan-hat" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, argon_fan_hat_dt_ids);
+> +
+> +static struct i2c_driver argon_fan_hat_driver = {
+> +	.driver = {
+> +		.name = "argon-fan-hat",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +		.of_match_table = argon_fan_hat_dt_ids,
+> +	},
+> +	.probe = argon_fan_hat_i2c_probe,
+> +	.shutdown = argon_fan_hat_i2c_shutdown,
+> +};
+> +
+> +module_i2c_driver(argon_fan_hat_driver);
+> +
+> +MODULE_AUTHOR("Marek Vasut <marek.vasut+renesas@mailbox.org>");
+> +MODULE_DESCRIPTION("Argon40 Fan HAT");
+> +MODULE_LICENSE("GPL");
+
+--t62wktukis6g36v3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhRdWsACgkQj4D7WH0S
+/k5sewf/W/Bkf4IPqRyNruG1KiJrgDv7v9R+ERQDdI7f9RsSCXJfEz12JrTZYUm2
+atwr+J/EiXfGpeDU9saB0mzie5SUc++yLDwYWMP8Xrhd5IKr6gvD/IAuIFOLcsGl
+F8mBog3Ee1FRBpadulBuXqj9S7/Z+zlfRpnBqtqgoeedRkurJp2DdP5oYPQGcrid
+0cisVKrPXPVj10ab0HSBbh/Q6xDlIgVR1byv5OLX3QGrgKWuXXzhTHIhWiSTEC+w
+lsD1PlM7+oe7eiVtbSGxcsyxthvXzVym53b5ygde1IHpPWvi1OwWl15EGyDG29Ml
+27diFYbYMY6Nug82++4siY7k54bT5A==
+=1E7U
+-----END PGP SIGNATURE-----
+
+--t62wktukis6g36v3--
 
