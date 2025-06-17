@@ -1,76 +1,77 @@
-Return-Path: <linux-pwm+bounces-6401-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6402-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E1B6ADCB8B
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jun 2025 14:30:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0343DADCD94
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jun 2025 15:38:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B93317399A
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jun 2025 12:28:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3CFB81737D7
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jun 2025 13:38:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BE202EA464;
-	Tue, 17 Jun 2025 12:26:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61F982E2665;
+	Tue, 17 Jun 2025 13:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJZwMlxF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uDQKdZb/"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38182E92DE;
-	Tue, 17 Jun 2025 12:26:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A342E265C;
+	Tue, 17 Jun 2025 13:37:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750163183; cv=none; b=oC4WrCK+dOSHzcNLLLAkbcSZuMbc9IG3j0A0Smu8Aj4M1oST8o5x9HcpLKXKAEAkbenQlr4t/apPn4TOQSygMEm7/K0tT6ItQHBmtELDdMmeFOppH9RoFPb9Z1vy4hCHXzKXYn57QtJBD7Her9P7Rp2WqaxceNPz0cSjgbLaLb8=
+	t=1750167466; cv=none; b=sGx7roOKapYVwGS/I+gKS5XFD3erklqnFLEIw7Ad/4qpiiOQhv9NzOurb3OF/JwlwFXh+byzSoKaxlbATul2kX74nZFwZgin9xmOi++N99RNl25A4BvstPFuGGAPbzpUzL8a8Cjm5cmQTHf5XCQEFJ7/Rdf/SdfsvRjy6Qti0wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750163183; c=relaxed/simple;
-	bh=MnYggXt1DmzLw3znPdMFXwZLsZaCNbYxq0l13Lkdwdo=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=DLuaWBYRVSbCnO+yzxU09vWdqb4KHe4kcaWpfpWtMvd7MUiTf0WqQijzS47AjPRbnGVIRegZ8WJ/nt9uZZ1ZfZPWJyiG+1Hk19xPU0KWXf9PDY+sNThkGRKWsKQOaTU+YobkRbp5mmKNEXcbE5b/yfQc9ilITrkDzKkg0Nd2qcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rJZwMlxF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F980C4CEF1;
-	Tue, 17 Jun 2025 12:26:22 +0000 (UTC)
+	s=arc-20240116; t=1750167466; c=relaxed/simple;
+	bh=VikTIZp4AfgSesWbDPBebzVoysMDPcHm2POYFhTcWfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vo9anM2D05LjqoQhUlxpxtKLOPgNILhtkLQv6idj+IZ7ukAXjdtM+1U6n9Un3cUBZD+7BeXBr0HhxR0XElwABn36MdMG5u6qRjJMsL0zftgLTs1v+DA8bLyyzZEvHZhEcWkNoYekOaf29/LJBtOl9Br2TKZ75YvuQPThfN4iiZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uDQKdZb/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4BADC4CEE3;
+	Tue, 17 Jun 2025 13:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750163182;
-	bh=MnYggXt1DmzLw3znPdMFXwZLsZaCNbYxq0l13Lkdwdo=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=rJZwMlxF15g7P/9eloPAfeyGiCDn3VVYajFxR+h/dmOcDu8bhNF/vS3tp8Bf/mRcC
-	 2dd3V+zCVThyg1mev/V5TnvnxpgFzNsLM2y5xmXVYAkppKh1MaNgGW1VbAN1JPeB6S
-	 Cix8Hv/tKS0tMNN8wfqGMdTLxBTzA4avPtmBWNZ9pD/xAqldwLMZrCEgrkznr2lyhK
-	 QNZUj92+y/UNDepMEmXBmEOQyZYc6I61DAeAvxAaBZ3ibTn0a9s4RvWmTNP5SqrV/z
-	 3EwFQ0z5CwfwqUV7DzbPbptuWC3JVe1WonJv4RY8v4K5+fwS/ZxPznLSApl9VoWWAX
-	 ZYQJr0GAmWI+Q==
-Date: Tue, 17 Jun 2025 07:26:21 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1750167465;
+	bh=VikTIZp4AfgSesWbDPBebzVoysMDPcHm2POYFhTcWfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uDQKdZb/AR6HKApzBCrjPXDtLFgYKqB229c4RkdzSd4buLbCB1qKaLP07wiqc2ot9
+	 JHbheS4b85tHeZSE5GbQRCAjU0S4EOQFcFGy0Oa4z5LTSNmkdGOVcCdZlCzxZ/EQSi
+	 U0ArArk7E5YCMbATZF2RvXX/UzbATgdxikhpmgSUa/MFs29ifvIfKnVkeDWFRU92tw
+	 FwEdPOpJ8entGbpMP9akPkiCegR0PLBjAgdb9eFs2tepOz5ROa+1q+RVESVAILW9uI
+	 HmiBYdmi+E/Uc1NRNyJmx7aHYuuM5xE5c7QB5h/bcvKTK/jI5onMU4zYvfUfSwRN6k
+	 KgR/5iyamKehQ==
+Date: Tue, 17 Jun 2025 08:37:44 -0500
+From: Rob Herring <robh@kernel.org>
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-pwm@vger.kernel.org,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: pwm: argon40,fan-hat: Document
+ Argon40 Fan HAT
+Message-ID: <20250617133744.GA1888765-robh@kernel.org>
+References: <20250617092037.37229-1-marek.vasut+renesas@mailbox.org>
+ <20250617092037.37229-2-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, linux-pwm@vger.kernel.org, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <20250617092037.37229-2-marek.vasut+renesas@mailbox.org>
-References: <20250617092037.37229-1-marek.vasut+renesas@mailbox.org>
- <20250617092037.37229-2-marek.vasut+renesas@mailbox.org>
-Message-Id: <175016318163.1418393.10980265892327260592.robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: pwm: argon40,fan-hat: Document
- Argon40 Fan HAT
 
-
-On Tue, 17 Jun 2025 11:19:35 +0200, Marek Vasut wrote:
+On Tue, Jun 17, 2025 at 11:19:35AM +0200, Marek Vasut wrote:
 > Document trivial PWM on Argon40 Fan HAT, which is a RaspberryPi
 > blower fan hat which can be controlled over I2C.
 > 
 > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 > ---
-> Cc: "Uwe Kleine-KÃ¶nig" <ukleinek@kernel.org>
+> Cc: "Uwe Kleine-König" <ukleinek@kernel.org>
 > Cc: Conor Dooley <conor+dt@kernel.org>
 > Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
 > Cc: Rob Herring <robh@kernel.org>
@@ -85,30 +86,64 @@ On Tue, 17 Jun 2025 11:19:35 +0200, Marek Vasut wrote:
 >  1 file changed, 48 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/pwm/argon40,fan-hat.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/pwm/argon40,fan-hat.yaml b/Documentation/devicetree/bindings/pwm/argon40,fan-hat.yaml
+> new file mode 100644
+> index 000000000000..a0010700ab12
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/argon40,fan-hat.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/argon40,fan-hat.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Argon40 Fan HAT PWM controller
+> +
+> +maintainers:
+> +  - Marek Vasut <marek.vasut+renesas@mailbox.org>
+> +
+> +description: |
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Don't need '|'.
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/argon40,fan-hat.example.dtb: pwm@1a (argon40,fan-hat): #pwm-cells: 3 was expected
-	from schema $id: http://devicetree.org/schemas/pwm/argon40,fan-hat.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250617092037.37229-2-marek.vasut+renesas@mailbox.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+> +  The trivial PWM on Argon40 Fan HAT, which is a RaspberryPi blower fan
+> +  hat which can be controlled over I2C, generates a fixed 30 kHz period
+> +  PWM signal with configurable 0..100% duty cycle to control the fan
+> +  speed.
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: argon40,fan-hat
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      pwm@1a {
+> +        compatible = "argon40,fan-hat";
+> +        reg = <0x1a>;
+> +        #pwm-cells = <2>;
+> +      };
+> +    };
+> -- 
+> 2.47.2
+> 
 
