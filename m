@@ -1,59 +1,63 @@
-Return-Path: <linux-pwm+bounces-6434-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6435-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09A32ADF4DE
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jun 2025 19:50:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF621ADF53B
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jun 2025 19:59:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D317166D83
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jun 2025 17:50:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 396AF401C36
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jun 2025 17:56:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F056A2FBFE8;
-	Wed, 18 Jun 2025 17:42:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 814A82F94B4;
+	Wed, 18 Jun 2025 17:55:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNU6yYCk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9SDhn13"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05922F49FD;
-	Wed, 18 Jun 2025 17:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDFE2F5469;
+	Wed, 18 Jun 2025 17:55:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750268539; cv=none; b=U8NX6r4dp7+IiBt3qu5LLVDKT1Bm/apyIZMAKz7Cjag2VuioWLV4mK0lrvanOtYYh6j+Wc2t0EWPXeUqWuI4OYQrPzAFFINQqDZQyAABxsuOvu+i0M8n6j16wq1wo0jadDBKoq4+jkMHQUcKI1zkhJLgfBK4KhTA9imin+mrV+8=
+	t=1750269316; cv=none; b=new4lKTfSzol/cGUGB7fzxm1lK9nRIplXd//RBoR2y7I41uECNWvQhMfmjDYDjcs2w2oFj2EfDckxTzSMs6mmO7ajxhsRRRHBpfH2yPJk9bfklwBXsUHk3nzes1qMhZcfpopw8lgo2PubkGkmqvjPwGKMshUhUMlMtUcAbAqzDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750268539; c=relaxed/simple;
-	bh=LArCPePMzO+BasZon9StkkfDlv13a3fopLrcbOJJqgw=;
+	s=arc-20240116; t=1750269316; c=relaxed/simple;
+	bh=5wT0aIrsAha0PXMViQ6wIobYxSVAr6a7EIn8WbcB6Uc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDW2JHEfxCi/BgxCarlTO07/tZLcwUELwEfSVkLM0WaXiey+dHirJCAlHu9O50nZ/Vpzki3fllm3BCaLUaGOt/H+Iu7gbht4O7NXJ8AJTIXfPrq5qGa7nrN62wIDsX8yfybiebHP23GdDrw86e9JISo+HJDiMuTiz7HuZ3h7D/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNU6yYCk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA4E4C4CEE7;
-	Wed, 18 Jun 2025 17:42:13 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=t65YbicfJxsmS2al+B+j2+rRIMqHne2N+K72vuBHDjWPIocDhDhaVuG0dZd7d7VpDEu85QqFS1px0b1d6YblbdhHVkXA+1yradD3a8rVo0dLplp0NRb6BBxiAmB7skGTY2bhakw/KQqhXHQH26PLzQfxTRkisg1anqfcH+7SeIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9SDhn13; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41642C4CEE7;
+	Wed, 18 Jun 2025 17:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750268534;
-	bh=LArCPePMzO+BasZon9StkkfDlv13a3fopLrcbOJJqgw=;
+	s=k20201202; t=1750269314;
+	bh=5wT0aIrsAha0PXMViQ6wIobYxSVAr6a7EIn8WbcB6Uc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eNU6yYCkSNrivI4pNO22Dm80jQzj9T2iws6xKuRO8+xxwD4bwuuHiB1U/LEbwTWq+
-	 f1COU2swCT3suIAJfVKB8k44oUT91GnamNByvI+j4moPI/s1IfKJOwfkzkOxDeXt1I
-	 +f2t7HXZaOCDQ/QQPG3Rw3u7sDPAEQKDc6LDyfTISlqbDTIFin1bpNUkhoNVvitb37
-	 QjXc+WBvvHitEHNeTbg5LHeIg8+2TgZnL10EJVT05341s76uVcUhp6YzUHgEiAzXn8
-	 GvLWlDOpvtDjZSd3QcKqOxVAw+wrqUAhFe5kScJGWgLXEbyPcsjE8f99qXnxkeyk2B
-	 1o7qseL+w9Erw==
-Date: Wed, 18 Jun 2025 19:42:11 +0200
+	b=V9SDhn13c0JD2tjlibEUADU/2YTadF28roMpREO+NiAgnQ9xC2FmjSnyGkCpIkQxI
+	 aj4ltT+dQVGJhd/slgNsY4huMq/s9VuWI0iCVJkjQaIVhmA43ZlQCdI36eY9jZbxU8
+	 S5sB5uipNgGj1dkuWSg4+WmAYz1tyS3SG/0it1nGZH/5ftfmneJKpl1lsL62Bb1zOE
+	 gNKYcOZ2R3Z8mF4IUUc7M5aD2cWvO0/XKLyBNtRLkn6NP1Mz8WF5eSnnnhr5KDfYHs
+	 Gy4lSXenkcd4etvjBxXJFBz4i16317pfiN0GkhY1/+tumtO9rgewoi9KYYNMVPxAuD
+	 f6rREnUPhqvvA==
+Date: Wed, 18 Jun 2025 19:55:12 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: nuno.sa@analog.com
-Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org, Lee Jones <lee@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH v5 10/20] pwm: adp5585: add support for adp5589
-Message-ID: <52fpewavv56z5fmqxabcua4rv5nugsglctgoiijrbipagryvau@wl3vdhza6ro5>
-References: <20250614-dev-adp5589-fw-v5-0-7e9d84906268@analog.com>
- <20250614-dev-adp5589-fw-v5-10-7e9d84906268@analog.com>
+To: Jorge Marques <gastmaier@gmail.com>
+Cc: Jorge Marques <jorge.marques@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>, 
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 4/8] iio: adc: Add support for ad4052
+Message-ID: <ie44wrnocvisv2ilgds76owbk4u423rr2htpsc5pobykj37zeg@ga5y25gcdjv3>
+References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
+ <20250610-iio-driver-ad4052-v3-4-cf1e44c516d4@analog.com>
+ <yw3n2csu4x4mfed33dtvl75zc5scgkjvkzruqilpw64n7esmdn@3fj77ufzm3c2>
+ <oqibdd7spdxvlimrwcabqo2xryfplk4q6lnwav5grtl5juud5x@vqfego523x7a>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -61,49 +65,80 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="agqyefwbu5h5hblt"
+	protocol="application/pgp-signature"; boundary="6n56agevkbvsdqk4"
 Content-Disposition: inline
-In-Reply-To: <20250614-dev-adp5589-fw-v5-10-7e9d84906268@analog.com>
+In-Reply-To: <oqibdd7spdxvlimrwcabqo2xryfplk4q6lnwav5grtl5juud5x@vqfego523x7a>
 
 
---agqyefwbu5h5hblt
+--6n56agevkbvsdqk4
 Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 10/20] pwm: adp5585: add support for adp5589
+Subject: Re: [PATCH v3 4/8] iio: adc: Add support for ad4052
 MIME-Version: 1.0
 
-Hello Nuno,
+Hello,
 
-On Sat, Jun 14, 2025 at 03:36:01PM +0100, Nuno S=E1 via B4 Relay wrote:
-> From: Nuno S=E1 <nuno.sa@analog.com>
+On Tue, Jun 17, 2025 at 05:34:56PM +0200, Jorge Marques wrote:
+> On Tue, Jun 17, 2025 at 04:59:48PM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Tue, Jun 10, 2025 at 09:34:37AM +0200, Jorge Marques wrote:
+> > > +static int ad4052_get_samp_freq(struct iio_dev *indio_dev,
+> > > +				struct iio_chan_spec const *chan,
+> > > +				int *val,
+> > > +				int *val2)
+> > > +{
+> > > +	struct ad4052_state *st =3D iio_priv(indio_dev);
+> > > +
+> > > +	*val =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, st->pwm_st.period);
+> > > +	return IIO_VAL_INT;
+> >=20
+> > st->pwm_st.period is the period that was requested before. If you want
+> > the real period that is currently emitted, check pwm_get_state_hw().
 >=20
-> Add support for the adp5589 I/O expander. From a PWM point of view it is
-> pretty similar to adp5585. Main difference is the address
-> of registers meaningful for configuring the PWM.
+> I believe only ad4695.c uses this method and the reason for that is if
+> the pwm is disabled we still want to obtain the requested value.
+>=20
+> Reverting slightly to v2, the semantic to allow fetching from hw when
+> enabled, and using the managed state when disabled, would be:
+>=20
+> 	struct pwm_state pwm_st;
+> 	int ret
+>=20
+> 	ret =3D pwm_get_state_hw(st->cnv_pwm, &pwm_st);
+> 	if (ret)
+> 		goto out_release;
+>=20
+> 	if (!pwm_st.enabled)
+> 		pwm_st =3D st->pwm_st;
+>=20
+> 	*val =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, pwm_st.period);
+>=20
+> Is this ok?
 
-Patch looks ok, as for patch #3 assuming this is supposed to go in via
-Lee's mfd tree:
+Looks fine to me. I didn't object the original suggested code, just
+wanted to highlight the semantics.
 
-Acked-by: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
+I would expect that the compiler optimizes out the unnecessary
+assignments done in pwm_st =3D st->pwm_st, as only pwm_st.period is used
+later on.
 
 Best regards
 Uwe
 
---agqyefwbu5h5hblt
+--6n56agevkbvsdqk4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhS+nAACgkQj4D7WH0S
-/k6anAf+N652Dm3OwSyGiFPAyOmidigaq1rx9YC46HPNtL3bnaDxy3NBgLOElPtS
-45j5vZBwy6sOU0zpzzmV6yB7hyHS7gprl6NjwyqR6PleekCnwdSUKUp9JJ8sLJHj
-y01sM9nmSpNkYjmF64/FP7QPnwmAIJGo/gwwutTXO8wfgiDPBcYvM55IxA9hLYhn
-LUh6+zxarb//ZDzl6ODom9RwnWG9r3aEk+xG5VgOImPQj+FhXtTyztWO4aX5oa64
-qyJLzUwL9mLntMfxmXt3VH3yIu2hbRVD7IpVF4MtQRgvpl7mINLQlHZF+I/FXIMA
-94+VfIIqZtnNo8wKOcRybJUgkpaRYQ==
-=WE2+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhS/X0ACgkQj4D7WH0S
+/k6uOggAutqfRasKnyDG4NPZagUBSr3nqLLjatsZLuA3uLLglPffPSkWn906uKQL
+s+GFWFqirMgxqPyT6wi37NJL5Sv0nYvqgN02HBa8uDnSOip3wVtD14B+FI1wC2+A
+puYwXaPwG/0eSZOi+XmtqO5M3bwgsnVb3ev8oH1dF1bkJKaDFnh8b73o2mqPZ2cn
+hSkHzrRTW0tWN6x9T+wUH2CfnTsgGZe/M5twgwYoLUbbPmmvca0lpOS5bxAbKjo+
+735f9Yg65sp7HDsCR8JgVjE/Yr+5No2TkWpIx8JpAMdsbq8lZKEugWPHHs16tu+8
+PWQ+2XLnIVDnEBYpBRenpgEMHFZ2+w==
+=oKT8
 -----END PGP SIGNATURE-----
 
---agqyefwbu5h5hblt--
+--6n56agevkbvsdqk4--
 
