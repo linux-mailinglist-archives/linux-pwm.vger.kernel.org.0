@@ -1,67 +1,63 @@
-Return-Path: <linux-pwm+bounces-6438-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6439-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BADA4ADF5AA
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jun 2025 20:19:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F921ADF627
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jun 2025 20:45:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E26E3A79A5
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jun 2025 18:19:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7580318899B3
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jun 2025 18:46:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BDB02F3C38;
-	Wed, 18 Jun 2025 18:19:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E6181A316E;
+	Wed, 18 Jun 2025 18:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lzKZWqwH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCstE6Fk"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF6E70830;
-	Wed, 18 Jun 2025 18:19:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0E23085B3;
+	Wed, 18 Jun 2025 18:45:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750270761; cv=none; b=DDbrHWoQ5sPK3xbln3kQgKm1x57v+xWQGqwWdrgl5WKEMUBYihKDDSG2TSodhTz0XfFdKUFd7hYqJor6G+o0E+CVKkBoOYfmEed82A3pZFxy12ayeectUBWGVk1pPSDbpGCbRWokIG8rzGH/RVw23bD8ZFaJ4JT3FGeGukoCF/U=
+	t=1750272341; cv=none; b=QO1OcM6Hu8+kKROGd0wdfGvzJTyDtJw4kfV0I0YuEKIlDBv0BIJ4bTeufdlYVLW0rmcI/HkG0mm+XhJSibgWrRJWM2jKtiUuoRVCeXIrtBPX3X1T+MBR4RLCUdIKfPnnHU0NT8tx1wPKh9yu0E//r0dsy2qVjuFBnaH6G3NaG+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750270761; c=relaxed/simple;
-	bh=a50wlknDlpagNq9jT3Q/IWSLUrXmeXKtizwXZ65RjX0=;
+	s=arc-20240116; t=1750272341; c=relaxed/simple;
+	bh=68swwkz5WLUDkgvby28K+L/7Yq5D/ex+5F8+/n1VM34=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JtY0/Oy3t6VVByjww8SbTUsdy5nrH8y3xYx9S5CKHq1ANnsDs/IKoqx2CFm5tqFKxOFZspogO+m8Kyq2q9TZWteGToJdErp1Lmpj4E/0cP07dMdlxOI06uSmLUoTjoXiTVpSzbokFLKmserO2lLVdvgQdVT7O5ebaIoMdApqJDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lzKZWqwH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28080C4CEE7;
-	Wed, 18 Jun 2025 18:19:19 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=GtvWbH3RXYPbLgdX+TUJl4f3UBcem1qTCq3JFoAO8Nx6rJTgEb9Rbth2HynfbM8TdpioNj3nl19geEn5tl+2TBNxWfxYScuqMOPWDSCTR77k2LUduQaehwpww3oYlezzZXWQBj3qpbmLH9UL3wIiH5rHqcu/VIDs2vCFHpV9E2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCstE6Fk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEEE5C4CEE7;
+	Wed, 18 Jun 2025 18:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750270760;
-	bh=a50wlknDlpagNq9jT3Q/IWSLUrXmeXKtizwXZ65RjX0=;
+	s=k20201202; t=1750272341;
+	bh=68swwkz5WLUDkgvby28K+L/7Yq5D/ex+5F8+/n1VM34=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lzKZWqwHZj3IpGzO5PE2PMzFEc9y+To0ksq9WMfVFHMABL5TvgULiuHVEv1Q3sICd
-	 IvcBuy+9JdRDH9jmtmYKfEGU4DmKUfgoiKms+0R8YUpDXkRf3B0WH60WlDjuJTD6S4
-	 2RCswt7B+ik4mQwGkHA7obrN/2VGwQqRxPAXnAplqAx0PVQsRdI+UECPKAIBaAkBKL
-	 b0o1Um6RqawIVq36Xc0ZG/mgZFaifAE55ARqxI11lANsh5gjgdy4lJGu6smC7kBtZn
-	 CooEN3OuhxDOkP1Efqj2P6vx3bjkzTm2RZJcPdIZShHV0Ng8rm7gXcz/ml3vlKwCN5
-	 ZV200A33o5DPQ==
-Date: Wed, 18 Jun 2025 20:19:18 +0200
+	b=jCstE6Fk0hg6V1f/jiM/Wd3QOJemurFTPyYcxCtb+mcbCmR4uUG6vSSnijonLbt6M
+	 Ixaz8BOXVTA6zRYvOwJYl+qu8ROFot80wICOOBMnKxssz7i67mueGYtvwotNbHqfmA
+	 Tzbh4okcWY1vTw3icBFtUx3wPuz9eii2GYamIat1Xoz3ohc4AnITtl4t79WRT0RL6+
+	 zIW+e8FnA7LVvbj1vwY0l6SUdq/gOnR/ENJLD39lZxSiqtFxT9MZHAAkprFY9qhfG3
+	 6VwNZa3k3ANKbWAjpUFvBI8m1blP5VxvYmag2jQ4Ke1VokA9HpMZW2zNpdQap5XCYv
+	 2/Si3/z9lZL4w==
+Date: Wed, 18 Jun 2025 20:45:38 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: =?utf-8?B?0JDQu9C10LrRgdCw0L3QtNGAINCo0YPQsdC40L0=?= <privatesub2@gmail.com>, 
-	linux-kernel@vger.kernel.org, Brandon Cheo Fusi <fusibrandon13@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v12 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
- support
-Message-ID: <daopyy24kta2myimufkf2v6c6igdplco6b2kxohm47j6cez5mb@34ccs3wbtkop>
-References: <20250427142500.151925-1-privatesub2@gmail.com>
- <20250427142500.151925-3-privatesub2@gmail.com>
- <20250512233944.06bc1cb7@minigeek.lan>
- <CAF4idN=Kwp8bDYVyjM52eUwVEEZcPM9YyK9KiqUzyf8Dm=cXTQ@mail.gmail.com>
- <hetih6ul7hdj3kflhy2s2zkkh3r7pcupgwde3xnwmjzs6cujp3@vcw4pde76bdb>
- <20250528132902.70f634cd@donnerap.manchester.arm.com>
+To: mathieu.dubois-briand@bootlin.com
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	andriy.shevchenko@intel.com, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v10 04/11] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <amukbuzpu34jbcjhmzmvfgh6eik5isrwcicfmlqmsyibvhij72@nnmhdj3celnt>
+References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
+ <20250530-mdb-max7360-support-v10-4-ce3b9e60a588@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -69,154 +65,323 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zqgmvr7sp22wp6bu"
+	protocol="application/pgp-signature"; boundary="nb4jfns7i22b6xds"
 Content-Disposition: inline
-In-Reply-To: <20250528132902.70f634cd@donnerap.manchester.arm.com>
+In-Reply-To: <20250530-mdb-max7360-support-v10-4-ce3b9e60a588@bootlin.com>
 
 
---zqgmvr7sp22wp6bu
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
+--nb4jfns7i22b6xds
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v12 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
- support
+Subject: Re: [PATCH v10 04/11] pwm: max7360: Add MAX7360 PWM support
 MIME-Version: 1.0
 
-Hello Andre,
-
-On Wed, May 28, 2025 at 01:29:02PM +0100, Andre Przywara wrote:
-> On Wed, 28 May 2025 13:08:40 +0200
-> Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org> wrote:
-> > On Sat, May 24, 2025 at 12:07:28PM +0300, =D0=90=D0=BB=D0=B5=D0=BA=D1=
-=81=D0=B0=D0=BD=D0=B4=D1=80 =D0=A8=D1=83=D0=B1=D0=B8=D0=BD wrote:
-> > > =D0=B2=D1=82, 13 =D0=BC=D0=B0=D1=8F 2025=E2=80=AF=D0=B3. =D0=B2 01:39=
-, Andre Przywara <andre.przywara@arm.com>: =20
-> > > >
-> > > > On Sun, 27 Apr 2025 17:24:54 +0300
-> > > > Aleksandr Shubin <privatesub2@gmail.com> wrote: =20
-> > > > > +              */
-> > > > > +             use_bus_clk =3D false;
-> > > > > +             val =3D mul_u64_u64_div_u64(state->period, hosc_rat=
-e, NSEC_PER_SEC);
-> > > > > +             /*
-> > > > > +              * If the calculated value is =E2=89=A4 1, the peri=
-od is too short
-> > > > > +              * for proper PWM operation
-> > > > > +              */
-> > > > > +             if (val <=3D 1) { =20
-> > > >
-> > > > So if I get the code correctly, it prefers HOSC over APB? Is that
-> > > > really the best way? Shouldn't it be the other way around: we use t=
-he
-> > > > faster clock, since this will not limit the sibling channel?
-> > > >
-> > > > And another thing to consider are rounding errors due to integer
-> > > > division: certain period rates might be better achievable with one =
-or
-> > > > the other source clock: 3 MHz works best as 24MHz/8, 3.125MHz as
-> > > > 100MHz/32.
-> > > > So shall we calculate the values and compare the errors instead?
-> > > > Oh, and also we need to consider bypassing, I feel like this should=
- be
-> > > > checked first.
-> > > >
-> > > > In any case I think there should be a comment describing the strate=
-gy
-> > > > and give some rationale, I think. =20
-> > >=20
-> > > I like the idea of comparing the quantization error for each clock so=
-urce
-> > > (i.e. computing the actual period for both APB and HOSC and choosing
-> > > whichever is closer to the requested period).
-> > > I can try to implement that error-minimization approach in the next
-> > > series of patches and add a comment explaining the strategy. =20
-> >=20
-> > Consumers have different needs. Some might prefer a better match for
-> > period, but in my experience most would go for a fine-grained selection
-> > of duty_cycle, so prefering the faster clock sounds sane.
-> >=20
-> > I don't say minimizing the error is wrong, but if it's unclear that
-> > this matches what a consumer wants I object to make the procedure to
-> > select the hardware settings considerably more complicated and run-time
-> > intensive.
+On Fri, May 30, 2025 at 12:00:12PM +0200, mathieu.dubois-briand@bootlin.com=
+ wrote:
+> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
 >=20
-> Yes, I agree. There seems to be another use case here, which is to provide
-> clocks on output pins. The PWM IP has a bypass switch (per channel, after
-> the divider), and this feature is already required to supply the
-> "internal" (co-packaged) Ethernet PHY on the Allwinner H616 with its cloc=
-k.
-> With the two possible input clocks and those pre-dividers there is actual=
-ly
-> quite a number of possible frequencies to deliver on output pins.
+> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
+> 8 independent PWM outputs.
 >=20
-> Since we need some algorithm to decide when we need to use the bypass
-> mode, should we check for that if the duty cycle is 50%, to see if we can
-> reach the frequency with just the pre-dividers?
-> Chances are we need this anyway, since for instance the 24MHz required for
-> the PHY cannot be achieved otherwise.
-
-And the clk output is the output after the predividers I assume? I would
-prefer to make the driver create a clk_provider instead of guessing
-which requests are supposed to have a meaning for the clk output.
-
-> > > > > +static int sun20i_pwm_probe(struct platform_device *pdev)
-> > > > > +{
-> > > > > +     struct pwm_chip *chip;
-> > > > > +     struct sun20i_pwm_chip *sun20i_chip;
-> > > > > +     struct clk *clk_bus;
-> > > > > +     struct reset_control *rst;
-> > > > > +     u32 npwm;
-> > > > > +     int ret;
-> > > > > +
-> > > > > +     ret =3D of_property_read_u32(pdev->dev.of_node, "allwinner,=
-npwms", &npwm);
-> > > > > +     if (ret < 0)
-> > > > > +             npwm =3D 8; /* Default value */
-> > > > > +
-> > > > > +     if (npwm > 16) {
-> > > > > +             dev_info(&pdev->dev, "Limiting number of PWM lines =
-=66rom %u to 16", npwm); =20
-> > > >
-> > > > I don't think we should proceed if the firmware information is clea=
-rly
-> > > > wrong. Just bail out with -EINVAL or so here, so that gets fixed in=
- the
-> > > > DT. =20
-> >=20
-> > To me it's not obvious that the "firmware information is clearly wrong".
-> > Maybe the next Allwinner SoC will have 24 outputs and the problem is
-> > only that this driver isn't prepared to cope for that number of outputs?
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> ---
+>  drivers/pwm/Kconfig       |  10 +++
+>  drivers/pwm/Makefile      |   1 +
+>  drivers/pwm/pwm-max7360.c | 180 ++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 191 insertions(+)
 >=20
-> But then it would be an error, regardless?
-> The MMIO register frame of this IP here has a hard limit on 16 channels,
-> both by the bit assignments in each register (2 bits per channel in a
-> 32-bit register), but also by the layout of the registers (max 8
-> registers, each for a pair of 2 PWM channels). So anything with more than
-> 16 channels cannot be compatible with what this driver supports.
-> So as this driver here stands right now, more than 16 channels is an
-> error, simple as that. If we extend the driver later on, to cover more
-> advanced IP, we would naturally amend this check, of course.
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 4731d5b90d7e..0b22141cbf85 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -755,4 +755,14 @@ config PWM_XILINX
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-xilinx.
+> =20
+> +config PWM_MAX7360
+> +	tristate "MAX7360 PWMs"
+> +	depends on MFD_MAX7360
+> +	help
+> +	  PWM driver for Maxim Integrated MAX7360 multifunction device, with
+> +	  support for up to 8 PWM outputs.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-max7360.
 
-Agreed. In that case I don't care much if .probe() fails or just limits
-the number of PWMs to 16.
+Alphabetic ordering (by config name) please.
+
+>  endif
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 539e0def3f82..9c7701d8070b 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -36,6 +36,7 @@ obj-$(CONFIG_PWM_LPC32XX)	+=3D pwm-lpc32xx.o
+>  obj-$(CONFIG_PWM_LPSS)		+=3D pwm-lpss.o
+>  obj-$(CONFIG_PWM_LPSS_PCI)	+=3D pwm-lpss-pci.o
+>  obj-$(CONFIG_PWM_LPSS_PLATFORM)	+=3D pwm-lpss-platform.o
+> +obj-$(CONFIG_PWM_MAX7360)	+=3D pwm-max7360.o
+>  obj-$(CONFIG_PWM_MESON)		+=3D pwm-meson.o
+>  obj-$(CONFIG_PWM_MEDIATEK)	+=3D pwm-mediatek.o
+>  obj-$(CONFIG_PWM_MICROCHIP_CORE)	+=3D pwm-microchip-core.o
+> diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
+> new file mode 100644
+> index 000000000000..a0c82c63d2ac
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-max7360.c
+> @@ -0,0 +1,180 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright 2025 Bootlin
+> + *
+> + * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
+> + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> + *
+> + * Limitations:
+> + * - Only supports normal polarity.
+> + * - The period is fixed to 2 ms.
+> + * - Only the duty cycle can be changed, new values are applied at the b=
+eginning
+> + *   of the next cycle.
+> + * - When disabled, the output is put in Hi-Z.
+> + */
+> +#include <linux/bits.h>
+> +#include <linux/dev_printk.h>
+> +#include <linux/err.h>
+> +#include <linux/math64.h>
+> +#include <linux/mfd/max7360.h>
+> +#include <linux/minmax.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +#include <linux/time.h>
+> +#include <linux/types.h>
+> +
+> +#define MAX7360_NUM_PWMS			8
+> +#define MAX7360_PWM_MAX_RES			255
+> +#define MAX7360_PWM_PERIOD_NS			(2 * NSEC_PER_MSEC)
+> +
+> +struct max7360_pwm_waveform {
+> +	u8 duty_steps;
+> +	bool enabled;
+> +};
+> +
+> +static int max7360_pwm_request(struct pwm_chip *chip, struct pwm_device =
+*pwm)
+> +{
+> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
+> +
+> +	return regmap_write_bits(regmap, MAX7360_REG_PWMCFG(pwm->hwpwm),
+> +				 MAX7360_PORT_CFG_COMMON_PWM, 0);
+> +}
+
+Do you need to undo that in .free()?
+
+> +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
+> +					   struct pwm_device *pwm,
+> +					   const struct pwm_waveform *wf,
+> +					   void *_wfhw)
+> +{
+> +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
+> +	u64 duty_steps;
+> +
+> +	/*
+> +	 * Ignore user provided values for period_length_ns and duty_offset_ns:
+> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of =
+0.
+> +	 */
+> +	duty_steps =3D mul_u64_u64_div_u64(wf->duty_length_ns, MAX7360_PWM_MAX_=
+RES,
+> +					 MAX7360_PWM_PERIOD_NS);
+
+You don't need the 64 bit division (which is expensive on 32 bit archs)
+if you use:
+
+	if (wf->duty_length_ns >=3D MAX7360_PWM_PERIOD_NS)
+		duty_steps =3D MAX7360_PWM_MAX_RES;
+	else
+		duty_steps =3D (u32)wf->duty_length_ns * MAX7360_PWM_MAX_RES / MAX7360_PW=
+M_PERIOD_NS;
+
+> +	wfhw->duty_steps =3D min(MAX7360_PWM_MAX_RES, duty_steps);
+> +	wfhw->enabled =3D !!wf->duty_length_ns;
+
+How does the output behave if you clean the respective bit in
+MAX7360_REG_GPIOCTRL? Unless it emits a constant low signal (and not
+e.g. High-Z) you have to do
+
+	wfhw->enabled =3D !!wf->period_length_ns;
+
+here. Please document the behaviour in a paragraph at the top of
+the driver. Look at other drivers for the right format. The questions to
+answer are:
+
+ - How does the driver behave on disable? (Typical is constant low or
+   High-Z or freezing. Does it stop instantly or does it complete the
+   currently running period?)
+
+ - How does the driver behave on a (non-disabling) reconfiguration? Can
+   it happen that there are glitches? (Consider for example that
+   duty_cycle changes from 0.5 ms to 1.5ms while the hardware is just in
+   the middle of the 2ms period. Does the output go high immediately
+   then producing two 0.5ms pulses during that period?)
+
+> +	return 0;
+> +}
+> +
+> +static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, stru=
+ct pwm_device *pwm,
+> +					     const void *_wfhw, struct pwm_waveform *wf)
+> +{
+> +	const struct max7360_pwm_waveform *wfhw =3D _wfhw;
+> +
+> +	wf->period_length_ns =3D wfhw->enabled ? MAX7360_PWM_PERIOD_NS : 0;
+> +	wf->duty_offset_ns =3D 0;
+> +	wf->duty_length_ns =3D DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERI=
+OD_NS,
+> +					  MAX7360_PWM_MAX_RES);
+
+This should be 0 if !wfhw->enabled to make *wf a valid setting.
+
+A check for that in the core (with CONFIG_PWM_DEBUG) would be great.
+
+> +	return 0;
+> +}
+> +
+> +static int max7360_pwm_write_waveform(struct pwm_chip *chip,
+> +				      struct pwm_device *pwm,
+> +				      const void *_wfhw)
+> +{
+> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
+> +	const struct max7360_pwm_waveform *wfhw =3D _wfhw;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	if (wfhw->enabled) {
+> +		ret =3D regmap_write(regmap, MAX7360_REG_PWM(pwm->hwpwm), wfhw->duty_s=
+teps);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	val =3D wfhw->enabled ? BIT(pwm->hwpwm) : 0;
+> +	return regmap_write_bits(regmap, MAX7360_REG_GPIOCTRL, BIT(pwm->hwpwm),=
+ val);
+> +}
+> +
+> +static int max7360_pwm_read_waveform(struct pwm_chip *chip,
+> +				     struct pwm_device *pwm,
+> +				     void *_wfhw)
+> +{
+> +	struct regmap *regmap =3D pwmchip_get_drvdata(chip);
+> +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	ret =3D regmap_read(regmap, MAX7360_REG_GPIOCTRL, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val & BIT(pwm->hwpwm)) {
+> +		wfhw->enabled =3D true;
+> +		ret =3D regmap_read(regmap, MAX7360_REG_PWM(pwm->hwpwm), &val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		wfhw->duty_steps =3D val;
+> +	} else {
+> +		wfhw->enabled =3D false;
+> +		wfhw->duty_steps =3D 0;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pwm_ops max7360_pwm_ops =3D {
+> +	.request =3D max7360_pwm_request,
+> +	.round_waveform_tohw =3D max7360_pwm_round_waveform_tohw,
+> +	.round_waveform_fromhw =3D max7360_pwm_round_waveform_fromhw,
+> +	.read_waveform =3D max7360_pwm_read_waveform,
+> +	.write_waveform =3D max7360_pwm_write_waveform,
+> +};
+> +
+> +static int max7360_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct pwm_chip *chip;
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	regmap =3D dev_get_regmap(dev->parent, NULL);
+> +	if (!regmap)
+> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
+> +
+> +	/*
+> +	 * This MFD sub-device does not have any associated device tree node:
+> +	 * properties are stored in the device node of the parent (MFD) device
+> +	 * and this same node is used in phandles of client devices.
+> +	 * Reuse this device tree node here, as otherwise the PWM subsystem
+> +	 * would be confused by this topology.
+> +	 */
+> +	device_set_of_node_from_dev(dev, dev->parent);
+> +
+> +	chip =3D devm_pwmchip_alloc(dev, MAX7360_NUM_PWMS, 0);
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	chip->ops =3D &max7360_pwm_ops;
+> +
+> +	pwmchip_set_drvdata(chip, regmap);
+> +
+> +	ret =3D devm_pwmchip_add(dev, chip);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver max7360_pwm_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "max7360-pwm",
+
+Please consider setting
+
+		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+
+here.
+
+> +	},
+> +	.probe =3D max7360_pwm_probe,
+> +};
+> +module_platform_driver(max7360_pwm_driver);
+> +
+> +MODULE_DESCRIPTION("MAX7360 PWM driver");
+> +MODULE_AUTHOR("Kamel BOUHARA <kamel.bouhara@bootlin.com>");
+> +MODULE_AUTHOR("Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>=
+");
+> +MODULE_LICENSE("GPL");
 
 Best regards
 Uwe
 
---zqgmvr7sp22wp6bu
+--nb4jfns7i22b6xds
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhTAyMACgkQj4D7WH0S
-/k5TXQf/WQifjbmW7D5efouTLo5vO4iUok97pK1+s3+HHamdmm23IWg0PAFmFQBB
-UNd0buVhud3TtGtJeSPa57FUEzriGdGzJ2CFN+qDdUY7L7VGACE6S7mGsnLLYQuN
-UsGMB0G7qVL5h3zhySTgXtgMF+D9QZHZq/LwR00/PpXVDAG6vES7AwdQlsG0PS+4
-so3ravkEOTsVKRYzFLC6dNZoGeGWaz3X0Iedjl4Y8NXs+HKpp2qyh1x8FPJYIy9V
-GBtDzx8E4s8SwuJeTJSdcfs/PlIyCWCa51El8AExmHaB0oE8JEB3dqdrKRHxLc0Z
-Ie0GiCpIKi3W7ApbehC3rBcHxbwj9g==
-=USjg
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhTCU8ACgkQj4D7WH0S
+/k7cqgf/WXi9aiJFe2APaRTmgebwjHm/Vfjzf54eQh2WwG38kavCDRRV5ejcm7nh
+MVn0PLwf4W1ItJXh89u66zRUCy5N8hlak4RPRIGbbVFRhYqtiAPwCXX0/hrZyfHL
+6U12235ATlUUfQvI2cMOwgcTC3LGWL6xStZSICqyFKFH+Qg3jYwk1/qo2Ecz/RKL
+w74N4UucyvzToYBYvWHuzt1jeXpgnHIi2wvK6RVM3v/PA064TZa9mbYZ6oK/JzsM
+kvCKbcBTLXtC88VXC/XsTKmeZXfx0GF5xGmmC7RiDt5phNxrnnK2ra+YAxXl9UoD
+9hFdvagIMmLv4Fa6N9+WyhfuhR2SFQ==
+=yW7s
 -----END PGP SIGNATURE-----
 
---zqgmvr7sp22wp6bu--
+--nb4jfns7i22b6xds--
 
