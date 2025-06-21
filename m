@@ -1,132 +1,155 @@
-Return-Path: <linux-pwm+bounces-6462-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6463-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EA2FAE2A43
-	for <lists+linux-pwm@lfdr.de>; Sat, 21 Jun 2025 18:20:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 66FDEAE2A44
+	for <lists+linux-pwm@lfdr.de>; Sat, 21 Jun 2025 18:21:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED95C17795C
-	for <lists+linux-pwm@lfdr.de>; Sat, 21 Jun 2025 16:20:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0BEE6177659
+	for <lists+linux-pwm@lfdr.de>; Sat, 21 Jun 2025 16:21:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38A4313C9C4;
-	Sat, 21 Jun 2025 16:20:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2123114A62B;
+	Sat, 21 Jun 2025 16:21:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="qPlu7BCi";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="jP5By4tz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/d/N0HL"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F191D19BBC;
-	Sat, 21 Jun 2025 16:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5CB19BBC;
+	Sat, 21 Jun 2025 16:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750522811; cv=none; b=YI15vOk3YXWEezA2N/Cz5xk/6SipS8RRePdKEPJg4E3THdYU7f/mOdoFg7OhuHgqoga/aFJJKlCFQqZ3zJ5BDqW2okO/2aRuaIWp2m6tTXQyK+3dcK3br3OLXQLFS/e8GYaErtG3IQCpjevPIf3sjoqiQN04zvDFwKvy3HOREoI=
+	t=1750522867; cv=none; b=jOd9/GUCkcHhTbSVuGB/aYjemQcvI1a4kyqQsPzUYRcMf3UC+bk3D3AUiiy10elIBcDiDze2uWOMppa63A9SehJ397UISyT2l+nyr31ImKqbFgjl0jtCGDJ/39+EsZ05zfyUds4e0eBSMsEGLPHyuWs0StNcsvOHoQkPVHnx2Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750522811; c=relaxed/simple;
-	bh=1kwlWE50IrDKcOsB0Q92H3E7Gf1/s26EaRGwuaWDrQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TTUcPAJ5YrLuc67Bohy1Ijne6ai8rZqMnHr5I2BmK47sK8Q9uzPsUTUtJ1kGGk9cRXRxvluzVhvk00bA6gCBHnMAtgvxPu1ABZ/Wen0sQJ79vxlK1Tj30OOjHW2ZQ0A2i0GZELVFofveHYEA5mqPmD6J97bjFED4OZb+vb05HSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=qPlu7BCi; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=jP5By4tz; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bPfh06YPqz9snC;
-	Sat, 21 Jun 2025 18:20:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750522800;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UmGkueZv92x8FVoX2PUBUwwGVfuumaUY5sT7yc1Es/s=;
-	b=qPlu7BCimxSBdGvk5KOedTZYTE3w+irmAPpNZostJ+ueK+cC7donVMSG6Whhe0DBqZG2JD
-	SgIaKogXo+2lKwyR2kfBuyGGe5rEOWwciwbuQtZZvKMkePAoWTsAp3j5Ehm/2Hbl3dbpBW
-	0SnjohFmhfd/b30bj2YsrifuIX84i5AvioFR60TD9fV3NjDVPov0V00gGeMPfAIrWp73iK
-	ZKqw8viWC8/V1HaEYnpwVQUG8PVUpa75hiFjAbtKb0DLgWPByYKg/6qhn57RoVF+CZ9YQa
-	TB/U2wLcms+/e4KQFPHv0HU9fFvgf5OMn/+xwF9LcMOktJpFtGzGs+lJ/vP/1Q==
-Message-ID: <9a846ef0-e558-41b7-b285-6106723f2343@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1750522798;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UmGkueZv92x8FVoX2PUBUwwGVfuumaUY5sT7yc1Es/s=;
-	b=jP5By4tzF40KKmW8w6xjwlu8B20jehJSvC8+dW+dpyBn1WhrnSqkv9wOoyauj/wzAR5vPH
-	g7czqRPju9VWnds97jQz+UtBtv7nP8qXsGsL11TkBjCKWQgOC4FCDVRBqgDenLJpYXtXzc
-	ReqRM+Z22sILWG5MgAsNKgRUqlQXStJ49gEouJruZGO9zWXGSW1rjdUwTy9vpXzjPZTYfs
-	JGwkNulN7ZKXsM3X6dXNQOAkCDAOgqGnRdh2mXDUEmZ8bpB7narxpyOB/xU5Dg3Vv47kU+
-	CwlKokVMeqCbdW9EyGucdXJfZ5B9Cho0vZwDO5t4bnWwY4Hl1U6KtFD7kl+JmQ==
-Date: Sat, 21 Jun 2025 18:19:57 +0200
+	s=arc-20240116; t=1750522867; c=relaxed/simple;
+	bh=LB/sUlImxWZJV0axEKn9tfOzZFIfxAbqgGkgEQtBZ0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AvLuAC7YxUroj3JaMgxXes2usSPBm6lhlxZVGF+cZxqJ6d3aEwk69Zx72JPO7jpYpFNTPdPioX/xwepoFtEzXcffso5ywvNfxFKN/tU8nxEl6ZHcW+dEKByyW74eaNCqzliJWzE37KIW4qW6PRhRa9bF4UyJT/Z4O7vQzRYyycU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/d/N0HL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A41B3C4CEE7;
+	Sat, 21 Jun 2025 16:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750522866;
+	bh=LB/sUlImxWZJV0axEKn9tfOzZFIfxAbqgGkgEQtBZ0Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=U/d/N0HLO8IFfTdRJMTxTwOkneCdUwP4t3AQn83qfjTgPQO3APcqH4LMOoLjK2K1T
+	 sa3CeeUbyK90l4uX4GRdYkSa49x0PryTnGqiwaT0xJm5qyxKATcw6P6J5UHnBVTmTD
+	 kAjgCbF2EFt1Wjau1mvOQMmAH44ZWBIU1AxBU8xAO5/6EBhSvtl+SBSHlRYZpVfHSx
+	 6URQ42efVcH0z1j+DWyV7k8JUgoxSGmkJRaWogr2or4k9bs62SoJKNfOmDYn9bKuaf
+	 mAROyXgGnXfyKhUSqi424U3buI/n4HOvMMK01HrrCJKuDpckWdVCVhbuQlGBbcBSoN
+	 c1JJU77lAQcIQ==
+Date: Sat, 21 Jun 2025 17:20:54 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jorge Marques <gastmaier@gmail.com>
+Cc: Jorge Marques <jorge.marques@analog.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, David
+ Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 8/8] iio: adc: Add events support to ad4052
+Message-ID: <20250621172054.3698f3ff@jic23-huawei>
+In-Reply-To: <2uknsmgz57wie4cv2tll3ttfyiw7lyjyaryc74nd3o5fteoazk@vbgdt5ofkn5r>
+References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
+	<20250610-iio-driver-ad4052-v3-8-cf1e44c516d4@analog.com>
+	<20250614113616.4663269f@jic23-huawei>
+	<2uknsmgz57wie4cv2tll3ttfyiw7lyjyaryc74nd3o5fteoazk@vbgdt5ofkn5r>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 2/3] dt-bindings: pwm: argon40,fan-hat: Document
- Argon40 Fan HAT
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Rob Herring <robh@kernel.org>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-pwm@vger.kernel.org,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org
-References: <20250617092037.37229-1-marek.vasut+renesas@mailbox.org>
- <20250617092037.37229-2-marek.vasut+renesas@mailbox.org>
- <20250617133744.GA1888765-robh@kernel.org>
- <2e152214-5f2d-451c-8659-941184cd8fdd@mailbox.org>
- <foiatljwemu3owuogzekgiydcyedxbhb2nyvzbs53zuxx7yohs@atpwrceby5fd>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <foiatljwemu3owuogzekgiydcyedxbhb2nyvzbs53zuxx7yohs@atpwrceby5fd>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: mr1bsa3wx79ntexb9wpe3m78dwnswoum
-X-MBO-RS-ID: a1a734fcd8b5f712755
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 6/20/25 12:27 PM, Uwe Kleine-König wrote:
-> Hello Marek,
 
-Hi,
-
-> On Tue, Jun 17, 2025 at 03:48:13PM +0200, Marek Vasut wrote:
->> On 6/17/25 3:37 PM, Rob Herring wrote:
->>
->> [...]
->>
->>>> +++ b/Documentation/devicetree/bindings/pwm/argon40,fan-hat.yaml
->>>> @@ -0,0 +1,48 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/pwm/argon40,fan-hat.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Argon40 Fan HAT PWM controller
->>>> +
->>>> +maintainers:
->>>> +  - Marek Vasut <marek.vasut+renesas@mailbox.org>
->>>> +
->>>> +description: |
->>>
->>> Don't need '|'.
->>
->> Fixed in V4 ...
+> > > +
+> > > +static int ad4052_read_event_value(struct iio_dev *indio_dev,
+> > > +				   const struct iio_chan_spec *chan,
+> > > +				   enum iio_event_type type,
+> > > +				   enum iio_event_direction dir,
+> > > +				   enum iio_event_info info, int *val,
+> > > +				   int *val2)
+> > > +{
+> > > +	struct ad4052_state *st = iio_priv(indio_dev);
+> > > +	int ret;
+> > > +
+> > > +	if (!iio_device_claim_direct(indio_dev))
+> > > +		return -EBUSY;
+> > > +
+> > > +	if (st->wait_event) {
+> > > +		ret = -EBUSY;
+> > > +		goto out_release;  
+> >   
 > 
-> That sounds as if there is already a v4 on the lists. I don't find such
-> a patch series though. Am I missing something or just misinterpreting
-> your words?
+> Below are two distinct options with different implications.
+> > Not being able to read event parameters whilst monitoring them seems
+> > very restrictive.  Can't we cache the values?  Either play games to ensure
+> > we get them from the regmap cache or just cache these few values in st.
+> > 
+> > Checking what you are monitoring for feels like the sort of thing
+> > userspace might well do.  
+> 
+> (1)
+> I agree, I can investigate regcache_cache_only and the other cache
+> options to achieve this. If I come to the conclusion it is not possible,
+> storing into st will achieve the same.
+> 
+> > 
+> > Even blocking changing the monitoring parameters is unusually strict.
+> > Why not just drop out of monitor mode, update them and go back in?
+> >   
+> (2)
+> The core point of the blocking behaviour is to not have hidden downtimes
+> in the monitoring for the user. An early driver used to do what you
+> describe and it was a design decision.
+> 
+> Since a custom regmap_bus was necessary to restrict the regmap access
+> speed (ADC access is faster), bringing back this by behavior embedding
+> it in the custom regmap now seems plausible, with proper explanation in
+> the rst page. This should fully dismiss the st->wait_event -> -EBUSY.
+> 
+> Considering (1) and (2), what is the preferred approach?
 
-Its coming once I sort out all the feedback, I did not post V4 yet.
+Key here is that the user made the choice to change the parameters.
+Most of the time they won't choose to do that, but if they do then
+that's what they want to do. Why make them turn the monitoring off,
+change value and turn it on again if we can support it reasonably
+cleanly.  In many devices there is no interruption to monitoring so
+we may well have userspace code written against assumption it
+can just update this stuff without that dance.  So prefer (2)
+but (1) is better than nothing if (2) proves too complex.
 
--- 
-Best regards,
-Marek Vasut
+J
+> 
+> Regards,
+> Jorge
+> > > +	}
+> > > +
+> > > +	switch (info) {
+> > > +	case IIO_EV_INFO_VALUE:
+> > > +		ret = __ad4052_read_event_info_value(st, dir, val);
+> > > +		break;
+> > > +	case IIO_EV_INFO_HYSTERESIS:
+> > > +		ret = __ad4052_read_event_info_hysteresis(st, dir, val);
+> > > +		break;
+> > > +	default:
+> > > +		ret = -EINVAL;
+> > > +		break;
+> > > +	}
+> > > +
+> > > +out_release:
+> > > +	iio_device_release_direct(indio_dev);
+> > > +	return ret ? ret : IIO_VAL_INT;
+> > > +}  
+
 
