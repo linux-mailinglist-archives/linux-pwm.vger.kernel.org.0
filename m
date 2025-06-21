@@ -1,178 +1,132 @@
-Return-Path: <linux-pwm+bounces-6461-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6462-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC32DAE2A3B
-	for <lists+linux-pwm@lfdr.de>; Sat, 21 Jun 2025 18:17:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EA2FAE2A43
+	for <lists+linux-pwm@lfdr.de>; Sat, 21 Jun 2025 18:20:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42EE3165A8D
-	for <lists+linux-pwm@lfdr.de>; Sat, 21 Jun 2025 16:17:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED95C17795C
+	for <lists+linux-pwm@lfdr.de>; Sat, 21 Jun 2025 16:20:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A946E14A62B;
-	Sat, 21 Jun 2025 16:16:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38A4313C9C4;
+	Sat, 21 Jun 2025 16:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWAMRLP/"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="qPlu7BCi";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="jP5By4tz"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E51817BD3;
-	Sat, 21 Jun 2025 16:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F191D19BBC;
+	Sat, 21 Jun 2025 16:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750522617; cv=none; b=XYs51ah085erDclQK6LbhpBv/duzNnyNK5Mvrj4u1gs9NkjZ4yYIBjO1l4qTQr+mbBNhanVcoFhtvWvKR1Y8XAxnOkfBefn7K0+5JL1J5UzynbXt0U7tD50jdc6rSwM/JAfiTh9jZAzYokwMZ/zCJl8Dd9QVYCBQuKZSR2rUuPU=
+	t=1750522811; cv=none; b=YI15vOk3YXWEezA2N/Cz5xk/6SipS8RRePdKEPJg4E3THdYU7f/mOdoFg7OhuHgqoga/aFJJKlCFQqZ3zJ5BDqW2okO/2aRuaIWp2m6tTXQyK+3dcK3br3OLXQLFS/e8GYaErtG3IQCpjevPIf3sjoqiQN04zvDFwKvy3HOREoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750522617; c=relaxed/simple;
-	bh=Qv21DpKuY5ulUd/lhpFtmQI0Y3I4JarC2uI/1WkzTHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qhou0Xw0oFVbDblx6uVyprNu9OEAqamctkS4KJzKeXsMRMbegTF5xqtgGQ3c296RWGA66J2xiTkVl8Tq6hIANXjBiyFYTDaa06u7zM8BhhNIsaNpNRrPiXN2Jae29+34khR0bh0p3GCwXrKIyJaAqTkW2qB29NtvM62BkPemBi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWAMRLP/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13AACC4CEE7;
-	Sat, 21 Jun 2025 16:16:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750522617;
-	bh=Qv21DpKuY5ulUd/lhpFtmQI0Y3I4JarC2uI/1WkzTHE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jWAMRLP/E9lB1GnDW9CuOx7pDPmUgG0AAYQDBx9az9cVjKiWC47nj1HZn7JvbKT+b
-	 6U5PcNKUXrGyEX2vHTbnHdBhFVPcYz4VjGj4LnzlI9WuYU65InMOnnrTuzrggSuTqu
-	 c0UpCjdB7LIB4DAf9N8k+movBQoBMYvlUUYLSeLjV8XlDfNSzjUdHUPd8P8GuWvnRi
-	 TwEsOjwekxmWPk9fFBNhcFFIIZ2l18sGbASeqchc9FOTkZ9qEUdCQUJFmaSOtkAM9l
-	 eQdjDB7NADDveq/efMaBOve171g0ioXBXagVCjAO5KnI36tHzDrQgwaoHIHyCG69Ke
-	 fbXiXIFfT5GIA==
-Date: Sat, 21 Jun 2025 17:16:48 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jorge Marques <gastmaier@gmail.com>
-Cc: Jorge Marques <jorge.marques@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, David
- Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 6/8] iio: adc: Add offload support for ad4052
-Message-ID: <20250621171648.6f40904f@jic23-huawei>
-In-Reply-To: <hdwuh3ouw4gzpbj7u7dtzaphdjonecls2xuu7p4nmi7wwrcmye@jhhhqvdlbuv3>
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
-	<20250610-iio-driver-ad4052-v3-6-cf1e44c516d4@analog.com>
-	<20250614112022.24bf9212@jic23-huawei>
-	<hdwuh3ouw4gzpbj7u7dtzaphdjonecls2xuu7p4nmi7wwrcmye@jhhhqvdlbuv3>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750522811; c=relaxed/simple;
+	bh=1kwlWE50IrDKcOsB0Q92H3E7Gf1/s26EaRGwuaWDrQU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TTUcPAJ5YrLuc67Bohy1Ijne6ai8rZqMnHr5I2BmK47sK8Q9uzPsUTUtJ1kGGk9cRXRxvluzVhvk00bA6gCBHnMAtgvxPu1ABZ/Wen0sQJ79vxlK1Tj30OOjHW2ZQ0A2i0GZELVFofveHYEA5mqPmD6J97bjFED4OZb+vb05HSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=qPlu7BCi; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=jP5By4tz; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bPfh06YPqz9snC;
+	Sat, 21 Jun 2025 18:20:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750522800;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UmGkueZv92x8FVoX2PUBUwwGVfuumaUY5sT7yc1Es/s=;
+	b=qPlu7BCimxSBdGvk5KOedTZYTE3w+irmAPpNZostJ+ueK+cC7donVMSG6Whhe0DBqZG2JD
+	SgIaKogXo+2lKwyR2kfBuyGGe5rEOWwciwbuQtZZvKMkePAoWTsAp3j5Ehm/2Hbl3dbpBW
+	0SnjohFmhfd/b30bj2YsrifuIX84i5AvioFR60TD9fV3NjDVPov0V00gGeMPfAIrWp73iK
+	ZKqw8viWC8/V1HaEYnpwVQUG8PVUpa75hiFjAbtKb0DLgWPByYKg/6qhn57RoVF+CZ9YQa
+	TB/U2wLcms+/e4KQFPHv0HU9fFvgf5OMn/+xwF9LcMOktJpFtGzGs+lJ/vP/1Q==
+Message-ID: <9a846ef0-e558-41b7-b285-6106723f2343@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750522798;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UmGkueZv92x8FVoX2PUBUwwGVfuumaUY5sT7yc1Es/s=;
+	b=jP5By4tzF40KKmW8w6xjwlu8B20jehJSvC8+dW+dpyBn1WhrnSqkv9wOoyauj/wzAR5vPH
+	g7czqRPju9VWnds97jQz+UtBtv7nP8qXsGsL11TkBjCKWQgOC4FCDVRBqgDenLJpYXtXzc
+	ReqRM+Z22sILWG5MgAsNKgRUqlQXStJ49gEouJruZGO9zWXGSW1rjdUwTy9vpXzjPZTYfs
+	JGwkNulN7ZKXsM3X6dXNQOAkCDAOgqGnRdh2mXDUEmZ8bpB7narxpyOB/xU5Dg3Vv47kU+
+	CwlKokVMeqCbdW9EyGucdXJfZ5B9Cho0vZwDO5t4bnWwY4Hl1U6KtFD7kl+JmQ==
+Date: Sat, 21 Jun 2025 18:19:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v3 2/3] dt-bindings: pwm: argon40,fan-hat: Document
+ Argon40 Fan HAT
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+ Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-pwm@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, devicetree@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org
+References: <20250617092037.37229-1-marek.vasut+renesas@mailbox.org>
+ <20250617092037.37229-2-marek.vasut+renesas@mailbox.org>
+ <20250617133744.GA1888765-robh@kernel.org>
+ <2e152214-5f2d-451c-8659-941184cd8fdd@mailbox.org>
+ <foiatljwemu3owuogzekgiydcyedxbhb2nyvzbs53zuxx7yohs@atpwrceby5fd>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <foiatljwemu3owuogzekgiydcyedxbhb2nyvzbs53zuxx7yohs@atpwrceby5fd>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: mr1bsa3wx79ntexb9wpe3m78dwnswoum
+X-MBO-RS-ID: a1a734fcd8b5f712755
 
-On Fri, 20 Jun 2025 20:52:10 +0200
-Jorge Marques <gastmaier@gmail.com> wrote:
+On 6/20/25 12:27 PM, Uwe Kleine-König wrote:
+> Hello Marek,
 
-> On Sat, Jun 14, 2025 at 11:20:22AM +0100, Jonathan Cameron wrote:
-> > On Tue, 10 Jun 2025 09:34:39 +0200
-> > Jorge Marques <jorge.marques@analog.com> wrote:
-> >   
-> > > Support SPI offload with appropriate FPGA firmware. Since the SPI-Engine
-> > > offload module always sends 32-bit data to the DMA engine, the
-> > > scantype.storagebytes is set to 32-bit and the SPI transfer length is
-> > > based on the scantype.realbits. This combination allows to optimize the
-> > > SPI to transfer only 2 or 3 bytes (depending on the granularity and
-> > > mode), while the number of samples are computed correctly by tools on
-> > > top of the iio scantype.
-> > > 
-> > > Signed-off-by: Jorge Marques <jorge.marques@analog.com>  
-> > Minor comments inline.  I think they are all follow up from comments on
-> > earlier patches that apply here as well.
-> >   
-> > > ---
-> > >  drivers/iio/adc/ad4052.c | 244 ++++++++++++++++++++++++++++++++++++++++++++++-
-> > >  1 file changed, 242 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/iio/adc/ad4052.c b/drivers/iio/adc/ad4052.c
-> > > index 842f5972a1c58701addf5243e7b87da9c26c773f..7d32dc4701ddb0204b5505a650ce7caafc2cb5ed 100644
-> > > --- a/drivers/iio/adc/ad4052.c
-> > > +++ b/drivers/iio/adc/ad4052.c
-> > > @@ -11,6 +11,8 @@
-> > >  #include <linux/delay.h>
-> > >  #include <linux/err.h>
-> > >  #include <linux/gpio/consumer.h>
-> > > +#include <linux/iio/buffer.h>
-> > > +#include <linux/iio/buffer-dmaengine.h>
-> > >  #include <linux/iio/iio.h>
-> > >  #include <linux/iio/sysfs.h>
-> > >  #include <linux/interrupt.h>
-> > > @@ -23,6 +25,8 @@
-> > >  #include <linux/regmap.h>
-> > >  #include <linux/regulator/consumer.h>
-> > >  #include <linux/spi/spi.h>
-> > > +#include <linux/spi/offload/consumer.h>
-> > > +#include <linux/spi/offload/provider.h>
-> > >  #include <linux/string.h>
-> > >  #include <linux/types.h>
-> > >  #include <linux/units.h>
-> > > @@ -111,6 +115,7 @@ enum ad4052_interrupt_en {
-> > >  
-> > >  struct ad4052_chip_info {
-> > >  	const struct iio_chan_spec channels[1];
-> > > +	const struct iio_chan_spec offload_channels[1];  
-> > 
-> > If there is only ever one of these drop the array.
-> >   
-> Hi Jonathan,
+Hi,
+
+> On Tue, Jun 17, 2025 at 03:48:13PM +0200, Marek Vasut wrote:
+>> On 6/17/25 3:37 PM, Rob Herring wrote:
+>>
+>> [...]
+>>
+>>>> +++ b/Documentation/devicetree/bindings/pwm/argon40,fan-hat.yaml
+>>>> @@ -0,0 +1,48 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/pwm/argon40,fan-hat.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Argon40 Fan HAT PWM controller
+>>>> +
+>>>> +maintainers:
+>>>> +  - Marek Vasut <marek.vasut+renesas@mailbox.org>
+>>>> +
+>>>> +description: |
+>>>
+>>> Don't need '|'.
+>>
+>> Fixed in V4 ...
 > 
-> It is hard to predict if no other similar device will have only two
-> channels. But I would say most drivers end-up having more channels.
+> That sounds as if there is already a v4 on the lists. I don't find such
+> a patch series though. Am I missing something or just misinterpreting
+> your words?
 
-Ok. I don't mind that much, but it does feel like planning for a future
-that might or might not come.   Easy enough to refactor later.
+Its coming once I sort out all the feedback, I did not post V4 yet.
 
-> >   
-> > >  
-> > > +static int ad4052_update_xfer_offload(struct iio_dev *indio_dev,
-> > > +				      struct iio_chan_spec const *chan)
-> > > +{
-> > > +	struct ad4052_state *st = iio_priv(indio_dev);
-> > > +	const struct iio_scan_type *scan_type;
-> > > +	struct spi_transfer *xfer = &st->offload_xfer;
-> > > +
-> > > +	scan_type = iio_get_current_scan_type(indio_dev, chan);
-> > > +	if (IS_ERR(scan_type))
-> > > +		return PTR_ERR(scan_type);
-> > > +
-> > > +	xfer->bits_per_word = scan_type->realbits;
-> > > +	xfer->offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
-> > > +	xfer->len = scan_type->realbits == 24 ? 4 : 2;  
-> > 
-> > Same question on length vs bits_per_word applies here as in the earlier
-> > patch.
-> >   
-> To be able to optimize the SPI message, len must be a multiple of 16
-> bits. To achieve maximum throughput, no extra bits (and therefore SCLK
-> clock cycles) must be transferred during the SPI transfer. This is set
-> by bits_per_word, 24-bits means 24 SCLK.
-
-I got that intention, what I wasn't sure on was what the spi subsystem
-would do with this case.
-
-I checked the docs and this case is called out though only in the
-spi_device docs for bits_per_word (not mentioned in the spi_transfer
-docs) so fair enough.  Just seemed strange!
- 
-> 
-> Finally, storagebits is the number of bits actually used to store the
-> reading, and for the offload channel is the DMA width, always 32-bits.
-> An abstraction to obtain the DMA width should be created, so the 32-bits
-> value is not hard-coded into the driver, still, for this series, it is.
-> 
-Thanks
-
-Jonathan
-
-
+-- 
+Best regards,
+Marek Vasut
 
