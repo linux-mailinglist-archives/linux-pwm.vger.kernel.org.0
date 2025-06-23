@@ -1,188 +1,131 @@
-Return-Path: <linux-pwm+bounces-6492-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6493-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2C9FAE4C89
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Jun 2025 20:11:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E218AE4DC4
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Jun 2025 21:53:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B5E8189A52B
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Jun 2025 18:11:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7FAE17C5E1
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Jun 2025 19:53:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 029512D8DA9;
-	Mon, 23 Jun 2025 18:09:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6234A2D12F4;
+	Mon, 23 Jun 2025 19:53:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="l4i87764"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Br+Bsi+O"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454E82D5C83
-	for <linux-pwm@vger.kernel.org>; Mon, 23 Jun 2025 18:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F213FD4;
+	Mon, 23 Jun 2025 19:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750702154; cv=none; b=SZwG3Pu+Lb8pYG47NJsLMOeNDZXO5KCmh8JfxsH7d9vDAWlc/Kf10BLEKGPzHWBeLGLjyug7GaeoOpv+6AdognsLq0Rphf90fLscZvHz3a0qwikIex3ie7IVH4ZsHIFyKi0pbvSEG2/nCUTRuRNFErZVikDyhTcaTa1Q5LRkOPg=
+	t=1750708435; cv=none; b=tT/n2buHW7fTlW5Zs2+hnGvdZsGhhgBEY5U4Efs2SjaJ9tdUtfwYINoAkkYn7dEqPbSfkaF67G16KN3oXmwi0H7RROJ2n8clsMloafRoCFvzHEGwMqOTw3zbuCsr5+dJpRwSjThjlLTdclR37K2c0+pdRVvFOUzPv+RHlB8l2CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750702154; c=relaxed/simple;
-	bh=pQpdhYmfxqh3Yfxmei5sPv11PaCzGkgZVRufLVaDNj8=;
-	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
-	 Content-Type:References; b=OJeiOqvt/F/flVraWDIK1JAqmWXSBTyTT08QWwzhff9d/wfnKimNntz07lEBU49JDV14y8Z/0CE4EQ4vhgaqQaLVcDs0omcxHOvUDGxt+Oxo+Jy2EJ3Q5yh4sYfiJJRED/ltwJL1b8yk3NMt6iMYYfJXcO+ZuKUfLi5Y5PU/cl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=l4i87764; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250623180909euoutp0209ccafaf22fb749eb08168c969f9e077~LvlRlyhFG2670826708euoutp02e
-	for <linux-pwm@vger.kernel.org>; Mon, 23 Jun 2025 18:09:09 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250623180909euoutp0209ccafaf22fb749eb08168c969f9e077~LvlRlyhFG2670826708euoutp02e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750702149;
-	bh=Thc/4MnT4r5I8ag38cbivyQhpbuX345C1nEB0lzCSSU=;
-	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
-	b=l4i87764c4t/HnfCZ+5UFqdEXrcuyOHrgrER0xN/t/TVnHg4hlvR9qO570ZnZVc/L
-	 kvcuvLqzLNdTL2k6/aby4ydB5Ov+RPGcXiu5/em1DLzZR5NEtQSjidLcpUUo8Yx3tA
-	 y0pRn2r81/6FZWiAguXjBeicofEge1/Q4QfiGz84=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250623180908eucas1p1a3494bba009ff1d7b7d5d59f915e9927~LvlQeI11R2898428984eucas1p1Y;
-	Mon, 23 Jun 2025 18:09:08 +0000 (GMT)
-Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
-	[106.210.136.40]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250623180907eusmtip10853b0d9e99b673eabdf4475ccf85ae0~LvlPWboOD3150531505eusmtip1z;
-	Mon, 23 Jun 2025 18:09:07 +0000 (GMT)
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-Date: Mon, 23 Jun 2025 20:08:57 +0200
-Subject: [PATCH v5 9/9] riscv: dts: thead: Add PWM fan and thermal control
+	s=arc-20240116; t=1750708435; c=relaxed/simple;
+	bh=pyqYnOlkjidKRgeVyxX1rCr60cUUf4YqGlw39FHd3yQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eVeeD/ynfbx8NtEav5qDQnbZN/sV1TCfTXBzjk92QO574Vm4OuD/WoV9nAK0NN9c8g/bxTMGJggDmBrnc+g5lrIaJagJYttsTl5tCkpjeY96ckVXbiKvXc2KTdARPSkMeqDpvMX+pxmBVxeyeagCsf97a7yCnTfeQw2q7maTKKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Br+Bsi+O; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3AB8C4CEEA;
+	Mon, 23 Jun 2025 19:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750708434;
+	bh=pyqYnOlkjidKRgeVyxX1rCr60cUUf4YqGlw39FHd3yQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Br+Bsi+OVOOTawbj4sGu0MQYf7hqOUg4sm2E2mj6dLITYCSbnDou8doSNxXB1czyi
+	 a0kaxiHp42zTxgBVA3OudGDDEuXYMwkgQFFWsIsevVAfjLfEpEYJILsV7Q9AwOr7U6
+	 DlObCANx3FRTMZ0YA45A+sfOwqZ7BQh6ucmFzD0v261FbHiN4WgCW6RpcJh2syXjMJ
+	 jYDhmlDV3wnIVZ7W9qcOEq/l7wrnzMxCM5WTzcPgc6jwFk7lpYWwu45dQ3dSrtTEsi
+	 T97e96NHAjBdLTp5Y2bn6V8042YoSJ/iKryF6B5VPU1qGbDPTrz4TTB2QBzBIKtop7
+	 zXh/YNsUXbC7Q==
+Date: Mon, 23 Jun 2025 21:53:51 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Marek Vasut <marek.vasut@mailbox.org>
+Cc: linux-pwm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] pwm: argon-fan-hat: Add Argon40 Fan HAT support
+Message-ID: <apbocxuzcptlpghphh7nchnwyxpfhmiwosgxrt4y5awsb67ar3@fbskfbulwsma>
+References: <20250621172056.160855-1-marek.vasut+renesas@mailbox.org>
+ <20250621172056.160855-3-marek.vasut+renesas@mailbox.org>
+ <purpjdp72jw2rok5ihyua635izyih54ufom2knsbaiwdd3jzgk@6wjf364fao2g>
+ <dbec18f0-5df4-4eb8-93ab-da6ccfedf8ab@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250623-rust-next-pwm-working-fan-for-sending-v5-9-0ca23747c23e@samsung.com>
-In-Reply-To: <20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
-	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
-	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,  Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,  Trevor
-	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,  Michal
-	Wilczynski <m.wilczynski@samsung.com>, Drew Fustini <drew@pdp7.com>,  Guo
-	Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,  Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
-	<conor+dt@kernel.org>,  Paul Walmsley <paul.walmsley@sifive.com>,  Palmer
-	Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,  Alexandre
-	Ghiti <alex@ghiti.fr>,  Marek Szyprowski <m.szyprowski@samsung.com>,  Benno
-	Lossin <lossin@kernel.org>,  Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Benno Lossin <lossin@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-X-Mailer: b4 0.15-dev
-X-CMS-MailID: 20250623180908eucas1p1a3494bba009ff1d7b7d5d59f915e9927
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250623180908eucas1p1a3494bba009ff1d7b7d5d59f915e9927
-X-EPHeader: CA
-X-CMS-RootMailID: 20250623180908eucas1p1a3494bba009ff1d7b7d5d59f915e9927
-References: <20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com>
-	<CGME20250623180908eucas1p1a3494bba009ff1d7b7d5d59f915e9927@eucas1p1.samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7nsxiujugcoezieo"
+Content-Disposition: inline
+In-Reply-To: <dbec18f0-5df4-4eb8-93ab-da6ccfedf8ab@mailbox.org>
 
-Add Device Tree nodes to enable a PWM controlled fan and it's associated
-thermal management for the Lichee Pi 4A board.
 
-This enables temperature-controlled active cooling for the Lichee Pi 4A
-board based on SoC temperature.
+--7nsxiujugcoezieo
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 3/3] pwm: argon-fan-hat: Add Argon40 Fan HAT support
+MIME-Version: 1.0
 
-Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
----
- arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts | 67 +++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+Hello Marek,
 
-diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-index 4020c727f09e8e2286fdc7fecd79dbd8eba69556..c58c2085ca92a3234f1350500cedae4157f0c35f 100644
---- a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-+++ b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-@@ -28,9 +28,76 @@ aliases {
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	thermal-zones {
-+		cpu-thermal {
-+			polling-delay = <1000>;
-+			polling-delay-passive = <1000>;
-+			thermal-sensors = <&pvt 0>;
-+
-+			trips {
-+				fan_config0: fan-trip0 {
-+					temperature = <39000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				fan_config1: fan-trip1 {
-+					temperature = <50000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				fan_config2: fan-trip2 {
-+					temperature = <60000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map-active-0 {
-+					cooling-device = <&fan 1 1>;
-+					trip = <&fan_config0>;
-+				};
-+
-+				map-active-1 {
-+					cooling-device = <&fan 2 2>;
-+					trip = <&fan_config1>;
-+				};
-+
-+				map-active-2 {
-+					cooling-device = <&fan 3 3>;
-+					trip = <&fan_config2>;
-+				};
-+			};
-+		};
-+	};
-+
-+	fan: pwm-fan {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&fan_pins>;
-+		compatible = "pwm-fan";
-+		#cooling-cells = <2>;
-+		pwms = <&pwm 1 10000000 0>;
-+		cooling-levels = <0 66 196 255>;
-+	};
-+
- };
- 
- &padctrl0_apsys {
-+	fan_pins: fan-0 {
-+		pwm1-pins {
-+			pins = "GPIO3_3"; /* PWM1 */
-+			function = "pwm";
-+			bias-disable;
-+			drive-strength = <25>;
-+			input-disable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+
- 	uart0_pins: uart0-0 {
- 		tx-pins {
- 			pins = "UART0_TXD";
+On Mon, Jun 23, 2025 at 07:30:33PM +0200, Marek Vasut wrote:
+> On 6/23/25 11:11 AM, Uwe Kleine-K=F6nig wrote:
+> > when I replied to v3 this v4 was already on the list which I missed. My
+> > concern applies here, too, though.
+> >=20
+> > On Sat, Jun 21, 2025 at 07:19:56PM +0200, Marek Vasut wrote:
+> > > +static void argon_fan_hat_i2c_shutdown(struct i2c_client *i2c)
+> > > +{
+> > > +	argon_fan_hat_write(i2c, 100);
+> > > +}
+> >=20
+> > If you drop this, I'm willing to apply.
+>=20
+> Dropping this would make the hardware which uses this device more
+> susceptible to thermal damage, e.g. in case it gets stuck during reboot a=
+nd
+> does not boot Linux afterward. I don't want to risk such thermal damage.
 
--- 
-2.34.1
+We agree here. But the right place to address this is the pwm-fan
+driver. A PWM is supposed to do exactly and only what its consumer wants
+it to do (in the limits set by hardware). Officially a PWM driver
+doesn't know the polarity of a fan, so `argon_fan_hat_write(i2c, 100)`
+might fully enable or complete disable the fan. The fan-driver knows the
+polarity. The PWM driver doesn't even know that it controls a fan. And
+the next guy takes the argon device and controls a motor with it --- and
+wonders that the vehicle gives full-speed at shutdown.
 
+So I hope we also agree that the pwm-fan driver (or an even more generic
+place if possible that applies to all fan drivers) is the right layer to
+fix this. And note that the pwm-fan driver already has such a decision
+implemented, it's just the wrong one from your POV as it disables the
+fan at shutdown. For me this is another confirmation that having a
+shutdown callback in the PWM driver is wrong. The two affected drivers
+shouldn't fight about what is the right policy.
+
+Best regards
+Uwe
+
+--7nsxiujugcoezieo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhZsMEACgkQj4D7WH0S
+/k5JEAf/ScuSFqcJij5p6YFnA9Fb6WDX7yVojrrApcLGB29gnmYa9Cuppt6t6ZW6
+r8NkGZ5lsRI1ivyvW149fKyHx+NIEtO3/eSbtVOeIyObx868DH6e7nXU3VMubSbb
+9ItUiOsUgmvdz1+QIBPMGc635NaVlUIABwCw51ZYZCp3ahCf6pOY7D6tcJl1rcpf
+Yv+beIsZgh7OzjXPhaaCh8NhUwCe8STUjxTMJIlzJHoGa5c5/j+h1tAEHQhwNpot
+vN34jVxJnJHhH3NOigvG4GU7jrDJ/XTXWkL7i9b56dyvPSGRcv48OanqFcujaWa9
+GR+PvAH2cr0OYrMS0poGoGPQzf0YhQ==
+=kmj9
+-----END PGP SIGNATURE-----
+
+--7nsxiujugcoezieo--
 
