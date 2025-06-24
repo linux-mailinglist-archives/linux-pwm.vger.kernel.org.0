@@ -1,143 +1,228 @@
-Return-Path: <linux-pwm+bounces-6508-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6509-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47248AE61C4
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 12:05:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A103AE65DE
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 15:11:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C064A16D1C2
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 10:05:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07C31188B877
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 13:05:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0470627E1D7;
-	Tue, 24 Jun 2025 10:05:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE47D28D8FA;
+	Tue, 24 Jun 2025 13:05:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="O0sR5a+4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XtgBVdTI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DED27F170
-	for <linux-pwm@vger.kernel.org>; Tue, 24 Jun 2025 10:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2A0182BC;
+	Tue, 24 Jun 2025 13:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750759513; cv=none; b=R6Q+hqezQ3nXOadIppEK/+pHya7ejQjJRYdHbGjjitLQpMJkVVsnkUKgsNA/R8FKAyTkXMdKw3p/0g8wd48CMVz6+5rJF2JAO3Vq+XDlg71PnILBlpL984PWiIZjpddmhGXTd/wv7YmKSF7CF66QWv2zeDzFERfpfB5UlY7B2ms=
+	t=1750770334; cv=none; b=bsv3e1j0T8aO0gRfD9V0pIy6vgXAKD7wId82i+byILxZSvWx5ileEP63kcjuTUn5PaR9xNd30RF/5hjFNmw9zfScfapy31chOX77uMk6vpCC2xZXC+VUVUnQJElzk8rXHCL0bKYCC/3xuqkOtSROwjhEist4V/2zMMJDfSgBqyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750759513; c=relaxed/simple;
-	bh=BxSZCTHQQbOzpUXG41bzHe6bhur/t86DouCb7Fsp5mY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DE930FTkvu9DKjhS5B/FjBQtyWco78amTb2rS3wU6IssuPhp+xK+Vdc06CWzICuFtd6ligOce8Z9qdamYaaQvvSYRsPsXZsWKDObE+5sOPNol1RmGJWekNIvzQ88W5nqXrzXZX+JT/37AbNQvG/JlLoytfvJy41qFBUWFmFQEwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=O0sR5a+4; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451d54214adso1651305e9.3
-        for <linux-pwm@vger.kernel.org>; Tue, 24 Jun 2025 03:05:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750759508; x=1751364308; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/p4W8XBYRlLTJmF90cO5SUhM2S4WURG9L9T1Yq5WmNI=;
-        b=O0sR5a+49VlPI+YGmXq96t8eUMBJN5VeM79EStrIbRu1lY+uhRVJp82mxUQ7gE8J7c
-         TjE++uDoq8ghX6iCjgQM5EPL/lm3KPySalgmcv9Ihnb82gpVw5RPBA0/6zRkARgSm4TG
-         Ql5MY82RsoPd+xa065JfK97CGgCBedIWg0mKUL6mU3VmBGcp9UEzAe6/KPxl1mIQBxIZ
-         6VPGzBkoyBhYN1nqFlF2zm/Soaoq796GGKL7TMQwjDYyvR4MOdNUmwN7k+KRqkxKr8LM
-         i1Rs9hxW5XMTSDiyPQgLlJWS4WoQAFp1niyTEalXilidD9z9dT/YKyU1U/EfPkOCrbbG
-         pSLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750759508; x=1751364308;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/p4W8XBYRlLTJmF90cO5SUhM2S4WURG9L9T1Yq5WmNI=;
-        b=RCA1SB/BGC+vZdT+ZpbHTs0vNfXCLFEjRF9iuxuSVUiFd0BqDcjTpJgH2McIKY3kTh
-         +cliej+Wn1kvzCJ0FNLrl2oEK8e5l2tiEX6TGy8Nt7wSyEx3BZ/r/mvHCd2Ga6dUbkrY
-         jZWIAeA481G14E+2sGSCAK+n7WIgTJchYwPHXRP3w5nGBqM5KWvIsk8YGmF1rJMPMDyx
-         54nHIg8R1BrT0ITuX+3uOZx7wvKWfHBK2BrN45vwrDh3xD62eNkYJpPGeea8liyWydfD
-         Op9tYbKCpu7zpP7VfWx93P0jxlxVhBzmRvSnLNWCjK1RyUVgdXWF08rsfa4+O/8XOiq8
-         42Qg==
-X-Gm-Message-State: AOJu0YyShAY27huIIdhoG9F6HtUiZdqq14mPPmzVG5ghQ3kK6UecnubF
-	EBYrnLxafUKoUNBcj+QghNEgwXcRTUoLsPujQsmRu1RNc6WuoajGIbSEN+/Cp45WScuOOHwnOlu
-	qgfzW
-X-Gm-Gg: ASbGncvuArCR37TT4f3CkytP3j+z8qpUd1QX8VdNCp39O4HuctejNJf/R6lYN0knI3f
-	96alyUsJrWH5EB9nIwe7FUc/PoEjbXVHXcFy/WScDMThV1N8ghLRbqbHBZLD3hb/xUT2yWLsh4V
-	46O6OQlDTk+WChMjoMFkA7BCnHl3eHB5+6BZEyV8AdsATgeWy0iLgTamU/asByPqlGaeI5uC1Km
-	acU/Tt6JzqRilUwnbwxUPO6Sz4fe04tqxZAHVSbVZx7qMyK3Cjn0FcVOG/sc1LygvgK66hThO0A
-	DTo1tA+PKChCIhaw/tbDhlmpPj5XVT3SimmfaIEtWUvOpL6J+pHL/zszs2n03ydve6lfZAEVq4d
-	/PNeWInPFsQfdIs6IeZ8gpI/JkXre
-X-Google-Smtp-Source: AGHT+IFJrgvCHKycSbwdKW1xCkf/MuOiL8PQmR3kqGg/1FDNCNSxeZZyPqXfrJodaz4BV1On31nEtw==
-X-Received: by 2002:a05:600c:4452:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-453716b567bmr69741045e9.7.1750759507719;
-        Tue, 24 Jun 2025 03:05:07 -0700 (PDT)
-Received: from localhost (p200300f65f13c80400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:c804::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-453646fd642sm133197175e9.21.2025.06.24.03.05.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 03:05:07 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH] docs: pwm: Adapt Locking paragraph to reality
-Date: Tue, 24 Jun 2025 12:05:00 +0200
-Message-ID: <20250624100500.1429163-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1750770334; c=relaxed/simple;
+	bh=kGyeSWwPfNqY8c6qb1h6FLEVc9UbMJzgCLbeazagA7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NGpdCEDSxUbWh+I3VZF+32g84c95RWt+PyyoMLBzrDuEaRgfdst7DyO9RgccQN42upgVRLeqcTuj6Hn7Tit7+8eNdAPx3fUJE5B+/MBgzG30WK9XlK0gpr4UNRtRDkOrvrfC7C9vdP3Rbx86Nae/lDFeL95cnb5Y3xaXLXJ9iKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XtgBVdTI; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750770333; x=1782306333;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=kGyeSWwPfNqY8c6qb1h6FLEVc9UbMJzgCLbeazagA7s=;
+  b=XtgBVdTIsC6FO0JhBOtUe5Rxbgg7/U5WO2mSHJUMceV/aUrE6artdMLc
+   uezbx4bIRjfvwGNb/BSFs/XunyCEEOsmPvwCqXn+4W1ik+ltdgFocdtSL
+   1DpCQGk19uIhReVjDePpa1jOzfef8wK6fk4+ZkmkHrpMr1HCfeOcjt4YI
+   WIMRaLPFO/bnLgHB2YVq87csT7oI450hYGPeio7AEHV8AJDdJ6bfaXQLD
+   A9ENBhui/LFZUkPW/DW4xVqzHUUBFbmkq9XYk3TcRA5SeGHH1+p6EKGdQ
+   qH0oCL8yNv9zS77aLdmfBQ3xBsOQ1QvUlI6QhCkSBtiwU5ND0VtborHW+
+   w==;
+X-CSE-ConnectionGUID: b5r2D6evSwiwZTnyyiaLqQ==
+X-CSE-MsgGUID: hXSDTVIiRhWB22ROi4TQCg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64436179"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="64436179"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 06:05:33 -0700
+X-CSE-ConnectionGUID: yx5S08Y/Tj22QfpDWdefuQ==
+X-CSE-MsgGUID: i9+uPxK2STCA4XdUDpP6OA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="182787385"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 06:05:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uU3L4-00000009TQw-0NDt;
+	Tue, 24 Jun 2025 16:05:26 +0300
+Date: Tue, 24 Jun 2025 16:05:25 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Andy Shevchenko <andy@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v15 2/2] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <aFqilRNwsUafDtOm@smile.fi.intel.com>
+References: <20250623211116.1395-1-ansuelsmth@gmail.com>
+ <20250623211116.1395-2-ansuelsmth@gmail.com>
+ <CAHp75VcEJ0w5rcyq_DSHHunYanU5S9OgnRz1t8XervXqGQCX4w@mail.gmail.com>
+ <685a64d5.df0a0220.1f9a42.38b0@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1943; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=BxSZCTHQQbOzpUXG41bzHe6bhur/t86DouCb7Fsp5mY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBoWnhMZSx36slfU2u6dOspYk4GeYrazI8k4XzbT le7FPWLb+SJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaFp4TAAKCRCPgPtYfRL+ TgmWB/4mlf3PJE2o0ekyCVkZ8WN8dmD9Cqy5DVK33obcZHMRgKW4ar7jANlQXfR/CuL0opsOeJ1 Ti8dJBNN9iGeqo1SJpPzcXh8LnddKyIgWLUITGPazZ8oMFsW5m/Q8ikRISc/amK36l9gu0VDTRd iDlx9FS8JBLYhU5+lRdqfM37TF5xsMdRsvwS4wwwTWkRBf41vJ2eWh40vuxEx1MS3JcZCgEoab7 9PL6rO00390pTEELXX+hxDlM3ja9oIpdFRdDJEwDtd4SJsNbmEhqUcNchuliB5u4KP7hUsDeHbG yVkBrkaHvL+VZ6wLidXMtNfQFpaiqU2qu5xC7TcQK7km73lc
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <685a64d5.df0a0220.1f9a42.38b0@mx.google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-We have the distinction between pwm_apply_atomic() and
-pwm_apply_might_sleep() since commit c748a6d77c06 (pwm: Rename
-pwm_apply_state() to pwm_apply_might_sleep()) contained in v6.8-rc1.
+On Tue, Jun 24, 2025 at 10:41:54AM +0200, Christian Marangi wrote:
+> On Tue, Jun 24, 2025 at 09:37:26AM +0300, Andy Shevchenko wrote:
+> > On Tue, Jun 24, 2025 at 12:11 AM Christian Marangi <ansuelsmth@gmail.com> wrote:
 
-Locking in the core was introduced in commit 1cc2e1faafb3 ("pwm: Add
-more locking", contained in v6.13-rc1) to serialize per-chip callbacks
-and device removal.
+...
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
-Hello,
+> > > +config PWM_AIROHA
+> > > +       tristate "Airoha PWM support"
+> > > +       depends on ARCH_AIROHA || COMPILE_TEST
+> > 
+> > > +       depends on OF
+> > 
+> > There is nothing dependent on this. If you want to enable run-time,
+> > why not using this in conjunction with the COMPILE_TEST?
 
-I guess there are no objections and so will apply this patch to my pwm
-tree in a week or so if there is no negative feedback.
+Yes, I understand that. Maybe you should have dropped versioning of the series
+:-)
 
-Best regards
-Uwe
+> > > +       select REGMAP_MMIO
 
- Documentation/driver-api/pwm.rst | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+...
 
-diff --git a/Documentation/driver-api/pwm.rst b/Documentation/driver-api/pwm.rst
-index b41b1c56477f..0d27a40f5818 100644
---- a/Documentation/driver-api/pwm.rst
-+++ b/Documentation/driver-api/pwm.rst
-@@ -173,10 +173,15 @@ Locking
- -------
- 
- The PWM core list manipulations are protected by a mutex, so pwm_get()
--and pwm_put() may not be called from an atomic context. Currently the
--PWM core does not enforce any locking to pwm_enable(), pwm_disable() and
--pwm_config(), so the calling context is currently driver specific. This
--is an issue derived from the former barebone API and should be fixed soon.
-+and pwm_put() may not be called from an atomic context.
-+Most functions in the PWM consumer API might sleep and so must not be called
-+from atomic context. The notable exception is pwm_apply_atomic() which has the
-+same semantics as pwm_apply_might_sleep() but can be called from atomic context.
-+(The price for that is that it doesn't work for all PWM devices, use
-+pwm_might_sleep() to check if a given PWM supports atomic operation.
-+
-+Locking in the PWM core ensures that callbacks related to a single chip are
-+serialized.
- 
- Helpers
- -------
+> > > +#include <linux/bitfield.h>
+> > > +#include <linux/bitops.h>
+> > > +#include <linux/err.h>
+> > 
+> > > +#include <linux/gpio.h>
+> > 
+> > Have you had a chance to read the top of that header file?
+> > No, just no. This header must not be used in the new code.
+> 
+> As you can see by the changelog this is very old code so I wasn't
+> aware.
 
-base-commit: f817b6dd2b62d921a6cdc0a3ac599cd1851f343c
+Understood.
+
+> > > +#include <linux/io.h>
+> > > +#include <linux/iopoll.h>
+> > > +#include <linux/math64.h>
+> > > +#include <linux/mfd/syscon.h>
+> > > +#include <linux/module.h>
+> > 
+> > > +#include <linux/of.h>
+> > 
+> > Nothing is used from this header. You actually missed mod_devicetable.h.
+> > 
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/pwm.h>
+> > > +#include <linux/regmap.h>
+> > 
+> > Missing headers, such as types.h.
+> > Please, follow the IWYU principle.
+> 
+> Aside from types do you have hint of other missing header?
+
+Just above :-)
+
+> Do you have a tool to identify the missing header?
+
+Unfortunately no tool available, this is just by experience of reviewing code
+and doing some cleanups in include/ area.
+
+The rule of thumb, for anythin you use, check which header provides that type
+or API. But OTOH don't be too pedantic about it, types.h, for example, covers
+a lot of basic kernel types and many compiler attributes and so on, no need
+to take care of those separately.
+
+TL;DR: you should go through your code and check it.
+
+...
+
+> > > +       u64 initialized;
+> > 
+> > Is it bitmap? This looks really weird, at least a comment is a must to
+> > explain why 64-bit for the variable that suggests (by naming) only a
+> > single bit.
+> 
+> There could be 33 PWM channel so it doesn't fit a u32. This is why u64.
+> I feel bitmap might be overkill for the task but if requested, I will
+> change it.
+
+Why? It has a shortcuts for unsigned long, so it should give you no difference
+on 64-bit compilation. 32-bit might suffer a bit, but if you curious you may
+check it. The ask here is only based on the variable naming and unclearness of
+how many bits are in use. Also bitmap will help to understand the code better.
+
+For instance, here
+
+	DEFINE_BITMAP(initialized, 33); // or rather a definition for 33
+
+will give immediate understanding how this is used and what are the limits.
+With u64 it;s unclear what you will do with a potential garbage in the upper
+bits, for example.
+
+So, let's say I prefer to see bitmap types and APIs here based on the above
+examples.
+
+...
+
+> > This entire function reminds me of something from util_macros.h or
+> > bsearch.h or similar. Can you double check that you really can't
+> > utilise one of those?
+> 
+> I checked and bsearch can't be used and and for util_macros the closest
+> can't be used. As explained in previous revision, it's not simply a
+> matter of finding the closest value but it's about finding a value that
+> is closest to the period_ns and only with that condition satisfied one
+> closest to the duty. We can't mix them as search for the closest of
+> both.
+
+Perhaps adding a comment on top to summarize this, or did I miss it?
+
+...
+
+> > > +       pc->buckets[bucket].used &= ~BIT_ULL(hwpwm);
+> > 
+> > Oh, why do you need 'used' to be also 64-bit?
+
+Right, but I mean why does each of the buckets require a 64-bit value? Can it
+be handled in a single bitmap or so?
+
+Or is it used like a cluster of the PWMs in one bucket?
+It feels like bitmap APIs can also improve the implementation here.
+
+> In the extreme case, a bucket can be used by all 33 PWM channel.
+
 -- 
-2.49.0
+With Best Regards,
+Andy Shevchenko
+
 
 
