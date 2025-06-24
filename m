@@ -1,85 +1,85 @@
-Return-Path: <linux-pwm+bounces-6514-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6515-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 002AEAE6E7A
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 20:17:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92BBBAE6E73
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 20:16:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3DFB188947A
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 18:16:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 194E53A9137
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 18:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21B8F2DAFB9;
-	Tue, 24 Jun 2025 18:16:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F7E7223316;
+	Tue, 24 Jun 2025 18:16:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zQ8kmdA8"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="QgWb0uLp"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2841B233145
-	for <linux-pwm@vger.kernel.org>; Tue, 24 Jun 2025 18:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92CA2298984
+	for <linux-pwm@vger.kernel.org>; Tue, 24 Jun 2025 18:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750788991; cv=none; b=tr/hwm6eaHKrjOXgdIajLDuXsC7MPrcVNGqwHCsZi05Lh+NvB+haRySpvOas6e6ZSPS7luhKnVRW/Xo40GGxbV3VK4ZlHU8Dvqzw4KOglfOmH3jJTIS5lTzdW6l1MhO/nIAz1FPxRSYF3VCEwP9OOazS1PERJBrnPzbhCqPo1n0=
+	t=1750788993; cv=none; b=S0DkIVGcuJm6+dkVxbXI+GQ2EBTYvB2jNCJPPEN1hKnFOii08WrA81ENkF+LF29hG610UIhzpXqLXKHC87J8TxKATJUeZXkMDshMLD/0d7/9/sb/g3hAL+nJZZgq1Byyl3RwidIZDvB/0ybFqsIlVoUMO+prUdusoku/dI1b6dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750788991; c=relaxed/simple;
-	bh=tZK8Wq+anKBP1rLIKaMXsBuPvMqM2sbrLZnT8Z4b6RM=;
+	s=arc-20240116; t=1750788993; c=relaxed/simple;
+	bh=AeR5HOeXyWBOLfB7mM+468coOylmeYon8YOOLv3sS2c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vAI8n6ud3WCzEM8YhKhKDvYU83np1FuRwGoHcG2p7Q/Y19Q7XV8Vt9a9ighMKl709I5D40bqps4Snk2yZ9nziurA13zTWwXSUHSlVZSEKS+WOWNNy3vuHxNgb3EXSnKTuDHVexixczxYb2aqlwXqhe8iezSeZqo4rFMDSFUUKSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zQ8kmdA8; arc=none smtp.client-ip=209.85.218.42
+	 MIME-Version:Content-Type; b=iUJG2LsHKjstxOTNrI+dQ73VpYYX+sHEJ+4FfqA5G9IsQhP8qwhs3UZJaSSoRub7jdNJLNcH8L9KEhnAnbrrOTX/bQv7EEZNGh1KbA/i+Qismu2YyHuD2b24wg69M97C8pHUlSe+lupJcRAbcvgj7bXYZVOf865hqTkJulo+Sqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=QgWb0uLp; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad93ff9f714so144114966b.2
-        for <linux-pwm@vger.kernel.org>; Tue, 24 Jun 2025 11:16:28 -0700 (PDT)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae0bc9c7835so50326366b.2
+        for <linux-pwm@vger.kernel.org>; Tue, 24 Jun 2025 11:16:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750788987; x=1751393787; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750788990; x=1751393790; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UHz/3THqHcjEMon6vyiI8Ozs2SXaYtuBLpbkrNuLzts=;
-        b=zQ8kmdA87NKhN8kEmJsx1pk8r6Xdlw1/bk7xvvrhHZqqH0diSuGuyUmfJTG7FcQia/
-         Q6QGuteT0sT2ScWCbS5oqQlZC0T/nvdEku/eSuotN+YwKdy9+SiJ7Rd8R6tJq+xp0fNR
-         Gyjkopugm3LBdVlYd1qp9dUk4m9xVkGoBwCBX2TcwAfHHo2b6kB/YRs0Tmywh1NwA95c
-         ggn27qUd/dcg2cRFGnKrgB8WMpUchNS22OoE/HoLUWGp19QpAEShWMAWIGz6KsH6iYQg
-         glkCUnco57MNG7VPNi12rwfKEXIxuJkZxD1wRj9lnn46JYb/Ih8U/TzIZEK3uWGxrBey
-         haUw==
+        bh=V4tdqEiAfMmZSrDkN9ucWcWrVJ1NBqGwLO8dXph+7cM=;
+        b=QgWb0uLpnl7QQuU1LW7V68zPsltntQXUqyrAlCrBWDNOfHpC6xq5z0miLJ96RO7K4T
+         pepCJjfC3rPq5FvjzWbLyGhojAwvhu8pY48kEeIj+RXmBbPqwcoHIfNfLhuJylTVhW/V
+         biBnrAo3yGul53QurMDBAl2CvqW7Z0OSKesqAs5mtN13SYsywzZPN9ENrbAquW2R1To8
+         kdb6Sqw7JGKkhW0Hl+PrUzcfni2ycdoXKmIQ5uZ2whA+TNCWxl2ddiyZ8HyjYkv389SM
+         y16If3gYKhB6IhqMGUdPZQ9ieKgdcPZeS/1umyKq8w2dTzPty/D8vAW+I8rib3ulhc6g
+         aXCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750788987; x=1751393787;
+        d=1e100.net; s=20230601; t=1750788990; x=1751393790;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UHz/3THqHcjEMon6vyiI8Ozs2SXaYtuBLpbkrNuLzts=;
-        b=wKr+Zy+RoODkDSXOQCflvqKtxQe03siay2YtAENQWXlzIGw/K91AYRmxTEPfgNoSl2
-         GZ3Bgpj3rkEH/wagyQbMRrOd2xzHena7Yb1UHHlFG1IeuowkRzaNsMWoQg24fav7rz02
-         ua7X3DnNOqhP8LCTfiQvKjK+OtxhWnovZteEjHhw2uDx8TUWauGR5NS7VI6hoWJ/KFab
-         KjCCru31PTcI622eJGlErCw/hXpF85Lj5Uhn/GdBbewHkaFMQO9SrcqXNJ9an3Yniky9
-         nRlDmk7Oazci7RHwP4VROOH2S1p91mu5vyLiYxhDagsYZHXlD1nNwENu8KOlh44QDoPR
-         LY5Q==
-X-Gm-Message-State: AOJu0Yw6l9HsqT9lBGnF45hzj34/EWlzPNtsKa0DoIOehDdMRQUwgkEn
-	d2Tx2ekgszecCN8GEPibQOXHRLMlJ48AYQFZyJEN8y3meLcls0djMQE1tUSfsxpTpHHkVF7jURR
-	4GUFQ
-X-Gm-Gg: ASbGnctqkjDGqYwGu/vybhU/zNhg/prOg5KJ1sdpVw8TnRe30Jm0g3GRCnedONNHAyx
-	nItCsbo4xWDxcHwIWCed5pDJNo1buyhARyhxZwEoAzUDjWOBki3jVbB50Dr/W1mlnY4G5D+EuYV
-	nc2m6amgMgattzlyUD99H3+fVKaMzJSk0jKk9dBg0eFXMkWVF85EJ3ls4iJZ05pYJy80uWQ8a3D
-	K5UGgahcHO0Pmr3Wdlq16hPxhHhP4bOUuTCG8u8YrUQ7K2xJUvuH4MLJZvd6aqWB41Cue4C/KDq
-	wzesPz+0hDdhouc1kWOHrQyK0e6ML3VD6rQDEG04Z7MBPicm4nT7w6JkLRxI/86XPNwc0zbLsln
-	vww==
-X-Google-Smtp-Source: AGHT+IEOZkYdx1/zibKqZMORZGuO3lgEW21erK3oZBKU/fRGiWuFQ0Dtix+3x3kqUbVdO3ce/uGFQw==
-X-Received: by 2002:a17:907:cd16:b0:ad2:40a1:7894 with SMTP id a640c23a62f3a-ae0bea0a411mr32871166b.41.1750788987278;
-        Tue, 24 Jun 2025 11:16:27 -0700 (PDT)
+        bh=V4tdqEiAfMmZSrDkN9ucWcWrVJ1NBqGwLO8dXph+7cM=;
+        b=G42i15pfn7Fs5giD/bCo53DA1eth+jsNC6i+yPEk0Hc/984AaffAMWeWXhie4vRy1H
+         vWAz0tlUlauN/3kWx29NoyTyZmVQX+0hoJGeWVweYgYn76Vp2wqstziH0Jc04ZK38tci
+         FE1IR5hjzqSz2v+MUu57x54vwrtNsalBwwoRZQZa35Kmh04IhBele4b/MaFrnhGYMMoR
+         2douZT3P/Odw/sQURCp5n0r3jcwVxia4WmtdhJ1XN94bSXEO4LoD0HW/f1RjYSV5Hf/P
+         r/JDH6GnuA5TSgaYzaJI2St2SvdSAJToKnbJ2MurjS2buPox9XGoVYYIJxbxLkUP7FL+
+         Numg==
+X-Gm-Message-State: AOJu0YzJFVi1e+Oz0h0yit2FTY082nBbVsW3kh6e7GKig+AwzYXnsCw4
+	KlqUtLraDwyL7/rk+2uJ4NNGWpAxm/6Q1+nrdRD1tNFW7M6spr6uLn1KtxquiGcecidNdITzBPd
+	97LiV
+X-Gm-Gg: ASbGncsdYo/TpdrsftnBn7ZNpv/naqLhpR82nXM+JGzhBIfXz3jqlic/7VJLmKJcYNf
+	e6oGU+XxxoFAbo3y+vF2htjbTZPKazISyxK3no8leOQZ+CO5Mu1udKvLTxZMBtsKPWFCcsspZ24
+	nr4W53lSIaIVcy9Mh+P20IgzIgGDbi6SsEJITkr7DTPQkrmh9wdIlBhREZy+BKkmV1li+/OKXUJ
+	m3ScCAiuov6MLlrKChgmSW0sKMqLi506IYLjoCvh4RjPQ51VayZmbwiT0Bhql6pF7uINW/ya6Fc
+	uycGyzwh0AJ0Tc9MM5llc3/oomSRPmKxr5b+SjlRr+jIHi4lBJ4Z9VxBslmzhHBZfXs=
+X-Google-Smtp-Source: AGHT+IEUFcPaDicHrC6kAbAVuJBUW3hcGGkEc2u9n4KbT8XxA1Qh9pF/Jfy1ywddJWe+c7zGqGbcHQ==
+X-Received: by 2002:a17:906:6a12:b0:ae0:a1c2:262e with SMTP id a640c23a62f3a-ae0bea2e0c8mr30082966b.50.1750788989758;
+        Tue, 24 Jun 2025 11:16:29 -0700 (PDT)
 Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ae054209a13sm901584066b.168.2025.06.24.11.16.26
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ae0541b7242sm910719866b.118.2025.06.24.11.16.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 11:16:26 -0700 (PDT)
+        Tue, 24 Jun 2025 11:16:29 -0700 (PDT)
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 To: linux-pwm@vger.kernel.org
-Cc: Vladimir Zapolskiy <vz@mleia.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 4/8] pwm: lpc18xx-sct: Drop driver local locking
-Date: Tue, 24 Jun 2025 20:15:40 +0200
-Message-ID:  <4f7a2da37adbfe4743564245119045826d86eca6.1750788649.git.u.kleine-koenig@baylibre.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH 5/8] pwm: microchip-core: Drop driver local locking
+Date: Tue, 24 Jun 2025 20:15:41 +0200
+Message-ID:  <6d6ef0376ea0058b040eec3b257e324493a083f1.1750788649.git.u.kleine-koenig@baylibre.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750788649.git.u.kleine-koenig@baylibre.com>
 References: <cover.1750788649.git.u.kleine-koenig@baylibre.com>
@@ -90,87 +90,86 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2821; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=tZK8Wq+anKBP1rLIKaMXsBuPvMqM2sbrLZnT8Z4b6RM=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBoWutY/hqvEJv/ccjOwk+1Eo4IGImrEhto56NV5 WbUTOYeBvSJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaFrrWAAKCRCPgPtYfRL+ Tmk9CACFJ0A/jRALDWw+ocNBbs3Jg1kxVhrPhaaqLaqabNp/L3ZYtMNRq3Pu0rvsMWeGnXlCZnH 6O+RXcF2nVIb44s93mM8z+uHVAKMls3Zuyj8IWBgDz1DCYdrVSpDRFSrJ3r2CsH6Jvnv/XBbIwB TwKNMLAgLMSQo/ZNOjjtzVXMclcZnQAmgyr0F0dl90iJmHaWtA2lNuBcNjRozZ7qHEkieVCtNkh BP1ZvV/qSgCDVjGTpXjKT2vSSzYu1p/DhP8B/pJbS57fWnZwtZLUMvuFW2M70oTtO21nLbZHsxA Eal0wKVvFr2bkKPjwNVNqI7bDjjGvvrU3a1KRrZIbEQzUL5V
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2660; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=AeR5HOeXyWBOLfB7mM+468coOylmeYon8YOOLv3sS2c=; b=owGbwMvMwMXY3/A7olbonx/jabUkhoyo19EFDP+zZvpFbYjVt7snG2LB+ZhlY/D+i/uz3yuqu hSax5p0MhqzMDByMciKKbLYN67JtKqSi+xc++8yzCBWJpApDFycAjARaTn2P5xlnEEctl+8PW1+ WS1I6FlvckbW4KGcZOL6NU+nbxM/o9PzNXbux9WzxRaZTOeMOeD5etPtrVe27/rkHNqswqevPOX mO3vxnEPpT8L2RQo1zzrC7qOSYL86lVeOsfQoU4T49lQNqWK7WNa406ZcmU7vlKQfJwSdUKkVbd z20IJf3yirvNDbmudIT1bVjVvNufvuz1/CevJQsdnirV2RVY9OZs2cKh6zxfROuubK8Huz2xs/c ajvi+0xjrb6a7NXbLt63MSWdaF8D1IijFTWNCelvprEt9w17uyqBY9ezFw/7/2hQ+4Zi88lPTR2 8720XotL7WO7eLCVXHvv//mx4pwZC/Xu5zU/3XH55+EsAA==
 X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-Both mutexes are only used in one function each. These functions are only
-called by the .apply() callback. As the .apply() calls are serialized by
-the core since commit 1cc2e1faafb3 ("pwm: Add more locking") the mutexes
-have no effect apart from runtime overhead. Drop them.
+The pwm core already serializes .apply() and .get_state(), so the driver
+local lock is always free and adds no protection.
+
+Drop it.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
 ---
- drivers/pwm/pwm-lpc18xx-sct.c | 14 --------------
- 1 file changed, 14 deletions(-)
+ drivers/pwm/pwm-microchip-core.c | 17 +----------------
+ 1 file changed, 1 insertion(+), 16 deletions(-)
 
-diff --git a/drivers/pwm/pwm-lpc18xx-sct.c b/drivers/pwm/pwm-lpc18xx-sct.c
-index f351baa63453..1e614b2a0227 100644
---- a/drivers/pwm/pwm-lpc18xx-sct.c
-+++ b/drivers/pwm/pwm-lpc18xx-sct.c
-@@ -100,8 +100,6 @@ struct lpc18xx_pwm_chip {
- 	u64 max_period_ns;
- 	unsigned int period_event;
- 	unsigned long event_map;
--	struct mutex res_lock;
--	struct mutex period_lock;
- 	struct lpc18xx_pwm_data channeldata[LPC18XX_NUM_PWMS];
- };
- 
-@@ -129,8 +127,6 @@ static void lpc18xx_pwm_set_conflict_res(struct lpc18xx_pwm_chip *lpc18xx_pwm,
+diff --git a/drivers/pwm/pwm-microchip-core.c b/drivers/pwm/pwm-microchip-core.c
+index 12821b4bbf97..4ff32bb4c205 100644
+--- a/drivers/pwm/pwm-microchip-core.c
++++ b/drivers/pwm/pwm-microchip-core.c
+@@ -36,7 +36,6 @@
+ #include <linux/ktime.h>
+ #include <linux/math.h>
+ #include <linux/module.h>
+-#include <linux/mutex.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
+@@ -56,7 +55,6 @@
+ struct mchp_core_pwm_chip {
+ 	struct clk *clk;
+ 	void __iomem *base;
+-	struct mutex lock; /* protects the shared period */
+ 	ktime_t update_timestamp;
+ 	u32 sync_update_mask;
+ 	u16 channel_enabled;
+@@ -360,17 +358,10 @@ static int mchp_core_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			       const struct pwm_state *state)
  {
- 	u32 val;
+ 	struct mchp_core_pwm_chip *mchp_core_pwm = to_mchp_core_pwm(chip);
+-	int ret;
+-
+-	mutex_lock(&mchp_core_pwm->lock);
  
--	mutex_lock(&lpc18xx_pwm->res_lock);
+ 	mchp_core_pwm_wait_for_sync_update(mchp_core_pwm, pwm->hwpwm);
+ 
+-	ret = mchp_core_pwm_apply_locked(chip, pwm, state);
 -
- 	/*
- 	 * Simultaneous set and clear may happen on an output, that is the case
- 	 * when duty_ns == period_ns. LPC18xx SCT allows to set a conflict
-@@ -140,8 +136,6 @@ static void lpc18xx_pwm_set_conflict_res(struct lpc18xx_pwm_chip *lpc18xx_pwm,
- 	val &= ~LPC18XX_PWM_RES_MASK(pwm->hwpwm);
- 	val |= LPC18XX_PWM_RES(pwm->hwpwm, action);
- 	lpc18xx_pwm_writel(lpc18xx_pwm, LPC18XX_PWM_RES_BASE, val);
+-	mutex_unlock(&mchp_core_pwm->lock);
 -
--	mutex_unlock(&lpc18xx_pwm->res_lock);
+-	return ret;
++	return mchp_core_pwm_apply_locked(chip, pwm, state);
  }
  
- static void lpc18xx_pwm_config_period(struct pwm_chip *chip, u64 period_ns)
-@@ -200,8 +194,6 @@ static int lpc18xx_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 		return -ERANGE;
- 	}
+ static int mchp_core_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -381,8 +372,6 @@ static int mchp_core_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm
+ 	u16 prescale, period_steps;
+ 	u8 duty_steps, posedge, negedge;
  
--	mutex_lock(&lpc18xx_pwm->period_lock);
+-	mutex_lock(&mchp_core_pwm->lock);
 -
- 	requested_events = bitmap_weight(&lpc18xx_pwm->event_map,
- 					 LPC18XX_PWM_EVENT_MAX);
+ 	mchp_core_pwm_wait_for_sync_update(mchp_core_pwm, pwm->hwpwm);
  
-@@ -214,7 +206,6 @@ static int lpc18xx_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	    lpc18xx_pwm->period_ns) {
- 		dev_err(pwmchip_parent(chip), "conflicting period requested for PWM %u\n",
- 			pwm->hwpwm);
--		mutex_unlock(&lpc18xx_pwm->period_lock);
- 		return -EBUSY;
- 	}
+ 	if (mchp_core_pwm->channel_enabled & (1 << pwm->hwpwm))
+@@ -415,8 +404,6 @@ static int mchp_core_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm
+ 	posedge = readb_relaxed(mchp_core_pwm->base + MCHPCOREPWM_POSEDGE(pwm->hwpwm));
+ 	negedge = readb_relaxed(mchp_core_pwm->base + MCHPCOREPWM_NEGEDGE(pwm->hwpwm));
  
-@@ -224,8 +215,6 @@ static int lpc18xx_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 		lpc18xx_pwm_config_period(chip, period_ns);
- 	}
- 
--	mutex_unlock(&lpc18xx_pwm->period_lock);
+-	mutex_unlock(&mchp_core_pwm->lock);
 -
- 	lpc18xx_pwm_config_duty(chip, pwm, duty_ns);
+ 	if (negedge == posedge) {
+ 		state->duty_cycle = state->period;
+ 		state->period *= 2;
+@@ -469,8 +456,6 @@ static int mchp_core_pwm_probe(struct platform_device *pdev)
+ 				 &mchp_core_pwm->sync_update_mask))
+ 		mchp_core_pwm->sync_update_mask = 0;
  
- 	return 0;
-@@ -377,9 +366,6 @@ static int lpc18xx_pwm_probe(struct platform_device *pdev)
- 	if (lpc18xx_pwm->clk_rate > NSEC_PER_SEC)
- 		return dev_err_probe(&pdev->dev, -EINVAL, "pwm clock to fast\n");
- 
--	mutex_init(&lpc18xx_pwm->res_lock);
--	mutex_init(&lpc18xx_pwm->period_lock);
+-	mutex_init(&mchp_core_pwm->lock);
 -
- 	lpc18xx_pwm->max_period_ns =
- 		mul_u64_u64_div_u64(NSEC_PER_SEC, LPC18XX_PWM_TIMER_MAX, lpc18xx_pwm->clk_rate);
+ 	chip->ops = &mchp_core_pwm_ops;
  
+ 	mchp_core_pwm->channel_enabled = readb_relaxed(mchp_core_pwm->base + MCHPCOREPWM_EN(0));
 -- 
 2.49.0
 
