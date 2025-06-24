@@ -1,94 +1,89 @@
-Return-Path: <linux-pwm+bounces-6502-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6503-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E743AE5E4B
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 09:45:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DBB1AE5EF4
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 10:19:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 863141BC0FF2
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 07:45:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A83384A1B13
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 08:19:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2EFC2571DD;
-	Tue, 24 Jun 2025 07:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6F0F257AD1;
+	Tue, 24 Jun 2025 08:19:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EN/DqN8S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FguYRCmM"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40102571AD;
-	Tue, 24 Jun 2025 07:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BC4257AF8;
+	Tue, 24 Jun 2025 08:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750751116; cv=none; b=APJVO3THenDlBdD9HQvqUXGmwb9JLMK4YLpcbYt98iFCcB4PPmakpXU6n7YD5Kp6Gern2CYeTi6fmUaRO1nzJUzrzWuLA+mTatZj9TJpot524V43xRtA3s8lXvbjAIfrUaPdafud8CkWOkVKFLhjqLYizMVTLWLH6m7wTcVWPJU=
+	t=1750753165; cv=none; b=fEckRT5uDdLnFc6ClUbXLvLOw9oRBqANbJ+yh5Qi2kPir40R2IWK90NSw250NlYwI3lfoR95PyfbjfbB25ElYEK7AW98zX4A2elVrtG1Gzbs5cDJZNnq+E/qOspqKr3bkhecEDGII+M4eYQTQ1r+WoUJZvOBshbDPQ7aVz2teWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750751116; c=relaxed/simple;
-	bh=OMYfjk/HFBuh+RTKM3jVKi0nByrXItMtgixjn74Xy6A=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gLv5jK/HO+G+xSEpO/5ujEPW6GS1BlS3JgsGByJ98Bt+XgSenUcrUCNSLCXmbk5yqlWGMGNZlR1rveABJoJRD3KJOSVD0LjIrAoOgJLJqrCR4NkA7HZDjQq4B5qVRtgNKIAwh22hnBgxI0J4U7NZlwJIMQNd1rR+vEiVotzXlQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EN/DqN8S; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1750753165; c=relaxed/simple;
+	bh=lHc4ZAAeqfzHN1X+wVHA/c/Uut3n6yiJSxjoF8fRGM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FJ/otmwa5H0j6sgakZgDWq6rHMOHwGVjhFJT/RaRIV/ydoo7WjDVpHc8Zu5qEMs08BdjCNjSoShjy5aNogCUEbYzASqxsWeonTtsCsAWiqgfUEFUahWvuTjqFi7IFoqUx80KXq8rbCsz5Zqnn3LopFs07jVvKp5KVqsltjcYsUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FguYRCmM; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4f72cba73so3931910f8f.1;
-        Tue, 24 Jun 2025 00:45:14 -0700 (PDT)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a57ae5cb17so2786605f8f.0;
+        Tue, 24 Jun 2025 01:19:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750751113; x=1751355913; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750753162; x=1751357962; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=g0Qw5wb1qPbwmyPbsLrs16hi2rdMz6r9QLI+Zkxs80I=;
-        b=EN/DqN8SQPSyhcRP+BHiwZGHKO32f62KZ2sT8LdzHAa/b94z35+3IZGbyHDdyYQbws
-         3akHsaFvQ/cm+2vm039NwWc/xJXzNAKr77EuD9sE73L/CoULckEbSUPhhBa80+GEESda
-         6SxEtLMP6j+O3hhZqQjPNJ0teR1t8Xahx1eOz54pARkv3kQQSOhIDFMsV+XBuGdBR/hP
-         XxnYCFngrcBAx3GApXYpVeVIs3pZ1CxnKT/t4vP9ONDYCI3ereKaGxn7yXCd4FJcJu0A
-         XXywV10AYSN9w5UTBhI62VQsKBSIINZ8CQF1cx3M8BERM+bllgLaKeNV/n+cMy1xwWW8
-         XQDw==
+        bh=0HQzhmMwm8dgf3BqJLxWZHwxNCOz9a49V8WdE7r2r9U=;
+        b=FguYRCmMN+dN7u+Zmnwmr8jRuHvOI2IINWyxueJMTglU5f1GOYJ0ad3DShailOqtlx
+         8V4o0kbkZx/flhJYHjJjf4FX/RpQYkfXd0EGqn7gvZoneikZhqfpvmMoPOJYURq1Tc6S
+         OO0a9rEmTc9qUL35tq/SxyiFNrIVomB4YA5njPbEDl03a3LH5XoLEZ7Teg0hgkWD1MGd
+         qtCNz8JnISoM/md9xeFtxFKL3djW2xl46H2Fed1J4dm4eRzE2MxWE+IdN8jPvyaAAoqq
+         ZyQk+aFhRj8819EiWIL8l1Sff0rGbmDEBarMiiyd/C8XvSK7fgGeoUIahXlFG0qQEigg
+         GmZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750751113; x=1751355913;
+        d=1e100.net; s=20230601; t=1750753162; x=1751357962;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g0Qw5wb1qPbwmyPbsLrs16hi2rdMz6r9QLI+Zkxs80I=;
-        b=TCqD6Rno/nS7iMJ+pJog/SWwz9+Bmi2v72lb4IGXH74vrn+5Yd+PTuQ3avUn49gJs/
-         aAbgnS3hdAbOrK8WasWYvG5DoHGJT7RTMWMg5UrBQh5jQA682NVegTWm7sM9mTV2oHUI
-         ZRtsef8F1Q3FnRWqiPsvDbvl8ZYBX+E2SUXaeN7D1vduImu16HbFZPCiVNuDaB0eT8Z5
-         YQWrgoIGbYCx1o3dIr0Lhq3hpB8BVi/tty3FlGpIpHSeOOE/Be6iHTIGeuiq3+PXDfXv
-         D8SfTTq3aZ0c1bjSnu5cdpoIhzIIVPshM0ICdrdCjnDtqQ+qf+u/+tF8s62aQFn06eeL
-         S9pw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/ogYZ3i8oU54gI012FQFsNllcWdo5FwTSvglUXLgz+mqU46itKc/hJ9LFUg5+znrUheqIhDeFm6Wp@vger.kernel.org, AJvYcCWFYfdeoclyQQjUy2dLW4HS6acw+K4dthQnLdCsICON0boKCJl2c5ToVcOTYeVfrmUS7SPHmqL5u9WbkmM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywzq6EBATubhhPmPyil5BCQIPDCnssAHplGc9Q8mqjHi2t1skCY
-	o1R+sEidUjLm2bTk8YORRAYJWsH7zSRCUGlNzIByCHMmpsE1hgy7WHz2qlCXsg==
-X-Gm-Gg: ASbGncsTXTharGMCDpvnilP3eVKsLZ7YKYdpesACncqDX/apDRneYyGeGFnSLPMv3C+
-	u6oqbmEH23QYTOebgOh7AS/s7UcrAOdj/5sxNF44Ir6H+ptLPGu3xn5S1NK/A8YWkDvok0hgqGx
-	a4F0bzT/9HTqaHsdJUAKixpDsgeNGQc6p3Gl4+d7+i9w8P2A7073hUs1piez9Tv+0a6WaydTET0
-	q6QKkB1j9xx1D28kjtN8+04CN5CAslFRvkcGITx7oaJ9yPDpLHnzoT1ZYT7nQyCQYmMMqiPMW60
-	RVImnJb/p+4mzObcuGG3m+MZk6P72u2Ot7HpI54lp3OxB8VK4dQ6t+C6cirP26FwUnx2/KWsn6v
-	zLttqGMDYtFSxkNKmLw==
-X-Google-Smtp-Source: AGHT+IE0gWJM7aSHVAxN1GTQvphCOkft5ulLOzwhDZvQOYQaffQzFyUGVVNZrQjCmYXfWS8WYgK6DQ==
-X-Received: by 2002:a05:6000:2409:b0:3a6:daff:9e5 with SMTP id ffacd0b85a97d-3a6e71c5b54mr1705345f8f.7.1750751112954;
-        Tue, 24 Jun 2025 00:45:12 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4536470370fsm132895045e9.29.2025.06.24.00.45.11
+        bh=0HQzhmMwm8dgf3BqJLxWZHwxNCOz9a49V8WdE7r2r9U=;
+        b=SbkV3zORPSc+5y19JyCCDYWWUwV3m/iliHaT/MihuF7em76pG9d2KUfCXNBo1dqMeO
+         ZeQch1maLvGZ78y0DoUEEQZ7qHnIMdIxu6786eeDjkqtAfOpz/QJx1zbty8IkgJSdbpU
+         /et2FesaM1HaOhFCZEwTq2BDF+K6k2Aq/5P/nIQDQiSzpxCvO1IC7UXeWU/dUx4yavoa
+         sE3p6gF1f3MdbtwvPbixEQq2PY6/Ee75XBBShxRnZm7PJbcKmZ6hdLQm1hM8n1sRdA4j
+         YI2anGcuPpfqx0L+s+Z+FjkpSx9wfwtWRNHJ+Tdp5hNJtpghPGtpH+LVB6QFO/C66QIM
+         eNvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVY/x7lKJisVrN8j4iqDc1S2wl0VSSpPV0CPgAZvZSagwarNuKe7WAnLmmoYaGQ7MeLXRcY0L5SojjA7w==@vger.kernel.org, AJvYcCWfsGbShFM4Y/cQplYnh1eVulxeHqvMsc374llnSA538tZGZf5f0oOA1YqBPhJBWpaL8ut45TAcSsnj@vger.kernel.org, AJvYcCX7fSKNqkzKwp8PScMOf7Ob3kyxWT0uKcAXRSSvUMhl2zpTaaUbqV/DCIk/De7VrMdJnHcnj6L49USDavaA@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQBgEgYWefKlU9dLfwRtOrpGsj2PyCWlAGPjYh1Bj3//NdNqi8
+	+SFAp5UJpfklJgCyPu06OWCXUw5DMsI6DHCwJ/GPqe9wNKsJOVwCbTNR
+X-Gm-Gg: ASbGncuAXjK/PwIiwFr6OP2cTcF+8E9zPfcqGLN1e3i/lAqP4Z72UotNGgYXLdOiSZu
+	F5dykkg1kSGsc7xsaRUa4pMaxOZmZDdgWUUyl7oZ+NPT2m5A/pipyYddMUa+VQH4Fum681vcruC
+	KNSSCeoVuLqyep9p18ex2WXFPvLkGncU09PMg2wYCJzRgmSMaPcEHRJWlLVUewAajgTPpMsxGkG
+	jo2FdCpJbZvsHNJELqNagq0JsSQFx1Ddd8MRUUsPb4QeJY3rLIY29yNl3p/ezyuxREv9qEaLgbJ
+	CCXCcJUuEdbTUerZf/RpGF/kyV25YdnuvWPlmkw3pGHGpTBGSveEPZT+PX+U
+X-Google-Smtp-Source: AGHT+IHM8PUchadujkUTWUPCwyBPckulRdVw9/8xANJ2K7NJhCiUFZ9kIVn/HWC58YcEhFgH9pggxA==
+X-Received: by 2002:a05:6000:144e:b0:3a3:6b07:20a1 with SMTP id ffacd0b85a97d-3a6d12deb86mr13227259f8f.40.1750753162353;
+        Tue, 24 Jun 2025 01:19:22 -0700 (PDT)
+Received: from legfed1 ([2a00:79c0:6bf:b400:22ea:3d6a:5919:85f8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805d21fsm1275485f8f.23.2025.06.24.01.19.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 00:45:11 -0700 (PDT)
-Message-ID: <685a5787.050a0220.20ff0f.fd7a@mx.google.com>
-X-Google-Original-Message-ID: <aFpXhMeTm_7QT8sj@Ansuel-XPS.>
-Date: Tue, 24 Jun 2025 09:45:08 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Andy Shevchenko <andy@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v15 1/2] math.h: provide rounddown_ull variant for
- rounddown MACRO
-References: <20250623211116.1395-1-ansuelsmth@gmail.com>
- <CAHp75VcWW=RaHS9Yb8BcK2Jt7qtNOQzA3eDOZQ88RQG63981cQ@mail.gmail.com>
+        Tue, 24 Jun 2025 01:19:22 -0700 (PDT)
+Date: Tue, 24 Jun 2025 10:19:20 +0200
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: dimitri.fedrau@liebherr.com, Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>, linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v3] pwm: mc33xs2410: add support for temperature sensors
+Message-ID: <20250624081920.GA10327@legfed1>
+References: <20250619-mc33xs2410-hwmon-v3-1-301731e49f8f@liebherr.com>
+ <cviovwci5fgtyina7p7zqjns7cwveivy3vetqhhagwmrlc2gm2@jrqgorif7xff>
+ <20250624070442.GA3383@legfed1>
+ <u4aigv7nhsqygisyrhcohq25tvktsukjexng6zddib6kvj6hwl@vaa2pset4qbi>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -98,66 +93,58 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VcWW=RaHS9Yb8BcK2Jt7qtNOQzA3eDOZQ88RQG63981cQ@mail.gmail.com>
+In-Reply-To: <u4aigv7nhsqygisyrhcohq25tvktsukjexng6zddib6kvj6hwl@vaa2pset4qbi>
 
-On Tue, Jun 24, 2025 at 09:08:32AM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 24, 2025 at 12:11 AM Christian Marangi <ansuelsmth@gmail.com> wrote:
+Am Tue, Jun 24, 2025 at 09:29:25AM +0200 schrieb Uwe Kleine-König:
+> On Tue, Jun 24, 2025 at 09:04:42AM +0200, Dimitri Fedrau wrote:
+> > Hi Uwe,
+> > 
+> > Am Mon, Jun 23, 2025 at 11:07:24AM +0200 schrieb Uwe Kleine-König:
+> > > hello Dimitri,
+> > > 
+> > > On Thu, Jun 19, 2025 at 07:32:42PM +0200, Dimitri Fedrau via B4 Relay wrote:
+> > > > @@ -29,6 +30,8 @@
+> > > >  
+> > > >  #include <linux/spi/spi.h>
+> > > >  
+> > > > +/* ctrl registers */
+> > > > +
+> > > >  #define MC33XS2410_GLB_CTRL			0x00
+> > > >  #define MC33XS2410_GLB_CTRL_MODE		GENMASK(7, 6)
+> > > >  #define MC33XS2410_GLB_CTRL_MODE_NORMAL		FIELD_PREP(MC33XS2410_GLB_CTRL_MODE, 1)
+> > > > @@ -51,6 +54,21 @@
+> > > >  
+> > > >  #define MC33XS2410_WDT				0x14
+> > > >  
+> > > > +#define MC33XS2410_TEMP_WT			0x29
+> > > > +#define MC33XS2410_TEMP_WT_MASK			GENMASK(7, 0)
+> > > > +
+> > > > +/* diag registers */
+> > > > +
+> > > > +/* chan in { 1 ... 4 } */
+> > > > +#define MC33XS2410_OUT_STA(chan)		(0x02 + (chan) - 1)
+> > > > +#define MC33XS2410_OUT_STA_OTW			BIT(8)
+> > > > +
+> > > > +#define MC33XS2410_TS_TEMP_DIE			0x26
+> > > > +#define MC33XS2410_TS_TEMP_MASK			GENMASK(9, 0)
+> > > 
+> > > Keep the registers in address order please
 > >
-> > There is currently a problem with the usage of rounddown MACRO with
+> > Aren't they ? There are "ctrl" and "diag" registers and I didn't mix up
+> > adresses. There is a comment for each of them when defines start.
 > 
-> rounddown() with
-> 
-> > u64 dividends. This cause compilation error on specific arch where
-> 
-> causes
-> 
-> > 64bit division is done on 32bit system.
-> 
-> on the 32-bit
-> 
-> 
-> > To be more specific GCC try optimize the function and replace it with
-> 
-> to optimize
-> 
-> > __umoddi3 but this is actually not compiled in the kernel.
-> 
-> __umoddi3()
-> 
-> > Example:
-> > pwm-airoha.c:(.text+0x8f8): undefined reference to `__umoddi3'
-> >
-> > To better handle this, introduce a variant of rounddown MACRO,
-> 
-> rounddown(),
-
-For this and the other... Is it correct to use () for MACRO?
-I assume () should be used only for functions.
-
-> 
-> > rounddown_ull that can be used exactly for this scenario.
-> 
-> rounddown_ull()
-> 
-> > rounddown_ull new MACRO use the do_div MACRO that do the heavy work of
-> 
-> The rounddown_ull() is a new macro that uses do_div() to do the heavy work of
-> 
-> > handling internally all the magic for 64bit division on 32bit (and
-> 
-> for the 64-bit divisions on the 32-bit platforms (and
-> 
-> > indirectly fix the compilation error).
-> 
+> +#define MC33XS2410_TEMP_WT                     0x29
 > ...
-> 
-> > - Add this patch
-> 
-> Why are math64 APIs not usable here?
+> +#define MC33XS2410_TS_TEMP_DIE                 0x26
 >
 
-There isn't a rounddown API for math64.
+MC33XS2410_TEMP_WT is a "ctrl" register and MC33XS2410_TS_TEMP_DIE is a
+"diag" register. Both register sets start with adress 0. "ctrl" and
+"diag" defines are separated because I didn't want to mix them up.
 
--- 
-	Ansuel
+[...]
+
+Best regards,
+Dimitri Fedrau
+
 
