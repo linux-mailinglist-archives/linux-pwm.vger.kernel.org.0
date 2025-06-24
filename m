@@ -1,82 +1,87 @@
-Return-Path: <linux-pwm+bounces-6516-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6517-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24A41AE6E70
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 20:16:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 803FBAE6E6E
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 20:16:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C84C97A258E
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 18:15:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE2C9165BF4
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Jun 2025 18:16:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DEF826CE3F;
-	Tue, 24 Jun 2025 18:16:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C811230BCB;
+	Tue, 24 Jun 2025 18:16:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NTVSJeZY"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xi2QL25n"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A9A298984
-	for <linux-pwm@vger.kernel.org>; Tue, 24 Jun 2025 18:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71869293C6C
+	for <linux-pwm@vger.kernel.org>; Tue, 24 Jun 2025 18:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750788996; cv=none; b=lCI+NR00vU7mmowofibkAWVgsPUidj81nZeMvjPFN/z3P4iPjo0sIMTmN97SbKZqSPGh0CINxzX/2qDhoZScI31P0x8knhnW5nQSabO4t4RUO35e454KR+xF0ShDCkTHc0LV8kB7VFLShoptqci8FikavDZ3PW+ARoTaz6CZh8M=
+	t=1750789000; cv=none; b=iWF03mD2TeY6Ts+tv5nHQitS2CcXqLfxPOHelhgEvzRYZ1jURaU4kQMtsAphj69wisTZS+sKZWUWdOTs9CGMB1p9lJfg1yZx822ozCfd7zhbtkUGzLzjul8coCZAFd8a6kBKV3JoXiAN/Ccd81vq70fMCldu1stw5XmqCTAYASo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750788996; c=relaxed/simple;
-	bh=DO1LppBx8IVH6D+GUjvF5jlyRVSmFmRfdcql06N1lgY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n0AQr++JadAVPpVpk6IDnM2To0evxSkv9wbARhlRB2lHPwdO+g6pEtUT2ekDxqPWaHxNthRmOiwBy2korqeKUJBB/3tdAcDnRr0Ty+w+UD6L4SvCp9C/QInpF89sSz6RE/xCowLOLbzKWzwl3ctisKxZ8pFvBcNqM5dPuBvve6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NTVSJeZY; arc=none smtp.client-ip=209.85.218.41
+	s=arc-20240116; t=1750789000; c=relaxed/simple;
+	bh=E/uUePM7a46y0UkgtyPdkbBAs51qHEH/jq0OTlEoicI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hRs6RbHoKm17V5pdYdZw1BjQR/1+ejGkfCQi9LsdTeMZz/GYeVaMu4Qibrz3uS2HGQuEQs+7mNU2ba8pSi6LzxquDB7EQN05EWgTlr7ZSJlogIdjAaV9dc+dsHKRZpaNk8fnvDL7hXMVnEmqYQoLCMaRB4SunWkWCTs3JNkW2U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xi2QL25n; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-adb2e9fd208so132498966b.3
-        for <linux-pwm@vger.kernel.org>; Tue, 24 Jun 2025 11:16:33 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60768f080d8so9922387a12.1
+        for <linux-pwm@vger.kernel.org>; Tue, 24 Jun 2025 11:16:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750788992; x=1751393792; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750788995; x=1751393795; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1CncuNAFSte8Xrf31fizDhz4RiIfpYyBGmk57DMSt4s=;
-        b=NTVSJeZYb4+JPmyZ6uvmzYtR3sNBMA2OtB82vlvtaF1EPF3yXpS2x1vHBMBr1zWttc
-         gmkzxbPJLSOMChOYl5QwZ2iSfHkCgIffp7LmTRNPeicZjJ5nHqUNkL4CK11flc0wZBQx
-         aYHQ3MWP7fnVplnP4HZFGCtXf4viIuokNyttKgfmEbJb8h6DpsSyn4OqXCTMx8GbV2rs
-         1s09ikipg0vBwoUI5o7F7hWkbQlNPDosME0H7LlfBHlxyfP8ueT4ujeMturPvKYYwU8P
-         Eq9woyRquv7TctgzRf+pCEuYC2BLgWc4FvrbAIdA4FzDTD8I815PyfzNSqDCOP8bl+EM
-         xqqw==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hEjv4F6KSOcClNbcVqHshoCAEKi/vQAT9lN/7mgczII=;
+        b=xi2QL25nOiEuO2g6UroJNZQjZhHpu5ZPormzH9OjpkiycmuS5ujj+FTLcxT7stFcgP
+         sqbUeq+yw+yx1VZerhF+MvH9GKcInTaD0HfzQrS7zXMnzh8USTBJY8KEWSDvi4KwRzIa
+         OH0ubnAWUhDEVca0HimzSou/d3FlJt0+I+0avuOoocgtBC8jvygUd3hyjBBzZ1APi4pi
+         NbLjhySxwrwbR3MYQ4hG6aQGqQmPaUKAcPhGd3JjddW9lO/mOiiNIlpsGErbgAjeoq6T
+         K00JIFU/g8do9krZFDp0byAUQOKJOZhmSB2HY++Iu4teKpX1mDCvU3/orT01teUN7FqF
+         2yrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750788992; x=1751393792;
+        d=1e100.net; s=20230601; t=1750788995; x=1751393795;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1CncuNAFSte8Xrf31fizDhz4RiIfpYyBGmk57DMSt4s=;
-        b=dFpef5m+XmTcE572l489m41lUWLEeKGqQBX3mihWDxLCGYhtpedxX5ahNsOAteGq0z
-         jQ8uUfC6rEsq3HiV/GaHDIveWza3JVQMDmJt/N+GNVBn5QEqD3XAtWKbWiJKtfTI3XbK
-         Vfa1wA4bPD15mPkVmUXJMHdirjMpyV2SJARK1CYq48Jes2WFhsSDHvsFvoaVZT8n2MLT
-         yCklQCNLCuX+5qMHdSJM1yjpmcEX6KNhhpi6CBXmAIqIgzXSSf8tpmet8CKFE9vykglh
-         jLPA9k9mA7z1bTuDkf3KORcyqgUxjerR5V9d08wf184WZRujoRd//iMxTyBuQk6zuPfm
-         8agQ==
-X-Gm-Message-State: AOJu0YwAN96axa55CmInnNkjiEX2CQZLpkLyxO0nwxzOOThthY60qu7O
-	Jfbga8zBO/rvkmRLzsuEFYq8jUa6Celhe32/ADEuFZNHyWAt3hgDyLbmE+eT+YQoCu44QbmZ0vM
-	UH7DG
-X-Gm-Gg: ASbGncsII/RdDRgSKqmAEsYLVf8k/JMF3WlEeiprwJxYcZRKzpPTdJq2tNdn09ujo/f
-	rucG9XS6sf1Og578yhiKJTGehA4FuY2NXQlQYzBOEHhC5AHz0Nm08xEaka0kwqwZ1L3H+VEQC7r
-	BYkMeLr90VJ8fCs144C6DCvu4IG+35wdSaI+Y2Tu4TSVv1eOKybV/Fj01zmjb4Gm7gbjkivXLwW
-	4NHjqr2RwBbo++ZnJB+o3Q1HIybQCdoKhViuWckQ7fTarsn6SGvFRivc33p78WlijMdo35l3wkB
-	eDmPRLZjg4+4C55Sx4tXwHQrFM0rD2AY17zx7j4LGeRWvQ2RWpaQXKM8lY5MGRNOCzw=
-X-Google-Smtp-Source: AGHT+IG1rd3O5pizwMiHE9SYqTKOMkfSVa0XrUYnIHIn6DQgnAbQZzm2vcJ76EJK7tFIn3+s+PzTPw==
-X-Received: by 2002:a17:907:1c89:b0:ad5:42bd:dfab with SMTP id a640c23a62f3a-ae0bf1542abmr19683166b.30.1750788992165;
-        Tue, 24 Jun 2025 11:16:32 -0700 (PDT)
+        bh=hEjv4F6KSOcClNbcVqHshoCAEKi/vQAT9lN/7mgczII=;
+        b=UB+o7wuUxfkDWXalYMnqtotjUHQ7XY36IcHHffwnaNvSzMk7Tn0Tw4dPhtyNSagzZm
+         psrqtBH4R2L0TgqMMHdSwqCDl0qXPJp6AGo+9JseShDGpNB8d/YbFXi2Yiv2+XDpthZo
+         KSmkUD9RtUavlslUX6O5gR+Sqvzw06E7WHgOr43pqRwfSdM+kmf2ybZnl7S3SY0RblUV
+         VR6mh4TWSnnbl45KAGFDZ45etD9IQEX3jXAxww8xAc/es5f2pvJ1ElD4enuTFg16sVf/
+         7HKoByqujvRugHlwdLsInTpnaWWBl4/FNPQ1BorO/e4VcXgcSQqCSS6BK/CSmwK9YZVY
+         n5/g==
+X-Gm-Message-State: AOJu0YyN6kS57rNCSRnCdFB3HSG7Nm99mU5I2LpjpjQocd4fIqk77IuP
+	+u6ih9HoyRLnoDpTGKszXXtiL8pUcFHEntT5v9ftVh8XpZfjiGa+YXoBq10q+tvsudNRlN4Rtqy
+	VhQ2H
+X-Gm-Gg: ASbGncstX0FwO737x6xKGdc6AFIF1jMebARoANvn15zvHZsReFEQBa1gNiU+dCFezjw
+	hvJ7L7Q6XDHyhrUszhzXPABb96Etm4csXOqbQfFXXqG73W2eMVwYcT3SqBtzpw0TEGXffaHrkyd
+	K4QgpEYgih5nvURYt7XOsSlz95aYLt3Pw8lhfacpFdXELcJ0UoCDmYN8b2C8k33BPdlDOiLjpwN
+	ikj5mfUldL2oGcCr8IphLUvwsN845C7xFVo1i/C6HTZDjJzRA/cv8+zcpgVSgsTvh/Iv4k4VcI+
+	Z7wyBv8ykjENDVfGB1qTsRWFhKgRnYJl/QR3i48G4EEnQ+D56hO9OaCMNU0GOZ25/2s=
+X-Google-Smtp-Source: AGHT+IEBuy6MlT6u62EQdRkXXyLoqvydf3fc2sW2sY8y/XmffxoA6g93x7kLpzH/nKHARpOTaVXeag==
+X-Received: by 2002:a05:6402:2787:b0:60c:4782:e4e1 with SMTP id 4fb4d7f45d1cf-60c4782e825mr471973a12.27.1750788994579;
+        Tue, 24 Jun 2025 11:16:34 -0700 (PDT)
 Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ae09d8eb43bsm272036866b.78.2025.06.24.11.16.31
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-60c2f4682cfsm1357564a12.39.2025.06.24.11.16.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 11:16:31 -0700 (PDT)
+        Tue, 24 Jun 2025 11:16:34 -0700 (PDT)
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 To: linux-pwm@vger.kernel.org
-Subject: [PATCH 6/8] pwm: sti: Drop driver local locking
-Date: Tue, 24 Jun 2025 20:15:42 +0200
-Message-ID:  <7ad150e40b45d6cb16fee633dcd6390a49a327a1.1750788649.git.u.kleine-koenig@baylibre.com>
+Cc: Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev
+Subject: [PATCH 7/8] pwm: sun4i: Drop driver local locking
+Date: Tue, 24 Jun 2025 20:15:43 +0200
+Message-ID:  <87b71c46b82b787959f0cea314d3010f16a50a29.1750788649.git.u.kleine-koenig@baylibre.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750788649.git.u.kleine-koenig@baylibre.com>
 References: <cover.1750788649.git.u.kleine-koenig@baylibre.com>
@@ -87,100 +92,85 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2241; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=DO1LppBx8IVH6D+GUjvF5jlyRVSmFmRfdcql06N1lgY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBoWute1t5CLBg3gSjLwgMlqxmABQ+BT2zL5wE+H MfumF9WNbWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaFrrXgAKCRCPgPtYfRL+ Thz9B/4s/nfqUs9frvY/c9vcEparT710WnequTjqW0miVxm2tv9Pg34+ljAWvsOCDnbE+8TpRtf vb38dg4ZiZtZ4jiubK5/lUlbPfVwa+B8y4/hYphiwfdpKCyECzsPpTEFDd7HjhfJeTeYOF6rlyy RllJMILwkfYtUHWOrYVa1kxf+Yn3e4U0lJDrPlZT8B4bLQVroy3NVBD5OWD7yagA8xBrY5X2phV zK6yb37d4ouWqEvWoieTS3zayV3qUBrxPK+Usdheo9tNw2/NGwgbfaACxL+5G/Oa47qopLlCpj+ sWfb+0Jr8nmW7MajmR/1ldTwbOXSsySl6TTOp+rPnqzGLOWq
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2350; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=E/uUePM7a46y0UkgtyPdkbBAs51qHEH/jq0OTlEoicI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBoWuthUg2J6w2ChMNVvit4yXPA5cDRrT0c/S8gW 4HHQIQNG0aJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaFrrYQAKCRCPgPtYfRL+ TjNGB/wO0hqOPlv69u2jHFp28EXbuBIuakfzbJR6Kdu2hu2gfU/7Osac8aAdtKXPA98M/zP3KSD zMVYhpn+mGKi2Io57AJuIcfNYVQSZUT3CqXf6QAQmeXAOFxCi0g1nE+wSUIsN9NJyIC6n7+65Xq O27FjJEQrrhrNDzXNvGfWJn5O2hk0Hyfi/t5aENoWcy6sg88u3sPAsgzdHvG9UYOQc/9yjEaR6m /jPX9EWcS7ZewwKR/tZf4MgxzQr7/Ov/S41lh31r7KMi09KVWOV18l1iT0dQ5+UaphXTk4jvKAT yip0E/lVsUngTPdTR+cONqYKBxPOz+Rw07St5K7dzBdJMRtn
 X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-The pwm core already serializes calls to .apply(), so the driver local
-mutex adds no protection and can be dropped.
+The pwm core serializes calls to .apply(), so the driver lock doesn't
+add any protection and can safely be dropped.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
 ---
- drivers/pwm/pwm-sti.c | 23 ++++++-----------------
- 1 file changed, 6 insertions(+), 17 deletions(-)
+ drivers/pwm/pwm-sun4i.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
-index 396b52672ce0..3b702b8f0c7f 100644
---- a/drivers/pwm/pwm-sti.c
-+++ b/drivers/pwm/pwm-sti.c
-@@ -92,7 +92,6 @@ struct sti_pwm_chip {
- 	struct pwm_device *cur;
- 	unsigned long configured;
- 	unsigned int en_count;
--	struct mutex sti_pwm_lock; /* To sync between enable/disable calls */
- 	void __iomem *mmio;
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index e60dc7d6b591..6c5591ca868b 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -21,7 +21,6 @@
+ #include <linux/pwm.h>
+ #include <linux/reset.h>
+ #include <linux/slab.h>
+-#include <linux/spinlock.h>
+ #include <linux/time.h>
+ 
+ #define PWM_CTRL_REG		0x0
+@@ -85,7 +84,6 @@ struct sun4i_pwm_chip {
+ 	struct clk *clk;
+ 	struct reset_control *rst;
+ 	void __iomem *base;
+-	spinlock_t ctrl_lock;
+ 	const struct sun4i_pwm_data *data;
  };
  
-@@ -244,55 +243,46 @@ static int sti_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct sti_pwm_chip *pc = to_sti_pwmchip(chip);
- 	struct device *dev = pc->dev;
--	int ret = 0;
-+	int ret;
- 
- 	/*
- 	 * Since we have a common enable for all PWM devices, do not enable if
- 	 * already enabled.
- 	 */
--	mutex_lock(&pc->sti_pwm_lock);
- 
- 	if (!pc->en_count) {
- 		ret = clk_enable(pc->pwm_clk);
- 		if (ret)
--			goto out;
-+			return ret;
- 
- 		ret = clk_enable(pc->cpt_clk);
- 		if (ret)
--			goto out;
-+			return ret;
- 
- 		ret = regmap_field_write(pc->pwm_out_en, 1);
- 		if (ret) {
- 			dev_err(dev, "failed to enable PWM device %u: %d\n",
- 				pwm->hwpwm, ret);
--			goto out;
-+			return ret;
- 		}
+@@ -258,7 +256,6 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		return ret;
  	}
  
- 	pc->en_count++;
+-	spin_lock(&sun4ichip->ctrl_lock);
+ 	ctrl = sun4i_pwm_readl(sun4ichip, PWM_CTRL_REG);
  
--out:
--	mutex_unlock(&pc->sti_pwm_lock);
--	return ret;
-+	return 0;
- }
+ 	if (sun4ichip->data->has_direct_mod_clk_output) {
+@@ -266,7 +263,6 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
+ 			/* We can skip other parameter */
+ 			sun4i_pwm_writel(sun4ichip, ctrl, PWM_CTRL_REG);
+-			spin_unlock(&sun4ichip->ctrl_lock);
+ 			return 0;
+ 		}
  
- static void sti_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct sti_pwm_chip *pc = to_sti_pwmchip(chip);
+@@ -297,8 +293,6 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
  
--	mutex_lock(&pc->sti_pwm_lock);
+ 	sun4i_pwm_writel(sun4ichip, ctrl, PWM_CTRL_REG);
+ 
+-	spin_unlock(&sun4ichip->ctrl_lock);
 -
--	if (--pc->en_count) {
--		mutex_unlock(&pc->sti_pwm_lock);
-+	if (--pc->en_count)
- 		return;
--	}
+ 	if (state->enabled)
+ 		return 0;
  
- 	regmap_field_write(pc->pwm_out_en, 0);
+@@ -309,12 +303,10 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	else
+ 		usleep_range(delay_us, delay_us * 2);
  
- 	clk_disable(pc->pwm_clk);
- 	clk_disable(pc->cpt_clk);
+-	spin_lock(&sun4ichip->ctrl_lock);
+ 	ctrl = sun4i_pwm_readl(sun4ichip, PWM_CTRL_REG);
+ 	ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+ 	ctrl &= ~BIT_CH(PWM_EN, pwm->hwpwm);
+ 	sun4i_pwm_writel(sun4ichip, ctrl, PWM_CTRL_REG);
+-	spin_unlock(&sun4ichip->ctrl_lock);
+ 
+ 	clk_disable_unprepare(sun4ichip->clk);
+ 
+@@ -456,8 +448,6 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+ 
+ 	chip->ops = &sun4i_pwm_ops;
+ 
+-	spin_lock_init(&sun4ichip->ctrl_lock);
 -
--	mutex_unlock(&pc->sti_pwm_lock);
- }
- 
- static void sti_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -594,7 +584,6 @@ static int sti_pwm_probe(struct platform_device *pdev)
- 
- 	pc->dev = dev;
- 	pc->en_count = 0;
--	mutex_init(&pc->sti_pwm_lock);
- 
- 	ret = sti_pwm_probe_regmap(pc);
- 	if (ret)
+ 	ret = pwmchip_add(chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
 -- 
 2.49.0
 
