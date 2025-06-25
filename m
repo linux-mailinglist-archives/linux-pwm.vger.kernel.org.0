@@ -1,162 +1,134 @@
-Return-Path: <linux-pwm+bounces-6531-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6532-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56B72AE845F
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Jun 2025 15:21:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 87963AE8596
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Jun 2025 16:06:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 55AE71BC4BA5
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Jun 2025 13:18:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24DC518864EE
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Jun 2025 14:05:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86A2F262FC2;
-	Wed, 25 Jun 2025 13:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23AB9263F5F;
+	Wed, 25 Jun 2025 14:05:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWbrss6L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHMxm2Zb"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF18625FA0F;
-	Wed, 25 Jun 2025 13:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F014B263F22;
+	Wed, 25 Jun 2025 14:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750857392; cv=none; b=ax7C7pgMh3aCFhXJ/Cp8oxshniRa8SJwCpItu5BuDiEbqdfRdUV3ViFOtP0cAFzd/ZjSJG8qO1lhc3TkdaW7AbL1Dz48M3kxr3X4pV9mCBw0tVMQ4HTvglTwfHGagtFVK5EfG5mUHO57tY1apJJzg32F590LFmkNGNpHQkuM/kI=
+	t=1750860326; cv=none; b=bf6Kt2sKFOzPMyppQbM+tEX+Sdg93ert8dnci2kbswFGcZWlP+vKgmNwGTGqetK1SXawIiX+GzdgUpzF7xQ5jdsoYclekPDEZ9uZ1DIv8LQkEuXPt8oAUTSouho0t3NqqRrLgNPMKVWcWK0YPSBl8+q1az0zLE4ZHMTtqu1N9Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750857392; c=relaxed/simple;
-	bh=17ImiBrvIC1hj8JzSb1O1aUHchtP9UQvsq/M13ZSMhI=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ds7u8AEVtInbR/T74fYBy6ErVE/g3rZANcY5NPLwA6MJAvSKnRKFQpkKrh95YEEFkRH4Yq1a2zOzq1lTZZdwazTGV59fW3STDiSls+MKzFk4AhVV72UnPNrzUEzdou6AmpOwxWMttOLqIKC3bKsT1Grnex9xngcDDfecbUa6Yvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AWbrss6L; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a522224582so838048f8f.3;
-        Wed, 25 Jun 2025 06:16:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750857389; x=1751462189; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=kNNms1cqXOggVNTVVI9ToDIchXGpgIDdlrqJ7bT7Z3I=;
-        b=AWbrss6LETXrQnLnzWjkb1JQJHUSMV/3xK/ms9eWf65Fs5w8EYBSfnyTnHeYQCNKtx
-         TOGR2ZLul2ReI14A8oUp41d9EB2iouwuMJsOuWyP+JUza48dGbtgDYcJdl2THZGDd17w
-         zvCu2Faxj4BArBqRpb/1UN+gBqM1Abu5DOc8dlamw9DGqzgzPWb+P+jAfQwPTptbY3tO
-         1B04zlyNxdRprZh7Y2Gg8uajR/881IC0EnXg4fVHmlVNgrc1XBYbwPcqDqtLvowuzHDZ
-         g6LOyrwaVrgiuVHxfDW7/sfvTGe4Jqq3js1HghuOhPMHdSSaXCjs2Y0xL2KDfQRzVLy6
-         XtmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750857389; x=1751462189;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kNNms1cqXOggVNTVVI9ToDIchXGpgIDdlrqJ7bT7Z3I=;
-        b=LnrVKD4T4lerjEUGh9xpvkJckC0q6KK+t6kPp/Z5xOd+KwZUhI5LViORDpqEKjLs3j
-         HqwhDOdaaqaJkaJmGIdeHXZ077jQf4kvUVyJDqfyazShDB9m/FsHGUZ3/tGK59MBRxRO
-         21EhVeMlVFJuk51aj+am8AMkzJijWcwPmgNMGjQkezFkqNN6fi5LsBxwIA+NBfLOhM6K
-         JQkcRxtBobcAVcMcjug+8sP7iFvNhQBJ3J10UVPLzrzewkRflsq+S+Z3WkM8cBMj5e7B
-         7IDofIEHKEU+Oo5EeYiVpipPVtuTSBpWtm1XUQSehgntKfPiB9/OLdyoLXPSYTSppgWi
-         kqZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxbNegHE1oYcBh8QbbVNTweOcNXVF9g9rV1Mvudw2Qg+jijhdolJTWbil1gFFcTUg3gFTKqR4jZLbF@vger.kernel.org, AJvYcCW7y5exFeC2YSB+gczW6e6dPaNIiaqoSOCOslJ4G4AplVLK7hHcwRUbEOCn/howcIXAVhaFG8XCECxUEQE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5gp6VQwRdIAWMvZwMpT58GJrNlA4FGv6b3mS3Br//lAa7k07i
-	BSVX0nFSU5YZ5Fy5KiFhHDuC6Iyiz/6Yp/mrs6TDRrbFOYfTz+zY7vvn
-X-Gm-Gg: ASbGncs5P4JJ9AiewVf7HkqghLtB4fPDrsf2Z3878ExlV0QY5XJjzrudX/sfYdTOSTp
-	Jthbo0pLpjkxrZSTeXAh5cRPwXLZLphCNgGdwuu3UIY/KaqUN0eGijDwSoxr6ZbaRsIVgme7y2x
-	9SvRe26D9fRYJf++aSzqstkQsRK0wAf9uTjRFsaZlS4BGBhTiwvSD7WJWaNNWYcs1DaYQ19PA1v
-	mDz1ZBVWvqtuCvlQw4rHq6Lbn5xZJlap6+zwloYXdAexoZl58QVZNTVCDDKYn5C6l/P+Z0Lxhy/
-	YqRQBW5oIXFNmHnAMvn1bnHiEsyF6eD4VsZdNuvy//ZvFr9hCsqUQZj2pj5eiX9HCXPtgcHjulp
-	ecM7D3G2G89jghGEZJQ==
-X-Google-Smtp-Source: AGHT+IHb3Q0fgemYtR23g+jZRPWflFpdrZhbF17TvO7pkjsqXfR8YQ4Ku28UgCKOYBTi2n6UQD4jJQ==
-X-Received: by 2002:a5d:5f4d:0:b0:3a4:f7ae:77e8 with SMTP id ffacd0b85a97d-3a6ed620053mr2616782f8f.15.1750857388773;
-        Wed, 25 Jun 2025 06:16:28 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45382376ff7sm20503605e9.35.2025.06.25.06.16.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 06:16:28 -0700 (PDT)
-Message-ID: <685bf6ac.050a0220.357231.66b2@mx.google.com>
-X-Google-Original-Message-ID: <aFv2qTBCCSwmj1y3@Ansuel-XPS.>
-Date: Wed, 25 Jun 2025 15:16:25 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v16 1/2] math64.h: provide rounddown_u64 variant for
- rounddown macro
+	s=arc-20240116; t=1750860326; c=relaxed/simple;
+	bh=riLdd5+MDpL2DCfxQ37cyxD+TU6nR3iPtqrq+d4xA5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fmGA1RlVm/CzQC7YPH3i+8kFhGoMTsZotGU1UX1sXhoG0DcMpvhQyM25cqvjKTBILGUbWHx4HhihF5XUHNVeVUolEOfpXBs7agsF4fyFvO/1iJxW7Ct5BvsLDy6SfnLlmb6oeLZgw20KLH0L4raNLhtUZj5XqlKTysy9T2IL/fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHMxm2Zb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 388CAC4CEEA;
+	Wed, 25 Jun 2025 14:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750860325;
+	bh=riLdd5+MDpL2DCfxQ37cyxD+TU6nR3iPtqrq+d4xA5E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hHMxm2ZbQ4XkvYV1DsPM4VqmwWiIZGuZ7nDPTNJfx1brZQJRa25WRirGPmqjk+1bI
+	 i1i+cDBLFmTXxdlhWEaxlb3C03ot2jiWBrZ+HDboPZrNmhmCZywE2zjLgTa1cLwZ53
+	 dyg22/GtZBR7Fv2ZXNyDDjqhGlXdUHvM2SDHcWlt7Ab1k4Mo+OsHt1zysaikSR8Fa5
+	 C6NbZjSCuHz1ilnTEOt9Gvnvcss7ZR2A5sB8/LAHsZGDxclM0W2gMrig9f6yeVsbHL
+	 TgWD3EqLFRFAOE6xMaCvHs69/PWPxspv8cp+T/pKCyrNsMim0VcM1NoJkQ3xB3D80c
+	 Gdk0trZ9gM50A==
+Date: Wed, 25 Jun 2025 16:05:22 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Andy Shevchenko <andriy.shevchenko@intel.com>, Benjamin Larsson <benjamin.larsson@genexis.eu>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v16 2/2] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <ucygzs2tom6ukfaqg5gujt2uiluawhfccaxjrxyisxuut2u4zi@rlhjecrfwkyz>
 References: <20250625000059.20040-1-ansuelsmth@gmail.com>
- <aFvf4c6Jp-cgBssA@smile.fi.intel.com>
+ <20250625000059.20040-2-ansuelsmth@gmail.com>
+ <dehsalp2za4i6jgod6ej6gqhestljo7qost66jzmql52n2zecp@imtgipg24lv5>
+ <685ba7d9.df0a0220.e1b22.e6c2@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jjitsmuq2jnwbm6s"
 Content-Disposition: inline
-In-Reply-To: <aFvf4c6Jp-cgBssA@smile.fi.intel.com>
-
-On Wed, Jun 25, 2025 at 02:39:13PM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 25, 2025 at 02:00:38AM +0200, Christian Marangi wrote:
-> > There is currently a problem with the usage of rounddown() macro with
-> > u64 dividends. This causes compilation error on specific arch where
-> > 64-bit division is done on 32-bit system.
-> > 
-> > To be more specific GCC try to optimize the function and replace it
-> > with __umoddi3() but this is actually not compiled in the kernel.
-> > 
-> > Example:
-> > pwm-airoha.c:(.text+0x8f8): undefined reference to `__umoddi3'
-> > 
-> > To better handle this, introduce a variant of rounddown() macro,
-> > rounddown_u64() that can be used exactly for this scenario.
-> > 
-> > The new rounddown_u64() in math64.h uses do_div() to do the heavy work
-> > of handling internally all the magic for the 64-bit division on 32-bit
-> > (and indirectly fix the compilation error).
-> 
-> ...
-> 
-> > static inline u64 roundup_u64(u64 x, u32 y)
-> >  {
-> >  	return DIV_U64_ROUND_UP(x, y) * y;
-> >  }
-> 
-> ...
-> 
-> > +static inline u64 rounddown_u64(u64 x, u32 y)
-> > +{
-> > +	u64 tmp = x;
-> > +	return x - do_div(tmp, y);
-> > +}
-> 
-> Can it be implemented as above?
-> 
-> 	return DIV_U64_ROUND_DOWN(x, y) * y;
-> 
-> (yes, it seems we are missing the DIV_U64_ROUND_DOWN() implementation).
-> 
-
-Guess it would be
-
-#define DIV_U64_ROUND_DOWN(ll, d)		\
-	({ u32 _tmp = (d); div_u64((ll), _tmp); })
+In-Reply-To: <685ba7d9.df0a0220.e1b22.e6c2@mx.google.com>
 
 
-But isn't that just directly div_u64?? (maybe the dividend is enforced
-u32 with the cast)
+--jjitsmuq2jnwbm6s
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v16 2/2] pwm: airoha: Add support for EN7581 SoC
+MIME-Version: 1.0
 
-and in math.h I can also notice
+Hello Christian,
 
-#define DIV_ROUND_DOWN_ULL(ll, d) \
-	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
+On Wed, Jun 25, 2025 at 09:40:07AM +0200, Christian Marangi wrote:
+> On Wed, Jun 25, 2025 at 09:24:33AM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Wed, Jun 25, 2025 at 02:00:39AM +0200, Christian Marangi wrote:
+> > > +	/*
+> > > +	 * Period goes at 4ns step, normalize it to check if we can
+> > > +	 * share a generator.
+> > > +	 */
+> > > +	period_ns =3D rounddown_u64(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
+> >=20
+> > I don't understand why you need that. If you clamp to
+> > AIROHA_PWM_PERIOD_MAX_NS first, you don't need the (expensive) 64-bit
+> > operation. If you compare using ticks instead of ns you don't even need
+> > to round down, but just do the division that you end up doing anyhow.
+>=20
+> Correct me if I'm wrong but=20
 
-tons of macro that do the same thing ahhahah
+I will :-)
+=20
+> #define NSEC_PER_SEC	1000000000L
+> #define AIROHA_PWM_PERIOD_MAX_NS       (1 * NSEC_PER_SEC)
+>=20
+> doesn't fit u32 so an u64 is needed.
 
-Really seems I'm opening a can of worm.
+1000000000 =3D 0x3b9aca00, that are 30 bits.
+=20
+> And using ns until the apply process is handy for bucket sharing. I can
+> change it to reference ticks but I think the round is necessary.
 
-Also also division + subtraction isn't less CPU intensive than division
-+ multiplication?
+It's only handy as you track ns for the buckets. Changing that to
+ticks, too, makes this all naturally fit again.
+=20
+> You want to change everything to reference tick? (honestly this is a
+> good chance to introduce this missing API, since I feel also other might
+> benefits from this)
 
-I know the compiler does magic on these internally but still...
+I don't understand that, but I think yes. Doing the bucket selection in
+ticks sounds right.
 
--- 
-	Ansuel
+Best regards
+Uwe
+
+--jjitsmuq2jnwbm6s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhcAiAACgkQj4D7WH0S
+/k7vzgf8Dqo863izCP0slue3JHgjxuqX8V0NBopvhm0vd2/N30HzS+H/VqgZDf8N
+kkcjndkpBrDzfZLQHqt6ixP3CFQH+3sFuHNTC0EA7bX8BOzxtVI7AdyNsfEx6Yvp
+a8REle1vUuxH9YX4a9Qg7yEMB8hiCPt+OO/NGmK4ijRfOt8rJDmG4mXg4rYK6vf0
+k76qOtxX3sZZwrIUQRoTeptnOgfnp5cADmHPBUO0zR3DXavw6eOxXK3biLYchiT2
+VOOxu1zFBhjlScjMP/YLKOpAnma5AL+kzLLACdarwYqjTi9tnANGh5GVytag3j/Z
+m2HfF0w5y+9OfEXvKGSXDPvXxhGyxA==
+=eQt8
+-----END PGP SIGNATURE-----
+
+--jjitsmuq2jnwbm6s--
 
