@@ -1,57 +1,57 @@
-Return-Path: <linux-pwm+bounces-6566-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6567-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36DD2AEC9AB
-	for <lists+linux-pwm@lfdr.de>; Sat, 28 Jun 2025 20:15:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4621AECA19
+	for <lists+linux-pwm@lfdr.de>; Sat, 28 Jun 2025 21:47:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 623163A88AF
-	for <lists+linux-pwm@lfdr.de>; Sat, 28 Jun 2025 18:14:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A6CAB17B362
+	for <lists+linux-pwm@lfdr.de>; Sat, 28 Jun 2025 19:47:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96386287510;
-	Sat, 28 Jun 2025 18:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE1111DB13A;
+	Sat, 28 Jun 2025 19:47:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZQB2CRQb"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IEGdUC5o"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E7F277804
-	for <linux-pwm@vger.kernel.org>; Sat, 28 Jun 2025 18:15:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE52B1A38E1
+	for <linux-pwm@vger.kernel.org>; Sat, 28 Jun 2025 19:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751134507; cv=none; b=K95q4RuBZsNrLGeNdnZAe+Np3Tdt/zWXPk59Ien8cJu2vO30Vc7lKvNXhPysJrHQbflWXiaEbJ4dbRZq0MOYNseI+r/EUr+TLixqiNQPtfeFbenWrxG3dCDGFFpq6n6my5tca6epNWQbO0Gn7JDqJnghyerVg5wVzjgY682htm4=
+	t=1751140046; cv=none; b=EhTpeHhNocQGjURQuedvF+CawEYipj4mPAZiR0ZYpUEzQQy8iTbMWl08Djfhkg836+mnSzUmOCC7ALz0jglvhckjAh4gC4JWgLziy1HuWwTzyVHj9/wz2ZFZllAIdge6vTB6WVz2BxD6D/13Ndo2H/2FXMCpctdZO9kDF4gqBlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751134507; c=relaxed/simple;
-	bh=DqAaSx9Iu74jTCRCpoqiW6+h8SmPhlzSLhjEqvo182I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=n3x1ruXv0uiO14iAhBB7ES0dL3X2nUIXDAMqU1xGBx16Jb4Vx5fDKFvwiJx00voMNYRCYRxzwKv7WPPRmUR+C7KCWjE0dYOl8ffKiQWsqmrVE9HV9KNJH+M2EWenUbOU1wmNrMPevHybCJXwqZh6xN6vSSNdZPOKQ8kSzqO7N3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ZQB2CRQb; arc=none smtp.client-ip=210.118.77.12
+	s=arc-20240116; t=1751140046; c=relaxed/simple;
+	bh=llOLxU6qCnLWBXw7+VEoR/hUbOyYP7z3m1x1yRUJHFQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:In-Reply-To:
+	 Content-Type:References; b=NERwdPsP/0W3viYN29bxy/PO8FULyEx+3Q8KLdSr5Q1G0zx7ZfCsB+gb/8Kn2XS2EmsL3RclAs68+JFed8rUyUxxxxFBaVQqIugFWCPqURi3oPNy+OtuuuYE75uwlfUrQ9jJpryNyy2cQ+X9jO8dy84h6sosdbl9nCB1W+eJWAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=IEGdUC5o; arc=none smtp.client-ip=210.118.77.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250628181502euoutp025602ddc8c03c285aee4c368da5bcf6ae~NR41IdiNF2823728237euoutp02C
-	for <linux-pwm@vger.kernel.org>; Sat, 28 Jun 2025 18:15:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250628181502euoutp025602ddc8c03c285aee4c368da5bcf6ae~NR41IdiNF2823728237euoutp02C
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250628194722euoutp02ff01354addd53eb3a22f2f071f90ef48~NTJco4A7n1246412464euoutp02v
+	for <linux-pwm@vger.kernel.org>; Sat, 28 Jun 2025 19:47:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250628194722euoutp02ff01354addd53eb3a22f2f071f90ef48~NTJco4A7n1246412464euoutp02v
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751134502;
-	bh=2JA1x1+wxIMxbTcb05JnAkXnXDTnRK4eUQH/s2vY+XY=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=ZQB2CRQbRmZs3pRIe8Bl9Duy3N7ceVBVs/91VdN/4mbECUPi6EzlJ48XsWeg092xp
-	 T/13PpGMsFIvSVHYuD6lco/5ijepbwH0pKvopRfqTnWJkuTKOiLtzNsUEv5qC5fb4H
-	 FL65xO/uyQNSMV+tXu3JbfcuutEaNhOE2V8DId/Q=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	s=mail20170921; t=1751140042;
+	bh=axJnmCBw8vcB+1/v69aDzi/3JfSqL27uLNkLJTcOH2I=;
+	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
+	b=IEGdUC5oW3uNnQwl94w+DPWdmD/r1J55qZDK/kwi2rfNkdRRM4L1VBYWf7ta741wX
+	 SNUbwGFeyVdkGVmaw84dGcFNWr3AF2UapIXHlXCKJrQk9jJi3TFuQaJLUZ/rzMUNGR
+	 FGLX0sBwxRJ2bNl5IlfpS5lZiN+vGh6y3ys1mpIU=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
 	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250628181501eucas1p1fa95a0e5ce8ee9081b9b7cd0bd3fc7db~NR4z_sDU71200312003eucas1p15;
-	Sat, 28 Jun 2025 18:15:01 +0000 (GMT)
+	20250628194720eucas1p14af2771ea2617fb8e46730caff1f8707~NTJbX0KSR0958209582eucas1p1r;
+	Sat, 28 Jun 2025 19:47:20 +0000 (GMT)
 Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250628181459eusmtip1664c47fbf09b84ffb0d6e5a1c32c784b~NR4ywaDGi1908019080eusmtip1a;
-	Sat, 28 Jun 2025 18:14:59 +0000 (GMT)
-Message-ID: <21504282-18d1-4165-a1bc-ec4cbbb19c2b@samsung.com>
-Date: Sat, 28 Jun 2025 20:14:59 +0200
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250628194719eusmtip24171c173724a0ec56c18072a8014ddcb~NTJaLA4Jg2188521885eusmtip2f;
+	Sat, 28 Jun 2025 19:47:19 +0000 (GMT)
+Message-ID: <1450a457-4bd3-4e9c-a74f-3be15c9ec84f@samsung.com>
+Date: Sat, 28 Jun 2025 21:47:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -59,7 +59,8 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/9] pwm: Add Rust driver for T-HEAD TH1520 SoC
+Subject: Re: [PATCH v5 1/9] rust: pwm: Add Kconfig and basic data structures
+From: Michal Wilczynski <m.wilczynski@samsung.com>
 To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
@@ -77,339 +78,416 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
 	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <aot4ow37qsrehgce6vpc5m7ha5w6h4jvj7k7bokn4eo63sjk5x@iyp5ir234kx5>
+In-Reply-To: <c127e368-8c1f-4299-b222-a105940ac34e@samsung.com>
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250628181501eucas1p1fa95a0e5ce8ee9081b9b7cd0bd3fc7db
+X-CMS-MailID: 20250628194720eucas1p14af2771ea2617fb8e46730caff1f8707
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250623180902eucas1p2960477c0a44f05e991747312b0ae0ff0
+X-RootMTR: 20250623180858eucas1p1815f6d6815b1c715baad94810cefacd5
 X-EPHeader: CA
-X-CMS-RootMailID: 20250623180902eucas1p2960477c0a44f05e991747312b0ae0ff0
+X-CMS-RootMailID: 20250623180858eucas1p1815f6d6815b1c715baad94810cefacd5
 References: <20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com>
-	<CGME20250623180902eucas1p2960477c0a44f05e991747312b0ae0ff0@eucas1p2.samsung.com>
-	<20250623-rust-next-pwm-working-fan-for-sending-v5-4-0ca23747c23e@samsung.com>
-	<aot4ow37qsrehgce6vpc5m7ha5w6h4jvj7k7bokn4eo63sjk5x@iyp5ir234kx5>
+	<CGME20250623180858eucas1p1815f6d6815b1c715baad94810cefacd5@eucas1p1.samsung.com>
+	<20250623-rust-next-pwm-working-fan-for-sending-v5-1-0ca23747c23e@samsung.com>
+	<q7sz7uci5vnyc24laqzs56vgt4i2jamb3ifyxkqom6qcml5kkv@642prvwxjkxc>
+	<c127e368-8c1f-4299-b222-a105940ac34e@samsung.com>
 
 
 
-On 6/27/25 17:28, Uwe Kleine-König wrote:
-> On Mon, Jun 23, 2025 at 08:08:52PM +0200, Michal Wilczynski wrote:
->> Introduce a PWM driver for the T-HEAD TH1520 SoC, written in Rust and
->> utilizing the safe PWM abstractions from the preceding commit.
+On 6/28/25 16:38, Michal Wilczynski wrote:
+> 
+> 
+> On 6/27/25 17:10, Uwe Kleine-König wrote:
+>> On Mon, Jun 23, 2025 at 08:08:49PM +0200, Michal Wilczynski wrote:
+>>> Introduce the foundational support for PWM abstractions in Rust.
+>>>
+>>> This commit adds the `RUST_PWM_ABSTRACTIONS` Kconfig option to enable
+>>> the feature, along with the necessary build-system support and C
+>>> helpers.
+>>>
+>>> It also introduces the first set of safe wrappers for the PWM
+>>> subsystem, covering the basic data carrying C structs and enums:
+>>> - `Polarity`: A safe wrapper for `enum pwm_polarity`.
+>>> - `Waveform`: A wrapper for `struct pwm_waveform`.
+>>> - `Args`: A wrapper for `struct pwm_args`.
+>>> - `State`: A wrapper for `struct pwm_state`.
+>>>
+>>> These types provide memory safe, idiomatic Rust representations of the
+>>> core PWM data structures and form the building blocks for the
+>>> abstractions that will follow.
+>>>
+>>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>>> ---
+>>>  MAINTAINERS                     |   6 ++
+>>>  drivers/pwm/Kconfig             |  13 +++
+>>>  rust/bindings/bindings_helper.h |   1 +
+>>>  rust/helpers/helpers.c          |   1 +
+>>>  rust/helpers/pwm.c              |  20 ++++
+>>>  rust/kernel/lib.rs              |   2 +
+>>>  rust/kernel/pwm.rs              | 198 ++++++++++++++++++++++++++++++++++++++++
+>>>  7 files changed, 241 insertions(+)
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 0c1d245bf7b84f8a78b811e0c9c5a3edc09edc22..a575622454a2ef57ce055c8a8c4765fa4fddc490 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -20073,6 +20073,12 @@ F:	include/linux/pwm.h
+>>>  F:	include/linux/pwm_backlight.h
+>>>  K:	pwm_(config|apply_might_sleep|apply_atomic|ops)
+>>>  
+>>> +PWM SUBSYSTEM BINDINGS [RUST]
+>>> +M:	Michal Wilczynski <m.wilczynski@samsung.com>
+>>> +S:	Maintained
+>>> +F:	rust/helpers/pwm.c
+>>> +F:	rust/kernel/pwm.rs
+>>> +
+>>>  PXA GPIO DRIVER
+>>>  M:	Robert Jarzmik <robert.jarzmik@free.fr>
+>>>  L:	linux-gpio@vger.kernel.org
+>>> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+>>> index d9bcd1e8413eaed1602d6686873e263767c58f5f..cfddeae0eab3523f04f361fb41ccd1345c0c937b 100644
+>>> --- a/drivers/pwm/Kconfig
+>>> +++ b/drivers/pwm/Kconfig
+>>> @@ -790,4 +790,17 @@ config PWM_XILINX
+>>>  	  To compile this driver as a module, choose M here: the module
+>>>  	  will be called pwm-xilinx.
+>>>  
+>>> + config RUST_PWM_ABSTRACTIONS
+>>> +	bool "Rust PWM abstractions support"
+>>> +	depends on RUST
+>>> +	depends on PWM=y
 >>
->> The driver implements the pwm::PwmOps trait using the modern waveform
->> API (round_waveform_tohw, write_waveform, etc.) to support configuration
->> of period, duty cycle, and polarity for the TH1520's PWM channels.
+>> Currently CONFIG_PWM is a bool, so it cannot be =m. But I considered
+>> making PWM a tristate variable. How would that interfere with Rust
+>> support?
 >>
->> Resource management is handled using idiomatic Rust patterns. The PWM
->> chip object is allocated via pwm::Chip::new and its registration with
->> the PWM core is managed by the pwm::Registration RAII guard. This
->> ensures pwmchip_remove is always called when the driver unbinds,
->> preventing resource leaks. Device managed resources are used for the
->> MMIO region, and the clock lifecycle is correctly managed in the
->> driver's private data Drop implementation.
+>>> +	help
+>>> +	  This option enables the safe Rust abstraction layer for the PWM
+>>> +	  subsystem. It provides idiomatic wrappers and traits necessary for
+>>> +	  writing PWM controller drivers in Rust.
+>>> +
+>>> +	  The abstractions handle resource management (like memory and reference
+>>> +	  counting) and provide safe interfaces to the underlying C core,
+>>> +	  allowing driver logic to be written in safe Rust.
+>>> +
+>>>  endif
+>>> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+>>> index 693cdd01f9290fa01375cf78cac0e5a90df74c6c..6fe7dd529577952bf7adb4fe0526b0d5fbd6f3bd 100644
+>>> --- a/rust/bindings/bindings_helper.h
+>>> +++ b/rust/bindings/bindings_helper.h
+>>> @@ -64,6 +64,7 @@
+>>>  #include <linux/pm_opp.h>
+>>>  #include <linux/poll.h>
+>>>  #include <linux/property.h>
+>>> +#include <linux/pwm.h>
+>>>  #include <linux/refcount.h>
+>>>  #include <linux/sched.h>
+>>>  #include <linux/security.h>
+>>> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+>>> index 16fa9bca5949b85e8d4cdcfe8e6886124f72d8d8..60879e6d794ce0f87e39caafc5495bf5e8acf8f0 100644
+>>> --- a/rust/helpers/helpers.c
+>>> +++ b/rust/helpers/helpers.c
+>>> @@ -31,6 +31,7 @@
+>>>  #include "platform.c"
+>>>  #include "pci.c"
+>>>  #include "pid_namespace.c"
+>>> +#include "pwm.c"
+>>>  #include "rbtree.c"
+>>>  #include "rcu.c"
+>>>  #include "refcount.c"
+>>> diff --git a/rust/helpers/pwm.c b/rust/helpers/pwm.c
+>>> new file mode 100644
+>>> index 0000000000000000000000000000000000000000..d75c588863685d3990b525bb1b84aa4bc35ac397
+>>> --- /dev/null
+>>> +++ b/rust/helpers/pwm.c
+>>> @@ -0,0 +1,20 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +// Copyright (c) 2025 Samsung Electronics Co., Ltd.
+>>> +// Author: Michal Wilczynski <m.wilczynski@samsung.com>
+>>> +
+>>> +#include <linux/pwm.h>
+>>> +
+>>> +struct device *rust_helper_pwmchip_parent(const struct pwm_chip *chip)
+>>> +{
+>>> +	return pwmchip_parent(chip);
+>>> +}
+>>> +
+>>> +void *rust_helper_pwmchip_get_drvdata(struct pwm_chip *chip)
+>>> +{
+>>> +	return pwmchip_get_drvdata(chip);
+>>> +}
+>>> +
+>>> +void rust_helper_pwmchip_set_drvdata(struct pwm_chip *chip, void *data)
+>>> +{
+>>> +	pwmchip_set_drvdata(chip, data);
+>>> +}
+>>> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+>>> index 6b4774b2b1c37f4da1866e993be6230bc6715841..ce1d08b14e456905dbe7b625bbb8ca8b08deae2a 100644
+>>> --- a/rust/kernel/lib.rs
+>>> +++ b/rust/kernel/lib.rs
+>>> @@ -105,6 +105,8 @@
+>>>  pub mod seq_file;
+>>>  pub mod sizes;
+>>>  mod static_assert;
+>>> +#[cfg(CONFIG_RUST_PWM_ABSTRACTIONS)]
+>>> +pub mod pwm;
+>>>  #[doc(hidden)]
+>>>  pub mod std_vendor;
+>>>  pub mod str;
+>>> diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
+>>> new file mode 100644
+>>> index 0000000000000000000000000000000000000000..ed681b228c414e7ae8bf80ca649ad497c9dc4ec3
+>>> --- /dev/null
+>>> +++ b/rust/kernel/pwm.rs
+>>> @@ -0,0 +1,198 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +// Copyright (c) 2025 Samsung Electronics Co., Ltd.
+>>> +// Author: Michal Wilczynski <m.wilczynski@samsung.com>
+>>> +
+>>> +//! PWM subsystem abstractions.
+>>> +//!
+>>> +//! C header: [`include/linux/pwm.h`](srctree/include/linux/pwm.h).
+>>> +
+>>> +use crate::{
+>>> +    bindings,
+>>> +    prelude::*,
+>>> +    types::Opaque,
+>>> +};
+>>> +use core::convert::TryFrom;
+>>> +
+>>> +/// Maximum size for the hardware-specific waveform representation buffer.
+>>> +///
+>>> +/// From C: `#define WFHWSIZE 20`
+>>> +pub const WFHW_MAX_SIZE: usize = 20;
 >>
->> The driver's core logic is written entirely in safe Rust, with no unsafe
->> blocks.
+>> Can we somehow enforce that this doesn't diverge if the C define is
+>> increased?
+> 
+> You are absolutely right. The hardcoded value is a maintenance risk. The
+> #define is in core.c, so bindgen cannot see it.
+> 
+> I can address this by submitting a patch to move the #define WFHWSIZE to
+> include/linux/pwm.h. This will make it part of the public API, allow
+> bindgen to generate a binding for it, and ensure the Rust code can never
+> diverge. Is this fine ?
+> 
 >>
->> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
->> ---
->>  MAINTAINERS               |   1 +
->>  drivers/pwm/Kconfig       |  10 ++
->>  drivers/pwm/Makefile      |   1 +
->>  drivers/pwm/pwm_th1520.rs | 318 ++++++++++++++++++++++++++++++++++++++++++++++
->>  4 files changed, 330 insertions(+)
+>>> +/// PWM polarity. Mirrors [`enum pwm_polarity`](srctree/include/linux/pwm.h).
+>>> +#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+>>> +pub enum Polarity {
+>>> +    /// Normal polarity (duty cycle defines the high period of the signal).
+>>> +    Normal,
+>>> +
+>>> +    /// Inversed polarity (duty cycle defines the low period of the signal).
+>>> +    Inversed,
+>>> +}
+>>> +
+>>> +impl TryFrom<bindings::pwm_polarity> for Polarity {
+>>> +    type Error = Error;
+>>> +
+>>> +    fn try_from(polarity: bindings::pwm_polarity) -> Result<Self, Error> {
+>>> +        match polarity {
+>>> +            bindings::pwm_polarity_PWM_POLARITY_NORMAL => Ok(Polarity::Normal),
+>>> +            bindings::pwm_polarity_PWM_POLARITY_INVERSED => Ok(Polarity::Inversed),
+>>> +            _ => Err(EINVAL),
+>>> +        }
+>>> +    }
+>>> +}
+>>> +
+>>> +impl From<Polarity> for bindings::pwm_polarity {
+>>> +    fn from(polarity: Polarity) -> Self {
+>>> +        match polarity {
+>>> +            Polarity::Normal => bindings::pwm_polarity_PWM_POLARITY_NORMAL,
+>>> +            Polarity::Inversed => bindings::pwm_polarity_PWM_POLARITY_INVERSED,
+>>> +        }
+>>> +    }
+>>> +}
+>>> +
+>>> +/// Represents a PWM waveform configuration.
+>>> +/// Mirrors struct [`struct pwm_waveform`](srctree/include/linux/pwm.h).
+>>> +#[derive(Copy, Clone, Debug, Default, PartialEq, Eq)]
+>>> +pub struct Waveform {
+>>> +    /// Total duration of one complete PWM cycle, in nanoseconds.
+>>> +    pub period_length_ns: u64,
+>>> +
+>>> +    /// Duty-cycle active time, in nanoseconds.
+>>> +    ///
+>>> +    /// For a typical normal polarity configuration (active-high) this is the
+>>> +    /// high time of the signal.
+>>> +    pub duty_length_ns: u64,
+>>> +
+>>> +    /// Duty-cycle start offset, in nanoseconds.
+>>> +    ///
+>>> +    /// Delay from the beginning of the period to the first active edge.
+>>> +    /// In most simple PWM setups this is `0`, so the duty cycle starts
+>>> +    /// immediately at each period’s start.
+>>> +    pub duty_offset_ns: u64,
+>>> +}
+>>> +
+>>> +impl From<bindings::pwm_waveform> for Waveform {
+>>> +    fn from(wf: bindings::pwm_waveform) -> Self {
+>>> +        Waveform {
+>>> +            period_length_ns: wf.period_length_ns,
+>>> +            duty_length_ns: wf.duty_length_ns,
+>>> +            duty_offset_ns: wf.duty_offset_ns,
+>>> +        }
+>>> +    }
+>>> +}
+>>> +
+>>> +impl From<Waveform> for bindings::pwm_waveform {
+>>> +    fn from(wf: Waveform) -> Self {
+>>> +        bindings::pwm_waveform {
+>>> +            period_length_ns: wf.period_length_ns,
+>>> +            duty_length_ns: wf.duty_length_ns,
+>>> +            duty_offset_ns: wf.duty_offset_ns,
+>>> +        }
+>>> +    }
+>>> +}
+>>> +
+>>> +/// Wrapper for board-dependent PWM arguments [`struct pwm_args`](srctree/include/linux/pwm.h).
+>>> +#[repr(transparent)]
+>>> +pub struct Args(Opaque<bindings::pwm_args>);
+>>> +
+>>> +impl Args {
+>>> +    /// Creates an `Args` wrapper from a C struct pointer.
+>>> +    ///
+>>> +    /// # Safety
+>>> +    ///
+>>> +    /// The caller must ensure that `c_args_ptr` is a valid, non-null pointer
+>>> +    /// to `bindings::pwm_args` and that the pointed-to data is valid
+>>> +    /// for the duration of this function call (as data is copied).
+>>> +    unsafe fn from_c_ptr(c_args_ptr: *const bindings::pwm_args) -> Self {
+>>> +        // SAFETY: Caller guarantees `c_args_ptr` is valid. We dereference it to copy.
+>>> +        Args(Opaque::new(unsafe { *c_args_ptr }))
+>>> +    }
+>>> +
+>>> +    /// Returns the period of the PWM signal in nanoseconds.
+>>> +    pub fn period(&self) -> u64 {
+>>> +        // SAFETY: `self.0.get()` returns a pointer to the `bindings::pwm_args`
+>>> +        // managed by the `Opaque` wrapper. This pointer is guaranteed to be
+>>> +        // valid and aligned for the lifetime of `self` because `Opaque` owns a copy.
+>>> +        unsafe { (*self.0.get()).period }
+>>> +    }
+>>> +
+>>> +    /// Returns the polarity of the PWM signal.
+>>> +    pub fn polarity(&self) -> Result<Polarity, Error> {
+>>> +        // SAFETY: `self.0.get()` returns a pointer to the `bindings::pwm_args`
+>>> +        // managed by the `Opaque` wrapper. This pointer is guaranteed to be
+>>> +        // valid and aligned for the lifetime of `self`.
+>>> +        let raw_polarity = unsafe { (*self.0.get()).polarity };
+>>> +        Polarity::try_from(raw_polarity)
+>>> +    }
+>>> +}
+>>> +
+>>> +/// Wrapper for PWM state [`struct pwm_state`](srctree/include/linux/pwm.h).
+>>> +#[repr(transparent)]
+>>> +pub struct State(bindings::pwm_state);
+>>> +
+>>> +impl Default for State {
+>>> +    fn default() -> Self {
+>>> +        Self::new()
+>>> +    }
+>>> +}
+>>> +
+>>> +impl State {
+>>> +    /// Creates a new zeroed `State`.
+>>> +    pub fn new() -> Self {
+>>> +        State(bindings::pwm_state::default())
+>>> +    }
+>>> +
+>>> +    /// Creates a `State` wrapper by taking ownership of a C `pwm_state` value.
+>>> +    pub(crate) fn from_c(c_state: bindings::pwm_state) -> Self {
+>>> +        State(c_state)
+>>> +    }
+>>> +
+>>> +    /// Gets the period of the PWM signal in nanoseconds.
+>>> +    pub fn period(&self) -> u64 {
+>>> +        self.0.period
+>>> +    }
+>>> +
+>>> +    /// Sets the period of the PWM signal in nanoseconds.
+>>> +    pub fn set_period(&mut self, period_ns: u64) {
+>>> +        self.0.period = period_ns;
+>>> +    }
+>>> +
+>>> +    /// Gets the duty cycle of the PWM signal in nanoseconds.
+>>> +    pub fn duty_cycle(&self) -> u64 {
+>>> +        self.0.duty_cycle
+>>> +    }
+>>> +
+>>> +    /// Sets the duty cycle of the PWM signal in nanoseconds.
+>>> +    pub fn set_duty_cycle(&mut self, duty_ns: u64) {
+>>> +        self.0.duty_cycle = duty_ns;
+>>> +    }
+>>> +
+>>> +    /// Returns `true` if the PWM signal is enabled.
+>>> +    pub fn enabled(&self) -> bool {
+>>> +        self.0.enabled
+>>> +    }
+>>> +
+>>> +    /// Sets the enabled state of the PWM signal.
+>>> +    pub fn set_enabled(&mut self, enabled: bool) {
+>>> +        self.0.enabled = enabled;
+>>> +    }
+>>> +
+>>> +    /// Gets the polarity of the PWM signal.
+>>> +    pub fn polarity(&self) -> Result<Polarity, Error> {
+>>> +        Polarity::try_from(self.0.polarity)
+>>> +    }
+>>> +
+>>> +    /// Sets the polarity of the PWM signal.
+>>> +    pub fn set_polarity(&mut self, polarity: Polarity) {
+>>> +        self.0.polarity = polarity.into();
+>>> +    }
 >>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index a575622454a2ef57ce055c8a8c4765fa4fddc490..879870471e86dcec4a0e8f5c45d2cc3409411fdd 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -21402,6 +21402,7 @@ F:	drivers/mailbox/mailbox-th1520.c
->>  F:	drivers/net/ethernet/stmicro/stmmac/dwmac-thead.c
->>  F:	drivers/pinctrl/pinctrl-th1520.c
->>  F:	drivers/pmdomain/thead/
->> +F:	drivers/pwm/pwm_th1520.rs
->>  F:	drivers/reset/reset-th1520.c
->>  F:	include/dt-bindings/clock/thead,th1520-clk-ap.h
->>  F:	include/dt-bindings/power/thead,th1520-power.h
->> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> index cfddeae0eab3523f04f361fb41ccd1345c0c937b..a675b3bd68392d1b05a47a2a1390c5606647ca15 100644
->> --- a/drivers/pwm/Kconfig
->> +++ b/drivers/pwm/Kconfig
->> @@ -719,6 +719,16 @@ config PWM_TEGRA
->>  	  To compile this driver as a module, choose M here: the module
->>  	  will be called pwm-tegra.
->>  
->> +config PWM_TH1520
->> +	tristate "TH1520 PWM support"
->> +	depends on RUST_PWM_ABSTRACTIONS
-> 
-> RUST_PWM_ABSTRACTIONS is user selectable. Is that sensible. From a
-> user's POV it shouldn't matter if the driver is written in Rust or not.
+>> Please don't expose these non-atomic callbacks. pwm_disable() would be
+>> fine.
 
-You make an excellent point about user experience. My initial thought
-was to follow the depends on pattern that I saw in other Rust drivers.
+Hmm, I've just realized that without those setters it would most likely
+impossible to correctly implement the get_state callback. Shall I keep
+them ? The meaning of those setters is to update the State struct, not
+change polarity of the running PWM channel
 
-I can see how using select would be cleaner for the end user. My only
-hesitation was that it differs from the current convention for Rust
-drivers, and I wanted to be careful about changing an established
-pattern.
-
-If you are comfortable with setting this direction for the PWM
-subsystem, I am happy to make the change to use select
-RUST_PWM_ABSTRACTIONS (gated by depends on RUST). Please let me know.
-
+>>
+>> Otherwise I'd prefer if pwm_set_waveform_might_sleep() is the API
+>> exposed to/by Rust.
 > 
->> +	help
->> +	  This option enables the driver for the PWM controller found on the
->> +	  T-HEAD TH1520 SoC.
->> +
->> +	  To compile this driver as a module, choose M here; the module
->> +	  will be called pwm-th1520. If you are unsure, say N.
->> +
->>  config PWM_TIECAP
->>  	tristate "ECAP PWM support"
->>  	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
->> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
->> index 96160f4257fcb0e0951581af0090615c0edf5260..a410747095327a315a6bcd24ae343ce7857fe323 100644
->> --- a/drivers/pwm/Makefile
->> +++ b/drivers/pwm/Makefile
->> @@ -66,6 +66,7 @@ obj-$(CONFIG_PWM_STMPE)		+= pwm-stmpe.o
->>  obj-$(CONFIG_PWM_SUN4I)		+= pwm-sun4i.o
->>  obj-$(CONFIG_PWM_SUNPLUS)	+= pwm-sunplus.o
->>  obj-$(CONFIG_PWM_TEGRA)		+= pwm-tegra.o
->> +obj-$(CONFIG_PWM_TH1520)	+= pwm_th1520.o
->>  obj-$(CONFIG_PWM_TIECAP)	+= pwm-tiecap.o
->>  obj-$(CONFIG_PWM_TIEHRPWM)	+= pwm-tiehrpwm.o
->>  obj-$(CONFIG_PWM_TWL)		+= pwm-twl.o
->> diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..a77c45cef9cf8f02a25db9d42c45cd0df565b0ec
->> --- /dev/null
->> +++ b/drivers/pwm/pwm_th1520.rs
->> @@ -0,0 +1,318 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (c) 2025 Samsung Electronics Co., Ltd.
->> +// Author: Michal Wilczynski <m.wilczynski@samsung.com>
->> +
->> +//! Rust T-HEAD TH1520 PWM driver
->> +//!
->> +//! Limitations:
->> +//! - The period and duty cycle are controlled by 32-bit hardware registers,
->> +//!   limiting the maximum resolution.
->> +//! - The driver supports continuous output mode only; one-shot mode is not
->> +//!   implemented.
->> +//! - The controller hardware provides up to 6 PWM channels.
 > 
-> Important questions to answer here are:
+> OK, I'll remove all the setters from the State, while will keep the
+> getters, as they would be useful in apply callbacks. Will implement
+> additional functions for Device i.e set_waveform, round_waveform and
+> get_waveform, and the new enum to expose the result of the
+> round_waveform more idiomatically.
 > 
->  - How does the hardware behave on disable? (Does it stop immediately
->    (or at all)? Does it emit a constant output? Which?) 
->  - How does the hardware behave on reconfiguration? (Does it switch
->    immidiately or does it complete the current period? Can there be
->    glitches?
-
-Sure, I have investigated and will add comments explaining that
-reconfiguration is glitch free and disabling is done by setting the duty
-cycle to zero
-
+> /// Describes the outcome of a `round_waveform` operation.
+> #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+> pub enum RoundingOutcome {
+>     /// The requested waveform was achievable exactly or by rounding values down.
+>     ExactOrRoundedDown,
 > 
->> +//!
->> +
->> +use core::ops::Deref;
->> +use kernel::{
->> +    c_str,
->> +    clk::Clk,
->> +    device::{Bound, Core, Device},
->> +    devres,
->> +    io::mem::IoMem,
->> +    of, platform,
->> +    prelude::*,
->> +    pwm, time,
->> +};
->> +
->> +const MAX_PWM_NUM: u32 = 6;
->> +
->> +// Register offsets
->> +const fn th1520_pwm_chn_base(n: u32) -> usize {
->> +    (n * 0x20) as usize
->> +}
->> +
->> +const fn th1520_pwm_ctrl(n: u32) -> usize {
->> +    th1520_pwm_chn_base(n)
->> +}
->> +
->> +const fn th1520_pwm_per(n: u32) -> usize {
->> +    th1520_pwm_chn_base(n) + 0x08
->> +}
->> +
->> +const fn th1520_pwm_fp(n: u32) -> usize {
->> +    th1520_pwm_chn_base(n) + 0x0c
->> +}
->> +
->> +// Control register bits
->> +const PWM_START: u32 = 1 << 0;
->> +const PWM_CFG_UPDATE: u32 = 1 << 2;
->> +const PWM_CONTINUOUS_MODE: u32 = 1 << 5;
->> +const PWM_FPOUT: u32 = 1 << 8;
+>     /// The requested waveform could only be achieved by rounding up.
+>     RoundedUp,
+> }
 > 
-> Can you please add a driver specific prefix to these?
-
-OK
-
+>>
+>>> +    /// Returns `true` if the PWM signal is configured for power usage hint.
+>>> +    pub fn usage_power(&self) -> bool {
+>>> +        self.0.usage_power
+>>> +    }
+>>> +
+>>> +    /// Sets the power usage hint for the PWM signal.
+>>> +    pub fn set_usage_power(&mut self, usage_power: bool) {
+>>> +        self.0.usage_power = usage_power;
+>>> +    }
+>>
+>> I would prefer to not expose usage_power, too.
+>>
+>>> +}
+>>
+>> Best regards
+>> Uwe
 > 
->> +const TH1520_PWM_REG_SIZE: usize = 0xB0;
->> +
->> +fn ns_to_cycles(ns: u64, rate_hz: u64) -> u64 {
->> +    const NSEC_PER_SEC_U64: u64 = time::NSEC_PER_SEC as u64;
->> +
->> +    match ns.checked_mul(rate_hz) {
->> +        Some(product) => product / NSEC_PER_SEC_U64,
->> +        None => u64::MAX,
->> +    }
-> 
-> The semantic here is: If ns * rate_hz overflows, return U64_MAX, else ns
-> * rate_hz / NSEC_PER_SEC, right?
-> 
-> If you cannot easily reproduce what mul_u64_u64_div_u64() does, I think
-> it would be more prudent do make this:
-> 
-> 	match ns.checked_mul(rate_hz) {
-> 	    Some(product) => product,
-> 	    None => u64::MAX,
-> 	} / NSEC_PER_SEC_U64
-
-Thank you for the feedback on the calculation. I analyzed the two
-approaches and found that on overflow, my version saturates to u64::MAX,
-while the suggested version would result in u64::MAX / NSEC_PER_SEC. I
-believe my original implementation's saturation behavior is more
-predictable. With this in mind, would you be comfortable with me
-retaining the original implementation?
-
-> 
->> +}
->> +
->> [...]
->> +impl pwm::PwmOps for Th1520PwmDriverData {
->> +    type WfHw = Th1520WfHw;
->> +
->> +    fn round_waveform_tohw(
->> +        chip: &pwm::Chip,
->> +        _pwm: &pwm::Device,
->> +        wf: &pwm::Waveform,
->> +    ) -> Result<(c_int, Self::WfHw)> {
->> +        let data: &Self = chip.drvdata();
->> +
->> +        if wf.period_length_ns == 0 {
->> +            return Ok((
->> +                0,
->> +                Th1520WfHw {
->> +                    enabled: false,
->> +                    ..Default::default()
->> +                },
->> +            ));
->> +        }
->> +
->> +        let rate_hz = data.clk.rate().as_hz() as u64;
->> +
->> +        let period_cycles = ns_to_cycles(wf.period_length_ns, rate_hz).min(u32::MAX as u64);
->> +        let mut duty_cycles = ns_to_cycles(wf.duty_length_ns, rate_hz).min(u32::MAX as u64);
->> +
->> +        let mut ctrl_val = PWM_CONTINUOUS_MODE;
->> +
->> +        if wf.duty_offset_ns == 0 {
->> +            ctrl_val |= PWM_FPOUT;
->> +        } else {
->> +            duty_cycles = period_cycles - duty_cycles;
-> 
-> Huh, this looks wrong. Your hardware only supports the two polarities,
-> right? Then configure inversed polarity if
-> 
-> 	wf->duty_length_ns && wf->duty_offset_ns && wf->duty_length_ns + wf->duty_offset_ns >= wf->period_length_ns
-> 
-> (i.e. how the pwm-stm32 driver does it).
-
-OK, will fix
-
-> 
->> +        }
->> +
->> +        let wfhw = Th1520WfHw {
->> +            period_cycles: period_cycles as u32,
->> +            duty_cycles: duty_cycles as u32,
->> +            ctrl_val,
->> +            enabled: true,
->> +        };
->> +
->> +        dev_dbg!(
->> +            chip.device(),
->> +            "Requested: period {}ns, duty {}ns, offset {}ns -> HW: period {} cyc, duty {} cyc, ctrl 0x{:x}\n",
-> 
-> Would it be helpful to also emit the clkrate here?
-
-OK will update
-
-> 
->> +            wf.period_length_ns,
->> +            wf.duty_length_ns,
->> +            wf.duty_offset_ns,
->> +            wfhw.period_cycles,
->> +            wfhw.duty_cycles,
->> +            wfhw.ctrl_val
->> +        );
->> +
->> +        Ok((0, wfhw))
->> +    }
->> +
->> +    fn round_waveform_fromhw(
->> +        chip: &pwm::Chip,
->> +        _pwm: &pwm::Device,
->> +        wfhw: &Self::WfHw,
->> +        wf: &mut pwm::Waveform,
->> +    ) -> Result<c_int> {
->> +        let data: &Self = chip.drvdata();
->> +        let rate_hz = data.clk.rate().as_hz() as u64;
->> +
->> +        wf.period_length_ns = cycles_to_ns(wfhw.period_cycles as u64, rate_hz);
->> +
->> +        let duty_cycles = wfhw.duty_cycles as u64;
->> +
->> +        if (wfhw.ctrl_val & PWM_FPOUT) != 0 {
->> +            wf.duty_length_ns = cycles_to_ns(duty_cycles, rate_hz);
->> +            wf.duty_offset_ns = 0;
->> +        } else {
->> +            let period_cycles = wfhw.period_cycles as u64;
->> +            let original_duty_cycles = period_cycles.saturating_sub(duty_cycles);
->> +
->> +            wf.duty_length_ns = cycles_to_ns(original_duty_cycles, rate_hz);
->> +            // We can't recover the original non-zero offset, so we just set it
->> +            // to a representative non-zero value.
->> +            wf.duty_offset_ns = 1;
-> 
-> For an inversed polarity signal the duty_offset is polarity - duty_cycle.
-
-I believe there was a typo in your suggestion and you meant period
-instead of polarity. Based on that, my understanding is that for an
-inverted signal, the generic pwm_waveform struct expects duty_offset_ns
-to represent the duration of the initial low time, while duty_length_ns
-represents the high time.
-
-so the code would look like this:
-// For an inverted signal, `duty_length_ns` is the high time (period - low_time).
-wf.duty_length_ns = cycles_to_ns(original_duty_cycles, rate_hz);
-// The offset is the initial low time, which is what the hardware register provides.
-wf.duty_offset_ns = cycles_to_ns(duty_cycles, rate_hz);
-
-
-> 
->> +        }
->> +
->> +        Ok(0)
->> +    }
-> 
-> Best regards
-> Uwe
+> Best regards,
 
 Best regards,
 -- 
