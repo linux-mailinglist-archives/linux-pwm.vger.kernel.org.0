@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-6568-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6569-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99CF5AECBE3
-	for <lists+linux-pwm@lfdr.de>; Sun, 29 Jun 2025 11:08:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C6E4AECBED
+	for <lists+linux-pwm@lfdr.de>; Sun, 29 Jun 2025 11:23:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A65283A8438
-	for <lists+linux-pwm@lfdr.de>; Sun, 29 Jun 2025 09:08:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C75EB1677E2
+	for <lists+linux-pwm@lfdr.de>; Sun, 29 Jun 2025 09:23:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48425204096;
-	Sun, 29 Jun 2025 09:08:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CA2320ADEE;
+	Sun, 29 Jun 2025 09:23:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4kbqwkD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APVy3NzI"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8327263B;
-	Sun, 29 Jun 2025 09:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4106F288D6;
+	Sun, 29 Jun 2025 09:23:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751188127; cv=none; b=ditRX+a+FyaQ/RQkAKdtxSZm5ezh5Bi4Ap5Aa7G5MCxpVDLz2Z8zDSX2nPYKsICl2laDTIlPXub7FrkTYSrgSECs/BmjWJZpIVd/T/ynMSMQ1GMU9YAixgIXGor15rNt92GWqJmWrSJwtucKBVWyWmILno73ILXrnlyWo4zmhxA=
+	t=1751189012; cv=none; b=PDxson98+W92qvfHOYKnGNQ7toeBJk7NCPPYcfi0ZqkRShCd0JiE+oqj0XzbK4c+Y9qcYlIiBjs2C+qJfRzysw8UR1h5y1OyJXYNDUgzUqaIePQ1+3o8sFISI5IdgZ6/BpmLsPc0PmMP/ZKqFosPM8UjOHaG2eEeh/0uThwIwHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751188127; c=relaxed/simple;
-	bh=VsqYT+LBwb0rmI3PvXGZAQQ4CA/ISgMwiSBJCr3gTBg=;
+	s=arc-20240116; t=1751189012; c=relaxed/simple;
+	bh=/8XcI162B0sYbFUdY2r+KNvY47NDLVAYfZ9Vy6AeueY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Es4oLwWqPisXp5S2La5zOb1lOaqv6s4SABAYcNQZoRBd1xKTdMXl8yZjzqaAcek8YQk3GKdUBm8AWXr22HWebJ0rtl8GFf3IEICtceL+xsoVrxgPfbkwjuvkNw61Bns6O8D0Y0jf2qvLoturSVkekgQk6ChzZPQKgNPaEe4tCk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4kbqwkD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C88ECC4CEEB;
-	Sun, 29 Jun 2025 09:08:45 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=YTy5soXcu78qplnHcN5M834y/3w6WCfNsjke56hOYywrWQFoJTS2SxcIjONLx2Rh8FB6BQ21UWdnVR3JmGOp9tyO7EcQbZ7YS7Lgk+noNncEcMoTXgpQwQA99+kYFpLFPFB+zobUxDEQsKxHBfdW9WYFBC2RwFeXTQtn34k9Aes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APVy3NzI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A278C4CEEB;
+	Sun, 29 Jun 2025 09:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751188126;
-	bh=VsqYT+LBwb0rmI3PvXGZAQQ4CA/ISgMwiSBJCr3gTBg=;
+	s=k20201202; t=1751189011;
+	bh=/8XcI162B0sYbFUdY2r+KNvY47NDLVAYfZ9Vy6AeueY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F4kbqwkDpirVxTs2vJKh7WffFed9zOrqDh/dd/X5i1R+ZCMGb9MR8LGW/80IW0nLj
-	 +74Xv8WP3OpJw88MWD6NmyLNF93uK6MiZB2ICEgxNYlhsolHdDQpGRUfaw2HhLNv+t
-	 7G1PD3GULd4JPKGWxlG0rqv36AwuZSeIebLKJBAbmRP+tcE85NWrErsKlkQvzlZeua
-	 X7FJx8xEZmIyQVILp1R4kTeTCSO7GDpJI7a+Cf3+hnpedfIAP9gmSY6789kn2c0BKP
-	 arAsdoFnmpBMNkOB5b53JFUTd2taMidyak8Cr5mOALJMszzO5H/dLLObjGUHgf75e5
-	 x/ITWYCvgeOXw==
-Date: Sun, 29 Jun 2025 11:08:42 +0200
+	b=APVy3NzIX5p4apY8KRVg1ZmIvEwQEDTq6UZR/FZ9m+LtIz8/ayYGDJjMlPtPdii4L
+	 egRiF6s1TG9cfHyaH10reV2s9y3JPQCugUSaXMtB9tXHwTfs89bYVWmJMNq42CjaaL
+	 tRy2V2+FGgLAYiKSjzECHgOLDQS1Z5feangq6Xyt/pS8cFPpWLlE4fIJ70ox80OKWB
+	 po7oweOvG21Inw7nUiV1Z8k9LipbK7CMiXC27kj1ZoDNqGvsyKWFiQiJAUf6eTScES
+	 Kpd79FAj4HVzeLW98x0f1r3L3Zk9Yb6dYLguS6ctv/1iiscq1jWqgLXBQJPR3w3Wtg
+	 TDnMZIzalfe8g==
+Date: Sun, 29 Jun 2025 11:23:28 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
 To: Michal Wilczynski <m.wilczynski@samsung.com>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -57,13 +57,13 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, 
 	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
 	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v5 4/9] pwm: Add Rust driver for T-HEAD TH1520 SoC
-Message-ID: <i2rewsouxhtbomkfd7gyxpvrxi4f6tu26visny25qilhhttcft@ufqv4p3bwcjv>
+Subject: Re: [PATCH v5 1/9] rust: pwm: Add Kconfig and basic data structures
+Message-ID: <ayp32pdwvpko3zuatgt2jgtfxgcmrmc5aujkx6twjchmyazpz7@yeo3kxgxnpda>
 References: <20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com>
- <CGME20250623180902eucas1p2960477c0a44f05e991747312b0ae0ff0@eucas1p2.samsung.com>
- <20250623-rust-next-pwm-working-fan-for-sending-v5-4-0ca23747c23e@samsung.com>
- <aot4ow37qsrehgce6vpc5m7ha5w6h4jvj7k7bokn4eo63sjk5x@iyp5ir234kx5>
- <21504282-18d1-4165-a1bc-ec4cbbb19c2b@samsung.com>
+ <CGME20250623180858eucas1p1815f6d6815b1c715baad94810cefacd5@eucas1p1.samsung.com>
+ <20250623-rust-next-pwm-working-fan-for-sending-v5-1-0ca23747c23e@samsung.com>
+ <q7sz7uci5vnyc24laqzs56vgt4i2jamb3ifyxkqom6qcml5kkv@642prvwxjkxc>
+ <c127e368-8c1f-4299-b222-a105940ac34e@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -71,151 +71,98 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zne6uyqf6w4firk4"
+	protocol="application/pgp-signature"; boundary="f2wvje3fvzd4cjo2"
 Content-Disposition: inline
-In-Reply-To: <21504282-18d1-4165-a1bc-ec4cbbb19c2b@samsung.com>
+In-Reply-To: <c127e368-8c1f-4299-b222-a105940ac34e@samsung.com>
 
 
---zne6uyqf6w4firk4
+--f2wvje3fvzd4cjo2
 Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 4/9] pwm: Add Rust driver for T-HEAD TH1520 SoC
+Subject: Re: [PATCH v5 1/9] rust: pwm: Add Kconfig and basic data structures
 MIME-Version: 1.0
 
 Hello Michal,
 
-On Sat, Jun 28, 2025 at 08:14:59PM +0200, Michal Wilczynski wrote:
-> On 6/27/25 17:28, Uwe Kleine-K=F6nig wrote:
-> > On Mon, Jun 23, 2025 at 08:08:52PM +0200, Michal Wilczynski wrote:
-> >> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> >> index cfddeae0eab3523f04f361fb41ccd1345c0c937b..a675b3bd68392d1b05a47a=
-2a1390c5606647ca15 100644
-> >> --- a/drivers/pwm/Kconfig
-> >> +++ b/drivers/pwm/Kconfig
-> >> @@ -719,6 +719,16 @@ config PWM_TEGRA
-> >>  	  To compile this driver as a module, choose M here: the module
-> >>  	  will be called pwm-tegra.
-> >> =20
-> >> +config PWM_TH1520
-> >> +	tristate "TH1520 PWM support"
-> >> +	depends on RUST_PWM_ABSTRACTIONS
+On Sat, Jun 28, 2025 at 04:38:15PM +0200, Michal Wilczynski wrote:
+> On 6/27/25 17:10, Uwe Kleine-K=F6nig wrote:
+> > On Mon, Jun 23, 2025 at 08:08:49PM +0200, Michal Wilczynski wrote:
+> >> +/// From C: `#define WFHWSIZE 20`
+> >> +pub const WFHW_MAX_SIZE: usize =3D 20;
 > >=20
-> > RUST_PWM_ABSTRACTIONS is user selectable. Is that sensible. From a
-> > user's POV it shouldn't matter if the driver is written in Rust or not.
+> > Can we somehow enforce that this doesn't diverge if the C define is
+> > increased?
 >=20
-> You make an excellent point about user experience. My initial thought
-> was to follow the depends on pattern that I saw in other Rust drivers.
+> You are absolutely right. The hardcoded value is a maintenance risk. The
+> #define is in core.c, so bindgen cannot see it.
 >=20
-> I can see how using select would be cleaner for the end user. My only
-> hesitation was that it differs from the current convention for Rust
-> drivers, and I wanted to be careful about changing an established
-> pattern.
->=20
-> If you are comfortable with setting this direction for the PWM
-> subsystem, I am happy to make the change to use select
-> RUST_PWM_ABSTRACTIONS (gated by depends on RUST). Please let me know.
+> I can address this by submitting a patch to move the #define WFHWSIZE to
+> include/linux/pwm.h. This will make it part of the public API, allow
+> bindgen to generate a binding for it, and ensure the Rust code can never
+> diverge. Is this fine ?
 
-Sounds good.
+I wonder if that is the opportunity to create a file
+include/linux/pwm-provider.h. In that file we could collect all the bits
+that are only relevant for drivers (pwm_ops, pwm_chip, pwmchip_parent,
+pwmchip_alloc ...). (Some inline functions depend on some of these, so
+some might have to stay in pwm.h)
 
-> >> +const TH1520_PWM_REG_SIZE: usize =3D 0xB0;
-> >> +
-> >> +fn ns_to_cycles(ns: u64, rate_hz: u64) -> u64 {
-> >> +    const NSEC_PER_SEC_U64: u64 =3D time::NSEC_PER_SEC as u64;
-> >> +
-> >> +    match ns.checked_mul(rate_hz) {
-> >> +        Some(product) =3D> product / NSEC_PER_SEC_U64,
-> >> +        None =3D> u64::MAX,
-> >> +    }
+I can address that in parallel, don't add this quest to your series. So
+yes, move WFHWSIZE to include/linux/pwm.h (and rename it to PWM_WFHWSIZE
+to not pollute the global namespace).
+=20
+> > Please don't expose these non-atomic callbacks. pwm_disable() would be
+> > fine.
 > >=20
-> > The semantic here is: If ns * rate_hz overflows, return U64_MAX, else ns
-> > * rate_hz / NSEC_PER_SEC, right?
-> >=20
-> > If you cannot easily reproduce what mul_u64_u64_div_u64() does, I think
-> > it would be more prudent do make this:
-> >=20
-> > 	match ns.checked_mul(rate_hz) {
-> > 	    Some(product) =3D> product,
-> > 	    None =3D> u64::MAX,
-> > 	} / NSEC_PER_SEC_U64
+> > Otherwise I'd prefer if pwm_set_waveform_might_sleep() is the API
+> > exposed to/by Rust.
 >=20
-> Thank you for the feedback on the calculation. I analyzed the two
-> approaches and found that on overflow, my version saturates to u64::MAX,
-> while the suggested version would result in u64::MAX / NSEC_PER_SEC. I
-> believe my original implementation's saturation behavior is more
-> predictable. With this in mind, would you be comfortable with me
-> retaining the original implementation?
-
-I'm convinced that my alternative is better. Consider the implemented
-mapping: Assuming rate_hz =3D 160000000 you have:
-
-	      ns     |       cycles
-	-------------+---------------------
-	 ...         |
-	115292150452 |          18446744072
-	115292150453 |          18446744072
-	115292150454 |          18446744072
-	115292150455 |          18446744072
-	115292150456 |          18446744072
-	115292150457 |          18446744073
-	115292150458 |          18446744073
-	115292150459 |          18446744073
-	115292150460 |          18446744073
-	115292150461 | 18446744073709551615
-	115292150462 | 18446744073709551615
-	 ...
-
-that's strange, isn't it?
-
-> >> +            wf.duty_length_ns =3D cycles_to_ns(original_duty_cycles, =
-rate_hz);
-> >> +            // We can't recover the original non-zero offset, so we j=
-ust set it
-> >> +            // to a representative non-zero value.
-> >> +            wf.duty_offset_ns =3D 1;
-> >=20
-> > For an inversed polarity signal the duty_offset is polarity - duty_cycl=
-e.
 >=20
-> I believe there was a typo in your suggestion and you meant period
-> instead of polarity.
+> OK, I'll remove all the setters from the State, while will keep the
+> getters, as they would be useful in apply callbacks.
 
-ack.
+How so? They might be useful for consumers, but my preferred idiom for
+them is that they know at each point in time what they want completely
+and don't make that dependant on the previous setting.
 
-> Based on that, my understanding is that for an
-> inverted signal, the generic pwm_waveform struct expects duty_offset_ns
-> to represent the duration of the initial low time, while duty_length_ns
-> represents the high time.
+> Will implement additional functions for Device i.e set_waveform,
+> round_waveform and get_waveform, and the new enum to expose the result
+> of the round_waveform more idiomatically.
+>=20
+> /// Describes the outcome of a `round_waveform` operation.
+> #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+> pub enum RoundingOutcome {
+>     /// The requested waveform was achievable exactly or by rounding valu=
+es down.
+>     ExactOrRoundedDown,
+>=20
+>     /// The requested waveform could only be achieved by rounding up.
+>     RoundedUp,
+> }
 
-right.
-
-> so the code would look like this:
-> // For an inverted signal, `duty_length_ns` is the high time (period - lo=
-w_time).
-> wf.duty_length_ns =3D cycles_to_ns(original_duty_cycles, rate_hz);
-> // The offset is the initial low time, which is what the hardware registe=
-r provides.
-> wf.duty_offset_ns =3D cycles_to_ns(duty_cycles, rate_hz);
-
-Looks correct
-
+Sounds good. Hoever I have some doubts about the C semantic here, too.
+Is it really helpful to provide that info? A user of that return value
+has to check anyhow which parameter got rounded up. If you have an
+opinion here, please share.
+=20
 Best regards
 Uwe
 
---zne6uyqf6w4firk4
+--f2wvje3fvzd4cjo2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhhApYACgkQj4D7WH0S
-/k5+Egf9EOzTF4z/r/D9Hyp//XvOQjamYBI1WYsS7Fdu17jstTst7ySTReSmPC4n
-RgHIFJ2E9iyVCQg9zJYhjoQwiymMY+aWvFC4ETRl8+Ym89QF6Nj939dCqTlT2eki
-YGedvygxJRkwGjjlDOdnRVzn7UwUqSDRG9xJ7fAmW1tEdwFtCzAmTuNDSYoKeFMK
-C1coZH5dOQUeYdQcs+7auFpyKgMNPhauFQj/Wg22ccLXXabvJk+uw4HoqE4wJaf8
-MF2p05YYQyV6J9VugpvU8Mg81lhH206bW+qn8ElE5Jh7/VWvAUHziIn+cFLGyoJz
-hfD+nuoobHVKZfk+YsSla6wrKJ7qjw==
-=XfKM
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhhBgsACgkQj4D7WH0S
+/k4sxAf8C8i/gRngTHVBR6MQlOBH/NsBUPpJbWQypLdM2xSscvdCFQtAnbKJP5Hg
+Fk/8joL6WEKb7BN0t1Rpx3P+C1P+H9VjHACvOz5hYp6QTgdMHr7Z7zYnyB+ZsmDs
+f1IWj6JAgc5MO0OdhVCzS0jCCWRPkJU6yW1zSnnmPFHETHykahwz7KUHp7uqolNG
+/PT8WLOAVCVQBdr9eo/QEzjQgdw9+p2Lhx7P7ereaDHKZR4eZrOpwUsTw6/1uORP
+E1CyN5JrfLo6hmM0A6dbfanJJm1Nb/wyoLk5aJq77K8wXFUFjZ2TcLrC2+98udwH
+IOjOEMaf5kponiXidNjXdH/Mdk6oQA==
+=3eXa
 -----END PGP SIGNATURE-----
 
---zne6uyqf6w4firk4--
+--f2wvje3fvzd4cjo2--
 
