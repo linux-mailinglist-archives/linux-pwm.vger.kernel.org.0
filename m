@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-6606-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6607-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F941AEE849
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jun 2025 22:28:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C35A9AEE858
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jun 2025 22:35:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F02E3A38CE
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jun 2025 20:28:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0DBE51777C6
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jun 2025 20:35:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26445230BF0;
-	Mon, 30 Jun 2025 20:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F18BF230264;
+	Mon, 30 Jun 2025 20:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9/a6/Nx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQdPVWlE"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D867222E3FA;
-	Mon, 30 Jun 2025 20:27:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D6F1DDA15;
+	Mon, 30 Jun 2025 20:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751315246; cv=none; b=QD9k/tou/pHcR1TMBa/C/WD5M9fjscCBikQjsmo7wl1ip8jRq6pAHbwWDRX5ne0YN+THyDqPS90h8ufdqO3GHgL1PN+fJiZTOaOhxLiiX3/12gIa8afQOUhi0soihWa+GsUTddOyhJo8FIW6pX3JI3CdmB9brXgEb7R4SYuAyE8=
+	t=1751315720; cv=none; b=BGYmtOlpITrD37ZzKhaadUIhL3U4qgn/OntuRv9GGRz4slbzr3eJpZ8CfQNa/1aO8JJjg5B6pJx4aZXr8AiwlUc05u0krEfF86yL4iWTGj6Tda1M3TefPRxohXwgJzpMddYvyGPf6GrIVSk/R4IldFAOCKbURL1COIFZ4MBOiJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751315246; c=relaxed/simple;
-	bh=mm6D6rN9YCLi05ZkS4Yr8AiNEs/PMDAf3hD+0ETdEvA=;
+	s=arc-20240116; t=1751315720; c=relaxed/simple;
+	bh=tQs2Z2Qlt33u9MXNYKvC5h012PuPJ3SbrN4OrPh6WUM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WgO9T5H3j6dY1X/W+Y+jHKz82BJ8HlulOAax6hxaiHSkyJWwo2tv6rYRsyj/nMjQM8AgLURCnrB7vnLJN0MQ06woWy+kvf6CBVJGggGsk9Ruj6QUiaIOwSsl8MBeP3V3NqpmeWBA7W4h8WB0Y81NgpQ9e0FDaiFoebX24H3vpO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9/a6/Nx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04FFEC4CEE3;
-	Mon, 30 Jun 2025 20:27:24 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=erO+vHyKlcLq5QwVI1nxhxQHi/H95wdTuEAe8TlBK8fE3/fQCohzmiygDg/KyOAusMFD6+Rey25GqJ8y8yaYAVc2GZRtUPM0WI3d2b6ILRZsjXbduigpQxyzVtp2Xe8BM4s2IPaGf2vB9+B8dZarrhuvCjbwu6/PFdHrvNZsgBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQdPVWlE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8278FC4CEE3;
+	Mon, 30 Jun 2025 20:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751315245;
-	bh=mm6D6rN9YCLi05ZkS4Yr8AiNEs/PMDAf3hD+0ETdEvA=;
+	s=k20201202; t=1751315720;
+	bh=tQs2Z2Qlt33u9MXNYKvC5h012PuPJ3SbrN4OrPh6WUM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V9/a6/NxFgycREwnlDhrZgtvp8pAFZImQNec5/c/twV2DgQ0znTyfrop3lQKZeZ7h
-	 fgQ39nnpkRhWhAyw5J5AKzgtDzpQvA8Z6tMKD+u2aCTt3+GoDm8ccE4Xg5Q9i1qZUL
-	 +AD2WCWeY8ARVpccuvjwuKYMzBHzXkqT3laSqVLK03++8wYeeec8cBrN+EjhvUvlLZ
-	 T9RKDw2/uEOdkpuEHNebR6fa64ajz0bL7erRyjy6bsF3BlvXYHo+XO1du383Eg2Cjc
-	 pjDM2rlbVJL/SPYAj2u0PIRbIwo4D6mqHolSxIp6xoG2RrlsNvRZAJD3WF1ySGItIF
-	 otdth+1F2/mOQ==
-Date: Mon, 30 Jun 2025 13:27:23 -0700
+	b=jQdPVWlEXvMQf260xJdBEwJ5mye0aeV5BlmUUkJyQiwtf4pqIzmLONkUBMckpQoc9
+	 W/Gf30/G7C3LEJuIqE8b2ijFpfBO2Z9jhqb2AF62IGrJXteH9c6lSB7k7fBCecGEH4
+	 9S37AvxNcIpOYeUr+5NNnQoXyK81waffWOCYOZO3Wl5bJYSH5r+QSkoDh0pB6SASoa
+	 DPOgBmc691vLQSaDa82hz08t8TNYhHg5WTC600Nb4o3OTeYG0VTQsUc2pi48hpm25L
+	 i1KUb5f1JjCndHAgnhqZQ0svQ3XmvjKUn0GJb4HFDru94h27kWiGJGdA5EqLj0LR9j
+	 3d2oOyqVsae3g==
+Date: Mon, 30 Jun 2025 13:35:18 -0700
 From: Drew Fustini <fustini@kernel.org>
 To: Michal Wilczynski <m.wilczynski@samsung.com>
 Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
@@ -66,11 +66,12 @@ Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
 	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
 	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
 	linux-clk@vger.kernel.org
-Subject: Re: [PATCH v5 8/9] riscv: dts: thead: Add PVT node
-Message-ID: <aGLzK8wTFcWuR4Zv@x1>
-References: <20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com>
- <CGME20250623180907eucas1p10c0ca6b667debcc8139402d97e4ef800@eucas1p1.samsung.com>
- <20250623-rust-next-pwm-working-fan-for-sending-v5-8-0ca23747c23e@samsung.com>
+Subject: Re: [PATCH v4 5/9] clk: thead: Mark essential bus clocks as
+ CLK_IGNORE_UNUSED
+Message-ID: <aGL1BjGowU3HNsYE@x1>
+References: <20250618-rust-next-pwm-working-fan-for-sending-v4-0-a6a28f2b6d8a@samsung.com>
+ <CGME20250618122808eucas1p1734efef72b723602969465d6cd0c01d2@eucas1p1.samsung.com>
+ <20250618-rust-next-pwm-working-fan-for-sending-v4-5-a6a28f2b6d8a@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -79,55 +80,74 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250623-rust-next-pwm-working-fan-for-sending-v5-8-0ca23747c23e@samsung.com>
+In-Reply-To: <20250618-rust-next-pwm-working-fan-for-sending-v4-5-a6a28f2b6d8a@samsung.com>
 
-On Mon, Jun 23, 2025 at 08:08:56PM +0200, Michal Wilczynski wrote:
-> Add PVT DT node for thermal sensor.
+On Wed, Jun 18, 2025 at 02:27:38PM +0200, Michal Wilczynski wrote:
+> Probing peripherals in the AON and PERI domains, such as the PVT thermal
+> sensor and the PWM controller, can lead to boot hangs or unresponsive
+> devices on the LPi4A board. The root cause is that their parent bus
+> clocks ('CLK_CPU2AON_X2H' and the 'CLK_PERISYS_APB' clocks) are
+> automatically gated by the kernel's power-saving mechanisms when the bus
+> is perceived as idle.
 > 
+> Alternative solutions were investigated, including modeling the parent
+> bus in the Device Tree with 'simple-pm-bus' or refactoring the clock
+> driver's parentage. The 'simple-pm-bus' approach is not viable due to
+> the lack of defined bus address ranges in the hardware manual and its
+> creation of improper dependencies on the 'pm_runtime' API for consumer
+> drivers.
+> 
+> Therefore, applying the'`CLK_IGNORE_UNUSED' flag directly to the
+> essential bus clocks is the most direct and targeted fix. This prevents
+> the kernel from auto-gating these buses and ensures peripherals remain
+> accessible.
+> 
+> This change fixes the boot hang associated with the PVT sensor and
+> resolves the functional issues with the PWM controller.
+> 
+> Link: https://lore.kernel.org/all/9e8a12db-236d-474c-b110-b3be96edf057@samsung.com/ [1]
+> 
+> Reviewed-by: Drew Fustini <drew@pdp7.com>
 > Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 > ---
->  arch/riscv/boot/dts/thead/th1520.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  drivers/clk/thead/clk-th1520-ap.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-> index 26996422e1efe5d2dde68819c2cec1c3fa782a23..bef30780034e06b07aa29b27b0225ea891a4b531 100644
-> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
-> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-> @@ -669,6 +669,17 @@ padctrl_aosys: pinctrl@fffff4a000 {
->  			thead,pad-group = <1>;
->  		};
->  
-> +		pvt: pvt@fffff4e000 {
-> +			compatible = "moortec,mr75203";
-> +			reg = <0xff 0xfff4e000 0x0 0x80>,
-> +			      <0xff 0xfff4e080 0x0 0x100>,
-> +			      <0xff 0xfff4e180 0x0 0x680>,
-> +			      <0xff 0xfff4e800 0x0 0x600>;
-> +			reg-names = "common", "ts", "pd", "vm";
-> +			clocks = <&aonsys_clk>;
-> +			#thermal-sensor-cells = <1>;
-> +		};
-> +
->  		gpio@fffff52000 {
->  			compatible = "snps,dw-apb-gpio";
->  			reg = <0xff 0xfff52000 0x0 0x1000>;
+> diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
+> index ebfb1d59401d05443716eb0029403b01775e8f73..cf7f6bd428a0faa4611b3fc61edbbc6690e565d9 100644
+> --- a/drivers/clk/thead/clk-th1520-ap.c
+> +++ b/drivers/clk/thead/clk-th1520-ap.c
+> @@ -792,11 +792,12 @@ static CCU_GATE(CLK_AON2CPU_A2X, aon2cpu_a2x_clk, "aon2cpu-a2x", axi4_cpusys2_ac
+>  		0x134, BIT(8), 0);
+>  static CCU_GATE(CLK_X2X_CPUSYS, x2x_cpusys_clk, "x2x-cpusys", axi4_cpusys2_aclk_pd,
+>  		0x134, BIT(7), 0);
+> -static CCU_GATE(CLK_CPU2AON_X2H, cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_pd, 0x138, BIT(8), 0);
+> +static CCU_GATE(CLK_CPU2AON_X2H, cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_pd,
+> +		0x138, BIT(8), CLK_IGNORE_UNUSED);
+>  static CCU_GATE(CLK_CPU2PERI_X2H, cpu2peri_x2h_clk, "cpu2peri-x2h", axi4_cpusys2_aclk_pd,
+>  		0x140, BIT(9), CLK_IGNORE_UNUSED);
+>  static CCU_GATE(CLK_PERISYS_APB1_HCLK, perisys_apb1_hclk, "perisys-apb1-hclk", perisys_ahb_hclk_pd,
+> -		0x150, BIT(9), 0);
+> +		0x150, BIT(9), CLK_IGNORE_UNUSED);
+>  static CCU_GATE(CLK_PERISYS_APB2_HCLK, perisys_apb2_hclk, "perisys-apb2-hclk", perisys_ahb_hclk_pd,
+>  		0x150, BIT(10), CLK_IGNORE_UNUSED);
+>  static CCU_GATE(CLK_PERISYS_APB3_HCLK, perisys_apb3_hclk, "perisys-apb3-hclk", perisys_ahb_hclk_pd,
 > 
 > -- 
 > 2.34.1
 > 
 
-The PVT sensor is useful for more than just the fan so I'm okay with
-taking this even though the PWM driver has yet to be accepted. I have
-applied this patch to thead-dt-for-next [1] as commit c31f289 [2].
-
-The required clk driver fix has been applied to thead-clk-for-next [3]
-as commit 0370395 [4], so PVT sensor will be able to be tested in next.
+I've applied this patch to thead-clk-for-next [1] as commit 0370395 [2].
 
 Thanks,
 Drew
 
-[1] https://github.com/pdp7/linux/commits/thead-dt-for-next/
-[2] https://github.com/pdp7/linux/commit/c31f2899eab084b3557e9f9e10fc7898113ef18d
-[3] https://github.com/pdp7/linux/commits/thead-clk-for-next/
-[4] https://github.com/pdp7/linux/commit/0370395d45ca6dd53bb931978f0e91ac8dd6f1c5
+[1] https://github.com/pdp7/linux/commits/thead-clk-for-next/
+[2] https://github.com/pdp7/linux/commit/0370395d45ca6dd53bb931978f0e91ac8dd6f1c5
+~                                                                                                                                                     
+~                                                                                                                                                     
+~                                                                                                 
+
+
+
 
