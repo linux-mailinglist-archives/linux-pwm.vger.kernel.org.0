@@ -1,271 +1,174 @@
-Return-Path: <linux-pwm+bounces-6577-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6578-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7697AED8E6
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jun 2025 11:37:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A16F0AED99B
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jun 2025 12:19:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB1EB16E28C
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jun 2025 09:37:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98D9F189A46B
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jun 2025 10:19:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A00C23D2BD;
-	Mon, 30 Jun 2025 09:37:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85042248F65;
+	Mon, 30 Jun 2025 10:19:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="VhNqzNDr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PH4rrLza"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEF32459F2
-	for <linux-pwm@vger.kernel.org>; Mon, 30 Jun 2025 09:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD81A34CF5;
+	Mon, 30 Jun 2025 10:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751276251; cv=none; b=eIZYxmN9WsesVEUOwfNo5IpId5wOH5DRYJwHQO6Bq/W0wD+brtstfregoT10qdjOgJVlFZZSUpMz8AyNefoktNuVAZdJCTxxafwZ5oQXHD+ppyWq8TgLMk5SkeetmkYLAmjyp22jyOJY3JQwKJucKtKgWbPRy+wojtAo3eRQ8pU=
+	t=1751278768; cv=none; b=UZuPhTgC3M4uhKeshbWl4KIFcQKKTmMsAE4iebGfeLmC6x9bmUJyE52JSyBOwom6WBCL+tCxgucokbaCvIGBGo+0sTGjdEXzbcWw6Ween59/2GXE5PMO5d5k08kZMUfxSO70rIQ4YSgn2reNnzT5zcqMoZsuK8M99O7tVKWU9yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751276251; c=relaxed/simple;
-	bh=GnfLzsdPfQ2VHV8UMkZ2FvFVLNH8ELi6SNM5xx1OHiY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oiCG/wAKX+iHrPh7J37Qyg874hC7mhF0KJ2wdK89l8Mr4zONyIHBH+KpQQ5W+jQGkgg2z0DNMDo5lBB+g+4+/UyPqohUm1a5XeuPkf3gcCAX3vk9/HW/ImH+I6kqT2naUd4jz4h5h9mdDZVP8Pwn3vM7tvbaPU7W2bLivFqbWVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=VhNqzNDr; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4537fdec39fso4766635e9.0
-        for <linux-pwm@vger.kernel.org>; Mon, 30 Jun 2025 02:37:27 -0700 (PDT)
+	s=arc-20240116; t=1751278768; c=relaxed/simple;
+	bh=o0/xe/4JWB/9UT/btiB4gjB1qHYPUz0dQhHO847HiS8=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mvwiOM9mCY+MXNdrTTovhIAbKSPMrQKGiXaeJvvBrsXYspoaCDaXwrUfsRiziKK5xjJ9TwDxUTUpYi8f++C+3BZcfKyA8osm9AQfkBm6NEHAG4+huHUgS/+28KPv31uOLDJFuim+JM2GF+3y9IsEYrMIMFRx4jKqXPkaIdPTvMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PH4rrLza; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a6e2d85705so2353963f8f.0;
+        Mon, 30 Jun 2025 03:19:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751276246; x=1751881046; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gUrNdDVU77c9uw4mJM2RJELk7rgZTpadQl39/qaYr4k=;
-        b=VhNqzNDrowA5HQ7XqL1sjW4x/f0fgTnpRA6mjqyxIb6Kx0PqcgDI0hnW7E8TUVA7uT
-         H4Qn6V4/tG2Z1vEb8sMn1XoxsetoULXLLkiZuJdxe8QlsOizxUEuHEhAJqquUSeJuNZM
-         B7nCiwYJt/xu7BnDh8seaM9Ju7naItYWS3ckjFj7eg3x1FWtULofmLpO6CBF0tHbzGed
-         p6NpYP29OZDloiGYEszvKxK4vPl7DbBoz7xx4W/pIo9CRMP/MfRYU8bJvIiL5Ijc6adk
-         eiV5PZ+Gdgnsyzpm94nuB0YjQZvReLjdeN6EtKFk5oOXxmzOkQXaXpRwnKab7ICbVfNb
-         lypw==
+        d=gmail.com; s=20230601; t=1751278765; x=1751883565; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=YYytyjnVKf5f7mpQA+qzmKhKa7r+QZu71oHHNPXV1Qw=;
+        b=PH4rrLzaXKduyyz1sE7QJSrtQidLp55BHHxfSTu/+1d4Ziix6S0E7za1BPx5yxzHtf
+         tSNNQGLpNj29QmqQ8azlZ2aLlyC+NOmBBLfzPhcmSNY0lg36XBSghzgfnPnkSzdMJUfY
+         o5ybge26veLvYTk2VetN+2ZRHsiXSJ9Y6n42mmyGGyiJG0k3yzmxLL8FHN+9YEhPAUQ1
+         T5zTnpP/KMoeNKlVvY8m9WzBNhoncuEF/iwZKH/cAmgWXMj4WptXG3u8Lwj95yEx6wgB
+         W01L+OTO+TEF1y7SiG1BWfoZN9UIcmEEbzxuPA31Z8dEQ1WiW9PwyD9lNvT5fnk8BEVC
+         5GAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751276246; x=1751881046;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gUrNdDVU77c9uw4mJM2RJELk7rgZTpadQl39/qaYr4k=;
-        b=bP1x8vOGvndiwpEy9ekQspbhqPZ49E0e2jNtEQ11eQ/SvGvfmM8uzK3FjkQ8xUADq3
-         DA8MpI/fnVR5NOrY+6j5EOQVt6L9aEIMCWIrs0dv1/icPkVathp6igS2CEv0lqEUadtS
-         7HjJiMQJAj0z6HaJ06pG9oi7kHWbE25Oo15hNb178XVXBbwRUmUFX0uw6T3NMDZ5nUQ9
-         CUPnDK6fmA69f4vXrceZv8Nndi6RSKzq9HnSHawXMPA8eKgUZKqMdKy7x7+DYmgyzCdJ
-         hJpIIBPNQQbtmO/LrwEnhA6MSpeqaDXblTST8oA+geOIiJv1BeZvvQ3Sq0v/ugkIkkx1
-         wCMg==
-X-Forwarded-Encrypted: i=1; AJvYcCWaBMZJe/aBtT3Fo4FdgFHHUg/aLA6hgxhtEc4DDS71we3wDpkiEUvlJBRmbPjYlzfK1xJdVyfoAbo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzq+BZDsUp+7Pa6AVJ7SqfW/idSe5JR6QhJNBzIUC8TeNwU1z8f
-	98k+74ay4itYPsZcR2aiPJJjl7Vf6LXtIHcudX/P6expeKoouRqWlZUspuCNELCvJRETCpzAIuq
-	p9DQl
-X-Gm-Gg: ASbGncvVGt6dHHzA/KliIGRH+jZuI8LSxv8QZDMmx9jN9W4rtRMM5fy+JZNQRILaQTf
-	coKGbpj3MHyD/GYv/5zmanWIhh4rMCeGhKi9amPlhccQWdvEjXUFJEneuQ3UHKYmB+0YL4M9Oqs
-	fDs8bVvuTz4EvJ3U1reFcb9simoxSPFa7Avw+eceB2Y01n6g8JacZNMqzmTiCqpBRfHggFJ6/tY
-	os/GRbtPZoPk6C2Jn3TkTXgPHt4V9lGqQKn43IRjB3XJl6GSHVMCpamz8901bUC7Vyf9qiqmINe
-	kSWCWJ23cxt0PlACmpJ2xx+2iAdGGPOXaYb+sDJ8LUfuZzq+VLg0tBkPV8IrzHvHY2tC18qDWL2
-	eWqyrwX1LN27sf++LABVKiYPq8pka
-X-Google-Smtp-Source: AGHT+IFBxWCjZ6a4yiGuV3Ap6A1SD/3fbRo9FBv1t8LTT4S614TTr0mdjKuAeIYjUe/jM3Uo1hzqGQ==
-X-Received: by 2002:a05:600c:4750:b0:43b:ca39:6c7d with SMTP id 5b1f17b1804b1-4538ee30effmr148411035e9.3.1751276246017;
-        Mon, 30 Jun 2025 02:37:26 -0700 (PDT)
-Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4538a406ab6sm131054585e9.30.2025.06.30.02.37.25
+        d=1e100.net; s=20230601; t=1751278765; x=1751883565;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YYytyjnVKf5f7mpQA+qzmKhKa7r+QZu71oHHNPXV1Qw=;
+        b=oQ87e7oZCud8G1K23FvX8ZKc/zXNfx5SS3Zv5QQ/CmhChKWnxfU7u4mYVc63MG5kBC
+         rVdtKy9yUfB2qyi5P93jYBYG11jdIWFptHBtU4Kt+j5VOpreaJslmhufEMTb+zkRfm5Z
+         m7QgtaaBCq0j+93GjOAcXo8Po05aBN7nF9OQ4dfF48NevESIjnN+v4a9aF1+CDiawF02
+         6nJD3uFrzM9ZgjJBzTDJznVC2PgDo1YHzV5kgT0QUdVz0e7NSvDo35rzPMSvTQa/rPDL
+         MqkIbWmq/xtZGFExfNt3KCwIxV/j6RRGllgwyAc4sFOR2k/Pa5SmGGP/JITq6ZcDI9O8
+         Zr1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUrUC90QHjDgzS5MDqRmcnkwFJhtpOw1yFoXcAkWHjuSg99UpC+hUJoHesYfWZq9TOhiRNz8cqIZzO7@vger.kernel.org, AJvYcCX1VSJ3as1cVzP2tO9QAIKohXMOOB0U5BaZOuwrM7p39jA7ry9wI3FovXw/T6I8g/ZLXkBSlJW+ghv0QQg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6CSvMqekPyidNJdjjweYE2Mnux/Xu8nBxUbjfGtmPwHxKioV1
+	24I6XzsdWrkx16cM1Ym6aWq2UuNEyEIi/1D0tUswwkt2y+iUdyLvzXnj
+X-Gm-Gg: ASbGncuHeguvm++lNXGXlKd/QqBHu99s3Z114Tq2OjMpAJwqCfI/m4/+X/Axxhh3u77
+	HHBwQy5OSVSZNmqUIx7J8TyIESuDuR/5iLkq73rvTJ6tcFnsSE0wSUZ0b0x/lJsLrIwZsPYC8K+
+	703AdnUr+O3xxOmk1v0+PDThcwbOcC2tjty20PKwSfrutcAW05DpNwmD9j62Pf1vN7lUqt20jCY
+	IRsLKfL/Ebw7PgYwhCeWPUZAhFGv6aqaqtrRXyfEKVXoe5re9QVHLN7zbsxJh2apeHN+kknZsgp
+	PwOkTOiaWv0jxr0zdl81GTMFmPDognppsDV9fqztikVxXGn7UsIoTKNfI+18IXq7mYFClLNrpxV
+	3MsI+LDGKHpJAD+LWwOfLIjIYwmipb5I=
+X-Google-Smtp-Source: AGHT+IHpTZWldZLghotIau2Mlg0lfLxdb5ZY7nUx9Y4IMUxtmaELb1sia+Q2PUSneM7iCe6V3UVM0g==
+X-Received: by 2002:a05:6000:20c4:b0:3aa:c95b:d1d9 with SMTP id ffacd0b85a97d-3aac95bd1ddmr4729133f8f.6.1751278764716;
+        Mon, 30 Jun 2025 03:19:24 -0700 (PDT)
+Received: from Ansuel-XPS. (host-87-3-254-137.retail.telecomitalia.it. [87.3.254.137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c8013b3sm9999344f8f.39.2025.06.30.03.19.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jun 2025 02:37:25 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	linux-input@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: [PATCH v2] Input: max8997_haptic - Optimize PWM configuration
-Date: Mon, 30 Jun 2025 11:37:17 +0200
-Message-ID: <20250630093718.2062359-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.49.0
+        Mon, 30 Jun 2025 03:19:24 -0700 (PDT)
+Message-ID: <686264ac.df0a0220.feace.3044@mx.google.com>
+X-Google-Original-Message-ID: <aGJkqsNwztdjl-ow@Ansuel-XPS.>
+Date: Mon, 30 Jun 2025 12:19:22 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v18] pwm: airoha: Add support for EN7581 SoC
+References: <20250626224805.9034-1-ansuelsmth@gmail.com>
+ <aF5dHDr8yDSKlp5j@smile.fi.intel.com>
+ <685e6544.5d0a0220.20cf55.9440@mx.google.com>
+ <aF5xrHkTr8Tb71ZH@smile.fi.intel.com>
+ <685e73cf.df0a0220.214b10.9998@mx.google.com>
+ <aF544lt-9YJq8r0y@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5601; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=GnfLzsdPfQ2VHV8UMkZ2FvFVLNH8ELi6SNM5xx1OHiY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBoYlrOagWcyyC4zVhjFV5jfvaWu/eZAgVghg6z+ q3bXG7SfTSJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaGJazgAKCRCPgPtYfRL+ TqjdCACH8KqudfEX4kHE+DFXBYTfCBHP3OQFCRbHX3E1kZGB0conIQObEg5W3Ui14u2LbKgVe0c TW04U4aZa1oQu70pTUEzIOO75QCYwralGktrJcHwIiqS0xzWK3+ueIKOw5WaJx8t2lgTNZD5DGA ZUmjrPDIdI7i6CKa/VHGZTal/waeQX0y2SDSTrrnFHWTqCMDJGHWAxMIyKLrP2FnngSysLmadsn BIAgSr2mkKMBhDOtp6tXBlli1EhgQvoQqN6JS1n86s9f/KYesfwsNxWaCXwqe74gqcBkFgjMgV8 uTGhsK6HGjTSyUxIw8br94zkke7T3c+j2EOE1QVKXAFa/u+9
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aF544lt-9YJq8r0y@smile.fi.intel.com>
 
-Both pwm_config() and pwm_enable() are wrappers around
-pwm_apply_might_sleep(). Instead of calling this function twice only
-call it once without an intermediate step.
+On Fri, Jun 27, 2025 at 01:56:34PM +0300, Andy Shevchenko wrote:
+> On Fri, Jun 27, 2025 at 12:34:49PM +0200, Christian Marangi wrote:
+> > On Fri, Jun 27, 2025 at 01:25:48PM +0300, Andy Shevchenko wrote:
+> > > On Fri, Jun 27, 2025 at 11:32:46AM +0200, Christian Marangi wrote:
+> > > > On Fri, Jun 27, 2025 at 11:58:04AM +0300, Andy Shevchenko wrote:
+> > > > > On Fri, Jun 27, 2025 at 12:47:53AM +0200, Christian Marangi wrote:
+> 
+> ...
+> 
+> > > > > > +	/* Global mutex to protect bucket used refcount_t */
+> > > > > > +	struct mutex mutex;
+> > > > > 
+> > > > > This makes a little sense. Either you use refcount_t (which is atomic) or
+> > > > > use mutex + regular variable.
+> > > > 
+> > > > Using a regular variable I lose all the benefits of refcount_t with
+> > > > underflow and other checks.
+> > > 
+> > > Then drop the mutex, atomic operations do not need an additional
+> > > synchronisation. Btw, have you looked at kref APIs? Maybe that
+> > > would make the intention clearer?
+> > 
+> > It's needed for
+> > 
+> > +       mutex_lock(&pc->mutex);
+> > +       if (refcount_read(&pc->buckets[bucket].used) == 0) {
+> > +               config_bucket = true;
+> > +               refcount_set(&pc->buckets[bucket].used, 1);
+> > +       } else {
+> > +               refcount_inc(&pc->buckets[bucket].used);
+> > +       }
+> > +       mutex_unlock(&pc->mutex);
+> > 
+> > the refcount_read + refcount_set.
+> 
+> Which is simply wrong. Nobody should use atomics in such a way.
+> Imagine if somebody wants to copy something like this in their
+> code (in case of no mutex is there), they most likely won't notice
+> this subtle bug.
+>
 
-Setup the PWM in max8997_haptic_enable() only where it was enabled
-historically. max8997_haptic_set_duty_cycle() is renamed accordingly to
-make it clear this function is only about the internal setup now.
-pwm_config() was called earlier back then, but that call has no effect
-on the hardware when the PWM is disabled, so delaying this configuration
-doesn't make a difference.
+Yes I understand that someone might think the additional mutex can be
+""optional""
 
-As pwm_apply_might_sleep() is used now defining the whole state of the
-PWM, the call to pwm_apply_args() in .probe() can be dropped now, too.
+> > As you explained there might be case where refcount_read is zero but nother
+> > PWM channel is setting the value so one refcount gets lost.
+> 
+> Right, because you should use refcount_inc_and_test() and initialise it
+> to -MAX instead of 0. Or something like this.
+> 
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
-Hello,
+Mhhh I think API for _inc_and_test doesn't currently exist and I don't
+feel too confident implementing them currently.
 
-changes since (implicit) v1, available at
-https://lore.kernel.org/linux-input/20250623112742.1372312-2-u.kleine-koenig@baylibre.com
+> > kref I checked but not useful for the task.
+> 
+> Okay.
+> 
+> > The logic here is
+> > 
+> > - refcount init as 0 (bucket unused)
+> > - refcount set to 1 on first bucket use (bucket get configured)
+> > - refcount increased if already used
+> > - refcount decreased when PWM channel released
+> > - bucket gets flagged as unused when refcount goes to 0 again
+>
 
- - keep enabling the PWM only after the regulator is also enabled
- - add a comment describing the reason for that, making it possible that
-   someone with access to the device and/or documenation easily notices
-   this cleanup (if it's possible)
- - rename max8997_haptic_set_duty_cycle() ->
-   max8997_haptic_set_internal_duty_cycle() and make it return void.
- - trivially rebase to a newer next tag
- - drop pwm_apply_args()
+Do you think I should bite the bullet and just drop using refcount and
+implement a simple int variable protected by a mutex?
 
-The driving motivation is to get rid of pwm_config(). This driver is one
-of the remaining two users of this function.
-
- drivers/input/misc/max8997_haptic.c | 98 +++++++++++++++--------------
- 1 file changed, 50 insertions(+), 48 deletions(-)
-
-diff --git a/drivers/input/misc/max8997_haptic.c b/drivers/input/misc/max8997_haptic.c
-index f97f341ee0bb..033225cae818 100644
---- a/drivers/input/misc/max8997_haptic.c
-+++ b/drivers/input/misc/max8997_haptic.c
-@@ -53,40 +53,35 @@ struct max8997_haptic {
- 	unsigned int pattern_signal_period;
- };
- 
--static int max8997_haptic_set_duty_cycle(struct max8997_haptic *chip)
-+static void max8997_haptic_set_internal_duty_cycle(struct max8997_haptic *chip)
- {
--	int ret = 0;
-+	u8 duty_index = 0;
- 
--	if (chip->mode == MAX8997_EXTERNAL_MODE) {
--		unsigned int duty = chip->pwm_period * chip->level / 100;
--		ret = pwm_config(chip->pwm, duty, chip->pwm_period);
--	} else {
--		u8 duty_index = 0;
-+	if (chip->mode == MAX8997_EXTERNAL_MODE)
-+		return;
- 
--		duty_index = DIV_ROUND_UP(chip->level * 64, 100);
-+	duty_index = DIV_ROUND_UP(chip->level * 64, 100);
- 
--		switch (chip->internal_mode_pattern) {
--		case 0:
--			max8997_write_reg(chip->client,
--				MAX8997_HAPTIC_REG_SIGPWMDC1, duty_index);
--			break;
--		case 1:
--			max8997_write_reg(chip->client,
--				MAX8997_HAPTIC_REG_SIGPWMDC2, duty_index);
--			break;
--		case 2:
--			max8997_write_reg(chip->client,
--				MAX8997_HAPTIC_REG_SIGPWMDC3, duty_index);
--			break;
--		case 3:
--			max8997_write_reg(chip->client,
--				MAX8997_HAPTIC_REG_SIGPWMDC4, duty_index);
--			break;
--		default:
--			break;
--		}
-+	switch (chip->internal_mode_pattern) {
-+	case 0:
-+		max8997_write_reg(chip->client,
-+			MAX8997_HAPTIC_REG_SIGPWMDC1, duty_index);
-+		break;
-+	case 1:
-+		max8997_write_reg(chip->client,
-+			MAX8997_HAPTIC_REG_SIGPWMDC2, duty_index);
-+		break;
-+	case 2:
-+		max8997_write_reg(chip->client,
-+			MAX8997_HAPTIC_REG_SIGPWMDC3, duty_index);
-+		break;
-+	case 3:
-+		max8997_write_reg(chip->client,
-+			MAX8997_HAPTIC_REG_SIGPWMDC4, duty_index);
-+		break;
-+	default:
-+		break;
- 	}
--	return ret;
- }
- 
- static void max8997_haptic_configure(struct max8997_haptic *chip)
-@@ -155,11 +150,7 @@ static void max8997_haptic_enable(struct max8997_haptic *chip)
- 
- 	guard(mutex)(&chip->mutex);
- 
--	error = max8997_haptic_set_duty_cycle(chip);
--	if (error) {
--		dev_err(chip->dev, "set_pwm_cycle failed, error: %d\n", error);
--		return;
--	}
-+	max8997_haptic_set_internal_duty_cycle(chip);
- 
- 	if (!chip->enabled) {
- 		error = regulator_enable(chip->regulator);
-@@ -168,16 +159,32 @@ static void max8997_haptic_enable(struct max8997_haptic *chip)
- 			return;
- 		}
- 		max8997_haptic_configure(chip);
--		if (chip->mode == MAX8997_EXTERNAL_MODE) {
--			error = pwm_enable(chip->pwm);
--			if (error) {
--				dev_err(chip->dev, "Failed to enable PWM\n");
--				regulator_disable(chip->regulator);
--				return;
--			}
--		}
--		chip->enabled = true;
- 	}
-+
-+	/*
-+	 * It would be more straight forward to configure the external PWM
-+	 * earlier i.e. when the internal duty_cycle is setup in internal mode.
-+	 * But historically this is done only after the regulator was enabled
-+	 * and max8997_haptic_configure() set the enable bit in
-+	 * MAX8997_HAPTIC_REG_CONF2. So better keep it this way.
-+	 */
-+	if (chip->mode == MAX8997_EXTERNAL_MODE) {
-+		struct pwm_state state;
-+
-+		pwm_init_state(chip->pwm, &state);
-+		state.period = chip->pwm_period;
-+		state.duty_cycle = chip->pwm_period * chip->level / 100;
-+		state.enabled = true;
-+
-+		error = pwm_apply_might_sleep(chip->pwm, &state);
-+		if (error) {
-+			dev_err(chip->dev, "Failed to enable PWM\n");
-+			regulator_disable(chip->regulator);
-+			return;
-+		}
-+	}
-+
-+	chip->enabled = true;
- }
- 
- static void max8997_haptic_disable(struct max8997_haptic *chip)
-@@ -282,11 +289,6 @@ static int max8997_haptic_probe(struct platform_device *pdev)
- 			goto err_free_mem;
- 		}
- 
--		/*
--		 * FIXME: pwm_apply_args() should be removed when switching to
--		 * the atomic PWM API.
--		 */
--		pwm_apply_args(chip->pwm);
- 		break;
- 
- 	default:
-
-base-commit: 1343433ed38923a21425c602e92120a1f1db5f7a
 -- 
-2.49.0
+	Ansuel
 
