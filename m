@@ -1,141 +1,100 @@
-Return-Path: <linux-pwm+bounces-6601-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6603-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66227AEDC02
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jun 2025 13:54:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99702AEE09C
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jun 2025 16:26:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D91E1176576
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jun 2025 11:53:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E4417A56EF
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jun 2025 14:25:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0184C285CAE;
-	Mon, 30 Jun 2025 11:52:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13C3228AAEA;
+	Mon, 30 Jun 2025 14:26:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FL3lqLzC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yv1N+2YK"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C6E285412;
-	Mon, 30 Jun 2025 11:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9819628B7D6;
+	Mon, 30 Jun 2025 14:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751284366; cv=none; b=XwEdC1yK64HQ4p5ZX8/p9vFfGfYz4aoXNwpd3udfs5wYFO6/i/25yNwIQF8SbLslfS9y0NJvp0elAShsswmhC43895RGVtyZVRO7b2ddLDBLxwUpUGfOUFac7CTua6lzx0I1hkSyIKvh/TutPGO78t09Q9pyC+1gRmQPyWkgaBE=
+	t=1751293599; cv=none; b=Lt3aZgu7FSwdvv7BodDheR/sBrRIZAZnkAo7O8Vy8s7TZzH9qJ/TvDRiqW8iyd5SC/xGH4gixwwiXTTt83wmkHK2Vrw7/fNfulfk96Uk9pdes40X/a4yxulVEh5mktKSAxRxavOzhDFEAvDQckBu4fXP+G/kSVmArVOEOvL6U4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751284366; c=relaxed/simple;
-	bh=nFZOQexnNjnUMXtGPF7ep9n0MIVjVa8TN2/NZxxIAd8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RGDlIPt6shkOWOE7Ggu0FbaZYVIyqTMCRXKG5+WoRRYjCwfDjgC7GFxndfEe6n6LfSq2mq7AfjLArMICRCXHyVnuzbKP6RrB+/OriZ+sM160TvrYLs9EgvMGD2E4hPJWbiVk+Z4zJEwA2i2gEh0gPdbXR7HKUY+gbzsXSecGBwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FL3lqLzC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6B471C4CEF6;
-	Mon, 30 Jun 2025 11:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751284366;
-	bh=nFZOQexnNjnUMXtGPF7ep9n0MIVjVa8TN2/NZxxIAd8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=FL3lqLzC+MQ+WZK7Bc05sS7xo7u03E0blBiQHHwAYBxezh9VS4Zaal2cNEtdib+mW
-	 XQOvsTVQQqP4xcF239IIARn74S24b5Wr8Xc3pGxbV20GHU1FxobOV+mwmCePwYYlas
-	 PG62ywEtoOoj781MmuhT+MGr1hU6NUNtVPNYbCRg6jjqdi71CvIHtOLzwZhOEfHAav
-	 UuDrLZJ2KnV/7s3HBvT7z+5PECYZlor+7XO4KrG0L4JZzIzQphhT3Ju35utDM6MuDJ
-	 NOkjJV55jRrBc9bxVeTU+yO9sq0OnLT637S1Dxm29fDbnKv5ZnOGYGuTqBSJ3bZAcv
-	 VOGETAShamufg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B8EC8302F;
-	Mon, 30 Jun 2025 11:52:46 +0000 (UTC)
-From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Mon, 30 Jun 2025 12:53:11 +0100
-Subject: [PATCH v6 20/20] mfd: adp5585: Add support for a reset pin
+	s=arc-20240116; t=1751293599; c=relaxed/simple;
+	bh=LH0zpZNtemYaui0yK8YL8xxeqgeBRfGvZY2w1RSLDPg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p3Rl04aLJcZK761tPo326NFbbKj46RHrG29ucATrXm01DJ9gdrD9MXqzs/PI/XPYpBMka1wTOtlf/up5Qtseu2ij4bS4D3626qJpJqid6Z9BuMQj9JB3JodB0/8p5ejFuEFG7TRmoupIYb+T5BXuwyOozZvFGCoV0yJqLR3gYp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yv1N+2YK; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751293598; x=1782829598;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LH0zpZNtemYaui0yK8YL8xxeqgeBRfGvZY2w1RSLDPg=;
+  b=Yv1N+2YKgsh2rsKFUiyFkCYij7cDF2b12g7G6G5YU/H0kXpi0siiO1r/
+   aBXsgzUOd08GxzlyPQpCjIYcYDTBSeksBFO5OwBw3I/CnhsjJrNy745eg
+   evdqLG3sCKaDrX69bnE0CkaNy6olyA9QHSucgZTCifWjzw5UBd13nXmD1
+   YVfvOm8RACcPg1ZGh+0TaMxJlx2v0GUpTR23KVVv174MAVRPVPNdfBkgs
+   WzcH2oZ5aVqhN1Fccy1J7LYnI+snyyH0ACpqnPFBYwQgSjruYMxwUUGpS
+   1BnnzwzBcjiYZW57s2KFN+i2O2BWZKBoUk4RMYEjFaxE45YWOE5T8dgvq
+   g==;
+X-CSE-ConnectionGUID: /n5IoTUJSEqlJUagPkpoDQ==
+X-CSE-MsgGUID: mtwG6Mn8S3q8kg5kL4uk3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11480"; a="53383141"
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="53383141"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 07:26:31 -0700
+X-CSE-ConnectionGUID: OqDc/OX+THKtV4fz/6CtAg==
+X-CSE-MsgGUID: TQePXOhoQ2OLNm7XPC+H7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,278,1744095600"; 
+   d="scan'208";a="154010984"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2025 07:26:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uWFSk-0000000BKaD-0sOx;
+	Mon, 30 Jun 2025 17:26:26 +0300
+Date: Mon, 30 Jun 2025 17:26:25 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v19] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <aGKekeRcr-W7V0Ba@smile.fi.intel.com>
+References: <20250630114504.8308-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250630-dev-adp5589-fw-v6-20-a0f392a0ba91@analog.com>
-References: <20250630-dev-adp5589-fw-v6-0-a0f392a0ba91@analog.com>
-In-Reply-To: <20250630-dev-adp5589-fw-v6-0-a0f392a0ba91@analog.com>
-To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-input@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Liu Ying <victor.liu@nxp.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751284374; l=1501;
- i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=mo45c0YcZpaHsHxCU2xPefftxnua9GwC2/0PBDuFfIU=;
- b=w9qqEVYe1DCLUB/Au+QawoAJxdOWuNowpU1r5yG6miF1ipXK2pLicpAjOhPlVi5UpCDr0AhjG
- dKtsaWqOr1kAiU8f7eoUpCqyurBU4WqNAD4ZMT/sVS2fIzc1fPzl2tw
-X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
- pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
-X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
- auth_id=100
-X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-Reply-To: nuno.sa@analog.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630114504.8308-1-ansuelsmth@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-From: Nuno Sá <nuno.sa@analog.com>
+On Mon, Jun 30, 2025 at 01:44:39PM +0200, Christian Marangi wrote:
 
-Make sure to perform an Hardware reset during probe  if the pin is given
-in FW.
+> Introduce driver for PWM module available on EN7581 SoC.
 
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
----
- drivers/mfd/adp5585.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
-index 11a26f668653439378f9eb31d053c45772a940d0..58f7cebe2ea4f2c68f64370449f5fbce8a2f14ed 100644
---- a/drivers/mfd/adp5585.c
-+++ b/drivers/mfd/adp5585.c
-@@ -12,6 +12,7 @@
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/i2c.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/mfd/adp5585.h>
- #include <linux/mfd/core.h>
- #include <linux/mod_devicetable.h>
-@@ -690,6 +691,7 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
- {
- 	struct regmap_config *regmap_config;
- 	struct adp5585_dev *adp5585;
-+	struct gpio_desc *gpio;
- 	unsigned int id;
- 	int ret;
- 
-@@ -714,6 +716,20 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
- 	if (ret)
- 		return ret;
- 
-+	gpio = devm_gpiod_get_optional(&i2c->dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(gpio))
-+		return PTR_ERR(gpio);
-+
-+	/*
-+	 * Note the timings are not documented anywhere in the datasheet. They are just
-+	 * reasonable values that work.
-+	 */
-+	if (gpio) {
-+		fsleep(30);
-+		gpiod_set_value_cansleep(gpio, 0);
-+		fsleep(60);
-+	}
-+
- 	adp5585->regmap = devm_regmap_init_i2c(i2c, regmap_config);
- 	if (IS_ERR(adp5585->regmap))
- 		return dev_err_probe(&i2c->dev, PTR_ERR(adp5585->regmap),
+This version LGTM,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
-2.50.0
+With Best Regards,
+Andy Shevchenko
 
 
 
