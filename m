@@ -1,53 +1,52 @@
-Return-Path: <linux-pwm+bounces-6639-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6641-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9B63AEFC57
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 16:31:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B42B3AEFC5E
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 16:31:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 019F21898B98
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 14:32:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB78916380C
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 14:31:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C26A275AFF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49A9A27700C;
 	Tue,  1 Jul 2025 14:31:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QJQ0GJBR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjJv5K0p"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3492C859;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C4C1FBE8A;
 	Tue,  1 Jul 2025 14:31:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751380311; cv=none; b=XgycVY7heS0lrftrH4Pd1F5+jhjVjZ5ZBhWrx6gm2XgxqCUDYOnJAcb3NbBNUpcHbCeT+xAN9iSaJIC7jqjCdC9Am88f+ZDnDFCoZq0tw5XaG/2mz5JYvWRfCDmsx0TMbdxML0vzRvhQEP8UoecznCefefnw2NDEyriu1/rBuUE=
+	t=1751380311; cv=none; b=jwRex3Zc5tY6hHjA0ofivDJRITHZczYzMP+jd9Nd5yv0A4Hmw1w4o9KDXcpzFepzbDUPqE52IwNoWIvRQaEtDqMVL3TZohh9H7iznM87C+5t+16+ECJoFXDNoSlc2OE2neGNLZy1um/crzUxu7haTLO5ljEUxSj/P3s4Y/Q/3FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751380311; c=relaxed/simple;
-	bh=xE9LEXnv+f+pNg2IH3v72SIq7f78Vz1orUlvYd/H3bA=;
+	bh=JiHYRMPGdiaiJDp2Yy2cbdzBFEz0+t64SK2Znk3Vw18=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qFJFR7b9gXM/oOAXzvI3pCpDxuUFuHx0v5FlNm7LIL1XPPuKYzVpinvbNjfkQBBr4+4QpqLt/bHrrmZaiuyvyuHaC9gDGTjGa7SciLHe2WIQ+S3Kz367MxdJAnXeGDySg2WPEzVhgD1r8LkFU39OiXCxl9mLawqavvDvO9Q+bsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QJQ0GJBR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9B999C4CEEF;
+	 In-Reply-To:To:Cc; b=GQSnaZzP6NQVGWJaujPzn3o4sBLUpDJdkD0X9KA25hdBCT4N1PdU3SmLjKYI6J/ehse61bXzwKFQIn4xssEzaB2mEA6Yllh+wwUyaTs82Oy2HJRqL9Ff1j/Yu6wAPpaNFkohqqDTAr3QXPMmDNjM0B0+r6zWcl46IepjSE5A8Gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjJv5K0p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A900FC4CEED;
 	Tue,  1 Jul 2025 14:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1751380310;
-	bh=xE9LEXnv+f+pNg2IH3v72SIq7f78Vz1orUlvYd/H3bA=;
+	bh=JiHYRMPGdiaiJDp2Yy2cbdzBFEz0+t64SK2Znk3Vw18=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=QJQ0GJBR0U1kfetG2uyVBjfZ5W63Nt/V8c+/Jg5zaAXzkVQsQ+qR2O1liw9Li2i4e
-	 yMnkO0y8/jl6T1Xbt4lbiP7Jr7npTSwLl39Z+HdxXuBF1GWR5rWMksBz/ZwreuwZoZ
-	 aWPU3KVmaibp0jXxmXope55o5kMaVDxL4fgkwpbnpKagHwg3MZth7zxp4vav8XjBmw
-	 nW7E5bQ8NaX99hB7VZV0wm3b6lAidBfGrSc7lMtEWrapjxY4oSoUWHU8C46pG+980A
-	 XTUN5PspxnQgLvpkCED2CLBiIHELcltTsmsrbH/7gc14oh7UTzpg5Ad+80f6C/VPDl
-	 kdAuqQYCKbNiQ==
+	b=CjJv5K0pQ1Cg847ISa8k0rYvgm5OdEhzigxMECPgstdcm5Nd3yjCKOEfEuAR3+IrW
+	 /xFEg6qlY9V/xBHSKkyG6KyKQyrMy8TlTnHaHuwixPBZMivRWKuacSk85yID1PShSS
+	 J/olfvnKg1fyhaI6ZZsSufuvn6gVq9mWLlv7zEHIkUiaWbvONZmdfSn65blPsG3+dF
+	 jny5xNENcKrzjGZQVUlk+T1BOSM5Pp7uLLJeXoBatk0oI1Wu67cToz4QU50Vg/cqy/
+	 qHqqlXMc0EKMJfSM2nVWjCgmdtnyzXjU6YBh26UWWrFyDYMrZAmnIgtb4NQrAyg9Sp
+	 aCtkuIGlxDOhw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCC7C83038;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1E2C8303A;
 	Tue,  1 Jul 2025 14:31:50 +0000 (UTC)
 From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Tue, 01 Jul 2025 15:31:56 +0100
-Subject: [PATCH v7 01/20] dt-bindings: mfd: adp5585: ease on the required
- properties
+Date: Tue, 01 Jul 2025 15:31:57 +0100
+Subject: [PATCH v7 02/20] mfd: adp5585: Only add devices given in FW
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250701-dev-adp5589-fw-v7-1-b1fcfe9e9826@analog.com>
+Message-Id: <20250701-dev-adp5589-fw-v7-2-b1fcfe9e9826@analog.com>
 References: <20250701-dev-adp5589-fw-v7-0-b1fcfe9e9826@analog.com>
 In-Reply-To: <20250701-dev-adp5589-fw-v7-0-b1fcfe9e9826@analog.com>
 To: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
@@ -71,11 +70,11 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
  Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
  Liu Ying <victor.liu@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751380320; l=1054;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1751380320; l=2284;
  i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=fiqzA9oHr6utDnbinR+jWc5MyikFuofO+NDW02/Pf/k=;
- b=o+PSJdFr5dWxcowKAMvAiCrBfmIS7LrYCenIVhDwPOLdRXkuzaLIFxe6Gk11SEaNAqZAJoKF0
- y7o6uiCuJnzA3F7maZodeomTE27ihBABdg9gEkTH8zM2CWbgfA+HSHJ
+ bh=soe5P9JSSfqBEOhKOq8V4GIoTzj5UMGmO8QTcPbpojY=;
+ b=qJFH8Pd8XArULL63okrZWXBtjENTVa8sOGt0xbmckWYBJpsGmi4BZbWN+bMRYkUg5WQnyN3mS
+ yZW+f8LfBxnCEcpmPYQNX/h+YC7VdetCyYmcGdl57u0YnZyCggT6kDe
 X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
  pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
 X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
@@ -85,32 +84,78 @@ Reply-To: nuno.sa@analog.com
 
 From: Nuno Sá <nuno.sa@analog.com>
 
-It is not mandatory to use all the capabilities of the device. One can
-very well only use it as a gpio controller without the PWM support. This
-will be even more evident when support for the matrix keymap is added.
-Hence drop the requirements for PWM and GPIO.
+Not all devices (features) of the adp5585 device are mandatory to be
+used in all platforms. Hence, check what's given in FW and dynamically
+create the mfd_cell array to be given to devm_mfd_add_devices().
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 ---
- Documentation/devicetree/bindings/mfd/adi,adp5585.yaml | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/mfd/adp5585.c | 38 +++++++++++++++++++++++++++++---------
+ 1 file changed, 29 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-index ee2272f754a339569c793102928ddd13249f8fee..e30e22f964f78519b2ec207e9415e4897db5c702 100644
---- a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-+++ b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-@@ -52,9 +52,6 @@ patternProperties:
- required:
-   - compatible
-   - reg
--  - gpio-controller
--  - "#gpio-cells"
--  - "#pwm-cells"
+diff --git a/drivers/mfd/adp5585.c b/drivers/mfd/adp5585.c
+index 160e0b38106a6d78f7d4b7c866cb603d96ea673e..53a46734f2d022ec54b3efc2ebbf389357f8d85a 100644
+--- a/drivers/mfd/adp5585.c
++++ b/drivers/mfd/adp5585.c
+@@ -17,7 +17,13 @@
+ #include <linux/regmap.h>
+ #include <linux/types.h>
  
- allOf:
-   - if:
+-static const struct mfd_cell adp5585_devs[] = {
++enum {
++	ADP5585_DEV_GPIO,
++	ADP5585_DEV_PWM,
++	ADP5585_DEV_MAX
++};
++
++static const struct mfd_cell adp5585_devs[ADP5585_DEV_MAX] = {
+ 	{ .name = "adp5585-gpio", },
+ 	{ .name = "adp5585-pwm", },
+ };
+@@ -110,6 +116,27 @@ static const struct regmap_config adp5585_regmap_configs[] = {
+ 	},
+ };
+ 
++static int adp5585_add_devices(struct device *dev)
++{
++	int ret;
++
++	if (device_property_present(dev, "#pwm-cells")) {
++		ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO,
++					   &adp5585_devs[ADP5585_DEV_PWM], 1, NULL, 0, NULL);
++		if (ret)
++			return dev_err_probe(dev, ret, "Failed to add PWM device\n");
++	}
++
++	if (device_property_present(dev, "#gpio-cells")) {
++		ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO,
++					   &adp5585_devs[ADP5585_DEV_GPIO], 1, NULL, 0, NULL);
++		if (ret)
++			return dev_err_probe(dev, ret, "Failed to add GPIO device\n");
++	}
++
++	return 0;
++}
++
+ static int adp5585_i2c_probe(struct i2c_client *i2c)
+ {
+ 	const struct regmap_config *regmap_config;
+@@ -138,14 +165,7 @@ static int adp5585_i2c_probe(struct i2c_client *i2c)
+ 		return dev_err_probe(&i2c->dev, -ENODEV,
+ 				     "Invalid device ID 0x%02x\n", id);
+ 
+-	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+-				   adp5585_devs, ARRAY_SIZE(adp5585_devs),
+-				   NULL, 0, NULL);
+-	if (ret)
+-		return dev_err_probe(&i2c->dev, ret,
+-				     "Failed to add child devices\n");
+-
+-	return 0;
++	return adp5585_add_devices(&i2c->dev);
+ }
+ 
+ static int adp5585_suspend(struct device *dev)
 
 -- 
 2.50.0
