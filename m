@@ -1,188 +1,226 @@
-Return-Path: <linux-pwm+bounces-6670-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6672-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A16F5AEFEFF
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 18:05:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92136AEFF3A
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 18:15:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B50021882A2D
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 16:04:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4144C3BAE28
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 16:14:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A8EA27BF95;
-	Tue,  1 Jul 2025 16:02:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A075127E041;
+	Tue,  1 Jul 2025 16:14:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E4CZAKog"
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="X4t9Qp1C"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012040.outbound.protection.outlook.com [52.101.71.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271AC27FB01
-	for <linux-pwm@vger.kernel.org>; Tue,  1 Jul 2025 16:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751385734; cv=none; b=Qqr02SyipM3WtXJLsdofSzHa7vD5XLYjjn1/tvIzuxSE02mkK2+Rjx/NcSEwkMfKBrFta5rKri3Y8BGrQ3ku/wn3VU1ga+fQs0Ls15JRpybm5U4Jq+TJBmYSLEThEWouNEDMqeVhnVm0W+Ykboj2EaD1EfNYNTfVT6VrFhlniKA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751385734; c=relaxed/simple;
-	bh=pQpdhYmfxqh3Yfxmei5sPv11PaCzGkgZVRufLVaDNj8=;
-	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
-	 Content-Type:References; b=MtTbyWQZPdV83LTVa76zzfKW4xnmwdxQbnoeN+8AXmRAQre4SX1z9ZpnGEv+7cW9RENskM9s9w3OMzcHyl/MVvPMN5Xv3jLeeL/HXqHpnnxiA2Zp53kBt+Hmy+uqo24eu/OJVqehFNhvdfsiacRV6kCoVf9kQn7w+XXHc/VzJyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=E4CZAKog; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250701160208euoutp01df9d95ebb0b0ea97a0f19a40f2f6c7a8~OLAp-iznA1111611116euoutp01J
-	for <linux-pwm@vger.kernel.org>; Tue,  1 Jul 2025 16:02:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250701160208euoutp01df9d95ebb0b0ea97a0f19a40f2f6c7a8~OLAp-iznA1111611116euoutp01J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751385728;
-	bh=Thc/4MnT4r5I8ag38cbivyQhpbuX345C1nEB0lzCSSU=;
-	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
-	b=E4CZAKogyAvZo+4zp4YdTXwhS6UT3701qpYlrBkDWHg7t+enBnejRciSq8V2WvOqI
-	 LVIWNffSp+f6RsG7Ydj0ZxFSY+cmVPUMR1Tq3K6JdNYBk3FeRzWPdkV6CmUgru2TCu
-	 XQ6KQyxk8FijjwV7q4bJZV2EGWx6kRDPr5xIw+XM=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250701160208eucas1p2633ce5cd0b9ef013999b3d596be74cdd~OLApiaZG32521625216eucas1p2G;
-	Tue,  1 Jul 2025 16:02:08 +0000 (GMT)
-Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
-	[106.210.136.40]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250701160206eusmtip192999017bfbc2de977e7580df56a36a7~OLAoZ52AM3260032600eusmtip1D;
-	Tue,  1 Jul 2025 16:02:06 +0000 (GMT)
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-Date: Tue, 01 Jul 2025 18:01:45 +0200
-Subject: [PATCH v6 8/8] riscv: dts: thead: Add PWM fan and thermal control
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40EA126AD9;
+	Tue,  1 Jul 2025 16:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1751386474; cv=fail; b=MYWogtscd9q1eEr/Do8lQBsqWDy8/cudyMcFNMUIbvT8ikVheBJgSeSsGDrZndWg7miQQnbmI+3mO74jfppttO+FcUyqoVQH4WAtRoEgYEFUEj6VH5VEr/GmnTZs4EsHxrhfMPpK/rgtiLsQGJCG9E1+MbhjiWhVSo5I5weUEg4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1751386474; c=relaxed/simple;
+	bh=Ck9tVlS0jxHa93aUXqW7Qk2ltG3sZdgR+2o+gJoXl1A=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Y7XWc7g0PjxiL6JF93KJNM8jJiOHcJA0Yapbma+RUBNFvPYdiqmdWku14axIsIsIvgq6LYrp2zEhUxvYXizp7+GGDdR7m1kKY6Tmg7CQdahd30N639P+LIhcIQT72Jn6vqStdSxMiKJ7EEDRyhAcbar7l+oFQmQ4X++szl6tCGY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=X4t9Qp1C; arc=fail smtp.client-ip=52.101.71.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rI1NU4IfJCzIKXzGfD6OJpqpKWYZq0T5jB6aPrw/8DgfOIZK+SAJ63V1EvIMtl5GwPTFFmJhFg46aYBbodlE9u4a4aZBK+LnCirwjLDX50ZWAs9awqoOPa6yCq10JVZl7AVLXrGERerMYbbKuiXmgeIw+1LPyTwLc41JerRnOyGNZi1vMJIAABL+QDY8HHkOwCOW+zQ6lMx322c3IRGvosa4d+vavpGYq722934QNCLLh7lPbQGx5r1hAQPJYMbzHbzTJd5XtgCizi3Iz+GMsBMlN3ZSkY1O351R6f8fd0d8KQZm42ejnzUVFjzJ+m8JZE+AYkHWSwcbxyIvEP+mDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Xsb8k4IMCmipnR9snmGaY/l2ZASseBpznxZbFP4F5Vc=;
+ b=UknXR+fMyMKV3sTcvOajiQx4G00XiTVmrq8JTXl8noen6THaRIy+uH5f3yrty1sQdUbCDzqY2YypwDcgRMiWD7ksp2XT6e9fbykKu5wcM5zwAyaxwn2djG0y4QEUEjC6EQS/tBsf4pfKtih0Qj/GhjiRB6g/77VZw9J4KmJNZtmdZE+CHnwVYdIVugZRcNHnU2TKrMcVHmh+llflwJzYo5QZ6nbna0MQNdjSXTEhQ0dm/oeYfm55LN/bnuXljI/xeQzUAbQkPlAatyU3/sPHG++VMCYdVB/uR4Txhid70AEUsAe3LCq6jyUwDVJ2g7+ucPBUSyWMwL28Mvy/evpttQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xsb8k4IMCmipnR9snmGaY/l2ZASseBpznxZbFP4F5Vc=;
+ b=X4t9Qp1CC86+odP1kgNIlZx8XPjEf6weFJGXEreu/cDFU4WbiSDSzhpmq/sYikafo/W43gyipd0bJcLi4h6nk4CS2uKTdHvT5Luv0yfZlHyZ4hqy84+PPVFe+Tml5d/1TGZi6xabc3YYU25CJ5y2YNj+mquI4AFS1Ve/1xOoG1s=
+Received: from DU7PR01CA0040.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:50e::23) by DU0PR02MB8096.eurprd02.prod.outlook.com
+ (2603:10a6:10:314::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.21; Tue, 1 Jul
+ 2025 16:14:28 +0000
+Received: from DB1PEPF00050A00.eurprd03.prod.outlook.com
+ (2603:10a6:10:50e:cafe::1d) by DU7PR01CA0040.outlook.office365.com
+ (2603:10a6:10:50e::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.32 via Frontend Transport; Tue,
+ 1 Jul 2025 16:14:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ DB1PEPF00050A00.mail.protection.outlook.com (10.167.242.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8901.15 via Frontend Transport; Tue, 1 Jul 2025 16:14:28 +0000
+Received: from pc52311-2249 (10.4.0.13) by se-mail01w.axis.com (10.20.40.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 1 Jul
+ 2025 18:14:27 +0200
+From: Waqar Hameed <waqar.hameed@axis.com>
+To: David Lechner <dlechner@baylibre.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, Julien Panis <jpanis@baylibre.com>,
+	William Breathitt Gray <wbg@kernel.org>, Linus Walleij
+	<linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Peter Rosin
+	<peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, Nuno
+ =?utf-8?Q?S=C3=A1?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+	Cosmin Tanislav <cosmin.tanislav@analog.com>, Lars-Peter Clausen
+	<lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>,
+	"Matthias Brugger" <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Matteo Martelli
+	<matteomartelli3@gmail.com>, Heiko Stuebner <heiko@sntech.de>, "Francesco
+ Dolcini" <francesco@dolcini.it>, =?utf-8?Q?Jo=C3=A3o?= Paulo =?utf-8?Q?Go?=
+ =?utf-8?Q?n=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>, Hugo Villeneuve
+	<hvilleneuve@dimonoff.com>, Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>,
+	Mudit Sharma <muditsharma.info@gmail.com>, Gerald Loacker
+	<gerald.loacker@wolfvision.net>, Song Qiang <songqiang1304521@gmail.com>,
+	"Crt Mori" <cmo@melexis.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	"Ulf Hansson" <ulf.hansson@linaro.org>, Karol Gugala <kgugala@antmicro.com>,
+	Mateusz Holenko <mholenko@antmicro.com>, Gabriel Somlo <gsomlo@gmail.com>,
+	Joel Stanley <joel@jms.id.au>, Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>, Wei Fang <wei.fang@nxp.com>, Clark
+ Wang <xiaoning.wang@nxp.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinod Koul
+	<vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Sebastian
+ Reichel <sre@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
+	<ukleinek@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, Kevin
+ Hilman <khilman@baylibre.com>, "Jerome Brunet" <jbrunet@baylibre.com>, Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>, Han Xu <han.xu@nxp.com>,
+	Haibo Chen <haibo.chen@nxp.com>, Yogesh Gaur <yogeshgaur.83@gmail.com>, Mark
+ Brown <broonie@kernel.org>, Avri Altman <avri.altman@wdc.com>, Bart Van
+ Assche <bvanassche@acm.org>, "James E.J. Bottomley"
+	<James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+	<martin.petersen@oracle.com>, Souradeep Chowdhury
+	<quic_schowdhu@quicinc.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Liam Girdwood <lgirdwood@gmail.com>, Peter Ujfalusi
+	<peter.ujfalusi@linux.intel.com>, Bard Liao
+	<yung-chuan.liao@linux.intel.com>, Ranjani Sridharan
+	<ranjani.sridharan@linux.intel.com>, Daniel Baluta <daniel.baluta@nxp.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>, Pierre-Louis Bossart
+	<pierre-louis.bossart@linux.dev>, Jaroslav Kysela <perex@perex.cz>, "Takashi
+ Iwai" <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+	<s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, <kernel@axis.com>,
+	<linux-iio@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<linux-i2c@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-rockchip@lists.infradead.org>,
+	<linux-input@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+	<imx@lists.linux.dev>, <netdev@vger.kernel.org>,
+	<linux-phy@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+	<linux-amlogic@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+	<linux-scsi@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+	<linux-usb@vger.kernel.org>, <sound-open-firmware@alsa-project.org>,
+	<linux-sound@vger.kernel.org>
+Subject: Re: [PATCH] Remove error prints for devm_add_action_or_reset()
+In-Reply-To: <3df2c424-297e-4538-b350-5c465b22fa39@baylibre.com> (David
+	Lechner's message of "Tue, 1 Jul 2025 10:16:47 -0500")
+References: <pnd7c0s6ji2.fsf@axis.com>
+	<3df2c424-297e-4538-b350-5c465b22fa39@baylibre.com>
+User-Agent: a.out
+Date: Tue, 1 Jul 2025 18:14:26 +0200
+Message-ID: <pndy0t76g7x.fsf@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250701-rust-next-pwm-working-fan-for-sending-v6-8-2710932f6f6b@samsung.com>
-In-Reply-To: <20250701-rust-next-pwm-working-fan-for-sending-v6-0-2710932f6f6b@samsung.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
-	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
-	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,  Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,  Trevor
-	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,  Michal
-	Wilczynski <m.wilczynski@samsung.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Paul Walmsley
-	<paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,  Marek Szyprowski
-	<m.szyprowski@samsung.com>,  Benno Lossin <lossin@kernel.org>,  Michael
-	Turquette <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Benno
-	Lossin <lossin@kernel.org>,  Drew Fustini <fustini@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-X-Mailer: b4 0.15-dev
-X-CMS-MailID: 20250701160208eucas1p2633ce5cd0b9ef013999b3d596be74cdd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250701160208eucas1p2633ce5cd0b9ef013999b3d596be74cdd
-X-EPHeader: CA
-X-CMS-RootMailID: 20250701160208eucas1p2633ce5cd0b9ef013999b3d596be74cdd
-References: <20250701-rust-next-pwm-working-fan-for-sending-v6-0-2710932f6f6b@samsung.com>
-	<CGME20250701160208eucas1p2633ce5cd0b9ef013999b3d596be74cdd@eucas1p2.samsung.com>
+Content-Type: text/plain
+X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
+ (10.20.40.7)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB1PEPF00050A00:EE_|DU0PR02MB8096:EE_
+X-MS-Office365-Filtering-Correlation-Id: 82d1a656-5d8a-47a7-c136-08ddb8ba5b19
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?zbyQLz3O8s4IQT3OW9eGYTNglVofY85uWyQmX0YrFG3g9g09yv5z6wI85IHA?=
+ =?us-ascii?Q?7/0hiLROQVENK3tnhnolQBWBpz00tyXNCkgJ8Cvor7m1ssXU1KKmP4i9+1x5?=
+ =?us-ascii?Q?eL6hYcpumk0PXOaJv4XSRCefgAcS8XKyv0AKQ8W4cx0ZLMD8NBfRzLdrfKr8?=
+ =?us-ascii?Q?L0YNlnbTaSr1blVBMwzWdp7d1M5F0/1rkXyJfkaK+SBwZn4DMxflVNhJQ1Yo?=
+ =?us-ascii?Q?2WUzPMhR26if38p6t/uqlFwlZAzXKbR9uxYNlshN++4nvS7AJYPmIID/yji3?=
+ =?us-ascii?Q?sW0rx+6CIcFH0MP8KjmXUieHSIoiplJeGq4dDbhQnVnrkqrVTiutvsj63ITX?=
+ =?us-ascii?Q?jsvSAUTBKxGOpA93YlPEKxJdoGc6+PelWHgleItG2Kq3fPQuGMcPwxPb/0v7?=
+ =?us-ascii?Q?5mAT6KkU+ZzL8QTrMkCs720u2dUfUUsgeRclej+fUkgBI5zemD1XFsISnquw?=
+ =?us-ascii?Q?rEFppE2gdxqxDDytgB0SYxQfXo2wJ2chRmAdi1teJQB4BSN3KY+xT386MeoA?=
+ =?us-ascii?Q?iA51Y0HyCSKDeTu6KeXkgMBkmqooT5oq/UpQLTq9RJVwWQoPDU1Xp5+d+nXy?=
+ =?us-ascii?Q?IqFJI2iMGMgk00MalJIT4CCRUpaTk+55k5Gc8+w52ZMJRR+sDSDGyj92ZF6F?=
+ =?us-ascii?Q?dAEvRJadQfJ2pcaKuA5MAGD3mljkMq4EhBrOM0nESzhFYaOKwlWKcXRtaNDM?=
+ =?us-ascii?Q?30JlwmX+99Yj3Adne/w2RheYS3sCPnJR779u0aeuZvlWWQh998EODPgxBEVd?=
+ =?us-ascii?Q?X/+G9Jqh/5zhtUAWl08V3KHKZhP92hJXc1TR6YD856Z1CIUVAnhLbEpOluCn?=
+ =?us-ascii?Q?xl2VDJSOUz3ZH0qfhkz4EmDQED75etewjU8lMcpR6HWeUwhYF26HeHbLpISP?=
+ =?us-ascii?Q?tjpoS5nZzF4XOltCjlkzY4eLjebQxjPKl487+TNpOIMr6CVRM7+Gb6nsS5eQ?=
+ =?us-ascii?Q?3FO0PqBAzIWdnwdf5XHBlOYggnqojTQ67aKN9GzOncXy0a4efhTy7Ki93a8/?=
+ =?us-ascii?Q?NANSv8dSZy4y+NAeLBA55lGTalFvA8kCoVwgQHFghOo4rDQXDsPCZDgiECVx?=
+ =?us-ascii?Q?R4oUhHcrcb++QFnju4vbziMs+qrPZK7hl+f8CY2+8rQrlnDHKQueYu6bmIhO?=
+ =?us-ascii?Q?B4nUulzVOE6JECh944oKcpUvpq3qdkjfGufW531AvBHNNnA82S8CcT0SeKwI?=
+ =?us-ascii?Q?oq3VMclwK64hl0lUDSWhOuXMntlVJKvNdIvpl4/w5go5vv5zVKok4Q8qFhWb?=
+ =?us-ascii?Q?YOJQB/CEfam7r0Cf0ThC7lVibbU2kEtsx4/as/DzWr2s7DdpIqH3IZWaizOs?=
+ =?us-ascii?Q?9/qdXacBIwcz6oTiFyVamplCOlLOJsH9n9OR2QV1YQv3F6p5IkGQxDBbRy7E?=
+ =?us-ascii?Q?7WKJvEGxex1A8fVHq6jJjyKdJx4G89ceV63xSEHGWF2AYCMBpMrSkIBT9f0E?=
+ =?us-ascii?Q?9sSlsjM6t7+khcjrkRScasnaxIuoxBLw6kN+DKI1BXt/LbScvPwzZrqD9ndX?=
+ =?us-ascii?Q?avcAMqrCzAGFTX3rEfWlwY6e3HxOLuwhfjNn?=
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2025 16:14:28.7668
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82d1a656-5d8a-47a7-c136-08ddb8ba5b19
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB1PEPF00050A00.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR02MB8096
 
-Add Device Tree nodes to enable a PWM controlled fan and it's associated
-thermal management for the Lichee Pi 4A board.
+On Tue, Jul 01, 2025 at 10:16 -0500 David Lechner <dlechner@baylibre.com> wrote:
 
-This enables temperature-controlled active cooling for the Lichee Pi 4A
-board based on SoC temperature.
+> On 7/1/25 10:03 AM, Waqar Hameed wrote:
+>> When `devm_add_action_or_reset()` fails, it is due to a failed memory
+>> allocation and will thus return `-ENOMEM`. `dev_err_probe()` doesn't do
+>> anything when error is `-ENOMEM`. Therefore, remove the useless call to
+>> `dev_err_probe()` when `devm_add_action_or_reset()` fails, and just
+>> return the value instead.
+>> 
+>> Signed-off-by: Waqar Hameed <waqar.hameed@axis.com>
+>> ---
+> I can't speak for all subsystems, but this would probably be acceptable
+> in the iio subsystem.
+>
+> However, I don't think anyone is going to accept a patch that touches
+> all of these files at the same time across subsystems.
+>
+> So I would suggest to split this up into one patch per driver and create
+> one series per subsystem. This way, each subsystem isn't bothered by unrelated
+> patches that they don't particularly need to care about. And note that some
+> subsystems like net have additional expectations, e.g for the patch subject
+> so that it gets picked up by automated tools, so be sure to check the docs
+> for this.
 
-Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
----
- arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts | 67 +++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+Thanks for the suggestion David! I will do that then.
 
-diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-index 4020c727f09e8e2286fdc7fecd79dbd8eba69556..c58c2085ca92a3234f1350500cedae4157f0c35f 100644
---- a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-+++ b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-@@ -28,9 +28,76 @@ aliases {
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	thermal-zones {
-+		cpu-thermal {
-+			polling-delay = <1000>;
-+			polling-delay-passive = <1000>;
-+			thermal-sensors = <&pvt 0>;
-+
-+			trips {
-+				fan_config0: fan-trip0 {
-+					temperature = <39000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				fan_config1: fan-trip1 {
-+					temperature = <50000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				fan_config2: fan-trip2 {
-+					temperature = <60000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map-active-0 {
-+					cooling-device = <&fan 1 1>;
-+					trip = <&fan_config0>;
-+				};
-+
-+				map-active-1 {
-+					cooling-device = <&fan 2 2>;
-+					trip = <&fan_config1>;
-+				};
-+
-+				map-active-2 {
-+					cooling-device = <&fan 3 3>;
-+					trip = <&fan_config2>;
-+				};
-+			};
-+		};
-+	};
-+
-+	fan: pwm-fan {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&fan_pins>;
-+		compatible = "pwm-fan";
-+		#cooling-cells = <2>;
-+		pwms = <&pwm 1 10000000 0>;
-+		cooling-levels = <0 66 196 255>;
-+	};
-+
- };
- 
- &padctrl0_apsys {
-+	fan_pins: fan-0 {
-+		pwm1-pins {
-+			pins = "GPIO3_3"; /* PWM1 */
-+			function = "pwm";
-+			bias-disable;
-+			drive-strength = <25>;
-+			input-disable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+
- 	uart0_pins: uart0-0 {
- 		tx-pins {
- 			pins = "UART0_TXD";
-
--- 
-2.34.1
-
+(I was contemplating on doing that at first, but gambled on this, since
+I saw some other commits patches touching multiple files in different
+sub-systems.)
 
