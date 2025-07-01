@@ -1,130 +1,139 @@
-Return-Path: <linux-pwm+bounces-6637-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6638-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9AAAAEFB11
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 15:46:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F73CAEFB1A
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 15:48:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1E9318854E4
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 13:47:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6DC0B18854A5
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 13:48:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C47C6274B5C;
-	Tue,  1 Jul 2025 13:46:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04C412750FA;
+	Tue,  1 Jul 2025 13:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4nwgjcK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKP8WDWF"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26884272E46;
-	Tue,  1 Jul 2025 13:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C408A1E7C12;
+	Tue,  1 Jul 2025 13:47:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751377605; cv=none; b=C7xNuBLf2Kv1e64D+XD1rKAnVsactClY5k82bb35/95cFZdhPFcAxzMQEVn0MoOr0Qcy+4Lzv9zc6EtTG14smmq4uXclx7mgujzjvVXGIXcY3HNM22u9a8S5QvB1Imb0yCxDfBUJMFLWEyzhScAGO8AMsmNTlXD9ia+JUACDFyM=
+	t=1751377674; cv=none; b=pu1Tc2xDMctv99bVNQdTgOCknAMYrwyjiAImPBOxzbEpix5LZ2ks15bRijQa2OdMkIPYouAaemT1vW18iAwdg+5GDVP004/Xyu8Dc9yCYX5EzeEMSwrTlL+J9qb+7C4nlXuUEh0UF4UgMp0H80QlzA/JzJoBk/jtaOQTsT9+Dbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751377605; c=relaxed/simple;
-	bh=ibP52KV8RQXXWvzqFsSFw+ob6EAw66Mhj2C9IAdm7YY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HoQFe2WYYhFzGpng7sgY6rm18q7ypg9tEKxYz21jg++ur3OwmafuEp9bwOqduBMMFt2zAb9/7cnLcgbNOo7aNBUCW7s/mNpQJc2R91NnYpZSliFXMq6B+He2l+WlW1H6wkfyixYQfywq26r+rABJMHo/rAoHTIJCpP9l6giIcEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C4nwgjcK; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a54690d369so3159562f8f.3;
-        Tue, 01 Jul 2025 06:46:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751377600; x=1751982400; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ibP52KV8RQXXWvzqFsSFw+ob6EAw66Mhj2C9IAdm7YY=;
-        b=C4nwgjcKlmSPwREdPcB2tYyZhtGoi4Os5zcoLQir1iYudpgc3LejQYA1kRZ0MJvouu
-         zZXYKOGMJY11N2C5lDgvod3E5QGMrXTE0/9gf/ZxCGYDDkownOBjd4FR0VkcrEVg3T9r
-         R3yEAIbMr9a7+bqgO4oguuKAj0w5s8Ad27e80aKmqnd4M/VG+sCufLEEHxr+RtaSKHDT
-         Prsizgfvr/RE1/u+dSczG22k8gUm709VxGcCW30R4DeGbb7ow9El09I500anqIh+X5we
-         yLOZlRJznh/AUW//fx66FhkPRs8fQkywmR9i0xcXh0Oj4I+VQTk59oqHOWKLYBL0vei4
-         v/fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751377600; x=1751982400;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ibP52KV8RQXXWvzqFsSFw+ob6EAw66Mhj2C9IAdm7YY=;
-        b=MnQcbXXEOqfzByLgo0NKe87Peb26TSOtro9kKuBpBsvL24Z26ZbBXHnrRG50LXqI00
-         l6CIigIuqk5gAqPo8IhSpJPLbvzVD+ZypGidrqDGKaPlIaa8X5lfzcyyAfyZyRY1oKPd
-         UoALC7Tj6WgOGfS9cpTtJj5Fyeg3W8EPxw2yUQdZtN6jrIBTkahnkEcNTmooMQa/uMgw
-         JQ+3h2nfl2hWLSPpLhPQn2jDpQT8tXwcM57WuP4n/w89umNXN2I2HMiGKhIVwJCRpsyT
-         cXsVtlAXEu85DiVQXwv64U14sbG5g+Pa4lWbohydRy4TNHcyIJMaXKpELytl3BztMNna
-         F39A==
-X-Forwarded-Encrypted: i=1; AJvYcCUntJRMSH02xlwaMUawsiGBm7r2H+F9EkIdz+szTl4WUAMCVQPS1FZ3Qkw+eOdIb2c+XfwZsoayu4KY@vger.kernel.org, AJvYcCVFvr18CcFD4uyYsZi1zOwSWnFOh1I7u7JSVL12ZVXdZl9gQohwY+Plyg+WxpxJTSKVc6aZStv3qT4T8nM=@vger.kernel.org, AJvYcCVZZMITX/X2w4XuLJyflPG7QrlEmLLoJZSpXJXz1Ijbp5zKDfoV1WiV2DPDKJegENQ6JY0c81TP6Hby@vger.kernel.org, AJvYcCWlLxmahm2i7qDiQ7qpJp0REIIAUvHmowmsdxFc7jxa3bnmPgw9NhNGRP9SByqJIx0u0i3v12eUd0WeKQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyqz2YqDk12js2GIipnJwD9/yM0LbftcvTBYgw1CgIGupThPYhJ
-	3KW5qkqFjYW+BCn4pAp5eHD7dPdGE9SuIDJOwKip/zcUdlmi+EwvMBit
-X-Gm-Gg: ASbGncvjB6ynqFTa51cxmInDlNK1Z/1rpFbU9STX15eeJ5QgMlHZgCmvK96jvNhnk+Y
-	D/PBfD/oYX2AquSEcN9cw9TpLg2cKaMtakHYHHpfKUs+J1JJx5m9K9weM0FRWfrN+9gPuXxULOO
-	GaN4fo5nuW62w1DsEULCXduMmAYbJaA5xQAQ4Dn+4+tdapwlp11LGctTu8Dl7TFBLLyv8WkpVn2
-	tufs+SNlxu9l2A/LoPfQv3NWk9VT8sOQssCp4g/0EqqQwN4hbsLgnZmogP4zJ346g85uZZekFQa
-	OdxeGQoryv3CL2UpL7CqYSDQcekEDZk3e7cwtj7rGNrsNVvPKl1drsEnpUn4aPBjEwv2ww==
-X-Google-Smtp-Source: AGHT+IHNzs/WLjUgqKAkUB6nlEsDDAtKiJRYzIrWS0JGdts5+xxqNpbxFYSph7JZ0yDE4KoQ73ZzuQ==
-X-Received: by 2002:a05:6000:42c1:b0:3a4:fc07:f453 with SMTP id ffacd0b85a97d-3a8f435e0acmr9959643f8f.8.1751377600119;
-        Tue, 01 Jul 2025 06:46:40 -0700 (PDT)
-Received: from [192.168.1.187] ([161.230.67.253])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a88c80b516sm12991233f8f.41.2025.07.01.06.46.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jul 2025 06:46:39 -0700 (PDT)
-Message-ID: <b211113c728540679d589a0321041c14d36701fa.camel@gmail.com>
-Subject: Re: [PATCH v6 16/20] Input: adp5585: Add Analog Devices ADP5585/89
- support
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Cc: nuno.sa@analog.com, linux-gpio@vger.kernel.org,
- linux-pwm@vger.kernel.org, 	devicetree@vger.kernel.org,
- linux-input@vger.kernel.org, Lee Jones <lee@kernel.org>,  Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,  Linus Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov	 <dmitry.torokhov@gmail.com>,
- Laurent Pinchart	 <laurent.pinchart@ideasonboard.com>, Liu Ying
- <victor.liu@nxp.com>
-Date: Tue, 01 Jul 2025 14:46:50 +0100
-In-Reply-To: <sjbb62jqcjvac7fzyqtk5rvxijvakwc6ldpe3p2stgtzrgj3ur@5wbl4vndhjpi>
-References: <20250630-dev-adp5589-fw-v6-0-a0f392a0ba91@analog.com>
-	 <20250630-dev-adp5589-fw-v6-16-a0f392a0ba91@analog.com>
-	 <txppsdw4w7ocnysvrm54ta4ulplwawd5pk2l5wt3bhrag6qbev@gr4ah7lgjigi>
-	 <83685a983e2134fd644a8720383408d4b452996a.camel@gmail.com>
-	 <sjbb62jqcjvac7fzyqtk5rvxijvakwc6ldpe3p2stgtzrgj3ur@5wbl4vndhjpi>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	s=arc-20240116; t=1751377674; c=relaxed/simple;
+	bh=BJoRfhtEL+X1bH/jHqhnpouOMrtPwiiWI2DW54qSaAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qBBwxc+Nmub/7++/Fg6jwAuXaZ47404HQkrLQYL5o01tjOgebKY1IV+zRwzEgryZ4VEDzqvjpv8wkLH7KVO+5u6D6DIu9E3MBIlHdXpCO3uR+gu9xW4SuoY/kSyBuuuyMLke26tzFD8eH4OP6fzZoB0Rp72QNkfhd2tecmSSvuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKP8WDWF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA291C4CEEB;
+	Tue,  1 Jul 2025 13:47:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751377674;
+	bh=BJoRfhtEL+X1bH/jHqhnpouOMrtPwiiWI2DW54qSaAg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oKP8WDWFQdAxIkofySD3R0UNvP/6lJYjlUArVy1GUBHMQ2n59LMtoTmERDI7fHBcR
+	 tDGFl4wmyZj07pPEA4II5Kpy0C+EF0wyENGWgdZ5nFpE/gvEfVUuwNsUPvpw91kcSt
+	 mKDgTEpdxdUrmhQ97sNkYt9BgbwFNXkFN/RSmxvV3P1XZUQApED6Z06R6YqYIahV+4
+	 D0NqogZd6jr629Km1IGner83srqGMqXnUCsG8cS69bDb/3cK4E6Aq10p689ifbLolL
+	 j3MFZwVNnyHJ0/xTS+e8qCkDvoH2d84I5arsh8ookOXd+8vRWqgKxOJ6zRBUbqgi5w
+	 TdLOM7wRWjSOw==
+Date: Tue, 1 Jul 2025 15:47:51 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v5 1/9] rust: pwm: Add Kconfig and basic data structures
+Message-ID: <wee6qrsgqojb36pb2ykle5dzlt3x3vscjx6nedy3xlrtdgy3wm@sgduuiflto2p>
+References: <20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com>
+ <CGME20250623180858eucas1p1815f6d6815b1c715baad94810cefacd5@eucas1p1.samsung.com>
+ <20250623-rust-next-pwm-working-fan-for-sending-v5-1-0ca23747c23e@samsung.com>
+ <q7sz7uci5vnyc24laqzs56vgt4i2jamb3ifyxkqom6qcml5kkv@642prvwxjkxc>
+ <c127e368-8c1f-4299-b222-a105940ac34e@samsung.com>
+ <1450a457-4bd3-4e9c-a74f-3be15c9ec84f@samsung.com>
+ <n5zfbzu3hn7kqdf3xc7orpeovvdprc2xlf7w3f62uoohkxdk5c@cc24urt5xf36>
+ <ca58f110-7f9a-427d-b018-e514cf34adaf@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="a3yx2qm3x3iy6jfn"
+Content-Disposition: inline
+In-Reply-To: <ca58f110-7f9a-427d-b018-e514cf34adaf@samsung.com>
 
-On Tue, 2025-07-01 at 15:43 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hey Nuno,
->=20
-> On Tue, Jul 01, 2025 at 10:19:03AM +0100, Nuno S=C3=A1 wrote:
-> > I did asked Lee before sending v6 but He likely missed it. I would add =
-it
-> > here
-> > but it is painful to do it with b4 so I ended up adding the log directl=
-y in
-> > the
-> > commit message. b4 was removing git notes and I also don't like git not=
-es
-> > adding
-> > that "Notes:" line in the beginning. Do you have any suggestion on how =
-you
-> > handle this with b4 other than b4 send -o $DIR && git-send-mail?
->=20
-> I'm not using b4 for sending, but ISTR that adding the --- to the commit
-> log after the S-o-b area does the right thing. You get the tripple dash
-> twice then, but git-apply does the right thing with it.
->=20
 
-Yeps, I just realized that :).
+--a3yx2qm3x3iy6jfn
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 1/9] rust: pwm: Add Kconfig and basic data structures
+MIME-Version: 1.0
 
-- Nuno S=C3=A1
+Hello Michal,
+
+On Tue, Jul 01, 2025 at 10:24:54AM +0200, Michal Wilczynski wrote:
+> On 6/29/25 12:29, Uwe Kleine-K=F6nig wrote:
+> > On Sat, Jun 28, 2025 at 09:47:19PM +0200, Michal Wilczynski wrote:
+>=20
+> >>>>> +    /// Sets the polarity of the PWM signal.
+> >>>>> +    pub fn set_polarity(&mut self, polarity: Polarity) {
+> >>>>> +        self.0.polarity =3D polarity.into();
+> >>>>> +    }
+> >>>>
+> >>>> Please don't expose these non-atomic callbacks. pwm_disable() would =
+be
+> >>>> fine.
+> >>
+> >> Hmm, I've just realized that without those setters it would most likely
+> >> impossible to correctly implement the get_state callback.
+> >=20
+> > You shouldn't implement the get_state callback for a waveform driver.
+>=20
+> You're right that a new driver using the waveform API shouldn't
+> implement .get_state.
+>=20
+> My goal for the abstraction layer, however, is to be flexible enough to
+> support writing both modern waveform drivers and legacy style drivers
+> that use the .apply and .get_state callbacks.
+
+No, please don't. New C drivers should implement the waveform API. The
+same holds true for Rust drivers. So don't create a door that isn't
+supposed to be used.
+
+Best regards
+Uwe
+
+--a3yx2qm3x3iy6jfn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhj5wQACgkQj4D7WH0S
+/k57mggAjV/gPHEZEhCbpbGaA0U7iyTFgEmMeVkkJxzImAE2AmC1ed9voHg64BLd
+TLDis9YSPhntR2Km1fd4c5x1ina+fVZITIPTm8z9XUaQJk99UfsSuZPX0mTsyo4o
+O4jBd2cpo/MPcv/FodAIhNfILnnArRfMkOJTTSl+L8H5g7IUXOcGVtF+3EkgP3gh
+pClTe7NYPLD5I4MDBV+eK0JopHWbTfQJ608ob/vcPZdycjfyYE45fhXrYFEFjvnB
+12jFYYENaO3/HTGs92o4NvjVdYgPLOj3TsiUU4c+UPrxRpLlsJS4J6Pu1TRxt+Jl
+q9K1u2WtSUbHvMEl7Y61fbNlEOwgPg==
+=Q8/O
+-----END PGP SIGNATURE-----
+
+--a3yx2qm3x3iy6jfn--
 
