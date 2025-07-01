@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-6621-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6622-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 183ACAEF14E
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 10:37:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30F17AEF169
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 10:40:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 62FF5176773
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 08:37:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 30ADD7A9D6A
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Jul 2025 08:39:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A127266B41;
-	Tue,  1 Jul 2025 08:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3371426B77D;
+	Tue,  1 Jul 2025 08:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0N1EdDj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJAiyqyd"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4476E1FDD;
-	Tue,  1 Jul 2025 08:37:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F356A26B742;
+	Tue,  1 Jul 2025 08:39:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751359067; cv=none; b=aaWU1rpviqDQQ3iROgpxL03d0lrFWpXJuZ/+Jc+h5uaS6JP+VKbIA8XPm3Fcjl/+9Jwdi3lXHnIJQ77F5VL7A5B2+8CvkdEVWxQkr4MdNovrdd+9jEwBNZoo6X4+RtW1DC0i3eETUQNtFwFkpLZKhyuuoze2a/Yo67MmZ2XPUFo=
+	t=1751359200; cv=none; b=tZysoDizTdogHlf5+zy/C41Qv0rFJYYmI1Bt7sUS02kSXEY6TtGPn66jOqLLhv761na1syCHrhCT49w/xqCMXI7ktEeZaGfNAopoT87Tj2lvJpQD9eUfQUQX1HlwX37TWAjXK+ol1sC+m/i9Ts6btWhZu4aWDdQpgQ1VA3HxZ3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751359067; c=relaxed/simple;
-	bh=Fol+Onr6AX+6q8X/RzSabA3gh8+jqlmEX4hzJihL3W4=;
+	s=arc-20240116; t=1751359200; c=relaxed/simple;
+	bh=+6SLbZmX+21Rd1SXpw9czrDma6pP7nmqskRnVGf4jV8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EeohPDJol5fj2YZDZ/eC16HnHxUfxjGV9QmZAUfZQRL4j9MVq870s8VO5cZOPtHNUTdzwhq8OAubPImOdcuqhEfUYA747rAiFAUpLxcoHo4wYXDkoonf/zhX2fGKyB555P8gllqVXxAd0gEEjPEb9RwGfozUmbfV9ODfSZR2oTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0N1EdDj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A007C4CEEB;
-	Tue,  1 Jul 2025 08:37:45 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=flcVULekFLNKabGTtXgzhQX3kaIxBnMJF0yzY8lfiecvimJL1aKZQAH+Qc8fZGFydbMHB1id79WMmYFUOstpn6+cIo+Ghe+YYrxKsuNZwDQmluhY3cpwTYYwSMdt09KUXlUqYZtc5mzcp+jyGj2FjVAqz43bD3dElj9en3RAGh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJAiyqyd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E6C5C4CEEB;
+	Tue,  1 Jul 2025 08:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751359066;
-	bh=Fol+Onr6AX+6q8X/RzSabA3gh8+jqlmEX4hzJihL3W4=;
+	s=k20201202; t=1751359198;
+	bh=+6SLbZmX+21Rd1SXpw9czrDma6pP7nmqskRnVGf4jV8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B0N1EdDjz3lDGF5Gs+i05Q7cHJGLbYBse1LJAKuoPY68lYjUhRkFMKeIokrrRaqbW
-	 YpZHyz4CJ8uKzjm+2eOJWZV4GjZrHER/KyGmZ1ddDOEPthNiVkSTDDWePD+kvfF3zZ
-	 dcAz5StHgYQV3mxUKya2f52hEQG4LEwyY7Iv7yfdy5MCJ86Qfxk4aREE+tVoI9KylW
-	 8YjunFF3aMDlaecPF5WPe3SZdANK5see5NUxsTrzYdxp85NecrWgBiJXg/QI98HF2Y
-	 hVMQMJafOR5Rha547v7p5FeqHgKRIpad22dfjALzxtIIULQYnDk6rZMVW5hkeYKfty
-	 Kr1odQXmh76Zw==
-Date: Tue, 1 Jul 2025 10:37:43 +0200
+	b=aJAiyqydGLso3Vljfbu7fD9uDL05Hi4dM980cjgy68/3V/AH606u1nWja22rHPL/E
+	 v27lX84xl8FCEDJBZ8vPqWnTJwrTmF1y0iDL3G1UjQ5WF/r+60kcUAmhmAWQ/a8fVe
+	 U49CjCIXiJEaWxKSNwNKtAtdrhr1qo8V5ZAo9Wb/x4grUoTtzgqdeMamNX+aUsm1BY
+	 r/HMwrdVSSB1Zh+Znocj5T0UG2hMTPy6vn83KAdOHVjtY2OJ0W+XImkAkYRzS59XzX
+	 mOsnvBglgU9WDG5MZOgEYg6UiSKhAZsCmkCN5Y3ecr5vlQpdBrsLSqsYkkvHHisu2I
+	 Tu0PuSxbz9+0w==
+Date: Tue, 1 Jul 2025 10:39:56 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
 To: nuno.sa@analog.com
 Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
@@ -50,10 +50,11 @@ Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
 	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
 	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
 	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Liu Ying <victor.liu@nxp.com>
-Subject: Re: [PATCH v6 03/20] mfd: adp5585: Enable oscilator during probe
-Message-ID: <7lgjenjwbkf55ycxogibxvckcmqseq7auoaurvb7sih4nplyuw@xgh3v4qgwghe>
+Subject: Re: [PATCH v6 16/20] Input: adp5585: Add Analog Devices ADP5585/89
+ support
+Message-ID: <txppsdw4w7ocnysvrm54ta4ulplwawd5pk2l5wt3bhrag6qbev@gr4ah7lgjigi>
 References: <20250630-dev-adp5589-fw-v6-0-a0f392a0ba91@analog.com>
- <20250630-dev-adp5589-fw-v6-3-a0f392a0ba91@analog.com>
+ <20250630-dev-adp5589-fw-v6-16-a0f392a0ba91@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -61,41 +62,58 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ibhfvmpogrcuyehc"
+	protocol="application/pgp-signature"; boundary="mqscdmphlstc25ju"
 Content-Disposition: inline
-In-Reply-To: <20250630-dev-adp5589-fw-v6-3-a0f392a0ba91@analog.com>
+In-Reply-To: <20250630-dev-adp5589-fw-v6-16-a0f392a0ba91@analog.com>
 
 
---ibhfvmpogrcuyehc
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--mqscdmphlstc25ju
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
-Subject: Re: [PATCH v6 03/20] mfd: adp5585: Enable oscilator during probe
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 16/20] Input: adp5585: Add Analog Devices ADP5585/89
+ support
 MIME-Version: 1.0
 
-Hello,
+On Mon, Jun 30, 2025 at 12:53:07PM +0100, Nuno S=E1 via B4 Relay wrote:
+> From: Nuno S=E1 <nuno.sa@analog.com>
+>=20
+> The ADP5585 is a 10/11 input/output port expander with a built in keypad
+> matrix decoder, programmable logic, reset generator, and PWM generator.
+> This driver supports the keyboard function using the platform device
+> registered by the core MFD driver.
+>=20
+> The ADP5589 has 19 pins and also features an unlock function.
+>=20
+> Changes in v6:
+>  - Improve kconfig text.
 
-just one comment that I saw while skimming over this series in my
-mailbox:
+Is it intended to have the changelog for the series in the commit log in
+the end?
 
-$Subject ~= s/oscilator/oscillator/
+> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Signed-off-by: Nuno S=E1 <nuno.sa@analog.com>
+> ---
+
+I would expect that not, so it should go here.
 
 Best regards
 Uwe
 
---ibhfvmpogrcuyehc
+--mqscdmphlstc25ju
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhjnlUACgkQj4D7WH0S
-/k6rugf/fAQpHtJXXJ+9liGajvF59VUtUco5aeDGq/SlLPu2XqMsQeYnNn62EsnQ
-KEaVvnxpasvpOuLby1Ormf8dD+OkMb8FAF0syjtLeXGFm+YPdgMmnh8GPOr1x39Q
-+gLCxVKqo/BfU9jYY+XfPyUYcHlh1US/A/2QCupYEARsVFRzFABXpguWL0+52LOi
-5jSlu9pQA7k/4mjdTptImYEn3ZDaRtNjD7MgeL0Q+i7w1YonX1Os0e0OcjlwDVOF
-vcdwlLr9LFnHxeZuXA8xOzS0GYYPQ7yxPWlqpcmSCcOk41CJHYQVMRr5rRPx4nbF
-k5dBc4bjHjD43eUfoofFmrzPwP0llQ==
-=2BbF
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhjntkACgkQj4D7WH0S
+/k4UfwgAqR6n1VQfqgq0d9sdWLAEXCxZFfTeeisIg00MKHCsWFnW57KvO4ptWnnA
+NRI6rlGoCMkmk+MmPl1HHbXq/ReMdGJmH3cqGqiNqnxz+s0Kv3Bsg5JtcDEQYJU/
+StJqUIg2C2zr3iKMtS5Tk3T3zBiyMd8v8gpPgHfhRcWO2VQBI1unND9RlYuvZfp2
+pyqi7jFCrTIpBPzuyeIqAH+CTOKIPz3oC7AcF4ksxyeZNn/re43BTtUlel2NCe+L
+exgHue1i/txpt5ta/K3gFZWdxtU6SsrbFfeII4DgSxBBis29QJGXwAFazsSCF2v2
+45Lq4NIl2B+s5bKFSE2wQxBDWuFcdg==
+=Dzj1
 -----END PGP SIGNATURE-----
 
---ibhfvmpogrcuyehc--
+--mqscdmphlstc25ju--
 
