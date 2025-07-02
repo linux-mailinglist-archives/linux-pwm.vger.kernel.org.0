@@ -1,75 +1,93 @@
-Return-Path: <linux-pwm+bounces-6705-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6706-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4716DAF5CBE
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 17:23:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18710AF63A5
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 23:00:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 296FC1C45A34
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 15:22:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6C84F3A9D01
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 21:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AC9F2F2358;
-	Wed,  2 Jul 2025 15:21:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78AD31AF0C8;
+	Wed,  2 Jul 2025 21:00:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gt1ABjjI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QrvHPqnS"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC022F365B;
-	Wed,  2 Jul 2025 15:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34102DE712;
+	Wed,  2 Jul 2025 21:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751469669; cv=none; b=MoxZH+q+y4A2vJYAqfclfvcgvMYH15Y8DO2i4Va4YKPyA7a88IU9FtDcFktBhmqR5ID2/tBZqS0dEbsW0nfK389DVvR6OMr+gqKwMz0G1XzDjrHEpKHUbnSd1Liha8wLYec89Bz1aX8HZhLGU6yNvIFfSx6syyyLr3C52H2i2b8=
+	t=1751490027; cv=none; b=XzvANJV6hjd51x3FppuDiLLOtpzPwxR4eh3Z5CTSUjnYnh6hyaGKur+bCBWG5y7aHcSYzimWdGNIxzQqep8KN6CNsoOAda8gUj2ALiSvCrekhBxpIIaGfuvBfgIhGeppfaPGQml8V/EqKi5j/enGcU8snn8TXJtt6EkY8wWaZfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751469669; c=relaxed/simple;
-	bh=M/1qI026Rf8MHuDJoLIxqcQbHcw9InNMCIRG1daBlW4=;
+	s=arc-20240116; t=1751490027; c=relaxed/simple;
+	bh=bg34YmmeS70FFPT/uwXB8HPdNMd9xBbgYpLNVAACqC0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gS6C02ukT/m718ZBuT2daezwc3+RWT/FVyB4zXKG8qjf4UW7U43xdoEeXC0WVyA16njWTE6R77Ccn6cjCLn2DfMJhb6lh0dffqYm/MFsidnv2BMzN1FbgNBJoMxrH50xL0PSRdK+NK31rY2Ds8wY+tVIauA655yfDzlmKXQwsN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gt1ABjjI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A127C4CEE7;
-	Wed,  2 Jul 2025 15:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751469668;
-	bh=M/1qI026Rf8MHuDJoLIxqcQbHcw9InNMCIRG1daBlW4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gt1ABjjID7Yl1S93DXNEXXx9Gu+slXGI3XlUkze9+VdPfBrRji29vH/Za7ojXIyJc
-	 NoY/8Kk5iCroXeRw/044bIbHoRswoHsJy00tTHMdd1NAnNLUdJg0rNQvTJQNRoa9Vk
-	 oEjZWsS/9UOnwcmtp+bEdcCepAJJ1B4kb1zCN2LG1SUT3mtc2IoqUnW2p1WwAm+aBU
-	 kUKnxBuGnEEuO9FWQHj+ewubg6e7wXbxE7icOT9PkwujBlhN8Kwtdx2p0aFiwVd+FD
-	 rthuZtHy4zRT/tsB04nNnve7FTpvTj7Q0Dppc1lF1c4kvsndaOBiafeh1s4WRaKNNR
-	 dih7Dip1xrTLg==
-Date: Wed, 2 Jul 2025 17:21:00 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Drew Fustini <fustini@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 4/8] rust: pwm: Add driver operations trait and
- registration support
-Message-ID: <aGVOXNqnSjCm8fQl@pollux>
-References: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
- <CGME20250702134958eucas1p26baf0f661006f5b79c31b2afa683baee@eucas1p2.samsung.com>
- <20250702-rust-next-pwm-working-fan-for-sending-v7-4-67ef39ff1d29@samsung.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=OdaBdbaf88cOVXuGUn2r3PoGpiTiKat6zIgQA0gBbCcbcfB2XCypiFI9SGJSXGT3MYtCT8QBq1pKDXzTjLQEQTMX+tN/MrOblBCQ8N/+xJ/vkVCzwazSpCU/RF7Xny7mQa2x9hb3kBFbDdNM2LSUklVCb5AQZdTBtVP6V6OqNA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QrvHPqnS; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235a3dd4f0dso45998005ad.0;
+        Wed, 02 Jul 2025 14:00:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751490025; x=1752094825; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2xfvGPO1Ksya3OuQDaPHkRfGmdWKE6WGfobY/qdxMtI=;
+        b=QrvHPqnS1ZRpWm7etXR9jCNbAyZQ50luAIs33QsLySSclzKIch7SavfsmKCIt6hFRn
+         u6mCuxMK3t/UuxhqpH6P4nr22rINj60EBMnUou+JhYefXr2BLeyaFcv3tZmxh6UbJrIb
+         fa/Ct3NnLMKa64CwKgmh6+mQejkldoBU3nUslXHw+y3ZmjCQNGyRnAGFLPYDxiI85125
+         dCvkedHIYyLddEDmTeDky0WeHKi2XzJH8PeMZS/GcfcrQmHswKJBkHZ6OgGt/l3XufTZ
+         HMyXl6PWebwODkk2S4H4BcTUT5SoJETo4F2IHZ8lLAFv9WFY3OaJXJ08vLLWC23kFJKp
+         fzDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751490025; x=1752094825;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2xfvGPO1Ksya3OuQDaPHkRfGmdWKE6WGfobY/qdxMtI=;
+        b=Be/rCIuUb6Kx4CL7hY5MZEQd/66/jSQLH6Gj++SIX2hdJHEeYeb1KH8tOfaHRWwc4O
+         bBjti7FmnMQ0RiB9MPSnkeSNmDLqItzyMT6lq6dT2MPLoqHWPy6js1XBOXdvFV8Mi1CI
+         yYSIVR/2T0ibPEbkSTwaC+uy9UaHpsU9NP+ulkeyHthYneWu2Ya+yrK+9WpsXy4D9K7m
+         nCBomnVw8uLYE2RejgMPByQUJS7dWynw5KKnW7Hpx59VM7wGhOxVJHEejAHxazZo+USS
+         FPRiRrE65JMd0o7JXD894DkGhW4ZZ7v15LhvJ83fBiHApniaGopxWJxNf7jPvYjIMhxp
+         hN7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUHEgCtFLxQmIVGoNxM04OhoUNAJqtcv7wMuCMKVKEcJHJJcWlxc8pemRUsENyzW8FAs/CWH4IRdHqW@vger.kernel.org, AJvYcCVG+8sOTxIF/uRquN7F4Hwd6M1+uMxHD0A2S9SKd+hyVsF8bUttHorXULGJiorgp+Gz/uzRA5EaCy0k@vger.kernel.org, AJvYcCW8hK+o4zfFn/X03gQqR1p69BLzjRlz4ImYDraI7mdWU/nmNBPsN2heXnXYNvphyrmFx3zT7HcgHEIiyQ==@vger.kernel.org, AJvYcCWnIMIrDaWDQSSmBc1/EVcAaYZfKRnKKBh2fSe03x1yBvj9zubJb1AbdZ5KlB0aHUcoL1VZfGWUXaS/6Koe@vger.kernel.org, AJvYcCXSwUWUaAtxQFEVa9RBTK1YrTI/nVa00t3SLO4KPdrLvtTcO/rItQkpx2oUZbbcIKdUmbvnw44wNssan2w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn0fHFkAio/W+nywhXEE16H9XpP3SlD+Ov4yDXg1k5MNoY2fvK
+	O3kMmNVEvmbaWCgX+uewh9Ikc6hv4YrreFDnMprCpuSKWS9XQnLOYYv1
+X-Gm-Gg: ASbGncv7j++xsmb4wWXLjImTaY1mZSuPaaX6RK0S3wq/qHRj2MM9MHqnQpFrafvQY3K
+	O7ewbhIs1m1NdDIZ8AINF8Xa57+vXXUFBk+DsOA+t3pX1H8GdxC32tJl6FU/hlSeUt6uh7d3TVh
+	E7HV6AbF/oGCBEmcKAanNlUhPEMFHe3ZON65lsp6bPfv/7izq3IedsNRsh+5cCglLUtkN5w3uIY
+	/1Fiv+SRQoop/SWIZroNsKAYGMJgld2kvdtt8Lh6adTB9hF7RSsu2T8zsiOKALYtkdaleHWlUwq
+	eSL6HQ96OLN9Rlv/gM2D734JcCYn+swTtf078DAkLc23ChZ5lDrcgAxD/WgiOBc=
+X-Google-Smtp-Source: AGHT+IFwtUIm+14PZZznaUVeBL4d9kvfMJHlGFaNbp2ss/KcjJLiMnWF42EXMssj52lvwKsLwDaCgg==
+X-Received: by 2002:a17:902:e54b:b0:223:4d7e:e52c with SMTP id d9443c01a7336-23c6e4d683cmr74426775ad.5.1751490024982;
+        Wed, 02 Jul 2025 14:00:24 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:918b:9ece:525a:9158])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3c4b2esm143163835ad.211.2025.07.02.14.00.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 14:00:24 -0700 (PDT)
+Date: Wed, 2 Jul 2025 14:00:19 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	andriy.shevchenko@intel.com, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v10 09/11] input: keyboard: Add support for MAX7360 keypad
+Message-ID: <uibf7p6niiljlymzp24h2sk5dzhw5xschaqxj6wfpgge6b7hdo@czpfchjl7pvw>
+References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
+ <20250530-mdb-max7360-support-v10-9-ce3b9e60a588@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -78,43 +96,26 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250702-rust-next-pwm-working-fan-for-sending-v7-4-67ef39ff1d29@samsung.com>
+In-Reply-To: <20250530-mdb-max7360-support-v10-9-ce3b9e60a588@bootlin.com>
 
-On Wed, Jul 02, 2025 at 03:45:32PM +0200, Michal Wilczynski wrote:
-> +impl Registration {
-> +    /// Registers a PWM chip with the PWM subsystem.
-> +    ///
-> +    /// Transfers its ownership to the `devres` framework, which ties its lifetime
-> +    /// to the parent device.
-> +    /// On unbind of the parent device, the `devres` entry will be dropped, automatically
-> +    /// calling `pwmchip_remove`. This function should be called from the driver's `probe`.
-> +    pub fn register(
-> +        dev: &device::Device<Bound>,
-> +        chip: ARef<Chip>,
-> +        ops_vtable: &'static PwmOpsVTable,
-> +    ) -> Result {
+Hi Mathieu,
 
-One thing I did miss here: Given that this should give us the guarantee that the
-parent device of the Chip is always bound, you have to add a check for this
-here, i.e. fail if `dev.as_raw() != chip.parent().as_raw()`.
+On Fri, May 30, 2025 at 12:00:17PM +0200, Mathieu Dubois-Briand wrote:
+> +	if (!in_range(max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN,
+> +		      MAX7360_DEBOUNCE_MAX - MAX7360_DEBOUNCE_MIN)) {
+> +		dev_err(dev, "Invalid keypad-debounce-delay-ms: %u, should be between %u and %u.\n",
+> +			max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN, MAX7360_DEBOUNCE_MAX);
+> +		return -EINVAL;
 
-> +        let c_chip_ptr = chip.as_raw();
-> +
-> +        // SAFETY: `c_chip_ptr` is valid because the `ARef<Chip>` that owns it exists.
-> +        // The vtable pointer is also valid. This sets the `.ops` field on the C struct.
-> +        unsafe {
-> +            (*c_chip_ptr).ops = ops_vtable.as_raw();
-> +        }
-> +
-> +        // SAFETY: `c_chip_ptr` points to a valid chip with its ops initialized.
-> +        // `__pwmchip_add` is the C function to register the chip with the PWM core.
-> +        unsafe {
-> +            to_result(bindings::__pwmchip_add(c_chip_ptr, core::ptr::null_mut()))?;
-> +        }
-> +
-> +        let registration = Registration { chip };
-> +
-> +        devres::register(dev, registration, GFP_KERNEL)
-> +    }
-> +}
+Is it inclusive of MAX7360_DEBOUNCE_MAX or exclusive? Do we need + 1
+here?
+
+Anyway,
+
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
+Thanks.
+
+-- 
+Dmitry
 
