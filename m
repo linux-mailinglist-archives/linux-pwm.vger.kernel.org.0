@@ -1,56 +1,57 @@
-Return-Path: <linux-pwm+bounces-6683-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6684-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBCF8AF0AF7
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 07:51:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A3ECAF0B15
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 08:01:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7BD5548001F
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 05:50:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B7B7D17D6AC
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 06:01:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E58D81F8733;
-	Wed,  2 Jul 2025 05:51:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C44491EFF93;
+	Wed,  2 Jul 2025 06:01:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dM7AuOf1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovsAoToY"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EB81F5820;
-	Wed,  2 Jul 2025 05:51:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C45E1DF96F;
+	Wed,  2 Jul 2025 06:01:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751435468; cv=none; b=dx8vDeU9lPe0mfxJ5La3OqmwCB1TFocCZ9HLnefCb6mwfL9BPDYBZkPYXSc3UK9se3SjiNFqkRVejhB4GtBVwmfmcKiXqJoyVK3375YuTeZcvHlLrHH+zifIwRzK/6MfKgkM1WfUUH2R0sNi1JRy9f2j+LpDXFEDOujRQjbRH80=
+	t=1751436068; cv=none; b=OjZXu/1KqsWyy2L5mYQzUafUMreDZ4l6PWr4UHTucTnE8oPoaYnlEDoaJ6NNy3bDuDyfTwef1B0YyaaDOlHTpn6wM/aWASDM0KyKO79WZi3xv4Djqla0d+KNyqvp8CiENmnUzc7toBGMrxrjpMeGBmPyl1OCzlHatyh5ZkrPIvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751435468; c=relaxed/simple;
-	bh=ZGAD34V2+/nppac1OT0z+GzgTDgySO7EWRziPrZ69y4=;
+	s=arc-20240116; t=1751436068; c=relaxed/simple;
+	bh=uiChSvZj4suPEgBnlqfn38z0ZrpKB48CFH9gUHqFA9E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F22VQ3ic1UXY0J+tYPPVcRQuZoOH3C6PU/+VJ6YbWk5ki9r2YH9jZnxFvRo8S810VsPIoXXAVYlrXTwZS3FMGtBRYq3+AEQ0WEY23f0a5DZieme7piPWft5/MFv2BC+tUogEGAxJEYNtQYjMNuv9NRgbM8tedV9UonnwLjXnmIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dM7AuOf1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5FEDC4CEEE;
-	Wed,  2 Jul 2025 05:51:07 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=dgcgwqU6vgk8iNvIMYyJjcZDDS60D9fd+gQ4xlyejTzErPnH8FDG09o7/I5E+gtYJjC9NBwd1G98+9uoWP1Pi4QYfbulAMCXg651lTibBKQZHw2O4YF3VF0MVed3KiN7kbbREMWxsfGJjub09crmTwUV1fvrSR0Yl+4B/WkhwLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovsAoToY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB46FC4CEEE;
+	Wed,  2 Jul 2025 06:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751435468;
-	bh=ZGAD34V2+/nppac1OT0z+GzgTDgySO7EWRziPrZ69y4=;
+	s=k20201202; t=1751436068;
+	bh=uiChSvZj4suPEgBnlqfn38z0ZrpKB48CFH9gUHqFA9E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dM7AuOf1hTRbGtNWbCOJAPZl67ADKPrFWgVugY011aGKwfSiAFwq8dvNEL97Vyp8s
-	 xTn+6uU1tZs/T9/eBkUPoRD83JOAQJW+1edZsd0pgtPKbFueoai22a8Q9SvxlHEGQ9
-	 cf9bByoDeJfGh7mnG6Pu8iwRz8vNlhNYfD88/4m5wB2nrNknIU0f2GOJwR+dikebwt
-	 GdT8eDtYQD7HuuQJ6p/gKttY1xjyG16qEF21A6n57p5ml5eGd0vYoBQtVV4OPQcrvL
-	 BXvELVmxzhwkmcQBQnnHDxduPaixhatWSVmZXsgjon9WI/4bSBfdZXDDDpd8n/6g5m
-	 iXDiaIw0yKAcA==
-Date: Wed, 2 Jul 2025 07:51:05 +0200
+	b=ovsAoToYxtNoitFll0qxh4FcNat2AtZHg5/hEee2H5KzClsgV1iFHvomVrJ5SEB+5
+	 UF0WDWi9DQIlCNvWpuNsBIny4kK5vKBCwc9vgYKMOLjPNfKyXgPja3svXpIl9lvhKP
+	 xvRAIt6WznV/Gpy1oikITJLrGMmT4TqdVHKKVRUkpqn8XDxAYurDtmCu/14qKH7VNa
+	 jOuZ0qk4mZm6mOaAOEfy0ON3sp0Q3s6JlMuYnHtFfk5Cyy8aOqQb2tXbc3jBpS6gXd
+	 WIQVeXVA88BEaMi8AI/a7iag6KPBcUtzbXsbxkNixl9+swVZV29QOxxK9d4DQFQAxn
+	 rralP+/VQ7pkg==
+Date: Wed, 2 Jul 2025 08:01:05 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	linux-pwm@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
-Subject: Re: [PATCH] pwm: imx-tpm: reset counter if CMOD is 0
-Message-ID: <vwozlwajisjw5qomwtmnfdklmucevyxncsxl2cdmixn2yixxrk@x6j3r2lrl5qz>
-References: <20250701220147.1007786-1-laurentiumihalcea111@gmail.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Benjamin Larsson <benjamin.larsson@genexis.eu>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v19] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <wntjec4p7nepuauucwqwgwcresphjikln7cqchep3vjocpuo6u@6hjpkwcbvx7d>
+References: <20250630114504.8308-1-ansuelsmth@gmail.com>
+ <bwtk2nac2eo2jgf2lousguw7o34tzhz7mesdo3jfaf4gc3pri6@tff3h4f4274u>
+ <686434fb.050a0220.efc3e.909b@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -58,98 +59,110 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3g6nf2e7dhscobr3"
+	protocol="application/pgp-signature"; boundary="hra54f6mnib5eiut"
 Content-Disposition: inline
-In-Reply-To: <20250701220147.1007786-1-laurentiumihalcea111@gmail.com>
+In-Reply-To: <686434fb.050a0220.efc3e.909b@mx.google.com>
 
 
---3g6nf2e7dhscobr3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--hra54f6mnib5eiut
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: imx-tpm: reset counter if CMOD is 0
+Subject: Re: [PATCH v19] pwm: airoha: Add support for EN7581 SoC
 MIME-Version: 1.0
 
-Hello,
+On Tue, Jul 01, 2025 at 09:20:24PM +0200, Christian Marangi wrote:
+> On Tue, Jul 01, 2025 at 09:40:03AM +0200, Uwe Kleine-K=F6nig wrote:
+> > > +	shift =3D AIROHA_PWM_REG_CYCLE_CFG_SHIFT(shift);
+> > > +
+> > > +	/* Configure frequency divisor */
+> > > +	mask =3D AIROHA_PWM_WAVE_GEN_CYCLE << shift;
+> > > +	val =3D FIELD_PREP(AIROHA_PWM_WAVE_GEN_CYCLE, period_ticks) << shif=
+t;
+> > > +	ret =3D regmap_update_bits(pc->regmap, AIROHA_PWM_REG_CYCLE_CFG_VAL=
+UE(offset),
+> > > +				 mask, val);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	offset =3D bucket;
+> > > +	shift =3D do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+> > > +	shift =3D AIROHA_PWM_REG_GPIO_FLASH_PRD_SHIFT(shift);
+> > > +
+> > > +	/* Configure duty cycle */
+> > > +	mask =3D AIROHA_PWM_GPIO_FLASH_PRD_HIGH << shift;
+> > > +	val =3D FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_HIGH, duty_ticks) << s=
+hift;
+> > > +	ret =3D regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PR=
+D_SET(offset),
+> > > +				 mask, val);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	mask =3D AIROHA_PWM_GPIO_FLASH_PRD_LOW << shift;
+> > > +	val =3D FIELD_PREP(AIROHA_PWM_GPIO_FLASH_PRD_LOW,
+> > > +			 AIROHA_PWM_DUTY_FULL - duty_ticks) << shift;
+> > > +	return regmap_update_bits(pc->regmap, AIROHA_PWM_REG_GPIO_FLASH_PRD=
+_SET(offset),
+> > > +				  mask, val);
+> >=20
+> > Strange hardware, why do you have to configure both the high and the low
+> > relative duty? What happens if AIROHA_PWM_GPIO_FLASH_PRD_LOW +
+> > AIROHA_PWM_GPIO_FLASH_PRD_HIGH !=3D AIROHA_PWM_DUTY_FULL?
+>=20
+> From documentation it gets rejected and configured bucket doesn't work.
 
-On Tue, Jul 01, 2025 at 06:01:47PM -0400, Laurentiu Mihalcea wrote:
-> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->=20
-> As per the i.MX93 TRM, section 67.3.2.1 "MOD register update", the value
-> of the TPM counter does NOT get updated when writing MOD.MOD unless
-> SC.CMOD !=3D 0. Therefore, with the current code, assuming the following
-> sequence:
->=20
-> 	1) pwm_disable()
-> 	2) pwm_apply_might_sleep() /* period is changed here */
-> 	3) pwm_enable()
->=20
-> and assuming only one channel is active, if CNT.COUNT is higher than the
-> MOD.MOD value written during the pwm_apply_might_sleep() call then, when
-> re-enabling the PWM during pwm_enable(), the counter will end up resetting
-> after UINT32_MAX - CNT.COUNT + MOD.MOD cycles instead of MOD.MOD cycles as
-> normally expected.
->=20
-> Fix this problem by forcing a reset of the TPM counter before MOD.MOD is
-> written.
->=20
-> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
-> ---
->  drivers/pwm/pwm-imx-tpm.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->=20
-> diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-> index 7ee7b65b9b90..30f271826aed 100644
-> --- a/drivers/pwm/pwm-imx-tpm.c
-> +++ b/drivers/pwm/pwm-imx-tpm.c
-> @@ -204,6 +204,19 @@ static int pwm_imx_tpm_apply_hw(struct pwm_chip *chi=
-p,
->  		val |=3D FIELD_PREP(PWM_IMX_TPM_SC_PS, p->prescale);
->  		writel(val, tpm->base + PWM_IMX_TPM_SC);
-> =20
-> +		/*
-> +		 * VERY IMPORTANT: if CMOD is set to 0 then writing
+ok.
 
-The "VERY IMPORTANT" is correct today as this is missing and so
-disturbing operation. However once this patch is applied, it's only
-normal to have it. So I suggest to drop this.
+> > > [...]
+> > > +	/*
+> > > +	 * Duty is divided in 255 segment, normalize it to check if we
+> > > +	 * can share a generator.
+> > > +	 */
+> > > +	duty_ns =3D DIV_U64_ROUND_UP(duty_ns * AIROHA_PWM_DUTY_FULL,
+> > > +				   AIROHA_PWM_DUTY_FULL);
+> >=20
+> > This looks bogus. This is just duty_ns =3D duty_ns, or what do I miss?
+> > Also duty_ns is an u32 and AIROHA_PWM_DUTY_FULL an int, so there is no
+> > need for a 64 bit division.
+>=20
+> duty_ns * 255 goes beyond max u32.
 
-> +		 * MOD will NOT reset the value of the TPM counter.
-> +		 *
-> +		 * Therefore, if CNT.COUNT > MOD.MOD, the counter will reset
-> +		 * after UINT32_MAX - CNT.COUNT + MOD.MOD cycles, which is
-> +		 * incorrect.
-> +		 *
-> +		 * To avoid this, we need to force a reset of the
-> +		 * counter before writing the new MOD value.
-> +		 */
+In that case duty_ns * AIROHA_PWM_DUTY_FULL overflows to a smaller
+value. Just because the value then is used by DIV_U64_ROUND_UP doesn't
+fix the overflow. You need (u64)duty_ns * AIROHA_PWM_DUTY_FULL then.
 
-Without the reference manual at hand or a deeper understanding of the
-hardware this isn't understandable. What is MOD? What is CMOD?
+> 225000000000.
+>=20
+> Some revision ago it was asked to round also the duty_ns. And this is
+> really to round_up duty in 255 segment.
 
-> +		if (!cmod)
-> +			writel(0x0, tpm->base + PWM_IMX_TPM_CNT);
->  		/*
->  		 * set period count:
->  		 * if the PWM is disabled (CMOD[1:0] =3D 2b00), then MOD register
+Yes, and I identified this as the code that intends to do that. Please
+double check this really works. I would claim you need:
+
+	duty_ns =3D DIV_ROUND_UP(duty_ns, AIROHA_PWM_DUTY_FULL) * AIROHA_PWM_DUTY_=
+FULL;
+
+here because no matter if you round up or down, dividing
+n * AIROHA_PWM_DUTY_FULL by AIROHA_PWM_DUTY_FULL yields n.
 
 Best regards
 Uwe
 
---3g6nf2e7dhscobr3
+--hra54f6mnib5eiut
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhkyMYACgkQj4D7WH0S
-/k4iHQf8D+bL01vDv300bdPlR2TetB6qvOXjNcXttTNMBqfVUKF0sjh6CPnD9AF4
-+UYCBnykBN7RCMFHgKjVj9GhRXC+uZOVJ9dzCGRIA3IthpOQ9bDk+JHQKbSZvZ2S
-Ojsa8DXIHC9DILnx3a9+iDTKAYo9mujgg7nm9iJhkqqsUZMNTmzdB+vi1lVBr6Lp
-4B01fzHsEGfcnIJI5x+YrYwMVlibGMBTQQe8I4qyf/L0EQjg+7wCwyyfTd9l3Mzv
-4DZd0T4ZkQYO/BGUzJjLJhwyfEydNLIIlSFIC0NujZ77I8pytN2Kg224UgvcsagK
-+L9FL0eZBLvFJSsg2tf2IML/rNum5w==
-=cNud
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhkyx4ACgkQj4D7WH0S
+/k6ylQgAoJB6fA64UueHzEZkMoZSOrwR5C7d2I24qhxKbrkbkiJdNqzO8HvRWlGs
+sXTY04ZbJauj63r8WRXvV86biiTSYv+EV0qkT5mOOyLI9/9oiIOPuvtTFQPoryQc
+xRF7q7csHZFryIqxO36q7vcGZB7Pw4LOwzAf/weUNsR1tKAHaQtE2gErbxGl7zZ8
+tzAeqwsvsdcZthjaD95SGe+YnrSJ/uD79Vv8ks0e4tbcKKD+HIKN15topqrS9bfP
+1UqsYZ6m2v5Pl9bnGM+CRr48reQJtIo7eNYKLyIVXkZydJVnjKaJMV2bWVnFrzWk
+1Tkz3d/JFO2W3fZStA7u/neMOOotRw==
+=hcqn
 -----END PGP SIGNATURE-----
 
---3g6nf2e7dhscobr3--
+--hra54f6mnib5eiut--
 
