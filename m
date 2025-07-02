@@ -1,77 +1,77 @@
-Return-Path: <linux-pwm+bounces-6706-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6707-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18710AF63A5
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 23:00:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34CF4AF63B7
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 23:05:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6C84F3A9D01
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 21:00:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 767B717BF85
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 21:05:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78AD31AF0C8;
-	Wed,  2 Jul 2025 21:00:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C1461E9B1C;
+	Wed,  2 Jul 2025 21:05:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QrvHPqnS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NlmPAFZv"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34102DE712;
-	Wed,  2 Jul 2025 21:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076172DE6F9;
+	Wed,  2 Jul 2025 21:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751490027; cv=none; b=XzvANJV6hjd51x3FppuDiLLOtpzPwxR4eh3Z5CTSUjnYnh6hyaGKur+bCBWG5y7aHcSYzimWdGNIxzQqep8KN6CNsoOAda8gUj2ALiSvCrekhBxpIIaGfuvBfgIhGeppfaPGQml8V/EqKi5j/enGcU8snn8TXJtt6EkY8wWaZfk=
+	t=1751490313; cv=none; b=EfA1IBaNmoaPTG0BPnxxJrGA99uLuyzvLn/ALz8rMZHM1lYqGVGFzQGlknPkqx2mOIYkwNd1ZATeNK8zDv0sog8Wd+uBzImfag7YouJOieNw1QVIqNnTss4B2g5Z0ApumxbbOHeQrlqpYVU2V8m1XDpeA37t3mfVtv0avptEFug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751490027; c=relaxed/simple;
-	bh=bg34YmmeS70FFPT/uwXB8HPdNMd9xBbgYpLNVAACqC0=;
+	s=arc-20240116; t=1751490313; c=relaxed/simple;
+	bh=YG6sPS0G+I71vksxn4epGkUMjbDGBdqbdGVeWWGjEjU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OdaBdbaf88cOVXuGUn2r3PoGpiTiKat6zIgQA0gBbCcbcfB2XCypiFI9SGJSXGT3MYtCT8QBq1pKDXzTjLQEQTMX+tN/MrOblBCQ8N/+xJ/vkVCzwazSpCU/RF7Xny7mQa2x9hb3kBFbDdNM2LSUklVCb5AQZdTBtVP6V6OqNA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QrvHPqnS; arc=none smtp.client-ip=209.85.214.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=aAq/xuUFPzbIJJm3D3YUz8DctHyjadC1Y0mrSOumMYtMJC7sLBWZdom4OM1DAbwv+5oHB3tz8se3E7IUjU4ZVydOeYSIUCKpK5UZ1d8jMC3dn898hmN0zxj62Cet8l3+6AJY/7Q/6NxB73upuhqcr+JIppcldBWgSuyMGoF58uY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NlmPAFZv; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235a3dd4f0dso45998005ad.0;
-        Wed, 02 Jul 2025 14:00:25 -0700 (PDT)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-236470b2dceso42712775ad.0;
+        Wed, 02 Jul 2025 14:05:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751490025; x=1752094825; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751490311; x=1752095111; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2xfvGPO1Ksya3OuQDaPHkRfGmdWKE6WGfobY/qdxMtI=;
-        b=QrvHPqnS1ZRpWm7etXR9jCNbAyZQ50luAIs33QsLySSclzKIch7SavfsmKCIt6hFRn
-         u6mCuxMK3t/UuxhqpH6P4nr22rINj60EBMnUou+JhYefXr2BLeyaFcv3tZmxh6UbJrIb
-         fa/Ct3NnLMKa64CwKgmh6+mQejkldoBU3nUslXHw+y3ZmjCQNGyRnAGFLPYDxiI85125
-         dCvkedHIYyLddEDmTeDky0WeHKi2XzJH8PeMZS/GcfcrQmHswKJBkHZ6OgGt/l3XufTZ
-         HMyXl6PWebwODkk2S4H4BcTUT5SoJETo4F2IHZ8lLAFv9WFY3OaJXJ08vLLWC23kFJKp
-         fzDQ==
+        bh=Wh2PtfxFsXVqWIGJhK/ssCsDM+Xukv05BNpcs9NLP9I=;
+        b=NlmPAFZvcijlbCuhBELwDijrRXmTc+HQFPC/47TpiwehITCPDxVA3PqnDipqUXExiZ
+         V4mZVA2puHDq5xZtpfxegx1yjtbHM4ZNiE+3NjXh3jbXIexb9q78VjQszoZQ050cNSlE
+         ScUhBMKAL+3sz/xW5Ujavbk1dCXpmLS2bOpSbL+T0MYCI5zMb3GMN5XbPpIkWsDQexEf
+         +p0KbRAAnugxhtUnyBl66FDDY3DkOKicpCvBXHqpvTOD8WKQtRwHgFe4q/OrCtutnnqd
+         1rKELVfMbQssv9l2NHKoS12IXnO/rF+i+ssCbgoOkGSR8Bd25P/3bTL2qNeZ2oOioKlm
+         T6Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751490025; x=1752094825;
+        d=1e100.net; s=20230601; t=1751490311; x=1752095111;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2xfvGPO1Ksya3OuQDaPHkRfGmdWKE6WGfobY/qdxMtI=;
-        b=Be/rCIuUb6Kx4CL7hY5MZEQd/66/jSQLH6Gj++SIX2hdJHEeYeb1KH8tOfaHRWwc4O
-         bBjti7FmnMQ0RiB9MPSnkeSNmDLqItzyMT6lq6dT2MPLoqHWPy6js1XBOXdvFV8Mi1CI
-         yYSIVR/2T0ibPEbkSTwaC+uy9UaHpsU9NP+ulkeyHthYneWu2Ya+yrK+9WpsXy4D9K7m
-         nCBomnVw8uLYE2RejgMPByQUJS7dWynw5KKnW7Hpx59VM7wGhOxVJHEejAHxazZo+USS
-         FPRiRrE65JMd0o7JXD894DkGhW4ZZ7v15LhvJ83fBiHApniaGopxWJxNf7jPvYjIMhxp
-         hN7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUHEgCtFLxQmIVGoNxM04OhoUNAJqtcv7wMuCMKVKEcJHJJcWlxc8pemRUsENyzW8FAs/CWH4IRdHqW@vger.kernel.org, AJvYcCVG+8sOTxIF/uRquN7F4Hwd6M1+uMxHD0A2S9SKd+hyVsF8bUttHorXULGJiorgp+Gz/uzRA5EaCy0k@vger.kernel.org, AJvYcCW8hK+o4zfFn/X03gQqR1p69BLzjRlz4ImYDraI7mdWU/nmNBPsN2heXnXYNvphyrmFx3zT7HcgHEIiyQ==@vger.kernel.org, AJvYcCWnIMIrDaWDQSSmBc1/EVcAaYZfKRnKKBh2fSe03x1yBvj9zubJb1AbdZ5KlB0aHUcoL1VZfGWUXaS/6Koe@vger.kernel.org, AJvYcCXSwUWUaAtxQFEVa9RBTK1YrTI/nVa00t3SLO4KPdrLvtTcO/rItQkpx2oUZbbcIKdUmbvnw44wNssan2w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyn0fHFkAio/W+nywhXEE16H9XpP3SlD+Ov4yDXg1k5MNoY2fvK
-	O3kMmNVEvmbaWCgX+uewh9Ikc6hv4YrreFDnMprCpuSKWS9XQnLOYYv1
-X-Gm-Gg: ASbGncv7j++xsmb4wWXLjImTaY1mZSuPaaX6RK0S3wq/qHRj2MM9MHqnQpFrafvQY3K
-	O7ewbhIs1m1NdDIZ8AINF8Xa57+vXXUFBk+DsOA+t3pX1H8GdxC32tJl6FU/hlSeUt6uh7d3TVh
-	E7HV6AbF/oGCBEmcKAanNlUhPEMFHe3ZON65lsp6bPfv/7izq3IedsNRsh+5cCglLUtkN5w3uIY
-	/1Fiv+SRQoop/SWIZroNsKAYGMJgld2kvdtt8Lh6adTB9hF7RSsu2T8zsiOKALYtkdaleHWlUwq
-	eSL6HQ96OLN9Rlv/gM2D734JcCYn+swTtf078DAkLc23ChZ5lDrcgAxD/WgiOBc=
-X-Google-Smtp-Source: AGHT+IFwtUIm+14PZZznaUVeBL4d9kvfMJHlGFaNbp2ss/KcjJLiMnWF42EXMssj52lvwKsLwDaCgg==
-X-Received: by 2002:a17:902:e54b:b0:223:4d7e:e52c with SMTP id d9443c01a7336-23c6e4d683cmr74426775ad.5.1751490024982;
-        Wed, 02 Jul 2025 14:00:24 -0700 (PDT)
+        bh=Wh2PtfxFsXVqWIGJhK/ssCsDM+Xukv05BNpcs9NLP9I=;
+        b=VZWNrLdWNBOYec343V0jTzZpJZc4mIqU450lLCqLxLe4R7a1JtcPtha6/b2F/oV2b3
+         bS1VgAr4/4E7VL1Gu0r3BNhsptMkb0c3ZntrGLGFz+QoaOdVfglnq5woYFycGkpNLu/u
+         XtdKTuOG4w2NZuj4ha1JwTKAotcZWSv405xI1PoPWs2LrbIP4z9AxTgM6syJsfuNOC85
+         0coK23T34gg4l4riQhjY5P3j0zLlxP+Zxjj69Ye6QtbEyHAF32nGxVYrM6AdJWEbprzs
+         +LHCtVIaCaoFf07q6qmpCcGTCHWsYfx+5fAQyPxeaYD3YT1kGKA8v+Ff0TvUqHCgr7Zz
+         RYdw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSFCWKiuDnL20ckUmCSeYqERBRO1TcYpDn1lL9w+f/ETs3S7usZbQ6VOVRcIRwTu8n4+2xOoNYyTuj@vger.kernel.org, AJvYcCVBf7uz3ggCBG7CW20u0cEvO8QpZaS9hHUu3dRj+5+fIU1Ov5ty0RtzdS1GMrKkox7HEOx9Ybc+fSQRtw==@vger.kernel.org, AJvYcCWY7T6r5vnN8Ioc1jmo+JRUUU5UFx1B1nStS6MwwqZMQ3Gh5hs+mG5snHBJ4vaIbi8YJ6BOQTeGqjxhXJcd@vger.kernel.org, AJvYcCX/33PxYvrgDFyfzoHE1vCpc66kR5DOhQyr87ojGIHQdIf7w2IRNydBSqmfL2LtuRMHyEejwqcCAcKo@vger.kernel.org, AJvYcCXnVqLsx5o9Q4321TfEwccOMu+obPQdZWlgFYdbt7dAcaWk3VuhYCLHqfZORZ2xOg0j6l2tRe3nKj3ZDZw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5irhQ78EB8mb7UHUgt9dkOuagyGwTb2jNFXhjJZIBcoG82AAh
+	pyy7rL5oVj29PbjWpbJKvr3yMFeYXwpsAfdWPMBSCWIsuEsJzXduNGqk
+X-Gm-Gg: ASbGncvvhMgHH2boXRpfXrMqJaQyOPX5lH8D07DnetMgNMVP+Jzox5/Zp1m5ktB1eN9
+	Yy2X1XTLeIDWsPkeB72V+H8+jZ/7TJYQrrsDnLMe4St+55p5dldpHK69G8JtGQ3j2pdQN2WatGZ
+	TwdM72XnRE9zAnFCG1WZdVjRA8laSFbBLZvXmZvMlN2zwQS6hKUW2otPEVh1GCR6NUkTnoVchLe
+	8gSMFtRQ/5JE04HJrqdn5QT4L5cQLjw/GOJcQdtO2UxDmuJPkEJKaEh+T6wkRXiOCBlfgOYPklJ
+	1tUlQhlBYSc2jbAp7Nq5fSCMA6jMyXwLle16eJgV8OCeRWwovPiLdpKYSWSz/rI=
+X-Google-Smtp-Source: AGHT+IED4rigsUmACCM8UMue5pRAk+uyxupiG5Exv/rXBrfmLjc9Y12VetS1nwj6oMIn6YZGh8phpQ==
+X-Received: by 2002:a17:903:1a70:b0:234:cc7c:d2e8 with SMTP id d9443c01a7336-23c6e5b0fd8mr52532375ad.37.1751490311058;
+        Wed, 02 Jul 2025 14:05:11 -0700 (PDT)
 Received: from google.com ([2620:15c:9d:2:918b:9ece:525a:9158])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3c4b2esm143163835ad.211.2025.07.02.14.00.23
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23acb3acc62sm146106955ad.143.2025.07.02.14.05.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jul 2025 14:00:24 -0700 (PDT)
-Date: Wed, 2 Jul 2025 14:00:19 -0700
+        Wed, 02 Jul 2025 14:05:10 -0700 (PDT)
+Date: Wed, 2 Jul 2025 14:05:07 -0700
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -84,10 +84,10 @@ Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
 	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
 	andriy.shevchenko@intel.com, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v10 09/11] input: keyboard: Add support for MAX7360 keypad
-Message-ID: <uibf7p6niiljlymzp24h2sk5dzhw5xschaqxj6wfpgge6b7hdo@czpfchjl7pvw>
+Subject: Re: [PATCH v10 10/11] input: misc: Add support for MAX7360 rotary
+Message-ID: <rfxdncj7o6ow53jthveea6byresoz3vwts3h4cqjezn3egrny3@sd63xrnhwm6s>
 References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
- <20250530-mdb-max7360-support-v10-9-ce3b9e60a588@bootlin.com>
+ <20250530-mdb-max7360-support-v10-10-ce3b9e60a588@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -96,21 +96,37 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250530-mdb-max7360-support-v10-9-ce3b9e60a588@bootlin.com>
+In-Reply-To: <20250530-mdb-max7360-support-v10-10-ce3b9e60a588@bootlin.com>
 
 Hi Mathieu,
 
-On Fri, May 30, 2025 at 12:00:17PM +0200, Mathieu Dubois-Briand wrote:
-> +	if (!in_range(max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN,
-> +		      MAX7360_DEBOUNCE_MAX - MAX7360_DEBOUNCE_MIN)) {
-> +		dev_err(dev, "Invalid keypad-debounce-delay-ms: %u, should be between %u and %u.\n",
-> +			max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN, MAX7360_DEBOUNCE_MAX);
-> +		return -EINVAL;
+On Fri, May 30, 2025 at 12:00:18PM +0200, Mathieu Dubois-Briand wrote:
+> +
+> +static void max7360_rotaty_report_event(struct max7360_rotary *max7360_rotary, int steps)
 
-Is it inclusive of MAX7360_DEBOUNCE_MAX or exclusive? Do we need + 1
-here?
+s/rotaty/rotary
 
-Anyway,
+> +	if (max7360_rotary->relative_axis) {
+> +		input_report_rel(max7360_rotary->input, max7360_rotary->axis, steps);
+> +	} else {
+> +		int pos = max7360_rotary->pos;
+> +		int maxval = max7360_rotary->steps;
+> +
+> +		/*
+> +		 * Add steps to the position.
+> +		 * Make sure added steps are always in ]-maxval; maxval[
+> +		 * interval, so (pos + maxval) is always >= 0.
+> +		 * Then set back pos to the [0; maxval[ interval.
+> +		 */
+> +		pos += steps % maxval;
+> +		if (max7360_rotary->rollover)
+> +			pos = (pos + maxval) % maxval;
+> +		else
+> +			pos = clamp(pos, 0, maxval);
+
+Should it be clamp(pos, 0, maxval - 1) by chance?
+
+Otherwise:
 
 Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
