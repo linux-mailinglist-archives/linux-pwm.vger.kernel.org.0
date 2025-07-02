@@ -1,188 +1,252 @@
-Return-Path: <linux-pwm+bounces-6703-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6704-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB9EFAF5A2C
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 15:53:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EA50AF5C6E
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 17:14:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F3033BF59A
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 13:51:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A68EB18953BB
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Jul 2025 15:14:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11517288C19;
-	Wed,  2 Jul 2025 13:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 499ED30AACD;
+	Wed,  2 Jul 2025 15:13:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PLSOJR1e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3YKk9tc"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C7128724B
-	for <linux-pwm@vger.kernel.org>; Wed,  2 Jul 2025 13:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FEB30AAC3;
+	Wed,  2 Jul 2025 15:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751464207; cv=none; b=ush49WvPsyQUGRrzfxU7SHumeYUDo0M7U+FJkiSWqBCqNv1TLXVcvUfI2ByqQReqLQ16V+1mudHjUhPzPoxMl1pSqn1JmY8Qp7IUG7viTRpXLJUsNKDo9Bz5Go1gPoM70es8gxp7Je+iFmStoYmy1YK83n8UPi99NjpMVvnZ+Bo=
+	t=1751469223; cv=none; b=r1OAYhvJkKgu2IJvaj/YV3U/GrS/qlNCckMzfj3XqkR6aefX8+pWcFWNzTDcFyCpWgRN/kpz+P9jdwfHVV/gtjbsopmbcdTvllnZKr0yE9HblF2oCGvxA8wwR28A88VCuEt3jlqjhBZdeirFr9518VRTsCgPrOqE+l5lpdutueE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751464207; c=relaxed/simple;
-	bh=pQpdhYmfxqh3Yfxmei5sPv11PaCzGkgZVRufLVaDNj8=;
-	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
-	 Content-Type:References; b=IbjbLa5nmSIarpL8NmPG33m8PmOLj61YwSxlLOLKG6D3Aj6wm4JMWOA7dXf49fh1LaIjLS11lFd/s4dgbOLm+0YfJf+ooKyI5SIuJH0CMThD/NR6HlKoRRuLnctgTnlOpGLOQvyhjzYfyWsoliP4fmPADnfFW5socuFkZjEgzAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=PLSOJR1e; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250702135004euoutp02ddb2dfb6f449842a0814c8b6d4b4d250~Oc2ob4AC42698626986euoutp02k
-	for <linux-pwm@vger.kernel.org>; Wed,  2 Jul 2025 13:50:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250702135004euoutp02ddb2dfb6f449842a0814c8b6d4b4d250~Oc2ob4AC42698626986euoutp02k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751464204;
-	bh=Thc/4MnT4r5I8ag38cbivyQhpbuX345C1nEB0lzCSSU=;
-	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
-	b=PLSOJR1ems9j+u01Iom1Bf7tfQqAO/+/i6RKbz6UaUaX9AtpnRZZ7lavK/yC7eR5x
-	 JeOIjXtNkv8gRas0XHkr9ijybMp3xbvaM3TA7v8CDzrpim4tzm4okn5gXj/hnI/cjH
-	 vgKaWaY3wiBd7raLicR1hTP6Oysay60LERJ06vsY=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250702135003eucas1p114a5ce5dea469242940b7e2e44a7ad59~Oc2nsQ3Sd2688626886eucas1p1g;
-	Wed,  2 Jul 2025 13:50:03 +0000 (GMT)
-Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
-	[106.210.136.40]) by eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250702135002eusmtip2051f0a93828f9a33086d66487d03c072~Oc2moyBjI0829708297eusmtip2_;
-	Wed,  2 Jul 2025 13:50:02 +0000 (GMT)
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-Date: Wed, 02 Jul 2025 15:45:36 +0200
-Subject: [PATCH v7 8/8] riscv: dts: thead: Add PWM fan and thermal control
+	s=arc-20240116; t=1751469223; c=relaxed/simple;
+	bh=9KOpZ+d/XCXNDsoS55VxNUdTj9TN9I7t+x/Rpsw/H7I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H/MlSEhxLCu5qCP/c/DuPEKogGIdqk72N2GPpLxQKv89NcL+PhCbDW0YP7Cge8RbNHNqZ9zF5sjTZeemWUkc3pqKWn5XB51Lmz84H9iZP1H74nGrCMZ0YMPhkl8aGqLMjFVCQ44/mm4ZgyIODXf9S2y278xu2qVEGjNdd8jnNkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T3YKk9tc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63A56C4CEE7;
+	Wed,  2 Jul 2025 15:13:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751469222;
+	bh=9KOpZ+d/XCXNDsoS55VxNUdTj9TN9I7t+x/Rpsw/H7I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T3YKk9tcc21lKT0e8rJsMgs392Ojl6R9DEscpVgysb7rhzQEb/5aQmDusOXxbcfKN
+	 HdFhz4rka4g4jIgo8bej4SSBWSJ1LcCipsCMZ2lOrA6G1tXp2arxNhF8axS6Jm85sn
+	 Bi3cG2p92nnYcCrLxZwQZzZh4uasZkmOkoJrQ+gI5k75y2n+XpWsINKGqd4LAIJrzH
+	 PymYC+//cYLekNyniNlYPjTQUL7FzMjAnQyC9AoNNX9E91LMFh3tCWYIkAj8pEMxX9
+	 3ZI1qDtXCuFm7ac56rBTj7QbLPaQgudPU9IFUQVO0QBjnayWM5dceCsqui6wW4SAl1
+	 WwXV/5Tu5oV3g==
+Date: Wed, 2 Jul 2025 17:13:34 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Drew Fustini <fustini@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 3/8] rust: pwm: Add core 'Device' and 'Chip' object
+ wrappers
+Message-ID: <aGVMnmoepIVSS0yK@pollux>
+References: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
+ <CGME20250702134957eucas1p1d84f2ed3014cf98ea3a077c7fae6dea6@eucas1p1.samsung.com>
+ <20250702-rust-next-pwm-working-fan-for-sending-v7-3-67ef39ff1d29@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250702-rust-next-pwm-working-fan-for-sending-v7-8-67ef39ff1d29@samsung.com>
-In-Reply-To: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
-	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
-	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,  Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,  Trevor
-	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,  Michal
-	Wilczynski <m.wilczynski@samsung.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Paul Walmsley
-	<paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,  Marek Szyprowski
-	<m.szyprowski@samsung.com>,  Benno Lossin <lossin@kernel.org>,  Michael
-	Turquette <mturquette@baylibre.com>,  Drew Fustini <fustini@kernel.org>,
-	Benno Lossin <lossin@kernel.org>,  Drew Fustini <fustini@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org
-X-Mailer: b4 0.15-dev
-X-CMS-MailID: 20250702135003eucas1p114a5ce5dea469242940b7e2e44a7ad59
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250702135003eucas1p114a5ce5dea469242940b7e2e44a7ad59
-X-EPHeader: CA
-X-CMS-RootMailID: 20250702135003eucas1p114a5ce5dea469242940b7e2e44a7ad59
-References: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
-	<CGME20250702135003eucas1p114a5ce5dea469242940b7e2e44a7ad59@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250702-rust-next-pwm-working-fan-for-sending-v7-3-67ef39ff1d29@samsung.com>
 
-Add Device Tree nodes to enable a PWM controlled fan and it's associated
-thermal management for the Lichee Pi 4A board.
+On Wed, Jul 02, 2025 at 03:45:31PM +0200, Michal Wilczynski wrote:
+> Building on the basic data types, this commit introduces the central
+> object abstractions for the PWM subsystem: Device and Chip. It also
+> includes the core trait implementations that make the Chip wrapper a
+> complete, safe, and managed object.
+> 
+> The main components of this change are:
+>  - Device and Chip Structs: These structs wrap the underlying struct
+>    pwm_device and struct pwm_chip C objects, providing safe, idiomatic
+>    methods to access their fields.
+> 
+>  - High-Level `Device` API: Exposes safe wrappers for the modern
+>    `waveform` API, allowing consumers to apply, read, and pre-validate
+>    hardware configurations.
+> 
+>  - Core Trait Implementations for Chip:
+>     - AlwaysRefCounted: Links the Chip's lifetime to its embedded
+>       struct device reference counter. This enables automatic lifetime
+>       management via ARef.
+>     - Send and Sync: Marks the Chip wrapper as safe for use across
+>       threads. This is sound because the C core handles all necessary
+>       locking for the underlying object's state.
+> 
+> These wrappers and traits form a robust foundation for building PWM
+> drivers in Rust.
+> 
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 
-This enables temperature-controlled active cooling for the Lichee Pi 4A
-board based on SoC temperature.
+Few more comments below, with those fixed:
 
-Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
----
- arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts | 67 +++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
 
-diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-index 4020c727f09e8e2286fdc7fecd79dbd8eba69556..c58c2085ca92a3234f1350500cedae4157f0c35f 100644
---- a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-+++ b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-@@ -28,9 +28,76 @@ aliases {
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	thermal-zones {
-+		cpu-thermal {
-+			polling-delay = <1000>;
-+			polling-delay-passive = <1000>;
-+			thermal-sensors = <&pvt 0>;
-+
-+			trips {
-+				fan_config0: fan-trip0 {
-+					temperature = <39000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				fan_config1: fan-trip1 {
-+					temperature = <50000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+
-+				fan_config2: fan-trip2 {
-+					temperature = <60000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map-active-0 {
-+					cooling-device = <&fan 1 1>;
-+					trip = <&fan_config0>;
-+				};
-+
-+				map-active-1 {
-+					cooling-device = <&fan 2 2>;
-+					trip = <&fan_config1>;
-+				};
-+
-+				map-active-2 {
-+					cooling-device = <&fan 3 3>;
-+					trip = <&fan_config2>;
-+				};
-+			};
-+		};
-+	};
-+
-+	fan: pwm-fan {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&fan_pins>;
-+		compatible = "pwm-fan";
-+		#cooling-cells = <2>;
-+		pwms = <&pwm 1 10000000 0>;
-+		cooling-levels = <0 66 196 255>;
-+	};
-+
- };
- 
- &padctrl0_apsys {
-+	fan_pins: fan-0 {
-+		pwm1-pins {
-+			pins = "GPIO3_3"; /* PWM1 */
-+			function = "pwm";
-+			bias-disable;
-+			drive-strength = <25>;
-+			input-disable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+
- 	uart0_pins: uart0-0 {
- 		tx-pins {
- 			pins = "UART0_TXD";
+> +/// Wrapper for a PWM device [`struct pwm_device`](srctree/include/linux/pwm.h).
+> +#[repr(transparent)]
+> +pub struct Device(Opaque<bindings::pwm_device>);
+> +
+> +impl Device {
 
--- 
-2.34.1
+<snip>
 
+> +    /// Gets a reference to the parent `Chip` that this device belongs to.
+> +    pub fn chip(&self) -> &Chip {
+> +        // SAFETY: `self.as_raw()` provides a valid pointer. (*self.as_raw()).chip
+> +        // is assumed to be a valid pointer to `pwm_chip` managed by the kernel.
+> +        // Chip::as_ref's safety conditions must be met.
+> +        unsafe { Chip::as_ref((*self.as_raw()).chip) }
+
+I assume the C API does guarantee that a struct pwm_device *always* holds a
+valid pointer to a struct pwm_chip?
+
+> +
+> +/// Wrapper for a PWM chip/controller ([`struct pwm_chip`](srctree/include/linux/pwm.h)).
+> +#[repr(transparent)]
+> +pub struct Chip(Opaque<bindings::pwm_chip>);
+> +
+> +impl Chip {
+> +    /// Creates a reference to a [`Chip`] from a valid pointer.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The caller must ensure that `ptr` is valid and remains valid for the lifetime of the
+> +    /// returned [`Chip`] reference.
+> +    pub(crate) unsafe fn as_ref<'a>(ptr: *mut bindings::pwm_chip) -> &'a Self {
+> +        // SAFETY: The safety requirements guarantee the validity of the dereference, while the
+> +        // `Chip` type being transparent makes the cast ok.
+> +        unsafe { &*ptr.cast::<Self>() }
+> +    }
+> +
+> +    /// Returns a raw pointer to the underlying `pwm_chip`.
+> +    pub(crate) fn as_raw(&self) -> *mut bindings::pwm_chip {
+> +        self.0.get()
+> +    }
+> +
+> +    /// Gets the number of PWM channels (hardware PWMs) on this chip.
+> +    pub fn npwm(&self) -> u32 {
+> +        // SAFETY: `self.as_raw()` provides a valid pointer for `self`'s lifetime.
+> +        unsafe { (*self.as_raw()).npwm }
+> +    }
+> +
+> +    /// Returns `true` if the chip supports atomic operations for configuration.
+> +    pub fn is_atomic(&self) -> bool {
+> +        // SAFETY: `self.as_raw()` provides a valid pointer for `self`'s lifetime.
+> +        unsafe { (*self.as_raw()).atomic }
+> +    }
+> +
+> +    /// Returns a reference to the embedded `struct device` abstraction.
+> +    pub fn device(&self) -> &device::Device {
+> +        // SAFETY: `self.as_raw()` provides a valid pointer to `bindings::pwm_chip`.
+> +        // The `dev` field is an instance of `bindings::device` embedded within `pwm_chip`.
+> +        // Taking a pointer to this embedded field is valid.
+> +        // `device::Device` is `#[repr(transparent)]`.
+> +        // The lifetime of the returned reference is tied to `self`.
+> +        let dev_field_ptr = unsafe { core::ptr::addr_of!((*self.as_raw()).dev) };
+
+I think you can use `&raw` instead.
+
+> +        // SAFETY: `dev_field_ptr` is a valid pointer to `bindings::device`.
+> +        // Casting and dereferencing is safe due to `repr(transparent)` and lifetime.
+> +        unsafe { &*(dev_field_ptr.cast::<device::Device>()) }
+
+Please use Device::as_ref() instead.
+
+> +    }
+> +
+> +    /// Gets the *typed* driver-specific data associated with this chip's embedded device.
+> +    pub fn drvdata<T: 'static>(&self) -> &T {
+
+You need to make the whole Chip structure generic over T, i.e.
+Chip<T: ForeignOwnable>.
+
+Otherwise the API is unsafe, since the caller can pass in any T when calling
+`chip.drvdata()` regardless of whether you actually stored as private data
+through Chip::new().
+
+Also, given that `T: ForeignOwnable`, you should return `T::Borrowed`.
+
+> +        // SAFETY: `self.as_raw()` gives a valid pwm_chip pointer.
+> +        // `bindings::pwmchip_get_drvdata` is the C function to retrieve driver data.
+> +        let ptr = unsafe { bindings::pwmchip_get_drvdata(self.as_raw()) };
+> +
+> +        // SAFETY: The only way to create a chip is through Chip::new, which initializes
+> +        // this pointer.
+> +        unsafe { &*ptr.cast::<T>() }
+> +    }
+> +
+> +    /// Allocates and wraps a PWM chip using `bindings::pwmchip_alloc`.
+> +    ///
+> +    /// Returns an [`ARef<Chip>`] managing the chip's lifetime via refcounting
+> +    /// on its embedded `struct device`.
+> +    pub fn new<T: 'static + ForeignOwnable>(
+> +        parent_dev: &device::Device,
+> +        npwm: u32,
+> +        sizeof_priv: usize,
+> +        drvdata: T,
+
+As mentioned above, the whole Chip structure needs to be generic over T,
+otherwise you can't guarantee that this T is the same T as the one in drvdata().
+
+> +// SAFETY: Implements refcounting for `Chip` using the embedded `struct device`.
+> +unsafe impl AlwaysRefCounted for Chip {
+> +    #[inline]
+> +    fn inc_ref(&self) {
+> +        // SAFETY: `self.0.get()` points to a valid `pwm_chip` because `self` exists.
+> +        // The embedded `dev` is valid. `get_device` increments its refcount.
+> +        unsafe {
+> +            bindings::get_device(core::ptr::addr_of_mut!((*self.0.get()).dev));
+
+I think you can use `&raw mut` instead.
+
+Also, if you move the semicolon at the end of the unsafe block, this goes in one
+line.
+
+> +        }
+> +    }
+> +
+> +    #[inline]
+> +    unsafe fn dec_ref(obj: NonNull<Chip>) {
+> +        let c_chip_ptr = obj.cast::<bindings::pwm_chip>().as_ptr();
+> +
+> +        // SAFETY: `obj` is a valid pointer to a `Chip` (and thus `bindings::pwm_chip`)
+> +        // with a non-zero refcount. `put_device` handles decrement and final release.
+> +        unsafe {
+> +            bindings::put_device(core::ptr::addr_of_mut!((*c_chip_ptr).dev));
+> +        }
+
+Same here.
+
+> +    }
+> +}
 
