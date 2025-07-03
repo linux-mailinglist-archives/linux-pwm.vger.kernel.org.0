@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-6713-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6714-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D582AF8273
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Jul 2025 23:12:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7185AF8284
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Jul 2025 23:14:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8F3761C47F60
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Jul 2025 21:12:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 969167A30B9
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Jul 2025 21:13:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BD3B2BD5BF;
-	Thu,  3 Jul 2025 21:12:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AA232BE7B5;
+	Thu,  3 Jul 2025 21:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MM2xOjYP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dN6Y+S7/"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BCC76C61;
-	Thu,  3 Jul 2025 21:12:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657AE2BD5BF;
+	Thu,  3 Jul 2025 21:14:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751577130; cv=none; b=Geb96UBprV7kF2poC5oFIvoR0DmQzAg43MRzCVnaPwUkIshFpUxDeTezPFYj8/2Qk2G6nz83axuAP8JkD+4UpT0FPEYVWq+BBjeaMLMCAqVfjLA3OyRYFijOpuWcdmggp1dE29pc9Q5Bd3B6IHFaJeOCrI6wBLf4o4yHaTb/IfQ=
+	t=1751577280; cv=none; b=VjwK2soWxLFwGJZUd0qSQV+HXjPHqexujPf4nymdC9vZZ007hIUA2HOwRFEmE7XSWEqHfumK3iZeaITeiYxvAPZu8zvHdVc38l98/IdiL2pio8ZayNxoI7NOVpBtWEVncJxx6YBuBK5a2M/NMWRlQ7Xkcql4ofV3imZmcb0W5aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751577130; c=relaxed/simple;
-	bh=BccBPphFegUfvo9vaJnC2YeCQIMSxr8COvMz3kKjdFQ=;
+	s=arc-20240116; t=1751577280; c=relaxed/simple;
+	bh=dT3HXJdueQ/TtIh10MafcagW9grURrInOFDiHaE4YAE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UDCkBee9PZNI2luuH+4t828tuyJdP2TMj3msA7DAoVsOxb7WA8TI7NV868vQpOUGJjgWOu/qqKPc+yw9T/jy4gyLn9E4yTwiY1LHNhbX9l2PI2d41Hp5oShoGog71yrb58AzOzfQshMI/lViayMpeRKVO+LDHUhwUNDj1sG/W54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MM2xOjYP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A2B6C4CEEB;
-	Thu,  3 Jul 2025 21:12:09 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=f8IWzOgOfjFakIadpnEwQd5DiUzWQGdrbhs8oCwIGJGOKQ7LHEiHG4bDamsKyXdYZnuVC1/xp9OQ+bFPRGBKgAETOzNQwy3AICp25TV8xDYsKdmQsQzlaw1cV4+WfGnoHkj+LyoWPJAdDC39VrrjDYteU0ajecx47x1VLesqr74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dN6Y+S7/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 674D6C4CEE3;
+	Thu,  3 Jul 2025 21:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751577130;
-	bh=BccBPphFegUfvo9vaJnC2YeCQIMSxr8COvMz3kKjdFQ=;
+	s=k20201202; t=1751577279;
+	bh=dT3HXJdueQ/TtIh10MafcagW9grURrInOFDiHaE4YAE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MM2xOjYPR/IlHPzFnc4v2tVz/O2tS3X1RNb1e1zd37lyGL3SuN4QC2cD2rggrgojM
-	 YqnQMLcCzLbZYB97rUY8sid3KisERGoNEM89VfLjSqmgPU4GFfBsbGO/oMLjNDC6CB
-	 +bmZ5tUZ0Uj0Z5JJHvqMlBG5QZAUjDq9eCOGUaaLy9RA7rzjPaVijO25n2XibWN2/A
-	 s4rdeHqvUtmuJ1qG71Px/2qpMUJm45f1tAwV9dQb+oTmxlm5jzgEVWE8uOiGVSnZrW
-	 7OjzF+BqqRhVtSUZU8NXUsq095I++8WhR8gdQ5XmKnXnTj+i7ie+9J+OuR+w6ZyKfC
-	 FOk/GBTTD0aUw==
-Date: Thu, 3 Jul 2025 14:12:08 -0700
+	b=dN6Y+S7/irGC1QtJuoxuGkKwnvtHa2E3PZfRG8brGqKjhENIg5sioAaRoEwKW/GWg
+	 Px8Zee01GDBXIyQpKdR6AmE7H/hcij1i6TaDgl0enlVzXeIxJK5yCFCt0ELN3RZqi7
+	 MS1a85taNpTxP+e0HVLcTexZLqfXWIOHhlM8fIn5MlfpaViQm+0kGIVa6mwPb+yRQ7
+	 Eihg1+bDXPdvTdYpEgh7v8qNSiPA+o+by5E1lcu1KgZLi9yRRmoaF0N1iKi5Gm+Hyl
+	 AdexxqsUF/bp5/NP+pMeGcD+A3cJsi7TaRCzZFEx9PUac8awfMllymNHmf+v2xSIkC
+	 IiV/b5sRd2JzQ==
+Date: Thu, 3 Jul 2025 14:14:37 -0700
 From: Drew Fustini <fustini@kernel.org>
 To: Michal Wilczynski <m.wilczynski@samsung.com>
 Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
@@ -64,11 +64,11 @@ Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
 	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
 	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
 	devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 8/8] riscv: dts: thead: Add PWM fan and thermal control
-Message-ID: <aGbyKAYPc3Hqc+uY@x1>
+Subject: Re: [PATCH v7 7/8] riscv: dts: thead: Add PWM controller node
+Message-ID: <aGbyvc16om2v7Qpv@x1>
 References: <20250702-rust-next-pwm-working-fan-for-sending-v7-0-67ef39ff1d29@samsung.com>
- <CGME20250702135003eucas1p114a5ce5dea469242940b7e2e44a7ad59@eucas1p1.samsung.com>
- <20250702-rust-next-pwm-working-fan-for-sending-v7-8-67ef39ff1d29@samsung.com>
+ <CGME20250702135002eucas1p29d0a0393fec6158a3ca158ea09b61cf1@eucas1p2.samsung.com>
+ <20250702-rust-next-pwm-working-fan-for-sending-v7-7-67ef39ff1d29@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -77,14 +77,10 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250702-rust-next-pwm-working-fan-for-sending-v7-8-67ef39ff1d29@samsung.com>
+In-Reply-To: <20250702-rust-next-pwm-working-fan-for-sending-v7-7-67ef39ff1d29@samsung.com>
 
-On Wed, Jul 02, 2025 at 03:45:36PM +0200, Michal Wilczynski wrote:
-> Add Device Tree nodes to enable a PWM controlled fan and it's associated
-> thermal management for the Lichee Pi 4A board.
-> 
-> This enables temperature-controlled active cooling for the Lichee Pi 4A
-> board based on SoC temperature.
+On Wed, Jul 02, 2025 at 03:45:35PM +0200, Michal Wilczynski wrote:
+> Add the Device Tree node for the T-HEAD TH1520 SoC's PWM controller.
 > 
 > Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 
