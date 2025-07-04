@@ -1,150 +1,219 @@
-Return-Path: <linux-pwm+bounces-6730-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6731-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 017DBAF99A3
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Jul 2025 19:27:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2289EAF9CA3
+	for <lists+linux-pwm@lfdr.de>; Sat,  5 Jul 2025 01:03:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B2971BC7531
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Jul 2025 17:28:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98210482A0C
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Jul 2025 23:03:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4434C207E03;
-	Fri,  4 Jul 2025 17:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9358520D517;
+	Fri,  4 Jul 2025 23:03:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="urPNg31e"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T4PKWz+E"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34C71F2C45
-	for <linux-pwm@vger.kernel.org>; Fri,  4 Jul 2025 17:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22EB2E370D;
+	Fri,  4 Jul 2025 23:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751650064; cv=none; b=O0aEOFuY+JVIhhiZnDNVHT2rqhO6iTXdohQ/H0Fxn8F+RCjPkxcD0elXHewFGLSRgzL/xv5cS/OZuIaZnNR7F/vv2E+2ZdQyDo+cZ2wwW58nyCDusWPWG15/jZvc8/NejwIng93tpwyvRVJ7eVugdy5LavcMaLQy/uYcOSUJ0DM=
+	t=1751670234; cv=none; b=kdosMOS2WA3PAa5ACIdzjy+961r5rcC9yPXGRh1lsWJg/mJfMngE+uBQxyIJdzBu1f912502GM6OsxeeYZf3bzKlbb/rq4ExGr55i6YtnQF2VXssq35Eatkdthrb8/Rf1Vdd1kk+B4qBgKz6Hszb17CWrlfTo2Qp5C4FY5jwBF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751650064; c=relaxed/simple;
-	bh=5T8lLq8LRw7v7jY52F738fYrCCvGVLO6R+VQ2/Gu59s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XO1ehjyvq3hRdyE5MLGY9pxeIx6ptK0gKqnw8Er6hVhAndIZwU8xaEg48HPq8jmlPigMhFEexvwZKh51irY4ITcdbswrm0QG7qaTug9J9K6SQ1vV71Gltm6TragR2nQanxHlV/BZekbmsZsXYtXS+KaaEHKGHrnsYCrACEK7yrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=urPNg31e; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so8774675e9.0
-        for <linux-pwm@vger.kernel.org>; Fri, 04 Jul 2025 10:27:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1751650060; x=1752254860; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EJ8+3kzijg+yQZlgXvqdx2kavqq2yHDf6k+bFmty+p8=;
-        b=urPNg31eS6IrYbUfKBIznXUkVT6kiZg8eTnbE5KZ748gdFtyjG/YrzJgOFVh5fUpf+
-         b9uCcloNQNYOvUtLelFR2OSYeSnbnvQYo8H5w/Rv0U6O7xXiYrLuWF6cd8QqiIHI60rN
-         0UOXcS8pUiUG8WyI5BXTxpmLF9wI5rmVfcBzLDV0S7xhVTkOqm4EEJozVzXmw+pzN4r/
-         x+PmTBoEJw8YeyLU+JjSFYYVqPaDaI0tN+jrmmOgm1vkK3T5+RMlXcVr9pIHnq7sdshi
-         omw5X+g8dF+N9L7HKaFOzvuT7HWXKXIr1mUqR9KmCYDgbZv2WCWcxU5P/UdEJfHaOCdT
-         iHBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751650060; x=1752254860;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EJ8+3kzijg+yQZlgXvqdx2kavqq2yHDf6k+bFmty+p8=;
-        b=aJEoB5vyA4JAPR78Mv8HwCfdMhkjm5JyUkky5zX/muXbzSn7pTyYofezEjUs1nRebD
-         AG9gmrrA+3+YQicDNsbBB8h4FGHNYiOfFizRcMxSHkHUp3OD3Iu2tULOy5xkGkCjCuzP
-         B9cEMPZWrzEOtN4CBtMscs17dboyQQmwC15WDb/ktGIGfUGRupG+OAqEQdiC/AjmAePJ
-         Y77QFkLexp9eVY5j27QouJR2K76w4IkMDF4oQdY71SIGjl1NjyukHkcKd1IrTKNf9SIm
-         RILv+fZzOmhFay3alZGbV5cQtjUSYOeiaCaWImuw7Y2voS08pNVwRksoAkKmQEZlySjH
-         fqkA==
-X-Gm-Message-State: AOJu0YwQLc9pAg6C4p6chtc16Y1wv6Z+eZp/0VfQtUiGxXqu07vNicxG
-	ywbe6lISN/52LSIDjjYQxX1AlXJCJ6neDiZ3M77HO9LpUF5I/DDFuhLmfOe7MtUcZQI=
-X-Gm-Gg: ASbGncsbjBTWiQUDkKM3kWtZKq+Y9LIKwOCK3D6JQp8jzYyXfOjN+WH5OQsYBXSU5js
-	IE9uzdi2fzbTIDzzwBaBN33JQFFMw2SVSLvO16enntcCNEsEANntOSzJI/a8DuYJojuslQoRbSO
-	QDiAdY4ux9vQaQtie+QEYDMaPZg94Td+22rhilWuA0sYG5ZZs/VBAaHp6MRqyCcg448yiFNwfXv
-	c62Ip1wYeNiRINgfppOTYycS7EUx52GKQ1TBdaItHZsmj/QwAlzZlB9AktJLbe924xboe5nevyx
-	PmHrv1BrG5UgEhVzQoGel6U2veowN2GmfbfRWIgOOpNbe7Wp090P68EgeZslEELXCbb43Jbt4aJ
-	tFXdz2qWe9oHoyr+gWxBEA6oJmwPzHv5DRvKjE3I=
-X-Google-Smtp-Source: AGHT+IGv5u997dndbYtn5LpnOeCgXKKeiNmL+umfIlNuz+5mm9d73N+p5qkNg3C/k7JLAiqbd72qUA==
-X-Received: by 2002:a05:600c:8b6f:b0:43c:efed:733e with SMTP id 5b1f17b1804b1-454b30b4d40mr39282915e9.14.1751650059765;
-        Fri, 04 Jul 2025 10:27:39 -0700 (PDT)
-Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-454b188d8e6sm31455575e9.36.2025.07.04.10.27.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jul 2025 10:27:39 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
+	s=arc-20240116; t=1751670234; c=relaxed/simple;
+	bh=2v4mwCOfGj2tRqIBg86lB8MMPJvf67lCQwiGx2bDo+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=spwme5wgoS9wdHEl4gsmZEWNZQX1forMqLkTxrGxrK8pEuCvxnPv1+m3SfF8d0ZrN+otBkjDG5sZVNP2SP9w0pTK567+8oTxHMhSXis5z0iHyuVGUAhElDrYAvrwQxFtZAP/+pCbexlYKnaDAlGWK7Lsu+f0zFdKb9/GNi6B7ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T4PKWz+E; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751670233; x=1783206233;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2v4mwCOfGj2tRqIBg86lB8MMPJvf67lCQwiGx2bDo+o=;
+  b=T4PKWz+EDUi0IuMRP2xyYBBETuMVx9hzneq1MDdB4JHgRSGpMe4BjppB
+   KENrbJpaSx/i0/tw7e2aAi6g5E1Gu/6UIHM6O3vld5jreUPHDve7TByE4
+   s9QkntsnHN/7S/w0lbo0Btzw07WCwopAPjmWK3DFUkpfqBKN54rNy7mW2
+   oOwQ+a/BcDcHsJJRlF+yqGTxyui1/wL+JhLayrcoPjbddJQdROXEBFWoi
+   JFgOCm3EMFv7jpzAksNk3+Js6szSzcJb+llOKHIFPTO69bsIfH5FNz4Go
+   Zi3zWktoFatKYFLXTC0XawqvfHwcDwTMqI4vYfTzQFPt8gIZqHJN018In
+   A==;
+X-CSE-ConnectionGUID: UQfMXCD4RiOpA0seCyhq7Q==
+X-CSE-MsgGUID: L+SDInEMSTmlfDfbT8z63w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11484"; a="64594852"
+X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
+   d="scan'208";a="64594852"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2025 16:03:52 -0700
+X-CSE-ConnectionGUID: xMI2KgH0Sz2GeaKQyHZoww==
+X-CSE-MsgGUID: 2NIQhblOT4uFkdMli7zH3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,288,1744095600"; 
+   d="scan'208";a="185684170"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 04 Jul 2025 16:03:49 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uXpRb-00047v-2r;
+	Fri, 04 Jul 2025 23:03:47 +0000
+Date: Sat, 5 Jul 2025 07:02:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: linux-pwm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH] pwm: mediatek: Ensure to disable clocks in error path
-Date: Fri,  4 Jul 2025 19:27:27 +0200
-Message-ID: <20250704172728.626815-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.49.0
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Christian Marangi <ansuelsmth@gmail.com>
+Subject: Re: [PATCH v20] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <202507050624.7hvmxJdI-lkp@intel.com>
+References: <20250704072807.9335-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1841; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=5T8lLq8LRw7v7jY52F738fYrCCvGVLO6R+VQ2/Gu59s=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBoaA8A/CID8YoVzALS6o+3ioPferch7DY1qIofp Ikg+oeQkkWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaGgPAAAKCRCPgPtYfRL+ Tu4JB/9jcS5cvb4dOI+tfyL8GO5FMte/UYZykJQsMUX7mAS214vqglz9KOtmyfbXkf5ZK2otSml ZterLv8gcmhJLJYofdE1y8S1shMqNIRin7NZ6eaaN0C+ptF9sF31aiWXPRnEoFsKYdueGyZ9ov9 Is9qaX7rZA4/Gjgtw4k9aaUamznd5q5xpJu26xUog599gwS+WLuPU3l5A9xaP7TjTs21pTuf0u5 FswUA9k93WAL8h96F3jnP/n08LX3anvstsmbBG32/n8Pqwm1SxMR2oV8cPPqXVHozul4z+RkpEs pzFPczoCywlbdJmrRuCT6XY7KYD9g56e7O0TaYAXdkq3ayHZ
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704072807.9335-1-ansuelsmth@gmail.com>
 
-After enabling the clocks each error path must disable the clocks again.
-One of them failed to do so. Unify the error paths to use goto to make it
-harder for future changes to add a similar bug.
+Hi Christian,
 
-Fixes: 7ca59947b5fc ("pwm: mediatek: Prevent divide-by-zero in pwm_mediatek_config()")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
- drivers/pwm/pwm-mediatek.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index 7eaab5831499..33d3554b9197 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -130,8 +130,10 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 		return ret;
- 
- 	clk_rate = clk_get_rate(pc->clk_pwms[pwm->hwpwm]);
--	if (!clk_rate)
--		return -EINVAL;
-+	if (!clk_rate) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
- 
- 	/* Make sure we use the bus clock and not the 26MHz clock */
- 	if (pc->soc->has_ck_26m_sel)
-@@ -150,9 +152,9 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	}
- 
- 	if (clkdiv > PWM_CLK_DIV_MAX) {
--		pwm_mediatek_clk_disable(chip, pwm);
- 		dev_err(pwmchip_parent(chip), "period of %d ns not supported\n", period_ns);
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto out;
- 	}
- 
- 	if (pc->soc->pwm45_fixup && pwm->hwpwm > 2) {
-@@ -169,9 +171,10 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	pwm_mediatek_writel(pc, pwm->hwpwm, reg_width, cnt_period);
- 	pwm_mediatek_writel(pc, pwm->hwpwm, reg_thres, cnt_duty);
- 
-+out:
- 	pwm_mediatek_clk_disable(chip, pwm);
- 
--	return 0;
-+	return ret;
- }
- 
- static int pwm_mediatek_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc4 next-20250704]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/pwm-airoha-Add-support-for-EN7581-SoC/20250704-153259
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250704072807.9335-1-ansuelsmth%40gmail.com
+patch subject: [PATCH v20] pwm: airoha: Add support for EN7581 SoC
+config: openrisc-allyesconfig (https://download.01.org/0day-ci/archive/20250705/202507050624.7hvmxJdI-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250705/202507050624.7hvmxJdI-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507050624.7hvmxJdI-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from ./arch/openrisc/include/generated/asm/div64.h:1,
+                    from include/linux/math.h:6,
+                    from include/linux/kernel.h:27,
+                    from include/linux/cpumask.h:11,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/spinlock.h:63,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:7,
+                    from include/linux/mm.h:7,
+                    from arch/openrisc/include/asm/pgalloc.h:20,
+                    from arch/openrisc/include/asm/io.h:18,
+                    from include/linux/io.h:12,
+                    from drivers/pwm/pwm-airoha.c:20:
+   drivers/pwm/pwm-airoha.c: In function 'airoha_pwm_apply_bucket_config':
+   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]
+     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                                   ^~
+   drivers/pwm/pwm-airoha.c:270:17: note: in expansion of macro 'do_div'
+     270 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
+         |                 ^~~~~~
+   In file included from include/linux/array_size.h:5,
+                    from drivers/pwm/pwm-airoha.c:16:
+>> include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
+     195 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^~
+   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   drivers/pwm/pwm-airoha.c:270:17: note: in expansion of macro 'do_div'
+     270 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
+         |                 ^~~~~~
+   include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
+     199 |                 __rem = __div64_32(&(n), __base);       \
+         |                                    ^~~~
+         |                                    |
+         |                                    u32 * {aka unsigned int *}
+   drivers/pwm/pwm-airoha.c:270:17: note: in expansion of macro 'do_div'
+     270 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_CYCLE_CFG);
+         |                 ^~~~~~
+   include/asm-generic/div64.h:174:38: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'u32 *' {aka 'unsigned int *'}
+     174 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
+         |                            ~~~~~~~~~~^~~~~~~~
+   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast [-Wcompare-distinct-pointer-types]
+     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                                   ^~
+   drivers/pwm/pwm-airoha.c:282:17: note: in expansion of macro 'do_div'
+     282 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+         |                 ^~~~~~
+>> include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
+     195 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^~
+   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   drivers/pwm/pwm-airoha.c:282:17: note: in expansion of macro 'do_div'
+     282 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+         |                 ^~~~~~
+   include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Wincompatible-pointer-types]
+     199 |                 __rem = __div64_32(&(n), __base);       \
+         |                                    ^~~~
+         |                                    |
+         |                                    u32 * {aka unsigned int *}
+   drivers/pwm/pwm-airoha.c:282:17: note: in expansion of macro 'do_div'
+     282 |         shift = do_div(offset, AIROHA_PWM_BUCKET_PER_FLASH_PROD);
+         |                 ^~~~~~
+   include/asm-generic/div64.h:174:38: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'u32 *' {aka 'unsigned int *'}
+     174 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
+         |                            ~~~~~~~~~~^~~~~~~~
+
+
+vim +195 include/asm-generic/div64.h
+
+^1da177e4c3f41 Linus Torvalds     2005-04-16  176  
+^1da177e4c3f41 Linus Torvalds     2005-04-16  177  /* The unnecessary pointer compare is there
+^1da177e4c3f41 Linus Torvalds     2005-04-16  178   * to check for type safety (n must be 64bit)
+^1da177e4c3f41 Linus Torvalds     2005-04-16  179   */
+^1da177e4c3f41 Linus Torvalds     2005-04-16  180  # define do_div(n,base) ({				\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  181  	uint32_t __base = (base);			\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  182  	uint32_t __rem;					\
+^1da177e4c3f41 Linus Torvalds     2005-04-16 @183  	(void)(((typeof((n)) *)0) == ((uint64_t *)0));	\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  184  	if (__builtin_constant_p(__base) &&		\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  185  	    is_power_of_2(__base)) {			\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  186  		__rem = (n) & (__base - 1);		\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  187  		(n) >>= ilog2(__base);			\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  188  	} else if (__builtin_constant_p(__base) &&	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  189  		   __base != 0) {			\
+461a5e51060c93 Nicolas Pitre      2015-10-30  190  		uint32_t __res_lo, __n_lo = (n);	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  191  		(n) = __div64_const32(n, __base);	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  192  		/* the remainder can be computed with 32-bit regs */ \
+461a5e51060c93 Nicolas Pitre      2015-10-30  193  		__res_lo = (n);				\
+461a5e51060c93 Nicolas Pitre      2015-10-30  194  		__rem = __n_lo - __res_lo * __base;	\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02 @195  	} else if (likely(((n) >> 32) == 0)) {		\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  196  		__rem = (uint32_t)(n) % __base;		\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  197  		(n) = (uint32_t)(n) / __base;		\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  198  	} else {					\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  199  		__rem = __div64_32(&(n), __base);	\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  200  	}						\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  201  	__rem;						\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  202   })
+^1da177e4c3f41 Linus Torvalds     2005-04-16  203  
+
 -- 
-2.49.0
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
