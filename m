@@ -1,163 +1,143 @@
-Return-Path: <linux-pwm+bounces-6800-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6801-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E46AAFE142
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Jul 2025 09:26:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77FAAAFE1BB
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Jul 2025 10:01:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6DA053B183F
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Jul 2025 07:26:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01D753A6661
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Jul 2025 08:01:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42F4D26FA60;
-	Wed,  9 Jul 2025 07:26:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE155212B28;
+	Wed,  9 Jul 2025 08:01:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DmM/KA3x"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="HHvaBN2+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B75126B778
-	for <linux-pwm@vger.kernel.org>; Wed,  9 Jul 2025 07:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7379B18A6DF
+	for <linux-pwm@vger.kernel.org>; Wed,  9 Jul 2025 08:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752046013; cv=none; b=DpeMSAjD3soTTP8MVt8ANCI/jUiZJWU8WXFGeB9wo7qZSm1MMiDitX2eH2zJzpOZxDSyZV9VNYBUw8pIX2n+Y4y+GcDvUjMFSqW59TcJ1/USeGsLROaxiN/UAQBT/ZdCd3MWXlaoikKUsSs7MN9390XtCnCrMnmMtXT4xPOOY/I=
+	t=1752048094; cv=none; b=BeRn7Z6++tmvwum1xWVTvCyw7S48BZ6kG9QF0EXMGRhh8TJE4lJDp5+uUDJdqvVTLFO41k8wIFJDQHyHN85Epgae0Aw2rtFETFSuTzlJfA/KPmS0P6bDIZwqOxKHKi2CBS1fxIdWF+7IYTGgLfcu3Pyb85tpL5EO3HgWicBEd/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752046013; c=relaxed/simple;
-	bh=XUUln88n+vvb0xdyre8bwQBB4xlA9ax/lxsdgBJNE7Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YIdwHxXi9SJLj9Co/9VevwP3zIcK0gZlcXCZ4cocacL+6aqeOT9LsCUD2PkIKmsGdBtDQWbVALkxQeBLHi+U+tWCkyOpwop0qa7jioA0zNDZiXrTjJYW3UU9u7am+Hw1nkf09xbJcE8BJ4HknvVcCW51zDtCQ6jFpOIssZGQpVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DmM/KA3x; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45362642f3bso4880275e9.2
-        for <linux-pwm@vger.kernel.org>; Wed, 09 Jul 2025 00:26:51 -0700 (PDT)
+	s=arc-20240116; t=1752048094; c=relaxed/simple;
+	bh=+LMs9nwAbFqUimrlcZAU115LhNSVWWcRlkMoxh2fsVs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eFNYXo/XWbHV3/mNT7S22sW1AVv01maX54QfuUAAhFa4bGEiEN8BV7/InECWgqmrMkkdYuJMMoZMUmXQwMc2Dv0x3vRZdZeoDQ6g4J6zZP/lSAwl52mZKFk7V8icXbyetOqZgpdu1yNJq7gYhOtK6GbWFpBWb6CJfFjHcca5Tu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=HHvaBN2+; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-60c9d8a16e5so9718136a12.0
+        for <linux-pwm@vger.kernel.org>; Wed, 09 Jul 2025 01:01:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1752046010; x=1752650810; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=XUUln88n+vvb0xdyre8bwQBB4xlA9ax/lxsdgBJNE7Y=;
-        b=DmM/KA3xuBI0/OPfUVznu9NTCcvfap28gJo/ahoTSa7OkVVEDYilyY00dI739FqxyK
-         ZYeGvM4Ce+N0ym3cwhaq/35OIUHi0ZBaRbv7zJN5qQ9nhzjL2JokYIYxaZmw68ucmiMh
-         CdEgyZRNu7eKe5fOQTpJuD9uhf9Bw5oy5guhlD3elphGtM8N+8+U4H2dLcxDK6ghxwhD
-         VQ/8hMh5iZaMtr6G/vI84MFZo68zyXahceZYYFpdcrwl3n84IkaXE4Ine/CTXOnXF0oH
-         QJKPV1T+0OrfsMv86Mm6Ti2M486EEjY5W2N6PFPs8oZKqQa9ARt/a3KK7e//HaqYnsAO
-         fVnQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1752048089; x=1752652889; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+LMs9nwAbFqUimrlcZAU115LhNSVWWcRlkMoxh2fsVs=;
+        b=HHvaBN2+B2at0E35/Fw0REsIfHVgz2n1YsJ0URiOw/HKyY8r6EQoXy8oZ9io9jl2y5
+         QARjqZCDQgc+mLLM2zuoxLaPjyMlytXXagZZEqfCma7P9UET1fWlxwMs8Rjn+s0AWp5M
+         GNRn1Rgc+6MkKiNpuxaqNdP6+Flhq+fz7l7359hVQH70UdpEMNQDvX+w/0LjHohIwDNv
+         ZglQ1OEGCdFVyPzu0/wCXPyLVAhYn7DgoxZbrml5paa7tu7q30XKYjqcaQBV7hIm4Lan
+         0n6nc2BKoF0Ir1ikdPyjCV/r0Kl5qn2TBPfLmRxZuE4F3OGGL9NbRolhyrr+cQ2pix/W
+         fpbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752046010; x=1752650810;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XUUln88n+vvb0xdyre8bwQBB4xlA9ax/lxsdgBJNE7Y=;
-        b=RNQXiFq9CYurE3U0USs9BRiwj9ltii8yeCfz2FVuy875dnjKmADPeK25g6XWYkt0Oh
-         2d4YNkpKSOqZW1CUFUiBWDL7uaGRUHoPofhidY2r3p7xhSAIPLhGX71tetmpawKxYoej
-         yT9XnaF5FotnPWxrJkfgXPys1jaFqRULqZvYPrkv/AK5nH8eVCVbDw0O45zyAhEpg3QN
-         YZAZvlIOV7dDBuG4e77cXxu+lfdqX8TdWjf1+96Z1zG5/xDxTetbsh8mVwP4Cwq2fJyZ
-         OPcr7k1vFoDZ6qZ6/qeCN47dwrtNwrraLmj5ZcrhV1lHzlTQPSOga+9klEOMPG6NXoHc
-         mSCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXOFvErHkehVSJb0eXIjwFEeuGo34JrSO5F75RX0clTxUriw2Y/bd7cKpy7GFzlQ/idOQxEdVzC4so=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVsJE1MZLvDfzCFh9AYZO6vtiT8UUM1DU6UzeXZ/l5JHcevyFv
-	1rrumjSRgU2VG9eQ41WhTQCbrFK2eFjqHzTVMRkqE8Y/Qzgxh9o9eDoolouD6ErgN9w=
-X-Gm-Gg: ASbGncuF57JndeV4zQz9dy24e5IioqTH15z8ZmHMnYqCiOJ6fe4xOHT9dMQyMvggteb
-	0bqa7ZD/mC8C1a6IPNmQx1h/hN6MytsbCHEPnU+/1E+RPouCsyvh57QYQhTnWJCrVodsEx2Tpbv
-	Zjp3wYhXJlHyAKrrmBEWs1QyIePWPnD6kT022VGt2ddnrCXmQeN+FlKLaMLU+vgfh8X2L9EQjlR
-	sOHHmaOe3d95K9woNOuu0zEt2b58meJcb8Fx1sDXZZ2A0kJb3AeyqJQqJZjmAKQncUhDjuVEQwA
-	XuvWjSTKJXXFtiRmx3afLVw4s2WlgftBvBEEVEUfuxZafq4/fjuJyKurXNYyTGHH5QSESOHM2Md
-	sRSJxFA==
-X-Google-Smtp-Source: AGHT+IHZpo9yVzRnXdUKvTXY9ZQtWtBLdKSOZfU7YVv7hkzlMjlyi3VsozBWY+UWea6vDF42mm0qzQ==
-X-Received: by 2002:a05:600c:37c5:b0:451:dee4:cd07 with SMTP id 5b1f17b1804b1-454d52681e5mr4298385e9.0.1752046009717;
-        Wed, 09 Jul 2025 00:26:49 -0700 (PDT)
-Received: from [192.168.1.110] ([178.197.222.89])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b470f871casm14962751f8f.45.2025.07.09.00.26.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Jul 2025 00:26:49 -0700 (PDT)
-Message-ID: <3f2938ce-8045-44dd-aee6-542779cd9916@linaro.org>
-Date: Wed, 9 Jul 2025 09:26:47 +0200
+        d=1e100.net; s=20230601; t=1752048089; x=1752652889;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+LMs9nwAbFqUimrlcZAU115LhNSVWWcRlkMoxh2fsVs=;
+        b=LTivJCdO43xnukIaMwoeL5cvkyJgxaZcsSPIzlsI/eE/7ONpJV6It7mptvYuDRDhc5
+         UmMWotKg5miXPoLLEvoQrwfMJmcZ6RecOSnm4MgWXSZfrovQcTQEC1AY+idqKKIZTk/h
+         vTOishZqZbwvxDsdpRKbNitI7JY/TSirW0lh1djgrTm0HQc6bsxAkq5Ne24CFv6iggC1
+         FBdT8Hmt/ThT/xRAhVBcjqndGZ6neLfvRcPbQXmMMyszqOCIo181Jqlsf3t0gDOS9OX7
+         XJd1gGrqN0CCWC92zU+FgF3mcgkWhtzUyAPrxgXdNk2iSvJ44yX6G6ej58yTv+8CMY29
+         jTUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVtAcCFYCAT9xcBxDi58VIA03b/P2jyXrcmCWuzYOVfDyecLHK8e1KrxEYWEiRcCt/ZwqaAd5eFUss=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwI8j7/+6mKF6nI9bdJ4Ja7K/tSuH3k4pNZasKPLM8W7Z4j6POM
+	xOZT9y8m9awOJjlIYrG1tHOjBJpO4QvitJ5hmNZrvOojn2YafSy9zi4tSvn7nEiuioiT1Ycq9jQ
+	QajHU
+X-Gm-Gg: ASbGnctYGyrFIlWDt3kSh3VBke/Xih20ocDXWkIB63hOb+QzOV43SByytpG7/XC3L7c
+	q1tnIigNa1xWCH6ohQOhw2U+SthKuVIMgEG+GOXf0S4vW54u5MaRxDBrDhJqHMePdWVjv2mU1Eo
+	VUzacnKkl53grGBaX1MJfF/tDCk/gHOpNfjaSwUEUPq8KUWTRbtW8+rdMrzMpkljN1zke9AHP/Y
+	Erkr11IDCHQytc9BsLaJxSymW6VNvcvNetWqrelLhj3LJDw6J0GGllQKe2LtPpQJ6E4vLkkzlbq
+	nYbc01f2U1cx7oM5kvRxeQR04ZiaDTPp1ghJW1syERlM0GFh7D2PMdWOvp+3h8CJafg=
+X-Google-Smtp-Source: AGHT+IFBXOzd9iwnJcU6ys0n0tOScCaS96LTlgmk4/agHFWXi9OXbwsBntMcLQxbhIAYszAndNvzfg==
+X-Received: by 2002:a17:907:874b:b0:ae6:c9b3:57cb with SMTP id a640c23a62f3a-ae6cf549b81mr155596066b.5.1752048089411;
+        Wed, 09 Jul 2025 01:01:29 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ae3f6b0336asm1061070766b.115.2025.07.09.01.01.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Jul 2025 01:01:28 -0700 (PDT)
+Date: Wed, 9 Jul 2025 10:01:26 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] pwm: mediatek: Ensure to disable clocks in error path
+Message-ID: <xkluxdj7ns3mxul7iadgd675t2yrztr5ywj73z3zimrpqpz5o3@foo6qpnmt7c5>
+References: <20250704172728.626815-2-u.kleine-koenig@baylibre.com>
+ <ad575b88-80c7-4301-96eb-b34d97c5d5fa@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] clocksource: timer-cadence-ttc: Support TTC device
- configured as PWM
-To: "Rao, Appana Durga Kedareswara" <appana.durga.kedareswara.rao@amd.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
- "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "Simek, Michal" <michal.simek@amd.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
- "git (AMD-Xilinx)" <git@amd.com>,
- "Vanukuri, Meher Thanmaiee" <MeherThanmaiee.Vanukuri@amd.com>
-References: <20250115113556.2832282-1-mubin.sayyed@amd.com>
- <20250115113556.2832282-3-mubin.sayyed@amd.com>
- <hwnhz4yr6vzz3oav4gq7qptejjy3rdwff7iveawaxexf3tbngr@pnrxi6jkpw3k>
- <DS7PR12MB824987018AAB745E38C638728F7CA@DS7PR12MB8249.namprd12.prod.outlook.com>
- <DS7PR12MB82495FE4A65F266D0857EB408F49A@DS7PR12MB8249.namprd12.prod.outlook.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <DS7PR12MB82495FE4A65F266D0857EB408F49A@DS7PR12MB8249.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nlx4gym6ltgwnmyd"
+Content-Disposition: inline
+In-Reply-To: <ad575b88-80c7-4301-96eb-b34d97c5d5fa@collabora.com>
 
-On 09/07/2025 08:51, Rao, Appana Durga Kedareswara wrote:
-> Ping!
 
-You responded after three months and now you keep pinging on that? No,
-implement entire feedback and then start working on recent Linux kernel.
+--nlx4gym6ltgwnmyd
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pwm: mediatek: Ensure to disable clocks in error path
+MIME-Version: 1.0
 
-Best regards,
-Krzysztof
+Hello,
+
+On Mon, Jul 07, 2025 at 11:33:00AM +0200, AngeloGioacchino Del Regno wrote:
+> Il 04/07/25 19:27, Uwe Kleine-K=F6nig ha scritto:
+> > After enabling the clocks each error path must disable the clocks again.
+> > One of them failed to do so. Unify the error paths to use goto to make =
+it
+> > harder for future changes to add a similar bug.
+> >=20
+>=20
+> I don't like gotos, but admittedly that's the cleanest option, so:
+>=20
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
+
+I somehow missed your mail before I sent the patch to Linus for
+inclusion into 6.16-rc6. Anyhow it's very appreciated even when spotting
+it only today! Thank you and sorry for not honoring that by adding your
+tag to the commit.
+
+Best regards
+Uwe
+
+--nlx4gym6ltgwnmyd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhuIdQACgkQj4D7WH0S
+/k4U5Qf/YSzRht495dMD2nqnQVOBbye9Zhk8OhgjT3q/FobP0sdpSL8jtIMYA997
+ZBs2YOUYobAvfqlYRLI5GCpBr/3A0Vp8M1oeFb2IL5h7j9QjXHaQL8ZBHNUDZCcJ
+Z4o7e6LnVrEnyokwK8NIrfi3VTtJCz3XuXp+f07bNuDLNtPT20dDD+VsHf1+qV9h
+2FtzpRlVBXWqu5e9SyVPyjF/Rj2F0HkghPkEGrV+M0nRhMhFzZ92SKzpqzOAnEFg
+EcG+foh9umzKYgSOgKEolj11hdHYp1k3Efl2CFRX+CpvP2T6FBr6zRZLiyL3LuNq
+Arl5RRU8HtWOl8vMMNFO+D1Crq6r2Q==
+=L+fW
+-----END PGP SIGNATURE-----
+
+--nlx4gym6ltgwnmyd--
 
