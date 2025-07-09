@@ -1,58 +1,84 @@
-Return-Path: <linux-pwm+bounces-6795-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6796-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B80B1AFDFC6
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Jul 2025 08:05:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1E1FAFDFD6
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Jul 2025 08:14:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AECDF581F3A
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Jul 2025 06:05:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E55934E8183
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Jul 2025 06:14:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63FCF26B2C8;
-	Wed,  9 Jul 2025 06:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C6A526B2A9;
+	Wed,  9 Jul 2025 06:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTmO4pte"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Sb4h+CtL"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3231426A0FD;
-	Wed,  9 Jul 2025 06:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E30E1DF965
+	for <linux-pwm@vger.kernel.org>; Wed,  9 Jul 2025 06:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752041108; cv=none; b=VClECMLQoXy0GZkOj25v4g1rCucGo/GdQr4aQV/l6pfmPbXDSJiLRks/sRKPasN0QKLA9VCnIEegdusjWHDWE8CMTby49UjOlmUDJLUds+VXA5sV+prlK5DSzMbTH418koPEEuXfRcU5Vi+XBW31w5qoruLIqXAqWdGw3BGGLxU=
+	t=1752041664; cv=none; b=Yr4TdWs7uBxCAaCDmkyg+Mu9lhc7xwo9WgH9YJN1dqYRxOd6IGgYQ20Dy4YT6tbYZmBttCsKw4i3FR1FqAiFhLeViA5RXr/SYhGVsKp4xzCPxRYvsC5dGF7cRcc2xx40Yl5tc0qSb322WE8Siqs2/p6NTansOszUI5DRmkF6nKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752041108; c=relaxed/simple;
-	bh=SzD8fsHU7duvdSUQLYizw2PuJGQ8kvETIYaho9kNf10=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H0C2z9BqF8gsL9v1Xyu/SO1+4L8Pyk+aVX5Tm8+aTbRl+cGbotgoBIT55UaqTGxzFlpBLd3xGvNgoMjviJJh2X9IuBlHkrnAfoLemL5P/bVm7DTGv+BksktU2tIGp5/SV341BBvubQgoEX8z4I3/tcGtMo5gGRHK/riITkDm6O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTmO4pte; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 181DEC4CEF0;
-	Wed,  9 Jul 2025 06:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752041107;
-	bh=SzD8fsHU7duvdSUQLYizw2PuJGQ8kvETIYaho9kNf10=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nTmO4pteY97Kik7iPXm2GrBZ2k+ytY/51/0hYrDwr8tP2BmdFndwlFWeZJ02QxayF
-	 bP+HnMSYmzi23Ssn6wqpMjW78n5yCy71sUQpG/ByD9rmbRjp8Fu1Heb65xhY55ftCw
-	 SDCLTBwk04U+kQNIs3WyqmvuHvX6xTPHpLoFa3EpXJbaOKvntBEDo4W74kkRIxM5ZC
-	 APgtU64n1gCyVeFJ6pKTAuAFtUiX6uBc/ibClllYw6J2knt2vAIU8q8j36W0B8tkCM
-	 6DmMOv3mlUPoWFKtffaP6SoZFfBTKshsy7Mxoh3gt5cvUrUHnAE19vck0OwvLYdO6V
-	 dov1haKVEqIpw==
-Date: Wed, 9 Jul 2025 08:05:04 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	linux-pwm@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
-Subject: Re: [PATCH] pwm: imx-tpm: reset counter if CMOD is 0
-Message-ID: <xo56zato6pgqqttdriskfgh4kdt2g6q5eg5jxte56uddkdfr63@sa7coeifbsmy>
-References: <20250701220147.1007786-1-laurentiumihalcea111@gmail.com>
- <vwozlwajisjw5qomwtmnfdklmucevyxncsxl2cdmixn2yixxrk@x6j3r2lrl5qz>
- <a1b6039e-7020-4d17-8186-d40ac17ba730@gmail.com>
+	s=arc-20240116; t=1752041664; c=relaxed/simple;
+	bh=8mGZIBbncaz9lTrdvh0RUvHjL6vzTe4jCIcBt1fy6Yk=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fWxJdIFJ1uTs6ukqjcWBag34pT1HJtasRPZmB4R8fp/hdCwUZoVluWonWf56FCDXo3bo+LUEYl757y+NRwYGIQ9KDE9AbgKPyPLoMHzYtwwrY+fuCph1J6wGHvXwcwRT9JBFeRnNn/QTbrGrcGERw8MUs97rRvGuVEBFR5+D+ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Sb4h+CtL; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ae0b6532345so115196066b.1
+        for <linux-pwm@vger.kernel.org>; Tue, 08 Jul 2025 23:14:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1752041659; x=1752646459; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X0d9wopNoxIL1zT2dehNcsBc3M/PDNolMwR+XGf9tY8=;
+        b=Sb4h+CtLG1Eoxes5RrEjQAz8gO0ur0jILcgzWG6z8TaAHFLJ6UkvAqQlw8Ql3jw5mr
+         +FN8J6hfQpC/6UJuuJIXLIkEHi3Gf817PCZZrqNIbYAgnLOLYL6+D1JUYAjuzwZwK5i3
+         TcT462gqD2yNdcs+SmBnOWB1DI160HBsekL3z0M8u7NQHj3kWkoz1wC791vzQH6udRbU
+         2r02Pv1tcHhFb3TSyIYjOd6cE5Zw0fRZa7bTTVuUdaoEOtZlqUS1QjBqbPvMdHrrTig/
+         KTJ/TUvPQiTV5iSlhgqq7VFHxPX1YqleOtpofhYZjOAYkbPow+bDPfyaf9/SXPrYRMRD
+         VieQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752041659; x=1752646459;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X0d9wopNoxIL1zT2dehNcsBc3M/PDNolMwR+XGf9tY8=;
+        b=gk3i+CHZESXJOtJsk+30KdApTlUnJeqtq2Ljp+QBFbvE76iRsqEPdlFZR5e0QIw0p8
+         QbdscILzA9L0xJ8Ywc+50um60s6J2jeflLKrJDrl0w2OZ1mRo0MiStuXUw5xA6MiVaj/
+         eLMiyhMskGxtPcghTqeF+/rXdwk+LxM0thTlvxNOAdggEciiyUfAT5kRC1Us4W9xGoJ9
+         N4+yAjzz+OcqzGI8OeEAZBkqw40+hMExmY5e087phYEa/M6l0o4RUDdoVXjB4G9cG9q0
+         1ogTX9ybaV3xyeIzgeyP5qWrsudvflZO5xYc4GTWws0LN9DfH0LAjWWf/vv3LNk5c1it
+         Dpnw==
+X-Gm-Message-State: AOJu0YywWyyUNXQ1G0AHGA6h3NJjaoUijKB+f1GSL6yd0c7iccAMvI3+
+	yxVcMf/WkFdNl3Fr6dVBZkASpdDJi33rUrwKJBSA70ril+1008cNy1Hv9KzyjfRHKPwe5oWqVFp
+	o4uag
+X-Gm-Gg: ASbGncu1EB11ZNZF47dbo+ulVEuY9tVYXHxxVQxp4ePY8/eH25qAtjTVJMmZXxK8+0P
+	uS7ruP01C5FsPqhEDLcSPPoRCrVUQlppVlj9kJo0c8ItfvVoY+D1WGZyzjg3VA7Vb92Wk1xQonL
+	HKccnxA+NyU8NnOzj5hg0oqVXKdmpg0glfVMrPmWhpQHwyEOfCxNw6bM/YXkPTo2PnAJknCgELP
+	6M8jehf2vgfj8Yc4e6l5El+PuFgFxhf/4GyfQSbWtKc1h8KG0hQegVpPrYgPLeTLb707sptoIP3
+	ukLayjif4aKb/M557sTRQznbKtI3pEUbAoctWaQ+3qHdM8UcWhATRubeqRTz9sMcRSQ=
+X-Google-Smtp-Source: AGHT+IG1eKVrtsewlMntycc+9L8VUcv/RwqpWfADWtwf6IQaa0Pwi2ksu7/ZZwPzi6RjGv/aVFuOuQ==
+X-Received: by 2002:a17:907:602a:b0:ae3:c017:ec5a with SMTP id a640c23a62f3a-ae6b26f518dmr507371966b.16.1752041658440;
+        Tue, 08 Jul 2025 23:14:18 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-60fcb8c63f9sm8170441a12.72.2025.07.08.23.14.17
+        for <linux-pwm@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Jul 2025 23:14:17 -0700 (PDT)
+Date: Wed, 9 Jul 2025 08:14:16 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Subject: Re: [PATCH libpwm 2/4] sysfs: Fix polarity handling
+Message-ID: <tcoklwryj4nufffylojzrdwbzpu2fcinecreomcidp5px2jecs@pr42yvapreub>
+References: <cover.1751995302.git.u.kleine-koenig@baylibre.com>
+ <149cd2e217dfb90210cc6fff332ec776371b0387.1751995302.git.u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -60,65 +86,58 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lxvmazlbdrmpdgwa"
+	protocol="application/pgp-signature"; boundary="mnvwozi3ibmjivy2"
 Content-Disposition: inline
-In-Reply-To: <a1b6039e-7020-4d17-8186-d40ac17ba730@gmail.com>
+In-Reply-To: <149cd2e217dfb90210cc6fff332ec776371b0387.1751995302.git.u.kleine-koenig@baylibre.com>
 
 
---lxvmazlbdrmpdgwa
+--mnvwozi3ibmjivy2
 Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: imx-tpm: reset counter if CMOD is 0
+Subject: Re: [PATCH libpwm 2/4] sysfs: Fix polarity handling
 MIME-Version: 1.0
 
-Hello Laurentiu,
-
-On Wed, Jul 02, 2025 at 11:31:28AM +0300, Laurentiu Mihalcea wrote:
-> On 7/2/2025 8:51 AM, Uwe Kleine-K=F6nig wrote:
-> > On Tue, Jul 01, 2025 at 06:01:47PM -0400, Laurentiu Mihalcea wrote:
-> >> +		 * MOD will NOT reset the value of the TPM counter.
-> >> +		 *
-> >> +		 * Therefore, if CNT.COUNT > MOD.MOD, the counter will reset
-> >> +		 * after UINT32_MAX - CNT.COUNT + MOD.MOD cycles, which is
-> >> +		 * incorrect.
-> >> +		 *
-> >> +		 * To avoid this, we need to force a reset of the
-> >> +		 * counter before writing the new MOD value.
-> >> +		 */
-> > Without the reference manual at hand or a deeper understanding of the
-> > hardware this isn't understandable. What is MOD? What is CMOD?
+On Tue, Jul 08, 2025 at 07:24:14PM +0200, Uwe Kleine-K=F6nig wrote:
+> Depending on polarity the sysfs duty_cycle either defines the active or t=
+he
+> inactive time of the PWM output. This has three effects that both were not
+> considered before in the sysfs backend:
 >=20
-> so, MOD is the reference value for the counter. The counter needs to
-> count until this value is reached, at which point the counter value
-> gets reset to 0 and the output signal is driven HIGH or LOW (depends
-> on the configured polarity). This value is used to define the period
-> of the PWM.
+>  - If polarity changes this affects the waveform's duty_length;
+>  - if duty_length_ns changes and polarity is inverted this affects
+>    duty_offset; and
+>  - for inverted polarity the written duty_cycle value must be
+>    period_length_ns - duty_length_ns.
 >=20
-> CMOD, on the other hand, is a clocking-related configuration option.
-> I'd say what we're most interested in here is the fact that if CMOD is
-> 0 then the counter will be disabled. Otherwise, it will be enabled.
+> To simplify handling the first two items, rework the cache representation
+> to use the parameters of the sysfs representation.
+>=20
+> For the second introduce a helper variable.
 
-JFTR: I marked your patch as "changes requested" now in patchwork and my
-inbox and expect an updated patch, but without holding my breath :-)
+Reminder to myself: The issue was initially about two effects and the
+message still talks about "both". Also "second" should be "third".
+
+Just for that I won't send a v2 and just fixup while applying if no
+further review requires an iteration.
 
 Best regards
 Uwe
 
---lxvmazlbdrmpdgwa
+--mnvwozi3ibmjivy2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhuBo0ACgkQj4D7WH0S
-/k6dsgf/RheRWtMwEqe7uWfXT5aywFTiqSMVTEDTy8ZWFhJ977cgY7pWfCCqtk2U
-RYLXoc+cp5FIhb0yBfk25qK5cHIzwVxE6p0H07itNWXjKlP2NYssB3ozzCv2Cer9
-WNO/rZKF4TYaYI7cd6eqM0+HJZMABZuOBvJnMG7xGds3ktFG4OHkYUSQfcDIBUqg
-Ty6LOq2LQMXKsT8IXzYYGlqGk8BblLKfgVyOing2W3+eKJCqI5R5G43S5dH5SZBR
-1EAAEEfmzVviiRbe2hpYVSrRoTgfQjCPjX42QmIDH0lsgoGtzhHllP7l+hlImesh
-RbFkCkmk8Aw6dTWrBeaF+89ovOg8lA==
-=k8wj
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhuCLUACgkQj4D7WH0S
+/k6yiAf9HPLK2gLjQm1jV5oVLNR7ObuzbbJuRjXTd4QW8FI9TrYwHNaWvbbGP7D1
+uK0KU0M+/52k+eGLwXpKxCX/d56mWIrCtZjeWnFo8K0OhoDdtwXdtXdrRuauLjYy
+utak0qBlXXClkT61XxJ7c3ze8e+M29VXXEaQwPyJkcQrnDsq7Hq3u+HLnlSWgWp/
+24OQXcWGSd/A7elmEL4Ht2wZz/psOT3Mtvo3I7/UQ/eEPr/I9ReP8SFL9yRdZGbY
+da3466ltzZ3TnPeQDAMPQG96FY9h8j2wMrjfxe8voSW1ZWs1GDWorXJcgV337ZGt
+ulkWx2qaynLn20NGOJVVXA3TFey8HA==
+=xvPc
 -----END PGP SIGNATURE-----
 
---lxvmazlbdrmpdgwa--
+--mnvwozi3ibmjivy2--
 
